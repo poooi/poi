@@ -30,3 +30,5 @@ node_modules
 /config.json
 
 /PepperFlash
+
+/components
