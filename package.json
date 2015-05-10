@@ -4,7 +4,7 @@
   "description": "KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -r jscoverage --compilers coffee:coffee-script/register"
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,6 @@
     "bower": "^1.4.1",
     "coffeelint": "^1.9.6",
     "gulp": "^3.8.11",
-    "jscoverage": "^0.5.9",
     "mocha": "^2.2.4",
     "mocha-lcov-reporter": "0.0.2"
   }
