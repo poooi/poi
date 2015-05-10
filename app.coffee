@@ -11,14 +11,21 @@ proxy = require './lib/proxy'
 
 mainWindow = null
 
-listenPort = config.get 'poi.port', 12450
 # Proxy setting
+listenPort = config.get 'poi.port', 12450
 app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
 app.commandLine.appendSwitch 'ignore-certificate-errors'
 
 # Pepper Flash
-app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'libpepflashplayer.so')
-app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+if process.platform == 'linux'
+  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'libpepflashplayer.so')
+  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+else if process.platform == 'win32'
+  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'pepflashplayer.dll')
+  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+else if process.platform == 'darwin'
+  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'PepperFlashPlayer.plugin')
+  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
 
 app.on 'window-all-closed', ->
   app.quit() unless process.platform == 'darwin'
@@ -33,8 +40,8 @@ app.on 'ready', ->
       'web-security': false
       'plugins': true
   mainWindow.loadUrl "file://#{__dirname}/index.html"
-  mainWindow.openDevTools
-    detach: true
+  #mainWindow.openDevTools
+  #  detach: true
   mainWindow.on 'closed', ->
     mainWindow = null
 

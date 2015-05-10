@@ -7,3 +7,7 @@ poi-app {
 kan-game {
   flex: 5 0px;
 }
+/* Initial height 0px */
+kan-game webview /deep/ object[is=browserplugin] {
+  height: 0px;
+}

@@ -7,6 +7,10 @@ window.jQuery = require './components/jquery/dist/jquery'
 window.React = require 'react'
 window.ReactBootstrap = require 'react-bootstrap'
 
+# Node modules
+window.config = remote.require './lib/config'
+window.proxy = remote.require './lib/proxy'
+
 views = ['layout', 'app']
 plugins = []
 for view in views

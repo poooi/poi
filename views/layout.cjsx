@@ -1,15 +1,23 @@
-{ROOT, jQuery, remote, $, $$, React, ReactBootstrap} = window
+{ROOT, jQuery, $, $$, React, ReactBootstrap} = window
+{config, proxy} = window
 
 # Custom theme
-config = remote.require './lib/config'
 if theme = config.get 'poi.theme'
   $('#bootstrap-css').setAttribute 'href', "./assets/themes/#{theme}/css/#{theme}.css"
 window.addEventListener 'theme.change', (e) ->
   theme = e.detail.theme
   $('#bootstrap-css').setAttribute 'href', "./assets/themes/#{theme}/css/#{theme}.css"
 
-first = true
+# Test
+proxy.on 'game.request', (method, path, body) ->
+  return
+  console.log "Request: #{method} #{path} #{JSON.stringify(body)}"
+proxy.on 'game.response', (method, path, body) ->
+  return
+  console.log "Response: #{method} #{path} #{JSON.stringify(body)}"
 
+# Initial
+$('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
 # Layout
 adjustSize = ->
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
@@ -30,8 +38,6 @@ adjustSize = ->
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
   $('kan-game').style.marginTop = "#{(window.innerHeight - 480 * factor) / 2.0}px"
 
-window.addEventListener 'resize', (e) ->
-  adjustSize()
 # Hack CSS and Fix font family
 $('kan-game webview').addEventListener 'page-title-set', (e) ->
   @insertCSS """
@@ -43,5 +49,8 @@ $('kan-game webview').addEventListener 'page-title-set', (e) ->
     }
   """
   adjustSize()
+# Adjust elements layout
+window.addEventListener 'resize', (e) ->
+  adjustSize()
 $('kan-game webview').addEventListener 'did-finish-load', (e) ->
-  setTimeout adjustSize, 2000
+  setTimeout adjustSize, 500

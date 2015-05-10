@@ -4,13 +4,14 @@ EventEmitter = require 'events'
 url = require 'url'
 net = require 'net'
 http = require 'http'
+querystring = require 'querystring'
 _ = require 'underscore'
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 config = require './config'
-{log, warn, error} = require './utils'
+{log, warn, error, resolveBody} = require './utils'
 resolve = (req) ->
   switch config.get 'proxy.use'
     when 'socks5'
@@ -29,12 +30,14 @@ class Proxy extends EventEmitter
     super()
     @load()
   load: ->
+    self = @
     # HTTP Requests
     @server = http.createServer async (req, res) ->
-      log "#{req.method} #{req.url}"
       # Patch proxy-connection
       delete req.headers['proxy-connection']
       req.headers['connection'] = 'close'
+      parsed = url.parse req.url
+      isGameApi = parsed.pathname.startsWith '/kcsapi'
       # With request body
       if req.method == 'PUT' || req.method == 'POST' || req.method == 'PATCH' || req.method == 'OPTIONS'
         reqBody = new Buffer(0)
@@ -53,6 +56,10 @@ class Proxy extends EventEmitter
             [response, body] = yield requestAsync resolve options
             res.writeHead response.statusCode, response.headers
             res.end body
+            if isGameApi
+              self.emit 'game.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
+              resolvedBody = yield resolveBody response.headers['content-encoding'], body
+              self.emit 'game.response', req.method, parsed.pathname, resolvedBody
           catch e
             error "#{req.method} #{req.url} #{e.toString()}"
       else
@@ -65,11 +72,14 @@ class Proxy extends EventEmitter
             followRedirect: false
           res.writeHead response.statusCode, response.headers
           res.end body
+          if isGameApi
+            self.emit 'game.request', req.method, parsed.pathname
+            resolvedBody = yield resolveBody response.headers['content-encoding'], body
+            self.emit 'game.response', req.method, parsed.pathname, resolvedBody
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
-      log "CONNECT #{req.url}"
       remoteUrl = url.parse "https://#{req.url}"
       remote = null
       switch config.get 'proxy.use'
