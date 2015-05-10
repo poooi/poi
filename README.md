@@ -14,9 +14,15 @@ Scalable KanColle browser and tool.
 + Notification
 + Extension Support
 
+## Roadmap
+
+Refer to https://github.com/yudachi/poi/issues/1
+
 ## Based on
 
 + [Electron](https://github.com/atom/electron)
++ [React](https://github.com/facebook/react)
++ [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
 + [ShadowSocks](https://github.com/shadowsocks/shadowsocks)
 
 ## License
