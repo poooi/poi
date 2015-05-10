@@ -36,6 +36,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "bower": "^1.4.1",
     "coffeelint": "^1.9.6",
     "gulp": "^3.8.11",
     "jscoverage": "^0.5.9",
