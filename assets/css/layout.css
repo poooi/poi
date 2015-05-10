@@ -1,0 +1,9 @@
+poi-main {
+  display: flex;
+}
+poi-app {
+  flex: 2 0px;
+}
+kan-game {
+  flex: 5 0px;
+}

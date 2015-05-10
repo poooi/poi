@@ -1,0 +1,12 @@
+language: node_js
+os:
+  - "linux"
+  - "osx"
+node_js:
+  - "iojs"
+  - "node"
+before_script:
+  - "./node_modules/coffeelint/bin/coffeelint ."
+  - "./node_modules/bower/bin/bower install"
+after_script:
+  - "npm test"

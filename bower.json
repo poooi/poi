@@ -1,0 +1,30 @@
+{
+  "name": "poi",
+  "version": "1.0.0",
+  "homepage": "https://github.com/yudachi/poi",
+  "authors": [
+    "Magica <i@0u0.moe>"
+  ],
+  "description": "Scalable KanColle browser and tool.",
+  "main": "index.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "KanColle",
+    "Browser",
+    "Tool"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "coffee-script": "~1.9.2"
+  }
+}
