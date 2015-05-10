@@ -40,8 +40,8 @@ app.on 'ready', ->
       'web-security': false
       'plugins': true
   mainWindow.loadUrl "file://#{__dirname}/index.html"
-  #mainWindow.openDevTools
-  #  detach: true
+  mainWindow.openDevTools
+    detach: true
   mainWindow.on 'closed', ->
     mainWindow = null
 

@@ -4,7 +4,7 @@
   "description": "KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register"
+    "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register"
   },
   "repository": {
     "type": "git",
