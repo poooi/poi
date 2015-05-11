@@ -6,12 +6,14 @@ net = require 'net'
 http = require 'http'
 querystring = require 'querystring'
 _ = require 'underscore'
+caseNormalizer = require 'header-case-normalizer'
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 config = require './config'
 {log, warn, error, resolveBody} = require './utils'
+
 resolve = (req) ->
   switch config.get 'proxy.use'
     when 'socks5'
@@ -21,65 +23,68 @@ resolve = (req) ->
           socksHost: config.get 'proxy.socks5.host', '127.0.0.1'
           socksPort: config.get 'proxy.socks5.port', 1080
     when 'http'
+      host = config.get 'proxy.http.host', '127.0.0.1'
+      port = config.get 'proxy.http.port', 8118
       return _.extend req,
-        proxy: "http://#{config.get 'proxy.http.host', '127.0.0.1'}:#{config.get 'proxy.http.port', 8118}"
+        proxy: "http://#{host}:#{port}"
     else
       return req
+
 class Proxy extends EventEmitter
   constructor: ->
     super()
     @load()
   load: ->
     self = @
+
     # HTTP Requests
-    @server = http.createServer async (req, res) ->
-      # Patch proxy-connection
+    @server = http.createServer (req, res) ->
       delete req.headers['proxy-connection']
       req.headers['connection'] = 'close'
       parsed = url.parse req.url
       isGameApi = parsed.pathname.startsWith '/kcsapi'
-      # With request body
-      if req.method == 'PUT' || req.method == 'POST' || req.method == 'PATCH' || req.method == 'OPTIONS'
-        reqBody = new Buffer(0)
-        req.on 'data', (data) ->
-          reqBody = Buffer.concat [reqBody, data]
-        req.on 'end', async ->
-          try
-            options =
-              method: req.method
-              url: req.url
-              headers: req.headers
-              encoding: null
-            if reqBody.length > 0
-              options = _.extend options,
-                body: reqBody
-            [response, body] = yield requestAsync resolve options
-            res.writeHead response.statusCode, response.headers
-            res.end body
-            if isGameApi
-              self.emit 'game.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
-              resolvedBody = yield resolveBody response.headers['content-encoding'], body
-              self.emit 'game.response', req.method, parsed.pathname, resolvedBody
-          catch e
-            error "#{req.method} #{req.url} #{e.toString()}"
-      else
+      reqBody = new Buffer(0)
+      req.on 'data', (data) ->
+        reqBody = Buffer.concat [reqBody, data]
+      req.on 'end', async ->
         try
-          [response, body] = yield requestAsync resolve
+          options =
             method: req.method
             url: req.url
             headers: req.headers
             encoding: null
             followRedirect: false
-          res.writeHead response.statusCode, response.headers
-          res.end body
+          if reqBody.length > 0
+            options = _.extend options,
+              body: reqBody
           if isGameApi
-            self.emit 'game.request', req.method, parsed.pathname
-            resolvedBody = yield resolveBody response.headers['content-encoding'], body
-            self.emit 'game.response', req.method, parsed.pathname, resolvedBody
+            success = false
+            for i in [0..30]
+              break if success
+              try
+                [response, body] = yield requestAsync resolve options
+                if response.statusCode == 200
+                  success = true
+                  res.writeHead response.statusCode, response.headers
+                  res.end body
+                  self.emit 'game.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
+                  resolvedBody = yield resolveBody response.headers['content-encoding'], body
+                  self.emit 'game.response', req.method, parsed.pathname, resolvedBody
+                else
+                  error "Status Code:#{response.statusCode}"
+              catch e
+                error "Api failed: #{req.method} #{req.url} #{e.toString()}"
+          else
+            [response, body] = yield requestAsync resolve options
+            res.writeHead response.statusCode, response.headers
+            res.end body
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
+
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
+      delete req.headers['proxy-connection']
+      req.headers['connection'] = 'close'
       remoteUrl = url.parse "https://#{req.url}"
       remote = null
       switch config.get 'proxy.use'
@@ -96,6 +101,18 @@ class Proxy extends EventEmitter
             remote.write data
           remote.on 'data', (data) ->
             client.write data
+        when 'http'
+          host = config.get 'proxy.http.host', '127.0.0.1'
+          port = config.get 'proxy.http.port', 8118
+          msg = "CONNECT #{remoteUrl.hostname}:#{remoteUrl.port} HTTP/#{req.httpVersion}\r\n"
+          for k, v of req.headers
+            msg += "#{caseNormalizer(k)}: #{v}\r\n"
+          msg += "\r\n"
+          remote = net.connect port, host, ->
+            remote.write msg
+            remote.write head
+            client.pipe remote
+            remote.pipe client
         else
           remote = net.connect remoteUrl.port, remoteUrl.hostname, ->
             client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\nProxy-Agent: poi\r\n\r\n"
@@ -118,7 +135,9 @@ class Proxy extends EventEmitter
       remote.on 'timeout', ->
         client.destroy()
         remote.destroy()
+
     listenPort = config.get 'poi.port', 12450
     @server.listen listenPort, ->
       log "Proxy listening on #{listenPort}"
+
 module.exports = new Proxy()

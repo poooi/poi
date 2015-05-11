@@ -27,6 +27,7 @@
     "coffee-script": "^1.9.2",
     "colors": "^1.1.0",
     "fs-extra": "^0.18.2",
+    "header-case-normalizer": "^1.0.2",
     "path-extra": "^1.0.2",
     "react": "^0.13.3",
     "react-bootstrap": "^0.21.2",

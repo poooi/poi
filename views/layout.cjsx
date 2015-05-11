@@ -53,4 +53,4 @@ $('kan-game webview').addEventListener 'page-title-set', (e) ->
 window.addEventListener 'resize', (e) ->
   adjustSize()
 $('kan-game webview').addEventListener 'did-finish-load', (e) ->
-  setTimeout adjustSize, 500
+  setTimeout adjustSize, 1000
