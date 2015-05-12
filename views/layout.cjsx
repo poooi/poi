@@ -16,7 +16,6 @@ require "./layout.#{layout}"
 
 # Test
 proxy.on 'game.request', (method, path, body) ->
-  return
   console.log "Request: #{method} #{path} #{JSON.stringify(body)}"
 proxy.on 'game.response', (method, path, body) ->
   return

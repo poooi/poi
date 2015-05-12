@@ -14,6 +14,9 @@ SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 config = require './config'
 {log, warn, error, resolveBody} = require './utils'
 
+# Network error retries
+retries = config.get 'poi.proxy.retries', 30
+
 resolve = (req) ->
   switch config.get 'proxy.use'
     when 'socks5'
@@ -58,7 +61,7 @@ class Proxy extends EventEmitter
               body: reqBody
           if isGameApi
             success = false
-            for i in [0..30]
+            for i in [0..retries]
               break if success
               try
                 [response, body] = yield requestAsync resolve options

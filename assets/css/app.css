@@ -1,0 +1,69 @@
+* {
+  font-family: Ubuntu, "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
+}
+::-webkit-scrollbar {
+  width: 0px;
+}
+.material-icon {
+  margin-top: 5px;
+  margin-right: 20px;
+  width: 30px;
+  height: 30px;
+}
+.material-value {
+  line-height: 30px;
+  vertical-align: middle;
+}
+poi-app .container {
+  width: auto;
+}
+.panel {
+  margin-bottom: 1px;
+}
+.panel-body {
+  padding: 8px;
+}
+.panel-heading {
+  padding: 8px;
+}
+.table {
+  margin-bottom: 1px;
+}
+.alert {
+  margin-bottom: 1px;
+  padding: 8px;
+  text-align: center;
+}
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+poi-app table tr td {
+  font-size: 15px;
+}
+.task-panel table tr td {
+  font-size: 10px;
+}
+.task-panel .panel {
+  padding-bottom: 1px;
+}
+span, img, .panel-heading {
+  -webkit-user-select: none !important;
+  cursor: default !important;
+}
+.panel-container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.panel-col {
+  padding-left: 0px;
+  padding-right: 1px;
+}
+.teitoku-panel .col-xs-6, .teitoku-panel .col-xs-3 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+poi-app .container {
+  padding-left: 0px;
+  padding-right: 0px;
+}

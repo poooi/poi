@@ -27,6 +27,7 @@
     "coffee-script": "^1.9.2",
     "colors": "^1.1.0",
     "fs-extra": "^0.18.2",
+    "glob": "^5.0.5",
     "header-case-normalizer": "^1.0.2",
     "objtree": "^0.1.1",
     "path-extra": "^1.0.2",

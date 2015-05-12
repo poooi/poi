@@ -23,7 +23,7 @@ Refer to https://github.com/yudachi/poi/issues/1
 + [Electron](https://github.com/atom/electron)
 + [React](https://github.com/facebook/react)
 + [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
-+ [ShadowSocks](https://github.com/shadowsocks/shadowsocks)
++ [Shadowsocks](https://github.com/shadowsocks/shadowsocks)
 
 ## License
 [The MIT License](https://github.com/yudachi/poi/blob/master/LICENSE)

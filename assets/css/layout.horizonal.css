@@ -8,3 +8,6 @@ kan-game {
 poi-app {
   flex: 2 0px;
 }
+hr {
+  display: none;
+}
