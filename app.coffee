@@ -34,14 +34,20 @@ app.on 'ready', ->
   screen = require 'screen'
   screenSize = screen.getPrimaryDisplay().workAreaSize
   mainWindow = new BrowserWindow
-    width: config.get 'window.width', screenSize.width
-    height: config.get 'window.height', screenSize.height
+    x: config.get 'poi.window.x', 0
+    y: config.get 'poi.window.y', 0
+    width: config.get 'poi.window.width', screenSize.width
+    height: config.get 'poi.window.height', screenSize.height
     'web-preferences':
       'web-security': false
       'plugins': true
   mainWindow.loadUrl "file://#{__dirname}/index.html"
   mainWindow.openDevTools
     detach: true
+  mainWindow.on 'close', ->
+    # Save current position and size
+    bounds = mainWindow.getBounds()
+    config.set 'poi.window', bounds
   mainWindow.on 'closed', ->
     mainWindow = null
 

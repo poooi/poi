@@ -36,7 +36,6 @@ class Proxy extends EventEmitter
     @load()
   load: ->
     self = @
-
     # HTTP Requests
     @server = http.createServer (req, res) ->
       delete req.headers['proxy-connection']
@@ -80,7 +79,6 @@ class Proxy extends EventEmitter
             res.end body
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
-
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
       delete req.headers['proxy-connection']
@@ -135,7 +133,6 @@ class Proxy extends EventEmitter
       remote.on 'timeout', ->
         client.destroy()
         remote.destroy()
-
     listenPort = config.get 'poi.port', 12450
     @server.listen listenPort, ->
       log "Proxy listening on #{listenPort}"

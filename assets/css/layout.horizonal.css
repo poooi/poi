@@ -1,0 +1,10 @@
+poi-main {
+  display: flex;
+  flex-flow: row nowrap;
+}
+kan-game {
+  flex: 5 0px;
+}
+poi-app {
+  flex: 2 0px;
+}
