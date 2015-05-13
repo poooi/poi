@@ -5,34 +5,36 @@
 TaskPanel = React.createClass
   getInitialState: ->
     tasks: [
-        task: -1
-        progress: -1
+        name: '未接受'
+        progress: ''
       ,
-        task: -1
-        progress: -1
+        name: '未接受'
+        progress: ''
       ,
-        task: -1
-        progress: -1
+        name: '未接受'
+        progress: ''
       ,
-        task: -1
-        progress: -1
+        name: '未接受'
+        progress: ''
       ,
-        task: -1
-        progress: -1
+        name: '未接受'
+        progress: ''
     ]
+  componentDidMount: ->
+    setTimeout ->
+      # Fix task panel height
+      height = window.getComputedStyle($('.mission-panel .panel-body')).height
+      $('.task-panel .panel-body').style.height = "#{height}"
+    , 2000
   render: ->
     <Panel header="任务" bsStyle="primary">
       <Table>
         <tbody>
         {
           for i in [0..4]
-            name = '未接受的任务'
-            if @state.tasks[i]?.task >= 0
-              name = @state.tasks[i]?.task
-            progress = ''
             <tr>
-              <td>{name}</td>
-              <td>{progress}</td>
+              <td>{@state.tasks[i].name}</td>
+              <td>{@state.tasks[i].progress}</td>
             </tr>
         }
         </tbody>

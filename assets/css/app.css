@@ -4,6 +4,9 @@
 ::-webkit-scrollbar {
   width: 0px;
 }
+body {
+  font-size: 13px;
+}
 .material-icon {
   margin-top: 5px;
   margin-right: 20px;
@@ -39,15 +42,16 @@ hr {
   margin-bottom: 5px;
 }
 poi-app table tr td {
-  font-size: 15px;
+  font-size: 12px;
 }
 .task-panel table tr td {
-  font-size: 10px;
+  font-size: 12px;
 }
-.task-panel .panel {
-  padding-bottom: 1px;
+.task-panel .table tbody tr td {
+  padding-top: 4px;
+  padding-bottom: 5px;
 }
-span, img, .panel-heading {
+span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
   cursor: default !important;
 }
@@ -66,4 +70,7 @@ span, img, .panel-heading {
 poi-app .container {
   padding-left: 0px;
   padding-right: 0px;
+}
+table {
+  table-layout: fixed;
 }

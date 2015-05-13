@@ -12,12 +12,12 @@ adjustSize = ->
   factor = Math.ceil(window.innerWidth /  800.0 * 100) / 100.0
   webview.executeJavaScript """
     var iframe = document.querySelector('#game_frame').contentWindow.document;
-    document.querySelector('html').style.zoom = #{factor};
-    iframe.querySelector('html').style.zoom = #{factor};
+    document.querySelector('html').style.zoom = #{factor + 0.002};
+    iframe.querySelector('html').style.zoom = #{factor + 0.002};
     window.scrollTo(0, 0);
     var x = document.querySelector('#game_frame').getBoundingClientRect().left + iframe.querySelector('embed').getBoundingClientRect().left;
     var y = document.querySelector('#game_frame').getBoundingClientRect().top + iframe.querySelector('embed').getBoundingClientRect().top;
-    window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
+    window.scrollTo(Math.ceil(x * #{factor + 0.002}), Math.ceil(y * #{factor + 0.002}));
     document.documentElement.style.overflow = 'hidden';
   """
 

@@ -2,6 +2,7 @@ path = require 'path-extra'
 glob = require 'glob'
 {ROOT, remote, _, $, $$, React, ReactBootstrap} = window
 {Button, TabbedArea, TabPane, Alert} = ReactBootstrap
+{config, proxy, log} = window
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*')).map (filePath) ->
@@ -45,3 +46,8 @@ PoiAlert = React.createClass
 
 React.render <PoiAlert />, $('poi-alert')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
+
+proxy.addListener 'game.request', (method, path) ->
+  log "正在请求 #{method} #{path}"
+proxy.addListener 'game.response', (method, path) ->
+  success "获得数据 #{method} #{path}"

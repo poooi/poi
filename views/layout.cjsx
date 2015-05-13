@@ -13,10 +13,3 @@ window.addEventListener 'theme.change', (e) ->
 if layout != 'horizonal'
   $('#layout-css').setAttribute 'href', "./assets/css/layout.#{layout}.css"
 require "./layout.#{layout}"
-
-# Test
-proxy.on 'game.request', (method, path, body) ->
-  console.log "Request: #{method} #{path} #{JSON.stringify(body)}"
-proxy.on 'game.response', (method, path, body) ->
-  return
-  console.log "Response: #{method} #{path} #{JSON.stringify(body)}"

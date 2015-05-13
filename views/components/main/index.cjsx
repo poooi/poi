@@ -12,18 +12,18 @@ module.exports =
       xs = 3
       xs = 6 if layout == 'horizonal'
       <div>
-        <TeitokuPanel />
+        <TeitokuPanel ref="teitokuPanel" />
         <Grid className="panel-container">
-          <Col xs={xs} className="panel-col">
+          <Col xs={xs} className="panel-col mission-panel" ref="missionPanel">
             <MissionPanel />
           </Col>
-          <Col xs={xs} className="panel-col">
+          <Col xs={xs} className="panel-col ndock-panel" ref="ndockPanel">
             <NdockPanel />
           </Col>
-          <Col xs={xs} className="panel-col">
+          <Col xs={xs} className="panel-col kdock-panel" ref="kdockPanel">
             <KdockPanel />
           </Col>
-          <Col xs={xs} className="panel-col task-panel">
+          <Col xs={xs} className="panel-col task-panel" ref="taskPanel">
             <TaskPanel />
           </Col>
         </Grid>

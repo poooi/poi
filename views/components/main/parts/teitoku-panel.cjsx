@@ -28,8 +28,10 @@ TeitokuPanel = React.createClass
         materials[material.api_id] = material for material in body.api_material
         @setState
           shipCount: body.api_ship.length
-          slotitemCount: body.api_material.length
           material: materials
+      when '/kcsapi/api_get_member/slot_item'
+        @setState
+          slotitemCount: body.length
   componentDidMount: ->
     proxy.addListener 'game.response', @handleResponse
   componentWillUnmount: ->
