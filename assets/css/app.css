@@ -74,3 +74,11 @@ poi-app .container {
 table {
   table-layout: fixed;
 }
+.panel-body table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.label {
+  font-size: 80%;
+}

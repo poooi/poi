@@ -67,10 +67,10 @@ window.proxy = remote.require './lib/proxy'
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
 
-# Game datas prefixed by $
+# Global data resolver
 proxy.addListener 'game.response', (method, path, body) ->
   switch path
-    # Game datas
+    # Game datas prefixed by $
     when '/kcsapi/api_start2'
       window.$ships = []
       window.$ships[ship.api_id] = ship for ship in body.api_mst_ship
@@ -84,7 +84,7 @@ proxy.addListener 'game.response', (method, path, body) ->
       window.$maps[map.api_id] = map for map in body.api_mst_mapinfo
       window.$missions = []
       window.$missions[mission.api_id] = mission for mission in body.api_mst_mission
-    # User datas
+    # User datas prefixed by _
     when '/kcsapi/api_port/port'
       window._ships = []
       window._ships[ship.api_id] = ship for ship in body.api_ship
@@ -97,8 +97,5 @@ proxy.addListener 'game.response', (method, path, body) ->
       window._slotitems[body.api_slot_item.api_id] = body.api_slot_item
 
 views = ['layout', 'app']
-plugins = []
 for view in views
   require "./views/#{view}"
-for plugin in plugins
-  require "./plugins/#{plugin}/index"

@@ -50,7 +50,7 @@ KdockPanel = React.createClass
         @setState
           docks: docks
           notified: notified
-      when '/kcspai/api_req_kousyou/getship'
+      when '/kcsapi/api_req_kousyou/getship'
         for kdock in body.api_kdock
           id = kdock.api_id
           switch kdock.api_state
@@ -92,8 +92,6 @@ KdockPanel = React.createClass
     proxy.removeListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    style =
-      width: '50%'
     <Panel header="建造" bsStyle="danger">
       <Table>
         <tbody>

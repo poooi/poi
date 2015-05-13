@@ -76,6 +76,7 @@ class Proxy extends EventEmitter
                   error "Status Code:#{response.statusCode}"
               catch e
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
+              yield Promise.delay(3000) unless success
           else
             [response, body] = yield requestAsync resolve options
             res.writeHead response.statusCode, response.headers

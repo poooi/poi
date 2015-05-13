@@ -61,7 +61,7 @@ MissionPanel = React.createClass
       if decks[i].countdown > 0
         decks[i].countdown -= 1
         if decks[i].countdown <= 40 && !notified[i]
-          notify "#{decks[i].api_name} 远征归来"
+          notify "#{decks[i].name} 远征归来"
           notified[i] = true
     @setState
       decks: decks
@@ -73,8 +73,6 @@ MissionPanel = React.createClass
     proxy.removeListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    style =
-      width: '50%'
     <Panel header="远征" bsStyle="info">
       <Table>
         <tbody>
