@@ -37,6 +37,10 @@ TaskPanel = React.createClass
         name: '未接受'
         id: 100000
         progress: '-'
+      ,
+        name: '未接受'
+        id: 100000
+        progress: '-'
     ]
   handleResponse: (method, path, body, postBody) ->
     {tasks} = @state
@@ -104,7 +108,7 @@ TaskPanel = React.createClass
       <Table>
         <tbody>
         {
-          for i in [0..4]
+          for i in [0..5]
             <tr>
               <td>{@state.tasks[i].name}</td>
               <td>

@@ -48,8 +48,8 @@ poi-app table tr td {
   font-size: 12px;
 }
 .task-panel .table tbody tr td {
-  padding-top: 4px;
-  padding-bottom: 5px;
+  padding-top: 2px;
+  padding-bottom: 3px;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
