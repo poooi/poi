@@ -69,9 +69,9 @@ class Proxy extends EventEmitter
                   success = true
                   res.writeHead response.statusCode, response.headers
                   res.end body
-                  self.emit 'game.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
+                  self.emit 'game.on.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
                   resolvedBody = yield resolveBody response.headers['content-encoding'], body
-                  self.emit 'game.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
+                  self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
                 else
                   error "Status Code:#{response.statusCode}"
               catch e

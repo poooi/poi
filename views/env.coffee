@@ -68,7 +68,10 @@ window.proxy = remote.require './lib/proxy'
 window.layout = config.get 'poi.layout', 'horizonal'
 
 # Global data resolver
-proxy.addListener 'game.response', (method, path, body) ->
+proxy.addListener 'game.on.request', (method, path, body) ->
+  proxy.emit 'game.request', method, path, body
+
+proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   switch path
     # Game datas prefixed by $
     when '/kcsapi/api_start2'
@@ -95,6 +98,7 @@ proxy.addListener 'game.response', (method, path, body) ->
       window._ships[body.api_ship.api_id] = body.api_ship
     when '/kcsapi/api_req_kousyou/createitem'
       window._slotitems[body.api_slot_item.api_id] = body.api_slot_item
+  proxy.emit 'game.response', method, path, body, postBody
 
 views = ['layout', 'app']
 for view in views

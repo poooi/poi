@@ -75,7 +75,7 @@ TaskPanel = React.createClass
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
         idx = _.findIndex tasks, (e) ->
-          e.id == postBody.api_quest_id
+          e.id == parseInt(postBody.api_quest_id)
         return if idx == -1
         tasks[idx] =
           name: '未接受'
@@ -84,7 +84,7 @@ TaskPanel = React.createClass
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
         idx = _.findIndex tasks, (e) ->
-          e.id == postBody.api_quest_id
+          e.id == parseInt(postBody.api_quest_id)
         return if idx == -1
         tasks[idx] =
           name: '未接受'
