@@ -37,6 +37,12 @@ TeitokuPanel = React.createClass
         materials[material.api_id] = material for material in body
         @setState
           material: materials
+      when '/kcsapi/api_req_hokyu/charge'
+        {material} = @state
+        for i in [0..3]
+          material[i] = body.api_material[i]
+        @setState
+          material: material
   componentDidMount: ->
     proxy.addListener 'game.response', @handleResponse
   componentWillUnmount: ->

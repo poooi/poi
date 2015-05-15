@@ -1,6 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {config, proxy} = window
-{Panel, Table, Label} = ReactBootstrap
+{Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 
 getStyleByProgress = (progress) ->
   switch progress
@@ -20,26 +20,32 @@ TaskPanel = React.createClass
     tasks: [
         name: '未接受'
         id: 100000
+        content: '...'
         progress: '-'
       ,
         name: '未接受'
         id: 100000
+        content: '...'
         progress: '-'
       ,
         name: '未接受'
         id: 100000
+        content: '...'
         progress: '-'
       ,
         name: '未接受'
         id: 100000
+        content: '...'
         progress: '-'
       ,
         name: '未接受'
         id: 100000
+        content: '...'
         progress: '-'
       ,
         name: '未接受'
         id: 100000
+        content: '...'
         progress: '-'
     ]
   handleResponse: (method, path, body, postBody) ->
@@ -65,12 +71,14 @@ TaskPanel = React.createClass
             tasks[idx] =
               name: task.api_title
               id: task.api_no
+              content: task.api_detail
               progress: progress
           # Update current
           else
             tasks[idx] =
               name: task.api_title
               id: task.api_no
+              content: task.api_detail
               progress: progress
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
@@ -80,6 +88,7 @@ TaskPanel = React.createClass
         tasks[idx] =
           name: '未接受'
           id: 100000
+          content: '...'
           progress: '-'
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
@@ -89,6 +98,7 @@ TaskPanel = React.createClass
         tasks[idx] =
           name: '未接受'
           id: 100000
+          content: '...'
           progress: '-'
     tasks = _.sortBy tasks, (e) ->
       e.id
@@ -110,7 +120,9 @@ TaskPanel = React.createClass
         {
           for i in [0..5]
             <tr>
-              <td>{@state.tasks[i].name}</td>
+              <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+                <td>{@state.tasks[i].name}</td>
+              </OverlayTrigger>
               <td>
                 <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
               </td>
