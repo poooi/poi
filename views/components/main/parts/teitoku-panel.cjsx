@@ -1,5 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {config, proxy} = window
+{log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
 
 rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
@@ -27,11 +28,17 @@ TeitokuPanel = React.createClass
         materials = []
         materials[material.api_id] = material for material in body.api_material
         @setState
-          shipCount: body.api_ship.length
+          shipCount: window._ships.length
           material: materials
       when '/kcsapi/api_get_member/slot_item'
+        ### FIXME
+        Uncaught Error: Invariant Violation: setState(...):
+        Cannot update during an existing state transition (such as within `render`).
+        Render methods should be a pure function of props and state.
+        In fact, all things are successfully updated. Maybe a React.js bug.
+        ###
         @setState
-          slotitemCount: body.length
+          slotitemCount: window._slotitems.length
       when '/kcsapi/api_get_member/material'
         materials = []
         materials[material.api_id] = material for material in body

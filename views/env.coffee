@@ -67,8 +67,25 @@ window.proxy = remote.require './lib/proxy'
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
 
+# Message Queue
+###
+requests = []
+responses = []
+emitRequest = ->
+  if requests.length > 0
+    request = requests.shift()
+    proxy.emit 'game.request', request[0], request[1], request[2]
+emitResponse = ->
+  if responses.length > 0
+    response = responses.shift()
+    proxy.emit 'game.response', response[0], response[1], response[2], response[3]
+setInterval emitRequest, 1000
+setInterval emitResponse, 1000
+###
+
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
+  #requests.push [method, path, body]
   proxy.emit 'game.request', method, path, body
 
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
@@ -89,15 +106,14 @@ proxy.addListener 'game.on.response', (method, path, body, postBody) ->
       window.$missions[mission.api_id] = mission for mission in body.api_mst_mission
     # User datas prefixed by _
     when '/kcsapi/api_port/port'
-      window._ships = []
-      window._ships[ship.api_id] = ship for ship in body.api_ship
+      window._ships = body.api_ship
     when '/kcsapi/api_get_member/slot_item'
-      window._slotitems = []
-      window._slotitems[slotitem.api_id] = slotitem for slotitem in body
+      window._slotitems = body
     when '/kcsapi/api_req_kousyou/getship'
-      window._ships[body.api_ship.api_id] = body.api_ship
+      window._ships.push body.api_ship
     when '/kcsapi/api_req_kousyou/createitem'
-      window._slotitems[body.api_slot_item.api_id] = body.api_slot_item
+      window._slotitems.push body.api_slot_item
+  #responses.push [method, path, body, postBody]
   proxy.emit 'game.response', method, path, body, postBody
 
 views = ['layout', 'app']

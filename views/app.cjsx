@@ -56,5 +56,5 @@ React.render <ControlledTabArea />, $('poi-nav-tabs')
 proxy.addListener 'game.request', (method, path) ->
   log "正在请求 #{method} #{path}"
 proxy.addListener 'game.response', (method, path, body, postBody) ->
-  console.log [path, body, postBody]
+  #console.log [path, body, postBody]
   success "获得数据 #{method} #{path}"
