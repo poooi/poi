@@ -1,4 +1,5 @@
-{layout, $, $$, React, ReactBootstrap} = window
+path = require 'path-extra'
+{layout, ROOT, $, $$, React, ReactBootstrap} = window
 {Grid, Col} = ReactBootstrap
 {config, proxy} = window
 {TeitokuPanel, MissionPanel, NdockPanel, KdockPanel, TaskPanel} = require './parts'
@@ -12,6 +13,7 @@ module.exports =
       xs = 3
       xs = 6 if layout == 'horizonal'
       <div>
+        <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
         <TeitokuPanel ref="teitokuPanel" />
         <Grid className="panel-container">
           <Col xs={xs} className="panel-col ndock-panel" ref="ndockPanel">

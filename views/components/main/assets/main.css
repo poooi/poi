@@ -1,0 +1,57 @@
+#MainView .material-icon {
+  margin-top: 5px;
+  margin-right: 20px;
+  width: 30px;
+  height: 30px;
+}
+#MainView .material-value {
+  line-height: 30px;
+  vertical-align: middle;
+}
+#MainView .panel {
+  margin-bottom: 2px;
+}
+#MainView .panel-body {
+  padding: 8px;
+}
+#MainView .panel-heading {
+  padding: 8px;
+}
+#MainView .table {
+  margin-bottom: 1px;
+}
+#MainView table tr td {
+  font-size: 12px;
+}
+#MainView .task-panel table tr td {
+  font-size: 12px;
+}
+#MainView .task-panel .table tbody tr td {
+  padding-top: 2px;
+  padding-bottom: 3px;
+}
+#MainView .panel-container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#MainView .panel-col {
+  padding-left: 0px;
+  padding-right: 1px;
+}
+#MainView .teitoku-panel .col-xs-6, #MainView .teitoku-panel .col-xs-3 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#MainView .panel-body table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MainView .label {
+  font-size: 80%;
+}
+#MainView .material-icon {
+  margin-right: 5px;
+  width: 30px;
+  height: 30px;
+}

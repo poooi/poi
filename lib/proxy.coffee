@@ -97,7 +97,7 @@ class Proxy extends EventEmitter
             host: remoteUrl.hostname
             port: remoteUrl.port
           remote.on 'connect', ->
-            client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\nProxy-Agent: poi\r\n\r\n"
+            client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n"
             remote.write head
           client.on 'data', (data) ->
             remote.write data
@@ -117,7 +117,7 @@ class Proxy extends EventEmitter
             remote.pipe client
         else
           remote = net.connect remoteUrl.port, remoteUrl.hostname, ->
-            client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\nProxy-Agent: poi\r\n\r\n"
+            client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n"
             remote.write head
             client.pipe remote
             remote.pipe client

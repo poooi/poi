@@ -15,7 +15,6 @@ plugins = plugins.filter (filePath) ->
 components = components.concat plugins
 components = components.map (filePath) ->
   component = require path.join(filePath, 'index')
-  window[component.name] = component.reactClass
   component.priority = 10000 unless component.priority?
   component
 components = _.sortBy(components, 'priority')
@@ -29,8 +28,8 @@ ControlledTabArea = React.createClass
     <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
       {
         components.map (component, index) ->
-          <TabPane key={index} eventKey={index} tab={component.displayName}>
-            {React.createElement(window[component.name])}
+          <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name}>
+            {React.createElement(component.reactClass)}
           </TabPane>
       }
     </TabbedArea>
@@ -56,5 +55,5 @@ React.render <ControlledTabArea />, $('poi-nav-tabs')
 proxy.addListener 'game.request', (method, path) ->
   log "正在请求 #{method} #{path}"
 proxy.addListener 'game.response', (method, path, body, postBody) ->
-  #console.log [path, body, postBody]
+  console.log [path, body, postBody]
   success "获得数据 #{method} #{path}"
