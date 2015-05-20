@@ -20,10 +20,16 @@
       "port": 8118
     },
     "shadowsocks": {
-      "host": "106.186.30.188",
-      "port": 12450,
+      "server": {
+        "host": "106.186.30.188",
+        "port": 12450
+      },
+      "local": {
+        "port": 12451
+      },
       "password": "__PoiSocks__",
-      "method": "aes-256-cfb"
+      "method": "aes-256-cfb",
+      "timeout": 600000
     }
   }
 }
