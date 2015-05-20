@@ -75,7 +75,7 @@ TeitokuPanel = React.createClass
                   value = '??'
                   if @state?.material[i]?.api_value?
                     value = @state.material[i].api_value
-                  <Col xs={3}>
+                  <Col key={i} xs={3}>
                     <img src={src} className="material-icon" />
                     <span className="material-value">{value}</span>
                   </Col>
@@ -88,7 +88,7 @@ TeitokuPanel = React.createClass
                   value = '??'
                   if @state?.material[i]?.api_value?
                     value = @state.material[i].api_value
-                  <Col xs={3}>
+                  <Col key={i} xs={3}>
                     <img src={src} className="material-icon" />
                     <span className="material-value">{value}</span>
                   </Col>
@@ -105,7 +105,7 @@ TeitokuPanel = React.createClass
                   value = @state.material[i].api_value
                 style =
                   width: '12.5%'
-                <Col xs={3} style={style}>
+                <Col key={i} xs={3} style={style}>
                   <img src={src} className="material-icon" />
                   <span className="material-value">{value}</span>
                 </Col>

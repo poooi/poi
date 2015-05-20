@@ -70,7 +70,7 @@ NdockPanel = React.createClass
         <tbody>
         {
           for i in [1..4]
-            <tr>
+            <tr key={i}>
               <td>{@state.docks[i].name}</td>
               <td>{resolveTime @state.docks[i].countdown}</td>
             </tr>

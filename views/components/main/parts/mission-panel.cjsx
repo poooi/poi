@@ -78,7 +78,7 @@ MissionPanel = React.createClass
         <tbody>
         {
           for i in [1..4]
-            <tr>
+            <tr key={i}>
               <td>{@state.decks[i]?.name}</td>
               <td>{resolveTime @state.decks[i].countdown}</td>
             </tr>

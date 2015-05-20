@@ -119,7 +119,7 @@ TaskPanel = React.createClass
         <tbody>
         {
           for i in [0..5]
-            <tr>
+            <tr key={i}>
               <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
                 <td>{@state.tasks[i].name}</td>
               </OverlayTrigger>
