@@ -1,6 +1,8 @@
 Promise = require 'bluebird'
 async = Promise.coroutine
 colors = require 'colors'
+fs = require 'fs-extra'
+path = require 'path-extra'
 zlib = Promise.promisifyAll require 'zlib'
 
 stringify = (str) ->
@@ -39,3 +41,43 @@ module.exports =
         resolve decoded
       catch e
         reject e
+  isStaticResource: (pathname) ->
+    return pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1 && pathname.indexOf('mainD2.swf') == -1
+  findHack: (pathname) ->
+    loc = path.join(global.ROOT, 'cache', pathname)
+    sp = loc.split '.'
+    ext = sp.pop()
+    sp.push 'hack'
+    sp.push ext
+    loc = sp.join '.'
+    try
+      fs.accessSync loc, fs.R_OK
+      return loc
+    catch
+      return null
+  findHackExecPath: (pathname) ->
+    loc = path.join(global.EXECROOT, 'cache', pathname)
+    sp = loc.split '.'
+    ext = sp.pop()
+    sp.push 'hack'
+    sp.push ext
+    loc = sp.join '.'
+    try
+      fs.accessSync loc, fs.R_OK
+      return loc
+    catch
+      return null
+  findCache: (pathname) ->
+    loc = path.join(global.ROOT, 'cache', pathname)
+    try
+      fs.accessSync loc, fs.R_OK
+      return loc
+    catch
+      return null
+  findCacheExecPath: (pathname) ->
+    loc = path.join(global.EXECROOT, 'cache', pathname)
+    try
+      fs.accessSync loc, fs.R_OK
+      return loc
+    catch
+      return null

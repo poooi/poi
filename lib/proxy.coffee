@@ -7,14 +7,16 @@ http = require 'http'
 querystring = require 'querystring'
 _ = require 'underscore'
 caseNormalizer = require 'header-case-normalizer'
+fs = Promise.promisifyAll require 'fs-extra'
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
 shadowsocks = require 'shadowsocks'
+mime = require 'mime'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 
 config = require './config'
-{log, warn, error, resolveBody} = require './utils'
+{log, warn, error, resolveBody, isStaticResource, findHack, findHackExecPath, findCache, findCacheExecPath} = require './utils'
 
 # Network error retries
 retries = config.get 'poi.proxy.retries', 30
@@ -69,6 +71,9 @@ class Proxy extends EventEmitter
       req.headers['connection'] = 'close'
       parsed = url.parse req.url
       isGameApi = parsed.pathname.startsWith '/kcsapi'
+      cacheFile = null
+      if isStaticResource(parsed.pathname)
+        cacheFile = findHack(parsed.pathname) || findHackExecPath(parsed.pathname) || findCache(parsed.pathname) || findCacheExecPath(parsed.pathname)
       reqBody = new Buffer(0)
       # Get all request body
       req.on 'data', (data) ->
@@ -85,8 +90,17 @@ class Proxy extends EventEmitter
           if reqBody.length > 0
             options = _.extend options,
               body: reqBody
+          # Use cache file
+          if cacheFile
+            data = yield fs.readFileAsync cacheFile
+            res.writeHead 200,
+              'Server': 'Apache'
+              'Content-Length': data.length
+              'Cache-Control': 'max-age=2592000, public'
+              'Content-Type': mime.lookup cacheFile
+            res.end data
           # Enable retry for game api
-          if isGameApi
+          else if isGameApi
             success = false
             for i in [0..retries]
               break if success

@@ -1,10 +1,11 @@
 app = require 'app'
 BrowserWindow = require 'browser-window'
+path = require 'path'
 
 # Environment
 global.ROOT = __dirname
+global.EXECROOT = path.join(process.execPath, '..')
 
-path = require 'path'
 config = require './lib/config'
 proxy = require './lib/proxy'
 {log, warn, error} = require './lib/utils'
