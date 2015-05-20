@@ -1,0 +1,29 @@
+{
+  "poi": {
+    "theme": "darkly",
+    "layout": "vertical",
+    "window": {
+      "x": 100,
+      "y": 100,
+      "width": 701,
+      "height": 721
+    }
+  },
+  "proxy": {
+    "use": "shadowsocks",
+    "socks5": {
+      "host": "127.0.0.1",
+      "port": 1080
+    },
+    "http": {
+      "host": "127.0.0.1",
+      "port": 8118
+    },
+    "shadowsocks": {
+      "host": "106.186.30.188",
+      "port": 12450,
+      "password": "__PoiSocks__",
+      "method": "aes-256-cfb"
+    }
+  }
+}
