@@ -9,8 +9,10 @@ _ = require 'underscore'
 caseNormalizer = require 'header-case-normalizer'
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
+shadowsocks = require 'shadowsocks'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
+
 config = require './config'
 {log, warn, error, resolveBody} = require './utils'
 
@@ -19,33 +21,56 @@ retries = config.get 'poi.proxy.retries', 30
 
 resolve = (req) ->
   switch config.get 'proxy.use'
+    # HTTP Request via SOCKS5 proxy
     when 'socks5'
       return _.extend req,
         agentClass: SocksHttpAgent
         agentOptions:
           socksHost: config.get 'proxy.socks5.host', '127.0.0.1'
           socksPort: config.get 'proxy.socks5.port', 1080
+    # HTTP Request via Shadowsocks
+    when 'shadowsocks'
+      return _.extend req,
+        agentClass: SocksHttpAgent
+        agentOptions:
+          socksHost: '127.0.0.1'
+          socksPort: config.get 'proxy.shadowsocks.local.port', 1080
+    # HTTP Request via HTTP proxy
     when 'http'
       host = config.get 'proxy.http.host', '127.0.0.1'
       port = config.get 'proxy.http.port', 8118
       return _.extend req,
         proxy: "http://#{host}:#{port}"
+    # Directly
     else
       return req
 
 class Proxy extends EventEmitter
   constructor: ->
     super()
+    @startShadowsocks()
     @load()
+  # Start Shadowsocks local server
+  startShadowsocks: ->
+    return unless config.get('proxy.use') == 'shadowsocks'
+    host = config.get 'proxy.shadowsocks.server.host', '127.0.0.1'
+    port = config.get 'proxy.shadowsocks.server.port', 8388
+    local = config.get 'proxy.shadowsocks.local.port', 1080
+    password = config.get 'proxy.shadowsocks.password', 'PASSWORD'
+    method = config.get 'proxy.shadowsocks.method', 'aes-256-cfb'
+    timeout = config.get 'proxy.shadowsocks.timeout', 600000
+    @sslocal = shadowsocks.createServer host, port, local, password, method, timeout, '127.0.0.1'
   load: ->
     self = @
     # HTTP Requests
     @server = http.createServer (req, res) ->
       delete req.headers['proxy-connection']
+      # Disable HTTP Keep-Alive
       req.headers['connection'] = 'close'
       parsed = url.parse req.url
       isGameApi = parsed.pathname.startsWith '/kcsapi'
       reqBody = new Buffer(0)
+      # Get all request body
       req.on 'data', (data) ->
         reqBody = Buffer.concat [reqBody, data]
       req.on 'end', async ->
@@ -56,26 +81,32 @@ class Proxy extends EventEmitter
             headers: req.headers
             encoding: null
             followRedirect: false
+          # Add body to request
           if reqBody.length > 0
             options = _.extend options,
               body: reqBody
+          # Enable retry for game api
           if isGameApi
             success = false
             for i in [0..retries]
               break if success
               try
+                # Emit request event to plugins
+                self.emit 'game.on.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
+                # Create remote request
                 [response, body] = yield requestAsync resolve options
                 if response.statusCode == 200
                   success = true
                   res.writeHead response.statusCode, response.headers
                   res.end body
-                  self.emit 'game.on.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
+                  # Emit response events to plugins
                   resolvedBody = yield resolveBody response.headers['content-encoding'], body
                   self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
                 else
                   error "Status Code:#{response.statusCode}"
               catch e
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
+              # Delay 3s for retry
               yield Promise.delay(3000) unless success
           else
             [response, body] = yield requestAsync resolve options
@@ -86,11 +117,13 @@ class Proxy extends EventEmitter
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
       delete req.headers['proxy-connection']
+      # Disable HTTP Keep-Alive
       req.headers['connection'] = 'close'
       remoteUrl = url.parse "https://#{req.url}"
       remote = null
       switch config.get 'proxy.use'
         when 'socks5'
+          # Write data directly to SOCKS5 proxy
           remote = socks.createConnection
             socksHost: config.get 'proxy.socks5.host', '127.0.0.1'
             socksPort: config.get 'proxy.socks5.port', 1080
@@ -103,9 +136,25 @@ class Proxy extends EventEmitter
             remote.write data
           remote.on 'data', (data) ->
             client.write data
+        # Write data directly to Shadowsocks
+        when 'shadowsocks'
+          remote = socks.createConnection
+            socksHost: config.get '127.0.0.1'
+            socksPort: config.get 'proxy.shadowsocks.local.port', 1080
+            host: remoteUrl.hostname
+            port: remoteUrl.port
+          remote.on 'connect', ->
+            client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n"
+            remote.write head
+          client.on 'data', (data) ->
+            remote.write data
+          remote.on 'data', (data) ->
+            client.write data
+        # Write data directly to HTTP proxy
         when 'http'
           host = config.get 'proxy.http.host', '127.0.0.1'
           port = config.get 'proxy.http.port', 8118
+          # Write header to http proxy
           msg = "CONNECT #{remoteUrl.hostname}:#{remoteUrl.port} HTTP/#{req.httpVersion}\r\n"
           for k, v of req.headers
             msg += "#{caseNormalizer(k)}: #{v}\r\n"
@@ -115,6 +164,7 @@ class Proxy extends EventEmitter
             remote.write head
             client.pipe remote
             remote.pipe client
+        # Connect to remote directly
         else
           remote = net.connect remoteUrl.port, remoteUrl.hostname, ->
             client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n"
