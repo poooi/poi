@@ -1,10 +1,15 @@
+Promise = require 'bluebird'
 gulp = require 'gulp'
-request = require 'request'
-fs = require 'fs-extra'
+request = Promise.promisifyAll require 'request'
+requestAsync = Promise.promisify request
+fs = Promise.promisifyAll require 'fs-extra'
 path = require 'path-extra'
 colors = require 'colors'
+unzip = require 'unzip'
 
-gulp.task 'theme', ->
+async = Promise.coroutine
+
+gulp.task 'theme', async ->
   themes =
     cerulean: 'https://bootswatch.com/cerulean/bootstrap.css'
     cosmo: 'https://bootswatch.com/cosmo/bootstrap.css'
@@ -26,8 +31,23 @@ gulp.task 'theme', ->
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
     console.log "Downloding #{theme} theme.".blue
-    request.get url
-      .pipe fs.createWriteStream path.join(dir, "#{theme}.css")
+    data = yield request.getAsync url,
+      encoding: null
+    yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
+
+gulp.task 'flash', ->
+  console.log "Downloading flash plugin".blue
+  plugins =
+    win32: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/win32.zip'
+    linux: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/linux.zip'
+    darwin: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/darwin.zip'
+  url = plugins[process.platform]
+  dir = path.join(__dirname, 'PepperFlash')
+  fs.ensureDirSync dir
+  data = request.get url
+    .pipe unzip.Extract({path: dir})
+
 gulp.task 'default', [
-  'theme'
+  'theme',
+  'flash'
 ]

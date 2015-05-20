@@ -45,6 +45,7 @@
     "coffeelint": "^1.9.6",
     "gulp": "^3.8.11",
     "mocha": "^2.2.5",
-    "mocha-lcov-reporter": "0.0.2"
+    "mocha-lcov-reporter": "0.0.2",
+    "unzip": "^0.1.11"
   }
 }

@@ -29,6 +29,8 @@ node_modules
 # poi config
 /config.json
 
+/PepperFlash
+
 /components
 
 /assets/themes
