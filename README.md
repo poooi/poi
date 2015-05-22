@@ -24,6 +24,7 @@ cd poi
 npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
+mv default-config.json config.json
 /path/to/electron ./
 ```
 
