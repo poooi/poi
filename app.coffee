@@ -22,8 +22,8 @@ if process.platform == 'linux'
   app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'linux', 'libpepflashplayer.so')
   app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
 else if process.platform == 'win32'
-  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'win32', 'pepflashplayer.dll')
-  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
+  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
 else if process.platform == 'darwin'
   app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
   app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
