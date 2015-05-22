@@ -21,13 +21,13 @@
     },
     "shadowsocks": {
       "server": {
-        "host": "106.186.30.188",
+        "host": "157.7.109.137",
         "port": 12450
       },
       "local": {
         "port": 12451
       },
-      "password": "__PoiSocks__",
+      "password": "__POI__",
       "method": "aes-256-cfb",
       "timeout": 600000
     }
