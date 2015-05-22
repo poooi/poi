@@ -30,3 +30,12 @@ poi-app .container {
 table {
   table-layout: fixed;
 }
+poi-app poi-nav-tabs nav ul {
+  display: flex;
+}
+poi-app poi-nav-tabs nav ul li {
+  flex: 1;
+}
+poi-app poi-nav-tabs nav ul li a {
+  text-align: center;
+}
