@@ -1,12 +1,12 @@
 {
   "poi": {
     "theme": "darkly",
-    "layout": "vertical",
+    "layout": "horizonal",
     "window": {
-      "x": 100,
-      "y": 100,
-      "width": 701,
-      "height": 721
+      "x": 13,
+      "y": 70,
+      "width": 1243,
+      "height": 557
     }
   },
   "proxy": {
