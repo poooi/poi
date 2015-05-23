@@ -6,14 +6,19 @@
 }
 body {
   font-size: 13px;
+  -webkit-font-smoothing: antialiased;
 }
 poi-app .container {
   width: auto;
 }
 .alert {
+  border-radius: 0px;
+  font-size: 12px;
   margin-bottom: 1px;
-  padding: 8px;
+  padding: 3px;
   text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
