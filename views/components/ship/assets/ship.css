@@ -1,0 +1,18 @@
+#ShipView .btn-group {
+  display: flex;
+  width: 100%;
+}
+#ShipView .btn-group .btn {
+  flex: 1;
+}
+#ShipView .info-list .fade {
+  display: none;
+}
+#ShipView .info-list .active {
+  display: block;
+}
+#ShipView table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

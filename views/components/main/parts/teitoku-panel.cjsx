@@ -1,21 +1,38 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{config, proxy} = window
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
 
+order = if layout == 'horizonal' then [1, 3, 5, 7, 2, 4, 6, 8] else [1..8]
+
 rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
+
+getHeader = (state) ->
+  if state.nickname?
+    return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]"
+  else
+    return '提督 [尚未登录]'
+
+getStyle = (state) ->
+  if state.nickname?
+    return 'success'
+  else
+    return 'danger'
+
+getMaterialImage = (idx) ->
+  return "#{ROOT}/assets/img/material/#{idx}.png"
 
 TeitokuPanel = React.createClass
   getInitialState: ->
     level: 0
     nickname: null
     rank: 0
-    material: []
+    material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
     shipCount: '??'
     maxChara: '??'
     slotitemCount: '??'
     maxSlotitem: '??'
-  handleResponse: (method, path, body) ->
+  handleResponse: (e) ->
+    {method, path, body} = e.detail
     switch path
       when '/kcsapi/api_get_member/basic'
         @setState
@@ -25,93 +42,47 @@ TeitokuPanel = React.createClass
           maxChara: body.api_max_chara
           maxSlotitem: body.api_max_slotitem
       when '/kcsapi/api_port/port'
-        materials = []
-        materials[material.api_id] = material for material in body.api_material
+        {material} = @state
+        for e in body.api_material
+          material[e.api_id] = e.api_value
         @setState
           shipCount: window._ships.length
-          material: materials
+          material: material
       when '/kcsapi/api_get_member/slot_item'
-        ### FIXME
-        Uncaught Error: Invariant Violation: setState(...):
-        Cannot update during an existing state transition (such as within `render`).
-        Render methods should be a pure function of props and state.
-        In fact, all things are successfully updated. Maybe a React.js bug.
-        ###
         @setState
-          slotitemCount: window._slotitems.length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_get_member/material'
-        materials = []
-        materials[material.api_id] = material for material in body
+        {material} = @state
+        for e in body
+          material[e.api_id] = e.api_value
         @setState
-          material: materials
+          shipCount: window._ships.length
+          material: material
       when '/kcsapi/api_req_hokyu/charge'
         {material} = @state
         for i in [0..3]
-          material[i] = body.api_material[i]
+          material[i + 1] = body.api_material[i]
         @setState
           material: material
   componentDidMount: ->
-    proxy.addListener 'game.response', @handleResponse
+    window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
-    proxy.removeListener 'game.response', @handleResponse
+    window.removeEventListener 'game.response', @handleResponse
   render: ->
-    header = '提督 [尚未登录]'
-    bsStyle = 'danger'
-    if @state.nickname
-      header = "Lv. #{@state.level} #{@state.nickname} [#{rankName[@state.rank]}]"
-      bsStyle = 'success'
-    <Panel header={header} bsStyle={bsStyle} className="teitoku-panel">
+    <Panel header={getHeader @state} bsStyle={getStyle @state} className="teitoku-panel">
       <Grid>
         <Col xs={6}>舰娘：{@state.shipCount} / {@state.maxChara}</Col>
         <Col xs={6}>装备：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
       </Grid>
+      <Grid>
       {
-        if layout == 'horizonal'
-          <div>
-            <Grid>
-              {
-                for i in [1, 3, 5, 7]
-                  src = "#{ROOT}/assets/img/material/#{i}.png"
-                  value = '??'
-                  if @state?.material[i]?.api_value?
-                    value = @state.material[i].api_value
-                  <Col key={i} xs={3}>
-                    <img src={src} className="material-icon" />
-                    <span className="material-value">{value}</span>
-                  </Col>
-              }
-            </Grid>
-            <Grid>
-              {
-                for i in [2, 4, 6, 8]
-                  src = "#{ROOT}/assets/img/material/#{i}.png"
-                  value = '??'
-                  if @state?.material[i]?.api_value?
-                    value = @state.material[i].api_value
-                  <Col key={i} xs={3}>
-                    <img src={src} className="material-icon" />
-                    <span className="material-value">{value}</span>
-                  </Col>
-              }
-            </Grid>
-          </div>
-        else
-          <Grid>
-            {
-              for i in [1..8]
-                src = "#{ROOT}/assets/img/material/#{i}.png"
-                value = '??'
-                if @state?.material[i]?.api_value?
-                  value = @state.material[i].api_value
-                style =
-                  width: '12.5%'
-                <Col key={i} xs={3} style={style}>
-                  <img src={src} className="material-icon" />
-                  <span className="material-value">{value}</span>
-                </Col>
-            }
-          </Grid>
+        for i in order
+          <Col key={i} xs={3}>
+            <img src={getMaterialImage i} className="material-icon" />
+            <span className="material-value">{@state.material[i]}</span>
+          </Col>
       }
+      </Grid>
     </Panel>
 
 module.exports = TeitokuPanel

@@ -22,7 +22,8 @@ KdockPanel = React.createClass
         countdown: -1
     ]
     notified: []
-  handleResponse: (method, path, body, postBody) ->
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
     {$ships} = window
     {docks, notified} = @state
     switch path
@@ -86,10 +87,10 @@ KdockPanel = React.createClass
       docks: docks
       notified: notified
   componentDidMount: ->
-    proxy.addListener 'game.response', @handleResponse
+    window.addEventListener 'game.response', @handleResponse
     setInterval @updateCountdown, 1000
   componentWillUnmount: ->
-    proxy.removeListener 'game.response', @handleResponse
+    window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
     <Panel header="建造" bsStyle="danger">
