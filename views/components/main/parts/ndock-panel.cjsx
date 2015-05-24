@@ -1,5 +1,4 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{config, proxy} = window
 {resolveTime} = window
 {Panel, Table} = ReactBootstrap
 
@@ -22,7 +21,8 @@ NdockPanel = React.createClass
         countdown: -1
     ]
     notified: []
-  handleResponse: (method, path, body, postBody) ->
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
     {$ships, _ships} = window
     {docks, notified} = @state
     switch path
@@ -59,10 +59,10 @@ NdockPanel = React.createClass
       docks: docks
       notified: notified
   componentDidMount: ->
-    proxy.addListener 'game.response', @handleResponse
+    window.addEventListener 'game.response', @handleResponse
     setInterval @updateCountdown, 1000
   componentWillUnmount: ->
-    proxy.removeListener 'game.response', @handleResponse
+    window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
     <Panel header="入渠" bsStyle="warning">

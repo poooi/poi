@@ -67,28 +67,23 @@ window.proxy = remote.require './lib/proxy'
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
 
-# Message Queue
-###
-requests = []
-responses = []
-emitRequest = ->
-  if requests.length > 0
-    request = requests.shift()
-    proxy.emit 'game.request', request[0], request[1], request[2]
-emitResponse = ->
-  if responses.length > 0
-    response = responses.shift()
-    proxy.emit 'game.response', response[0], response[1], response[2], response[3]
-setInterval emitRequest, 1000
-setInterval emitResponse, 1000
-###
-
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
-  #requests.push [method, path, body]
-  proxy.emit 'game.request', method, path, body
+  # Important! Clone a copy of proxy objects!
+  body = _.extend {}, body
+  event = new CustomEvent 'game.request',
+    bubbles: true
+    cancelable: true
+    detail:
+      method: method
+      path: path
+      body: body
+  window.dispatchEvent event
 
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
+  # Important! Clone a copy of proxy objects!
+  body = _.extend {}, body
+  postBody = _.extend {}, postBody
   switch path
     # Game datas prefixed by $
     when '/kcsapi/api_start2'
@@ -113,8 +108,15 @@ proxy.addListener 'game.on.response', (method, path, body, postBody) ->
       window._ships.push body.api_ship
     when '/kcsapi/api_req_kousyou/createitem'
       window._slotitems.push body.api_slot_item
-  #responses.push [method, path, body, postBody]
-  proxy.emit 'game.response', method, path, body, postBody
+  event = new CustomEvent 'game.response',
+    bubbles: true
+    cancelable: true
+    detail:
+      method: method
+      path: path
+      body: body
+      postBody: postBody
+  window.dispatchEvent event
 
 views = ['layout', 'app']
 for view in views

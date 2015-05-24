@@ -3,10 +3,10 @@
     "theme": "darkly",
     "layout": "horizonal",
     "window": {
-      "x": 13,
-      "y": 70,
-      "width": 1243,
-      "height": 557
+      "x": 240,
+      "y": 188,
+      "width": 1234,
+      "height": 560
     }
   },
   "proxy": {

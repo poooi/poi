@@ -1,5 +1,4 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{config, proxy} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 
 getStyleByProgress = (progress) ->
@@ -48,7 +47,8 @@ TaskPanel = React.createClass
         content: '...'
         progress: '-'
     ]
-  handleResponse: (method, path, body, postBody) ->
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
     {tasks} = @state
     switch path
       when '/kcsapi/api_get_member/questlist'
@@ -110,9 +110,9 @@ TaskPanel = React.createClass
       height = window.getComputedStyle($('.mission-panel .panel-body')).height
       $('.task-panel .panel-body').style.height = "#{height}"
     , 2000
-    proxy.addListener 'game.response', @handleResponse
+    window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
-    proxy.removeListener 'game.response', @handleResponse
+    window.removeEventListener 'game.response', @handleResponse
   render: ->
     <Panel header="任务" bsStyle="primary">
       <Table>
