@@ -7,18 +7,23 @@ KdockPanel = React.createClass
   getInitialState: ->
     docks: [
         name: '未使用'
+        material: []
         countdown: -1
       ,
         name: '未使用'
+        material: []
         countdown: -1
       ,
         name: '未使用'
+        material: []
         countdown: -1
       ,
         name: '未使用'
+        material: []
         countdown: -1
       ,
         name: '未使用'
+        material: []
         countdown: -1
     ]
     notified: []
@@ -34,19 +39,35 @@ KdockPanel = React.createClass
             when -1
               docks[id] =
                 name: '未解锁'
+                material: []
                 countdown: -1
             when 0
               docks[id] =
                 name: '未使用'
+                material: []
                 countdown: -1
               notified[id] = false
             when 2
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
+                material: [
+                  kdock.api_item1
+                  kdock.api_item2
+                  kdock.api_item3
+                  kdock.api_item4
+                  kdock.api_item5
+                ]
                 countdown: Math.floor((kdock.api_complete_time - new Date()) / 1000)
             when 3
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
+                material: [
+                  kdock.api_item1
+                  kdock.api_item2
+                  kdock.api_item3
+                  kdock.api_item4
+                  kdock.api_item5
+                ]
                 countdown: 0
         @setState
           docks: docks
@@ -58,19 +79,35 @@ KdockPanel = React.createClass
             when -1
               docks[id] =
                 name: '未解锁'
+                material: []
                 countdown: -1
             when 0
               docks[id] =
                 name: '未使用'
+                material: []
                 countdown: -1
               notified[id] = false
             when 2
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
+                material: [
+                  kdock.api_item1
+                  kdock.api_item2
+                  kdock.api_item3
+                  kdock.api_item4
+                  kdock.api_item5
+                ]
                 countdown: Math.floor((kdock.api_complete_time - new Date()) / 1000)
             when 3
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
+                material: [
+                  kdock.api_item1
+                  kdock.api_item2
+                  kdock.api_item3
+                  kdock.api_item4
+                  kdock.api_item5
+                ]
                 countdown: 0
         @setState
           docks: docks
