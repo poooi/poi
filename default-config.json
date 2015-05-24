@@ -1,16 +1,16 @@
 {
   "poi": {
     "theme": "darkly",
-    "layout": "vertical",
+    "layout": "horizonal",
     "window": {
-      "x": 0,
-      "y": 66,
-      "width": 1054,
-      "height": 1014
+      "x": 240,
+      "y": 188,
+      "width": 1234,
+      "height": 560
     }
   },
   "proxy": {
-    "use": "socks5",
+    "use": "shadowsocks",
     "socks5": {
       "host": "127.0.0.1",
       "port": 1080
@@ -21,13 +21,13 @@
     },
     "shadowsocks": {
       "server": {
-        "host": "157.7.109.137",
-        "port": 12450
+        "host": "43.224.34.41",
+        "port": 27017
       },
       "local": {
         "port": 12451
       },
-      "password": "__POI__",
+      "password": "@_PoiPublic_@",
       "method": "aes-256-cfb",
       "timeout": 600000
     }
