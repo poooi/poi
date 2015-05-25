@@ -3,24 +3,16 @@ path = require 'path-extra'
 {config, proxy} = window
 {TabbedArea, TabPane, Table} = ReactBootstrap
 getStyle = (state) ->
-  switch state
-    # Cond >= 40, Supplied, Repaired, In port
-    when 0
-      return 'btn-success'
-    # 20 <= Cond < 40, or not supplied, or medium damage
-    when 1
-      return 'btn-warning'
-    # Cond < 20, or heavy damage
-    when 2
-      return 'btn-danger'
-    # Repairing
-    when 3
-      return 'btn-info'
-    # In mission
-    when 4
-      return 'btn-primary'
-    else
-      return 'btn-default'
+  # 0: Cond >= 40, Supplied, Repaired, In port
+  # 1: 20 <= Cond < 40, or not supplied, or medium damage
+  # 2: Cond < 20, or heavy damage
+  # 3: Repairing
+  # 4: In mission
+  style = ['success', 'warning', 'danger', 'info', 'primary']
+  if state in [0..4]
+    return style[state]
+  else
+    return 'default'
 module.exports =
   name: 'ShipView'
   priority: 0.1
