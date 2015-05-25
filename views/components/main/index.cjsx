@@ -1,7 +1,6 @@
 path = require 'path-extra'
 {layout, ROOT, $, $$, React, ReactBootstrap} = window
 {Grid, Col} = ReactBootstrap
-{config, proxy} = window
 {TeitokuPanel, MissionPanel, NdockPanel, KdockPanel, TaskPanel} = require './parts'
 module.exports =
   name: 'MainView'

@@ -1,5 +1,4 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{config, proxy} = window
 {resolveTime} = window
 {Panel, Table} = ReactBootstrap
 
