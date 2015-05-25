@@ -23,6 +23,11 @@ window.resolveTime = (seconds) ->
   minutes = "0#{minutes}" if minutes < 10
   seconds = "0#{seconds}" if seconds < 10
   "#{hours}:#{minutes}:#{seconds}"
+Object.clone = (obj) ->
+  if obj instanceof Array
+    return _.extend [], obj
+  else if obj instanceof Object
+    return _.extend {}, obj
 window.log = (msg) ->
   event = new CustomEvent 'poi.alert',
     bubbles: true
@@ -70,7 +75,7 @@ window.layout = config.get 'poi.layout', 'horizonal'
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
   # Important! Clone a copy of proxy objects!
-  body = _.extend {}, body
+  body = Object.clone body
   event = new CustomEvent 'game.request',
     bubbles: true
     cancelable: true
@@ -82,8 +87,8 @@ proxy.addListener 'game.on.request', (method, path, body) ->
 
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   # Important! Clone a copy of proxy objects!
-  body = _.extend {}, body
-  postBody = _.extend {}, postBody
+  body = Object.clone body
+  postBody = Object.clone postBody
   switch path
     # Game datas prefixed by $
     when '/kcsapi/api_start2'
