@@ -40,5 +40,9 @@ Refer to https://github.com/yudachi/poi/issues/1
 + [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
 + [Shadowsocks](https://github.com/shadowsocks/shadowsocks)
 
+## Contributing
+
+Don't push directly to master.
+
 ## License
 [The MIT License](https://github.com/yudachi/poi/blob/master/LICENSE)
