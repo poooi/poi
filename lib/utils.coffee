@@ -14,6 +14,7 @@ stringify = (str) ->
   return str
 
 module.exports =
+  remoteStringify: JSON.stringify
   log: (str) ->
     str = stringify str
     console.log "[INFO] #{str}"

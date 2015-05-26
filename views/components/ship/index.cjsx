@@ -105,7 +105,9 @@ module.exports =
         <ButtonGroup>
         {
           for i in [0..3]
-            <Button key={i} bsSize="small" bsStyle={getStyle @state.state[i]} onClick={@handleClick.bind(this, i)}>{@state.name[i]}</Button>
+            <Button key={i} bsSize="small"
+                            bsStyle={getStyle @state.state[i]}
+                            onClick={@handleClick.bind(this, i)}>{@state.name[i]}</Button>
         }
         </ButtonGroup>
         {
@@ -128,10 +130,14 @@ module.exports =
                         <td width="25%" className="material-progress">
                           <Grid>
                             <Col xs={6}>
-                              <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100} now={ship.api_fuel / shipInfo.api_fuel_max * 100} label={"#{ship.api_fuel} / #{shipInfo.api_fuel_max}"} />
+                              <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                           now={ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                           label={"#{ship.api_fuel} / #{shipInfo.api_fuel_max}"} />
                             </Col>
                             <Col xs={6}>
-                              <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100} now={ship.api_bull / shipInfo.api_bull_max * 100} label={"#{ship.api_bull} / #{shipInfo.api_bull_max}"} />
+                              <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                           now={ship.api_bull / shipInfo.api_bull_max * 100}
+                                           label={"#{ship.api_bull} / #{shipInfo.api_bull_max}"} />
                             </Col>
                           </Grid>
                         </td>
@@ -141,7 +147,9 @@ module.exports =
                         <td>{shipInfo.api_name}</td>
                         <td>Lv. {ship.api_lv}</td>
                         <td className="hp-progress">
-                          <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
+                          <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+                                       now={ship.api_nowhp / ship.api_maxhp * 100}
+                                       label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                         </td>
                         <td>
                           <Slotitems data={ship.api_slot} />
