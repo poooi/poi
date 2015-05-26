@@ -28,7 +28,11 @@ ControlledTabArea = React.createClass
   handleSelect: (key) ->
     @setState {key}
   render: ->
-    <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+    ### FIXME
+    # Animation disabled
+    # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
+    ###
+    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
     {
       components.map (component, index) ->
         <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name}>

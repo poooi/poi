@@ -5,17 +5,13 @@ Slotitems = React.createClass
   render: ->
     <div className="slotitem-container">
       {
-        # Update global data
-        if {$slotitems, _slotitems} = window
-          null
-      }
-      {
+        {$slotitems, _slotitems} = window
         for itemId in @props.data
           continue if itemId == -1
-          item = _.find _slotitems, (e) ->
-            e.api_id == itemId
+          idx = _.sortedIndex _slotitems, {api_id: itemId}, 'api_id'
+          item = _slotitems[idx]
           itemInfo = $slotitems[item.api_slotitem_id]
-          <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{itemInfo.api_type[3]}.png")} alt={itemInfo.api_name} />
+          <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{itemInfo.api_type[3]}.png")} alt={itemInfo.api_name} title={itemInfo.api_name} />
       }
     </div>
 

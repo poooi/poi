@@ -59,18 +59,13 @@ module.exports =
       switch path
         when '/kcsapi/api_port/port'
           @setState
-            deck: body.api_deck_port
+            deck: Object.clone body.api_deck_port
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
     render: ->
       <div>
-        {
-          # Update current data
-          if {$ships, $shipTypes, _ships} = window
-            null
-        }
         <link rel="stylesheet" href={join(relative(ROOT, __dirname), 'assets', 'ship.css')} />
         <ButtonGroup>
         {
@@ -79,6 +74,7 @@ module.exports =
         }
         </ButtonGroup>
         {
+          {$ships, $shipTypes, _ships} = window
           for deck, i in @state.deck
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
               <Table>
@@ -86,8 +82,8 @@ module.exports =
                 {
                   for shipId, j in deck.api_ship
                     continue if shipId == -1
-                    ship = _.find _ships, (e) ->
-                      e.api_id == shipId
+                    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
+                    ship = _ships[idx]
                     shipInfo = $ships[ship.api_ship_id]
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [
@@ -110,7 +106,7 @@ module.exports =
                         <td>{shipInfo.api_name}</td>
                         <td>Lv. {ship.api_lv}</td>
                         <td className="hp-progress">
-                          <ProgressBar striped bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
+                          <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                         </td>
                         <td>
                           <Slotitems data={ship.api_slot} />

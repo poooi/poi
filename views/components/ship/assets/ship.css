@@ -26,10 +26,9 @@
   padding-bottom: 0px;
 }
 #ShipView .slotitem-container img {
-  width: 50px;
-  height: 50px;
-  margin-left: -14px;
-  margin-top: -14px;
+  width: 30px;
+  height: 30px;
+  margin-top: -10px;
 }
 #ShipView .hp-progress .progress {
   height: 22px;
@@ -40,12 +39,13 @@
 }
 #ShipView .hp-progress .progress {
   position: relative;
+  margin-bottom: 1px;
 }
 #ShipView .hp-progress .progress-bar span span {
   position: absolute;
   width: 100%;
   display: block;
-  color: #464545;
+  color: #6B5C5C;
 }
 #ShipView .material-progress .progress {
   margin-bottom: 1px;
@@ -59,9 +59,12 @@
   position: absolute;
   width: 100%;
   display: block;
-  color: #464545;
+  color: #6B5C5C;
 }
 #ShipView .material-progress .col-xs-6 {
   padding-left: 1px;
   padding-right: 1px;
+}
+#ShipView .table {
+  margin-bottom: 1px;
 }
