@@ -16,9 +16,9 @@ window.ReactBootstrap = require 'react-bootstrap'
 
 # Utils
 # Object.clone = require 'clone'
-# Object.clone = (obj) ->
-#   JSON.parse JSON.stringify obj
 Object.clone = (obj) ->
+  JSON.parse JSON.stringify obj
+Object.remoteClone = (obj) ->
   JSON.parse remoteStringify obj
 window.resolveTime = (seconds) ->
   return '' if seconds < 0
@@ -77,7 +77,7 @@ window.layout = config.get 'poi.layout', 'horizonal'
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
   # Important! Clone a copy of proxy objects!
-  body = Object.clone body
+  body = Object.remoteClone body
   event = new CustomEvent 'game.request',
     bubbles: true
     cancelable: true
@@ -96,8 +96,10 @@ resolveResponses = ->
     # Important! Clone a copy of proxy objects!
     ### Clone Benchmark
     start = new Date().getTime()
-    body = Object.clone body
-    postBody = Object.clone postBody
+    ###
+    body = Object.remoteClone body
+    postBody = Object.remoteClone postBody
+    ###
     end = new Date().getTime()
     console.log "Clone time: #{end - start}"
     ###
