@@ -1,7 +1,7 @@
 {relative, join} = require 'path-extra'
 {_, $, $$, React, ReactBootstrap, ROOT} = window
 {$ships, $shipTypes, _ships} = window
-{Button, ButtonGroup, Table, ProgressBar, Grid, Col} = ReactBootstrap
+{Button, ButtonGroup, Table, ProgressBar, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
 getStyle = (state) ->
   if state in [0..4]
@@ -64,6 +64,53 @@ getDeckState = (deck, ndocks) ->
     if shipId in ndocks
       state = Math.max(state, 3)
   return state
+getDeckMessage = (deck) ->
+  {$ships, $slotitems, _ships} = window
+  totalLv = totalShip = totalTyku = totalSaku = 0
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
+    ship = _ships[idx]
+    shipInfo = $ships[ship.api_ship_id]
+    totalLv += ship.api_lv
+    totalShip += 1
+    totalSaku += Math.sqrt(ship.api_sakuteki[0]) * 1.69
+    for itemId, slotId in ship.api_slot
+      continue if itemId == -1
+      idx = _.sortedIndex _slotitems, {api_id: itemId}, 'api_id'
+      item = _slotitems[idx]
+      itemInfo = $slotitems[item.api_slotitem_id]
+      # Airplane Tyku
+      if itemInfo.api_type[3] in [6, 7, 8, 10]
+        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
+      # Saku
+      # 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
+      #            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
+      #            + √(各艦毎の素索敵) × (1.69) + (司令部レベルを5の倍数に切り上げ) × (-0.61)
+      switch itemInfo.api_type[3]
+        when 7
+          totalSaku += itemInfo.api_saku * 1.04
+        when 8
+          totalSaku += itemInfo.api_saku * 1.37
+        when 9
+          totalSaku += itemInfo.api_saku * 1.66
+        when 10
+          if itemInfo.api_type[2] == 10
+            totalSaku += itemInfo.api_saku * 2.00
+          else if itemInfo.api_type[2] == 11
+            totalSaku += itemInfo.api_saku * 1.78
+        when 11
+          if itemInfo.api_type[2] == 12
+            totalSaku += itemInfo.api_saku * 1.00
+          else if itemInfo.api_type[2] == 13
+            totalSaku += itemInfo.api_saku * 0.99
+        when 24
+          totalSaku += itemInfo.api_saku * 0.91
+  totalSaku -= 0.61 * window._teitokuLv
+  totalSaku = Math.max(0, totalSaku)
+  avgLv = totalLv / totalShip
+  [totalLv, parseFloat(avgLv.toFixed(2)), totalTyku, parseFloat(totalSaku.toFixed(2))]
+
 module.exports =
   name: 'ShipView'
   priority: 0.1
@@ -73,6 +120,7 @@ module.exports =
     getInitialState: ->
       name: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
       state: [-1, -1, -1, -1]
+      message: ['没有舰队信息', '没有舰队信息', '没有舰队信息', '没有舰队信息']
       deck: []
       ndock: []
       activeDeck: 0
@@ -90,11 +138,14 @@ module.exports =
           decks = Object.clone body.api_deck_port
           states = decks.map (deck) ->
             getDeckState deck, ndocks
+          messages = decks.map (deck) ->
+            getDeckMessage deck
           @setState
             name: names
             state: states
             deck: decks
             ndock: ndocks
+            message: messages
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
     componentWillUnmount: ->
@@ -114,6 +165,22 @@ module.exports =
           {$ships, $shipTypes, _ships} = window
           for deck, i in @state.deck
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
+              <Alert bsStyle={getStyle @state.state[i]}>
+                <Grid>
+                  <Col xs={2} xsOffset={2}>
+                    总计 Lv.{@state.message[i][0]}
+                  </Col>
+                  <Col xs={2}>
+                    平均 Lv.{@state.message[i][1]}
+                  </Col>
+                  <Col xs={2}>
+                    制空值：{@state.message[i][2]}
+                  </Col>
+                  <Col xs={2}>
+                    索敌值：{@state.message[i][3]}
+                  </Col>
+                </Grid>
+              </Alert>
               <Table>
                 <tbody>
                 {

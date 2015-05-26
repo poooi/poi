@@ -35,7 +35,7 @@ ControlledTabArea = React.createClass
     <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
     {
       components.map (component, index) ->
-        <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name}>
+        <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
         {
           React.createElement(component.reactClass)
         }

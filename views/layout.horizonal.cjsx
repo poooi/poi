@@ -9,6 +9,8 @@ adjustSize = ->
   webview = $('kan-game webview')
   url = webview.getUrl()
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
+  [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
+    e.style.overflowX = "scroll"
   factor = Math.ceil(window.innerWidth / 7.0 * 5.0 / 800.0 * 100) / 100.0
   webview.executeJavaScript """
     var iframe = document.querySelector('#game_frame').contentWindow.document;

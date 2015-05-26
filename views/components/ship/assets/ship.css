@@ -24,8 +24,6 @@
 }
 #ShipView table tr td {
   padding-bottom: 0px;
-  padding-left: 4px;
-  padding-right: 4px;
 }
 #ShipView .slotitem-container img {
   width: 30px;
@@ -72,4 +70,9 @@
 }
 #ShipView .table {
   margin-bottom: 1px;
+}
+#ShipView .alert-primary {
+  background-color: #375a7f;
+  border-color: #375a7f;
+  color: #ffffff;
 }

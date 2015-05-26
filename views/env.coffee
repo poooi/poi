@@ -119,6 +119,8 @@ resolveResponses = ->
         window.$missions = []
         window.$missions[mission.api_id] = mission for mission in body.api_mst_mission
       # User datas prefixed by _
+      when '/kcsapi/api_get_member/basic'
+        window._teitokuLv = body.api_level
       when '/kcsapi/api_port/port'
         window._ships = body.api_ship
       when '/kcsapi/api_get_member/slot_item'
