@@ -14,18 +14,18 @@ getStyle = (state) ->
   else
     return 'default'
 getHpStyle = (percent) ->
-  if percent < 25
+  if percent <= 25
     'danger'
-  else if percent < 50
+  else if percent <= 50
     'warning'
-  else if percent < 75
+  else if percent <= 75
     'info'
   else
     'success'
 getMaterialStyle = (percent) ->
-  if percent < 50
+  if percent <= 50
     'danger'
-  else if percent < 75
+  else if percent <= 75
     'warning'
   else if percent < 100
     'info'
@@ -40,6 +40,30 @@ getCondStyle = (cond) ->
     color: '#F37B1D'
   else
     null
+getDeckState = (deck, ndocks) ->
+  state = 0
+  {$ships, _ships} = window
+  # In mission
+  if deck.api_mission[0] > 0
+    state = Math.max(state, 4)
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
+    ship = _ships[idx]
+    shipInfo = $ships[ship.api_ship_id]
+    # Cond < 20 or medium damage
+    if ship.api_cond < 20 || ship.api_nowhp / ship.api_maxhp < 0.25
+      state = Math.max(state, 2)
+    # Cond < 40 or heavy damage
+    else if ship.api_cond < 40 || ship.api_nowhp / ship.api_maxhp < 0.5
+      state = Math.max(state, 1)
+    # Not supplied
+    if ship.api_fuel / shipInfo.api_fuel_max < 0.99 || ship.api_bull / shipInfo.api_bull_max < 0.99
+      state = Math.max(state, 1)
+    # Repairing
+    if shipId in ndocks
+      state = Math.max(state, 3)
+  return state
 module.exports =
   name: 'ShipView'
   priority: 0.1
@@ -50,6 +74,7 @@ module.exports =
       name: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
       state: [-1, -1, -1, -1]
       deck: []
+      ndock: []
       activeDeck: 0
     handleClick: (idx) ->
       @setState
@@ -58,8 +83,18 @@ module.exports =
       {method, path, body, postBody} = e.detail
       switch path
         when '/kcsapi/api_port/port'
+          names = body.api_deck_port.map (e) ->
+            e.api_name
+          ndocks = body.api_ndock.map (e) ->
+            e.api_ship_id
+          decks = Object.clone body.api_deck_port
+          states = decks.map (deck) ->
+            getDeckState deck, ndocks
           @setState
-            deck: Object.clone body.api_deck_port
+            name: names
+            state: states
+            deck: decks
+            ndock: ndocks
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
     componentWillUnmount: ->
@@ -88,9 +123,9 @@ module.exports =
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [
                       <tr key={j * 2}>
-                        <td>{shipType}</td>
-                        <td>Next. {ship.api_exp[1]}</td>
-                        <td className="material-progress">
+                        <td width="20%">{shipType}</td>
+                        <td width="22%">Next. {ship.api_exp[1]}</td>
+                        <td width="25%" className="material-progress">
                           <Grid>
                             <Col xs={6}>
                               <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100} now={ship.api_fuel / shipInfo.api_fuel_max * 100} label={"#{ship.api_fuel} / #{shipInfo.api_fuel_max}"} />
@@ -100,7 +135,7 @@ module.exports =
                             </Col>
                           </Grid>
                         </td>
-                        <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
+                        <td width="33%" style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
                       </tr>
                       <tr key={j * 2 + 1}>
                         <td>{shipInfo.api_name}</td>

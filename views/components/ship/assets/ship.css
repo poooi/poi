@@ -24,11 +24,16 @@
 }
 #ShipView table tr td {
   padding-bottom: 0px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 #ShipView .slotitem-container img {
   width: 30px;
   height: 30px;
   margin-top: -10px;
+}
+#ShipView .progress {
+  border-radius: 0px;
 }
 #ShipView .hp-progress .progress {
   height: 22px;
