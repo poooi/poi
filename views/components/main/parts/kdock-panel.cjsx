@@ -1,6 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime} = window
-{Panel, Table} = ReactBootstrap
+{Panel, Table, OverlayTrigger, Tooltip} = ReactBootstrap
 
 KdockPanel = React.createClass
   getInitialState: ->
@@ -135,7 +135,15 @@ KdockPanel = React.createClass
         {
           for i in [1..4]
             <tr key={i}>
-              <td>{@state.docks[i].name}</td>
+              <OverlayTrigger placement='left' overlay={
+                  <Tooltip>
+                    油 {@state.docks[i].material[0]} 弹 {@state.docks[i].material[1]}<br />
+                    钢 {@state.docks[i].material[2]} 铝 {@state.docks[i].material[3]}<br />
+                    资材 {@state.docks[i].material[4]}
+                  </Tooltip>
+                }>
+                <td>{@state.docks[i].name}</td>
+              </OverlayTrigger>
               <td>{resolveTime @state.docks[i].countdown}</td>
             </tr>
         }
