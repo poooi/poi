@@ -67,7 +67,7 @@ window.notify = (msg) ->
     icon: "file://#{ROOT}/assets/icons/icon.png"
     body: msg
 window.toggleModal = (title, content) ->
-  event = new CustomEvent 'poi.alert',
+  event = new CustomEvent 'poi.modal',
     bubbles: true
     cancelable: true
     detail:

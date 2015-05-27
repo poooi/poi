@@ -54,11 +54,10 @@ PoiConfig = React.createClass
           <Col xs={12}>
             <Input type="select" ref="theme" value={@state.theme} onChange={@handleSetTheme}>
               {
-                themes.map (theme) ->
-                  <option value={theme}>{theme[0].toUpperCase() + theme.slice(1)}</option>
-
+                themes.map (theme, index) ->
+                  <option key={index} value={theme}>{theme[0].toUpperCase() + theme.slice(1)}</option>
               }
-              <option value="__default__">Default</option>
+              <option key={-1} value="__default__">Default</option>
             </Input>
           </Col>
         </Grid>
