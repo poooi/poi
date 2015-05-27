@@ -1,0 +1,3 @@
+[submodule "plugins/exp-cal"]
+	path = plugins/exp-cal
+	url = https://github.com/yudachi/plugin-exp-calculator.git
