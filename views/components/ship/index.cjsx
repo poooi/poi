@@ -1,5 +1,5 @@
 {relative, join} = require 'path-extra'
-{_, $, $$, React, ReactBootstrap, ROOT} = window
+{_, $, $$, React, ReactBootstrap, ROOT, resolveTime} = window
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup, Table, ProgressBar, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
@@ -63,7 +63,7 @@ getDeckState = (deck, ndocks) ->
     # Repairing
     if shipId in ndocks
       state = Math.max(state, 3)
-  return state
+  state
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
   totalLv = totalShip = totalTyku = totalSaku = 0
@@ -106,11 +106,20 @@ getDeckMessage = (deck) ->
             totalSaku += itemInfo.api_saku * 0.99
         when 24
           totalSaku += itemInfo.api_saku * 0.91
-  totalSaku -= 0.61 * window._teitokuLv
+  totalSaku -= 0.61 * Math.floor(window._teitokuLv / 5) * 5
   totalSaku = Math.max(0, totalSaku)
   avgLv = totalLv / totalShip
   [totalLv, parseFloat(avgLv.toFixed(2)), totalTyku, parseFloat(totalSaku.toFixed(2))]
-
+getCondCountdown = (deck) ->
+  {$ships, $slotitems, _ships} = window
+  countdown = 0
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
+    ship = _ships[idx]
+    if ship.api_cond < 49
+      countdown = Math.max(countdown, Math.ceil((49 - ship.api_cond) / 3) * 180)
+  countdown
 module.exports =
   name: 'ShipView'
   priority: 0.1
@@ -121,6 +130,7 @@ module.exports =
       name: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
       state: [-1, -1, -1, -1]
       message: ['没有舰队信息', '没有舰队信息', '没有舰队信息', '没有舰队信息']
+      countdown: [0, 0, 0, 0]
       deck: []
       ndock: []
       activeDeck: 0
@@ -140,16 +150,27 @@ module.exports =
             getDeckState deck, ndocks
           messages = decks.map (deck) ->
             getDeckMessage deck
+          countdown = decks.map (deck) ->
+            getCondCountdown deck
           @setState
             name: names
             state: states
             deck: decks
             ndock: ndocks
             message: messages
+            countdown: countdown
+    updateCountdown: ->
+      {countdown} = @state
+      for i in [0..3]
+        countdown[i] -= 1 if countdown[i] > 0
+      @setState
+        countdown: countdown
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
+      setInterval @updateCountdown, 1000
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
+      clearInterval @updateCountdown, 1000
     render: ->
       <div>
         <link rel="stylesheet" href={join(relative(ROOT, __dirname), 'assets', 'ship.css')} />
@@ -167,7 +188,7 @@ module.exports =
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
               <Alert bsStyle={getStyle @state.state[i]}>
                 <Grid>
-                  <Col xs={2} xsOffset={2}>
+                  <Col xs={2} xsOffset={1}>
                     总计 Lv.{@state.message[i][0]}
                   </Col>
                   <Col xs={2}>
@@ -178,6 +199,9 @@ module.exports =
                   </Col>
                   <Col xs={2}>
                     索敌值：{@state.message[i][3]}
+                  </Col>
+                  <Col xs={2}>
+                    Cond 回复：{resolveTime @state.countdown[i]}
                   </Col>
                 </Grid>
               </Alert>
