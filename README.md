@@ -16,7 +16,7 @@ Scalable KanColle browser and tool.
 
 ## Run
 
-First, get [Electron](https://github.com/atom/electron) v0.26.1 and [io.js](https://iojs.org).
+First, get [Electron](https://github.com/atom/electron) *v0.26.1* and [io.js](https://iojs.org).
 
 ```bash
 git clone https://github.com/yudachi/poi
@@ -24,7 +24,7 @@ cd poi
 npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
-mv default-config.json config.json
+cp default-config.json config.json
 /path/to/electron ./
 ```
 
