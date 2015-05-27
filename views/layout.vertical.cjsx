@@ -1,7 +1,8 @@
 {$, $$} = window
 
 # Initial
-$('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
+# $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
+$('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 
 # Layout
 adjustSize = ->
@@ -23,9 +24,8 @@ adjustSize = ->
     window.scrollTo(Math.ceil(x * #{factor + 0.002}), Math.ceil(y * #{factor + 0.002}));
     document.documentElement.style.overflow = 'hidden';
   """
-
-# Hack CSS and Fix font family
-$('kan-game webview').addEventListener 'page-title-set', (e) ->
+adjustSize()
+handleTitleSet = ->
   @insertCSS """
     * {
       font-family: Ubuntu, "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
@@ -35,8 +35,20 @@ $('kan-game webview').addEventListener 'page-title-set', (e) ->
     }
   """
   adjustSize()
+# Hack CSS and Fix font family
+$('kan-game webview').addEventListener 'page-title-set', handleTitleSet
+
 # Adjust elements layout
-window.addEventListener 'resize', (e) ->
-  adjustSize()
+window.addEventListener 'resize', adjustSize
+
+timeout = null
 $('kan-game webview').addEventListener 'did-finish-load', (e) ->
-  setTimeout adjustSize, 1000
+  timeout = setTimeout adjustSize, 1000
+
+module.exports =
+  unload: ->
+    [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
+      e.style.overflowY = "hidden"
+    window.removeEventListener 'resize', adjustSize
+    $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
+    clearTimeout timeout

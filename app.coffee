@@ -10,7 +10,7 @@ config = require './lib/config'
 proxy = require './lib/proxy'
 {log, warn, error} = require './lib/utils'
 
-mainWindow = null
+global.mainWindow = mainWindow = null
 
 # Proxy setting
 listenPort = config.get 'poi.port', 12450
@@ -34,7 +34,7 @@ app.on 'window-all-closed', ->
 app.on 'ready', ->
   screen = require 'screen'
   screenSize = screen.getPrimaryDisplay().workAreaSize
-  mainWindow = new BrowserWindow
+  global.mainWindow = mainWindow = new BrowserWindow
     x: config.get 'poi.window.x', 0
     y: config.get 'poi.window.y', 0
     width: config.get 'poi.window.width', screenSize.width

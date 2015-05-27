@@ -66,7 +66,14 @@ window.notify = (msg) ->
   new Notification 'poi',
     icon: "file://#{ROOT}/assets/icons/icon.png"
     body: msg
-
+window.toggleModal = (title, content) ->
+  event = new CustomEvent 'poi.alert',
+    bubbles: true
+    cancelable: true
+    detail:
+      title: title
+      content: content
+  window.dispatchEvent event
 # Node modules
 window.config = remote.require './lib/config'
 window.proxy = remote.require './lib/proxy'

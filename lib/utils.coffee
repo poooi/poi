@@ -82,3 +82,7 @@ module.exports =
       return loc
     catch
       return null
+  setBounds: (options) ->
+    global.mainWindow.setBounds options
+  getBounds: ->
+    global.mainWindow.getBounds()

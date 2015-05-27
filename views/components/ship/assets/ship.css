@@ -48,7 +48,6 @@
   position: absolute;
   width: 100%;
   display: block;
-  color: #6B5C5C;
 }
 #ShipView .material-progress .progress {
   margin-bottom: 1px;
@@ -62,7 +61,6 @@
   position: absolute;
   width: 100%;
   display: block;
-  color: #6B5C5C;
 }
 #ShipView .material-progress .col-xs-6 {
   padding-left: 1px;
