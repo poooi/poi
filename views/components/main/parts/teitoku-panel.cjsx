@@ -14,7 +14,7 @@ getHeader = (state) ->
 
 getStyle = (state) ->
   if state.nickname?
-    return 'success'
+    return 'primary'
   else
     return 'danger'
 

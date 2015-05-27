@@ -23,6 +23,7 @@
   "homepage": "https://github.com/yudachi/poi",
   "dependencies": {
     "bluebird": "^2.9.25",
+    "clone": "^1.0.2",
     "coffee-react": "^3.2.0",
     "coffee-script": "^1.9.2",
     "colors": "^1.1.0",

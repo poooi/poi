@@ -44,3 +44,15 @@ poi-app poi-nav-tabs nav ul li {
 poi-app poi-nav-tabs nav ul li a {
   text-align: center;
 }
+.table tbody tr td {
+  padding: 8px;
+}
+.btn:focus {
+  outline: none;
+}
+.btn:active {
+  outline: none;
+}
+.btn:hover {
+  outline: none;
+}
