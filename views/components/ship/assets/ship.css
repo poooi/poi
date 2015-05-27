@@ -24,6 +24,7 @@
 }
 #ShipView table tr td {
   padding-bottom: 0px;
+  border: none;
 }
 #ShipView .slotitem-container img {
   width: 30px;
