@@ -5,9 +5,7 @@
 ShipInfoArea = React.createClass 
 	render: ->
 		<div>
-		{
-			React.createElement(ShipInfoTableArea.reactClass)
-		}
+			<ShipInfoTableArea />
 		</div>
 
 React.render <ShipInfoArea />, $('ship-info')

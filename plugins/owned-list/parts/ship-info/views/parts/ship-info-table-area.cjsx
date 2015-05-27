@@ -1,8 +1,7 @@
 {React, ReactBootstrap} = window
-{Panel, Table} = window
+{Panel, Table} = ReactBootstrap
 
-module.exports = 
-	reactClass: React.createClass
+ShipInfoTableArea = React.createClass
 		render: ->
 			<Table striped bordered condensed hover>
 				<thead>
@@ -40,3 +39,5 @@ module.exports =
 					</tr>
 				</tbody>
 			</Table>
+
+module.exports = ShipInfoTableArea
