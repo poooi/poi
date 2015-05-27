@@ -16,7 +16,7 @@ Scalable KanColle browser and tool.
 
 ## Run
 
-First, get [Electron](https://github.com/atom/electron) *v0.26.1* and [io.js](https://iojs.org).
+First, get [Electron](https://github.com/atom/electron) **v0.26.1** and [io.js](https://iojs.org).
 
 ```bash
 git clone https://github.com/yudachi/poi
