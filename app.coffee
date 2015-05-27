@@ -20,7 +20,7 @@ app.commandLine.appendSwitch 'ignore-certificate-errors'
 # Pepper Flash
 if process.platform == 'linux'
   app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+  app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
 else if process.platform == 'win32'
   app.commandLine.appendSwitch 'ppapi-flash-path', path.join(__dirname, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
   app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
@@ -43,8 +43,8 @@ app.on 'ready', ->
       'web-security': false
       'plugins': true
   mainWindow.loadUrl "file://#{__dirname}/index.html"
-  mainWindow.openDevTools
-    detach: true
+  #mainWindow.openDevTools
+  #  detach: true
   mainWindow.on 'close', ->
     # Save current position and size
     bounds = mainWindow.getBounds()
