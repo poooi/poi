@@ -49,6 +49,8 @@ app.on 'ready', ->
     # Save current position and size
     bounds = mainWindow.getBounds()
     config.set 'poi.window', bounds
+    # Close all sub window
+    require('./lib/window').closeWindows()
   mainWindow.on 'closed', ->
     mainWindow = null
 
