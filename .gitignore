@@ -37,4 +37,4 @@ node_modules
 
 /cache
 
-/plugins
+/plugins/*
