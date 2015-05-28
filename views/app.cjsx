@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
-{Button, TabbedArea, TabPane, Alert} = ReactBootstrap
+{Button, TabbedArea, TabPane, Alert, OverlayMixin, Modal} = ReactBootstrap
 {config, proxy, log} = window
 
 # Get components
@@ -15,7 +15,7 @@ plugins = plugins.filter (filePath) ->
 
 components = components.concat plugins
 components = components.map (filePath) ->
-  component = require path.join(filePath, 'index')
+  component = require filePath
   component.priority = 10000 unless component.priority?
   component
 components = components.filter (component) ->
@@ -58,7 +58,41 @@ PoiAlert = React.createClass
   render: ->
     <Alert bsStyle={@state.type}>{@state.message}</Alert>
 
+ModalTrigger = React.createClass
+  mixins: [OverlayMixin]
+  getInitialState: ->
+    isModalOpen: false
+    title: null
+    content: null
+  handleToggle: ->
+    @setState
+      isModalOpen: false
+  handleModal: (e) ->
+    @setState
+      isModalOpen: true
+      title: e.detail.title
+      content: e.detail.content
+  componentDidMount: ->
+    window.addEventListener 'poi.modal', @handleModal
+  componentWillUnmount: ->
+    window.removeEventListener 'poi.modal', @handleModal
+  render: ->
+    <span />
+  renderOverlay: ->
+    if !@state.isModalOpen
+      <span />
+    else
+      <Modal title={@state.title} onRequestHide={@handleToggle}>
+        <div className='modal-body'>
+          {@state.content}
+        </div>
+        <div className='modal-footer'>
+          <Button onClick={@handleToggle}>关闭</Button>
+        </div>
+      </Modal>
+
 React.render <PoiAlert />, $('poi-alert')
+React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
 
 window.addEventListener 'game.request', (e) ->

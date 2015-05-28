@@ -1,7 +1,8 @@
 {$, $$} = window
 
 # Initial
-$('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
+# $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
+$('#layout-css').setAttribute 'href', "./assets/css/layout.horizonal.css"
 
 # Layout
 adjustSize = ->
@@ -25,9 +26,8 @@ adjustSize = ->
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
   $('kan-game').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
   $('poi-app').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
-
-# Hack CSS and Fix font family
-$('kan-game webview').addEventListener 'page-title-set', (e) ->
+adjustSize()
+handleTitleSet = ->
   @insertCSS """
     * {
       font-family: Ubuntu, "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
@@ -37,8 +37,20 @@ $('kan-game webview').addEventListener 'page-title-set', (e) ->
     }
   """
   adjustSize()
+# Hack CSS and Fix font family
+$('kan-game webview').addEventListener 'page-title-set', handleTitleSet
+
 # Adjust elements layout
-window.addEventListener 'resize', (e) ->
-  adjustSize()
+window.addEventListener 'resize', adjustSize
+
+timeout = null
 $('kan-game webview').addEventListener 'did-finish-load', (e) ->
-  setTimeout adjustSize, 1000
+  timeout = setTimeout adjustSize, 1000
+
+module.exports =
+  unload: ->
+    [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
+      e.style.overflowX = "hidden"
+    window.removeEventListener 'resize', adjustSize
+    $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
+    clearTimeout timeout

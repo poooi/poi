@@ -109,7 +109,7 @@ getDeckMessage = (deck) ->
   totalSaku -= 0.61 * Math.floor(window._teitokuLv / 5) * 5
   totalSaku = Math.max(0, totalSaku)
   avgLv = totalLv / totalShip
-  [totalLv, parseFloat(avgLv.toFixed(2)), totalTyku, parseFloat(totalSaku.toFixed(2))]
+  [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0))]
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
   countdown = 0
@@ -188,7 +188,7 @@ module.exports =
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
               <Alert bsStyle={getStyle @state.state[i]}>
                 <Grid>
-                  <Col xs={2} xsOffset={1}>
+                  <Col xs={2}>
                     总计 Lv.{@state.message[i][0]}
                   </Col>
                   <Col xs={2}>
@@ -200,8 +200,8 @@ module.exports =
                   <Col xs={2}>
                     索敌值：{@state.message[i][3]}
                   </Col>
-                  <Col xs={2}>
-                    Cond 回复：{resolveTime @state.countdown[i]}
+                  <Col xs={4}>
+                    回复：{resolveTime @state.countdown[i]}
                   </Col>
                 </Grid>
               </Alert>

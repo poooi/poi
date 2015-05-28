@@ -3,8 +3,8 @@
     "theme": "superhero",
     "layout": "horizonal",
     "window": {
-      "x": 240,
-      "y": 188,
+      "x": 60,
+      "y": 60,
       "width": 1234,
       "height": 560
     }

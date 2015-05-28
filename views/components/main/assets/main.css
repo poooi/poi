@@ -46,6 +46,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  border: none;
+  line-height: 1.42857143;
 }
 #MainView .label {
   font-size: 80%;
