@@ -10,7 +10,7 @@ plugins = plugins.filter (filePath) ->
   enabled = config.get "plugin.#{plugin.name}.enable", true
   enabled && settingsClass?
 plugins = plugins.map (filePath) ->
-  plugin = require path.join(filePath, 'index')
+  plugin = require filePath
   plugin.priority = 10000 unless plugin.priority?
   plugin
 plugins = _.sortBy(plugins, 'priority')

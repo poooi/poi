@@ -15,7 +15,7 @@ plugins = plugins.filter (filePath) ->
 
 components = components.concat plugins
 components = components.map (filePath) ->
-  component = require path.join(filePath, 'index')
+  component = require filePath
   component.priority = 10000 unless component.priority?
   component
 components = components.filter (component) ->
