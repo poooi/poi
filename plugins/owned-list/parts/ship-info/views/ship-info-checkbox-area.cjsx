@@ -1,23 +1,23 @@
 {React, ReactBootstrap, jQuery} = window
 {Panel, Button, Input, Col, Grid} = ReactBootstrap
 
-sortPanelTitle = 
+sortPanelTitle =
   <h3>排序设置</h3>
 
-filterPanelTitle = 
+filterPanelTitle =
   <h3>过滤器设置</h3>
 
 ShipInfoCheckboxArea = React.createClass
   handleClickAscend: ->
-    @props.sortRules($('#sortbase').value,1)  
-  handleClickDescend: ->
     @props.sortRules($('#sortbase').value,0)
+  handleClickDescend: ->
+    @props.sortRules($('#sortbase').value,1)
   handleClickCheckbox: ->
     checkboxes = []
     jQuery('#checkboxPanel input[type=checkbox]').each ->
       if jQuery(this).prop "checked" then checkboxes.push jQuery(this).val()
     for box,index in checkboxes
-      checkboxes[index] = parseInt(box) 
+      checkboxes[index] = parseInt(box)
     @props.filterRules(checkboxes)
 
   render: ->
@@ -78,7 +78,7 @@ ShipInfoCheckboxArea = React.createClass
             <Button bsStyle="info" onClick={@handleClickCheckbox} block>确认设置</Button>
           </Col>
         </Grid>
-      </Panel>  
+      </Panel>
     </div>
 
 module.exports = ShipInfoCheckboxArea

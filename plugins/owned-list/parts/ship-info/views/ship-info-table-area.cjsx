@@ -2,7 +2,7 @@
 {Panel, Table} = ReactBootstrap
 
 
-resultPanelTitle = 
+resultPanelTitle =
   <h3>舰娘信息</h3>
 
 Slotitems = React.createClass
@@ -52,7 +52,7 @@ ShipInfoTableArea = React.createClass
     if path is '/kcsapi/api_port/port' or path is '/kcsapi/api_req_kousyou/getship'
       rows = []
       for ship in _ships
-        row = 
+        row =
           id: ship.api_id
           type: $shipTypes[$ships[ship.api_ship_id].api_stype].api_name
           name: $ships[ship.api_ship_id].api_name
@@ -101,22 +101,23 @@ ShipInfoTableArea = React.createClass
         </thead>
         <tbody>
         {
-          if @state.show 
+          if @state.show
             $shipTypes = window.$shipTypes
-            _.sortBy @state.rows, @props.sortName
-            @state.rows.reverse() if @props.sortOrder
 
-            shipTypes = [] 
+            shipTypes = []
             if $shipTypes?
               for x in @props.shipTypeBoxes
                 shipTypes.push $shipTypes[x].api_name
 
             showRows = []
-            for row in @state.rows 
+            for row in @state.rows
               showRows.push row if row.type in shipTypes
 
+            showRows = _.sortBy showRows, @props.sortName
+            showRows.reverse() if @props.sortOrder
+
             for row, index in showRows
-              <ShipInfoTable 
+              <ShipInfoTable
                 key = {index}
                 index = {index + 1}
                 id = {row.id}
@@ -130,7 +131,7 @@ ShipInfoTableArea = React.createClass
                 soukou = {row.soukou}
                 lucky = {row.lucky}
                 sakuteki = {row.sakuteki}
-                slot = {row.slot} 
+                slot = {row.slot}
                 />
         }
         </tbody>
