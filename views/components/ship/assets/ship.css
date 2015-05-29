@@ -33,6 +33,7 @@
 }
 #ShipView .progress {
   border-radius: 0px;
+  background-color: inherit;
 }
 #ShipView .hp-progress .progress {
   height: 22px;

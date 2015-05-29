@@ -40,6 +40,9 @@ poi-app poi-nav-tabs nav ul {
 }
 poi-app poi-nav-tabs nav ul li {
   flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 poi-app poi-nav-tabs nav ul li a {
   text-align: center;
