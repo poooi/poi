@@ -41,11 +41,12 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "adm-zip": "^0.4.7",
     "bower": "^1.4.1",
     "coffeelint": "^1.9.7",
+    "del": "^1.2.0",
     "gulp": "^3.8.11",
     "mocha": "^2.2.5",
-    "mocha-lcov-reporter": "0.0.2",
-    "unzip": "^0.1.11"
+    "mocha-lcov-reporter": "0.0.2"
   }
 }

@@ -100,5 +100,5 @@ window.addEventListener 'game.request', (e) ->
   log "正在请求 #{method} #{path}"
 window.addEventListener 'game.response', (e) ->
   {method, path, body, postBody} = e.detail
-  console.log [path, body, postBody]
+  console.log [path, body, postBody] if process.env.DEBUG?
   success "获得数据 #{method} #{path}"

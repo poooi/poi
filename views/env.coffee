@@ -149,6 +149,8 @@ resolveResponses = ->
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   responses.push [method, path, body, postBody]
   resolveResponses() if !locked
+proxy.addListener 'game.start', ->
+  window.dispatchEvent new Event 'resize'
 
 views = ['layout', 'app']
 for view in views
