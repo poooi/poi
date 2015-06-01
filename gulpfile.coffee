@@ -1,3 +1,5 @@
+ELECTRON_VERSION = '0.26.1'
+
 Promise = require 'bluebird'
 gulp = require 'gulp'
 request = Promise.promisifyAll require 'request'
@@ -6,6 +8,8 @@ fs = Promise.promisifyAll require 'fs-extra'
 path = require 'path-extra'
 colors = require 'colors'
 unzip = require 'unzip'
+
+{log, warn, error} = require './lib/utils'
 
 async = Promise.coroutine
 
@@ -30,13 +34,13 @@ gulp.task 'theme', async ->
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
-    console.log "Downloding #{theme} theme.".blue
+    log "Downloding #{theme} theme."
     data = yield request.getAsync url,
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
 
 gulp.task 'flash', ->
-  console.log "Downloading flash plugin".blue
+  log 'Downloading flash plugin'
   plugins =
     win32: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/win32.zip'
     linux: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/linux.zip'
@@ -47,7 +51,18 @@ gulp.task 'flash', ->
   data = request.get url
     .pipe unzip.Extract({path: dir})
 
-gulp.task 'default', [
-  'theme',
-  'flash'
-]
+gulp.task 'electron', ->
+
+  log 'Downloding electron '
+gulp.task 'electron-all', ->
+
+
+gulp.task 'build', ['flash', 'electron'], ->
+  gulp.start 'pack'
+
+gulp.task 'build-all', ['flash-all', 'electron-all'], ->
+  gulp.start 'pack-all'
+
+gulp.task 'clean-build'
+
+gulp.task 'default', ['theme', 'flash']
