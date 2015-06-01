@@ -126,6 +126,7 @@ class Proxy extends EventEmitter
             [response, body] = yield requestAsync resolve options
             res.writeHead response.statusCode, response.headers
             res.end body
+            self.emit 'game.start' if parsed.pathname == '/kcs/mainD2.swf'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
     # HTTPS Requests

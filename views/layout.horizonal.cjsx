@@ -43,14 +43,9 @@ $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
 # Adjust elements layout
 window.addEventListener 'resize', adjustSize
 
-timeout = null
-$('kan-game webview').addEventListener 'did-finish-load', (e) ->
-  timeout = setTimeout adjustSize, 1000
-
 module.exports =
   unload: ->
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.overflowX = "hidden"
     window.removeEventListener 'resize', adjustSize
     $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
-    clearTimeout timeout
