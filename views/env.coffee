@@ -15,7 +15,6 @@ window.ReactBootstrap = require 'react-bootstrap'
 {remoteStringify} = remote.require './lib/utils'
 
 # Utils
-# Object.clone = require 'clone'
 Object.clone = (obj) ->
   JSON.parse JSON.stringify obj
 Object.remoteClone = (obj) ->
@@ -101,15 +100,8 @@ resolveResponses = ->
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
     # Important! Clone a copy of proxy objects!
-    ### Clone Benchmark
-    start = new Date().getTime()
-    ###
     body = Object.remoteClone body
     postBody = Object.remoteClone postBody
-    ###
-    end = new Date().getTime()
-    console.log "Clone time: #{end - start}"
-    ###
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
