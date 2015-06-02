@@ -4,7 +4,7 @@ remote = require 'remote'
 windowManager = remote.require './lib/window'
 
 shipInfoWindow = null
-
+itemInfoWindow = null
 initialShipInfoWindow = ->
   shipInfoWindow = windowManager.createWindow
     #Use config
@@ -15,11 +15,25 @@ initialShipInfoWindow = ->
 
   shipInfoWindow.loadUrl "file://#{__dirname}/parts/ship-info/index.html"
   shipInfoWindow.openDevTools
-    detach: true 
+    detach: true
 
 initialShipInfoWindow()
 
-module.exports = 
+initialItemInfoWindow = ->
+  itemInfoWindow = windowManager.createWindow
+    #Use config
+    x: 0
+    y: 0
+    width: 800
+    height: 600
+
+  itemInfoWindow.loadUrl "file://#{__dirname}/parts/item-info/index.html"
+  itemInfoWindow.openDevTools
+    detach: true
+
+initialItemInfoWindow()
+
+module.exports =
   name: 'OwnedList'
   priority: 50
   displayName: '详细信息'
@@ -28,9 +42,11 @@ module.exports =
 
     handleClickShipButton: ->
       shipInfoWindow.show()
+    handleClickItemButton: ->
+      itemInfoWindow.show()
 
     render: ->
       <div>
         <Button bsStyle='info' bsSize='large' block onClick={@handleClickShipButton} >舰娘信息</Button>
-        <Button bsStyle='info' bsSize='large' block >装备信息</Button> 
+        <Button bsStyle='info' bsSize='large' block onClick={@handleClickItemButton} >装备信息</Button>
       </div>
