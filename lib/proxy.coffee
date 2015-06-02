@@ -123,11 +123,7 @@ class Proxy extends EventEmitter
               # Delay 3s for retry
               yield Promise.delay(3000) unless success
           else
-            if parsed.pathname.startsWith '/kcs'
-              [response, body] = yield requestAsync resolve options
-            else
-              [response, body] = yield requestAsync _.extend (resolve options),
-                timeout: 4000
+            [response, body] = yield requestAsync resolve options
             res.writeHead response.statusCode, response.headers
             res.end body
           if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic', '/kcsapi/api_port/port']

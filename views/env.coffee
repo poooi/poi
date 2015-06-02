@@ -105,46 +105,46 @@ resolveResponses = ->
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
-        $ships = []
-        $ships[ship.api_id] = ship for ship in body.api_mst_ship
-        $shipTypes = []
-        $shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
-        $slotitems = []
-        $slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
-        $mapareas = []
-        $mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
-        $maps = []
-        $maps[map.api_id] = map for map in body.api_mst_mapinfo
-        $missions = []
-        $missions[mission.api_id] = mission for mission in body.api_mst_mission
+        window.$ships = []
+        window.$ships[ship.api_id] = ship for ship in body.api_mst_ship
+        window.$shipTypes = []
+        window.$shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
+        window.$slotitems = []
+        window.$slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
+        window.$mapareas = []
+        window.$mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
+        window.$maps = []
+        window.$maps[map.api_id] = map for map in body.api_mst_mapinfo
+        window.$missions = []
+        window.$missions[mission.api_id] = mission for mission in body.api_mst_mission
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
-        _teitokuLv = body.api_level
+        window._teitokuLv = body.api_level
       when '/kcsapi/api_req_sortie/battleresult'
-        _teitokuLv = body.api_member_lv
+        window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_port/port'
-        _ships = body.api_ship
+        window._ships = body.api_ship
       when '/kcsapi/api_get_member/slot_item'
-        _slotitems = body
+        window._slotitems = body
       when '/kcsapi/api_req_kousyou/getship'
-        _ships.push body.api_ship
+        window._ships.push body.api_ship
       when '/kcsapi/api_req_kousyou/createitem'
-        _slotitems.push body.api_slot_item if body.api_create_flag == 1
+        window._slotitems.push body.api_slot_item if body.api_create_flag == 1
       when '/kcsapi/api_req_kousyou/destroyship'
-        idx = _.sortedIndex _ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
-        _ships.splice idx, 1
+        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
+        window._ships.splice idx, 1
       when '/kcsapi/api_req_kousyou/destroyitem2'
         for itemId in postBody.api_slotitem_ids.split(',')
-          idx = _.sortedIndex _slotitems, {api_id: parseInt(itemId)}, 'api_id'
-          _slotitems.splice idx, 1
+          idx = _.sortedIndex window._slotitems, {api_id: parseInt(itemId)}, 'api_id'
+          window._slotitems.splice idx, 1
       when '/kcsapi/api_req_hokyu/charge'
         for ship in body.api_ship
-          idx = _.sortedIndex _ships, {api_id: ship.api_id}, 'api_id'
-          _ships[idx] = _.extend _ships[idx], ship
+          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
+          window._ships[idx] = _.extend window._ships[idx], ship
       when '/kcsapi/api_get_member/ship_deck'
         for ship in body.api_ship_data
-          idx = _.sortedIndex _ships, {api_id: ship.api_id}, 'api_id'
-          _ships[idx] = ship
+          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
+          window._ships[idx] = ship
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true
