@@ -41,6 +41,9 @@ TeitokuPanel = React.createClass
           rank: body.api_rank
           maxChara: body.api_max_chara
           maxSlotitem: body.api_max_slotitem
+      when '/kcsapi/api_req_sortie/battleresult'
+        @setState
+          level: window._teitokuLv
       when '/kcsapi/api_port/port'
         {material} = @state
         for e in body.api_material
@@ -50,7 +53,24 @@ TeitokuPanel = React.createClass
           material: material
       when '/kcsapi/api_get_member/slot_item'
         @setState
-          slotitemCount: Object.keys(window._slotitems).length
+          slotitemCount: window._slotitems.length
+      when '/kcsapi/api_req_kousyou/getship'
+        @setState
+          shipCount: window._ships.length
+      when '/kcsapi/api_req_kousyou/destroyitem2'
+        {material} = @state
+        for i in [0..3]
+          material[i] += body.api_get_material[i]
+        @setState
+          material: material
+          slotitemCount: window._slotitems.length
+      when '/kcsapi/api_req_kousyou/destroyship'
+        {material} = @state
+        for i in [0..3]
+          material[i] = body.api_material[i]
+        @setState
+          material: material
+          shipCount: window._ships.length
       when '/kcsapi/api_get_member/material'
         {material} = @state
         for e in body

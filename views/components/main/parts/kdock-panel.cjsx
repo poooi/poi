@@ -1,5 +1,5 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{resolveTime} = window
+{resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip} = ReactBootstrap
 
 KdockPanel = React.createClass
@@ -111,6 +111,11 @@ KdockPanel = React.createClass
         @setState
           docks: docks
           notified: notified
+      when '/kcsapi/api_req_kousyou/createitem'
+        if body.api_create_flag == 0
+          warn "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name} 开发失败"
+        else if body.api_create_flag == 1
+          success "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name} 开发成功"
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]

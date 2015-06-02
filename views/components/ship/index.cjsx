@@ -1,5 +1,5 @@
 {relative, join} = require 'path-extra'
-{_, $, $$, React, ReactBootstrap, ROOT, resolveTime} = window
+{_, $, $$, React, ReactBootstrap, ROOT, resolveTime, toggleModal} = window
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup, Table, ProgressBar, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
@@ -10,7 +10,8 @@ getStyle = (state) ->
     # 2: Cond < 20, or heavy damage
     # 3: Repairing
     # 4: In mission
-    return ['success', 'warning', 'danger', 'info', 'primary'][state]
+    # 5: In map
+    return ['success', 'warning', 'danger', 'info', 'primary', 'primary'][state]
   else
     return 'default'
 getHpStyle = (percent) ->
@@ -127,18 +128,19 @@ module.exports =
   description: '舰队展示页面，展示舰队详情信息'
   reactClass: React.createClass
     getInitialState: ->
-      name: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
-      state: [-1, -1, -1, -1]
-      message: ['没有舰队信息', '没有舰队信息', '没有舰队信息', '没有舰队信息']
+      names: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
+      states: [-1, -1, -1, -1]
+      messages: ['没有舰队信息', '没有舰队信息', '没有舰队信息', '没有舰队信息']
       countdown: [0, 0, 0, 0]
-      deck: []
-      ndock: []
+      decks: []
+      ndocks: []
       activeDeck: 0
     handleClick: (idx) ->
       @setState
         activeDeck: idx
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
+      {names, decks, ndocks} = @state
       switch path
         when '/kcsapi/api_port/port'
           names = body.api_deck_port.map (e) ->
@@ -146,19 +148,63 @@ module.exports =
           ndocks = body.api_ndock.map (e) ->
             e.api_ship_id
           decks = Object.clone body.api_deck_port
-          states = decks.map (deck) ->
-            getDeckState deck, ndocks
-          messages = decks.map (deck) ->
-            getDeckMessage deck
-          countdown = decks.map (deck) ->
-            getCondCountdown deck
-          @setState
-            name: names
-            state: states
-            deck: decks
-            ndock: ndocks
-            message: messages
-            countdown: countdown
+        when '/kcsapi/api_req_hensei/change'
+          {decks} = @state
+          deckId = parseInt(postBody.api_id) - 1
+          idx = parseInt(postBody.api_ship_idx)
+          curId = decks[deckId].api_ship[idx]
+          shipId = parseInt(postBody.api_ship_id)
+          # Empty -> One
+          if curId == -1
+            decks[deckId].api_ship[idx] = shipId
+          # One -> Empty
+          else if shipId == -1
+            for i in [idx..4]
+              decks[deckId].api_ship[i] = decks[deckId].api_ship[i + 1]
+            decks[deckId].api_ship[5] = -1
+          else
+            [x, y] = [-1, -1]
+            for deck, i in decks
+              for ship, j in deck.api_ship
+                if ship == shipId
+                  [x, y] = [i, j]
+                  break
+            decks[deckId].api_ship[idx] = shipId
+            # Exchange
+            decks[x].api_ship[y] = curId if x != -1 && y != -1
+        when '/kcsapi/api_req_hokyu/charge'
+          {decks} = @state
+        when '/kcsapi/api_get_member/ship_deck'
+          {decks} = @state
+          decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+        when '/kcsapi/api_req_map/start'
+          {states} = @state
+          deckId = parseInt(postBody.api_deck_id) - 1
+          states[deckId] = 5
+        when '/kcsapi/api_req_map/next'
+          {decks, states} = @state
+          {$ships, _ships} = window
+          for deck, i in decks
+            continue if states[i] != 5
+            for shipId in deck.api_ship
+              idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
+              ship = _ships[idx]
+              if ship.api_nowhp / ship.api_maxhp < 0.250001
+                shipInfo = $ships[ship.api_ship_id]
+                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
+      states = decks.map (deck) ->
+        getDeckState deck, ndocks
+      messages = decks.map (deck) ->
+        getDeckMessage deck
+      countdown = decks.map (deck) ->
+        getCondCountdown deck
+      @setState
+        names: names
+        decks: decks
+        ndocks: ndocks
+        states: states
+        messages: messages
+        countdown: countdown
     updateCountdown: ->
       {countdown} = @state
       for i in [0..3]
@@ -178,27 +224,27 @@ module.exports =
         {
           for i in [0..3]
             <Button key={i} bsSize="small"
-                            bsStyle={getStyle @state.state[i]}
-                            onClick={@handleClick.bind(this, i)}>{@state.name[i]}</Button>
+                            bsStyle={getStyle @state.states[i]}
+                            onClick={@handleClick.bind(this, i)}>{@state.names[i]}</Button>
         }
         </ButtonGroup>
         {
           {$ships, $shipTypes, _ships} = window
-          for deck, i in @state.deck
+          for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
-              <Alert bsStyle={getStyle @state.state[i]}>
+              <Alert bsStyle={getStyle @state.states[i]}>
                 <Grid>
                   <Col xs={2}>
-                    总计 Lv.{@state.message[i][0]}
+                    总计 Lv.{@state.messages[i][0]}
                   </Col>
                   <Col xs={2}>
-                    平均 Lv.{@state.message[i][1]}
+                    平均 Lv.{@state.messages[i][1]}
                   </Col>
                   <Col xs={2}>
-                    制空值：{@state.message[i][2]}
+                    制空值：{@state.messages[i][2]}
                   </Col>
                   <Col xs={2}>
-                    索敌值：{@state.message[i][3]}
+                    索敌值：{@state.messages[i][3]}
                   </Col>
                   <Col xs={4}>
                     回复：{resolveTime @state.countdown[i]}
