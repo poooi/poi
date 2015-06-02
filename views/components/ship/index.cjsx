@@ -3,6 +3,7 @@
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup, Table, ProgressBar, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
+inBattle = [false, false, false, false]
 getStyle = (state) ->
   if state in [0..4]
     # 0: Cond >= 40, Supplied, Repaired, In port
@@ -45,6 +46,8 @@ getDeckState = (deck, ndocks) ->
   state = 0
   {$ships, _ships} = window
   # In mission
+  if inBattle[deck.api_id - 1]
+    state = Math.max(state, 5)
   if deck.api_mission[0] > 0
     state = Math.max(state, 4)
   for shipId in deck.api_ship
@@ -148,6 +151,7 @@ module.exports =
           ndocks = body.api_ndock.map (e) ->
             e.api_ship_id
           decks = Object.clone body.api_deck_port
+          inBattle = [false, false, false, false]
         when '/kcsapi/api_req_hensei/change'
           {decks} = @state
           deckId = parseInt(postBody.api_id) - 1
@@ -178,15 +182,15 @@ module.exports =
           {decks} = @state
           decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         when '/kcsapi/api_req_map/start'
-          {states} = @state
           deckId = parseInt(postBody.api_deck_id) - 1
-          states[deckId] = 5
+          inBattle[deckId] = true
         when '/kcsapi/api_req_map/next'
           {decks, states} = @state
           {$ships, _ships} = window
           for deck, i in decks
             continue if states[i] != 5
             for shipId in deck.api_ship
+              continue if shipId == -1
               idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
               ship = _ships[idx]
               if ship.api_nowhp / ship.api_maxhp < 0.250001
