@@ -128,6 +128,8 @@ resolveResponses = ->
         window._slotitems = body
       when '/kcsapi/api_req_kousyou/getship'
         window._ships.push body.api_ship
+        for item in body.api_slotitem
+          window._slotitems.push item
       when '/kcsapi/api_req_kousyou/createitem'
         window._slotitems.push body.api_slot_item if body.api_create_flag == 1
       when '/kcsapi/api_req_kousyou/destroyship'
