@@ -47,6 +47,12 @@ poi-app poi-nav-tabs nav ul li {
 poi-app poi-nav-tabs nav ul li a {
   text-align: center;
 }
+poi-app poi-nav-tabs nav ul.dropdown-menu {
+  min-width: 100%;
+}
+poi-app poi-nav-tabs nav li.dropdown {
+  overflow: inherit;
+}
 .table tbody tr td {
   padding: 8px;
 }
