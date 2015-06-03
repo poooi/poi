@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
-{Button, TabbedArea, TabPane, Alert, OverlayMixin, Modal} = ReactBootstrap
+{Button, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton} = ReactBootstrap
 {config, proxy, log} = window
 
 # Get components
@@ -13,7 +13,6 @@ plugins = plugins.filter (filePath) ->
   plugin = require filePath
   config.get "plugin.#{plugin.name}.enable", true
 
-components = components.concat plugins
 components = components.map (filePath) ->
   component = require filePath
   component.priority = 10000 unless component.priority?
@@ -21,6 +20,14 @@ components = components.map (filePath) ->
 components = components.filter (component) ->
   component.show isnt false
 components = _.sortBy(components, 'priority')
+
+plugins = plugins.map (filePath) ->
+  plugin = require filePath
+  plugin.priority = 10000 unless plugin.priority?
+  plugin
+plugins = plugins.filter (plugin) ->
+  plugin.show isnt false
+plugins = _.sortBy(plugins, 'priority')
 
 ControlledTabArea = React.createClass
   getInitialState: ->
@@ -34,12 +41,24 @@ ControlledTabArea = React.createClass
     ###
     <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
     {
-      components.map (component, index) ->
-        <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
+      [
+        components.map (component, index) ->
+          <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
+          {
+            React.createElement(component.reactClass)
+          }
+          </TabPane>
+        <DropdownButton key={components.length} eventKey={components.length} tab='插件' navItem={true}>
         {
-          React.createElement(component.reactClass)
+          plugins.map (plugin, index) ->
+            <TabPane key={components.length + 1 + index} eventKey={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+            {
+              React.createElement(plugin.reactClass)
+            }
+            </TabPane>
         }
-        </TabPane>
+        </DropdownButton>
+      ]
     }
     </TabbedArea>
 
