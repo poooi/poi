@@ -9,16 +9,19 @@ ShipInfoCheckboxArea = React.createClass
     checked: [false, false, true, true, true, true, true, true, true, true, true, true,
               true, true, true, true, true, true, true, true, true, true, true, true]
     order: 0
+    sortKey: 'id'
   handleClickAscend: ->
     @setState
       order: 0
-    @props.sortRules($('#sortbase').value, 0)
+    @props.sortRules(@state.sortKey, @state.order)
   handleClickDescend: ->
     @setState
       order: 1
-    @props.sortRules($('#sortbase').value, 1)
+    @props.sortRules(@state.sortKey, @state.order)
   handleKeyChange: (e) ->
-    @props.sortRules(e.target.value, 1)
+    @setState
+      sortKey: e.target.value
+    @props.sortRules(@state.sortKey, @state.order)
   handleClickCheckbox: (index) ->
     checkboxes = []
     {checked} = @state
