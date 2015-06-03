@@ -5,14 +5,14 @@
 {Slotitems} = require './parts'
 inBattle = [false, false, false, false]
 getStyle = (state) ->
-  if state in [0..4]
+  if state in [0..5]
     # 0: Cond >= 40, Supplied, Repaired, In port
     # 1: 20 <= Cond < 40, or not supplied, or medium damage
     # 2: Cond < 20, or heavy damage
     # 3: Repairing
     # 4: In mission
     # 5: In map
-    return ['success', 'warning', 'danger', 'info', 'primary', 'primary'][state]
+    return ['success', 'warning', 'danger', 'info', 'primary', 'default'][state]
   else
     return 'default'
 getHpStyle = (percent) ->
@@ -144,6 +144,7 @@ module.exports =
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {names, decks, ndocks} = @state
+      flag = true
       switch path
         when '/kcsapi/api_port/port'
           names = body.api_deck_port.map (e) ->
@@ -178,6 +179,9 @@ module.exports =
             decks[x].api_ship[y] = curId if x != -1 && y != -1
         when '/kcsapi/api_req_hokyu/charge'
           {decks} = @state
+        when '/kcsapi/api_get_member/deck'
+          {decks} = @state
+          decks[deck.api_id - 1] = deck for deck in body
         when '/kcsapi/api_get_member/ship_deck'
           {decks} = @state
           decks[deck.api_id - 1] = deck for deck in body.api_deck_data
@@ -199,6 +203,9 @@ module.exports =
               if ship.api_nowhp / ship.api_maxhp < 0.250001
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
+        else
+          flag = false
+      return unless flag
       states = decks.map (deck) ->
         getDeckState deck, ndocks
       messages = decks.map (deck) ->
