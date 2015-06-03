@@ -206,6 +206,8 @@ module.exports =
         else
           flag = false
       return unless flag
+      # Global decks for plugins!
+      window._decks = Object.clone decks
       states = decks.map (deck) ->
         getDeckState deck, ndocks
       messages = decks.map (deck) ->
