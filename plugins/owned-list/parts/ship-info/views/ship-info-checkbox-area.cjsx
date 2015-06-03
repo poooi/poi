@@ -8,10 +8,17 @@ ShipInfoCheckboxArea = React.createClass
   getInitialState: ->
     checked: [false, false, true, true, true, true, true, true, true, true, true, true,
               true, true, true, true, true, true, true, true, true, true, true, true]
+    order: 0
   handleClickAscend: ->
+    @setState
+      order: 0
     @props.sortRules($('#sortbase').value, 0)
   handleClickDescend: ->
+    @setState
+      order: 1
     @props.sortRules($('#sortbase').value, 1)
+  handleKeyChange: (e) ->
+    @props.sortRules(e.target.value, 1)
   handleClickCheckbox: (index) ->
     checkboxes = []
     {checked} = @state
@@ -26,7 +33,7 @@ ShipInfoCheckboxArea = React.createClass
       <Grid className='vertical-center'>
         <Col xs={2}>排序规则</Col>
         <Col xs={6}>
-          <Input id='sortbase' type='select' placeholder='id'>
+          <Input id='sortbase' type='select' placeholder='id' onChange={@handleKeyChange}>
             <option value='id'>ID</option>
             <option value='type'>舰种</option>
             <option value='name'>舰名</option>
@@ -41,10 +48,14 @@ ShipInfoCheckboxArea = React.createClass
           </Input>
         </Col>
         <Col xs={2}>
-          <Button bsStyle="info" bsSize='small' onClick={@handleClickAscend} block>升序</Button>
+          <Button bsStyle={if @state.order == 0 then 'success' else 'default'} bsSize='small' onClick={@handleClickAscend} block>
+            {if @state.order == 0 then '√ ' else ''} 升序
+          </Button>
         </Col>
         <Col xs={2}>
-          <Button bsStyle="info" bsSize='small' onClick={@handleClickDescend} block>降序</Button>
+          <Button bsStyle={if @state.order == 1 then 'success' else 'default'} bsSize='small' onClick={@handleClickDescend} block>
+            {if @state.order == 1 then '√ ' else ''} 降序
+          </Button>
         </Col>
       </Grid>
       <Divider text="舰种过滤" />

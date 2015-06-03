@@ -2,6 +2,7 @@
   font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
 }
 body {
+  margin-top: 15px;
   font-size: 13px;
 }
 .form-group {
@@ -36,12 +37,16 @@ body {
   width: inherit;
 }
 #ship-info-show .slotitem-container img {
-  margin: -4px;
+  height: 32px;
+}
+#ship-info-show .slotitem-container {
+  margin-left: -6px;
 }
 #ship-info-show table tbody tr td {
   vertical-align: middle;
-  line-height: 20px;
-  height: 20px;
+  line-height: 36px;
+  height: 36px;
+  padding: 1px 5px;
 }
 #ship-info-show .col-xs-12 {
   padding-right: 5px;
