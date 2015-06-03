@@ -28,7 +28,7 @@ adjustSize()
 handleTitleSet = ->
   @insertCSS """
     * {
-      font-family: Ubuntu, "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
+      font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
     }
     ::-webkit-scrollbar {
       width: 0px;

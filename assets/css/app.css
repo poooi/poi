@@ -1,5 +1,5 @@
 * {
-  font-family: "Ubuntu", "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
+  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
 }
 ::-webkit-scrollbar {
   width: 0px;
@@ -46,6 +46,12 @@ poi-app poi-nav-tabs nav ul li {
 }
 poi-app poi-nav-tabs nav ul li a {
   text-align: center;
+}
+poi-app poi-nav-tabs nav ul.dropdown-menu {
+  min-width: 100%;
+}
+poi-app poi-nav-tabs nav li.dropdown {
+  overflow: inherit;
 }
 .table tbody tr td {
   padding: 8px;
