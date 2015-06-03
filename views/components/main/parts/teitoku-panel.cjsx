@@ -19,7 +19,7 @@ getStyle = (state) ->
     return 'danger'
 
 getMaterialImage = (idx) ->
-  return "#{ROOT}/assets/img/material/#{idx}.png"
+  return "#{ROOT}/assets/img/material/0#{idx}.png"
 
 TeitokuPanel = React.createClass
   getInitialState: ->

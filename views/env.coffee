@@ -145,6 +145,13 @@ resolveResponses = ->
         for ship in body.api_ship_data
           idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
           window._ships[idx] = ship
+      when '/kcsapi/api_req_kaisou/slotset'
+        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_id)}, 'api_id'
+        window._ships[idx].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
+      when '/kcsapi/api_get_member/ship3'
+        for ship in body.api_ship_data
+          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
+          window._ships[idx] = ship
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true

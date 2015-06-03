@@ -1,8 +1,8 @@
 #MainView .material-icon {
   margin-top: 5px;
-  margin-right: 20px;
-  width: 30px;
-  height: 30px;
+  margin-right: 5px;
+  width: 18px;
+  height: 18px;
 }
 #MainView .material-value {
   line-height: 30px;
@@ -51,9 +51,4 @@
 }
 #MainView .label {
   font-size: 80%;
-}
-#MainView .material-icon {
-  margin-right: 5px;
-  width: 30px;
-  height: 30px;
 }

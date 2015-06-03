@@ -181,6 +181,9 @@ module.exports =
         when '/kcsapi/api_get_member/ship_deck'
           {decks} = @state
           decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+        when '/kcsapi/api_get_member/ship3'
+          {decks} = @state
+          decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
           inBattle[deckId] = true
@@ -239,16 +242,16 @@ module.exports =
               <Alert bsStyle={getStyle @state.states[i]}>
                 <Grid>
                   <Col xs={2}>
-                    总计 Lv.{@state.messages[i][0]}
+                    总 Lv.{@state.messages[i][0]}
                   </Col>
                   <Col xs={2}>
-                    平均 Lv.{@state.messages[i][1]}
+                    均 Lv.{@state.messages[i][1]}
                   </Col>
                   <Col xs={2}>
-                    制空值：{@state.messages[i][2]}
+                    制空：{@state.messages[i][2]}
                   </Col>
                   <Col xs={2}>
-                    索敌值：{@state.messages[i][3]}
+                    索敌：{@state.messages[i][3]}
                   </Col>
                   <Col xs={4}>
                     回复：{resolveTime @state.countdown[i]}
