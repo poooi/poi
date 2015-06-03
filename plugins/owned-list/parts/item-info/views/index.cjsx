@@ -1,24 +1,24 @@
 {React, ReactBootstrap, jQuery} = window
-{Panel, Grid, Col, Table} = ReactBootstrap
+{Panel, Row, Grid, Col} = ReactBootstrap
 
 ItemInfoTable = React.createClass
   render: ->
     {$ships, $slotitems} = window
-    <tr>
-      <Grid>
-        <td>{$slotitems[@props.slotItemType].api_name}</td>
-        <td>{@props.sumNum}</td>
-        <td>{@props.restNum}</td>
-        <td>
-          {
-            for equipShip, index in @props.equipList
-              <Col xs={3} sm={3} md={3} lg={3} key=index>
-                {$ships[equipShip.shipNameId].api_name + "*" + equipShip.equipNum + " "}
-              </Col>
-          }
-        </td>
-      </Grid>
-    </tr>
+    <Row>
+      <Col xs={2} sm={2} md={2} lg={2}>{$slotitems[@props.slotItemType].api_name}</Col>
+      <Col xs={2} sm={2} md={1} lg={1}>{@props.sumNum}</Col>
+      <Col xs={2} sm={2} md={1} lg={1}>{@props.restNum}</Col>
+      <Col xs={6} sm={6} md={8} lg={8}>
+        <Row>
+        {
+          for equipShip, index in @props.equipList
+            <Col xs={6} sm={3} md={2} lg={2} key=index>
+              {$ships[equipShip.shipNameId].api_name + "*" + equipShip.equipNum + " "}
+            </Col>
+        }
+        </Row>
+      </Col>
+    </Row>
 
 ItemInfoArea = React.createClass
   getInitialState: ->
@@ -90,32 +90,33 @@ ItemInfoArea = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <div>
-      <Table striped bordered condensed hover>
-        <thead>
-          <tr>
-            <th>装备名称</th>
-            <th>总数量</th>
-            <th>剩余数量</th>
-            <th>装备情况</th>
-          </tr>
-        </thead>
-        <tbody>
-        {
-          if @state.rows?
-            for row, index in @state.rows
-              if row?
-                <ItemInfoTable
-                  key = {index}
-                  slotItemType = {row.slotItemType}
-                  sumNum = {row.sumNum}
-                  restNum = {row.sumNum - row.inUseNum}
-                  equipList = {row.equipList}
-                />
-        }
-        </tbody>
-      </Table>
-    </div>
-
+    <Grid>
+      <Row>
+        <Col xs={2} sm={2} md={2} lg={2}>装备名称</Col>
+        <Col xs={2} sm={2} md={1} lg={1}>总数量</Col>
+        <Col xs={2} sm={2} md={1} lg={1}>剩余数</Col>
+        <Col xs={6} sm={2} md={8} lg={8}>装备情况</Col>
+      </Row>
+      {
+        {_} = window
+        if @state.rows?
+          printRows = []
+          for row in @state.rows
+            if row?
+              printRows.push row
+          printRows = _.sortBy printRows, 'sumNum'
+          printRows.reverse()
+          for row, index in printRows
+            row.equipList = _.sortBy row.equipList, 'equipNum'
+            row.equipList.reverse()
+            <ItemInfoTable
+              key = {index}
+              slotItemType = {row.slotItemType}
+              sumNum = {row.sumNum}
+              restNum = {row.sumNum - row.inUseNum}
+              equipList = {row.equipList}
+            />
+      }
+    </Grid>
 
 React.render <ItemInfoArea />, $('item-info')
