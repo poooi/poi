@@ -126,7 +126,7 @@ class Proxy extends EventEmitter
             [response, body] = yield requestAsync resolve options
             res.writeHead response.statusCode, response.headers
             res.end body
-          if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic', '/kcsapi/api_port/port']
+          if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
             self.emit 'game.start'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"

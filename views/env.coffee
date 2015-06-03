@@ -120,14 +120,40 @@ resolveResponses = ->
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
+      when '/kcsapi/api_req_sortie/battleresult'
+        window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_port/port'
         window._ships = body.api_ship
       when '/kcsapi/api_get_member/slot_item'
         window._slotitems = body
       when '/kcsapi/api_req_kousyou/getship'
         window._ships.push body.api_ship
+        for item in body.api_slotitem
+          window._slotitems.push item
       when '/kcsapi/api_req_kousyou/createitem'
-        window._slotitems.push body.api_slot_item
+        window._slotitems.push body.api_slot_item if body.api_create_flag == 1
+      when '/kcsapi/api_req_kousyou/destroyship'
+        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
+        window._ships.splice idx, 1
+      when '/kcsapi/api_req_kousyou/destroyitem2'
+        for itemId in postBody.api_slotitem_ids.split(',')
+          idx = _.sortedIndex window._slotitems, {api_id: parseInt(itemId)}, 'api_id'
+          window._slotitems.splice idx, 1
+      when '/kcsapi/api_req_hokyu/charge'
+        for ship in body.api_ship
+          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
+          window._ships[idx] = _.extend window._ships[idx], ship
+      when '/kcsapi/api_get_member/ship_deck'
+        for ship in body.api_ship_data
+          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
+          window._ships[idx] = ship
+      when '/kcsapi/api_req_kaisou/slotset'
+        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_id)}, 'api_id'
+        window._ships[idx].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
+      when '/kcsapi/api_get_member/ship3'
+        for ship in body.api_ship_data
+          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
+          window._ships[idx] = ship
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true
