@@ -1,27 +1,26 @@
 {React, ReactBootstrap, jQuery} = window
 {Panel, Button, Input, Col, Grid} = ReactBootstrap
 Divider = require './divider'
-shipTypes = ['', '海防艦', '駆逐艦', '軽巡洋艦', '重雷装巡洋艦', '重巡洋艦', '航空巡洋艦', '軽空母', '戦艦', '航空戦艦', '正規空母',
-             '潜水艦', '潜水空母', '水上機母艦', '揚陸艦', '装甲空母', '工作艦', '潜水母艦', '練習巡洋艦']
-
+shipTypes = ['', '海防艦', '駆逐艦', '軽巡洋艦', '重雷装巡洋艦', '重巡洋艦', '航空巡洋艦', '軽空母', '戦艦', '戦艦', '航空戦艦', '正規空母',
+             '超弩級戦艦', '潜水艦', '潜水空母', '補給艦', '水上機母艦', '揚陸艦', '装甲空母', '工作艦', '潜水母艦', '練習巡洋艦']
 ShipInfoCheckboxArea = React.createClass
   getInitialState: ->
-    checked: [false, false, true, true, true, true, true, true, true, true, true, true,
+    checked: [false, true, true, true, true, true, true, true, true, true, true, true,
               true, true, true, true, true, true, true, true, true, true, true, true]
     order: 0
     sortKey: 'id'
   handleClickAscend: ->
     @setState
       order: 0
-    @props.sortRules(@state.sortKey, @state.order)
+    @props.sortRules(@state.sortKey, 0)
   handleClickDescend: ->
     @setState
       order: 1
-    @props.sortRules(@state.sortKey, @state.order)
+    @props.sortRules(@state.sortKey, 1)
   handleKeyChange: (e) ->
     @setState
       sortKey: e.target.value
-    @props.sortRules(@state.sortKey, @state.order)
+    @props.sortRules(e.target.value, @state.order)
   handleClickCheckbox: (index) ->
     checkboxes = []
     {checked} = @state
@@ -65,7 +64,7 @@ ShipInfoCheckboxArea = React.createClass
       <Grid id='ship-info-filter'>
       {
         for shipType, index in shipTypes
-          continue if index < 2
+          continue if index < 1 || shipType == shipTypes[index - 1]
           <Col key={index} xs={2}>
             <Input type='checkbox' label={shipType} key={index} value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.checked[index]} />
           </Col>
