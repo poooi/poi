@@ -81,7 +81,9 @@ getDeckMessage = (deck) ->
       item = _slotitems[idx]
       itemInfo = $slotitems[item.api_slotitem_id]
       # Airplane Tyku
-      if itemInfo.api_type[3] in [6, 7, 8, 10]
+      if itemInfo.api_type[3] in [6, 7, 8]
+        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
+      else if itemInfo.api_type[3] == 10 && itemInfo.api_type[2] == 11
         totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
       # Saku
       # 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
@@ -106,7 +108,7 @@ getDeckMessage = (deck) ->
             totalSaku += itemInfo.api_saku * 0.99
         when 24
           totalSaku += itemInfo.api_saku * 0.91
-  totalSaku -= 0.61 * Math.floor(window._teitokuLv / 5) * 5
+  totalSaku -= 0.61 * Math.floor((window._teitokuLv + 4) / 5) * 5
   totalSaku = Math.max(0, totalSaku)
   avgLv = totalLv / totalShip
   [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0))]
