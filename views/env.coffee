@@ -15,6 +15,7 @@ window.$$ = (param) -> document.querySelectorAll(param)
 window.jQuery = require './components/jquery/dist/jquery'
 window.React = require 'react'
 window.ReactBootstrap = require 'react-bootstrap'
+window.FontAwesome = require 'react-fontawesome'
 
 {remoteStringify} = remote.require './lib/utils'
 

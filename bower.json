@@ -25,6 +25,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.4",
-    "coffee-script": "~1.9.2"
+    "coffee-script": "~1.9.2",
+    "font-awesome": "~4.3.0"
   }
 }
