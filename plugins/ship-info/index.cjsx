@@ -12,8 +12,9 @@ initialShipInfoWindow = ->
     width: 800
     height: 600
   shipInfoWindow.loadUrl "file://#{__dirname}/index.html"
-  shipInfoWindow.openDevTools
-    detach: true
+  if process.env.DEBUG?
+    shipInfoWindow.openDevTools
+      detach: true
 initialShipInfoWindow()
 
 module.exports =
