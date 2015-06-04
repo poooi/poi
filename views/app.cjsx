@@ -51,11 +51,14 @@ ControlledTabArea = React.createClass
         <DropdownButton key={components.length} eventKey={components.length} tab='插件' navItem={true}>
         {
           plugins.map (plugin, index) ->
-            <TabPane key={components.length + 1 + index} eventKey={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
-            {
-              React.createElement(plugin.reactClass)
-            }
-            </TabPane>
+            if plugin.handleClick
+              <div key={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
+            else
+              <TabPane key={components.length + 1 + index} eventKey={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+              {
+                React.createElement(plugin.reactClass)
+              }
+              </TabPane>
         }
         </DropdownButton>
       ]
