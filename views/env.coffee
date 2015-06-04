@@ -15,6 +15,7 @@ window.$$ = (param) -> document.querySelectorAll(param)
 window.jQuery = require './components/jquery/dist/jquery'
 window.React = require 'react'
 window.ReactBootstrap = require 'react-bootstrap'
+window.FontAwesome = require 'react-fontawesome'
 
 {remoteStringify} = remote.require './lib/utils'
 
@@ -138,6 +139,10 @@ resolveResponses = ->
         window._slotitems.push body.api_slot_item if body.api_create_flag == 1
       when '/kcsapi/api_req_kousyou/destroyship'
         idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
+        for itemId in window._ships[idx].api_slot
+          continue if itemId == -1
+          itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
+          window._slotitems.splice itemIdx, 1
         window._ships.splice idx, 1
       when '/kcsapi/api_req_kousyou/destroyitem2'
         for itemId in postBody.api_slotitem_ids.split(',')
