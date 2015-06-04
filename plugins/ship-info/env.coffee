@@ -4,7 +4,7 @@ window.path = require 'path'
 # This part partly copy form ROOT/views/env.coffee
 # Without useless code
 # Environments ROOT: xxx/poi/
-window.ROOT = path.join(__dirname, "..", "..", "..", "..")
+window.ROOT = path.join(__dirname, "..", "..")
 # Shortcuts and Components
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
@@ -20,9 +20,9 @@ window.proxy = remote.require './lib/proxy'
 
 theme = config.get 'poi.theme', '__default__'
 if theme != '__default__'
-  $('#bootstrap-css').setAttribute 'href', "../../../../assets/themes/#{theme}/css/#{theme}.css"
+  $('#bootstrap-css').setAttribute 'href', "../../assets/themes/#{theme}/css/#{theme}.css"
 else
-  $('#bootstrap-css').setAttribute 'href', '../../../../components/bootstrap/dist/css/bootstrap.css'
+  $('#bootstrap-css').setAttribute 'href', '../../components/bootstrap/dist/css/bootstrap.css'
 
 # Utils
 # Object.clone = require 'clone'
