@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
-{Button, TabbedArea, TabPane, Alert} = ReactBootstrap
+{Button, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton} = ReactBootstrap
 {config, proxy, log} = window
 
 # Get components
@@ -13,14 +13,21 @@ plugins = plugins.filter (filePath) ->
   plugin = require filePath
   config.get "plugin.#{plugin.name}.enable", true
 
-components = components.concat plugins
 components = components.map (filePath) ->
-  component = require path.join(filePath, 'index')
+  component = require filePath
   component.priority = 10000 unless component.priority?
   component
 components = components.filter (component) ->
   component.show isnt false
 components = _.sortBy(components, 'priority')
+
+plugins = plugins.map (filePath) ->
+  plugin = require filePath
+  plugin.priority = 10000 unless plugin.priority?
+  plugin
+plugins = plugins.filter (plugin) ->
+  plugin.show isnt false
+plugins = _.sortBy(plugins, 'priority')
 
 ControlledTabArea = React.createClass
   getInitialState: ->
@@ -34,12 +41,24 @@ ControlledTabArea = React.createClass
     ###
     <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
     {
-      components.map (component, index) ->
-        <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
+      [
+        components.map (component, index) ->
+          <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
+          {
+            React.createElement(component.reactClass)
+          }
+          </TabPane>
+        <DropdownButton key={components.length} eventKey={components.length} tab='插件' navItem={true}>
         {
-          React.createElement(component.reactClass)
+          plugins.map (plugin, index) ->
+            <TabPane key={components.length + 1 + index} eventKey={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+            {
+              React.createElement(plugin.reactClass)
+            }
+            </TabPane>
         }
-        </TabPane>
+        </DropdownButton>
+      ]
     }
     </TabbedArea>
 
@@ -58,7 +77,41 @@ PoiAlert = React.createClass
   render: ->
     <Alert bsStyle={@state.type}>{@state.message}</Alert>
 
+ModalTrigger = React.createClass
+  mixins: [OverlayMixin]
+  getInitialState: ->
+    isModalOpen: false
+    title: null
+    content: null
+  handleToggle: ->
+    @setState
+      isModalOpen: false
+  handleModal: (e) ->
+    @setState
+      isModalOpen: true
+      title: e.detail.title
+      content: e.detail.content
+  componentDidMount: ->
+    window.addEventListener 'poi.modal', @handleModal
+  componentWillUnmount: ->
+    window.removeEventListener 'poi.modal', @handleModal
+  render: ->
+    <span />
+  renderOverlay: ->
+    if !@state.isModalOpen
+      <span />
+    else
+      <Modal title={@state.title} onRequestHide={@handleToggle}>
+        <div className='modal-body'>
+          {@state.content}
+        </div>
+        <div className='modal-footer'>
+          <Button onClick={@handleToggle}>关闭</Button>
+        </div>
+      </Modal>
+
 React.render <PoiAlert />, $('poi-alert')
+React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
 
 window.addEventListener 'game.request', (e) ->
@@ -66,5 +119,5 @@ window.addEventListener 'game.request', (e) ->
   log "正在请求 #{method} #{path}"
 window.addEventListener 'game.response', (e) ->
   {method, path, body, postBody} = e.detail
-  console.log [path, body, postBody]
+  console.log [path, body, postBody] if process.env.DEBUG?
   success "获得数据 #{method} #{path}"

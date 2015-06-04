@@ -1,6 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{resolveTime} = window
-{Panel, Table} = ReactBootstrap
+{resolveTime, success, warn} = window
+{Panel, Table, OverlayTrigger, Tooltip} = ReactBootstrap
 
 KdockPanel = React.createClass
   getInitialState: ->
@@ -111,6 +111,11 @@ KdockPanel = React.createClass
         @setState
           docks: docks
           notified: notified
+      when '/kcsapi/api_req_kousyou/createitem'
+        if body.api_create_flag == 0
+          setTimeout warn.bind(@, "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name} 开发失败"), 500
+        else if body.api_create_flag == 1
+          setTimeout success.bind(@, "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name} 开发成功"), 500
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
@@ -135,7 +140,15 @@ KdockPanel = React.createClass
         {
           for i in [1..4]
             <tr key={i}>
-              <td>{@state.docks[i].name}</td>
+              <OverlayTrigger placement='left' overlay={
+                  <Tooltip>
+                    油 {@state.docks[i].material[0]} 弹 {@state.docks[i].material[1]}<br />
+                    钢 {@state.docks[i].material[2]} 铝 {@state.docks[i].material[3]}<br />
+                    资材 {@state.docks[i].material[4]}
+                  </Tooltip>
+                }>
+                <td>{@state.docks[i].name}</td>
+              </OverlayTrigger>
               <td>{resolveTime @state.docks[i].countdown}</td>
             </tr>
         }

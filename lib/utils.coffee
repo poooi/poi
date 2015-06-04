@@ -20,10 +20,10 @@ module.exports =
     console.log "[INFO] #{str}"
   warn: (str) ->
     str = stringify str
-    console.log "[WARN] #{str}".yellow
+    console.warn "[WARN] #{str}".yellow
   error: (str) ->
     str = stringify str
-    console.log "[ERROR] #{str}".bold.red
+    console.error "[ERROR] #{str}".bold.red
   resolveBody: (encoding, body) ->
     return new Promise async (resolve, reject) ->
       try
@@ -82,3 +82,7 @@ module.exports =
       return loc
     catch
       return null
+  setBounds: (options) ->
+    global.mainWindow.setBounds options
+  getBounds: ->
+    global.mainWindow.getBounds()

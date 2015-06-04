@@ -1,0 +1,7 @@
+#SettingsView .divider {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#SettingsView .divider hr {
+  margin-bottom: 15.5px;
+}

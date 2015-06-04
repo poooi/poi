@@ -21,7 +21,7 @@ module.exports =
     cur = config
     for p in path
       cur = cur?[p]
-    cur || value
+    if cur? then cur else value
   set: (path, value) ->
     path = path.split('.').filter (p) -> p != ''
     cur = config

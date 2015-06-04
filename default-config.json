@@ -1,10 +1,10 @@
 {
   "poi": {
-    "theme": "superhero",
+    "theme": "darkly",
     "layout": "horizonal",
     "window": {
-      "x": 240,
-      "y": 188,
+      "x": 60,
+      "y": 60,
       "width": 1234,
       "height": 560
     }
@@ -21,7 +21,7 @@
     },
     "shadowsocks": {
       "server": {
-        "host": "43.224.34.41",
+        "host": "116.251.209.211",
         "port": 27017
       },
       "local": {

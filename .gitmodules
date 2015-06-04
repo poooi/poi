@@ -1,0 +1,6 @@
+[submodule "plugins/exp-calc"]
+	path = plugins/exp-calc
+	url = https://github.com/yudachi/plugin-exp-calculator.git
+[submodule "plugins/report"]
+	path = plugins/report
+	url = https://github.com/yudachi/plugin-report.git

@@ -34,3 +34,5 @@ node_modules
 /components
 
 /assets/themes
+
+/cache
