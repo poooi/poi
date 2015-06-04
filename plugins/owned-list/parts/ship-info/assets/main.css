@@ -1,6 +1,63 @@
-* {
-  font-family: "Ubuntu", "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
+*, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
 }
 body {
-  font-size: 14px;
+  margin-top: 15px;
+  font-size: 13px;
+}
+.form-group {
+  margin-bottom: 0px;
+}
+.vertical-center {
+  display: flex;
+  align-items: center;
+}
+.divider {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.divider hr {
+  margin-bottom: 15.5px;
+}
+#ship-info-settings .checkbox {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+#ship-info-settings #ship-info-filter .col-xs-2 {
+  padding-left: 1px;
+  padding-right: 1px;
+}
+#ship-info-settings .form-control {
+  height: inherit;
+  padding: 6px 15px 7px;
+}
+#ship-info-show .container {
+  margin: 0px;
+  padding: 0px;
+  width: inherit;
+}
+#ship-info-show .slotitem-container img {
+  height: 32px;
+}
+#ship-info-show .slotitem-container {
+  margin-left: -6px;
+}
+#ship-info-show table tbody tr td {
+  vertical-align: middle;
+  line-height: 36px;
+  height: 36px;
+  padding: 1px 5px;
+}
+#ship-info-show .col-xs-12 {
+  padding-right: 5px;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 1px;
+}
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 1px;
+  background-color: #3d3d3d;
 }

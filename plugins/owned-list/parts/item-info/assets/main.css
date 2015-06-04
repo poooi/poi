@@ -1,6 +1,6 @@
-* {
-  font-family: "Ubuntu", "WenQuanYi Micro Hei", "Microsoft YaHei" !important;
+*, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
 }
 body {
-  font-size: 14px;
+  font-size: 13px;
 }

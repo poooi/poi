@@ -18,6 +18,12 @@ window.proxy = remote.require './lib/proxy'
 
 {remoteStringify} = remote.require './lib/utils'
 
+theme = config.get 'poi.theme', '__default__'
+if theme != '__default__'
+  $('#bootstrap-css').setAttribute 'href', "../../../../assets/themes/#{theme}/css/#{theme}.css"
+else
+  $('#bootstrap-css').setAttribute 'href', '../../../../components/bootstrap/dist/css/bootstrap.css'
+
 # Utils
 # Object.clone = require 'clone'
 Object.remoteClone = (obj) ->
