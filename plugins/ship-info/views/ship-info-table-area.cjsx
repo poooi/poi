@@ -49,9 +49,26 @@ ShipInfoTableArea = React.createClass
     {method, path, body, postBody} = e.detail
     {$shipTypes, $ships, _ships} = window
     {rows} = @state
-    if path is '/kcsapi/api_port/port' or path is '/kcsapi/api_req_kousyou/getship'
-      rows = []
-      for ship in _ships
+    switch path
+      when '/kcsapi/api_port/port'
+        rows = []
+        for ship in _ships
+          row =
+            id: ship.api_id
+            type: $shipTypes[$ships[ship.api_ship_id].api_stype].api_name
+            name: $ships[ship.api_ship_id].api_name
+            lv:  ship.api_lv
+            cond: ship.api_cond
+            karyoku: ship.api_karyoku[0]
+            raisou: ship.api_raisou[0]
+            taiku: ship.api_taiku[0]
+            soukou: ship.api_soukou[0]
+            lucky: ship.api_lucky[0]
+            sakuteki: ship.api_sakuteki[0]
+            slot: ship.api_slot
+          rows.push row
+      when '/kcsapi/api_req_kousyou/getship'
+        ship = body.api_ship
         row =
           id: ship.api_id
           type: $shipTypes[$ships[ship.api_ship_id].api_stype].api_name
