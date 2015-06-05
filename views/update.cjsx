@@ -35,4 +35,5 @@ checkUpdate = ->
       ]
       toggleModal title, content, footer
 
-setTimeout checkUpdate, 5000
+if process.platform != 'darwin'
+  setTimeout checkUpdate, 5000
