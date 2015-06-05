@@ -21,6 +21,7 @@ module.exports =
   name: 'ShipInfo'
   priority: 50
   displayName: [<FontAwesome name='ship' key={0} />, ' 舰娘信息']
+  author: [<a key={0} href="https://github.com/myzwillmake">Yunze</a>]
   description: '提供已有舰娘详细信息查看'
   handleClick: ->
     shipInfoWindow.show()
