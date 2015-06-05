@@ -18,7 +18,7 @@ components = components.map (filePath) ->
   component.priority = 10000 unless component.priority?
   component
 components = components.filter (component) ->
-  component.show isnt false
+  component.show isnt false and component.name != 'SettingsView'
 components = _.sortBy(components, 'priority')
 
 plugins = plugins.map (filePath) ->
@@ -28,6 +28,8 @@ plugins = plugins.map (filePath) ->
 plugins = plugins.filter (plugin) ->
   plugin.show isnt false
 plugins = _.sortBy(plugins, 'priority')
+
+settings = require path.join(ROOT, 'views', 'components', 'settings')
 
 ControlledTabArea = React.createClass
   getInitialState: ->
@@ -61,6 +63,11 @@ ControlledTabArea = React.createClass
               </TabPane>
         }
         </DropdownButton>
+        <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
+        {
+          React.createElement(settings.reactClass)
+        }
+        </TabPane>
       ]
     }
     </TabbedArea>
