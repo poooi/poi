@@ -1,3 +1,5 @@
+global.POI_VERSION = '1.0.0-beta'
+
 app = require 'app'
 BrowserWindow = require 'browser-window'
 path = require 'path'
@@ -7,9 +9,14 @@ fs = require 'fs-extra'
 global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = app.getPath('appData')
+if process.env.DEBUG?
+  global.SERVER_HOSTNAME = '127.0.0.1:17027'
+else
+  global.SERVER_HOSTNAME = 'poi.0u0.moe'
 
 config = require './lib/config'
 proxy = require './lib/proxy'
+update = require './lib/update'
 {log, warn, error} = require './lib/utils'
 
 global.mainWindow = mainWindow = null
