@@ -1,5 +1,5 @@
 {React, ReactBootstrap, jQuery} = window
-{Panel, Button, Input, Col, Grid} = ReactBootstrap
+{Panel, Button, Input, Col, Grid, Row} = ReactBootstrap
 Divider = require './divider'
 shipTypes = ['', '海防艦', '駆逐艦', '軽巡洋艦', '重雷装巡洋艦', '重巡洋艦', '航空巡洋艦', '軽空母', '戦艦', '戦艦', '航空戦艦', '正規空母',
              '超弩級戦艦', '潜水艦', '潜水空母', '補給艦', '水上機母艦', '揚陸艦', '装甲空母', '工作艦', '潜水母艦', '練習巡洋艦']
@@ -27,6 +27,22 @@ ShipInfoCheckboxArea = React.createClass
     checked[index] = !checked[index]
     for shipType, i in shipTypes
       checkboxes.push i if checked[i]
+    @setState {checked}
+    @props.filterRules(checkboxes)
+  handleCilckCheckboxAllButton: ->
+    checkboxes = []
+    {checked} = @state
+    for shipType, i in shipTypes
+      if i
+        checked[i] = true
+        checkboxes.push i
+    @setState {checked}
+    @props.filterRules(checkboxes)
+  handleCilckCheckboxNoneButton: ->
+    checkboxes = []
+    {checked} = @state
+    for shipType, i in shipTypes
+      checked[i] = false
     @setState {checked}
     @props.filterRules(checkboxes)
   render: ->
@@ -62,13 +78,23 @@ ShipInfoCheckboxArea = React.createClass
       </Grid>
       <Divider text="舰种过滤" />
       <Grid id='ship-info-filter'>
-      {
-        for shipType, index in shipTypes
-          continue if index < 1 || shipType == shipTypes[index - 1]
-          <Col key={index} xs={2}>
-            <Input type='checkbox' label={shipType} key={index} value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.checked[index]} />
+        <Row>
+        {
+          for shipType, index in shipTypes
+            continue if index < 1 || shipType == shipTypes[index - 1]
+            <Col key={index} xs={2}>
+              <Input type='checkbox' label={shipType} key={index} value={index} onChange={@handleClickCheckbox.bind(@, index)} checked={@state.checked[index]} />
+            </Col>
+        }
+        </Row>
+        <Row>
+          <Col xs={2}>
+            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxAllButton} block>全选</Button>
           </Col>
-      }
+          <Col xs={2}>
+            <Button className="filter-button" bsStyle='default' bsSize='small' onClick={@handleCilckCheckboxNoneButton} block>全不选</Button>
+          </Col>
+        </Row>
       </Grid>
     </div>
 

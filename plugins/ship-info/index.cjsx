@@ -7,10 +7,10 @@ shipInfoWindow = null
 initialShipInfoWindow = ->
   shipInfoWindow = windowManager.createWindow
     #Use config
-    x: 0
-    y: 0
-    width: 800
-    height: 600
+    x: config.get 'poi.window.x', 0
+    y: config.get 'poi.window.y', 0
+    width: 820
+    height: 650
   shipInfoWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     shipInfoWindow.openDevTools
