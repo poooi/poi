@@ -51,6 +51,7 @@ TeitokuPanel = React.createClass
         @setState
           shipCount: window._ships.length
           material: material
+          slotitemCount: window._slotitems.length
       when '/kcsapi/api_get_member/slot_item'
         @setState
           slotitemCount: window._slotitems.length
