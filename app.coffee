@@ -6,6 +6,7 @@ fs = require 'fs-extra'
 # Environment
 global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
+global.APPDATA_PATH = app.getPath('appData')
 
 config = require './lib/config'
 proxy = require './lib/proxy'

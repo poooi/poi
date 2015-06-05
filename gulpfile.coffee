@@ -51,7 +51,7 @@ gulp.task 'theme', async ->
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
 
-gulp.task 'flash', ->
+gulp.task 'flash', async ->
   plugins =
     win32: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/win32.zip'
     linux: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/linux.zip'
@@ -59,9 +59,17 @@ gulp.task 'flash', ->
   url = plugins[process.platform]
   dir = path.join(__dirname, 'PepperFlash')
   fs.ensureDirSync dir
-  log 'Downloading flash plugin'
-  request.get url
-    .pipe unzip.Extract({path: dir})
+  try
+    yield fs.accessAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
+  catch e
+    log "Downloading flash plugin #{PLATFORM}"
+    [response, body] = yield requestAsync
+      url: url
+      encoding: null
+    yield fs.writeFileAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), body
+  log "Extract flash plugin"
+  zip = new AdmZip path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip")
+  zip.extractAllTo dir, true
 
 gulp.task 'download-electron', async ->
   electrons =
