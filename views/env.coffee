@@ -1,14 +1,15 @@
 require 'coffee-react/register'
 
 # Environments
+window.remote = require 'remote'
 window.ROOT = __dirname
+window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
 if process.env.DEBUG?
   window.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
   window.SERVER_HOSTNAME = 'poi.0u0.moe'
 
 # Shortcuts and Components
-window.remote = require 'remote'
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
