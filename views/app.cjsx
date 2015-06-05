@@ -10,8 +10,11 @@ components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 plugins = plugins.filter (filePath) ->
   # Every plugin will be required
-  plugin = require filePath
-  config.get "plugin.#{plugin.name}.enable", true
+  try
+    plugin = require filePath
+    return config.get "plugin.#{plugin.name}.enable", true
+  catch e
+    return false
 
 components = components.map (filePath) ->
   component = require filePath
