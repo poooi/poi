@@ -163,6 +163,16 @@ resolveResponses = ->
         for ship in body.api_ship_data
           idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
           window._ships[idx] = ship
+      when '/kcsapi/api_req_kousyou/remodel_slot'
+        if body.api_use_slot_id?
+          for itemId in body.api_use_slot_id
+            itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
+            window._slotitems.splice itemIdx, 1
+        if body.api_remodel_flag == 1 and body.api_after_slot?
+          afterSlot = body.api_after_slot
+          itemId = afterSlot.api_id
+          itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
+          window._slotitems[itemIdx] = afterSlot
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true

@@ -49,15 +49,8 @@ resolveResponses = ->
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
     # Important! Clone a copy of proxy objects!
-    ### Clone Benchmark
-    start = new Date().getTime()
-    ###
     body = Object.remoteClone body
     postBody = Object.remoteClone postBody
-    ###
-    end = new Date().getTime()
-    console.log "Clone time: #{end - start}"
-    ###
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
@@ -82,8 +75,34 @@ resolveResponses = ->
         window._slotitems = body
       when '/kcsapi/api_req_kousyou/getship'
         window._ships.push body.api_ship
+        for item in body.api_slotitem
+          window._slotitems.push item
       when '/kcsapi/api_req_kousyou/createitem'
-        window._slotitems.push body.api_slot_item
+        window._slotitems.push body.api_slot_item if body.api_create_flag == 1
+      when '/kcsapi/api_req_kousyou/destroyship'
+        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
+        for itemId in window._ships[idx].api_slot
+          continue if itemId == -1
+          itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
+          window._slotitems.splice itemIdx, 1
+        window._ships.splice idx, 1
+      when '/kcsapi/api_req_kousyou/destroyitem2'
+        for itemId in postBody.api_slotitem_ids.split(',')
+          idx = _.sortedIndex window._slotitems, {api_id: parseInt(itemId)}, 'api_id'
+          window._slotitems.splice idx, 1
+      when '/kcsapi/api_req_kaisou/slotset'
+        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_id)}, 'api_id'
+        window._ships[idx].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
+      when '/kcsapi/api_req_kousyou/remodel_slot'
+        if body.api_use_slot_id?
+          for itemId in body.api_use_slot_id
+            itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
+            window._slotitems.splice itemIdx, 1
+        if body.api_remodel_flag == 1 and body.api_after_slot?
+          afterSlot = body.api_after_slot
+          itemId = afterSlot.api_id
+          itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
+          window._slotitems[itemIdx] = afterSlot
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true
