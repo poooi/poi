@@ -12,8 +12,9 @@ initialItemInfoWindow = ->
     width: 800
     height: 600
   itemInfoWindow.loadUrl "file://#{__dirname}/index.html"
-  itemInfoWindow.openDevTools
-    detach: true
+  if process.env.DEBUG?
+    itemInfoWindow.openDevTools
+      detach: true
 initialItemInfoWindow()
 
 module.exports =
