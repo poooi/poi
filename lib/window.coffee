@@ -10,6 +10,12 @@ module.exports =
         'web-security': false
         'plugins': true
     current = new BrowserWindow options
+    show = current.show
+    current.show = ->
+      if current.isMinimized()
+        current.restore()
+      else
+        show.bind(current)()
     current.on 'close', (e) ->
       current.hide()
       e.preventDefault() unless forceClose
