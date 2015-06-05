@@ -43,7 +43,6 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "adm-zip": "^0.4.7",
     "bower": "^1.4.1",
     "coffeelint": "^1.10.1",
     "del": "^1.2.0",
