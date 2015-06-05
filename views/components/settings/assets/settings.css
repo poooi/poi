@@ -5,3 +5,16 @@
 #SettingsView .divider hr {
   margin-bottom: 15.5px;
 }
+#SettingsView #navigator-bar .container {
+  display: flex;
+  align-items: center;
+}
+#SettingsView #navigator-bar {
+  margin-bottom: 0px;
+}
+#SettingsView #navigator-bar .form-group {
+  margin-bottom: 0px;
+}
+#SettingsView #navigator-bar .container .btn-group {
+  float: right;
+}

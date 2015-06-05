@@ -1,9 +1,10 @@
 path = require 'path-extra'
 glob = require 'glob'
-{$, $$, _, React, ReactBootstrap, ROOT} = window
+{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Button, ButtonGroup, Input} = ReactBootstrap
 {config} = window
 Divider = require './divider'
+NavigatorBar = require './navigator-bar'
 themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
   path.basename filePath
 PoiConfig = React.createClass
@@ -33,6 +34,10 @@ PoiConfig = React.createClass
     @setState {theme}
   render: ->
     <form>
+      <div className="form-group" id='navigator-bar'>
+        <Divider text="导航" />
+        <NavigatorBar />
+      </div>
       <div className="form-group">
         <Divider text="布局" />
         <Grid>
