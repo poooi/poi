@@ -4,10 +4,8 @@ require 'coffee-react/register'
 window.remote = require 'remote'
 window.ROOT = __dirname
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
-if process.env.DEBUG?
-  window.SERVER_HOSTNAME = '127.0.0.1:17027'
-else
-  window.SERVER_HOSTNAME = 'poi.0u0.moe'
+window.POI_VERSION = remote.getGlobal 'POI_VERSION'
+window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
 
 # Shortcuts and Components
 window._ = require 'underscore'
@@ -71,13 +69,14 @@ window.notify = (msg) ->
   new Notification 'poi',
     icon: "file://#{ROOT}/assets/icons/icon.png"
     body: msg
-window.toggleModal = (title, content) ->
+window.toggleModal = (title, content, footer) ->
   event = new CustomEvent 'poi.modal',
     bubbles: true
     cancelable: true
     detail:
       title: title
       content: content
+      footer: footer
   window.dispatchEvent event
 # Node modules
 window.config = remote.require './lib/config'
@@ -190,6 +189,6 @@ proxy.addListener 'game.on.response', (method, path, body, postBody) ->
 proxy.addListener 'game.start', ->
   window.dispatchEvent new Event 'resize'
 
-views = ['layout', 'app']
+views = ['layout', 'app', 'update']
 for view in views
   require "./views/#{view}"

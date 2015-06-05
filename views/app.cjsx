@@ -104,10 +104,20 @@ ModalTrigger = React.createClass
       isModalOpen: true
       title: e.detail.title
       content: e.detail.content
+      footer: e.detail.footer
   componentDidMount: ->
     window.addEventListener 'poi.modal', @handleModal
   componentWillUnmount: ->
     window.removeEventListener 'poi.modal', @handleModal
+  renderFooter: (footer) ->
+    return unless footer? and footer.length? and footer.length > 0
+    self = @
+    footer.map (button) ->
+      <Button onClick={
+        (e) ->
+          self.handleToggle()
+          button.func()
+      } bsStyle={button.style}>{button.name}</Button>
   render: ->
     <span />
   renderOverlay: ->
@@ -120,6 +130,7 @@ ModalTrigger = React.createClass
         </div>
         <div className='modal-footer'>
           <Button onClick={@handleToggle}>关闭</Button>
+          {@renderFooter @state.footer}
         </div>
       </Modal>
 
