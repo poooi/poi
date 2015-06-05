@@ -3,6 +3,8 @@
 webview = $('kan-game webview')
 getIcon = (status) ->
   switch status
+    when -2
+      <FontAwesome name='times' />
     when -1
       <FontAwesome name='arrow-right' />
     when 0
@@ -28,6 +30,9 @@ NavigatorBar = React.createClass
     @setState
       navigateStatus: 0
       navigateUrl: webview.getUrl()
+  handleFailLoad: ->
+    @setState
+      navigateStatus: -2
   handleNavigate: ->
     webview.src = @state.navigateUrl
   handleRefresh: ->
@@ -35,9 +40,11 @@ NavigatorBar = React.createClass
   componentDidMount: ->
     webview.addEventListener 'did-start-loading', @handleStartLoading
     webview.addEventListener 'did-stop-loading', @handleStopLoading
+    webview.addEventListener 'did-fail-load', @handleFailLoad
   componentWillUmount: ->
     webview.removeEventListener 'did-start-loading', @handleStartLoading
     webview.removeEventListener 'did-stop-loading', @handleStopLoading
+    webview.removeEventListener 'did-fail-load', @handleFailLoad
   render: ->
     <Grid>
       <Col xs={8}>
