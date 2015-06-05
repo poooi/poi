@@ -21,6 +21,7 @@ module.exports =
   name: 'ItemInfo'
   priority: 51
   displayName: [<FontAwesome name='rocket' key={0} />, ' 装备信息']
+  author: [<a key={0} href="https://github.com/myzwillmake">Yunze</a>]
   description: '提供装备详细信息查看'
   handleClick: ->
     itemInfoWindow.show()
