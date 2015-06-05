@@ -32,7 +32,7 @@ ProxyConfig = React.createClass
         config.set 'proxy.shadowsocks.password', @refs.shadowsocksPassword.getValue()
         config.set 'proxy.shadowsocks.method', @refs.shadowsocksMethod.getValue()
       else
-        config.set 'use', 'none'
+        config.set 'proxy.use', 'none'
     toggleModal '代理设置', '保存成功'
     e.preventDefault()
   handleHttpHostChange: (e) ->
