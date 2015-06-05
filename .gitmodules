@@ -6,4 +6,4 @@
 	url = https://github.com/yudachi/plugin-report.git
 [submodule "plugins/prophet"]
 	path = plugins/prophet
-	url = https://github.com/yudachi/plugin-prophetic.git
+	url = https://github.com/yudachi/plugin-prophet.git
