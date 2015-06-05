@@ -3,6 +3,7 @@ glob = require 'glob'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
 {Grid, Col, Input} = ReactBootstrap
 {config} = window
+{openExternal} = require 'shell'
 Divider = require './divider'
 
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
@@ -13,6 +14,9 @@ plugins = plugins.map (filePath) ->
 plugins = _.sortBy(plugins, 'priority')
 enabled = plugins.map (plugin) ->
   config.get "plugin.#{plugin.name}.enable", true
+
+getAuthorLink = (author, link) ->
+  <a onClick={openExternal.bind(this, link)}>{author}</a>
 
 PluginConfig = React.createClass
   getInitialState: ->
@@ -29,7 +33,7 @@ PluginConfig = React.createClass
       {
         plugins.map (plugin, index) =>
           <Col key={index} xs={12}>
-            <Input type="checkbox" label={[plugin.displayName, ' @ ', plugin.author || 'Unknown', '：', plugin.description, <br key={-1} />, 'Version ',  plugin.version || '1.0.0']} checked={@state.enabled[index]} onChange={@handleChange.bind @, index } />
+            <Input type="checkbox" label={[plugin.displayName, ' @ ', getAuthorLink(plugin.author, plugin.link), '：', plugin.description, <br key={-1} />, 'Version ',  plugin.version || '1.0.0']} checked={@state.enabled[index]} onChange={@handleChange.bind @, index } />
           </Col>
       }
       </Grid>
