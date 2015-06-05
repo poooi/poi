@@ -29,7 +29,7 @@ ProxyConfig = React.createClass
         config.set 'proxy.use', 'shadowsocks'
         config.set 'proxy.shadowsocks.server.host', @refs.shadowsocksServerHost.getValue()
         config.set 'proxy.shadowsocks.server.port', @refs.shadowsocksServerPort.getValue()
-        config.set 'proxy.shadowsocks.port', @refs.shadowsocksPassword.getValue()
+        config.set 'proxy.shadowsocks.password', @refs.shadowsocksPassword.getValue()
         config.set 'proxy.shadowsocks.method', @refs.shadowsocksMethod.getValue()
       else
         config.set 'use', 'none'
