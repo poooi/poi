@@ -20,6 +20,7 @@ checkUpdate = ->
     if info == 'error'
       console.log 'Check update error.'
       return
+    console.log "Remote version: #{info.version}. Current version: #{POI_VERSION}"
     if info.version != POI_VERSION
       updateInfo = info
       title = '更新版本'
