@@ -103,7 +103,7 @@ TeitokuPanel = React.createClass
         <Col xs={6}>舰娘：{@state.shipCount} / {@state.maxChara}</Col>
         <Col xs={6}>装备：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
       </Grid>
-      <Grid>
+      <Grid style={marginTop: 5}>
       {
         for i in order
           <Col key={i} xs={3}>
