@@ -41,5 +41,5 @@ window.addEventListener 'layout.change', (e) ->
   window._layout.unload()
   delete require.cache[require.resolve("./layout.#{layout}")]
   {layout} = e.detail
-  window._layout = require "./layout.#{layout}"
   changeBounds()
+  window._layout = require "./layout.#{layout}"
