@@ -7,10 +7,10 @@ itemInfoWindow = null
 initialItemInfoWindow = ->
   itemInfoWindow = windowManager.createWindow
     #Use config
-    x: 0
-    y: 0
-    width: 800
-    height: 600
+    x: config.get 'poi.window.x', 0
+    y: config.get 'poi.window.y', 0
+    width: 1020
+    height: 650
   itemInfoWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     itemInfoWindow.openDevTools
