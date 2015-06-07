@@ -4,6 +4,7 @@ path = Promise.promisifyAll require 'path-extra'
 fs = Promise.promisifyAll require 'fs-extra'
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
+{spawnSync} = require 'child_process'
 AdmZip = require 'adm-zip'
 
 {SERVER_HOSTNAME, ROOT} = global
@@ -34,10 +35,17 @@ module.exports =
       else
         callback 'error'
       tempFile = path.join(path.tempdir(), "poi-update-#{version}.zip")
-      dir = path.join(ROOT, '..')
+      dir = path.join(ROOT)
+      tempdir = path.join(ROOT, '..', "poi-update-#{version}")
+      fs.ensureDirSync tempdir
       yield fs.writeFileAsync tempFile, body
       zip = new AdmZip tempFile
-      zip.extractAllTo dir, true
+      zip.extractAllTo tempdir, true
+      switch process.platform
+        when 'win32'
+          spawnSync 'move', ['/Y', tempdir, dir]
+        when 'linux', 'darwin'
+          spawnSync 'mv', [tempdir, dir]
       callback info
     catch e
       error e
