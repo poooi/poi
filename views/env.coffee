@@ -1,8 +1,9 @@
 require 'coffee-react/register'
+path = require 'path-extra'
 
 # Environments
 window.remote = require 'remote'
-window.ROOT = __dirname
+window.ROOT = path.join(__dirname, '..')
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
 window.POI_VERSION = remote.getGlobal 'POI_VERSION'
 window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
@@ -11,7 +12,7 @@ window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
-window.jQuery = require './components/jquery/dist/jquery'
+window.jQuery = require path.join(ROOT, 'components/jquery/dist/jquery')
 window.React = require 'react'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
@@ -101,6 +102,10 @@ proxy.addListener 'game.on.request', (method, path, body) ->
 responses = []
 locked = false
 resolveResponses = ->
+  extendShip = (ship) ->
+    _.extend window.$ships[ship.api_ship_id], ship
+  extendSlotitem = (item) ->
+    _.extend window.$slotitems[item.api_slotitem_id], item
   locked = true
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
@@ -111,17 +116,17 @@ resolveResponses = ->
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
         window.$ships = []
-        window.$ships[ship.api_id] = ship for ship in body.api_mst_ship
+        $ships[ship.api_id] = ship for ship in body.api_mst_ship
         window.$shipTypes = []
-        window.$shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
+        $shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
         window.$slotitems = []
-        window.$slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
+        $slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
         window.$mapareas = []
-        window.$mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
+        $mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
         window.$maps = []
-        window.$maps[map.api_id] = map for map in body.api_mst_mapinfo
+        $maps[map.api_id] = map for map in body.api_mst_mapinfo
         window.$missions = []
-        window.$missions[mission.api_id] = mission for mission in body.api_mst_mission
+        $missions[mission.api_id] = mission for mission in body.api_mst_mission
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
@@ -129,50 +134,52 @@ resolveResponses = ->
         window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_port/port'
         window._ships = body.api_ship
+        _ships[i] = extendShip ship for ship, i in _ships
       when '/kcsapi/api_get_member/slot_item'
         window._slotitems = body
+        _slotitems[i] = extendSlotitem item for item, i in _slotitems
       when '/kcsapi/api_req_kousyou/getship'
-        window._ships.push body.api_ship
-        for item in body.api_slotitem
-          window._slotitems.push item
+        _ships.push extendShip body.api_ship
+        if body.api_slotitem?
+          _slotitems.push extendSlotitem item for item in body.api_slotitem
       when '/kcsapi/api_req_kousyou/createitem'
-        window._slotitems.push body.api_slot_item if body.api_create_flag == 1
+        _slotitems.push extendSlotitem body.api_slot_item if body.api_create_flag == 1
       when '/kcsapi/api_req_kousyou/destroyship'
-        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
-        for itemId in window._ships[idx].api_slot
+        idx = _.sortedIndex _ships, {api_id: parseInt(postBody.api_ship_id)}, 'api_id'
+        for itemId in _ships[idx].api_slot
           continue if itemId == -1
-          itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
-          window._slotitems.splice itemIdx, 1
-        window._ships.splice idx, 1
+          itemIdx = _.sortedIndex _slotitems, {api_id: itemId}, 'api_id'
+          _slotitems.splice itemIdx, 1
+        _ships.splice idx, 1
       when '/kcsapi/api_req_kousyou/destroyitem2'
         for itemId in postBody.api_slotitem_ids.split(',')
-          idx = _.sortedIndex window._slotitems, {api_id: parseInt(itemId)}, 'api_id'
-          window._slotitems.splice idx, 1
+          idx = _.sortedIndex _slotitems, {api_id: parseInt(itemId)}, 'api_id'
+          _slotitems.splice idx, 1
       when '/kcsapi/api_req_hokyu/charge'
         for ship in body.api_ship
-          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
-          window._ships[idx] = _.extend window._ships[idx], ship
+          idx = _.sortedIndex _ships, {api_id: ship.api_id}, 'api_id'
+          _ships[idx] = _.extend _ships[idx], ship
       when '/kcsapi/api_get_member/ship_deck'
         for ship in body.api_ship_data
-          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
-          window._ships[idx] = ship
+          idx = _.sortedIndex _ships, {api_id: ship.api_id}, 'api_id'
+          _ships[idx] = extendShip ship
       when '/kcsapi/api_req_kaisou/slotset'
-        idx = _.sortedIndex window._ships, {api_id: parseInt(postBody.api_id)}, 'api_id'
-        window._ships[idx].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
+        idx = _.sortedIndex _ships, {api_id: parseInt(postBody.api_id)}, 'api_id'
+        _ships[idx].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
       when '/kcsapi/api_get_member/ship3'
         for ship in body.api_ship_data
-          idx = _.sortedIndex window._ships, {api_id: ship.api_id}, 'api_id'
-          window._ships[idx] = ship
+          idx = _.sortedIndex _ships, {api_id: ship.api_id}, 'api_id'
+          _ships[idx] = extendShip ship
       when '/kcsapi/api_req_kousyou/remodel_slot'
         if body.api_use_slot_id?
           for itemId in body.api_use_slot_id
-            itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
-            window._slotitems.splice itemIdx, 1
+            itemIdx = _.sortedIndex _slotitems, {api_id: itemId}, 'api_id'
+            _slotitems.splice itemIdx, 1
         if body.api_remodel_flag == 1 and body.api_after_slot?
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
-          itemIdx = _.sortedIndex window._slotitems, {api_id: itemId}, 'api_id'
-          window._slotitems[itemIdx] = afterSlot
+          itemIdx = _.sortedIndex _slotitems, {api_id: itemId}, 'api_id'
+          _slotitems[itemIdx] = extendSlotitem afterSlot
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true
@@ -187,8 +194,6 @@ proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   responses.push [method, path, body, postBody]
   resolveResponses() if !locked
 proxy.addListener 'game.start', ->
-  window.dispatchEvent new Event 'resize'
-
-views = ['layout', 'app', 'update']
-for view in views
-  require "./views/#{view}"
+  window.dispatchEvent new Event 'game.start'
+proxy.addListener 'game.payitem', ->
+  window.dispatchEvent new Event 'game.payitem'

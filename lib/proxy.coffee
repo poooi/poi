@@ -128,6 +128,8 @@ class Proxy extends EventEmitter
             res.end body
           if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
             self.emit 'game.start'
+          else if req.url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
+            self.emit 'game.payitem'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
     # HTTPS Requests
