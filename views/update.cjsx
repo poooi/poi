@@ -34,7 +34,9 @@ checkUpdate = ->
         func: doUpdate,
         style: 'primary'
       ]
-      toggleModal title, content, footer
+      if process.platform != 'win32'
+        toggleModal title, content, footer
+      else
+        toggleModal title, content
 
-if process.platform != 'win32'
-  setTimeout checkUpdate, 5000
+setTimeout checkUpdate, 5000
