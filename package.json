@@ -31,6 +31,7 @@
     "glob": "^5.0.10",
     "header-case-normalizer": "^1.0.2",
     "mime": "^1.3.4",
+    "mv": "^2.0.3",
     "objtree": "^0.1.1",
     "path-extra": "^1.0.3",
     "react": "^0.13.3",
