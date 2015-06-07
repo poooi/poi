@@ -5,7 +5,7 @@ shipTypes = ['', '海防艦', '駆逐艦', '軽巡洋艦', '重雷装巡洋艦',
              '超弩級戦艦', '潜水艦', '潜水空母', '補給艦', '水上機母艦', '揚陸艦', '装甲空母', '工作艦', '潜水母艦', '練習巡洋艦']
 ShipInfoCheckboxArea = React.createClass
   getInitialState: ->
-    checked: [false, true, true, true, true, true, true, true, true, true, true, true,
+    checked: [false, true, true, true, true, true, true, true, true, false, true, true,
               true, true, true, true, true, true, true, true, true, true, true, true]
     order: 0
     sortKey: 'id'
@@ -33,7 +33,7 @@ ShipInfoCheckboxArea = React.createClass
     checkboxes = []
     {checked} = @state
     for shipType, i in shipTypes
-      if i
+      if i != 0 && i != 9
         checked[i] = true
         checkboxes.push i
     @setState {checked}

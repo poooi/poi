@@ -85,6 +85,18 @@ window.proxy = remote.require './lib/proxy'
 
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
+# Custom theme
+window.theme = config.get 'poi.theme', '__default__'
+if theme == '__default__'
+  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
+else
+  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
+window.addEventListener 'theme.change', (e) ->
+  window.theme = e.detail.theme
+  if theme == '__default__'
+    $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
+  else
+    $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
 
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
@@ -103,9 +115,9 @@ responses = []
 locked = false
 resolveResponses = ->
   extendShip = (ship) ->
-    _.extend window.$ships[ship.api_ship_id], ship
+    _.extend _.clone(window.$ships[ship.api_ship_id]), ship
   extendSlotitem = (item) ->
-    _.extend window.$slotitems[item.api_slotitem_id], item
+    _.extend _.clone(window.$slotitems[item.api_slotitem_id]), item
   locked = true
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
