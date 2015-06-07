@@ -70,7 +70,17 @@ window.notify = (msg) ->
   new Notification 'poi',
     icon: "file://#{ROOT}/assets/icons/icon.png"
     body: msg
+modals = []
+window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
+  modals.push
+    title: title
+    content: content
+    footer: footer
+  window.showModal() if !window.modalLocked
+window.showModal = ->
+  return if modals.length == 0
+  {title, content, footer} = modals.shift()
   event = new CustomEvent 'poi.modal',
     bubbles: true
     cancelable: true
