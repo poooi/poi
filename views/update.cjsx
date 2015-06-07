@@ -36,4 +36,5 @@ checkUpdate = ->
       ]
       toggleModal title, content, footer
 
-setTimeout checkUpdate, 5000
+if process.platform != 'win32'
+  setTimeout checkUpdate, 5000

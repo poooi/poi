@@ -10,15 +10,12 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.horizonal.css"
 
 # Layout
 adjustSize = ->
-  $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "99%"
-  $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
-  setTimeout ->
-    $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "100%"
-    $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
-  , 200
   webview = $('kan-game webview')
   url = webview.getUrl()
-  return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' || webview.isLoading()
+  return if webview.isLoading()
+  if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
+    $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
+    return
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
     e.style.overflowX = "scroll"
   factor = Math.ceil(window.innerWidth / 7.0 * 5.0 / 800.0 * 100) / 100.0
@@ -35,7 +32,7 @@ adjustSize = ->
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
   $('kan-game').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
   $('poi-app').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
-setTimeout adjustSize, 200
+interval = setInterval adjustSize, 500
 
 adjustPayitem = ->
   webview = $('kan-game webview')
@@ -65,18 +62,19 @@ handleTitleSet = ->
       width: 0px;
     }
   """
-  adjustSize()
+  # adjustSize()
 # Hack CSS and Fix font family
 $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
 
 # Adjust elements layout
-window.addEventListener 'resize', adjustSize
-window.addEventListener 'game.start', adjustSize
+# window.addEventListener 'resize', adjustSize
+# window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
 
 module.exports =
   unload: ->
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.overflowX = "hidden"
-    window.removeEventListener 'resize', adjustSize
+    # window.removeEventListener 'resize', adjustSize
+    clearInterval interval
     $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
