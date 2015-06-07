@@ -1,3 +1,3 @@
 require 'coffee-react/register'
-require './env'
+require '../../views/env'
 require './views'

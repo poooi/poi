@@ -2,19 +2,6 @@
 {config, proxy} = window
 {setBounds, getBounds} = remote.require './lib/utils'
 
-# Custom theme
-theme = config.get 'poi.theme', '__default__'
-if theme != '__default__'
-  $('#bootstrap-css').setAttribute 'href', "./assets/themes/#{theme}/css/#{theme}.css"
-else
-  $('#bootstrap-css').setAttribute 'href', './components/bootstrap/dist/css/bootstrap.css'
-window.addEventListener 'theme.change', (e) ->
-  theme = e.detail.theme
-  if theme == '__default__'
-    $('#bootstrap-css').setAttribute 'href', './components/bootstrap/dist/css/bootstrap.css'
-  else
-    $('#bootstrap-css').setAttribute 'href', "./assets/themes/#{theme}/css/#{theme}.css"
-
 changeBounds = ->
   bound = getBounds()
   {x, y} = bound
