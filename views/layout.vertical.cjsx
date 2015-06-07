@@ -6,6 +6,9 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 
 # Layout
 adjustSize = ->
+  $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "99%"
+  $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "100%"
+  $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
   webview = $('kan-game webview')
   url = webview.getUrl()
@@ -24,7 +27,27 @@ adjustSize = ->
     window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
     document.documentElement.style.overflow = 'hidden';
   """
-adjustSize()
+setTimeout adjustSize, 500
+
+adjustPayitem = ->
+  webview = $('kan-game webview')
+  webview.executeJavaScript """
+    function fixPayitem() {
+      setTimeout(function() {
+        var alert = document.querySelector('#alert');
+        if (alert == null || typeof(alert) == 'undefined')
+          return;
+        alert.style.zoom = 0.8;
+        alert.style.left = '320px';
+        alert.style.top = '90px';
+      }, 500);
+    }
+    fixPayitem();
+    if (typeof(__POI_INJECTED_LISTENER__) == 'undefined') {
+      __POI_INJECTED_LISTENER__ = window.addEventListener('resize', fixPayitem);
+    }
+  """
+
 handleTitleSet = ->
   @insertCSS """
     * {
@@ -40,6 +63,8 @@ $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
 
 # Adjust elements layout
 window.addEventListener 'resize', adjustSize
+window.addEventListener 'game.start', adjustSize
+window.addEventListener 'game.payitem', adjustPayitem
 
 module.exports =
   unload: ->
