@@ -11,9 +11,11 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.horizonal.css"
 # Layout
 adjustSize = ->
   $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "99%"
-  $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "100%"
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
-  $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
+  setTimeout ->
+    $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "100%"
+    $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
+  , 200
   webview = $('kan-game webview')
   url = webview.getUrl()
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' || webview.isLoading()
@@ -33,7 +35,7 @@ adjustSize = ->
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
   $('kan-game').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
   $('poi-app').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
-setTimeout adjustSize, 500
+setTimeout adjustSize, 200
 
 adjustPayitem = ->
   webview = $('kan-game webview')

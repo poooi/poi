@@ -7,9 +7,11 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 # Layout
 adjustSize = ->
   $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "99%"
-  $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "100%"
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
-  $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
+  setTimeout ->
+    $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "100%"
+    $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
+  , 200
   webview = $('kan-game webview')
   url = webview.getUrl()
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' || webview.isLoading()
@@ -27,7 +29,7 @@ adjustSize = ->
     window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
     document.documentElement.style.overflow = 'hidden';
   """
-setTimeout adjustSize, 500
+setTimeout adjustSize, 200
 
 adjustPayitem = ->
   webview = $('kan-game webview')
