@@ -7,3 +7,9 @@
 [submodule "plugins/prophet"]
 	path = plugins/prophet
 	url = https://github.com/yudachi/plugin-prophet.git
+[submodule "plugins/item-improvement"]
+	path = plugins/item-improvement
+	url = https://github.com/yudachi/plugin-item-improvement
+[submodule "plugins/expedition"]
+	path = plugins/expedition
+	url = https://github.com/yudachi/plugin-expedition
