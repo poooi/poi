@@ -1,17 +1,18 @@
 {$, $$} = window
 
-if process.env.DEBUG?
-  $('kan-game webview')?.openDevTools
-    detach: true
-
 # Initial
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
 $('#layout-css').setAttribute 'href', "./assets/css/layout.horizonal.css"
+factor = null
 
 # Layout
 adjustSize = ->
   webview = $('kan-game webview')
-  url = webview?.getUrl()
+  url = null
+  try
+    url = webview?.getUrl?()
+  catch e
+    url = null
   # return if webview.isLoading()
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
     $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
@@ -33,7 +34,10 @@ adjustSize = ->
   $('kan-game').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
   $('poi-app').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
 # interval = setInterval adjustSize, 500
-adjustSize()
+if !window._delay
+  adjustSize()
+else
+  setTimeout adjustSize, 500
 
 adjustPayitem = ->
   webview = $('kan-game webview')
@@ -69,7 +73,12 @@ document.addEventListener 'DOMContentLoaded', ->
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
 
 # Adjust elements layout
-window.addEventListener 'resize', adjustSize
+handleResize = ->
+  if !window._delay
+    adjustSize()
+  else
+    window._delay = false
+window.addEventListener 'resize', handleResize
 window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
 
@@ -77,8 +86,13 @@ module.exports =
   unload: ->
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.overflowX = "hidden"
-    window.removeEventListener 'resize', adjustSize
+    window.removeEventListener 'resize', handleResize
     window.removeEventListener 'game.start', adjustSize
     window.removeEventListener 'game.payitem', adjustPayitem
     # clearInterval interval
     $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
+    if factor
+      $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 5}px"
+    else
+      $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 5}px"
+    window._delay = true

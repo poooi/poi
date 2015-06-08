@@ -147,9 +147,9 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   title = 'README'
   content =
     <div>
-      <p>诶嘿！欢迎使用 poi v{POI_VERSION}！poi 准备在 6 月 12 日发布正式版！在使用之前看看下面的东西吧！</p>
+      <p>诶嘿！欢迎使用 poi v{POI_VERSION}！poi 准备在 6 月 12 日发布正式版！使用之前看看下面！</p>
       <p style={color: 'red'}>poi 不能在含有中文或者全角字符的文件目录下正常运行！</p>
-      <p style={color: 'red'}>poi 不会修改任何游戏内的发包与收包，并且不提供给插件修改发包与收包的能力。但是请注意，请使用可信的 poi 版本和可信的插件！</p>
+      <p style={color: 'red'}>poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！</p>
       <p>poi 支持岛风go缓存包，将岛风go缓存包中的cache文件夹放在poi目录下即可，.hack.swf 魔改文件也是支持的。</p>
       <p>poi 默认使用一个公共Shadowsocks代理连接，但是性能不是很好，并且不会长期维护，仅供测试使用。更改代理的设置在设置面板中可以找到。
       <ul>
@@ -158,8 +158,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
         <li>使用Shadowsocks也可以用内置的Shadowsocks模块，不过性能不是很好。</li>
         <li>使用VPN的选择不使用代理就好了。</li>
       </ul></p>
-      <p>poi 有的时候会出现flash无法正常缩放的情况，多拖拖窗口，或者过一会儿拖拖窗口。这个功能依赖于网速，所以多多包容……</p>
-      <p>poi 对小分辨率不是特别友好……建议在小分辨率屏幕下使用横版，大分辨率下使用纵版防止缩放过度。</p>
+      <p>建议在小分辨率屏幕下使用横版，大分辨率下使用纵版防止缩放过度。</p>
       <p>如果 poi 的运行不流畅，可以在设置中关闭一部分插件，对插件的操作重启后生效。</p>
       <p>BUG 汇报 和 改进建议 - GitHub: https://github.com/yudachi/poi/issues </p>
     </div>
