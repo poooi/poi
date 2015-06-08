@@ -6,6 +6,11 @@
   <link rel="stylesheet" href="./components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="./assets/css/app.css">
   <link rel="stylesheet" id="layout-css" href="./assets/css/layout.horizonal.css">
+  <script>
+    require('coffee-script/register');
+    require('./views/env');
+    require('./views/layout');
+  </script>
 </head>
 <body>
   <poi-main>
@@ -27,13 +32,8 @@
     </poi-app>
   </poi-main>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      require('coffee-script/register');
-      require('./views/env');
-      require('./views/layout');
-      require('./views/app');
-      require('./views/update');
-    }, false);
+    require('./views/app');
+    require('./views/update');
   </script>
 </body>
 </html>

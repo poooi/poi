@@ -1,7 +1,7 @@
 {$, $$} = window
 
 if process.env.DEBUG?
-  $('kan-game webview').openDevTools
+  $('kan-game webview')?.openDevTools
     detach: true
 
 # Initial
@@ -11,7 +11,7 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.horizonal.css"
 # Layout
 adjustSize = ->
   webview = $('kan-game webview')
-  url = webview.getUrl()
+  url = webview?.getUrl()
   # return if webview.isLoading()
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
     $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight}px"
@@ -65,7 +65,8 @@ handleTitleSet = ->
   """
   adjustSize()
 # Hack CSS and Fix font family
-$('kan-game webview').addEventListener 'page-title-set', handleTitleSet
+document.addEventListener 'DOMContentLoaded', ->
+  $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
 
 # Adjust elements layout
 window.addEventListener 'resize', adjustSize

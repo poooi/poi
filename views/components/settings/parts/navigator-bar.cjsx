@@ -18,7 +18,7 @@ NavigatorBar = React.createClass
     # 0: Finish
     # 1: Loading
     navigateStatus: 1
-    navigateUrl: webview.getUrl()
+    navigateUrl: 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   handleSetUrl: (e) ->
     @setState
       navigateUrl: e.target.value

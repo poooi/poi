@@ -66,6 +66,9 @@ app.on 'ready', ->
     'web-preferences':
       'web-security': false
       'plugins': true
+  # Default menu in v0.27.3
+  if process.versions['electron'] >= '0.27.3'
+    mainWindow.setMenu null
   mainWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     mainWindow.openDevTools
