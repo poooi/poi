@@ -13,3 +13,9 @@
 [submodule "plugins/expedition"]
 	path = plugins/expedition
 	url = https://github.com/yudachi/plugin-expedition
+[submodule "plugins/item-info"]
+	path = plugins/item-info
+	url = https://github.com/yudachi/plugin-item-info
+[submodule "plugins/ship-info"]
+	path = plugins/ship-info
+	url = https://github.com/yudachi/plugin-ship-info
