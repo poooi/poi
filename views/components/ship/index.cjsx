@@ -161,8 +161,11 @@ module.exports =
           idx = parseInt(postBody.api_ship_idx)
           curId = decks[deckId].api_ship[idx]
           shipId = parseInt(postBody.api_ship_id)
+          # Remove all
+          if idx == -1
+            decks[deckId].api_ship[i] = -1 for i in [1..5]
           # Empty -> One
-          if curId == -1
+          else if curId == -1
             decks[deckId].api_ship[idx] = shipId
           # One -> Empty
           else if shipId == -1
@@ -193,6 +196,21 @@ module.exports =
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
           inBattle[deckId] = true
+        when '/kcsapi/api_req_kousyou/destroyship'
+          {decks} = @state
+          removeId = parseInt(postBody.api_ship_id)
+          [x, y] = [-1, -1]
+          for deck, i in decks
+            for shipId, j in deck.api_ship
+              if shipId == removeId
+                [x, y] = [i, j]
+                break
+          if y == 5
+            decks[x].api_ship[y] = -1
+          else
+            for idx in [y..4]
+              decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
+            decks[x].api_ship[5] = -1
         when '/kcsapi/api_req_map/next'
           {decks, states} = @state
           {$ships, _ships} = window
