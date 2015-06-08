@@ -8,7 +8,7 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 adjustSize = ->
   webview = $('kan-game webview')
   url = webview.getUrl()
-  return if webview.isLoading()
+  # return if webview.isLoading()
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
@@ -25,7 +25,8 @@ adjustSize = ->
     window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
     document.documentElement.style.overflow = 'hidden';
   """
-interval = setInterval adjustSize, 500
+# interval = setInterval adjustSize, 500
+adjustSize()
 
 adjustPayitem = ->
   webview = $('kan-game webview')
@@ -55,13 +56,13 @@ handleTitleSet = ->
       width: 0px;
     }
   """
-  # adjustSize()
+  adjustSize()
 # Hack CSS and Fix font family
 $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
 
 # Adjust elements layout
-# window.addEventListener 'resize', adjustSize
-# window.addEventListener 'game.start', adjustSize
+window.addEventListener 'resize', adjustSize
+window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
 
 module.exports =
@@ -69,6 +70,8 @@ module.exports =
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = ""
       e.style.overflowY = "hidden"
-    # window.removeEventListener 'resize', adjustSize
-    clearInterval interval
+    window.removeEventListener 'resize', adjustSize
+    window.removeEventListener 'game.start', adjustSize
+    window.removeEventListener 'game.payitem', adjustPayitem
+    # clearInterval interval
     $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
