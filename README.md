@@ -12,11 +12,11 @@ Scalable KanColle browser and tool.
 + Cache
 + Analysis
 + Notification
-+ Extension Support
++ Plugin Support
 
 ## Run
 
-First, get [Electron](https://github.com/atom/electron) **v0.26.1** and [io.js](https://iojs.org).
+First, get the latest version of [Electron](https://github.com/atom/electron) and [io.js](https://iojs.org).
 
 ```bash
 git clone https://github.com/yudachi/poi
@@ -28,10 +28,9 @@ cp default-config.json config.json
 /path/to/electron ./
 ```
 
+## Guides for developers
 
-## Roadmap
-
-Refer to https://github.com/yudachi/poi/issues/1
+About plugin, read the [docs](https://github.com/yudachi/poi/tree/master/docs).
 
 ## Based on
 
@@ -39,10 +38,6 @@ Refer to https://github.com/yudachi/poi/issues/1
 + [React](https://github.com/facebook/react)
 + [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
 + [Shadowsocks](https://github.com/shadowsocks/shadowsocks)
-
-## Contributing
-
-Don't push directly to master.
 
 ## License
 [The MIT License](https://github.com/yudachi/poi/blob/master/LICENSE)
