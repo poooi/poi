@@ -186,6 +186,7 @@ index.html
 ## 一些提示
 
 + 面板中显示的插件会被包裹在 <div id='插件名' /> 中，所以在自定义 CSS 中，建议用 `#插件名` 保证不影响全局 CSS。
++ 在 /path/to/poi/resources/app/app.coffee 中加入 process.env.DEBUG = 1 可以开启除错模式
 
 ## 实例参考
 
