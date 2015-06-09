@@ -205,12 +205,13 @@ module.exports =
               if shipId == removeId
                 [x, y] = [i, j]
                 break
-          if y == 5
-            decks[x].api_ship[y] = -1
-          else
-            for idx in [y..4]
-              decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
-            decks[x].api_ship[5] = -1
+          if x != -1 && y != -1
+            if y == 5
+              decks[x].api_ship[y] = -1
+            else
+              for idx in [y..4]
+                decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
+              decks[x].api_ship[5] = -1
         when '/kcsapi/api_req_map/next'
           {decks, states} = @state
           {$ships, _ships} = window
