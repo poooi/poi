@@ -8,7 +8,7 @@ fs = require 'fs-extra'
 # Environment
 global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
-global.APPDATA_PATH = app.getPath('appData')
+global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
