@@ -18,3 +18,10 @@
 #SettingsView #navigator-bar .container .btn-group {
   float: right;
 }
+#SettingsView #poi-config .form-group {
+  margin-bottom: 0px;
+}
+#SettingsView #poi-config #poi-resolutionr-config {
+  display: flex;
+  align-items: center;
+}
