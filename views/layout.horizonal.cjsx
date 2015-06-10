@@ -31,8 +31,8 @@ adjustSize = ->
     document.documentElement.style.overflow = 'hidden';
   """
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
-  $('kan-game').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
-  $('poi-app').style.marginTop = "#{(window.innerHeight - 480 * factor - 25) / 2.0}px"
+  $('kan-game').style.marginTop = "#{Math.max(0,(window.innerHeight - 480 * factor - 25)) / 2.0}px"
+  $('poi-app').style.marginTop = "#{Math.max(0,(window.innerHeight - 570)) / 2.0}px"
 # interval = setInterval adjustSize, 500
 if !window._delay
   adjustSize()
