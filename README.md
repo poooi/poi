@@ -52,10 +52,8 @@ cp default-config.json config.json
 [plugin-item-info(Bundled)](https://github.com/yudachi/plugin-item-info) by [Yunze](https://github.com/myzwillmake) 
 >Show infomation of all owned items.
 
-
-
-
-[plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis) Calculate the time requried of repair.
+[plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis) 
+>Calculate the time requried of repair.
 
 ## Guides for developers
 
