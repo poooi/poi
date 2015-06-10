@@ -198,6 +198,10 @@ resolveResponses = ->
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
+      when '/kcsapi/api_req_kaisou/powerup'
+        for shipId in postBody.api_id_items.split(',')
+          delete _ships[parseInt(shipId)]
+        _ships[body.api_ship.api_id] = extendShip body.api_ship
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true
