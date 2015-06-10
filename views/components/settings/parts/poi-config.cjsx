@@ -11,6 +11,8 @@ PoiConfig = React.createClass
   getInitialState: ->
     layout: config.get 'poi.layout', 'horizonal'
     theme: config.get 'poi.theme', '__default__'
+    gameWidth: config.get('poi.scale', window.gameScale) * window.innerWidth
+    useFixedResolution: if config.get('poi.scale') then true else false
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
@@ -32,8 +34,43 @@ PoiConfig = React.createClass
         theme: theme
     window.dispatchEvent event
     @setState {theme}
+  handleSetScale: (e) ->
+    @setState
+      gameWidth: @refs.scale.getValue()
+    width = parseInt @refs.scale.getValue()
+    return if isNaN(width) || width < 0 || !@state.useFixedResolution
+    scale = width / window.innerWidth
+    window.gameScale = scale
+    window.dispatchEvent new Event('scale.change')
+    config.set 'poi.scale', scale
+  handleResize: ->
+    {gameWidth} = @state
+    width = parseInt gameWidth
+    return if isNaN(width) || width < 0
+    if @state.useFixedResolution
+      scale = width / window.innerWidth
+      window.gameScale = scale
+      window.dispatchEvent new Event('scale.change')
+      config.set 'poi.scale', scale
+    else
+      @setState
+        gameWidth: window.innerWidth * window.gameScale
+  handleSetFixedResolution: (e) ->
+    current = @state.useFixedResolution
+    if current
+      config.set 'poi.scale', null
+      @setState
+        useFixedResolution: false
+    else
+      @setState
+        useFixedResolution: true
+      @handleResize()
+  componentDidMount: ->
+    window.addEventListener 'resize', @handleResize
+  componentWillUnmount: ->
+    window.removeEventListener 'resize', @handleResize
   render: ->
-    <form>
+    <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
         <Divider text="导航" />
         <NavigatorBar />
@@ -53,6 +90,31 @@ PoiConfig = React.createClass
           </Col>
         </Grid>
       </div>
+      {
+        if window.layout == 'horizonal'
+          <div className="form-group">
+            <Divider text="游戏分辨率" />
+            <Grid>
+              <Col xs={12}>
+                <Input type='checkbox' ref="useFixedResolution" label='使用固定分辨率' checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
+              </Col>
+            </Grid>
+            <Grid id="poi-resolutionr-config">
+              <Col xs={5}>
+                <Input type="number" ref="scale" value={@state.gameWidth} onChange={@handleSetScale} readOnly={!@state.useFixedResolution} />
+              </Col>
+              <Col xs={1}>
+                x
+              </Col>
+              <Col xs={5}>
+                <Input type="number" value={@state.gameWidth * 480 / 800} readOnly />
+              </Col>
+              <Col xs={1}>
+                px
+              </Col>
+            </Grid>
+          </div>
+      }
       <div className="form-group">
         <Divider text="主题" />
         <Grid>
