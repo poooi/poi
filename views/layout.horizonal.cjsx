@@ -63,6 +63,9 @@ handleTitleSet = ->
     * {
       font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif !important;
     }
+    #ntg-recommend {
+      display: none !important;
+    }
     ::-webkit-scrollbar {
       width: 0px;
     }
