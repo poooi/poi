@@ -2,6 +2,9 @@
 {resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip} = ReactBootstrap
 
+getMaterialImage = (idx) ->
+  return "#{ROOT}/assets/img/material/0#{idx}.png"
+
 KdockPanel = React.createClass
   getInitialState: ->
     docks: [
@@ -142,14 +145,24 @@ KdockPanel = React.createClass
             <tr key={i}>
               <OverlayTrigger placement='left' overlay={
                   <Tooltip>
-                    油 {@state.docks[i].material[0]} 弹 {@state.docks[i].material[1]}<br />
-                    钢 {@state.docks[i].material[2]} 铝 {@state.docks[i].material[3]}<br />
-                    资材 {@state.docks[i].material[4]}
+                    <img src={getMaterialImage 1} className="material-icon" /> {@state.docks[i].material[0]} <img src={getMaterialImage 3} className="material-icon" /> {@state.docks[i].material[2]}<br />
+                    <img src={getMaterialImage 2} className="material-icon" /> {@state.docks[i].material[1]} <img src={getMaterialImage 4} className="material-icon" /> {@state.docks[i].material[3]}<br />
+                    <img src={getMaterialImage 7} className="material-icon" /> {@state.docks[i].material[4]}
                   </Tooltip>
                 }>
-                <td>{@state.docks[i].name}</td>
+                {
+                  if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
+                    <td><strong style={color: '#d9534f'}>{@state.docks[i].name}</strong></td>
+                  else
+                    <td>{@state.docks[i].name}</td>
+                }
               </OverlayTrigger>
-              <td>{resolveTime @state.docks[i].countdown}</td>
+              {
+                if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
+                  <td><strong style={color: '#d9534f'}>{resolveTime @state.docks[i].countdown}</strong></td>
+                else
+                  <td>{resolveTime @state.docks[i].countdown}</td>
+              }
             </tr>
         }
         </tbody>
