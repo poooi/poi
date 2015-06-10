@@ -107,8 +107,8 @@ window =
   $maps: Array // 游戏中所有地图的基本资料，和游戏中的消息包一致，以 api_id 为 index。
   $missions: Array // 游戏中所有远征的基本资料，和游戏中的消息包一致，以 api_id 为 index。
   // _ 开头的是玩家相关的数据
-  _ships: Array // 玩家的所有舰船，以 api_id 排序，需要用二分查找。
-  _slotitems: Array // 玩家的所有装备，以 api_id 排序，需要用二分查找。
+  _ships: Object // 玩家的所有舰船，以 api_id 为 key。
+  _slotitems: Object // 玩家的所有装备，以 api_id 为 key。
   _decks: Array // 玩家目前的编队信息。
 ```
 
