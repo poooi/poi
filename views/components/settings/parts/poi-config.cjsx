@@ -90,6 +90,20 @@ PoiConfig = React.createClass
           </Col>
         </Grid>
       </div>
+      <div className="form-group">
+        <Divider text="主题" />
+        <Grid>
+          <Col xs={12}>
+            <Input type="select" ref="theme" value={@state.theme} onChange={@handleSetTheme}>
+              {
+                themes.map (theme, index) ->
+                  <option key={index} value={theme}>{theme[0].toUpperCase() + theme.slice(1)}</option>
+              }
+              <option key={-1} value="__default__">Default</option>
+            </Input>
+          </Col>
+        </Grid>
+      </div>
       {
         if window.layout == 'horizonal'
           <div className="form-group">
@@ -115,20 +129,6 @@ PoiConfig = React.createClass
             </Grid>
           </div>
       }
-      <div className="form-group">
-        <Divider text="主题" />
-        <Grid>
-          <Col xs={12}>
-            <Input type="select" ref="theme" value={@state.theme} onChange={@handleSetTheme}>
-              {
-                themes.map (theme, index) ->
-                  <option key={index} value={theme}>{theme[0].toUpperCase() + theme.slice(1)}</option>
-              }
-              <option key={-1} value="__default__">Default</option>
-            </Input>
-          </Col>
-        </Grid>
-      </div>
     </form>
 
 module.exports = PoiConfig
