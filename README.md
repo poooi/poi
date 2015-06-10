@@ -21,6 +21,8 @@ First, get the latest version of [Electron](https://github.com/atom/electron) an
 ```bash
 git clone https://github.com/yudachi/poi
 cd poi
+git submodule init
+git submodule update
 npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
