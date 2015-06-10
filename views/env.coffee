@@ -135,6 +135,8 @@ resolveResponses = ->
     # Important! Clone a copy of proxy objects!
     body = Object.remoteClone body
     postBody = Object.remoteClone postBody
+    # Delete api_token
+    delete postBody.api_token if postBody?.api_token?
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
@@ -207,7 +209,6 @@ resolveResponses = ->
     window.dispatchEvent event
   locked = false
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
-  delete postBody.api_token if postBody?.api_token?
   responses.push [method, path, body, postBody]
   resolveResponses() if !locked
 proxy.addListener 'game.start', ->
