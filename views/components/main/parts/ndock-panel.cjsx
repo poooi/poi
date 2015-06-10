@@ -40,9 +40,8 @@ NdockPanel = React.createClass
                 countdown: -1
               notified[id] = false
             when 1
-              idx = _.sortedIndex _ships, {api_id: ndock.api_ship_id}, 'api_id'
               docks[id] =
-                name: $ships[_ships[idx].api_ship_id].api_name
+                name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
                 countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
         @setState
           docks: docks

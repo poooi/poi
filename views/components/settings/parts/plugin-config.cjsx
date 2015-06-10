@@ -37,9 +37,13 @@ PluginConfig = React.createClass
           </Col>
       }
       </Grid>
-      <Alert bsStyle='warning'>
-        关闭或者开启插件的设置在重新启动后生效。
-      </Alert>
+      <Grid>
+        <Col xs={12}>
+          <Alert bsStyle='warning'>
+            关闭或者开启插件的设置在重新启动后生效。
+          </Alert>
+        </Col>
+      </Grid>
     </form>
 
 module.exports = PluginConfig

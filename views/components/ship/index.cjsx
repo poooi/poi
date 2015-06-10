@@ -52,8 +52,7 @@ getDeckState = (deck, ndocks) ->
     state = Math.max(state, 4)
   for shipId in deck.api_ship
     continue if shipId == -1
-    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
-    ship = _ships[idx]
+    ship = _ships[shipId]
     shipInfo = $ships[ship.api_ship_id]
     # Cond < 20 or medium damage
     if ship.api_cond < 20 || ship.api_nowhp / ship.api_maxhp < 0.25
@@ -73,16 +72,14 @@ getDeckMessage = (deck) ->
   totalLv = totalShip = totalTyku = totalSaku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
-    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
-    ship = _ships[idx]
+    ship = _ships[shipId]
     shipInfo = $ships[ship.api_ship_id]
     totalLv += ship.api_lv
     totalShip += 1
     totalSaku += Math.sqrt(ship.api_sakuteki[0]) * 1.69
     for itemId, slotId in ship.api_slot
       continue if itemId == -1
-      idx = _.sortedIndex _slotitems, {api_id: itemId}, 'api_id'
-      item = _slotitems[idx]
+      item = _slotitems[itemId]
       itemInfo = $slotitems[item.api_slotitem_id]
       # Airplane Tyku
       if itemInfo.api_type[3] in [6, 7, 8]
@@ -121,8 +118,7 @@ getCondCountdown = (deck) ->
   countdown = 0
   for shipId in deck.api_ship
     continue if shipId == -1
-    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
-    ship = _ships[idx]
+    ship = _ships[shipId]
     if ship.api_cond < 49
       countdown = Math.max(countdown, Math.ceil((49 - ship.api_cond) / 3) * 180)
   countdown
@@ -219,8 +215,7 @@ module.exports =
             continue if states[i] != 5
             for shipId in deck.api_ship
               continue if shipId == -1
-              idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
-              ship = _ships[idx]
+              ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
@@ -293,8 +288,7 @@ module.exports =
                 {
                   for shipId, j in deck.api_ship
                     continue if shipId == -1
-                    idx = _.sortedIndex _ships, {api_id: shipId}, 'api_id'
-                    ship = _ships[idx]
+                    ship = _ships[shipId]
                     shipInfo = $ships[ship.api_ship_id]
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [

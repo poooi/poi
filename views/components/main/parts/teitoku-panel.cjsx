@@ -49,40 +49,40 @@ TeitokuPanel = React.createClass
         for e in body.api_material
           material[e.api_id] = e.api_value
         @setState
-          shipCount: window._ships.length
+          shipCount: Object.keys(window._ships).length
           material: material
-          slotitemCount: window._slotitems.length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_get_member/slot_item'
         @setState
-          slotitemCount: window._slotitems.length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/getship'
         @setState
-          shipCount: window._ships.length
-          slotitemCount: window._slotitems.length
+          shipCount: Object.keys(window._ships).length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/createitem'
         @setState
-          slotitemCount: window._slotitems.length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/destroyitem2'
         {material} = @state
         for i in [0..3]
           material[i + 1] += body.api_get_material[i]
         @setState
           material: material
-          slotitemCount: window._slotitems.length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/destroyship'
         {material} = @state
         for i in [0..3]
           material[i + 1] = body.api_material[i]
         @setState
           material: material
-          shipCount: window._ships.length
-          slotitemCount: window._slotitems.length
+          shipCount: Object.keys(window._ships).length
+          slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_get_member/material'
         {material} = @state
         for e in body
           material[e.api_id] = e.api_value
         @setState
-          shipCount: window._ships.length
+          shipCount: Object.keys(window._ships).length
           material: material
       when '/kcsapi/api_req_hokyu/charge'
         {material} = @state
@@ -92,7 +92,7 @@ TeitokuPanel = React.createClass
           material: material
       when '/kcsapi/api_req_kousyou/remodel_slot'
         @setState
-          slotitemCount: window._slotitems.length
+          slotitemCount: Object.keys(window._slotitems).length
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
