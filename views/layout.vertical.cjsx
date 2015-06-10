@@ -34,6 +34,7 @@ if !window._delay
   adjustSize()
 else
   setTimeout adjustSize, 500
+  setTimeout adjustSize, 2000
 
 adjustPayitem = ->
   webview = $('kan-game webview')

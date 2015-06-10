@@ -1,4 +1,4 @@
-{$, $$} = window
+{$, $$, gameScale} = window
 
 # Initial
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
@@ -19,7 +19,7 @@ adjustSize = ->
     return
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
     e.style.overflowX = "scroll"
-  factor = Math.ceil(window.innerWidth / 7.0 * 5.0 / 800.0 * 100) / 100.0
+  factor = Math.ceil(window.innerWidth * gameScale / 800.0 * 100) / 100.0
   webview.executeJavaScript """
     var iframe = document.querySelector('#game_frame').contentWindow.document;
     document.querySelector('html').style.zoom = #{factor};
@@ -38,6 +38,7 @@ if !window._delay
   adjustSize()
 else
   setTimeout adjustSize, 500
+  setTimeout adjustSize, 2000
 
 adjustPayitem = ->
   webview = $('kan-game webview')
@@ -81,7 +82,16 @@ handleResize = ->
     adjustSize()
   else
     window._delay = false
+handleChangeScale = ->
+  {gameScale} = window
+  $('kan-game').style.flex = gameScale
+  $('poi-app').style.flex = 1 - gameScale
+  handleResize()
+if config.get('poi.scale', false)
+  document.addEventListener 'DOMContentLoaded', handleResize
+
 window.addEventListener 'resize', handleResize
+window.addEventListener 'scale.change', handleChangeScale
 window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
 
@@ -90,10 +100,13 @@ module.exports =
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.overflowX = "hidden"
     window.removeEventListener 'resize', handleResize
+    window.removeEventListener 'scale.change', handleChangeScale
     window.removeEventListener 'game.start', adjustSize
     window.removeEventListener 'game.payitem', adjustPayitem
     # clearInterval interval
     $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
+    $('kan-game').style.flex = null
+    $('poi-app').style.flex = null
     if factor
       $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 5}px"
     else
