@@ -1,0 +1,25 @@
+#Repair label {
+  font-size: 13px;
+}
+#Repair .hidden {
+  display: none;
+}
+#Repair .show {
+  display: block;
+}
+#Repair table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#Repair table tr td {
+  padding-left: 5px;
+  font-size: 100%;
+}
+#Repair table {
+  font-size: 100%;
+  text-align: center;
+}
+#Repair {
+  margin-top: 15px;
+}
