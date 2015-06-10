@@ -65,14 +65,14 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_kousyou/destroyitem2'
         {material} = @state
         for i in [0..3]
-          material[i] += body.api_get_material[i]
+          material[i + 1] += body.api_get_material[i]
         @setState
           material: material
           slotitemCount: window._slotitems.length
       when '/kcsapi/api_req_kousyou/destroyship'
         {material} = @state
         for i in [0..3]
-          material[i] = body.api_material[i]
+          material[i + 1] = body.api_material[i]
         @setState
           material: material
           shipCount: window._ships.length
