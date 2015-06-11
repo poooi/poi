@@ -3,12 +3,12 @@
 
 getStyleByProgress = (progress) ->
   switch progress
-    when '进行中'
-      return 'default'
+    when '进行'
+      return 'warning'
     when '50%'
-      return 'info'
-    when '80%'
       return 'primary'
+    when '80%'
+      return 'info'
     when '达成'
       return 'success'
     else
@@ -55,7 +55,7 @@ TaskPanel = React.createClass
         for task in body.api_list
           continue if task is -1 || task.api_state < 2
           # Determine progress
-          progress = '进行中'
+          progress = '进行'
           if task.api_state == 3
             progress = '达成'
           else if task.api_progress_flag == 1
@@ -105,16 +105,11 @@ TaskPanel = React.createClass
     @setState
       tasks: tasks
   componentDidMount: ->
-    # Fix task panel height uglily
-    setTimeout ->
-      height = window.getComputedStyle($('.mission-panel .panel-body')).height
-      $('.task-panel .panel-body').style.height = "#{height}"
-    , 2000
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Panel header="任务" bsStyle="primary">
+    <Panel header="任务" bsStyle="success">
       <Table>
         <tbody>
         {

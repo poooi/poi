@@ -110,9 +110,9 @@ MissionPanel = React.createClass
                 <td colSpan="2">
                   {
                     if @state.decks[i].mission?
-                      <span>{@state.decks[i].mission}</span>
+                      <span>↳ {@state.decks[i].mission}</span>
                     else
-                      <span>&nbsp;</span>
+                      <span>↳</span>
                   }
                 </td>
               </tr>

@@ -16,7 +16,7 @@ getStyle = (state) ->
   if state.nickname?
     return 'primary'
   else
-    return 'danger'
+    return 'default'
 
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
