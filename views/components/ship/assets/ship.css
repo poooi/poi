@@ -61,7 +61,7 @@
   position: relative;
 }
 #ShipView .material-progress .progress .progress-bar {
-  font-size: 10px;
+  font-size: 9px;
   line-height: 12px;
 }
 #ShipView .material-progress .progress .progress-bar span span {
