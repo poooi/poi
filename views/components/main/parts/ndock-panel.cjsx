@@ -1,6 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime} = window
-{Panel, Table} = ReactBootstrap
+{Panel, Table, Label} = ReactBootstrap
 
 NdockPanel = React.createClass
   getInitialState: ->
@@ -70,7 +70,16 @@ NdockPanel = React.createClass
           for i in [1..4]
             <tr key={i}>
               <td>{@state.docks[i].name}</td>
-              <td>{resolveTime @state.docks[i].countdown}</td>
+              <td>
+                {
+                  if @state.docks[i].countdown > 0
+                    <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
+                  if @state.docks[i].countdown is 0
+                    <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
+                  else
+                    <Label bsStyle="default">-</Label>
+                }
+              </td>
             </tr>
         }
         </tbody>

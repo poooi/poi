@@ -21,13 +21,17 @@
 }
 #MainView table tr td {
   font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 5px;
 }
-#MainView .task-panel table tr td {
-  font-size: 12px;
+#MainView table tr td:first-child {
+  width: 60%;
 }
-#MainView .task-panel .table tbody tr td {
-  padding-top: 2px;
-  padding-bottom: 3px;
+#MainView table tr td:last-child {
+  width: 40%;
+}
+#MainView table tr td[colspan] {
+  width: 100% !important;
 }
 #MainView .panel-container {
   padding-left: 0px;
