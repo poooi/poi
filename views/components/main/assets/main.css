@@ -21,13 +21,26 @@
 }
 #MainView table tr td {
   font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 5px;
 }
-#MainView .task-panel table tr td {
-  font-size: 12px;
+#MainView table tr td:first-child {
+  width: 55%;
+  text-align: left;
 }
-#MainView .task-panel .table tbody tr td {
-  padding-top: 2px;
-  padding-bottom: 3px;
+#MainView table tr td:last-child {
+  width: 45%;
+  text-align: right;
+}
+#MainView .task-panel table tr td:first-child {
+  width: 65%;
+}
+#MainView .task-panel table tr td:last-child {
+  width: 35%;
+}
+#MainView table tr td[colspan] {
+  width: 100% !important;
+  text-align: left;
 }
 #MainView .panel-container {
   padding-left: 0px;
@@ -38,7 +51,7 @@
   padding-right: 1px;
 }
 #MainView .teitoku-panel .col-xs-6, #MainView .teitoku-panel .col-xs-3 {
-  padding-left: 0px;
+  padding-left: 8px;
   padding-right: 0px;
 }
 #MainView .panel-body table td {

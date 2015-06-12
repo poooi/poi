@@ -293,9 +293,21 @@ module.exports =
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [
                       <tr key={j * 2}>
-                        <td width="20%">{shipType}</td>
-                        <td width="22%">Next. {ship.api_exp[1]}</td>
-                        <td width="25%" className="material-progress">
+                        <td width="20%">{shipInfo.api_name}</td>
+                        <td width="22%">Lv. {ship.api_lv}</td>
+                        <td width="25%" className="hp-progress">
+                          <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+                                       now={ship.api_nowhp / ship.api_maxhp * 100}
+                                       label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
+                        </td>
+                        <td width="33%">
+                          <Slotitems data={ship.api_slot} />
+                        </td>
+                      </tr>
+                      <tr key={j * 2 + 1}>
+                        <td>{shipType}</td>
+                        <td>Next. {ship.api_exp[1]}</td>
+                        <td className="material-progress">
                           <Grid>
                             <Col xs={6}>
                               <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
@@ -309,19 +321,7 @@ module.exports =
                             </Col>
                           </Grid>
                         </td>
-                        <td width="33%" style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
-                      </tr>
-                      <tr key={j * 2 + 1}>
-                        <td>{shipInfo.api_name}</td>
-                        <td>Lv. {ship.api_lv}</td>
-                        <td className="hp-progress">
-                          <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
-                                       now={ship.api_nowhp / ship.api_maxhp * 100}
-                                       label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
-                        </td>
-                        <td>
-                          <Slotitems data={ship.api_slot} />
-                        </td>
+                        <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
                       </tr>
                     ]
                 }

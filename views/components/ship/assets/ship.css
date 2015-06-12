@@ -13,24 +13,27 @@
 }
 #ShipView table td {
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 #ShipView table tr:nth-child(odd) td {
-  font-size: 90%;
+  font-size: 120%;
+  padding-top: 12px;
 }
 #ShipView table tr:nth-child(even) td {
-  font-size: 120%;
+  font-size: 90%;
+  padding-top: 4px;
 }
 #ShipView table tr td {
   padding-bottom: 0px;
   border: none;
+  vertical-align: middle;
 }
 #ShipView .slotitem-container img {
   width: 30px;
   height: 30px;
-  margin-top: -10px;
-  margin-left: -3px;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  margin-left: -5px;
 }
 #ShipView .progress {
   border-radius: 0px;
@@ -58,7 +61,7 @@
   position: relative;
 }
 #ShipView .material-progress .progress .progress-bar {
-  font-size: 10px;
+  font-size: 9px;
   line-height: 12px;
 }
 #ShipView .material-progress .progress .progress-bar span span {

@@ -1,6 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime, success, warn} = window
-{Panel, Table, OverlayTrigger, Tooltip} = ReactBootstrap
+{Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
 
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
@@ -157,12 +157,19 @@ KdockPanel = React.createClass
                     <td>{@state.docks[i].name}</td>
                 }
               </OverlayTrigger>
-              {
-                if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
-                  <td><strong style={color: '#d9534f'}>{resolveTime @state.docks[i].countdown}</strong></td>
-                else
-                  <td>{resolveTime @state.docks[i].countdown}</td>
-              }
+              <td>
+                {
+                  if @state.docks[i].countdown > 0
+                    if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
+                      <Label bsStyle="danger">{resolveTime @state.docks[i].countdown}</Label>
+                    else
+                      <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
+                  else if @state.docks[i].countdown is 0
+                    <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
+                  else
+                    <Label bsStyle="default">-</Label>
+                }
+              </td>
             </tr>
         }
         </tbody>

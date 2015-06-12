@@ -1,5 +1,5 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{Panel, Table} = ReactBootstrap
+{Panel, Table, Label} = ReactBootstrap
 {resolveTime} = window
 {notify} = window
 
@@ -8,26 +8,32 @@ MissionPanel = React.createClass
     decks: [
         name: '第0艦隊'
         countdown: -1
+        mission: null
       ,
         name: '第1艦隊'
         countdown: -1
+        mission: null
       ,
         name: '第2艦隊'
         countdown: -1
+        mission: null
       ,
         name: '第3艦隊'
         countdown: -1
+        mission: null
       ,
         name: '第4艦隊'
         countdown: -1
+        mission: null
     ]
     notified: []
   handleResponse: (e) ->
+    {$missions} = window
     {method, path, body, postBody} = e.detail
     switch path
       when '/kcsapi/api_port/port'
         {decks, notified} = @state
-        for deck in body.api_deck_port
+        for deck in body.api_deck_port[1..3]
           id = deck.api_id
           countdown = -1
           switch deck.api_mission[0]
@@ -41,9 +47,15 @@ MissionPanel = React.createClass
             # Just come back
             when 2
               countdown = 0
+          mission_id = deck.api_mission[1]
+          if mission_id isnt 0
+            mission = $missions[mission_id].api_name
+          else
+            mission = null
           decks[id] =
             name: deck.api_name
             countdown: countdown
+            mission: mission
         @setState
           decks: decks
           notified: notified
@@ -51,6 +63,8 @@ MissionPanel = React.createClass
         id = postBody.api_deck_id
         {decks, notified} = @state
         decks[id].countdown = Math.floor((body.api_complatetime - new Date()) / 1000)
+        mission_id = postBody.api_mission_id
+        decks[id].mission = $missions[mission_id].api_name
         notified[id] = false
         @setState
           decks: decks
@@ -77,11 +91,32 @@ MissionPanel = React.createClass
       <Table>
         <tbody>
         {
-          for i in [1..4]
-            <tr key={i}>
-              <td>{@state.decks[i]?.name}</td>
-              <td>{resolveTime @state.decks[i].countdown}</td>
-            </tr>
+          for i in [2..4]
+            <div>
+              <tr key={"mission_time_"+i}>
+                <td>{@state.decks[i].name}</td>
+                <td>
+                  {
+                    if @state.decks[i].countdown > 0
+                      <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
+                    else if @state.decks[i].countdown is 0
+                      <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
+                    else
+                      <Label bsStyle="default">-</Label>
+                  }
+                </td>
+              </tr>
+              <tr key={"mission_name_"+i}>
+                <td colSpan="2">
+                  {
+                    if @state.decks[i].mission?
+                      <span>↳ {@state.decks[i].mission}</span>
+                    else
+                      <span>↳</span>
+                  }
+                </td>
+              </tr>
+            </div>
         }
         </tbody>
       </Table>
