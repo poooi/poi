@@ -9,6 +9,10 @@ fs = require 'fs-extra'
 global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
+if process.platform == 'darwin'
+  global.EXROOT = global.APPDATA_PATH
+else
+  global.EXROOT = global.EXECROOT
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else

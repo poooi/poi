@@ -3,12 +3,20 @@ path = require 'path'
 fs = require 'fs-extra'
 {log, warn, error} = require './utils'
 
-{ROOT} = global
+{ROOT, EXROOT} = global
 
 config = {}
-configPath = path.join(ROOT, 'config.json')
+defaultConfigPath = path.join(ROOT, 'config.json')
+configPath = path.join(EXROOT, 'config.json')
 
 # Read saved config
+try
+  fs.accessSync defaultConfigPath, fs.R_OK | fs.W_OK
+  config = fs.readJsonSync defaultConfigPath
+catch e
+  warn e
+
+# Read user config
 try
   fs.accessSync configPath, fs.R_OK | fs.W_OK
   config = fs.readJsonSync configPath

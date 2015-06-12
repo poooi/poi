@@ -8,6 +8,8 @@ glob = require 'glob'
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
+exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
+plugins = plugins.concat(exPlugins)
 plugins = plugins.filter (filePath) ->
   # Every plugin will be required
   try
