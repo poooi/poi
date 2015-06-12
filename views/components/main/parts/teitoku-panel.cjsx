@@ -12,12 +12,6 @@ getHeader = (state) ->
   else
     return '提督 [尚未登录]'
 
-getStyle = (state) ->
-  if state.nickname?
-    return 'primary'
-  else
-    return 'default'
-
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
 
@@ -98,7 +92,7 @@ TeitokuPanel = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Panel header={getHeader @state} bsStyle={getStyle @state} className="teitoku-panel">
+    <Panel header={getHeader @state} bsStyle="default" className="teitoku-panel">
       <Grid>
         <Col xs={6}>舰娘：{@state.shipCount} / {@state.maxChara}</Col>
         <Col xs={6}>装备：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
