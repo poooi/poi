@@ -92,31 +92,31 @@ MissionPanel = React.createClass
         <tbody>
         {
           for i in [2..4]
-          [
-            <tr key={i * 2}>
-              <td>{@state.decks[i].name}</td>
-              <td>
-                {
-                  if @state.decks[i].countdown > 0
-                    <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
-                  else if @state.decks[i].countdown is 0
-                    <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
-                  else
-                    <Label bsStyle="default"></Label>
-                }
-              </td>
-            </tr>,
-            <tr key={i * 2 + 1}>
-              <td colSpan="2">
-                {
-                  if @state.decks[i].mission?
-                    <span>↳ {@state.decks[i].mission}</span>
-                  else
-                    <span>↳</span>
-                }
-              </td>
-            </tr>
-          ]
+            [
+              <tr key={i * 2}>
+                <td>{@state.decks[i].name}</td>
+                <td>
+                  {
+                    if @state.decks[i].countdown > 0
+                      <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
+                    else if @state.decks[i].countdown is 0
+                      <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
+                    else
+                      <Label bsStyle="default"></Label>
+                  }
+                </td>
+              </tr>,
+              <tr key={i * 2 + 1}>
+                <td colSpan="2">
+                  {
+                    if @state.decks[i].mission?
+                      <span>↳ {@state.decks[i].mission}</span>
+                    else
+                      <span>↳</span>
+                  }
+                </td>
+              </tr>
+            ]
         }
         </tbody>
       </Table>

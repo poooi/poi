@@ -79,7 +79,7 @@ ControlledTabArea = React.createClass
 
 PoiAlert = React.createClass
   getInitialState: ->
-    message: 'poi 正常运行中'
+    message: 'poi 连接网络中'
     type: 'success'
   handleAlert: (e) ->
     @setState
