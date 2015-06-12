@@ -42,7 +42,6 @@ module.exports =
         cur[p] = value
     # Save to file
     try
-      fs.accessSync configPath, fs.R_OK | fs.W_OK
-      fs.writeJsonSync configPath, config
+      fs.writeFileSync configPath, JSON.stringify(config, null, 2)
     catch e
       warn e
