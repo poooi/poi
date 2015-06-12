@@ -124,7 +124,7 @@ PoiConfig = React.createClass
           </Col>
           <Col xs={12}>
             <Alert bsStyle='warning' style={marginTop: '10px'}>
-              如果有未知原因的连接错误与猫，删除以上两项，重启软件后生效。
+              如果经常猫，删除以上两项。
             </Alert>
           </Col>
         </Grid>
