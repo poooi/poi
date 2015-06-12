@@ -1,8 +1,11 @@
 path = require 'path-extra'
+fs = require 'fs-extra'
 glob = require 'glob'
+rimraf = require 'rimraf'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Button, ButtonGroup, Input} = ReactBootstrap
-{config} = window
+{Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
+{config, toggleModal} = window
+{APPDATA_PATH} = window
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
@@ -65,6 +68,22 @@ PoiConfig = React.createClass
       @setState
         useFixedResolution: true
       @handleResize()
+  handleClearCookie: (e) ->
+    rimraf path.join(APPDATA_PATH, 'Cookies'), (err) ->
+      if err?
+        toggleModal '删除 Cookies', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cookies')}"
+      else
+        toggleModal '删除 Cookies', '删除成功，请立刻重启软件。'
+  handleClearCache: (e) ->
+    error = null
+    rimraf path.join(APPDATA_PATH, 'Cache'), (err) ->
+      error = error || err
+      rimraf path.join(APPDATA_PATH, 'Pepper Data'), (err) ->
+        error = error || err
+        if error
+          toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')} 和 #{path.join(APPDATA_PATH, 'Pepper Data')}"
+        else
+          toggleModal '删除浏览器缓存', '删除成功，请立刻重启软件。'
   componentDidMount: ->
     window.addEventListener 'resize', @handleResize
   componentWillUnmount: ->
@@ -87,6 +106,26 @@ PoiConfig = React.createClass
             <Button bsStyle={if @state.layout == 'vertical' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'vertical'} style={width: '100%'}>
               {if @state.layout == 'vertical' then '√ ' else ''}使用纵版布局
             </Button>
+          </Col>
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text="Cookies 和缓存" />
+        <Grid>
+          <Col xs={6}>
+            <Button bsStyle="danger" onClick={@handleClearCookie} style={width: '100%'}>
+              删除 Cookies
+            </Button>
+          </Col>
+          <Col xs={6}>
+            <Button bsStyle="danger" onClick={@handleClearCache} style={width: '100%'}>
+              删除浏览器缓存
+            </Button>
+          </Col>
+          <Col xs={12}>
+            <Alert bsStyle='warning' style={marginTop: '10px'}>
+              如果有未知原因的连接错误与猫，删除以上两项，重启软件后生效。
+            </Alert>
           </Col>
         </Grid>
       </div>
