@@ -20,32 +20,32 @@ TaskPanel = React.createClass
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
     ]
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -89,7 +89,7 @@ TaskPanel = React.createClass
           name: '未接受'
           id: 100000
           content: '...'
-          progress: '-'
+          progress: ''
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
         idx = _.findIndex tasks, (e) ->
@@ -99,7 +99,7 @@ TaskPanel = React.createClass
           name: '未接受'
           id: 100000
           content: '...'
-          progress: '-'
+          progress: ''
     tasks = _.sortBy tasks, (e) ->
       e.id
     @setState

@@ -167,7 +167,7 @@ KdockPanel = React.createClass
                   else if @state.docks[i].countdown is 0
                     <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
                   else
-                    <Label bsStyle="default">-</Label>
+                    <Label bsStyle="default"></Label>
                 }
               </td>
             </tr>

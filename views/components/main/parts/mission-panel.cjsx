@@ -93,7 +93,7 @@ MissionPanel = React.createClass
         {
           for i in [2..4]
             <div>
-              <tr key={"mission_time_"+i}>
+              <tr key={"mission_time_" + i}>
                 <td>{@state.decks[i].name}</td>
                 <td>
                   {
@@ -102,11 +102,11 @@ MissionPanel = React.createClass
                     else if @state.decks[i].countdown is 0
                       <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
                     else
-                      <Label bsStyle="default">-</Label>
+                      <Label bsStyle="default"></Label>
                   }
                 </td>
               </tr>
-              <tr key={"mission_name_"+i}>
+              <tr key={"mission_name_" + i}>
                 <td colSpan="2">
                   {
                     if @state.decks[i].mission?

@@ -88,7 +88,7 @@ handleChangeScale = ->
   $('poi-app').style.flex = 1 - gameScale
   handleResize()
 if config.get('poi.scale', false)
-  document.addEventListener 'DOMContentLoaded', handleResize
+  document.addEventListener 'DOMContentLoaded', handleChangeScale
 
 window.addEventListener 'resize', handleResize
 window.addEventListener 'scale.change', handleChangeScale
