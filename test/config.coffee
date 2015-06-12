@@ -1,6 +1,6 @@
 assert = require 'assert'
 # Environments
-global.ROOT = __dirname
+global.ROOT = global.EXROOT = __dirname
 config = null
 
 describe 'config', ->

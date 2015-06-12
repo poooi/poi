@@ -3,7 +3,7 @@ fs = require 'fs-extra'
 path = require 'path-extra'
 
 # Environments
-global.ROOT = __dirname
+global.ROOT = global.EXROOT = __dirname
 config = null
 
 describe 'config with saved file', ->

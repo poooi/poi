@@ -57,7 +57,7 @@ else if process.platform == 'darwin'
     app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
 
 app.on 'window-all-closed', ->
-  app.quit() unless process.platform == 'darwin'
+  app.quit()
 
 app.on 'ready', ->
   screen = require 'screen'
