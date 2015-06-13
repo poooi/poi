@@ -16,7 +16,7 @@ socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 
 config = require './config'
-{log, warn, error, resolveBody, isStaticResource, findHack, findHackExecPath, findCache, findCacheExecPath} = require './utils'
+{log, warn, error, resolveBody, isStaticResource, findHack, findHackExPath, findCache, findCacheExPath} = require './utils'
 
 # Network error retries
 retries = config.get 'poi.proxy.retries', 0
