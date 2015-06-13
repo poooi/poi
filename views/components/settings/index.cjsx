@@ -2,7 +2,7 @@ glob = require 'glob'
 path = require 'path-extra'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
 {Grid, Col, Input, TabbedArea, TabPane, Alert} = ReactBootstrap
-{PoiConfig, ProxyConfig, PluginConfig} = require './parts'
+{PoiConfig, NetworkConfig, PluginConfig} = require './parts'
 # Discover plugins and remove unused plugins or no setting ui plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 plugins = plugins.filter (filePath) ->
@@ -27,7 +27,7 @@ module.exports =
           <PoiConfig />
         </TabPane>
         <TabPane key={1} eventKey={1} tab="网络代理" id='proxy-config' className='poi-settings-tabpane'>
-          <ProxyConfig />
+          <NetworkConfig />
         </TabPane>
         <TabPane key={2} eventKey={2} tab="扩展程序" id='plugin-config' className='poi-settings-tabpane'>
           <PluginConfig />

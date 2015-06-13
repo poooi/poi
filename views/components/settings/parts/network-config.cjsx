@@ -1,16 +1,17 @@
 path = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, ROOT, toggleModal} = window
 {config} = window
-{Input, Grid, Col, Button} = ReactBootstrap
+{Input, Grid, Col, Button, Alert} = ReactBootstrap
 Divider = require './divider'
 
 shadowsocksMethods = ["aes-256-cfb", "aes-192-cfb", "aes-128-cfb", "bf-cfb",
                       "camellia-256-cfb", "camellia-192-cfb", "camellia-128-cfb",
                       "cast5-cfb", "des-cfb", "idea-cfb", "rc2-cfb", "rc4", "rc4-md5"]
 
-ProxyConfig = React.createClass
+NetworkConfig = React.createClass
   getInitialState: ->
-    Object.remoteClone config.get('proxy', {use: 'none'})
+    _.extend Object.remoteClone(config.get('proxy', {use: 'none'})),
+      retries: config.get 'poi.proxy.retries', 0
   handleChangeUse: ->
     use = @refs.use.getValue()
     @setState {use}
@@ -33,7 +34,7 @@ ProxyConfig = React.createClass
         config.set 'proxy.shadowsocks.method', @refs.shadowsocksMethod.getValue()
       else
         config.set 'proxy.use', 'none'
-    toggleModal '代理设置', '保存成功'
+    toggleModal '代理设置', '保存成功，重启软件后生效。'
     e.preventDefault()
   handleHttpHostChange: (e) ->
     {http} = @state
@@ -67,6 +68,12 @@ ProxyConfig = React.createClass
     {shadowsocks} = @state
     shadowsocks.method = e.target.value
     @setState {shadowsocks}
+  handleSetRetries: (e) ->
+    @setState
+      retries: e.target.value
+    r = parseInt(e.target.value)
+    return if isNaN(r) || r < 0
+    config.set 'poi.proxy.retries', r
   render: ->
     <form>
       <Divider text="代理类型" />
@@ -127,6 +134,17 @@ ProxyConfig = React.createClass
             </Col>
           </Grid>
       }
+      <Divider text="防猫重试次数" />
+      <Grid>
+        <Col xs={12}>
+          <Input type="number" ref="retries" value={@state.retries} onChange={@handleSetRetries} />
+        </Col>
+        <Col xs={12}>
+          <Alert bsStyle='warning' style={marginTop: '10px'}>
+            如果不希望开启这个功能，设置为 0 即可。
+          </Alert>
+        </Col>
+      </Grid>
       <Divider text="保存设置" />
       <Grid>
         <Col xs={12}>
@@ -135,4 +153,4 @@ ProxyConfig = React.createClass
       </Grid>
     </form>
 
-module.exports = ProxyConfig
+module.exports = NetworkConfig

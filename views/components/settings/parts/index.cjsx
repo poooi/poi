@@ -1,4 +1,4 @@
 module.exports =
   PoiConfig: require './poi-config'
-  ProxyConfig: require './proxy-config'
+  NetworkConfig: require './network-config'
   PluginConfig: require './plugin-config'
