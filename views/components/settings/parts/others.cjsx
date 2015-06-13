@@ -49,6 +49,7 @@ Others = React.createClass
             <li>Chibaheit</li>
             <li>KochiyaOcean</li>
             <li>malichan</li>
+          </ul>
         </Col>
       </Grid>
     </div>
