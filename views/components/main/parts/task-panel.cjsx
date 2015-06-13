@@ -1,6 +1,8 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 
+prevHours = (new Date()).getUTCHours()
+
 getStyleByProgress = (progress) ->
   switch progress
     when '进行'
@@ -104,10 +106,27 @@ TaskPanel = React.createClass
       e.id
     @setState
       tasks: tasks
+  refreshDay: ->
+    curHours = (new Date()).getUTCHours()
+    return if prevHours == curHours
+    # UTC 20:00 -> Beijing 4:00 -> Tokyo 5:00
+    if prevHours == 19 and curHours == 20
+      tasks = []
+      for idx in [0..5]
+        tasks[idx] =
+          name: '未接受'
+          id: 100000
+          content: '...'
+          progress: ''
+      @setState
+        tasks: tasks
+    prevHours = curHours
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    setInterval @refreshDay, 60000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    clearInterval @refreshDay, 60000
   render: ->
     <Panel header="任务" bsStyle="success">
       <Table>
