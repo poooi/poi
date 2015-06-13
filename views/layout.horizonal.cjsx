@@ -100,7 +100,9 @@ window.addEventListener 'game.payitem', adjustPayitem
 module.exports =
   unload: ->
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
+      e.style.height = ""
       e.style.overflowX = "hidden"
+      e.style.overflowY = "hidden"
     window.removeEventListener 'resize', handleResize
     window.removeEventListener 'scale.change', handleChangeScale
     window.removeEventListener 'game.start', adjustSize
