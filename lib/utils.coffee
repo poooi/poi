@@ -56,8 +56,8 @@ module.exports =
       return loc
     catch
       return null
-  findHackExecPath: (pathname) ->
-    loc = path.join(global.EXECROOT, 'cache', pathname)
+  findHackExPath: (pathname) ->
+    loc = path.join(global.EXROOT, 'cache', pathname)
     sp = loc.split '.'
     ext = sp.pop()
     sp.push 'hack'
@@ -75,8 +75,8 @@ module.exports =
       return loc
     catch
       return null
-  findCacheExecPath: (pathname) ->
-    loc = path.join(global.EXECROOT, 'cache', pathname)
+  findCacheExPath: (pathname) ->
+    loc = path.join(global.EXROOT, 'cache', pathname)
     try
       fs.accessSync loc, fs.R_OK
       return loc
