@@ -2,7 +2,7 @@ glob = require 'glob'
 path = require 'path-extra'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
 {Grid, Col, Input, TabbedArea, TabPane, Alert} = ReactBootstrap
-{PoiConfig, NetworkConfig, PluginConfig} = require './parts'
+{PoiConfig, NetworkConfig, PluginConfig, Others} = require './parts'
 # Discover plugins and remove unused plugins or no setting ui plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 plugins = plugins.filter (filePath) ->
@@ -40,4 +40,7 @@ module.exports =
             }
             </TabPane>
         }
+        <TabPane key={-1} eventKey={-1} tab="帮助与其他" id='others' className='poi-settings-tabpane'>
+          <Others />
+        </TabPane>
       </TabbedArea>
