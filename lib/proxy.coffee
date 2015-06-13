@@ -19,7 +19,7 @@ config = require './config'
 {log, warn, error, resolveBody, isStaticResource, findHack, findHackExecPath, findCache, findCacheExecPath} = require './utils'
 
 # Network error retries
-retries = config.get 'poi.proxy.retries', 30
+retries = config.get 'poi.proxy.retries', 1
 
 resolve = (req) ->
   switch config.get 'proxy.use'
