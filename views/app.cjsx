@@ -160,6 +160,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
         <li>使用Shadowsocks也可以用内置的Shadowsocks模块，不过性能不是很好。</li>
         <li>使用VPN的选择不使用代理就好了。</li>
       </ul></p>
+      <p>poi 如果有显示错误，可以手动调整一下内容大小，布局会自动适配。</p>
       <p>如果 poi 的运行不流畅，可以在设置中关闭一部分插件，对插件的操作重启后生效。</p>
       <p>为 poi 贡献代码和编写插件 - GitHub: https://github.com/yudachi/poi </p>
     </div>
