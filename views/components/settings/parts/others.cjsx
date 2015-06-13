@@ -33,10 +33,11 @@ Others = React.createClass
       <Grid>
         <Col xs={12}>
           <ul>
-            <li>岛风 go 缓存存放路径：{path.join(window.EXROOT, 'cache')}</li>
-            <li>浏览器缓存路径：{window.APPDATA_PATH}</li>
-            <li>插件存放路径：{path.join(window.EXROOT, 'plugins')} 和 {path.join(window.ROOT, 'plugins')}</li>
-            <li>配置文件路径：{path.join(window.EXROOT, 'config.json')}</li>
+            <li>岛风 go 缓存存放目录：{path.join(window.EXROOT, 'cache')}</li>
+            <li>浏览器缓存目录：{window.APPDATA_PATH}</li>
+            <li>插件存放目录：{path.join(window.EXROOT, 'plugins')} 和 {path.join(window.ROOT, 'plugins')}</li>
+            <li>配置文件目录：{path.join(window.EXROOT, 'config.json')}</li>
+            <li>poi 源代码目录：{window.ROOT}</li>
           </ul>
         </Col>
       </Grid>
