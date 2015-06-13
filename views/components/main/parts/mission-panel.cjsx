@@ -7,22 +7,27 @@ MissionPanel = React.createClass
   getInitialState: ->
     decks: [
         name: '第0艦隊'
+        completeTime: -1
         countdown: -1
         mission: null
       ,
         name: '第1艦隊'
+        completeTime: -1
         countdown: -1
         mission: null
       ,
         name: '第2艦隊'
+        completeTime: -1
         countdown: -1
         mission: null
       ,
         name: '第3艦隊'
+        completeTime: -1
         countdown: -1
         mission: null
       ,
         name: '第4艦隊'
+        completeTime: -1
         countdown: -1
         mission: null
     ]
@@ -40,12 +45,15 @@ MissionPanel = React.createClass
             # In port
             when 0
               countdown = -1
+              completeTime = -1
               notified[id] = false
             # In mission
             when 1
+              completeTime = deck.api_mission[2]
               countdown = Math.floor((deck.api_mission[2] - new Date()) / 1000)
             # Just come back
             when 2
+              completeTime = 0
               countdown = 0
           mission_id = deck.api_mission[1]
           if mission_id isnt 0
@@ -54,6 +62,7 @@ MissionPanel = React.createClass
             mission = null
           decks[id] =
             name: deck.api_name
+            completeTime: completeTime
             countdown: countdown
             mission: mission
         @setState
@@ -62,6 +71,7 @@ MissionPanel = React.createClass
       when '/kcsapi/api_req_mission/start'
         id = postBody.api_deck_id
         {decks, notified} = @state
+        decks[id].completeTime = body.api_complatetime
         decks[id].countdown = Math.floor((body.api_complatetime - new Date()) / 1000)
         mission_id = postBody.api_mission_id
         decks[id].mission = $missions[mission_id].api_name
@@ -73,7 +83,7 @@ MissionPanel = React.createClass
     {decks, notified} = @state
     for i in [1..4]
       if decks[i].countdown > 0
-        decks[i].countdown -= 1
+        decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
         if decks[i].countdown <= 40 && !notified[i]
           notify "#{decks[i].name} 远征归来"
           notified[i] = true

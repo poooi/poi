@@ -6,18 +6,23 @@ NdockPanel = React.createClass
   getInitialState: ->
     docks: [
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
     ]
     notified: []
@@ -33,23 +38,50 @@ NdockPanel = React.createClass
             when -1
               docks[id] =
                 name: '未解锁'
+                completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
                 name: '未使用'
+                completeTime: -1
                 countdown: -1
               notified[id] = false
             when 1
               docks[id] =
                 name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
+                completeTime: ndock.api_complete_time
                 countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
         @setState
           docks: docks
+          notified: notified
+      when '/kcsapi/api_get_member/ndock'
+        for ndock in body
+          id = ndock.api_id
+          switch ndock.api_state
+            when -1
+              docks[id] =
+                name: '未解锁'
+                completeTime: -1
+                countdown: -1
+            when 0
+              docks[id] =
+                name: '未使用'
+                completeTime: -1
+                countdown: -1
+              notified[id] = false
+            when 1
+              docks[id] =
+                name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
+                completeTime: ndock.api_complete_time
+                countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
+        @setState
+          docks: docks
+          notified: notified
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
-        docks[i].countdown -= 1
+        docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 45 && !notified[i]
           notify "#{docks[i].name} 修复完成"
           notified[i] = true

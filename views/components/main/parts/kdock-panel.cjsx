@@ -10,22 +10,27 @@ KdockPanel = React.createClass
     docks: [
         name: '未使用'
         material: []
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
         material: []
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
         material: []
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
         material: []
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
         material: []
+        completeTime: -1
         countdown: -1
     ]
     notified: []
@@ -43,11 +48,13 @@ KdockPanel = React.createClass
                 name: '未解锁'
                 material: []
                 countdown: -1
+                completeTime: -1
             when 0
               docks[id] =
                 name: '未使用'
                 material: []
                 countdown: -1
+                completeTime: -1
               notified[id] = false
             when 2
               docks[id] =
@@ -59,6 +66,7 @@ KdockPanel = React.createClass
                   kdock.api_item4
                   kdock.api_item5
                 ]
+                completeTime: kdock.api_complete_time
                 countdown: Math.floor((kdock.api_complete_time - new Date()) / 1000)
             when 3
               docks[id] =
@@ -70,6 +78,7 @@ KdockPanel = React.createClass
                   kdock.api_item4
                   kdock.api_item5
                 ]
+                completeTime: 0
                 countdown: 0
         @setState
           docks: docks
@@ -82,11 +91,13 @@ KdockPanel = React.createClass
               docks[id] =
                 name: '未解锁'
                 material: []
+                completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
                 name: '未使用'
                 material: []
+                completeTime: -1
                 countdown: -1
               notified[id] = false
             when 2
@@ -99,6 +110,7 @@ KdockPanel = React.createClass
                   kdock.api_item4
                   kdock.api_item5
                 ]
+                completeTime: kdock.api_complete_time
                 countdown: Math.floor((kdock.api_complete_time - new Date()) / 1000)
             when 3
               docks[id] =
@@ -110,6 +122,7 @@ KdockPanel = React.createClass
                   kdock.api_item4
                   kdock.api_item5
                 ]
+                completeTime: 0
                 countdown: 0
         @setState
           docks: docks
@@ -123,7 +136,7 @@ KdockPanel = React.createClass
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
-        docks[i].countdown -= 1
+        docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
           notify "#{docks[i].name} 建造完成"
           notified[i] = true
