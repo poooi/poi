@@ -144,7 +144,7 @@ PoiConfig = React.createClass
         </Grid>
       </div>
       {
-        if window.layout == 'horizonal'
+        if @state.layout == 'horizonal'
           <div className="form-group">
             <Divider text="游戏分辨率" />
             <Grid>

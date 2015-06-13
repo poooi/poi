@@ -19,7 +19,7 @@ adjustSize = ->
     e.style.overflowX = "scroll"
     e.style.overflowY = "scroll"
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
-    $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 25}px"
+    $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 27}px"
     return
   factor = Math.ceil(window.innerWidth * gameScale / 800.0 * 100) / 100.0
   webview.executeJavaScript """
