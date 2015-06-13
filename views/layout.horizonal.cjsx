@@ -15,7 +15,7 @@ adjustSize = ->
     url = null
   # return if webview.isLoading()
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{window.innerHeight - 40}px"
+    e.style.height = "565px"
     e.style.overflowX = "scroll"
     e.style.overflowY = "scroll"
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
@@ -34,6 +34,10 @@ adjustSize = ->
   """
   $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
   $('kan-game').style.marginTop = "#{Math.max(0,(window.innerHeight - 480 * factor - 25)) / 2.0}px"
+  [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
+    e.style.height = "#{Math.max(565, 480 * factor - 27)}px"
+    e.style.overflowX = "scroll"
+    e.style.overflowY = "scroll"
   $('poi-app').style.marginTop = "#{Math.max(0,Math.min((window.innerHeight - 480 * factor - 25),(window.innerHeight - 565))) / 2.0}px"
 # interval = setInterval adjustSize, 500
 if !window._delay

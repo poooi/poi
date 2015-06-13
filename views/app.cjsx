@@ -153,7 +153,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
       <p style={color: 'red'}>poi 不能在含有中文或者全角字符的文件目录下正常运行！</p>
       <p style={color: 'red'}>poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！</p>
       <p>poi 支持岛风go缓存包，将岛风go缓存包中的cache文件夹放在poi目录下即可，.hack.swf 魔改文件也是支持的。</p>
-      <p>poi 默认使用一个公共Shadowsocks代理连接，但是性能不是很好，并且不会长期维护，仅供测试使用。更改代理的设置在设置面板中可以找到。
+      <p>poi 默认使用一个公共Shadowsocks代理连接，仅供测试使用。更改代理的设置在设置面板中可以找到。
       <ul>
         <li>使用岛风go的选择HTTP代理，地址是127.0.0.1，端口8099。（默认情况下）</li>
         <li>使用自己本地的Shadowsocks或者Socks5代理的选择Socks代理。</li>
@@ -162,6 +162,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
       </ul></p>
       <p>poi 如果有显示错误，可以手动调整一下内容大小，布局会自动适配。</p>
       <p>如果 poi 的运行不流畅，可以在设置中关闭一部分插件，对插件的操作重启后生效。</p>
+      <p>poi 交流群：378320628</p>
       <p>为 poi 贡献代码和编写插件 - GitHub: https://github.com/yudachi/poi </p>
     </div>
   footer = [
