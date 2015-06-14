@@ -19,9 +19,14 @@ module.exports =
         current.restore()
       else
         show.bind(current)()
-    current.on 'close', (e) ->
-      current.hide()
-      e.preventDefault() unless forceClose
+    if options.realClose
+      current.on 'closed', (e) ->
+        idx = _.indexOf windows, current
+        windows.splice idx, 1
+    else
+      current.on 'close', (e) ->
+        current.hide()
+        e.preventDefault() unless forceClose
     windows.push current
     return current
   # Warning: Don't call this method manually
@@ -29,5 +34,6 @@ module.exports =
   closeWindows: ->
     forceClose = true
     for win, i in windows
+      continue unless win?
       win.close()
       windows[i] = null
