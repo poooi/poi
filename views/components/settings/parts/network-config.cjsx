@@ -134,14 +134,14 @@ NetworkConfig = React.createClass
             </Col>
           </Grid>
       }
-      <Divider text="防猫重试次数" />
+      <Divider text="网络错误重试次数" />
       <Grid>
         <Col xs={12}>
           <Input type="number" ref="retries" value={@state.retries} onChange={@handleSetRetries} />
         </Col>
         <Col xs={12}>
           <Alert bsStyle='danger' style={marginTop: '10px'}>
-            任何本地防猫都不能保证绝对安全，斟酌使用。
+            任何本地重试都不能保证绝对安全，斟酌使用。
           </Alert>
         </Col>
       </Grid>
