@@ -140,8 +140,8 @@ NetworkConfig = React.createClass
           <Input type="number" ref="retries" value={@state.retries} onChange={@handleSetRetries} />
         </Col>
         <Col xs={12}>
-          <Alert bsStyle='warning' style={marginTop: '10px'}>
-            如果不希望开启这个功能，设置为 0 即可。
+          <Alert bsStyle='danger' style={marginTop: '10px'}>
+            任何防猫都不能保证绝对安全，请注意。
           </Alert>
         </Col>
       </Grid>
