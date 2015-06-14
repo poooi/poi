@@ -141,7 +141,7 @@ NetworkConfig = React.createClass
         </Col>
         <Col xs={12}>
           <Alert bsStyle='danger' style={marginTop: '10px'}>
-            任何防猫都不能保证绝对安全，请注意。
+            任何防猫都不能保证绝对安全，斟酌使用。
           </Alert>
         </Col>
       </Grid>
