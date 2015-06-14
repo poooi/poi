@@ -1,5 +1,6 @@
 require 'coffee-react/register'
 path = require 'path-extra'
+notifier = require 'node-notifier'
 
 # Environments
 window.remote = require 'remote'
@@ -68,9 +69,11 @@ window.error = (msg) ->
       type: 'danger'
   window.dispatchEvent event
 window.notify = (msg) ->
-  new Notification 'poi',
+  notifier.notify
+    title: 'poi'
+    message: msg
     icon: "file://#{ROOT}/assets/icons/icon.png"
-    body: msg
+    sound: config.get('poi.notify.sound', false)
 modals = []
 window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
