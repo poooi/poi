@@ -8,10 +8,29 @@ shadowsocksMethods = ["aes-256-cfb", "aes-192-cfb", "aes-128-cfb", "bf-cfb",
                       "camellia-256-cfb", "camellia-192-cfb", "camellia-128-cfb",
                       "cast5-cfb", "des-cfb", "idea-cfb", "rc2-cfb", "rc4", "rc4-md5"]
 
+basic =
+  use: 'none',
+  http:
+    host: '127.0.0.1'
+    port: 8099
+  socks5:
+    host: "127.0.0.1",
+    port: 1080
+  shadowsocks:
+    server:
+      host: "116.251.209.211",
+      port: 27017
+    local:
+      port: 12451
+    password: "@_PoiPublic_@",
+    method: "aes-256-cfb",
+    timeout: 600000,
+    port: "@_PoiPublic_@"
+  retries: config.get 'poi.proxy.retries', 0
+
 NetworkConfig = React.createClass
   getInitialState: ->
-    _.extend Object.remoteClone(config.get('proxy', {use: 'none'})),
-      retries: config.get 'poi.proxy.retries', 0
+    _.extend basic, Object.remoteClone(config.get 'proxy', {})
   handleChangeUse: ->
     use = @refs.use.getValue()
     @setState {use}
@@ -140,7 +159,7 @@ NetworkConfig = React.createClass
           <Input type="number" ref="retries" value={@state.retries} onChange={@handleSetRetries} />
         </Col>
         <Col xs={12}>
-          <Alert bsStyle='danger' style={marginTop: '10px'}>
+          <Alert bsStyle='danger'>
             任何本地重试都不能保证绝对安全，斟酌使用。
           </Alert>
         </Col>
