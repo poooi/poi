@@ -110,7 +110,7 @@ TaskPanel = React.createClass
     curHours = (new Date()).getUTCHours()
     return if prevHours == curHours
     # UTC 20:00 -> Beijing 4:00 -> Tokyo 5:00
-    if prevHours == 19 and curHours == 20
+    if prevHours <= 19 and curHours >= 20
       tasks = []
       for idx in [0..5]
         tasks[idx] =
