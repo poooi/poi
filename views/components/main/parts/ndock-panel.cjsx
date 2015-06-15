@@ -1,6 +1,7 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime} = window
 {Panel, Table, Label} = ReactBootstrap
+{join} = require 'path-extra'
 
 NdockPanel = React.createClass
   getInitialState: ->
@@ -83,7 +84,7 @@ NdockPanel = React.createClass
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 45 && !notified[i]
-          notify "#{docks[i].name} 修复完成", {icon: path.join(ROOT, 'assets', 'img', 'material', '6_big.png')}
+          notify "#{docks[i].name} 修复完成", {icon: join(ROOT, 'assets', 'img', 'material', '6_big.png')}
           notified[i] = true
     @setState
       docks: docks
