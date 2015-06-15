@@ -1,6 +1,7 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
+{join} = require 'path-extra'
 
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
@@ -138,7 +139,7 @@ KdockPanel = React.createClass
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} 建造完成", {icon: path.join(ROOT, 'assets', 'img', 'material', '5_big.png')}
+          notify "#{docks[i].name} 建造完成", {icon: join(ROOT, 'assets', 'img', 'material', '5_big.png')}
           notified[i] = true
     @setState
       docks: docks
