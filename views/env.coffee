@@ -177,7 +177,6 @@ resolveResponses = ->
         idx = parseInt(postBody.api_ship_id)
         for itemId in _ships[idx].api_slot
           continue if itemId == -1
-          itemIdx = itemId
           delete _slotitems[itemId]
         delete _ships[idx]
       when '/kcsapi/api_req_kousyou/destroyitem2'
@@ -204,7 +203,11 @@ resolveResponses = ->
           _slotitems[itemId] = extendSlotitem afterSlot
       when '/kcsapi/api_req_kaisou/powerup'
         for shipId in postBody.api_id_items.split(',')
-          delete _ships[parseInt(shipId)]
+          idx = parseInt(shipId)
+          for itemId in _ships[idx].api_slot
+            continue if itemId == -1
+            delete _slotitems[itemId]
+          delete _ships[idx]
         _ships[body.api_ship.api_id] = extendShip body.api_ship
     event = new CustomEvent 'game.response',
       bubbles: true

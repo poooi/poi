@@ -90,6 +90,7 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_kaisou/powerup'
         @setState
           shipCount: Object.keys(window._ships).length
+          slotitemCount: Object.keys(window._slotitems).length
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
