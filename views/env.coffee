@@ -68,12 +68,17 @@ window.error = (msg) ->
       message: msg
       type: 'danger'
   window.dispatchEvent event
-window.notify = (msg) ->
-  notifier.notify
-    title: 'poi'
-    message: msg
-    icon: "file://#{ROOT}/assets/icons/icon.png"
-    sound: config.get('poi.notify.sound', false)
+window.notify = (msg, options) ->
+  if process.platform == 'win32'
+    notifier.notify
+      title: 'poi'
+      message: msg
+      icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
+      sound: config.get('poi.notify.sound', true)
+  else
+    new Notification 'poi',
+      icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
+      body: msg
 modals = []
 window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
