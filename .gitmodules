@@ -19,3 +19,6 @@
 [submodule "plugins/ship-info"]
 	path = plugins/ship-info
 	url = https://github.com/yudachi/plugin-ship-info
+[submodule "plugins/new-window"]
+	path = plugins/new-window
+	url = https://github.com/yudachi/plugin-new-window
