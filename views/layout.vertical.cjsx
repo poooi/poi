@@ -58,7 +58,7 @@ adjustPayitem = ->
 handleTitleSet = ->
   @insertCSS """
     * {
-      font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif !important;
+      font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif !important;
     }
     #ntg-recommend {
       display: none !important;
