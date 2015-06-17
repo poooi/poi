@@ -2,6 +2,7 @@
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 
 prevHours = (new Date()).getUTCHours()
+interval = null
 
 getStyleByProgress = (progress) ->
   switch progress
@@ -123,10 +124,10 @@ TaskPanel = React.createClass
     prevHours = curHours
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
-    setInterval @refreshDay, 60000
+    interval = setInterval @refreshDay, 30000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
-    clearInterval @refreshDay, 60000
+    clearInterval interval
   render: ->
     <Panel header="任务" bsStyle="success">
       <Table>
