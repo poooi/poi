@@ -23,7 +23,7 @@ Others = React.createClass
             <li><a onClick={openExternal.bind(@, 'http://weibo.com/maginya')}> Magica </a></li>
             <li>myzWILLmake</li>
             <li>Chibaheit</li>
-            <li><a onClick={openExternal.bind(@, 'http://weibo.com/androidian233')}> KochiyaOcean</li>
+            <li><a onClick={openExternal.bind(@, 'http://www.kochiyaocean.org')}> KochiyaOcean</li>
             <li>malichan</li>
           </ul>
         </Col>
