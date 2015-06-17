@@ -109,17 +109,18 @@ class Proxy extends EventEmitter
                 self.emit 'game.on.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
                 # Create remote request
                 [response, body] = yield requestAsync resolve options
+                success = true
+                res.writeHead response.statusCode, response.headers
+                res.end body
+                # Emit response events to plugins
+                resolvedBody = yield resolveBody response.headers['content-encoding'], body
                 if response.statusCode == 200
-                  success = true
-                  res.writeHead response.statusCode, response.headers
-                  res.end body
-                  # Emit response events to plugins
-                  resolvedBody = yield resolveBody response.headers['content-encoding'], body
                   self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
                 else
-                  error "Status Code:#{response.statusCode}"
+                  self.emit 'network.invalid.code', response.statusCode
               catch e
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
+                self.emit 'network.error.retry', i + 1 if i < retries
               # Delay 3s for retry
               yield Promise.delay(3000) unless success
           else

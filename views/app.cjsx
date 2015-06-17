@@ -2,7 +2,7 @@ path = require 'path-extra'
 glob = require 'glob'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton} = ReactBootstrap
-{config, proxy, log} = window
+{config, proxy, log, success, warn, error} = window
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
@@ -139,7 +139,7 @@ ModalTrigger = React.createClass
         </div>
       </Modal>
 
-React.render <PoiAlert />, $('poi-alert')
+React.render <PoiAlert id="poi-alert" />, $('poi-alert')
 React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
 
@@ -194,3 +194,9 @@ window.addEventListener 'game.response', (e) ->
   {method, path, body, postBody} = e.detail
   console.log [path, body, postBody] if process.env.DEBUG?
   success "获得数据 #{method} #{path}"
+window.addEventListener 'network.error.retry', (e) ->
+  {counter} = e.detail
+  error "网络连接错误，正在进行第#{counter}次重试"
+window.addEventListener 'network.invalid.code', (e) ->
+  {code} = e.detail
+  error "服务器返回非正常的 HTTP 状态码，HTTP #{code}"

@@ -231,3 +231,17 @@ proxy.addListener 'game.start', ->
   window.dispatchEvent new Event 'game.start'
 proxy.addListener 'game.payitem', ->
   window.dispatchEvent new Event 'game.payitem'
+proxy.addListener 'network.error.retry', (counter) ->
+  event = new CustomEvent 'network.error.retry',
+    bubbles: true
+    cancelable: true
+    detail:
+      counter: counter
+  window.dispatchEvent event
+proxy.addListener 'network.invalid.code', (code) ->
+  event = new CustomEvent 'network.invalid.code',
+    bubbles: true
+    cancelable: true
+    detail:
+      code: code
+  window.dispatchEvent event
