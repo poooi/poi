@@ -172,6 +172,21 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   ]
   window.toggleModal title, content, footer
 
+confirmExit = false
+exitPoi = ->
+  confirmExit = true
+  window.close()
+window.onbeforeunload = (e) ->
+  if confirmExit
+    return true
+  else
+    toggleModal '关闭 poi', '确认退出？', [
+      name: '确定退出'
+      func: exitPoi
+      style: 'warning'
+    ]
+    return false
+
 window.addEventListener 'game.request', (e) ->
   {method, path} = e.detail
   log "正在请求 #{method} #{path}"
