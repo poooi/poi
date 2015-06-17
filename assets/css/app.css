@@ -12,14 +12,18 @@ poi-app .container {
   width: auto;
 }
 .alert {
-  opacity: 0.7;
   border-radius: 0px;
   font-size: 12px;
-  padding: 6px 3px 5px 3px;
-  margin-bottom: 0px;
+  margin-bottom: 1px;
+  padding: 3px;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+kan-game poi-info .alert {
+  opacity: 0.7;
+  padding: 6px 3px 5px 3px;
+  margin-bottom: 0px;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
