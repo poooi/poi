@@ -86,3 +86,9 @@ module.exports =
     global.mainWindow.setBounds options
   getBounds: ->
     global.mainWindow.getBounds()
+  capturePageInMainWindow: (rect, callback) ->
+    global.mainWindow.capturePage rect, (image) ->
+      buf = image.toPng()
+      filename = path.join global.EXROOT, "#{Date.now()}.png"
+      fs.writeFile filename, buf, (err) ->
+        callback err, filename

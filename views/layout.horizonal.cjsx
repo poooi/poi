@@ -18,7 +18,7 @@ adjustSize = ->
     e.style.height = "#{window.innerHeight - 40}px"
     e.style.overflowY = "scroll"
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
-    $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 27}px"
+    $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 31}px"
     return
   factor = Math.ceil(window.innerWidth * gameScale / 800.0 * 100) / 100.0
   webview.executeJavaScript """
@@ -32,7 +32,7 @@ adjustSize = ->
     document.documentElement.style.overflow = 'hidden';
   """
   $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor)}px"
-  $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - 480 * factor - 25)) / 2.0}px"
+  $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - 480 * factor - 30)) / 2.0}px"
 if !window._delay
   adjustSize()
 else

@@ -1,8 +1,8 @@
 path = require 'path-extra'
 glob = require 'glob'
-{ROOT, _, $, $$, React, ReactBootstrap} = window
-{Button, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton} = ReactBootstrap
-{config, proxy, log, success, warn, error} = window
+{ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
+{Button, ButtonToolbar, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton, OverlayTrigger, Tooltip} = ReactBootstrap
+{config, proxy, remote, log, success, warn, error} = window
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
@@ -92,6 +92,39 @@ PoiAlert = React.createClass
   render: ->
     <Alert bsStyle={@state.type}>{@state.message}</Alert>
 
+{capturePageInMainWindow} = remote.require './lib/utils'
+PoiControl = React.createClass
+  getInitialState: ->
+    muted: false
+  handleCapturePage: ->
+    bound = $('kan-game webview').getBoundingClientRect()
+    rect =
+      x: Math.ceil bound.left
+      y: Math.ceil bound.top
+      width: Math.floor bound.width
+      height: Math.floor bound.height
+    capturePageInMainWindow rect, (err, filename) ->
+      if err?
+        error '截图保存失败'
+      else
+        success "截图保存在 #{filename}"
+  handleSetMuted: ->
+    muted = !@state.muted
+    if $('kan-game webview').setAudioMuted?
+      $('kan-game webview').setAudioMuted muted
+    else
+      error '当前版本不支持静音功能'
+    @setState {muted}
+  render: ->
+    <div>
+      <OverlayTrigger placement='left' overlay={<Tooltip>截屏</Tooltip>}>
+        <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name="camera-retro" /></Button>
+      </OverlayTrigger>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '取消静音' else '点我静音'}</Tooltip>}>
+        <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'bell-slash-o' else 'bell-o'} /></Button>
+      </OverlayTrigger>
+    </div>
+
 ModalTrigger = React.createClass
   mixins: [OverlayMixin]
   getInitialState: ->
@@ -140,6 +173,7 @@ ModalTrigger = React.createClass
       </Modal>
 
 React.render <PoiAlert id="poi-alert" />, $('poi-alert')
+React.render <PoiControl />, $('poi-control')
 React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
 
