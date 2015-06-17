@@ -13,7 +13,7 @@ adjustSize = ->
   catch e
     url = null
   # return if webview.isLoading()
-  $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
+  $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
     e.style.height = "#{window.innerHeight - window.innerWidth / 800.0 * 480.0 - 90}px"
     e.style.overflowY = "scroll"
