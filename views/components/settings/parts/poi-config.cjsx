@@ -147,25 +147,23 @@ PoiConfig = React.createClass
         if @state.layout == 'horizonal'
           <div className="form-group">
             <Divider text="游戏分辨率" />
-            <Grid>
-              <Col xs={12}>
-                <Input type='checkbox' ref="useFixedResolution" label='使用固定分辨率' checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
-              </Col>
-            </Grid>
-            <Grid id="poi-resolutionr-config">
-              <Col xs={5}>
+            <div style={display: 'flex', marginLeft: 15, marginRight: 15}>
+              <Input type='checkbox' ref="useFixedResolution" label='使用固定分辨率' checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
+            </div>
+            <div id="poi-resolution-config" style={display: 'flex', marginLeft: 15, marginRight: 15, alignItems: 'center'}>
+              <div style={flex: 1}>
                 <Input type="number" ref="scale" value={@state.gameWidth} onChange={@handleSetScale} readOnly={!@state.useFixedResolution} />
-              </Col>
-              <Col xs={1}>
+              </div>
+              <div style={flex: 'none', width: 15, paddingLeft: 5}>
                 x
-              </Col>
-              <Col xs={5}>
+              </div>
+              <div style={flex: 1}>
                 <Input type="number" value={@state.gameWidth * 480 / 800} readOnly />
-              </Col>
-              <Col xs={1}>
+              </div>
+              <div style={flex: 'none', width: 15, paddingLeft: 5}>
                 px
-              </Col>
-            </Grid>
+              </div>
+            </div>
           </div>
       }
     </form>
