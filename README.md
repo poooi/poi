@@ -56,6 +56,9 @@ cp default-config.json config.json
 [plugin-new-window (Bundled)](https://github.com/yudachi/plugin-new-window) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Open a external browser window.
 
+[plugin-almanac (Bundled)](https://github.com/yudachi/plugin-almanac) by [Magica](https://github.com/magicae)
+> KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
+
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.
 
