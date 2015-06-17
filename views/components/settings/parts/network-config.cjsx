@@ -111,34 +111,34 @@ NetworkConfig = React.createClass
         if @state.use == 'http'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="httpHost" label="代理地址" placeholder="输入代理地址" value={@state.http.host} onChange={@handleHttpHostChange} />
+              <Input type="text" ref="httpHost" label="代理地址" placeholder="输入代理地址" value={@state?.http?.host} onChange={@handleHttpHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpPort" label="代理端口" placeholder="输入代理端口" value={@state.http.port} onChange={@handleHttpPortChange} />
+              <Input type="text" ref="httpPort" label="代理端口" placeholder="输入代理端口" value={@state?.http?.port} onChange={@handleHttpPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'socks5'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="socksHost" label="代理地址" placeholder="输入代理地址" value={@state.socks5.host} onChange={@handleSocksHostChange} />
+              <Input type="text" ref="socksHost" label="代理地址" placeholder="输入代理地址" value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="socksPort" label="代理端口" placeholder="输入代理端口" value={@state.socks5.port} onChange={@handleSocksPortChange} />
+              <Input type="text" ref="socksPort" label="代理端口" placeholder="输入代理端口" value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'shadowsocks'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerHost" label="服务器地址" placeholder="Shadowsocks 服务器地址" value={@state.shadowsocks.server.host} onChange={@handleShadowsocksServerHostChange} />
+              <Input type="text" ref="shadowsocksServerHost" label="服务器地址" placeholder="Shadowsocks 服务器地址" value={@state?.shadowsocks?.server?.host} onChange={@handleShadowsocksServerHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerPort" label="服务器端口" placeholder="Shadowsocks 服务器端口" value={@state.shadowsocks.server.port} onChange={@handleShadowsocksServerPortChange} />
+              <Input type="text" ref="shadowsocksServerPort" label="服务器端口" placeholder="Shadowsocks 服务器端口" value={@state?.shadowsocks?.server?.port} onChange={@handleShadowsocksServerPortChange} />
             </Col>
             <Col xs={6}>
-              <Input type="password" ref="shadowsocksPassword" label="密码" placeholder="Shadowsocks 密码" value={@state.shadowsocks.password} onChange={@handleShadowsocksPasswordChange} />
+              <Input type="password" ref="shadowsocksPassword" label="密码" placeholder="Shadowsocks 密码" value={@state?.shadowsocks?.password} onChange={@handleShadowsocksPasswordChange} />
             </Col>
             <Col xs={6}>
-              <Input type="select" ref="shadowsocksMethod" label="加密方法" placeholder="Shadowsocks 加密方式" value={@state.shadowsocks.method} onChange={@handleShadowsocksMethodChange}>
+              <Input type="select" ref="shadowsocksMethod" label="加密方法" placeholder="Shadowsocks 加密方式" value={@state?.shadowsocks?.method} onChange={@handleShadowsocksMethodChange}>
               {
                 shadowsocksMethods.map (method, index) ->
                   <option key={index} value={method}>{method.toUpperCase()}</option>
