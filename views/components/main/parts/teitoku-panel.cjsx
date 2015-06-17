@@ -13,7 +13,7 @@ getHeader = (state) ->
     return '提督 [尚未登录]'
 
 getMaterialImage = (idx) ->
-  return "#{ROOT}/assets/img/material/0#{idx}.png"
+  return "file://#{ROOT}/assets/img/material/0#{idx}.png"
 
 TeitokuPanel = React.createClass
   getInitialState: ->
