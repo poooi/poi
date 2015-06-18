@@ -76,6 +76,10 @@ poi-control .btn-sm {
   padding: 2px 7px;
   font-size: 15px;
 }
+poi-control button .fa {
+  cursor: pointer !important;
+  width: 30px;
+}
 .table tbody tr td {
   padding: 8px;
 }

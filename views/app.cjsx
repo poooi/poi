@@ -1,5 +1,7 @@
+fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
+{showItemInFolder, openItem} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, ButtonToolbar, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error} = window
@@ -108,6 +110,9 @@ PoiControl = React.createClass
         error '截图保存失败'
       else
         success "截图保存在 #{filename}"
+  componentDidMount: ->
+    fs.ensureDirSync path.join(window.EXROOT, 'cache')
+    fs.ensureDirSync if process.platform == 'darwin' then path.join(path.homedir(), "Pictures") else path.join(global.EXROOT, 'screenshots')
   handleSetMuted: ->
     muted = !@state.muted
     if $('kan-game webview').setAudioMuted?
@@ -117,10 +122,18 @@ PoiControl = React.createClass
     @setState {muted}
   render: ->
     <div>
-      <OverlayTrigger placement='left' overlay={<Tooltip>截屏</Tooltip>}>
-        <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name="camera-retro" /></Button>
+      <OverlayTrigger placement='left' overlay={<Tooltip>自定义缓存目录</Tooltip>}>
+        <Button onClick={openItem.bind(@, path.join(window.EXROOT, 'cache'))} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '取消静音' else '点我静音'}</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>截图存放目录</Tooltip>}>
+        <Button onClick={openItem.bind(@, if process.platform == 'darwin' then path.join(path.homedir(), "Pictures") else path.join(global.EXROOT, 'screenshots'))} bsSize='small'>
+          <FontAwesome name='photo' />
+        </Button>
+      </OverlayTrigger>
+      <OverlayTrigger placement='left' overlay={<Tooltip>一键截图</Tooltip>}>
+        <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
+      </OverlayTrigger>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '关闭声音' else '打开声音'}</Tooltip>}>
         <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>
@@ -172,7 +185,7 @@ ModalTrigger = React.createClass
         </div>
       </Modal>
 
-React.render <PoiAlert id="poi-alert" />, $('poi-alert')
+React.render <PoiAlert id='poi-alert' />, $('poi-alert')
 React.render <PoiControl />, $('poi-control')
 React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')

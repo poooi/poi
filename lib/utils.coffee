@@ -92,10 +92,10 @@ module.exports =
         buf = image.toPng()
         now = new Date()
         date = "#{now.getFullYear()}-#{now.getMonth()}-#{now.getDate()}T#{now.getHours()}.#{now.getMinutes()}.#{now.getSeconds()}"
-        if process.platform == "darwin"
-          darwinPath = path.join path.homedir(), "Pictures"
+        if process.platform == 'darwin'
+          darwinPath = path.join path.homedir(), 'Pictures'
           fs.ensureDirSync darwinPath
-          filename = path.join path.homedir(), "Pictures", "#{date}.png"
+          filename = path.join path.homedir(), 'Pictures', "#{date}.png"
         else
           fs.ensureDirSync path.join global.EXROOT, 'screenshots'
           filename = path.join global.EXROOT, 'screenshots', "#{date}.png"
