@@ -211,7 +211,7 @@ exitPoi = ->
   confirmExit = true
   window.close()
 window.onbeforeunload = (e) ->
-  if confirmExit || process.platform == "darwin"
+  if confirmExit || !config.get('poi.confirm.quit', false)
     return true
   else
     toggleModal '关闭 poi', '确认退出？', [

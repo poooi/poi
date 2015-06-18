@@ -16,6 +16,12 @@ PoiConfig = React.createClass
     theme: config.get 'poi.theme', '__default__'
     gameWidth: config.get('poi.scale', window.gameScale) * window.innerWidth
     useFixedResolution: if config.get('poi.scale') then true else false
+    enableConfirmQuit: config.get 'poi.confirm.quit', false
+  handleSetConfirmQuit: ->
+    enabled = @state.enableConfirmQuit
+    config.set 'poi.confirm.quit', !enabled
+    @setState
+      enableConfirmQuit: !enabled
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
@@ -91,8 +97,13 @@ PoiConfig = React.createClass
   render: ->
     <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
-        <Divider text="导航" />
+        <Divider text="浏览器" />
         <NavigatorBar />
+        <Grid>
+          <Col xs={12}>
+            <Input type="checkbox" label="关闭前弹出确认窗口" checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
+          </Col>
+        </Grid>
       </div>
       <div className="form-group">
         <Divider text="布局" />
