@@ -24,6 +24,7 @@ kan-game poi-info .alert {
   opacity: 0.7;
   padding: 6px 3px 5px 3px;
   margin-bottom: 0px;
+  height: 100%;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
@@ -60,11 +61,16 @@ poi-app poi-nav-tabs nav li.dropdown {
 }
 poi-info {
   display: flex;
+  align-items: stretch;
 }
 poi-alert {
   flex: 1;
 }
+poi-control {
+  height: 100%;
+}
 poi-control .btn-sm {
+  height: 100%;
   border-radius: 0px;
   padding: 2px 7px;
   font-size: 15px;
