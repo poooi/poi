@@ -89,6 +89,9 @@ module.exports =
   capturePageInMainWindow: (rect, callback) ->
     global.mainWindow.capturePage rect, (image) ->
       buf = image.toPng()
-      filename = path.join global.EXROOT, "#{Date.now()}.png"
+      if process.platform == "darwin"
+        filename = path.join path.homedir(), "Desktop", "#{Date.now()}.png"
+      else
+        filename = path.join global.EXROOT, "#{Date.now()}.png"
       fs.writeFile filename, buf, (err) ->
         callback err, filename
