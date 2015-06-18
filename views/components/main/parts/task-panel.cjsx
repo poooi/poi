@@ -24,31 +24,43 @@ TaskPanel = React.createClass
         id: 100000
         content: '...'
         progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
         progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
         progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
         progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
         progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
         progress: ''
+        category: 0
+        type: 0
     ]
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -76,6 +88,8 @@ TaskPanel = React.createClass
               id: task.api_no
               content: task.api_detail
               progress: progress
+              category: task.api_category
+              type: task.api_type
           # Update current
           else
             tasks[idx] =
@@ -83,6 +97,8 @@ TaskPanel = React.createClass
               id: task.api_no
               content: task.api_detail
               progress: progress
+              category: task.api_category
+              type: task.api_type
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
         idx = _.findIndex tasks, (e) ->
@@ -93,6 +109,8 @@ TaskPanel = React.createClass
           id: 100000
           content: '...'
           progress: ''
+          category: 0
+          type: 0
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
         idx = _.findIndex tasks, (e) ->
@@ -103,10 +121,18 @@ TaskPanel = React.createClass
           id: 100000
           content: '...'
           progress: ''
+          category: 0
+          type: 0
     tasks = _.sortBy tasks, (e) ->
       e.id
     @setState
       tasks: tasks
+    event = new CustomEvent 'task.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        tasks: tasks
+    window.dispatchEvent event
   refreshDay: ->
     curHours = (new Date()).getUTCHours()
     return if prevHours == curHours
@@ -119,14 +145,28 @@ TaskPanel = React.createClass
           id: 100000
           content: '...'
           progress: ''
+          category: 0
+          type: 0
       @setState
         tasks: tasks
+      event = new CustomEvent 'task.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          tasks: tasks
+      window.dispatchEvent event
     prevHours = curHours
+  handleTaskInfo: (e) ->
+    {tasks} = e.detail
+    @setState
+      tasks: tasks
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'task.info', @handleTaskInfo
     interval = setInterval @refreshDay, 30000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'task.info', @handleTaskInfo
     clearInterval interval
   render: ->
     <Panel header="任务" bsStyle="success">
