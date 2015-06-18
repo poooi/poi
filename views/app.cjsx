@@ -185,10 +185,15 @@ ModalTrigger = React.createClass
         </div>
       </Modal>
 
+CustomCssInjector = React.createClass
+  render: ->
+    <link rel='stylesheet' href={path.join(window.EXROOT, 'hack', 'custom.css')} />
+
 React.render <PoiAlert id='poi-alert' />, $('poi-alert')
 React.render <PoiControl />, $('poi-control')
 React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
+React.render <CustomCssInjector />, $('poi-css-injector')
 
 dontShowAgain = ->
   config.set('poi.first', POI_VERSION)
@@ -235,12 +240,14 @@ window.onbeforeunload = (e) ->
     return false
 
 window.addEventListener 'game.request', (e) ->
-  {method, path} = e.detail
-  log "正在请求 #{method} #{path}"
+  {method} = e.detail
+  resPath = e.detail.path
+  log "正在请求 #{method} #{resPath}"
 window.addEventListener 'game.response', (e) ->
-  {method, path, body, postBody} = e.detail
-  console.log [path, body, postBody] if process.env.DEBUG?
-  success "获得数据 #{method} #{path}"
+  {method, body, postBody} = e.detail
+  resPath = e.detail.path
+  console.log [resPath, body, postBody] if process.env.DEBUG?
+  success "获得数据 #{method} #{resPath}"
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
   error "网络连接错误，正在进行第#{counter}次重试"

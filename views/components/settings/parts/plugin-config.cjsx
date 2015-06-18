@@ -30,19 +30,19 @@ PluginConfig = React.createClass
     <form>
       <Divider text="全部插件" />
       <Grid>
+        <Col xs={12}>
+          <Alert bsStyle='info'>
+            关闭或者开启插件的设置在重新启动后生效。
+          </Alert>
+        </Col>
+      </Grid>
+      <Grid>
       {
         plugins.map (plugin, index) =>
           <Col key={index} xs={12}>
             <Input type="checkbox" label={[plugin.displayName, ' @ ', getAuthorLink(plugin.author, plugin.link), '：', plugin.description, <br key={-1} />, 'Version ',  plugin.version || '1.0.0']} checked={@state.enabled[index]} onChange={@handleChange.bind @, index } />
           </Col>
       }
-      </Grid>
-      <Grid>
-        <Col xs={12}>
-          <Alert bsStyle='warning'>
-            关闭或者开启插件的设置在重新启动后生效。
-          </Alert>
-        </Col>
       </Grid>
     </form>
 
