@@ -121,7 +121,7 @@ PoiControl = React.createClass
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name="camera-retro" /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '取消静音' else '点我静音'}</Tooltip>}>
-        <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'bell-slash-o' else 'bell-o'} /></Button>
+        <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>
 
