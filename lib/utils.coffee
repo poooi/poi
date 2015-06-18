@@ -88,10 +88,14 @@ module.exports =
     global.mainWindow.getBounds()
   capturePageInMainWindow: (rect, callback) ->
     global.mainWindow.capturePage rect, (image) ->
-      buf = image.toPng()
-      if process.platform == "darwin"
-        filename = path.join path.homedir(), "Desktop", "#{Date.now()}.png"
-      else
-        filename = path.join global.EXROOT, "#{Date.now()}.png"
-      fs.writeFile filename, buf, (err) ->
-        callback err, filename
+      try
+        buf = image.toPng()
+        if process.platform == "darwin"
+          filename = path.join path.homedir(), 'Desktop', "#{Date.now()}.png"
+        else
+          fs.ensureDirSync path.join global.EXROOT, 'screenshots'
+          filename = path.join global.EXROOT, 'screenshots', "#{Date.now()}.png"
+        fs.writeFile filename, buf, (err) ->
+          callback err, filename
+      catch e
+        callback err
