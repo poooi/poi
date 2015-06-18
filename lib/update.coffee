@@ -24,21 +24,3 @@ module.exports =
     catch e
       error e
       callback 'error'
-  update: async (info, callback) ->
-    try
-      {version, url} = info
-      [response, body] = yield requestAsync url,
-        method: 'GET'
-        encoding: null
-        gzip: true
-      if response.statusCode != 200
-        return callback 'error'
-      tempFile = path.join(path.tempdir(), "poi-update.zip")
-      yield fs.writeFileAsync tempFile, body
-      child = fork(path.join(ROOT, 'lib', 'unzip-update'))
-      child.on 'close', (code) ->
-        log "Code: #{code}"
-        callback info
-    catch e
-      error e
-      callback 'error'
