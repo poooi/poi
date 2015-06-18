@@ -1,5 +1,5 @@
-POI_VERSION = '1.1.0'
-ELECTRON_VERSION = '0.27.3'
+POI_VERSION = '2.0.0'
+ELECTRON_VERSION = '0.28.2'
 SYSTEM_BIT =
   win32: 'ia32'
   linux: 'x64'
