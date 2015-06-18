@@ -91,7 +91,9 @@ module.exports =
       try
         buf = image.toPng()
         if process.platform == "darwin"
-          filename = path.join path.homedir(), 'Desktop', "#{Date.now()}.png"
+          darwinPath = path.join path.homedir(), "Pictures", "Poi"
+          fs.ensureDirSync darwinPath
+          filename = path.join path.homedir(), "Pictures", "Poi", "#{Date.now()}.png"
         else
           fs.ensureDirSync path.join global.EXROOT, 'screenshots'
           filename = path.join global.EXROOT, 'screenshots', "#{Date.now()}.png"
