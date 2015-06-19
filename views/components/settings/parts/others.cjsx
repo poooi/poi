@@ -19,6 +19,7 @@ Others = React.createClass
       <Grid>
         <Col xs={12}>
           <ul>
+            <li><a onClick={openExternal.bind(@, 'http://www.pixiv.net/member.php?id=3991162')}> Season千 </a></li>
             <li><a onClick={openExternal.bind(@, 'http://weibo.com/maginya')}> Magica </a></li>
             <li><a onClick={openExternal.bind(@, 'http://weibo.com/myzwillmake')}> Yunze </a></li>
             <li><a onClick={openExternal.bind(@, 'http://weibo.com/chibaheit')}> Chibaheit </a></li>
