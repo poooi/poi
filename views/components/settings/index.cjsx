@@ -40,7 +40,7 @@ module.exports =
             }
             </TabPane>
         }
-        <TabPane key={-1} eventKey={-1} tab="关于" id='others' className='poi-settings-tabpane'>
+        <TabPane key={-1} eventKey={-1} tab="关于 poi" id='others' className='poi-settings-tabpane'>
           <Others />
         </TabPane>
       </TabbedArea>
