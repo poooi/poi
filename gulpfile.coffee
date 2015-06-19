@@ -72,13 +72,13 @@ gulp.task 'download-electron', async ->
   dir = path.join(path.tempdir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM_BIT[PLATFORM]}")
   fs.ensureDirSync dir
   try
-    yield fs.accessAsync path.join(path.tempdir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
+    yield fs.accessAsync path.join(path.homedir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
   catch e
     log "Downloding Electron #{PLATFORM} #{ELECTRON_VERSION}"
     [response, body] = yield requestAsync
       url: url
       encoding: null
-    yield fs.writeFileAsync path.join(path.tempdir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip"), body
+    yield fs.writeFileAsync path.join(path.homedir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip"), body
   log "Extract Electron #{ELECTRON_VERSION}"
   zip = new AdmZip path.join(path.tempdir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
   zip.extractAllTo dir, true
@@ -105,10 +105,10 @@ gulp.task 'get-flash-player', ['install-dependencies'], async ->
     linux: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/linux.zip'
     darwin: 'http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/darwin.zip'
   url = plugins[PLATFORM]
-  dir = path.join(path.tempdir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM_BIT[PLATFORM]}", 'PepperFlash')
+  dir = path.join(path.homedir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM_BIT[PLATFORM]}", 'PepperFlash')
   fs.ensureDirSync dir
   try
-    yield fs.accessAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
+    yield fs.accessAsync path.join(path.homedir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
   catch e
     log "Downloading flash plugin #{PLATFORM}"
     [response, body] = yield requestAsync
