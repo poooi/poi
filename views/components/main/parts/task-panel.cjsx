@@ -138,15 +138,27 @@ TaskPanel = React.createClass
     return if prevHours == curHours
     # UTC 20:00 -> Beijing 4:00 -> Tokyo 5:00
     if prevHours <= 19 and curHours >= 20
-      tasks = []
-      for idx in [0..5]
-        tasks[idx] =
-          name: '未接受'
-          id: 100000
-          content: '...'
-          progress: ''
-          category: 0
-          type: 0
+      {tasks} = @state
+      for task, idx in tasks
+        continue if task.id == 100000
+        if task.type in [2, 4, 5]
+          tasks[idx] =
+            name: '未接受'
+            id: 100000
+            content: '...'
+            progress: ''
+            category: 0
+            type: 0
+        if task.type is 3 and (new Date()).getUTCDay() is 0
+          tasks[idx] =
+            name: '未接受'
+            id: 100000
+            content: '...'
+            progress: ''
+            category: 0
+            type: 0
+      tasks = _.sortBy tasks, (e) ->
+        e.id
       @setState
         tasks: tasks
       event = new CustomEvent 'task.change',
