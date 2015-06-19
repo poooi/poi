@@ -6,6 +6,7 @@ rimraf = require 'rimraf'
 {Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
+{openItem} = require 'shell'
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
@@ -90,6 +91,13 @@ PoiConfig = React.createClass
           toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')} 和 #{path.join(APPDATA_PATH, 'Pepper Data')}"
         else
           toggleModal '删除浏览器缓存', '删除成功，请立刻重启软件。'
+  handleOpenCustomCss: (e) ->
+    try
+      d = path.join(EXROOT, 'hack', 'custom.css')
+      fs.ensureFileSync d
+      openItem d
+    catch e
+      toggleModal '编辑自定义 CSS', '打开失败，可能没有创建文件的权限'
   componentDidMount: ->
     window.addEventListener 'resize', @handleResize
   componentWillUnmount: ->
@@ -143,7 +151,7 @@ PoiConfig = React.createClass
       <div className="form-group">
         <Divider text="主题" />
         <Grid>
-          <Col xs={12}>
+          <Col xs={6}>
             <Input type="select" ref="theme" value={@state.theme} onChange={@handleSetTheme}>
               {
                 themes.map (theme, index) ->
@@ -151,6 +159,9 @@ PoiConfig = React.createClass
               }
               <option key={-1} value="__default__">Default</option>
             </Input>
+          </Col>
+          <Col xs={6}>
+            <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>打开自定义 CSS</Button>
           </Col>
         </Grid>
       </div>

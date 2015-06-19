@@ -4,7 +4,7 @@ glob = require 'glob'
 {showItemInFolder, openItem} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, ButtonToolbar, TabbedArea, TabPane, Alert, OverlayMixin, Modal, DropdownButton, OverlayTrigger, Tooltip} = ReactBootstrap
-{config, proxy, remote, log, success, warn, error} = window
+{config, proxy, remote, log, success, warn, error, toggleModal} = window
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
@@ -110,9 +110,19 @@ PoiControl = React.createClass
         error '截图保存失败'
       else
         success "截图保存在 #{filename}"
-  componentDidMount: ->
-    fs.ensureDirSync path.join(window.EXROOT, 'cache')
-    fs.ensureDirSync if process.platform == 'darwin' then path.join(path.homedir(), "Pictures") else path.join(global.EXROOT, 'screenshots')
+  handleOpenCacheFolder: ->
+    try
+      fs.ensureDirSync path.join(window.EXROOT, 'cache')
+      openItem path.join(window.EXROOT, 'cache')
+    catch e
+      toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
+  handleOpenScreenshotFolder: ->
+    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures') else path.join(global.EXROOT, 'screenshots')
+    try
+      fs.ensureDirSync d
+      openItem d
+    catch e
+      toggleModal '打开截图目录', '打开失败，可能没有创建文件夹的权限'
   handleSetMuted: ->
     muted = !@state.muted
     if $('kan-game webview').setAudioMuted?
@@ -123,12 +133,10 @@ PoiControl = React.createClass
   render: ->
     <div>
       <OverlayTrigger placement='left' overlay={<Tooltip>自定义缓存目录</Tooltip>}>
-        <Button onClick={openItem.bind(@, path.join(window.EXROOT, 'cache'))} bsSize='small'><FontAwesome name='bolt' /></Button>
+        <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>截图存放目录</Tooltip>}>
-        <Button onClick={openItem.bind(@, if process.platform == 'darwin' then path.join(path.homedir(), "Pictures") else path.join(global.EXROOT, 'screenshots'))} bsSize='small'>
-          <FontAwesome name='photo' />
-        </Button>
+        <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>一键截图</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
