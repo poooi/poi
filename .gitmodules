@@ -25,3 +25,6 @@
 [submodule "plugins/almanac"]
 	path = plugins/almanac
 	url = https://github.com/yudachi/plugin-almanac
+[submodule "plugins/quest-info"]
+	path = plugins/quest-info
+	url = https://github.com/yudachi/plugin-quest
