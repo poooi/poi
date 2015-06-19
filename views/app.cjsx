@@ -135,7 +135,7 @@ PoiControl = React.createClass
       <OverlayTrigger placement='left' overlay={<Tooltip>自定义缓存目录</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>截图存放目录</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>游戏截图目录</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>一键截图</Tooltip>}>

@@ -6,7 +6,7 @@ path = require 'path-extra'
 
 Others = React.createClass
   render: ->
-    <div>
+    <div id='poi-others'>
       <Grid>
         <Col xs={12}>
           <img src="file://#{ROOT}/assets/img/logo.png" style={width: '100%'} />

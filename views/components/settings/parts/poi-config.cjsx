@@ -161,7 +161,7 @@ PoiConfig = React.createClass
             </Input>
           </Col>
           <Col xs={6}>
-            <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>打开自定义 CSS</Button>
+            <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>编辑自定义 CSS</Button>
           </Col>
         </Grid>
       </div>
