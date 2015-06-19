@@ -1,4 +1,4 @@
-global.POI_VERSION = '2.0.0'
+global.POI_VERSION = '2.0.1'
 
 app = require 'app'
 BrowserWindow = require 'browser-window'
