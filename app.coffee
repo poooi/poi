@@ -2,8 +2,14 @@ global.POI_VERSION = '2.0.0'
 
 app = require 'app'
 BrowserWindow = require 'browser-window'
-path = require 'path'
+path = require 'path-extra'
 fs = require 'fs-extra'
+
+# Patch fs for current Electron
+fs.accessSync = (filePath, mode) ->
+  if fs.existsSync(filePath)
+    return true
+  throw new Error("ENOENT: no such file or directory, access '#{filePath}'")
 
 # Environment
 global.ROOT = __dirname
