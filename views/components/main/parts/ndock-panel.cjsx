@@ -83,7 +83,7 @@ NdockPanel = React.createClass
     for i in [1..4]
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
-        if docks[i].countdown <= 45 && !notified[i]
+        if docks[i].countdown <= 60 && !notified[i]
           notify "#{docks[i].name} 修复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png')}
           notified[i] = true
     @setState
@@ -105,9 +105,9 @@ NdockPanel = React.createClass
               <td>{@state.docks[i].name}</td>
               <td>
                 {
-                  if @state.docks[i].countdown > 0
+                  if @state.docks[i].countdown > 60
                     <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
-                  else if @state.docks[i].countdown is 0
+                  else if @state.docks[i].countdown > -1
                     <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
                   else
                     <Label bsStyle="default"></Label>

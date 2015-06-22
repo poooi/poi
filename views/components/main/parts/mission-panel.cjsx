@@ -85,7 +85,7 @@ MissionPanel = React.createClass
     for i in [1..4]
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
-        if decks[i].countdown <= 40 && !notified[i]
+        if decks[i].countdown <= 60 && !notified[i]
           notify "#{decks[i].name} 远征归来", {icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')}
           notified[i] = true
     @setState
@@ -108,9 +108,9 @@ MissionPanel = React.createClass
                 <td>{@state.decks[i].name}</td>
                 <td>
                   {
-                    if @state.decks[i].countdown > 0
+                    if @state.decks[i].countdown > 60
                       <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
-                    else if @state.decks[i].countdown is 0
+                    else if @state.decks[i].countdown > -1
                       <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
                     else
                       <Label bsStyle="default"></Label>
