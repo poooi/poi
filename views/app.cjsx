@@ -38,6 +38,7 @@ plugins = _.sortBy(plugins, 'priority')
 
 settings = require path.join(ROOT, 'views', 'components', 'settings')
 
+# Main tabbed area
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
@@ -79,6 +80,7 @@ ControlledTabArea = React.createClass
     }
     </TabbedArea>
 
+# Alert info
 PoiAlert = React.createClass
   getInitialState: ->
     message: 'poi 连接网络中'
@@ -94,6 +96,7 @@ PoiAlert = React.createClass
   render: ->
     <Alert bsStyle={@state.type}>{@state.message}</Alert>
 
+# Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
 PoiControl = React.createClass
   getInitialState: ->
@@ -125,17 +128,20 @@ PoiControl = React.createClass
       toggleModal '打开截图目录', '打开失败，可能没有创建文件夹的权限'
   handleSetMuted: ->
     muted = !@state.muted
-    if $('kan-game webview').setAudioMuted?
-      $('kan-game webview').setAudioMuted muted
-    else
-      error '当前版本不支持静音功能'
+    $('kan-game webview').setAudioMuted muted
     @setState {muted}
+  handleOpenDevTools: ->
+    remote.getCurrentWindow().openDevTools
+      detach: true
   render: ->
     <div>
-      <OverlayTrigger placement='left' overlay={<Tooltip>自定义缓存目录</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>开发人员工具</Tooltip>}>
+        <Button onClick={@handleOpenDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
+      </OverlayTrigger>
+      <OverlayTrigger placement='left' overlay={<Tooltip>缓存目录</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>游戏截图目录</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>截图目录</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>一键截图</Tooltip>}>
@@ -146,6 +152,7 @@ PoiControl = React.createClass
       </OverlayTrigger>
     </div>
 
+# Notification modal
 ModalTrigger = React.createClass
   mixins: [OverlayMixin]
   getInitialState: ->
@@ -193,6 +200,7 @@ ModalTrigger = React.createClass
         </div>
       </Modal>
 
+# Custom css injector
 CustomCssInjector = React.createClass
   render: ->
     <link rel='stylesheet' href={path.join(window.EXROOT, 'hack', 'custom.css')} />
@@ -203,6 +211,7 @@ React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
 React.render <CustomCssInjector />, $('poi-css-injector')
 
+# Readme contents
 dontShowAgain = ->
   config.set('poi.first', POI_VERSION)
 if config.get('poi.first', '0.0.0') != POI_VERSION
@@ -232,6 +241,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   ]
   window.toggleModal title, content, footer
 
+# Confirm before quit
 confirmExit = false
 exitPoi = ->
   confirmExit = true
