@@ -1,5 +1,5 @@
 {relative, join} = require 'path-extra'
-{_, $, $$, React, ReactBootstrap, ROOT, resolveTime, toggleModal} = window
+{_, $, $$, React, ReactBootstrap, ROOT, resolveTime, toggleModal, notify} = window
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
@@ -240,7 +240,10 @@ module.exports =
     updateCountdown: ->
       {countdown} = @state
       for i in [0..3]
-        countdown[i] -= 1 if countdown[i] > 0
+        if countdown[i] > 0
+          countdown[i] -= 1
+          if countdown[i] is 0
+            notify "#{@state.names[i]} 修复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')} 
       @setState
         countdown: countdown
     componentDidMount: ->
