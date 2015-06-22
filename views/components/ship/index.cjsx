@@ -243,7 +243,7 @@ module.exports =
         if countdown[i] > 0
           countdown[i] -= 1
           if countdown[i] is 0
-            notify "#{@state.names[i]} 修复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')} 
+            notify "#{@state.names[i]} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')} 
       @setState
         countdown: countdown
     componentDidMount: ->
