@@ -17,6 +17,11 @@ adjustSize = ->
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
     e.style.height = "#{window.innerHeight - 40}px"
     e.style.overflowY = "scroll"
+  # Fix poi-info when game size 0x0
+  if gameScale < 0.00001
+    $('poi-info')?.style?.display = 'none'
+  else
+    $('poi-info')?.style?.display = ''
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
     $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 31}px"
     return
@@ -99,6 +104,7 @@ module.exports =
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = ""
       e.style.overflowY = "hidden"
+    $('poi-info').style.display = ''
     window.removeEventListener 'resize', handleResize
     window.removeEventListener 'scale.change', handleChangeScale
     window.removeEventListener 'game.start', adjustSize
