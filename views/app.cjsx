@@ -101,6 +101,7 @@ PoiAlert = React.createClass
 PoiControl = React.createClass
   getInitialState: ->
     muted: false
+    alwaysOnTop: false
   handleCapturePage: ->
     bound = $('kan-game webview').getBoundingClientRect()
     rect =
@@ -130,6 +131,10 @@ PoiControl = React.createClass
     muted = !@state.muted
     $('kan-game webview').setAudioMuted muted
     @setState {muted}
+  handleSetAlwaysOnTop: ->
+    alwaysOnTop = !@state.alwaysOnTop
+    remote.getCurrentWindow().setAlwaysOnTop alwaysOnTop
+    @setState {alwaysOnTop}
   handleOpenDevTools: ->
     remote.getCurrentWindow().openDevTools
       detach: true
@@ -143,6 +148,9 @@ PoiControl = React.createClass
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>截图目录</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
+      </OverlayTrigger>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.alwaysOnTop then '取消置顶' else '窗口置顶'}</Tooltip>}>
+        <Button onClick={@handleSetAlwaysOnTop} bsSize='small'><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>一键截图</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
