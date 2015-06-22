@@ -1,4 +1,3 @@
-global.POI_VERSION = '2.0.1'
 
 app = require 'app'
 BrowserWindow = require 'browser-window'
@@ -12,6 +11,7 @@ fs.accessSync = (filePath, mode) ->
   throw new Error("ENOENT: no such file or directory, access '#{filePath}'")
 
 # Environment
+global.POI_VERSION = app.getVersion()
 global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
