@@ -276,7 +276,7 @@ module.exports =
                     制空：{@state.messages[i][2]}
                   </Col>
                   <Col xs={2}>
-                    <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@state.messages[i][4]} + [装備]{@state.messages[i][5]} - [司令部 Lv]{@state.messages[i][6]}</Tooltip>}>
+                    <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@state.messages[i][4]} + [装備]{@state.messages[i][5]} - [司令部]{@state.messages[i][6]}</Tooltip>}>
                       <span>索敌：{@state.messages[i][3]}</span>
                     </OverlayTrigger>
                   </Col>
