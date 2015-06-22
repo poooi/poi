@@ -83,9 +83,9 @@ getDeckMessage = (deck) ->
       itemInfo = $slotitems[item.api_slotitem_id]
       # Airplane Tyku
       if itemInfo.api_type[3] in [6, 7, 8]
-        itemTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
+        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
       else if itemInfo.api_type[3] == 10 && itemInfo.api_type[2] == 11
-        itemTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
+        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
       # Saku
       # 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
       #            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
