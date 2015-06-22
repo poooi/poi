@@ -1,7 +1,7 @@
 {relative, join} = require 'path-extra'
 {_, $, $$, React, ReactBootstrap, ROOT, resolveTime, toggleModal} = window
 {$ships, $shipTypes, _ships} = window
-{Button, ButtonGroup, Table, ProgressBar, Grid, Col, Alert} = ReactBootstrap
+{Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
 inBattle = [false, false, false, false]
 getStyle = (state) ->
@@ -69,50 +69,50 @@ getDeckState = (deck, ndocks) ->
   state
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
-  totalLv = totalShip = totalTyku = totalSaku = 0
+  totalLv = totalShip = totalTyku = totalSaku = shipSaku = itemSaku = teitokuSaku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
     ship = _ships[shipId]
     shipInfo = $ships[ship.api_ship_id]
     totalLv += ship.api_lv
     totalShip += 1
-    totalSaku += Math.sqrt(ship.api_sakuteki[0]) * 1.69
+    shipSaku += Math.sqrt(ship.api_sakuteki[0]) * 1.69
     for itemId, slotId in ship.api_slot
       continue if itemId == -1
       item = _slotitems[itemId]
       itemInfo = $slotitems[item.api_slotitem_id]
       # Airplane Tyku
       if itemInfo.api_type[3] in [6, 7, 8]
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
+        itemTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
       else if itemInfo.api_type[3] == 10 && itemInfo.api_type[2] == 11
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
+        itemTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
       # Saku
       # 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
       #            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
       #            + √(各艦毎の素索敵) × (1.69) + (司令部レベルを5の倍数に切り上げ) × (-0.61)
       switch itemInfo.api_type[3]
         when 7
-          totalSaku += itemInfo.api_saku * 1.04
+          itemSaku += itemInfo.api_saku * 1.04
         when 8
-          totalSaku += itemInfo.api_saku * 1.37
+          itemSaku += itemInfo.api_saku * 1.37
         when 9
-          totalSaku += itemInfo.api_saku * 1.66
+          itemSaku += itemInfo.api_saku * 1.66
         when 10
           if itemInfo.api_type[2] == 10
-            totalSaku += itemInfo.api_saku * 2.00
+            itemSaku += itemInfo.api_saku * 2.00
           else if itemInfo.api_type[2] == 11
-            totalSaku += itemInfo.api_saku * 1.78
+            itemSaku += itemInfo.api_saku * 1.78
         when 11
           if itemInfo.api_type[2] == 12
-            totalSaku += itemInfo.api_saku * 1.00
+            itemSaku += itemInfo.api_saku * 1.00
           else if itemInfo.api_type[2] == 13
-            totalSaku += itemInfo.api_saku * 0.99
+            itemSaku += itemInfo.api_saku * 0.99
         when 24
-          totalSaku += itemInfo.api_saku * 0.91
-  totalSaku -= 0.61 * Math.floor((window._teitokuLv + 4) / 5) * 5
-  totalSaku = Math.max(0, totalSaku)
+          itemSaku += itemInfo.api_saku * 0.91
+  teitokuSaku = 0.61 * Math.floor((window._teitokuLv + 4) / 5) * 5
+  totalSaku = shipSaku + itemSaku - teitokuSaku
   avgLv = totalLv / totalShip
-  [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0))]
+  [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0)), shipSaku, itemSaku, teitokuSaku]
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
   countdown = 0
@@ -276,7 +276,9 @@ module.exports =
                     制空：{@state.messages[i][2]}
                   </Col>
                   <Col xs={2}>
-                    索敌：{@state.messages[i][3]}
+                    <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@state.messages[i][4]} + [装備]{@state.messages[i][5]} - [司令部 Lv]{@state.messages[i][6]}</Tooltip>}>
+                      <span>索敌：{@state.messages[i][3]}</span>
+                    </OverlayTrigger>
                   </Col>
                   <Col xs={4}>
                     回复：{resolveTime @state.countdown[i]}
