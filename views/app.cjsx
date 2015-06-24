@@ -35,6 +35,8 @@ plugins = plugins.map (filePath) ->
 plugins = plugins.filter (plugin) ->
   plugin.show isnt false
 plugins = _.sortBy(plugins, 'priority')
+tabbedPlugins = plugins.filter (plugin) ->
+  !plugin.handleClick?
 
 settings = require path.join(ROOT, 'views', 'components', 'settings')
 
@@ -44,6 +46,21 @@ ControlledTabArea = React.createClass
     key: 0
   handleSelect: (key) ->
     @setState {key}
+  handleCtrlOrCmdTabKeyDown: ->
+    @setState
+      key: 0
+  handleTabKeyDown: ->
+    @setState
+      key: (@state.key + 1) % (components.length + tabbedPlugins.length)
+  componentDidMount: ->
+    window.addEventListener 'keydown', (e) =>
+      console.log e
+      if e.keyCode is 9
+        e.preventDefault()
+        if e.ctrlKey || e.metaKey
+          @handleCtrlOrCmdTabKeyDown()
+        else
+          @handleTabKeyDown()
   render: ->
     ### FIXME
     # Animation disabled
@@ -55,25 +72,27 @@ ControlledTabArea = React.createClass
         components.map (component, index) ->
           <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
           {
-            React.createElement(component.reactClass)
+            React.createElement component.reactClass
           }
           </TabPane>
-        <DropdownButton key={components.length} eventKey={components.length} tab='插件' navItem={true}>
+        <DropdownButton key={components.length} eventKey={-1} tab='插件' navItem={true}>
         {
+          counter = 0
           plugins.map (plugin, index) ->
             if plugin.handleClick
               <div key={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
             else
-              <TabPane key={components.length + 1 + index} eventKey={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+              <TabPane key={components.length + 1 + index} eventKey={components.length - 1 + (counter += 1)} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
               {
-                React.createElement(plugin.reactClass)
+                console.log "#{plugin.name} #{components.length - 1 + counter}"
+                React.createElement plugin.reactClass
               }
               </TabPane>
         }
         </DropdownButton>
         <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
         {
-          React.createElement(settings.reactClass)
+          React.createElement settings.reactClass
         }
         </TabPane>
       ]
