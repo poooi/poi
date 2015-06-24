@@ -54,7 +54,6 @@ ControlledTabArea = React.createClass
       key: (@state.key + 1) % (components.length + tabbedPlugins.length)
   componentDidMount: ->
     window.addEventListener 'keydown', (e) =>
-      console.log e
       if e.keyCode is 9
         e.preventDefault()
         if e.ctrlKey || e.metaKey
