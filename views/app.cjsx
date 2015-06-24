@@ -83,7 +83,6 @@ ControlledTabArea = React.createClass
             else
               <TabPane key={components.length + 1 + index} eventKey={components.length - 1 + (counter += 1)} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
               {
-                console.log "#{plugin.name} #{components.length - 1 + counter}"
                 React.createElement plugin.reactClass
               }
               </TabPane>
