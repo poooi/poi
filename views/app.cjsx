@@ -138,6 +138,8 @@ PoiControl = React.createClass
   handleOpenDevTools: ->
     remote.getCurrentWindow().openDevTools
       detach: true
+  handleJustifyLayout: ->
+    window.dispatchEvent new Event('resize')
   render: ->
     <div>
       <OverlayTrigger placement='left' overlay={<Tooltip>开发人员工具</Tooltip>}>
@@ -148,6 +150,9 @@ PoiControl = React.createClass
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>截图目录</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
+      </OverlayTrigger>
+      <OverlayTrigger placement='left' overlay={<Tooltip>自动适配页面</Tooltip>}>
+        <Button onClick={@handleJustifyLayout} bsSize='small'><FontAwesome name='arrow-alt' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.alwaysOnTop then '取消置顶' else '窗口置顶'}</Tooltip>}>
         <Button onClick={@handleSetAlwaysOnTop} bsSize='small'><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
