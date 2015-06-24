@@ -50,6 +50,10 @@ ControlledTabArea = React.createClass
   handleCtrlOrCmdTabKeyDown: ->
     @setState
       key: 0
+  handleCtrlOrCmdNumberKeyDown: (num) ->
+    if num <= components.length + tabbedPlugins.length
+      @setState
+        key: num - 1
   handleTabKeyDown: ->
     @setState
       key: (@state.key + 1) % (components.length + tabbedPlugins.length)
@@ -62,10 +66,15 @@ ControlledTabArea = React.createClass
         setTimeout ->
           lockedTab = false
         , 200
-        if e.ctrlKey || e.metaKey
+        if e.ctrlKey or e.metaKey
           @handleCtrlOrCmdTabKeyDown()
         else
           @handleTabKeyDown()
+      else if e.ctrlKey or e.metaKey
+        if e.keyCode >= 49 and e.keyCode <= 57
+          @handleCtrlOrCmdNumberKeyDown(e.keyCode - 48)
+        else if e.keyCode is 48
+          @handleCtrlOrCmdNumberKeyDown 10
   render: ->
     ### FIXME
     # Animation disabled
