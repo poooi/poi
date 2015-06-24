@@ -41,6 +41,7 @@ tabbedPlugins = plugins.filter (plugin) ->
 settings = require path.join(ROOT, 'views', 'components', 'settings')
 
 # Main tabbed area
+lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
@@ -56,6 +57,11 @@ ControlledTabArea = React.createClass
     window.addEventListener 'keydown', (e) =>
       if e.keyCode is 9
         e.preventDefault()
+        return if lockedTab and e.repeat
+        lockedTab = true
+        setTimeout ->
+          lockedTab = false
+        , 200
         if e.ctrlKey || e.metaKey
           @handleCtrlOrCmdTabKeyDown()
         else
