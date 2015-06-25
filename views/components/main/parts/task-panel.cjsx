@@ -67,6 +67,7 @@ TaskPanel = React.createClass
     {tasks} = @state
     switch path
       when '/kcsapi/api_get_member/questlist'
+        return unless body.api_list?
         for task in body.api_list
           continue if task is -1 || task.api_state < 2
           # Determine progress
