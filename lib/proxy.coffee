@@ -114,6 +114,8 @@ class Proxy extends EventEmitter
                 res.end body
                 # Emit response events to plugins
                 resolvedBody = yield resolveBody response.headers['content-encoding'], body
+                if !resolvedBody?
+                  throw new Error('Empty Body')
                 if response.statusCode == 200
                   self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
                 else
