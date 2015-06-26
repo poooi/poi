@@ -6,7 +6,7 @@ rimraf = require 'rimraf'
 {Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
-{openItem} = require 'shell'
+{showItenInFolder, openItem} = require 'shell'
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
@@ -79,6 +79,11 @@ PoiConfig = React.createClass
     rimraf path.join(APPDATA_PATH, 'Cookies'), (err) ->
       if err?
         toggleModal '删除 Cookies', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cookies')}"
+        try
+            fs.ensureFileSync APPDATA_PATH
+            openItem APPDATA_PATH
+        catch e
+            toggleModal '打开缓存目录','打开失败，可能没有访问权限'
       else
         toggleModal '删除 Cookies', '删除成功，请立刻重启软件。'
   handleClearCache: (e) ->
@@ -89,6 +94,11 @@ PoiConfig = React.createClass
         error = error || err
         if error
           toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')} 和 #{path.join(APPDATA_PATH, 'Pepper Data')}"
+          try
+            fs.ensureFileSync APPDATA_PATH
+            openItem APPDATA_PATH
+          catch e
+            toggleModal '打开缓存目录','打开失败，可能没有访问权限'
         else
           toggleModal '删除浏览器缓存', '删除成功，请立刻重启软件。'
   handleOpenCustomCss: (e) ->
