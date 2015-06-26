@@ -112,7 +112,7 @@ getDeckMessage = (deck) ->
   teitokuSaku = 0.61 * Math.floor((window._teitokuLv + 4) / 5) * 5
   totalSaku = shipSaku + itemSaku - teitokuSaku
   avgLv = totalLv / totalShip
-  [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0)), shipSaku, itemSaku, teitokuSaku]
+  [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0)), parseFloat(shipSaku.toFixed(2)), parseFloat(itemSaku.toFixed(2)), parseFloat(teitokuSaku.toFixed(2))]
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
   countdown = 0
@@ -243,7 +243,7 @@ module.exports =
         if countdown[i] > 0
           countdown[i] -= 1
           if countdown[i] is 0
-            notify "#{@state.names[i]} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')} 
+            notify "#{@state.names[i]} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
       @setState
         countdown: countdown
     componentDidMount: ->
