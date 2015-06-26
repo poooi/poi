@@ -238,11 +238,11 @@ module.exports =
         messages: messages
         countdown: countdown
     updateCountdown: ->
-      {countdown} = @state
+      {countdown, states} = @state
       for i in [0..3]
         if countdown[i] > 0
           countdown[i] -= 1
-          if countdown[i] is 0
+          if countdown[i] is 0 and states[i] < 4
             notify "#{@state.names[i]} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
       @setState
         countdown: countdown
