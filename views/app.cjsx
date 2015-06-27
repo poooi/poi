@@ -175,12 +175,15 @@ PoiControl = React.createClass
   handleOpenDevTools: ->
     remote.getCurrentWindow().openDevTools
       detach: true
+  handleOpenWebviewDevTools: ->
+    $('kan-game webview').openDevTools
+      detach: true
   handleJustifyLayout: ->
     window.dispatchEvent new Event('resize')
   render: ->
     <div>
       <OverlayTrigger placement='left' overlay={<Tooltip>开发人员工具</Tooltip>}>
-        <Button onClick={@handleOpenDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
+        <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>缓存目录</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
