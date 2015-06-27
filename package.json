@@ -24,9 +24,9 @@
   "dependencies": {
     "adm-zip": "^0.4.7",
     "bluebird": "^2.9.30",
-    "coffee-react": "^3.2.0",
+    "coffee-react": "^4.0.0",
     "coffee-script": "^1.9.3",
-    "colors": "^1.1.0",
+    "colors": "^1.1.2",
     "fs-extra": "^0.20.1",
     "glob": "^5.0.10",
     "header-case-normalizer": "^1.0.2",
