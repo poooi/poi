@@ -99,7 +99,7 @@ PoiConfig = React.createClass
       rimraf path.join(APPDATA_PATH, 'Pepper Data'), (err) ->
         error = error || err
         if error
-          toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')} 和 #{path.join(APPDATA_PATH, 'Pepper Data')}"
+          toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')}"
           try
             fs.ensureFileSync APPDATA_PATH
             showItemInFolder path.join(APPDATA_PATH, 'Cache')
