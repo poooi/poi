@@ -62,10 +62,12 @@ PoiControl = React.createClass
       toggleModal '打开截图目录', '打开失败，可能没有创建文件夹的权限'
   handleSetMuted: ->
     muted = !@state.muted
+    config.set 'poi.content.muted', muted
     $('kan-game webview').setAudioMuted muted
     @setState {muted}
   handleSetAlwaysOnTop: ->
     alwaysOnTop = !@state.alwaysOnTop
+    config.set 'poi.content.alwaysOnTop', alwaysOnTop
     remote.getCurrentWindow().setAlwaysOnTop alwaysOnTop
     @setState {alwaysOnTop}
   handleOpenDevTools: ->
@@ -76,6 +78,16 @@ PoiControl = React.createClass
       detach: true
   handleJustifyLayout: ->
     window.dispatchEvent new Event('resize')
+  componentDidMount: ->
+    setTimeout =>
+      try
+        if config.get 'poi.content.muted', false
+          @handleSetMuted()
+        if config.get 'poi.content.alwaysOnTop', false
+          @handleSetAlwaysOnTop()
+      catch e
+        false
+    , 100
   render: ->
     <div>
       <OverlayTrigger placement='left' overlay={<Tooltip>开发人员工具</Tooltip>}>
