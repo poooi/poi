@@ -92,3 +92,9 @@ poi-control button .fa {
 .btn:hover {
   outline: none;
 }
+.poi-tabs-container {
+  display: flex;
+}
+.poi-tabs-container > div {
+  flex: 1;
+}
