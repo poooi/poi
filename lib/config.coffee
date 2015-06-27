@@ -6,6 +6,7 @@ fs = require 'fs-extra'
 {ROOT, EXROOT} = global
 
 config = {}
+configCache = {}
 defaultConfigPath = path.join(ROOT, 'config.json')
 configPath = path.join(EXROOT, 'config.json')
 
@@ -25,12 +26,14 @@ catch e
 
 module.exports =
   get: (path, value) ->
+    return configCache[path] if configCache[path]?
     path = path.split('.').filter (p) -> p != ''
     cur = config
     for p in path
       cur = cur?[p]
-    if cur? then cur else value
+    configCache[path] = if cur? then cur else value
   set: (path, value) ->
+    delete configCache[path] if configCache[path]?
     path = path.split('.').filter (p) -> p != ''
     cur = config
     len = path.length
