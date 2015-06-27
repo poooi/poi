@@ -18,11 +18,17 @@ PoiConfig = React.createClass
     gameWidth: config.get('poi.scale', window.gameScale) * window.innerWidth
     useFixedResolution: if config.get('poi.scale') then true else false
     enableConfirmQuit: config.get 'poi.confirm.quit', false
+    enableDoubleTabbed: config.get 'poi.tabarea.double', false
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
     @setState
       enableConfirmQuit: !enabled
+  handleSetDoubleTabbed: ->
+    enabled = @state.enableDoubleTabbed
+    config.set 'poi.tabarea.double', !enabled
+    @setState
+      enableDoubleTabbed: !enabled
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
@@ -135,6 +141,9 @@ PoiConfig = React.createClass
             <Button bsStyle={if @state.layout == 'vertical' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'vertical'} style={width: '100%'}>
               {if @state.layout == 'vertical' then '√ ' else ''}使用纵版布局
             </Button>
+          </Col>
+          <Col xs={12}>
+            <Input type="checkbox" label="切分组件与插件面板" checked={@state.enableDoubleTabbed} onChange={@handleSetDoubleTabbed} />
           </Col>
         </Grid>
       </div>
