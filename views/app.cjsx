@@ -115,7 +115,7 @@ ControlledTabArea = React.createClass
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
-    message: 'poi 等待游戏数据中'
+    message: 'poi 等待游戏数据中……'
     type: 'success'
   handleAlert: (e) ->
     @setState
@@ -317,3 +317,5 @@ window.addEventListener 'network.error.retry', (e) ->
 window.addEventListener 'network.invalid.code', (e) ->
   {code} = e.detail
   error "服务器返回非正常的 HTTP 状态码，HTTP #{code}"
+window.addEventListener 'network.error', ->
+  error '网络连接失败，请检查网络与代理设置'

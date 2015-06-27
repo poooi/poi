@@ -245,3 +245,5 @@ proxy.addListener 'network.invalid.code', (code) ->
     detail:
       code: code
   window.dispatchEvent event
+proxy.addListener 'network.error', ->
+  window.dispatchEvent new Event 'network.error'

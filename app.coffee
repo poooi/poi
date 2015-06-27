@@ -26,6 +26,7 @@ else
 
 config = require './lib/config'
 proxy = require './lib/proxy'
+proxy.setMaxListeners 30
 update = require './lib/update'
 {log, warn, error} = require './lib/utils'
 
