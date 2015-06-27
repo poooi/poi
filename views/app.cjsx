@@ -54,6 +54,9 @@ ControlledTabArea = React.createClass
     if num <= components.length + tabbedPlugins.length
       @setState
         key: num - 1
+  handleShiftTabKeyDown: ->
+    @setState
+      key: if @state.key? then (@state.key - 1 + components.length + tabbedPlugins.length) % (components.length + tabbedPlugins.length) else components.length + tabbedPlugins.length - 1
   handleTabKeyDown: ->
     @setState
       key: if @state.key? then (@state.key + 1) % (components.length + tabbedPlugins.length) else 1
@@ -68,6 +71,8 @@ ControlledTabArea = React.createClass
         , 200
         if e.ctrlKey or e.metaKey
           @handleCtrlOrCmdTabKeyDown()
+        else if e.shiftKey
+          @handleShiftTabKeyDown()
         else
           @handleTabKeyDown()
       else if e.ctrlKey or e.metaKey
