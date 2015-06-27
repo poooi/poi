@@ -81,7 +81,7 @@ PoiConfig = React.createClass
         toggleModal '删除 Cookies', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cookies')}"
         try
             fs.ensureFileSync APPDATA_PATH
-            openItem APPDATA_PATH
+            showItemInFolder path.join(APPDATA_PATH, 'Cookies')
         catch e
             toggleModal '打开缓存目录','打开失败，可能没有访问权限'
       else
@@ -96,7 +96,7 @@ PoiConfig = React.createClass
           toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')} 和 #{path.join(APPDATA_PATH, 'Pepper Data')}"
           try
             fs.ensureFileSync APPDATA_PATH
-            openItem APPDATA_PATH
+            showItemInFolder path.join(APPDATA_PATH, 'Cache')
           catch e
             toggleModal '打开缓存目录','打开失败，可能没有访问权限'
         else
