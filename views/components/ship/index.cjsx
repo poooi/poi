@@ -260,7 +260,10 @@ module.exports =
           for i in [0..3]
             <Button key={i} bsSize="small"
                             bsStyle={getStyle @state.states[i]}
-                            onClick={@handleClick.bind(this, i)}>{@state.names[i]}</Button>
+                            onClick={@handleClick.bind(this, i)}
+                            className={if @state.activeDeck == i then 'active' else ''}>
+              {@state.names[i]}
+            </Button>
         }
         </ButtonGroup>
         {
