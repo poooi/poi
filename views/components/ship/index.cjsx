@@ -265,15 +265,13 @@ module.exports =
                         <td>Next. {ship.api_exp[1]}</td>
                         <td className="material-progress">
                           <Grid>
-                            <Col xs={6}>
+                            <Col xs={6} style={paddingRight: 1}>
                               <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                           now={ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                           label={"#{ship.api_fuel} / #{shipInfo.api_fuel_max}"} />
+                                             now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
                             </Col>
-                            <Col xs={6}>
+                            <Col xs={6} style={paddingLeft: 1}>
                               <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                           now={ship.api_bull / shipInfo.api_bull_max * 100}
-                                           label={"#{ship.api_bull} / #{shipInfo.api_bull_max}"} />
+                                             now={ship.api_bull / shipInfo.api_bull_max * 100} />
                             </Col>
                           </Grid>
                         </td>

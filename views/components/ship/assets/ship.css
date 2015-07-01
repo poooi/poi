@@ -70,8 +70,8 @@
   display: block;
 }
 #ShipView .material-progress .col-xs-6 {
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 #ShipView .table {
   margin-bottom: 1px;
