@@ -34,11 +34,13 @@ gulp.task 'theme', async ->
     slate: 'https://bootswatch.com/slate/bootstrap.css'
     superhero: 'https://bootswatch.com/superhero/bootstrap.css'
     united: 'https://bootswatch.com/united/bootstrap.css'
+    lumendark: 'https://raw.githubusercontent.com/PHELiOX/poi-theme-lumendark/master/lumendark.css'
+    paperdark: 'https://raw.githubusercontent.com/ruiii/poi_theme_paper_dark/master/paper_dark.css'
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
     log "Downloding #{theme} theme."
-    data = yield request.getAsync url,
+    [res, data] = yield request.getAsync url,
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
 
