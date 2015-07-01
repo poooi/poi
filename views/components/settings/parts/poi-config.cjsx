@@ -134,12 +134,12 @@ PoiConfig = React.createClass
         <Divider text="布局" />
         <Grid>
           <Col xs={6}>
-            <Button bsStyle={if @state.layout == 'horizonal' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'horizonal'} style={width: '100%'}>
+            <Button bsStyle={if @state.layout == 'horizonal' then 'success' else 'info'} onClick={@handleSetLayout.bind @, 'horizonal'} style={width: '100%'}>
               {if @state.layout == 'horizonal' then '√ ' else ''}使用横版布局
             </Button>
           </Col>
           <Col xs={6}>
-            <Button bsStyle={if @state.layout == 'vertical' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'vertical'} style={width: '100%'}>
+            <Button bsStyle={if @state.layout == 'vertical' then 'success' else 'info'} onClick={@handleSetLayout.bind @, 'vertical'} style={width: '100%'}>
               {if @state.layout == 'vertical' then '√ ' else ''}使用纵版布局
             </Button>
           </Col>
@@ -162,7 +162,7 @@ PoiConfig = React.createClass
             </Button>
           </Col>
           <Col xs={12}>
-            <Alert bsStyle='warning' style={marginTop: '10px'}>
+            <Alert bsStyle='info' style={marginTop: '20px'}>
               如果经常猫，删除以上两项。
             </Alert>
           </Col>

@@ -1,0 +1,67 @@
+#MainView .material-icon {
+  margin-right: 5px;
+  width: 18px;
+  height: 18px;
+}
+#MainView .material-value {
+  line-height: 30px;
+  vertical-align: middle;
+}
+#MainView .panel {
+  margin-bottom: 1px;
+}
+#MainView .panel-body {
+  padding: 8px;
+}
+#MainView .panel-heading {
+  padding: 8px;
+}
+#MainView .table {
+  margin-bottom: 1px;
+}
+#MainView table tr td {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 5px;
+}
+#MainView table tr td:first-child {
+  width: 55%;
+  text-align: left;
+}
+#MainView table tr td:last-child {
+  width: 45%;
+  text-align: right;
+}
+#MainView .task-panel table tr td:first-child {
+  width: 65%;
+}
+#MainView .task-panel table tr td:last-child {
+  width: 35%;
+}
+#MainView table tr td[colspan] {
+  width: 100% !important;
+  text-align: left;
+}
+#MainView .panel-container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#MainView .panel-col {
+  padding-left: 0px;
+  padding-right: 1px;
+}
+#MainView .teitoku-panel .col-xs-6, #MainView .teitoku-panel .col-xs-3 {
+  padding-left: 8px;
+  padding-right: 0px;
+}
+#MainView .panel-body table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: none;
+  line-height: 1.42857143;
+}
+#MainView .label {
+  font-size: 80%;
+  font-weight: normal;
+}

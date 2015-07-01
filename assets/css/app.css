@@ -1,5 +1,5 @@
 *, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
+  /*font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;*/
 }
 ::-webkit-scrollbar {
   width: 0px;
@@ -9,19 +9,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 .alert {
-  border-radius: 0px;
+  /*border-radius: 0px;*/
   font-size: 12px;
-  margin-bottom: 1px;
-  padding: 3px;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /*margin-bottom: 1px;*/
+  /*padding: 3px;*/
+  /*text-align: center;*/
+  /*text-overflow: ellipsis;*/
+  /*white-space: nowrap;*/
 }
 kan-game poi-info .alert {
-  opacity: 0.7;
+  /*opacity: 0.7;*/
   padding: 6px 3px 5px 3px;
-  margin-bottom: 0px;
-  height: 100%;
+  margin: 0px;
+  border-radius: 0px;
+  font-size: 14px;
+  height: 30px;
+  line-height: 1;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
@@ -40,8 +43,8 @@ poi-app .container {
 table {
   table-layout: fixed;
 }
-poi-app poi-nav-tabs nav ul {
-  display: flex;
+poi-app poi-nav-tabs nav .nav-tabs ul {
+  /*display: flex;*/
 }
 poi-app poi-nav-tabs nav ul li {
   flex: 1;
@@ -62,25 +65,34 @@ poi-info {
   display: flex;
   align-items: stretch;
 }
-poi-alert {
+poi-alert{
   flex: 1;
 }
 poi-control {
   height: 100%;
+  margin:0px;
 }
 poi-control .btn-sm {
   height: 100%;
-  border-radius: 0px;
-  border-width: 2px;
-  padding: 2px 7px;
-  font-size: 15px;
+  /*border-radius: 0px;*/
+  /*border-width: 2px;*/
+  padding: 5px 5px 2px 5px;
+  font-size: 13px;
+  margin:0px;
 }
 poi-control button .fa {
   cursor: pointer !important;
-  width: 20px;
+  width: 22px;
 }
 .table tbody tr td {
-  padding: 8px;
+  font-size: 12px;
+  padding: 4px 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.table tbody tr td .label{
+  /*color: #fff;*/
 }
 .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
   outline: none !important;
