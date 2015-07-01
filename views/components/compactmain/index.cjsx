@@ -133,6 +133,5 @@ module.exports =
         return '提督 [尚未登录]'
     render: ->
       <div>
-        <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
         <TeitokuPanel ref="teitokuPanel" />
       </div>

@@ -14,22 +14,28 @@
 #ShipView .show {
   display: block;
 }
-#ShipView table #shipDetails{
+#ShipView #shipDetails{
   margin-bottom: 1px;
 }
-#ShipView table #shipDetails tr td {
+#ShipView #shipDetails tr td {
   overflow: hidden;
   white-space: nowrap;
   /*margin-bottom: 1px;*/
-  padding:0px 10px;
+  /*padding:0px 10px;*/
   border: none;
   vertical-align: middle;
 }
-#ShipView table #shipDetails td #shipName {
+#ShipView #shipDetails #shipInfo1 td {
+  vertical-align: bottom;
+}
+#ShipView #shipDetails #shipInfo2 td {
+  vertical-align: top;
+}
+#ShipView td #shipName{
   font-size: 130%;
   padding-top: 12px;
 }
-#ShipView table #shipDetails td #shipType {
+#ShipView td #shipType{
   font-size: 80%;
   padding-top: 0px;
   text-align: right;
@@ -38,7 +44,7 @@
   width: 30px;
   height: 30px;
   margin-top: -5px;
-  margin-bottom: -5px;
+  margin-bottom: -10px;
   margin-left: -5px;
 }
 #ShipView .hp-progress {
@@ -86,7 +92,7 @@
   padding-right: 0px;
 }
 #ShipView #shipCond{
-  text-align: center;
+  /*text-align: center;*/
 }
 #ShipView .alert {
   /*background-color: #000;*/

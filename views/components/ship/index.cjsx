@@ -13,7 +13,7 @@ getStyle = (state) ->
     # 3: Repairing
     # 4: In mission
     # 5: In map
-    return ['success', 'warning', 'danger', 'info', 'primary', 'default'][state]
+    return ['success', 'warning', 'danger', 'info', 'default', 'primary'][state]
   else
     return 'default'
 getHpStyle = (percent) ->
@@ -22,21 +22,21 @@ getHpStyle = (percent) ->
   else if percent <= 50
     'warning'
   else if percent <= 75
-    'info'
+    'primary'
   else
-    'success'
+    'info'
 getMaterialStyle = (percent) ->
   if percent <= 50
     'danger'
   else if percent <= 75
     'warning'
   else if percent < 100
-    'info'
+    'primary'
   else
-    'success'
+    'info'
 getCondStyle = (cond) ->
   if cond > 49
-    color: '#FFFF00'
+    color: '#ffd600'
   else if cond < 20
     color: '#DD514C'
   else if cond < 30
@@ -130,7 +130,7 @@ getCondCountdown = (deck) ->
 module.exports =
   name: 'ShipView'
   priority: 0.1
-  displayName: '舰队'
+  displayName: [<FontAwesome key={0} name='server' />, ' 舰队信息']
   description: '舰队展示页面，展示舰队详情信息'
   reactClass: React.createClass
     getInitialState: ->
@@ -222,7 +222,7 @@ module.exports =
           {$ships, $shipTypes, _ships} = window
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
-              <Alert bsStyle={getStyle @state.states[i]}>
+              <Alert id="deckStatus" bsStyle={getStyle @state.states[i]}>
                 <Grid>
                   <Col xs={2}>
                     总 Lv.{@state.messages[i][0]}
@@ -233,17 +233,17 @@ module.exports =
                   <Col xs={2}>
                     制空：{@state.messages[i][2]}
                   </Col>
-                  <Col xs={2}>
+                  <Col xs={3}>
                     <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@state.messages[i][4]} + [装備]{@state.messages[i][5]} - [司令部]{@state.messages[i][6]}</Tooltip>}>
                       <span>索敌：{@state.messages[i][3]}</span>
                     </OverlayTrigger>
                   </Col>
-                  <Col xs={4}>
+                  <Col xs={3}>
                     回复：<span id={"deck-condition-countdown-#{i}"}>{resolveTime @state.countdown[i]}</span>
                   </Col>
                 </Grid>
               </Alert>
-              <Table>
+              <Table id="shipDetails">
                 <tbody>
                 {
                   for shipId, j in deck.api_ship
@@ -252,21 +252,21 @@ module.exports =
                     shipInfo = $ships[ship.api_ship_id]
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [
-                      <tr key={j * 2}>
-                        <td width="20%">{shipInfo.api_name}</td>
-                        <td width="22%">Lv. {ship.api_lv}</td>
-                        <td width="25%" className="hp-progress">
+                      <tr id="shipInfo1" key={j * 2}>
+                        <td id="shipName" width="25%">{shipInfo.api_name}</td>
+                        <td id="shipLv" width="20%">Lv. {ship.api_lv}</td>
+                        <td id='hpBar' width="25%" className="hp-progress">
                           <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                        now={ship.api_nowhp / ship.api_maxhp * 100}
                                        label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                         </td>
-                        <td width="33%">
+                        <td id='shipEquipments'width="30%">
                           <Slotitems data={ship.api_slot} />
                         </td>
                       </tr>
-                      <tr key={j * 2 + 1}>
-                        <td>{shipType}</td>
-                        <td>Next. {ship.api_exp[1]}</td>
+                      <tr id="shipInfo2" key={j * 2 + 1}>
+                        <td id='shipType'>{shipType}</td>
+                        <td id='shipExp' >Next. {ship.api_exp[1]}</td>
                         <td className="material-progress">
                           <Grid>
                             <Col xs={6} style={paddingRight: 1}>
@@ -279,7 +279,7 @@ module.exports =
                             </Col>
                           </Grid>
                         </td>
-                        <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
+                        <td id='shipCond' style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
                       </tr>
                     ]
                 }
