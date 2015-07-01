@@ -162,11 +162,24 @@ module.exports =
             decks[deckId].api_ship[i] = -1 for i in [1..5]
           # Empty -> One
           else if curId == -1
+            [x, y] = [-1, -1]
+            for deck, i in decks
+              for ship, j in deck.api_ship
+                if ship == shipId
+                  [x, y] = [i, j]
+                  break
             decks[deckId].api_ship[idx] = shipId
+            # Empty to ship in deck
+            if x != -1 && y != -1
+              if y <= 4
+                for i in [y..4]
+                  decks[x].api_ship[i] = decks[x].api_ship[i + 1]
+              decks[x].api_ship[5] = -1
           # One -> Empty
           else if shipId == -1
-            for i in [idx..4]
-              decks[deckId].api_ship[i] = decks[deckId].api_ship[i + 1]
+            if idx <= 4
+              for i in [idx..4]
+                decks[deckId].api_ship[i] = decks[deckId].api_ship[i + 1]
             decks[deckId].api_ship[5] = -1
           else
             [x, y] = [-1, -1]

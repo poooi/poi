@@ -83,14 +83,8 @@ poi-control button .fa {
 .table tbody tr td {
   padding: 8px;
 }
-.btn:focus {
-  outline: none;
-}
-.btn:active {
-  outline: none;
-}
-.btn:hover {
-  outline: none;
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+  outline: none !important;
 }
 .poi-tabs-container {
   display: flex;
