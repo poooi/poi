@@ -76,9 +76,16 @@ window.notify = (msg, options) ->
       icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
       sound: config.get('poi.notify.sound', true)
   else
+    # According to MDN Notification API docs:
+    #   https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
+    # Parameter `sound` is not supported in any browser yet,
+    # so we play sound manually.
     new Notification 'poi',
       icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
       body: msg
+    if config.get('poi.notify.sound', true)
+      sound = new Audio "file://#{ROOT}/assets/audio/poi.mp3"
+      sound.play()
 modals = []
 window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
