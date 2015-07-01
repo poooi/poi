@@ -40,6 +40,8 @@ getCondStyle = (cond) ->
     color: '#DD514C'
   else if cond < 30
     color: '#F37B1D'
+  else if cond < 40
+    color: '#FFC880'
   else
     null
 getDeckState = (deck, ndocks) ->
