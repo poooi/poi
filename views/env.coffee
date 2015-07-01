@@ -220,7 +220,7 @@ resolveResponses = ->
       when '/kcsapi/api_get_member/deck'
         window._decks[deck.api_id - 1] = deck for deck in body
       when '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
-        decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+        window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
       when '/kcsapi/api_req_kousyou/destroyship'
         decks = window._decks
         removeId = parseInt(postBody.api_ship_id)
