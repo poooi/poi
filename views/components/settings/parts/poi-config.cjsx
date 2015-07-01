@@ -29,6 +29,7 @@ PoiConfig = React.createClass
     config.set 'poi.tabarea.double', !enabled
     @setState
       enableDoubleTabbed: !enabled
+    toggleModal '布局设置', '设置成功，请重新打开软件使得布局生效。'
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
