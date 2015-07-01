@@ -54,7 +54,7 @@ PoiConfig = React.createClass
     @setState
       gameWidth: @refs.scale.getValue()
     width = parseInt @refs.scale.getValue()
-    return if isNaN(width) || width < 0 || !@state.useFixedResolution
+    return if isNaN(width) || width < 0 || !@state.useFixedResolution || width > window.innerWidth - 150
     scale = width / window.innerWidth
     window.gameScale = scale
     window.dispatchEvent new Event('scale.change')
@@ -62,7 +62,7 @@ PoiConfig = React.createClass
   handleResize: ->
     {gameWidth} = @state
     width = parseInt gameWidth
-    return if isNaN(width) || width < 0
+    return if isNaN(width) || width < 0 || width > window.innerWidth - 150
     if @state.useFixedResolution
       scale = width / window.innerWidth
       window.gameScale = scale

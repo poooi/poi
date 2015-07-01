@@ -94,7 +94,7 @@ ControlledTabArea = React.createClass
           counter = 0
           plugins.map (plugin, index) ->
             if plugin.handleClick
-              <div key={components.length + 1 + index} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
+              <div key={components.length + 1 + index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
             else
               <TabPane key={components.length + 1 + index} eventKey={components.length - 1 + (counter += 1)} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
               {
