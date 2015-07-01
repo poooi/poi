@@ -176,6 +176,67 @@ resolveResponses = ->
       when '/kcsapi/api_port/port'
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
+        window._decks = body.api_deck_port
+      when '/kcsapi/api_req_hensei/change'
+        decks = window._decks
+        deckId = parseInt(postBody.api_id) - 1
+        idx = parseInt(postBody.api_ship_idx)
+        curId = decks[deckId].api_ship[idx]
+        shipId = parseInt(postBody.api_ship_id)
+        # Remove all
+        if idx == -1
+          decks[deckId].api_ship[i] = -1 for i in [1..5]
+        # Empty -> One
+        else if curId == -1
+          [x, y] = [-1, -1]
+          for deck, i in decks
+            for ship, j in deck.api_ship
+              if ship == shipId
+                [x, y] = [i, j]
+                break
+          decks[deckId].api_ship[idx] = shipId
+          # Empty to ship in deck
+          if x != -1 && y != -1
+            if y <= 4
+              for i in [y..4]
+                decks[x].api_ship[i] = decks[x].api_ship[i + 1]
+            decks[x].api_ship[5] = -1
+        # One -> Empty
+        else if shipId == -1
+          if idx <= 4
+            for i in [idx..4]
+              decks[deckId].api_ship[i] = decks[deckId].api_ship[i + 1]
+          decks[deckId].api_ship[5] = -1
+        else
+          [x, y] = [-1, -1]
+          for deck, i in decks
+            for ship, j in deck.api_ship
+              if ship == shipId
+                [x, y] = [i, j]
+                break
+          decks[deckId].api_ship[idx] = shipId
+          # Exchange
+          decks[x].api_ship[y] = curId if x != -1 && y != -1
+      when '/kcsapi/api_get_member/deck'
+        window._decks[deck.api_id - 1] = deck for deck in body
+      when '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
+        decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+      when '/kcsapi/api_req_kousyou/destroyship'
+        decks = window._decks
+        removeId = parseInt(postBody.api_ship_id)
+        [x, y] = [-1, -1]
+        for deck, i in decks
+          for shipId, j in deck.api_ship
+            if shipId == removeId
+              [x, y] = [i, j]
+              break
+        if x != -1 && y != -1
+          if y == 5
+            decks[x].api_ship[y] = -1
+          else
+            for idx in [y..4]
+              decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
+            decks[x].api_ship[5] = -1
       when '/kcsapi/api_get_member/slot_item'
         window._slotitems = {}
         _slotitems[item.api_id] = extendSlotitem item for item in body
