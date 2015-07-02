@@ -162,21 +162,21 @@ index.cjsx
 remote = require 'remote'
 windowManager = remote.require './lib/window'
 
-pluginWindow = null
+window.pluginWindow = null // 保留一个全局引用防止 pluginWindow 被 gc
 initialPluginWindow = ->
-  pluginWindow = windowManager.createWindow
+  window.pluginWindow = windowManager.createWindow
     x: config.get 'poi.window.x', 0
     y: config.get 'poi.window.y', 0
     width: 820
     height: 650
-  pluginWindow.loadUrl "file://#{__dirname}/index.html"
+  window.pluginWindow.loadUrl "file://#{__dirname}/index.html"
 initialItemImprovementWindow()
 
 module.exports =
   name: 'Sample'
   displayName: 'Sample'
   handleClick: ->
-    pluginWindow.show()
+    window.pluginWindow.show()
 ```
 index.html
 ```html
