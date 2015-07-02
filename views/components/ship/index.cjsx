@@ -4,6 +4,7 @@
 {Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
 inBattle = [false, false, false, false]
+timeDelta = [0, 0, 0, 0]
 getStyle = (state) ->
   if state in [0..5]
     # 0: Cond >= 40, Supplied, Repaired, In port
@@ -178,6 +179,7 @@ module.exports =
         getDeckMessage deck
       countdown = decks.map (deck) ->
         getCondCountdown deck
+      timeDelta = [0, 0, 0, 0]
       @setState
         names: names
         decks: decks
@@ -188,12 +190,12 @@ module.exports =
     updateCountdown: ->
       {countdown, states} = @state
       for i in [0..3]
-        if countdown[i] > 0
-          countdown[i] -= 1
-          if countdown[i] is 0 and states[i] < 4
+        if countdown[i] - timeDelta[i] > 0
+          timeDelta[i] += 1
+          # Use DOM operation instead of React for performance
+          $("#ShipView #deck-condition-countdown-#{i}").innerHTML = resolveTime(countdown[i] - timeDelta[i])
+          if countdown[i] == timeDelta[i] and states[i] < 4
             notify "#{@state.names[i]} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
-      @setState
-        countdown: countdown
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
       setInterval @updateCountdown, 1000
@@ -235,7 +237,7 @@ module.exports =
                     </OverlayTrigger>
                   </Col>
                   <Col xs={4}>
-                    回复：{resolveTime @state.countdown[i]}
+                    回复：<span id={"deck-condition-countdown-#{i}"}>{resolveTime @state.countdown[i]}</span>
                   </Col>
                 </Grid>
               </Alert>
