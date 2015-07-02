@@ -51,9 +51,7 @@ ControlledTabArea = React.createClass
     xs: if layout == 'horizonal' then 6 else 4
     activepanelleft: 0
     activepanelright: 0
-    level: 0
-    nickname: null
-    rank: 0
+    teitoku: null
   handleSelect: (key) ->
     @setState {key}
   handleSelectRightPanel: (key) ->
@@ -102,7 +100,7 @@ ControlledTabArea = React.createClass
     # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
     ###
     <div>
-      <Navbar fluid brand={"compactmain.getHeader @state"}>
+      <Navbar fluid brand={"compactmain.handleNavbar this"}>
       {
         <Nav navbar right activeKey={@state.key} onSelect={@handleSelect}>
           <DropdownButton key={1} eventKey={1} title='面板'>
