@@ -248,11 +248,11 @@ resolveResponses = ->
           delete _slotitems[parseInt(itemId)]
       when '/kcsapi/api_req_kousyou/destroyship'
         decks = window._decks
-        idx = parseInt(postBody.api_ship_id)
+        removeId = parseInt(postBody.api_ship_id)
         [x, y] = [-1, -1]
         for deck, i in decks
           for shipId, j in deck.api_ship
-            if shipId == idx
+            if shipId == removeId
               [x, y] = [i, j]
               break
         if x != -1 && y != -1
@@ -262,10 +262,10 @@ resolveResponses = ->
             for idx in [y..4]
               decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
             decks[x].api_ship[5] = -1
-        for itemId in _ships[idx].api_slot
+        for itemId in _ships[removeId].api_slot
           continue if itemId == -1
           delete _slotitems[itemId]
-        delete _ships[idx]
+        delete _ships[removeId]
       when '/kcsapi/api_req_kousyou/getship'
         _ships[body.api_ship.api_id] = extendShip body.api_ship
         if body.api_slotitem?
