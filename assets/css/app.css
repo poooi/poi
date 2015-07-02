@@ -8,9 +8,6 @@ body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
 }
-poi-app .container {
-  width: auto;
-}
 .alert {
   border-radius: 0px;
   font-size: 12px;
@@ -37,6 +34,8 @@ hr {
 poi-app .container {
   padding-left: 0px;
   padding-right: 0px;
+  width: auto;
+  overflow-x: hidden;
 }
 table {
   table-layout: fixed;
