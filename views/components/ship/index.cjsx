@@ -79,7 +79,7 @@ getDeckMessage = (deck) ->
     shipInfo = $ships[ship.api_ship_id]
     totalLv += ship.api_lv
     totalShip += 1
-    shipSaku += Math.sqrt(ship.api_sakuteki[0]) * 1.69
+    shipPureSaku = ship.api_sakuteki[0]
     for itemId, slotId in ship.api_slot
       continue if itemId == -1
       item = _slotitems[itemId]
@@ -93,6 +93,7 @@ getDeckMessage = (deck) ->
       # 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
       #            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
       #            + √(各艦毎の素索敵) × (1.69) + (司令部レベルを5の倍数に切り上げ) × (-0.61)
+      shipPureSaku -= itemInfo.api_saku
       switch itemInfo.api_type[3]
         when 7
           itemSaku += itemInfo.api_saku * 1.04
@@ -112,6 +113,7 @@ getDeckMessage = (deck) ->
             itemSaku += itemInfo.api_saku * 0.99
         when 24
           itemSaku += itemInfo.api_saku * 0.91
+    shipSaku += Math.sqrt(shipPureSaku) * 1.69
   teitokuSaku = 0.61 * Math.floor((window._teitokuLv + 4) / 5) * 5
   totalSaku = shipSaku + itemSaku - teitokuSaku
   avgLv = totalLv / totalShip
