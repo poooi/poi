@@ -91,12 +91,13 @@ TeitokuPanel = React.createClass
         @setState
           shipCount: Object.keys(window._ships).length
           slotitemCount: Object.keys(window._slotitems).length
+
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Panel bsStyle='default' className='teitoku-panel' style={{borderRadius:0}} style={{paddingLeft:15}} >
+    <Panel bsStyle='default' className='teitoku-panel' style={{borderRadius:0}} style={{paddingLeft:15}}>
       <Grid>
         {
           for i in [1,2,3,4,5,6,7,8] # order
@@ -126,12 +127,9 @@ module.exports =
       window.addEventListener 'layout.change', @handleChangeLayout
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
-    getHeader: (state) ->
-      if TeitokuPanel.state.nickname?
-        return "Lv. #{TeitokuPanel.state.level} #{TeitokuPanel.state.nickname} [#{rankName[TeitokuPanel.state.rank]}]"
-      else
-        return '提督 [尚未登录]'
+    handleNavbar: (navbar) -> # handel navbar.state
+      navbar.state.teitoku = getHeader @state
     render: ->
       <div>
-        <TeitokuPanel ref="teitokuPanel" />
+        <TeitokuPanel onChange={@handleNavbar} ref="teitokuPanel" />
       </div>
