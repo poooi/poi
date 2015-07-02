@@ -171,8 +171,19 @@ resolveResponses = ->
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
-      when '/kcsapi/api_req_sortie/battleresult'
-        window._teitokuLv = body.api_member_lv
+      when '/kcsapi/api_get_member/deck'
+        window._decks[deck.api_id - 1] = deck for deck in body
+      when '/kcsapi/api_get_member/ship_deck'
+        window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+        for ship in body.api_ship_data
+          _ships[ship.api_id] = extendShip ship
+      when '/kcsapi/api_get_member/ship3'
+        window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+        for ship in body.api_ship_data
+          _ships[ship.api_id] = extendShip ship
+      when '/kcsapi/api_get_member/slot_item'
+        window._slotitems = {}
+        _slotitems[item.api_id] = extendSlotitem item for item in body
       when '/kcsapi/api_port/port'
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
@@ -217,17 +228,31 @@ resolveResponses = ->
           decks[deckId].api_ship[idx] = shipId
           # Exchange
           decks[x].api_ship[y] = curId if x != -1 && y != -1
-      when '/kcsapi/api_get_member/deck'
-        window._decks[deck.api_id - 1] = deck for deck in body
-      when '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
-        window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+      when '/kcsapi/api_req_hokyu/charge'
+        for ship in body.api_ship
+          _ships[ship.api_id] = _.extend _ships[ship.api_id], ship
+      when '/kcsapi/api_req_kaisou/powerup'
+        for shipId in postBody.api_id_items.split(',')
+          idx = parseInt(shipId)
+          for itemId in _ships[idx].api_slot
+            continue if itemId == -1
+            delete _slotitems[itemId]
+          delete _ships[idx]
+        _ships[body.api_ship.api_id] = extendShip body.api_ship
+      when '/kcsapi/api_req_kaisou/slotset'
+        _ships[parseInt(postBody.api_id)].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
+      when '/kcsapi/api_req_kousyou/createitem'
+        _slotitems[body.api_slot_item.api_id] = extendSlotitem body.api_slot_item if body.api_create_flag == 1
+      when '/kcsapi/api_req_kousyou/destroyitem2'
+        for itemId in postBody.api_slotitem_ids.split(',')
+          delete _slotitems[parseInt(itemId)]
       when '/kcsapi/api_req_kousyou/destroyship'
         decks = window._decks
-        removeId = parseInt(postBody.api_ship_id)
+        idx = parseInt(postBody.api_ship_id)
         [x, y] = [-1, -1]
         for deck, i in decks
           for shipId, j in deck.api_ship
-            if shipId == removeId
+            if shipId == idx
               [x, y] = [i, j]
               break
         if x != -1 && y != -1
@@ -237,35 +262,14 @@ resolveResponses = ->
             for idx in [y..4]
               decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
             decks[x].api_ship[5] = -1
-      when '/kcsapi/api_get_member/slot_item'
-        window._slotitems = {}
-        _slotitems[item.api_id] = extendSlotitem item for item in body
-      when '/kcsapi/api_req_kousyou/getship'
-        _ships[body.api_ship.api_id] = extendShip body.api_ship
-        if body.api_slotitem?
-          _slotitems[item.api_id] = extendSlotitem item for item in body.api_slotitem
-      when '/kcsapi/api_req_kousyou/createitem'
-        _slotitems[body.api_slot_item.api_id] = extendSlotitem body.api_slot_item if body.api_create_flag == 1
-      when '/kcsapi/api_req_kousyou/destroyship'
-        idx = parseInt(postBody.api_ship_id)
         for itemId in _ships[idx].api_slot
           continue if itemId == -1
           delete _slotitems[itemId]
         delete _ships[idx]
-      when '/kcsapi/api_req_kousyou/destroyitem2'
-        for itemId in postBody.api_slotitem_ids.split(',')
-          delete _slotitems[parseInt(itemId)]
-      when '/kcsapi/api_req_hokyu/charge'
-        for ship in body.api_ship
-          _ships[ship.api_id] = _.extend _ships[ship.api_id], ship
-      when '/kcsapi/api_get_member/ship_deck'
-        for ship in body.api_ship_data
-          _ships[ship.api_id] = extendShip ship
-      when '/kcsapi/api_req_kaisou/slotset'
-        _ships[parseInt(postBody.api_id)].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
-      when '/kcsapi/api_get_member/ship3'
-        for ship in body.api_ship_data
-          _ships[ship.api_id] = extendShip ship
+      when '/kcsapi/api_req_kousyou/getship'
+        _ships[body.api_ship.api_id] = extendShip body.api_ship
+        if body.api_slotitem?
+          _slotitems[item.api_id] = extendSlotitem item for item in body.api_slotitem
       when '/kcsapi/api_req_kousyou/remodel_slot'
         if body.api_use_slot_id?
           for itemId in body.api_use_slot_id
@@ -274,14 +278,8 @@ resolveResponses = ->
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
-      when '/kcsapi/api_req_kaisou/powerup'
-        for shipId in postBody.api_id_items.split(',')
-          idx = parseInt(shipId)
-          for itemId in _ships[idx].api_slot
-            continue if itemId == -1
-            delete _slotitems[itemId]
-          delete _ships[idx]
-        _ships[body.api_ship.api_id] = extendShip body.api_ship
+      when '/kcsapi/api_req_sortie/battleresult'
+        window._teitokuLv = body.api_member_lv
     event = new CustomEvent 'game.response',
       bubbles: true
       cancelable: true
