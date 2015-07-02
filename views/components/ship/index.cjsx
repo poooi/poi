@@ -24,7 +24,7 @@ getHpStyle = (percent) ->
   else if percent <= 75
     'primary'
   else
-    'info'
+    'success'
 getMaterialStyle = (percent) ->
   if percent <= 50
     'danger'
@@ -33,7 +33,7 @@ getMaterialStyle = (percent) ->
   else if percent < 100
     'primary'
   else
-    'info'
+    'success'
 getCondStyle = (cond) ->
   if cond > 49
     color: '#ffd600'
@@ -222,7 +222,7 @@ module.exports =
           {$ships, $shipTypes, _ships} = window
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
-              <Alert id="deckStatus" bsStyle={getStyle @state.states[i]}>
+              <Alert className="deckStatus" bsStyle={getStyle @state.states[i]}>
                 <Grid>
                   <Col xs={2}>
                     总 Lv.{@state.messages[i][0]}
@@ -243,7 +243,7 @@ module.exports =
                   </Col>
                 </Grid>
               </Alert>
-              <Table id="shipDetails">
+              <Table className="shipDetails">
                 <tbody>
                 {
                   for shipId, j in deck.api_ship
@@ -252,21 +252,21 @@ module.exports =
                     shipInfo = $ships[ship.api_ship_id]
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [
-                      <tr id="shipInfo1" key={j * 2}>
-                        <td id="shipName" width="25%">{shipInfo.api_name}</td>
-                        <td id="shipLv" width="20%">Lv. {ship.api_lv}</td>
-                        <td id='hpBar' width="25%" className="hp-progress">
+                      <tr className="shipInfo1" key={j * 2}>
+                        <td className="shipName" width="25%">{shipInfo.api_name}</td>
+                        <td className="shipLv" width="20%">Lv. {ship.api_lv}</td>
+                        <td className='hpBar' width="25%" className="hp-progress">
                           <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                        now={ship.api_nowhp / ship.api_maxhp * 100}
                                        label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                         </td>
-                        <td id='shipEquipments'width="30%">
+                        <td className='shipEquipments'width="30%">
                           <Slotitems data={ship.api_slot} />
                         </td>
                       </tr>
-                      <tr id="shipInfo2" key={j * 2 + 1}>
-                        <td id='shipType'>{shipType}</td>
-                        <td id='shipExp' >Next. {ship.api_exp[1]}</td>
+                      <tr className="shipInfo2" key={j * 2 + 1}>
+                        <td className='shipType'>{shipType}</td>
+                        <td className='shipExp' >Next. {ship.api_exp[1]}</td>
                         <td className="material-progress">
                           <Grid>
                             <Col xs={6} style={paddingRight: 1}>
@@ -279,7 +279,7 @@ module.exports =
                             </Col>
                           </Grid>
                         </td>
-                        <td id='shipCond' style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
+                        <td className='shipCond' style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
                       </tr>
                     ]
                 }

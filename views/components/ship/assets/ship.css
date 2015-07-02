@@ -14,33 +14,33 @@
 #ShipView .show {
   display: block;
 }
-#ShipView #shipDetails{
+#ShipView .shipDetails{
   margin-bottom: 1px;
 }
-#ShipView #shipDetails tr td {
+#ShipView .shipDetails tr td {
   overflow: hidden;
   white-space: nowrap;
   /*margin-bottom: 1px;*/
   /*padding:0px 10px;*/
   border: none;
-  vertical-align: middle;
+  /*vertical-align: middle;*/
 }
-#ShipView #shipDetails #shipInfo1 td {
+#ShipView .shipDetails .shipInfo1 td{
   vertical-align: bottom;
 }
-#ShipView #shipDetails #shipInfo2 td {
+#ShipView .shipDetails .shipInfo2 td{
   vertical-align: top;
+  padding-top: 0px;
 }
-#ShipView td #shipName{
-  font-size: 130%;
-  padding-top: 12px;
+#ShipView .shipDetails .shipInfo1 .shipName{
+  font-size: 120%;
 }
-#ShipView td #shipType{
+#ShipView .shipDetails .shipInfo1 .shipType{
   font-size: 80%;
   padding-top: 0px;
   text-align: right;
 }
-#ShipView #shipEquipments .slotitem-container img {
+#ShipView .shipEquipments .slotitem-container img {
   width: 30px;
   height: 30px;
   margin-top: -5px;
