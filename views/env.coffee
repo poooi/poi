@@ -32,6 +32,7 @@ window.resolveTime = (seconds) ->
   seconds -= hours * 3600
   minutes = Math.floor(seconds / 60)
   seconds -= minutes * 60
+  seconds = Math.floor(seconds)
   hours = "0#{hours}" if hours < 10
   minutes = "0#{minutes}" if minutes < 10
   seconds = "0#{seconds}" if seconds < 10
