@@ -48,19 +48,22 @@ lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
-    xs: if layout == 'horizonal' then 6 else 4
+    xs: if layout == 'horizonal' then 4 else 4
     activepanelleft: 0
-    activepanelright: 0
+    activepanelright: 1
+    activepanelmid: 1
     teitoku: null
   handleSelect: (key) ->
     @setState {key}
   handleSelectRightPanel: (key) ->
-    console.log "#{@state.key}"
     @setState
       activepanelright: key
   handleSelectLeftPanel: (key) ->
     @setState
       activepanelleft: key
+  handleSelectMidPanel: (key) ->
+    @setState
+      activepanelmid: key
   handleCtrlOrCmdTabKeyDown: ->
     @setState
       key: 0
@@ -103,15 +106,12 @@ ControlledTabArea = React.createClass
       <Navbar fluid brand={"compactmain.handleNavbar this"}>
       {
         <Nav navbar right activeKey={@state.key} onSelect={@handleSelect}>
-          <DropdownButton key={1} eventKey={1} title='面板'>
-            <MenuItem key={0} eventKey={0} id={timegauge.name} className='poi-app-tabpane toggle' onSelect={@handleSelectLeftPanel}>
-              {timegauge.displayName}
-            </MenuItem>
-            <MenuItem key={1} eventKey={1} id={fleet.name} className='poi-app-tabpane toggle' onSelect={@handleSelectLeftPanel}>
+          <DropdownButton key={1} eventKey={1} title='自定面板'>
+            <MenuItem key={1} eventKey={1} id={fleet.name} className='poi-app-tabpane toggle' onSelect={@handleSelectMidPanel}>
               {fleet.displayName}
             </MenuItem>
             <MenuItem key={2} eventKey={2} id={prophet.name} className='poi-app-tabpane toggle'
-             onSelect={@handleSelectLeftPanel}>
+             onSelect={@handleSelectMidPanel}>
               {prophet.displayName}
             </MenuItem>
           </DropdownButton>
@@ -146,19 +146,21 @@ ControlledTabArea = React.createClass
         React.createElement compactmain.reactClass
       }
       </div>
-      <Grid className="dual-panel-container">
+      <Grid className="tri-panel-container">
         <Col xs={@state.xs} className='panel-col ship-panel' ref="left-panel">
-          <div key={0} eventKey={0} tab={timegauge.displayName} id={timegauge.name} className='poi-app-tabpane' className={if @state.activepanelleft == 0 then 'show' else 'hidden'}>
+          <div key={0} eventKey={0} tab={timegauge.displayName} id={timegauge.name} className='poi-app-tabpane'>
           {
             React.createElement timegauge.reactClass
           }
           </div>
-          <div key={1} eventKey={1} tab={fleet.displayName} id={fleet.name} className='poi-app-tabpane' className={if @state.activepanelleft == 1 then 'show' else 'hidden'}>
+        </Col>
+        <Col xs={@state.xs} className='panel-col ship-panel' ref="mid-panel">
+          <div key={1} eventKey={1} tab={fleet.displayName} id={fleet.name} className='poi-app-tabpane' className={if @state.activepanelmid == 1 then 'show' else 'hidden'}>
           {
             React.createElement fleet.reactClass
           }
           </div>
-          <div key={2} eventKey={2} tab={prophet.displayName} id={prophet.name} className='poi-app-tabpane' className={if @state.activepanelleft == 2 then 'show' else 'hidden'}>
+          <div key={2} eventKey={2} tab={prophet.displayName} id={prophet.name} className='poi-app-tabpane' className={if @state.activepanelmid == 2 then 'show' else 'hidden'}>
           {
             React.createElement prophet.reactClass
           }
