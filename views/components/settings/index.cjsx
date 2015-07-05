@@ -25,26 +25,28 @@ module.exports =
       # Animation disabled
       # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
       ###
-      <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={false}>
+      <div id="settingsArea">
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'settings.css')} />
-        <TabPane key={0} eventKey={0} tab="基本设置" id='poi-config' className='poi-settings-tabpane'>
-          <PoiConfig />
-        </TabPane>
-        <TabPane key={1} eventKey={1} tab="网络代理" id='proxy-config' className='poi-settings-tabpane'>
-          <NetworkConfig />
-        </TabPane>
-        <TabPane key={2} eventKey={2} tab="扩展程序" id='plugin-config' className='poi-settings-tabpane'>
-          <PluginConfig />
-        </TabPane>
-        {
-          plugins.map (plugin, index) ->
-            <TabPane key={index + 3}  eventKey={index + 3} tab={plugin.displayName} id={plugin.name} className='poi-settings-tabpane'>
-            {
-              React.createElement(plugin.settingsClass)
-            }
-            </TabPane>
-        }
-        <TabPane key={-1} eventKey={-1} tab="关于 poi" id='others' className='poi-settings-tabpane'>
-          <Others />
-        </TabPane>
-      </TabbedArea>
+        <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={false}>
+          <TabPane key={0} eventKey={0} tab="基本设置" id='poi-config' className='poi-settings-tabpane'>
+            <PoiConfig />
+          </TabPane>
+          <TabPane key={1} eventKey={1} tab="网络代理" id='proxy-config' className='poi-settings-tabpane'>
+            <NetworkConfig />
+          </TabPane>
+          <TabPane key={2} eventKey={2} tab="扩展程序" id='plugin-config' className='poi-settings-tabpane'>
+            <PluginConfig />
+          </TabPane>
+          {
+            plugins.map (plugin, index) ->
+              <TabPane key={index + 3}  eventKey={index + 3} tab={plugin.displayName} id={plugin.name} className='poi-settings-tabpane'>
+              {
+                React.createElement(plugin.settingsClass)
+              }
+              </TabPane>
+          }
+          <TabPane key={-1} eventKey={-1} tab="关于 poi" id='others' className='poi-settings-tabpane'>
+            <Others />
+          </TabPane>
+        </TabbedArea>
+      </div>

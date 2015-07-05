@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
-{_, React, ReactBootstrap} = window
-{TabbedArea, TabPane, DropdownButton} = ReactBootstrap
+{_, $, $$, ROOT, notify, layout, React, ReactBootstrap} = window
+{Grid, Col, Row, TabbedArea, TabPane, Navbar, Nav, NavItem, MenuItem, DropdownButton} = ReactBootstrap
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
@@ -34,14 +34,36 @@ plugins = plugins.filter (plugin) ->
 plugins = _.sortBy(plugins, 'priority')
 tabbedPlugins = plugins.filter (plugin) ->
   !plugin.handleClick?
+indivPlugins = plugins.filter (plugin) ->
+  plugin.handleClick?
+
 settings = require path.join(ROOT, 'views', 'components', 'settings')
+compactmain = require path.join(ROOT, 'views', 'components', 'compactmain')
+timegauge = require path.join(ROOT, 'views', 'components', 'timegauge')
+fleet = require path.join(ROOT, 'views', 'components', 'ship')
+prophet = require path.join(ROOT, 'plugins', 'prophet')
 
 lockedTab = false
+
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
+    xs: if layout == 'horizonal' then 4 else 4
+    activepanelleft: 0
+    activepanelright: 1
+    activepanelmid: 1
+    teitoku: null
   handleSelect: (key) ->
     @setState {key}
+  handleSelectRightPanel: (key) ->
+    @setState
+      activepanelright: key
+  handleSelectLeftPanel: (key) ->
+    @setState
+      activepanelleft: key
+  handleSelectMidPanel: (key) ->
+    @setState
+      activepanelmid: key
   handleCtrlOrCmdTabKeyDown: ->
     @setState
       key: 0
@@ -80,36 +102,93 @@ ControlledTabArea = React.createClass
     # Animation disabled
     # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
     ###
-    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
-    {
-      [
-        components.map (component, index) ->
-          <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
+    <div>
+      <Navbar fluid brand={"compactmain.handleNavbar this"}>
+      {
+        <Nav navbar right activeKey={@state.key} onSelect={@handleSelect}>
+          <DropdownButton key={1} eventKey={1} title='自定面板'>
+            <MenuItem key={1} eventKey={1} id={fleet.name} className='poi-app-tabpane toggle' onSelect={@handleSelectMidPanel}>
+              {fleet.displayName}
+            </MenuItem>
+            <MenuItem key={2} eventKey={2} id={prophet.name} className='poi-app-tabpane toggle'
+             onSelect={@handleSelectMidPanel}>
+              {prophet.displayName}
+            </MenuItem>
+          </DropdownButton>
+          <DropdownButton key={2} eventKey={2} title='插件'>
           {
-            React.createElement component.reactClass
+            keys = [0..indivPlugins.length - 1].map (a) -> (a+tabbedPlugins.length)
+            [
+              <MenuItem key={0} eventKey={0} id={fleet.name} className='poi-app-tabpane toggle' onSelect={@handleSelectRightPanel}>
+                {fleet.displayName}
+              </MenuItem>
+              for i in [0..tabbedPlugins.length - 1]
+                plugin = tabbedPlugins[i]
+                <MenuItem key={i + 1} eventKey={i + 1} id={plugin.name} className='poi-app-tabpane' onSelect={@handleSelectRightPanel}>
+                  {plugin.displayName}
+                </MenuItem>
+              for i in keys
+                plugin = indivPlugins[i - tabbedPlugins.length]
+                <MenuItem key={i} eventKey={i} id={plugin.name} onSelect={plugin.handleClick}>
+                  {plugin.displayName}
+                </MenuItem>
+            ]
           }
-          </TabPane>
-        <DropdownButton key={components.length} eventKey={-1} tab='插件' navItem={true}>
-        {
-          counter = 0
-          plugins.map (plugin, index) ->
-            if plugin.handleClick
-              <div key={components.length + 1 + index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
-            else
-              <TabPane key={components.length + 1 + index} eventKey={components.length - 1 + (counter += 1)} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+          </DropdownButton>
+          <NavItem key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane toggle' onSelect={@handleSelectRightPanel}>
+            {settings.displayName}
+          </NavItem>
+        </Nav>
+      }
+      </Navbar>
+      <div id='teitoku-panel' ref='teitoku-panel'>
+      {
+        React.createElement compactmain.reactClass
+      }
+      </div>
+      <Grid className="tri-panel-container">
+        <Col xs={@state.xs} className='panel-col ship-panel' ref="left-panel">
+          <div key={0} eventKey={0} tab={timegauge.displayName} id={timegauge.name} className='poi-app-tabpane'>
+          {
+            React.createElement timegauge.reactClass
+          }
+          </div>
+        </Col>
+        <Col xs={@state.xs} className='panel-col ship-panel' ref="mid-panel">
+          <div key={1} eventKey={1} tab={fleet.displayName} id={fleet.name} className='poi-app-tabpane' className={if @state.activepanelmid == 1 then 'show' else 'hidden'}>
+          {
+            React.createElement fleet.reactClass
+          }
+          </div>
+          <div key={2} eventKey={2} tab={prophet.displayName} id={prophet.name} className='poi-app-tabpane' className={if @state.activepanelmid == 2 then 'show' else 'hidden'}>
+          {
+            React.createElement prophet.reactClass
+          }
+          </div>
+        </Col>
+        <Col xs={@state.xs} className="panel-col plugin-panel" ref="right-panel">
+          <div key={0} eventKey={0} tab={fleet.displayName} id={fleet.name} className='poi-app-tabpane' className={if @state.activepanelright == 0 then 'show' else 'hidden'}>
+          {
+            React.createElement fleet.reactClass
+          }
+          </div>
+          {
+            for i in [0..tabbedPlugins.length - 1]
+              plugin = tabbedPlugins[i]
+              <div key={i + 1} eventKey={i + 1} id={plugin.name} className='poi-app-tabpane' className={if @state.activepanelright == i + 1 then 'show' else 'hidden'}>
               {
                 React.createElement plugin.reactClass
               }
-              </TabPane>
-        }
-        </DropdownButton>
-        <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
-        {
-          React.createElement settings.reactClass
-        }
-        </TabPane>
-      ]
-    }
-    </TabbedArea>
+              </div>
+          }
+          <div key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane' className={if @state.activepanelright == 1000 then 'show' else 'hidden'}>
+          {
+            React.createElement settings.reactClass
+          }
+          </div>
+        </Col>
+      </Grid>
+    </div>
+
 
 module.exports = ControlledTabArea

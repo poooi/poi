@@ -1,13 +1,19 @@
+#SettingsView #settingsArea{
+  padding-bottom: 15px;
+}
 #SettingsView .divider {
   padding-left: 15px;
   padding-right: 15px;
 }
-#SettingsView .divider hr {
-  margin-bottom: 15.5px;
+#SettingsView .divider{
+  margin: 15px 0;
 }
 #SettingsView #navigator-bar .container {
   display: flex;
   align-items: center;
+}
+#SettingsView .nav{
+  display: flex;
 }
 #SettingsView #navigator-bar {
   margin-bottom: 0px;
