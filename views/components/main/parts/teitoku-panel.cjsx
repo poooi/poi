@@ -34,7 +34,7 @@ TeitokuPanel = React.createClass
     level: 0
     nickname: null
     rank: 0
-    nextExp:'?'
+    nextExp: '?'
     material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
     shipCount: '??'
     maxChara: '??'
@@ -48,7 +48,7 @@ TeitokuPanel = React.createClass
           level: body.api_level
           nickname: body.api_nickname
           rank: body.api_rank
-          nextExp:totalExp[body.api_level] - body.api_experience
+          nextExp: totalExp[body.api_level] - body.api_experience
           maxChara: body.api_max_chara
           maxSlotitem: body.api_max_slotitem
       when '/kcsapi/api_req_sortie/battleresult'
