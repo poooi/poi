@@ -25,6 +25,7 @@ Others = React.createClass
             <li><a onClick={openExternal.bind(@, 'http://weibo.com/chibaheit')}> Chibaheit </a></li>
             <li><a onClick={openExternal.bind(@, 'http://www.kochiyaocean.org')}> KochiyaOcean </a></li>
             <li><a onClick={openExternal.bind(@, 'http://www.weibo.com/1791427467')}> 马里酱 </a></li>
+            <li><a onClick={openExternal.bind(@, 'http://www.weibo.com/jenningswu')}> 吴钩霜雪明 </a></li>
           </ul>
         </Col>
       </Grid>
