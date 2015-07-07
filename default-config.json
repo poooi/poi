@@ -8,7 +8,9 @@
       "width": 1274,
       "height": 616
     },
-    "scale": 0.6279434850863422
+    "webview": {
+      "width": 800
+    }
   },
   "proxy": {
     "use": "shadowsocks",
