@@ -84,6 +84,9 @@ app.on 'ready', ->
   if process.env.DEBUG?
     mainWindow.openDevTools
       detach: true
+  # Never wants navigate
+  mainWindow.webContents.on 'will-navigate', (e) ->
+    e.preventDefault()
   mainWindow.on 'close', ->
     # Save current position and size
     bounds = mainWindow.getBounds()

@@ -19,6 +19,7 @@ module.exports =
         current.restore()
       else
         show.bind(current)()
+    # Close window really
     if options.realClose
       current.on 'closed', (e) ->
         idx = _.indexOf windows, current
@@ -27,6 +28,10 @@ module.exports =
       current.on 'close', (e) ->
         current.hide()
         e.preventDefault() unless forceClose
+    # Draggable
+    unless options.draggable
+      current.webContents.on 'will-navigate', (e) ->
+        e.preventDefault()
     windows.push current
     return current
   # Warning: Don't call this method manually
