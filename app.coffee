@@ -1,4 +1,3 @@
-
 app = require 'app'
 BrowserWindow = require 'browser-window'
 path = require 'path-extra'
@@ -79,7 +78,45 @@ app.on 'ready', ->
       'plugins': true
   # Default menu in v0.27.3
   if process.versions['electron'] >= '0.27.3'
-    mainWindow.setMenu null
+    if process.platform == 'darwin'
+      template = [
+        label: '程序'
+        submenu: [
+          label: '退出'
+          accelerator: 'Command+Q'
+          click: -> app.quit()
+        ]
+      ,
+        label: '编辑'
+        submenu: [
+          label: '撤销'
+          accelerator: 'Command+Z'
+          selector: 'undo:'
+        ,
+          label: '恢复'
+          accelerator: 'Shift+Command+Z'
+          selector: 'redo:'
+        ,
+          label: '剪切'
+          accelerator: 'Command+X'
+          selector: 'cut:'
+        ,
+          label: '复制'
+          accelerator: 'Command+C'
+          selector: 'copy:'
+        ,
+          label: '粘贴'
+          accelerator: 'Command+V'
+          selector: 'paste:'
+        ,
+          label: '全选'
+          accelerator: 'Command+A'
+          selector: 'selectAll:'
+        ]
+      ]
+      mainWindow.setMenu require('menu').buildFromTemplate(template)
+    else
+      mainWindow.setMenu null
   mainWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     mainWindow.openDevTools
