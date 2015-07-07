@@ -28,9 +28,23 @@
   border: none;
   vertical-align: middle;
 }
+#ShipView .slotitem-container {
+  position: relative;
+  vertical-align: bottom;
+  display: inline;
+}
+#ShipView .slotitem-container .slotitem-onslot {
+  position: absolute;
+  font-size: 12px;
+  left: -3px;
+  bottom: -3px;
+}
+#ShipView .slotitem-container span.show {
+  display: inline !important;
+}
 #ShipView .slotitem-container img {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   margin-top: -5px;
   margin-bottom: -5px;
   margin-left: -5px;
