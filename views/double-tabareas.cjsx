@@ -60,8 +60,9 @@ ControlledTabArea = React.createClass
   handleTabKeyDown: ->
     @setState
       key: [@state.key[0], if @state.key[1]? then (@state.key[1] + 1) % tabbedPlugins.length else 1]
-  componentDidMount: ->
-    window.addEventListener 'keydown', (e) =>
+  handleKeyDown: ->
+    return if listener?
+    @listener = window.addEventListener 'keydown', (e) =>
       if e.keyCode is 9
         e.preventDefault()
         return if lockedTab and e.repeat
@@ -80,6 +81,8 @@ ControlledTabArea = React.createClass
           @handleCtrlOrCmdNumberKeyDown(e.keyCode - 48)
         else if e.keyCode is 48
           @handleCtrlOrCmdNumberKeyDown 10
+  componentDidMount: ->
+    window.addEventListener 'game.start', @handleKeyDown
   render: ->
     ### FIXME
     # Animation disabled

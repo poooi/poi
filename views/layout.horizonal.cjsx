@@ -63,22 +63,8 @@ adjustPayitem = ->
     }
   """
 
-handleTitleSet = ->
-  @insertCSS """
-    * {
-      font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif !important;
-    }
-    #ntg-recommend {
-      display: none !important;
-    }
-    ::-webkit-scrollbar {
-      width: 0px;
-    }
-  """
-  adjustSize()
-# Hack CSS and Fix font family
 document.addEventListener 'DOMContentLoaded', ->
-  $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
+  $('kan-game webview').addEventListener 'page-title-set', adjustSize
 
 # Adjust elements layout
 handleResize = ->
