@@ -4,6 +4,25 @@
 prevHours = (new Date()).getUTCHours()
 interval = null
 
+getType = (api_category) ->
+  switch api_category
+    when 0
+      return '#ffffff'
+    when 1
+      return '#21bb3a'
+    when 2
+      return '#e73939'
+    when 3
+      return '#a0fe29'
+    when 4
+      return '#2dffb3'
+    when 5
+      return '#f4df22'
+    when 6
+      return '#cd6c48'
+    when 7
+      return '#c792e8'
+
 getStyleByProgress = (progress) ->
   switch progress
     when '进行'
@@ -189,7 +208,7 @@ TaskPanel = React.createClass
           for i in [0..5]
             <tr key={i}>
               <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                <td>{@state.tasks[i].name}</td>
+                <td style={color:getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
               </OverlayTrigger>
               <td>
                 <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
