@@ -1,4 +1,4 @@
-{$, $$, gameScale} = window
+{$, $$, webviewWidth} = window
 
 # Initial
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
@@ -18,14 +18,14 @@ adjustSize = ->
     e.style.height = "#{window.innerHeight - 40}px"
     e.style.overflowY = "scroll"
   # Fix poi-info when game size 0x0
-  if gameScale < 0.00001
-    $('poi-info')?.style?.display = 'none'
+  if webviewWidth > -0.00001 and webviewWidth < 0.00001
+    $('kan-game')?.style?.display = 'none'
   else
-    $('poi-info')?.style?.display = ''
+    $('kan-game')?.style?.display = ''
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
     $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 31}px"
     return
-  factor = Math.ceil(window.innerWidth * gameScale / 800.0 * 100) / 100.0
+  factor = Math.ceil(webviewWidth / 800.0 * 100) / 100.0
   webview.executeJavaScript """
     var iframe = document.querySelector('#game_frame').contentWindow.document;
     document.querySelector('html').style.zoom = #{factor};
@@ -63,25 +63,36 @@ adjustPayitem = ->
     }
   """
 
-document.addEventListener 'DOMContentLoaded', ->
-  $('kan-game webview').addEventListener 'page-title-set', adjustSize
-
 # Adjust elements layout
 handleResize = ->
+  {webviewWidth} = window
+  if webviewWidth != -1
+    $('kan-game').style.flex = webviewWidth
+    $('poi-app').style.flex = window.innerWidth - webviewWidth
   if !window._delay
     adjustSize()
   else
     window._delay = false
-handleChangeScale = ->
-  {gameScale} = window
-  $('kan-game').style.flex = gameScale
-  $('poi-app').style.flex = 1 - gameScale
+
+handleTitleSet = ->
+  @insertCSS """
+    #ntg-recommend {
+      display: none !important;
+    }
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+  """
   handleResize()
-if config.get('poi.scale', false)
-  document.addEventListener 'DOMContentLoaded', handleChangeScale
+
+document.addEventListener 'DOMContentLoaded', ->
+  $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
+
+if webviewWidth != -1
+  document.addEventListener 'DOMContentLoaded', handleResize
 
 window.addEventListener 'resize', handleResize
-window.addEventListener 'scale.change', handleChangeScale
+window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
 
@@ -92,7 +103,7 @@ module.exports =
       e.style.overflowY = "hidden"
     $('poi-info').style.display = ''
     window.removeEventListener 'resize', handleResize
-    window.removeEventListener 'scale.change', handleChangeScale
+    window.removeEventListener 'webview.width.change', handleResize
     window.removeEventListener 'game.start', adjustSize
     window.removeEventListener 'game.payitem', adjustPayitem
     # clearInterval interval
