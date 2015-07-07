@@ -208,7 +208,7 @@ TaskPanel = React.createClass
           for i in [0..5]
             <tr key={i}>
               <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                <td style={color:getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
+                <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
               </OverlayTrigger>
               <td>
                 <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
