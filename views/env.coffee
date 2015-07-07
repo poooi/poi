@@ -113,7 +113,7 @@ window.proxy = remote.require './lib/proxy'
 
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
-window.gameScale = config.get 'poi.scale', if config.get('poi.tabarea.double', false) then 4.0 / 7.0 else 5.0 / 7.0
+window.webviewWidth = config.get 'poi.webview.width', -1
 
 # Custom theme
 window.theme = config.get 'poi.theme', '__default__'

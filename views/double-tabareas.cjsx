@@ -4,6 +4,8 @@ glob = require 'glob'
 {TabbedArea, TabPane, DropdownButton} = ReactBootstrap
 
 $('poi-main').className += 'double-tabbed'
+window.doubleTabbed = true
+
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 # Discover plugins and remove unused plugins

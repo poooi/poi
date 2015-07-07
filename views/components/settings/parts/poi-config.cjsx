@@ -15,8 +15,8 @@ PoiConfig = React.createClass
   getInitialState: ->
     layout: config.get 'poi.layout', 'horizonal'
     theme: config.get 'poi.theme', '__default__'
-    gameWidth: config.get('poi.scale', window.gameScale) * window.innerWidth
-    useFixedResolution: if config.get('poi.scale') then true else false
+    gameWidth: if (config.get 'poi.webview.width', -1) == -1 then (window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)) else (config.get 'poi.webview.width', -1)
+    useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
   handleSetConfirmQuit: ->
@@ -51,37 +51,32 @@ PoiConfig = React.createClass
         theme: theme
     window.dispatchEvent event
     @setState {theme}
-  handleSetScale: (e) ->
+  handleSetWebviewWidth: (e) ->
     @setState
-      gameWidth: @refs.scale.getValue()
-    width = parseInt @refs.scale.getValue()
+      gameWidth: @refs.webviewWidth.getValue()
+    width = parseInt @refs.webviewWidth.getValue()
     return if isNaN(width) || width < 0 || !@state.useFixedResolution || width > window.innerWidth - 150
-    scale = width / window.innerWidth
-    window.gameScale = scale
-    window.dispatchEvent new Event('scale.change')
-    config.set 'poi.scale', scale
+    window.webviewWidth = width
+    window.dispatchEvent new Event('webview.width.change')
+    config.set 'poi.webview.width', width
   handleResize: ->
     {gameWidth} = @state
     width = parseInt gameWidth
     return if isNaN(width) || width < 0 || width > window.innerWidth - 150
-    if @state.useFixedResolution
-      scale = width / window.innerWidth
-      window.gameScale = scale
-      window.dispatchEvent new Event('scale.change')
-      config.set 'poi.scale', scale
-    else
+    if !@state.useFixedResolution
       @setState
-        gameWidth: window.innerWidth * window.gameScale
+        gameWidth: window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
   handleSetFixedResolution: (e) ->
     current = @state.useFixedResolution
     if current
-      config.set 'poi.scale', null
+      config.set 'poi.webview.width', -1
       @setState
         useFixedResolution: false
+      @handleResize()
     else
       @setState
         useFixedResolution: true
-      @handleResize()
+      @handleSetWebviewWidth()
   handleClearCookie: (e) ->
     rimraf path.join(APPDATA_PATH, 'Cookies'), (err) ->
       if err?
@@ -185,29 +180,26 @@ PoiConfig = React.createClass
           </Col>
         </Grid>
       </div>
-      {
-        if @state.layout == 'horizonal'
-          <div className="form-group">
-            <Divider text="游戏分辨率" />
-            <div style={display: 'flex', marginLeft: 15, marginRight: 15}>
-              <Input type='checkbox' ref="useFixedResolution" label='使用固定分辨率' checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
-            </div>
-            <div id="poi-resolution-config" style={display: 'flex', marginLeft: 15, marginRight: 15, alignItems: 'center'}>
-              <div style={flex: 1}>
-                <Input type="number" ref="scale" value={@state.gameWidth} onChange={@handleSetScale} readOnly={!@state.useFixedResolution} />
-              </div>
-              <div style={flex: 'none', width: 15, paddingLeft: 5}>
-                x
-              </div>
-              <div style={flex: 1}>
-                <Input type="number" value={@state.gameWidth * 480 / 800} readOnly />
-              </div>
-              <div style={flex: 'none', width: 15, paddingLeft: 5}>
-                px
-              </div>
-            </div>
+      <div className="form-group">
+        <Divider text="游戏分辨率" />
+        <div style={display: 'flex', marginLeft: 15, marginRight: 15}>
+          <Input type='checkbox' ref="useFixedResolution" label='使用固定分辨率' checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
+        </div>
+        <div id="poi-resolution-config" style={display: 'flex', marginLeft: 15, marginRight: 15, alignItems: 'center'}>
+          <div style={flex: 1}>
+            <Input type="number" ref="webviewWidth" value={@state.gameWidth} onChange={@handleSetWebviewWidth} readOnly={!@state.useFixedResolution} />
           </div>
-      }
+          <div style={flex: 'none', width: 15, paddingLeft: 5}>
+            x
+          </div>
+          <div style={flex: 1}>
+            <Input type="number" value={@state.gameWidth * 480 / 800} readOnly />
+          </div>
+          <div style={flex: 'none', width: 15, paddingLeft: 5}>
+            px
+          </div>
+        </div>
+      </div>
     </form>
 
 module.exports = PoiConfig
