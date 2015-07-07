@@ -96,7 +96,7 @@ class Proxy extends EventEmitter
             res.writeHead 200,
               'Server': 'Apache'
               'Content-Length': data.length
-              'Cache-Control': 'max-age=2592000, public'
+              'Cache-Control': 'no-cache'
               'Content-Type': mime.lookup cacheFile
             res.end data
           # Enable retry for game api
