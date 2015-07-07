@@ -1,13 +1,14 @@
 {
   "poi": {
-    "theme": "darkly",
+    "theme": "paperdark",
     "layout": "horizonal",
     "window": {
       "x": 60,
       "y": 60,
-      "width": 1244,
-      "height": 605
-    }
+      "width": 1274,
+      "height": 616
+    },
+    "scale": 0.6279434850863422
   },
   "proxy": {
     "use": "shadowsocks",
