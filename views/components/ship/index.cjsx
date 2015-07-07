@@ -261,7 +261,7 @@ module.exports =
                                        label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                         </td>
                         <td width="33%">
-                          <Slotitems data={ship.api_slot} />
+                          <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
                         </td>
                       </tr>
                       <tr key={j * 2 + 1}>
