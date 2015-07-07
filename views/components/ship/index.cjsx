@@ -182,6 +182,10 @@ module.exports =
       countdown = decks.map (deck) ->
         getCondCountdown deck
       timeDelta = [0, 0, 0, 0]
+      if countdown[0] > 0 || countdown[1] > 0 || countdown[2] > 0 || countdown[3] > 0
+        @interval = setInterval @updateCountdown, 1000 if !@interval?
+      else
+        @interval = clearInterval @interval if @interval?
       @setState
         names: names
         decks: decks
@@ -191,19 +195,22 @@ module.exports =
         countdown: countdown
     updateCountdown: ->
       {countdown, states} = @state
+      flag = true
       for i in [0..3]
         if countdown[i] - timeDelta[i] > 0
+          flag = false
           timeDelta[i] += 1
           # Use DOM operation instead of React for performance
-          $("#ShipView #deck-condition-countdown-#{i}").innerHTML = resolveTime(countdown[i] - timeDelta[i])
+          $("#ShipView #deck-condition-countdown-#{i}-#{@componentId}").innerHTML = resolveTime(countdown[i] - timeDelta[i])
           if countdown[i] == timeDelta[i] and states[i] < 4
             notify "#{@state.names[i]} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
+      @interval = clearInterval @interval if flag
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
-      setInterval @updateCountdown, 1000
+      @componentId = Math.ceil(Date.now() * Math.random())
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
-      clearInterval @updateCountdown, 1000
+      @interval = clearInterval @interval if @interval?
     render: ->
       <div>
         <link rel="stylesheet" href={join(relative(ROOT, __dirname), 'assets', 'ship.css')} />
@@ -239,7 +246,7 @@ module.exports =
                     </OverlayTrigger>
                   </Col>
                   <Col xs={4}>
-                    回复：<span id={"deck-condition-countdown-#{i}"}>{resolveTime @state.countdown[i]}</span>
+                    回复：<span id={"deck-condition-countdown-#{i}-#{@componentId}"}>{resolveTime @state.countdown[i]}</span>
                   </Col>
                 </Grid>
               </Alert>
