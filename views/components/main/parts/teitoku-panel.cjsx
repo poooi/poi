@@ -53,6 +53,7 @@ TeitokuPanel = React.createClass
           maxSlotitem: body.api_max_slotitem
       when '/kcsapi/api_req_sortie/battleresult'
         @setState
+          shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
           level: window._teitokuLv
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_practice/battle_result'
