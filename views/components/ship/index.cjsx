@@ -171,6 +171,25 @@ module.exports =
               if ship.api_nowhp / ship.api_maxhp < 0.250001
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
+        when '/kcsapi/api_get_member/ndock'
+          @setState
+            ndocks: body.map(e) -> e.api_ship_id
+        when '/kcsapi/api_req_nyukyo/speedchange'
+          if body.api_result == 1
+            id = ndocks[postBody.api_ndock_id - 1]
+            for deck, i in decks
+              for shipId in deck.api_ship
+                if shipId == id
+                  ship = _ships[id]
+                  ship.api_nowhp = ship.api_maxhp
+        when '/kcsapi/api_req_nyukyo/start'
+          if body.api_result == 1 and postBody.api_highspeed == '1'
+            id = parseInt(postBody.api_ship_id)
+            for deck, i in decks
+              for shipId in deck.api_ship
+                if shipId == id
+                  ship = _ships[id]
+                  ship.api_nowhp = ship.api_maxhp
         else
           flag = false
       return unless flag
