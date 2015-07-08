@@ -28,11 +28,11 @@ getStyleByProgress = (progress) ->
     when '进行'
       return 'warning'
     when '50%'
-      return 'primary'
-    when '80%'
-      return 'info'
-    when '达成'
       return 'success'
+    when '80%'
+      return 'success'
+    when '达成'
+      return 'info'
     else
       return 'default'
 
