@@ -61,7 +61,7 @@ PoiConfig = React.createClass
     config.set 'poi.webview.width', width
   handleResize: ->
     {gameWidth} = @state
-    width = parseInt gameWidth
+    window.webviewWidth = width = parseInt gameWidth
     return if isNaN(width) || width < 0 || (config.get('poi.layout', 'horizonal') == 'horizonal' && width > window.innerWidth - 150)
     if !@state.useFixedResolution
       @setState
@@ -73,6 +73,8 @@ PoiConfig = React.createClass
       @setState
         useFixedResolution: false
       @handleResize()
+      window.webviewWidth = -1
+      window.dispatchEvent new Event('webview.width.change')
     else
       @setState
         useFixedResolution: true
