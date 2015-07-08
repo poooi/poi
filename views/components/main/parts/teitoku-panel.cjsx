@@ -2,7 +2,7 @@
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
 
-order = if layout == 'horizonal' then [1, 3, 5, 7, 2, 4, 6, 8] else [1..8]
+order = if layout == 'horizonal' or window.doubleTabbed then [1, 3, 5, 7, 2, 4, 6, 8] else [1..8]
 
 rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
 

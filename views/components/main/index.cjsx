@@ -22,7 +22,7 @@ module.exports =
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
         <TeitokuPanel ref="teitokuPanel" />
         {
-          if @state.layout == 'horizonal'
+          if @state.layout == 'horizonal' or window.doubleTabbed
             [
               <div className="panel-container" style={display: 'flex'}>
                 <NdockPanel style={flex: 1} />
