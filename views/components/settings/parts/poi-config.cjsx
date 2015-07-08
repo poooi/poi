@@ -55,14 +55,14 @@ PoiConfig = React.createClass
     @setState
       gameWidth: @refs.webviewWidth.getValue()
     width = parseInt @refs.webviewWidth.getValue()
-    return if isNaN(width) || width < 0 || !@state.useFixedResolution || width > window.innerWidth - 150
+    return if isNaN(width) || width < 0 || !@state.useFixedResolution || (config.get('poi.layout', 'horizonal') == 'horizonal' && width > window.innerWidth - 150)
     window.webviewWidth = width
     window.dispatchEvent new Event('webview.width.change')
     config.set 'poi.webview.width', width
   handleResize: ->
     {gameWidth} = @state
     width = parseInt gameWidth
-    return if isNaN(width) || width < 0 || width > window.innerWidth - 150
+    return if isNaN(width) || width < 0 || (config.get('poi.layout', 'horizonal') == 'horizonal' && width > window.innerWidth - 150)
     if !@state.useFixedResolution
       @setState
         gameWidth: window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
