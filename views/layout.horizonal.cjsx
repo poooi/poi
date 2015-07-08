@@ -25,7 +25,9 @@ adjustSize = ->
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
     $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 31}px"
     return
-  factor = Math.ceil(webviewWidth / 800.0 * 100) / 100.0
+  factor = Math.ceil(window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0) / 800.0 * 100) / 100.0
+  if webviewWidth > 0.00001
+    factor = Math.ceil(webviewWidth / 800.0 * 100) / 100.0
   webview.executeJavaScript """
     var iframe = document.querySelector('#game_frame').contentWindow.document;
     document.querySelector('html').style.zoom = #{factor};
@@ -101,7 +103,7 @@ module.exports =
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = ""
       e.style.overflowY = "hidden"
-    $('poi-info').style.display = ''
+    $('kan-game').style.display = ''
     window.removeEventListener 'resize', handleResize
     window.removeEventListener 'webview.width.change', handleResize
     window.removeEventListener 'game.start', adjustSize
