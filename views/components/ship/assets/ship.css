@@ -1,9 +1,16 @@
 #ShipView .btn-group {
   display: flex;
   width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
 }
 #ShipView .btn-group .btn {
   flex: 1;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
 }
 #ShipView .hidden {
   display: none;
@@ -91,7 +98,6 @@
   margin-bottom: 1px;
 }
 #ShipView .alert {
-  background-color: #000;
-  border-color: #000;
-  color: #fff;
+  background-color: transparent;
+  border-color: transparent;
 }
