@@ -242,6 +242,7 @@ resolveResponses = ->
             delete _slotitems[itemId]
           delete _ships[idx]
         _ships[body.api_ship.api_id] = extendShip body.api_ship
+        window._decks = body.api_deck
       when '/kcsapi/api_req_kaisou/slotset'
         _ships[parseInt(postBody.api_id)].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
       when '/kcsapi/api_req_kousyou/createitem'

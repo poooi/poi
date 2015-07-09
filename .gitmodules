@@ -31,3 +31,6 @@
 [submodule "plugins/akashic-records"]
 	path = plugins/akashic-records
 	url = https://github.com/yudachi/plugin-Akashic-records
+[submodule "plugins/map-hp"]
+	path = plugins/map-hp
+	url = https://github.com/yudachi/plugin-map-hp.git
