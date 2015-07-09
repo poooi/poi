@@ -5,7 +5,6 @@ glob = require 'glob'
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
-
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
@@ -26,15 +25,6 @@ components = components.filter (component) ->
   component.show isnt false and component.name != 'SettingsView'
 components = _.sortBy(components, 'priority')
 
-PluginWrap = React.createClass
-  shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey isnt @props.selectedKey
-      false
-    else
-      true
-  render: ->
-    React.createElement @props.plugin.reactClass
-
 plugins = plugins.map (filePath) ->
   plugin = require filePath
   plugin.priority = 10000 unless plugin.priority?
@@ -51,8 +41,7 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
   handleSelect: (key) ->
-    if key isnt @state.key
-      @setState {key}
+    @setState {key}
   handleCtrlOrCmdTabKeyDown: ->
     @setState
       key: 0
@@ -100,11 +89,9 @@ ControlledTabArea = React.createClass
         components.map (component, index) ->
           <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
           {
-            React.createElement component.reactClass,
-              selectedKey: [@state.key, @state.key]
+            React.createElement component.reactClass
           }
           </TabPane>
-        , @
         <DropdownButton key={components.length} eventKey={-1} tab='插件' navItem={true}>
         {
           counter = 0
@@ -113,15 +100,15 @@ ControlledTabArea = React.createClass
               <div key={components.length + 1 + index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
             else
               <TabPane key={components.length + 1 + index} eventKey={components.length - 1 + (counter += 1)} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
-                <PluginWrap plugin={plugin} selectedKey={@state.key} />
+              {
+                React.createElement plugin.reactClass
+              }
               </TabPane>
-          , @
         }
         </DropdownButton>
         <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
         {
-          React.createElement settings.reactClass,
-            selectedKey: [@state.key, @state.key]
+          React.createElement settings.reactClass
         }
         </TabPane>
       ]

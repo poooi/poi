@@ -8,16 +8,6 @@ window.doubleTabbed = true
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
-
-PluginWrap = React.createClass
-  shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
-      false
-    else
-      true
-  render: ->
-    React.createElement @props.plugin.reactClass
-
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
@@ -54,9 +44,8 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     key: [0, 0]
   handleSelectLeft: (key) ->
-    if key isnt @state.key[0]
-      @setState
-        key: [key, @state.key[1]]
+    @setState
+      key: [key, @state.key[1]]
   handleSelectRight: (key) ->
     @setState
       key: [@state.key[0], key]
@@ -108,15 +97,12 @@ ControlledTabArea = React.createClass
           components.map (component, index) ->
             <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
             {
-              React.createElement component.reactClass,
-                selectedKey: @state.key
+              React.createElement component.reactClass
             }
             </TabPane>
-          , @
           <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
           {
-            React.createElement settings.reactClass,
-              selectedKey: @state.key
+            React.createElement settings.reactClass
           }
           </TabPane>
         ]
@@ -132,10 +118,9 @@ ControlledTabArea = React.createClass
             else
               <TabPane key={index} eventKey={counter += 1} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
               {
-                <PluginWrap plugin={plugin} selectedKey={@state.key} />
+                React.createElement plugin.reactClass
               }
               </TabPane>
-          , @
         }
         </DropdownButton>
       </TabbedArea>
