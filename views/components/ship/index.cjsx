@@ -34,34 +34,17 @@ getMaterialStyle = (percent) ->
     'info'
   else
     'success'
-getFontStyle = (theme)  ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
-    color: '#FFF'
-  else
-    color: '#000'
 getCondStyle = (cond) ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
-    if cond > 49
-      color: '#FFFF00'
-    else if cond < 20
-      color: '#DD514C'
-    else if cond < 30
-      color: '#F37B1D'
-    else if cond < 40
-      color: '#FFC880'
-    else
-      null
+  if cond > 49
+    color: '#FFFF00'
+  else if cond < 20
+    color: '#DD514C'
+  else if cond < 30
+    color: '#F37B1D'
+  else if cond < 40
+    color: '#FFC880'
   else
-    if cond > 49
-      'text-shadow': '0 0 3px #FFFF00'
-    else if cond < 20
-      'text-shadow': '0 0 3px #DD514C'
-    else if cond < 30
-      'text-shadow': '0 0 3px #F37B1D'
-    else if cond < 40
-      'text-shadow': '0 0 3px #FFC880'
-    else
-      null
+    null
 getDeckState = (deck, ndocks) ->
   state = 0
   {$ships, _ships} = window
@@ -172,7 +155,7 @@ module.exports =
           ndocks = body.api_ndock.map (e) ->
             e.api_ship_id
           inBattle = [false, false, false, false]
-        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship'
+        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup'
           true
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
@@ -189,8 +172,7 @@ module.exports =
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
         when '/kcsapi/api_get_member/ndock'
-          @setState
-            ndocks: body.map(e) -> e.api_ship_id
+          ndocks = body.map (e) -> e.api_ship_id
         when '/kcsapi/api_req_nyukyo/speedchange'
           if body.api_result == 1
             id = ndocks[postBody.api_ndock_id - 1]
@@ -265,7 +247,7 @@ module.exports =
           {$ships, $shipTypes, _ships} = window
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
-              <Alert style={getFontStyle window.theme}>
+              <Alert bsStyle={getStyle @state.states[i]}>
                 <Grid>
                   <Col xs={2}>
                     总 Lv.{@state.messages[i][0]}
