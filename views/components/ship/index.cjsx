@@ -147,8 +147,9 @@ module.exports =
       else
         true
     handleClick: (idx) ->
-      @setState
-        activeDeck: idx
+      if idx isnt @state.activeDeck
+        @setState
+          activeDeck: idx
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {names, ndocks} = @state
