@@ -178,8 +178,7 @@ module.exports =
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
         when '/kcsapi/api_get_member/ndock'
-          @setState
-            ndocks: body.map (e)-> e.api_ship_id
+          ndocks: body.map (e)-> e.api_ship_id
         when '/kcsapi/api_req_nyukyo/speedchange'
           if body.api_result == 1
             id = ndocks[postBody.api_ndock_id - 1]
