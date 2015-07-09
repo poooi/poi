@@ -15,6 +15,11 @@ module.exports =
         layout: e.detail.layout
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
+    shouldComponentUpdate: (nextProps, nextState)->
+      if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
+        false
+      else
+        true
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
     render: ->
