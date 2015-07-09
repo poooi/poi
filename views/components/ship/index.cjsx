@@ -34,34 +34,17 @@ getMaterialStyle = (percent) ->
     'info'
   else
     'success'
-getFontStyle = (theme)  ->
-  if window.theme.match('dark') or window.theme.match('Dark') or window.theme.match('slate') or window.theme.match('superhero')
-    color: '#FFF'
-  else
-    color: '#000'
 getCondStyle = (cond) ->
-  if window.theme.match('dark') or window.theme.match('Dark') or window.theme.match('slate') or window.theme.match('superhero')
-    if cond > 49
-      color: '#FFFF00'
-    else if cond < 20
-      color: '#DD514C'
-    else if cond < 30
-      color: '#F37B1D'
-    else if cond < 40
-      color: '#FFC880'
-    else
-      null
+  if cond > 49
+    color: '#FFFF00'
+  else if cond < 20
+    color: '#DD514C'
+  else if cond < 30
+    color: '#F37B1D'
+  else if cond < 40
+    color: '#FFC880'
   else
-    if cond > 49
-      'text-shadow': '0 0 3px #FFFF00'
-    else if cond < 20
-      'text-shadow': '0 0 3px #DD514C'
-    else if cond < 30
-      'text-shadow': '0 0 3px #F37B1D'
-    else if cond < 40
-      'text-shadow': '0 0 3px #FFC880'
-    else
-      null
+    null
 getDeckState = (deck, ndocks) ->
   state = 0
   {$ships, _ships} = window
@@ -264,7 +247,7 @@ module.exports =
           {$ships, $shipTypes, _ships} = window
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
-              <Alert style={getFontStyle window.theme}>
+              <Alert bsStyle={getStyle @state.states[i]}>
                 <Grid>
                   <Col xs={2}>
                     总 Lv.{@state.messages[i][0]}
