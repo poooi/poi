@@ -11,7 +11,7 @@ components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey isnt @props.selectedKey
+    if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
       false
     else
       true
@@ -109,14 +109,14 @@ ControlledTabArea = React.createClass
             <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
             {
               React.createElement component.reactClass,
-                selectedKey: @state.key[0]
+                selectedKey: @state.key
             }
             </TabPane>
           , @
           <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
           {
             React.createElement settings.reactClass,
-              selectedKey: @state.key[0]
+              selectedKey: @state.key
           }
           </TabPane>
         ]

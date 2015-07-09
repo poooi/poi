@@ -16,7 +16,7 @@ module.exports =
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
     shouldComponentUpdate: (nextProps, nextState)->
-      if nextProps.selectedKey isnt @props.selectedKey
+      if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
         false
       else
         true

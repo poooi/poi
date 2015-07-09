@@ -178,56 +178,59 @@ TopAlert = React.createClass
 PaneBody = React.createClass
   # getInitialState: ->
   #   
+  shouldComponentUpdate: (nextProps, nextState)->
+    if nextProps.activeDeck isnt @props.activeDeck
+      false
+    else
+      true
   render: ->
-    <div className="ship-deck" className={if @props.activeDeck is @props.deckIndex then 'show' else 'hidden'} key={@props.deckIndex}>
-      <TopAlert 
-        messages={@props.messages}
-        deckIndex={@props.deckIndex}
-        deckName={@props.deckName}
-        deckState={@props.deckState} />
-      <Table>
-        <tbody>
-        {
-          {$ships, $shipTypes, _ships} = window
-          for shipId, j in @props.deck.api_ship
-            continue if shipId == -1
-            ship = _ships[shipId]
-            shipInfo = $ships[ship.api_ship_id]
-            shipType = $shipTypes[shipInfo.api_stype].api_name
-            [
-              <tr key={j * 2}>
-                <td width="20%">{shipInfo.api_name}</td>
-                <td width="22%">Lv. {ship.api_lv}</td>
-                <td width="25%" className="hp-progress">
-                  <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
-                               now={ship.api_nowhp / ship.api_maxhp * 100}
-                               label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
-                </td>
-                <td width="33%">
-                  <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
-                </td>
-              </tr>
-              <tr key={j * 2 + 1}>
-                <td>{shipType}</td>
-                <td>Next. {ship.api_exp[1]}</td>
-                <td className="material-progress">
-                  <Grid>
-                    <Col xs={6} style={paddingRight: 1}>
-                      <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                     now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
-                    </Col>
-                    <Col xs={6} style={paddingLeft: 1}>
-                      <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                     now={ship.api_bull / shipInfo.api_bull_max * 100} />
-                    </Col>
-                  </Grid>
-                </td>
-                <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
-              </tr>
-            ]
-        }
-        </tbody>
-      </Table>
-    </div>
+    <TopAlert 
+      messages={@props.messages}
+      deckIndex={@props.deckIndex}
+      deckName={@props.deckName}
+      deckState={@props.deckState} />
+    <Table>
+      <tbody>
+      {
+        {$ships, $shipTypes, _ships} = window
+        for shipId, j in @props.deck.api_ship
+          continue if shipId == -1
+          ship = _ships[shipId]
+          shipInfo = $ships[ship.api_ship_id]
+          shipType = $shipTypes[shipInfo.api_stype].api_name
+          [
+            <tr key={j * 2}>
+              <td width="20%">{shipInfo.api_name}</td>
+              <td width="22%">Lv. {ship.api_lv}</td>
+              <td width="25%" className="hp-progress">
+                <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+                             now={ship.api_nowhp / ship.api_maxhp * 100}
+                             label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
+              </td>
+              <td width="33%">
+                <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+              </td>
+            </tr>
+            <tr key={j * 2 + 1}>
+              <td>{shipType}</td>
+              <td>Next. {ship.api_exp[1]}</td>
+              <td className="material-progress">
+                <Grid>
+                  <Col xs={6} style={paddingRight: 1}>
+                    <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                   now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                  </Col>
+                  <Col xs={6} style={paddingLeft: 1}>
+                    <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                   now={ship.api_bull / shipInfo.api_bull_max * 100} />
+                  </Col>
+                </Grid>
+              </td>
+              <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
+            </tr>
+          ]
+      }
+      </tbody>
+    </Table>
 
 module.exports = PaneBody

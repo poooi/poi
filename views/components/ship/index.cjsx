@@ -93,7 +93,7 @@ module.exports =
       ndocks: []
       activeDeck: 0
     shouldComponentUpdate: (nextProps, nextState)->
-      if nextProps.selectedKey isnt @props.selectedKey
+      if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
         false
       else
         true
@@ -178,14 +178,15 @@ module.exports =
         </ButtonGroup>
         {
           for deck, i in @state.decks
-            <PaneBody 
-              key={i}
-              deckIndex={i}
-              deck={@state.decks[i]}
-              activeDeck={@state.activeDeck}
-              deckState={@state.states[i]}
-              deckName={@state.names[i]}
-            />
+            <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
+              <PaneBody 
+                key={i}
+                deckIndex={i}
+                deck={@state.decks[i]}
+                activeDeck={@state.activeDeck}
+                deckState={@state.states[i]}
+                deckName={@state.names[i]}
+              />
+            </div>
         }
-        
       </div>
