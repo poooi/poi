@@ -41,7 +41,8 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
   handleSelect: (key) ->
-    @setState {key}
+    if key isnt @state.key
+      @setState {key}
   handleCtrlOrCmdTabKeyDown: ->
     @setState
       key: 0
@@ -89,9 +90,11 @@ ControlledTabArea = React.createClass
         components.map (component, index) ->
           <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
           {
-            React.createElement component.reactClass
+            React.createElement component.reactClass,
+              selectedKey: @state.key
           }
           </TabPane>
+        , @
         <DropdownButton key={components.length} eventKey={-1} tab='插件' navItem={true}>
         {
           counter = 0
@@ -108,7 +111,8 @@ ControlledTabArea = React.createClass
         </DropdownButton>
         <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
         {
-          React.createElement settings.reactClass
+          React.createElement settings.reactClass,
+            selectedKey: @state.key
         }
         </TabPane>
       ]

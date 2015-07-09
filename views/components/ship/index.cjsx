@@ -141,6 +141,11 @@ module.exports =
       decks: []
       ndocks: []
       activeDeck: 0
+    shouldComponentUpdate: (nextProps, nextState)->
+      if nextProps.selectedKey isnt @props.selectedKey
+        false
+      else
+        true
     handleClick: (idx) ->
       @setState
         activeDeck: idx

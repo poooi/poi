@@ -44,8 +44,9 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     key: [0, 0]
   handleSelectLeft: (key) ->
-    @setState
-      key: [key, @state.key[1]]
+    if key isnt @state.key[0]
+      @setState
+        key: [key, @state.key[1]]
   handleSelectRight: (key) ->
     @setState
       key: [@state.key[0], key]
@@ -97,12 +98,15 @@ ControlledTabArea = React.createClass
           components.map (component, index) ->
             <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
             {
-              React.createElement component.reactClass
+              React.createElement component.reactClass,
+                selectedKey: @state.key[0]
             }
             </TabPane>
+          , @
           <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
           {
-            React.createElement settings.reactClass
+            React.createElement settings.reactClass,
+              selectedKey: @state.key[0]
           }
           </TabPane>
         ]

@@ -20,6 +20,11 @@ module.exports =
   displayName: '设置'
   description: '功能设置界面'
   reactClass: React.createClass
+    shouldComponentUpdate: (nextProps, nextState)->
+      if nextProps.selectedKey isnt @props.selectedKey
+        false
+      else
+        true
     render: ->
       ### FIXME
       # Animation disabled
