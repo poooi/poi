@@ -28,10 +28,10 @@ components = _.sortBy(components, 'priority')
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey isnt @props.selectedKey
-      false
-    else
+    if nextProps.selectedKey is @props.index
       true
+    else
+      false
   render: ->
     React.createElement @props.plugin.reactClass
 
@@ -105,7 +105,8 @@ ControlledTabArea = React.createClass
           <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
           {
             React.createElement component.reactClass,
-              selectedKey: [@state.key, @state.key]
+              selectedKey: @state.key
+              index: index
           }
           </TabPane>
         , @
@@ -116,8 +117,9 @@ ControlledTabArea = React.createClass
             if plugin.handleClick
               <div key={components.length + 1 + index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
             else
-              <TabPane key={components.length + 1 + index} eventKey={components.length - 1 + (counter += 1)} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
-                <PluginWrap plugin={plugin} selectedKey={@state.key} />
+              key = components.length - 1 + (counter += 1)
+              <TabPane key={components.length + 1 + index} eventKey={key} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+                <PluginWrap plugin={plugin} selectedKey={@state.key} index={key}/>
               </TabPane>
           , @
         }
@@ -126,6 +128,7 @@ ControlledTabArea = React.createClass
         {
           React.createElement settings.reactClass,
             selectedKey: [@state.key, @state.key]
+            index: 1000
         }
         </TabPane>
       ]

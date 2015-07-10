@@ -93,10 +93,19 @@ module.exports =
       ndocks: []
       activeDeck: 0
     shouldComponentUpdate: (nextProps, nextState)->
-      if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
-        false
+      if nextProps.selectedKey[0]?
+        if nextProps.selectedKey[0] is @props.index
+          if nextProps.selectedKey[1] isnt @props.selectedKey[1]
+            false
+          else
+            true
+        else
+          false
       else
-        true
+        if nextProps.selectedKey is @props.index
+          true
+        else
+          false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
         @setState

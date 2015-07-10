@@ -11,10 +11,13 @@ components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
-      false
+    if nextProps.selectedKey[1] is @props.index
+      if nextProps.selectedKey[0] isnt @props.selectedKey[0]
+        false
+      else
+        true
     else
-      true
+      false
   render: ->
     React.createElement @props.plugin.reactClass
 
@@ -113,6 +116,7 @@ ControlledTabArea = React.createClass
             {
               React.createElement component.reactClass,
                 selectedKey: @state.key
+                index: index
             }
             </TabPane>
           , @
@@ -120,6 +124,7 @@ ControlledTabArea = React.createClass
           {
             React.createElement settings.reactClass,
               selectedKey: @state.key
+              index: 1000
           }
           </TabPane>
         ]
@@ -133,10 +138,9 @@ ControlledTabArea = React.createClass
             if plugin.handleClick
               <div key={index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
             else
-              <TabPane key={index} eventKey={counter += 1} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
-              {
-                <PluginWrap plugin={plugin} selectedKey={@state.key} />
-              }
+              eventKey = (counter += 1)
+              <TabPane key={index} eventKey={eventKey} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
+                <PluginWrap plugin={plugin} selectedKey={@state.key} index={eventKey} />
               </TabPane>
           , @
         }

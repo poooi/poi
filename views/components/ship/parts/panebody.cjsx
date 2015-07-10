@@ -183,10 +183,10 @@ PaneBody = React.createClass
   # getInitialState: ->
   #   
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.activeDeck isnt @props.activeDeck
-      false
-    else
+    if nextProps.activeDeck is @props.deckIndex
       true
+    else
+      false
   render: ->
     <div>
       <TopAlert 
