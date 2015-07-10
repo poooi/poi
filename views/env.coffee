@@ -22,6 +22,11 @@ window.FontAwesome = require 'react-fontawesome'
 {remoteStringify} = remote.require './lib/utils'
 
 # Utils
+isDarkTheme = (theme) ->
+  if theme.indexOf('dark') != -1 or theme == 'slate' or theme == 'superhero'
+    return true
+  else
+    return false
 Object.clone = (obj) ->
   JSON.parse JSON.stringify obj
 Object.remoteClone = (obj) ->
