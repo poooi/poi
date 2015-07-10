@@ -50,21 +50,25 @@ lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
+  setKeyState: (state) ->
+    if state.key isnt @state.key
+      @setState
+        key: state.key
   handleSelect: (key) ->
     if key isnt @state.key
       @setState {key}
   handleCtrlOrCmdTabKeyDown: ->
-    @setState
+    @setKeyState
       key: 0
   handleCtrlOrCmdNumberKeyDown: (num) ->
     if num <= components.length + tabbedPlugins.length
-      @setState
+      @setKeyState
         key: num - 1
   handleShiftTabKeyDown: ->
-    @setState
+    @setKeyState
       key: if @state.key? then (@state.key - 1 + components.length + tabbedPlugins.length) % (components.length + tabbedPlugins.length) else components.length + tabbedPlugins.length - 1
   handleTabKeyDown: ->
-    @setState
+    @setKeyState
       key: if @state.key? then (@state.key + 1) % (components.length + tabbedPlugins.length) else 1
   handleKeyDown: ->
     return if @listener?
