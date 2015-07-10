@@ -1,4 +1,5 @@
-{$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
+{relative, join} = require 'path-extra'
+{{$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
 
 Slotitems = require './slotitems'
