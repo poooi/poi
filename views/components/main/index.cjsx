@@ -16,19 +16,7 @@ module.exports =
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
     shouldComponentUpdate: (nextProps, nextState)->
-      if nextProps.selectedKey[0]?
-        if nextProps.selectedKey[0] is @props.index
-          if nextProps.selectedKey[1] isnt @props.selectedKey[1]
-            false
-          else
-            true
-        else
-          false
-      else
-        if nextProps.selectedKey is @props.index
-          true
-        else
-          false
+      false
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
     render: ->

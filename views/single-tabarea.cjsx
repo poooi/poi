@@ -28,10 +28,7 @@ components = _.sortBy(components, 'priority')
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey is @props.index
-      true
-    else
-      false
+    false
   render: ->
     React.createElement @props.plugin.reactClass
 

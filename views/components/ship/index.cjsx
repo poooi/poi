@@ -92,24 +92,35 @@ module.exports =
       decks: []
       ndocks: []
       activeDeck: 0
+      dataVersion: 0
+    showDataVersion: 0
     shouldComponentUpdate: (nextProps, nextState)->
       if nextProps.selectedKey[0]?
         if nextProps.selectedKey[0] is @props.index
-          if nextProps.selectedKey[1] isnt @props.selectedKey[1]
-            false
+          if nextProps.selectedKey[1] is @props.selectedKey[1]
+            if nextState.dataVersion isnt @showDataVersion
+              @showDataVersion = nextState.dataVersion
+              true
+            else
+              false
           else
-            true
+            false
         else
           false
       else
         if nextProps.selectedKey is @props.index
-          true
+          if nextState.dataVersion isnt @showDataVersion
+            @showDataVersion = nextState.dataVersion
+            true
+          else
+            false
         else
           false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
         @setState
           activeDeck: idx
+          dataVersion: @state.dataVersion+=1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {names, ndocks} = @state
@@ -166,6 +177,7 @@ module.exports =
         decks: decks
         ndocks: ndocks
         states: states
+        dataVersion: @state.dataVersion+=1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
     componentWillUnmount: ->

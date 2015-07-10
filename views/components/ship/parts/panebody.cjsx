@@ -154,6 +154,7 @@ TopAlert = React.createClass
     @setAlert()
   componentDidMount: ->
     @isMount = true
+    window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     @interval = clearInterval @interval if @interval?
   render: ->

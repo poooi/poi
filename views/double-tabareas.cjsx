@@ -11,13 +11,7 @@ components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.selectedKey[1] is @props.index
-      if nextProps.selectedKey[0] isnt @props.selectedKey[0]
-        false
-      else
-        true
-    else
-      false
+    false
   render: ->
     React.createElement @props.plugin.reactClass
 
