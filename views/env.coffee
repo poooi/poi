@@ -165,15 +165,20 @@ resolveResponses = ->
         $shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
         window.$slotitems = []
         $slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
+        window.$slotitemtypes = []
+        $slotitemtypes[slotitemtype.api_id] = slotitemtype for slotitemtype in body.api_mst_slotitem_equiptype 
         window.$mapareas = []
         $mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
         window.$maps = []
         $maps[map.api_id] = map for map in body.api_mst_mapinfo
         window.$missions = []
         $missions[mission.api_id] = mission for mission in body.api_mst_mission
+        window.$useitems = []
+        $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
+        window._nickNameId = body.api_nickname_id
       when '/kcsapi/api_get_member/deck'
         window._decks[deck.api_id - 1] = deck for deck in body
       when '/kcsapi/api_get_member/ship_deck'
@@ -191,6 +196,7 @@ resolveResponses = ->
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
         window._decks = body.api_deck_port
+        window._teitokuLv = body.api_basic.api_level
       when '/kcsapi/api_req_hensei/change'
         decks = window._decks
         deckId = parseInt(postBody.api_id) - 1
