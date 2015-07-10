@@ -144,7 +144,7 @@ TopAlert = React.createClass
       # Use DOM operation instead of React for performance
       $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@countdown - @timeDelta)
       if @countdown == @timeDelta and @props.deckState < 4
-        notify "#{@props.names} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
+        notify "#{@props.deckName} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
     @interval = clearInterval @interval if flag
   componentWillMount: ->
     @setAlert()
