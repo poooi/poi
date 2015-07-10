@@ -147,9 +147,9 @@ TopAlert = React.createClass
         notify "#{@props.names} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
     @interval = clearInterval @interval if flag
   componentWillMount: ->
-    @setAlert()
-  componentDidMount: ->
     @componentId = Math.ceil(Date.now() * Math.random())
+    @setAlert()
+  # componentDidMount: ->
   componentWillUnmount: ->
     @interval = clearInterval @interval if @interval?
   render: ->
