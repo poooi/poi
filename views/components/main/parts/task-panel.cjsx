@@ -7,7 +7,7 @@ interval = null
 getType = (api_category) ->
   switch api_category
     when 0
-      if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
+      if window.isDarkTheme
         return '#ffffff'
       else
         return '#000000'
