@@ -23,11 +23,11 @@
   "homepage": "https://github.com/yudachi/poi",
   "dependencies": {
     "adm-zip": "^0.4.7",
-    "bluebird": "^2.9.32",
+    "bluebird": "^2.9.33",
     "coffee-react": "^4.0.0",
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
-    "fs-extra": "^0.21.0",
+    "fs-extra": "^0.22.1",
     "glob": "^5.0.13",
     "header-case-normalizer": "^1.0.2",
     "iconv-lite": "^0.4.11",
