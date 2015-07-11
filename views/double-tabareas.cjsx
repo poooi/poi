@@ -67,7 +67,8 @@ ControlledTabArea = React.createClass
     @handleSelect [@state.key[0], if @state.key[1]? then (@state.key[1] + 1) % tabbedPlugins.length else 1]
   handleKeyDown: ->
     return if @listener?
-    @listener = window.addEventListener 'keydown', (e) =>
+    @listener = true
+    window.addEventListener 'keydown', (e) =>
       if e.keyCode is 9
         e.preventDefault()
         return if lockedTab and e.repeat
