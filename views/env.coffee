@@ -22,11 +22,6 @@ window.FontAwesome = require 'react-fontawesome'
 {remoteStringify} = remote.require './lib/utils'
 
 # Utils
-isDarkTheme = (theme) ->
-  if theme.indexOf('dark') != -1 or theme == 'slate' or theme == 'superhero'
-    return true
-  else
-    return false
 Object.clone = (obj) ->
   JSON.parse JSON.stringify obj
 Object.remoteClone = (obj) ->
@@ -122,12 +117,14 @@ window.webviewWidth = config.get 'poi.webview.width', -1
 
 # Custom theme
 window.theme = config.get 'poi.theme', '__default__'
+window.isDarkTheme = theme.indexOf('dark') != -1 or theme == 'slate' or theme == 'superhero'
 if theme == '__default__'
   $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
 else
   $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
 window.addEventListener 'theme.change', (e) ->
   window.theme = e.detail.theme
+  window.isDarkTheme = theme.indexOf('dark') != -1 or theme == 'slate' or theme == 'superhero'
   if theme == '__default__'
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
   else

@@ -16,7 +16,7 @@ getMaterialStyle = (percent) ->
     'success'
 
 getCondStyle = (cond) ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
+  if window.isDarkTheme
     if cond > 49
       color: '#FFFF00'
     else if cond < 20
@@ -40,10 +40,7 @@ getCondStyle = (cond) ->
       null
 
 getFontStyle = (theme)  ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
-    color: '#FFF'
-  else
-    color: '#000'
+  if window.isDarkTheme then color: '#FFF' else color: '#000'
 
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
@@ -55,7 +52,7 @@ getCondCountdown = (deck) ->
     if ship.api_cond < 49
       cond = Math.min(cond, ship.api_cond)
     countdown = Math.max(countdown, Math.ceil((49 - cond) / 3) * 180)
-  ret = 
+  ret =
     countdown: countdown
     cond: cond
 
@@ -192,16 +189,11 @@ TopAlert = React.createClass
     </Alert>
 
 PaneBody = React.createClass
-  # getInitialState: ->
-  #   
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.activeDeck is @props.deckIndex
-      true
-    else
-      false
+    nextProps.activeDeck is @props.deckIndex
   render: ->
     <div>
-      <TopAlert 
+      <TopAlert
         messages={@props.messages}
         deckIndex={@props.deckIndex}
         deckName={@props.deckName}
