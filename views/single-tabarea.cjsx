@@ -124,7 +124,7 @@ ControlledTabArea = React.createClass
         <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
         {
           React.createElement settings.reactClass,
-            selectedKey: [@state.key, @state.key]
+            selectedKey: @state.key
             index: 1000
         }
         </TabPane>
