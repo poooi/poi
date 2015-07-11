@@ -41,6 +41,7 @@ module.exports = {
   displayName: String | ReactElement // 插件在界面显示时的名字
   priority: Number // 插件在菜单里排序的优先级，值越小插件就会显示在越前
   show: Boolean // 插件是否应该被显示
+  realClose: Boolean // 窗口插件在关闭时是否完全终结进程，默认为否
   author: String | ReactElement // 插件作者
   link: String // 插件作者的链接
   description: String | ReactElement // 插件基本描述
