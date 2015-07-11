@@ -92,15 +92,27 @@ module.exports =
       decks: []
       ndocks: []
       activeDeck: 0
+      dataVersion: 0
+    showDataVersion: 0
     shouldComponentUpdate: (nextProps, nextState)->
-      if nextProps.selectedKey[0] isnt @props.selectedKey[0] or nextProps.selectedKey[1] isnt @props.selectedKey[1]
-        false
-      else
-        true
+      #only when this pane is visibile and its data is changed, this pane update.
+      if nextProps.selectedKey[0]?  # if layout is double-tabareas
+        if nextProps.selectedKey[0] is @props.index # if ship-pane is visibile
+          if nextProps.selectedKey[1] is @props.selectedKey[1] # rule out the condition of switching plugin-tab
+            if nextState.dataVersion isnt @showDataVersion # if dataVersion is changed, this pane should update!
+              @showDataVersion = nextState.dataVersion
+              return true
+      else  # layout is single-tabareas
+        if nextProps.selectedKey is @props.index # if ship-pane is visibile
+          if nextState.dataVersion isnt @showDataVersion # if dataVersion is changed, this pane should update!
+            @showDataVersion = nextState.dataVersion
+            return true
+      false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
         @setState
           activeDeck: idx
+          dataVersion: @state.dataVersion += 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {names, ndocks} = @state
@@ -157,6 +169,7 @@ module.exports =
         decks: decks
         ndocks: ndocks
         states: states
+        dataVersion: @state.dataVersion += 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
     componentWillUnmount: ->

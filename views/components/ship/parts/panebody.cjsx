@@ -124,6 +124,16 @@ TopAlert = React.createClass
   timeDelta: 0
   cond: 0
   isMount: false
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
+    refreshFlag = false
+    switch path
+      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
+        refreshFlag = true
+      when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship'
+        refreshFlag = true
+    if refreshFlag
+      @setAlert()
   setAlert: ->
     decks = window._decks
     @messages = getDeckMessage decks[@props.deckIndex]
@@ -154,7 +164,9 @@ TopAlert = React.createClass
     @setAlert()
   componentDidMount: ->
     @isMount = true
+    window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
+    window.removeEventListener 'game.response', @handleResponse
     @interval = clearInterval @interval if @interval?
   render: ->
     <Alert style={getFontStyle window.theme}>
@@ -183,10 +195,10 @@ PaneBody = React.createClass
   # getInitialState: ->
   #   
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.activeDeck isnt @props.activeDeck
-      false
-    else
+    if nextProps.activeDeck is @props.deckIndex
       true
+    else
+      false
   render: ->
     <div>
       <TopAlert 
