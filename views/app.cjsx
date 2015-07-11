@@ -151,14 +151,19 @@ ModalTrigger = React.createClass
     if !@state.isModalOpen
       <span />
     else
-      <Modal title={@state.title} onRequestHide={@handleToggle}>
-        <div className='modal-body'>
+      <Modal autoFocus={true}
+             animation={true}
+             onHide={@handleToggle}>
+        <Modal.Header closeButton>
+          <Modal.Title>{@state.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           {@state.content}
-        </div>
-        <div className='modal-footer'>
+        </Modal.Body>
+        <Modal.Footer>
           <Button onClick={@handleToggle}>关闭</Button>
           {@renderFooter @state.footer}
-        </div>
+        </Modal.Footer>
       </Modal>
 
 # Custom css injector
