@@ -34,6 +34,7 @@
   padding-bottom: 0px;
   border: none;
   vertical-align: middle;
+  line-height: 1.42857143;
 }
 #ShipView .slotitem-container {
   position: relative;

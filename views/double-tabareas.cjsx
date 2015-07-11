@@ -50,32 +50,25 @@ lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: [0, 0]
-  setKeyState: (state) ->
-    if state.key[0] isnt @state.key[0] or state.key[1] isnt @state.key[1]
-      @setState
-        key: state.key
+  handleSelect: (key) ->
+    @setState {key} if key[0] isnt @state.key[0] or key[1] isnt @state.key[1]
   handleSelectLeft: (key) ->
-    @setKeyState
-      key: [key, @state.key[1]]
+    @handleSelect [key, @state.key[1]]
   handleSelectRight: (key) ->
-    @setKeyState
-      key: [@state.key[0], key]
+    @handleSelect [@state.key[0], key]
   handleCtrlOrCmdTabKeyDown: ->
-    @setKeyState
-      key: [(@state.key[0] + 1) % components.length, @state.key[1]]
+    @handleSelect [(@state.key[0] + 1) % components.length, @state.key[1]]
   handleCtrlOrCmdNumberKeyDown: (num) ->
     if num <= tabbedPlugins.length
-      @setKeyState
-        key: [@state.key[0], num - 1]
+      @handleSelect [@state.key[0], num - 1]
   handleShiftTabKeyDown: ->
-    @setKeyState
-      key: [@state.key[0], if @state.key[1]? then (@state.key[1] - 1 + tabbedPlugins.length) % tabbedPlugins.length else tabbedPlugins.length - 1]
+    @handleSelect [@state.key[0], if @state.key[1]? then (@state.key[1] - 1 + tabbedPlugins.length) % tabbedPlugins.length else tabbedPlugins.length - 1]
   handleTabKeyDown: ->
-    @setKeyState
-      key: [@state.key[0], if @state.key[1]? then (@state.key[1] + 1) % tabbedPlugins.length else 1]
+    @handleSelect [@state.key[0], if @state.key[1]? then (@state.key[1] + 1) % tabbedPlugins.length else 1]
   handleKeyDown: ->
     return if @listener?
-    @listener = window.addEventListener 'keydown', (e) =>
+    @listener = true
+    window.addEventListener 'keydown', (e) =>
       if e.keyCode is 9
         e.preventDefault()
         return if lockedTab and e.repeat
@@ -105,19 +98,18 @@ ControlledTabArea = React.createClass
       <TabbedArea activeKey={@state.key[0]} onSelect={@handleSelectLeft} animation={false}>
       {
         [
-          components.map (component, index) ->
+          components.map (component, index) =>
             <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
             {
               React.createElement component.reactClass,
-                selectedKey: @state.key
+                selectedKey: @state.key[0]
                 index: index
             }
             </TabPane>
-          , @
           <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
           {
             React.createElement settings.reactClass,
-              selectedKey: @state.key
+              selectedKey: @state.key[0]
               index: 1000
           }
           </TabPane>
@@ -128,15 +120,14 @@ ControlledTabArea = React.createClass
         <DropdownButton key={-1} eventKey={-1} tab='插件' navItem={true}>
         {
           counter = -1
-          plugins.map (plugin, index) ->
+          plugins.map (plugin, index) =>
             if plugin.handleClick
               <div key={index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
             else
               eventKey = (counter += 1)
               <TabPane key={index} eventKey={eventKey} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
-                <PluginWrap plugin={plugin} selectedKey={@state.key} index={eventKey} />
+                <PluginWrap plugin={plugin} selectedKey={@state.key[1]} index={eventKey} />
               </TabPane>
-          , @
         }
         </DropdownButton>
       </TabbedArea>

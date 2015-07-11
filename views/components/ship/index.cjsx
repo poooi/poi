@@ -17,43 +17,6 @@ getStyle = (state) ->
     return ['success', 'warning', 'danger', 'info', 'primary', 'default'][state]
   else
     return 'default'
-getMaterialStyle = (percent) ->
-  if percent <= 50
-    'danger'
-  else if percent <= 75
-    'warning'
-  else if percent < 100
-    'info'
-  else
-    'success'
-getFontStyle = (theme)  ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
-    color: '#FFF'
-  else
-    color: '#000'
-getCondStyle = (cond) ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
-    if cond > 49
-      color: '#FFFF00'
-    else if cond < 20
-      color: '#DD514C'
-    else if cond < 30
-      color: '#F37B1D'
-    else if cond < 40
-      color: '#FFC880'
-    else
-      null
-  else
-    if cond > 49
-      'text-shadow': '0 0 3px #FFFF00'
-    else if cond < 20
-      'text-shadow': '0 0 3px #DD514C'
-    else if cond < 30
-      'text-shadow': '0 0 3px #F37B1D'
-    else if cond < 40
-      'text-shadow': '0 0 3px #FFC880'
-    else
-      null
 getDeckState = (deck, ndocks) ->
   state = 0
   {$ships, _ships} = window
@@ -95,24 +58,16 @@ module.exports =
       dataVersion: 0
     showDataVersion: 0
     shouldComponentUpdate: (nextProps, nextState)->
-      #only when this pane is visibile and its data is changed, this pane update.
-      if nextProps.selectedKey[0]?  # if layout is double-tabareas
-        if nextProps.selectedKey[0] is @props.index # if ship-pane is visibile
-          if nextProps.selectedKey[1] is @props.selectedKey[1] # rule out the condition of switching plugin-tab
-            if nextState.dataVersion isnt @showDataVersion # if dataVersion is changed, this pane should update!
-              @showDataVersion = nextState.dataVersion
-              return true
-      else  # layout is single-tabareas
-        if nextProps.selectedKey is @props.index # if ship-pane is visibile
-          if nextState.dataVersion isnt @showDataVersion # if dataVersion is changed, this pane should update!
-            @showDataVersion = nextState.dataVersion
-            return true
+      # if ship-pane is visibile and dataVersion is changed, this pane should update!
+      if nextProps.selectedKey is @props.index and nextState.dataVersion isnt @showDataVersion
+        @showDataVersion = nextState.dataVersion
+        return true
       false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
         @setState
           activeDeck: idx
-          dataVersion: @state.dataVersion += 1
+          dataVersion: @state.dataVersion + 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {names, ndocks} = @state
@@ -169,7 +124,7 @@ module.exports =
         decks: decks
         ndocks: ndocks
         states: states
-        dataVersion: @state.dataVersion += 1
+        dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
     componentWillUnmount: ->
@@ -192,7 +147,7 @@ module.exports =
         {
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
-              <PaneBody 
+              <PaneBody
                 key={i}
                 deckIndex={i}
                 deck={@state.decks[i]}
