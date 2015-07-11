@@ -152,7 +152,6 @@ module.exports =
                 deckIndex={i}
                 deck={@state.decks[i]}
                 activeDeck={@state.activeDeck}
-                deckState={@state.states[i]}
                 deckName={@state.names[i]}
               />
             </div>

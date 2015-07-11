@@ -121,13 +121,19 @@ TopAlert = React.createClass
   timeDelta: 0
   cond: 0
   isMount: false
+  inBattle: false
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     refreshFlag = false
     switch path
+      when '/kcsapi/api_port/port'
+        @inBattle = false
+        refreshFlag = true
+      when '/kcsapi/api_req_map/start'
+        @inBattle = true
       when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
         refreshFlag = true
-      when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship'
+      when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship'
         refreshFlag = true
     if refreshFlag
       @setAlert()
@@ -153,7 +159,7 @@ TopAlert = React.createClass
       # Use DOM operation instead of React for performance
       if @isMount
         $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@countdown - @timeDelta)
-      if @countdown == @timeDelta and @props.deckState < 4
+      if @countdown is @timeDelta and not @inBattle and window._decks[@props.deckIndex].api_mission[0] <= 0
         notify "#{@props.deckName} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
     @interval = clearInterval @interval if flag
   componentWillMount: ->
@@ -196,8 +202,7 @@ PaneBody = React.createClass
       <TopAlert
         messages={@props.messages}
         deckIndex={@props.deckIndex}
-        deckName={@props.deckName}
-        deckState={@props.deckState} />
+        deckName={@props.deckName} />
       <Table>
         <tbody>
         {
