@@ -62,6 +62,9 @@ cp default-config.json config.json
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.
 
+[plugin-ship-panel-patcher](https://github.com/yudachi/plugin-ship-panel-patcher) by [KochiyaOcean](https://github.com/KochiyaOcean)
+> Use an alter style of ship panel.
+
 ## Guides for developers
 
 About plugin, read the [docs](https://github.com/yudachi/poi/tree/master/docs).
