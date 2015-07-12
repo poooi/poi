@@ -183,6 +183,8 @@ resolveResponses = ->
         window._nickNameId = body.api_nickname_id
       when '/kcsapi/api_get_member/deck'
         window._decks[deck.api_id - 1] = deck for deck in body
+      when '/kcsapi/api_get_member/ndock'
+        window._ndocks = body.map (e) -> e.api_ship_id
       when '/kcsapi/api_get_member/ship_deck'
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         for ship in body.api_ship_data
@@ -198,6 +200,7 @@ resolveResponses = ->
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
         window._decks = body.api_deck_port
+        window._ndocks = body.api_ndock.map (e) -> e.api_ship_id
         window._teitokuLv = body.api_basic.api_level
       when '/kcsapi/api_req_hensei/change'
         decks = window._decks
@@ -290,6 +293,13 @@ resolveResponses = ->
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
+      when '/kcsapi/api_req_nyukyo/speedchange'
+        shipId = _ndocks[postBody.api_ndock_id - 1]
+        _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
+      when '/kcsapi/api_req_nyukyo/start'
+        if postBody.api_highspeed == '1'
+          shipId = parseInt postBody.api_ship_id
+          _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
       when '/kcsapi/api_req_sortie/battleresult'
         window._teitokuLv = body.api_member_lv
     event = new CustomEvent 'game.response',

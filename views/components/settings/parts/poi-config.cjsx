@@ -19,11 +19,17 @@ PoiConfig = React.createClass
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
+    enableNotifySound: config.get 'poi.notify.sound', true
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
     @setState
       enableConfirmQuit: !enabled
+  handleSetNotifySound: ->
+    enabled = @state.enableNotifySound
+    config.set 'poi.notify.sound', !enabled
+    @setState
+      enableNotifySound: !enabled
   handleSetDoubleTabbed: ->
     enabled = @state.enableDoubleTabbed
     config.set 'poi.tabarea.double', !enabled
@@ -61,11 +67,15 @@ PoiConfig = React.createClass
     config.set 'poi.webview.width', width
   handleResize: ->
     {gameWidth} = @state
-    window.webviewWidth = width = parseInt gameWidth
+    width = parseInt gameWidth
     return if isNaN(width) || width < 0 || (config.get('poi.layout', 'horizonal') == 'horizonal' && width > window.innerWidth - 150)
     if !@state.useFixedResolution
-      @setState
-        gameWidth: window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
+      if config.get('poi.layout', 'horizonal') == 'horizonal'
+        @setState
+          gameWidth: window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
+      else
+        @setState
+          gameWidth: window.innerWidth
   handleSetFixedResolution: (e) ->
     current = @state.useFixedResolution
     if current
@@ -124,6 +134,9 @@ PoiConfig = React.createClass
         <Grid>
           <Col xs={12}>
             <Input type="checkbox" label="关闭前弹出确认窗口" checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
+          </Col>
+          <Col xs={12}>
+            <Input type="checkbox" label="开启通知提示音" checked={@state.enableNotifySound} onChange={@handleSetNotifySound} />
           </Col>
         </Grid>
       </div>

@@ -17,7 +17,7 @@ getStyle = (state) ->
     return ['success', 'warning', 'danger', 'info', 'primary', 'default'][state]
   else
     return 'default'
-getDeckState = (deck, ndocks) ->
+getDeckState = (deck) ->
   state = 0
   {$ships, _ships} = window
   # In mission
@@ -39,7 +39,7 @@ getDeckState = (deck, ndocks) ->
     if ship.api_fuel / shipInfo.api_fuel_max < 0.99 || ship.api_bull / shipInfo.api_bull_max < 0.99
       state = Math.max(state, 1)
     # Repairing
-    if shipId in ndocks
+    if shipId in window._ndocks
       state = Math.max(state, 3)
   state
 
@@ -53,7 +53,6 @@ module.exports =
       names: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
       states: [-1, -1, -1, -1]
       decks: []
-      ndocks: []
       activeDeck: 0
       dataVersion: 0
     showDataVersion: 0
@@ -70,16 +69,13 @@ module.exports =
           dataVersion: @state.dataVersion + 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
-      {names, ndocks} = @state
+      {names} = @state
       flag = true
       switch path
         when '/kcsapi/api_port/port'
-          names = body.api_deck_port.map (e) ->
-            e.api_name
-          ndocks = body.api_ndock.map (e) ->
-            e.api_ship_id
+          names = body.api_deck_port.map (e) -> e.api_name
           inBattle = [false, false, false, false]
-        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup'
+        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange'
           true
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
@@ -95,34 +91,15 @@ module.exports =
               if ship.api_nowhp / ship.api_maxhp < 0.250001
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
-        when '/kcsapi/api_get_member/ndock'
-          ndocks = body.map (e) -> e.api_ship_id
-        when '/kcsapi/api_req_nyukyo/speedchange'
-          if body.api_result == 1
-            id = ndocks[postBody.api_ndock_id - 1]
-            for deck, i in decks
-              for shipId in deck.api_ship
-                if shipId == id
-                  ship = _ships[id]
-                  ship.api_nowhp = ship.api_maxhp
-        when '/kcsapi/api_req_nyukyo/start'
-          if body.api_result == 1 and postBody.api_highspeed == '1'
-            id = parseInt(postBody.api_ship_id)
-            for deck, i in decks
-              for shipId in deck.api_ship
-                if shipId == id
-                  ship = _ships[id]
-                  ship.api_nowhp = ship.api_maxhp
         else
           flag = false
       return unless flag
       decks = window._decks
       states = decks.map (deck) ->
-        getDeckState deck, ndocks
+        getDeckState deck
       @setState
         names: names
         decks: decks
-        ndocks: ndocks
         states: states
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->

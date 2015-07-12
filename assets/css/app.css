@@ -8,6 +8,7 @@ body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
   line-height: 1.42857143;
+  overflow-x: hidden;
 }
 .alert {
   border-radius: 0px;
