@@ -142,9 +142,9 @@ TopAlert = React.createClass
     @messages = getDeckMessage decks[@props.deckIndex]
     tmp = getCondCountdown decks[@props.deckIndex]
     @countdown = tmp.countdown
-    if tmp.countdown isnt @cond
+    if tmp.cond isnt @cond
       @timeDelta = 0
-      @cond = tmp.countdown
+      @cond = tmp.cond
     if @countdown > 0
       @interval = setInterval @updateCountdown, 1000 if !@interval?
     else
