@@ -115,7 +115,6 @@ PoiControl = React.createClass
 
 # Notification modal
 ModalTrigger = React.createClass
-  mixins: [OverlayMixin]
   getInitialState: ->
     isModalOpen: false
     title: null
@@ -146,25 +145,21 @@ ModalTrigger = React.createClass
           button.func()
       } bsStyle={button.style}>{button.name}</Button>
   render: ->
-    <span />
-  renderOverlay: ->
-    if !@state.isModalOpen
-      <span />
-    else
-      <Modal autoFocus={true}
-             animation={true}
-             onHide={@handleToggle}>
-        <Modal.Header closeButton>
-          <Modal.Title>{@state.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {@state.content}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={@handleToggle}>关闭</Button>
-          {@renderFooter @state.footer}
-        </Modal.Footer>
-      </Modal>
+    <Modal autoFocus={true}
+           animation={true}
+           show={@state.isModalOpen}
+           onHide={@handleToggle}>
+      <Modal.Header closeButton>
+        <Modal.Title>{@state.title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {@state.content}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={@handleToggle}>关闭</Button>
+        {@renderFooter @state.footer}
+      </Modal.Footer>
+    </Modal>
 
 # Custom css injector
 CustomCssInjector = React.createClass
