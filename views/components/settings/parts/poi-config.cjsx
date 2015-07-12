@@ -13,9 +13,17 @@ themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
   path.basename filePath
 PoiConfig = React.createClass
   getInitialState: ->
+    gameWidth =
+      if (config.get 'poi.webview.width', -1) == -1
+        if config.get('poi.layout', 'horizonal') == 'horizonal'
+          window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
+        else
+          window.innerWidth
+      else
+        config.get 'poi.webview.width', -1
     layout: config.get 'poi.layout', 'horizonal'
     theme: config.get 'poi.theme', '__default__'
-    gameWidth: if (config.get 'poi.webview.width', -1) == -1 then (window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)) else (config.get 'poi.webview.width', -1)
+    gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
@@ -86,6 +94,7 @@ PoiConfig = React.createClass
       window.webviewWidth = -1
       window.dispatchEvent new Event('webview.width.change')
     else
+      @state.useFixedResolution = true
       @setState
         useFixedResolution: true
       @handleSetWebviewWidth()
