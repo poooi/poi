@@ -1,5 +1,5 @@
-POI_VERSION = '1.0.0'
-ELECTRON_VERSION = '0.27.2'
+POI_VERSION = '2.2.0'
+ELECTRON_VERSION = '0.28.2'
 SYSTEM_BIT =
   win32: 'ia32'
   linux: 'x64'
@@ -27,27 +27,20 @@ async = Promise.coroutine
 
 gulp.task 'theme', async ->
   themes =
-    cerulean: 'https://bootswatch.com/cerulean/bootstrap.css'
-    cosmo: 'https://bootswatch.com/cosmo/bootstrap.css'
-    cyborg: 'https://bootswatch.com/cyborg/bootstrap.css'
     darkly: 'https://bootswatch.com/darkly/bootstrap.css'
     flatly: 'https://bootswatch.com/flatly/bootstrap.css'
-    journal: 'https://bootswatch.com/journal/bootstrap.css'
     lumen: 'https://bootswatch.com/lumen/bootstrap.css'
     paper: 'https://bootswatch.com/paper/bootstrap.css'
-    readable: 'https://bootswatch.com/readable/bootstrap.css'
-    sandstone: 'https://bootswatch.com/sandstone/bootstrap.css'
-    simplex: 'https://bootswatch.com/simplex/bootstrap.css'
     slate: 'https://bootswatch.com/slate/bootstrap.css'
-    spacetab: 'https://bootswatch.com/spacelab/bootstrap.css'
     superhero: 'https://bootswatch.com/superhero/bootstrap.css'
     united: 'https://bootswatch.com/united/bootstrap.css'
-    yeti: 'https://bootswatch.com/yeti/bootstrap.css'
+    lumendark: 'https://raw.githubusercontent.com/PHELiOX/poi-theme-lumendark/master/lumendark.css'
+    paperdark: 'https://raw.githubusercontent.com/ruiii/poi_theme_paper_dark/master/paperdark.css'
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
     log "Downloding #{theme} theme."
-    data = yield request.getAsync url,
+    [res, data] = yield request.getAsync url,
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
 
@@ -81,15 +74,15 @@ gulp.task 'download-electron', async ->
   dir = path.join(path.tempdir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM_BIT[PLATFORM]}")
   fs.ensureDirSync dir
   try
-    yield fs.accessAsync path.join(path.tempdir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
+    yield fs.accessAsync path.join(path.homedir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
   catch e
     log "Downloding Electron #{PLATFORM} #{ELECTRON_VERSION}"
     [response, body] = yield requestAsync
       url: url
       encoding: null
-    yield fs.writeFileAsync path.join(path.tempdir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip"), body
+    yield fs.writeFileAsync path.join(path.homedir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip"), body
   log "Extract Electron #{ELECTRON_VERSION}"
-  zip = new AdmZip path.join(path.tempdir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
+  zip = new AdmZip path.join(path.homedir(), "electron-v#{ELECTRON_VERSION}-#{PLATFORM}.zip")
   zip.extractAllTo dir, true
 
 gulp.task 'copy-files', ['download-electron'], ->
@@ -117,15 +110,15 @@ gulp.task 'get-flash-player', ['install-dependencies'], async ->
   dir = path.join(path.tempdir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM_BIT[PLATFORM]}", 'PepperFlash')
   fs.ensureDirSync dir
   try
-    yield fs.accessAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
+    yield fs.accessAsync path.join(path.homedir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
   catch e
     log "Downloading flash plugin #{PLATFORM}"
     [response, body] = yield requestAsync
       url: url
       encoding: null
-    yield fs.writeFileAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), body
+    yield fs.writeFileAsync path.join(path.homedir(), "flashplayer-#{PLATFORM}.zip"), body
   log "Extract flash plugin"
-  zip = new AdmZip path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip")
+  zip = new AdmZip path.join(path.homedir(), "flashplayer-#{PLATFORM}.zip")
   zip.extractAllTo dir, true
 
 gulp.task 'build', ['get-flash-player'], async ->

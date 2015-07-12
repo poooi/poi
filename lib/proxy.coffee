@@ -16,10 +16,10 @@ socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 
 config = require './config'
-{log, warn, error, resolveBody, isStaticResource, findHack, findHackExecPath, findCache, findCacheExecPath} = require './utils'
+{log, warn, error, resolveBody, isStaticResource, findHack, findHackExPath, findCache, findCacheExPath} = require './utils'
 
 # Network error retries
-retries = config.get 'poi.proxy.retries', 30
+retries = config.get 'poi.proxy.retries', 0
 
 resolve = (req) ->
   switch config.get 'proxy.use'
@@ -73,7 +73,7 @@ class Proxy extends EventEmitter
       isGameApi = parsed.pathname.startsWith '/kcsapi'
       cacheFile = null
       if isStaticResource(parsed.pathname)
-        cacheFile = findHack(parsed.pathname) || findHackExecPath(parsed.pathname) || findCache(parsed.pathname) || findCacheExecPath(parsed.pathname)
+        cacheFile = findHack(parsed.pathname) || findHackExPath(parsed.pathname) || findCache(parsed.pathname) || findCacheExPath(parsed.pathname)
       reqBody = new Buffer(0)
       # Get all request body
       req.on 'data', (data) ->
@@ -96,7 +96,7 @@ class Proxy extends EventEmitter
             res.writeHead 200,
               'Server': 'Apache'
               'Content-Length': data.length
-              'Cache-Control': 'max-age=2592000, public'
+              'Cache-Control': 'no-cache'
               'Content-Type': mime.lookup cacheFile
             res.end data
           # Enable retry for game api
@@ -109,17 +109,20 @@ class Proxy extends EventEmitter
                 self.emit 'game.on.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
                 # Create remote request
                 [response, body] = yield requestAsync resolve options
+                success = true
+                res.writeHead response.statusCode, response.headers
+                res.end body
+                # Emit response events to plugins
+                resolvedBody = yield resolveBody response.headers['content-encoding'], body
+                if !resolvedBody?
+                  throw new Error('Empty Body')
                 if response.statusCode == 200
-                  success = true
-                  res.writeHead response.statusCode, response.headers
-                  res.end body
-                  # Emit response events to plugins
-                  resolvedBody = yield resolveBody response.headers['content-encoding'], body
                   self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
                 else
-                  error "Status Code:#{response.statusCode}"
+                  self.emit 'network.invalid.code', response.statusCode
               catch e
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
+                self.emit 'network.error.retry', i + 1 if i < retries
               # Delay 3s for retry
               yield Promise.delay(3000) unless success
           else
@@ -128,8 +131,11 @@ class Proxy extends EventEmitter
             res.end body
           if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
             self.emit 'game.start'
+          else if req.url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
+            self.emit 'game.payitem'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
+          self.emit 'network.error'
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
       delete req.headers['proxy-connection']

@@ -1,5 +1,5 @@
 *, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", sans-serif;
+  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
 }
 ::-webkit-scrollbar {
   width: 0px;
@@ -7,9 +7,7 @@
 body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
-}
-poi-app .container {
-  width: auto;
+  line-height: 1.42857143;
 }
 .alert {
   border-radius: 0px;
@@ -19,6 +17,12 @@ poi-app .container {
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+kan-game poi-info .alert {
+  opacity: 0.7;
+  padding: 6px 3px 5px 3px;
+  margin-bottom: 0px;
+  height: 100%;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
@@ -31,6 +35,8 @@ hr {
 poi-app .container {
   padding-left: 0px;
   padding-right: 0px;
+  width: auto;
+  overflow-x: hidden;
 }
 table {
   table-layout: fixed;
@@ -53,15 +59,36 @@ poi-app poi-nav-tabs nav ul.dropdown-menu {
 poi-app poi-nav-tabs nav li.dropdown {
   overflow: inherit;
 }
+poi-info {
+  display: flex;
+  align-items: stretch;
+}
+poi-alert {
+  flex: 1;
+}
+poi-control {
+  height: 100%;
+}
+poi-control .btn-sm {
+  height: 100%;
+  border-radius: 0px;
+  border-width: 2px;
+  padding: 2px 7px;
+  font-size: 15px;
+}
+poi-control button .fa {
+  cursor: pointer !important;
+  width: 20px;
+}
 .table tbody tr td {
   padding: 8px;
 }
-.btn:focus {
-  outline: none;
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+  outline: none !important;
 }
-.btn:active {
-  outline: none;
+.poi-tabs-container {
+  display: flex;
 }
-.btn:hover {
-  outline: none;
+.poi-tabs-container > div {
+  flex: 1;
 }

@@ -1,5 +1,5 @@
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Button, ButtonGroup, Input} = ReactBootstrap
+{Button, ButtonGroup, Input} = ReactBootstrap
 webview = $('kan-game webview')
 getIcon = (status) ->
   switch status
@@ -18,7 +18,7 @@ NavigatorBar = React.createClass
     # 0: Finish
     # 1: Loading
     navigateStatus: 1
-    navigateUrl: webview.getUrl()
+    navigateUrl: 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   handleSetUrl: (e) ->
     @setState
       navigateUrl: e.target.value
@@ -46,15 +46,15 @@ NavigatorBar = React.createClass
     webview.removeEventListener 'did-stop-loading', @handleStopLoading
     webview.removeEventListener 'did-fail-load', @handleFailLoad
   render: ->
-    <Grid>
-      <Col xs={8}>
+    <div style={display: 'flex'}>
+      <div style={flex: 1, marginLeft: 15, marginRight: 15}>
         <Input type='text' bsSize='small' placeholder='输入网页地址' value={@state.navigateUrl} onChange={@handleSetUrl} />
-      </Col>
-      <Col xs={4}>
+      </div>
+      <div style={flex: 'none', width: 82}>
         <ButtonGroup>
           <Button bsSize='small' bsStyle='primary' onClick={@handleNavigate}>{getIcon(@state.navigateStatus)}</Button>
           <Button bsSize='small' bsStyle='warning' onClick={@handleRefresh}><FontAwesome name='refresh' /></Button>
         </ButtonGroup>
-      </Col>
-    </Grid>
+      </div>
+    </div>
 module.exports = NavigatorBar

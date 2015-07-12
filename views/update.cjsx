@@ -3,17 +3,12 @@
 {React, ReactBootstrap, toggleModal} = window
 {PageHeader} = ReactBootstrap
 updateManager = remote.require './lib/update'
+shell = require 'shell'
 
 updateInfo = null
 
 doUpdate = ->
-  updateManager.update updateInfo, (res) ->
-    if res == 'error'
-      console.log 'Update error.'
-      return
-    title = '更新完成'
-    content = '请重新打开 poi 使得更新生效'
-    toggleModal title, content
+  shell.openExternal 'http://0u0.moe/poi'
 
 checkUpdate = ->
   updateManager.checkUpdate (info) ->
@@ -30,11 +25,10 @@ checkUpdate = ->
           <div dangerouslySetInnerHTML={__html: info.log} />
         </div>
       footer = [
-        name: '更新',
+        name: '下载最新版',
         func: doUpdate,
         style: 'primary'
       ]
       toggleModal title, content, footer
 
-if process.platform != 'darwin'
-  setTimeout checkUpdate, 5000
+setTimeout checkUpdate, 5000

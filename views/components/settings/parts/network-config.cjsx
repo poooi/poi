@@ -1,16 +1,36 @@
 path = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, ROOT, toggleModal} = window
 {config} = window
-{Input, Grid, Col, Button} = ReactBootstrap
+{Input, Grid, Col, Button, Alert} = ReactBootstrap
 Divider = require './divider'
 
 shadowsocksMethods = ["aes-256-cfb", "aes-192-cfb", "aes-128-cfb", "bf-cfb",
                       "camellia-256-cfb", "camellia-192-cfb", "camellia-128-cfb",
                       "cast5-cfb", "des-cfb", "idea-cfb", "rc2-cfb", "rc4", "rc4-md5"]
 
-ProxyConfig = React.createClass
+basic =
+  use: 'none',
+  http:
+    host: '127.0.0.1'
+    port: 8099
+  socks5:
+    host: "127.0.0.1",
+    port: 1080
+  shadowsocks:
+    server:
+      host: "116.251.209.211",
+      port: 27017
+    local:
+      port: 12451
+    password: "@_PoiPublic_@",
+    method: "aes-256-cfb",
+    timeout: 600000,
+    port: "@_PoiPublic_@"
+  retries: config.get 'poi.proxy.retries', 0
+
+NetworkConfig = React.createClass
   getInitialState: ->
-    Object.remoteClone config.get('proxy', {use: 'none'})
+    _.extend basic, Object.remoteClone(config.get 'proxy', {})
   handleChangeUse: ->
     use = @refs.use.getValue()
     @setState {use}
@@ -33,7 +53,7 @@ ProxyConfig = React.createClass
         config.set 'proxy.shadowsocks.method', @refs.shadowsocksMethod.getValue()
       else
         config.set 'proxy.use', 'none'
-    toggleModal '代理设置', '保存成功'
+    toggleModal '代理设置', '保存成功，重启软件后生效。'
     e.preventDefault()
   handleHttpHostChange: (e) ->
     {http} = @state
@@ -67,6 +87,12 @@ ProxyConfig = React.createClass
     {shadowsocks} = @state
     shadowsocks.method = e.target.value
     @setState {shadowsocks}
+  handleSetRetries: (e) ->
+    @setState
+      retries: e.target.value
+    r = parseInt(e.target.value)
+    return if isNaN(r) || r < 0
+    config.set 'poi.proxy.retries', r
   render: ->
     <form>
       <Divider text="代理类型" />
@@ -85,34 +111,34 @@ ProxyConfig = React.createClass
         if @state.use == 'http'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="httpHost" label="代理地址" placeholder="输入代理地址" value={@state.http.host} onChange={@handleHttpHostChange} />
+              <Input type="text" ref="httpHost" label="代理地址" placeholder="输入代理地址" value={@state?.http?.host} onChange={@handleHttpHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpPort" label="代理端口" placeholder="输入代理端口" value={@state.http.port} onChange={@handleHttpPortChange} />
+              <Input type="text" ref="httpPort" label="代理端口" placeholder="输入代理端口" value={@state?.http?.port} onChange={@handleHttpPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'socks5'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="socksHost" label="代理地址" placeholder="输入代理地址" value={@state.socks5.host} onChange={@handleSocksHostChange} />
+              <Input type="text" ref="socksHost" label="代理地址" placeholder="输入代理地址" value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="socksPort" label="代理端口" placeholder="输入代理端口" value={@state.socks5.port} onChange={@handleSocksPortChange} />
+              <Input type="text" ref="socksPort" label="代理端口" placeholder="输入代理端口" value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'shadowsocks'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerHost" label="服务器地址" placeholder="Shadowsocks 服务器地址" value={@state.shadowsocks.server.host} onChange={@handleShadowsocksServerHostChange} />
+              <Input type="text" ref="shadowsocksServerHost" label="服务器地址" placeholder="Shadowsocks 服务器地址" value={@state?.shadowsocks?.server?.host} onChange={@handleShadowsocksServerHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerPort" label="服务器端口" placeholder="Shadowsocks 服务器端口" value={@state.shadowsocks.server.port} onChange={@handleShadowsocksServerPortChange} />
+              <Input type="text" ref="shadowsocksServerPort" label="服务器端口" placeholder="Shadowsocks 服务器端口" value={@state?.shadowsocks?.server?.port} onChange={@handleShadowsocksServerPortChange} />
             </Col>
             <Col xs={6}>
-              <Input type="password" ref="shadowsocksPassword" label="密码" placeholder="Shadowsocks 密码" value={@state.shadowsocks.password} onChange={@handleShadowsocksPasswordChange} />
+              <Input type="password" ref="shadowsocksPassword" label="密码" placeholder="Shadowsocks 密码" value={@state?.shadowsocks?.password} onChange={@handleShadowsocksPasswordChange} />
             </Col>
             <Col xs={6}>
-              <Input type="select" ref="shadowsocksMethod" label="加密方法" placeholder="Shadowsocks 加密方式" value={@state.shadowsocks.method} onChange={@handleShadowsocksMethodChange}>
+              <Input type="select" ref="shadowsocksMethod" label="加密方法" placeholder="Shadowsocks 加密方式" value={@state?.shadowsocks?.method} onChange={@handleShadowsocksMethodChange}>
               {
                 shadowsocksMethods.map (method, index) ->
                   <option key={index} value={method}>{method.toUpperCase()}</option>
@@ -127,6 +153,17 @@ ProxyConfig = React.createClass
             </Col>
           </Grid>
       }
+      <Divider text="网络错误重试次数" />
+      <Grid>
+        <Col xs={12}>
+          <Input type="number" ref="retries" value={@state.retries} onChange={@handleSetRetries} />
+        </Col>
+        <Col xs={12}>
+          <Alert bsStyle='danger'>
+            任何本地重试都不能保证绝对安全，斟酌使用。
+          </Alert>
+        </Col>
+      </Grid>
       <Divider text="保存设置" />
       <Grid>
         <Col xs={12}>
@@ -135,4 +172,4 @@ ProxyConfig = React.createClass
       </Grid>
     </form>
 
-module.exports = ProxyConfig
+module.exports = NetworkConfig

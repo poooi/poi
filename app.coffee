@@ -1,14 +1,23 @@
-global.POI_VERSION = '1.0.0-beta2'
-
 app = require 'app'
 BrowserWindow = require 'browser-window'
-path = require 'path'
+path = require 'path-extra'
 fs = require 'fs-extra'
 
+# Patch fs for current Electron
+#fs.accessSync = (filePath, mode) ->
+#  if fs.existsSync(filePath)
+#    return true
+#  throw new Error("ENOENT: no such file or directory, access '#{filePath}'")
+
 # Environment
+global.POI_VERSION = app.getVersion()
 global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
-global.APPDATA_PATH = app.getPath('appData')
+global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
+if process.platform == 'darwin'
+  global.EXROOT = global.APPDATA_PATH
+else
+  global.EXROOT = global.EXECROOT
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
@@ -16,6 +25,7 @@ else
 
 config = require './lib/config'
 proxy = require './lib/proxy'
+proxy.setMaxListeners 30
 update = require './lib/update'
 {log, warn, error} = require './lib/utils'
 
@@ -53,7 +63,7 @@ else if process.platform == 'darwin'
     app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
 
 app.on 'window-all-closed', ->
-  app.quit() unless process.platform == 'darwin'
+  app.quit()
 
 app.on 'ready', ->
   screen = require 'screen'
@@ -66,17 +76,61 @@ app.on 'ready', ->
     'web-preferences':
       'web-security': false
       'plugins': true
+  # Default menu in v0.27.3
+  if process.versions['electron'] >= '0.27.3'
+    if process.platform == 'darwin'
+      template = [
+        label: '程序'
+        submenu: [
+          label: '退出'
+          accelerator: 'Command+Q'
+          click: -> app.quit()
+        ]
+      ,
+        label: '编辑'
+        submenu: [
+          label: '撤销'
+          accelerator: 'Command+Z'
+          selector: 'undo:'
+        ,
+          label: '恢复'
+          accelerator: 'Shift+Command+Z'
+          selector: 'redo:'
+        ,
+          label: '剪切'
+          accelerator: 'Command+X'
+          selector: 'cut:'
+        ,
+          label: '复制'
+          accelerator: 'Command+C'
+          selector: 'copy:'
+        ,
+          label: '粘贴'
+          accelerator: 'Command+V'
+          selector: 'paste:'
+        ,
+          label: '全选'
+          accelerator: 'Command+A'
+          selector: 'selectAll:'
+        ]
+      ]
+      mainWindow.setMenu require('menu').buildFromTemplate(template)
+    else
+      mainWindow.setMenu null
   mainWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     mainWindow.openDevTools
       detach: true
+  # Never wants navigate
+  mainWindow.webContents.on 'will-navigate', (e) ->
+    e.preventDefault()
   mainWindow.on 'close', ->
     # Save current position and size
     bounds = mainWindow.getBounds()
     config.set 'poi.window', bounds
+  mainWindow.on 'closed', ->
     # Close all sub window
     require('./lib/window').closeWindows()
-  mainWindow.on 'closed', ->
     mainWindow = null
 
 # Uncaught error

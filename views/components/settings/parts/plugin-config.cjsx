@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
-{Grid, Col, Input} = ReactBootstrap
+{Grid, Col, Input, Alert} = ReactBootstrap
 {config} = window
 {openExternal} = require 'shell'
 Divider = require './divider'
@@ -29,6 +29,13 @@ PluginConfig = React.createClass
   render: ->
     <form>
       <Divider text="全部插件" />
+      <Grid>
+        <Col xs={12}>
+          <Alert bsStyle='info'>
+            关闭或者开启插件的设置在重新启动后生效。
+          </Alert>
+        </Col>
+      </Grid>
       <Grid>
       {
         plugins.map (plugin, index) =>

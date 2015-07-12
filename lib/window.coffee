@@ -10,15 +10,28 @@ module.exports =
         'web-security': false
         'plugins': true
     current = new BrowserWindow options
+    # Default menu in v0.27.3
+    if process.versions['electron'] >= '0.27.3'
+      current.setMenu options.menu || null
     show = current.show
     current.show = ->
       if current.isMinimized()
         current.restore()
       else
         show.bind(current)()
-    current.on 'close', (e) ->
-      current.hide()
-      e.preventDefault() unless forceClose
+    # Close window really
+    if options.realClose
+      current.on 'closed', (e) ->
+        idx = _.indexOf windows, current
+        windows.splice idx, 1
+    else
+      current.on 'close', (e) ->
+        current.hide()
+        e.preventDefault() unless forceClose
+    # Draggable
+    unless options.draggable
+      current.webContents.on 'will-navigate', (e) ->
+        e.preventDefault()
     windows.push current
     return current
   # Warning: Don't call this method manually
@@ -26,5 +39,6 @@ module.exports =
   closeWindows: ->
     forceClose = true
     for win, i in windows
+      continue unless win?
       win.close()
       windows[i] = null

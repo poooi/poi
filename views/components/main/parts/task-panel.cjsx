@@ -1,14 +1,39 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 
+prevHours = (new Date()).getUTCHours()
+interval = null
+
+getType = (api_category) ->
+  switch api_category
+    when 0
+      if window.isDarkTheme
+        return '#ffffff'
+      else
+        return '#000000'
+    when 1
+      return '#21bb3a'
+    when 2
+      return '#e73939'
+    when 3
+      return '#a0fe29'
+    when 4
+      return '#2dffb3'
+    when 5
+      return '#f4df22'
+    when 6
+      return '#cd6c48'
+    when 7
+      return '#c792e8'
+
 getStyleByProgress = (progress) ->
   switch progress
-    when '进行中'
-      return 'default'
+    when '进行'
+      return 'warning'
     when '50%'
-      return 'info'
-    when '80%'
       return 'primary'
+    when '80%'
+      return 'info'
     when '达成'
       return 'success'
     else
@@ -20,42 +45,55 @@ TaskPanel = React.createClass
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
+        category: 0
+        type: 0
       ,
         name: '未接受'
         id: 100000
         content: '...'
-        progress: '-'
+        progress: ''
+        category: 0
+        type: 0
     ]
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {tasks} = @state
     switch path
       when '/kcsapi/api_get_member/questlist'
+        return unless body.api_list?
         for task in body.api_list
           continue if task is -1 || task.api_state < 2
           # Determine progress
-          progress = '进行中'
+          progress = '进行'
           if task.api_state == 3
             progress = '达成'
           else if task.api_progress_flag == 1
@@ -73,6 +111,8 @@ TaskPanel = React.createClass
               id: task.api_no
               content: task.api_detail
               progress: progress
+              category: task.api_category
+              type: task.api_type
           # Update current
           else
             tasks[idx] =
@@ -80,6 +120,8 @@ TaskPanel = React.createClass
               id: task.api_no
               content: task.api_detail
               progress: progress
+              category: task.api_category
+              type: task.api_type
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
         idx = _.findIndex tasks, (e) ->
@@ -89,7 +131,9 @@ TaskPanel = React.createClass
           name: '未接受'
           id: 100000
           content: '...'
-          progress: '-'
+          progress: ''
+          category: 0
+          type: 0
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
         idx = _.findIndex tasks, (e) ->
@@ -99,29 +143,75 @@ TaskPanel = React.createClass
           name: '未接受'
           id: 100000
           content: '...'
-          progress: '-'
+          progress: ''
+          category: 0
+          type: 0
     tasks = _.sortBy tasks, (e) ->
       e.id
     @setState
       tasks: tasks
+    event = new CustomEvent 'task.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        tasks: tasks
+    window.dispatchEvent event
+  refreshDay: ->
+    curHours = (new Date()).getUTCHours()
+    return if prevHours == curHours
+    # UTC 20:00 -> Beijing 4:00 -> Tokyo 5:00
+    if prevHours <= 19 and curHours >= 20
+      {tasks} = @state
+      for task, idx in tasks
+        continue if task.id == 100000
+        if task.type in [2, 4, 5]
+          tasks[idx] =
+            name: '未接受'
+            id: 100000
+            content: '...'
+            progress: ''
+            category: 0
+            type: 0
+        if task.type is 3 and (new Date()).getUTCDay() is 0
+          tasks[idx] =
+            name: '未接受'
+            id: 100000
+            content: '...'
+            progress: ''
+            category: 0
+            type: 0
+      tasks = _.sortBy tasks, (e) ->
+        e.id
+      @setState
+        tasks: tasks
+      event = new CustomEvent 'task.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          tasks: tasks
+      window.dispatchEvent event
+    prevHours = curHours
+  handleTaskInfo: (e) ->
+    {tasks} = e.detail
+    @setState
+      tasks: tasks
   componentDidMount: ->
-    # Fix task panel height uglily
-    setTimeout ->
-      height = window.getComputedStyle($('.mission-panel .panel-body')).height
-      $('.task-panel .panel-body').style.height = "#{height}"
-    , 2000
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'task.info', @handleTaskInfo
+    interval = setInterval @refreshDay, 30000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'task.info', @handleTaskInfo
+    clearInterval interval
   render: ->
-    <Panel header="任务" bsStyle="primary">
+    <Panel header="任务" bsStyle="success">
       <Table>
         <tbody>
         {
           for i in [0..5]
             <tr key={i}>
               <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                <td>{@state.tasks[i].name}</td>
+                <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
               </OverlayTrigger>
               <td>
                 <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>

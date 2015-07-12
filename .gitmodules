@@ -7,3 +7,30 @@
 [submodule "plugins/prophet"]
 	path = plugins/prophet
 	url = https://github.com/yudachi/plugin-prophet.git
+[submodule "plugins/item-improvement"]
+	path = plugins/item-improvement
+	url = https://github.com/yudachi/plugin-item-improvement
+[submodule "plugins/expedition"]
+	path = plugins/expedition
+	url = https://github.com/yudachi/plugin-expedition
+[submodule "plugins/item-info"]
+	path = plugins/item-info
+	url = https://github.com/yudachi/plugin-item-info
+[submodule "plugins/ship-info"]
+	path = plugins/ship-info
+	url = https://github.com/yudachi/plugin-ship-info
+[submodule "plugins/new-window"]
+	path = plugins/new-window
+	url = https://github.com/yudachi/plugin-new-window
+[submodule "plugins/almanac"]
+	path = plugins/almanac
+	url = https://github.com/yudachi/plugin-almanac
+[submodule "plugins/quest-info"]
+	path = plugins/quest-info
+	url = https://github.com/yudachi/plugin-quest
+[submodule "plugins/akashic-records"]
+	path = plugins/akashic-records
+	url = https://github.com/yudachi/plugin-Akashic-records
+[submodule "plugins/map-hp"]
+	path = plugins/map-hp
+	url = https://github.com/yudachi/plugin-map-hp.git

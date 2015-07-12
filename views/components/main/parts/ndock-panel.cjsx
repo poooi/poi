@@ -1,23 +1,29 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime} = window
-{Panel, Table} = ReactBootstrap
+{Panel, Table, Label} = ReactBootstrap
+{join} = require 'path-extra'
 
 NdockPanel = React.createClass
   getInitialState: ->
     docks: [
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
       ,
         name: '未使用'
+        completeTime: -1
         countdown: -1
     ]
     notified: []
@@ -33,26 +39,52 @@ NdockPanel = React.createClass
             when -1
               docks[id] =
                 name: '未解锁'
+                completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
                 name: '未使用'
+                completeTime: -1
                 countdown: -1
               notified[id] = false
             when 1
-              idx = _.sortedIndex _ships, {api_id: ndock.api_ship_id}, 'api_id'
               docks[id] =
-                name: $ships[_ships[idx].api_ship_id].api_name
+                name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
+                completeTime: ndock.api_complete_time
                 countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
         @setState
           docks: docks
+          notified: notified
+      when '/kcsapi/api_get_member/ndock'
+        for ndock in body
+          id = ndock.api_id
+          switch ndock.api_state
+            when -1
+              docks[id] =
+                name: '未解锁'
+                completeTime: -1
+                countdown: -1
+            when 0
+              docks[id] =
+                name: '未使用'
+                completeTime: -1
+                countdown: -1
+              notified[id] = false
+            when 1
+              docks[id] =
+                name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
+                completeTime: ndock.api_complete_time
+                countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
+        @setState
+          docks: docks
+          notified: notified
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
-        docks[i].countdown -= 1
-        if docks[i].countdown <= 45 && !notified[i]
-          notify "#{docks[i].name} 修复完成"
+        docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
+        if docks[i].countdown <= 60 && !notified[i]
+          notify "#{docks[i].name} 修复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png')}
           notified[i] = true
     @setState
       docks: docks
@@ -71,7 +103,16 @@ NdockPanel = React.createClass
           for i in [1..4]
             <tr key={i}>
               <td>{@state.docks[i].name}</td>
-              <td>{resolveTime @state.docks[i].countdown}</td>
+              <td>
+                {
+                  if @state.docks[i].countdown > 60
+                    <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
+                  else if @state.docks[i].countdown > -1
+                    <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
+                  else
+                    <Label bsStyle="default"></Label>
+                }
+              </td>
             </tr>
         }
         </tbody>

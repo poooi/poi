@@ -1,5 +1,5 @@
 path = require 'path-extra'
-{layout, ROOT, $, $$, React, ReactBootstrap} = window
+{ROOT, $, $$, React, ReactBootstrap} = window
 {Grid, Col} = ReactBootstrap
 {TeitokuPanel, MissionPanel, NdockPanel, KdockPanel, TaskPanel} = require './parts'
 module.exports =
@@ -9,31 +9,38 @@ module.exports =
   description: '概览面板，提供基本的概览界面'
   reactClass: React.createClass
     getInitialState: ->
-      xs: if layout == 'horizonal' then 6 else 3
+      layout: window.layout
     handleChangeLayout: (e) ->
-      {layout} = e.detail
       @setState
-        xs: if layout == 'horizonal' then 6 else 3
+        layout: e.detail.layout
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
+    shouldComponentUpdate: (nextProps, nextState)->
+      false
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
     render: ->
       <div>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
         <TeitokuPanel ref="teitokuPanel" />
-          <Grid className="panel-container">
-            <Col xs={@state.xs} className="panel-col ndock-panel" ref="ndockPanel">
-              <NdockPanel />
-            </Col>
-            <Col xs={@state.xs} className="panel-col kdock-panel" ref="kdockPanel">
-              <KdockPanel />
-            </Col>
-            <Col xs={@state.xs} className="panel-col mission-panel" ref="missionPanel">
-              <MissionPanel />
-            </Col>
-            <Col xs={@state.xs} className="panel-col task-panel" ref="taskPanel">
-              <TaskPanel />
-            </Col>
-          </Grid>
+        {
+          if @state.layout == 'horizonal' or window.doubleTabbed
+            [
+              <div className="panel-container" style={display: 'flex'}>
+                <NdockPanel style={flex: 1} />
+                <KdockPanel style={flex: 1} />
+              </div>,
+              <div className="panel-container" style={display: 'flex'}>
+                <MissionPanel style={flex: 1} />
+                <TaskPanel style={flex: 1} />
+              </div>
+            ]
+          else
+            <div className="panel-container" style={display: 'flex'}>
+              <NdockPanel style={flex: 1} />
+              <KdockPanel style={flex: 1} />
+              <MissionPanel style={flex: 1} />
+              <TaskPanel style={flex: 1} />
+            </div>
+        }
       </div>

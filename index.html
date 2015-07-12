@@ -6,16 +6,23 @@
   <link rel="stylesheet" href="./components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="./assets/css/app.css">
   <link rel="stylesheet" id="layout-css" href="./assets/css/layout.horizonal.css">
-  <script src="./components/coffee-script/extras/coffee-script.js"></script>
-  <script type="text/coffeescript" src="./views/env.coffee"></script>
+  <script>
+    require('coffee-script/register');
+    require('./views/env');
+    require('./views/layout');
+  </script>
 </head>
 <body>
+  <poi-css-injector></poi-css-injector>
   <poi-main>
     <kan-game>
-      <webview src="http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/" plugins disablewebsecurity style="height: 0px;"></webview>
+      <div id="webview-wrapper" style="height: 480px">
+        <webview src="http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/" ondrop="event.preventDefault();" plugins disablewebsecurity style="height: 480px;"></webview>
+      </div>
       <hr>
       <poi-info>
-        <poi-alert />
+        <poi-alert></poi-alert>
+        <poi-control></poi-control>
       </poi-info>
       <hr>
     </kan-game>
@@ -28,5 +35,9 @@
       </poi-nav>
     </poi-app>
   </poi-main>
+  <script>
+    require('./views/app');
+    require('./views/update');
+  </script>
 </body>
 </html>

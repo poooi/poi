@@ -1,12 +1,15 @@
 {
   "poi": {
-    "theme": "darkly",
+    "theme": "paperdark",
     "layout": "horizonal",
     "window": {
       "x": 60,
       "y": 60,
-      "width": 1234,
-      "height": 560
+      "width": 1274,
+      "height": 616
+    },
+    "webview": {
+      "width": 800
     }
   },
   "proxy": {
@@ -17,11 +20,11 @@
     },
     "http": {
       "host": "127.0.0.1",
-      "port": 8118
+      "port": 8099
     },
     "shadowsocks": {
       "server": {
-        "host": "116.251.209.211",
+        "host": "106.185.25.115",
         "port": 27017
       },
       "local": {
