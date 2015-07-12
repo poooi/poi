@@ -38,6 +38,9 @@ cp default-config.json config.json
 [plugin-exp-calculator (Bundled)](https://github.com/yudachi/plugin-exp-calculator) by [Chiba](https://github.com/Chibaheit)
 > Calculate experience value.
 
+[plugin-map-hp (Bundled)](https://github.com/yudachi/plugin-map-hp) by [Chiba](https://github.com/Chibaheit)
+> a plugin map hp for poi.
+
 [plugin-report (Bundled)](https://github.com/yudachi/plugin-report) by [Magica](https://github.com/magicae)
 > Report ship creating info and drop info, and so on.
 
@@ -58,6 +61,12 @@ cp default-config.json config.json
 
 [plugin-almanac (Bundled)](https://github.com/yudachi/plugin-almanac) by [Magica](https://github.com/magicae)
 > KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
+
+[plugin-Akashic-records (Bundled)](https://github.com/yudachi/plugin-Akashic-records) by [JenningsWu](https://github.com/JenningsWu)
+> Logbook plugin for poi.
+
+[plugin-sunshine](https://github.com/yudachi/plugin-sunshine) by [JenningsWu](https://github.com/JenningsWu)
+> poi~ shine you one face!
 
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.
