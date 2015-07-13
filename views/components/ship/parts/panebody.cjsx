@@ -80,6 +80,7 @@ getMaterialStyleData = (percent) ->
   else
     null
 
+
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
   totalLv = totalShip = totalTyku = totalSaku = shipSaku = itemSaku = teitokuSaku = 0
@@ -146,7 +147,7 @@ TopAlert = React.createClass
         refreshFlag = true
       when '/kcsapi/api_req_map/start'
         @inBattle = true
-      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
+      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3'
         refreshFlag = true
       when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship'
         refreshFlag = true

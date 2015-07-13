@@ -189,6 +189,9 @@ resolveResponses = ->
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         for ship in body.api_ship_data
           _ships[ship.api_id] = extendShip ship
+      when '/kcsapi/api_get_member/ship2'
+        for ship in body
+          _ships[ship.api_id] = extendShip ship
       when '/kcsapi/api_get_member/ship3'
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         for ship in body.api_ship_data
