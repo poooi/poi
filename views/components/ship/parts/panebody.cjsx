@@ -1,6 +1,6 @@
 {relative, join} = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
-{Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
+{Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row} = ReactBootstrap
 
 Slotitems = require './slotitems'
 
@@ -65,6 +65,16 @@ getHpStyle = (percent) ->
     'info'
   else
     'success'
+
+getMaterialStyleData = (percent) ->
+  if percent <= 20
+    color: '#F37B1D'
+  else if percent <= 40
+    color: '#DD514C'
+  else if percent < 100
+    color: '#FFFF00'
+  else
+    null
 
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
