@@ -16,9 +16,9 @@ getType = (api_category) ->
     when 2
       return '#e73939'
     when 3
-      return '#a0fe29'
+      return '#87DA61'
     when 4
-      return '#2dffb3'
+      return '#32bab8'
     when 5
       return '#f4df22'
     when 6
