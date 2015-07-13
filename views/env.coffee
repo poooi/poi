@@ -150,8 +150,6 @@ resolveResponses = ->
     _.extend _.clone(window.$ships[ship.api_ship_id]), ship
   extendSlotitem = (item) ->
     _.extend _.clone(window.$slotitems[item.api_slotitem_id]), item
-  extendUseitem = (useitem) ->
-    _.extend _.clone(window.$useitems[useitem.api_id]), useitem
   locked = true
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
@@ -177,8 +175,6 @@ resolveResponses = ->
         $maps[map.api_id] = map for map in body.api_mst_mapinfo
         window.$missions = []
         $missions[mission.api_id] = mission for mission in body.api_mst_mission
-        window.$useitems = []
-        $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
@@ -201,9 +197,6 @@ resolveResponses = ->
       when '/kcsapi/api_get_member/slot_item'
         window._slotitems = {}
         _slotitems[item.api_id] = extendSlotitem item for item in body
-      when '/kcsapi/api_get_member/useitem'
-        window._useitems = {}
-        _useitems[useitem.api_id] = extendUseitem useitem for useitem in body
       when '/kcsapi/api_port/port'
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
