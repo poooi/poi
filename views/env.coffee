@@ -110,6 +110,7 @@ window.showModal = ->
 # Node modules
 window.config = remote.require './lib/config'
 window.proxy = remote.require './lib/proxy'
+window.CONST = Object.remoteClone remote.require './lib/constant'
 
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'

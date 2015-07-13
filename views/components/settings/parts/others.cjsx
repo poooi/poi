@@ -1,4 +1,4 @@
-{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, POI_VERSION} = window
+{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, POI_VERSION, CONST} = window
 {Grid, Col, Button, ButtonGroup, Input} = ReactBootstrap
 Divider = require './divider'
 path = require 'path-extra'
@@ -17,19 +17,12 @@ Others = React.createClass
       </Grid>
       <Divider text="Contributors" />
       <Grid>
-        <Col xs={12}>
-          <ul>
-            <li><a onClick={openExternal.bind(@, 'http://www.pixiv.net/member.php?id=3991162')}> Season千 </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://weibo.com/maginya')}> Magica </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://weibo.com/myzwillmake')}> Yunze </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://weibo.com/chibaheit')}> Chibaheit </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://www.kochiyaocean.org')}> KochiyaOcean </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://www.weibo.com/1791427467')}> 马里酱 </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://www.weibo.com/jenningswu')}> 吴钩霜雪明 </a></li>
-            <li><a onClick={openExternal.bind(@, 'https://github.com/ruiii')}> Rui </a></li>
-            <li><a onClick={openExternal.bind(@, 'http://www.weibo.com/pheliox')}> Artoria </a></li>
-          </ul>
-        </Col>
+      {
+        CONST.contributors.map (e) ->
+          <Col xs={2}>
+            <img className="avatar-img" src={e.avatar} onClick={openExternal.bind(@, e.link)} title={e.name} />
+          </Col>
+      }
       </Grid>
     </div>
 
