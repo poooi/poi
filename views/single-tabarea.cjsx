@@ -98,7 +98,7 @@ ControlledTabArea = React.createClass
               index: index
           }
           </TabPane>
-        <DropdownButton key={components.length} eventKey={-1} tab='插件' navItem={true}>
+        <DropdownButton key={components.length} eventKey={-1} tab={<span>插件 - {plugins[@state.key].displayName}</span>} navItem={true}>
         {
           counter = 0
           plugins.map (plugin, index) =>

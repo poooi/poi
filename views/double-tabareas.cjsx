@@ -117,7 +117,7 @@ ControlledTabArea = React.createClass
       }
       </TabbedArea>
       <TabbedArea activeKey={@state.key[1]} onSelect={@handleSelectRight} animation={false}>
-        <DropdownButton key={-1} eventKey={-1} tab='插件' navItem={true}>
+        <DropdownButton key={-1} eventKey={-1} tab={<span>插件 - {plugins[@state.key[1]].displayName}</span>} navItem={true}>
         {
           counter = -1
           plugins.map (plugin, index) =>
