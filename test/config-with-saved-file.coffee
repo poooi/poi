@@ -1,6 +1,7 @@
 assert = require 'assert'
 fs = require 'fs-extra'
 path = require 'path-extra'
+CSON = require 'cson'
 
 # Environments
 global.ROOT = global.EXROOT = __dirname
@@ -8,7 +9,7 @@ config = null
 
 describe 'config with saved file', ->
   beforeEach ->
-    fs.writeJsonSync path.join(__dirname, 'config.json'),
+    fs.writeFileSync path.join(__dirname, 'config.cson'), CSON.stringify
       path:
         to:
           initial:
@@ -36,4 +37,4 @@ describe 'config with saved file', ->
     it 'should be get a null', ->
       assert.deepEqual config.get('null.path'), null
   afterEach ->
-    fs.unlinkSync path.join(__dirname, 'config.json')
+    fs.unlinkSync path.join(__dirname, 'config.cson')
