@@ -59,11 +59,11 @@ cp default-config.json config.json
 [plugin-new-window (Bundled)](https://github.com/yudachi/plugin-new-window) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Open a external browser window.
 
-[plugin-almanac (Bundled)](https://github.com/yudachi/plugin-almanac) by [Magica](https://github.com/magicae)
-> KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
-
 [plugin-Akashic-records (Bundled)](https://github.com/yudachi/plugin-Akashic-records) by [JenningsWu](https://github.com/JenningsWu)
 > Logbook plugin for poi.
+
+[plugin-almanac](https://github.com/yudachi/plugin-almanac) by [Magica](https://github.com/magicae)
+> KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
 
 [plugin-sunshine](https://github.com/yudachi/plugin-sunshine) by [JenningsWu](https://github.com/JenningsWu)
 > poi~ shine you one face!
