@@ -91,7 +91,7 @@ module.exports =
       try
         buf = image.toPng()
         now = new Date()
-        date = "#{now.getFullYear()}-#{now.getMonth()}-#{now.getDate()}T#{now.getHours()}.#{now.getMinutes()}.#{now.getSeconds()}"
+        date = "#{now.getFullYear()}-#{now.getMonth() + 1}-#{now.getDate()}T#{now.getHours()}.#{now.getMinutes()}.#{now.getSeconds()}"
         if process.platform == 'darwin'
           darwinPath = path.join path.homedir(), 'Pictures'
           fs.ensureDirSync darwinPath
