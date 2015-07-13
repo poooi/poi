@@ -175,6 +175,8 @@ resolveResponses = ->
         $maps[map.api_id] = map for map in body.api_mst_mapinfo
         window.$missions = []
         $missions[mission.api_id] = mission for mission in body.api_mst_mission
+        window.$useitems = []		
+        $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
