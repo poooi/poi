@@ -150,6 +150,8 @@ resolveResponses = ->
     _.extend _.clone(window.$ships[ship.api_ship_id]), ship
   extendSlotitem = (item) ->
     _.extend _.clone(window.$slotitems[item.api_slotitem_id]), item
+  extendUseitem = (useitem) ->
+    _.extend _.clone(window.$useitems[useitem.api_id]), useitem
   locked = true
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
@@ -189,6 +191,9 @@ resolveResponses = ->
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         for ship in body.api_ship_data
           _ships[ship.api_id] = extendShip ship
+      when '/kcsapi/api_get_member/ship2'
+        for ship in body
+          _ships[ship.api_id] = extendShip ship
       when '/kcsapi/api_get_member/ship3'
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         for ship in body.api_ship_data
@@ -196,6 +201,9 @@ resolveResponses = ->
       when '/kcsapi/api_get_member/slot_item'
         window._slotitems = {}
         _slotitems[item.api_id] = extendSlotitem item for item in body
+      when '/kcsapi/api_get_member/useitem'
+        window._useitems = {}
+        _useitems[useitem.api_id] = extendUseitem useitem for useitem in body
       when '/kcsapi/api_port/port'
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
