@@ -27,7 +27,10 @@ kan-game poi-info .alert {
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
-  cursor: default !important;
+  cursor: default;
+}
+a, button {
+  cursor: pointer;
 }
 hr {
   margin-top: 5px;
