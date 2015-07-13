@@ -89,7 +89,7 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_kousyou/createship_speedchange'
         {material} = @state
         if body.api_result == 1
-          material[4] -= material[4]
+          material[4] -= 1
         @setState
           material: material
       when '/kcsapi/api_req_kousyou/destroyitem2'
@@ -121,12 +121,6 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_mission/result'
         @setState
           nextExp: totalExp[window._teitokuLv] - body.api_member_exp
-      when '/kcsapi/api_req_nyukyo/speedchange'
-        {material} = @state
-        if body.api_result == 1
-          material[5] -= 1
-        @setState
-          material: material
       when '/kcsapi/api_req_nyukyo/speedchange'
         {material} = @state
         if body.api_result == 1
