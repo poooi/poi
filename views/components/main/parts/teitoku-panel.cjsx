@@ -124,19 +124,19 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_nyukyo/speedchange'
         {material} = @state
         if body.api_result == 1
-          material[5] -= material[5]
+          material[5] -= 1
         @setState
           material: material
       when '/kcsapi/api_req_nyukyo/speedchange'
         {material} = @state
         if body.api_result == 1
-          material[5] -= material[5]
+          material[5] -= 1
         @setState
           material: material
       when '/kcsapi/api_req_nyukyo/start'
         {material} = @state
         if body.api_highspeed == 1
-          material[5] -= material[5]
+          material[5] -= 1
         @setState
           material: material
       when '/kcsapi/api_req_practice/battle_result'
