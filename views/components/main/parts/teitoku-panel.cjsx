@@ -22,7 +22,10 @@ totalExp = [
 
 getHeader = (state) ->
   if state.nickname?
-    return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
+    if @state.level == 120
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]"
+    else
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
   else
     return '提督 [尚未登录]'
 
