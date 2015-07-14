@@ -86,7 +86,7 @@ gulp.task 'download-electron', async ->
   zip.extractAllTo dir, true
 
 gulp.task 'copy-files', ['download-electron'], ->
-  gulp.src(['app.coffee', 'bower.json', 'default-config.cson', 'index.html', 'index.js', 'LICENSE', 'package.json'])
+  gulp.src(['app.coffee', 'bower.json', 'default-config.cson', 'constant.cson', 'index.html', 'index.js', 'LICENSE', 'package.json'])
       .pipe(gulp.dest(BUILD_ROOT))
   gulp.src(['assets/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'assets')))
   gulp.src(['components/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'components')))
