@@ -297,6 +297,8 @@ resolveResponses = ->
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
+      when '/kcsapi/api_req_mission/result'
+        window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_req_nyukyo/speedchange'
         shipId = _ndocks[postBody.api_ndock_id - 1]
         _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
@@ -304,6 +306,8 @@ resolveResponses = ->
         if postBody.api_highspeed == '1'
           shipId = parseInt postBody.api_ship_id
           _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
+      when '/kcsapi/api_req_practice/battle_result'
+        window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_req_sortie/battleresult'
         window._teitokuLv = body.api_member_lv
     event = new CustomEvent 'game.response',
