@@ -138,8 +138,8 @@ ModalTrigger = React.createClass
   renderFooter: (footer) ->
     return unless footer? and footer.length? and footer.length > 0
     self = @
-    footer.map (button) ->
-      <Button onClick={
+    footer.map (button, index) ->
+      <Button key={index} onClick={
         (e) ->
           self.handleToggle()
           button.func()

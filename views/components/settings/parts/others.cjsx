@@ -18,8 +18,8 @@ Others = React.createClass
       <Divider text="Contributors" />
       <Grid>
       {
-        CONST.contributors.map (e) ->
-          <Col xs={2}>
+        CONST.contributors.map (e, i) ->
+          <Col xs={2} key={i}>
             <img className="avatar-img" src={e.avatar} onClick={openExternal.bind(@, e.link)} title={e.name} />
           </Col>
       }
