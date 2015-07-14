@@ -120,7 +120,8 @@ TeitokuPanel = React.createClass
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_mission/result'
         @setState
-          nextExp: totalExp[window._teitokuLv] - body.api_member_exp
+          level: body.api_member_lv
+          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_nyukyo/speedchange'
         {material} = @state
         if body.api_result == 1
@@ -135,12 +136,12 @@ TeitokuPanel = React.createClass
           material: material
       when '/kcsapi/api_req_practice/battle_result'
         @setState
-          level: window._teitokuLv
-          nextExp: totalExp[window._teitokuLv] - body.api_member_exp
+          level: body.api_member_lv
+          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_sortie/battleresult'
         @setState
           shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
-          level: window._teitokuLv
+          level: body.api_member_lv
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
