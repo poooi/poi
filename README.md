@@ -44,8 +44,11 @@ cp default-config.cson config.cson
 [plugin-report (Bundled)](https://github.com/yudachi/plugin-report) by [Magica](https://github.com/magicae)
 > Report ship creating info and drop info, and so on.
 
-[plugin-expedition (Bundled)](https://github.com/yudachi/plugin-expedition) by [malichan](https://github.com/malichan)
+[plugin-expedition (Bundled)](https://github.com/yudachi/plugin-expedition) by [Malichan](https://github.com/malichan)
 > Show expedition info.
+
+[plugin-quest (Bundled)](https://github.com/yudachi/plugin-quest) by [Malichan](https://github.com/malichan)
+> Show quest info.
 
 [plugin-item-improvement (Bundled)](https://github.com/yudachi/plugin-item-improvement) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Show improvable items of the day.
