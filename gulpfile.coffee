@@ -86,7 +86,7 @@ gulp.task 'download-electron', async ->
   zip.extractAllTo dir, true
 
 gulp.task 'copy-files', ['download-electron'], ->
-  gulp.src(['app.coffee', 'bower.json', 'default-config.json', 'index.html', 'index.js', 'LICENSE', 'package.json'])
+  gulp.src(['app.coffee', 'bower.json', 'default-config.cson', 'index.html', 'index.js', 'LICENSE', 'package.json'])
       .pipe(gulp.dest(BUILD_ROOT))
   gulp.src(['assets/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'assets')))
   gulp.src(['components/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'components')))
@@ -122,7 +122,7 @@ gulp.task 'get-flash-player', ['install-dependencies'], async ->
   zip.extractAllTo dir, true
 
 gulp.task 'build', ['get-flash-player'], async ->
-  fs.renameSync path.join(BUILD_ROOT, 'default-config.json'), path.join(BUILD_ROOT, 'config.json')
+  fs.renameSync path.join(BUILD_ROOT, 'default-config.cson'), path.join(BUILD_ROOT, 'config.cson')
   process.chdir path.join(path.tempdir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM_BIT[PLATFORM]}")
   if PLATFORM == 'linux'
     yield execAsync 'mv ./electron ./poi'
