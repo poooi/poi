@@ -300,7 +300,7 @@ PaneBody = React.createClass
                     </Col>
                   </Grid>
                 </td>
-                <td style={getCondStyle ship.api_cond}>Cond. {@state.cond[j]}</td>
+                <td style={getCondStyle @state.cond[j]}>Cond. {@state.cond[j]}</td>
               </tr>
             ]
         }
