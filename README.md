@@ -27,7 +27,7 @@ git submodule update
 npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
-cp default-config.json config.json
+cp default-config.cson config.cson
 /path/to/electron ./
 ```
 
