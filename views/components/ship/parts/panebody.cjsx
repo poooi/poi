@@ -80,7 +80,6 @@ getMaterialStyleData = (percent) ->
   else
     null
 
-
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
   totalLv = totalShip = totalTyku = totalSaku = shipSaku = itemSaku = teitokuSaku = 0
