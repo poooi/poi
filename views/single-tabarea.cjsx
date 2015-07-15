@@ -1,6 +1,6 @@
 path = require 'path-extra'
 glob = require 'glob'
-{_, React, ReactBootstrap} = window
+{_, React, ReactBootstrap, FontAwesome} = window
 {TabbedArea, TabPane, DropdownButton} = ReactBootstrap
 
 # Get components
@@ -105,7 +105,7 @@ ControlledTabArea = React.createClass
                           if @state.key >= components.length and @state.key < 1000
                             <span>{plugins[@state.key - components.length].displayName}</span>
                           else
-                            '插件'
+                            <span><FontAwesome name='sitemap' /> 插件</span>
                         }
                         navItem={true}>
         {
