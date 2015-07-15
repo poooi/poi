@@ -202,25 +202,17 @@ TopAlert = React.createClass
     @interval = clearInterval @interval if @interval?
   render: ->
     <Alert style={getFontStyle window.theme}>
-      <Grid>
-        <Col xs={2}>
-          总 Lv.{@messages[0]}
-        </Col>
-        <Col xs={2}>
-          均 Lv.{@messages[1]}
-        </Col>
-        <Col xs={2}>
-          制空：{@messages[2]}
-        </Col>
-        <Col xs={2}>
+      <div style={display: "flex"}>
+        <span style={flex: 1}>总 Lv.{@messages[0]}</span>
+        <span style={flex: 1}>均 Lv.{@messages[1]}</span>
+        <span style={flex: 1}>制空:&nbsp;{@messages[2]}</span>
+        <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@messages[4]} + [装備]{@messages[5]} - [司令部]{@messages[6]}</Tooltip>}>
-            <span>索敌：{@messages[3]}</span>
+            <span>索敌:&nbsp;{@messages[3]}</span>
           </OverlayTrigger>
-        </Col>
-        <Col xs={4}>
-          回复：<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span>
-        </Col>
-      </Grid>
+        </span>
+        <span style={flex: 1.5}>回复:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
+      </div>
     </Alert>
 
 PaneBody = React.createClass
