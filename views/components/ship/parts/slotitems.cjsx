@@ -1,7 +1,8 @@
 path = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
 {OverlayTrigger, Tooltip} = ReactBootstrap
-
+getBackgroundStyle = (theme)  ->
+  if window.isDarkTheme then 'background-color': 'rgba(33,33,33,0.7)' else 'background-color': 'rgba(256,256,256,0.7)'
 Slotitems = React.createClass
   render: ->
     <div className="slotitems">
@@ -16,7 +17,8 @@ Slotitems = React.createClass
           </OverlayTrigger>
           <span className="slotitem-onslot
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
-                          #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}">
+                          #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
+                          style={getBackgroundStyle window.theme}>
             {@props.onslot[i]}
           </span>
         </div>
