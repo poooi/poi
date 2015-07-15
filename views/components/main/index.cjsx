@@ -5,7 +5,7 @@ path = require 'path-extra'
 module.exports =
   name: 'MainView'
   priority: 0
-  displayName: [<FontAwesome key={0} name='home' />, ' 概览']
+  displayName: <span><FontAwesome key={0} name='home' /> 概览</span>
   description: '概览面板，提供基本的概览界面'
   reactClass: React.createClass
     getInitialState: ->

@@ -17,7 +17,7 @@ plugins = _.sortBy(plugins, 'priority')
 module.exports =
   name: 'SettingsView'
   priority: 10001
-  displayName: [<FontAwesome key={0} name='cog' />, ' 设置']
+  displayName: <span><FontAwesome key={0} name='cog' /> 设置</span>
   description: '功能设置界面'
   reactClass: React.createClass
     shouldComponentUpdate: (nextProps, nextState)->
