@@ -103,7 +103,7 @@ ControlledTabArea = React.createClass
                         tab=
                         {
                           if @state.key >= components.length and @state.key < 1000
-                            <span>插件 - {plugins[@state.key - components.length].displayName}</span>
+                            <span>{plugins[@state.key - components.length].displayName}</span>
                           else
                             '插件'
                         }
