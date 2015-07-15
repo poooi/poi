@@ -44,14 +44,13 @@
 #ShipView .slotitem-container .slotitem-onslot {
   position: absolute;
   font-size: 12px;
+  text-align: center;
   left: -3px;
   bottom: -3px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
-  border-top-right-radius: 2px;
-  border-top-left-radius: 2px;
+  border-radius: 9px;
+  width: 18px;
+  height: 18px;
   padding-left: 2px;
-  padding-right: 2px;
 }
 #ShipView .slotitem-container span.show {
   display: inline !important;
