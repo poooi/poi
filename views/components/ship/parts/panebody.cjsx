@@ -184,7 +184,9 @@ TopAlert = React.createClass
         cond = @cond.map (c) => if c < 49 then Math.min(49, c + @timeDelta / 60) else c
         @props.updateCond(cond)
       if @maxCountdown is @timeDelta and not @inBattle and window._decks[@props.deckIndex].api_mission[0] <= 0
-        notify "#{@props.deckName} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
+        notify "#{@props.deckName} 疲劳回复完成",
+          type: 'morale'
+          icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
     if flag or @inBattle
       @interval = clearInterval @interval
       @clearCountdown()
