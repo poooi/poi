@@ -70,52 +70,51 @@ window.error = (msg) ->
       type: 'danger'
   window.dispatchEvent event
 window.notify = (msg, options) ->
-  # Send desktop notification
   # Basic notification settings
   enabled = config.get('poi.notify.enabled', true)
+  sound = config.get('poi.notify.sound', true)
+  audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
+  # Advanced notification settings
+  if enabled
+    switch options?.type
+      when 'construction'
+        enabled = config.get('poi.notify.construction.enabled', enabled)
+      when 'expedition'
+        enabled = config.get('poi.notify.expedition.enabled', enabled)
+      when 'repair'
+        enabled = config.get('poi.notify.repair.enabled', enabled)
+      when 'morale'
+        enabled = config.get('poi.notify.morale.enabled', enabled)
+      else
+        enabled = config.get('poi.notify.others.enabled', enabled)
+  if sound
+    switch options?.type
+      when 'construction'
+        audio = config.get('poi.notify.construction.audio', audio)
+      when 'expedition'
+        audio = config.get('poi.notify.expedition.audio', audio)
+      when 'repair'
+        audio = config.get('poi.notify.repair.audio', audio)
+      when 'morale'
+        audio = config.get('poi.notify.morale.audio', audio)
+  # Send desktop notification
   if !enabled
     return
-  # Advanced notification settings
-  switch options?.type
-    when 'construction'
-      enabled = config.get('poi.notify.construction.enabled', enabled)
-    when 'expedition'
-      enabled = config.get('poi.notify.expedition.enabled', enabled)
-    when 'repair'
-      enabled = config.get('poi.notify.repair.enabled', enabled)
-    when 'morale'
-      enabled = config.get('poi.notify.morale.enabled', enabled)
-    else
-      enabled = config.get('poi.notify.others.enabled', enabled)
-  if enabled
-    if process.platform == 'win32'
-      notifier.notify
-        title: 'poi'
-        message: msg
-        icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
-        sound: false
-    else
-      new Notification 'poi',
-        icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
-        body: msg
+  if process.platform == 'win32'
+    notifier.notify
+      title: 'poi'
+      message: msg
+      icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
+      sound: false
+  else
+    new Notification 'poi',
+      icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
+      body: msg
   # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
-  # Basic notification settings
-  sound = config.get('poi.notify.sound', true)
-  audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
   if !sound
     return
-  # Advanced notification settings
-  switch options?.type
-    when 'construction'
-      audio = config.get('poi.notify.construction.audio', audio)
-    when 'expedition'
-      audio = config.get('poi.notify.expedition.audio', audio)
-    when 'repair'
-      audio = config.get('poi.notify.repair.audio', audio)
-    when 'morale'
-      audio = config.get('poi.notify.morale.audio', audio)
   sound = new Audio(audio)
   sound.play()
 modals = []
