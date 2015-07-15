@@ -25,16 +25,16 @@ module.exports =
         <TeitokuPanel ref="teitokuPanel" />
         {
           if @state.layout == 'horizonal' or window.doubleTabbed
-            [
-              <div className="panel-container" style={display: 'flex'}>
+            <div>
+              <div key={0} className="panel-container" style={display: 'flex'}>
                 <NdockPanel style={flex: 1} />
                 <KdockPanel style={flex: 1} />
-              </div>,
-              <div className="panel-container" style={display: 'flex'}>
+              </div>
+              <div key={1} className="panel-container" style={display: 'flex'}>
                 <MissionPanel style={flex: 1} />
                 <TaskPanel style={flex: 1} />
               </div>
-            ]
+            </div>
           else
             <div className="panel-container" style={display: 'flex'}>
               <NdockPanel style={flex: 1} />
