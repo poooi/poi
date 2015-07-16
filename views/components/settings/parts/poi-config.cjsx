@@ -1,7 +1,7 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
 glob = require 'glob'
-rimraf = require 'rimraf'
+remote = require 'remote'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
 {config, toggleModal} = window
@@ -99,31 +99,11 @@ PoiConfig = React.createClass
         useFixedResolution: true
       @handleSetWebviewWidth()
   handleClearCookie: (e) ->
-    rimraf path.join(APPDATA_PATH, 'Cookies'), (err) ->
-      if err?
-        toggleModal '删除 Cookies', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cookies')}"
-        try
-            fs.ensureFileSync APPDATA_PATH
-            showItemInFolder path.join(APPDATA_PATH, 'Cookies')
-        catch e
-            toggleModal '打开缓存目录','打开失败，可能没有访问权限'
-      else
-        toggleModal '删除 Cookies', '删除成功，请立刻重启软件。'
+    remote.getCurrentWebContents().clearStorageData ['cookies'], ->
+      toggleModal '删除 Cookies', '删除成功。'
   handleClearCache: (e) ->
-    error = null
-    rimraf path.join(APPDATA_PATH, 'Cache'), (err) ->
-      error = error || err
-      rimraf path.join(APPDATA_PATH, 'Pepper Data'), (err) ->
-        error = error || err
-        if error
-          toggleModal '删除浏览器缓存', "删除失败，你可以手动删除 #{path.join(APPDATA_PATH, 'Cache')}"
-          try
-            fs.ensureFileSync APPDATA_PATH
-            showItemInFolder path.join(APPDATA_PATH, 'Cache')
-          catch e
-            toggleModal '打开缓存目录','打开失败，可能没有访问权限'
-        else
-          toggleModal '删除浏览器缓存', '删除成功，请立刻重启软件。'
+    remote.getCurrentWebContents().clearCache ->
+      toggleModal '删除缓存', '删除成功。'
   handleOpenCustomCss: (e) ->
     try
       d = path.join(EXROOT, 'hack', 'custom.css')
