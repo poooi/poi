@@ -144,7 +144,8 @@ class Proxy extends EventEmitter
             self.emit 'game.payitem'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
-          self.emit 'network.error'
+          if req.url.startsWith('http://www.dmm.com/netgame/') or req.url.indexOf('/kcs/') != -1 or req.url.indexOf('/kcsapi/') != -1
+            self.emit 'network.error'
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
       delete req.headers['proxy-connection']
