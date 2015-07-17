@@ -126,6 +126,7 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_mission/result'
         @setState
           level: body.api_member_lv
+          exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_nyukyo/speedchange'
         {material} = @state
