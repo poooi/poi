@@ -80,6 +80,14 @@ MissionPanel = React.createClass
         @setState
           decks: decks
           notified: notified
+      when '/kcsapi/api_req_mission/return_instruction'
+        id = postBody.api_deck_id
+        {decks, notified} = @state
+        decks[id].completeTime = body.api_mission[2]
+        decks[id].countdown = Math.floor((body.api_mission[2] - new Date()) / 1000)
+        @setState
+          decks: decks
+          notified: notified
   updateCountdown: ->
     {decks, notified} = @state
     for i in [1..4]
