@@ -5,6 +5,8 @@ fs = require 'fs-extra'
 path = require 'path-extra'
 zlib = Promise.promisifyAll require 'zlib'
 
+cacheDir = if process.platform == 'darwin' then 'MyCache' else 'cache'
+
 stringify = (str) ->
   return str if typeof str == 'string'
   if str.toString() == '[object Object]'
@@ -45,7 +47,7 @@ module.exports =
   isStaticResource: (pathname) ->
     return pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1 && pathname.indexOf('mainD2.swf') == -1
   findHack: (pathname) ->
-    loc = path.join(global.ROOT, 'cache', pathname)
+    loc = path.join(global.ROOT, cacheDir, pathname)
     sp = loc.split '.'
     ext = sp.pop()
     sp.push 'hack'
@@ -57,7 +59,7 @@ module.exports =
     catch
       return null
   findHackExPath: (pathname) ->
-    loc = path.join(global.EXROOT, 'cache', pathname)
+    loc = path.join(global.EXROOT, cacheDir, pathname)
     sp = loc.split '.'
     ext = sp.pop()
     sp.push 'hack'
@@ -69,14 +71,14 @@ module.exports =
     catch
       return null
   findCache: (pathname) ->
-    loc = path.join(global.ROOT, 'cache', pathname)
+    loc = path.join(global.ROOT, cacheDir, pathname)
     try
       fs.accessSync loc, fs.R_OK
       return loc
     catch
       return null
   findCacheExPath: (pathname) ->
-    loc = path.join(global.EXROOT, 'cache', pathname)
+    loc = path.join(global.EXROOT, cacheDir, pathname)
     try
       fs.accessSync loc, fs.R_OK
       return loc
