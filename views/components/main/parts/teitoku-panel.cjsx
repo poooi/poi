@@ -18,11 +18,14 @@ totalExp = [
   383000, 397000, 411500, 426500, 442000, 458000, 474500, 491500, 509000, 527000,
   545500, 564500, 584500, 606500, 631500, 661500, 701500, 761500, 851500, 1000000,
   1300000, 1600000, 1900000, 2200000, 2600000, 3000000, 3500000, 4000000, 4600000, 5200000,
-  5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000, 15000000]
+  5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000]
 
 getHeader = (state) ->
   if state.nickname?
-    return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
+    if state.level == 120
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Exp. #{state.nextExp}"
+    else
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
   else
     return '提督 [尚未登录]'
 
