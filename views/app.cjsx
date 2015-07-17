@@ -87,7 +87,7 @@ PoiControl = React.createClass
           @handleSetAlwaysOnTop()
       catch e
         false
-    , 100
+    , 1000
   render: ->
     <div>
       <OverlayTrigger placement='left' overlay={<Tooltip>开发人员工具</Tooltip>}>
