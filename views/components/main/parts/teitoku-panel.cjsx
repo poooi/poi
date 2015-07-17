@@ -23,7 +23,7 @@ totalExp = [
 getHeader = (state) ->
   if state.nickname?
     if state.level == 120
-      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Exp. #{state.nextExp}"
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Exp. #{state.exp}"
     else
       return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
   else
@@ -38,6 +38,7 @@ TeitokuPanel = React.createClass
     nickname: null
     rank: 0
     nextExp: '?'
+    exp: '?'
     material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
     shipCount: '??'
     maxChara: '??'
@@ -51,6 +52,7 @@ TeitokuPanel = React.createClass
           level: body.api_level
           nickname: body.api_nickname
           rank: body.api_rank
+          exp: body.api_experience
           nextExp: totalExp[body.api_level] - body.api_experience
           maxChara: body.api_max_chara
           maxSlotitem: body.api_max_slotitem
@@ -140,11 +142,13 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_practice/battle_result'
         @setState
           level: body.api_member_lv
+          exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_sortie/battleresult'
         @setState
           shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
           level: body.api_member_lv
+          exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
