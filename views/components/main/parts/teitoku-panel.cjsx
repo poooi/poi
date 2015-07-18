@@ -18,11 +18,14 @@ totalExp = [
   383000, 397000, 411500, 426500, 442000, 458000, 474500, 491500, 509000, 527000,
   545500, 564500, 584500, 606500, 631500, 661500, 701500, 761500, 851500, 1000000,
   1300000, 1600000, 1900000, 2200000, 2600000, 3000000, 3500000, 4000000, 4600000, 5200000,
-  5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000, 15000000]
+  5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000]
 
 getHeader = (state) ->
   if state.nickname?
-    return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
+    if state.level == 120
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Exp. #{state.exp}"
+    else
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
   else
     return '提督 [尚未登录]'
 
@@ -35,6 +38,7 @@ TeitokuPanel = React.createClass
     nickname: null
     rank: 0
     nextExp: '?'
+    exp: '?'
     material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
     shipCount: '??'
     maxChara: '??'
@@ -48,6 +52,7 @@ TeitokuPanel = React.createClass
           level: body.api_level
           nickname: body.api_nickname
           rank: body.api_rank
+          exp: body.api_experience
           nextExp: totalExp[body.api_level] - body.api_experience
           maxChara: body.api_max_chara
           maxSlotitem: body.api_max_slotitem
@@ -121,6 +126,7 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_mission/result'
         @setState
           level: body.api_member_lv
+          exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_nyukyo/speedchange'
         {material} = @state
@@ -137,11 +143,13 @@ TeitokuPanel = React.createClass
       when '/kcsapi/api_req_practice/battle_result'
         @setState
           level: body.api_member_lv
+          exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_sortie/battleresult'
         @setState
           shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
           level: body.api_member_lv
+          exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
