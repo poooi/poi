@@ -56,6 +56,17 @@ getStyleByPercent = (percent) ->
     return 'success'
   return 'default'
 
+tooltipRender = (id) ->
+  if @state.tasks[i].id != 214
+    return <span>"当前进度: #{@state.progress[i]} / #{@state.target[i]}"</span>
+  else
+    return <span>"当前进度: "<br/>
+              "出击: #{@state.codeA[0]}"<br/>
+              "S胜: #{@state.codeA[1]}" <br/>
+              "Boss战: #{@state.codeA[2]}" <br/>
+              "Boss战S胜: #{@state.codeA[3]}"
+            </span>
+
 emptyTask =
   name: '未接受'
   id: 100000
@@ -181,8 +192,11 @@ TaskPanel = React.createClass
               <td>
                 {
                   if QuestTracker
-                    <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.tasks[i].id != 214 then "当前进度: #{@state.progress[i]} / #{@state.target[i]}" else "当前进度: <br/>出击: #{@state.codeA[0]}<br/> S胜: #{@state.codeA[1]} <br/>Boss战: #{@state.codeA[2]} <br/>Boss战S胜: #{@state.codeA[3]}"}</Tooltip>}>
-                      <Label style={if @state.tasks[i].id == 100000 then display:"none"} bsStyle={getStyleByPercent @state.percent[i]}>{@state.percent[i]}%</Label>
+                    <OverlayTrigger placement='left' overlay={<Tooltip>{tooltipRender task[i].id}</Tooltip>}>
+                      <Label style={if @state.tasks[i].id == 100000 then display:"none"}
+                             bsStyle={getStyleByPercent @state.percent[i]}>
+                        {@state.percent[i]}%
+                      </Label>
                     </OverlayTrigger>
                   else
                     <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
