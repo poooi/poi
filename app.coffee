@@ -36,26 +36,26 @@ if process.platform == 'linux'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 else if process.platform == 'win32'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 else if process.platform == 'darwin'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 
 app.on 'window-all-closed', ->
   app.quit()
