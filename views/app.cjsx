@@ -48,9 +48,11 @@ PoiControl = React.createClass
       else
         success "截图保存在 #{filename}"
   handleOpenCacheFolder: ->
+    dir = 'cache'
+    dir = 'MyCache' if process.platform == 'darwin'
     try
-      fs.ensureDirSync path.join(window.EXROOT, 'cache')
-      openItem path.join(window.EXROOT, 'cache')
+      fs.ensureDirSync path.join(window.EXROOT, dir)
+      openItem path.join(window.EXROOT, dir)
     catch e
       toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
   handleOpenScreenshotFolder: ->
