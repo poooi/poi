@@ -31,18 +31,14 @@ getType = (api_category) ->
     when 7
       return '#c792e8'
 
-getStyleByProgress = (progress) ->
-  switch progress
-    when '进行'
-      return 'warning'
-    when '50%'
-      return 'primary'
-    when '80%'
-      return 'info'
-    when '达成'
-      return 'success'
-    else
-      return 'default'
+getStyleByPercent = (percent) ->
+  if percent < 50
+    return 'warning'
+  if percent < 100
+    return 'primary'
+  if percent == 100
+    return 'success'
+  return 'default'
 
 emptyTask =
   name: '未接受'
@@ -54,11 +50,16 @@ emptyTask =
 
 TaskPanel = React.createClass
   getInitialState: ->
+    percent: [0, 0, 0, 0, 0, 0]
+    progress: [0, 0, 0, 0, 0, 0]
+    target: [1, 1, 1, 1, 1, 1]
+    codeA: [0, 0, 0, 0]
     tasks: [Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask),
             Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask)]
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {tasks} = @state
+    flag = false
     switch path
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
@@ -85,27 +86,31 @@ TaskPanel = React.createClass
             progress: progress
             category: task.api_category
             type: task.api_type
+          flag = true
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
         idx = _.findIndex tasks, (e) ->
           e.id == parseInt(postBody.api_quest_id)
         return if idx == -1
         tasks[idx] = Object.clone(emptyTask)
+        flag = true
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
         idx = _.findIndex tasks, (e) ->
           e.id == parseInt(postBody.api_quest_id)
         return if idx == -1
         tasks[idx] = Object.clone(emptyTask)
+        flag = true
     tasks = _.sortBy tasks, (e) -> e.id
-    @setState
-      tasks: tasks
-    event = new CustomEvent 'task.change',
-      bubbles: true
-      cancelable: true
-      detail:
+    if flag
+      @setState
         tasks: tasks
-    window.dispatchEvent event
+      event = new CustomEvent 'task.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          tasks: tasks
+      window.dispatchEvent event
   refreshDay: ->
     curDay = getCurrentDay()
     return if prevDay == curDay
@@ -130,11 +135,20 @@ TaskPanel = React.createClass
     {tasks} = e.detail
     @setState
       tasks: tasks
+  handleTaskUpdate: (e) ->
+    {codeA, percent, progress, target} = e.detail
+    @setState
+      codeA: codeA
+      percent: percent
+      progress: progress
+      target: target
   componentDidMount: ->
+    window.addEventListener 'task.update', @handleTaskUpdate
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'task.info', @handleTaskInfo
     @interval = setInterval @refreshDay, 30000
   componentWillUnmount: ->
+    window.removeEventListener 'task.update', @handleTaskUpdate
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'task.info', @handleTaskInfo
     clearInterval @interval
@@ -145,11 +159,13 @@ TaskPanel = React.createClass
         {
           for i in [0..5]
             <tr key={i}>
-              <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+              <OverlayTrigger placement='right' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
                 <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
               </OverlayTrigger>
               <td>
-                <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
+                <OverlayTrigger placement='right' overlay={<Tooltip>{if @state.tasks[i].id != 214 then "当前进度: #{@state.progress[i]} / #{@state.target[i]}" else "当前进度: <br/>出击: #{@state.codeA[0]}<br/> S胜: #{@state.codeA[1]} <br/>Boss战: #{@state.codeA[2]} <br/>Boss战S胜: #{@state.codeA[3]}"}</Tooltip>}>
+                  <Label style={if @state.tasks[i].id == 100000 then display:"none"} bsStyle={getStyleByPercent @state.percent[i]}>{@state.percent[i]}%</Label>
+                </OverlayTrigger>
               </td>
             </tr>
         }
