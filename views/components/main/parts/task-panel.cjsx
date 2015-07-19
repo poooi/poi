@@ -183,13 +183,13 @@ TaskPanel = React.createClass
                   if QuestTracker
                     <OverlayTrigger placement='left' overlay={<Tooltip>{
                           if @state.tasks[i].id != 214
-                            <span>"当前进度: #{@state.progress[i]} / #{@state.target[i]}"</span>
+                            <span>当前进度: {@state.progress[i]} / {@state.target[i]}</span>
                           else
-                            <span>"当前进度: "<br/>
-                              "出击: #{@state.codeA[0]}"<br/>
-                              "S胜: #{@state.codeA[1]}" <br/>
-                              "Boss战: #{@state.codeA[2]}" <br/>
-                              "Boss战S胜: #{@state.codeA[3]}"
+                            <span>当前进度: <br/>
+                              出击: {@state.codeA[0]}<br/>
+                              S胜: {@state.codeA[1]} <br/>
+                              Boss战: {@state.codeA[2]} <br/>
+                              Boss战S胜: {@state.codeA[3]}
                             </span>}</Tooltip>}>
                       <Label style={if @state.tasks[i].id == 100000 then display:"none"}
                              bsStyle={getStyleByPercent @state.percent[i]}>
