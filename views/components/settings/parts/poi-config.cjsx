@@ -27,12 +27,18 @@ PoiConfig = React.createClass
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
+    enableNotify: config.get 'poi.notify.enabled', true
     enableNotifySound: config.get 'poi.notify.sound', true
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
     @setState
       enableConfirmQuit: !enabled
+  handleSetNotify: ->
+    enabled = @state.enableNotify
+    config.set 'poi.notify.enabled', !enabled
+    @setState
+      enableNotify: !enabled
   handleSetNotifySound: ->
     enabled = @state.enableNotifySound
     config.set 'poi.notify.sound', !enabled
@@ -124,8 +130,20 @@ PoiConfig = React.createClass
           <Col xs={12}>
             <Input type="checkbox" label="关闭前弹出确认窗口" checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
           </Col>
-          <Col xs={12}>
-            <Input type="checkbox" label="开启通知提示音" checked={@state.enableNotifySound} onChange={@handleSetNotifySound} />
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text="通知" />
+        <Grid>
+          <Col xs={6}>
+            <Button bsStyle={if @state.enableNotify then 'success' else 'danger'} onClick={@handleSetNotify} style={width: '100%'}>
+              {if @state.enableNotify then '√ ' else ''}开启通知
+            </Button>
+          </Col>
+          <Col xs={6}>
+            <Button bsStyle={if @state.enableNotifySound then 'success' else 'danger'} onClick={@handleSetNotifySound} style={width: '100%'}>
+              {if @state.enableNotifySound then '√ ' else ''}开启声音
+            </Button>
           </Col>
         </Grid>
       </div>
