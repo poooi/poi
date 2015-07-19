@@ -3,12 +3,6 @@ BrowserWindow = require 'browser-window'
 path = require 'path-extra'
 fs = require 'fs-extra'
 
-# Patch fs for current Electron
-#fs.accessSync = (filePath, mode) ->
-#  if fs.existsSync(filePath)
-#    return true
-#  throw new Error("ENOENT: no such file or directory, access '#{filePath}'")
-
 # Environment
 global.POI_VERSION = app.getVersion()
 global.ROOT = __dirname
@@ -23,6 +17,7 @@ if process.env.DEBUG?
 else
   global.SERVER_HOSTNAME = 'poi.0u0.moe'
 
+CONST = require './lib/constant'
 config = require './lib/config'
 proxy = require './lib/proxy'
 proxy.setMaxListeners 30
@@ -41,26 +36,26 @@ if process.platform == 'linux'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 else if process.platform == 'win32'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'win32', 'pepflashplayer32.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.188'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 else if process.platform == 'darwin'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '17.0.0.169'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 
 app.on 'window-all-closed', ->
   app.quit()
@@ -78,44 +73,7 @@ app.on 'ready', ->
       'plugins': true
   # Default menu in v0.27.3
   if process.versions['electron'] >= '0.27.3'
-    if process.platform == 'darwin'
-      template = [
-        label: '程序'
-        submenu: [
-          label: '退出'
-          accelerator: 'Command+Q'
-          click: -> app.quit()
-        ]
-      ,
-        label: '编辑'
-        submenu: [
-          label: '撤销'
-          accelerator: 'Command+Z'
-          selector: 'undo:'
-        ,
-          label: '恢复'
-          accelerator: 'Shift+Command+Z'
-          selector: 'redo:'
-        ,
-          label: '剪切'
-          accelerator: 'Command+X'
-          selector: 'cut:'
-        ,
-          label: '复制'
-          accelerator: 'Command+C'
-          selector: 'copy:'
-        ,
-          label: '粘贴'
-          accelerator: 'Command+V'
-          selector: 'paste:'
-        ,
-          label: '全选'
-          accelerator: 'Command+A'
-          selector: 'selectAll:'
-        ]
-      ]
-      mainWindow.setMenu require('menu').buildFromTemplate(template)
-    else
+    if process.platform != 'darwin'
       mainWindow.setMenu null
   mainWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?

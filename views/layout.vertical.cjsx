@@ -16,7 +16,7 @@ adjustSize = ->
   if window.webviewWidth != -1
     factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{window.innerHeight - (480.0 * factor - 1) - 95}px"
+    e.style.height = "#{window.innerHeight - (480.0 * factor - 1) - 70}px"
     e.style.overflowY = "scroll"
   $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{480.0 * factor - 1}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"

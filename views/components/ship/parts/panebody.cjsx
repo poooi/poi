@@ -1,6 +1,6 @@
 {relative, join} = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
-{Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
+{Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row} = ReactBootstrap
 
 Slotitems = require './slotitems'
 
@@ -44,14 +44,18 @@ getFontStyle = (theme)  ->
 
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
-  countdown = 0
-  cond = 49
-  for shipId in deck.api_ship
-    continue if shipId == -1
+  countdown = [0, 0, 0, 0, 0, 0]
+  cond = [49, 49, 49, 49, 49, 49]
+  for shipId, i in deck.api_ship
+    if shipId == -1
+      countdown[i] = 0
+      cond[i] = 49
+      continue
     ship = _ships[shipId]
-    if ship.api_cond < 49
-      cond = Math.min(cond, ship.api_cond)
-    countdown = Math.max(countdown, Math.ceil((49 - cond) / 3) * 180)
+    # if ship.api_cond < 49
+    #   cond[i] = Math.min(cond[i], ship.api_cond)
+    cond[i] = ship.api_cond
+    countdown[i] = Math.max(countdown[i], Math.ceil((49 - cond[i]) / 3) * 180)
   ret =
     countdown: countdown
     cond: cond
@@ -65,6 +69,16 @@ getHpStyle = (percent) ->
     'info'
   else
     'success'
+
+getMaterialStyleData = (percent) ->
+  if percent <= 20
+    color: '#F37B1D'
+  else if percent <= 40
+    color: '#DD514C'
+  else if percent < 100
+    color: '#FFFF00'
+  else
+    null
 
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
@@ -117,9 +131,10 @@ getDeckMessage = (deck) ->
 
 TopAlert = React.createClass
   messages: ['没有舰队信息']
-  countdown: 0
+  countdown: [0, 0, 0, 0, 0, 0]
+  maxCountdown: 0
   timeDelta: 0
-  cond: 0
+  cond: [0, 0, 0, 0, 0, 0]
   isMount: false
   inBattle: false
   handleResponse: (e) ->
@@ -131,7 +146,7 @@ TopAlert = React.createClass
         refreshFlag = true
       when '/kcsapi/api_req_map/start'
         @inBattle = true
-      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
+      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3'
         refreshFlag = true
       when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship'
         refreshFlag = true
@@ -141,27 +156,42 @@ TopAlert = React.createClass
     decks = window._decks
     @messages = getDeckMessage decks[@props.deckIndex]
     tmp = getCondCountdown decks[@props.deckIndex]
+    @maxCountdown = tmp.countdown.reduce (a, b) -> Math.max a, b    # new countdown
     @countdown = tmp.countdown
-    if tmp.countdown isnt @cond
+    minCond = tmp.cond.reduce (a, b) -> Math.min a, b               # new cond
+    thisMinCond = @cond.reduce (a, b) -> Math.min a, b              # current cond
+    if thisMinCond isnt minCond
       @timeDelta = 0
-      @cond = tmp.countdown
-    if @countdown > 0
+    @cond = tmp.cond
+    if @maxCountdown > 0
       @interval = setInterval @updateCountdown, 1000 if !@interval?
     else
-      @interval = clearInterval @interval if @interval?
+      if @interval?
+        @interval = clearInterval @interval
+        @clearCountdown()
   componentWillUpdate: ->
     @setAlert()
   updateCountdown: ->
     flag = true
-    if @countdown - @timeDelta > 0
+    if @maxCountdown - @timeDelta > 0
       flag = false
       @timeDelta += 1
       # Use DOM operation instead of React for performance
       if @isMount
-        $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@countdown - @timeDelta)
-      if @countdown is @timeDelta and not @inBattle and window._decks[@props.deckIndex].api_mission[0] <= 0
-        notify "#{@props.deckName} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
-    @interval = clearInterval @interval if flag
+        $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@maxCountdown - @timeDelta)
+      if @timeDelta % (3 * 60) == 0
+        cond = @cond.map (c) => if c < 49 then Math.min(49, c + @timeDelta / 60) else c
+        @props.updateCond(cond)
+      if @maxCountdown is @timeDelta and not @inBattle and window._decks[@props.deckIndex].api_mission[0] <= 0
+        notify "#{@props.deckName} 疲劳回复完成",
+          type: 'morale'
+          icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
+    if flag or @inBattle
+      @interval = clearInterval @interval
+      @clearCountdown()
+  clearCountdown: ->
+    if @isMount
+      $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(0)
   componentWillMount: ->
     @componentId = Math.ceil(Date.now() * Math.random())
     @setAlert()
@@ -173,33 +203,56 @@ TopAlert = React.createClass
     @interval = clearInterval @interval if @interval?
   render: ->
     <Alert style={getFontStyle window.theme}>
-      <Grid>
-        <Col xs={2}>
-          总 Lv.{@messages[0]}
-        </Col>
-        <Col xs={2}>
-          均 Lv.{@messages[1]}
-        </Col>
-        <Col xs={2}>
-          制空：{@messages[2]}
-        </Col>
-        <Col xs={2}>
+      <div style={display: "flex"}>
+        <span style={flex: 1}>总 Lv.{@messages[0]}</span>
+        <span style={flex: 1}>均 Lv.{@messages[1]}</span>
+        <span style={flex: 1}>制空:&nbsp;{@messages[2]}</span>
+        <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@messages[4]} + [装備]{@messages[5]} - [司令部]{@messages[6]}</Tooltip>}>
-            <span>索敌：{@messages[3]}</span>
+            <span>索敌:&nbsp;{@messages[3]}</span>
           </OverlayTrigger>
-        </Col>
-        <Col xs={4}>
-          回复：<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @countdown}</span>
-        </Col>
-      </Grid>
+        </span>
+        <span style={flex: 1.5}>回复:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
+      </div>
     </Alert>
 
 PaneBody = React.createClass
-  shouldComponentUpdate: (nextProps, nextState)->
+  condDynamicUpdateFlag: false
+  getInitialState: ->
+    cond: [0, 0, 0, 0, 0, 0]
+  onCondChange: (cond) ->
+    condDynamicUpdateFlag = true
+    @setState
+      cond: cond
+  shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.activeDeck is @props.deckIndex
+  componentWillReceiveProps: (nextProps) ->
+    if @condDynamicUpdateFlag
+      @condDynamicUpdateFlag = not @condDynamicUpdateFlag
+    else
+      cond = [0, 0, 0, 0, 0, 0]
+      for shipId, j in nextProps.deck.api_ship
+        if shipId == -1
+          cond[j] = 49
+          continue
+        ship = _ships[shipId]
+        cond[j] = ship.api_cond
+      @setState
+        cond: cond
+  componentWillMount: ->
+    cond = [0, 0, 0, 0, 0, 0]
+    for shipId, j in @props.deck.api_ship
+      if shipId == -1
+        cond[j] = 49
+        continue
+      ship = _ships[shipId]
+      cond[j] = ship.api_cond
+    @setState
+      cond: cond
   render: ->
     <div>
       <TopAlert
+        updateCond={@onCondChange}
         messages={@props.messages}
         deckIndex={@props.deckIndex}
         deckName={@props.deckName} />
@@ -240,7 +293,7 @@ PaneBody = React.createClass
                     </Col>
                   </Grid>
                 </td>
-                <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
+                <td style={getCondStyle @state.cond[j]}>Cond. {@state.cond[j]}</td>
               </tr>
             ]
         }

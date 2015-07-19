@@ -1,26 +1,27 @@
 Promise = require 'bluebird'
 path = require 'path'
 fs = require 'fs-extra'
+CSON = require 'cson'
 {log, warn, error} = require './utils'
 
 {ROOT, EXROOT} = global
 
 config = {}
 configCache = {}
-defaultConfigPath = path.join(ROOT, 'config.json')
-configPath = path.join(EXROOT, 'config.json')
+defaultConfigPath = path.join(ROOT, 'config.cson')
+configPath = path.join(EXROOT, 'config.cson')
 
 # Read saved config
 try
   fs.accessSync defaultConfigPath, fs.R_OK | fs.W_OK
-  config = fs.readJsonSync defaultConfigPath
+  config = CSON.parseCSONFile defaultConfigPath
 catch e
   warn e
 
 # Read user config
 try
   fs.accessSync configPath, fs.R_OK | fs.W_OK
-  config = fs.readJsonSync configPath
+  config = CSON.parseCSONFile configPath
 catch e
   warn e
 
@@ -45,6 +46,6 @@ module.exports =
         cur[p] = value
     # Save to file
     try
-      fs.writeFileSync configPath, JSON.stringify(config, null, 2)
+      fs.writeFileSync configPath, CSON.stringify(config, null, 2)
     catch e
       warn e

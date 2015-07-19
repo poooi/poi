@@ -40,7 +40,7 @@ PluginConfig = React.createClass
       {
         plugins.map (plugin, index) =>
           <Col key={index} xs={12}>
-            <Input type="checkbox" label={[plugin.displayName, ' @ ', getAuthorLink(plugin.author, plugin.link), '：', plugin.description, <br key={-1} />, 'Version ',  plugin.version || '1.0.0']} checked={@state.enabled[index]} onChange={@handleChange.bind @, index } />
+            <Input type="checkbox" label={<span>{plugin.displayName} @ {getAuthorLink(plugin.author, plugin.link)}：{plugin.description} <br key={-1} /> Version {plugin.version || '1.0.0'}</span>} checked={@state.enabled[index]} onChange={@handleChange.bind @, index} />
           </Col>
       }
       </Grid>

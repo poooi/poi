@@ -139,7 +139,9 @@ KdockPanel = React.createClass
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} 建造完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')}
+          notify "#{docks[i].name} 建造完成",
+            type: 'construction'
+            icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
     @setState
       docks: docks

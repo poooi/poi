@@ -1,8 +1,13 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 
-prevHours = (new Date()).getUTCHours()
-interval = null
+# Local time -> Task Refresh time(GMT + 4)
+getCurrentDay = ->
+  curTime = new Date()
+  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
+  curTime.getDay()
+
+prevDay = getCurrentDay()
 
 getType = (api_category) ->
   switch api_category
@@ -16,9 +21,9 @@ getType = (api_category) ->
     when 2
       return '#e73939'
     when 3
-      return '#a0fe29'
+      return '#87da61'
     when 4
-      return '#2dffb3'
+      return '#32bab8'
     when 5
       return '#f4df22'
     when 6
@@ -39,51 +44,18 @@ getStyleByProgress = (progress) ->
     else
       return 'default'
 
+emptyTask =
+  name: '未接受'
+  id: 100000
+  content: '...'
+  progress: ''
+  category: 0
+  type: 0
+
 TaskPanel = React.createClass
   getInitialState: ->
-    tasks: [
-        name: '未接受'
-        id: 100000
-        content: '...'
-        progress: ''
-        category: 0
-        type: 0
-      ,
-        name: '未接受'
-        id: 100000
-        content: '...'
-        progress: ''
-        category: 0
-        type: 0
-      ,
-        name: '未接受'
-        id: 100000
-        content: '...'
-        progress: ''
-        category: 0
-        type: 0
-      ,
-        name: '未接受'
-        id: 100000
-        content: '...'
-        progress: ''
-        category: 0
-        type: 0
-      ,
-        name: '未接受'
-        id: 100000
-        content: '...'
-        progress: ''
-        category: 0
-        type: 0
-      ,
-        name: '未接受'
-        id: 100000
-        content: '...'
-        progress: ''
-        category: 0
-        type: 0
-    ]
+    tasks: [Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask),
+            Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask)]
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {tasks} = @state
@@ -106,48 +78,26 @@ TaskPanel = React.createClass
           if idx == -1
             idx = _.findIndex tasks, (e) ->
               e.id == 100000
-            tasks[idx] =
-              name: task.api_title
-              id: task.api_no
-              content: task.api_detail
-              progress: progress
-              category: task.api_category
-              type: task.api_type
-          # Update current
-          else
-            tasks[idx] =
-              name: task.api_title
-              id: task.api_no
-              content: task.api_detail
-              progress: progress
-              category: task.api_category
-              type: task.api_type
+          tasks[idx] =
+            name: task.api_title
+            id: task.api_no
+            content: task.api_detail
+            progress: progress
+            category: task.api_category
+            type: task.api_type
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
         idx = _.findIndex tasks, (e) ->
           e.id == parseInt(postBody.api_quest_id)
         return if idx == -1
-        tasks[idx] =
-          name: '未接受'
-          id: 100000
-          content: '...'
-          progress: ''
-          category: 0
-          type: 0
+        tasks[idx] = Object.clone(emptyTask)
       # Stop quest
       when '/kcsapi/api_req_quest/stop'
         idx = _.findIndex tasks, (e) ->
           e.id == parseInt(postBody.api_quest_id)
         return if idx == -1
-        tasks[idx] =
-          name: '未接受'
-          id: 100000
-          content: '...'
-          progress: ''
-          category: 0
-          type: 0
-    tasks = _.sortBy tasks, (e) ->
-      e.id
+        tasks[idx] = Object.clone(emptyTask)
+    tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
     event = new CustomEvent 'task.change',
@@ -157,31 +107,16 @@ TaskPanel = React.createClass
         tasks: tasks
     window.dispatchEvent event
   refreshDay: ->
-    curHours = (new Date()).getUTCHours()
-    return if prevHours == curHours
-    # UTC 20:00 -> Beijing 4:00 -> Tokyo 5:00
-    if prevHours <= 19 and curHours >= 20
-      {tasks} = @state
-      for task, idx in tasks
-        continue if task.id == 100000
-        if task.type in [2, 4, 5]
-          tasks[idx] =
-            name: '未接受'
-            id: 100000
-            content: '...'
-            progress: ''
-            category: 0
-            type: 0
-        if task.type is 3 and (new Date()).getUTCDay() is 0
-          tasks[idx] =
-            name: '未接受'
-            id: 100000
-            content: '...'
-            progress: ''
-            category: 0
-            type: 0
-      tasks = _.sortBy tasks, (e) ->
-        e.id
+    curDay = getCurrentDay()
+    return if prevDay == curDay
+    {tasks} = @state
+    for task, idx in tasks
+      continue if task.id == 100000
+      if task.type in [2, 4, 5]
+        tasks[idx] = Object.clone(emptyTask)
+      if task.type is 3 and curDay is 1
+        tasks[idx] = Object.clone(emptyTask)
+      tasks = _.sortBy tasks, (e) -> e.id
       @setState
         tasks: tasks
       event = new CustomEvent 'task.change',
@@ -190,7 +125,7 @@ TaskPanel = React.createClass
         detail:
           tasks: tasks
       window.dispatchEvent event
-    prevHours = curHours
+    prevDay = curDay
   handleTaskInfo: (e) ->
     {tasks} = e.detail
     @setState
@@ -198,11 +133,11 @@ TaskPanel = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'task.info', @handleTaskInfo
-    interval = setInterval @refreshDay, 30000
+    @interval = setInterval @refreshDay, 30000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'task.info', @handleTaskInfo
-    clearInterval interval
+    clearInterval @interval
   render: ->
     <Panel header="任务" bsStyle="success">
       <Table>

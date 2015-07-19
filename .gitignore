@@ -27,7 +27,7 @@ build/Release
 node_modules
 
 # poi config
-/config.json
+/config.cson
 
 /PepperFlash
 

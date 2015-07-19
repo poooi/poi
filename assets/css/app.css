@@ -8,6 +8,7 @@ body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
   line-height: 1.42857143;
+  overflow-x: hidden;
 }
 .alert {
   border-radius: 0px;
@@ -26,7 +27,10 @@ kan-game poi-info .alert {
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
-  cursor: default !important;
+  cursor: default;
+}
+a, button {
+  cursor: pointer;
 }
 hr {
   margin-top: 5px;

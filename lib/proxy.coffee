@@ -92,13 +92,22 @@ class Proxy extends EventEmitter
               body: reqBody
           # Use cache file
           if cacheFile
-            data = yield fs.readFileAsync cacheFile
-            res.writeHead 200,
-              'Server': 'Apache'
-              'Content-Length': data.length
-              'Cache-Control': 'no-cache'
-              'Content-Type': mime.lookup cacheFile
-            res.end data
+            stats = yield fs.statAsync cacheFile
+            # Cache is new
+            if req.headers['if-modified-since']? && (new Date(req.headers['if-modified-since']) >= stats.mtime)
+              res.writeHead 304,
+                'Server': 'Apache'
+                'Last-Modified': stats.mtime.toGMTString()
+              res.end()
+            # Cache is old
+            else
+              data = yield fs.readFileAsync cacheFile
+              res.writeHead 200,
+                'Server': 'Apache'
+                'Content-Length': data.length
+                'Content-Type': mime.lookup cacheFile
+                'Last-Modified': stats.mtime.toGMTString()
+              res.end data
           # Enable retry for game api
           else if isGameApi
             success = false
@@ -135,7 +144,8 @@ class Proxy extends EventEmitter
             self.emit 'game.payitem'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
-          self.emit 'network.error'
+          if req.url.startsWith('http://www.dmm.com/netgame/') or req.url.indexOf('/kcs/') != -1 or req.url.indexOf('/kcsapi/') != -1
+            self.emit 'network.error'
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
       delete req.headers['proxy-connection']

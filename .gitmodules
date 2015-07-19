@@ -22,9 +22,6 @@
 [submodule "plugins/new-window"]
 	path = plugins/new-window
 	url = https://github.com/yudachi/plugin-new-window
-[submodule "plugins/almanac"]
-	path = plugins/almanac
-	url = https://github.com/yudachi/plugin-almanac
 [submodule "plugins/quest-info"]
 	path = plugins/quest-info
 	url = https://github.com/yudachi/plugin-quest

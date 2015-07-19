@@ -27,7 +27,7 @@ git submodule update
 npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
-cp default-config.json config.json
+cp default-config.cson config.cson
 /path/to/electron ./
 ```
 
@@ -38,11 +38,17 @@ cp default-config.json config.json
 [plugin-exp-calculator (Bundled)](https://github.com/yudachi/plugin-exp-calculator) by [Chiba](https://github.com/Chibaheit)
 > Calculate experience value.
 
+[plugin-map-hp (Bundled)](https://github.com/yudachi/plugin-map-hp) by [Chiba](https://github.com/Chibaheit)
+> a plugin map hp for poi.
+
 [plugin-report (Bundled)](https://github.com/yudachi/plugin-report) by [Magica](https://github.com/magicae)
 > Report ship creating info and drop info, and so on.
 
-[plugin-expedition (Bundled)](https://github.com/yudachi/plugin-expedition) by [malichan](https://github.com/malichan)
+[plugin-expedition (Bundled)](https://github.com/yudachi/plugin-expedition) by [Malichan](https://github.com/malichan)
 > Show expedition info.
+
+[plugin-quest (Bundled)](https://github.com/yudachi/plugin-quest) by [Malichan](https://github.com/malichan)
+> Show quest info.
 
 [plugin-item-improvement (Bundled)](https://github.com/yudachi/plugin-item-improvement) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Show improvable items of the day.
@@ -56,8 +62,14 @@ cp default-config.json config.json
 [plugin-new-window (Bundled)](https://github.com/yudachi/plugin-new-window) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Open a external browser window.
 
-[plugin-almanac (Bundled)](https://github.com/yudachi/plugin-almanac) by [Magica](https://github.com/magicae)
+[plugin-Akashic-records (Bundled)](https://github.com/yudachi/plugin-Akashic-records) by [JenningsWu](https://github.com/JenningsWu)
+> Logbook plugin for poi.
+
+[plugin-almanac](https://github.com/yudachi/plugin-almanac) by [Magica](https://github.com/magicae)
 > KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
+
+[plugin-sunshine](https://github.com/yudachi/plugin-sunshine) by [JenningsWu](https://github.com/JenningsWu)
+> poi~ shine you one face!
 
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.

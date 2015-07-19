@@ -70,6 +70,36 @@ window.error = (msg) ->
       type: 'danger'
   window.dispatchEvent event
 window.notify = (msg, options) ->
+  # Basic notification settings
+  enabled = config.get('poi.notify.enabled', true)
+  sound = config.get('poi.notify.sound', true)
+  audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
+  # Advanced notification settings
+  if enabled
+    switch options?.type
+      when 'construction'
+        enabled = config.get('poi.notify.construction.enabled', enabled)
+      when 'expedition'
+        enabled = config.get('poi.notify.expedition.enabled', enabled)
+      when 'repair'
+        enabled = config.get('poi.notify.repair.enabled', enabled)
+      when 'morale'
+        enabled = config.get('poi.notify.morale.enabled', enabled)
+      else
+        enabled = config.get('poi.notify.others.enabled', enabled)
+  if sound
+    switch options?.type
+      when 'construction'
+        audio = config.get('poi.notify.construction.audio', audio)
+      when 'expedition'
+        audio = config.get('poi.notify.expedition.audio', audio)
+      when 'repair'
+        audio = config.get('poi.notify.repair.audio', audio)
+      when 'morale'
+        audio = config.get('poi.notify.morale.audio', audio)
+  # Send desktop notification
+  if !enabled
+    return
   if process.platform == 'win32'
     notifier.notify
       title: 'poi'
@@ -77,16 +107,16 @@ window.notify = (msg, options) ->
       icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
       sound: false
   else
-    # According to MDN Notification API docs:
-    #   https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
-    # Parameter `sound` is not supported in any browser yet,
-    # so we play sound manually.
     new Notification 'poi',
       icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
       body: msg
-  if config.get('poi.notify.sound', true)
-    sound = new Audio "file://#{ROOT}/assets/audio/poi.mp3"
-    sound.play()
+  # Play notification sound
+  #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
+  #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
+  if !sound
+    return
+  sound = new Audio(audio)
+  sound.play()
 modals = []
 window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
@@ -110,6 +140,7 @@ window.showModal = ->
 # Node modules
 window.config = remote.require './lib/config'
 window.proxy = remote.require './lib/proxy'
+window.CONST = Object.remoteClone remote.require './lib/constant'
 
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
@@ -183,9 +214,14 @@ resolveResponses = ->
         window._nickNameId = body.api_nickname_id
       when '/kcsapi/api_get_member/deck'
         window._decks[deck.api_id - 1] = deck for deck in body
+      when '/kcsapi/api_get_member/ndock'
+        window._ndocks = body.map (e) -> e.api_ship_id
       when '/kcsapi/api_get_member/ship_deck'
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
         for ship in body.api_ship_data
+          _ships[ship.api_id] = extendShip ship
+      when '/kcsapi/api_get_member/ship2'
+        for ship in body
           _ships[ship.api_id] = extendShip ship
       when '/kcsapi/api_get_member/ship3'
         window._decks[deck.api_id - 1] = deck for deck in body.api_deck_data
@@ -198,6 +234,7 @@ resolveResponses = ->
         window._ships = {}
         _ships[ship.api_id] = extendShip ship for ship in body.api_ship
         window._decks = body.api_deck_port
+        window._ndocks = body.api_ndock.map (e) -> e.api_ship_id
         window._teitokuLv = body.api_basic.api_level
       when '/kcsapi/api_req_hensei/change'
         decks = window._decks
@@ -290,6 +327,17 @@ resolveResponses = ->
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
+      when '/kcsapi/api_req_mission/result'
+        window._teitokuLv = body.api_member_lv
+      when '/kcsapi/api_req_nyukyo/speedchange'
+        shipId = _ndocks[postBody.api_ndock_id - 1]
+        _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
+      when '/kcsapi/api_req_nyukyo/start'
+        if postBody.api_highspeed == '1'
+          shipId = parseInt postBody.api_ship_id
+          _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
+      when '/kcsapi/api_req_practice/battle_result'
+        window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_req_sortie/battleresult'
         window._teitokuLv = body.api_member_lv
     event = new CustomEvent 'game.response',

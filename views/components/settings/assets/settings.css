@@ -25,6 +25,14 @@
   display: flex;
   align-items: center;
 }
-#SettingsView #poi-others a {
+#SettingsView #poi-others .avatar-img {
   cursor: pointer !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+#SettingsView #poi-others .avatar-img:hover {
+  transform: rotate(360deg);
+  transition-duration: 3s;
 }
