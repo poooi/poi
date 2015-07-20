@@ -29,7 +29,7 @@ module.exports =
         current.hide()
         e.preventDefault() unless forceClose
     # Draggable
-    unless options.draggable
+    unless options.navigatable
       current.webContents.on 'will-navigate', (e) ->
         e.preventDefault()
     windows.push current
