@@ -77,6 +77,9 @@ cp default-config.cson config.cson
 [plugin-ship-panel-patcher](https://github.com/yudachi/plugin-ship-panel-patcher) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Use an alter style of ship panel.
 
+[plugin-secretary](https://github.com/dazzyd/poi-secretary) by [Dazzy Ding](https://github.com/dazzyd)
+> Use secretary voice as notification sound.
+
 ## Guides for developers
 
 About plugin, read the [docs](https://github.com/yudachi/poi/tree/master/docs).
