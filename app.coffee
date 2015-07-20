@@ -22,6 +22,7 @@ config = require './lib/config'
 proxy = require './lib/proxy'
 proxy.setMaxListeners 30
 update = require './lib/update'
+shortcut = require './lib/shortcut'
 {log, warn, error} = require './lib/utils'
 
 global.mainWindow = mainWindow = null
@@ -58,9 +59,11 @@ else if process.platform == 'darwin'
     app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 
 app.on 'window-all-closed', ->
+  shortcut.unregister()
   app.quit()
 
 app.on 'ready', ->
+  shortcut.register()
   screen = require 'screen'
   screenSize = screen.getPrimaryDisplay().workAreaSize
   global.mainWindow = mainWindow = new BrowserWindow
