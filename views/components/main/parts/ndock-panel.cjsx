@@ -115,7 +115,6 @@ NdockPanel = React.createClass
                     <OverlayTrigger placement='right' overlay={<Tooltip><strong>完成时间: </strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
                       <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
                     </OverlayTrigger>
-
                   else if @state.docks[i].countdown > -1
                     <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
                   else
