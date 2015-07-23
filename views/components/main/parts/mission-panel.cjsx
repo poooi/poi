@@ -1,8 +1,12 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{Panel, Table, Label} = ReactBootstrap
+{Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {resolveTime} = window
 {notify} = window
 {join} = require 'path-extra'
+
+timeToString = (dateTime) ->
+  date = new Date(dateTime)
+  "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
 
 MissionPanel = React.createClass
   getInitialState: ->
@@ -119,7 +123,9 @@ MissionPanel = React.createClass
                 <td>
                   {
                     if @state.decks[i].countdown > 60
-                      <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
+                      <OverlayTrigger placement='right' overlay={<Tooltip><strong>归港时间: </strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
+                        <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
+                      </OverlayTrigger>
                     else if @state.decks[i].countdown > -1
                       <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
                     else
