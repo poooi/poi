@@ -124,8 +124,12 @@ TeitokuPanel = React.createClass
           material: material
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_mission/result'
+        if body.api_member_lv in [1..119]
+          level = body.api_member_lv
+        else
+          level = parseInt(body.api_member_lv)
         @setState
-          level: body.api_member_lv
+          level: level
           exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_req_nyukyo/speedchange'
