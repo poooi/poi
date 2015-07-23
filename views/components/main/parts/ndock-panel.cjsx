@@ -1,7 +1,11 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime} = window
-{Panel, Table, Label} = ReactBootstrap
+{Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {join} = require 'path-extra'
+
+timeToString = (dateTime) ->
+  date = new Date(dateTime)
+  "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
 
 NdockPanel = React.createClass
   getInitialState: ->
@@ -108,7 +112,9 @@ NdockPanel = React.createClass
               <td>
                 {
                   if @state.docks[i].countdown > 60
-                    <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
+                    <OverlayTrigger placement='right' overlay={<Tooltip><strong>完成时间: </strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
+                      <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
+                    </OverlayTrigger>
                   else if @state.docks[i].countdown > -1
                     <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
                   else
