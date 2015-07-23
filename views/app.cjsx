@@ -6,6 +6,9 @@ glob = require 'glob'
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
+# Hackable panels
+window.hack = {}
+
 # Main tabbed area
 ControlledTabArea =
   if config.get('poi.tabarea.double', false)
