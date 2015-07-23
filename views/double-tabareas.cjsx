@@ -89,6 +89,7 @@ ControlledTabArea = React.createClass
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
+    window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
     ### FIXME
     # Animation disabled
