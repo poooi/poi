@@ -189,6 +189,9 @@ resolveResponses = ->
     postBody = Object.remoteClone postBody
     # Delete api_token
     delete postBody.api_token if postBody?.api_token?
+    # Fix api
+    body.api_level = parseInt body.api_level if body?.api_level?
+    body.api_member_lv = parseInt body.api_member_lv if body?.api_member_lv?
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
