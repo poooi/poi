@@ -261,12 +261,6 @@ TaskPanel = React.createClass
       tasks = _.sortBy tasks, (e) -> e.id
       @setState
         tasks: tasks
-      event = new CustomEvent 'task.change',
-        bubbles: true
-        cancelable: true
-        detail:
-          tasks: tasks
-      window.dispatchEvent event
   refreshDay: ->
     curDay = getCurrentDay()
     return if prevDay == curDay
