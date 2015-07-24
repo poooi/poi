@@ -56,6 +56,7 @@ clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
 activateQuestRecord = (id) ->
+  console.log questRecord
   if questRecord[id]?
     questRecord[id].active = true
     return
@@ -64,6 +65,7 @@ activateQuestRecord = (id) ->
     required: 0
     active: true
   for k, v of questGoals[id]
+    continue if k == 'type'
     questRecord[id][k] =
       count: v.init
       required: v.required
