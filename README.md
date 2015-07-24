@@ -15,6 +15,16 @@ Scalable KanColle browser and tool.
 + Notification
 + Plugin Support
 
+## Screenshots
+
+![Preview1](https://cloud.githubusercontent.com/assets/6753092/8869050/1c1dd656-3212-11e5-9342-806403b0400d.png)
+![Preview2](https://cloud.githubusercontent.com/assets/6753092/8869052/1d19a29c-3212-11e5-8d3a-9bcbd3afef5c.png)
+![Preview3](https://cloud.githubusercontent.com/assets/6753092/8869053/1e794caa-3212-11e5-9100-a33559026b6c.png)
+![Preview4](https://cloud.githubusercontent.com/assets/6753092/8869055/1f24763e-3212-11e5-9767-048bbc3f2c05.png)
+![Preview5](https://cloud.githubusercontent.com/assets/6753092/8869056/1fe883a8-3212-11e5-8745-a042d27be8fd.png)
+![Preview6](https://cloud.githubusercontent.com/assets/6753092/8869057/21468a56-3212-11e5-8ac0-71be75b0a668.png)
+![Preview7](https://cloud.githubusercontent.com/assets/6753092/8869058/22667b3a-3212-11e5-9f42-17bf3c1ebc0b.png)
+
 ## Run
 
 First, get the latest version of [Electron](https://github.com/atom/electron) and [io.js](https://iojs.org).
