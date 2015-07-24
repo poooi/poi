@@ -12,28 +12,6 @@ getCurrentDay = ->
 
 prevDay = getCurrentDay()
 
-getType = (api_category) ->
-  switch api_category
-    when 0
-      if window.isDarkTheme
-        return '#ffffff'
-      else
-        return '#000000'
-    when 1
-      return '#21bb3a'
-    when 2
-      return '#e73939'
-    when 3
-      return '#87da61'
-    when 4
-      return '#32bab8'
-    when 5
-      return '#f4df22'
-    when 6
-      return '#cd6c48'
-    when 7
-      return '#c792e8'
-
 getStyleByProgress = (progress) ->
   switch progress
     when '进行'
@@ -315,7 +293,7 @@ TaskPanel = React.createClass
             if @state.tasks[i].tracking
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
+                  <td>{@state.tasks[i].name}</td>
                 </OverlayTrigger>
                 <td>
                   <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
@@ -326,7 +304,7 @@ TaskPanel = React.createClass
             else
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
+                  <td>{@state.tasks[i].name}</td>
                 </OverlayTrigger>
                 <td>
                   <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
