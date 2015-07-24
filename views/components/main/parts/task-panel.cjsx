@@ -56,7 +56,6 @@ clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
 activateQuestRecord = (id) ->
-  console.log questRecord
   if questRecord[id]?
     questRecord[id].active = true
     return
@@ -81,9 +80,9 @@ updateQuestRecord = (e, options, delta) ->
   flag = false
   for id, q of questRecord
     continue unless q.active and q[e]?
-    continue if q[e].shipType? and options.shipType not in q[e].shipType
-    continue if q[e].mission? and options.mission not in q[e].mission
-    continue if q[e].maparea? and options.maparea not in q[e].maparea
+    continue if questGoals[id][e].shipType? and options.shipType not in questGoals[id][e].shipType
+    continue if questGoals[id][e].mission? and options.mission not in questGoals[id][e].mission
+    continue if questGoals[id][e].maparea? and options.maparea not in questGoals[id][e].maparea
     before = q[e].count
     q[e].count = Math.min(q[e].required, q[e].count + delta)
     q.count += q[e].count - before
