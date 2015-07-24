@@ -97,7 +97,7 @@ getToolTip = (id) ->
   {
     for k, v of questRecord[id]
       if v.count? and v.required?
-        <div>{v.description} - {v.count} / {v.required}</div>
+        <div key={k}>{v.description} - {v.count} / {v.required}</div>
   }
   </div>
 
@@ -205,12 +205,13 @@ TaskPanel = React.createClass
       when '/kcsapi/api_req_kousyou/destroyitem2'
         flag = updateQuestRecord('destory_item', null, 1)
     return unless flag
-    for task in tasks
-      continue if task.id == 100000
-      if questGoals[task.id]?
-        task.tracking = true
-        task.percent = questRecord[task.id].count / questRecord[task.id].required
-        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+    if config.get('poi.quest.tracker.enable', true)
+      for task in tasks
+        continue if task.id == 100000
+        if questGoals[task.id]?
+          task.tracking = true
+          task.percent = questRecord[task.id].count / questRecord[task.id].required
+          task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
@@ -249,7 +250,23 @@ TaskPanel = React.createClass
       shipType = window.$ships[shipId].api_stype
       if shipType in [7, 11, 13, 15]
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
-    @forceUpdate() if flag
+    if flag and config.get('poi.quest.tracker.enable', true)
+      {tasks} = @state
+      for task in tasks
+        continue if task.id == 100000
+        if questGoals[task.id]?
+          task.tracking = true
+          task.percent = questRecord[task.id].count / questRecord[task.id].required
+          task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+      tasks = _.sortBy tasks, (e) -> e.id
+      @setState
+        tasks: tasks
+      event = new CustomEvent 'task.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          tasks: tasks
+      window.dispatchEvent event
   refreshDay: ->
     curDay = getCurrentDay()
     return if prevDay == curDay
