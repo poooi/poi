@@ -24,6 +24,10 @@ module.exports =
       current.on 'closed', (e) ->
         idx = _.indexOf windows, current
         windows.splice idx, 1
+    else if options.forceMinimize
+      current.on 'close', (e) ->
+        current.minimize()
+        e.preventDefault() unless forceClose
     else
       current.on 'close', (e) ->
         current.hide()
