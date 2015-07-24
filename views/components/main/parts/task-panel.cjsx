@@ -72,7 +72,8 @@ catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord
+  questRecord.day = getCurrentDay()
+  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
@@ -103,7 +104,9 @@ updateQuestRecord = (e, options, delta) ->
     continue if q[e].shipType? and options.shipType not in q[e].shipType
     continue if q[e].mission? and options.mission not in q[e].mission
     continue if q[e].maparea? and options.maparea not in q[e].maparea
-    q[e].counter = Math.min(q[e].required, q[e].counter + delta)
+    before = q[e].count
+    q[e].count = Math.min(q[e].required, q[e].count + delta)
+    q.count += q[e].count - before
     flag = true
   if flag
     syncQuestRecord()
@@ -131,6 +134,12 @@ TaskPanel = React.createClass
         memberId = window._nickNameId
         try
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
+          if getCurrentDay() != questRecord.day
+            for id, q of questRecord
+              delete questRecord[id] if questGoals[id].type in [2, 4, 5]
+          if getCurrentDay() < questRecord.day
+            for id, q of questRecord
+              delete questRecord[id] if questGoals[id].type is 3
         catch error
           false
       when '/kcsapi/api_get_member/questlist'
@@ -146,9 +155,7 @@ TaskPanel = React.createClass
           else if task.api_progress_flag == 2
             progress = '80%'
           # Determine customize progress
-          if questGoals[task.api_no]?
-            activateQuestRecord task.api_no
-            progress = questRecord[task.api_no].count + ' / ' + questRecord[task.api_no].required
+          activateQuestRecord task.api_no if questGoals[task.api_no]?
           idx = _.findIndex tasks, (e) ->
             e.id == task.api_no
           # Do not exist currently
@@ -162,8 +169,6 @@ TaskPanel = React.createClass
             progress: progress
             category: task.api_category
             type: task.api_type
-            percent: questRecord[task.api_no].count / questRecord[task.api_no].required
-            tracking: questGoals[task.api_no]?
         flag = true
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
@@ -220,6 +225,12 @@ TaskPanel = React.createClass
       when '/kcsapi/api_req_kousyou/destroyitem2'
         flag = updateQuestRecord('destory_item', null, 1)
     return unless flag
+    for task in tasks
+      continue if task.id == 100000
+      if questGoals[task.id]?
+        task.tracking = true
+        task.percent = questRecord[task.id].count / questRecord[task.id].required
+        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
