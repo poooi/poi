@@ -1,6 +1,6 @@
 {relative, join} = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
-{Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row} = ReactBootstrap
+{Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overlay} = ReactBootstrap
 
 Slotitems = require './slotitems'
 
@@ -133,17 +133,48 @@ TopAlert = React.createClass
   messages: ['没有舰队信息']
   countdown: [0, 0, 0, 0, 0, 0]
   maxCountdown: 0
+  missionCountdown: 0
+  completeTime: 0
   timeDelta: 0
   cond: [0, 0, 0, 0, 0, 0]
   isMount: false
   inBattle: false
+  inMission: false
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     refreshFlag = false
     switch path
       when '/kcsapi/api_port/port'
+        if @props.deckIndex != 0
+          deck = body.api_deck_port[@props.deckIndex]
+          @missionCountdown = -1
+          switch deck.api_mission[0]
+            # In port
+            when 0
+              @missionCountdown = -1
+              @completeTime = -1
+            # In mission
+            when 1
+              @completeTime = deck.api_mission[2]
+              @missionCountdown = Math.floor((deck.api_mission[2] - new Date()) / 1000)
+            # Just come back
+            when 2
+              @completeTime = 0
+              @missionCountdown = 0
         @inBattle = false
         refreshFlag = true
+      when '/kcsapi/api_req_mission/start'
+        if postBody.api_deck_id == @props.deckIndex
+          @completeTime = body.api_complatetime
+          @missionCountdown = Math.floor((body.api_complatetime - new Date()) / 1000)
+          @inBattle = false
+          refreshFlag = true
+      when '/kcsapi/api_req_mission/return_instruction'
+        if postBody.api_deck_id == @props.deckIndex
+          @completeTime = body.api_mission[2]
+          @missionCountdown = Math.floor((body.api_mission[2] - new Date()) / 1000)
+          @inBattle = false
+          refreshFlag = true
       when '/kcsapi/api_req_map/start'
         @inBattle = true
       when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3'
@@ -152,17 +183,29 @@ TopAlert = React.createClass
         refreshFlag = true
     if refreshFlag
       @setAlert()
+  getState: ->
+    if @inMission
+      return '远征'
+    else
+      return '回复'
   setAlert: ->
     decks = window._decks
     @messages = getDeckMessage decks[@props.deckIndex]
     tmp = getCondCountdown decks[@props.deckIndex]
-    @maxCountdown = tmp.countdown.reduce (a, b) -> Math.max a, b    # new countdown
-    @countdown = tmp.countdown
-    minCond = tmp.cond.reduce (a, b) -> Math.min a, b               # new cond
-    thisMinCond = @cond.reduce (a, b) -> Math.min a, b              # current cond
-    if thisMinCond isnt minCond
+    @missionCountdown = Math.max(0, Math.floor((@completeTime - new Date()) / 1000))
+    if @missionCountdown > 0
+      @maxCountdown = @missionCountdown
       @timeDelta = 0
-    @cond = tmp.cond
+      @inMission = true
+    else
+      @maxCountdown = tmp.countdown.reduce (a, b) -> Math.max a, b    # new countdown
+      @countdown = tmp.countdown
+      minCond = tmp.cond.reduce (a, b) -> Math.min a, b               # new cond
+      thisMinCond = @cond.reduce (a, b) -> Math.min a, b              # current cond
+      if thisMinCond isnt minCond
+        @timeDelta = 0
+      @cond = tmp.cond
+      @inMission = false
     if @maxCountdown > 0
       @interval = setInterval @updateCountdown, 1000 if !@interval?
     else
@@ -182,7 +225,7 @@ TopAlert = React.createClass
       if @timeDelta % (3 * 60) == 0
         cond = @cond.map (c) => if c < 49 then Math.min(49, c + @timeDelta / 60) else c
         @props.updateCond(cond)
-      if @maxCountdown is @timeDelta and not @inBattle and window._decks[@props.deckIndex].api_mission[0] <= 0
+      if @maxCountdown is @timeDelta and not @inBattle and not @inMission and window._decks[@props.deckIndex].api_mission[0] <= 0
         notify "#{@props.deckName} 疲劳回复完成",
           type: 'morale'
           icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
@@ -212,7 +255,7 @@ TopAlert = React.createClass
             <span>索敌:&nbsp;{@messages[3]}</span>
           </OverlayTrigger>
         </span>
-        <span style={flex: 1.5}>回复:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
+        <span style={flex: 1.5}>{@getState()}:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
       </div>
     </Alert>
 
