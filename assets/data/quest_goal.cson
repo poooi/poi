@@ -104,7 +104,7 @@
   type: 2
   "destroy_ship":
     description: "解体"
-    required: 3
+    required: 2
     init: 0
 619: # 装備の改修強化 改修1次
   type: 2
