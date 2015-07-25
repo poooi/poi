@@ -80,17 +80,24 @@ module.exports =
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
           inBattle[deckId] = true
+          {decks, states} = @state
+          {_ships} = window
+          deck = decks[deckId]
+          for shipId in deck.api_ship
+            continue if shipId == -1
+            ship = _ships[shipId]
+            if ship.api_nowhp / ship.api_maxhp < 0.250001
+              toggleModal '出击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能会被击沉！"
         when '/kcsapi/api_req_map/next'
           {decks, states} = @state
-          {$ships, _ships} = window
+          {_ships} = window
           for deck, i in decks
             continue if states[i] != 5
             for shipId in deck.api_ship
               continue if shipId == -1
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001
-                shipInfo = $ships[ship.api_ship_id]
-                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
+                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能会被击沉！"
         else
           flag = false
       return unless flag
