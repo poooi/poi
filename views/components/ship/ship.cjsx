@@ -61,6 +61,8 @@ module.exports =
       if nextProps.selectedKey is @props.index and nextState.dataVersion isnt @showDataVersion
         @showDataVersion = nextState.dataVersion
         return true
+      if @state.decks.length is 0 and nextState.decks.length isnt 0
+        return true
       false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck

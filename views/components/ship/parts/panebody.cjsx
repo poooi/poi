@@ -139,7 +139,8 @@ TopAlert = React.createClass
   cond: [0, 0, 0, 0, 0, 0]
   isMount: false
   inBattle: false
-  inMission: false
+  getInitialState: ->
+    inMission: false
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     refreshFlag = false
@@ -164,7 +165,8 @@ TopAlert = React.createClass
         @inBattle = false
         refreshFlag = true
       when '/kcsapi/api_req_mission/start'
-        if postBody.api_deck_id == @props.deckIndex
+        # postBody.api_deck_id is a string starting from 1
+        if postBody.api_deck_id == "#{@props.deckIndex + 1}"
           @completeTime = body.api_complatetime
           @missionCountdown = Math.floor((body.api_complatetime - new Date()) / 1000)
           @inBattle = false
@@ -184,7 +186,7 @@ TopAlert = React.createClass
     if refreshFlag
       @setAlert()
   getState: ->
-    if @inMission
+    if @state.inMission
       return '远征'
     else
       return '回复'
@@ -193,10 +195,14 @@ TopAlert = React.createClass
     @messages = getDeckMessage decks[@props.deckIndex]
     tmp = getCondCountdown decks[@props.deckIndex]
     @missionCountdown = Math.max(0, Math.floor((@completeTime - new Date()) / 1000))
+    {inMission} = @state
+    changeFlag = false
     if @missionCountdown > 0
       @maxCountdown = @missionCountdown
       @timeDelta = 0
-      @inMission = true
+      if not inMission
+        changeFlag = true
+      @cond = tmp.cond
     else
       @maxCountdown = tmp.countdown.reduce (a, b) -> Math.max a, b    # new countdown
       @countdown = tmp.countdown
@@ -205,7 +211,11 @@ TopAlert = React.createClass
       if thisMinCond isnt minCond
         @timeDelta = 0
       @cond = tmp.cond
-      @inMission = false
+      if inMission
+        changeFlag = true
+    if changeFlag
+      @setState
+        inMission: not inMission
     if @maxCountdown > 0
       @interval = setInterval @updateCountdown, 1000 if !@interval?
     else
@@ -225,7 +235,7 @@ TopAlert = React.createClass
       if @timeDelta % (3 * 60) == 0
         cond = @cond.map (c) => if c < 49 then Math.min(49, c + @timeDelta / 60) else c
         @props.updateCond(cond)
-      if @maxCountdown is @timeDelta and not @inBattle and not @inMission and window._decks[@props.deckIndex].api_mission[0] <= 0
+      if @maxCountdown is @timeDelta and not @inBattle and not @state.inMission and window._decks[@props.deckIndex].api_mission[0] <= 0
         notify "#{@props.deckName} 疲劳回复完成",
           type: 'morale'
           icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
@@ -237,6 +247,22 @@ TopAlert = React.createClass
       $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(0)
   componentWillMount: ->
     @componentId = Math.ceil(Date.now() * Math.random())
+    if @props.deckIndex != 0
+      deck = window._decks[@props.deckIndex]
+      @missionCountdown = -1
+      switch deck.api_mission[0]
+        # In port
+        when 0
+          @missionCountdown = -1
+          @completeTime = -1
+        # In mission
+        when 1
+          @completeTime = deck.api_mission[2]
+          @missionCountdown = Math.floor((deck.api_mission[2] - new Date()) / 1000)
+        # Just come back
+        when 2
+          @completeTime = 0
+          @missionCountdown = 0
     @setAlert()
   componentDidMount: ->
     @isMount = true
