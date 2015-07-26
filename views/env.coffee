@@ -236,6 +236,7 @@ resolveResponses = ->
         $missions[mission.api_id] = mission for mission in body.api_mst_mission
         window.$useitems = []
         $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
+        # updating start2Body while avoiding body from being updated by multi-plugins
         if start2Version > localStorage.start2Version
           localStorage.start2Version = start2Version
           localStorage.start2Body = body
