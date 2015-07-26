@@ -178,8 +178,8 @@ start2Version = 0
 initStart2Value = ->
   if localStorage.start2Version?
     start2Version = localStorage.start2Version
-  body = localStorage.start2Body
-  if body?
+  if localStorage.start2Body?
+    body = JSON.parse localStorage.start2Body
     window.$ships = []
     $ships[ship.api_id] = ship for ship in body.api_mst_ship
     window.$shipTypes = []
@@ -239,7 +239,7 @@ resolveResponses = ->
         # updating start2Body while avoiding body from being updated by multi-plugins
         if not localStorage.start2Version? or start2Version > localStorage.start2Version
           localStorage.start2Version = start2Version
-          localStorage.start2Body = body
+          localStorage.start2Body = JSON.stringify body
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
