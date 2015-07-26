@@ -239,7 +239,7 @@ TopAlert = React.createClass
         notify "#{@props.deckName} 疲劳回复完成",
           type: 'morale'
           icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
-    if flag or @inBattle
+    if flag or (@inBattle and not @state.inMission)
       @interval = clearInterval @interval
       @clearCountdown()
   clearCountdown: ->
