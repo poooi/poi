@@ -174,6 +174,30 @@ proxy.addListener 'game.on.request', (method, path, body) ->
       body: body
   window.dispatchEvent event
 
+start2Version = 0
+initStart2Value = ->
+  if localStorage.start2Version?
+    start2Version = localStorage.start2Version
+  body = localStorage.start2Body
+  if body?
+    window.$ships = []
+    $ships[ship.api_id] = ship for ship in body.api_mst_ship
+    window.$shipTypes = []
+    $shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
+    window.$slotitems = []
+    $slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
+    window.$slotitemTypes = []
+    $slotitemTypes[slotitemtype.api_id] = slotitemtype for slotitemtype in body.api_mst_slotitem_equiptype
+    window.$mapareas = []
+    $mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
+    window.$maps = []
+    $maps[map.api_id] = map for map in body.api_mst_mapinfo
+    window.$missions = []
+    $missions[mission.api_id] = mission for mission in body.api_mst_mission
+    window.$useitems = []
+    $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
+initStart2Value()
+
 responses = []
 locked = false
 resolveResponses = ->
@@ -195,6 +219,7 @@ resolveResponses = ->
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
+        start2Version += 1
         window.$ships = []
         $ships[ship.api_id] = ship for ship in body.api_mst_ship
         window.$shipTypes = []
@@ -211,6 +236,10 @@ resolveResponses = ->
         $missions[mission.api_id] = mission for mission in body.api_mst_mission
         window.$useitems = []
         $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
+        # updating start2Body while avoiding body from being updated by multi-plugins
+        if start2Version > localStorage.start2Version
+          localStorage.start2Version = start2Version
+          localStorage.start2Body = body
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
