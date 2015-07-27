@@ -3,7 +3,7 @@
 {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overlay} = ReactBootstrap
 
 Slotitems = require './slotitems'
-
+StatusLabel = require './statuslabel'
 
 getMaterialStyle = (percent) ->
   if percent <= 50
@@ -79,6 +79,28 @@ getMaterialStyleData = (percent) ->
     color: '#FFFF00'
   else
     null
+
+getStatusStyle = (status) ->
+  flag = status.reduce (a, b) -> a or b
+  if flag? and flag
+    return {opacity: 0.4}
+  else
+    return {}
+    # $("#ShipView #shipInfo").style.opacity = 0.4
+
+getStatusArray = (shipId) ->
+  status = []
+  # retreat status
+  status[0] = false
+  # reparing
+  status[1] = if shipId in _ndocks then true else false
+  # special 1
+  status[2] = false
+  # special 2
+  status[3] = false
+  # special 3
+  status[4] = false
+  return status
 
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
