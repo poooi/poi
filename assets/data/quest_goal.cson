@@ -130,7 +130,7 @@
     init: 0
 212: # 敵輸送船団を叩け！ 击沉补给舰5只
   type: 5
- "sinking":
+  "sinking":
     description: "敵補給艦"
     shipType: [15]
     required: 5
