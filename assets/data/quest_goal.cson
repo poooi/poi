@@ -212,6 +212,13 @@
     maparea: [52]
     required: 2
     init: 0
+256: # 潜水艦隊」出撃せよ！ 获得6-1 BOSS战S胜利3次
+  type: 6
+  "battle_boss_win_rank_s"
+    description: "勝利"
+    maparea: [61]
+    required: 3
+    init: 0
 261: # 海上輸送路の安全確保に努めよ！ 获得1-5 BOSS战A胜利以上3次
   type: 3
   "battle_boss_win_rank_a":
@@ -219,6 +226,13 @@
     maparea: [15]
     required: 3
     init: 0
+265: # 海上護衛強化月間 获得1-5 BOSS战A胜利以上10次
+  type: 6
+  "battle_boss_win_rank_a"
+  description: "勝利"
+  maparea: [15]
+  required: 10
+  init: 0
 302: # 大規模演習 获得胜利20次
   type: 3
   "practice_win":
