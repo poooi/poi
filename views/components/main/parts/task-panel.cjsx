@@ -12,28 +12,6 @@ getCurrentDay = ->
 
 prevDay = getCurrentDay()
 
-getType = (api_category) ->
-  switch api_category
-    when 0
-      if window.isDarkTheme
-        return '#ffffff'
-      else
-        return '#000000'
-    when 1
-      return '#21bb3a'
-    when 2
-      return '#e73939'
-    when 3
-      return '#87da61'
-    when 4
-      return '#32bab8'
-    when 5
-      return '#f4df22'
-    when 6
-      return '#cd6c48'
-    when 7
-      return '#c792e8'
-
 getStyleByProgress = (progress) ->
   switch progress
     when '进行'
@@ -72,7 +50,8 @@ catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord
+  questRecord.day = getCurrentDay()
+  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
@@ -85,6 +64,7 @@ activateQuestRecord = (id) ->
     required: 0
     active: true
   for k, v of questGoals[id]
+    continue if k == 'type'
     questRecord[id][k] =
       count: v.init
       required: v.required
@@ -100,10 +80,12 @@ updateQuestRecord = (e, options, delta) ->
   flag = false
   for id, q of questRecord
     continue unless q.active and q[e]?
-    continue if q[e].shipType? and options.shipType not in q[e].shipType
-    continue if q[e].mission? and options.mission not in q[e].mission
-    continue if q[e].maparea? and options.maparea not in q[e].maparea
-    q[e].counter = Math.min(q[e].required, q[e].counter + delta)
+    continue if questGoals[id][e].shipType? and options.shipType not in questGoals[id][e].shipType
+    continue if questGoals[id][e].mission? and options.mission not in questGoals[id][e].mission
+    continue if questGoals[id][e].maparea? and options.maparea not in questGoals[id][e].maparea
+    before = q[e].count
+    q[e].count = Math.min(q[e].required, q[e].count + delta)
+    q.count += q[e].count - before
     flag = true
   if flag
     syncQuestRecord()
@@ -114,7 +96,7 @@ getToolTip = (id) ->
   {
     for k, v of questRecord[id]
       if v.count? and v.required?
-        <div>{v.description} - {v.count} / {v.required}</div>
+        <div key={k}>{v.description} - {v.count} / {v.required}</div>
   }
   </div>
 
@@ -131,6 +113,12 @@ TaskPanel = React.createClass
         memberId = window._nickNameId
         try
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
+          if getCurrentDay() != questRecord.day
+            for id, q of questRecord
+              delete questRecord[id] if questGoals[id].type in [2, 4, 5]
+          if getCurrentDay() < questRecord.day
+            for id, q of questRecord
+              delete questRecord[id] if questGoals[id].type in [3, 6]
         catch error
           false
       when '/kcsapi/api_get_member/questlist'
@@ -146,9 +134,7 @@ TaskPanel = React.createClass
           else if task.api_progress_flag == 2
             progress = '80%'
           # Determine customize progress
-          if questGoals[task.api_no]?
-            activateQuestRecord task.api_no
-            progress = questRecord[task.api_no].count + ' / ' + questRecord[task.api_no].required
+          activateQuestRecord task.api_no if questGoals[task.api_no]?
           idx = _.findIndex tasks, (e) ->
             e.id == task.api_no
           # Do not exist currently
@@ -162,8 +148,6 @@ TaskPanel = React.createClass
             progress: progress
             category: task.api_category
             type: task.api_type
-            percent: questRecord[task.api_no].count / questRecord[task.api_no].required
-            tracking: questGoals[task.api_no]?
         flag = true
       # Finish quest
       when '/kcsapi/api_req_quest/clearitemget'
@@ -220,6 +204,12 @@ TaskPanel = React.createClass
       when '/kcsapi/api_req_kousyou/destroyitem2'
         flag = updateQuestRecord('destory_item', null, 1)
     return unless flag
+    for task in tasks
+      continue if task.id == 100000
+      if questGoals[task.id]?
+        task.tracking = true
+        task.percent = questRecord[task.id].count / questRecord[task.id].required
+        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
@@ -258,7 +248,17 @@ TaskPanel = React.createClass
       shipType = window.$ships[shipId].api_stype
       if shipType in [7, 11, 13, 15]
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
-    @forceUpdate() if flag
+    if flag
+      {tasks} = @state
+      for task in tasks
+        continue if task.id == 100000
+        if questGoals[task.id]?
+          task.tracking = true
+          task.percent = questRecord[task.id].count / questRecord[task.id].required
+          task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+      tasks = _.sortBy tasks, (e) -> e.id
+      @setState
+        tasks: tasks
   refreshDay: ->
     curDay = getCurrentDay()
     return if prevDay == curDay
@@ -304,7 +304,7 @@ TaskPanel = React.createClass
             if @state.tasks[i].tracking
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
+                  <td>{@state.tasks[i].name}</td>
                 </OverlayTrigger>
                 <td>
                   <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
@@ -315,7 +315,7 @@ TaskPanel = React.createClass
             else
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td style={color: getType @state.tasks[i].category}>{@state.tasks[i].name}</td>
+                  <td>{@state.tasks[i].name}</td>
                 </OverlayTrigger>
                 <td>
                   <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>

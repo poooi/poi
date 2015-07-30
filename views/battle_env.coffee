@@ -110,11 +110,11 @@ window.addEventListener 'game.response', (e) ->
           supportAttack nowHp, body.api_support_info.api_damage
     when '/kcsapi/api_req_battle_midnight/battle'
       battled = true
-      nowHp = hougekiAttack nowHp, body.api_hougeki if body.api_hougeki?
+      hougekiAttack nowHp, body.api_hougeki if body.api_hougeki?
     when '/kcsapi/api_req_battle_midnight/sp_midnight'
       battled = true
       enemyShipId = body.api_ship_ke.slice 1, 7
-      nowhp = body.api_nowhps.slice 1, 13
+      nowHp = body.api_nowhps.slice 1, 13
       hougekiAttack nowHp, body.api_hougeki if body.api_hougeki?
     when '/kcsapi/api_req_sortie/airbattle'
       battled = true
@@ -132,6 +132,10 @@ window.addEventListener 'game.response', (e) ->
             rank: body.api_win_rank
             boss: bossCell == currentCell
             map: map
+            mapCell: currentCell
+            quest: body.api_quest_name
+            enemy: body.api_enemy_info.api_deck_name
+            dropShipId: if body.api_get_ship? then body.api_get_ship.api_ship_id else -1
             deckShipId: Object.clone _decks[deckId].api_ship
             deckHp: nowHp.slice 0, 6
             enemyShipId: Object.clone enemyShipId
