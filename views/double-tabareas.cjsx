@@ -91,12 +91,8 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
-    ### FIXME
-    # Animation disabled
-    # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
-    ###
     <div className='poi-tabs-container'>
-      <TabbedArea activeKey={@state.key[0]} onSelect={@handleSelectLeft} animation={false}>
+      <TabbedArea activeKey={@state.key[0]} onSelect={@handleSelectLeft} animation={true}>
       {
         [
           components.map (component, index) =>
@@ -117,7 +113,7 @@ ControlledTabArea = React.createClass
         ]
       }
       </TabbedArea>
-      <TabbedArea activeKey={@state.key[1]} onSelect={@handleSelectRight} animation={false}>
+      <TabbedArea activeKey={@state.key[1]} onSelect={@handleSelectRight} animation={true}>
         <DropdownButton key={-1} eventKey={-1} tab={<span>{plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' /> 插件</span>}</span>} navItem={true}>
         {
           counter = -1

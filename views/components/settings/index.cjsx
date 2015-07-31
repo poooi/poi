@@ -23,11 +23,7 @@ module.exports =
     shouldComponentUpdate: (nextProps, nextState)->
       false
     render: ->
-      ### FIXME
-      # Animation disabled
-      # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
-      ###
-      <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={false}>
+      <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={true}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'settings.css')} />
         <TabPane key={0} eventKey={0} tab="基本设置" id='poi-config' className='poi-settings-tabpane'>
           <PoiConfig />
