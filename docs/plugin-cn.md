@@ -193,4 +193,4 @@ index.html
 
 poi 的所有内置组件和 plugins 以一样的方式组织，在 poi 代码的 views/componets 下可以看到他们的代码。
 
-在 Yudachi(https://github.com/yudachi) 下有很多可以参考的插件。
+在 poooi(https://github.com/poooi) 下有很多可以参考的插件。
