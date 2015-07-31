@@ -5,12 +5,20 @@ CSON = require 'cson'
 fs = require 'fs-extra'
 
 # Local time -> Task Refresh time(GMT + 4)
-getCurrentDay = ->
+
+getCurrentTime = (type)->
   curTime = new Date()
   curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime.getDay()
+  switch type
+    when 'day'
+      return curTime.getDay()
+    when 'date'
+      return curTime.getDate()
+    when 'month'
+      return curTime.getMonth() + 1
 
-prevDay = getCurrentDay()
+prevDay = getCurrentTime('day')
+prevMonth = getCurrentTime('month')
 
 getStyleByProgress = (progress) ->
   switch progress
@@ -50,7 +58,8 @@ catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  questRecord.day = getCurrentDay()
+  questRecord.day = getCurrentTime('day')
+  questRecord.month = getCurrentTime('month')
   fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
@@ -113,12 +122,15 @@ TaskPanel = React.createClass
         memberId = window._nickNameId
         try
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
-          if getCurrentDay() != questRecord.day
+          if getCurrentTime('day') != questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-          if getCurrentDay() < questRecord.day
+          if getCurrentTime('day') < questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type is 3
+          if getCurrentTime('month') > questRecord.month
+            for id, q of questRecord
+              delete questRecord[id] if questGoals[id].type is 6
         catch error
           false
       when '/kcsapi/api_get_member/questlist'
@@ -260,8 +272,10 @@ TaskPanel = React.createClass
       @setState
         tasks: tasks
   refreshDay: ->
-    curDay = getCurrentDay()
-    return if prevDay == curDay
+    curDay = getCurrentTime('day')
+    curMonth = getCurrentTime('month')
+    curDate = getCurrentTime('date')
+    return if prevDay == curDay and prevMonth == curMonth
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
@@ -269,6 +283,9 @@ TaskPanel = React.createClass
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       if task.type is 3 and curDay is 1
+        clearQuestRecord task.id
+        tasks[idx] = Object.clone(emptyTask)
+      if task.type is 6 and curDate is 1
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       tasks = _.sortBy tasks, (e) -> e.id
