@@ -17,6 +17,7 @@ currentCell = -1
 battled = false
 nowHp = []
 enemyShipId = []
+colorNo = -1
 
 koukuAttack = (nowHp, kouku) ->
   if kouku.api_edam?
@@ -78,9 +79,11 @@ window.addEventListener 'game.response', (e) ->
       currentCell = body.api_no
       deckId = parseInt(postBody.api_deck_id) - 1
       nowHp = []
+      colorNo = body.api_color_no
     when '/kcsapi/api_req_map/next'
       currentCell = body.api_no
       battled = false
+      colorNo = body.api_color_no
     when '/kcsapi/api_port/port'
       # Initialize all info
       deckId = -1
@@ -91,6 +94,7 @@ window.addEventListener 'game.response', (e) ->
       battled = false
       nowHp = []
       enemyShipId = []
+      colorNo = -1
     when '/kcsapi/api_req_sortie/battle'
       battled = true
       enemyShipId = body.api_ship_ke.slice 1, 7
@@ -130,7 +134,7 @@ window.addEventListener 'game.response', (e) ->
           cancelable: true
           detail:
             rank: body.api_win_rank
-            boss: bossCell == currentCell
+            boss: bossCell == currentCell or colorNo == 5
             map: map
             mapCell: currentCell
             quest: body.api_quest_name
