@@ -2,7 +2,6 @@
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
 {join} = require 'path-extra'
-fs = require 'fs-extra'
 
 # Local time -> Task Refresh time(GMT + 4)
 getCurrentDay = ->
@@ -64,7 +63,7 @@ questRecord = {}
 syncQuestRecord = ->
   questRecord.day = getCurrentDay()
   questRecord.month = getCurrentMonth()
-  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
+  localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
@@ -125,7 +124,9 @@ TaskPanel = React.createClass
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
         try
-          questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
+          questRecord = localStorage.getItem "quest_tracking_#{memberId}"
+          if questRecord?
+            questRecord = JSON.parse questRecord
           if getCurrentDay() != questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type in [2, 4, 5]
@@ -135,8 +136,8 @@ TaskPanel = React.createClass
           if getCurrentMonth() > questRecord.month
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type is 6
-        catch error
-          false
+        else
+          questRecord = {}
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
         for task in body.api_list
