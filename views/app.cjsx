@@ -32,6 +32,20 @@ PoiAlert = React.createClass
   render: ->
     <Alert bsStyle={@state.type}>{@state.message}</Alert>
 
+# Map Reminder
+PoiMapReminder = React.createClass
+  getInitialState: ->
+    battling: '未出击'
+  handleMapReminder: (e)->
+    @setState
+      battling: e.detail.mapArea
+  componentDidMount: ->
+    window.addEventListener 'poi.map.reminder', @handleMapReminder
+  componentWillUnmount: ->
+    window.removeEventListener 'poi.map.reminder', @handleMapReminder
+  render: ->
+    <Alert>{@state.battling}</Alert>
+
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
 PoiControl = React.createClass
@@ -172,6 +186,7 @@ CustomCssInjector = React.createClass
     <link rel='stylesheet' href={path.join(window.EXROOT, 'hack', 'custom.css')} />
 
 React.render <PoiAlert id='poi-alert' />, $('poi-alert')
+React.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
 React.render <PoiControl />, $('poi-control')
 React.render <ModalTrigger />, $('poi-modal-trigger')
 React.render <ControlledTabArea />, $('poi-nav-tabs')
