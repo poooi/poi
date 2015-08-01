@@ -1,4 +1,4 @@
-{ROOT, layout, _, $, $$, React, ReactBootstrap} = window
+{ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
 
@@ -151,6 +151,14 @@ TeitokuPanel = React.createClass
           level: body.api_member_lv
           exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
+      when '/kcsapi/api_get_member/mapinfo'
+        if config.get 'poi.mapstartcheck.ship'
+          freeShipSlot = config.get 'poi.mapstartcheck.freeShipSlot'
+          if @state.maxChara - @state.shipCount < freeShipSlot
+            toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+        if config.get 'poi.mapstartcheck.item'
+          if @state.maxSlotitem - @state.slotitemCount <= 0
+            toggleModal '装备检查', "装备已满，出击注意！"
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->

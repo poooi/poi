@@ -29,6 +29,9 @@ PoiConfig = React.createClass
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
     enableNotify: config.get 'poi.notify.enabled', true
     enableNotifySound: config.get 'poi.notify.sound', true
+    mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
+    freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
+    mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
@@ -44,6 +47,21 @@ PoiConfig = React.createClass
     config.set 'poi.notify.sound', !enabled
     @setState
       enableNotifySound: !enabled
+  handleSetMapStartCheckShip: ->
+    enabled = @state.mapStartCheckShip
+    config.set 'poi.mapstartcheck.ship', !enabled
+    @setState
+      mapStartCheckShip: !enabled
+  handleSetMapStartCheckFreeShipSlot: (e) ->
+    freeShipSlot = parseInt @refs.freeShipSlot.getValue()
+    config.set 'poi.mapstartcheck.freeShipSlot', freeShipSlot
+    @setState
+      freeShipSlot: freeShipSlot
+  handleSetMapStartCheckItem: ->
+    enabled = @state.enableConfirmQuit
+    config.set 'poi.mapstartcheck.item', !enabled
+    @setState
+      mapStartCheckItem: !enabled
   handleSetDoubleTabbed: ->
     enabled = @state.enableDoubleTabbed
     config.set 'poi.tabarea.double', !enabled
@@ -146,6 +164,20 @@ PoiConfig = React.createClass
             </Button>
           </Col>
         </Grid>
+      </div>
+      <div className="form-group" >
+        <Divider text="出击检查" />
+        <div style={display:"flex", flexFlow:"row nowrap"}>
+          <div style={flex:2, margin:"0 15px"}>
+            <Input type="checkbox" label="船位检查" checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
+          </div>
+          <div style={flex:2, margin:"0 15px"}>
+            <Input type="checkbox" label="装备检查" checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
+          </div>
+        </div>
+        <div style={flex:2, margin:"0 15px"}>
+          <Input type="number" label="船位少于此数量将报警" ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位报警数量" />
+        </div>
       </div>
       <div className="form-group">
         <Divider text="布局" />
