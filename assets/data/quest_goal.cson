@@ -257,3 +257,20 @@
     description: "近代化改修"
     required: 15
     init: 0
+###
+# Monthly
+###
+256: # 潜水艦隊」出撃せよ！ 获得6-1 BOSS战S胜利3次
+  type: 6
+  "battle_boss_win_rank_s"
+    description: "勝利"
+    maparea: [61]
+    required: 3
+    init: 0
+265: # 海上護衛強化月間 获得1-5 BOSS战A胜利以上10次
+  type: 6
+  "battle_boss_win_rank_a"
+    description: "勝利"
+    maparea: [15]
+    required: 10
+    init: 0
