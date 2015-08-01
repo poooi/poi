@@ -132,7 +132,7 @@ TaskPanel = React.createClass
           if getCurrentDay() < questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type is 3
-          if getCurrentMonth() > questRecord.month
+          if getCurrentMonth() isnt questRecord.month
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type is 6
         else
