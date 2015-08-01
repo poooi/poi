@@ -2,23 +2,14 @@
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
 {join} = require 'path-extra'
-fs = require 'fs-extra'
 
 # Local time -> Task Refresh time(GMT + 4)
-
-getCurrentTime = (type)->
+getCurrentDay = ->
   curTime = new Date()
   curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  switch type
-    when 'day'
-      return curTime.getDay()
-    when 'date'
-      return curTime.getDate()
-    when 'month'
-      return curTime.getMonth() + 1
+  curTime.getDay()
 
-prevDay = getCurrentTime('day')
-prevMonth = getCurrentTime('month')
+prevDay = getCurrentDay()
 
 getStyleByProgress = (progress) ->
   switch progress
@@ -58,9 +49,8 @@ catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  questRecord.day = getCurrentTime('day')
-  questRecord.month = getCurrentTime('month')
-  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
+  questRecord.day = getCurrentDay()
+  localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
@@ -120,19 +110,17 @@ TaskPanel = React.createClass
     switch path
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
-        try
-          questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
-          if getCurrentTime('day') != questRecord.day
+        questRecord = localStorage.getItem "quest_tracking_#{memberId}"
+        if questRecord?
+          questRecord = JSON.parse questRecord
+          if getCurrentDay() != questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-          if getCurrentTime('day') < questRecord.day
+          if getCurrentDay() < questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type is 3
-          if getCurrentTime('month') > questRecord.month
-            for id, q of questRecord
-              delete questRecord[id] if questGoals[id].type is 6
-        catch error
-          false
+        else
+          questRecord = {}
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
         for task in body.api_list
@@ -272,10 +260,8 @@ TaskPanel = React.createClass
       @setState
         tasks: tasks
   refreshDay: ->
-    curDay = getCurrentTime('day')
-    curMonth = getCurrentTime('month')
-    curDate = getCurrentTime('date')
-    return if prevDay == curDay and prevMonth == curMonth
+    curDay = getCurrentDay()
+    return if prevDay == curDay
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
@@ -283,9 +269,6 @@ TaskPanel = React.createClass
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       if task.type is 3 and curDay is 1
-        clearQuestRecord task.id
-        tasks[idx] = Object.clone(emptyTask)
-      if task.type is 6 and curDate is 1
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       tasks = _.sortBy tasks, (e) -> e.id

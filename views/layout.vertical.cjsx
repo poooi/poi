@@ -32,6 +32,11 @@ adjustSize = ->
     window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
     document.documentElement.style.overflow = 'hidden';
   """
+  webview.insertCSS """
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+  """
 # interval = setInterval adjustSize, 500
 if !window._delay
   adjustSize()
@@ -69,9 +74,6 @@ handleTitleSet = ->
   @insertCSS """
     #ntg-recommend {
       display: none !important;
-    }
-    ::-webkit-scrollbar {
-      width: 0px;
     }
   """
   handleResize()

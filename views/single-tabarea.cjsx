@@ -82,13 +82,9 @@ ControlledTabArea = React.createClass
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
-    window.addEventListener 'tabarea.reload', @forceUpdate 
+    window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
-    ### FIXME
-    # Animation disabled
-    # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
-    ###
-    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
+    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={true}>
     {
       [
         components.map (component, index) =>

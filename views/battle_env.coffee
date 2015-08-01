@@ -17,6 +17,10 @@ currentCell = -1
 battled = false
 nowHp = []
 enemyShipId = []
+# Formation: 0 - 単縦陣, 1 - 複縦陣, 2 - 輪形陣, 3 - 梯形陣, 4 - 単横陣,
+# 5 - 第一警戒航行序列, 6 - 第二警戒航行序列, 7 - 第三警戒航行序列, 8 - 第四警戒航行序列
+enemyFormation = 0
+colorNo = -1
 
 koukuAttack = (nowHp, kouku) ->
   if kouku.api_edam?
@@ -78,9 +82,13 @@ window.addEventListener 'game.response', (e) ->
       currentCell = body.api_no
       deckId = parseInt(postBody.api_deck_id) - 1
       nowHp = []
+      colorNo = body.api_color_no
+      enemyFormation = 0
     when '/kcsapi/api_req_map/next'
       currentCell = body.api_no
       battled = false
+      colorNo = body.api_color_no
+      enemyFormation = 0
     when '/kcsapi/api_port/port'
       # Initialize all info
       deckId = -1
@@ -91,9 +99,12 @@ window.addEventListener 'game.response', (e) ->
       battled = false
       nowHp = []
       enemyShipId = []
+      colorNo = -1
+      enemyFormation = 0
     when '/kcsapi/api_req_sortie/battle'
       battled = true
       enemyShipId = body.api_ship_ke.slice 1, 7
+      enemyFormation = body.api_formation[1] if body.api_formation?
       nowHp = body.api_nowhps.slice 1, 13
       koukuAttack nowHp, body.api_kouku.api_stage3 if body.api_kouku.api_stage3?
       openAttack nowHp, body.api_opening_atack if body.api_opening_atack?
@@ -114,11 +125,13 @@ window.addEventListener 'game.response', (e) ->
     when '/kcsapi/api_req_battle_midnight/sp_midnight'
       battled = true
       enemyShipId = body.api_ship_ke.slice 1, 7
+      enemyFormation = body.api_formation[1] if body.api_formation?
       nowHp = body.api_nowhps.slice 1, 13
       hougekiAttack nowHp, body.api_hougeki if body.api_hougeki?
     when '/kcsapi/api_req_sortie/airbattle'
       battled = true
       enemyShipId = body.api_ship_ke.slice 1, 7
+      enemyFormation = body.api_formation[1] if body.api_formation?
       nowHp = body.api_nowhps.slice 1, 13
       koukuAttack nowHp, body.api_kouku.api_stage3 if body.api_kouku? && body.api_kouku.api_stage3?
       koukuAttack nowHp, body.api_kouku2.api_stage3 if body.api_kouku2? && body.api_kouku2.api_stage3?
@@ -130,7 +143,7 @@ window.addEventListener 'game.response', (e) ->
           cancelable: true
           detail:
             rank: body.api_win_rank
-            boss: bossCell == currentCell
+            boss: bossCell == currentCell or colorNo == 5
             map: map
             mapCell: currentCell
             quest: body.api_quest_name
@@ -139,5 +152,6 @@ window.addEventListener 'game.response', (e) ->
             deckShipId: Object.clone _decks[deckId].api_ship
             deckHp: nowHp.slice 0, 6
             enemyShipId: Object.clone enemyShipId
+            enemyFormation: enemyFormation
             enemyHp: nowHp.slice 6, 12
         window.dispatchEvent event
