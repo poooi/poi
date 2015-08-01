@@ -155,10 +155,16 @@ TeitokuPanel = React.createClass
         if config.get 'poi.mapstartcheck.ship'
           freeShipSlot = config.get 'poi.mapstartcheck.freeShipSlot'
           if @state.maxChara - @state.shipCount < freeShipSlot
-            toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+            # toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+            setTimeout =>
+              error "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+            , 1000
         if config.get 'poi.mapstartcheck.item'
           if @state.maxSlotitem - @state.slotitemCount <= 0
-            toggleModal '装备检查', "装备已满，出击注意！"
+            # toggleModal '装备检查', "装备已满，出击注意！"
+            setTimeout =>
+              error "装备已满，出击注意！"
+            , 1000
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
