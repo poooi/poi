@@ -11,6 +11,18 @@ getCurrentDay = ->
 
 prevDay = getCurrentDay()
 
+getCurrentDate = ->
+  curTime = new Date()
+  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
+  curTime.getDate()
+
+getCurrentMonth = ->
+  curTime = new Date()
+  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
+  curTime.getMonth() + 1
+
+prevMonth = getCurrentMonth()
+
 getStyleByProgress = (progress) ->
   switch progress
     when '进行'
@@ -50,6 +62,7 @@ catch
 questRecord = {}
 syncQuestRecord = ->
   questRecord.day = getCurrentDay()
+  questRecord.month = getCurrentMonth()
   localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
@@ -119,6 +132,9 @@ TaskPanel = React.createClass
           if getCurrentDay() < questRecord.day
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type is 3
+          if getCurrentMonth() > questRecord.month
+            for id, q of questRecord
+              delete questRecord[id] if questGoals[id].type is 6
         else
           questRecord = {}
       when '/kcsapi/api_get_member/questlist'
@@ -261,7 +277,9 @@ TaskPanel = React.createClass
         tasks: tasks
   refreshDay: ->
     curDay = getCurrentDay()
-    return if prevDay == curDay
+    curMonth = getCurrentMonth()
+    curDate = getCurrentDate()
+    return if prevDay == curDay and prevMonth == curMonth
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
@@ -269,6 +287,9 @@ TaskPanel = React.createClass
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       if task.type is 3 and curDay is 1
+        clearQuestRecord task.id
+        tasks[idx] = Object.clone(emptyTask)
+      if task.type is 6 and curDate is 1
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       tasks = _.sortBy tasks, (e) -> e.id
@@ -280,6 +301,7 @@ TaskPanel = React.createClass
         detail:
           tasks: tasks
       window.dispatchEvent event
+    prevMonth = curMonth
     prevDay = curDay
   handleTaskInfo: (e) ->
     {tasks} = e.detail
