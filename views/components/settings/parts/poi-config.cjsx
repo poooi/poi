@@ -58,7 +58,7 @@ PoiConfig = React.createClass
     @setState
       freeShipSlot: freeShipSlot
   handleSetMapStartCheckItem: ->
-    enabled = @state.enableConfirmQuit
+    enabled = @state.mapStartCheckItem
     config.set 'poi.mapstartcheck.item', !enabled
     @setState
       mapStartCheckItem: !enabled
