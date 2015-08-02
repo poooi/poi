@@ -78,9 +78,9 @@ activateQuestRecord = (id, progress) ->
       percent = 0.8
     when '达成'
       percent = 1
-  if questRecord[id]?
-    questRecord[id].active = true
-    return
+#  if questRecord[id]?
+#    questRecord[id].active = true
+#    return
   questRecord[id] =
     count: 0
     required: 0
