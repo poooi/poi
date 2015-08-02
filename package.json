@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yudachi/poi.git"
+    "url": "https://github.com/poooi/poi.git"
   },
   "keywords": [
     "KanColle",
@@ -18,9 +18,9 @@
   "author": "Magica",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yudachi/poi/issues"
+    "url": "https://github.com/poooi/poi/issues"
   },
-  "homepage": "https://github.com/yudachi/poi",
+  "homepage": "https://github.com/poooi/poi",
   "dependencies": {
     "adm-zip": "^0.4.7",
     "bluebird": "^2.9.34",
@@ -39,7 +39,7 @@
     "react": "^0.13.3",
     "react-bootstrap": "git+https://github.com/magicae/react-bootstrap.git",
     "react-fontawesome": "^0.2.5",
-    "request": "^2.58.0",
+    "request": "^2.60.0",
     "shadowsocks": "git+https://github.com/magicae/shadowsocks-nodejs.git",
     "socks5-client": "^1.1.0",
     "socks5-http-client": "^1.0.1",

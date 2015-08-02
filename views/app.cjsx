@@ -211,9 +211,9 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
       </ul></p>
       <p>poi 如果有显示错误，可以手动调整一下内容大小，布局会自动适配。</p>
       <p>如果 poi 的运行不流畅，可以在设置中关闭一部分插件，对插件的操作重启后生效。</p>
-      <p>更多帮助参考 poi wiki - https://github.com/yudachi/poi/wiki </p>
+      <p>更多帮助参考 poi wiki - https://github.com/poooi/poi/wiki </p>
       <p>poi 交流群：378320628</p>
-      <p>为 poi 贡献代码和编写插件 - GitHub: https://github.com/yudachi/poi </p>
+      <p>为 poi 贡献代码和编写插件 - GitHub: https://github.com/poooi/poi </p>
     </div>
   footer = [
     name: '知道啦！'
