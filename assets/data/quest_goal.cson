@@ -92,14 +92,14 @@
   type: 2
   "create_item":
     description: "開発"
-    required: 3
-    init: 0
+    required: 4
+    init: 1
 608: # 艦娘「建造」艦隊強化！ 建造3次
   type: 2
   "create_ship":
     description: "建造"
-    required: 3
-    init: 0
+    required: 4
+    init: 1
 609: # 軍縮条約対応！ 解体2次
   type: 2
   "destroy_ship":
@@ -243,8 +243,8 @@
   "mission_success":
     description: "遠征"
     mission: ['東京急行', '東京急行(弐)']
-    required: 6
-    init: 0
+    required: 7
+    init: 1
 613: # 資源の再利用 进行废弃24次
   type: 3
   "destory_item":

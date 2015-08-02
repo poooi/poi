@@ -4,23 +4,19 @@ CSON = require 'cson'
 {join} = require 'path-extra'
 
 # Local time -> Task Refresh time(GMT + 4)
-getCurrentDay = ->
+getCurrentTime = ->
   curTime = new Date()
   curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime.getDay()
+  curTime
+getCurrentDay = ->
+  getCurrentTime().getDay()
+getCurrentDate = ->
+  getCurrentTime().getDate()
+getCurrentMonth = ->
+  getCurrentTime().getMonth() + 1
 
 prevDay = getCurrentDay()
-
-getCurrentDate = ->
-  curTime = new Date()
-  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime.getDate()
-
-getCurrentMonth = ->
-  curTime = new Date()
-  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime.getMonth() + 1
-
+prevDate = getCurrentDate()
 prevMonth = getCurrentMonth()
 
 getStyleByProgress = (progress) ->
@@ -62,27 +58,44 @@ catch
 questRecord = {}
 syncQuestRecord = ->
   questRecord.day = getCurrentDay()
+  questRecord.date = getCurrentDate()
   questRecord.month = getCurrentMonth()
   localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
-activateQuestRecord = (id) ->
+activateQuestRecord = (id, progress) ->
   if questRecord[id]?
     questRecord[id].active = true
-    return
-  questRecord[id] =
-    count: 0
-    required: 0
-    active: true
-  for k, v of questGoals[id]
-    continue if k == 'type'
-    questRecord[id][k] =
-      count: v.init
-      required: v.required
-      description: v.description
-    questRecord[id].count += v.init
-    questRecord[id].required += v.required
+  else
+    questRecord[id] =
+      count: 0
+      required: 0
+      active: true
+    for k, v of questGoals[id]
+      continue if k == 'type'
+      questRecord[id][k] =
+        count: v.init
+        required: v.required
+        description: v.description
+      questRecord[id].count += v.init
+      questRecord[id].required += v.required
+  # Only sync progress with game progress if the quest has only one goal.
+  if Object.keys(questGoals[id]).length == 2
+    progress = switch progress
+      when '达成'
+        1
+      when '80%'
+        0.8
+      when '50%'
+        0.5
+      else
+        0
+    for k, v of questGoals[id]
+      continue if k == 'type'
+      before = questRecord[id][k].count
+      questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
+      questRecord[id].count += questRecord[id][k].count - before
   syncQuestRecord()
 inactivateQuestRecord = (id) ->
   return unless questRecord[id]?
@@ -126,7 +139,7 @@ TaskPanel = React.createClass
         questRecord = localStorage.getItem "quest_tracking_#{memberId}"
         if questRecord?
           questRecord = JSON.parse questRecord
-          if getCurrentDay() != questRecord.day
+          if getCurrentDay() isnt questRecord.day or getCurrentDate() isnt questRecord.date or getCurrentMonth() isnt questRecord.month
             for id, q of questRecord
               delete questRecord[id] if questGoals[id].type in [2, 4, 5]
           if getCurrentDay() < questRecord.day
@@ -150,7 +163,7 @@ TaskPanel = React.createClass
           else if task.api_progress_flag == 2
             progress = '80%'
           # Determine customize progress
-          activateQuestRecord task.api_no if questGoals[task.api_no]?
+          activateQuestRecord task.api_no, progress if questGoals[task.api_no]?
           idx = _.findIndex tasks, (e) ->
             e.id == task.api_no
           # Do not exist currently
@@ -277,9 +290,9 @@ TaskPanel = React.createClass
         tasks: tasks
   refreshDay: ->
     curDay = getCurrentDay()
-    curMonth = getCurrentMonth()
     curDate = getCurrentDate()
-    return if prevDay == curDay and prevMonth == curMonth
+    curMonth = getCurrentMonth()
+    return if prevDay == curDay and prevDate == curDate and prevMonth == curMonth
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
@@ -302,6 +315,7 @@ TaskPanel = React.createClass
           tasks: tasks
       window.dispatchEvent event
     prevMonth = curMonth
+    prevDate = curDate
     prevDay = curDay
   handleTaskInfo: (e) ->
     {tasks} = e.detail
