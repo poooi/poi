@@ -67,10 +67,20 @@ syncQuestRecord = ->
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
-activateQuestRecord = (id) ->
-  if questRecord[id]?
-    questRecord[id].active = true
-    return
+activateQuestRecord = (id, progress) ->
+  percent = 0
+  switch progress
+    when '进行'
+      percent = 0
+    when '50%'
+      percent = 0.5
+    when '80%'
+      percent = 0.8
+    when '达成'
+      percent = 1
+#  if questRecord[id]?
+#    questRecord[id].active = true
+#    return
   questRecord[id] =
     count: 0
     required: 0
@@ -78,10 +88,10 @@ activateQuestRecord = (id) ->
   for k, v of questGoals[id]
     continue if k == 'type'
     questRecord[id][k] =
-      count: v.init
+      count: v.required * percent
       required: v.required
       description: v.description
-    questRecord[id].count += v.init
+    questRecord[id].count += v.required * percent
     questRecord[id].required += v.required
   syncQuestRecord()
 inactivateQuestRecord = (id) ->
@@ -150,7 +160,7 @@ TaskPanel = React.createClass
           else if task.api_progress_flag == 2
             progress = '80%'
           # Determine customize progress
-          activateQuestRecord task.api_no if questGoals[task.api_no]?
+          activateQuestRecord task.api_no, progress if questGoals[task.api_no]?
           idx = _.findIndex tasks, (e) ->
             e.id == task.api_no
           # Do not exist currently
