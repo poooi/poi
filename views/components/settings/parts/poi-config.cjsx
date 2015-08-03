@@ -176,7 +176,7 @@ PoiConfig = React.createClass
           </div>
         </div>
         <div style={flex:2, margin:"0 15px"}>
-          <Input type="number" label="船位少于此数量将报警" ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位报警数量" />
+          <Input type="number" label="船位少于此数量时警告" ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
         </div>
       </div>
       <div className="form-group">
