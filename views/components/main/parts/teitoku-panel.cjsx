@@ -153,7 +153,7 @@ TeitokuPanel = React.createClass
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_get_member/mapinfo'
         if config.get 'poi.mapstartcheck.ship'
-          freeShipSlot = config.get 'poi.mapstartcheck.freeShipSlot'
+          freeShipSlot = config.get 'poi.mapstartcheck.freeShipSlot', 4
           if @state.maxChara - @state.shipCount < freeShipSlot
             # toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
             setTimeout =>
