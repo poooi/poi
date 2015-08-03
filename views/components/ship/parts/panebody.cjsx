@@ -404,7 +404,7 @@ PaneBody = React.createClass
                 <td width="20%">{shipInfo.api_name}</td>
                 <td width="22%">Lv. {ship.api_lv}</td>
                 <td width="25%" className="hp-progress">
-                  <OverlayTrigger show = {ship.api_ndock_time} placement='bottom' overlay={<Tooltip>入渠时间：{resolveTime ship.api_ndock_time/1000}</Tooltip>}>
+                  <OverlayTrigger show = {ship.api_ndock_time} placement='bottom' overlay={<Tooltip>入渠时间：{resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
                     <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                  now={ship.api_nowhp / ship.api_maxhp * 100}
                                  label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
