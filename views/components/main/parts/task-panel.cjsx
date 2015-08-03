@@ -141,12 +141,15 @@ TaskPanel = React.createClass
           questRecord = JSON.parse questRecord
           if getCurrentDay() isnt questRecord.day or getCurrentDate() isnt questRecord.date or getCurrentMonth() isnt questRecord.month
             for id, q of questRecord
+              continue unless questGoals[id]?
               delete questRecord[id] if questGoals[id].type in [2, 4, 5]
           if getCurrentDay() < questRecord.day
             for id, q of questRecord
+              continue unless questGoals[id]?
               delete questRecord[id] if questGoals[id].type is 3
           if getCurrentMonth() isnt questRecord.month
             for id, q of questRecord
+              continue unless questGoals[id]?
               delete questRecord[id] if questGoals[id].type is 6
         else
           questRecord = {}

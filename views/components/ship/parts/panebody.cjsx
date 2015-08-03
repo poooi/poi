@@ -80,54 +80,114 @@ getMaterialStyleData = (percent) ->
   else
     null
 
-getDeckMessage = (deck) ->
-  {$ships, $slotitems, _ships} = window
-  totalLv = totalShip = totalTyku = totalSaku = shipSaku = itemSaku = teitokuSaku = 0
+
+# Tyku
+# 制空値 = [(艦載機の対空値) × √(搭載数)] の総計
+getTyku = (deck) ->
+  {$ships, $slotitems, _ships, _slotitems} = window
+  totalTyku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
     ship = _ships[shipId]
-    shipInfo = $ships[ship.api_ship_id]
-    totalLv += ship.api_lv
-    totalShip += 1
+    for itemId, slotId in ship.api_slot
+      continue if itemId == -1
+      item = _slotitems[itemId]
+      if item.api_type[3] in [6, 7, 8]
+        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+      else if item.api_type[3] == 10 && item.api_type[2] == 11
+        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+  totalTyku
+
+# Saku (2-5 旧式)
+# 偵察機索敵値×2 ＋ 電探索敵値 ＋ √(艦隊の装備込み索敵値合計 - 偵察機索敵値 - 電探索敵値)
+getSaku25 = (deck) ->
+  {$ships, $slotitems, _ships, _slotitems} = window
+  reconSaku = shipSaku = radarSaku = 0
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    ship = _ships[shipId]
+    shipSaku += ship.api_sakuteki[0]
+    for itemId, slotId in ship.api_slot
+      continue if itemId == -1
+      item = _slotitems[itemId]
+      switch item.api_type[3]
+        when 9
+          reconSaku += item.api_saku
+          shipSaku -= item.api_saku
+        when 10
+          if item.api_type[2] == 10
+            reconSaku += item.api_saku
+            shipSaku -= item.api_saku
+        when 11
+          radarSaku += item.api_saku
+          shipSaku -= item.api_saku
+  reconSaku = reconSaku * 2.00
+  shipSaku = Math.sqrt(shipSaku)
+  totalSaku = reconSaku + radarSaku + shipSaku
+
+  recon: parseFloat(reconSaku.toFixed(2))
+  radar: parseFloat(radarSaku.toFixed(2))
+  ship: parseFloat(shipSaku.toFixed(2))
+  total: parseFloat(totalSaku.toFixed(2))
+
+# Saku (2-5 秋式)
+# 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
+#            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
+#            + √(各艦毎の素索敵) × (1.69) + (司令部レベルを5の倍数に切り上げ) × (-0.61)
+getSaku25a = (deck) ->
+  {$ships, $slotitems, _ships, _slotitems} = window
+  totalSaku = shipSaku = itemSaku = teitokuSaku = 0
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    ship = _ships[shipId]
     shipPureSaku = ship.api_sakuteki[0]
     for itemId, slotId in ship.api_slot
       continue if itemId == -1
       item = _slotitems[itemId]
-      itemInfo = $slotitems[item.api_slotitem_id]
-      # Airplane Tyku
-      if itemInfo.api_type[3] in [6, 7, 8]
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
-      else if itemInfo.api_type[3] == 10 && itemInfo.api_type[2] == 11
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * itemInfo.api_tyku)
-      # Saku
-      # 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
-      #            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
-      #            + √(各艦毎の素索敵) × (1.69) + (司令部レベルを5の倍数に切り上げ) × (-0.61)
-      shipPureSaku -= itemInfo.api_saku
-      switch itemInfo.api_type[3]
+      shipPureSaku -= item.api_saku
+      switch item.api_type[3]
         when 7
-          itemSaku += itemInfo.api_saku * 1.04
+          itemSaku += item.api_saku * 1.04
         when 8
-          itemSaku += itemInfo.api_saku * 1.37
+          itemSaku += item.api_saku * 1.37
         when 9
-          itemSaku += itemInfo.api_saku * 1.66
+          itemSaku += item.api_saku * 1.66
         when 10
-          if itemInfo.api_type[2] == 10
-            itemSaku += itemInfo.api_saku * 2.00
-          else if itemInfo.api_type[2] == 11
-            itemSaku += itemInfo.api_saku * 1.78
+          if item.api_type[2] == 10
+            itemSaku += item.api_saku * 2.00
+          else if item.api_type[2] == 11
+            itemSaku += item.api_saku * 1.78
         when 11
-          if itemInfo.api_type[2] == 12
-            itemSaku += itemInfo.api_saku * 1.00
-          else if itemInfo.api_type[2] == 13
-            itemSaku += itemInfo.api_saku * 0.99
+          if item.api_type[2] == 12
+            itemSaku += item.api_saku * 1.00
+          else if item.api_type[2] == 13
+            itemSaku += item.api_saku * 0.99
         when 24
-          itemSaku += itemInfo.api_saku * 0.91
+          itemSaku += item.api_saku * 0.91
     shipSaku += Math.sqrt(shipPureSaku) * 1.69
   teitokuSaku = 0.61 * Math.floor((window._teitokuLv + 4) / 5) * 5
   totalSaku = shipSaku + itemSaku - teitokuSaku
+
+  ship: parseFloat(shipSaku.toFixed(2))
+  item: parseFloat(itemSaku.toFixed(2))
+  teitoku: parseFloat(teitokuSaku.toFixed(2))
+  total: parseFloat(totalSaku.toFixed(2))
+
+getDeckMessage = (deck) ->
+  {$ships, $slotitems, _ships} = window
+  totalLv = totalShip = 0
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    ship = _ships[shipId]
+    totalLv += ship.api_lv
+    totalShip += 1
   avgLv = totalLv / totalShip
-  [totalLv, parseFloat(avgLv.toFixed(0)), totalTyku, parseFloat(totalSaku.toFixed(0)), parseFloat(shipSaku.toFixed(2)), parseFloat(itemSaku.toFixed(2)), parseFloat(teitokuSaku.toFixed(2))]
+
+  totalLv: totalLv
+  avgLv: parseFloat(avgLv.toFixed(0))
+  tyku: getTyku(deck)
+  saku25: getSaku25(deck)
+  saku25a: getSaku25a(deck)
 
 TopAlert = React.createClass
   messages: ['没有舰队信息']
@@ -273,12 +333,17 @@ TopAlert = React.createClass
   render: ->
     <Alert style={getFontStyle window.theme}>
       <div style={display: "flex"}>
-        <span style={flex: 1}>总 Lv.{@messages[0]}</span>
-        <span style={flex: 1}>均 Lv.{@messages[1]}</span>
-        <span style={flex: 1}>制空:&nbsp;{@messages[2]}</span>
+        <span style={flex: 1}>总 Lv.{@messages.totalLv}</span>
+        <span style={flex: 1}>均 Lv.{@messages.avgLv}</span>
+        <span style={flex: 1}>制空:&nbsp;{@messages.tyku}</span>
         <span style={flex: 1}>
-          <OverlayTrigger placement='bottom' overlay={<Tooltip>[艦娘]{@messages[4]} + [装備]{@messages[5]} - [司令部]{@messages[6]}</Tooltip>}>
-            <span>索敌:&nbsp;{@messages[3]}</span>
+          <OverlayTrigger placement='bottom' overlay={
+            <Tooltip>
+              <div>2-5秋式： {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
+              <div>2-5旧式： {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
+            </Tooltip>
+          }>
+            <span>索敌:&nbsp;{@messages.saku25a.total}</span>
           </OverlayTrigger>
         </span>
         <span style={flex: 1.5}>{@getState()}:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
