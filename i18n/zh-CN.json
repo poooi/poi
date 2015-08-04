@@ -1,5 +1,5 @@
 {
-  "Waiting response……": "poi 等待游戏数据中……",
+  "Waiting response...": "poi 等待游戏数据中……",
   "not in a sortie": "未出击",
   "failed to save the screenshot": "截图保存失败",
   "screenshot saved to": "截图保存在",
@@ -25,8 +25,8 @@
   " Plugins": " 插件",
   "Update": "更新",
   "Download latest version": "下载最新版",
-  "Network error, Retrying %s time": "网络连接错误，正在进行第 %s 次重试",
-  "Network error, Retrying %s times": "网络连接错误，正在进行第 %s 次重试",
+  "Connection failed after %s retry": "网络连接错误，正在进行第 %s 次重试",
+  "Connection failed after %s retries": "网络连接错误，正在进行第 %s 次重试",
   "Network error: HTTP %s": "服务器返回非正常的 HTTP 状态码，HTTP %s",
   "Connection failed.": "网络连接失败，请检查网络与代理设置",
   " Overview": " 概览",

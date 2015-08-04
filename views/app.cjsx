@@ -76,7 +76,7 @@ PoiControl = React.createClass
       if err?
         error __ 'Failed to save the screenshot'
       else
-        success "#{i18n__ 'screenshot saved to'} #{filename}"
+        success "#{__ 'screenshot saved to'} #{filename}"
   handleOpenCacheFolder: ->
     dir = 'cache'
     dir = 'MyCache' if process.platform == 'darwin'
@@ -262,7 +262,7 @@ window.addEventListener 'game.response', (e) ->
   success "#{__ "Hit"} #{method} #{resPath}"
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
-  error __n "Network error, Retrying %s time", "Network error, Retrying %s times", counter
+  error __n "Connection failed after %s retry", "Connection failed after %s retries", counter
 window.addEventListener 'network.invalid.code', (e) ->
   {code} = e.detail
   error __ "Network error: HTTP %s", code
