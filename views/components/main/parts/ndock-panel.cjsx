@@ -4,7 +4,7 @@ i18n = require 'i18n'
 {resolveTime} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {join} = require 'path-extra'
-
+{__, __n} = i18n
 timeToString = (dateTime) ->
   date = new Date(dateTime)
   "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
@@ -12,23 +12,23 @@ timeToString = (dateTime) ->
 NdockPanel = React.createClass
   getInitialState: ->
     docks: [
-        name: i18n.__ 'Empty'
+        name: __ 'Empty'
         completeTime: -1
         countdown: -1
       ,
-        name: i18n.__ 'Empty'
+        name: __ 'Empty'
         completeTime: -1
         countdown: -1
       ,
-        name: i18n.__ 'Empty'
+        name: __ 'Empty'
         completeTime: -1
         countdown: -1
       ,
-        name: i18n.__ 'Empty'
+        name: __ 'Empty'
         completeTime: -1
         countdown: -1
       ,
-        name: i18n.__ 'Empty'
+        name: __ 'Empty'
         completeTime: -1
         countdown: -1
     ]
@@ -44,12 +44,12 @@ NdockPanel = React.createClass
           switch ndock.api_state
             when -1
               docks[id] =
-                name: i18n.__ 'Locked'
+                name: __ 'Locked'
                 completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
-                name: i18n.__ 'Empty'
+                name: __ 'Empty'
                 completeTime: -1
                 countdown: -1
               notified[id] = false
@@ -67,12 +67,12 @@ NdockPanel = React.createClass
           switch ndock.api_state
             when -1
               docks[id] =
-                name: i18n.__ 'Locked'
+                name: __ 'Locked'
                 completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
-                name: i18n.__ 'Empty'
+                name: __ 'Empty'
                 completeTime: -1
                 countdown: -1
               notified[id] = false
@@ -90,7 +90,7 @@ NdockPanel = React.createClass
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 60 && !notified[i]
-          notify "#{docks[i].name} #{i18n.__ "repair completed"}",
+          notify "#{docks[i].name} #{__ "repair completed"}",
             type: 'repair'
             icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png')
           notified[i] = true
@@ -104,7 +104,7 @@ NdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header={i18n.__ 'Docking'} bsStyle="warning">
+    <Panel header={__ 'Docking'} bsStyle="warning">
       <Table>
         <tbody>
         {
@@ -114,7 +114,7 @@ NdockPanel = React.createClass
               <td>
                 {
                   if @state.docks[i].countdown > 60
-                    <OverlayTrigger placement='right' overlay={<Tooltip><strong>{i18n.__ "Finish by : "}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
+                    <OverlayTrigger placement='right' overlay={<Tooltip><strong>{__ "Finish by : "}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
                       <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
                     </OverlayTrigger>
                   else if @state.docks[i].countdown > -1

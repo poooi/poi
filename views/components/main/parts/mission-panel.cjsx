@@ -5,7 +5,7 @@ i18n = require 'i18n'
 {resolveTime} = window
 {notify} = window
 {join} = require 'path-extra'
-
+{__, __n} = i18n
 timeToString = (dateTime) ->
   date = new Date(dateTime)
   "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
@@ -13,27 +13,27 @@ timeToString = (dateTime) ->
 MissionPanel = React.createClass
   getInitialState: ->
     decks: [
-        name: i18n.__ "No.%s fleet", '0'
+        name: __ "No.%s fleet", '0'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '1'
+        name: __ "No.%s fleet", '1'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '2'
+        name: __ "No.%s fleet", '2'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '3'
+        name: __ "No.%s fleet", '3'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '4'
+        name: __ "No.%s fleet", '4'
         completeTime: -1
         countdown: -1
         mission: null
@@ -100,7 +100,7 @@ MissionPanel = React.createClass
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
         if decks[i].countdown <= 60 && !notified[i]
-          notify "#{decks[i].name} #{i18n.__ "mission complete"}",
+          notify "#{decks[i].name} #{__ "mission complete"}",
             type: 'expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
@@ -114,7 +114,7 @@ MissionPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header={i18n.__ "Expedition"} bsStyle="info">
+    <Panel header={__ "Expedition"} bsStyle="info">
       <Table>
         <tbody>
         {
@@ -125,7 +125,7 @@ MissionPanel = React.createClass
                 <td>
                   {
                     if @state.decks[i].countdown > 60
-                      <OverlayTrigger placement='right' overlay={<Tooltip><strong>{i18n.__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
+                      <OverlayTrigger placement='right' overlay={<Tooltip><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
                         <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
                       </OverlayTrigger>
                     else if @state.decks[i].countdown > -1

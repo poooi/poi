@@ -1,37 +1,37 @@
-i18nMain = require 'i18n'
+i18n = require 'i18n'
 path = require 'path-extra'
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
-
+{__, __n} = i18n
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
 
 KdockPanel = React.createClass
   getInitialState: ->
     docks: [
-        name: i18nMain.__ 'Empty'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: i18nMain.__ 'Empty'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: i18nMain.__ 'Empty'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: i18nMain.__ 'Empty'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: i18nMain.__ 'Empty'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
@@ -48,13 +48,13 @@ KdockPanel = React.createClass
           switch kdock.api_state
             when -1
               docks[id] =
-                name: i18nMain.__ 'Locked'
+                name: __ 'Locked'
                 material: []
                 countdown: -1
                 completeTime: -1
             when 0
               docks[id] =
-                name: i18nMain.__ 'Empty'
+                name: __ 'Empty'
                 material: []
                 countdown: -1
                 completeTime: -1
@@ -92,13 +92,13 @@ KdockPanel = React.createClass
           switch kdock.api_state
             when -1
               docks[id] =
-                name: i18nMain.__ 'Locked'
+                name: __ 'Locked'
                 material: []
                 completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
-                name: i18nMain.__ 'Empty'
+                name: __ 'Empty'
                 material: []
                 completeTime: -1
                 countdown: -1
@@ -132,16 +132,16 @@ KdockPanel = React.createClass
           notified: notified
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 0
-          setTimeout warn.bind(@, i18nMain.__("The development of %s was failed.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
+          setTimeout warn.bind(@, __("The development of %s was failed.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
         else if body.api_create_flag == 1
-          setTimeout success.bind(@, i18nMain.__("The development of %s was successful.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
+          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} #{i18nMain.__ "built"}",
+          notify "#{docks[i].name} #{__ "built"}",
             type: 'construction'
             icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
@@ -155,7 +155,7 @@ KdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header={i18nMain.__ "Construction"} bsStyle="danger">
+    <Panel header={__ "Construction"} bsStyle="danger">
       <Table>
         <tbody>
         {
