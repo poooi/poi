@@ -132,7 +132,7 @@ PoiConfig = React.createClass
         useFixedResolution: true
       @handleSetWebviewWidth()
   handleClearCookie: (e) ->
-    remote.getCurrentWebContents().session.clearStorageData ['cookies'], ->
+    remote.getCurrentWebContents().session.clearStorageData {storages: ['cookies']}, ->
       toggleModal __("Delete cookies"), __("Success!")
   handleClearCache: (e) ->
     remote.getCurrentWebContents().session.clearCache ->
