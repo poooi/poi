@@ -3,17 +3,7 @@ glob = require 'glob'
 i18n = require 'i18n'
 {_, $, React, ReactBootstrap, FontAwesome} = window
 {TabbedArea, TabPane, DropdownButton} = ReactBootstrap
-
-# i18n configure
-i18n.configure({
-    locales:['en-US', 'ja-JP', 'zh-CN'],
-    defaultLocale: 'zh-CN',
-    directory: path.join(__dirname, "i18n"),
-    updateFiles: false,
-    indent: "\t",
-    extension: '.json'
-})
-i18n.setLocale(window.language)
+{__, __n} = i18n
 
 $('poi-main').className += 'double-tabbed'
 window.doubleTabbed = true
@@ -126,7 +116,7 @@ ControlledTabArea = React.createClass
       }
       </TabbedArea>
       <TabbedArea activeKey={@state.key[1]} onSelect={@handleSelectRight} animation={true}>
-        <DropdownButton key={-1} eventKey={-1} tab={<span>{plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{i18n.__ " Plugins"}</span>}</span>} navItem={true}>
+        <DropdownButton key={-1} eventKey={-1} tab={<span>{plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ " Plugins"}</span>}</span>} navItem={true}>
         {
           counter = -1
           plugins.map (plugin, index) =>

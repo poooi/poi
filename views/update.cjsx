@@ -4,18 +4,7 @@ i18n = require 'i18n'
 {remote} = window
 {React, ReactBootstrap, toggleModal} = window
 updateManager = remote.require './lib/update'
-
-# i18n configure
-i18n.configure({
-    locales:['en-US', 'ja-JP', 'zh-CN'],
-    defaultLocale: 'zh-CN',
-    directory: path.join(__dirname, "i18n"),
-    updateFiles: false,
-    indent: "\t",
-    extension: '.json'
-})
-i18n.setLocale(window.language)
-
+{__, __n} = i18n
 shell = require 'shell'
 
 updateInfo = null
@@ -36,11 +25,11 @@ checkUpdate = ->
     console.log "Remote version: #{info.version}. Current version: #{POI_VERSION}"
     if isNewVersion(POI_VERSION, info.version)
       updateInfo = info
-      title = <span>{i18n.__ "Update"} poi-v{info.version}</span>
+      title = <span>{__ "Update"} poi-v{info.version}</span>
       content =
         <div dangerouslySetInnerHTML={__html: info.log} />
       footer = [
-        name: i18n.__ 'Download latest version',
+        name: __ 'Download latest version',
         func: doUpdate,
         style: 'primary'
       ]
