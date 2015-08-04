@@ -165,20 +165,6 @@ PoiConfig = React.createClass
           </Col>
         </Grid>
       </div>
-      <div className="form-group" >
-        <Divider text="出击检查" />
-        <div style={display:"flex", flexFlow:"row nowrap"}>
-          <div style={flex:2, margin:"0 15px"}>
-            <Input type="checkbox" label="船位检查" checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
-          </div>
-          <div style={flex:2, margin:"0 15px"}>
-            <Input type="checkbox" label="装备检查" checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
-          </div>
-        </div>
-        <div style={flex:2, margin:"0 15px"}>
-          <Input type="number" label="船位少于此数量时警告" ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
-        </div>
-      </div>
       <div className="form-group">
         <Divider text="布局" />
         <Grid>
@@ -196,6 +182,20 @@ PoiConfig = React.createClass
             <Input type="checkbox" label="切分组件与插件面板" checked={@state.enableDoubleTabbed} onChange={@handleSetDoubleTabbed} />
           </Col>
         </Grid>
+      </div>
+      <div className="form-group" >
+        <Divider text="出击检查" />
+        <div style={display:"flex", flexFlow:"row nowrap"}>
+          <div style={flex:2, margin:"0 15px"}>
+            <Input type="checkbox" label="船位检查" checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
+          </div>
+          <div style={flex:2, margin:"0 15px"}>
+            <Input type="checkbox" label="装备检查" checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
+          </div>
+        </div>
+        <div style={flex:2, margin:"0 15px"}>
+          <Input type="number" label="船位少于此数量时警告" ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
+        </div>
       </div>
       <div className="form-group">
         <Divider text="Cookies 和缓存" />
