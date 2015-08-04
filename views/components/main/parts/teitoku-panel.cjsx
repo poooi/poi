@@ -1,3 +1,5 @@
+path = require 'path-extra'
+{__} = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
@@ -37,7 +39,7 @@ getHeader = (state) ->
         </div>
       )
   else
-    return '提督 [尚未登录]'
+    return __ 'Admiral [Not logged in]'
 
 getMaterialImage = (idx) ->
   return "file://#{ROOT}/assets/img/material/0#{idx}.png"
@@ -162,13 +164,13 @@ TeitokuPanel = React.createClass
           if @state.maxChara - @state.shipCount < freeShipSlot
             # toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
             setTimeout =>
-              error "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+              error __ 'Attention! Ship Slot has only %s left.', "#{@state.maxChara - @state.shipCount}"
             , 1000
         if config.get 'poi.mapstartcheck.item'
           if @state.maxSlotitem - @state.slotitemCount <= 0
             # toggleModal '装备检查', "装备已满，出击注意！"
             setTimeout =>
-              error "装备已满，出击注意！"
+              error __ 'Attention! Item Slot is full.'
             , 1000
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
@@ -177,8 +179,8 @@ TeitokuPanel = React.createClass
   render: ->
     <Panel header={getHeader @state} bsStyle="default" className="teitoku-panel">
       <Grid>
-        <Col xs={6}>舰娘：{@state.shipCount} / {@state.maxChara}</Col>
-        <Col xs={6}>装备：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
+        <Col xs={6}>{__ 'Ships'}：{@state.shipCount} / {@state.maxChara}</Col>
+        <Col xs={6}>{__ 'Equipment'}：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
       </Grid>
       <Grid style={marginTop: 5}>
       {

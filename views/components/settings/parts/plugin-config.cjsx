@@ -1,11 +1,11 @@
 path = require 'path-extra'
 glob = require 'glob'
+{__, __n} = require 'i18n'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
 {Grid, Col, Input, Alert} = ReactBootstrap
 {config} = window
 {openExternal} = require 'shell'
 Divider = require './divider'
-
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 plugins = plugins.map (filePath) ->
   plugin = require filePath
@@ -28,11 +28,11 @@ PluginConfig = React.createClass
       enabled: enabled
   render: ->
     <form>
-      <Divider text="全部插件" />
+      <Divider text={__ 'Plugins'} />
       <Grid>
         <Col xs={12}>
           <Alert bsStyle='info'>
-            关闭或者开启插件的设置在重新启动后生效。
+            {__ 'You must reboot the app for the changes to take effect.'}
           </Alert>
         </Col>
       </Grid>

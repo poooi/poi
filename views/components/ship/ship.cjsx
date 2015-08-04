@@ -1,4 +1,5 @@
 {relative, join} = require 'path-extra'
+{__, __n} = require 'i18n'
 {_, $, $$, React, ReactBootstrap, ROOT, toggleModal} = window
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup} = ReactBootstrap
@@ -51,7 +52,7 @@ getDeckState = (deck) ->
 module.exports =
   name: 'ShipView'
   priority: 0.1
-  displayName: <span><FontAwesome key={0} name='server' /> 舰队</span>
+  displayName: <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
   description: '舰队展示页面，展示舰队详情信息'
   reactClass: React.createClass
     getInitialState: ->
@@ -123,7 +124,7 @@ module.exports =
                   continue if slotId == -1
                   safe = true if _slotitems[slotId].api_type[3] is 14
                 if !safe
-                  toggleModal '注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能有击沉风险！"
+                  toggleModal __('Attention!'), "Lv. #{ship.api_lv} - #{ship.api_name} #{__ 'is heavily damaged!'}"
         else
           flag = false
       return unless flag

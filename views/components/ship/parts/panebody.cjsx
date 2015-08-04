@@ -1,4 +1,6 @@
 {relative, join} = require 'path-extra'
+i18n = require 'i18n'
+{__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overlay} = ReactBootstrap
 
@@ -202,7 +204,7 @@ getDeckMessage = (deck) ->
   saku25a: getSaku25a(deck)
 
 TopAlert = React.createClass
-  messages: ['没有舰队信息']
+  messages: [__ 'No data']
   countdown: [0, 0, 0, 0, 0, 0]
   maxCountdown: 0
   missionCountdown: 0
@@ -259,9 +261,9 @@ TopAlert = React.createClass
       @setAlert()
   getState: ->
     if @state.inMission
-      return '远征'
+      return __ 'Expedition'
     else
-      return '回复'
+      return __ 'Resting'
   setAlert: ->
     decks = window._decks
     @messages = getDeckMessage decks[@props.deckIndex]
@@ -308,7 +310,7 @@ TopAlert = React.createClass
         cond = @cond.map (c) => if c < 49 then Math.min(49, c + @timeDelta / 60) else c
         @props.updateCond(cond)
       if @maxCountdown is @timeDelta and not @inBattle and not @state.inMission and window._decks[@props.deckIndex].api_mission[0] <= 0
-        notify "#{@props.deckName} 疲劳回复完成",
+        notify "#{@props.deckName} #{__ 'have recovered from fatigue'}",
           type: 'morale'
           icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
     if flag or (@inBattle and not @state.inMission)
@@ -345,25 +347,25 @@ TopAlert = React.createClass
   render: ->
     <Alert style={getFontStyle window.theme}>
       <div style={display: "flex"}>
-        <span style={flex: 1}>总 Lv.{@messages.totalLv}</span>
-        <span style={flex: 1}>均 Lv.{@messages.avgLv}</span>
+        <span style={flex: 1}>{__ 'Total Lv'}. {@messages.totalLv}</span>
+        <span style={flex: 1}>{__ 'Avg Lv'}. {@messages.avgLv}</span>
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>
-              <span>基础制空: {@messages.tyku.basic} 熟练度加成: {@messages.tyku.alv}</span>
+              <span>{__ 'Basic'}: {@messages.tyku.basic} {__ 'Aircraft Skill'}: {@messages.tyku.alv}</span>
             </Tooltip>
           }>
-            <span>制空: {@messages.tyku.total}</span>
+            <span>{__ 'FP'}: {@messages.tyku.total}</span>
           </OverlayTrigger>
         </span>
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>
-              <div>2-5秋式: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
-              <div>2-5旧式: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
+              <div>2-5 {__ 'Autumn'}: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
+              <div>2-5 {__ 'Old'}: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
             </Tooltip>
           }>
-            <span>索敌: {@messages.saku25a.total}</span>
+            <span>{__ 'LOS'}: {@messages.saku25a.total}</span>
           </OverlayTrigger>
         </span>
         <span style={flex: 1.5}>{@getState()}: <span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>

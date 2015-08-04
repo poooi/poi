@@ -1,3 +1,5 @@
+{__} = require 'i18n'
+path = require 'path-extra'
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
@@ -9,27 +11,27 @@ getMaterialImage = (idx) ->
 KdockPanel = React.createClass
   getInitialState: ->
     docks: [
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
@@ -46,13 +48,13 @@ KdockPanel = React.createClass
           switch kdock.api_state
             when -1
               docks[id] =
-                name: '未解锁'
+                name: __ 'Locked'
                 material: []
                 countdown: -1
                 completeTime: -1
             when 0
               docks[id] =
-                name: '未使用'
+                name: __ 'Empty'
                 material: []
                 countdown: -1
                 completeTime: -1
@@ -90,13 +92,13 @@ KdockPanel = React.createClass
           switch kdock.api_state
             when -1
               docks[id] =
-                name: '未解锁'
+                name: __ 'Locked'
                 material: []
                 completeTime: -1
                 countdown: -1
             when 0
               docks[id] =
-                name: '未使用'
+                name: __ 'Empty'
                 material: []
                 completeTime: -1
                 countdown: -1
@@ -130,16 +132,16 @@ KdockPanel = React.createClass
           notified: notified
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 0
-          setTimeout warn.bind(@, "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name} 开发失败"), 500
+          setTimeout warn.bind(@, __("The development of %s was failed.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
         else if body.api_create_flag == 1
-          setTimeout success.bind(@, "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name} 开发成功"), 500
+          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} 建造完成",
+          notify "#{docks[i].name} #{__ 'built'}",
             type: 'construction'
             icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
@@ -153,7 +155,7 @@ KdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header="建造" bsStyle="danger">
+    <Panel header={__ 'Construction'} bsStyle="danger">
       <Table>
         <tbody>
         {
