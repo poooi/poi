@@ -1,7 +1,19 @@
 path = require 'path-extra'
 glob = require 'glob'
+i18n = require 'i18n'
 {_, React, ReactBootstrap, FontAwesome} = window
 {TabbedArea, TabPane, DropdownButton} = ReactBootstrap
+
+# i18n configure
+i18n.configure({
+    locales:['en-US', 'ja-JP', 'zh-CN'],
+    defaultLocale: 'zh-CN',
+    directory: path.join(__dirname, "i18n"),
+    updateFiles: false,
+    indent: "\t",
+    extension: '.json'
+})
+i18n.setLocale(window.language)
 
 # Get components
 components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
@@ -102,7 +114,7 @@ ControlledTabArea = React.createClass
                           if @state.key >= components.length and @state.key < 1000
                             <span>{plugins[@state.key - components.length].displayName}</span>
                           else
-                            <span><FontAwesome name='sitemap' /> 插件</span>
+                            <span><FontAwesome name='sitemap' />{i18n.__ " Plugins"}</span>
                         }
                         navItem={true}>
         {

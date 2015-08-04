@@ -156,6 +156,7 @@ window.CONST = Object.remoteClone remote.require './lib/constant'
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
 window.webviewWidth = config.get 'poi.webview.width', -1
+window.language = config.get 'poi.language', 'zh-CN'
 
 # Custom theme
 window.theme = config.get 'poi.theme', '__default__'

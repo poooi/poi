@@ -1,9 +1,11 @@
+path = require 'path-extra'
+i18n = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {resolveTime} = window
 {notify} = window
 {join} = require 'path-extra'
-
+{__, __n} = i18n
 timeToString = (dateTime) ->
   date = new Date(dateTime)
   "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
@@ -11,27 +13,27 @@ timeToString = (dateTime) ->
 MissionPanel = React.createClass
   getInitialState: ->
     decks: [
-        name: '第0艦隊'
+        name: __ "No.%s fleet", '0'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第1艦隊'
+        name: __ "No.%s fleet", '1'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第2艦隊'
+        name: __ "No.%s fleet", '2'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第3艦隊'
+        name: __ "No.%s fleet", '3'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第4艦隊'
+        name: __ "No.%s fleet", '4'
         completeTime: -1
         countdown: -1
         mission: null
@@ -98,7 +100,7 @@ MissionPanel = React.createClass
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
         if decks[i].countdown <= 60 && !notified[i]
-          notify "#{decks[i].name} 远征归来",
+          notify "#{decks[i].name} #{__ "mission complete"}",
             type: 'expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
@@ -112,7 +114,7 @@ MissionPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header="远征" bsStyle="info">
+    <Panel header={__ "Expedition"} bsStyle="info">
       <Table>
         <tbody>
         {
@@ -123,7 +125,7 @@ MissionPanel = React.createClass
                 <td>
                   {
                     if @state.decks[i].countdown > 60
-                      <OverlayTrigger placement='right' overlay={<Tooltip><strong>归港时间: </strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
+                      <OverlayTrigger placement='right' overlay={<Tooltip><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
                         <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
                       </OverlayTrigger>
                     else if @state.decks[i].countdown > -1

@@ -2,11 +2,14 @@ path = require 'path-extra'
 fs = require 'fs-extra'
 glob = require 'glob'
 remote = require 'remote'
+i18n = require 'i18n'
+{__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
+
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
@@ -23,6 +26,7 @@ PoiConfig = React.createClass
         config.get 'poi.webview.width', -1
     layout: config.get 'poi.layout', 'horizonal'
     theme: config.get 'poi.theme', '__default__'
+    language: config.get 'poi.language', 'zh-CN'
     gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
@@ -67,7 +71,7 @@ PoiConfig = React.createClass
     config.set 'poi.tabarea.double', !enabled
     @setState
       enableDoubleTabbed: !enabled
-    toggleModal '布局设置', '设置成功，请重新打开软件使得布局生效。'
+    toggleModal __("layout settings"), __("You must reboot the app for the changes to take effect")
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
@@ -78,6 +82,11 @@ PoiConfig = React.createClass
         layout: layout
     window.dispatchEvent event
     @setState {layout}
+  handleSetLanguage: (language) ->
+    language = @refs.language.getValue()
+    return if @state.language == language
+    config.set 'poi.language', language
+    @setState {language}
   handleSetTheme: (theme) ->
     theme = @refs.theme.getValue()
     return if @state.theme == theme
@@ -124,17 +133,17 @@ PoiConfig = React.createClass
       @handleSetWebviewWidth()
   handleClearCookie: (e) ->
     remote.getCurrentWebContents().session.clearStorageData ['cookies'], ->
-      toggleModal '删除 Cookies', '删除成功。'
+      toggleModal __("Delete cookies"), __("Success!")
   handleClearCache: (e) ->
     remote.getCurrentWebContents().session.clearCache ->
-      toggleModal '删除缓存', '删除成功。'
+      toggleModal __("Delete cache"), __("Success!")
   handleOpenCustomCss: (e) ->
     try
       d = path.join(EXROOT, 'hack', 'custom.css')
       fs.ensureFileSync d
       openItem d
     catch e
-      toggleModal '编辑自定义 CSS', '打开失败，可能没有创建文件的权限'
+      toggleModal __("Edit custom CSS"), __("Failed. Perhaps you don't have permission to it.")
   componentDidMount: ->
     window.addEventListener 'resize', @handleResize
   componentWillUnmount: ->
@@ -142,83 +151,95 @@ PoiConfig = React.createClass
   render: ->
     <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
-        <Divider text="浏览器" />
+        <Divider text={__("Browser")} />
         <NavigatorBar />
         <Grid>
           <Col xs={12}>
-            <Input type="checkbox" label="关闭前弹出确认窗口" checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
+            <Input type="checkbox" label={__("Confirm before exit")} checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
           </Col>
         </Grid>
       </div>
       <div className="form-group">
-        <Divider text="通知" />
+        <Divider text={__("Notification")} />
         <Grid>
           <Col xs={6}>
             <Button bsStyle={if @state.enableNotify then 'success' else 'danger'} onClick={@handleSetNotify} style={width: '100%'}>
-              {if @state.enableNotify then '√ ' else ''}开启通知
+              {if @state.enableNotify then '√ ' else ''}{__("Enable notification")}
             </Button>
           </Col>
           <Col xs={6}>
             <Button bsStyle={if @state.enableNotifySound then 'success' else 'danger'} onClick={@handleSetNotifySound} style={width: '100%'}>
-              {if @state.enableNotifySound then '√ ' else ''}开启声音
+              {if @state.enableNotifySound then '√ ' else ''}{__("Enable notif sound")}
             </Button>
-          </Col>
-        </Grid>
-      </div>
-      <div className="form-group">
-        <Divider text="布局" />
-        <Grid>
-          <Col xs={6}>
-            <Button bsStyle={if @state.layout == 'horizonal' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'horizonal'} style={width: '100%'}>
-              {if @state.layout == 'horizonal' then '√ ' else ''}使用横版布局
-            </Button>
-          </Col>
-          <Col xs={6}>
-            <Button bsStyle={if @state.layout == 'vertical' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'vertical'} style={width: '100%'}>
-              {if @state.layout == 'vertical' then '√ ' else ''}使用纵版布局
-            </Button>
-          </Col>
-          <Col xs={12}>
-            <Input type="checkbox" label="切分组件与插件面板" checked={@state.enableDoubleTabbed} onChange={@handleSetDoubleTabbed} />
           </Col>
         </Grid>
       </div>
       <div className="form-group" >
-        <Divider text="出击检查" />
+        <Divider text={__("Slot check")} />
         <div style={display:"flex", flexFlow:"row nowrap"}>
           <div style={flex:2, margin:"0 15px"}>
-            <Input type="checkbox" label="船位检查" checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
+            <Input type="checkbox" label={__("Ship slots")} checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
           </div>
           <div style={flex:2, margin:"0 15px"}>
-            <Input type="checkbox" label="装备检查" checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
+            <Input type="checkbox" label={__("Item slots")} checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
           </div>
         </div>
         <div style={flex:2, margin:"0 15px"}>
-          <Input type="number" label="船位少于此数量时警告" ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
+          <Input type="number" label={__("Warn when the number of empty ship slots is less than")} ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
         </div>
       </div>
       <div className="form-group">
-        <Divider text="Cookies 和缓存" />
+        <Divider text={__("Layout")} />
+        <Grid>
+          <Col xs={6}>
+            <Button bsStyle={if @state.layout == 'horizonal' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'horizonal'} style={width: '100%'}>
+              {if @state.layout == 'horizonal' then '√ ' else ''}{__ "Use horizontal layout"}
+            </Button>
+          </Col>
+          <Col xs={6}>
+            <Button bsStyle={if @state.layout == 'vertical' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'vertical'} style={width: '100%'}>
+              {if @state.layout == 'vertical' then '√ ' else ''}{__ "Use vertical layout"}
+            </Button>
+          </Col>
+          <Col xs={12}>
+            <Input type="checkbox" label={__ "Split component and plugin panel"} checked={@state.enableDoubleTabbed} onChange={@handleSetDoubleTabbed} />
+          </Col>
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text={__ "Language"} />
+        <Grid>
+          <Col xs={6}>
+            <Input type="select" ref="language" value={@state.language} onChange={@handleSetLanguage}>
+              <option value="zh-CN">中文</option>
+              <option value="ja-JP">日本語</option>
+              <option value="en-US">English</option>
+            </Input>
+          </Col>
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text={__ "Cache and cookies"} />
         <Grid>
           <Col xs={6}>
             <Button bsStyle="danger" onClick={@handleClearCookie} style={width: '100%'}>
-              删除 Cookies
+              {__ "Delete cookies"}
             </Button>
           </Col>
           <Col xs={6}>
             <Button bsStyle="danger" onClick={@handleClearCache} style={width: '100%'}>
-              删除浏览器缓存
+              {__ "Delete cache"}
             </Button>
           </Col>
           <Col xs={12}>
             <Alert bsStyle='warning' style={marginTop: '10px'}>
-              如果经常猫，删除以上两项。
+              {__ "If connection error occurs frequently, delete both of them."}
             </Alert>
           </Col>
         </Grid>
       </div>
       <div className="form-group">
-        <Divider text="主题" />
+        <Divider text={__ "Themes"} />
         <Grid>
           <Col xs={6}>
             <Input type="select" ref="theme" value={@state.theme} onChange={@handleSetTheme}>
@@ -230,14 +251,14 @@ PoiConfig = React.createClass
             </Input>
           </Col>
           <Col xs={6}>
-            <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>编辑自定义 CSS</Button>
+            <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>{__ "Edit custom CSS"}</Button>
           </Col>
         </Grid>
       </div>
       <div className="form-group">
-        <Divider text="游戏分辨率" />
+        <Divider text={__ "Game resoultion"} />
         <div style={display: 'flex', marginLeft: 15, marginRight: 15}>
-          <Input type='checkbox' ref="useFixedResolution" label='使用固定分辨率' checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
+          <Input type='checkbox' ref="useFixedResolution" label={__ "Use fixed resoultion"} checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
         </div>
         <div id="poi-resolution-config" style={display: 'flex', marginLeft: 15, marginRight: 15, alignItems: 'center'}>
           <div style={flex: 1}>

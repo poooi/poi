@@ -38,6 +38,11 @@ adjustSize = ->
     window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
     document.documentElement.style.overflow = 'hidden';
   """
+  webview.insertCSS """
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+  """
   $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 1}px"
   $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"
 if !window._delay
@@ -80,9 +85,6 @@ handleTitleSet = ->
   @insertCSS """
     #ntg-recommend {
       display: none !important;
-    }
-    ::-webkit-scrollbar {
-      width: 0px;
     }
   """
   handleResize()

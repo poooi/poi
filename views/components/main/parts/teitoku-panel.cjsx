@@ -1,7 +1,9 @@
+path = require 'path-extra'
+i18n = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
-
+{__, __n} = i18n
 order = if layout == 'horizonal' or window.doubleTabbed then [1, 3, 5, 7, 2, 4, 6, 8] else [1..8]
 
 rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
@@ -27,7 +29,7 @@ getHeader = (state) ->
     else
       return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
   else
-    return '提督 [尚未登录]'
+    return __ 'Admiral [Not logged in]'
 
 getMaterialImage = (idx) ->
   return "file://#{ROOT}/assets/img/material/0#{idx}.png"
@@ -157,13 +159,13 @@ TeitokuPanel = React.createClass
           if @state.maxChara - @state.shipCount < freeShipSlot
             # toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
             setTimeout =>
-              error "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+              error __ "Attention! Ship Slot has only %s left.", "#{@state.maxChara - @state.shipCount}"
             , 1000
         if config.get 'poi.mapstartcheck.item'
           if @state.maxSlotitem - @state.slotitemCount <= 0
             # toggleModal '装备检查', "装备已满，出击注意！"
             setTimeout =>
-              error "装备已满，出击注意！"
+              error __ "Attention! Item Slot is full."
             , 1000
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
@@ -172,8 +174,8 @@ TeitokuPanel = React.createClass
   render: ->
     <Panel header={getHeader @state} bsStyle="default" className="teitoku-panel">
       <Grid>
-        <Col xs={6}>舰娘：{@state.shipCount} / {@state.maxChara}</Col>
-        <Col xs={6}>装备：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
+        <Col xs={6}>{__ "Ships"}：{@state.shipCount} / {@state.maxChara}</Col>
+        <Col xs={6}>{__ "Equipment"}：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
       </Grid>
       <Grid style={marginTop: 5}>
       {
