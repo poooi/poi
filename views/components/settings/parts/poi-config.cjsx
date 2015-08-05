@@ -175,20 +175,6 @@ PoiConfig = React.createClass
           </Col>
         </Grid>
       </div>
-      <div className="form-group" >
-        <Divider text={__("Slot check")} />
-        <div style={display:"flex", flexFlow:"row nowrap"}>
-          <div style={flex:2, margin:"0 15px"}>
-            <Input type="checkbox" label={__("Ship slots")} checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
-          </div>
-          <div style={flex:2, margin:"0 15px"}>
-            <Input type="checkbox" label={__("Item slots")} checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
-          </div>
-        </div>
-        <div style={flex:2, margin:"0 15px"}>
-          <Input type="number" label={__("Warn when the number of empty ship slots is less than")} ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
-        </div>
-      </div>
       <div className="form-group">
         <Divider text={__("Layout")} />
         <Grid>
@@ -207,12 +193,27 @@ PoiConfig = React.createClass
           </Col>
         </Grid>
       </div>
+      <div className="form-group" >
+        <Divider text={__("Slot check")} />
+        <div style={display:"flex", flexFlow:"row nowrap"}>
+          <div style={flex:2, margin:"0 15px"}>
+            <Input type="checkbox" label={__("Ship slots")} checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
+          </div>
+          <div style={flex:2, margin:"0 15px"}>
+            <Input type="checkbox" label={__("Item slots")} checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
+          </div>
+        </div>
+        <div style={flex:2, margin:"0 15px"}>
+          <Input type="number" label={__("Warn when the number of empty ship slots is less than")} ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
+        </div>
+      </div>
       <div className="form-group">
         <Divider text={__ "Language"} />
         <Grid>
           <Col xs={6}>
             <Input type="select" ref="language" value={@state.language} onChange={@handleSetLanguage}>
-              <option value="zh-CN">中文</option>
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">正體中文</option>
               <option value="ja-JP">日本語</option>
               <option value="en-US">English</option>
             </Input>
