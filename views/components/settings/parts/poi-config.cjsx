@@ -84,6 +84,7 @@ PoiConfig = React.createClass
     @setState {layout}
   handleSetLanguage: (language) ->
     language = @refs.language.getValue()
+    i18n.setLocale language
     return if @state.language == language
     config.set 'poi.language', language
     @setState {language}
