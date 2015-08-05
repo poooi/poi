@@ -134,10 +134,6 @@ class Proxy extends EventEmitter
                 self.emit 'network.error.retry', i + 1 if i < retries
               # Delay 3s for retry
               yield Promise.delay(3000) unless success
-          # Monkey Patch for Shimakaze GO
-          else if parsed.hostname in ['connect.facebook.net', 'pixel.rubiconproject.com'] and config.get('proxy.use') is 'http'
-            res.writeHead 200
-            res.end()
           else
             [response, body] = yield requestAsync resolve options
             res.writeHead response.statusCode, response.headers
