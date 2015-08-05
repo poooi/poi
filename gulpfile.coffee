@@ -54,6 +54,7 @@ gulp.task 'flash', async ->
   fs.ensureDirSync dir
   try
     yield fs.accessAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
+    yield fs.removeSync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip")
   catch e
     log "Downloading flash plugin #{PLATFORM}"
     [response, body] = yield requestAsync
