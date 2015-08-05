@@ -1,6 +1,8 @@
 require 'coffee-react/register'
 path = require 'path-extra'
 notifier = require 'node-notifier'
+i18n = require 'i18n'
+{__, __n} = i18n
 
 # Environments
 window.remote = require 'remote'
@@ -72,7 +74,7 @@ window.error = (msg) ->
 # map reminder
 window.reminder = (mapArea) ->
   if mapArea == null
-    mapArea = '未出击'
+    mapArea = __ 'not in a sortie'
   event = new CustomEvent 'poi.map.reminder',
     bubbles: true
     cancelable: true
@@ -373,7 +375,7 @@ resolveResponses = ->
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
       when '/kcsapi/api_req_map/start'
-        reminder '出击海域: ' + body.api_maparea_id + '-' + body.api_mapinfo_no
+        reminder __("Going on a Sortie: ") + body.api_maparea_id + '-' + body.api_mapinfo_no
       when '/kcsapi/api_req_mission/result'
         window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_req_nyukyo/speedchange'
