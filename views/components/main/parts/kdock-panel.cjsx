@@ -134,7 +134,7 @@ KdockPanel = React.createClass
         if body.api_create_flag == 0
           setTimeout warn.bind(@, __("The development of %s was failed.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
         else if body.api_create_flag == 1
-          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
+          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name}")), 500
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
