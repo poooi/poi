@@ -1,11 +1,14 @@
 path = require 'path-extra'
+i18n = require 'i18n'
 {ROOT, $, $$, React, ReactBootstrap} = window
 {Grid, Col} = ReactBootstrap
 {TeitokuPanel, MissionPanel, NdockPanel, KdockPanel, TaskPanel} = require './parts'
+{__, __n} = i18n
+
 module.exports =
   name: 'MainView'
   priority: 0
-  displayName: <span><FontAwesome key={0} name='home' /> 概览</span>
+  displayName: <span><FontAwesome key={0} name='home' />{__ " Overview"}</span>
   description: '概览面板，提供基本的概览界面'
   reactClass: React.createClass
     getInitialState: ->

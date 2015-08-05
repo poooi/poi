@@ -1,7 +1,9 @@
 path = require 'path-extra'
+i18n = require 'i18n'
 {$, $$, _, React, ReactBootstrap, ROOT, toggleModal} = window
 {config} = window
 {Input, Grid, Col, Button, Alert} = ReactBootstrap
+{__, __n} = i18n
 Divider = require './divider'
 
 shadowsocksMethods = ["aes-256-cfb", "aes-192-cfb", "aes-128-cfb", "bf-cfb",
@@ -53,7 +55,7 @@ NetworkConfig = React.createClass
         config.set 'proxy.shadowsocks.method', @refs.shadowsocksMethod.getValue()
       else
         config.set 'proxy.use', 'none'
-    toggleModal '代理设置', '保存成功，重启软件后生效。'
+    toggleModal __('Proxy setting'), __('Success! It will be available after a restart')
     e.preventDefault()
   handleHttpHostChange: (e) ->
     {http} = @state
@@ -95,50 +97,50 @@ NetworkConfig = React.createClass
     config.set 'poi.proxy.retries', r
   render: ->
     <form>
-      <Divider text="代理类型" />
+      <Divider text={__ 'Proxy protocol'} />
       <Grid>
         <Col xs={12}>
           <Input type="select" ref="use" value={@state.use || "none"} onChange={@handleChangeUse}>
-            <option key={0} value="http">HTTP 代理</option>
-            <option key={1} value="socks5">Socks5 代理</option>
+            <option key={0} value="http">HTTP {__ "proxy"}</option>
+            <option key={1} value="socks5">Socks5 {__ "proxy"}</option>
             <option key={2} value="shadowsocks">Shadowsocks</option>
-            <option key={3} value="none">不使用代理</option>
+            <option key={3} value="none">{__ "No proxy"}</option>
           </Input>
         </Col>
       </Grid>
-      <Divider text="代理详情" />
+      <Divider text={__ 'Proxy server information'} />
       {
         if @state.use == 'http'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="httpHost" label="代理地址" placeholder="输入代理地址" value={@state?.http?.host} onChange={@handleHttpHostChange} />
+              <Input type="text" ref="httpHost" label={__ 'Proxy server address'} placeholder="输入代理地址" value={@state?.http?.host} onChange={@handleHttpHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpPort" label="代理端口" placeholder="输入代理端口" value={@state?.http?.port} onChange={@handleHttpPortChange} />
+              <Input type="text" ref="httpPort" label={__ 'Proxy server port'} placeholder="输入代理端口" value={@state?.http?.port} onChange={@handleHttpPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'socks5'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="socksHost" label="代理地址" placeholder="输入代理地址" value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
+              <Input type="text" ref="socksHost" label={__ 'Proxy server address'} placeholder="输入代理地址" value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="socksPort" label="代理端口" placeholder="输入代理端口" value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
+              <Input type="text" ref="socksPort" label={__ 'Proxy server port'} placeholder="输入代理端口" value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'shadowsocks'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerHost" label="服务器地址" placeholder="Shadowsocks 服务器地址" value={@state?.shadowsocks?.server?.host} onChange={@handleShadowsocksServerHostChange} />
+              <Input type="text" ref="shadowsocksServerHost" label={__ 'Proxy server address'} placeholder="Shadowsocks 服务器地址" value={@state?.shadowsocks?.server?.host} onChange={@handleShadowsocksServerHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerPort" label="服务器端口" placeholder="Shadowsocks 服务器端口" value={@state?.shadowsocks?.server?.port} onChange={@handleShadowsocksServerPortChange} />
+              <Input type="text" ref="shadowsocksServerPort" label={__ 'Proxy server port'} placeholder="Shadowsocks 服务器端口" value={@state?.shadowsocks?.server?.port} onChange={@handleShadowsocksServerPortChange} />
             </Col>
             <Col xs={6}>
-              <Input type="password" ref="shadowsocksPassword" label="密码" placeholder="Shadowsocks 密码" value={@state?.shadowsocks?.password} onChange={@handleShadowsocksPasswordChange} />
+              <Input type="password" ref="shadowsocksPassword" label={__ 'Password'} placeholder="Shadowsocks 密码" value={@state?.shadowsocks?.password} onChange={@handleShadowsocksPasswordChange} />
             </Col>
             <Col xs={6}>
-              <Input type="select" ref="shadowsocksMethod" label="加密方法" placeholder="Shadowsocks 加密方式" value={@state?.shadowsocks?.method} onChange={@handleShadowsocksMethodChange}>
+              <Input type="select" ref="shadowsocksMethod" label={__ 'Encryption algorithm'} placeholder="Shadowsocks 加密方式" value={@state?.shadowsocks?.method} onChange={@handleShadowsocksMethodChange}>
               {
                 shadowsocksMethods.map (method, index) ->
                   <option key={index} value={method}>{method.toUpperCase()}</option>
@@ -149,25 +151,25 @@ NetworkConfig = React.createClass
         else
           <Grid>
             <Col xs={12}>
-              <center>将会直接连接网络或者通过全局 VPN 访问网络</center>
+              <center>{__ "Will connect to server directly."}</center>
             </Col>
           </Grid>
       }
-      <Divider text="网络错误重试次数" />
+      <Divider text={__ "Times of reconnect"} />
       <Grid>
         <Col xs={12}>
           <Input type="number" ref="retries" value={@state.retries} onChange={@handleSetRetries} />
         </Col>
         <Col xs={12}>
           <Alert bsStyle='danger'>
-            任何本地重试都不能保证绝对安全，斟酌使用。
+            {__ "It may be unsafe!"}
           </Alert>
         </Col>
       </Grid>
-      <Divider text="保存设置" />
+      <Divider text={__ "Save settings"} />
       <Grid>
         <Col xs={12}>
-          <Button bsStyle="success" onClick={@handleSaveConfig} style={width: '100%'}>点击保存</Button>
+          <Button bsStyle="success" onClick={@handleSaveConfig} style={width: '100%'}>{__ "Save"}</Button>
         </Col>
       </Grid>
     </form>

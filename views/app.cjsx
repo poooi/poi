@@ -1,10 +1,23 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
+i18n = require 'i18n'
+{__, __n} = i18n
 {showItemInFolder, openItem} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
+
+# i18n configure
+i18n.configure({
+    locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+    defaultLocale: 'zh-CN',
+    directory: path.join(__dirname, "..", "i18n"),
+    updateFiles: false,
+    indent: "\t",
+    extension: '.json'
+})
+i18n.setLocale(window.language)
 
 # Hackable panels
 window.hack = {}
@@ -19,7 +32,7 @@ ControlledTabArea =
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
-    message: 'poi 等待游戏数据中……'
+    message: __ 'Waiting response...'
     type: 'success'
   handleAlert: (e) ->
     @setState
@@ -35,7 +48,7 @@ PoiAlert = React.createClass
 # Map Reminder
 PoiMapReminder = React.createClass
   getInitialState: ->
-    battling: '未出击'
+    battling: __ 'not in a sortie'
   handleMapReminder: (e)->
     @setState
       battling: e.detail.mapArea
@@ -61,9 +74,9 @@ PoiControl = React.createClass
       height: Math.floor bound.height
     capturePageInMainWindow rect, (err, filename) ->
       if err?
-        error '截图保存失败'
+        error __ 'Failed to save the screenshot'
       else
-        success "截图保存在 #{filename}"
+        success "#{__ 'screenshot saved to'} #{filename}"
   handleOpenCacheFolder: ->
     dir = 'cache'
     dir = 'MyCache' if process.platform == 'darwin'
@@ -71,14 +84,14 @@ PoiControl = React.createClass
       fs.ensureDirSync path.join(window.EXROOT, dir)
       openItem path.join(window.EXROOT, dir)
     catch e
-      toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
+      toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
   handleOpenScreenshotFolder: ->
     d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
     try
       fs.ensureDirSync d
       openItem d
     catch e
-      toggleModal '打开截图目录', '打开失败，可能没有创建文件夹的权限'
+      toggleModal __ 'Open screenshot dir', __ "Failed. Perhaps you don't have permission to it."
   handleSetMuted: ->
     muted = !@state.muted
     config.set 'poi.content.muted', muted
@@ -109,25 +122,25 @@ PoiControl = React.createClass
     , 1000
   render: ->
     <div>
-      <OverlayTrigger placement='left' overlay={<Tooltip>开发人员工具</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Developer Tools"}</Tooltip>}>
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>缓存目录</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Open cache dir"}</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>截图目录</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Open screenshot dir"}</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>自动适配页面</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Auto adjust"}</Tooltip>}>
         <Button onClick={@handleJustifyLayout} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.alwaysOnTop then '取消置顶' else '窗口置顶'}</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.alwaysOnTop then __ "Dont always on top" else __ "Always on top"}</Tooltip>}>
         <Button onClick={@handleSetAlwaysOnTop} bsSize='small'><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>一键截图</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Take a screenshot"}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '关闭声音' else '打开声音'}</Tooltip>}>
+      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then __ "Volume off" else __ "Volume on"}</Tooltip>}>
         <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>
@@ -175,7 +188,7 @@ ModalTrigger = React.createClass
         {@state.content}
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={@handleToggle}>关闭</Button>
+        <Button onClick={@handleToggle}>{__ "Cancel"}</Button>
         {@renderFooter @state.footer}
       </Modal.Footer>
     </Modal>
@@ -216,7 +229,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
       <p>为 poi 贡献代码和编写插件 - GitHub: https://github.com/poooi/poi </p>
     </div>
   footer = [
-    name: '知道啦！'
+    name: __ "I know"
     func: dontShowAgain
     style: 'success'
   ]
@@ -231,8 +244,8 @@ window.onbeforeunload = (e) ->
   if confirmExit || !config.get('poi.confirm.quit', false)
     return true
   else
-    toggleModal '关闭 poi', '确认退出？', [
-      name: '确定退出'
+    toggleModal __("Exit"), __('Confirm?'), [
+      name: __ 'Confirm'
       func: exitPoi
       style: 'warning'
     ]
@@ -241,17 +254,17 @@ window.onbeforeunload = (e) ->
 window.addEventListener 'game.request', (e) ->
   {method} = e.detail
   resPath = e.detail.path
-  log "正在请求 #{method} #{resPath}"
+  log "#{__ "Requesting"} #{method} #{resPath}"
 window.addEventListener 'game.response', (e) ->
   {method, body, postBody} = e.detail
   resPath = e.detail.path
   console.log [resPath, body, postBody] if process.env.DEBUG?
-  success "获得数据 #{method} #{resPath}"
+  success "#{__ "Hit"} #{method} #{resPath}"
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
-  error "网络连接错误，正在进行第#{counter}次重试"
+  error __n "Connection failed after %s retry", "Connection failed after %s retries", counter
 window.addEventListener 'network.invalid.code', (e) ->
   {code} = e.detail
-  error "服务器返回非正常的 HTTP 状态码，HTTP #{code}"
+  error __ "Network error: HTTP %s", code
 window.addEventListener 'network.error', ->
-  error '网络连接失败，请检查网络与代理设置'
+  error __ 'Connection failed.'

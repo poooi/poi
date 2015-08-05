@@ -1,7 +1,10 @@
+path = require 'path-extra'
+i18n = require 'i18n'
 {POI_VERSION} = window
 {remote} = window
 {React, ReactBootstrap, toggleModal} = window
 updateManager = remote.require './lib/update'
+{__, __n} = i18n
 shell = require 'shell'
 
 updateInfo = null
@@ -22,11 +25,11 @@ checkUpdate = ->
     console.log "Remote version: #{info.version}. Current version: #{POI_VERSION}"
     if isNewVersion(POI_VERSION, info.version)
       updateInfo = info
-      title = <span>更新 poi-v{info.version}</span>
+      title = <span>{__ "Update"} poi-v{info.version}</span>
       content =
         <div dangerouslySetInnerHTML={__html: info.log} />
       footer = [
-        name: '下载最新版',
+        name: __ 'Download latest version',
         func: doUpdate,
         style: 'primary'
       ]
