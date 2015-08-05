@@ -73,7 +73,7 @@ PoiControl = React.createClass
     catch e
       toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
   handleOpenScreenshotFolder: ->
-    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures') else path.join(global.EXROOT, 'screenshots')
+    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
     try
       fs.ensureDirSync d
       openItem d
