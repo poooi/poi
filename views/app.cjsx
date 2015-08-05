@@ -10,7 +10,7 @@ i18n = require 'i18n'
 
 # i18n configure
 i18n.configure({
-    locales:['en-US', 'ja-JP', 'zh-CN'],
+    locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
     defaultLocale: 'zh-CN',
     directory: path.join(__dirname, "..", "i18n"),
     updateFiles: false,
