@@ -22,21 +22,31 @@ adjustSize = ->
     $('kan-game')?.style?.display = 'none'
   else
     $('kan-game')?.style?.display = ''
-  if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
+  if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
     $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 31}px"
     return
   factor = Math.ceil(window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0) / 800.0 * 100) / 100.0
   if webviewWidth > 0.00001
     factor = Math.ceil(webviewWidth / 800.0 * 100) / 100.0
   webview.executeJavaScript """
-    var iframe = document.querySelector('#game_frame').contentWindow.document;
-    document.querySelector('html').style.zoom = #{factor};
-    iframe.querySelector('html').style.zoom = #{factor};
-    window.scrollTo(0, 0);
-    var x = document.querySelector('#game_frame').getBoundingClientRect().left + iframe.querySelector('embed').getBoundingClientRect().left;
-    var y = document.querySelector('#game_frame').getBoundingClientRect().top + iframe.querySelector('embed').getBoundingClientRect().top;
-    window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
-    document.documentElement.style.overflow = 'hidden';
+    if (document.querySelector('#game_frame') != null) {
+      var iframe = document.querySelector('#game_frame').contentWindow.document;
+      document.querySelector('html').style.zoom = #{factor};
+      iframe.querySelector('html').style.zoom = #{factor};
+      window.scrollTo(0, 0);
+      var x = document.querySelector('#game_frame').getBoundingClientRect().left + iframe.querySelector('embed').getBoundingClientRect().left;
+      var y = document.querySelector('#game_frame').getBoundingClientRect().top + iframe.querySelector('embed').getBoundingClientRect().top;
+      window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
+      document.documentElement.style.overflow = 'hidden';
+    } else if (document.querySelector('embed') != null) {
+      var iframe = document.querySelector('embed');
+      document.querySelector('html').style.zoom = #{factor};
+      window.scrollTo(0, 0);
+      var x = document.querySelector('embed').getBoundingClientRect().left;
+      var y = document.querySelector('embed').getBoundingClientRect().top;
+      window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
+      document.documentElement.style.overflow = 'hidden';
+    }
   """
   $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 1}px"
   $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"

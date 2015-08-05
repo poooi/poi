@@ -95,9 +95,9 @@ module.exports =
         now = new Date()
         date = "#{now.getFullYear()}-#{now.getMonth() + 1}-#{now.getDate()}T#{now.getHours()}.#{now.getMinutes()}.#{now.getSeconds()}"
         if process.platform == 'darwin'
-          darwinPath = path.join path.homedir(), 'Pictures'
+          darwinPath = path.join path.homedir(), 'Pictures', 'Poi'
           fs.ensureDirSync darwinPath
-          filename = path.join path.homedir(), 'Pictures', "#{date}.png"
+          filename = path.join path.homedir(), 'Pictures', 'Poi', "#{date}.png"
         else
           fs.ensureDirSync path.join global.EXROOT, 'screenshots'
           filename = path.join global.EXROOT, 'screenshots', "#{date}.png"

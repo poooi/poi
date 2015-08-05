@@ -86,7 +86,7 @@ PoiControl = React.createClass
     catch e
       toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
   handleOpenScreenshotFolder: ->
-    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures') else path.join(global.EXROOT, 'screenshots')
+    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
     try
       fs.ensureDirSync d
       openItem d
