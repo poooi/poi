@@ -32,7 +32,7 @@ ControlledTabArea =
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
-    message: __ 'Waiting response……'
+    message: __ 'Waiting response...'
     type: 'success'
   handleAlert: (e) ->
     @setState
