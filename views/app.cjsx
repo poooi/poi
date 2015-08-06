@@ -49,13 +49,19 @@ PoiAlert = React.createClass
 PoiMapReminder = React.createClass
   getInitialState: ->
     battling: __ 'not in a sortie'
-  handleMapReminder: (e)->
-    @setState
-      battling: e.detail.mapArea
+  handleResponse: (e) ->
+    {path, body} = e.detail
+    switch path
+      when '/kcsapi/api_port/port'
+        @setState
+          battling: __ 'not in a sortie'
+      when '/kcsapi/api_req_map/start'
+        @setState
+          battling: __('Going on a Sortie: ') + body.api_maparea_id + '-' + body.api_mapinfo_no
   componentDidMount: ->
-    window.addEventListener 'poi.map.reminder', @handleMapReminder
+    window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
-    window.removeEventListener 'poi.map.reminder', @handleMapReminder
+    window.removeEventListener 'game.response', @handleResponse
   render: ->
     <Alert>{@state.battling}</Alert>
 

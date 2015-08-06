@@ -1,8 +1,6 @@
 require 'coffee-react/register'
 path = require 'path-extra'
 notifier = require 'node-notifier'
-i18n = require 'i18n'
-{__, __n} = i18n
 
 # Environments
 window.remote = require 'remote'
@@ -71,17 +69,6 @@ window.error = (msg) ->
       message: msg
       type: 'danger'
   window.dispatchEvent event
-# map reminder
-window.reminder = (mapArea) ->
-  if mapArea == null
-    mapArea = __ 'not in a sortie'
-  event = new CustomEvent 'poi.map.reminder',
-    bubbles: true
-    cancelable: true
-    detail:
-      mapArea: mapArea
-  window.dispatchEvent event
-
 window.notify = (msg, options) ->
   # Basic notification settings
   enabled = config.get('poi.notify.enabled', true)
@@ -282,7 +269,6 @@ resolveResponses = ->
         window._decks = body.api_deck_port
         window._ndocks = body.api_ndock.map (e) -> e.api_ship_id
         window._teitokuLv = body.api_basic.api_level
-        reminder null
       when '/kcsapi/api_req_hensei/change'
         decks = window._decks
         deckId = parseInt(postBody.api_id) - 1
@@ -374,8 +360,6 @@ resolveResponses = ->
           afterSlot = body.api_after_slot
           itemId = afterSlot.api_id
           _slotitems[itemId] = extendSlotitem afterSlot
-      when '/kcsapi/api_req_map/start'
-        reminder __("Going on a Sortie: ") + body.api_maparea_id + '-' + body.api_mapinfo_no
       when '/kcsapi/api_req_mission/result'
         window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_req_nyukyo/speedchange'
