@@ -26,8 +26,10 @@
   " Plugins": " ツール",
   "Update": "更新",
   "Download latest version": "最新バージョンをダウンロードする",
-  "Connection failed after %s retry": "ネットワークエラーが発生した。今第 %s 回の再試行している",
-  "Connection failed after %s retries": "ネットワークエラーが発生した。今第 %s 回の再試行している",
+  "Connection failed after %s retry":{
+     "one": "ネットワークエラーが発生した。今第 %s 回の再試行している",
+     "other": "ネットワークエラーが発生した。今第 %s 回の再試行している"
+   },
   "Network error: HTTP %s": "ネットワークエラー、HTTP %s",
   "Connection failed.": "接続できない。ネットワークとプロキシの設定を確認して下さい",
   " Overview": " 概況",

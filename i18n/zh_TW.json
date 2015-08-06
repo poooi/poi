@@ -26,8 +26,10 @@
   " Plugins": " 插件",
   "Update": "更新",
   "Download latest version": "下載最新版本",
-  "Connection failed after %s retry": "網絡連接錯誤，正在進行第 %s 次重試",
-  "Connection failed after %s retries": "網絡連接錯誤，正在進行第 %s 次重試",
+  "Connection failed after %s retry":{
+     "one": "網絡連接錯誤，正在進行第 %s 次重試",
+     "other": "網絡連接錯誤，正在進行第 %s 次重試"
+   },
   "Network error: HTTP %s": "伺服器返回非正常的 HTTP 狀態碼，HTTP %s",
   "Connection failed.": "網絡連接失敗，請檢查網絡與代理設定",
   " Overview": " 概覽",
