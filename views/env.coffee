@@ -145,7 +145,12 @@ window.CONST = Object.remoteClone remote.require './lib/constant'
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
 window.webviewWidth = config.get 'poi.webview.width', -1
-window.language = config.get 'poi.language', 'zh-CN'
+
+# Language
+require('os-locale') (err, locale) ->
+  osLocale = 'zh_CN'
+  osLocale = locale unless err?
+  window.language = config.get 'poi.language', osLocale
 
 # Custom theme
 window.theme = config.get 'poi.theme', '__default__'

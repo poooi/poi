@@ -36,6 +36,7 @@
     "mime": "^1.3.4",
     "node-notifier": "^4.2.3",
     "objtree": "^0.1.1",
+    "os-locale": "^1.1.0",
     "path-extra": "^1.0.3",
     "react": "^0.13.3",
     "react-bootstrap": "git+https://github.com/magicae/react-bootstrap.git",

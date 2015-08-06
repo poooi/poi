@@ -26,7 +26,7 @@ PoiConfig = React.createClass
         config.get 'poi.webview.width', -1
     layout: config.get 'poi.layout', 'horizonal'
     theme: config.get 'poi.theme', '__default__'
-    language: config.get 'poi.language', 'zh-CN'
+    language: config.get 'poi.language', 'zh_CN'
     gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
@@ -212,10 +212,10 @@ PoiConfig = React.createClass
         <Grid>
           <Col xs={6}>
             <Input type="select" ref="language" value={@state.language} onChange={@handleSetLanguage}>
-              <option value="zh-CN">简体中文</option>
-              <option value="zh-TW">正體中文</option>
-              <option value="ja-JP">日本語</option>
-              <option value="en-US">English</option>
+              <option value="zh_CN">简体中文</option>
+              <option value="zh_TW">正體中文</option>
+              <option value="ja_JP">日本語</option>
+              <option value="en_US">English</option>
             </Input>
           </Col>
         </Grid>
