@@ -44,6 +44,8 @@ PoiConfig = React.createClass
       enableNotify: !enabled
   handleChangeNotifyVolume: (e) ->
     volume = @refs.notifyVolume.getValue()
+    volume = parseFloat(volume)
+    return if volume is NaN
     config.set('poi.notify.volume', volume)
   handleSetMapStartCheckShip: ->
     enabled = @state.mapStartCheckShip
