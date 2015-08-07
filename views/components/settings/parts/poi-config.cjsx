@@ -28,7 +28,7 @@ PoiConfig = React.createClass
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
     enableNotify: config.get 'poi.notify.enabled', true
-    enableNotifySound: config.get 'poi.notify.sound', true
+    notifyVolume: config.get 'poi.notify.volume', 1.0
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
@@ -42,11 +42,9 @@ PoiConfig = React.createClass
     config.set 'poi.notify.enabled', !enabled
     @setState
       enableNotify: !enabled
-  handleSetNotifySound: ->
-    enabled = @state.enableNotifySound
-    config.set 'poi.notify.sound', !enabled
-    @setState
-      enableNotifySound: !enabled
+  handleChangeNotifyVolume: (e) ->
+    volume = @refs.notifyVolume.getValue()
+    config.set('poi.notify.volume', volume)
   handleSetMapStartCheckShip: ->
     enabled = @state.mapStartCheckShip
     config.set 'poi.mapstartcheck.ship', !enabled
@@ -159,9 +157,9 @@ PoiConfig = React.createClass
             </Button>
           </Col>
           <Col xs={6}>
-            <Button bsStyle={if @state.enableNotifySound then 'success' else 'danger'} onClick={@handleSetNotifySound} style={width: '100%'}>
-              {if @state.enableNotifySound then '√ ' else ''}开启声音
-            </Button>
+            <Input type="range" style={padding: 0} label="音量"
+              ref="notifyVolume" onInput={@handleChangeNotifyVolume}
+              min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
           </Col>
         </Grid>
       </div>
