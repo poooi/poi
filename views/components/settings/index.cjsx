@@ -8,7 +8,7 @@ plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 plugins = plugins.filter (filePath) ->
   plugin = require filePath
   enabled = config.get "plugin.#{plugin.name}.enable", true
-  enabled && settingsClass?
+  enabled && plugin.settingsClass? && false
 plugins = plugins.map (filePath) ->
   plugin = require filePath
   plugin.priority = 10000 unless plugin.priority?
