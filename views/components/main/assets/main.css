@@ -65,3 +65,11 @@
   font-size: 90%;
   font-weight: normal;
 }
+#MainView .catIndicator {
+  display: inline-block;
+  height: 1em;
+  width: 4px;
+  vertical-align: middle;
+  margin-right: 4px;
+  flex: none;
+}
