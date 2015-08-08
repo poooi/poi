@@ -19,6 +19,27 @@ prevDay = getCurrentDay()
 prevDate = getCurrentDate()
 prevMonth = getCurrentMonth()
 
+getCategory = (api_category) ->
+  switch api_category
+    when 0
+      return '#ffffff'
+    when 1
+      return '#19BB2E'
+    when 2
+      return '#e73939'
+    when 3
+      return '#87da61'
+    when 4
+      return '#16C2A3'
+    when 5
+      return '#E2C609'
+    when 6
+      return '#805444'
+    when 7
+      return '#c792e8'
+    else
+      return '#fff'
+
 getStyleByProgress = (progress) ->
   switch progress
     when '进行'
@@ -343,7 +364,10 @@ TaskPanel = React.createClass
             if @state.tasks[i].tracking
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td>{@state.tasks[i].name}</td>
+                  <td style={display:"flex", alignItems:"center"}>
+                    <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
+                    {@state.tasks[i].name}
+                  </td>
                 </OverlayTrigger>
                 <td>
                   <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
@@ -354,7 +378,10 @@ TaskPanel = React.createClass
             else
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td>{@state.tasks[i].name}</td>
+                  <td style={display:"flex", alignItems:"center"}>
+                    <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
+                    {@state.tasks[i].name}
+                  </td>
                 </OverlayTrigger>
                 <td>
                   <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
