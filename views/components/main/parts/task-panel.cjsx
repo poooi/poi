@@ -364,7 +364,7 @@ TaskPanel = React.createClass
             if @state.tasks[i].tracking
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td>
+                  <td style={display:"flex", alignItems:"center"}>
                     <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
                     {@state.tasks[i].name}
                   </td>
@@ -378,7 +378,7 @@ TaskPanel = React.createClass
             else
               <tr key={i}>
                 <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td>
+                  <td style={display:"flex", alignItems:"center"}>
                     <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
                     {@state.tasks[i].name}
                   </td>
