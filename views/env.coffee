@@ -73,25 +73,31 @@ window.error = (msg) ->
 window.notify = (msg, options) ->
   # Basic notification settings
   enabled = config.get('poi.notify.enabled', true)
-  volume = config.get('poi.notify.volume', 1.0)
+  sound = config.get('poi.notify.sound', true)
   audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
   # Advanced notification settings
   if enabled
     switch options?.type
       when 'construction'
         enabled = config.get('poi.notify.construction.enabled', enabled)
-        audio = config.get('poi.notify.construction.audio', audio)
       when 'expedition'
         enabled = config.get('poi.notify.expedition.enabled', enabled)
-        audio = config.get('poi.notify.expedition.audio', audio)
       when 'repair'
         enabled = config.get('poi.notify.repair.enabled', enabled)
-        audio = config.get('poi.notify.repair.audio', audio)
       when 'morale'
         enabled = config.get('poi.notify.morale.enabled', enabled)
-        audio = config.get('poi.notify.morale.audio', audio)
       else
         enabled = config.get('poi.notify.others.enabled', enabled)
+  if sound
+    switch options?.type
+      when 'construction'
+        audio = config.get('poi.notify.construction.audio', audio)
+      when 'expedition'
+        audio = config.get('poi.notify.expedition.audio', audio)
+      when 'repair'
+        audio = config.get('poi.notify.repair.audio', audio)
+      when 'morale'
+        audio = config.get('poi.notify.morale.audio', audio)
   # Send desktop notification
   if !enabled
     return
@@ -108,8 +114,9 @@ window.notify = (msg, options) ->
   # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
+  if !sound
+    return
   sound = new Audio(audio)
-  sound.volume = volume
   sound.play()
 modals = []
 window.modalLocked = false
