@@ -3,21 +3,22 @@
 CSON = require 'cson'
 {join} = require 'path-extra'
 
-# Local time -> Task Refresh time(GMT + 4)
-getCurrentTime = ->
-  curTime = new Date()
-  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime
-getCurrentDay = ->
-  getCurrentTime().getDay()
-getCurrentDate = ->
-  getCurrentTime().getDate()
-getCurrentMonth = ->
-  getCurrentTime().getMonth() + 1
+zero = 331200000
+isDifferentDay = (time1, time2) ->
+  day1 = (time1 - zero) // 86400000
+  day2 = (time2 - zero) // 86400000
+  day1 != day2
+isDifferentWeek = (time1, time2) ->
+  week1 = (time1 - zero) // 604800000
+  week2 = (time2 - zero) // 604800000
+  week1 != week2
+isDifferentMonth = (time1, time2) ->
+  # UTC time to UTC+4
+  date1 = new Date(time1 + 14400000)
+  date2 = new Date(time2 + 14400000)
+  date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
 
-prevDay = getCurrentDay()
-prevDate = getCurrentDate()
-prevMonth = getCurrentMonth()
+prevTime = (new Date()).getTime()
 
 getCategory = (api_category) ->
   switch api_category
@@ -78,9 +79,7 @@ catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  questRecord.day = getCurrentDay()
-  questRecord.date = getCurrentDate()
-  questRecord.month = getCurrentMonth()
+  questRecord.time = (new Date()).getTime()
   localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
@@ -158,17 +157,17 @@ TaskPanel = React.createClass
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
         questRecord = localStorage.getItem "quest_tracking_#{memberId}"
-        if questRecord?
+        if questRecord? and questRecord.time?
           questRecord = JSON.parse questRecord
-          if getCurrentDay() isnt questRecord.day or getCurrentDate() isnt questRecord.date or getCurrentMonth() isnt questRecord.month
+          if isDifferentDay((new Date()).getTime(), questRecord.time)
             for id, q of questRecord
               continue unless questGoals[id]?
               delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-          if getCurrentDay() < questRecord.day
+          if isDifferentWeek((new Date()).getTime(), questRecord.time)
             for id, q of questRecord
               continue unless questGoals[id]?
               delete questRecord[id] if questGoals[id].type is 3
-          if getCurrentMonth() isnt questRecord.month
+          if isDifferentMonth((new Date()).getTime(), questRecord.time)
             for id, q of questRecord
               continue unless questGoals[id]?
               delete questRecord[id] if questGoals[id].type is 6
@@ -313,20 +312,17 @@ TaskPanel = React.createClass
       @setState
         tasks: tasks
   refreshDay: ->
-    curDay = getCurrentDay()
-    curDate = getCurrentDate()
-    curMonth = getCurrentMonth()
-    return if prevDay == curDay and prevDate == curDate and prevMonth == curMonth
+    return unless isDifferentDay((new Date()).getTime(), prevTime)
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
       if task.type in [2, 4, 5]
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      if task.type is 3 and curDay is 1
+      if task.type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      if task.type is 6 and curDate is 1
+      if task.type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
       tasks = _.sortBy tasks, (e) -> e.id
@@ -338,9 +334,7 @@ TaskPanel = React.createClass
         detail:
           tasks: tasks
       window.dispatchEvent event
-    prevMonth = curMonth
-    prevDate = curDate
-    prevDay = curDay
+    prevTime = (new Date()).getTime()
   handleTaskInfo: (e) ->
     {tasks} = e.detail
     @setState
@@ -363,12 +357,14 @@ TaskPanel = React.createClass
           for i in [0..5]
             if @state.tasks[i].tracking
               <tr key={i}>
-                <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td style={display:"flex", alignItems:"center"}>
-                    <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
-                    {@state.tasks[i].name}
-                  </td>
-                </OverlayTrigger>
+                <td>
+                  <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+                    <div style={display: "flex", alignItems: "center"}>
+                      <span className="catIndicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
+                      {@state.tasks[i].name}
+                    </div>
+                  </OverlayTrigger>
+                </td>
                 <td>
                   <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
                     <Label bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
@@ -377,12 +373,14 @@ TaskPanel = React.createClass
               </tr>
             else
               <tr key={i}>
-                <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td style={display:"flex", alignItems:"center"}>
-                    <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
-                    {@state.tasks[i].name}
-                  </td>
-                </OverlayTrigger>
+                <td>
+                  <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+                    <div style={display: "flex", alignItems: "center"}>
+                      <span className="catIndicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
+                      {@state.tasks[i].name}
+                    </div>
+                  </OverlayTrigger>
+                </td>
                 <td>
                   <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
                 </td>
