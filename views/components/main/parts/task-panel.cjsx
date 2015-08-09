@@ -353,7 +353,7 @@ TaskPanel = React.createClass
     window.removeEventListener 'battle.result', @handleBattleResult
     clearInterval @interval
   render: ->
-    <Panel header="任务" bsStyle="success">
+    <Panel className='task-panel' header="任务" bsStyle="success">
       <Table>
         <tbody>
         {
@@ -361,31 +361,23 @@ TaskPanel = React.createClass
             if @state.tasks[i].tracking
               <tr key={i}>
                 <td>
+                  <span className='category-indicator' style={backgroundColor: getCategory @state.tasks[i].category}></span>
                   <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                    <div style={display: "flex", alignItems: "center"}>
-                      <span className="catIndicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
-                      {@state.tasks[i].name}
-                    </div>
+                    <span>{@state.tasks[i].name}</span>
                   </OverlayTrigger>
-                </td>
-                <td>
                   <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
-                    <Label bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
+                    <Label style={marginLeft: 'auto'} bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
                   </OverlayTrigger>
                 </td>
               </tr>
             else
               <tr key={i}>
                 <td>
+                  <span className='category-indicator' style={backgroundColor: getCategory @state.tasks[i].category}></span>
                   <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                    <div style={display: "flex", alignItems: "center"}>
-                      <span className="catIndicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
-                      {@state.tasks[i].name}
-                    </div>
+                    <span>{@state.tasks[i].name}</span>
                   </OverlayTrigger>
-                </td>
-                <td>
-                  <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
+                  <Label style={marginLeft: 'auto'} bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
                 </td>
               </tr>
         }
