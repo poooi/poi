@@ -91,9 +91,6 @@ handleTitleSet = ->
     #ntg-recommend {
       display: none !important;
     }
-    ::-webkit-scrollbar {
-      width: 0px;
-    }
   """
   handleResize()
 
