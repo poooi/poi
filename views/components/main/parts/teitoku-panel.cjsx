@@ -27,7 +27,7 @@ getHeader = (state) ->
                <Col xs={6}>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</Col>
                <Col xs={6}>Exp. {state.exp}</Col>
              </Grid>
-      else
+   else
       return <Grid>
                 <Col xs={6}>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</Col>
                 <Col xs={6}>Next. {state.nextExp}</Col>
