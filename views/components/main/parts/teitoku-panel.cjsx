@@ -23,15 +23,19 @@ totalExp = [
 getHeader = (state) ->
   if state.nickname?
     if state.level == 120
-      return  <Grid>
-               <Col xs={6}>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</Col>
-               <Col xs={6}>Exp. {state.exp}</Col>
-             </Grid>
-   else
-      return <Grid>
-                <Col xs={6}>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</Col>
-                <Col xs={6}>Next. {state.nextExp}</Col>
-             </Grid>
+      return (
+        <div style={display: 'flex', fontSize: 13}>
+          <div>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</div>
+          <div style={minWidth: 100, marginLeft: 'auto'}>Exp. {state.exp}</div>
+        </div>
+      )
+    else
+      return (
+        <div style={display: 'flex', fontSize: 13}>
+          <div>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</div>
+          <div style={minWidth: 100, marginLeft: 'auto'}>Next. {state.nextExp}</div>
+        </div>
+      )
   else
     return '提督 [尚未登录]'
 

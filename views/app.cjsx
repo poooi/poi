@@ -37,8 +37,9 @@ PoiMapReminder = React.createClass
   getInitialState: ->
     battling: '未出击'
   handleResponse: (e) ->
-    {path, body} = e.detail
-    switch path
+    reqPath = e.detail.path
+    {body} = e.detail
+    switch reqPath
       when '/kcsapi/api_port/port'
         @setState
           battling: '未出击'
