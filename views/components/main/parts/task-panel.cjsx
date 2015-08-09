@@ -2,6 +2,7 @@
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
 {join} = require 'path-extra'
+fs = require 'fs-extra'
 
 zero = 331200000
 isDifferentDay = (time1, time2) ->
@@ -73,6 +74,7 @@ emptyTask =
 
 memberId = -1
 # Quest Tracking
+questGoals = {}
 try
   questGoals = CSON.parseCSONFile join(ROOT, 'assets', 'data', 'quest_goal.cson')
 catch
@@ -80,7 +82,7 @@ catch
 questRecord = {}
 syncQuestRecord = ->
   questRecord.time = (new Date()).getTime()
-  localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
+  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
@@ -156,22 +158,23 @@ TaskPanel = React.createClass
     switch path
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
-        questRecord = localStorage.getItem "quest_tracking_#{memberId}"
-        if questRecord? and questRecord.time?
-          questRecord = JSON.parse questRecord
-          if isDifferentDay((new Date()).getTime(), questRecord.time)
-            for id, q of questRecord
-              continue unless questGoals[id]?
-              delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-          if isDifferentWeek((new Date()).getTime(), questRecord.time)
-            for id, q of questRecord
-              continue unless questGoals[id]?
-              delete questRecord[id] if questGoals[id].type is 3
-          if isDifferentMonth((new Date()).getTime(), questRecord.time)
-            for id, q of questRecord
-              continue unless questGoals[id]?
-              delete questRecord[id] if questGoals[id].type is 6
-        else
+        try
+          questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
+          if questRecord? and questRecord.time?
+            questRecord = JSON.parse questRecord
+            if isDifferentDay((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type in [2, 4, 5]
+            if isDifferentWeek((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type is 3
+            if isDifferentMonth((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type is 6
+        catch err
           questRecord = {}
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
@@ -325,15 +328,15 @@ TaskPanel = React.createClass
       if task.type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      tasks = _.sortBy tasks, (e) -> e.id
-      @setState
+    tasks = _.sortBy tasks, (e) -> e.id
+    @setState
+      tasks: tasks
+    event = new CustomEvent 'task.change',
+      bubbles: true
+      cancelable: true
+      detail:
         tasks: tasks
-      event = new CustomEvent 'task.change',
-        bubbles: true
-        cancelable: true
-        detail:
-          tasks: tasks
-      window.dispatchEvent event
+    window.dispatchEvent event
     prevTime = (new Date()).getTime()
   handleTaskInfo: (e) ->
     {tasks} = e.detail
