@@ -328,6 +328,14 @@ TaskPanel = React.createClass
       if task.type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
+    for id, q of questRecord
+      continue unless questGoals[id]?
+      if questGoals[id].type in [2, 4, 5]
+        clearQuestRecord id
+      if questGoals[id].type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
+        clearQuestRecord id
+      if questGoals[id].type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
+        clearQuestRecord id
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
