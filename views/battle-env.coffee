@@ -155,6 +155,7 @@ window.addEventListener 'game.response', (e) ->
               enemyShipId: Object.clone enemyShipId
               enemyFormation: enemyFormation
               enemyHp: nowHp.slice 6, 12
+              getEventItem: body.api_get_eventitem?
           window.dispatchEvent event
       # Event Combined battle
       when '/kcsapi/api_req_combined_battle/airbattle'
@@ -204,6 +205,7 @@ window.addEventListener 'game.response', (e) ->
               enemyShipId: Object.clone enemyShipId
               enemyFormation: enemyFormation
               enemyHp: nowHp.slice 6, 12
+              getEventItem: body.api_get_eventitem?
           window.dispatchEvent event
   catch err
     console.error err
