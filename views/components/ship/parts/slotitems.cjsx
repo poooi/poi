@@ -23,8 +23,8 @@ Slotitems = React.createClass
               {if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6 then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
               {if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9  then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
               {if item.api_alv? and item.api_alv >= 9 then <strong style={color: '#F94D2F'}>★</strong> else ''}
-            </Tooltip>}>
-            }>
+            </Tooltip>
+          }>
             <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
           </OverlayTrigger>
           <span className="slotitem-onslot
