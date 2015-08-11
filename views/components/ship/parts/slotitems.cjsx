@@ -15,7 +15,16 @@ Slotitems = React.createClass
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container">
-          <OverlayTrigger placement='left' overlay={<Tooltip>{item.api_name}{if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}</Tooltip>}>
+          <OverlayTrigger placement='left' overlay={
+            <Tooltip>
+              {item.api_name}
+              {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
+              {if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3 then <strong style={color: '#3EAEFF'}>★+{item.api_alv}</strong> else ''}
+              {if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6 then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
+              {if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9  then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
+              {if item.api_alv? and item.api_alv >= 9 then <strong style={color: '#F94D2F'}>★</strong> else ''}
+            </Tooltip>}>
+            }>
             <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
           </OverlayTrigger>
           <span className="slotitem-onslot
