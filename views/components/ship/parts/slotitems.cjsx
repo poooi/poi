@@ -19,10 +19,19 @@ Slotitems = React.createClass
             <Tooltip>
               {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
-              {if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3 then <strong style={color: '#3EAEFF'}>★+{item.api_alv}</strong> else ''}
-              {if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6 then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
-              {if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9  then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
-              {if item.api_alv? and item.api_alv >= 9 then <strong style={color: '#F94D2F'}>★</strong> else ''}
+              &nbsp;&nbsp;{
+                if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
+                  for i in [1..item.api_alv]
+                    <strong key={i} style={color: '#3EAEFF'}>|</strong>
+                else if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6
+                  for i in [1..item.api_alv - 3]
+                    <strong key={i} style={color: '#F9C62F'}>/</strong>
+                else if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9
+                  <strong key={i} style={color: '#F9C62F'}> <FontAwesome key={0} name='angle-double-up'/> </strong>
+                else if item.api_alv? and item.api_alv >= 9
+                  <strong key={i} style={color: '#F94D2F'}>★</strong>
+                else ''
+              }
             </Tooltip>
           }>
             <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
