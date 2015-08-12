@@ -401,9 +401,9 @@ PaneBody = React.createClass
             shipType = $shipTypes[shipInfo.api_stype].api_name
             [
               <tr key={j * 2}>
-                <td width="20%">{shipInfo.api_name}</td>
-                <td width="22%">Lv. {ship.api_lv}</td>
-                <td width="25%" className="hp-progress">
+                <td width="18%">{shipInfo.api_name}</td>
+                <td width="20%">Lv. {ship.api_lv}</td>
+                <td width="24%" className="hp-progress">
                 {
                   if ship.api_ndock_time
                     <OverlayTrigger show = {ship.api_ndock_time} placement='bottom' overlay={<Tooltip>入渠时间：{resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
@@ -416,8 +416,8 @@ PaneBody = React.createClass
                                    now={ship.api_nowhp / ship.api_maxhp * 100}
                                    label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />}
                 </td>
-                <td width="33%">
-                  <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                <td width="38%">
+                  <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} dataex={ship.api_slot_ex} />
                 </td>
               </tr>
               <tr key={j * 2 + 1}>
