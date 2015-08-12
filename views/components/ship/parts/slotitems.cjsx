@@ -15,8 +15,46 @@ Slotitems = React.createClass
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container">
-          <OverlayTrigger placement='left' overlay={<Tooltip>{item.api_name}{if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}</Tooltip>}>
-            <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 33}.png")} />
+          <OverlayTrigger placement='left' overlay={
+            <Tooltip>
+              {item.api_name}
+              {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
+              &nbsp;&nbsp;{
+                if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
+                  for j in [1..item.api_alv]
+                    <strong key={j} style={color: '#3EAEFF'}>|</strong>
+                else if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6
+                  for j in [1..item.api_alv - 3]
+                    <strong key={j} style={color: '#F9C62F'}>\</strong>
+                else if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9
+                  <strong key={j} style={color: '#F9C62F'}> <FontAwesome key={0} name='angle-double-right'/> </strong>
+                else if item.api_alv? and item.api_alv >= 9
+                  <strong key={j} style={color: '#F94D2F'}>★</strong>
+                else ''
+              }
+            </Tooltip>
+          }>
+            <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
+          </OverlayTrigger>
+          <span className="slotitem-onslot
+                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
+                          #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
+                          style={getBackgroundStyle()}>
+            {@props.onslot[i]}
+          </span>
+        </div>
+    }
+    {
+      {$slotitems, _slotitems} = window
+      if @props.dataex
+        item = _slotitems[@props.dataex]
+        <div key={i} className="slotitem-container">
+          <OverlayTrigger placement='left' overlay={
+            <Tooltip>
+              {item.api_name}
+            </Tooltip>
+          }>
+            <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
           </OverlayTrigger>
           <span className="slotitem-onslot
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
