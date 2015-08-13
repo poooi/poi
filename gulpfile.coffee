@@ -39,7 +39,7 @@ gulp.task 'theme', async ->
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
-    log "Downloding #{theme} theme."
+    log "Downloading #{theme} theme."
     [res, data] = yield request.getAsync url,
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
