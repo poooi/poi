@@ -417,7 +417,9 @@ PaneBody = React.createClass
                                    label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />}
                 </td>
                 <td width="38%">
-                  <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} dataex={ship.api_slot_ex} />
+                  <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)}
+                             onslot={ship.api_onslot}
+                             maxeq={ship.api_maxeq} />
                 </td>
               </tr>
               <tr key={j * 2 + 1}>
