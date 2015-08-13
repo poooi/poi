@@ -161,7 +161,6 @@ TaskPanel = React.createClass
         try
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
           if questRecord? and questRecord.time?
-            questRecord = JSON.parse questRecord
             if isDifferentDay((new Date()).getTime(), questRecord.time)
               for id, q of questRecord
                 continue unless questGoals[id]?
