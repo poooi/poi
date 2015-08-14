@@ -51,6 +51,7 @@
   width: 18px;
   height: 18px;
   padding-left: 2px;
+  padding-right: 2px;
 }
 #ShipView .slotitem-container span.show {
   display: inline !important;
