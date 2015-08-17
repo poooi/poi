@@ -31,3 +31,6 @@
 [submodule "plugins/map-hp"]
 	path = plugins/map-hp
 	url = https://github.com/poooi/plugin-map-hp.git
+[submodule "plugins/poi-stats"]
+	path = plugins/poi-stats
+	url = git@github.com:alvin-777/poi-plugin-poi-stats.git
