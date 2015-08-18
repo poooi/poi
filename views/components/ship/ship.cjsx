@@ -130,7 +130,7 @@ module.exports =
               continue if shipId == -1
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
-                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能会被击沉，请到舰队面板确认是否有应急修理要员/女神携带！"
+                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，请到舰队面板确认是否有应急修理要员/女神携带！"
         else
           flag = false
       return unless flag
