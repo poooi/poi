@@ -19,7 +19,7 @@ Slotitems = React.createClass
             <Tooltip>
               {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
-              &nbsp;&nbsp;{
+              {
                 if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
                   for j in [1..item.api_alv]
                     <strong key={j} style={color: '#3EAEFF'}>|</strong>

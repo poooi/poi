@@ -82,21 +82,31 @@ getMaterialStyleData = (percent) ->
 
 
 # Tyku
-# 制空値 = [(艦載機の対空値) × √(搭載数)] の総計
+# 制空値 = [(艦載機の対空値) × √(搭載数)] の総計 + 熟練補正
 getTyku = (deck) ->
   {$ships, $slotitems, _ships, _slotitems} = window
-  totalTyku = 0
+  basicTyku = alvTyku = totalTyku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
     ship = _ships[shipId]
     for itemId, slotId in ship.api_slot
       continue if itemId == -1
       item = _slotitems[itemId]
+      # Basic tyku
       if item.api_type[3] in [6, 7, 8]
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
       else if item.api_type[3] == 10 && item.api_type[2] == 11
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-  totalTyku
+        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+      # Alv
+      if item.api_type[3] == 6 && item.api_alv > 0 && item.api_alv <= 7
+        alvTyku += [0, 1, 4, 6, 11, 16, 17, 25][item.api_alv]
+      else if item.api_type[3] == 11 && item.api_alv == 7
+        alvTyku += 9
+  totalTyku = basicTyku + alvTyku
+
+  basic: basicTyku
+  alv: alvTyku
+  total: totalTyku
 
 # Saku (2-5 旧式)
 # 偵察機索敵値×2 ＋ 電探索敵値 ＋ √(艦隊の装備込み索敵値合計 - 偵察機索敵値 - 電探索敵値)
@@ -335,18 +345,26 @@ TopAlert = React.createClass
       <div style={display: "flex"}>
         <span style={flex: 1}>总 Lv.{@messages.totalLv}</span>
         <span style={flex: 1}>均 Lv.{@messages.avgLv}</span>
-        <span style={flex: 1}>制空:&nbsp;{@messages.tyku}</span>
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>
-              <div>2-5秋式： {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
-              <div>2-5旧式： {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
+              <span>{@messages.tyku.basic} + {@messages.tyku.alv} = {@messages.tyku.total}</span>
             </Tooltip>
           }>
-            <span>索敌:&nbsp;{@messages.saku25a.total}</span>
+            <span>制空: {@messages.tyku.total}</span>
           </OverlayTrigger>
         </span>
-        <span style={flex: 1.5}>{@getState()}:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
+        <span style={flex: 1}>
+          <OverlayTrigger placement='bottom' overlay={
+            <Tooltip>
+              <div>2-5秋式: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
+              <div>2-5旧式: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
+            </Tooltip>
+          }>
+            <span>索敌: {@messages.saku25a.total}</span>
+          </OverlayTrigger>
+        </span>
+        <span style={flex: 1.5}>{@getState()}: <span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
       </div>
     </Alert>
 
