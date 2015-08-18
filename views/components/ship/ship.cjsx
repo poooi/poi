@@ -92,12 +92,14 @@ module.exports =
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 damagedShip = shipId
+                break
           if damagedShip == -1
             for shipId in decks[1].api_ship
               continue if shipId == -1
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 damagedShip = shipId
+                break
           if damagedShip != -1
             gobackShip = -1
             for shipId in decks[1].api_ship
@@ -105,6 +107,7 @@ module.exports =
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp > 0.750001 and !goback[shipId]
                 gobackShip = shipId
+                break
             if gobackShip != -1
               goback[damagedShip] = goback[gobackShip] = true
         when '/kcsapi/api_req_map/start'
