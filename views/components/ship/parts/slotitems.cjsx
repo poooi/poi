@@ -37,10 +37,10 @@ Slotitems = React.createClass
             <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
           </OverlayTrigger>
           <span className="slotitem-onslot
-                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
-                          #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
+                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 || i == 5 then 'show' else 'hide'}
+                          #{if @props.onslot[i] < @props.maxeq[i] && i != 5 then 'text-warning' else ''}"
                           style={getBackgroundStyle()}>
-            {@props.onslot[i]}
+            {if i == 5 then '+' else @props.onslot[i]}
           </span>
         </div>
     }
