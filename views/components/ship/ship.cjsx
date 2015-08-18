@@ -6,6 +6,8 @@
 {PaneBody} = require './parts'
 
 inBattle = [false, false, false, false]
+goback = {}
+
 getStyle = (state) ->
   if state in [0..5]
     # 0: Cond >= 40, Supplied, Repaired, In port
@@ -77,8 +79,34 @@ module.exports =
         when '/kcsapi/api_port/port'
           names = body.api_deck_port.map (e) -> e.api_name
           inBattle = [false, false, false, false]
+          goback = {}
         when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange'
           true
+        # FCF
+        when '/kcsapi/api_req_combined_battle/goback_port'
+          {decks, _ships} = @state
+          damagedShip = -1
+          if damagedShip == -1
+            for shipId in decks[0].api_ship
+              continue if shipId == -1
+              ship = _ships[shipId]
+              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
+                damagedShip = shipId
+          if damagedShip == -1
+            for shipId in decks[1].api_ship
+              continue if shipId == -1
+              ship = _ships[shipId]
+              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
+                damagedShip = shipId
+          if damagedShip != -1
+            gobackShip = -1
+            for shipId in decks[1].api_ship
+              continue if shipId == -1
+              ship = _ships[shipId]
+              if ship.api_nowhp / ship.api_maxhp > 0.750001 and !goback[shipId]
+                gobackShip = shipId
+            if gobackShip != -1
+              goback[damagedShip] = goback[gobackShip] = true
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
           inBattle[deckId] = true
@@ -88,8 +116,8 @@ module.exports =
           for shipId in deck.api_ship
             continue if shipId == -1
             ship = _ships[shipId]
-            if ship.api_nowhp / ship.api_maxhp < 0.250001
-              toggleModal '出击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能会被击沉！"
+            if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
+              toggleModal '出击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，请到舰队面板确认是否有应急修理要员/女神携带！"
         when '/kcsapi/api_req_map/next'
           {decks, states} = @state
           {_ships} = window
@@ -98,8 +126,8 @@ module.exports =
             for shipId in deck.api_ship
               continue if shipId == -1
               ship = _ships[shipId]
-              if ship.api_nowhp / ship.api_maxhp < 0.250001
-                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能会被击沉！"
+              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
+                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能会被击沉，请到舰队面板确认是否有应急修理要员/女神携带！"
         else
           flag = false
       return unless flag
