@@ -1,13 +1,161 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
-{showItemInFolder, openItem} = require 'shell'
+{showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
 # Hackable panels
 window.hack = {}
+
+# poi menu
+if process.platform == 'darwin'
+  template = [
+    {
+      label: 'Poi'
+      submenu: [
+        {
+          label: 'About'
+          selector: 'orderFrontStandardAboutPanel:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Services'
+          submenu: []
+        },
+        { type: 'separator' },
+        {
+          label: 'Hide Poi'
+          accelerator: 'CmdOrCtrl+H'
+          selector: 'hide:'
+        },
+        {
+          label: 'Hide Others'
+          accelerator: 'CmdOrCtrl+Shift+H'
+          selector: 'hideOtherApplications:'
+        },
+        {
+          label: 'Show All'
+          selector: 'unhideAllApplications:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit'
+          accelerator: 'CmdOrCtrl+Q'
+          selector: 'terminate:'
+        }
+      ]
+    },
+    {
+      label: 'Edit'
+      submenu: [
+        {
+          label: 'Undo'
+          accelerator: 'CmdOrCtrl+Z'
+          selector: 'undo:'
+        },
+        {
+          label: 'Redo'
+          accelerator: 'Shift+CmdOrCtrl+Z'
+          selector: 'redo:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Cut'
+          accelerator: 'CmdOrCtrl+X'
+          selector: 'cut:'
+        },
+        {
+          label: 'Copy'
+          accelerator: 'CmdOrCtrl+C'
+          selector: 'copy:'
+        },
+        {
+          label: 'Paste'
+          accelerator: 'CmdOrCtrl+V'
+          selector: 'paste:'
+        },
+        {
+          label: 'Select All'
+          accelerator: 'CmdOrCtrl+A'
+          selector: 'selectAll:'
+        }
+      ]
+    },
+    {
+      label: 'View'
+      submenu: [
+        {
+          label: 'Reload'
+          accelerator: 'CmdOrCtrl+R'
+          click: ->
+            $('kan-game webview').reload()
+        },
+        {
+          label: 'Stop'
+          accelerator: 'CmdOrCtrl+.'
+          click: ->
+            $('kan-game webview').stop()
+        },
+        {
+          label: 'Open Developer Tools'
+          accelerator: 'Alt+CmdOrCtrl+I'
+          click: ->
+            remote.getCurrentWindow().openDevTools({detach: true})
+        },
+        {
+          label: 'Open Developer Tools of WebView'
+          click: ->
+            $('kan-game webview').openDevTools({detach: true})
+        }
+      ]
+    },
+    {
+      label: 'Window'
+      submenu: [
+        {
+          label: 'Minimize'
+          accelerator: 'CmdOrCtrl+M'
+          selector: 'performMiniaturize:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Bring All to Front'
+          selector: 'arrangeInFront:'
+        }
+      ]
+    },
+    {
+      label: 'Help'
+      submenu: [
+        {
+          label: 'Wiki'
+          click: ->
+            openExternal 'https://github.com/poooi/poi/wiki'
+        },
+        {
+          label: 'Poi Statistics'
+          click: ->
+            openExternal 'http://db.kcwiki.moe/'
+        },
+        { type: 'separator' },
+        {
+          label: 'Report Issue'
+          click: ->
+            openExternal 'https://github.com/poooi/poi/issues'
+        },
+        {
+          label: 'Search Issues'
+          click: ->
+            openExternal 'https://github.com/issues?q=+is%3Aissue+user%3Apoooi'
+        }
+      ]
+    }
+  ]
+  Menu = remote.require('menu')
+  menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 
 # Main tabbed area
 ControlledTabArea =

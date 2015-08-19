@@ -59,8 +59,9 @@ else if process.platform == 'darwin'
     app.commandLine.appendSwitch 'ppapi-flash-version', '18.0.0.209'
 
 app.on 'window-all-closed', ->
-  shortcut.unregister()
-  app.quit()
+  if process.platform != 'darwin'
+    shortcut.unregister()
+    app.quit()
 
 app.on 'ready', ->
   shortcut.register()
