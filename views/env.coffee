@@ -99,7 +99,7 @@ window.notify = (msg, options) ->
     notifier.notify
       title: 'poi'
       message: msg
-      icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
+      icon: options?.icon || require('path-extra').join(ROOT, 'assets', 'icons', 'icon.png')
       sound: false
   else
     new Notification 'poi',
