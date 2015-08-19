@@ -350,7 +350,7 @@ TopAlert = React.createClass
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>
-              <span>{@messages.tyku.basic} + {@messages.tyku.alv} = {@messages.tyku.total}</span>
+              <span>基础制空: {@messages.tyku.basic} 熟练度加成: {@messages.tyku.alv}</span>
             </Tooltip>
           }>
             <span>制空: {@messages.tyku.total}</span>
