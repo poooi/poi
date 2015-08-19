@@ -9,7 +9,7 @@ poi:
   webview:
     width: 800
   shortcut:
-    bosskey: "CmdOrCtrl+h"
+    bosskey: "CmdOrCtrl+i"
 proxy:
   use: "none"
   socks5:

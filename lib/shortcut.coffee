@@ -6,7 +6,7 @@ state = []
 hidden = false
 module.exports =
   register: ->
-    globalShortcut.register config.get('poi.shortcut.bosskey', 'CmdOrCtrl+h'), ->
+    globalShortcut.register config.get('poi.shortcut.bosskey', 'CmdOrCtrl+i'), ->
       windows = BrowserWindow.getAllWindows()
       if !hidden
         # Hide all windows
