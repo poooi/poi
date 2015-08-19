@@ -7,6 +7,10 @@
 
 Scalable KanColle browser and tool.
 
+## Downloads
+
+Always [Here](http://0u0.moe/poi).
+
 ## Features
 
 + Proxy
