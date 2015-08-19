@@ -15,60 +15,111 @@ map = -1
 bossCell = -1
 currentCell = -1
 battled = false
-nowHp = []
 enemyShipId = []
+_sortieHp = []
+_combinedHp = []
+_enemyHp = []
 # Formation: 0 - 単縦陣, 1 - 複縦陣, 2 - 輪形陣, 3 - 梯形陣, 4 - 単横陣,
 # 5 - 第一警戒航行序列, 6 - 第二警戒航行序列, 7 - 第三警戒航行序列, 8 - 第四警戒航行序列
 enemyFormation = 0
 colorNo = -1
 
-koukuAttack = (nowHp, kouku) ->
+koukuAttack = (sortieHp, enemyHp, kouku) ->
   if kouku.api_edam?
     for damage, i in kouku.api_edam
       damage = Math.floor(damage)
-      continue if damage <= 0
-      nowHp[i + 5] -= damage
+      if damage > 0
+        enemyHp[i - 1] -= damage
   if kouku.api_fdam?
     for damage, i in kouku.api_fdam
       damage = Math.floor(damage)
-      continue if damage <= 0
-      nowHp[i - 1] -= damage
-openAttack = (nowHp, openingAttack) ->
-  if openingAttack.api_edam?
-    for damage, i in openingAttack.api_edam
+      if damage > 0
+        sortieHp[i - 1] -= damage
+
+supportAttack = (sortieHp, enemyHp, support) ->
+  for damage, i in support
+    damage = Math.floor(damage)
+    continue if damage <= 0 || i > 6
+    enemyHp[i - 1] -= damage
+
+raigekiAttack = (sortieHp, enemyHp, raigeki) ->
+  if raigeki.api_edam?
+    for damage, i in raigeki.api_edam
       damage = Math.floor(damage)
-      continue if damage <= 0
-      nowHp[i + 5] -= damage
-  if openingAttack.api_fdam?
-    for damage, i in openingAttack.api_fdam
+      if damage > 0
+        enemyHp[i - 1] -= damage
+  if raigeki.api_fdam?
+    for damage, i in raigeki.api_fdam
       damage = Math.floor(damage)
-      continue if damage <= 0
-      nowHp[i - 1] -= damage
-hougekiAttack = (nowHp, hougeki) ->
+      if damage > 0
+        sortieHp[i - 1] -= damage
+
+hougekiAttack = (sortieHp, enemyHp, hougeki) ->
   for damageFrom, i in hougeki.api_at_list
     continue if damageFrom == -1
     for damage, j in hougeki.api_damage[i]
       damage = Math.floor(damage)
       damageTo = hougeki.api_df_list[i][j]
       continue if damage <= 0
-      nowHp[damageTo - 1] -= damage
-raigekiAttack = (nowHp, raigeki) ->
-  if raigeki.api_edam?
-    for damage, i in raigeki.api_edam
-      damage = Math.floor(damage)
-      continue if damage <= 0
-      nowHp[i + 5] -= damage
-  if raigeki.api_fdam?
-    for damage, i in raigeki.api_fdam
-      damage = Math.floor(damage)
-      continue if damage <= 0
-      nowHp[i - 1] -= damage
-supportAttack = (nowHp, damages) ->
-  for damage, i in damages
-    damage = Math.floor(damage)
-    continue if damage <= 0
-    continue if i > 6
-    nowHp[i + 5] -= damage
+      if damageTo < 7
+        sortieHp[damageTo - 1] -= damage
+      else
+        enemyHp[damageTo - 1 - 6] -= damage
+
+analogBattle = (sortieHp, enemyHp, combinedHp, isCombined, isWater, body) ->
+  # First air battle
+  if body.api_kouku?
+    if body.api_kouku.api_stage3?
+      koukuAttack sortieHp, enemyHp, body.api_kouku.api_stage3
+    if body.api_kouku.api_stage3_combined?
+      koukuAttack combinedHp, enemyHp, body.api_kouku.api_stage3_combined
+  # Second air battle
+  if body.api_kouku2?
+    if body.api_kouku2.api_stage3?
+      koukuAttack sortieHp, enemyHp, body.api_kouku2.api_stage3
+    if body.api_kouku2.api_stage3_combined?
+      koukuAttack combinedHp, enemyHp, body.api_kouku2.api_stage3_combined
+  # Support battle
+  if body.api_support_info?
+    if body.api_support_info.api_support_airatack?
+      supportAttack soriteHp, enemyHp, body.api_support_info.api_support_airatack.api_stage3.api_edam
+    else if body.api_support_info.api_support_hourai?
+      supportAttack soriteHp, enemyHp, body.api_support_info.api_support_hourai.api_damage
+    else
+      supportAttack soriteHp, enemyHp, body.api_support_info.api_damage
+  # Opening battle
+  if body.api_opening_atack?
+    if isCombined?
+      raigekiAttack combinedHp, enemyHp, body.api_opening_atack
+    else
+      raigekiAttack sortieHp, enemyHp, body.api_opening_atack
+  # Night battle
+  if body.api_hougeki?
+    if isCombined?
+      hougekiAttack combinedHp, enemyHp, body.api_hougeki
+    else
+      hougekiAttack sortieHp, enemyHp, body.api_hougeki
+  # First hougeki battle
+  if body.api_hougeki1?
+    if isCombined && !isWater
+      hougekiAttack combinedHp, enemyHp, body.api_hougeki1
+    else
+      hougekiAttack sortieHp, enemyHp, body.api_hougeki1
+  # Second hougeki battle
+  if body.api_hougeki2?
+    hougekiAttack sortieHp, enemyHp, body.api_hougeki2
+  # Combined hougeki battle
+  if body.api_hougeki3?
+    if isCombined && isWater
+      hougekiAttack combinedHp, enemyHp, body.api_hougeki3
+    else
+      hougekiAttack sortieHp, enemyHp, body.api_hougeki3
+  # Raigeki battle
+  if body.api_raigeki?
+    if isCombined?
+      raigekiAttack combinedHp, enemyHp, body.api_raigeki
+    else
+      raigekiAttack sortieHp, enemyHp, body.api_raigeki
 
 window.addEventListener 'game.response', (e) ->
   {method, path, body, postBody} = e.detail
@@ -102,90 +153,38 @@ window.addEventListener 'game.response', (e) ->
         enemyShipId = []
         colorNo = -1
         enemyFormation = 0
-      when '/kcsapi/api_req_sortie/battle'
+      # Normal battle
+      when '/kcsapi/api_req_sortie/battle', '/kcsapi/api_req_battle_midnight/battle', '/kcsapi/api_req_battle_midnight/sp_midnight', '/kcsapi/api_req_sortie/airbattle'
         battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        nowHp = body.api_nowhps.slice 1, 13
-        koukuAttack nowHp, body.api_kouku.api_stage3 if body.api_kouku.api_stage3?
-        openAttack nowHp, body.api_opening_atack if body.api_opening_atack?
-        hougekiAttack nowHp, body.api_hougeki1 if body.api_hougeki1?
-        hougekiAttack nowHp, body.api_hougeki2 if body.api_hougeki2?
-        hougekiAttack nowHp, body.api_hougeki3 if body.api_hougeki3?
-        raigekiAttack nowHp, body.api_raigeki if body.api_raigeki?
-        if body.api_support_info?
-          if body.api_support_info.api_support_airatack?
-            supportAttack nowHp, body.api_support_info.api_support_airatack.api_stage3.api_edam
-          else if body.api_support_info.api_support_hourai?
-            supportAttack nowHp, body.api_support_info.api_support_hourai.api_damage
-          else
-            supportAttack nowHp, body.api_support_info.api_damage
-      when '/kcsapi/api_req_battle_midnight/battle'
-        battled = true
-        hougekiAttack nowHp, body.api_hougeki if body.api_hougeki?
-      when '/kcsapi/api_req_battle_midnight/sp_midnight'
-        battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        nowHp = body.api_nowhps.slice 1, 13
-        hougekiAttack nowHp, body.api_hougeki if body.api_hougeki?
-      when '/kcsapi/api_req_sortie/airbattle'
-        battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        nowHp = body.api_nowhps.slice 1, 13
-        koukuAttack nowHp, body.api_kouku.api_stage3 if body.api_kouku? && body.api_kouku.api_stage3?
-        koukuAttack nowHp, body.api_kouku2.api_stage3 if body.api_kouku2? && body.api_kouku2.api_stage3?
-      when '/kcsapi/api_req_sortie/battleresult'
-        if battled
-          {_decks} = window
-          event = new CustomEvent 'battle.result',
-            bubbles: true
-            cancelable: true
-            detail:
-              rank: body.api_win_rank
-              boss: bossCell == currentCell or colorNo == 5
-              map: map
-              mapCell: currentCell
-              quest: body.api_quest_name
-              enemy: body.api_enemy_info.api_deck_name
-              dropShipId: if body.api_get_ship? then body.api_get_ship.api_ship_id else -1
-              deckShipId: Object.clone _decks[deckId].api_ship
-              deckHp: nowHp.slice 0, 6
-              enemyShipId: Object.clone enemyShipId
-              enemyFormation: enemyFormation
-              enemyHp: nowHp.slice 6, 12
-              getEventItem: body.api_get_eventitem?
-          window.dispatchEvent event
+        combined = false
+        _sortieHp = body.api_nowhps.slice(1, 7)
+        _enemyHp = body.api_nowhps.slice(7, 13)
+        enemyShipId = body.api_ship_ke.slice(1, 7)
+        enemyFormation = body.api_formation[1]
+        analogBattle _sortieHp, _enemyHp, _combinedHp, false, false, body
+        console.log [_sortieHp, _combinedHp, _enemyHp]
       # Event Combined battle
-      when '/kcsapi/api_req_combined_battle/airbattle'
+      when '/kcsapi/api_req_combined_battle/airbattle', '/kcsapi/api_req_combined_battle/battle', '/kcsapi/api_req_combined_battle/midnight_battle', '/kcsapi/api_req_combined_battle/sp_midnight'
         battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        # TODO: Add hp calculate
-        nowHp = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-      when '/kcsapi/api_req_combined_battle/battle'
-        battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        # TODO: Add hp calculate
-        nowHp = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-      when '/kcsapi/api_req_combined_battle/midnight_battle'
-        battled = true
-        # TODO: Add hp calculate
-      when '/kcsapi/api_req_combined_battle/sp_midnight'
-        battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        # TODO: Add hp calculate
-        nowHp = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        combined = true
+        _sortieHp = body.api_nowhps.slice(1, 7)
+        _combinedHp = body.api_nowhps_combined.slice(1, 7)
+        _enemyHp = body.api_nowhps.slice(7, 13)
+        enemyShipId = body.api_ship_ke.slice(1, 7)
+        enemyFormation = body.api_formation[1]
+        analogBattle _sortieHp, _enemyHp, _combinedHp, true, false, body
+        console.log [_sortieHp, _combinedHp, _enemyHp]
       when '/kcsapi/api_req_combined_battle/battle_water'
         battled = true
-        enemyShipId = body.api_ship_ke.slice 1, 7
-        enemyFormation = body.api_formation[1] if body.api_formation?
-        # TODO: Add hp calculate
-        nowHp = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-      when '/kcsapi/api_req_combined_battle/battleresult'
+        combined = true
+        _sortieHp = body.api_nowhps.slice(1, 7)
+        _combinedHp = body.api_nowhps_combined.slice(1, 7)
+        _enemyHp = body.api_nowhps.slice(7, 13)
+        enemyShipId = body.api_ship_ke.slice(1, 7)
+        enemyFormation = body.api_formation[1]
+        analogBattle _sortieHp, _enemyHp, _combinedHp, true, true, body
+        console.log [_sortieHp, _combinedHp, _enemyHp]
+      when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
         if battled
           {_decks} = window
           event = new CustomEvent 'battle.result',
@@ -199,13 +198,13 @@ window.addEventListener 'game.response', (e) ->
               quest: body.api_quest_name
               enemy: body.api_enemy_info.api_deck_name
               dropShipId: if body.api_get_ship? then body.api_get_ship.api_ship_id else -1
-              # TODO
-              # deckShipId: Object.clone _decks[deckId].api_ship
-              # deckHp: nowHp.slice 0, 6
+              deckShipId: if combined then _decks[0].api_ship.concat(_decks[1].api_ship) else Object.clone _decks[deckId].api_ship
+              deckHp: if combined then _sortieHp.concat(_combinedHp)
               enemyShipId: Object.clone enemyShipId
               enemyFormation: enemyFormation
-              enemyHp: nowHp.slice 6, 12
+              enemyHp: Object.clone _enemyHp
               getEventItem: body.api_get_eventitem?
+          console.log event.detail
           window.dispatchEvent event
   catch err
     console.error err
