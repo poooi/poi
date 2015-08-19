@@ -377,6 +377,21 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   ]
   window.toggleModal title, content, footer
 
+# F5 & Ctrl+F5
+window.addEventListener 'keydown', (e) ->
+  if process.platform == 'darwin' and e.keyCode is 82 and e.metaKey
+    if e.shiftKey # cmd + shift + r
+      $('kan-game webview').reloadIgnoringCache()
+    else # cmd + r
+      # Catched by menu
+      # $('kan-game webview').reload()
+      false
+  else if e.keyCode is 116
+    if e.ctrlKey # ctrl + f5
+      $('kan-game webview').reloadIgnoringCache()
+    else # f5
+      $('kan-game webview').reload()
+
 # Confirm before quit
 confirmExit = false
 exitPoi = ->
