@@ -119,7 +119,7 @@ module.exports =
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 # 应急修理要员/女神
                 safe = false
-                for slotId in ship.api_slot
+                for slotId in ship.api_slot.concat(ship.api_slot_ex || -1)
                   continue if slotId == -1
                   safe = true if _slotitems[slotId].api_type[3] is 14
                 if !safe
