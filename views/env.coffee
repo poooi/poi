@@ -1,10 +1,10 @@
 require 'coffee-react/register'
-path = require 'path-extra'
+{join} = require 'path-extra'
 notifier = require 'node-notifier'
 
 # Environments
 window.remote = require 'remote'
-window.ROOT = path.join(__dirname, '..')
+window.ROOT = join(__dirname, '..')
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
 window.POI_VERSION = remote.getGlobal 'POI_VERSION'
@@ -14,7 +14,7 @@ window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
-window.jQuery = require path.join(ROOT, 'components/jquery/dist/jquery')
+window.jQuery = require join(ROOT, 'components/jquery/dist/jquery')
 window.React = require 'react'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
@@ -99,7 +99,7 @@ window.notify = (msg, options) ->
     notifier.notify
       title: 'poi'
       message: msg
-      icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
+      icon: options?.icon || join(ROOT, 'assets', 'icons', 'icon.png')
       sound: false
   else
     new Notification 'poi',
