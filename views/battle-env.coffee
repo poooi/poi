@@ -162,7 +162,6 @@ window.addEventListener 'game.response', (e) ->
       if path != '/kcsapi/api_req_battle_midnight/battle'
         enemyFormation = body.api_formation[1]
       analogBattle _sortieHp, _enemyHp, _combinedHp, false, false, body
-      console.log [_sortieHp, _combinedHp, _enemyHp]
     # Event Combined battle
     when '/kcsapi/api_req_combined_battle/airbattle', '/kcsapi/api_req_combined_battle/battle', '/kcsapi/api_req_combined_battle/midnight_battle', '/kcsapi/api_req_combined_battle/sp_midnight'
       battled = true
@@ -174,7 +173,6 @@ window.addEventListener 'game.response', (e) ->
       if path != '/kcsapi/api_req_combined_battle/midnight_battle'
         enemyFormation = body.api_formation[1]
       analogBattle _sortieHp, _enemyHp, _combinedHp, true, false, body
-      console.log [_sortieHp, _combinedHp, _enemyHp]
     when '/kcsapi/api_req_combined_battle/battle_water'
       battled = true
       combined = true
@@ -184,7 +182,6 @@ window.addEventListener 'game.response', (e) ->
       enemyShipId = body.api_ship_ke.slice(1, 7)
       enemyFormation = body.api_formation[1]
       analogBattle _sortieHp, _enemyHp, _combinedHp, true, true, body
-      console.log [_sortieHp, _combinedHp, _enemyHp]
     when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
       if battled
         {_decks} = window
@@ -205,5 +202,4 @@ window.addEventListener 'game.response', (e) ->
             enemyFormation: enemyFormation
             enemyHp: Object.clone _enemyHp
             getEventItem: body.api_get_eventitem?
-        console.log event.detail
         window.dispatchEvent event

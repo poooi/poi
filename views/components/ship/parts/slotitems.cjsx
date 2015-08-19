@@ -12,7 +12,7 @@ Slotitems = React.createClass
     {
       {$slotitems, _slotitems} = window
       for itemId, i in @props.data
-        continue if itemId == -1
+        continue unless itemId != -1 && _slotitems[itemId]?
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container">
           <OverlayTrigger placement='left' overlay={

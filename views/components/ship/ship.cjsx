@@ -8,6 +8,8 @@
 inBattle = [false, false, false, false]
 goback = {}
 combined = false
+escapeId = -1
+towId = -1
 
 getStyle = (state) ->
   if state in [0..5]
@@ -84,35 +86,19 @@ module.exports =
           combined = body.api_combined_flag? && body.api_combined_flag > 0
         when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange'
           true
-        # FCF
+        when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
+          {decks} = @state
+          if body.api_escape_flag? && body.api_escape_flag > 0
+            escapeIdx = body.api_escape.api_escape_idx[0] - 1
+            towIdx = body.api_escape.api_tow_idx[0] - 1
+            escapeId = decks[escapeIdx // 6].api_ship[escapeIdx % 6]
+            towId = decks[towIdx // 6].api_ship[towIdx % 6]
         when '/kcsapi/api_req_combined_battle/goback_port'
-          {decks, _ships} = @state
-          damagedShip = -1
-          if damagedShip == -1
-            for shipId, idx in decks[0].api_ship
-              continue if shipId == -1 || idx == 0
-              ship = _ships[shipId]
-              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
-                damagedShip = shipId
-                break
-          if damagedShip == -1
-            for shipId, idx in decks[1].api_ship
-              continue if shipId == -1 || idx == 0
-              ship = _ships[shipId]
-              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
-                damagedShip = shipId
-                break
-          if damagedShip != -1
-            gobackShip = -1
-            for shipId, idx in decks[1].api_ship
-              continue if shipId == -1 || idx == 0
-              ship = _ships[shipId]
-              if ship.api_stype == 2 and ship.api_nowhp / ship.api_maxhp > 0.750001 and !goback[shipId]
-                gobackShip = shipId
-                break
-            if gobackShip != -1
-              console.log "退避：#{_ships[damagedShip].api_name} 护卫：#{_ships[gobackShip].api_name}"
-              goback[damagedShip] = goback[gobackShip] = true
+          {decks} = @state
+          {_ships} = window
+          if escapeId != -1 && towId != -1
+            console.log "退避：#{_ships[damagedShip].api_name} 护卫：#{_ships[gobackShip].api_name}"
+            goback[escapeId] = goback[towId] = true
         when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
           if path == '/kcsapi/api_req_map/start'
             if combined
@@ -121,6 +107,7 @@ module.exports =
             else
               deckId = parseInt(postBody.api_deck_id) - 1
               inBattle[deckId] = true
+          escapeId = towId = -1
           {decks, states} = @state
           {_ships, _slotitems} = window
           for deckId in [0..3]
