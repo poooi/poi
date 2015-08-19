@@ -97,7 +97,7 @@ module.exports =
           {decks} = @state
           {_ships} = window
           if escapeId != -1 && towId != -1
-            console.log "退避：#{_ships[damagedShip].api_name} 护卫：#{_ships[gobackShip].api_name}"
+            console.log "退避：#{_ships[escapeId].api_name} 护卫：#{_ships[towId].api_name}"
             goback[escapeId] = goback[towId] = true
         when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
           if path == '/kcsapi/api_req_map/start'
