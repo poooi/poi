@@ -114,7 +114,7 @@ module.exports =
               console.log "退避：#{_ships[damagedShip].api_name} 护卫：#{_ships[gobackShip].api_name}"
               goback[damagedShip] = goback[gobackShip] = true
         when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
-          if path == '/kcsapi/api_req_map/next'
+          if path == '/kcsapi/api_req_map/start'
             if combined
               deckId = 0
               inBattle[0] = inBattle[1] = true

@@ -89,13 +89,13 @@ analogBattle = (sortieHp, enemyHp, combinedHp, isCombined, isWater, body) ->
       supportAttack soriteHp, enemyHp, body.api_support_info.api_damage
   # Opening battle
   if body.api_opening_atack?
-    if isCombined?
+    if isCombined
       raigekiAttack combinedHp, enemyHp, body.api_opening_atack
     else
       raigekiAttack sortieHp, enemyHp, body.api_opening_atack
   # Night battle
   if body.api_hougeki?
-    if isCombined?
+    if isCombined
       hougekiAttack combinedHp, enemyHp, body.api_hougeki
     else
       hougekiAttack sortieHp, enemyHp, body.api_hougeki
@@ -116,95 +116,94 @@ analogBattle = (sortieHp, enemyHp, combinedHp, isCombined, isWater, body) ->
       hougekiAttack sortieHp, enemyHp, body.api_hougeki3
   # Raigeki battle
   if body.api_raigeki?
-    if isCombined?
+    if isCombined
       raigekiAttack combinedHp, enemyHp, body.api_raigeki
     else
       raigekiAttack sortieHp, enemyHp, body.api_raigeki
 
 window.addEventListener 'game.response', (e) ->
   {method, path, body, postBody} = e.detail
-  try
-    switch path
-      when '/kcsapi/api_req_map/start'
-        # Refresh current map info
-        combined = false
-        battled = false
-        map = body.api_maparea_id * 10 + body.api_mapinfo_no
-        bossCell = body.api_bosscell_no
-        currentCell = body.api_no
-        deckId = parseInt(postBody.api_deck_id) - 1
-        nowHp = []
-        colorNo = body.api_color_no
-        enemyFormation = 0
-      when '/kcsapi/api_req_map/next'
-        currentCell = body.api_no
-        battled = false
-        colorNo = body.api_color_no
-        enemyFormation = 0
-      when '/kcsapi/api_port/port'
-        # Initialize all info
-        deckId = -1
-        combined = false
-        map = -1
-        bossCell = -1
-        currentCell = -1
-        battled = false
-        nowHp = []
-        enemyShipId = []
-        colorNo = -1
-        enemyFormation = 0
-      # Normal battle
-      when '/kcsapi/api_req_sortie/battle', '/kcsapi/api_req_battle_midnight/battle', '/kcsapi/api_req_battle_midnight/sp_midnight', '/kcsapi/api_req_sortie/airbattle'
-        battled = true
-        combined = false
-        _sortieHp = body.api_nowhps.slice(1, 7)
-        _enemyHp = body.api_nowhps.slice(7, 13)
-        enemyShipId = body.api_ship_ke.slice(1, 7)
+  switch path
+    when '/kcsapi/api_req_map/start'
+      # Refresh current map info
+      combined = false
+      battled = false
+      map = body.api_maparea_id * 10 + body.api_mapinfo_no
+      bossCell = body.api_bosscell_no
+      currentCell = body.api_no
+      deckId = parseInt(postBody.api_deck_id) - 1
+      nowHp = []
+      colorNo = body.api_color_no
+      enemyFormation = 0
+    when '/kcsapi/api_req_map/next'
+      currentCell = body.api_no
+      battled = false
+      colorNo = body.api_color_no
+      enemyFormation = 0
+    when '/kcsapi/api_port/port'
+      # Initialize all info
+      deckId = -1
+      combined = false
+      map = -1
+      bossCell = -1
+      currentCell = -1
+      battled = false
+      nowHp = []
+      enemyShipId = []
+      colorNo = -1
+      enemyFormation = 0
+    # Normal battle
+    when '/kcsapi/api_req_sortie/battle', '/kcsapi/api_req_battle_midnight/battle', '/kcsapi/api_req_battle_midnight/sp_midnight', '/kcsapi/api_req_sortie/airbattle'
+      battled = true
+      combined = false
+      _sortieHp = body.api_nowhps.slice(1, 7)
+      _enemyHp = body.api_nowhps.slice(7, 13)
+      enemyShipId = body.api_ship_ke.slice(1, 7)
+      if path != '/kcsapi/api_req_battle_midnight/battle'
         enemyFormation = body.api_formation[1]
-        analogBattle _sortieHp, _enemyHp, _combinedHp, false, false, body
-        console.log [_sortieHp, _combinedHp, _enemyHp]
-      # Event Combined battle
-      when '/kcsapi/api_req_combined_battle/airbattle', '/kcsapi/api_req_combined_battle/battle', '/kcsapi/api_req_combined_battle/midnight_battle', '/kcsapi/api_req_combined_battle/sp_midnight'
-        battled = true
-        combined = true
-        _sortieHp = body.api_nowhps.slice(1, 7)
-        _combinedHp = body.api_nowhps_combined.slice(1, 7)
-        _enemyHp = body.api_nowhps.slice(7, 13)
-        enemyShipId = body.api_ship_ke.slice(1, 7)
+      analogBattle _sortieHp, _enemyHp, _combinedHp, false, false, body
+      console.log [_sortieHp, _combinedHp, _enemyHp]
+    # Event Combined battle
+    when '/kcsapi/api_req_combined_battle/airbattle', '/kcsapi/api_req_combined_battle/battle', '/kcsapi/api_req_combined_battle/midnight_battle', '/kcsapi/api_req_combined_battle/sp_midnight'
+      battled = true
+      combined = true
+      _sortieHp = body.api_nowhps.slice(1, 7)
+      _combinedHp = body.api_nowhps_combined.slice(1, 7)
+      _enemyHp = body.api_nowhps.slice(7, 13)
+      enemyShipId = body.api_ship_ke.slice(1, 7)
+      if path != '/kcsapi/api_req_combined_battle/midnight_battle'
         enemyFormation = body.api_formation[1]
-        analogBattle _sortieHp, _enemyHp, _combinedHp, true, false, body
-        console.log [_sortieHp, _combinedHp, _enemyHp]
-      when '/kcsapi/api_req_combined_battle/battle_water'
-        battled = true
-        combined = true
-        _sortieHp = body.api_nowhps.slice(1, 7)
-        _combinedHp = body.api_nowhps_combined.slice(1, 7)
-        _enemyHp = body.api_nowhps.slice(7, 13)
-        enemyShipId = body.api_ship_ke.slice(1, 7)
-        enemyFormation = body.api_formation[1]
-        analogBattle _sortieHp, _enemyHp, _combinedHp, true, true, body
-        console.log [_sortieHp, _combinedHp, _enemyHp]
-      when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
-        if battled
-          {_decks} = window
-          event = new CustomEvent 'battle.result',
-            bubbles: true
-            cancelable: true
-            detail:
-              rank: body.api_win_rank
-              boss: bossCell == currentCell or colorNo == 5
-              map: map
-              mapCell: currentCell
-              quest: body.api_quest_name
-              enemy: body.api_enemy_info.api_deck_name
-              dropShipId: if body.api_get_ship? then body.api_get_ship.api_ship_id else -1
-              deckShipId: if combined then _decks[0].api_ship.concat(_decks[1].api_ship) else Object.clone _decks[deckId].api_ship
-              deckHp: if combined then _sortieHp.concat(_combinedHp)
-              enemyShipId: Object.clone enemyShipId
-              enemyFormation: enemyFormation
-              enemyHp: Object.clone _enemyHp
-              getEventItem: body.api_get_eventitem?
-          console.log event.detail
-          window.dispatchEvent event
-  catch err
-    console.error err
+      analogBattle _sortieHp, _enemyHp, _combinedHp, true, false, body
+      console.log [_sortieHp, _combinedHp, _enemyHp]
+    when '/kcsapi/api_req_combined_battle/battle_water'
+      battled = true
+      combined = true
+      _sortieHp = body.api_nowhps.slice(1, 7)
+      _combinedHp = body.api_nowhps_combined.slice(1, 7)
+      _enemyHp = body.api_nowhps.slice(7, 13)
+      enemyShipId = body.api_ship_ke.slice(1, 7)
+      enemyFormation = body.api_formation[1]
+      analogBattle _sortieHp, _enemyHp, _combinedHp, true, true, body
+      console.log [_sortieHp, _combinedHp, _enemyHp]
+    when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
+      if battled
+        {_decks} = window
+        event = new CustomEvent 'battle.result',
+          bubbles: true
+          cancelable: true
+          detail:
+            rank: body.api_win_rank
+            boss: bossCell == currentCell or colorNo == 5
+            map: map
+            mapCell: currentCell
+            quest: body.api_quest_name
+            enemy: body.api_enemy_info.api_deck_name
+            dropShipId: if body.api_get_ship? then body.api_get_ship.api_ship_id else -1
+            deckShipId: if combined then _decks[0].api_ship.concat(_decks[1].api_ship) else Object.clone _decks[deckId].api_ship
+            deckHp: if combined then _sortieHp.concat(_combinedHp)
+            enemyShipId: Object.clone enemyShipId
+            enemyFormation: enemyFormation
+            enemyHp: Object.clone _enemyHp
+            getEventItem: body.api_get_eventitem?
+        console.log event.detail
+        window.dispatchEvent event
