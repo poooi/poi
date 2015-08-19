@@ -7,6 +7,7 @@
 
 inBattle = [false, false, false, false]
 goback = {}
+combined = false
 
 getStyle = (state) ->
   if state in [0..5]
@@ -80,6 +81,7 @@ module.exports =
           names = body.api_deck_port.map (e) -> e.api_name
           inBattle = [false, false, false, false]
           goback = {}
+          combined = body.api_combined_flag? && body.api_combined_flag > 0
         when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange'
           true
         # FCF
@@ -111,27 +113,30 @@ module.exports =
             if gobackShip != -1
               console.log "退避：#{_ships[damagedShip].api_name} 护卫：#{_ships[gobackShip].api_name}"
               goback[damagedShip] = goback[gobackShip] = true
-        when '/kcsapi/api_req_map/start'
-          deckId = parseInt(postBody.api_deck_id) - 1
-          inBattle[deckId] = true
+        when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
+          if path == '/kcsapi/api_req_map/next'
+            if combined
+              deckId = 0
+              inBattle[0] = inBattle[1] = true
+            else
+              deckId = parseInt(postBody.api_deck_id) - 1
+              inBattle[deckId] = true
           {decks, states} = @state
-          {_ships} = window
-          deck = decks[deckId]
-          for shipId in deck.api_ship
-            continue if shipId == -1
-            ship = _ships[shipId]
-            if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
-              toggleModal '出击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，请到舰队面板确认是否有应急修理要员/女神携带！"
-        when '/kcsapi/api_req_map/next'
-          {decks, states} = @state
-          {_ships} = window
-          for deck, i in decks
-            continue if states[i] != 5
+          {_ships, _slotitems} = window
+          for deckId in [0..3]
+            continue unless inBattle[deckId]
+            deck = decks[deckId]
             for shipId in deck.api_ship
               continue if shipId == -1
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
-                toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，请到舰队面板确认是否有应急修理要员/女神携带！"
+                # 应急修理要员/女神
+                safe = false
+                for slotId in ship.api_slot
+                  continue if slotId == -1
+                  safe = true if _slotitems[slotId].api_type[3] is 14
+                if !safe
+                  toggleModal '注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能有击沉风险！"
         else
           flag = false
       return unless flag
