@@ -87,28 +87,29 @@ module.exports =
           {decks, _ships} = @state
           damagedShip = -1
           if damagedShip == -1
-            for shipId in decks[0].api_ship
-              continue if shipId == -1
+            for shipId, idx in decks[0].api_ship
+              continue if shipId == -1 || idx == 0
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 damagedShip = shipId
                 break
           if damagedShip == -1
-            for shipId in decks[1].api_ship
-              continue if shipId == -1
+            for shipId, idx in decks[1].api_ship
+              continue if shipId == -1 || idx == 0
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 damagedShip = shipId
                 break
           if damagedShip != -1
             gobackShip = -1
-            for shipId in decks[1].api_ship
-              continue if shipId == -1
+            for shipId, idx in decks[1].api_ship
+              continue if shipId == -1 || idx == 0
               ship = _ships[shipId]
-              if ship.api_nowhp / ship.api_maxhp > 0.750001 and !goback[shipId]
+              if ship.api_stype == 2 and ship.api_nowhp / ship.api_maxhp > 0.750001 and !goback[shipId]
                 gobackShip = shipId
                 break
             if gobackShip != -1
+              console.log "退避：#{_ships[damagedShip].api_name} 护卫：#{_ships[gobackShip].api_name}"
               goback[damagedShip] = goback[gobackShip] = true
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
