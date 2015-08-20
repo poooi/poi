@@ -399,14 +399,14 @@ exitPoi = ->
   window.close()
 window.onbeforeunload = (e) ->
   if confirmExit || !config.get('poi.confirm.quit', false)
-    return true
+    e.returnValue = true
   else
     toggleModal '关闭 poi', '确认退出？', [
       name: '确定退出'
       func: exitPoi
       style: 'warning'
     ]
-    return false
+    e.returnValue = false
 
 window.addEventListener 'game.request', (e) ->
   {method} = e.detail
