@@ -82,11 +82,11 @@ analogBattle = (sortieHp, enemyHp, combinedHp, isCombined, isWater, body) ->
   # Support battle
   if body.api_support_info?
     if body.api_support_info.api_support_airatack?
-      supportAttack soriteHp, enemyHp, body.api_support_info.api_support_airatack.api_stage3.api_edam
+      supportAttack sortieHp, enemyHp, body.api_support_info.api_support_airatack.api_stage3.api_edam
     else if body.api_support_info.api_support_hourai?
-      supportAttack soriteHp, enemyHp, body.api_support_info.api_support_hourai.api_damage
+      supportAttack sortieHp, enemyHp, body.api_support_info.api_support_hourai.api_damage
     else
-      supportAttack soriteHp, enemyHp, body.api_support_info.api_damage
+      supportAttack sortieHp, enemyHp, body.api_support_info.api_damage
   # Opening battle
   if body.api_opening_atack?
     if isCombined
