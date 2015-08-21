@@ -227,6 +227,14 @@ PoiControl = React.createClass
       openItem path.join(window.EXROOT, dir)
     catch e
       toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
+  handleOpenMakaiFolder: ->
+    dir = 'cache/kcs/resources/swf/ships'
+    dir = 'MyCache/kcs/resources/swf/ships' if process.platform == 'darwin'
+    try
+      fs.ensureDirSync path.join(window.EXROOT, dir)
+      openItem path.join(window.EXROOT, dir)
+    catch e
+      toggleModal '打开魔改目录', '打开失败，可能没有创建文件夹的权限'
   handleOpenScreenshotFolder: ->
     d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
     try
@@ -271,7 +279,7 @@ PoiControl = React.createClass
         <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>截图目录</Tooltip>}>
-        <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
+        <Button onClick={@handleOpenScreenshotFolder} onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>自动适配页面</Tooltip>}>
         <Button onClick={@handleJustifyLayout} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
