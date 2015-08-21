@@ -14,10 +14,14 @@ changeBounds = ->
     # Previous vertical
     newHeight = window.innerWidth / 800 * 480 + 30
     newWidth = window.innerWidth / 5 * 7
-  else
+  else if layout == 'vertical'
     # Previous horizonal
     newHeight = window.innerWidth / 7 * 5 / 800 * 480 + 420
     newWidth = window.innerWidth / 7 * 5
+  else
+    # L
+    newHeight = 1280
+    newWidth = 720
   setBounds
     x: x
     y: y
