@@ -6,6 +6,7 @@ path = require 'path-extra'
 zlib = Promise.promisifyAll require 'zlib'
 
 cacheDir = if process.platform == 'darwin' then 'MyCache' else 'cache'
+screenshotDir = ''
 
 stringify = (str) ->
   return str if typeof str == 'string'
@@ -88,19 +89,28 @@ module.exports =
     global.mainWindow.setBounds options
   getBounds: ->
     global.mainWindow.getBounds()
+  setScreenshotDirPath: (newPath) ->
+    if !newPath
+      if process.platform == 'darwin'
+        screenshotDir = path.join path.homedir(), 'Pictures', 'Poi'
+      else
+        screenshotDir = path.join global.EXROOT, 'screenshots'
+      fs.ensureDirSync screenshotDir
+    else
+      fs.ensureDirSync newPath, () -> setScreenshotDirPath()
+  getScreenshotDirPath: ->
+    if !screenshotDir
+      this.setScreenshotDirPath()
+    return screenshotDir
   capturePageInMainWindow: (rect, callback) ->
+    dir = this.getScreenshotDirPath()   # Be careful this method has to be called here
     global.mainWindow.capturePage rect, (image) ->
       try
         buf = image.toPng()
         now = new Date()
         date = "#{now.getFullYear()}-#{now.getMonth() + 1}-#{now.getDate()}T#{now.getHours()}.#{now.getMinutes()}.#{now.getSeconds()}"
-        if process.platform == 'darwin'
-          darwinPath = path.join path.homedir(), 'Pictures', 'Poi'
-          fs.ensureDirSync darwinPath
-          filename = path.join path.homedir(), 'Pictures', 'Poi', "#{date}.png"
-        else
-          fs.ensureDirSync path.join global.EXROOT, 'screenshots'
-          filename = path.join global.EXROOT, 'screenshots', "#{date}.png"
+        fs.ensureDirSync dir
+        filename = path.join dir, "#{date}.png"
         fs.writeFile filename, buf, (err) ->
           callback err, filename
       catch e
