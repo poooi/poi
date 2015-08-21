@@ -70,7 +70,7 @@
   "Proxy server port": "プロキシポート",
   "Password": "パスワード",
   "Encryption algorithm": "暗号化方式",
-  "Will connect to server directly.": "インターネットに直接（またはVPNで）接続しています。",
+  "Will connect to server directly.": "インターネットに直接（またはVPNで）接続します。",
   "Times of reconnect": "再試行回数",
   "It may be unsafe!": "危険！リクエスト再試行はアカウントBANを招く可能性があります。",
   "Save settings": "設定の保存",
