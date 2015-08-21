@@ -227,7 +227,7 @@ PoiControl = React.createClass
       openItem path.join(window.EXROOT, dir)
     catch e
       toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
-   handleOpenMakaiFolder: ->
+  handleOpenMakaiFolder: ->
     dir = 'cache/kcs/resources/swf/ships'
     dir = 'MyCache/kcs/resources/swf/ships' if process.platform == 'darwin'
     try
@@ -242,7 +242,6 @@ PoiControl = React.createClass
       openItem d
     catch e
       toggleModal '打开截图目录', '打开失败，可能没有创建文件夹的权限'
-      
   handleSetMuted: ->
     muted = !@state.muted
     config.set 'poi.content.muted', muted
