@@ -276,10 +276,10 @@ PoiControl = React.createClass
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>缓存目录</Tooltip>}>
-        <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
+        <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>截图目录</Tooltip>}>
-        <Button onClick={@handleOpenScreenshotFolder} onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='photo' /></Button>
+        <Button onClick={@handleOpenScreenshotFolder}} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>自动适配页面</Tooltip>}>
         <Button onClick={@handleJustifyLayout} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
