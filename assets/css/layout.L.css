@@ -4,6 +4,12 @@ poi-main
 
     flex-flow: row nowrap;
 }
+poi-app
+{
+    display: flex;
+
+    flex-flow: column;
+}
 kan-game
 {
     flex: 5 0;

@@ -164,7 +164,7 @@ layout =
     ControlledTabArea = require './double-tabareas'
     'double'
   else if config.get('poi.tabarea', false) == 'L'
-    {ControlledTabArea, AdditionalTabArea} = require './L-tabareas'
+    {ControlledTabArea, AdditionalTabArea, PlusTabArea} = require './L-tabareas'
     'L'
   else
     ControlledTabArea = require './single-tabarea'
@@ -354,6 +354,7 @@ React.render <ControlledTabArea />, $('poi-nav-tabs')
 React.render <CustomCssInjector />, $('poi-css-injector')
 if layout == 'L'
   React.render <AdditionalTabArea />, $('poi-additional-tabs')
+  React.render <PlusTabArea />, $('poi-tab-plus')
 
 # Readme contents
 dontShowAgain = ->

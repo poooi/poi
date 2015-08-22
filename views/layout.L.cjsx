@@ -15,13 +15,19 @@ adjustSize = ->
     url = null
   # return if webview.isLoading()
   webviewHeight = Math.floor(window.webviewWidth / 10 * 6)
+  navHeight = $('poi-nav-tabs nav')?.getBoundingClientRect().height
+  appMargin = 50
+  # Tabs row I
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{window.innerHeight - 100}px"
+    e.style.height = "#{webviewHeight - navHeight}px"
     e.style.overflowY = "scroll"
     e.style.overflowX = "hidden"
-  $('#MainView')?.style?.height = "#{window.innerHeight - webviewHeight - 50}px"
-  $('#MainView')?.style?.overflowY = "scroll"
-  $('#MainView')?.style?.overflowX = "hidden"
+    e.style.minHeight = "#{webviewHeight - navHeight}px"
+  # tabs row II
+  [].forEach.call $$('div.poi-app-2ndpane'), (e) ->
+    e.style.height = "#{window.innerHeight - webviewHeight - appMargin}px"
+    e.style.overflowY = "scroll"
+    e.style.overflowX = "hidden"
   # Fix poi-info when game size 0x0
   if webviewWidth > -0.00001 and webviewWidth < 0.00001
     $('kan-game')?.style?.display = 'none'
@@ -58,7 +64,7 @@ adjustSize = ->
 if !window._delay
   adjustSize()
 else
-  setTimeout adjustSize, 500
+  # setTimeout adjustSize, 500
   setTimeout adjustSize, 2000
 
 adjustPayitem = ->
@@ -130,6 +136,7 @@ module.exports =
     $('kan-game').style.flex = null
     $('poi-app').style.flex = null
     $('poi-addition').style.flex = null
+    $('poi-plus').style.flex = null
     if factor
       $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 5}px"
     else

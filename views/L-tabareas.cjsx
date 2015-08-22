@@ -56,7 +56,7 @@ prophet = require path.join(ROOT, 'plugins', 'prophet')
 lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
-    key: [0, 0]
+    key: [0, 2]
   handleSelect: (key) ->
     @setState {key} if key[0] isnt @state.key[0] or key[1] isnt @state.key[1]
   handleSelectLeft: (key) ->
@@ -145,12 +145,21 @@ ControlledTabArea = React.createClass
 
 AdditionalTabArea = React.createClass
   render: ->
-    <div id={main.name} style={width:"100%", overflowX:"hidden", overflowY:"scroll"}>
+    <div className="poi-app-2ndpane" id={main.name} style={width:"100%", overflowX:"hidden", overflowY:"scroll"}>
       {
         React.createElement main.reactClass
+      }
+    </div>
+
+PlusTabArea = React.createClass
+  render: ->
+    <div className="poi-app-2ndpane" id={prophet.name} style={width:"100%", overflowX:"hidden", overflowY:"scroll"}>
+      {
+        React.createElement prophet.reactClass
       }
     </div>
 
 module.exports =
   ControlledTabArea: ControlledTabArea
   AdditionalTabArea: AdditionalTabArea
+  PlusTabArea: PlusTabArea
