@@ -26,7 +26,7 @@ PoiConfig = React.createClass
     gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
-    enableDoubleTabbed: config.get 'poi.tabarea.double', false
+    tabbedLayout: config.get 'poi.tabarea', "horizontal"
     enableNotify: config.get 'poi.notify.enabled', true
     notifyVolume: config.get 'poi.notify.volume', true
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
@@ -64,11 +64,25 @@ PoiConfig = React.createClass
     config.set 'poi.mapstartcheck.item', !enabled
     @setState
       mapStartCheckItem: !enabled
-  handleSetDoubleTabbed: ->
-    enabled = @state.enableDoubleTabbed
-    config.set 'poi.tabarea.double', !enabled
+  handleSetTabbed: (tabbed) ->
+    config.set 'poi.tabarea', tabbed
+    if tabbed = "L"
+      layout = "L"
+    event = new CustomEvent 'layout.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        layout: layout
+    window.dispatchEvent event
     @setState
-      enableDoubleTabbed: !enabled
+      layout: layout
+      enableLTabbed: !enabled
+    toggleModal '布局设置', '设置成功，请重新打开软件使得布局生效。'
+  handleSetDoubleTabbed: ->
+    enabled = if @state.tabbedLayout == 'double' then true else false
+    config.set 'poi.tabarea', 'double'
+    @setState
+      tabbedLayout: 'double'
     toggleModal '布局设置', '设置成功，请重新打开软件使得布局生效。'
   handleSetLayout: (layout) ->
     return if @state.layout == layout
@@ -184,7 +198,14 @@ PoiConfig = React.createClass
             </Button>
           </Col>
           <Col xs={12}>
-            <Input type="checkbox" label="切分组件与插件面板" checked={@state.enableDoubleTabbed} onChange={@handleSetDoubleTabbed} />
+            <Button bsStyle={if @state.tabbedLayout == 'L' then 'success' else 'danger'} onClick={@handleSetTabbed.bind @, 'L'} style={width: '100%'}>
+              {if @state.layout == 'L' then '√ ' else ''}使用L布局
+            </Button>
+          </Col>
+          <Col xs={12}>
+            <Button bsStyle={if @state.tabbedLayout == 'double' then 'success' else 'danger'} onClick={@handleSetTabbed.bind @, 'double'} style={width: '100%'}>
+              {if @state.layout == 'double' then '√ ' else ''}使用双栏布局
+            </Button>
           </Col>
         </Grid>
       </div>
