@@ -199,7 +199,7 @@ PoiMapReminder = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="info">{@state.battling}</Alert>
+    <Alert>{@state.battling}</Alert>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
