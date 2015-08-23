@@ -90,7 +90,7 @@ getTyku = (deck) ->
     continue if shipId == -1
     ship = _ships[shipId]
     for itemId, slotId in ship.api_slot
-      continue if itemId == -1
+      continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
       # Basic tyku
       if item.api_type[3] in [6, 7, 8]
@@ -120,7 +120,7 @@ getSaku25 = (deck) ->
     ship = _ships[shipId]
     shipSaku += ship.api_sakuteki[0]
     for itemId, slotId in ship.api_slot
-      continue if itemId == -1
+      continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
       switch item.api_type[3]
         when 9
@@ -154,7 +154,7 @@ getSaku25a = (deck) ->
     ship = _ships[shipId]
     shipPureSaku = ship.api_sakuteki[0]
     for itemId, slotId in ship.api_slot
-      continue if itemId == -1
+      continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
       shipPureSaku -= item.api_saku
       switch item.api_type[3]
