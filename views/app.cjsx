@@ -397,7 +397,7 @@ window.addEventListener 'keydown', (e) ->
   else if e.keyCode is 116
     if e.ctrlKey # ctrl + f5
       $('kan-game webview').reloadIgnoringCache()
-    else # f5
+    else if !e.metaKey && !e.altKey && !e.shiftKey # f5
       $('kan-game webview').reload()
 
 # Confirm before quit
