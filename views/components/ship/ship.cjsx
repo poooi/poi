@@ -101,7 +101,7 @@ module.exports =
             goback[escapeId] = goback[towId] = true
         when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
           if path == '/kcsapi/api_req_map/start'
-            if combined
+            if combined && parseInt(postBody.api_deck_id) == 1
               deckId = 0
               inBattle[0] = inBattle[1] = true
             else
