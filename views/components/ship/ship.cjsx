@@ -113,8 +113,8 @@ module.exports =
           for deckId in [0..3]
             continue unless inBattle[deckId]
             deck = decks[deckId]
-            for shipId in deck.api_ship
-              continue if shipId == -1
+            for shipId, idx in deck.api_ship
+              continue if shipId == -1 or idx == 0
               ship = _ships[shipId]
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 # 应急修理要员/女神
