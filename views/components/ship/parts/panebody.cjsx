@@ -84,21 +84,33 @@ getMaterialStyleData = (percent) ->
 
 
 # Tyku
-# 制空値 = [(艦載機の対空値) × √(搭載数)] の総計
+# 制空値 = [(艦載機の対空値) × √(搭載数)] の総計 + 熟練補正
 getTyku = (deck) ->
   {$ships, $slotitems, _ships, _slotitems} = window
-  totalTyku = 0
+  basicTyku = alvTyku = totalTyku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
     ship = _ships[shipId]
     for itemId, slotId in ship.api_slot
-      continue if itemId == -1
+      continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
+      # Basic tyku
       if item.api_type[3] in [6, 7, 8]
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
       else if item.api_type[3] == 10 && item.api_type[2] == 11
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-  totalTyku
+        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+      # Alv
+      if item.api_type[3] == 6 && item.api_alv > 0 && item.api_alv <= 7
+        alvTyku += [0, 1, 4, 6, 11, 16, 17, 25][item.api_alv]
+      else if item.api_type[3] in [7, 8] && item.api_alv == 7
+        alvTyku += 3
+      else if item.api_type[3] == 10 && item.api_type[2] == 11 && item.api_alv == 7
+        alvTyku += 9
+  totalTyku = basicTyku + alvTyku
+
+  basic: basicTyku
+  alv: alvTyku
+  total: totalTyku
 
 # Saku (2-5 旧式)
 # 偵察機索敵値×2 ＋ 電探索敵値 ＋ √(艦隊の装備込み索敵値合計 - 偵察機索敵値 - 電探索敵値)
@@ -110,7 +122,7 @@ getSaku25 = (deck) ->
     ship = _ships[shipId]
     shipSaku += ship.api_sakuteki[0]
     for itemId, slotId in ship.api_slot
-      continue if itemId == -1
+      continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
       switch item.api_type[3]
         when 9
@@ -144,7 +156,7 @@ getSaku25a = (deck) ->
     ship = _ships[shipId]
     shipPureSaku = ship.api_sakuteki[0]
     for itemId, slotId in ship.api_slot
-      continue if itemId == -1
+      continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
       shipPureSaku -= item.api_saku
       switch item.api_type[3]
@@ -335,6 +347,7 @@ TopAlert = React.createClass
   render: ->
     <Alert style={getFontStyle window.theme}>
       <div style={display: "flex"}>
+<<<<<<< HEAD
         <span style={flex: 1}>{__ "Total Lv."}{@messages.totalLv}</span>
         <span style={flex: 1}>{__ "Avg Lv."}{@messages.avgLv}</span>
         <span style={flex: 1}>{__ "Fighter Power: "}{@messages.tyku}</span>
@@ -346,9 +359,30 @@ TopAlert = React.createClass
             </Tooltip>
           }>
             <span>{__ "LOS: "}{@messages.saku25a.total}</span>
+=======
+        <span style={flex: 1}>总 Lv.{@messages.totalLv}</span>
+        <span style={flex: 1}>均 Lv.{@messages.avgLv}</span>
+        <span style={flex: 1}>
+          <OverlayTrigger placement='bottom' overlay={
+            <Tooltip>
+              <span>基础制空: {@messages.tyku.basic} 熟练度加成: {@messages.tyku.alv}</span>
+            </Tooltip>
+          }>
+            <span>制空: {@messages.tyku.total}</span>
           </OverlayTrigger>
         </span>
-        <span style={flex: 1.5}>{@getState()}:&nbsp;<span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
+        <span style={flex: 1}>
+          <OverlayTrigger placement='bottom' overlay={
+            <Tooltip>
+              <div>2-5秋式: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
+              <div>2-5旧式: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
+            </Tooltip>
+          }>
+            <span>索敌: {@messages.saku25a.total}</span>
+>>>>>>> master
+          </OverlayTrigger>
+        </span>
+        <span style={flex: 1.5}>{@getState()}: <span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
       </div>
     </Alert>
 
@@ -408,19 +442,33 @@ PaneBody = React.createClass
                 <td width="24%" className="hp-progress">
                 {
                   if ship.api_ndock_time
+<<<<<<< HEAD
                     <OverlayTrigger placement='bottom' overlay={<Tooltip>{__ 'Repair Time:'}{resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
+=======
+                    <OverlayTrigger show = {ship.api_ndock_time} placement='bottom' overlay={<Tooltip>入渠时间：{resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
+>>>>>>> master
                       <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                    now={ship.api_nowhp / ship.api_maxhp * 100}
                                    label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                     </OverlayTrigger>
                   else
                     <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+<<<<<<< HEAD
                                  now={ship.api_nowhp / ship.api_maxhp * 100}
                                  label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />}
 
                 </td>
                 <td width="38%">
                   <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} dataex={ship.api_slot_ex} />
+=======
+                                   now={ship.api_nowhp / ship.api_maxhp * 100}
+                                   label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />}
+                </td>
+                <td width="38%">
+                  <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)}
+                             onslot={ship.api_onslot}
+                             maxeq={ship.api_maxeq} />
+>>>>>>> master
                 </td>
               </tr>
               <tr key={j * 2 + 1}>

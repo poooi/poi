@@ -12,14 +12,18 @@ Slotitems = React.createClass
     {
       {$slotitems, _slotitems} = window
       for itemId, i in @props.data
-        continue if itemId == -1
+        continue unless itemId != -1 && _slotitems[itemId]?
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container">
           <OverlayTrigger placement='left' overlay={
             <Tooltip>
               {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
+<<<<<<< HEAD
               &nbsp;&nbsp;{
+=======
+              {
+>>>>>>> master
                 if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
                   for j in [1..item.api_alv]
                     <strong key={j} style={color: '#3EAEFF'}>|</strong>
@@ -35,6 +39,7 @@ Slotitems = React.createClass
             </Tooltip>
           }>
             <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
+<<<<<<< HEAD
           </OverlayTrigger>
           <span className="slotitem-onslot
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
@@ -55,12 +60,14 @@ Slotitems = React.createClass
             </Tooltip>
           }>
             <img key={itemId} src={path.join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} />
+=======
+>>>>>>> master
           </OverlayTrigger>
           <span className="slotitem-onslot
-                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
-                          #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
+                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 || i == 5 then 'show' else 'hide'}
+                          #{if @props.onslot[i] < @props.maxeq[i] && i != 5 then 'text-warning' else ''}"
                           style={getBackgroundStyle()}>
-            {@props.onslot[i]}
+            {if i == 5 then '+' else @props.onslot[i]}
           </span>
         </div>
     }

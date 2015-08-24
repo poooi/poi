@@ -4,6 +4,7 @@ i18n = require 'i18n'
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
 {join} = require 'path-extra'
+<<<<<<< HEAD
 {__, __n} = i18n
 # Local time -> Task Refresh time(GMT + 4)
 getCurrentTime = ->
@@ -16,10 +17,47 @@ getCurrentDate = ->
   getCurrentTime().getDate()
 getCurrentMonth = ->
   getCurrentTime().getMonth() + 1
+=======
+fs = require 'fs-extra'
 
-prevDay = getCurrentDay()
-prevDate = getCurrentDate()
-prevMonth = getCurrentMonth()
+zero = 331200000
+isDifferentDay = (time1, time2) ->
+  day1 = (time1 - zero) // 86400000
+  day2 = (time2 - zero) // 86400000
+  day1 != day2
+isDifferentWeek = (time1, time2) ->
+  week1 = (time1 - zero) // 604800000
+  week2 = (time2 - zero) // 604800000
+  week1 != week2
+isDifferentMonth = (time1, time2) ->
+  # UTC time to UTC+4
+  date1 = new Date(time1 + 14400000)
+  date2 = new Date(time2 + 14400000)
+  date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
+>>>>>>> master
+
+prevTime = (new Date()).getTime()
+
+getCategory = (api_category) ->
+  switch api_category
+    when 0
+      return '#ffffff'
+    when 1
+      return '#19BB2E'
+    when 2
+      return '#e73939'
+    when 3
+      return '#87da61'
+    when 4
+      return '#16C2A3'
+    when 5
+      return '#E2C609'
+    when 6
+      return '#805444'
+    when 7
+      return '#c792e8'
+    else
+      return '#fff'
 
 getStyleByProgress = (progress) ->
   switch progress
@@ -53,16 +91,15 @@ emptyTask =
 
 memberId = -1
 # Quest Tracking
+questGoals = {}
 try
   questGoals = CSON.parseCSONFile join(ROOT, 'assets', 'data', 'quest_goal.cson')
 catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  questRecord.day = getCurrentDay()
-  questRecord.date = getCurrentDate()
-  questRecord.month = getCurrentMonth()
-  localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
+  questRecord.time = (new Date()).getTime()
+  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
@@ -138,22 +175,22 @@ TaskPanel = React.createClass
     switch path
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
-        questRecord = localStorage.getItem "quest_tracking_#{memberId}"
-        if questRecord?
-          questRecord = JSON.parse questRecord
-          if getCurrentDay() isnt questRecord.day or getCurrentDate() isnt questRecord.date or getCurrentMonth() isnt questRecord.month
-            for id, q of questRecord
-              continue unless questGoals[id]?
-              delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-          if getCurrentDay() < questRecord.day
-            for id, q of questRecord
-              continue unless questGoals[id]?
-              delete questRecord[id] if questGoals[id].type is 3
-          if getCurrentMonth() isnt questRecord.month
-            for id, q of questRecord
-              continue unless questGoals[id]?
-              delete questRecord[id] if questGoals[id].type is 6
-        else
+        try
+          questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
+          if questRecord? and questRecord.time?
+            if isDifferentDay((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type in [2, 4, 5]
+            if isDifferentWeek((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type is 3
+            if isDifferentMonth((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type is 6
+        catch err
           questRecord = {}
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
@@ -294,34 +331,37 @@ TaskPanel = React.createClass
       @setState
         tasks: tasks
   refreshDay: ->
-    curDay = getCurrentDay()
-    curDate = getCurrentDate()
-    curMonth = getCurrentMonth()
-    return if prevDay == curDay and prevDate == curDate and prevMonth == curMonth
+    return unless isDifferentDay((new Date()).getTime(), prevTime)
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
       if task.type in [2, 4, 5]
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      if task.type is 3 and curDay is 1
+      if task.type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      if task.type is 6 and curDate is 1
+      if task.type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      tasks = _.sortBy tasks, (e) -> e.id
-      @setState
+    for id, q of questRecord
+      continue unless questGoals[id]?
+      if questGoals[id].type in [2, 4, 5]
+        clearQuestRecord id
+      if questGoals[id].type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
+        clearQuestRecord id
+      if questGoals[id].type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
+        clearQuestRecord id
+    tasks = _.sortBy tasks, (e) -> e.id
+    @setState
+      tasks: tasks
+    event = new CustomEvent 'task.change',
+      bubbles: true
+      cancelable: true
+      detail:
         tasks: tasks
-      event = new CustomEvent 'task.change',
-        bubbles: true
-        cancelable: true
-        detail:
-          tasks: tasks
-      window.dispatchEvent event
-    prevMonth = curMonth
-    prevDate = curDate
-    prevDay = curDay
+    window.dispatchEvent event
+    prevTime = (new Date()).getTime()
   handleTaskInfo: (e) ->
     {tasks} = e.detail
     @setState
@@ -337,29 +377,35 @@ TaskPanel = React.createClass
     window.removeEventListener 'battle.result', @handleBattleResult
     clearInterval @interval
   render: ->
+<<<<<<< HEAD
     <Panel header={__ "Quest"} bsStyle="success">
+=======
+    <Panel className='task-panel' header="任务" bsStyle="success">
+>>>>>>> master
       <Table>
         <tbody>
         {
           for i in [0..5]
             if @state.tasks[i].tracking
               <tr key={i}>
-                <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td>{@state.tasks[i].name}</td>
-                </OverlayTrigger>
                 <td>
+                  <span className='category-indicator' style={backgroundColor: getCategory @state.tasks[i].category}></span>
+                  <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+                    <span>{@state.tasks[i].name}</span>
+                  </OverlayTrigger>
                   <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
-                    <Label bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
+                    <Label style={marginLeft: 'auto'} bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
                   </OverlayTrigger>
                 </td>
               </tr>
             else
               <tr key={i}>
-                <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                  <td>{@state.tasks[i].name}</td>
-                </OverlayTrigger>
                 <td>
-                  <Label bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
+                  <span className='category-indicator' style={backgroundColor: getCategory @state.tasks[i].category}></span>
+                  <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+                    <span>{@state.tasks[i].name}</span>
+                  </OverlayTrigger>
+                  <Label style={marginLeft: 'auto'} bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
                 </td>
               </tr>
         }

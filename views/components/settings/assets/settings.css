@@ -36,3 +36,11 @@
   transform: rotate(360deg);
   transition-duration: 3s;
 }
+#SettingsView input[type=range],
+#SettingsView input[type=range]:focus,
+#SettingsView input[type=range]:active,
+#SettingsView input[type=range]:hover {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}

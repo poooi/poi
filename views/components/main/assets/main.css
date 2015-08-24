@@ -25,18 +25,18 @@
   padding-bottom: 5px;
 }
 #MainView table tr td:first-child {
-  width: 55%;
+  width: 45%;
   text-align: left;
 }
 #MainView table tr td:last-child {
-  width: 45%;
+  width: 55%;
   text-align: right;
 }
-#MainView .task-panel table tr td:first-child {
-  width: 65%;
-}
-#MainView .task-panel table tr td:last-child {
-  width: 35%;
+#MainView .task-panel table tr td {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
 }
 #MainView table tr td[colspan] {
   width: 100% !important;
@@ -62,6 +62,22 @@
   line-height: 1.42857143;
 }
 #MainView .label {
-  font-size: 90%;
+  font-size: 95%;
   font-weight: normal;
+}
+#MainView .task-panel span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MainView .task-panel .label {
+  min-width: 50px;
+}
+#MainView .category-indicator {
+  display: inline-block;
+  height: 1em;
+  width: 4px;
+  vertical-align: middle;
+  margin-right: 4px;
+  flex: none;
 }

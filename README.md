@@ -7,6 +7,10 @@
 
 Scalable KanColle browser and tool.
 
+## Downloads
+
+Always [Here](http://0u0.moe/poi).
+
 ## Features
 
 + Proxy
@@ -84,11 +88,14 @@ cp default-config.cson config.cson
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.
 
-[plugin-ship-panel-patcher](https://github.com/poooi/plugin-ship-panel-patcher) by [KochiyaOcean](https://github.com/KochiyaOcean)
+[obsolete][plugin-ship-panel-patcher](https://github.com/poooi/plugin-ship-panel-patcher) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Use an alter style of ship panel.
 
 [plugin-secretary](https://github.com/dazzyd/poi-secretary) by [Dazzy Ding](https://github.com/dazzyd)
 > Use secretary voice as notification sound.
+
+[plugin-hensei-nikki](https://github.com/poooi/plugin-hensei-nikki.git) by [Rui](https://github.com/ruiii)
+> Record fleet config once sortied.
 
 ## Guides for developers
 

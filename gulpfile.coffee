@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 POI_VERSION = '4.0.0'
 ELECTRON_VERSION = '0.30.0'
+=======
+POI_VERSION = '3.4.0'
+ELECTRON_VERSION = '0.30.5'
+>>>>>>> master
 SYSTEM_BIT =
   win32: 'ia32'
   linux: 'x64'
@@ -36,10 +41,11 @@ gulp.task 'theme', async ->
     united: 'https://bootswatch.com/united/bootstrap.css'
     lumendark: 'https://raw.githubusercontent.com/PHELiOX/poi-theme-lumendark/master/lumendark.css'
     paperdark: 'https://raw.githubusercontent.com/ruiii/poi_theme_paper_dark/master/paperdark.css'
+    papercyan: 'https://raw.githubusercontent.com/govizlora/theme-papercyan/master/papercyan.css'
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
-    log "Downloding #{theme} theme."
+    log "Downloading #{theme} theme."
     [res, data] = yield request.getAsync url,
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data

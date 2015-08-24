@@ -63,7 +63,8 @@ app.on 'window-all-closed', ->
   app.quit()
 
 app.on 'ready', ->
-  shortcut.register()
+  if process.platform != 'darwin'
+    shortcut.register()
   screen = require 'screen'
   screenSize = screen.getPrimaryDisplay().workAreaSize
   global.mainWindow = mainWindow = new BrowserWindow

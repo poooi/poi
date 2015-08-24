@@ -26,9 +26,7 @@ kan-game poi-info .alert {
   height: 100%;
 }
 kan-game poi-map-reminder .alert {
-  background-color: #464545;
-  color: #fff;
-  width: 150px;
+  width: 120px;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;

@@ -1,9 +1,13 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
+<<<<<<< HEAD
 i18n = require 'i18n'
 {__, __n} = i18n
 {showItemInFolder, openItem} = require 'shell'
+=======
+{showItemInFolder, openItem, openExternal} = require 'shell'
+>>>>>>> master
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
@@ -21,6 +25,154 @@ i18n.setLocale(window.language)
 
 # Hackable panels
 window.hack = {}
+
+# poi menu
+if process.platform == 'darwin'
+  template = [
+    {
+      label: 'Poi'
+      submenu: [
+        {
+          label: 'About'
+          selector: 'orderFrontStandardAboutPanel:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Services'
+          submenu: []
+        },
+        { type: 'separator' },
+        {
+          label: 'Hide Poi'
+          accelerator: 'CmdOrCtrl+H'
+          selector: 'hide:'
+        },
+        {
+          label: 'Hide Others'
+          accelerator: 'CmdOrCtrl+Shift+H'
+          selector: 'hideOtherApplications:'
+        },
+        {
+          label: 'Show All'
+          selector: 'unhideAllApplications:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit'
+          accelerator: 'CmdOrCtrl+Q'
+          selector: 'terminate:'
+        }
+      ]
+    },
+    {
+      label: 'Edit'
+      submenu: [
+        {
+          label: 'Undo'
+          accelerator: 'CmdOrCtrl+Z'
+          selector: 'undo:'
+        },
+        {
+          label: 'Redo'
+          accelerator: 'Shift+CmdOrCtrl+Z'
+          selector: 'redo:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Cut'
+          accelerator: 'CmdOrCtrl+X'
+          selector: 'cut:'
+        },
+        {
+          label: 'Copy'
+          accelerator: 'CmdOrCtrl+C'
+          selector: 'copy:'
+        },
+        {
+          label: 'Paste'
+          accelerator: 'CmdOrCtrl+V'
+          selector: 'paste:'
+        },
+        {
+          label: 'Select All'
+          accelerator: 'CmdOrCtrl+A'
+          selector: 'selectAll:'
+        }
+      ]
+    },
+    {
+      label: 'View'
+      submenu: [
+        {
+          label: 'Reload'
+          accelerator: 'CmdOrCtrl+R'
+          click: ->
+            $('kan-game webview').reload()
+        },
+        {
+          label: 'Stop'
+          accelerator: 'CmdOrCtrl+.'
+          click: ->
+            $('kan-game webview').stop()
+        },
+        {
+          label: 'Open Developer Tools'
+          accelerator: 'Alt+CmdOrCtrl+I'
+          click: ->
+            remote.getCurrentWindow().openDevTools({detach: true})
+        },
+        {
+          label: 'Open Developer Tools of WebView'
+          click: ->
+            $('kan-game webview').openDevTools({detach: true})
+        }
+      ]
+    },
+    {
+      label: 'Window'
+      submenu: [
+        {
+          label: 'Minimize'
+          accelerator: 'CmdOrCtrl+M'
+          selector: 'performMiniaturize:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Bring All to Front'
+          selector: 'arrangeInFront:'
+        }
+      ]
+    },
+    {
+      label: 'Help'
+      submenu: [
+        {
+          label: 'Wiki'
+          click: ->
+            openExternal 'https://github.com/poooi/poi/wiki'
+        },
+        {
+          label: 'Poi Statistics'
+          click: ->
+            openExternal 'http://db.kcwiki.moe/'
+        },
+        { type: 'separator' },
+        {
+          label: 'Report Issue'
+          click: ->
+            openExternal 'https://github.com/poooi/poi/issues'
+        },
+        {
+          label: 'Search Issues'
+          click: ->
+            openExternal 'https://github.com/issues?q=+is%3Aissue+user%3Apoooi'
+        }
+      ]
+    }
+  ]
+  Menu = remote.require('menu')
+  menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 
 # Main tabbed area
 ControlledTabArea =
@@ -48,6 +200,7 @@ PoiAlert = React.createClass
 # Map Reminder
 PoiMapReminder = React.createClass
   getInitialState: ->
+<<<<<<< HEAD
     battling: __ 'not in a sortie'
   handleResponse: (e) ->
     {path, body} = e.detail
@@ -58,12 +211,25 @@ PoiMapReminder = React.createClass
       when '/kcsapi/api_req_map/start'
         @setState
           battling: __('Going on a Sortie: ') + body.api_maparea_id + '-' + body.api_mapinfo_no
+=======
+    battling: '未出击'
+  handleResponse: (e) ->
+    reqPath = e.detail.path
+    {body} = e.detail
+    switch reqPath
+      when '/kcsapi/api_port/port'
+        @setState
+          battling: '未出击'
+      when '/kcsapi/api_req_map/start'
+        @setState
+          battling: '出击海域: ' + body.api_maparea_id + '-' + body.api_mapinfo_no
+>>>>>>> master
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert>{@state.battling}</Alert>
+    <Alert bsStyle="default">{@state.battling}</Alert>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
@@ -90,7 +256,19 @@ PoiControl = React.createClass
       fs.ensureDirSync path.join(window.EXROOT, dir)
       openItem path.join(window.EXROOT, dir)
     catch e
+<<<<<<< HEAD
       toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
+=======
+      toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
+  handleOpenMakaiFolder: ->
+    dir = 'cache/kcs/resources/swf/ships'
+    dir = 'MyCache/kcs/resources/swf/ships' if process.platform == 'darwin'
+    try
+      fs.ensureDirSync path.join(window.EXROOT, dir)
+      openItem path.join(window.EXROOT, dir)
+    catch e
+      toggleModal '打开魔改目录', '打开失败，可能没有创建文件夹的权限'
+>>>>>>> master
   handleOpenScreenshotFolder: ->
     d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
     try
@@ -131,8 +309,13 @@ PoiControl = React.createClass
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Developer Tools"}</Tooltip>}>
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
+<<<<<<< HEAD
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Open cache dir"}</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
+=======
+      <OverlayTrigger placement='left' overlay={<Tooltip>缓存目录</Tooltip>}>
+        <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
+>>>>>>> master
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Open screenshot dir"}</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
@@ -146,7 +329,11 @@ PoiControl = React.createClass
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Take a screenshot"}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
       </OverlayTrigger>
+<<<<<<< HEAD
       <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then __ "Volume off" else __ "Volume on"}</Tooltip>}>
+=======
+      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '关闭游戏声音' else '打开游戏声音'}</Tooltip>}>
+>>>>>>> master
         <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>
@@ -241,6 +428,21 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   ]
   window.toggleModal title, content, footer
 
+# F5 & Ctrl+F5
+window.addEventListener 'keydown', (e) ->
+  if process.platform == 'darwin' and e.keyCode is 82 and e.metaKey
+    if e.shiftKey # cmd + shift + r
+      $('kan-game webview').reloadIgnoringCache()
+    else # cmd + r
+      # Catched by menu
+      # $('kan-game webview').reload()
+      false
+  else if e.keyCode is 116
+    if e.ctrlKey # ctrl + f5
+      $('kan-game webview').reloadIgnoringCache()
+    else if !e.metaKey && !e.altKey && !e.shiftKey # f5
+      $('kan-game webview').reload()
+
 # Confirm before quit
 confirmExit = false
 exitPoi = ->
@@ -248,14 +450,14 @@ exitPoi = ->
   window.close()
 window.onbeforeunload = (e) ->
   if confirmExit || !config.get('poi.confirm.quit', false)
-    return true
+    e.returnValue = true
   else
     toggleModal __("Exit"), __('Confirm?'), [
       name: __ 'Confirm'
       func: exitPoi
       style: 'warning'
     ]
-    return false
+    e.returnValue = false
 
 window.addEventListener 'game.request', (e) ->
   {method} = e.detail

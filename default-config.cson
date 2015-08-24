@@ -8,6 +8,8 @@ poi:
     height: 616
   webview:
     width: 800
+  shortcut:
+    bosskey: "CmdOrCtrl+i"
 proxy:
   use: "none"
   socks5:

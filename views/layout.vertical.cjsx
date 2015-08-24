@@ -18,6 +18,16 @@ adjustSize = ->
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
     e.style.height = "#{window.innerHeight - (480.0 * factor - 1) - 70}px"
     e.style.overflowY = "scroll"
+  if window.webviewWidth > window.innerWidth
+    nowWindow = remote.getCurrentWindow()
+    bound = nowWindow.getBounds()
+    borderX = bound.width - window.innerWidth
+    newWidth = window.webviewWidth
+    nowWindow.setBounds
+      x: bound.x
+      y: bound.y
+      width: parseInt(newWidth + borderX)
+      height: bound.height
   $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{480.0 * factor - 1}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
   $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
@@ -42,7 +52,7 @@ adjustSize = ->
       document.documentElement.style.overflow = 'hidden';
     }
   """
-# interval = setInterval adjustSize, 500
+
 if !window._delay
   adjustSize()
 else
@@ -79,9 +89,6 @@ handleTitleSet = ->
   @insertCSS """
     #ntg-recommend {
       display: none !important;
-    }
-    ::-webkit-scrollbar {
-      width: 0px;
     }
   """
   handleResize()

@@ -25,9 +25,19 @@ totalExp = [
 getHeader = (state) ->
   if state.nickname?
     if state.level == 120
-      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Exp. #{state.exp}"
+      return (
+        <div style={display: 'flex', fontSize: 13}>
+          <div>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</div>
+          <div style={minWidth: 100, marginLeft: 'auto'}>Exp. {state.exp}</div>
+        </div>
+      )
     else
-      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　　　　Next. #{state.nextExp}"
+      return (
+        <div style={display: 'flex', fontSize: 13}>
+          <div>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</div>
+          <div style={minWidth: 100, marginLeft: 'auto'}>Next. {state.nextExp}</div>
+        </div>
+      )
   else
     return __ 'Admiral [Not logged in]'
 
@@ -142,12 +152,7 @@ TeitokuPanel = React.createClass
           material[5] -= 1
         @setState
           material: material
-      when '/kcsapi/api_req_practice/battle_result'
-        @setState
-          level: body.api_member_lv
-          exp: body.api_member_exp
-          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
-      when '/kcsapi/api_req_sortie/battleresult'
+      when '/kcsapi/api_req_practice/battle_result', '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
         @setState
           shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
           level: body.api_member_lv

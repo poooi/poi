@@ -5,7 +5,7 @@ remote = require 'remote'
 i18n = require 'i18n'
 {__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
+{Grid, Col, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
@@ -32,7 +32,7 @@ PoiConfig = React.createClass
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
     enableNotify: config.get 'poi.notify.enabled', true
-    enableNotifySound: config.get 'poi.notify.sound', true
+    notifyVolume: config.get 'poi.notify.volume', true
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
@@ -46,11 +46,13 @@ PoiConfig = React.createClass
     config.set 'poi.notify.enabled', !enabled
     @setState
       enableNotify: !enabled
-  handleSetNotifySound: ->
-    enabled = @state.enableNotifySound
-    config.set 'poi.notify.sound', !enabled
+  handleChangeNotifyVolume: (e) ->
+    volume = @refs.notifyVolume.getValue()
+    volume = parseFloat(volume)
+    return if volume is NaN
+    config.set('poi.notify.volume', volume)
     @setState
-      enableNotifySound: !enabled
+      notifyVolume: volume
   handleSetMapStartCheckShip: ->
     enabled = @state.mapStartCheckShip
     config.set 'poi.mapstartcheck.ship', !enabled
@@ -169,9 +171,18 @@ PoiConfig = React.createClass
             </Button>
           </Col>
           <Col xs={6}>
+<<<<<<< HEAD
             <Button bsStyle={if @state.enableNotifySound then 'success' else 'danger'} onClick={@handleSetNotifySound} style={width: '100%'}>
               {if @state.enableNotifySound then '√ ' else ''}{__("Enable notif sound")}
             </Button>
+=======
+            <OverlayTrigger placement='top' overlay={
+                <Tooltip>音量 <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
+              }>
+              <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
+                min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
+            </OverlayTrigger>
+>>>>>>> master
           </Col>
         </Grid>
       </div>

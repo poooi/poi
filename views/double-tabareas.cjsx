@@ -94,7 +94,7 @@ ControlledTabArea = React.createClass
     window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
     <div className='poi-tabs-container'>
-      <TabbedArea activeKey={@state.key[0]} onSelect={@handleSelectLeft} animation={true}>
+      <TabbedArea activeKey={@state.key[0]} onSelect={@handleSelectLeft} animation={false}>
       {
         [
           components.map (component, index) =>
@@ -115,8 +115,13 @@ ControlledTabArea = React.createClass
         ]
       }
       </TabbedArea>
+<<<<<<< HEAD
       <TabbedArea activeKey={@state.key[1]} onSelect={@handleSelectRight} animation={true}>
         <DropdownButton key={-1} eventKey={-1} tab={<span>{plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ " Plugins"}</span>}</span>} navItem={true}>
+=======
+      <TabbedArea activeKey={@state.key[1]} onSelect={@handleSelectRight} animation={false}>
+        <DropdownButton key={-1} eventKey={-1} tab={<span>{plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' /> 插件</span>}</span>} navItem={true}>
+>>>>>>> master
         {
           counter = -1
           plugins.map (plugin, index) =>

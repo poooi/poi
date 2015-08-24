@@ -86,7 +86,7 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
-    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={true}>
+    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
     {
       [
         components.map (component, index) =>
