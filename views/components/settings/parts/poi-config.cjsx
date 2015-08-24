@@ -172,7 +172,7 @@ PoiConfig = React.createClass
           </Col>
           <Col xs={6}>
             <OverlayTrigger placement='top' overlay={
-                <Tooltip>__ "Volume"<strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
+                <Tooltip>{__ "Volume"}<strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
               }>
               <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
                 min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
