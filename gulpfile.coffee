@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 POI_VERSION = '4.0.0'
-ELECTRON_VERSION = '0.30.0'
-=======
-POI_VERSION = '3.4.0'
 ELECTRON_VERSION = '0.30.5'
->>>>>>> master
 SYSTEM_BIT =
   win32: 'ia32'
   linux: 'x64'

@@ -69,10 +69,6 @@ window.error = (msg) ->
       message: msg
       type: 'danger'
   window.dispatchEvent event
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 window.notify = (msg, options) ->
   # Basic notification settings
   enabled = config.get('poi.notify.enabled', true)

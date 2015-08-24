@@ -4,20 +4,7 @@ i18n = require 'i18n'
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
 {join} = require 'path-extra'
-<<<<<<< HEAD
 {__, __n} = i18n
-# Local time -> Task Refresh time(GMT + 4)
-getCurrentTime = ->
-  curTime = new Date()
-  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime
-getCurrentDay = ->
-  getCurrentTime().getDay()
-getCurrentDate = ->
-  getCurrentTime().getDate()
-getCurrentMonth = ->
-  getCurrentTime().getMonth() + 1
-=======
 fs = require 'fs-extra'
 
 zero = 331200000
@@ -34,7 +21,6 @@ isDifferentMonth = (time1, time2) ->
   date1 = new Date(time1 + 14400000)
   date2 = new Date(time2 + 14400000)
   date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
->>>>>>> master
 
 prevTime = (new Date()).getTime()
 
@@ -377,11 +363,7 @@ TaskPanel = React.createClass
     window.removeEventListener 'battle.result', @handleBattleResult
     clearInterval @interval
   render: ->
-<<<<<<< HEAD
-    <Panel header={__ "Quest"} bsStyle="success">
-=======
-    <Panel className='task-panel' header="任务" bsStyle="success">
->>>>>>> master
+    <Panel className='task-panel' header={__ "Quest"} bsStyle="success">
       <Table>
         <tbody>
         {

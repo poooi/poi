@@ -1,10 +1,6 @@
 {
   "name": "poi",
-<<<<<<< HEAD
   "version": "4.0.0",
-=======
-  "version": "3.4.0",
->>>>>>> master
   "homepage": "https://github.com/poooi/poi",
   "authors": [
     "Magica <i@0u0.moe>"

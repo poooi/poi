@@ -98,15 +98,6 @@ module.exports =
         when '/kcsapi/api_req_combined_battle/goback_port'
           {decks} = @state
           {_ships} = window
-<<<<<<< HEAD
-          deck = decks[deckId]
-          for shipId in deck.api_ship
-            continue if shipId == -1
-            ship = _ships[shipId]
-            if ship.api_nowhp / ship.api_maxhp < 0.250001
-              toggleModal __("Attention!"), "Lv. #{ship.api_lv} - #{ship.api_name} #{__ "is heavily damaged!"}"
-        when '/kcsapi/api_req_map/next'
-=======
           if escapeId != -1 && towId != -1
             console.log "退避：#{_ships[escapeId].api_name} 护卫：#{_ships[towId].api_name}"
             goback[escapeId] = goback[towId] = true
@@ -119,7 +110,6 @@ module.exports =
               deckId = parseInt(postBody.api_deck_id) - 1
               inBattle[deckId] = true
           escapeId = towId = -1
->>>>>>> master
           {decks, states} = @state
           {_ships, _slotitems} = window
           for deckId in [0..3]
@@ -128,10 +118,6 @@ module.exports =
             for shipId, idx in deck.api_ship
               continue if shipId == -1 or idx == 0
               ship = _ships[shipId]
-<<<<<<< HEAD
-              if ship.api_nowhp / ship.api_maxhp < 0.250001
-                toggleModal __("Attention!"), "Lv. #{ship.api_lv} - #{ship.api_name} #{__ "is heavily damaged!"}"
-=======
               if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
                 # 应急修理要员/女神
                 safe = false
@@ -139,8 +125,7 @@ module.exports =
                   continue if slotId == -1
                   safe = true if _slotitems[slotId].api_type[3] is 14
                 if !safe
-                  toggleModal '注意！', "Lv. #{ship.api_lv} - #{ship.api_name} 大破，可能有击沉风险！"
->>>>>>> master
+                  toggleModal __("Attention!"), "Lv. #{ship.api_lv} - #{ship.api_name} #{__ "is heavily damaged!"}"
         else
           flag = false
       return unless flag

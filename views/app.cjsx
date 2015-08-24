@@ -1,13 +1,9 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
-<<<<<<< HEAD
 i18n = require 'i18n'
 {__, __n} = i18n
-{showItemInFolder, openItem} = require 'shell'
-=======
 {showItemInFolder, openItem, openExternal} = require 'shell'
->>>>>>> master
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
@@ -200,30 +196,17 @@ PoiAlert = React.createClass
 # Map Reminder
 PoiMapReminder = React.createClass
   getInitialState: ->
-<<<<<<< HEAD
     battling: __ 'not in a sortie'
-  handleResponse: (e) ->
-    {path, body} = e.detail
-    switch path
-      when '/kcsapi/api_port/port'
-        @setState
-          battling: __ 'not in a sortie'
-      when '/kcsapi/api_req_map/start'
-        @setState
-          battling: __('Going on a Sortie: ') + body.api_maparea_id + '-' + body.api_mapinfo_no
-=======
-    battling: '未出击'
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
     switch reqPath
       when '/kcsapi/api_port/port'
         @setState
-          battling: '未出击'
+          battling: __ 'not in a sortie'
       when '/kcsapi/api_req_map/start'
         @setState
-          battling: '出击海域: ' + body.api_maparea_id + '-' + body.api_mapinfo_no
->>>>>>> master
+          battling: __('Going on a Sortie: ') + body.api_maparea_id + '-' + body.api_mapinfo_no
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
@@ -256,10 +239,7 @@ PoiControl = React.createClass
       fs.ensureDirSync path.join(window.EXROOT, dir)
       openItem path.join(window.EXROOT, dir)
     catch e
-<<<<<<< HEAD
       toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
-=======
-      toggleModal '打开缓存目录', '打开失败，可能没有创建文件夹的权限'
   handleOpenMakaiFolder: ->
     dir = 'cache/kcs/resources/swf/ships'
     dir = 'MyCache/kcs/resources/swf/ships' if process.platform == 'darwin'
@@ -268,7 +248,6 @@ PoiControl = React.createClass
       openItem path.join(window.EXROOT, dir)
     catch e
       toggleModal '打开魔改目录', '打开失败，可能没有创建文件夹的权限'
->>>>>>> master
   handleOpenScreenshotFolder: ->
     d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
     try
@@ -309,13 +288,8 @@ PoiControl = React.createClass
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Developer Tools"}</Tooltip>}>
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
-<<<<<<< HEAD
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Open cache dir"}</Tooltip>}>
-        <Button onClick={@handleOpenCacheFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
-=======
-      <OverlayTrigger placement='left' overlay={<Tooltip>缓存目录</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
->>>>>>> master
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Open screenshot dir"}</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
@@ -329,11 +303,7 @@ PoiControl = React.createClass
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ "Take a screenshot"}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
       </OverlayTrigger>
-<<<<<<< HEAD
       <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then __ "Volume off" else __ "Volume on"}</Tooltip>}>
-=======
-      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then '关闭游戏声音' else '打开游戏声音'}</Tooltip>}>
->>>>>>> master
         <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>

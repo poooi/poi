@@ -1,10 +1,6 @@
 {
   "name": "poi",
-<<<<<<< HEAD
   "version": "4.0.0",
-=======
-  "version": "3.4.0",
->>>>>>> master
   "description": "KanColle Browser Tool",
   "main": "index.js",
   "scripts": {

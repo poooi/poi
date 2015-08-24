@@ -171,18 +171,12 @@ PoiConfig = React.createClass
             </Button>
           </Col>
           <Col xs={6}>
-<<<<<<< HEAD
-            <Button bsStyle={if @state.enableNotifySound then 'success' else 'danger'} onClick={@handleSetNotifySound} style={width: '100%'}>
-              {if @state.enableNotifySound then '√ ' else ''}{__("Enable notif sound")}
-            </Button>
-=======
             <OverlayTrigger placement='top' overlay={
-                <Tooltip>音量 <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
+                <Tooltip>__ "Volume"<strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
               }>
               <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
                 min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
             </OverlayTrigger>
->>>>>>> master
           </Col>
         </Grid>
       </div>

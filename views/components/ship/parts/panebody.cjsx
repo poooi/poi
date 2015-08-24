@@ -347,10 +347,17 @@ TopAlert = React.createClass
   render: ->
     <Alert style={getFontStyle window.theme}>
       <div style={display: "flex"}>
-<<<<<<< HEAD
         <span style={flex: 1}>{__ "Total Lv."}{@messages.totalLv}</span>
-        <span style={flex: 1}>{__ "Avg Lv."}{@messages.avgLv}</span>
-        <span style={flex: 1}>{__ "Fighter Power: "}{@messages.tyku}</span>
+        <span style={flex: 1}>{__ "Avg. Lv."}{@messages.avgLv}</span>
+        <span style={flex: 1}>
+          <OverlayTrigger placement='bottom' overlay={
+            <Tooltip>
+              <span>{__ "Basic FP: "} {@messages.tyku.basic} {__ "Rank bonuses: "} {@messages.tyku.alv}</span>
+            </Tooltip>
+          }>
+            <span>{__ "Fighter Power: "}{@messages.tyku.total}</span>
+          </OverlayTrigger>
+        </span>
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>
@@ -359,27 +366,6 @@ TopAlert = React.createClass
             </Tooltip>
           }>
             <span>{__ "LOS: "}{@messages.saku25a.total}</span>
-=======
-        <span style={flex: 1}>总 Lv.{@messages.totalLv}</span>
-        <span style={flex: 1}>均 Lv.{@messages.avgLv}</span>
-        <span style={flex: 1}>
-          <OverlayTrigger placement='bottom' overlay={
-            <Tooltip>
-              <span>基础制空: {@messages.tyku.basic} 熟练度加成: {@messages.tyku.alv}</span>
-            </Tooltip>
-          }>
-            <span>制空: {@messages.tyku.total}</span>
-          </OverlayTrigger>
-        </span>
-        <span style={flex: 1}>
-          <OverlayTrigger placement='bottom' overlay={
-            <Tooltip>
-              <div>2-5秋式: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
-              <div>2-5旧式: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
-            </Tooltip>
-          }>
-            <span>索敌: {@messages.saku25a.total}</span>
->>>>>>> master
           </OverlayTrigger>
         </span>
         <span style={flex: 1.5}>{@getState()}: <span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
@@ -442,25 +428,13 @@ PaneBody = React.createClass
                 <td width="24%" className="hp-progress">
                 {
                   if ship.api_ndock_time
-<<<<<<< HEAD
                     <OverlayTrigger placement='bottom' overlay={<Tooltip>{__ 'Repair Time:'}{resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
-=======
-                    <OverlayTrigger show = {ship.api_ndock_time} placement='bottom' overlay={<Tooltip>入渠时间：{resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
->>>>>>> master
                       <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                    now={ship.api_nowhp / ship.api_maxhp * 100}
                                    label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />
                     </OverlayTrigger>
                   else
                     <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
-<<<<<<< HEAD
-                                 now={ship.api_nowhp / ship.api_maxhp * 100}
-                                 label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />}
-
-                </td>
-                <td width="38%">
-                  <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} dataex={ship.api_slot_ex} />
-=======
                                    now={ship.api_nowhp / ship.api_maxhp * 100}
                                    label={"#{ship.api_nowhp} / #{ship.api_maxhp}"} />}
                 </td>
@@ -468,7 +442,6 @@ PaneBody = React.createClass
                   <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)}
                              onslot={ship.api_onslot}
                              maxeq={ship.api_maxeq} />
->>>>>>> master
                 </td>
               </tr>
               <tr key={j * 2 + 1}>
