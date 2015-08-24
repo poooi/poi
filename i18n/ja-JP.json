@@ -1,7 +1,7 @@
 {
   "Waiting response...": "poi 読み込み中",
-  "not in a sortie": "出撃していません",
-  "Going on a Sortie: ": "出撃海域 ",
+  "Not in a sortie": "出撃していません",
+  "Going on a Sortie": "出撃海域 ",
   "failed to save the screenshot": "スクリーンショットの保存に失敗しました",
   "screenshot saved to": "スクリーンショットの保存先",
   "Open cache dir": "キャッシュの保存先",
@@ -117,5 +117,5 @@
   "LOS": "索敵",
   "Autumn": "秋",
   "Old": "旧",
-  "Repair Time:": "修理時間:"
+  "Repair Time": "修理時間"
 }

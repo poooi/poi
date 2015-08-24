@@ -1,7 +1,8 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
-{__, __n} = require 'i18n'
+i18n = require 'i18n'
+{__, __n} = i18n
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
@@ -9,7 +10,7 @@ glob = require 'glob'
 
 # i18n configure
 i18n.configure
-  locales:['en-US', 'ja-JP', 'zh-CN'],
+  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
   defaultLocale: 'zh-CN',
   directory: path.join(ROOT, 'i18n'),
   updateFiles: false,
@@ -178,7 +179,7 @@ ControlledTabArea =
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
-    message: __ 'Waiting response……'
+    message: __ 'Waiting response...'
     type: 'success'
   handleAlert: (e) ->
     @setState
@@ -194,17 +195,17 @@ PoiAlert = React.createClass
 # Map Reminder
 PoiMapReminder = React.createClass
   getInitialState: ->
-    battling: '未出击'
+    battling: __ 'Not in a sortie'
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
     switch reqPath
       when '/kcsapi/api_port/port'
         @setState
-          battling: __ 'not in a sortie'
+          battling: __ 'Not in a sortie'
       when '/kcsapi/api_req_map/start'
         @setState
-          battling: __ 'Going on a Sortie: ' + body.api_maparea_id + '-' + body.api_mapinfo_no
+          battling: __('Going on a Sortie') + ': ' + body.api_maparea_id + '-' + body.api_mapinfo_no
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->

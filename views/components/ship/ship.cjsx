@@ -56,7 +56,7 @@ module.exports =
   description: '舰队展示页面，展示舰队详情信息'
   reactClass: React.createClass
     getInitialState: ->
-      names: ['第1艦隊', '第2艦隊', '第3艦隊', '第4艦隊']
+      names: [__('No.%s fleet', 1), __('No.%s fleet', 2), __('No.%s fleet', 3), __('No.%s fleet', 4)]
       states: [-1, -1, -1, -1]
       decks: []
       activeDeck: 0

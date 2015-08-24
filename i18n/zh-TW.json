@@ -1,7 +1,7 @@
 {
   "Waiting response...": "poi 等待遊戲數據中……",
-  "not in a sortie": "未出擊",
-  "Going on a Sortie: ": "出擊海域: ",
+  "Not in a sortie": "未出擊",
+  "Going on a Sortie": "出擊海域: ",
   "failed to save the screenshot": "截圖保存失敗",
   "screenshot saved to": "截圖保存在",
   "Open cache dir": "打開快取目錄",
@@ -117,5 +117,5 @@
   "LOS: ": "索敵: ",
   " Autumn": " 秋式",
   " Old": " 舊式",
-  "Repair Time:": "修理時間:"
+  "Repair Time": "修理時間"
 }
