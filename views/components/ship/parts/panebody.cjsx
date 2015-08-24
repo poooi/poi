@@ -352,10 +352,10 @@ TopAlert = React.createClass
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>
-              <span>{__ 'Basic'}: {@messages.tyku.basic} {__ 'Aircraft Skill'}: {@messages.tyku.alv}</span>
+              <span>{__ 'Basic FP'}: {@messages.tyku.basic} {__ 'Rank bonuses'}: {@messages.tyku.alv}</span>
             </Tooltip>
           }>
-            <span>{__ 'FP'}: {@messages.tyku.total}</span>
+            <span>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
           </OverlayTrigger>
         </span>
         <span style={flex: 1}>
