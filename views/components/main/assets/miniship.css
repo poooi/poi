@@ -1,0 +1,185 @@
+#MiniShip{
+  font-size: 14px;
+}
+#MiniShip .btn-group {
+  display: flex;
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+#MiniShip .btn-group .btn {
+  flex: 1;
+}
+#MiniShip .hidden {
+  display: none;
+}
+#MiniShip .show {
+  display: block;
+}
+#MiniShip .deckStatus {
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+}
+#MiniShip .progress {
+  margin-bottom: 5px;
+}
+#MainView .shipMore {
+  width: 8px;
+  height: 8px;
+}
+
+#MainView .recProgress {
+  margin: 5px;
+  display: block;
+  flex: 1;
+}
+#MainView .recProgress .progress-bar{
+  margin: 0;
+  height: 10px;
+}
+#MainView .recProgress .progress-bar:last-child:before{
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#MiniShip .shipDetails {
+  margin-bottom: 1px;
+}
+#MiniShip .shipDetails .shipTile {
+  margin: 5px 5px 5px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#MiniShip .shipDetails .shipItem {
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  overflow: hidden;
+  white-space: nowrap;
+  /*margin-right: 15px;*/
+}
+
+#MiniShip .shipDetails .statusLabel {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 5px;
+  flex: none;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#MiniShip .shipDetails .shipItem .shipInfo {
+  flex: none;
+  font-size: 14px;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  justify-content: space-between;
+  /*width: 6em;*/
+  /*min-width: 4em;*/
+  /*margin-left: 4px;
+  margin-right: 4px;*/
+}
+#MiniShip .shipDetails .shipItem .shipInfo .shipHp {
+  flex: 1.5;
+  padding-right: 5px;
+  align-self: flex-start;
+}
+#MiniShip .shipDetails .shipItem .shipInfo .shipType {
+  margin-left: 5px;
+}
+#MiniShip .shipDetails .shipItem .shipInfo .shipName {
+  flex: 1.5;
+  padding-right: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MiniShip .shipDetails .shipItem .shipCond {
+  flex: none;
+  align-self: flex-end;
+  margin-left: auto;
+  display: table;
+  /*margin-right: 4px;*/
+  /*margin-bottom: 5px;*/
+  /*width: 32px;*/
+}
+#MiniShip .shipDetails .shipItem .shipCond .condIndicator {
+  display: inline-block;
+  height: 30px;
+  width: 4px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+#MiniShip .shipItem .shipLv{
+  flex: 2;
+  display: flex;
+  flex-direction: row;
+  /*margin: 0 4px;*/
+}
+#MiniShip .shipItem .shipLvText {
+  flex: 1.5;
+  font-size: 70%;
+  margin-right: 4px;
+  line-height: 1;
+}
+#MiniShip .shipItem .hp-progress {
+  flex: 2.3;
+}
+#MiniShip .shipItem .hp-progress .progress{
+  height: 7px;
+}
+#MiniShip .shipDetails .shipItem .progress .progress-condition{
+}
+
+#MiniShip .shipDetails .shipItem .shipFB{
+  flex: 0.4;
+  display: flex;
+  flex-direction: row;
+  margin-left: 4px;
+  /*margin-right: 4px;*/
+}
+#MiniShip .shipDetails .shipItem .shipFB .progress{
+  width: 6px;
+}
+
+#MiniShip .shipDetails .shipItem .shipSlot{
+  width: 105px;
+  flex: none;
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-bottom: 3px;
+}
+#MiniShip .slotitem-container {
+  position: relative;
+  vertical-align: bottom;
+  display: inline;
+}
+#MiniShip .slotitem-container .slotitem-onslot {
+  position: absolute;
+  font-size: 18px;
+  text-align: center;
+  /*left: -1px;
+  top: -9px;*/
+}
+#MiniShip .slotitem-container span.slotitem-onslot.label{
+  padding: 2px 2px;
+}
+#MiniShip .slotitem-container span.show {
+  display: inline !important;
+}
+#MiniShip .slotitem-container img {
+  width: 30px;
+  height: 30px;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  margin-left: -3px;
+}
+#MiniShip .alert {
+  background-color: transparent;
+  border-color: transparent;
+  margin-top: 9px;
+  text-align: center;
+}
