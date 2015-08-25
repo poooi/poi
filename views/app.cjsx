@@ -214,7 +214,7 @@ PoiMapReminder = React.createClass
     <Alert bsStyle="default">{@state.battling}</Alert>
 
 # Controller icon bar
-{capturePageInMainWindow} = remote.require './lib/utils'
+{getScreenshotDirPath, capturePageInMainWindow} = remote.require './lib/utils'
 PoiControl = React.createClass
   getInitialState: ->
     muted: false
@@ -248,7 +248,7 @@ PoiControl = React.createClass
     catch e
       toggleModal __ 'Open makai dir', __ "Failed. Perhaps you don't have permission to it."
   handleOpenScreenshotFolder: ->
-    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.EXROOT, 'screenshots')
+    d = getScreenshotDirPath()
     try
       fs.ensureDirSync d
       openItem d
