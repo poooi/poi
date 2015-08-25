@@ -20,7 +20,7 @@ getStyle = (state) ->
     # 3: Repairing
     # 4: In mission
     # 5: In map
-    return ['success', 'warning', 'danger', 'info', 'default', 'info'][state]
+    return ['success', 'warning', 'danger', 'info', 'primary', 'default'][state]
   else
     return 'default'
 
