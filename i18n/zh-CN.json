@@ -77,7 +77,7 @@
   "Save settings": "保存设置",
   "Save": "保存",
   "All of the plugins": "全部插件",
-  "You must reboot the app for the changes to take effect": "关闭或者开启插件的设置在重新启动后生效。",
+  "You must reboot the app for the changes to take effect.": "关闭或者开启插件的设置在重新启动后生效。",
   "Layout settings": "布局设置",
   "Delete cookies": "删除 Cookies",
   "Delete cache": "删除缓存",

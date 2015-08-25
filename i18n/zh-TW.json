@@ -77,7 +77,7 @@
   "Save settings": "保存設定",
   "Save": "保存",
   "All of the plugins": "全部插件",
-  "You must reboot the app for the changes to take effect": "關閉或開啟插件的設定在重新啟動軟體後生效。",
+  "You must reboot the app for the changes to take effect.": "關閉或開啟插件的設定在重新啟動軟體後生效。",
   "Layout settings": "佈局設定",
   "Delete cookies": "刪除 Cookies",
   "Delete cache": "刪除快取",

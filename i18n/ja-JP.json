@@ -77,7 +77,7 @@
   "Save settings": "設定の保存",
   "Save": "保存",
   "All of the plugins": "ツール On/Off",
-  "You must reboot the app for the changes to take effect": "設定変更は再起動後に有効になります。",
+  "You must reboot the app for the changes to take effect.": "設定変更は再起動後に有効になります。",
   "Layout settings": "画面設定",
   "Delete cookies": "クッキーを削除する",
   "Delete cache": "キャッシュを削除する",
