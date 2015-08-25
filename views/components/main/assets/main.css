@@ -107,7 +107,7 @@
   flex-flow: column;
   justify-content: space-between;
 }
-#MainView .ndock-item{
+#MainView .ndock-item {
   display: flex;
   flex: 1;
   /*margin: 3px;*/

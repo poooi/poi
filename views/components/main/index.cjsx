@@ -36,7 +36,7 @@ module.exports =
             </div>
             <div className="panel-row">
               <div className="panel-col half">
-                <div className="panel-col resource-panel" ref="resourcePanel" >
+                <div className="panel-col resource-panel" ref="resourcePanel">
                   <ResourcePanel />
                 </div>
                 <div className="miniship" id={MiniShip.name} ref="miniship">
@@ -58,10 +58,10 @@ module.exports =
                    </TabPane>
                   </TabbedArea>
                 </Panel>
-                <div className="mission-panel" ref="missionPanel" >
+                <div className="mission-panel" ref="missionPanel">
                   <MissionPanel />
                 </div>
-                <div className="task-panel" ref="taskPanel" >
+                <div className="task-panel" ref="taskPanel">
                   <TaskPanel />
                 </div>
               </div>
@@ -75,10 +75,10 @@ module.exports =
               </div>
               <div className="panel-row">
                 <div className="panel-col half">
-                  <div className="panel-col resource-panel" ref="resourcePanel" >
+                  <div className="panel-col resource-panel" ref="resourcePanel">
                     <ResourcePanel />
                   </div>
-                  <div className="panel-col task-panel" ref="taskPanel" >
+                  <div className="panel-col task-panel" ref="taskPanel">
                     <TaskPanel />
                   </div>
                 </div>
@@ -97,7 +97,7 @@ module.exports =
                      </TabPane>
                     </TabbedArea>
                   </Panel>
-                  <div className="panel-col mission-panel" ref="missionPanel" >
+                  <div className="panel-col mission-panel" ref="missionPanel">
                     <MissionPanel />
                   </div>
                 </div>
