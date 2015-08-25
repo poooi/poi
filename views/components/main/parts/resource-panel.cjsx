@@ -82,8 +82,7 @@ ResourcePanel = React.createClass
       <Grid>
       {
         for i in order
-          <Col key={i} xs={6} style={if i!=1 && i!=3
-                                      marginTop: '4px'}>
+          <Col key={i} xs={6} style={marginBottom: 3}>
             <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"} className="material-icon" />
             <span className="material-value">{@state.material[i]}</span>
           </Col>

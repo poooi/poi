@@ -151,6 +151,9 @@
   padding-top: 4px;
   padding-bottom: 3px;
 }
+#MainView .resource-panel .material-value {
+  margin-left: 5px;
+}
 #MainView .label {
   font-size: 90%;
   font-weight: normal;
