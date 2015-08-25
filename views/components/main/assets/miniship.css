@@ -1,4 +1,4 @@
-#MiniShip{
+#MiniShip {
   font-size: 14px;
 }
 #MiniShip .btn-group {
@@ -92,7 +92,7 @@
   vertical-align: middle;
   margin-left: 4px;
 }
-#MiniShip .ship-item .ship-lv{
+#MiniShip .ship-item .ship-lv {
   flex: 2;
   display: flex;
   flex-direction: row;
@@ -107,14 +107,14 @@
 #MiniShip .ship-item .hp-progress {
   flex: 2.3;
 }
-#MiniShip .ship-item .hp-progress .progress{
+#MiniShip .ship-item .hp-progress .progress {
   height: 7px;
   flex: auto;
 }
-#MiniShip .ship-details .ship-item .progress .progress-condition{
+#MiniShip .ship-details .ship-item .progress .progress-condition {
 }
 
-#MiniShip .ship-details .ship-item .ship-slot{
+#MiniShip .ship-details .ship-item .ship-slot {
   width: 105px;
   flex: none;
   margin-left: 4px;

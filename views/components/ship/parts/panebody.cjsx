@@ -347,8 +347,8 @@ TopAlert = React.createClass
   render: ->
     <Alert style={getFontStyle window.theme}>
       <div style={display: "flex"}>
-        <span style={flex: 1}>{__ 'Total Lv.'}. {@messages.totalLv}</span>
-        <span style={flex: 1}>{__ 'Avg. Lv.'}. {@messages.avgLv}</span>
+        <span style={flex: 1}>{__ 'Total Lv'}. {@messages.totalLv}</span>
+        <span style={flex: 1}>{__ 'Avg. Lv'}. {@messages.avgLv}</span>
         <span style={flex: 1}>
           <OverlayTrigger placement='bottom' overlay={
             <Tooltip>

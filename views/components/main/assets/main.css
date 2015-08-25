@@ -90,7 +90,7 @@
   display: flex;
   flex: 1;
 }
-#MainView .mission-item .mission-name{
+#MainView .mission-item .mission-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
@@ -112,7 +112,7 @@
   flex: 1;
   /*margin: 3px;*/
 }
-#MainView .ndock-item .ndock-name{
+#MainView .ndock-item .ndock-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
