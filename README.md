@@ -34,11 +34,10 @@ Always [Here](http://0u0.moe/poi).
 First, get the latest version of [Electron](https://github.com/atom/electron) and [io.js](https://iojs.org).
 
 ```bash
-git clone https://github.com/poooi/poi
-cd poi
-git submodule init
-git submodule update
-npm install
+git clone https://github.com/poooi/poi && cd poi
+git submodule update --init
+git submodule foreach npm i
+npm i
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
 cp default-config.cson config.cson
