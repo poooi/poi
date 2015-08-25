@@ -1,7 +1,7 @@
 {
   "Waiting response...": "poi 等待游戏数据中……",
-  "Not in a sortie": "未出击",
-  "Going on a Sortie": "出击海域: ",
+  "Not in sortie": "未出击",
+  "Sortie area": "出击海域",
   "failed to save the screenshot": "截图保存失败",
   "screenshot saved to": "截图保存在",
   "Open cache dir": "打开缓存目录",
@@ -77,7 +77,7 @@
   "Save settings": "保存设置",
   "Save": "保存",
   "All of the plugins": "全部插件",
-  "You must reboot the app for the changes to take effect": "关闭或者开启插件的设置在重新启动后生效。",
+  "You must reboot the app for the changes to take effect.": "关闭或者开启插件的设置在重新启动后生效。",
   "Layout settings": "布局设置",
   "Delete cookies": "删除 Cookies",
   "Delete cache": "删除缓存",
