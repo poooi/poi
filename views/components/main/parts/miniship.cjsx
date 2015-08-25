@@ -294,69 +294,67 @@ PaneBody = React.createClass
           shipInfo = $ships[ship.api_ship_id]
           shipType = $shipTypes[shipInfo.api_stype].api_name
           status = getStatusArray shipId
-          [
-            <div className="ship-tile">
-              <OverlayTrigger placement="top" overlay={
-                <Popover className="ship-pop">
-                  <div className="div-col">
-                    <div className="item-name">
-                      <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
-                    </div>
-                    <div className="div-row">
-                      <div className="div-col flex">
-                        <div className="div-row" style={marginTop: 5}>
-                          <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" />
-                          <span style={marginLeft: 'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
-                        </div>
-                        <div>
-                          <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                       now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
-                        </div>
+          <div className="ship-tile">
+            <OverlayTrigger placement="top" overlay={
+              <Popover className="ship-pop">
+                <div className="div-col">
+                  <div className="item-name">
+                    <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                  </div>
+                  <div className="div-row">
+                    <div className="div-col flex">
+                      <div className="div-row" style={marginTop: 5}>
+                        <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" />
+                        <span style={marginLeft: 'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
                       </div>
-                      <div className="div-col flex" style={marginLeft: 10}>
-                        <div className="div-row" style={marginTop: 5}>
-                          <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" />
-                          <span style={marginLeft: 'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
-                        </div>
-                        <div>
-                          <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                       now={ship.api_bull / shipInfo.api_bull_max * 100} />
-                        </div>
+                      <div>
+                        <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                     now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                      </div>
+                    </div>
+                    <div className="div-col flex" style={marginLeft: 10}>
+                      <div className="div-row" style={marginTop: 5}>
+                        <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" />
+                        <span style={marginLeft: 'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
+                      </div>
+                      <div>
+                        <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                     now={ship.api_bull / shipInfo.api_bull_max * 100} />
                       </div>
                     </div>
                   </div>
-                </Popover>
-              }>
-                <div className="ship-item" style={getStatusStyle status}>
-                  <div className="div-col">
-                    <div className="ship-info" >
-                      <span className="ship-name">
-                        {shipInfo.api_name}
-                      </span>
-                      <span className="ship-hp">
-                        {ship.api_nowhp} / {ship.api_maxhp}
-                      </span>
-                      <div style={flex: 0.8}>
-                        <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
-                          ★{ship.api_cond}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="div-col" style={marginTop: 5}>
-                    <div className="ship-info">
-                      <span className="ship-lv-text">
-                        Lv. {ship.api_lv} ({ship.api_exp[1]})
-                      </span>
-                      <span className="hp-progress">
-                        <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
+                </div>
+              </Popover>
+            }>
+              <div className="ship-item" style={getStatusStyle status}>
+                <div className="div-col">
+                  <div className="ship-info" >
+                    <span className="ship-name">
+                      {shipInfo.api_name}
+                    </span>
+                    <span className="ship-hp">
+                      {ship.api_nowhp} / {ship.api_maxhp}
+                    </span>
+                    <div style={flex: 0.8}>
+                      <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
+                        ★{ship.api_cond}
                       </span>
                     </div>
                   </div>
                 </div>
-              </OverlayTrigger>
-            </div>
-          ]
+                <div className="div-col" style={marginTop: 5}>
+                  <div className="ship-info">
+                    <span className="ship-lv-text">
+                      Lv. {ship.api_lv} ({ship.api_exp[1]})
+                    </span>
+                    <span className="hp-progress">
+                      <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </OverlayTrigger>
+          </div>
       }
       </div>
     </div>
