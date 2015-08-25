@@ -436,7 +436,7 @@ module.exports =
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
     render: ->
-      <Panel bsStyle="default" style={minHeight: 322}>
+      <Panel bsStyle="default" style={minHeight: 320}>
         <link rel="stylesheet" href={join(relative(ROOT, __dirname),'..', 'assets', 'miniship.css')} />
         <ButtonGroup bsSize="xsmall">
         {
