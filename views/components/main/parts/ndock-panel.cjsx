@@ -8,7 +8,6 @@ timeToString = (dateTime) ->
   date = new Date(dateTime)
   "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
 
-
 NdockPanel = React.createClass
   getInitialState: ->
     docks: [
@@ -108,7 +107,6 @@ NdockPanel = React.createClass
     {
       for i in [1..4]
         if @state.docks[i].countdown > 60
-
           <div key={i} className="panel-item ndock-item">
             <span className="ndock-name">
               {@state.docks[i].name}

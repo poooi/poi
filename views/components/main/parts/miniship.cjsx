@@ -229,8 +229,8 @@ TopAlert = React.createClass
     window.removeEventListener 'game.response', @handleResponse
   render: ->
     <div style={display: "flex", justifyContent: "space-around"}>
-      <span style={flex: "none"}>{__ 'Total Lv.'}{@messages.totalLv} </span>
-      <span style={flex: "none", marginLeft: 5}>{__ 'Avg. Lv.'}{@messages.avgLv} </span>
+      <span style={flex: "none"}>{__ 'Total Lv'}{@messages.totalLv} </span>
+      <span style={flex: "none", marginLeft: 5}>{__ 'Avg. Lv'}{@messages.avgLv} </span>
       <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
     </div>
 

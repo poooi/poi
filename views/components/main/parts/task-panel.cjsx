@@ -368,7 +368,7 @@ TaskPanel = React.createClass
           <div className="panel-item task-item" key={i}>
             <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="quest-name">
-                <span className="cat-indicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
+                <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
               </div>
             </OverlayTrigger>
@@ -382,7 +382,7 @@ TaskPanel = React.createClass
           <div className="panel-item task-item" key={i}>
             <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="quest-name">
-                <span className="cat-indicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
+                <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
               </div>
             </OverlayTrigger>
