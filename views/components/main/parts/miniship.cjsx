@@ -4,8 +4,7 @@ path =  require 'path-extra'
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup} = ReactBootstrap
 {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
-i18n = require 'i18n'
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 
 inBattle = [false, false, false, false]
 goback = {}
@@ -375,7 +374,7 @@ module.exports =
       activeDeck: 0
       dataVersion: 0
     showDataVersion: 0
-    shouldComponentUpdate: (nextProps, nextState)->
+    shouldComponentUpdate: (nextProps, nextState) ->
       # if ship-pane is visibile and dataVersion is changed, this pane should update!
       if nextProps.selectedKey is @props.index and nextState.dataVersion isnt @showDataVersion
         @showDataVersion = nextState.dataVersion
@@ -439,7 +438,7 @@ module.exports =
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
     render: ->
-      <Panel bsStyle="default" style={minHeight: '322px'}>
+      <Panel bsStyle="default" style={minHeight: 322}>
         <link rel="stylesheet" href={join(relative(ROOT, __dirname),'..', 'assets', 'miniship.css')} />
         <ButtonGroup bsSize="xsmall">
         {

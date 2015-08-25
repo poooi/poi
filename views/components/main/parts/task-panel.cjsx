@@ -3,8 +3,7 @@
 CSON = require 'cson'
 fs = require 'fs-extra'
 {join} = require 'path-extra'
-i18n = require 'i18n'
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 
 zero = 331200000
 isDifferentDay = (time1, time2) ->
@@ -362,7 +361,7 @@ TaskPanel = React.createClass
     window.removeEventListener 'battle.result', @handleBattleResult
     clearInterval @interval
   render: ->
-    <Panel bsStyle="default" >
+    <Panel bsStyle="default">
     {
       for i in [0..5]
         if @state.tasks[i].tracking

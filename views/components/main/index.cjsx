@@ -1,6 +1,5 @@
 path = require 'path-extra'
-i18n = require 'i18n'
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 {layout, ROOT, $, $$, React, ReactBootstrap} = window
 {TabbedArea, TabPane, Grid, Col, Row, Accordion, Panel, Nav, NavItem, TabbedArea, TabPane} = ReactBootstrap
 {MissionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel} = require './parts'
@@ -23,7 +22,7 @@ module.exports =
       window.addEventListener 'layout.change', @handleChangeLayout
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
-    shouldComponentUpdate: (nextProps, nextState)->
+    shouldComponentUpdate: (nextProps, nextState) ->
       false
     render: ->
       <div>

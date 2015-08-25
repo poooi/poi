@@ -3,8 +3,7 @@
 {resolveTime} = window
 {notify} = window
 {join} = require 'path-extra'
-i18n = require 'i18n'
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 
 timeToString = (dateTime) ->
   date = new Date(dateTime)
@@ -14,27 +13,27 @@ timeToString = (dateTime) ->
 MissionPanel = React.createClass
   getInitialState: ->
     decks: [
-        name: '第0艦隊'
+        name: __ "No.%s fleet", '0'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第1艦隊'
+        name: __ "No.%s fleet", '1'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第2艦隊'
+        name: __ "No.%s fleet", '2'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第3艦隊'
+        name: __ "No.%s fleet", '3'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: '第4艦隊'
+        name: __ "No.%s fleet", '4'
         completeTime: -1
         countdown: -1
         mission: null
@@ -115,7 +114,7 @@ MissionPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel bsStyle="default" >
+    <Panel bsStyle="default">
     {
       for i in [2..4]
         <div className="panel-item mission-item" key={i} >

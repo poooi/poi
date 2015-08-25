@@ -1,16 +1,9 @@
 path = require 'path-extra'
-i18n = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 order = [1, 3, 2, 4, 5, 7, 6, 8]
-
-getMaterialImage = (idx) ->
-  return "file://#{ROOT}/assets/img/material/0#{idx}.png"
-getMargin = (i) ->
-  if i!=1 && i!=3
-    return {marginTop: '4px'}
 
 ResourcePanel = React.createClass
 
@@ -89,8 +82,9 @@ ResourcePanel = React.createClass
       <Grid>
       {
         for i in order
-          <Col key={i} xs={6} style={getMargin i}>
-            <img src={getMaterialImage i} className="material-icon" />
+          <Col key={i} xs={6} style={if i!=1 && i!=3
+                                      marginTop: '4px'}>
+            <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"} className="material-icon" />
             <span className="material-value">{@state.material[i]}</span>
           </Col>
       }
