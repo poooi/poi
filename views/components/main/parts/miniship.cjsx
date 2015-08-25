@@ -297,7 +297,7 @@ PaneBody = React.createClass
           [
             <div className="ship-tile">
               <OverlayTrigger placement="top" overlay={
-                <Popover id="shipPop">
+                <Popover className="ship-pop">
                   <div className="div-col">
                     <div className="item-name">
                       <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
