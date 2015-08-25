@@ -45,7 +45,7 @@ module.exports =
               </div>
               <div className="panel-col half">
                 <Panel className="combinedPanels panel-col">
-                  <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+                  <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
                    <TabPane eventKey={1} tab={__ 'Docking'}>
                      <div className="ndock-panel flex">
                        <NdockPanel />
@@ -84,7 +84,7 @@ module.exports =
                 </div>
                 <div className="panel-col half">
                   <Panel className="combinedPanels panel-col">
-                    <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+                    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
                      <TabPane eventKey={1} tab={__ 'Docking'}>
                        <div className="panel-col ndock-panel flex">
                          <NdockPanel />

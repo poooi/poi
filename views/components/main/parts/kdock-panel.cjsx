@@ -198,7 +198,7 @@ KdockPanel = React.createClass
                 </Label>
               </div>
           else if @state.docks[i].countdown is 0
-            <div className="panelItem kdock-item">
+            <div className="panel-item kdock-item">
               <span className="kdock-name">
                 {@state.docks[i].name}
               </span>
@@ -207,7 +207,7 @@ KdockPanel = React.createClass
               </Label>
             </div>
           else
-            <div className="panelItem kdock-item">
+            <div className="panel-item kdock-item">
               <span className="kdock-name">
                 {@state.docks[i].name}
               </span>
