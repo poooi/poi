@@ -1,39 +1,39 @@
-path = require 'path-extra'
-i18n = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {resolveTime} = window
 {notify} = window
 {join} = require 'path-extra'
+{__, __n} = require 'i18n'
 
 timeToString = (dateTime) ->
   date = new Date(dateTime)
   "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
 
+
 MissionPanel = React.createClass
   getInitialState: ->
     decks: [
-        name: i18n.__ "No.%s fleet", '0'
+        name: __ "No.%s fleet", '0'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '1'
+        name: __ "No.%s fleet", '1'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '2'
+        name: __ "No.%s fleet", '2'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '3'
+        name: __ "No.%s fleet", '3'
         completeTime: -1
         countdown: -1
         mission: null
       ,
-        name: i18n.__ "No.%s fleet", '4'
+        name: __ "No.%s fleet", '4'
         completeTime: -1
         countdown: -1
         mission: null
@@ -100,7 +100,7 @@ MissionPanel = React.createClass
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
         if decks[i].countdown <= 60 && !notified[i]
-          notify "#{decks[i].name} #{i18n.__ "mission complete"}",
+          notify "#{decks[i].name} #{__ 'mission complete'}",
             type: 'expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
@@ -114,41 +114,30 @@ MissionPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header={i18n.__ "Expedition"} bsStyle="info">
-      <Table>
-        <tbody>
+    <Panel bsStyle="default">
+    {
+      for i in [2..4]
+        <div className="panel-item mission-item" key={i} >
+          <span className="mission-name">
+          {
+            if @state.decks[i].mission?
+              "#{@state.decks[i].mission}"
+            else
+              __ 'Ready'
+          }
+          </span>
         {
-          for i in [2..4]
-            [
-              <tr key={i * 2}>
-                <td>{@state.decks[i].name}</td>
-                <td>
-                  {
-                    if @state.decks[i].countdown > 60
-                      <OverlayTrigger placement='right' overlay={<Tooltip><strong>{i18n.__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
-                        <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
-                      </OverlayTrigger>
-                    else if @state.decks[i].countdown > -1
-                      <Label bsStyle="success">{resolveTime @state.decks[i].countdown}</Label>
-                    else
-                      <Label bsStyle="default"></Label>
-                  }
-                </td>
-              </tr>,
-              <tr key={i * 2 + 1}>
-                <td colSpan="2">
-                  {
-                    if @state.decks[i].mission?
-                      <span>↳ {@state.decks[i].mission}</span>
-                    else
-                      <span>↳</span>
-                  }
-                </td>
-              </tr>
-            ]
+          if @state.decks[i].countdown > 60
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
+              <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
+            </OverlayTrigger>
+          else if @state.decks[i].countdown > -1
+            <Label className="mission-timer" bsStyle="success" >{resolveTime @state.decks[i].countdown}</Label>
+          else
+            <Label className="mission-timer" bsStyle="default"></Label>
         }
-        </tbody>
-      </Table>
+        </div>
+    }
     </Panel>
 
 module.exports = MissionPanel

@@ -1,9 +1,8 @@
-{__} = require 'i18n'
-path = require 'path-extra'
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
+{__, __n} = require 'i18n'
 
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
@@ -134,14 +133,14 @@ KdockPanel = React.createClass
         if body.api_create_flag == 0
           setTimeout warn.bind(@, __("The development of %s was failed.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
         else if body.api_create_flag == 1
-          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
+          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name}")), 500
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} #{__ 'built'}",
+          notify "#{docks[i].name} #{__ "built"}",
             type: 'construction'
             icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
@@ -155,43 +154,70 @@ KdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header={__ 'Construction'} bsStyle="danger">
-      <Table>
-        <tbody>
+    <div>
+    {
+      for i in [1..4]
+        <OverlayTrigger key={i} placement='top' overlay={
+          <Tooltip>
+            {
+              if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
+                <span>
+                  <strong style={color: '#d9534f'}>
+                    {@state.docks[i].name}
+                  </strong>
+                  <br/>
+                </span>
+              else
+                <span>{@state.docks[i].name}<br/></span>
+            }
+            <img src={getMaterialImage 1} className="material-icon" /> {@state.docks[i].material[0]}
+            <img src={getMaterialImage 2} className="material-icon" /> {@state.docks[i].material[1]}
+            <img src={getMaterialImage 3} className="material-icon" /> {@state.docks[i].material[2]}
+            <img src={getMaterialImage 4} className="material-icon" /> {@state.docks[i].material[3]}
+            <img src={getMaterialImage 7} className="material-icon" /> {@state.docks[i].material[4]}
+          </Tooltip>
+        }>
         {
-          for i in [1..4]
-            <tr key={i}>
-              <OverlayTrigger placement='left' overlay={
-                  <Tooltip>
-                    <img src={getMaterialImage 1} className="material-icon" /> {@state.docks[i].material[0]} <img src={getMaterialImage 3} className="material-icon" /> {@state.docks[i].material[2]}<br />
-                    <img src={getMaterialImage 2} className="material-icon" /> {@state.docks[i].material[1]} <img src={getMaterialImage 4} className="material-icon" /> {@state.docks[i].material[3]}<br />
-                    <img src={getMaterialImage 7} className="material-icon" /> {@state.docks[i].material[4]}
-                  </Tooltip>
-                }>
-                {
-                  if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
-                    <td><strong style={color: '#d9534f'}>{@state.docks[i].name}</strong></td>
-                  else
-                    <td>{@state.docks[i].name}</td>
-                }
-              </OverlayTrigger>
-              <td>
-                {
-                  if @state.docks[i].countdown > 0
-                    if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
-                      <Label bsStyle="danger">{resolveTime @state.docks[i].countdown}</Label>
-                    else
-                      <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
-                  else if @state.docks[i].countdown is 0
-                    <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
-                  else
-                    <Label bsStyle="default"></Label>
-                }
-              </td>
-            </tr>
+          if @state.docks[i].countdown > 0
+            if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
+              <div className="panel-item kdock-item">
+                <span className="kdock-name">
+                  {@state.docks[i].name}
+                </span>
+                <Label className="kdock-timer" bsStyle="danger">
+                  {resolveTime @state.docks[i].countdown}
+                </Label>
+              </div>
+            else
+              <div className="panel-item kdock-item">
+                <span className="kdock-name">
+                  {@state.docks[i].name}
+                </span>
+                <Label className="kdock-timer" bsStyle="info">
+                  {resolveTime @state.docks[i].countdown}
+                </Label>
+              </div>
+          else if @state.docks[i].countdown is 0
+            <div className="panelItem kdock-item">
+              <span className="kdock-name">
+                {@state.docks[i].name}
+              </span>
+              <Label className="kdock-timer" bsStyle="success">
+                {resolveTime @state.docks[i].countdown}
+              </Label>
+            </div>
+          else
+            <div className="panelItem kdock-item">
+              <span className="kdock-name">
+                {@state.docks[i].name}
+              </span>
+              <Label className="kdock-timer" bsStyle="default">
+                {resolveTime 0}
+              </Label>
+            </div>
         }
-        </tbody>
-      </Table>
-    </Panel>
+        </OverlayTrigger>
+    }
+    </div>
 
 module.exports = KdockPanel

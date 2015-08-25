@@ -1,9 +1,8 @@
-path = require 'path-extra'
-{__} = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {join} = require 'path-extra'
+{__, __n} = require 'i18n'
 
 timeToString = (dateTime) ->
   date = new Date(dateTime)
@@ -104,29 +103,39 @@ NdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel header={__ 'Docking'} bsStyle="warning">
-      <Table>
-        <tbody>
-        {
-          for i in [1..4]
-            <tr key={i}>
-              <td>{@state.docks[i].name}</td>
-              <td>
-                {
-                  if @state.docks[i].countdown > 60
-                    <OverlayTrigger placement='right' overlay={<Tooltip><strong>{__ 'Finish by: '}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
-                      <Label bsStyle="primary">{resolveTime @state.docks[i].countdown}</Label>
-                    </OverlayTrigger>
-                  else if @state.docks[i].countdown > -1
-                    <Label bsStyle="success">{resolveTime @state.docks[i].countdown}</Label>
-                  else
-                    <Label bsStyle="default"></Label>
-                }
-              </td>
-            </tr>
-        }
-        </tbody>
-      </Table>
-    </Panel>
+    <div>
+    {
+      for i in [1..4]
+        if @state.docks[i].countdown > 60
+          <div key={i} className="panel-item ndock-item">
+            <span className="ndock-name">
+              {@state.docks[i].name}
+            </span>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ 'Finish by : '}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
+              <Label className="ndock-timer" bsStyle="primary">
+                {resolveTime @state.docks[i].countdown}
+              </Label>
+            </OverlayTrigger>
+          </div>
+        else if @state.docks[i].countdown > -1
+          <div key={i}  className="panel-item ndock-item">
+            <span className="ndock-name">
+              {@state.docks[i].name}
+            </span>
+            <Label className="ndock-timer" bsStyle="success">
+              {resolveTime @state.docks[i].countdown}
+            </Label>
+          </div>
+        else
+          <div key={i}  className="panel-item ndock-item">
+            <span className="ndock-name">
+              {@state.docks[i].name}
+            </span>
+            <Label className="ndock-timer" bsStyle="default">
+              {resolveTime 0}
+            </Label>
+          </div>
+    }
+    </div>
 
 module.exports = NdockPanel

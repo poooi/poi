@@ -1,36 +1,50 @@
-#MainView .material-icon {
-  margin-right: 5px;
-  width: 18px;
-  height: 18px;
+#MainView {
+  font-size: 12px;
+  min-width: 250px;
 }
-#MainView .material-value {
-  line-height: 30px;
-  vertical-align: middle;
+#MainView .nav {
+  margin-top: -6px;
+  margin-bottom: 5px;
+}
+#MainView .nav > li {
+  overflow: inherit;
 }
 #MainView .panel {
-  margin-bottom: 1px;
+  margin: 3px;
+}
+#MainView .panel-container,
+#MainView .panel-col {
+  display: flex;
+  flex-flow: column;
+}
+#MainView .panel-row {
+  display: flex;
+  flex-flow: row;
+}
+#MainView .half {
+  width: 50%;
+}
+#MainView .flex {
+  flex: 1;
 }
 #MainView .panel-body {
-  padding: 8px;
+  /*padding: 8px;*/
+  width: 100%;
 }
-#MainView .panel-heading {
-  padding: 8px;
+#MainView .panel-container .ndock-panel,
+#MainView .panel-container .kdock-panel,
+#MainView .panel-container .mission-panel,
+#MainView .panel-container .task-panel {
+  flex: none;
+  /*width: 49%;*/
 }
-#MainView .table {
-  margin-bottom: 1px;
+#MainView .panel-item {
+  padding: 4px;
 }
-#MainView table tr td {
-  font-size: 12px;
-  padding-top: 4px;
-  padding-bottom: 5px;
-}
-#MainView table tr td:first-child {
-  width: 45%;
-  text-align: left;
-}
-#MainView table tr td:last-child {
-  width: 55%;
-  text-align: right;
+#MainView .task-panel.panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: column nowrap;
 }
 #MainView .task-panel table tr td {
   width: 100%;
@@ -38,21 +52,108 @@
   align-items: center;
   text-align: left;
 }
-#MainView table tr td[colspan] {
-  width: 100% !important;
-  text-align: left;
+#MainView .task-panel .label {
+  min-width: 50px;
 }
-#MainView .panel-container {
-  padding-left: 0px;
-  padding-right: 0px;
+#MainView .task-item {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
 }
-#MainView .panel-col {
-  padding-left: 0px;
-  padding-right: 1px;
+#MainView .task-item .quest-name {
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-#MainView .teitoku-panel .col-xs-6, #MainView .teitoku-panel .col-xs-3 {
-  padding-left: 8px;
-  padding-right: 0px;
+#MainView .task-item .quest-progress {
+  min-width: 50px;
+  flex: none;
+}
+#MainView .task-item .cat-indicator {
+  display: inline-block;
+  height: 1em;
+  width: 4px;
+  vertical-align: middle;
+  margin-right: 4px;
+  flex: none;
+}
+#MainView .mission-panel .panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: column nowrap;
+}
+#MainView .mission-item {
+  display: flex;
+  flex: 1;
+}
+#MainView .mission-item .mission-name {
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MainView .mission-item .mission-timer {
+  flex: none;
+}
+#MainView .ndock-panel .panel-body {
+  /*border: 1px solid skyblue;*/
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+#MainView .ndock-item {
+  display: flex;
+  flex: 1;
+  /*margin: 3px;*/
+}
+#MainView .ndock-item .ndock-name {
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MainView .ndock-item .ndock-timer {
+  flex: none;
+}
+#MainView .kdock-panel .panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+#MainView .kdock-item {
+  display: flex;
+  flex: 1;
+}
+#MainView .kdock-item .kdock-name {
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MainView .kdock-item .kdock-timer {
+  /*display: flex;*/
+  flex: none;
+  /*margin: 3px;*/
+}
+#MainView .resource-panel .panel-body {
+  /*border: 1px solid orange;*/
+  padding-top: 4px;
+  padding-bottom: 3px;
+}
+#MainView .label {
+  font-size: 90%;
+  font-weight: normal;
 }
 #MainView .panel-body table td {
   overflow: hidden;
@@ -61,23 +162,14 @@
   border: none;
   line-height: 1.42857143;
 }
-#MainView .label {
-  font-size: 95%;
-  font-weight: normal;
+#MainView table tr td {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 5px;
 }
-#MainView .task-panel span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+#MainView .panel-body {
+  padding: 8px;
 }
-#MainView .task-panel .label {
-  min-width: 50px;
-}
-#MainView .category-indicator {
-  display: inline-block;
-  height: 1em;
-  width: 4px;
-  vertical-align: middle;
-  margin-right: 4px;
-  flex: none;
+#MainView .panel-heading {
+  padding: 8px;
 }

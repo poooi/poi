@@ -1,6 +1,8 @@
 module.exports =
-  TeitokuPanel: window.hack.TeitokuPanel || require './teitoku-panel'
-  MissionPanel: window.hack.MissionPanel || require './mission-panel'
-  NdockPanel: window.hack.NdockPanel || require './ndock-panel'
-  KdockPanel: window.hack.KdockPanel || require './kdock-panel'
-  TaskPanel: window.hack.TaskPanel || require './task-panel'
+  MissionPanel: require './mission-panel'
+  NdockPanel: require './ndock-panel'
+  KdockPanel: require './kdock-panel'
+  TaskPanel: require './task-panel'
+  MiniShip: require './miniship'
+  ResourcePanel: require './resource-panel'
+  TeitokuPanel: require './teitoku-panel'

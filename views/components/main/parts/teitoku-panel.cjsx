@@ -1,9 +1,8 @@
 path = require 'path-extra'
-{__} = require 'i18n'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
-{Panel, Grid, Col} = ReactBootstrap
-
+{Panel, Grid, Col, OverlayTrigger, Tooltip} = ReactBootstrap
+{__, __n} = require 'i18n'
 order = if layout == 'horizonal' or window.doubleTabbed then [1, 3, 5, 7, 2, 4, 6, 8] else [1..8]
 
 rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
@@ -25,21 +24,11 @@ totalExp = [
 getHeader = (state) ->
   if state.nickname?
     if state.level == 120
-      return (
-        <div style={display: 'flex', fontSize: 13}>
-          <div>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</div>
-          <div style={minWidth: 100, marginLeft: 'auto'}>Exp. {state.exp}</div>
-        </div>
-      )
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　#{__ "Ships"}：#{state.shipCount} / #{state.maxChara}　#{__ "Equipment"}：#{state.slotitemCount} / #{state.maxSlotitem}"
     else
-      return (
-        <div style={display: 'flex', fontSize: 13}>
-          <div>Lv. {state.level} {state.nickname} [{rankName[state.rank]}]</div>
-          <div style={minWidth: 100, marginLeft: 'auto'}>Next. {state.nextExp}</div>
-        </div>
-      )
+      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　#{__ "Ships"}：#{state.shipCount} / #{state.maxChara}　#{__ "Equipment"}：#{state.slotitemCount} / #{state.maxSlotitem}"
   else
-    return __ 'Admiral [Not logged in]'
+    return "#{__ 'Admiral [Not logged in]'}　#{__ "Ships"}：0 / 0　#{__ "Equipment"}：0 / 0"
 
 getMaterialImage = (idx) ->
   return "file://#{ROOT}/assets/img/material/0#{idx}.png"
@@ -51,7 +40,6 @@ TeitokuPanel = React.createClass
     rank: 0
     nextExp: '?'
     exp: '?'
-    material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
     shipCount: '??'
     maxChara: '??'
     slotitemCount: '??'
@@ -69,59 +57,27 @@ TeitokuPanel = React.createClass
           maxChara: body.api_max_chara
           maxSlotitem: body.api_max_slotitem
       when '/kcsapi/api_get_member/material'
-        {material} = @state
-        for e in body
-          material[e.api_id] = e.api_value
         @setState
           shipCount: Object.keys(window._ships).length
-          material: material
       when '/kcsapi/api_get_member/slot_item'
         @setState
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_port/port'
-        {material} = @state
-        for e in body.api_material
-          material[e.api_id] = e.api_value
         @setState
           shipCount: Object.keys(window._ships).length
-          material: material
           slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_hokyu/charge'
-        {material} = @state
-        for i in [0..3]
-          material[i + 1] = body.api_material[i]
-        @setState
-          material: material
       when '/kcsapi/api_req_kaisou/powerup'
         @setState
           shipCount: Object.keys(window._ships).length
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/createitem'
-        {material} = @state
-        for i in [0..7]
-          material[i + 1] = body.api_material[i]
         @setState
-          material: material
           slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kousyou/createship_speedchange'
-        {material} = @state
-        if body.api_result == 1
-          material[4] -= 1
-        @setState
-          material: material
       when '/kcsapi/api_req_kousyou/destroyitem2'
-        {material} = @state
-        for i in [0..3]
-          material[i + 1] += body.api_get_material[i]
         @setState
-          material: material
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/destroyship'
-        {material} = @state
-        for i in [0..3]
-          material[i + 1] = body.api_material[i]
         @setState
-          material: material
           shipCount: Object.keys(window._ships).length
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/getship'
@@ -129,30 +85,25 @@ TeitokuPanel = React.createClass
           shipCount: Object.keys(window._ships).length
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_kousyou/remodel_slot'
-        {material} = @state
-        for i in [0..7]
-          material[i + 1] = body.api_after_material[i]
         @setState
-          material: material
           slotitemCount: Object.keys(window._slotitems).length
       when '/kcsapi/api_req_mission/result'
         @setState
           level: body.api_member_lv
           exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
-      when '/kcsapi/api_req_nyukyo/speedchange'
-        {material} = @state
-        if body.api_result == 1
-          material[5] -= 1
+      when '/kcsapi/api_req_practice/battle_result'
         @setState
-          material: material
-      when '/kcsapi/api_req_nyukyo/start'
-        {material} = @state
-        if body.api_highspeed == 1
-          material[5] -= 1
+          level: body.api_member_lv
+          exp: body.api_member_exp
+          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
+      when '/kcsapi/api_req_sortie/battleresult'
         @setState
-          material: material
-      when '/kcsapi/api_req_practice/battle_result', '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
+          shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
+          level: body.api_member_lv
+          exp: body.api_member_exp
+          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
+      when '/kcsapi/api_req_combined_battle/battleresult'
         @setState
           shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
           level: body.api_member_lv
@@ -164,33 +115,25 @@ TeitokuPanel = React.createClass
           if @state.maxChara - @state.shipCount < freeShipSlot
             # toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
             setTimeout =>
-              error __ 'Attention! Ship Slot has only %s left.', "#{@state.maxChara - @state.shipCount}"
+              error __ "Attention! Ship Slot has only %s left.", "#{@state.maxChara - @state.shipCount}"
             , 1000
         if config.get 'poi.mapstartcheck.item'
           if @state.maxSlotitem - @state.slotitemCount <= 0
             # toggleModal '装备检查', "装备已满，出击注意！"
             setTimeout =>
-              error __ 'Attention! Item Slot is full.'
+              error __ "Attention! Item Slot is full."
             , 1000
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Panel header={getHeader @state} bsStyle="default" className="teitoku-panel">
-      <Grid>
-        <Col xs={6}>{__ 'Ships'}：{@state.shipCount} / {@state.maxChara}</Col>
-        <Col xs={6}>{__ 'Equipment'}：{@state.slotitemCount} / {@state.maxSlotitem}</Col>
-      </Grid>
-      <Grid style={marginTop: 5}>
-      {
-        for i in order
-          <Col key={i} xs={3}>
-            <img src={getMaterialImage i} className="material-icon" />
-            <span className="material-value">{@state.material[i]}</span>
-          </Col>
-      }
-      </Grid>
+    <Panel bsStyle="default" className="teitoku-panel">
+      <OverlayTrigger placement="bottom" overlay={<Tooltip>Next. {@state.nextExp}</Tooltip>}>
+        <div>
+          {getHeader @state}
+        </div>
+      </OverlayTrigger>
     </Panel>
 
 module.exports = TeitokuPanel

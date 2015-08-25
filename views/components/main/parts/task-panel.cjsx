@@ -1,9 +1,9 @@
-{join} = require 'path-extra'
-{__, __n} = require 'i18n'
-CSON = require 'cson'
-fs = require 'fs-extra'
 {ROOT, APPDATA_PATH, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
+CSON = require 'cson'
+fs = require 'fs-extra'
+{join} = require 'path-extra'
+{__, __n} = require 'i18n'
 
 zero = 331200000
 isDifferentDay = (time1, time2) ->
@@ -51,7 +51,7 @@ getStyleByProgress = (progress) ->
       return 'primary'
     when '80%'
       return 'info'
-    when __ 'Completed'
+    when '达成'
       return 'success'
     else
       return 'default'
@@ -361,36 +361,36 @@ TaskPanel = React.createClass
     window.removeEventListener 'battle.result', @handleBattleResult
     clearInterval @interval
   render: ->
-    <Panel className='task-panel' header={__ 'Quest'} bsStyle="success">
-      <Table>
-        <tbody>
-        {
-          for i in [0..5]
-            if @state.tasks[i].tracking
-              <tr key={i}>
-                <td>
-                  <span className='category-indicator' style={backgroundColor: getCategory @state.tasks[i].category}></span>
-                  <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                    <span>{@state.tasks[i].name}</span>
-                  </OverlayTrigger>
-                  <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
-                    <Label style={marginLeft: 'auto'} bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
-                  </OverlayTrigger>
-                </td>
-              </tr>
-            else
-              <tr key={i}>
-                <td>
-                  <span className='category-indicator' style={backgroundColor: getCategory @state.tasks[i].category}></span>
-                  <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-                    <span>{@state.tasks[i].name}</span>
-                  </OverlayTrigger>
-                  <Label style={marginLeft: 'auto'} bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
-                </td>
-              </tr>
-        }
-        </tbody>
-      </Table>
+    <Panel bsStyle="default">
+    {
+      for i in [0..5]
+        if @state.tasks[i].tracking
+          <div className="panel-item task-item" key={i}>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+              <div className="quest-name">
+                <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
+                {@state.tasks[i].name}
+              </div>
+            </OverlayTrigger>
+            <div>
+              <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
+                <Label className="quest-progress" bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
+              </OverlayTrigger>
+            </div>
+          </div>
+        else
+          <div className="panel-item task-item" key={i}>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+              <div className="quest-name">
+                <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
+                {@state.tasks[i].name}
+              </div>
+            </OverlayTrigger>
+            <div>
+              <Label className="quest-progress" bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
+            </div>
+          </div>
+    }
     </Panel>
 
 module.exports = TaskPanel
