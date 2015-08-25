@@ -132,9 +132,9 @@ KdockPanel = React.createClass
           notified: notified
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 0
-          setTimeout warn.bind(@, "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name} 开发失败"), 500
+          setTimeout warn.bind(@, __("The development of %s was failed.", "#{$slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), 500
         else if body.api_create_flag == 1
-          setTimeout success.bind(@, "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name} 开发成功"), 500
+          setTimeout success.bind(@, __("The development of %s was successful.", "#{$slotitems[body.api_slot_item.api_slotitem_id].api_name}")), 500
   updateCountdown: ->
     {docks, notified} = @state
     for i in [1..4]
@@ -181,38 +181,38 @@ KdockPanel = React.createClass
         {
           if @state.docks[i].countdown > 0
             if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
-              <div className="panelItem kdockItem">
-                <span className="kdockName">
+              <div className="panel-item kdock-item">
+                <span className="kdock-name">
                   {@state.docks[i].name}
                 </span>
-                <Label className="kdockTimer" bsStyle="danger">
+                <Label className="kdock-timer" bsStyle="danger">
                   {resolveTime @state.docks[i].countdown}
                 </Label>
               </div>
             else
-              <div className="panelItem kdockItem">
-                <span className="kdockName">
+              <div className="panel-item kdock-item">
+                <span className="kdock-name">
                   {@state.docks[i].name}
                 </span>
-                <Label className="kdockTimer" bsStyle="info">
+                <Label className="kdock-timer" bsStyle="info">
                   {resolveTime @state.docks[i].countdown}
                 </Label>
               </div>
           else if @state.docks[i].countdown is 0
-            <div className="panelItem kdockItem">
-              <span className="kdockName">
+            <div className="panelItem kdock-item">
+              <span className="kdock-name">
                 {@state.docks[i].name}
               </span>
-              <Label className="kdockTimer" bsStyle="success">
+              <Label className="kdock-timer" bsStyle="success">
                 {resolveTime @state.docks[i].countdown}
               </Label>
             </div>
           else
-            <div className="panelItem kdockItem">
-              <span className="kdockName">
+            <div className="panelItem kdock-item">
+              <span className="kdock-name">
                 {@state.docks[i].name}
               </span>
-              <Label className="kdockTimer" bsStyle="default">
+              <Label className="kdock-timer" bsStyle="default">
                 {resolveTime 0}
               </Label>
             </div>

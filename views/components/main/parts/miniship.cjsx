@@ -286,7 +286,7 @@ PaneBody = React.createClass
           <span style={margin: 'auto'}>{@props.deck.api_name}</span>
         </OverlayTrigger>
       </div>
-      <div className="shipDetails">
+      <div className="ship-details">
       {
         {$ships, $shipTypes, _ships} = window
         for shipId, j in @props.deck.api_ship
@@ -296,7 +296,7 @@ PaneBody = React.createClass
           shipType = $shipTypes[shipInfo.api_stype].api_name
           status = getStatusArray shipId
           [
-            <div className="shipTile">
+            <div className="ship-tile">
               <OverlayTrigger placement="top" overlay={
                 <Popover id="shipPop">
                   <div className="div-col">
@@ -328,25 +328,25 @@ PaneBody = React.createClass
                   </div>
                 </Popover>
               }>
-                <div className="shipItem" style={getStatusStyle status}>
+                <div className="ship-item" style={getStatusStyle status}>
                   <div className="div-col">
-                    <div className="shipInfo" >
-                      <span className="shipName">
+                    <div className="ship-info" >
+                      <span className="ship-name">
                         {shipInfo.api_name}
                       </span>
-                      <span className="shipHp">
+                      <span className="ship-hp">
                         {ship.api_nowhp} / {ship.api_maxhp}
                       </span>
                       <div style={flex: 0.8}>
-                        <span className="shipCond" style={color: getCondStyle ship.api_cond}>
+                        <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
                           ★{ship.api_cond}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="div-col" style={marginTop: 5}>
-                    <div className="shipInfo">
-                      <span className="shipLvText">
+                    <div className="ship-info">
+                      <span className="ship-lv-text">
                         Lv. {ship.api_lv} ({ship.api_exp[1]})
                       </span>
                       <span className="hp-progress">

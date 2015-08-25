@@ -366,29 +366,29 @@ TaskPanel = React.createClass
     {
       for i in [0..5]
         if @state.tasks[i].tracking
-          <div className="panelItem taskItem" key={i}>
+          <div className="panel-item task-item" key={i}>
             <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-              <div className="questName">
-                <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
+              <div className="quest-name">
+                <span className="cat-indicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
               </div>
             </OverlayTrigger>
             <div>
               <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
-                <Label className="questProgress" bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
+                <Label className="quest-progress" bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
               </OverlayTrigger>
             </div>
           </div>
         else
-          <div className="panelItem taskItem" key={i}>
+          <div className="panel-item task-item" key={i}>
             <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
-              <div className="questName">
-                <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
+              <div className="quest-name">
+                <span className="cat-indicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
               </div>
             </OverlayTrigger>
             <div>
-              <Label className="questProgress" bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
+              <Label className="quest-progress" bsStyle={getStyleByProgress @state.tasks[i].progress}>{@state.tasks[i].progress}</Label>
             </div>
           </div>
     }
