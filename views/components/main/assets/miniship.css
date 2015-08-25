@@ -52,7 +52,6 @@
 }
 #MiniShip .shipDetails .shipItem {
   flex: 1;
-  display: flex;
   flex-flow: column nowrap;
   align-items: flex-end;
   overflow: hidden;
@@ -102,9 +101,6 @@
   align-self: flex-end;
   margin-left: auto;
   display: table;
-  /*margin-right: 4px;*/
-  /*margin-bottom: 5px;*/
-  /*width: 32px;*/
 }
 #MiniShip .shipDetails .shipItem .shipCond .condIndicator {
   display: inline-block;
@@ -130,6 +126,7 @@
 }
 #MiniShip .shipItem .hp-progress .progress{
   height: 7px;
+  flex: auto;
 }
 #MiniShip .shipDetails .shipItem .progress .progress-condition{
 }
@@ -152,34 +149,57 @@
   margin-right: 4px;
   margin-bottom: 3px;
 }
-#MiniShip .slotitem-container {
-  position: relative;
-  vertical-align: bottom;
-  display: inline;
-}
-#MiniShip .slotitem-container .slotitem-onslot {
-  position: absolute;
-  font-size: 18px;
-  text-align: center;
-  /*left: -1px;
-  top: -9px;*/
-}
-#MiniShip .slotitem-container span.slotitem-onslot.label{
-  padding: 2px 2px;
-}
-#MiniShip .slotitem-container span.show {
-  display: inline !important;
-}
-#MiniShip .slotitem-container img {
-  width: 30px;
-  height: 30px;
-  margin-top: -5px;
-  margin-bottom: -5px;
-  margin-left: -3px;
-}
 #MiniShip .alert {
   background-color: transparent;
   border-color: transparent;
   margin-top: 9px;
   text-align: center;
+}
+#MiniShip .fleet-name {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+#shipPop .slotitem-container {
+  display :flex;
+  flex-flow: row;
+  margin-top: 4px;
+}
+#shipPop .slotitem-container .slotitem-onslot {
+  font-size: 90%;
+  padding: 3px 6px 3px 5px;
+  margin-left: 2px;
+}
+#shipPop .slotitem-container span.show {
+  display: inline !important;
+}
+#shipPop .slotitem-container img {
+  width: 32px;
+  height: 32px;
+  margin-top: -8px;
+  margin-bottom: -8px;
+}
+#MiniShip .div-col,
+#shipPop .div-col {
+  display: flex;
+  flex-flow: column;
+}
+#MiniShip .div-row,
+#shipPop .div-row {
+  display: flex;
+  flex-flow: row;
+}
+#shipPop .flex {
+  flex: 1;
+}
+#shipPop .item-name {
+  margin-bottom: 5px;
+  width: 220px
+}
+#shipPop .progress {
+  margin-top: 5px;
+  height: 9px;
+}
+#shipPop .material-icon {
+  margin-right: auto;
 }

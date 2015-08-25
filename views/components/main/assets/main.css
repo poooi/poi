@@ -10,10 +10,22 @@
   overflow: inherit;
 }
 #MainView .panel{
-  margin: 4px;
+  margin: 3px;
 }
-#MainView .panel-container {
-
+#MainView .panel-container,
+#MainView .panel-col {
+  display: flex;
+  flex-flow: column;
+}
+#MainView .panel-row {
+  display: flex;
+  flex-flow: row;
+}
+#MainView .half {
+  width: 50%;
+}
+#MainView .flex {
+  flex: 1;
 }
 #MainView .panel-body {
   /*padding: 8px;*/
@@ -150,35 +162,14 @@
   border: none;
   line-height: 1.42857143;
 }
-#MainView table tr td[colspan] {
-  width: 100% !important;
-  text-align: left;
-}
-#MainView .panel-container {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-#MainView .panel-col {
-  padding-left: 0px;
-  padding-right: 1px;
-}
-#MainView .miniship .panel-body{
-
-}
 #MainView table tr td {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 5px;
-}
-#MainView .panel {
-  margin-bottom: 1px;
 }
 #MainView .panel-body {
   padding: 8px;
 }
 #MainView .panel-heading {
   padding: 8px;
-}
-#MainView .table {
-  margin-bottom: 1px;
 }
