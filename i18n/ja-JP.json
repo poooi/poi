@@ -1,7 +1,7 @@
 {
   "Waiting response...": "poi 読み込み中",
-  "Not in a sortie": "出撃していません",
-  "Going on a Sortie": "出撃海域 ",
+  "Not in sortie": "出撃していません",
+  "Sortie area": "出撃海域",
   "failed to save the screenshot": "スクリーンショットの保存に失敗しました",
   "screenshot saved to": "スクリーンショットの保存先",
   "Open cache dir": "キャッシュの保存先",

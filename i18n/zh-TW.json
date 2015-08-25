@@ -1,7 +1,7 @@
 {
   "Waiting response...": "poi 等待遊戲數據中……",
-  "Not in a sortie": "未出擊",
-  "Going on a Sortie": "出擊海域: ",
+  "Not in sortie": "未出擊",
+  "Sortie area": "出擊海域",
   "failed to save the screenshot": "截圖保存失敗",
   "screenshot saved to": "截圖保存在",
   "Open cache dir": "打開快取目錄",
