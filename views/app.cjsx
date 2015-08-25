@@ -195,17 +195,17 @@ PoiAlert = React.createClass
 # Map Reminder
 PoiMapReminder = React.createClass
   getInitialState: ->
-    battling: __ 'Not in a sortie'
+    battling: __ 'Not in sortie'
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
     switch reqPath
       when '/kcsapi/api_port/port'
         @setState
-          battling: __ 'Not in a sortie'
+          battling: __ 'Not in sortie'
       when '/kcsapi/api_req_map/start'
         @setState
-          battling: __('Going on a Sortie') + ': ' + body.api_maparea_id + '-' + body.api_mapinfo_no
+          battling: __('Sortie area') + ': ' + body.api_maparea_id + '-' + body.api_mapinfo_no
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
@@ -350,7 +350,7 @@ ModalTrigger = React.createClass
         {@state.content}
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={@handleToggle}>{__ 'Cancel'}</Button>
+        <Button onClick={@handleToggle}>{__ 'Close'}</Button>
         {@renderFooter @state.footer}
       </Modal.Footer>
     </Modal>
