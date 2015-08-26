@@ -26,7 +26,7 @@ module.exports =
     shouldComponentUpdate: (nextProps, nextState)->
       false
     render: ->
-      <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={true}>
+      <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={false}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'settings.css')} />
         <TabPane key={0} eventKey={0} tab={__ "Common"} id='poi-config' className='poi-settings-tabpane'>
           <PoiConfig />
