@@ -30,7 +30,7 @@
   "Download latest version":"Download latest version",
   "Connection failed after %s retry": {
      "one":"one",
-     "other":"other",
+     "other":"other"
    },
   "Network error: HTTP %s":"Network error: HTTP %s",
   "Connection failed.":"Connection failed.",
@@ -118,5 +118,5 @@
   "LOS":"LOS",
   "Autumn":"Autumn",
   "Old":"Old",
-  "Repair Time":"Time to repair"
+  "Repair Time":"Repair Time"
 }
