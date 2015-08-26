@@ -9,11 +9,23 @@
 #MainView .nav > li {
   overflow: inherit;
 }
-#MainView .panel{
-  margin: 4px;
+#MainView .panel {
+  margin: 3px;
 }
-#MainView .panel-container {
-
+#MainView .panel-container,
+#MainView .panel-col {
+  display: flex;
+  flex-flow: column;
+}
+#MainView .panel-row {
+  display: flex;
+  flex-flow: row;
+}
+#MainView .half {
+  width: 50%;
+}
+#MainView .flex {
+  flex: 1;
 }
 #MainView .panel-body {
   /*padding: 8px;*/
@@ -26,7 +38,7 @@
   flex: none;
   /*width: 49%;*/
 }
-#MainView .panelItem {
+#MainView .panel-item {
   padding: 4px;
 }
 #MainView .task-panel.panel-body {
@@ -43,13 +55,13 @@
 #MainView .task-panel .label {
   min-width: 50px;
 }
-#MainView .taskItem {
+#MainView .task-item {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
 }
-#MainView .taskItem .questName {
+#MainView .task-item .quest-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
@@ -57,11 +69,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .taskItem .questProgress {
+#MainView .task-item .quest-progress {
   min-width: 50px;
   flex: none;
 }
-#MainView .taskItem .catIndicator {
+#MainView .task-item .cat-indicator {
   display: inline-block;
   height: 1em;
   width: 4px;
@@ -69,16 +81,16 @@
   margin-right: 4px;
   flex: none;
 }
-#MainView .mission-panel.panel-body {
+#MainView .mission-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
   flex-flow: column nowrap;
 }
-#MainView .missionItem {
+#MainView .mission-item {
   display: flex;
   flex: 1;
 }
-#MainView .missionItem .missionName{
+#MainView .mission-item .mission-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
@@ -86,7 +98,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .missionItem .missionTimer {
+#MainView .mission-item .mission-timer {
   flex: none;
 }
 #MainView .ndock-panel .panel-body {
@@ -95,12 +107,12 @@
   flex-flow: column;
   justify-content: space-between;
 }
-#MainView .ndockItem{
+#MainView .ndock-item {
   display: flex;
   flex: 1;
   /*margin: 3px;*/
 }
-#MainView .ndockItem .ndockName{
+#MainView .ndock-item .ndock-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
@@ -108,7 +120,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .ndockItem .ndockTimer {
+#MainView .ndock-item .ndock-timer {
   flex: none;
 }
 #MainView .kdock-panel .panel-body {
@@ -117,11 +129,11 @@
   flex-flow: column;
   justify-content: space-between;
 }
-#MainView .kdockItem {
+#MainView .kdock-item {
   display: flex;
   flex: 1;
 }
-#MainView .kdockItem .kdockName {
+#MainView .kdock-item .kdock-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
@@ -129,7 +141,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .kdockItem .kdockTimer {
+#MainView .kdock-item .kdock-timer {
   /*display: flex;*/
   flex: none;
   /*margin: 3px;*/
@@ -138,6 +150,9 @@
   /*border: 1px solid orange;*/
   padding-top: 4px;
   padding-bottom: 3px;
+}
+#MainView .resource-panel .material-value {
+  margin-left: 5px;
 }
 #MainView .label {
   font-size: 90%;
@@ -150,35 +165,14 @@
   border: none;
   line-height: 1.42857143;
 }
-#MainView table tr td[colspan] {
-  width: 100% !important;
-  text-align: left;
-}
-#MainView .panel-container {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-#MainView .panel-col {
-  padding-left: 0px;
-  padding-right: 1px;
-}
-#MainView .miniship .panel-body{
-
-}
 #MainView table tr td {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 5px;
-}
-#MainView .panel {
-  margin-bottom: 1px;
 }
 #MainView .panel-body {
   padding: 8px;
 }
 #MainView .panel-heading {
   padding: 8px;
-}
-#MainView .table {
-  margin-bottom: 1px;
 }

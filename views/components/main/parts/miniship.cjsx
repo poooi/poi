@@ -4,8 +4,7 @@ path =  require 'path-extra'
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup} = ReactBootstrap
 {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
-i18n = require 'i18n'
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 
 inBattle = [false, false, false, false]
 goback = {}
@@ -21,7 +20,7 @@ getStyle = (state) ->
     # 3: Repairing
     # 4: In mission
     # 5: In map
-    return ['success', 'warning', 'danger', 'info', 'default', 'info'][state]
+    return ['success', 'warning', 'danger', 'info', 'primary', 'default'][state]
   else
     return 'default'
 
@@ -107,9 +106,6 @@ getStatusArray = (shipId) ->
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
 
-getBackdropStyle = ->
-  return {fontSize: '90%', fontWeight: 'normal', padding: '3px 6px 3px 5px', marginLeft: '2px'}
-
 getTyku = (deck) ->
   {$ships, $slotitems, _ships, _slotitems} = window
   basicTyku = alvTyku = totalTyku = 0
@@ -159,12 +155,12 @@ Slotitems = React.createClass
       for itemId, i in @props.data
         continue if itemId == -1
         item = _slotitems[itemId]
-        <div key={i} className="slotitem-container" style={display:"flex", flexFlow:"row", marginTop: '4px'}>
-          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} style={width: '32px', height: '32px',  marginTop: '-8px', marginBottom: '-8px'}} />
+        <div key={i} className="slotitem-container">
+          <img key={itemId} src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
           <span>
             {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
-              &nbsp;&nbsp;{
+              {
                 if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
                   for j in [1..item.api_alv]
                     <strong key={j} style={color: '#3EAEFF'}>|</strong>
@@ -180,8 +176,7 @@ Slotitems = React.createClass
           </span>
           <Label className="slotitem-onslot
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}"
-                          bsStyle="#{if @props.onslot[i] < @props.maxeq[i] then 'warning' else 'default'}"
-                          style={getBackdropStyle()}>
+                          bsStyle="#{if @props.onslot[i] < @props.maxeq[i] then 'warning' else 'default'}">
             {@props.onslot[i]}
           </Label>
         </div>
@@ -234,9 +229,9 @@ TopAlert = React.createClass
     window.removeEventListener 'game.response', @handleResponse
   render: ->
     <div style={display: "flex", justifyContent: "space-around"}>
-      <span style={flex: "none"}>{__ 'Total Lv.'}{@messages.totalLv} </span>
-      <span style={flex: "none", marginLeft: "5px"}>{__ 'Avg. Lv.'}{@messages.avgLv} </span>
-      <span style={flex: "none", marginLeft: "5px"}>{__ 'Fighter Power: '}{@messages.tyku.total}</span>
+      <span style={flex: "none"}>{__ 'Total Lv'}{@messages.totalLv} </span>
+      <span style={flex: "none", marginLeft: 5}>{__ 'Avg. Lv'}{@messages.avgLv} </span>
+      <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
     </div>
 
 PaneBody = React.createClass
@@ -274,7 +269,7 @@ PaneBody = React.createClass
       cond: cond
   render: ->
     <div>
-      <div style={display:"flex", justifyContent:"space-between", margin:"5px 0"}>
+      <div className="fleet-name">
         <OverlayTrigger placement="top" overlay={
           <Popover>
             <div>
@@ -290,7 +285,7 @@ PaneBody = React.createClass
           <span style={margin: 'auto'}>{@props.deck.api_name}</span>
         </OverlayTrigger>
       </div>
-      <div className="shipDetails">
+      <div className="ship-details">
       {
         {$ships, $shipTypes, _ships} = window
         for shipId, j in @props.deck.api_ship
@@ -299,73 +294,67 @@ PaneBody = React.createClass
           shipInfo = $ships[ship.api_ship_id]
           shipType = $shipTypes[shipInfo.api_stype].api_name
           status = getStatusArray shipId
-          [
-            <div className="shipTile">
-              <OverlayTrigger placement="top" overlay={
-                <Popover>
-                  <div style={display:"flex", flexFlow:"column"}>
-                    <div style={marginBottom: '5px', width: '200px'}>
-                      <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
-                    </div>
-                    <div style={display:"flex", flexFlow:"row"}>
-                      <div style={flex: 1, display:"flex", flexFlow:"column"}>
-                        <div style={display:"flex", flexFlow:"row", marginTop: '5px'}>
-                          <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" style={marginRight:'auto'} />
-                          <span style={marginLeft:'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
-                        </div>
-                        <div>
-                          <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                       style={marginTop: '5px', height: '9px'}
-                                       now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
-                        </div>
+          <div className="ship-tile">
+            <OverlayTrigger placement="top" overlay={
+              <Popover className="ship-pop">
+                <div className="div-col">
+                  <div className="item-name">
+                    <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                  </div>
+                  <div className="div-row">
+                    <div className="div-col flex">
+                      <div className="div-row" style={marginTop: 5}>
+                        <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" />
+                        <span style={marginLeft: 'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
                       </div>
-                      <div style={width: '10px'} />
-                      <div style={flex: 1, display:"flex", flexFlow:"column"}>
-                        <div style={display:"flex", flexFlow:"row", marginTop: '5px'}>
-                          <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" style={marginRight:'auto'} />
-                          <span style={marginLeft:'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
-                        </div>
-                        <div>
-                          <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                       style={marginTop: '5px'}
-                                       style={marginTop: '5px', height: '9px'}
-                                       now={ship.api_bull / shipInfo.api_bull_max * 100} />
-                        </div>
+                      <div>
+                        <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                     now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                      </div>
+                    </div>
+                    <div className="div-col flex" style={marginLeft: 10}>
+                      <div className="div-row" style={marginTop: 5}>
+                        <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" />
+                        <span style={marginLeft: 'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
+                      </div>
+                      <div>
+                        <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                     now={ship.api_bull / shipInfo.api_bull_max * 100} />
                       </div>
                     </div>
                   </div>
-                </Popover>
-              }>
-                <div className="shipItem" style={getStatusStyle status}>
-                  <div style={display: "flex", flexDirection: "column", width:"100%"}>
-                    <div className="shipInfo" >
-                      <span className="shipName">
-                        {shipInfo.api_name}
-                      </span>
-                      <span className="shipHp">
-                        {ship.api_nowhp} / {ship.api_maxhp}
-                      </span>
-                      <div style={flex: 0.8}>
-                        <span className="shipCond" style={color:getCondStyle ship.api_cond}>
-                          ★{ship.api_cond}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div style={display:"flex", flexDirection: "column", width:"100%", marginTop:5}>
-                    <div className="shipInfo" >
-                      <span className="shipLvText">
-                        Lv. {ship.api_lv} ({ship.api_exp[1]})
-                      </span>
-                      <span className="hp-progress">
-                        <ProgressBar style={flex: "auto"} bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
+                </div>
+              </Popover>
+            }>
+              <div className="ship-item" style={getStatusStyle status}>
+                <div className="div-col">
+                  <div className="ship-info" >
+                    <span className="ship-name">
+                      {shipInfo.api_name}
+                    </span>
+                    <span className="ship-hp">
+                      {ship.api_nowhp} / {ship.api_maxhp}
+                    </span>
+                    <div style={flex: 0.8}>
+                      <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
+                        ★{ship.api_cond}
                       </span>
                     </div>
                   </div>
                 </div>
-              </OverlayTrigger>
-            </div>
-          ]
+                <div className="div-col" style={marginTop: 5}>
+                  <div className="ship-info">
+                    <span className="ship-lv-text">
+                      Lv. {ship.api_lv} ({ship.api_exp[1]})
+                    </span>
+                    <span className="hp-progress">
+                      <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </OverlayTrigger>
+          </div>
       }
       </div>
     </div>
@@ -383,7 +372,7 @@ module.exports =
       activeDeck: 0
       dataVersion: 0
     showDataVersion: 0
-    shouldComponentUpdate: (nextProps, nextState)->
+    shouldComponentUpdate: (nextProps, nextState) ->
       # if ship-pane is visibile and dataVersion is changed, this pane should update!
       if nextProps.selectedKey is @props.index and nextState.dataVersion isnt @showDataVersion
         @showDataVersion = nextState.dataVersion
@@ -447,7 +436,7 @@ module.exports =
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
     render: ->
-      <Panel bsStyle="default" style={minHeight: '322px'}>
+      <Panel bsStyle="default" style={minHeight: 320}>
         <link rel="stylesheet" href={join(relative(ROOT, __dirname),'..', 'assets', 'miniship.css')} />
         <ButtonGroup bsSize="xsmall">
         {

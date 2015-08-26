@@ -1,6 +1,5 @@
 path = require 'path-extra'
-i18n = require 'i18n'
-{__, __n} = i18n
+{__, __n} = require 'i18n'
 {layout, ROOT, $, $$, React, ReactBootstrap} = window
 {TabbedArea, TabPane, Grid, Col, Row, Accordion, Panel, Nav, NavItem, TabbedArea, TabPane} = ReactBootstrap
 {MissionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel} = require './parts'
@@ -23,7 +22,7 @@ module.exports =
       window.addEventListener 'layout.change', @handleChangeLayout
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
-    shouldComponentUpdate: (nextProps, nextState)->
+    shouldComponentUpdate: (nextProps, nextState) ->
       false
     render: ->
       <div>
@@ -31,81 +30,82 @@ module.exports =
 
       {
         if @state.layout == 'horizonal' or window.doubleTabbed
-          <div className="panel-container" style={display:"flex", flexFlow:"column"}>
+          <div className="panel-col">
             <div className="panel-col teitoku-panel">
               <TeitokuPanel />
             </div>
-            <div style={display:"flex", flexFlow:"row"}>
-              <div style={display:"flex", flexFlow:"column nowrap",width:"50%"}>
-                <div className="panel-col resource-panel" ref="resourcePanel" >
+            <div className="panel-row">
+              <div className="panel-col half">
+                <div className="panel-col resource-panel" ref="resourcePanel">
                   <ResourcePanel />
                 </div>
                 <div className="miniship" id={MiniShip.name} ref="miniship">
                   {React.createElement MiniShip.reactClass}
                 </div>
               </div>
-              <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
-                <Panel className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
-                  <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+              <div className="panel-col half">
+                <Panel className="combinedPanels panel-col">
+                  <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
                    <TabPane eventKey={1} tab={__ 'Docking'}>
-                     <div className={"panel-col ndock-panel "}style={flex: 1}>
+                     <div className="ndock-panel flex">
                        <NdockPanel />
                      </div>
                    </TabPane>
                    <TabPane eventKey={2} tab={__ 'Construction'}>
-                     <div className={"panel-col kdock-panel "}style={flex: 1}>
+                     <div className="kdock-panel flex">
                        <KdockPanel />
                      </div>
                    </TabPane>
                   </TabbedArea>
                 </Panel>
-                <div className="panel-col mission-panel" ref="missionPanel" >
+                <div className="mission-panel" ref="missionPanel">
                   <MissionPanel />
                 </div>
-                <div className="panel-col task-panel" ref="taskPanel" >
+                <div className="task-panel" ref="taskPanel">
                   <TaskPanel />
                 </div>
               </div>
             </div>
           </div>
         else
-          <div className="panel-container" style={display:"flex", flexFlow:"row"}>
-            <div style={display:"flex", flexFlow:"column", width:"60%"}>
+          <div className="panel-row">
+            <div className="panel-col" style={width: "60%"}>
               <div className="panel-col teitoku-panel">
                 <TeitokuPanel />
               </div>
-              <div style={display:"flex", flexFlow:"row"}>
-                <div style={display:"flex", flexFlow:"column nowrap",width:"50%"}>
-                  <div className="panel-col resource-panel" ref="resourcePanel" >
+              <div className="panel-row">
+                <div className="panel-col half">
+                  <div className="panel-col resource-panel" ref="resourcePanel">
                     <ResourcePanel />
                   </div>
-                  <div className="panel-col task-panel" ref="taskPanel" >
+                  <div className="panel-col task-panel" ref="taskPanel">
                     <TaskPanel />
                   </div>
                 </div>
-                <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
-                  <Panel className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
-                    <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+                <div className="panel-col half">
+                  <Panel className="combinedPanels panel-col">
+                    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
                      <TabPane eventKey={1} tab={__ 'Docking'}>
-                       <div className={"panel-col ndock-panel "}style={flex: 1}>
+                       <div className="panel-col ndock-panel flex">
                          <NdockPanel />
                        </div>
                      </TabPane>
                      <TabPane eventKey={2} tab={__ 'Construction'}>
-                       <div className={"panel-col kdock-panel "}style={flex: 1}>
+                       <div className="panel-col kdock-panel flex">
                          <KdockPanel />
                        </div>
                      </TabPane>
                     </TabbedArea>
                   </Panel>
-                  <div className="panel-col mission-panel" ref="missionPanel" >
+                  <div className="panel-col mission-panel" ref="missionPanel">
                     <MissionPanel />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="miniship" id={MiniShip.name} ref="miniship" style={display:"flex", flexFlow:"column", width:"40%"}>
+            <div className="miniship panel-col" id={MiniShip.name} ref="miniship" style={width:"40%"}>
               {React.createElement MiniShip.reactClass}
             </div>
-          </div>}
+          </div>
+        }
       </div>
