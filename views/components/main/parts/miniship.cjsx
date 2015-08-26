@@ -84,26 +84,32 @@ getCondStyle = (cond) ->
 
 getStatusStyle = (status) ->
   if status?
-    flag = status[0] or status[1] # retreat or repairing
+    flag = status == 0 or status == 1 # retreat or repairing
     if flag? and flag
       return {opacity: 0.4}
   else
     return {}
 
-getStatusArray = (shipId) ->
-  status = []
+getShipStatus = (shipId) ->
+  status = -1
   # retreat status
-  status[0] = shipId == escapeId || shipId == towId
+  if shipId == escapeId || shipId == towId
+    return status = 0
   # reparing
-  status[1] = if shipId in _ndocks then true else false
+  if shipId in _ndocks
+    return status = 1
   # special 1 locked phase 1
-  status[2] = _ships[shipId].api_sally_area == 1
+  else if _ships[shipId].api_sally_area == 1
+    return status = 2
   # special 2 locked phase 2
-  status[3] = _ships[shipId].api_sally_area == 2
+  else if _ships[shipId].api_sally_area == 2
+    return status = 3
   # special 3 locked phase 3
-  status[4] =  _ships[shipId].api_sally_area == 3
+  else if  _ships[shipId].api_sally_area == 3
+    return status = 4
   # special 3 locked phase 3
-  status[5] = _ships[shipId].api_sally_area == 4
+  else if _ships[shipId].api_sally_area == 4
+    return status = 5
   return status
 
 ###
@@ -120,23 +126,22 @@ getStatusArray = (shipId) ->
     else if @props.status[4]? and @props.status[4]
       <Label bsStyle="warning"><FontAwesome key={0} name='rub' /></Label>
 
-    @todo: improve extesibility
 ###
 StatusLabelMini = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
     not _.isEqual(nextProps.label, @props.label)
   render: ->
-    if @props.label[0]? and @props.label[0]
+    if @props.label? and @props.label == 0
       <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
-    else if @props.label[1]? and @props.label[1]
+    else if @props.label? and @props.label == 1
       <Label bsStyle="info"><FontAwesome key={0} name='wrench' /></Label>
-    else if @props.label[2]? and @props.label[2]
+    else if @props.label? and @props.label == 2
       <Label bsStyle="info"><FontAwesome key={0} name='lock' /></Label>
-    else if @props.label[3]? and @props.label[3]
+    else if @props.label? and @props.label == 3
       <Label bsStyle="primary"><FontAwesome key={0} name='lock' /></Label>
-    else if @props.label[4]? and @props.label[4]
+    else if @props.label? and @props.label == 4
       <Label bsStyle="success"><FontAwesome key={0} name='lock' /></Label>
-    else if @props.label[4]? and @props.label[4]
+    else if @props.label? and @props.label == 5
       <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
     else
       <Label bsStyle="default" style={border: '1px solid'}></Label>
@@ -276,19 +281,14 @@ PaneBody = React.createClass
   condDynamicUpdateFlag: false
   getInitialState: ->
     cond: [0, 0, 0, 0, 0, 0]
-    label: [[false, false, false, false, false, false],
-            [false, false, false, false, false, false],
-            [false, false, false, false, false, false],
-            [false, false, false, false, false, false],
-            [false, false, false, false, false, false],
-            [false, false, false, false, false, false]]
+    label: [-1, -1, -1, -1, -1, -1]
   updateLabels: ->
     # refresh label
     {label} = @state
     for shipId, j in @props.deck.api_ship
       continue if shipId == -1
       ship = _ships[shipId]
-      status = getStatusArray shipId
+      status = getShipStatus shipId
       label[j] = status
     label
   onCondChange: (cond) ->
@@ -302,17 +302,18 @@ PaneBody = React.createClass
     switch path
       when '/kcsapi/api_port/port'
         updateflag = true
+        label = @updateLabels()
       when '/kcsapi/api_req_hensei/change'
         updateflag = true
+        label = @updateLabels()
       when '/kcsapi/api_req_nyukyo/start'
         shipId = parseInt postBody.api_ship_id
         if shipId in @props.deck.api_ship
           i = @props.deck.api_ship.indexOf shipId
-          # status = getStatusArray shipId
-          label[i][1] = true
+          # status = getShipStatus shipId
+          label[i] = 1
           updateflag = true
     if updateflag
-      label = @updateLabels()
       @setState
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
@@ -371,7 +372,6 @@ PaneBody = React.createClass
           ship = _ships[shipId]
           shipInfo = $ships[ship.api_ship_id]
           shipType = $shipTypes[shipInfo.api_stype].api_name
-
           <div className="ship-tile">
             <OverlayTrigger placement="top" overlay={
               <Popover className="ship-pop">
