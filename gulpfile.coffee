@@ -37,6 +37,7 @@ gulp.task 'theme', async ->
     lumendark: 'https://raw.githubusercontent.com/PHELiOX/poi-theme-lumendark/master/lumendark.css'
     paperdark: 'https://raw.githubusercontent.com/ruiii/poi_theme_paper_dark/master/paperdark.css'
     papercyan: 'https://raw.githubusercontent.com/govizlora/theme-papercyan/master/papercyan.css'
+    paperblack: 'https://raw.githubusercontent.com/PHELiOX/paperblack/master/css/paperblack.css'
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
