@@ -93,17 +93,17 @@ getStatusStyle = (status) ->
 getStatusArray = (shipId) ->
   status = []
   # retreat status
-  status[0] = if shipId == escapeId || shipId == towId then true else false
+  status[0] = shipId == escapeId || shipId == towId
   # reparing
   status[1] = if shipId in _ndocks then true else false
   # special 1 locked phase 1
-  status[2] = if _ships[shipId].api_sally_area == 1 then true else false
+  status[2] = _ships[shipId].api_sally_area == 1
   # special 2 locked phase 2
-  status[3] = if _ships[shipId].api_sally_area == 2 then true else false
+  status[3] = _ships[shipId].api_sally_area == 2
   # special 3 locked phase 3
-  status[4] = if _ships[shipId].api_sally_area == 3 then true else false
+  status[4] =  _ships[shipId].api_sally_area == 3
   # special 3 locked phase 3
-  status[5] = if _ships[shipId].api_sally_area == 4 then true else false
+  status[5] = _ships[shipId].api_sally_area == 4
   return status
 
 ###
@@ -139,7 +139,7 @@ StatusLabelMini = React.createClass
     else if @props.label[4]? and @props.label[4]
       <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
     else
-      <Label bsStyle="default" style={border:"1px solid "}></Label>
+      <Label bsStyle="default" style={border: '1px solid'}></Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
