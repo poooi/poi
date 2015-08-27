@@ -44,10 +44,14 @@
 
 #MiniShip .ship-details .status-label {
   display: inline-block;
-  width: 5px;
-  height: 5px;
-  margin-right: 5px;
-  flex: none;
+  z-index: 100;
+  position: relative;
+  /*top: 5px;
+  left: 5px;*/
+  /*width: 5px;
+  height: 5px;*/
+  margin-left: 5px;
+  flex: 0.5;
   text-align: center;
   vertical-align: middle;
 }
@@ -65,7 +69,7 @@
   margin-right: 4px;*/
 }
 #MiniShip .ship-details .ship-item .ship-info .ship-hp {
-  flex: 1.5;
+  flex: 1;
   padding-right: 5px;
   align-self: flex-start;
 }

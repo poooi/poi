@@ -83,25 +83,68 @@ getCondStyle = (cond) ->
     '#FFF'
 
 getStatusStyle = (status) ->
-  flag = status.reduce (a, b) -> a or b
-  if flag? and flag
-    return {opacity: 0.4}
+  if status?
+    flag = status == 0 or status == 1 # retreat or repairing
+    if flag? and flag
+      return {opacity: 0.4}
   else
     return {}
 
-getStatusArray = (shipId) ->
-  status = []
+getShipStatus = (shipId) ->
+  status = -1
   # retreat status
-  status[0] = false
+  if shipId == escapeId || shipId == towId
+    return status = 0
   # reparing
-  status[1] = if shipId in _ndocks then true else false
-  # special 1
-  status[2] = false
-  # special 2
-  status[3] = false
-  # special 3
-  status[4] = false
+  if shipId in _ndocks
+    return status = 1
+  # special 1 locked phase 1
+  else if _ships[shipId].api_sally_area == 1
+    return status = 2
+  # special 2 locked phase 2
+  else if _ships[shipId].api_sally_area == 2
+    return status = 3
+  # special 3 locked phase 3
+  else if  _ships[shipId].api_sally_area == 3
+    return status = 4
+  # special 3 locked phase 3
+  else if _ships[shipId].api_sally_area == 4
+    return status = 5
   return status
+
+###
+# usage:
+# get a ship's all status using props, sorted by status priority
+# status array: [retreat, repairing, special1, special2, special3]
+# value: boolean
+
+      <Label bsStyle="info"><FontAwesome key={0} name='asterisk' /></Label>
+    else if @props.status[3]? and @props.status[3]
+      <Label bsStyle="primary"><FontAwesome key={0} name='heart' /></Label>
+    else if @props.status[4]? and @props.status[4]
+      <Label bsStyle="success"><FontAwesome key={0} name='leaf' /></Label>
+    else if @props.status[4]? and @props.status[4]
+      <Label bsStyle="warning"><FontAwesome key={0} name='rub' /></Label>
+
+###
+StatusLabelMini = React.createClass
+  shouldComponentUpdate: (nextProps, nextState) ->
+    not _.isEqual(nextProps.label, @props.label)
+  render: ->
+    if @props.label? and @props.label == 0
+      <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
+    else if @props.label? and @props.label == 1
+      <Label bsStyle="info"><FontAwesome key={0} name='wrench' /></Label>
+    else if @props.label? and @props.label == 2
+      <Label bsStyle="info"><FontAwesome key={0} name='lock' /></Label>
+    else if @props.label? and @props.label == 3
+      <Label bsStyle="primary"><FontAwesome key={0} name='lock' /></Label>
+    else if @props.label? and @props.label == 4
+      <Label bsStyle="success"><FontAwesome key={0} name='lock' /></Label>
+    else if @props.label? and @props.label == 5
+      <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
+    else
+      <Label bsStyle="default" style={border: '1px solid'}></Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
@@ -160,7 +203,7 @@ Slotitems = React.createClass
           <span>
             {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
-              {
+              &nbsp;&nbsp;{
                 if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
                   for j in [1..item.api_alv]
                     <strong key={j} style={color: '#3EAEFF'}>|</strong>
@@ -238,10 +281,41 @@ PaneBody = React.createClass
   condDynamicUpdateFlag: false
   getInitialState: ->
     cond: [0, 0, 0, 0, 0, 0]
+    label: [-1, -1, -1, -1, -1, -1]
+  updateLabels: ->
+    # refresh label
+    {label} = @state
+    for shipId, j in @props.deck.api_ship
+      continue if shipId == -1
+      ship = _ships[shipId]
+      status = getShipStatus shipId
+      label[j] = status
+    label
   onCondChange: (cond) ->
     condDynamicUpdateFlag = true
     @setState
       cond: cond
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
+    {label} = @state
+    updateflag = false
+    switch path
+      when '/kcsapi/api_port/port'
+        updateflag = true
+        label = @updateLabels()
+      when '/kcsapi/api_req_hensei/change'
+        updateflag = true
+        label = @updateLabels()
+      when '/kcsapi/api_req_nyukyo/start'
+        shipId = parseInt postBody.api_ship_id
+        if shipId in @props.deck.api_ship
+          i = @props.deck.api_ship.indexOf shipId
+          # status = getShipStatus shipId
+          label[i] = 1
+          updateflag = true
+    if updateflag
+      @setState
+        label: label
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.activeDeck is @props.deckIndex
   componentWillReceiveProps: (nextProps) ->
@@ -267,6 +341,11 @@ PaneBody = React.createClass
       cond[j] = ship.api_cond
     @setState
       cond: cond
+  componentDidMount: ->
+    window.addEventListener 'game.response', @handleResponse
+    label = @updateLabels()
+    @setState
+      label: label
   render: ->
     <div>
       <div className="fleet-name">
@@ -293,7 +372,6 @@ PaneBody = React.createClass
           ship = _ships[shipId]
           shipInfo = $ships[ship.api_ship_id]
           shipType = $shipTypes[shipInfo.api_stype].api_name
-          status = getStatusArray shipId
           <div className="ship-tile">
             <OverlayTrigger placement="top" overlay={
               <Popover className="ship-pop">
@@ -326,7 +404,7 @@ PaneBody = React.createClass
                 </div>
               </Popover>
             }>
-              <div className="ship-item" style={getStatusStyle status}>
+              <div className="ship-item" style={getStatusStyle @state.label[j]}>
                 <div className="div-col">
                   <div className="ship-info" >
                     <span className="ship-name">
@@ -335,10 +413,13 @@ PaneBody = React.createClass
                     <span className="ship-hp">
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
-                    <div style={flex: 0.8}>
+                    <div style={flex: 1}>
                       <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
                         ★{ship.api_cond}
                       </span>
+                    </div>
+                    <div className="status-label">
+                      <StatusLabelMini label={@state.label[j]}/>
                     </div>
                   </div>
                 </div>
