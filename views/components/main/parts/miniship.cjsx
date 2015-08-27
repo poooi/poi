@@ -71,16 +71,28 @@ getMaterialStyle = (percent) ->
     'success'
 
 getCondStyle = (cond) ->
-  if cond > 49
-    '#FCFA00'
-  else if cond < 20
-    '#DD514C'
-  else if cond < 30
-    '#F37B1D'
-  else if cond < 40
-    '#FFC880'
+  if window.isDarkTheme
+    if cond > 49
+      color: '#FFFF00'
+    else if cond < 20
+      color: '#DD514C'
+    else if cond < 30
+      color: '#F37B1D'
+    else if cond < 40
+      color: '#FFC880'
+    else
+      null
   else
-    '#FFF'
+    if cond > 49
+      textShadow: '0 0 3px #FFFF00'
+    else if cond < 20
+      textShadow: '0 0 3px #DD514C'
+    else if cond < 30
+      textShadow: '0 0 3px #F37B1D'
+    else if cond < 40
+      textShadow: '0 0 3px #FFC880'
+    else
+      null
 
 getStatusStyle = (status) ->
   if status?
@@ -144,7 +156,7 @@ StatusLabelMini = React.createClass
     else if @props.label? and @props.label == 5
       <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
     else
-      <Label bsStyle="default" style={border: '1px solid'}>　</Label>
+      <Label bsStyle="default" style={border: '1px solid', marginBottom: -1}>　</Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
@@ -414,7 +426,7 @@ PaneBody = React.createClass
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
                     <div className="flex" style={getStatusStyle @state.label[j]}>
-                      <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
+                      <span className="ship-cond" style={getCondStyle ship.api_cond}>
                         ★{ship.api_cond}
                       </span>
                     </div>

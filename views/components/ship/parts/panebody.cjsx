@@ -31,13 +31,13 @@ getCondStyle = (cond) ->
       null
   else
     if cond > 49
-      'text-shadow': '0 0 3px #FFFF00'
+      textShadow: '0 0 3px #FFFF00'
     else if cond < 20
-      'text-shadow': '0 0 3px #DD514C'
+      textShadow: '0 0 3px #DD514C'
     else if cond < 30
-      'text-shadow': '0 0 3px #F37B1D'
+      textShadow: '0 0 3px #F37B1D'
     else if cond < 40
-      'text-shadow': '0 0 3px #FFC880'
+      textShadow: '0 0 3px #FFC880'
     else
       null
 
