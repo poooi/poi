@@ -144,7 +144,7 @@ StatusLabelMini = React.createClass
     else if @props.label? and @props.label == 5
       <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
     else
-      <Label bsStyle="default" style={border: '1px solid'}></Label>
+      <Label bsStyle="default" style={border: '1px solid'}>　</Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
