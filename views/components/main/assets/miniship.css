@@ -41,7 +41,6 @@
   white-space: nowrap;
   /*margin-right: 15px;*/
 }
-
 #MiniShip .ship-details .status-label {
   display: inline-block;
   z-index: 100;
@@ -51,11 +50,17 @@
   /*width: 5px;
   height: 5px;*/
   margin-left: 5px;
+  margin-top: -1px;
   flex: 0.5;
   text-align: center;
   vertical-align: middle;
+  width: 20px;
 }
-
+#MiniShip .ship-details .status-label .label {
+  width: 20px;
+  padding: 3px 3px;
+  display: inline-block;
+}
 #MiniShip .ship-details .ship-item .ship-info {
   flex: none;
   font-size: 14px;
@@ -71,6 +76,7 @@
 #MiniShip .ship-details .ship-item .ship-info .ship-hp {
   flex: 1;
   padding-right: 5px;
+  padding-left: 11px;
   align-self: flex-start;
 }
 #MiniShip .ship-details .ship-item .ship-info .ship-type {
@@ -135,6 +141,12 @@
   display: flex;
   justify-content: space-between;
   margin: 5px 0;
+}
+#MiniShip .flex {
+  flex: 1;
+}
+#MiniShip .margin-top {
+  margin-top: 5px;
 }
 .ship-pop .slotitem-container {
   display :flex;

@@ -404,16 +404,16 @@ PaneBody = React.createClass
                 </div>
               </Popover>
             }>
-              <div className="ship-item" style={getStatusStyle @state.label[j]}>
+              <div className="ship-item">
                 <div className="div-col">
-                  <div className="ship-info" >
-                    <span className="ship-name">
+                  <div className="ship-info">
+                    <span className="ship-name" style={getStatusStyle @state.label[j]}>
                       {shipInfo.api_name}
                     </span>
-                    <span className="ship-hp">
+                    <span className="ship-hp" style={getStatusStyle @state.label[j]}>
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
-                    <div style={flex: 1}>
+                    <div className="flex" style={getStatusStyle @state.label[j]}>
                       <span className="ship-cond" style={color: getCondStyle ship.api_cond}>
                         ★{ship.api_cond}
                       </span>
@@ -423,7 +423,7 @@ PaneBody = React.createClass
                     </div>
                   </div>
                 </div>
-                <div className="div-col" style={marginTop: 5}>
+                <div className="div-col margin-top" style={getStatusStyle @state.label[j]}>
                   <div className="ship-info">
                     <span className="ship-lv-text">
                       Lv. {ship.api_lv} ({ship.api_exp[1]})
