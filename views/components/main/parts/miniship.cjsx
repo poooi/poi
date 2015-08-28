@@ -393,7 +393,7 @@ PaneBody = React.createClass
                   </div>
                   <div className="div-row">
                     <div className="div-col flex">
-                      <div className="div-row" style={marginTop: 5}>
+                      <div className="div-row top-space">
                         <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" />
                         <span style={marginLeft: 'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
                       </div>
@@ -403,7 +403,7 @@ PaneBody = React.createClass
                       </div>
                     </div>
                     <div className="div-col flex" style={marginLeft: 10}>
-                      <div className="div-row" style={marginTop: 5}>
+                      <div className="div-row top-space">
                         <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" />
                         <span style={marginLeft: 'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
                       </div>
@@ -435,7 +435,7 @@ PaneBody = React.createClass
                     </div>
                   </div>
                 </div>
-                <div className="div-col margin-top" style={getStatusStyle @state.label[j]}>
+                <div className="div-col top-space" style={getStatusStyle @state.label[j]}>
                   <div className="ship-info">
                     <span className="ship-lv-text">
                       Lv. {ship.api_lv} ({ship.api_exp[1]})

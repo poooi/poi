@@ -145,7 +145,7 @@
 #MiniShip .flex {
   flex: 1;
 }
-#MiniShip .margin-top {
+#MiniShip .top-space {
   margin-top: 5px;
 }
 .ship-pop .slotitem-container {
