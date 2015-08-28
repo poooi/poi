@@ -156,7 +156,7 @@ StatusLabelMini = React.createClass
     else if @props.label? and @props.label == 5
       <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
     else
-      <Label bsStyle="default" style={border: '1px solid', marginBottom: -1}>　</Label>
+      <Label bsStyle="default" style={opacity: 0}></Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
@@ -417,33 +417,31 @@ PaneBody = React.createClass
               </Popover>
             }>
               <div className="ship-item">
-                <div className="div-col">
-                  <div className="ship-info">
-                    <span className="ship-name" style={getStatusStyle @state.label[j]}>
-                      {shipInfo.api_name}
-                    </span>
+                <div className="ship-info">
+                  <span className="ship-name" style={getStatusStyle @state.label[j]}>
+                    {shipInfo.api_name}
+                  </span>
+                  <span className="ship-lv-text top-space" style={getStatusStyle @state.label[j]}>
+                    Lv. {ship.api_lv} ({ship.api_exp[1]})
+                  </span>
+                </div>
+                <div className="ship-stat">
+                  <div className="div-row">
                     <span className="ship-hp" style={getStatusStyle @state.label[j]}>
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
-                    <div className="flex" style={getStatusStyle @state.label[j]}>
+                    <div className="status-label">
+                      <StatusLabelMini label={@state.label[j]}/>
+                    </div>
+                    <div style={getStatusStyle @state.label[j]}>
                       <span className="ship-cond" style={getCondStyle ship.api_cond}>
                         ★{ship.api_cond}
                       </span>
                     </div>
-                    <div className="status-label">
-                      <StatusLabelMini label={@state.label[j]}/>
-                    </div>
                   </div>
-                </div>
-                <div className="div-col top-space" style={getStatusStyle @state.label[j]}>
-                  <div className="ship-info">
-                    <span className="ship-lv-text">
-                      Lv. {ship.api_lv} ({ship.api_exp[1]})
-                    </span>
-                    <span className="hp-progress">
-                      <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
-                    </span>
-                  </div>
+                  <span className="hp-progress top-space" style={getStatusStyle @state.label[j]}>
+                    <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
+                  </span>
                 </div>
               </div>
             </OverlayTrigger>
