@@ -221,11 +221,12 @@ PoiControl = React.createClass
     alwaysOnTop: false
   handleCapturePage: ->
     bound = $('kan-game webview').getBoundingClientRect()
+    realHeight = webviewWidth * 480 / 800
     rect =
       x: Math.ceil bound.left
-      y: Math.ceil bound.top
-      width: Math.floor bound.width
-      height: Math.floor bound.height
+      y: Math.ceil(bound.top + (bound.height - realHeight) / 2)
+      width: webviewWidth
+      height: Math.floor realHeight
     capturePageInMainWindow rect, (err, filename) ->
       if err?
         error __ 'Failed to save the screenshot'
