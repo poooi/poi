@@ -224,7 +224,7 @@ PoiControl = React.createClass
     realHeight = webviewWidth * 480 / 800
     rect =
       x: Math.ceil bound.left
-      y: Math.ceil(bound.top + (bound.height - realHeight) / 2)
+      y: Math.floor(bound.top + (bound.height - realHeight) / 2)
       width: webviewWidth
       height: Math.floor realHeight
     capturePageInMainWindow rect, (err, filename) ->
