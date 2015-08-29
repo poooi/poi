@@ -193,7 +193,7 @@ KdockPanel = React.createClass
                 <span className="kdock-name">
                   {@state.docks[i].name}
                 </span>
-                <Label className="kdock-timer" bsStyle="info">
+                <Label className="kdock-timer" bsStyle="primary">
                   {resolveTime @state.docks[i].countdown}
                 </Label>
               </div>
