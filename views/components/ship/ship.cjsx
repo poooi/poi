@@ -164,6 +164,8 @@ module.exports =
                 deck={@state.decks[i]}
                 activeDeck={@state.activeDeck}
                 deckName={@state.names[i]}
+                escapeId={escapeId}
+                towId={towId}
               />
             </div>
         }
