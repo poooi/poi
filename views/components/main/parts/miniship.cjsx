@@ -395,7 +395,7 @@ PaneBodyMini = React.createClass
           ship = _ships[shipId]
           shipInfo = $ships[ship.api_ship_id]
           shipType = $shipTypes[shipInfo.api_stype].api_name
-          <div className="ship-tile">
+          <div key={j} className="ship-tile">
             <OverlayTrigger placement="top" overlay={
               <Popover className="ship-pop">
                 <div className="item-name">
