@@ -110,6 +110,9 @@ getShipStatus = (shipId) ->
   # reparing
   if shipId in _ndocks
     return status = 1
+  # supply
+  else if (Math.min _ships[shipId].api_fuel / _ships[shipId].api_fuel_max * 100, _ships[shipId].api_bull / _ships[shipId].api_bull_max * 100) < 100
+    return status = 6
   # special 1 locked phase 1
   else if _ships[shipId].api_sally_area == 1
     return status = 2
@@ -141,7 +144,7 @@ getShipStatus = (shipId) ->
 ###
 StatusLabelMini = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
-    not _.isEqual(nextProps.label, @props.label)
+    not (_.isEqual(nextProps.label, @props.label) and _.isEqual(nextProps.supply, @props.supply))
   render: ->
     if @props.label? and @props.label == 0
       <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
@@ -155,6 +158,8 @@ StatusLabelMini = React.createClass
       <Label bsStyle="success"><FontAwesome key={0} name='lock' /></Label>
     else if @props.label? and @props.label == 5
       <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
+    else if @props.label? and @props.label == 6
+      <Label bsStyle={getMaterialStyle @props.supply}>{Math.round @props.supply}</Label>
     else
       <Label bsStyle="default" style={opacity: 0}></Label>
 
@@ -212,7 +217,7 @@ Slotitems = React.createClass
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container">
           <img key={itemId} src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
-          <span>
+          <span className="slotitem-name">
             {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
               &nbsp;&nbsp;{
@@ -289,7 +294,7 @@ TopAlert = React.createClass
       <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
     </div>
 
-PaneBody = React.createClass
+PaneBodyMini = React.createClass
   condDynamicUpdateFlag: false
   getInitialState: ->
     cond: [0, 0, 0, 0, 0, 0]
@@ -316,6 +321,12 @@ PaneBody = React.createClass
         updateflag = true
         label = @updateLabels()
       when '/kcsapi/api_req_hensei/change'
+        updateflag = true
+        label = @updateLabels()
+      when '/kcsapi/api_req_hokyu/charge'
+        updateflag = true
+        label = @updateLabels()
+      when '/kcsapi/api_req_map/next'
         updateflag = true
         label = @updateLabels()
       when '/kcsapi/api_req_nyukyo/start'
@@ -387,51 +398,33 @@ PaneBody = React.createClass
           <div className="ship-tile">
             <OverlayTrigger placement="top" overlay={
               <Popover className="ship-pop">
-                <div className="div-col">
-                  <div className="item-name">
-                    <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
-                  </div>
-                  <div className="div-row">
-                    <div className="div-col flex">
-                      <div className="div-row top-space">
-                        <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" />
-                        <span style={marginLeft: 'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
-                      </div>
-                      <div>
-                        <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                     now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
-                      </div>
-                    </div>
-                    <div className="div-col flex" style={marginLeft: 10}>
-                      <div className="div-row top-space">
-                        <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" />
-                        <span style={marginLeft: 'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
-                      </div>
-                      <div>
-                        <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                     now={ship.api_bull / shipInfo.api_bull_max * 100} />
-                      </div>
-                    </div>
-                  </div>
+                <div className="item-name">
+                  <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
                 </div>
               </Popover>
             }>
               <div className="ship-item">
-                <div className="ship-info">
-                  <span className="ship-name" style={getStatusStyle @state.label[j]}>
-                    {shipInfo.api_name}
-                  </span>
-                  <span className="ship-lv-text top-space" style={getStatusStyle @state.label[j]}>
-                    Lv. {ship.api_lv} ({ship.api_exp[1]})
-                  </span>
-                </div>
+                <OverlayTrigger placement='left' overlay={
+                  <Tooltip>
+                    Next. {ship.api_exp[1]}
+                  </Tooltip>
+                }>
+                  <div className="ship-info">
+                    <span className="ship-name" style={getStatusStyle @state.label[j]}>
+                      {shipInfo.api_name}
+                    </span>
+                    <span className="ship-lv-text top-space" style={getStatusStyle @state.label[j]}>
+                      Lv. {ship.api_lv}
+                    </span>
+                  </div>
+                </OverlayTrigger>
                 <div className="ship-stat">
                   <div className="div-row">
                     <span className="ship-hp" style={getStatusStyle @state.label[j]}>
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
                     <div className="status-label">
-                      <StatusLabelMini label={@state.label[j]}/>
+                      <StatusLabelMini label={@state.label[j]} supply={Math.min ship.api_fuel / shipInfo.api_fuel_max * 100, ship.api_bull / shipInfo.api_bull_max * 100} />
                     </div>
                     <div style={getStatusStyle @state.label[j]}>
                       <span className="ship-cond" style={getCondStyle ship.api_cond}>
@@ -542,7 +535,7 @@ module.exports =
         {
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
-              <PaneBody
+              <PaneBodyMini
                 key={i}
                 deckIndex={i}
                 deck={@state.decks[i]}
