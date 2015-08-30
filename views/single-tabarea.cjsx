@@ -1,5 +1,6 @@
 path = require 'path-extra'
 glob = require 'glob'
+{__} = require 'i18n'
 {_, React, ReactBootstrap, FontAwesome} = window
 {TabbedArea, TabPane, DropdownButton} = ReactBootstrap
 
@@ -82,11 +83,8 @@ ControlledTabArea = React.createClass
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
+    window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
-    ### FIXME
-    # Animation disabled
-    # Relate to https://github.com/react-bootstrap/react-bootstrap/issues/287
-    ###
     <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
     {
       [
@@ -105,7 +103,7 @@ ControlledTabArea = React.createClass
                           if @state.key >= components.length and @state.key < 1000
                             <span>{plugins[@state.key - components.length].displayName}</span>
                           else
-                            <span><FontAwesome name='sitemap' /> 插件</span>
+                            <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
                         }
                         navItem={true}>
         {

@@ -1,6 +1,7 @@
 {$, $$, layout} = window
 {config, proxy} = window
 {setBounds, getBounds} = remote.require './lib/utils'
+WindowManager = remote.require './lib/window'
 
 changeBounds = ->
   bound = getBounds()
@@ -31,3 +32,14 @@ window.addEventListener 'layout.change', (e) ->
   {layout} = e.detail
   changeBounds()
   window._layout = require "./layout.#{layout}"
+
+document.addEventListener 'DOMContentLoaded', ->
+  # Create new window for new window in webview
+  $('kan-game webview').addEventListener 'new-window', (e) ->
+    exWindow = WindowManager.createWindow
+      realClose: true
+      navigatable: true
+      'node-integration': false
+    exWindow.loadUrl e.url
+    exWindow.show()
+    e.preventDefault()

@@ -1,3 +1,3 @@
 module.exports =
-  Slotitems: require './slotitems.cjsx'
-  PaneBody: require './panebody.cjsx'
+  Slotitems: window.hack.ShipViewSlotitems || require './slotitems.cjsx'
+  PaneBody: window.hack.ShipViewPaneBody ||  require './panebody.cjsx'

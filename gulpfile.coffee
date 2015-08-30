@@ -1,5 +1,5 @@
-POI_VERSION = '3.0.0'
-ELECTRON_VERSION = '0.30.0'
+POI_VERSION = '3.4.0'
+ELECTRON_VERSION = '0.30.5'
 SYSTEM_BIT =
   win32: 'ia32'
   linux: 'x64'
@@ -36,10 +36,12 @@ gulp.task 'theme', async ->
     united: 'https://bootswatch.com/united/bootstrap.css'
     lumendark: 'https://raw.githubusercontent.com/PHELiOX/poi-theme-lumendark/master/lumendark.css'
     paperdark: 'https://raw.githubusercontent.com/ruiii/poi_theme_paper_dark/master/paperdark.css'
+    papercyan: 'https://raw.githubusercontent.com/govizlora/theme-papercyan/master/papercyan.css'
+    paperblack: 'https://raw.githubusercontent.com/PHELiOX/paperblack/master/css/paperblack.css'
   for theme, url of themes
     dir = path.join(__dirname, 'assets', 'themes', theme, 'css')
     fs.ensureDirSync dir
-    log "Downloding #{theme} theme."
+    log "Downloading #{theme} theme."
     [res, data] = yield request.getAsync url,
       encoding: null
     yield fs.writeFileAsync path.join(dir, "#{theme}.css"), data
@@ -54,6 +56,7 @@ gulp.task 'flash', async ->
   fs.ensureDirSync dir
   try
     yield fs.accessAsync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip"), fs.R_OK
+    yield fs.removeSync path.join(path.tempdir(), "flashplayer-#{PLATFORM}.zip")
   catch e
     log "Downloading flash plugin #{PLATFORM}"
     [response, body] = yield requestAsync

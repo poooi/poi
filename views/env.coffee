@@ -69,34 +69,29 @@ window.error = (msg) ->
       message: msg
       type: 'danger'
   window.dispatchEvent event
+
 window.notify = (msg, options) ->
   # Basic notification settings
   enabled = config.get('poi.notify.enabled', true)
-  sound = config.get('poi.notify.sound', true)
+  volume = config.get('poi.notify.volume', 1.0)
   audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
   # Advanced notification settings
   if enabled
     switch options?.type
       when 'construction'
         enabled = config.get('poi.notify.construction.enabled', enabled)
-      when 'expedition'
-        enabled = config.get('poi.notify.expedition.enabled', enabled)
-      when 'repair'
-        enabled = config.get('poi.notify.repair.enabled', enabled)
-      when 'morale'
-        enabled = config.get('poi.notify.morale.enabled', enabled)
-      else
-        enabled = config.get('poi.notify.others.enabled', enabled)
-  if sound
-    switch options?.type
-      when 'construction'
         audio = config.get('poi.notify.construction.audio', audio)
       when 'expedition'
+        enabled = config.get('poi.notify.expedition.enabled', enabled)
         audio = config.get('poi.notify.expedition.audio', audio)
       when 'repair'
+        enabled = config.get('poi.notify.repair.enabled', enabled)
         audio = config.get('poi.notify.repair.audio', audio)
       when 'morale'
+        enabled = config.get('poi.notify.morale.enabled', enabled)
         audio = config.get('poi.notify.morale.audio', audio)
+      else
+        enabled = config.get('poi.notify.others.enabled', enabled)
   # Send desktop notification
   if !enabled
     return
@@ -104,7 +99,7 @@ window.notify = (msg, options) ->
     notifier.notify
       title: 'poi'
       message: msg
-      icon: options?.icon || path.join(ROOT, 'assets', 'icons', 'icon.png')
+      icon: options?.icon || require('path-extra').join(ROOT, 'assets', 'icons', 'icon.png')
       sound: false
   else
     new Notification 'poi',
@@ -113,9 +108,10 @@ window.notify = (msg, options) ->
   # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
-  if !sound
+  if volume < 0.00001
     return
   sound = new Audio(audio)
+  sound.volume = volume
   sound.play()
 modals = []
 window.modalLocked = false
@@ -145,6 +141,7 @@ window.CONST = Object.remoteClone remote.require './lib/constant'
 # User configs
 window.layout = config.get 'poi.layout', 'horizonal'
 window.webviewWidth = config.get 'poi.webview.width', -1
+window.language = config.get 'poi.language', navigator.language
 
 # Custom theme
 window.theme = config.get 'poi.theme', '__default__'
@@ -174,6 +171,30 @@ proxy.addListener 'game.on.request', (method, path, body) ->
       body: body
   window.dispatchEvent event
 
+start2Version = 0
+initStart2Value = ->
+  if localStorage.start2Version?
+    start2Version = localStorage.start2Version
+  if localStorage.start2Body?
+    body = JSON.parse localStorage.start2Body
+    window.$ships = []
+    $ships[ship.api_id] = ship for ship in body.api_mst_ship
+    window.$shipTypes = []
+    $shipTypes[stype.api_id] = stype for stype in body.api_mst_stype
+    window.$slotitems = []
+    $slotitems[slotitem.api_id] = slotitem for slotitem in body.api_mst_slotitem
+    window.$slotitemTypes = []
+    $slotitemTypes[slotitemtype.api_id] = slotitemtype for slotitemtype in body.api_mst_slotitem_equiptype
+    window.$mapareas = []
+    $mapareas[maparea.api_id] = maparea for maparea in body.api_mst_maparea
+    window.$maps = []
+    $maps[map.api_id] = map for map in body.api_mst_mapinfo
+    window.$missions = []
+    $missions[mission.api_id] = mission for mission in body.api_mst_mission
+    window.$useitems = []
+    $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
+initStart2Value()
+
 responses = []
 locked = false
 resolveResponses = ->
@@ -189,9 +210,13 @@ resolveResponses = ->
     postBody = Object.remoteClone postBody
     # Delete api_token
     delete postBody.api_token if postBody?.api_token?
+    # Fix api
+    body.api_level = parseInt body.api_level if body?.api_level?
+    body.api_member_lv = parseInt body.api_member_lv if body?.api_member_lv?
     switch path
       # Game datas prefixed by $
       when '/kcsapi/api_start2'
+        start2Version += 1
         window.$ships = []
         $ships[ship.api_id] = ship for ship in body.api_mst_ship
         window.$shipTypes = []
@@ -208,6 +233,10 @@ resolveResponses = ->
         $missions[mission.api_id] = mission for mission in body.api_mst_mission
         window.$useitems = []
         $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
+        # updating start2Body while avoiding body from being updated by multi-plugins
+        if not localStorage.start2Version? or start2Version > localStorage.start2Version
+          localStorage.start2Version = start2Version
+          localStorage.start2Body = JSON.stringify body
       # User datas prefixed by _
       when '/kcsapi/api_get_member/basic'
         window._teitokuLv = body.api_level
@@ -332,10 +361,12 @@ resolveResponses = ->
       when '/kcsapi/api_req_nyukyo/speedchange'
         shipId = _ndocks[postBody.api_ndock_id - 1]
         _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
+        _ships[shipId].api_cond = Math.max(40, _ships[shipId].api_cond)
       when '/kcsapi/api_req_nyukyo/start'
         if postBody.api_highspeed == '1'
           shipId = parseInt postBody.api_ship_id
           _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
+          _ships[shipId].api_cond = Math.max(40, _ships[shipId].api_cond)
       when '/kcsapi/api_req_practice/battle_result'
         window._teitokuLv = body.api_member_lv
       when '/kcsapi/api_req_sortie/battleresult'

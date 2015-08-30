@@ -1,0 +1,276 @@
+###
+# Daily
+###
+201: # 敵艦隊を撃破せよ！ 获得胜利1次
+  type: 2
+  "battle_win":
+    description: "勝利"
+    required: 1
+    init: 0
+216: # 敵艦隊主力を撃滅せよ！ 进行战斗1次
+  type: 2
+  "battle":
+    description: "作戰"
+    required: 1
+    init: 0
+210: # 敵艦隊を10回邀撃せよ！ 进行战斗10次
+  type: 2
+  "battle":
+    description: "作戰"
+    required: 10
+    init: 0
+218: # 敵補給艦を3隻撃沈せよ！ 击沉补给舰3只
+  type: 2
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 3
+    init: 0
+226: # 南西諸島海域の制海権を握れ！ 获得2-1～2-5 BOSS战胜利5次
+  type: 2
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [21, 22, 23, 24, 25]
+    required: 5
+    init: 0
+230: # 敵潜水艦を制圧せよ！ 击沉潜水舰6只
+  type: 2
+  "sinking":
+    description: "敵潜水艦"
+    shipType: [13]
+    required: 6
+    init: 0
+303: # 「演習」で練度向上！ 进行演习3次
+  type: 2
+  "practice":
+    description: "演習"
+    required: 3
+    init: 0
+304: # 「演習」で他提督を圧倒せよ！ 演习获得胜利5次
+  type: 2
+  "practice_win":
+    description: "演習勝利"
+    required: 5
+    init: 0
+402: # 「遠征」を３回成功させよう！ 远征成功3次
+  type: 2
+  "mission_success":
+    description: "遠征"
+    required: 3
+    init: 0
+403: # 「遠征」を１０回成功させよう！ 远征成功10次
+  type: 2
+  "mission_success":
+    description: "遠征"
+    required: 10
+    init: 0
+503: # 艦隊大整備！ 入渠5次
+  type: 2
+  "repair":
+    description: "入渠"
+    required: 5
+    init: 0
+504: # 艦隊酒保祭り！ 补给15次
+  type: 2
+  "supply":
+    description: "補給"
+    required: 15
+    init: 0
+605: # 新装備「開発」指令 开发1次
+  type: 2
+  "create_item":
+    description: "開発"
+    required: 1
+    init: 0
+606: # 新造艦「建造」指令 建造1次
+  type: 2
+  "create_ship":
+    description: "建造"
+    required: 1
+    init: 0
+607: # 装備「開発」集中強化！ 开发3次
+  type: 2
+  "create_item":
+    description: "開発"
+    required: 4
+    init: 1
+608: # 艦娘「建造」艦隊強化！ 建造3次
+  type: 2
+  "create_ship":
+    description: "建造"
+    required: 4
+    init: 1
+609: # 軍縮条約対応！ 解体2次
+  type: 2
+  "destroy_ship":
+    description: "解体"
+    required: 2
+    init: 0
+619: # 装備の改修強化 改修1次
+  type: 2
+  "remodel_item":
+    description: "改修"
+    required: 1
+    init: 0
+702: # 艦の「近代化改修」を実施せよ！ 近代化改修2次
+  type: 2
+  "remodel_ship":
+    description: "近代化改修"
+    required: 2
+    init: 0
+###
+# Someday
+###
+211: # 敵空母を３隻撃沈せよ！ 击沉轻母或空母2次
+  type: 4
+  "sinking":
+    description: "敵空母"
+    shipType: [7, 11]
+    required: 3
+    init: 0
+212: # 敵輸送船団を叩け！ 击沉补给舰5只
+  type: 5
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 5
+    init: 0
+###
+# Weekly
+###
+214: # あ号作戦 获得S胜利6次, 获得BOSS战胜利12次, 进行BOSS战24次, 进行战斗36次
+  type: 3
+  "battle_rank_s":
+    description: "S勝利"
+    required: 6
+    init: 0
+  "battle_boss_win":
+    description: "BOSS戰勝利"
+    required: 12
+    init: 0
+  "battle_boss":
+    description: "BOSS戰"
+    required: 24
+    init: 0
+  "battle":
+    description: "作戰"
+    required: 36
+    init: 0
+220: # い号作戦 击沉空母/轻母20只
+  type: 3
+  "sinking":
+    description: "敵空母"
+    shipType: [7, 11]
+    required: 20
+    init: 0
+213: # 海上通商破壊作戦 击沉补给舰20只
+  type: 3
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 20
+    init: 0
+221: # ろ号作戦 击沉补给舰50只
+  type: 3
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 50
+    init: 0
+228: # 海上護衛戦 击沉潜水舰15只
+  type: 3
+  "sinking":
+    description: "敵潜水艦"
+    shipType: [13]
+    required: 15
+    init: 0
+229: # 敵東方艦隊を撃滅せよ！ 获得4-1～4-5 BOSS战胜利12次
+  type: 3
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [41, 42, 43, 44, 45]
+    required: 12
+    init: 0
+241: # 敵北方艦隊主力を撃滅せよ！ 获得3-3～3-5 BOSS战胜利5次
+  type: 3
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [33, 34, 35]
+    required: 5
+    init: 0
+242: # 敵東方中枢艦隊を撃破せよ！ 获得4-4 BOSS战胜利1次
+  type: 3
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [44]
+    required: 1
+    init: 0
+243: # 南方海域珊瑚諸島沖の制空権を握れ！ 获得5-2 BOSS战S胜利2次
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "勝利"
+    maparea: [52]
+    required: 2
+    init: 0
+261: # 海上輸送路の安全確保に努めよ！ 获得1-5 BOSS战A胜利以上3次
+  type: 3
+  "battle_boss_win_rank_a":
+    description: "勝利"
+    maparea: [15]
+    required: 3
+    init: 0
+302: # 大規模演習 获得胜利20次
+  type: 3
+  "practice_win":
+    description: "演習勝利"
+    required: 20
+    init: 0
+404: # 大規模遠征作戦、発令！ 获得成功30次
+  type: 3
+  "mission_success":
+    description: "遠征"
+    required: 30
+    init: 0
+410: # 南方への輸送作戦を成功させよ！ 获得远征37/38成功1次
+  type: 3
+  "mission_success":
+    description: "遠征"
+    mission: ['東京急行', '東京急行(弐)']
+    required: 1
+    init: 0
+411: # 南方への鼠輸送を継続実施せよ！ 获得远征37/38成功6次
+  type: 3
+  "mission_success":
+    description: "遠征"
+    mission: ['東京急行', '東京急行(弐)']
+    required: 7
+    init: 1
+613: # 資源の再利用 进行废弃24次
+  type: 3
+  "destory_item":
+    description: "廃棄"
+    required: 24
+    init: 0
+703: # 「近代化改修」を進め、戦備を整えよ！ 进行舰船近代化改修15次
+  type: 3
+  "remodel_ship":
+    description: "近代化改修"
+    required: 15
+    init: 0
+###
+# Monthly
+###
+256: # 潜水艦隊」出撃せよ！ 获得6-1 BOSS战S胜利3次
+  type: 6
+  "battle_boss_win_rank_s":
+    description: "勝利"
+    maparea: [61]
+    required: 3
+    init: 0
+265: # 海上護衛強化月間 获得1-5 BOSS战A胜利以上10次
+  type: 6
+  "battle_boss_win_rank_a":
+    description: "勝利"
+    maparea: [15]
+    required: 10
+    init: 0

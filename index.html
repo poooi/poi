@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <title>poi</title>
   <link rel="stylesheet" id="bootstrap-css" href="./components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="./components/font-awesome/css/font-awesome.min.css">
@@ -9,6 +10,7 @@
   <script>
     require('coffee-script/register');
     require('./views/env');
+    require('./views/battle-env')
     require('./views/layout');
   </script>
 </head>
@@ -22,6 +24,7 @@
       <hr>
       <poi-info>
         <poi-alert></poi-alert>
+        <poi-map-reminder></poi-map-reminder>
         <poi-control></poi-control>
       </poi-info>
       <hr>

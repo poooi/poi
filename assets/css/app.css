@@ -25,6 +25,9 @@ kan-game poi-info .alert {
   margin-bottom: 0px;
   height: 100%;
 }
+kan-game poi-map-reminder .alert {
+  width: 120px;
+}
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
   cursor: default;
@@ -74,7 +77,7 @@ poi-control {
   height: 100%;
 }
 poi-control .btn-sm {
-  height: 100%;
+  height: 28px;
   border-radius: 0px;
   border-width: 2px;
   padding: 2px 7px;
