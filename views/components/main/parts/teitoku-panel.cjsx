@@ -23,7 +23,19 @@ totalExp = [
 
 getHeader = (state) ->
   if state.nickname?
-    return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　#{__ "Ships"}：#{state.shipCount} / #{state.maxChara}　#{__ "Equipment"}：#{state.slotitemCount} / #{state.maxSlotitem}"
+    return (
+      <div>
+        <OverlayTrigger placement="bottom" overlay={
+            if state.level == 120
+              <Tooltip>Next. {state.nextExp}</Tooltip>
+            else
+              <Tooltip>Total. {state.exp}</Tooltip>
+          }>
+          <span>Lv. {state.level}</span>
+        </OverlayTrigger>
+        {' ' + state.nickname} [{rankName[state.rank]}]　{__ 'Ships'}: {state.shipCount} / {state.maxChara}　{__ 'Equipment'}: {state.slotitemCount} / {state.maxSlotitem}
+      </div>
+    )
   else
     return "#{__ 'Admiral [Not logged in]'}　#{__ "Ships"}：0 / 0　#{__ "Equipment"}：0 / 0"
 

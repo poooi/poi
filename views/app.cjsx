@@ -180,7 +180,7 @@ ControlledTabArea =
 PoiAlert = React.createClass
   getInitialState: ->
     message: __ 'Waiting response...'
-    type: 'success'
+    type: 'default'
   handleAlert: (e) ->
     @setState
       message: e.detail.message
@@ -431,12 +431,13 @@ window.onbeforeunload = (e) ->
 window.addEventListener 'game.request', (e) ->
   {method} = e.detail
   resPath = e.detail.path
-  log "#{__ 'Requesting'} #{method} #{resPath}"
 window.addEventListener 'game.response', (e) ->
   {method, body, postBody} = e.detail
   resPath = e.detail.path
   console.log [resPath, body, postBody] if process.env.DEBUG?
-  success "#{__ 'Hit'} #{method} #{resPath}"
+  log "#{__ 'Hit'} #{method} #{resPath}"
+window.addEventListener 'game.start', (e) ->
+  log 'poi 正常运行中'
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
   error __n 'Network error, Retrying %s time', 'Network error, Retrying %s times', counter

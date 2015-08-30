@@ -43,7 +43,7 @@ window.log = (msg) ->
     cancelable: true
     detail:
       message: msg
-      type: 'info'
+      type: 'default'
   window.dispatchEvent event
 window.success = (msg) ->
   event = new CustomEvent 'poi.alert',
