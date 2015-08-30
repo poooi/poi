@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "4.0.0",
+  "version": "4.0.0-staging.0",
   "description": "KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
     "cson": "^3.0.1",
-    "fs-extra": "^0.23.1",
+    "fs-extra": "^0.24.0",
     "glob": "^5.0.14",
     "header-case-normalizer": "^1.0.2",
     "i18n": "^0.5.0",
@@ -38,8 +38,8 @@
     "path-extra": "^1.0.3",
     "react": "^0.13.3",
     "react-bootstrap": "git+https://github.com/magicae/react-bootstrap.git",
-    "react-fontawesome": "^0.2.5",
-    "request": "^2.60.0",
+    "react-fontawesome": "^0.3.2",
+    "request": "^2.61.0",
     "shadowsocks": "git+https://github.com/magicae/shadowsocks-nodejs.git",
     "socks5-client": "^1.1.0",
     "socks5-http-client": "^1.0.1",
