@@ -31,11 +31,14 @@
   /*padding: 8px;*/
   width: 100%;
 }
-#MainView .panel-container .ndock-panel,
-#MainView .panel-container .kdock-panel,
-#MainView .panel-container .mission-panel,
-#MainView .panel-container .task-panel {
-  flex: none;
+#MainView .ndock-panel,
+#MainView .kdock-panel,
+#MainView .mission-panel,
+#MainView .task-panel,
+#MainView .teitoku-panel,
+#MainView .resource-panel {
+  white-space: nowrap;
+  overflow: hidden;
   /*width: 49%;*/
 }
 #MainView .panel-item {

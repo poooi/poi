@@ -23,10 +23,7 @@ totalExp = [
 
 getHeader = (state) ->
   if state.nickname?
-    if state.level == 120
-      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　#{__ "Ships"}：#{state.shipCount} / #{state.maxChara}　#{__ "Equipment"}：#{state.slotitemCount} / #{state.maxSlotitem}"
-    else
-      return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　#{__ "Ships"}：#{state.shipCount} / #{state.maxChara}　#{__ "Equipment"}：#{state.slotitemCount} / #{state.maxSlotitem}"
+    return "Lv. #{state.level} #{state.nickname} [#{rankName[state.rank]}]　#{__ "Ships"}：#{state.shipCount} / #{state.maxChara}　#{__ "Equipment"}：#{state.slotitemCount} / #{state.maxSlotitem}"
   else
     return "#{__ 'Admiral [Not logged in]'}　#{__ "Ships"}：0 / 0　#{__ "Equipment"}：0 / 0"
 
@@ -129,7 +126,10 @@ TeitokuPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
   render: ->
     <Panel bsStyle="default" className="teitoku-panel">
-      <OverlayTrigger placement="bottom" overlay={<Tooltip>Next. {@state.nextExp}</Tooltip>}>
+      <OverlayTrigger placement="bottom" overlay={if @state.level == 120
+                                                    <Tooltip>Exp. {@state.exp}</Tooltip>
+                                                  else
+                                                    <Tooltip>Next. {@state.nextExp}</Tooltip>}>
         <div>
           {getHeader @state}
         </div>
