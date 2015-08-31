@@ -211,7 +211,7 @@ PoiMapReminder = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="default">{@state.battling}</Alert>
+    <Alert bsStyle="default"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
