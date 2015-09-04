@@ -118,5 +118,10 @@
   "LOS": "索敌",
   "Autumn": "秋式",
   "Old": "旧式",
-  "Repair Time": "维修时间"
+  "Repair Time": "维修时间",
+  "Ready": "准备完成",
+  "Retreated": "退避",
+  "Repairing": "修理中",
+  "Resupply needed": "需要补给",
+  "Ship tag: %s": "出击限定: %s"
 }
