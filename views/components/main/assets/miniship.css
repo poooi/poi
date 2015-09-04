@@ -43,7 +43,7 @@
   /*margin-right: 15px;*/
 }
 #MiniShip .ship-details .ship-item .ship-info {
-  flex: 3;
+  flex: 1;
   font-size: 14px;
   display: flex;
   flex-flow: column nowrap;
@@ -67,7 +67,7 @@
   overflow: hidden;
 }
 #MiniShip .ship-details .ship-item .ship-stat {
-  flex: 3;
+  flex: 2;
   font-size: 14px;
   display: flex;
   flex-flow: column nowrap;
