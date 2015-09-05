@@ -144,22 +144,36 @@ getShipStatus = (shipId) ->
 ###
 StatusLabelMini = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
-    not (_.isEqual(nextProps.label, @props.label) and _.isEqual(nextProps.supply, @props.supply))
+    not _.isEqual(nextProps.label, @props.label)
   render: ->
     if @props.label? and @props.label == 0
-      <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Retreated'}</Tooltip>}>
+        <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
+      </OverlayTrigger>
     else if @props.label? and @props.label == 1
-      <Label bsStyle="info"><FontAwesome key={0} name='wrench' /></Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Repairing'}</Tooltip>}>
+        <Label bsStyle="info"><FontAwesome key={0} name='wrench' /></Label>
+      </OverlayTrigger>
     else if @props.label? and @props.label == 2
-      <Label bsStyle="info"><FontAwesome key={0} name='lock' /></Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E1, E2, E7'}</Tooltip>}>
+        <Label bsStyle="info"><FontAwesome key={0} name='tag' /></Label>
+      </OverlayTrigger>
     else if @props.label? and @props.label == 3
-      <Label bsStyle="primary"><FontAwesome key={0} name='lock' /></Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E3, E6, E7'}</Tooltip>}>
+        <Label bsStyle="primary"><FontAwesome key={0} name='tag' /></Label>
+      </OverlayTrigger>
     else if @props.label? and @props.label == 4
-      <Label bsStyle="success"><FontAwesome key={0} name='lock' /></Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E4, E7'}</Tooltip>}>
+        <Label bsStyle="success"><FontAwesome key={0} name='tag' /></Label>
+      </OverlayTrigger>
     else if @props.label? and @props.label == 5
-      <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E5'}</Tooltip>}>
+        <Label bsStyle="warning"><FontAwesome key={0} name='tag' /></Label>
+      </OverlayTrigger>
     else if @props.label? and @props.label == 6
-      <Label bsStyle={getMaterialStyle @props.supply}>{Math.round @props.supply}</Label>
+      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Resupply needed'}</Tooltip>}>
+        <Label bsStyle="warning"><FontAwesome key={0} name='database' /></Label>
+      </OverlayTrigger>
     else
       <Label bsStyle="default" style={opacity: 0}></Label>
 
@@ -404,7 +418,7 @@ PaneBodyMini = React.createClass
               </Popover>
             }>
               <div className="ship-item">
-                <OverlayTrigger placement='left' overlay={
+                <OverlayTrigger placement='top' overlay={
                   <Tooltip>
                     Next. {ship.api_exp[1]}
                   </Tooltip>
@@ -424,7 +438,7 @@ PaneBodyMini = React.createClass
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
                     <div className="status-label">
-                      <StatusLabelMini label={@state.label[j]} supply={Math.min ship.api_fuel / shipInfo.api_fuel_max * 100, ship.api_bull / shipInfo.api_bull_max * 100} />
+                      <StatusLabelMini label={@state.label[j]} />
                     </div>
                     <div style={getStatusStyle @state.label[j]}>
                       <span className="ship-cond" style={getCondStyle ship.api_cond}>
