@@ -197,10 +197,10 @@ getTyku = (deck) ->
       # Alv
       if item.api_type[3] == 6 && item.api_alv > 0 && item.api_alv <= 7
         alvTyku += [0, 1, 4, 6, 11, 16, 17, 25][item.api_alv]
-      else if item.api_type[3] in [7, 8] && item.api_alv == 7
-        alvTyku += 3
-      else if item.api_type[3] == 10 && item.api_type[2] == 11 && item.api_alv == 7
-        alvTyku += 9
+      else if item.api_type[3] in [7, 8] && item.api_alv > 0 && item.api_alv <= 7
+        alvTyku += [0, 1, 1, 1, 2, 2, 2, 3][item.api_alv]
+      else if item.api_type[3] == 10 && item.api_type[2] == 11 && item.api_alv > 0 && item.api_alv <= 7
+        alvTyku += [0, 1, 2, 2, 4, 4, 4, 9][item.api_alv]
   totalTyku = basicTyku + alvTyku
 
   basic: basicTyku
