@@ -99,8 +99,8 @@ module.exports =
           fs.ensureDirSync darwinPath
           filename = path.join path.homedir(), 'Pictures', 'Poi', "#{date}.png"
         else
-          fs.ensureDirSync path.join global.EXROOT, 'screenshots'
-          filename = path.join global.EXROOT, 'screenshots', "#{date}.png"
+          fs.ensureDirSync path.join global.APPDATA_PATH, 'screenshots'
+          filename = path.join global.APPDATA_PATH, 'screenshots', "#{date}.png"
         fs.writeFile filename, buf, (err) ->
           callback err, filename
       catch e
