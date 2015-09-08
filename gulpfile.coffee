@@ -11,8 +11,6 @@ BUILD_ROOT = path.join(path.tempdir(), "poi-v#{POI_VERSION}-#{PLATFORM}-#{SYSTEM
 
 Promise = require 'bluebird'
 gulp = require 'gulp'
-del = Promise.promisifyAll require 'del'
-delAsync = Promise.promisify del
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
 fs = Promise.promisifyAll require 'fs-extra'
