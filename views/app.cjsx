@@ -297,13 +297,13 @@ PoiControl = React.createClass
         <Button onClick={@handleJustifyLayout} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
-        <Button onClick={@handleSetAlwaysOnTop} bsSize='small'><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
+        <Button onClick={@handleSetAlwaysOnTop} bsSize='small' className={if @state.alwaysOnTop then 'active' else ''}><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{__ 'Take a screenshot'}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then __ 'Volume off' else __ 'Volume on'}</Tooltip>}>
-        <Button onClick={@handleSetMuted} bsSize='small'><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
+        <Button onClick={@handleSetMuted} bsSize='small' className={if @state.muted then 'active' else ''}><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>
 
