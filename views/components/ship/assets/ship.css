@@ -43,25 +43,20 @@
 }
 #ShipView .slotitem-container .slotitem-onslot {
   position: absolute;
-  font-size: 12px;
+  font-size: 11px;
   text-align: center;
   left: -4px;
-  bottom: -6px;
-  border-radius: 9px;
-  width: 18px;
-  height: 18px;
-  padding-left: 2px;
-  padding-right: 2px;
+  bottom: 0px;
+  border-radius: 8px;
+  width: 16px;
+  height: 16px;
 }
 #ShipView .slotitem-container span.show {
   display: inline !important;
 }
 #ShipView .slotitem-container img {
-  width: 36px;
-  height: 36px;
-  margin-top: -5px;
-  margin-bottom: -5px;
-  margin-left: -5px;
+  width: 28px;
+  height: 28px;
 }
 #ShipView .progress {
   border-radius: 0px;
