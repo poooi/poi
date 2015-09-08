@@ -31,3 +31,6 @@
 [submodule "plugins/map-hp"]
 	path = plugins/map-hp
 	url = https://github.com/poooi/plugin-map-hp.git
+[submodule "plugins/hensei-nikki"]
+	path = plugins/hensei-nikki
+	url = https://github.com/poooi/plugin-hensei-nikki.git
