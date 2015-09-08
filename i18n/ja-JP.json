@@ -63,7 +63,7 @@
   "Plugins": "ツール",
   "About": " poiについて",
   "Proxy setting": "プロキシ設定",
-  "Success! It will be available after a restart": "成功しました。再起動後に有効になります",
+  "Success! It will be available after a restart.": "成功しました。再起動後に有効になります",
   "Proxy protocol": "プロキシプロトコル",
   "proxy": "プロキシ",
   "No proxy": "プロキシを使用しない",

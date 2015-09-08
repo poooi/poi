@@ -63,7 +63,7 @@
   "Plugins": "擴展插件",
   "About": "關於 poi",
   "Proxy setting": "代理設定",
-  "Success! It will be available after a restart": "保存成功，重啟軟體後生效。",
+  "Success! It will be available after a restart.": "保存成功，重啟軟體後生效。",
   "Proxy protocol": "代理類型",
   "proxy": "代理",
   "No proxy": "不使用代理",
