@@ -27,9 +27,9 @@ getHeader = (state) ->
       <div>
         <OverlayTrigger placement="bottom" overlay={
             if state.level == 120
-              <Tooltip>Next. {state.nextExp}</Tooltip>
-            else
               <Tooltip>Total. {state.exp}</Tooltip>
+            else
+              <Tooltip>Next. {state.nextExp}</Tooltip>
           }>
           <span>Lv. {state.level}</span>
         </OverlayTrigger>
@@ -138,14 +138,7 @@ TeitokuPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
   render: ->
     <Panel bsStyle="default" className="teitoku-panel">
-      <OverlayTrigger placement="bottom" overlay={if @state.level == 120
-                                                    <Tooltip>Exp. {@state.exp}</Tooltip>
-                                                  else
-                                                    <Tooltip>Next. {@state.nextExp}</Tooltip>}>
-        <div>
-          {getHeader @state}
-        </div>
-      </OverlayTrigger>
+      {getHeader @state}
     </Panel>
 
 module.exports = TeitokuPanel
