@@ -26,7 +26,7 @@ PoiConfig = React.createClass
         config.get 'poi.webview.width', -1
     layout: config.get 'poi.layout', 'horizonal'
     theme: config.get 'poi.theme', '__default__'
-    language: config.get 'poi.language', 'zh-CN'
+    language: config.get 'poi.language', navigator.language
     gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
