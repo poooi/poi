@@ -94,7 +94,7 @@ gulp.task 'copy-files', ['download-electron'], ->
   gulp.src(['lib/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'lib')))
   gulp.src(['views/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'views')))
   gulp.src(['plugins/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'plugins')))
-  gulp.src(['i18n/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'plugins')))
+  gulp.src(['i18n/**/*']).pipe(gulp.dest(path.join(BUILD_ROOT, 'i18n')))
 
 gulp.task 'install-dependencies', ['copy-files'], async ->
   log BUILD_ROOT
