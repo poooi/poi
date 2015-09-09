@@ -128,9 +128,9 @@ updateQuestRecord = (e, options, delta) ->
   flag = false
   for id, q of questRecord
     continue unless q.active and q[e]?
-    continue if questGoals[id][e].shipType? and options.shipType not in questGoals[id][e].shipType
-    continue if questGoals[id][e].mission? and options.mission not in questGoals[id][e].mission
-    continue if questGoals[id][e].maparea? and options.maparea not in questGoals[id][e].maparea
+    continue if questGoals[id][e]?.shipType? and options.shipType not in questGoals[id][e].shipType
+    continue if questGoals[id][e]?.mission? and options.mission not in questGoals[id][e].mission
+    continue if questGoals[id][e]?.maparea? and options.maparea not in questGoals[id][e].maparea
     before = q[e].count
     q[e].count = Math.min(q[e].required, q[e].count + delta)
     q.count += q[e].count - before
