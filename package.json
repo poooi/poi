@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "4.0.0-staging.0",
+  "version": "3.5.0",
   "description": "KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/poooi/poi",
   "dependencies": {
     "adm-zip": "^0.4.7",
-    "bluebird": "^2.9.34",
+    "bluebird": "^2.10.0",
     "coffee-react": "^4.0.0",
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
