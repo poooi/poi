@@ -33,6 +33,7 @@ PoiConfig = React.createClass
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
     enableNotify: config.get 'poi.notify.enabled', true
     notifyVolume: config.get 'poi.notify.volume', true
+    zoomLevel: config.get 'poi.zoomLevel', 1
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
@@ -53,6 +54,17 @@ PoiConfig = React.createClass
     config.set('poi.notify.volume', volume)
     @setState
       notifyVolume: volume
+  handleChangeZoomLevel: (e) ->
+    zoomLevel = @refs.zoomLevel.getValue()
+    zoomLevel = parseFloat(zoomLevel)
+    return if @state.zoomLevel == zoomLevel
+    document.getElementById('poi-app-container').style.transformOrigin = '0 0'
+    document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{zoomLevel})"
+    document.getElementById('poi-app-container').style.width = "#{Math.floor(100/zoomLevel)}%"
+    document.getElementById('poi-app-container').style.height = "#{Math.floor(100/zoomLevel)}%"
+    config.set('poi.zoomLevel', zoomLevel)
+    @setState
+      zoomLevel: zoomLevel
   handleSetMapStartCheckShip: ->
     enabled = @state.mapStartCheckShip
     config.set 'poi.mapstartcheck.ship', !enabled
@@ -259,6 +271,19 @@ PoiConfig = React.createClass
           </Col>
           <Col xs={6}>
             <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>{__ 'Edit custom CSS'}</Button>
+          </Col>
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Zoom'} />
+        <Grid>
+          <Col xs={6}>
+            <OverlayTrigger placement='top' overlay={
+                <Tooltip>{__ 'Zoom level'} <strong>{parseInt(@state.zoomLevel * 100)}%</strong></Tooltip>
+              }>
+              <Input type="range" ref="zoomLevel" onInput={@handleChangeZoomLevel}
+                min={0.5} max={2.0} step={0.05} defaultValue={@state.zoomLevel} />
+            </OverlayTrigger>
           </Col>
         </Grid>
       </div>

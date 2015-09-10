@@ -18,6 +18,13 @@ i18n.configure
   extension: '.json'
 i18n.setLocale(window.language)
 
+# Set zoom level
+zoomLevel: window.zoomLevel
+document.getElementById('poi-app-container').style.transformOrigin = '0 0'
+document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{zoomLevel})"
+document.getElementById('poi-app-container').style.width = "#{Math.floor(100/zoomLevel)}%"
+document.getElementById('poi-app-container').style.height = "#{Math.floor(100/zoomLevel)}%"
+
 # Hackable panels
 window.hack = {}
 

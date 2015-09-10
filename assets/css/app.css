@@ -39,6 +39,9 @@ hr {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+poi-app {
+  overflow: auto;
+}
 poi-app .container {
   padding-left: 0px;
   padding-right: 0px;
