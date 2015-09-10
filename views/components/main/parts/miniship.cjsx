@@ -70,30 +70,6 @@ getMaterialStyle = (percent) ->
   else
     'success'
 
-getCondStyle = (cond) ->
-  if window.isDarkTheme
-    if cond > 49
-      color: '#FFFF00'
-    else if cond < 20
-      color: '#DD514C'
-    else if cond < 30
-      color: '#F37B1D'
-    else if cond < 40
-      color: '#FFC880'
-    else
-      null
-  else
-    if cond > 49
-      textShadow: '0 0 3px #FFFF00'
-    else if cond < 20
-      textShadow: '0 0 3px #DD514C'
-    else if cond < 30
-      textShadow: '0 0 3px #F37B1D'
-    else if cond < 40
-      textShadow: '0 0 3px #FFC880'
-    else
-      null
-
 getStatusStyle = (status) ->
   if status?
     flag = status == 0 or status == 1 # retreat or repairing
@@ -441,7 +417,7 @@ PaneBodyMini = React.createClass
                       <StatusLabelMini label={@state.label[j]} />
                     </div>
                     <div style={getStatusStyle @state.label[j]}>
-                      <span className="ship-cond" style={getCondStyle ship.api_cond}>
+                      <span className="ship-cond" style={window.getCondStyle ship.api_cond}>
                         ★{ship.api_cond}
                       </span>
                     </div>

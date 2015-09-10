@@ -148,7 +148,7 @@ window.zoomLevel = config.get 'poi.zoomLevel', 1
 window.theme = config.get 'poi.theme', '__default__'
 window.isUsingDarkTheme = ->
   theme.indexOf('dark') != -1 or theme.indexOf('black') != -1 or theme == 'slate' or theme in ['slate', 'superhero', 'papercyan']
-window.isDarkTheme = window.isUsingDarkTheme()
+window.isDarkTheme = isUsingDarkTheme()
 if theme == '__default__'
   $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
 else
@@ -160,6 +160,42 @@ window.addEventListener 'theme.change', (e) ->
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
   else
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
+
+# Not sure where this function should go, leave it here just for now, for easy access.
+window.getCondStyle = (cond) ->
+  if isDarkTheme
+    if cond > 52 # 53~100
+      color: '#FFFF00',
+      # fontWeight: 'bold',
+      textShadow: '0 0 7px #FFFF00'
+    else if cond > 49 # 50~52
+      color: '#FFFF80'
+    else if cond is 49 # 49
+      {}
+    else if cond < 20 # 0~19
+      color: '#DD514C'
+    else if cond < 30 # 20~29
+      color: '#F37B1D'
+    else if cond < 40 # 30~39
+      color: '#FFC880'
+    else # 40~48
+      color: '#FFE8CB'
+      opacity: 0.8
+  else
+    if cond > 52
+      textShadow: '0 0 3px #FFFF00'
+    else if cond > 49
+      textShadow: '0 0 3px #FFFF80'
+    else if cond is 49
+      {}
+    else if cond < 20
+      textShadow: '0 0 3px #DD514C'
+    else if cond < 30
+      textShadow: '0 0 3px #F37B1D'
+    else if cond < 40
+      textShadow: '0 0 3px #FFC880'
+    else
+      textShadow: '0 0 3px #FFE8CB'
 
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
