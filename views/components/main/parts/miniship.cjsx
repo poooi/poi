@@ -417,7 +417,7 @@ PaneBodyMini = React.createClass
                       <StatusLabelMini label={@state.label[j]} />
                     </div>
                     <div style={getStatusStyle @state.label[j]}>
-                      <span className="ship-cond" style={window.getCondStyle ship.api_cond}>
+                      <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
                         ★{ship.api_cond}
                       </span>
                     </div>

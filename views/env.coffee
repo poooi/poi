@@ -163,39 +163,22 @@ window.addEventListener 'theme.change', (e) ->
 
 # Not sure where this function should go, leave it here just for now, for easy access.
 window.getCondStyle = (cond) ->
-  if isDarkTheme
-    if cond > 52 # 53~100
-      color: '#FFFF00',
-      # fontWeight: 'bold',
-      textShadow: '0 0 7px #FFFF00'
-    else if cond > 49 # 50~52
-      color: '#FFFF80'
-    else if cond is 49 # 49
-      {}
-    else if cond < 20 # 0~19
-      color: '#DD514C'
-    else if cond < 30 # 20~29
-      color: '#F37B1D'
-    else if cond < 40 # 30~39
-      color: '#FFC880'
-    else # 40~48
-      color: '#FFE8CB'
-      opacity: 0.8
+  s = 'poi-ship-cond-'
+  if cond > 52
+    s += '53'
+  else if cond > 49
+    s += '50'
+  else if cond is 49
+    s += '49'
+  else if cond > 39
+    s += '40'
+  else if cond > 29
+    s += '30'
+  else if cond > 19
+    s += '20'
   else
-    if cond > 52
-      textShadow: '0 0 3px #FFFF00'
-    else if cond > 49
-      textShadow: '0 0 3px #FFFF80'
-    else if cond is 49
-      {}
-    else if cond < 20
-      textShadow: '0 0 3px #DD514C'
-    else if cond < 30
-      textShadow: '0 0 3px #F37B1D'
-    else if cond < 40
-      textShadow: '0 0 3px #FFC880'
-    else
-      textShadow: '0 0 3px #FFE8CB'
+    s += '0'
+  s += if isDarkTheme then ' dark' else ' lite'
 
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->

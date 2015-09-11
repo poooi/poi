@@ -435,7 +435,7 @@ PaneBody = React.createClass
                     </Col>
                   </Grid>
                 </td>
-                <td style={window.getCondStyle @state.cond[j]}>Cond. {@state.cond[j]}</td>
+                <td className={window.getCondStyle @state.cond[j]}>Cond. {@state.cond[j]}</td>
               </tr>
             ]
         }
