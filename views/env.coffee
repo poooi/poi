@@ -149,9 +149,9 @@ window.reloadCustomCss = ->
   $('#custom-css')?.setAttribute 'href', "file://#{EXROOT}/hack/custom.css"
 
 # Custom theme
-window.loadTheme = (theme) ->
-  window.theme = theme
-  window.isDarkTheme = theme.indexOf('dark') != -1 or theme.indexOf('black') != -1 or theme == 'slate' or theme in ['slate', 'superhero', 'papercyan']
+window.loadTheme = (th) ->
+  window.theme = th
+  window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test th
   if theme == '__default__'
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
   else
