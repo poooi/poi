@@ -145,21 +145,16 @@ window.language = config.get 'poi.language', navigator.language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
 
 # Custom theme
-window.theme = config.get 'poi.theme', '__default__'
-window.isUsingDarkTheme = ->
-  theme.indexOf('dark') != -1 or theme.indexOf('black') != -1 or theme == 'slate' or theme in ['slate', 'superhero', 'papercyan']
-window.isDarkTheme = isUsingDarkTheme()
-if theme == '__default__'
-  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
-else
-  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
-window.addEventListener 'theme.change', (e) ->
-  window.theme = e.detail.theme
-  window.isDarkTheme = window.isUsingDarkTheme()
+window.loadTheme = (theme) ->
+  window.theme = theme
+  window.isDarkTheme = theme.indexOf('dark') != -1 or theme.indexOf('black') != -1 or theme == 'slate' or theme in ['slate', 'superhero', 'papercyan']
   if theme == '__default__'
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
   else
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
+window.loadTheme(config.get 'poi.theme', '__default__')
+window.addEventListener 'theme.change', (e) ->
+  window.loadTheme e.detail.theme
 
 # Not sure where this function should go, leave it here just for now, for easy access.
 window.getCondStyle = (cond) ->
