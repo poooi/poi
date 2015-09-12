@@ -157,6 +157,10 @@
 #MainView .resource-panel .material-value {
   margin-left: 5px;
 }
+#MainView .resource-panel img {
+  width: 18px;
+  height: 18px;
+}
 #MainView .label {
   font-size: 90%;
   font-weight: normal;
