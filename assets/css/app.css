@@ -129,24 +129,24 @@ poi-control button .fa {
   text-shadow: 0 0 7px #FFFF00;
 }
 
-.poi-ship-cond-0.lite {  /* cond 0~19  */
+.poi-ship-cond-0.light {  /* cond 0~19  */
   text-shadow: 0 0 3px #DD514C;
 }
-.poi-ship-cond-20.lite { /* cond 20~29 */
+.poi-ship-cond-20.light { /* cond 20~29 */
   text-shadow: 0 0 3px #F37B1D;
 }
-.poi-ship-cond-30.lite { /* cond 30~39 */
+.poi-ship-cond-30.light { /* cond 30~39 */
   text-shadow: 0 0 3px #FFC880;
 }
-.poi-ship-cond-40.lite { /* cond 40~48 */
+.poi-ship-cond-40.light { /* cond 40~48 */
   text-shadow: 0 0 3px #FFE8CB;
 }
-.poi-ship-cond-49.lite { /* cond 49    */
+.poi-ship-cond-49.light { /* cond 49    */
   /* use default color */
 }
-.poi-ship-cond-50.lite { /* cond 50~52 */
+.poi-ship-cond-50.light { /* cond 50~52 */
   text-shadow: 0 0 3px #FFFF80;
 }
-.poi-ship-cond-53.lite { /* cond 53~100 */
+.poi-ship-cond-53.light { /* cond 53~100 */
   text-shadow: 0 0 3px #FFFF00;
 }

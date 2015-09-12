@@ -179,7 +179,7 @@ window.getCondStyle = (cond) ->
     s += '20'
   else
     s += '0'
-  s += if isDarkTheme then ' dark' else ' lite'
+  s += if isDarkTheme then ' dark' else ' light'
 
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->
