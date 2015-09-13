@@ -144,20 +144,42 @@ window.webviewWidth = config.get 'poi.webview.width', -1
 window.language = config.get 'poi.language', navigator.language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
 
+#Custom css
+window.reloadCustomCss = ->
+  $('#custom-css')?.setAttribute 'href', "file://#{EXROOT}/hack/custom.css"
+
 # Custom theme
-window.theme = config.get 'poi.theme', '__default__'
-window.isDarkTheme = theme.indexOf('dark') != -1 or theme.indexOf('black') != -1 or theme in ['slate', 'superhero', 'papercyan']
-if theme == '__default__'
-  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
-else
-  $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
-window.addEventListener 'theme.change', (e) ->
-  window.theme = e.detail.theme
-  window.isDarkTheme = theme.indexOf('dark') != -1 or theme.indexOf('black') != -1 or theme in ['slate', 'superhero', 'papercyan']
+window.loadTheme = (th) ->
+  window.theme = th
+  window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test th
   if theme == '__default__'
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
   else
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
+  window.reloadCustomCss()
+
+window.loadTheme(config.get 'poi.theme', '__default__')
+window.addEventListener 'theme.change', (e) ->
+  window.loadTheme e.detail.theme
+
+# Not sure where this function should go, leave it here just for now, for easy access.
+window.getCondStyle = (cond) ->
+  s = 'poi-ship-cond-'
+  if cond > 52
+    s += '53'
+  else if cond > 49
+    s += '50'
+  else if cond is 49
+    s += '49'
+  else if cond > 39
+    s += '40'
+  else if cond > 29
+    s += '30'
+  else if cond > 19
+    s += '20'
+  else
+    s += '0'
+  s += if isDarkTheme then ' dark' else ' light'
 
 # Global data resolver
 proxy.addListener 'game.on.request', (method, path, body) ->

@@ -364,7 +364,7 @@ ModalTrigger = React.createClass
 # Custom css injector
 CustomCssInjector = React.createClass
   render: ->
-    <link rel='stylesheet' href={path.join(window.EXROOT, 'hack', 'custom.css')} />
+    <link rel='stylesheet' id='custom-css' href={path.join(window.EXROOT, 'hack', 'custom.css')} />
 
 React.render <PoiAlert id='poi-alert' />, $('poi-alert')
 React.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')

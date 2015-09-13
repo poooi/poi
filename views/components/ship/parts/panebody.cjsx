@@ -17,30 +17,6 @@ getMaterialStyle = (percent) ->
   else
     'success'
 
-getCondStyle = (cond) ->
-  if window.isDarkTheme
-    if cond > 49
-      color: '#FFFF00'
-    else if cond < 20
-      color: '#DD514C'
-    else if cond < 30
-      color: '#F37B1D'
-    else if cond < 40
-      color: '#FFC880'
-    else
-      null
-  else
-    if cond > 49
-      textShadow: '0 0 3px #FFFF00'
-    else if cond < 20
-      textShadow: '0 0 3px #DD514C'
-    else if cond < 30
-      textShadow: '0 0 3px #F37B1D'
-    else if cond < 40
-      textShadow: '0 0 3px #FFC880'
-    else
-      null
-
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
 
@@ -459,7 +435,7 @@ PaneBody = React.createClass
                     </Col>
                   </Grid>
                 </td>
-                <td style={getCondStyle @state.cond[j]}>Cond. {@state.cond[j]}</td>
+                <td className={window.getCondStyle @state.cond[j]}>Cond. {@state.cond[j]}</td>
               </tr>
             ]
         }
