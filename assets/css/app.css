@@ -111,22 +111,15 @@ poi-control button .fa {
 .poi-ship-cond-30.dark { /* cond 30~39 */
   color: #FFC880;
 }
-.poi-ship-cond-40.dark { /* cond 40~48 */
-  color: #FFE8CB;
-  opacity: 0.8;
-}
-.poi-ship-cond-49.dark { /* cond 49    */
-  /* use default color */
+.poi-ship-cond-40.dark { /* cond 40~49 */
+
 }
 .poi-ship-cond-50.dark { /* cond 50~52 */
-  /* use default color,
-   * but with outer glow effect
-   */
-  text-shadow: 0 0 5px #FFFF00;
+  color: gold
 }
 .poi-ship-cond-53.dark { /* cond 53~100 */
-  color: #FFFF60;
-  text-shadow: 0 0 7px #FFFF00;
+  color: #FFFF00;
+  font-weight: 400;
 }
 
 .poi-ship-cond-0.light {  /* cond 0~19  */
@@ -138,15 +131,13 @@ poi-control button .fa {
 .poi-ship-cond-30.light { /* cond 30~39 */
   text-shadow: 0 0 3px #FFC880;
 }
-.poi-ship-cond-40.light { /* cond 40~48 */
-  text-shadow: 0 0 3px #FFE8CB;
-}
-.poi-ship-cond-49.light { /* cond 49    */
-  /* use default color */
+.poi-ship-cond-40.light { /* cond 40~49 */
+
 }
 .poi-ship-cond-50.light { /* cond 50~52 */
-  text-shadow: 0 0 3px #FFFF80;
+  text-shadow: 0 0 3px gold;
 }
 .poi-ship-cond-53.light { /* cond 53~100 */
   text-shadow: 0 0 3px #FFFF00;
+  font-weight: 400;
 }
