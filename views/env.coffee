@@ -169,14 +169,14 @@ window.getCondStyle = (cond) ->
     s += '53'
   else if cond > 49
     s += '50'
-  else if cond in [30..39]
-    s += '30'
-  else if cond in [20..29]
-    s += '20'
-  else if cond < 20
-    s += '0'
-  else
+  else if cond > 39
     s += '40'
+  else if cond > 29
+    s += '30'
+  else if cond > 19
+    s += '20'
+  else
+    s += '0'
   s += if isDarkTheme then ' dark' else ' light'
 
 # Global data resolver
