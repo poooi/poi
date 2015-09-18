@@ -104,6 +104,7 @@ poi-control button .fa {
 
 .poi-ship-cond-0.dark {  /* cond 0~19  */
   color: #DD514C;
+  font-weight: bold;
 }
 .poi-ship-cond-20.dark { /* cond 20~29 */
   color: #F37B1D;
@@ -124,6 +125,7 @@ poi-control button .fa {
 
 .poi-ship-cond-0.light {  /* cond 0~19  */
   text-shadow: 0 0 3px #DD514C;
+  font-weight: bold;
 }
 .poi-ship-cond-20.light { /* cond 20~29 */
   text-shadow: 0 0 3px #F37B1D;
