@@ -169,6 +169,8 @@ window.getCondStyle = (cond) ->
     s += '53'
   else if cond > 49
     s += '50'
+  else if cond == 49
+    s += '49'
   else if cond > 39
     s += '40'
   else if cond > 29
