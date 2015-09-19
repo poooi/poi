@@ -290,25 +290,25 @@ PoiControl = React.createClass
     , 1000
   render: ->
     <div>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{__ 'Developer Tools'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{__ 'Developer Tools'}</Tooltip>}>
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{__ 'Open cache dir'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{__ 'Open cache dir'}</Tooltip>}>
         <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{__ 'Open screenshot dir'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{__ 'Open screenshot dir'}</Tooltip>}>
         <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{__ 'Auto adjust'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{__ 'Auto adjust'}</Tooltip>}>
         <Button onClick={@handleJustifyLayout} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
         <Button onClick={@handleSetAlwaysOnTop} bsSize='small' className={if @state.alwaysOnTop then 'active' else ''}><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{__ 'Take a screenshot'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{__ 'Take a screenshot'}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='left' overlay={<Tooltip>{if @state.muted then __ 'Volume off' else __ 'Volume on'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip>{if @state.muted then __ 'Volume off' else __ 'Volume on'}</Tooltip>}>
         <Button onClick={@handleSetMuted} bsSize='small' className={if @state.muted then 'active' else ''}><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
     </div>
