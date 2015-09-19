@@ -32,7 +32,7 @@ PoiConfig = React.createClass
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
     enableNotify: config.get 'poi.notify.enabled', true
-    notifyVolume: config.get 'poi.notify.volume', true
+    notifyVolume: config.get 'poi.notify.volume', 1.0
     zoomLevel: config.get 'poi.zoomLevel', 1
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
