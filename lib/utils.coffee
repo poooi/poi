@@ -40,7 +40,6 @@ module.exports =
         decoded = decoded.toString()
         decoded = decoded.substring(7) if decoded.indexOf('svdata=') == 0
         decoded = JSON.parse decoded
-        decoded = decoded.api_data if decoded.api_data?
         resolve decoded
       catch e
         reject e
