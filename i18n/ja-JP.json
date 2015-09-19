@@ -36,7 +36,7 @@
   "Connection failed.": "接続できない。ネットワークとプロキシの設定を確認して下さい",
   " Overview": " 一覧",
   "Empty": "未使用",
-  "Locked": "ロック済",
+  "Locked": "未開放",
   "built": "建造完了",
   "Construction": "建造",
   "The development of %s was successful.": "%s 開発成功",
