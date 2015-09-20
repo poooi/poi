@@ -84,6 +84,19 @@ module.exports =
       @setState
         show: !@state.show
         dataVersion: @state.dataVersion + 1
+    handleKeyDown: ->
+      return if @listener?
+      @listener = true
+      window.addEventListener 'keydown', (e) =>
+        if e.ctrlKey or e.metaKey
+          if e.keyCode == 49 && @state.show
+            @setState
+              show: false
+              dataVersion: @state.dataVersion + 1
+          else if e.keyCode == 50 && !@state.show
+            @setState
+              show: true
+              dataVersion: @state.dataVersion + 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {fullnames} = @state
@@ -131,6 +144,7 @@ module.exports =
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
+      window.addEventListener 'game.start', @handleKeyDown
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
