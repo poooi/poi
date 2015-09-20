@@ -140,25 +140,25 @@
 #MiniShip .top-space {
   margin-top: 5px;
 }
-.ship-pop .slotitem-container {
+.ship-pop .slotitem-container-mini {
   display :flex;
   flex-flow: row;
   margin-top: 4px;
 }
-.ship-pop .slotitem-container .slotitem-name {
+.ship-pop .slotitem-container-mini .slotitem-name-mini {
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
 }
-.ship-pop .slotitem-container .slotitem-onslot {
+.ship-pop .slotitem-container-mini .slotitem-onslot-mini {
   font-size: 90%;
   padding: 3px 6px 3px 5px;
   margin-left: 2px;
 }
-.ship-pop .slotitem-container span.show {
+.ship-pop .slotitem-container-mini span.show {
   display: inline !important;
 }
-.ship-pop .slotitem-container img {
+.ship-pop .slotitem-container-mini img {
   width: 32px;
   height: 32px;
   margin-top: -8px;
@@ -187,4 +187,24 @@
 }
 .ship-pop .material-icon {
   margin-right: auto;
+}
+#MiniShip .ship-panel {
+  position: absolute;
+  z-index: 100;
+  top: 40px;
+  left: 0px;
+  height: 90%;
+  padding: 1px;
+}
+#MiniShip .ship-panel .panel-body {
+  padding: 1px;
+}
+.hidden {
+  display: none;
+}
+.half-scale {
+  width: 49%;
+}
+.full-scale {
+  width: 99%;
 }
