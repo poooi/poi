@@ -111,6 +111,7 @@ module.exports =
           escapeId = towId = -1
           {decks, states} = @state
           {_ships, _slotitems} = window
+          damagedShips = []
           for deckId in [0..3]
             continue unless inBattle[deckId]
             deck = decks[deckId]
@@ -124,7 +125,9 @@ module.exports =
                   continue if slotId == -1
                   safe = true if _slotitems[slotId].api_type[3] is 14
                 if !safe
-                  toggleModal __('Attention!'), "Lv. #{ship.api_lv} - #{ship.api_name} #{__ 'is heavily damaged!'}"
+                  damagedShips.push("Lv. #{ship.api_lv} - #{ship.api_name}")
+          if damagedShips.length > 0
+            toggleModal __('Attention!'), damagedShips.join(' ') + __('is heavily damaged!')
         else
           flag = false
       return unless flag
