@@ -188,23 +188,60 @@
 .ship-pop .material-icon {
   margin-right: auto;
 }
-#MiniShip .ship-panel {
+#MiniShip .ship-panel-full {
   position: absolute;
   z-index: 100;
   top: 40px;
-  left: 0px;
   height: 90%;
-  padding: 1px;
-}
-#MiniShip .ship-panel .panel-body {
-  padding: 1px;
-}
-.hidden {
-  display: none;
-}
-.half-scale {
-  width: 49%;
-}
-.full-scale {
   width: 99%;
+  padding: 1px;
+  transition: 0.2s;
+}
+#MiniShip .ship-panel-half {
+  position: absolute;
+  z-index: 100;
+  top: 40px;
+  height: 90%;
+  width: 49%;
+  padding: 1px;
+  transition: 0.2s;
+}
+#MiniShip .ship-panel-full-hidden {
+  position: absolute;
+  z-index: 100;
+  visibility: hidden;
+  height: 315px;
+  padding: 1px;
+  width: 48%;
+  overflow: hidden;
+  transition: 0.2s;
+  /*opacity: 0;*/
+}
+#MiniShip .ship-panel-half-hidden {
+  position: absolute;
+  z-index: 100;
+  top: 175px;
+  visibility: hidden;
+  height: 315px;
+  padding: 1px;
+  width: 24%;
+  overflow: hidden;
+  transition: 0.2s;
+  /*opacity: 0;*/
+}
+#MiniShip .ship-panel-full .panel-body,
+#MiniShip .ship-panel-half .panel-body {
+  padding: 1px;
+}
+.toleft {
+  left: 0px;
+}
+.toright {
+  right: 0px;
+}
+.top-vertical {
+  top: 40px;
+}
+.top-horizonal {
+  top: 175px;
 }

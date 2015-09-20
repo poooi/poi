@@ -166,7 +166,10 @@ module.exports =
               </div>
           }
         </Panel>
-        <Panel id="ShipView" className="ship-panel #{if !@state.show then 'hidden'} #{if window.doubleTabbed then 'half-scale' else 'full-scale'}">
+        <Panel id="ShipView"
+               className="#{if window.doubleTabbed then 'ship-panel-half' else 'ship-panel-full'}#{if @state.show then '' else '-hidden'}
+                          #{if (!window.doubleTabbed) && (window.layout == 'vertical') then 'toright' else 'toleft'}
+                          #{if (!@state.show) && (window.layout == 'vertical') then 'top-vertical' else 'top-horizonal'}">
           <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'ship.css')} />
           <div className="panel-row">
             <ButtonGroup>
