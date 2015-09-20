@@ -406,7 +406,7 @@ resolveResponses = ->
   locked = false
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   # Invalid response
-  return if body.api_result is 100
+  return if body.api_result isnt 1
   body = body.api_data if body.api_data?
   responses.push [method, path, body, postBody]
   resolveResponses() if !locked
