@@ -34,28 +34,29 @@ if process.platform == 'darwin'
       label: 'Poi'
       submenu: [
         {
-          label: 'About'
-          selector: 'orderFrontStandardAboutPanel:'
+          label: 'About Poi'
+          role: 'about'
         },
         { type: 'separator' },
         {
           label: 'Services'
+          role: 'services'
           submenu: []
         },
         { type: 'separator' },
         {
           label: 'Hide Poi'
           accelerator: 'CmdOrCtrl+H'
-          selector: 'hide:'
+          role: 'hide'
         },
         {
           label: 'Hide Others'
           accelerator: 'CmdOrCtrl+Shift+H'
-          selector: 'hideOtherApplications:'
+          role: 'hideothers'
         },
         {
           label: 'Show All'
-          selector: 'unhideAllApplications:'
+          role: 'unhide'
         },
         { type: 'separator' },
         {
@@ -71,33 +72,33 @@ if process.platform == 'darwin'
         {
           label: 'Undo'
           accelerator: 'CmdOrCtrl+Z'
-          selector: 'undo:'
+          role: 'undo'
         },
         {
           label: 'Redo'
           accelerator: 'Shift+CmdOrCtrl+Z'
-          selector: 'redo:'
+          role: 'redo'
         },
         { type: 'separator' },
         {
           label: 'Cut'
           accelerator: 'CmdOrCtrl+X'
-          selector: 'cut:'
+          role: 'cut'
         },
         {
           label: 'Copy'
           accelerator: 'CmdOrCtrl+C'
-          selector: 'copy:'
+          role: 'copy'
         },
         {
           label: 'Paste'
           accelerator: 'CmdOrCtrl+V'
-          selector: 'paste:'
+          role: 'paste'
         },
         {
           label: 'Select All'
           accelerator: 'CmdOrCtrl+A'
-          selector: 'selectAll:'
+          role: 'selectall'
         }
       ]
     },
@@ -131,21 +132,23 @@ if process.platform == 'darwin'
     },
     {
       label: 'Window'
+      role: 'window'
       submenu: [
         {
           label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
-          selector: 'performMiniaturize:'
+          role: 'minimize'
         },
         { type: 'separator' },
         {
           label: 'Bring All to Front'
-          selector: 'arrangeInFront:'
+          role: 'front'
         }
       ]
     },
     {
       label: 'Help'
+      role: 'help'
       submenu: [
         {
           label: 'Wiki'
