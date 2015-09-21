@@ -29,6 +29,10 @@ window.hack = {}
 
 # poi menu
 if process.platform == 'darwin'
+  exeCodeOnWindowHasReloadArea = (win, f) ->
+    if win?.reloadArea?
+      code = "$('#{win.reloadArea}').#{f}"
+      win.webContents.executeJavaScript(code)
   template = [
     {
       label: 'Poi'
@@ -108,25 +112,26 @@ if process.platform == 'darwin'
         {
           label: 'Reload'
           accelerator: 'CmdOrCtrl+R'
-          click: ->
-            $('kan-game webview').reload()
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
         },
         {
           label: 'Stop'
           accelerator: 'CmdOrCtrl+.'
-          click: ->
-            $('kan-game webview').stop()
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
         },
+        { type: 'separator' },
         {
           label: 'Open Developer Tools'
           accelerator: 'Alt+CmdOrCtrl+I'
-          click: ->
-            remote.getCurrentWindow().openDevTools({detach: true})
+          click: (item, focusedWindow) ->
+            focusedWindow.openDevTools({detach: true})
         },
         {
           label: 'Open Developer Tools of WebView'
-          click: ->
-            $('kan-game webview').openDevTools({detach: true})
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({detach: true})')
         }
       ]
     },

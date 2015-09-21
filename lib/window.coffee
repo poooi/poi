@@ -13,6 +13,7 @@ module.exports =
     # Default menu in v0.27.3
     if process.versions['electron'] >= '0.27.3'
       current.setMenu options.menu || null
+      current.reloadArea = null
     show = current.show
     current.show = ->
       if current.isMinimized()
