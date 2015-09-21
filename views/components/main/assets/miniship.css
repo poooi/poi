@@ -215,7 +215,7 @@
   width: 48%;
   overflow: hidden;
   transition: 0.2s;
-  opacity: 0.4;
+  opacity: 0;
 }
 #MiniShip .ship-panel-half-hidden {
   position: absolute;
@@ -227,7 +227,7 @@
   width: 24%;
   overflow: hidden;
   transition: 0.2s;
-  opacity: 0.4;
+  opacity: 0;
 }
 #MiniShip .ship-panel-full .panel-body,
 #MiniShip .ship-panel-half .panel-body {

@@ -5,6 +5,7 @@ path =  require 'path-extra'
 {Button, ButtonGroup} = ReactBootstrap
 {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
 {__, __n} = require 'i18n'
+StatusLabel = require './statuslabel'
 
 getHpStyle = (percent) ->
   if percent <= 25
@@ -58,41 +59,6 @@ getShipStatus = (shipId) ->
   else if _ships[shipId].api_sally_area == 4
     return status = 5
   return status
-
-StatusLabelMini = React.createClass
-  shouldComponentUpdate: (nextProps, nextState) ->
-    not _.isEqual(nextProps.label, @props.label)
-  render: ->
-    if @props.label? and @props.label == 0
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Retreated'}</Tooltip>}>
-        <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
-      </OverlayTrigger>
-    else if @props.label? and @props.label == 1
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Repairing'}</Tooltip>}>
-        <Label bsStyle="info"><FontAwesome key={0} name='wrench' /></Label>
-      </OverlayTrigger>
-    else if @props.label? and @props.label == 2
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E1, E2, E7'}</Tooltip>}>
-        <Label bsStyle="info"><FontAwesome key={0} name='tag' /></Label>
-      </OverlayTrigger>
-    else if @props.label? and @props.label == 3
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E3, E6, E7'}</Tooltip>}>
-        <Label bsStyle="primary"><FontAwesome key={0} name='tag' /></Label>
-      </OverlayTrigger>
-    else if @props.label? and @props.label == 4
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E4, E7'}</Tooltip>}>
-        <Label bsStyle="success"><FontAwesome key={0} name='tag' /></Label>
-      </OverlayTrigger>
-    else if @props.label? and @props.label == 5
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Ship tag: %s', 'E5'}</Tooltip>}>
-        <Label bsStyle="warning"><FontAwesome key={0} name='tag' /></Label>
-      </OverlayTrigger>
-    else if @props.label? and @props.label == 6
-      <OverlayTrigger placement="top" overlay={<Tooltip>{__ 'Resupply needed'}</Tooltip>}>
-        <Label bsStyle="warning"><FontAwesome key={0} name='database' /></Label>
-      </OverlayTrigger>
-    else
-      <Label bsStyle="default" style={opacity: 0}></Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
@@ -356,7 +322,7 @@ PaneBodyMini = React.createClass
                       {ship.api_nowhp} / {ship.api_maxhp}
                     </span>
                     <div className="status-label">
-                      <StatusLabelMini label={@state.label[j]} />
+                      <StatusLabel label={@state.label[j]} />
                     </div>
                     <div style={getStatusStyle @state.label[j]}>
                       <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>

@@ -3,6 +3,7 @@
 {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overlay, Label} = ReactBootstrap
 {__, __n} = require 'i18n'
 Slotitems = require './slotitems'
+StatusLabel = require './statuslabel'
 
 getMaterialStyle = (percent) ->
   if percent <= 50
@@ -67,25 +68,6 @@ getShipStatus = (shipId, escapeId, towId) ->
   else if _ships[shipId].api_sally_area == 4
     return status = 5
   return status
-
-StatusLabelMini = React.createClass
-  shouldComponentUpdate: (nextProps, nextState) ->
-    not _.isEqual(nextProps.label, @props.label)
-  render: ->
-    if @props.label? and @props.label == 0
-      <Label bsStyle="danger"><FontAwesome key={0} name='exclamation-circle' /></Label>
-    else if @props.label? and @props.label == 1
-      <Label bsStyle="info"><FontAwesome key={0} name='wrench' /></Label>
-    else if @props.label? and @props.label == 2
-      <Label bsStyle="info"><FontAwesome key={0} name='lock' /></Label>
-    else if @props.label? and @props.label == 3
-      <Label bsStyle="primary"><FontAwesome key={0} name='lock' /></Label>
-    else if @props.label? and @props.label == 4
-      <Label bsStyle="success"><FontAwesome key={0} name='lock' /></Label>
-    else if @props.label? and @props.label == 5
-      <Label bsStyle="warning"><FontAwesome key={0} name='lock' /></Label>
-    else
-      <Label bsStyle="default" style={opacity: 0}></Label>
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
@@ -521,7 +503,7 @@ PaneBody = React.createClass
                           {ship.api_nowhp} / {ship.api_maxhp}
                         </span>
                         <div className="status-label">
-                          <StatusLabelMini label={@state.label[j]}/>
+                          <StatusLabel label={@state.label[j]}/>
                         </div>
                         <div style={getStatusStyle @state.label[j]}>
                           <span className="ship-cond" style={getCondStyle ship.api_cond}>
