@@ -131,6 +131,25 @@ module.exports =
               deckId = parseInt(postBody.api_deck_id) - 1
               inBattle[deckId] = true
           escapeId = towId = -1
+          {decks, states} = @state
+          {_ships, _slotitems} = window
+          damagedShips = []
+          for deckId in [0..3]
+            continue unless inBattle[deckId]
+            deck = decks[deckId]
+            for shipId, idx in deck.api_ship
+              continue if shipId == -1 or idx == 0
+              ship = _ships[shipId]
+              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
+                # 应急修理要员/女神
+                safe = false
+                for slotId in ship.api_slot.concat(ship.api_slot_ex || -1)
+                  continue if slotId == -1
+                  safe = true if _slotitems[slotId].api_type[3] is 14
+                if !safe
+                  damagedShips.push("Lv. #{ship.api_lv} - #{ship.api_name}")
+          if damagedShips.length > 0
+            toggleModal __('Attention!'), damagedShips.join(' ') + __('is heavily damaged!')
         else
           flag = false
       return unless flag
