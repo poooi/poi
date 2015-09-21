@@ -73,6 +73,15 @@ emptyTask =
   category: 0
   type: 0
 
+lockedTask =
+  name: __ 'Locked'
+  id: 100001
+  content: '...'
+  progress: ''
+  category: 0
+  type: 0
+
+
 memberId = -1
 # Quest Tracking
 questGoals = {}
@@ -152,13 +161,20 @@ firstBattle = false
 
 TaskPanel = React.createClass
   getInitialState: ->
+    taskLimits: 5
     tasks: [Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask),
-            Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask)]
+            Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(lockedTask)]
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {tasks} = @state
     flag = false
     switch path
+      when '/kcsapi/api_port/port'     #Handle parallel quest show 
+        if @state.taskLimits != body.api_parallel_quest_count
+          tasks[5] = Object.clone(emptyTask)
+          @setState
+            tasks: tasks
+            taskLimits: body.api_parallel_quest_count
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
         try
@@ -269,7 +285,7 @@ TaskPanel = React.createClass
           firstBattle = false
     return unless flag
     for task in tasks
-      continue if task.id == 100000
+      continue if task.id >= 100000
       if questGoals[task.id]?
         task.tracking = true
         task.percent = questRecord[task.id].count / questRecord[task.id].required
@@ -315,7 +331,7 @@ TaskPanel = React.createClass
     if flag
       {tasks} = @state
       for task in tasks
-        continue if task.id == 100000
+        continue if task.id >= 100000
         if questGoals[task.id]?
           task.tracking = true
           task.percent = questRecord[task.id].count / questRecord[task.id].required
@@ -327,7 +343,7 @@ TaskPanel = React.createClass
     return unless isDifferentDay((new Date()).getTime(), prevTime)
     {tasks} = @state
     for task, idx in tasks
-      continue if task.id == 100000
+      continue if task.id >= 100000
       if task.type in [2, 4, 5]
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
