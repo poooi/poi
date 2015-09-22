@@ -29,33 +29,38 @@ window.hack = {}
 
 # poi menu
 if process.platform == 'darwin'
+  exeCodeOnWindowHasReloadArea = (win, f) ->
+    if win?.reloadArea?
+      code = "$('#{win.reloadArea}').#{f}"
+      win.webContents.executeJavaScript(code)
   template = [
     {
       label: 'Poi'
       submenu: [
         {
-          label: 'About'
-          selector: 'orderFrontStandardAboutPanel:'
+          label: 'About Poi'
+          role: 'about'
         },
         { type: 'separator' },
         {
           label: 'Services'
+          role: 'services'
           submenu: []
         },
         { type: 'separator' },
         {
           label: 'Hide Poi'
           accelerator: 'CmdOrCtrl+H'
-          selector: 'hide:'
+          role: 'hide'
         },
         {
           label: 'Hide Others'
           accelerator: 'CmdOrCtrl+Shift+H'
-          selector: 'hideOtherApplications:'
+          role: 'hideothers'
         },
         {
           label: 'Show All'
-          selector: 'unhideAllApplications:'
+          role: 'unhide'
         },
         { type: 'separator' },
         {
@@ -71,33 +76,33 @@ if process.platform == 'darwin'
         {
           label: 'Undo'
           accelerator: 'CmdOrCtrl+Z'
-          selector: 'undo:'
+          role: 'undo'
         },
         {
           label: 'Redo'
           accelerator: 'Shift+CmdOrCtrl+Z'
-          selector: 'redo:'
+          role: 'redo'
         },
         { type: 'separator' },
         {
           label: 'Cut'
           accelerator: 'CmdOrCtrl+X'
-          selector: 'cut:'
+          role: 'cut'
         },
         {
           label: 'Copy'
           accelerator: 'CmdOrCtrl+C'
-          selector: 'copy:'
+          role: 'copy'
         },
         {
           label: 'Paste'
           accelerator: 'CmdOrCtrl+V'
-          selector: 'paste:'
+          role: 'paste'
         },
         {
           label: 'Select All'
           accelerator: 'CmdOrCtrl+A'
-          selector: 'selectAll:'
+          role: 'selectall'
         }
       ]
     },
@@ -107,45 +112,74 @@ if process.platform == 'darwin'
         {
           label: 'Reload'
           accelerator: 'CmdOrCtrl+R'
-          click: ->
-            $('kan-game webview').reload()
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
         },
         {
           label: 'Stop'
           accelerator: 'CmdOrCtrl+.'
-          click: ->
-            $('kan-game webview').stop()
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
         },
+        { type: 'separator' },
         {
           label: 'Open Developer Tools'
           accelerator: 'Alt+CmdOrCtrl+I'
-          click: ->
-            remote.getCurrentWindow().openDevTools({detach: true})
+          click: (item, focusedWindow) ->
+            focusedWindow.openDevTools({detach: true})
         },
         {
           label: 'Open Developer Tools of WebView'
-          click: ->
-            $('kan-game webview').openDevTools({detach: true})
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({detach: true})')
+        }
+      ]
+    },
+    {
+      label: 'Themes'
+      submenu: [
+        {
+          label: 'Apply Theme'
+          submenu: []
+        },
+        { type: 'separator' },
+        {
+          label: 'Next Theme'
+          accelerator: 'CmdOrCtrl+T'
+          click: (item, focusedWindow) ->
+            all = window.allThemes
+            nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
+            window.applyTheme nextTheme
+        },
+        {
+          label: 'Previous Theme'
+          accelerator: 'CmdOrCtrl+Shift+T'
+          click: (item, focusedWindow) ->
+            all = window.allThemes
+            prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
+            window.applyTheme prevTheme
         }
       ]
     },
     {
       label: 'Window'
+      role: 'window'
       submenu: [
         {
           label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
-          selector: 'performMiniaturize:'
+          role: 'minimize'
         },
         { type: 'separator' },
         {
           label: 'Bring All to Front'
-          selector: 'arrangeInFront:'
+          role: 'front'
         }
       ]
     },
     {
       label: 'Help'
+      role: 'help'
       submenu: [
         {
           label: 'Wiki'
@@ -171,9 +205,21 @@ if process.platform == 'darwin'
       ]
     }
   ]
+  window.allThemes.map (th) ->
+    template[3].submenu[0].submenu.push
+      label: if th is '__default__' then 'Default' else th.charAt(0).toUpperCase() + th.slice(1)
+      type: 'radio'
+      checked: window.theme is th
+      click: (item, focusedWindow) ->
+        if th isnt window.theme
+          window.applyTheme th
   Menu = remote.require('menu')
-  menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  appMenu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(appMenu)
+  # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...
+  themeMenuList = appMenu.items[3].submenu.items[0].submenu.items
+  window.addEventListener 'theme.change', (e) ->
+    themeMenuList[window.allThemes.indexOf(e.detail.theme)].checked = true
 
 # Main tabbed area
 ControlledTabArea =

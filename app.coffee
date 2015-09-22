@@ -77,7 +77,9 @@ app.on 'ready', ->
       'plugins': true
   # Default menu in v0.27.3
   if process.versions['electron'] >= '0.27.3'
-    if process.platform != 'darwin'
+    if process.platform == 'darwin'
+      mainWindow.reloadArea = 'kan-game webview'
+    else
       mainWindow.setMenu null
   mainWindow.loadUrl "file://#{__dirname}/index.html"
   if process.env.DEBUG?

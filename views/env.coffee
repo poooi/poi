@@ -149,6 +149,7 @@ window.reloadCustomCss = ->
   $('#custom-css')?.setAttribute 'href', "file://#{EXROOT}/hack/custom.css"
 
 # Custom theme
+# You should call window.applyTheme() to apply a theme properly.
 window.loadTheme = (th) ->
   window.theme = th
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test th
@@ -157,10 +158,18 @@ window.loadTheme = (th) ->
   else
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
   window.reloadCustomCss()
+window.applyTheme = (th) ->
+  config.set 'poi.theme', th
+  window.loadTheme th
+  event = new CustomEvent 'theme.change',
+    bubbles: true
+    cancelable: true
+    detail:
+      theme: th
+  window.dispatchEvent event
 
+window.allThemes = ['__default__'].concat(require('glob').sync("#{ROOT}/assets/themes/*/").map (dirPath) -> path.basename(dirPath))
 window.loadTheme(config.get 'poi.theme', '__default__')
-window.addEventListener 'theme.change', (e) ->
-  window.loadTheme e.detail.theme
 
 # Not sure where this function should go, leave it here just for now, for easy access.
 window.getCondStyle = (cond) ->
