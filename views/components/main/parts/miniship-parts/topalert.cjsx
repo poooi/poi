@@ -135,10 +135,8 @@ getDeckMessage = (deck) ->
     ship = _ships[shipId]
     totalLv += ship.api_lv
     totalShip += 1
-  avgLv = totalLv / totalShip
 
   totalLv: totalLv
-  avgLv: parseFloat(avgLv.toFixed(0))
   tyku: getTyku(deck)
   saku25: getSaku25(deck)
   saku25a: getSaku25a(deck)
@@ -300,7 +298,6 @@ TopAlert = React.createClass
         <Alert style={getFontStyle window.theme}>
           <div style={display: "flex"}>
             <span style={flex: 1}>{__ 'Total Lv'}. {@messages.totalLv}</span>
-            <span style={flex: 1}>{__ 'Avg. Lv'}. {@messages.avgLv}</span>
             <span style={flex: 1}>
               <OverlayTrigger placement='bottom' overlay={
                 <Tooltip>
