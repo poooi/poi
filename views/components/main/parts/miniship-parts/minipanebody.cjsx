@@ -6,6 +6,7 @@ path =  require 'path-extra'
 {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
 {__, __n} = require 'i18n'
 StatusLabel = require './statuslabel'
+TopAlert = require './topalert'
 
 getHpStyle = (percent) ->
   if percent <= 25
@@ -63,47 +64,6 @@ getShipStatus = (shipId) ->
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
 
-getTyku = (deck) ->
-  {$ships, $slotitems, _ships, _slotitems} = window
-  basicTyku = alvTyku = totalTyku = 0
-  for shipId in deck.api_ship
-    continue if shipId == -1
-    ship = _ships[shipId]
-    for itemId, slotId in ship.api_slot
-      continue if itemId == -1
-      item = _slotitems[itemId]
-      # Basic tyku
-      if item.api_type[3] in [6, 7, 8]
-        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-      else if item.api_type[3] == 10 && item.api_type[2] == 11
-        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-      # Alv
-      if item.api_type[3] == 6 && item.api_alv > 0 && item.api_alv <= 7
-        alvTyku += [0, 1, 4, 6, 11, 16, 17, 25][item.api_alv]
-      else if item.api_type[3] in [7, 8] && item.api_alv > 0 && item.api_alv <= 7
-        alvTyku += [0, 1, 1, 1, 2, 2, 2, 3][item.api_alv]
-      else if item.api_type[3] == 10 && item.api_type[2] == 11 && item.api_alv > 0 && item.api_alv <= 7
-        alvTyku += [0, 1, 2, 2, 4, 4, 4, 9][item.api_alv]
-  totalTyku = basicTyku + alvTyku
-
-  basic: basicTyku
-  alv: alvTyku
-  total: totalTyku
-
-
-getDeckMessage = (deck) ->
-  {$ships, $slotitems, _ships} = window
-  totalLv = totalShip = 0
-  for shipId in deck.api_ship
-    continue if shipId == -1
-    ship = _ships[shipId]
-    totalLv += ship.api_lv
-    totalShip += 1
-  avgLv = totalLv / totalShip
-  totalLv: totalLv
-  avgLv: parseFloat(avgLv.toFixed(0))
-  tyku: getTyku(deck)
-
 Slotitems = React.createClass
   render: ->
     <div className="slotitems-mini" style={display:"flex", flexFlow:"column"}>
@@ -138,57 +98,6 @@ Slotitems = React.createClass
           </Label>
         </div>
     }
-    </div>
-
-TopAlert = React.createClass
-  messages: [__ 'No data']
-  cond: [0, 0, 0, 0, 0, 0]
-  isMount: false
-  inBattle: false
-  handleResponse: (e) ->
-    {method, path, body, postBody} = e.detail
-    refreshFlag = false
-    switch path
-      when '/kcsapi/api_port/port'
-        if @props.deckIndex != 0
-          deck = body.api_deck_port[@props.deckIndex]
-        @inBattle = false
-        refreshFlag = true
-      when '/kcsapi/api_req_mission/start'
-        # postBody.api_deck_id is a string starting from 1
-        if postBody.api_deck_id == "#{@props.deckIndex + 1}"
-          @inBattle = false
-          refreshFlag = true
-      when '/kcsapi/api_req_mission/return_instruction'
-        if postBody.api_deck_id == @props.deckIndex
-          @inBattle = false
-          refreshFlag = true
-      when '/kcsapi/api_req_map/start'
-        @inBattle = true
-      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3'
-        refreshFlag = true
-      when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_nyukyo/start'
-        refreshFlag = true
-    if refreshFlag
-      @setAlert()
-  setAlert: ->
-    decks = window._decks
-    @messages = getDeckMessage decks[@props.deckIndex]
-  componentWillUpdate: ->
-    @setAlert()
-  componentWillMount: ->
-    @componentId = Math.ceil(Date.now() * Math.random())
-    @setAlert()
-  componentDidMount: ->
-    @isMount = true
-    window.addEventListener 'game.response', @handleResponse
-  componentWillUnmount: ->
-    window.removeEventListener 'game.response', @handleResponse
-  render: ->
-    <div style={display: "flex", justifyContent: "space-around"}>
-      <span style={flex: "none"}>{__ 'Total Lv'}{@messages.totalLv} </span>
-      <span style={flex: "none", marginLeft: 5}>{__ 'Avg. Lv'}{@messages.avgLv} </span>
-      <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
     </div>
 
 PaneBodyMini = React.createClass
@@ -269,22 +178,23 @@ PaneBodyMini = React.createClass
       label: label
   render: ->
     <div>
+      <OverlayTrigger placement="top" overlay={
+        <Popover>
+          <div>
+            <TopAlert
+              updateCond={@onCondChange}
+              messages={@props.messages}
+              deckIndex={@props.deckIndex}
+              deckName={@props.deckName}
+              mini={true}
+            />
+          </div>
+        </Popover>
+      }>
       <div className="fleet-name">
-        <OverlayTrigger placement="top" overlay={
-          <Popover>
-            <div>
-              <TopAlert
-                updateCond={@onCondChange}
-                messages={@props.messages}
-                deckIndex={@props.deckIndex}
-                deckName={@props.deckName}
-              />
-            </div>
-          </Popover>
-          }>
-          <span style={margin: 'auto'}>{@props.deck.api_name}</span>
-        </OverlayTrigger>
+        <span style={margin: 'auto'}>{@props.deck.api_name}</span>
       </div>
+      </OverlayTrigger>
       <div className="ship-details">
       {
         {$ships, $shipTypes, _ships} = window
