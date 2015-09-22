@@ -53,8 +53,11 @@ ControlledTabArea = React.createClass
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect 0
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    if num <= components.length + tabbedPlugins.length
-      @handleSelect num - 1
+    if num == 1 || num == 2
+      @handleSelect 0
+    else
+      if num <= components.length + tabbedPlugins.length
+        @handleSelect num - 2
   handleShiftTabKeyDown: ->
     @handleSelect if @state.key? then (@state.key - 1 + components.length + tabbedPlugins.length) % (components.length + tabbedPlugins.length) else components.length + tabbedPlugins.length - 1
   handleTabKeyDown: ->

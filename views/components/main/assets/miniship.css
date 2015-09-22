@@ -140,25 +140,25 @@
 #MiniShip .top-space {
   margin-top: 5px;
 }
-.ship-pop .slotitem-container {
+.ship-pop .slotitem-container-mini {
   display :flex;
   flex-flow: row;
   margin-top: 4px;
 }
-.ship-pop .slotitem-container .slotitem-name {
+.ship-pop .slotitem-container-mini .slotitem-name-mini {
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
 }
-.ship-pop .slotitem-container .slotitem-onslot {
+.ship-pop .slotitem-container-mini .slotitem-onslot-mini {
   font-size: 90%;
   padding: 3px 6px 3px 5px;
   margin-left: 2px;
 }
-.ship-pop .slotitem-container span.show {
+.ship-pop .slotitem-container-mini span.show {
   display: inline !important;
 }
-.ship-pop .slotitem-container img {
+.ship-pop .slotitem-container-mini img {
   width: 32px;
   height: 32px;
   margin-top: -8px;
@@ -187,4 +187,61 @@
 }
 .ship-pop .material-icon {
   margin-right: auto;
+}
+#MiniShip .ship-panel-full {
+  position: absolute;
+  z-index: 100;
+  top: 40px;
+  height: 90%;
+  width: 99%;
+  padding: 1px;
+  transition: 0.2s;
+}
+#MiniShip .ship-panel-half {
+  position: absolute;
+  z-index: 100;
+  top: 40px;
+  height: 90%;
+  width: 49%;
+  padding: 1px;
+  transition: 0.2s;
+}
+#MiniShip .ship-panel-full-hidden {
+  position: absolute;
+  z-index: 100;
+  visibility: hidden;
+  height: 315px;
+  padding: 1px;
+  width: 48%;
+  overflow: hidden;
+  transition: 0.2s;
+  opacity: 0;
+}
+#MiniShip .ship-panel-half-hidden {
+  position: absolute;
+  z-index: 100;
+  top: 175px;
+  visibility: hidden;
+  height: 315px;
+  padding: 1px;
+  width: 24%;
+  overflow: hidden;
+  transition: 0.2s;
+  opacity: 0;
+}
+#MiniShip .ship-panel-full .panel-body,
+#MiniShip .ship-panel-half .panel-body {
+  padding: 1px;
+}
+.toleft {
+  left: 0px;
+}
+.toright {
+  right: 0px;
+}
+.top-vertical {
+  top: 40px;
+}
+.top-horizonal {
+  top: 175px;
 }
