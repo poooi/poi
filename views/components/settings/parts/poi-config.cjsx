@@ -1,6 +1,5 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
-glob = require 'glob'
 remote = require 'remote'
 i18n = require 'i18n'
 {__, __n} = i18n
@@ -12,8 +11,6 @@ i18n = require 'i18n'
 
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
-themes = glob.sync(path.join(ROOT, 'assets', 'themes', '*')).map (filePath) ->
-  path.basename filePath
 PoiConfig = React.createClass
   getInitialState: ->
     gameWidth =
@@ -104,15 +101,11 @@ PoiConfig = React.createClass
     @setState {language}
   handleSetTheme: (theme) ->
     theme = @refs.theme.getValue()
-    return if @state.theme == theme
-    config.set 'poi.theme', theme
-    event = new CustomEvent 'theme.change',
-      bubbles: true
-      cancelable: true
-      detail:
-        theme: theme
-    window.dispatchEvent event
-    @setState {theme}
+    if @state.theme != theme
+      window.applyTheme theme
+  onThemeChange: (e) ->
+    @setState
+      theme: e.detail.theme
   handleSetWebviewWidth: (e) ->
     @setState
       gameWidth: @refs.webviewWidth.getValue()
@@ -161,8 +154,10 @@ PoiConfig = React.createClass
       toggleModal __('Edit custom CSS'), __("Failed. Perhaps you don't have permission to it.")
   componentDidMount: ->
     window.addEventListener 'resize', @handleResize
+    window.addEventListener 'theme.change', @onThemeChange
   componentWillUnmount: ->
     window.removeEventListener 'resize', @handleResize
+    window.removeEventListener 'theme.change', @onThemeChange
   render: ->
     <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
@@ -263,10 +258,11 @@ PoiConfig = React.createClass
           <Col xs={6}>
             <Input type="select" ref="theme" value={@state.theme} onChange={@handleSetTheme}>
               {
-                themes.map (theme, index) ->
-                  <option key={index} value={theme}>{theme[0].toUpperCase() + theme.slice(1)}</option>
+                window.allThemes.map (theme, index) ->
+                  <option key={index} value={theme}>
+                    { if theme is '__default__' then 'Default' else (theme[0].toUpperCase() + theme.slice(1)) }
+                  </option>
               }
-              <option key={-1} value="__default__">Default</option>
             </Input>
           </Col>
           <Col xs={6}>

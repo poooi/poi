@@ -136,6 +136,32 @@ if process.platform == 'darwin'
       ]
     },
     {
+      label: 'Themes'
+      submenu: [
+        {
+          label: 'Apply Theme'
+          submenu: []
+        },
+        { type: 'separator' },
+        {
+          label: 'Next Theme'
+          accelerator: 'CmdOrCtrl+T'
+          click: (item, focusedWindow) ->
+            all = window.allThemes
+            nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
+            window.applyTheme nextTheme
+        },
+        {
+          label: 'Previous Theme'
+          accelerator: 'CmdOrCtrl+Shift+T'
+          click: (item, focusedWindow) ->
+            all = window.allThemes
+            prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
+            window.applyTheme prevTheme
+        }
+      ]
+    },
+    {
       label: 'Window'
       role: 'window'
       submenu: [
@@ -179,9 +205,21 @@ if process.platform == 'darwin'
       ]
     }
   ]
+  window.allThemes.map (th) ->
+    template[3].submenu[0].submenu.push
+      label: if th is '__default__' then 'Default' else th.charAt(0).toUpperCase() + th.slice(1)
+      type: 'radio'
+      checked: window.theme is th
+      click: (item, focusedWindow) ->
+        if th isnt window.theme
+          window.applyTheme th
   Menu = remote.require('menu')
-  menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  appMenu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(appMenu)
+  # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...
+  themeMenuList = appMenu.items[3].submenu.items[0].submenu.items
+  window.addEventListener 'theme.change', (e) ->
+    themeMenuList[window.allThemes.indexOf(e.detail.theme)].checked = true
 
 # Main tabbed area
 ControlledTabArea =
