@@ -1,6 +1,5 @@
 #ShipView{
   font-size: 15px;
-  overflow: auto;
 }
 #ShipView .btn-group {
   display: flex;

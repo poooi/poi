@@ -7,6 +7,7 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 # Layout
 adjustSize = ->
   webview = $('kan-game webview')
+  poiapp = document.getElementsByTagName('poi-app')[0]
   url = null
   try
     url = webview?.getUrl?()
@@ -15,8 +16,9 @@ adjustSize = ->
   factor = Math.ceil(window.innerWidth /  800.0 * 100) / 100.0
   if window.webviewWidth != -1
     factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
+  poiapp?.style?.height = "#{window.innerHeight - Math.ceil(480.0 * factor) - 30}px"
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{window.innerHeight - (480.0 * factor - 1) - 70}px"
+    e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - 30) / window.zoomLevel - 40}px"
     e.style.overflowY = "scroll"
   if window.webviewWidth > window.innerWidth
     nowWindow = remote.getCurrentWindow()

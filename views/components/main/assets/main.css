@@ -27,6 +27,9 @@
 #MainView .flex {
   flex: 1;
 }
+#MainView .main-panel {
+  height: calc(100% - 4px);
+}
 #MainView .panel-body {
   /*padding: 8px;*/
   width: 100%;
