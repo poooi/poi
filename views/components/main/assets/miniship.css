@@ -24,16 +24,16 @@
 #MiniShip .progress {
   margin-bottom: 5px;
 }
-#MiniShip .ship-details {
+#MiniShip .ship-details-mini {
   margin-bottom: 1px;
 }
-#MiniShip .ship-details .ship-tile {
+#MiniShip .ship-details-mini .ship-tile {
   margin: 5px 5px 5px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-#MiniShip .ship-details .ship-item {
+#MiniShip .ship-details-mini .ship-item {
   flex: 1;
   display: flex;
   flex-flow: row nowrap;
@@ -42,31 +42,31 @@
   white-space: nowrap;
   /*margin-right: 15px;*/
 }
-#MiniShip .ship-details .ship-item .ship-info {
+#MiniShip .ship-details-mini .ship-item .ship-info {
   flex: 1;
   font-size: 14px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
 }
-#MiniShip .ship-details .ship-item .ship-info .ship-type {
+#MiniShip .ship-details-mini .ship-item .ship-info .ship-type {
   margin-left: 5px;
 }
-#MiniShip .ship-details .ship-item .ship-info .ship-name {
+#MiniShip .ship-details-mini .ship-item .ship-info .ship-name {
   flex: 1.5;
   padding-right: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MiniShip .ship-details .ship-item .ship-info .ship-lv-text {
+#MiniShip .ship-details-mini .ship-item .ship-info .ship-lv-text {
   flex: 2;
   font-size: 70%;
   margin-right: 4px;
   line-height: 1;
   overflow: hidden;
 }
-#MiniShip .ship-details .ship-item .ship-stat {
+#MiniShip .ship-details-mini .ship-item .ship-stat {
   flex: 2;
   font-size: 14px;
   display: flex;
@@ -75,12 +75,12 @@
   min-width: 125px;
   justify-content: space-between;
 }
-#MiniShip .ship-details .ship-item .ship-stat .ship-hp {
+#MiniShip .ship-details-mini .ship-item .ship-stat .ship-hp {
   flex: 1;
   align-self: flex-start;
 }
 .ship-pop .status-label,
-#MiniShip .ship-details .ship-item .ship-stat .status-label {
+#MiniShip .ship-details-mini .ship-item .ship-stat .status-label {
   display: inline-block;
   z-index: 100;
   position: relative;
@@ -90,33 +90,33 @@
   vertical-align: middle;
   width: 20px;
 }
-#MiniShip .ship-details .ship-item .ship-stat .status-label .label {
+#MiniShip .ship-details-mini .ship-item .ship-stat .status-label .label {
   width: 20px;
   padding: 3px 3px;
   display: inline-block;
 }
-#MiniShip .ship-details .ship-item .ship-stat .ship-cond {
+#MiniShip .ship-details-mini .ship-item .ship-stat .ship-cond {
   width: 40px;
   align-self: flex-end;
   margin-left: auto;
   display: table;
   text-align: right;
 }
-#MiniShip .ship-details .ship-item .ship-stat .ship-cond .cond-indicator {
+#MiniShip .ship-details-mini .ship-item .ship-stat .ship-cond .cond-indicator {
   display: inline-block;
   height: 30px;
   width: 4px;
   vertical-align: middle;
   margin-left: 4px;
 }
-#MiniShip .ship-details .ship-item .ship-stat .hp-progress {
+#MiniShip .ship-details-mini .ship-item .ship-stat .hp-progress {
   flex: 1;
 }
-#MiniShip .ship-details .ship-item .ship-stat .hp-progress .progress {
+#MiniShip .ship-details-mini .ship-item .ship-stat .hp-progress .progress {
   height: 7px;
   flex: auto;
 }
-#MiniShip .ship-details .ship-item .ship-slot {
+#MiniShip .ship-details-mini .ship-item .ship-slot {
   width: 105px;
   flex: none;
   margin-left: 4px;
@@ -192,7 +192,7 @@
   position: absolute;
   z-index: 100;
   top: 40px;
-  height: 90%;
+  height: 91%;
   width: 99%;
   padding: 1px;
   transition: 0.2s;
@@ -201,7 +201,7 @@
   position: absolute;
   z-index: 100;
   top: 40px;
-  height: 90%;
+  height: 91%;
   width: 49%;
   padding: 1px;
   transition: 0.2s;

@@ -1,5 +1,6 @@
 #ShipView{
   font-size: 15px;
+  overflow: auto;
 }
 #ShipView .btn-group {
   display: flex;
@@ -41,7 +42,7 @@
   margin-bottom: 1px;
 }
 #ShipView .ship-details .ship-item {
-  margin-top: 2px;
+  margin-top: 7px;
   margin-left: 3px;
   flex: 1;
   display: flex;
@@ -172,7 +173,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 5px 5px 5px 0;
+  margin: 5px 5px 0 5px;
 }
 #ShipView .material-progress {
   vertical-align: top;
@@ -201,7 +202,7 @@
 #ShipView .ship-details .ship-item .ship-slot{
   width: 130px;
   flex: none;
-  margin: 5px 5px 10px 5px;
+  margin: 5px 5px 5px 5px;
 }
 #ShipView .slotitem-container {
   position: relative;

@@ -195,7 +195,7 @@ PaneBodyMini = React.createClass
         <span style={margin: 'auto'}>{@props.deck.api_name}</span>
       </div>
       </OverlayTrigger>
-      <div className="ship-details">
+      <div className="ship-details-mini">
       {
         {$ships, $shipTypes, _ships} = window
         for shipId, j in @props.deck.api_ship
