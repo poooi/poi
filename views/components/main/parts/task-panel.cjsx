@@ -169,7 +169,7 @@ TaskPanel = React.createClass
     {tasks} = @state
     flag = false
     switch path
-      when '/kcsapi/api_port/port'     #Handle parallel quest show 
+      when '/kcsapi/api_port/port'     #Handle parallel quest show
         if @state.taskLimits != body.api_parallel_quest_count
           tasks[5] = Object.clone(emptyTask)
           @setState
@@ -391,7 +391,7 @@ TaskPanel = React.createClass
       for i in [0..5]
         if @state.tasks[i].tracking
           <div className="panel-item task-item" key={i}>
-            <OverlayTrigger placement={if window.layout == 'horizonal' then 'left' else 'top'} overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'top' else 'left'} overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="quest-name">
                 <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
@@ -405,7 +405,7 @@ TaskPanel = React.createClass
           </div>
         else
           <div className="panel-item task-item" key={i}>
-            <OverlayTrigger placement={if window.layout == 'horizonal' then 'left' else 'top'} overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'top' else 'left'} overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="quest-name">
                 <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}

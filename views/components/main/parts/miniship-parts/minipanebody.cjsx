@@ -178,7 +178,7 @@ PaneBodyMini = React.createClass
       label: label
   render: ->
     <div>
-      <OverlayTrigger placement="top" overlay={
+      <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
         <Popover>
           <div>
             <TopAlert
@@ -204,7 +204,7 @@ PaneBodyMini = React.createClass
           shipInfo = $ships[ship.api_ship_id]
           shipType = $shipTypes[shipInfo.api_stype].api_name
           <div key={j} className="ship-tile">
-            <OverlayTrigger placement="top" overlay={
+            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
               <Popover className="ship-pop">
                 <div className="item-name">
                   <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
