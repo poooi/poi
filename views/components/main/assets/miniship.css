@@ -230,6 +230,7 @@
 #MiniShip .ship-panel-full .panel-body,
 #MiniShip .ship-panel-half .panel-body {
   padding: 1px;
+  height: 100%;
 }
 .toleft {
   left: 0px;
@@ -242,6 +243,10 @@
   height: calc(100% - 42px);
 }
 .top-horizonal {
-  top: 175px;
+  top: 174px;
   height: calc(100% - 180px);
+}
+#MiniShip .ship-deck {
+  height: calc(100% - 35px);
+  overflow: auto;
 }

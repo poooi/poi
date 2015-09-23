@@ -8,7 +8,7 @@ body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
   line-height: 1.42857143;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .alert {
   border-radius: 0px;
@@ -18,6 +18,12 @@ body {
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.tab-content {
+  overflow: auto;
+}
+#poi-app-container {
+  overflow: hidden;
 }
 kan-game poi-info .alert {
   opacity: 0.7;
@@ -40,7 +46,7 @@ hr {
   margin-bottom: 5px;
 }
 poi-app {
-  overflow: auto;
+  position: static;
 }
 poi-app .container {
   padding-left: 0px;

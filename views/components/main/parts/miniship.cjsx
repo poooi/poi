@@ -224,7 +224,7 @@ module.exports =
           </div>
           {
             for deck, i in @state.decks
-              <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
+              <div className="ship-deck #{if @state.activeDeck is i then 'show' else 'hidden'}" key={i}>
                 <PaneBody
                   key={i}
                   deckIndex={i}

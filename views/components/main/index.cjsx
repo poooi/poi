@@ -25,9 +25,8 @@ module.exports =
     shouldComponentUpdate: (nextProps, nextState) ->
       false
     render: ->
-      <div>
+      <div className="main-panel">
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
-
       {
         if @state.layout == 'horizonal' or window.doubleTabbed
           <div className="panel-col">
