@@ -1,6 +1,7 @@
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {OverlayTrigger, Tooltip,  Alert} = ReactBootstrap
 {__, __n} = require 'i18n'
+{join} = require 'path-extra'
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
