@@ -27,13 +27,62 @@
 #MainView .flex {
   flex: 1;
 }
-#MainView .main-panel {
-  height: calc(100% - 4px);
-}
 #MainView .panel-body {
   /*padding: 8px;*/
   width: 100%;
 }
+/*universal*/
+#MainView .bottom-area {
+  height: calc(100% - 39px);
+}
+#MainView .teitoku-panel-area {
+  height: 39px;
+}
+/*horizonal*/
+#MainView .main-area-horizontal {
+  height: 467px;
+  overflow: hidden;
+}
+#MainView .bottom-right-area,
+#MainView .bottom-left-area {
+  height: 100%;
+}
+#MainView .miniship-area-horizontal {
+  height: calc(100% - 97px);
+  min-height: 328px;
+}
+#MainView .resource-panel-area-horizontal,
+#MainView .mission-panel-area-horizontal {
+  height: 97px;
+}
+#MainView .combined-panels-area-horizontal {
+  height: 150px;
+}
+#MainView .task-panel-area-horizontal {
+  height: calc(100% - 253px);
+  min-height: 172px;
+}
+/*vertical*/
+#MainView .main-area-vertical {
+  height: 328px;
+}
+#MainView .left-area,
+#MainView .right-bottom-area,
+#MainView .left-bottom-area {
+  height: 100%
+}
+#MainView .resource-panel-area-vertical,
+#MainView .mission-panel-area-vertical {
+  height: 40%;
+}
+#MainView .combined-panels-area-vertical,
+#MainView .task-panel-area-vertical {
+  height: 60%;
+}
+#MainView .miniship-area-vertical {
+  height: 100%;
+}
+/*panels*/
 #MainView .ndock-panel,
 #MainView .kdock-panel,
 #MainView .mission-panel,
@@ -42,7 +91,11 @@
 #MainView .resource-panel {
   white-space: nowrap;
   overflow: hidden;
-  /*width: 49%;*/
+}
+#MainView .mission-panel .panel,
+#MainView .task-panel .panel,
+#MainView .resource-panel .panel {
+  height: calc(100% - 8px)
 }
 #MainView .panel-item {
   padding: 4px;
@@ -167,6 +220,8 @@
 #MainView .label {
   font-size: 90%;
   font-weight: normal;
+  padding-top: .2em;
+  padding-bottom: .2em;
 }
 #MainView .panel-body table td {
   overflow: hidden;

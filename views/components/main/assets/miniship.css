@@ -191,7 +191,7 @@
 #MiniShip .ship-panel-full {
   position: absolute;
   z-index: 100;
-  top: 38px;
+  bottom: 0px;
   height: calc(100% - 42px);
   width: calc(100% - 4px);
   padding: 1px;
@@ -200,9 +200,9 @@
 #MiniShip .ship-panel-half {
   position: absolute;
   z-index: 100;
-  top: 38px;
+  bottom: 0px;
   height: calc(100% - 42px);
-  width: calc(50% - 4px)
+  width: calc(50% - 4px);
   padding: 1px;
   transition: 0.2s;
 }
@@ -211,6 +211,7 @@
   z-index: 100;
   visibility: hidden;
   padding: 1px;
+  bottom: 0px;
   width: calc(50% - 4px);
   overflow: hidden;
   transition: 0.2s;
@@ -219,9 +220,9 @@
 #MiniShip .ship-panel-half-hidden {
   position: absolute;
   z-index: 100;
-  top: 175px;
   visibility: hidden;
   padding: 1px;
+  bottom: 0px;
   width: calc(25% - 4px);
   overflow: hidden;
   transition: 0.2s;
@@ -234,17 +235,19 @@
 }
 .toleft {
   left: 0px;
+  transition: 0.2s;
 }
 .toright {
   right: 0px;
+  transition: 0.2s;
 }
 .top-vertical {
-  top: 38px;
   height: calc(100% - 42px);
+  transition: 0.2s;
 }
 .top-horizonal {
-  top: 174px;
   height: calc(100% - 180px);
+  transition: 0.2s;
 }
 #MiniShip .ship-deck {
   height: calc(100% - 35px);

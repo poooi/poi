@@ -168,8 +168,8 @@ module.exports =
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
     render: ->
-      <div>
-        <Panel bsStyle="default" style={minHeight: 320}>
+      <div style={height: '100%'}>
+        <Panel bsStyle="default" style={minHeight: 322, height: 'calc(100% - 8px)'}>
           <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'miniship.css')} />
           <div className="panel-row">
             <ButtonGroup bsSize="xsmall">
@@ -202,7 +202,7 @@ module.exports =
         <Panel id="ShipView"
                className="#{if window.doubleTabbed then 'ship-panel-half' else 'ship-panel-full'}#{if @state.show then '' else '-hidden'}
                           #{if (!window.doubleTabbed) && (window.layout == 'vertical') then 'toright' else 'toleft'}
-                          #{if (!@state.show) && (window.layout == 'vertical') then 'top-vertical' else 'top-horizonal'}">
+                          #{if (window.layout == 'vertical') && (!window.doubleTabbed) then if (!@state.show) then 'top-vertical' else if (!@state.show) then 'top-horizonal'}">
           <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'ship.css')} />
           <div className="panel-row">
             <ButtonGroup>
