@@ -211,7 +211,7 @@ module.exports =
                           #{if (window.layout == 'vertical') && (!window.doubleTabbed) then if (!@state.show) then 'top-vertical' else if (!@state.show) then 'top-horizonal'}">
           <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'ship.css')} />
           <div className="panel-row">
-            <ButtonGroup>
+            <ButtonGroup className="fleet-name-button">
             {
               for i in [0..3]
                 <Button key={i} bsSize="small"

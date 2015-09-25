@@ -59,7 +59,7 @@
   height: 150px;
 }
 #MainView .task-panel-area-horizontal {
-  height: calc(100% - 253px);
+  height: calc(100% - 255px);
   min-height: 172px;
 }
 /*vertical*/
@@ -95,7 +95,7 @@
 #MainView .mission-panel .panel,
 #MainView .task-panel .panel,
 #MainView .resource-panel .panel {
-  height: calc(100% - 8px)
+  height: calc(100% - 6px)
 }
 #MainView .panel-item {
   padding: 4px;
