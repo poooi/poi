@@ -61,7 +61,6 @@ PoiConfig = React.createClass
     poiappHeight = parseInt(document.getElementsByTagName('poi-app')[0].style.height)
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = "#{poiappHeight / zoomLevel - 40}px"
-      console.log e.style.height
       e.style.overflowY = "scroll"
     config.set('poi.zoomLevel', zoomLevel)
     @setState
