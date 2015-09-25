@@ -9,6 +9,7 @@ ResourcePanel = React.createClass
 
   getInitialState: ->
     material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
+    limit: 30750   # material limit of level 120
   handleResponse: (e) ->
     {method, path, body} = e.detail
     switch path
@@ -19,11 +20,15 @@ ResourcePanel = React.createClass
         @setState
           material: material
       when '/kcsapi/api_port/port'
-        {material} = @state
+        {material, limit} = @state
         for e in body.api_material
           material[e.api_id] = e.api_value
+        level = parseInt(body.api_basic.api_level)
+        if level > 0
+          limit = 750 + level * 250
         @setState
           material: material
+          limit: limit
       when '/kcsapi/api_req_hokyu/charge'
         {material} = @state
         for i in [0..3]
@@ -83,8 +88,15 @@ ResourcePanel = React.createClass
       {
         for i in order
           <Col key={i} xs={6} style={marginBottom: 3}>
-            <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"} className="material-icon" />
-            <span className="material-value">{@state.material[i]}</span>
+          {
+            # Show special effect to indicate that meterial is lower than limit.
+            # Only apply to first 4 material (fuel, ammo, steel and bauxite).
+            style = null
+            if i <= 4 and @state.material[i] < @state.limit
+              style = {'-webkit-filter': 'drop-shadow(0px 0px 4px #2196F3)'}
+            <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"} className="material-icon" style={style} />
+          }
+          <span className="material-value">{@state.material[i]}</span>
           </Col>
       }
       </Grid>
