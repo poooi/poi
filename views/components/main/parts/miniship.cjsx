@@ -67,6 +67,12 @@ module.exports =
       activeDeck: 0
       dataVersion: 0
     showDataVersion: 0
+    nowTime: 0
+    componentWillUpdate: (nextProps, nextState) ->
+      @nowTime = (new Date()).getTime()
+    componentDidUpdate: (prevProps, prevState) ->
+      cur = (new Date()).getTime()
+      console.log "the cost of ship-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
     shouldComponentUpdate: (nextProps, nextState) ->
       # if ship-pane is visibile and dataVersion is changed, this pane should update!
       if nextProps.selectedKey is @props.index and nextState.dataVersion isnt @showDataVersion
@@ -227,6 +233,7 @@ module.exports =
               <div className="ship-deck #{if @state.activeDeck is i then 'show' else 'hidden'}" key={i}>
                 <PaneBody
                   key={i}
+                  show={@state.show}
                   deckIndex={i}
                   deck={@state.decks[i]}
                   activeDeck={@state.activeDeck}
