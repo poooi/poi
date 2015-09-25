@@ -207,8 +207,8 @@
 }
 #MainView .resource-panel .panel-body {
   /*border: 1px solid orange;*/
-  padding-top: 4px;
-  padding-bottom: 3px;
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 #MainView .resource-panel .material-value {
   margin-left: 5px;
