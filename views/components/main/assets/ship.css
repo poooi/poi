@@ -8,12 +8,16 @@
   padding-right: 5px;
   padding-top: 5px;
 }
+#ShipView .fleet-name-button {
+  width: calc(100% - 50px)
+}
 #ShipView .btn-group .btn {
   flex: 1;
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+  overflow: hidden;
 }
 #ShipView .hidden {
   display: none;
