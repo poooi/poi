@@ -88,8 +88,12 @@
   padding-top: 0px;
   opacity: 0.8;
 }
-#ShipView .ship-details .ship-item .ship-info .ship-lv {
-
+#ShipView .ship-details .ship-item .ship-info .ship-exp {
+  flex: 1;
+  font-size: 75%;
+  vertical-align: bottom;
+  padding-top: 0px;
+  opacity: 0.8;
 }
 #ShipView .ship-details .ship-item .ship-info .ship-type {
   margin-left: 5px;

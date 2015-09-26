@@ -179,16 +179,13 @@ PaneBody = React.createClass
                         <span className='ship-type'>
                           {shipType}
                         </span>
-                        <span className="ship-lv">
-                          Next. {ship.api_exp[1]}
-                        </span>
                       </div>
                       <span className="ship-name">
                         {shipInfo.api_name}
                       </span>
-                      <div className="exp-progress">
-                        <ProgressBar bsStyle="info" now={ship.api_exp[2]} />
-                      </div>
+                      <span className="ship-exp">
+                        Next. {ship.api_exp[1]}
+                      </span>
                     </div>
                     <div className="ship-stat">
                       <div className="div-row">
