@@ -87,6 +87,13 @@ module.exports =
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
     toggle: ->
+      # dispatch an event about whether the main pane is show or not
+      event = new CustomEvent 'view.main.visible',
+        bubbles: true
+        cancelable: false
+        detail:
+          visible: @state.show
+      window.dispatchEvent event
       @setState
         show: !@state.show
         dataVersion: @state.dataVersion + 1
@@ -197,6 +204,7 @@ module.exports =
               <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
                 <PaneBodyMini
                   key={i}
+                  show={!@state.show}
                   deckIndex={i}
                   deck={@state.decks[i]}
                   activeDeck={@state.activeDeck}

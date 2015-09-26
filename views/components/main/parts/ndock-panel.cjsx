@@ -32,6 +32,13 @@ NdockPanel = React.createClass
         countdown: -1
     ]
     notified: []
+    show: true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextState.show
+  handleVisibleResponse: (e) ->
+    {visible} = e.detail
+    @setState
+      show: visible
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships, _ships} = window
@@ -98,9 +105,11 @@ NdockPanel = React.createClass
       notified: notified
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'view.main.visible', @handleVisibleResponse
     setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'view.main.visible', @handleVisibleResponse
     clearInterval @updateCountdown, 1000
   render: ->
     <div>

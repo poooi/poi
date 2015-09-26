@@ -10,6 +10,13 @@ ResourcePanel = React.createClass
   getInitialState: ->
     material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
     limit: 30750   # material limit of level 120
+    show: true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextState.show
+  handleVisibleResponse: (e) ->
+    {visible} = e.detail
+    @setState
+      show: visible
   handleResponse: (e) ->
     {method, path, body} = e.detail
     switch path
@@ -80,8 +87,10 @@ ResourcePanel = React.createClass
           material: material
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'view.main.visible', @handleVisibleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'view.main.visible', @handleVisibleResponse
   render: ->
     <Panel bsStyle="default">
       <Grid>

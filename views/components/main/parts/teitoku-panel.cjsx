@@ -53,6 +53,13 @@ TeitokuPanel = React.createClass
     maxChara: '??'
     slotitemCount: '??'
     maxSlotitem: '??'
+    show: true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextState.show
+  handleVisibleResponse: (e) ->
+    {visible} = e.detail
+    @setState
+      show: visible
   handleResponse: (e) ->
     {method, path, body} = e.detail
     switch path
@@ -134,8 +141,10 @@ TeitokuPanel = React.createClass
             , 1000
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'view.main.visible', @handleVisibleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'view.main.visible', @handleVisibleResponse
   render: ->
     <Panel bsStyle="default" className="teitoku-panel">
       {getHeader @state}
