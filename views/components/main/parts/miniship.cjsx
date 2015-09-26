@@ -103,10 +103,22 @@ module.exports =
       window.addEventListener 'keydown', (e) =>
         if e.ctrlKey or e.metaKey
           if e.keyCode == 49 && @state.show
+            event = new CustomEvent 'view.main.visible',
+              bubbles: true
+              cancelable: false
+              detail:
+                visible: @state.show
+            window.dispatchEvent event
             @setState
               show: false
               dataVersion: @state.dataVersion + 1
           else if e.keyCode == 50 && !@state.show
+            event = new CustomEvent 'view.main.visible',
+              bubbles: true
+              cancelable: false
+              detail:
+                visible: @state.show
+            window.dispatchEvent event
             @setState
               show: true
               dataVersion: @state.dataVersion + 1
