@@ -39,6 +39,13 @@ MissionPanel = React.createClass
         mission: null
     ]
     notified: []
+    show: true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextState.show
+  handleVisibleResponse: (e) ->
+    {visible} = e.detail
+    @setState
+      show: visible
   handleResponse: (e) ->
     {$missions} = window
     {method, path, body, postBody} = e.detail
@@ -109,9 +116,11 @@ MissionPanel = React.createClass
       notified: notified
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'view.main.visible', @handleVisibleResponse
     setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'view.main.visible', @handleVisibleResponse
     clearInterval @updateCountdown, 1000
   render: ->
     <Panel bsStyle="default">

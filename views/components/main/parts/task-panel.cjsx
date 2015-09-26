@@ -164,6 +164,13 @@ TaskPanel = React.createClass
     taskLimits: 5
     tasks: [Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(emptyTask),
             Object.clone(emptyTask), Object.clone(emptyTask), Object.clone(lockedTask)]
+    show: true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextState.show
+  handleVisibleResponse: (e) ->
+    {visible} = e.detail
+    @setState
+      show: visible
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {tasks} = @state
@@ -379,11 +386,13 @@ TaskPanel = React.createClass
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'task.info', @handleTaskInfo
     window.addEventListener 'battle.result', @handleBattleResult
+    window.addEventListener 'view.main.visible', @handleVisibleResponse
     @interval = setInterval @refreshDay, 30000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'task.info', @handleTaskInfo
     window.removeEventListener 'battle.result', @handleBattleResult
+    window.removeEventListener 'view.main.visible', @handleVisibleResponse
     clearInterval @interval
   render: ->
     <Panel bsStyle="default">
