@@ -35,6 +35,7 @@ window.addEventListener 'layout.change', (e) ->
 
 document.addEventListener 'DOMContentLoaded', ->
   # Create new window for new window in webview
+  $('kan-game webview').src = config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'new-window', (e) ->
     exWindow = WindowManager.createWindow
       realClose: true
