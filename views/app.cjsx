@@ -39,6 +39,7 @@ if process.platform == 'darwin'
         {
           label: 'About Poi'
           role: 'about'
+          selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },
         {
@@ -51,15 +52,18 @@ if process.platform == 'darwin'
           label: 'Hide Poi'
           accelerator: 'CmdOrCtrl+H'
           role: 'hide'
+          selector: 'hide:'
         },
         {
           label: 'Hide Others'
           accelerator: 'CmdOrCtrl+Shift+H'
           role: 'hideothers'
+          selector: 'hideOtherApplications:'
         },
         {
           label: 'Show All'
           role: 'unhide'
+          selector: 'unhideAllApplications:'
         },
         { type: 'separator' },
         {
@@ -76,32 +80,38 @@ if process.platform == 'darwin'
           label: 'Undo'
           accelerator: 'CmdOrCtrl+Z'
           role: 'undo'
+          selector: 'undo:'
         },
         {
           label: 'Redo'
           accelerator: 'Shift+CmdOrCtrl+Z'
           role: 'redo'
+          selector: 'redo:'
         },
         { type: 'separator' },
         {
           label: 'Cut'
           accelerator: 'CmdOrCtrl+X'
           role: 'cut'
+          selector: 'cut:'
         },
         {
           label: 'Copy'
           accelerator: 'CmdOrCtrl+C'
           role: 'copy'
+          selector: 'copy:'
         },
         {
           label: 'Paste'
           accelerator: 'CmdOrCtrl+V'
           role: 'paste'
+          selector: 'paste:'
         },
         {
           label: 'Select All'
           accelerator: 'CmdOrCtrl+A'
           role: 'selectall'
+          selector: 'selectAll:'
         }
       ]
     },
@@ -168,11 +178,13 @@ if process.platform == 'darwin'
           label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
+          selector: 'performMiniaturize:'
         },
         { type: 'separator' },
         {
           label: 'Bring All to Front'
           role: 'front'
+          selector: 'arrangeInFront:'
         }
       ]
     },
