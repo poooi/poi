@@ -31,6 +31,7 @@ global.mainWindow = mainWindow = null
 listenPort = config.get 'poi.port', 12450
 app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
 app.commandLine.appendSwitch 'ignore-certificate-errors'
+app.commandLine.appendSwitch 'ssl-version-fallback-min', "tls1"
 
 # Pepper Flash
 if process.platform == 'linux'
