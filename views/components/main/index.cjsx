@@ -15,7 +15,6 @@ module.exports =
     handleChangeLayout: (e) ->
       @setState
         layout: e.detail.layout
-      @forceUpdate()
     handleSelect: (key) ->
       @setState {key}
       @forceUpdate()
