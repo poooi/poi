@@ -96,6 +96,7 @@ PoiConfig = React.createClass
         layout: layout
     window.dispatchEvent event
     @setState {layout}
+    toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
   handleSetLanguage: (language) ->
     language = @refs.language.getValue()
     return if @state.language == language
