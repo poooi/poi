@@ -170,6 +170,11 @@ if process.platform == 'darwin'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
         },
+        {
+          label: 'Close'
+          accelerator: 'CmdOrCtrl+W'
+          role: 'close'
+        },
         { type: 'separator' },
         {
           label: 'Bring All to Front'
