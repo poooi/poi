@@ -1,5 +1,5 @@
 poi:
-  theme: "papercyan"
+  theme: "paperdark"
   layout: "horizonal"
   window:
     x: 60
