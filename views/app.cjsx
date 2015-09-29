@@ -64,9 +64,22 @@ if process.platform == 'darwin'
         },
         { type: 'separator' },
         {
-          label: 'Quit'
+          label: 'Warn Before Quitting'
+          type: 'checkbox'
+          checked: config.get('poi.confirm.quit', false)
+          click: (item, focusedWindow) ->
+            config.set('poi.confirm.quit', item.checked)
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit Poi'
           accelerator: 'CmdOrCtrl+Q'
-          selector: 'terminate:'
+          click: ->
+            # The terminate selector will ignore the 'poi.confirm.quit' setting
+            # and try to close any (plugin) window it can close first.
+            # So here we should only try to close the main window and let it handle all the rest.
+            remote.getCurrentWindow().focus()
+            window.close()
         }
       ]
     },

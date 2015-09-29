@@ -166,11 +166,14 @@ PoiConfig = React.createClass
       <div className="form-group" id='navigator-bar'>
         <Divider text={__ 'Browser'} />
         <NavigatorBar />
-        <Grid>
-          <Col xs={12}>
-            <Input type="checkbox" label={__ 'Confirm before exit'} checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
-          </Col>
-        </Grid>
+        {
+          if process.platform isnt 'darwin'
+            <Grid>
+              <Col xs={12}>
+                <Input type="checkbox" label={__ 'Confirm before exit'} checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
+              </Col>
+            </Grid>
+        }
       </div>
       <div className="form-group">
         <Divider text={__ 'Notification'} />
