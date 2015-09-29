@@ -64,6 +64,14 @@ if process.platform == 'darwin'
         },
         { type: 'separator' },
         {
+          label: 'Warn Before Quitting'
+          type: 'checkbox'
+          checked: config.get('poi.confirm.quit', false)
+          click: (item, focusedWindow) ->
+            config.set('poi.confirm.quit', item.checked)
+        },
+        { type: 'separator' },
+        {
           label: 'Quit'
           accelerator: 'CmdOrCtrl+Q'
           selector: 'terminate:'
