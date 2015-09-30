@@ -44,7 +44,7 @@ NavigatorBar = React.createClass
     webview.reload()
   handlePressEnter: (e) ->
     if e.keyCode is 13
-	     @handleNavigate()
+      @handleNavigate()
   handleSetHomepage: ->
     config.set 'poi.homepage', @state.navigateUrl
   componentDidMount: ->
