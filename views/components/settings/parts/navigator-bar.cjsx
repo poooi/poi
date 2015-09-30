@@ -42,6 +42,9 @@ NavigatorBar = React.createClass
     webview.src = @state.navigateUrl
   handleRefresh: ->
     webview.reload()
+  handlePressEnter: (e) ->
+    if e.keyCode is 13
+      @handleNavigate()
   handleSetHomepage: ->
     config.set 'poi.homepage', @state.navigateUrl
   componentDidMount: ->
@@ -55,7 +58,7 @@ NavigatorBar = React.createClass
   render: ->
     <div style={display: 'flex'}>
       <div style={flex: 1, marginLeft: 15, marginRight: 15}>
-        <Input type='text' bsSize='small' placeholder='输入网页地址' value={@state.navigateUrl} onChange={@handleSetUrl} />
+        <Input type='text' bsSize='small' placeholder='输入网页地址' value={@state.navigateUrl} onChange={@handleSetUrl} onKeyDown={@handlePressEnter}/>
       </div>
       <div style={flex: 'none', width: 110}>
         <ButtonGroup>
