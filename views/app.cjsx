@@ -279,8 +279,9 @@ PoiMapReminder = React.createClass
     nextSpot: null
     mapspot: mapspot
   handleResponse: (e) ->
-    {path, body} = e.detail
-    switch path
+    reqPath = e.detail.path
+    {body} = e.detail
+    switch reqPath
       when '/kcsapi/api_port/port'
         @setState
           status: null
