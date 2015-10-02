@@ -76,7 +76,7 @@ emptyTask =
 lockedTask =
   name: __ 'Locked'
   id: 100001
-  content: '...'
+  content: __ "Increase your active quest limit with a \"Headquarters Personnel\"."
   progress: ''
   category: 0
   type: 0
