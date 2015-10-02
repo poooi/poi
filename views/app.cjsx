@@ -2,7 +2,6 @@ fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
 i18n = require 'i18n'
-CSON = require 'cson'
 {__, __n} = i18n
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
@@ -265,72 +264,23 @@ PoiAlert = React.createClass
 # Map Reminder
 PoiMapReminder = React.createClass
   getInitialState: ->
-    # Load map data
-    mapspot = null
-    try
-      mapspot = CSON.parseCSONFile path.join(ROOT, 'assets', 'data', 'mapspot.cson')
-    catch
-      console.log 'Failed to load map data!'
-
-    status: null  # null: not in sortie || "sortie" || "compass"
-    mapArea: 0
-    mapCell: 0
-    nowSpot: null
-    nextSpot: null
-    mapspot: mapspot
+    battling: __ 'Not in sortie'
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
     switch reqPath
       when '/kcsapi/api_port/port'
         @setState
-          status: null
+          battling: __ 'Not in sortie'
       when '/kcsapi/api_req_map/start'
         @setState
-          mapArea: body.api_maparea_id
-          mapCell: body.api_mapinfo_no
-          status: "compass"
-          nowSpot: 0
-          nextSpot: body.api_no
-      when '/kcsapi/api_req_map/next'
-        @setState
-          status: "compass"
-          nowSpot: @state.nextSpot
-          nextSpot: body.api_no
-      when '/kcsapi/api_req_sortie/battle', '/kcsapi/api_req_battle_midnight/battle'
-        @setState
-          status: "sortie"
+          battling: __('Sortie area') + ': ' + body.api_maparea_id + '-' + body.api_mapinfo_no
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
-  getCompassAngle: () ->
-    return null unless mapspot = @state.mapspot?[@state.mapArea]?[@state.mapCell]
-    return null unless nowPoint = mapspot[@state.nowSpot]
-    return null unless nextPoint = mapspot[@state.nextSpot]
-    # Calucate and translate to css rorate angle
-    angle = Math.atan2(nextPoint[1] - nowPoint[1], nextPoint[0] - nowPoint[0]) / Math.PI * 180
-    angle = angle + 90
   render: ->
-    <Alert bsStyle="default" style={if !window.isDarkTheme then color: 'black' else color: 'white'}>
-      {
-        switch @state.status
-          when "compass"
-            <div>
-              {__('Compass') + ': '}
-              {
-                if angle = @getCompassAngle()
-                  <FontAwesome name='long-arrow-up' style={transform: "rotate(#{angle}deg)"} />
-                else
-                  '?'
-              }
-            </div>
-          when "sortie"
-            __('Sortie area') + ': ' + @state.mapArea + '-' + @state.mapCell
-          else
-            __('Not in sortie')
-      }
-    </Alert>
+    <Alert bsStyle="default"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
