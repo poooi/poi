@@ -127,5 +127,7 @@
   "Ship tag: %s": "出擊限定: %s",
   "Set as homepage": "ホームページを設定する",
   "Zoom": "ズーム",
-  "Zoom level": "ズームレベル"
+  "Zoom level": "ズームレベル",
+  "Poi should be placed in a path that contains no non-ASCII character.": "日本語等の非 ASCII 文字を含むフォルダにインストールしないでください。",
+  "The current path is: %s": "現在のインストール先: %s"
 }

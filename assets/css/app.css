@@ -155,3 +155,8 @@ poi-control button .fa {
   text-shadow: 0 0 3px #FFFF00;
   font-weight: bold;
 }
+.non-ascii-path {
+  text-align: center;
+  margin-top: 25%;
+  font-size: 20px;
+}

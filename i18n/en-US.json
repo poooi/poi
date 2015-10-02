@@ -121,5 +121,7 @@
   "Old": "Old",
   "Repair Time": "Repair Time",
   "Zoom": "Zoom",
-  "Zoom level": "Zoom level"
+  "Zoom level": "Zoom level",
+  "Poi should be placed in a path that contains no non-ASCII character.": "Poi should be placed in a path that contains no non-ASCII character.",
+  "The current path is: %s": "The current path is: %s"
 }

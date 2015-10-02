@@ -18,6 +18,15 @@ i18n.configure
   extension: '.json'
 i18n.setLocale(window.language)
 
+if ROOT.match(/[^\x00-\x7F]/)
+  $('#webview-wrapper').innerHTML = """
+    <div class="non-ascii-path">
+      <p>#{__ 'Poi should be placed in a path that contains no non-ASCII character.'}</p>
+      <p>#{__ 'The current path is: %s', ROOT}</p>
+    </div>
+
+  """
+
 # Set zoom level
 document.getElementById('poi-app-container').style.transformOrigin = '0 0'
 document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{window.zoomLevel})"
