@@ -21,24 +21,6 @@ totalExp = [
   1300000, 1600000, 1900000, 2200000, 2600000, 3000000, 3500000, 4000000, 4600000, 5200000,
   5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000]
 
-getHeader = (state) ->
-  if state.nickname?
-    return (
-      <div>
-        <OverlayTrigger placement="bottom" overlay={
-            if state.level == 120
-              <Tooltip>Total. {state.exp}</Tooltip>
-            else
-              <Tooltip>Next. {state.nextExp}</Tooltip>
-          }>
-          <span>Lv. {state.level}</span>
-        </OverlayTrigger>
-        {' ' + state.nickname} [{rankName[state.rank]}]　{__ 'Ships'}: {state.shipCount} / {state.maxChara}　{__ 'Equipment'}: {state.slotitemCount} / {state.maxSlotitem}
-      </div>
-    )
-  else
-    return "#{__ 'Admiral [Not logged in]'}　#{__ "Ships"}：0 / 0　#{__ "Equipment"}：0 / 0"
-
 getMaterialImage = (idx) ->
   return "file://#{ROOT}/assets/img/material/0#{idx}.png"
 
@@ -145,9 +127,39 @@ TeitokuPanel = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'view.main.visible', @handleVisibleResponse
+  getHeader: ->
+    if @state.nickname?
+      styleCommon =
+        minWidth: '60px'
+        padding: '2px'
+        float: 'left'
+      styleL = Object.assign {}, styleCommon, {textAlign: 'right'}
+      styleR = Object.assign {}, styleCommon, {textAlign: 'left'}
+      <div>
+        <OverlayTrigger placement="bottom" overlay={
+            if @state.level < 120
+              <Tooltip>
+                <div style={display: 'table'}>
+                  <div>
+                    <span style={styleL}>Next.</span><span style={styleR}>{@state.nextExp}</span>
+                  </div>
+                  <div>
+                    <span style={styleL}>Total Exp.</span><span style={styleR}>{@state.exp}</span>
+                  </div>
+                </div>
+              </Tooltip>
+            else
+              <Tooltip>Total Exp. {@state.exp}</Tooltip>
+          }>
+          <span>{"Lv. #{@state.level}　#{@state.nickname}　[#{rankName[@state.rank]}]　"}</span>
+        </OverlayTrigger>
+        {__ 'Ships'}: {@state.shipCount} / {@state.maxChara}　{__ 'Equipment'}: {@state.slotitemCount} / {@state.maxSlotitem}
+      </div>
+    else
+      <div>{"#{__ 'Admiral [Not logged in]'}　#{__ "Ships"}：? / ?　#{__ "Equipment"}：? / ?"}</div>
   render: ->
     <Panel bsStyle="default" className="teitoku-panel">
-      {getHeader @state}
+      {@getHeader()}
     </Panel>
 
 module.exports = TeitokuPanel
