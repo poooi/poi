@@ -193,7 +193,7 @@ module.exports =
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
     render: ->
-      <div style={height: '100%'}>
+      <div style={height: '100%'} onDoubleClick={@toggle}>
         <Panel bsStyle="default" style={minHeight: 322, height: 'calc(100% - 8px)'}>
           <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'miniship.css')} />
           <div className="panel-row">
