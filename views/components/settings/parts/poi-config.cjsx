@@ -15,13 +15,13 @@ PoiConfig = React.createClass
   getInitialState: ->
     gameWidth =
       if (config.get 'poi.webview.width', -1) == -1
-        if config.get('poi.layout', 'horizonal') == 'horizonal'
+        if config.get('poi.layout', 'horizontal') == 'horizontal'
           window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
         else
           window.innerWidth
       else
         config.get 'poi.webview.width', -1
-    layout: config.get 'poi.layout', 'horizonal'
+    layout: config.get 'poi.layout', 'horizontal'
     theme: config.get 'poi.theme', '__default__'
     language: config.get 'poi.language', navigator.language
     gameWidth: gameWidth
@@ -114,16 +114,16 @@ PoiConfig = React.createClass
     @setState
       gameWidth: @refs.webviewWidth.getValue()
     width = parseInt @refs.webviewWidth.getValue()
-    return if isNaN(width) || width < 0 || !@state.useFixedResolution || (config.get('poi.layout', 'horizonal') == 'horizonal' && width > window.innerWidth - 150)
+    return if isNaN(width) || width < 0 || !@state.useFixedResolution || (config.get('poi.layout', 'horizontal') == 'horizontal' && width > window.innerWidth - 150)
     window.webviewWidth = width
     window.dispatchEvent new Event('webview.width.change')
     config.set 'poi.webview.width', width
   handleResize: ->
     {gameWidth} = @state
     width = parseInt gameWidth
-    return if isNaN(width) || width < 0 || (config.get('poi.layout', 'horizonal') == 'horizonal' && width > window.innerWidth - 150)
+    return if isNaN(width) || width < 0 || (config.get('poi.layout', 'horizontal') == 'horizontal' && width > window.innerWidth - 150)
     if !@state.useFixedResolution
-      if config.get('poi.layout', 'horizonal') == 'horizonal'
+      if config.get('poi.layout', 'horizontal') == 'horizontal'
         @setState
           gameWidth: window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
       else
@@ -212,8 +212,8 @@ PoiConfig = React.createClass
         <Divider text={__("Layout")} />
         <Grid>
           <Col xs={6}>
-            <Button bsStyle={if @state.layout == 'horizonal' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'horizonal'} style={width: '100%'}>
-              {if @state.layout == 'horizonal' then '√ ' else ''}{__ 'Use horizontal layout'}
+            <Button bsStyle={if @state.layout == 'horizontal' then 'success' else 'danger'} onClick={@handleSetLayout.bind @, 'horizontal'} style={width: '100%'}>
+              {if @state.layout == 'horizontal' then '√ ' else ''}{__ 'Use horizontal layout'}
             </Button>
           </Col>
           <Col xs={6}>

@@ -2,7 +2,7 @@
 
 # Initial
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
-$('#layout-css').setAttribute 'href', "./assets/css/layout.horizonal.css"
+$('#layout-css').setAttribute 'href', "./assets/css/layout.horizontal.css"
 factor = null
 
 # Layout

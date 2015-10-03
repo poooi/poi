@@ -151,7 +151,7 @@ poi 用户设置相关 API。
 ```javascript
 window.config.get('path.to.config', 'default'); // 获取某个用户设置值，获取失败返回默认值
 window.config.set('path.to.config', 'some value'); // 保存某个用户设置值
-window.layout // 目前的布局，'horizonal' || 'vertical'
+window.layout // 目前的布局，'horizontal' || 'vertical'
 window.theme // 目前使用的主题
 ```
 ## 窗口插件开发

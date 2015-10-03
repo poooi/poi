@@ -28,7 +28,7 @@ module.exports =
       <div>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
       {
-        if @state.layout == 'horizonal' or window.doubleTabbed
+        if @state.layout == 'horizontal' or window.doubleTabbed
           <div className="panel-col main-area-horizontal">
             <div className="panel-col teitoku-panel-area">
               <TeitokuPanel />
