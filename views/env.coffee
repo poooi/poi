@@ -138,8 +138,14 @@ window.config = remote.require './lib/config'
 window.proxy = remote.require './lib/proxy'
 window.CONST = Object.remoteClone remote.require './lib/constant'
 
+checkLayout = (layout) ->
+  if layout isnt 'horizontal' and layout isnt 'vertical' and layout isnt 'L'
+    layout = 'horizontal'
+    config.set 'poi.layout', layout
+  layout
+
 # User configs
-window.layout = config.get 'poi.layout', 'horizontal'
+window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.webviewWidth = config.get 'poi.webview.width', -1
 window.language = config.get 'poi.language', navigator.language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
