@@ -86,12 +86,17 @@ PaneBody = React.createClass
         updateflag = true
         label = @updateLabels()
       when '/kcsapi/api_req_nyukyo/start'
-        shipId = parseInt postBody.api_ship_id
-        if shipId in @props.deck.api_ship
-          i = @props.deck.api_ship.indexOf shipId
-          # status = getShipStatus shipId
-          label[i] = 1
+        if (postBody.api_highspeed == 1)
           updateflag = true
+      when '/kcsapi/api_get_member/ndock'
+        for shipId in _ndocks
+          i = @props.deck.api_ship.indexOf shipId
+          if i isnt -1
+            label[i] = 1
+            updateflag = true
+      when '/kcsapi/api_req_nyukyo/speedchange'
+        updateflag = true
+        label = @updateLabels()
     if updateflag
       @setState
         label: label
