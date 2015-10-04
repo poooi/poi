@@ -1,6 +1,6 @@
 poi:
   theme: "paperdark"
-  layout: "horizonal"
+  layout: "horizontal"
   window:
     x: 60
     y: 60

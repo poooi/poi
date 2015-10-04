@@ -10,12 +10,12 @@ changeBounds = ->
   borderY = bound.height - window.innerHeight
   newHeight = window.innerHeight
   newWidth = window.innerWidth
-  if layout == 'horizonal'
+  if layout == 'horizontal'
     # Previous vertical
     newHeight = window.innerWidth / 800 * 480 + 30
     newWidth = window.innerWidth / 5 * 7
   else
-    # Previous horizonal
+    # Previous horizontal
     newHeight = window.innerWidth / 7 * 5 / 800 * 480 + 420
     newWidth = window.innerWidth / 7 * 5
   setBounds

@@ -245,7 +245,7 @@
   height: calc(100% - 42px);
   transition: 0.2s;
 }
-.top-horizonal {
+.top-horizontal {
   height: calc(100% - 180px);
   transition: 0.2s;
 }
