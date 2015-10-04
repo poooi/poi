@@ -142,6 +142,9 @@ PaneBodyMini = React.createClass
           # status = getShipStatus shipId
           label[i] = 1
           updateflag = true
+      when '/kcsapi/api_req_nyukyo/speedchange'
+        updateflag = true
+        label = @updateLabels()
     if updateflag
       @setState
         label: label
