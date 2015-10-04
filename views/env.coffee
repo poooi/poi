@@ -420,7 +420,7 @@ resolveResponses = ->
           postBody: postBody
       window.dispatchEvent event
     catch err
-      console.error e
+      console.error err
   locked = false
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   # Invalid response
