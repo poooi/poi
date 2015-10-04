@@ -400,6 +400,7 @@ resolveResponses = ->
         shipId = _ndocks[postBody.api_ndock_id - 1]
         _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
         _ships[shipId].api_cond = Math.max(40, _ships[shipId].api_cond)
+        _ndocks[postBody.api_ndock_id - 1] = 0
       when '/kcsapi/api_req_nyukyo/start'
         if postBody.api_highspeed == '1'
           shipId = parseInt postBody.api_ship_id
