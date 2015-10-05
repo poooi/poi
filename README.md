@@ -7,9 +7,10 @@
 
 Scalable KanColle browser and tool.
 
-## Downloads
+## Prebuilt Release Downloads
 
-Always [Here](http://0u0.moe/poi).
+GitHub release: [here](https://github.com/poooi/poi/releases).
+China mainland: [here](http://0u0.moe/poi).
 
 ## Features
 
