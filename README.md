@@ -82,14 +82,8 @@ cp default-config.cson config.cson
 [plugin-almanac](https://github.com/poooi/plugin-almanac) by [Magica](https://github.com/magicae)
 > KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
 
-[plugin-sunshine](https://github.com/poooi/plugin-sunshine) by [JenningsWu](https://github.com/JenningsWu)
-> poi~ shine you one face!
-
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.
-
-[obsolete][plugin-ship-panel-patcher](https://github.com/poooi/plugin-ship-panel-patcher) by [KochiyaOcean](https://github.com/KochiyaOcean)
-> Use an alter style of ship panel.
 
 [plugin-secretary](https://github.com/dazzyd/poi-secretary) by [Dazzy Ding](https://github.com/dazzyd)
 > Use secretary voice as notification sound.
