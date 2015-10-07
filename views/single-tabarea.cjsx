@@ -26,6 +26,7 @@ components = components.map (filePath) ->
 components = components.filter (component) ->
   component.show isnt false and component.name != 'SettingsView'
 components = _.sortBy(components, 'priority')
+numOfComponentsHotKeys = components.length + 1  # main view uses 1 & 2, so +1
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
@@ -56,8 +57,8 @@ ControlledTabArea = React.createClass
     if num == 1 || num == 2
       @handleSelect 0
     else
-      if num <= components.length + tabbedPlugins.length
-        @handleSelect num - 2
+      if num <= numOfComponentsHotKeys + tabbedPlugins.length
+        @handleSelect num - numOfComponentsHotKeys
   handleShiftTabKeyDown: ->
     @handleSelect if @state.key? then (@state.key - 1 + components.length + tabbedPlugins.length) % (components.length + tabbedPlugins.length) else components.length + tabbedPlugins.length - 1
   handleTabKeyDown: ->
