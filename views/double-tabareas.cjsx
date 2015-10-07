@@ -35,6 +35,7 @@ components = components.map (filePath) ->
 components = components.filter (component) ->
   component.show isnt false and component.name != 'SettingsView'
 components = _.sortBy(components, 'priority')
+numOfComponentsHotKeys = components.length + 1  # main view uses 1 & 2, so +1
 
 plugins = plugins.map (filePath) ->
   plugin = require filePath
@@ -60,8 +61,8 @@ ControlledTabArea = React.createClass
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect [(@state.key[0] + 1) % components.length, @state.key[1]]
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    if num <= tabbedPlugins.length && num > 2
-      @handleSelect [@state.key[0], num - 3]
+    if num <= numOfComponentsHotKeys + tabbedPlugins.length && num > numOfComponentsHotKeys
+      @handleSelect [@state.key[0], num - numOfComponentsHotKeys - 1]
   handleShiftTabKeyDown: ->
     @handleSelect [@state.key[0], if @state.key[1]? then (@state.key[1] - 1 + tabbedPlugins.length) % tabbedPlugins.length else tabbedPlugins.length - 1]
   handleTabKeyDown: ->
