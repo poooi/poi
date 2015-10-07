@@ -127,5 +127,7 @@
   "Ship tag: %s": "出擊限定: %s",
   "Set as homepage": "設為首頁",
   "Zoom": "縮放",
-  "Zoom level": "縮放比率"
+  "Zoom level": "縮放比率",
+  "Poi should be placed in a path that contains no non-ASCII character.": "請將 poi 置於英文目錄下。",
+  "The current path is: %s": "當前的目錄是: %s"
 }

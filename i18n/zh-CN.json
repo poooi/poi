@@ -127,5 +127,7 @@
   "Ship tag: %s": "出击限定: %s",
   "Set as homepage": "设为主页",
   "Zoom": "缩放",
-  "Zoom level": "缩放比率"
+  "Zoom level": "缩放比率",
+  "Poi should be placed in a path that contains no non-ASCII character.": "请将 poi 置于英文目录下。",
+  "The current path is: %s": "当前的目录是: %s"
 }
