@@ -255,6 +255,7 @@ PoiAlert = React.createClass
       try
         DYN = fs.readFileSync(path.join(ROOT, 'assets', 'data', 'doYouKnow'), 'utf-8')
         DYN = DYN.split '\n'
+        DYN = DYN.slice 0, DYN.length - 1
       catch
         console.log 'No do you know data!'
       message = DYN[0]
@@ -274,7 +275,7 @@ PoiAlert = React.createClass
       now = (new Date).getTime()
       if now - @state.refreshTime >= 1200000
         refreshTime = now
-        idx = (@state.DYN.indexOf(@state.message) - 1 + @state.DYN.length) % @state.DYN.length
+        idx = (@state.DYN.indexOf(@state.message) + 1 + @state.DYN.length) % @state.DYN.length
         message = @state.DYN[idx]
         @setState
           message: message
