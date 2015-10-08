@@ -266,7 +266,11 @@ PoiAlert = React.createClass
     refreshTime: (new Date).getTime()
     type: 'default'
   handleAlert: (e) ->
-    if @state.show
+    if e.type is 'danger' or !@state.show
+      @setState
+        message: e.detail.message
+        type: e.detail.type
+    else
       now = (new Date).getTime()
       if now - @state.refreshTime >= 1200000
         refreshTime = now
@@ -275,10 +279,6 @@ PoiAlert = React.createClass
         @setState
           message: message
           refreshTime: refreshTime
-    else
-      @setState
-        message: e.detail.message
-        type: e.detail.type
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
   componentWillUnmount: ->
