@@ -153,6 +153,7 @@ PaneBodyMini = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.activeDeck is @props.deckIndex and nextProps.show
   componentWillReceiveProps: (nextProps) ->
+    {_ships} = window
     if @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
     else
