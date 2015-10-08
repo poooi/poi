@@ -245,15 +245,41 @@ ControlledTabArea =
   else
     require './single-tabarea'
 
+
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
-    message: __ 'Waiting for response...'
+    show = config.get 'poi.doyouknow.show', true
+    DYN = []
+    if show
+      try
+        DYN = fs.readFileSync(path.join(ROOT, 'assets', 'data', 'doYouKnow'), 'utf-8')
+        DYN = DYN.split '\n'
+        DYN = DYN.slice 0, DYN.length - 1
+      catch
+        console.log 'No do you know data!'
+      message = DYN[0]
+    else
+      message = __ 'Waiting for response...'
+    show: show
+    DYN: DYN
+    message: message
+    refreshTime: (new Date).getTime()
     type: 'default'
   handleAlert: (e) ->
-    @setState
-      message: e.detail.message
-      type: e.detail.type
+    if e.type is 'danger' or !@state.show
+      @setState
+        message: e.detail.message
+        type: e.detail.type
+    else
+      now = (new Date).getTime()
+      if now - @state.refreshTime >= 1200000
+        refreshTime = now
+        idx = (@state.DYN.indexOf(@state.message) + 1 + @state.DYN.length) % @state.DYN.length
+        message = @state.DYN[idx]
+        @setState
+          message: message
+          refreshTime: refreshTime
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
   componentWillUnmount: ->

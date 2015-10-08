@@ -34,6 +34,7 @@ PoiConfig = React.createClass
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
+    doYouKnow: config.get 'poi.doyouknow.show', true
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
@@ -143,6 +144,12 @@ PoiConfig = React.createClass
       @setState
         useFixedResolution: true
       @handleSetWebviewWidth()
+  handleSetDYN: (e) ->
+    {doYouKnow} = @state
+    doYouKnow = !doYouKnow
+    config.set 'poi.doyouknow.show', doYouKnow
+    @setState {doYouKnow}
+    toggleModal __('Do you know'), __('You must reboot the app for the changes to take effect.')
   handleClearCookie: (e) ->
     remote.getCurrentWebContents().session.clearStorageData {storages: ['cookies']}, ->
       toggleModal __('Delete cookies'), __('Success!')
@@ -176,6 +183,12 @@ PoiConfig = React.createClass
             </Grid>
         }
       </div>
+        <div className="form-group">
+          <Divider text={__ 'Do you know'} />
+          <div style={flex: 2, margin: "0 15px"}>
+            <Input type="checkbox" label={__ 'Show do you know'} checked={@state.doYouKnow} onChange={@handleSetDYN} />
+          </div>
+        </div>
       <div className="form-group">
         <Divider text={__ 'Notification'} />
         <Grid>
