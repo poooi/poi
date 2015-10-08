@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/poooi/poi",
   "dependencies": {
+    "electron-prebuilt": "0.33.6",
     "adm-zip": "^0.4.7",
     "bluebird": "^2.10.0",
     "coffee-react": "^4.0.0",

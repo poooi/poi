@@ -42,7 +42,7 @@ npm i
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
 cp default-config.cson config.cson
-/path/to/electron ./
+./node_modules/electron-prebuilt/dist/electron ./
 ```
 
 ## Available Plugins
