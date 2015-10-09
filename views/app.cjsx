@@ -250,16 +250,33 @@ PoiAlert = React.createClass
   getInitialState: ->
     message: __ 'Waiting for response...'
     type: 'default'
+    overflow: false
+    messagewidth: 0
   handleAlert: (e) ->
+    overflow = false
+    message = e.detail.message
+    document.getElementById('alert-area').innerHTML = message
+    if document.getElementById('alert-container').offsetWidth < document.getElementById('alert-area').offsetWidth
+      overflow = true
+      message = "#{message}　　　　　#{message}　　　　　"
+      document.getElementById('alert-area').innerHTML = message
     @setState
-      message: e.detail.message
+      message: message
       type: e.detail.type
+      overflow: overflow
+      messagewidth: document.getElementById('alert-area').offsetWidth
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert bsStyle={@state.type}>{@state.message}</Alert>
+    <Alert id='alert-container' bsStyle={@state.type} style={overflow: 'hidden'}>
+      <div className='alert-position' style={width: @state.messagewidth}>
+        <span id='alert-area' className={if @state.overflow then 'overflow-anim' else ''}>
+          {@state.message}
+        </span>
+      </div>
+    </Alert>
 
 # Map Reminder
 PoiMapReminder = React.createClass

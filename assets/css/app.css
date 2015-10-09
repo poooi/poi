@@ -155,3 +155,19 @@ poi-control button .fa {
   text-shadow: 0 0 3px #FFFF00;
   font-weight: bold;
 }
+.alert-position {
+  margin-left: auto;
+  margin-right: auto;
+}
+.overflow-anim {
+  animation-name: overflowscroll;
+  animation-duration: 10s;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  margin-left: 0%;
+}
+@keyframes overflowscroll {
+    0% {margin-left: 0%;}
+    100% {margin-left: -100%;}
+}
