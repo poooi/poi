@@ -96,14 +96,14 @@ class Proxy extends EventEmitter
             # Cache is new
             if req.headers['if-modified-since']? && (new Date(req.headers['if-modified-since']) >= stats.mtime)
               res.writeHead 304,
-                'Server': 'Apache'
+                'Server': 'nginx'
                 'Last-Modified': stats.mtime.toGMTString()
               res.end()
             # Cache is old
             else
               data = yield fs.readFileAsync cacheFile
               res.writeHead 200,
-                'Server': 'Apache'
+                'Server': 'nginx'
                 'Content-Length': data.length
                 'Content-Type': mime.lookup cacheFile
                 'Last-Modified': stats.mtime.toGMTString()
