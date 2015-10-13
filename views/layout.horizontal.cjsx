@@ -84,6 +84,9 @@ handleResize = ->
   if webviewWidth != -1
     $('kan-game').style.flex = webviewWidth
     $('poi-app').style.flex = window.innerWidth - webviewWidth
+  else
+    $('kan-game').style.flex = (if window.doubleTabbed then 4.0 else 5.0)
+    $('poi-app').style.flex = (if window.doubleTabbed then 3.0 else 2.0)
   if !window._delay
     adjustSize()
   else
