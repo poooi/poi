@@ -245,47 +245,61 @@ ControlledTabArea =
   else
     require './single-tabarea'
 
-
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
     show = config.get 'poi.doyouknow.show', true
-    DYN = []
+    DYK = []
     if show
       try
-        DYN = fs.readFileSync(path.join(ROOT, 'assets', 'data', 'doYouKnow'), 'utf-8')
-        DYN = DYN.split '\n'
-        DYN = DYN.slice 0, DYN.length - 1
+        DYK = fs.readJSONSync path.join(ROOT, 'assets', 'data', 'doYouKnow')
       catch
         console.log 'No do you know data!'
-      message = DYN[0]
+      message = __ DYK[Math.floor(Math.random() * 18)]
     else
       message = __ 'Waiting for response...'
     show: show
-    DYN: DYN
+    DYK: DYK
     message: message
     refreshTime: (new Date).getTime()
     type: 'default'
+    overflow: false
+    messagewidth: 0
   handleAlert: (e) ->
-    if e.type is 'danger' or !@state.show
-      @setState
-        message: e.detail.message
-        type: e.detail.type
+    if e.type isnt 'default' or !@state.show
+      message = e.detail.message
+      type = e.detail.type
     else
       now = (new Date).getTime()
       if now - @state.refreshTime >= 1200000
         refreshTime = now
-        idx = (@state.DYN.indexOf(@state.message) + 1 + @state.DYN.length) % @state.DYN.length
-        message = @state.DYN[idx]
-        @setState
-          message: message
-          refreshTime: refreshTime
+        message = @state.DYK[Math.floor(Math.random() * 18)]
+        type = @state.type
+    overflow = false
+    message = e.detail.message
+    document.getElementById('alert-area').innerHTML = message
+    if document.getElementById('alert-container').offsetWidth < document.getElementById('alert-area').offsetWidth
+      overflow = true
+      message = "#{message}　　　　　#{message}　　　　　"
+      document.getElementById('alert-area').innerHTML = message
+     @setState
+      refreshTime: refreshTime
+      message: message
+      type: type
+      overflow: overflow
+      messagewidth: document.getElementById('alert-area').offsetWidth
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert bsStyle={@state.type}>{@state.message}</Alert>
+    <Alert id='alert-container' bsStyle={@state.type} style={overflow: 'hidden'}>
+      <div className='alert-position' style={width: @state.messagewidth}>
+        <span id='alert-area' className={if @state.overflow then 'overflow-anim' else ''}>
+          {@state.message}
+        </span>
+      </div>
+    </Alert>
 
 # Map Reminder
 PoiMapReminder = React.createClass
