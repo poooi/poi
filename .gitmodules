@@ -34,3 +34,6 @@
 [submodule "plugins/hensei-nikki"]
 	path = plugins/hensei-nikki
 	url = https://github.com/poooi/plugin-hensei-nikki.git
+[submodule "plugins/battle-detail"]
+	path = plugins/battle-detail
+	url = https://github.com/poooi/plugin-battle-detail.git
