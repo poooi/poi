@@ -485,10 +485,18 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
 
 refreshFlash = ->
   $('kan-game webview').executeJavaScript """
-    var flash = document.getElementById('game_frame').contentDocument.getElementById('flashWrap');
-    var flashInnerHTML = flash.innerHTML;
-    flash.innerHTML = '';
-    flash.innerHTML = flashInnerHTML;
+    var doc;
+    if (document.getElementById('game_frame')) {
+      doc = document.getElementById('game_frame').contentDocument;
+    } else {
+      doc = document;
+    }
+    var flash = doc.getElementById('flashWrap');
+    if(flash) {
+      var flashInnerHTML = flash.innerHTML;
+      flash.innerHTML = '';
+      flash.innerHTML = flashInnerHTML;
+    }
   """
 # F5 & Ctrl+F5 & Alt+F5
 window.addEventListener 'keydown', (e) ->

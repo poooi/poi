@@ -44,10 +44,18 @@ NavigatorBar = React.createClass
     webview.reload()
   handleRefreshFlash: ->
     webview.executeJavaScript """
-      var flash = document.getElementById('game_frame').contentDocument.getElementById('flashWrap');
-      var flashInnerHTML = flash.innerHTML;
-      flash.innerHTML = '';
-      flash.innerHTML = flashInnerHTML;
+      var doc;
+      if (document.getElementById('game_frame')) {
+        doc = document.getElementById('game_frame').contentDocument;
+      } else {
+        doc = document;
+      }
+      var flash = doc.getElementById('flashWrap');
+      if(flash) {
+        var flashInnerHTML = flash.innerHTML;
+        flash.innerHTML = '';
+        flash.innerHTML = flashInnerHTML;
+      }
     """
   handlePressEnter: (e) ->
     if e.keyCode is 13
