@@ -42,6 +42,21 @@ NavigatorBar = React.createClass
     webview.src = @state.navigateUrl
   handleRefresh: ->
     webview.reload()
+  handleRefreshFlash: ->
+    webview.executeJavaScript """
+      var doc;
+      if (document.getElementById('game_frame')) {
+        doc = document.getElementById('game_frame').contentDocument;
+      } else {
+        doc = document;
+      }
+      var flash = doc.getElementById('flashWrap');
+      if(flash) {
+        var flashInnerHTML = flash.innerHTML;
+        flash.innerHTML = '';
+        flash.innerHTML = flashInnerHTML;
+      }
+    """
   handlePressEnter: (e) ->
     if e.keyCode is 13
       @handleNavigate()
@@ -63,7 +78,7 @@ NavigatorBar = React.createClass
       <div style={flex: 'none', width: 110}>
         <ButtonGroup>
           <Button bsSize='small' bsStyle='primary' onClick={@handleNavigate}>{getIcon(@state.navigateStatus)}</Button>
-          <Button bsSize='small' bsStyle='warning' onClick={@handleRefresh}><FontAwesome name='refresh' /></Button>
+          <Button bsSize='small' bsStyle='warning' onClick={@handleRefresh} onContextMenu={@handleRefreshFlash}><FontAwesome name='refresh' /></Button>
         </ButtonGroup>
         <ButtonGroup style={marginLeft: 5}>
           <OverlayTrigger placement='top' overlay={<Tooltip>{__ 'Set as homepage'}</Tooltip>}>
