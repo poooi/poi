@@ -79,6 +79,9 @@ cp default-config.cson config.cson
 [plugin-Akashic-records (Bundled)](https://github.com/poooi/plugin-Akashic-records) by [JenningsWu](https://github.com/JenningsWu)
 > Logbook plugin for poi.
 
+[plugin-battle-detail (Bundled)](https://github.com/poooi/plugin-battle-detail) by [Dazzy Ding](https://github.com/yukixz)
+> Show battle detail.
+
 [plugin-almanac](https://github.com/poooi/plugin-almanac) by [Magica](https://github.com/magicae)
 > KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
 
