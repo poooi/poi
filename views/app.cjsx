@@ -483,11 +483,20 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   ]
   window.toggleModal title, content, footer
 
-# F5 & Ctrl+F5
+refreshFlash = ->
+  $('kan-game webview').executeJavaScript """
+    var flash = document.getElementById('game_frame').contentDocument.getElementById('flashWrap');
+    var flashInnerHTML = flash.innerHTML;
+    flash.innerHTML = '';
+    flash.innerHTML = flashInnerHTML;
+  """
+# F5 & Ctrl+F5 & Alt+F5
 window.addEventListener 'keydown', (e) ->
   if process.platform == 'darwin' and e.keyCode is 82 and e.metaKey
     if e.shiftKey # cmd + shift + r
       $('kan-game webview').reloadIgnoringCache()
+    else if e.altKey # cmd + alt + r
+      refreshFlash()
     else # cmd + r
       # Catched by menu
       # $('kan-game webview').reload()
@@ -495,7 +504,9 @@ window.addEventListener 'keydown', (e) ->
   else if e.keyCode is 116
     if e.ctrlKey # ctrl + f5
       $('kan-game webview').reloadIgnoringCache()
-    else if !e.metaKey && !e.altKey && !e.shiftKey # f5
+    else if e.altKey # alt + f5
+      refreshFlash()
+    else if !e.metaKey # f5
       $('kan-game webview').reload()
 
 # Confirm before quit
