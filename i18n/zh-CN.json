@@ -60,6 +60,7 @@
   "Attention! Ship Slot has only %s left.": "船位剩余 %s，出击注意！",
   " Settings": " 设置",
   "Common": "基本设置",
+  "Display": "显示设置",
   "Proxy": "网络代理",
   "Plugins": "扩展程序",
   "About": "关于 poi",

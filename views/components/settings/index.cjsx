@@ -3,7 +3,7 @@ path = require 'path-extra'
 i18n = require 'i18n'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
 {Grid, Col, Input, TabbedArea, TabPane, Alert} = ReactBootstrap
-{PoiConfig, NetworkConfig, PluginConfig, Others} = require './parts'
+{PoiConfig, DisplayConfig, NetworkConfig, PluginConfig, Others} = require './parts'
 {__, __n} = i18n
 
 # Discover plugins and remove unused plugins or no setting ui plugins
@@ -31,15 +31,18 @@ module.exports =
         <TabPane key={0} eventKey={0} tab={__ "Common"} id='poi-config' className='poi-settings-tabpane'>
           <PoiConfig />
         </TabPane>
-        <TabPane key={1} eventKey={1} tab={__ "Proxy"} id='proxy-config' className='poi-settings-tabpane'>
+        <TabPane key={1} eventKey={1} tab={__ "Display"} id='display-config' className='poi-settings-tabpane'>
+          <DisplayConfig />
+        </TabPane>
+        <TabPane key={2} eventKey={2} tab={__ "Proxy"} id='proxy-config' className='poi-settings-tabpane'>
           <NetworkConfig />
         </TabPane>
-        <TabPane key={2} eventKey={2} tab={__ "Plugins"} id='plugin-config' className='poi-settings-tabpane'>
+        <TabPane key={3} eventKey={3} tab={__ "Plugins"} id='plugin-config' className='poi-settings-tabpane'>
           <PluginConfig />
         </TabPane>
         {
           plugins.map (plugin, index) ->
-            <TabPane key={index + 3}  eventKey={index + 3} tab={plugin.displayName} id={plugin.name} className='poi-settings-tabpane'>
+            <TabPane key={index + 4}  eventKey={index + 4} tab={plugin.displayName} id={plugin.name} className='poi-settings-tabpane'>
             {
               React.createElement(plugin.settingsClass)
             }

@@ -44,3 +44,7 @@
   box-shadow: none;
   padding: 0;
 }
+#SettingsView .nav-pills > li > a {
+  padding-left: 0px;
+  padding-right: 0px;
+}
