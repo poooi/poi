@@ -16,6 +16,11 @@ PoiConfig = React.createClass
     language: config.get 'poi.language', navigator.language
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableNotify: config.get 'poi.notify.enabled', true
+    constructionNotify: config.get 'poi.notify.construction.enabled', 'true'
+    expeditionNotify: config.get 'poi.notify.expedition.enabled', 'true'
+    repairNotify: config.get 'poi.notify.repair.enabled', 'true'
+    moraleNotify: config.get 'poi.notify.morale.enabled', 'true'
+    othersNotify: config.get 'poi.notify.others.enabled', 'true'
     notifyVolume: config.get 'poi.notify.volume', 1.0
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
@@ -37,6 +42,33 @@ PoiConfig = React.createClass
     config.set('poi.notify.volume', volume)
     @setState
       notifyVolume: volume
+  handleSetNotifyIndividual: (type) ->
+    switch type
+      when 'construction'
+        enabled = @state.constructionNotify
+        config.set "poi.notify.construction.enabled", !enabled
+        @setState
+          constructionNotify: !enabled
+      when 'expedition'
+        enabled = @state.expeditionNotify
+        config.set "poi.notify.expedition.enabled", !enabled
+        @setState
+          expeditionNotify: !enabled
+      when 'repair'
+        enabled = @state.repairNotify
+        config.set "poi.notify.repair.enabled", !enabled
+        @setState
+          repairNotify: !enabled
+      when 'morale'
+        enabled = @state.moraleNotify
+        config.set "poi.notify.morale.enabled", !enabled
+        @setState
+          moraleNotify: !enabled
+      when 'others'
+        enabled = @state.othersNotify
+        config.set "poi.notify.others.enabled", !enabled
+        @setState
+          othersNotify: !enabled
   handleSetMapStartCheckShip: ->
     enabled = @state.mapStartCheckShip
     config.set 'poi.mapstartcheck.ship', !enabled
@@ -81,19 +113,52 @@ PoiConfig = React.createClass
       <div className="form-group">
         <Divider text={__ 'Notification'} />
         <Grid>
-          <Col xs={6}>
-            <Button bsStyle={if @state.enableNotify then 'success' else 'danger'} onClick={@handleSetNotify} style={width: '100%'}>
-              {if @state.enableNotify then '√ ' else ''}{__ 'Enable notification'}
-            </Button>
-          </Col>
-          <Col xs={6}>
-            <OverlayTrigger placement='top' overlay={
-                <Tooltip>{__ 'Volume'} <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
-              }>
-              <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
-                min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
-            </OverlayTrigger>
-          </Col>
+          <div>
+            <Col xs={6}>
+              <Button bsStyle={if @state.enableNotify then 'success' else 'danger'} onClick={@handleSetNotify} style={width: '100%'}>
+                {if @state.enableNotify then '√ ' else ''}{__ 'Enable notification'}
+              </Button>
+            </Col>
+            <Col xs={6}>
+              <OverlayTrigger placement='top' overlay={
+                  <Tooltip>{__ 'Volume'} <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
+                }>
+                <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
+                  min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
+              </OverlayTrigger>
+            </Col>
+          </div>
+          <div>
+            <Col xs={12}>
+              <ButtonGroup justified>
+                <Button bsStyle={if @state.constructionNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'construction'}
+                        className='notif-button'>
+                  {__ 'Construction'}
+                </Button>
+                <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
+                        className='notif-button'>
+                  {__ 'Expedition'}
+                </Button>
+                <Button bsStyle={if @state.repairNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'repair'}
+                        className='notif-button'>
+                  {__ 'Docking'}
+                </Button>
+                <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'morale'}
+                        className='notif-button'>
+                  {__ 'Morale'}
+                </Button>
+                <Button bsStyle={if @state.othersNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'others'}
+                        className='notif-button'>
+                  {__ 'Others'}
+                </Button>
+              </ButtonGroup>
+            </Col>
+          </div>
         </Grid>
       </div>
       <div className="form-group" >

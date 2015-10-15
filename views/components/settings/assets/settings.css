@@ -48,3 +48,6 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+#SettingsView .notif-button {
+  width: 20%;
+}
