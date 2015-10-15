@@ -129,7 +129,7 @@ PoiConfig = React.createClass
             </Col>
           </div>
           <div>
-            <Col xs={12}>
+            <Col xs={12} style={marginTop: 10}>
               <ButtonGroup justified>
                 <Button bsStyle={if @state.constructionNotify then 'success' else 'danger'}
                         onClick={@handleSetNotifyIndividual.bind this, 'construction'}
