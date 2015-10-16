@@ -47,14 +47,37 @@ ControlledTabArea = React.createClass
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
     @setState {key} if key isnt @state.key
+  handleSelectMainView: ->
+    event = new CustomEvent 'miniship.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        state: false
+    window.dispatchEvent event
+  handleSelectShipView: ->
+    event = new CustomEvent 'miniship.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        state: true
+    window.dispatchEvent event
+  handleMiniShipChange: (e) ->
+    e.preventDefault()
+    if e.detail.state
+      @setState {key: -2} if @state.key isnt -2
+    else
+      @setState {key: 0} if @state.key isnt 0
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect 0
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    if num == 1 || num == 2
-      @handleSelect 0
+    if num == 1
+      @handleSelectMainView()
     else
-      if num <= 2 + tabbedPlugins.length
-        @handleSelect num - 2
+      if num == 2
+        @handleSelectShipView()
+      else
+        if num <= 2 + tabbedPlugins.length
+          @handleSelect num - 2
   handleShiftTabKeyDown: ->
     @handleSelect if @state.key? then (@state.key + tabbedPlugins.length) % (1 + tabbedPlugins.length) else tabbedPlugins.length
   handleTabKeyDown: ->
@@ -84,13 +107,19 @@ ControlledTabArea = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
+    window.addEventListener 'miniship.change', @handleMiniShipChange
+  componentWillUnmount: ->
+    window.removeEventListener 'miniship.change', @handleMiniShipChange
   render: ->
     <div>
-      <Nav bsStyle="tabs" activeKey={@state.key} onSelect={@handleSelectMenuItem}>
-        <NavItem key={0} eventKey={0} className='poi-app-tabpane' onSelect={@handleSelect}>
+      <Nav bsStyle="tabs" activeKey={@state.key}>
+        <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
           {mainview.displayName}
         </NavItem>
-        <NavDropdown id='plugin-dropdown' key={1} eventKey={-1}
+        <NavItem key={-2} eventKey={-2} onSelect={@handleSelectShipView}>
+          <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
+        </NavItem>
+        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1}
                      title=
                      {
                        if @state.key >= 1 and @state.key < 1000
@@ -107,17 +136,17 @@ ControlledTabArea = React.createClass
               </MenuItem>
             else
               key = (counter += 1)
-              <MenuItem key={2 + index} eventKey={key}>
+              <MenuItem key={2 + index} eventKey={key} onSelect={@handleSelectMenuItem}>
                 {plugin.displayName}
               </MenuItem>
         }
         </NavDropdown>
-        <NavItem key={1000} eventKey={1000} className='poi-app-tabpane' onSelect={@handleSelect}>
+        <NavItem key={1000} eventKey={1000} onSelect={@handleSelect}>
           {settings.displayName}
         </NavItem>
       </Nav>
       <div>
-        <div id={mainview.name} className="poi-app-tabpane #{if @state.key == 0 then 'show' else 'hidden'}">
+        <div id={mainview.name} className="poi-app-tabpane #{if @state.key == 0 || @state.key == -2 then 'show' else 'hidden'}">
           {
             React.createElement mainview.reactClass,
               selectedKey: @state.key

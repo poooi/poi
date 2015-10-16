@@ -87,41 +87,25 @@ module.exports =
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
     toggle: ->
-      # dispatch an event about whether the main pane is show or not
-      event = new CustomEvent 'view.main.visible',
+      event = new CustomEvent 'miniship.change',
         bubbles: true
-        cancelable: false
+        cancelable: true
         detail:
-          visible: @state.show
+          state: !@state.show
       window.dispatchEvent event
-      @setState
-        show: !@state.show
-        dataVersion: @state.dataVersion + 1
-    handleKeyDown: ->
-      return if @listener?
-      @listener = true
-      window.addEventListener 'keydown', (e) =>
-        if e.ctrlKey or e.metaKey
-          if e.keyCode == 49 && @state.show
-            event = new CustomEvent 'view.main.visible',
-              bubbles: true
-              cancelable: false
-              detail:
-                visible: @state.show
-            window.dispatchEvent event
-            @setState
-              show: false
-              dataVersion: @state.dataVersion + 1
-          else if e.keyCode == 50 && !@state.show
-            event = new CustomEvent 'view.main.visible',
-              bubbles: true
-              cancelable: false
-              detail:
-                visible: @state.show
-            window.dispatchEvent event
-            @setState
-              show: true
-              dataVersion: @state.dataVersion + 1
+    handleMiniShipChange: (e) ->
+      # dispatch an event about whether the main pane is show or not
+      e.preventDefault()
+      if e.detail.state isnt @state.show
+        event = new CustomEvent 'view.main.visible',
+          bubbles: true
+          cancelable: false
+          detail:
+            visible: @state.show
+        window.dispatchEvent event
+        @setState
+          show: !@state.show
+          dataVersion: @state.dataVersion + 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {fullnames} = @state
@@ -188,9 +172,10 @@ module.exports =
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
-      window.addEventListener 'game.start', @handleKeyDown
+      window.addEventListener 'miniship.change', @handleMiniShipChange
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
+      window.removeEventListener 'miniship.change', @handleMiniShipChange
       @interval = clearInterval @interval if @interval?
     render: ->
       <div style={height: '100%'} onDoubleClick={@toggle}>
