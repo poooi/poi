@@ -2,10 +2,10 @@ path = require 'path-extra'
 glob = require 'glob'
 {__} = require 'i18n'
 {_, React, ReactBootstrap, FontAwesome} = window
-{TabbedArea, TabPane, DropdownButton} = ReactBootstrap
+{Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 
 # Get components
-components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
+# components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
@@ -18,15 +18,6 @@ plugins = plugins.filter (filePath) ->
     return config.get "plugin.#{plugin.name}.enable", true
   catch e
     return false
-
-components = components.map (filePath) ->
-  component = require filePath
-  component.priority = 10000 unless component.priority?
-  component
-components = components.filter (component) ->
-  component.show isnt false and component.name != 'SettingsView'
-components = _.sortBy(components, 'priority')
-numOfComponentsHotKeys = components.length + 1  # main view uses 1 & 2, so +1
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
@@ -43,7 +34,9 @@ plugins = plugins.filter (plugin) ->
 plugins = _.sortBy(plugins, 'priority')
 tabbedPlugins = plugins.filter (plugin) ->
   !plugin.handleClick?
+
 settings = require path.join(ROOT, 'views', 'components', 'settings')
+mainview = require path.join(ROOT, 'views', 'components', 'main')
 
 lockedTab = false
 ControlledTabArea = React.createClass
@@ -51,18 +44,21 @@ ControlledTabArea = React.createClass
     key: 0
   handleSelect: (key) ->
     @setState {key} if key isnt @state.key
+  handleSelectMenuItem: (e, key) ->
+    e.preventDefault()
+    @setState {key} if key isnt @state.key
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect 0
   handleCtrlOrCmdNumberKeyDown: (num) ->
     if num == 1 || num == 2
       @handleSelect 0
     else
-      if num <= numOfComponentsHotKeys + tabbedPlugins.length
-        @handleSelect num - numOfComponentsHotKeys
+      if num <= 2 + tabbedPlugins.length
+        @handleSelect num - 2
   handleShiftTabKeyDown: ->
-    @handleSelect if @state.key? then (@state.key - 1 + components.length + tabbedPlugins.length) % (components.length + tabbedPlugins.length) else components.length + tabbedPlugins.length - 1
+    @handleSelect if @state.key? then (@state.key + tabbedPlugins.length) % (1 + tabbedPlugins.length) else tabbedPlugins.length
   handleTabKeyDown: ->
-    @handleSelect if @state.key? then (@state.key + 1) % (components.length + tabbedPlugins.length) else 1
+    @handleSelect if @state.key? then (@state.key + 1) % (1 + tabbedPlugins.length) else 1
   handleKeyDown: ->
     return if @listener?
     @listener = true
@@ -89,48 +85,61 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
   render: ->
-    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
-    {
-      [
-        components.map (component, index) =>
-          <TabPane key={index} eventKey={index} tab={component.displayName} id={component.name} className='poi-app-tabpane'>
-          {
-            React.createElement component.reactClass,
-              selectedKey: @state.key
-              index: index
-          }
-          </TabPane>
-        <DropdownButton key={components.length}
-                        eventKey={-1}
-                        tab=
-                        {
-                          if @state.key >= components.length and @state.key < 1000
-                            <span>{plugins[@state.key - components.length].displayName}</span>
-                          else
-                            <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
-                        }
-                        navItem={true}>
+    <div>
+      <Nav bsStyle="tabs" activeKey={@state.key} onSelect={@handleSelectMenuItem}>
+        <NavItem key={0} eventKey={0} className='poi-app-tabpane' onSelect={@handleSelect}>
+          {mainview.displayName}
+        </NavItem>
+        <NavDropdown id='plugin-dropdown' key={1} eventKey={-1}
+                     title=
+                     {
+                       if @state.key >= 1 and @state.key < 1000
+                         <span>{plugins[@state.key - 1].displayName}</span>
+                       else
+                         <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
+                     }>
         {
           counter = 0
           plugins.map (plugin, index) =>
             if plugin.handleClick
-              <div key={components.length + 1 + index} eventKey={0} tab={plugin.displayName} id={plugin.name} onClick={plugin.handleClick} />
+              <MenuItem key={2 + index} eventKey={0} onSelect={plugin.handleClick}>
+                {plugin.displayName}
+              </MenuItem>
             else
-              key = components.length - 1 + (counter += 1)
-              <TabPane key={components.length + 1 + index} eventKey={key} tab={plugin.displayName} id={plugin.name} className='poi-app-tabpane'>
-                <PluginWrap plugin={plugin} selectedKey={@state.key} index={key} />
-              </TabPane>
+              key = (counter += 1)
+              <MenuItem key={2 + index} eventKey={key}>
+                {plugin.displayName}
+              </MenuItem>
         }
-        </DropdownButton>
-        <TabPane key={1000} eventKey={1000} tab={settings.displayName} id={settings.name} className='poi-app-tabpane'>
+        </NavDropdown>
+        <NavItem key={1000} eventKey={1000} className='poi-app-tabpane' onSelect={@handleSelect}>
+          {settings.displayName}
+        </NavItem>
+      </Nav>
+      <div>
+        <div id={mainview.name} className="poi-app-tabpane #{if @state.key == 0 then 'show' else 'hidden'}">
+          {
+            React.createElement mainview.reactClass,
+              selectedKey: @state.key
+              index: 0
+          }
+        </div>
         {
-          React.createElement settings.reactClass,
-            selectedKey: @state.key
-            index: 1000
+          counter = 0
+          plugins.map (plugin, index) =>
+            if !plugin.handleClick
+              key = (counter += 1)
+              <div id={plugin.name} className="poi-app-tabpane #{if @state.key == key then 'show' else 'hidden'}">
+                <PluginWrap plugin={plugin} selectedKey={@state.key} index={key} />
+              </div>
         }
-        </TabPane>
-      ]
-    }
-    </TabbedArea>
-
+        <div id={settings.name} className="poi-app-tabpane #{if @state.key == 1000 then 'show' else 'hidden'}">
+          {
+            React.createElement settings.reactClass,
+              selectedKey: @state.key
+              index: 1000
+          }
+        </div>
+      </div>
+    </div>
 module.exports = ControlledTabArea

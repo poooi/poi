@@ -1,7 +1,7 @@
 path = require 'path-extra'
 {__, __n} = require 'i18n'
 {layout, ROOT, $, $$, React, ReactBootstrap} = window
-{TabbedArea, TabPane, Grid, Col, Row, Accordion, Panel, Nav, NavItem, TabbedArea, TabPane} = ReactBootstrap
+{Tab, Tabs, Grid, Col, Row, Accordion, Panel, Nav, NavItem} = ReactBootstrap
 {MissionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel} = require './parts'
 module.exports =
   name: 'MainView'
@@ -15,9 +15,6 @@ module.exports =
     handleChangeLayout: (e) ->
       @setState
         layout: e.detail.layout
-    handleSelect: (key) ->
-      @setState {key}
-      @forceUpdate()
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
     componentWillUnmount: ->
@@ -44,18 +41,18 @@ module.exports =
               </div>
               <div className="panel-col half bottom-left-area">
                 <Panel className="combined-panels panel-col combined-panels-area-horizontal">
-                  <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
-                   <TabPane eventKey={1} tab={__ 'Docking'}>
-                     <div className="ndock-panel flex">
-                       <NdockPanel />
-                     </div>
-                   </TabPane>
-                   <TabPane eventKey={2} tab={__ 'Construction'}>
-                     <div className="kdock-panel flex">
-                       <KdockPanel />
-                     </div>
-                   </TabPane>
-                  </TabbedArea>
+                  <Tabs defaultActiveKey={1} animation={false}>
+                    <Tab eventKey={1} title={__ 'Docking'}>
+                      <div className="ndock-panel flex">
+                        <NdockPanel />
+                      </div>
+                    </Tab>
+                    <Tab eventKey={2} title={__ 'Construction'}>
+                      <div className="kdock-panel flex">
+                        <KdockPanel />
+                      </div>
+                    </Tab>
+                  </Tabs>
                 </Panel>
                 <div className="mission-panel mission-panel-area-horizontal" ref="missionPanel">
                   <MissionPanel />
@@ -83,18 +80,18 @@ module.exports =
                 </div>
                 <div className="panel-col half right-bottom-area">
                   <Panel className="combined-panels panel-col combined-panels-area-vertical">
-                    <TabbedArea activeKey={@state.key} onSelect={@handleSelect} animation={false}>
-                     <TabPane eventKey={1} tab={__ 'Docking'}>
-                       <div className="panel-col ndock-panel flex">
-                         <NdockPanel />
-                       </div>
-                     </TabPane>
-                     <TabPane eventKey={2} tab={__ 'Construction'}>
-                       <div className="panel-col kdock-panel flex">
-                         <KdockPanel />
-                       </div>
-                     </TabPane>
-                    </TabbedArea>
+                    <Tabs defaultActiveKey={1} animation={false}>
+                      <Tab eventKey={1} title={__ 'Docking'}>
+                        <div className="ndock-panel flex">
+                          <NdockPanel />
+                        </div>
+                      </Tab>
+                      <Tab eventKey={2} title={__ 'Construction'}>
+                        <div className="kdock-panel flex">
+                          <KdockPanel />
+                        </div>
+                      </Tab>
+                    </Tabs>
                   </Panel>
                   <div className="panel-col mission-panel mission-panel-area-vertical" ref="missionPanel">
                     <MissionPanel />

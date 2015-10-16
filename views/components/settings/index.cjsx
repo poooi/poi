@@ -2,7 +2,7 @@ glob = require 'glob'
 path = require 'path-extra'
 i18n = require 'i18n'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
-{Grid, Col, Input, TabbedArea, TabPane, Alert} = ReactBootstrap
+{Grid, Col, Input, Tabs, Tab, Alert} = ReactBootstrap
 {PoiConfig, DisplayConfig, NetworkConfig, PluginConfig, Others} = require './parts'
 {__, __n} = i18n
 
@@ -26,29 +26,29 @@ module.exports =
     shouldComponentUpdate: (nextProps, nextState)->
       false
     render: ->
-      <TabbedArea bsStyle="pills" defaultActiveKey={0} animation={false}>
+      <Tabs bsStyle="pills" defaultActiveKey={0} animation={false}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'settings.css')} />
-        <TabPane key={0} eventKey={0} tab={__ "Common"} id='poi-config' className='poi-settings-tabpane'>
+        <Tab key={0} eventKey={0} title={__ "Common"} id='poi-config' className='poi-settings-Tab'>
           <PoiConfig />
-        </TabPane>
-        <TabPane key={1} eventKey={1} tab={__ "Display"} id='display-config' className='poi-settings-tabpane'>
+        </Tab>
+        <Tab key={1} eventKey={1} title={__ "Display"} id='display-config' className='poi-settings-Tab'>
           <DisplayConfig />
-        </TabPane>
-        <TabPane key={2} eventKey={2} tab={__ "Proxy"} id='proxy-config' className='poi-settings-tabpane'>
+        </Tab>
+        <Tab key={2} eventKey={2} title={__ "Proxy"} id='proxy-config' className='poi-settings-Tab'>
           <NetworkConfig />
-        </TabPane>
-        <TabPane key={3} eventKey={3} tab={__ "Plugins"} id='plugin-config' className='poi-settings-tabpane'>
+        </Tab>
+        <Tab key={3} eventKey={3} title={__ "Plugins"} id='plugin-config' className='poi-settings-Tab'>
           <PluginConfig />
-        </TabPane>
+        </Tab>
         {
           plugins.map (plugin, index) ->
-            <TabPane key={index + 4}  eventKey={index + 4} tab={plugin.displayName} id={plugin.name} className='poi-settings-tabpane'>
+            <Tab key={index + 4}  eventKey={index + 4} title={plugin.displayName} id={plugin.name} className='poi-settings-Tab'>
             {
               React.createElement(plugin.settingsClass)
             }
-            </TabPane>
+            </Tab>
         }
-        <TabPane key={-1} eventKey={-1} tab={__ "About"} id='others' className='poi-settings-tabpane'>
+        <Tab key={-1} eventKey={-1} title={__ "About"} id='others' className='poi-settings-Tab'>
           <Others />
-        </TabPane>
-      </TabbedArea>
+        </Tab>
+      </Tabs>
