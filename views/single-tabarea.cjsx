@@ -64,11 +64,11 @@ ControlledTabArea = React.createClass
   handleMiniShipChange: (e) ->
     e.preventDefault()
     if e.detail.state
-      @setState {key: -2} if @state.key isnt -2
+      @handleSelect 1
     else
-      @setState {key: 0} if @state.key isnt 0
+      @handleSelect 0
   handleCtrlOrCmdTabKeyDown: ->
-    @handleSelect 0
+    @handleSelectMainView()
   handleCtrlOrCmdNumberKeyDown: (num) ->
     if num == 1
       @handleSelectMainView()
@@ -77,11 +77,25 @@ ControlledTabArea = React.createClass
         @handleSelectShipView()
       else
         if num <= 2 + tabbedPlugins.length
-          @handleSelect num - 2
+          @handleSelect num - 1
   handleShiftTabKeyDown: ->
-    @handleSelect if @state.key? then (@state.key + tabbedPlugins.length) % (1 + tabbedPlugins.length) else tabbedPlugins.length
+    next = if @state.key? then (@state.key + tabbedPlugins.length) % (1 + tabbedPlugins.length) else tabbedPlugins.length
+    if next == 0
+      @handleSelectMainView()
+    else
+      if next == 1
+        @handleSelectShipView()
+      else
+        @handleSelect next
   handleTabKeyDown: ->
-    @handleSelect if @state.key? then (@state.key + 1) % (1 + tabbedPlugins.length) else 1
+    next = if @state.key? then (@state.key + 1) % (1 + tabbedPlugins.length) else 1
+    if next == 0
+      @handleSelectMainView()
+    else
+      if next == 1
+        @handleSelectShipView()
+      else
+        @handleSelect next
   handleKeyDown: ->
     return if @listener?
     @listener = true
@@ -116,19 +130,19 @@ ControlledTabArea = React.createClass
         <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
           {mainview.displayName}
         </NavItem>
-        <NavItem key={-2} eventKey={-2} onSelect={@handleSelectShipView}>
+        <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
           <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
         </NavItem>
         <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1}
                      title=
                      {
-                       if @state.key >= 1 and @state.key < 1000
-                         <span>{plugins[@state.key - 1].displayName}</span>
+                       if @state.key >= 2 and @state.key < 1000
+                         <span>{plugins[@state.key - 2].displayName}</span>
                        else
                          <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
                      }>
         {
-          counter = 0
+          counter = 1
           plugins.map (plugin, index) =>
             if plugin.handleClick
               <MenuItem key={2 + index} eventKey={0} onSelect={plugin.handleClick}>
@@ -146,7 +160,7 @@ ControlledTabArea = React.createClass
         </NavItem>
       </Nav>
       <div>
-        <div id={mainview.name} className="poi-app-tabpane #{if @state.key == 0 || @state.key == -2 then 'show' else 'hidden'}">
+        <div id={mainview.name} className="poi-app-tabpane #{if @state.key == 0 || @state.key == 1 then 'show' else 'hidden'}">
           {
             React.createElement mainview.reactClass,
               selectedKey: @state.key
@@ -154,7 +168,7 @@ ControlledTabArea = React.createClass
           }
         </div>
         {
-          counter = 0
+          counter = 1
           plugins.map (plugin, index) =>
             if !plugin.handleClick
               key = (counter += 1)
