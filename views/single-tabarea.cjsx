@@ -54,6 +54,7 @@ ControlledTabArea = React.createClass
       detail:
         state: false
     window.dispatchEvent event
+    @handleSelect 0
   handleSelectShipView: ->
     event = new CustomEvent 'miniship.change',
       bubbles: true
@@ -61,12 +62,13 @@ ControlledTabArea = React.createClass
       detail:
         state: true
     window.dispatchEvent event
+    @handleSelect 1
   handleMiniShipChange: (e) ->
     e.preventDefault()
-    if e.detail.state
-      @handleSelect 1
-    else
+    if e.detail.visible
       @handleSelect 0
+    else
+      @handleSelect 1
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelectMainView()
   handleCtrlOrCmdNumberKeyDown: (num) ->
@@ -121,9 +123,9 @@ ControlledTabArea = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    window.addEventListener 'miniship.change', @handleMiniShipChange
+    window.addEventListener 'view.main.visible', @handleMiniShipChange
   componentWillUnmount: ->
-    window.removeEventListener 'miniship.change', @handleMiniShipChange
+    window.removeEventListener 'view.main.visible', @handleMiniShipChange
   render: ->
     <div>
       <Nav bsStyle="tabs" activeKey={@state.key}>

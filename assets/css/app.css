@@ -171,3 +171,6 @@ poi-control button .fa {
     0% {margin-left: 0%;}
     100% {margin-left: -100%;}
 }
+a:focus {
+  outline: none;
+}
