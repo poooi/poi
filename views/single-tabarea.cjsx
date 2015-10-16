@@ -42,33 +42,41 @@ lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
+  nowTime: 0
+  componentWillUpdate: (nextProps, nextState) ->
+    @nowTime = (new Date()).getTime()
+  componentDidUpdate: (prevProps, prevState) ->
+    cur = (new Date()).getTime()
+    console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
   handleSelect: (key) ->
     @setState {key} if key isnt @state.key
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
     @setState {key} if key isnt @state.key
   handleSelectMainView: ->
-    event = new CustomEvent 'miniship.change',
+    event = new CustomEvent 'view.main.visible',
       bubbles: true
-      cancelable: true
+      cancelable: false
       detail:
-        state: false
+        visible: true
     window.dispatchEvent event
     @handleSelect 0
   handleSelectShipView: ->
-    event = new CustomEvent 'miniship.change',
+    event = new CustomEvent 'view.main.visible',
       bubbles: true
-      cancelable: true
+      cancelable: false
       detail:
-        state: true
+        visible: false
     window.dispatchEvent event
     @handleSelect 1
   handleMiniShipChange: (e) ->
     e.preventDefault()
     if e.detail.visible
-      @handleSelect 0
+      if @state.key is 1
+        @handleSelect 0
     else
-      @handleSelect 1
+      if @state.key is 0
+        @handleSelect 1
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelectMainView()
   handleCtrlOrCmdNumberKeyDown: (num) ->

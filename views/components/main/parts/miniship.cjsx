@@ -87,22 +87,16 @@ module.exports =
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
     toggle: ->
-      event = new CustomEvent 'miniship.change',
+      event = new CustomEvent 'view.main.visible',
         bubbles: true
-        cancelable: true
+        cancelable: false
         detail:
-          state: !@state.show
+          visible: @state.show
       window.dispatchEvent event
     handleMiniShipChange: (e) ->
       # dispatch an event about whether the main pane is show or not
       e.preventDefault()
-      if e.detail.state isnt @state.show
-        event = new CustomEvent 'view.main.visible',
-          bubbles: true
-          cancelable: false
-          detail:
-            visible: @state.show
-        window.dispatchEvent event
+      if e.detail.visible == @state.show
         @setState
           show: !@state.show
           dataVersion: @state.dataVersion + 1
@@ -172,10 +166,10 @@ module.exports =
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
-      window.addEventListener 'miniship.change', @handleMiniShipChange
+      window.addEventListener 'view.main.visible', @handleMiniShipChange
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
-      window.removeEventListener 'miniship.change', @handleMiniShipChange
+      window.removeEventListener 'view.main.visible', @handleMiniShipChange
       @interval = clearInterval @interval if @interval?
     render: ->
       <div style={height: '100%'} onDoubleClick={@toggle}>
