@@ -66,6 +66,11 @@
 #MainView .main-area-vertical {
   height: 328px;
 }
+#MainView .main-area-vertical .resource-panel .panel-body,
+#MainView .main-area-vertical .combined-panels .panel-body,
+#MainView .main-area-vertical .mission-panel .panel-body {
+  margin-top: 8px;
+}
 #MainView .left-area,
 #MainView .right-bottom-area,
 #MainView .left-bottom-area {
