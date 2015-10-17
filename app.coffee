@@ -27,6 +27,9 @@ shortcut = require './lib/shortcut'
 
 global.mainWindow = mainWindow = null
 
+# Debug setting
+app.commandLine.appendSwitch 'enable-logging'
+
 # Proxy setting
 listenPort = config.get 'poi.port', 12450
 app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
