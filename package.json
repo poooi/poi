@@ -37,7 +37,7 @@
     "objtree": "^0.1.1",
     "path-extra": "^1.0.3",
     "react": "^0.13.3",
-    "react-bootstrap": "git+https://github.com/magicae/react-bootstrap.git",
+    "react-bootstrap": "^0.26.4",
     "react-fontawesome": "^0.3.2",
     "request": "^2.61.0",
     "shadowsocks": "git+https://github.com/magicae/shadowsocks-nodejs.git",

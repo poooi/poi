@@ -9,6 +9,8 @@ body {
   -webkit-font-smoothing: antialiased;
   line-height: 1.42857143;
   overflow: hidden;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 .alert {
   border-radius: 0px;
@@ -170,4 +172,7 @@ poi-control button .fa {
 @keyframes overflowscroll {
     0% {margin-left: 0%;}
     100% {margin-left: -100%;}
+}
+a:focus {
+  outline: none;
 }
