@@ -255,27 +255,35 @@ PoiAlert = React.createClass
     type: 'info'
     overflow: false
     messagewidth: 0
-  handleAlert: (e) ->
-    overflow = false
-    message = e.detail.message
-    document.getElementById('alert-area').innerHTML = message
+  updateAlert:  ->
+    # Must set innerHTML before getting offsetWidth
+    document.getElementById('alert-area').innerHTML = @message
     if document.getElementById('alert-container').offsetWidth < document.getElementById('alert-area').offsetWidth
+      # Twice messages each followed by 5 full-width spaces
+      displayMessage = "#{@message}　　　　　#{@message}　　　　　"
       overflow = true
-      message = "#{message}　　　　　#{message}　　　　　"
-      document.getElementById('alert-area').innerHTML = message
+    else
+      displayMessage = @message
+      overflow = false
+    # Must set innerHTML again before getting offsetWidth 
+    document.getElementById('alert-area').innerHTML = displayMessage
     @setState
-      message: message
-      type: e.detail.type
-      overflow: overflow
-      messagewidth: document.getElementById('alert-area').offsetWidth
+      message: displayMessage
+      type: @messageType
+      overflowAnim: if overflow then 'overflow-anim' else ''
+      messageWidth: document.getElementById('alert-area').offsetWidth
+  handleAlert: (e) ->
+    @message = e.detail.message
+    @messageType = e.detail.type
+    @updateAlert()
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert id='alert-container' bsStyle={if @state.type is 'default' then 'info' else @state.type} style={overflow: 'hidden'}>
-      <div className='alert-position' style={width: @state.messagewidth}>
-        <span id='alert-area' className={if @state.overflow then 'overflow-anim' else ''}>
+    <Alert id='alert-container' bsStyle={@state.type} style={overflow: 'hidden'}>
+      <div className='alert-position' style={width: @state.messageWidth}>
+        <span id='alert-area' className={@state.overflowAnim}>
           {@state.message}
         </span>
       </div>
