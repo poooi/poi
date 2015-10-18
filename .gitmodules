@@ -37,3 +37,6 @@
 [submodule "plugins/battle-detail"]
 	path = plugins/battle-detail
 	url = https://github.com/poooi/plugin-battle-detail.git
+[submodule "plugins/doyouknow"]
+	path = plugins/doyouknow
+	url = https://github.com/dkwingsmt/plugin-doyouknow
