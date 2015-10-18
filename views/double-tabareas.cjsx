@@ -116,8 +116,8 @@ ControlledTabArea = React.createClass
           {
             counter = -1
             plugins.map (plugin, index) =>
-              if plugin.handleClick
-                <MenuItem key={index} eventKey={0} onSelect={plugin.handleClick}>
+              if plugin.handleClick?
+                <MenuItem key={index} eventKey={@state.key[1]} onSelect={plugin.handleClick}>
                   {plugin.displayName}
                 </MenuItem>
               else
@@ -131,7 +131,7 @@ ControlledTabArea = React.createClass
         {
           counter = -1
           plugins.map (plugin, index) =>
-            if !plugin.handleClick
+            if !plugin.handleClick?
               key = (counter += 1)
               <div id={plugin.name} className="poi-app-tabpane #{if @state.key[1] == key then 'show' else 'hidden'}">
                 <PluginWrap plugin={plugin} selectedKey={@state.key[1]} index={key} />
