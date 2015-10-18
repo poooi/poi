@@ -45,8 +45,8 @@
   margin-bottom: 1px;
 }
 #ShipView .ship-details .ship-item {
-  margin-top: 7px;
-  margin-left: 3px;
+  padding-top: 7px;
+  padding-left: 3px;
   flex: 1;
   display: flex;
   flex-flow: row nowrap;
