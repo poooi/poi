@@ -131,5 +131,8 @@
   "Ship tag: %s": "出擊限定: %s",
   "Set as homepage": "ホームページを設定する",
   "Zoom": "ズーム",
-  "Zoom level": "ズームレベル"
+  "Zoom level": "ズームレベル",
+  "Advanced": "高度な設定",
+  "Disable Hardware Acceleration": "ハードウェアアクセラレーション無効化",
+  "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定する"
 }

@@ -30,6 +30,11 @@ global.mainWindow = mainWindow = null
 # Debug setting
 app.commandLine.appendSwitch 'enable-logging'
 
+# Disable HA
+disableHA = config.get 'poi.disableHA', false
+if disableHA
+  app.commandLine.appendSwitch 'disable-gpu'
+
 # Proxy setting
 listenPort = config.get 'poi.port', 12450
 app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"

@@ -25,11 +25,23 @@ PoiConfig = React.createClass
     mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
     freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
+    enableDMMcookie: config.get 'poi.enableDMMcookie', false
+    disableHA: config.get 'poi.disableHA', false
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
     @setState
       enableConfirmQuit: !enabled
+  handleDisableHA: ->
+    enabled = @state.disableHA
+    config.set 'poi.disableHA', !enabled
+    @setState
+      disableHA: !enabled
+  handleSetDMMcookie: ->
+    enabled = @state.enableDMMcookie
+    config.set 'poi.enableDMMcookie', !enabled
+    @setState
+      enableDMMcookie: !enabled
   handleSetNotify: ->
     enabled = @state.enableNotify
     config.set 'poi.notify.enabled', !enabled
@@ -205,6 +217,17 @@ PoiConfig = React.createClass
               <option value="ja-JP">日本語</option>
               <option value="en-US">English</option>
             </Input>
+          </Col>
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Advanced'} />
+        <Grid>
+          <Col xs={12}>
+            <Input type="checkbox" label={__ 'Disable Hardware Acceleration'} checked={@state.disableHA} onChange={@handleDisableHA} />
+          </Col>
+          <Col xs={12}>
+            <Input type="checkbox" label={__ 'Editing DMM Cookie\'s Region Flag'} checked={@state.enableDMMcookie} onChange={@handleSetDMMcookie} />
           </Col>
         </Grid>
       </div>
