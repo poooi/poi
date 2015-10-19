@@ -74,6 +74,7 @@
   "Proxy server information": "代理详情",
   "Proxy server address": "代理地址",
   "Proxy server port": "代理端口",
+  "Username": "用户名",
   "Password": "密码",
   "Encryption algorithm": "加密方式",
   "Will connect to server directly.": "将会直接连接网络或者通过全局 VPN 访问网络",

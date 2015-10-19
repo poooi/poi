@@ -15,6 +15,8 @@ basic =
   http:
     host: '127.0.0.1'
     port: 8099
+    username: ''
+    password: ''
   socks5:
     host: "127.0.0.1",
     port: 1080
@@ -43,6 +45,8 @@ NetworkConfig = React.createClass
         config.set 'proxy.use', 'http'
         config.set 'proxy.http.host', @refs.httpHost.getValue()
         config.set 'proxy.http.port', @refs.httpPort.getValue()
+        config.set 'proxy.http.username', @refs.httpUsername.getValue()
+        config.set 'proxy.http.password', @refs.httpPassword.getValue()
       when 'socks5'
         config.set 'proxy.use', 'socks5'
         config.set 'proxy.socks5.host', @refs.socksHost.getValue()
@@ -64,6 +68,14 @@ NetworkConfig = React.createClass
   handleHttpPortChange: (e) ->
     {http} = @state
     http.port = e.target.value
+    @setState {http}
+  handleHttpUsernameChange: (e) ->
+    {http} = @state
+    http.username = e.target.value
+    @setState {http}
+  handleHttpPasswordChange: (e) ->
+    {http} = @state
+    http.password = e.target.value
     @setState {http}
   handleSocksHostChange: (e) ->
     {socks5} = @state
@@ -113,34 +125,40 @@ NetworkConfig = React.createClass
         if @state.use == 'http'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="httpHost" label={__ 'Proxy server address'} placeholder="输入代理地址" value={@state?.http?.host} onChange={@handleHttpHostChange} />
+              <Input type="text" ref="httpHost" label={__ 'Proxy server address'} placeholder={__ 'Proxy server address'} value={@state?.http?.host} onChange={@handleHttpHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpPort" label={__ 'Proxy server port'} placeholder="输入代理端口" value={@state?.http?.port} onChange={@handleHttpPortChange} />
+              <Input type="text" ref="httpPort" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.http?.port} onChange={@handleHttpPortChange} />
+            </Col>
+            <Col xs={6}>
+              <Input type="text" ref="httpUsername" label={__ 'Username'} placeholder={__ 'Username'} value={@state?.http?.username} onChange={@handleHttpUsernameChange} />
+            </Col>
+            <Col xs={6}>
+              <Input type="password" ref="httpPassword" label={__ 'Password'} placeholder={__ 'Password'} value={@state?.http?.password} onChange={@handleHttpPasswordChange} />
             </Col>
           </Grid>
         else if @state.use == 'socks5'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="socksHost" label={__ 'Proxy server address'} placeholder="输入代理地址" value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
+              <Input type="text" ref="socksHost" label={__ 'Proxy server address'} placeholder={__ 'Proxy server address'} value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="socksPort" label={__ 'Proxy server port'} placeholder="输入代理端口" value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
+              <Input type="text" ref="socksPort" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
             </Col>
           </Grid>
         else if @state.use == 'shadowsocks'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerHost" label={__ 'Proxy server address'} placeholder="Shadowsocks 服务器地址" value={@state?.shadowsocks?.server?.host} onChange={@handleShadowsocksServerHostChange} />
+              <Input type="text" ref="shadowsocksServerHost" label={__ 'Proxy server address'} placeholder={__ 'Proxy server address'} value={@state?.shadowsocks?.server?.host} onChange={@handleShadowsocksServerHostChange} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="shadowsocksServerPort" label={__ 'Proxy server port'} placeholder="Shadowsocks 服务器端口" value={@state?.shadowsocks?.server?.port} onChange={@handleShadowsocksServerPortChange} />
+              <Input type="text" ref="shadowsocksServerPort" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.shadowsocks?.server?.port} onChange={@handleShadowsocksServerPortChange} />
             </Col>
             <Col xs={6}>
-              <Input type="password" ref="shadowsocksPassword" label={__ 'Password'} placeholder="Shadowsocks 密码" value={@state?.shadowsocks?.password} onChange={@handleShadowsocksPasswordChange} />
+              <Input type="password" ref="shadowsocksPassword" label={__ 'Password'} placeholder={__ 'Password'} value={@state?.shadowsocks?.password} onChange={@handleShadowsocksPasswordChange} />
             </Col>
             <Col xs={6}>
-              <Input type="select" ref="shadowsocksMethod" label={__ 'Encryption algorithm'} placeholder="Shadowsocks 加密方式" value={@state?.shadowsocks?.method} onChange={@handleShadowsocksMethodChange}>
+              <Input type="select" ref="shadowsocksMethod" label={__ 'Encryption algorithm'} placeholder={__ 'Encryption algorithm'} value={@state?.shadowsocks?.method} onChange={@handleShadowsocksMethodChange}>
               {
                 shadowsocksMethods.map (method, index) ->
                   <option key={index} value={method}>{method.toUpperCase()}</option>

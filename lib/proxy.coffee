@@ -41,8 +41,10 @@ resolve = (req) ->
     when 'http'
       host = config.get 'proxy.http.host', '127.0.0.1'
       port = config.get 'proxy.http.port', 8118
+      username = config.get 'proxy.http.username', ''
+      password = config.get 'proxy.http.password', ''
       return _.extend req,
-        proxy: "http://#{host}:#{port}"
+        proxy: "http://#{if username isnt '' && password isnt '' then "#{username}:#{password}@" else ''}#{host}:#{port}"
     # Directly
     else
       return req

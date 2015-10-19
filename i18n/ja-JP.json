@@ -74,6 +74,7 @@
   "Proxy server information": "プロキシ情報",
   "Proxy server address": "プロキシサーバー",
   "Proxy server port": "プロキシポート",
+  "Username": "ユーザー名",
   "Password": "パスワード",
   "Encryption algorithm": "暗号化方式",
   "Will connect to server directly.": "インターネットに直接（またはVPNで）接続します。",
