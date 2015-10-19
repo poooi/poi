@@ -45,21 +45,21 @@ poiAlert = (details) ->
     detail: details
   window.dispatchEvent event
 window.log = (msg, options) -> poiAlert window.jQuery.extend({
-    message: msg,
-    type: 'default',
-    priority: 0}, options)
+  message: msg,
+  type: 'default',
+  priority: 0}, options)
 window.success = (msg, options) -> poiAlert window.jQuery.extend({
-    message: msg,
-    type: 'success',
-    priority: 1}, options)
+  message: msg,
+  type: 'success',
+  priority: 1}, options)
 window.warn = (msg, options) -> poiAlert window.jQuery.extend({
-    message: msg,
-    type: 'warning',
-    priority: 2}, options)
+  message: msg,
+  type: 'warning',
+  priority: 2}, options)
 window.error = (msg, options) -> poiAlert window.jQuery.extend({
-    message: msg,
-    type: 'warning',
-    priority: 4}, options)
+  message: msg,
+  type: 'warning',
+  priority: 4}, options)
 
 window.notify = (msg, options) ->
   # Basic notification settings
