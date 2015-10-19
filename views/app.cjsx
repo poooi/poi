@@ -252,6 +252,7 @@ PoiAlert = React.createClass
     type: 'default'
     overflow: false
     messagewidth: 0
+
   updateAlert:  ->
     # Must set innerHTML before getting offsetWidth
     document.getElementById('alert-area').innerHTML = @message
@@ -269,10 +270,28 @@ PoiAlert = React.createClass
       type: @messageType
       overflowAnim: if overflow then 'overflow-anim' else ''
       messageWidth: document.getElementById('alert-area').offsetWidth
+
   handleAlert: (e) ->
-    @message = e.detail.message
-    @messageType = e.detail.type
-    @updateAlert()
+    # Format:
+    #     message: <string-to-display>
+    #     type: 'default'|'success'|'warning'|'danger'
+    #     priority: 0-5, the higher the more important
+    #     stickyFor: time in milliseconds 
+
+    # Make a message sticky to avoid from refreshing
+    thisPriority = e.detail.priority || 0
+    update = !@stickyEnd || @stickyEnd < (new Date).getTime()
+    update = update || !@stickyPriority || @stickyPriority <= thisPriority
+    if (update)
+      @stickyPriority = thisPriority
+      if e.detail.stickyFor
+        @stickyEnd = (new Date).getTime() + e.detail.stickyFor
+      else
+        @stickyEnd = null
+      @message = e.detail.message
+      @messageType = e.detail.type
+      @updateAlert()
+
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
   componentWillUnmount: ->
