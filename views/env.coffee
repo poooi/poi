@@ -212,7 +212,11 @@ proxy.addListener 'game.on.request', (method, path, body) ->
 start2Version = 0
 initStart2Value = ->
   if localStorage.start2Version?
-    start2Version = localStorage.start2Version
+    start2Version = parseInt localStorage.start2Version
+    # We need a hack to deal with Infinity for historical reasons.
+    if start2Version > 0xFFFFFFFF
+      start2Version = 0
+      localStorage.start2Version = 0
   if localStorage.start2Body?
     body = JSON.parse localStorage.start2Body
     window.$ships = []
@@ -274,7 +278,7 @@ resolveResponses = ->
           $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
           # updating start2Body while avoiding body from being updated by multi-plugins
           if not localStorage.start2Version? or start2Version > localStorage.start2Version
-            localStorage.start2Version = start2Version
+            localStorage.start2Version = start2Version % 0xFFFFFFFF
             localStorage.start2Body = JSON.stringify body
         # User datas prefixed by _
         when '/kcsapi/api_get_member/basic'
