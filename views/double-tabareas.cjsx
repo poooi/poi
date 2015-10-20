@@ -56,6 +56,7 @@ ControlledTabArea = React.createClass
       detail:
         visible: true
     window.dispatchEvent event
+    @handleSelectLeft 0
   handleSelectShipView: ->
     event = new CustomEvent 'view.main.visible',
       bubbles: true
@@ -63,6 +64,7 @@ ControlledTabArea = React.createClass
       detail:
         visible: false
     window.dispatchEvent event
+    @handleSelectLeft 0
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect [(@state.key[0] + 1) % 1, @state.key[1]]
   handleCtrlOrCmdNumberKeyDown: (num) ->
