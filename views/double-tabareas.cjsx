@@ -49,11 +49,31 @@ ControlledTabArea = React.createClass
   handleSelectRight: (e, key) ->
     e.preventDefault()
     @handleSelect [@state.key[0], key]
+  handleSelectMainView: ->
+    event = new CustomEvent 'view.main.visible',
+      bubbles: true
+      cancelable: false
+      detail:
+        visible: true
+    window.dispatchEvent event
+  handleSelectShipView: ->
+    event = new CustomEvent 'view.main.visible',
+      bubbles: true
+      cancelable: false
+      detail:
+        visible: false
+    window.dispatchEvent event
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect [(@state.key[0] + 1) % 1, @state.key[1]]
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    if num <= 2 + tabbedPlugins.length && num > 2
-      @handleSelect [@state.key[0], num - 3]
+    if num == 1
+      @handleSelectMainView()
+    else
+      if num == 2
+        @handleSelectShipView()
+      else
+        if num <= 2 + tabbedPlugins.length && num > 2
+          @handleSelect [@state.key[0], num - 3]
   handleShiftTabKeyDown: ->
     @handleSelect [@state.key[0], if @state.key[1]? then (@state.key[1] - 1 + tabbedPlugins.length) % tabbedPlugins.length else tabbedPlugins.length - 1]
   handleTabKeyDown: ->
