@@ -184,7 +184,7 @@ PaneBody = React.createClass
                     <span className="hp-progress top-space" style={getStatusStyle @state.label[j]}>
                       {if ship.api_ndock_time
                         [
-                          <OverlayTrigger key={j} show = {ship.api_ndock_time} placement='top' overlay={<Tooltip id='panebody-repair-time'>{__ 'Repair Time'}: {resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
+                          <OverlayTrigger key={j} show = {ship.api_ndock_time} placement='top' overlay={<Tooltip id="panebody-repair-time-#{j}">{__ 'Repair Time'}: {resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
                             <ProgressBar key={j} bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                          now={ship.api_nowhp / ship.api_maxhp * 100} />
                           </OverlayTrigger>
@@ -201,20 +201,20 @@ PaneBody = React.createClass
               </div>
               <span className="ship-fb" style={getStatusStyle @state.label[j]}>
                 <span style={flex: 1}>
-                  <OverlayTrigger placement='right' overlay={<Tooltip id='panebody-fuel'>{ship.api_fuel} / {shipInfo.api_fuel_max}</Tooltip>}>
+                  <OverlayTrigger placement='right' overlay={<Tooltip id="panebody-fuel-#{j}">{ship.api_fuel} / {shipInfo.api_fuel_max}</Tooltip>}>
                     <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
                                  now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
                   </OverlayTrigger>
                 </span>
                 <span style={flex: 1}>
-                  <OverlayTrigger placement='right' overlay={<Tooltip id='panebody-bull'>{ship.api_bull} / {shipInfo.api_bull_max}</Tooltip>}>
+                  <OverlayTrigger placement='right' overlay={<Tooltip id="panebody-bull-#{j}">{ship.api_bull} / {shipInfo.api_bull_max}</Tooltip>}>
                     <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
                                  now={ship.api_bull / shipInfo.api_bull_max * 100} />
                   </OverlayTrigger>
                 </span>
               </span>
               <div className="ship-slot" style={getStatusStyle @state.label[j]}>
-                <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                <Slotitems key={j} data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
               </div>
             </div>
         }
