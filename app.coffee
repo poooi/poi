@@ -46,10 +46,10 @@ if process.platform == 'linux'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.219'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.226'
   catch e
     app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.219'
+    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.226'
 else if process.platform == 'win32'
   try
     fs.accessSync path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer.dll')
