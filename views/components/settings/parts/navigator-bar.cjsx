@@ -81,7 +81,7 @@ NavigatorBar = React.createClass
           <Button bsSize='small' bsStyle='warning' onClick={@handleRefresh} onContextMenu={@handleRefreshFlash}><FontAwesome name='refresh' /></Button>
         </ButtonGroup>
         <ButtonGroup style={marginLeft: 5}>
-          <OverlayTrigger placement='top' overlay={<Tooltip>{__ 'Set as homepage'}</Tooltip>}>
+          <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'>{__ 'Set as homepage'}</Tooltip>}>
             <Button bsSize='small' onClick={@handleSetHomepage}><FontAwesome name='bookmark' /></Button>
           </OverlayTrigger>
         </ButtonGroup>

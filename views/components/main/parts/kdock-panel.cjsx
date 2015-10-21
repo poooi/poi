@@ -169,7 +169,7 @@ KdockPanel = React.createClass
     {
       for i in [1..4]
         <OverlayTrigger key={i} placement='top' overlay={
-          <Tooltip>
+          <Tooltip id='kdock-material'>
             {
               if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
                 <span>

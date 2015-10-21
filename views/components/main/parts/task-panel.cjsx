@@ -400,21 +400,21 @@ TaskPanel = React.createClass
       for i in [0..5]
         if @state.tasks[i].tracking
           <div className="panel-item task-item" key={i}>
-            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'top' else 'left'} overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'top' else 'left'} overlay={<Tooltip id='task-quest-name'><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="quest-name">
                 <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
               </div>
             </OverlayTrigger>
             <div>
-              <OverlayTrigger placement='left' overlay={<Tooltip>{getToolTip @state.tasks[i].id}</Tooltip>}>
+              <OverlayTrigger placement='left' overlay={<Tooltip id='task-progress'>{getToolTip @state.tasks[i].id}</Tooltip>}>
                 <Label className="quest-progress" bsStyle={getStyleByPercent @state.tasks[i].percent}>{@state.tasks[i].progress}</Label>
               </OverlayTrigger>
             </div>
           </div>
         else
           <div className="panel-item task-item" key={i}>
-            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'top' else 'left'} overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'top' else 'left'} overlay={<Tooltip id='task-name'><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="quest-name">
                 <span className="cat-indicator" style={backgroundColor: getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}

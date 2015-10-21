@@ -86,13 +86,14 @@ module.exports =
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
-    toggle: ->
+    toggle: (e) ->
       event = new CustomEvent 'view.main.visible',
         bubbles: true
         cancelable: false
         detail:
           visible: @state.show
       window.dispatchEvent event
+      e.preventDefault()
     handleMiniShipChange: (e) ->
       # dispatch an event about whether the main pane is show or not
       e.preventDefault()

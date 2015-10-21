@@ -301,7 +301,7 @@ TopAlert = React.createClass
             <span style={flex: 1}>{__ 'Total Lv'}. {@messages.totalLv}</span>
             <span style={flex: 1}>
               <OverlayTrigger placement='bottom' overlay={
-                <Tooltip>
+                <Tooltip id='topalert-FP'>
                   <span>{__ 'Basic FP'}: {@messages.tyku.basic} {__ 'Rank bonuses'}: {@messages.tyku.alv}</span>
                 </Tooltip>
               }>
@@ -310,7 +310,7 @@ TopAlert = React.createClass
             </span>
             <span style={flex: 1}>
               <OverlayTrigger placement='bottom' overlay={
-                <Tooltip>
+                <Tooltip id='topalert-recon'>
                   <div>2-5 {__ 'Autumn'}: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
                   <div>2-5 {__ 'Old'}: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
                 </Tooltip>

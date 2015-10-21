@@ -138,7 +138,7 @@ TeitokuPanel = React.createClass
       <div>
         <OverlayTrigger placement="bottom" overlay={
             if @state.level < 120
-              <Tooltip>
+              <Tooltip id='teitoku-exp'>
                 <div style={display: 'table'}>
                   <div>
                     <span style={styleL}>Next.</span><span style={styleR}>{@state.nextExp}</span>
@@ -149,7 +149,7 @@ TeitokuPanel = React.createClass
                 </div>
               </Tooltip>
             else
-              <Tooltip>Total Exp. {@state.exp}</Tooltip>
+              <Tooltip id='teitoku-exp'>Total Exp. {@state.exp}</Tooltip>
           }>
           <span>{"Lv. #{@state.level}　#{@state.nickname}　[#{rankName[@state.rank]}]　"}</span>
         </OverlayTrigger>

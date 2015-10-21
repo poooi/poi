@@ -137,7 +137,7 @@ MissionPanel = React.createClass
           </span>
         {
           if @state.decks[i].countdown > 60
-            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
+            <OverlayTrigger placement='left' overlay={<Tooltip id='mission-return-by'><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
               <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
             </OverlayTrigger>
           else if @state.decks[i].countdown > -1

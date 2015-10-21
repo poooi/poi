@@ -97,15 +97,9 @@ ResourcePanel = React.createClass
       {
         for i in order
           <Col key={i} xs={6} style={marginBottom: 3}>
-          {
-            # Show special effect to indicate that meterial is lower than limit.
-            # Only apply to first 4 material (fuel, ammo, steel and bauxite).
-            style = null
-            if i <= 4 and @state.material[i] < @state.limit
-              style = {'-webkit-filter': 'drop-shadow(0px 0px 4px #2196F3)'}
-            <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"} className="material-icon" style={style} />
-          }
-          <span className="material-value">{@state.material[i]}</span>
+            <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"}
+                 className="material-icon #{if i <= 4 and @state.material[i] < @state.limit then 'grow' else ''}" />
+            <span className="material-value">{@state.material[i]}</span>
           </Col>
       }
       </Grid>

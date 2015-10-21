@@ -120,7 +120,7 @@ NdockPanel = React.createClass
             <span className="ndock-name">
               {@state.docks[i].name}
             </span>
-            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ 'Finish by : '}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
+            <OverlayTrigger placement='left' overlay={<Tooltip id='ndock-finish-by'><strong>{__ 'Finish by : '}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
               <Label className="ndock-timer" bsStyle="primary">
                 {resolveTime @state.docks[i].countdown}
               </Label>

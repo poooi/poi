@@ -148,77 +148,75 @@ PaneBody = React.createClass
             ship = _ships[shipId]
             shipInfo = $ships[ship.api_ship_id]
             shipType = $shipTypes[shipInfo.api_stype].api_name
-            [
-              <div className="ship-item">
-                <div className="ship-tile">
-                  <div className="ship-basic-item">
-                    <div className="ship-info" style={getStatusStyle @state.label[j]}>
-                      <div className="ship-basic">
-                        <span className="ship-lv">
-                          Lv. {ship.api_lv}
-                        </span>
-                        <span className='ship-type'>
-                          {shipType}
-                        </span>
-                      </div>
-                      <span className="ship-name">
-                        {shipInfo.api_name}
+            <div key={j} className="ship-item">
+              <div className="ship-tile">
+                <div className="ship-basic-item">
+                  <div className="ship-info" style={getStatusStyle @state.label[j]}>
+                    <div className="ship-basic">
+                      <span className="ship-lv">
+                        Lv. {ship.api_lv}
                       </span>
-                      <span className="ship-exp">
-                        Next. {ship.api_exp[1]}
+                      <span className='ship-type'>
+                        {shipType}
                       </span>
                     </div>
-                    <div className="ship-stat">
-                      <div className="div-row">
-                        <span className="ship-hp" style={getStatusStyle @state.label[j]}>
-                          {ship.api_nowhp} / {ship.api_maxhp}
-                        </span>
-                        <div className="status-label">
-                          <StatusLabel label={@state.label[j]}/>
-                        </div>
-                        <div style={getStatusStyle @state.label[j]}>
-                          <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
-                            ★{ship.api_cond}
-                          </span>
-                        </div>
+                    <span className="ship-name">
+                      {shipInfo.api_name}
+                    </span>
+                    <span className="ship-exp">
+                      Next. {ship.api_exp[1]}
+                    </span>
+                  </div>
+                  <div className="ship-stat">
+                    <div className="div-row">
+                      <span className="ship-hp" style={getStatusStyle @state.label[j]}>
+                        {ship.api_nowhp} / {ship.api_maxhp}
+                      </span>
+                      <div className="status-label">
+                        <StatusLabel label={@state.label[j]}/>
                       </div>
-                      <span className="hp-progress top-space" style={getStatusStyle @state.label[j]}>
-                        {if ship.api_ndock_time
-                          [
-                            <OverlayTrigger show = {ship.api_ndock_time} placement='top' overlay={<Tooltip>{__ 'Repair Time'}: {resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
-                              <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
-                                           now={ship.api_nowhp / ship.api_maxhp * 100} />
-                            </OverlayTrigger>
-                          ]
-                        else
-                          [
-                            <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+                      <div style={getStatusStyle @state.label[j]}>
+                        <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
+                          ★{ship.api_cond}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="hp-progress top-space" style={getStatusStyle @state.label[j]}>
+                      {if ship.api_ndock_time
+                        [
+                          <OverlayTrigger key={j} show = {ship.api_ndock_time} placement='top' overlay={<Tooltip id='panebody-repair-time'>{__ 'Repair Time'}: {resolveTime ship.api_ndock_time / 1000}</Tooltip>}>
+                            <ProgressBar key={j} bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
                                          now={ship.api_nowhp / ship.api_maxhp * 100} />
-                          ]
-                        }
-                      </span>
-                    </div>
+                          </OverlayTrigger>
+                        ]
+                      else
+                        [
+                          <ProgressBar key={j} bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+                                       now={ship.api_nowhp / ship.api_maxhp * 100} />
+                        ]
+                      }
+                    </span>
                   </div>
                 </div>
-                <span className="ship-fb" style={getStatusStyle @state.label[j]}>
-                  <span style={flex: 1}>
-                    <OverlayTrigger placement='right' overlay={<Tooltip>{ship.api_fuel} / {shipInfo.api_fuel_max}</Tooltip>}>
-                      <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                   now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
-                    </OverlayTrigger>
-                  </span>
-                  <span style={flex: 1}>
-                    <OverlayTrigger placement='right' overlay={<Tooltip>{ship.api_bull} / {shipInfo.api_bull_max}</Tooltip>}>
-                      <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                   now={ship.api_bull / shipInfo.api_bull_max * 100} />
-                    </OverlayTrigger>
-                  </span>
-                </span>
-                <div className="ship-slot" style={getStatusStyle @state.label[j]}>
-                  <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
-                </div>
               </div>
-            ]
+              <span className="ship-fb" style={getStatusStyle @state.label[j]}>
+                <span style={flex: 1}>
+                  <OverlayTrigger placement='right' overlay={<Tooltip id='panebody-fuel'>{ship.api_fuel} / {shipInfo.api_fuel_max}</Tooltip>}>
+                    <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                 now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                  </OverlayTrigger>
+                </span>
+                <span style={flex: 1}>
+                  <OverlayTrigger placement='right' overlay={<Tooltip id='panebody-bull'>{ship.api_bull} / {shipInfo.api_bull_max}</Tooltip>}>
+                    <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                 now={ship.api_bull / shipInfo.api_bull_max * 100} />
+                  </OverlayTrigger>
+                </span>
+              </span>
+              <div className="ship-slot" style={getStatusStyle @state.label[j]}>
+                <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+              </div>
+            </div>
         }
       </div>
     </div>

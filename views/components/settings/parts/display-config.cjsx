@@ -155,7 +155,7 @@ DisplayConfig = React.createClass
         <Grid>
           <Col xs={6}>
             <OverlayTrigger placement='top' overlay={
-                <Tooltip>{__ 'Zoom level'} <strong>{parseInt(@state.zoomLevel * 100)}%</strong></Tooltip>
+                <Tooltip id='displayconfig-zoom'>{__ 'Zoom level'} <strong>{parseInt(@state.zoomLevel * 100)}%</strong></Tooltip>
               }>
               <Input type="range" ref="zoomLevel" onInput={@handleChangeZoomLevel}
                 min={0.5} max={2.0} step={0.05} defaultValue={@state.zoomLevel} />

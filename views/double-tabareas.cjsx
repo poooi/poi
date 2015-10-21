@@ -155,7 +155,7 @@ ControlledTabArea = React.createClass
           plugins.map (plugin, index) =>
             if !plugin.handleClick?
               key = (counter += 1)
-              <div id={plugin.name} className="poi-app-tabpane #{if @state.key[1] == key then 'show' else 'hidden'}">
+              <div id={plugin.name} key={key} className="poi-app-tabpane #{if @state.key[1] == key then 'show' else 'hidden'}">
                 <PluginWrap plugin={plugin} selectedKey={@state.key[1]} index={key} />
               </div>
         }
