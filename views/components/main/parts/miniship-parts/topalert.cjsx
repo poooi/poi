@@ -287,11 +287,11 @@ TopAlert = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     @interval = clearInterval @interval if @interval?
   render: ->
-    <div>
+    <div style={width: '100%'}>
     {
       if @props.mini
-        <div style={display: "flex", justifyContent: "space-around"}>
-          <span style={flex: "none"}>{__ 'Total Lv'}{@messages.totalLv} </span>
+        <div style={display: "flex", justifyContent: "space-around", width: '100%'}>
+          <span style={flex: "none"}>Lv. {@messages.totalLv} </span>
           <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
           <span style={flex: "none", marginLeft: 5}>{__ 'LOS'}: {@messages.saku25a.total}</span>
         </div>

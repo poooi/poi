@@ -184,23 +184,15 @@ PaneBodyMini = React.createClass
       label: label
   render: ->
     <div>
-      <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
-        <Popover>
-          <div>
-            <TopAlert
-              updateCond={@onCondChange}
-              messages={@props.messages}
-              deckIndex={@props.deckIndex}
-              deckName={@props.deckName}
-              mini={true}
-            />
-          </div>
-        </Popover>
-      }>
       <div className="fleet-name">
-        <span style={margin: 'auto'}>{@props.deck.api_name}</span>
+        <TopAlert
+          updateCond={@onCondChange}
+          messages={@props.messages}
+          deckIndex={@props.deckIndex}
+          deckName={@props.deckName}
+          mini={true}
+        />
       </div>
-      </OverlayTrigger>
       <div className="ship-details-mini">
       {
         {$ships, $shipTypes, _ships} = window
