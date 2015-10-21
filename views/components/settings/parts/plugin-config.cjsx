@@ -4,7 +4,7 @@ glob = require 'glob'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
 {Grid, Col, Input, Alert} = ReactBootstrap
 {config} = window
-{openExternal} = require 'shell'
+shell = require 'shell'
 Divider = require './divider'
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
 plugins = plugins.map (filePath) ->
@@ -16,7 +16,10 @@ enabled = plugins.map (plugin) ->
   config.get "plugin.#{plugin.name}.enable", true
 
 getAuthorLink = (author, link) ->
-  <a onClick={openExternal.bind(this, link)}>{author}</a>
+  handleClickAuthorLink = (e) ->
+    shell.openExternal e.target.dataset.link
+    e.preventDefault()
+  <a onClick={handleClickAuthorLink} data-link={link}>{author}</a>
 
 PluginConfig = React.createClass
   getInitialState: ->
