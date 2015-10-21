@@ -12,6 +12,11 @@ shadowsocksMethods = ["aes-256-cfb", "aes-192-cfb", "aes-128-cfb", "bf-cfb",
 
 basic =
   use: 'none',
+  diff:
+    host1:'127.0.0.1'
+    port1:8098
+    host2:'127.0.0.1'
+    post2:8888
   http:
     host: '127.0.0.1'
     port: 8099
@@ -41,6 +46,12 @@ NetworkConfig = React.createClass
   handleSaveConfig: (e) ->
     use = @refs.use.getValue()
     switch use
+      when 'diff'
+        config.set 'proxy.use','diff'
+        config.set 'proxy.diff.host1', @refs.httpHost1.getValue()
+        config.set 'proxy.diff.port1', @refs.httpPort1.getValue()
+        config.set 'proxy.diff.host2', @refs.httpHost2.getValue()
+        config.set 'proxy.diff.port2', @refs.httpPort2.getValue()
       when 'http'
         config.set 'proxy.use', 'http'
         config.set 'proxy.http.host', @refs.httpHost.getValue()
@@ -61,6 +72,22 @@ NetworkConfig = React.createClass
         config.set 'proxy.use', 'none'
     toggleModal __('Proxy setting'), __('Success! It will be available after a restart.')
     e.preventDefault()
+  handleHttpHost1Change: (e) ->
+    {diff} = @state
+    diff.host = e.target.value
+    @setState {diff}
+  handleHttpPort1Change: (e) ->
+    {diff} = @state
+    diff.port = e.target.value
+    @setState {diff}
+  handleHttpHost2Change: (e) ->
+    {diff} = @state
+    diff.host = e.target.value
+    @setState {diff}
+  handleHttpPort2Change: (e) ->
+    {diff} = @state
+    http.port = e.target.value
+    @setState {diff}
   handleHttpHostChange: (e) ->
     {http} = @state
     http.host = e.target.value
@@ -117,6 +144,7 @@ NetworkConfig = React.createClass
             <option key={1} value="socks5">Socks5 {__ "proxy"}</option>
             <option key={2} value="shadowsocks">Shadowsocks</option>
             <option key={3} value="none">{__ "No proxy"}</option>
+			<option key={4} value="diff">HTTP {__ "diff proxy"}</option>
           </Input>
         </Col>
       </Grid>
@@ -135,6 +163,21 @@ NetworkConfig = React.createClass
             </Col>
             <Col xs={6}>
               <Input type="password" ref="httpPassword" label={__ 'Password'} placeholder={__ 'Password'} value={@state?.http?.password} onChange={@handleHttpPasswordChange} />
+            </Col>
+          </Grid>
+        else if @state.use=='diff'
+          <Grid>
+            <Col xs={6}>
+              <Input type="text" ref="httpHost" label={__ 'Proxy server address htp'} placeholder="输入代理地址" value={@state?.diff?.host1} onChange={@handleHttpHost1Change} />
+            </Col>
+            <Col xs={6}>
+              <Input type="text" ref="httpPort" label={__ 'Proxy server port htp'} placeholder="输入代理端口" value={@state?.diff?.port1} onChange={@handleHttpPort1Change} />
+            </Col>
+            <Col xs={6}>
+              <Input type="text" ref="httpHost" label={__ 'Proxy server address htps'} placeholder="输入代理地址" value={@state?.diff?.host2} onChange={@handleHttpHost2Change} />
+            </Col>
+            <Col xs={6}>
+              <Input type="text" ref="httpPort" label={__ 'Proxy server port htps'} placeholder="输入代理端口" value={@state?.diff?.port2} onChange={@handleHttpPort2Change} />
             </Col>
           </Grid>
         else if @state.use == 'socks5'
