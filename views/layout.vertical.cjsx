@@ -1,10 +1,16 @@
 {$, $$} = window
 
 # Initial
-$('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
+# $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
 $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
+poiControlHeight = 30 # Magic number
 
 # Layout
+adjustWebviewHeight = (h) ->
+  $('kan-game #webview-wrapper')?.style?.height = h
+  $('kan-game webview')?.style?.height = h
+  $('kan-game webview')?.shadowRoot?.querySelector('object[is=browserplugin]')?.style?.height = h
+
 adjustSize = ->
   webview = $('kan-game webview')
   poiapp = document.getElementsByTagName('poi-app')[0]
@@ -16,9 +22,9 @@ adjustSize = ->
   factor = Math.ceil(window.innerWidth /  800.0 * 100) / 100.0
   if window.webviewWidth != -1
     factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
-  poiapp?.style?.height = "#{window.innerHeight - Math.ceil(480.0 * factor) - 30}px"
+  poiapp?.style?.height = "#{window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight}px"
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - 30) / window.zoomLevel - 40}px"
+    e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight) / window.zoomLevel - 40}px"
     e.style.overflowY = "scroll"
   if window.webviewWidth > window.innerWidth
     nowWindow = remote.getCurrentWindow()
@@ -30,7 +36,7 @@ adjustSize = ->
       y: bound.y
       width: parseInt(newWidth + borderX)
       height: bound.height
-  $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{480.0 * factor - 1}px"
+  adjustWebviewHeight "#{480.0 * factor - 1}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
   $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
@@ -112,7 +118,7 @@ module.exports =
     window.removeEventListener 'game.start', adjustSize
     window.removeEventListener 'game.payitem', adjustPayitem
     $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
-    $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0 - 5}px"
+    adjustWebviewHeight "#{window.innerWidth / 800.0 * 480.0 - 5}px"
     $('kan-game #webview-wrapper')?.style?.width = ""
     $('kan-game #webview-wrapper')?.style?.marginLeft = ""
     window._delay = true
