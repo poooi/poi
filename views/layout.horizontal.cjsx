@@ -4,8 +4,14 @@
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
 $('#layout-css').setAttribute 'href', "./assets/css/layout.horizontal.css"
 factor = null
+poiControlHeight = 31 # Magic number
 
 # Layout
+adjustWebviewHeight = (h) ->
+  $('kan-game #webview-wrapper')?.style?.height = h
+  $('kan-game webview')?.style?.height = h
+  $('kan-game webview')?.shadowRoot?.querySelector('object[is=browserplugin]')?.style?.height = h
+
 adjustSize = ->
   poiapp = document.getElementsByTagName('poi-app')[0]
   webview = $('kan-game webview')
@@ -25,7 +31,9 @@ adjustSize = ->
   else
     $('kan-game')?.style?.display = ''
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
-    $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 31}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{webviewWidth}px"
+    adjustWebviewHeight "#{window.innerHeight - poiControlHeight}px"
+    factor = null
     return
   factor = Math.ceil(window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0) / 800.0 * 100) / 100.0
   if webviewWidth > 0.00001
@@ -50,9 +58,10 @@ adjustSize = ->
       document.documentElement.style.overflow = 'hidden';
     }
   """
-  $('kan-game #webview-wrapper')?.style?.height = $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 1}px"
+  adjustWebviewHeight "#{Math.floor(480 * factor) - 1}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
   $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"
+
 if !window._delay
   adjustSize()
 else
@@ -126,7 +135,7 @@ module.exports =
     $('kan-game').style.flex = null
     $('poi-app').style.flex = null
     if factor
-      $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{Math.floor(480 * factor) - 5}px"
+      adjustWebviewHeight "#{Math.floor(480 * factor) - 5}px"
     else
-      $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerHeight - 5}px"
+      adjustWebviewHeight "#{window.innerHeight - 5}px"
     window._delay = true
