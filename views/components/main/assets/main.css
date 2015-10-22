@@ -247,5 +247,5 @@
   padding: 8px;
 }
 #MainView .grow {
-  -webkit-filter: 'drop-shadow(0px 0px 4px #2196F3)'
+  -webkit-filter: drop-shadow(0px 0px 4px #2196F3);
 }
