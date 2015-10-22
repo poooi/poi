@@ -144,7 +144,7 @@ NetworkConfig = React.createClass
             <option key={1} value="socks5">Socks5 {__ "proxy"}</option>
             <option key={2} value="shadowsocks">Shadowsocks</option>
             <option key={3} value="none">{__ "No proxy"}</option>
-			<option key={4} value="diff">HTTP {__ "diff proxy"}</option>
+            <option key={4} value="diff">HTTP {__ "diff proxy"}</option>
           </Input>
         </Col>
       </Grid>
