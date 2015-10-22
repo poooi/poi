@@ -67,7 +67,7 @@ adjustSize = ->
     document.body.appendChild dropdownStyle
     isAppended = true
   dropdownStyle.innerHTML =
-    """poi-nav .dropdown-menu {
+    """poi-nav poi-nav-tabs nav .dropdown-menu {
       max-height: #{$('#MainView').style.height};
       overflow: auto;
     }
