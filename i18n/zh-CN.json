@@ -80,6 +80,7 @@
   "Proxy server port http": "http代理端口",
   "Proxy server address https": "https代理地址",
   "Proxy server port https": "https代理端口",
+  "diff proxy":"对不同协议使用不同代理（适用于非锅go又要使用日志的情况）",
   "Encryption algorithm": "加密方式",
   "Will connect to server directly.": "将会直接连接网络或者通过全局 VPN 访问网络",
   "Times of reconnect": "网络错误重试次数",
