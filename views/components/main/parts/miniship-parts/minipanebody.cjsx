@@ -123,16 +123,7 @@ PaneBodyMini = React.createClass
     {label} = @state
     updateflag = false
     switch path
-      when '/kcsapi/api_port/port'
-        updateflag = true
-        label = @updateLabels()
-      when '/kcsapi/api_req_hensei/change'
-        updateflag = true
-        label = @updateLabels()
-      when '/kcsapi/api_req_hokyu/charge'
-        updateflag = true
-        label = @updateLabels()
-      when '/kcsapi/api_req_map/next'
+      when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_req_map/next', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_nyukyo/speedchange'
         updateflag = true
         label = @updateLabels()
       when '/kcsapi/api_req_nyukyo/start'
@@ -144,9 +135,6 @@ PaneBodyMini = React.createClass
           if i isnt -1
             label[i] = 1
             updateflag = true
-      when '/kcsapi/api_req_nyukyo/speedchange'
-        updateflag = true
-        label = @updateLabels()
     if updateflag
       @setState
         label: label
