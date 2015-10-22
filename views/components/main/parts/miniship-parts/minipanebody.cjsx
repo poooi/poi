@@ -41,7 +41,7 @@ getShipStatus = (shipId) ->
   # retreat status
   # if shipId == escapeId || shipId == towId
     # return status = 0
-  # reparing
+  # repairing
   if shipId in _ndocks
     return status = 1
   # supply
@@ -56,7 +56,7 @@ getShipStatus = (shipId) ->
   # special 3 locked phase 3
   else if  _ships[shipId].api_sally_area == 3
     return status = 4
-  # special 3 locked phase 3
+  # special 4 locked phase 4
   else if _ships[shipId].api_sally_area == 4
     return status = 5
   return status
