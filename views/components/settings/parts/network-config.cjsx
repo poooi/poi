@@ -168,16 +168,16 @@ NetworkConfig = React.createClass
         else if @state.use=='diff'
           <Grid>
             <Col xs={6}>
-              <Input type="text" ref="httpHost" label={__ 'Proxy server address htp'} placeholder="输入代理地址" value={@state?.diff?.host1} onChange={@handleHttpHost1Change} />
+              <Input type="text" ref="httpHost" label={__ 'Proxy server address http'} placeholder="输入代理地址" value={@state?.diff?.host1} onChange={@handleHttpHost1Change} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpPort" label={__ 'Proxy server port htp'} placeholder="输入代理端口" value={@state?.diff?.port1} onChange={@handleHttpPort1Change} />
+              <Input type="text" ref="httpPort" label={__ 'Proxy server port http'} placeholder="输入代理端口" value={@state?.diff?.port1} onChange={@handleHttpPort1Change} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpHost" label={__ 'Proxy server address htps'} placeholder="输入代理地址" value={@state?.diff?.host2} onChange={@handleHttpHost2Change} />
+              <Input type="text" ref="httpHost" label={__ 'Proxy server address https'} placeholder="输入代理地址" value={@state?.diff?.host2} onChange={@handleHttpHost2Change} />
             </Col>
             <Col xs={6}>
-              <Input type="text" ref="httpPort" label={__ 'Proxy server port htps'} placeholder="输入代理端口" value={@state?.diff?.port2} onChange={@handleHttpPort2Change} />
+              <Input type="text" ref="httpPort" label={__ 'Proxy server port https'} placeholder="输入代理端口" value={@state?.diff?.port2} onChange={@handleHttpPort2Change} />
             </Col>
           </Grid>
         else if @state.use == 'socks5'
