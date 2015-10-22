@@ -45,6 +45,12 @@ resolve = (req) ->
       password = config.get 'proxy.http.password', ''
       return _.extend req,
         proxy: "http://#{if username isnt '' && password isnt '' then "#{username}:#{password}@" else ''}#{host}:#{port}"
+    # HTTP Request via different proxy
+    when 'diff'
+      host = config.get 'proxy.diff.host1', '127.0.0.1'
+      port = config.get 'proxy.diff.port1', 8098
+      return _.extend req,
+        proxy: "http://#{host}:#{port}"
     # Directly
     else
       return req
@@ -190,6 +196,20 @@ class Proxy extends EventEmitter
         when 'http'
           host = config.get 'proxy.http.host', '127.0.0.1'
           port = config.get 'proxy.http.port', 8118
+          # Write header to http proxy
+          msg = "CONNECT #{remoteUrl.hostname}:#{remoteUrl.port} HTTP/#{req.httpVersion}\r\n"
+          for k, v of req.headers
+            msg += "#{caseNormalizer(k)}: #{v}\r\n"
+          msg += "\r\n"
+          remote = net.connect port, host, ->
+            remote.write msg
+            remote.write head
+            client.pipe remote
+            remote.pipe client
+        # Write data directly to diff proxy
+        when 'diff'
+          host = config.get 'proxy.diff.host2', '127.0.0.1'
+          port = config.get 'proxy.diff.port2', 8098
           # Write header to http proxy
           msg = "CONNECT #{remoteUrl.hostname}:#{remoteUrl.port} HTTP/#{req.httpVersion}\r\n"
           for k, v of req.headers
