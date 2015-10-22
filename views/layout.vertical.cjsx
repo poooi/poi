@@ -4,6 +4,8 @@
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
 $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 poiControlHeight = 30 # Magic number
+dropdownStyleAppended = false
+dropdownStyle = document.createElement 'style'
 
 # Layout
 adjustWebviewHeight = (h) ->
@@ -24,7 +26,7 @@ adjustSize = ->
     factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
   poiapp?.style?.height = "#{window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight}px"
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight) / window.zoomLevel - 40}px"
+    e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight) / window.zoomLevel - poiControlHeight}px"
     e.style.overflowY = "scroll"
   if window.webviewWidth > window.innerWidth
     nowWindow = remote.getCurrentWindow()
@@ -60,6 +62,16 @@ adjustSize = ->
       document.documentElement.style.overflow = 'hidden';
     }
   """
+  # Autoset plugin-dropdown height
+  if !dropdownStyleAppended
+    document.body.appendChild dropdownStyle
+    isAppended = true
+  dropdownStyle.innerHTML =
+    """poi-nav .dropdown-menu {
+      max-height: #{$('#MainView').style.height};
+      overflow: auto;
+    }
+    """
 
 if !window._delay
   adjustSize()

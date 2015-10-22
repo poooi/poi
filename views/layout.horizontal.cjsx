@@ -5,6 +5,8 @@
 $('#layout-css').setAttribute 'href', "./assets/css/layout.horizontal.css"
 factor = null
 poiControlHeight = 31 # Magic number
+dropdownStyleAppended = false
+dropdownStyle = document.createElement 'style'
 
 # Layout
 adjustWebviewHeight = (h) ->
@@ -23,7 +25,7 @@ adjustSize = ->
   # return if webview.isLoading()
   poiapp?.style?.height = "#{window.innerHeight}px"
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{window.innerHeight / window.zoomLevel - 40}px"
+    e.style.height = "#{window.innerHeight / window.zoomLevel - poiControlHeight}px"
     e.style.overflowY = "scroll"
   # Fix poi-info when game size 0x0
   if webviewWidth > -0.00001 and webviewWidth < 0.00001
@@ -61,6 +63,16 @@ adjustSize = ->
   adjustWebviewHeight "#{Math.floor(480 * factor) - 1}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
   $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"
+  # Autoset plugin-dropdown height
+  if !dropdownStyleAppended
+    document.body.appendChild dropdownStyle
+    isAppended = true
+  dropdownStyle.innerHTML =
+    """poi-nav .dropdown-menu {
+      max-height: #{$('#MainView').style.height};
+      overflow: auto;
+    }
+    """
 
 if !window._delay
   adjustSize()

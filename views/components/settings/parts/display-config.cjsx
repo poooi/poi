@@ -40,6 +40,7 @@ DisplayConfig = React.createClass
       e.style.height = "#{poiappHeight / zoomLevel - 40}px"
       e.style.overflowY = "scroll"
     window.zoomLevel = zoomLevel
+    window.dispatchEvent new Event('resize')
     config.set('poi.zoomLevel', zoomLevel)
     @setState
       zoomLevel: zoomLevel
