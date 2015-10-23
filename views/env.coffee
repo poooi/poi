@@ -149,8 +149,6 @@ window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.webviewWidth = config.get 'poi.webview.width', -1
 window.language = config.get 'poi.language', navigator.language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
-d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
-window.screenshotPath = config.get 'poi.screenshotPath', d
 
 #Custom css
 window.reloadCustomCss = ->

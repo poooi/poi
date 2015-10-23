@@ -68,14 +68,19 @@ module.exports =
     global.mainWindow.setBounds options
   getBounds: ->
     global.mainWindow.getBounds()
-  capturePageInMainWindow: (rect, scpath, callback) ->
+  capturePageInMainWindow: (rect, callback) ->
     global.mainWindow.capturePage rect, (image) ->
       try
         buf = image.toPng()
         now = new Date()
         date = "#{now.getFullYear()}-#{now.getMonth() + 1}-#{now.getDate()}T#{now.getHours()}.#{now.getMinutes()}.#{now.getSeconds()}"
-        fs.ensureDirSync scpath
-        filename = path.join scpath, "#{date}.png"
+        if process.platform == 'darwin'
+          darwinPath = path.join path.homedir(), 'Pictures', 'Poi'
+          fs.ensureDirSync darwinPath
+          filename = path.join path.homedir(), 'Pictures', 'Poi', "#{date}.png"
+        else
+          fs.ensureDirSync path.join global.APPDATA_PATH, 'screenshots'
+          filename = path.join global.APPDATA_PATH, 'screenshots', "#{date}.png"
         fs.writeFile filename, buf, (err) ->
           callback err, filename
       catch e

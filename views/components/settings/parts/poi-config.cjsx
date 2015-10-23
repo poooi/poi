@@ -11,10 +11,6 @@ i18n = require 'i18n'
 
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
-FolderPicker = require './folder-picker'
-
-d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
-
 PoiConfig = React.createClass
   getInitialState: ->
     language: config.get 'poi.language', navigator.language
@@ -31,7 +27,6 @@ PoiConfig = React.createClass
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
     enableDMMcookie: config.get 'poi.enableDMMcookie', false
     disableHA: config.get 'poi.disableHA', false
-    screenshotPath: config.get 'poi.screenshotPath', d
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
@@ -113,13 +108,6 @@ PoiConfig = React.createClass
   handleClearCache: (e) ->
     remote.getCurrentWebContents().session.clearCache ->
       toggleModal __('Delete cache'), __('Success!')
-  folderPickerOnDrop: (files) ->
-    isDirectory = fs.statSync(files.path).isDirectory()
-    if isDirectory
-      window.screenshotPath = files.path
-      config.set 'poi.screenshotPath', files.path
-      @setState
-        screenshotPath: files.path
   render: ->
     <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
@@ -229,16 +217,6 @@ PoiConfig = React.createClass
               <option value="ja-JP">日本語</option>
               <option value="en-US">English</option>
             </Input>
-          </Col>
-        </Grid>
-      </div>
-      <div className="form-group">
-        <Divider text={__ 'Screenshot Folder'} />
-        <Grid>
-          <Col xs={12}>
-            <FolderPicker onDrop={@folderPickerOnDrop}>
-              <div>{@state.screenshotPath}</div>
-            </FolderPicker>
           </Col>
         </Grid>
       </div>

@@ -312,7 +312,7 @@ PoiControl = React.createClass
       y: Math.ceil bound.top
       width: Math.floor bound.width
       height: Math.floor bound.height
-    capturePageInMainWindow rect, window.screenshotPath, (err, filename) ->
+    capturePageInMainWindow rect, (err, filename) ->
       if err?
         error __ 'Failed to save the screenshot'
       else
@@ -334,9 +334,10 @@ PoiControl = React.createClass
     catch e
       toggleModal __ 'Open makai dir', __ "Failed. Perhaps you don't have permission to it."
   handleOpenScreenshotFolder: ->
+    d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
     try
-      fs.ensureDirSync window.screenshotPath
-      openItem window.screenshotPath
+      fs.ensureDirSync d
+      openItem d
     catch e
       toggleModal __ 'Open screenshot dir', __ "Failed. Perhaps you don't have permission to it."
   handleSetMuted: ->
