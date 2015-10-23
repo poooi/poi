@@ -1,6 +1,7 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
 remote = require 'remote'
+dialog = remote.require 'dialog'
 i18n = require 'i18n'
 {__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
@@ -11,7 +12,6 @@ i18n = require 'i18n'
 
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
-FolderPicker = require './folder-picker'
 
 d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
 
@@ -113,13 +113,26 @@ PoiConfig = React.createClass
   handleClearCache: (e) ->
     remote.getCurrentWebContents().session.clearCache ->
       toggleModal __('Delete cache'), __('Success!')
-  folderPickerOnDrop: (files) ->
-    isDirectory = fs.statSync(files.path).isDirectory()
+  folderPickerOnDrop: (e) ->
+    e.preventDefault()
+    droppedFiles = e.dataTransfer.files
+    isDirectory = fs.statSync(droppedFiles[0].path).isDirectory()
     if isDirectory
-      window.screenshotPath = files.path
-      config.set 'poi.screenshotPath', files.path
+      window.screenshotPath = droppedFiles[0].path
+      config.set 'poi.screenshotPath', droppedFiles[0].path
       @setState
-        screenshotPath: files.path
+        screenshotPath: droppedFiles[0].path
+  folderPickerOnClick: ->
+    filename = dialog.showOpenDialog
+      title: __ 'Screenshot Folder'
+      properties: ['openDirectory', 'createDirectory']
+    if filename isnt undefined
+      window.screenshotPath = filename
+      config.set 'poi.screenshotPath', filename
+      @setState
+        screenshotPath: filename
+  onDrag: (e) ->
+    e.preventDefault()
   render: ->
     <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
@@ -236,9 +249,14 @@ PoiConfig = React.createClass
         <Divider text={__ 'Screenshot Folder'} />
         <Grid>
           <Col xs={12}>
-            <FolderPicker onDrop={@folderPickerOnDrop}>
-              <div>{@state.screenshotPath}</div>
-            </FolderPicker>
+            <div className="folder-picker"
+                 onClick={@folderPickerOnClick}
+                 onDrop={@folderPickerOnDrop}
+                 onDragEnter={@onDrag}
+                 onDragOver={@onDrag}
+                 onDragLeave={@onDrag}>
+              {@state.screenshotPath}
+            </div>
           </Col>
         </Grid>
       </div>
