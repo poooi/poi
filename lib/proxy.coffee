@@ -44,8 +44,10 @@ resolve = (req) ->
       requirePassword = config.get 'proxy.http.requirePassword', false
       username = config.get 'proxy.http.username', ''
       password = config.get 'proxy.http.password', ''
+      useAuth = requirePassword && username isnt '' && password isnt ''
+      strAuth = "#{username}:#{password}@"
       return _.extend req,
-        proxy: "http://#{if requirePassword && username isnt '' && password isnt '' then "#{username}:#{password}@" else ''}#{host}:#{port}"
+        proxy: "http://#{if useAuth then strAuth else ''}#{host}:#{port}"
     # Directly
     else
       return req
