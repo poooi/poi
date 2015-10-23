@@ -15,6 +15,7 @@ basic =
   http:
     host: '127.0.0.1'
     port: 8099
+    requirePassword: false
     username: ''
     password: ''
   socks5:
@@ -45,6 +46,7 @@ NetworkConfig = React.createClass
         config.set 'proxy.use', 'http'
         config.set 'proxy.http.host', @refs.httpHost.getValue()
         config.set 'proxy.http.port', @refs.httpPort.getValue()
+        config.set 'proxy.http.requirePassword', @refs.httpRequirePassword.getChecked()
         config.set 'proxy.http.username', @refs.httpUsername.getValue()
         config.set 'proxy.http.password', @refs.httpPassword.getValue()
       when 'socks5'
@@ -68,6 +70,10 @@ NetworkConfig = React.createClass
   handleHttpPortChange: (e) ->
     {http} = @state
     http.port = e.target.value
+    @setState {http}
+  handleSetHttpRequirePassword: (e) ->
+    {http} = @state
+    http.requirePassword = !http.requirePassword
     @setState {http}
   handleHttpUsernameChange: (e) ->
     {http} = @state
@@ -130,12 +136,20 @@ NetworkConfig = React.createClass
             <Col xs={6}>
               <Input type="text" ref="httpPort" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.http?.port} onChange={@handleHttpPortChange} />
             </Col>
-            <Col xs={6}>
-              <Input type="text" ref="httpUsername" label={__ 'Username'} placeholder={__ 'Username'} value={@state?.http?.username} onChange={@handleHttpUsernameChange} />
+            <Col xs={12}>
+              <Input type='checkbox' ref="httpRequirePassword" label={__ 'Proxy server requires password'} checked={!!@state?.http?.requirePassword} onChange={@handleSetHttpRequirePassword} />
             </Col>
-            <Col xs={6}>
-              <Input type="password" ref="httpPassword" label={__ 'Password'} placeholder={__ 'Password'} value={@state?.http?.password} onChange={@handleHttpPasswordChange} />
-            </Col>
+            {
+              
+                <div style={if !@state.http.requirePassword then {display: 'none'} else {}} >
+                  <Col xs={6}>
+                    <Input type="text" ref="httpUsername" label={__ 'Username'} placeholder={__ 'Username'} value={@state?.http?.username} onChange={@handleHttpUsernameChange} />
+                  </Col>
+                  <Col xs={6}>
+                    <Input type="password" ref="httpPassword" label={__ 'Password'} placeholder={__ 'Password'} value={@state?.http?.password} onChange={@handleHttpPasswordChange} />
+                  </Col>
+                </div>
+            }
           </Grid>
         else if @state.use == 'socks5'
           <Grid>
