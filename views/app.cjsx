@@ -319,7 +319,7 @@ PoiControl = React.createClass
         success "#{__ 'screenshot saved to'} #{filename}"
   handleOpenCacheFolder: ->
     dir = 'cache'
-    dir = 'MyCache' if process.platform == 'darwin'
+    dir = 'MyCache' if process.platform != 'win32'
     try
       fs.ensureDirSync path.join(window.EXROOT, dir)
       openItem path.join(window.EXROOT, dir)
@@ -327,7 +327,7 @@ PoiControl = React.createClass
       toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
   handleOpenMakaiFolder: ->
     dir = 'cache/kcs/resources/swf/ships'
-    dir = 'MyCache/kcs/resources/swf/ships' if process.platform == 'darwin'
+    dir = 'MyCache/kcs/resources/swf/ships' if process.platform != 'win32'
     try
       fs.ensureDirSync path.join(window.EXROOT, dir)
       openItem path.join(window.EXROOT, dir)

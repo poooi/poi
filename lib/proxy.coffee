@@ -75,7 +75,7 @@ class Proxy extends EventEmitter
       isGameApi = parsed.pathname.startsWith '/kcsapi'
       cacheFile = null
       if isStaticResource(parsed.pathname)
-        cacheFile = findHack(parsed.pathname) || findHackExPath(parsed.pathname) || findCache(parsed.pathname) || findCacheExPath(parsed.pathname)
+        cacheFile = findHack(parsed.pathname) || findCache(parsed.pathname)
       reqBody = new Buffer(0)
       # Get all request body
       req.on 'data', (data) ->
