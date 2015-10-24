@@ -27,8 +27,8 @@ checkUpdate = ->
       content =
         <div dangerouslySetInnerHTML={__html: info.log} />
       footer = [
-        name: __ 'Download latest version',
-        func: doUpdate,
+        name: __ 'Download latest version'
+        func: doUpdate
         style: 'primary'
       ]
       toggleModal title, content, footer
