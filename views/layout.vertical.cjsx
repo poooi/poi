@@ -44,8 +44,8 @@ adjustSize = ->
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
   webview.executeJavaScript """
     var w = 800 * #{factor};
-    document.querySelector('html body').style.minWidth=w+"px";
-    document.querySelector('html body').style.width=w+"px";
+    document.querySelector('html body').style.minWidth = w + "px";
+    document.querySelector('html body').style.width = w + "px";
     if (document.querySelector('#game_frame') != null) {
       var iframe = document.querySelector('#game_frame').contentWindow.document;
       document.querySelector('html').style.zoom = #{factor};
@@ -68,7 +68,7 @@ adjustSize = ->
   # Autoset plugin-dropdown height
   if !dropdownStyleAppended
     document.body.appendChild dropdownStyle
-    isAppended = true
+    dropdownStyleAppended = true
   dropdownStyle.innerHTML =
     """poi-nav poi-nav-tabs nav .dropdown-menu {
       max-height: #{$('#MainView').style.height};

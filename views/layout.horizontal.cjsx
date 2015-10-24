@@ -66,7 +66,7 @@ adjustSize = ->
   # Autoset plugin-dropdown height
   if !dropdownStyleAppended
     document.body.appendChild dropdownStyle
-    isAppended = true
+    dropdownStyleAppended = true
   dropdownStyle.innerHTML =
     """poi-nav poi-nav-tabs nav .dropdown-menu {
       max-height: #{$('#MainView').style.height};
