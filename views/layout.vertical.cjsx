@@ -43,9 +43,7 @@ adjustSize = ->
   $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
   webview.executeJavaScript """
-    var w = 800 * #{factor};
-    document.querySelector('html body').style.minWidth = w + "px";
-    document.querySelector('html body').style.width = w + "px";
+    document.querySelector('html body').style.paddingRight = window.innerWidth + "px";
     if (document.querySelector('#game_frame') != null) {
       var iframe = document.querySelector('#game_frame').contentWindow.document;
       document.querySelector('html').style.zoom = #{factor};
