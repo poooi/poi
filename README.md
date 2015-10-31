@@ -23,13 +23,15 @@ China mainland mirror: [here](http://0u0.moe/poi).
 
 ## Screenshots
 
-![Preview1](https://cloud.githubusercontent.com/assets/6753092/8869050/1c1dd656-3212-11e5-9342-806403b0400d.png)
-![Preview2](https://cloud.githubusercontent.com/assets/6753092/8869052/1d19a29c-3212-11e5-8d3a-9bcbd3afef5c.png)
-![Preview3](https://cloud.githubusercontent.com/assets/6753092/8869053/1e794caa-3212-11e5-9100-a33559026b6c.png)
-![Preview4](https://cloud.githubusercontent.com/assets/6753092/8869055/1f24763e-3212-11e5-9767-048bbc3f2c05.png)
-![Preview5](https://cloud.githubusercontent.com/assets/6753092/8869056/1fe883a8-3212-11e5-8745-a042d27be8fd.png)
-![Preview6](https://cloud.githubusercontent.com/assets/6753092/8869057/21468a56-3212-11e5-8ac0-71be75b0a668.png)
-![Preview7](https://cloud.githubusercontent.com/assets/6753092/8869058/22667b3a-3212-11e5-9f42-17bf3c1ebc0b.png)
+![Preview 1](https://cloud.githubusercontent.com/assets/6753092/10863967/ebcc2b60-8018-11e5-9f74-9d0cf214fe49.png)
+![Preview 2](https://cloud.githubusercontent.com/assets/6753092/10863968/ee4d8a96-8018-11e5-92ae-7f794864dca8.png)
+![Preview 3](https://cloud.githubusercontent.com/assets/6753092/10863969/f0a49b2c-8018-11e5-9659-43f626c4691c.png)
+![Preview 4](https://cloud.githubusercontent.com/assets/6753092/10863970/f19f7ec0-8018-11e5-99f8-8df3bced1616.png)
+![Preview 5](https://cloud.githubusercontent.com/assets/6753092/10863971/f2a69114-8018-11e5-8b4e-3017472a24a4.png)
+![Preview 6](https://cloud.githubusercontent.com/assets/6753092/10863972/f3c3a898-8018-11e5-9aa6-0049a879e0bc.png)
+![Preview 7](https://cloud.githubusercontent.com/assets/6753092/10863973/f56bddb4-8018-11e5-82c1-4d1fc23779a8.png)
+![Preview 8](https://cloud.githubusercontent.com/assets/6753092/10863975/f70264ae-8018-11e5-8b71-2fb9a78819d5.png)
+![Preview 9](https://cloud.githubusercontent.com/assets/6753092/10863976/f8458094-8018-11e5-9164-c9127fee9257.png)
 
 ## Run
 
