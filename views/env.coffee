@@ -285,6 +285,7 @@ resolveResponses = ->
         # User datas prefixed by _
         when '/kcsapi/api_get_member/basic'
           window._teitokuLv = body.api_level
+          window._nickName = body.api_nickname
           window._nickNameId = body.api_nickname_id
         when '/kcsapi/api_get_member/deck'
           window._decks[deck.api_id - 1] = deck for deck in body
@@ -350,6 +351,10 @@ resolveResponses = ->
             decks[deckId].api_ship[idx] = shipId
             # Exchange
             decks[x].api_ship[y] = curId if x != -1 && y != -1
+        when '/kcsapi/api_req_hensei/preset_select'
+          decks = window._decks
+          deckId = parseInt(postBody.api_deck_id) - 1
+          decks[deckId] = body
         when '/kcsapi/api_req_hokyu/charge'
           for ship in body.api_ship
             _ships[ship.api_id] = _.extend _ships[ship.api_id], ship
@@ -364,6 +369,8 @@ resolveResponses = ->
           window._decks = body.api_deck
         when '/kcsapi/api_req_kaisou/slotset'
           _ships[parseInt(postBody.api_id)].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
+        when '/kcsapi/api_req_kaisou/slot_exchange_index'
+          _ships[parseInt(postBody.api_id)].api_slot = body.api_slot
         when '/kcsapi/api_req_kousyou/createitem'
           _slotitems[body.api_slot_item.api_id] = extendSlotitem body.api_slot_item if body.api_create_flag == 1
         when '/kcsapi/api_req_kousyou/destroyitem2'
