@@ -285,6 +285,7 @@ resolveResponses = ->
         # User datas prefixed by _
         when '/kcsapi/api_get_member/basic'
           window._teitokuLv = body.api_level
+          window._nickName = body.api_nickname
           window._nickNameId = body.api_nickname_id
         when '/kcsapi/api_get_member/deck'
           window._decks[deck.api_id - 1] = deck for deck in body
