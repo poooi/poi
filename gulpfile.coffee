@@ -1,4 +1,4 @@
-POI_VERSION = '4.0.0'
+POI_VERSION = '4.1.0-alpha'
 ELECTRON_VERSION = '0.34.0'
 SYSTEM_BIT =
   win32: 'ia32'
