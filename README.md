@@ -105,7 +105,6 @@ About plugin, read the [docs](https://github.com/poooi/poi/tree/master/docs).
 + [Electron](https://github.com/atom/electron)
 + [React](https://github.com/facebook/react)
 + [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
-+ [Shadowsocks](https://github.com/shadowsocks/shadowsocks)
 
 ## License
 [The MIT License](https://github.com/poooi/poi/blob/master/LICENSE)
