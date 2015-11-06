@@ -10,7 +10,6 @@ caseNormalizer = require 'header-case-normalizer'
 fs = Promise.promisifyAll require 'fs-extra'
 request = Promise.promisifyAll require 'request'
 requestAsync = Promise.promisify request
-shadowsocks = require 'shadowsocks'
 mime = require 'mime'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
@@ -30,13 +29,6 @@ resolve = (req) ->
         agentOptions:
           socksHost: config.get 'proxy.socks5.host', '127.0.0.1'
           socksPort: config.get 'proxy.socks5.port', 1080
-    # HTTP Request via Shadowsocks
-    when 'shadowsocks'
-      return _.extend req,
-        agentClass: SocksHttpAgent
-        agentOptions:
-          socksHost: '127.0.0.1'
-          socksPort: config.get 'proxy.shadowsocks.local.port', 1080
     # HTTP Request via HTTP proxy
     when 'http'
       host = config.get 'proxy.http.host', '127.0.0.1'
@@ -55,18 +47,7 @@ resolve = (req) ->
 class Proxy extends EventEmitter
   constructor: ->
     super()
-    @startShadowsocks()
     @load()
-  # Start Shadowsocks local server
-  startShadowsocks: ->
-    return unless config.get('proxy.use') == 'shadowsocks'
-    host = config.get 'proxy.shadowsocks.server.host', '127.0.0.1'
-    port = config.get 'proxy.shadowsocks.server.port', 8388
-    local = config.get 'proxy.shadowsocks.local.port', 1080
-    password = config.get 'proxy.shadowsocks.password', 'PASSWORD'
-    method = config.get 'proxy.shadowsocks.method', 'aes-256-cfb'
-    timeout = config.get 'proxy.shadowsocks.timeout', 600000
-    @sslocal = shadowsocks.createServer host, port, local, password, method, timeout, '127.0.0.1'
   load: ->
     self = @
     # HTTP Requests
@@ -166,20 +147,6 @@ class Proxy extends EventEmitter
           remote = socks.createConnection
             socksHost: config.get 'proxy.socks5.host', '127.0.0.1'
             socksPort: config.get 'proxy.socks5.port', 1080
-            host: remoteUrl.hostname
-            port: remoteUrl.port
-          remote.on 'connect', ->
-            client.write "HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n"
-            remote.write head
-          client.on 'data', (data) ->
-            remote.write data
-          remote.on 'data', (data) ->
-            client.write data
-        # Write data directly to Shadowsocks
-        when 'shadowsocks'
-          remote = socks.createConnection
-            socksHost: config.get '127.0.0.1'
-            socksPort: config.get 'proxy.shadowsocks.local.port', 1080
             host: remoteUrl.hostname
             port: remoteUrl.port
           remote.on 'connect', ->

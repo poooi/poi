@@ -18,12 +18,3 @@ proxy:
   http:
     host: "127.0.0.1"
     port: 8099
-  shadowsocks:
-    server:
-      host: "106.185.25.115"
-      port: 27017
-    local:
-      port: 12451
-    password: "@_PoiPublic_@"
-    method: "aes-256-cfb"
-    timeout: 600000
