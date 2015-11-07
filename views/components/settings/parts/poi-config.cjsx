@@ -124,11 +124,12 @@ PoiConfig = React.createClass
         screenshotPath: droppedFiles[0].path
   folderPickerOnClick: ->
     fs.ensureDirSync @state.screenshotPath
-    filename = dialog.showOpenDialog
+    filenames = dialog.showOpenDialog
       title: __ 'Screenshot Folder'
       defaultPath: @state.screenshotPath
       properties: ['openDirectory', 'createDirectory']
-    if filename isnt undefined
+    if filenames isnt undefined
+      filename = filenames[0]
       window.screenshotPath = filename
       config.set 'poi.screenshotPath', filename
       @setState
