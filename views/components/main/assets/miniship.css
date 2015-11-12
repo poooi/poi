@@ -188,6 +188,13 @@
 .ship-pop .material-icon {
   margin-right: auto;
 }
+.ship-pop {
+  font-size: 13px;
+}
+.ship-pop .tooltip-inner {
+  max-width: 230px;
+  width: 230px;
+}
 #MiniShip .ship-panel-full {
   position: absolute;
   z-index: 100;
