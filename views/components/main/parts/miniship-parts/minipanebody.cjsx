@@ -73,21 +73,13 @@ Slotitems = React.createClass
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container-mini">
-          <img key={itemId} src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
+          <img key={itemId} className='slotitem-img' src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
           <span className="slotitem-name-mini">
             {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
               &nbsp;&nbsp;{
-                if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3
-                  for j in [1..item.api_alv]
-                    <strong key={j} style={color: '#3EAEFF'}>|</strong>
-                else if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6
-                  for j in [1..item.api_alv - 3]
-                    <strong key={j} style={color: '#F9C62F'}>\</strong>
-                else if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9
-                  <strong key={j} style={color: '#F9C62F'}> <FontAwesome key={0} name='angle-double-right'/> </strong>
-                else if item.api_alv? and item.api_alv >= 9
-                  <strong key={j} style={color: '#F94D2F'}>★</strong>
+                if item.api_alv? and 1 <= item.api_alv <= 7
+                  <img className='alv-img' src={join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
                 else ''
               }
           </span>
