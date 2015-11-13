@@ -73,13 +73,13 @@ Slotitems = React.createClass
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container-mini">
-          <img key={itemId} src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
+          <img key={itemId} className='slotitem-img' src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
           <span className="slotitem-name-mini">
             {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
               &nbsp;&nbsp;{
                 if item.api_alv? and 1 <= item.api_alv <= 7
-                  <img style={height: '16px'} src={join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
+                  <img className='alv-img' src={join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
                 else ''
               }
           </span>

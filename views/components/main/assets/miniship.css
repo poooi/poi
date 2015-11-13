@@ -158,7 +158,7 @@
 .ship-pop .slotitem-container-mini span.show {
   display: inline !important;
 }
-.ship-pop .slotitem-container-mini img {
+.ship-pop .slotitem-container-mini .slotitem-img {
   width: 32px;
   height: 32px;
   margin-top: -8px;
@@ -195,6 +195,12 @@
   max-width: 230px;
   width: 230px;
 }
+
+.alv-img{
+  height: 14px;
+  margin-bottom: 2px;
+}
+
 #MiniShip .ship-panel-full {
   position: absolute;
   z-index: 100;
