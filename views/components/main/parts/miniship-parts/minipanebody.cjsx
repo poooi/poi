@@ -79,7 +79,7 @@ Slotitems = React.createClass
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
               &nbsp;&nbsp;{
                 if item.api_alv? and 1 <= item.api_alv <= 7
-                  <img style={height: '16px'} src={path.join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
+                  <img style={height: '16px'} src={join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
                 else ''
               }
           </span>
