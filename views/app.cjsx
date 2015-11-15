@@ -438,7 +438,7 @@ ModalTrigger = React.createClass
         {@state.content}
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={@handleToggle}>{__ 'Close'}</Button>
+        <Button onClick={@handleToggle}>{if @state.footer then __ 'Cancel' else __ 'Close'}</Button>
         {@renderFooter @state.footer}
       </Modal.Footer>
     </Modal>
