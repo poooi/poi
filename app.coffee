@@ -10,6 +10,15 @@ global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
 global.EXROOT = global.APPDATA_PATH
 
+# TODO: Remove in the next release
+if process.platform == 'win32'
+  try
+    fs.copySync path.join(global.EXECROOT, 'config.cson'),
+      path.join(global.EXROOT, 'config.cson'),
+      clobber: false
+  catch
+    # expected EEXIST
+
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
