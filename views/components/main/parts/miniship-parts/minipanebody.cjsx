@@ -183,7 +183,7 @@ PaneBodyMini = React.createClass
           shipType = $shipTypes[shipInfo.api_stype].api_name
           <div key={j} className="ship-tile">
             <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
-              <Tooltip id="ship-pop-#{@props.key}-#{j}" className="ship-pop">
+              <Tooltip id="ship-pop-#{@props.key}-#{j}" className="ship-pop #{if ship.api_slot[0] > 0 || ship.api_slot_ex > 0 then '' else 'hidden'}">
                 <div className="item-name">
                   <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
                 </div>
