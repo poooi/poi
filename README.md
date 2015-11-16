@@ -84,6 +84,9 @@ cp default-config.cson config.cson
 [plugin-battle-detail (Bundled)](https://github.com/poooi/plugin-battle-detail) by [Dazzy Ding](https://github.com/yukixz)
 > Show battle detail.
 
+[plugin-hensei-nikki (Bundled)](https://github.com/poooi/plugin-hensei-nikki.git) by [Rui](https://github.com/ruiii)
+> Record fleet config once sortied.
+
 [plugin-almanac](https://github.com/poooi/plugin-almanac) by [Magica](https://github.com/magicae)
 > KanColle almanac from http://sandbox.runjs.cn/show/x9ou86rn
 
@@ -93,8 +96,8 @@ cp default-config.cson config.cson
 [plugin-secretary](https://github.com/dazzyd/poi-secretary) by [Dazzy Ding](https://github.com/dazzyd)
 > Use secretary voice as notification sound.
 
-[plugin-hensei-nikki](https://github.com/poooi/plugin-hensei-nikki.git) by [Rui](https://github.com/ruiii)
-> Record fleet config once sortied.
+[plugin-hairstrength](https://github.com/ruiii/plugin-hairstrength.git) by [Rui](https://github.com/ruiii)
+> Senka calculator.
 
 ## Guides for developers
 
