@@ -38,7 +38,7 @@ adjustSize = ->
       y: bound.y
       width: parseInt(newWidth + borderX)
       height: bound.height
-  adjustWebviewHeight "#{480.0 * factor - 1}px"
+  adjustWebviewHeight "#{480.0 * factor}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
   $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
