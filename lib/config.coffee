@@ -6,24 +6,25 @@ CSON = require 'cson'
 
 {ROOT, EXROOT} = global
 
-config = {}
+config = null
 configCache = {}
 defaultConfigPath = path.join(ROOT, 'config.cson')
 configPath = path.join(EXROOT, 'config.cson')
-
-# Read saved config
-try
-  fs.accessSync defaultConfigPath, fs.R_OK | fs.W_OK
-  config = CSON.parseCSONFile defaultConfigPath
-catch e
-  warn e
 
 # Read user config
 try
   fs.accessSync configPath, fs.R_OK | fs.W_OK
   config = CSON.parseCSONFile configPath
-catch e
-  warn e
+
+# Read saved config
+if !config?
+  try
+    fs.accessSync defaultConfigPath, fs.R_OK | fs.W_OK
+    config = CSON.parseCSONFile defaultConfigPath
+
+if !config?
+  config = {}
+  warn 'cannot read config.cson'
 
 module.exports =
   get: (path, value) ->
