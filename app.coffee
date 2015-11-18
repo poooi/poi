@@ -98,7 +98,7 @@ app.on 'ready', ->
       mainWindow.reloadArea = 'kan-game webview'
     else
       mainWindow.setMenu null
-  mainWindow.loadUrl "file://#{__dirname}/index.html"
+  mainWindow.loadURL "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     mainWindow.openDevTools
       detach: true

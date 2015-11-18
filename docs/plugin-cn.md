@@ -170,7 +170,7 @@ initialPluginWindow = ->
     y: config.get 'poi.window.y', 0
     width: 820
     height: 650
-  window.pluginWindow.loadUrl "file://#{__dirname}/index.html"
+  window.pluginWindow.loadURL "file://#{__dirname}/index.html"
 initialItemImprovementWindow()
 
 module.exports =

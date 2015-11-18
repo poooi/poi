@@ -57,6 +57,6 @@ document.addEventListener 'DOMContentLoaded', ->
       realClose: true
       navigatable: true
       'node-integration': false
-    exWindow.loadUrl e.url
+    exWindow.loadURL e.url
     exWindow.show()
     e.preventDefault()

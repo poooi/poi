@@ -18,7 +18,7 @@ adjustSize = ->
   poiapp = document.getElementsByTagName('poi-app')[0]
   url = null
   try
-    url = webview?.getUrl?()
+    url = webview?.getURL?()
   catch e
     url = null
   factor = Math.ceil(window.innerWidth /  800.0 * 100) / 100.0
