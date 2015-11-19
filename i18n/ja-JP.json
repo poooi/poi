@@ -65,7 +65,7 @@
   "Display": "ディスプレイ",
   "Proxy": "プロキシ",
   "Plugins": "ツール",
-  "About": " poiについて",
+  "About": "poiについて",
   "Proxy setting": "プロキシ設定",
   "Success! It will be available after a restart.": "成功しました。再起動後に有効になります",
   "Proxy protocol": "プロキシプロトコル",
@@ -103,7 +103,7 @@
   "Layout": "レイアウト",
   "Use horizontal layout": "レイアウトを横向きに",
   "Use vertical layout": "レイアウトを縦向きに",
-  "Split component and plugin panel":"コンポーネントとツールパネルを切り分けます",
+  "Split component and plugin panel": "コンポーネントとツールパネルを切り分けます",
   "Language": "言語",
   "Cache and cookies": "クッキーとキャッシュ",
   "If connection error occurs frequently, delete both of them.": "通信エラーが頻発するようならクッキーとキャッシュを削除して下さい。",
@@ -130,11 +130,11 @@
   "Repairing": "入渠中",
   "Resupply needed": "補給不足",
   "Ship tag: %s": "出擊限定: %s",
-  "Set as homepage": "ホームページを設定する",
+  "Set as homepage": "ホームページを設定します",
   "Zoom": "ズーム",
   "Zoom level": "ズームレベル",
-  "Screenshot Folder": "スクリーンショット保存先フォルダ",
+  "Screenshot Folder": "スクリーンショット保存先",
   "Advanced": "高度な設定",
-  "Disable Hardware Acceleration": "ハードウェアアクセラレーション無効化",
-  "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定する"
+  "Disable Hardware Acceleration": "ハードウェアアクセラレーションを無効化",
+  "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定します"
 }
