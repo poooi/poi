@@ -59,6 +59,7 @@
   "Equipment": "装备",
   "Admiral [Not logged in]": "提督 [尚未登录]",
   "Attention! Item Slot is full.": "装备已满，出击注意！",
+  "Attention! Only %d free item slot(s) left!": "装备槽仅剩%d个，出击注意！",
   "Attention! Ship Slot has only %s left.": "船位剩余 %s，出击注意！",
   " Settings": " 设置",
   "Common": "基本设置",
