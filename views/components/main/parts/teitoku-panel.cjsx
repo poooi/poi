@@ -117,10 +117,13 @@ TeitokuPanel = React.createClass
             , 1000
         if config.get 'poi.mapstartcheck.item'
           freeItemSlot = config.get 'poi.mapstartcheck.freeItemSlot', freeShipSlot * 3
-          if @state.maxSlotitem - @state.slotitemCount < freeItemSlot
-            # toggleModal '装备检查', "装备已满，出击注意！"
+          slotsLeft = @state.maxSlotitem - @state.slotitemCount
+          if slotsLeft < freeItemSlot
+            errMsg = __ "Attention! Item Slot is full."
+            if slotsLeft > 0
+              errMsg = __ "Attention! Only %d free item slot(s) left!", slotsLeft
             setTimeout =>
-              error __ "Attention! Item Slot is full."
+              error errMsg
             , 1000
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse

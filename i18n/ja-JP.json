@@ -59,6 +59,7 @@
   "Equipment": "装備",
   "Admiral [Not logged in]": "提督 [ログインしていません]",
   "Attention! Item Slot is full.": "装備の空き枠がない、ご注意を！",
+  "Attention! Only %d free item slot(s) left!": "保有装備枠に余裕がありません！空枠は%d個しか残りません、ご注意を！",
   "Attention! Ship Slot has only %s left.": "艦娘の空き枠は %s 隻だ。ご注意を！",
   " Settings": " 設定",
   "Common": "基本設定",
