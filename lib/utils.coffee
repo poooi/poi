@@ -5,7 +5,7 @@ fs = require 'fs-extra'
 path = require 'path-extra'
 zlib = Promise.promisifyAll require 'zlib'
 
-cacheDir = if process.platform != 'win32' then 'MyCache' else 'cache'
+cacheDir = 'MyCache'
 
 stringify = (str) ->
   return str if typeof str == 'string'
