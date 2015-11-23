@@ -10,6 +10,7 @@ poi:
     width: 800
   shortcut:
     bosskey: "CmdOrCtrl+i"
+  useSVGIcon: false
 proxy:
   use: "none"
   socks5:

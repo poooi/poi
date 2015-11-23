@@ -1,0 +1,5 @@
+Copyright (c) 2015 [edwardaaaa](https://github.com/edwardaaaa) All rights reserved.
+
+THESE SVG ICONS ARE **NOT** GOVERNED BY THE MIT LICENSE.
+
+ICONS HERE CAN **ONLY** BE USED IN POI, INCLUDING PLUGINS, EXTENSIONS AND DERIVATIVES OF POI.

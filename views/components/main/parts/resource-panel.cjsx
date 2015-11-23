@@ -4,6 +4,7 @@ path = require 'path-extra'
 {Panel, Grid, Col} = ReactBootstrap
 {__, __n} = require 'i18n'
 order = [1, 3, 2, 4, 5, 7, 6, 8]
+{MaterialIcon} = require '../../common/icon'
 
 ResourcePanel = React.createClass
 
@@ -97,8 +98,7 @@ ResourcePanel = React.createClass
       {
         for i in order
           <Col key={i} xs={6} style={marginBottom: 3}>
-            <img src={"file://#{ROOT}/assets/img/material/0#{i}.png"}
-                 className="material-icon #{if i <= 4 and @state.material[i] < @state.limit then 'grow' else ''}" />
+            <MaterialIcon materialId={i} className="material-icon #{if i <= 4 and @state.material[i] < @state.limit then 'grow' else ''}" />
             <span className="material-value">{@state.material[i]}</span>
           </Col>
       }
