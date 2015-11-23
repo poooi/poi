@@ -158,11 +158,15 @@
 .ship-pop .slotitem-container-mini span.show {
   display: inline !important;
 }
-.ship-pop .slotitem-container-mini .slotitem-img {
+.ship-pop .slotitem-container-mini .slotitem-img.png {
   width: 32px;
   height: 32px;
   margin-top: -8px;
   margin-bottom: -8px;
+}
+.ship-pop .slotitem-container-mini .slotitem-img.svg {
+  width: 20px;
+  height: 20px;
 }
 #MiniShip .div-col,
 .ship-pop .div-col {

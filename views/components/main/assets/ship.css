@@ -231,12 +231,16 @@
 #ShipView .slotitem-container span.show {
   display: inline !important;
 }
-#ShipView .slotitem-container img {
+#ShipView .slotitem-container img.png {
   width: 32px;
   height: 32px;
   margin-top: -5px;
   margin-bottom: -3px;
   margin-left: -5px;
+}
+#ShipView .slotitem-container img.svg {
+  width: 28px;
+  height: 28px;
 }
 #ShipView .alert {
   background-color: transparent;

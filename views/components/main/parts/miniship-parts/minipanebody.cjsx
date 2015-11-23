@@ -7,6 +7,7 @@ path =  require 'path-extra'
 {__, __n} = require 'i18n'
 StatusLabel = require './statuslabel'
 TopAlert = require './topalert'
+{SlotitemIcon} = require '../../../common/icon'
 
 getHpStyle = (percent) ->
   if percent <= 25
@@ -66,14 +67,14 @@ getFontStyle = (theme)  ->
 
 Slotitems = React.createClass
   render: ->
-    <div className="slotitems-mini" style={display:"flex", flexFlow:"column"}>
+    <div className="slotitems-mini" style={display: "flex", flexFlow: "column"}>
     {
       {$slotitems, _slotitems} = window
       for itemId, i in @props.data
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container-mini">
-          <img key={itemId} className='slotitem-img' src={join('assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")}} />
+          <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.api_type[3]} />
           <span className="slotitem-name-mini">
             {item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}> ★{item.api_level}</strong> else ''}

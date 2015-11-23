@@ -27,6 +27,7 @@ DisplayConfig = React.createClass
     useFixedResolution: config.get('poi.webview.width', -1) != -1
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
+    enableSVGIcon: config.get 'poi.useSVGIcon', false
     zoomLevel: config.get 'poi.zoomLevel', 1
   handleChangeZoomLevel: (e) ->
     zoomLevel = @refs.zoomLevel.getValue()
@@ -50,6 +51,12 @@ DisplayConfig = React.createClass
     @setState
       enableDoubleTabbed: !enabled
     toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
+  handleSetSVGIcon: ->
+    enabled = @state.enableSVGIcon
+    config.set 'poi.useSVGIcon', !enabled
+    window.useSVGIcon = !enabled
+    @setState
+      enableSVGIcon: !enabled
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
@@ -149,6 +156,9 @@ DisplayConfig = React.createClass
           </Col>
           <Col xs={6}>
             <Button bsStyle='primary' onClick={@handleOpenCustomCss} block>{__ 'Edit custom CSS'}</Button>
+          </Col>
+          <Col xs={12}>
+            <Input type="checkbox" label={__ 'Use SVG Icon'} checked={@state.enableSVGIcon} onChange={@handleSetSVGIcon} />
           </Col>
         </Grid>
       </div>
