@@ -282,6 +282,7 @@ PoiAlert = React.createClass
 PoiMapReminder = React.createClass
   getInitialState: ->
     battling: __ 'Not in sortie'
+  mapRanks: ['', '丙', '乙', '甲']
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
@@ -290,8 +291,12 @@ PoiMapReminder = React.createClass
         @setState
           battling: __ 'Not in sortie'
       when '/kcsapi/api_req_map/start'
+        txt = "#{__ 'Sortie area'}: #{body.api_maparea_id}-#{body.api_mapinfo_no}"
+        mapId = "#{body.api_maparea_id}#{body.api_mapinfo_no}"
+        if window._eventMapRanks?[mapId]?
+          txt += " " + @mapRanks[window._eventMapRanks[mapId]]
         @setState
-          battling: __('Sortie area') + ': ' + body.api_maparea_id + '-' + body.api_mapinfo_no
+          battling: txt
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
