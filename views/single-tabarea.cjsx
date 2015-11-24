@@ -8,7 +8,7 @@ glob = require 'glob'
 # components = glob.sync(path.join(ROOT, 'views', 'components', '*'))
 
 # Discover plugins and remove unused plugins
-plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
+plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
 plugins = plugins.concat(exPlugins)
 plugins = plugins.filter (filePath) ->

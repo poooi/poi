@@ -26,6 +26,9 @@ document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / w
 # Hackable panels
 window.hack = {}
 
+# Module path
+require('module').globalPaths.push(path.join(ROOT, "node_modules"))
+
 # poi menu
 if process.platform == 'darwin'
   exeCodeOnWindowHasReloadArea = (win, f) ->

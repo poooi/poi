@@ -14,7 +14,7 @@ PluginWrap = React.createClass
     React.createElement @props.plugin.reactClass
 
 # Discover plugins and remove unused plugins
-plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
+plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
 plugins = plugins.concat(exPlugins)
 plugins = plugins.filter (filePath) ->
