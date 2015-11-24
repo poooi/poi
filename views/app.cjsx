@@ -28,6 +28,44 @@ window.hack = {}
 
 # Module path
 require('module').globalPaths.push(path.join(ROOT, "node_modules"))
+try
+  fs.unlinkSync(path.join(APPDATA_PATH, "node_modules"))
+catch error
+  if process.env.DEBUG? then console.log error
+try
+  fs.symlinkSync(path.join(ROOT, "node_modules"), path.join(APPDATA_PATH, "node_modules"), 'dir')
+catch error
+  if process.env.DEBUG? then console.log error
+
+# Components path
+try
+  fs.unlinkSync(path.join(APPDATA_PATH, 'plugins', 'components'))
+catch error
+  if process.env.DEBUG? then console.log error
+try
+  fs.symlinkSync(path.join(ROOT, 'components'), path.join(APPDATA_PATH, 'plugins', 'components'), 'dir')
+catch error
+  if process.env.DEBUG? then console.log error
+
+# assets path
+try
+  fs.unlinkSync(path.join(APPDATA_PATH, 'plugins', 'assets'))
+catch error
+  if process.env.DEBUG? then console.log error
+try
+  fs.symlinkSync(path.join(ROOT, 'assets'), path.join(APPDATA_PATH, 'plugins', 'assets'), 'dir')
+catch error
+  if process.env.DEBUG? then console.log error
+
+# env path
+try
+  fs.unlinkSync(path.join(APPDATA_PATH, 'plugins', 'views'))
+catch error
+  if process.env.DEBUG? then console.log error
+try
+  fs.symlinkSync(path.join(ROOT, 'views'), path.join(APPDATA_PATH, 'plugins', 'views'), 'dir')
+catch error
+  if process.env.DEBUG? then console.log error
 
 # poi menu
 if process.platform == 'darwin'
