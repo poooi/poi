@@ -1,8 +1,12 @@
 path = require 'path-extra'
 glob = require 'glob'
 {__} = require 'i18n'
+semver = require 'semver'
 {_, $, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
+
+# Plugin version
+version = fs.readJsonSync 'plugin.json'
 
 $('poi-main').className += 'double-tabbed'
 window.doubleTabbed = true
@@ -21,7 +25,11 @@ plugins = plugins.filter (filePath) ->
   # Every plugin will be required
   try
     plugin = require filePath
-    return config.get "plugin.#{plugin.name}.enable", true
+    if version[plugin.name] isnt undefined && version[plugin.name] isnt null
+      latest = version[plugin.name]
+    else
+      latest = "v0.0.0"
+    return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, latest)
   catch e
     return false
 
