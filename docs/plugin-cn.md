@@ -185,6 +185,7 @@ index.html
 ```
 
 由于新建窗口时的新进程和主进程环境变量有所不同，可以引用此段 javascript 以加载与主程序相同的环境变量。
+
 env-loader.js
 ```javascript
 window.remote = require('remote');
