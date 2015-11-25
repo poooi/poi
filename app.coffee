@@ -9,6 +9,7 @@ global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
 global.EXROOT = global.APPDATA_PATH
+global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
 # TODO: Remove in the next release
 if process.platform == 'win32'
