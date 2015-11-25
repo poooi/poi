@@ -184,6 +184,19 @@ index.html
 <html><body><h1>It works</h1></body></html>
 ```
 
+由于新建窗口时的新进程和主进程环境变量有所不同，可以引用此段 javascript 以加载与主程序相同的环境变量。
+env-loader.js
+```javascript
+window.remote = require('remote');
+window.ROOT = remote.getGlobal('ROOT');
+window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH');
+window.POI_VERSION = remote.getGlobal('POI_VERSION');
+window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME');
+window.MODULE_PATH = remote.getGlobal('MODULE_PATH');
+require('module').globalPaths.push(MODULE_PATH);
+require(ROOT + "/components/coffee-script/extras/coffee-script.js");
+```
+
 ## 一些提示
 
 + 面板中显示的插件会被包裹在`<div id='插件名' />` 中，所以在自定义 CSS 中，建议用 `#插件名` 保证不影响全局 CSS。
