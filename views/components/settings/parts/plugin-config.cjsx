@@ -16,8 +16,12 @@ packages = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 plugins = plugins.map (filePath) ->
   plugin = require filePath
-  packageData = fs.readJsonSync path.join filePath, 'package.json'
-  plugin.packageName = packageData.name
+  packageData = {}
+  try
+    fs.readJsonSync path.join filePath, 'package.json'
+  catch error
+    if env.process.DEBUG? then console.log error
+  plugin.packageName = packageData.name || plugin.name
   plugin.priority = 10000 unless plugin.priority?
   plugin
 plugins = _.sortBy(plugins, 'priority')
