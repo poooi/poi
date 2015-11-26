@@ -24,7 +24,7 @@ plugins = _.sortBy(plugins, 'priority')
 
 status = plugins.map (plugin) ->
   # 0: enabled 1: manually disabled 2: disabled because too old
-  if packages[plugin.packageName].version isnt undefined && packages[plugin.packageName].version isnt null
+  if packages[plugin.packageName]?.version?
     lowest = packages[plugin.packageName].version
   else
     lowest = "v0.0.0"
