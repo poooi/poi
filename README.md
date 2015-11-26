@@ -97,6 +97,9 @@ cp default-config.cson config.cson
 [plugin-hairstrength](https://github.com/ruiii/plugin-hairstrength.git) by [Rui](https://github.com/ruiii)
 > Senka calculator.
 
+[plugin-poi-stats](https://github.com/alvin-777/poi-plugin-poi-stats) by [Alvin](https://github.com/alvin-777)
+> Shows drop statistics gathered by Poi in a new window.
+
 ## Guides for developers
 
 About plugin, read the [docs](https://github.com/poooi/poi/tree/master/docs).
