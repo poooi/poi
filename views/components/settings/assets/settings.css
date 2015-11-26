@@ -62,3 +62,11 @@
   padding: 5px;
   cursor: pointer;
 }
+#SettingsView .div-col {
+  display: flex;
+  flex-flow: column;
+}
+#SettingsView .div-row {
+  display: flex;
+  flex-flow: row;
+}

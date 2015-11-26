@@ -2,11 +2,12 @@ path = require 'path-extra'
 glob = require 'glob'
 {__} = require 'i18n'
 semver = require 'semver'
+fs = require 'fs-extra'
 {_, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 
 # Plugin version
-version = fs.readJsonSync 'plugin.json'
+version = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
 
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
@@ -16,8 +17,10 @@ plugins = plugins.filter (filePath) ->
   # Every plugin will be required
   try
     plugin = require filePath
-    if version[plugin.name] isnt undefined && version[plugin.name] isnt null
-      latest = version[plugin.name]
+    packageData = fs.readJsonSync path.join filePath, 'package.json'
+    plugin.packageName = packageData.name
+    if version[plugin.packageName] isnt undefined && version[plugin.packageName] isnt null
+      latest = version[plugin.packageName]
     else
       latest = "v0.0.0"
     return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, latest)
