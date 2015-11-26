@@ -85,7 +85,6 @@ PluginConfig = React.createClass
       updating = @state.updating
       updating[index] = true
       npm.load {prefix: "#{PLUGIN_PATH}"}, (err) ->
-        npm.config.set '-global-style', true
         npm.commands.update [plugins[index].packageName], (er, data) ->
           callback(index)
       @setState {updating}
