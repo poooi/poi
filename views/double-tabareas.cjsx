@@ -26,13 +26,20 @@ plugins = plugins.filter (filePath) ->
   # Every plugin will be required
   try
     plugin = require filePath
-    packageData = fs.readJsonSync path.join filePath, 'package.json'
-    plugin.packageName = packageData.name
-    if packages[plugin.packageName].version isnt undefined && packages[plugin.packageName].version isnt null
-      latest = packages[plugin.packageName].version
+    packageData = {}
+    try
+      packageData = fs.readJsonSync path.join filePath, 'package.json'
+    catch error
+      if env.process.DEBUG? then console.log error
+    if packageData?.name?
+      plugin.packageName =  packageData.name
     else
-      latest = "v0.0.0"
-    return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, latest)
+      plugin.packageName = plugin.name
+    if packages[plugin.packageName]?.version?
+      lowest = packages[plugin.packageName].version
+    else
+      lowest = "v0.0.0"
+    return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, lowest)
   catch e
     return false
 
