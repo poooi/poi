@@ -18,10 +18,13 @@ plugins = plugins.map (filePath) ->
   plugin = require filePath
   packageData = {}
   try
-    fs.readJsonSync path.join filePath, 'package.json'
+    packageData = fs.readJsonSync path.join filePath, 'package.json'
   catch error
     if env.process.DEBUG? then console.log error
-  plugin.packageName = packageData.name || plugin.name
+  if packageData?.name?
+    plugin.packageName =  packageData.name
+  else
+    plugin.packageName = plugin.name
   plugin.priority = 10000 unless plugin.priority?
   plugin
 plugins = _.sortBy(plugins, 'priority')
