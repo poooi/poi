@@ -4,7 +4,7 @@ glob = require 'glob'
 fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
-{$, $$, _, React, ReactBootstrap, ROOT} = window
+{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Input, Alert, Button, ButtonGroup} = ReactBootstrap
 {config} = window
 shell = require 'shell'
@@ -37,13 +37,20 @@ status = plugins.map (plugin) ->
 updating = plugins.map (plugin) ->
   updating = false
 
-console.log packages
+removeStatus = plugins.map (plugin) ->
+  # 0: exist 1: removing 2: removed
+  removeStatus = 0
 
 latest = {}
-toInstall = packages
+installTargets = packages
 for plugin, index in plugins
   latest[plugin.packageName] = plugin.version
+  delete installTargets[plugin.packageName]
 
+installStatus = []
+for installTarget of installTargets
+  # 0: not installed 1: installing 2: installed
+  installStatus.push 0
 
 getAuthorLink = (author, link) ->
   handleClickAuthorLink = (e) ->
@@ -56,6 +63,8 @@ PluginConfig = React.createClass
     status: status
     latest: latest
     updating: updating
+    installStatus: installStatus
+    removeStatus: removeStatus
   handleEnable: (index) ->
     status = @state.status
     if status[index] isnt 2
@@ -65,13 +74,49 @@ PluginConfig = React.createClass
       config.set "plugin.#{plugins[index].name}.enable", enable
     @setState
       status: status
-  handleUpdate: (index) ->
-  handleRemove: (index) ->
+  handleUpdateComplete: (index) ->
+    plugins[index].version = @state.latest[plugins[index].packageName]
+    updating = @state.updating
+    updating[index] = false
+    @checkUpdate(@solveUpdate)
+    @setState {updating}
+  handleUpdate: (index, callback) ->
+    if !@props.disabled
+      updating = @state.updating
+      updating[index] = true
+      npm.load {prefix: "#{PLUGIN_PATH}"}, (err) ->
+        npm.config.set '-global-style', true
+        npm.commands.update [plugins[index].packageName], (er, data) ->
+          callback(index)
+      @setState {updating}
+  handleRemoveComplete: (index) ->
+    removeStatus = @state.removeStatus
+    removeStatus[index] = 2
+    @setState {removeStatus}
+  handleRemove: (index, callback) ->
+    if !@props.disabled
+      removeStatus = @state.removeStatus
+      removeStatus[index] = 1
+      npm.load {prefix: "#{PLUGIN_PATH}"}, (err) ->
+        npm.commands.uninstall [plugins[index].packageName], (er, data) ->
+          callback(index)
+      @setState {removeStatus}
+  handleInstallComplete: (index) ->
+    installStatus = @state.installStatus
+    installStatus[index] = 2
+    @setState {installStatus}
+  handleInstall: (name, index, callback) ->
+    if !@props.disabled
+      installStatus = @state.installStatus
+      installStatus[index] = 1
+      npm.load {prefix: "#{PLUGIN_PATH}"}, (err) ->
+        npm.commands.install [name], (er, data) ->
+          callback(index)
+      @setState {installStatus}
   solveUpdate: (updateData) ->
     latest = @state.latest
     for updateObject, index in updateData
       latest[updateObject[1]] = updateObject[4]
-    console.log latest
     @setState {latest}
   checkUpdate: (callback) ->
     npm.load {prefix: "#{PLUGIN_PATH}"}, (err) ->
@@ -122,8 +167,8 @@ PluginConfig = React.createClass
                       }
                     </Button>
                     <Button bsStyle='primary'
-                            disabled={@state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName])}
-                            onClick={@handleUpdate.bind @, index}
+                            disabled={@state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0}
+                            onClick={@handleUpdate.bind @, index, @handleUpdateComplete}
                             style={width: "33%"}>
                       {
                         if @state.updating[index]
@@ -135,9 +180,52 @@ PluginConfig = React.createClass
                       }
                     </Button>
                     <Button bsStyle='danger'
-                            onClick={@handleRemove.bind @, index}
+                            onClick={@handleRemove.bind @, index, @handleRemoveComplete}
+                            disabled={@state.removeStatus[index] != 0}
                             style={width: "33%"}>
-                      {"Remove"}
+                      {
+                        switch @state.removeStatus[index]
+                          when 0
+                            "Remove"
+                          when 1
+                            "Removing"
+                          when 2
+                            "Removed"
+                      }
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Col>
+            </Col>
+          </Col>
+      }
+      {
+        index = -1
+        for installTarget of installTargets
+          index++
+          <Col key={index} xs={12} style={marginBottom: 8}>
+            <Col xs={12} className='div-row'>
+              <span style={fontSize: '150%'}><FontAwesome name={installTargets[installTarget]['icon']} /> {installTargets[installTarget][window.language]} </span>
+              <span style={paddingTop: 2}> @ {getAuthorLink(installTargets[installTarget]['author'], installTargets[installTarget]['link'])} </span>
+            </Col>
+            <Col xs={12} style={marginTop: 4}>
+              <Col xs={7}>{installTargets[installTarget]["des#{window.language}"]}</Col>
+              <Col xs={5} style={padding: 0}>
+                <div style={marginLeft: 'auto'}>
+                  <ButtonGroup bsSize='small' style={width: '100%'}>
+                    <Button bsStyle='primary'
+                            disabled={@state.installStatus[index] != 0}
+                            onClick={@handleInstall.bind @, installTarget, index, @handleInstallComplete}
+                            style={width: "100%"}>
+                      {
+                        switch @state.installStatus[index]
+                          when 0
+                            "Install"
+                          when 1
+                            "Installing"
+                          when 2
+                            "Installed"
+                      }
                     </Button>
                   </ButtonGroup>
                 </div>
