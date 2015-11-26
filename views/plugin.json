@@ -1,15 +1,92 @@
 {
-  "poi-plugin-akashic-records": "v0.0.0",
-  "poi-plugin-battle-detail": "v0.0.0",
-  "poi-plugin-exp-calc": "v0.0.0",
-  "poi-plugin-expedition": "v0.0.0",
-  "poi-plugin-hensei-nikki": "v0.0.0",
-  "poi-plugin-item-improvement": "v0.0.0",
-  "poi-plugin-item-info": "v0.0.0",
-  "poi-plugin-map-hp": "v0.0.0",
-  "poi-plugin-new-window": "v0.0.0",
-  "poi-plugin-prophet": "v0.0.0",
-  "poi-plugin-quest-info": "v0.0.0",
-  "poi-plugin-report": "v0.0.0",
-  "poi-plugin-ship-info": "v0.0.0"  
+  "poi-plugin-akashic-records": {
+    "zh-CN": "航海日志",
+    "zh-TW": "航海日誌",
+    "ja-JP": "航海日誌",
+    "en-US": "Akashic Records",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-battle-detail": {
+    "zh-CN": "战斗详情",
+    "zh-TW": "戰鬥詳情",
+    "ja-JP": "戦闘詳細",
+    "en-US": "Battle Detail",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-exp-calc": {
+    "zh-CN": "经验计算",
+    "zh-TW": "經驗值計算",
+    "ja-JP": "経験値計算機",
+    "en-US": "Exp calculator",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-expedition": {
+    "zh-CN": "远征信息",
+    "zh-TW": "遠征信息",
+    "ja-JP": "遠征情報",
+    "en-US": "Expedition",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-hensei-nikki": {
+    "zh-CN": "编成日记",
+    "zh-TW": "編成日記",
+    "ja-JP": "編成日記",
+    "en-US": "Organization Records",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-item-improvement": {
+    "zh-CN": "装备改修",
+    "zh-TW": "裝備修改",
+    "ja-JP": "装備改修表",
+    "en-US": "Equipment Improvement",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-item-info": {
+    "zh-CN": "装备信息",
+    "zh-TW": "裝備信息",
+    "ja-JP": "装備データ",
+    "en-US": "Equipment Info",
+    "version": "v0.0.0"},
+  "poi-plugin-map-hp": {
+    "zh-CN": "海域血量",
+    "zh-TW": "海域血量",
+    "ja-JP": "海域HPゲージ",
+    "en-US": "Map HP",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-new-window": {
+    "zh-CN": "一心二用",
+    "zh-TW": "一心二用",
+    "ja-JP": "内蔵ブラウザ",
+    "en-US": "Built-in Browser",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-prophet": {
+    "zh-CN": "未卜先知",
+    "zh-TW": "未卜先知",
+    "ja-JP": "予知能力",
+    "en-US": "Prophet",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-quest-info": {
+    "zh-CN": "任务信息",
+    "zh-TW": "任务信息",
+    "ja-JP": "任务信息",
+    "en-US": "Quest Info",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-report": {
+    "zh-CN": "数据汇报",
+    "zh-TW": "数据汇报",
+    "ja-JP": "数据汇报",
+    "en-US": "Data Report",
+    "version": "v0.0.0"
+  },
+  "poi-plugin-ship-info": {
+    "zh-CN": "舰娘信息",
+    "zh-TW": "艦娘信息",
+    "ja-JP": "艦娘データ",
+    "en-US": "Ship Girls Info",
+    "version": "v0.0.0"
+  }
 }

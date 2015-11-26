@@ -11,7 +11,7 @@ shell = require 'shell'
 Divider = require './divider'
 
 # Plugin version
-version = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
+package = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
 
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 plugins = plugins.map (filePath) ->
@@ -24,8 +24,8 @@ plugins = _.sortBy(plugins, 'priority')
 
 status = plugins.map (plugin) ->
   # 0: enabled 1: manually disabled 2: disabled because too old
-  if version[plugin.packageName] isnt undefined && version[plugin.packageName] isnt null
-    lowest = version[plugin.packageName]
+  if package[plugin.packageName].version isnt undefined && package[plugin.packageName].version isnt null
+    lowest = package[plugin.packageName].version
   else
     lowest = "v0.0.0"
   if semver.lt(plugin.version, lowest)

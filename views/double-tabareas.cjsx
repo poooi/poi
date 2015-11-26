@@ -7,7 +7,7 @@ fs = require 'fs-extra'
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 
 # Plugin version
-version = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
+package = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
 
 $('poi-main').className += 'double-tabbed'
 window.doubleTabbed = true
@@ -28,8 +28,8 @@ plugins = plugins.filter (filePath) ->
     plugin = require filePath
     packageData = fs.readJsonSync path.join filePath, 'package.json'
     plugin.packageName = packageData.name
-    if version[plugin.packageName] isnt undefined && version[plugin.packageName] isnt null
-      latest = version[plugin.packageName]
+    if package[plugin.packageName].version isnt undefined && package[plugin.packageName].version isnt null
+      latest = package[plugin.packageName].version
     else
       latest = "v0.0.0"
     return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, latest)
