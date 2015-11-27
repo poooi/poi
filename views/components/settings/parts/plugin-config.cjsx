@@ -5,7 +5,7 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem} = ReactBootstrap
+{Grid, Col, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem, Label} = ReactBootstrap
 {config} = window
 shell = require 'shell'
 Divider = require './divider'
@@ -184,7 +184,7 @@ PluginConfig = React.createClass
           {
             for plugin, index in plugins
               if semver.lt(plugin.version, latest[plugin.packageName])
-                <span>{plugin.displayName} </span>
+                <span key={index}>{plugin.displayName} </span>
           }
           <span>{__ "have newer version. Please update your plugins."}</span>
         </div>
@@ -271,6 +271,13 @@ PluginConfig = React.createClass
             <Col xs={12} className='div-row'>
               <span style={fontSize: '150%'}>{plugin.displayName} </span>
               <span style={paddingTop: 2}> @ {getAuthorLink(plugin.author, plugin.link)} </span>
+              <div style={paddingTop: 2}>
+                <Label bsStyle='primary'
+                       className="#{if @state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
+                  <FontAwesome name='cloud-upload' />
+                  Version {@state.latest[plugin.packageName]}
+                </Label>
+              </div>
               <div style={paddingTop: 2, marginLeft: 'auto'}>Version {plugin.version || '1.0.0'}</div>
             </Col>
             <Col xs={12} style={marginTop: 4}>
