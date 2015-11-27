@@ -75,13 +75,14 @@ window.error = (msg) ->
       type: 'danger'
   window.dispatchEvent event
 
+NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
   audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
   volume = config.get('poi.notify.volume', 1.0)
   title = 'poi'
-  icon = path.join(ROOT, 'assets', 'icons', 'icon.png')
+  icon = NOTIFY_DEFAULT_ICON
   switch options?.type
     when 'construction'
       enabled = config.get('poi.notify.construction.enabled', enabled) if enabled
