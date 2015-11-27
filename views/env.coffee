@@ -76,48 +76,51 @@ window.error = (msg) ->
   window.dispatchEvent event
 
 window.notify = (msg, options) ->
-  # Basic notification settings
+  # Notification config
   enabled = config.get('poi.notify.enabled', true)
-  volume = config.get('poi.notify.volume', 1.0)
   audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
-  # Advanced notification settings
-  if enabled
-    switch options?.type
-      when 'construction'
-        enabled = config.get('poi.notify.construction.enabled', enabled)
-        audio = config.get('poi.notify.construction.audio', audio)
-      when 'expedition'
-        enabled = config.get('poi.notify.expedition.enabled', enabled)
-        audio = config.get('poi.notify.expedition.audio', audio)
-      when 'repair'
-        enabled = config.get('poi.notify.repair.enabled', enabled)
-        audio = config.get('poi.notify.repair.audio', audio)
-      when 'morale'
-        enabled = config.get('poi.notify.morale.enabled', enabled)
-        audio = config.get('poi.notify.morale.audio', audio)
-      else
-        enabled = config.get('poi.notify.others.enabled', enabled)
+  volume = config.get('poi.notify.volume', 1.0)
+  title = 'poi'
+  icon = path.join(ROOT, 'assets', 'icons', 'icon.png')
+  switch options?.type
+    when 'construction'
+      enabled = config.get('poi.notify.construction.enabled', enabled) if enabled
+      audio = config.get('poi.notify.construction.audio', audio)
+    when 'expedition'
+      enabled = config.get('poi.notify.expedition.enabled', enabled) if enabled
+      audio = config.get('poi.notify.expedition.audio', audio)
+    when 'repair'
+      enabled = config.get('poi.notify.repair.enabled', enabled) if enabled
+      audio = config.get('poi.notify.repair.audio', audio)
+    when 'morale'
+      enabled = config.get('poi.notify.morale.enabled', enabled) if enabled
+      audio = config.get('poi.notify.morale.audio', audio)
+    else
+      enabled = config.get('poi.notify.others.enabled', enabled) if enabled
+  # Overwrite by options
+  if options?
+    title = options.title if options.title
+    icon = options.icon if options.icon
   # Send desktop notification
-  if !enabled
-    return
+  return unless enabled
   if process.platform == 'win32'
     notifier.notify
-      title: 'poi'
+      title: title
+      icon: icon
       message: msg
-      icon: options?.icon || require('path-extra').join(ROOT, 'assets', 'icons', 'icon.png')
       sound: false
   else
-    new Notification 'poi',
-      icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
+    new Notification title,
+      icon: "file://#{icon}"
       body: msg
   # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
-  if volume < 0.00001
-    return
+  return if volume < 0.00001
   sound = new Audio(audio)
   sound.volume = volume
   sound.play()
+
 modals = []
 window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
