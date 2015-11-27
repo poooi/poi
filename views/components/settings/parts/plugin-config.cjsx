@@ -97,7 +97,7 @@ PluginConfig = React.createClass
     plugins[index].version = @state.latest[plugins[index].packageName]
     updating = @state.updating
     updating[index] = false
-    @checkUpdate(@solveUpdate)
+    @checkUpdate(@solveUpdate, false)
     @setState {updating}
   handleUpdate: (index, callback) ->
     if !@props.disabled
@@ -171,22 +171,34 @@ PluginConfig = React.createClass
         npm.commands.install [name], (er, data) ->
           callback(index)
       @setState {installStatus}
-  solveUpdate: (updateData) ->
+  solveUpdate: (updateData, isfirst) ->
     latest = @state.latest
     for updateObject, index in updateData
       latest[updateObject[1]] = updateObject[4]
+    if isfirst && updateData.length > 0
+      title = <span>{__ 'Plugin update'}</span>
+      content =
+        <div>
+          {
+            for plugin, index in plugins
+              if semver.lt(plugin.version, latest[plugin.packageName])
+                <span>{plugin.displayName} </span>
+          }
+          <span>have newer version. Please update your plugins.</span>
+        </div>
+      toggleModal title, content
     @setState
       latest: latest
       checking: false
-  checkUpdate: (callback) ->
+  checkUpdate: (callback, isfirst) ->
     npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server}, (err) ->
       npm.config.set 'depth', 1
       npm.commands.outdated [], (er, data) ->
-        callback(data)
+        callback(data, isfirst)
     @setState
       checking: true
   componentDidMount: ->
-    @checkUpdate(@solveUpdate)
+    @checkUpdate(@solveUpdate, true)
   render: ->
     <form>
       <Divider text={__ 'Plugins'} />
@@ -200,7 +212,7 @@ PluginConfig = React.createClass
       <Grid>
         <Col xs={12} style={padding: '10px 15px'}>
           <ButtonGroup bsSize='small' style={width: '75%'}>
-            <Button onClick={@checkUpdate.bind(@, @solveUpdate)}
+            <Button onClick={@checkUpdate.bind(@, @solveUpdate, false)}
                     disabled={@state.checking}
                     className="control-button"
                     style={width: '33%'}>
