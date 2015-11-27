@@ -246,7 +246,7 @@ PluginConfig = React.createClass
                             id="mirror-select">
               {
                 for server, index in mirror
-                  <MenuItem key={index} onSelect={@onSelectServer.bind @, index}>mirror[index].name</MenuItem>
+                  <MenuItem key={index} onSelect={@onSelectServer.bind @, index}>{mirror[index].name}</MenuItem>
               }
             </DropdownButton>
           </ButtonGroup>
