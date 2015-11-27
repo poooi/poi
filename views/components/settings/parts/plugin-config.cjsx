@@ -28,6 +28,8 @@ plugins = plugins.map (filePath) ->
     plugin.packageName =  packageData.name
   else
     plugin.packageName = plugin.name
+  if packageData?.version?
+    plugin.version = packageData.version
   plugin.priority = 10000 unless plugin.priority?
   plugin
 plugins = _.sortBy(plugins, 'priority')
