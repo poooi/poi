@@ -137,5 +137,18 @@
   "Advanced": "高级设置",
   "Disable Hardware Acceleration": "禁用硬件加速",
   "Editing DMM Cookie's Region Flag": "设置 DMM 地区 Cookie",
-  "Use SVG Icon": "使用高清图标"
+  "Use SVG Icon": "使用高清图标",
+  "Plugin update": "插件更新",
+  "have newer version. Please update your plugins.": "有新版本。请更新插件。",
+  "Check Update": "检查更新",
+  "Install all": "全部安装",
+  "Update all": "全部升级",
+  "Disable": "禁用",
+  "Enable": "启用",
+  "Outdated": "过期",
+  "Updating": "更新中",
+  "Latest": "无更新",
+  "Remove": "删除",
+  "Removing": "删除中",
+  "Removed": "已删除"
 }

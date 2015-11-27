@@ -136,5 +136,19 @@
   "Screenshot Folder": "スクリーンショット保存先",
   "Advanced": "高度な設定",
   "Disable Hardware Acceleration": "ハードウェアアクセラレーションを無効化",
-  "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定します"
+  "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定します",
+  "Use SVG Icon": "SVGアイコンを使用します",
+  "Plugin update": "ツール更新",
+  "have newer version. Please update your plugins.": "は新しいバージョンがあります。更新してください。",
+  "Check Update": "更新をチェック",
+  "Install all": "全てインストール",
+  "Update all": "全て更新",
+  "Disable": "無効にする",
+  "Enable": "有効にする",
+  "Outdated": "古いバージョン",
+  "Updating": "更新中",
+  "Latest": "無更新",
+  "Remove": "削除します",
+  "Removing": "削除中",
+  "Removed": "削除済"
 }

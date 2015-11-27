@@ -136,5 +136,19 @@
   "Screenshot Folder": "截圖目錄",
   "Advanced": "進階設定",
   "Disable Hardware Acceleration": "禁用硬體加速",
-  "Editing DMM Cookie's Region Flag": "設置 DMM 地區 Cookie"
+  "Editing DMM Cookie's Region Flag": "設置 DMM 地區 Cookie",
+  "Use SVG Icon": "使用高清圖標",
+  "Plugin update": "插件更新",
+  "have newer version. Please update your plugins.": "有新版本。請更新插件。",
+  "Check Update": "檢查更新",
+  "Install all": "全部安裝",
+  "Update all": "全部升級",
+  "Disable": "禁用",
+  "Enable": "啓用",
+  "Outdated": "過期",
+  "Updating": "更新中",
+  "Latest": "無更新",
+  "Remove": "刪除",
+  "Removing": "刪除中",
+  "Removed": "已刪除"
 }

@@ -184,7 +184,7 @@ PluginConfig = React.createClass
               if semver.lt(plugin.version, latest[plugin.packageName])
                 <span>{plugin.displayName} </span>
           }
-          <span>have newer version. Please update your plugins.</span>
+          <span>{__ "have newer version. Please update your plugins."}</span>
         </div>
       toggleModal title, content
     @setState
@@ -217,7 +217,7 @@ PluginConfig = React.createClass
                     className="control-button"
                     style={width: '33%'}>
               <FontAwesome name='refresh' spin={@state.checking} />
-              <span> Check Update</span>
+              <span> {__ "Check Update"}</span>
             </Button>
             <Button onClick={@handleUpdateAll.bind(@, @handleUpdateAllComplete)}
                     disabled={@state.updatingAll}
@@ -230,7 +230,7 @@ PluginConfig = React.createClass
                                "cloud-download"
                            }
                            pulse={@state.updatingAll}/>
-              <span> Update all</span>
+              <span> {__ "Update all"}</span>
             </Button>
             <Button onClick={@handleInstallAll.bind(@, @handleInstallAllComplete)}
                     disabled={@state.installing}
@@ -243,7 +243,7 @@ PluginConfig = React.createClass
                                "download"
                            }
                            pulse={@state.installing}/>
-              <span> Install all</span>
+              <span> {__ "Install all"}</span>
             </Button>
           </ButtonGroup>
           <ButtonGroup bsSize='small' style={width: '25%', paddingLeft: 6}>
@@ -293,11 +293,11 @@ PluginConfig = React.createClass
                       {
                         switch @state.status[index]
                           when 0
-                            " Disable"
+                             __ "Disable"
                           when 1
-                            " enable"
+                             __ "Enable"
                           when 2
-                            " Outdated"
+                             __ "Outdated"
                       }
                     </Button>
                     <Button bsStyle='primary'
@@ -316,11 +316,11 @@ PluginConfig = React.createClass
                                    pulse={@state.updating[index]}/>
                       {
                         if @state.updating[index]
-                          " Updating"
+                           __ "Updating"
                         else if semver.lt(plugin.version, @state.latest[plugin.packageName])
-                          " Update"
+                           __ "Update"
                         else
-                          " Latest"
+                           __ "Latest"
                       }
                     </Button>
                     <Button bsStyle='danger'
@@ -332,11 +332,11 @@ PluginConfig = React.createClass
                       {
                         switch @state.removeStatus[index]
                           when 0
-                            " Remove"
+                             __ "Remove"
                           when 1
-                            " Removing"
+                             __ "Removing"
                           when 2
-                            " Removed"
+                             __ "Removed"
                       }
                     </Button>
                   </ButtonGroup>
@@ -377,11 +377,11 @@ PluginConfig = React.createClass
                       {
                         switch @state.installStatus[index]
                           when 0
-                            " Install"
+                             __ "Install"
                           when 1
-                            " Installing"
+                             __ "Installing"
                           when 2
-                            " Installed"
+                             __ "Installed"
                       }
                     </Button>
                   </ButtonGroup>
