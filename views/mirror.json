@@ -1,14 +1,17 @@
 [
   {
     "name": "cnpmjs",
+    "menuname": "cnpmjs.org",
     "server": "http://r.cnpmjs.org/"
   },
   {
     "name": "taobao",
+    "menuname": "npm.taobao.org",
     "server": "http://registry.npm.taobao.org/"
   },
   {
     "name": "npmjs",
+    "menuname": "npmjs.org",
     "server": "https://registry.npmjs.org/"
   }
 ]
