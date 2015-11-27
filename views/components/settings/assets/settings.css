@@ -70,3 +70,11 @@
   display: flex;
   flex-flow: row;
 }
+#SettingsView .control-button {
+  margin: 0px;
+  height: 30px;
+}
+#SettingsView .control-button > button,
+#SettingsView .plugin-control-button {
+  padding: 5px 7px;
+}

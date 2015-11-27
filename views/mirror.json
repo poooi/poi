@@ -1,0 +1,14 @@
+[
+  {
+    "name": "cnpmjs",
+    "server": "http://r.cnpmjs.org/"
+  },
+  {
+    "name": "taobao",
+    "server": "http://registry.npm.taobao.org/"
+  },
+  {
+    "name": "npmjs",
+    "server": "https://registry.npmjs.org/"
+  }
+]
