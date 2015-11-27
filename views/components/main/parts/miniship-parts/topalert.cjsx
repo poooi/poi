@@ -254,6 +254,7 @@ TopAlert = React.createClass
         if @maxCountdown is @timeDelta and not @inBattle and not @state.inMission and window._decks[@props.deckIndex].api_mission[0] <= 0
           notify "#{@props.deckName} #{__ 'have recovered from fatigue'}",
             type: 'morale'
+            type: __ 'Morale'
             icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
       if flag or (@inBattle and not @state.inMission)
         @interval = clearInterval @interval

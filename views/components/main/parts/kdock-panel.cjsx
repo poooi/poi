@@ -151,7 +151,7 @@ KdockPanel = React.createClass
         if docks[i].countdown <= 1 && !notified[i]
           notify "#{docks[i].name} #{__ "built"}",
             type: 'construction'
-            title: __ "built"
+            title: __ "Construction"
             icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
     @setState

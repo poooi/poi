@@ -98,7 +98,7 @@ NdockPanel = React.createClass
         if docks[i].countdown <= 60 && !notified[i]
           notify "#{docks[i].name} #{__ 'repair completed'}",
             type: 'repair'
-            title: __ 'repair completed'
+            title: __ 'Docking'
             icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png')
           notified[i] = true
     @setState
