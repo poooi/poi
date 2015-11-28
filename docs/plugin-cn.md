@@ -16,20 +16,21 @@ poi 基于网页技术开发，所有的 UI 和逻辑都是使用网页技术完
 ## 插件的基本结构
 poi 的文件目录大概是以下的样子。
 ```
-poi
+appData
   |-- plugins
-          |-- plugin1
+        |--node_modules
+            |-- plugin1
                   |-- index.js
                   |-- ...
                   |-- ...
-          |-- plugin2
+            |-- plugin2
                   |-- index.cjsx
                   |-- ...
                   |-- ...
-          |-- plugin3
+            |-- plugin3
                   |-- index.coffee
 ```
-在启动的时候，poi 会寻找 plugins 目录下的所有文件夹，并尝试以插件的方式将其载入。
+在启动的时候，poi 会寻找 appData/plugins/node_modules 目录下的所有名字以 `poi-plugin-` 开头的文件夹，并尝试以插件的方式将其载入。
 
 一个插件只需要有基本的 index 就可以被载入，index 可以是 index.js，index.coffee 或者 index.cjsx。
 
@@ -197,6 +198,14 @@ window.MODULE_PATH = remote.getGlobal('MODULE_PATH');
 require('module').globalPaths.push(MODULE_PATH);
 require(ROOT + "/components/coffee-script/extras/coffee-script.js");
 ```
+
+## 在 [npm](http://npmjs.org) 上发布
+
+在 npm 上发布不仅可以使得版本维护更加简便，而且 poi 将会用重载的 npm 模组进行新版本插件的更新。
+
+详情请参照 npm 关于 [package.json](https://docs.npmjs.com/files/package.json) 和 [npm publish](https://docs.npmjs.com/cli/publish) 的文档
+
+注意包名应该以 `poi-plugin-` 开头以便其被 poi 发现
 
 ## 一些提示
 
