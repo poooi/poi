@@ -2,6 +2,7 @@ require 'coffee-react/register'
 path = require 'path-extra'
 notifier = require 'node-notifier'
 fs = require 'fs-extra'
+os = require 'os'
 
 # Environments
 window.remote = require 'remote'
@@ -76,6 +77,11 @@ window.error = (msg) ->
   window.dispatchEvent event
 
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
+NOTIFY_NOTIFICATION_API = true
+if process.platform == 'win32'
+  release = os.release().split('.')
+  if (release[0] < 6) or (release[0] == 6 and release[1] <= 1)
+    NOTIFY_NOTIFICATION_API = false
 window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
@@ -104,16 +110,16 @@ window.notify = (msg, options) ->
     icon = options.icon if options.icon
   # Send desktop notification
   return unless enabled
-  if process.platform == 'win32'
+  if NOTIFY_NOTIFICATION_API
+    new Notification title,
+      icon: "file://#{icon}"
+      body: msg
+  else
     notifier.notify
       title: title
       icon: icon
       message: msg
       sound: false
-  else
-    new Notification title,
-      icon: "file://#{icon}"
-      body: msg
   # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
