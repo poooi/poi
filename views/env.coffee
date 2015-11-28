@@ -1,14 +1,19 @@
 require 'coffee-react/register'
 path = require 'path-extra'
 notifier = require 'node-notifier'
+fs = require 'fs-extra'
 
 # Environments
 window.remote = require 'remote'
 window.ROOT = path.join(__dirname, '..')
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
+window.PLUGIN_PATH = path.join window.APPDATA_PATH, 'plugins'
 window.POI_VERSION = remote.getGlobal 'POI_VERSION'
 window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
+window.MODULE_PATH = remote.getGlobal 'MODULE_PATH'
+fs.ensureDirSync window.PLUGIN_PATH
+fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
 
 # Shortcuts and Components
 window._ = require 'underscore'
@@ -290,6 +295,11 @@ resolveResponses = ->
           window._nickNameId = body.api_nickname_id
         when '/kcsapi/api_get_member/deck'
           window._decks[deck.api_id - 1] = deck for deck in body
+        when '/kcsapi/api_get_member/mapinfo'
+          window._eventMapRanks = {}
+          for map in body
+            if map.api_eventmap?.api_selected_rank?
+              window._eventMapRanks[map.api_id] = map.api_eventmap.api_selected_rank
         when '/kcsapi/api_get_member/ndock'
           window._ndocks = body.map (e) -> e.api_ship_id
         when '/kcsapi/api_get_member/ship_deck'
@@ -409,6 +419,8 @@ resolveResponses = ->
             afterSlot = body.api_after_slot
             itemId = afterSlot.api_id
             _slotitems[itemId] = extendSlotitem afterSlot
+        when '/kcsapi/api_req_map/select_eventmap_rank'
+          window._eventMapRanks["#{postBody.api_maparea_id}#{postBody.api_map_no}"] = postBody.api_rank
         when '/kcsapi/api_req_mission/result'
           window._teitokuLv = body.api_member_lv
         when '/kcsapi/api_req_nyukyo/speedchange'
