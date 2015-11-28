@@ -1,8 +1,13 @@
 path = require 'path-extra'
 glob = require 'glob'
 {__} = require 'i18n'
+semver = require 'semver'
+fs = require 'fs-extra'
 {_, $, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
+
+# Plugin version
+packages = fs.readJsonSync path.join ROOT, 'views', 'plugin.json'
 
 $('poi-main').className += 'double-tabbed'
 window.doubleTabbed = true
@@ -14,14 +19,27 @@ PluginWrap = React.createClass
     React.createElement @props.plugin.reactClass
 
 # Discover plugins and remove unused plugins
-plugins = glob.sync(path.join(ROOT, 'plugins', '*'))
+plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
 plugins = plugins.concat(exPlugins)
 plugins = plugins.filter (filePath) ->
   # Every plugin will be required
   try
     plugin = require filePath
-    return config.get "plugin.#{plugin.name}.enable", true
+    packageData = {}
+    try
+      packageData = fs.readJsonSync path.join filePath, 'package.json'
+    catch error
+      if env.process.DEBUG? then console.log error
+    if packageData?.name?
+      plugin.packageName =  packageData.name
+    else
+      plugin.packageName = plugin.name
+    if packages[plugin.packageName]?.version?
+      lowest = packages[plugin.packageName].version
+    else
+      lowest = "v0.0.0"
+    return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, lowest)
   catch e
     return false
 

@@ -1,14 +1,19 @@
 require 'coffee-react/register'
 path = require 'path-extra'
 notifier = require 'node-notifier'
+fs = require 'fs-extra'
 
 # Environments
 window.remote = require 'remote'
 window.ROOT = path.join(__dirname, '..')
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
+window.PLUGIN_PATH = path.join window.APPDATA_PATH, 'plugins'
 window.POI_VERSION = remote.getGlobal 'POI_VERSION'
 window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
+window.MODULE_PATH = remote.getGlobal 'MODULE_PATH'
+fs.ensureDirSync window.PLUGIN_PATH
+fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
 
 # Shortcuts and Components
 window._ = require 'underscore'
