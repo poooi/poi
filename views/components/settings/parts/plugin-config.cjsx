@@ -178,17 +178,17 @@ PluginConfig = React.createClass
     for updateObject, index in updateData
       latest[updateObject[1]] = updateObject[4]
     if isfirst && updateData.length > 0
-      title = <span>{__ 'Plugin update'}</span>
-      content =
-        <div>
-          {
-            for plugin, index in plugins
-              if semver.lt(plugin.version, latest[plugin.packageName])
-                <span key={index}>{plugin.displayName} </span>
-          }
-          <span>{__ "have newer version. Please update your plugins."}</span>
-        </div>
-      toggleModal title, content
+      title = __ 'Plugin update'
+      content = ""
+      for plugin, index in plugins
+        if semver.lt(plugin.version, latest[plugin.packageName])
+          for child in plugin.displayName.props.children
+            if typeof child is "string"
+              content = "#{content} #{child}"
+      content = "#{content} #{__ "have newer version. Please update your plugins."}"
+      notify content,
+        type: title
+        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
     @setState
       latest: latest
       checking: false
