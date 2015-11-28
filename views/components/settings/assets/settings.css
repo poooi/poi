@@ -78,3 +78,6 @@
 #SettingsView .plugin-control-button {
   padding: 5px 7px;
 }
+#SettingsView button .fa {
+  margin-right: 2px;
+}
