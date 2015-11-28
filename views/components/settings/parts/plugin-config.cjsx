@@ -274,7 +274,7 @@ PluginConfig = React.createClass
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
               <span style={fontSize: '150%'}>{plugin.displayName} </span>
-              <span style={paddingTop: 2}> @ {getAuthorLink(plugin.author, plugin.link)} </span>
+              <span style={paddingTop: 2}> @{getAuthorLink(plugin.author, plugin.link)} </span>
               <div style={paddingTop: 2}>
                 <Label bsStyle='primary'
                        className="#{if @state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
@@ -365,7 +365,7 @@ PluginConfig = React.createClass
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
               <span style={fontSize: '150%'}><FontAwesome name={installTargets[installTarget]['icon']} /> {installTargets[installTarget][window.language]} </span>
-              <span style={paddingTop: 2}> @ {getAuthorLink(installTargets[installTarget]['author'], installTargets[installTarget]['link'])} </span>
+              <span style={paddingTop: 2}> @{getAuthorLink(installTargets[installTarget]['author'], installTargets[installTarget]['link'])} </span>
             </Col>
             <Col xs={12} style={marginTop: 4}>
               <Col xs={8}>{installTargets[installTarget]["des#{window.language}"]}</Col>
