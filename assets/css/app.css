@@ -23,6 +23,7 @@ body {
 }
 .tab-content {
   overflow: auto;
+  margin-bottom: 15px;
 }
 #poi-app-container {
   overflow: hidden;
