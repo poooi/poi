@@ -194,5 +194,19 @@
     "deszh-TW": "戦果計算器",
     "desja-JP": "戦果計算器",
     "desen-US": "Senka calculator"
+  },
+  "poi-plugin-almanac": {
+    "zh-CN": "舰娘黄历",
+    "zh-TW": "舰娘黄历",
+    "ja-JP": "舰娘黄历",
+    "en-US": "Almanac",
+    "version": "v0.0.0",
+    "icon": "calendar",
+    "author": "Magica",
+    "link": "https://github.com/magicae",
+    "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "deszh-TW": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "desja-JP": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "desen-US": "An almanac"
   }
 }
