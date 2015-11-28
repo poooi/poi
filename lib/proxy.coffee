@@ -1,9 +1,11 @@
 Promise = require 'bluebird'
 async = Promise.coroutine
+zlib = Promise.promisifyAll require 'zlib'
 EventEmitter = require 'events'
 url = require 'url'
 net = require 'net'
 http = require 'http'
+path = require 'path'
 querystring = require 'querystring'
 _ = require 'underscore'
 caseNormalizer = require 'header-case-normalizer'
@@ -15,7 +17,49 @@ socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 
 config = require './config'
-{log, warn, error, resolveBody, isStaticResource, findHack, findHackExPath, findCache, findCacheExPath} = require './utils'
+{log, warn, error} = require './utils'
+
+resolveBody = (encoding, body) ->
+  return new Promise async (resolve, reject) ->
+    try
+      decoded = null
+      switch encoding
+        when 'gzip'
+          decoded = yield zlib.gunzipAsync body
+        when 'deflate'
+          decoded = yield zlib.inflateAsync body
+        else
+          decoded = body
+      decoded = decoded.toString()
+      decoded = decoded.substring(7) if decoded.indexOf('svdata=') == 0
+      decoded = JSON.parse decoded
+      resolve decoded
+    catch e
+      reject e
+isStaticResource = (pathname) ->
+  return pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1
+getCachePath = (pathname) ->
+  dir = config.get 'poi.cachePath', global.DEFAULT_CACHE_PATH
+  path.join dir, pathname
+findHack = (pathname) ->
+  loc = getCachePath pathname
+  sp = loc.split '.'
+  ext = sp.pop()
+  sp.push 'hack'
+  sp.push ext
+  loc = sp.join '.'
+  try
+    fs.accessSync loc, fs.R_OK
+    return loc
+  catch
+    return null
+findCache = (pathname) ->
+  loc = getCachePath pathname
+  try
+    fs.accessSync loc, fs.R_OK
+    return loc
+  catch
+    return null
 
 # Network error retries
 retries = config.get 'poi.proxy.retries', 0
