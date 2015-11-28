@@ -13,7 +13,6 @@ i18n = require 'i18n'
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 
-d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
 
 PoiConfig = React.createClass
   getInitialState: ->
@@ -31,7 +30,8 @@ PoiConfig = React.createClass
     mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
     enableDMMcookie: config.get 'poi.enableDMMcookie', false
     disableHA: config.get 'poi.disableHA', false
-    screenshotPath: config.get 'poi.screenshotPath', d
+    screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
+    cachePath: config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
@@ -113,30 +113,47 @@ PoiConfig = React.createClass
   handleClearCache: (e) ->
     remote.getCurrentWebContents().session.clearCache ->
       toggleModal __('Delete cache'), __('Success!')
-  folderPickerOnDrop: (e) ->
+  folderPickerOnDrop: (callback, e) ->
     e.preventDefault()
     droppedFiles = e.dataTransfer.files
     isDirectory = fs.statSync(droppedFiles[0].path).isDirectory()
-    if isDirectory
-      window.screenshotPath = droppedFiles[0].path
-      config.set 'poi.screenshotPath', droppedFiles[0].path
-      @setState
-        screenshotPath: droppedFiles[0].path
-  folderPickerOnClick: ->
-    fs.ensureDirSync @state.screenshotPath
-    dialog.showOpenDialog
-      title: __ 'Screenshot Folder'
-      defaultPath: @state.screenshotPath
-      properties: ['openDirectory', 'createDirectory']
-      (filenames) =>
-        if filenames isnt undefined
-          filename = filenames[0]
-          window.screenshotPath = filename
-          config.set 'poi.screenshotPath', filename
-          @setState
-            screenshotPath: filename
+    callback droppedFiles[0].path if isDirectory
+  screenshotFolderPickerOnDrop: (e) ->
+    @folderPickerOnDrop @setScreenshotPath, e
+  screenshotFolderPickerOnClick: ->
+    @synchronize =>
+      fs.ensureDirSync @state.screenshotPath
+      filenames = dialog.showOpenDialog
+        title: __ 'Screenshot Folder'
+        defaultPath: @state.screenshotPath
+        properties: ['openDirectory', 'createDirectory']
+      @setScreenshotPath filenames[0] if filenames isnt undefined
+  cacheFolderPickerOnDrop: (e) ->
+    @folderPickerOnDrop @setCachePath, e
+  cacheFolderPickerOnClick: ->
+    @synchronize =>
+      fs.ensureDirSync @state.cachePath
+      filenames = dialog.showOpenDialog
+        title: __ 'Cache Folder'
+        defaultPath: @state.cachePath
+        properties: ['openDirectory', 'createDirectory']
+      @setCachePath filenames[0] if filenames isnt undefined
+  setScreenshotPath: (pathname) ->
+    window.screenshotPath = pathname
+    config.set 'poi.screenshotPath', pathname
+    @setState
+      screenshotPath: pathname
+  setCachePath: (pathname) ->
+    config.set 'poi.cachePath', pathname
+    @setState
+      cachePath: pathname
   onDrag: (e) ->
     e.preventDefault()
+  synchronize: (callback) ->
+    return if @lock
+    @lock = true
+    callback()
+    @lock = false
   render: ->
     <form id="poi-config">
       <div className="form-group" id='navigator-bar'>
@@ -254,12 +271,27 @@ PoiConfig = React.createClass
         <Grid>
           <Col xs={12}>
             <div className="folder-picker"
-                 onClick={@folderPickerOnClick}
-                 onDrop={@folderPickerOnDrop}
+                 onClick={@screenshotFolderPickerOnClick}
+                 onDrop={@screenshotFolderPickerOnDrop}
                  onDragEnter={@onDrag}
                  onDragOver={@onDrag}
                  onDragLeave={@onDrag}>
               {@state.screenshotPath}
+            </div>
+          </Col>
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Cache Folder'} />
+        <Grid>
+          <Col xs={12}>
+            <div className="folder-picker"
+                 onClick={@cacheFolderPickerOnClick}
+                 onDrop={@cacheFolderPickerOnDrop}
+                 onDragEnter={@onDrag}
+                 onDragOver={@onDrag}
+                 onDragLeave={@onDrag}>
+              {@state.cachePath}
             </div>
           </Col>
         </Grid>
