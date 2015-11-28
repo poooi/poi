@@ -199,6 +199,8 @@ PluginConfig = React.createClass
         callback(data, isfirst)
     @setState
       checking: true
+  onSelectOpenFolder: ->
+    shell.openItem path.join PLUGIN_PATH, 'node_modules'
   componentDidMount: ->
     @checkUpdate(@solveUpdate, true)
   render: ->
@@ -262,6 +264,8 @@ PluginConfig = React.createClass
                 for server, index in mirror
                   <MenuItem key={index} onSelect={@onSelectServer.bind @, index}>{mirror[index].menuname}</MenuItem>
               }
+              <MenuItem divider />
+              <MenuItem key={index} onSelect={@onSelectOpenFolder}>{__ "Manually install"}</MenuItem>
             </DropdownButton>
           </ButtonGroup>
         </Col>
