@@ -82,7 +82,7 @@ ControlledTabArea = React.createClass
       detail:
         visible: false
     window.dispatchEvent event
-    @handleSelectLeft 0
+    @handleSelectLeft 1
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect [(@state.key[0] + 1) % 1, @state.key[1]]
   handleCtrlOrCmdNumberKeyDown: (num) ->
