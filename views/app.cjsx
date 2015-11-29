@@ -472,12 +472,11 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   content =
     <div>
       <p>诶嘿！欢迎使用 poi v{POI_VERSION}！使用之前看看下面！</p>
-      <p style={color: 'red'}>poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！</p>
+      <p style={color: '#FFCCFF', fontWeight: 'bold', fontSize: 'large'}>poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！</p>
       <p>poi 默认不使用代理。更改代理的设置在设置面板中可以找到。
       <ul>
         <li>使用岛风go的选择HTTP代理，地址是127.0.0.1，端口8099。（默认情况下）</li>
         <li>使用自己本地的Shadowsocks或者Socks5代理的选择Socks5代理。</li>
-        <li>使用Shadowsocks也可以用内置的Shadowsocks模块，不过性能不是很好。</li>
         <li>使用VPN的选择不使用代理就好了。</li>
       </ul></p>
       <p>poi 如果有显示错误，可以手动调整一下内容大小，布局会自动适配。</p>
