@@ -126,11 +126,14 @@ ControlledTabArea = React.createClass
   render: ->
     <div className='poi-tabs-container'>
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key[0]} onSelect={@handleSelectLeft}>
-          <NavItem key={0} eventKey={0} className='poi-app-tabpane'>
+        <Nav bsStyle="tabs" activeKey={@state.key[0]}>
+          <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
             {mainview.displayName}
           </NavItem>
-          <NavItem key={1000} eventKey={1000} className='poi-app-tabpane'>
+          <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
+            <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
+          </NavItem>
+          <NavItem key={1000} eventKey={1000} className='poi-app-tabpane' onSelect={@handleSelectLeft}>
             {settings.displayName}
           </NavItem>
         </Nav>
