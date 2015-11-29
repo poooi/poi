@@ -107,6 +107,7 @@ window.notify = (msg, options) ->
   if options?
     title = options.title if options.title
     icon = options.icon if options.icon
+    audio = options.audio if options.audio
   # Send desktop notification
   return unless enabled
   if NOTIFY_NOTIFICATION_API
