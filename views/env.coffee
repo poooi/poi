@@ -3,6 +3,7 @@ path = require 'path-extra'
 notifier = require 'node-notifier'
 fs = require 'fs-extra'
 os = require 'os'
+semver = require 'semver'
 
 # Environments
 window.remote = require 'remote'
@@ -78,10 +79,8 @@ window.error = (msg) ->
 
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
-if process.platform == 'win32'
-  release = os.release().split('.')
-  if (release[0] < 6) or (release[0] == 6 and release[1] <= 1)
-    NOTIFY_NOTIFICATION_API = false
+if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
+  NOTIFY_NOTIFICATION_API = false
 window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
