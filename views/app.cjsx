@@ -550,8 +550,6 @@ window.addEventListener 'game.response', (e) ->
   resPath = e.detail.path
   console.log [resPath, body, postBody] if process.env.DEBUG?
   log "#{__ 'Hit'} #{method} #{resPath}"
-window.addEventListener 'game.start', (e) ->
-  log 'poi 正常运行中'
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
   error __n 'Network error, Retrying %s time', 'Network error, Retrying %s times', counter
