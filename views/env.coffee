@@ -160,9 +160,18 @@ checkLayout = (layout) ->
   layout
 
 # User configs
+language = navigator.language
+if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
+  switch language.substr(0,1).toLowerCase()
+    when 'zh'
+      language = 'zh-TW'
+    when 'ja'
+      language = 'ja-JP'
+    else
+      language = 'en-US'
 window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.webviewWidth = config.get 'poi.webview.width', -1
-window.language = config.get 'poi.language', navigator.language
+window.language = config.get 'poi.language', language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
 window.useSVGIcon = config.get 'poi.useSVGIcon', false
 d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')

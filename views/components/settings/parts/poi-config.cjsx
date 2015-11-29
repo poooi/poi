@@ -13,10 +13,19 @@ i18n = require 'i18n'
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 
+language = navigator.language
+if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
+  switch language.substr(0,1).toLowerCase()
+    when 'zh'
+      language = 'zh-TW'
+    when 'ja'
+      language = 'ja-JP'
+    else
+      language = 'en-US'
 
 PoiConfig = React.createClass
   getInitialState: ->
-    language: config.get 'poi.language', navigator.language
+    language: config.get 'poi.language', language
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableNotify: config.get 'poi.notify.enabled', true
     constructionNotify: config.get 'poi.notify.construction.enabled', 'true'
