@@ -82,7 +82,7 @@ ControlledTabArea = React.createClass
       detail:
         visible: false
     window.dispatchEvent event
-    @handleSelectLeft 0
+    @handleSelectLeft 1
   handleCtrlOrCmdTabKeyDown: ->
     @handleSelect [(@state.key[0] + 1) % 1, @state.key[1]]
   handleCtrlOrCmdNumberKeyDown: (num) ->
@@ -126,15 +126,18 @@ ControlledTabArea = React.createClass
   render: ->
     <div className='poi-tabs-container'>
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key[0]} onSelect={@handleSelectLeft}>
-          <NavItem key={0} eventKey={0} className='poi-app-tabpane'>
+        <Nav bsStyle="tabs" activeKey={@state.key[0]}>
+          <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
             {mainview.displayName}
           </NavItem>
-          <NavItem key={1000} eventKey={1000} className='poi-app-tabpane'>
+          <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
+            <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
+          </NavItem>
+          <NavItem key={1000} eventKey={1000} className='poi-app-tabpane' onSelect={@handleSelectLeft}>
             {settings.displayName}
           </NavItem>
         </Nav>
-        <div id={mainview.name} className="poi-app-tabpane #{if @state.key[0] == 0 then 'show' else 'hidden'}">
+        <div id={mainview.name} className="poi-app-tabpane #{if @state.key[0] in [0, 1] then 'show' else 'hidden'}">
           {
             React.createElement mainview.reactClass,
               selectedKey: @state.key[0]
