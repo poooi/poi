@@ -64,6 +64,12 @@ for installTarget of installTargets
   # 0: not installed 1: installing 2: installed
   installStatus.push 0
 
+npmConfig = {
+  prefix: "#{PLUGIN_PATH}",
+  registry: mirror[config.get "packageManager.mirror", 0].server,
+  http_proxy: 'http://127.0.0.1:12450'
+}
+
 getAuthorLink = (author, link) ->
   handleClickAuthorLink = (e) ->
     shell.openExternal e.target.dataset.link
@@ -85,6 +91,11 @@ PluginConfig = React.createClass
   onSelectServer: (state) ->
     config.set "packageManager.mirror", state
     server = mirror[state].server
+    npmConfig = {
+      prefix: "#{PLUGIN_PATH}",
+      registry: mirror[state].server,
+      http_proxy: 'http://127.0.0.1:12450'
+    }
     @setState
       mirror: state
   handleEnable: (index) ->
@@ -106,7 +117,7 @@ PluginConfig = React.createClass
     if !@props.disabled
       updating = @state.updating
       updating[index] = true
-      npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server, http_proxy: 'http://127.0.0.1:12450'}, (err) ->
+      npm.load npmConfig, (err) ->
         npm.commands.update [plugins[index].packageName], (er, data) ->
           callback(index)
       @setState {updating}
@@ -123,7 +134,7 @@ PluginConfig = React.createClass
     for installTarget of installTargets
       installAllStatus.push 1
       toInstall.push installTarget
-    npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server, http_proxy: 'http://127.0.0.1:12450'}, (err) ->
+    npm.load npmConfig, (err) ->
       npm.commands.install toInstall, (er, data) ->
         callback()
     @setState
@@ -146,7 +157,7 @@ PluginConfig = React.createClass
         if semver.lt(plugin.version, @state.latest[plugin.packageName]) && @state.removeStatus[index] == 0
           updating[index] = true
           toUpdate.push plugin.packageName
-      npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server, http_proxy: 'http://127.0.0.1:12450'}, (err) ->
+      npm.load npmConfig, (err) ->
         npm.commands.update toUpdate, (er, data) ->
           callback()
       @setState
@@ -160,7 +171,7 @@ PluginConfig = React.createClass
     if !@props.disabled
       removeStatus = @state.removeStatus
       removeStatus[index] = 1
-      npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server, http_proxy: 'http://127.0.0.1:12450'}, (err) ->
+      npm.load npmConfig, (err) ->
         npm.commands.uninstall [plugins[index].packageName], (er, data) ->
           callback(index)
       @setState {removeStatus}
@@ -172,7 +183,7 @@ PluginConfig = React.createClass
     if !@props.disabled
       installStatus = @state.installStatus
       installStatus[index] = 1
-      npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server, http_proxy: 'http://127.0.0.1:12450'}, (err) ->
+      npm.load npmConfig, (err) ->
         npm.commands.install [name], (er, data) ->
           callback(index)
       @setState {installStatus}
@@ -199,7 +210,7 @@ PluginConfig = React.createClass
       checking: false
       isUpdateAvailable: isUpdateAvailable
   checkUpdate: (callback, isfirst) ->
-    npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server, http_proxy: 'http://127.0.0.1:12450'}, (err) ->
+    npm.load npmConfig, (err) ->
       npm.config.set 'depth', 1
       npm.commands.outdated [], (er, data) ->
         callback(data, isfirst)
