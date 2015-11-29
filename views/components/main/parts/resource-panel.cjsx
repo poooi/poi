@@ -19,7 +19,7 @@ ResourcePanel = React.createClass
     @setState
       show: visible
   handleResponse: (e) ->
-    {method, path, body} = e.detail
+    {method, path, body, postBody} = e.detail
     switch path
       when '/kcsapi/api_get_member/material'
         {material} = @state
@@ -52,7 +52,7 @@ ResourcePanel = React.createClass
       when '/kcsapi/api_req_kousyou/createship_speedchange'
         {material} = @state
         if body.api_result == 1
-          material[4] -= 1
+          material[5] -= parseInt(postBody.api_highspeed)
         @setState
           material: material
       when '/kcsapi/api_req_kousyou/destroyitem2'
