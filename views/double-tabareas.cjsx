@@ -137,7 +137,7 @@ ControlledTabArea = React.createClass
             {settings.displayName}
           </NavItem>
         </Nav>
-        <div id={mainview.name} className="poi-app-tabpane #{if @state.key[0] == 0 then 'show' else 'hidden'}">
+        <div id={mainview.name} className="poi-app-tabpane #{if @state.key[0] in [0, 1] then 'show' else 'hidden'}">
           {
             React.createElement mainview.reactClass,
               selectedKey: @state.key[0]
