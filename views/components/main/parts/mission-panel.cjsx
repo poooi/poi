@@ -109,6 +109,7 @@ MissionPanel = React.createClass
         if decks[i].countdown <= 60 && !notified[i]
           notify "#{decks[i].name} #{__ 'mission complete'}",
             type: 'expedition'
+            title: __ 'Expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
     @setState
