@@ -40,7 +40,6 @@
     "react-bootstrap": "^0.26.4",
     "react-fontawesome": "^0.3.2",
     "request": "^2.61.0",
-    "semver": "^5.0.3",
     "socks5-client": "^1.1.0",
     "socks5-http-client": "^1.0.1",
     "underscore": "^1.8.3"
