@@ -158,7 +158,7 @@ ControlledTabArea = React.createClass
         <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
           <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
         </NavItem>
-        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1}
+        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
                      title=
                      {
                        if @state.key >= 2 and @state.key < 1000
@@ -178,6 +178,10 @@ ControlledTabArea = React.createClass
               <MenuItem key={2 + index} eventKey={key} onSelect={@handleSelectMenuItem}>
                 {plugin.displayName}
               </MenuItem>
+        }
+        {
+          if plugins.length == 0
+            <MenuItem key={1001} disabled>{__ "Install plugins in settings"}</MenuItem>
         }
         </NavDropdown>
         <NavItem key={1000} eventKey={1000} onSelect={@handleSelect}>

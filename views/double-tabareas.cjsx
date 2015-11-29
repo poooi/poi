@@ -151,7 +151,7 @@ ControlledTabArea = React.createClass
       </div>
       <div>
         <Nav bsStyle="tabs" activeKey={@state.key[1]} onSelect={@handleSelectRight}>
-          <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1}
+          <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
                        title={plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>}>
           {
             counter = -1
@@ -165,6 +165,10 @@ ControlledTabArea = React.createClass
                 <MenuItem key={index} eventKey={key}>
                   {plugin.displayName}
                 </MenuItem>
+          }
+          {
+            if plugins.length == 0
+              <MenuItem key={1001} disabled>{__ "Install plugins in settings"}</MenuItem>
           }
           </NavDropdown>
         </Nav>

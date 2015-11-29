@@ -152,5 +152,6 @@
   "Remove": "削除します",
   "Removing": "削除中",
   "Removed": "削除済",
-  "Manually install": "手動インストール"
+  "Manually install": "手動インストール",
+  "Install plugins in settings": "設定にツールをインストールします"
 }
