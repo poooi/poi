@@ -81,6 +81,7 @@ PluginConfig = React.createClass
     updatingAll: false
     installing: false
     mirror: config.get "packageManager.mirror", 0
+    isUpdateAvailable: false
   onSelectServer: (state) ->
     config.set "packageManager.mirror", state
     server = mirror[state].server
@@ -133,22 +134,24 @@ PluginConfig = React.createClass
     for plugin, index in plugins
       plugin.version = @state.latest[plugin.packageName]
       updating[index] = false
+    @checkUpdate(@solveUpdate, false)
     @setState
       updating: updating
       updatingAll: false
   handleUpdateAll: (callback) ->
-    updating = @state.updating
-    toUpdate = []
-    for plugin, index in plugins
-      if semver.lt(plugin.version, @state.latest[plugin.packageName]) && @state.removeStatus[index] == 0
-        updating[index] = true
-        toUpdate.push plugin.packageName
-    npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server}, (err) ->
-      npm.commands.update toUpdate, (er, data) ->
-        callback()
-    @setState
-      updating: updating
-      updatingAll: true
+    if !@props.disabled
+      updating = @state.updating
+      toUpdate = []
+      for plugin, index in plugins
+        if semver.lt(plugin.version, @state.latest[plugin.packageName]) && @state.removeStatus[index] == 0
+          updating[index] = true
+          toUpdate.push plugin.packageName
+      npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server}, (err) ->
+        npm.commands.update toUpdate, (er, data) ->
+          callback()
+      @setState
+        updating: updating
+        updatingAll: true
   handleRemoveComplete: (index) ->
     removeStatus = @state.removeStatus
     removeStatus[index] = 2
@@ -177,6 +180,7 @@ PluginConfig = React.createClass
     latest = @state.latest
     for updateObject, index in updateData
       latest[updateObject[1]] = updateObject[4]
+    isUpdateAvailable = updateData.length > 0
     if isfirst && updateData.length > 0
       title = __ 'Plugin update'
       content = ""
@@ -187,11 +191,13 @@ PluginConfig = React.createClass
               content = "#{content} #{child}"
       content = "#{content} #{__ "have newer version. Please update your plugins."}"
       notify content,
-        type: title
+        type: 'plugin update'
+        title: title
         icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
     @setState
       latest: latest
       checking: false
+      isUpdateAvailable: isUpdateAvailable
   checkUpdate: (callback, isfirst) ->
     npm.load {prefix: "#{PLUGIN_PATH}", registry: mirror[@state.mirror].server}, (err) ->
       npm.config.set 'depth', 1
@@ -224,7 +230,7 @@ PluginConfig = React.createClass
               <span> {__ "Check Update"}</span>
             </Button>
             <Button onClick={@handleUpdateAll.bind(@, @handleUpdateAllComplete)}
-                    disabled={@state.updatingAll}
+                    disabled={@state.updatingAll || !@state.isUpdateAvailable || @state.checking}
                     className="control-button"
                     style={width: '33%'}>
               <FontAwesome name={
