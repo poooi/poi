@@ -107,8 +107,8 @@ PluginConfig = React.createClass
       config.set "plugin.#{plugins[index].name}.enable", enable
     @setState
       status: status
-  handleUpdateComplete: (index) ->
-    plugins[index].version = @state.latest[plugins[index].packageName]
+  handleUpdateComplete: (index, er) ->
+    plugins[index].version = @state.latest[plugins[index].packageName] if !er
     updating = @state.updating
     updating[index] = false
     @checkUpdate(@solveUpdate, false)
@@ -119,31 +119,44 @@ PluginConfig = React.createClass
       updating[index] = true
       npm.load npmConfig, (err) ->
         npm.commands.update [plugins[index].packageName], (er, data) ->
-          callback(index)
+          callback(index, er)
       @setState {updating}
-  handleInstallAllComplete: () ->
+  handleInstallAllComplete: (er) ->
     installAllStatus = []
+    index = -1
     for installTarget of installTargets
-      installAllStatus.push 2
+      index++
+      if !er
+        installAllStatus.push 2
+      else
+        if @state.installStatus[index] < 2
+          installAllStatus.push 0
+        else
+          installAllStatus.push 2
     @setState
       installStatus: installAllStatus
       installing: false
   handleInstallAll: (callback) ->
     installAllStatus = []
     toInstall = []
+    index = -1
     for installTarget of installTargets
-      installAllStatus.push 1
-      toInstall.push installTarget
+      index++
+      if @state.installStatus[index] == 0
+        installAllStatus.push 1
+        toInstall.push installTarget
+      else
+        installAllStatus.push @state.installStatus[index]
     npm.load npmConfig, (err) ->
       npm.commands.install toInstall, (er, data) ->
-        callback()
+        callback(er)
     @setState
       installStatus: installAllStatus
       installing: true
-  handleUpdateAllComplete: () ->
+  handleUpdateAllComplete: (er) ->
     updating = @state.updating
     for plugin, index in plugins
-      plugin.version = @state.latest[plugin.packageName]
+      plugin.version = @state.latest[plugin.packageName] if !er
       updating[index] = false
     @checkUpdate(@solveUpdate, false)
     @setState
@@ -159,7 +172,7 @@ PluginConfig = React.createClass
           toUpdate.push plugin.packageName
       npm.load npmConfig, (err) ->
         npm.commands.update toUpdate, (er, data) ->
-          callback()
+          callback(er)
       @setState
         updating: updating
         updatingAll: true
@@ -175,9 +188,10 @@ PluginConfig = React.createClass
         npm.commands.uninstall [plugins[index].packageName], (er, data) ->
           callback(index)
       @setState {removeStatus}
-  handleInstallComplete: (index) ->
+  handleInstallComplete: (index, er) ->
     installStatus = @state.installStatus
     installStatus[index] = 2
+    installStatus[index] = 0 if er
     @setState {installStatus}
   handleInstall: (name, index, callback) ->
     if !@props.disabled
@@ -185,7 +199,7 @@ PluginConfig = React.createClass
       installStatus[index] = 1
       npm.load npmConfig, (err) ->
         npm.commands.install [name], (er, data) ->
-          callback(index)
+          callback(index, er)
       @setState {installStatus}
   solveUpdate: (updateData, isfirst) ->
     latest = @state.latest
@@ -254,7 +268,7 @@ PluginConfig = React.createClass
                            pulse={@state.updatingAll}/>
               <span> {__ "Update all"}</span>
             </Button>
-            <Button onClick={@handleInstallAll.bind(@, @handleInstallAllComplete)}
+            <Button onClick={@handleInstallAll.bind @, @handleInstallAllComplete}
                     disabled={@state.installing}
                     className="control-button"
                     style={width: '33%'}>
