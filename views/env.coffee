@@ -307,6 +307,7 @@ resolveResponses = ->
           if not localStorage.start2Version? or start2Version > localStorage.start2Version
             localStorage.start2Version = start2Version % 0xFFFFFFFF
             localStorage.start2Body = JSON.stringify body
+          window.dispatchEvent new Event 'initialize.complete'
         # User datas prefixed by _
         when '/kcsapi/api_get_member/basic'
           window._teitokuLv = body.api_level
