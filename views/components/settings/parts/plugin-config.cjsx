@@ -205,6 +205,7 @@ PluginConfig = React.createClass
         type: 'plugin update'
         title: title
         icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+        audio: "file://#{ROOT}/assets/audio/update.mp3"
     @setState
       latest: latest
       checking: false
