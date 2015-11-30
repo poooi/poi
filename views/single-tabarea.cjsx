@@ -11,8 +11,6 @@ packages = fs.readJsonSync path.join ROOT, 'plugin.json'
 
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
-exPlugins = glob.sync(path.join(EXROOT, 'plugins', '*'))
-plugins = plugins.concat(exPlugins)
 plugins = plugins.filter (filePath) ->
   # Every plugin will be required
   try
