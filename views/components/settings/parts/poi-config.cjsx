@@ -164,7 +164,7 @@ PoiConfig = React.createClass
     callback()
     @lock = false
   render: ->
-    <form id="poi-config">
+    <form>
       <div className="form-group" id='navigator-bar'>
         <Divider text={__ 'Browser'} />
         <NavigatorBar />
