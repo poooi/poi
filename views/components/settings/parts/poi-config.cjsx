@@ -5,7 +5,8 @@ dialog = remote.require 'dialog'
 i18n = require 'i18n'
 {__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip} = ReactBootstrap
+{Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
+{OverlayTrigger, Tooltip, Collapse, Well} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
@@ -22,6 +23,73 @@ if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
       language = 'ja-JP'
     else
       language = 'en-US'
+
+SlotCheckConfig = React.createClass
+  getInitialState: ->
+    @cfgEntry = "poi.mapStartCheck.#{@props.type}"
+
+    showInput: false
+    enable: config.get "#{@cfgEntry}.enable", false
+    value: ''
+  CheckValid: (v) ->
+    !isNaN(v) and !isNaN(n = parseInt v) and n >= 0
+  handleToggleInput: ->
+    if @state.showInput
+      @setState
+        showInput: false
+    else
+      num = config.get "#{@cfgEntry}.minFreeSlots", -1
+      @setState
+        showInput: true
+        value: if @CheckValid(num) then num else ''
+    console.log config.get @cfgEntry
+  handleChange: (e) ->
+    @setState
+      value: e.target.value
+  handleSubmit: (e) ->
+    e.preventDefault()
+    if @CheckValid @state.value
+      n = parseInt @state.value
+      config.set @cfgEntry, {enable: true, minFreeSlots: n}
+      @setState
+        showInput: false
+        enable: true
+        value: n
+    else
+      config.set "#{@cfgEntry}.enable", false
+      @setState
+        showInput: false
+        enable: false
+    console.log config.get @cfgEntry
+  render: ->
+    toggleBtn = <Button onClick={@handleToggleInput} bsSize='xs'
+      bsStyle={if @state.enable then 'success' else 'default'}
+      style={verticalAlign: 'text-bottom'}>
+      {if @state.enable then 'ON' else 'OFF'}</Button>
+    inputValid = @CheckValid @state.value
+    submitBtn = <Button type='submit'
+      bsStyle={if inputValid then 'success' else 'danger'}>
+      {if inputValid then 'SAVE' else 'DISABLE'}</Button>
+    <div style={margin: '5px 15px'}>
+      <form onSubmit={@handleSubmit}>
+        <div style={fontSize: '15px'}>
+          {__ "#{@props.type} slots"} {toggleBtn}
+        </div>
+        <Collapse in={@state.showInput}>
+          <div>
+            <Well>
+              <Input type="text" bsSize='small'
+                bsStyle={if inputValid then 'success' else 'error'}
+                label={__ "Warn if the number of free #{@props.type} slots is less than"}
+                help={if inputValid then __ '(Leave it empty to disable)' else ''}
+                value={@state.value}
+                onChange={@handleChange}
+                buttonAfter={submitBtn} />
+            </Well>
+          </div>
+        </Collapse>
+      </form>
+    </div>
 
 PoiConfig = React.createClass
   getInitialState: ->
@@ -164,6 +232,7 @@ PoiConfig = React.createClass
     callback()
     @lock = false
   render: ->
+    <div>
     <form>
       <div className="form-group" id='navigator-bar'>
         <Divider text={__ 'Browser'} />
@@ -228,20 +297,13 @@ PoiConfig = React.createClass
           </div>
         </Grid>
       </div>
-      <div className="form-group" >
-        <Divider text={__ 'Slot check'} />
-        <div style={display: "flex", flexFlow: "row nowrap"}>
-          <div style={flex: 2, margin: "0 15px"}>
-            <Input type="checkbox" label={__ 'Ship slots'} checked={@state.mapStartCheckShip} onChange={@handleSetMapStartCheckShip} />
-          </div>
-          <div style={flex: 2, margin: "0 15px"}>
-            <Input type="checkbox" label={__ 'Item slots'} checked={@state.mapStartCheckItem} onChange={@handleSetMapStartCheckItem} />
-          </div>
-        </div>
-        <div style={flex: 2, margin: "0 15px"}>
-          <Input type="number" label={__ 'Warn when the number of empty ship slots is less than'} ref="freeShipSlot" value={@state.freeShipSlot} onChange={@handleSetMapStartCheckFreeShipSlot} placeholder="船位警告触发数" />
-        </div>
-      </div>
+    </form>
+    <div className="form-group" >
+      <Divider text={__ 'Slot check'} />
+      <SlotCheckConfig type="ship" />
+      <SlotCheckConfig type="item" />
+    </div>
+    <form>
       <div className="form-group">
         <Divider text={__ 'Cache and cookies'} />
         <Grid>
@@ -317,5 +379,6 @@ PoiConfig = React.createClass
         </Grid>
       </div>
     </form>
+    </div>
 
 module.exports = PoiConfig
