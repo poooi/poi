@@ -39,10 +39,8 @@ First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/
 
 ```bash
 git clone --recursive https://github.com/poooi/poi && cd poi
-git submodule foreach npm i
 npm i
-./node_modules/.bin/bower install
-./node_modules/.bin/gulp
+./node_modules/.bin/gulp install
 cp default-config.cson config.cson
 /path/to/electron ./
 ```

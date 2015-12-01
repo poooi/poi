@@ -21,7 +21,7 @@ gulp.task 'getVersion', ->
   if package_version != bower_version
     log "WARNING: package.json has version #{package_version} while bower.json has version #{bower_version}"
 
-gulp.task 'localDep', async ->
+gulp.task 'install', async ->
   yield buildLocalAsync()
 
 gulp.task 'build', ['getVersion'], async ->
@@ -33,6 +33,6 @@ gulp.task 'clean', async ->
 gulp.task 'default', ->
   gulp_command = 'gulp'
   log "Usage:"
-  log "  #{gulp_command} localDep - Download dependencies to run poi here"
-  log "  #{gulp_command} build    - Build release packages under ./build/release/"
-  log "  #{gulp_command} clean    - Clean up temporary files except for release packages"
+  log "  #{gulp_command} install - Install dependencies to run poi locally"
+  log "  #{gulp_command} build   - Build release packages under ./build/release/"
+  log "  #{gulp_command} clean   - Clean up temporary files except for release packages"
