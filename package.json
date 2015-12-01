@@ -28,7 +28,7 @@
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
     "cson": "^3.0.1",
-    "fs-extra": "^0.24.0",
+    "fs-extra": "^0.26.2",
     "glob": "^5.0.14",
     "header-case-normalizer": "^1.0.3",
     "i18n": "^0.5.0",
@@ -51,6 +51,7 @@
     "coffeelint": "^1.11.1",
     "gulp": "^3.9.0",
     "mocha": "^2.3.2",
-    "mocha-lcov-reporter": "0.0.2"
+    "mocha-lcov-reporter": "0.0.2",
+    "through2": "^2.0.0"
   }
 }

@@ -14,6 +14,8 @@ n7z = require 'node-7z'
 _ = require 'underscore'
 semver = require 'semver'
 {execAsync} = Promise.promisifyAll require('child_process')
+{compile} = require 'coffee-react'
+through2 = require 'through2'
 
 {log} = require './lib/utils'
 
@@ -48,7 +50,7 @@ get_flash_url = (platform, arch) ->
 
 target_list = [
   # Files
-  'app.coffee', 'bower.json', 'config.cson', 'constant.cson',
+  'app.js', 'bower.json', 'config.cson', 'constant.cson',
   'index.html', 'index.js', 'LICENSE', 'package.json',
   'mirror.json', 'plugin.json',
   # Folders
@@ -115,6 +117,11 @@ add7z = async (archive, files, options) ->
   catch e
   yield (new n7z()).add archive, files, options
 
+changeExt = (src_path, ext) -> 
+  src_dir = path.dirname src_path
+  src_basename = path.basename(src_path, path.extname src_path)
+  path.join(src_dir, src_basename+ext)
+
 # *** METHODS ***
 npmInstallAsync = async (npm_path, tgt_dir) ->
   command = "'#{npm_path}' install --production"
@@ -139,6 +146,38 @@ filterCopyAppAsync = async (stage1_app, stage2_app) ->
   yield Promise.all (for target in target_list
     fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target), 
       clobber: true)
+
+translateCoffeeAsync = (app_dir) ->
+  log "Compiling #{app_dir}"
+  ignoreFolders = ['node_modules', 'assets', 'components']
+  excludeDirectoriesFilter = through2.obj (item, enc, next) ->
+    if item.stats.isDirectory() && path.basename(item.path) in ignoreFolders
+    else
+      @push item
+    next()
+
+  onlyCoffeescriptsFilter = through2.obj (item, enc, next) ->
+    if item.stats.isFile() && path.extname(item.path).toLowerCase() in ['.coffee', '.cjsx']
+      @push item
+    next()
+
+  new Promise (resolve) ->
+    tasks = []
+    fs.walk app_dir
+    .pipe excludeDirectoriesFilter
+    .pipe onlyCoffeescriptsFilter
+    .on 'data', (item) ->
+      tasks.push (async ->
+        src_path = item.path
+        tgt_path = changeExt src_path, '.js'
+        src = yield fs.readFileAsync src_path, 'utf-8'
+        tgt = compile src
+        yield fs.writeFileAsync tgt_path, tgt
+        yield fs.removeAsync src_path
+        log "Compiled #{tgt_path}"
+        )()
+    .on 'end', async ->
+      resolve(yield Promise.all tasks)
 
 packageAppAsync = async (poi_version, app_dir, release_dir) ->
   log "Packaging app.7z."
@@ -201,6 +240,7 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
         log "#{platform}-#{arch} successfully packaged to #{release_path}."
 
   else if platform == 'linux'
+
     yield fs.moveAsync path.join(stage3_electron, 'electron'), path.join(stage3_electron, 'poi'),
       clobber: true
     Promise.resolve 
@@ -251,9 +291,12 @@ module.exports =
     bower_path = path.join(__dirname, 'node_modules', 'bower', 'bin', 'bower')
 
     try
-      yield Promise.join (fs.removeAsync stage1_app), 
+      yield Promise.join \
+        (fs.removeAsync stage1_app), 
         (fs.removeAsync stage2_app)
     catch e
+    fs.ensureDirSync stage1_app
+    fs.ensureDirSync stage2_app
 
     # Check npm version
     npm_version = (yield execAsync "'#{npm_path}' --version")[0].trim()
@@ -269,12 +312,13 @@ module.exports =
     yield Promise.join download_themes, 
       (async -> 
         yield archive_app
-        yield Promise.join \
+        yield fs.moveAsync path.join(stage1_app, 'default-config.cson'), path.join(stage1_app, 'config.cson')
+        yield Promise.join(
+          translateCoffeeAsync(stage1_app),
           (async -> 
             yield npmInstallAsync npm_path, stage1_app
             yield bowerInstallAsync bower_path, stage1_app
-            )(),
-          fs.moveAsync path.join(stage1_app, 'default-config.cson'), path.join(stage1_app, 'config.cson')
+            )())
         )()
 
     # Prepare stage2
@@ -326,4 +370,3 @@ module.exports =
           fs.removeAsync dirpath)
     catch
     log "Done."
-
