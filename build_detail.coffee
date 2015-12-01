@@ -16,6 +16,7 @@ semver = require 'semver'
 {execAsync} = Promise.promisifyAll require('child_process')
 {compile} = require 'coffee-react'
 through2 = require 'through2'
+asar = require 'asar'
 
 {log} = require './lib/utils'
 
@@ -147,6 +148,9 @@ filterCopyAppAsync = async (stage1_app, stage2_app) ->
     fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target), 
       clobber: true)
 
+packageAsarAsync = (app_folder, app_asar) ->
+  Promise.promisify(asar.createPackage)(app_folder, app_asar)
+
 translateCoffeeAsync = (app_dir) ->
   log "Compiling #{app_dir}"
   ignoreFolders = ['node_modules', 'assets', 'components']
@@ -180,36 +184,36 @@ translateCoffeeAsync = (app_dir) ->
       resolve(yield Promise.all tasks)
 
 packageAppAsync = async (poi_version, app_dir, release_dir) ->
-  log "Packaging app.7z."
-  release_path = path.join(release_dir, "app-#{poi_version}.7z")
+  log "Packaging app.asar."
+  release_path = path.join(release_dir, "app-#{poi_version}", "app.asar")
   try
-    yield fs.removeAsync release_dir
+    yield fs.removeAsync release_path
   catch e
-  yield add7z release_path, app_dir
-  path.join(release_dir, "app-#{poi_version}.7z")
+  yield packageAsarAsync app_dir, release_path
+  release_path
 
 packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   log "Packaging #{poi_fullname}."
   release_path = path.join(release_dir, poi_fullname+'.7z')
   try
-    yield fs.removeAsync release_dir
+    yield fs.removeAsync release_path
   catch e
   yield add7z release_path, electron_dir
   release_path
 
 packageStage3Async = async (platform, arch, poi_version, electron_version, 
-            download_dir, stage2_app, building_root, release_dir) ->
+            download_dir, app_path, building_root, release_dir) ->
   platform_arch = "#{platform}-#{arch}"
   poi_fullname = "poi-v#{poi_version}-#{platform_arch}"
   stage3_electron = path.join building_root, poi_fullname
-  stage3_app = path.join stage3_electron, 'resources', 'app'
-  flash_dir = path.join stage3_app, 'PepperFlash'
+  stage3_app = path.join stage3_electron, 'resources', 'app.asar'
+  flash_dir = path.join stage3_electron, 'PepperFlash'
 
   try
     yield fs.removeAsync stage3_electron
   catch e
 
-  copy_app = fs.copyAsync stage2_app, stage3_app
+  copy_app = fs.copyAsync app_path, stage3_app
   install_flash = installFlashAsync platform, arch, download_dir, flash_dir
 
   electron_url = get_electron_url platform, arch, electron_version
@@ -243,10 +247,11 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
 
     yield fs.moveAsync path.join(stage3_electron, 'electron'), path.join(stage3_electron, 'poi'),
       clobber: true
+    package_release = packageReleaseAsync poi_fullname, stage3_electron, release_dir
     Promise.resolve 
       log: null
       todo: async ->
-        release_path = yield packageReleaseAsync poi_fullname, stage3_electron, release_dir
+        release_path = yield package_release
         log "#{platform}-#{arch} successfully packaged to #{release_path}."
 
   else if platform == 'darwin'
@@ -324,16 +329,14 @@ module.exports =
     # Prepare stage2
     yield filterCopyAppAsync stage1_app, stage2_app
 
-    # Pack app.7z
-    package_app = packageAppAsync poi_version, stage2_app, release_dir
+    # Pack app.asar
+    app_path = yield packageAppAsync poi_version, stage2_app, release_dir
 
     # Prepare stage 3
     stage3_info = yield Promise.all (
       for [platform, arch] in platform_arch_list
         packageStage3Async(platform, arch, poi_version, electron_version, 
-          download_dir, stage2_app, building_root, release_dir))
-
-    yield package_app
+          download_dir, app_path, building_root, release_dir))
 
     # Finishing work of stage 3
     stage3_logs = (for [[platform, arch], info] in _.zip(platform_arch_list, stage3_info) when info

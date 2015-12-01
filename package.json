@@ -52,6 +52,7 @@
     "gulp": "^3.9.0",
     "mocha": "^2.3.2",
     "mocha-lcov-reporter": "0.0.2",
-    "through2": "^2.0.0"
+    "through2": "^2.0.0",
+    "asar": "^0.8.3"
   }
 }
