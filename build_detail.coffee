@@ -1,4 +1,4 @@
-use_taobao_mirror = false
+use_taobao_mirror = true
 
 # *** INCLUDE ***
 os = require 'os'
@@ -47,7 +47,7 @@ get_electron_url = (platform, arch, electron_version) ->
     "https://github.com/atom/electron/releases/download/v#{electron_version}/#{electron_fullname}"
 
 get_flash_url = (platform, arch) ->
-  "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
+  "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}-#{arch}.zip"
 
 target_list = [
   # Files
