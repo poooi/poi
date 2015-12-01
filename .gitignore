@@ -37,4 +37,6 @@ node_modules
 
 /cache
 
+/plugins
+
 *.swp
