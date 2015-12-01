@@ -31,8 +31,8 @@ gulp.task 'clean', async ->
   yield cleanTempFiles()
 
 gulp.task 'default', ->
-  gulp_command = 'gulp'
+  _gulp = 'gulp'
   log "Usage:"
-  log "  #{gulp_command} install - Install dependencies to run poi locally"
-  log "  #{gulp_command} build   - Build release packages under ./build/release/"
-  log "  #{gulp_command} clean   - Clean up temporary files except for release packages"
+  log "  #{_gulp} install - Install dependencies to run poi locally"
+  log "  #{_gulp} build   - Build release packages under ./build/release/"
+  log "  #{_gulp} clean   - Clean up temporary files except for release packages"

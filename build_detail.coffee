@@ -99,11 +99,13 @@ extractZip = (zip_file, dest_path, descript="") ->
 
 downloadThemesAsync = (theme_root, download_dir) ->
   Promise.all (for theme, theme_url of theme_list
-    downloadAsync theme_url, path.join(theme_root, theme, 'css'), "#{theme}.css", "#{theme} theme")
+    downloadAsync theme_url, path.join(theme_root, theme, 'css'),
+      "#{theme}.css", "#{theme} theme")
 
 installFlashAsync = async (platform, arch, download_dir, flash_dir) ->
   flash_url = get_flash_url platform, arch
-  flash_path = yield downloadAsync flash_url, download_dir, "flash-#{platform}-#{arch}.zip", 'flash plugin'
+  flash_path = yield downloadAsync flash_url, download_dir,
+    "flash-#{platform}-#{arch}.zip", 'flash plugin'
   extractZip flash_path, flash_dir, 'flash plugin'
 
 copyNoOverwriteAsync = async (src, tgt, options) ->
@@ -118,13 +120,14 @@ add7z = async (archive, files, options) ->
   catch e
   yield (new n7z()).add archive, files, options
 
-changeExt = (src_path, ext) -> 
+changeExt = (src_path, ext) ->
   src_dir = path.dirname src_path
   src_basename = path.basename(src_path, path.extname src_path)
   path.join(src_dir, src_basename+ext)
 
 # *** METHODS ***
 npmInstallAsync = async (npm_path, tgt_dir) ->
+  # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   command = "'#{npm_path}' install --production"
   log "Installing npm for #{tgt_dir}"
   cwd = process.cwd()
@@ -145,7 +148,7 @@ bowerInstallAsync = async (bower_path, tgt_dir) ->
 
 filterCopyAppAsync = async (stage1_app, stage2_app) ->
   yield Promise.all (for target in target_list
-    fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target), 
+    fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target),
       clobber: true)
 
 packageAsarAsync = (app_folder, app_asar) ->
@@ -155,10 +158,10 @@ translateCoffeeAsync = (app_dir) ->
   log "Compiling #{app_dir}"
   targetExts = ['.coffee', '.cjsx']
 
-  options = 
+  options =
     followLinks: false
     filters: ['node_modules', 'assets', path.join(__dirname, 'components')]
- 
+
   new Promise (resolve) ->
     tasks = []
     walk.walk app_dir, options
@@ -196,7 +199,7 @@ packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   yield add7z release_path, electron_dir
   release_path
 
-packageStage3Async = async (platform, arch, poi_version, electron_version, 
+packageStage3Async = async (platform, arch, poi_version, electron_version,
             download_dir, app_path, building_root, release_dir) ->
   platform_arch = "#{platform}-#{arch}"
   poi_fullname = "poi-v#{poi_version}-#{platform_arch}"
@@ -213,7 +216,8 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
 
   electron_url = get_electron_url platform, arch, electron_version
   install_electron = (async ->
-    electron_path = yield downloadAsync electron_url, download_dir, '', 'electron'
+    electron_path = yield downloadAsync electron_url, download_dir, '',
+      'electron'
     extractZip electron_path, stage3_electron, 'electron'
   )()
 
@@ -225,25 +229,29 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     yield Promise.join(
       fs.copyAsync(path.join(stage3_electron, 'electron.exe'), raw_poi_exe),
       copyNoOverwriteAsync(path.join(stage3_electron, 'electron.exe'), poi_exe))
-    yield fs.moveAsync path.join(stage3_electron, 'electron.exe'), path.join(stage3_electron, 'poi.exe'),
+    yield fs.moveAsync path.join(stage3_electron, 'electron.exe'),
+      path.join(stage3_electron, 'poi.exe'),
       clobber: true
-    Promise.resolve 
+    Promise.resolve
       log: " To complete packaging #{platform}-#{arch}, you need to:\n
-            (1) Modify #{raw_poi_exe} and save as #{platform_arch}.poi.exe after\n
+            (1) Modify #{raw_poi_exe} and save as #{platform_arch}.poi.exe by\n
             ...(a) changing its icon into poi\n
             ...(b) changing its version into #{poi_version}\n
             * The target file is not overwritten if you build poi again."
       todo: async ->
         yield fs.copyAsync poi_exe, path.join(stage3_electron, 'poi.exe')
-        release_path = yield packageReleaseAsync poi_fullname, stage3_electron, release_dir
+        release_path = yield packageReleaseAsync poi_fullname, stage3_electron,
+          release_dir
         log "#{platform}-#{arch} successfully packaged to #{release_path}."
 
   else if platform == 'linux'
 
-    yield fs.moveAsync path.join(stage3_electron, 'electron'), path.join(stage3_electron, 'poi'),
+    yield fs.moveAsync path.join(stage3_electron, 'electron'),
+      path.join(stage3_electron, 'poi'),
       clobber: true
-    package_release = packageReleaseAsync poi_fullname, stage3_electron, release_dir
-    Promise.resolve 
+    package_release = packageReleaseAsync poi_fullname, stage3_electron,
+      release_dir
+    Promise.resolve
       log: null
       todo: async ->
         release_path = yield package_release
@@ -252,11 +260,9 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
   else if platform == 'darwin'
     Promise.resolve
       log: "This is chiba's guo, I no bei."
-      todo: ->
   else
     Promise.resolve
       log: "Unsupported platform #{platform}."
-      todo: ->
 
 
 module.exports =
@@ -268,7 +274,8 @@ module.exports =
     bower_path = path.join(__dirname, 'node_modules', 'bower', 'bin', 'bower')
 
     download_theme = downloadThemesAsync theme_root, download_dir
-    install_flash = installFlashAsync os.platform(), os.arch(), download_dir, flash_dir
+    install_flash = installFlashAsync os.platform(), os.arch(), download_dir,
+      flash_dir
     install_npm_bower = npmInstallAsync npm_path, __dirname
     .then -> (async -> yield bowerInstallAsync bower_path, __dirname)()
 
@@ -292,7 +299,7 @@ module.exports =
 
     try
       yield Promise.join \
-        (fs.removeAsync stage1_app), 
+        (fs.removeAsync stage1_app),
         (fs.removeAsync stage2_app)
     catch e
     fs.ensureDirSync stage1_app
@@ -309,13 +316,14 @@ module.exports =
     # Prepare stage1
     download_themes = downloadThemesAsync theme_root, download_dir
     archive_app = execAsync "git archive HEAD | tar -x -C '#{stage1_app}'"
-    yield Promise.join download_themes, 
-      (async -> 
+    yield Promise.join download_themes,
+      (async ->
         yield archive_app
-        yield fs.moveAsync path.join(stage1_app, 'default-config.cson'), path.join(stage1_app, 'config.cson')
+        yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
+          path.join(stage1_app, 'config.cson')
         yield Promise.join(
           translateCoffeeAsync(stage1_app),
-          (async -> 
+          (async ->
             yield npmInstallAsync npm_path, stage1_app
             yield bowerInstallAsync bower_path, stage1_app
             )())
@@ -330,11 +338,12 @@ module.exports =
     # Prepare stage 3
     stage3_info = yield Promise.all (
       for [platform, arch] in platform_arch_list
-        packageStage3Async(platform, arch, poi_version, electron_version, 
+        packageStage3Async(platform, arch, poi_version, electron_version,
           download_dir, app_path, building_root, release_dir))
 
     # Finishing work of stage 3
-    stage3_logs = (for [[platform, arch], info] in _.zip(platform_arch_list, stage3_info) when info
+    stage3_logs = (for [[platform, arch], info] in _.zip(
+      platform_arch_list, stage3_info) when info
       ["#{platform}-#{arch}", info.log])
     if stage3_logs
       log " "
@@ -345,10 +354,10 @@ module.exports =
         for line in stage3_log.split '\n'
           log "  "+line
         log " "
-      log "*** Press Enter AFTER fulfilling the requirements above to finish ***"
+      log "*** Follow the instructions above and press Enter to finish ***"
       yield new Promise (resolve) ->
         process.stdin.once 'data', ->
-          process.stdin.unref()   # Allows the program to terminate 
+          process.stdin.unref()   # Allows the program to terminate
           resolve()
       yield Promise.all (info.todo() for info in stage3_info when info.todo)
     log "All platforms are successfully built."
