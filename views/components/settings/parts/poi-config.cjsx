@@ -35,14 +35,13 @@ SlotCheckConfig = React.createClass
     !isNaN(v) and !isNaN(n = parseInt v) and n >= 0
   handleToggleInput: ->
     if @state.showInput
-      @setState
-        showInput: false
+      @handleDisable()
     else
       num = config.get "#{@cfgEntry}.minFreeSlots", -1
       @setState
         showInput: true
         value: if @CheckValid(num) then num else ''
-    console.log config.get @cfgEntry
+    console.log @props.type + JSON.stringify(config.get @cfgEntry)
   handleChange: (e) ->
     @setState
       value: e.target.value
@@ -56,16 +55,21 @@ SlotCheckConfig = React.createClass
         enable: true
         value: n
     else
-      config.set "#{@cfgEntry}.enable", false
-      @setState
-        showInput: false
-        enable: false
-    console.log config.get @cfgEntry
+      @handleDisable()
+    console.log @props.type + JSON.stringify(config.get @cfgEntry)
+  handleDisable: ->
+    config.set "#{@cfgEntry}.enable", false
+    @setState
+      showInput: false
+      enable: false
   render: ->
+    toggleBtnStyle = if @state.enable then 'success' else 'default'
+    toggleBtnStyle = 'danger' if @state.showInput
+    toggleBtnTxt = if @state.enable then 'ON' else 'OFF'
+    toggleBtnTxt = 'DISABLE' if @state.showInput
     toggleBtn = <Button onClick={@handleToggleInput} bsSize='xs'
-      bsStyle={if @state.enable then 'success' else 'default'}
-      style={verticalAlign: 'text-bottom'}>
-      {if @state.enable then 'ON' else 'OFF'}</Button>
+      bsStyle={toggleBtnStyle} style={verticalAlign: 'text-bottom'}>
+      {toggleBtnTxt}</Button>
     inputValid = @CheckValid @state.value
     submitBtn = <Button type='submit'
       bsStyle={if inputValid then 'success' else 'danger'}>
@@ -81,7 +85,6 @@ SlotCheckConfig = React.createClass
               <Input type="text" bsSize='small'
                 bsStyle={if inputValid then 'success' else 'error'}
                 label={__ "Warn if the number of free #{@props.type} slots is less than"}
-                help={if inputValid then __ '(Leave it empty to disable)' else ''}
                 value={@state.value}
                 onChange={@handleChange}
                 buttonAfter={submitBtn} />
