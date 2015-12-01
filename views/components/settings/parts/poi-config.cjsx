@@ -233,152 +233,152 @@ PoiConfig = React.createClass
     @lock = false
   render: ->
     <div>
-    <form>
-      <div className="form-group" id='navigator-bar'>
-        <Divider text={__ 'Browser'} />
-        <NavigatorBar />
-        {
-          if process.platform isnt 'darwin'
-            <Grid>
-              <Col xs={12}>
-                <Input type="checkbox" label={__ 'Confirm before exit'} checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
+      <form>
+        <div className="form-group" id='navigator-bar'>
+          <Divider text={__ 'Browser'} />
+          <NavigatorBar />
+          {
+            if process.platform isnt 'darwin'
+              <Grid>
+                <Col xs={12}>
+                  <Input type="checkbox" label={__ 'Confirm before exit'} checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
+                </Col>
+              </Grid>
+          }
+        </div>
+        <div className="form-group">
+          <Divider text={__ 'Notification'} />
+          <Grid>
+            <div>
+              <Col xs={6}>
+                <Button bsStyle={if @state.enableNotify then 'success' else 'danger'} onClick={@handleSetNotify} style={width: '100%'}>
+                  {if @state.enableNotify then '√ ' else ''}{__ 'Enable notification'}
+                </Button>
               </Col>
-            </Grid>
-        }
+              <Col xs={6}>
+                <OverlayTrigger placement='top' overlay={
+                    <Tooltip id='poiconfig-volume'>{__ 'Volume'} <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
+                  }>
+                  <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
+                    min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
+                </OverlayTrigger>
+              </Col>
+            </div>
+            <div>
+              <Col xs={12} style={marginTop: 10}>
+                <ButtonGroup justified>
+                  <Button bsStyle={if @state.constructionNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'construction'}
+                          className='notif-button'>
+                    {__ 'Construction'}
+                  </Button>
+                  <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
+                          className='notif-button'>
+                    {__ 'Expedition'}
+                  </Button>
+                  <Button bsStyle={if @state.repairNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'repair'}
+                          className='notif-button'>
+                    {__ 'Docking'}
+                  </Button>
+                  <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'morale'}
+                          className='notif-button'>
+                    {__ 'Morale'}
+                  </Button>
+                  <Button bsStyle={if @state.othersNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'others'}
+                          className='notif-button'>
+                    {__ 'Others'}
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </div>
+          </Grid>
+        </div>
+      </form>
+      <div className="form-group" >
+        <Divider text={__ 'Slot check'} />
+        <SlotCheckConfig type="ship" />
+        <SlotCheckConfig type="item" />
       </div>
-      <div className="form-group">
-        <Divider text={__ 'Notification'} />
-        <Grid>
-          <div>
+      <form>
+        <div className="form-group">
+          <Divider text={__ 'Cache and cookies'} />
+          <Grid>
             <Col xs={6}>
-              <Button bsStyle={if @state.enableNotify then 'success' else 'danger'} onClick={@handleSetNotify} style={width: '100%'}>
-                {if @state.enableNotify then '√ ' else ''}{__ 'Enable notification'}
+              <Button bsStyle="danger" onClick={@handleClearCookie} style={width: '100%'}>
+                {__ 'Delete cookies'}
               </Button>
             </Col>
             <Col xs={6}>
-              <OverlayTrigger placement='top' overlay={
-                  <Tooltip id='poiconfig-volume'>{__ 'Volume'} <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
-                }>
-                <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
-                  min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
-              </OverlayTrigger>
+              <Button bsStyle="danger" onClick={@handleClearCache} style={width: '100%'}>
+                {__ 'Delete cache'}
+              </Button>
             </Col>
-          </div>
-          <div>
-            <Col xs={12} style={marginTop: 10}>
-              <ButtonGroup justified>
-                <Button bsStyle={if @state.constructionNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'construction'}
-                        className='notif-button'>
-                  {__ 'Construction'}
-                </Button>
-                <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
-                        className='notif-button'>
-                  {__ 'Expedition'}
-                </Button>
-                <Button bsStyle={if @state.repairNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'repair'}
-                        className='notif-button'>
-                  {__ 'Docking'}
-                </Button>
-                <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'morale'}
-                        className='notif-button'>
-                  {__ 'Morale'}
-                </Button>
-                <Button bsStyle={if @state.othersNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'others'}
-                        className='notif-button'>
-                  {__ 'Others'}
-                </Button>
-              </ButtonGroup>
+            <Col xs={12}>
+              <Alert bsStyle='warning' style={marginTop: '10px'}>
+                {__ 'If connection error occurs frequently, delete both of them.'}
+              </Alert>
             </Col>
-          </div>
-        </Grid>
-      </div>
-    </form>
-    <div className="form-group" >
-      <Divider text={__ 'Slot check'} />
-      <SlotCheckConfig type="ship" />
-      <SlotCheckConfig type="item" />
-    </div>
-    <form>
-      <div className="form-group">
-        <Divider text={__ 'Cache and cookies'} />
-        <Grid>
-          <Col xs={6}>
-            <Button bsStyle="danger" onClick={@handleClearCookie} style={width: '100%'}>
-              {__ 'Delete cookies'}
-            </Button>
-          </Col>
-          <Col xs={6}>
-            <Button bsStyle="danger" onClick={@handleClearCache} style={width: '100%'}>
-              {__ 'Delete cache'}
-            </Button>
-          </Col>
-          <Col xs={12}>
-            <Alert bsStyle='warning' style={marginTop: '10px'}>
-              {__ 'If connection error occurs frequently, delete both of them.'}
-            </Alert>
-          </Col>
-        </Grid>
-      </div>
-      <div className="form-group">
-        <Divider text={__ 'Language'} />
-        <Grid>
-          <Col xs={6}>
-            <Input type="select" ref="language" value={@state.language} onChange={@handleSetLanguage}>
-              <option value="zh-CN">简体中文</option>
-              <option value="zh-TW">正體中文</option>
-              <option value="ja-JP">日本語</option>
-              <option value="en-US">English</option>
-            </Input>
-          </Col>
-        </Grid>
-      </div>
-      <div className="form-group">
-        <Divider text={__ 'Screenshot Folder'} />
-        <Grid>
-          <Col xs={12}>
-            <div className="folder-picker"
-                 onClick={@screenshotFolderPickerOnClick}
-                 onDrop={@screenshotFolderPickerOnDrop}
-                 onDragEnter={@onDrag}
-                 onDragOver={@onDrag}
-                 onDragLeave={@onDrag}>
-              {@state.screenshotPath}
-            </div>
-          </Col>
-        </Grid>
-      </div>
-      <div className="form-group">
-        <Divider text={__ 'Cache Folder'} />
-        <Grid>
-          <Col xs={12}>
-            <div className="folder-picker"
-                 onClick={@cacheFolderPickerOnClick}
-                 onDrop={@cacheFolderPickerOnDrop}
-                 onDragEnter={@onDrag}
-                 onDragOver={@onDrag}
-                 onDragLeave={@onDrag}>
-              {@state.cachePath}
-            </div>
-          </Col>
-        </Grid>
-      </div>
-      <div className="form-group">
-        <Divider text={__ 'Advanced'} />
-        <Grid>
-          <Col xs={12}>
-            <Input type="checkbox" label={__ 'Disable Hardware Acceleration'} checked={@state.disableHA} onChange={@handleDisableHA} />
-          </Col>
-          <Col xs={12}>
-            <Input type="checkbox" label={__ 'Editing DMM Cookie\'s Region Flag'} checked={@state.enableDMMcookie} onChange={@handleSetDMMcookie} />
-          </Col>
-        </Grid>
-      </div>
-    </form>
+          </Grid>
+        </div>
+        <div className="form-group">
+          <Divider text={__ 'Language'} />
+          <Grid>
+            <Col xs={6}>
+              <Input type="select" ref="language" value={@state.language} onChange={@handleSetLanguage}>
+                <option value="zh-CN">简体中文</option>
+                <option value="zh-TW">正體中文</option>
+                <option value="ja-JP">日本語</option>
+                <option value="en-US">English</option>
+              </Input>
+            </Col>
+          </Grid>
+        </div>
+        <div className="form-group">
+          <Divider text={__ 'Screenshot Folder'} />
+          <Grid>
+            <Col xs={12}>
+              <div className="folder-picker"
+                   onClick={@screenshotFolderPickerOnClick}
+                   onDrop={@screenshotFolderPickerOnDrop}
+                   onDragEnter={@onDrag}
+                   onDragOver={@onDrag}
+                   onDragLeave={@onDrag}>
+                {@state.screenshotPath}
+              </div>
+            </Col>
+          </Grid>
+        </div>
+        <div className="form-group">
+          <Divider text={__ 'Cache Folder'} />
+          <Grid>
+            <Col xs={12}>
+              <div className="folder-picker"
+                   onClick={@cacheFolderPickerOnClick}
+                   onDrop={@cacheFolderPickerOnDrop}
+                   onDragEnter={@onDrag}
+                   onDragOver={@onDrag}
+                   onDragLeave={@onDrag}>
+                {@state.cachePath}
+              </div>
+            </Col>
+          </Grid>
+        </div>
+        <div className="form-group">
+          <Divider text={__ 'Advanced'} />
+          <Grid>
+            <Col xs={12}>
+              <Input type="checkbox" label={__ 'Disable Hardware Acceleration'} checked={@state.disableHA} onChange={@handleDisableHA} />
+            </Col>
+            <Col xs={12}>
+              <Input type="checkbox" label={__ 'Editing DMM Cookie\'s Region Flag'} checked={@state.enableDMMcookie} onChange={@handleSetDMMcookie} />
+            </Col>
+          </Grid>
+        </div>
+      </form>
     </div>
 
 module.exports = PoiConfig
