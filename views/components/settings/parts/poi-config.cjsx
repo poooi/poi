@@ -25,7 +25,23 @@ if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
       language = 'en-US'
 
 SlotCheckConfig = React.createClass
+  preProcess: ->
+    # Remove this method after some future releases
+    old = config.get 'poi.mapstartcheck'
+    if old?
+      if old.ship?
+        config.set 'poi.mapStartCheck.ship.enable', old.ship
+      if old.freeShipSlot?
+        config.set 'poi.mapStartCheck.ship.minFreeSlots', old.freeShipSlot
+      if old.item?
+        config.set 'poi.mapStartCheck.item.enable', old.item
+      if old.freeItemSlot?
+        config.set 'poi.mapStartCheck.item.minFreeSlots', old.freeItemSlot
+      config.set 'poi.mapstartcheck'
+
   getInitialState: ->
+    @preProcess()
+
     @cfgEntry = "poi.mapStartCheck.#{@props.type}"
 
     showInput: false
