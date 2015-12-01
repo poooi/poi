@@ -15,8 +15,8 @@ _ = require 'underscore'
 semver = require 'semver'
 {execAsync} = Promise.promisifyAll require('child_process')
 {compile} = require 'coffee-react'
-through2 = require 'through2'
 asar = require 'asar'
+walk = require 'walk'
 
 {log} = require './lib/utils'
 
@@ -153,34 +153,29 @@ packageAsarAsync = (app_folder, app_asar) ->
 
 translateCoffeeAsync = (app_dir) ->
   log "Compiling #{app_dir}"
-  ignoreFolders = ['node_modules', 'assets', 'components']
-  excludeDirectoriesFilter = through2.obj (item, enc, next) ->
-    if item.stats.isDirectory() && path.basename(item.path) in ignoreFolders
-    else
-      @push item
-    next()
+  targetExts = ['.coffee', '.cjsx']
 
-  onlyCoffeescriptsFilter = through2.obj (item, enc, next) ->
-    if item.stats.isFile() && path.extname(item.path).toLowerCase() in ['.coffee', '.cjsx']
-      @push item
-    next()
-
+  options = 
+    followLinks: false
+    filters: ['node_modules', 'assets', path.join(__dirname, 'components')]
+ 
   new Promise (resolve) ->
     tasks = []
-    fs.walk app_dir
-    .pipe excludeDirectoriesFilter
-    .pipe onlyCoffeescriptsFilter
-    .on 'data', (item) ->
-      tasks.push (async ->
-        src_path = item.path
-        tgt_path = changeExt src_path, '.js'
-        src = yield fs.readFileAsync src_path, 'utf-8'
-        tgt = compile src
-        yield fs.writeFileAsync tgt_path, tgt
-        yield fs.removeAsync src_path
-        log "Compiled #{tgt_path}"
-        )()
+    walk.walk app_dir, options
+    .on 'file', (root, fileStats, next) ->
+      if path.extname(fileStats.name).toLowerCase() in targetExts
+        tasks.push (async ->
+          src_path = path.join root, fileStats.name
+          tgt_path = changeExt src_path, '.js'
+          src = yield fs.readFileAsync src_path, 'utf-8'
+          tgt = compile src
+          yield fs.writeFileAsync tgt_path, tgt
+          yield fs.removeAsync src_path
+          log "Compiled #{tgt_path}"
+          )()
+      next()
     .on 'end', async ->
+      log 'Compiling ended'
       resolve(yield Promise.all tasks)
 
 packageAppAsync = async (poi_version, app_dir, release_dir) ->
