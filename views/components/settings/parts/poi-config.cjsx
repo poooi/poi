@@ -84,14 +84,14 @@ SlotCheckConfig = React.createClass
     toggleBtnStyle = if @state.enable then 'success' else 'default'
     toggleBtnStyle = 'danger' if @state.showInput
     toggleBtnTxt = if @state.enable then 'ON' else 'OFF'
-    toggleBtnTxt = 'DISABLE' if @state.showInput
+    toggleBtnTxt = __ 'Disable' if @state.showInput
     toggleBtn = <Button onClick={@handleToggleInput} bsSize='xs'
       bsStyle={toggleBtnStyle} style={verticalAlign: 'text-bottom'}>
       {toggleBtnTxt}</Button>
     inputValid = @CheckValid @state.value
     submitBtn = <Button type='submit'
       bsStyle={if inputValid then 'success' else 'danger'}>
-      {if inputValid then 'SAVE' else 'DISABLE'}</Button>
+      {if inputValid then __ 'Save' else __ 'Disable'}</Button>
     <div style={margin: '5px 15px'}>
       <form onSubmit={@handleSubmit}>
         <div style={fontSize: '15px'}>
