@@ -78,6 +78,8 @@ SlotCheckConfig = React.createClass
     @setState
       showInput: false
       enable: false
+  selectText: ->
+    @textInput.getInputDOMNode().select()
   render: ->
     toggleBtnStyle = if @state.enable then 'success' else 'default'
     toggleBtnStyle = 'danger' if @state.showInput
@@ -95,13 +97,14 @@ SlotCheckConfig = React.createClass
         <div style={fontSize: '15px'}>
           {__ "#{@props.type} slots"} {toggleBtn}
         </div>
-        <Collapse in={@state.showInput}>
+        <Collapse in={@state.showInput} onEntered={@selectText}>
           <div>
             <Well>
               <Input type="text" bsSize='small'
                 bsStyle={if inputValid then 'success' else 'error'}
                 label={__ "Warn if the number of free #{@props.type} slots is less than"}
                 value={@state.value}
+                ref={(r) => this.textInput = r}
                 onChange={@handleChange}
                 buttonAfter={submitBtn} />
             </Well>
