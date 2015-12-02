@@ -5,7 +5,7 @@ i18n = require 'i18n'
 {__, __n} = i18n
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactDOM, ReactBootstrap} = window
-{Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
+{Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip, ProgressBar} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
 # i18n configure
