@@ -313,7 +313,10 @@ PoiMapReminder = React.createClass
   render: ->
     s = if !window.isDarkTheme then color: 'black' else color: 'white'
     <div>
-      <ProgressBar bsStyle="info" now={@state.mapHp[0]} max={@state.mapHp[1]}/>
+      {
+        if @state.mapHp[1] > 0
+          <ProgressBar bsStyle="info" now={@state.mapHp[0]} max={@state.mapHp[1]}/>
+      }
       <Alert bsStyle="default" style={s}>{@state.battling}</Alert>
     </div>
 
