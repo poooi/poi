@@ -285,27 +285,37 @@ PoiAlert = React.createClass
 PoiMapReminder = React.createClass
   getInitialState: ->
     battling: __ 'Not in sortie'
+    mapHp: [0, 0]
   mapRanks: ['', '丙', '乙', '甲']
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
+    maphp = [0, 0]
     switch reqPath
       when '/kcsapi/api_port/port'
         @setState
           battling: __ 'Not in sortie'
+          mapHp: maphp
       when '/kcsapi/api_req_map/start'
         txt = "#{__ 'Sortie area'}: #{body.api_maparea_id}-#{body.api_mapinfo_no}"
         mapId = "#{body.api_maparea_id}#{body.api_mapinfo_no}"
         if window._eventMapRanks?[mapId]?
           txt += " " + @mapRanks[window._eventMapRanks[mapId]]
+        if body.api_eventmap?.api_now_maphp? and body.api_eventmap?.api_max_maphp?
+          maphp = [body.api_eventmap.api_now_maphp, body.api_eventmap.api_max_maphp]
         @setState
           battling: txt
+          mapHp: maphp
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="info"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
+    s = if !window.isDarkTheme then color: 'black' else color: 'white'
+    <div>
+      <ProgressBar bsStyle="info" now={@state.mapHp[0]} max={@state.mapHp[1]}/>
+      <Alert bsStyle="info" style={s}>{@state.battling}</Alert>
+    </div>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'

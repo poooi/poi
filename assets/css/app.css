@@ -34,8 +34,14 @@ kan-game poi-info .alert {
   margin-bottom: 0px;
   height: 100%;
 }
-kan-game poi-map-reminder .alert {
+kan-game poi-map-reminder {
+  position: relative;
   width: 120px;
+}
+kan-game poi-map-reminder .progress {
+  position: absolute;
+  width: 100%;
+  height: 3px;
 }
 span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
