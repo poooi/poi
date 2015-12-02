@@ -286,7 +286,7 @@ PoiMapReminder = React.createClass
   getInitialState: ->
     battling: __ 'Not in sortie'
     mapHp: [0, 0]
-  mapRanks: ['', '丙', '乙', '甲']
+  mapRanks: ['', ' 丙', ' 乙', ' 甲']
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
@@ -297,14 +297,16 @@ PoiMapReminder = React.createClass
           battling: __ 'Not in sortie'
           mapHp: maphp
       when '/kcsapi/api_req_map/start'
-        txt = "#{__ 'Sortie area'}: #{body.api_maparea_id}-#{body.api_mapinfo_no}"
+        mapName = "#{body.api_maparea_id}-#{body.api_mapinfo_no}"
         mapId = "#{body.api_maparea_id}#{body.api_mapinfo_no}"
         if window._eventMapRanks?[mapId]?
-          txt += " " + @mapRanks[window._eventMapRanks[mapId]]
+          mapName += @mapRanks[window._eventMapRanks[mapId]]
         if body.api_eventmap?.api_now_maphp? and body.api_eventmap?.api_max_maphp?
           maphp = [body.api_eventmap.api_now_maphp, body.api_eventmap.api_max_maphp]
+          if 0 < maphp[0] < config.get("poi.mapStartCheck.mapHp.#{mapId}", 0) + 1
+            toggleModal '快回家！！', "你想推掉【 #{mapName} 】吗？！"
         @setState
-          battling: txt
+          battling: "#{__ 'Sortie area'}: #{mapName}"
           mapHp: maphp
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
