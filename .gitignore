@@ -38,3 +38,6 @@ node_modules
 /cache
 
 *.swp
+
+# poi build directory
+build/
