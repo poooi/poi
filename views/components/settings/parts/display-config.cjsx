@@ -122,7 +122,7 @@ DisplayConfig = React.createClass
     window.removeEventListener 'resize', @handleResize
     window.removeEventListener 'theme.change', @onThemeChange
   render: ->
-    <form id="poi-config">
+    <form>
       <div className="form-group">
         <Divider text={__("Layout")} />
         <Grid>
