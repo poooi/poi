@@ -123,7 +123,7 @@ PoiConfig = React.createClass
     repairNotify: config.get 'poi.notify.repair.enabled', 'true'
     moraleNotify: config.get 'poi.notify.morale.enabled', 'true'
     othersNotify: config.get 'poi.notify.others.enabled', 'true'
-    notifyVolume: config.get 'poi.notify.volume', 1.0
+    notifyVolume: config.get 'poi.notify.volume', 0.8
     enableDMMcookie: config.get 'poi.enableDMMcookie', false
     disableHA: config.get 'poi.disableHA', false
     screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
@@ -155,6 +155,8 @@ PoiConfig = React.createClass
     config.set('poi.notify.volume', volume)
     @setState
       notifyVolume: volume
+  handleEndChangeNotifyVolume: (e) ->
+    window.notify null
   handleSetNotifyIndividual: (type) ->
     switch type
       when 'construction'
@@ -263,7 +265,8 @@ PoiConfig = React.createClass
                 <OverlayTrigger placement='top' overlay={
                     <Tooltip id='poiconfig-volume'>{__ 'Volume'} <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
                   }>
-                  <Input type="range" ref="notifyVolume" onInput={@handleChangeNotifyVolume}
+                  <Input type="range" ref="notifyVolume"
+                    onChange={@handleChangeNotifyVolume} onMouseUp={@handleEndChangeNotifyVolume}
                     min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
                 </OverlayTrigger>
               </Col>
