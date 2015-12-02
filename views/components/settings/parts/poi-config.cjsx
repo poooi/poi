@@ -303,7 +303,7 @@ PoiConfig = React.createClass
         </div>
       </form>
       <div className="form-group" >
-        <Divider text={__ 'Slot check'} />
+        <Divider text={__ 'Slot Check'} />
         <SlotCheckConfig type="ship" />
         <SlotCheckConfig type="item" />
       </div>
