@@ -108,17 +108,16 @@ TeitokuPanel = React.createClass
           exp: body.api_member_exp
           nextExp: totalExp[body.api_member_lv] - body.api_member_exp
       when '/kcsapi/api_get_member/mapinfo'
-        freeShipSlot = config.get 'poi.mapstartcheck.freeShipSlot', 4
-        if config.get 'poi.mapstartcheck.ship'
-          if @state.maxChara - @state.shipCount < freeShipSlot
-            # toggleModal '船位检查', "船位剩余#{@state.maxChara - @state.shipCount}，出击注意！"
+        if config.get 'poi.mapStartCheck.ship.enable', false
+          minFreeShipSlots = config.get 'poi.mapStartCheck.ship.minFreeSlots', 4
+          if @state.maxChara - @state.shipCount < minFreeShipSlots
             setTimeout =>
               error __ "Attention! Ship Slot has only %s left.", "#{@state.maxChara - @state.shipCount}"
             , 1000
-        if config.get 'poi.mapstartcheck.item'
-          freeItemSlot = config.get 'poi.mapstartcheck.freeItemSlot', freeShipSlot * 3
+        if config.get 'poi.mapStartCheck.item.enable', false
+          minFreeItemSlots = config.get 'poi.mapStartCheck.item.minFreeSlots', 10
           slotsLeft = @state.maxSlotitem - @state.slotitemCount
-          if slotsLeft < freeItemSlot
+          if slotsLeft < minFreeItemSlots
             errMsg = __ "Attention! Item Slot is full."
             if slotsLeft > 0
               errMsg = __ "Attention! Only %d free item slot(s) left!", slotsLeft
