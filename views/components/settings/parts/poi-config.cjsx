@@ -94,7 +94,7 @@ SlotCheckConfig = React.createClass
       {if inputValid then __ 'Save' else __ 'Disable'}</Button>
     <div style={margin: '5px 15px'}>
       <form onSubmit={@handleSubmit}>
-        <div style={fontSize: '15px'}>
+        <div>
           {__ "#{@props.type} slots"} {toggleBtn}
         </div>
         <Collapse in={@state.showInput} onEntered={@selectText}>
