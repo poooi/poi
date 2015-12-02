@@ -124,9 +124,6 @@ PoiConfig = React.createClass
     moraleNotify: config.get 'poi.notify.morale.enabled', 'true'
     othersNotify: config.get 'poi.notify.others.enabled', 'true'
     notifyVolume: config.get 'poi.notify.volume', 1.0
-    mapStartCheckShip: config.get 'poi.mapstartcheck.ship', false
-    freeShipSlot: config.get 'poi.mapstartcheck.freeShipSlot', 4
-    mapStartCheckItem: config.get 'poi.mapstartcheck.item', true
     enableDMMcookie: config.get 'poi.enableDMMcookie', false
     disableHA: config.get 'poi.disableHA', false
     screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
@@ -185,21 +182,6 @@ PoiConfig = React.createClass
         config.set "poi.notify.others.enabled", !enabled
         @setState
           othersNotify: !enabled
-  handleSetMapStartCheckShip: ->
-    enabled = @state.mapStartCheckShip
-    config.set 'poi.mapstartcheck.ship', !enabled
-    @setState
-      mapStartCheckShip: !enabled
-  handleSetMapStartCheckFreeShipSlot: (e) ->
-    freeShipSlot = parseInt @refs.freeShipSlot.getValue()
-    config.set 'poi.mapstartcheck.freeShipSlot', freeShipSlot
-    @setState
-      freeShipSlot: freeShipSlot
-  handleSetMapStartCheckItem: ->
-    enabled = @state.mapStartCheckItem
-    config.set 'poi.mapstartcheck.item', !enabled
-    @setState
-      mapStartCheckItem: !enabled
   handleSetLanguage: (language) ->
     language = @refs.language.getValue()
     return if @state.language == language
