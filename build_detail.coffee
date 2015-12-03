@@ -5,7 +5,7 @@ os = require 'os'
 path = require 'path-extra'
 Promise = require 'bluebird'
 request = Promise.promisifyAll require 'request'
-requestAsync = Promise.promisify request
+requestAsync = Promise.promisify request, multiArgs: true
 fs = Promise.promisifyAll require 'fs-extra'
 gulp = require 'gulp'
 AdmZip = require 'adm-zip'
@@ -86,6 +86,8 @@ downloadAsync = async (url, dest_dir, filename, description) ->
     [response, body] = yield requestAsync
       url: url
       encoding: null
+    if response.statusCode != 200
+      throw "Error: Response status code #{response.statusCode} from #{url}"
     yield fs.writeFileAsync dest_path, body
     log "Successfully downloaded to #{dest_path}"
   dest_path
@@ -97,9 +99,10 @@ extractZip = (zip_file, dest_path, descript="") ->
   zip.extractAllTo dest_path, true
   log "Extracting #{descript} finished"
 
-downloadExtractZipAsync = async (url, download_dir, filename, dest_path, description) ->
+downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
+                                 description) ->
   while 1
-    try 
+    try
       zip_path = yield downloadAsync url, download_dir, filename, description
       extractZip zip_path, dest_path, description
     catch
