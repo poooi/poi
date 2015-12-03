@@ -257,6 +257,16 @@ PoiAlert = React.createClass
     messagewidth: 0
 
   updateAlert:  ->
+    # Update style
+    classes = @dom.classList
+    styleClass = "alert-#{@messageType}"
+    if @prevStyleClass != styleClass
+      if @prevStyleClass
+        classes.remove @prevStyleClass
+      classes.add styleClass
+      @prevStyleClass = styleClass
+      @dom.setAttribute 'class', classes
+
     # Must set innerHTML before getting offsetWidth
     document.getElementById('alert-area').innerHTML = @message
     if document.getElementById('alert-container').offsetWidth < document.getElementById('alert-area').offsetWidth
@@ -270,7 +280,6 @@ PoiAlert = React.createClass
     document.getElementById('alert-area').innerHTML = displayMessage
     @setState
       message: displayMessage
-      type: @messageType
       overflowAnim: if overflow then 'overflow-anim' else ''
       messageWidth: document.getElementById('alert-area').offsetWidth
 
@@ -300,7 +309,8 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert id='alert-container' bsStyle={@state.type} style={overflow: 'hidden'}>
+    <Alert id='alert-container' bsStyle={null} style={overflow: 'hidden'} 
+        ref={(ref) => @dom = ReactDOM.findDOMNode ref}>
       <div className='alert-position' style={width: @state.messageWidth}>
         <span id='alert-area' className={@state.overflowAnim}>
           {@state.message}
@@ -332,7 +342,10 @@ PoiMapReminder = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="info"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
+    <Alert className={"alert-default"}  bsStyle={null} 
+        style={if !window.isDarkTheme then color: 'black' else color: 'white'}>
+      {@state.battling}
+    </Alert>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
