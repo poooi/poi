@@ -124,7 +124,7 @@ ControlledTabArea = React.createClass
   render: ->
     <div className='poi-tabs-container'>
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key[0]}>
+        <Nav bsStyle="tabs" activeKey={@state.key[0]} justified>
           <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
             {mainview.displayName}
           </NavItem>
@@ -151,7 +151,7 @@ ControlledTabArea = React.createClass
         </div>
       </div>
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key[1]} onSelect={@handleSelectRight}>
+        <Nav bsStyle="tabs" activeKey={@state.key[1]} onSelect={@handleSelectRight} justified>
           <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
                        title={plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>}>
           {

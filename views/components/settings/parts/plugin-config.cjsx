@@ -70,12 +70,6 @@ npmConfig = {
   http_proxy: 'http://127.0.0.1:12450'
 }
 
-getAuthorLink = (author, link) ->
-  handleClickAuthorLink = (e) ->
-    shell.openExternal e.target.dataset.link
-    e.preventDefault()
-  <a onClick={handleClickAuthorLink} data-link={link}>{author}</a>
-
 PluginConfig = React.createClass
   getInitialState: ->
     status: status
@@ -88,6 +82,9 @@ PluginConfig = React.createClass
     installing: false
     mirror: config.get "packageManager.mirror", 0
     isUpdateAvailable: false
+  handleClickAuthorLink: (link, e) ->
+    shell.openExternal link
+    e.preventDefault()
   onSelectServer: (state) ->
     config.set "packageManager.mirror", state
     server = mirror[state].server
@@ -306,7 +303,7 @@ PluginConfig = React.createClass
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
               <span style={fontSize: '150%'}>{plugin.displayName} </span>
-              <span style={paddingTop: 2}> @{getAuthorLink(plugin.author, plugin.link)} </span>
+              <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
               <div style={paddingTop: 2}>
                 <Label bsStyle='primary'
                        className="#{if @state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
@@ -397,7 +394,7 @@ PluginConfig = React.createClass
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
               <span style={fontSize: '150%'}><FontAwesome name={installTargets[installTarget]['icon']} /> {installTargets[installTarget][window.language]} </span>
-              <span style={paddingTop: 2}> @{getAuthorLink(installTargets[installTarget]['author'], installTargets[installTarget]['link'])} </span>
+              <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, installTargets[installTarget]['link']}>{installTargets[installTarget]['author']}</span></span>
             </Col>
             <Col xs={12} style={marginTop: 4}>
               <Col xs={8}>{installTargets[installTarget]["des#{window.language}"]}</Col>

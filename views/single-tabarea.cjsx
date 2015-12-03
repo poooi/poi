@@ -149,7 +149,7 @@ ControlledTabArea = React.createClass
     window.removeEventListener 'view.main.visible', @handleMiniShipChange
   render: ->
     <div>
-      <Nav bsStyle="tabs" activeKey={@state.key}>
+      <Nav bsStyle="tabs" activeKey={@state.key} justified>
         <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
           {mainview.displayName}
         </NavItem>
