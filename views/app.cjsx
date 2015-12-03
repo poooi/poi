@@ -305,7 +305,15 @@ PoiMapReminder = React.createClass
           maphp = [body.api_eventmap.api_now_maphp, body.api_eventmap.api_max_maphp]
           if 0 < maphp[0] < config.get("poi.mapStartCheck.mapHp.#{mapId}", 0) + 1
             title = ['快回家！！', '快住手！！', '雅蠛蝶！！'][Math.floor((Math.random() * 3))]
-            toggleModal title, "你想推掉【 #{mapName} 】吗？！"
+            notify "#{title}你想推掉 #{mapName} 吗？！"
+            s = color: 'red', fontWeight: 'bold'
+            content = <h3>你想推掉 <span style={s}>{mapName}</span> 吗？！</h3>
+            footer = [
+              name: '嘿 嘿 嘿 我就是要推'
+              func: window.iWannaDefeatMap.bind undefined, body.api_maparea_id, body.api_mapinfo_no
+              style: 'danger'
+            ]
+            toggleModal title, content, footer
         @setState
           battling: "#{__ 'Sortie area'}: #{mapName}"
           mapHp: maphp
