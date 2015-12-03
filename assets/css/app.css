@@ -60,22 +60,22 @@ poi-app .container {
 table {
   table-layout: fixed;
 }
-poi-app poi-nav-tabs nav ul {
+poi-app poi-nav-tabs .nav {
   display: flex;
 }
-poi-app poi-nav-tabs nav ul li {
+poi-app poi-nav-tabs .nav li {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-poi-app poi-nav-tabs nav ul li a {
+poi-app poi-nav-tabs .nav  li a {
   text-align: center;
 }
-poi-app poi-nav-tabs nav ul.dropdown-menu {
+poi-app poi-nav-tabs .nav .dropdown-menu {
   min-width: 100%;
 }
-poi-app poi-nav-tabs nav li.dropdown {
+poi-app poi-nav-tabs .nav .dropdown {
   overflow: inherit;
 }
 poi-info {

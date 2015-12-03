@@ -71,7 +71,6 @@ adjustSize = ->
     """poi-nav poi-nav-tabs .nav .dropdown-menu {
       max-height: #{$('#MainView').style.height};
       overflow: auto;
-      min-width: 0;
     }
     """
 

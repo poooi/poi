@@ -151,7 +151,7 @@ ControlledTabArea = React.createClass
         </div>
       </div>
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key[1]} onSelect={@handleSelectRight} justified>
+        <Nav bsStyle="tabs" activeKey={@state.key[1]} onSelect={@handleSelectRight}>
           <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
                        title={plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>}>
           {
