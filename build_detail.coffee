@@ -128,7 +128,7 @@ changeExt = (src_path, ext) ->
 # *** METHODS ***
 npmInstallAsync = async (npm_path, tgt_dir) ->
   # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
-  command = "'#{npm_path}' install --production"
+  command = "#{npm_path} install --production"
   log "Installing npm for #{tgt_dir}"
   cwd = process.cwd()
   fs.ensureDirSync tgt_dir
@@ -138,7 +138,7 @@ npmInstallAsync = async (npm_path, tgt_dir) ->
   log "Finished installing npm for #{tgt_dir}"
 
 bowerInstallAsync = async (bower_path, tgt_dir) ->
-  command = "'#{bower_path}' install"
+  command = "#{bower_path} install"
   log command
   cwd = process.cwd()
   fs.ensureDirSync tgt_dir
@@ -271,7 +271,7 @@ module.exports =
     theme_root = path.join __dirname, 'assets', 'themes'
     flash_dir = path.join __dirname, 'PepperFlash'
     npm_path = 'npm'
-    bower_path = path.join(__dirname, 'node_modules', 'bower', 'bin', 'bower')
+    bower_path = path.join(__dirname, 'node_modules', '.bin', 'bower')
 
     download_theme = downloadThemesAsync theme_root, download_dir
     install_flash = installFlashAsync os.platform(), os.arch(), download_dir,
@@ -295,7 +295,7 @@ module.exports =
     theme_root = path.join stage1_app, 'assets', 'themes'
 
     npm_path = 'npm'
-    bower_path = path.join(__dirname, 'node_modules', 'bower', 'bin', 'bower')
+    bower_path = path.join(__dirname, 'node_modules', '.bin', 'bower')
 
     try
       yield Promise.join \

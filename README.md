@@ -38,7 +38,7 @@ China mainland mirror: [here](http://0u0.moe/poi).
 First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/electron) and [Node.js](https://nodejs.org).
 
 ```bash
-git clone --recursive https://github.com/poooi/poi && cd poi
+git clone https://github.com/poooi/poi && cd poi
 npm i
 ./node_modules/.bin/gulp install
 cp default-config.cson config.cson
