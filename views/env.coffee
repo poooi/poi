@@ -23,6 +23,7 @@ window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
 window.jQuery = require path.join(ROOT, 'components/jquery/dist/jquery')
 window.React = require 'react'
+window.ReactDOM = require 'react-dom'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
 

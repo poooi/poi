@@ -26,7 +26,7 @@ module.exports =
     shouldComponentUpdate: (nextProps, nextState)->
       false
     render: ->
-      <Tabs bsStyle="pills" defaultActiveKey={0} animation={false}>
+      <Tabs bsStyle="pills" defaultActiveKey={0} animation={false} justified>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'settings.css')} />
         <Tab key={0} eventKey={0} title={__ "Common"} id='poi-config' className='poi-settings-Tab'>
           <PoiConfig />

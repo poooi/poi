@@ -4,7 +4,7 @@ glob = require 'glob'
 i18n = require 'i18n'
 {__, __n} = i18n
 {showItemInFolder, openItem, openExternal} = require 'shell'
-{ROOT, EXROOT, _, $, $$, React, ReactBootstrap} = window
+{ROOT, EXROOT, _, $, $$, React, ReactDOM, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
@@ -252,7 +252,7 @@ ControlledTabArea =
 PoiAlert = React.createClass
   getInitialState: ->
     message: __ 'Waiting for response...'
-    type: 'default'
+    type: 'info'
     overflow: false
     messagewidth: 0
   handleAlert: (e) ->
@@ -273,7 +273,7 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert id='alert-container' bsStyle={@state.type} style={overflow: 'hidden'}>
+    <Alert id='alert-container' bsStyle={if @state.type is 'default' then 'info' else @state.type} style={overflow: 'hidden'}>
       <div className='alert-position' style={width: @state.messagewidth}>
         <span id='alert-area' className={if @state.overflow then 'overflow-anim' else ''}>
           {@state.message}
@@ -305,7 +305,7 @@ PoiMapReminder = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="default"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
+    <Alert bsStyle="info"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
@@ -457,12 +457,12 @@ CustomCssInjector = React.createClass
     fs.ensureFileSync cssPath
     <link rel='stylesheet' id='custom-css' href={cssPath} />
 
-React.render <PoiAlert id='poi-alert' />, $('poi-alert')
-React.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
-React.render <PoiControl />, $('poi-control')
-React.render <ModalTrigger />, $('poi-modal-trigger')
-React.render <ControlledTabArea />, $('poi-nav-tabs')
-React.render <CustomCssInjector />, $('poi-css-injector')
+ReactDOM.render <PoiAlert id='poi-alert' />, $('poi-alert')
+ReactDOM.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
+ReactDOM.render <PoiControl />, $('poi-control')
+ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
+ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
+ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
 
 # Readme contents
 dontShowAgain = ->
