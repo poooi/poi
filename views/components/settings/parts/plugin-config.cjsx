@@ -200,15 +200,21 @@ PluginConfig = React.createClass
       @setState {installStatus}
   solveUpdate: (updateData, isfirst) ->
     latest = @state.latest
+    updateCount = 0
     for updateObject, index in updateData
-      latest[updateObject[1]] = updateObject[4]
-    isUpdateAvailable = updateData.length > 0
-    if isfirst && updateData.length > 0
+      if semver.lt(latest[updateObject[1]], updateObject[4])
+        latest[updateObject[1]] = updateObject[4]
+        updateCount++
+    isUpdateAvailable = updateCount > 0
+    if isfirst && updateCount > 0
       title = __ 'Plugin update'
       outdatedPlugins = []
       for plugin, index in plugins
         if semver.lt(plugin.version, latest[plugin.packageName])
-          displayItems = plugin.displayName.props.children || plugin.displayName
+          if plugin.displayName.props?.children?
+            displayItems = plugin.displayName.props.children
+          else
+            displayItems = plugin.displayName
           for child in displayItems
             if typeof child is "string"
               outdatedPlugins.push child
