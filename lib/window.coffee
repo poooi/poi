@@ -1,5 +1,5 @@
 _ = require 'underscore'
-BrowserWindow = require 'browser-window'
+{BrowserWindow} = require 'electron'
 global.windows = windows = []
 forceClose = false
 module.exports =

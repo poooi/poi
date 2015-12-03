@@ -1,5 +1,4 @@
-BrowserWindow = require 'browser-window'
-globalShortcut = require 'global-shortcut'
+{globalShortcut, BrowserWindow} = require 'electron'
 config = require './config'
 # Window state before hide
 state = []
