@@ -87,7 +87,7 @@ downloadAsync = async (url, dest_dir, filename, description) ->
       url: url
       encoding: null
     if response.statusCode != 200
-      throw "Error: Response status code #{response.statusCode} from #{url}"
+      throw new Error("Response status code #{response.statusCode}")
     yield fs.writeFileAsync dest_path, body
     log "Successfully downloaded to #{dest_path}"
   dest_path
@@ -105,8 +105,8 @@ downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
     try
       zip_path = yield downloadAsync url, download_dir, filename, description
       extractZip zip_path, dest_path, description
-    catch
-      log "Downloading #{zip_path} failed, retrying"
+    catch e
+      log "Downloading failed, retrying #{url}, reason: #{e}"
       try
         yield fs.removeAsync zip_path
       catch
