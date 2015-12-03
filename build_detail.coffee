@@ -97,16 +97,29 @@ extractZip = (zip_file, dest_path, descript="") ->
   zip.extractAllTo dest_path, true
   log "Extracting #{descript} finished"
 
+downloadExtractZipAsync = async (url, download_dir, filename, dest_path, description) ->
+  while 1
+    try 
+      zip_path = yield downloadAsync url, download_dir, filename, description
+      extractZip zip_path, dest_path, description
+    catch
+      log "Downloading #{zip_path} failed, retrying"
+      try
+        yield fs.removeAsync zip_path
+      catch
+      continue
+    break
+
 downloadThemesAsync = (theme_root, download_dir) ->
   Promise.all (for theme, theme_url of theme_list
     downloadAsync theme_url, path.join(theme_root, theme, 'css'),
       "#{theme}.css", "#{theme} theme")
 
-installFlashAsync = async (platform, arch, download_dir, flash_dir) ->
+installFlashAsync = (platform, arch, download_dir, flash_dir) ->
   flash_url = get_flash_url platform, arch
-  flash_path = yield downloadAsync flash_url, download_dir,
-    "flash-#{platform}-#{arch}.zip", 'flash plugin'
-  extractZip flash_path, flash_dir, 'flash plugin'
+  downloadExtractZipAsync flash_url, download_dir,
+      "flash-#{platform}-#{arch}.zip",
+      flash_dir, 'flash plugin'
 
 copyNoOverwriteAsync = async (src, tgt, options) ->
   try
@@ -215,11 +228,8 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
   install_flash = installFlashAsync platform, arch, download_dir, flash_dir
 
   electron_url = get_electron_url platform, arch, electron_version
-  install_electron = (async ->
-    electron_path = yield downloadAsync electron_url, download_dir, '',
-      'electron'
-    extractZip electron_path, stage3_electron, 'electron'
-  )()
+  install_electron = downloadExtractZipAsync electron_url, download_dir, '',
+      stage3_electron, 'electron'
 
   yield Promise.join copy_app, install_flash, install_electron
 
@@ -306,7 +316,7 @@ module.exports =
     fs.ensureDirSync stage2_app
 
     # Check npm version
-    npm_version = (yield execAsync "'#{npm_path}' --version")[0].trim()
+    npm_version = (yield execAsync "'#{npm_path}' --version").trim()
     log "You are using npm v#{npm_version}"
     if semver.major(npm_version) == 2
       log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
