@@ -304,7 +304,8 @@ PoiMapReminder = React.createClass
         if body.api_eventmap?.api_now_maphp? and body.api_eventmap?.api_max_maphp?
           maphp = [body.api_eventmap.api_now_maphp, body.api_eventmap.api_max_maphp]
           if 0 < maphp[0] < config.get("poi.mapStartCheck.mapHp.#{mapId}", 0) + 1
-            toggleModal '快回家！！', "你想推掉【 #{mapName} 】吗？！"
+            title = ['快回家！！', '快住手！！', '雅蠛蝶！！'][Math.floor((Math.random() * 3))]
+            toggleModal title, "你想推掉【 #{mapName} 】吗？！"
         @setState
           battling: "#{__ 'Sortie area'}: #{mapName}"
           mapHp: maphp
@@ -321,6 +322,10 @@ PoiMapReminder = React.createClass
       }
       <Alert bsStyle="info" style={s}>{@state.battling}</Alert>
     </div>
+window.dontDefeatMap = (areaNo, mapNo, minHp) ->
+  config.set "poi.mapStartCheck.mapHp.#{areaNo}#{mapNo}", minHp
+window.iWannaDefeatMap = (areaNo, mapNo) ->
+  config.set "poi.mapStartCheck.mapHp.#{areaNo}#{mapNo}"
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
