@@ -205,13 +205,14 @@ PluginConfig = React.createClass
     isUpdateAvailable = updateData.length > 0
     if isfirst && updateData.length > 0
       title = __ 'Plugin update'
-      content = ""
+      outdatedPlugins = []
       for plugin, index in plugins
         if semver.lt(plugin.version, latest[plugin.packageName])
-          for child in plugin.displayName.props.children
+          displayItems = plugin.displayName.props.children || plugin.displayName
+          for child in displayItems
             if typeof child is "string"
-              content = "#{content} #{child}"
-      content = "#{content} #{__ "have newer version. Please update your plugins."}"
+              outdatedPlugins.push child
+      content = "#{outdatedPlugins.join(' ')} #{__ "have newer version. Please update your plugins."}"
       notify content,
         type: 'plugin update'
         title: title
