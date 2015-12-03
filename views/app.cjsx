@@ -5,7 +5,7 @@ i18n = require 'i18n'
 {__, __n} = i18n
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactDOM, ReactBootstrap} = window
-{Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
+{Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip, ProgressBar} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
 # i18n configure
@@ -285,27 +285,55 @@ PoiAlert = React.createClass
 PoiMapReminder = React.createClass
   getInitialState: ->
     battling: __ 'Not in sortie'
-  mapRanks: ['', '丙', '乙', '甲']
+    mapHp: [0, 0]
+  mapRanks: ['', ' 丙', ' 乙', ' 甲']
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
+    maphp = [0, 0]
     switch reqPath
       when '/kcsapi/api_port/port'
         @setState
           battling: __ 'Not in sortie'
+          mapHp: maphp
       when '/kcsapi/api_req_map/start'
-        txt = "#{__ 'Sortie area'}: #{body.api_maparea_id}-#{body.api_mapinfo_no}"
+        mapName = "#{body.api_maparea_id}-#{body.api_mapinfo_no}"
         mapId = "#{body.api_maparea_id}#{body.api_mapinfo_no}"
         if window._eventMapRanks?[mapId]?
-          txt += " " + @mapRanks[window._eventMapRanks[mapId]]
+          mapName += @mapRanks[window._eventMapRanks[mapId]]
+        if body.api_eventmap?.api_now_maphp? and body.api_eventmap?.api_max_maphp?
+          maphp = [body.api_eventmap.api_now_maphp, body.api_eventmap.api_max_maphp]
+          if 0 < maphp[0] < config.get("poi.mapStartCheck.mapHp.#{mapId}", 0) + 1
+            title = ['快回家！！', '快住手！！', '雅蠛蝶！！'][Math.floor((Math.random() * 3))]
+            notify "#{title}你想推掉 #{mapName} 吗？！"
+            s = color: 'red', fontWeight: 'bold'
+            content = <h3>你想推掉 <span style={s}>{mapName}</span> 吗？！</h3>
+            footer = [
+              name: '嘿 嘿 嘿 我就是要推'
+              func: window.iWannaDefeatMap.bind undefined, body.api_maparea_id, body.api_mapinfo_no
+              style: 'danger'
+            ]
+            toggleModal title, content, footer
         @setState
-          battling: txt
+          battling: "#{__ 'Sortie area'}: #{mapName}"
+          mapHp: maphp
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="info"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
+    s = if !window.isDarkTheme then color: 'black' else color: 'white'
+    <div>
+      {
+        if @state.mapHp[1] > 0
+          <ProgressBar bsStyle="info" now={@state.mapHp[0]} max={@state.mapHp[1]}/>
+      }
+      <Alert bsStyle="info" style={s}>{@state.battling}</Alert>
+    </div>
+window.dontDefeatMap = (areaNo, mapNo, minHp) ->
+  config.set "poi.mapStartCheck.mapHp.#{areaNo}#{mapNo}", minHp
+window.iWannaDefeatMap = (areaNo, mapNo) ->
+  config.set "poi.mapStartCheck.mapHp.#{areaNo}#{mapNo}"
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
