@@ -252,7 +252,7 @@ ControlledTabArea =
 PoiAlert = React.createClass
   getInitialState: ->
     message: __ 'Waiting for response...'
-    type: 'info'
+    type: 'default'
     overflow: false
     messagewidth: 0
   handleAlert: (e) ->
@@ -273,13 +273,13 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert id='alert-container' bsStyle={if @state.type is 'default' then 'info' else @state.type} style={overflow: 'hidden'}>
+    <div id='alert-container' className="alert alert-#{@state.type}" style={overflow: 'hidden'}>
       <div className='alert-position' style={width: @state.messagewidth}>
         <span id='alert-area' className={if @state.overflow then 'overflow-anim' else ''}>
           {@state.message}
         </span>
       </div>
-    </Alert>
+    </div>
 
 # Map Reminder
 PoiMapReminder = React.createClass
@@ -305,7 +305,7 @@ PoiMapReminder = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert bsStyle="info"  style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</Alert>
+    <div className="alert" style={if !window.isDarkTheme then color: 'black' else color: 'white'}>{@state.battling}</div>
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
