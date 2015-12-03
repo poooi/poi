@@ -45,38 +45,29 @@ window.resolveTime = (seconds) ->
   minutes = "0#{minutes}" if minutes < 10
   seconds = "0#{seconds}" if seconds < 10
   "#{hours}:#{minutes}:#{seconds}"
-window.log = (msg) ->
+
+poiAlert = (details) ->
   event = new CustomEvent 'poi.alert',
     bubbles: true
     cancelable: true
-    detail:
-      message: msg
-      type: 'default'
+    detail: details
   window.dispatchEvent event
-window.success = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'success'
-  window.dispatchEvent event
-window.warn = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'warning'
-  window.dispatchEvent event
-window.error = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'danger'
-  window.dispatchEvent event
+window.log = (msg, options) -> poiAlert window.jQuery.extend({
+  message: msg,
+  type: 'default',
+  priority: 0}, options)
+window.success = (msg, options) -> poiAlert window.jQuery.extend({
+  message: msg,
+  type: 'success',
+  priority: 1}, options)
+window.warn = (msg, options) -> poiAlert window.jQuery.extend({
+  message: msg,
+  type: 'warning',
+  priority: 2}, options)
+window.error = (msg, options) -> poiAlert window.jQuery.extend({
+  message: msg,
+  type: 'warning',
+  priority: 4}, options)
 
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
