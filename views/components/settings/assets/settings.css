@@ -78,6 +78,10 @@
 #SettingsView .plugin-control-button {
   padding: 5px 7px;
 }
+#SettingsView #mirror-select {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 #SettingsView button .fa {
   margin-right: 2px;
 }
