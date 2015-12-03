@@ -19,7 +19,7 @@ adjustSize = ->
   webview = $('kan-game webview')
   url = null
   try
-    url = webview?.getUrl?()
+    url = webview?.getURL?()
   catch e
     url = null
   # return if webview.isLoading()

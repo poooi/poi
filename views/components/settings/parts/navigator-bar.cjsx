@@ -31,7 +31,7 @@ NavigatorBar = React.createClass
   handleStopLoading: ->
     @setState
       navigateStatus: 0
-      navigateUrl: webview.getUrl()
+      navigateUrl: webview.getURL()
   handleFailLoad: ->
     @setState
       navigateStatus: -2
