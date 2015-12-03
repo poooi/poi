@@ -305,7 +305,7 @@ PoiAlert = React.createClass
           {@state.message}
         </span>
       </div>
-    </div>
+    </Alert>
 
 # Map Reminder
 PoiMapReminder = React.createClass
