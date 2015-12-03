@@ -257,16 +257,6 @@ PoiAlert = React.createClass
     messagewidth: 0
 
   updateAlert:  ->
-    # Update style
-    classes = @dom.classList
-    styleClass = "alert-#{@messageType}"
-    if @prevStyleClass != styleClass
-      if @prevStyleClass
-        classes.remove @prevStyleClass
-      classes.add styleClass
-      @prevStyleClass = styleClass
-      @dom.setAttribute 'class', classes
-
     # Must set innerHTML before getting offsetWidth
     document.getElementById('alert-area').innerHTML = @message
     if document.getElementById('alert-container').offsetWidth < document.getElementById('alert-area').offsetWidth
@@ -309,8 +299,7 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert id='alert-container' bsStyle={null} style={overflow: 'hidden'} 
-        ref={(ref) => @dom = ReactDOM.findDOMNode ref}>
+    <Alert id='alert-container' bsStyle={null} style={overflow: 'hidden'} className="alert-#{@messageType}">
       <div className='alert-position' style={width: @state.messageWidth}>
         <span id='alert-area' className={@state.overflowAnim}>
           {@state.message}
