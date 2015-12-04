@@ -49,7 +49,15 @@
   padding-right: 0px;
 }
 #SettingsView .notif-button {
-  width: 20%;
+  width: 33%;
+}
+#SettingsView .notif-input {
+  width: 80%;
+  margin-left: 10px;
+}
+#SettingsView .notif-row {
+  display: flex;
+  padding-top: 10px;
 }
 #SettingsView .folder-picker {
   width: 100%;
