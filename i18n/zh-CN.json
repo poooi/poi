@@ -155,5 +155,7 @@
   "Removing": "删除中",
   "Removed": "已删除",
   "Manually install": "手动安装",
-  "Install plugins in settings": "在设置中安装插件"
+  "Install plugins in settings": "在设置中安装插件",
+  "Plugin error": "插件错误",
+  "failed to load. Maybe your version of poi is too low.": "的加载失败了。可能是因为你的 poi 版本太旧。"
 }

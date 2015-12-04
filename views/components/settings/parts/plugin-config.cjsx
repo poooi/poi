@@ -17,6 +17,26 @@ packages = fs.readJsonSync path.join ROOT, 'plugin.json'
 mirror = fs.readJsonSync path.join ROOT, 'mirror.json'
 
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
+fails = []
+for plugin, index in plugins
+  try
+    test = require plugin
+  catch error
+    fail = path.basename plugin
+    fails.push fail
+if fails.length > 0
+  title = __ 'Plugin error'
+  content = "#{fails.join(' ')} #{__ "failed to load. Maybe your version of poi is too low."}"
+  notify content,
+    type: 'plugin error'
+    title: title
+    icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+    audio: "file://#{ROOT}/assets/audio/fail.mp3"
+plugins = plugins.filter (filePath) ->
+  if path.basename filePath in fails
+    return false
+  else
+    return true
 plugins = plugins.map (filePath) ->
   plugin = require filePath
   packageData = {}

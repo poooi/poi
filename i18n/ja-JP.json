@@ -155,5 +155,7 @@
   "Removing": "削除中",
   "Removed": "削除済",
   "Manually install": "手動インストール",
-  "Install plugins in settings": "設定にツールをインストールします"
+  "Install plugins in settings": "設定にツールをインストールします",
+  "Plugin error": "ツールエラー",
+  "failed to load. Maybe your version of poi is too low.": "のロードに失敗しました。"
 }
