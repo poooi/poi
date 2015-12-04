@@ -6,7 +6,7 @@ os = require 'os'
 semver = require 'semver'
 
 # Environments
-window.remote = require 'remote'
+window.remote = require('electron').remote
 window.ROOT = path.join(__dirname, '..')
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'

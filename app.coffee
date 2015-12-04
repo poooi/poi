@@ -1,5 +1,4 @@
-app = require 'app'
-BrowserWindow = require 'browser-window'
+{app, BrowserWindow} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
 
@@ -83,7 +82,7 @@ app.on 'window-all-closed', ->
 app.on 'ready', ->
   if process.platform != 'darwin'
     shortcut.register()
-  screen = require 'screen'
+  {screen} = require 'electron'
   screenSize = screen.getPrimaryDisplay().workAreaSize
   global.mainWindow = mainWindow = new BrowserWindow
     x: config.get 'poi.window.x', 0

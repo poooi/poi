@@ -1,6 +1,6 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
-remote = require 'remote'
+{remote} = require 'electron'
 i18n = require 'i18n'
 {__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window

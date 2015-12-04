@@ -233,7 +233,7 @@ if process.platform == 'darwin'
       click: (item, focusedWindow) ->
         if th isnt window.theme
           window.applyTheme th
-  Menu = remote.require('menu')
+  {Menu} = remote.require('electron')
   appMenu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(appMenu)
   # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...

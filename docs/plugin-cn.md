@@ -161,7 +161,7 @@ window.theme // 目前使用的主题
 
 index.cjsx
 ```coffeescript
-remote = require 'remote'
+{remote} = require 'electron'
 windowManager = remote.require './lib/window'
 
 window.pluginWindow = null // 保留一个全局引用防止 pluginWindow 被 gc
@@ -189,7 +189,7 @@ index.html
 
 env-loader.js
 ```javascript
-window.remote = require('remote');
+window.remote = require('electron').remote;
 window.ROOT = remote.getGlobal('ROOT');
 window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH');
 window.POI_VERSION = remote.getGlobal('POI_VERSION');
