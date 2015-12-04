@@ -18,22 +18,27 @@ mirror = fs.readJsonSync path.join ROOT, 'mirror.json'
 
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 fails = []
+failsName = []
 for plugin, index in plugins
   try
     test = require plugin
   catch error
     fail = path.basename plugin
-    fails.push fail
+    fails.push plugin
+    if packages[fail]?
+      failsName.push packages[fail][window.language]
+    else
+      failsName.push fail
 if fails.length > 0
   title = __ 'Plugin error'
-  content = "#{fails.join(' ')} #{__ "failed to load. Maybe your version of poi is too low."}"
+  content = "#{failsName.join(' ')} #{__ "failed to load. Maybe your version of poi is too low."}"
   notify content,
     type: 'plugin error'
     title: title
     icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
     audio: "file://#{ROOT}/assets/audio/fail.mp3"
 plugins = plugins.filter (filePath) ->
-  if path.basename filePath in fails
+  if filePath in fails
     return false
   else
     return true
@@ -222,7 +227,7 @@ PluginConfig = React.createClass
     latest = @state.latest
     updateCount = 0
     for updateObject, index in updateData
-      if semver.lt(latest[updateObject[1]], updateObject[4])
+      if latest[updateObject[1]]? && semver.lt(latest[updateObject[1]], updateObject[4])
         latest[updateObject[1]] = updateObject[4]
         updateCount++
     isUpdateAvailable = updateCount > 0
