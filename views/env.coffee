@@ -69,6 +69,8 @@ window.error = (msg, options) -> poiAlert Object.assign({
   type: 'warning',
   priority: 4}, options)
 
+## window.notify
+# msg=null: Sound-only notification.
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
 if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
@@ -77,7 +79,7 @@ window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
   audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
-  volume = config.get('poi.notify.volume', 1.0)
+  volume = config.get('poi.notify.volume', 0.8)
   title = 'poi'
   icon = NOTIFY_DEFAULT_ICON
   switch options?.type
@@ -100,25 +102,26 @@ window.notify = (msg, options) ->
     title = options.title if options.title
     icon = options.icon if options.icon
     audio = options.audio if options.audio
+
   # Send desktop notification
-  return unless enabled
-  if NOTIFY_NOTIFICATION_API
-    new Notification title,
-      icon: "file://#{icon}"
-      body: msg
-  else
-    notifier.notify
-      title: title
-      icon: icon
-      message: msg
-      sound: false
-  # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
-  return if volume < 0.00001
-  sound = new Audio(audio)
-  sound.volume = volume
-  sound.play()
+  return unless enabled
+  if msg?
+    if NOTIFY_NOTIFICATION_API
+      new Notification title,
+        icon: "file://#{icon}"
+        body: msg
+    else
+      notifier.notify
+        title: title
+        icon: icon
+        message: msg
+        sound: false
+  if volume > 0.0001
+    sound = new Audio(audio)
+    sound.volume = volume
+    sound.play()
 
 modals = []
 window.modalLocked = false
