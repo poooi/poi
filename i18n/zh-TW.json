@@ -157,5 +157,5 @@
   "Manually install": "手動安裝",
   "Install plugins in settings": "在設置中安裝插件",
   "Plugin error": "插件錯誤",
-  "failed to load. Maybe your version of poi is too low.": "加載失敗。可能是因爲你的 poi 版本過於陳舊。"
+  "failed to load. Maybe there are some compatibility problems.": "加載失敗。可能存在兼容性問題。"
 }

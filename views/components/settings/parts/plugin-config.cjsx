@@ -31,7 +31,7 @@ for plugin, index in plugins
       failsName.push fail
 if fails.length > 0
   title = __ 'Plugin error'
-  content = "#{failsName.join(' ')} #{__ "failed to load. Maybe your version of poi is too low."}"
+  content = "#{failsName.join(' ')} #{__ "failed to load. Maybe there are some compatibility problems."}"
   notify content,
     type: 'plugin error'
     title: title
