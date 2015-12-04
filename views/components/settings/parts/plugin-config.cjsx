@@ -238,7 +238,7 @@ PluginConfig = React.createClass
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
   componentDidMount: ->
-    @checkUpdate(@solveUpdate, true)
+    @checkUpdate(@solveUpdate, true) if config.get('poi.update.plugin', true)
   render: ->
     <form>
       <Divider text={__ 'Plugins'} />
