@@ -325,10 +325,10 @@ PoiConfig = React.createClass
                   <div>
                     <Well>
                       <Row>
-                        <Col xs={8} className='notif-container'>
-                          <div className='notif-input-desc'>{__ 'Notify when expedition returns in'}</div>
+                        <Col xs={9} className='notif-container'>
+                          <div className='notif-input-desc'>{__ 'Expedition'}: {__ 'Notify when expedition returns in'}</div>
                         </Col>
-                        <Col xs={4} className='notif-container'>
+                        <Col xs={3} className='notif-container'>
                           <Input type="number" ref="expeditionValue" disabled={!@state.expeditionNotify}
                                  value={@state.expeditionValue} onChange={@handleSetExpedition}
                                  bsSize='small'
@@ -337,10 +337,10 @@ PoiConfig = React.createClass
                         </Col>
                       </Row>
                       <Row>
-                        <Col xs={8} className='notif-container'>
-                          <div className='notif-input-desc'>{__ 'Notify when morale is greater than'}</div>
+                        <Col xs={9} className='notif-container'>
+                          <div className='notif-input-desc'>{__ 'Morale'}: {__ 'Notify when morale is greater than'}</div>
                         </Col>
-                        <Col xs={4} className='notif-container'>
+                        <Col xs={3} className='notif-container'>
                           <Input type="number" ref="moraleValue" disabled={!@state.moraleNotify}
                                  value={@state.moraleValue} onChange={@handleSetMorale}
                                  bsSize='small'
