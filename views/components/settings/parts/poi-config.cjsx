@@ -128,6 +128,8 @@ PoiConfig = React.createClass
     disableHA: config.get 'poi.disableHA', false
     screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
     cachePath: config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
+    moraleValue: config.get 'poi.notify.morale.value', 49
+    expeditionValue: config.get 'poi.notify.expedition.value', 60
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
@@ -230,6 +232,18 @@ PoiConfig = React.createClass
     config.set 'poi.cachePath', pathname
     @setState
       cachePath: pathname
+  handleSetMorale: (e) ->
+    @setState
+      moraleValue: e.target.value
+    value = parseInt(e.target.value)
+    return if isNaN(value) || value < 0
+    config.set 'poi.notify.morale.value', value
+  handleSetExpedition: (e) ->
+    @setState
+      expeditionValue: e.target.value
+    value = parseInt(e.target.value)
+    return if isNaN(value) || value < 0
+    config.set 'poi.notify.expedition.value', value
   onDrag: (e) ->
     e.preventDefault()
   synchronize: (callback) ->
@@ -279,20 +293,10 @@ PoiConfig = React.createClass
                           className='notif-button'>
                     {__ 'Construction'}
                   </Button>
-                  <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
-                          onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
-                          className='notif-button'>
-                    {__ 'Expedition'}
-                  </Button>
                   <Button bsStyle={if @state.repairNotify then 'success' else 'danger'}
                           onClick={@handleSetNotifyIndividual.bind this, 'repair'}
                           className='notif-button'>
                     {__ 'Docking'}
-                  </Button>
-                  <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
-                          onClick={@handleSetNotifyIndividual.bind this, 'morale'}
-                          className='notif-button'>
-                    {__ 'Morale'}
                   </Button>
                   <Button bsStyle={if @state.othersNotify then 'success' else 'danger'}
                           onClick={@handleSetNotifyIndividual.bind this, 'others'}
@@ -300,6 +304,28 @@ PoiConfig = React.createClass
                     {__ 'Others'}
                   </Button>
                 </ButtonGroup>
+              </Col>
+            </div>
+            <div>
+              <Col xs={6} className='notif-row'>
+                <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'morale'}
+                        style={width: '100%'}>
+                  {__ 'Morale'}
+                </Button>
+                <Input type="number" ref="moraleValue" disabled={!@state.moraleNotify}
+                       value={@state.moraleValue} onChange={@handleSetMorale}
+                       className='notif-input' />
+              </Col>
+              <Col xs={6} className='notif-row'>
+                <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
+                        onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
+                        style={width: '400%'}>
+                  {__ 'Expedition'}
+                </Button>
+                <Input type="number" ref="expeditionValue" disabled={!@state.expeditionNotify}
+                       value={@state.expeditionValue} onChange={@handleSetExpedition}
+                       addonAfter='S' className='notif-input' />
               </Col>
             </div>
           </Grid>
