@@ -1,4 +1,4 @@
-{$, $$, _, React, ReactBootstrap, resolveTime, notify, config} = window
+{$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {OverlayTrigger, Tooltip,  Alert} = ReactBootstrap
 {__, __n} = require 'i18n'
 {join} = require 'path-extra'
@@ -9,7 +9,7 @@ getFontStyle = (theme)  ->
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
   countdown = [0, 0, 0, 0, 0, 0]
-  moraleValue = config.get 'poi.notify.morale.value', 49
+  moraleValue = window.notify.morale
   cond = [moraleValue, moraleValue, moraleValue, moraleValue, moraleValue, moraleValue]
   for shipId, i in deck.api_ship
     if shipId == -1

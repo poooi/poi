@@ -1,4 +1,4 @@
-{ROOT, layout, _, $, $$, React, ReactBootstrap, config} = window
+{ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {resolveTime} = window
 {notify} = window
@@ -106,7 +106,7 @@ MissionPanel = React.createClass
     for i in [1..4]
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
-        expeditionValue = config.get 'poi.notify.expedition.value', 60
+        expeditionValue = window.notify.expedition
         if decks[i].countdown <= expeditionValue && !notified[i]
           notify "#{decks[i].name} #{__ 'mission complete'}",
             type: 'expedition'

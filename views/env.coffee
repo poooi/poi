@@ -171,6 +171,8 @@ window.zoomLevel = config.get 'poi.zoomLevel', 1
 window.useSVGIcon = config.get 'poi.useSVGIcon', false
 d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
 window.screenshotPath = config.get 'poi.screenshotPath', d
+window.notify.morale = config.get 'poi.notify.morale.value', 49
+window.notify.expedition = config.get 'poi.notify.expedition.value', 60
 
 #Custom css
 window.reloadCustomCss = ->

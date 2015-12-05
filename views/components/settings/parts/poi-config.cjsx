@@ -57,7 +57,7 @@ SlotCheckConfig = React.createClass
       @setState
         showInput: true
         value: if @CheckValid(num) then num else ''
-    console.log @props.type + JSON.stringify(config.get @cfgEntry)
+    console.log @props.type + JSON.stringify(config.get @cfgEntry) if process.env.DEBUG?
   handleChange: (e) ->
     @setState
       value: e.target.value
@@ -72,7 +72,7 @@ SlotCheckConfig = React.createClass
         value: n
     else
       @handleDisable()
-    console.log @props.type + JSON.stringify(config.get @cfgEntry)
+    console.log @props.type + JSON.stringify(config.get @cfgEntry) if process.env.DEBUG?
   handleDisable: ->
     config.set "#{@cfgEntry}.enable", false
     @setState
@@ -129,8 +129,8 @@ PoiConfig = React.createClass
     disableHA: config.get 'poi.disableHA', false
     screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
     cachePath: config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
-    moraleValue: config.get 'poi.notify.morale.value', 49
-    expeditionValue: config.get 'poi.notify.expedition.value', 60
+    moraleValue: window.notify.morale
+    expeditionValue: window.notify.expedition
   handleSetTimeSettingShow: ->
     timeSettingShow = !@state.timeSettingShow
     @setState {timeSettingShow}
@@ -237,19 +237,28 @@ PoiConfig = React.createClass
     @setState
       cachePath: pathname
   handleSetMorale: (e) ->
-    @setState
-      moraleValue: e.target.value
-    value = parseInt(e.target.value)
+    value = parseInt(e.target.value) || 0
     return if isNaN(value) || value < 0
-    config.set 'poi.notify.morale.value', value
+    window.notify.morale = value
+    @setState
+      moraleValue: value
   handleSetExpedition: (e) ->
-    @setState
-      expeditionValue: e.target.value
-    value = parseInt(e.target.value)
+    value = parseInt(e.target.value) || 0
     return if isNaN(value) || value < 0
-    config.set 'poi.notify.expedition.value', value
+    @setState
+      expeditionValue: value
+  saveNotifySetting: ->
+    {moraleValue, expeditionValue} = @state
+    config.set 'poi.notify.expedition.value', expeditionValue
+    window.notify.expedition = expeditionValue
+    config.set 'poi.notify.morale.value', moraleValue
+    window.notify.morale = moraleValue
+    @setState
+      timeSettingShow: false
   onDrag: (e) ->
     e.preventDefault()
+  selectInput: (id) ->
+    document.getElementById(id).select()
   synchronize: (callback) ->
     return if @lock
     @lock = true
@@ -329,8 +338,11 @@ PoiConfig = React.createClass
                           <div className='notif-input-desc'>{__ 'Expedition'}: {__ 'Notify when expedition returns in'}</div>
                         </Col>
                         <Col xs={3} className='notif-container'>
-                          <Input type="number" ref="expeditionValue" disabled={!@state.expeditionNotify}
-                                 value={@state.expeditionValue} onChange={@handleSetExpedition}
+                          <Input type="number" ref="expeditionValue" id="expeditionValue"
+                                 disabled={!@state.expeditionNotify}
+                                 value={@state.expeditionValue}
+                                 onChange={@handleSetExpedition}
+                                 onClick={@selectInput.bind @, "expeditionValue"}
                                  bsSize='small'
                                  addonAfter='S'
                                  className='notif-input' />
@@ -341,10 +353,18 @@ PoiConfig = React.createClass
                           <div className='notif-input-desc'>{__ 'Morale'}: {__ 'Notify when morale is greater than'}</div>
                         </Col>
                         <Col xs={3} className='notif-container'>
-                          <Input type="number" ref="moraleValue" disabled={!@state.moraleNotify}
-                                 value={@state.moraleValue} onChange={@handleSetMorale}
+                          <Input type="number" ref="moraleValue" id="moraleValue"
+                                 disabled={!@state.moraleNotify}
+                                 value={@state.moraleValue}
+                                 onChange={@handleSetMorale}
+                                 onClick={@selectInput.bind @, "moraleValue"}
                                  bsSize='small'
                                  className='notif-input' />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col xs={2} xsOffset={10}>
+                          <Button bsSize='small' onClick={@saveNotifySetting}>{__ 'Save'}</Button>
                         </Col>
                       </Row>
                     </Well>
