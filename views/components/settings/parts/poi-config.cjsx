@@ -5,7 +5,7 @@ fs = require 'fs-extra'
 i18n = require 'i18n'
 {__, __n} = i18n
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Button, ButtonGroup, Input, Alert} = ReactBootstrap
+{Grid, Col, Row, Button, ButtonGroup, Input, Alert} = ReactBootstrap
 {OverlayTrigger, Tooltip, Collapse, Well} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
@@ -115,6 +115,7 @@ SlotCheckConfig = React.createClass
 
 PoiConfig = React.createClass
   getInitialState: ->
+    timeSettingShow: false
     language: config.get 'poi.language', language
     enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableNotify: config.get 'poi.notify.enabled', true
@@ -130,6 +131,9 @@ PoiConfig = React.createClass
     cachePath: config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
     moraleValue: config.get 'poi.notify.morale.value', 49
     expeditionValue: config.get 'poi.notify.expedition.value', 60
+  handleSetTimeSettingShow: ->
+    timeSettingShow = !@state.timeSettingShow
+    @setState {timeSettingShow}
   handleSetConfirmQuit: ->
     enabled = @state.enableConfirmQuit
     config.set 'poi.confirm.quit', !enabled
@@ -287,45 +291,65 @@ PoiConfig = React.createClass
             </div>
             <div>
               <Col xs={12} style={marginTop: 10}>
-                <ButtonGroup justified>
+                <ButtonGroup style={display: 'flex'}>
                   <Button bsStyle={if @state.constructionNotify then 'success' else 'danger'}
                           onClick={@handleSetNotifyIndividual.bind this, 'construction'}
                           className='notif-button'>
                     {__ 'Construction'}
+                  </Button>
+                  <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
+                          className='notif-button'>
+                    {__ 'Expedition'}
                   </Button>
                   <Button bsStyle={if @state.repairNotify then 'success' else 'danger'}
                           onClick={@handleSetNotifyIndividual.bind this, 'repair'}
                           className='notif-button'>
                     {__ 'Docking'}
                   </Button>
+                  <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
+                          onClick={@handleSetNotifyIndividual.bind this, 'morale'}
+                          className='notif-button'>
+                    {__ 'Morale'}
+                  </Button>
                   <Button bsStyle={if @state.othersNotify then 'success' else 'danger'}
                           onClick={@handleSetNotifyIndividual.bind this, 'others'}
                           className='notif-button'>
                     {__ 'Others'}
                   </Button>
+                  <Button onClick={@handleSetTimeSettingShow} bsStyle='primary' style={width: 40}>
+                    <FontAwesome name="#{if @state.timeSettingShow then 'angle-up' else 'angle-down'}" />
+                  </Button>
                 </ButtonGroup>
-              </Col>
-            </div>
-            <div>
-              <Col xs={6} className='notif-row'>
-                <Button bsStyle={if @state.moraleNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'morale'}
-                        style={width: '100%'}>
-                  {__ 'Morale'}
-                </Button>
-                <Input type="number" ref="moraleValue" disabled={!@state.moraleNotify}
-                       value={@state.moraleValue} onChange={@handleSetMorale}
-                       className='notif-input' />
-              </Col>
-              <Col xs={6} className='notif-row'>
-                <Button bsStyle={if @state.expeditionNotify then 'success' else 'danger'}
-                        onClick={@handleSetNotifyIndividual.bind this, 'expedition'}
-                        style={width: '400%'}>
-                  {__ 'Expedition'}
-                </Button>
-                <Input type="number" ref="expeditionValue" disabled={!@state.expeditionNotify}
-                       value={@state.expeditionValue} onChange={@handleSetExpedition}
-                       addonAfter='S' className='notif-input' />
+                <Collapse in={@state.timeSettingShow}>
+                  <div>
+                    <Well>
+                      <Row>
+                        <Col xs={8} className='notif-container'>
+                          <div className='notif-input-desc'>{__ 'Notify when expedition returns in'}</div>
+                        </Col>
+                        <Col xs={4} className='notif-container'>
+                          <Input type="number" ref="expeditionValue" disabled={!@state.expeditionNotify}
+                                 value={@state.expeditionValue} onChange={@handleSetExpedition}
+                                 bsSize='small'
+                                 addonAfter='S'
+                                 className='notif-input' />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col xs={8} className='notif-container'>
+                          <div className='notif-input-desc'>{__ 'Notify when morale is greater than'}</div>
+                        </Col>
+                        <Col xs={4} className='notif-container'>
+                          <Input type="number" ref="moraleValue" disabled={!@state.moraleNotify}
+                                 value={@state.moraleValue} onChange={@handleSetMorale}
+                                 bsSize='small'
+                                 className='notif-input' />
+                        </Col>
+                      </Row>
+                    </Well>
+                  </div>
+                </Collapse>
               </Col>
             </div>
           </Grid>

@@ -157,5 +157,7 @@
   "Manually install": "手動インストール",
   "Install plugins in settings": "設定にツールをインストールします",
   "Plugin error": "ツールエラー",
-  "failed to load. Maybe there are some compatibility problems.": "のロードに失敗しました。互換性の問題が発生する可能性があります。"
+  "failed to load. Maybe there are some compatibility problems.": "のロードに失敗しました。互換性の問題が発生する可能性があります。",
+  "Notify when expedition returns in": "遠征帰投の通知をはやめる",
+  "Notify when morale is greater than": "コンディションがこの数値以上なったとき通知します"
 }

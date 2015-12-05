@@ -157,5 +157,7 @@
   "Manually install": "手动安装",
   "Install plugins in settings": "在设置中安装插件",
   "Plugin error": "插件错误",
-  "failed to load. Maybe there are some compatibility problems.": "的加载失败了。可能存在兼容性问题。"
+  "failed to load. Maybe there are some compatibility problems.": "的加载失败了。可能存在兼容性问题。",
+  "Notify when expedition returns in": "远征通知提前时间",
+  "Notify when morale is greater than": "疲劳度回复至此时通知"
 }
