@@ -250,7 +250,7 @@ TopAlert = React.createClass
         if @isMount
           $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@maxCountdown - @timeDelta)
         if @timeDelta % (3 * 60) == 0
-          moraleValue = config.get 'poi.notify.morale.value', 49
+          moraleValue = window.notify.morale
           cond = @cond.map (c) => if c < moraleValue then Math.min(moraleValue, c + @timeDelta / 60) else c
           @props.updateCond(cond)
         if @maxCountdown is @timeDelta and not @inBattle and not @state.inMission and window._decks[@props.deckIndex].api_mission[0] <= 0

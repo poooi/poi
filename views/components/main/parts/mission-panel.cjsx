@@ -138,7 +138,7 @@ MissionPanel = React.createClass
           }
           </span>
         {
-          if @state.decks[i].countdown > config.get('poi.notify.expedition.value', 60)
+          if @state.decks[i].countdown > window.notify.expedition
             <OverlayTrigger placement='left' overlay={<Tooltip id="mission-return-by-#{i}"><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
               <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
             </OverlayTrigger>
