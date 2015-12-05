@@ -5,7 +5,7 @@ i18n = require 'i18n'
 {__, __n} = i18n
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactDOM, ReactBootstrap} = window
-{Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip} = ReactBootstrap
+{Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip, Collapse} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
 # i18n configure
@@ -266,7 +266,7 @@ PoiAlert = React.createClass
     else
       displayMessage = @message
       overflow = false
-    # Must set innerHTML again before getting offsetWidth 
+    # Must set innerHTML again before getting offsetWidth
     document.getElementById('alert-area').innerHTML = displayMessage
     @setState
       message: displayMessage
@@ -278,7 +278,7 @@ PoiAlert = React.createClass
     #     message: <string-to-display>
     #     type: 'default'|'success'|'warning'|'danger'
     #     priority: 0-5, the higher the more important
-    #     stickyFor: time in milliseconds 
+    #     stickyFor: time in milliseconds
 
     # Make a message sticky to avoid from refreshing
     thisPriority = e.detail.priority || 0
@@ -331,7 +331,7 @@ PoiMapReminder = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   render: ->
-    <Alert className={"alert-default"}  bsStyle={null} 
+    <Alert className={"alert-default"}  bsStyle={null}
         style={if !window.isDarkTheme then color: 'black' else color: 'white'}>
       {@state.battling}
     </Alert>
@@ -342,6 +342,7 @@ PoiControl = React.createClass
   getInitialState: ->
     muted: false
     alwaysOnTop: false
+    extend: false
   handleCapturePage: ->
     bound = $('kan-game webview').getBoundingClientRect()
     rect =
@@ -396,6 +397,9 @@ PoiControl = React.createClass
     e.preventDefault()
   handleUnlockWebview: ->
     $('kan-game webview').executeJavaScript "document.documentElement.style.overflow = 'auto'"
+  handleSetExtend: ->
+    extend = !@state.extend
+    @setState {extend}
   componentDidMount: ->
     setTimeout =>
       try
@@ -407,21 +411,9 @@ PoiControl = React.createClass
         false
     , 1000
   render: ->
-    <div>
+    <div className='poi-control-container'>
       <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button'>{__ 'Developer Tools'}</Tooltip>}>
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
-      </OverlayTrigger>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button'>{__ 'Open cache dir'}</Tooltip>}>
-        <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
-      </OverlayTrigger>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button'>{__ 'Open screenshot dir'}</Tooltip>}>
-        <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
-      </OverlayTrigger>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button'>{__ 'Auto adjust'}</Tooltip>}>
-        <Button onClick={@handleJustifyLayout} onContextMenu={@handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
-      </OverlayTrigger>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
-        <Button onClick={@handleSetAlwaysOnTop} bsSize='small' className={if @state.alwaysOnTop then 'active' else ''}><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
       </OverlayTrigger>
       <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button'>{__ 'Take a screenshot'}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
@@ -429,6 +421,23 @@ PoiControl = React.createClass
       <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button'>{if @state.muted then __ 'Volume on' else __ 'Volume off'}</Tooltip>}>
         <Button onClick={@handleSetMuted} bsSize='small' className={if @state.muted then 'active' else ''}><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
+      <Collapse in={@state.extend} dimension='width' className="poi-control-extender">
+        <div>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button'>{__ 'Open cache dir'}</Tooltip>}>
+            <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button'>{__ 'Open screenshot dir'}</Tooltip>}>
+            <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button'>{__ 'Auto adjust'}</Tooltip>}>
+            <Button onClick={@handleJustifyLayout} onContextMenu={@handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
+            <Button onClick={@handleSetAlwaysOnTop} bsSize='small' className={if @state.alwaysOnTop then 'active' else ''}><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
+          </OverlayTrigger>
+        </div>
+      </Collapse>
+      <Button onClick={@handleSetExtend} bsSize='small' className={if @state.extend then 'active' else ''}><FontAwesome name={if @state.extend then 'angle-left' else 'angle-right'} /></Button>
     </div>
 
 # Notification modal

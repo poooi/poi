@@ -98,6 +98,25 @@ poi-control button .fa {
   cursor: pointer !important;
   width: 20px;
 }
+poi-control .poi-control-container {
+  display: flex;
+  flex-direction: row;
+}
+poi-control .poi-control-extender {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: 0.3s;
+  display: block;
+}
+poi-control .collapse {
+  width: 0px;
+}
+poi-control .collapse.in {
+  width: auto;
+}
+poi-control .collapsing {
+  width: auto;
+}
 .table tbody tr td {
   padding: 8px;
 }
