@@ -16,6 +16,8 @@
   "Developer Tools": "デベロッパーツール",
   "Always on top": "ウィンドウを常に最前面に表示します",
   "Dont always on top": "ウィンドウを常に最前面に表示しません",
+  "Resizeable": "ウィンドウサイズの変更を許可",
+  "Not resizeable": "ウィンドウサイズの変更を不許可",
   "Take a screenshot": "スクリーンショットを撮ります",
   "Cancel": "取り消し",
   "Close": "戻る",

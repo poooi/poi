@@ -16,6 +16,8 @@
   "Developer Tools": "開發者工具",
   "Always on top": "窗口置頂",
   "Dont always on top": "取消置頂",
+  "Resizeable": "允許變更窗口大小",
+  "Not resizeable": "禁止變更窗口大小",
   "Take a screenshot": "一鍵截圖",
   "Cancel": "取消",
   "Close": "關閉",

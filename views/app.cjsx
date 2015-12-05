@@ -343,6 +343,7 @@ PoiControl = React.createClass
     muted: false
     alwaysOnTop: false
     extend: false
+    resizeable: true
   handleCapturePage: ->
     bound = $('kan-game webview').getBoundingClientRect()
     rect =
@@ -386,6 +387,11 @@ PoiControl = React.createClass
     config.set 'poi.content.alwaysOnTop', alwaysOnTop
     remote.getCurrentWindow().setAlwaysOnTop alwaysOnTop
     @setState {alwaysOnTop}
+  handleSetResizable: ->
+    resizeable = !@state.resizeable
+    config.set 'poi.content.resizeable', resizeable
+    remote.getCurrentWindow().setResizable resizeable
+    @setState {resizeable}
   handleOpenDevTools: ->
     remote.getCurrentWindow().openDevTools
       detach: true
@@ -407,6 +413,8 @@ PoiControl = React.createClass
           @handleSetMuted()
         if config.get 'poi.content.alwaysOnTop', false
           @handleSetAlwaysOnTop()
+        if !(config.get 'poi.content.resizeable', true)
+          @handleSetResizable()
       catch e
         false
     , 1000
@@ -434,6 +442,9 @@ PoiControl = React.createClass
           </OverlayTrigger>
           <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
             <Button onClick={@handleSetAlwaysOnTop} bsSize='small' className={if @state.alwaysOnTop then 'active' else ''}><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.resizeable then __ 'Resizeable' else __ 'Not resizeable'}</Tooltip>}>
+            <Button onClick={@handleSetResizable} bsSize='small' className={if @state.resizeable then '' else 'active'}><FontAwesome name={if @state.resizeable then 'unlock-alt' else 'lock'} /></Button>
           </OverlayTrigger>
         </div>
       </Collapse>
