@@ -379,6 +379,8 @@ resolveResponses = ->
             decks[deckId].api_ship[idx] = shipId
             # Exchange
             decks[x].api_ship[y] = curId if x != -1 && y != -1
+        when '/kcsapi/api_req_hensei/lock'
+          _ships[parseInt(postBody.api_ship_id)].api_locked = body.api_locked
         when '/kcsapi/api_req_hensei/preset_select'
           decks = window._decks
           deckId = parseInt(postBody.api_deck_id) - 1
@@ -399,6 +401,8 @@ resolveResponses = ->
           _ships[parseInt(postBody.api_id)].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
         when '/kcsapi/api_req_kaisou/slot_exchange_index'
           _ships[parseInt(postBody.api_id)].api_slot = body.api_slot
+        when '/kcsapi/api_req_kaisou/lock'
+          _slotitems[parseInt(postBody.api_slotitem_id)].api_locked = body.api_locked
         when '/kcsapi/api_req_kousyou/createitem'
           _slotitems[body.api_slot_item.api_id] = extendSlotitem body.api_slot_item if body.api_create_flag == 1
         when '/kcsapi/api_req_kousyou/destroyitem2'
