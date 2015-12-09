@@ -443,7 +443,7 @@ PoiControl = React.createClass
           <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.alwaysOnTop then __ 'Dont always on top' else __ 'Always on top'}</Tooltip>}>
             <Button onClick={@handleSetAlwaysOnTop} bsSize='small' className={if @state.alwaysOnTop then 'active' else ''}><FontAwesome name={if @state.alwaysOnTop then 'arrow-down' else 'arrow-up'} /></Button>
           </OverlayTrigger>
-          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.resizeable then __ 'Resizeable' else __ 'Not resizeable'}</Tooltip>}>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-always-on-top-button'>{if @state.resizeable then __ 'Not resizeable' else __ 'Resizeable'}</Tooltip>}>
             <Button onClick={@handleSetResizable} bsSize='small' className={if @state.resizeable then '' else 'active'}><FontAwesome name={if @state.resizeable then 'unlock-alt' else 'lock'} /></Button>
           </OverlayTrigger>
         </div>
