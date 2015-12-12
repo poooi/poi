@@ -567,7 +567,7 @@ window.addEventListener 'keydown', (e) ->
       else if e.altKey # cmd + alt + r
         refreshFlash()
       else # cmd + r
-        # Catched by menu
+        # Caught by menu
         # $('kan-game webview').reload()
         false
   else if e.keyCode is 116
