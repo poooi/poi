@@ -560,6 +560,9 @@ refreshFlash = ->
 window.addEventListener 'keydown', (e) ->
   if process.platform == 'darwin'
     if e.keyCode is 91 or e.keyCode is 93
+      # When the game (flash) is on focus, it catches all keypress events
+      # Blur the webview when any Cmd key is pressed,
+      # so the OS shortcuts (from app menu) will always work
       remote.getCurrentWindow().blurWebView()
     else if e.keyCode is 82 and e.metaKey
       if e.shiftKey # cmd + shift + r
