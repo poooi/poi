@@ -142,6 +142,7 @@
   "Advanced": "進階設定",
   "Disable Hardware Acceleration": "禁用硬體加速",
   "Editing DMM Cookie's Region Flag": "設置 DMM 地區 Cookie",
+  "Prevent DMM Network Change Popup": "屏蔽 DMM 網絡變更警告",
   "Use SVG Icon": "使用高清圖標",
   "Plugin update": "插件更新",
   "have newer version. Please update your plugins.": "有新版本。請更新插件。",

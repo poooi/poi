@@ -51,6 +51,11 @@ document.addEventListener 'DOMContentLoaded', ->
         document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/";
         document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/";
       """
+    disableNetworkAlert = config.get 'poi.disableNetworkAlert', false
+    if disableNetworkAlert
+      $('kan-game webview').executeJavaScript """
+        DMM.netgame.reloadDialog=function(){}
+      """
   # Create new window for new window in webview
   $('kan-game webview').addEventListener 'new-window', (e) ->
     exWindow = WindowManager.createWindow

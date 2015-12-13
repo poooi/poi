@@ -126,6 +126,7 @@ PoiConfig = React.createClass
     othersNotify: config.get 'poi.notify.others.enabled', 'true'
     notifyVolume: config.get 'poi.notify.volume', 0.8
     enableDMMcookie: config.get 'poi.enableDMMcookie', false
+    disableNetworkAlert: config.get 'poi.disableNetworkAlert', false
     disableHA: config.get 'poi.disableHA', false
     screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
     cachePath: config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
@@ -149,6 +150,11 @@ PoiConfig = React.createClass
     config.set 'poi.enableDMMcookie', !enabled
     @setState
       enableDMMcookie: !enabled
+  handleSetNetworkAlert: ->
+    disabled = @state.disableNetworkAlert
+    config.set 'poi.disableNetworkAlert', !disabled
+    @setState
+      disableNetworkAlert: !enabled
   handleSetNotify: ->
     enabled = @state.enableNotify
     config.set 'poi.notify.enabled', !enabled
@@ -452,6 +458,9 @@ PoiConfig = React.createClass
             </Col>
             <Col xs={12}>
               <Input type="checkbox" label={__ 'Editing DMM Cookie\'s Region Flag'} checked={@state.enableDMMcookie} onChange={@handleSetDMMcookie} />
+            </Col>
+            <Col xs={12}>
+              <Input type="checkbox" label={__ 'Prevent DMM Network Change Popup'} checked={@state.disableNetworkAlert} onChange={@handleSetNetworkAlert} />
             </Col>
           </Grid>
         </div>
