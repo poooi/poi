@@ -41,6 +41,9 @@ span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
   cursor: default;
 }
+button > span {
+  cursor: inherit;
+}
 a, button {
   cursor: pointer;
 }
