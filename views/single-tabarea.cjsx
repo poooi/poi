@@ -125,11 +125,11 @@ ControlledTabArea = React.createClass
         else if e.keyCode is 48
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
-    @renderPlugins()
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'view.main.visible', @handleMiniShipChange
-    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    @renderPlugins().then =>
+      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   componentWillUnmount: ->
     window.removeEventListener 'view.main.visible', @handleMiniShipChange
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins

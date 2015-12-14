@@ -31,8 +31,14 @@ PluginConfig = React.createClass
     initState = @getInitialState()
     initState.reloading = true
     @setState initState
-    PluginManager.readPlugins().then =>
-      @updateFromPluginManager reloading: false
+    PluginManager.getMirrors().then (mirrors) =>
+      PluginManager.getMirror().then (mirror) =>
+        PluginManager.readPlugins().then =>
+          @updateFromPluginManager {
+            mirrors: mirrors
+            mirrorName: mirror.name
+            reloading: false
+          }
   updateFromPluginManager: (state) ->
     state ?= {}
     PluginManager.getInstalledPlugins().then (plugins) =>

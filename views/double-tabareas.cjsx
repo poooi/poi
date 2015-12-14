@@ -24,7 +24,7 @@ ControlledTabArea = React.createClass
     key: [0, 0]
     plugins: []
     tabbedPlugins: []
-  #
+
   # render plugins
   renderPlugins: ->
     PluginManager.getValidPlugins().then (plugins) =>
@@ -99,10 +99,10 @@ ControlledTabArea = React.createClass
         else if e.keyCode is 48
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
-    @renderPlugins()
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    @renderPlugins().then =>
+      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   componentWillUnmount: ->
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   render: ->
