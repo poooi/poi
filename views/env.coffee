@@ -147,6 +147,8 @@ window.showModal = ->
 window.config = remote.require './lib/config'
 window.proxy = remote.require './lib/proxy'
 window.CONST = Object.remoteClone remote.require './lib/constant'
+# Plugin Manager
+window.PluginManager = require '../lib/plugin-manager'
 
 checkLayout = (layout) ->
   if layout isnt 'horizontal' and layout isnt 'vertical' and layout isnt 'L'
@@ -157,7 +159,7 @@ checkLayout = (layout) ->
 # User configs
 language = navigator.language
 if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
-  switch language.substr(0,1).toLowerCase()
+  switch language.substr(0, 1).toLowerCase()
     when 'zh'
       language = 'zh-TW'
     when 'ja'

@@ -1,313 +1,152 @@
+Promise = require 'bluebird'
 path = require 'path-extra'
 glob = require 'glob'
 {__, __n} = require 'i18n'
 fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
-{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
+{$, $$, _, PluginManager, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem, Label} = ReactBootstrap
 {config} = window
 shell = require 'shell'
 Divider = require './divider'
 
-# Plugin version
-packages = fs.readJsonSync path.join ROOT, 'plugin.json'
-
-# Mirror server
-mirror = fs.readJsonSync path.join ROOT, 'mirror.json'
-
-plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
-fails = []
-failsName = []
-for plugin, index in plugins
-  try
-    test = require plugin
-  catch error
-    fail = path.basename plugin
-    fails.push plugin
-    if packages[fail]?
-      failsName.push packages[fail][window.language]
-    else
-      failsName.push fail
-if fails.length > 0
-  title = __ 'Plugin error'
-  content = "#{failsName.join(' ')} #{__ "failed to load. Maybe there are some compatibility problems."}"
-  notify content,
-    type: 'plugin error'
-    title: title
-    icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
-    audio: "file://#{ROOT}/assets/audio/fail.mp3"
-plugins = plugins.filter (filePath) ->
-  if filePath in fails
-    return false
-  else
-    return true
-plugins = plugins.map (filePath) ->
-  plugin = require filePath
-  packageData = {}
-  try
-    packageData = fs.readJsonSync path.join filePath, 'package.json'
-  catch error
-    if env.process.DEBUG? then console.log error
-  if packageData?.name?
-    plugin.packageName =  packageData.name
-  else
-    plugin.packageName = plugin.name
-  if packageData?.version?
-    plugin.version = packageData.version
-  plugin.priority = 10000 unless plugin.priority?
-  plugin
-plugins = _.sortBy(plugins, 'priority')
-
-status = plugins.map (plugin) ->
-  # 0: enabled 1: manually disabled 2: disabled because too old
-  if packages[plugin.packageName]?.version?
-    lowest = packages[plugin.packageName].version
-  else
-    lowest = "v0.0.0"
-  if semver.lt(plugin.version, lowest)
-    status = 2
-  else if config.get "plugin.#{plugin.name}.enable", true
-    status = 0
-  else status = 1
-
-updating = plugins.map (plugin) ->
-  updating = false
-
-removeStatus = plugins.map (plugin) ->
-  # 0: exist 1: removing 2: removed
-  removeStatus = 0
-
-latest = {}
-installTargets = packages
-for plugin, index in plugins
-  latest[plugin.packageName] = plugin.version
-  delete installTargets[plugin.packageName]
-
-installStatus = []
-for installTarget of installTargets
-  # 0: not installed 1: installing 2: installed
-  installStatus.push 0
-
-npmConfig = {
-  prefix: "#{PLUGIN_PATH}",
-  registry: mirror[config.get "packageManager.mirror", 0].server,
-  http_proxy: 'http://127.0.0.1:12450'
-}
 
 PluginConfig = React.createClass
   getInitialState: ->
-    status: status
-    latest: latest
-    updating: updating
-    installStatus: installStatus
-    removeStatus: removeStatus
-    checking: false
+    checkingUpdate: false
+    hasUpdates: false
+    npmWorkding: false
+    installingAll: false
+    installingPluginNames: []
+    mirrorName: ''
+    mirrors: []
+    plugins: []
+    uninstalledPluginSettings: []
     updatingAll: false
-    installing: false
-    mirror: config.get "packageManager.mirror", 0
-    isUpdateAvailable: false
+    reloading: false
+  emitReload: ->
+    PluginManager.emitReload()
+  readPlugins: ->
+    initState = @getInitialState()
+    initState.reloading = true
+    @setState initState
+    PluginManager.getMirrors().then (mirrors) =>
+      PluginManager.getMirror().then (mirror) =>
+        PluginManager.readPlugins().then =>
+          @updateFromPluginManager {
+            mirrors: mirrors
+            mirrorName: mirror.name
+            reloading: false
+          }
+  updateFromPluginManager: (state) ->
+    state ?= {}
+    PluginManager.getInstalledPlugins().then (plugins) =>
+      PluginManager.getUninstalledPluginSettings().then (settings) =>
+        state.plugins = plugins
+        state.uninstalledPluginSettings = settings
+        @setState state
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
-  onSelectServer: (state) ->
-    config.set "packageManager.mirror", state
-    server = mirror[state].server
-    npmConfig = {
-      prefix: "#{PLUGIN_PATH}",
-      registry: mirror[state].server,
-      http_proxy: 'http://127.0.0.1:12450'
-    }
-    @setState
-      mirror: state
+  onSelectServer: (index) ->
+    PluginManager.selectMirror(index).then (mirror) =>
+      @setState mirrorName: mirror.name
   handleEnable: (index) ->
-    status = @state.status
-    if status[index] isnt 2
-      status[index] = (status[index] + 1) % 2
-      if status[index] == 0 then enable = true
-      if status[index] == 1 then enable = false
-      config.set "plugin.#{plugins[index].name}.enable", enable
-    @setState
-      status: status
-  handleUpdateComplete: (index, er) ->
-    plugins[index].version = @state.latest[plugins[index].packageName] if !er
-    updating = @state.updating
-    updating[index] = false
-    @checkUpdate(@solveUpdate, false)
-    @setState {updating}
-  handleUpdate: (index, callback) ->
+    PluginManager.getInstalledPlugins().then (plugins) =>
+      plugin = plugins[index]
+      switch PluginManager.getStatusOfPlugin plugin
+        when PluginManager.DISABLED
+          PluginManager.enablePlugin plugin
+        when PluginManager.VALID
+          PluginManager.disablePlugin plugin
+      @updateFromPluginManager()
+  handleUpdate: (index) ->
     if !@props.disabled
-      updating = @state.updating
-      updating[index] = true
-      npm.load npmConfig, (err) ->
-        npm.commands.update [plugins[index].packageName], (er, data) ->
-          callback(index, er)
-      @setState {updating}
-  handleInstallAllComplete: (er) ->
-    installAllStatus = []
-    index = -1
-    for installTarget of installTargets
-      index++
-      if !er
-        installAllStatus.push 2
-      else
-        if @state.installStatus[index] < 2
-          installAllStatus.push 0
-        else
-          installAllStatus.push 2
-    @setState
-      installStatus: installAllStatus
-      installing: false
-  handleInstallAll: (callback) ->
-    installAllStatus = []
-    toInstall = []
-    index = -1
-    for installTarget of installTargets
-      index++
-      if @state.installStatus[index] == 0
-        installAllStatus.push 1
-        toInstall.push installTarget
-      else
-        installAllStatus.push @state.installStatus[index]
-    npm.load npmConfig, (err) ->
-      npm.commands.install toInstall, (er, data) ->
-        callback(er)
-    @setState
-      installStatus: installAllStatus
-      installing: true
-  handleUpdateAllComplete: (er) ->
-    updating = @state.updating
-    for plugin, index in plugins
-      plugin.version = @state.latest[plugin.packageName] if !er
-      updating[index] = false
-    @checkUpdate(@solveUpdate, false)
-    @setState
-      updating: updating
-      updatingAll: false
-  handleUpdateAll: (callback) ->
+      @setState npmWorkding: true
+      PluginManager.getInstalledPlugins().then (plugins) =>
+        plugin = plugins[index]
+        PluginManager.updatePlugin(plugin).then =>
+          @updateFromPluginManager npmWorkding: false
+  handleInstallAll: ->
+    @setState installingAll: true
+    PluginManager.getUninstalledPluginSettings().then (settings) =>
+      Promise.coroutine( =>
+        for name, value of settings
+          yield @handleInstall name
+        @setState installingAll: false
+      )()
+  handleUpdateAll: ->
     if !@props.disabled
-      updating = @state.updating
-      toUpdate = []
-      for plugin, index in plugins
-        if semver.lt(plugin.version, @state.latest[plugin.packageName]) && @state.removeStatus[index] == 0
-          updating[index] = true
-          toUpdate.push plugin.packageName
-      npm.load npmConfig, (err) ->
-        npm.commands.update toUpdate, (er, data) ->
-          callback(er)
-      @setState
-        updating: updating
-        updatingAll: true
-  handleRemoveComplete: (index) ->
-    removeStatus = @state.removeStatus
-    removeStatus[index] = 2
-    @setState {removeStatus}
-  handleRemove: (index, callback) ->
+      @setState updatingAll: true
+      PluginManager.getOutdatedPlugins().then (plugins) =>
+        Promise.coroutine( =>
+          for plugin, index in plugins
+            yield @handleUpdate index
+        ).then =>
+          @setState updatingAll: false
+  handleRemove: (index) ->
     if !@props.disabled
-      removeStatus = @state.removeStatus
-      removeStatus[index] = 1
-      npm.load npmConfig, (err) ->
-        npm.commands.uninstall [plugins[index].packageName], (er, data) ->
-          callback(index)
-      @setState {removeStatus}
-  handleInstallComplete: (index, er) ->
-    installStatus = @state.installStatus
-    installStatus[index] = 2
-    installStatus[index] = 0 if er
-    @setState {installStatus}
-  handleInstall: (name, index, callback) ->
+      PluginManager.getInstalledPlugins().then (plugins) =>
+        plugin = plugins[index]
+        @setState npmWorkding: true
+        PluginManager.uninstallPlugin(plugin).then =>
+          @updateFromPluginManager npmWorkding: false
+  handleInstall: (name) ->
     if !@props.disabled
-      installStatus = @state.installStatus
-      installStatus[index] = 1
-      npm.load npmConfig, (err) ->
-        npm.commands.install [name], (er, data) ->
-          callback(index, er)
-      @setState {installStatus}
-  solveUpdate: (updateData, isfirst) ->
-    latest = @state.latest
-    updateCount = 0
-    for updateObject, index in updateData
-      if latest[updateObject[1]]? && semver.lt(latest[updateObject[1]], updateObject[4])
-        latest[updateObject[1]] = updateObject[4]
-        updateCount++
-    isUpdateAvailable = updateCount > 0
-    if isfirst && updateCount > 0
-      title = __ 'Plugin update'
-      outdatedPlugins = []
-      for plugin, index in plugins
-        if semver.lt(plugin.version, latest[plugin.packageName])
-          if plugin.displayName.props?.children?
-            displayItems = plugin.displayName.props.children
-          else
-            displayItems = plugin.displayName
-          for child in displayItems
-            if typeof child is "string"
-              outdatedPlugins.push child
-      content = "#{outdatedPlugins.join(' ')} #{__ "have newer version. Please update your plugins."}"
-      notify content,
-        type: 'plugin update'
-        title: title
-        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
-        audio: "file://#{ROOT}/assets/audio/update.mp3"
-    @setState
-      latest: latest
-      checking: false
-      isUpdateAvailable: isUpdateAvailable
-  checkUpdate: (callback, isfirst) ->
-    npm.load npmConfig, (err) ->
-      npm.config.set 'depth', 1
-      npm.commands.outdated [], (er, data) ->
-        callback(data, isfirst)
-    @setState
-      checking: true
+      installingPluginNames = @state.installingPluginNames
+      installingPluginNames.push name
+      @setState installingPluginNames: installingPluginNames, npmWorkding: true
+      PluginManager.installPlugin(name).then =>
+        installingPluginNames = @state.installingPluginNames
+        index = installingPluginNames.indexOf name
+        if index > -1
+          installingPluginNames.splice index, 1
+          @updateFromPluginManager {
+            installingPluginNames: installingPluginNames
+            npmWorkding: false
+          }
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
+  checkUpdate: ->
+    @setState checkingUpdate: true
+    PluginManager.getOutdatedPlugins().then (plugins) =>
+      @updateFromPluginManager {
+        hasUpdates: plugins.length isnt 0
+        checkingUpdate: false
+      }
   componentDidMount: ->
-    @checkUpdate(@solveUpdate, true) if config.get('poi.update.plugin', true)
+    PluginManager.getMirrors().then (mirrors) =>
+      PluginManager.getMirror().then (mirror) =>
+        @updateFromPluginManager mirrors: mirrors, mirrorName: mirror.name
   render: ->
     <form>
       <Divider text={__ 'Plugins'} />
       <Grid>
-        <Col xs={12}>
-          <Alert bsStyle='info'>
-            {__ 'You must reboot the app for the changes to take effect.'}
-          </Alert>
-        </Col>
-      </Grid>
-      <Grid>
         <Col xs={12} style={padding: '10px 15px'}>
           <ButtonGroup bsSize='small' style={width: '75%'}>
-            <Button onClick={@checkUpdate.bind(@, @solveUpdate, false)}
-                    disabled={@state.checking}
+            <Button onClick={@checkUpdate}
+                    disabled={@state.checkingUpdate}
                     className="control-button"
                     style={width: '33%'}>
-              <FontAwesome name='refresh' spin={@state.checking} />
+              <FontAwesome name='refresh' spin={@state.checkingUpdate} />
               <span> {__ "Check Update"}</span>
             </Button>
-            <Button onClick={@handleUpdateAll.bind(@, @handleUpdateAllComplete)}
-                    disabled={@state.updatingAll || !@state.isUpdateAvailable || @state.checking}
+            <Button onClick={@handleUpdateAll}
+                    disabled={@state.npmWorkding ||
+                      !@state.hasUpdates || @state.checkingUpdate}
                     className="control-button"
                     style={width: '33%'}>
-              <FontAwesome name={
-                             if @state.updatingAll
-                               "spinner"
-                             else
-                               "cloud-download"
-                           }
+              <FontAwesome name={if @state.updatingAll then 'spinner' else 'cloud-download'}
                            pulse={@state.updatingAll}/>
               <span> {__ "Update all"}</span>
             </Button>
-            <Button onClick={@handleInstallAll.bind @, @handleInstallAllComplete}
-                    disabled={@state.installing}
+            <Button onClick={@handleInstallAll}
+                    disabled={@state.npmWorkding}
                     className="control-button"
                     style={width: '33%'}>
-              <FontAwesome name={
-                             if @state.installing
-                               "spinner"
-                             else
-                               "download"
-                           }
-                           pulse={@state.installing}/>
+              <FontAwesome name={if @state.installingAll then 'spinner' else 'download'}
+                           pulse={@state.installingAll}/>
               <span> {__ "Install all"}</span>
             </Button>
           </ButtonGroup>
@@ -316,34 +155,63 @@ PluginConfig = React.createClass
                             className="control-button"
                             pullRight
                             title={
-                              React.createElement("span", null, React.createElement(FontAwesome, {
-                                "name": 'server'
-                              }), " ", mirror[this.state.mirror].name);
+                              React.createElement("span",
+                                null, React.createElement(FontAwesome, {
+                                  "name": 'server'
+                                }), " ", @state.mirrorName)
                             }
                             id="mirror-select">
               {
-                for server, index in mirror
-                  <MenuItem key={index} onSelect={@onSelectServer.bind @, index}>{mirror[index].menuname}</MenuItem>
+                for mirror, index in @state.mirrors
+                  <MenuItem key={index}
+                            onSelect={@onSelectServer.bind @, index}>
+                    {mirror.menuname}
+                  </MenuItem>
               }
               <MenuItem divider />
-              <MenuItem key={index} onSelect={@onSelectOpenFolder}>{__ "Manually install"}</MenuItem>
+              <MenuItem key={index}
+                        onSelect={@onSelectOpenFolder}>
+                {__ "Manually install"}
+              </MenuItem>
             </DropdownButton>
+          </ButtonGroup>
+          <ButtonGroup bsSize='small' style={width: '100%', marginTop: 10}>
+            <Button onClick={@readPlugins}
+                    disabled={@state.reloading}
+                    className="control-button"
+                    style={width: '50%'}>
+              <FontAwesome name={if @state.reloading then 'spinner' else 'repeat'}
+                           pulse={@state.reloading}/>
+              <span> {__ "Reload all"}</span>
+            </Button>
+            <Button onClick={@emitReload}
+                    className="control-button"
+                    style={width: '50%'}>
+              <FontAwesome name='rocket' />
+              <span> {__ "Apply Change"}</span>
+            </Button>
           </ButtonGroup>
         </Col>
       {
-        for plugin, index in plugins
+        for plugin, index in @state.plugins
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
-              <span style={fontSize: '150%'}>{plugin.displayName} </span>
-              <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
+              <span style={fontSize: '150%'}> {plugin.displayName} </span>
+              <span style={paddingTop: 2}> @
+                <span onClick={@handleClickAuthorLink.bind @, plugin.link}>
+                  {plugin.author}
+                </span>
+              </span>
               <div style={paddingTop: 2}>
                 <Label bsStyle='primary'
-                       className="#{if @state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
+                       className="#{if not plugin.isOutdated then 'hidden'}">
                   <FontAwesome name='cloud-upload' />
-                  Version {@state.latest[plugin.packageName]}
+                  Version {plugin.lastVersion}
                 </Label>
               </div>
-              <div style={paddingTop: 2, marginLeft: 'auto'}>Version {plugin.version || '1.0.0'}</div>
+              <div style={paddingTop: 2, marginLeft: 'auto'}>
+                Version {plugin.version || plugin.packageData.version || '1.0.0'}
+              </div>
             </Col>
             <Col xs={12} style={marginTop: 4}>
               <Col xs={5}>{plugin.description}</Col>
@@ -351,66 +219,69 @@ PluginConfig = React.createClass
                 <div style={marginLeft: 'auto'}>
                   <ButtonGroup bsSize='small' style={width: '100%'}>
                     <Button bsStyle='info'
-                            disabled={if @state.status[index] == 2 then true else false}
+                            disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                             onClick={@handleEnable.bind @, index}
                             style={width: "33%"}
                             className="plugin-control-button">
                       <FontAwesome name={
-                                     switch @state.status[index]
-                                       when 0
+                                     switch PluginManager.getStatusOfPlugin plugin
+                                       when PluginManager.VALID
                                          "pause"
-                                       when 1
+                                       when PluginManager.DISABLED
                                          "play"
-                                       when 2
+                                       when PluginManager.NEEDUPDATE
                                          "ban"
+                                       when PluginManager.BROKEN
+                                         "close"
                                    }/>
                       {
-                        switch @state.status[index]
-                          when 0
-                             __ "Disable"
-                          when 1
-                             __ "Enable"
-                          when 2
-                             __ "Outdated"
+                        switch PluginManager.getStatusOfPlugin plugin
+                          when PluginManager.VALID
+                            __ "Disable"
+                          when PluginManager.DISABLED
+                            __ "Enable"
+                          when PluginManager.NEEDUPDATE
+                            __ "Outdated"
+                          when PluginManager.BROKEN
+                            __ "Broken"
                       }
                     </Button>
                     <Button bsStyle='primary'
-                            disabled={@state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0}
-                            onClick={@handleUpdate.bind @, index, @handleUpdateComplete}
+                            disabled={not plugin.isOutdated || plugin.isUpdating || @state.npmWorkding || @state.checkingUpdate}
+                            onClick={@handleUpdate.bind @, index}
                             style={width: "33%"}
                             className="plugin-control-button">
                       <FontAwesome name={
-                                     if @state.updating[index]
+                                     if plugin.isUpdating
                                        "spinner"
-                                     else if semver.lt(plugin.version, @state.latest[plugin.packageName])
+                                     else if plugin.isOutdated
                                        "cloud-download"
                                      else
                                        "check"
                                    }
-                                   pulse={@state.updating[index]}/>
+                                   pulse={plugin.isUpdating}/>
                       {
-                        if @state.updating[index]
+                        if plugin.isUpdating
                            __ "Updating"
-                        else if semver.lt(plugin.version, @state.latest[plugin.packageName])
+                        else if plugin.isOutdated
                            __ "Update"
                         else
                            __ "Latest"
                       }
                     </Button>
                     <Button bsStyle='danger'
-                            onClick={@handleRemove.bind @, index, @handleRemoveComplete}
-                            disabled={@state.removeStatus[index] != 0}
+                            onClick={@handleRemove.bind @, index}
+                            disabled={not plugin.isInstalled}
                             style={width: "33%"}
                             className="plugin-control-button">
-                      <FontAwesome name={if @state.removeStatus[index] == 0 then 'trash' else 'trash-o'} />
+                      <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
                       {
-                        switch @state.removeStatus[index]
-                          when 0
-                             __ "Remove"
-                          when 1
-                             __ "Removing"
-                          when 2
-                             __ "Removed"
+                        if plugin.isUninstalling
+                          __ "Removing"
+                        else if plugin.isInstalled
+                          __ "Remove"
+                        else
+                          __ "Removed"
                       }
                     </Button>
                   </ButtonGroup>
@@ -420,42 +291,42 @@ PluginConfig = React.createClass
           </Col>
       }
       {
-        index = -1
-        for installTarget of installTargets
-          index++
+        for name, index in Object.keys(@state.uninstalledPluginSettings)
+          value = @state.uninstalledPluginSettings[name]
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
-              <span style={fontSize: '150%'}><FontAwesome name={installTargets[installTarget]['icon']} /> {installTargets[installTarget][window.language]} </span>
-              <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, installTargets[installTarget]['link']}>{installTargets[installTarget]['author']}</span></span>
+              <span style={fontSize: '150%'}>
+                <FontAwesome name={value.icon} />
+                  {value[window.language]}
+                </span>
+              <span style={paddingTop: 2}> @
+                <span onClick={@handleClickAuthorLink.bind @, value.link}>
+                  {value.author}
+                </span>
+              </span>
             </Col>
             <Col xs={12} style={marginTop: 4}>
-              <Col xs={8}>{installTargets[installTarget]["des#{window.language}"]}</Col>
+              <Col xs={8}>{value["des#{window.language}"]}</Col>
               <Col xs={4} style={padding: 0}>
                 <div style={marginLeft: 'auto'}>
                   <ButtonGroup bsSize='small' style={width: '100%'}>
                     <Button bsStyle='primary'
-                            disabled={@state.installStatus[index] != 0}
-                            onClick={@handleInstall.bind @, installTarget, index, @handleInstallComplete}
+                            disabled={@state.npmWorkding}
+                            onClick={@handleInstall.bind @, name}
                             style={width: "100%"}
                             className="plugin-control-button">
                       <FontAwesome name={
-                                     switch @state.installStatus[index]
-                                       when 0
-                                         "download"
-                                       when 1
-                                         "spinner"
-                                       when 2
-                                         "check"
+                                     if name in @state.installingPluginNames
+                                       'downloading'
+                                     else
+                                       'download'
                                    }
-                                   pulse={@state.installStatus[index] == 1}/>
+                                   pulse={name in @state.installingPluginNames}/>
                       {
-                        switch @state.installStatus[index]
-                          when 0
-                             __ "Install"
-                          when 1
-                             __ "Installing"
-                          when 2
-                             __ "Installed"
+                        if name in @state.installingPluginNames
+                          __ "Installing"
+                        else
+                          __ "Install"
                       }
                     </Button>
                   </ButtonGroup>

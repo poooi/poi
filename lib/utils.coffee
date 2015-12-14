@@ -1,4 +1,4 @@
-
+colors = require 'colors'
 fs = require 'fs-extra'
 path = require 'path-extra'
 
