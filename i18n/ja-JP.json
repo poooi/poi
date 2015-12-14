@@ -142,6 +142,7 @@
   "Advanced": "高度な設定",
   "Disable Hardware Acceleration": "ハードウェアアクセラレーションを無効化",
   "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定します",
+  "Prevent DMM Network Change Popup": "DMMネットワーク変更アラートを阻止",
   "Use SVG Icon": "SVGアイコンを使用します",
   "Plugin update": "ツール更新",
   "have newer version. Please update your plugins.": "は新しいバージョンがあります。更新してください。",

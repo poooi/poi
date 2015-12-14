@@ -155,17 +155,17 @@
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
-    "zh-TW": "数据汇报",
-    "ja-JP": "数据汇报",
+    "zh-TW": "數據匯報",
+    "ja-JP": "統計データベースツール",
     "en-US": "Data Report",
     "version": "v0.0.0",
     "icon": "pie-chart",
     "author": "Magica",
     "link": "https://github.com/magicae",
     "deszh-CN": "汇报建造数据、海域掉落数据、开发数据",
-    "deszh-TW": "汇报建造数据、海域掉落数据、开发数据",
-    "desja-JP": "汇报建造数据、海域掉落数据、开发数据",
-    "desen-US": "汇报建造数据、海域掉落数据、开发数据"
+    "deszh-TW": "匯報建造數據、海域掉落數據、開發數據",
+    "desja-JP": "統計データベース(http://db.kcwiki.moe)登録用ツール",
+    "desen-US": "Report data to database(http://db.kcwiki.moe)"
   },
   "poi-plugin-ship-info": {
     "zh-CN": "舰娘信息",
@@ -180,6 +180,20 @@
     "deszh-TW": "提供已有艦娘詳細信息查看",
     "desja-JP": "持っている艦娘の情報を展示する",
     "desen-US": "Show detailed information of all owned ship girls"
+  },
+  "poi-plugin-secretary": {
+    "zh-CN": "秘书通知",
+    "zh-TW": "祕書通知",
+    "ja-JP": "秘書艦ボイス",
+    "en-US": "Secretary",
+    "version": "v0.0.0",
+    "icon": "file-audio-o",
+    "author": "Dazzy Ding",
+    "link": "https://github.com/yukixz",
+    "deszh-CN": "将秘书舰语音设置为通知语音",
+    "deszh-TW": "將祕書艦語音設置爲通知語音",
+    "desja-JP": "秘書艦のボイスが通知音を設定します",
+    "desen-US": "Use secretary voice as notification sound."
   },
   "poi-plugin-senka-calc": {
     "zh-CN": "我变强了",
@@ -197,7 +211,7 @@
   },
   "poi-plugin-almanac": {
     "zh-CN": "舰娘黄历",
-    "zh-TW": "舰娘黄历",
+    "zh-TW": "艦娘黃曆",
     "ja-JP": "舰娘黄历",
     "en-US": "Almanac",
     "version": "v0.0.0",
@@ -205,8 +219,22 @@
     "author": "Magica",
     "link": "https://github.com/magicae",
     "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
-    "deszh-TW": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
-    "desja-JP": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "deszh-TW": "艦娘老黃曆改二移植版，在此感謝原作者 HY Little",
+    "desja-JP": "中國語のアルマナック",
     "desen-US": "An almanac"
+  },
+  "poi-plugin-translator": {
+    "zh-CN": "英语翻译",
+    "zh-TW": "英語翻譯",
+    "ja-JP": "翻訳者",
+    "en-US": "Translator",
+    "version": "v0.0.0",
+    "icon": "language",
+    "author": "KochiyaOcean",
+    "link": "https://github.com/kochiyaocean",
+    "deszh-CN": "将舰娘名和装备名翻译为英文",
+    "deszh-TW": "將艦娘名和裝備名翻譯爲英文",
+    "desja-JP": "艦娘と装備の名前を英訳します",
+    "desen-US": "Translate ships' & equipments' name into English"
   }
 }

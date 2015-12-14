@@ -195,9 +195,11 @@ window.addEventListener 'game.response', (e) ->
             mapCell: currentCell
             quest: body.api_quest_name
             enemy: body.api_enemy_info.api_deck_name
+            combined: combined
+            mvp: if combined then [body.api_mvp - 1, body.api_mvp_combined - 1] else [body.api_mvp - 1, body.api_mvp - 1]
             dropShipId: if body.api_get_ship? then body.api_get_ship.api_ship_id else -1
             deckShipId: if combined then _decks[0].api_ship.concat(_decks[1].api_ship) else Object.clone _decks[deckId].api_ship
-            deckHp: if combined then _sortieHp.concat(_combinedHp)
+            deckHp: if combined then _sortieHp.concat(_combinedHp) else _sortieHp
             enemyShipId: Object.clone enemyShipId
             enemyFormation: enemyFormation
             enemyHp: Object.clone _enemyHp
