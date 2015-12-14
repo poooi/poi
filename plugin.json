@@ -181,6 +181,20 @@
     "desja-JP": "持っている艦娘の情報を展示する",
     "desen-US": "Show detailed information of all owned ship girls"
   },
+  "poi-plugin-secretary": {
+    "zh-CN": "秘书通知",
+    "zh-TW": "祕書通知",
+    "ja-JP": "秘書艦ボイス",
+    "en-US": "Secretary",
+    "version": "v0.0.0",
+    "icon": "file-audio-o",
+    "author": "Dazzy Ding",
+    "link": "https://github.com/yukixz",
+    "deszh-CN": "将秘书舰语音设置为通知语音",
+    "deszh-TW": "將祕書艦語音設置爲通知語音",
+    "desja-JP": "秘書艦のボイスが通知音を設定します",
+    "desen-US": "Use secretary voice as notification sound."
+  },
   "poi-plugin-senka-calc": {
     "zh-CN": "我变强了",
     "zh-TW": "戦果計算",
