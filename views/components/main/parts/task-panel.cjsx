@@ -51,7 +51,7 @@ getStyleByProgress = (progress) ->
       return 'primary'
     when '80%'
       return 'info'
-    when '达成'
+    when __ 'Completed'
       return 'success'
     else
       return 'default'

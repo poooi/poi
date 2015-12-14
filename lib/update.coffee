@@ -1,7 +1,7 @@
 Promise = require 'bluebird'
 async = Promise.coroutine
 request = Promise.promisifyAll require 'request'
-requestAsync = Promise.promisify request
+requestAsync = Promise.promisify request, multiArgs: true
 
 {SERVER_HOSTNAME, POI_VERSION, ROOT} = global
 {log, warn, error} = require './utils'

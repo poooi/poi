@@ -2,9 +2,11 @@ require 'coffee-react/register'
 path = require 'path-extra'
 notifier = require 'node-notifier'
 fs = require 'fs-extra'
+os = require 'os'
+semver = require 'semver'
 
 # Environments
-window.remote = require 'remote'
+window.remote = require('electron').remote
 window.ROOT = path.join(__dirname, '..')
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
@@ -21,6 +23,7 @@ window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
 window.jQuery = require path.join(ROOT, 'components/jquery/dist/jquery')
 window.React = require 'react'
+window.ReactDOM = require 'react-dom'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
 
@@ -42,82 +45,84 @@ window.resolveTime = (seconds) ->
   minutes = "0#{minutes}" if minutes < 10
   seconds = "0#{seconds}" if seconds < 10
   "#{hours}:#{minutes}:#{seconds}"
-window.log = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'default'
-  window.dispatchEvent event
-window.success = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'success'
-  window.dispatchEvent event
-window.warn = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'warning'
-  window.dispatchEvent event
-window.error = (msg) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail:
-      message: msg
-      type: 'danger'
-  window.dispatchEvent event
 
+poiAlert = (details) ->
+  event = new CustomEvent 'poi.alert',
+    bubbles: true
+    cancelable: true
+    detail: details
+  window.dispatchEvent event
+window.log = (msg, options) -> poiAlert Object.assign({
+  message: msg,
+  type: 'default',
+  priority: 0}, options)
+window.success = (msg, options) -> poiAlert Object.assign({
+  message: msg,
+  type: 'success',
+  priority: 1}, options)
+window.warn = (msg, options) -> poiAlert Object.assign({
+  message: msg,
+  type: 'warning',
+  priority: 2}, options)
+window.error = (msg, options) -> poiAlert Object.assign({
+  message: msg,
+  type: 'warning',
+  priority: 4}, options)
+
+## window.notify
+# msg=null: Sound-only notification.
+NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
+NOTIFY_NOTIFICATION_API = true
+if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
+  NOTIFY_NOTIFICATION_API = false
 window.notify = (msg, options) ->
-  # Basic notification settings
+  # Notification config
   enabled = config.get('poi.notify.enabled', true)
-  volume = config.get('poi.notify.volume', 1.0)
   audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
-  # Advanced notification settings
-  if enabled
-    switch options?.type
-      when 'construction'
-        enabled = config.get('poi.notify.construction.enabled', enabled)
-        audio = config.get('poi.notify.construction.audio', audio)
-      when 'expedition'
-        enabled = config.get('poi.notify.expedition.enabled', enabled)
-        audio = config.get('poi.notify.expedition.audio', audio)
-      when 'repair'
-        enabled = config.get('poi.notify.repair.enabled', enabled)
-        audio = config.get('poi.notify.repair.audio', audio)
-      when 'morale'
-        enabled = config.get('poi.notify.morale.enabled', enabled)
-        audio = config.get('poi.notify.morale.audio', audio)
-      else
-        enabled = config.get('poi.notify.others.enabled', enabled)
+  volume = config.get('poi.notify.volume', 0.8)
+  title = 'poi'
+  icon = NOTIFY_DEFAULT_ICON
+  switch options?.type
+    when 'construction'
+      enabled = config.get('poi.notify.construction.enabled', enabled) if enabled
+      audio = config.get('poi.notify.construction.audio', audio)
+    when 'expedition'
+      enabled = config.get('poi.notify.expedition.enabled', enabled) if enabled
+      audio = config.get('poi.notify.expedition.audio', audio)
+    when 'repair'
+      enabled = config.get('poi.notify.repair.enabled', enabled) if enabled
+      audio = config.get('poi.notify.repair.audio', audio)
+    when 'morale'
+      enabled = config.get('poi.notify.morale.enabled', enabled) if enabled
+      audio = config.get('poi.notify.morale.audio', audio)
+    else
+      enabled = config.get('poi.notify.others.enabled', enabled) if enabled
+  # Overwrite by options
+  if options?
+    title = options.title if options.title
+    icon = options.icon if options.icon
+    audio = options.audio if options.audio
+
   # Send desktop notification
-  if !enabled
-    return
-  if process.platform == 'win32'
-    notifier.notify
-      title: 'poi'
-      message: msg
-      icon: options?.icon || require('path-extra').join(ROOT, 'assets', 'icons', 'icon.png')
-      sound: false
-  else
-    new Notification 'poi',
-      icon: if options?.icon then "file://#{options.icon}" else "file://#{ROOT}/assets/icons/icon.png"
-      body: msg
-  # Play notification sound
   #   According to MDN Notification API docs: https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
   #   Parameter `sound` is not supported in any browser yet, so we play sound manually.
-  if volume < 0.00001
-    return
-  sound = new Audio(audio)
-  sound.volume = volume
-  sound.play()
+  return unless enabled
+  if msg?
+    if NOTIFY_NOTIFICATION_API
+      new Notification title,
+        icon: "file://#{icon}"
+        body: msg
+    else
+      notifier.notify
+        title: title
+        icon: icon
+        message: msg
+        sound: false
+  if volume > 0.0001
+    sound = new Audio(audio)
+    sound.volume = volume
+    sound.play()
+
 modals = []
 window.modalLocked = false
 window.toggleModal = (title, content, footer) ->
@@ -142,6 +147,8 @@ window.showModal = ->
 window.config = remote.require './lib/config'
 window.proxy = remote.require './lib/proxy'
 window.CONST = Object.remoteClone remote.require './lib/constant'
+# Plugin Manager
+window.PluginManager = require '../lib/plugin-manager'
 
 checkLayout = (layout) ->
   if layout isnt 'horizontal' and layout isnt 'vertical' and layout isnt 'L'
@@ -150,13 +157,24 @@ checkLayout = (layout) ->
   layout
 
 # User configs
+language = navigator.language
+if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
+  switch language.substr(0, 1).toLowerCase()
+    when 'zh'
+      language = 'zh-TW'
+    when 'ja'
+      language = 'ja-JP'
+    else
+      language = 'en-US'
 window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.webviewWidth = config.get 'poi.webview.width', -1
-window.language = config.get 'poi.language', navigator.language
+window.language = config.get 'poi.language', language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
 window.useSVGIcon = config.get 'poi.useSVGIcon', false
 d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
 window.screenshotPath = config.get 'poi.screenshotPath', d
+window.notify.morale = config.get 'poi.notify.morale.value', 49
+window.notify.expedition = config.get 'poi.notify.expedition.value', 60
 
 #Custom css
 window.reloadCustomCss = ->
@@ -288,6 +306,7 @@ resolveResponses = ->
           if not localStorage.start2Version? or start2Version > localStorage.start2Version
             localStorage.start2Version = start2Version % 0xFFFFFFFF
             localStorage.start2Body = JSON.stringify body
+          window.dispatchEvent new Event 'initialize.complete'
         # User datas prefixed by _
         when '/kcsapi/api_get_member/basic'
           window._teitokuLv = body.api_level
@@ -295,6 +314,11 @@ resolveResponses = ->
           window._nickNameId = body.api_nickname_id
         when '/kcsapi/api_get_member/deck'
           window._decks[deck.api_id - 1] = deck for deck in body
+        when '/kcsapi/api_get_member/mapinfo'
+          window._eventMapRanks = {}
+          for map in body
+            if map.api_eventmap?.api_selected_rank?
+              window._eventMapRanks[map.api_id] = map.api_eventmap.api_selected_rank
         when '/kcsapi/api_get_member/ndock'
           window._ndocks = body.map (e) -> e.api_ship_id
         when '/kcsapi/api_get_member/ship_deck'
@@ -357,6 +381,8 @@ resolveResponses = ->
             decks[deckId].api_ship[idx] = shipId
             # Exchange
             decks[x].api_ship[y] = curId if x != -1 && y != -1
+        when '/kcsapi/api_req_hensei/lock'
+          _ships[parseInt(postBody.api_ship_id)].api_locked = body.api_locked
         when '/kcsapi/api_req_hensei/preset_select'
           decks = window._decks
           deckId = parseInt(postBody.api_deck_id) - 1
@@ -377,6 +403,8 @@ resolveResponses = ->
           _ships[parseInt(postBody.api_id)].api_slot[parseInt(postBody.api_slot_idx)] = parseInt(postBody.api_item_id)
         when '/kcsapi/api_req_kaisou/slot_exchange_index'
           _ships[parseInt(postBody.api_id)].api_slot = body.api_slot
+        when '/kcsapi/api_req_kaisou/lock'
+          _slotitems[parseInt(postBody.api_slotitem_id)].api_locked = body.api_locked
         when '/kcsapi/api_req_kousyou/createitem'
           _slotitems[body.api_slot_item.api_id] = extendSlotitem body.api_slot_item if body.api_create_flag == 1
         when '/kcsapi/api_req_kousyou/destroyitem2'
@@ -414,6 +442,8 @@ resolveResponses = ->
             afterSlot = body.api_after_slot
             itemId = afterSlot.api_id
             _slotitems[itemId] = extendSlotitem afterSlot
+        when '/kcsapi/api_req_map/select_eventmap_rank'
+          window._eventMapRanks["#{postBody.api_maparea_id}#{postBody.api_map_no}"] = postBody.api_rank
         when '/kcsapi/api_req_mission/result'
           window._teitokuLv = body.api_member_lv
         when '/kcsapi/api_req_nyukyo/speedchange'

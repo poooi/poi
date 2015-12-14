@@ -35,14 +35,12 @@ China mainland mirror: [here](http://0u0.moe/poi).
 
 ## Run
 
-First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/electron) and [Node.js](https://nodejs.org).
+First, get the __latest__(v0.35.x) __x64__ version of [Electron](https://github.com/atom/electron) and [Node.js](https://nodejs.org).
 
 ```bash
-git clone --recursive https://github.com/poooi/poi && cd poi
-git submodule foreach npm i
+git clone https://github.com/poooi/poi && cd poi
 npm i
-./node_modules/.bin/bower install
-./node_modules/.bin/gulp
+./node_modules/.bin/gulp install
 cp default-config.cson config.cson
 /path/to/electron ./
 ```

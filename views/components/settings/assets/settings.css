@@ -49,7 +49,19 @@
   padding-right: 0px;
 }
 #SettingsView .notif-button {
-  width: 20%;
+  flex: 1;
+}
+#SettingsView .notif-input {
+}
+#SettingsView .notif-row {
+}
+#SettingsView .notif-container {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 6px;
+}
+#SettingsView .notif-input-desc {
+  padding: 6px 0px;
 }
 #SettingsView .folder-picker {
   width: 100%;
@@ -77,4 +89,11 @@
 #SettingsView .control-button > button,
 #SettingsView .plugin-control-button {
   padding: 5px 7px;
+}
+#SettingsView #mirror-select {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#SettingsView button .fa {
+  margin-right: 2px;
 }

@@ -9,17 +9,18 @@ getFontStyle = (theme)  ->
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
   countdown = [0, 0, 0, 0, 0, 0]
-  cond = [49, 49, 49, 49, 49, 49]
+  moraleValue = window.notify.morale
+  cond = [moraleValue, moraleValue, moraleValue, moraleValue, moraleValue, moraleValue]
   for shipId, i in deck.api_ship
     if shipId == -1
       countdown[i] = 0
-      cond[i] = 49
+      cond[i] = moraleValue
       continue
     ship = _ships[shipId]
     # if ship.api_cond < 49
     #   cond[i] = Math.min(cond[i], ship.api_cond)
     cond[i] = ship.api_cond
-    countdown[i] = Math.max(countdown[i], Math.ceil((49 - cond[i]) / 3) * 180)
+    countdown[i] = Math.max(countdown[i], Math.ceil((moraleValue - cond[i]) / 3) * 180)
   ret =
     countdown: countdown
     cond: cond
@@ -249,11 +250,13 @@ TopAlert = React.createClass
         if @isMount
           $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@maxCountdown - @timeDelta)
         if @timeDelta % (3 * 60) == 0
-          cond = @cond.map (c) => if c < 49 then Math.min(49, c + @timeDelta / 60) else c
+          moraleValue = window.notify.morale
+          cond = @cond.map (c) => if c < moraleValue then Math.min(moraleValue, c + @timeDelta / 60) else c
           @props.updateCond(cond)
         if @maxCountdown is @timeDelta and not @inBattle and not @state.inMission and window._decks[@props.deckIndex].api_mission[0] <= 0
           notify "#{@props.deckName} #{__ 'have recovered from fatigue'}",
             type: 'morale'
+            title: __ 'Morale'
             icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
       if flag or (@inBattle and not @state.inMission)
         @interval = clearInterval @interval

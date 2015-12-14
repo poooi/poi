@@ -19,7 +19,7 @@ adjustSize = ->
   webview = $('kan-game webview')
   url = null
   try
-    url = webview?.getUrl?()
+    url = webview?.getURL?()
   catch e
     url = null
   # return if webview.isLoading()
@@ -68,7 +68,7 @@ adjustSize = ->
     document.body.appendChild dropdownStyle
     dropdownStyleAppended = true
   dropdownStyle.innerHTML =
-    """poi-nav poi-nav-tabs nav .dropdown-menu {
+    """poi-nav poi-nav-tabs .nav .dropdown-menu {
       max-height: #{$('#MainView').style.height};
       overflow: auto;
     }

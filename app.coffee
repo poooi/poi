@@ -1,5 +1,4 @@
-app = require 'app'
-BrowserWindow = require 'browser-window'
+{app, BrowserWindow} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
 
@@ -9,6 +8,7 @@ global.ROOT = __dirname
 global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
 global.EXROOT = global.APPDATA_PATH
+global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
 # TODO: Remove in the next release
@@ -82,7 +82,7 @@ app.on 'window-all-closed', ->
 app.on 'ready', ->
   if process.platform != 'darwin'
     shortcut.register()
-  screen = require 'screen'
+  {screen} = require 'electron'
   screenSize = screen.getPrimaryDisplay().workAreaSize
   global.mainWindow = mainWindow = new BrowserWindow
     x: config.get 'poi.window.x', 0
@@ -99,7 +99,7 @@ app.on 'ready', ->
       mainWindow.reloadArea = 'kan-game webview'
     else
       mainWindow.setMenu null
-  mainWindow.loadUrl "file://#{__dirname}/index.html"
+  mainWindow.loadURL "file://#{__dirname}/index.html"
   if process.env.DEBUG?
     mainWindow.openDevTools
       detach: true

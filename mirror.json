@@ -1,12 +1,12 @@
 [
   {
     "name": "cnpmjs",
-    "menuname": "cnpmjs.org",
+    "menuname": "cnpmjs.org (China mirror)",
     "server": "http://r.cnpmjs.org/"
   },
   {
     "name": "npmjs",
-    "menuname": "npmjs.org",
+    "menuname": "npmjs.org (Main server)",
     "server": "https://registry.npmjs.org/"
   }
 ]

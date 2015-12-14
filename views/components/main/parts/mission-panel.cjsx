@@ -106,9 +106,11 @@ MissionPanel = React.createClass
     for i in [1..4]
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
-        if decks[i].countdown <= 60 && !notified[i]
+        expeditionValue = window.notify.expedition
+        if decks[i].countdown <= expeditionValue && !notified[i]
           notify "#{decks[i].name} #{__ 'mission complete'}",
             type: 'expedition'
+            title: __ 'Expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
     @setState
@@ -136,7 +138,7 @@ MissionPanel = React.createClass
           }
           </span>
         {
-          if @state.decks[i].countdown > 60
+          if @state.decks[i].countdown > window.notify.expedition
             <OverlayTrigger placement='left' overlay={<Tooltip id="mission-return-by-#{i}"><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
               <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
             </OverlayTrigger>

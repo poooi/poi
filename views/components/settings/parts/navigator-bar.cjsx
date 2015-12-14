@@ -31,7 +31,7 @@ NavigatorBar = React.createClass
   handleStopLoading: ->
     @setState
       navigateStatus: 0
-      navigateUrl: webview.getUrl()
+      navigateUrl: webview.getURL()
   handleFailLoad: ->
     @setState
       navigateStatus: -2
@@ -62,6 +62,9 @@ NavigatorBar = React.createClass
       @handleNavigate()
   handleSetHomepage: ->
     config.set 'poi.homepage', @state.navigateUrl
+  handleGotoHomepage: ->
+    @state.navigateUrl=config.get 'poi.homepage'
+    @handleNavigate()
   componentDidMount: ->
     webview.addEventListener 'did-start-loading', @handleStartLoading
     webview.addEventListener 'did-stop-loading', @handleStopLoading
@@ -82,7 +85,7 @@ NavigatorBar = React.createClass
         </ButtonGroup>
         <ButtonGroup style={marginLeft: 5}>
           <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'>{__ 'Set as homepage'}</Tooltip>}>
-            <Button bsSize='small' onClick={@handleSetHomepage}><FontAwesome name='bookmark' /></Button>
+            <Button bsSize='small' onClick={@handleSetHomepage} onContextMenu={@handleGotoHomepage}><FontAwesome name='bookmark' /></Button>
           </OverlayTrigger>
         </ButtonGroup>
       </div>

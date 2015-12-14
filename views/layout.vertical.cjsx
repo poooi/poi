@@ -18,7 +18,7 @@ adjustSize = ->
   poiapp = document.getElementsByTagName('poi-app')[0]
   url = null
   try
-    url = webview?.getUrl?()
+    url = webview?.getURL?()
   catch e
     url = null
   factor = Math.ceil(window.innerWidth /  800.0 * 100) / 100.0
@@ -68,7 +68,7 @@ adjustSize = ->
     document.body.appendChild dropdownStyle
     dropdownStyleAppended = true
   dropdownStyle.innerHTML =
-    """poi-nav poi-nav-tabs nav .dropdown-menu {
+    """poi-nav poi-nav-tabs .nav .dropdown-menu {
       max-height: #{$('#MainView').style.height};
       overflow: auto;
     }

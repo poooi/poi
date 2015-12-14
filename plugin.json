@@ -180,5 +180,33 @@
     "deszh-TW": "提供已有艦娘詳細信息查看",
     "desja-JP": "持っている艦娘の情報を展示する",
     "desen-US": "Show detailed information of all owned ship girls"
+  },
+  "poi-plugin-senka-calc": {
+    "zh-CN": "我变强了",
+    "zh-TW": "戦果計算",
+    "ja-JP": "戦果計算",
+    "en-US": "Senka Calc",
+    "version": "v0.0.0",
+    "icon": "odnoklassniki",
+    "author": "Rui",
+    "link": "https://github.com/ruiii",
+    "deszh-CN": "战果计算器",
+    "deszh-TW": "戦果計算器",
+    "desja-JP": "戦果計算器",
+    "desen-US": "Senka calculator"
+  },
+  "poi-plugin-almanac": {
+    "zh-CN": "舰娘黄历",
+    "zh-TW": "舰娘黄历",
+    "ja-JP": "舰娘黄历",
+    "en-US": "Almanac",
+    "version": "v0.0.0",
+    "icon": "calendar",
+    "author": "Magica",
+    "link": "https://github.com/magicae",
+    "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "deszh-TW": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "desja-JP": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "desen-US": "An almanac"
   }
 }

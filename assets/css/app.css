@@ -1,5 +1,5 @@
 *, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "Heiti SC", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
+  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
 }
 ::-webkit-scrollbar {
   width: 0px;
@@ -23,6 +23,7 @@ body {
 }
 .tab-content {
   overflow: auto;
+  margin-bottom: 15px;
 }
 #poi-app-container {
   overflow: hidden;
@@ -59,22 +60,22 @@ poi-app .container {
 table {
   table-layout: fixed;
 }
-poi-app poi-nav-tabs nav ul {
+poi-app poi-nav-tabs .nav {
   display: flex;
 }
-poi-app poi-nav-tabs nav ul li {
+poi-app poi-nav-tabs .nav li {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-poi-app poi-nav-tabs nav ul li a {
+poi-app poi-nav-tabs .nav  li a {
   text-align: center;
 }
-poi-app poi-nav-tabs nav ul.dropdown-menu {
+poi-app poi-nav-tabs .nav .dropdown-menu {
   min-width: 100%;
 }
-poi-app poi-nav-tabs nav li.dropdown {
+poi-app poi-nav-tabs .nav .dropdown {
   overflow: inherit;
 }
 poi-info {
@@ -96,6 +97,25 @@ poi-control .btn-sm {
 poi-control button .fa {
   cursor: pointer !important;
   width: 20px;
+}
+poi-control .poi-control-container {
+  display: flex;
+  flex-direction: row;
+}
+poi-control .poi-control-extender {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: 0.3s;
+  display: block;
+}
+poi-control .collapse {
+  width: 0px;
+}
+poi-control .collapse.in {
+  width: auto;
+}
+poi-control .collapsing {
+  width: auto;
 }
 .table tbody tr td {
   padding: 8px;
