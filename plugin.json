@@ -155,17 +155,17 @@
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
-    "zh-TW": "数据汇报",
-    "ja-JP": "数据汇报",
+    "zh-TW": "數據匯報",
+    "ja-JP": "統計データベースツール",
     "en-US": "Data Report",
     "version": "v0.0.0",
     "icon": "pie-chart",
     "author": "Magica",
     "link": "https://github.com/magicae",
     "deszh-CN": "汇报建造数据、海域掉落数据、开发数据",
-    "deszh-TW": "汇报建造数据、海域掉落数据、开发数据",
-    "desja-JP": "汇报建造数据、海域掉落数据、开发数据",
-    "desen-US": "汇报建造数据、海域掉落数据、开发数据"
+    "deszh-TW": "匯報建造數據、海域掉落數據、開發數據",
+    "desja-JP": "統計データベース(http://db.kcwiki.moe)登録用ツール",
+    "desen-US": "Report data to database(http://db.kcwiki.moe)"
   },
   "poi-plugin-ship-info": {
     "zh-CN": "舰娘信息",
@@ -197,7 +197,7 @@
   },
   "poi-plugin-almanac": {
     "zh-CN": "舰娘黄历",
-    "zh-TW": "舰娘黄历",
+    "zh-TW": "艦娘黃曆",
     "ja-JP": "舰娘黄历",
     "en-US": "Almanac",
     "version": "v0.0.0",
@@ -205,8 +205,8 @@
     "author": "Magica",
     "link": "https://github.com/magicae",
     "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
-    "deszh-TW": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
-    "desja-JP": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
+    "deszh-TW": "艦娘老黃曆改二移植版，在此感謝原作者 HY Little",
+    "desja-JP": "中國語のアルマナック",
     "desen-US": "An almanac"
   },
   "poi-plugin-translator": {
