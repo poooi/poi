@@ -107,6 +107,8 @@ PluginConfig = React.createClass
     installing: false
     mirror: config.get "packageManager.mirror", 0
     isUpdateAvailable: false
+  isUpdateAvailable: false
+  checkCount: 0
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
@@ -224,42 +226,68 @@ PluginConfig = React.createClass
           callback(index, er)
       @setState {installStatus}
   solveUpdate: (updateData, isfirst) ->
-    latest = @state.latest
-    updateCount = 0
-    for updateObject, index in updateData
-      if latest[updateObject[1]]? && semver.lt(latest[updateObject[1]], updateObject[4])
-        latest[updateObject[1]] = updateObject[4]
-        updateCount++
-    isUpdateAvailable = updateCount > 0
-    if isfirst && updateCount > 0
-      title = __ 'Plugin update'
-      outdatedPlugins = []
-      for plugin, index in plugins
-        if semver.lt(plugin.version, latest[plugin.packageName])
-          if plugin.displayName.props?.children?
-            displayItems = plugin.displayName.props.children
-          else
-            displayItems = plugin.displayName
-          for child in displayItems
-            if typeof child is "string"
-              outdatedPlugins.push child
-      content = "#{outdatedPlugins.join(' ')} #{__ "have newer version. Please update your plugins."}"
-      notify content,
-        type: 'plugin update'
-        title: title
-        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
-        audio: "file://#{ROOT}/assets/audio/update.mp3"
-    @setState
-      latest: latest
-      checking: false
-      isUpdateAvailable: isUpdateAvailable
+    if config.get 'enableBetaPluginCheck', false
+      latest = @state.latest
+      latestVersion = updateData.latest
+      if semver.lt(latestVersion, updateData.beta ? "0.0.0")
+        latestVersion = updateData.beta
+      if latest[updateData.packageName]? && semver.lt(latest[updateData.packageName], latestVersion)
+        latest[updateData.packageName] = latestVersion
+        @isUpdateAvailable = true
+      #console.log "checkCount: #{@checkCount}"
+      @checkCount--
+    else
+      latest = @state.latest
+      updateCount = 0
+      for updateObject, index in updateData
+        if latest[updateObject[1]]? && semver.lt(latest[updateObject[1]], updateObject[4])
+          latest[updateObject[1]] = updateObject[4]
+          updateCount++
+      @isUpdateAvailable = updateCount > 0
+    if (@checkCount is 0)
+      if isfirst && @isUpdateAvailable
+        title = __ 'Plugin update'
+        outdatedPlugins = []
+        for plugin, index in plugins
+          if semver.lt(plugin.version, latest[plugin.packageName])
+            if plugin.displayName.props?.children?
+              displayItems = plugin.displayName.props.children
+            else
+              displayItems = plugin.displayName
+            for child in displayItems
+              if typeof child is "string"
+                outdatedPlugins.push child
+        content = "#{outdatedPlugins.join(' ')} #{__ "have newer version. Please update your plugins."}"
+        notify content,
+          type: 'plugin update'
+          title: title
+          icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+          audio: "file://#{ROOT}/assets/audio/update.mp3"
+      @setState
+        latest: latest
+        checking: false
+        isUpdateAvailable: @isUpdateAvailable
   checkUpdate: (callback, isfirst) ->
-    npm.load npmConfig, (err) ->
-      npm.config.set 'depth', 1
-      npm.commands.outdated [], (er, data) ->
-        callback(data, isfirst)
+    latest = @state.latest
+    for plugin in plugins
+      latest[plugin.packageName] = plugin.version
+    @isUpdateAvailable = false
+    if config.get 'enableBetaPluginCheck', false
+      npm.load npmConfig, (err) =>
+        @checkCount = plugins.length
+        for plugin in plugins
+          packageName = plugin.packageName
+          npm.commands.distTag ['ls', plugin.packageName], do (packageName) ->
+            (er, data) ->
+              callback(Object.assign({packageName: packageName}, data), isfirst)
+    else
+      npm.load npmConfig, (err) ->
+        npm.config.set 'depth', 1
+        npm.commands.outdated [], (er, data) ->
+          callback(data, isfirst)
     @setState
       checking: true
+      latest: latest
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
   componentDidMount: ->
