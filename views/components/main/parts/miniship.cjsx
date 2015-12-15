@@ -187,9 +187,6 @@ module.exports =
                 </Button>
             }
             </ButtonGroup>
-            <Button bsSize="xsmall" onClick={@toggle}>
-              <FontAwesome name='external-link' />
-            </Button>
           </div>
           {
             for deck, i in @state.decks
@@ -221,11 +218,6 @@ module.exports =
                   {@state.fullnames[i]}
                 </Button>
             }
-            </ButtonGroup>
-            <ButtonGroup style={width: 50}>
-              <Button bsSize="small" onClick={@toggle}>
-                <FontAwesome name='external-link-square' rotate=180 />
-              </Button>
             </ButtonGroup>
           </div>
           {
