@@ -95,6 +95,18 @@ npmConfig = {
   http_proxy: 'http://127.0.0.1:12450'
 }
 
+ifStableVersion = (version) ->
+  semver.satisfies version,
+    ">= #{semver.major version}.#{semver.minor version}.#{semver.patch version}"
+
+needUpdate = (now, check) ->
+  if ifStableVersion now
+    semver.lt now, check
+  else if not ifStableVersion(now) and not ifStableVersion(check)
+    semver.lt now, check
+  else
+    true
+
 PluginConfig = React.createClass
   getInitialState: ->
     status: status
@@ -107,6 +119,8 @@ PluginConfig = React.createClass
     installing: false
     mirror: config.get "packageManager.mirror", 0
     isUpdateAvailable: false
+  isUpdateAvailable: false
+  checkCount: 0
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
@@ -139,9 +153,13 @@ PluginConfig = React.createClass
     if !@props.disabled
       updating = @state.updating
       updating[index] = true
-      npm.load npmConfig, (err) ->
-        npm.commands.update [plugins[index].packageName], (er, data) ->
-          callback(index, er)
+      npm.load npmConfig, (err) =>
+        if ifStableVersion @state.latest[plugins[index].packageName]
+          npm.commands.update [plugins[index].packageName], (er, data) ->
+            callback(index, er)
+        else
+          npm.commands.install ["#{plugins[index].packageName}@#{@state.latest[plugins[index].packageName]}"], (er,data) ->
+            callback(index, er)
       @setState {updating}
   handleInstallAllComplete: (er) ->
     installAllStatus = []
@@ -187,13 +205,13 @@ PluginConfig = React.createClass
   handleUpdateAll: (callback) ->
     if !@props.disabled
       updating = @state.updating
-      toUpdate = []
+      toInstall = []
       for plugin, index in plugins
-        if semver.lt(plugin.version, @state.latest[plugin.packageName]) && @state.removeStatus[index] == 0
+        if needUpdate(plugin.version, @state.latest[plugin.packageName]) && @state.removeStatus[index] == 0
           updating[index] = true
-          toUpdate.push plugin.packageName
+          toInstall.push "#{plugin.packageName}@#{@state.latest[plugin.packageName]}"
       npm.load npmConfig, (err) ->
-        npm.commands.update toUpdate, (er, data) ->
+        npm.commands.install toInstall, (er, data) ->
           callback(er)
       @setState
         updating: updating
@@ -225,41 +243,52 @@ PluginConfig = React.createClass
       @setState {installStatus}
   solveUpdate: (updateData, isfirst) ->
     latest = @state.latest
-    updateCount = 0
-    for updateObject, index in updateData
-      if latest[updateObject[1]]? && semver.lt(latest[updateObject[1]], updateObject[4])
-        latest[updateObject[1]] = updateObject[4]
-        updateCount++
-    isUpdateAvailable = updateCount > 0
-    if isfirst && updateCount > 0
-      title = __ 'Plugin update'
-      outdatedPlugins = []
-      for plugin, index in plugins
-        if semver.lt(plugin.version, latest[plugin.packageName])
-          if plugin.displayName.props?.children?
-            displayItems = plugin.displayName.props.children
-          else
-            displayItems = plugin.displayName
-          for child in displayItems
-            if typeof child is "string"
-              outdatedPlugins.push child
-      content = "#{outdatedPlugins.join(' ')} #{__ "have newer version. Please update your plugins."}"
-      notify content,
-        type: 'plugin update'
-        title: title
-        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
-        audio: "file://#{ROOT}/assets/audio/update.mp3"
-    @setState
-      latest: latest
-      checking: false
-      isUpdateAvailable: isUpdateAvailable
+    latestVersion = updateData.latest
+    if config.get('enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
+      latestVersion = updateData.beta
+    if latest[updateData.packageName]? && needUpdate(latest[updateData.packageName], latestVersion)
+      latest[updateData.packageName] = latestVersion
+      @isUpdateAvailable = true
+    #console.log "checkCount: #{@checkCount}"
+    @checkCount--
+    if (@checkCount is 0)
+      if isfirst && @isUpdateAvailable
+        title = __ 'Plugin update'
+        outdatedPlugins = []
+        for plugin, index in plugins
+          if needUpdate(plugin.version, latest[plugin.packageName])
+            if plugin.displayName.props?.children?
+              displayItems = plugin.displayName.props.children
+            else
+              displayItems = plugin.displayName
+            for child in displayItems
+              if typeof child is "string"
+                outdatedPlugins.push child
+        content = "#{outdatedPlugins.join(' ')} #{__ "have newer version. Please update your plugins."}"
+        notify content,
+          type: 'plugin update'
+          title: title
+          icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+          audio: "file://#{ROOT}/assets/audio/update.mp3"
+      @setState
+        latest: latest
+        checking: false
+        isUpdateAvailable: @isUpdateAvailable
   checkUpdate: (callback, isfirst) ->
-    npm.load npmConfig, (err) ->
-      npm.config.set 'depth', 1
-      npm.commands.outdated [], (er, data) ->
-        callback(data, isfirst)
+    latest = @state.latest
+    for plugin in plugins
+      latest[plugin.packageName] = plugin.version
+    @isUpdateAvailable = false
+    npm.load npmConfig, (err) =>
+      @checkCount = plugins.length
+      for plugin in plugins
+        packageName = plugin.packageName
+        npm.commands.distTag ['ls', plugin.packageName], do (packageName) ->
+          (er, data) ->
+            callback(Object.assign({packageName: packageName}, data), isfirst)
     @setState
       checking: true
+      latest: latest
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
   componentDidMount: ->
@@ -337,8 +366,8 @@ PluginConfig = React.createClass
               <span style={fontSize: '150%'}>{plugin.displayName} </span>
               <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
               <div style={paddingTop: 2}>
-                <Label bsStyle='primary'
-                       className="#{if @state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
+                <Label bsStyle="#{if ifStableVersion @state.latest[plugin.packageName] then 'primary' else 'warning'}"
+                       className="#{if @state.updating[index] || not needUpdate(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
                   <FontAwesome name='cloud-upload' />
                   Version {@state.latest[plugin.packageName]}
                 </Label>
@@ -375,14 +404,14 @@ PluginConfig = React.createClass
                       }
                     </Button>
                     <Button bsStyle='primary'
-                            disabled={@state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0}
+                            disabled={@state.updating[index] || not needUpdate(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0}
                             onClick={@handleUpdate.bind @, index, @handleUpdateComplete}
                             style={width: "33%"}
                             className="plugin-control-button">
                       <FontAwesome name={
                                      if @state.updating[index]
                                        "spinner"
-                                     else if semver.lt(plugin.version, @state.latest[plugin.packageName])
+                                     else if needUpdate(plugin.version, @state.latest[plugin.packageName])
                                        "cloud-download"
                                      else
                                        "check"
@@ -391,7 +420,7 @@ PluginConfig = React.createClass
                       {
                         if @state.updating[index]
                            __ "Updating"
-                        else if semver.lt(plugin.version, @state.latest[plugin.packageName])
+                        else if needUpdate(plugin.version, @state.latest[plugin.packageName])
                            __ "Update"
                         else
                            __ "Latest"
