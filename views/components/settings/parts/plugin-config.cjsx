@@ -95,6 +95,10 @@ npmConfig = {
   http_proxy: 'http://127.0.0.1:12450'
 }
 
+ifStableVersion = (version) ->
+  semver.satisfies version,
+    ">= #{semver.major version}.#{semver.minor version}.#{semver.patch version}"
+
 PluginConfig = React.createClass
   getInitialState: ->
     status: status
@@ -365,7 +369,7 @@ PluginConfig = React.createClass
               <span style={fontSize: '150%'}>{plugin.displayName} </span>
               <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
               <div style={paddingTop: 2}>
-                <Label bsStyle='primary'
+                <Label bsStyle="#{if ifStableVersion @state.latest[plugin.packageName] then 'primary' else 'warning'}"
                        className="#{if @state.updating[index] || semver.gte(plugin.version, @state.latest[plugin.packageName]) || @state.removeStatus[index] != 0 then 'hidden' else ''}">
                   <FontAwesome name='cloud-upload' />
                   Version {@state.latest[plugin.packageName]}
