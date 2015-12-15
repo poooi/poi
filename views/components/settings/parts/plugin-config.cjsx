@@ -242,24 +242,15 @@ PluginConfig = React.createClass
           callback(index, er)
       @setState {installStatus}
   solveUpdate: (updateData, isfirst) ->
-    if config.get 'enableBetaPluginCheck', false
-      latest = @state.latest
-      latestVersion = updateData.latest
-      if semver.lt(latestVersion, updateData.beta ? "0.0.0")
-        latestVersion = updateData.beta
-      if latest[updateData.packageName]? && semver.lt(latest[updateData.packageName], latestVersion)
-        latest[updateData.packageName] = latestVersion
-        @isUpdateAvailable = true
-      #console.log "checkCount: #{@checkCount}"
-      @checkCount--
-    else
-      latest = @state.latest
-      updateCount = 0
-      for updateObject, index in updateData
-        if latest[updateObject[1]]? && needUpdate(latest[updateObject[1]], updateObject[4])
-          latest[updateObject[1]] = updateObject[4]
-          updateCount++
-      @isUpdateAvailable = updateCount > 0
+    latest = @state.latest
+    latestVersion = updateData.latest
+    if config.get('enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
+      latestVersion = updateData.beta
+    if latest[updateData.packageName]? && needUpdate(latest[updateData.packageName], latestVersion)
+      latest[updateData.packageName] = latestVersion
+      @isUpdateAvailable = true
+    #console.log "checkCount: #{@checkCount}"
+    @checkCount--
     if (@checkCount is 0)
       if isfirst && @isUpdateAvailable
         title = __ 'Plugin update'
@@ -288,19 +279,13 @@ PluginConfig = React.createClass
     for plugin in plugins
       latest[plugin.packageName] = plugin.version
     @isUpdateAvailable = false
-    if config.get 'enableBetaPluginCheck', false
-      npm.load npmConfig, (err) =>
-        @checkCount = plugins.length
-        for plugin in plugins
-          packageName = plugin.packageName
-          npm.commands.distTag ['ls', plugin.packageName], do (packageName) ->
-            (er, data) ->
-              callback(Object.assign({packageName: packageName}, data), isfirst)
-    else
-      npm.load npmConfig, (err) ->
-        npm.config.set 'depth', 1
-        npm.commands.outdated [], (er, data) ->
-          callback(data, isfirst)
+    npm.load npmConfig, (err) =>
+      @checkCount = plugins.length
+      for plugin in plugins
+        packageName = plugin.packageName
+        npm.commands.distTag ['ls', plugin.packageName], do (packageName) ->
+          (er, data) ->
+            callback(Object.assign({packageName: packageName}, data), isfirst)
     @setState
       checking: true
       latest: latest
