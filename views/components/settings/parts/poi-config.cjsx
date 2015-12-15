@@ -130,6 +130,7 @@ PoiConfig = React.createClass
     disableHA: config.get 'poi.disableHA', false
     screenshotPath: config.get 'poi.screenshotPath', window.screenshotPath
     cachePath: config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
+    enableBetaPluginCheck: config.get 'enableBetaPluginCheck', false
     moraleValue: window.notify.morale
     expeditionValue: window.notify.expedition
   handleSetTimeSettingShow: ->
@@ -155,6 +156,11 @@ PoiConfig = React.createClass
     config.set 'poi.disableNetworkAlert', !disabled
     @setState
       disableNetworkAlert: !enabled
+  handleSetBetaPluginCheck: ->
+    enabled = @state.enableBetaPluginCheck
+    config.set 'enableBetaPluginCheck', !enabled
+    @setState
+      enableBetaPluginCheck: !enabled
   handleSetNotify: ->
     enabled = @state.enableNotify
     config.set 'poi.notify.enabled', !enabled
@@ -461,6 +467,9 @@ PoiConfig = React.createClass
             </Col>
             <Col xs={12}>
               <Input type="checkbox" label={__ 'Prevent DMM Network Change Popup'} checked={@state.disableNetworkAlert} onChange={@handleSetNetworkAlert} />
+            </Col>
+            <Col xs={12}>
+              <Input type="checkbox" label={__ '开发者选项: 检查 beta 版插件'} checked={@state.enableBetaPluginCheck} onChange={@handleSetBetaPluginCheck} />
             </Col>
           </Grid>
         </div>
