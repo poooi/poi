@@ -1,12 +1,23 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactDOM, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip, Collapse} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
+
+# i18n config
+window.i18n = new (require 'i18n-2')
+  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+  defaultLocale: 'zh-CN',
+  directory: path.join(ROOT, 'i18n'),
+  updateFiles: false,
+  indent: "\t",
+  extension: '.json'
+  devMode: false
+window.i18n.setLocale(window.language)
+__ = window.i18n.__.bind(i18n)
+__n = window.i18n.__n.bind(i18n)
 
 # Set zoom level
 document.getElementById('poi-app-container').style.transformOrigin = '0 0'
@@ -548,21 +559,15 @@ refreshFlash = ->
   """
 # F5 & Ctrl+F5 & Alt+F5
 window.addEventListener 'keydown', (e) ->
-  if process.platform == 'darwin'
-    if e.keyCode is 91 or e.keyCode is 93
-      # When the game (flash) is on focus, it catches all keypress events
-      # Blur the webview when any Cmd key is pressed,
-      # so the OS shortcuts (from app menu) will always work
-      remote.getCurrentWindow().blurWebView()
-    else if e.keyCode is 82 and e.metaKey
-      if e.shiftKey # cmd + shift + r
-        $('kan-game webview').reloadIgnoringCache()
-      else if e.altKey # cmd + alt + r
-        refreshFlash()
-      else # cmd + r
-        # Caught by menu
-        # $('kan-game webview').reload()
-        false
+  if process.platform == 'darwin' and e.keyCode is 82 and e.metaKey
+    if e.shiftKey # cmd + shift + r
+      $('kan-game webview').reloadIgnoringCache()
+    else if e.altKey # cmd + alt + r
+      refreshFlash()
+    else # cmd + r
+      # Catched by menu
+      # $('kan-game webview').reload()
+      false
   else if e.keyCode is 116
     if e.ctrlKey # ctrl + f5
       $('kan-game webview').reloadIgnoringCache()
