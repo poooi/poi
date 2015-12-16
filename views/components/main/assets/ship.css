@@ -9,7 +9,6 @@
   padding-top: 5px;
 }
 #ShipView .fleet-name-button {
-  width: calc(100% - 50px)
 }
 #ShipView .btn-group .btn {
   flex: 1;
