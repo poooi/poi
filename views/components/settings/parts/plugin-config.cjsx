@@ -243,14 +243,15 @@ PluginConfig = React.createClass
         npm.commands.install [name], (er, data) ->
           callback(index, er)
       @setState {installStatus}
-  solveUpdate: (updateData, isfirst) ->
-    latest = @state.latest
-    latestVersion = updateData.latest ? "0.0.0"
-    if config.get('enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
-      latestVersion = updateData.beta
-    if latest[updateData.packageName]? && needUpdate(latest[updateData.packageName], latestVersion)
-      latest[updateData.packageName] = latestVersion
-      @isUpdateAvailable = true
+  solveUpdate: (err, updateData, isfirst) ->
+    if not err?
+      latest = @state.latest
+      latestVersion = updateData.latest ? "0.0.0"
+      if config.get('enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
+        latestVersion = updateData.beta
+      if latest[updateData.packageName]? && needUpdate(latest[updateData.packageName], latestVersion)
+        latest[updateData.packageName] = latestVersion
+        @isUpdateAvailable = true
     #console.log "checkCount: #{@checkCount}"
     @checkCount--
     if (@checkCount is 0)
@@ -286,8 +287,8 @@ PluginConfig = React.createClass
       for plugin in plugins
         packageName = plugin.packageName
         npm.commands.distTag ['ls', plugin.packageName], do (packageName) ->
-          (er, data) ->
-            callback(Object.assign({packageName: packageName}, data), isfirst)
+          (err, data) ->
+            callback(err, Object.assign({packageName: packageName}, data), isfirst)
     @setState
       checking: true
       latest: latest
