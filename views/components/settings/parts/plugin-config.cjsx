@@ -9,6 +9,7 @@ semver = require 'semver'
 {Grid, Col, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem, Label} = ReactBootstrap
 {config} = window
 shell = require 'shell'
+{dialog} = remote.require 'electron'
 Divider = require './divider'
 
 # Plugin version
@@ -292,6 +293,53 @@ PluginConfig = React.createClass
       latest: latest
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
+  onSelectInstallFromFileComplete: (data, er) ->
+    if er
+      notify __ 'Install failed. Maybe the selected files are not plugin packages.',
+        type: 'plugin error'
+        title: __ 'Install failed'
+        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+        audio: "file://#{ROOT}/assets/audio/fail.mp3"
+    else
+      for arr in data
+        name = arr[0].split('@')[0]
+        index = -1
+        installStatus = @state.installStatus
+        for installTarget of installTargets
+          index++
+          if installTarget == name
+            installStatus[index] = 2
+        notify __ 'Plugins are installed successfully. Please restart poi to take effect.',
+          type: 'plugin installed'
+          title: __ 'Install complete'
+          icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+          audio: "file://#{ROOT}/assets/audio/update.mp3"
+        @setState {installStatus}
+  onSelectInstallFromFile: (callback) ->
+    @synchronize =>
+      filenames = dialog.showOpenDialog
+        title: __ 'Select files'
+        defaultPath: remote.require('electron').app.getPath('downloads')
+        properties: ['openFile', 'multiSelections']
+      if filenames
+        npm.load npmConfig, (err) =>
+          npm.commands.install filenames, (er, data) ->
+            callback(data, er)
+  onDropInstallFromFile: (callback, e) ->
+    e.preventDefault()
+    droppedFiles = e.dataTransfer.files
+    filenames = []
+    for droppedFile in droppedFiles
+      filenames.push droppedFile.path
+    if filenames
+      npm.load npmConfig, (err) =>
+        npm.commands.install filenames, (er, data) ->
+          callback(data, er)
+  synchronize: (callback) ->
+    return if @lock
+    @lock = true
+    callback()
+    @lock = false
   componentDidMount: ->
     @checkUpdate(@solveUpdate, true) if config.get('poi.update.plugin', true)
   render: ->
@@ -352,6 +400,7 @@ PluginConfig = React.createClass
                             }
                             id="mirror-select">
               {
+                index = 0
                 for server, index in mirror
                   <MenuItem key={index} onSelect={@onSelectServer.bind @, index}>{mirror[index].menuname}</MenuItem>
               }
@@ -359,6 +408,16 @@ PluginConfig = React.createClass
               <MenuItem key={index} onSelect={@onSelectOpenFolder}>{__ "Manually install"}</MenuItem>
             </DropdownButton>
           </ButtonGroup>
+        </Col>
+        <Col xs={12} style={paddingBottom: 10}>
+          <div className="folder-picker"
+               onClick={@onSelectInstallFromFile.bind @, @onSelectInstallFromFileComplete}
+               onDrop={@onDropInstallFromFile.bind @, @onSelectInstallFromFileComplete}
+               onDragEnter={(e)=> e.preventDefault()}
+               onDragOver={(e)=> e.preventDefault()}
+               onDragLeave={(e)=> e.preventDefault()}>
+            {__ "Drop plugin packages here to install it, or click here to select them"}
+          </div>
         </Col>
       {
         for plugin, index in plugins
