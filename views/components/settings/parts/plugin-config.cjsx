@@ -1,6 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'

@@ -2,7 +2,8 @@
 {resolveTime} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {join} = require 'path-extra'
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 
 timeToString = (dateTime) ->
   date = new Date(dateTime)
