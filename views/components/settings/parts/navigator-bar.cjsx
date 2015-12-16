@@ -1,7 +1,8 @@
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {config} = window
 {Button, ButtonGroup, Input, OverlayTrigger, Tooltip} = ReactBootstrap
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 webview = $('kan-game webview')
 getIcon = (status) ->
   switch status

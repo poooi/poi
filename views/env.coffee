@@ -26,7 +26,14 @@ window.React = require 'react'
 window.ReactDOM = require 'react-dom'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
-
+window.i18n = new (require 'i18n-2')
+  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+  defaultLocale: 'zh-CN',
+  directory: path.join(ROOT, 'i18n'),
+  updateFiles: false,
+  indent: "\t",
+  extension: '.json'
+  devMode: false
 {remoteStringify} = remote.require './lib/utils'
 
 # Utils
@@ -173,6 +180,7 @@ d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', '
 window.screenshotPath = config.get 'poi.screenshotPath', d
 window.notify.morale = config.get 'poi.notify.morale.value', 49
 window.notify.expedition = config.get 'poi.notify.expedition.value', 60
+window.i18n.setLocale(window.language)
 
 #Custom css
 window.reloadCustomCss = ->

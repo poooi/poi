@@ -2,7 +2,8 @@ path = require 'path-extra'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col, OverlayTrigger, Tooltip} = ReactBootstrap
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 order = if layout == 'horizontal' or window.doubleTabbed then [1, 3, 5, 7, 2, 4, 6, 8] else [1..8]
 
 rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']

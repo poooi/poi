@@ -1,6 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
-{__} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 semver = require 'semver'
 fs = require 'fs-extra'
 {_, React, ReactBootstrap, FontAwesome} = window

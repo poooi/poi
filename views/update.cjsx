@@ -1,4 +1,5 @@
-{__} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 {POI_VERSION} = window
 {remote} = window
 {React, ReactBootstrap, toggleModal} = window

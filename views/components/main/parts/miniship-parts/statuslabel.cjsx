@@ -1,6 +1,7 @@
 {_, $, $$, React, ReactBootstrap, FontAwesome} = window
 {OverlayTrigger, Tooltip, Label} = ReactBootstrap
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 
 texts = [
   ['Retreated'],

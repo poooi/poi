@@ -1,9 +1,9 @@
 path = require 'path-extra'
-i18n = require 'i18n'
 {$, $$, _, React, ReactBootstrap, ROOT, toggleModal} = window
 {config} = window
 {Input, Grid, Col, Button, Alert} = ReactBootstrap
-{__, __n} = i18n
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 Divider = require './divider'
 
 basic =

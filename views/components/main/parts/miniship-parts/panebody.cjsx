@@ -1,7 +1,8 @@
 {relative, join} = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overlay, Label} = ReactBootstrap
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 Slotitems = require './slotitems'
 StatusLabel = require './statuslabel'
 TopAlert = require './topalert'

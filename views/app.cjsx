@@ -1,22 +1,12 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
 glob = require 'glob'
-i18n = require 'i18n'
-{__, __n} = i18n
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 {showItemInFolder, openItem, openExternal} = require 'shell'
 {ROOT, EXROOT, _, $, $$, React, ReactDOM, ReactBootstrap} = window
 {Button, Alert, OverlayMixin, Modal, OverlayTrigger, Tooltip, Collapse} = ReactBootstrap
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
-
-# i18n configure
-i18n.configure
-  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-  defaultLocale: 'zh-CN',
-  directory: path.join(ROOT, 'i18n'),
-  updateFiles: false,
-  indent: "\t",
-  extension: '.json'
-i18n.setLocale(window.language)
 
 # Set zoom level
 document.getElementById('poi-app-container').style.transformOrigin = '0 0'

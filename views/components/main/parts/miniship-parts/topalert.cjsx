@@ -1,6 +1,7 @@
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {OverlayTrigger, Tooltip,  Alert} = ReactBootstrap
-{__, __n} = require 'i18n'
+__ = i18n.__.bind(i18n)
+__n = i18n.__n.bind(i18n)
 {join} = require 'path-extra'
 
 getFontStyle = (theme)  ->
