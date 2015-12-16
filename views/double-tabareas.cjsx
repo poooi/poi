@@ -29,7 +29,7 @@ plugins = plugins.filter (filePath) ->
     try
       packageData = fs.readJsonSync path.join filePath, 'package.json'
     catch error
-      if env.process.DEBUG? then console.log error
+      if process.env.DEBUG? then console.log error
     if packageData?.name?
       plugin.packageName =  packageData.name
     else
@@ -40,6 +40,7 @@ plugins = plugins.filter (filePath) ->
       lowest = "v0.0.0"
     return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, lowest)
   catch e
+    if process.env.DEBUG? then console.log e
     return false
 
 plugins = plugins.map (filePath) ->

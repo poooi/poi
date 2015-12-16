@@ -50,7 +50,7 @@ plugins = plugins.map (filePath) ->
   try
     packageData = fs.readJsonSync path.join filePath, 'package.json'
   catch error
-    if env.process.DEBUG? then console.log error
+    if process.env.DEBUG? then console.log error
   if packageData?.name?
     plugin.packageName =  packageData.name
   else
