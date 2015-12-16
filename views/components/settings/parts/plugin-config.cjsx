@@ -243,7 +243,7 @@ PluginConfig = React.createClass
       @setState {installStatus}
   solveUpdate: (updateData, isfirst) ->
     latest = @state.latest
-    latestVersion = updateData.latest
+    latestVersion = updateData.latest ? "0.0.0"
     if config.get('enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
       latestVersion = updateData.beta
     if latest[updateData.packageName]? && needUpdate(latest[updateData.packageName], latestVersion)
