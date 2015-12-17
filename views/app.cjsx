@@ -300,13 +300,13 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
   render: ->
-    <Alert id='alert-container' bsStyle={null} style={overflow: 'hidden'} className="alert-#{@messageType}">
+    <div id='alert-container' style={overflow: 'hidden'} className="alert alert-#{@messageType}">
       <div className='alert-position' style={width: @state.messageWidth}>
         <span id='alert-area' className={@state.overflowAnim}>
           {@state.message}
         </span>
       </div>
-    </Alert>
+    </div>
 
 # Map Reminder
 PoiMapReminder = React.createClass
