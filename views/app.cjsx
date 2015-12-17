@@ -257,10 +257,14 @@ PoiAlert = React.createClass
     overflow: false
     messagewidth: 0
 
-  updateAlert:  ->
+  updateAlert: (e) ->
     # Must set innerHTML before getting offsetWidth
     document.getElementById('alert-area').innerHTML = @message
-    if document.getElementById('alert-container').offsetWidth < document.getElementById('alert-area').offsetWidth
+    if e
+      containerWidth = e.detail.alertWidth
+    else
+      containerWidth = document.getElementById('alert-container').offsetWidth
+    if containerWidth < document.getElementById('alert-area').offsetWidth
       # Twice messages each followed by 5 full-width spaces
       displayMessage = "#{@message}　　　　　#{@message}　　　　　"
       overflow = true
@@ -297,8 +301,11 @@ PoiAlert = React.createClass
 
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
+    window.addEventListener 'alert.change', @updateAlert
+    @message = @state.message
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
+    window.removeEventListener 'alert.change', @updateAlert
   render: ->
     <div id='alert-container' style={overflow: 'hidden'} className="alert alert-#{@messageType}">
       <div className='alert-position' style={width: @state.messageWidth}>
@@ -407,6 +414,15 @@ PoiControl = React.createClass
   handleSetExtend: ->
     extend = !@state.extend
     @setState {extend}
+  componentDidUpdate: (prevProps, prevState) ->
+    if prevState.extend != @state.extend
+      event = new CustomEvent 'alert.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          alertWidth: @alertWidth
+      window.dispatchEvent event
+    @alertWidth = document.getElementById('alert-container').offsetWidth
   componentDidMount: ->
     setTimeout =>
       try
