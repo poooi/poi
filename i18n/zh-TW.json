@@ -134,6 +134,7 @@
   "Repairing": "修理中",
   "Resupply needed": "需要補給",
   "Ship tag: %s": "出擊限定: %s",
+  "Input address": "輸入地址",
   "Set as homepage": "設為首頁",
   "Zoom": "縮放",
   "Zoom level": "縮放比率",
@@ -167,5 +168,6 @@
   "Plugins are installed successfully. Please restart poi to take effect.": "安裝完成，重啓後生效",
   "Install failed. Maybe the selected files are not plugin packages.": "安裝失敗。是否選擇了正確的安裝包？",
   "Install complete": "安裝完成",
-  "Install failed": "安裝失敗"
+  "Install failed": "安裝失敗",
+  "Developer option: check update of beta version": "開發者選項: 檢查 beta 版插件更新"
 }

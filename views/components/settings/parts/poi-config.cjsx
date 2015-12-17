@@ -469,7 +469,7 @@ PoiConfig = React.createClass
               <Input type="checkbox" label={__ 'Prevent DMM Network Change Popup'} checked={@state.disableNetworkAlert} onChange={@handleSetNetworkAlert} />
             </Col>
             <Col xs={12}>
-              <Input type="checkbox" label={__ '开发者选项: 检查 beta 版插件'} checked={@state.enableBetaPluginCheck} onChange={@handleSetBetaPluginCheck} />
+              <Input type="checkbox" label={__ 'Developer option: check update of beta version'} checked={@state.enableBetaPluginCheck} onChange={@handleSetBetaPluginCheck} />
             </Col>
           </Grid>
         </div>

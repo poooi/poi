@@ -77,7 +77,7 @@ NavigatorBar = React.createClass
   render: ->
     <div style={display: 'flex'}>
       <div style={flex: 1, marginLeft: 15, marginRight: 15}>
-        <Input type='text' bsSize='small' placeholder='输入网页地址' value={@state.navigateUrl} onChange={@handleSetUrl} onKeyDown={@handlePressEnter}/>
+        <Input type='text' bsSize='small' placeholder={__ 'Input address'} value={@state.navigateUrl} onChange={@handleSetUrl} onKeyDown={@handlePressEnter}/>
       </div>
       <div style={flex: 'none', width: 110}>
         <ButtonGroup>
