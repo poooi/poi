@@ -199,6 +199,34 @@ require('module').globalPaths.push(MODULE_PATH);
 require(ROOT + "/components/coffee-script/extras/coffee-script.js");
 ```
 
+## i18n
+
+poi 内置了 i18n-2 模组以进行多语言翻译
+
+建议将将要初始化的 i18n object 附着到 window.i18n 下，如下所示：
+
+```coffeescript
+window.i18n.pluginName = new (require 'i18n-2')
+  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+  defaultLocale: 'zh-CN',
+  directory: path.join(__dirname, 'i18n'),
+  updateFiles: false,
+  indent: "\t",
+  extension: '.json'
+  devMode: false
+window.i18n.pluginName.setLocale(window.language)
+__ = i18n.pluginName.__.bind(i18n.pluginName)
+__n = i18n.pluginName.__n.bind(i18n.pluginName)
+```
+
+在相应目录放置翻译文件之后就可以通过如下方法来获得翻译了
+
+```coffeescript
+translated = __ 'to translate'
+```
+
+关于 i18n-2 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
+
 ## 在 [npm](http://npmjs.org) 上发布
 
 在 npm 上发布不仅可以使得版本维护更加简便，而且 poi 将会用重载的 npm 模组进行新版本插件的更新。
