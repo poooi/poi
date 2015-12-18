@@ -7,17 +7,21 @@ glob = require 'glob'
 {config, proxy, remote, log, success, warn, error, toggleModal} = window
 
 # i18n config
-window.i18n = new (require 'i18n-2')
-  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-  defaultLocale: 'zh-CN',
-  directory: path.join(ROOT, 'i18n'),
-  updateFiles: false,
-  indent: "\t",
-  extension: '.json'
-  devMode: false
-window.i18n.setLocale(window.language)
-__ = window.i18n.__.bind(i18n)
-__n = window.i18n.__n.bind(i18n)
+window.i18n = {}
+i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
+for i18nFile in i18nFiles
+  namespace = path.basename i18nFile
+  window.i18n[namespace] = new (require 'i18n-2')
+    locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+    defaultLocale: 'zh-CN',
+    directory: i18nFile,
+    updateFiles: false,
+    indent: "\t",
+    extension: '.json'
+    devMode: false
+  window.i18n[namespace].setLocale(window.language)
+__ = window.i18n.others.__.bind(i18n.others)
+__n = window.i18n.others.__n.bind(i18n.others)
 
 # Set zoom level
 document.getElementById('poi-app-container').style.transformOrigin = '0 0'

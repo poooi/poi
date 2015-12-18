@@ -3,8 +3,8 @@ path = require 'path-extra'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
 {Grid, Col, Input, Tabs, Tab, Alert} = ReactBootstrap
 {PoiConfig, DisplayConfig, NetworkConfig, PluginConfig, Others} = require './parts'
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.setting.__.bind(i18n.setting)
+__n = i18n.setting.__n.bind(i18n.setting)
 
 # Discover plugins and remove unused plugins or no setting ui plugins
 plugins = glob.sync(path.join(ROOT, 'plugins', '*'))

@@ -2,8 +2,8 @@ path = require 'path-extra'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col} = ReactBootstrap
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.main.__.bind(i18n.main)
+__n = i18n.main.__n.bind(i18n.main)
 order = [1, 3, 2, 4, 5, 7, 6, 8]
 {MaterialIcon} = require '../../common/icon'
 

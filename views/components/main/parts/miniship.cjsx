@@ -4,8 +4,8 @@ path =  require 'path-extra'
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup} = ReactBootstrap
 {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.main.__.bind(i18n.main)
+__n = i18n.main.__n.bind(i18n.main)
 
 inBattle = [false, false, false, false]
 goback = {}

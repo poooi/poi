@@ -2,8 +2,8 @@ path = require 'path-extra'
 fs = require 'fs-extra'
 {remote} = require 'electron'
 {dialog} = remote.require 'electron'
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.setting.__.bind(i18n.setting)
+__n = i18n.setting.__n.bind(i18n.setting)
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Row, Button, ButtonGroup, Input, Alert} = ReactBootstrap
 {OverlayTrigger, Tooltip, Collapse, Well} = ReactBootstrap
@@ -206,7 +206,8 @@ PoiConfig = React.createClass
     language = @refs.language.getValue()
     return if @state.language == language
     config.set 'poi.language', language
-    i18n.setLocale language
+    for namespace of window.i18n
+      window.i18n[namespace].setLocale language
     @setState {language}
   handleClearCookie: (e) ->
     remote.getCurrentWebContents().session.clearStorageData {storages: ['cookies']}, ->

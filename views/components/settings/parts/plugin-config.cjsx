@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.setting.__.bind(i18n.setting)
+__n = i18n.setting.__n.bind(i18n.setting)
 fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'

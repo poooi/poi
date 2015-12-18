@@ -3,8 +3,8 @@
 CSON = require 'cson'
 fs = require 'fs-extra'
 {join} = require 'path-extra'
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.main.__.bind(i18n.main)
+__n = i18n.main.__n.bind(i18n.main)
 
 zero = 331200000
 isDifferentDay = (time1, time2) ->

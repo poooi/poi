@@ -1,7 +1,7 @@
 path = require 'path-extra'
 glob = require 'glob'
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.others.__.bind(i18n.others)
+__n = i18n.others.__n.bind(i18n.others)
 semver = require 'semver'
 fs = require 'fs-extra'
 {_, React, ReactBootstrap, FontAwesome} = window
@@ -156,7 +156,7 @@ ControlledTabArea = React.createClass
           {mainview.displayName}
         </NavItem>
         <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
-          <span><FontAwesome key={0} name='server' />{__ ' Fleet'}</span>
+          <span><FontAwesome key={0} name='server' />{window.i18n.main.__ ' Fleet'}</span>
         </NavItem>
         <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
                      title=

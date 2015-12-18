@@ -1,5 +1,5 @@
-__ = i18n.__.bind(i18n)
-__n = i18n.__n.bind(i18n)
+__ = i18n.others.__.bind(i18n.others)
+__n = i18n.others.__n.bind(i18n.others)
 {POI_VERSION} = window
 {remote} = window
 {React, ReactBootstrap, toggleModal} = window
