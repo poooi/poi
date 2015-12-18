@@ -208,6 +208,7 @@ PoiConfig = React.createClass
     config.set 'poi.language', language
     for namespace of window.i18n
       window.i18n[namespace].setLocale language
+    window.language = language
     @setState {language}
   handleClearCookie: (e) ->
     remote.getCurrentWebContents().session.clearStorageData {storages: ['cookies']}, ->
