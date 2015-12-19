@@ -1,10 +1,10 @@
 # 插件开发指南
 
-poi 基于网页技术开发，所有的 UI 和逻辑都是使用网页技术完成的。所以在开发插件之前，应该下列的技术有个大概的了解。
+poi 基于 Web 技术开发，所有的 UI 和逻辑都是使用 Web 技术完成的。所以在开发插件之前，应该下列的技术有个大概的了解。
 
 + 基本的 HTML，CSS 和 JavaScript
 + [React.js](http://facebook.github.io/react/)
-+ [io.js](https://iojs.org)([Node.js](https://nodejs.org))
++ [Node.js](https://nodejs.org)
 + [Electron](https://github.com/atom/electron)
 
 为了有更好的开发体验，最好对下列技术有个基本的了解。
