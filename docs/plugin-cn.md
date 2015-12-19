@@ -245,9 +245,9 @@ window.i18n.resources.setLocale = (str) -> return # poi-plugin-translator 不存
 
 try
   Translator = require 'poi-plugin-translator'
-cache error
-  return
-  
+catch error
+  console.log error
+
 resource = window.i18n.resources.__ 'to translate'
 ```
 
