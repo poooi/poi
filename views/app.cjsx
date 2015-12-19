@@ -566,15 +566,21 @@ refreshFlash = ->
   """
 # F5 & Ctrl+F5 & Alt+F5
 window.addEventListener 'keydown', (e) ->
-  if process.platform == 'darwin' and e.keyCode is 82 and e.metaKey
-    if e.shiftKey # cmd + shift + r
-      $('kan-game webview').reloadIgnoringCache()
-    else if e.altKey # cmd + alt + r
-      refreshFlash()
-    else # cmd + r
-      # Catched by menu
-      # $('kan-game webview').reload()
-      false
+  if process.platform == 'darwin'
+    if e.keyCode is 91 or e.keyCode is 93
+      # When the game (flash) is on focus, it catches all keypress events
+      # Blur the webview when any Cmd key is pressed,
+      # so the OS shortcuts will always work
+      remote.getCurrentWindow().blurWebView()
+    else if e.keyCode is 82 and e.metaKey
+      if e.shiftKey # cmd + shift + r
+        $('kan-game webview').reloadIgnoringCache()
+      else if e.altKey # cmd + alt + r
+        refreshFlash()
+      else # cmd + r
+        # Catched by menu
+        # $('kan-game webview').reload()
+        false
   else if e.keyCode is 116
     if e.ctrlKey # ctrl + f5
       $('kan-game webview').reloadIgnoringCache()
