@@ -236,5 +236,19 @@
     "deszh-TW": "將艦娘名和裝備名翻譯爲英文",
     "desja-JP": "艦娘と装備の名前を英訳します",
     "desen-US": "Translate ships' & equipments' name into English"
+  },
+  "poi-plugin-poi-stats": {
+    "zh-CN": "掉落统计",
+    "zh-TW": "掉落統計",
+    "ja-JP": "海域ドロップ",
+    "en-US": "Poi Statistics",
+    "version": "v0.0.0",
+    "icon": "bar-chart",
+    "author": "Alvin",
+    "link": "https://github.com/alvin-777",
+    "deszh-CN": "在新窗口中查询与浏览Poi收集的海域掉落统计",
+    "deszh-TW": "在新視窗中查詢與瀏覽Poi收集的海域掉落統計",
+    "desja-JP": "海域ドロップ統計",
+    "desen-US": "Show drop statistics gathered by Poi in a new window"
   }
 }
