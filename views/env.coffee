@@ -4,6 +4,7 @@ notifier = require 'node-notifier'
 fs = require 'fs-extra'
 os = require 'os'
 semver = require 'semver'
+glob = require 'glob'
 
 # Environments
 window.remote = require('electron').remote
@@ -172,6 +173,25 @@ d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', '
 window.screenshotPath = config.get 'poi.screenshotPath', d
 window.notify.morale = config.get 'poi.notify.morale.value', 49
 window.notify.expedition = config.get 'poi.notify.expedition.value', 60
+
+# i18n config
+window.i18n = {}
+i18nFiles = glob.sync(path.join(__dirname, '..', 'i18n', '*'))
+for i18nFile in i18nFiles
+  namespace = path.basename i18nFile
+  window.i18n[namespace] = new (require 'i18n-2')
+    locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+    defaultLocale: 'zh-CN',
+    directory: i18nFile,
+    updateFiles: false,
+    indent: "\t",
+    extension: '.json'
+    devMode: false
+  window.i18n[namespace].setLocale(window.language)
+window.i18n.resources = {}
+window.i18n.resources.__ = (str) => return str
+window.i18n.resources.translate = (locale, str) => return str
+window.i18n.resources.setLocale = (str) => return
 
 #Custom css
 window.reloadCustomCss = ->
