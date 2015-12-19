@@ -236,6 +236,13 @@ resource = window.i18n.resources.__ 'to translate'
 对于新窗口插件，需要调用相应插件
 
 ```coffeescript
+if !window.i18n?
+  window.i18n = {}
+window.i18n.resources = {}
+window.i18n.resources.__ = (str) -> return str
+window.i18n.resources.translate = (locale, str) -> return str
+window.i18n.resources.setLocale = (str) -> return # poi-plugin-translator 不存在时返回原值，如果 require 了 ROOT/view/env 则不需要此项目
+
 try
   Translator = require 'poi-plugin-translator'
 cache error
