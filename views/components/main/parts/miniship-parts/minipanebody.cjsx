@@ -77,7 +77,7 @@ Slotitems = React.createClass
         <div key={i} className="slotitem-container-mini">
           <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.api_type[3]} />
           <span className="slotitem-name-mini">
-            {item.api_name}
+            {i18n.resources.__ item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}> ★{item.api_level}</strong> else ''}
               &nbsp;&nbsp;{
                 if item.api_alv? and 1 <= item.api_alv <= 7
@@ -199,7 +199,7 @@ PaneBodyMini = React.createClass
                 }>
                   <div className="ship-info">
                     <span className="ship-name" style={getStatusStyle @state.label[j]}>
-                      {shipInfo.api_name}
+                      {i18n.resources.__ shipInfo.api_name}
                     </span>
                     <span className="ship-lv-text top-space" style={getStatusStyle @state.label[j]}>
                       Lv. {ship.api_lv}

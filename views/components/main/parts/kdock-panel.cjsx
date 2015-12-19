@@ -176,12 +176,12 @@ KdockPanel = React.createClass
               if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
                 <span>
                   <strong style={color: '#d9534f'}>
-                    {@state.docks[i].name}
+                    {i18n.resources.__ @state.docks[i].name}
                   </strong>
                   <br/>
                 </span>
               else
-                <span>{@state.docks[i].name}<br/></span>
+                <span>{i18n.resources.__ @state.docks[i].name}<br/></span>
             }
             <img src={getMaterialImage 1} className="material-icon" /> {@state.docks[i].material[0]}
             <img src={getMaterialImage 2} className="material-icon" /> {@state.docks[i].material[1]}
@@ -195,7 +195,7 @@ KdockPanel = React.createClass
             if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
               <div className="panel-item kdock-item">
                 <span className="kdock-name">
-                  {@state.docks[i].name}
+                  {i18n.resources.__ @state.docks[i].name}
                 </span>
                 <Label className="kdock-timer" bsStyle="danger">
                   {resolveTime @state.docks[i].countdown}
@@ -204,7 +204,7 @@ KdockPanel = React.createClass
             else
               <div className="panel-item kdock-item">
                 <span className="kdock-name">
-                  {@state.docks[i].name}
+                  {i18n.resources.__ @state.docks[i].name}
                 </span>
                 <Label className="kdock-timer" bsStyle="primary">
                   {resolveTime @state.docks[i].countdown}
@@ -213,7 +213,7 @@ KdockPanel = React.createClass
           else if @state.docks[i].countdown is 0
             <div className="panel-item kdock-item">
               <span className="kdock-name">
-                {@state.docks[i].name}
+                {i18n.resources.__ @state.docks[i].name}
               </span>
               <Label className="kdock-timer" bsStyle="success">
                 {resolveTime @state.docks[i].countdown}
@@ -222,7 +222,7 @@ KdockPanel = React.createClass
           else
             <div className="panel-item kdock-item">
               <span className="kdock-name">
-                {@state.docks[i].name}
+                {i18n.resources.__ @state.docks[i].name}
               </span>
               <Label className="kdock-timer" bsStyle="default">
                 {resolveTime 0}

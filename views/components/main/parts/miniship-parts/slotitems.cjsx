@@ -18,7 +18,7 @@ Slotitems = React.createClass
         <div key={i} className="slotitem-container">
           <OverlayTrigger placement='left' overlay={
             <Tooltip id="fleet-#{@props.fleet}-slot-#{@props.key}-item-#{i}-level">
-              {item.api_name}
+              {i18n.resources.__ item.api_name}
               {if item.api_level > 0 then <strong style={color: '#45A9A5'}> ★{item.api_level}</strong> else ''}
               {
                 if item.api_alv? and 1 <= item.api_alv <= 7
