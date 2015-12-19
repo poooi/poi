@@ -120,7 +120,7 @@ NdockPanel = React.createClass
         if @state.docks[i].countdown > 60
           <div key={i} className="panel-item ndock-item">
             <span className="ndock-name">
-              {@state.docks[i].name}
+              {i18n.resources.__ @state.docks[i].name}
             </span>
             <OverlayTrigger placement='left' overlay={<Tooltip id="ndock-finish-by-#{i}"><strong>{__ 'Finish by : '}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
               <Label className="ndock-timer" bsStyle="primary">
@@ -131,7 +131,7 @@ NdockPanel = React.createClass
         else if @state.docks[i].countdown > -1
           <div key={i}  className="panel-item ndock-item">
             <span className="ndock-name">
-              {@state.docks[i].name}
+              {i18n.resources.__ @state.docks[i].name}
             </span>
             <Label className="ndock-timer" bsStyle="success">
               {resolveTime @state.docks[i].countdown}
@@ -140,7 +140,7 @@ NdockPanel = React.createClass
         else
           <div key={i}  className="panel-item ndock-item">
             <span className="ndock-name">
-              {@state.docks[i].name}
+              {i18n.resources.__ @state.docks[i].name}
             </span>
             <Label className="ndock-timer" bsStyle="default">
               {resolveTime 0}
