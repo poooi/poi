@@ -8,7 +8,7 @@ __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 StatusLabel = require './statuslabel'
 TopAlert = require './topalert'
-{SlotitemIcon} = require '../../../common/icon'
+{SlotitemIcon} = require '../../../etc/icon'
 
 getHpStyle = (percent) ->
   if percent <= 25

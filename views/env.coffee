@@ -4,6 +4,7 @@ notifier = require 'node-notifier'
 fs = require 'fs-extra'
 os = require 'os'
 semver = require 'semver'
+glob = require 'glob'
 
 # Environments
 window.remote = require('electron').remote
@@ -44,29 +45,6 @@ window.resolveTime = (seconds) ->
   minutes = "0#{minutes}" if minutes < 10
   seconds = "0#{seconds}" if seconds < 10
   "#{hours}:#{minutes}:#{seconds}"
-
-poiAlert = (details) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail: details
-  window.dispatchEvent event
-window.log = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'default',
-  priority: 0}, options)
-window.success = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'success',
-  priority: 1}, options)
-window.warn = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'warning',
-  priority: 2}, options)
-window.error = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'warning',
-  priority: 4}, options)
 
 ## window.notify
 # msg=null: Sound-only notification.
@@ -172,6 +150,41 @@ d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', '
 window.screenshotPath = config.get 'poi.screenshotPath', d
 window.notify.morale = config.get 'poi.notify.morale.value', 49
 window.notify.expedition = config.get 'poi.notify.expedition.value', 60
+
+# i18n config
+window.i18n = {}
+i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
+for i18nFile in i18nFiles
+  namespace = path.basename i18nFile
+  window.i18n[namespace] = new (require 'i18n-2')
+    locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+    defaultLocale: 'zh-CN',
+    directory: i18nFile,
+    updateFiles: false,
+    indent: "\t",
+    extension: '.json'
+    devMode: false
+  window.i18n[namespace].setLocale(window.language)
+
+# Alert helpers. 
+#   Requires: window.i18n
+{newAlert} = require './components/info/alert'
+window.log = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'default',
+  priority: 0}, options)
+window.success = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'success',
+  priority: 1}, options)
+window.warn = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'warning',
+  priority: 2}, options)
+window.error = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'warning',
+  priority: 4}, options)
 
 #Custom css
 window.reloadCustomCss = ->
