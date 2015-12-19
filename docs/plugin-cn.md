@@ -227,6 +227,23 @@ translated = __ 'to translate'
 
 关于 i18n-2 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
 
+对于游戏内资源的翻译，poi 预置了一个翻译方法，对于非新窗口插件，可以通过如下方法调用
+
+```coffeescript
+resource = window.i18n.resources.__ 'to translate'
+```
+
+对于新窗口插件，需要调用相应插件
+
+```coffeescript
+try
+  Translator = require 'poi-plugin-translator'
+cache error
+  return
+  
+resource = window.i18n.resources.__ 'to translate'
+```
+
 ## 在 [npm](http://npmjs.org) 上发布
 
 在 npm 上发布不仅可以使得版本维护更加简便，而且 poi 将会用重载的 npm 模组进行新版本插件的更新。
