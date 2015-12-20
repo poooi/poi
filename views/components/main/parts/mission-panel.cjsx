@@ -133,7 +133,7 @@ MissionPanel = React.createClass
           <span className="mission-name">
           {
             if @state.decks[i].mission?
-              "#{@state.decks[i].mission}"
+              "#{i18n.resources.__ @state.decks[i].mission}"
             else
               __ 'Ready'
           }

@@ -68,23 +68,6 @@ PoiAlert = React.createClass
       </div>
     </div>
 
-window.addEventListener 'game.request', (e) ->
-  {method} = e.detail
-  resPath = e.detail.path
-window.addEventListener 'game.response', (e) ->
-  {method, body, postBody} = e.detail
-  resPath = e.detail.path
-  console.log [resPath, body, postBody] if process.env.DEBUG?
-  log "#{__ 'Hit'} #{method} #{resPath}"
-window.addEventListener 'network.error.retry', (e) ->
-  {counter} = e.detail
-  error __n 'Network error, Retrying %s time', 'Network error, Retrying %s times', counter
-window.addEventListener 'network.invalid.code', (e) ->
-  {code} = e.detail
-  error __ 'Network error: HTTP %s', code
-window.addEventListener 'network.error', ->
-  error __ 'Connection failed.'
-
 newAlert = (details) ->
   event = new CustomEvent 'poi.alert',
     bubbles: true

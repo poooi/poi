@@ -153,11 +153,11 @@ window.notify.expedition = config.get 'poi.notify.expedition.value', 60
 
 # i18n config
 window.i18n = {}
-i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
+i18nFiles = glob.sync(path.join(__dirname, '..', 'i18n', '*'))
 for i18nFile in i18nFiles
   namespace = path.basename i18nFile
   window.i18n[namespace] = new (require 'i18n-2')
-    locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+    locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
     defaultLocale: 'zh-CN',
     directory: i18nFile,
     updateFiles: false,
@@ -165,6 +165,10 @@ for i18nFile in i18nFiles
     extension: '.json'
     devMode: false
   window.i18n[namespace].setLocale(window.language)
+window.i18n.resources = {}
+window.i18n.resources.__ = (str) -> return str
+window.i18n.resources.translate = (locale, str) -> return str
+window.i18n.resources.setLocale = (str) -> return
 
 # Alert helpers. 
 #   Requires: window.i18n

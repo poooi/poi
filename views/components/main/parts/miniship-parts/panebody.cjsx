@@ -158,11 +158,11 @@ PaneBody = React.createClass
                         Lv. {ship.api_lv}
                       </span>
                       <span className='ship-type'>
-                        {shipType}
+                        {i18n.resources.__ shipType}
                       </span>
                     </div>
                     <span className="ship-name">
-                      {shipInfo.api_name}
+                      {i18n.resources.__ shipInfo.api_name}
                     </span>
                     <span className="ship-exp">
                       Next. {ship.api_exp[1]}

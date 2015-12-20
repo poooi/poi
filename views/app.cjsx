@@ -46,3 +46,4 @@ ReactDOM.render <PoiControl />, $('poi-control')
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
 ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
 ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
+

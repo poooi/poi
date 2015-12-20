@@ -1,10 +1,10 @@
 # 插件开发指南
 
-poi 基于网页技术开发，所有的 UI 和逻辑都是使用网页技术完成的。所以在开发插件之前，应该下列的技术有个大概的了解。
+poi 基于 Web 技术开发，所有的 UI 和逻辑都是使用 Web 技术完成的。所以在开发插件之前，应该下列的技术有个大概的了解。
 
 + 基本的 HTML，CSS 和 JavaScript
 + [React.js](http://facebook.github.io/react/)
-+ [io.js](https://iojs.org)([Node.js](https://nodejs.org))
++ [Node.js](https://nodejs.org)
 + [Electron](https://github.com/atom/electron)
 
 为了有更好的开发体验，最好对下列技术有个基本的了解。
@@ -226,6 +226,30 @@ translated = __ 'to translate'
 ```
 
 关于 i18n-2 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
+
+对于游戏内资源的翻译，poi 预置了一个翻译方法，对于非新窗口插件，可以通过如下方法调用
+
+```coffeescript
+resource = window.i18n.resources.__ 'to translate'
+```
+
+对于新窗口插件，需要调用相应插件
+
+```coffeescript
+if !window.i18n?
+  window.i18n = {}
+window.i18n.resources = {}
+window.i18n.resources.__ = (str) -> return str
+window.i18n.resources.translate = (locale, str) -> return str
+window.i18n.resources.setLocale = (str) -> return # poi-plugin-translator 不存在时返回原值，如果 require 了 ROOT/view/env 则不需要此项目
+
+try
+  Translator = require 'poi-plugin-translator'
+catch error
+  console.log error
+
+resource = window.i18n.resources.__ 'to translate'
+```
 
 ## 在 [npm](http://npmjs.org) 上发布
 
