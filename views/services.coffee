@@ -5,6 +5,7 @@ __n = window.i18n.others.__n.bind(i18n.others)
 
 require './services/update'
 require './services/battle-env'
+require './services/layout'
 
 # Readme contents
 dontShowAgain = ->
