@@ -251,13 +251,33 @@ catch error
 resource = window.i18n.resources.__ 'to translate'
 ```
 
-## 在 [npm](http://npmjs.org) 上发布
+## 插件发布规范
+### 在 [npm](http://npmjs.org) 上发布
 
 在 npm 上发布不仅可以使得版本维护更加简便，而且 poi 将会用重载的 npm 模组进行新版本插件的更新。
 
 详情请参照 npm 关于 [package.json](https://docs.npmjs.com/files/package.json) 和 [npm publish](https://docs.npmjs.com/cli/publish) 的文档
 
 注意包名应该以 `poi-plugin-` 开头以便其被 poi 发现
+
+### 发布插件的测试版
+
+允许插件通过 npm 发布测试版本，提供给“希望及时体验 beta 版插件”的用户进行测试。测试版插件在 npm 上发布时应打 `beta` tag，而非 `latest` tag。
+
+参考命令如下
+
+`npm publish --tag beta`
+
+### 插件（安装包）的发布
+
+插件在发布时，应打包为 tar.gz 格式，以方便用户下载并直接安装离线安装包。
+
+参考命令如下
+
+```
+cd path/to/[repo] && npm i
+cd .. && tar cvf [repo] [repo].tar.gz
+```
 
 ## 一些提示
 
