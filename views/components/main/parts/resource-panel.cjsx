@@ -5,7 +5,7 @@ path = require 'path-extra'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 order = [1, 3, 2, 4, 5, 7, 6, 8]
-{MaterialIcon} = require '../../etc/icon'
+{MaterialIcon} = require '../../common/icon'
 
 ResourcePanel = React.createClass
 
