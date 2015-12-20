@@ -46,29 +46,6 @@ window.resolveTime = (seconds) ->
   seconds = "0#{seconds}" if seconds < 10
   "#{hours}:#{minutes}:#{seconds}"
 
-poiAlert = (details) ->
-  event = new CustomEvent 'poi.alert',
-    bubbles: true
-    cancelable: true
-    detail: details
-  window.dispatchEvent event
-window.log = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'default',
-  priority: 0}, options)
-window.success = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'success',
-  priority: 1}, options)
-window.warn = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'warning',
-  priority: 2}, options)
-window.error = (msg, options) -> poiAlert Object.assign({
-  message: msg,
-  type: 'warning',
-  priority: 4}, options)
-
 ## window.notify
 # msg=null: Sound-only notification.
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
@@ -192,6 +169,26 @@ window.i18n.resources = {}
 window.i18n.resources.__ = (str) -> return str
 window.i18n.resources.translate = (locale, str) -> return str
 window.i18n.resources.setLocale = (str) -> return
+
+# Alert helpers. 
+#   Requires: window.i18n
+{newAlert} = require './components/info/alert'
+window.log = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'default',
+  priority: 0}, options)
+window.success = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'success',
+  priority: 1}, options)
+window.warn = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'warning',
+  priority: 2}, options)
+window.error = (msg, options) -> newAlert Object.assign({
+  message: msg,
+  type: 'warning',
+  priority: 4}, options)
 
 #Custom css
 window.reloadCustomCss = ->
