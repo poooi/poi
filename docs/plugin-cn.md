@@ -259,6 +259,19 @@ resource = window.i18n.resources.__ 'to translate'
 
 注意包名应该以 `poi-plugin-` 开头以便其被 poi 发现
 
+## 插件安装包的打包方法
+
+对于网络情况诡异或不熟悉npm命令又希望使用第三方插件的用户，基于npm对tar.gz格式本地安装包的支持，poi 提供了从本地插件安装包安装的方式。
+
+由于npm i命令仅支持 tar.gz格式的安装包，必须将插件打包成tar.gz格式。
+
+参考命令如下
+
+```
+cd path/to/[repo] && npm i
+cd .. && tar cvf [repo] [repo].tar.gz
+```
+
 ## 一些提示
 
 + 面板中显示的插件会被包裹在`<div id='插件名' />` 中，所以在自定义 CSS 中，建议用 `#插件名` 保证不影响全局 CSS。
