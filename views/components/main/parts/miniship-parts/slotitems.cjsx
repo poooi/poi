@@ -1,7 +1,7 @@
 path = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
 {OverlayTrigger, Tooltip} = ReactBootstrap
-{SlotitemIcon} = require '../../../etc/icon'
+{SlotitemIcon} = require '../../../common/icon'
 getBackgroundStyle = ->
   if window.isDarkTheme
     backgroundColor: 'rgba(33, 33, 33, 0.7)'
