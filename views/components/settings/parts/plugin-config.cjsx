@@ -407,8 +407,9 @@ PluginConfig = React.createClass
             <Button onClick={@handleAdvancedShow}
                     className="control-button"
                     style={width: '25%'}>
-              <span> {__ "Advanced"}</span>
-              <FontAwesome name="#{if @state.timeSettingShow then 'angle-up' else 'angle-down'}" />
+              <FontAwesome name="gear" />
+              <span> {__ "Advanced"} </span>
+              <FontAwesome name="#{if @state.advanced then 'angle-up' else 'angle-down'}" />
             </Button>
           </ButtonGroup>
           <Collapse in={@state.advanced}>
