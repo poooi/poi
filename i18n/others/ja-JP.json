@@ -35,5 +35,13 @@
      "other": "ネットワークエラーが発生しました。今第 %s 回の再試行しています"
    },
   "Network error: HTTP %s": "ネットワークエラー、HTTP %s",
-  "Connection failed.": "接続できません。ネットワークとプロキシの設定を確認して下さい"
-  }
+  "Connection failed.": "接続できません。ネットワークとプロキシの設定を確認して下さい",
+
+  "Modernization succeeded! ": "近代化改修成功！",
+  "Modernization failed.": "近代化改修失敗…",
+  "Firepower": "火力",
+  "Torpedo": "雷装",
+  "AntiAir": "対空",
+  "Armor": "装甲",
+  "Luck": "運"
+}

@@ -6,6 +6,7 @@ __n = window.i18n.others.__n.bind(i18n.others)
 require './services/update'
 require './services/layout'
 require './services/welcome'
+require './services/modernization-delta'
 
 refreshFlash = ->
   $('kan-game webview').executeJavaScript """

@@ -35,5 +35,13 @@
      "other": "網絡連接錯誤，正在進行第 %s 次重試"
    },
   "Network error: HTTP %s": "伺服器返回非正常的 HTTP 狀態碼，HTTP %s",
-  "Connection failed.": "網絡連接失敗，請檢查網絡與代理設定"
+  "Connection failed.": "網絡連接失敗，請檢查網絡與代理設定",
+
+  "Modernization succeeded! ": "近代化改修成功！",
+  "Modernization failed.": "近代化改修失敗…",
+  "Firepower": "火力",
+  "Torpedo": "雷裝",
+  "AntiAir": "對空",
+  "Armor": "裝甲",
+  "Luck": "運"
 }
