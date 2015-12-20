@@ -8,7 +8,7 @@ fs = require 'fs-extra'
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 
 # Plugin version
-packages = fs.readJsonSync path.join ROOT, 'plugin.json'
+packages = fs.readJsonSync path.join ROOT, 'assets', 'data', 'plugin.json'
 
 # Discover plugins and remove unused plugins
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))

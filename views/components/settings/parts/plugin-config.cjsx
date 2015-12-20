@@ -13,10 +13,10 @@ shell = require 'shell'
 Divider = require './divider'
 
 # Plugin version
-packages = fs.readJsonSync path.join ROOT, 'plugin.json'
+packages = fs.readJsonSync path.join ROOT, 'assets', 'data', 'plugin.json'
 
 # Mirror server
-mirror = fs.readJsonSync path.join ROOT, 'mirror.json'
+mirror = fs.readJsonSync path.join ROOT, 'assets', 'data', 'mirror.json'
 
 plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
 fails = []

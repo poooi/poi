@@ -8,7 +8,7 @@ fs = require 'fs-extra'
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 
 # Plugin version
-packages = fs.readJsonSync path.join ROOT, 'plugin.json'
+packages = fs.readJsonSync path.join ROOT, 'assets', 'data', 'plugin.json'
 
 $('poi-main').className += 'double-tabbed'
 window.doubleTabbed = true
