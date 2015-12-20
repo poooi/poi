@@ -424,7 +424,7 @@ PluginConfig = React.createClass
                       <Input type="text"
                              value={@state.manuallyInstallPackage}
                              onChange={@changeInstalledPackage}
-                             label={__ 'Install directly form npm'}
+                             label={__ 'Install directly from npm'}
                              placeholder={__ 'Input plugin package name...'}
                              bsSize='small'
                              buttonAfter={installButton} />
@@ -446,7 +446,7 @@ PluginConfig = React.createClass
                   </Col>
                   <Col xs=12>
                     <label className='control-label' style={width: '100%'}>
-                      {__ 'Other options'}
+                      {__ 'Others'}
                     </label>
                     <ButtonGroup style={width: '100%'}>
                       <Button style={width: '50%'} onClick={@onSelectOpenFolder}>

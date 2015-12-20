@@ -90,5 +90,13 @@
   "Install failed. Maybe the selected files are not plugin packages.": "インストールが失敗しました。選択したファイルはツールパッケージではないですか？",
   "Install complete": "インストール完了",
   "Install failed": "インストール失敗",
+  "Install": "インストール",
+  "Installing": "インストール中",
+  "Installed": "インストール済",
+  "Install directly from npm": "NPM サーバーで直接にインストール",
+  "Input plugin package name...": "ツールの名前を入力します",
+  "Select npm server": "NPM サーバーを選択",
+  "Open plugin folder": "ツールのフォルダを開きます",
+  "Search for plugins": "ツールを検索",
   "Developer option: check update of beta version": "開発者向けオプション: ツールのベータ版をチェックします"
 }
