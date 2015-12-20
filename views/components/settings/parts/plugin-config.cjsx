@@ -6,7 +6,7 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem, Label} = ReactBootstrap
+{Grid, Col, Row, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem, Label, Collapse, Well} = ReactBootstrap
 {config} = window
 shell = require 'shell'
 {dialog} = remote.require 'electron'
@@ -121,6 +121,8 @@ PluginConfig = React.createClass
     installing: false
     mirror: config.get "packageManager.mirror", 0
     isUpdateAvailable: false
+    advanced: false
+    manuallyInstallPackage: ''
   isUpdateAvailable: false
   checkCount: 0
   handleClickAuthorLink: (link, e) ->
@@ -136,6 +138,12 @@ PluginConfig = React.createClass
     }
     @setState
       mirror: state
+  handleAdvancedShow: ->
+    advanced = !@state.advanced
+    @setState {advanced}
+  changeInstalledPackage: (e) ->
+    manuallyInstallPackage = e.target.value
+    @setState {manuallyInstallPackage}
   handleEnable: (index) ->
     status = @state.status
     if status[index] isnt 2
@@ -294,6 +302,9 @@ PluginConfig = React.createClass
       latest: latest
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
+  onSelectOpenSite: (e) ->
+    shell.openExternal "https://www.npmjs.com/search?q=poi-plugin"
+    e.preventDefault()
   onSelectInstallFromFileComplete: (data, er) ->
     if er
       notify __ 'Install failed. Maybe the selected files are not plugin packages.',
@@ -336,6 +347,10 @@ PluginConfig = React.createClass
       npm.load npmConfig, (err) =>
         npm.commands.install filenames, (er, data) ->
           callback(data, er)
+  handleManuallyInstall: (name, callback) ->
+    npm.load npmConfig, (err) =>
+      npm.commands.install [name], (er, data) ->
+        callback(data, er)
   synchronize: (callback) ->
     return if @lock
     @lock = true
@@ -355,18 +370,18 @@ PluginConfig = React.createClass
       </Grid>
       <Grid>
         <Col xs={12} style={padding: '10px 15px'}>
-          <ButtonGroup bsSize='small' style={width: '75%'}>
+          <ButtonGroup bsSize='small' style={width: '100%'}>
             <Button onClick={@checkUpdate.bind(@, @solveUpdate, false)}
                     disabled={@state.checking}
                     className="control-button"
-                    style={width: '33%'}>
+                    style={width: '25%'}>
               <FontAwesome name='refresh' spin={@state.checking} />
               <span> {__ "Check Update"}</span>
             </Button>
             <Button onClick={@handleUpdateAll.bind(@, @handleUpdateAllComplete)}
                     disabled={@state.updatingAll || !@state.isUpdateAvailable || @state.checking}
                     className="control-button"
-                    style={width: '33%'}>
+                    style={width: '25%'}>
               <FontAwesome name={
                              if @state.updatingAll
                                "spinner"
@@ -379,7 +394,7 @@ PluginConfig = React.createClass
             <Button onClick={@handleInstallAll.bind @, @handleInstallAllComplete}
                     disabled={@state.installing}
                     className="control-button"
-                    style={width: '33%'}>
+                    style={width: '25%'}>
               <FontAwesome name={
                              if @state.installing
                                "spinner"
@@ -389,26 +404,64 @@ PluginConfig = React.createClass
                            pulse={@state.installing}/>
               <span> {__ "Install all"}</span>
             </Button>
+            <Button onClick={@handleAdvancedShow}
+                    className="control-button"
+                    style={width: '25%'}>
+              <FontAwesome name="gear" />
+              <span> {__ "Advanced"} </span>
+              <FontAwesome name="#{if @state.advanced then 'angle-up' else 'angle-down'}" />
+            </Button>
           </ButtonGroup>
-          <ButtonGroup bsSize='small' style={width: '25%', paddingLeft: 6}>
-            <DropdownButton style={width: '100%'}
-                            className="control-button"
-                            pullRight
-                            title={
-                              React.createElement("span", null, React.createElement(FontAwesome, {
-                                "name": 'server'
-                              }), " ", mirror[this.state.mirror].name);
-                            }
-                            id="mirror-select">
-              {
-                index = 0
-                for server, index in mirror
-                  <MenuItem key={index} onSelect={@onSelectServer.bind @, index}>{mirror[index].menuname}</MenuItem>
-              }
-              <MenuItem divider />
-              <MenuItem key={index} onSelect={@onSelectOpenFolder}>{__ "Manually install"}</MenuItem>
-            </DropdownButton>
-          </ButtonGroup>
+          <Collapse in={@state.advanced}>
+            <div>
+              <Well>
+                <Row>
+                  <Col xs=12>
+                    {
+                      installButton =
+                        <Button bsStyle='primary' onClick={@handleManuallyInstall.bind @, @state.manuallyInstallPackage, @onSelectInstallFromFileComplete}>
+                          {__ 'Install'}
+                        </Button>
+                      <Input type="text"
+                             value={@state.manuallyInstallPackage}
+                             onChange={@changeInstalledPackage}
+                             label={__ 'Install directly from npm'}
+                             placeholder={__ 'Input plugin package name...'}
+                             bsSize='small'
+                             buttonAfter={installButton} />
+                    }
+                  </Col>
+                  <Col xs=12>
+                    <label className='control-label' style={width: '100%'}>
+                      {__ 'Select npm server'}
+                    </label>
+                    {
+                      for server, index in mirror
+                        <Col key={index} xs=6>
+                          <Input type="radio"
+                                 label={server.menuname}
+                                 checked={@state.mirror == index}
+                                 onChange={@onSelectServer.bind @, index} />
+                        </Col>
+                    }
+                  </Col>
+                  <Col xs=12>
+                    <label className='control-label' style={width: '100%'}>
+                      {__ 'Others'}
+                    </label>
+                    <ButtonGroup style={width: '100%'}>
+                      <Button style={width: '50%'} onClick={@onSelectOpenFolder}>
+                        {__ 'Open plugin folder'}
+                      </Button>
+                      <Button style={width: '50%'} onClick={@onSelectOpenSite}>
+                        {__ 'Search for plugins'}
+                      </Button>
+                    </ButtonGroup>
+                  </Col>
+                </Row>
+              </Well>
+            </div>
+          </Collapse>
         </Col>
         <Col xs={12} style={paddingBottom: 10}>
           <div className="folder-picker"

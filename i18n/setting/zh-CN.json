@@ -90,5 +90,13 @@
   "Install failed. Maybe the selected files are not plugin packages.": "安装失败。是否选择了正确的安装包？",
   "Install complete": "安装完成",
   "Install failed": "安装失败",
+  "Install": "安装",
+  "Installing": "安装中",
+  "Installed": "安装完成",
+  "Install directly from npm": "直接从 npm 服务器安装",
+  "Input plugin package name...": "输入插件的包名",
+  "Select npm server": "选择 npm 服务器",
+  "Open plugin folder": "打开插件目录",
+  "Search for plugins": "查找插件",
   "Developer option: check update of beta version": "开发者选项: 检查 beta 版插件更新"
 }
