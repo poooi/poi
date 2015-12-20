@@ -260,7 +260,7 @@ resource = window.i18n.resources.__ 'to translate'
 process.env.DEBUG = 1
 ```
 
-如果你需要程序从一开始就进入调试模式，可以在启动poi的命令行后加上`--debug`或`-d`参数
+如果你需要程序从一开始就进入调试模式（例如当你需要调试`app.cjsx`中的代码时），可以在启动poi的命令行后加上`--debug`或`-d`参数
 ```
 electron poi --debug
 ```
