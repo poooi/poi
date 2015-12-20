@@ -12,28 +12,30 @@ Slotitems = React.createClass
     <div className="slotitems">
     {
       {$slotitems, _slotitems} = window
-      for itemId, i in @props.data
-        continue unless itemId != -1 && _slotitems[itemId]?
-        item = _slotitems[itemId]
+      for itemId, i in @props.slot.concat(@props.slot_ex || 0)
+        continue unless (i < @props.slot_num) or (i == 5 and itemId != 0)
+        item = _slotitems[itemId] || {api_name: "", api_type: [0, 0, 0, 0]}
         <div key={i} className="slotitem-container">
           <OverlayTrigger placement='left' overlay={
             <Tooltip id="fleet-#{@props.fleet}-slot-#{@props.key}-item-#{i}-level">
               {i18n.resources.__ item.api_name}
-              {if item.api_level > 0 then <strong style={color: '#45A9A5'}> ★{item.api_level}</strong> else ''}
+              {
+                if item.api_level > 0
+                  <strong style={color: '#45A9A5'}> ★{item.api_level}</strong>
+              }
               {
                 if item.api_alv? and 1 <= item.api_alv <= 7
                   <img className='alv-img' src={path.join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
-                else ''
               }
             </Tooltip>
           }>
             <span>
               <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.api_type[3]} />
               <span className="slotitem-onslot
-                              #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 || i == 5 then 'show' else 'hide'}
-                              #{if @props.onslot[i] < @props.maxeq[i] && i != 5 then 'text-warning' else ''}"
+                              #{if (i == 5) or (item.api_type[3] == 0) or (6 <= item.api_type[3] <= 10) or (21 <= item.api_type[3] <= 22) or (item.api_type[3] == 33) then 'show' else 'hide'}
+                              #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
                               style={getBackgroundStyle()}>
-                {if i == 5 then '+' else @props.onslot[i]}
+                {if i == 5 then "+" else @props.onslot[i]}
               </span>
             </span>
           </OverlayTrigger>
