@@ -31,10 +31,10 @@ getStatus = (ship, i) ->
   # i = 0 for current status, and i = 1 for max status
   if ship
     statuses = (s[i] for s in[
-      ship.api_karyoku, 
-      ship.api_raisou, 
-      ship.api_taiku, 
-      ship.api_soukou, 
+      ship.api_karyoku,
+      ship.api_raisou,
+      ship.api_taiku,
+      ship.api_soukou,
       ship.api_lucky
     ])
 getCurrentStatus = (ship) -> getStatus(ship, 0)
@@ -55,9 +55,9 @@ textStatus = (nameStatus, beforeStatus, afterStatus, maxStatus, maxDelta) ->
   delta = afterStatus - beforeStatus
   if maxDelta != 0
     if afterStatus == maxStatus || delta == maxDelta
-      "#{nameStatus}↑↑↑#{delta}"
+      "#{nameStatus} ++#{delta}"
     else
-      "#{nameStatus}↑#{delta}"
+      "#{nameStatus} +#{delta}"
 
 onRequest = (e) ->
   if e.detail.path == '/kcsapi/api_req_kaisou/powerup'
