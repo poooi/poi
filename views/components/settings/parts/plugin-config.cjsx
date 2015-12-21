@@ -25,6 +25,7 @@ for plugin, index in plugins
   try
     test = require plugin
   catch error
+    console.error error
     fail = path.basename plugin
     fails.push plugin
     if packages[fail]?
@@ -86,10 +87,18 @@ for plugin, index in plugins
   latest[plugin.packageName] = plugin.version
   delete installTargets[plugin.packageName]
 
+for fail, index in fails
+  delete installTargets[path.basename fail]
+
 installStatus = []
 for installTarget of installTargets
   # 0: not installed 1: installing 2: installed
   installStatus.push 0
+
+failStatus = []
+for fail, index in fails
+  # 0: broken 1: installing 2: installed 3: removing 4: removed
+  failStatus.push 0
 
 npmConfig = {
   prefix: "#{PLUGIN_PATH}",
@@ -116,6 +125,7 @@ PluginConfig = React.createClass
     updating: updating
     installStatus: installStatus
     removeStatus: removeStatus
+    failStatus: failStatus
     checking: false
     updatingAll: false
     installing: false
@@ -313,20 +323,20 @@ PluginConfig = React.createClass
         icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
         audio: "file://#{ROOT}/assets/audio/fail.mp3"
     else
+      installStatus = @state.installStatus
       for arr in data
         name = arr[0].split('@')[0]
         index = -1
-        installStatus = @state.installStatus
         for installTarget of installTargets
           index++
           if installTarget == name
             installStatus[index] = 2
-        notify __ 'Plugins are installed successfully. Please restart poi to take effect.',
-          type: 'plugin installed'
-          title: __ 'Install complete'
-          icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
-          audio: "file://#{ROOT}/assets/audio/update.mp3"
-        @setState {installStatus}
+      notify __ 'Plugins are installed successfully. Please restart poi to take effect.',
+        type: 'plugin installed'
+        title: __ 'Install complete'
+        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+        audio: "file://#{ROOT}/assets/audio/update.mp3"
+      @setState {installStatus}
   onSelectInstallFromFile: (callback) ->
     @synchronize =>
       filenames = dialog.showOpenDialog
@@ -351,6 +361,34 @@ PluginConfig = React.createClass
     npm.load npmConfig, (err) =>
       npm.commands.install [name], (er, data) ->
         callback(data, er)
+  handleReinstall: (index, callback) ->
+    if !@props.disabled
+      failStatus = @state.failStatus
+      failStatus[index] = 1
+      name = path.basename fails[index]
+      @handleManuallyInstall.bind @, name, callback
+      @setState {failStatus}
+  handleReinstallComplete: (data, er) ->
+    failStatus = @state.failStatus
+    for arr in data
+      name = arr[0].split('@')[0]
+      for fail, index of fails
+        if name == path.basename fail
+          failStatus[index] = if er then 0 else 2
+    @setState {failStatus}
+  handleRemoveBroken: (index, callback) ->
+    if !@props.disabled
+      name = path.basename fails[index]
+      failStatus = @state.failStatus
+      failStatus[index] = 3
+      npm.load npmConfig, (err) ->
+        npm.commands.uninstall [name], (er, data) ->
+          callback(index, er)
+      @setState {failStatus}
+  handleRemoveBrokenComplete: (index ,er) ->
+    failStatus = @state.failStatus
+    failStatus[index] = if er then 0 else 4
+    @setState {failStatus}
   synchronize: (callback) ->
     return if @lock
     @lock = true
@@ -554,6 +592,91 @@ PluginConfig = React.createClass
                              __ "Removing"
                           when 2
                              __ "Removed"
+                      }
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Col>
+            </Col>
+          </Col>
+      }
+      {
+        packages = fs.readJsonSync path.join ROOT, 'assets', 'data', 'plugin.json'
+        for fail, index in fails
+          fail = path.basename fail
+          plugin = {}
+          if packages[fail]?
+            plugin.displayName =
+              <span><FontAwesome name={packages[fail]['icon']} /> {packages[fail][window.language]} </span>
+            plugin.author = packages[fail]['author']
+            plugin.link = packages[fail]['link']
+            plugin.description = packages[fail]["des#{window.language}"]
+            plugin.version = __ 'unknown'
+          else
+            plugin.displayName =
+              <span><FontAwesome name='ban' /> {fail} </span>
+            plugin.author = __ 'unknown'
+            plugin.link = 'https://github.com/poooi'
+            plugin.version = __ 'unknown'
+            plugin.description = __ 'unknown'
+          <Col key={index} xs={12} style={marginBottom: 8}>
+            <Col xs={12} className='div-row'>
+              <span style={fontSize: '150%'}>{plugin.displayName} </span>
+              <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
+              <div style={paddingTop: 2, marginLeft: 'auto'}>Version {plugin.version || '1.0.0'}</div>
+            </Col>
+            <Col xs={12} style={marginTop: 4}>
+              <Col xs={5}>{plugin.description}</Col>
+              <Col xs={7} style={padding: 0}>
+                <div style={marginLeft: 'auto'}>
+                  <ButtonGroup bsSize='small' style={width: '100%'}>
+                    <Button bsStyle='info'
+                            disabled=true
+                            onClick={(e)=> e.preventDefault}
+                            style={width: "33%"}
+                            className="plugin-control-button">
+                      <FontAwesome name="ban" />
+                      {__ 'Error'}
+                    </Button>
+                    <Button bsStyle='primary'
+                            disabled={@state.failStatus[index] != 0}
+                            onClick={@handleReinstall.bind @, index, @handleReinstallComplete}
+                            style={width: "33%"}
+                            className="plugin-control-button">
+                      <FontAwesome name={
+                                     switch @state.failStatus[index]
+                                       when 1
+                                         "spinner"
+                                       when 2
+                                         "check"
+                                       else
+                                         "download"
+                                   }
+                                   pulse={@state.failStatus[index] == 1}/>
+                      {
+                        switch @state.failStatus[index]
+                          when 1
+                             __ "Installing"
+                          when 2
+                             __ "Installed"
+                          else
+                            __ "Reinstall"
+                      }
+                    </Button>
+                    <Button bsStyle='danger'
+                            onClick={@handleRemoveBroken.bind @, index, @handleRemoveBrokenComplete}
+                            disabled={@state.failStatus[index] != 0}
+                            style={width: "33%"}
+                            className="plugin-control-button">
+                      <FontAwesome name={if @state.failStatus[index] == 0 then 'trash' else 'trash-o'} />
+                      {
+                        switch @state.failStatus[index]
+                          when 3
+                             __ "Removing"
+                          when 4
+                             __ "Removed"
+                          else
+                             __ "Remove"
                       }
                     </Button>
                   </ButtonGroup>
