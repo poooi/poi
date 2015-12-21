@@ -361,18 +361,18 @@ PluginConfig = React.createClass
     npm.load npmConfig, (err) =>
       npm.commands.install [name], (er, data) ->
         callback(data, er)
-  handleReinstall: (index, callback) ->
+  handleReinstall: (index) ->
     if !@props.disabled
       failStatus = @state.failStatus
       failStatus[index] = 1
       name = path.basename fails[index]
-      @handleManuallyInstall.bind @, name, callback
+      @handleManuallyInstall name, @handleReinstallComplete
       @setState {failStatus}
   handleReinstallComplete: (data, er) ->
     failStatus = @state.failStatus
     for arr in data
       name = arr[0].split('@')[0]
-      for fail, index of fails
+      for fail, index in fails
         if name == path.basename fail
           failStatus[index] = if er then 0 else 2
     @setState {failStatus}
@@ -640,7 +640,7 @@ PluginConfig = React.createClass
                     </Button>
                     <Button bsStyle='primary'
                             disabled={@state.failStatus[index] != 0}
-                            onClick={@handleReinstall.bind @, index, @handleReinstallComplete}
+                            onClick={@handleReinstall.bind @, index}
                             style={width: "33%"}
                             className="plugin-control-button">
                       <FontAwesome name={
