@@ -6,7 +6,7 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Row, Input, Alert, Button, ButtonGroup, DropdownButton, MenuItem, Label, Collapse, Well} = ReactBootstrap
+{Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip} = ReactBootstrap
 {config} = window
 shell = require 'shell'
 {dialog} = remote.require 'electron'
@@ -492,12 +492,14 @@ PluginConfig = React.createClass
                     </label>
                     {
                       for server, index in mirror
-                        <Col key={index} xs=6>
-                          <Input type="radio"
-                                 label={server.menuname}
-                                 checked={@state.mirror == index}
-                                 onChange={@onSelectServer.bind @, index} />
-                        </Col>
+                        <OverlayTrigger placement='top' overlay={<Tooltip id="npm-server-#{index}">{server.menuname}</Tooltip>}>
+                          <Col key={index} xs=4 style={padding: '0px 5px'}>
+                            <Input type="radio"
+                                   label={server.name}
+                                   checked={@state.mirror == index}
+                                   onChange={@onSelectServer.bind @, index} />
+                          </Col>
+                        </OverlayTrigger>
                     }
                   </Col>
                   <Col xs=12>
