@@ -47,3 +47,13 @@ module.exports =
       continue unless win?
       win.close()
       windows[i] = null
+  rememberMain: ->
+    win = global.mainWindow
+    isFullScreen = win.isFullScreen()
+    win.setFullScreen(false) if isFullScreen
+    isMaximized = win.isMaximized() # This must be checked AFTER exiting full screen
+    win.unmaximize() if isMaximized
+    b = win.getBounds()
+    b.isFullScreen = isFullScreen
+    b.isMaximized = isMaximized
+    require('./config').set 'poi.window', b

@@ -100,16 +100,16 @@ app.on 'ready', ->
     else
       mainWindow.setMenu null
   mainWindow.loadURL "file://#{__dirname}/index.html"
+  if config.get 'poi.window.isMaximized', false
+    mainWindow.maximize()
+  if config.get 'poi.window.isFullScreen', false
+    mainWindow.setFullScreen(true)
   if process.env.DEBUG?
     mainWindow.openDevTools
       detach: true
   # Never wants navigate
   mainWindow.webContents.on 'will-navigate', (e) ->
     e.preventDefault()
-  mainWindow.on 'close', ->
-    # Save current position and size
-    bounds = mainWindow.getBounds()
-    config.set 'poi.window', bounds
   mainWindow.on 'closed', ->
     # Close all sub window
     require('./lib/window').closeWindows()
