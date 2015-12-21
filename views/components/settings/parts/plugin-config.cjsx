@@ -492,7 +492,7 @@ PluginConfig = React.createClass
                     </label>
                     {
                       for server, index in mirror
-                        <OverlayTrigger placement='top' overlay={<Tooltip id="npm-server-#{index}">{server.menuname}</Tooltip>}>
+                        <OverlayTrigger placement='top' key={index} overlay={<Tooltip id="npm-server-#{index}">{server.menuname}</Tooltip>}>
                           <Col key={index} xs=4 style={padding: '0px 5px'}>
                             <Input type="radio"
                                    label={server.name}
