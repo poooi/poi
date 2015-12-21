@@ -75,10 +75,10 @@ DisplayConfig = React.createClass
   onThemeChange: (e) ->
     @setState
       theme: e.detail.theme
-  handleSetWebviewWidth: (e) ->
+  handleSetWebviewWidth: (node, e) ->
     @setState
-      gameWidth: @refs.webviewWidth.getValue()
-    width = parseInt @refs.webviewWidth.getValue()
+      gameWidth: @refs[node].getValue()
+    width = parseInt @refs[node].getValue()
     return if isNaN(width) || width < 0 || !@state.useFixedResolution || (config.get('poi.layout', 'horizontal') == 'horizontal' && width > window.innerWidth - 150)
     window.webviewWidth = width
     window.dispatchEvent new Event('webview.width.change')
@@ -107,7 +107,7 @@ DisplayConfig = React.createClass
       @state.useFixedResolution = true
       @setState
         useFixedResolution: true
-      @handleSetWebviewWidth()
+      @handleSetWebviewWidth("webviewWidth")
   handleOpenCustomCss: (e) ->
     try
       d = path.join(EXROOT, 'hack', 'custom.css')
@@ -177,12 +177,24 @@ DisplayConfig = React.createClass
       </div>
       <div className="form-group">
         <Divider text={__ 'Game resoultion'} />
-        <div style={display: 'flex', marginLeft: 15, marginRight: 15}>
+        <Col xs=6>
           <Input type='checkbox' ref="useFixedResolution" label={__ 'Use fixed resoultion'} checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
-        </div>
-        <div id="poi-resolution-config" style={display: 'flex', marginLeft: 15, marginRight: 15, alignItems: 'center'}>
+        </Col>
+        <Col xs=6>
+          <Input type="select" ref="webviewWidthRatio" value={parseInt(@state.gameWidth / 400) * 400} onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"} readOnly={!@state.useFixedResolution}>
+            {
+              i = 0
+              while i < 4
+                i++
+                <option key={i} value={i * 400}>
+                  {i * 50}%
+                </option>
+            }
+          </Input>
+        </Col>
+        <Col id="poi-resolution-config" xs=12 style={display: 'flex', alignItems: 'center'}>
           <div style={flex: 1}>
-            <Input type="number" ref="webviewWidth" value={@state.gameWidth} onChange={@handleSetWebviewWidth} readOnly={!@state.useFixedResolution} />
+            <Input type="number" ref="webviewWidth" value={@state.gameWidth} onChange={@handleSetWebviewWidth.bind @, "webviewWidth"} readOnly={!@state.useFixedResolution} />
           </div>
           <div style={flex: 'none', width: 15, paddingLeft: 5}>
             x
@@ -193,7 +205,7 @@ DisplayConfig = React.createClass
           <div style={flex: 'none', width: 15, paddingLeft: 5}>
             px
           </div>
-        </div>
+        </Col>
       </div>
     </form>
 

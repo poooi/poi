@@ -212,7 +212,7 @@
   "poi-plugin-almanac": {
     "zh-CN": "舰娘黄历",
     "zh-TW": "艦娘黃曆",
-    "ja-JP": "舰娘黄历",
+    "ja-JP": "アルマナック",
     "en-US": "Almanac",
     "version": "v0.0.0",
     "icon": "calendar",
@@ -221,7 +221,7 @@
     "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
     "deszh-TW": "艦娘老黃曆改二移植版，在此感謝原作者 HY Little",
     "desja-JP": "中國語のアルマナック",
-    "desen-US": "An almanac"
+    "desen-US": "An Chinese almanac"
   },
   "poi-plugin-translator": {
     "zh-CN": "英语翻译",

@@ -35,6 +35,14 @@
   "Network error: HTTP %s": "Network error: HTTP %s",
   "Connection failed.": "Connection failed.",
 
+  "Modernization succeeded! ": "Modernization succeeded! ",
+  "Modernization failed.": "Modernization failed.",
+  "Firepower": "Firepower",
+  "Torpedo": "Torpedo",
+  "AntiAir": "AntiAir",
+  "Armor": "Armor",
+  "Luck": "Luck",
+
   "doyouknow-prefix": "#Tip# ",
   "doyouknow-contents": [
     "We frequently introduces new features in \"Tips\". You can disable it in settings though",
@@ -67,4 +75,5 @@
     "You can now sort the table of plugin \"Ship Girls Info\" by clicking the table head",
     ""
   ]
+
 }

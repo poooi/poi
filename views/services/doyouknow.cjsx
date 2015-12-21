@@ -7,7 +7,6 @@ PREFIX = __ "doyouknow-prefix"
 
 update = (list) ->
   return if !config.get('poi.doyouknow.enabled', true)
-  console.log "Another doyouknow"
   # Post a random tip
   window.log PREFIX+list[Math.floor(Math.random() * list.length)],
     priority: 1

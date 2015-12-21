@@ -1,3 +1,10 @@
+if process.env.DEBUG?
+  alert """
+        DEBUG MODE
+
+        Now it's your chance to pause the app & add your breakpoints!
+        """
+
 fs = require 'fs-extra'
 path = require 'path-extra'
 {ROOT, EXROOT, _, $, $$, React, ReactDOM} = window
@@ -46,4 +53,3 @@ ReactDOM.render <PoiControl />, $('poi-control')
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
 ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
 ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
-
