@@ -1,11 +1,16 @@
 [
   {
-    "name": "cnpmjs",
+    "name": "tsinghua tuna (China mirror)",
+    "menuname": "tuna.tsinghua.edu.cn (China mirror)",
+    "server": "https://npm.tuna.tsinghua.edu.cn/"
+  },
+  {
+    "name": "cnpmjs (China mirror)",
     "menuname": "cnpmjs.org (China mirror)",
     "server": "http://r.cnpmjs.org/"
   },
   {
-    "name": "npmjs",
+    "name": "npmjs (Main server)",
     "menuname": "npmjs.org (Main server)",
     "server": "https://registry.npmjs.org/"
   }
