@@ -33,5 +33,14 @@
      "other": "other"
    },
   "Network error: HTTP %s": "Network error: HTTP %s",
-  "Connection failed.": "Connection failed."
+  "Connection failed.": "Connection failed.",
+
+  "Modernization succeeded! ": "Modernization succeeded! ",
+  "Modernization failed.": "Modernization failed.",
+  "Firepower": "Firepower",
+  "Torpedo": "Torpedo",
+  "AntiAir": "AntiAir",
+  "Armor": "Armor",
+  "Luck": "Luck"
+
 }
