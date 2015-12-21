@@ -133,6 +133,7 @@ PoiConfig = React.createClass
     enableBetaPluginCheck: config.get 'enableBetaPluginCheck', false
     moraleValue: window.notify.morale
     expeditionValue: window.notify.expedition
+    enableDoyouknow: config.get 'poi.doyouknow.enabled', true
   handleSetTimeSettingShow: ->
     timeSettingShow = !@state.timeSettingShow
     @setState {timeSettingShow}
@@ -269,6 +270,11 @@ PoiConfig = React.createClass
     window.notify.morale = moraleValue
     @setState
       timeSettingShow: false
+  handleSetEnableDoyouknow: ->
+    enabled = !@state.enableDoyouknow
+    config.set 'poi.doyouknow.enabled', enabled
+    @setState 
+      enableDoyouknow: enabled
   onDrag: (e) ->
     e.preventDefault()
   selectInput: (id) ->
@@ -455,6 +461,14 @@ PoiConfig = React.createClass
                    onDragLeave={@onDrag}>
                 {@state.cachePath}
               </div>
+            </Col>
+          </Grid>
+        </div>
+        <div className="form-group">
+          <Divider text={__ 'Other settings'} />
+          <Grid>
+            <Col xs={12}>
+              <Input type="checkbox" label={__ 'Display \"Tips\"'} checked={@state.enableDoyouknow} onChange={@handleSetEnableDoyouknow} />
             </Col>
           </Grid>
         </div>

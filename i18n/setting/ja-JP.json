@@ -98,5 +98,7 @@
   "Select npm server": "NPM サーバーを選択",
   "Open plugin folder": "ツールのフォルダを開きます",
   "Search for plugins": "ツールを検索",
-  "Developer option: check update of beta version": "開発者向けオプション: ツールのベータ版をチェックします"
+  "Developer option: check update of beta version": "開発者向けオプション: ツールのベータ版をチェックします",
+  "Other settings": "他の機能",
+  "Display \"Tips\"": "「ヒント」を表示"
 }

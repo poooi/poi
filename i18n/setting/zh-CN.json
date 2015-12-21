@@ -98,5 +98,7 @@
   "Select npm server": "选择 npm 服务器",
   "Open plugin folder": "打开插件目录",
   "Search for plugins": "查找插件",
-  "Developer option: check update of beta version": "开发者选项: 检查 beta 版插件更新"
+  "Developer option: check update of beta version": "开发者选项: 检查 beta 版插件更新",
+  "Other settings": "其它功能",
+  "Display \"Tips\"": "显示“小提示”"
 }

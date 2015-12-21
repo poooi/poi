@@ -33,5 +33,11 @@
      "other": "other"
    },
   "Network error: HTTP %s": "Network error: HTTP %s",
-  "Connection failed.": "Connection failed."
+  "Connection failed.": "Connection failed.",
+
+  "doyouknow-prefix": "#Tip# ",
+  "doyouknow-contents": [
+    "You can disable \"Tips\" in settings",
+    ""
+  ]
 }
