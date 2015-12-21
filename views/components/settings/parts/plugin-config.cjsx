@@ -181,38 +181,55 @@ PluginConfig = React.createClass
           npm.commands.install ["#{plugins[index].packageName}@#{@state.latest[plugins[index].packageName]}"], (er,data) ->
             callback(index, er)
       @setState {updating}
-  handleInstallAllComplete: (er) ->
-    installAllStatus = []
-    index = -1
-    for installTarget of installTargets
-      index++
-      if !er
-        installAllStatus.push 2
-      else
-        if @state.installStatus[index] < 2
-          installAllStatus.push 0
-        else
-          installAllStatus.push 2
+  handleInstallAllComplete: (data, er) ->
+    failStatus = @state.failStatus
+    installStatus = @state.installStatus
+    for arr in data
+      name = arr[0].split('@')[0]
+      for fail, index in fails
+        if name == path.basename fail
+          failStatus[index] = if er then 0 else 2
+      index = -1
+      for installTarget of installTargets
+        index++
+        if name == installTarget
+          installStatus[index] = if er then 0 else 2
     @setState
-      installStatus: installAllStatus
+      failStatus: failStatus
+      installStatus: installStatus
       installing: false
   handleInstallAll: (callback) ->
-    installAllStatus = []
-    toInstall = []
-    index = -1
+    if !@props.disabled
+      failStatus = @state.failStatus
+      installAllStatus = []
+      toInstall = []
+      index = -1
+      for installTarget of installTargets
+        index++
+        if @state.installStatus[index] == 0
+          installAllStatus.push 1
+          toInstall.push installTarget
+        else
+          installAllStatus.push @state.installStatus[index]
+      for fail, index in fails
+        if failStatus[index] == 0
+          toInstall.push path.basename fail
+          failStatus[index] = 1
+      npm.load npmConfig, (err) ->
+        npm.commands.install toInstall, (er, data) ->
+          callback(data, er)
+      @setState
+        installStatus: installAllStatus
+        installing: true
+  isInstallAllAvailable: ->
+    count = 0
     for installTarget of installTargets
-      index++
       if @state.installStatus[index] == 0
-        installAllStatus.push 1
-        toInstall.push installTarget
-      else
-        installAllStatus.push @state.installStatus[index]
-    npm.load npmConfig, (err) ->
-      npm.commands.install toInstall, (er, data) ->
-        callback(er)
-    @setState
-      installStatus: installAllStatus
-      installing: true
+        count++
+    for fail, index in fails
+      if failStatus[index] == 0
+        count++
+    return if count == 0 then false else true
   handleUpdateAllComplete: (er) ->
     updating = @state.updating
     for plugin, index in plugins
@@ -430,7 +447,7 @@ PluginConfig = React.createClass
               <span> {__ "Update all"}</span>
             </Button>
             <Button onClick={@handleInstallAll.bind @, @handleInstallAllComplete}
-                    disabled={@state.installing}
+                    disabled={@state.installing || !@isInstallAllAvailable()}
                     className="control-button"
                     style={width: '25%'}>
               <FontAwesome name={
