@@ -169,7 +169,6 @@ PluginConfig = React.createClass
     plugins[index].version = @state.latest[plugins[index].packageName] if !er
     updating = @state.updating
     updating[index] = false
-    @checkUpdate(@solveUpdate, false)
     @setState {updating}
   handleUpdate: (index, callback) ->
     if !@props.disabled
@@ -237,7 +236,6 @@ PluginConfig = React.createClass
     for plugin, index in plugins
       plugin.version = @state.latest[plugin.packageName] if !er
       updating[index] = false
-    @checkUpdate(@solveUpdate, false)
     @setState
       updating: updating
       updatingAll: false
