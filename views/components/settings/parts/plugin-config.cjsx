@@ -102,7 +102,7 @@ for fail, index in fails
 
 npmConfig = {
   prefix: "#{PLUGIN_PATH}",
-  registry: mirror[config.get "packageManager.mirror", 0].server,
+  registry: mirror[config.get "packageManager.mirrorName", "npm"].server,
   http_proxy: 'http://127.0.0.1:12450'
 }
 
@@ -129,7 +129,7 @@ PluginConfig = React.createClass
     checking: false
     updatingAll: false
     installing: false
-    mirror: config.get "packageManager.mirror", 0
+    mirror: config.get "packageManager.mirrorName", "npm"
     isUpdateAvailable: false
     advanced: false
     manuallyInstallPackage: ''
@@ -139,7 +139,7 @@ PluginConfig = React.createClass
     shell.openExternal link
     e.preventDefault()
   onSelectServer: (state) ->
-    config.set "packageManager.mirror", state
+    config.set "packageManager.mirrorName", state
     server = mirror[state].server
     npmConfig = {
       prefix: "#{PLUGIN_PATH}",
@@ -491,13 +491,15 @@ PluginConfig = React.createClass
                       {__ 'Select npm server'}
                     </label>
                     {
-                      for server, index in mirror
-                        <OverlayTrigger placement='top' key={index} overlay={<Tooltip id="npm-server-#{index}">{server.menuname}</Tooltip>}>
+                      index = -1
+                      for server of mirror
+                        index++
+                        <OverlayTrigger placement='top' key={index} overlay={<Tooltip id="npm-server-#{index}">{mirror[server].menuname}</Tooltip>}>
                           <Col key={index} xs=4 style={padding: '0px 5px'}>
                             <Input type="radio"
-                                   label={server.name}
-                                   checked={@state.mirror == index}
-                                   onChange={@onSelectServer.bind @, index} />
+                                   label={mirror[server].name}
+                                   checked={@state.mirror == server}
+                                   onChange={@onSelectServer.bind @, server} />
                           </Col>
                         </OverlayTrigger>
                     }

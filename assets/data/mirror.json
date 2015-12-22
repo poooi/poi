@@ -1,17 +1,17 @@
-[
-  {
+{
+  "tsinghua": {
     "name": "Tsinghua (CN)",
     "menuname": "npm.tuna.tsinghua.edu.cn",
     "server": "https://npm.tuna.tsinghua.edu.cn/"
   },
-  {
+  "cnpm": {
     "name": "CNPM (CN)",
     "menuname": "r.cnpmjs.org",
     "server": "http://r.cnpmjs.org/"
   },
-  {
+  "npm": {
     "name": "NPMJS (US)",
     "menuname": "registry.npmjs.org",
     "server": "https://registry.npmjs.org/"
   }
-]
+}
