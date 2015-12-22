@@ -458,6 +458,17 @@ PoiConfig = React.createClass
           <FolderPickerConfig label={__ 'Cache Folder'} configName="poi.cachePath" defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
         </div>
         <div className="form-group">
+          <Divider text={__ 'Other settings'} />
+          <Grid>
+            <Col xs={12}>
+            <CheckboxLabelConfig 
+              label={__ 'Display \"Tips\"'} 
+              configName="poi.doyouknow.enabled" 
+              defaultVal=true />
+            </Col>
+          </Grid>
+        </div>
+        <div className="form-group">
           <Divider text={__ 'Advanced'} />
           <Grid>
             <CheckboxLabelConfig 
