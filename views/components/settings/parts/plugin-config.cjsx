@@ -100,9 +100,11 @@ for fail, index in fails
   # 0: broken 1: installing 2: installed 3: removing 4: removed
   failStatus.push 0
 
+primaryServer = if window.language == "zh-CN" then "tsinghua" else "npm"
+
 npmConfig = {
   prefix: "#{PLUGIN_PATH}",
-  registry: mirror[config.get "packageManager.mirrorName", "npm"].server,
+  registry: mirror[config.get "packageManager.mirrorName", primaryServer].server,
   http_proxy: 'http://127.0.0.1:12450'
 }
 
@@ -129,7 +131,7 @@ PluginConfig = React.createClass
     checking: false
     updatingAll: false
     installing: false
-    mirror: config.get "packageManager.mirrorName", "npm"
+    mirror: config.get "packageManager.mirrorName", primaryServer
     isUpdateAvailable: false
     advanced: false
     manuallyInstallPackage: ''
