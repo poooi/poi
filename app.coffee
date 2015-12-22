@@ -49,31 +49,29 @@ app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
 app.commandLine.appendSwitch 'ignore-certificate-errors'
 app.commandLine.appendSwitch 'ssl-version-fallback-min', "tls1"
 
-# Pepper Flash
-if process.platform == 'linux'
-  try
-    fs.accessSync path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.226'
-  catch e
-    app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'linux', 'libpepflashplayer.so')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.226'
-else if process.platform == 'win32'
-  try
-    fs.accessSync path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'win32', 'pepflashplayer.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.219'
-  catch e
-    app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'win32', 'pepflashplayer.dll')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.219'
-else if process.platform == 'darwin'
-  try
-    fs.accessSync path.join(EXECROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-path', path.join(EXECROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.226'
-  catch e
-    app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, 'PepperFlash', 'darwin', 'PepperFlashPlayer.plugin')
-    app.commandLine.appendSwitch 'ppapi-flash-version', '19.0.0.226'
+pepperFlashData =
+  linux:
+    filename: 'libpepflashplayer.so'
+    version: '19.0.0.226'
+  win32:
+    filename: 'pepflashplayer.dll'
+    version: '19.0.0.219'
+  darwin:
+    filename: 'PepperFlashPlayer.plugin'
+    version: '19.0.0.226'
+
+for platform, data of pepperFlashData
+  if process.platform is platform
+    innerPath = path.join 'PepperFlash', platform, data.filename
+    execPath = path.join EXECROOT, innerPath
+    try
+      fs.accessSync execPath
+      app.commandLine.appendSwitch 'ppapi-flash-path', execPath
+      app.commandLine.appendSwitch 'ppapi-flash-version', data.version
+    catch
+      app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, innerPath)
+      app.commandLine.appendSwitch 'ppapi-flash-version', data.version
+    break
 
 app.on 'window-all-closed', ->
   shortcut.unregister()
