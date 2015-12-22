@@ -56,6 +56,7 @@ exitPoi = ->
   window.close()
 window.onbeforeunload = (e) ->
   if confirmExit || !config.get('poi.confirm.quit', false)
+    remote.require('./lib/window').rememberMain()
     e.returnValue = true
   else
     toggleModal __('Exit'), __('Confirm?'), [
@@ -81,4 +82,3 @@ window.addEventListener 'network.invalid.code', (e) ->
   error __ 'Network error: HTTP %s', code
 window.addEventListener 'network.error', ->
   error __ 'Connection failed.'
-
