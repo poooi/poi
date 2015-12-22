@@ -67,7 +67,7 @@
     "deszh-CN": "记录编成信息",
     "deszh-TW": "記錄編成信息",
     "desja-JP": "編成を記録します",
-    "desen-US": "记录编成信息"
+    "desen-US": "Record and share fleet compositions"
   },
   "poi-plugin-item-improvement": {
     "zh-CN": "装备改修",
@@ -76,8 +76,8 @@
     "en-US": "Equipment Improvement",
     "version": "v0.0.0",
     "icon": "wrench",
-    "author": "KochiyaOcean",
-    "link": "https://github.com/kochiyaocean",
+    "author": "Dazzy Ding",
+    "link": "https://github.com/yukixz",
     "deszh-CN": "查看装备改修信息",
     "deszh-TW": "檢視裝備修改訊息",
     "desja-JP": "簡易装備改修表",
@@ -90,8 +90,8 @@
     "en-US": "Equipment Info",
     "version": "v0.0.0",
     "icon": "rocket",
-    "author": "Yunze",
-    "link": "https://github.com/myzwillmake",
+    "author": "taroxd",
+    "link": "https://github.com/taroxd",
     "deszh-CN": "提供装备详细信息查看",
     "deszh-TW": "提供裝備詳細信息查看",
     "desja-JP": "持っている装備の情報を表示します",
@@ -149,9 +149,9 @@
     "author": "马里酱",
     "link": "https://github.com/malichan",
     "deszh-CN": "任务信息查询 & 任务面板强化",
-    "deszh-TW": "任务信息查询 & 任务面板强化",
-    "desja-JP": "任务信息查询 & 任务面板强化",
-    "desen-US": "任务信息查询 & 任务面板强化"
+    "deszh-TW": "任務信息查詢 & 任務面板強化",
+    "desja-JP": "任務攻略データや開放条件一覧",
+    "desen-US": "Show task infomation & improve task panel"
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
@@ -174,8 +174,8 @@
     "en-US": "Ship Girls Info",
     "version": "v0.0.0",
     "icon": "ship",
-    "author": "Yunze",
-    "link": "https://github.com/myzwillmake",
+    "author": "Ayaphis",
+    "link": "https://github.com/Ayaphis",
     "deszh-CN": "提供已有舰娘详细信息查看",
     "deszh-TW": "提供已有艦娘詳細信息查看",
     "desja-JP": "持っている艦娘の情報を展示する",
