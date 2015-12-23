@@ -161,11 +161,7 @@ PluginConfig = React.createClass
   onSelectServer: (state) ->
     config.set "packageManager.mirrorName", state
     server = mirror[state].server
-    npmConfig = {
-      prefix: "#{PLUGIN_PATH}",
-      registry: mirror[state].server,
-      http_proxy: 'http://127.0.0.1:12450'
-    }
+    npmConfig.registry = mirror[state].server
     @setState
       mirror: state
   handleAdvancedShow: ->
