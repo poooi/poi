@@ -45,7 +45,8 @@
     "semver": "^5.1.0",
     "socks5-client": "^1.1.0",
     "socks5-http-client": "^1.0.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "mousetrap ": "^1.5.3"
   },
   "devDependencies": {
     "bower": "^1.5.2",

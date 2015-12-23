@@ -1,6 +1,7 @@
 {app, BrowserWindow} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
+ipcMain = require("electron").ipcMain
 
 # Environment
 global.POI_VERSION = app.getVersion()
@@ -110,6 +111,10 @@ app.on 'ready', ->
     # Close all sub window
     require('./lib/window').closeWindows()
     mainWindow = null
+
+ipcMain.on 'refresh-shortcut', ->
+  shortcut.unregister()
+  shortcut.register()
 
 # Uncaught error
 process.on 'uncaughtException', (e) ->
