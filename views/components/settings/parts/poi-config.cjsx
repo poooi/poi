@@ -468,7 +468,7 @@ ShortcutConfig = React.createClass
     # Translate from mousetrap to electron accelerator
     # Differentiate meta from ctrl only when they both appears
     # Incompatibilities on special keys may still exist (only solved 'del' here)
-    mapping = 
+    mapping =
       shift: 'Shift'
       alt: 'Alt'
       ctrl: 'Ctrl'
@@ -496,7 +496,7 @@ ShortcutConfig = React.createClass
         </Col>
         <Col xs={9}>
           <ButtonGroup justified>
-            <Button 
+            <Button
               disabled={@recording()}
               bsStyle={if @enabled() then "success" else "danger"}
               onClick={if @recording() then null else @handleClickRecord}
@@ -505,8 +505,8 @@ ShortcutConfig = React.createClass
             </Button>
             {
               if @showDisableButton()
-                <Button bsStyle="danger" 
-                  onMouseDown={@handleDisable} 
+                <Button bsStyle="danger"
+                  onMouseDown={@handleDisable}
                   style={width: '20%'}>
                   <i className="fa fa-times"></i>
                 </Button>
@@ -567,20 +567,20 @@ PoiConfig = React.createClass
         </div>
         <div className="form-group">
           <Divider text={__ 'Other settings'} />
-          <Col xs={12}>
-            <CheckboxLabelConfig 
-              label={__ 'Display \"Tips\"'} 
-              configName="poi.doyouknow.enabled" 
+          <div>
+            <CheckboxLabelConfig
+              label={__ 'Display \"Tips\"'}
+              configName="poi.doyouknow.enabled"
               defaultVal=true />
-          </Col>
+          </div>
           {
             if process.platform isnt 'darwin'
-              <Col xs={12}>
-                <ShortcutConfig 
+              <div>
+                <ShortcutConfig
                   label={__ 'Boss key'}
                   configName="poi.shortcut.bosskey"
                   onNewVal={-> ipcRenderer.send 'refresh-shortcut'} />
-              </Col>
+              </div>
           }
         </div>
         <div className="form-group">
