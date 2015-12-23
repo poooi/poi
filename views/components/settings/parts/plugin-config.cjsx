@@ -251,11 +251,14 @@ PluginConfig = React.createClass
     return if count == 0 then false else true
   handleUpdateAllComplete: (er) ->
     updating = @state.updating
+    isUpdateAvailable = @state.isUpdateAvailable
+    isUpdateAvailable = false if !er
     for plugin, index in plugins
       plugin.version = @state.latest[plugin.packageName] if !er
       updating[index] = false
     @setState
       updating: updating
+      isUpdateAvailable: isUpdateAvailable
       updatingAll: false
   handleUpdateAll: (callback) ->
     if !@props.disabled
