@@ -30,8 +30,8 @@ release_dir_name = 'release'
 # global.* variables are assigned to adapt for requiring 'config'
 global.ROOT = __dirname
 system_appdata_path = process.env.APPDATA || (
-  if process.platform == 'darwin' 
-  then path.join(process.env.HOME, 'Library/Application Support') 
+  if process.platform == 'darwin'
+  then path.join(process.env.HOME, 'Library/Application Support')
   else '/var/local')
 global.APPDATA_PATH = path.join system_appdata_path, 'poi'
 global.EXROOT = global.APPDATA_PATH
@@ -356,7 +356,6 @@ module.exports.buildLocalAsync = ->
 
 # Package release archives of poi, on multiple platforms
 module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list) ->
-  async (poi_version, electron_version, platform_arch_list) ->
   build_root = path.join __dirname, build_dir_name
 
   download_dir = path.join build_root, download_dir_name
