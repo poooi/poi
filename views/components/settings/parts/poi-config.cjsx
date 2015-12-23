@@ -449,7 +449,7 @@ ShortcutConfig = React.createClass
   handleClickRecord: (e) ->
     this.constructor.prototype.listener = (character, modifiers, e) =>
       this.constructor.prototype.listener = null
-      if character == 'esc' && !modifiers
+      if character == 'esc' && modifiers.length == 0
         @abortRecording()
       else
         @setKey character, modifiers
