@@ -555,10 +555,10 @@ PoiConfig = React.createClass
         </div>
         <div className="form-group">
           <Divider text={__ 'Screenshot Folder'} />
-          <FolderPickerConfig 
-            label={__ 'Screenshot Folder'} 
-            configName="poi.screenshotPath" 
-            defaultVal={window.screenshotPath} 
+          <FolderPickerConfig
+            label={__ 'Screenshot Folder'}
+            configName="poi.screenshotPath"
+            defaultVal={window.screenshotPath}
             onNewVal={(pathname) -> window.screenshotPath = pathname} />
         </div>
         <div className="form-group">
@@ -586,21 +586,17 @@ PoiConfig = React.createClass
         <div className="form-group">
           <Divider text={__ 'Advanced'} />
           <Grid>
-            <CheckboxLabelConfig 
-              label={__ 'Disable Hardware Acceleration'} 
-              configName="poi.disableHA" 
+            <CheckboxLabelConfig
+              label={__ 'Disable Hardware Acceleration'}
+              configName="poi.disableHA"
               defaultVal=false />
-            <CheckboxLabelConfig 
-              label={__ 'Editing DMM Cookie\'s Region Flag'} 
-              configName="poi.enableDMMcookie" 
+            <CheckboxLabelConfig
+              label={__ 'Editing DMM Cookie\'s Region Flag'}
+              configName="poi.enableDMMcookie"
               defaultVal=false />
-            <CheckboxLabelConfig 
-              label={__ 'Prevent DMM Network Change Popup'} 
-              configName="poi.disableNetworkAlert" 
-              defaultVal=false />
-            <CheckboxLabelConfig 
-              label={__ 'Developer option: check update of beta version'} 
-              configName="enableBetaPluginCheck" 
+            <CheckboxLabelConfig
+              label={__ 'Prevent DMM Network Change Popup'}
+              configName="poi.disableNetworkAlert"
               defaultVal=false />
           </Grid>
         </div>

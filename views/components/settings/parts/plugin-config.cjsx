@@ -104,9 +104,11 @@ primaryServer = if window.language == "zh-CN" then "tsinghua" else "npm"
 
 npmConfig = {
   prefix: "#{PLUGIN_PATH}",
-  registry: mirror[config.get "packageManager.mirrorName", primaryServer].server,
-  http_proxy: 'http://127.0.0.1:12450'
+  registry: mirror[config.get "packageManager.mirrorName", primaryServer].server
 }
+
+if config.get "packageManager.proxy", false
+  npmConfig.http_proxy = 'http://127.0.0.1:12450'
 
 ifStableVersion = (version) ->
   semver.satisfies version,
@@ -132,6 +134,8 @@ PluginConfig = React.createClass
     updatingAll: false
     installing: false
     mirror: config.get "packageManager.mirrorName", primaryServer
+    enableBetaPluginCheck: config.get "packageManager.enableBetaPluginCheck", false
+    enableProxy: config.get "packageManager.proxy", false
     isUpdateAvailable: false
     advanced: false
     manuallyInstallPackage: ''
@@ -140,6 +144,20 @@ PluginConfig = React.createClass
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
+  handleEnableBetaPluginCheck: ->
+    enabled = @state.enableBetaPluginCheck
+    config.set "packageManager.enableBetaPluginCheck", !enabled
+    @setState
+      enableBetaPluginCheck: !enabled
+  handleEnableProxy: ->
+    enabled = @state.enableProxy
+    config.set "packageManager.proxy", !enabled
+    if !enabled
+      npmConfig.http_proxy = 'http://127.0.0.1:12450'
+    else
+      delete npmConfig.http_proxy
+    @setState
+      enableProxy: !enabled
   onSelectServer: (state) ->
     config.set "packageManager.mirrorName", state
     server = mirror[state].server
@@ -282,12 +300,11 @@ PluginConfig = React.createClass
     if not err?
       latest = @state.latest
       latestVersion = updateData.latest ? "0.0.0"
-      if config.get('enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
+      if config.get('packageManager.enableBetaPluginCheck', false) and semver.lt(latestVersion, updateData.beta ? "0.0.0")
         latestVersion = updateData.beta
       if latest[updateData.packageName]? && needUpdate(latest[updateData.packageName], latestVersion)
         latest[updateData.packageName] = latestVersion
         @isUpdateAvailable = true
-    #console.log "checkCount: #{@checkCount}"
     @checkCount--
     if (@checkCount is 0)
       if isfirst && @isUpdateAvailable
@@ -508,6 +525,16 @@ PluginConfig = React.createClass
                     <label className='control-label' style={width: '100%'}>
                       {__ 'Others'}
                     </label>
+                    <div>
+                      <Input type="checkbox" label={__ 'Connect to npm server through proxy'}
+                             checked={@state.enableProxy}
+                             onChange={@handleEnableProxy} />
+                    </div>
+                    <div>
+                      <Input type="checkbox" label={__ 'Developer option: check update of beta version'}
+                             checked={@state.enableBetaPluginCheck}
+                             onChange={@handleEnableBetaPluginCheck} />
+                    </div>
                     <ButtonGroup style={width: '100%'}>
                       <Button style={width: '50%'} onClick={@onSelectOpenFolder}>
                         {__ 'Open plugin folder'}
