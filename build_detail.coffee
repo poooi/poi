@@ -4,8 +4,9 @@ use_taobao_mirror = true
 os = require 'os'
 path = require 'path-extra'
 Promise = require 'bluebird'
+{promisify} = Promise
 request = Promise.promisifyAll require 'request'
-requestAsync = Promise.promisify request, multiArgs: true
+requestAsync = promisify request, multiArgs: true
 fs = Promise.promisifyAll require 'fs-extra'
 gulp = require 'gulp'
 AdmZip = require 'adm-zip'
@@ -17,6 +18,8 @@ semver = require 'semver'
 {compile} = require 'coffee-react'
 asar = require 'asar'
 walk = require 'walk'
+npm = require 'npm'
+targz = require 'tar.gz'
 
 {log} = require './lib/utils'
 
@@ -24,6 +27,18 @@ walk = require 'walk'
 build_dir_name = 'build'
 download_dir_name = 'download'
 release_dir_name = 'release'
+# global.* variables are assigned to adapt for requiring 'config'
+global.ROOT = __dirname
+system_appdata_path = process.env.APPDATA || (
+  if process.platform == 'darwin' 
+  then path.join(process.env.HOME, 'Library/Application Support') 
+  else '/var/local')
+global.APPDATA_PATH = path.join system_appdata_path, 'poi'
+global.EXROOT = global.APPDATA_PATH
+config = require './lib/config'
+
+plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
+mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
 
 theme_list =
   darkly:     'https://bootswatch.com/darkly/bootstrap.css'
@@ -141,6 +156,9 @@ changeExt = (src_path, ext) ->
   src_basename = path.basename(src_path, path.extname src_path)
   path.join(src_dir, src_basename+ext)
 
+compressGzipAsync = (src_folder, tgt_path) ->
+  targz().compress src_folder, tgt_path
+
 # *** METHODS ***
 npmInstallAsync = async (npm_path, tgt_dir) ->
   # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
@@ -168,7 +186,7 @@ filterCopyAppAsync = async (stage1_app, stage2_app) ->
       clobber: true)
 
 packageAsarAsync = (app_folder, app_asar) ->
-  Promise.promisify(asar.createPackage)(app_folder, app_asar)
+  promisify(asar.createPackage)(app_folder, app_asar)
 
 translateCoffeeAsync = (app_dir) ->
   log "Compiling #{app_dir}"
@@ -276,6 +294,47 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
   else
     Promise.resolve
       log: "Unsupported platform #{platform}."
+
+installPluginsTo = async (plugin_names, install_root, server) ->
+  fs.removeAsync install_root
+  fs.ensureDirSync install_root
+  npmConfig =
+    prefix: install_root
+    registry: server
+  yield promisify(npm.load) npmConfig
+  yield promisify(npm.commands.install) plugin_names
+
+module.exports.installPluginsAsync = async (poi_version) ->
+  build_root = path.join __dirname, build_dir_name
+  building_root = path.join build_root, "building_#{poi_version}"
+  release_dir = path.join build_root, release_dir_name
+
+  packages = fs.readJsonSync plugin_json_path
+  mirror = fs.readJsonSync mirror_json_path
+  # Don't want to mess with detecting system language here without window.navigator
+  language = config.get 'poi.language', 'zh-CN'
+  primaryServer = if language == "zh-CN" then "tsinghua" else "npm"
+  server = mirror[config.get "packageManager.mirrorName", primaryServer].server
+
+  plugin_names = (n for n of packages)
+
+  install_root = path.join building_root, 'poiplugins_install'
+  fs.removeSync install_root
+  fs.ensureDirSync install_root
+  yield installPluginsTo plugin_names, install_root, server
+
+  gzip_root = path.join building_root, 'poiplugins'
+  fs.removeSync gzip_root
+  fs.ensureDirSync gzip_root
+  for name in plugin_names
+    yield compressGzipAsync path.join(install_root, "node_modules", name), path.join(gzip_root, name+'.tar.gz')
+
+  d = new Date()
+  str_date = "#{d.getUTCFullYear()}-#{d.getUTCMonth()+1}-#{d.getUTCDate()}"
+  archive_path = path.join release_dir, "poiplugins_#{str_date}.7z"
+  yield add7z archive_path, gzip_root
+
+  log "Successfully built tarballs at #{archive_path}"
 
 
 # Download dependencies in order to run ``electron .`` right at the poi repo

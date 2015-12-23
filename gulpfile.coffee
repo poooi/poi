@@ -6,7 +6,7 @@ async = Promise.coroutine
 gulp = require 'gulp'
 
 {log} = require './lib/utils'
-{buildLocalAsync, buildAsync, cleanTempFiles} = require './build_detail'
+{buildLocalAsync, buildAsync, cleanTempFiles, installPluginsAsync} = require './build_detail'
 
 package_json = require './package.json'
 bower_json = require './bower.json'
@@ -30,9 +30,13 @@ gulp.task 'build', ['getVersion'], async ->
 gulp.task 'clean', async ->
   yield cleanTempFiles()
 
+gulp.task 'build_plugins', ['getVersion'], async ->
+  yield installPluginsAsync poi_version
+
 gulp.task 'default', ->
   _gulp = 'gulp'
   log "Usage:"
-  log "  #{_gulp} install - Install dependencies to run poi locally"
-  log "  #{_gulp} build   - Build release packages under ./build/release/"
-  log "  #{_gulp} clean   - Clean up temporary files except for release packages"
+  log "  #{_gulp} install       - Install dependencies to run poi locally"
+  log "  #{_gulp} build         - Build release packages under ./build/release/"
+  log "  #{_gulp} build_plugins - Build offline plugin tarballs under ./build/release/"
+  log "  #{_gulp} clean         - Clean up temporary files except for release packages"
