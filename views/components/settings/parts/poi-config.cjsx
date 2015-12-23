@@ -10,6 +10,8 @@ __n = i18n.setting.__n.bind(i18n.setting)
 {config, toggleModal} = window
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
+Mousetrap = require 'Mousetrap'
+ipcRenderer = require("electron").ipcRenderer
 
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
@@ -414,6 +416,112 @@ SlotCheckConfig = React.createClass
       </form>
     </div>
 
+# Parameters:
+#   label       String         The title to display
+#   configName  String         Where you store in config
+#   defaultVal  String         Default key. Use '' (empty) if not given
+#   onNewVal    function(val)  Called when a new value is set. val=null for disabled.
+# State table
+#   [Disabled] --(Click "Record")--> [Recording]
+#   [Enabled]  --(Click "Record")--> [Recording]
+#              --(Click "Disable")-> [Disabled]
+#   [Recording]--(Press Esc)-------> [Previous]
+#              --(Click Anywhere)--> [Previous]
+#              --(A valid key)-----> [Enabled]
+ShortcutConfig = React.createClass
+  getInitialState: ->
+    myval: config.get @props.configName, (@props.defaultVal || '')
+    recording: false
+  displayText: ->
+    if @recording()
+      __ 'Press the key, or Esc to cancel'
+    else
+      @state.myval || __ 'Disabled'
+  showDisableButton: ->
+    @enabled() && !@recording()
+  recording: ->
+    @state.recording
+  enabled: ->
+    !!@state.myval
+  handleClickAnywhere: (e) ->
+    document.removeEventListener 'mousedown', @handleClickAnywhere
+    @abortRecording()
+  handleClickRecord: (e) ->
+    this.constructor.prototype.listener = (character, modifiers, e) =>
+      this.constructor.prototype.listener = null
+      if character == 'esc' && !modifiers
+        @abortRecording()
+      else
+        @setKey character, modifiers
+    document.addEventListener 'mousedown', @handleClickAnywhere
+    @setState
+      recording: true
+  handleDisable: ->
+    @setState
+      myval: null
+      recording: false
+    @newVal ''
+  abortRecording: ->
+    @setState
+      recording: false
+  transformKeyStr: (character, modifiers) ->
+    # Translate from mousetrap to electron accelerator
+    # Differentiate meta from ctrl only when they both appears
+    # Incompatibilities on special keys may still exist (only solved 'del' here)
+    mapping = 
+      shift: 'Shift'
+      alt: 'Alt'
+      ctrl: 'Ctrl'
+      meta: if 'ctrl' in modifiers then 'Cmd' else 'CmdOrCtrl'
+      Del: 'Delete'
+    str_modifiers = (mapping[m] for m in modifiers)
+    # Capitalize the first letter just to make it prettier
+    character = character[0].toUpperCase() + character.substr 1
+    s = (str_modifiers.concat [mapping[character] || character]).join '+'
+    s
+  setKey: (character, modifiers) ->
+    s = @transformKeyStr character, modifiers
+    @setState
+      myval: s
+      recording: false
+    @newVal s
+  newVal: (val) ->
+    config.set @props.configName, val
+    @props.onNewVal val if @props.onNewVal
+  render: ->
+    <Col xs={12}>
+      <Row>
+        <Col xs={3}>
+          <span>{@props.label}</span>
+        </Col>
+        <Col xs={9}>
+          <ButtonGroup justified>
+            <Button 
+              disabled={@recording()}
+              bsStyle={if @enabled() then "success" else "danger"}
+              onClick={if @recording() then null else @handleClickRecord}
+              style={width: '80%'}>
+              {@displayText()}
+            </Button>
+            {
+              if @showDisableButton()
+                <Button bsStyle="danger" 
+                  onMouseDown={@handleDisable} 
+                  style={width: '20%'}>
+                  <i className="fa fa-times"></i>
+                </Button>
+            }
+          </ButtonGroup>
+        </Col>
+      </Row>
+    </Col>
+
+Mousetrap.prototype.handleKey = (character, modifiers, e) ->
+  return if e.type != 'keydown'
+  return if character in ['shift', 'alt', 'ctrl', 'meta']
+  fn = ShortcutConfig.prototype.listener
+  fn.apply this, arguments if fn
+
 PoiConfig = React.createClass
   render: ->
     <div>
@@ -459,14 +567,21 @@ PoiConfig = React.createClass
         </div>
         <div className="form-group">
           <Divider text={__ 'Other settings'} />
-          <Grid>
-            <Col xs={12}>
+          <Col xs={12}>
             <CheckboxLabelConfig 
               label={__ 'Display \"Tips\"'} 
               configName="poi.doyouknow.enabled" 
               defaultVal=true />
-            </Col>
-          </Grid>
+          </Col>
+          {
+            if process.platform isnt 'darwin'
+              <Col xs={12}>
+                <ShortcutConfig 
+                  label={__ 'Boss key'}
+                  configName="poi.shortcut.bosskey"
+                  onNewVal={-> ipcRenderer.send 'refresh-shortcut'} />
+              </Col>
+          }
         </div>
         <div className="form-group">
           <Divider text={__ 'Advanced'} />
