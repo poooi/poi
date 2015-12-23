@@ -101,5 +101,7 @@
   "Select npm server": "選擇 npm 服務器",
   "Open plugin folder": "打開插件目錄",
   "Search for plugins": "搜尋插件",
-  "Developer option: check update of beta version": "開發者選項: 檢查 beta 版插件更新"
+  "Developer option: check update of beta version": "開發者選項: 檢查 beta 版插件更新",
+  "Other settings": "其它功能",
+  "Display \"Tips\"": "顯示“小提示”"
 }

@@ -43,5 +43,10 @@
   "Torpedo": "雷装",
   "AntiAir": "対空",
   "Armor": "装甲",
-  "Luck": "運"
+  "Luck": "運",
+
+  "doyouknow-prefix": "ヒント：",
+  "doyouknow-contents": [
+    ""
+  ]
 }
