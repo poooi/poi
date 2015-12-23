@@ -6,9 +6,9 @@ STICKY_TIME = 10 # seconds, time that the tip can't be refreshed by a "default"
 PREFIX = __ "doyouknow-prefix"
 
 update = (list) ->
-  return if !config.get('poi.doyouknow.enabled', true)
+  return if !config.get('poi.doyouknow.enabled', true) && list
   # Post a random tip
-  window.log PREFIX+list[Math.floor(Math.random() * list.length)],
+  window.log PREFIX + list[Math.floor(Math.random() * list.length)],
     priority: 1
     stickyFor: STICKY_TIME*1000
   # Reinvoked after certain interval
