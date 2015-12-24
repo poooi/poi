@@ -293,7 +293,7 @@ electron poi --debug-plugin=ship-info
 
 允许插件通过 npm 发布测试版本，提供给“希望及时体验 beta 版插件”的用户进行测试。测试版插件使用先行版本号，形如 `x.y.z-beta.a`， 例如 `"version": "2.2.0-beta.0"`。在 npm 上发布时应打 `beta` tag，而非 `latest` tag。
 
-与之对应的，稳定版插件应使用形如 `x.y.z` 的版本号，遵循语义化版本规范。
+与之对应的，稳定版插件应使用形如 `x.y.z` 的版本号，遵循[语义化版本规范](http://semver.org/)。
 
 参考命令如下
 
