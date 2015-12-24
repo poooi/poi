@@ -10,7 +10,7 @@ __n = i18n.setting.__n.bind(i18n.setting)
 {config, toggleModal} = window
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
-Mousetrap = require 'Mousetrap'
+mousetrap = require 'mousetrap'
 ipcRenderer = require("electron").ipcRenderer
 
 Divider = require './divider'
@@ -516,7 +516,7 @@ ShortcutConfig = React.createClass
       </Row>
     </Col>
 
-Mousetrap.prototype.handleKey = (character, modifiers, e) ->
+mousetrap.prototype.handleKey = (character, modifiers, e) ->
   return if e.type != 'keydown'
   return if character in ['shift', 'alt', 'ctrl', 'meta']
   fn = ShortcutConfig.prototype.listener
