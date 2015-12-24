@@ -1,7 +1,7 @@
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
-INTERVAL = config.get('poi.doyouknow.interval', 600) # seconds, time for a new tip
+INTERVAL = config.get('poi.doyouknow.interval', 1800) # seconds, time for a new tip
 STICKY_TIME = 10 # seconds, time that the tip can't be refreshed by a "default"
 PREFIX = __ "doyouknow-prefix"
 
@@ -17,7 +17,7 @@ update = (list) ->
 firstUpdate = ->
   document.removeEventListener 'DOMContentLoaded', firstUpdate
   list = (text for text in __ 'doyouknow-contents' when text)
-  if list
+  if list.length != 0
     # Delay for a period b/c the alert region may not properly detect its width
     setTimeout update, 1000, list
 
