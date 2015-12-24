@@ -31,7 +31,11 @@ module.exports =
         e.preventDefault() unless forceClose
     else
       current.on 'close', (e) ->
-        current.hide()
+        if current.isFullScreen()
+          current.once 'leave-full-screen', current.hide.bind(current)
+          current.setFullScreen(false)
+        else
+          current.hide()
         e.preventDefault() unless forceClose
     # Draggable
     unless options.navigatable
