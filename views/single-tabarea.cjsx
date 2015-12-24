@@ -162,7 +162,7 @@ ControlledTabArea = React.createClass
                      title=
                      {
                        if @state.key >= 2 and @state.key < 1000
-                         <span>{plugins[@state.key - 2].displayName}</span>
+                         <span>{tabbedPlugins[@state.key - 2].displayName}</span>
                        else
                          <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
                      }>

@@ -155,7 +155,7 @@ ControlledTabArea = React.createClass
       <div>
         <Nav bsStyle="tabs" activeKey={@state.key[1]} onSelect={@handleSelectRight}>
           <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
-                       title={plugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>}>
+                       title={tabbedPlugins[@state.key[1]]?.displayName || <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>}>
           {
             counter = -1
             plugins.map (plugin, index) =>
