@@ -53,13 +53,13 @@ app.commandLine.appendSwitch 'ssl-version-fallback-min', "tls1"
 pepperFlashData =
   linux:
     filename: 'libpepflashplayer.so'
-    version: '19.0.0.226'
+    version: '20.0.0.248'
   win32:
     filename: 'pepflashplayer.dll'
-    version: '19.0.0.219'
+    version: '20.0.0.248'
   darwin:
     filename: 'PepperFlashPlayer.plugin'
-    version: '19.0.0.226'
+    version: '20.0.0.248'
 
 pepperFlashData = pepperFlashData[process.platform]
 innerFlashPath = path.join 'PepperFlash', process.platform, pepperFlashData.filename
