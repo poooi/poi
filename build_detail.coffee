@@ -66,9 +66,8 @@ get_flash_url = (platform, arch) ->
 
 target_list = [
   # Files
-  'app.js', 'bower.json', 'config.cson', 'constant.cson',
+  'app.js', 'bower.json', 'config.cson',
   'index.html', 'index.js', 'LICENSE', 'package.json',
-  'mirror.json', 'plugin.json',
   # Folders
   'assets',
   'components',
