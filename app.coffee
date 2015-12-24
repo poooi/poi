@@ -36,9 +36,6 @@ shortcut = require './lib/shortcut'
 
 global.mainWindow = mainWindow = null
 
-# Debug setting
-app.commandLine.appendSwitch 'enable-logging'
-
 # Disable HA
 disableHA = config.get 'poi.disableHA', false
 if disableHA
