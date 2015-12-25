@@ -13,7 +13,8 @@ registerDevToolShortcut = ->
 
 module.exports =
   register: ->
-    registerBossKey()
-    registerDevToolShortcut()
+    if process.platform != 'darwin'
+      registerBossKey()
+      registerDevToolShortcut()
   unregister: ->
     globalShortcut.unregisterAll()
