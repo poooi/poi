@@ -8,7 +8,7 @@
 	.st2{fill:#FFD02C;}
 	.st3{display:inline;fill:none;}
 	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#FFFF00;}
+	.st5{fill:#FFCF00;}
 </style>
 <g id="Layer_1" class="st0">
 	<g id="XMLID_1_" class="st1">
@@ -28,7 +28,7 @@
 	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<polygon id="XMLID_37_" class="st5" points="557.8,467.7 534.2,490.8 240.1,196.6 194.8,241.9 489.2,536.3 467.2,558.2 
-		465.7,738.1 579.5,851 760.5,851 851,760.9 851,579.9 737.9,466.7 	"/>
+	<polygon id="XMLID_37_" class="st5" points="877,604 672.7,402.3 560.3,401.6 192.5,34 135.4,91.1 491.8,447.5 446.5,492.8 
+		90.1,136.4 33.4,193 401,560.7 401,673.8 605,877 605,991 719,991 719,877 718,877 877,718.1 877,718 991,718 991,604 	"/>
 </g>
 </svg>

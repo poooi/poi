@@ -29,9 +29,8 @@
 	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<g id="XMLID_37_">
-		<circle id="XMLID_39_" class="st5" cx="512.8" cy="160.2" r="129.8"/>
-		<polygon id="XMLID_42_" class="st5" points="524.4,864 736,352 288,352 498,864 191,864 191,928 832,928 832,864 		"/>
-	</g>
+	<circle id="XMLID_38_" class="st5" cx="512.7" cy="148.1" r="148.1"/>
+	<polygon id="XMLID_65_" class="st5" points="510.9,987.5 256.3,366.8 767.4,366.8 	"/>
+	<rect id="XMLID_66_" x="146.2" y="951" class="st5" width="731.3" height="73"/>
 </g>
 </svg>

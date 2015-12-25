@@ -8,7 +8,7 @@
 	.st2{fill:#FFFFC5;}
 	.st3{display:inline;fill:none;}
 	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:3;stroke-miterlimit:10;}
-	.st5{fill:#2AFF50;}
+	.st5{fill:#65D576;}
 </style>
 <g id="Layer_1" class="st0">
 	<g id="XMLID_1_" class="st1">
@@ -28,7 +28,8 @@
 	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<polyline id="XMLID_37_" class="st5" points="448,352 562.1,206.8 877.1,153 956.5,248.8 784,309.5 784,411 921,546.3 921,816.9 
-		716.7,970 310.8,970 108,816.9 108,546.3 277,411 378.4,411 378.4,411 6.4,106.5 40.2,38.9 448,352 	"/>
+	<polygon id="XMLID_51_" class="st5" points="642,939 642.3,703.3 845.5,500.6 568.6,223.6 523.2,268.8 258.3,4 211.6,50.8 
+		476.4,315.6 407.3,384.7 142.5,119.9 96.4,165.9 361.4,430.9 315.3,476.9 482.1,643.6 482,938.4 114,938.4 114,1023.9 1010,1024 
+		1010,939 	"/>
 </g>
 </svg>

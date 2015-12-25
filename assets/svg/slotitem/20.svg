@@ -7,7 +7,7 @@
 	.st1{display:inline;}
 	.st2{fill:#FFD02C;}
 	.st3{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st4{fill:#9AA55D;}
+	.st4{fill:#A1AE5C;}
 </style>
 <g id="Layer_1" class="st0">
 	<g id="XMLID_1_" class="st1">
@@ -27,7 +27,8 @@
 	<circle id="XMLID_36_" class="st3" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<path id="XMLID_37_" class="st4" d="M960,576v-64.8c0,0-128,52-224,62.9V352H546v224c0,0-66,0-194,0S64,511.2,64,511.2
-		S192,737,352,737s513,0.6,513,0.6l63-32.6v-32l-63-33v-32L960,576z"/>
+	<path id="XMLID_37_" class="st4" d="M864.5,864c0,0-288.5,0-512.5,0C136,819,0,448,0,448s182.9,91,329.1,91s291.4,0,402.3,0
+		S1024,399,1024,399V539L865,640v65l159,49v59L864.5,864z"/>
+	<rect id="XMLID_38_" x="437.4" y="224" class="st4" width="297.7" height="321.7"/>
 </g>
 </svg>

@@ -8,7 +8,7 @@
 	.st2{fill:#FFFFC5;}
 	.st3{display:inline;fill:none;}
 	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:3;stroke-miterlimit:10;}
-	.st5{fill:#7FEBFF;}
+	.st5{fill:#7BCEDB;}
 </style>
 <g id="Layer_1" class="st0">
 	<g id="XMLID_1_" class="st1">
@@ -28,12 +28,14 @@
 	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<circle id="XMLID_38_" class="st5" cx="360.2" cy="606.2" r="248.8"/>
-	<path id="XMLID_55_" class="st5" d="M374.8,328.3c146.5,0,265.3,118.8,265.3,265.3c0,29.9-4.9,58.6-14,85.3l0.7,0.7l193.7-288.4
-		c23.7-27.3,38-62.9,38-101.8c0-85.9-69.6-155.5-155.5-155.5c-27,0-52.5,6.9-74.6,19l0,0L313,335l0.4,0.5
-		C333.1,330.8,353.7,328.3,374.8,328.3z"/>
-	<circle id="XMLID_57_" class="st5" cx="768" cy="737" r="32"/>
-	<circle id="XMLID_60_" class="st5" cx="858.5" cy="576.5" r="47.5"/>
-	<circle id="XMLID_61_" class="st5" cx="640.8" cy="833.2" r="31.8"/>
+	<g id="XMLID_37_">
+		<circle id="XMLID_38_" class="st5" cx="323.4" cy="675.3" r="321.7"/>
+		<path id="XMLID_40_" class="st5" d="M989.8,244.2C989.8,135.9,901.9,48,793.6,48c-34.1,0-66.2,8.7-94.2,24l-0.1-0.1L301.4,301.7
+			l0.6,0.6c24.9-5.9,50.8-9,77.5-9c184.9,0,334.8,149.9,334.8,334.8c0,37.7-6.2,73.9-17.7,107.7l0.9,0.9l244.5-364
+			C971.7,338.3,989.8,293.4,989.8,244.2z"/>
+		<circle id="XMLID_39_" class="st5" cx="847.8" cy="797.6" r="40.4"/>
+		<circle id="XMLID_41_" class="st5" cx="962.1" cy="595" r="60"/>
+		<circle id="XMLID_42_" class="st5" cx="687.2" cy="919.1" r="40.1"/>
+	</g>
 </g>
 </svg>

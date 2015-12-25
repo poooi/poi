@@ -29,13 +29,12 @@
 	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<g id="XMLID_55_">
-		<polygon id="XMLID_56_" class="st5" points="400,481 624,513 624,449 400,417 		"/>
-		<polygon id="XMLID_57_" class="st5" points="399,591.5 624,624.5 624,559.5 399,527.5 		"/>
-		<polygon id="XMLID_60_" class="st5" points="399,705 624,736 624,673 399,641 		"/>
-		<polygon id="XMLID_61_" class="st5" points="399,368 624,400 624,336 399,304 		"/>
-		<path id="XMLID_64_" class="st5" d="M513,64c-223.2,0-289,32-289,32v96h175v64l225,32v-96h178V96C802,96,736.2,64,513,64z"/>
-		<polygon id="XMLID_65_" class="st5" points="399,832 399,832 511.5,1009.1 624,832 624,832 624,784.5 399,752.5 		"/>
-	</g>
+	<path id="XMLID_64_" class="st5" d="M510.9,34.5c-244.2,0-380.9,97.2-380.9,97.2V221h276v90.4l208,30.1V221h280v-89.3
+		C894,131.7,755.1,34.5,510.9,34.5z"/>
+	<polygon id="XMLID_40_" class="st5" points="406,825.5 510,933 614,825.5 614,814.8 406,793.3 	"/>
+	<polygon id="XMLID_38_" class="st5" points="406,431.8 614,461.9 614,387.2 406,356.2 	"/>
+	<polygon id="XMLID_37_" class="st5" points="406,552.3 614,582.4 614,507.7 406,476.6 	"/>
+	<polygon id="XMLID_39_" class="st5" points="406,673.6 614,703.7 614,629 406,598 	"/>
+	<polygon id="XMLID_41_" class="st5" points="406,793.1 614,823.2 614,748.5 406,717.5 	"/>
 </g>
 </svg>

@@ -8,8 +8,8 @@
 	.st2{fill:#FFD02C;}
 	.st3{display:inline;fill:none;}
 	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#996633;}
-	.st6{fill:#BC8B35;}
+	.st5{fill:#A56234;}
+	.st6{fill:#C67E47;}
 </style>
 <g id="Layer_1" class="st0">
 	<g id="XMLID_1_" class="st1">
@@ -30,11 +30,9 @@
 	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
 </g>
 <g id="Layer_2">
-	<g id="XMLID_41_">
-		<polygon id="XMLID_38_" class="st5" points="47,641 47,737 576,832 865,727.9 880,640 880,544 576,737 		"/>
-		<polygon id="XMLID_40_" class="st5" points="191,364.1 191,445.5 639.4,526 884.3,437.8 897,363.2 897,281.9 639.4,445.5 		"/>
-		<polygon id="XMLID_39_" class="st6" points="896.5,281.9 449.5,200.5 205.4,281.9 190.7,364 639.4,445.5 884.4,363.2 		"/>
-		<polygon id="XMLID_37_" class="st6" points="879.3,544 352,448 64,544 46.7,640.8 576,737 865,640 		"/>
-	</g>
+	<polygon id="XMLID_42_" class="st5" points="196,237.1 196.3,396.5 535.9,515.1 779.2,436 827,276.7 827,118.6 535.9,355.7 	"/>
+	<polygon id="XMLID_41_" class="st6" points="827,118.6 487.4,0 244.8,79 196,237.1 535.9,355.7 779.2,276.7 	"/>
+	<polygon id="XMLID_39_" class="st5" points="80.7,670.6 81,873.2 512.9,1024 822.3,923.5 883,720.8 883,519.8 512.8,821.4 	"/>
+	<polygon id="XMLID_46_" class="st6" points="883.2,519.8 451.2,369 142.7,469.5 80.7,670.6 512.9,821.4 822.4,720.8 	"/>
 </g>
 </svg>
