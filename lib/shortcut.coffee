@@ -20,5 +20,8 @@ module.exports =
           for w in windows
             w.show() if state[w.id]
           hidden = false
+    globalShortcut.register 'Ctrl+Shift+I', ->
+      BrowserWindow.getFocusedWindow()?.openDevTools
+        detach: true
   unregister: ->
     globalShortcut.unregisterAll()
