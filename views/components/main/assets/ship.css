@@ -238,8 +238,9 @@
   margin-left: -5px;
 }
 #ShipView .slotitem-container img.svg {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 23px;
+  margin-right: 2px;
 }
 #ShipView .alert {
   background-color: transparent;
