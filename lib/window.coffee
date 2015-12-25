@@ -32,7 +32,8 @@ module.exports =
     else
       current.on 'close', (e) ->
         if current.isFullScreen()
-          current.once 'leave-full-screen', current.hide.bind(current)
+          current.once 'leave-full-screen', ->
+            current.hide()
           current.setFullScreen(false)
         else
           current.hide()
