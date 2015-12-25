@@ -31,7 +31,8 @@
   "Edit custom CSS": "编辑自定义 CSS",
   "Failed. Perhaps you don't have permission to it.": "打开失败，可能没有创建文件的权限",
   "Browser": "浏览器",
-  "Confirm before exit": "关闭前弹出确认窗口",
+  "Confirm before exit": "关闭前确认",
+  "Set this in the OS X App Menu": "：在OS X顶部App菜单中设置",
   "Notification": "通知",
   "Enable notification": "开启通知",
   "Enable notif sound": "开启声音",
@@ -61,7 +62,7 @@
   "Zoom level": "缩放比率",
   "Screenshot Folder": "截图目录",
   "Cache Folder": "缓存目录",
-  "Advanced": "高级设置",
+  "Advanced functionalities": "高级功能",
   "Disable Hardware Acceleration": "禁用硬件加速",
   "Editing DMM Cookie's Region Flag": "设置 DMM 地区 Cookie",
   "Prevent DMM Network Change Popup": "屏蔽 DMM 网络变更警告",
@@ -104,6 +105,8 @@
   "Connect to npm server through proxy": "使用代理连接至 npm 服务器",
   "Developer option: check update of beta version": "开发者选项: 检查 beta 版插件更新",
   "Other settings": "其它功能",
-  "Boss key": "老闆鍵",
+  "Boss key": "老板键",
+  "Press the key, or Esc to cancel": "等待按下快捷键中，或按Esc取消",
+  "Disabled": "快捷键未设置，点此处设置",
   "Display \"Tips\"": "显示“小提示”"
 }

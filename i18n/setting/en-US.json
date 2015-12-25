@@ -30,7 +30,8 @@
   "Edit custom CSS": "Edit custom CSS",
   "Failed. Perhaps you don't have permission to it.": "Failed. Perhaps you don't have permission to it.",
   "Browser": "Browser",
-  "Confirm before exit": "Confirm before exit",
+  "Confirm before exit": "Warn Before Quitting",
+  "Set this in the OS X App Menu": ": Set this in the OS X App Menu",
   "Notification": "Notification",
   "Enable notification": "Enable notification",
   "Enable notif sound": "Enable notif sound",
@@ -53,8 +54,11 @@
   "Zoom level": "Zoom level",
   "Screenshot Folder": "Screenshot Folder",
   "Cache Folder": "Cache Folder",
+  "Advanced functionalities": "Advanced functionalities",
   "Use SVG Icon": "Use SVG Icon",
   "Other settings": "Other settings",
   "Boss key": "Boss key",
+  "Press the key, or Esc to cancel": "Press the key, or Esc to cancel",
+  "Disabled": "Hotkey disabled, click to record",
   "Display \"Tips\"": "Display \"Tips\""
 }
