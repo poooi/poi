@@ -1,7 +1,11 @@
 _ = require 'underscore'
 {BrowserWindow} = require 'electron'
 global.windows = windows = []
+
 forceClose = false
+state = []  # Window state before hide
+hidden = false
+
 module.exports =
   createWindow: (options) ->
     options = _.extend options,
@@ -61,3 +65,14 @@ module.exports =
     b.isFullScreen = isFullScreen
     b.isMaximized = isMaximized
     require('./config').set 'poi.window', b
+  toggleAllWindowsVisibility: ->
+    for w in BrowserWindow.getAllWindows()
+      if !hidden
+        state[w.id] = w.isVisible()
+        w.hide()
+      else
+        w.show() if state[w.id]
+    hidden = !hidden
+  openFocusedWindowDevTools: ->
+    BrowserWindow.getFocusedWindow()?.openDevTools
+      detach: true

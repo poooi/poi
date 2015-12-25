@@ -8,6 +8,7 @@ __n = window.i18n.others.__n.bind(i18n.others)
 
 # Controller icon bar
 {capturePageInMainWindow} = remote.require './lib/utils'
+{openFocusedWindowDevTools} = remote.require './lib/window'
 PoiControl = React.createClass
   getInitialState: ->
     muted: false
@@ -63,8 +64,7 @@ PoiControl = React.createClass
     remote.getCurrentWindow().setResizable resizeable
     @setState {resizeable}
   handleOpenDevTools: ->
-    remote.getCurrentWindow().openDevTools
-      detach: true
+    openFocusedWindowDevTools()
   handleOpenWebviewDevTools: ->
     $('kan-game webview').openDevTools
       detach: true
@@ -130,5 +130,5 @@ PoiControl = React.createClass
       <Button onClick={@handleSetExtend} bsSize='small' className={if @state.extend then 'active' else ''}><FontAwesome name={if @state.extend then 'angle-left' else 'angle-right'} /></Button>
     </div>
 
-module.exports = 
+module.exports =
   PoiControl: PoiControl
