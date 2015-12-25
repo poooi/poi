@@ -50,7 +50,7 @@ window.resolveTime = (seconds) ->
 # msg=null: Sound-only notification.
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
-if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
+if process.platform == 'win32' and semver.lt(os.release(), '6.4.0')
   NOTIFY_NOTIFICATION_API = false
 window.notify = (msg, options) ->
   # Notification config
