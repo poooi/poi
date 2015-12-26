@@ -32,7 +32,7 @@
   "Failed. Perhaps you don't have permission to it.": "失敗しました。権限の有無を確認して下さい",
   "Browser": "ブラウザ",
   "Confirm before exit": "終了する前に警告メッセージを表示する",
-  "Set this in the OS X App Menu": "：OS Xメニューバーに設定できる",
+  "Set this in the OS X App Menu": "OS Xメニューバーに設定してください。",
   "Notification": "通知",
   "Enable notification": "通知オン",
   "Enable notif sound": "通知ボイス　オン",

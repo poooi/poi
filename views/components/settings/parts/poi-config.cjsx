@@ -6,7 +6,7 @@ __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Row, Button, ButtonGroup, Input, Alert} = ReactBootstrap
-{OverlayTrigger, Tooltip, Collapse, Well} = ReactBootstrap
+{OverlayTrigger, Overlay, Tooltip, Collapse, Well} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
@@ -200,11 +200,15 @@ SetNotifyIndividualConfig = React.createClass
 # Parameters:
 #   label       String  The text to display
 #   configName  String  Where you store in config
-#   defaultVal  Bool    The default value for config. False if not given (not recommended)
+#   defaultVal  Bool    The default value for config. False if not given
 #   onNewVal    Function(val)  Called when a new value is set.
+#   undecided   Bool    Disable the checkbox and replace with a "?"
 CheckboxLabelConfig = React.createClass
   getInitialState: ->
-    myval: config.get @props.configName, (@props.defaultVal || false)
+    myval: if @props.undecided 
+        false 
+      else 
+        config.get @props.configName, (@props.defaultVal || false)
   handleChange: ->
     enabled = @state.myval
     config.set @props.configName, !enabled
@@ -212,9 +216,20 @@ CheckboxLabelConfig = React.createClass
       myval: !enabled
     @props.onNewVal @state.myval if @props.onNewVal
   render: ->
-    <Col xs={12}>
-      <Input type="checkbox" label={@props.label} checked={@state.myval} onChange={@handleChange} />
-    </Col>
+    <Row className={if @props.undecided then 'undecided-checkbox-inside'} >
+      <Col xs={12} >
+        <Grid>
+          <Col xs={12} >
+            <Input 
+              type="checkbox" 
+              label={@props.label} 
+              disabled={@props.undecided}
+              checked={if @props.undecided then false else @state.myval} 
+              onChange={if @props.undecided then null else @handleChange} />
+          </Col>
+        </Grid>
+      </Col>
+    </Row>
 
 # Parameters:
 #   label       String         The title to display
@@ -484,7 +499,7 @@ ShortcutConfig = React.createClass
     config.set @props.configName, val
     @props.onNewVal val if @props.onNewVal
   render: ->
-    <Col xs={12}>
+    <Row>
       <ButtonGroup justified>
         <Button
           active={false}
@@ -509,7 +524,7 @@ ShortcutConfig = React.createClass
             </Button>
         }
       </ButtonGroup>
-    </Col>
+    </Row>
 
 mousetrap.prototype.handleKey = (character, modifiers, e) ->
   return if e.type != 'keydown'
@@ -575,12 +590,17 @@ PoiConfig = React.createClass
                 configName="poi.confirm.quit"
                 defaultVal=true />
             else
-              <Col xs={12}><div className="form-group">
-                <span>{__ 'Confirm before exit'}</span>
-                <ul>
-                  <li>{__ 'Set this in the OS X App Menu'}</li>
-                </ul>
-              </div></Col>
+              <OverlayTrigger placement="top" 
+                overlay={
+                    <Tooltip id="tooltip-confirm-before-exit">
+                      {__ 'Set this in the OS X App Menu'}
+                    </Tooltip>} >
+                <div>
+                  <CheckboxLabelConfig
+                    label={__ 'Confirm before exit'}
+                    undecided=true />
+                </div>
+              </OverlayTrigger>
           }
           <CheckboxLabelConfig
             label={__ 'Display \"Tips\"'}

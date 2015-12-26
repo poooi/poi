@@ -32,7 +32,7 @@
   "Failed. Perhaps you don't have permission to it.": "打开失败，可能没有创建文件的权限",
   "Browser": "浏览器",
   "Confirm before exit": "关闭前确认",
-  "Set this in the OS X App Menu": "：在OS X顶部App菜单中设置",
+  "Set this in the OS X App Menu": "请在OS X顶部App菜单中设置。",
   "Notification": "通知",
   "Enable notification": "开启通知",
   "Enable notif sound": "开启声音",
