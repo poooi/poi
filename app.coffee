@@ -74,8 +74,7 @@ app.on 'window-all-closed', ->
   app.quit()
 
 app.on 'ready', ->
-  if process.platform != 'darwin'
-    shortcut.register()
+  shortcut.register()
   {screen} = require 'electron'
   screenSize = screen.getPrimaryDisplay().workAreaSize
   global.mainWindow = mainWindow = new BrowserWindow
