@@ -10,7 +10,6 @@ config = null
 configCache = {}
 defaultConfigPath = path.join(ROOT, 'config.cson')
 configPath = path.join(EXROOT, 'config.cson')
-console.log configPath
 
 # Read user config
 try

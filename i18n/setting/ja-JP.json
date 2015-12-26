@@ -31,7 +31,8 @@
   "Edit custom CSS": "カスタムCSSを編集",
   "Failed. Perhaps you don't have permission to it.": "失敗しました。権限の有無を確認して下さい",
   "Browser": "ブラウザ",
-  "Confirm before exit": "終了確認ダイアログを利用します",
+  "Confirm before exit": "終了する前に警告メッセージを表示する",
+  "Set this in the OS X App Menu": "OS Xメニューバーに設定してください。",
   "Notification": "通知",
   "Enable notification": "通知オン",
   "Enable notif sound": "通知ボイス　オン",
@@ -61,7 +62,7 @@
   "Zoom level": "ズームレベル",
   "Screenshot Folder": "スクリーンショット保存先",
   "Cache Folder": "キャッシュ保存先",
-  "Advanced": "高度な設定",
+  "Advanced functionalities": "高度な機能",
   "Disable Hardware Acceleration": "ハードウェアアクセラレーションを無効化",
   "Editing DMM Cookie's Region Flag": "DMMリージョンクッキーを設定します",
   "Prevent DMM Network Change Popup": "DMMネットワーク変更アラートを阻止",
@@ -106,5 +107,7 @@
   "Developer option: check update of beta version": "開発者向けオプション: ツールのベータ版をチェックします",
   "Other settings": "他の機能",
   "Boss key": "ボスが来た",
+  "Press the key, or Esc to cancel": "割り当てるキーを押してください",
+  "Disabled": "未設定",
   "Display \"Tips\"": "「ヒント」を表示"
 }

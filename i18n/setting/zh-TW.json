@@ -32,6 +32,7 @@
   "Failed. Perhaps you don't have permission to it.": "開啟失敗，可能沒有足夠的權限",
   "Browser": "瀏覽器",
   "Confirm before exit": "關閉前確認",
+  "Set this in the OS X App Menu": "在OS X頂部App菜單中設置。",
   "Notification": "通知",
   "Enable notification": "開啟通知",
   "Enable notif sound": "開啟聲音",
@@ -61,7 +62,7 @@
   "Zoom level": "縮放比率",
   "Screenshot Folder": "截圖目錄",
   "Cache Folder": "快取目錄",
-  "Advanced": "進階設定",
+  "Advanced functionalities": "進階功能",
   "Disable Hardware Acceleration": "禁用硬體加速",
   "Editing DMM Cookie's Region Flag": "設置 DMM 地區 Cookie",
   "Prevent DMM Network Change Popup": "屏蔽 DMM 網絡變更警告",
@@ -106,5 +107,7 @@
   "Developer option: check update of beta version": "開發者選項: 檢查 beta 版插件更新",
   "Other settings": "其它功能",
   "Boss key": "老闆鍵",
+  "Press the key, or Esc to cancel": "等待按下快捷鍵中，或按Esc取消",
+  "Disabled": "快捷鍵未設置，點此處設置",
   "Display \"Tips\"": "顯示“小提示”"
 }

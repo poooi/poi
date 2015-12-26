@@ -26,21 +26,6 @@ if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
     else
       language = 'en-US'
 
-EnableConfirmQuitConfig = React.createClass
-  getInitialState: ->
-    enableConfirmQuit: config.get 'poi.confirm.quit', false
-  handleSetConfirmQuit: ->
-    enabled = @state.enableConfirmQuit
-    config.set 'poi.confirm.quit', !enabled
-    @setState
-      enableConfirmQuit: !enabled
-  render: ->
-    <Grid>
-      <Col xs={12}>
-        <Input type="checkbox" label={__ 'Confirm before exit'} checked={@state.enableConfirmQuit} onChange={@handleSetConfirmQuit} />
-      </Col>
-    </Grid>
-
 SetNotifyIndividualConfig = React.createClass
   getInitialState: ->
     enableNotify: config.get 'poi.notify.enabled', true
@@ -215,20 +200,36 @@ SetNotifyIndividualConfig = React.createClass
 # Parameters:
 #   label       String  The text to display
 #   configName  String  Where you store in config
-#   defaultVal  Bool    The default value for config. False if not given (not recommended)
+#   defaultVal  Bool    The default value for config. False if not given
+#   onNewVal    Function(val)  Called when a new value is set.
+#   undecided   Bool    Disable the checkbox and replace with a "?"
 CheckboxLabelConfig = React.createClass
   getInitialState: ->
-    myval: config.get @props.configName, (@props.defaultVal || false)
+    myval: if @props.undecided 
+        false 
+      else 
+        config.get @props.configName, (@props.defaultVal || false)
   handleChange: ->
-    console.log @state.myval
     enabled = @state.myval
     config.set @props.configName, !enabled
     @setState
       myval: !enabled
+    @props.onNewVal @state.myval if @props.onNewVal
   render: ->
-    <Col xs={12}>
-      <Input type="checkbox" label={@props.label} checked={@state.myval} onChange={@handleChange} />
-    </Col>
+    <Row className={if @props.undecided then 'undecided-checkbox-inside'} >
+      <Col xs={12} >
+        <Grid>
+          <Col xs={12} >
+            <Input 
+              type="checkbox" 
+              label={@props.label} 
+              disabled={@props.undecided}
+              checked={if @props.undecided then false else @state.myval} 
+              onChange={if @props.undecided then null else @handleChange} />
+          </Col>
+        </Grid>
+      </Col>
+    </Row>
 
 # Parameters:
 #   label       String         The title to display
@@ -420,6 +421,7 @@ SlotCheckConfig = React.createClass
 #   label       String         The title to display
 #   configName  String         Where you store in config
 #   defaultVal  String         Default key. Use '' (empty) if not given
+#   active      Bool           If false, config value is used if configName != '' else defaultVal
 #   onNewVal    function(val)  Called when a new value is set. val=null for disabled.
 # State table
 #   [Disabled] --(Click "Record")--> [Recording]
@@ -430,15 +432,23 @@ SlotCheckConfig = React.createClass
 #              --(A valid key)-----> [Enabled]
 ShortcutConfig = React.createClass
   getInitialState: ->
-    myval: config.get @props.configName, (@props.defaultVal || '')
+    initVal = if @active() || @props.configName
+        config.get @props.configName, (@props.defaultVal || '')
+      else 
+        @props.defaultVal
+    myval: initVal
     recording: false
   displayText: ->
     if @recording()
       __ 'Press the key, or Esc to cancel'
+    else if @state.myval
+      "<#{@state.myval}>"
     else
-      @state.myval || __ 'Disabled'
+      __ 'Disabled'
+  active: ->
+    if typeof @props.active == "undefined" then true else @props.active
   showDisableButton: ->
-    @enabled() && !@recording()
+    @active() && @enabled() && !@recording()
   recording: ->
     @state.recording
   enabled: ->
@@ -489,32 +499,32 @@ ShortcutConfig = React.createClass
     config.set @props.configName, val
     @props.onNewVal val if @props.onNewVal
   render: ->
-    <Col xs={12}>
-      <Row>
-        <Col xs={3}>
-          <span>{@props.label}</span>
-        </Col>
-        <Col xs={9}>
-          <ButtonGroup justified>
-            <Button
-              disabled={@recording()}
-              bsStyle={if @enabled() then "success" else "danger"}
-              onClick={if @recording() then null else @handleClickRecord}
-              style={width: '80%'}>
-              {@displayText()}
+    <Row>
+      <ButtonGroup justified>
+        <Button
+          active={false}
+          bsStyle="link"
+          style={width: '25%', align: 'left', cursor: 'default'} >
+          {@props.label}
+        </Button>
+        <Button
+          active={@active()}
+          disabled={!@active() || @recording()}
+          bsStyle={if !@active() then 'default' else if @enabled() then "success" else "danger"}
+          onClick={if @recording() || !@active() then null else @handleClickRecord}
+          style={width: '60%'}>
+          {@displayText()}
+        </Button>
+        {
+          if @showDisableButton()
+            <Button bsStyle="danger"
+              onMouseDown={@handleDisable}
+              style={width: '15%'}>
+              <i className="fa fa-times"></i>
             </Button>
-            {
-              if @showDisableButton()
-                <Button bsStyle="danger"
-                  onMouseDown={@handleDisable}
-                  style={width: '20%'}>
-                  <i className="fa fa-times"></i>
-                </Button>
-            }
-          </ButtonGroup>
-        </Col>
-      </Row>
-    </Col>
+        }
+      </ButtonGroup>
+    </Row>
 
 mousetrap.prototype.handleKey = (character, modifiers, e) ->
   return if e.type != 'keydown'
@@ -525,82 +535,96 @@ mousetrap.prototype.handleKey = (character, modifiers, e) ->
 PoiConfig = React.createClass
   render: ->
     <div>
-      <form>
-        <div className="form-group" id='navigator-bar'>
-          <Divider text={__ 'Browser'} />
-          <NavigatorBar />
-          {
-            if process.platform isnt 'darwin'
-              <EnableConfirmQuitConfig />
-          }
-        </div>
-        <div className="form-group">
-          <Divider text={__ 'Notification'} />
-          <SetNotifyIndividualConfig />
-        </div>
-      </form>
+      <div className="form-group" id='navigator-bar'>
+        <Divider text={__ 'Browser'} />
+        <NavigatorBar />
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Notification'} />
+        <SetNotifyIndividualConfig />
+      </div>
       <div className="form-group" >
         <Divider text={__ 'Slot Check'} />
         <SlotCheckConfig type="ship" />
         <SlotCheckConfig type="item" />
       </div>
-      <form>
-        <div className="form-group">
-          <Divider text={__ 'Cache and cookies'} />
-          <ClearCacheCookieConfig />
-        </div>
-        <div className="form-group">
-          <Divider text={__ 'Language'} />
-          <SelectLanguageConfig />
-        </div>
-        <div className="form-group">
-          <Divider text={__ 'Screenshot Folder'} />
-          <FolderPickerConfig
-            label={__ 'Screenshot Folder'}
-            configName="poi.screenshotPath"
-            defaultVal={window.screenshotPath}
-            onNewVal={(pathname) -> window.screenshotPath = pathname} />
-        </div>
-        <div className="form-group">
-          <Divider text={__ 'Cache Folder'} />
-          <FolderPickerConfig label={__ 'Cache Folder'} configName="poi.cachePath" defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
-        </div>
-        <div className="form-group">
-          <Divider text={__ 'Other settings'} />
-          <div>
-            <CheckboxLabelConfig
-              label={__ 'Display \"Tips\"'}
-              configName="poi.doyouknow.enabled"
-              defaultVal=true />
-          </div>
+      <div className="form-group">
+        <Divider text={__ 'Cache and cookies'} />
+        <ClearCacheCookieConfig />
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Language'} />
+        <SelectLanguageConfig />
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Screenshot Folder'} />
+        <FolderPickerConfig
+          label={__ 'Screenshot Folder'}
+          configName="poi.screenshotPath"
+          defaultVal={window.screenshotPath}
+          onNewVal={(pathname) -> window.screenshotPath = pathname} />
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Cache Folder'} />
+        <FolderPickerConfig label={__ 'Cache Folder'} configName="poi.cachePath" defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Other settings'} />
+        <Grid>
           {
             if process.platform isnt 'darwin'
-              <div>
-                <ShortcutConfig
-                  label={__ 'Boss key'}
-                  configName="poi.shortcut.bosskey"
-                  onNewVal={-> ipcRenderer.send 'refresh-shortcut'} />
-              </div>
+              <ShortcutConfig
+                label={__ 'Boss key'}
+                configName="poi.shortcut.bosskey"
+                onNewVal={-> ipcRenderer.send 'refresh-shortcut'} />
+            else
+              <ShortcutConfig
+                label={__ 'Boss key'}
+                defaultVal="Cmd+H"
+                active={false} />
           }
-        </div>
-        <div className="form-group">
-          <Divider text={__ 'Advanced'} />
-          <Grid>
-            <CheckboxLabelConfig
-              label={__ 'Disable Hardware Acceleration'}
-              configName="poi.disableHA"
-              defaultVal=false />
-            <CheckboxLabelConfig
-              label={__ 'Editing DMM Cookie\'s Region Flag'}
-              configName="poi.enableDMMcookie"
-              defaultVal=false />
-            <CheckboxLabelConfig
-              label={__ 'Prevent DMM Network Change Popup'}
-              configName="poi.disableNetworkAlert"
-              defaultVal=false />
-          </Grid>
-        </div>
-      </form>
+          {
+            if process.platform isnt 'darwin'
+              <CheckboxLabelConfig
+                label={__ 'Confirm before exit'}
+                configName="poi.confirm.quit"
+                defaultVal=true />
+            else
+              <OverlayTrigger placement="top" 
+                overlay={
+                    <Tooltip id="tooltip-confirm-before-exit">
+                      {__ 'Set this in the OS X App Menu'}
+                    </Tooltip>} >
+                <div>
+                  <CheckboxLabelConfig
+                    label={__ 'Confirm before exit'}
+                    undecided=true />
+                </div>
+              </OverlayTrigger>
+          }
+          <CheckboxLabelConfig
+            label={__ 'Display \"Tips\"'}
+            configName="poi.doyouknow.enabled"
+            defaultVal=true />
+        </Grid>
+      </div>
+      <div className="form-group">
+        <Divider text={__ 'Advanced functionalities'} />
+        <Grid>
+          <CheckboxLabelConfig
+            label={__ 'Disable Hardware Acceleration'}
+            configName="poi.disableHA"
+            defaultVal=false />
+          <CheckboxLabelConfig
+            label={__ 'Editing DMM Cookie\'s Region Flag'}
+            configName="poi.enableDMMcookie"
+            defaultVal=false />
+          <CheckboxLabelConfig
+            label={__ 'Prevent DMM Network Change Popup'}
+            configName="poi.disableNetworkAlert"
+            defaultVal=false />
+        </Grid>
+      </div>
     </div>
 
 module.exports = PoiConfig

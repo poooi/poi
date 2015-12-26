@@ -41,6 +41,9 @@ span, img, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
   cursor: default;
 }
+input + span {
+  cursor: inherit;
+}
 button > span {
   cursor: inherit;
 }
@@ -198,4 +201,14 @@ poi-control .collapsing {
 }
 a:focus {
   outline: none;
+}
+.undecided-checkbox-inside label {
+    cursor: help;
+}
+.undecided-checkbox-inside label input[type="checkbox"] {
+    cursor: help;
+}
+.undecided-checkbox-inside input[type="checkbox"]:not(:checked):after {
+    content: "?";
+    text-align: center;
 }
