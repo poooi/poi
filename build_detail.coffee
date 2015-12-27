@@ -324,7 +324,7 @@ installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
     plugin_dir)
 
   yield Promise.join (for plugin_dir in plugins_dir
-    new Promise (resolve) ->
+    yield new Promise (resolve) ->
       require('child_process').fork npm_exec_path, ['install', '--no-bin-links'],
         cwd: plugin_dir
       .on 'exit', -> resolve())
