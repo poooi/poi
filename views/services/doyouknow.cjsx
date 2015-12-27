@@ -2,7 +2,7 @@ __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
 INTERVAL = config.get('poi.doyouknow.interval', 1800) # seconds, time for a new tip
-STICKY_TIME = 10 # seconds, time that the tip can't be refreshed by a "default"
+STICKY_TIME = 20 # seconds, time that the tip can't be refreshed by a "default"
 PREFIX = __ "doyouknow-prefix"
 
 update = (list) ->
