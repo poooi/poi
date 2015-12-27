@@ -55,25 +55,15 @@ if process.platform == 'win32' and semver.lt(os.release(), '6.4.0')
 window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
-  audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
+  audio = config.get('poi.notify.others.audio', config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3"))
   volume = config.get('poi.notify.volume', 0.8)
   title = 'poi'
   icon = NOTIFY_DEFAULT_ICON
-  switch options?.type
-    when 'construction'
-      enabled = config.get('poi.notify.construction.enabled', enabled) if enabled
-      audio = config.get('poi.notify.construction.audio', audio)
-    when 'expedition'
-      enabled = config.get('poi.notify.expedition.enabled', enabled) if enabled
-      audio = config.get('poi.notify.expedition.audio', audio)
-    when 'repair'
-      enabled = config.get('poi.notify.repair.enabled', enabled) if enabled
-      audio = config.get('poi.notify.repair.audio', audio)
-    when 'morale'
-      enabled = config.get('poi.notify.morale.enabled', enabled) if enabled
-      audio = config.get('poi.notify.morale.audio', audio)
-    else
-      enabled = config.get('poi.notify.others.enabled', enabled) if enabled
+  if options?.type? and options.type isnt ""
+    enabled = config.get("poi.notify.#{options.type}.enabled", enabled) if enabled
+    audio = config.get("poi.notify.#{options.type}.audio", audio)
+  else
+    enabled = config.get('poi.notify.others.enabled', enabled) if enabled
   # Overwrite by options
   if options?
     title = options.title if options.title
