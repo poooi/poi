@@ -37,6 +37,8 @@ global.APPDATA_PATH = path.join system_appdata_path, 'poi'
 global.EXROOT = global.APPDATA_PATH
 config = require './lib/config'
 
+npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
+
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
 
@@ -294,14 +296,43 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     Promise.resolve
       log: "Unsupported platform #{platform}."
 
-installPluginsTo = async (plugin_names, install_root, server) ->
-  fs.removeAsync install_root
+installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
+  console.log "tarball_root"+tarball_root
+  fs.removeSync install_root
   fs.ensureDirSync install_root
+  fs.removeSync tarball_root
+  fs.ensureDirSync tarball_root
+
+  # Install plugins
   npmConfig =
     prefix: install_root
     registry: server
   yield promisify(npm.load) npmConfig
   yield promisify(npm.commands.install) plugin_names
+
+  plugins_dir = (for name in plugin_names
+    console.log name
+    plugin_dir = path.join install_root, 'node_modules', name
+
+    # Modify package.json
+    plugin_package_json = path.join(plugin_dir, 'package.json')
+    contents = require plugin_package_json
+    # Delete this key, otherwise npm install won't succeed
+    delete contents._requiredBy
+    contents.bundledDependencies = (k for k of contents.dependencies)
+    fs.writeFileSync plugin_package_json, JSON.stringify(contents)
+    plugin_dir)
+
+  yield Promise.join (for plugin_dir in plugins_dir
+    new Promise (resolve) ->
+      require('child_process').fork npm_exec_path, ['install', '--no-bin-links'],
+        cwd: plugin_dir
+      .on 'exit', -> resolve())
+
+  yield new Promise (resolve) ->
+      require('child_process').fork npm_exec_path, ['pack'].concat(plugins_dir),
+        cwd: tarball_root
+      .on 'exit', -> resolve()
 
 module.exports.installPluginsAsync = async (poi_version) ->
   build_root = path.join __dirname, build_dir_name
@@ -312,21 +343,14 @@ module.exports.installPluginsAsync = async (poi_version) ->
   mirror = fs.readJsonSync mirror_json_path
   # Don't want to mess with detecting system language here without window.navigator
   language = config.get 'poi.language', 'zh-CN'
-  primaryServer = if language == "zh-CN" then "tsinghua" else "npm"
+  primaryServer = if language == 'zh-CN' then 'taobao' else 'npm'
   server = mirror[config.get "packageManager.mirrorName", primaryServer].server
 
   plugin_names = (n for n of packages)
 
   install_root = path.join building_root, 'poiplugins_install'
-  fs.removeSync install_root
-  fs.ensureDirSync install_root
-  yield installPluginsTo plugin_names, install_root, server
-
   gzip_root = path.join building_root, 'poiplugins'
-  fs.removeSync gzip_root
-  fs.ensureDirSync gzip_root
-  for name in plugin_names
-    yield compressGzipAsync path.join(install_root, "node_modules", name), path.join(gzip_root, name+'.tar.gz')
+  yield installPluginsTo plugin_names, install_root, gzip_root, server
 
   d = new Date()
   str_date = "#{d.getUTCFullYear()}-#{d.getUTCMonth()+1}-#{d.getUTCDate()}"
