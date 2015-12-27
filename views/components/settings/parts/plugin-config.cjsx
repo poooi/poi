@@ -189,12 +189,8 @@ PluginConfig = React.createClass
       updating = @state.updating
       updating[index] = true
       npm.load npmConfig, (err) =>
-        if ifStableVersion @state.latest[plugins[index].packageName]
-          npm.commands.update [plugins[index].packageName], (er, data) ->
-            callback(index, er)
-        else
-          npm.commands.install ["#{plugins[index].packageName}@#{@state.latest[plugins[index].packageName]}"], (er,data) ->
-            callback(index, er)
+        npm.commands.install ["#{plugins[index].packageName}@#{@state.latest[plugins[index].packageName]}"], (er,data) ->
+          callback(index, er)
       @setState {updating}
   handleInstallAllComplete: (data, er) ->
     failStatus = @state.failStatus
