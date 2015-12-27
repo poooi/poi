@@ -4,6 +4,11 @@
     "menuname": "npm.tuna.tsinghua.edu.cn",
     "server": "https://npm.tuna.tsinghua.edu.cn/"
   },
+  "taobao": {
+    "name": "Taobao (CN)",
+    "menuname": "registry.npm.taobao.org",
+    "server": "http://registry.npm.taobao.org/"
+  },
   "cnpm": {
     "name": "CNPM (CN)",
     "menuname": "r.cnpmjs.org",

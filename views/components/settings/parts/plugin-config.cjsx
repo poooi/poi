@@ -100,7 +100,7 @@ for fail, index in fails
   # 0: broken 1: installing 2: installed 3: removing 4: removed
   failStatus.push 0
 
-primaryServer = if window.language == "zh-CN" then "tsinghua" else "npm"
+primaryServer = if window.language == "zh-CN" then "taobao" else "npm"
 
 npmConfig = {
   prefix: "#{PLUGIN_PATH}",
@@ -511,7 +511,7 @@ PluginConfig = React.createClass
                       for server of mirror
                         index++
                         <OverlayTrigger placement='top' key={index} overlay={<Tooltip id="npm-server-#{index}">{mirror[server].menuname}</Tooltip>}>
-                          <Col key={index} xs=4 style={padding: '0px 5px'}>
+                          <Col key={index} xs=6 style={padding: '0px 5px'}>
                             <Input type="radio"
                                    label={mirror[server].name}
                                    checked={@state.mirror == server}
