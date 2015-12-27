@@ -181,7 +181,7 @@ ControlledTabArea = React.createClass
         }
         {
           if plugins.length == 0
-            <MenuItem key={1001} disabled>{__ "Install plugins in settings"}</MenuItem>
+            <MenuItem key={1001} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
         }
         </NavDropdown>
         <NavItem key={1000} eventKey={1000} onSelect={@handleSelect}>
