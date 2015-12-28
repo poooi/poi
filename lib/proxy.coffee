@@ -156,7 +156,9 @@ class Proxy extends EventEmitter
                 if !resolvedBody?
                   throw new Error('Empty Body')
                 if response.statusCode == 200
-                  self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
+                  if resolvedBody.api_result is 1
+                    resolvedBody = resolvedBody.api_data if resolvedBody.api_data?
+                    self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
                 else if response.statusCode == 503
                   throw new Error('Service unavailable')
                 else
