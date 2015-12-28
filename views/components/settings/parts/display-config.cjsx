@@ -25,7 +25,6 @@ DisplayConfig = React.createClass
     theme: config.get 'poi.theme', '__default__'
     gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
-    enableConfirmQuit: config.get 'poi.confirm.quit', false
     enableDoubleTabbed: config.get 'poi.tabarea.double', false
     enableSVGIcon: config.get 'poi.useSVGIcon', false
     zoomLevel: config.get 'poi.zoomLevel', 1
