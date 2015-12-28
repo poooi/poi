@@ -46,43 +46,43 @@ cp default-config.cson config.cson
 ```
 
 ## Available Plugins
-[plugin-prophet (Bundled)](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
+[plugin-prophet](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
 > Show the result of battle.
 
-[plugin-exp-calculator (Bundled)](https://github.com/poooi/plugin-exp-calculator) by [Chiba](https://github.com/Chibaheit)
+[plugin-exp-calculator](https://github.com/poooi/plugin-exp-calculator) by [Chiba](https://github.com/Chibaheit)
 > Calculate experience value.
 
-[plugin-map-hp (Bundled)](https://github.com/poooi/plugin-map-hp) by [Chiba](https://github.com/Chibaheit)
+[plugin-map-hp](https://github.com/poooi/plugin-map-hp) by [Chiba](https://github.com/Chibaheit)
 > a plugin map hp for poi.
 
-[plugin-report (Bundled)](https://github.com/poooi/plugin-report) by [Magica](https://github.com/magicae)
+[plugin-report](https://github.com/poooi/plugin-report) by [Magica](https://github.com/magicae)
 > Report ship creating info and drop info, and so on.
 
-[plugin-expedition (Bundled)](https://github.com/poooi/plugin-expedition) by [Malichan](https://github.com/malichan)
+[plugin-expedition](https://github.com/poooi/plugin-expedition) by [Malichan](https://github.com/malichan)
 > Show expedition info.
 
-[plugin-quest (Bundled)](https://github.com/poooi/plugin-quest) by [Malichan](https://github.com/malichan)
+[plugin-quest](https://github.com/poooi/plugin-quest) by [Malichan](https://github.com/malichan)
 > Show quest info.
 
-[plugin-item-improvement (Bundled)](https://github.com/poooi/plugin-item-improvement) by [KochiyaOcean](https://github.com/KochiyaOcean)
+[plugin-item-improvement](https://github.com/poooi/plugin-item-improvement) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Show improvable items of the day.
 
-[plugin-ship-info (Bundled)](https://github.com/poooi/plugin-ship-info) by [Yunze](https://github.com/myzwillmake)
+[plugin-ship-info](https://github.com/poooi/plugin-ship-info) by [Yunze](https://github.com/myzwillmake)
 > Show detailed information of all owned ships.
 
-[plugin-item-info (Bundled)](https://github.com/poooi/plugin-item-info) by [Yunze](https://github.com/myzwillmake)
+[plugin-item-info](https://github.com/poooi/plugin-item-info) by [Yunze](https://github.com/myzwillmake)
 > Show information of all owned items.
 
-[plugin-new-window (Bundled)](https://github.com/poooi/plugin-new-window) by [KochiyaOcean](https://github.com/KochiyaOcean)
+[plugin-new-window](https://github.com/poooi/plugin-new-window) by [KochiyaOcean](https://github.com/KochiyaOcean)
 > Open a external browser window.
 
-[plugin-Akashic-records (Bundled)](https://github.com/poooi/plugin-Akashic-records) by [JenningsWu](https://github.com/JenningsWu)
+[plugin-Akashic-records](https://github.com/poooi/plugin-Akashic-records) by [JenningsWu](https://github.com/JenningsWu)
 > Logbook plugin for poi.
 
-[plugin-battle-detail (Bundled)](https://github.com/poooi/plugin-battle-detail) by [Dazzy Ding](https://github.com/yukixz)
+[plugin-battle-detail](https://github.com/poooi/plugin-battle-detail) by [Dazzy Ding](https://github.com/yukixz)
 > Show battle detail.
 
-[plugin-hensei-nikki (Bundled)](https://github.com/poooi/plugin-hensei-nikki.git) by [Rui](https://github.com/ruiii)
+[plugin-hensei-nikki](https://github.com/poooi/plugin-hensei-nikki.git) by [Rui](https://github.com/ruiii)
 > Record fleet config once sortied.
 
 [plugin-almanac](https://github.com/poooi/plugin-almanac) by [Magica](https://github.com/magicae)
