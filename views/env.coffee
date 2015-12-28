@@ -496,10 +496,7 @@ resolveResponses = ->
       console.error err
   locked = false
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
-  # Invalid response
-  return if body.api_result isnt 1
-  body = body.api_data if body.api_data?
-  responses.push [method, path, body, postBody]
+  responses.push [Object.remoteClone(method), Object.remoteClone(path), Object.remoteClone(body), Object.remoteClone(postBody)]
   resolveResponses() if !locked
 proxy.addListener 'game.start', ->
   window.dispatchEvent new Event 'game.start'
