@@ -297,9 +297,6 @@ resolveResponses = ->
   while responses.length > 0
     [method, path, body, postBody] = responses.shift()
     try
-      # Important! Clone a copy of proxy objects!
-      body = Object.remoteClone body
-      postBody = Object.remoteClone postBody
       # Delete api_token
       delete postBody.api_token if postBody?.api_token?
       # Fix api
@@ -496,7 +493,8 @@ resolveResponses = ->
       console.error err
   locked = false
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
-  responses.push [Object.remoteClone(method), Object.remoteClone(path), Object.remoteClone(body), Object.remoteClone(postBody)]
+  # Important! Clone a copy of proxy objects!
+  responses.push [method, path, Object.remoteClone(body), Object.remoteClone(postBody)]
   resolveResponses() if !locked
 proxy.addListener 'game.start', ->
   window.dispatchEvent new Event 'game.start'
