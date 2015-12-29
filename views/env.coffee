@@ -245,18 +245,20 @@ window.getCondStyle = (cond) ->
     s += '0'
   s += if isDarkTheme then ' dark' else ' light'
 
+
 # Global data resolver
-proxy.addListener 'game.on.request', (method, path, body) ->
-  # Important! Clone a copy of proxy objects!
-  body = Object.remoteClone body
-  event = new CustomEvent 'game.request',
-    bubbles: true
-    cancelable: true
-    detail:
-      method: method
-      path: path
-      body: body
-  window.dispatchEvent event
+# We don't use it now. Remove to reduce memory leak
+# proxy.addListener 'game.on.request', (method, path, body) ->
+#   # Important! Clone a copy of proxy objects!
+#   body = Object.remoteClone body
+#   event = new CustomEvent 'game.request',
+#     bubbles: true
+#     cancelable: true
+#     detail:
+#       method: method
+#       path: path
+#       body: body
+#   window.dispatchEvent event
 
 start2Version = 0
 initStart2Value = ->
@@ -494,7 +496,7 @@ resolveResponses = ->
   locked = false
 proxy.addListener 'game.on.response', (method, path, body, postBody) ->
   # Important! Clone a copy of proxy objects!
-  responses.push [method, path, Object.remoteClone(body), Object.remoteClone(postBody)]
+  responses.push [method, path, JSON.parse(body), JSON.parse(postBody)]
   resolveResponses() if !locked
 proxy.addListener 'game.start', ->
   window.dispatchEvent new Event 'game.start'
