@@ -158,7 +158,7 @@ class Proxy extends EventEmitter
                 if response.statusCode == 200
                   if resolvedBody.api_result is 1
                     resolvedBody = resolvedBody.api_data if resolvedBody.api_data?
-                    self.emit 'game.on.response', req.method, parsed.pathname, resolvedBody, querystring.parse reqBody.toString()
+                    self.emit 'game.on.response', req.method, parsed.pathname, JSON.stringify(resolvedBody),  JSON.stringify(querystring.parse reqBody.toString())
                 else if response.statusCode == 503
                   throw new Error('Service unavailable')
                 else
