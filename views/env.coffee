@@ -247,18 +247,17 @@ window.getCondStyle = (cond) ->
 
 
 # Global data resolver
-# We don't use it now. Remove to reduce memory leak
-# proxy.addListener 'game.on.request', (method, path, body) ->
-#   # Important! Clone a copy of proxy objects!
-#   body = Object.remoteClone body
-#   event = new CustomEvent 'game.request',
-#     bubbles: true
-#     cancelable: true
-#     detail:
-#       method: method
-#       path: path
-#       body: body
-#   window.dispatchEvent event
+proxy.addListener 'game.on.request', (method, path, body) ->
+  # Important! Clone a copy of proxy objects!
+  body = JSON.parse body
+  event = new CustomEvent 'game.request',
+    bubbles: true
+    cancelable: true
+    detail:
+      method: method
+      path: path
+      body: body
+  window.dispatchEvent event
 
 start2Version = 0
 initStart2Value = ->

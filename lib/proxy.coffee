@@ -145,7 +145,7 @@ class Proxy extends EventEmitter
               break if success
               try
                 # Emit request event to plugins
-                self.emit 'game.on.request', req.method, parsed.pathname, querystring.parse reqBody.toString()
+                self.emit 'game.on.request', req.method, parsed.pathname, JSON.stringify(querystring.parse reqBody.toString())
                 # Create remote request
                 [response, body] = yield requestAsync resolve options
                 success = true
