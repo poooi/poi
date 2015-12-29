@@ -35,7 +35,7 @@ China mainland mirror: [here](http://0u0.moe/poi).
 
 ## Run
 
-First, get the __latest__(v0.35.x) __x64__ version of [Electron](https://github.com/atom/electron) and [Node.js](https://nodejs.org).
+First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/electron) and [Node.js](https://nodejs.org).
 
 ```bash
 git clone https://github.com/poooi/poi && cd poi
