@@ -1,5 +1,3 @@
-use_taobao_mirror = true
-
 # *** INCLUDE ***
 os = require 'os'
 path = require 'path-extra'
@@ -27,16 +25,19 @@ child_process = require 'child_process'
 build_dir_name = 'build'
 download_dir_name = 'download'
 release_dir_name = 'release'
-# global.* variables are assigned to adapt for requiring 'config'
-global.ROOT = __dirname
-system_appdata_path = process.env.APPDATA || (
-  if process.platform == 'darwin'
-  then path.join(process.env.HOME, 'Library/Application Support')
-  else '/var/local')
-global.APPDATA_PATH = path.join system_appdata_path, 'poi'
-global.EXROOT = global.APPDATA_PATH
-config = require './lib/config'
+config = (->  
+  # global.* variables are assigned to adapt for requiring 'config'
+  global.ROOT = __dirname
+  system_appdata_path = process.env.APPDATA || (
+    if process.platform == 'darwin'
+    then path.join(process.env.HOME, 'Library/Application Support')
+    else '/var/local')
+  global.APPDATA_PATH = path.join system_appdata_path, 'poi'
+  global.EXROOT = global.APPDATA_PATH
+  require './lib/config')()
 
+# If !use_taobao_mirror, download Electron from GitHub.
+use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
 bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
@@ -161,10 +162,21 @@ changeExt = (src_path, ext) ->
 compressGzipAsync = (src_folder, tgt_path) ->
   targz().compress src_folder, tgt_path
 
+# Run js script
 runScriptAsync = (script_path, args, options) ->
   new Promise (resolve) ->
-    child_process.fork.apply this, arguments
+    child_process.fork script_path, args, options
     .on 'exit', -> resolve()
+
+# Run js script, but suppress stdout and stores it into a string used to resolve
+runScriptSilentAsync = (script_path, args, options) ->
+  new Promise (resolve) ->
+    proc = child_process.fork script_path, args, Object.assign({silent: true}, options)
+    data = ''
+    proc.stdout.on 'readable', ->
+      while (chunk = proc.stdout.read()) != null
+        data += chunk
+    proc.on 'exit', -> resolve(data)
 
 npmInstallAsync = async (tgt_dir, args=[]) ->
   # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
@@ -208,7 +220,11 @@ translateCoffeeAsync = (app_dir) ->
           src_path = path.join root, fileStats.name
           tgt_path = changeExt src_path, '.js'
           src = yield fs.readFileAsync src_path, 'utf-8'
-          tgt = compile src
+          try
+            tgt = compile src
+          catch e
+            console.log "Compiling #{src_path} failed: #{e}"
+            return
           yield fs.writeFileAsync tgt_path, tgt
           yield fs.removeAsync src_path
           log "Compiled #{tgt_path}"
@@ -322,7 +338,7 @@ installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
     plugin_dir)
 
   yield Promise.all (for plugin_dir in plugins_dir
-    npmInstallAsync, plugin_dir, ['--registry', server, '--no-bin-links'])
+    npmInstallAsync plugin_dir, ['--registry', server, '--no-bin-links', '--silent'])
 
   yield runScriptAsync npm_exec_path, ['pack'].concat(plugins_dir),
     cwd: tarball_root
@@ -383,15 +399,14 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
   theme_root = path.join stage1_app, 'assets', 'themes'
 
   try
-    yield Promise.join \
-      (fs.removeAsync stage1_app),
-      (fs.removeAsync stage2_app)
+    fs.removeSync stage1_app
+    fs.removeSync stage2_app
   catch e
   fs.ensureDirSync stage1_app
   fs.ensureDirSync stage2_app
 
   # Check npm version
-  npm_version = (yield execAsync "'#{npm_path}' --version").trim()
+  npm_version = (yield runScriptSilentAsync npm_exec_path, ['--version']).trim()
   log "You are using npm v#{npm_version}"
   if semver.major(npm_version) == 2
     log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
