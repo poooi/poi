@@ -18,8 +18,8 @@ semver = require 'semver'
 {compile} = require 'coffee-react'
 asar = require 'asar'
 walk = require 'walk'
-npm = require 'npm'
 targz = require 'tar.gz'
+child_process = require 'child_process'
 
 {log} = require './lib/utils'
 
@@ -38,6 +38,7 @@ global.EXROOT = global.APPDATA_PATH
 config = require './lib/config'
 
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
+bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
@@ -129,7 +130,7 @@ downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
       continue
     break
 
-downloadThemesAsync = (theme_root, download_dir) ->
+downloadThemesAsync = (theme_root) ->
   Promise.all (for theme, theme_url of theme_list
     downloadAsync theme_url, path.join(theme_root, theme, 'css'),
       "#{theme}.css", "#{theme} theme")
@@ -160,27 +161,28 @@ changeExt = (src_path, ext) ->
 compressGzipAsync = (src_folder, tgt_path) ->
   targz().compress src_folder, tgt_path
 
-# *** METHODS ***
-npmInstallAsync = async (npm_path, tgt_dir) ->
+runScriptAsync = (script_path, args, options) ->
+  new Promise (resolve) ->
+    child_process.fork.apply this, arguments
+    .on 'exit', -> resolve()
+
+npmInstallAsync = async (tgt_dir, args=[]) ->
   # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
-  command = "#{npm_path} install --production"
   log "Installing npm for #{tgt_dir}"
-  cwd = process.cwd()
   fs.ensureDirSync tgt_dir
-  process.chdir tgt_dir
-  yield execAsync command
-  process.chdir cwd
+  yield runScriptAsync npm_exec_path, ['install'].concat(args),
+    cwd: tgt_dir
   log "Finished installing npm for #{tgt_dir}"
 
-bowerInstallAsync = async (bower_path, tgt_dir) ->
-  command = "#{bower_path} install"
-  log command
-  cwd = process.cwd()
+bowerInstallAsync = async (tgt_dir) ->
+  log "Installing bower for #{tgt_dir}"
   fs.ensureDirSync tgt_dir
-  process.chdir tgt_dir
-  yield execAsync command
-  process.chdir cwd
+  yield runScriptAsync bower_exec_path, ['install'],
+    cwd: tgt_dir
+  log "Finished installing bower for #{tgt_dir}"
 
+
+# *** METHODS ***
 filterCopyAppAsync = async (stage1_app, stage2_app) ->
   yield Promise.all (for target in target_list
     fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target),
@@ -304,14 +306,9 @@ installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
   fs.ensureDirSync tarball_root
 
   # Install plugins
-  npmConfig =
-    prefix: install_root
-    registry: server
-  yield promisify(npm.load) npmConfig
-  yield promisify(npm.commands.install) plugin_names
+  yield npmInstallAsync install_root, ['--registry', server].concat(plugin_names)
 
   plugins_dir = (for name in plugin_names
-    console.log name
     plugin_dir = path.join install_root, 'node_modules', name
 
     # Modify package.json
@@ -321,18 +318,14 @@ installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
     delete contents._requiredBy
     contents.bundledDependencies = (k for k of contents.dependencies)
     fs.writeFileSync plugin_package_json, JSON.stringify(contents)
+
     plugin_dir)
 
   yield Promise.all (for plugin_dir in plugins_dir
-    new Promise (resolve) ->
-      require('child_process').fork npm_exec_path, ['install', '--no-bin-links'],
-        cwd: plugin_dir
-      .on 'exit', -> resolve())
+    npmInstallAsync, plugin_dir, ['--registry', server, '--no-bin-links'])
 
-  yield new Promise (resolve) ->
-      require('child_process').fork npm_exec_path, ['pack'].concat(plugins_dir),
-        cwd: tarball_root
-      .on 'exit', -> resolve()
+  yield runScriptAsync npm_exec_path, ['pack'].concat(plugins_dir),
+    cwd: tarball_root
 
 module.exports.installPluginsAsync = async (poi_version) ->
   build_root = path.join __dirname, build_dir_name
@@ -365,14 +358,13 @@ module.exports.buildLocalAsync = ->
   download_dir = path.join __dirname, build_dir_name, download_dir_name
   theme_root = path.join __dirname, 'assets', 'themes'
   flash_dir = path.join __dirname, 'PepperFlash'
-  npm_path = 'npm'
-  bower_path = path.join(__dirname, 'node_modules', '.bin', 'bower')
 
-  download_theme = downloadThemesAsync theme_root, download_dir
+  download_theme = downloadThemesAsync theme_root
   install_flash = installFlashAsync os.platform(), os.arch(), download_dir,
     flash_dir
-  install_npm_bower = npmInstallAsync npm_path, __dirname
-  .then -> (async -> yield bowerInstallAsync bower_path, __dirname)()
+  install_npm_bower = (async -> 
+    yield npmInstallAsync __dirname, ['--production'] 
+    yield bowerInstallAsync __dirname)()
 
   Promise.join download_theme, install_flash, install_npm_bower
 
@@ -389,9 +381,6 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
   stage2_app = path.join building_root, 'app'
 
   theme_root = path.join stage1_app, 'assets', 'themes'
-
-  npm_path = 'npm'
-  bower_path = path.join(__dirname, 'node_modules', '.bin', 'bower')
 
   try
     yield Promise.join \
@@ -410,7 +399,7 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
     return
 
   # Prepare stage1
-  download_themes = downloadThemesAsync theme_root, download_dir
+  download_themes = downloadThemesAsync theme_root
   archive_app = execAsync "git archive HEAD | tar -x -C '#{stage1_app}'"
   yield Promise.join download_themes,
     (async ->
@@ -420,8 +409,8 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
       yield Promise.join(
         translateCoffeeAsync(stage1_app),
         (async ->
-          yield npmInstallAsync npm_path, stage1_app
-          yield bowerInstallAsync bower_path, stage1_app
+          yield npmInstallAsync stage1_app, ['--production']
+          yield bowerInstallAsync stage1_app
           )())
       )()
 
