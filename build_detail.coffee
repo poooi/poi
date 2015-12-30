@@ -43,6 +43,13 @@ bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
+npm_server = (->
+  mirrors = fs.readJsonSync mirror_json_path
+  # Don't want to mess with detecting system language here without window.navigator
+  language = config.get 'poi.language', 'zh-CN'
+  primaryServer = if language == 'zh-CN' then 'taobao' else 'npm'
+  mirrors[config.get "packageManager.mirrorName", primaryServer].server)()
+log "Using npm mirror #{npm_server}"
 
 theme_list =
   darkly:     'https://bootswatch.com/darkly/bootstrap.css'
@@ -165,11 +172,11 @@ compressGzipAsync = (src_folder, tgt_path) ->
 # Run js script
 runScriptAsync = (script_path, args, options) ->
   new Promise (resolve) ->
-    child_process.fork script_path, args, options
-    .on 'exit', -> resolve()
+    proc = child_process.fork script_path, args, options
+    proc.on 'exit', -> resolve()
 
 # Run js script, but suppress stdout and stores it into a string used to resolve
-runScriptSilentAsync = (script_path, args, options) ->
+runScriptReturnStdoutAsync = (script_path, args, options) ->
   new Promise (resolve) ->
     proc = child_process.fork script_path, args, Object.assign({silent: true}, options)
     data = ''
@@ -182,7 +189,7 @@ npmInstallAsync = async (tgt_dir, args=[]) ->
   # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   log "Installing npm for #{tgt_dir}"
   fs.ensureDirSync tgt_dir
-  yield runScriptAsync npm_exec_path, ['install'].concat(args),
+  yield runScriptAsync npm_exec_path, ['install', '--registry', npm_server].concat(args),
     cwd: tgt_dir
   log "Finished installing npm for #{tgt_dir}"
 
@@ -223,7 +230,7 @@ translateCoffeeAsync = (app_dir) ->
           try
             tgt = compile src
           catch e
-            console.log "Compiling #{src_path} failed: #{e}"
+            log "Compiling #{src_path} failed: #{e}"
             return
           yield fs.writeFileAsync tgt_path, tgt
           yield fs.removeAsync src_path
@@ -314,15 +321,14 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     Promise.resolve
       log: "Unsupported platform #{platform}."
 
-installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
-  console.log "tarball_root"+tarball_root
+installPluginsTo = async (plugin_names, install_root, tarball_root) ->
   fs.removeSync install_root
   fs.ensureDirSync install_root
   fs.removeSync tarball_root
   fs.ensureDirSync tarball_root
 
   # Install plugins
-  yield npmInstallAsync install_root, ['--registry', server].concat(plugin_names)
+  yield npmInstallAsync install_root, ['--production', '--prefix', '.'].concat(plugin_names)
 
   plugins_dir = (for name in plugin_names
     plugin_dir = path.join install_root, 'node_modules', name
@@ -338,7 +344,7 @@ installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
     plugin_dir)
 
   yield Promise.all (for plugin_dir in plugins_dir
-    npmInstallAsync plugin_dir, ['--registry', server, '--no-bin-links', '--silent'])
+    npmInstallAsync plugin_dir, ['--no-bin-links', '--no-progress', '--production'])
 
   yield runScriptAsync npm_exec_path, ['pack'].concat(plugins_dir),
     cwd: tarball_root
@@ -349,17 +355,12 @@ module.exports.installPluginsAsync = async (poi_version) ->
   release_dir = path.join build_root, release_dir_name
 
   packages = fs.readJsonSync plugin_json_path
-  mirror = fs.readJsonSync mirror_json_path
-  # Don't want to mess with detecting system language here without window.navigator
-  language = config.get 'poi.language', 'zh-CN'
-  primaryServer = if language == 'zh-CN' then 'taobao' else 'npm'
-  server = mirror[config.get "packageManager.mirrorName", primaryServer].server
 
   plugin_names = (n for n of packages)
 
   install_root = path.join building_root, 'poiplugins_install'
   gzip_root = path.join building_root, 'poiplugins'
-  yield installPluginsTo plugin_names, install_root, gzip_root, server
+  yield installPluginsTo plugin_names, install_root, gzip_root
 
   d = new Date()
   str_date = "#{d.getUTCFullYear()}-#{d.getUTCMonth()+1}-#{d.getUTCDate()}"
@@ -406,7 +407,7 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
   fs.ensureDirSync stage2_app
 
   # Check npm version
-  npm_version = (yield runScriptSilentAsync npm_exec_path, ['--version']).trim()
+  npm_version = (yield runScriptReturnStdoutAsync npm_exec_path, ['--version']).trim()
   log "You are using npm v#{npm_version}"
   if semver.major(npm_version) == 2
     log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
