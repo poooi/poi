@@ -2,19 +2,21 @@
 config = require './config'
 Window = require './window'
 
-log = (acc, usage) ->
-  console.log "Registering shortcut: #{acc}\t=> #{usage}" if process.env.DEBUG?
+registerShortcut = (acc, desc, func) ->
+  console.log "Registering shortcut: #{acc}\t=> #{desc}" if process.env.DEBUG?
+  try
+    globalShortcut.register acc, func
+  catch err
+    console.error "Failed to register shortcut[#{acc}]: #{err}"
 
 registerBossKey = ->
   accelerator = config.get('poi.shortcut.bosskey', '')
   if accelerator
-    log accelerator, 'Boss Key'
-    globalShortcut.register accelerator, Window.toggleAllWindowsVisibility
+    registerShortcut accelerator, 'Boss Key', Window.toggleAllWindowsVisibility
 
 registerDevToolShortcut = ->
   accelerator = 'Ctrl+Shift+I'
-  log accelerator, 'Open Focused Window Dev Tools'
-  globalShortcut.register accelerator, Window.openFocusedWindowDevTools
+  registerShortcut accelerator, 'Open Focused Window Dev Tools', Window.openFocusedWindowDevTools
 
 module.exports =
   register: ->
