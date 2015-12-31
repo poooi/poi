@@ -38,6 +38,7 @@ config = (->
 
 # If !use_taobao_mirror, download Electron from GitHub.
 use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
+log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
 bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
@@ -306,7 +307,7 @@ packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   release_path
 
 packageStage3Async = async (platform, arch, poi_version, electron_version,
-            download_dir, app_path, building_root, release_dir) ->
+            download_dir, building_root, release_dir) ->
   platform_arch = "#{platform}-#{arch}"
   poi_fullname = "poi-v#{poi_version}-#{platform_arch}"
   stage3_electron = path.join building_root, poi_fullname
@@ -317,14 +318,13 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     yield fs.removeAsync stage3_electron
   catch e
 
-  copy_app = fs.copyAsync app_path, stage3_app
   install_flash = installFlashAsync platform, arch, download_dir, flash_dir
 
   electron_url = get_electron_url platform, arch, electron_version
   install_electron = downloadExtractZipAsync electron_url, download_dir, '',
       stage3_electron, 'electron'
 
-  yield Promise.join copy_app, install_flash, install_electron
+  yield Promise.join install_flash, install_electron
 
   if platform == 'win32'
     raw_poi_exe = path.join(building_root, "#{platform_arch}.raw.poi.exe")
@@ -336,6 +336,7 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
       path.join(stage3_electron, 'poi.exe'),
       clobber: true
     Promise.resolve
+      app_path: stage3_app
       log: " To complete packaging #{platform}-#{arch}, you need to:\n
             (1) Modify #{raw_poi_exe} and save as #{platform_arch}.poi.exe by\n
             ...(a) changing its icon into poi\n
@@ -348,13 +349,13 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
         log "#{platform}-#{arch} successfully packaged to #{release_path}."
 
   else if platform == 'linux'
-
     yield fs.moveAsync path.join(stage3_electron, 'electron'),
       path.join(stage3_electron, 'poi'),
       clobber: true
     package_release = packageReleaseAsync poi_fullname, stage3_electron,
       release_dir
     Promise.resolve
+      app_path: stage3_app
       log: null
       todo: async ->
         release_path = yield package_release
@@ -445,14 +446,21 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
 
   return if !checkNpmVersion()
 
-  app_path = yield packageAppAsync poi_version, building_root, release_dir
-  return if !electron_version?
+  app_path_promise = packageAppAsync poi_version, building_root, release_dir
+  if !electron_version?
+    yield app_path_promise
+    return
 
   # Stage3: Package each platform
   stage3_info = yield Promise.all (
     for [platform, arch] in platform_arch_list
       packageStage3Async(platform, arch, poi_version, electron_version,
-        download_dir, app_path, building_root, release_dir))
+        download_dir, building_root, release_dir))
+
+  # Copy app
+  for info in stage3_info
+    if info.app_path?
+      fs.copySync (yield app_path_promise), info.app_path
 
   # Finishing work of stage 3
   stage3_logs = (for [[platform, arch], info] in _.zip(
