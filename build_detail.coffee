@@ -12,7 +12,6 @@ async = Promise.coroutine
 n7z = require 'node-7z'
 _ = require 'underscore'
 semver = require 'semver'
-{execAsync} = Promise.promisifyAll require('child_process')
 {compile} = require 'coffee-react'
 asar = require 'asar'
 walk = require 'walk'
@@ -167,26 +166,20 @@ changeExt = (src_path, ext) ->
   src_basename = path.basename(src_path, path.extname src_path)
   path.join(src_dir, src_basename+ext)
 
-untarAsync = (src_path, tgt_dir) ->
-  try
-    fs.removeSync tgt_dir
-  catch
-  new Promise (resolve) ->
-    fs.createReadStream(src_path)
-    .pipe(tar.extract tgt_dir)
-    .on('finish', resolve)
-
-gitArchiveAsync = async (tar_path, tgt_dir) ->
+gitArchiveAsync = (tar_path, tgt_dir) ->
   try
     fs.removeSync tar_path
   catch
   try
-    yield execAsync "git archive HEAD -o #{tar_path}"
+    proc = child_process.spawn 'git', ['archive', 'HEAD']
   catch e
     log e
     log "Error on git archive! Probably you haven't installed git or it does not exist in your PATH."
     process.exit 1
-  yield untarAsync tar_path, tgt_dir
+  new Promise (resolve) ->
+    proc.stdout
+    .pipe(tar.extract tgt_dir)
+    .on('finish', resolve)
 
 # Run js script
 runScriptAsync = (script_path, args, options) ->
@@ -370,13 +363,12 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     yield fs.moveAsync path.join(stage3_electron, 'electron'),
       path.join(stage3_electron, 'poi'),
       clobber: true
-    package_release = packageReleaseAsync poi_fullname, stage3_electron,
-      release_dir
     Promise.resolve
       app_path: stage3_app
       log: null
       todo: async ->
-        release_path = yield package_release
+        release_path = yield packageReleaseAsync poi_fullname, stage3_electron,
+          release_dir
         log "#{platform}-#{arch} successfully packaged to #{release_path}."
 
   else if platform == 'darwin'
