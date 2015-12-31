@@ -256,7 +256,8 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
   stage1_app = path.join building_root, 'stage1'
   stage2_app = path.join building_root, 'app'
   theme_root = path.join stage1_app, 'assets', 'themes'
-  release_path = path.join(release_dir, "app-#{poi_version}", "app.asar")
+  asar_path = path.join building_root, "app.asar"
+  release_path = path.join release_dir, "app-#{poi_version}.7z"
 
   try
     fs.removeSync stage1_app
@@ -287,10 +288,13 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
   # Pack stage2 into app.asar
   log "Packaging app.asar."
   try
-    yield fs.removeAsync release_path
-  catch e
-  yield packageAsarAsync stage2_app, release_path
-  release_path
+    yield fs.removeAsync asar_path
+  catch
+  yield packageAsarAsync stage2_app, asar_path
+  log "Compressing app.asar into #{release_path}"
+  yield add7z release_path, asar_path
+  log "Compression completed."
+  asar_path
 
 packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   log "Packaging #{poi_fullname}."
@@ -428,9 +432,11 @@ module.exports.buildLocalAsync = ->
 
   Promise.join download_theme, install_flash, install_npm_bower
 
+module.exports.buildAppAsync = (poi_version) ->
+  module.exports.buildAsync (poi_version) 
 
 # Package release archives of poi, on multiple platforms
-module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list, app_only) ->
+module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list) ->
   build_root = path.join __dirname, build_dir_name
 
   download_dir = path.join build_root, download_dir_name
@@ -440,7 +446,7 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
   return if !checkNpmVersion()
 
   app_path = yield packageAppAsync poi_version, building_root, release_dir
-  return if app_only?
+  return if !electron_version?
 
   # Stage3: Package each platform
   stage3_info = yield Promise.all (

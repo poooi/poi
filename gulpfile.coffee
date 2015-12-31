@@ -6,7 +6,7 @@ async = Promise.coroutine
 gulp = require 'gulp'
 
 {log} = require './lib/utils'
-{buildLocalAsync, buildAsync, cleanTempFiles, installPluginsAsync} = require './build_detail'
+{buildLocalAsync, buildAsync, buildAppAsync, cleanTempFiles, installPluginsAsync} = require './build_detail'
 
 package_json = require './package.json'
 bower_json = require './bower.json'
@@ -17,7 +17,7 @@ gulp.task 'getVersion', ->
   package_version = package_json.version
   bower_version = bower_json.version
   poi_version = package_version
-  log "*** Start building poi v#{poi_version} with electron v#{electron_version} ***"
+  log "*** Start building poi v#{poi_version} ***"
   if package_version != bower_version
     log "WARNING: package.json has version #{package_version} while bower.json has version #{bower_version}"
 
@@ -28,7 +28,7 @@ gulp.task 'build', ['getVersion'], async ->
   yield buildAsync poi_version, electron_version, build_all_platforms
 
 gulp.task 'build_app', ['getVersion'], async ->
-  yield buildAsync poi_version, electron_version, build_all_platforms, true
+  yield buildAppAsync poi_version
 
 gulp.task 'clean', async ->
   yield cleanTempFiles()
