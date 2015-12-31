@@ -48,10 +48,13 @@
   height: 100%;
 }
 #MainView .miniship-area-horizontal {
-  height: calc(100% - 97px);
+  height: calc(100% - 96px);
   min-height: 328px;
 }
-#MainView .resource-panel-area-horizontal,
+#MainView .resource-panel-area-horizontal{
+  height: 96px;
+}
+
 #MainView .mission-panel-area-horizontal {
   height: 97px;
 }
@@ -59,7 +62,7 @@
   height: 150px;
 }
 #MainView .task-panel-area-horizontal {
-  height: calc(100% - 255px);
+  height: calc(100% - 253px);
   min-height: 172px;
 }
 /*vertical*/
