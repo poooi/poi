@@ -16,7 +16,7 @@ semver = require 'semver'
 {compile} = require 'coffee-react'
 asar = require 'asar'
 walk = require 'walk'
-targz = require 'tar.gz'
+tar = require 'tar-fs'
 child_process = require 'child_process'
 
 {log} = require './lib/utils'
@@ -167,8 +167,26 @@ changeExt = (src_path, ext) ->
   src_basename = path.basename(src_path, path.extname src_path)
   path.join(src_dir, src_basename+ext)
 
-compressGzipAsync = (src_folder, tgt_path) ->
-  targz().compress src_folder, tgt_path
+untarAsync = (src_path, tgt_dir) ->
+  try
+    fs.removeSync tgt_dir
+  catch
+  new Promise (resolve) ->
+    fs.createReadStream(src_path)
+    .pipe(tar.extract tgt_dir)
+    .on('finish', resolve)
+
+gitArchiveAsync = async (tar_path, tgt_dir) ->
+  try
+    fs.removeSync tar_path
+  catch
+  try
+    yield execAsync "git archive HEAD -o #{tar_path}"
+  catch e
+    log e
+    log "Error on git archive! Probably you haven't installed git or it does not exist in your PATH."
+    process.exit 1
+  yield untarAsync tar_path, tgt_dir
 
 # Run js script
 runScriptAsync = (script_path, args, options) ->
@@ -209,6 +227,9 @@ filterCopyAppAsync = async (stage1_app, stage2_app) ->
       clobber: true)
 
 packageAsarAsync = (app_folder, app_asar) ->
+  try
+    fs.removeSync app_asar
+  catch
   promisify(asar.createPackage)(app_folder, app_asar)
 
 translateCoffeeAsync = (app_dir) ->
@@ -254,6 +275,7 @@ checkNpmVersion = ->
     true
 
 packageAppAsync = async (poi_version, building_root, release_dir) ->
+  tar_path = path.join building_root, "app_stage1.tar"
   stage1_app = path.join building_root, 'stage1'
   stage2_app = path.join building_root, 'app'
   theme_root = path.join stage1_app, 'assets', 'themes'
@@ -268,29 +290,25 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
   fs.ensureDirSync stage2_app
 
   # Stage1: Everything downloaded and translated
+  yield gitArchiveAsync tar_path, stage1_app
   download_themes = downloadThemesAsync theme_root
-  archive_app = execAsync "git archive HEAD | tar -x -C '#{stage1_app}'"
-  yield Promise.join download_themes,
-    (async ->
-      yield archive_app
-      yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
-        path.join(stage1_app, 'config.cson')
-      yield Promise.join(
-        translateCoffeeAsync(stage1_app),
-        (async ->
-          yield npmInstallAsync stage1_app, ['--production']
-          yield bowerInstallAsync stage1_app
-          )())
-      )()
+  prepare_app = (async ->
+    yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
+      path.join(stage1_app, 'config.cson')
+    yield Promise.join(
+      translateCoffeeAsync(stage1_app),
+      (async ->
+        yield npmInstallAsync stage1_app, ['--production']
+        yield bowerInstallAsync stage1_app
+        )())
+    )()
+  yield Promise.join download_themes, prepare_app
 
   # Stage2: Filtered copy
   yield filterCopyAppAsync stage1_app, stage2_app
 
   # Pack stage2 into app.asar
   log "Packaging app.asar."
-  try
-    yield fs.removeAsync asar_path
-  catch
   yield packageAsarAsync stage2_app, asar_path
   log "Compressing app.asar into #{release_path}"
   yield add7z release_path, asar_path
@@ -369,9 +387,11 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
       log: "Unsupported platform #{platform}."
 
 installPluginsTo = async (plugin_names, install_root, tarball_root) ->
-  fs.removeSync install_root
+  try
+    fs.removeSync install_root
+    fs.removeSync tarball_root
+  catch
   fs.ensureDirSync install_root
-  fs.removeSync tarball_root
   fs.ensureDirSync tarball_root
 
   # Install plugins
