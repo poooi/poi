@@ -126,7 +126,7 @@ ControlledTabArea = React.createClass
   render: ->
     <div className='poi-tabs-container'>
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key[0]} justified>
+        <Nav bsStyle="tabs" activeKey={@state.key[0]}>
           <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
             {mainview.displayName}
           </NavItem>
