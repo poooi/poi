@@ -155,7 +155,7 @@ copyNoOverwriteAsync = async (src, tgt, options) ->
   catch e
     yield fs.copyAsync src, tgt
 
-add7z = async (archive, files, options) ->
+compress7zAsync = async (files, archive, options) ->
   try
     yield fs.removeAsync archive
   catch e
@@ -304,7 +304,7 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
   log "Packaging app.asar."
   yield packageAsarAsync stage2_app, asar_path
   log "Compressing app.asar into #{release_path}"
-  yield add7z release_path, asar_path
+  yield compress7zAsync asar_path, release_path
   log "Compression completed."
   asar_path
 
@@ -314,7 +314,7 @@ packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   try
     yield fs.removeAsync release_path
   catch e
-  yield add7z release_path, electron_dir
+  yield compress7zAsync electron_dir, release_path
   release_path
 
 packageStage3Async = async (platform, arch, poi_version, electron_version,
@@ -425,7 +425,7 @@ module.exports.installPluginsAsync = async (poi_version) ->
   d = new Date()
   str_date = "#{d.getUTCFullYear()}-#{d.getUTCMonth()+1}-#{d.getUTCDate()}"
   archive_path = path.join release_dir, "poiplugins_#{str_date}.7z"
-  yield add7z archive_path, gzip_root
+  yield compress7zAsync gzip_root, archive_path
 
   log "Successfully built tarballs at #{archive_path}"
 
