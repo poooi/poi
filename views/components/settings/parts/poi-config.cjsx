@@ -441,7 +441,7 @@ ShortcutConfig = React.createClass
   displayText: ->
     if @recording()
       __ 'Press the key, or Esc to cancel'
-    else if @state.myval
+    else if @enabled()
       "<#{@state.myval}>"
     else
       __ 'Disabled'
@@ -456,8 +456,17 @@ ShortcutConfig = React.createClass
   handleClickAnywhere: (e) ->
     document.removeEventListener 'mousedown', @handleClickAnywhere
     @abortRecording()
+  keyShouldIgnore: (character, modifiers) ->
+    if character.length == 0
+      return true
+    # Test if the first character is a control byte
+    if character.charCodeAt(0) < 32
+      return true
+    return false
   handleClickRecord: (e) ->
     this.constructor.prototype.listener = (character, modifiers, e) =>
+      if @keyShouldIgnore character, modifiers
+        return
       this.constructor.prototype.listener = null
       if character == 'esc' && modifiers.length == 0
         @abortRecording()
@@ -484,6 +493,7 @@ ShortcutConfig = React.createClass
       ctrl: 'Ctrl'
       meta: if 'ctrl' in modifiers then 'Cmd' else 'CmdOrCtrl'
       Del: 'Delete'
+      Ins: 'Insert'
     str_modifiers = (mapping[m] for m in modifiers)
     # Capitalize the first letter just to make it prettier
     character = character[0].toUpperCase() + character.substr 1
