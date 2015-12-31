@@ -249,7 +249,7 @@ translateCoffeeAsync = (app_dir) ->
             return
           yield fs.writeFileAsync tgt_path, tgt
           yield fs.removeAsync src_path
-          log "Compiled #{tgt_path}"
+          #log "Compiled #{tgt_path}"
           )()
       next()
     .on 'end', async ->
