@@ -36,6 +36,7 @@ config = (->
   require './lib/config')()
 
 # If !use_taobao_mirror, download Electron from GitHub.
+#config.set 'buildscript.useTaobaoMirror', false
 use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
 log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
@@ -65,15 +66,15 @@ theme_list =
   paperblack: 'https://raw.githubusercontent.com/PHELiOX/paperblack/master/css/paperblack.css'
   darklykai:  'https://raw.githubusercontent.com/magicae/sleepy/master/dist/sleepy.css'
 
-get_electron_url = (platform, arch, electron_version) ->
-  electron_fullname = "electron-v#{electron_version}-#{platform}-#{arch}.zip"
+get_electron_url = (platform, electron_version) ->
+  electron_fullname = "electron-v#{electron_version}-#{platform}.zip"
   if use_taobao_mirror
     "https://npm.taobao.org/mirrors/electron/#{electron_version}/#{electron_fullname}"
   else
     "https://github.com/atom/electron/releases/download/v#{electron_version}/#{electron_fullname}"
 
-get_flash_url = (platform, arch) ->
-  "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}-#{arch}.zip"
+get_flash_url = (platform) ->
+  "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
 
 target_list = [
   # Files
@@ -143,10 +144,9 @@ downloadThemesAsync = (theme_root) ->
     downloadAsync theme_url, path.join(theme_root, theme, 'css'),
       "#{theme}.css", "#{theme} theme")
 
-installFlashAsync = (platform, arch, download_dir, flash_dir) ->
-  flash_url = get_flash_url platform, arch
-  downloadExtractZipAsync flash_url, download_dir,
-      "flash-#{platform}-#{arch}.zip",
+installFlashAsync = (platform, download_dir, flash_dir) ->
+  flash_url = get_flash_url platform
+  downloadExtractZipAsync flash_url, download_dir, "flash-#{platform}.zip",
       flash_dir, 'flash plugin'
 
 copyNoOverwriteAsync = async (src, tgt, options) ->
@@ -317,10 +317,9 @@ packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   yield compress7zAsync electron_dir, release_path
   release_path
 
-packageStage3Async = async (platform, arch, poi_version, electron_version,
+packageStage3Async = async (platform, poi_version, electron_version,
             download_dir, building_root, release_dir) ->
-  platform_arch = "#{platform}-#{arch}"
-  poi_fullname = "poi-v#{poi_version}-#{platform_arch}"
+  poi_fullname = "poi-v#{poi_version}-#{platform}"
   stage3_electron = path.join building_root, poi_fullname
   stage3_app = path.join stage3_electron, 'resources', 'app.asar'
   flash_dir = path.join stage3_electron, 'PepperFlash'
@@ -329,17 +328,18 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     yield fs.removeAsync stage3_electron
   catch e
 
-  install_flash = installFlashAsync platform, arch, download_dir, flash_dir
+  install_flash = installFlashAsync platform, download_dir, flash_dir
 
-  electron_url = get_electron_url platform, arch, electron_version
+  electron_url = get_electron_url platform, electron_version
   install_electron = downloadExtractZipAsync electron_url, download_dir, '',
       stage3_electron, 'electron'
 
   yield Promise.join install_flash, install_electron
 
-  if platform == 'win32'
-    raw_poi_exe = path.join(building_root, "#{platform_arch}.raw.poi.exe")
-    poi_exe = path.join(building_root, "#{platform_arch}.poi.exe")
+  platform_prefix = platform.split('-')[0]
+  if platform_prefix == 'win32'
+    raw_poi_exe = path.join(building_root, "#{platform}.raw.poi.exe")
+    poi_exe = path.join(building_root, "#{platform}.poi.exe")
     yield Promise.join(
       fs.copyAsync(path.join(stage3_electron, 'electron.exe'), raw_poi_exe),
       copyNoOverwriteAsync(path.join(stage3_electron, 'electron.exe'), poi_exe))
@@ -348,8 +348,8 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
       clobber: true
     Promise.resolve
       app_path: stage3_app
-      log: " To complete packaging #{platform}-#{arch}, you need to:\n
-            (1) Modify #{raw_poi_exe} and save as #{platform_arch}.poi.exe by\n
+      log: " To complete packaging #{platform}, you need to:\n
+            (1) Modify #{raw_poi_exe} and save as #{platform}.poi.exe by\n
             ...(a) changing its icon into poi\n
             ...(b) changing its version into #{poi_version}\n
             * The target file is not overwritten if you build poi again."
@@ -357,9 +357,9 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
         yield fs.copyAsync poi_exe, path.join(stage3_electron, 'poi.exe')
         release_path = yield packageReleaseAsync poi_fullname, stage3_electron,
           release_dir
-        log "#{platform}-#{arch} successfully packaged to #{release_path}."
+        log "#{platform} successfully packaged to #{release_path}."
 
-  else if platform == 'linux'
+  else if platform_prefix == 'linux'
     yield fs.moveAsync path.join(stage3_electron, 'electron'),
       path.join(stage3_electron, 'poi'),
       clobber: true
@@ -369,14 +369,14 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
       todo: async ->
         release_path = yield packageReleaseAsync poi_fullname, stage3_electron,
           release_dir
-        log "#{platform}-#{arch} successfully packaged to #{release_path}."
+        log "#{platform} successfully packaged to #{release_path}."
 
-  else if platform == 'darwin'
+  else if platform_prefix == 'darwin'
     Promise.resolve
       log: "This is chiba's guo, I no bei."
   else
     Promise.resolve
-      log: "Unsupported platform #{platform}."
+      log: "Unsupported platform #{platform_prefix}."
 
 installPluginsTo = async (plugin_names, install_root, tarball_root) ->
   try
@@ -449,7 +449,7 @@ module.exports.buildAppAsync = (poi_version) ->
   module.exports.buildAsync (poi_version) 
 
 # Package release archives of poi, on multiple platforms
-module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list) ->
+module.exports.buildAsync = async (poi_version, electron_version, platform_list) ->
   build_root = path.join __dirname, build_dir_name
 
   download_dir = path.join build_root, download_dir_name
@@ -465,8 +465,8 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
 
   # Stage3: Package each platform
   stage3_info = yield Promise.all (
-    for [platform, arch] in platform_arch_list
-      packageStage3Async(platform, arch, poi_version, electron_version,
+    for platform in platform_list
+      packageStage3Async(platform, poi_version, electron_version,
         download_dir, building_root, release_dir))
 
   # Copy app
@@ -475,9 +475,9 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
       fs.copySync (yield app_path_promise), info.app_path
 
   # Finishing work of stage 3
-  stage3_logs = (for [[platform, arch], info] in _.zip(
-    platform_arch_list, stage3_info) when info
-    ["#{platform}-#{arch}", info.log])
+  stage3_logs = (for [platform, info] in _.zip(
+    platform_list, stage3_info) when info
+    [platform, info.log])
   if stage3_logs
     log " "
     log "*** BUILDING IS NOT COMPLETED: See log below ***"
