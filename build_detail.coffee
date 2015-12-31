@@ -241,6 +241,17 @@ translateCoffeeAsync = (app_dir) ->
       log 'Compiling ended'
       resolve(yield Promise.all tasks)
 
+checkNpmVersion = ->
+  # Check npm version
+  npm_version = (yield runScriptReturnStdoutAsync npm_exec_path, ['--version']).trim()
+  log "You are using npm v#{npm_version}"
+  if semver.major(npm_version) == 2
+    log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
+    log "Aborted."
+    false
+  else
+    true
+
 packageAppAsync = async (poi_version, building_root, release_dir) ->
   stage1_app = path.join building_root, 'stage1'
   stage2_app = path.join building_root, 'app'
@@ -419,25 +430,19 @@ module.exports.buildLocalAsync = ->
 
 
 # Package release archives of poi, on multiple platforms
-module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list) ->
+module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list, app_only) ->
   build_root = path.join __dirname, build_dir_name
 
   download_dir = path.join build_root, download_dir_name
   building_root = path.join build_root, "building_#{poi_version}"
   release_dir = path.join build_root, release_dir_name
 
-
-  # Check npm version
-  npm_version = (yield runScriptReturnStdoutAsync npm_exec_path, ['--version']).trim()
-  log "You are using npm v#{npm_version}"
-  if semver.major(npm_version) == 2
-    log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
-    log "Aborted."
-    return
+  return if !checkNpmVersion()
 
   app_path = yield packageAppAsync poi_version, building_root, release_dir
+  return if app_only?
 
-  # Prepare stage 3
+  # Stage3: Package each platform
   stage3_info = yield Promise.all (
     for [platform, arch] in platform_arch_list
       packageStage3Async(platform, arch, poi_version, electron_version,
