@@ -241,13 +241,44 @@ translateCoffeeAsync = (app_dir) ->
       log 'Compiling ended'
       resolve(yield Promise.all tasks)
 
-packageAppAsync = async (poi_version, app_dir, release_dir) ->
-  log "Packaging app.asar."
+packageAppAsync = async (poi_version, building_root, release_dir) ->
+  stage1_app = path.join building_root, 'stage1'
+  stage2_app = path.join building_root, 'app'
+  theme_root = path.join stage1_app, 'assets', 'themes'
   release_path = path.join(release_dir, "app-#{poi_version}", "app.asar")
+
+  try
+    fs.removeSync stage1_app
+    fs.removeSync stage2_app
+  catch e
+  fs.ensureDirSync stage1_app
+  fs.ensureDirSync stage2_app
+
+  # Stage1: Everything downloaded and translated
+  download_themes = downloadThemesAsync theme_root
+  archive_app = execAsync "git archive HEAD | tar -x -C '#{stage1_app}'"
+  yield Promise.join download_themes,
+    (async ->
+      yield archive_app
+      yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
+        path.join(stage1_app, 'config.cson')
+      yield Promise.join(
+        translateCoffeeAsync(stage1_app),
+        (async ->
+          yield npmInstallAsync stage1_app, ['--production']
+          yield bowerInstallAsync stage1_app
+          )())
+      )()
+
+  # Stage2: Filtered copy
+  yield filterCopyAppAsync stage1_app, stage2_app
+
+  # Pack stage2 into app.asar
+  log "Packaging app.asar."
   try
     yield fs.removeAsync release_path
   catch e
-  yield packageAsarAsync app_dir, release_path
+  yield packageAsarAsync stage2_app, release_path
   release_path
 
 packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
@@ -346,6 +377,7 @@ installPluginsTo = async (plugin_names, install_root, tarball_root) ->
   yield Promise.all (for plugin_dir in plugins_dir
     npmInstallAsync plugin_dir, ['--no-bin-links', '--no-progress', '--production'])
 
+  log "Now packing plugins into tarballs."
   yield runScriptAsync npm_exec_path, ['pack'].concat(plugins_dir),
     cwd: tarball_root
 
@@ -394,17 +426,6 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
   building_root = path.join build_root, "building_#{poi_version}"
   release_dir = path.join build_root, release_dir_name
 
-  stage1_app = path.join building_root, 'stage1'
-  stage2_app = path.join building_root, 'app'
-
-  theme_root = path.join stage1_app, 'assets', 'themes'
-
-  try
-    fs.removeSync stage1_app
-    fs.removeSync stage2_app
-  catch e
-  fs.ensureDirSync stage1_app
-  fs.ensureDirSync stage2_app
 
   # Check npm version
   npm_version = (yield runScriptReturnStdoutAsync npm_exec_path, ['--version']).trim()
@@ -414,27 +435,7 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
     log "Aborted."
     return
 
-  # Prepare stage1
-  download_themes = downloadThemesAsync theme_root
-  archive_app = execAsync "git archive HEAD | tar -x -C '#{stage1_app}'"
-  yield Promise.join download_themes,
-    (async ->
-      yield archive_app
-      yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
-        path.join(stage1_app, 'config.cson')
-      yield Promise.join(
-        translateCoffeeAsync(stage1_app),
-        (async ->
-          yield npmInstallAsync stage1_app, ['--production']
-          yield bowerInstallAsync stage1_app
-          )())
-      )()
-
-  # Prepare stage2
-  yield filterCopyAppAsync stage1_app, stage2_app
-
-  # Pack app.asar
-  app_path = yield packageAppAsync poi_version, stage2_app, release_dir
+  app_path = yield packageAppAsync poi_version, building_root, release_dir
 
   # Prepare stage 3
   stage3_info = yield Promise.all (
