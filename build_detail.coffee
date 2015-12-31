@@ -1,5 +1,3 @@
-use_taobao_mirror = true
-
 # *** INCLUDE ***
 os = require 'os'
 path = require 'path-extra'
@@ -18,8 +16,8 @@ semver = require 'semver'
 {compile} = require 'coffee-react'
 asar = require 'asar'
 walk = require 'walk'
-npm = require 'npm'
-targz = require 'tar.gz'
+tar = require 'tar-fs'
+child_process = require 'child_process'
 
 {log} = require './lib/utils'
 
@@ -27,20 +25,32 @@ targz = require 'tar.gz'
 build_dir_name = 'build'
 download_dir_name = 'download'
 release_dir_name = 'release'
-# global.* variables are assigned to adapt for requiring 'config'
-global.ROOT = __dirname
-system_appdata_path = process.env.APPDATA || (
-  if process.platform == 'darwin'
-  then path.join(process.env.HOME, 'Library/Application Support')
-  else '/var/local')
-global.APPDATA_PATH = path.join system_appdata_path, 'poi'
-global.EXROOT = global.APPDATA_PATH
-config = require './lib/config'
+config = (->  
+  # global.* variables are assigned to adapt for requiring 'config'
+  global.ROOT = __dirname
+  system_appdata_path = process.env.APPDATA || (
+    if process.platform == 'darwin'
+    then path.join(process.env.HOME, 'Library/Application Support')
+    else '/var/local')
+  global.APPDATA_PATH = path.join system_appdata_path, 'poi'
+  global.EXROOT = global.APPDATA_PATH
+  require './lib/config')()
 
+# If !use_taobao_mirror, download Electron from GitHub.
+use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
+log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
+bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
+npm_server = (->
+  mirrors = fs.readJsonSync mirror_json_path
+  # Don't want to mess with detecting system language here without window.navigator
+  language = config.get 'poi.language', 'zh-CN'
+  primaryServer = if language == 'zh-CN' then 'taobao' else 'npm'
+  mirrors[config.get "packageManager.mirrorName", primaryServer].server)()
+log "Using npm mirror #{npm_server}"
 
 theme_list =
   darkly:     'https://bootswatch.com/darkly/bootstrap.css'
@@ -129,7 +139,7 @@ downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
       continue
     break
 
-downloadThemesAsync = (theme_root, download_dir) ->
+downloadThemesAsync = (theme_root) ->
   Promise.all (for theme, theme_url of theme_list
     downloadAsync theme_url, path.join(theme_root, theme, 'css'),
       "#{theme}.css", "#{theme} theme")
@@ -157,36 +167,69 @@ changeExt = (src_path, ext) ->
   src_basename = path.basename(src_path, path.extname src_path)
   path.join(src_dir, src_basename+ext)
 
-compressGzipAsync = (src_folder, tgt_path) ->
-  targz().compress src_folder, tgt_path
+untarAsync = (src_path, tgt_dir) ->
+  try
+    fs.removeSync tgt_dir
+  catch
+  new Promise (resolve) ->
+    fs.createReadStream(src_path)
+    .pipe(tar.extract tgt_dir)
+    .on('finish', resolve)
 
-# *** METHODS ***
-npmInstallAsync = async (npm_path, tgt_dir) ->
+gitArchiveAsync = async (tar_path, tgt_dir) ->
+  try
+    fs.removeSync tar_path
+  catch
+  try
+    yield execAsync "git archive HEAD -o #{tar_path}"
+  catch e
+    log e
+    log "Error on git archive! Probably you haven't installed git or it does not exist in your PATH."
+    process.exit 1
+  yield untarAsync tar_path, tgt_dir
+
+# Run js script
+runScriptAsync = (script_path, args, options) ->
+  new Promise (resolve) ->
+    proc = child_process.fork script_path, args, options
+    proc.on 'exit', -> resolve()
+
+# Run js script, but suppress stdout and stores it into a string used to resolve
+runScriptReturnStdoutAsync = (script_path, args, options) ->
+  new Promise (resolve) ->
+    proc = child_process.fork script_path, args, Object.assign({silent: true}, options)
+    data = ''
+    proc.stdout.on 'readable', ->
+      while (chunk = proc.stdout.read()) != null
+        data += chunk
+    proc.on 'exit', -> resolve(data)
+
+npmInstallAsync = async (tgt_dir, args=[]) ->
   # Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
-  command = "#{npm_path} install --production"
   log "Installing npm for #{tgt_dir}"
-  cwd = process.cwd()
   fs.ensureDirSync tgt_dir
-  process.chdir tgt_dir
-  yield execAsync command
-  process.chdir cwd
+  yield runScriptAsync npm_exec_path, ['install', '--registry', npm_server].concat(args),
+    cwd: tgt_dir
   log "Finished installing npm for #{tgt_dir}"
 
-bowerInstallAsync = async (bower_path, tgt_dir) ->
-  command = "#{bower_path} install"
-  log command
-  cwd = process.cwd()
+bowerInstallAsync = async (tgt_dir) ->
+  log "Installing bower for #{tgt_dir}"
   fs.ensureDirSync tgt_dir
-  process.chdir tgt_dir
-  yield execAsync command
-  process.chdir cwd
+  yield runScriptAsync bower_exec_path, ['install'],
+    cwd: tgt_dir
+  log "Finished installing bower for #{tgt_dir}"
 
+
+# *** METHODS ***
 filterCopyAppAsync = async (stage1_app, stage2_app) ->
   yield Promise.all (for target in target_list
     fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target),
       clobber: true)
 
 packageAsarAsync = (app_folder, app_asar) ->
+  try
+    fs.removeSync app_asar
+  catch
   promisify(asar.createPackage)(app_folder, app_asar)
 
 translateCoffeeAsync = (app_dir) ->
@@ -206,7 +249,11 @@ translateCoffeeAsync = (app_dir) ->
           src_path = path.join root, fileStats.name
           tgt_path = changeExt src_path, '.js'
           src = yield fs.readFileAsync src_path, 'utf-8'
-          tgt = compile src
+          try
+            tgt = compile src
+          catch e
+            log "Compiling #{src_path} failed: #{e}"
+            return
           yield fs.writeFileAsync tgt_path, tgt
           yield fs.removeAsync src_path
           log "Compiled #{tgt_path}"
@@ -216,14 +263,57 @@ translateCoffeeAsync = (app_dir) ->
       log 'Compiling ended'
       resolve(yield Promise.all tasks)
 
-packageAppAsync = async (poi_version, app_dir, release_dir) ->
-  log "Packaging app.asar."
-  release_path = path.join(release_dir, "app-#{poi_version}", "app.asar")
+checkNpmVersion = ->
+  # Check npm version
+  npm_version = (yield runScriptReturnStdoutAsync npm_exec_path, ['--version']).trim()
+  log "You are using npm v#{npm_version}"
+  if semver.major(npm_version) == 2
+    log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
+    log "Aborted."
+    false
+  else
+    true
+
+packageAppAsync = async (poi_version, building_root, release_dir) ->
+  tar_path = path.join building_root, "app_stage1.tar"
+  stage1_app = path.join building_root, 'stage1'
+  stage2_app = path.join building_root, 'app'
+  theme_root = path.join stage1_app, 'assets', 'themes'
+  asar_path = path.join building_root, "app.asar"
+  release_path = path.join release_dir, "app-#{poi_version}.7z"
+
   try
-    yield fs.removeAsync release_path
+    fs.removeSync stage1_app
+    fs.removeSync stage2_app
   catch e
-  yield packageAsarAsync app_dir, release_path
-  release_path
+  fs.ensureDirSync stage1_app
+  fs.ensureDirSync stage2_app
+
+  # Stage1: Everything downloaded and translated
+  yield gitArchiveAsync tar_path, stage1_app
+  download_themes = downloadThemesAsync theme_root
+  prepare_app = (async ->
+    yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
+      path.join(stage1_app, 'config.cson')
+    yield Promise.join(
+      translateCoffeeAsync(stage1_app),
+      (async ->
+        yield npmInstallAsync stage1_app, ['--production']
+        yield bowerInstallAsync stage1_app
+        )())
+    )()
+  yield Promise.join download_themes, prepare_app
+
+  # Stage2: Filtered copy
+  yield filterCopyAppAsync stage1_app, stage2_app
+
+  # Pack stage2 into app.asar
+  log "Packaging app.asar."
+  yield packageAsarAsync stage2_app, asar_path
+  log "Compressing app.asar into #{release_path}"
+  yield add7z release_path, asar_path
+  log "Compression completed."
+  asar_path
 
 packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   log "Packaging #{poi_fullname}."
@@ -235,7 +325,7 @@ packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
   release_path
 
 packageStage3Async = async (platform, arch, poi_version, electron_version,
-            download_dir, app_path, building_root, release_dir) ->
+            download_dir, building_root, release_dir) ->
   platform_arch = "#{platform}-#{arch}"
   poi_fullname = "poi-v#{poi_version}-#{platform_arch}"
   stage3_electron = path.join building_root, poi_fullname
@@ -246,14 +336,13 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     yield fs.removeAsync stage3_electron
   catch e
 
-  copy_app = fs.copyAsync app_path, stage3_app
   install_flash = installFlashAsync platform, arch, download_dir, flash_dir
 
   electron_url = get_electron_url platform, arch, electron_version
   install_electron = downloadExtractZipAsync electron_url, download_dir, '',
       stage3_electron, 'electron'
 
-  yield Promise.join copy_app, install_flash, install_electron
+  yield Promise.join install_flash, install_electron
 
   if platform == 'win32'
     raw_poi_exe = path.join(building_root, "#{platform_arch}.raw.poi.exe")
@@ -265,6 +354,7 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
       path.join(stage3_electron, 'poi.exe'),
       clobber: true
     Promise.resolve
+      app_path: stage3_app
       log: " To complete packaging #{platform}-#{arch}, you need to:\n
             (1) Modify #{raw_poi_exe} and save as #{platform_arch}.poi.exe by\n
             ...(a) changing its icon into poi\n
@@ -277,13 +367,13 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
         log "#{platform}-#{arch} successfully packaged to #{release_path}."
 
   else if platform == 'linux'
-
     yield fs.moveAsync path.join(stage3_electron, 'electron'),
       path.join(stage3_electron, 'poi'),
       clobber: true
     package_release = packageReleaseAsync poi_fullname, stage3_electron,
       release_dir
     Promise.resolve
+      app_path: stage3_app
       log: null
       todo: async ->
         release_path = yield package_release
@@ -296,22 +386,18 @@ packageStage3Async = async (platform, arch, poi_version, electron_version,
     Promise.resolve
       log: "Unsupported platform #{platform}."
 
-installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
-  console.log "tarball_root"+tarball_root
-  fs.removeSync install_root
+installPluginsTo = async (plugin_names, install_root, tarball_root) ->
+  try
+    fs.removeSync install_root
+    fs.removeSync tarball_root
+  catch
   fs.ensureDirSync install_root
-  fs.removeSync tarball_root
   fs.ensureDirSync tarball_root
 
   # Install plugins
-  npmConfig =
-    prefix: install_root
-    registry: server
-  yield promisify(npm.load) npmConfig
-  yield promisify(npm.commands.install) plugin_names
+  yield npmInstallAsync install_root, ['--production', '--prefix', '.'].concat(plugin_names)
 
   plugins_dir = (for name in plugin_names
-    console.log name
     plugin_dir = path.join install_root, 'node_modules', name
 
     # Modify package.json
@@ -321,18 +407,15 @@ installPluginsTo = async (plugin_names, install_root, tarball_root, server) ->
     delete contents._requiredBy
     contents.bundledDependencies = (k for k of contents.dependencies)
     fs.writeFileSync plugin_package_json, JSON.stringify(contents)
+
     plugin_dir)
 
   yield Promise.all (for plugin_dir in plugins_dir
-    new Promise (resolve) ->
-      require('child_process').fork npm_exec_path, ['install', '--no-bin-links'],
-        cwd: plugin_dir
-      .on 'exit', -> resolve())
+    npmInstallAsync plugin_dir, ['--no-bin-links', '--no-progress', '--production'])
 
-  yield new Promise (resolve) ->
-      require('child_process').fork npm_exec_path, ['pack'].concat(plugins_dir),
-        cwd: tarball_root
-      .on 'exit', -> resolve()
+  log "Now packing plugins into tarballs."
+  yield runScriptAsync npm_exec_path, ['pack'].concat(plugins_dir),
+    cwd: tarball_root
 
 module.exports.installPluginsAsync = async (poi_version) ->
   build_root = path.join __dirname, build_dir_name
@@ -340,17 +423,12 @@ module.exports.installPluginsAsync = async (poi_version) ->
   release_dir = path.join build_root, release_dir_name
 
   packages = fs.readJsonSync plugin_json_path
-  mirror = fs.readJsonSync mirror_json_path
-  # Don't want to mess with detecting system language here without window.navigator
-  language = config.get 'poi.language', 'zh-CN'
-  primaryServer = if language == 'zh-CN' then 'taobao' else 'npm'
-  server = mirror[config.get "packageManager.mirrorName", primaryServer].server
 
   plugin_names = (n for n of packages)
 
   install_root = path.join building_root, 'poiplugins_install'
   gzip_root = path.join building_root, 'poiplugins'
-  yield installPluginsTo plugin_names, install_root, gzip_root, server
+  yield installPluginsTo plugin_names, install_root, gzip_root
 
   d = new Date()
   str_date = "#{d.getUTCFullYear()}-#{d.getUTCMonth()+1}-#{d.getUTCDate()}"
@@ -365,17 +443,18 @@ module.exports.buildLocalAsync = ->
   download_dir = path.join __dirname, build_dir_name, download_dir_name
   theme_root = path.join __dirname, 'assets', 'themes'
   flash_dir = path.join __dirname, 'PepperFlash'
-  npm_path = 'npm'
-  bower_path = path.join(__dirname, 'node_modules', '.bin', 'bower')
 
-  download_theme = downloadThemesAsync theme_root, download_dir
+  download_theme = downloadThemesAsync theme_root
   install_flash = installFlashAsync os.platform(), os.arch(), download_dir,
     flash_dir
-  install_npm_bower = npmInstallAsync npm_path, __dirname
-  .then -> (async -> yield bowerInstallAsync bower_path, __dirname)()
+  install_npm_bower = (async -> 
+    yield npmInstallAsync __dirname, ['--production'] 
+    yield bowerInstallAsync __dirname)()
 
   Promise.join download_theme, install_flash, install_npm_bower
 
+module.exports.buildAppAsync = (poi_version) ->
+  module.exports.buildAsync (poi_version) 
 
 # Package release archives of poi, on multiple platforms
 module.exports.buildAsync = async (poi_version, electron_version, platform_arch_list) ->
@@ -385,57 +464,23 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_arch_
   building_root = path.join build_root, "building_#{poi_version}"
   release_dir = path.join build_root, release_dir_name
 
-  stage1_app = path.join building_root, 'stage1'
-  stage2_app = path.join building_root, 'app'
+  return if !checkNpmVersion()
 
-  theme_root = path.join stage1_app, 'assets', 'themes'
-
-  npm_path = 'npm'
-  bower_path = path.join(__dirname, 'node_modules', '.bin', 'bower')
-
-  try
-    yield Promise.join \
-      (fs.removeAsync stage1_app),
-      (fs.removeAsync stage2_app)
-  catch e
-  fs.ensureDirSync stage1_app
-  fs.ensureDirSync stage2_app
-
-  # Check npm version
-  npm_version = (yield execAsync "'#{npm_path}' --version").trim()
-  log "You are using npm v#{npm_version}"
-  if semver.major(npm_version) == 2
-    log "*** USING npm 2 TO BUILD poi IS PROHIBITED ***"
-    log "Aborted."
+  app_path_promise = packageAppAsync poi_version, building_root, release_dir
+  if !electron_version?
+    yield app_path_promise
     return
 
-  # Prepare stage1
-  download_themes = downloadThemesAsync theme_root, download_dir
-  archive_app = execAsync "git archive HEAD | tar -x -C '#{stage1_app}'"
-  yield Promise.join download_themes,
-    (async ->
-      yield archive_app
-      yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
-        path.join(stage1_app, 'config.cson')
-      yield Promise.join(
-        translateCoffeeAsync(stage1_app),
-        (async ->
-          yield npmInstallAsync npm_path, stage1_app
-          yield bowerInstallAsync bower_path, stage1_app
-          )())
-      )()
-
-  # Prepare stage2
-  yield filterCopyAppAsync stage1_app, stage2_app
-
-  # Pack app.asar
-  app_path = yield packageAppAsync poi_version, stage2_app, release_dir
-
-  # Prepare stage 3
+  # Stage3: Package each platform
   stage3_info = yield Promise.all (
     for [platform, arch] in platform_arch_list
       packageStage3Async(platform, arch, poi_version, electron_version,
-        download_dir, app_path, building_root, release_dir))
+        download_dir, building_root, release_dir))
+
+  # Copy app
+  for info in stage3_info
+    if info.app_path?
+      fs.copySync (yield app_path_promise), info.app_path
 
   # Finishing work of stage 3
   stage3_logs = (for [[platform, arch], info] in _.zip(
