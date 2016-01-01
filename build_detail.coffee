@@ -437,7 +437,7 @@ module.exports.buildLocalAsync = ->
   flash_dir = path.join __dirname, 'PepperFlash'
 
   download_theme = downloadThemesAsync theme_root
-  install_flash = installFlashAsync os.platform(), os.arch(), download_dir,
+  install_flash = installFlashAsync "#{os.platform()}-#{os.arch()}", download_dir,
     flash_dir
   install_npm_bower = (async -> 
     yield npmInstallAsync __dirname, ['--production'] 
