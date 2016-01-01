@@ -38,6 +38,8 @@ config = (->
 # If !use_taobao_mirror, download Electron from GitHub.
 #config.set 'buildscript.useTaobaoMirror', false
 use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
+if process.env.TRAVIS
+  use_taobao_mirror = false
 log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
 bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
@@ -49,7 +51,10 @@ npm_server = (->
   # Don't want to mess with detecting system language here without window.navigator
   language = config.get 'poi.language', 'zh-CN'
   primaryServer = if language == 'zh-CN' then 'taobao' else 'npm'
-  mirrors[config.get "packageManager.mirrorName", primaryServer].server)()
+  server = config.get "packageManager.mirrorName", primaryServer
+  if process.env.TRAVIS
+    server = 'npm'
+  mirrors[server].server)()
 log "Using npm mirror #{npm_server}"
 
 theme_list =
@@ -74,7 +79,10 @@ get_electron_url = (platform, electron_version) ->
     "https://github.com/atom/electron/releases/download/v#{electron_version}/#{electron_fullname}"
 
 get_flash_url = (platform) ->
-  "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
+  if process.env.TRAVIS
+    "https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/#{platform}.zip"
+  else
+    "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
 
 target_list = [
   # Files
@@ -488,10 +496,13 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_list)
         log "  "+line
       log " "
     log "*** Follow the instructions above and press Enter to finish ***"
-    yield new Promise (resolve) ->
-      process.stdin.once 'data', ->
-        process.stdin.unref()   # Allows the program to terminate
-        resolve()
+    if process.env.TRAVIS
+      log "Using Travis.ci. The instructions are skipped."
+    else
+      yield new Promise (resolve) ->
+        process.stdin.once 'data', ->
+          process.stdin.unref()   # Allows the program to terminate
+          resolve()
     yield Promise.all (info.todo() for info in stage3_info when info.todo)
   log "All platforms are successfully built."
 
