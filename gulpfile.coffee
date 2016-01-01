@@ -1,5 +1,5 @@
 electron_version = '0.35.2'
-build_all_platforms = [['win32', 'ia32'], ['win32', 'x64'], ['linux', 'x64']]
+build_all_platforms = ['win32-ia32', 'win32-x64', 'linux-x64']
 
 Promise = require 'bluebird'
 async = Promise.coroutine
