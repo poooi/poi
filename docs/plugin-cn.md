@@ -164,13 +164,14 @@ index.cjsx
 {remote} = require 'electron'
 windowManager = remote.require './lib/window'
 
-window.pluginWindow = null // 保留一个全局引用防止 pluginWindow 被 gc
+window.pluginWindow = null # 保留一个全局引用防止 pluginWindow 被 gc
 initialPluginWindow = ->
   window.pluginWindow = windowManager.createWindow
     x: config.get 'poi.window.x', 0
     y: config.get 'poi.window.y', 0
     width: 820
     height: 650
+    indexName: 'pluginName' # 如果需要在 global.windowsIndex 里加入该窗口的索引，添加该项
   window.pluginWindow.loadURL "file://#{__dirname}/index.html"
 initialItemImprovementWindow()
 
