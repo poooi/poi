@@ -1,6 +1,7 @@
 _ = require 'underscore'
 {BrowserWindow} = require 'electron'
 global.windows = windows = []
+global.windowsIndex = windowsIndex = {}
 
 forceClose = false
 state = []  # Window state before hide
@@ -14,6 +15,8 @@ module.exports =
         'web-security': false
         'plugins': true
     current = new BrowserWindow options
+    if options.indexName?
+      windowsIndex[options.indexName] = current
     # Default menu in v0.27.3
     if process.versions['electron'] >= '0.27.3'
       current.setMenu options.menu || null
@@ -27,6 +30,8 @@ module.exports =
     # Close window really
     if options.realClose
       current.on 'closed', (e) ->
+        if options.indexName?
+          delete windowsIndex[options.indexName]
         idx = _.indexOf windows, current
         windows.splice idx, 1
     else if options.forceMinimize
@@ -76,3 +81,9 @@ module.exports =
   openFocusedWindowDevTools: ->
     BrowserWindow.getFocusedWindow()?.openDevTools
       detach: true
+  getWindowsIndex: ->
+    return global.windowsIndex
+  getWindow: (name) ->
+    return global.windowsIndex[name]
+  getMainWindow: ->
+    return global.mainWindow
