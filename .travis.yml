@@ -13,3 +13,4 @@ before_script:
   - gulp install
 script:
   - gulp build
+  - gulp build_plugins
