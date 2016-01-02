@@ -18,7 +18,7 @@
 #   })
 #
 #   nameIPC = ipc.access("plugin-name")
-#	  if nameIPC?
+#   if nameIPC?
 #     nameIPC.api_name(args)
 #
 
