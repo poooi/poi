@@ -142,7 +142,7 @@ NdockPanel = React.createClass
             <span className="ndock-name">
               {i18n.resources.__ @state.docks[i].name}
             </span>
-            <Label className="ndock-timer" bsStyle="success">
+            <Label className="ndock-timer" bsStyle="default">
               {resolveTime 0}
             </Label>
           </div>
