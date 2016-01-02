@@ -165,11 +165,11 @@ KdockPanel = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'view.main.visible', @handleVisibleResponse
-    setInterval @updateCountdown, 1000
+    @intervalId = setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'view.main.visible', @handleVisibleResponse
-    clearInterval @updateCountdown, 1000
+    clearInterval @intervalId
   render: ->
     <div>
     {
