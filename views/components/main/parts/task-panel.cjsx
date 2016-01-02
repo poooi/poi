@@ -29,7 +29,7 @@ getCategory = (api_category) ->
       return '#ffffff'
     when 1
       return '#19BB2E'
-    when 2
+    when 2, 8
       return '#e73939'
     when 3
       return '#87da61'
