@@ -150,6 +150,7 @@ KdockPanel = React.createClass
           setTimeout success.bind(@, __("The development of %s was successful.", "#{window.i18n.resources.__ $slotitems[body.api_slot_item.api_slotitem_id].api_name}")), showItemDevResultDelay
   updateCountdown: ->
     {docks, notified} = @state
+    updated = false
     for i in [1..4]
       if docks[i].countdown > 0
         docks[i].countdown = getCountDown(docks[i].completeTime)
@@ -159,17 +160,19 @@ KdockPanel = React.createClass
             title: __ "Construction"
             icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
-    @setState
-      docks: docks
-      notified: notified
+        updated = true
+    if updated
+      @setState
+        docks: docks
+        notified: notified
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'view.main.visible', @handleVisibleResponse
-    setInterval @updateCountdown, 1000
+    @intervalId = setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'view.main.visible', @handleVisibleResponse
-    clearInterval @updateCountdown, 1000
+    clearInterval @intervalId
   render: ->
     <div>
     {

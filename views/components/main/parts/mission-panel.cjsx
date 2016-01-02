@@ -99,6 +99,7 @@ MissionPanel = React.createClass
           notified: notified
   updateCountdown: ->
     {decks, notified} = @state
+    updated = false
     for i in [1..4]
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
@@ -109,17 +110,19 @@ MissionPanel = React.createClass
             title: __ 'Expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
-    @setState
-      decks: decks
-      notified: notified
+        updated = true
+    if updated
+      @setState
+        decks: decks
+        notified: notified
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'view.main.visible', @handleVisibleResponse
-    setInterval @updateCountdown, 1000
+    @intervalId = setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'view.main.visible', @handleVisibleResponse
-    clearInterval @updateCountdown, 1000
+    clearInterval @intervalId
   render: ->
     <Panel bsStyle="default">
     {
