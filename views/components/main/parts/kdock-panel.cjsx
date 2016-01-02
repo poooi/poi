@@ -8,6 +8,10 @@ __n = i18n.main.__n.bind(i18n.main)
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
 
+getCountDown = (completeTime) ->
+  diff = completeTime - Date.now()
+  if diff < 0 then 0 else Math.floor(diff / 1000)
+
 showItemDevResultDelay = if window.config.get('poi.delayItemDevResult', false) then 6200 else 500
 
 KdockPanel = React.createClass
@@ -79,7 +83,7 @@ KdockPanel = React.createClass
                   kdock.api_item5
                 ]
                 completeTime: kdock.api_complete_time
-                countdown: Math.floor((kdock.api_complete_time - new Date()) / 1000)
+                countdown: getCountDown(kdock.api_complete_time)
             when 3
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
@@ -123,7 +127,7 @@ KdockPanel = React.createClass
                   kdock.api_item5
                 ]
                 completeTime: kdock.api_complete_time
-                countdown: Math.floor((kdock.api_complete_time - new Date()) / 1000)
+                countdown: getCountDown(kdock.api_complete_time)
             when 3
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
@@ -148,7 +152,7 @@ KdockPanel = React.createClass
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
-        docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
+        docks[i].countdown = getCountDown(docks[i].completeTime)
         if docks[i].countdown <= 1 && !notified[i]
           notify "#{docks[i].name} #{__ "built"}",
             type: 'construction'
