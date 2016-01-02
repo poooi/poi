@@ -1,11 +1,16 @@
 language: node_js
 os:
-  - "linux"
+  - linux
 node_js:
-  - "iojs"
-  - "node"
+  - iojs
+  - node
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y p7zip-full
 before_script:
-  - "./node_modules/coffeelint/bin/coffeelint ."
-  - "./node_modules/bower/bin/bower install"
-after_script:
-  - "npm test"
+  - export TRAVIS=1
+  - npm install -g gulp
+  - gulp install
+script:
+  - gulp build
+  - gulp build_plugins
