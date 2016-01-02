@@ -1,8 +1,8 @@
 #
 # ipc: Inter-Plugins Call
 #
-# Any function passed to `register` should bind to `this`
-#   if you want to access `this` in you API handler.
+# Any function passed to `register` will be run asynchronous.
+# Be careful of your `this.
 #
 # Usage:
 #   remote = require('electron').remote
