@@ -5,6 +5,10 @@
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 
+getCountDown = (completeTime) ->
+  diff = completeTime - Date.now()
+  if diff < 0 then 0 else Math.floor(diff / 1000)
+
 NdockPanel = React.createClass
   getInitialState: ->
     docks: [
@@ -60,7 +64,7 @@ NdockPanel = React.createClass
               docks[id] =
                 name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
                 completeTime: ndock.api_complete_time
-                countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
+                countdown: getCountDown(ndock.api_complete_time)
         @setState
           docks: docks
           notified: notified
@@ -83,7 +87,7 @@ NdockPanel = React.createClass
               docks[id] =
                 name: $ships[_ships[ndock.api_ship_id].api_ship_id].api_name
                 completeTime: ndock.api_complete_time
-                countdown: Math.floor((ndock.api_complete_time - new Date()) / 1000)
+                countdown: getCountDown(ndock.api_complete_time)
         @setState
           docks: docks
           notified: notified
@@ -91,7 +95,7 @@ NdockPanel = React.createClass
     {docks, notified} = @state
     for i in [1..4]
       if docks[i].countdown > 0
-        docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
+        docks[i].countdown = getCountDown(docks[i].completeTime)
         if docks[i].countdown <= 60 && !notified[i]
           notify "#{docks[i].name} #{__ 'repair completed'}",
             type: 'repair'
@@ -138,7 +142,7 @@ NdockPanel = React.createClass
             <span className="ndock-name">
               {i18n.resources.__ @state.docks[i].name}
             </span>
-            <Label className="ndock-timer" bsStyle="success">
+            <Label className="ndock-timer" bsStyle="default">
               {resolveTime 0}
             </Label>
           </div>
