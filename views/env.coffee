@@ -34,6 +34,7 @@ Object.clone = (obj) ->
   JSON.parse JSON.stringify obj
 Object.remoteClone = (obj) ->
   JSON.parse remoteStringify obj
+
 window.resolveTime = (seconds) ->
   return '' if seconds < 0
   hours = Math.floor(seconds / 3600)
@@ -45,6 +46,9 @@ window.resolveTime = (seconds) ->
   minutes = "0#{minutes}" if minutes < 10
   seconds = "0#{seconds}" if seconds < 10
   "#{hours}:#{minutes}:#{seconds}"
+window.timeToString = (milliseconds) ->
+  date = new Date(milliseconds)
+  date.toTimeString().slice(0, 8)  # HH:mm:ss
 
 ## window.notify
 # msg=null: Sound-only notification.
@@ -170,11 +174,11 @@ window.i18n.resources.__ = (str) -> return str
 window.i18n.resources.translate = (locale, str) -> return str
 window.i18n.resources.setLocale = (str) -> return
 
-# Alert helpers. 
+# Alert helpers.
 #   Requires: window.i18n
 {newAlert} = require './components/info/alert'
 DEFAULT_STICKYFOR = 3*1000  # Milliseconds
-window.log = (msg, options) -> newAlert Object.assign 
+window.log = (msg, options) -> newAlert Object.assign
   message: msg
   type: 'default'
   priority: 0

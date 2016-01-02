@@ -5,10 +5,6 @@
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 
-timeToString = (dateTime) ->
-  date = new Date(dateTime)
-  "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
-
 getCountDown = (completeTime) ->
   diff = completeTime - Date.now()
   if diff < 0 then 0 else Math.floor(diff / 1000)
@@ -133,7 +129,7 @@ NdockPanel = React.createClass
             </OverlayTrigger>
           </div>
         else if @state.docks[i].countdown > -1
-          <div key={i}  className="panel-item ndock-item">
+          <div key={i} className="panel-item ndock-item">
             <span className="ndock-name">
               {i18n.resources.__ @state.docks[i].name}
             </span>
@@ -142,7 +138,7 @@ NdockPanel = React.createClass
             </Label>
           </div>
         else
-          <div key={i}  className="panel-item ndock-item">
+          <div key={i} className="panel-item ndock-item">
             <span className="ndock-name">
               {i18n.resources.__ @state.docks[i].name}
             </span>

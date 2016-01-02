@@ -6,11 +6,6 @@
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 
-timeToString = (dateTime) ->
-  date = new Date(dateTime)
-  "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
-
-
 MissionPanel = React.createClass
   getInitialState: ->
     decks: [
