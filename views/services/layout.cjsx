@@ -28,11 +28,14 @@ changeBounds = ->
     height: parseInt(newHeight + borderY)
 
 window.addEventListener 'layout.change', (e) ->
+  resizable = remote.getCurrentWindow().isResizable()
+  remote.getCurrentWindow().setResizable false
   window._layout.unload()
   delete require.cache[require.resolve("./layout.#{layout}")]
   {layout} = e.detail
   changeBounds()
   window._layout = require "./layout.#{layout}"
+  remote.getCurrentWindow().setResizable resizable
 
 document.addEventListener 'DOMContentLoaded', ->
   $('kan-game webview').src = config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
