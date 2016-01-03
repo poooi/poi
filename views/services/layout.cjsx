@@ -29,7 +29,7 @@ changeBounds = ->
 
 window.addEventListener 'layout.change', (e) ->
   resizable = remote.getCurrentWindow().isResizable()
-  remote.getCurrentWindow().setResizable false
+  remote.getCurrentWindow().setResizable true
   window._layout.unload()
   delete require.cache[require.resolve("./layout.#{layout}")]
   {layout} = e.detail
