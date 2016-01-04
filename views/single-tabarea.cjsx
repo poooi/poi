@@ -68,9 +68,10 @@ ControlledTabArea = React.createClass
     @setState {key} if key isnt @state.key
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
-    @setState {key} if key isnt @state.key
-    pluginKey = key
-    @setState {pluginKey}
+    if key isnt @state.key
+      @setState {key}
+      pluginKey = key
+      @setState {pluginKey}
   handleSelectMainView: ->
     event = new CustomEvent 'view.main.visible',
       bubbles: true
