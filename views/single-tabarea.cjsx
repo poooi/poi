@@ -58,6 +58,7 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
   nowTime: 0
+  pluginKey: 0
   componentWillUpdate: (nextProps, nextState) ->
     @nowTime = (new Date()).getTime()
   componentDidUpdate: (prevProps, prevState) ->
@@ -67,7 +68,10 @@ ControlledTabArea = React.createClass
     @setState {key} if key isnt @state.key
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
-    @setState {key} if key isnt @state.key
+    if key isnt @state.key
+      @setState {key}
+      pluginKey = key
+      @setState {pluginKey}
   handleSelectMainView: ->
     event = new CustomEvent 'view.main.visible',
       bubbles: true
@@ -151,21 +155,22 @@ ControlledTabArea = React.createClass
     window.removeEventListener 'view.main.visible', @handleMiniShipChange
   render: ->
     <div>
-      <Nav bsStyle="tabs" activeKey={@state.key}>
+      <Nav bsStyle="tabs" activeKey={@state.key} id="top-nav">
         <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
           {mainview.displayName}
         </NavItem>
         <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
           <span><FontAwesome key={0} name='server' />{window.i18n.main.__ ' Fleet'}</span>
         </NavItem>
-        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight
-                     title=
-                     {
-                       if @state.key >= 2 and @state.key < 1000
-                         <span>{tabbedPlugins[@state.key - 2].displayName}</span>
-                       else
-                         <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
-                     }>
+        <NavItem key={1001} eventKey={@state.pluginKey} onSelect={@handleSelect}>
+           {
+             if @state.pluginKey >= 2 and @state.pluginKey < 1000
+               <span>{tabbedPlugins[@state.pluginKey - 2].displayName}</span>
+             else
+               <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
+           }
+        </NavItem>
+        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight>
         {
           counter = 1
           plugins.map (plugin, index) =>

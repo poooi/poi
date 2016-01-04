@@ -69,6 +69,15 @@ table {
 poi-app poi-nav-tabs .nav {
   display: flex;
 }
+#top-nav {
+  display: inherit;
+}
+#top-nav > li:nth-child(-n+3){
+  width:26%;
+}
+#top-nav > li:nth-child(n+4){
+  width:11%;
+}
 poi-app poi-nav-tabs .nav li {
   flex: 1;
   overflow: hidden;
