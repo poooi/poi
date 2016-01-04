@@ -102,7 +102,8 @@ KdockPanel = React.createClass
     {
       for i in [1..4]
         dockName = i18n.resources.__ @state.docks[i].name
-        isLSC = @state.docks[i].material[0] >= 1000
+        isInUse = @state.docks[i].completeTime >= 0
+        isLSC = isInUse and @state.docks[i].material[0] >= 1000
         content = <div className="panel-item kdock-item">
                     <span className="kdock-name">{dockName}</span>
                     <CountdownLabel key={i}
@@ -112,28 +113,26 @@ KdockPanel = React.createClass
                                     dockName={dockName} />
                   </div>
 
-        <OverlayTrigger key={i} placement='top' overlay={
-          <Tooltip id="kdock-material-#{i}">
-            {
-              if isLSC
-                <span>
-                  <strong style={color: '#d9534f'}>
-                    {dockName}
-                  </strong>
-                  <br/>
-                </span>
-              else
-                <span>{dockName}<br/></span>
-            }
-            {getMaterialImage 1} {@state.docks[i].material[0]}
-            {getMaterialImage 2} {@state.docks[i].material[1]}
-            {getMaterialImage 3} {@state.docks[i].material[2]}
-            {getMaterialImage 4} {@state.docks[i].material[3]}
-            {getMaterialImage 7} {@state.docks[i].material[4]}
-          </Tooltip>
-        }>
-        {content}
-        </OverlayTrigger>
+        if isInUse
+          <OverlayTrigger key={i} placement='top' overlay={
+            <Tooltip id="kdock-material-#{i}">
+              {
+                style = if isLSC then {color: '#D9534F', fontWeight: 'bold'} else null
+                <span style={style}>{dockName}<br /></span>
+              }
+              {getMaterialImage 1} {@state.docks[i].material[0]}
+              {getMaterialImage 2} {@state.docks[i].material[1]}
+              {getMaterialImage 3} {@state.docks[i].material[2]}
+              {getMaterialImage 4} {@state.docks[i].material[3]}
+              {getMaterialImage 7} {@state.docks[i].material[4]}
+            </Tooltip>
+          }>
+            {content}
+          </OverlayTrigger>
+        else
+          <span key={i}>
+            {content}
+          </span>
     }
     </div>
 
