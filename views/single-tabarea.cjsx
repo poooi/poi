@@ -57,6 +57,8 @@ lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
+    pluginKey: -2
+    dropdownOpen: false
   nowTime: 0
   pluginKey: 0
   componentWillUpdate: (nextProps, nextState) ->
@@ -64,14 +66,21 @@ ControlledTabArea = React.createClass
   componentDidUpdate: (prevProps, prevState) ->
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
+  handleToggleDropdown: ->
+    dropdownOpen = !@state.dropdownOpen
+    @setState {dropdownOpen}
   handleSelect: (key) ->
-    @setState {key} if key isnt @state.key
+    if key isnt @state.key
+      if key is -2 then @handleToggleDropdown()
+      @setState
+        key: if key isnt -2 then key else @state.key
+        pluginKey: if key > 1 && key < 1000 then key else @state.pluginKey
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
     if key isnt @state.key
-      @setState {key}
-      pluginKey = key
-      @setState {pluginKey}
+      @setState
+        key: key
+        pluginKey: key
   handleSelectMainView: ->
     event = new CustomEvent 'view.main.visible',
       bubbles: true
@@ -170,7 +179,7 @@ ControlledTabArea = React.createClass
                <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
            }
         </NavItem>
-        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight>
+        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown}>
         {
           counter = 1
           plugins.map (plugin, index) =>
@@ -186,11 +195,11 @@ ControlledTabArea = React.createClass
         }
         {
           if plugins.length == 0
-            <MenuItem key={1001} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
+            <MenuItem key={1002} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
         }
         </NavDropdown>
-        <NavItem key={1000} eventKey={1000} onSelect={@handleSelect}>
-          {settings.displayName}
+        <NavItem key={1000} eventKey={1000} onSelect={@handleSelect} className="tab-narrow">
+          <FontAwesome key={0} name='cog' />
         </NavItem>
       </Nav>
       <div>
