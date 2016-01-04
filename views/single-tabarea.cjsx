@@ -189,8 +189,8 @@ ControlledTabArea = React.createClass
             <MenuItem key={1001} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
         }
         </NavDropdown>
-        <NavItem key={1000} eventKey={1000} onSelect={@handleSelect}>
-          {settings.displayName}
+        <NavItem key={1000} eventKey={1000} onSelect={@handleSelect} className="tab-narrow">
+          <FontAwesome key={0} name='cog' />
         </NavItem>
       </Nav>
       <div>

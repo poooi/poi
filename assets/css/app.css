@@ -72,10 +72,10 @@ poi-app poi-nav-tabs .nav {
 #top-nav {
   display: inherit;
 }
-#top-nav > li:nth-child(-n+3){
+#top-nav > li {
   width:26%;
 }
-#top-nav > li:nth-child(n+4){
+#top-nav > li.dropdown, #top-nav > li.tab-narrow{
   width:11%;
 }
 poi-app poi-nav-tabs .nav li {
