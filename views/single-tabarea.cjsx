@@ -57,6 +57,7 @@ lockedTab = false
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
+    pluginKey: -2
   nowTime: 0
   pluginKey: 0
   componentWillUpdate: (nextProps, nextState) ->
@@ -65,13 +66,16 @@ ControlledTabArea = React.createClass
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
   handleSelect: (key) ->
-    @setState {key} if key isnt @state.key
+    if key isnt @state.key
+      @setState
+        key: if key isnt -2 then key else @state.key
+        pluginKey: if key > 1 && key < 1000 then key else @state.pluginKey
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
     if key isnt @state.key
-      @setState {key}
-      pluginKey = key
-      @setState {pluginKey}
+      @setState
+        key: key
+        pluginKey: key
   handleSelectMainView: ->
     event = new CustomEvent 'view.main.visible',
       bubbles: true
@@ -186,7 +190,7 @@ ControlledTabArea = React.createClass
         }
         {
           if plugins.length == 0
-            <MenuItem key={1001} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
+            <MenuItem key={1002} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
         }
         </NavDropdown>
         <NavItem key={1000} eventKey={1000} onSelect={@handleSelect} className="tab-narrow">
