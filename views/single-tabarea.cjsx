@@ -58,6 +58,7 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
     pluginKey: -2
+    dropdownOpen: false
   nowTime: 0
   pluginKey: 0
   componentWillUpdate: (nextProps, nextState) ->
@@ -65,8 +66,12 @@ ControlledTabArea = React.createClass
   componentDidUpdate: (prevProps, prevState) ->
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
+  handleToggleDropdown: ->
+    dropdownOpen = !@state.dropdownOpen
+    @setState {dropdownOpen}
   handleSelect: (key) ->
     if key isnt @state.key
+      if key is -2 then @handleToggleDropdown()
       @setState
         key: if key isnt -2 then key else @state.key
         pluginKey: if key > 1 && key < 1000 then key else @state.pluginKey
@@ -174,7 +179,7 @@ ControlledTabArea = React.createClass
                <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
            }
         </NavItem>
-        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight>
+        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown}>
         {
           counter = 1
           plugins.map (plugin, index) =>
