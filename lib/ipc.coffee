@@ -8,26 +8,29 @@
 #   remote = require('electron').remote
 #   ipc = remote.require('./lib/ipc')
 #
-#   ipc.register("plugin-name", {
-#     api_name:   @ref_to_function.bind(@)
-#     api_name2:  @ref_to_function_2.bind(@)
+#   ipc.register("scope_name", {
+#     api_name:   @ref_to_function
+#     api_name2:  @ref_to_function_2
 #   })
 #
-#   ipc.unregister("plugin-name", "api_name")
-#   ipc.unregister("plugin-name", ["api_name", "api_name2"])
-#   ipc.unregister("plugin-name", {
+#   ipc.unregister("scope_name", "api_name")
+#   ipc.unregister("scope_name", ["api_name", "api_name_2"])
+#   ipc.unregister("scope_name", {
 #     api_name:   @whatever
-#     api_name2:  @whatever
+#     api_name_2: @whatever
 #   })
 #
-#   plugin = ipc.access("plugin-name")
-#   if plugin?
-#     plugin.api_name(args)
+#   ipc.unregisterAll("scope_name")
+#
+#   scope = ipc.access("scope_name")
+#   scope?.api_name?(args)
+#
+#   ipc.foreach("api_name", arg1, arg2, ...)
 #
 
 class IPC
   constructor: ->
-    @data = {}
+    @data = new Object()
 
   # scope:  string
   # opts:   key-func Object
@@ -40,6 +43,7 @@ class IPC
     @unregister(scope, Object.keys(opts))
     for key, func of opts
       @data[scope][key] = func
+    return
 
   # scope:  string
   # keys:   string / Array of string / key-func Object
@@ -55,11 +59,20 @@ class IPC
       keys = Object.keys(opts)
     for key in keys
       delete @data[scope][key]
+    return
 
   unregisterAll: (scope) ->
     delete @data[scope]
 
   access: (scope) ->
     return @data[scope]
+
+  # key:    string
+  # args:   arguments passing to api
+  foreach: (key, args...) ->
+    for scope, apis of @data
+      if apis.hasOwnProperty(key)
+        apis[key].apply(null, args)
+    return
 
 module.exports = new IPC()
