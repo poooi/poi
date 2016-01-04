@@ -21,10 +21,6 @@ CountdownLabel = React.createClass
     else if timeRemaining is 0
       style = 'success'
     @setState {style: style} if style isnt @state.style
-  notify: ->
-    notify "#{@props.dockName} 建造完成",
-      type: 'construction'
-      icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
   render: ->
     <Label bsStyle={@state.style}>
     {
@@ -32,7 +28,7 @@ CountdownLabel = React.createClass
         <CountdownTimer countdownId={"kdock-#{@props.dockIndex}"}
                         completeTime={@props.completeTime}
                         tickCallback={@tick}
-                        completeCallback={@notify} />
+                        completeCallback={@props.notify} />
     }
     </Label>
 
@@ -69,7 +65,10 @@ getMaterialImage = (idx) ->
   path = join(ROOT, 'assets', 'img', 'material', "0#{idx}.png")
   <img src={path} className="material-icon" />
 
+constructionIcon = join(ROOT, 'assets', 'img', 'operation', 'build.png')
+
 KdockPanel = React.createClass
+  canNotify: false
   getInitialState: ->
     docks: new Array(5).fill(0).map () -> new KDockInfo
   handleResponse: (e) ->
@@ -77,6 +76,11 @@ KdockPanel = React.createClass
     {$ships} = window
     {docks} = @state
     switch path
+      when '/kcsapi/api_start2'
+        # Do not notify before entering the game
+        @canNotify = false
+      when '/kcsapi/api_port/port'
+        @canNotify = true
       when '/kcsapi/api_get_member/kdock', '/kcsapi/api_req_kousyou/getship'
         kdocks = body
         kdocks = body.api_kdock if path is '/kcsapi/api_req_kousyou/getship'
@@ -97,6 +101,15 @@ KdockPanel = React.createClass
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+  notify: ->
+    return if not @canNotify
+    completedShips = []
+    for i in [1..4]
+      if 0 <= @state.docks[i].completeTime <= new Date().getTime()
+        completedShips.push i18n.resources.__ @state.docks[i].name
+    notify "#{completedShips.join ', '} #{__ 'built'}",
+      type: 'construction'
+      icon: constructionIcon
   render: ->
     <div>
     {
@@ -110,7 +123,7 @@ KdockPanel = React.createClass
                                     dockIndex={i}
                                     completeTime={@state.docks[i].completeTime}
                                     isLSC={isLSC}
-                                    dockName={dockName} />
+                                    notify={@notify} />
                   </div>
 
         if isInUse
