@@ -14,33 +14,59 @@ getCountDown = (completeTime) ->
 
 showItemDevResultDelay = if window.config.get('poi.delayItemDevResult', false) then 6200 else 500
 
+
+CountdownTimer = require './countdown-timer'
+CountdownLabel = React.createClass
+  getInitialState: ->
+    style: 'default'
+  tick: (timeRemaining) ->
+    style = 'default'
+    if timeRemaining > 600
+      style = if @props.isLSC then 'danger' else 'primary'
+    else if timeRemaining > 0
+      style = 'warning'
+    else if timeRemaining is 0
+      style = 'success'
+    @setState {style: style} if style isnt @state.style
+  notify: ->
+    console.log "ignore this notify" if @props.completeTime is 0
+    notify "#{@props.dockName} 建造完成",
+      type: 'construction'
+      icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
+  render: ->
+    <Label bsStyle={@state.style}>
+    {
+      if @props.completeTime >= 0
+        <CountdownTimer countdownId={"kdock-#{@props.dockIndex}"}
+                        completeTime={@props.completeTime}
+                        tickCallback={@tick}
+                        completeCallback={@notify} />
+    }
+    </Label>
+
+
 KdockPanel = React.createClass
   getInitialState: ->
     docks: [
         name: __ 'Empty'
         material: []
         completeTime: -1
-        countdown: -1
       ,
         name: __ 'Empty'
         material: []
         completeTime: -1
-        countdown: -1
       ,
         name: __ 'Empty'
         material: []
         completeTime: -1
-        countdown: -1
       ,
         name: __ 'Empty'
         material: []
         completeTime: -1
-        countdown: -1
       ,
         name: __ 'Empty'
         material: []
         completeTime: -1
-        countdown: -1
     ]
     notified: []
     show: true
@@ -63,13 +89,11 @@ KdockPanel = React.createClass
               docks[id] =
                 name: __ 'Locked'
                 material: []
-                countdown: -1
                 completeTime: -1
             when 0
               docks[id] =
                 name: __ 'Empty'
                 material: []
-                countdown: -1
                 completeTime: -1
               notified[id] = false
             when 2
@@ -83,7 +107,6 @@ KdockPanel = React.createClass
                   kdock.api_item5
                 ]
                 completeTime: kdock.api_complete_time
-                countdown: getCountDown(kdock.api_complete_time)
             when 3
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
@@ -108,13 +131,11 @@ KdockPanel = React.createClass
                 name: __ 'Locked'
                 material: []
                 completeTime: -1
-                countdown: -1
             when 0
               docks[id] =
                 name: __ 'Empty'
                 material: []
                 completeTime: -1
-                countdown: -1
               notified[id] = false
             when 2
               docks[id] =
@@ -127,7 +148,6 @@ KdockPanel = React.createClass
                   kdock.api_item5
                 ]
                 completeTime: kdock.api_complete_time
-                countdown: getCountDown(kdock.api_complete_time)
             when 3
               docks[id] =
                 name: $ships[kdock.api_created_ship_id].api_name
@@ -139,7 +159,6 @@ KdockPanel = React.createClass
                   kdock.api_item5
                 ]
                 completeTime: 0
-                countdown: 0
         @setState
           docks: docks
           notified: notified
@@ -148,31 +167,12 @@ KdockPanel = React.createClass
           setTimeout warn.bind(@, __("The development of %s was failed.", "#{window.i18n.resources.__ $slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), showItemDevResultDelay
         else if body.api_create_flag == 1
           setTimeout success.bind(@, __("The development of %s was successful.", "#{window.i18n.resources.__ $slotitems[body.api_slot_item.api_slotitem_id].api_name}")), showItemDevResultDelay
-  updateCountdown: ->
-    {docks, notified} = @state
-    updated = false
-    for i in [1..4]
-      if docks[i].countdown > 0
-        docks[i].countdown = getCountDown(docks[i].completeTime)
-        if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} #{__ "built"}",
-            type: 'construction'
-            title: __ "Construction"
-            icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
-          notified[i] = true
-        updated = true
-    if updated
-      @setState
-        docks: docks
-        notified: notified
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'view.main.visible', @handleVisibleResponse
-    @intervalId = setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
     window.removeEventListener 'view.main.visible', @handleVisibleResponse
-    clearInterval @intervalId
   render: ->
     <div>
     {
@@ -198,42 +198,39 @@ KdockPanel = React.createClass
           </Tooltip>
         }>
         {
+          countdown = <CountdownLabel key={i}
+                                      dockIndex={i}
+                                      completeTime={@state.docks[i].completeTime}
+                                      isLSC={@state.docks[i].material[0] >= 1000}
+                                      dockName={i18n.resources.__ @state.docks[i].name} />
           if @state.docks[i].countdown > 0
             if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
               <div className="panel-item kdock-item">
                 <span className="kdock-name">
                   {i18n.resources.__ @state.docks[i].name}
                 </span>
-                <Label className="kdock-timer" bsStyle="danger">
-                  {resolveTime @state.docks[i].countdown}
-                </Label>
+                {countdown}
               </div>
             else
               <div className="panel-item kdock-item">
                 <span className="kdock-name">
                   {i18n.resources.__ @state.docks[i].name}
                 </span>
-                <Label className="kdock-timer" bsStyle="primary">
-                  {resolveTime @state.docks[i].countdown}
-                </Label>
+                {countdown}
               </div>
           else if @state.docks[i].countdown is 0
             <div className="panel-item kdock-item">
               <span className="kdock-name">
                 {i18n.resources.__ @state.docks[i].name}
               </span>
-              <Label className="kdock-timer" bsStyle="success">
-                {resolveTime @state.docks[i].countdown}
-              </Label>
+              {countdown}
             </div>
           else
             <div className="panel-item kdock-item">
               <span className="kdock-name">
                 {i18n.resources.__ @state.docks[i].name}
               </span>
-              <Label className="kdock-timer" bsStyle="default">
-                {resolveTime 0}
-              </Label>
+              {countdown}
             </div>
         }
         </OverlayTrigger>
