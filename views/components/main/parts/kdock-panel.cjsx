@@ -88,6 +88,11 @@ KdockPanel = React.createClass
           docks[kdock.api_id].update kdock
         @setState
           docks: docks
+      when '/kcsapi/api_req_kousyou/createship_speedchange'
+        if body.api_result == 1
+          docks[postBody.api_kdock_id].completeTime = 0
+          @setState
+            docks: docks
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 0
           setTimeout warn.bind(@, __("The development of %s was failed.",
