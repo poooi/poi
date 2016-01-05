@@ -1,4 +1,4 @@
-
+require 'colors'
 fs = require 'fs-extra'
 path = require 'path-extra'
 
@@ -17,10 +17,10 @@ module.exports =
     console.log "[INFO] #{str}"
   warn: (str) ->
     str = stringify str
-    console.warn "[WARN] #{str}" #.yellow   # colors may not compatible with latest Electron, and make all messages "undefined"
+    console.warn "[WARN] #{str}".yellow
   error: (str) ->
     str = stringify str
-    console.error "[ERROR] #{str}" #.bold.red
+    console.error "[ERROR] #{str}".bold.red
   setBounds: (options) ->
     global.mainWindow.setBounds options
   getBounds: ->
