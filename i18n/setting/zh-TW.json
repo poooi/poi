@@ -55,7 +55,7 @@
   "If connection error occurs frequently, delete both of them.": "如果經常連接失敗，刪除以上兩項。",
   "Themes": "主題",
   "Game resoultion": "遊戲解析度",
-  "Use fixed resoultion": "使用固定解析度",
+  "Adaptive resolution based on the window": "分辨率隨窗口大小自動調整",
   "Input address": "輸入地址",
   "Set as homepage": "設為主頁",
   "Zoom": "縮放",

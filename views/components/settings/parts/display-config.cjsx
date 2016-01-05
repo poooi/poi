@@ -179,10 +179,10 @@ ChangeResolutionConfig = React.createClass
     window.removeEventListener 'resize', @handleResize
   render: ->
     <Grid>
-      <Col xs=6>
-        <Input type='checkbox' ref="useFixedResolution" label={__ 'Use fixed resoultion'} checked={@state.useFixedResolution} onChange={@handleSetFixedResolution} />
+      <Col xs=8>
+        <Input type='checkbox' ref="useFixedResolution" label={__ 'Adaptive resolution based on the window'} checked={!@state.useFixedResolution} onChange={@handleSetFixedResolution} />
       </Col>
-      <Col xs=6>
+      <Col xs=4>
         <Input type="select" ref="webviewWidthRatio" value={parseInt(@state.gameWidth / 400) * 400} onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"} readOnly={!@state.useFixedResolution}>
           {
             i = 0
