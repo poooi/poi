@@ -180,10 +180,17 @@ ChangeResolutionConfig = React.createClass
   render: ->
     <Grid>
       <Col xs=8>
-        <Input type='checkbox' ref="useFixedResolution" label={__ 'Adaptive resolution based on the window'} checked={!@state.useFixedResolution} onChange={@handleSetFixedResolution} />
+        <Input type='checkbox' 
+         ref="useFixedResolution" 
+         label={__ 'Adaptive resolution based on the window'} 
+         checked={!@state.useFixedResolution} onChange={@handleSetFixedResolution} />
       </Col>
       <Col xs=4>
-        <Input type="select" ref="webviewWidthRatio" value={parseInt(@state.gameWidth / 400) * 400} onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"} readOnly={!@state.useFixedResolution}>
+        <Input type="select"
+         ref="webviewWidthRatio"
+         value={parseInt(@state.gameWidth / 400) * 400}
+         onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"}
+         disabled={!@state.useFixedResolution} >
           {
             i = 0
             while i < 4
@@ -196,7 +203,11 @@ ChangeResolutionConfig = React.createClass
       </Col>
       <Col id="poi-resolution-config" xs=12 style={display: 'flex', alignItems: 'center'}>
         <div style={flex: 1}>
-          <Input type="number" ref="webviewWidth" value={@state.gameWidth} onChange={@handleSetWebviewWidth.bind @, "webviewWidth"} readOnly={!@state.useFixedResolution} />
+          <Input type="number"
+           ref="webviewWidth"
+           value={@state.gameWidth}
+           onChange={@handleSetWebviewWidth.bind @, "webviewWidth"}
+           readOnly={!@state.useFixedResolution} />
         </div>
         <div style={flex: 'none', width: 15, paddingLeft: 5}>
           x
