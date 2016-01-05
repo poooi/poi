@@ -3,9 +3,6 @@
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
-beforeStatuses = null
-afterStatuses = null
-maxDeltas = null
 nameStatuses = [
   __('Firepower'),
   __('Torpedo'),
@@ -20,6 +17,9 @@ sum = (l) ->
     s += i
   s
 
+# Stores information in onRequest, used in onResponse
+requestRecord = null
+
 # Multiplied by a factor of 5 to do operations in integers
 luckProviders = (id) ->
   switch id
@@ -27,58 +27,60 @@ luckProviders = (id) ->
     when 402 then 8     # Maruyu Kai
     else 0
 
-getStatus = (ship, i) ->
-  # i = 0 for current status, and i = 1 for max status
-  if ship
-    statuses = (s[i] for s in[
-      ship.api_karyoku,
-      ship.api_raisou,
-      ship.api_taiku,
-      ship.api_soukou,
-      ship.api_lucky
-    ])
-getCurrentStatus = (ship) -> getStatus(ship, 0)
-getMaxStatus = (ship) -> getStatus(ship, 1)
-
-maxDelta = (lst) ->
+calcMaxDelta = (lst) ->
   baseSum = sum lst
   # According to the formula provided by wiki
   baseSum + Math.floor((baseSum+1)/5)
 
+# Given sourceShips, the maximum statuses addable regardless of status cap
 calcMaxDeltas = (sourceShips) ->
-  maxFourDeltas = (maxDelta l for l in _.unzip($ships[id].api_powup for id in sourceShips))
+  maxFourDeltas = (calcMaxDelta l for l in _.unzip($ships[id].api_powup for id in sourceShips))
   maxLuck = Math.ceil(sum(luckProviders id for id in sourceShips) / 5 - 0.0001)
   maxDeltas = maxFourDeltas.concat [maxLuck]
   maxDeltas
 
-textStatus = (nameStatus, beforeStatus, afterStatus, maxStatus, maxDelta) ->
-  delta = afterStatus - beforeStatus
-  if maxDelta != 0
-    if afterStatus == maxStatus || delta == maxDelta
-      "#{nameStatus} ++#{delta}"
-    else
-      "#{nameStatus} +#{delta}"
+apiStatuses = ['api_houg', 'api_raig', 'api_tyku', 'api_souk', 'api_luck']
+
+calcRemainingStatuses = (ship) ->
+  (for i in [0..4]
+    ship[apiStatuses[i]][1] - (ship[apiStatuses[i]][0] + ship.api_kyouka[i]))
+
+calcDisplayText = (targetShipBefore, sourceShips) ->
+  # Clone it because it may have been modified on response
+  kyoukaBefore = targetShipBefore.api_kyouka.slice()
+  # Run unnecessary calculation in a promise to minimize the blocking of request
+  new Promise (resolve) ->
+    maxDeltas = calcMaxDeltas sourceShips
+    resolve (targetShipAfter) -> 
+      kyoukaAfter = targetShipAfter.api_kyouka
+      remainingAfter = calcRemainingStatuses targetShipAfter
+      texts = []
+      for i in [0..4]
+        delta = kyoukaAfter[i] - kyoukaBefore[i]
+        maxDelta = maxDeltas[i]
+        remaining = remainingAfter[i]
+        # First term: Something could have been added, but maybe delta == 0
+        # Second term: Something has been added
+        if (remaining != 0 && maxDelta != 0) || delta != 0
+          remainingText = if remaining == 0 then 'max' else "+#{remaining}"
+          upText = if remaining == 0 || delta == maxDelta then '↑↑' else '↑'
+          texts.push "#{nameStatuses[i]} #{upText}#{delta}(#{remainingText})"
+      __('Modernization succeeded! ') + texts.join('　')
 
 onRequest = (e) ->
   if e.detail.path == '/kcsapi/api_req_kaisou/powerup'
     {api_id, api_id_items} = e.detail.body
     # Read the status before modernization
-    target = _ships[api_id]
-    beforeStatuses = getCurrentStatus target
     sourceShips = (_ships[id_item].api_ship_id for id_item in api_id_items.split ',')
-    maxDeltas = calcMaxDeltas sourceShips
+    requestRecord = calcDisplayText _ships[api_id], sourceShips
 
 onResponse = (e) ->
   if e.detail.path == '/kcsapi/api_req_kaisou/powerup'
     # Read the status after modernization
     if e.detail.body.api_powerup_flag
       target = e.detail.body.api_ship
-      afterStatuses = getCurrentStatus target
-      maxStatuses = getMaxStatus target
-      if beforeStatuses && afterStatuses
-        textStatuses = (textStatus(t, s1, s2, ms, md) for [t, s1, s2, ms, md] in \
-              _.zip(nameStatuses, beforeStatuses, afterStatuses, maxStatuses, maxDeltas) when md != 0 && s1 != s2)
-        setTimeout window.success, 100, __('Modernization succeeded! ') + textStatuses.join('　')
+      requestRecord.then (calcText) ->
+        setTimeout window.success, 100, calcText _ships[target.api_id]
     else
       setTimeout window.warn, 100, __ 'Modernization failed.'
 
