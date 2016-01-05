@@ -188,9 +188,10 @@ ChangeResolutionConfig = React.createClass
       <Col xs=4>
         <Input type="select"
          ref="webviewWidthRatio"
-         value={parseInt(@state.gameWidth / 400) * 400}
+         value={@state.gameWidth}
          onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"}
          disabled={!@state.useFixedResolution} >
+          <option key={-1} value={@state.gameWidth} hidden>{Math.round(@state.gameWidth/8)}%</option>
           {
             i = 0
             while i < 4
