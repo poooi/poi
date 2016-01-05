@@ -161,17 +161,14 @@ ChangeResolutionConfig = React.createClass
           gameWidth: window.innerWidth
   handleSetFixedResolution: (e) ->
     current = @state.useFixedResolution
+    @setState
+      useFixedResolution: !current
     if current
       config.set 'poi.webview.width', -1
-      @setState
-        useFixedResolution: false
       @handleResize()
       window.webviewWidth = -1
       window.dispatchEvent new Event('webview.width.change')
     else
-      @state.useFixedResolution = true
-      @setState
-        useFixedResolution: true
       @handleSetWebviewWidth("webviewWidth")
   componentDidMount: ->
     window.addEventListener 'resize', @handleResize
