@@ -188,7 +188,7 @@ ChangeResolutionConfig = React.createClass
          value={@state.gameWidth}
          onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"}
          disabled={!@state.useFixedResolution} >
-          <option key={-1} value={@state.gameWidth} hidden>{Math.round(@state.gameWidth/8)}%</option>
+          <option key={-1} value={@state.gameWidth} hidden>{Math.round(@state.gameWidth/800*100)}%</option>
           {
             i = 0
             while i < 4
@@ -203,7 +203,7 @@ ChangeResolutionConfig = React.createClass
         <div style={flex: 1}>
           <Input type="number"
            ref="webviewWidth"
-           value={@state.gameWidth}
+           value={Math.round(@state.gameWidth)}
            onChange={@handleSetWebviewWidth.bind @, "webviewWidth"}
            readOnly={!@state.useFixedResolution} />
         </div>
@@ -211,7 +211,7 @@ ChangeResolutionConfig = React.createClass
           x
         </div>
         <div style={flex: 1}>
-          <Input type="number" value={@state.gameWidth * 480 / 800} readOnly />
+          <Input type="number" value={Math.round(@state.gameWidth * 480 / 800)} readOnly />
         </div>
         <div style={flex: 'none', width: 15, paddingLeft: 5}>
           px
