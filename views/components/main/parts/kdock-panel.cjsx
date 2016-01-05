@@ -59,7 +59,7 @@ class KDockInfo
           kdock.api_item4
           kdock.api_item5
         ]
-        @completeTime = if kdock.api_state is 2 then kdock.api_complete_time else 0
+        @completeTime = kdock.api_complete_time
 
 getMaterialImage = (idx) ->
   path = join(ROOT, 'assets', 'img', 'material', "0#{idx}.png")
@@ -70,7 +70,7 @@ constructionIcon = join(ROOT, 'assets', 'img', 'operation', 'build.png')
 KdockPanel = React.createClass
   canNotify: false
   getInitialState: ->
-    docks: new Array(5).fill(0).map () -> new KDockInfo
+    docks: [1..5].map () -> new KDockInfo
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     {$ships} = window
