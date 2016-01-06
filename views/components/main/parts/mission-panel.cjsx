@@ -6,14 +6,20 @@ __n = i18n.main.__n.bind(i18n.main)
 
 CountdownTimer = require './countdown-timer'
 CountdownLabel = React.createClass
-  getInitialState: ->
-    style: 'default'
   getLabelStyle: (timeRemaining, notifyBefore) ->
     switch
       when timeRemaining > notifyBefore + 540 then 'primary'
       when timeRemaining > notifyBefore  then 'warning'
       when timeRemaining >= 0  then 'success'
       else 'default'
+  getInitialState: ->
+    timeRemaining = CountdownTimer.getTimeRemaining @props.completeTime
+    style: @getLabelStyle timeRemaining, window.notify.expedition
+  componentWillReceiveProps: (nextProps) ->
+    if nextProps.completeTime isnt @props.completeTime
+      timeRemaining = CountdownTimer.getTimeRemaining nextProps.completeTime
+      @setState
+        style: @getLabelStyle timeRemaining, window.notify.expedition
   tick: (timeRemaining) ->
     notifyBefore = window.notify.expedition
     @props.notify() if timeRemaining is notifyBefore
