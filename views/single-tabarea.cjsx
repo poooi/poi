@@ -179,7 +179,7 @@ ControlledTabArea = React.createClass
                <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
            }
         </NavItem>
-        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown}>
+        <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown} title=''>
         {
           counter = 1
           plugins.map (plugin, index) =>
