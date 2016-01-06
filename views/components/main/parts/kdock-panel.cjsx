@@ -79,8 +79,9 @@ KdockPanel = React.createClass
         kdocks = body
         kdocks = body.api_kdock if path is '/kcsapi/api_req_kousyou/getship'
         docks = kdocks.map (kdock) -> new KDockInfo(kdock)
-        @setState
-          docks: docks
+        if !_.isEqual docks, @state.docks
+          @setState
+            docks: docks
       when '/kcsapi/api_req_kousyou/createship_speedchange'
         console.assert body.api_result == 1, "body.api_result isn't 1: ", body
         docks = @state.docks.slice()    # elements still referring to @state

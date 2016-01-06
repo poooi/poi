@@ -64,8 +64,9 @@ NdockPanel = React.createClass
       when '/kcsapi/api_port/port', '/kcsapi/api_get_member/ndock'
         ndocks = if path is '/kcsapi/api_port/port' then body.api_ndock else body
         docks = ndocks.map (ndock) -> new NDockInfo(ndock)
-        @setState
-          docks: docks
+        if !_.isEqual docks, @state.docks
+          @setState
+            docks: docks
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
