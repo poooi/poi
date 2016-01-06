@@ -250,8 +250,7 @@ window.getCondStyle = (cond) ->
   s += if isDarkTheme then ' dark' else ' light'
 
 
-# Global data resolver
-proxy.addListener 'game.on.request', (method, path, body) ->
+handleProxyGameOnRequest = (method, path, body) ->
   # Important! Clone a copy of proxy objects!
   body = JSON.parse body
   event = new CustomEvent 'game.request',
@@ -262,6 +261,9 @@ proxy.addListener 'game.on.request', (method, path, body) ->
       path: path
       body: body
   window.dispatchEvent event
+
+# Global data resolver
+proxy.addListener 'game.on.request', handleProxyGameOnRequest
 
 start2Version = 0
 initStart2Value = ->
@@ -497,27 +499,48 @@ resolveResponses = ->
     catch err
       console.error err
   locked = false
-proxy.addListener 'game.on.response', (method, path, body, postBody) ->
+
+handleProxyGameOnResponse = (method, path, body, postBody) ->
   # Important! Clone a copy of proxy objects!
   responses.push [method, path, JSON.parse(body), JSON.parse(postBody)]
   resolveResponses() if !locked
-proxy.addListener 'game.start', ->
+proxy.addListener 'game.on.response', handleProxyGameOnResponse
+
+handleProxyGameStart = ->
   window.dispatchEvent new Event 'game.start'
-proxy.addListener 'game.payitem', ->
+proxy.addListener 'game.start', handleProxyGameStart
+
+handleProxyGamePayitem = ->
   window.dispatchEvent new Event 'game.payitem'
-proxy.addListener 'network.error.retry', (counter) ->
+proxy.addListener 'game.payitem', handleProxyGamePayitem
+
+handleProxyNetworkErrorRetry = (counter) ->
   event = new CustomEvent 'network.error.retry',
     bubbles: true
     cancelable: true
     detail:
       counter: counter
   window.dispatchEvent event
-proxy.addListener 'network.invalid.code', (code) ->
+proxy.addListener 'network.error.retry', handleProxyNetworkErrorRetry
+
+handleProxyNetworkInvalidCode = (code) ->
   event = new CustomEvent 'network.invalid.code',
     bubbles: true
     cancelable: true
     detail:
       code: code
   window.dispatchEvent event
-proxy.addListener 'network.error', ->
+proxy.addListener 'network.invalid.code', handleProxyNetworkInvalidCode
+
+handleProxyNetworkError = ->
   window.dispatchEvent new Event 'network.error'
+proxy.addListener 'network.error', handleProxyNetworkError
+
+window.addEventListener 'unload', ->
+  proxy.removeListener 'game.on.request', handleProxyGameOnRequest
+  proxy.removeListener 'game.on.response', handleProxyGameOnResponse
+  proxy.removeListener 'game.start', handleProxyGameStart
+  proxy.removeListener 'game.payitem', handleProxyGamePayitem
+  proxy.removeListener 'network.error.retry', handleProxyNetworkErrorRetry
+  proxy.removeListener 'network.invalid.code', handleProxyNetworkInvalidCode
+  proxy.removeListener 'network.error', handleProxyNetworkError
