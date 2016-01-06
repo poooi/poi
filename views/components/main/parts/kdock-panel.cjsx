@@ -1,6 +1,6 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {resolveTime, success, warn} = window
-{Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
+{OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
@@ -13,16 +13,15 @@ CountdownLabel = React.createClass
   getInitialState: ->
     style: 'default'
   tick: (timeRemaining) ->
-    style = 'default'
-    if timeRemaining > 600
-      style = if @props.isLSC then 'danger' else 'primary'
-    else if timeRemaining > 0
-      style = 'warning'
-    else if timeRemaining is 0
-      style = 'success'
+    style = switch
+      when timeRemaining > 600 and @props.isLSC then 'danger'
+      when timeRemaining > 600 then 'primary'
+      when timeRemaining >  0  then 'warning'
+      when timeRemaining is 0  then 'success'
+      else 'default'
     @setState {style: style} if style isnt @state.style
   render: ->
-    <Label bsStyle={@state.style}>
+    <Label className="kdock-timer" bsStyle={@state.style}>
     {
       if @props.completeTime >= 0
         <CountdownTimer countdownId={"kdock-#{@props.dockIndex}"}
@@ -46,10 +45,8 @@ class KDockInfo
     @completeTime = -1
   update: (kdock) ->
     switch kdock.api_state
-      when -1
-        @setLocked()
-      when 0
-        @empty()
+      when -1 then @setLocked()
+      when 0  then @empty()
       when 2, 3
         @name = window.$ships[kdock.api_created_ship_id].api_name
         @material =  [
@@ -61,19 +58,12 @@ class KDockInfo
         ]
         @completeTime = kdock.api_complete_time
 
-getMaterialImage = (idx) ->
-  path = join(ROOT, 'assets', 'img', 'material', "0#{idx}.png")
-  <img src={path} className="material-icon" />
-
-constructionIcon = join(ROOT, 'assets', 'img', 'operation', 'build.png')
-
 KdockPanel = React.createClass
   canNotify: false
   getInitialState: ->
     docks: [1..5].map () -> new KDockInfo
   handleResponse: (e) ->
-    {method, path, body, postBody} = e.detail
-    {$ships} = window
+    {path, body, postBody} = e.detail
     {docks} = @state
     switch path
       when '/kcsapi/api_start2'
@@ -106,15 +96,18 @@ KdockPanel = React.createClass
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+  getMaterialImage: (idx) ->
+    path = join(ROOT, 'assets', 'img', 'material', "0#{idx}.png")
+    <img src={path} className="material-icon" />
+  constructionIcon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
   notify: ->
     return if not @canNotify
-    completedShips = []
-    for i in [1..4]
-      if 0 <= @state.docks[i].completeTime <= new Date().getTime()
-        completedShips.push i18n.resources.__ @state.docks[i].name
-    notify "#{completedShips.join ', '} #{__ 'built'}",
-      type: 'construction'
-      icon: constructionIcon
+    completedShips = @state.docks.slice(1).filter(
+      (dock) -> 0 <= dock.completeTime < new Date().getTime() + 1000).map(
+      (dock) -> i18n.resources.__ dock.name).join(', ')
+    notify "#{completedShips} #{__ 'built'}",
+      type: __ "Construction"
+      icon: @constructionIcon
   render: ->
     <div>
     {
@@ -124,8 +117,7 @@ KdockPanel = React.createClass
         isLSC = isInUse and @state.docks[i].material[0] >= 1000
         content = <div className="panel-item kdock-item">
                     <span className="kdock-name">{dockName}</span>
-                    <CountdownLabel key={i}
-                                    dockIndex={i}
+                    <CountdownLabel dockIndex={i}
                                     completeTime={@state.docks[i].completeTime}
                                     isLSC={isLSC}
                                     notify={@notify} />
@@ -138,11 +130,11 @@ KdockPanel = React.createClass
                 style = if isLSC then {color: '#D9534F', fontWeight: 'bold'} else null
                 <span style={style}>{dockName}<br /></span>
               }
-              {getMaterialImage 1} {@state.docks[i].material[0]}
-              {getMaterialImage 2} {@state.docks[i].material[1]}
-              {getMaterialImage 3} {@state.docks[i].material[2]}
-              {getMaterialImage 4} {@state.docks[i].material[3]}
-              {getMaterialImage 7} {@state.docks[i].material[4]}
+              {@getMaterialImage 1} {@state.docks[i].material[0]}
+              {@getMaterialImage 2} {@state.docks[i].material[1]}
+              {@getMaterialImage 3} {@state.docks[i].material[2]}
+              {@getMaterialImage 4} {@state.docks[i].material[3]}
+              {@getMaterialImage 7} {@state.docks[i].material[4]}
             </Tooltip>
           }>
             {content}
