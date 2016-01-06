@@ -538,9 +538,8 @@ proxyListener =
   'network.invalid.code': handleProxyNetworkInvalidCode
   'network.error': handleProxyNetworkError
 
-window.addEventListener 'load', ->
-  for eventName, handler of proxyListener
-    proxy.addListener eventName, handler
+for eventName, handler of proxyListener
+  proxy.addListener eventName, handler
 
 window.addEventListener 'unload', ->
   for eventName, handler of proxyListener
