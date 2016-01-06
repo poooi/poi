@@ -1,151 +1,107 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
-{resolveTime} = window
-{notify} = window
+{Panel, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {join} = require 'path-extra'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 
+CountdownTimer = require './countdown-timer'
+CountdownLabel = React.createClass
+  getInitialState: ->
+    style: 'default'
+  getLabelStyle: (timeRemaining, notifyBefore) ->
+    switch
+      when timeRemaining > notifyBefore + 540 then 'primary'
+      when timeRemaining > notifyBefore  then 'warning'
+      when timeRemaining >= 0  then 'success'
+      else 'default'
+  tick: (timeRemaining) ->
+    notifyBefore = window.notify.expedition
+    @props.notify() if timeRemaining is notifyBefore
+
+    style = @getLabelStyle timeRemaining, notifyBefore
+    @setState {style: style} if style isnt @state.style
+  render: ->
+    label = <Label className="mission-timer" bsStyle={@state.style}>
+            {
+              if @props.completeTime > 0
+                <CountdownTimer countdownId={"mission-#{@props.dockIndex}"}
+                                completeTime={@props.completeTime}
+                                tickCallback={@tick} />
+            }
+            </Label>
+    if @state.style in ['primary', 'warning']
+      <OverlayTrigger placement='left' overlay={
+        <Tooltip id="mission-return-by-#{@props.dockIndex}">
+          <strong>{__ "Return by : "}</strong>{timeToString @props.completeTime}
+        </Tooltip>
+      }>
+        {label}
+      </OverlayTrigger>
+    else
+      label
+
+
+class MissionInfo
+  constructor: (deckName) ->
+    @deckName = if deckName? then deckName else '???'
+    @setInPort()
+  setInPort: ->
+    @missionId = 0
+    @completeTime = -1
+  setInMission: (missionId, completeTime) ->
+    @missionId = missionId
+    @completeTime = completeTime
+  getMissionName: ->
+    if @missionId > 0
+      i18n.resources.__ window.$missions[@missionId].api_name
+    else
+      __ 'Ready'
+
 MissionPanel = React.createClass
   getInitialState: ->
-    decks: [
-        name: __ "No.%s fleet", '0'
-        completeTime: -1
-        countdown: -1
-        mission: null
-      ,
-        name: __ "No.%s fleet", '1'
-        completeTime: -1
-        countdown: -1
-        mission: null
-      ,
-        name: __ "No.%s fleet", '2'
-        completeTime: -1
-        countdown: -1
-        mission: null
-      ,
-        name: __ "No.%s fleet", '3'
-        completeTime: -1
-        countdown: -1
-        mission: null
-      ,
-        name: __ "No.%s fleet", '4'
-        completeTime: -1
-        countdown: -1
-        mission: null
-    ]
-    notified: []
-    show: true
-  shouldComponentUpdate: (nextProps, nextState) ->
-    nextState.show
-  handleVisibleResponse: (e) ->
-    {visible} = e.detail
-    @setState
-      show: visible
+    missions: [new MissionInfo, new MissionInfo, new MissionInfo]
   handleResponse: (e) ->
-    {$missions} = window
-    {method, path, body, postBody} = e.detail
+    {path, body, postBody} = e.detail
     switch path
       when '/kcsapi/api_port/port'
-        {decks, notified} = @state
-        for deck in body.api_deck_port[1..3]
-          id = deck.api_id
-          countdown = -1
+        missions = body.api_deck_port.slice(1).map (deck) ->
+          mi = new MissionInfo deck.api_name
           switch deck.api_mission[0]
-            # In port
-            when 0
-              countdown = -1
-              completeTime = -1
-              notified[id] = false
-            # In mission
-            when 1
-              completeTime = deck.api_mission[2]
-              countdown = Math.floor((deck.api_mission[2] - new Date()) / 1000)
-            # Just come back
-            when 2
-              completeTime = 0
-              countdown = 0
-          mission_id = deck.api_mission[1]
-          if mission_id isnt 0
-            mission = $missions[mission_id].api_name
-          else
-            mission = null
-          decks[id] =
-            name: deck.api_name
-            completeTime: completeTime
-            countdown: countdown
-            mission: mission
+            when 0 then mi.setInPort()
+            when 1, 2
+              mi.setInMission deck.api_mission[1], deck.api_mission[2]
+          mi
+        if !_.isEqual missions, @state.missions
+          @setState
+            missions: missions
+      when '/kcsapi/api_req_mission/start', '/kcsapi/api_req_mission/return_instruction'
+        missions = @state.missions.slice()
+        idx = postBody.api_deck_id - 2
+        missions[idx] = new MissionInfo missions[idx].deckName
+        if path is '/kcsapi/api_req_mission/start'
+          missions[idx].setInMission postBody.api_mission_id, body.api_complatetime
+        else
+          missions[idx].setInMission body.api_mission[1], body.api_mission[2]
         @setState
-          decks: decks
-          notified: notified
-      when '/kcsapi/api_req_mission/start'
-        id = postBody.api_deck_id
-        {decks, notified} = @state
-        decks[id].completeTime = body.api_complatetime
-        decks[id].countdown = Math.floor((body.api_complatetime - new Date()) / 1000)
-        mission_id = postBody.api_mission_id
-        decks[id].mission = $missions[mission_id].api_name
-        notified[id] = false
-        @setState
-          decks: decks
-          notified: notified
-      when '/kcsapi/api_req_mission/return_instruction'
-        id = postBody.api_deck_id
-        {decks, notified} = @state
-        decks[id].completeTime = body.api_mission[2]
-        decks[id].countdown = Math.floor((body.api_mission[2] - new Date()) / 1000)
-        @setState
-          decks: decks
-          notified: notified
-  updateCountdown: ->
-    {decks, notified} = @state
-    updated = false
-    for i in [1..4]
-      if decks[i].countdown > 0
-        decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
-        expeditionValue = window.notify.expedition
-        if decks[i].countdown <= expeditionValue && !notified[i]
-          notify "#{decks[i].name} #{__ 'mission complete'}",
-            type: 'expedition'
-            title: __ 'Expedition'
-            icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
-          notified[i] = true
-        updated = true
-    if updated
-      @setState
-        decks: decks
-        notified: notified
+          missions: missions
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
-    window.addEventListener 'view.main.visible', @handleVisibleResponse
-    @intervalId = setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
-    window.removeEventListener 'view.main.visible', @handleVisibleResponse
-    clearInterval @intervalId
+  notify: (deckName) ->
+    notify "#{deckName} #{__ 'mission complete'}",
+      type: 'expedition'
+      title: __ 'Expedition'
+      icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
   render: ->
     <Panel bsStyle="default">
     {
-      for i in [2..4]
+      for mission, i in @state.missions
         <div className="panel-item mission-item" key={i} >
-          <span className="mission-name">
-          {
-            if @state.decks[i].mission?
-              "#{i18n.resources.__ @state.decks[i].mission}"
-            else
-              __ 'Ready'
-          }
-          </span>
-        {
-          if @state.decks[i].countdown > window.notify.expedition
-            <OverlayTrigger placement='left' overlay={<Tooltip id="mission-return-by-#{i}"><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
-              <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
-            </OverlayTrigger>
-          else if @state.decks[i].countdown > -1
-            <Label className="mission-timer" bsStyle="success" >{resolveTime @state.decks[i].countdown}</Label>
-          else
-            <Label className="mission-timer" bsStyle="default"></Label>
-        }
+          <span className="mission-name">{mission.getMissionName()}</span>
+          <CountdownLabel dockIndex={i}
+                          completeTime={mission.completeTime}
+                          notify={@notify.bind @, mission.deckName}/>
         </div>
     }
     </Panel>
