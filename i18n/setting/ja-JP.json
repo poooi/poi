@@ -55,7 +55,7 @@
   "If connection error occurs frequently, delete both of them.": "通信エラーが頻発するようならクッキーとキャッシュを削除して下さい。",
   "Themes": "テーマ",
   "Game resoultion": "解像度",
-  "Use fixed resoultion": "解像度を固定します",
+  "Adaptive resolution based on the window": "ウィンドウに基づく適応解像度",
   "Input address": "アドレスを入力します",
   "Set as homepage": "ホームページを設定します",
   "Zoom": "ズーム",
