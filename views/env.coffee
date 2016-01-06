@@ -251,8 +251,9 @@ window.getCondStyle = (cond) ->
 
 
 # Global data resolver
-proxy.addListener 'game.on.request', (method, path, body) ->
-  # Important! Clone a copy of proxy objects!
+
+handleProxyGameOnRequest = (method, path, body) ->
+  # Parse the json object
   body = JSON.parse body
   event = new CustomEvent 'game.request',
     bubbles: true
@@ -497,27 +498,50 @@ resolveResponses = ->
     catch err
       console.error err
   locked = false
-proxy.addListener 'game.on.response', (method, path, body, postBody) ->
-  # Important! Clone a copy of proxy objects!
+
+handleProxyGameOnResponse = (method, path, body, postBody) ->
+  # Parse the json object
   responses.push [method, path, JSON.parse(body), JSON.parse(postBody)]
   resolveResponses() if !locked
-proxy.addListener 'game.start', ->
+
+handleProxyGameStart = ->
   window.dispatchEvent new Event 'game.start'
-proxy.addListener 'game.payitem', ->
+
+handleProxyGamePayitem = ->
   window.dispatchEvent new Event 'game.payitem'
-proxy.addListener 'network.error.retry', (counter) ->
+
+handleProxyNetworkErrorRetry = (counter) ->
   event = new CustomEvent 'network.error.retry',
     bubbles: true
     cancelable: true
     detail:
       counter: counter
   window.dispatchEvent event
-proxy.addListener 'network.invalid.code', (code) ->
+
+handleProxyNetworkInvalidCode = (code) ->
   event = new CustomEvent 'network.invalid.code',
     bubbles: true
     cancelable: true
     detail:
       code: code
   window.dispatchEvent event
-proxy.addListener 'network.error', ->
+
+handleProxyNetworkError = ->
   window.dispatchEvent new Event 'network.error'
+
+proxyListener =
+  'game.on.request': handleProxyGameOnRequest
+  'game.on.response': handleProxyGameOnResponse
+  'game.start': handleProxyGameStart
+  'game.payitem': handleProxyGamePayitem
+  'network.error.retry': handleProxyNetworkErrorRetry
+  'network.invalid.code': handleProxyNetworkInvalidCode
+  'network.error': handleProxyNetworkError
+
+window.addEventListener 'load', ->
+  for eventName, handler of proxyListener
+    proxy.addListener eventName, handler
+
+window.addEventListener 'unload', ->
+  for eventName, handler of proxyListener
+    proxy.removeListener eventName, handler
