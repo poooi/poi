@@ -39,33 +39,31 @@ CountdownLabel = React.createClass
 
 
 class NDockInfo
-  constructor: ->
-    @empty()
+  constructor: (ndockApi) ->
+    if ndockApi? then @update(ndockApi) else @empty()
   empty: ->
     @name = __ 'Empty'
     @completeTime = -1
   setLocked: ->
     @name = __ 'Locked'
     @completeTime = -1
-  update: (ndock) ->
-    switch ndock.api_state
+  update: (ndockApi) ->
+    switch ndockApi.api_state
       when -1 then @setLocked()
       when 0  then @empty()
       when 1
-        @name = window._ships[ndock.api_ship_id].api_name
-        @completeTime = ndock.api_complete_time
+        @name = window._ships[ndockApi.api_ship_id].api_name
+        @completeTime = ndockApi.api_complete_time
 
 NdockPanel = React.createClass
   getInitialState: ->
-    docks: [1..5].map () -> new NDockInfo
+    docks: [1..4].map () -> new NDockInfo
   handleResponse: (e) ->
     {path, body} = e.detail
-    {docks} = @state
     switch path
       when '/kcsapi/api_port/port', '/kcsapi/api_get_member/ndock'
         ndocks = if path is '/kcsapi/api_port/port' then body.api_ndock else body
-        for ndock in ndocks
-          docks[ndock.api_id].update ndock
+        docks = ndocks.map (ndock) -> new NDockInfo(ndock)
         @setState
           docks: docks
   componentDidMount: ->
@@ -81,14 +79,14 @@ NdockPanel = React.createClass
   render: ->
     <div>
     {
-      for i in [1..4]
+      for dock, i in @state.docks
         <div key={i} className="panel-item ndock-item">
           <span className="ndock-name">
-            {i18n.resources.__ @state.docks[i].name}
+            {i18n.resources.__ dock.name}
           </span>
           <CountdownLabel dockIndex={i}
-                          completeTime={@state.docks[i].completeTime}
-                          notify={@notify.bind @, @state.docks[i].name}/>
+                          completeTime={dock.completeTime}
+                          notify={@notify.bind @, dock.name}/>
         </div>
     }
     </div>

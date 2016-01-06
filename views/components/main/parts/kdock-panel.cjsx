@@ -32,8 +32,8 @@ CountdownLabel = React.createClass
 
 
 class KDockInfo
-  constructor: ->
-    @empty()
+  constructor: (kdockApi) ->
+    if kdockApi? then @update(kdockApi) else @empty()
   empty: ->
     @name = __ 'Empty'
     @material = []
@@ -42,28 +42,33 @@ class KDockInfo
     @name = __ 'Locked'
     @material = []
     @completeTime = -1
-  update: (kdock) ->
-    switch kdock.api_state
+  update: (kdockApi) ->
+    switch kdockApi.api_state
       when -1 then @setLocked()
       when 0  then @empty()
       when 2, 3
-        @name = window.$ships[kdock.api_created_ship_id].api_name
+        @name = window.$ships[kdockApi.api_created_ship_id].api_name
         @material =  [
-          kdock.api_item1
-          kdock.api_item2
-          kdock.api_item3
-          kdock.api_item4
-          kdock.api_item5
+          kdockApi.api_item1
+          kdockApi.api_item2
+          kdockApi.api_item3
+          kdockApi.api_item4
+          kdockApi.api_item5
         ]
-        @completeTime = kdock.api_complete_time
+        @completeTime = kdockApi.api_complete_time
+  clone: ->
+    kdi = new KDockInfo
+    kdi.name = @name
+    kdi.material = @material.slice()
+    kdi.completeTime = @completeTime
+    kdi
 
 KdockPanel = React.createClass
   canNotify: false
   getInitialState: ->
-    docks: [1..5].map () -> new KDockInfo
+    docks: [1..4].map () -> new KDockInfo
   handleResponse: (e) ->
     {path, body, postBody} = e.detail
-    {docks} = @state
     switch path
       when '/kcsapi/api_start2'
         # Do not notify before entering the game
@@ -73,15 +78,17 @@ KdockPanel = React.createClass
       when '/kcsapi/api_get_member/kdock', '/kcsapi/api_req_kousyou/getship'
         kdocks = body
         kdocks = body.api_kdock if path is '/kcsapi/api_req_kousyou/getship'
-        for kdock in kdocks
-          docks[kdock.api_id].update kdock
+        docks = kdocks.map (kdock) -> new KDockInfo(kdock)
         @setState
           docks: docks
       when '/kcsapi/api_req_kousyou/createship_speedchange'
-        if body.api_result == 1
-          docks[postBody.api_kdock_id].completeTime = 0
-          @setState
-            docks: docks
+        console.assert body.api_result == 1, "body.api_result isn't 1: ", body
+        docks = @state.docks.slice()    # elements still referring to @state
+        idx = postBody.api_kdock_id - 1
+        docks[idx] = docks[idx].clone() # make a copy of the one to be modified
+        docks[idx].completeTime = 0
+        @setState
+          docks: docks
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 0
           setTimeout warn.bind(@, __("The development of %s was failed.",
@@ -101,7 +108,8 @@ KdockPanel = React.createClass
   constructionIcon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
   notify: ->
     return if not @canNotify
-    completedShips = @state.docks.slice(1).filter(
+    # Notify all completed ships
+    completedShips = @state.docks.filter(
       (dock) -> 0 <= dock.completeTime < new Date().getTime() + 1000).map(
       (dock) -> i18n.resources.__ dock.name).join(', ')
     notify "#{completedShips} #{__ 'built'}",
@@ -110,14 +118,14 @@ KdockPanel = React.createClass
   render: ->
     <div>
     {
-      for i in [1..4]
-        dockName = i18n.resources.__ @state.docks[i].name
-        isInUse = @state.docks[i].completeTime >= 0
-        isLSC = isInUse and @state.docks[i].material[0] >= 1000
+      for dock, i in @state.docks
+        dockName = i18n.resources.__ dock.name
+        isInUse = dock.completeTime >= 0
+        isLSC = isInUse and dock.material[0] >= 1000
         content = <div className="panel-item kdock-item">
                     <span className="kdock-name">{dockName}</span>
                     <CountdownLabel dockIndex={i}
-                                    completeTime={@state.docks[i].completeTime}
+                                    completeTime={dock.completeTime}
                                     isLSC={isLSC}
                                     notify={@notify} />
                   </div>
@@ -129,11 +137,11 @@ KdockPanel = React.createClass
                 style = if isLSC then {color: '#D9534F', fontWeight: 'bold'} else null
                 <span style={style}>{dockName}<br /></span>
               }
-              {@getMaterialImage 1} {@state.docks[i].material[0]}
-              {@getMaterialImage 2} {@state.docks[i].material[1]}
-              {@getMaterialImage 3} {@state.docks[i].material[2]}
-              {@getMaterialImage 4} {@state.docks[i].material[3]}
-              {@getMaterialImage 7} {@state.docks[i].material[4]}
+              {@getMaterialImage 1} {dock.material[0]}
+              {@getMaterialImage 2} {dock.material[1]}
+              {@getMaterialImage 3} {dock.material[2]}
+              {@getMaterialImage 4} {dock.material[3]}
+              {@getMaterialImage 7} {dock.material[4]}
             </Tooltip>
           }>
             {content}
