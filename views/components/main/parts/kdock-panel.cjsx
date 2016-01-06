@@ -1,5 +1,4 @@
-{ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{resolveTime, success, warn} = window
+{ROOT, layout, _, $, $$, React, ReactBootstrap, success, warn} = window
 {OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
 __ = i18n.main.__.bind(i18n.main)
