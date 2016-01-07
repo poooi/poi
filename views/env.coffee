@@ -126,6 +126,7 @@ window.showModal = ->
 
 # Node modules
 window.config = remote.require './lib/config'
+window.ipc = remote.require './lib/ipc'
 window.proxy = remote.require './lib/proxy'
 window.CONST = Object.remoteClone remote.require './lib/constant'
 
