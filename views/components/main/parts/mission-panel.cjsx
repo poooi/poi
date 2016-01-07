@@ -107,7 +107,7 @@ MissionPanel = React.createClass
           <span className="mission-name">{mission.getMissionName()}</span>
           <CountdownLabel dockIndex={i}
                           completeTime={mission.completeTime}
-                          notify={@notify.bind @, mission.deckName}/>
+                          notify={_.once(@notify.bind @, mission.deckName)}/>
         </div>
     }
     </Panel>

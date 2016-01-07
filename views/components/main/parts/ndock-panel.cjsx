@@ -91,7 +91,7 @@ NdockPanel = React.createClass
           <span className="ndock-name">{i18n.resources.__ dock.name}</span>
           <CountdownLabel dockIndex={i}
                           completeTime={dock.completeTime}
-                          notify={@notify.bind @, dock.name}/>
+                          notify={_.once(@notify.bind @, dock.name)}/>
         </div>
     }
     </div>

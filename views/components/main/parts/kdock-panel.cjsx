@@ -134,7 +134,7 @@ KdockPanel = React.createClass
                     <CountdownLabel dockIndex={i}
                                     completeTime={dock.completeTime}
                                     isLSC={isLSC}
-                                    notify={@notify} />
+                                    notify={_.once @notify} />
                   </div>
 
         if isInUse
