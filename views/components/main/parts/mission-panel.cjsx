@@ -74,7 +74,7 @@ MissionPanel = React.createClass
           mi = new MissionInfo deck.api_name
           switch deck.api_mission[0]
             when 0 then mi.setInPort()
-            when 1, 2
+            when 1, 2, 3  # 1: In mission  2: Just returned  3: Returning
               mi.setInMission deck.api_mission[1], deck.api_mission[2]
           mi
         if !_.isEqual missions, @state.missions
