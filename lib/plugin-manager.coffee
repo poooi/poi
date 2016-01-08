@@ -53,8 +53,10 @@ class PluginManager
     @plugins_ = null
     # @private {?Array<Object>} mirror information
     @mirrors_ = null
-    # @private {?Object} selected mirror
-    @mirror_ = null
+    # @private {?Object} npm config
+    @config_ =
+      mirror: null
+      proxy: null
 
     # @const
     @VALID = 0
@@ -89,23 +91,28 @@ class PluginManager
   # @retrun {Promise<Array<Object>>}
   readMirrors: ->
     fs.readJsonAsync(@mirrorPath).then (@mirrors_) =>
-      @selectMirror(config.get 'packageManager.mirror', 0).then =>
+      mirrorConf = config.get 'packageManager.mirrorName', if navigator.language is 'zh-CN' then  "taobao" else "npm"
+      proxyConf = config.get "packageManager.proxy", false
+      @selectConfig(mirrorConf, proxyConf).then =>
         @mirrors_
 
-  # select a mirror based on index
-  # @param {number} index
-  # @return {Promise<Object>} return the selected mirror
-  selectMirror: (index) ->
+  # select a mirror and set proxy config
+  # @param {object, object} mirror name, is proxy enabled
+  # @return {Promise<Object>} return the npm config
+  selectConfig: (name, enable) ->
     @getMirrors().then =>
-      @mirror_ = @mirrors_[index]
-      config.set "packageManager.mirror", index
+      @config_.mirror = @mirrors_[name]
+      config.set "packageManager.mirrorName", name
+      @config_.proxy = enable
+      config.set "packageManager.proxy", enable
       new Promise (resolve) =>
-        npm.load {
+        npmConfig =
           prefix: PLUGIN_PATH
-          registry: @mirror_.server
-          http_proxy: 'http://127.0.0.1:12450'
-        }, =>
-          resolve @mirror_
+          registry: @config_.mirror.server
+        if @config_.proxy
+          npmConfig.http_proxy = 'http://127.0.0.1:12450'
+        npm.load npmConfig, =>
+          resolve @config_
 
   # set the update relative information to plugins
   # @return {Promise<>}
@@ -144,9 +151,9 @@ class PluginManager
 
   # get the selected mirror
   # @return {Promise<Object>}
-  getMirror: ->
+  getConf: ->
     @getMirrors().then =>
-      return Promise.resolve @mirror_
+      return Promise.resolve @config_
 
   # get installed plugins
   # @return {Promise<Array<Plugin>>}
@@ -374,7 +381,7 @@ class PluginManager
           icon: path.join ROOT, 'assets', 'img', 'material', '7_big.png'
           audio: "file://#{ROOT}/assets/audio/fail.mp3"
 
-pluginManager = new PluginManager path.join(ROOT, 'plugin.json'), PLUGIN_PATH,
-  path.join(ROOT, 'mirror.json')
+pluginManager = new PluginManager path.join(ROOT, 'assets', 'data', 'plugin.json'), PLUGIN_PATH,
+  path.join(ROOT, 'assets', 'data', 'mirror.json')
 
 module.exports = pluginManager
