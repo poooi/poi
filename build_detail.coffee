@@ -24,7 +24,7 @@ child_process = require 'child_process'
 build_dir_name = 'build'
 download_dir_name = 'download'
 release_dir_name = 'release'
-config = (->  
+config = (->
   # global.* variables are assigned to adapt for requiring 'config'
   global.ROOT = __dirname
   system_appdata_path = process.env.APPDATA || (
@@ -432,7 +432,7 @@ module.exports.installPluginsAsync = async (poi_version) ->
 
   d = new Date()
   str_date = "#{d.getUTCFullYear()}-#{d.getUTCMonth()+1}-#{d.getUTCDate()}"
-  archive_path = path.join release_dir, "poiplugins_#{str_date}.7z"
+  archive_path = path.join release_dir, "poi-plugins_#{str_date}.7z"
   yield compress7zAsync gzip_root, archive_path
 
   log "Successfully built tarballs at #{archive_path}"
@@ -447,14 +447,14 @@ module.exports.buildLocalAsync = ->
   download_theme = downloadThemesAsync theme_root
   install_flash = installFlashAsync "#{os.platform()}-#{os.arch()}", download_dir,
     flash_dir
-  install_npm_bower = (async -> 
-    yield npmInstallAsync __dirname, ['--production'] 
+  install_npm_bower = (async ->
+    yield npmInstallAsync __dirname, ['--production']
     yield bowerInstallAsync __dirname)()
 
   Promise.join download_theme, install_flash, install_npm_bower
 
 module.exports.buildAppAsync = (poi_version) ->
-  module.exports.buildAsync (poi_version) 
+  module.exports.buildAsync (poi_version)
 
 # Package release archives of poi, on multiple platforms
 module.exports.buildAsync = async (poi_version, electron_version, platform_list) ->
