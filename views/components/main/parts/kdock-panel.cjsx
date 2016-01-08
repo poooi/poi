@@ -120,7 +120,8 @@ KdockPanel = React.createClass
       (dock) -> 0 <= dock.completeTime < new Date().getTime() + 1000).map(
       (dock) -> i18n.resources.__ dock.name).join(', ')
     notify "#{completedShips} #{__ 'built'}",
-      type: __ "Construction"
+      type: 'construction'
+      title: __ "Construction"
       icon: @constructionIcon
   render: ->
     <div>
