@@ -62,9 +62,9 @@ calcDisplayText = (targetShipBefore, sourceShips) ->
         # First term: Something could have been added, but maybe delta == 0
         # Second term: Something has been added
         if (remaining != 0 && maxDelta != 0) || delta != 0
-          remainingText = if remaining == 0 then 'max' else "+#{remaining}"
-          upText = if remaining == 0 || delta == maxDelta then '↑↑' else '↑'
-          texts.push "#{nameStatuses[i]} #{upText}#{delta}(#{remainingText})"
+          remainingText = if remaining == 0 then 'max' else "#{remaining}"
+          upText = if remaining == 0 || delta == maxDelta then '++' else '+'
+          texts.push "#{nameStatuses[i]} #{upText}#{delta}/#{remainingText}"
       __('Modernization succeeded! ') + texts.join('　')
 
 onRequest = (e) ->
