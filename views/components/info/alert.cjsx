@@ -1,4 +1,4 @@
-{React} = window
+{React, ReactDOM} = window
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
@@ -12,20 +12,32 @@ PoiAlert = React.createClass
 
   updateAlert: (e) ->
     # Must set innerHTML before getting offsetWidth
-    document.getElementById('alert-area').innerHTML = @message
-    if e
-      containerWidth = e.detail.alertWidth
-    else
-      containerWidth = document.getElementById('alert-container').offsetWidth
-    if containerWidth < document.getElementById('alert-area').offsetWidth
-      # Twice messages each followed by 5 full-width spaces
-      displayMessage = "#{@message}　　　　　#{@message}　　　　　"
-      overflow = true
-    else
+    if React.isValidElement @message
       displayMessage = @message
-      overflow = false
-    # Must set innerHTML again before getting offsetWidth
-    document.getElementById('alert-area').innerHTML = displayMessage
+      ReactDOM.render @message, document.getElementById('alert-area')
+      if e
+        containerWidth = e.detail.alertWidth
+      else
+        containerWidth = document.getElementById('alert-container').offsetWidth
+      if containerWidth < document.getElementById('alert-area').offsetWidth
+        overflow = true
+      else
+        overflow = false
+    else
+      document.getElementById('alert-area').innerHTML = @message
+      if e
+        containerWidth = e.detail.alertWidth
+      else
+        containerWidth = document.getElementById('alert-container').offsetWidth
+      if containerWidth < document.getElementById('alert-area').offsetWidth
+        # Twice messages each followed by 5 full-width spaces
+        displayMessage = "#{@message}　　　　　#{@message}　　　　　"
+        overflow = true
+      else
+        displayMessage = @message
+        overflow = false
+      # Must set innerHTML again before getting offsetWidth
+      document.getElementById('alert-area').innerHTML = displayMessage
     @setState
       message: displayMessage
       overflowAnim: if overflow then 'overflow-anim' else ''
@@ -75,6 +87,6 @@ newAlert = (details) ->
     detail: details
   window.dispatchEvent event
 
-module.exports = 
+module.exports =
   PoiAlert: PoiAlert,
   newAlert: newAlert

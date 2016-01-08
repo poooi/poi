@@ -51,21 +51,26 @@ calcDisplayText = (targetShipBefore, sourceShips) ->
   # Run unnecessary calculation in a promise to minimize the blocking of request
   new Promise (resolve) ->
     maxDeltas = calcMaxDeltas sourceShips
-    resolve (targetShipAfter) -> 
+    resolve (targetShipAfter) ->
       kyoukaAfter = targetShipAfter.api_kyouka
       remainingAfter = calcRemainingStatuses targetShipAfter
-      texts = []
-      for i in [0..4]
-        delta = kyoukaAfter[i] - kyoukaBefore[i]
-        maxDelta = maxDeltas[i]
-        remaining = remainingAfter[i]
-        # First term: Something could have been added, but maybe delta == 0
-        # Second term: Something has been added
-        if (remaining != 0 && maxDelta != 0) || delta != 0
-          remainingText = if remaining == 0 then 'max' else "#{remaining}"
-          upText = if remaining == 0 || delta == maxDelta then '++' else '+'
-          texts.push "#{nameStatuses[i]} #{upText}#{delta}/#{remainingText}"
-      __('Modernization succeeded! ') + texts.join('　')
+      prerender = React.createClass
+        render: ->
+          <span>
+          {__('Modernization succeeded! ')}
+          {
+            for i in [0..4]
+              delta = kyoukaAfter[i] - kyoukaBefore[i]
+              maxDelta = maxDeltas[i]
+              remaining = remainingAfter[i]
+              # First term: Something could have been added, but maybe delta == 0
+              # Second term: Something has been added
+              if (remaining != 0 && maxDelta != 0) || delta != 0
+                <span key={i}>&nbsp;&nbsp;{nameStatuses[i]}&nbsp;<FontAwesome key={0} name="#{if remaining == 0 || delta == maxDelta then 'angle-double-up' else 'angle-up'}" />&nbsp;{delta}/<span key={1} style={fontSize:'80%', verticalAlign:'baseline'}>{if remaining == 0 then 'MAX' else "+#{remaining}"}</span>&nbsp;&nbsp;</span>
+          }
+          </span>
+      # Object.clone(React.createElement prerender, null)
+      React.createElement prerender, null
 
 onRequest = (e) ->
   if e.detail.path == '/kcsapi/api_req_kaisou/powerup'
@@ -79,7 +84,7 @@ onResponse = (e) ->
     # Read the status after modernization
     if e.detail.body.api_powerup_flag
       target = e.detail.body.api_ship
-      requestRecord.then (calcText) ->
+      requestRecord?.then (calcText) ->
         setTimeout window.success, 100, calcText _ships[target.api_id]
     else
       setTimeout window.warn, 100, __ 'Modernization failed.'
