@@ -115,6 +115,9 @@ class PluginManager
           registry: @config_.mirror.server
         if @config_.proxy
           npmConfig.http_proxy = 'http://127.0.0.1:12450'
+        else
+          if npmConfig.http_proxy?
+            delete npmConfig.http_proxy
         npm.load npmConfig, =>
           resolve @config_
 
