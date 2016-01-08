@@ -144,7 +144,22 @@ ChangeResolutionConfig = React.createClass
     @setState
       gameWidth: @refs[node].getValue()
     width = parseInt @refs[node].getValue()
-    return if isNaN(width) || width < 0 || !@state.useFixedResolution || (config.get('poi.layout', 'horizontal') == 'horizontal' && width > window.innerWidth - 150)
+    return if isNaN(width) || width < 0 || !@state.useFixedResolution
+    if config.get('poi.layout', 'horizontal') == 'horizontal'
+      width = Math.min(width, window.innerWidth - 150)
+
+    # Avoid setting a huge size by mistake
+    max_height = screen.height
+    max_width = screen.width
+    if config.get('poi.layout', 'horizontal') == 'horizontal'
+      max_width = max_width - (if window.doubleTabbed then 600 else 400)
+    else
+      max_height = max_height - 200
+    console.log max_width, max_height, width
+    max_width = max_height / 480 * 800
+    if width > max_width
+      width = max_width
+
     window.webviewWidth = width
     window.dispatchEvent new Event('webview.width.change')
     config.set 'poi.webview.width', width
