@@ -103,12 +103,15 @@ class PluginManager
   # @return {Promise<Object>} return the npm config
   selectConfig: (name, enable, check) ->
     @getMirrors().then =>
-      @config_.mirror = @mirrors_[name]
-      config.set "packageManager.mirrorName", name
-      @config_.proxy = enable
-      config.set "packageManager.proxy", enable
-      @config_.betaCheck = check
-      config.set "packageManager.enableBetaPluginCheck", check
+      if name?
+        @config_.mirror = @mirrors_[name]
+        config.set "packageManager.mirrorName", name
+      if enable?
+        @config_.proxy = enable
+        config.set "packageManager.proxy", enable
+      if check?
+        @config_.betaCheck = check
+        config.set "packageManager.enableBetaPluginCheck", check
       new Promise (resolve) =>
         npmConfig =
           prefix: PLUGIN_PATH
