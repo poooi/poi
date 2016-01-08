@@ -132,7 +132,16 @@ class PluginManager
         Promise.all(
           @plugins.map (plugin) =>
             @getLastestVersionOfPlugin(plugin).then (distTag) ->
-              version = if @config_.betaCheck && distTag.beta? then distTag.beta else distTag.latest
+              if !@config_.betaCheck
+                version = distTag.latest
+              else
+                if distTag.beta?
+                  if semver.gt distTag.beta, distTag.latest
+                    version = distTag.beta
+                  else
+                    version = distTag.latest
+                else
+                  version = distTag.latest
               plugin.lastestVersion = version
               plugin.isOutdated = semver.lt plugin.version, plugin.lastestVersion
         )
