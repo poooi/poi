@@ -57,6 +57,7 @@ class PluginManager
     @config_ =
       mirror: null
       proxy: null
+      betaCheck: null
 
     # @const
     @VALID = 0
@@ -93,18 +94,21 @@ class PluginManager
     fs.readJsonAsync(@mirrorPath).then (@mirrors_) =>
       mirrorConf = config.get 'packageManager.mirrorName', if navigator.language is 'zh-CN' then  "taobao" else "npm"
       proxyConf = config.get "packageManager.proxy", false
-      @selectConfig(mirrorConf, proxyConf).then =>
+      betaCheck = config.get "packageManager.enableBetaPluginCheck", false
+      @selectConfig(mirrorConf, proxyConf, betaCheck).then =>
         @mirrors_
 
   # select a mirror and set proxy config
-  # @param {object, object} mirror name, is proxy enabled
+  # @param {object, object, object} mirror name, is proxy enabled, is check beta plugin
   # @return {Promise<Object>} return the npm config
-  selectConfig: (name, enable) ->
+  selectConfig: (name, enable, check) ->
     @getMirrors().then =>
       @config_.mirror = @mirrors_[name]
       config.set "packageManager.mirrorName", name
       @config_.proxy = enable
       config.set "packageManager.proxy", enable
+      @config_.betaCheck = check
+      config.set "packageManager.enableBetaPluginCheck", check
       new Promise (resolve) =>
         npmConfig =
           prefix: PLUGIN_PATH
@@ -119,10 +123,12 @@ class PluginManager
   setUpdateInformation: ->
     @getMirrors().then =>
       @getInstalledPlugins().then =>
-        Promise.all(@plugins.map (plugin) =>
-          @getLastestVersionOfPlugin(plugin).then (version) ->
-            plugin.lastestVersion = version
-            plugin.isOutdated = semver.lt plugin.version, plugin.lastestVersion
+        Promise.all(
+          @plugins.map (plugin) =>
+            @getLastestVersionOfPlugin(plugin).then (distTag) ->
+              version = if @config_.betaCheck && distTag.beta? then distTag.beta else distTag.latest
+              plugin.lastestVersion = version
+              plugin.isOutdated = semver.lt plugin.version, plugin.lastestVersion
         )
 
   # get the current plugins
@@ -292,8 +298,8 @@ class PluginManager
     # after getting mirrors, at least one mirror is set
     @getMirrors().then ->
       new Promise (resolve) ->
-        npm.commands.outdated [plugin.packageName], (err, data) ->
-          resolve data[4] or null
+        npm.commands.distTag ['ls', plugin.packageName], (err, data) ->
+          resolve data or null
 
   # update one plugin
   # @param {Plugin} plugin
@@ -302,7 +308,7 @@ class PluginManager
     plugin.isUpdating = true
     @getMirrors().then ->
       new Promise (resolve) ->
-        npm.commands.update [plugin.packageName], ->
+        npm.commands.install ["#{plugins[index].packageName}@#{plugin.version}"], ->
         plugin.isUpdating = false
         resolve()
 
