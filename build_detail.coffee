@@ -426,8 +426,8 @@ module.exports.installPluginsAsync = async (poi_version) ->
 
   plugin_names = (n for n of packages)
 
-  install_root = path.join building_root, 'poiplugins_install'
-  gzip_root = path.join building_root, 'poiplugins'
+  install_root = path.join building_root, 'poi-plugins_install'
+  gzip_root = path.join building_root, 'poi-plugins'
   yield installPluginsTo plugin_names, install_root, gzip_root
 
   d = new Date()
