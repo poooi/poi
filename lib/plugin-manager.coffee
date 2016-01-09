@@ -3,7 +3,7 @@ path = require 'path-extra'
 semver = require 'semver'
 npm = require 'npm'
 async = Promise.coroutine
-
+React = require 'react'
 fs = Promise.promisifyAll require 'fs-extra'
 
 # we need only glob here
@@ -339,11 +339,18 @@ class PluginManager
   # @private
   readPlugin_: (pluginPath) ->
     try
+      pluginData = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'plugin.json'))
+    catch error
+      pluginData = {}
+      utils.error error
+
+    try
       plugin = require pluginPath
       plugin.priority ?= 10000
       plugin.isRead = true
     catch error
       plugin = isRead: false
+      plugin.version = '0.0.0'
 
     try
       plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
@@ -357,6 +364,34 @@ class PluginManager
       plugin.packageName = plugin.name
     else
       plugin.packageName = path.basename pluginPath
+
+    if !plugin.displayName?
+      if pluginData[plugin.packageName]?
+        plugin.displayName =
+          <span>
+            <FontAwesome key={0} name=pluginData[plugin.packageName].icon />
+            {' ' + pluginData[plugin.packageName][window.language]}
+          </span>
+      else
+        plugin.displayName = plugin.packageName
+
+    if !plugin.author?
+      if pluginData[plugin.packageName]?
+        plugin.author = pluginData[plugin.packageName].author
+      else
+        plugin.author = "unknown"
+
+    if !plugin.link?
+      if pluginData[plugin.packageName]?
+        plugin.link = pluginData[plugin.packageName].link
+      else
+        plugin.link = "https://github.com/poooi"
+
+    if !plugin.description?
+      if pluginData[plugin.packageName]?
+        plugin.description = pluginData[plugin.packageName]["des#{window.language}"]
+      else
+        plugin.description = "unknown"
 
     plugin.isInstalled = true
     plugin.isOutdated = false
