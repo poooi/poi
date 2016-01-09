@@ -137,7 +137,7 @@ window.log('Something'); // 显示在游戏窗口下方的信息条
 window.warn('Something'); // 显示在游戏窗口下方的信息条
 window.error('Something'); // 显示在游戏窗口下方的信息条
 window.success('Something'); // 显示在游戏窗口下方的信息条
-window.notify('Something'); // 桌面通知，Windows 上由于 Electron 的原因未实现
+window.notify('Something'); // 桌面通知
 window.toggleModal('Title', 'Content'); // 显示模态框，Content 可以是 HTML 文档
 // 如果需要在模态框下自定义按钮
 var footer = {
@@ -151,7 +151,7 @@ window.toggleModal('Title', 'Content', footer);
 poi 用户设置相关 API。
 ```javascript
 window.config.get('path.to.config', 'default'); // 获取某个用户设置值，获取失败返回默认值
-window.config.set('path.to.config', 'some value'); // 保存某个用户设置值
+window.config.set('path.to.config', 'some value'); // 保存某个用户设置值，若不提供值相当于删除该设置
 window.layout // 目前的布局，'horizontal' || 'vertical'
 window.theme // 目前使用的主题
 ```
