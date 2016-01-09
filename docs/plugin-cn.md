@@ -76,7 +76,7 @@ module.exports =
 在 index 中，以下所有接口都是可用的。
 
 + HTML DOM API
-+ Chrome 43 的浏览器 JavaScript
++ Chrome 47 的浏览器 JavaScript
 + Node.js 的所有功能
 + poi 暴露出的 API
 
