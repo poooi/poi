@@ -5,6 +5,8 @@ npm = require 'npm'
 async = Promise.coroutine
 React = require 'react'
 fs = Promise.promisifyAll require 'fs-extra'
+__ = i18n.setting.__.bind(i18n.setting)
+__n = i18n.setting.__n.bind(i18n.setting)
 
 # we need only glob here
 globAsync = Promise.promisify require 'glob'
@@ -207,28 +209,40 @@ class PluginManager
 
   # get all plugins that are outdated
   # @return {Plugin<Array<Plugin>>}
-  getOutdatedPlugins: ->
+  getOutdatedPlugins: (isNotif) ->
     # after getting mirrors, at least one mirror is set
     @getMirrors().then =>
       new Promise (resolve) =>
         @getInstalledPlugins().then (plugins) =>
           outdatedPlugins = []
+          outdatedList = []
           task = plugins.map (plugin) =>
             new Promise (resolve) =>
               npm.commands.distTag ['ls', plugin.packageName], (err, distTag) =>
-                if semver.gt distTag.latest, plugin.version
+                latest = plugin.version
+                if @config_.betaCheck && distTag.beta?
+                  if semver.gt distTag.beta, latest
+                    latest = distTag.beta
+                    if semver.gt distTag.latest, latest
+                      latest = distTag.latest
+                else
+                  if semver.gt distTag.latest, latest
+                    latest = distTag.latest
+                if semver.gt latest, plugin.version
                   outdatedPlugins.push plugin
                   index = @plugins_.indexOf(plugin)
                   @plugins_[index].isOutdated = true
-                  @plugins_[index].lastestVersion = distTag.latest
-                else if @config_.betaCheck && distTag.beta?
-                  if semver.gt distTag.beta, plugin.version
-                    outdatedPlugins.push plugin
-                    index = @plugins_.indexOf(plugin)
-                    @plugins_[index].isOutdated = true
-                    @plugins_[index].lastestVersion = distTag.beta
+                  @plugins_[index].lastestVersion = latest
+                  outdatedList.push plugin.stringName
                 resolve()
           Promise.all(task).then =>
+            if isNotif
+              content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
+              notify content,
+                type: 'plugin update'
+                title: __ 'Plugin update'
+                icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+                audio: "file://#{ROOT}/assets/audio/update.mp3"
             resolve outdatedPlugins
 
   # get all plugins which match a filer function
@@ -365,6 +379,8 @@ class PluginManager
     else
       plugin.packageName = path.basename pluginPath
 
+    # Missing data of broken plugins
+
     if !plugin.displayName?
       if pluginData[plugin.packageName]?
         plugin.displayName =
@@ -392,6 +408,23 @@ class PluginManager
         plugin.description = pluginData[plugin.packageName]["des#{window.language}"]
       else
         plugin.description = "unknown"
+
+    # For notifition
+    if typeof plugin.displayName is 'string'
+      plugin.stringName = plugin.displayName
+    else if pluginData[plugin.packageName]?
+        plugin.stringName = pluginData[plugin.packageName][window.language]
+      else
+        if plugin.displayName.props?.children?
+          displayItems = plugin.displayName.props.children
+        else
+          if plugin.displayName.props?.children?
+            displayItems = plugin.displayName.props.children
+          else
+            displayItems = plugin.displayName
+          for child in displayItems
+            if typeof child is "string"
+              plugin.stringName = child
 
     plugin.isInstalled = true
     plugin.isOutdated = false
