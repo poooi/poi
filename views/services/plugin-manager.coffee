@@ -11,7 +11,7 @@ __n = i18n.setting.__n.bind(i18n.setting)
 # we need only glob here
 globAsync = Promise.promisify require 'glob'
 
-utils = require './utils'
+utils = remote.require './lib/utils'
 
 {config, language, notify} = window
 
