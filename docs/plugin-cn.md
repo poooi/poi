@@ -30,7 +30,7 @@ appData
             |-- plugin3
                   |-- index.coffee
 ```
-在启动的时候，poi 会寻找 appData/plugins/node_modules 目录下的所有名字以 `poi-plugin-` 开头的文件夹，并尝试以插件的方式将其载入。此处 `appData` 为用于存放用户数据的目录，Windows 上是 `%AppData%/poi`，类 unix 操作系统上是 `~/.config/poi`
+在启动的时候，poi 会寻找 `appData/plugins/node_modules` 目录下的所有名字以 `poi-plugin-` 开头的文件夹，并尝试以插件的方式将其载入。此处 `appData` 为用于存放用户数据的目录，Windows 上是 `%AppData%/poi`，类 unix 操作系统上是 `~/.config/poi`
 
 一个插件只需要有基本的 index 就可以被载入，index 可以是 `index.js`，`index.coffee` 或者 `index.cjsx`。
 
