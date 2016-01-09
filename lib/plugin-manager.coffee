@@ -186,17 +186,6 @@ class PluginManager
   getUnreadPlugins: ->
     @getFilteredPlugins_ (plugin) -> not plugin.isRead
 
-  # get all unread plugin names, base on package settings or path
-  # @return {Promise<Array<string>>}
-  getUnreadPluginNames: ->
-    @getUnreadPluginPaths_().then (paths) =>
-      paths.map (path) =>
-        basename = path.basename path
-        if @requirements_[basename]?
-          return @requirements_[basename][language]
-        else
-          return basename
-
   # get all valid plugins, see comment of @isValid_
   # @return {Promise<Array<Plugin>>}
   getValidPlugins: ->
@@ -219,24 +208,24 @@ class PluginManager
           task = plugins.map (plugin) =>
             new Promise (resolve) =>
               npm.commands.distTag ['ls', plugin.packageName], (err, distTag) =>
-                latest = plugin.version
+                latest = "#{plugin.version}"
                 if @config_.betaCheck && distTag.beta?
                   if semver.gt distTag.beta, latest
                     latest = distTag.beta
-                    if semver.gt distTag.latest, latest
-                      latest = distTag.latest
-                else
-                  if semver.gt distTag.latest, latest
-                    latest = distTag.latest
+                if semver.gt distTag.latest, latest
+                  latest = distTag.latest
                 if semver.gt latest, plugin.version
                   outdatedPlugins.push plugin
-                  index = @plugins_.indexOf(plugin)
-                  @plugins_[index].isOutdated = true
-                  @plugins_[index].lastestVersion = latest
-                  outdatedList.push plugin.stringName
+                  index = -1
+                  for plugin_, i in @plugins_
+                    if plugin.packageName is plugin_.packageName
+                      index = i
+                  @plugins_[index]?.isOutdated = true
+                  @plugins_[index]?.lastestVersion = latest
+                  if plugin.isRead then outdatedList.push plugin.stringName
                 resolve()
           Promise.all(task).then =>
-            if isNotif
+            if isNotif && outdatedList.length > 0
               content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
               notify content,
                 type: 'plugin update'
@@ -428,7 +417,7 @@ class PluginManager
 
     plugin.isInstalled = true
     plugin.isOutdated = false
-    if plugin.packageData?.version?
+    if plugin.packageData?.version? && plugin.isRead
       plugin.version = plugin.packageData.version
     plugin.lastestVersion = plugin.version
     return plugin
@@ -436,9 +425,12 @@ class PluginManager
   # notify user about unread plugins, only shown when any exists
   # @private
   notifyFailed_: ->
-    @getUnreadPluginNames().then (names) ->
-      if names.length > 0
-        content = "#{names.join(' ')} #{
+    @getUnreadPlugins().then (plugins) ->
+      unreadList = []
+      for plugin in plugins
+        unreadList.push plugin.stringName
+      if unreadList.length > 0
+        content = "#{unreadList.join(' ')} #{
           __ 'failed to load. Maybe there are some compatibility problems.'}"
         notify content,
           type: 'plugin error'
