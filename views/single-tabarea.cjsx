@@ -7,48 +7,11 @@ fs = require 'fs-extra'
 {_, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 
-# Plugin version
-packages = fs.readJsonSync path.join ROOT, 'assets', 'data', 'plugin.json'
-
-# Discover plugins and remove unused plugins
-plugins = glob.sync(path.join(PLUGIN_PATH, 'node_modules', 'poi-plugin-*'))
-plugins = plugins.filter (filePath) ->
-  # Every plugin will be required
-  try
-    plugin = require filePath
-    packageData = {}
-    try
-      packageData = fs.readJsonSync path.join filePath, 'package.json'
-    catch error
-      if process.env.DEBUG? then console.log error
-    if packageData?.name?
-      plugin.packageName =  packageData.name
-    else
-      plugin.packageName = plugin.name
-    if packages[plugin.packageName]?.version?
-      lowest = packages[plugin.packageName].version
-    else
-      lowest = "v0.0.0"
-    return config.get("plugin.#{plugin.name}.enable", true) && semver.gte(plugin.version, lowest)
-  catch e
-    if process.env.DEBUG? then console.log e
-    return false
-
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
     false
   render: ->
     React.createElement @props.plugin.reactClass
-
-plugins = plugins.map (filePath) ->
-  plugin = require filePath
-  plugin.priority = 10000 unless plugin.priority?
-  plugin
-plugins = plugins.filter (plugin) ->
-  plugin.show isnt false
-plugins = _.sortBy(plugins, 'priority')
-tabbedPlugins = plugins.filter (plugin) ->
-  !plugin.handleClick?
 
 settings = require path.join(ROOT, 'views', 'components', 'settings')
 mainview = require path.join(ROOT, 'views', 'components', 'main')
@@ -59,13 +22,25 @@ ControlledTabArea = React.createClass
     key: 0
     pluginKey: -2
     dropdownOpen: false
-  nowTime: 0
-  pluginKey: 0
+    nowTime: 0
+    plugins: []
+    tabbedPlugins: []
   componentWillUpdate: (nextProps, nextState) ->
     @nowTime = (new Date()).getTime()
   componentDidUpdate: (prevProps, prevState) ->
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
+  renderPlugins: ->
+    PluginManager.getValidPlugins().then (plugins) =>
+      plugins = plugins.filter (plugin) ->
+        plugin.show isnt false
+      plugins = _.sortBy plugins, 'priority'
+
+      tabbedPlugins = plugins.filter (plugin) ->
+        !plugin.handleClick?
+
+      if @isMounted()
+        @setState {plugins: plugins, tabbedPlugins: tabbedPlugins}
   handleToggleDropdown: ->
     dropdownOpen = !@state.dropdownOpen
     @setState {dropdownOpen}
@@ -114,10 +89,10 @@ ControlledTabArea = React.createClass
       if num == 2
         @handleSelectShipView()
       else
-        if num <= 2 + tabbedPlugins.length
+        if num <= 2 + @state.tabbedPlugins.length
           @handleSelect num - 1
   handleShiftTabKeyDown: ->
-    next = if @state.key? then (@state.key + tabbedPlugins.length) % (1 + tabbedPlugins.length) else tabbedPlugins.length
+    next = if @state.key? then (@state.key + @state.tabbedPlugins.length) % (1 + @state.tabbedPlugins.length) else @state.tabbedPlugins.length
     if next == 0
       @handleSelectMainView()
     else
@@ -126,7 +101,7 @@ ControlledTabArea = React.createClass
       else
         @handleSelect next
   handleTabKeyDown: ->
-    next = if @state.key? then (@state.key + 1) % (1 + tabbedPlugins.length) else 1
+    next = if @state.key? then (@state.key + 1) % (1 + @state.tabbedPlugins.length) else 1
     if next == 0
       @handleSelectMainView()
     else
@@ -160,8 +135,11 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'view.main.visible', @handleMiniShipChange
+    @renderPlugins().then =>
+      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   componentWillUnmount: ->
     window.removeEventListener 'view.main.visible', @handleMiniShipChange
+    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   render: ->
     <div>
       <Nav bsStyle="tabs" activeKey={@state.key} id="top-nav">
@@ -174,7 +152,7 @@ ControlledTabArea = React.createClass
         <NavItem key={1001} eventKey={@state.pluginKey} onSelect={@handleSelect}>
            {
              if @state.pluginKey >= 2 and @state.pluginKey < 1000
-               <span>{tabbedPlugins[@state.pluginKey - 2].displayName}</span>
+               <span>{@state.tabbedPlugins[@state.pluginKey - 2].displayName}</span>
              else
                <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
            }
@@ -182,7 +160,7 @@ ControlledTabArea = React.createClass
         <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown} title=''>
         {
           counter = 1
-          plugins.map (plugin, index) =>
+          @state.plugins.map (plugin, index) =>
             if plugin.handleClick?
               <MenuItem key={2 + index} eventKey={@state.key} onSelect={plugin.handleClick}>
                 {plugin.displayName}
@@ -194,7 +172,7 @@ ControlledTabArea = React.createClass
               </MenuItem>
         }
         {
-          if plugins.length == 0
+          if @state.plugins.length == 0
             <MenuItem key={1002} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
         }
         </NavDropdown>
@@ -212,7 +190,7 @@ ControlledTabArea = React.createClass
         </div>
         {
           counter = 1
-          plugins.map (plugin, index) =>
+          @state.plugins.map (plugin, index) =>
             if !plugin.handleClick?
               key = (counter += 1)
               <div id={plugin.name} key={key} className="poi-app-tabpane #{if @state.key == key then 'show' else 'hidden'}">
