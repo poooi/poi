@@ -1,242 +1,163 @@
-{ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{resolveTime, success, warn} = window
-{Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
+{ROOT, layout, _, $, $$, React, ReactBootstrap, success, warn} = window
+{OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 
-getMaterialImage = (idx) ->
-  return "#{ROOT}/assets/img/material/0#{idx}.png"
-
-getCountDown = (completeTime) ->
-  diff = completeTime - Date.now()
-  if diff < 0 then 0 else Math.floor(diff / 1000)
-
 showItemDevResultDelay = if window.config.get('poi.delayItemDevResult', false) then 6200 else 500
 
-KdockPanel = React.createClass
+
+CountdownTimer = require './countdown-timer'
+CountdownLabel = React.createClass
+  getLabelStyle: (timeRemaining) ->
+    switch
+      when timeRemaining > 600 and @props.isLSC then 'danger'
+      when timeRemaining > 600 then 'primary'
+      when timeRemaining >  0  then 'warning'
+      when timeRemaining is 0  then 'success'
+      else 'default'
   getInitialState: ->
-    docks: [
-        name: __ 'Empty'
-        material: []
-        completeTime: -1
-        countdown: -1
-      ,
-        name: __ 'Empty'
-        material: []
-        completeTime: -1
-        countdown: -1
-      ,
-        name: __ 'Empty'
-        material: []
-        completeTime: -1
-        countdown: -1
-      ,
-        name: __ 'Empty'
-        material: []
-        completeTime: -1
-        countdown: -1
-      ,
-        name: __ 'Empty'
-        material: []
-        completeTime: -1
-        countdown: -1
-    ]
-    notified: []
-    show: true
-  shouldComponentUpdate: (nextProps, nextState) ->
-    nextState.show
-  handleVisibleResponse: (e) ->
-    {visible} = e.detail
-    @setState
-      show: visible
+    style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime)
+  componentWillReceiveProps: (nextProps) ->
+    if nextProps.completeTime isnt @props.completeTime
+      @setState
+        style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
+  tick: (timeRemaining) ->
+    style = @getLabelStyle timeRemaining
+    @setState {style: style} if style isnt @state.style
+  render: ->
+    <Label className="kdock-timer" bsStyle={@state.style}>
+    {
+      if @props.completeTime >= 0
+        <CountdownTimer countdownId={"kdock-#{@props.dockIndex}"}
+                        completeTime={@props.completeTime}
+                        tickCallback={@tick}
+                        completeCallback={@props.notify} />
+    }
+    </Label>
+
+
+class KDockInfo
+  constructor: (kdockApi) ->
+    if kdockApi? then @update(kdockApi) else @empty()
+  empty: ->
+    @name = __ 'Empty'
+    @material = []
+    @completeTime = -1
+  setLocked: ->
+    @name = __ 'Locked'
+    @material = []
+    @completeTime = -1
+  update: (kdockApi) ->
+    switch kdockApi.api_state
+      when -1 then @setLocked()
+      when 0  then @empty()
+      when 2, 3
+        @name = window.$ships[kdockApi.api_created_ship_id].api_name
+        @material =  [
+          kdockApi.api_item1
+          kdockApi.api_item2
+          kdockApi.api_item3
+          kdockApi.api_item4
+          kdockApi.api_item5
+        ]
+        @completeTime = kdockApi.api_complete_time
+  clone: ->
+    kdi = new KDockInfo
+    kdi.name = @name
+    kdi.material = @material.slice()
+    kdi.completeTime = @completeTime
+    kdi
+
+KdockPanel = React.createClass
+  canNotify: false
+  getInitialState: ->
+    docks: [1..4].map () -> new KDockInfo
   handleResponse: (e) ->
-    {method, path, body, postBody} = e.detail
-    {$ships} = window
-    {docks, notified} = @state
+    {path, body, postBody} = e.detail
     switch path
-      when '/kcsapi/api_get_member/kdock'
-        for kdock in body
-          id = kdock.api_id
-          switch kdock.api_state
-            when -1
-              docks[id] =
-                name: __ 'Locked'
-                material: []
-                countdown: -1
-                completeTime: -1
-            when 0
-              docks[id] =
-                name: __ 'Empty'
-                material: []
-                countdown: -1
-                completeTime: -1
-              notified[id] = false
-            when 2
-              docks[id] =
-                name: $ships[kdock.api_created_ship_id].api_name
-                material: [
-                  kdock.api_item1
-                  kdock.api_item2
-                  kdock.api_item3
-                  kdock.api_item4
-                  kdock.api_item5
-                ]
-                completeTime: kdock.api_complete_time
-                countdown: getCountDown(kdock.api_complete_time)
-            when 3
-              docks[id] =
-                name: $ships[kdock.api_created_ship_id].api_name
-                material: [
-                  kdock.api_item1
-                  kdock.api_item2
-                  kdock.api_item3
-                  kdock.api_item4
-                  kdock.api_item5
-                ]
-                completeTime: 0
-                countdown: 0
+      when '/kcsapi/api_start2'
+        # Do not notify before entering the game
+        @canNotify = false
+      when '/kcsapi/api_port/port'
+        @canNotify = true
+      when '/kcsapi/api_get_member/kdock', '/kcsapi/api_req_kousyou/getship'
+        kdocks = body
+        kdocks = body.api_kdock if path is '/kcsapi/api_req_kousyou/getship'
+        docks = kdocks.map (kdock) -> new KDockInfo(kdock)
+        if !_.isEqual docks, @state.docks
+          @setState
+            docks: docks
+      when '/kcsapi/api_req_kousyou/createship_speedchange'
+        console.assert body.api_result == 1, "body.api_result isn't 1: ", body
+        docks = @state.docks.slice()    # elements still referring to @state
+        idx = postBody.api_kdock_id - 1
+        docks[idx] = docks[idx].clone() # make a copy of the one to be modified
+        docks[idx].completeTime = 0
         @setState
           docks: docks
-          notified: notified
-      when '/kcsapi/api_req_kousyou/getship'
-        for kdock in body.api_kdock
-          id = kdock.api_id
-          switch kdock.api_state
-            when -1
-              docks[id] =
-                name: __ 'Locked'
-                material: []
-                completeTime: -1
-                countdown: -1
-            when 0
-              docks[id] =
-                name: __ 'Empty'
-                material: []
-                completeTime: -1
-                countdown: -1
-              notified[id] = false
-            when 2
-              docks[id] =
-                name: $ships[kdock.api_created_ship_id].api_name
-                material: [
-                  kdock.api_item1
-                  kdock.api_item2
-                  kdock.api_item3
-                  kdock.api_item4
-                  kdock.api_item5
-                ]
-                completeTime: kdock.api_complete_time
-                countdown: getCountDown(kdock.api_complete_time)
-            when 3
-              docks[id] =
-                name: $ships[kdock.api_created_ship_id].api_name
-                material: [
-                  kdock.api_item1
-                  kdock.api_item2
-                  kdock.api_item3
-                  kdock.api_item4
-                  kdock.api_item5
-                ]
-                completeTime: 0
-                countdown: 0
-        @setState
-          docks: docks
-          notified: notified
       when '/kcsapi/api_req_kousyou/createitem'
         if body.api_create_flag == 0
-          setTimeout warn.bind(@, __("The development of %s was failed.", "#{window.i18n.resources.__ $slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")), showItemDevResultDelay
+          setTimeout warn.bind(@, __("The development of %s was failed.",
+            "#{window.i18n.resources.__ $slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")),
+            showItemDevResultDelay
         else if body.api_create_flag == 1
-          setTimeout success.bind(@, __("The development of %s was successful.", "#{window.i18n.resources.__ $slotitems[body.api_slot_item.api_slotitem_id].api_name}")), showItemDevResultDelay
-  updateCountdown: ->
-    {docks, notified} = @state
-    updated = false
-    for i in [1..4]
-      if docks[i].countdown > 0
-        docks[i].countdown = getCountDown(docks[i].completeTime)
-        if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} #{__ "built"}",
-            type: 'construction'
-            title: __ "Construction"
-            icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
-          notified[i] = true
-        updated = true
-    if updated
-      @setState
-        docks: docks
-        notified: notified
+          setTimeout success.bind(@, __("The development of %s was successful.",
+            "#{window.i18n.resources.__ $slotitems[body.api_slot_item.api_slotitem_id].api_name}")),
+            showItemDevResultDelay
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
-    window.addEventListener 'view.main.visible', @handleVisibleResponse
-    @intervalId = setInterval @updateCountdown, 1000
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
-    window.removeEventListener 'view.main.visible', @handleVisibleResponse
-    clearInterval @intervalId
+  getMaterialImage: (idx) ->
+    path = join(ROOT, 'assets', 'img', 'material', "0#{idx}.png")
+    <img src={path} className="material-icon" />
+  constructionIcon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
+  notify: ->
+    return if not @canNotify
+    # Notify all completed ships
+    completedShips = @state.docks.filter(
+      (dock) -> 0 <= dock.completeTime < new Date().getTime() + 1000).map(
+      (dock) -> i18n.resources.__ dock.name).join(', ')
+    notify "#{completedShips} #{__ 'built'}",
+      type: 'construction'
+      title: __ "Construction"
+      icon: @constructionIcon
   render: ->
     <div>
     {
-      for i in [1..4]
-        <OverlayTrigger key={i} placement='top' overlay={
-          <Tooltip id="kdock-material-#{i}">
-            {
-              if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
-                <span>
-                  <strong style={color: '#d9534f'}>
-                    {i18n.resources.__ @state.docks[i].name}
-                  </strong>
-                  <br/>
-                </span>
-              else
-                <span>{i18n.resources.__ @state.docks[i].name}<br/></span>
-            }
-            <img src={getMaterialImage 1} className="material-icon" /> {@state.docks[i].material[0]}
-            <img src={getMaterialImage 2} className="material-icon" /> {@state.docks[i].material[1]}
-            <img src={getMaterialImage 3} className="material-icon" /> {@state.docks[i].material[2]}
-            <img src={getMaterialImage 4} className="material-icon" /> {@state.docks[i].material[3]}
-            <img src={getMaterialImage 7} className="material-icon" /> {@state.docks[i].material[4]}
-          </Tooltip>
-        }>
-        {
-          if @state.docks[i].countdown > 0
-            if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
-              <div className="panel-item kdock-item">
-                <span className="kdock-name">
-                  {i18n.resources.__ @state.docks[i].name}
-                </span>
-                <Label className="kdock-timer" bsStyle="danger">
-                  {resolveTime @state.docks[i].countdown}
-                </Label>
-              </div>
-            else
-              <div className="panel-item kdock-item">
-                <span className="kdock-name">
-                  {i18n.resources.__ @state.docks[i].name}
-                </span>
-                <Label className="kdock-timer" bsStyle="primary">
-                  {resolveTime @state.docks[i].countdown}
-                </Label>
-              </div>
-          else if @state.docks[i].countdown is 0
-            <div className="panel-item kdock-item">
-              <span className="kdock-name">
-                {i18n.resources.__ @state.docks[i].name}
-              </span>
-              <Label className="kdock-timer" bsStyle="success">
-                {resolveTime @state.docks[i].countdown}
-              </Label>
-            </div>
-          else
-            <div className="panel-item kdock-item">
-              <span className="kdock-name">
-                {i18n.resources.__ @state.docks[i].name}
-              </span>
-              <Label className="kdock-timer" bsStyle="default">
-                {resolveTime 0}
-              </Label>
-            </div>
-        }
-        </OverlayTrigger>
+      for dock, i in @state.docks
+        dockName = i18n.resources.__ dock.name
+        isInUse = dock.completeTime >= 0
+        isLSC = isInUse and dock.material[0] >= 1000
+        content = <div className="panel-item kdock-item">
+                    <span className="kdock-name">{dockName}</span>
+                    <CountdownLabel dockIndex={i}
+                                    completeTime={dock.completeTime}
+                                    isLSC={isLSC}
+                                    notify={_.once @notify} />
+                  </div>
+
+        if isInUse
+          <OverlayTrigger key={i} placement='top' overlay={
+            <Tooltip id="kdock-material-#{i}">
+              {
+                style = if isLSC then {color: '#D9534F', fontWeight: 'bold'} else null
+                <span style={style}>{dockName}<br /></span>
+              }
+              {@getMaterialImage 1} {dock.material[0]}
+              {@getMaterialImage 2} {dock.material[1]}
+              {@getMaterialImage 3} {dock.material[2]}
+              {@getMaterialImage 4} {dock.material[3]}
+              {@getMaterialImage 7} {dock.material[4]}
+            </Tooltip>
+          }>
+            {content}
+          </OverlayTrigger>
+        else
+          <span key={i}>
+            {content}
+          </span>
     }
     </div>
 
