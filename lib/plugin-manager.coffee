@@ -2,6 +2,7 @@ Promise = require 'bluebird'
 path = require 'path-extra'
 semver = require 'semver'
 npm = require 'npm'
+async = Promise.coroutine
 
 fs = Promise.promisifyAll require 'fs-extra'
 
@@ -124,28 +125,6 @@ class PluginManager
         npm.load npmConfig, =>
           resolve @config_
 
-  # set the update relative information to plugins
-  # @return {Promise<>}
-  setUpdateInformation: ->
-    @getMirrors().then =>
-      @getInstalledPlugins().then =>
-        Promise.all(
-          @plugins.map (plugin) =>
-            @getLastestVersionOfPlugin(plugin).then (distTag) ->
-              if !@config_.betaCheck
-                version = distTag.latest
-              else
-                if distTag.beta?
-                  if semver.gt distTag.beta, distTag.latest
-                    version = distTag.beta
-                  else
-                    version = distTag.latest
-                else
-                  version = distTag.latest
-              plugin.lastestVersion = version
-              plugin.isOutdated = semver.lt plugin.version, plugin.lastestVersion
-        )
-
   # get the current plugins
   # @return {Promise<Array<Plugin>>}
   getPlugins: ->
@@ -232,20 +211,25 @@ class PluginManager
     # after getting mirrors, at least one mirror is set
     @getMirrors().then =>
       new Promise (resolve) =>
-        npm.commands.outdated [], (err, data) =>
-          # data is an Array<Array<>> represents outdated plugins
-          # each element of data is in this format
-          # [
-          #   path,
-          #   packageName,
-          #   currentVersion,
-          #   wantedVersion,
-          #   lastestVersion,
-          #   "lastest"
-          # ]
-          names = data.map (item) -> item[1]
-          @getInstalledPlugins().then (plugins) ->
-            resolve plugins.filter (plugin) -> plugin.packageName in names
+        @getInstalledPlugins().then (plugins) =>
+          outdatedPlugins = []
+          task = plugins.map (plugin) =>
+            new Promise (resolve) =>
+              npm.commands.distTag ['ls', plugin.packageName], (err, distTag) =>
+                if semver.gt distTag.latest, plugin.version
+                  outdatedPlugins.push plugin
+                  index = @plugins_.indexOf(plugin)
+                  @plugins_[index].isOutdated = true
+                  @plugins_[index].lastestVersion = distTag.latest
+                else if @config_.betaCheck && distTag.beta?
+                  if semver.gt distTag.beta, plugin.version
+                    outdatedPlugins.push plugin
+                    index = @plugins_.indexOf(plugin)
+                    @plugins_[index].isOutdated = true
+                    @plugins_[index].lastestVersion = distTag.beta
+                resolve()
+          Promise.all(task).then =>
+            resolve outdatedPlugins
 
   # get all plugins which match a filer function
   # @param {!function(Plugin): boolean} filter
@@ -306,26 +290,15 @@ class PluginManager
       return false
     return config.get "plugin.#{plugin.name}.enable", true
 
-  # get the lastest version of plugin based on npm
-  # @param {Plugin}
-  # @return {Promise<?string>}
-  getLastestVersionOfPlugin: (plugin) ->
-    # after getting mirrors, at least one mirror is set
-    @getMirrors().then ->
-      new Promise (resolve) ->
-        npm.commands.distTag ['ls', plugin.packageName], (err, data) ->
-          resolve data or null
-
   # update one plugin
   # @param {Plugin} plugin
   # @return {Promise<>}
   updatePlugin: (plugin) ->
-    plugin.isUpdating = true
-    @getMirrors().then ->
-      new Promise (resolve) ->
-        npm.commands.install ["#{plugins[index].packageName}@#{plugin.version}"], ->
-        plugin.isUpdating = false
-        resolve()
+    @getMirrors().then =>
+      new Promise (resolve) =>
+        npm.commands.install ["#{plugin.packageName}@#{plugin.lastestVersion}"], (err) =>
+          plugin.isUpdating = false
+          if !err then resolve() else reject()
 
   # install one plugin and read it
   # @param {string} name
@@ -333,10 +306,10 @@ class PluginManager
   installPlugin: (name) ->
     @getMirrors().then =>
       new Promise (resolve) =>
-        npm.commands.install [name], =>
+        npm.commands.install [name], (err) =>
           plugin = @readPlugin_ path.join @pluginPath, 'node_modules', name
           @plugins_.push plugin
-          resolve plugin
+          if !err then resolve plugin else reject()
 
   # uninstall one plugin, this won't unload it from memory
   # @param {Plugin} plugin
@@ -387,6 +360,9 @@ class PluginManager
 
     plugin.isInstalled = true
     plugin.isOutdated = false
+    if plugin.packageData?.version?
+      plugin.version = plugin.packageData.version
+    plugin.lastestVersion = plugin.version
     return plugin
 
   # notify user about unread plugins, only shown when any exists
