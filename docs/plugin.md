@@ -2,15 +2,15 @@
 
 For poi version 5.0, last update: 2016-01-09
 
-Poi is based on web, all UI and procedure are done with web development techniques. Developers
+Poi is based on web, and all UI and procedure are done with web development techniques. Developers
 are supposed to have knowledge of following subjects:
 
-+ Essential HTML/CSS/JavaScript
++ Basic HTML, CSS and JavaScript
 + [React.js](http://facebook.github.io/react/)
 + [Node.js](https://nodejs.org)
 + [Electron](https://github.com/atom/electron)
 
-For a good developing experience, it is recommended to know of following stuffs:
+For a comfortable developing experience, it is recommended that you know of following stuffs:
 
 + [CoffeeScript](http://coffeescript.org)
 + [CoffeeReact](https://github.com/jsdf/coffee-react)
@@ -33,9 +33,9 @@ appData
             |-- plugin3
                   |-- index.coffee
 ```
-On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path appData/plugins/node_modules, and tries to load them as plugin.
+On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path appData/plugins/node_modules, and tries to load them as plugins.
 
-Basically, a plugin can be loaded when it contains an index, index can be index.js, index.coffee or index.cjsx.
+Basically, a plugin can be loaded when it contains an index, which can be index.js, index.coffee or index.cjsx.
 
 ## Attributes of index
 Index can expose its attributes via `export` method. Below are all attributes and their respective data type. Data type `String | ReactElement` means it will be directly displayed if it is a string, or rendered by React if a ReactElement.
@@ -67,7 +67,7 @@ module.exports = {
   })
 };
 ```
-You can always use jsx，cjsx to simplify the code, codes provide from now will be in cjsx. Above code is equivalent to:
+You can always use jsx, cjsx to simplify the code. Codes provided from now will be in cjsx. Code above is equivalent to:
 ```coffeescript
 module.exports =
   name: 'Sample'
@@ -76,10 +76,10 @@ module.exports =
     render: ->
       <h1>It works</h1>
 ```
-In index，following interfaces are available:
+In index, following interfaces are available:
 
 + HTML DOM API
-+ Chrome 43 browser JavaScript
++ Javascript in chrome 47
 + All functionality of Node.js
 + API exposed by poi
 
@@ -96,24 +96,24 @@ window =
   $ // equivalent to document.querySelector
   $$ // equivalent to document.querySelectorAll
   ROOT // poi's root path, namely path where package.json and index.html reside
-  APPDATA_PATH // path to store user data on Windows it will be %AppData%/poi，on Linux it will be ~/.config/poi
+  APPDATA_PATH // path to store user data on Windows it will be %AppData%/poi, on Linux it will be ~/.config/poi
   POI_VERSION // poi version
 ```
 
-Poi exposes API related to game data as global variables，you can fetch following information in window:
+Poi exposes API related to game data as global variables, you can fetch following information in `window`:
 
 ```javascript
 window =
   // variables beginning with $ is basic data, not related to user
   $ships: Array // basic data for all ships in game, same as the received data, index by api_id
-  $shipTypes: Array // basic data for all ships in game，same as the received data, index by api_id
-  $slotitems: Array // basic data for all equipments in game，same as the received data, index by api_id
-  $mapareas: Array // basic data for all map areas in game，same as the received data, index by api_id
-  $maps: Array // basic data for all maps in game，same as the received data, index by api_id
-  $missions: Array // basic data for all expeditions in game，same as the received data, index by api_id
+  $shipTypes: Array // basic data for all ships in game, same as the received data, index by api_id
+  $slotitems: Array // basic data for all equipments in game, same as the received data, index by api_id
+  $mapareas: Array // basic data for all map areas in game, same as the received data, index by api_id
+  $maps: Array // basic data for all maps in game, same as the received data, index by api_id
+  $missions: Array // basic data for all expeditions in game, same as the received data, index by api_id
   // variables beginning with _ is user data
   _ships: Object // all ships owned by player, index by api_id
-  _slotitems: Object // all equipments owned by player，index by api_id
+  _slotitems: Object // all equipments owned by player, index by api_id
   _decks: Array // player fleets
 ```
 
@@ -141,7 +141,7 @@ window.warn('Something'); // display on the information bar below game window
 window.error('Something'); // display on the information bar below game window
 window.success('Something'); // display on the information bar below game window
 window.notify('Something'); // desktop notification
-window.toggleModal('Title', 'Content'); // display modal，Content can be HTML
+window.toggleModal('Title', 'Content'); // display modal, Content can be HTML
 // if you need to customize buttons
 var footer = {
   name: String, // button display name
@@ -205,9 +205,9 @@ require(ROOT + "/components/coffee-script/extras/coffee-script.js");
 
 ## i18n
 
-Poi uses i18n-2 to realize i18n support.
+Poi supports i18n with the `i18n-2` package.
 
-It is recommended to bind the i18n object to initialize onto
+It is recommended that the i18n object be attached to
 window.i18n, as following:
 
 ```coffeescript
@@ -230,9 +230,9 @@ You can get translations after placing files in specified folders
 translated = __ 'to translate'
 ```
 
-More information on i18n-2 package, please refer to [i18n-2](https://github.com/jeresig/i18n-node-2)
+For more information on i18n-2 package, please refer to [i18n-2](https://github.com/jeresig/i18n-node-2)
 
-For i18n of game resources，poi predefines a translation method，for non-window plugin, it can be called as below:
+For i18n of game resources, poi predefines a translation method, for non-window plugin, it can be called as below:
 
 ```coffeescript
 resource = window.i18n.resources.__ 'to translate'
@@ -241,12 +241,13 @@ resource = window.i18n.resources.__ 'to translate'
 For new-window plugin, package should be called
 
 ```coffeescript
+# returns default value if there's no poi-plugin-translator (the plugin converting kanji names into romaji). If you have already required `ROOT/view/env`, these lines can be omitted.
 if !window.i18n?
   window.i18n = {}
 window.i18n.resources = {}
-window.i18n.resources.__ = (str) -> return str
-window.i18n.resources.translate = (locale, str) -> return str
-window.i18n.resources.setLocale = (str) -> return # returns  default value if there's no poi-plugin-translator (the plugin converting kanji names into romaji ), if you already require ROOT/view/env, this line can be avoided
+window.i18n.resources.__ = (str) -> str
+window.i18n.resources.translate = (locale, str) -> str
+window.i18n.resources.setLocale = (str) -> return
 
 try
   Translator = require 'poi-plugin-translator'
@@ -258,11 +259,11 @@ resource = window.i18n.resources.__ 'to translate'
 
 ## Debugging
 
-Setting environment variable DEBUG can activate debug mode.
+Setting environment variable `DEBUG` can activate debug mode.
 
 Open developer tool and type in console:
 ```javascript
-process.env.DEBUG = 1
+process.env.DEBUG = 1;
 ```
 
 If you want to enter debug mode from the start (e.g. you want to debug `app.cjsx`), you can add `--debug` or `-d` argument to start poi:
@@ -278,7 +279,7 @@ if process.env.DEBUG_PLUGIN is 'ship-info'
     shipInfoWindow.openDevTools
       detach: true
 ```
-When the command to start poi contains `--debug-plugin=ship-info` argument，ship-info's dev tool will automatically prompt:
+When the command to start poi contains `--debug-plugin=ship-info` argument, ship-info's dev tool will automatically prompt:
 ```
 electron poi --debug-plugin=ship-info
 ```
@@ -292,7 +293,7 @@ Publishing on npm facilitates versioning, and poi will use reloaded npm module t
 
 For more info, you can read npm's docs:  [package.json](https://docs.npmjs.com/files/package.json) and [npm publish](https://docs.npmjs.com/cli/publish).
 
-Package name should begin with `poi-plugin-` to make poi detect it.
+Package name should begin with `poi-plugin-` to make it detected by poi.
 
 ### Publishing a beta version
 
@@ -321,6 +322,6 @@ cd .. && tar cvf [repo] [repo].tar.gz
 
 ## Plugin examples
 
-Poi's internal componets are structured like plugins, you can fine their codes in views/componets.
+Poi's internal componets are structured like plugins, you can find their codes in views/componets.
 
 More plugins are available as reference on poooi(https://github.com/poooi)
