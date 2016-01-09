@@ -33,9 +33,9 @@ appData
             |-- plugin3
                   |-- index.coffee
 ```
-On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path appData/plugins/node_modules, and tries to load them as plugins.
+On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path `appData/plugins/node_modules`, and tries to load them as plugins. Here `appData` is path to store user data, on Windows it will be `%AppData%/poi`, on Unix-like OS it will be `~/.config/poi`.
 
-Basically, a plugin can be loaded when it contains an index, which can be index.js, index.coffee or index.cjsx.
+Basically, a plugin can be loaded when it contains an index, which can be `index.js`, `index.coffee` or `index.cjsx`.
 
 ## Attributes of index
 Index can expose its attributes via `export` method. Below are all attributes and their respective data type. Data type `String | ReactElement` means it will be directly displayed if it is a string, or rendered by React if a ReactElement.
@@ -91,7 +91,7 @@ window =
   React // React
   ReactBootstrap // React Bootstrap
   FontAwesome // React FontAwesome
-  jQuery // jQuery, not recommeded to use unless you really need it
+  jQuery // jQuery, not recommended to use unless you really need it
   _ // Underscore
   $ // equivalent to document.querySelector
   $$ // equivalent to document.querySelectorAll
@@ -104,20 +104,20 @@ Poi exposes API related to game data as global variables, you can fetch followin
 
 ```javascript
 window =
-  // variables beginning with $ is basic data, not related to user
+  // variable beginning with $ is basic data, not related to user
   $ships: Array // basic data for all ships in game, same as the received data, index by api_id
   $shipTypes: Array // basic data for all ships in game, same as the received data, index by api_id
   $slotitems: Array // basic data for all equipments in game, same as the received data, index by api_id
   $mapareas: Array // basic data for all map areas in game, same as the received data, index by api_id
   $maps: Array // basic data for all maps in game, same as the received data, index by api_id
   $missions: Array // basic data for all expeditions in game, same as the received data, index by api_id
-  // variables beginning with _ is user data
+  // variable beginning with _ is user data
   _ships: Object // all ships owned by player, index by api_id
   _slotitems: Object // all equipments owned by player, index by api_id
   _decks: Array // player fleets
 ```
 
-Poi exposes game data communication as global events, can be accessed via window.addEventListener to obtain information on data sending/receiving:
+Poi exposes game data communication as global events, can be accessed via `window.addEventListener` to obtain information on data sending/receiving:
 
 ```javascript
 window.addEventListener('game.request', function (e) {
@@ -160,7 +160,7 @@ window.theme // current theme
 ```
 ## Window plugin development
 
-New windows are created by windowManager. More information about createWindow method can be found in Electron's' [new BrowserWindow method](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
+New windows are created by `windowManager`. More information about `createWindow` method can be found in Electron's' [new BrowserWindow method](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
 
 index.cjsx
 ```coffeescript
@@ -208,7 +208,7 @@ require(ROOT + "/components/coffee-script/extras/coffee-script.js");
 Poi supports i18n with the `i18n-2` package.
 
 It is recommended that the i18n object be attached to
-window.i18n, as following:
+`window.i18n`, as following:
 
 ```coffeescript
 window.i18n.pluginName = new (require 'i18n-2')
@@ -322,6 +322,6 @@ cd .. && tar cvf [repo] [repo].tar.gz
 
 ## Plugin examples
 
-Poi's internal componets are structured like plugins, you can find their codes in views/componets.
+Poi's internal components are structured like plugins, you can find their codes in views/componets.
 
 More plugins are available as reference on poooi(https://github.com/poooi)

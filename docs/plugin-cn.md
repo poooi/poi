@@ -30,12 +30,12 @@ appData
             |-- plugin3
                   |-- index.coffee
 ```
-在启动的时候，poi 会寻找 appData/plugins/node_modules 目录下的所有名字以 `poi-plugin-` 开头的文件夹，并尝试以插件的方式将其载入。
+在启动的时候，poi 会寻找 `appData/plugins/node_modules` 目录下的所有名字以 `poi-plugin-` 开头的文件夹，并尝试以插件的方式将其载入。此处 `appData` 为用于存放用户数据的目录，Windows 上是 `%AppData%/poi`，类 unix 操作系统上是 `~/.config/poi`
 
-一个插件只需要有基本的 index 就可以被载入，index 可以是 index.js，index.coffee 或者 index.cjsx。
+一个插件只需要有基本的 index 就可以被载入，index 可以是 `index.js`，`index.coffee` 或者 `index.cjsx`。
 
 ## index 的基本属性
-index 可以需要以 export 的方式向外暴露以下属性，下面列出的所有属性以及对应的类型。类型为 `String | ReactElement` 表示如果是 String 类型则直接显示，ReactElement 会被 React 渲染。
+index 可以需要以 `export` 的方式向外暴露以下属性，下面列出的所有属性以及对应的类型。类型为 `String | ReactElement` 表示如果是 String 类型则直接显示，ReactElement 会被 React 渲染。
 ```javascript
 module.exports = {
   name: String // 插件的英文名
@@ -114,7 +114,7 @@ window =
   _decks: Array // 玩家目前的编队信息。
 ```
 
-poi 以全局事件的方式暴露游戏的通讯信息，可以通过 window.addEventListener 获得每次游戏请求的发包收包信息。
+poi 以全局事件的方式暴露游戏的通讯信息，可以通过 `window.addEventListener` 获得每次游戏请求的发包收包信息。
 
 ```javascript
 window.addEventListener('game.request', function (e) {
@@ -157,7 +157,7 @@ window.theme // 目前使用的主题
 ```
 ## 窗口插件开发
 
-使用 windowManager 来创建新窗口。关于 createWindow 的更多说明，参考 Electron 的 [BrowserWindow 中的 new 方法](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
+使用 `windowManager` 来创建新窗口。关于 `createWindow` 的更多说明，参考 Electron 的 [BrowserWindow 中的 new 方法](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
 
 index.cjsx
 ```coffeescript
@@ -202,9 +202,9 @@ require(ROOT + "/components/coffee-script/extras/coffee-script.js");
 
 ## i18n
 
-poi 内置了 i18n-2 模组以进行多语言翻译
+poi 内置了 `i18n-2` 模组以进行多语言翻译
 
-建议将将要初始化的 i18n object 附着到 window.i18n 下，如下所示：
+建议将将要初始化的 i18n object 附着到 `window.i18n` 下，如下所示：
 
 ```coffeescript
 window.i18n.pluginName = new (require 'i18n-2')
@@ -226,7 +226,7 @@ __n = i18n.pluginName.__n.bind(i18n.pluginName)
 translated = __ 'to translate'
 ```
 
-关于 i18n-2 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
+关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
 
 对于游戏内资源的翻译，poi 预置了一个翻译方法，对于非新窗口插件，可以通过如下方法调用
 
