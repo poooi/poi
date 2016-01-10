@@ -321,8 +321,10 @@ class PluginManager
           if packName == plugin_.packageName
             dump = true
             validPlugins[index].version = packVersion
-            if validPlugins[index].lastestVersion == packVersion
+            if semver.eq validPlugins[index].lastestVersion, packVersion
               validPlugins[index].isOutdated = false
+            else if semver.gt validPlugins[index].lastestVersion, packVersion
+              validPlugins[index].isOutdated = true
         if !dump then packgaeName = packName
       if packgaeName?
         plugin = null
