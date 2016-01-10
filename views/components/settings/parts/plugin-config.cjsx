@@ -64,17 +64,23 @@ PluginConfig = React.createClass
     shell.openExternal link
     e.preventDefault()
   handleEnableBetaPluginCheck: ->
-    config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
-    @setState
-      config: config
+    async( =>
+      config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
+      @setState
+        config: config
+    )()
   handleEnableProxy: ->
-    config = yield PluginManager.selectConfig(null, !@state.config.proxy, null)
-    @setState
-      config: config
+    async( =>
+      config = yield PluginManager.selectConfig(null, !@state.config.proxy, null)
+      @setState
+        config: config
+    )()
   onSelectServer: (state) ->
-    config = yield PluginManager.selectConfig(state ,null, null)
-    @setState
-      config: config
+    async( =>
+      config = yield PluginManager.selectConfig(state ,null, null)
+      @setState
+        config: config
+    )()
   handleAdvancedShow: ->
     advanced = !@state.advanced
     @setState {advanced}

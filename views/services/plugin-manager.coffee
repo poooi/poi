@@ -110,7 +110,7 @@ class PluginManager
   # @return {Promise<Object>} return the npm config
   selectConfig: (name, enable, check) ->
     async( =>
-      @getMirrors()
+      yield @getMirrors()
       if name?
         @config_.mirror = @mirrors_[name]
         config.set "packageManager.mirrorName", name
@@ -216,25 +216,28 @@ class PluginManager
       plugins = yield @getInstalledPlugins()
       outdatedPlugins = []
       outdatedList = []
-      for plugin in plugins
-        try
-          distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
-          latest = "#{plugin.version}"
-          if @config_.betaCheck && distTag.beta?
-            if semver.gt distTag.beta, latest
-              latest = distTag.beta
-          if semver.gt distTag.latest, latest
-            latest = distTag.latest
-          if semver.gt latest, plugin.version
-            outdatedPlugins.push plugin
-            index = -1
-            for plugin_, i in @plugins_
-              if plugin.packageName is plugin_.packageName
-                index = i
-            @plugins_[index]?.isOutdated = true
-            @plugins_[index]?.lastestVersion = latest
-            if plugin.isRead then outdatedList.push plugin.stringName
-        catch error
+      tasks = plugins.map (plugin) =>
+        async( =>
+          try
+            distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
+            latest = "#{plugin.version}"
+            if @config_.betaCheck && distTag.beta?
+              if semver.gt distTag.beta, latest
+                latest = distTag.beta
+            if semver.gt distTag.latest, latest
+              latest = distTag.latest
+            if semver.gt latest, plugin.version
+              outdatedPlugins.push plugin
+              index = -1
+              for plugin_, i in @plugins_
+                if plugin.packageName is plugin_.packageName
+                  index = i
+              @plugins_[index]?.isOutdated = true
+              @plugins_[index]?.lastestVersion = latest
+              if plugin.isRead then outdatedList.push plugin.stringName
+          catch error
+        )()
+      yield Promise.all(tasks)
       if isNotif && outdatedList.length > 0
         content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
         notify content,
@@ -310,7 +313,7 @@ class PluginManager
   # @return {Promise<>}
   updatePlugin: (plugin) ->
     async( =>
-      @getMirrors()
+      yield @getMirrors()
       try
         yield Promise.promisify(npm.commands.install)(["#{plugin.packageName}@#{plugin.lastestVersion}"])
       catch error
@@ -322,19 +325,21 @@ class PluginManager
   # @return {Promise<Plugin>}
   installPlugin: (name) ->
     async( =>
-      @getMirrors()
+      yield @getMirrors()
       try
+        packgaeName = null
         data = yield Promise.promisify(npm.commands.install)([name])
+        validPlugins = yield @getValidPlugins()
         for packs in data[0]
           dump = false
           packName = packs[0].split('@')[0]
-          for plugin_ in @plugins_
+          for plugin_ in validPlugins
             if packName == plugin_.packageName
               dump = true
-            if !dump then packgaeName = packName
+          if !dump then packgaeName = packName
         if packgaeName?
+          plugin = null
           plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packgaeName
-          @plugins_.push plugin
       catch error
         throw error
     )()
@@ -345,7 +350,7 @@ class PluginManager
   uninstallPlugin: (plugin) ->
     async( =>
       plugin.isUninstalling = true
-      @getMirrors()
+      yield @getMirrors()
       try
         yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
         plugin.isInstalled = false
