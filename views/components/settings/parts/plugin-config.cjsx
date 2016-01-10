@@ -124,7 +124,7 @@ PluginConfig = React.createClass
         @updateFromPluginManager npmWorkding: false
       catch error
         plugins[index].isUpdating = false
-        @updateFromPluginManager npmWorkding: false
+        @setState npmWorkding: false
         throw error
 
   handleInstallAll: async ->
