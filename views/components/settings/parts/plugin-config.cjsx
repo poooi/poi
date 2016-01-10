@@ -98,16 +98,14 @@ PluginConfig = React.createClass
         index = installingPluginNames.indexOf name
         if index > -1
           installingPluginNames.splice index, 1
-          @updateFromPluginManager {
+          yield @updateFromPluginManager {
             installingPluginNames: installingPluginNames
             npmWorkding: false
           }
         else
-          @setState
-            npmWorkding: false
+          yield @updateFromPluginManager npmWorkding: false
       catch error
-        @setState
-          npmWorkding: false
+        yield @updateFromPluginManager npmWorkding: false
         throw error
   handleUpdate: async (index) ->
     if !@props? || !@props.disabled
@@ -121,10 +119,10 @@ PluginConfig = React.createClass
         plugins[index].isUpdating = false
         plugins[index].isOutdated = false
         plugins[index].version = plugins[index].lastestVersion
-        @updateFromPluginManager npmWorkding: false
+        yield @updateFromPluginManager npmWorkding: false
       catch error
         plugins[index].isUpdating = false
-        @setState npmWorkding: false
+        yield @updateFromPluginManager npmWorkding: false
         throw error
 
   handleInstallAll: async ->
