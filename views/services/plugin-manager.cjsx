@@ -84,6 +84,7 @@ class PluginManager
     @plugins_ = pluginPaths.map @readPlugin_
     if opt_notifyFailed
       @notifyFailed_()
+    @plugins_ = _.sortBy @plugins_, 'priority'
     return @plugins_
 
   # emit @PLUGIN_RELOAD event, let valid plugins make effect
@@ -313,6 +314,8 @@ class PluginManager
       packgaeName = null
       data = yield Promise.promisify(npm.commands.install)([name])
       validPlugins = yield @getValidPlugins()
+      # Make sure if the plugin is unavailable.
+      # if available, update information.
       for packs in data[0]
         dump = false
         packName = packs[0].split('@')[0]
@@ -325,10 +328,14 @@ class PluginManager
               validPlugins[index].isOutdated = false
             else if semver.gt validPlugins[index].lastestVersion, packVersion
               validPlugins[index].isOutdated = true
-        if !dump then packgaeName = packName
+        if !dump
+          packgaeName = packName
+          break
       if packgaeName?
         plugin = null
         plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packgaeName
+        @plugins_.push plugin
+        @plugins_ = _.sortBy @plugins_, 'priority'
     catch error
       throw error
 
@@ -336,12 +343,13 @@ class PluginManager
   # @param {Plugin} plugin
   # @return {Promise<>}
   uninstallPlugin: async (plugin) ->
-    plugin.isUninstalling = true
     yield @getMirrors()
     try
       yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
-      plugin.isInstalled = false
-      plugin.isUninstalling = false
+      for plugin_, index in @plugins_
+        if plugin.packageName is plugin_.packageName
+          @plugins_.splice(index, 1)
+          break
     catch error
       throw error
 

@@ -86,7 +86,6 @@ PluginConfig = React.createClass
       when PluginManager.VALID
         PluginManager.disablePlugin plugin
     @updateFromPluginManager()
-
   handleInstall: async (name) ->
     if !@props.disabled
       installingPluginNames = @state.installingPluginNames
@@ -109,22 +108,16 @@ PluginConfig = React.createClass
         throw error
   handleUpdate: async (index) ->
     if !@props? || !@props.disabled
-      plugins = @state.plugins
-      plugins[index].isUpdating = true
+      @state.plugins[index].isUpdating = true
       @setState npmWorkding: true
       plugins = yield PluginManager.getInstalledPlugins()
-      plugin = @state.plugins[index]
+      plugin = plugins[index]
       try
         yield PluginManager.updatePlugin(plugin)
-        plugins[index].isUpdating = false
-        plugins[index].isOutdated = false
-        plugins[index].version = plugins[index].lastestVersion
         yield @updateFromPluginManager npmWorkding: false
       catch error
-        plugins[index].isUpdating = false
         yield @updateFromPluginManager npmWorkding: false
         throw error
-
   handleInstallAll: async ->
     @setState installingAll: true
     settings = yield PluginManager.getUninstalledPluginSettings()
@@ -132,7 +125,6 @@ PluginConfig = React.createClass
       yield @handleInstall(name)
     @setState
       installingAll: false
-
   handleUpdateAll: async ->
     if !@props.disabled
       @setState updatingAll: true
@@ -150,21 +142,16 @@ PluginConfig = React.createClass
       else
         @setState
           updatingAll: false
-
   handleRemove: async (index) ->
     if !@props.disabled
-      plugins = @state.plugins
-      plugins[index].isUninstalling = true
+      @state.plugins[index].isUninstalling = true
       @setState npmWorkding: true
       try
         plugins = yield PluginManager.getInstalledPlugins()
         plugin = plugins[index]
         yield PluginManager.uninstallPlugin(plugin)
-        plugins[index].isInstalled = false
-        plugins[index].isUninstalling = false
         @updateFromPluginManager npmWorkding: false
       catch error
-        plugins[index].isUninstalling = false
         @setState npmWorkding: false
         throw error
   checkUpdate: async ->
@@ -174,7 +161,6 @@ PluginConfig = React.createClass
       hasUpdates: plugins.length isnt 0
       checkingUpdate: false
     }
-
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
   onSelectOpenSite: (e) ->
@@ -195,7 +181,6 @@ PluginConfig = React.createClass
             @setState manuallyInstallStatus: 2
           catch error
             @setState manuallyInstallStatus: 3
-
   onDropInstallFromFile: async (e) ->
     e.preventDefault()
     droppedFiles = e.dataTransfer.files
