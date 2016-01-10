@@ -321,6 +321,8 @@ class PluginManager
           if packName == plugin_.packageName
             dump = true
             validPlugins[index].version = packVersion
+            if validPlugins[index].lastestVersion == packVersion
+              validPlugins[index].isOutdated = false
         if !dump then packgaeName = packName
       if packgaeName?
         plugin = null
