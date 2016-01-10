@@ -109,7 +109,7 @@ PluginConfig = React.createClass
         @setState
           npmWorkding: false
         throw error
-  handleUpdate1: async (index) ->
+  handleUpdate: async (index) ->
     if !@props? || !@props.disabled
       plugins = @state.plugins
       plugins[index].isUpdating = true
