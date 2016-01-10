@@ -294,9 +294,14 @@ class PluginManager
   # @return {Promise<>}
   updatePlugin: async (plugin) ->
     yield @getMirrors()
+    plugin.isUpdating = true
     try
       yield Promise.promisify(npm.commands.install)(["#{plugin.packageName}@#{plugin.lastestVersion}"])
+      plugin.isUpdating = false
+      plugin.isOutdated = false
+      plugin.version = plugin.lastestVersion
     catch error
+      plugin.isUpdating = false
       throw error
 
   # install one plugin and read it
@@ -311,9 +316,11 @@ class PluginManager
       for packs in data[0]
         dump = false
         packName = packs[0].split('@')[0]
-        for plugin_ in validPlugins
+        packVersion = packs[0].split('@')[1]
+        for plugin_, index in validPlugins
           if packName == plugin_.packageName
             dump = true
+            validPlugins[index].version = packVersion
         if !dump then packgaeName = packName
       if packgaeName?
         plugin = null
