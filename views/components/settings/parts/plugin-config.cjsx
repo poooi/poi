@@ -373,7 +373,7 @@ PluginConfig = React.createClass
           </Collapse>
         </Col>
         <Collapse in={@state.manuallyInstallStatus > 0}>
-          <Col xs=12>
+          <Col xs=12 style={paddingBottom: 10}>
             <Alert bsStyle={
                 switch @state.manuallyInstallStatus
                   when 1
