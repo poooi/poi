@@ -212,11 +212,11 @@ class PluginManager
   getOutdatedPlugins: (isNotif) ->
     # after getting mirrors, at least one mirror is set
     async( =>
-      @getMirrors()
+      yield @getMirrors()
       plugins = yield @getInstalledPlugins()
       outdatedPlugins = []
       outdatedList = []
-      plugins.map (plugin) =>
+      for plugin in plugins
         try
           distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
           latest = "#{plugin.version}"
@@ -326,7 +326,12 @@ class PluginManager
       try
         yield Promise.promisify(npm.commands.install)([name])
         plugin = @readPlugin_ path.join @pluginPath, 'node_modules', name
-        @plugins_.push plugin
+        dump = false
+        for plugin_ in @plugins_
+          if plugin.packageName == plugin_.packageName
+            dump = true
+        if !dump
+          @plugins_.push plugin
       catch error
         throw error
     )()

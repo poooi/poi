@@ -48,7 +48,6 @@ PluginConfig = React.createClass
         reloading: false
       }
     )()
-
   updateFromPluginManager: (newState) ->
     async( =>
       newState ?= {}
@@ -61,7 +60,6 @@ PluginConfig = React.createClass
         state[key] = newState[key]
       @setState state
     )()
-
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
@@ -103,6 +101,9 @@ PluginConfig = React.createClass
       async( =>
         try
           yield PluginManager.installPlugin(name)
+          name = path.basename name
+          name = name.replace('.tgz', '')
+          name = name.replace('.tar.gz', '')
           installingPluginNames = @state.installingPluginNames
           index = installingPluginNames.indexOf name
           if index > -1
@@ -111,18 +112,21 @@ PluginConfig = React.createClass
               installingPluginNames: installingPluginNames
               npmWorkding: false
             }
+          else
+            @setState
+              npmWorkding: false
         catch error
+          @setState
+            npmWorkding: false
           throw error
       )()
-
-
   handleUpdate: (index) ->
     if !@props? || !@props.disabled
       plugins = @state.plugins
       plugins[index].isUpdating = true
       @setState npmWorkding: true
-      plugins = yield PluginManager.getInstalledPlugins()
       async( =>
+        plugins = yield PluginManager.getInstalledPlugins()
         plugin = @state.plugins[index]
         try
           yield PluginManager.updatePlugin(plugin)
@@ -168,12 +172,21 @@ PluginConfig = React.createClass
 
   handleRemove: (index) ->
     if !@props.disabled
+      plugins = @state.plugins
+      plugins[index].isUninstalling = true
+      @setState npmWorkding: true
       async( =>
-        plugins = yield PluginManager.getInstalledPlugins()
-        plugin = plugins[index]
-        @setState npmWorkding: true
-        yield PluginManager.uninstallPlugin(plugin)
-        @updateFromPluginManager npmWorkding: false
+        try
+          plugins = yield PluginManager.getInstalledPlugins()
+          plugin = plugins[index]
+          yield PluginManager.uninstallPlugin(plugin)
+          plugins[index].isInstalled = false
+          plugins[index].isUninstalling = false
+          @updateFromPluginManager npmWorkding: false
+        catch error
+          plugins[index].isUninstalling = false
+          @setState npmWorkding: false
+          throw error
       )()
   checkUpdate: ->
     @setState checkingUpdate: true
@@ -225,7 +238,6 @@ PluginConfig = React.createClass
           catch error
             @setState manuallyInstallStatus: 3
       )()
-
   handleManuallyInstall: (name) ->
     @setState manuallyInstallStatus: 1
     async( =>
@@ -250,7 +262,11 @@ PluginConfig = React.createClass
       mirrors = yield PluginManager.getMirrors()
       PluginManager.readPlugins(true)
       config = yield PluginManager.getConf()
-      @setState checkingUpdate: true
+      @updateFromPluginManager {
+        checkingUpdate: true
+        mirrors: mirrors
+        config: config
+      }
       plugins = yield PluginManager.getOutdatedPlugins(true)
       @updateFromPluginManager {
         hasUpdates: plugins.length isnt 0
