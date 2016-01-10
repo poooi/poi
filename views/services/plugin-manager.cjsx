@@ -319,6 +319,8 @@ class PluginManager
       for packs in data[0]
         dump = false
         packName = packs[0].split('@')[0]
+        if packName.indexOf("poi-plugin") == -1
+          continue
         packVersion = packs[0].split('@')[1]
         for plugin_, index in validPlugins
           if packName == plugin_.packageName
