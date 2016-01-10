@@ -298,7 +298,7 @@ class PluginManager
   # @return {Promise<>}
   updatePlugin: (plugin) ->
     @getMirrors().then =>
-      new Promise (resolve) =>
+      new Promise (resolve, reject) =>
         npm.commands.install ["#{plugin.packageName}@#{plugin.lastestVersion}"], (err) =>
           plugin.isUpdating = false
           if !err then resolve() else reject()
@@ -308,7 +308,7 @@ class PluginManager
   # @return {Promise<Plugin>}
   installPlugin: (name) ->
     @getMirrors().then =>
-      new Promise (resolve) =>
+      new Promise (resolve, reject) =>
         npm.commands.install [name], (err) =>
           plugin = @readPlugin_ path.join @pluginPath, 'node_modules', name
           @plugins_.push plugin
