@@ -50,12 +50,14 @@ ResourcePanel = React.createClass
           material[i + 1] = body.api_material[i]
         @setState
           material: material
+      when '/kcsapi/api_get_member/kdock'
+        @kdockIsLSC = body.map (kdock) -> kdock.api_item1 >= 1000
       when '/kcsapi/api_req_kousyou/createship_speedchange'
         {material} = @state
         if body.api_result == 1
-          material[5] -= parseInt(postBody.api_highspeed)
-        @setState
-          material: material
+          material[5] -= if @kdockIsLSC?[postBody.api_kdock_id - 1] then 10 else 1
+          @setState
+            material: material
       when '/kcsapi/api_req_kousyou/destroyitem2'
         {material} = @state
         for i in [0..3]
