@@ -32,19 +32,17 @@ ControlledTabArea = React.createClass
   componentDidUpdate: (prevProps, prevState) ->
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
-  renderPlugins: ->
-    async( =>
-      plugins = yield PluginManager.getValidPlugins()
-      plugins = plugins.filter (plugin) ->
-        plugin.show isnt false
-      plugins = _.sortBy plugins, 'priority'
-      tabbedPlugins = plugins.filter (plugin) ->
-        !plugin.handleClick?
-      if @isMounted()
-        @setState
-          plugins: plugins
-          tabbedPlugins: tabbedPlugins
-    )()
+  renderPlugins: async ->
+    plugins = yield PluginManager.getValidPlugins()
+    plugins = plugins.filter (plugin) ->
+      plugin.show isnt false
+    plugins = _.sortBy plugins, 'priority'
+    tabbedPlugins = plugins.filter (plugin) ->
+      !plugin.handleClick?
+    if @isMounted()
+      @setState
+        plugins: plugins
+        tabbedPlugins: tabbedPlugins
   handleToggleDropdown: ->
     dropdownOpen = !@state.dropdownOpen
     @setState {dropdownOpen}
@@ -139,10 +137,8 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'view.main.visible', @handleMiniShipChange
-    async( =>
-      yield @renderPlugins()
-      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
-    )()
+    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    @renderPlugins()
   componentWillUnmount: ->
     window.removeEventListener 'view.main.visible', @handleMiniShipChange
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins

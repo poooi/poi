@@ -34,172 +34,148 @@ PluginConfig = React.createClass
   checkCount: 0
   emitReload: ->
     PluginManager.emitReload()
-  readPlugins: ->
-    async( =>
-      initState = @getInitialState()
-      initState.reloading = true
-      @setState initState
-      mirrors = yield PluginManager.getMirrors()
-      config = yield PluginManager.getConf()
-      yield PluginManager.readPlugins()
-      @updateFromPluginManager {
-        mirrors: mirrors
-        config: config
-        reloading: false
-      }
-    )()
-  updateFromPluginManager: (newState) ->
-    async( =>
-      newState ?= {}
-      state = @state
-      plugins = yield PluginManager.getInstalledPlugins()
-      settings = yield PluginManager.getUninstalledPluginSettings()
-      newState.plugins = plugins
-      newState.uninstalledPluginSettings = settings
-      for key of newState
-        state[key] = newState[key]
-      @setState state
-    )()
+  readPlugins: async ->
+    initState = @getInitialState()
+    initState.reloading = true
+    @setState initState
+    mirrors = yield PluginManager.getMirrors()
+    config = yield PluginManager.getConf()
+    yield PluginManager.readPlugins()
+    @updateFromPluginManager {
+      mirrors: mirrors
+      config: config
+      reloading: false
+    }
+  updateFromPluginManager: async (newState) ->
+    newState ?= {}
+    state = @state
+    plugins = yield PluginManager.getInstalledPlugins()
+    settings = yield PluginManager.getUninstalledPluginSettings()
+    newState.plugins = plugins
+    newState.uninstalledPluginSettings = settings
+    for key of newState
+      state[key] = newState[key]
+    @setState state
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
-  handleEnableBetaPluginCheck: ->
-    async( =>
-      config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
-      @setState
-        config: config
-    )()
-  handleEnableProxy: ->
-    async( =>
-      config = yield PluginManager.selectConfig(null, !@state.config.proxy, null)
-      @setState
-        config: config
-    )()
-  onSelectServer: (state) ->
-    async( =>
-      config = yield PluginManager.selectConfig(state ,null, null)
-      @setState
-        config: config
-    )()
+  handleEnableBetaPluginCheck: async ->
+    config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
+    @setState
+      config: config
+  handleEnableProxy: async ->
+    config = yield PluginManager.selectConfig(null, !@state.config.proxy, null)
+    @setState
+      config: config
+  onSelectServer: async (state) ->
+    config = yield PluginManager.selectConfig(state ,null, null)
+    @setState
+      config: config
   handleAdvancedShow: ->
     advanced = !@state.advanced
     @setState {advanced}
   changeInstalledPackage: (e) ->
     manuallyInstallPackage = e.target.value
     @setState {manuallyInstallPackage}
-  handleEnable: (index) ->
-    async( =>
-      plugins = yield PluginManager.getInstalledPlugins()
-      plugin = plugins[index]
-      switch PluginManager.getStatusOfPlugin plugin
-        when PluginManager.DISABLED
-          PluginManager.enablePlugin plugin
-        when PluginManager.VALID
-          PluginManager.disablePlugin plugin
-      @updateFromPluginManager()
-    )()
+  handleEnable: async (index) ->
+    plugins = yield PluginManager.getInstalledPlugins()
+    plugin = plugins[index]
+    switch PluginManager.getStatusOfPlugin plugin
+      when PluginManager.DISABLED
+        PluginManager.enablePlugin plugin
+      when PluginManager.VALID
+        PluginManager.disablePlugin plugin
+    @updateFromPluginManager()
 
-  handleInstall: (name) ->
+  handleInstall: async (name) ->
     if !@props.disabled
       installingPluginNames = @state.installingPluginNames
       installingPluginNames.push name
       @setState installingPluginNames: installingPluginNames, npmWorkding: true
-      async( =>
-        try
-          yield PluginManager.installPlugin(name)
-          installingPluginNames = @state.installingPluginNames
-          index = installingPluginNames.indexOf name
-          if index > -1
-            installingPluginNames.splice index, 1
-            @updateFromPluginManager {
-              installingPluginNames: installingPluginNames
-              npmWorkding: false
-            }
-          else
-            @setState
-              npmWorkding: false
-        catch error
+      try
+        yield PluginManager.installPlugin(name)
+        installingPluginNames = @state.installingPluginNames
+        index = installingPluginNames.indexOf name
+        if index > -1
+          installingPluginNames.splice index, 1
+          @updateFromPluginManager {
+            installingPluginNames: installingPluginNames
+            npmWorkding: false
+          }
+        else
           @setState
             npmWorkding: false
-          throw error
-      )()
-  handleUpdate: (index) ->
+      catch error
+        @setState
+          npmWorkding: false
+        throw error
+  handleUpdate1: async (index) ->
     if !@props? || !@props.disabled
       plugins = @state.plugins
       plugins[index].isUpdating = true
       @setState npmWorkding: true
-      async( =>
-        plugins = yield PluginManager.getInstalledPlugins()
-        plugin = @state.plugins[index]
-        try
-          yield PluginManager.updatePlugin(plugin)
-          plugins[index].isUpdating = false
-          plugins[index].isOutdated = false
-          plugins[index].version = plugins[index].lastestVersion
-          @updateFromPluginManager npmWorkding: false
-        catch error
-          plugins[index].isUpdating = false
-          @updateFromPluginManager npmWorkding: false
-          throw error
-      )()
+      plugins = yield PluginManager.getInstalledPlugins()
+      plugin = @state.plugins[index]
+      try
+        yield PluginManager.updatePlugin(plugin)
+        plugins[index].isUpdating = false
+        plugins[index].isOutdated = false
+        plugins[index].version = plugins[index].lastestVersion
+        @updateFromPluginManager npmWorkding: false
+      catch error
+        plugins[index].isUpdating = false
+        @updateFromPluginManager npmWorkding: false
+        throw error
 
-  handleInstallAll: ->
+  handleInstallAll: async ->
     @setState installingAll: true
-    async( =>
-      settings = yield PluginManager.getUninstalledPluginSettings()
-      for name, value of settings
-        yield @handleInstall(name)
-      @setState
-        installingAll: false
-    )()
+    settings = yield PluginManager.getUninstalledPluginSettings()
+    for name, value of settings
+      yield @handleInstall(name)
+    @setState
+      installingAll: false
 
-  handleUpdateAll: ->
+  handleUpdateAll: async ->
     if !@props.disabled
       @setState updatingAll: true
-      async( =>
-        err = null
-        for plugin, index in @state.plugins
-          if @state.plugins[index].isOutdated
-            try
-              yield @handleUpdate(index)
-            catch error
-              err = error
-        if !err
-          @setState
-            hasUpdates: false
-            updatingAll: false
-        else
-          @setState
-            updatingAll: false
-      )()
+      err = null
+      for plugin, index in @state.plugins
+        if @state.plugins[index].isOutdated
+          try
+            yield @handleUpdate(index)
+          catch error
+            err = error
+      if !err
+        @setState
+          hasUpdates: false
+          updatingAll: false
+      else
+        @setState
+          updatingAll: false
 
-  handleRemove: (index) ->
+  handleRemove: async (index) ->
     if !@props.disabled
       plugins = @state.plugins
       plugins[index].isUninstalling = true
       @setState npmWorkding: true
-      async( =>
-        try
-          plugins = yield PluginManager.getInstalledPlugins()
-          plugin = plugins[index]
-          yield PluginManager.uninstallPlugin(plugin)
-          plugins[index].isInstalled = false
-          plugins[index].isUninstalling = false
-          @updateFromPluginManager npmWorkding: false
-        catch error
-          plugins[index].isUninstalling = false
-          @setState npmWorkding: false
-          throw error
-      )()
-  checkUpdate: ->
+      try
+        plugins = yield PluginManager.getInstalledPlugins()
+        plugin = plugins[index]
+        yield PluginManager.uninstallPlugin(plugin)
+        plugins[index].isInstalled = false
+        plugins[index].isUninstalling = false
+        @updateFromPluginManager npmWorkding: false
+      catch error
+        plugins[index].isUninstalling = false
+        @setState npmWorkding: false
+        throw error
+  checkUpdate: async ->
     @setState checkingUpdate: true
-    async( =>
-      plugins = yield PluginManager.getOutdatedPlugins()
-      @updateFromPluginManager {
-        hasUpdates: plugins.length isnt 0
-        checkingUpdate: false
-      }
-    )()
+    plugins = yield PluginManager.getOutdatedPlugins()
+    @updateFromPluginManager {
+      hasUpdates: plugins.length isnt 0
+      checkingUpdate: false
+    }
 
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
@@ -213,25 +189,6 @@ PluginConfig = React.createClass
         defaultPath: remote.require('electron').app.getPath('downloads')
         properties: ['openFile', 'multiSelections']
       if filenames
-        async( =>
-          settings = yield PluginManager.getUninstalledPluginSettings()
-          for filename in filenames
-            @setState manuallyInstallStatus: 1
-            try
-              yield @handleInstall(filename)
-              @setState manuallyInstallStatus: 2
-            catch error
-              @setState manuallyInstallStatus: 3
-        )()
-
-  onDropInstallFromFile: (e) ->
-    e.preventDefault()
-    droppedFiles = e.dataTransfer.files
-    filenames = []
-    for droppedFile in droppedFiles
-      filenames.push droppedFile.path
-    if filenames
-      async( =>
         settings = yield PluginManager.getUninstalledPluginSettings()
         for filename in filenames
           @setState manuallyInstallStatus: 1
@@ -240,17 +197,30 @@ PluginConfig = React.createClass
             @setState manuallyInstallStatus: 2
           catch error
             @setState manuallyInstallStatus: 3
-      )()
-  handleManuallyInstall: (name) ->
-    @setState manuallyInstallStatus: 1
-    async( =>
+
+  onDropInstallFromFile: async (e) ->
+    e.preventDefault()
+    droppedFiles = e.dataTransfer.files
+    filenames = []
+    for droppedFile in droppedFiles
+      filenames.push droppedFile.path
+    if filenames
       settings = yield PluginManager.getUninstalledPluginSettings()
-      try
-        yield @handleInstall(name)
-        @setState manuallyInstallStatus: 2
-      catch error
-        @setState manuallyInstallStatus: 3
-    )()
+      for filename in filenames
+        @setState manuallyInstallStatus: 1
+        try
+          yield @handleInstall(filename)
+          @setState manuallyInstallStatus: 2
+        catch error
+          @setState manuallyInstallStatus: 3
+  handleManuallyInstall: async (name) ->
+    @setState manuallyInstallStatus: 1
+    settings = yield PluginManager.getUninstalledPluginSettings()
+    try
+      yield @handleInstall(name)
+      @setState manuallyInstallStatus: 2
+    catch error
+      @setState manuallyInstallStatus: 3
   synchronize: (callback) ->
     return if @lock
     @lock = true
@@ -260,24 +230,22 @@ PluginConfig = React.createClass
     if prevState.manuallyInstallStatus > 1 && prevState.manuallyInstallStatus == @state.manuallyInstallStatus
       @setState
         manuallyInstallStatus: 0
-  componentDidMount: ->
-    async( =>
-      mirrors = yield PluginManager.getMirrors()
-      PluginManager.readPlugins(true)
-      config = yield PluginManager.getConf()
-      @updateFromPluginManager {
-        checkingUpdate: true
-        mirrors: mirrors
-        config: config
-      }
-      plugins = yield PluginManager.getOutdatedPlugins(true)
-      @updateFromPluginManager {
-        hasUpdates: plugins.length isnt 0
-        checkingUpdate: false
-        mirrors: mirrors
-        config: config
-      }
-    )()
+  componentDidMount: async ->
+    mirrors = yield PluginManager.getMirrors()
+    PluginManager.readPlugins(true)
+    config = yield PluginManager.getConf()
+    @updateFromPluginManager {
+      checkingUpdate: true
+      mirrors: mirrors
+      config: config
+    }
+    plugins = yield PluginManager.getOutdatedPlugins(true)
+    @updateFromPluginManager {
+      hasUpdates: plugins.length isnt 0
+      checkingUpdate: false
+      mirrors: mirrors
+      config: config
+    }
   render: ->
     <form>
       <Divider text={__ 'Plugins'} />

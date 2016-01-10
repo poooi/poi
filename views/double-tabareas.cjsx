@@ -27,19 +27,17 @@ ControlledTabArea = React.createClass
     key: [0, 0]
     plugins: []
     tabbedPlugins: []
-  renderPlugins: ->
-    async( =>
-      plugins = yield PluginManager.getValidPlugins()
-      plugins = @state.plugins.filter (plugin) ->
-        plugin.show isnt false
-      plugins = _.sortBy @state.plugins, 'priority'
-      tabbedPlugins = plugins.filter (plugin) ->
-        !plugin.handleClick?
-      if @isMounted()
-        @setState
-          plugins: plugins
-          tabbedPlugins: tabbedPlugins
-    )()
+  renderPlugins: async ->
+    plugins = yield PluginManager.getValidPlugins()
+    plugins = @state.plugins.filter (plugin) ->
+      plugin.show isnt false
+    plugins = _.sortBy @state.plugins, 'priority'
+    tabbedPlugins = plugins.filter (plugin) ->
+      !plugin.handleClick?
+    if @isMounted()
+      @setState
+        plugins: plugins
+        tabbedPlugins: tabbedPlugins
   handleSelect: (key) ->
     @setState {key} if key[0] isnt @state.key[0] or key[1] isnt @state.key[1]
   handleSelectLeft: (key) ->
@@ -103,10 +101,8 @@ ControlledTabArea = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    async( =>
-      yield @renderPlugins()
-      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
-    )()
+    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    @renderPlugins()
   componentWillUnmount: ->
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   render: ->

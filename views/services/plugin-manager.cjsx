@@ -7,7 +7,6 @@ React = require 'react'
 fs = Promise.promisifyAll require 'fs-extra'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
-async = Promise.coroutine
 
 # we need only glob here
 globAsync = Promise.promisify require 'glob'
@@ -80,14 +79,12 @@ class PluginManager
   # read all plugins from file system
   # @param {boolean=} opt_notifyFailed notify user about unread plugins
   # @return {Promise<Array<Plugin>>}
-  readPlugins: (opt_notifyFailed) ->
-    async( =>
-      pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
-      @plugins_ = pluginPaths.map @readPlugin_
-      if opt_notifyFailed
-        @notifyFailed_()
-      return @plugins_
-    )()
+  readPlugins: async (opt_notifyFailed) ->
+    pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
+    @plugins_ = pluginPaths.map @readPlugin_
+    if opt_notifyFailed
+      @notifyFailed_()
+    return @plugins_
 
   # emit @PLUGIN_RELOAD event, let valid plugins make effect
   emitReload: ->
@@ -95,42 +92,38 @@ class PluginManager
 
   # read mirrors information and select the default one
   # @retrun {Promise<Array<Object>>}
-  readMirrors: ->
-    async( =>
-      @mirrors_ = yield Promise.promisify(fs.readJsonAsync)(@mirrorPath)
-      mirrorConf = config.get 'packageManager.mirrorName', if navigator.language is 'zh-CN' then  "taobao" else "npm"
-      proxyConf = config.get "packageManager.proxy", false
-      betaCheck = config.get "packageManager.enableBetaPluginCheck", false
-      yield @selectConfig(mirrorConf, proxyConf, betaCheck)
-      return @mirrors_
-    )()
+  readMirrors: async ->
+    @mirrors_ = yield Promise.promisify(fs.readJsonAsync)(@mirrorPath)
+    mirrorConf = config.get 'packageManager.mirrorName', if navigator.language is 'zh-CN' then  "taobao" else "npm"
+    proxyConf = config.get "packageManager.proxy", false
+    betaCheck = config.get "packageManager.enableBetaPluginCheck", false
+    yield @selectConfig(mirrorConf, proxyConf, betaCheck)
+    return @mirrors_
 
   # select a mirror and set proxy config
   # @param {object, object, object} mirror name, is proxy enabled, is check beta plugin
   # @return {Promise<Object>} return the npm config
-  selectConfig: (name, enable, check) ->
-    async( =>
-      yield @getMirrors()
-      if name?
-        @config_.mirror = @mirrors_[name]
-        config.set "packageManager.mirrorName", name
-      if enable?
-        @config_.proxy = enable
-        config.set "packageManager.proxy", enable
-      if check?
-        @config_.betaCheck = check
-        config.set "packageManager.enableBetaPluginCheck", check
-      npmConfig =
-        prefix: PLUGIN_PATH
-        registry: @config_.mirror.server
-      if @config_.proxy
-        npmConfig.http_proxy = 'http://127.0.0.1:12450'
-      else
-        if npmConfig.http_proxy?
-          delete npmConfig.http_proxy
-      yield Promise.promisify(npm.load)(npmConfig)
-      return @config_
-    )()
+  selectConfig: async (name, enable, check) ->
+    yield @getMirrors()
+    if name?
+      @config_.mirror = @mirrors_[name]
+      config.set "packageManager.mirrorName", name
+    if enable?
+      @config_.proxy = enable
+      config.set "packageManager.proxy", enable
+    if check?
+      @config_.betaCheck = check
+      config.set "packageManager.enableBetaPluginCheck", check
+    npmConfig =
+      prefix: PLUGIN_PATH
+      registry: @config_.mirror.server
+    if @config_.proxy
+      npmConfig.http_proxy = 'http://127.0.0.1:12450'
+    else
+      if npmConfig.http_proxy?
+        delete npmConfig.http_proxy
+    yield Promise.promisify(npm.load)(npmConfig)
+    return @config_
 
   # get the current plugins
   # @return {Promise<Array<Plugin>>}
@@ -150,21 +143,17 @@ class PluginManager
 
   # get the mirrors
   # @return {Promise<Array<Object>>}
-  getMirrors: ->
-    async( =>
-      if @mirrors_ != null
-        return Promise.resolve @mirrors_
-      else
-        yield @readMirrors()
-      )()
+  getMirrors: async ->
+    if @mirrors_ != null
+      return Promise.resolve @mirrors_
+    else
+      yield @readMirrors()
 
   # get the selected mirror
   # @return {Promise<Object>}
-  getConf: ->
-    async( =>
-      yield @getMirrors()
-      return Promise.resolve @config_
-    )()
+  getConf: async ->
+    yield @getMirrors()
+    return Promise.resolve @config_
 
   # get installed plugins
   # @return {Promise<Array<Plugin>>}
@@ -173,18 +162,16 @@ class PluginManager
 
   # get uninstalled plugin settings, get from requirements_
   # @return {Promise<Object>}
-  getUninstalledPluginSettings: ->
-    async( =>
-      yield @getRequirements()
-      installedPlugins = yield @getInstalledPlugins()
-      installedPluginNames = installedPlugins.map (plugin) ->
-        plugin.packageName
-      uninstalled = {}
-      for name, value of @requirements_
-        if name not in installedPluginNames
-          uninstalled[name] = value
-      return uninstalled
-    )()
+  getUninstalledPluginSettings: async ->
+    yield @getRequirements()
+    installedPlugins = yield @getInstalledPlugins()
+    installedPluginNames = installedPlugins.map (plugin) ->
+      plugin.packageName
+    uninstalled = {}
+    for name, value of @requirements_
+      if name not in installedPluginNames
+        uninstalled[name] = value
+    return uninstalled
 
   # get all read plugins
   # @return {Promise<Array<Plugin>>}
@@ -209,54 +196,48 @@ class PluginManager
 
   # get all plugins that are outdated
   # @return {Plugin<Array<Plugin>>}
-  getOutdatedPlugins: (isNotif) ->
+  getOutdatedPlugins: async (isNotif) ->
     # after getting mirrors, at least one mirror is set
-    async( =>
-      yield @getMirrors()
-      plugins = yield @getInstalledPlugins()
-      outdatedPlugins = []
-      outdatedList = []
-      tasks = plugins.map (plugin) =>
-        async( =>
-          try
-            distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
-            latest = "#{plugin.version}"
-            if @config_.betaCheck && distTag.beta?
-              if semver.gt distTag.beta, latest
-                latest = distTag.beta
-            if semver.gt distTag.latest, latest
-              latest = distTag.latest
-            if semver.gt latest, plugin.version
-              outdatedPlugins.push plugin
-              index = -1
-              for plugin_, i in @plugins_
-                if plugin.packageName is plugin_.packageName
-                  index = i
-              @plugins_[index]?.isOutdated = true
-              @plugins_[index]?.lastestVersion = latest
-              if plugin.isRead then outdatedList.push plugin.stringName
-          catch error
-        )()
-      yield Promise.all(tasks)
-      if isNotif && outdatedList.length > 0
-        content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
-        notify content,
-          type: 'plugin update'
-          title: __ 'Plugin update'
-          icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
-          audio: "file://#{ROOT}/assets/audio/update.mp3"
-      return outdatedPlugins
-    )()
+    yield @getMirrors()
+    plugins = yield @getInstalledPlugins()
+    outdatedPlugins = []
+    outdatedList = []
+    tasks = plugins.map async (plugin) =>
+      try
+        distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
+        latest = "#{plugin.version}"
+        if @config_.betaCheck && distTag.beta?
+          if semver.gt distTag.beta, latest
+            latest = distTag.beta
+        if semver.gt distTag.latest, latest
+          latest = distTag.latest
+        if semver.gt latest, plugin.version
+          outdatedPlugins.push plugin
+          index = -1
+          for plugin_, i in @plugins_
+            if plugin.packageName is plugin_.packageName
+              index = i
+          @plugins_[index]?.isOutdated = true
+          @plugins_[index]?.lastestVersion = latest
+          if plugin.isRead then outdatedList.push plugin.stringName
+      catch error
+    yield Promise.all(tasks)
+    if isNotif && outdatedList.length > 0
+      content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
+      notify content,
+        type: 'plugin update'
+        title: __ 'Plugin update'
+        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png')
+        audio: "file://#{ROOT}/assets/audio/update.mp3"
+    return outdatedPlugins
   # get all plugins which match a filer function
   # @param {!function(Plugin): boolean} filter
   # @return {Promise<Array<Plugin>>}
   # @private
-  getFilteredPlugins_: (filter) ->
-    async( =>
-      yield @getRequirements()
-      yield @getPlugins()
-      return @plugins_.filter filter
-    )()
+  getFilteredPlugins_: async (filter) ->
+    yield @getRequirements()
+    yield @getPlugins()
+    return @plugins_.filter filter
 
   # get a status of a plugin
   # @param {Plugin} plugin
@@ -311,53 +292,47 @@ class PluginManager
   # update one plugin
   # @param {Plugin} plugin
   # @return {Promise<>}
-  updatePlugin: (plugin) ->
-    async( =>
-      yield @getMirrors()
-      try
-        yield Promise.promisify(npm.commands.install)(["#{plugin.packageName}@#{plugin.lastestVersion}"])
-      catch error
-        throw error
-    )()
+  updatePlugin: async (plugin) ->
+    yield @getMirrors()
+    try
+      yield Promise.promisify(npm.commands.install)(["#{plugin.packageName}@#{plugin.lastestVersion}"])
+    catch error
+      throw error
 
   # install one plugin and read it
   # @param {string} name
   # @return {Promise<Plugin>}
-  installPlugin: (name) ->
-    async( =>
-      yield @getMirrors()
-      try
-        packgaeName = null
-        data = yield Promise.promisify(npm.commands.install)([name])
-        validPlugins = yield @getValidPlugins()
-        for packs in data[0]
-          dump = false
-          packName = packs[0].split('@')[0]
-          for plugin_ in validPlugins
-            if packName == plugin_.packageName
-              dump = true
-          if !dump then packgaeName = packName
-        if packgaeName?
-          plugin = null
-          plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packgaeName
-      catch error
-        throw error
-    )()
+  installPlugin: async (name) ->
+    yield @getMirrors()
+    try
+      packgaeName = null
+      data = yield Promise.promisify(npm.commands.install)([name])
+      validPlugins = yield @getValidPlugins()
+      for packs in data[0]
+        dump = false
+        packName = packs[0].split('@')[0]
+        for plugin_ in validPlugins
+          if packName == plugin_.packageName
+            dump = true
+        if !dump then packgaeName = packName
+      if packgaeName?
+        plugin = null
+        plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packgaeName
+    catch error
+      throw error
 
   # uninstall one plugin, this won't unload it from memory
   # @param {Plugin} plugin
   # @return {Promise<>}
-  uninstallPlugin: (plugin) ->
-    async( =>
-      plugin.isUninstalling = true
-      yield @getMirrors()
-      try
-        yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
-        plugin.isInstalled = false
-        plugin.isUninstalling = false
-      catch error
-        throw error
-    )()
+  uninstallPlugin: async (plugin) ->
+    plugin.isUninstalling = true
+    yield @getMirrors()
+    try
+      yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
+      plugin.isInstalled = false
+      plugin.isUninstalling = false
+    catch error
+      throw error
 
   # enable one plugin
   # @param {Plugin} plugin
@@ -457,21 +432,19 @@ class PluginManager
 
   # notify user about unread plugins, only shown when any exists
   # @private
-  notifyFailed_: ->
-    async( =>
-      plugins = yield @getUnreadPlugins()
-      unreadList = []
-      for plugin in plugins
-        unreadList.push plugin.stringName
-      if unreadList.length > 0
-        content = "#{unreadList.join(' ')} #{
-          __ 'failed to load. Maybe there are some compatibility problems.'}"
-        notify content,
-          type: 'plugin error'
-          title: __ 'Plugin error'
-          icon: path.join ROOT, 'assets', 'img', 'material', '7_big.png'
-          audio: "file://#{ROOT}/assets/audio/fail.mp3"
-    )()
+  notifyFailed_: async ->
+    plugins = yield @getUnreadPlugins()
+    unreadList = []
+    for plugin in plugins
+      unreadList.push plugin.stringName
+    if unreadList.length > 0
+      content = "#{unreadList.join(' ')} #{
+        __ 'failed to load. Maybe there are some compatibility problems.'}"
+      notify content,
+        type: 'plugin error'
+        title: __ 'Plugin error'
+        icon: path.join ROOT, 'assets', 'img', 'material', '7_big.png'
+        audio: "file://#{ROOT}/assets/audio/fail.mp3"
 
 pluginManager = new PluginManager path.join(ROOT, 'assets', 'data', 'plugin.json'), PLUGIN_PATH,
   path.join(ROOT, 'assets', 'data', 'mirror.json')
