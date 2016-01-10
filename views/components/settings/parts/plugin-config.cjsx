@@ -12,6 +12,7 @@ semver = require 'semver'
 shell = require 'shell'
 {dialog} = remote.require 'electron'
 Divider = require './divider'
+async = Promise.coroutine
 
 PluginConfig = React.createClass
   getInitialState: ->
@@ -28,47 +29,54 @@ PluginConfig = React.createClass
     reloading: false
     advanced: false
     manuallyInstallPackage: ''
+    manuallyInstallStatus: 0
   isUpdateAvailable: false
   checkCount: 0
   emitReload: ->
     PluginManager.emitReload()
   readPlugins: ->
-    initState = @getInitialState()
-    initState.reloading = true
-    @setState initState
-    PluginManager.getMirrors().then (mirrors) =>
-      PluginManager.getConf().then (config) =>
-        PluginManager.readPlugins().then =>
-          @updateFromPluginManager {
-            mirrors: mirrors
-            config: config
-            reloading: false
-          }
+    async( =>
+      initState = @getInitialState()
+      initState.reloading = true
+      @setState initState
+      mirrors = yield PluginManager.getMirrors()
+      config = yield PluginManager.getConf()
+      yield PluginManager.readPlugins()
+      @updateFromPluginManager {
+        mirrors: mirrors
+        config: config
+        reloading: false
+      }
+    )()
+
   updateFromPluginManager: (newState) ->
-    newState ?= {}
-    state = @state
-    PluginManager.getInstalledPlugins().then (plugins) =>
-      PluginManager.getUninstalledPluginSettings().then (settings) =>
-        newState.plugins = plugins
-        newState.uninstalledPluginSettings = settings
-        for key of newState
-          state[key] = newState[key]
-        @setState state
+    async( =>
+      newState ?= {}
+      state = @state
+      plugins = yield PluginManager.getInstalledPlugins()
+      settings = yield PluginManager.getUninstalledPluginSettings()
+      newState.plugins = plugins
+      newState.uninstalledPluginSettings = settings
+      for key of newState
+        state[key] = newState[key]
+      @setState state
+    )()
+
   handleClickAuthorLink: (link, e) ->
     shell.openExternal link
     e.preventDefault()
   handleEnableBetaPluginCheck: ->
-    PluginManager.selectConfig(null, null, !@state.config.betaCheck).then (config) =>
-      @setState
-        config: config
+    config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
+    @setState
+      config: config
   handleEnableProxy: ->
-    PluginManager.selectConfig(null, !@state.config.proxy, null).then (config) =>
-      @setState
-        config: config
+    config = yield PluginManager.selectConfig(null, !@state.config.proxy, null)
+    @setState
+      config: config
   onSelectServer: (state) ->
-    PluginManager.selectConfig(state ,null, null).then (config) =>
-      @setState
-        config: config
+    config = yield PluginManager.selectConfig(state ,null, null)
+    @setState
+      config: config
   handleAdvancedShow: ->
     advanced = !@state.advanced
     @setState {advanced}
@@ -76,7 +84,8 @@ PluginConfig = React.createClass
     manuallyInstallPackage = e.target.value
     @setState {manuallyInstallPackage}
   handleEnable: (index) ->
-    PluginManager.getInstalledPlugins().then (plugins) =>
+    async( =>
+      plugins = yield PluginManager.getInstalledPlugins()
       plugin = plugins[index]
       switch PluginManager.getStatusOfPlugin plugin
         when PluginManager.DISABLED
@@ -84,69 +93,70 @@ PluginConfig = React.createClass
         when PluginManager.VALID
           PluginManager.disablePlugin plugin
       @updateFromPluginManager()
+    )()
+
   handleInstall: (name) ->
     if !@props.disabled
       installingPluginNames = @state.installingPluginNames
       installingPluginNames.push name
       @setState installingPluginNames: installingPluginNames, npmWorkding: true
-      PluginManager.installPlugin(name).then =>
-        installingPluginNames = @state.installingPluginNames
-        index = installingPluginNames.indexOf name
-        if index > -1
-          installingPluginNames.splice index, 1
-          @updateFromPluginManager {
-            installingPluginNames: installingPluginNames
-            npmWorkding: false
-          }
-      .catch =>
-        @updateFromPluginManager {
-          npmWorkding: false
-        }
+      async( =>
+        try
+          yield PluginManager.installPlugin(name)
+          installingPluginNames = @state.installingPluginNames
+          index = installingPluginNames.indexOf name
+          if index > -1
+            installingPluginNames.splice index, 1
+            @updateFromPluginManager {
+              installingPluginNames: installingPluginNames
+              npmWorkding: false
+            }
+        catch error
+          throw error
+      )()
+
+
   handleUpdate: (index) ->
     if !@props? || !@props.disabled
       plugins = @state.plugins
       plugins[index].isUpdating = true
       @setState npmWorkding: true
-      PluginManager.getInstalledPlugins().then (plugins) =>
+      plugins = yield PluginManager.getInstalledPlugins()
+      async( =>
         plugin = @state.plugins[index]
-        PluginManager.updatePlugin(plugin).then =>
+        try
+          yield PluginManager.updatePlugin(plugin)
           plugins[index].isUpdating = false
           plugins[index].isOutdated = false
           plugins[index].version = plugins[index].lastestVersion
           @updateFromPluginManager npmWorkding: false
-          Promise.resolve()
-        .catch =>
+        catch error
           plugins[index].isUpdating = false
           @updateFromPluginManager npmWorkding: false
-          Promise.reject()
+          throw error
+      )()
+
   handleInstallAll: ->
     @setState installingAll: true
-    PluginManager.getUninstalledPluginSettings().then (settings) =>
-      Promise.coroutine( =>
-        err = false
-        for name, value of settings
-          yield @handleInstall(name).then =>
-            console.log 'barfoo!'
-          .catch =>
-            console.log 'not barfoo!'
-            err = true
-        if !err
-          @setState
-            hasUpdates: false
-            installingAll: false
-        else
-          @setState
-            installingAll: false
-      )()
+    async( =>
+      settings = yield PluginManager.getUninstalledPluginSettings()
+      for name, value of settings
+        yield @handleInstall(name)
+      @setState
+        installingAll: false
+    )()
+
   handleUpdateAll: ->
     if !@props.disabled
       @setState updatingAll: true
-      Promise.coroutine( =>
-        err = false
+      async( =>
+        err = null
         for plugin, index in @state.plugins
           if @state.plugins[index].isOutdated
-            yield @handleUpdate(index).catch =>
-              err = true
+            try
+              yield @handleUpdate(index)
+            catch error
+              err = error
         if !err
           @setState
             hasUpdates: false
@@ -155,68 +165,100 @@ PluginConfig = React.createClass
           @setState
             updatingAll: false
       )()
+
   handleRemove: (index) ->
     if !@props.disabled
-      PluginManager.getInstalledPlugins().then (plugins) =>
+      async( =>
+        plugins = yield PluginManager.getInstalledPlugins()
         plugin = plugins[index]
         @setState npmWorkding: true
-        PluginManager.uninstallPlugin(plugin).then =>
-          @updateFromPluginManager npmWorkding: false
+        yield PluginManager.uninstallPlugin(plugin)
+        @updateFromPluginManager npmWorkding: false
+      )()
   checkUpdate: ->
     @setState checkingUpdate: true
-    PluginManager.getOutdatedPlugins().then (plugins) =>
+    async( =>
+      plugins = yield PluginManager.getOutdatedPlugins()
       @updateFromPluginManager {
         hasUpdates: plugins.length isnt 0
         checkingUpdate: false
       }
+    )()
+
   onSelectOpenFolder: ->
     shell.openItem path.join PLUGIN_PATH, 'node_modules'
   onSelectOpenSite: (e) ->
     shell.openExternal "https://www.npmjs.com/search?q=poi-plugin"
     e.preventDefault()
-  onSelectInstallFromFileComplete: (data, er) ->
-  onSelectInstallFromFile: (callback) ->
+  onSelectInstallFromFile: ->
     @synchronize =>
       filenames = dialog.showOpenDialog
         title: __ 'Select files'
         defaultPath: remote.require('electron').app.getPath('downloads')
         properties: ['openFile', 'multiSelections']
       if filenames
-        npm.load npmConfig, (err) =>
-          npm.commands.install filenames, (er, data) ->
-            callback(data, er)
-  onDropInstallFromFile: (callback, e) ->
+        async( =>
+          settings = yield PluginManager.getUninstalledPluginSettings()
+          for filename in filenames
+            @setState manuallyInstallStatus: 1
+            try
+              yield @handleInstall(filename)
+              @setState manuallyInstallStatus: 2
+            catch error
+              @setState manuallyInstallStatus: 3
+        )()
+
+  onDropInstallFromFile: (e) ->
     e.preventDefault()
     droppedFiles = e.dataTransfer.files
     filenames = []
     for droppedFile in droppedFiles
       filenames.push droppedFile.path
     if filenames
-      npm.load npmConfig, (err) =>
-        npm.commands.install filenames, (er, data) ->
-          callback(data, er)
-  handleManuallyInstall: (name, callback) ->
-  handleReinstall: (index) ->
-  handleReinstallComplete: (data, er) ->
-  handleRemoveBroken: (index, callback) ->
-  handleRemoveBrokenComplete: (index ,er) ->
+      async( =>
+        settings = yield PluginManager.getUninstalledPluginSettings()
+        for filename in filenames
+          @setState manuallyInstallStatus: 1
+          try
+            yield @handleInstall(filename)
+            @setState manuallyInstallStatus: 2
+          catch error
+            @setState manuallyInstallStatus: 3
+      )()
+
+  handleManuallyInstall: (name) ->
+    @setState manuallyInstallStatus: 1
+    async( =>
+      settings = yield PluginManager.getUninstalledPluginSettings()
+      try
+        yield @handleInstall(name)
+        @setState manuallyInstallStatus: 2
+      catch error
+        @setState manuallyInstallStatus: 3
+    )()
   synchronize: (callback) ->
     return if @lock
     @lock = true
     callback()
     @lock = false
+  componentDidUpdate: (prevProps, prevState) ->
+    if prevState.manuallyInstallStatus > 1 && prevState.manuallyInstallStatus == @state.manuallyInstallStatus
+      @setState
+        manuallyInstallStatus: 0
   componentDidMount: ->
-    PluginManager.getMirrors().then (mirrors) =>
+    async( =>
+      mirrors = yield PluginManager.getMirrors()
       PluginManager.readPlugins(true)
-      PluginManager.getConf().then (config) =>
-        @setState checkingUpdate: true
-        PluginManager.getOutdatedPlugins(true).then (plugins) =>
-          @updateFromPluginManager {
-            hasUpdates: plugins.length isnt 0
-            checkingUpdate: false
-            mirrors: mirrors
-            config: config
-          }
+      config = yield PluginManager.getConf()
+      @setState checkingUpdate: true
+      plugins = yield PluginManager.getOutdatedPlugins(true)
+      @updateFromPluginManager {
+        hasUpdates: plugins.length isnt 0
+        checkingUpdate: false
+        mirrors: mirrors
+        config: config
+      }
+    )()
   render: ->
     <form>
       <Divider text={__ 'Plugins'} />
@@ -269,13 +311,16 @@ PluginConfig = React.createClass
                   <Col xs=12>
                     {
                       installButton =
-                        <Button bsStyle='primary' onClick={@handleManuallyInstall.bind @, @state.manuallyInstallPackage, @onSelectInstallFromFileComplete}>
+                        <Button bsStyle='primary'
+                                disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
+                                onClick={@handleManuallyInstall.bind @, @state.manuallyInstallPackage}>
                           {__ 'Install'}
                         </Button>
                       <Input type="text"
                              value={@state.manuallyInstallPackage}
                              onChange={@changeInstalledPackage}
                              label={__ 'Install directly from npm'}
+                             disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
                              placeholder={__ 'Input plugin package name...'}
                              bsSize='small'
                              buttonAfter={installButton} />
@@ -327,10 +372,33 @@ PluginConfig = React.createClass
             </div>
           </Collapse>
         </Col>
+        <Collapse in={@state.manuallyInstallStatus > 0}>
+          <Col xs=12>
+            <Alert bsStyle={
+                switch @state.manuallyInstallStatus
+                  when 1
+                    "info"
+                  when 2
+                    "success"
+                  when 3
+                    "danger"
+              }>
+              {
+                switch @state.manuallyInstallStatus
+                  when 1
+                    __("Installing") + "..."
+                  when 2
+                    __ "Plugins are installed successfully. Please restart poi to take effect."
+                  when 3
+                    __ "Install failed. Maybe the selected files are not plugin packages."
+              }
+            </Alert>
+          </Col>
+        </Collapse>
         <Col xs={12} style={paddingBottom: 10}>
           <div className="folder-picker"
-               onClick={@onSelectInstallFromFile.bind @, @onSelectInstallFromFileComplete}
-               onDrop={@onDropInstallFromFile.bind @, @onSelectInstallFromFileComplete}
+               onClick={@onSelectInstallFromFile}
+               onDrop={@onDropInstallFromFile}
                onDragEnter={(e)=> e.preventDefault()}
                onDragOver={(e)=> e.preventDefault()}
                onDragLeave={(e)=> e.preventDefault()}>

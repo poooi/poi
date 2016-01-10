@@ -1,11 +1,13 @@
 path = require 'path-extra'
 glob = require 'glob'
+Promise = require 'bluebird'
 __ = i18n.others.__.bind(i18n.others)
 __n = i18n.others.__n.bind(i18n.others)
 semver = require 'semver'
 fs = require 'fs-extra'
 {_, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
+async = Promise.coroutine
 
 PluginWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
@@ -31,16 +33,18 @@ ControlledTabArea = React.createClass
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
   renderPlugins: ->
-    PluginManager.getValidPlugins().then (plugins) =>
+    async( =>
+      plugins = yield PluginManager.getValidPlugins()
       plugins = plugins.filter (plugin) ->
         plugin.show isnt false
       plugins = _.sortBy plugins, 'priority'
-
       tabbedPlugins = plugins.filter (plugin) ->
         !plugin.handleClick?
-
       if @isMounted()
-        @setState {plugins: plugins, tabbedPlugins: tabbedPlugins}
+        @setState
+          plugins: plugins
+          tabbedPlugins: tabbedPlugins
+    )()
   handleToggleDropdown: ->
     dropdownOpen = !@state.dropdownOpen
     @setState {dropdownOpen}
@@ -135,8 +139,10 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'view.main.visible', @handleMiniShipChange
-    @renderPlugins().then =>
+    async( =>
+      yield @renderPlugins()
       window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    )()
   componentWillUnmount: ->
     window.removeEventListener 'view.main.visible', @handleMiniShipChange
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins

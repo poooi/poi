@@ -1,11 +1,13 @@
 path = require 'path-extra'
 glob = require 'glob'
+Promise = require 'bluebird'
 __ = i18n.others.__.bind(i18n.others)
 __n = i18n.others.__n.bind(i18n.others)
 semver = require 'semver'
 fs = require 'fs-extra'
 {_, $, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
+async = Promise.coroutine
 
 $('poi-main').className += 'double-tabbed'
 window.doubleTabbed = true
@@ -25,17 +27,19 @@ ControlledTabArea = React.createClass
     key: [0, 0]
     plugins: []
     tabbedPlugins: []
-  render@state.plugins: ->
-    PluginManager.getValid@state.plugins().then (@state.plugins) =>
-      @state.plugins = @state.plugins.filter (plugin) ->
+  renderPlugins: ->
+    async( =>
+      plugins = yield PluginManager.getValidPlugins()
+      plugins = @state.plugins.filter (plugin) ->
         plugin.show isnt false
-      @state.plugins = _.sortBy @state.plugins, 'priority'
-
-      @state.tabbedPlugins = @state.plugins.filter (plugin) ->
+      plugins = _.sortBy @state.plugins, 'priority'
+      tabbedPlugins = plugins.filter (plugin) ->
         !plugin.handleClick?
-
       if @isMounted()
-        @setState {@state.plugins: @state.plugins, @state.tabbedPlugins: @state.tabbedPlugins}
+        @setState
+          plugins: plugins
+          tabbedPlugins: tabbedPlugins
+    )()
   handleSelect: (key) ->
     @setState {key} if key[0] isnt @state.key[0] or key[1] isnt @state.key[1]
   handleSelectLeft: (key) ->
@@ -99,10 +103,12 @@ ControlledTabArea = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    @render@state.plugins().then =>
-      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @render@state.plugins
+    async( =>
+      yield @renderPlugins()
+      window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    )()
   componentWillUnmount: ->
-    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @render@state.plugins
+    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   render: ->
     <div className='poi-tabs-container'>
       <div>
