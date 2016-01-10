@@ -324,13 +324,16 @@ class PluginManager
     async( =>
       @getMirrors()
       try
-        yield Promise.promisify(npm.commands.install)([name])
-        plugin = @readPlugin_ path.join @pluginPath, 'node_modules', name
-        dump = false
-        for plugin_ in @plugins_
-          if plugin.packageName == plugin_.packageName
-            dump = true
-        if !dump
+        data = yield Promise.promisify(npm.commands.install)([name])
+        for packs in data[0]
+          dump = false
+          packName = packs[0].split('@')[0]
+          for plugin_ in @plugins_
+            if packName == plugin_.packageName
+              dump = true
+            if !dump then packgaeName = packName
+        if packgaeName?
+          plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packgaeName
           @plugins_.push plugin
       catch error
         throw error

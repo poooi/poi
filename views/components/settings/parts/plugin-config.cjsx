@@ -101,9 +101,6 @@ PluginConfig = React.createClass
       async( =>
         try
           yield PluginManager.installPlugin(name)
-          name = path.basename name
-          name = name.replace('.tgz', '')
-          name = name.replace('.tar.gz', '')
           installingPluginNames = @state.installingPluginNames
           index = installingPluginNames.indexOf name
           if index > -1
