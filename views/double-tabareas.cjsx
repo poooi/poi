@@ -29,9 +29,9 @@ ControlledTabArea = React.createClass
     tabbedPlugins: []
   renderPlugins: async ->
     plugins = yield PluginManager.getValidPlugins()
-    plugins = @state.plugins.filter (plugin) ->
+    plugins = plugins.filter (plugin) ->
       plugin.show isnt false
-    plugins = _.sortBy @state.plugins, 'priority'
+    plugins = _.sortBy plugins, 'priority'
     tabbedPlugins = plugins.filter (plugin) ->
       !plugin.handleClick?
     if @isMounted()
