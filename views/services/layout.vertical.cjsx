@@ -4,6 +4,7 @@
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
 $('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
 poiControlHeight = 30 # Magic number
+minPOIHeight = 200
 dropdownStyleAppended = false
 dropdownStyle = document.createElement 'style'
 
@@ -21,7 +22,8 @@ adjustSize = ->
     url = webview?.getURL?()
   catch e
     url = null
-  factor = Math.ceil(window.innerWidth /  800.0 * 100) / 100.0
+  factor = Math.min window.innerWidth / 800.0, (window.innerHeight - minPOIHeight) / 480.0
+  factor = Math.ceil(factor * 100) / 100.0
   if window.webviewWidth != -1
     factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
   poiapp?.style?.height = "#{window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight}px"
