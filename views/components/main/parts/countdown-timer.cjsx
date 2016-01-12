@@ -32,7 +32,7 @@ CountdownTimer = React.createClass
       else if completeTime <= currentTime
         0
       else
-        Math.floor((completeTime - currentTime) / 1000)
+        Math.round((completeTime - currentTime) / 1000)
   propTypes:
     countdownId: React.PropTypes.string.isRequired
     completeTime: React.PropTypes.number
