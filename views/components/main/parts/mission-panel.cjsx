@@ -13,10 +13,12 @@ CountdownLabel = React.createClass
       when timeRemaining >= 0  then 'success'
       else 'default'
   getInitialState: ->
+    @notify = _.once @props.notify
     timeRemaining = CountdownTimer.getTimeRemaining @props.completeTime
     style: @getLabelStyle timeRemaining, window.notify.expedition
   componentWillReceiveProps: (nextProps) ->
     if nextProps.completeTime isnt @props.completeTime
+      @notify = _.once nextProps.notify
       timeRemaining = CountdownTimer.getTimeRemaining nextProps.completeTime
       @setState
         style: @getLabelStyle timeRemaining, window.notify.expedition
@@ -24,7 +26,7 @@ CountdownLabel = React.createClass
     nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
     notifyBefore = window.notify.expedition
-    @props.notify() if timeRemaining <= notifyBefore
+    @notify() if timeRemaining <= notifyBefore
 
     style = @getLabelStyle timeRemaining, notifyBefore
     @setState {style: style} if style isnt @state.style
@@ -109,7 +111,7 @@ MissionPanel = React.createClass
           <span className="mission-name">{mission.getMissionName()}</span>
           <CountdownLabel dockIndex={i}
                           completeTime={mission.completeTime}
-                          notify={_.once(@notify.bind @, mission.deckName)}/>
+                          notify={@notify.bind @, mission.deckName}/>
         </div>
     }
     </Panel>

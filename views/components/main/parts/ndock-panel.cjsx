@@ -13,15 +13,17 @@ CountdownLabel = React.createClass
       when timeRemaining >= 0  then 'success'
       else 'default'
   getInitialState: ->
+    @notify = _.once @props.notify
     style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime)
   componentWillReceiveProps: (nextProps) ->
     if nextProps.completeTime isnt @props.completeTime
+      @notify = _.once nextProps.notify
       @setState
         style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
-    @props.notify() if timeRemaining <= 60
+    @notify() if timeRemaining <= 60
 
     style = @getLabelStyle timeRemaining
     @setState {style: style} if style isnt @state.style
@@ -98,7 +100,7 @@ NdockPanel = React.createClass
           <span className="ndock-name">{i18n.resources.__ dock.name}</span>
           <CountdownLabel dockIndex={i}
                           completeTime={dock.completeTime}
-                          notify={_.once(@notify.bind @, dock.name)}/>
+                          notify={@notify.bind @, dock.name}/>
         </div>
     }
     </div>
