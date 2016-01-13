@@ -101,7 +101,7 @@ ResourcePanel = React.createClass
       {
         for i in order
           <Col key={i} xs={6} style={marginBottom: 2, marginTop: 2}>
-            <MaterialIcon materialId={i} className="material-icon #{if i <= 4 and @state.material[i] < @state.limit then 'grow' else ''}" />
+            <MaterialIcon materialId={i} className="material-icon #{if i <= 4 and @state.material[i] < @state.limit then 'glow' else ''}" />
             <span className="material-value">{@state.material[i]}</span>
           </Col>
       }
