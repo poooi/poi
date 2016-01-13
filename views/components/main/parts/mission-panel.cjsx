@@ -27,24 +27,24 @@ CountdownLabel = React.createClass
     style = @getLabelStyle timeRemaining, notifyBefore
     @setState {style: style} if style isnt @state.style
   render: ->
-    label = <Label className="mission-timer" bsStyle={@state.style}>
-            {
-              if @props.completeTime > 0
-                <CountdownTimer countdownId={"mission-#{@props.dockIndex}"}
-                                completeTime={@props.completeTime}
-                                tickCallback={@tick} />
-            }
-            </Label>
-    if @state.style in ['primary', 'warning']
-      <OverlayTrigger placement='left' overlay={
-        <Tooltip id="mission-return-by-#{@props.dockIndex}">
-          <strong>{__ "Return by : "}</strong>{timeToString @props.completeTime}
-        </Tooltip>
-      }>
-        {label}
-      </OverlayTrigger>
-    else
-      label
+    <OverlayTrigger placement='left' overlay={
+      switch @state.style
+        when 'primary', 'warning'
+          <Tooltip id="mission-return-by-#{@props.dockIndex}">
+            <strong>{__ "Return by : "}</strong>{timeToString @props.completeTime}
+          </Tooltip>
+        else
+          <span />
+    }>
+      <Label className="mission-timer" bsStyle={@state.style}>
+      {
+        if @props.completeTime > 0
+          <CountdownTimer countdownId={"mission-#{@props.dockIndex+1}"}
+                          completeTime={@props.completeTime}
+                          tickCallback={@tick} />
+      }
+      </Label>
+    </OverlayTrigger>
 
 
 class MissionInfo
