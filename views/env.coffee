@@ -560,6 +560,6 @@ window.addEventListener 'load', ->
 
 window.addEventListener 'unload', ->
   if window.listenerStatusFlag
+    window.listenerStatusFlag = false
     for eventName, handler of proxyListener
       proxy.removeListener eventName, handler
-    window.listenerStatusFlag = false
