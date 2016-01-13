@@ -40,7 +40,7 @@ CountdownLabel = React.createClass
       <Label className="ndock-timer" bsStyle={@state.style}>
       {
         if @props.completeTime >= 0
-          <CountdownTimer countdownId={"ndock-#{@props.dockIndex}"}
+          <CountdownTimer countdownId={"ndock-#{@props.dockIndex+1}"}
                           completeTime={@props.completeTime}
                           tickCallback={@tick} />
       }

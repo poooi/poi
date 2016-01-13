@@ -31,7 +31,7 @@ CountdownLabel = React.createClass
     <Label className="kdock-timer" bsStyle={@state.style}>
     {
       if @props.completeTime >= 0
-        <CountdownTimer countdownId={"kdock-#{@props.dockIndex}"}
+        <CountdownTimer countdownId={"kdock-#{@props.dockIndex+1}"}
                         completeTime={@props.completeTime}
                         tickCallback={@tick}
                         completeCallback={@props.notify} />
