@@ -18,6 +18,8 @@ CountdownLabel = React.createClass
     if nextProps.completeTime isnt @props.completeTime
       @setState
         style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
     @props.notify() if timeRemaining <= 60
 
