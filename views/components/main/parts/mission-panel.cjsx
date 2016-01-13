@@ -6,29 +6,26 @@ __n = i18n.main.__n.bind(i18n.main)
 
 CountdownTimer = require './countdown-timer'
 CountdownLabel = React.createClass
-  getLabelStyle: (timeRemaining, notifyBefore) ->
+  getLabelStyle: (timeRemaining) ->
     switch
-      when timeRemaining > notifyBefore + 540 then 'primary'
-      when timeRemaining > notifyBefore  then 'warning'
+      when timeRemaining > 600 then 'primary'
+      when timeRemaining > 60  then 'warning'
       when timeRemaining >= 0  then 'success'
       else 'default'
   getInitialState: ->
     @notify = _.once @props.notify
-    timeRemaining = CountdownTimer.getTimeRemaining @props.completeTime
-    style: @getLabelStyle timeRemaining, window.notify.expedition
+    style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime)
   componentWillReceiveProps: (nextProps) ->
     if nextProps.completeTime isnt @props.completeTime
       @notify = _.once nextProps.notify
-      timeRemaining = CountdownTimer.getTimeRemaining nextProps.completeTime
       @setState
-        style: @getLabelStyle timeRemaining, window.notify.expedition
+        style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
-    notifyBefore = window.notify.expedition
-    @notify() if timeRemaining <= notifyBefore
+    @notify() if timeRemaining <= window.notify.expedition
 
-    style = @getLabelStyle timeRemaining, notifyBefore
+    style = @getLabelStyle timeRemaining
     @setState {style: style} if style isnt @state.style
   render: ->
     <OverlayTrigger placement='left' overlay={
