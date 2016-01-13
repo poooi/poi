@@ -249,6 +249,6 @@
 #MainView .panel-heading {
   padding: 8px;
 }
-#MainView .grow {
+#MainView .glow {
   -webkit-filter: drop-shadow(0px 0px 4px #2196F3)
 }
