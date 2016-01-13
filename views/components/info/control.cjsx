@@ -14,7 +14,7 @@ PoiControl = React.createClass
     muted: false
     alwaysOnTop: false
     extend: false
-    resizeable: true
+    resizeable: config.get 'poi.content.resizeable', true
   handleCapturePage: ->
     bound = $('kan-game webview').getBoundingClientRect()
     rect =
@@ -92,8 +92,6 @@ PoiControl = React.createClass
           @handleSetMuted()
         if config.get 'poi.content.alwaysOnTop', false
           @handleSetAlwaysOnTop()
-        if !(config.get 'poi.content.resizeable', true)
-          @handleSetResizable()
       catch e
         false
     , 1000

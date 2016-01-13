@@ -82,6 +82,7 @@ app.on 'ready', ->
     y: config.get 'poi.window.y', 0
     width: config.get 'poi.window.width', screenSize.width
     height: config.get 'poi.window.height', screenSize.height
+    resizable: config.get 'poi.content.resizeable', true
     'title-bar-style': 'hidden'
     'web-preferences':
       'web-security': false
