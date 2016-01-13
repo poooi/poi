@@ -255,15 +255,18 @@ window.getCondStyle = (cond) ->
 
 handleProxyGameOnRequest = (method, path, body) ->
   # Parse the json object
-  body = JSON.parse body
-  event = new CustomEvent 'game.request',
-    bubbles: true
-    cancelable: true
-    detail:
-      method: method
-      path: path
-      body: body
-  window.dispatchEvent event
+  try
+    body = JSON.parse body
+    event = new CustomEvent 'game.request',
+      bubbles: true
+      cancelable: true
+      detail:
+        method: method
+        path: path
+        body: body
+    window.dispatchEvent event
+  catch e
+    console.log e
 
 start2Version = 0
 initStart2Value = ->
@@ -502,8 +505,11 @@ resolveResponses = ->
 
 handleProxyGameOnResponse = (method, path, body, postBody) ->
   # Parse the json object
-  responses.push [method, path, JSON.parse(body), JSON.parse(postBody)]
-  resolveResponses() if !locked
+  try
+    responses.push [method, path, JSON.parse(body), JSON.parse(postBody)]
+    resolveResponses() if !locked
+  catch e
+    console.log e
 
 handleProxyGameStart = ->
   window.dispatchEvent new Event 'game.start'
@@ -539,9 +545,21 @@ proxyListener =
   'network.invalid.code': handleProxyNetworkInvalidCode
   'network.error': handleProxyNetworkError
 
-for eventName, handler of proxyListener
-  proxy.addListener eventName, handler
+window.listenerStatusFlag = false
+
+addProxyListener = ()->
+  if not window.listenerStatusFlag
+    window.listenerStatusFlag = true
+    for eventName, handler of proxyListener
+      proxy.addListener eventName, handler
+
+addProxyListener()
+
+window.addEventListener 'load', ->
+  addProxyListener()
 
 window.addEventListener 'unload', ->
-  for eventName, handler of proxyListener
-    proxy.removeListener eventName, handler
+  if window.listenerStatusFlag
+    window.listenerStatusFlag = false
+    for eventName, handler of proxyListener
+      proxy.removeListener eventName, handler
