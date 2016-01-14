@@ -22,6 +22,8 @@ CountdownLabel = React.createClass
     if nextProps.completeTime isnt @props.completeTime
       @setState
         style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
     style = @getLabelStyle timeRemaining
     @setState {style: style} if style isnt @state.style
@@ -29,7 +31,7 @@ CountdownLabel = React.createClass
     <Label className="kdock-timer" bsStyle={@state.style}>
     {
       if @props.completeTime >= 0
-        <CountdownTimer countdownId={"kdock-#{@props.dockIndex}"}
+        <CountdownTimer countdownId={"kdock-#{@props.dockIndex+1}"}
                         completeTime={@props.completeTime}
                         tickCallback={@tick}
                         completeCallback={@props.notify} />

@@ -13,35 +13,39 @@ CountdownLabel = React.createClass
       when timeRemaining >= 0  then 'success'
       else 'default'
   getInitialState: ->
+    @notify = _.once @props.notify
     style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime)
   componentWillReceiveProps: (nextProps) ->
     if nextProps.completeTime isnt @props.completeTime
+      @notify = _.once nextProps.notify
       @setState
         style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
-    @props.notify() if timeRemaining is 60
+    @notify() if timeRemaining <= 60
 
     style = @getLabelStyle timeRemaining
     @setState {style: style} if style isnt @state.style
   render: ->
-    label = <Label className="ndock-timer" bsStyle={@state.style}>
-            {
-              if @props.completeTime >= 0
-                <CountdownTimer countdownId={"ndock-#{@props.dockIndex}"}
-                                completeTime={@props.completeTime}
-                                tickCallback={@tick} />
-            }
-            </Label>
-    if @state.style in ['primary', 'warning']
-      <OverlayTrigger placement='left' overlay={
-        <Tooltip id="ndock-finish-by-#{@props.dockIndex}">
-          <strong>{__ 'Finish by : '}</strong>{timeToString @props.completeTime}
-        </Tooltip>
-      }>
-        {label}
-      </OverlayTrigger>
-    else
-      label
+    <OverlayTrigger placement='left' overlay={
+      switch @state.style
+        when 'primary', 'warning'
+          <Tooltip id="ndock-finish-by-#{@props.dockIndex}">
+            <strong>{__ 'Finish by : '}</strong>{timeToString @props.completeTime}
+          </Tooltip>
+        else
+          <span />
+    }>
+      <Label className="ndock-timer" bsStyle={@state.style}>
+      {
+        if @props.completeTime >= 0
+          <CountdownTimer countdownId={"ndock-#{@props.dockIndex+1}"}
+                          completeTime={@props.completeTime}
+                          tickCallback={@tick} />
+      }
+      </Label>
+    </OverlayTrigger>
 
 
 class NDockInfo
@@ -96,7 +100,7 @@ NdockPanel = React.createClass
           <span className="ndock-name">{i18n.resources.__ dock.name}</span>
           <CountdownLabel dockIndex={i}
                           completeTime={dock.completeTime}
-                          notify={_.once(@notify.bind @, dock.name)}/>
+                          notify={@notify.bind @, dock.name}/>
         </div>
     }
     </div>
