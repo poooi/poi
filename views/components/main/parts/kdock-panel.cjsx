@@ -132,16 +132,8 @@ KdockPanel = React.createClass
         dockName = i18n.resources.__ dock.name
         isInUse = dock.completeTime >= 0
         isLSC = isInUse and dock.material[0] >= 1000
-        content = <div className="panel-item kdock-item">
-                    <span className="kdock-name">{dockName}</span>
-                    <CountdownLabel dockIndex={i}
-                                    completeTime={dock.completeTime}
-                                    isLSC={isLSC}
-                                    notify={_.once @notify} />
-                  </div>
-
-        if isInUse
-          <OverlayTrigger key={i} placement='top' overlay={
+        <OverlayTrigger key={i} placement='top' overlay={
+          if isInUse
             <Tooltip id="kdock-material-#{i}">
               {
                 style = if isLSC then {color: '#D9534F', fontWeight: 'bold'} else null
@@ -153,13 +145,17 @@ KdockPanel = React.createClass
               {@getMaterialImage 4} {dock.material[3]}
               {@getMaterialImage 7} {dock.material[4]}
             </Tooltip>
-          }>
-            {content}
-          </OverlayTrigger>
-        else
-          <span key={i}>
-            {content}
-          </span>
+          else
+            <span />
+        }>
+          <div className="panel-item kdock-item">
+            <span className="kdock-name">{dockName}</span>
+            <CountdownLabel dockIndex={i}
+                            completeTime={dock.completeTime}
+                            isLSC={isLSC}
+                            notify={_.once @notify} />
+          </div>
+        </OverlayTrigger>
     }
     </div>
 
