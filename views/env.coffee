@@ -35,17 +35,17 @@ Object.clone = (obj) ->
 Object.remoteClone = (obj) ->
   JSON.parse remoteStringify obj
 
+pad = (n) ->
+  if n < 10 then "0#{n}" else n
 window.resolveTime = (seconds) ->
-  return '' if seconds < 0
-  hours = Math.floor(seconds / 3600)
-  seconds -= hours * 3600
-  minutes = Math.floor(seconds / 60)
-  seconds -= minutes * 60
-  seconds = Math.floor(seconds)
-  hours = "0#{hours}" if hours < 10
-  minutes = "0#{minutes}" if minutes < 10
-  seconds = "0#{seconds}" if seconds < 10
-  "#{hours}:#{minutes}:#{seconds}"
+  seconds = parseInt seconds
+  if seconds >= 0
+    s = seconds % 60
+    m = Math.trunc(seconds / 60) % 60
+    h = Math.trunc(seconds / 3600)
+    "#{pad h}:#{pad m}:#{pad s}"
+  else
+    ''
 window.timeToString = (milliseconds) ->
   date = new Date(milliseconds)
   date.toTimeString().slice(0, 8)  # HH:mm:ss
