@@ -89,6 +89,7 @@ resolve = (req) ->
       return req
 
 class Proxy extends EventEmitter
+  status: "CREATING"
   constructor: ->
     super()
     @load()
@@ -239,10 +240,17 @@ class Proxy extends EventEmitter
       remote.on 'timeout', ->
         client.destroy()
         remote.destroy()
-    @server.on 'error', (err) ->
+    @server.on 'error', (err) =>
       error err
+      if err.code == 'EADDRINUSE'
+        @_setStatus 'EADDRINUSE'
     listenPort = config.get 'poi.port', 12450
-    @server.listen listenPort, ->
+    @server.listen listenPort, =>
       log "Proxy listening on #{listenPort}"
+      @_setStatus "LISTENING"
+  _setStatus: (str) ->
+    @status = str
+  getStatus: () ->
+    @status
 
 module.exports = new Proxy()
