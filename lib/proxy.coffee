@@ -239,6 +239,8 @@ class Proxy extends EventEmitter
       remote.on 'timeout', ->
         client.destroy()
         remote.destroy()
+    @server.on 'error', (err) ->
+      error err
     listenPort = config.get 'poi.port', 12450
     @server.listen listenPort, ->
       log "Proxy listening on #{listenPort}"
