@@ -245,7 +245,7 @@ class Proxy extends EventEmitter
       if err.code == 'EADDRINUSE'
         @_setStatus 'EADDRINUSE'
     listenPort = config.get 'poi.port', 12450
-    @server.listen listenPort, =>
+    @server.listen listenPort, '127.0.0.1', =>
       log "Proxy listening on #{listenPort}"
       @_setStatus "LISTENING"
   _setStatus: (str) ->
