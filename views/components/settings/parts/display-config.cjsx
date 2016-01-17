@@ -51,7 +51,7 @@ ChangeLayoutConfig = React.createClass
 
 ChangeThemeConfig = React.createClass
   getInitialState: ->
-    theme: config.get 'poi.theme', '__default__'
+    theme: config.get 'poi.theme', 'paperdark'
     enableSVGIcon: config.get 'poi.useSVGIcon', false
   handleSetTheme: (theme) ->
     theme = @refs.theme.getValue()
@@ -192,9 +192,9 @@ ChangeResolutionConfig = React.createClass
   render: ->
     <Grid>
       <Col xs=8>
-        <Input type='checkbox' 
-         ref="useFixedResolution" 
-         label={__ 'Adaptive resolution based on the window'} 
+        <Input type='checkbox'
+         ref="useFixedResolution"
+         label={__ 'Adaptive resolution based on the window'}
          checked={!@state.useFixedResolution} onChange={@handleSetFixedResolution} />
       </Col>
       <Col xs=4>
@@ -251,7 +251,7 @@ DisplayConfig = React.createClass
       </div>
       <div className="form-group">
         <Divider text={__ 'Game resoultion'} />
-        <ChangeResolutionConfig /> 
+        <ChangeResolutionConfig />
       </div>
     </form>
 
