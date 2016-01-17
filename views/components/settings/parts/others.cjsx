@@ -3,6 +3,7 @@
 Divider = require './divider'
 path = require 'path-extra'
 {openExternal} = require 'shell'
+__ = i18n.setting.__.bind(i18n.setting)
 
 Others = React.createClass
   openLink: (lnk, e) ->
@@ -13,11 +14,16 @@ Others = React.createClass
       <Grid>
         <Col xs={12}>
           <img src="file://#{ROOT}/assets/img/logo.png" style={width: '100%'} />
-          <p>poi v{POI_VERSION} 基于 Electron v{process.versions.electron} 和 React.js 开发，是一个开源的跨平台舰队 Collection 浏览器。poi 的游戏行为与 Chrome 一致，原则上不提供任何影响收发包的功能。poi 仅提供基本浏览器功能，扩展功能请等待插件开发。</p>
-          <p>微博: <a onClick={@openLink.bind(@, 'http://weibo.com/letspoi')}> @ 今天 poi 出新版本了吗 </a></p>
-          <p>开发讨论与意见交流群: 378320628 </p>
-          <p>poi 掉落数据统计:<a onClick={@openLink.bind(@, 'http://db.kcwiki.moe')}> http://db.kcwiki.moe </a></p>
-          <p>更多帮助与指南查看 poi wiki: <a onClick={@openLink.bind(@, 'https://github.com/poooi/poi/wiki')}> https://github.com/poooi/poi/wiki </a></p>
+          <p>{__ "poi-description %s %s", POI_VERSION, process.versions.electron}</p>
+          {
+            if window.language is "zh-CN" || window.language is "zh-TW"
+              [
+                <p>微博: <a onClick={@openLink.bind(@, 'http://weibo.com/letspoi')}> @ 今天 poi 出新版本了吗 </a></p>
+                <p>开发讨论与意见交流群: 378320628 </p>
+              ]
+          }
+          <p>{__ "Database"}:<a onClick={@openLink.bind(@, 'http://db.kcwiki.moe')}> http://db.kcwiki.moe </a></p>
+          <p>{__ "Wiki"}: <a onClick={@openLink.bind(@, 'https://github.com/poooi/poi/wiki')}> https://github.com/poooi/poi/wiki </a></p>
           <p>GitHub：<a onClick={@openLink.bind(@, 'https://github.com/poooi/poi')}> https://github.com/poooi/poi </a></p>
         </Col>
       </Grid>
