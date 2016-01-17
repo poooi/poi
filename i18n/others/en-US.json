@@ -77,6 +77,11 @@
     "Try searching in plugin \"Logbook\"! How many times have you LSC'ed, or sortied to the event map?",
     "You can now sort the table of plugin \"Ship Girls Info\" by clicking the table head",
     ""
+  ],
+  "PortInUseSolution": [
+    "Make sure the former poi processes did close properly.",
+    "Make sure there isn't any other processes using the port.",
+    "Restart or logout & login again",
+    "Ask poi developers for help."
   ]
-
 }

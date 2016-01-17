@@ -61,16 +61,16 @@ ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
 console.log window.proxy.getStatus()
 console.log (window.proxy.getStatus() is 'EADDRINUSE')
 if window.proxy.getStatus() is 'EADDRINUSE'
+  solMsg = __ "PortInUseSolution"
   context =
     <div>
-      <p>{config.get 'poi.port', 12450} 端口已被占用</p>
-      <p>解决方法</p>
+      <p>{__ "Port %s is in use", config.get 'poi.port', 12450}</p>
+      <p>{__ "Solution"}</p>
       <ul>
-        <li>检查是否有未关闭的 poi 进程</li>
-        <li>确认无其他应用程序监听 {config.get 'poi.port', 12450} 端口</li>
-        <li>重启系统</li>
-        <li>通过 config.cson 修改监听端口</li>
-        <li>联系开发组寻求帮助</li>
+      {
+        for msg, index in solMsg
+          <li>{msg}</li>
+      }
       </ul>
     </div>
-  toggleModal "错误", context
+  toggleModal window.i18n.setting.__("Error"), context
