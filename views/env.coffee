@@ -229,6 +229,7 @@ window.applyTheme = (th) ->
   window.dispatchEvent event
 
 window.allThemes = ['__default__'].concat(require('glob').sync("#{ROOT}/assets/themes/*/").map (dirPath) -> path.basename(dirPath))
+config.setDefault 'poi.theme', 'paperdark'
 window.loadTheme(config.get 'poi.theme', 'paperdark')
 
 # Not sure where this function should go, leave it here just for now, for easy access.
