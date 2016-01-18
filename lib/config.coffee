@@ -55,14 +55,18 @@ module.exports =
       path = path.split('.').filter (p) -> p != ''
       cur = config
       len = path.length
-      for p, i in path
-        if i != len - 1
-          cur[p] = {} if typeof cur[p] != 'object'
-          cur = cur[p]
-        else
-          cur[p] = value
-      # Save to file
-      try
-        fs.writeFileSync configPath, CSON.stringify(config, null, 2)
-      catch e
-        warn e
+      for p in path
+        cur = cur?[p]
+      if !cur?
+        cur = config
+        for p, i in path
+          if i != len - 1
+            cur[p] = {} if typeof cur[p] != 'object'
+            cur = cur[p]
+          else
+            cur[p] = value
+        # Save to file
+        try
+          fs.writeFileSync configPath, CSON.stringify(config, null, 2)
+        catch e
+          warn e
