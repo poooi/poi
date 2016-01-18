@@ -17,10 +17,10 @@ Others = React.createClass
           <p>{__ "poi-description %s %s", POI_VERSION, process.versions.electron}</p>
           {
             if window.language is "zh-CN" || window.language is "zh-TW"
-              [
+              <div>
                 <p>微博: <a onClick={@openLink.bind(@, 'http://weibo.com/letspoi')}> @ 今天 poi 出新版本了吗 </a></p>
                 <p>开发讨论与意见交流群: 378320628 </p>
-              ]
+              </div>
           }
           <p>{__ "Database"}:<a onClick={@openLink.bind(@, 'http://db.kcwiki.moe')}> http://db.kcwiki.moe </a></p>
           <p>{__ "Wiki"}: <a onClick={@openLink.bind(@, 'https://github.com/poooi/poi/wiki')}> https://github.com/poooi/poi/wiki </a></p>
