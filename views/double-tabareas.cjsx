@@ -99,6 +99,7 @@ ControlledTabArea = React.createClass
         else if e.keyCode is 48
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
+    window.dispatchEvent new Event('resize')
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
