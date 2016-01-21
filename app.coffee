@@ -12,15 +12,6 @@ global.EXROOT = global.APPDATA_PATH
 global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
-# TODO: Remove in the next release
-if process.platform == 'win32'
-  try
-    fs.copySync path.join(global.EXECROOT, 'config.cson'),
-      path.join(global.EXROOT, 'config.cson'),
-      clobber: false
-  catch
-    # expected EEXIST
-
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
@@ -87,12 +78,10 @@ app.on 'ready', ->
     'web-preferences':
       'web-security': false
       'plugins': true
-  # Default menu in v0.27.3
-  if process.versions['electron'] >= '0.27.3'
-    if process.platform == 'darwin'
-      mainWindow.reloadArea = 'kan-game webview'
-    else
-      mainWindow.setMenu null
+  if process.platform == 'darwin'
+    mainWindow.reloadArea = 'kan-game webview'
+  else
+    mainWindow.setMenu null
   mainWindow.loadURL "file://#{__dirname}/index.html"
   if config.get 'poi.window.isMaximized', false
     mainWindow.maximize()
