@@ -33,15 +33,16 @@ preprocessArg = (arg, idx) ->
   false
 
 # Parse Debug Options
-reDebug = /^-(-debug|d)$/i
+reDebug = /^-(?:-debug(?:=(true|false))?|d)$/i
 ex = "\\w[\\w-]*"
 reDebugEx = new RegExp "^--debug-extra=#{ex}(,#{ex})*$", 'i'
 reDebugExD = new RegExp "^--debug-extra-d=#{ex}(,#{ex})*$", 'i'
 reExtra = new RegExp "#{ex}(?=,|$)", 'gi'
+debugMode = false
 exOpts = new Set
 parseDebugOptions = (arg) ->
   switch
-    when reDebug.test arg then process.env.DEBUG = 1
+    when reDebug.test arg then debugMode = reDebug.exec(arg)[1] isnt 'false'
     when reDebugEx.test arg then exOpts.add opt for opt in arg.match reExtra
     when reDebugExD.test arg then exOpts.delete opt for opt in arg.match reExtra
     else return false
@@ -56,7 +57,8 @@ process.argv.forEach (arg, idx) ->
     else warn "Invalid argument (ignored): #{arg}"
 
 
-if process.env.DEBUG?
+if debugMode
+  process.env.DEBUG = 1
   console.log "[DEBUG] Debug Mode Enabled".cyan
 if exOpts.size > 0
   process.env.DEBUG_EXTRA = Array.from(exOpts).join ','
