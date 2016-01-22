@@ -34,20 +34,18 @@ preprocessArg = (arg, idx) ->
 
 # Parse Debug Options
 reDebug = /^-(-debug|d)$/i
-reDebugEx = /^--debug-extra=\w[\w-]*(,\w[\w-]*)*$/i
+ex = "\\w[\\w-]*"
+reDebugEx = new RegExp "^--debug-extra=#{ex}(,#{ex})*$", 'i'
+reDebugExD = new RegExp "^--debug-extra-d=#{ex}(,#{ex})*$", 'i'
+reExtra = new RegExp "#{ex}(?=,|$)", 'gi'
+exOpts = new Set
 parseDebugOptions = (arg) ->
-  if reDebug.test arg
-    process.env.DEBUG = 1
-    true
-  else if reDebugEx.test arg
-    if process.env.DEBUG_EXTRA?
-      process.env.DEBUG_EXTRA += ','
-    else
-      process.env.DEBUG_EXTRA = ''
-    process.env.DEBUG_EXTRA += arg.split("=")[1]
-    true
-  else
-    false
+  switch
+    when reDebug.test arg then process.env.DEBUG = 1
+    when reDebugEx.test arg then exOpts.add opt for opt in arg.match reExtra
+    when reDebugExD.test arg then exOpts.delete opt for opt in arg.match reExtra
+    else return false
+  true
 
 
 process.argv.forEach (arg, idx) ->
@@ -60,5 +58,6 @@ process.argv.forEach (arg, idx) ->
 
 if process.env.DEBUG?
   console.log "[DEBUG] Debug Mode Enabled".cyan
-if process.env.DEBUG_EXTRA?
+if exOpts.size > 0
+  process.env.DEBUG_EXTRA = Array.from(exOpts).join ','
   console.log "[DEBUG] Extra Options: #{process.env.DEBUG_EXTRA}".cyan
