@@ -17,7 +17,7 @@ PoiMapReminder = React.createClass
         @setState
           battling: __ 'Not in sortie'
           mapHp: [0, 0]
-      when '/kcsapi/api_req_map/start'
+      when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
         mapName = "#{body.api_maparea_id}-#{body.api_mapinfo_no} (#{body.api_no})"
         mapId = "#{body.api_maparea_id}#{body.api_mapinfo_no}"
         if window._eventMapRanks?[mapId]?
