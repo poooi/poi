@@ -11,7 +11,7 @@ PoiMapReminder = React.createClass
     mapHp: [0, 0]
     nowArea: 0
     nowMap: 0
-    nowNode : 0
+    nowNode: 0
   handleResponse: (e) ->
     reqPath = e.detail.path
     {body} = e.detail
