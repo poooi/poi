@@ -39,9 +39,9 @@ PoiMapReminder = React.createClass
       when '/kcsapi/api_req_sortie/battle'
         if window._eventMapRanks?[mapId]?
           mapRank = @mapRanks[window._eventMapRanks[mapId]]
-          mapName = mapName = "#{@state.nowArea}-#{@state.nowMap} #{mapRank} (#{@state.nowNode})"
+          mapName = "#{@state.nowArea}-#{@state.nowMap} #{mapRank} (#{@state.nowNode})"
         else
-          mapName = mapName = "#{@state.nowArea}-#{@state.nowMap} (#{@state.nowNode})"
+          mapName = "#{@state.nowArea}-#{@state.nowMap} (#{@state.nowNode})"
         @setState
           battling: "#{__ 'Sortie area'}: #{mapName}"
   componentDidMount: ->
