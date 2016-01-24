@@ -28,17 +28,31 @@ PoiMapReminder = React.createClass
         @setState
           battling: "#{__ 'Sortie area'}: #{mapName}"
           mapHp: hp
+  handleMapInfo: (e) ->
+    if e.detail.mapdetail?
+      info = e.detail.mapdetail
+      if React.isValidElement info
+        ReactDOM.render info, document.getElementById('map-reminder-area')
+      else
+        @setState
+          battling: info
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
+    window.addEventListener 'poi.map-reminder', @handleMapInfo
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
+    window.removeEventListener 'poi.map-reminder', @handleMapInfo
   render: ->
     <div>
       {
         if @state.mapHp[1] > 0
           <ProgressBar bsStyle="info" now={@state.mapHp[0]} max={@state.mapHp[1]} />
       }
-      <Alert className={"alert-default"} bsStyle={null} >{@state.battling}</Alert>
+      <div className={"alert alert-default"}>
+        <span id='map-reminder-area'>
+          {@state.battling}
+        </span>
+      </div>
     </div>
 
 module.exports =
