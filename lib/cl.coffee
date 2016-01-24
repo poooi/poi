@@ -1,5 +1,6 @@
 # Process Command Line Arguments
 {warn} = require './utils'
+Debug = require './debug'
 
 # At this stage we only support a few flags,
 # so it's OK to process them one by one like this
@@ -38,13 +39,11 @@ ex = "\\w[\\w-]*"
 reDebugEx = new RegExp "^--debug-extra=#{ex}(,#{ex})*$", 'i'
 reDebugExD = new RegExp "^--debug-extra-d=#{ex}(,#{ex})*$", 'i'
 reExtra = new RegExp "#{ex}(?=,|$)", 'gi'
-debugMode = false
-exOpts = new Set
 parseDebugOptions = (arg) ->
   switch
-    when reDebug.test arg then debugMode = reDebug.exec(arg)[1] isnt 'false'
-    when reDebugEx.test arg then exOpts.add opt for opt in arg.match reExtra
-    when reDebugExD.test arg then exOpts.delete opt for opt in arg.match reExtra
+    when reDebug.test arg then Debug.setEnabled(reDebug.exec(arg)[1] isnt 'false')
+    when reDebugEx.test arg then Debug.enableExtra opt for opt in arg.match reExtra
+    when reDebugExD.test arg then Debug.disableExtra opt for opt in arg.match reExtra
     else return false
   true
 
@@ -57,9 +56,9 @@ process.argv.forEach (arg, idx) ->
     else warn "Invalid argument (ignored): #{arg}"
 
 
-if debugMode
+if Debug.isEnabled()
   process.env.DEBUG = 1
   console.log "[DEBUG] Debug Mode Enabled".cyan
-if exOpts.size > 0
-  process.env.DEBUG_EXTRA = Array.from(exOpts).join ','
+if (exOpts = Debug.getAllExtraOptionsAsArray()).length > 0
+  process.env.DEBUG_EXTRA = exOpts.join ','
   console.log "[DEBUG] Extra Options: #{process.env.DEBUG_EXTRA}".cyan
