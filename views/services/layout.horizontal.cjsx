@@ -60,7 +60,7 @@ adjustSize = ->
       document.documentElement.style.overflow = 'hidden';
     }
   """
-  adjustWebviewHeight "#{Math.floor(480 * factor)}px"
+  adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
   $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
   $('kan-game').style.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"
   # Autoset plugin-dropdown height
