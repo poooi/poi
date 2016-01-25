@@ -58,7 +58,7 @@ process.argv.forEach (arg, idx) ->
 
 if Debug.isEnabled()
   process.env.DEBUG = 1
-  console.log "[DEBUG] Debug Mode Enabled".cyan
+  Debug.log "Debug Mode Enabled"
 if (exOpts = Debug.getAllExtraOptionsAsArray()).length > 0
   process.env.DEBUG_EXTRA = exOpts.join ','
-  console.log "[DEBUG] Extra Options: #{process.env.DEBUG_EXTRA}".cyan
+  Debug.log "Extra Options: #{process.env.DEBUG_EXTRA}"
