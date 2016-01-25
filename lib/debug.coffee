@@ -1,17 +1,31 @@
 
+console.assert process, "process doesn't exist"
+isRenderer = process?.type is 'renderer'
 
 enabled = false
 extraOpts = new Set()
 
-debugLog = console.log.bind console, '[DEBUG]'
+doNothing = -> return
+debugLog = doNothing
+
+setupDebugLog = ->
+  if enabled
+    if isRenderer
+      style = 'background: linear-gradient(30deg, cyan, white 5ex)'
+      debugLog = console.debug.bind console, '%c[DEBUG] %s', style
+    else
+      debugLog = console.log.bind console, '[DEBUG] %s'.cyan
+  else
+    debugLog = doNothing
 
 module.exports =
   setEnabled: (b) ->
     enabled = b
+    setupDebugLog()
   enable: ->
-    enabled = true
+    @setEnabled true
   disable: ->
-    enabled = false
+    @setEnabled false
   isEnabled: ->
     enabled
 
@@ -24,4 +38,5 @@ module.exports =
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
 
-  log: debugLog
+  log: (txt = '', obj = null) ->
+    if obj? then debugLog txt, obj else debugLog txt
