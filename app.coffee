@@ -87,6 +87,7 @@ app.on 'ready', ->
     'web-preferences':
       'web-security': false
       'plugins': true
+      'enableLargerThanScreen': true
   # Default menu in v0.27.3
   if process.versions['electron'] >= '0.27.3'
     if process.platform == 'darwin'
