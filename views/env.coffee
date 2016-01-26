@@ -19,6 +19,7 @@ fs.ensureDirSync window.PLUGIN_PATH
 fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
 
 # Shortcuts and Components
+(window.debug = require ROOT + '/lib/debug').init()
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)

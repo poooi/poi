@@ -47,7 +47,7 @@ parseDebugOptions = (arg) ->
     else return false
   true
 
-
+# Process Command Line Arguments one by one
 process.argv.forEach (arg, idx) ->
   switch
     when preprocessArg(arg, idx) then return
@@ -55,10 +55,5 @@ process.argv.forEach (arg, idx) ->
     # when parseWhateverOtherOptions(arg) then return
     else warn "Invalid argument (ignored): #{arg}"
 
-
-if Debug.isEnabled()
-  process.env.DEBUG = 1
-  Debug.log "Debug Mode Enabled"
-if (exOpts = Debug.getAllExtraOptionsAsArray()).length > 0
-  process.env.DEBUG_EXTRA = exOpts.join ','
-  Debug.log "Extra Options: #{process.env.DEBUG_EXTRA}"
+# Finish initialization of debug environment
+Debug.init()
