@@ -401,37 +401,54 @@ PluginConfig = React.createClass
               <span style={fontSize: '150%'}>
                 {plugin.displayName}
               </span>
-              <span style={paddingTop: 2; paddingLeft: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
-              <div style={paddingTop: 2}>
-                <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
-                       className="#{if not plugin.isOutdated then 'hidden'}">
-                  <FontAwesome name='cloud-upload' />
-                  Version {plugin.lastestVersion}
-                </Label>
-              </div>
+              <span style={paddingTop: 2; paddingLeft: 2}> @<span className='author-link' onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
               <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
+                <div>
+                  <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                         className="update-label #{if not plugin.isOutdated then 'hidden'}"
+                         onClick={@handleUpdate.bind @, index}>
+                    <FontAwesome name={
+                                   if plugin.isUpdating
+                                     "spinner"
+                                   else if plugin.isOutdated
+                                     "cloud-download"
+                                   else
+                                     "check"
+                                 }
+                                 pulse={plugin.isUpdating}/>
+                    {
+                      if plugin.isUpdating
+                         __ "Updating"
+                      else if plugin.isOutdated
+                         "Version #{plugin.lastestVersion}"
+                      else
+                         __ "Latest"
+                    }
+                  </Label>
+                </div>
                 <div>
                   Version {plugin.version || '1.0.0'}
                 </div>
               </div>
             </Col>
             <Col xs={12} style={marginTop: 4}>
-              <Col xs={if plugin.settingsClass? then 5 else 6}>{plugin.description}</Col>
-              <Col xs={if plugin.settingsClass? then 7 else 6} style={padding: 0}>
-                <div style={marginLeft: 'auto'}>
+              <Col xs={5}>{plugin.description}</Col>
+              <Col xs={7} style={padding: 0}>
+                <div style={width: "#{if plugin.settingsClass? then '100%' else 'calc(100% * 2 / 3)'}", marginLeft: 'auto'}>
                   <ButtonGroup bsSize='small' style={width: '100%'}>
                     {
                       if plugin.settingsClass?
                         <Button ref="#{plugin.name}-setting-btn"
-                                bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 7)'}
+                                bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
                                 onClick={@toggleSettingPop.bind @, plugin.name}>
                           <FontAwesome name='gear' />
+                          {__ 'Settings'}
                         </Button>
                     }
                     <Button bsStyle='info'
                             disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                             onClick={@handleEnable.bind @, index}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% * 2 / 7)' else 'calc(100% / 3)'}"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
                             className="plugin-control-button">
                       <FontAwesome name={
                                      switch PluginManager.getStatusOfPlugin plugin
@@ -456,33 +473,10 @@ PluginConfig = React.createClass
                             __ "Error"
                       }
                     </Button>
-                    <Button bsStyle='primary'
-                            disabled={not plugin.isOutdated || plugin.isUpdating || @state.npmWorkding || @state.checkingUpdate}
-                            onClick={@handleUpdate.bind @, index}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% * 2 / 7)' else 'calc(100% / 3)'}"}
-                            className="plugin-control-button">
-                      <FontAwesome name={
-                                     if plugin.isUpdating
-                                       "spinner"
-                                     else if plugin.isOutdated
-                                       "cloud-download"
-                                     else
-                                       "check"
-                                   }
-                                   pulse={plugin.isUpdating}/>
-                      {
-                        if plugin.isUpdating
-                           __ "Updating"
-                        else if plugin.isOutdated
-                           __ "Update"
-                        else
-                           __ "Latest"
-                      }
-                    </Button>
                     <Button bsStyle='danger'
                             onClick={@handleRemove.bind @, index}
                             disabled={not plugin.isInstalled}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% * 2 / 7)' else 'calc(100% / 3)'}"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
                             className="plugin-control-button">
                       <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
                       {
@@ -522,7 +516,7 @@ PluginConfig = React.createClass
                   {value[window.language]}
                 </span>
               <span style={paddingTop: 2}> @
-                <span onClick={@handleClickAuthorLink.bind @, value.link}>
+                <span className='author-link' onClick={@handleClickAuthorLink.bind @, value.link}>
                   {value.author}
                 </span>
               </span>
