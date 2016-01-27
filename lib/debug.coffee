@@ -45,7 +45,7 @@ module.exports =
 
   enableExtra: (tag) ->
     console.assert tag, 'Are you kidding me? What do you want to enable?'
-    return {Debug.wrap 'Nothing happened'} if !tag
+    return (Debug.wrap 'Nothing happened') if !tag
     extraOpts.add tag.toString()
     Debug.wrap {enabledExtra: tag}
   disableExtra: (tag) ->
