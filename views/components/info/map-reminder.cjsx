@@ -5,7 +5,7 @@ __n = window.i18n.others.__n.bind(i18n.others)
 
 # Map Reminder
 PoiMapReminder = React.createClass
-  mapRanks: ['', ' 丙', ' 乙', ' 甲']
+  mapRanks: ['', " #{__ '丙'}", " #{__ '乙'}", " #{__ '甲'}"]
   getInitialState: ->
     battling: __ 'Not in sortie'
     mapHp: [0, 0]
