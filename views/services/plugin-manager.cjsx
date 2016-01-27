@@ -311,12 +311,12 @@ class PluginManager
   installPlugin: async (name) ->
     yield @getMirrors()
     try
-      packgaeName = null
+      packageName = null
       data = yield Promise.promisify(npm.commands.install)([name])
       validPlugins = yield @getValidPlugins()
       # Make sure if the plugin is unavailable.
       # if available, update information.
-      for packs in data[0]
+      for packs in data
         dump = false
         packName = packs[0].split('@')[0]
         if packName.indexOf("poi-plugin") == -1
@@ -331,11 +331,11 @@ class PluginManager
             else if semver.gt validPlugins[index].lastestVersion, packVersion
               validPlugins[index].isOutdated = true
         if !dump
-          packgaeName = packName
+          packageName = packName
           break
-      if packgaeName?
+      if packageName?
         plugin = null
-        plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packgaeName
+        plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packageName
         @plugins_.push plugin
         @plugins_ = _.sortBy @plugins_, 'priority'
     catch error
