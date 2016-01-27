@@ -30,9 +30,10 @@ module.exports =
     enabled
 
   enableExtra: (tag) ->
-    extraOpts.add tag
+    console.assert tag, 'Are you kidding me? What do you want to enable?'
+    extraOpts.add tag.toString()
   disableExtra: (tag) ->
-    extraOpts.delete tag
+    extraOpts.delete tag.toString()
   isExtraEnabled: (tag) ->
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
