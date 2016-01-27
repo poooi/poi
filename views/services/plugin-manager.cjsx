@@ -58,6 +58,7 @@ class PluginManager
     @mirrors_ = null
     # @private {?Object} npm config
     @config_ =
+      production: true
       mirror: null
       proxy: null
       betaCheck: null
