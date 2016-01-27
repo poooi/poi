@@ -1,9 +1,9 @@
 language: node_js
 os:
   - linux
+  - osx
 node_js:
-  - iojs
-  - node
+  - "5.3"
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y p7zip-full
