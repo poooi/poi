@@ -18,10 +18,24 @@ setupDebugLog = ->
   else
     debugLog = doNothing
 
+# This class is only for the purpose of giving some feedbacks
+# when certain function is called through the dev-tool console.
+# (e.g., shows "Debug {enabled: true}" instead of "undefined")
+# It should NOT be used for any other purpose.
+class Debug
+  @wrap: (o) ->
+    if typeof o is 'string'
+      Object.assign new Debug, {msg: o}
+    else if o.toString() is "[object Object]"
+      Object.assign new Debug, o
+    else
+      o
+
 module.exports =
   setEnabled: (b) ->
     enabled = b
     setupDebugLog()
+    Debug.wrap {enabled: b}
   enable: ->
     @setEnabled true
   disable: ->
@@ -31,9 +45,12 @@ module.exports =
 
   enableExtra: (tag) ->
     console.assert tag, 'Are you kidding me? What do you want to enable?'
+    return {Debug.wrap 'Nothing happened'} if !tag
     extraOpts.add tag.toString()
+    Debug.wrap {enabledExtra: tag}
   disableExtra: (tag) ->
     extraOpts.delete tag.toString()
+    Debug.wrap {disabledExtra: tag}
   isExtraEnabled: (tag) ->
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
