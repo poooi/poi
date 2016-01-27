@@ -167,7 +167,7 @@ PluginConfig = React.createClass
     shell.openExternal "https://www.npmjs.com/search?q=poi-plugin"
     e.preventDefault()
   onSelectInstallFromFile: ->
-    @synchronize =>
+    @synchronize async =>
       filenames = dialog.showOpenDialog
         title: __ 'Select files'
         defaultPath: remote.require('electron').app.getPath('downloads')
