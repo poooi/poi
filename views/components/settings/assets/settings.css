@@ -10,16 +10,16 @@
   align-items: center;
 }
 #SettingsView #navigator-bar {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 #SettingsView #navigator-bar .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 #SettingsView #navigator-bar .container .btn-group {
   float: right;
 }
 #SettingsView #poi-config .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 #SettingsView #poi-config #poi-resolutionr-config {
   display: flex;
@@ -45,15 +45,11 @@
   padding: 0;
 }
 #SettingsView .nav-pills > li > a {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 #SettingsView .notif-button {
   flex: 1;
-}
-#SettingsView .notif-input {
-}
-#SettingsView .notif-row {
 }
 #SettingsView .notif-container {
   display: flex;
@@ -61,7 +57,7 @@
   padding-bottom: 6px;
 }
 #SettingsView .notif-input-desc {
-  padding: 6px 0px;
+  padding: 6px 0;
 }
 #SettingsView .folder-picker {
   width: 100%;
@@ -83,7 +79,7 @@
   flex-flow: row;
 }
 #SettingsView .control-button {
-  margin: 0px;
+  margin: 0;
   height: 30px;
 }
 #SettingsView .control-button > button,
@@ -96,4 +92,7 @@
 }
 #SettingsView button .fa {
   margin-right: 2px;
+}
+.popover-content .container {
+  width: auto;
 }

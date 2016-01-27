@@ -7,12 +7,18 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, PluginManager} = window
-{Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip} = ReactBootstrap
+{Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Overlay, Popover} = ReactBootstrap
 {config} = window
 shell = require 'shell'
 {dialog} = remote.require 'electron'
 Divider = require './divider'
 async = Promise.coroutine
+
+PluginSettingWrap = React.createClass
+  shouldComponentUpdate: (nextProps, nextState)->
+    false
+  render: ->
+    React.createElement @props.plugin.settingsClass
 
 PluginConfig = React.createClass
   getInitialState: ->
@@ -25,6 +31,7 @@ PluginConfig = React.createClass
     mirrors: {}
     plugins: []
     uninstalledPluginSettings: []
+    settingPopOpen: {}
     updatingAll: false
     reloading: false
     advanced: false
@@ -71,6 +78,18 @@ PluginConfig = React.createClass
     config = yield PluginManager.selectConfig(state ,null, null)
     @setState
       config: config
+  getDOMNodeByName: (node) ->
+    ReactDOM.findDOMNode(@refs[node])
+  toggleSettingPop: (name, state) ->
+    settingPopOpen = @state.settingPopOpen
+    if state?
+      settingPopOpen[name] = state
+    else
+      if settingPopOpen[name]?
+        settingPopOpen[name] = !settingPopOpen[name]
+      else
+        settingPopOpen[name] = true
+    @setState {settingPopOpen}
   handleAdvancedShow: ->
     advanced = !@state.advanced
     @setState {advanced}
@@ -379,8 +398,10 @@ PluginConfig = React.createClass
         for plugin, index in @state.plugins
           <Col key={index} xs={12} style={marginBottom: 8}>
             <Col xs={12} className='div-row'>
-              <span style={fontSize: '150%'}>{plugin.displayName} </span>
-              <span style={paddingTop: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
+              <span style={fontSize: '150%'}>
+                {plugin.displayName}
+              </span>
+              <span style={paddingTop: 2; paddingLeft: 2}> @<span onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
               <div style={paddingTop: 2}>
                 <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
                        className="#{if not plugin.isOutdated then 'hidden'}">
@@ -388,17 +409,29 @@ PluginConfig = React.createClass
                   Version {plugin.lastestVersion}
                 </Label>
               </div>
-              <div style={paddingTop: 2, marginLeft: 'auto'}>Version {plugin.version || '1.0.0'}</div>
+              <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
+                <div>
+                  Version {plugin.version || '1.0.0'}
+                </div>
+              </div>
             </Col>
             <Col xs={12} style={marginTop: 4}>
-              <Col xs={5}>{plugin.description}</Col>
-              <Col xs={7} style={padding: 0}>
+              <Col xs={if plugin.settingsClass? then 5 else 6}>{plugin.description}</Col>
+              <Col xs={if plugin.settingsClass? then 7 else 6} style={padding: 0}>
                 <div style={marginLeft: 'auto'}>
                   <ButtonGroup bsSize='small' style={width: '100%'}>
+                    {
+                      if plugin.settingsClass?
+                        <Button ref="#{plugin.name}-setting-btn"
+                                bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 7)'}
+                                onClick={@toggleSettingPop.bind @, plugin.name}>
+                          <FontAwesome name='gear' />
+                        </Button>
+                    }
                     <Button bsStyle='info'
                             disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                             onClick={@handleEnable.bind @, index}
-                            style={width: "33%"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% * 2 / 7)' else 'calc(100% / 3)'}"}
                             className="plugin-control-button">
                       <FontAwesome name={
                                      switch PluginManager.getStatusOfPlugin plugin
@@ -426,7 +459,7 @@ PluginConfig = React.createClass
                     <Button bsStyle='primary'
                             disabled={not plugin.isOutdated || plugin.isUpdating || @state.npmWorkding || @state.checkingUpdate}
                             onClick={@handleUpdate.bind @, index}
-                            style={width: "33%"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% * 2 / 7)' else 'calc(100% / 3)'}"}
                             className="plugin-control-button">
                       <FontAwesome name={
                                      if plugin.isUpdating
@@ -449,7 +482,7 @@ PluginConfig = React.createClass
                     <Button bsStyle='danger'
                             onClick={@handleRemove.bind @, index}
                             disabled={not plugin.isInstalled}
-                            style={width: "33%"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% * 2 / 7)' else 'calc(100% / 3)'}"}
                             className="plugin-control-button">
                       <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
                       {
@@ -462,6 +495,18 @@ PluginConfig = React.createClass
                       }
                     </Button>
                   </ButtonGroup>
+                  {
+                    if plugin.settingsClass?
+                      <Overlay show={@state.settingPopOpen[plugin.name]}
+                               onHide={@toggleSettingPop.bind @, plugin.name, false}
+                               rootClose={true}
+                               target={@getDOMNodeByName.bind @, "#{plugin.name}-setting-btn"}
+                               placement='top'>
+                        <Popover id="#{plugin.name}-setting-pop">
+                          <PluginSettingWrap plugin={plugin} />
+                        </Popover>
+                      </Overlay>
+                  }
                 </div>
               </Col>
             </Col>
