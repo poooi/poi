@@ -20,6 +20,165 @@ PluginSettingWrap = React.createClass
   render: ->
     React.createElement @props.plugin.settingsClass
 
+InstalledPlugin = React.createClass
+  render: ->
+    plugin = @props.plugin
+    index = @props.index
+    <Col xs={12} style={marginBottom: 8}>
+      <Col xs={12} className='div-row'>
+        <span style={fontSize: '150%'}>
+          {plugin.displayName}
+        </span>
+        <span style={paddingTop: 2; paddingLeft: 2}> @<span className='author-link' onClick={_.partial @props.handleClickAuthorLink, plugin.link}>{plugin.author}</span></span>
+        <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
+          <div>
+            <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                   className="update-label #{if not plugin.isOutdated then 'hidden'}"
+                   onClick={_.partial @props.handleUpdate, index}>
+              <FontAwesome name={
+                             if plugin.isUpdating
+                               "spinner"
+                             else if plugin.isOutdated
+                               "cloud-download"
+                             else
+                               "check"
+                           }
+                           pulse={plugin.isUpdating}/>
+              {
+                if plugin.isUpdating
+                   __ "Updating"
+                else if plugin.isOutdated
+                   "Version #{plugin.lastestVersion}"
+                else
+                   __ "Latest"
+              }
+            </Label>
+          </div>
+          <div>
+            Version {plugin.version || '1.0.0'}
+          </div>
+        </div>
+      </Col>
+      <Col xs={12} style={marginTop: 4}>
+        <Col xs={5}>{plugin.description}</Col>
+        <Col xs={7} style={padding: 0}>
+          <div style={width: "#{if plugin.settingsClass? then '100%' else 'calc(100% * 2 / 3)'}", marginLeft: 'auto'}>
+            <ButtonGroup bsSize='small' style={width: '100%'}>
+              {
+                if plugin.settingsClass?
+                  <Button ref="setting-btn"
+                          bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
+                          onClick={_.partial @props.toggleSettingPop, plugin.name}>
+                    <FontAwesome name='gear' />
+                    {__ 'Settings'}
+                  </Button>
+              }
+              <Button bsStyle='info'
+                      disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
+                      onClick={_.partial @props.handleEnable, index}
+                      style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
+                      className="plugin-control-button">
+                <FontAwesome name={
+                               switch PluginManager.getStatusOfPlugin plugin
+                                 when PluginManager.VALID
+                                   "pause"
+                                 when PluginManager.DISABLED
+                                   "play"
+                                 when PluginManager.NEEDUPDATE
+                                   "ban"
+                                 when PluginManager.BROKEN
+                                   "close"
+                             }/>
+                {
+                  switch PluginManager.getStatusOfPlugin plugin
+                    when PluginManager.VALID
+                      __ "Disable"
+                    when PluginManager.DISABLED
+                      __ "Enable"
+                    when PluginManager.NEEDUPDATE
+                      __ "Outdated"
+                    when PluginManager.BROKEN
+                      __ "Error"
+                }
+              </Button>
+              <Button bsStyle='danger'
+                      onClick={_.partial @props.handleRemove, index}
+                      disabled={not plugin.isInstalled}
+                      style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
+                      className="plugin-control-button">
+                <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
+                {
+                  if plugin.isUninstalling
+                    __ "Removing"
+                  else if plugin.isInstalled
+                    __ "Remove"
+                  else
+                    __ "Removed"
+                }
+              </Button>
+            </ButtonGroup>
+            {
+              if plugin.settingsClass?
+                <Overlay show={@props.settingPopOpen}
+                         onHide={_.partial @props.toggleSettingPop, plugin.name, false}
+                         rootClose={true}
+                         target={=> ReactDOM.findDOMNode @refs['setting-btn']}
+                         placement='top'>
+                  <Popover id="#{plugin.name}-setting-pop">
+                    <PluginSettingWrap plugin={plugin} />
+                  </Popover>
+                </Overlay>
+            }
+          </div>
+        </Col>
+      </Col>
+    </Col>
+
+UninstalledPlugin = React.createClass
+  render: ->
+    value = @props.record
+    <Col xs={12} style={marginBottom: 8}>
+      <Col xs={12} className='div-row'>
+        <span style={fontSize: '150%'}>
+          <FontAwesome name={value.icon} />
+            {value[window.language]}
+          </span>
+        <span style={paddingTop: 2}> @
+          <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, value.link}>
+            {value.author}
+          </span>
+        </span>
+      </Col>
+      <Col xs={12} style={marginTop: 4}>
+        <Col xs={8}>{value["des#{window.language}"]}</Col>
+        <Col xs={4} style={padding: 0}>
+          <div style={marginLeft: 'auto'}>
+            <ButtonGroup bsSize='small' style={width: '100%'}>
+              <Button bsStyle='primary'
+                      disabled={@props.npmWorkding}
+                      onClick={_.partial @props.handleInstall, @props.name}
+                      style={width: "100%"}
+                      className="plugin-control-button">
+                <FontAwesome name={
+                               if @props.installing
+                                 'spinner'
+                               else
+                                 'download'
+                             }
+                             pulse={@props.installing}/>
+                {
+                  if @props.installing
+                    __ "Installing"
+                  else
+                    __ "Install"
+                }
+              </Button>
+            </ButtonGroup>
+          </div>
+        </Col>
+      </Col>
+    </Col>
+
 PluginConfig = React.createClass
   getInitialState: ->
     checkingUpdate: false
@@ -78,8 +237,6 @@ PluginConfig = React.createClass
     config = yield PluginManager.selectConfig(state ,null, null)
     @setState
       config: config
-  getDOMNodeByName: (node) ->
-    ReactDOM.findDOMNode(@refs[node])
   toggleSettingPop: (name, state) ->
     settingPopOpen = @state.settingPopOpen
     if state?
@@ -396,160 +553,30 @@ PluginConfig = React.createClass
         </Col>
       {
         for plugin, index in @state.plugins
-          <Col key={index} xs={12} style={marginBottom: 8}>
-            <Col xs={12} className='div-row'>
-              <span style={fontSize: '150%'}>
-                {plugin.displayName}
-              </span>
-              <span style={paddingTop: 2; paddingLeft: 2}> @<span className='author-link' onClick={@handleClickAuthorLink.bind @, plugin.link}>{plugin.author}</span></span>
-              <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
-                <div>
-                  <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
-                         className="update-label #{if not plugin.isOutdated then 'hidden'}"
-                         onClick={@handleUpdate.bind @, index}>
-                    <FontAwesome name={
-                                   if plugin.isUpdating
-                                     "spinner"
-                                   else if plugin.isOutdated
-                                     "cloud-download"
-                                   else
-                                     "check"
-                                 }
-                                 pulse={plugin.isUpdating}/>
-                    {
-                      if plugin.isUpdating
-                         __ "Updating"
-                      else if plugin.isOutdated
-                         "Version #{plugin.lastestVersion}"
-                      else
-                         __ "Latest"
-                    }
-                  </Label>
-                </div>
-                <div>
-                  Version {plugin.version || '1.0.0'}
-                </div>
-              </div>
-            </Col>
-            <Col xs={12} style={marginTop: 4}>
-              <Col xs={5}>{plugin.description}</Col>
-              <Col xs={7} style={padding: 0}>
-                <div style={width: "#{if plugin.settingsClass? then '100%' else 'calc(100% * 2 / 3)'}", marginLeft: 'auto'}>
-                  <ButtonGroup bsSize='small' style={width: '100%'}>
-                    {
-                      if plugin.settingsClass?
-                        <Button ref="#{plugin.name}-setting-btn"
-                                bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
-                                onClick={@toggleSettingPop.bind @, plugin.name}>
-                          <FontAwesome name='gear' />
-                          {__ 'Settings'}
-                        </Button>
-                    }
-                    <Button bsStyle='info'
-                            disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                            onClick={@handleEnable.bind @, index}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
-                            className="plugin-control-button">
-                      <FontAwesome name={
-                                     switch PluginManager.getStatusOfPlugin plugin
-                                       when PluginManager.VALID
-                                         "pause"
-                                       when PluginManager.DISABLED
-                                         "play"
-                                       when PluginManager.NEEDUPDATE
-                                         "ban"
-                                       when PluginManager.BROKEN
-                                         "close"
-                                   }/>
-                      {
-                        switch PluginManager.getStatusOfPlugin plugin
-                          when PluginManager.VALID
-                            __ "Disable"
-                          when PluginManager.DISABLED
-                            __ "Enable"
-                          when PluginManager.NEEDUPDATE
-                            __ "Outdated"
-                          when PluginManager.BROKEN
-                            __ "Error"
-                      }
-                    </Button>
-                    <Button bsStyle='danger'
-                            onClick={@handleRemove.bind @, index}
-                            disabled={not plugin.isInstalled}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
-                            className="plugin-control-button">
-                      <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
-                      {
-                        if plugin.isUninstalling
-                          __ "Removing"
-                        else if plugin.isInstalled
-                          __ "Remove"
-                        else
-                          __ "Removed"
-                      }
-                    </Button>
-                  </ButtonGroup>
-                  {
-                    if plugin.settingsClass?
-                      <Overlay show={@state.settingPopOpen[plugin.name]}
-                               onHide={@toggleSettingPop.bind @, plugin.name, false}
-                               rootClose={true}
-                               target={@getDOMNodeByName.bind @, "#{plugin.name}-setting-btn"}
-                               placement='top'>
-                        <Popover id="#{plugin.name}-setting-pop">
-                          <PluginSettingWrap plugin={plugin} />
-                        </Popover>
-                      </Overlay>
-                  }
-                </div>
-              </Col>
-            </Col>
-          </Col>
+          <InstalledPlugin
+            key={plugin.name}
+            index={index}
+            plugin={plugin}
+            handleClickAuthorLink={@handleClickAuthorLink}
+            handleUpdate={@handleUpdate}
+            toggleSettingPop={@toggleSettingPop}
+            handleEnable={@handleEnable}
+            handleRemove={@handleRemove}
+            settingPopOpen={@state.settingPopOpen[plugin.name]}
+            />
       }
       {
         for name, index in Object.keys(@state.uninstalledPluginSettings)
           value = @state.uninstalledPluginSettings[name]
-          <Col key={index} xs={12} style={marginBottom: 8}>
-            <Col xs={12} className='div-row'>
-              <span style={fontSize: '150%'}>
-                <FontAwesome name={value.icon} />
-                  {value[window.language]}
-                </span>
-              <span style={paddingTop: 2}> @
-                <span className='author-link' onClick={@handleClickAuthorLink.bind @, value.link}>
-                  {value.author}
-                </span>
-              </span>
-            </Col>
-            <Col xs={12} style={marginTop: 4}>
-              <Col xs={8}>{value["des#{window.language}"]}</Col>
-              <Col xs={4} style={padding: 0}>
-                <div style={marginLeft: 'auto'}>
-                  <ButtonGroup bsSize='small' style={width: '100%'}>
-                    <Button bsStyle='primary'
-                            disabled={@state.npmWorkding}
-                            onClick={@handleInstall.bind @, name}
-                            style={width: "100%"}
-                            className="plugin-control-button">
-                      <FontAwesome name={
-                                     if name in @state.installingPluginNames
-                                       'spinner'
-                                     else
-                                       'download'
-                                   }
-                                   pulse={name in @state.installingPluginNames}/>
-                      {
-                        if name in @state.installingPluginNames
-                          __ "Installing"
-                        else
-                          __ "Install"
-                      }
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </Col>
-            </Col>
-          </Col>
+          <UninstalledPlugin
+            key={name}
+            name={name}
+            record={value}
+            npmWorkding={@state.npmWorkding}
+            installing={name in @state.installingPluginNames}
+            handleClickAuthorLink={@handleClickAuthorLink}
+            handleInstall={@handleInstall}
+            />
       }
       </Grid>
     </form>
