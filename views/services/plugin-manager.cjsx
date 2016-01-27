@@ -311,34 +311,27 @@ class PluginManager
   installPlugin: async (name) ->
     yield @getMirrors()
     try
-      packageName = null
       data = yield Promise.promisify(npm.commands.install)([name])
-      validPlugins = yield @getValidPlugins()
+      readPlugins = yield @getReadPlugins()
       # Make sure if the plugin is unavailable.
       # if available, update information.
-      for packs in data
-        dump = false
-        packName = packs[0].split('@')[0]
-        if packName.indexOf("poi-plugin") == -1
-          continue
-        packVersion = packs[0].split('@')[1]
-        for plugin_, index in validPlugins
-          if packName == plugin_.packageName
-            dump = true
-            validPlugins[index].version = packVersion
-            if semver.eq validPlugins[index].lastestVersion, packVersion
-              validPlugins[index].isOutdated = false
-            else if semver.gt validPlugins[index].lastestVersion, packVersion
-              validPlugins[index].isOutdated = true
-        if !dump
-          packageName = packName
+      for [packInfo, packPath] in data
+        [packName, packVersion] = packInfo.split('@')
+        continue if !packName.startsWith('poi-plugin-')
+        plugin = readPlugins.find (plugin_) -> packName == plugin_.packageName
+        if plugin?
+          # If the installed plugin is one of the existing plugins
+          plugin.version = packVersion
+          plugin.isOutdated = semver.gt plugin.lastestVersion, packVersion
+        else
+          # If the installed plugin is a new plugin
+          plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packName
+          @plugins_.push plugin
           break
-      if packageName?
-        plugin = null
-        plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packageName
-        @plugins_.push plugin
-        @plugins_ = _.sortBy @plugins_, 'priority'
+      @plugins_ = _.sortBy @plugins_, 'priority'
     catch error
+      console.log "installPlugin error: #{error}"
+      console.log error.stack
       throw error
 
   # uninstall one plugin, this won't unload it from memory
@@ -353,6 +346,8 @@ class PluginManager
           @plugins_.splice(index, 1)
           break
     catch error
+      console.log "uninstallPlugin error: #{error}"
+      console.log error.stack
       throw error
 
   # enable one plugin
