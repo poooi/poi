@@ -7,7 +7,7 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, PluginManager} = window
-{Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Overlay, Popover} = ReactBootstrap
+{Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel} = ReactBootstrap
 {config} = window
 shell = require 'shell'
 {dialog} = remote.require 'electron'
@@ -20,7 +20,33 @@ PluginSettingWrap = React.createClass
   render: ->
     React.createElement @props.plugin.settingsClass
 
+CollapsiblePanel = React.createClass
+  getInitialState: ->
+    expanded: @props.expanded
+    hide: !@props.expanded
+  
+  componentWillReceiveProps: (nextProps) ->
+    transitionTime = @props.transitionTime || 400
+    if @props.expanded && !nextProps.expanded
+      @setState {expanded: false}
+      _.delay (=> @setState {hide: true}), transitionTime
+    else if !@props.expanded && nextProps.expanded
+      @setState {hide: false}
+      _.defer (=> @setState {expanded: true})
+
+  render: ->
+    style = Object.assign {}, @props.style, 
+      if @state.hide then {display: 'none'} else {}
+    <Panel {...@props} style={style} />
+
 InstalledPlugin = React.createClass
+  getInitialState: ->
+    settingOpen: false
+
+  toggleSettingPop: ->
+    @setState
+      settingOpen: !@state.settingOpen
+
   render: ->
     plugin = @props.plugin
     index = @props.index
@@ -68,7 +94,7 @@ InstalledPlugin = React.createClass
                 if plugin.settingsClass?
                   <Button ref="setting-btn"
                           bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
-                          onClick={_.partial @props.toggleSettingPop, plugin.name}>
+                          onClick={@toggleSettingPop}>
                     <FontAwesome name='gear' />
                     {__ 'Settings'}
                   </Button>
@@ -119,15 +145,10 @@ InstalledPlugin = React.createClass
             </ButtonGroup>
             {
               if plugin.settingsClass?
-                <Overlay show={@props.settingPopOpen}
-                         onHide={_.partial @props.toggleSettingPop, plugin.name, false}
-                         rootClose={true}
-                         target={=> ReactDOM.findDOMNode @refs['setting-btn']}
-                         placement='top'>
-                  <Popover id="#{plugin.name}-setting-pop">
-                    <PluginSettingWrap plugin={plugin} />
-                  </Popover>
-                </Overlay>
+                <CollapsiblePanel collapsible expanded={@state.settingOpen}
+                  style={margin: 0} >
+                  <PluginSettingWrap plugin={plugin} />
+                </CollapsiblePanel>
             }
           </div>
         </Col>
@@ -190,7 +211,6 @@ PluginConfig = React.createClass
     mirrors: {}
     plugins: []
     uninstalledPluginSettings: []
-    settingPopOpen: {}
     updatingAll: false
     reloading: false
     advanced: false
@@ -237,16 +257,6 @@ PluginConfig = React.createClass
     config = yield PluginManager.selectConfig(state ,null, null)
     @setState
       config: config
-  toggleSettingPop: (name, state) ->
-    settingPopOpen = @state.settingPopOpen
-    if state?
-      settingPopOpen[name] = state
-    else
-      if settingPopOpen[name]?
-        settingPopOpen[name] = !settingPopOpen[name]
-      else
-        settingPopOpen[name] = true
-    @setState {settingPopOpen}
   handleAdvancedShow: ->
     advanced = !@state.advanced
     @setState {advanced}
@@ -559,10 +569,8 @@ PluginConfig = React.createClass
             plugin={plugin}
             handleClickAuthorLink={@handleClickAuthorLink}
             handleUpdate={@handleUpdate}
-            toggleSettingPop={@toggleSettingPop}
             handleEnable={@handleEnable}
             handleRemove={@handleRemove}
-            settingPopOpen={@state.settingPopOpen[plugin.name]}
             />
       }
       {
