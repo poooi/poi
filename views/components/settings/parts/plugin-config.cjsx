@@ -528,9 +528,9 @@ PluginConfig = React.createClass
             <Col xs={12} className='div-row'>
               <span style={fontSize: '150%'}>
                 <FontAwesome name={value.icon} />
-                  {value[window.language]}
+                  {' ' + value[window.language]}
                 </span>
-              <span style={paddingTop: 2}> @
+              <span style={paddingLeft: 2}> @
                 <span className='author-link' onClick={@handleClickAuthorLink.bind @, value.link}>
                   {value.author}
                 </span>
