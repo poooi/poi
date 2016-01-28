@@ -439,8 +439,10 @@ PluginConfig = React.createClass
                     {
                       if plugin.settingsClass?
                         <Button ref="#{plugin.name}-setting-btn"
-                                bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
-                                onClick={@toggleSettingPop.bind @, plugin.name}>
+                                bsStyle='primary' bsSize='xs'
+                                style={width: 'calc(100% / 3)'}
+                                onClick={@toggleSettingPop.bind @, plugin.name, null}
+                                className="plugin-control-button">
                           <FontAwesome name='gear' />
                           {__ 'Settings'}
                         </Button>
@@ -448,7 +450,7 @@ PluginConfig = React.createClass
                     <Button bsStyle='info'
                             disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                             onClick={@handleEnable.bind @, index}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
                             className="plugin-control-button">
                       <FontAwesome name={
                                      switch PluginManager.getStatusOfPlugin plugin
@@ -476,7 +478,7 @@ PluginConfig = React.createClass
                     <Button bsStyle='danger'
                             onClick={@handleRemove.bind @, index}
                             disabled={not plugin.isInstalled}
-                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
+                            style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
                             className="plugin-control-button">
                       <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
                       {
@@ -489,21 +491,19 @@ PluginConfig = React.createClass
                       }
                     </Button>
                   </ButtonGroup>
-                  {
-                    if plugin.settingsClass?
-                      <Overlay show={@state.settingPopOpen[plugin.name]}
-                               onHide={@toggleSettingPop.bind @, plugin.name, false}
-                               rootClose={true}
-                               target={@getDOMNodeByName.bind @, "#{plugin.name}-setting-btn"}
-                               placement='top'>
-                        <Popover id="#{plugin.name}-setting-pop">
-                          <PluginSettingWrap plugin={plugin} />
-                        </Popover>
-                      </Overlay>
-                  }
                 </div>
               </Col>
             </Col>
+            {
+              if plugin.settingsClass?
+                <Collapse in={@state.settingPopOpen[plugin.name]}>
+                  <Col xs={12}>
+                    <Well>
+                      <PluginSettingWrap plugin={plugin} />
+                    </Well>
+                  </Col>
+                </Collapse>
+            }
           </Col>
       }
       {
