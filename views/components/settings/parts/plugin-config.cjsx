@@ -439,8 +439,10 @@ PluginConfig = React.createClass
                     {
                       if plugin.settingsClass?
                         <Button ref="#{plugin.name}-setting-btn"
-                                bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
-                                onClick={@toggleSettingPop.bind @, plugin.name}>
+                                bsStyle='primary' bsSize='xs'
+                                style={width: 'calc(100% / 3)'}
+                                onClick={@toggleSettingPop.bind @, plugin.name}
+                                className="plugin-control-button">
                           <FontAwesome name='gear' />
                           {__ 'Settings'}
                         </Button>
