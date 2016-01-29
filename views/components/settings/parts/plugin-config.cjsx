@@ -49,7 +49,6 @@ InstalledPlugin = React.createClass
 
   render: ->
     plugin = @props.plugin
-    index = @props.index
     <div style={marginLeft: 15, marginRight: 15, marginBottom: 8}>
       <Row>
         <Col xs={12} className='div-row'>
@@ -61,7 +60,7 @@ InstalledPlugin = React.createClass
             <div>
               <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
                      className="update-label #{if not plugin.isOutdated then 'hidden'}"
-                     onClick={_.partial @props.handleUpdate, index}>
+                     onClick={@props.handleUpdate}>
                 <FontAwesome name={
                                if plugin.isUpdating
                                  "spinner"
@@ -125,7 +124,7 @@ InstalledPlugin = React.createClass
                 }>
                 <Button bsStyle='info'
                   disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                  onClick={_.partial @props.handleEnable, index}
+                  onClick={@props.handleEnable}
                   style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
                   className="plugin-control-button">
                   <FontAwesome name={
@@ -154,7 +153,7 @@ InstalledPlugin = React.createClass
                 </Tooltip>
                 }>
                 <Button bsStyle='danger'
-                  onClick={_.partial @props.handleRemove, index}
+                  onClick={@props.handleRemove}
                   disabled={not plugin.isInstalled}
                   style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
                   className="plugin-control-button">
@@ -178,23 +177,23 @@ InstalledPlugin = React.createClass
 
 UninstalledPlugin = React.createClass
   render: ->
-    value = @props.record
+    plugin = @props.plugin
     <div style={marginLeft: 15, marginRight: 15, marginBottom: 8}>
       <Row>
         <Col xs={12} className='div-row'>
           <span style={fontSize: '150%'}>
-            <FontAwesome name={value.icon} />
-              {' ' + value[window.language]}
+            <FontAwesome name={plugin.icon} />
+              {' ' + plugin[window.language]}
             </span>
           <span style={paddingLeft: 2}> @
-            <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, value.link}>
-              {value.author}
+            <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, plugin.link}>
+              {plugin.author}
             </span>
           </span>
         </Col>
       </Row>
       <Row>
-        <Col xs={10}>{value["des#{window.language}"]}</Col>
+        <Col xs={10}>{plugin["des#{window.language}"]}</Col>
         <Col xs={2} style={padding: 0}>
           <div style={marginLeft: 'auto'}>
             <ButtonGroup bsSize='small' style={width: '100%'}>
@@ -210,7 +209,7 @@ UninstalledPlugin = React.createClass
                 }>
                 <Button bsStyle='primary'
                   disabled={@props.npmWorkding}
-                  onClick={_.partial @props.handleInstall, @props.name}
+                  onClick={@props.handleInstall}
                   style={width: "100%"}
                   className="plugin-control-button">
                   <FontAwesome name={
@@ -593,12 +592,11 @@ PluginConfig = React.createClass
         for plugin, index in @state.plugins
           <InstalledPlugin
             key={plugin.name}
-            index={index}
             plugin={plugin}
             handleClickAuthorLink={@handleClickAuthorLink}
-            handleUpdate={@handleUpdate}
-            handleEnable={@handleEnable}
-            handleRemove={@handleRemove}
+            handleUpdate={_.partial @handleUpdate, index}
+            handleEnable={_.partial @handleEnable, index}
+            handleRemove={_.partial @handleRemove, index}
             />
       }
       {
@@ -606,12 +604,11 @@ PluginConfig = React.createClass
           value = @state.uninstalledPluginSettings[name]
           <UninstalledPlugin
             key={name}
-            name={name}
-            record={value}
+            plugin={value}
             npmWorkding={@state.npmWorkding}
             installing={name in @state.installingPluginNames}
             handleClickAuthorLink={@handleClickAuthorLink}
-            handleInstall={@handleInstall}
+            handleInstall={_.partial @handleInstall, name}
             />
       }
       </Grid>
