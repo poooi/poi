@@ -86,35 +86,28 @@ InstalledPlugin = React.createClass
         </div>
       </Col>
       <Col xs={12} style={marginTop: 4}>
-        <Col xs={5}>{plugin.description}</Col>
-        <Col xs={7} style={padding: 0}>
+        <Col xs={7}>{plugin.description}</Col>
+        <Col xs={5} style={padding: 0}>
           <div style={width: "#{if plugin.settingsClass? then '100%' else 'calc(100% * 2 / 3)'}", marginLeft: 'auto'}>
             <ButtonGroup bsSize='small' style={width: '100%'}>
               {
                 if plugin.settingsClass?
-                  <Button ref="setting-btn"
-                          bsStyle='primary' bsSize='xs' style={width: 'calc(100% / 3)'}
-                          onClick={@toggleSettingPop}>
-                    <FontAwesome name='gear' />
-                    {__ 'Settings'}
-                  </Button>
+                  <OverlayTrigger placement='top' overlay={
+                     <Tooltip>
+                       {__ 'Settings'}
+                     </Tooltip>
+                     }>
+                     <Button ref="setting-btn"
+                             bsStyle='primary' bsSize='xs'
+                             style={width: 'calc(100% / 3)'}
+                             onClick={@toggleSettingPop}
+                             className="plugin-control-button">
+                       <FontAwesome name='gear' />
+                     </Button>
+                   </OverlayTrigger>
               }
-              <Button bsStyle='info'
-                      disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                      onClick={_.partial @props.handleEnable, index}
-                      style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
-                      className="plugin-control-button">
-                <FontAwesome name={
-                               switch PluginManager.getStatusOfPlugin plugin
-                                 when PluginManager.VALID
-                                   "pause"
-                                 when PluginManager.DISABLED
-                                   "play"
-                                 when PluginManager.NEEDUPDATE
-                                   "ban"
-                                 when PluginManager.BROKEN
-                                   "close"
-                             }/>
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip>
                 {
                   switch PluginManager.getStatusOfPlugin plugin
                     when PluginManager.VALID
@@ -126,13 +119,28 @@ InstalledPlugin = React.createClass
                     when PluginManager.BROKEN
                       __ "Error"
                 }
-              </Button>
-              <Button bsStyle='danger'
-                      onClick={_.partial @props.handleRemove, index}
-                      disabled={not plugin.isInstalled}
-                      style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else 'calc(100% / 2)'}"}
-                      className="plugin-control-button">
-                <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
+                </Tooltip>
+                }>
+                <Button bsStyle='info'
+                  disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
+                  onClick={_.partial @props.handleEnable, index}
+                  style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
+                  className="plugin-control-button">
+                  <FontAwesome name={
+                    switch PluginManager.getStatusOfPlugin plugin
+                      when PluginManager.VALID
+                        "pause"
+                      when PluginManager.DISABLED
+                        "play"
+                      when PluginManager.NEEDUPDATE
+                        "ban"
+                      when PluginManager.BROKEN
+                        "close"
+                    }/>
+                </Button>
+              </OverlayTrigger>
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip>
                 {
                   if plugin.isUninstalling
                     __ "Removing"
@@ -141,7 +149,16 @@ InstalledPlugin = React.createClass
                   else
                     __ "Removed"
                 }
-              </Button>
+                </Tooltip>
+                }>
+                <Button bsStyle='danger'
+                  onClick={_.partial @props.handleRemove, index}
+                  disabled={not plugin.isInstalled}
+                  style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
+                  className="plugin-control-button">
+                  <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
+                </Button>
+              </OverlayTrigger>
             </ButtonGroup>
             {
               if plugin.settingsClass?
@@ -162,38 +179,43 @@ UninstalledPlugin = React.createClass
       <Col xs={12} className='div-row'>
         <span style={fontSize: '150%'}>
           <FontAwesome name={value.icon} />
-            {value[window.language]}
+            {' ' + value[window.language]}
           </span>
-        <span style={paddingTop: 2}> @
+        <span style={paddingLeft: 2}> @
           <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, value.link}>
             {value.author}
           </span>
         </span>
       </Col>
       <Col xs={12} style={marginTop: 4}>
-        <Col xs={8}>{value["des#{window.language}"]}</Col>
-        <Col xs={4} style={padding: 0}>
+        <Col xs={10}>{value["des#{window.language}"]}</Col>
+        <Col xs={2} style={padding: 0}>
           <div style={marginLeft: 'auto'}>
             <ButtonGroup bsSize='small' style={width: '100%'}>
-              <Button bsStyle='primary'
-                      disabled={@props.npmWorkding}
-                      onClick={_.partial @props.handleInstall, @props.name}
-                      style={width: "100%"}
-                      className="plugin-control-button">
-                <FontAwesome name={
-                               if @props.installing
-                                 'spinner'
-                               else
-                                 'download'
-                             }
-                             pulse={@props.installing}/>
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip>
                 {
                   if @props.installing
                     __ "Installing"
                   else
                     __ "Install"
                 }
-              </Button>
+                </Tooltip>
+                }>
+                <Button bsStyle='primary'
+                  disabled={@props.npmWorkding}
+                  onClick={_.partial @props.handleInstall, @props.name}
+                  style={width: "100%"}
+                  className="plugin-control-button">
+                  <FontAwesome name={
+                      if @props.installing
+                        'spinner'
+                      else
+                        'download'
+                    }
+                    pulse={@props.installing}/>
+                </Button>
+              </OverlayTrigger>
             </ButtonGroup>
           </div>
         </Col>
