@@ -38,9 +38,9 @@ CollapsiblePanel = React.createClass
       _.defer (=> @setState {expanded: true})
 
   render: ->
-    style = Object.assign {}, @props.style, 
-      if @state.hide then {display: 'none'} else {}
-    <Panel {...@props} style={style} />
+    className = classnames @props.className,
+      'hidden': @state.hide
+    <Panel {...@props} className={className} />
 
 InstalledPlugin = React.createClass
   getInitialState: ->
@@ -52,14 +52,19 @@ InstalledPlugin = React.createClass
 
   render: ->
     plugin = @props.plugin
-    <div style={marginLeft: 15, marginRight: 15, marginBottom: 8}>
+    <div className='plugin-wrapper'>
       <Row>
         <Col xs={12} className='div-row'>
-          <span style={fontSize: '150%'}>
+          <span className='plugin-name'>
             {plugin.displayName}
           </span>
-          <span style={paddingTop: 2; paddingLeft: 2}> @<span className='author-link' onClick={_.partial @props.handleClickAuthorLink, plugin.link}>{plugin.author}</span></span>
-          <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
+          <div className='author-wrapper'>{'@'}
+            <span className='author-link'
+              onClick={_.partial @props.handleClickAuthorLink, plugin.link}>
+              {plugin.author}
+            </span>
+          </div>
+          <div className='update-wrapper'>
             <div>
               <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
                      className="update-label #{if not plugin.isOutdated then 'hidden'}"
@@ -91,9 +96,9 @@ InstalledPlugin = React.createClass
       </Row>
       <Row>
         <Col xs={7}>{plugin.description}</Col>
-        <Col xs={5} style={padding: 0}>
-          <div style={marginLeft: 'auto'}>
-            <ButtonGroup bsSize='small' style={width: '100%'}>
+        <Col xs={5}>
+          <Row>
+            <ButtonGroup bsSize='small' className='plugin-buttongroup'>
               {
                 if plugin.settingsClass?
                   <OverlayTrigger placement='top' overlay={
@@ -163,14 +168,14 @@ InstalledPlugin = React.createClass
                 </Button>
               </OverlayTrigger>
             </ButtonGroup>
-          </div>
+          </Row>
         </Col>
       </Row>
       <Row>
         {
           if plugin.settingsClass?
             <CollapsiblePanel collapsible expanded={@state.settingOpen}
-              style={margin: 0} >
+              className='plugin-setting-wrapper' >
               <PluginSettingWrap plugin={plugin} />
             </CollapsiblePanel>
         }
@@ -180,25 +185,26 @@ InstalledPlugin = React.createClass
 UninstalledPlugin = React.createClass
   render: ->
     plugin = @props.plugin
-    <div style={marginLeft: 15, marginRight: 15, marginBottom: 8}>
+    <div className='plugin-wrapper'>
       <Row>
         <Col xs={12} className='div-row'>
-          <span style={fontSize: '150%'}>
+          <span className='plugin-name'>
             <FontAwesome name={plugin.icon} />
               {' ' + plugin[window.language]}
-            </span>
-          <span style={paddingLeft: 2}> @
-            <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, plugin.link}>
+          </span>
+          <div className='author-wrapper'>{'@'}
+            <span className='author-link'
+              onClick={_.partial @props.handleClickAuthorLink, plugin.link}>
               {plugin.author}
             </span>
-          </span>
+          </div>
         </Col>
       </Row>
       <Row>
         <Col xs={10}>{plugin["des#{window.language}"]}</Col>
-        <Col xs={2} style={padding: 0}>
-          <div style={marginLeft: 'auto'}>
-            <ButtonGroup bsSize='small' style={width: '100%'}>
+        <Col xs={2}>
+          <Row>
+            <ButtonGroup bsSize='small' className='plugin-buttongroup'>
               <OverlayTrigger placement='top' overlay={
                 <Tooltip>
                 {
@@ -212,8 +218,7 @@ UninstalledPlugin = React.createClass
                 <Button bsStyle='primary'
                   disabled={@props.npmWorkding}
                   onClick={@props.handleInstall}
-                  style={width: "100%"}
-                  className="plugin-control-button">
+                  className='plugin-control-button col-xs-12'>
                   <FontAwesome name={
                       if @props.installing
                         'spinner'
@@ -224,7 +229,7 @@ UninstalledPlugin = React.createClass
                 </Button>
               </OverlayTrigger>
             </ButtonGroup>
-          </div>
+          </Row>
         </Col>
       </Row>
     </div>
