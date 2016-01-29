@@ -102,85 +102,86 @@ InstalledPlugin = React.createClass
         <Row>
           <Col xs={7}>{plugin.description}</Col>
           <Col xs={5}>
-            <Row>
-              <ButtonGroup bsSize='small' className="plugin-buttongroup btn-xs-#{if plugin.settingsClass? then 12 else 8}">
+            <ButtonGroup bsSize='small' className="plugin-buttongroup btn-xs-#{if plugin.settingsClass? then 12 else 8}">
+              {
+                if plugin.settingsClass?
+                  <OverlayTrigger placement='top' overlay={
+                     <Tooltip>
+                       {__ 'Settings'}
+                     </Tooltip>
+                     }>
+                     <Button ref='setting-btn'
+                             bsStyle='primary' bsSize='xs'
+                             onClick={@toggleSettingPop}
+                             className='plugin-control-button btn-xs-4'>
+                       <FontAwesome name='gear' />
+                     </Button>
+                   </OverlayTrigger>
+              }
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip>
                 {
-                  if plugin.settingsClass?
-                    <OverlayTrigger placement='top' overlay={
-                       <Tooltip>
-                         {__ 'Settings'}
-                       </Tooltip>
-                       }>
-                       <Button ref='setting-btn'
-                               bsStyle='primary' bsSize='xs'
-                               onClick={@toggleSettingPop}
-                               className='plugin-control-button btn-xs-4'>
-                         <FontAwesome name='gear' />
-                       </Button>
-                     </OverlayTrigger>
+                  switch PluginManager.getStatusOfPlugin plugin
+                    when PluginManager.VALID
+                      __ "Disable"
+                    when PluginManager.DISABLED
+                      __ "Enable"
+                    when PluginManager.NEEDUPDATE
+                      __ "Outdated"
+                    when PluginManager.BROKEN
+                      __ "Error"
                 }
-                <OverlayTrigger placement='top' overlay={
-                  <Tooltip>
-                  {
+                </Tooltip>
+                }>
+                <Button bsStyle='info'
+                  disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
+                  onClick={@props.handleEnable}
+                  className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
+                  <FontAwesome name={
                     switch PluginManager.getStatusOfPlugin plugin
                       when PluginManager.VALID
-                        __ "Disable"
+                        "pause"
                       when PluginManager.DISABLED
-                        __ "Enable"
+                        "play"
                       when PluginManager.NEEDUPDATE
-                        __ "Outdated"
+                        "ban"
                       when PluginManager.BROKEN
-                        __ "Error"
-                  }
-                  </Tooltip>
-                  }>
-                  <Button bsStyle='info'
-                    disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                    onClick={@props.handleEnable}
-                    className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
-                    <FontAwesome name={
-                      switch PluginManager.getStatusOfPlugin plugin
-                        when PluginManager.VALID
-                          "pause"
-                        when PluginManager.DISABLED
-                          "play"
-                        when PluginManager.NEEDUPDATE
-                          "ban"
-                        when PluginManager.BROKEN
-                          "close"
-                      }/>
-                  </Button>
-                </OverlayTrigger>
-                <OverlayTrigger placement='top' overlay={
-                  <Tooltip>
-                  {
-                    if plugin.isUninstalling
-                      __ "Removing"
-                    else if plugin.isInstalled
-                      __ "Remove"
-                    else
-                      __ "Removed"
-                  }
-                  </Tooltip>
-                  }>
-                  <Button bsStyle='danger'
-                    onClick={@props.handleRemove}
-                    disabled={not plugin.isInstalled}
-                    className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
-                    <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
-                  </Button>
-                </OverlayTrigger>
-              </ButtonGroup>
-            </Row>
+                        "close"
+                    }/>
+                </Button>
+              </OverlayTrigger>
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip>
+                {
+                  if plugin.isUninstalling
+                    __ "Removing"
+                  else if plugin.isInstalled
+                    __ "Remove"
+                  else
+                    __ "Removed"
+                }
+                </Tooltip>
+                }>
+                <Button bsStyle='danger'
+                  onClick={@props.handleRemove}
+                  disabled={not plugin.isInstalled}
+                  className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
+                  <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
+                </Button>
+              </OverlayTrigger>
+            </ButtonGroup>
           </Col>
         </Row>
         <Row>
           {
             if plugin.settingsClass?
-              <CollapsiblePanel collapsible expanded={@state.settingOpen}
-                className='plugin-setting-wrapper' >
-                <PluginSettingWrap plugin={plugin} />
-              </CollapsiblePanel>
+              <Collapse in={@state.settingOpen} className='plugin-setting-wrapper'>
+                <Col xs={12}>
+                  <Well>
+                    <PluginSettingWrap plugin={plugin} />
+                  </Well>
+                </Col>
+              </Collapse>
           }
         </Row>
       </Col>

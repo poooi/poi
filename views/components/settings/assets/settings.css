@@ -111,14 +111,10 @@
   padding-left: 2px;
 }
 #SettingsView .plugin-wrapper {
-  margin: 8px 0px 8px -15px;
+  padding-bottom: 8px;
 }
 #SettingsView .plugin-name {
   font-size: 150%;
-}
-#SettingsView .plugin-setting-wrapper {
-  margin: 0px 0px 0px 15px;
-  padding: 0;
 }
 #SettingsView .plugin-buttongroup {
   margin-left: auto;
