@@ -24,6 +24,12 @@ extraOpts = new Set()
 
 doNothing = -> return
 
+class ExOptHandler
+  constructor: (@enable, @disable, @isEnabled, @_log) ->
+  Object.defineProperties @prototype,
+    log:
+      get: -> if @isEnabled() then @_log else doNothing
+
 # Base Implementation
 class DebugBase
   setEnabled: (b) ->
@@ -36,18 +42,27 @@ class DebugBase
   isEnabled: ->
     enabled
 
+  extra: {}
   enableExtra: (tag) ->
     console.assert tag, 'Are you kidding me? What do you want to enable?'
     return (Debug.wrap 'Nothing happened') if !tag
+    @_addExOptHandler tag
     extraOpts.add tag.toString()
     Debug.wrap {enabledExtra: tag}
   disableExtra: (tag) ->
+    @_addExOptHandler tag
     extraOpts.delete tag.toString()
     Debug.wrap {disabledExtra: tag}
   isExtraEnabled: (tag) ->
+    @_addExOptHandler tag
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
+  _addExOptHandler: (tag) ->
+    @extra[tag] ?= new ExOptHandler @enableExtra.bind(@, tag),
+                                    @disableExtra.bind(@, tag),
+                                    @isExtraEnabled.bind(@, tag),
+                                    @_log
 
   _log: doNothing
   Object.defineProperties @prototype,
