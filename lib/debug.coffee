@@ -56,7 +56,8 @@ class DebugBase
 
   init: ->
     @log "Debug Mode"
-    @log "Extra Options: #{process.env.DEBUG_EXTRA}" if extraOpts.size > 0
+    if extraOpts.size is 1 then @_log "Extra Option: #{process.env.DEBUG_EXTRA}"
+    else if extraOpts.size > 1 then @_log "Extra Options: #{process.env.DEBUG_EXTRA}"
 
 # For the Browser Process
 class DebugBrowser extends DebugBase
