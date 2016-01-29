@@ -111,8 +111,6 @@
   padding-left: 2px;
 }
 #SettingsView .plugin-wrapper {
-  margin-left: 15px;
-  margin-right: 15px;
   margin-bottom: 8px;
 }
 #SettingsView .plugin-name {
@@ -127,4 +125,9 @@
 }
 .popover-content .container {
   width: auto;
+}
+#SettingsView .contents-wrapper {
+}
+#SettingsView .plugin-rowspace {
+  margin-bottom: 10px;
 }

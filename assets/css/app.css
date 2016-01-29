@@ -231,3 +231,8 @@ a:focus {
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
+
+.correct-container {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
