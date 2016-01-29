@@ -15,6 +15,10 @@ Divider = require './divider'
 async = Promise.coroutine
 classnames = require 'classnames'
 
+openLink = (link, e) ->
+  shell.openExternal link
+  e.preventDefault()
+
 PluginSettingWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
     true
@@ -61,7 +65,7 @@ InstalledPlugin = React.createClass
             </span>
             <div className='author-wrapper'>{'@'}
               <span className='author-link'
-                onClick={_.partial @props.handleClickAuthorLink, plugin.link}>
+                onClick={_.partial openLink, plugin.link}>
                 {plugin.author}
               </span>
             </div>
@@ -197,7 +201,7 @@ UninstalledPlugin = React.createClass
             </span>
             <div className='author-wrapper'>{'@'}
               <span className='author-link'
-                onClick={_.partial @props.handleClickAuthorLink, plugin.link}>
+                onClick={_.partial openLink, plugin.link}>
                 {plugin.author}
               </span>
             </div>
@@ -280,9 +284,6 @@ PluginConfig = React.createClass
     for key of newState
       state[key] = newState[key]
     @setState state
-  handleClickAuthorLink: (link, e) ->
-    shell.openExternal link
-    e.preventDefault()
   handleEnableBetaPluginCheck: async ->
     config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
     @setState
@@ -612,7 +613,6 @@ PluginConfig = React.createClass
             <InstalledPlugin
               key={plugin.name}
               plugin={plugin}
-              handleClickAuthorLink={@handleClickAuthorLink}
               handleUpdate={_.partial @handleUpdate, index}
               handleEnable={_.partial @handleEnable, index}
               handleRemove={_.partial @handleRemove, index}
@@ -626,7 +626,6 @@ PluginConfig = React.createClass
               plugin={value}
               npmWorkding={@state.npmWorkding}
               installing={name in @state.installingPluginNames}
-              handleClickAuthorLink={@handleClickAuthorLink}
               handleInstall={_.partial @handleInstall, name}
               />
         }
