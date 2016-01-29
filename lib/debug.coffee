@@ -94,7 +94,7 @@ class DebugRenderer extends DebugBase
 
   init: ->
     @setEnabled process.env.DEBUG?
-    extraOpts = new Set(process.env.DEBUG_EXTRA?.split ',')
+    process.env.DEBUG_EXTRA?.split(',').forEach @enableExtra.bind @
     super()
 
 debug = if isRenderer then new DebugRenderer else new DebugBrowser
