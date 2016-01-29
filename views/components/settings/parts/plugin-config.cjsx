@@ -13,6 +13,7 @@ shell = require 'shell'
 {dialog} = remote.require 'electron'
 Divider = require './divider'
 async = Promise.coroutine
+classnames = require 'classnames'
 
 PluginSettingWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
@@ -20,6 +21,8 @@ PluginSettingWrap = React.createClass
   render: ->
     React.createElement @props.plugin.settingsClass
 
+# A collapsible panel that automatically hides itself after collapsed
+# to avoid the two borders that still remains when height=0
 CollapsiblePanel = React.createClass
   getInitialState: ->
     expanded: @props.expanded
@@ -89,7 +92,7 @@ InstalledPlugin = React.createClass
       <Row>
         <Col xs={7}>{plugin.description}</Col>
         <Col xs={5} style={padding: 0}>
-          <div style={width: "#{if plugin.settingsClass? then '100%' else 'calc(100% * 2 / 3)'}", marginLeft: 'auto'}>
+          <div style={marginLeft: 'auto'}>
             <ButtonGroup bsSize='small' style={width: '100%'}>
               {
                 if plugin.settingsClass?
@@ -98,14 +101,15 @@ InstalledPlugin = React.createClass
                        {__ 'Settings'}
                      </Tooltip>
                      }>
-                     <Button ref="setting-btn"
+                     <Button ref='setting-btn'
                              bsStyle='primary' bsSize='xs'
-                             style={width: 'calc(100% / 3)'}
                              onClick={@toggleSettingPop}
-                             className="plugin-control-button">
+                             className='plugin-control-button col-xs-4'>
                        <FontAwesome name='gear' />
                      </Button>
                    </OverlayTrigger>
+                else
+                  <div className='col-xs-4' />
               }
               <OverlayTrigger placement='top' overlay={
                 <Tooltip>
@@ -125,8 +129,7 @@ InstalledPlugin = React.createClass
                 <Button bsStyle='info'
                   disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                   onClick={@props.handleEnable}
-                  style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
-                  className="plugin-control-button">
+                  className='plugin-control-button col-xs-4'>
                   <FontAwesome name={
                     switch PluginManager.getStatusOfPlugin plugin
                       when PluginManager.VALID
@@ -155,8 +158,7 @@ InstalledPlugin = React.createClass
                 <Button bsStyle='danger'
                   onClick={@props.handleRemove}
                   disabled={not plugin.isInstalled}
-                  style={width: "#{if plugin.settingsClass? then 'calc(100% / 3)' else '50%'}"}
-                  className="plugin-control-button">
+                  className="plugin-control-button col-xs-4">
                   <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
                 </Button>
               </OverlayTrigger>
