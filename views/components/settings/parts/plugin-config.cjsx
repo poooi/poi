@@ -21,7 +21,7 @@ openLink = (link, e) ->
 
 PluginSettingWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    true
+    false
   render: ->
     React.createElement @props.plugin.settingsClass
 
