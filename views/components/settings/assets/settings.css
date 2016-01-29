@@ -111,17 +111,18 @@
   padding-left: 2px;
 }
 #SettingsView .plugin-wrapper {
-  margin-bottom: 8px;
+  margin: 8px 0px 8px -15px;
 }
 #SettingsView .plugin-name {
   font-size: 150%;
 }
 #SettingsView .plugin-setting-wrapper {
-  margin: 0;
+  margin: 0px 0px 0px 15px;
   padding: 0;
 }
 #SettingsView .plugin-buttongroup {
-  width: 100%;
+  margin-left: auto;
+  display: block;
 }
 .popover-content .container {
   width: auto;
@@ -132,4 +133,16 @@
   margin-bottom: 10px;
 }
 #SettingsView .select-npm-server {
+}
+#SettingsView .btn-xs-4 {
+  width: 33.33333333%;
+}
+#SettingsView .btn-xs-6 {
+  width: 50%;
+}
+#SettingsView .btn-xs-8 {
+  width: 66.66666666%;
+}
+#SettingsView .btn-xs-12 {
+  width: 100%;
 }

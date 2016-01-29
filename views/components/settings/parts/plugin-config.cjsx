@@ -31,7 +31,7 @@ CollapsiblePanel = React.createClass
   getInitialState: ->
     expanded: @props.expanded
     hide: !@props.expanded
-  
+
   componentWillReceiveProps: (nextProps) ->
     transitionTime = @props.transitionTime || 400
     if @props.expanded && !nextProps.expanded
@@ -103,7 +103,7 @@ InstalledPlugin = React.createClass
           <Col xs={7}>{plugin.description}</Col>
           <Col xs={5}>
             <Row>
-              <ButtonGroup bsSize='small' className='plugin-buttongroup'>
+              <ButtonGroup bsSize='small' className="plugin-buttongroup btn-xs-#{if plugin.settingsClass? then 12 else 8}">
                 {
                   if plugin.settingsClass?
                     <OverlayTrigger placement='top' overlay={
@@ -114,12 +114,10 @@ InstalledPlugin = React.createClass
                        <Button ref='setting-btn'
                                bsStyle='primary' bsSize='xs'
                                onClick={@toggleSettingPop}
-                               className='plugin-control-button col-xs-4'>
+                               className='plugin-control-button btn-xs-4'>
                          <FontAwesome name='gear' />
                        </Button>
                      </OverlayTrigger>
-                  else
-                    <div className='col-xs-4' />
                 }
                 <OverlayTrigger placement='top' overlay={
                   <Tooltip>
@@ -139,7 +137,7 @@ InstalledPlugin = React.createClass
                   <Button bsStyle='info'
                     disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                     onClick={@props.handleEnable}
-                    className='plugin-control-button col-xs-4'>
+                    className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
                     <FontAwesome name={
                       switch PluginManager.getStatusOfPlugin plugin
                         when PluginManager.VALID
@@ -168,7 +166,7 @@ InstalledPlugin = React.createClass
                   <Button bsStyle='danger'
                     onClick={@props.handleRemove}
                     disabled={not plugin.isInstalled}
-                    className="plugin-control-button col-xs-4">
+                    className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
                     <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
                   </Button>
                 </OverlayTrigger>
@@ -225,7 +223,7 @@ UninstalledPlugin = React.createClass
                   <Button bsStyle='primary'
                     disabled={@props.npmWorkding}
                     onClick={@props.handleInstall}
-                    className='plugin-control-button col-xs-12'>
+                    className='plugin-control-button btn-xs-12'>
                     <FontAwesome name={
                         if @props.installing
                           'spinner'
