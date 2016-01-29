@@ -16,7 +16,7 @@ async = Promise.coroutine
 
 PluginSettingWrap = React.createClass
   shouldComponentUpdate: (nextProps, nextState)->
-    false
+    true
   render: ->
     React.createElement @props.plugin.settingsClass
 
@@ -50,42 +50,44 @@ InstalledPlugin = React.createClass
   render: ->
     plugin = @props.plugin
     index = @props.index
-    <Col xs={12} style={marginBottom: 8}>
-      <Col xs={12} className='div-row'>
-        <span style={fontSize: '150%'}>
-          {plugin.displayName}
-        </span>
-        <span style={paddingTop: 2; paddingLeft: 2}> @<span className='author-link' onClick={_.partial @props.handleClickAuthorLink, plugin.link}>{plugin.author}</span></span>
-        <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
-          <div>
-            <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
-                   className="update-label #{if not plugin.isOutdated then 'hidden'}"
-                   onClick={_.partial @props.handleUpdate, index}>
-              <FontAwesome name={
-                             if plugin.isUpdating
-                               "spinner"
-                             else if plugin.isOutdated
-                               "cloud-download"
-                             else
-                               "check"
-                           }
-                           pulse={plugin.isUpdating}/>
-              {
-                if plugin.isUpdating
-                   __ "Updating"
-                else if plugin.isOutdated
-                   "Version #{plugin.lastestVersion}"
-                else
-                   __ "Latest"
-              }
-            </Label>
+    <div style={marginLeft: 15, marginRight: 15, marginBottom: 8}>
+      <Row>
+        <Col xs={12} className='div-row'>
+          <span style={fontSize: '150%'}>
+            {plugin.displayName}
+          </span>
+          <span style={paddingTop: 2; paddingLeft: 2}> @<span className='author-link' onClick={_.partial @props.handleClickAuthorLink, plugin.link}>{plugin.author}</span></span>
+          <div style={paddingTop: 2, marginLeft: 'auto', display: 'flex'}>
+            <div>
+              <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                     className="update-label #{if not plugin.isOutdated then 'hidden'}"
+                     onClick={_.partial @props.handleUpdate, index}>
+                <FontAwesome name={
+                               if plugin.isUpdating
+                                 "spinner"
+                               else if plugin.isOutdated
+                                 "cloud-download"
+                               else
+                                 "check"
+                             }
+                             pulse={plugin.isUpdating}/>
+                {
+                  if plugin.isUpdating
+                     __ "Updating"
+                  else if plugin.isOutdated
+                     "Version #{plugin.lastestVersion}"
+                  else
+                     __ "Latest"
+                }
+              </Label>
+            </div>
+            <div>
+              Version {plugin.version || '1.0.0'}
+            </div>
           </div>
-          <div>
-            Version {plugin.version || '1.0.0'}
-          </div>
-        </div>
-      </Col>
-      <Col xs={12} style={marginTop: 4}>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={7}>{plugin.description}</Col>
         <Col xs={5} style={padding: 0}>
           <div style={width: "#{if plugin.settingsClass? then '100%' else 'calc(100% * 2 / 3)'}", marginLeft: 'auto'}>
@@ -160,34 +162,38 @@ InstalledPlugin = React.createClass
                 </Button>
               </OverlayTrigger>
             </ButtonGroup>
-            {
-              if plugin.settingsClass?
-                <CollapsiblePanel collapsible expanded={@state.settingOpen}
-                  style={margin: 0} >
-                  <PluginSettingWrap plugin={plugin} />
-                </CollapsiblePanel>
-            }
           </div>
         </Col>
-      </Col>
-    </Col>
+      </Row>
+      <Row>
+        {
+          if plugin.settingsClass?
+            <CollapsiblePanel collapsible expanded={@state.settingOpen}
+              style={margin: 0} >
+              <PluginSettingWrap plugin={plugin} />
+            </CollapsiblePanel>
+        }
+      </Row>
+    </div>
 
 UninstalledPlugin = React.createClass
   render: ->
     value = @props.record
-    <Col xs={12} style={marginBottom: 8}>
-      <Col xs={12} className='div-row'>
-        <span style={fontSize: '150%'}>
-          <FontAwesome name={value.icon} />
-            {' ' + value[window.language]}
+    <div style={marginLeft: 15, marginRight: 15, marginBottom: 8}>
+      <Row>
+        <Col xs={12} className='div-row'>
+          <span style={fontSize: '150%'}>
+            <FontAwesome name={value.icon} />
+              {' ' + value[window.language]}
+            </span>
+          <span style={paddingLeft: 2}> @
+            <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, value.link}>
+              {value.author}
+            </span>
           </span>
-        <span style={paddingLeft: 2}> @
-          <span className='author-link' onClick={_.partial @props.handleClickAuthorLink, value.link}>
-            {value.author}
-          </span>
-        </span>
-      </Col>
-      <Col xs={12} style={marginTop: 4}>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={10}>{value["des#{window.language}"]}</Col>
         <Col xs={2} style={padding: 0}>
           <div style={marginLeft: 'auto'}>
@@ -219,8 +225,8 @@ UninstalledPlugin = React.createClass
             </ButtonGroup>
           </div>
         </Col>
-      </Col>
-    </Col>
+      </Row>
+    </div>
 
 PluginConfig = React.createClass
   getInitialState: ->
