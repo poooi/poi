@@ -525,27 +525,37 @@ PluginConfig = React.createClass
                       }
                     </Col>
                     <Col xs=12>
-                      <label className='control-label' style={width: '100%'}>
-                        {__ 'Select npm server'}
-                      </label>
+                      <Row>
+                        <Col xs=12>
+                          <label className='control-label'>
+                            {__ 'Select npm server'}
+                          </label>
+                        </Col>
+                      </Row>
+                      <Row>
                       {
                         index = -1
                         for server of @state.mirrors
                           index++
                           <OverlayTrigger placement='top' key={index} overlay={<Tooltip id="npm-server-#{index}">{@state.mirrors[server].menuname}</Tooltip>}>
-                            <Col key={index} xs=6 style={padding: '0px 5px'}>
-                              <Input type="radio"
+                            <Col key={index} xs=6 className='select-npm-server'>
+                              <Input type='radio'
                                      label={@state.mirrors[server].name}
                                      checked={@state.config.mirror.server == @state.mirrors[server].server}
                                      onChange={@onSelectServer.bind @, server} />
                             </Col>
                           </OverlayTrigger>
                       }
+                      </Row>
                     </Col>
                     <Col xs=12>
-                      <label className='control-label' style={width: '100%'}>
-                        {__ 'Others'}
-                      </label>
+                      <Row>
+                        <Col xs=12>
+                          <label className='control-label'>
+                            {__ 'Others'}
+                          </label>
+                        </Col>
+                      </Row>
                       <div>
                         <Input type="checkbox" label={__ 'Connect to npm server through proxy'}
                                checked={@state.config.proxy}
@@ -556,14 +566,16 @@ PluginConfig = React.createClass
                                checked={@state.config.betaCheck}
                                onChange={@handleEnableBetaPluginCheck} />
                       </div>
-                      <ButtonGroup style={width: '100%'}>
-                        <Button style={width: '50%'} onClick={@onSelectOpenFolder}>
-                          {__ 'Open plugin folder'}
-                        </Button>
-                        <Button style={width: '50%'} onClick={@onSelectOpenSite}>
-                          {__ 'Search for plugins'}
-                        </Button>
-                      </ButtonGroup>
+                      <Row>
+                        <ButtonGroup className='plugin-buttongroup'>
+                          <Button className='col-xs-6' onClick={@onSelectOpenFolder}>
+                            {__ 'Open plugin folder'}
+                          </Button>
+                          <Button className='col-xs-6' onClick={@onSelectOpenSite}>
+                            {__ 'Search for plugins'}
+                          </Button>
+                        </ButtonGroup>
+                      </Row>
                     </Col>
                   </Row>
                 </Well>
