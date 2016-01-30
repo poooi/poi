@@ -149,16 +149,16 @@ ChangeResolutionConfig = React.createClass
       width = Math.min(width, window.innerWidth - 150)
 
     # Avoid setting a huge size by mistake
-    max_height = screen.height
-    max_width = screen.width
+    max_height = window.screen.availHeight
+    max_width = window.screen.availWidth
+    zoomLevel = config.get 'poi.zoomLevel', 1
     if config.get('poi.layout', 'horizontal') == 'horizontal'
-      max_width = max_width - (if window.doubleTabbed then 600 else 400)
+      max_width = max_width - (if window.doubleTabbed then 450 else 300) * zoomLevel
     else
-      max_height = max_height - 200
+      max_height = max_height - (200 * zoomLevel)
+      max_width = max_height / 480 * 800
+    width = Math.min(max_width, width)
     console.log max_width, max_height, width
-    max_width = max_height / 480 * 800
-    if width > max_width
-      width = max_width
 
     window.webviewWidth = width
     window.dispatchEvent new Event('webview.width.change')
