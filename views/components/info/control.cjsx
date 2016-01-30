@@ -11,8 +11,8 @@ __n = window.i18n.others.__n.bind(i18n.others)
 {openFocusedWindowDevTools} = remote.require './lib/window'
 PoiControl = React.createClass
   getInitialState: ->
-    muted: false
-    alwaysOnTop: false
+    muted: config.get 'poi.content.muted', false
+    alwaysOnTop: config.get 'poi.content.alwaysOnTop', false
     extend: false
     resizeable: config.get 'poi.content.resizeable', true
   handleCapturePage: ->
@@ -88,10 +88,8 @@ PoiControl = React.createClass
   componentDidMount: ->
     setTimeout =>
       try
-        if config.get 'poi.content.muted', false
-          @handleSetMuted()
-        if config.get 'poi.content.alwaysOnTop', false
-          @handleSetAlwaysOnTop()
+        if @state.muted
+          $('kan-game webview').setAudioMuted true
       catch e
         false
     , 1000

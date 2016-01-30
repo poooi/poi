@@ -83,6 +83,7 @@ app.on 'ready', ->
     width: config.get 'poi.window.width', screenSize.width
     height: config.get 'poi.window.height', screenSize.height
     resizable: config.get 'poi.content.resizeable', true
+    alwaysOnTop: config.get 'poi.content.alwaysOnTop', false
     'title-bar-style': 'hidden'
     'web-preferences':
       'web-security': false
