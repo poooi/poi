@@ -21,6 +21,8 @@
   "Username": "使用者名",
   "Password": "密碼",
   "Encryption algorithm": "加密方式",
+  "file": "檔案",
+  "PAC address": "PAC 地址",
   "Will connect to server directly.": "將會直接連線網路或者通過全局 VPN 訪問網路",
   "Times of reconnect": "網路錯誤重試次數",
   "It may be unsafe!": "任何本地重試都不能保證絕對安全，斟酌使用。",
