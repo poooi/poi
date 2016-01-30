@@ -8,7 +8,6 @@ Divider = require './divider'
 
 basic =
   use: 'none',
-  pac: false
   pacAddr: ''
   http:
     host: '127.0.0.1'
@@ -23,9 +22,7 @@ basic =
 
 NetworkConfig = React.createClass
   getInitialState: ->
-    state = _.extend basic, Object.remoteClone(config.get 'proxy', {})
-    if state.pac then state.use = 'pac'
-    state
+    _.extend basic, Object.remoteClone(config.get 'proxy', {})
   handleChangeUse: ->
     use = @refs.use.getValue()
     @setState {use}
@@ -34,7 +31,6 @@ NetworkConfig = React.createClass
     switch use
       when 'http'
         config.set 'proxy.use', 'http'
-        config.set 'proxy.pac', false
         config.set 'proxy.http.host', @refs.httpHost.getValue()
         config.set 'proxy.http.port', @refs.httpPort.getValue()
         config.set 'proxy.http.requirePassword', @refs.httpRequirePassword.getChecked()
@@ -42,16 +38,13 @@ NetworkConfig = React.createClass
         config.set 'proxy.http.password', @refs.httpPassword.getValue()
       when 'socks5'
         config.set 'proxy.use', 'socks5'
-        config.set 'proxy.pac', false
         config.set 'proxy.socks5.host', @refs.socksHost.getValue()
         config.set 'proxy.socks5.port', @refs.socksPort.getValue()
       when 'pac'
-        config.set 'proxy.use', 'none'
-        config.set 'proxy.pac', true
+        config.set 'proxy.use', 'pac'
         config.set 'proxy.pacAddr', @refs.pacAddr.getValue()
       else
         config.set 'proxy.use', 'none'
-        config.set 'proxy.pac', false
     toggleModal __('Proxy setting'), __('Success! It will be available after a restart.')
     e.preventDefault()
   handleHttpHostChange: (e) ->
