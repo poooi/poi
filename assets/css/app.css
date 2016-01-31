@@ -153,9 +153,19 @@ poi-control .collapsing {
 }
 .poi-tab-contents {
   display: -webkit-box;
-  flex-flow: row;
   position: relative;
-  transition: all .3s cubic-bezier(1,0,0,1);
+}
+.poi-tab-child-sizer {
+  left: 0;
+  top: 0;
+  width: 100%;
+  margin-right: -100%;
+  padding: 0;
+}
+.poi-tab-child-positioner {
+  position: relative;
+  width: 100%;
+  transition: left .3s cubic-bezier(1,0,0,1);
 }
 .poi-app-tabpane {
   width: 100%;
