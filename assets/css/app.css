@@ -155,7 +155,7 @@ poi-control .collapsing {
   display: -webkit-box;
   flex-flow: row;
   position: relative;
-  transition: all .3s ease-in-out;
+  transition: all .3s cubic-bezier(1,0,0,1);
 }
 .poi-app-tabpane {
   width: 100%;
