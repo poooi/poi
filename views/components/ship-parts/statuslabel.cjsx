@@ -34,8 +34,6 @@ icons = [
 ]
 
 StatusLabel = React.createClass
-  shouldComponentUpdate: (nextProps, nextState) ->
-    not _.isEqual(nextProps.label, @props.label)
   render: ->
     i = @props.label
     if i? && 0 <= i <= 6

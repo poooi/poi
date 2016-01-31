@@ -83,6 +83,10 @@ module.exports =
       false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
+        try
+          window.changeMiniShipDeck idx
+        catch error
+          console.error error
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
@@ -152,6 +156,7 @@ module.exports =
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
+      window.changeShipViewDeck = @handleClick
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
