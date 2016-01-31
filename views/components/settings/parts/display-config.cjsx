@@ -29,6 +29,7 @@ ChangeLayoutConfig = React.createClass
   handleSetDoubleTabbed: ->
     enabled = @state.enableDoubleTabbed
     config.set 'poi.tabarea.double', !enabled
+    window.doubleTabbed = !enabled
     try
       window.toggleDoubleTabbed !enabled
     catch error
