@@ -1,6 +1,16 @@
 #ShipView {
   font-size: 15px;
 }
+#ShipView .ship-tab-content {
+  display: -webkit-box;
+  flex-flow: row;
+  position: relative;
+  transition: all .3s cubic-bezier(1,0,0,1);
+}
+#ShipView .ship-tabpane,
+#ShipView .ship-deck {
+  width: 100%;
+}
 #ShipView .panel {
   margin: 2px;
   height: calc(100% - 20px);

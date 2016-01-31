@@ -1,6 +1,15 @@
 #MiniShip {
   font-size: 14px;
 }
+#MiniShip .ship-tab-content {
+  display: -webkit-box;
+  flex-flow: row;
+  position: relative;
+  transition: all .3s cubic-bezier(1,0,0,1);
+}
+#MiniShip .ship-tabpane {
+  width: 100%;
+}
 #MiniShip .btn-group {
   display: flex;
   width: 100%;

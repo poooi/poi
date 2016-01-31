@@ -90,6 +90,11 @@ module.exports =
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
+    handleClickOnce: (idx) ->
+      if idx isnt @state.activeDeck
+        @setState
+          activeDeck: idx
+          dataVersion: @state.dataVersion + 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {fullnames} = @state
@@ -156,7 +161,7 @@ module.exports =
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
-      window.changeMiniShipDeck = @handleClick
+      window.changeMiniShipDeck = @handleClickOnce
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
@@ -176,18 +181,23 @@ module.exports =
             }
             </ButtonGroup>
           </div>
-          {
-            for deck, i in @state.decks
-              <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
-                <PaneBodyMini
-                  key={i}
-                  show={@props.selectedKey == 0}
-                  deckIndex={i}
-                  deck={@state.decks[i]}
-                  activeDeck={@state.activeDeck}
-                  deckName={@state.names[i]}
-                />
-              </div>
-          }
+          <div className="no-scroll">
+            <div className="ship-tab-content"
+                 style={left: "-#{@state.activeDeck}00%"}>
+            {
+              for deck, i in @state.decks
+                <div className="ship-deck" className="ship-tabpane" key={i}>
+                  <PaneBodyMini
+                    key={i}
+                    show={@props.selectedKey == 0}
+                    deckIndex={i}
+                    deck={@state.decks[i]}
+                    activeDeck={@state.activeDeck}
+                    deckName={@state.names[i]}
+                  />
+                </div>
+            }
+            </div>
+          </div>
         </Panel>
       </div>
