@@ -26,12 +26,30 @@ TabContentsUnion = React.createClass
   getInitialState: ->
     nowKey: null
 
-  setNewKey: (nxtKey) ->
-    nowKey = @state.nowKey || @props.children[0]?.key
-    return if !nowKey? || nxtKey == nowKey
+  componentDidMount: ->
+    window.addEventListener 'TabContentsUnion.show', @handleShowEvent
+  componentWillUnmount: ->
+    window.removeEventListener 'TabContentsUnion.show', @handleShowEvent
+
+  componentWillReceiveProps: (nextProps) ->
+    if !@state.nowKey? && nextProps.children.length != 0
+      @setNewKey nextProps.children[0].key, true
+
+  handleShowEvent: (e) ->
+    @setNewKey e.detail.key
+
+  findChildByKey: (key) ->
+    _.filter((React.Children.map @props.children, 
+        (child) -> if child.key == key then child),
+      Boolean)[0]
+
+  setNewKey: (nxtKey, force=false) ->
+    if !force
+      nowKey = @state.nowKey || @props.children[0]?.key
+      return if (nowKey && nxtKey == nowKey) || !@findChildByKey nxtKey
     @setState
       nowKey: nxtKey
-    @props.onNewKey? nxtKey
+    @props.onChange? nxtKey
 
   activeKey: ->
     @state.nowKey || @props.children[0]?.key
@@ -73,20 +91,12 @@ TabContentsUnion = React.createClass
 
 ControlledTabArea = React.createClass
   getInitialState: ->
-    key: 0
-    pluginKey: if config.get 'poi.tabarea.double', false then 2 else -2
     dropdownOpen: false
-    nowTime: 0
     plugins: []
     tabbedPlugins: []
     doubleTabbed: config.get 'poi.tabarea.double', false
-    activePluginName: null
   toggleDoubleTabbed: (doubleTabbed) ->
-    key = @state.key
-    if @state.doubleTabbed
-      if key > 2 || key < 1000
-        key = 0
-    @setState {doubleTabbed, key}
+    @setState {doubleTabbed}
   componentWillUpdate: (nextProps, nextState) ->
     @nowTime = (new Date()).getTime()
   componentDidUpdate: (prevProps, prevState) ->
@@ -106,28 +116,18 @@ ControlledTabArea = React.createClass
   handleToggleDropdown: ->
     dropdownOpen = !@state.dropdownOpen
     @setState {dropdownOpen}
-  handleSelect: (key) ->
-    if @state.doubleTabbed
-      unionKey = switch key
-        when 0 then 'mainView'
-        when 1 then 'shipView'
-        when 1000 then 'settings'
-      if unionKey?
-        @refs.mainTabUnion.setTabShow unionKey
-      if key < 2 || key == 1000
-        @setState
-          key: key
-      else
-        @setState
-          pluginKey: key
-    else
-      if key isnt @state.key
-        if key is -2 then @handleToggleDropdown()
-        @setState
-          key: if key isnt -2 then key else @state.key
-          pluginKey: if key > 1 && key < 1000 then key else @state.pluginKey
-  handleSelectPlugin: (e, key) ->
-    @refs.pluginTabUnion.setNewKey key
+  selectTab: (key) ->
+    return if !key?
+    event = new CustomEvent 'TabContentsUnion.show',
+      bubbles: true
+      cancelable: false
+      detail:
+        key: key
+    window.dispatchEvent event
+  handleSelectTab: (key) ->
+    @selectTab key
+  handleSelectDropdown: (e, key) ->
+    @selectTab key
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
     if @state.doubleTabbed
@@ -138,19 +138,16 @@ ControlledTabArea = React.createClass
         key: key
         pluginKey: key
   handleCtrlOrCmdTabKeyDown: ->
-    @handleSelect 0
+    @selectTab 'mainView'
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    @refs.pluginTabUnion.setNewKey @state.plugins[num-3]?.name
-    if num <= 2 + @state.tabbedPlugins.length
-      @handleSelect num - 1
+    @selectTab switch num
+      when 1 then 'mainView'
+      when 2 then 'shipView'
+      else @state.plugins[num-3]?.name
   handleShiftTabKeyDown: ->
     @refs.pluginTabUnion.setTabOffset -1
-    next = if @state.key? then (@state.key + @state.tabbedPlugins.length) % (1 + @state.tabbedPlugins.length) else @state.tabbedPlugins.length
-    @handleSelect next
   handleTabKeyDown: ->
     @refs.pluginTabUnion.setTabOffset 1
-    next = if @state.key? then (@state.key + 1) % (1 + @state.tabbedPlugins.length) else 1
-    @handleSelect next
   handleKeyDown: ->
     return if @listener?
     @listener = true
@@ -185,6 +182,11 @@ ControlledTabArea = React.createClass
   render: ->
     activePluginName = @state.activePluginName || @state.plugins[0]?.name
     plugin = @state.plugins.find (p) => p.name == activePluginName
+    defaultPluginTitle = <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
+    defaultPluginContents = 
+      <MenuItem key={1002} disabled>
+        {window.i18n.setting.__ "Install plugins in settings"}
+      </MenuItem>
     if !@state.doubleTabbed
       <div>
         <Nav bsStyle="tabs" activeKey={@state.key} id="top-nav">
@@ -262,18 +264,19 @@ ControlledTabArea = React.createClass
     else
       <div className='poi-tabs-container'>
         <div className="no-scroll">
-          <Nav bsStyle="tabs" activeKey={@state.key}>
-            <NavItem key={0} eventKey={0} onSelect={@handleSelect}>
+          <Nav bsStyle="tabs" activeKey={@state.activeMainTab} onSelect={@handleSelectTab}>
+            <NavItem key='mainView' eventKey='mainView'>
               {mainview.displayName}
             </NavItem>
-            <NavItem key={1} eventKey={1} onSelect={@handleSelect}>
+            <NavItem key='shipView' eventKey='shipView'>
               {shipview.displayName}
             </NavItem>
-            <NavItem key={1000} eventKey={1000} className='poi-app-tabpane' onSelect={@handleSelect}>
+            <NavItem key='settings' eventKey='settings'>
               {settings.displayName}
             </NavItem>
           </Nav>
-          <TabContentsUnion ref='mainTabUnion'>
+          <TabContentsUnion ref='mainTabUnion'
+            onChange={(key) => @setState {activeMainTab: key}}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
               <mainview.reactClass
                 selectedKey={@state.key}
@@ -295,9 +298,9 @@ ControlledTabArea = React.createClass
           </TabContentsUnion>
         </div>
         <div className="no-scroll">
-          <Nav bsStyle="tabs" activeKey={@state.pluginKey} onSelect={@handleSelectPlugin}>
-            <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown}
-                         title={plugin?.displayName || <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>}>
+          <Nav bsStyle="tabs" onSelect={@handleSelectDropdown}>
+            <NavDropdown id='plugin-dropdown' pullRight
+              title={plugin?.displayName || defaultPluginTitle}>
             {
               @state.plugins.map (plugin, index) =>
                 <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
@@ -306,12 +309,12 @@ ControlledTabArea = React.createClass
             }
             {
               if @state.plugins.length == 0
-                <MenuItem key={1002} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
+                defaultPluginContents
             }
             </NavDropdown>
           </Nav>
           <TabContentsUnion ref='pluginTabUnion'
-            onNewKey={(key) => @setState {activePluginName: key}}>
+            onChange={(key) => @setState {activePluginName: key}}>
           {
             for plugin, index in @state.plugins when !plugin.handleClick?
               <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin">
