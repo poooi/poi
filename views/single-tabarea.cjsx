@@ -183,8 +183,14 @@ ControlledTabArea = React.createClass
           <FontAwesome key={0} name='cog' />
         </NavItem>
       </Nav>
-      <div>
-        <div id={mainview.name} className="poi-app-tabpane #{if @state.key == 0 || @state.key == 1 then 'show' else 'hidden'}">
+      <div className='poi-tab-contents'
+           style={left: "#{if @state.key == 0 || @state.key == 1
+                             '0%'
+                           else if @state.key == 1000
+                             "-#{@state.tabbedPlugins.length + 1}00%"
+                           else
+                             "-#{@state.key - 1}00%"}"}>
+        <div id={mainview.name} className="poi-app-tabpane">
           {
             React.createElement mainview.reactClass,
               selectedKey: @state.key
@@ -196,11 +202,11 @@ ControlledTabArea = React.createClass
           @state.plugins.map (plugin, index) =>
             if !plugin.handleClick?
               key = (counter += 1)
-              <div id={plugin.name} key={key} className="poi-app-tabpane #{if @state.key == key then 'show' else 'hidden'}">
+              <div id={plugin.name} key={key} className="poi-app-tabpane">
                 <PluginWrap plugin={plugin} selectedKey={@state.key} index={key} />
               </div>
         }
-        <div id={settings.name} className="poi-app-tabpane #{if @state.key == 1000 then 'show' else 'hidden'}">
+        <div id={settings.name} className="poi-app-tabpane">
           {
             React.createElement settings.reactClass,
               selectedKey: @state.key

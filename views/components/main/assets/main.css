@@ -2,6 +2,10 @@
   font-size: 12px;
   min-width: 250px;
 }
+#MainView .main-panel-content {
+  position: relative;
+  transition: all .3s ease-in-out;
+}
 #MainView .nav {
   margin-top: -6px;
   margin-bottom: 5px;

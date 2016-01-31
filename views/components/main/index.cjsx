@@ -12,18 +12,26 @@ module.exports =
   reactClass: React.createClass
     getInitialState: ->
       layout: window.layout
+      show: false
       key: 1
     handleChangeLayout: (e) ->
       @setState
         layout: e.detail.layout
+    handleMiniShipChange: (e) ->
+      # dispatch an event about whether the main pane is show or not
+      e.preventDefault()
+      if e.detail.visible == @state.show
+        @setState
+          show: !@state.show
+          dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
+      window.addEventListener 'view.main.visible', @handleMiniShipChange
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
-    shouldComponentUpdate: (nextProps, nextState) ->
-      false
+      window.removeEventListener 'view.main.visible', @handleMiniShipChange
     render: ->
-      <div>
+      <div className='main-panel-content' style={left: "#{if @state.show then '-100%' else '0'}"}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
       {
         if @state.layout == 'horizontal' or window.doubleTabbed

@@ -151,7 +151,28 @@ poi-control .collapsing {
 .poi-tabs-container > div {
   flex: 1;
 }
-
+.poi-tab-contents {
+  display: -webkit-box;
+  flex-flow: row;
+  position: relative;
+  transition: all .3s ease-in-out;
+}
+.poi-app-tabpane {
+  transition: all .3s ease-in-out;
+  width: 100%;
+}
+.hidden-left {
+  visibility: hidden;
+  left: 100%;
+}
+.hidden-right {
+  visibility: hidden;
+  right: 100%;
+}
+.div-col {
+  display: flex;
+  flex-flow: column;
+}
 .poi-ship-cond-0.dark {  /* cond 0~19  */
   color: #DD514C;
   font-weight: bold;
