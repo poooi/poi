@@ -2,12 +2,12 @@
   font-size: 15px;
 }
 #ShipView .panel {
-  margin: 3px;
+  margin: 2px;
   height: calc(100% - 20px);
   overflow: auto;
 }
 #ShipView .panel-body {
-  padding: 3px;
+  padding: 2px;
 }
 #ShipView .btn-group {
   display: flex;

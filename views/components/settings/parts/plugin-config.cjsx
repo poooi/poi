@@ -106,7 +106,7 @@ InstalledPlugin = React.createClass
               {
                 if plugin.settingsClass?
                   <OverlayTrigger placement='top' overlay={
-                     <Tooltip>
+                     <Tooltip id="#{plugin.name}-set-btn">
                        {__ 'Settings'}
                      </Tooltip>
                      }>
@@ -119,7 +119,7 @@ InstalledPlugin = React.createClass
                    </OverlayTrigger>
               }
               <OverlayTrigger placement='top' overlay={
-                <Tooltip>
+                <Tooltip id="#{plugin.name}-enb-btn">
                 {
                   switch PluginManager.getStatusOfPlugin plugin
                     when PluginManager.VALID
@@ -151,7 +151,7 @@ InstalledPlugin = React.createClass
                 </Button>
               </OverlayTrigger>
               <OverlayTrigger placement='top' overlay={
-                <Tooltip>
+                <Tooltip id="#{plugin.name}-rm-btn">
                 {
                   if plugin.isUninstalling
                     __ "Removing"
@@ -212,7 +212,7 @@ UninstalledPlugin = React.createClass
             <Row>
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
                 <OverlayTrigger placement='top' overlay={
-                  <Tooltip>
+                  <Tooltip id="#{plugin.name}-ins-btn">
                   {
                     if @props.installing
                       __ "Installing"
