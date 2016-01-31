@@ -128,6 +128,7 @@ ControlledTabArea = React.createClass
     @selectTab key
   handleSelectDropdown: (e, key) ->
     @selectTab key
+    @selectTab 'plugin' if !@state.doubleTabbed
   handleSelectMenuItem: (e, key) ->
     e.preventDefault()
     if @state.doubleTabbed
@@ -140,10 +141,16 @@ ControlledTabArea = React.createClass
   handleCtrlOrCmdTabKeyDown: ->
     @selectTab 'mainView'
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    @selectTab switch num
-      when 1 then 'mainView'
-      when 2 then 'shipView'
-      else @state.plugins[num-3]?.name
+    switch num
+      when 1 
+        key = 'mainView'
+      when 2
+        key = 'shipView'
+      else
+        key = @state.plugins[num-3]?.name
+        isPlugin = if key? then 'plugin'
+    @selectTab key
+    @selectTab isPlugin if !@state.doubleTabbed
   handleShiftTabKeyDown: ->
     @refs.pluginTabUnion.setTabOffset -1
   handleTabKeyDown: ->
@@ -189,75 +196,62 @@ ControlledTabArea = React.createClass
       </MenuItem>
     if !@state.doubleTabbed
       <div>
-        <Nav bsStyle="tabs" activeKey={@state.key} id="top-nav">
-          <NavItem key={0} eventKey={0} onSelect={@handleSelect}>
+        <Nav bsStyle="tabs" activeKey={@state.activeMainTab} id="top-nav"
+          onSelect={@handleSelectTab}>
+          <NavItem key='mainView' eventKey='mainView'>
             {mainview.displayName}
           </NavItem>
-          <NavItem key={1} eventKey={1} onSelect={@handleSelect}>
+          <NavItem key='shipView' eventKey='shipView'>
             {shipview.displayName}
           </NavItem>
-          <NavItem key={1001} eventKey={@state.pluginKey} onSelect={@handleSelect}>
-             {
-               if @state.pluginKey >= 2 and @state.pluginKey < 1000
-                 <span>{@state.tabbedPlugins[@state.pluginKey - 2].displayName}</span>
-               else
-                 <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
-             }
+          <NavItem key='plugin' eventKey='plugin' onSelect={@handleSelect}>
+            {plugin?.displayName || defaultPluginTitle}
           </NavItem>
-          <NavDropdown id='plugin-dropdown' key={-1} eventKey={-1} pullRight open={@state.dropdownOpen} onToggle={@handleToggleDropdown} title=''>
+          <NavDropdown id='plugin-dropdown' pullRight title=''
+             onSelect={@handleSelectDropdown}>
           {
-            counter = 1
             @state.plugins.map (plugin, index) =>
-              if plugin.handleClick?
-                <MenuItem key={2 + index} eventKey={@state.key} onSelect={plugin.handleClick}>
-                  {plugin.displayName}
-                </MenuItem>
-              else
-                key = (counter += 1)
-                <MenuItem key={2 + index} eventKey={key} onSelect={@handleSelectMenuItem}>
-                  {plugin.displayName}
-                </MenuItem>
+              <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
+                {plugin.displayName}
+              </MenuItem>
           }
           {
             if @state.plugins.length == 0
-              <MenuItem key={1002} disabled>{window.i18n.setting.__ "Install plugins in settings"}</MenuItem>
+              defaultPluginContents
           }
           </NavDropdown>
-          <NavItem key={1000} eventKey={1000} onSelect={@handleSelect} className="tab-narrow">
+          <NavItem key='settings' eventKey='settings' className="tab-narrow">
             <FontAwesome key={0} name='cog' />
           </NavItem>
         </Nav>
-        <TabContentsUnion selectedKey={@state.key}
-                          tabCount={@state.tabbedPlugins.length + 3}>
-          <div id={mainview.name} className="poi-app-tabpane">
-            {
-              React.createElement mainview.reactClass,
-                selectedKey: @state.key
-                index: 0
-            }
+        <TabContentsUnion ref='mainTabUnion'
+          onChange={(key) => @setState {activeMainTab: key}}>
+          <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
+            <mainview.reactClass
+              selectedKey={@state.key}
+              index=0
+              />
           </div>
-          <div id={shipview.name} className="poi-app-tabpane">
-            {
-              React.createElement shipview.reactClass,
-                selectedKey: @state.key
-                index: 1
-            }
+          <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
+            <shipview.reactClass
+              selectedKey={@state.key}
+              index=1
+              />
           </div>
+          <TabContentsUnion key='plugin' ref='pluginTabUnion'
+            onChange={(key) => @setState {activePluginName: key}}>
           {
-            counter = 1
-            @state.plugins.map (plugin, index) =>
-              if !plugin.handleClick?
-                key = (counter += 1)
-                <div id={plugin.name} key={key} className="poi-app-tabpane poi-plugin">
-                  <PluginWrap plugin={plugin} selectedKey={@state.key} index={key} />
-                </div>
+            for plugin, index in @state.plugins when !plugin.handleClick?
+              <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin">
+                <PluginWrap plugin={plugin} />
+              </div>
           }
-          <div id={settings.name} className="poi-app-tabpane poi-plugin">
-            {
-              React.createElement settings.reactClass,
-                selectedKey: @state.key
-                index: 1000
-            }
+          </TabContentsUnion>
+          <div id={settings.name} className="poi-app-tabpane" key='settings'>
+            <settings.reactClass
+              selectedKey={@state.key}
+              index=1000
+              />
           </div>
         </TabContentsUnion>
       </div>
