@@ -12,24 +12,16 @@ module.exports =
   reactClass: React.createClass
     getInitialState: ->
       layout: window.layout
-      show: false
       key: 1
     handleChangeLayout: (e) ->
       @setState
         layout: e.detail.layout
-    handleMiniShipChange: (e) ->
-      # dispatch an event about whether the main pane is show or not
-      e.preventDefault()
-      if e.detail.visible == @state.show
-        @setState
-          show: !@state.show
-          dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
-      window.addEventListener 'view.main.visible', @handleMiniShipChange
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
-      window.removeEventListener 'view.main.visible', @handleMiniShipChange
+    shouldComponentUpdate: (nextProps, nextState) ->
+      false
     render: ->
       <div className='main-panel-content' style={left: "#{if @state.show then '-100%' else '0'}"}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
@@ -45,7 +37,10 @@ module.exports =
                   <ResourcePanel />
                 </div>
                 <div className="miniship miniship-area-horizontal" id={MiniShip.name} ref="miniship">
-                  {React.createElement MiniShip.reactClass}
+                  {
+                    React.createElement MiniShip.reactClass,
+                      selectedKey: @props.selectedKey
+                  }
                 </div>
               </div>
               <div className="panel-col half bottom-left-area">
@@ -109,7 +104,10 @@ module.exports =
               </div>
             </div>
             <div className="miniship panel-col" id={MiniShip.name} ref="miniship" style={width:"40%"}>
-              {React.createElement MiniShip.reactClass}
+              {
+                React.createElement MiniShip.reactClass,
+                  selectedKey: @props.selectedKey
+              }
             </div>
           </div>
         }

@@ -17,6 +17,7 @@ PluginWrap = React.createClass
 
 settings = require path.join(ROOT, 'views', 'components', 'settings')
 mainview = require path.join(ROOT, 'views', 'components', 'main')
+shipview = require path.join(ROOT, 'views', 'components', 'ship')
 
 lockedTab = false
 ControlledTabArea = React.createClass
@@ -58,59 +59,17 @@ ControlledTabArea = React.createClass
       @setState
         key: key
         pluginKey: key
-  handleSelectMainView: ->
-    event = new CustomEvent 'view.main.visible',
-      bubbles: true
-      cancelable: false
-      detail:
-        visible: true
-    window.dispatchEvent event
-    @handleSelect 0
-  handleSelectShipView: ->
-    event = new CustomEvent 'view.main.visible',
-      bubbles: true
-      cancelable: false
-      detail:
-        visible: false
-    window.dispatchEvent event
-    @handleSelect 1
-  handleMiniShipChange: (e) ->
-    e.preventDefault()
-    if e.detail.visible
-      if @state.key is 1
-        @handleSelect 0
-    else
-      if @state.key is 0
-        @handleSelect 1
   handleCtrlOrCmdTabKeyDown: ->
-    @handleSelectMainView()
+    @handleSelect 0
   handleCtrlOrCmdNumberKeyDown: (num) ->
-    if num == 1
-      @handleSelectMainView()
-    else
-      if num == 2
-        @handleSelectShipView()
-      else
-        if num <= 2 + @state.tabbedPlugins.length
-          @handleSelect num - 1
+    if num <= 2 + @state.tabbedPlugins.length
+      @handleSelect num - 1
   handleShiftTabKeyDown: ->
     next = if @state.key? then (@state.key + @state.tabbedPlugins.length) % (1 + @state.tabbedPlugins.length) else @state.tabbedPlugins.length
-    if next == 0
-      @handleSelectMainView()
-    else
-      if next == 1
-        @handleSelectShipView()
-      else
-        @handleSelect next
+    @handleSelect next
   handleTabKeyDown: ->
     next = if @state.key? then (@state.key + 1) % (1 + @state.tabbedPlugins.length) else 1
-    if next == 0
-      @handleSelectMainView()
-    else
-      if next == 1
-        @handleSelectShipView()
-      else
-        @handleSelect next
+    @handleSelect next
   handleKeyDown: ->
     return if @listener?
     @listener = true
@@ -137,20 +96,18 @@ ControlledTabArea = React.createClass
     window.dispatchEvent new Event('resize')
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    window.addEventListener 'view.main.visible', @handleMiniShipChange
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
     @renderPlugins()
   componentWillUnmount: ->
-    window.removeEventListener 'view.main.visible', @handleMiniShipChange
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
   render: ->
     <div>
       <Nav bsStyle="tabs" activeKey={@state.key} id="top-nav">
-        <NavItem key={0} eventKey={0} onSelect={@handleSelectMainView}>
+        <NavItem key={0} eventKey={0} onSelect={@handleSelect}>
           {mainview.displayName}
         </NavItem>
-        <NavItem key={1} eventKey={1} onSelect={@handleSelectShipView}>
-          <span><FontAwesome key={0} name='server' />{window.i18n.main.__ ' Fleet'}</span>
+        <NavItem key={1} eventKey={1} onSelect={@handleSelect}>
+          {shipview.displayName}
         </NavItem>
         <NavItem key={1001} eventKey={@state.pluginKey} onSelect={@handleSelect}>
            {
@@ -184,12 +141,10 @@ ControlledTabArea = React.createClass
         </NavItem>
       </Nav>
       <div className='poi-tab-contents'
-           style={left: "#{if @state.key == 0 || @state.key == 1
-                             '0%'
-                           else if @state.key == 1000
-                             "-#{@state.tabbedPlugins.length + 1}00%"
+           style={left: "#{if @state.key == 1000
+                             "-#{@state.tabbedPlugins.length + 2}00%"
                            else
-                             "-#{@state.key - 1}00%"}"}>
+                             "-#{@state.key}00%"}"}>
         <div id={mainview.name} className="poi-app-tabpane">
           {
             React.createElement mainview.reactClass,
@@ -197,16 +152,23 @@ ControlledTabArea = React.createClass
               index: 0
           }
         </div>
+        <div id={shipview.name} className="poi-app-tabpane">
+          {
+            React.createElement shipview.reactClass,
+              selectedKey: @state.key
+              index: 1
+          }
+        </div>
         {
           counter = 1
           @state.plugins.map (plugin, index) =>
             if !plugin.handleClick?
               key = (counter += 1)
-              <div id={plugin.name} key={key} className="poi-app-tabpane">
+              <div id={plugin.name} key={key} className="poi-app-tabpane poi-plugin">
                 <PluginWrap plugin={plugin} selectedKey={@state.key} index={key} />
               </div>
         }
-        <div id={settings.name} className="poi-app-tabpane">
+        <div id={settings.name} className="poi-app-tabpane poi-plugin">
           {
             React.createElement settings.reactClass,
               selectedKey: @state.key

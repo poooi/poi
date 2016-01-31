@@ -158,8 +158,10 @@ poi-control .collapsing {
   transition: all .3s ease-in-out;
 }
 .poi-app-tabpane {
-  transition: all .3s ease-in-out;
   width: 100%;
+}
+.poi-plugin {
+  left: 100%;
 }
 .hidden-left {
   visibility: hidden;

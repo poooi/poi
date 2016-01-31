@@ -1,11 +1,13 @@
-#ShipView{
+#ShipView {
   font-size: 15px;
-  height: calc(100% - 16px);
-  width: calc(100% - 4px);
-  top: 0px;
-  left: 100%;
-  z-index: 100;
-  position: absolute;
+}
+#ShipView .panel {
+  margin: 3px;
+  height: calc(100% - 20px);
+  overflow: auto;
+}
+#ShipView .panel-body {
+  padding: 3px;
 }
 #ShipView .btn-group {
   display: flex;

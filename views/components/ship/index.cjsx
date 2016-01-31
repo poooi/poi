@@ -13,7 +13,7 @@ combined = false
 escapeId = -1
 towId = -1
 
-{PaneBodyMini} = require '../../ship-parts'
+{PaneBody} = require '../ship-parts'
 
 getStyle = (state) ->
   if state in [0..5]
@@ -54,9 +54,9 @@ getDeckState = (deck) ->
   state
 
 module.exports =
-  name: 'MiniShip'
+  name: 'ShipView'
   priority: 100000.1
-  displayName: <span><FontAwesome key={0} name='bars' /> Mini舰队</span>
+  displayName: <span><FontAwesome key={0} name='bars' />{__ ' Fleet'}</span>
   description: '舰队展示页面，展示舰队详情信息'
   reactClass: React.createClass
     getInitialState: ->
@@ -156,33 +156,32 @@ module.exports =
       window.removeEventListener 'game.response', @handleResponse
       @interval = clearInterval @interval if @interval?
     render: ->
-      <div style={height: '100%'}>
-        <Panel id="ShipViewMini" bsStyle="default" style={minHeight: 322, height: 'calc(100% - 6px)'}>
-          <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'miniship.css')} />
-          <div className="panel-row">
-            <ButtonGroup bsSize="xsmall">
-            {
-              for i in [0..3]
-                <Button key={i} bsStyle={getStyle @state.states[i]}
-                                onClick={@handleClick.bind(this, i)}
-                                className={if @state.activeDeck == i then 'active' else ''}>
-                  {@state.names[i]}
-                </Button>
-            }
-            </ButtonGroup>
-          </div>
+      <Panel>
+        <link rel="stylesheet" href={join(relative(ROOT, __dirname), 'assets', 'ship.css')} />
+        <div className="panel-row">
+          <ButtonGroup className="fleet-name-button">
           {
-            for deck, i in @state.decks
-              <div className="ship-deck" className={if @state.activeDeck is i then 'show' else 'hidden'} key={i}>
-                <PaneBodyMini
-                  key={i}
-                  show={@props.selectedKey == 0}
-                  deckIndex={i}
-                  deck={@state.decks[i]}
-                  activeDeck={@state.activeDeck}
-                  deckName={@state.names[i]}
-                />
-              </div>
+            for i in [0..3]
+              <Button key={i} bsSize="small"
+                              bsStyle={getStyle @state.states[i]}
+                              onClick={@handleClick.bind(this, i)}
+                              className={if @state.activeDeck == i then 'active' else ''}>
+                {@state.fullnames[i]}
+              </Button>
           }
-        </Panel>
-      </div>
+          </ButtonGroup>
+        </div>
+        {
+          for deck, i in @state.decks
+            <div className="ship-deck #{if @state.activeDeck is i then 'show' else 'hidden'}" key={i}>
+              <PaneBody
+                key={i}
+                show={@props.selectedKey == 1}
+                deckIndex={i}
+                deck={@state.decks[i]}
+                activeDeck={@state.activeDeck}
+                deckName={@state.fullnames[i]}
+              />
+            </div>
+        }
+      </Panel>
