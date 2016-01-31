@@ -32,11 +32,7 @@ if process.platform == 'darwin'
   require './components/etc/mac-menu'
 
 # Main tabbed area
-ControlledTabArea =
-  if config.get('poi.tabarea.double', false)
-    require './double-tabareas'
-  else
-    require './single-tabarea'
+ControlledTabArea = require './tabarea'
 
 {PoiAlert} = require './components/info/alert'
 {PoiMapReminder} = require './components/info/map-reminder'
