@@ -22,6 +22,7 @@
   "Password": "密碼",
   "Encryption algorithm": "加密方式",
   "file": "檔案",
+  "Experimental": "實驗性功能",
   "PAC address": "PAC 地址",
   "Will connect to server directly.": "將會直接連線網路或者通過全局 VPN 訪問網路",
   "Times of reconnect": "網路錯誤重試次數",

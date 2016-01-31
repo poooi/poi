@@ -92,7 +92,7 @@ NetworkConfig = React.createClass
           <Input type="select" ref="use" value={@state.use || "none"} onChange={@handleChangeUse}>
             <option key={0} value="http">HTTP {__ "proxy"}</option>
             <option key={1} value="socks5">Socks5 {__ "proxy"}</option>
-            <option key={2} value="pac">PAC {__ "file"}</option>
+            <option key={2} value="pac">PAC {__ "file"} ({__ "Experimental"})</option>
             <option key={3} value="none">{__ "No proxy"}</option>
           </Input>
         </Col>

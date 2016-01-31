@@ -22,6 +22,7 @@
   "Password": "パスワード",
   "Encryption algorithm": "暗号化方式",
   "file": "ファイル",
+  "Experimental": "実験的な機能",
   "PAC address": "PAC アドレス",
   "Will connect to server directly.": "インターネットに直接（またはVPNで）接続します。",
   "Times of reconnect": "再試行回数",
