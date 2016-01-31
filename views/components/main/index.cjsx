@@ -40,6 +40,7 @@ module.exports =
                   {
                     React.createElement MiniShip.reactClass,
                       selectedKey: @props.selectedKey
+                      index: @props.index
                   }
                 </div>
               </div>
@@ -107,6 +108,7 @@ module.exports =
               {
                 React.createElement MiniShip.reactClass,
                   selectedKey: @props.selectedKey
+                  index: @props.index
               }
             </div>
           </div>
