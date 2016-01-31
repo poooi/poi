@@ -1,5 +1,5 @@
 ################################################################################
-#                                Debug Support                                 #
+#                                 Debug Suite                                  #
 ################################################################################
 
 # This class is only for the purpose of giving some feedbacks
@@ -24,11 +24,14 @@ extraOpts = new Set()
 
 doNothing = -> return
 
+# Extra Option Handler
 class ExOptHandler
-  constructor: (@enable, @disable, @isEnabled, @_log) ->
   Object.defineProperties @prototype,
     log:
       get: -> if @isEnabled() then @_log else doNothing
+
+# Extra options container (just need the name)
+class ExtraDebugOptions
 
 # Base Implementation
 class DebugBase
@@ -42,7 +45,6 @@ class DebugBase
   isEnabled: ->
     enabled
 
-  extra: {}
   enableExtra: (tag) ->
     console.assert tag, 'Are you kidding me? What do you want to enable?'
     return (Debug.wrap 'Nothing happened') if !tag
@@ -59,15 +61,36 @@ class DebugBase
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
   _addExOptHandler: (tag) ->
-    @extra[tag] ?= new ExOptHandler @enableExtra.bind(@, tag),
-                                    @disableExtra.bind(@, tag),
-                                    @isExtraEnabled.bind(@, tag),
-                                    @_log
+    if !@extra[tag]?
+      Object.defineProperty @extra, tag,
+        value: new ExOptHandler
+        enumerable: true
+      Object.defineProperties @extra[tag],
+        enable:
+          value: @enableExtra.bind(@, tag)
+        disable:
+          value: @disableExtra.bind(@, tag)
+        isEnabled:
+          value: @isExtraEnabled.bind(@, tag)
+        _log:
+          value: @_log
+        name:
+          value: tag
+          enumerable: true
+        enabled:
+          get: -> @isEnabled()
+          set: (b) -> if b is true then @enable() else @disable()
+          enumerable: true
+        toString:
+          value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
 
   _log: doNothing
   Object.defineProperties @prototype,
     log:
       get: -> if @isEnabled() then @_log else doNothing
+    extra:
+      value: new ExtraDebugOptions
+      enumerable: true
 
   init: ->
     @log "Debug Mode"
