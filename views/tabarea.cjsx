@@ -34,7 +34,7 @@ TabContentsUnion = React.createClass
 ControlledTabArea = React.createClass
   getInitialState: ->
     key: 0
-    pluginKey: -2
+    pluginKey: if config.get 'poi.tabarea.double', false then 2 else -2
     dropdownOpen: false
     nowTime: 0
     plugins: []
