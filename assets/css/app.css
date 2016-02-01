@@ -166,7 +166,7 @@ poi-control .collapsing {
 .poi-tab-child-positioner {
   position: relative;
   width: 100%;
-  transition: left .3s cubic-bezier(1,0,0,1);
+  transition: left .3s ease-in-out;
 }
 .poi-app-tabpane {
   width: 100%;
