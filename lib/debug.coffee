@@ -92,6 +92,10 @@ class DebugBase
       value: new ExtraDebugOptions
       enumerable: true
 
+  initialized = false
+  isInitialized: ->
+    [r ,initialized] = [initialized, true]
+    r
   init: ->
     @log "Debug Mode"
     if extraOpts.size is 1 then @_log "Extra Option: #{process.env.DEBUG_EXTRA}"
@@ -103,10 +107,8 @@ class DebugBrowser extends DebugBase
     txt = "[DEBUG] #{msg}".cyan
     if obj? then console.log txt, obj else console.log txt
 
-  initialized = false
   init: ->
-    return Debug.wrap('Already initialized') if initialized
-    initialized = true
+    return Debug.wrap('Already initialized') if @isInitialized()
     process.env.DEBUG = 1 if @isEnabled()
     process.env.DEBUG_EXTRA = Array.from(extraOpts).join(',') if extraOpts.size > 0
     super()
@@ -118,10 +120,8 @@ class DebugRenderer extends DebugBase
     txt = "%c[DEBUG] #{msg}"
     if obj? then console.debug txt, style, obj else console.debug txt, style
 
-  initialized = false
   init: ->
-    return Debug.wrap('Already initialized') if initialized
-    initialized = true
+    return Debug.wrap('Already initialized') if @isInitialized()
     @setEnabled process.env.DEBUG?
     process.env.DEBUG_EXTRA?.split(',').forEach @enableExtra.bind @
     super()
