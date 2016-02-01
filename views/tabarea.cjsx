@@ -85,14 +85,10 @@ TabContentsUnion = React.createClass
             -100
           else
             100
-          tabStyle =
-            left: "#{positionLeft}%"
-            transition: '0s'
-          if child.key == activeKey ||
-             child.key == prevKey
-            delete tabStyle.transition
           <div className='poi-tab-child-sizer'>
-            <div className='poi-tab-child-positioner' style=tabStyle>
+            <div className="poi-tab-child-positioner
+              #{if child.key == activeKey || child.key == prevKey then '' else 'no-transition'}"
+                 style={left: "#{positionLeft}%"}>
               {child}
             </div>
           </div>
