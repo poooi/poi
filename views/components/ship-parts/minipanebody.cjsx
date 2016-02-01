@@ -112,8 +112,26 @@ PaneBodyMini = React.createClass
     condDynamicUpdateFlag = true
     @setState
       cond: cond
-  setMiniPaneState: (state) ->
-    @setState state
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
+    {label} = @state
+    updateflag = false
+    switch path
+      when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_req_map/next', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select'
+        updateflag = true
+        label = @updateLabels()
+      when '/kcsapi/api_req_nyukyo/start'
+        if (postBody.api_highspeed == 1)
+          updateflag = true
+      when '/kcsapi/api_get_member/ndock'
+        for shipId in _ndocks
+          i = @props.deck.api_ship.indexOf shipId
+          if i isnt -1
+            label[i] = 1
+            updateflag = true
+    if updateflag
+      @setState
+        label: label
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.activeDeck is @props.deckIndex
   componentWillReceiveProps: (nextProps) ->
@@ -142,7 +160,7 @@ PaneBodyMini = React.createClass
     @setState
       cond: cond
   componentDidMount: ->
-    window.setMiniPaneState = @setMiniPaneState
+    window.addEventListener 'game.response', @handleResponse
     label = @updateLabels()
     @setState
       label: label
