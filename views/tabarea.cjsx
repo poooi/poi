@@ -64,10 +64,14 @@ TabContentsUnion = React.createClass
   setTabOffset: (offset) ->
     return if !@props.children?
     nowKey = @activeKey()
+    childrenCount = React.Children.count @props.children
     React.Children.forEach @props.children, (child, index) =>
       if child.key == nowKey
-        nextIndex = (index+offset+@props.children.length) % @props.children.length
-        @setNewKey @props.children[nextIndex].key
+        nextIndex = (index+offset+childrenCount) % childrenCount
+        # Always use the same method to preserve the definition of index
+        React.Children.forEach @props.children, (child_, index_) =>
+          if index_ == nextIndex
+            @setNewKey child_.key
 
   render: ->
     onTheLeft = true
@@ -137,9 +141,9 @@ ControlledTabArea = React.createClass
     @selectTab key
     @selectTab isPlugin if !@state.doubleTabbed
   handleShiftTabKeyDown: ->
-    @refs.pluginTabUnion.setTabOffset -1
+    @refs.tabKeyUnion.setTabOffset -1
   handleTabKeyDown: ->
-    @refs.pluginTabUnion.setTabOffset 1
+    @refs.tabKeyUnion.setTabOffset 1
   handleKeyDown: ->
     return if @listener?
     @listener = true
@@ -173,12 +177,22 @@ ControlledTabArea = React.createClass
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
   render: ->
     activePluginName = @state.activePluginName || @state.plugins[0]?.name
-    plugin = @state.plugins.find (p) => p.name == activePluginName
+    activePlugin = @state.plugins.find (p) => p.name == activePluginName
     defaultPluginTitle = <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
-    defaultPluginContents = 
+    pluginDropdownContents = if @state.plugins.length == 0
       <MenuItem key={1002} disabled>
         {window.i18n.setting.__ "Install plugins in settings"}
       </MenuItem>
+    else
+      @state.plugins.map (plugin, index) =>
+        <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
+          {plugin.displayName}
+        </MenuItem>
+    pluginContents = for plugin, index in @state.plugins when !plugin.handleClick?
+      <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin"
+        onSelected={(key) => @setState {activePluginName: key}}>
+        <PluginWrap plugin={plugin} />
+      </div>
     if !@state.doubleTabbed
       <div>
         <Nav bsStyle="tabs" activeKey={@state.activeMainTab} id="top-nav"
@@ -190,26 +204,17 @@ ControlledTabArea = React.createClass
             {shipview.displayName}
           </NavItem>
           <NavItem key='plugin' eventKey={activePluginName} onSelect={@handleSelect}>
-            {plugin?.displayName || defaultPluginTitle}
+            {activePlugin?.displayName || defaultPluginTitle}
           </NavItem>
           <NavDropdown id='plugin-dropdown' pullRight title=''
-             onSelect={@handleSelectDropdown}>
-          {
-            @state.plugins.map (plugin, index) =>
-              <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
-                {plugin.displayName}
-              </MenuItem>
-          }
-          {
-            if @state.plugins.length == 0
-              defaultPluginContents
-          }
+            onSelect={@handleSelectDropdown}>
+            {pluginDropdownContents}
           </NavDropdown>
           <NavItem key='settings' eventKey='settings' className="tab-narrow">
             <FontAwesome key={0} name='cog' />
           </NavItem>
         </Nav>
-        <TabContentsUnion ref='mainTabUnion'
+        <TabContentsUnion ref='tabKeyUnion'
           onChange={(key) => @setState {activeMainTab: key}}>
           <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
             <mainview.reactClass />
@@ -217,13 +222,7 @@ ControlledTabArea = React.createClass
           <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
             <shipview.reactClass />
           </div>
-          {
-            for plugin, index in @state.plugins when !plugin.handleClick?
-              <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin"
-                onSelected={(key) => @setState {activePluginName: key}}>
-                <PluginWrap plugin={plugin} />
-              </div>
-          }
+          {pluginContents}
           <div id={settings.name} className="poi-app-tabpane" key='settings'>
             <settings.reactClass />
           </div>
@@ -243,7 +242,7 @@ ControlledTabArea = React.createClass
               {settings.displayName}
             </NavItem>
           </Nav>
-          <TabContentsUnion ref='mainTabUnion'
+          <TabContentsUnion
             onChange={(key) => @setState {activeMainTab: key}}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
               <mainview.reactClass />
@@ -258,15 +257,13 @@ ControlledTabArea = React.createClass
         </div>
         <div className="no-scroll">
           <Nav bsStyle="tabs" onSelect={@handleSelectDropdown}>
+            <NavDropdown id='plugin-dropdown' pullRight
+              title={activePlugin?.displayName || defaultPluginTitle}>
+            {pluginDropdownContents}
+            </NavDropdown>
           </Nav>
-          <TabContentsUnion ref='pluginTabUnion'
-            onChange={(key) => @setState {activePluginName: key}}>
-          {
-            for plugin, index in @state.plugins when !plugin.handleClick?
-              <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin">
-                <PluginWrap plugin={plugin} />
-              </div>
-          }
+          <TabContentsUnion ref='tabKeyUnion'>
+            {pluginContents}
           </TabContentsUnion>
         </div>
       </div>
