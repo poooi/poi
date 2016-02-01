@@ -93,6 +93,11 @@ PaneBody = React.createClass
             label[i] = 1
             updateflag = true
     if updateflag
+      try
+        window.setMiniPaneState
+          label: label
+      catch error
+        console.error error
       @setState
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->

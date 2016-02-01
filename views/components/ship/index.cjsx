@@ -146,6 +146,14 @@ module.exports =
       decks = window._decks
       states = decks.map (deck) ->
         getDeckState deck
+      try
+        window.setMiniShipState
+          fullnames: fullnames
+          decks: decks
+          states: states
+          dataVersion: @state.dataVersion + 1
+      catch error
+        console.error error
       @setState
         fullnames: fullnames
         decks: decks
