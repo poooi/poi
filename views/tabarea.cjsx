@@ -23,46 +23,42 @@ shipview = require path.join(ROOT, 'views', 'components', 'ship')
 lockedTab = false
 
 TabContentsUnion = React.createClass
-  prevActiveKey: 0
   getInitialState: ->
     nowKey: null
-
+    preKey: null
   componentDidMount: ->
     window.addEventListener 'TabContentsUnion.show', @handleShowEvent
   componentWillUnmount: ->
     window.removeEventListener 'TabContentsUnion.show', @handleShowEvent
-
   componentWillReceiveProps: (nextProps) ->
     if !@state.nowKey? && nextProps.children.length != 0
       @setNewKey nextProps.children[0].key, true
-
   handleShowEvent: (e) ->
     @setNewKey e.detail.key
-
   findChildByKey: (key) ->
     _.filter((React.Children.map @props.children,
         (child) -> if child.key == key then child),
       Boolean)[0]
-
   setNewKey: (nxtKey, force=false) ->
     nxtChild = @findChildByKey nxtKey
+    preKey = @state.nowKey
     return if !nxtChild
     if !force
       nowKey = @state.nowKey || @props.children[0]?.key
       return if (nowKey && nxtKey == nowKey)
     @setState
       nowKey: nxtKey
+      preKey: preKey
     @props.onChange? nxtKey
     nxtChild.props.onSelected? nxtKey
-
   activeKey: ->
     @state.nowKey || @props.children[0]?.key
-
+  prevKey: ->
+    @state.preKey || @props.children[0]?.key
   setTabShow: (key) ->
     React.Children.forEach @props.children, (child) =>
       if child.key == key
         @setNewKey key
-
   setTabOffset: (offset) ->
     return if !@props.children?
     nowKey = @activeKey()
@@ -74,11 +70,10 @@ TabContentsUnion = React.createClass
         React.Children.forEach @props.children, (child_, index_) =>
           if index_ == nextIndex
             @setNewKey child_.key
-  componentDidUpdate: (prevProps, prevState) ->
-    @prevActiveKey = @state.nowKey || @props.children[0]?.key
   render: ->
     onTheLeft = true
     activeKey = @activeKey()
+    prevKey = @prevKey()
     <div className='poi-tab-contents'>
       {
         React.Children.map @props.children, (child, index) =>
@@ -94,7 +89,7 @@ TabContentsUnion = React.createClass
             left: "#{positionLeft}%"
             transition: '0s'
           if child.key == activeKey ||
-             child.key == @prevActiveKey
+             child.key == prevKey
             delete tabStyle.transition
           <div className='poi-tab-child-sizer'>
             <div className='poi-tab-child-positioner' style=tabStyle>
