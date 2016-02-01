@@ -15,10 +15,6 @@ class Debug
     else
       o
 
-# Another wrapper
-class Handler
-  constructor: (@enabled, @type) ->
-
 # Globals
 console.assert process, "process doesn't exist"
 isRenderer = process?.type is 'renderer'
@@ -102,12 +98,6 @@ class DebugBase extends Logger
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
     @ex[tag]
-  list: ->
-    output = Debug.wrap {debug: new Handler(@isEnabled(), 'main')}
-    for opt of @ex
-      output[opt] = new Handler(@ex[opt].isEnabled(), 'extra')
-    console.table output
-    output
 
   Object.defineProperty @prototype, 'ex',
     value: new ExtraDebugOptions
@@ -124,6 +114,28 @@ class DebugBrowser extends DebugBase
     process.env.DEBUG_EXTRA = Array.from(extraOpts).join(',') if extraOpts.size > 0
     super()
 
+# Helper classes to make life easier with DevTools
+class DevToolsBooster
+
+class Booster
+  constructor: (dbgr, type, relistFunc) ->
+    @Enabled = dbgr.isEnabled()
+    @Type = type
+    enable = dbgr.enable.bind dbgr
+    disable = dbgr.disable.bind dbgr
+    if @Enabled
+      Object.defineProperty @, 'ClickToDisable -->',
+        get: ->
+          disable()
+          relistFunc()
+          'Disabled'
+    else
+      Object.defineProperty @, 'ClickToEnable -->',
+        get: ->
+          enable()
+          relistFunc()
+          'Enabled'
+
 # For the Renderer Processes
 class DebugRenderer extends DebugBase
   style = 'background: linear-gradient(30deg, cyan, white 3ex)'
@@ -135,6 +147,14 @@ class DebugRenderer extends DebugBase
     @setEnabled process.env.DEBUG?
     process.env.DEBUG_EXTRA?.split(',').forEach @enableExtra.bind @
     super()
+
+  list: ->
+    relist = @list.bind @
+    output = new DevToolsBooster
+    output['DEBUG'] = new Booster(@, 'main', relist)
+    for opt of @ex
+      output[opt] = new Booster(@ex[opt], 'extra', relist)
+    console.table output
 
 dbg = if isRenderer then new DebugRenderer else new DebugBrowser
 
