@@ -12,19 +12,25 @@ module.exports =
   reactClass: React.createClass
     getInitialState: ->
       layout: window.layout
+      doubleTabbed: window.doubleTabbed
       key: 1
     handleChangeLayout: (e) ->
       @setState
         layout: e.detail.layout
+    toggleDoubleTabbed: (e) ->
+      @setState
+        doubleTabbed: e.detail.doubleTabbed
     componentDidMount: ->
       window.addEventListener 'layout.change', @handleChangeLayout
+      window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
+      window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     render: ->
       <div className='main-panel-content' style={left: "#{if @state.show then '-100%' else '0'}"}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
       {
-        if @state.layout == 'horizontal' or window.doubleTabbed
+        if @state.layout == 'horizontal' or @state.doubleTabbed
           <div className="panel-col main-area-horizontal">
             <div className="panel-col teitoku-panel-area">
               <TeitokuPanel />

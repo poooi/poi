@@ -99,7 +99,8 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     plugins: []
     doubleTabbed: config.get 'poi.tabarea.double', false
-  toggleDoubleTabbed: (doubleTabbed) ->
+  toggleDoubleTabbed: (e) ->
+    doubleTabbed = e.detail.doubleTabbed
     @setState {doubleTabbed}
   componentWillUpdate: (nextProps, nextState) ->
     @nowTime = (new Date()).getTime()
@@ -172,12 +173,15 @@ ControlledTabArea = React.createClass
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
-    window.toggleDoubleTabbed = @toggleDoubleTabbed
+    window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     @cachePluginList()
     if process.platform == 'darwin'
       window.openSettings = @handleCmdCommaKeyDown
   componentWillUnmount: ->
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.removeEventListener 'tabarea.reload', @forceUpdate
+    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
   render: ->
     activePluginName = @state.activePluginName || @state.plugins[0]?.name
     activePlugin = @state.plugins.find (p) => p.name == activePluginName

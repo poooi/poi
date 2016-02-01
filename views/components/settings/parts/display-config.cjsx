@@ -29,11 +29,14 @@ ChangeLayoutConfig = React.createClass
   handleSetDoubleTabbed: ->
     enabled = @state.enableDoubleTabbed
     config.set 'poi.tabarea.double', !enabled
+    config.set 'poi.layout', layout
+    event = new CustomEvent 'doubleTabbed.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        doubleTabbed: !enabled
+    window.dispatchEvent event
     window.doubleTabbed = !enabled
-    try
-      window.toggleDoubleTabbed !enabled
-    catch error
-      console.error error
     @setState
       enableDoubleTabbed: !enabled
     toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
