@@ -174,6 +174,7 @@ ControlledTabArea = React.createClass
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
     window.toggleDoubleTabbed = @toggleDoubleTabbed
+    @cachePluginList()
     if process.platform == 'darwin'
       window.openSettings = @handleCmdCommaKeyDown
   componentWillUnmount: ->
