@@ -164,6 +164,8 @@ PaneBodyMini = React.createClass
     label = @updateLabels()
     @setState
       label: label
+  componentWillUnmount: ->
+    window.removeEventListener 'game.response', @handleResponse
   render: ->
     <div>
       <div className="fleet-name">
