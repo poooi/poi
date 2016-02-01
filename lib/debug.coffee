@@ -52,10 +52,10 @@ class DebugBase
     extraOpts.add tag.toString()
     Debug.wrap {enabledExtra: tag}
   disableExtra: (tag) ->
-    @_addExOptHandler tag
     extraOpts.delete tag.toString()
     Debug.wrap {disabledExtra: tag}
   isExtraEnabled: (tag) ->
+    return false if !tag
     @_addExOptHandler tag
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
