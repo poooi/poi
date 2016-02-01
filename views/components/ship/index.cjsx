@@ -75,15 +75,18 @@ module.exports =
       console.log "the cost of ship-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
-        try
-          window.changeMiniShipDeck idx
-        catch error
-          console.error error
+        event = new CustomEvent 'MiniShip.deckChange',
+          bubbles: true
+          cancelable: true
+          detail:
+            idx: idx
+        window.dispatchEvent event
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
-    handleClickOnce: (idx) ->
-      if idx isnt @state.activeDeck
+    handleClickOnce: (e) ->
+      idx = e.detail?.idx
+      if idx? && idx isnt @state.activeDeck
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
@@ -146,14 +149,15 @@ module.exports =
       decks = window._decks
       states = decks.map (deck) ->
         getDeckState deck
-      try
-        window.setMiniShipState
+      event = new CustomEvent 'MiniShip.getResponse',
+        bubbles: true
+        cancelable: true
+        detail:
           fullnames: fullnames
           decks: decks
           states: states
           dataVersion: @state.dataVersion + 1
-      catch error
-        console.error error
+      window.dispatchEvent event
       @setState
         fullnames: fullnames
         decks: decks
@@ -161,9 +165,10 @@ module.exports =
         dataVersion: @state.dataVersion + 1
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
-      window.changeShipViewDeck = @handleClickOnce
+      window.addEventListener 'ShipView.deckChange', @handleClickOnce
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
+      window.removeEventListener 'ShipView.deckChange', @handleClickOnce
       @interval = clearInterval @interval if @interval?
     render: ->
       <Panel>

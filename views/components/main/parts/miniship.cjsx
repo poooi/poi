@@ -75,24 +75,31 @@ module.exports =
       console.log "the cost of ship-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
-        try
-          window.changeShipViewDeck idx
-        catch error
-          console.error error
+        event = new CustomEvent 'ShipView.deckChange',
+          bubbles: true
+          cancelable: true
+          detail:
+            idx: idx
+        window.dispatchEvent event
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
-    handleClickOnce: (idx) ->
-      if idx isnt @state.activeDeck
+    handleClickOnce: (e) ->
+      idx = e.detail?.idx
+      if idx? && idx isnt @state.activeDeck
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
-    setMiniShipState: (state) ->
+    setMiniShipState: (e) ->
+      state = e.detail
       @setState state
     componentDidMount: ->
-      window.changeMiniShipDeck = @handleClickOnce
+      window.addEventListener 'MiniShip.deckChange', @handleClickOnce
+      window.addEventListener 'MiniShip.getResponse', @setMiniShipState
       window.setMiniShipState = @setMiniShipState
     componentWillUnmount: ->
+      window.removeEventListener 'MiniShip.deckChange', @handleClickOnce
+      window.removeEventListener 'MiniShip.getResponse', @setMiniShipState
       @interval = clearInterval @interval if @interval?
     render: ->
       <div style={height: '100%'}>
