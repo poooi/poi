@@ -44,12 +44,14 @@ TabContentsUnion = React.createClass
       Boolean)[0]
 
   setNewKey: (nxtKey, force=false) ->
+    nxtChild = @findChildByKey nxtKey
     if !force
       nowKey = @state.nowKey || @props.children[0]?.key
-      return if (nowKey && nxtKey == nowKey) || !@findChildByKey nxtKey
+      return if (nowKey && nxtKey == nowKey) || !nxtChild
     @setState
       nowKey: nxtKey
     @props.onChange? nxtKey
+    nxtChild.props.onSelected? nxtKey
 
   activeKey: ->
     @state.nowKey || @props.children[0]?.key
@@ -93,7 +95,6 @@ ControlledTabArea = React.createClass
   getInitialState: ->
     dropdownOpen: false
     plugins: []
-    tabbedPlugins: []
     doubleTabbed: config.get 'poi.tabarea.double', false
   toggleDoubleTabbed: (doubleTabbed) ->
     @setState {doubleTabbed}
@@ -102,20 +103,14 @@ ControlledTabArea = React.createClass
   componentDidUpdate: (prevProps, prevState) ->
     cur = (new Date()).getTime()
     console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
-  renderPlugins: async ->
+  cachePluginList: async ->
     plugins = yield PluginManager.getValidPlugins()
     plugins = plugins.filter (plugin) ->
       plugin.show isnt false
     plugins = _.sortBy plugins, 'priority'
-    tabbedPlugins = plugins.filter (plugin) ->
-      !plugin.handleClick?
     if @isMounted()
       @setState
         plugins: plugins
-        tabbedPlugins: tabbedPlugins
-  handleToggleDropdown: ->
-    dropdownOpen = !@state.dropdownOpen
-    @setState {dropdownOpen}
   selectTab: (key) ->
     return if !key?
     event = new CustomEvent 'TabContentsUnion.show',
@@ -128,16 +123,6 @@ ControlledTabArea = React.createClass
     @selectTab key
   handleSelectDropdown: (e, key) ->
     @selectTab key
-    @selectTab 'plugin' if !@state.doubleTabbed
-  handleSelectMenuItem: (e, key) ->
-    e.preventDefault()
-    if @state.doubleTabbed
-      @setState
-        pluginKey: key
-    else
-      @setState
-        key: key
-        pluginKey: key
   handleCtrlOrCmdTabKeyDown: ->
     @selectTab 'mainView'
   handleCtrlOrCmdNumberKeyDown: (num) ->
@@ -181,11 +166,11 @@ ControlledTabArea = React.createClass
     window.dispatchEvent new Event('resize')
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
     window.toggleDoubleTabbed = @toggleDoubleTabbed
-    @renderPlugins()
+    @cachePluginList()
   componentWillUnmount: ->
-    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @renderPlugins
+    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
   render: ->
     activePluginName = @state.activePluginName || @state.plugins[0]?.name
     plugin = @state.plugins.find (p) => p.name == activePluginName
@@ -204,7 +189,7 @@ ControlledTabArea = React.createClass
           <NavItem key='shipView' eventKey='shipView'>
             {shipview.displayName}
           </NavItem>
-          <NavItem key='plugin' eventKey='plugin' onSelect={@handleSelect}>
+          <NavItem key='plugin' eventKey={activePluginName} onSelect={@handleSelect}>
             {plugin?.displayName || defaultPluginTitle}
           </NavItem>
           <NavDropdown id='plugin-dropdown' pullRight title=''
@@ -238,15 +223,13 @@ ControlledTabArea = React.createClass
               index=1
               />
           </div>
-          <TabContentsUnion key='plugin' ref='pluginTabUnion'
-            onChange={(key) => @setState {activePluginName: key}}>
           {
             for plugin, index in @state.plugins when !plugin.handleClick?
-              <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin">
+              <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin"
+                onSelected={(key) => @setState {activePluginName: key}}>
                 <PluginWrap plugin={plugin} />
               </div>
           }
-          </TabContentsUnion>
           <div id={settings.name} className="poi-app-tabpane" key='settings'>
             <settings.reactClass
               selectedKey={@state.key}
