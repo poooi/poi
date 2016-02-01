@@ -20,7 +20,11 @@ module.exports =
     toggleDoubleTabbed: (e) ->
       @setState
         doubleTabbed: e.detail.doubleTabbed
+    componentDidUpdate: (prevProps, prevState) ->
+      if prevState.doubleTabbed != @state.doubleTabbed || prevState.layout != @state.layout
+        window.dispatchEvent new Event('resize')
     componentDidMount: ->
+      window.dispatchEvent new Event('resize')
       window.addEventListener 'layout.change', @handleChangeLayout
       window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     componentWillUnmount: ->

@@ -168,8 +168,11 @@ ControlledTabArea = React.createClass
           @handleCtrlOrCmdNumberKeyDown(e.keyCode - 48)
         else if e.keyCode is '0'.charCodeAt()
           @handleCtrlOrCmdNumberKeyDown 10
+  componentDidUpdate: (prevProps, prevState) ->
+    if prevState.doubleTabbed != @state.doubleTabbed
+      @setState
+        activeMainTab: 'mainView'
   componentDidMount: ->
-    window.dispatchEvent new Event('resize')
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
@@ -178,7 +181,7 @@ ControlledTabArea = React.createClass
     if process.platform == 'darwin'
       window.openSettings = @handleCmdCommaKeyDown
   componentWillUnmount: ->
-    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.removeEventListener 'game.start', @handleKeyDown
     window.removeEventListener 'tabarea.reload', @forceUpdate
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
     window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
