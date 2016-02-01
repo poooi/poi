@@ -181,7 +181,6 @@ module.exports =
               <div className="ship-deck" key={i}>
                 <PaneBody
                   key={i}
-                  show={@props.selectedKey == 1}
                   deckIndex={i}
                   deck={@state.decks[i]}
                   activeDeck={@state.activeDeck}

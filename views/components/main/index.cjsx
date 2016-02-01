@@ -20,8 +20,6 @@ module.exports =
       window.addEventListener 'layout.change', @handleChangeLayout
     componentWillUnmount: ->
       window.removeEventListener 'layout.change', @handleChangeLayout
-    shouldComponentUpdate: (nextProps, nextState) ->
-      false
     render: ->
       <div className='main-panel-content' style={left: "#{if @state.show then '-100%' else '0'}"}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
@@ -38,9 +36,7 @@ module.exports =
                 </div>
                 <div className="miniship miniship-area-horizontal" id={MiniShip.name} ref="miniship">
                   {
-                    React.createElement MiniShip.reactClass,
-                      selectedKey: @props.selectedKey
-                      index: @props.index
+                    React.createElement MiniShip.reactClass
                   }
                 </div>
               </div>
@@ -106,9 +102,7 @@ module.exports =
             </div>
             <div className="miniship panel-col" id={MiniShip.name} ref="miniship" style={width:"40%"}>
               {
-                React.createElement MiniShip.reactClass,
-                  selectedKey: @props.selectedKey
-                  index: @props.index
+                React.createElement MiniShip.reactClass
               }
             </div>
           </div>
