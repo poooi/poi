@@ -75,87 +75,31 @@ module.exports =
       console.log "the cost of ship-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
-        try
-          window.changeShipViewDeck idx
-        catch error
-          console.error error
+        event = new CustomEvent 'ShipView.deckChange',
+          bubbles: true
+          cancelable: true
+          detail:
+            idx: idx
+        window.dispatchEvent event
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
-    handleClickOnce: (idx) ->
-      if idx isnt @state.activeDeck
+    handleClickOnce: (e) ->
+      idx = e.detail?.idx
+      if idx? && idx isnt @state.activeDeck
         @setState
           activeDeck: idx
           dataVersion: @state.dataVersion + 1
-    handleResponse: (e) ->
-      {method, path, body, postBody} = e.detail
-      {fullnames} = @state
-      flag = true
-      switch path
-        when '/kcsapi/api_port/port'
-          fullnames = body.api_deck_port.map (e) -> e.api_name
-          inBattle = [false, false, false, false]
-          goback = {}
-          combined = body.api_combined_flag? && body.api_combined_flag > 0
-        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select', '/kcsapi/api_req_kaisou/slot_exchange_index'
-          true
-        when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
-          {decks} = @state
-          if body.api_escape_flag? && body.api_escape_flag > 0
-            escapeIdx = body.api_escape.api_escape_idx[0] - 1
-            towIdx = body.api_escape.api_tow_idx[0] - 1
-            escapeId = decks[escapeIdx // 6].api_ship[escapeIdx % 6]
-            towId = decks[towIdx // 6].api_ship[towIdx % 6]
-        when '/kcsapi/api_req_combined_battle/goback_port'
-          {decks} = @state
-          {_ships} = window
-          if escapeId != -1 && towId != -1
-            # console.log "退避：#{_ships[escapeId].api_name} 护卫：#{_ships[towId].api_name}"
-            goback[escapeId] = goback[towId] = true
-        when '/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next'
-          if path == '/kcsapi/api_req_map/start'
-            if combined && parseInt(postBody.api_deck_id) == 1
-              deckId = 0
-              inBattle[0] = inBattle[1] = true
-            else
-              deckId = parseInt(postBody.api_deck_id) - 1
-              inBattle[deckId] = true
-          escapeId = towId = -1
-          {decks, states} = @state
-          {_ships, _slotitems} = window
-          damagedShips = []
-          for deckId in [0..3]
-            continue unless inBattle[deckId]
-            deck = decks[deckId]
-            for shipId, idx in deck.api_ship
-              continue if shipId == -1 or idx == 0
-              ship = _ships[shipId]
-              if ship.api_nowhp / ship.api_maxhp < 0.250001 and !goback[shipId]
-                # 应急修理要员/女神
-                safe = false
-                for slotId in ship.api_slot.concat(ship.api_slot_ex || -1)
-                  continue if slotId == -1
-                  safe = true if _slotitems[slotId].api_type[3] is 14
-                if !safe
-                  damagedShips.push("Lv. #{ship.api_lv} - #{ship.api_name}")
-          if damagedShips.length > 0
-            toggleModal __('Attention!'), damagedShips.join(' ') + __('is heavily damaged!')
-        else
-          flag = false
-      return unless flag
-      decks = window._decks
-      states = decks.map (deck) ->
-        getDeckState deck
-      @setState
-        fullnames: fullnames
-        decks: decks
-        states: states
-        dataVersion: @state.dataVersion + 1
+    setMiniShipState: (e) ->
+      state = e.detail
+      @setState state
     componentDidMount: ->
-      window.addEventListener 'game.response', @handleResponse
-      window.changeMiniShipDeck = @handleClickOnce
+      window.addEventListener 'MiniShip.deckChange', @handleClickOnce
+      window.addEventListener 'MiniShip.getResponse', @setMiniShipState
+      window.setMiniShipState = @setMiniShipState
     componentWillUnmount: ->
-      window.removeEventListener 'game.response', @handleResponse
+      window.removeEventListener 'MiniShip.deckChange', @handleClickOnce
+      window.removeEventListener 'MiniShip.getResponse', @setMiniShipState
       @interval = clearInterval @interval if @interval?
     render: ->
       <div style={height: '100%'}>

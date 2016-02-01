@@ -68,7 +68,7 @@ PaneBody = React.createClass
     for shipId, j in @props.deck.api_ship
       continue if shipId == -1
       ship = _ships[shipId]
-      status = getShipStatus shipId, @props.escapeId, @props.towId
+      status = getShipStatus shipId
       label[j] = status
     label
   onCondChange: (cond) ->
