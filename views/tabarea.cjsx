@@ -23,6 +23,7 @@ shipview = require path.join(ROOT, 'views', 'components', 'ship')
 lockedTab = false
 
 TabContentsUnion = React.createClass
+  prevActiveKey: 0
   getInitialState: ->
     nowKey: null
 
@@ -39,7 +40,7 @@ TabContentsUnion = React.createClass
     @setNewKey e.detail.key
 
   findChildByKey: (key) ->
-    _.filter((React.Children.map @props.children, 
+    _.filter((React.Children.map @props.children,
         (child) -> if child.key == key then child),
       Boolean)[0]
 
@@ -73,23 +74,30 @@ TabContentsUnion = React.createClass
         React.Children.forEach @props.children, (child_, index_) =>
           if index_ == nextIndex
             @setNewKey child_.key
-
+  componentDidUpdate: (prevProps, prevState) ->
+    @prevActiveKey = @state.nowKey || @props.children[0]?.key
   render: ->
     onTheLeft = true
     activeKey = @activeKey()
     <div className='poi-tab-contents'>
       {
-        React.Children.map @props.children, (child) =>
+        React.Children.map @props.children, (child, index) =>
           if child.key == activeKey
             onTheLeft = false
           positionLeft = if child.key == activeKey
             0
           else if onTheLeft
             -100
-          else 
+          else
             100
+          tabStyle =
+            left: "#{positionLeft}%"
+            transition: '0s'
+          if child.key == activeKey ||
+             child.key == @prevActiveKey
+            delete tabStyle.transition
           <div className='poi-tab-child-sizer'>
-            <div className='poi-tab-child-positioner' style={left: "#{positionLeft}%"}>
+            <div className='poi-tab-child-positioner' style=tabStyle>
               {child}
             </div>
           </div>
@@ -133,7 +141,7 @@ ControlledTabArea = React.createClass
     @selectTab 'settings'
   handleCtrlOrCmdNumberKeyDown: (num) ->
     switch num
-      when 1 
+      when 1
         key = 'mainView'
       when 2
         key = 'shipView'
