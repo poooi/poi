@@ -24,17 +24,22 @@ extraOpts = new Set()
 
 doNothing = -> return
 
-# Extra Option Handler
-class ExOptHandler
+class Logger
   Object.defineProperties @prototype,
+    _log:
+      value: doNothing
+      writable: true
     log:
       get: -> if @isEnabled() then @_log else doNothing
+
+# Extra Option Handler
+class ExOptHandler extends Logger
 
 # Extra options container (just need the name)
 class ExtraDebugOptions
 
 # Base Implementation
-class DebugBase
+class DebugBase extends Logger
   setEnabled: (b) ->
     enabled = b
     Debug.wrap {enabled: b}
@@ -84,13 +89,9 @@ class DebugBase
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
 
-  _log: doNothing
-  Object.defineProperties @prototype,
-    log:
-      get: -> if @isEnabled() then @_log else doNothing
-    extra:
-      value: new ExtraDebugOptions
-      enumerable: true
+  Object.defineProperty @prototype, 'extra',
+    value: new ExtraDebugOptions
+    enumerable: true
 
   initialized = false
   isInitialized: ->
@@ -103,9 +104,8 @@ class DebugBase
 
 # For the Browser Process
 class DebugBrowser extends DebugBase
-  _log: (msg = '', obj = null) ->
-    txt = "[DEBUG] #{msg}".cyan
-    if obj? then console.log txt, obj else console.log txt
+  constructor: ->
+    @_log = console.log.bind console, '[DEBUG] %s'.cyan
 
   init: ->
     return Debug.wrap('Already initialized') if @isInitialized()
@@ -115,10 +115,9 @@ class DebugBrowser extends DebugBase
 
 # For the Renderer Processes
 class DebugRenderer extends DebugBase
-  style = 'background: linear-gradient(30deg, cyan, white 5ex)'
-  _log: (msg = '', obj = null) ->
-    txt = "%c[DEBUG] #{msg}"
-    if obj? then console.debug txt, style, obj else console.debug txt, style
+  style = 'background: linear-gradient(30deg, cyan, white 3ex)'
+  constructor: ->
+    @_log = console.debug.bind console, '%c%s', style
 
   init: ->
     return Debug.wrap('Already initialized') if @isInitialized()
