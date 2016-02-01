@@ -9,7 +9,6 @@ __n = i18n.setting.__n.bind(i18n.setting)
 {APPDATA_PATH} = window
 {showItemInFolder, openItem} = require 'shell'
 Divider = require './divider'
-NavigatorBar = require './navigator-bar'
 
 ChangeLayoutConfig = React.createClass
   getInitialState: ->

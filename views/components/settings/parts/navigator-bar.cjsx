@@ -70,7 +70,7 @@ NavigatorBar = React.createClass
     webview.addEventListener 'did-start-loading', @handleStartLoading
     webview.addEventListener 'did-stop-loading', @handleStopLoading
     webview.addEventListener 'did-fail-load', @handleFailLoad
-  componentWillUmount: ->
+  componentWillUnmount: ->
     webview.removeEventListener 'did-start-loading', @handleStartLoading
     webview.removeEventListener 'did-stop-loading', @handleStopLoading
     webview.removeEventListener 'did-fail-load', @handleFailLoad
