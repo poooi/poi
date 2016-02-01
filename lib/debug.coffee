@@ -66,11 +66,11 @@ class DebugBase extends Logger
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
   _addExOptHandler: (tag) ->
-    if !@extra[tag]?
-      Object.defineProperty @extra, tag,
+    if !@ex[tag]?
+      Object.defineProperty @ex, tag,
         value: new ExOptHandler
         enumerable: true
-      Object.defineProperties @extra[tag],
+      Object.defineProperties @ex[tag],
         enable:
           value: @enableExtra.bind(@, tag)
         disable:
@@ -89,7 +89,7 @@ class DebugBase extends Logger
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
 
-  Object.defineProperty @prototype, 'extra',
+  Object.defineProperty @prototype, 'ex',
     value: new ExtraDebugOptions
     enumerable: true
 
@@ -125,6 +125,6 @@ class DebugRenderer extends DebugBase
     process.env.DEBUG_EXTRA?.split(',').forEach @enableExtra.bind @
     super()
 
-debug = if isRenderer then new DebugRenderer else new DebugBrowser
+dbg = if isRenderer then new DebugRenderer else new DebugBrowser
 
-module.exports = debug
+module.exports = dbg

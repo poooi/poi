@@ -57,4 +57,4 @@ process.argv.forEach (arg, idx) ->
 
 # Finish initialization of debug environment
 Debug.init()
-global.debug = Debug
+global.dbg = Debug
