@@ -41,11 +41,6 @@ disableHA = config.get 'poi.disableHA', false
 if disableHA
   app.commandLine.appendSwitch 'disable-gpu'
 
-# PAC setting
-proxy = config.get 'proxy', {}
-if proxy.pac
-  app.commandLine.appendSwitch 'proxy-pac-url', proxy.pacAddr
-
 # Proxy setting
 listenPort = config.get 'poi.port', 12450
 app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
