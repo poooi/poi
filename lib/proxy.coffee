@@ -15,6 +15,7 @@ requestAsync = Promise.promisify request, multiArgs: true
 mime = require 'mime'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
+PacProxyAgent = require 'pac-proxy-agent'
 
 config = require './config'
 {log, warn, error} = require './utils'
@@ -64,6 +65,7 @@ findCache = (pathname) ->
 # Network error retries
 retries = config.get 'poi.proxy.retries', 0
 
+PacAgents = {}
 resolve = (req) ->
   switch config.get 'proxy.use'
     # HTTP Request via SOCKS5 proxy
@@ -84,6 +86,12 @@ resolve = (req) ->
       strAuth = "#{username}:#{password}@"
       return _.extend req,
         proxy: "http://#{if useAuth then strAuth else ''}#{host}:#{port}"
+    # PAC
+    when 'pac'
+      uri = config.get('proxy.pacAddr')
+      PacAgents[uri] ?= new PacProxyAgent(uri)
+      _.extend req,
+        agent: PacAgents[uri]
     # Directly
     else
       return req

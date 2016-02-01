@@ -8,6 +8,7 @@ Divider = require './divider'
 
 basic =
   use: 'none',
+  pacAddr: ''
   http:
     host: '127.0.0.1'
     port: 8099
@@ -39,6 +40,9 @@ NetworkConfig = React.createClass
         config.set 'proxy.use', 'socks5'
         config.set 'proxy.socks5.host', @refs.socksHost.getValue()
         config.set 'proxy.socks5.port', @refs.socksPort.getValue()
+      when 'pac'
+        config.set 'proxy.use', 'pac'
+        config.set 'proxy.pacAddr', @refs.pacAddr.getValue()
       else
         config.set 'proxy.use', 'none'
     toggleModal __('Proxy setting'), __('Success! It will be available after a restart.')
@@ -71,6 +75,9 @@ NetworkConfig = React.createClass
     {socks5} = @state
     socks5.port = e.target.value
     @setState {socks5}
+  handlePACAddrChange: (e) ->
+    pacAddr = e.target.value
+    @setState {pacAddr}
   handleSetRetries: (e) ->
     @setState
       retries: e.target.value
@@ -85,7 +92,8 @@ NetworkConfig = React.createClass
           <Input type="select" ref="use" value={@state.use || "none"} onChange={@handleChangeUse}>
             <option key={0} value="http">HTTP {__ "proxy"}</option>
             <option key={1} value="socks5">Socks5 {__ "proxy"}</option>
-            <option key={2} value="none">{__ "No proxy"}</option>
+            <option key={2} value="pac">PAC {__ "file"} ({__ "Experimental"})</option>
+            <option key={3} value="none">{__ "No proxy"}</option>
           </Input>
         </Col>
       </Grid>
@@ -121,6 +129,12 @@ NetworkConfig = React.createClass
             </Col>
             <Col xs={6}>
               <Input type="text" ref="socksPort" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
+            </Col>
+          </Grid>
+        else if @state.use == 'pac'
+          <Grid>
+            <Col xs={12}>
+              <Input type="text" ref="pacAddr" label={__ 'PAC address'} placeholder={__ 'PAC address'} value={@state?.pacAddr} onChange={@handlePACAddrChange} />
             </Col>
           </Grid>
         else
