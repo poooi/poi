@@ -15,6 +15,10 @@ class Debug
     else
       o
 
+# Another wrapper
+class Handler
+  constructor: (@enabled, @type) ->
+
 # Globals
 console.assert process, "process doesn't exist"
 isRenderer = process?.type is 'renderer'
@@ -98,6 +102,12 @@ class DebugBase extends Logger
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
     @ex[tag]
+  list: ->
+    output = Debug.wrap {debug: new Handler(@isEnabled(), 'main')}
+    for opt of @ex
+      output[opt] = new Handler(@ex[opt].isEnabled(), 'extra')
+    console.table output
+    output
 
   Object.defineProperty @prototype, 'ex',
     value: new ExtraDebugOptions
