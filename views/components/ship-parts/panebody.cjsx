@@ -95,6 +95,8 @@ PaneBody = React.createClass
     if updateflag
       @setState
         label: label
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.activeDeck is @props.deckIndex
   componentWillReceiveProps: (nextProps) ->
     if @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
