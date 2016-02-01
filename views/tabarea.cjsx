@@ -212,16 +212,10 @@ ControlledTabArea = React.createClass
         <TabContentsUnion ref='mainTabUnion'
           onChange={(key) => @setState {activeMainTab: key}}>
           <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-            <mainview.reactClass
-              selectedKey={@state.key}
-              index=0
-              />
+            <mainview.reactClass />
           </div>
           <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-            <shipview.reactClass
-              selectedKey={@state.key}
-              index=1
-              />
+            <shipview.reactClass />
           </div>
           {
             for plugin, index in @state.plugins when !plugin.handleClick?
@@ -231,10 +225,7 @@ ControlledTabArea = React.createClass
               </div>
           }
           <div id={settings.name} className="poi-app-tabpane" key='settings'>
-            <settings.reactClass
-              selectedKey={@state.key}
-              index=1000
-              />
+            <settings.reactClass />
           </div>
         </TabContentsUnion>
       </div>
@@ -255,40 +246,18 @@ ControlledTabArea = React.createClass
           <TabContentsUnion ref='mainTabUnion'
             onChange={(key) => @setState {activeMainTab: key}}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-              <mainview.reactClass
-                selectedKey={@state.key}
-                index=0
-                />
+              <mainview.reactClass />
             </div>
             <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-              <shipview.reactClass
-                selectedKey={@state.key}
-                index=1
-                />
+              <shipview.reactClass />
             </div>
             <div id={settings.name} className="poi-app-tabpane" key='settings'>
-              <settings.reactClass
-                selectedKey={@state.key}
-                index=1000
-                />
+              <settings.reactClass />
             </div>
           </TabContentsUnion>
         </div>
         <div className="no-scroll">
           <Nav bsStyle="tabs" onSelect={@handleSelectDropdown}>
-            <NavDropdown id='plugin-dropdown' pullRight
-              title={plugin?.displayName || defaultPluginTitle}>
-            {
-              @state.plugins.map (plugin, index) =>
-                <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
-                  {plugin.displayName}
-                </MenuItem>
-            }
-            {
-              if @state.plugins.length == 0
-                defaultPluginContents
-            }
-            </NavDropdown>
           </Nav>
           <TabContentsUnion ref='pluginTabUnion'
             onChange={(key) => @setState {activePluginName: key}}>

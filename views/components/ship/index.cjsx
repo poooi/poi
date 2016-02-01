@@ -73,14 +73,6 @@ module.exports =
     componentDidUpdate: (prevProps, prevState) ->
       cur = (new Date()).getTime()
       console.log "the cost of ship-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
-    shouldComponentUpdate: (nextProps, nextState) ->
-      # if ship-pane is visibile and dataVersion is changed, this pane should update!
-      if nextProps.selectedKey is @props.index and nextState.dataVersion isnt @showDataVersion
-        @showDataVersion = nextState.dataVersion
-        return true
-      if @state.decks.length is 0 and nextState.decks.length isnt 0
-        return true
-      false
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
         try
