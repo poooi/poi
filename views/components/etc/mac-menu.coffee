@@ -15,6 +15,13 @@ template = [
       },
       { type: 'separator' },
       {
+        label: 'Preferences...'
+        accelerator: 'CmdOrCtrl+,'
+        click: (item, focusedWindow) ->
+          window.openSettings?()
+      },
+      { type: 'separator' },
+      {
         label: 'Services'
         role: 'services'
         submenu: []

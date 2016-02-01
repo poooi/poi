@@ -45,9 +45,10 @@ TabContentsUnion = React.createClass
 
   setNewKey: (nxtKey, force=false) ->
     nxtChild = @findChildByKey nxtKey
+    return if !nxtChild
     if !force
       nowKey = @state.nowKey || @props.children[0]?.key
-      return if (nowKey && nxtKey == nowKey) || !nxtChild
+      return if (nowKey && nxtKey == nowKey)
     @setState
       nowKey: nxtKey
     @props.onChange? nxtKey
@@ -97,7 +98,6 @@ TabContentsUnion = React.createClass
 
 ControlledTabArea = React.createClass
   getInitialState: ->
-    dropdownOpen: false
     plugins: []
     doubleTabbed: config.get 'poi.tabarea.double', false
   toggleDoubleTabbed: (doubleTabbed) ->
@@ -129,6 +129,8 @@ ControlledTabArea = React.createClass
     @selectTab key
   handleCtrlOrCmdTabKeyDown: ->
     @selectTab 'mainView'
+  handleCmdCommaKeyDown: ->
+    @selectTab 'settings'
   handleCtrlOrCmdNumberKeyDown: (num) ->
     switch num
       when 1 
@@ -162,9 +164,9 @@ ControlledTabArea = React.createClass
         else
           @handleTabKeyDown()
       else if e.ctrlKey or e.metaKey
-        if e.keyCode >= 49 and e.keyCode <= 57
+        if e.keyCode >= '1'.charCodeAt() and e.keyCode <= '9'.charCodeAt()
           @handleCtrlOrCmdNumberKeyDown(e.keyCode - 48)
-        else if e.keyCode is 48
+        else if e.keyCode is '0'.charCodeAt()
           @handleCtrlOrCmdNumberKeyDown 10
   componentDidMount: ->
     window.dispatchEvent new Event('resize')
@@ -172,7 +174,8 @@ ControlledTabArea = React.createClass
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
     window.toggleDoubleTabbed = @toggleDoubleTabbed
-    @cachePluginList()
+    if process.platform == 'darwin'
+      window.openSettings = @handleCmdCommaKeyDown
   componentWillUnmount: ->
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
   render: ->
@@ -193,6 +196,8 @@ ControlledTabArea = React.createClass
         onSelected={(key) => @setState {activePluginName: key}}>
         <PluginWrap plugin={plugin} />
       </div>
+
+    # Return
     if !@state.doubleTabbed
       <div>
         <Nav bsStyle="tabs" activeKey={@state.activeMainTab} id="top-nav"
