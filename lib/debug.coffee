@@ -40,6 +40,15 @@ class ExtraDebugOptions
 
 # Base Implementation
 class DebugBase extends Logger
+  initialized = false
+  isInitialized: ->
+    [r ,initialized] = [initialized, true]
+    r
+  init: ->
+    @log "Debug Mode"
+    if extraOpts.size is 1 then @_log "Extra Option: #{process.env.DEBUG_EXTRA}"
+    else if extraOpts.size > 1 then @_log "Extra Options: #{process.env.DEBUG_EXTRA}"
+
   setEnabled: (b) ->
     enabled = b
     Debug.wrap {enabled: b}
@@ -53,7 +62,7 @@ class DebugBase extends Logger
   enableExtra: (tag) ->
     console.assert tag, 'Are you kidding me? What do you want to enable?'
     return (Debug.wrap 'Nothing happened') if !tag
-    @_addExOptHandler tag
+    @extra tag
     extraOpts.add tag.toString()
     Debug.wrap {enabledExtra: tag}
   disableExtra: (tag) ->
@@ -61,11 +70,11 @@ class DebugBase extends Logger
     Debug.wrap {disabledExtra: tag}
   isExtraEnabled: (tag) ->
     return false if !tag
-    @_addExOptHandler tag
+    @extra tag
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
-  _addExOptHandler: (tag) ->
+  extra: (tag) ->
     if !@ex[tag]?
       Object.defineProperty @ex, tag,
         value: new ExOptHandler
@@ -88,19 +97,11 @@ class DebugBase extends Logger
           enumerable: true
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
+    @ex[tag]
 
   Object.defineProperty @prototype, 'ex',
     value: new ExtraDebugOptions
     enumerable: true
-
-  initialized = false
-  isInitialized: ->
-    [r ,initialized] = [initialized, true]
-    r
-  init: ->
-    @log "Debug Mode"
-    if extraOpts.size is 1 then @_log "Extra Option: #{process.env.DEBUG_EXTRA}"
-    else if extraOpts.size > 1 then @_log "Extra Options: #{process.env.DEBUG_EXTRA}"
 
 # For the Browser Process
 class DebugBrowser extends DebugBase
