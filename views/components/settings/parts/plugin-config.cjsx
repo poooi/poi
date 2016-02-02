@@ -506,24 +506,6 @@ PluginConfig = React.createClass
                 <Well>
                   <Row>
                     <Col xs=12>
-                      {
-                        installButton =
-                          <Button bsStyle='primary'
-                                  disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
-                                  onClick={@handleManuallyInstall.bind @, @state.manuallyInstallPackage}>
-                            {__ 'Install'}
-                          </Button>
-                        <Input type="text"
-                               value={@state.manuallyInstallPackage}
-                               onChange={@changeInstalledPackage}
-                               label={__ 'Install directly from npm'}
-                               disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
-                               placeholder={__ 'Input plugin package name...'}
-                               bsSize='small'
-                               buttonAfter={installButton} />
-                      }
-                    </Col>
-                    <Col xs=12>
                       <Row>
                         <Col xs=12>
                           <label className='control-label'>
@@ -608,6 +590,24 @@ PluginConfig = React.createClass
           </Collapse>
         </Row>
         <Row className='plugin-rowspace'>
+          <Col xs=12>
+            {
+              installButton =
+                <Button bsStyle='primary'
+                        disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
+                        onClick={@handleManuallyInstall.bind @, @state.manuallyInstallPackage}>
+                  {__ 'Install'}
+                </Button>
+              <Input type="text"
+                     value={@state.manuallyInstallPackage}
+                     onChange={@changeInstalledPackage}
+                     label={__ 'Install directly from npm'}
+                     disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
+                     placeholder={__ 'Input plugin package name...'}
+                     bsSize='small'
+                     buttonAfter={installButton} />
+            }
+          </Col>
           <Col xs={12}>
             <div className="folder-picker"
                  onClick={@onSelectInstallFromFile}
