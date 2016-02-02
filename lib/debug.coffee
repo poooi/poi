@@ -40,9 +40,9 @@ class ExtraDebugOptions
 
 # Base Implementation
 class DebugBase extends Logger
-  initialized = false
-  isInitialized: ->
-    [r ,initialized] = [initialized, true]
+  initialised = false
+  isInitialised: ->
+    [r ,initialised] = [initialised, true]
     r
   init: ->
     @log "Debug Mode"
@@ -109,7 +109,7 @@ class DebugBrowser extends DebugBase
     @_log = console.log.bind console, '[DEBUG] %s'.cyan
 
   init: ->
-    return Debug.wrap('Already initialized') if @isInitialized()
+    return Debug.wrap('Already initialised') if @isInitialised()
     process.env.DEBUG = 1 if @isEnabled()
     process.env.DEBUG_EXTRA = Array.from(extraOpts).join(',') if extraOpts.size > 0
     super()
@@ -143,7 +143,7 @@ class DebugRenderer extends DebugBase
     @_log = console.debug.bind console, '%c%s', style
 
   init: ->
-    return Debug.wrap('Already initialized') if @isInitialized()
+    return Debug.wrap('Already initialised') if @isInitialised()
     @setEnabled process.env.DEBUG?
     process.env.DEBUG_EXTRA?.split(',').forEach @enableExtra.bind @
     super()
