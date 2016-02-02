@@ -344,6 +344,7 @@ resolveResponses = ->
           window._teitokuLv = body.api_level
           window._nickName = body.api_nickname
           window._nickNameId = body.api_nickname_id
+          window._teitokuExp = body.api_member_exp
         when '/kcsapi/api_get_member/deck'
           window._decks[deck.api_id - 1] = deck for deck in body
         when '/kcsapi/api_get_member/mapinfo'
@@ -489,8 +490,10 @@ resolveResponses = ->
             _ships[shipId].api_nowhp = _ships[shipId].api_maxhp
             _ships[shipId].api_cond = Math.max(40, _ships[shipId].api_cond)
         when '/kcsapi/api_req_practice/battle_result'
+          window._teitokuExp = body.api_member_exp
           window._teitokuLv = body.api_member_lv
         when '/kcsapi/api_req_sortie/battleresult'
+          window._teitokuExp = body.api_member_exp
           window._teitokuLv = body.api_member_lv
       event = new CustomEvent 'game.response',
         bubbles: true
