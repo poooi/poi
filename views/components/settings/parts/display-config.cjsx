@@ -17,6 +17,7 @@ ChangeLayoutConfig = React.createClass
   handleSetLayout: (layout) ->
     return if @state.layout == layout
     config.set 'poi.layout', layout
+    window.layout = layout
     event = new CustomEvent 'layout.change',
       bubbles: true
       cancelable: true
@@ -24,7 +25,7 @@ ChangeLayoutConfig = React.createClass
         layout: layout
     window.dispatchEvent event
     @setState {layout}
-    toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
+    #toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
   handleSetDoubleTabbed: ->
     enabled = @state.enableDoubleTabbed
     config.set 'poi.tabarea.double', !enabled
@@ -38,7 +39,7 @@ ChangeLayoutConfig = React.createClass
     window.doubleTabbed = !enabled
     @setState
       enableDoubleTabbed: !enabled
-    toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
+    #toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
   render: ->
     <Grid>
       <Col xs={6}>

@@ -64,7 +64,7 @@ NavigatorBar = React.createClass
   handleSetHomepage: ->
     config.set 'poi.homepage', @state.navigateUrl
   handleGotoHomepage: ->
-    @state.navigateUrl=config.get 'poi.homepage'
+    @state.navigateUrl = config.get 'poi.homepage'
     @handleNavigate()
   componentDidMount: ->
     webview.addEventListener 'did-start-loading', @handleStartLoading
