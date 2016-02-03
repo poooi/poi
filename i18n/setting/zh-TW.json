@@ -31,6 +31,7 @@
   "Save": "儲存",
   "All of the plugins": "全部插件",
   "You must reboot the app for the changes to take effect.": "關閉或者開啟插件的設定在重新啟動後生效。",
+  "Some plugins may not work before you refresh the page.": "部分插件需要刷新遊戲頁面後纔會恢復工作。",
   "Layout settings": "佈局設定",
   "Delete cookies": "刪除 Cookies",
   "Delete cache": "刪除快取",

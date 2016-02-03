@@ -25,7 +25,7 @@ ChangeLayoutConfig = React.createClass
         layout: layout
     window.dispatchEvent event
     @setState {layout}
-    #toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
+    toggleModal __('Layout settings'), __('Some plugins may not work before you refresh the page.')
   handleSetDoubleTabbed: ->
     enabled = @state.enableDoubleTabbed
     config.set 'poi.tabarea.double', !enabled
@@ -39,7 +39,7 @@ ChangeLayoutConfig = React.createClass
     window.doubleTabbed = !enabled
     @setState
       enableDoubleTabbed: !enabled
-    #toggleModal __('Layout settings'), __('You must reboot the app for the changes to take effect.')
+    toggleModal __('Layout settings'), __('Some plugins may not work before you refresh the page.')
   render: ->
     <Grid>
       <Col xs={6}>

@@ -24,6 +24,7 @@
   "Save": "Save",
   "All of the plugins": "All of the plugins",
   "You must reboot the app for the changes to take effect.": "You must reboot the app for the changes to take effect.",
+  "Some plugins may not work before you refresh the page.": "Some plugins may not work before you refresh the page.",
   "Layout settings": "Layout settings",
   "Delete cookies": "Delete cookies",
   "Delete cache": "Delete cache",

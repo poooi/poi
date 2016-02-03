@@ -31,6 +31,7 @@
   "Save": "保存",
   "All of the plugins": "ツール On/Off",
   "You must reboot the app for the changes to take effect.": "設定変更は再起動後に有効になります。",
+  "Some plugins may not work before you refresh the page.": "一部のプラグインはページを更新する前に機能しない場合があります。",
   "Layout settings": "画面設定",
   "Delete cookies": "クッキーを削除します",
   "Delete cache": "キャッシュを削除します",
