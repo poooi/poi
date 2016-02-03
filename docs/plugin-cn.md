@@ -82,7 +82,7 @@ module.exports =
 
 ## poi 暴露的 API
 
-poi 基本开发环境与环境变量。
+### 基本开发环境与环境变量
 ```javascript
 window =
   React // React
@@ -97,7 +97,9 @@ window =
   POI_VERSION // poi 版本号
 ```
 
-poi 以全局的方式暴露游戏资料相关的 API，可以在 window 中直接获得以下资料。
+### 游戏数据
+
+poi 以全局的方式暴露游戏资料，可以在 window 中直接获得以下资料。
 
 ```javascript
 window =
@@ -130,7 +132,7 @@ window.addEventListener('game.response', function (e) {
 });
 ```
 
-poi 用户通知相关 API。
+### 用户通知相关 API
 
 ```javascript
 window.log('Something'); // 显示在游戏窗口下方的信息条
@@ -148,13 +150,54 @@ var footer = {
 window.toggleModal('Title', 'Content', footer);
 ```
 
-poi 用户设置相关 API。
+### 用户设置相关 API
+
 ```javascript
 window.config.get('path.to.config', 'default'); // 获取某个用户设置值，获取失败返回默认值
 window.config.set('path.to.config', 'some value'); // 保存某个用户设置值，若不提供值相当于删除该设置
 window.layout // 目前的布局，'horizontal' || 'vertical'
 window.theme // 目前使用的主题
 ```
+
+### 插件间调用 IPC
+
+引入 ipc 模块：
+```javascript
+var ipc = window.ipc;
+```
+
+注册插件 API：  
+建议使用 `pluginName` 作为 `scope_name`。
+```javascript
+ipc.register("scope_name", {
+  api_name:   @ref_to_function
+  api_name2:  @ref_to_function_2
+});
+```
+
+注销插件 API
+```javascript
+ipc.unregister("scope_name", "api_name");
+ipc.unregister("scope_name", ["api_name", "api_name2"]);
+ipc.unregister("scope_name", {
+  api_name:   @whatever
+  api_name2:  @whatever
+});
+ipc.unregisterAll("scope_name");
+```
+
+调用其他插件的 API：  
+注意：所有调用均为异步调用，无法获得返回值。
+```coffeescript
+scope = ipc.access("scope_name");
+scope?.api_name?(args);
+```
+
+调用所有插件的 API：
+```javascript
+ipc.foreachCall("api_name", arg1, arg2, ...)
+```
+
 ## 窗口插件开发
 
 使用 `windowManager` 来创建新窗口。关于 `createWindow` 的更多说明，参考 Electron 的 [BrowserWindow 中的 new 方法](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
