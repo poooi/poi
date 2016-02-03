@@ -16,6 +16,7 @@ mime = require 'mime'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 PacProxyAgent = require 'pac-proxy-agent'
+{app} = require 'electron'
 
 config = require './config'
 {log, warn, error} = require './utils'
@@ -252,8 +253,11 @@ class Proxy extends EventEmitter
       error err
       if err.code == 'EADDRINUSE'
         @_setStatus 'EADDRINUSE'
-    listenPort = config.get 'poi.port', 12450
-    @server.listen listenPort, '127.0.0.1', =>
+    @server.listen 0, '127.0.0.1', =>
+      listenPort = @server.address().port
+      app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
+      app.commandLine.appendSwitch 'ignore-certificate-errors'
+      app.commandLine.appendSwitch 'ssl-version-fallback-min', "tls1"
       log "Proxy listening on #{listenPort}"
       @_setStatus "LISTENING"
   _setStatus: (str) ->
