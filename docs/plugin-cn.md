@@ -83,6 +83,7 @@ module.exports =
 ## poi 暴露的 API
 
 ### 基本开发环境与环境变量
+
 ```javascript
 window =
   React // React
@@ -175,7 +176,7 @@ ipc.register("scope_name", {
 });
 ```
 
-注销插件 API
+注销插件 API：
 ```javascript
 ipc.unregister("scope_name", "api_name");
 ipc.unregister("scope_name", ["api_name", "api_name2"]);
