@@ -72,7 +72,6 @@ class DebuggerBase extends IDebugger
     Debug.wrap {disabledExtra: tag}
   isExtraEnabled: (tag) ->
     return false if !tag
-    @extra tag
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
