@@ -1,7 +1,5 @@
 # Plugin development
 
-For poi version 5.0, last update: 2016-01-09
-
 Poi is based on web, and all UI and procedure are done with web development techniques. Developers
 are supposed to have knowledge of following subjects:
 
@@ -85,7 +83,8 @@ In index, following interfaces are available:
 
 ## API exposed by poi
 
-Poi's essential development environment and its variables:
+### Essential development environment and its variables
+
 ```javascript
 window =
   React // React
@@ -99,6 +98,8 @@ window =
   APPDATA_PATH // path to store user data on Windows it will be %AppData%/poi, on Linux it will be ~/.config/poi
   POI_VERSION // poi version
 ```
+
+### Game data
 
 Poi exposes API related to game data as global variables, you can fetch following information in `window`:
 
@@ -133,7 +134,7 @@ window.addEventListener('game.response', function (e) {
 });
 ```
 
-Poi API related to notifications:
+### Notifications API
 
 ```javascript
 window.log('Something'); // display on the information bar below game window
@@ -151,13 +152,54 @@ var footer = {
 window.toggleModal('Title', 'Content', footer);
 ```
 
-Poi user config
+### Config API
+
 ```javascript
 window.config.get('path.to.config', 'default'); // get a user config value, if fail, return the default value
 window.config.set('path.to.config', 'some value'); // save a user config value, not providing value will delete the config path
 window.layout // current layout = 'horizontal' || 'vertical'
 window.theme // current theme
 ```
+
+### Inter-Plugin Call
+
+Import IPC module
+```javascript
+var ipc = window.ipc;
+```
+
+Register plugin's API:  
+You should use `pluginName` as `scope_name`.
+```javascript
+ipc.register("scope_name", {
+  api_name:   @ref_to_function
+  api_name2:  @ref_to_function_2
+});
+```
+
+Unregister plugin's API:
+```javascript
+ipc.unregister("scope_name", "api_name");
+ipc.unregister("scope_name", ["api_name", "api_name2"]);
+ipc.unregister("scope_name", {
+  api_name:   @whatever
+  api_name2:  @whatever
+});
+ipc.unregisterAll("scope_name");
+```
+
+Call other plugin's API:  
+NOTICE: All calls are asynchronous. You mustn't expect a return value.
+```coffeescript
+scope = ipc.access("scope_name");
+scope?.api_name?(args);
+```
+
+Call an API of all plugins：
+```javascript
+ipc.foreachCall("api_name", arg1, arg2, ...)
+```
+
 ## Window plugin development
 
 New windows are created by `windowManager`. More information about `createWindow` method can be found in Electron's' [new BrowserWindow method](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。

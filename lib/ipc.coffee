@@ -1,32 +1,6 @@
 #
 # ipc: Inter-Plugins Call
 #
-# Any function passed to `register` will be run asynchronous.
-# Be careful of your `this.
-#
-# Usage:
-#   remote = require('electron').remote
-#   ipc = remote.require('./lib/ipc')
-#
-#   ipc.register("scope_name", {
-#     api_name:   @ref_to_function
-#     api_name2:  @ref_to_function_2
-#   })
-#
-#   ipc.unregister("scope_name", "api_name")
-#   ipc.unregister("scope_name", ["api_name", "api_name_2"])
-#   ipc.unregister("scope_name", {
-#     api_name:   @whatever
-#     api_name_2: @whatever
-#   })
-#
-#   ipc.unregisterAll("scope_name")
-#
-#   scope = ipc.access("scope_name")
-#   scope?.api_name?(args)
-#
-#   ipc.foreach("api_name", arg1, arg2, ...)
-#
 
 class IPC
   constructor: ->
@@ -69,7 +43,7 @@ class IPC
 
   # key:    string
   # args:   arguments passing to api
-  foreach: (key, args...) ->
+  foreachCall: (key, args...) ->
     for scope, apis of @data
       if apis.hasOwnProperty(key)
         apis[key].apply(null, args)
