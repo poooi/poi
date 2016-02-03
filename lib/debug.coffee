@@ -23,12 +23,17 @@ enabled = false
 extraOpts = new Set()
 
 doNothing = -> return
+definePureVirtual = (obj, name, defaultReturn = false) ->
+  Object.defineProperty obj, name,
+    value: ->
+      console.assert false, "Child class must implement \"#{name}\"!"
+      defaultReturn
+    writable: true
 
 class IDebugger
+  definePureVirtual @prototype, 'isEnabled'
+  definePureVirtual @prototype, '_log'
   Object.defineProperties @prototype,
-    _log:
-      value: doNothing
-      writable: true
     log:
       get: -> if @isEnabled() then @_log else doNothing
     assert:
