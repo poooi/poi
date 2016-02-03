@@ -25,7 +25,7 @@
 #   scope = ipc.access("scope_name")
 #   scope?.api_name?(args)
 #
-#   ipc.foreach("api_name", arg1, arg2, ...)
+#   ipc.foreachCall("api_name", arg1, arg2, ...)
 #
 
 class IPC
@@ -69,7 +69,7 @@ class IPC
 
   # key:    string
   # args:   arguments passing to api
-  foreach: (key, args...) ->
+  foreachCall: (key, args...) ->
     for scope, apis of @data
       if apis.hasOwnProperty(key)
         apis[key].apply(null, args)
