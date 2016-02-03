@@ -1,4 +1,4 @@
-electron_version = '0.36.3'
+electron_version = '0.36.7'
 build_all_platforms = ['win32-ia32', 'win32-x64', 'linux-x64']
 
 Promise = require 'bluebird'
