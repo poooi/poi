@@ -24,22 +24,24 @@ extraOpts = new Set()
 
 doNothing = -> return
 
-class Logger
+class IDebugger
   Object.defineProperties @prototype,
     _log:
       value: doNothing
       writable: true
     log:
       get: -> if @isEnabled() then @_log else doNothing
+    assert:
+      get: -> if @isEnabled() then console.assert.bind(console) else doNothing
 
 # Extra Option Handler
-class ExOptHandler extends Logger
+class ExOptHandler extends IDebugger
 
 # Extra options container (just need the name)
 class ExtraDebugOptions
 
 # Base Implementation
-class DebugBase extends Logger
+class DebuggerBase extends IDebugger
   initialised = false
   isInitialised: ->
     [r ,initialised] = [initialised, true]
@@ -104,7 +106,7 @@ class DebugBase extends Logger
     enumerable: true
 
 # For the Browser Process
-class DebugBrowser extends DebugBase
+class DebuggerBrowser extends DebuggerBase
   constructor: ->
     @_log = console.log.bind console, '[DEBUG] %s'.cyan
 
@@ -137,7 +139,7 @@ class Booster
           'Enabled'
 
 # For the Renderer Processes
-class DebugRenderer extends DebugBase
+class DebuggerRenderer extends DebuggerBase
   style = 'background: linear-gradient(30deg, cyan, white 3ex)'
   constructor: ->
     @_log = console.debug.bind console, '%c%s', style
@@ -156,6 +158,6 @@ class DebugRenderer extends DebugBase
       output[opt] = new Booster(@ex[opt], 'extra', relist)
     console.table output
 
-dbg = if isRenderer then new DebugRenderer else new DebugBrowser
+dbg = if isRenderer then new DebuggerRenderer else new DebuggerBrowser
 
 module.exports = dbg
