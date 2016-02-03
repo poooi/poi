@@ -26,7 +26,7 @@ doNothing = -> return
 definePureVirtual = (obj, name, defaultReturn = false) ->
   Object.defineProperty obj, name,
     value: ->
-      console.assert false, "Child class must implement \"#{name}\"!"
+      console.error "[ERROR] Child class must implement `#{name}`!"
       defaultReturn
     writable: true
 
