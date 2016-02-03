@@ -52,21 +52,3 @@ ReactDOM.render <PoiControl />, $('poi-control')
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
 ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
 ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
-
-# Check proxy status after modal is mounted
-console.log window.proxy.getStatus()
-console.log (window.proxy.getStatus() is 'EADDRINUSE')
-if window.proxy.getStatus() is 'EADDRINUSE'
-  solMsg = __ "PortInUseSolution"
-  context =
-    <div>
-      <p>{__ "Port %s is in use", config.get 'poi.port', 12450}</p>
-      <p>{__ "Solution"}</p>
-      <ul>
-      {
-        for msg, index in solMsg
-          <li>{msg}</li>
-      }
-      </ul>
-    </div>
-  toggleModal window.i18n.setting.__("Error"), context
