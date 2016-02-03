@@ -1,7 +1,5 @@
 # Plugin development
 
-For poi version 5.0, last update: 2016-01-09
-
 Poi is based on web, and all UI and procedure are done with web development techniques. Developers
 are supposed to have knowledge of following subjects:
 
