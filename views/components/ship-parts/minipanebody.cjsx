@@ -133,7 +133,7 @@ PaneBodyMini = React.createClass
       @setState
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
-    nextProps.activeDeck is @props.deckIndex
+    @props.dataVersion != nextProps.dataVersion
   componentWillReceiveProps: (nextProps) ->
     {_ships} = window
     if @condDynamicUpdateFlag

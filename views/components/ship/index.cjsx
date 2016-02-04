@@ -83,13 +83,11 @@ module.exports =
         window.dispatchEvent event
         @setState
           activeDeck: idx
-          dataVersion: @state.dataVersion + 1
     handleClickOnce: (e) ->
       idx = e.detail?.idx
       if idx? && idx isnt @state.activeDeck
         @setState
           activeDeck: idx
-          dataVersion: @state.dataVersion + 1
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
       {fullnames} = @state
@@ -198,6 +196,7 @@ module.exports =
                   deck={@state.decks[i]}
                   activeDeck={@state.activeDeck}
                   deckName={@state.fullnames[i]}
+                  dataVersion={@state.dataVersion}
                 />
               </div>
           }

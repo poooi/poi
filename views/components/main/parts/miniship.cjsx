@@ -83,13 +83,11 @@ module.exports =
         window.dispatchEvent event
         @setState
           activeDeck: idx
-          dataVersion: @state.dataVersion + 1
     handleClickOnce: (e) ->
       idx = e.detail?.idx
       if idx? && idx isnt @state.activeDeck
         @setState
           activeDeck: idx
-          dataVersion: @state.dataVersion + 1
     setMiniShipState: (e) ->
       state = e.detail
       @setState state
@@ -129,6 +127,7 @@ module.exports =
                     deck={@state.decks[i]}
                     activeDeck={@state.activeDeck}
                     deckName={@state.names[i]}
+                    dataVersion={@state.dataVersion}
                   />
                 </div>
             }
