@@ -16,6 +16,7 @@ mime = require 'mime'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
 PacProxyAgent = require 'pac-proxy-agent'
+{app} = require 'electron'
 
 config = require './config'
 {log, warn, error} = require './utils'
@@ -97,7 +98,6 @@ resolve = (req) ->
       return req
 
 class Proxy extends EventEmitter
-  status: "CREATING"
   constructor: ->
     super()
     @load()
@@ -250,15 +250,12 @@ class Proxy extends EventEmitter
         remote.destroy()
     @server.on 'error', (err) =>
       error err
-      if err.code == 'EADDRINUSE'
-        @_setStatus 'EADDRINUSE'
-    listenPort = config.get 'poi.port', 12450
+    listenPort = config.get('proxy.port', 0)
     @server.listen listenPort, '127.0.0.1', =>
-      log "Proxy listening on #{listenPort}"
-      @_setStatus "LISTENING"
-  _setStatus: (str) ->
-    @status = str
-  getStatus: () ->
-    @status
+      @port = @server.address().port
+      app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{@port}"
+      app.commandLine.appendSwitch 'ignore-certificate-errors'
+      app.commandLine.appendSwitch 'ssl-version-fallback-min', "tls1"
+      log "Proxy listening on #{@port}"
 
 module.exports = new Proxy()
