@@ -13,7 +13,7 @@ globAsync = Promise.promisify require 'glob'
 
 utils = remote.require './lib/utils'
 
-{config, language, notify} = window
+{config, language, notify, proxy} = window
 
 # dummy class, no plugin is created by call the constructor
 class Plugin
@@ -120,7 +120,7 @@ class PluginManager
       prefix: PLUGIN_PATH
       registry: @config_.mirror.server
     if @config_.proxy
-      npmConfig.http_proxy = 'http://127.0.0.1:12450'
+      npmConfig.http_proxy = 'http://127.0.0.1:#{proxy.port}'
     else
       if npmConfig.http_proxy?
         delete npmConfig.http_proxy

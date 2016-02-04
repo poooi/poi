@@ -250,11 +250,14 @@ class Proxy extends EventEmitter
         remote.destroy()
     @server.on 'error', (err) =>
       error err
-    @server.listen 0, '127.0.0.1', =>
-      listenPort = @server.address().port
-      app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{listenPort}"
+    listenPort = 0
+    if config.get('proxy.staticPort', false)
+      listenPort = 12450
+    @server.listen listenPort, '127.0.0.1', =>
+      @port = @server.address().port
+      app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{@port}"
       app.commandLine.appendSwitch 'ignore-certificate-errors'
       app.commandLine.appendSwitch 'ssl-version-fallback-min', "tls1"
-      log "Proxy listening on #{listenPort}"
+      log "Proxy listening on #{@port}"
 
 module.exports = new Proxy()
