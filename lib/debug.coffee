@@ -47,6 +47,10 @@ class ExtraDebugOptions
 
 # Base Implementation
 class DebuggerBase extends IDebugger
+  definePureVirtual @prototype, '_getLogFunc', doNothing
+  constructor: ->
+    @_log = @_getLogFunc '[DEBUG]'
+
   initialised = false
   isInitialised: ->
     [r ,initialised] = [initialised, true]
@@ -93,7 +97,7 @@ class DebuggerBase extends IDebugger
         isEnabled:
           value: @isExtraEnabled.bind(@, tag)
         _log:
-          value: @_log
+          value: @_getLogFunc "[#{tag}]"
         name:
           value: tag
           enumerable: true
@@ -111,8 +115,8 @@ class DebuggerBase extends IDebugger
 
 # For the Browser Process
 class DebuggerBrowser extends DebuggerBase
-  constructor: ->
-    @_log = console.log.bind console, '[DEBUG] %s'.cyan
+  _getLogFunc: (prefix) ->
+    console.log.bind console, "#{prefix} %s".cyan
 
   init: ->
     return Debug.wrap('Already initialised') if @isInitialised()
@@ -145,8 +149,8 @@ class Booster
 # For the Renderer Processes
 class DebuggerRenderer extends DebuggerBase
   style = 'background: linear-gradient(30deg, cyan, white 3ex)'
-  constructor: ->
-    @_log = console.debug.bind console, '%c%s', style
+  _getLogFunc: (prefix) ->
+    console.debug.bind console, "%c#{prefix}", style
 
   init: ->
     return Debug.wrap('Already initialised') if @isInitialised()
