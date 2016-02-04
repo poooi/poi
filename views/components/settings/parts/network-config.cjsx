@@ -50,7 +50,7 @@ NetworkConfig = React.createClass
     retries = 0 if isNaN(retries)
     config.set 'poi.proxy.retries', retries
     port = parseInt @refs.port.getValue()
-    port = 0 if isNaN(port)
+    port = 0 if isNaN(port) || port < 0 || port > 65534
     config.set 'proxy.port', port
     @setState
       retries: retries
