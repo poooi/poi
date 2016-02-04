@@ -115,8 +115,9 @@ class DebuggerBase extends IDebugger
 
 # For the Browser Process
 class DebuggerBrowser extends DebuggerBase
+  colors = require 'colors/safe'
   _getLogFunc: (prefix) ->
-    console.log.bind console, "#{prefix} %s".cyan
+    console.log.bind console, colors.cyan("#{prefix} %s")
 
   init: ->
     return Debug.wrap('Already initialised') if @isInitialised()
