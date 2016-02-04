@@ -96,7 +96,7 @@ PaneBody = React.createClass
       @setState
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
-    nextProps.activeDeck is @props.deckIndex
+    @props.dataVersion != nextProps.dataVersion
   componentWillReceiveProps: (nextProps) ->
     if @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
