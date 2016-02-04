@@ -24,6 +24,8 @@
   "file": "文件",
   "Experimental": "实验性功能",
   "PAC address": "PAC 地址",
+  "Local port": "本地端口",
+  "Default: 0 (Use random port)": "默认值：0（使用随机端口）",
   "Will connect to server directly.": "将会直接连接网络或者通过全局 VPN 访问网络",
   "Times of reconnect": "网络错误重试次数",
   "It may be unsafe!": "任何本地重试都不能保证绝对安全，斟酌使用。",

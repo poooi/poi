@@ -24,6 +24,8 @@
   "file": "ファイル",
   "Experimental": "実験的な機能",
   "PAC address": "PAC アドレス",
+  "Local port": "ローカルポート",
+  "Default: 0 (Use random port)": "デフォルト：０（ランダムで選びます）",
   "Will connect to server directly.": "インターネットに直接（またはVPNで）接続します。",
   "Times of reconnect": "再試行回数",
   "It may be unsafe!": "出撃中のリクエスト再試行は事故の可能性があります。",

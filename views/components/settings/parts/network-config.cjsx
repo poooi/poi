@@ -19,6 +19,7 @@ basic =
     host: "127.0.0.1",
     port: 1080
   retries: config.get 'poi.proxy.retries', 0
+  port: 0
 
 NetworkConfig = React.createClass
   getInitialState: ->
@@ -45,6 +46,15 @@ NetworkConfig = React.createClass
         config.set 'proxy.pacAddr', @refs.pacAddr.getValue()
       else
         config.set 'proxy.use', 'none'
+    retries = parseInt @refs.retries.getValue()
+    retries = 0 if isNaN(retries)
+    config.set 'poi.proxy.retries', retries
+    port = parseInt @refs.port.getValue()
+    port = 0 if isNaN(port)
+    config.set 'proxy.port', port
+    @setState
+      retries: retries
+      port: port
     toggleModal __('Proxy setting'), __('Success! It will be available after a restart.')
     e.preventDefault()
   handleHttpHostChange: (e) ->
@@ -81,9 +91,9 @@ NetworkConfig = React.createClass
   handleSetRetries: (e) ->
     @setState
       retries: e.target.value
-    r = parseInt(e.target.value)
-    return if isNaN(r) || r < 0
-    config.set 'poi.proxy.retries', r
+  handleSetPort: (e) ->
+    @setState
+      port: e.target.value
   render: ->
     <form>
       <Divider text={__ 'Proxy protocol'} />
@@ -153,6 +163,12 @@ NetworkConfig = React.createClass
           <Alert bsStyle='danger'>
             {__ 'It may be unsafe!'}
           </Alert>
+        </Col>
+      </Grid>
+      <Divider text={__ 'Local port'} />
+      <Grid>
+        <Col xs={12}>
+          <Input type="number" ref="port" value={@state.port} onChange={@handleSetPort} placeholder={__ "Default: 0 (Use random port)"} />
         </Col>
       </Grid>
       <Divider text={__ 'Save settings'} />

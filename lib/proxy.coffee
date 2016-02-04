@@ -250,9 +250,7 @@ class Proxy extends EventEmitter
         remote.destroy()
     @server.on 'error', (err) =>
       error err
-    listenPort = 0
-    if config.get('proxy.staticPort', false)
-      listenPort = 12450
+    listenPort = config.get('proxy.port', 0)
     @server.listen listenPort, '127.0.0.1', =>
       @port = @server.address().port
       app.commandLine.appendSwitch 'proxy-server', "127.0.0.1:#{@port}"
