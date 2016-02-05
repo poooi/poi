@@ -101,9 +101,7 @@ PaneBodyMini = React.createClass
     label: [-1, -1, -1, -1, -1, -1]
   updateLabels: ->
     # refresh label
-    label = [-1, -1, -1, -1, -1, -1]
-    for l, i in @state.label
-      label[i] = l
+    label = Object.clone @state.label
     for shipId, j in @props.deck.api_ship
       continue if shipId == -1
       ship = _ships[shipId]
@@ -116,9 +114,7 @@ PaneBodyMini = React.createClass
       cond: cond
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
-    label = [-1, -1, -1, -1, -1, -1]
-    for l, i in @state.label
-      label[i] = l
+    label = Object.clone @state.label
     updateflag = false
     switch path
       when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_req_map/next', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select'
@@ -137,10 +133,7 @@ PaneBodyMini = React.createClass
       @setState
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
-    if @props.deckIndex == 0
-      console.log @state.cond.toString(), nextState.cond.toString()
-      console.log @state.label.toString(), nextState.label.toString()
-    @props.dataVersion != nextProps.dataVersion || @state.cond.toString() != nextState.cond.toString() || @state.label.toString() != nextState.label.toString()
+    @props.dataVersion != nextProps.dataVersion || !_.isEqual(@state, nextState)
   componentWillReceiveProps: (nextProps) ->
     {_ships} = window
     if @condDynamicUpdateFlag
