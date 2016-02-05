@@ -101,13 +101,6 @@ class DebuggerBase extends IDebugger
           value: @isExtraEnabled.bind(@, tag)
         _log:
           value: @_getLogFunc "[#{tag}]"
-        name:
-          value: tag
-          enumerable: true
-        enabled:
-          get: -> @isEnabled()
-          set: (b) -> if b is true then @enable() else @disable()
-          enumerable: true
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
     @ex[tag]
