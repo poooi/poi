@@ -39,6 +39,26 @@ TeitokuPanel = React.createClass
     show: true
   shouldComponentUpdate: (nextProps, nextState) ->
     nextState.show
+  updateBasic: (body) ->
+    level: body.api_level
+    nickname: body.api_nickname
+    rank: body.api_rank
+    exp: body.api_experience
+    nextExp: totalExp[body.api_level] - body.api_experience
+    maxChara: body.api_max_chara
+    maxSlotitem: body.api_max_slotitem
+  updateCount: ->
+    state = {}
+    state.shipCount = Object.keys(window._ships).length if window._ships?
+    state.slotitemCount = Object.keys(window._slotitems).length if window._slotitems?
+    state
+  updateResult: (body) ->
+    state =
+      level: body.api_member_lv
+      exp: body.api_member_exp
+      nextExp: totalExp[body.api_member_lv] - body.api_member_exp
+    state.shipCount = @state.shipCount + 1 if body.api_get_ship?
+    state
   handleVisibleResponse: (e) ->
     {visible} = e.detail
     @setState
@@ -47,67 +67,13 @@ TeitokuPanel = React.createClass
     {method, path, body} = e.detail
     switch path
       when '/kcsapi/api_get_member/basic'
-        @setState
-          level: body.api_level
-          nickname: body.api_nickname
-          rank: body.api_rank
-          exp: body.api_experience
-          nextExp: totalExp[body.api_level] - body.api_experience
-          maxChara: body.api_max_chara
-          maxSlotitem: body.api_max_slotitem
-      when '/kcsapi/api_get_member/material'
-        @setState
-          shipCount: Object.keys(window._ships).length
-      when '/kcsapi/api_get_member/slot_item'
-        @setState
-          slotitemCount: Object.keys(window._slotitems).length
+        @setState @updateBasic(body)
+      when '/kcsapi/api_get_member/material', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/createitem', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/getship', '/kcsapi/api_req_kousyou/remodel_slot'
+        @setState @updateCount()
       when '/kcsapi/api_port/port'
-        @setState
-          shipCount: Object.keys(window._ships).length
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kaisou/powerup'
-        @setState
-          shipCount: Object.keys(window._ships).length
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kousyou/createitem'
-        @setState
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kousyou/destroyitem2'
-        @setState
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kousyou/destroyship'
-        @setState
-          shipCount: Object.keys(window._ships).length
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kousyou/getship'
-        @setState
-          shipCount: Object.keys(window._ships).length
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_kousyou/remodel_slot'
-        @setState
-          slotitemCount: Object.keys(window._slotitems).length
-      when '/kcsapi/api_req_mission/result'
-        @setState
-          level: body.api_member_lv
-          exp: body.api_member_exp
-          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
-      when '/kcsapi/api_req_practice/battle_result'
-        @setState
-          level: body.api_member_lv
-          exp: body.api_member_exp
-          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
-      when '/kcsapi/api_req_sortie/battleresult'
-        @setState
-          shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
-          level: body.api_member_lv
-          exp: body.api_member_exp
-          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
-      when '/kcsapi/api_req_combined_battle/battleresult'
-        @setState
-          shipCount: if body.api_get_ship? then @state.shipCount + 1 else @state.shipCount
-          level: body.api_member_lv
-          exp: body.api_member_exp
-          nextExp: totalExp[body.api_member_lv] - body.api_member_exp
+        @setState Object.assign(@updateBasic(body.api_basic), @updateCount())
+      when '/kcsapi/api_req_mission/result', '/kcsapi/api_req_practice/battle_result', '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
+        @setState @updateResult(body)
       when '/kcsapi/api_get_member/mapinfo'
         if config.get 'poi.mapStartCheck.ship.enable', false
           minFreeShipSlots = config.get 'poi.mapStartCheck.ship.minFreeSlots', 4
