@@ -207,35 +207,33 @@ UninstalledPlugin = React.createClass
           </Col>
         </Row>
         <Row>
-          <Col xs={10}>{plugin["des#{window.language}"]}</Col>
-          <Col xs={2}>
-            <Row>
-              <ButtonGroup bsSize='small' className='plugin-buttongroup'>
-                <OverlayTrigger placement='top' overlay={
-                  <Tooltip id="#{plugin.name}-ins-btn">
-                  {
-                    if @props.installing
-                      __ "Installing"
-                    else
-                      __ "Install"
-                  }
-                  </Tooltip>
-                  }>
-                  <Button bsStyle='primary'
-                    disabled={@props.npmWorkding}
-                    onClick={@props.handleInstall}
-                    className='plugin-control-button btn-xs-12'>
-                    <FontAwesome name={
-                        if @props.installing
-                          'spinner'
-                        else
-                          'download'
-                      }
-                      pulse={@props.installing}/>
-                  </Button>
-                </OverlayTrigger>
-              </ButtonGroup>
-            </Row>
+          <Col xs={7}>{plugin["des#{window.language}"]}</Col>
+          <Col xs={5}>
+            <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip id="#{plugin.name}-ins-btn">
+                {
+                  if @props.installing
+                    __ "Installing"
+                  else
+                    __ "Install"
+                }
+                </Tooltip>
+                }>
+                <Button bsStyle='primary'
+                  disabled={@props.npmWorkding}
+                  onClick={@props.handleInstall}
+                  className='plugin-control-button btn-xs-12'>
+                  <FontAwesome name={
+                      if @props.installing
+                        'spinner'
+                      else
+                        'download'
+                    }
+                    pulse={@props.installing}/>
+                </Button>
+              </OverlayTrigger>
+            </ButtonGroup>
           </Col>
         </Row>
       </Col>
