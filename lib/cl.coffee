@@ -35,7 +35,7 @@ preprocessArg = (arg, idx) ->
 
 # Parse Debug Options
 reDebug = /^-(?:-debug(?:=(true|false))?|d)$/i
-ex = "\\w[\\w-]*"
+ex = "[A-Za-z_]\\w*"
 reDebugEx = new RegExp "^--debug-extra=#{ex}(,#{ex})*$", 'i'
 reDebugExD = new RegExp "^--debug-extra-d=#{ex}(,#{ex})*$", 'i'
 reExtra = new RegExp "#{ex}(?=,|$)", 'gi'
