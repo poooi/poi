@@ -72,7 +72,7 @@ class DebuggerBase extends IDebugger
 
   validateTagName: (tag) ->
     valid = tag? and typeof tag is 'string' and tag.length > 0
-    @assert valid, 'You must pass a non-empty string!'
+    console.assert valid, 'You must pass a non-empty string! Current:', tag
     valid
   enableExtra: (tag) ->
     return (Debug.wrap 'Invalid extra option name') if !@extra tag
@@ -88,7 +88,7 @@ class DebuggerBase extends IDebugger
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
   extra: (tag) ->
-    if @validateTagName tag and !@ex[tag]?
+    if @validateTagName(tag) and !@ex[tag]?
       Object.defineProperty @ex, tag,
         value: new ExOptHandler
         enumerable: true
