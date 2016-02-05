@@ -64,7 +64,9 @@ PaneBody = React.createClass
     label: [-1, -1, -1, -1, -1, -1]
   updateLabels: ->
     # refresh label
-    {label} = @state
+    label = [-1, -1, -1, -1, -1, -1]
+    for l, i in @state.label
+      label[i] = l
     for shipId, j in @props.deck.api_ship
       continue if shipId == -1
       ship = _ships[shipId]
@@ -77,7 +79,9 @@ PaneBody = React.createClass
       cond: cond
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
-    {label} = @state
+    label = [-1, -1, -1, -1, -1, -1]
+    for l, i in @state.label
+      label[i] = l
     updateflag = false
     switch path
       when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select'
@@ -96,7 +100,7 @@ PaneBody = React.createClass
       @setState
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
-    @props.dataVersion != nextProps.dataVersion
+    @props.dataVersion != nextProps.dataVersion || @state.cond.toString() != nextState.cond.toString() || @state.label.toString() != nextState.label.toString()
   componentWillReceiveProps: (nextProps) ->
     if @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
