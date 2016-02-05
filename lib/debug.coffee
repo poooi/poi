@@ -70,22 +70,25 @@ class DebuggerBase extends IDebugger
   isEnabled: ->
     enabled
 
+  validateTagName: (tag) ->
+    valid = tag? and typeof tag is 'string' and tag.length > 0
+    @assert valid, 'You must pass a non-empty string!'
+    valid
   enableExtra: (tag) ->
-    console.assert tag, 'Are you kidding me? What do you want to enable?'
-    return (Debug.wrap 'Nothing happened') if !tag
-    @extra tag
+    return (Debug.wrap 'Invalid extra option name') if !@extra tag
     extraOpts.add tag.toString()
     Debug.wrap {enabledExtra: tag}
   disableExtra: (tag) ->
+    return (Debug.wrap 'Invalid extra option name') if !@validateTagName tag
     extraOpts.delete tag.toString()
     Debug.wrap {disabledExtra: tag}
   isExtraEnabled: (tag) ->
-    return false if !tag
+    return false if !@validateTagName tag
     extraOpts.has tag
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
   extra: (tag) ->
-    if !@ex[tag]?
+    if @validateTagName tag and !@ex[tag]?
       Object.defineProperty @ex, tag,
         value: new ExOptHandler
         enumerable: true
