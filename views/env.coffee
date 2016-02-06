@@ -4,11 +4,11 @@ fs = require 'fs-extra'
 os = require 'os'
 semver = require 'semver'
 glob = require 'glob'
-Tray = remote.require('electron').Tray
 
 # Environments
 window.remote = require('electron').remote
 window.ROOT = path.join(__dirname, '..')
+window.Tray = remote.require('electron').Tray
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
 window.PLUGIN_PATH = path.join window.APPDATA_PATH, 'plugins'
