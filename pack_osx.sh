@@ -19,16 +19,15 @@ RESOURCES_PATH=$1       ;shift
 # Update info.plist to poi
 APP_ROOT="${RAW_APP_PATH}/Contents"
 INFO_PLIST="${APP_ROOT}/Info.plist"
-plutil -replace CFBundleName -string Poi ${INFO_PLIST}
-plutil -replace CFBundleDisplayName -string Poi ${INFO_PLIST}
+plutil -replace CFBundleName -string poi ${INFO_PLIST}
+plutil -replace CFBundleDisplayName -string poi ${INFO_PLIST}
 plutil -replace CFBundleIdentifier -string com.github.poi ${INFO_PLIST}
 plutil -replace CFBundleVersion -string ${POI_VERSION} ${INFO_PLIST}
 plutil -replace CFBundleShortVersionString -string ${POI_VERSION} ${INFO_PLIST}
 
 # Executable
-plutil -replace CFBundleExecutable -string Poi ${INFO_PLIST}
-mv ${APP_ROOT}/MacOS/Electron ${APP_ROOT}/MacOS/Poi
-chmod +x ${APP_ROOT}/MacOS/Poi
+plutil -replace CFBundleExecutable -string poi ${INFO_PLIST}
+mv ${APP_ROOT}/MacOS/Electron ${APP_ROOT}/MacOS/poi
 
 # Icon
 plutil -replace CFBundleIconFile -string poi.icns ${INFO_PLIST}
