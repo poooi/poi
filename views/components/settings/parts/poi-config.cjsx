@@ -205,9 +205,9 @@ SetNotifyIndividualConfig = React.createClass
 #   undecided   Bool    Disable the checkbox and replace with a "?"
 CheckboxLabelConfig = React.createClass
   getInitialState: ->
-    myval: if @props.undecided 
-        false 
-      else 
+    myval: if @props.undecided
+        false
+      else
         config.get @props.configName, (@props.defaultVal || false)
   handleChange: ->
     enabled = @state.myval
@@ -220,11 +220,11 @@ CheckboxLabelConfig = React.createClass
       <Col xs={12} >
         <Grid>
           <Col xs={12} >
-            <Input 
-              type="checkbox" 
-              label={@props.label} 
+            <Input
+              type="checkbox"
+              label={@props.label}
               disabled={@props.undecided}
-              checked={if @props.undecided then false else @state.myval} 
+              checked={if @props.undecided then false else @state.myval}
               onChange={if @props.undecided then null else @handleChange} />
           </Col>
         </Grid>
@@ -434,7 +434,7 @@ ShortcutConfig = React.createClass
   getInitialState: ->
     initVal = if @active() || @props.configName
         config.get @props.configName, (@props.defaultVal || '')
-      else 
+      else
         @props.defaultVal
     myval: initVal
     recording: false
@@ -510,30 +510,32 @@ ShortcutConfig = React.createClass
     @props.onNewVal val if @props.onNewVal
   render: ->
     <Row>
-      <ButtonGroup justified>
-        <Button
-          active={false}
-          bsStyle="link"
-          style={width: '25%', align: 'left', cursor: 'default'} >
-          {@props.label}
-        </Button>
-        <Button
-          active={@active()}
-          disabled={!@active() || @recording()}
-          bsStyle={if !@active() then 'default' else if @enabled() then "success" else "danger"}
-          onClick={if @recording() || !@active() then null else @handleClickRecord}
-          style={width: '60%'}>
-          {@displayText()}
-        </Button>
-        {
-          if @showDisableButton()
-            <Button bsStyle="danger"
-              onMouseDown={@handleDisable}
-              style={width: '15%'}>
-              <i className="fa fa-times"></i>
-            </Button>
-        }
-      </ButtonGroup>
+      <Col xs={12}>
+        <ButtonGroup justified>
+          <Button
+            active={false}
+            bsStyle="link"
+            style={width: '25%', align: 'left', cursor: 'default'} >
+            {@props.label}
+          </Button>
+          <Button
+            active={@active()}
+            disabled={!@active() || @recording()}
+            bsStyle={if !@active() then 'default' else if @enabled() then "success" else "danger"}
+            onClick={if @recording() || !@active() then null else @handleClickRecord}
+            style={width: '60%'}>
+            {@displayText()}
+          </Button>
+          {
+            if @showDisableButton()
+              <Button bsStyle="danger"
+                onMouseDown={@handleDisable}
+                style={width: '15%'}>
+                <i className="fa fa-times"></i>
+              </Button>
+          }
+        </ButtonGroup>
+      </Col>
     </Row>
 
 mousetrap.prototype.handleKey = (character, modifiers, e) ->
@@ -600,7 +602,7 @@ PoiConfig = React.createClass
                 configName="poi.confirm.quit"
                 defaultVal=true />
             else
-              <OverlayTrigger placement="top" 
+              <OverlayTrigger placement="top"
                 overlay={
                     <Tooltip id="tooltip-confirm-before-exit">
                       {__ 'Set this in the OS X App Menu'}
