@@ -26,12 +26,15 @@ app.setAppUserModelId 'org.poi.poi'
 if process.platform == 'win32'
   windowsShortcuts = require 'windows-shortcuts-appid'
   shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
-  iconPath = global.ROOT + "\\assets\\icons\\poi.ico"
-  windowsShortcuts.create shortcutPath,
-      target: app.getPath('exe') + ' ' + app.getAppPath()
-      icon: iconPath
-    , ->
-     windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+  targetPath = app.getPath('exe') + ' ' + app.getAppPath()
+  try
+    fs.accessSync shortcutPath
+    windowsShortcuts.edit shortcutPath, {target: targetPath}, ->
+      windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+  catch error
+    windowsShortcuts.create shortcutPath, targetPath, ->
+       windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+
 
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
