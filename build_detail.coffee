@@ -43,8 +43,8 @@ use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
 if process.env.TRAVIS
   use_taobao_mirror = false
 log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
-npm_exec_path = path.join __dirname, 'node_modules', '.bin', 'npm'
-bower_exec_path = path.join __dirname, 'node_modules', '.bin', 'bower'
+npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
+bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
