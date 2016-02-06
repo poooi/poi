@@ -28,7 +28,6 @@ plutil -replace CFBundleShortVersionString -string ${POI_VERSION} ${INFO_PLIST}
 # Executable
 plutil -replace CFBundleExecutable -string Poi ${INFO_PLIST}
 mv ${APP_ROOT}/MacOS/Electron ${APP_ROOT}/MacOS/Poi
-chmod +x ${APP_ROOT}/MacOS/Poi
 
 # Icon
 plutil -replace CFBundleIconFile -string poi.icns ${INFO_PLIST}
