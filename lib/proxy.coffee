@@ -39,7 +39,10 @@ resolveBody = (encoding, body) ->
     catch e
       reject e
 isStaticResource = (pathname) ->
-  return pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1
+  return true if pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1
+  return true if pathname.startsWith('/gadget/')
+  return true if pathname.startsWith('/kcscontents/')
+  return false
 getCachePath = (pathname) ->
   dir = config.get 'poi.cachePath', global.DEFAULT_CACHE_PATH
   path.join dir, pathname
