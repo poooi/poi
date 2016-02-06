@@ -21,6 +21,14 @@ if process.platform == 'win32'
   catch
     # expected EEXIST
 
+# Add shortcut to start menu when os is windows
+app.setAppUserModelId 'org.poi.poi'
+if process.platform == 'win32'
+  windowsShortcuts = require 'windows-shortcuts-appid'
+  shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
+  windowsShortcuts.create shortcutPath, app.getPath('exe')
+  windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+
 if process.env.DEBUG?
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
