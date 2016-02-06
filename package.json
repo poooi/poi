@@ -49,7 +49,7 @@
     "windows-shortcuts-appid": "^0.3.2"
   },
   "devDependencies": {
-    "adm-zip": "^0.4.7",
+    "node-unzip-2": "^0.2.1",
     "bower": "^1.5.2",
     "coffeelint": "^1.11.1",
     "gulp": "^3.9.0",

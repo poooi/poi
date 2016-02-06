@@ -7,7 +7,6 @@ request = Promise.promisifyAll require 'request'
 requestAsync = promisify request, multiArgs: true
 fs = Promise.promisifyAll require 'fs-extra'
 gulp = require 'gulp'
-AdmZip = require 'adm-zip'
 async = Promise.coroutine
 n7z = require 'node-7z'
 _ = require 'underscore'
@@ -17,8 +16,12 @@ asar = require 'asar'
 walk = require 'walk'
 tar = require 'tar-fs'
 child_process = require 'child_process'
+unzip = require 'node-unzip-2'
 
 {log} = require './lib/utils'
+
+DONT_PACK_APP_IF_EXISTS=false
+USE_GITHUB_FLASH_MIRROR=false
 
 # *** CONSTANTS ***
 build_dir_name = 'build'
@@ -41,8 +44,8 @@ use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
 if process.env.TRAVIS
   use_taobao_mirror = false
 log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
-npm_exec_path = path.join __dirname, 'node_modules', '.bin', 'npm'
-bower_exec_path = path.join __dirname, 'node_modules', '.bin', 'bower'
+npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
+bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
@@ -79,7 +82,7 @@ get_electron_url = (platform, electron_version) ->
     "https://github.com/atom/electron/releases/download/v#{electron_version}/#{electron_fullname}"
 
 get_flash_url = (platform) ->
-  if process.env.TRAVIS
+  if process.env.TRAVIS || USE_GITHUB_FLASH_MIRROR
     "https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/#{platform}.zip"
   else
     "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
@@ -133,12 +136,39 @@ extractZip = (zip_file, dest_path, descript="") ->
   zip.extractAllTo dest_path, true
   log "Extracting #{descript} finished"
 
+extractZipAsync = (zip_file, dest_path, descript="") ->
+  log "Extract #{descript}"
+  new Promise (resolve) ->
+    fs.ensureDirSync path.dirname dest_path
+    fs.createReadStream(zip_file).pipe(unzip.Extract({ path: dest_path }))
+    .on 'close', ->
+      log "Extracting #{descript} finished"
+      resolve()
+
+extractZipCliAsync = (zip_file, dest_path, descript="") ->
+  log "Extract #{descript}"
+  fs.ensureDirSync dest_path
+  new Promise (resolve, reject) ->
+    command = "unzip '#{zip_file}'"
+    child_process.exec command,
+      cwd: dest_path
+      (error) ->
+        if error?
+          reject error
+        else
+          log "Extracting #{descript} finished"
+          resolve()
+
 downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
-                                 description) ->
+                                 description, useCli) ->
   while 1
     try
       zip_path = yield downloadAsync url, download_dir, filename, description
-      extractZip zip_path, dest_path, description
+      _extractAsync = if useCli? && useCli 
+        extractZipCliAsync
+      else
+        extractZipAsync
+      yield _extractAsync zip_path, dest_path, description
     catch e
       log "Downloading failed, retrying #{url}, reason: #{e}"
       try
@@ -283,37 +313,42 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
   asar_path = path.join building_root, "app.asar"
   release_path = path.join release_dir, "app-#{poi_version}.7z"
 
-  try
-    fs.removeSync stage1_app
-    fs.removeSync stage2_app
-  catch e
-  fs.ensureDirSync stage1_app
-  fs.ensureDirSync stage2_app
+  try 
+    if !DONT_PACK_APP_IF_EXISTS
+      throw true
+    yield fs.accessAsync asar_path, fs.R_OK
+  catch 
+    try
+      fs.removeSync stage1_app
+      fs.removeSync stage2_app
+    catch e
+    fs.ensureDirSync stage1_app
+    fs.ensureDirSync stage2_app
+  
+    # Stage1: Everything downloaded and translated
+    yield gitArchiveAsync tar_path, stage1_app
+    download_themes = downloadThemesAsync theme_root
+    prepare_app = (async ->
+      yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
+        path.join(stage1_app, 'config.cson')
+      yield Promise.join(
+        translateCoffeeAsync(stage1_app),
+        (async ->
+          yield npmInstallAsync stage1_app, ['--production']
+          yield bowerInstallAsync stage1_app
+          )())
+      )()
+    yield Promise.join download_themes, prepare_app
+  
+    # Stage2: Filtered copy
+    yield filterCopyAppAsync stage1_app, stage2_app
 
-  # Stage1: Everything downloaded and translated
-  yield gitArchiveAsync tar_path, stage1_app
-  download_themes = downloadThemesAsync theme_root
-  prepare_app = (async ->
-    yield fs.moveAsync path.join(stage1_app, 'default-config.cson'),
-      path.join(stage1_app, 'config.cson')
-    yield Promise.join(
-      translateCoffeeAsync(stage1_app),
-      (async ->
-        yield npmInstallAsync stage1_app, ['--production']
-        yield bowerInstallAsync stage1_app
-        )())
-    )()
-  yield Promise.join download_themes, prepare_app
-
-  # Stage2: Filtered copy
-  yield filterCopyAppAsync stage1_app, stage2_app
-
-  # Pack stage2 into app.asar
-  log "Packaging app.asar."
-  yield packageAsarAsync stage2_app, asar_path
-  log "Compressing app.asar into #{release_path}"
-  yield compress7zAsync asar_path, release_path
-  log "Compression completed."
+    # Pack stage2 into app.asar
+    log "Packaging app.asar."
+    yield packageAsarAsync stage2_app, asar_path
+    log "Compressing app.asar into #{release_path}"
+    yield compress7zAsync asar_path, release_path
+    log "Compression completed."
   asar_path
 
 packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
@@ -327,10 +362,22 @@ packageReleaseAsync = async (poi_fullname, electron_dir, release_dir) ->
 
 packageStage3Async = async (platform, poi_version, electron_version,
             download_dir, building_root, release_dir) ->
+  platform_prefix = platform.split('-')[0]
+  if platform_prefix == 'darwin' && process.platform != 'darwin'
+    log "Can not package darwin on platform #{process.platform}."
+    return Promise.resolve
+      todo: ->
+        log "#{platform} is not supported to be packaged under your platform \"#{process.platform}\""
+
   poi_fullname = "poi-v#{poi_version}-#{platform}"
   stage3_electron = path.join building_root, poi_fullname
-  stage3_app = path.join stage3_electron, 'resources', 'app.asar'
-  flash_dir = path.join stage3_electron, 'PepperFlash'
+  if platform_prefix == 'darwin'
+    # Copying app.asar is done after moving Electron.app to Poi.app
+    stage3_app = path.join stage3_electron, 'Poi.app', 'Contents', 'Resources', 'app.asar'
+    flash_dir = path.join stage3_electron, 'Electron.app', 'Contents', 'MacOS', 'PepperFlash'
+  else
+    stage3_app = path.join stage3_electron, 'resources', 'app.asar'
+    flash_dir = path.join stage3_electron, 'PepperFlash'
 
   try
     yield fs.removeAsync stage3_electron
@@ -340,11 +387,15 @@ packageStage3Async = async (platform, poi_version, electron_version,
 
   electron_url = get_electron_url platform, electron_version
   install_electron = downloadExtractZipAsync electron_url, download_dir, '',
-      stage3_electron, 'electron'
+      stage3_electron, 'electron', (platform_prefix == 'darwin')
 
   yield Promise.join install_flash, install_electron
 
-  platform_prefix = platform.split('-')[0]
+  if platform_prefix == 'darwin'
+    poi_app_path = path.join(stage3_electron, 'poi.app')
+    yield fs.moveAsync path.join(stage3_electron, 'Electron.app'), poi_app_path,
+     clobber: true
+
   if platform_prefix == 'win32'
     raw_poi_exe = path.join(building_root, "#{platform}.raw.poi.exe")
     poi_exe = path.join(building_root, "#{platform}.poi.exe")
@@ -365,7 +416,7 @@ packageStage3Async = async (platform, poi_version, electron_version,
         yield fs.copyAsync poi_exe, path.join(stage3_electron, 'poi.exe')
         release_path = yield packageReleaseAsync poi_fullname, stage3_electron,
           release_dir
-        log "#{platform} successfully packaged to #{release_path}."
+        log "#{platform} successfully packaged to #{release_path}"
 
   else if platform_prefix == 'linux'
     yield fs.moveAsync path.join(stage3_electron, 'electron'),
@@ -377,11 +428,35 @@ packageStage3Async = async (platform, poi_version, electron_version,
       todo: async ->
         release_path = yield packageReleaseAsync poi_fullname, stage3_electron,
           release_dir
-        log "#{platform} successfully packaged to #{release_path}."
+        log "#{platform} successfully packaged to #{release_path}"
 
   else if platform_prefix == 'darwin'
     Promise.resolve
-      log: "This is chiba's guo, I no bei."
+      app_path: stage3_app
+      log: null
+      todo: ->
+        new Promise (resolve, reject) ->
+          command = 'bash'
+          command += ' "' + path.join(__dirname, 'pack_osx.sh') + '"'
+          command += ' ' + poi_version
+          command += ' "' + poi_app_path + '"'
+          command += ' "' + path.join(stage3_electron, 'tmp') + '"'
+          command += ' "' + path.join(__dirname, 'assets', 'icons') + '"'
+          child_process.exec command, async (error, stdout, stderr) ->
+            if error
+              log stdout
+              log stderr
+              log error
+              reject(error)
+            else
+              # The last line is dmg_path, but stdout has another blank line
+              dmg_path  = stdout.split('\n').reverse()[1]
+              release_path = path.join release_dir, path.basename(dmg_path)
+              yield fs.removeAsync release_path
+              yield fs.moveAsync dmg_path, release_path
+              log "#{platform} successfully packaged to #{release_path}"
+              resolve()
+
   else
     Promise.resolve
       log: "Unsupported platform #{platform_prefix}."
@@ -471,6 +546,7 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_list)
     yield app_path_promise
     return
 
+  fs.ensureDirSync release_dir
   # Stage3: Package each platform
   stage3_info = yield Promise.all (
     for platform in platform_list
@@ -478,15 +554,15 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_list)
         download_dir, building_root, release_dir))
 
   # Copy app
-  for info in stage3_info
+  for info in stage3_info when info
     if info.app_path?
       fs.copySync (yield app_path_promise), info.app_path
 
   # Finishing work of stage 3
   stage3_logs = (for [platform, info] in _.zip(
-    platform_list, stage3_info) when info
+    platform_list, stage3_info) when info.log
     [platform, info.log])
-  if stage3_logs
+  if stage3_logs.length != 0
     log " "
     log "*** BUILDING IS NOT COMPLETED: See log below ***"
     log " "
@@ -503,7 +579,7 @@ module.exports.buildAsync = async (poi_version, electron_version, platform_list)
         process.stdin.once 'data', ->
           process.stdin.unref()   # Allows the program to terminate
           resolve()
-    yield Promise.all (info.todo() for info in stage3_info when info.todo)
+  yield Promise.all (info.todo() for info in stage3_info when info.todo)
   log "All platforms are successfully built."
 
 
