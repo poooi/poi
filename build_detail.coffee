@@ -20,7 +20,8 @@ unzip = require 'node-unzip-2'
 
 {log} = require './lib/utils'
 
-DONT_PACK_APP_IF_EXISTS=true
+DONT_PACK_APP_IF_EXISTS=false
+USE_GITHUB_FLASH_MIRROR=false
 
 # *** CONSTANTS ***
 build_dir_name = 'build'
@@ -81,7 +82,7 @@ get_electron_url = (platform, electron_version) ->
     "https://github.com/atom/electron/releases/download/v#{electron_version}/#{electron_fullname}"
 
 get_flash_url = (platform) ->
-  if process.env.TRAVIS
+  if process.env.TRAVIS || USE_GITHUB_FLASH_MIRROR
     "https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/#{platform}.zip"
   else
     "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
@@ -146,6 +147,7 @@ extractZipAsync = (zip_file, dest_path, descript="") ->
 
 extractZipCliAsync = (zip_file, dest_path, descript="") ->
   log "Extract #{descript}"
+  fs.ensureDirSync dest_path
   new Promise (resolve, reject) ->
     command = "unzip '#{zip_file}'"
     child_process.exec command,
