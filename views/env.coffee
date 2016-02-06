@@ -1,6 +1,5 @@
 require 'coffee-react/register'
 path = require 'path-extra'
-notifier = require 'node-notifier'
 fs = require 'fs-extra'
 os = require 'os'
 semver = require 'semver'
@@ -9,6 +8,7 @@ glob = require 'glob'
 # Environments
 window.remote = require('electron').remote
 window.ROOT = path.join(__dirname, '..')
+window.Tray = remote.require('electron').Tray
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
 window.PLUGIN_PATH = path.join window.APPDATA_PATH, 'plugins'
@@ -54,7 +54,7 @@ window.timeToString = (milliseconds) ->
 # msg=null: Sound-only notification.
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
-if process.platform == 'win32'
+if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
   NOTIFY_NOTIFICATION_API = false
 window.notify = (msg, options) ->
   # Notification config
@@ -93,12 +93,19 @@ window.notify = (msg, options) ->
       new Notification title,
         icon: "file://#{icon}"
         body: msg
+        silent: true
     else
-      notifier.notify
+      appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'));
+      appIcon.displayBalloon
         title: title
         icon: icon
-        message: msg
-        sound: false
+        content: msg
+      focusNdestroy = ->
+        remote.getGlobal('mainWindow').focus()
+        appIcon.destroy()
+      appIcon.on 'balloon-closed', appIcon.destroy
+      appIcon.on 'balloon-click', focusNdestroy
+
   if volume > 0.0001
     sound = new Audio(audio)
     sound.volume = volume
