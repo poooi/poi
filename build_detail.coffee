@@ -20,7 +20,7 @@ unzip = require 'node-unzip-2'
 
 {log} = require './lib/utils'
 
-DONT_PACK_APP_IF_EXISTS=false
+DONT_PACK_APP_IF_EXISTS=true
 
 # *** CONSTANTS ***
 build_dir_name = 'build'
@@ -363,8 +363,8 @@ packageStage3Async = async (platform, poi_version, electron_version,
   platform_prefix = platform.split('-')[0]
   if platform_prefix == 'darwin' && process.platform != 'darwin'
     log "Can not package darwin on platform #{process.platform}."
-    Promise.resolve
-      todo: async ->
+    return Promise.resolve
+      todo: ->
         log "#{platform} is not supported to be packaged under your platform \"#{process.platform}\""
 
   poi_fullname = "poi-v#{poi_version}-#{platform}"
