@@ -392,7 +392,7 @@ packageStage3Async = async (platform, poi_version, electron_version,
   yield Promise.join install_flash, install_electron
 
   if platform_prefix == 'darwin'
-    poi_app_path = path.join(stage3_electron, 'poi.app')
+    poi_app_path = path.join(stage3_electron, 'Poi.app')
     yield fs.moveAsync path.join(stage3_electron, 'Electron.app'), poi_app_path,
      clobber: true
 
