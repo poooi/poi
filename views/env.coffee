@@ -95,10 +95,15 @@ window.notify = (msg, options) ->
         body: msg
         silent: true
     else
-      Tray.displayBalloon
+      appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'));
+      appIcon.displayBalloon
         title: title
         icon: icon
         content: msg
+      destroyAppIcon = ->
+        appIcon.destroy()
+      appIcon.on 'balloon-closed', destroyAppIcon
+
   if volume > 0.0001
     sound = new Audio(audio)
     sound.volume = volume
