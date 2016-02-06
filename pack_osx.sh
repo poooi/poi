@@ -37,7 +37,7 @@ mv ${APP_ROOT}/Resources/atom.icns ${APP_ROOT}/Resources/poi.icns
 # Create .dmg
 mkdir -p $TMP_DIR
 RAW_APP_NAME=`basename $RAW_APP_PATH`
-DMG_PATH="${TMP_DIR}/poi-${POI_VERSION}-osx-x64.dmg"
+DMG_PATH="${TMP_DIR}/Poi-${POI_VERSION}-osx-x64.dmg"
 hdiutil create -format UDRW -srcfolder $RAW_APP_PATH $DMG_PATH
 # Get the 2nd line of output, the information of the mounted disk
 DEVINFO=`hdiutil attach $DMG_PATH -mountrandom $TMP_DIR | sed -n 2p`
