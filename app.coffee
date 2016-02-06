@@ -26,13 +26,14 @@ app.setAppUserModelId 'org.poi.poi'
 if process.platform == 'win32'
   windowsShortcuts = require 'windows-shortcuts-appid'
   shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
-  targetPath = app.getPath('exe') + ' ' + app.getAppPath()
+  targetPath = app.getPath('exe')
+  argPath = app.getAppPath()
   try
     fs.accessSync shortcutPath
-    windowsShortcuts.edit shortcutPath, {target: targetPath}, ->
+    windowsShortcuts.edit shortcutPath, {target: targetPath, args: argPath}, ->
       windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
   catch error
-    windowsShortcuts.create shortcutPath, targetPath, ->
+    windowsShortcuts.create shortcutPath, {target: targetPath, args: argPath}, ->
        windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
 
 
