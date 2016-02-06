@@ -100,9 +100,11 @@ window.notify = (msg, options) ->
         title: title
         icon: icon
         content: msg
-      destroyAppIcon = ->
+      focusNdestroy = ->
+        remote.getGlobal('mainWindow').focus()
         appIcon.destroy()
-      appIcon.on 'balloon-closed', destroyAppIcon
+      appIcon.on 'balloon-closed', appIcon.destroy
+      appIcon.on 'balloon-click', focusNdestroy
 
   if volume > 0.0001
     sound = new Audio(audio)
