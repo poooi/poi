@@ -167,6 +167,20 @@
     "desja-JP": "統計データベース(http://db.kcwiki.moe)登録用ツール",
     "desen-US": "Report data to database(http://db.kcwiki.moe)"
   },
+  "poi-plugin-kcwiki-report": {
+    "zh-CN": "舰娘百科数据收集",
+    "zh-TW": "艦娘百科數據收集",
+    "ja-JP": "KCwiki データベースツール",
+    "en-US": "KCwiki Data Report",
+    "version": "v0.0.0",
+    "icon": "pie-chart",
+    "author": "grzhan",
+    "link": "https://github.com/grzhan",
+    "deszh-CN": "舰娘百科(http://zh.kcwiki.moe)数据汇报",
+    "deszh-TW": "艦娘百科(http://zh.kcwiki.moe)數據匯報",
+    "desja-JP": "統計データベース(http://zh.kcwiki.moe)登録用ツール",
+    "desen-US": "Report data to database(http://zh.kcwiki.moe)"
+  },
   "poi-plugin-ship-info": {
     "zh-CN": "舰娘信息",
     "zh-TW": "艦娘信息",
