@@ -9,7 +9,7 @@ Debug = require './debug'
 
 # Pre-process Arguments
 ignore2ndArg = false
-reElectron = /electron$/i
+reElectron = /electron(.exe)?$/i
 preprocessArg = (arg, idx) ->
   switch
     when idx is 0
