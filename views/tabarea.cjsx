@@ -168,6 +168,8 @@ ControlledTabArea = React.createClass
           @handleCtrlOrCmdNumberKeyDown(e.keyCode - 48)
         else if e.keyCode is '0'.charCodeAt()
           @handleCtrlOrCmdNumberKeyDown 10
+  handleTabChange: (e) ->
+    @selectTab e.detail.tab
   componentDidUpdate: (prevProps, prevState) ->
     if prevState.doubleTabbed != @state.doubleTabbed
       @setState
@@ -177,6 +179,7 @@ ControlledTabArea = React.createClass
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
     window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
+    window.addEventListener 'tabarea.change', @handleTabChange
     @cachePluginList()
     if process.platform == 'darwin'
       window.openSettings = @handleCmdCommaKeyDown
@@ -185,6 +188,7 @@ ControlledTabArea = React.createClass
     window.removeEventListener 'tabarea.reload', @forceUpdate
     window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
     window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
+    window.removeEventListener 'tabarea.change', @handleTabChange
   render: ->
     activePluginName = @state.activePluginName || @state.plugins[0]?.name
     activePlugin = @state.plugins.find (p) => p.name == activePluginName
