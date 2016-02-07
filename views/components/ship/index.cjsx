@@ -161,6 +161,13 @@ module.exports =
         decks: decks
         states: states
         dataVersion: @state.dataVersion + 1
+    changeMainView: ->
+      event = new CustomEvent 'tabarea.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          tab: 'mainView'
+      window.dispatchEvent event
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
       window.addEventListener 'ShipView.deckChange', @handleClickOnce
@@ -169,7 +176,7 @@ module.exports =
       window.removeEventListener 'ShipView.deckChange', @handleClickOnce
       @interval = clearInterval @interval if @interval?
     render: ->
-      <Panel>
+      <Panel onDoubleClick={@changeMainView}>
         <link rel="stylesheet" href={join(relative(ROOT, __dirname), 'assets', 'ship.css')} />
         <div className="panel-row">
           <ButtonGroup className="fleet-name-button">

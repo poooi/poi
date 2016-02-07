@@ -91,6 +91,13 @@ module.exports =
     setMiniShipState: (e) ->
       state = e.detail
       @setState state
+    changeShipView: ->
+      event = new CustomEvent 'tabarea.change',
+        bubbles: true
+        cancelable: true
+        detail:
+          tab: 'shipView'
+      window.dispatchEvent event
     componentDidMount: ->
       window.addEventListener 'MiniShip.deckChange', @handleClickOnce
       window.addEventListener 'MiniShip.getResponse', @setMiniShipState
@@ -100,7 +107,7 @@ module.exports =
       window.removeEventListener 'MiniShip.getResponse', @setMiniShipState
       @interval = clearInterval @interval if @interval?
     render: ->
-      <div style={height: '100%'}>
+      <div style={height: '100%'} onDoubleClick={@changeShipView}>
         <Panel id="ShipViewMini" bsStyle="default" style={minHeight: 322, height: 'calc(100% - 6px)'}>
           <link rel="stylesheet" href={join(relative(ROOT, __dirname), '..', 'assets', 'miniship.css')} />
           <div className="panel-row">
