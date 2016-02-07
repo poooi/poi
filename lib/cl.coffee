@@ -9,8 +9,19 @@ Debug = require './debug'
 
 # Pre-process Arguments
 ignore2ndArg = false
-reElectron = /electron$/i
-reVersion = /^-(-version|v)$/i
+reElectron = /electron(.exe)?$/i
+preprocessArg = (arg, idx) ->
+  switch
+    when idx is 0
+      ignore2ndArg = true if reElectron.test arg
+      return true
+    when idx is 1
+      return ignore2ndArg
+    else
+      return false
+  false
+
+# Print Version Info to Console and Exit
 printVersionAndExit = ->
   {app} = require('electron')
   console.log "#{app.getName()} v#{app.getVersion()}".bold.blue,
@@ -19,19 +30,10 @@ printVersionAndExit = ->
       chrome v#{process.versions.chrome}, \
       react v#{require('react').version})".cyan
   app.exit 0
-preprocessArg = (arg, idx) ->
-  switch
-    when idx is 0
-      ignore2ndArg = true if reElectron.test arg
-      return true
-    when idx is 1
-      return ignore2ndArg
-    when reVersion.test arg
-      printVersionAndExit()
-      return true
-    else
-      return false
-  false
+reVersion = /^-(-version|v)$/i
+checkShowVersion = (arg) ->
+  return false if not reVersion.test arg
+  printVersionAndExit()
 
 # Parse Debug Options
 reDebug = /^-(?:-debug(?:=(true|false))?|d)$/i
@@ -51,6 +53,7 @@ parseDebugOptions = (arg) ->
 process.argv.forEach (arg, idx) ->
   switch
     when preprocessArg(arg, idx) then return
+    when checkShowVersion(arg) then return
     when parseDebugOptions(arg) then return
     # when parseWhateverOtherOptions(arg) then return
     else warn "Invalid argument (ignored): #{arg}"
