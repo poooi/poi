@@ -86,12 +86,22 @@ app.on 'window-all-closed', ->
 app.on 'ready', ->
   shortcut.register()
   {screen} = require 'electron'
-  screenSize = screen.getPrimaryDisplay().workAreaSize
+  {workArea} = screen.getPrimaryDisplay()
+  {x, y, width, height} = config.get 'poi.window', workArea
+  validate = (n, min, range) ->
+    n? and n >= min and n < min + range
+  withinDisplay = (d) ->
+    wa = d.workArea
+    validate(x, wa.x, wa.width) and validate(y, wa.y, wa.height)
+  if not screen.getAllDisplays().some withinDisplay
+    {x, y} = workArea
+  width ?= workArea.width
+  height ?= workArea.height
   global.mainWindow = mainWindow = new BrowserWindow
-    x: config.get 'poi.window.x', 0
-    y: config.get 'poi.window.y', 0
-    width: config.get 'poi.window.width', screenSize.width
-    height: config.get 'poi.window.height', screenSize.height
+    x: x
+    y: y
+    width: width
+    height: height
     resizable: config.get 'poi.content.resizeable', true
     alwaysOnTop: config.get 'poi.content.alwaysOnTop', false
     'title-bar-style': 'hidden'
