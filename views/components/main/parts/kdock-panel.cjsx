@@ -153,7 +153,7 @@ KdockPanel = React.createClass
             <CountdownLabel dockIndex={i}
                             completeTime={dock.completeTime}
                             isLSC={isLSC}
-                            notify={_.once @notify} />
+                            notify={if dock.completeTime > 0 then _.once(@notify) else null} />
           </div>
         </OverlayTrigger>
     }
