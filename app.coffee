@@ -11,15 +11,6 @@ global.EXROOT = global.APPDATA_PATH
 global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
-# TODO: Remove in the next release
-if process.platform == 'win32'
-  try
-    fs.copySync path.join(global.EXECROOT, 'config.cson'),
-      path.join(global.EXROOT, 'config.cson'),
-      clobber: false
-  catch
-    # expected EEXIST
-
 # Add shortcut to start menu when os is windows
 app.setAppUserModelId 'org.poi.poi'
 if process.platform == 'win32'
@@ -108,15 +99,15 @@ app.on 'ready', ->
       'web-security': false
       'plugins': true
       'enableLargerThanScreen': true
-  # Default menu in v0.27.3
-  if process.versions['electron'] >= '0.27.3'
-    if process.platform == 'darwin'
-      mainWindow.reloadArea = 'kan-game webview'
-      if /electron$/i.test process.argv[0]
-        icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
-        app.dock?.setIcon? icon
-    else
-      mainWindow.setMenu null
+  # Default menu
+  if process.platform == 'darwin'
+    mainWindow.reloadArea = 'kan-game webview'
+    if /electron$/i.test process.argv[0]
+      icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
+      app.dock?.setIcon? icon
+  else
+    mainWindow.setMenu null
+
   mainWindow.loadURL "file://#{__dirname}/index.html"
   if config.get 'poi.window.isMaximized', false
     mainWindow.maximize()
