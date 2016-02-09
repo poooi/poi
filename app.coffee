@@ -1,7 +1,6 @@
-{app, BrowserWindow} = require 'electron'
+{app, BrowserWindow, ipcMain, nativeImage} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
-ipcMain = require("electron").ipcMain
 
 # Environment
 global.POI_VERSION = app.getVersion()
@@ -113,6 +112,9 @@ app.on 'ready', ->
   if process.versions['electron'] >= '0.27.3'
     if process.platform == 'darwin'
       mainWindow.reloadArea = 'kan-game webview'
+      if /electron$/i.test process.argv[0]
+        icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
+        app.dock?.setIcon? icon
     else
       mainWindow.setMenu null
   mainWindow.loadURL "file://#{__dirname}/index.html"
