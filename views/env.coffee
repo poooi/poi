@@ -1,5 +1,5 @@
 require 'coffee-react/register'
-{join} = require 'path-extra'
+path = require 'path-extra'
 fs = require 'fs-extra'
 os = require 'os'
 semver = require 'semver'
@@ -7,23 +7,23 @@ glob = require 'glob'
 
 # Environments
 window.remote = require('electron').remote
-window.ROOT = join(__dirname, '..')
+window.ROOT = path.join(__dirname, '..')
 window.Tray = remote.require('electron').Tray
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
-window.PLUGIN_PATH = join window.APPDATA_PATH, 'plugins'
+window.PLUGIN_PATH = path.join window.APPDATA_PATH, 'plugins'
 window.POI_VERSION = remote.getGlobal 'POI_VERSION'
 window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
 window.MODULE_PATH = remote.getGlobal 'MODULE_PATH'
 fs.ensureDirSync window.PLUGIN_PATH
-fs.ensureDirSync join window.PLUGIN_PATH, 'node_modules'
+fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
 
 # Shortcuts and Components
-(window.dbg = require join(ROOT, 'lib', 'debug')).init()
+(window.dbg = require path.join(ROOT, 'lib', 'debug')).init()
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
-window.jQuery = require join(ROOT, 'components/jquery/dist/jquery')
+window.jQuery = require path.join(ROOT, 'components/jquery/dist/jquery')
 window.React = require 'react'
 window.ReactDOM = require 'react-dom'
 window.ReactBootstrap = require 'react-bootstrap'
@@ -53,7 +53,7 @@ window.timeToString = (milliseconds) ->
 
 ## window.notify
 # msg=null: Sound-only notification.
-NOTIFY_DEFAULT_ICON = join(ROOT, 'assets', 'icons', 'icon.png')
+NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
 if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
   NOTIFY_NOTIFICATION_API = false
@@ -96,7 +96,7 @@ window.notify = (msg, options) ->
         body: msg
         silent: true
     else
-      appIcon = new Tray(join(ROOT, 'assets', 'icons', 'poi.ico'));
+      appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'));
       appIcon.displayBalloon
         title: title
         icon: icon
@@ -160,14 +160,14 @@ window.webviewWidth = config.get 'poi.webview.width', -1
 window.language = config.get 'poi.language', language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
 window.useSVGIcon = config.get 'poi.useSVGIcon', false
-d = if process.platform == 'darwin' then join(path.homedir(), 'Pictures', 'Poi') else join(global.APPDATA_PATH, 'screenshots')
+d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', 'Poi') else path.join(global.APPDATA_PATH, 'screenshots')
 window.screenshotPath = config.get 'poi.screenshotPath', d
 window.notify.morale = config.get 'poi.notify.morale.value', 49
 window.notify.expedition = config.get 'poi.notify.expedition.value', 60
 
 # i18n config
 window.i18n = {}
-i18nFiles = glob.sync(join(__dirname, '..', 'i18n', '*'))
+i18nFiles = glob.sync(path.join(__dirname, '..', 'i18n', '*'))
 for i18nFile in i18nFiles
   namespace = path.basename i18nFile
   window.i18n[namespace] = new (require 'i18n-2')
@@ -315,6 +315,7 @@ resolveResponses = ->
     _.extend _.clone(window.$slotitems[item.api_slotitem_id]), item
   locked = true
   while responses.length > 0
+    `var path;` # HACK: Force shadowing an variable `path`;
     [method, path, body, postBody] = responses.shift()
     try
       # Delete api_token
