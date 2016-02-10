@@ -1,4 +1,4 @@
-# Break on first line (Please keep this line at the top of thi file)
+# Break on first line (Please keep this line at the top of this file)
 debugger if dbg.ex.brk?.isEnabled()
 
 {ROOT, EXROOT, _, $, $$, React, ReactDOM} = window
