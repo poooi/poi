@@ -27,7 +27,7 @@ if process.platform == 'win32'
        windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
 
 
-if process.env.DEBUG?
+if dbg.isEnabled()
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
   global.SERVER_HOSTNAME = 'poi.0u0.moe'
@@ -113,7 +113,7 @@ app.on 'ready', ->
     mainWindow.maximize()
   if config.get 'poi.window.isFullScreen', false
     mainWindow.setFullScreen(true)
-  if process.env.DEBUG?
+  if dbg.isEnabled()
     mainWindow.openDevTools
       detach: true
   # Never wants navigate

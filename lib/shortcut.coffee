@@ -3,7 +3,7 @@ config = require './config'
 Window = require './window'
 
 registerShortcut = (acc, desc, func) ->
-  console.log "Registering shortcut: #{acc}\t=> #{desc}" if process.env.DEBUG?
+  dbg.log "Registering shortcut: #{acc}\t=> #{desc}"
   try
     globalShortcut.register acc, func
     true
