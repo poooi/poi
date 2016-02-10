@@ -1,5 +1,5 @@
-
-debugger if dbg.isEnabled()
+# Break on first line (Please keep this line at the top of thi file)
+debugger if dbg.ex.brk?.isEnabled()
 
 {ROOT, EXROOT, _, $, $$, React, ReactDOM} = window
 {config, toggleModal} = window
