@@ -41,11 +41,13 @@ ex = "[A-Za-z_]\\w*"
 reDebugEx = new RegExp "^--debug-extra=#{ex}(,#{ex})*$", 'i'
 reDebugExD = new RegExp "^--debug-extra-d=#{ex}(,#{ex})*$", 'i'
 reExtra = new RegExp "#{ex}(?=,|$)", 'gi'
+reDebugBrk = /^--debug-brk$/ # CLI for node. You'll need node debugger to continue.
 parseDebugOptions = (arg) ->
   switch
     when reDebug.test arg then Debug.setEnabled(reDebug.exec(arg)[1] isnt 'false')
     when reDebugEx.test arg then Debug.enableExtra opt for opt in arg.match reExtra
     when reDebugExD.test arg then Debug.disableExtra opt for opt in arg.match reExtra
+    when reDebugBrk.test arg then Debug.enableExtra 'brk'
     else return false
   true
 

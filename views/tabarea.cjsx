@@ -107,7 +107,7 @@ ControlledTabArea = React.createClass
     @nowTime = (new Date()).getTime()
   componentDidUpdate: (prevProps, prevState) ->
     cur = (new Date()).getTime()
-    console.log "the cost of tab-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
+    dbg.extra('moduleRenderCost').log "the cost of tab-module's render: #{cur-@nowTime}ms"
   cachePluginList: async ->
     plugins = yield PluginManager.getValidPlugins()
     plugins = plugins.filter (plugin) ->

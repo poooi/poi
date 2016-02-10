@@ -72,7 +72,7 @@ module.exports =
       @nowTime = (new Date()).getTime()
     componentDidUpdate: (prevProps, prevState) ->
       cur = (new Date()).getTime()
-      console.log "the cost of ship-module's render: #{cur-@nowTime}ms" if process.env.DEBUG?
+      dbg.extra('moduleRenderCost').log "the cost of ship-module's render: #{cur-@nowTime}ms"
     handleClick: (idx) ->
       if idx isnt @state.activeDeck
         event = new CustomEvent 'MiniShip.deckChange',

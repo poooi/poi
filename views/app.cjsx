@@ -1,3 +1,6 @@
+# Break on first line (Please keep this line at the top of this file)
+debugger if dbg.ex.brk?.isEnabled()
+
 {ROOT, EXROOT, _, $, $$, React, ReactDOM} = window
 {config, toggleModal} = window
 fs = require 'fs-extra'
@@ -5,13 +8,6 @@ path = require 'path-extra'
 
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
-
-if process.env.DEBUG?
-  alert """
-        DEBUG MODE
-
-        Now it's your chance to pause the app & add your breakpoints!
-        """
 
 # Set zoom level
 document.getElementById('poi-app-container').style.transformOrigin = '0 0'

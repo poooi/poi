@@ -361,7 +361,7 @@ SlotCheckConfig = React.createClass
       @setState
         showInput: true
         value: if @CheckValid(num) then num else ''
-    console.log @props.type + JSON.stringify(config.get @cfgEntry) if process.env.DEBUG?
+    dbg.log @props.type + JSON.stringify(config.get @cfgEntry)
   handleChange: (e) ->
     @setState
       value: e.target.value
@@ -376,7 +376,7 @@ SlotCheckConfig = React.createClass
         value: n
     else
       @handleDisable()
-    console.log @props.type + JSON.stringify(config.get @cfgEntry) if process.env.DEBUG?
+    dbg.log @props.type + JSON.stringify(config.get @cfgEntry)
   handleDisable: ->
     config.set "#{@cfgEntry}.enable", false
     @setState
@@ -408,7 +408,7 @@ SlotCheckConfig = React.createClass
                 bsStyle={if inputValid then 'success' else 'error'}
                 label={__ "Warn if the number of free #{@props.type} slots is less than"}
                 value={@state.value}
-                ref={(r) => this.textInput = r}
+                ref={(r) => @textInput = r}
                 onChange={@handleChange}
                 buttonAfter={submitBtn} />
             </Well>
