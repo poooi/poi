@@ -218,13 +218,13 @@ PaneBody = React.createClass
           continue
         ship = _ships[shipId]
         cond[j] = ship.api_cond
-    ships = []
-    for shipId, i in props.deck.api_ship
-      continue if shipId is -1
-      ships.push new ShipData(shipId)
-    @setState
-      cond: cond
-      ships: ships
+      ships = []
+      for shipId, i in props.deck.api_ship
+        continue if shipId is -1
+        ships.push new ShipData(shipId)
+      @setState
+        cond: cond
+        ships: ships
   componentWillReceiveProps: (nextProps) ->
     @setShipData nextProps, true
   componentWillMount: ->

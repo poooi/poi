@@ -35,9 +35,9 @@ Slotitems = React.createClass
             <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.slotitemId} />
             <span className="slotitem-onslot
                             #{if (i == 5) or (item.slotitemId == 0) or (6 <= item.slotitemId <= 10) or (21 <= item.slotitemId <= 22) or (item.slotitemId == 33) then 'show' else 'hide'}
-                            #{if val.onslot < val.maxeq then 'text-warning'}"
+                            #{if item.onslot < item.maxeq then 'text-warning'}"
                             style={getBackgroundStyle()}>
-              {if i == 5 then "+" else val.onslot}
+              {if i == 5 then "+" else item.onslot}
             </span>
           </span>
 

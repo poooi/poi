@@ -66,32 +66,118 @@ getShipStatus = (shipId) ->
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
 
+class MiniShipData
+  constructor: (shipId) ->
+    {$ships, $shipTypes, _ships, _slotitems} = window
+    ship = _ships[shipId]
+    shipInfo = $ships[ship.api_ship_id]
+    @id = shipId
+    @type = $shipTypes[shipInfo.api_stype].api_name
+    @name = shipInfo.api_name
+    @lv = ship.api_lv
+    @nextEXP = ship.api_exp[1]
+    @nowHp = ship.api_nowhp
+    @maxHp = ship.api_maxhp
+    @cond = ship.api_cond
+    # @ndockTime = ship.api_ndock_time
+    # @nowFeul = ship.api_fuel
+    # @maxFeul = ship.api_fuel_max
+    # @fuelStatus = ship.api_fuel / shipInfo.api_fuel_max * 100
+    # @nowBull = ship.api_bull
+    # @maxBull = shipInfo.api_bull_max
+    # @bullStatus = ship.api_bull / shipInfo.api_bull_max * 100
+    @slotItems = []
+    @slotItemExist = false
+    for itemId, i in ship.api_slot.concat(ship.api_slot_ex || 0)
+      continue unless (i < ship.api_slot_num) or (i == 5 and itemId != 0)
+      item = _slotitems[itemId] || {api_name: "", api_type: [0, 0, 0, 0]}
+      @slotItemExist = @slotItemExist or _slotitems[itemId]?
+      @slotItems[i] =
+        id: itemId
+        onslot: ship.api_onslot[i]
+        maxeq: ship.api_maxeq[i]
+        isExist: _slotitems[itemId]?
+        name: item.api_name
+        level: item.api_level
+        alv: item.api_alv
+        slotItemId: item.api_type[3]
+
 Slotitems = React.createClass
+  shouldComponentUpdate: (nextProps, nextState) ->
+    not _.isEqual nextProps, @props
   render: ->
     <div className="slotitems-mini" style={display: "flex", flexFlow: "column"}>
     {
-      {$slotitems, _slotitems} = window
-      for itemId, i in @props.data
-        continue if itemId == -1
-        item = _slotitems[itemId]
+      for item, i in @props.data
+        continue if item.id == -1
+        itemId = item.id
         <div key={i} className="slotitem-container-mini">
-          <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.api_type[3]} />
+          <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.slotItemId} />
           <span className="slotitem-name-mini">
-            {i18n.resources.__ item.api_name}
-              {if item.api_level > 0 then <strong style={color: '#45A9A5'}> ★{item.api_level}</strong> else ''}
+            {i18n.resources.__ item.name}
+              {if item.level > 0 then <strong style={color: '#45A9A5'}> ★{item.level}</strong> else ''}
               &nbsp;&nbsp;{
-                if item.api_alv? and 1 <= item.api_alv <= 7
-                  <img className='alv-img' src={join('assets', 'img', 'airplane', "alv#{item.api_alv}.png")} />
+                if item.alv? and 1 <= item.alv <= 7
+                  <img className='alv-img' src={join('assets', 'img', 'airplane', "alv#{item.alv}.png")} />
                 else ''
               }
           </span>
           <Label className="slotitem-onslot-mini
-                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}"
-                          bsStyle="#{if @props.onslot[i] < @props.maxeq[i] then 'warning' else 'default'}">
-            {@props.onslot[i]}
+                          #{if (item.slotItemId >= 6 && item.slotItemId <= 10) || (item.slotItemId >= 21 && item.slotItemId <= 22) || item.slotItemId == 33 then 'show' else 'hide'}"
+                          bsStyle="#{if item.onslot < item.maxeq then 'warning' else 'default'}">
+            {item.onslot}
           </Label>
         </div>
     }
+    </div>
+
+MiniShipRow = React.createClass
+  shouldComponentUpdate: (nextProps, nextState) ->
+    not _.isEqual nextProps, @props
+  render: ->
+    <div className="ship-tile">
+      <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
+        <Tooltip id="ship-pop-#{@props.key}-#{@props.shipIndex}" className="ship-pop #{if @props.shipData.slotItemExist then '' else 'hidden'}">
+          <div className="item-name">
+            <Slotitems data={@props.shipData.slotItems} />
+          </div>
+        </Tooltip>
+      }>
+        <div className="ship-item">
+          <OverlayTrigger placement='top' overlay={
+            <Tooltip id="miniship-exp-#{@props.key}-#{@props.shipIndex}">
+              Next. {@props.shipData.exp}
+            </Tooltip>
+          }>
+            <div className="ship-info">
+              <span className="ship-name" style={getStatusStyle @props.label}>
+                {i18n.resources.__ @props.shipData.name}
+              </span>
+              <span className="ship-lv-text top-space" style={getStatusStyle @props.label}>
+                Lv. {@props.shipData.lv}
+              </span>
+            </div>
+          </OverlayTrigger>
+          <div className="ship-stat">
+            <div className="div-row">
+              <span className="ship-hp" style={getStatusStyle @props.label}>
+                {@props.shipData.nowHp} / {@props.shipData.maxHp}
+              </span>
+              <div className="status-label">
+                <StatusLabel label={@props.label} />
+              </div>
+              <div style={getStatusStyle @props.label}>
+                <span className={"ship-cond " + window.getCondStyle(@props.shipData.cond)}>
+                  ★{@props.shipData.cond}
+                </span>
+              </div>
+            </div>
+            <span className="hp-progress top-space" style={getStatusStyle @props.label}>
+              <ProgressBar bsStyle={getHpStyle @props.shipData.nowHp / @props.shipData.maxHp * 100} now={@props.shipData.nowHp / @props.shipData.maxHp * 100} />
+            </span>
+          </div>
+        </div>
+      </OverlayTrigger>
     </div>
 
 PaneBodyMini = React.createClass
@@ -99,6 +185,7 @@ PaneBodyMini = React.createClass
   getInitialState: ->
     cond: [0, 0, 0, 0, 0, 0]
     label: [-1, -1, -1, -1, -1, -1]
+    ships: []
   updateLabels: ->
     # refresh label
     label = Object.clone @state.label
@@ -134,31 +221,29 @@ PaneBodyMini = React.createClass
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
     @props.dataVersion != nextProps.dataVersion || !_.isEqual(@state, nextState)
-  componentWillReceiveProps: (nextProps) ->
+  setShipData: (props, flag) ->
     {_ships} = window
-    if @condDynamicUpdateFlag
+    if flag and @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
     else
       cond = [0, 0, 0, 0, 0, 0]
-      for shipId, j in nextProps.deck.api_ship
+      for shipId, j in props.deck.api_ship
         if shipId == -1
           cond[j] = 49
           continue
         ship = _ships[shipId]
         cond[j] = ship.api_cond
+      ships = []
+      for shipId, i in props.deck.api_ship
+        continue if shipId is -1
+        ships.push new MiniShipData(shipId)
       @setState
         cond: cond
+        ships: ships
+  componentWillReceiveProps: (nextProps) ->
+    @setShipData nextProps, true
   componentWillMount: ->
-    {$ships, $shipTypes, _ships} = window
-    cond = [0, 0, 0, 0, 0, 0]
-    for shipId, j in @props.deck.api_ship
-      if shipId == -1
-        cond[j] = 49
-        continue
-      ship = _ships[shipId]
-      cond[j] = ship.api_cond
-    @setState
-      cond: cond
+    @setShipData @props
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     label = @updateLabels()
@@ -180,55 +265,14 @@ PaneBodyMini = React.createClass
       <div className="ship-details-mini">
       {
         {$ships, $shipTypes, _ships} = window
-        for shipId, j in @props.deck.api_ship
-          continue if shipId == -1
-          ship = _ships[shipId]
-          shipInfo = $ships[ship.api_ship_id]
-          shipType = $shipTypes[shipInfo.api_stype].api_name
-          <div key={j} className="ship-tile">
-            <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
-              <Tooltip id="ship-pop-#{@props.key}-#{j}" className="ship-pop #{if ship.api_slot[0] > 0 || ship.api_slot_ex > 0 then '' else 'hidden'}">
-                <div className="item-name">
-                  <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
-                </div>
-              </Tooltip>
-            }>
-              <div className="ship-item">
-                <OverlayTrigger placement='top' overlay={
-                  <Tooltip id="miniship-exp-#{@props.key}-#{j}">
-                    Next. {ship.api_exp[1]}
-                  </Tooltip>
-                }>
-                  <div className="ship-info">
-                    <span className="ship-name" style={getStatusStyle @state.label[j]}>
-                      {i18n.resources.__ shipInfo.api_name}
-                    </span>
-                    <span className="ship-lv-text top-space" style={getStatusStyle @state.label[j]}>
-                      Lv. {ship.api_lv}
-                    </span>
-                  </div>
-                </OverlayTrigger>
-                <div className="ship-stat">
-                  <div className="div-row">
-                    <span className="ship-hp" style={getStatusStyle @state.label[j]}>
-                      {ship.api_nowhp} / {ship.api_maxhp}
-                    </span>
-                    <div className="status-label">
-                      <StatusLabel label={@state.label[j]} />
-                    </div>
-                    <div style={getStatusStyle @state.label[j]}>
-                      <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
-                        ★{ship.api_cond}
-                      </span>
-                    </div>
-                  </div>
-                  <span className="hp-progress top-space" style={getStatusStyle @state.label[j]}>
-                    <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
-                  </span>
-                </div>
-              </div>
-            </OverlayTrigger>
-          </div>
+        for shipData, j in @state.ships
+          <MiniShipRow
+            key={shipData.id}
+            label={@state.label[j]}
+            shipData={shipData}
+            deckIndex={@props.deckIndex}
+            shipIndex={j}
+          />
       }
       </div>
     </div>
