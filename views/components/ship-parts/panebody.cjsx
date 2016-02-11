@@ -59,7 +59,7 @@ getHpStyle = (percent) ->
 
 class ShipData
   constructor: (shipId) ->
-    {$ships, $shipTypes, _ships} = window
+    {$ships, $shipTypes, _ships, _slotitems} = window
     ship = _ships[shipId]
     shipInfo = $ships[ship.api_ship_id]
     @id = shipId
@@ -80,10 +80,16 @@ class ShipData
     @slotItems = []
     for itemId, i in ship.api_slot.concat(ship.api_slot_ex || 0)
       continue unless (i < ship.api_slot_num) or (i == 5 and itemId != 0)
+      item = _slotitems[itemId] || {api_name: "", api_type: [0, 0, 0, 0]}
       @slotItems[i] =
         id: itemId
         onslot: ship.api_onslot[i]
         maxeq: ship.api_maxeq[i]
+        isExist: _slotitems[itemId]?
+        name: item.api_name
+        level: item.api_level
+        alv: item.api_alv
+        slotitemId: item.api_type[3]
 
 ShipRow = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
