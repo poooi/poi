@@ -58,7 +58,7 @@ MiniShipRow = React.createClass
         <div className="ship-item">
           <OverlayTrigger placement='top' overlay={
             <Tooltip id="miniship-exp-#{@props.key}-#{@props.shipIndex}">
-              Next. {@props.shipData.exp}
+              Next. {@props.shipData.nextEXP}
             </Tooltip>
           }>
             <div className="ship-info">
