@@ -9,7 +9,6 @@ class ShipPane extends React.Component
   constructor: (props) ->
     super props
     this.state =
-      cond: [0, 0, 0, 0, 0, 0]
       label: [-1, -1, -1, -1, -1, -1]
       ships: []
     @type = props.type
@@ -36,7 +35,6 @@ class ShipPane extends React.Component
       ships[j].cond = cond[j]
       window._ships[shipData.id].api_cond = cond[j]
     @setState
-      cond: cond
       ships: ships
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
@@ -69,19 +67,15 @@ class ShipPane extends React.Component
     if flag and @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
     else
-      cond = [0, 0, 0, 0, 0, 0]
       for shipId, j in props.deck.api_ship
         if shipId == -1
-          cond[j] = 49
           continue
         ship = _ships[shipId]
-        cond[j] = ship.api_cond
       ships = []
       for shipId, i in props.deck.api_ship
         continue if shipId is -1
         ships.push new @ShipData(shipId)
       @setState
-        cond: cond
         ships: ships
   componentWillReceiveProps: (nextProps) ->
     @setShipData nextProps, true
