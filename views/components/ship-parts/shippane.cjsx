@@ -89,7 +89,7 @@ class ShipPane extends React.Component
     <div>
       <div className='fleet-name'>
         <TopAlert
-          updateCond={@onCondChange}
+          updateCond={@onCondChange.bind(@)}
           messages={@props.messages}
           deckIndex={@props.deckIndex}
           deckName={@props.deckName}
