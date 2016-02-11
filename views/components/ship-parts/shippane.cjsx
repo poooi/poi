@@ -41,6 +41,10 @@ class ShipPane extends React.Component
       when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select'
         updateflag = true
         label = @updateLabels()
+      when '/kcsapi/api_req_hokyu/charge'
+        if @type is 'MINI'
+          updateflag = true
+          label = @updateLabels()
       when '/kcsapi/api_req_nyukyo/start'
         if (postBody.api_highspeed == 1)
           updateflag = true
