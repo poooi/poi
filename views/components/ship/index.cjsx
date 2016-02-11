@@ -203,7 +203,6 @@ module.exports =
                   deck={@state.decks[i]}
                   activeDeck={@state.activeDeck}
                   deckName={@state.fullnames[i]}
-                  dataVersion={@state.dataVersion}
                 />
               </div>
           }
