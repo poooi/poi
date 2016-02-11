@@ -21,7 +21,7 @@ Slotitems = React.createClass
     <div className="slotitems-mini" style={display: "flex", flexFlow: "column"}>
     {
       for item, i in @props.data
-        continue if item.id == -1
+        continue if !item? || item.id == -1
         itemId = item.id
         <div key={i} className="slotitem-container-mini">
           <SlotitemIcon key={itemId} className='slotitem-img' slotitemId={item.slotitemId} />
