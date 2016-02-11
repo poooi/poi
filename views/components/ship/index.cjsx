@@ -65,8 +65,6 @@ module.exports =
       states: [-1, -1, -1, -1]
       decks: []
       activeDeck: 0
-      dataVersion: 0
-    showDataVersion: 0
     nowTime: 0
     componentWillUpdate: (nextProps, nextState) ->
       @nowTime = (new Date()).getTime()
@@ -154,13 +152,11 @@ module.exports =
           fullnames: fullnames
           decks: decks
           states: states
-          dataVersion: @state.dataVersion + 1
       window.dispatchEvent event
       @setState
         fullnames: fullnames
         decks: decks
         states: states
-        dataVersion: @state.dataVersion + 1
     changeMainView: ->
       event = new CustomEvent 'tabarea.change',
         bubbles: true
