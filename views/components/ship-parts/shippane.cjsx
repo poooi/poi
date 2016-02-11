@@ -31,8 +31,13 @@ class ShipPane extends React.Component
     label
   onCondChange: (cond) ->
     condDynamicUpdateFlag = true
+    ships = Object.clone @state.ships
+    for shipData, j in ships
+      ships[j].cond = cond[j]
+      window._ships[shipData.id].api_cond = cond[j]
     @setState
       cond: cond
+      ships: ships
   handleResponse: (e) ->
     {method, path, body, postBody} = e.detail
     label = Object.clone @state.label
