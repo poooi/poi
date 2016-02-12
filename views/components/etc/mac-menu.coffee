@@ -1,11 +1,128 @@
 {remote} = window
 {Menu} = remote.require('electron')
+{openExternal} = require 'shell'
 
 exeCodeOnWindowHasReloadArea = (win, f) ->
   if win?.reloadArea?
     code = "$('#{win.reloadArea}').#{f}"
     win.webContents.executeJavaScript(code)
 template = [
+  {
+    label: 'Poi'
+    submenu: [
+      {
+        label: 'About Poi'
+        role: 'about'
+      },
+      { type: 'separator' },
+      {
+        label: 'Preferences...'
+        accelerator: 'CmdOrCtrl+,'
+        click: (item, focusedWindow) ->
+          window.openSettings?()
+      },
+      { type: 'separator' },
+      {
+        label: 'Hide Poi'
+        click: (item, focusedWindow) ->
+          remote.getGlobal('mainWindow').hide()
+      },
+      {
+        label: 'Show All'
+        click: (item, focusedWindow) ->
+          remote.getGlobal('mainWindow').show()
+      },
+      { type: 'separator' },
+      {
+        label: 'Warn Before Quitting'
+        type: 'checkbox'
+        checked: config.get('poi.confirm.quit', false)
+        click: (item, focusedWindow) ->
+          config.set('poi.confirm.quit', item.checked)
+      },
+      { type: 'separator' },
+      {
+        label: 'Quit Poi'
+        accelerator: 'CmdOrCtrl+Q'
+        click: ->
+          # The terminate selector will ignore the 'poi.confirm.quit' setting
+          # and try to close any (plugin) window it can close first.
+          # So here we should only try to close the main window and let it handle all the rest.
+          remote.getCurrentWindow().focus()
+          window.close()
+      }
+    ]
+  },
+  {
+    label: 'View'
+    submenu: [
+      {
+        label: 'Open Developer Tools of Main Window'
+        click: (item, focusedWindow) ->
+          remote.getGlobal('mainWindow').openDevTools({detach: true})
+      },
+      {
+        label: 'Open Developer Tools of Main WebView'
+        click: (item, focusedWindow) ->
+          exeCodeOnWindowHasReloadArea(remote.getGlobal('mainWindow'), 'openDevTools({detach: true})')
+      }
+    ]
+  },
+  {
+    label: 'Themes'
+    submenu: [
+      {
+        label: 'Apply Theme'
+        submenu: []
+      },
+      { type: 'separator' },
+      {
+        label: 'Next Theme'
+        accelerator: 'CmdOrCtrl+T'
+        click: (item, focusedWindow) ->
+          all = window.allThemes
+          nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
+          window.applyTheme nextTheme
+      },
+      {
+        label: 'Previous Theme'
+        accelerator: 'CmdOrCtrl+Shift+T'
+        click: (item, focusedWindow) ->
+          all = window.allThemes
+          prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
+          window.applyTheme prevTheme
+      }
+    ]
+  },
+  {
+    label: 'Help'
+    role: 'help'
+    submenu: [
+      {
+        label: 'Wiki'
+        click: ->
+          openExternal 'https://github.com/poooi/poi/wiki'
+      },
+      {
+        label: 'Poi Statistics'
+        click: ->
+          openExternal 'http://db.kcwiki.moe/'
+      },
+      { type: 'separator' },
+      {
+        label: 'Report Issue'
+        click: ->
+          openExternal 'https://github.com/poooi/poi/issues'
+      },
+      {
+        label: 'Search Issues'
+        click: ->
+          openExternal 'https://github.com/issues?q=+is%3Aissue+user%3Apoooi'
+      }
+    ]
+  }
+]
+templateOSX = [
   {
     label: 'Poi'
     submenu: [
@@ -210,10 +327,11 @@ window.allThemes.map (th) ->
     click: (item, focusedWindow) ->
       if th isnt window.theme
         window.applyTheme th
-appMenu = Menu.buildFromTemplate(template)
 if process.platform == 'darwin'
+  appMenu = Menu.buildFromTemplate(templateOSX)
   Menu.setApplicationMenu(appMenu)
 else
+  appMenu = Menu.buildFromTemplate(template)
   window.appIcon?.setContextMenu(appMenu)
 # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...
 themeMenuList = appMenu.items[3].submenu.items[0].submenu.items
