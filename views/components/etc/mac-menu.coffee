@@ -322,9 +322,9 @@ else
       ]
     }
   ]
+if process.platform == 'darwin' then themepos = 3 else themepos = 2
 window.allThemes.map (th) ->
-  if process.platform == 'darwin' then pos = 3 else pos = 2
-  template[pos].submenu[0].submenu.push
+  template[themepos].submenu[0].submenu.push
     label: if th is '__default__' then 'Default' else th.charAt(0).toUpperCase() + th.slice(1)
     type: 'radio'
     checked: window.theme is th
@@ -337,6 +337,6 @@ if process.platform == 'darwin'
 else
   window.appIcon?.setContextMenu(appMenu)
 # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...
-themeMenuList = appMenu.items[3].submenu.items[0].submenu.items
+themeMenuList = appMenu.items[themepos].submenu.items[0].submenu.items
 window.addEventListener 'theme.change', (e) ->
   themeMenuList[window.allThemes.indexOf(e.detail.theme)].checked = true
