@@ -66,6 +66,8 @@ module.exports =
       decks: []
       activeDeck: 0
     nowTime: 0
+    shouldComponentUpdate: (nextProps, nextState)->
+      nextProps.activeMainTab is @props.activeMainTab
     componentWillUpdate: (nextProps, nextState) ->
       @nowTime = (new Date()).getTime()
     componentDidUpdate: (prevProps, prevState) ->
