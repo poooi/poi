@@ -1,7 +1,7 @@
 {$, $$, _, React} = window
 TopAlert = require './topalert'
 
-{getShipStatus} = require './utils.coffee'
+{getShipStatus} = require './utils'
 
 class ShipPane extends React.Component
   constructor: (props) ->
