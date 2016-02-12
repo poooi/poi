@@ -262,13 +262,13 @@ ControlledTabArea = React.createClass
           <TabContentsUnion
             onChange={(key) => @setState {activeMainTab: key}}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-              <mainview.reactClass />
+              <mainview.reactClass activeMainTab={@state.activeMainTab}/>
             </div>
             <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-              <shipview.reactClass />
+              <shipview.reactClass activeMainTab={@state.activeMainTab}/>
             </div>
             <div id={settings.name} className="poi-app-tabpane" key='settings'>
-              <settings.reactClass />
+              <settings.reactClass activeMainTab={@state.activeMainTab}/>
             </div>
           </TabContentsUnion>
         </div>

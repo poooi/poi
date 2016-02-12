@@ -14,6 +14,8 @@ module.exports =
       layout: window.layout
       doubleTabbed: window.doubleTabbed
       key: 1
+    shouldComponentUpdate: (nextProps, nextState)->
+      nextProps.activeMainTab is @props.activeMainTab
     handleChangeLayout: (e) ->
       @setState
         layout: e.detail.layout
