@@ -28,7 +28,7 @@ if process.platform != 'darwin'
   window.appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'))
 
 # poi menu
-require './components/etc/mac-menu'
+require './components/etc/menu'
 
 # Main tabbed area
 ControlledTabArea = require './tabarea'
