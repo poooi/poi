@@ -182,8 +182,7 @@ ControlledTabArea = React.createClass
     window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     window.addEventListener 'tabarea.change', @handleTabChange
     @cachePluginList()
-    if process.platform == 'darwin'
-      window.openSettings = @handleCmdCommaKeyDown
+    window.openSettings = @handleCmdCommaKeyDown
   componentWillUnmount: ->
     window.removeEventListener 'game.start', @handleKeyDown
     window.removeEventListener 'tabarea.reload', @forceUpdate

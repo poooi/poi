@@ -1,4 +1,4 @@
-ShipPane = require './shipPane'
+ShipPane = require './shippane'
 ShipPane.defaultProps = require './shipitem'
 
 MiniShipPane = class extends ShipPane

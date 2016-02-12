@@ -6,7 +6,7 @@ __n = i18n.main.__n.bind(i18n.main)
 Slotitems = require './slotitems'
 StatusLabel = require './statuslabel'
 
-{getHpStyle, getStatusStyle, getShipStatus, BaseShipData} = require './utils.coffee'
+{getHpStyle, getStatusStyle, getShipStatus, BaseShipData} = require './utils'
 
 getMaterialStyle = (percent) ->
   if percent <= 50

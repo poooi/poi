@@ -9,7 +9,7 @@ __n = i18n.main.__n.bind(i18n.main)
 StatusLabel = require './statuslabel'
 {SlotitemIcon} = require '../etc/icon'
 
-{getHpStyle, getStatusStyle, getShipStatus, BaseShipData} = require './utils.coffee'
+{getHpStyle, getStatusStyle, getShipStatus, BaseShipData} = require './utils'
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
