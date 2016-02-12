@@ -23,8 +23,9 @@ if process.platform == 'win32'
     windowsShortcuts.edit shortcutPath, {target: targetPath, args: argPath}, ->
       windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
   catch error
-    windowsShortcuts.create shortcutPath, {target: targetPath, args: argPath}, ->
-       windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+    try
+      windowsShortcuts.create shortcutPath, {target: targetPath, args: argPath}, ->
+         windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
 
 
 if dbg.isEnabled()
