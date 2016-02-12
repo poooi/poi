@@ -96,16 +96,12 @@ window.notify = (msg, options) ->
         body: msg
         silent: true
     else
-      appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'));
-      appIcon.displayBalloon
-        title: title
-        icon: icon
-        content: msg
-      focusNdestroy = ->
-        remote.getGlobal('mainWindow').focus()
-        appIcon.destroy()
-      appIcon.on 'balloon-closed', appIcon.destroy
-      appIcon.on 'balloon-click', focusNdestroy
+      try
+        appIcon.displayBalloon
+          title: title
+          icon: icon
+          content: msg
+        appIcon.on 'balloon-click', remote.getGlobal('mainWindow').focus
 
   if volume > 0.0001
     sound = new Audio(audio)

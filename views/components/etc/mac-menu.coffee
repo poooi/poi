@@ -211,7 +211,10 @@ window.allThemes.map (th) ->
       if th isnt window.theme
         window.applyTheme th
 appMenu = Menu.buildFromTemplate(template)
-Menu.setApplicationMenu(appMenu)
+if process.platform == 'darwin'
+  Menu.setApplicationMenu(appMenu)
+else
+  window.appIcon?.setContextMenu(appMenu)
 # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...
 themeMenuList = appMenu.items[3].submenu.items[0].submenu.items
 window.addEventListener 'theme.change', (e) ->

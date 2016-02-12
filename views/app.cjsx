@@ -23,9 +23,12 @@ window.PluginManager = require './services/plugin-manager'
 # Module path
 require('module').globalPaths.push(path.join(ROOT, "node_modules"))
 
+# Tray icon
+if process.platform != 'darwin'
+  window.appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'))
+
 # poi menu
-if process.platform == 'darwin'
-  require './components/etc/mac-menu'
+require './components/etc/mac-menu'
 
 # Main tabbed area
 ControlledTabArea = require './tabarea'
