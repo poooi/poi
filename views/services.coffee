@@ -73,7 +73,7 @@ window.addEventListener 'game.request', (e) ->
 window.addEventListener 'game.response', (e) ->
   {method, body, postBody} = e.detail
   resPath = e.detail.path
-  console.log [resPath, body, postBody] if dbg.isEnabled()
+  dbg.extra('gameResponse').log [resPath, body, postBody]
   log "#{__ 'Hit'} #{method} #{resPath}"
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
