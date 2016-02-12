@@ -65,8 +65,6 @@ module.exports =
       states: [-1, -1, -1, -1]
       decks: []
       activeDeck: 0
-      dataVersion: 0
-    showDataVersion: 0
     nowTime: 0
     componentWillUpdate: (nextProps, nextState) ->
       @nowTime = (new Date()).getTime()
@@ -134,7 +132,6 @@ module.exports =
                     deck={@state.decks[i]}
                     activeDeck={@state.activeDeck}
                     deckName={@state.names[i]}
-                    dataVersion={@state.dataVersion}
                   />
                 </div>
             }
