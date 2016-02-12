@@ -1,9 +1,7 @@
 {$, $$, _, React} = window
 TopAlert = require './topalert'
 
-{MiniShipData, ShipData, getShipStatus} = require './utils.coffee'
-ShipItem = require './shipitem'
-MiniShipItem = require './minishipitem'
+{getShipStatus} = require './utils.coffee'
 
 class ShipPane extends React.Component
   constructor: (props) ->
@@ -11,22 +9,16 @@ class ShipPane extends React.Component
     this.state =
       label: [-1, -1, -1, -1, -1, -1]
       ships: []
-    @type = props.type
-    if props.type is 'MINI'
-      @ShipData = MiniShipData
-      @ShipItem = MiniShipItem
-    else
-      @ShipData = ShipData
-      @ShipItem = ShipItem
+    @miniFlag = props.miniFlag
+    @ShipData = props.shipData
+    @ShipItem = props.shipItem
     @condDynamicUpdateFlag = false
   updateLabels: ->
     # refresh label
     label = Object.clone @state.label
     for shipId, j in @props.deck.api_ship
       continue if shipId == -1
-      ship = _ships[shipId]
-      status = getShipStatus @type is 'MINI', shipId
-      label[j] = status
+      label[j] = getShipStatus @miniFlag, shipId
     label
   onCondChange: (cond) ->
     condDynamicUpdateFlag = true
@@ -45,7 +37,7 @@ class ShipPane extends React.Component
         updateflag = true
         label = @updateLabels()
       when '/kcsapi/api_req_hokyu/charge'
-        if @type is 'MINI'
+        if @miniFlag
           updateflag = true
           label = @updateLabels()
       when '/kcsapi/api_req_nyukyo/start'
@@ -62,15 +54,10 @@ class ShipPane extends React.Component
         label: label
   shouldComponentUpdate: (nextProps, nextState) ->
     @props.deckName != nextProps.deckName || !_.isEqual(@state, nextState)
-  setShipData: (props, flag) ->
-    {_ships} = window
-    if flag and @condDynamicUpdateFlag
+  setShipData: (props) ->
+    if @condDynamicUpdateFlag
       @condDynamicUpdateFlag = not @condDynamicUpdateFlag
     else
-      for shipId, j in props.deck.api_ship
-        if shipId == -1
-          continue
-        ship = _ships[shipId]
       ships = []
       for shipId, i in props.deck.api_ship
         continue if shipId is -1
@@ -78,9 +65,9 @@ class ShipPane extends React.Component
       @setState
         ships: ships
   componentWillReceiveProps: (nextProps) ->
-    @setShipData nextProps, true
+    @setShipData nextProps
   componentWillMount: ->
-    @setShipData @props, false
+    @setShipData @props
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse.bind(@)
     label = @updateLabels()
@@ -96,10 +83,10 @@ class ShipPane extends React.Component
           messages={@props.messages}
           deckIndex={@props.deckIndex}
           deckName={@props.deckName}
-          mini={@type is 'MINI'}
+          mini={@miniFlag}
         />
       </div>
-      <div className="ship-details#{if @type is 'MINI' then '-mini' else ''}">
+      <div className="ship-details#{if @miniFlag then '-mini' else ''}">
         {
           {$shipTypes, _ships} = window
           for shipData, j in @state.ships
@@ -114,8 +101,8 @@ class ShipPane extends React.Component
     </div>
 
 ShipPane.propTypes =
-  type: React.PropTypes.string
-ShipPane.defaultProps =
-  type: 'WHOLE'
+  miniFlag: React.PropTypes.bool
+  shipData: React.PropTypes.func
+  shipItem: React.PropTypes.func
 
 module.exports = ShipPane

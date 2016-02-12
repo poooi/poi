@@ -6,7 +6,7 @@ __n = i18n.main.__n.bind(i18n.main)
 Slotitems = require './slotitems'
 StatusLabel = require './statuslabel'
 
-{getHpStyle, getStatusStyle, getShipStatus} = require './utils.coffee'
+{getHpStyle, getStatusStyle, getShipStatus, BaseShipData} = require './utils.coffee'
 
 getMaterialStyle = (percent) ->
   if percent <= 50
@@ -17,6 +17,19 @@ getMaterialStyle = (percent) ->
     'info'
   else
     'success'
+
+class ShipData extends BaseShipData
+  constructor: (shipId) ->
+    super shipId
+    ship = window._ships[shipId]
+    shipInfo = window.$ships[ship.api_ship_id]
+    @ndockTime = ship.api_ndock_time
+    @nowFeul = ship.api_fuel
+    @maxFeul = ship.api_fuel_max
+    @fuelStatus = ship.api_fuel / shipInfo.api_fuel_max * 100
+    @nowBull = ship.api_bull
+    @maxBull = shipInfo.api_bull_max
+    @bullStatus = ship.api_bull / shipInfo.api_bull_max * 100
 
 ShipRow = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
@@ -93,4 +106,7 @@ ShipRow = React.createClass
       </div>
     </div>
 
-module.exports = ShipRow
+module.exports =
+  shipItem: ShipRow
+  shipData: ShipData
+  miniFlag: false

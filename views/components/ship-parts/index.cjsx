@@ -1,7 +1,8 @@
 ShipPane = require './shipPane'
+ShipPane.defaultProps = require './shipitem'
+
 MiniShipPane = class extends ShipPane
-MiniShipPane.defaultProps =
-  type: 'MINI'
+MiniShipPane.defaultProps = require './minishipitem'
 
 module.exports =
   Slotitems: window.hack.ShipViewSlotitems || require './slotitems'

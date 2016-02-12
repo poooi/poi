@@ -9,7 +9,7 @@ __n = i18n.main.__n.bind(i18n.main)
 StatusLabel = require './statuslabel'
 {SlotitemIcon} = require '../etc/icon'
 
-{getHpStyle, getStatusStyle, getShipStatus} = require './utils.coffee'
+{getHpStyle, getStatusStyle, getShipStatus, BaseShipData} = require './utils.coffee'
 
 getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
@@ -35,7 +35,7 @@ Slotitems = React.createClass
               }
           </span>
           <Label className="slotitem-onslot-mini
-                          #{if (item.slotItemId >= 6 && item.slotItemId <= 10) || (item.slotItemId >= 21 && item.slotItemId <= 22) || item.slotItemId == 33 then 'show' else 'hide'}"
+                          #{if (item.slotitemId >= 6 && item.slotitemId <= 10) || (item.slotitemId >= 21 && item.slotitemId <= 22) || item.slotitemId == 33 then 'show' else 'hide'}"
                           bsStyle="#{if item.onslot < item.maxeq then 'warning' else 'default'}">
             {item.onslot}
           </Label>
@@ -92,4 +92,7 @@ MiniShipRow = React.createClass
       </OverlayTrigger>
     </div>
 
-module.exports = MiniShipRow
+module.exports =
+  shipItem: MiniShipRow
+  shipData: BaseShipData
+  miniFlag: true

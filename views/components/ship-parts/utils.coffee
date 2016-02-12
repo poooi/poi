@@ -1,4 +1,4 @@
-class MiniShipData
+class BaseShipData
   constructor: (shipId) ->
     {$ships, $shipTypes, _ships, _slotitems} = window
     ship = _ships[shipId]
@@ -27,22 +27,8 @@ class MiniShipData
         alv: item.api_alv
         slotitemId: item.api_type[3]
 
-class ShipData extends MiniShipData
-  constructor: (shipId) ->
-    super shipId
-    ship = window._ships[shipId]
-    shipInfo = window.$ships[ship.api_ship_id]
-    @ndockTime = ship.api_ndock_time
-    @nowFeul = ship.api_fuel
-    @maxFeul = ship.api_fuel_max
-    @fuelStatus = ship.api_fuel / shipInfo.api_fuel_max * 100
-    @nowBull = ship.api_bull
-    @maxBull = shipInfo.api_bull_max
-    @bullStatus = ship.api_bull / shipInfo.api_bull_max * 100
-
 module.exports =
-  MiniShipData: MiniShipData
-  ShipData: ShipData
+  BaseShipData: BaseShipData
   getMaterialStyle: (percent) ->
     if percent <= 50
       'danger'
