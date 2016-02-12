@@ -13,11 +13,6 @@ if process.platform != 'darwin'
       label: 'Poi'
       submenu: [
         {
-          label: 'About Poi'
-          role: 'about'
-        },
-        { type: 'separator' },
-        {
           label: 'Preferences...'
           accelerator: 'CmdOrCtrl+,'
           click: (item, focusedWindow) ->
@@ -25,12 +20,12 @@ if process.platform != 'darwin'
         },
         { type: 'separator' },
         {
-          label: 'Hide Poi'
+          label: 'Hide poi'
           click: (item, focusedWindow) ->
             remote.getGlobal('mainWindow').hide()
         },
         {
-          label: 'Show All'
+          label: 'Show poi'
           click: (item, focusedWindow) ->
             remote.getGlobal('mainWindow').show()
         },
@@ -44,7 +39,7 @@ if process.platform != 'darwin'
         },
         { type: 'separator' },
         {
-          label: 'Quit Poi'
+          label: 'Quit poi'
           accelerator: 'CmdOrCtrl+Q'
           click: ->
             # The terminate selector will ignore the 'poi.confirm.quit' setting
