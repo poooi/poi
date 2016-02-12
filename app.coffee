@@ -101,8 +101,8 @@ app.on 'ready', ->
       'plugins': true
       'enableLargerThanScreen': true
   # Default menu
+  mainWindow.reloadArea = 'kan-game webview'
   if process.platform == 'darwin'
-    mainWindow.reloadArea = 'kan-game webview'
     if /electron$/i.test process.argv[0]
       icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
       app.dock?.setIcon? icon
