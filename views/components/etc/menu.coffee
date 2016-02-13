@@ -16,7 +16,6 @@ if process.platform != 'darwin'
       submenu: [
         {
           label: __ 'Preferences...'
-          accelerator: 'CmdOrCtrl+,'
           click: (item, focusedWindow) ->
             window.openSettings?()
         },
@@ -59,7 +58,6 @@ if process.platform != 'darwin'
         { type: 'separator' },
         {
           label: __ 'Quit poi'
-          accelerator: 'CmdOrCtrl+Q'
           click: ->
             # The terminate selector will ignore the 'poi.confirm.quit' setting
             # and try to close any (plugin) window it can close first.
@@ -94,7 +92,6 @@ if process.platform != 'darwin'
         { type: 'separator' },
         {
           label: __ 'Next Theme'
-          accelerator: 'CmdOrCtrl+T'
           click: (item, focusedWindow) ->
             all = window.allThemes
             nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
@@ -102,7 +99,6 @@ if process.platform != 'darwin'
         },
         {
           label: __ 'Previous Theme'
-          accelerator: 'CmdOrCtrl+Shift+T'
           click: (item, focusedWindow) ->
             all = window.allThemes
             prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
