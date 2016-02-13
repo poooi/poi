@@ -6,7 +6,7 @@ class Ticker
     @intervalId = null
     @callbacks = new Map()
   tick: () =>
-    now = (new Date()).getTime()
+    now = Date.now()
     @callbacks.forEach (f) -> f(now)
   start: ->
     @intervalId = setInterval @tick, 1000
@@ -26,7 +26,7 @@ ticker = new Ticker()
 
 CountdownTimer = React.createClass
   statics:
-    getTimeRemaining: (completeTime, currentTime = (new Date()).getTime()) ->
+    getTimeRemaining: (completeTime, currentTime = Date.now()) ->
       if completeTime < 0
         -1
       else if completeTime <= currentTime
