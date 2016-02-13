@@ -105,10 +105,11 @@ window.notify = (msg, options) ->
         appIcon.on 'balloon-click', remote.getGlobal('mainWindow').focus
 
   if volume > 0.0001 && !playing
-    playing = true
     sound = new Audio(audio)
     sound.volume = volume
     sound.play()
+    sound.onplay = (e) ->
+      playing = true
     sound.onended = (e) ->
       playing = false
 
