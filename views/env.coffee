@@ -96,18 +96,16 @@ window.notify = (msg, options) ->
           content: msg
         appIcon.on 'balloon-click', remote.getGlobal('mainWindow').focus
 
-  if volume > 0.0001 && !notify_isPlayingAudio[type]
-    notify_isPlayingAudio[type] = true
+  if volume > 0.0001
     sound = new Audio(audio)
     sound.volume = volume
-    timer = setTimeout ->
-      sound.onended = null
-      notify_isPlayingAudio[type] = false
-    , 4096
+    sound.oncanplaythrough = ->
+      if !notify_isPlayingAudio[type]
+        notify_isPlayingAudio[type] = true
+        sound.play()
     sound.onended = ->
       clearTimeout timer
       notify_isPlayingAudio[type] = false
-    sound.play()
 
 modals = []
 window.modalLocked = false
