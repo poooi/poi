@@ -444,7 +444,7 @@ PluginConfig = React.createClass
       mirrors: mirrors
       config: config
     }
-    plugins = yield PluginManager.getOutdatedPlugins(true)
+    plugins = yield PluginManager.getOutdatedPlugins(config.get 'packageManager.enablePluginCheck', true)
     @updateFromPluginManager {
       hasUpdates: plugins.length isnt 0
       checkingUpdate: false
