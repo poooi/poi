@@ -23,7 +23,7 @@ CountdownLabel = React.createClass
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
-    @notify() if timeRemaining <= window.notify.expedition
+    @notify() if 0 < timeRemaining <= window.notify.expedition
 
     style = @getLabelStyle timeRemaining
     @setState {style: style} if style isnt @state.style
