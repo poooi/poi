@@ -1,6 +1,8 @@
 {remote} = window
 {Menu} = remote.require('electron')
 {openExternal} = require 'shell'
+__ = window.i18n.menu.__.bind(i18n.menu)
+__n = window.i18n.menu.__n.bind(i18n.menu)
 
 exeCodeOnWindowHasReloadArea = (win, f) ->
   if win?.reloadArea?
@@ -13,25 +15,42 @@ if process.platform != 'darwin'
       label: 'Poi'
       submenu: [
         {
-          label: 'Preferences...'
+          label: __ 'Preferences...'
           accelerator: 'CmdOrCtrl+,'
           click: (item, focusedWindow) ->
             window.openSettings?()
         },
         { type: 'separator' },
         {
-          label: 'Hide poi'
+          label: __ 'Hide poi'
           click: (item, focusedWindow) ->
             remote.getGlobal('mainWindow').hide()
         },
         {
-          label: 'Show poi'
+          label: __ 'Show poi'
           click: (item, focusedWindow) ->
             remote.getGlobal('mainWindow').show()
         },
         { type: 'separator' },
         {
-          label: 'Warn Before Quitting'
+          label: __ 'Resizable'
+          type: 'checkbox'
+          checked: config.get 'poi.content.resizeable', true
+          click: (item, focusedWindow) ->
+            remote.getGlobal('mainWindow').setResizable item.checked
+            config.set 'poi.content.resizeable', item.checked
+        },
+        {
+          label: __ 'Always on top'
+          type: 'checkbox'
+          checked: config.get 'poi.content.alwaysOnTop', false
+          click: (item, focusedWindow) ->
+            remote.getGlobal('mainWindow').setAlwaysOnTop item.checked
+            config.set 'poi.content.alwaysOnTop', item.checked
+        },
+        { type: 'separator' },
+        {
+          label: __ 'Confirm before exit'
           type: 'checkbox'
           checked: config.get('poi.confirm.quit', false)
           click: (item, focusedWindow) ->
@@ -39,7 +58,7 @@ if process.platform != 'darwin'
         },
         { type: 'separator' },
         {
-          label: 'Quit poi'
+          label: __ 'Quit poi'
           accelerator: 'CmdOrCtrl+Q'
           click: ->
             # The terminate selector will ignore the 'poi.confirm.quit' setting
@@ -51,30 +70,30 @@ if process.platform != 'darwin'
       ]
     },
     {
-      label: 'View'
+      label: __ 'View'
       submenu: [
         {
-          label: 'Open Developer Tools of Main Window'
+          label: __ 'Developer Tools'
           click: (item, focusedWindow) ->
             remote.getGlobal('mainWindow').openDevTools({detach: true})
         },
         {
-          label: 'Open Developer Tools of Main WebView'
+          label: __ 'Developer Tools of WebView'
           click: (item, focusedWindow) ->
             exeCodeOnWindowHasReloadArea(remote.getGlobal('mainWindow'), 'openDevTools({detach: true})')
         }
       ]
     },
     {
-      label: 'Themes'
+      label: __ 'Themes'
       submenu: [
         {
-          label: 'Apply Theme'
+          label: __ 'Apply Theme'
           submenu: []
         },
         { type: 'separator' },
         {
-          label: 'Next Theme'
+          label: __ 'Next Theme'
           accelerator: 'CmdOrCtrl+T'
           click: (item, focusedWindow) ->
             all = window.allThemes
@@ -82,7 +101,7 @@ if process.platform != 'darwin'
             window.applyTheme nextTheme
         },
         {
-          label: 'Previous Theme'
+          label: __ 'Previous Theme'
           accelerator: 'CmdOrCtrl+Shift+T'
           click: (item, focusedWindow) ->
             all = window.allThemes
@@ -92,27 +111,27 @@ if process.platform != 'darwin'
       ]
     },
     {
-      label: 'Help'
+      label: __ 'Help'
       role: 'help'
       submenu: [
         {
-          label: 'Wiki'
+          label: __ 'Wiki'
           click: ->
             openExternal 'https://github.com/poooi/poi/wiki'
         },
         {
-          label: 'Poi Statistics'
+          label: __ 'Poi Statistics'
           click: ->
             openExternal 'http://db.kcwiki.moe/'
         },
         { type: 'separator' },
         {
-          label: 'Report Issue'
+          label: __ 'Report Issue'
           click: ->
             openExternal 'https://github.com/poooi/poi/issues'
         },
         {
-          label: 'Search Issues'
+          label: __ 'Search Issues'
           click: ->
             openExternal 'https://github.com/issues?q=+is%3Aissue+user%3Apoooi'
         }
@@ -125,40 +144,57 @@ else
       label: 'Poi'
       submenu: [
         {
-          label: 'About Poi'
+          label: __ 'About poi'
           role: 'about'
         },
         { type: 'separator' },
         {
-          label: 'Preferences...'
+          label: __ 'Preferences...'
           accelerator: 'CmdOrCtrl+,'
           click: (item, focusedWindow) ->
             window.openSettings?()
         },
         { type: 'separator' },
         {
-          label: 'Services'
+          label: __ 'Services'
           role: 'services'
           submenu: []
         },
         { type: 'separator' },
         {
-          label: 'Hide Poi'
+          label: __ 'Hide poi'
           accelerator: 'CmdOrCtrl+H'
           role: 'hide'
         },
         {
-          label: 'Hide Others'
+          label: __ 'Hide others'
           accelerator: 'CmdOrCtrl+Shift+H'
           role: 'hideothers'
         },
         {
-          label: 'Show All'
+          label: __ 'Show All'
           role: 'unhide'
         },
         { type: 'separator' },
         {
-          label: 'Warn Before Quitting'
+          label: __ 'Resizable'
+          type: 'checkbox'
+          checked: config.get 'poi.content.resizeable', true
+          click: (item, focusedWindow) ->
+            remote.getGlobal('mainWindow').setResizable item.checked
+            config.set 'poi.content.resizeable', item.checked
+        },
+        {
+          label: __ 'Always on top'
+          type: 'checkbox'
+          checked: config.get 'poi.content.alwaysOnTop', false
+          click: (item, focusedWindow) ->
+            remote.getGlobal('mainWindow').setAlwaysOnTop item.checked
+            config.set 'poi.content.alwaysOnTop', item.checked
+        },
+        { type: 'separator' },
+        {
+          label: __ 'Confirm before exit'
           type: 'checkbox'
           checked: config.get('poi.confirm.quit', false)
           click: (item, focusedWindow) ->
@@ -166,7 +202,7 @@ else
         },
         { type: 'separator' },
         {
-          label: 'Quit Poi'
+          label: __ 'Quit poi'
           accelerator: 'CmdOrCtrl+Q'
           click: ->
             # The terminate selector will ignore the 'poi.confirm.quit' setting
@@ -178,80 +214,80 @@ else
       ]
     },
     {
-      label: 'Edit'
+      label: __ 'Edit'
       submenu: [
         {
-          label: 'Undo'
+          label: __ 'Undo'
           accelerator: 'CmdOrCtrl+Z'
           role: 'undo'
         },
         {
-          label: 'Redo'
+          label: __ 'Redo'
           accelerator: 'Shift+CmdOrCtrl+Z'
           role: 'redo'
         },
         { type: 'separator' },
         {
-          label: 'Cut'
+          label: __ 'Cut'
           accelerator: 'CmdOrCtrl+X'
           role: 'cut'
         },
         {
-          label: 'Copy'
+          label: __ 'Copy'
           accelerator: 'CmdOrCtrl+C'
           role: 'copy'
         },
         {
-          label: 'Paste'
+          label: __ 'Paste'
           accelerator: 'CmdOrCtrl+V'
           role: 'paste'
         },
         {
-          label: 'Select All'
+          label: __ 'Select All'
           accelerator: 'CmdOrCtrl+A'
           role: 'selectall'
         }
       ]
     },
     {
-      label: 'View'
+      label: __ 'View'
       submenu: [
         {
-          label: 'Reload'
+          label: __ 'Reload'
           accelerator: 'CmdOrCtrl+R'
           click: (item, focusedWindow) ->
             exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
         },
         {
-          label: 'Stop'
+          label: __ 'Stop'
           accelerator: 'CmdOrCtrl+.'
           click: (item, focusedWindow) ->
             exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
         },
         { type: 'separator' },
         {
-          label: 'Open Developer Tools'
+          label: __ 'Developer Tools'
           accelerator: 'Alt+CmdOrCtrl+I'
           click: (item, focusedWindow) ->
             focusedWindow.openDevTools({detach: true})
         },
         {
-          label: 'Open Developer Tools of WebView'
+          label: __ 'Developer Tools of WebView'
           click: (item, focusedWindow) ->
             exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({detach: true})')
         }
       ]
     },
     {
-      label: 'Themes'
+      label: __ 'Themes'
       submenu: [
         {
-          label: 'Apply Theme'
+          label: __ 'Apply Theme'
           submenu: []
         },
         { type: 'separator' },
         {
-          label: 'Next Theme'
+          label: __ 'Next Theme'
           accelerator: 'CmdOrCtrl+T'
           click: (item, focusedWindow) ->
             all = window.allThemes
@@ -259,7 +295,7 @@ else
             window.applyTheme nextTheme
         },
         {
-          label: 'Previous Theme'
+          label: __ 'Previous Theme'
           accelerator: 'CmdOrCtrl+Shift+T'
           click: (item, focusedWindow) ->
             all = window.allThemes
@@ -269,48 +305,48 @@ else
       ]
     },
     {
-      label: 'Window'
+      label: __ 'Window'
       role: 'window'
       submenu: [
         {
-          label: 'Minimize'
+          label: __ 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
         },
         {
-          label: 'Close'
+          label: __ 'Close'
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
         },
         { type: 'separator' },
         {
-          label: 'Bring All to Front'
+          label: __ 'Bring All to Front'
           role: 'front'
         }
       ]
     },
     {
-      label: 'Help'
+      label: __ 'Help'
       role: 'help'
       submenu: [
         {
-          label: 'Wiki'
+          label: __ 'Wiki'
           click: ->
             openExternal 'https://github.com/poooi/poi/wiki'
         },
         {
-          label: 'Poi Statistics'
+          label: __ 'Poi Statistics'
           click: ->
             openExternal 'http://db.kcwiki.moe/'
         },
         { type: 'separator' },
         {
-          label: 'Report Issue'
+          label: __ 'Report Issue'
           click: ->
             openExternal 'https://github.com/poooi/poi/issues'
         },
         {
-          label: 'Search Issues'
+          label: __ 'Search Issues'
           click: ->
             openExternal 'https://github.com/issues?q=+is%3Aissue+user%3Apoooi'
         }
