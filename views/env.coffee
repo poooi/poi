@@ -104,7 +104,6 @@ window.notify = (msg, options) ->
         notify_isPlayingAudio[type] = true
         sound.play()
     sound.onended = ->
-      clearTimeout timer
       notify_isPlayingAudio[type] = false
 
 modals = []

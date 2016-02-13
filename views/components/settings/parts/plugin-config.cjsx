@@ -436,6 +436,7 @@ PluginConfig = React.createClass
       @setState
         manuallyInstallStatus: 0
   componentDidMount: async ->
+    updateNotif = config.get 'packageManager.enablePluginCheck', true
     mirrors = yield PluginManager.getMirrors()
     PluginManager.readPlugins(true)
     config = yield PluginManager.getConf()
@@ -444,7 +445,7 @@ PluginConfig = React.createClass
       mirrors: mirrors
       config: config
     }
-    plugins = yield PluginManager.getOutdatedPlugins(config.get 'packageManager.enablePluginCheck', true)
+    plugins = yield PluginManager.getOutdatedPlugins(updateNotif)
     @updateFromPluginManager {
       hasUpdates: plugins.length isnt 0
       checkingUpdate: false
