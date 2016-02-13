@@ -436,14 +436,16 @@ PluginConfig = React.createClass
       @setState
         manuallyInstallStatus: 0
   componentDidMount: async ->
+    enablePluginCheck = config.get('packageManager.enablePluginCheck', true)
     mirrors = yield PluginManager.getMirrors()
     PluginManager.readPlugins(true)
     config = yield PluginManager.getConf()
     @updateFromPluginManager {
-      checkingUpdate: true
+      checkingUpdate: enablePluginCheck
       mirrors: mirrors
       config: config
     }
+    return unless enablePluginCheck
     plugins = yield PluginManager.getOutdatedPlugins(true)
     @updateFromPluginManager {
       hasUpdates: plugins.length isnt 0
