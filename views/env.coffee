@@ -57,6 +57,7 @@ NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
 if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
   NOTIFY_NOTIFICATION_API = false
+playing = false
 window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
@@ -103,10 +104,13 @@ window.notify = (msg, options) ->
           content: msg
         appIcon.on 'balloon-click', remote.getGlobal('mainWindow').focus
 
-  if volume > 0.0001
+  if volume > 0.0001 && !playing
+    playing = true
     sound = new Audio(audio)
     sound.volume = volume
     sound.play()
+    sound.onended = (e) ->
+      playing = false
 
 modals = []
 window.modalLocked = false
