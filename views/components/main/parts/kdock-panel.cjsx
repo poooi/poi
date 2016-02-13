@@ -119,7 +119,7 @@ KdockPanel = React.createClass
     return if not @canNotify
     # Notify all completed ships
     completedShips = @state.docks.filter(
-      (dock) -> 0 <= dock.completeTime < new Date().getTime() + 1000).map(
+      (dock) -> 0 <= dock.completeTime < Date.now() + 1000).map(
       (dock) -> i18n.resources.__ dock.name).join(', ')
     notify "#{completedShips} #{__ 'built'}",
       type: 'construction'

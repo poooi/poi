@@ -153,7 +153,7 @@ window.addEventListener 'game.response', (e) ->
       colorNo = -1
       enemyFormation = 0
     # Normal battle
-    when '/kcsapi/api_req_sortie/battle', '/kcsapi/api_req_battle_midnight/battle', '/kcsapi/api_req_battle_midnight/sp_midnight', '/kcsapi/api_req_sortie/airbattle'
+    when '/kcsapi/api_req_sortie/battle', '/kcsapi/api_req_battle_midnight/battle', '/kcsapi/api_req_battle_midnight/sp_midnight', '/kcsapi/api_req_sortie/airbattle', '/kcsapi/api_req_sortie/ld_airbattle'
       battled = true
       combined = false
       _sortieHp = body.api_nowhps.slice(1, 7)
@@ -163,7 +163,7 @@ window.addEventListener 'game.response', (e) ->
         enemyFormation = body.api_formation[1]
       analogBattle _sortieHp, _enemyHp, _combinedHp, false, false, body
     # Event Combined battle
-    when '/kcsapi/api_req_combined_battle/airbattle', '/kcsapi/api_req_combined_battle/battle', '/kcsapi/api_req_combined_battle/midnight_battle', '/kcsapi/api_req_combined_battle/sp_midnight'
+    when '/kcsapi/api_req_combined_battle/airbattle', '/kcsapi/api_req_combined_battle/battle', '/kcsapi/api_req_combined_battle/midnight_battle', '/kcsapi/api_req_combined_battle/sp_midnight', '/kcsapi/api_req_combined_battle/ld_airbattle'
       battled = true
       combined = true
       _sortieHp = body.api_nowhps.slice(1, 7)

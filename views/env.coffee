@@ -57,28 +57,21 @@ NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
 if process.platform == 'win32' and semver.lt(os.release(), '6.2.0')
   NOTIFY_NOTIFICATION_API = false
+notify_isPlayingAudio = {}
 window.notify = (msg, options) ->
   # Notification config
   enabled = config.get('poi.notify.enabled', true)
-  audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
   volume = config.get('poi.notify.volume', 0.8)
   title = 'poi'
   icon = NOTIFY_DEFAULT_ICON
-  switch options?.type
-    when 'construction'
-      enabled = config.get('poi.notify.construction.enabled', enabled) if enabled
-      audio = config.get('poi.notify.construction.audio', audio)
-    when 'expedition'
-      enabled = config.get('poi.notify.expedition.enabled', enabled) if enabled
-      audio = config.get('poi.notify.expedition.audio', audio)
-    when 'repair'
-      enabled = config.get('poi.notify.repair.enabled', enabled) if enabled
-      audio = config.get('poi.notify.repair.audio', audio)
-    when 'morale'
-      enabled = config.get('poi.notify.morale.enabled', enabled) if enabled
-      audio = config.get('poi.notify.morale.audio', audio)
-    else
-      enabled = config.get('poi.notify.others.enabled', enabled) if enabled
+  audio = config.get('poi.notify.audio', "file://#{ROOT}/assets/audio/poi.mp3")
+  type = options?.type || "others"
+
+  if type in ['construction', 'expedition', 'repair', 'morale']
+    enabled = config.get("poi.notify.#{type}.enabled", enabled) if enabled
+    audio = config.get("poi.notify.#{type}.audio", audio)
+  else
+    enabled = config.get("poi.notify.others.enabled", enabled) if enabled
   # Overwrite by options
   if options?
     title = options.title if options.title
@@ -106,7 +99,12 @@ window.notify = (msg, options) ->
   if volume > 0.0001
     sound = new Audio(audio)
     sound.volume = volume
-    sound.play()
+    sound.oncanplaythrough = ->
+      if !notify_isPlayingAudio[type]
+        notify_isPlayingAudio[type] = true
+        sound.play()
+    sound.onended = ->
+      notify_isPlayingAudio[type] = false
 
 modals = []
 window.modalLocked = false
