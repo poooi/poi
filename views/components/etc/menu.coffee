@@ -49,14 +49,6 @@ if process.platform != 'darwin'
         },
         { type: 'separator' },
         {
-          label: __ 'Confirm before exit'
-          type: 'checkbox'
-          checked: config.get('poi.confirm.quit', false)
-          click: (item, focusedWindow) ->
-            config.set('poi.confirm.quit', item.checked)
-        },
-        { type: 'separator' },
-        {
           label: __ 'Quit poi'
           click: ->
             # The terminate selector will ignore the 'poi.confirm.quit' setting
