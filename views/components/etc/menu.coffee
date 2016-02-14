@@ -354,7 +354,12 @@ appMenu = Menu.buildFromTemplate(template)
 if process.platform == 'darwin'
   Menu.setApplicationMenu(appMenu)
 else
-  window.appIcon?.setContextMenu(appMenu)
+  win = remote.getCurrentWindow()
+  win.setMenu(appMenu)
+  win.setAutoHideMenuBar(true)
+  win.setMenuBarVisibility(false)
+  if process.platform == 'win32'
+    window.appIcon?.setContextMenu(appMenu)
 # Ugly hard-coded hack... Hope Electron can provide some better interface in the future...
 themeMenuList = appMenu.items[themepos].submenu.items[0].submenu.items
 window.addEventListener 'theme.change', (e) ->
