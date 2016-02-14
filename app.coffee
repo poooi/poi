@@ -125,7 +125,7 @@ app.on 'ready', ->
     mainWindow = null
 
   # Tray icon
-  if process.platform != 'darwin'
+  if process.platform == 'win32'
     global.appIcon = appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'))
     appIcon.on 'click', ->
       win = mainWindow
