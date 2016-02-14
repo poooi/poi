@@ -8,13 +8,13 @@ glob = require 'glob'
 # Environments
 window.remote = require('electron').remote
 window.ROOT = path.join(__dirname, '..')
-window.Tray = remote.require('electron').Tray
 window.EXROOT = remote.getGlobal 'EXROOT'
 window.APPDATA_PATH = remote.getGlobal 'APPDATA_PATH'
 window.PLUGIN_PATH = path.join window.APPDATA_PATH, 'plugins'
 window.POI_VERSION = remote.getGlobal 'POI_VERSION'
 window.SERVER_HOSTNAME = remote.getGlobal 'SERVER_HOSTNAME'
 window.MODULE_PATH = remote.getGlobal 'MODULE_PATH'
+window.appIcon = remote.getGlobal 'appIcon'
 fs.ensureDirSync window.PLUGIN_PATH
 fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
 
