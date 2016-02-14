@@ -509,7 +509,7 @@ ShortcutConfig = React.createClass
     config.set @props.configName, val
     @props.onNewVal val if @props.onNewVal
   render: ->
-    <Row>
+    <div>
       <Col xs={12}>
         <ButtonGroup justified>
           <Button
@@ -536,7 +536,7 @@ ShortcutConfig = React.createClass
           }
         </ButtonGroup>
       </Col>
-    </Row>
+    </div>
 
 mousetrap.prototype.handleKey = (character, modifiers, e) ->
   return if e.type != 'keydown'
