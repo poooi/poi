@@ -50,9 +50,16 @@ ln -s /Applications
 popd >/dev/zero
 
 osascript <<EOF
+on delay duration
+  set endTime to (current date) + duration
+  repeat while (current date) is less than endTime
+    tell AppleScript to delay endTime - (current date)
+  end repeat
+end delay
 tell application "Finder"
  tell disk "$DISKNAME"
        open
+       delay 1
        set current view of container window to icon view
        set toolbar visible of container window to false
        set statusbar visible of container window to false

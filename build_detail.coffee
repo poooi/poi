@@ -129,14 +129,7 @@ downloadAsync = async (url, dest_dir, filename, description) ->
     log "Successfully downloaded to #{dest_path}"
   dest_path
 
-extractZip = (zip_file, dest_path, descript="") ->
-  log "Extract #{descript}"
-  fs.ensureDirSync path.dirname dest_path
-  zip = new AdmZip zip_file
-  zip.extractAllTo dest_path, true
-  log "Extracting #{descript} finished"
-
-extractZipAsync = (zip_file, dest_path, descript="") ->
+extractZipNodeAsync = (zip_file, dest_path, descript="") ->
   log "Extract #{descript}"
   new Promise (resolve) ->
     fs.ensureDirSync path.dirname dest_path
@@ -159,16 +152,18 @@ extractZipCliAsync = (zip_file, dest_path, descript="") ->
           log "Extracting #{descript} finished"
           resolve()
 
+extractZipAsync = 
+  if process.platform == 'win32'
+    extractZipNodeAsync
+  else
+    extractZipCliAsync
+
 downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
                                  description, useCli) ->
   while 1
     try
       zip_path = yield downloadAsync url, download_dir, filename, description
-      _extractAsync = if useCli? && useCli 
-        extractZipCliAsync
-      else
-        extractZipAsync
-      yield _extractAsync zip_path, dest_path, description
+      yield extractZipAsync zip_path, dest_path, description
     catch e
       log "Downloading failed, retrying #{url}, reason: #{e}"
       try
@@ -386,8 +381,9 @@ packageStage3Async = async (platform, poi_version, electron_version,
   install_flash = installFlashAsync platform, download_dir, flash_dir
 
   electron_url = get_electron_url platform, electron_version
+  useCliUnzip = process.platform != 'win32'
   install_electron = downloadExtractZipAsync electron_url, download_dir, '',
-      stage3_electron, 'electron', (platform_prefix == 'darwin')
+      stage3_electron, 'electron', useCliUnzip
 
   yield Promise.join install_flash, install_electron
 
