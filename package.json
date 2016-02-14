@@ -23,6 +23,7 @@
   "homepage": "https://github.com/poooi/poi",
   "dependencies": {
     "bluebird": "^3.0.6",
+    "classnames": "^2.2.3",
     "coffee-react": "^4.1.0",
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
