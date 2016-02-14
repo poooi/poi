@@ -24,8 +24,12 @@ window.PluginManager = require './services/plugin-manager'
 require('module').globalPaths.push(path.join(ROOT, "node_modules"))
 
 # Tray icon
-if process.platform != 'darwin'
+if process.platform isnt 'darwin'
   window.appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'))
+  window.appIcon.on 'click', ->
+    {remote} = require 'electron'
+    win = remote.getCurrentWindow()
+    if win.isMinimized() then win.restore() else win.show()
 
 # poi menu
 require './components/etc/menu'
