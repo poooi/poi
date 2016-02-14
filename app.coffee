@@ -1,4 +1,4 @@
-{app, BrowserWindow, ipcMain, nativeImage} = require 'electron'
+{app, BrowserWindow, ipcMain, nativeImage, Tray} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
 
@@ -26,7 +26,6 @@ if process.platform == 'win32'
     try
       windowsShortcuts.create shortcutPath, {target: targetPath, args: argPath}, ->
          windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
-
 
 if dbg.isEnabled()
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
@@ -124,6 +123,13 @@ app.on 'ready', ->
     # Close all sub window
     require('./lib/window').closeWindows()
     mainWindow = null
+
+  # Tray icon
+  if process.platform != 'darwin'
+    global.appIcon = appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'))
+    appIcon.on 'click', ->
+      win = mainWindow
+      if win.isMinimized() then win.restore() else win.show()
 
 ipcMain.on 'refresh-shortcut', ->
   shortcut.unregister()
