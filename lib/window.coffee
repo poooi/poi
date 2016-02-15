@@ -62,6 +62,7 @@ module.exports =
       windows[i] = null
   rememberMain: ->
     win = global.mainWindow
+    win.setResizable true # Remove after https://github.com/atom/electron/issues/4483 is fixed
     isFullScreen = win.isFullScreen()
     win.setFullScreen(false) if isFullScreen
     isMaximized = win.isMaximized() # This must be checked AFTER exiting full screen
