@@ -12,6 +12,9 @@ updateInfo = null
 doUpdate = ->
   shell.openExternal 'http://0u0.moe/poi'
 
+doUpdateGithub = ->
+  shell.openExternal 'https://github.com/poooi/poi/releases'
+
 checkUpdate = ->
   updateManager.checkUpdate (info) ->
     if info == 'error'
@@ -30,8 +33,13 @@ checkUpdate = ->
           style: 'success'
         },
         {
-          name: __ 'Download latest version'
+          name: __('Download latest version') + ' (Baidu)'
           func: doUpdate
+          style: 'primary'
+        },
+        {
+          name: __('Download latest version') + ' (Github)'
+          func: doUpdateGithub
           style: 'primary'
         }
       ]
