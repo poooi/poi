@@ -29,7 +29,7 @@
     "colors": "^1.1.2",
     "cson": "^3.0.2",
     "fs-extra": "^0.26.4",
-    "glob": "^6.0.4",
+    "glob": "^7.0.0",
     "header-case-normalizer": "^1.0.3",
     "i18n-2": "^0.6.3",
     "mime": "^1.3.4",
@@ -54,11 +54,11 @@
     "bower": "^1.5.2",
     "coffeelint": "^1.11.1",
     "gulp": "^3.9.0",
-    "mocha": "^2.3.2",
-    "mocha-lcov-reporter": "0.0.2",
-    "asar": "^0.8.3",
-    "node-7z": "^0.3.0",
+    "mocha": "^2.4.5",
+    "mocha-lcov-reporter": "^1.0.0",
+    "asar": "^0.9.1",
+    "node-7z": "^0.4.0",
     "walk": "^2.3.9",
-    "tar-fs": "1.9.0"
+    "tar-fs": "^1.10.0"
   }
 }
