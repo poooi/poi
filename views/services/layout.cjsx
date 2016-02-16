@@ -112,8 +112,8 @@ adjustPayitem = ->
         if (alert == null || typeof(alert) == 'undefined')
           return;
         alert.style.zoom = 0.8;
-        alert.style.left = '320px';
-        alert.style.top = '90px';
+        alert.style.left = '200px';
+        alert.style.top = '0px';
       }, 500);
     }
     fixPayitem();
