@@ -22,8 +22,8 @@ handleAnotherInstanceStarted = (argv, workingDirectory) ->
     # The documented `app.show()` for OSX does not actually exist (electron v0.36.7)
     # `app.focus()` is not documented, the api may change at any time
     app.focus?()
-    # show all windows...... toggleAllWindowsVisibility?
     if (mainWindow = global.mainWindow)?
+      mainWindow.show()
       mainWindow.restore() if mainWindow.isMinimized()
       mainWindow.focus()
   true
