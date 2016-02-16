@@ -34,6 +34,7 @@ makeSingleInstance = ->
       dbg.log 'Starting multiple instances of poi...'
     else
       warn 'Poi is already running. Will quit this process...'
+      require('electron').dialog.showErrorBox('Poi is already running', 'This process will quit now.')
       app.quit()
 
 
