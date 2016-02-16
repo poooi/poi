@@ -36,7 +36,7 @@ kan-game poi-info .alert {
 }
 kan-game poi-map-reminder {
   position: relative;
-  width: 120px;
+  width: 135px;
 }
 kan-game poi-map-reminder .progress {
   position: absolute;
