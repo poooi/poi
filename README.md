@@ -41,7 +41,6 @@ First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/
 git clone https://github.com/poooi/poi && cd poi
 npm i
 ./node_modules/.bin/gulp install
-cp default-config.cson config.cson
 /path/to/electron ./
 ```
 
