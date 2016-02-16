@@ -5,6 +5,8 @@
 $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
 factor = null
 poiControlHeight = 30 # Magic number
+gameLeftBound = -38.5 # The .5 removes white bound when factor != 1. It works but I dont know why lol
+gameTopBound = -16
 dropdownStyleAppended = false
 dropdownStyle = document.createElement 'style'
 
@@ -56,6 +58,7 @@ adjustSize = ->
     adjustWebviewHeight "#{window.innerHeight - poiControlHeight}px"
     factor = null
     return
+  # Set zoom factor
   webview.executeJavaScript """
     window.scrollTo(0, 0);
     if (document.querySelector('#game_frame') != null) {
@@ -67,7 +70,7 @@ adjustSize = ->
       document.querySelector('html').style.zoom = #{factor};
     }
   """
-  # Adjust webview height
+  # Adjust webview height & position
   if window.layout == 'horizontal'
     adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
     $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
@@ -139,8 +142,8 @@ handleTitleSet = ->
     }
     #w {
       position: absolute;
-      left: -38.5px;
-      top: -16px;
+      left: #{gameLeftBound}px;
+      top: #{gameTopBound}px;
     }
     #ntg-recommend {
       display: none !important;
