@@ -4,7 +4,7 @@
 WindowManager = remote.require './lib/window'
 
 window._delay = false
-window._layout = require "./layout.#{layout}"
+window._layout = require "./layout.detail"
 
 changeBounds = ->
   bound = getBounds()
@@ -30,11 +30,10 @@ changeBounds = ->
 window.addEventListener 'layout.change', (e) ->
   resizable = remote.getCurrentWindow().isResizable()
   remote.getCurrentWindow().setResizable true
-  window._layout.unload()
-  delete require.cache[require.resolve("./layout.#{layout}")]
   {layout} = e.detail
   changeBounds()
-  window._layout = require "./layout.#{layout}"
+  window.dispatchEvent new Event('resize')
+  $('#layout-css').setAttribute 'href', "./assets/css/layout.#{layout}.css"
   remote.getCurrentWindow().setResizable resizable
 
 document.addEventListener 'DOMContentLoaded', ->

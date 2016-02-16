@@ -1,10 +1,10 @@
-{$, $$} = window
+{$, $$, webviewWidth} = window
 
 # Initial
-# $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "#{window.innerWidth / 800.0 * 480.0}px"
-$('#layout-css').setAttribute 'href', "./assets/css/layout.vertical.css"
+# $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
+$('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
+factor = null
 poiControlHeight = 30 # Magic number
-minPOIHeight = 200
 dropdownStyleAppended = false
 dropdownStyle = document.createElement 'style'
 
@@ -15,22 +15,23 @@ adjustWebviewHeight = (h) ->
   $('kan-game webview')?.shadowRoot?.querySelector('object[is=browserplugin]')?.style?.height = h
 
 adjustSize = ->
-  webview = $('kan-game webview')
   poiapp = document.getElementsByTagName('poi-app')[0]
+  webview = $('kan-game webview')
   url = null
   try
     url = webview?.getURL?()
   catch e
     url = null
-  factor = Math.min window.innerWidth / 800.0, (window.innerHeight - minPOIHeight) / 480.0
-  factor = Math.ceil(factor * 100) / 100.0
-  if window.webviewWidth != -1
-    factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
-  poiapp?.style?.height = "#{window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight}px"
+  poiapp?.style?.height = "#{window.innerHeight}px"
+  # Set height of panel
   [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-    e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight) / window.zoomLevel - poiControlHeight}px"
+    if window.layout == 'horizontal'
+      e.style.height = "#{window.innerHeight / window.zoomLevel - poiControlHeight}px"
+    else
+      e.style.height = "#{(window.innerHeight - Math.ceil(480.0 * factor) - poiControlHeight) / window.zoomLevel - poiControlHeight}px"
     e.style.overflowY = "scroll"
-  if window.webviewWidth > window.innerWidth
+  # Resize when window size smaller than webview size
+  if window.layout == 'vertical' && window.webviewWidth > window.innerWidth
     nowWindow = remote.getCurrentWindow()
     bound = nowWindow.getBounds()
     borderX = bound.width - window.innerWidth
@@ -40,11 +41,23 @@ adjustSize = ->
       y: bound.y
       width: parseInt(newWidth + borderX)
       height: bound.height
-  adjustWebviewHeight "#{480.0 * factor}px"
-  $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
-  $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
-  return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
+  # Get factor
+  if webviewWidth > 0.00001
+    factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
+  else
+    factor = 0
+  # Fix poi-info when game size 0x0
+  if webviewWidth > -0.00001 and webviewWidth < 0.00001
+    $('kan-game')?.style?.display = 'none'
+  else
+    $('kan-game')?.style?.display = ''
+  if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
+    $('kan-game #webview-wrapper')?.style?.width = "#{webviewWidth}px"
+    adjustWebviewHeight "#{window.innerHeight - poiControlHeight}px"
+    factor = null
+    return
   webview.executeJavaScript """
+    window.scrollTo(0, 0);
     if (document.querySelector('#game_frame') != null) {
       var iframe = document.querySelector('#game_frame').contentWindow.document;
       document.querySelector('html').style.zoom = #{factor};
@@ -54,6 +67,17 @@ adjustSize = ->
       document.querySelector('html').style.zoom = #{factor};
     }
   """
+  # Adjust webview height
+  if window.layout == 'horizontal'
+    adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
+    $('kan-game #webview-wrapper')?.style?.marginLeft = '0'
+    $('kan-game')?.style?.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"
+  else
+    adjustWebviewHeight "#{480.0 * factor}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
+    $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
+    $('kan-game')?.style?.marginTop = '0'
   # Autoset plugin-dropdown height
   if !dropdownStyleAppended
     document.body.appendChild dropdownStyle
@@ -92,6 +116,14 @@ adjustPayitem = ->
 
 # Adjust elements layout
 handleResize = ->
+  if window.layout == 'horizontal'
+    {webviewWidth} = window
+    if webviewWidth != -1
+      $('kan-game').style.flex = webviewWidth
+      $('poi-app').style.flex = window.innerWidth - webviewWidth
+    else
+      $('kan-game').style.flex = (if window.doubleTabbed then 4.0 else 5.0)
+      $('poi-app').style.flex = (if window.doubleTabbed then 3.0 else 2.0)
   if !window._delay
     adjustSize()
   else
@@ -107,7 +139,7 @@ handleTitleSet = ->
     }
     #w {
       position: absolute;
-      left: -38px;
+      left: -38.5px;
       top: -16px;
     }
     #ntg-recommend {
@@ -118,22 +150,11 @@ handleTitleSet = ->
 
 document.addEventListener 'DOMContentLoaded', ->
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
+
+if webviewWidth != -1
+  document.addEventListener 'DOMContentLoaded', handleResize
+
 window.addEventListener 'resize', handleResize
 window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
-
-module.exports =
-  unload: ->
-    [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-      e.style.height = ""
-      e.style.overflowY = "hidden"
-    window.removeEventListener 'resize', handleResize
-    window.removeEventListener 'webview.width.change', handleResize
-    window.removeEventListener 'game.start', adjustSize
-    window.removeEventListener 'game.payitem', adjustPayitem
-    $('kan-game webview').removeEventListener 'page-title-set', handleTitleSet
-    adjustWebviewHeight "#{window.innerWidth / 800.0 * 480.0 - 5}px"
-    $('kan-game #webview-wrapper')?.style?.width = ""
-    $('kan-game #webview-wrapper')?.style?.marginLeft = ""
-    window._delay = true
