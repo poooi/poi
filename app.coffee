@@ -1,5 +1,10 @@
+# Set up debug environment
+(global.dbg = require './lib/debug').init()
+
 # Quit immediately if poi is already running, and multiple instance is not allowed
 require('./lib/singleton').makeSingleInstance()
+
+# ----- Abave code must stay at the top of this file -----
 
 {app, BrowserWindow, ipcMain, nativeImage, Tray} = require 'electron'
 path = require 'path-extra'

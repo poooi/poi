@@ -62,7 +62,3 @@ process.argv.forEach (arg, idx) ->
     when singleton.parseCLIArg(arg) then return
     # when parseWhateverOtherOptions(arg) then return
     else warn "Invalid argument (ignored): #{arg}"
-
-# Finish initialization of debug environment
-Debug.init()
-global.dbg = Debug
