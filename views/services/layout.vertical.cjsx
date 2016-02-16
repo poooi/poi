@@ -44,25 +44,18 @@ adjustSize = ->
   $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
   $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
-  webview.executeJavaScript """
-    document.querySelector('html body').style.paddingRight = window.innerWidth + "px";
-    if (document.querySelector('#game_frame') != null) {
-      var iframe = document.querySelector('#game_frame').contentWindow.document;
-      document.querySelector('html').style.zoom = #{factor};
-      iframe.querySelector('html').style.zoom = #{factor};
-      window.scrollTo(0, 0);
-      var x = document.querySelector('#game_frame').getBoundingClientRect().left + iframe.querySelector('embed').getBoundingClientRect().left;
-      var y = document.querySelector('#game_frame').getBoundingClientRect().top + iframe.querySelector('embed').getBoundingClientRect().top;
-      window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
-      document.documentElement.style.overflow = 'hidden';
-    } else if (document.querySelector('embed') != null) {
-      var iframe = document.querySelector('embed');
-      document.querySelector('html').style.zoom = #{factor};
-      window.scrollTo(0, 0);
-      var x = document.querySelector('embed').getBoundingClientRect().left;
-      var y = document.querySelector('embed').getBoundingClientRect().top;
-      window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
-      document.documentElement.style.overflow = 'hidden';
+  webview.insertCSS """
+    html {
+      overflow: hidden;
+      zoom: #{factor};
+    }
+    #dmm-ntgnavi-renew {
+      display: none;
+    }
+    #w {
+      position: absolute;
+      left: -38px;
+      top: -16px;
     }
   """
   # Autoset plugin-dropdown height

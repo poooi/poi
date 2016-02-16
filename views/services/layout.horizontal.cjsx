@@ -40,24 +40,18 @@ adjustSize = ->
   factor = Math.ceil(window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0) / 800.0 * 100) / 100.0
   if webviewWidth > 0.00001
     factor = Math.ceil(webviewWidth / 800.0 * 100) / 100.0
-  webview.executeJavaScript """
-    if (document.querySelector('#game_frame') != null) {
-      var iframe = document.querySelector('#game_frame').contentWindow.document;
-      document.querySelector('html').style.zoom = #{factor};
-      iframe.querySelector('html').style.zoom = #{factor};
-      window.scrollTo(0, 0);
-      var x = document.querySelector('#game_frame').getBoundingClientRect().left + iframe.querySelector('embed').getBoundingClientRect().left;
-      var y = document.querySelector('#game_frame').getBoundingClientRect().top + iframe.querySelector('embed').getBoundingClientRect().top;
-      window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
-      document.documentElement.style.overflow = 'hidden';
-    } else if (document.querySelector('embed') != null) {
-      var iframe = document.querySelector('embed');
-      document.querySelector('html').style.zoom = #{factor};
-      window.scrollTo(0, 0);
-      var x = document.querySelector('embed').getBoundingClientRect().left;
-      var y = document.querySelector('embed').getBoundingClientRect().top;
-      window.scrollTo(Math.ceil(x * #{factor}), Math.ceil(y * #{factor}));
-      document.documentElement.style.overflow = 'hidden';
+  webview.insertCSS """
+    html {
+      overflow: hidden;
+      zoom: #{factor};
+    }
+    #dmm-ntgnavi-renew {
+      display: none;
+    }
+    #w {
+      position: absolute;
+      left: -38px;
+      top: -16px;
     }
   """
   adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
