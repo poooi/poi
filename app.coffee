@@ -42,6 +42,26 @@ shortcut = require './lib/shortcut'
 
 global.mainWindow = mainWindow = null
 
+handleAnotherInstanceStarted = (argv, workingDirectory) ->
+  dbg.log argv
+  if argv.some((arg) -> arg is '-m')
+    log "Another instance of poi has started from \"#{workingDirectory}\"."
+  else
+    log "Another instance of poi is trying to start from \"#{workingDirectory}\" and should quit."
+    app.focus?() ##
+    # else show all windows...... toggleAllWindowsVisibility?
+    if mainWindow?
+      mainWindow.restore() if mainWindow.isMinimized()
+      mainWindow.focus()
+  true
+
+if app.makeSingleInstance handleAnotherInstanceStarted
+  if process.argv.some((arg) -> arg is '-m')
+    dbg.log 'Opening multiple instances of poi...'
+  else
+    warn 'Poi is already running. Will quit this process...'
+    app.quit()
+
 # Disable HA
 disableHA = config.get 'poi.disableHA', false
 if disableHA
