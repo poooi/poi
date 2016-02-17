@@ -1,5 +1,5 @@
 if window.i18n?.data?
-  __ = window.i18n.data.__.bind(i18n.data)
+  __ = window.i18n.data.__.bind(window.i18n.data)
 else
   path = require 'path-extra'
   i18n = new (require 'i18n-2')
