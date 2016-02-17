@@ -1,22 +1,18 @@
+{app} = require 'electron'
+path = require 'path-extra'
+fs = require 'fs-extra'
 
-pepperFlashData =
-  linux:
-    filename: 'libpepflashplayer.so'
-    version: '20.0.0.248'
-  win32:
-    filename: 'pepflashplayer.dll'
-    version: '20.0.0.248'
-  darwin:
-    filename: 'PepperFlashPlayer.plugin'
-    version: '20.0.0.248'
-
-pepperFlashData = pepperFlashData[process.platform]
-innerFlashPath = path.join 'PepperFlash', process.platform, pepperFlashData.filename
-defaultFlashPath = path.join EXECROOT, innerFlashPath
+platform = process.platform
+filename = switch platform
+  when 'darwin' then 'PepperFlashPlayer.plugin'
+  when 'linux'  then 'libpepflashplayer.so'
+  when 'win32'  then 'pepflashplayer.dll'
+innerPath = path.join 'PepperFlash', platform, filename
 try
-  fs.accessSync defaultFlashPath
-  app.commandLine.appendSwitch 'ppapi-flash-path', defaultFlashPath
-  app.commandLine.appendSwitch 'ppapi-flash-version', pepperFlashData.version
+  flashPath = path.join EXECROOT, innerPath
+  fs.accessSync flashPath
 catch
-  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, innerFlashPath)
-  app.commandLine.appendSwitch 'ppapi-flash-version', pepperFlashData.version
+  flashPath = path.join ROOT, innerPath
+dbg.extra('flashLoader').log "Loading flash player from:"
+dbg.extra('flashLoader').log flashPath
+app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
