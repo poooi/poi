@@ -31,14 +31,18 @@ types =
   "api_sakb": "Anti-LOS"
   "api_luck": "Luck"
   "api_leng": "Range"
+range = ['Short', 'Medium', 'Long', 'Very Long']
 
 module.exports =
   getItemData: (slotitem) ->
     data = []
     for type of types
       if slotitem[type]? && slotitem[type] != 0
-        if slotitem[type] > 0
-          data.push "#{__ types[type]} +#{slotitem[type]}"
+        if type != "api_leng"
+          if slotitem[type] > 0
+            data.push "#{__ types[type]} +#{slotitem[type]}"
+          else
+            data.push "#{__ types[type]} #{slotitem[type]}"
         else
-          data.push "#{__ types[type]} #{slotitem[type]}"
+          data.push "#{__ types[type]} #{__ range[slotitem[type] - 1]}"
     return data
