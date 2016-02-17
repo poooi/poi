@@ -10,16 +10,25 @@ filename = switch platform
 innerPath = join 'PepperFlash', platform, filename
 
 validatePath = (p) ->
-  return false if not p.endsWith filename
+  return false if typeof p isnt 'string' or not p.endsWith filename
   try
     fs.accessSync p
   catch
     return false
   true
 
-builtInPath = join EXECROOT, innerPath
+builtInPath = join EXECROOT, innerPath if EXECROOT?
 builtInPath = join ROOT, innerPath if not validatePath builtInPath
 
+reVerNum = /(\d+)\.(\d+)\.(\d+)\.(\d+)/
+getNewerVersion = (ver1, ver2) ->
+  v1 = reVerNum.exec ver1
+  v2 = reVerNum.exec ver2
+  if not v1
+    return if v2 then ver2 else ''
+  for i in [1..4]
+    continue if v1[i] == v2[i]
+    return if parseInt(v1[i]) > parseInt(v2[i]) then ver1 else ver2
 findChromeFlashPath = ->
   switch platform
     when 'darwin'
@@ -28,7 +37,7 @@ findChromeFlashPath = ->
         chromeVersionsDir = '/Applications/Google Chrome.app/Contents/Versions'
         chromeVersions = fs.readdirSync chromeVersionsDir
         return '' if chromeVersions.length is 0
-        chromeVer = chromeVersions[1] # TODO
+        chromeVer = chromeVersions.reduce getNewerVersion
         chromeFlashPath = join chromeVersionsDir, chromeVer,
           'Google Chrome Framework.framework/Internet Plug-Ins/PepperFlash/PepperFlashPlayer.plugin'
         fs.accessSync chromeFlashPath
