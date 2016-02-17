@@ -37,5 +37,8 @@ module.exports =
     data = []
     for type of types
       if slotitem[type]? && slotitem[type] != 0
-        data.push "#{__ types[type]}: #{slotitem[type]}"
+        if slotitem[type] > 0
+          data.push "#{__ types[type]} +#{slotitem[type]}"
+        else
+          data.push "#{__ types[type]} #{slotitem[type]}"
     return data
