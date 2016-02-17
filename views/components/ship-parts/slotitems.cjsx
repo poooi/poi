@@ -2,6 +2,7 @@ path = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, ROOT} = window
 {OverlayTrigger, Tooltip} = ReactBootstrap
 {SlotitemIcon} = require '../etc/icon'
+{getItemData} = require './slotitems-data'
 getBackgroundStyle = ->
   if window.isDarkTheme
     backgroundColor: 'rgba(33, 33, 33, 0.7)'
@@ -19,15 +20,25 @@ Slotitems = React.createClass
         itemId = item.id
         itemOverlay = if item.isExist
           <Tooltip id="fleet-#{@props.fleet}-slot-#{@props.key}-item-#{i}-level">
-            {i18n.resources.__ item.name}
-            {
-              if item.level? and item.level > 0
-                <strong style={color: '#45A9A5'}> ★{item.level}</strong>
-            }
-            {
-              if item.alv? and 1 <= item.alv <= 7
-                <img className='alv-img' src={path.join('assets', 'img', 'airplane', "alv#{item.alv}.png")} />
-            }
+            <div>
+              <div>
+                {i18n.resources.__ item.name}
+                {
+                  if item.level? and item.level > 0
+                    <strong style={color: '#45A9A5'}> ★{item.level}</strong>
+                }
+                {
+                  if item.alv? and 1 <= item.alv <= 7
+                    <img className='alv-img' src={path.join('assets', 'img', 'airplane', "alv#{item.alv}.png")} />
+                }
+              </div>
+              {
+                if _slotitems[itemId]?
+                  datas = getItemData _slotitems[itemId]
+                  for data, index in datas
+                    <div key="Slotitem-#{itemId}-#{index}">{data}</div>
+              }
+            </div>
           </Tooltip>
 
         itemSpan =
