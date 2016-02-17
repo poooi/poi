@@ -1,5 +1,17 @@
-__ = window.i18n.data.__.bind(i18n.data)
-__n = window.i18n.data.__n.bind(i18n.data)
+if window.i18n?.data?
+  __ = window.i18n.data.__.bind(i18n.data)
+else
+  path = require 'path-extra'
+  i18n = new (require 'i18n-2')
+    locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW']
+    defaultLocale: 'zh-CN'
+    directory: path.join ROOT, 'i18n', 'data'
+    updateFiles: false
+    indent: "\t"
+    extension: '.json'
+    devMode: false
+  i18n.setLocale(window.language)
+  __ = i18n.__.bind(i18n)
 
 types =
   "api_taik": "HP"
