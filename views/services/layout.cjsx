@@ -138,6 +138,11 @@ handleResize = ->
     window._delay = false
 
 handleTitleSet = ->
+  try
+    url = $('kan-game webview')?.getURL?()
+  catch e
+    url = null
+  return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
   @insertCSS """
     html {
       overflow: hidden;
