@@ -41,16 +41,16 @@ findChromeFlashPath = ->
         # and use its built-in Pepper Flash Player plugin.
         chromeVersionsDir = '/Applications/Google Chrome.app/Contents/Versions'
         chromeVersions = fs.readdirSync chromeVersionsDir
-        return '' if chromeVersions.length is 0 # Broken Chrome...
+        return null if chromeVersions.length is 0 # Broken Chrome...
         chromeVer = chromeVersions.reduce getNewerVersion
         chromeFlashPath = join chromeVersionsDir, chromeVer,
           'Google Chrome Framework.framework/Internet Plug-Ins/PepperFlash/PepperFlashPlayer.plugin'
         fs.accessSync chromeFlashPath
         chromeFlashPath
       catch
-        ''
-    when 'linux' then ''  # TODO
-    when 'win32' then ''  # TODO
+        null
+    when 'linux' then null  # TODO
+    when 'win32' then null  # TODO
 
 findSystemFlashPath = ->
   # Download/install from: https://get.adobe.com/flashplayer/otherversions/
@@ -61,9 +61,9 @@ findSystemFlashPath = ->
         fs.accessSync systemFlashPath
         systemFlashPath
       catch
-        ''
-    when 'linux' then ''  # TODO
-    when 'win32' then ''  # TODO
+        null
+    when 'linux' then null  # TODO
+    when 'win32' then null  # TODO
 
 getFlashVersion = (path) ->
   return '' if not validatePath path
@@ -83,8 +83,8 @@ parseCLIArg = (arg) ->
 
 getPath = ->
   flashPath = findChromeFlashPath()
-  flashPath = findSystemFlashPath() if not flashPath
-  flashPath = builtInPath if not flashPath
+  flashPath ?= findSystemFlashPath()
+  flashPath ?= builtInPath
   flashPath
 
 load = ->
