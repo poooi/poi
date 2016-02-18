@@ -77,7 +77,7 @@ window.addEventListener 'game.response', (e) ->
   log "#{__ 'Hit'} #{method} #{resPath}"
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
-  error __n 'Network error, Retrying %s time', 'Network error, Retrying %s times', counter
+  error __n 'Connection failed after %s retry',  counter
 window.addEventListener 'network.invalid.code', (e) ->
   {code} = e.detail
   error __ 'Network error: HTTP %s', code
