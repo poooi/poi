@@ -9,10 +9,10 @@ filename = switch platform
   when 'win32'  then 'pepflashplayer.dll'
 innerPath = join 'PepperFlash', platform, filename
 
-validatePath = (p) ->
-  return false if typeof p isnt 'string' or not p.endsWith filename
+validatePath = (path) ->
+  return false if typeof path isnt 'string' or not path.endsWith filename
   try
-    fs.accessSync p
+    fs.accessSync path
   catch
     return false
   true
@@ -47,6 +47,17 @@ findChromeFlashPath = ->
     when 'linux' then ''  # TODO
     when 'win32' then ''  # TODO
 
+getFlashVersion = (path) ->
+  return '' if not validatePath path
+  switch platform
+    when 'darwin'
+      plistPath = join path, 'Contents/Info.plist'
+      plistContent = fs.readFileSync(plistPath, 'utf8')
+      match = /<key>CFBundleVersion<\/key>\s*<string>(\d+(?:\.\d+)*)<\/string>/.exec plistContent
+      if match and match.length > 1 then match[1] else ''
+    when 'linux' then ''  # TODO
+    when 'win32' then ''  # TODO
+
 parseCLIArg = (arg) ->
   # --flash=useChrome
   # --flash-path=/Applications/Google\ Chrome.app/Contents/Versions/48.0.2564.109/Google\ Chrome\ Framework.framework/Internet\ Plug-Ins/PepperFlash/PepperFlashPlayer.plugin
@@ -65,5 +76,5 @@ load = ->
 
 
 exports.parseCLIArg = ->
-exports.getFlashPlayerVersion = (flashPlayerPath) ->
+exports.getFlashPlayerVersion = getFlashVersion
 exports.loadFlashPlayer = load
