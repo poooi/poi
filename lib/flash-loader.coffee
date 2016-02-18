@@ -52,6 +52,19 @@ findChromeFlashPath = ->
     when 'linux' then ''  # TODO
     when 'win32' then ''  # TODO
 
+findSystemFlashPath = ->
+  # Download/install from: https://get.adobe.com/flashplayer/otherversions/
+  switch platform
+    when 'darwin'
+      try
+        systemFlashPath = '/Library/Internet Plug-Ins/PepperFlashPlayer/PepperFlashPlayer.plugin'
+        fs.accessSync systemFlashPath
+        systemFlashPath
+      catch
+        ''
+    when 'linux' then ''  # TODO
+    when 'win32' then ''  # TODO
+
 getFlashVersion = (path) ->
   return '' if not validatePath path
   switch platform
@@ -69,13 +82,14 @@ parseCLIArg = (arg) ->
   # --flash-path=/Applications/Google\ Chrome.app/Contents/Versions/48.0.2564.109/Google\ Chrome\ Framework.framework/Internet\ Plug-Ins/PepperFlash/PepperFlashPlayer.plugin
 
 getPath = ->
-  chromeFlashPath = findChromeFlashPath()
-  return chromeFlashPath if validatePath chromeFlashPath
-  builtInPath
+  flashPath = findChromeFlashPath()
+  flashPath = findSystemFlashPath() if not flashPath
+  flashPath = builtInPath if not flashPath
+  flashPath
 
 load = ->
   flashPath = getPath()
-  dbg.extra('flashLoader').assert validatePath(flashPath), ''
+  dbg.extra('flashLoader').assert validatePath(flashPath), 'Path to Pepper Flash Player is invalid.'
   dbg.ex.flashLoader.log "Loading flash player from:"
   dbg.ex.flashLoader.log flashPath
   app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
