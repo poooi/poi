@@ -29,14 +29,19 @@ getNewerVersion = (ver1, ver2) ->
   for i in [1..4]
     continue if v1[i] == v2[i]
     return if parseInt(v1[i]) > parseInt(v2[i]) then ver1 else ver2
+
 findChromeFlashPath = ->
+  # Refer to: https://helpx.adobe.com/flash-player/kb/flash-player-google-chrome.html
   switch platform
     when 'darwin'
-      # "/Applications/Google Chrome.app/Contents/Versions/48.0.2564.109/Google Chrome Framework.framework/Internet Plug-Ins/PepperFlash/PepperFlashPlayer.plugin/Contents/Info.plist"
       try
+        # Usually there are 2 directories under the 'Versions' directory,
+        # all named after their respective Google Chrome version number.
+        # Find the newest version of Google Chrome
+        # and use its built-in Pepper Flash Player plugin.
         chromeVersionsDir = '/Applications/Google Chrome.app/Contents/Versions'
         chromeVersions = fs.readdirSync chromeVersionsDir
-        return '' if chromeVersions.length is 0
+        return '' if chromeVersions.length is 0 # Broken Chrome...
         chromeVer = chromeVersions.reduce getNewerVersion
         chromeFlashPath = join chromeVersionsDir, chromeVer,
           'Google Chrome Framework.framework/Internet Plug-Ins/PepperFlash/PepperFlashPlayer.plugin'
@@ -51,7 +56,8 @@ getFlashVersion = (path) ->
   return '' if not validatePath path
   switch platform
     when 'darwin'
-      plistPath = join path, 'Contents/Info.plist'
+      # The version info is in the Info.plist inside PepperFlashPlayer.plugin
+      plistPath = join path, 'Contents', 'Info.plist'
       plistContent = fs.readFileSync(plistPath, 'utf8')
       match = /<key>CFBundleVersion<\/key>\s*<string>(\d+(?:\.\d+)*)<\/string>/.exec plistContent
       if match and match.length > 1 then match[1] else ''
