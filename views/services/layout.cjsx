@@ -70,6 +70,29 @@ adjustSize = ->
     adjustWebviewHeight "#{window.innerHeight - poiControlHeight}px"
     factor = null
     return
+  # Insert CSS
+  webview.insertCSS """
+    html {
+      overflow: hidden;
+    }
+    #w, #main-ntg {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      margin-left: 0 !important;
+      margin-top: 0 !important;
+    }
+    #game_frame {
+      width: 800px !important;
+      position: absolute;
+      top: -16px;
+      left: 0;
+    }
+    .naviapp {
+      z-index: -1;
+    }
+  """
   # Set zoom factor
   webview.executeJavaScript """
     window.scrollTo(0, 0);
@@ -151,26 +174,6 @@ handleTitleSet = ->
     url = null
   return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
   @insertCSS """
-    html {
-      overflow: hidden;
-    }
-    #w, #main-ntg {
-      position: absolute !important;
-      top: 0;
-      left: 0;
-      z-index: 100;
-      margin-left: 0 !important;
-      margin-top: 0 !important;
-    }
-    #game_frame {
-      width: 800px !important;
-      position: absolute;
-      top: -16px;
-      left: 0;
-    }
-    .naviapp {
-      z-index: -1;
-    }
     #ntg-recommend {
       display: none !important;
     }
