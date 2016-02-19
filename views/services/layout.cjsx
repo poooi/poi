@@ -10,8 +10,6 @@ window._delay = false
 $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
 factor = null
 poiControlHeight = 30 # Magic number
-gameLeftBound = -38
-gameTopBound = -16
 dropdownStyleAppended = false
 dropdownStyle = document.createElement 'style'
 
