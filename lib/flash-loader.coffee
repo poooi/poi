@@ -77,6 +77,15 @@ getFlashVersion = (path) ->
     when 'linux' then ''  # TODO
     when 'win32' then ''  # TODO
 
+class FlashPlayerVersions
+
+getAllVersions = ->
+  out = new FlashPlayerVersions
+  out.chrome = getFlashVersion findChromeFlashPath()
+  out.system = getFlashVersion findSystemFlashPath()
+  out.builtin = getFlashVersion builtInPath
+  out
+
 parseCLIArg = (arg) ->
   # --flash=useChrome
   # --flash-path=/Applications/Google\ Chrome.app/Contents/Versions/48.0.2564.109/Google\ Chrome\ Framework.framework/Internet\ Plug-Ins/PepperFlash/PepperFlashPlayer.plugin
@@ -96,5 +105,6 @@ load = ->
 
 
 exports.parseCLIArg = ->
-exports.getFlashPlayerVersion = getFlashVersion
 exports.loadFlashPlayer = load
+exports.getFlashPlayerVersion = getFlashVersion
+exports.getAllVersions = getAllVersions
