@@ -10,7 +10,7 @@ window._delay = false
 $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
 factor = null
 poiControlHeight = 30 # Magic number
-gameLeftBound = -38.5 # The .5 removes white bound when factor != 1. It works but I dont know why lol
+gameLeftBound = -38
 gameTopBound = -16
 dropdownStyleAppended = false
 dropdownStyle = document.createElement 'style'
@@ -52,7 +52,15 @@ adjustSize = ->
   if webviewWidth > 0.00001
     factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
   else
-    factor = 0
+    if window.layout == 'horizontal'
+      factor = Math.ceil((window.innerHeight - poiControlHeight) / 480.0 * 100) / 100.0
+      if window.innerWidth - factor * 800 < 200
+        factor = Math.ceil((window.innerWidth - 200) / 800.0 * 100) / 100.0
+    else
+      factor = Math.ceil(window.innerWidth / 800.0 * 100) / 100.0
+      if window.innerHeight - factor * 480 < 200
+        factor = Math.ceil((window.innerHeight - 200) / 480.0 * 100) / 100.0
+  window.webviewFactor = factor
   # Fix poi-info when game size 0x0
   if webviewWidth > -0.00001 and webviewWidth < 0.00001
     $('kan-game')?.style?.display = 'none'
@@ -81,11 +89,11 @@ adjustSize = ->
     adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
     $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
     $('kan-game #webview-wrapper')?.style?.marginLeft = '0'
-    $('kan-game')?.style?.marginTop = "#{Math.max(0, (window.innerHeight - Math.floor(480 * factor - 1) - 30)) / 2.0}px"
+    $('kan-game')?.style?.marginTop = "#{Math.max(0, Math.floor((window.innerHeight - 480 * factor - poiControlHeight) / 2.0))}px"
   else
-    adjustWebviewHeight "#{480.0 * factor}px"
-    $('kan-game #webview-wrapper')?.style?.width = "#{800 * factor}px"
-    $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, window.innerWidth - 800 * factor - 1) / 2}px"
+    adjustWebviewHeight "#{Math.floor(480.0 * factor)}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
+    $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, Math.floor((window.innerWidth - Math.floor(800 * factor)) / 2.0))}px"
     $('kan-game')?.style?.marginTop = '0'
   # Autoset plugin-dropdown height
   if !dropdownStyleAppended
@@ -131,8 +139,8 @@ handleResize = ->
       $('kan-game').style.flex = webviewWidth
       $('poi-app').style.flex = window.innerWidth - webviewWidth
     else
-      $('kan-game').style.flex = (if window.doubleTabbed then 4.0 else 5.0)
-      $('poi-app').style.flex = (if window.doubleTabbed then 3.0 else 2.0)
+      $('kan-game').style.flex = Math.floor(window.webviewFactor * 800)
+      $('poi-app').style.flex = window.innerWidth - Math.floor(window.webviewFactor * 800)
   if !window._delay
     adjustSize()
   else
@@ -148,13 +156,22 @@ handleTitleSet = ->
     html {
       overflow: hidden;
     }
-    #dmm-ntgnavi-renew {
-      display: none;
+    #w, #main-ntg {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      margin-left: 0 !important;
+      margin-top: 0 !important;
     }
-    #w {
+    #game_frame {
+      width: 800px !important;
       position: absolute;
-      left: #{gameLeftBound}px;
-      top: #{gameTopBound}px;
+      top: -16px;
+      left: 0;
+    }
+    .naviapp {
+      z-index: -1;
     }
     #ntg-recommend {
       display: none !important;

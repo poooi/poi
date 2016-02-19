@@ -151,6 +151,7 @@ if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
 window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.doubleTabbed = config.get 'poi.tabarea.double', false
 window.webviewWidth = config.get 'poi.webview.width', -1
+window.webviewFactor = 1
 window.language = config.get 'poi.language', language
 window.zoomLevel = config.get 'poi.zoomLevel', 1
 window.useSVGIcon = config.get 'poi.useSVGIcon', false
