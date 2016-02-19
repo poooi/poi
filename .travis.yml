@@ -24,10 +24,3 @@ before_script:
 script:
 - gulp build
 - gulp build_plugins
-deploy:
-  provider: releases
-  api_key:
-    secure: WUeG5MaqQbdlIh1lLe3KZF4fv+ELUeLr4UXez8zYeylmLlxMsuKLZ2Lneb2xzbsoLsZs0ZtfCheFn8Ji2KeiM0IpxClNvTZKM2cSb24u2xEeuSPAVAgTzl0z1uvtHjIJD+GrDl9bJIzRcMEa2QRG82hq9zXTPEgtAvD3gPuqb6o=
-  file: build/release/*
-  on:
-    repo: poooi/poi
