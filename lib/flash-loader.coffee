@@ -78,13 +78,13 @@ getFlashVersion = (path) ->
     when 'win32' then ''  # TODO
 
 class FlashPlayerVersions
+  constructor: (builtInFlashPath, chromeFlashPath, systemFlashPath) ->
+    @builtin = getFlashVersion builtInFlashPath
+    @chrome = getFlashVersion chromeFlashPath
+    @system = getFlashVersion systemFlashPath
 
 getAllVersions = ->
-  out = new FlashPlayerVersions
-  out.chrome = getFlashVersion findChromeFlashPath()
-  out.system = getFlashVersion findSystemFlashPath()
-  out.builtin = getFlashVersion builtInPath
-  out
+  new FlashPlayerVersions builtInPath, findChromeFlashPath(), findSystemFlashPath()
 
 parseCLIArg = (arg) ->
   # --flash=useChrome
