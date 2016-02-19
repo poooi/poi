@@ -79,9 +79,9 @@ getFlashVersion = (path) ->
 
 class FlashPlayerVersions
   constructor: (builtInFlashPath, chromeFlashPath, systemFlashPath) ->
-    @builtin = getFlashVersion builtInFlashPath
-    @chrome = getFlashVersion chromeFlashPath
-    @system = getFlashVersion systemFlashPath
+    @builtin = getFlashVersion builtInFlashPath if builtInFlashPath?
+    @chrome = getFlashVersion chromeFlashPath if chromeFlashPath?
+    @system = getFlashVersion systemFlashPath if systemFlashPath?
 
 getAllVersions = ->
   new FlashPlayerVersions builtInPath, findChromeFlashPath(), findSystemFlashPath()
