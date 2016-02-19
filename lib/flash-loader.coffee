@@ -98,9 +98,9 @@ getPath = ->
 
 load = ->
   flashPath = getPath()
-  dbg.extra('flashLoader').assert validatePath(flashPath), 'Path to Pepper Flash Player is invalid.'
-  dbg.ex.flashLoader.log "Loading flash player from:"
-  dbg.ex.flashLoader.log flashPath
+  dbg.ex.flashLoader?.assert validatePath(flashPath), 'No installed Pepper Flash Player found.'
+  dbg.ex.flashLoader?.log "Loading Pepper Flash Player from:"
+  dbg.ex.flashLoader?.log flashPath
   app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
 
 
