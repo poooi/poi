@@ -17,8 +17,10 @@ validatePath = (path) ->
     return false
   true
 
-builtInPath = join EXECROOT, innerPath if EXECROOT?
-builtInPath = join ROOT, innerPath if not validatePath builtInPath
+getBuiltInFlashPath = ->
+  builtInPath = join EXECROOT, innerPath if EXECROOT?
+  builtInPath = join ROOT, innerPath if not validatePath builtInPath
+  if validatePath builtInPath then builtInPath else null
 
 reVerNum = /(\d+)\.(\d+)\.(\d+)\.(\d+)/
 getNewerVersion = (ver1, ver2) ->
@@ -84,7 +86,7 @@ class FlashPlayerVersions
     @system = getFlashVersion systemFlashPath if systemFlashPath?
 
 getAllVersions = ->
-  new FlashPlayerVersions builtInPath, findChromeFlashPath(), findSystemFlashPath()
+  new FlashPlayerVersions getBuiltInFlashPath(), findChromeFlashPath(), findSystemFlashPath()
 
 parseCLIArg = (arg) ->
   # --flash=useChrome
