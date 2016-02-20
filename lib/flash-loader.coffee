@@ -92,25 +92,17 @@ getAllVersions = ->
 useFlashLoc = 'auto'
 CLIFlashPath = ''
 reCLIArg = /^--flash-player=(.+)$/i
-reUseSpecialPath = /^@(auto|builtin|chrome|system)$/i
 parseCLIArg = (arg) ->
   if (m = reCLIArg.exec arg)?
     value = m[1]
     if value.startsWith '@'
-      if (m = reUseSpecialPath.exec value)?
-        useFlashLoc = m[1]
-      else
-        error "Invalid flash player location: '#{value}'."
-        error "Use one of [@auto, @builtin, @chrome, @system], \
-          or the path to your '#{filename}'"
+      useFlashLoc = value.slice 1
     else
       useFlashLoc = 'cli'
       CLIFlashPath = value
-    true
-  else
-    false
+  m?
 
-getPath = (loc) ->
+getPath = (loc = 'auto') ->
   switch loc
     when 'auto'
       flashPath = getBuiltInFlashPath()
@@ -130,10 +122,12 @@ getPath = (loc) ->
     when 'cli'
       flashPath = CLIFlashPath if validatePath CLIFlashPath
       errMsg = "Invalid path to '#{filename}': \n#{CLIFlashPath}"
+    else
+      errMsg = "Invalid Pepper Flash Player location: '@#{loc}'."
   if not flashPath?
     error errMsg
     dbg.ex.flashLoader?.log 'Falling back to auto-detection'
-    flashPath = getPath 'auto'
+    flashPath = getPath()
   flashPath
 
 load = ->
