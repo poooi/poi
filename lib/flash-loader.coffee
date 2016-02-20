@@ -1,6 +1,7 @@
 {app} = require 'electron'
 {join} = require 'path-extra'
 fs = require 'fs-extra'
+{warn, error} = require './utils'
 
 platform = process.platform
 filename = switch platform
@@ -88,14 +89,44 @@ class FlashPlayerVersions
 getAllVersions = ->
   new FlashPlayerVersions getBuiltInFlashPath(), findChromeFlashPath(), findSystemFlashPath()
 
+useFlashLoc = 'auto'
+CLIFlashPath = ''
+reCLIArg = /^--flash-player=(.+)$/i
+reUseSpecialPath = /^@(auto|builtin|chrome|system)$/i
 parseCLIArg = (arg) ->
-  # --flash=useChrome
-  # --flash-path=/Applications/Google\ Chrome.app/Contents/Versions/48.0.2564.109/Google\ Chrome\ Framework.framework/Internet\ Plug-Ins/PepperFlash/PepperFlashPlayer.plugin
+  if (m = reCLIArg.exec arg)?
+    value = m[1]
+    if value.startsWith '@'
+      if (m = reUseSpecialPath.exec value)?
+        useFlashLoc = m[1]
+      else
+        error "Unknown flash player location: #{value}"
+    else
+      if validatePath value
+        useFlashLoc = 'cli'
+        CLIFlashPath = value
+      else
+        error "Invalid flash player path:\n#{value}"
+    true
+  else
+    false
 
-getPath = ->
-  flashPath = builtInPath
-  flashPath ?= findChromeFlashPath()
-  flashPath ?= findSystemFlashPath()
+getPath = (loc = useFlashLoc) ->
+  switch loc
+    when 'auto'
+      flashPath = getBuiltInFlashPath()
+      flashPath ?= findChromeFlashPath()
+      flashPath ?= findSystemFlashPath()
+      return flashPath
+    when 'builtin'
+      flashPath = getBuiltInFlashPath()
+    when 'chrome'
+      flashPath = findChromeFlashPath()
+    when 'system'
+      flashPath = findSystemFlashPath()
+    when 'cli'
+      flashPath = CLIFlashPath
+  flashPath ?= getPath 'auto'
   flashPath
 
 load = ->
@@ -106,7 +137,7 @@ load = ->
   app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
 
 
-exports.parseCLIArg = ->
+exports.parseCLIArg = parseCLIArg
 exports.loadFlashPlayer = load
 exports.getFlashPlayerVersion = getFlashVersion
 exports.getAllVersions = getAllVersions
