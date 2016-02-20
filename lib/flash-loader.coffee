@@ -137,8 +137,9 @@ load = ->
     dbg.ex.flashLoader?.log flashPath
     app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
 
+if process.type is 'browser'
+  exports.parseCLIArg = parseCLIArg
+  exports.loadFlashPlayer = load
 
-exports.parseCLIArg = parseCLIArg
-exports.loadFlashPlayer = load
 exports.getFlashPlayerVersion = getFlashVersion
 exports.getAllVersions = getAllVersions
