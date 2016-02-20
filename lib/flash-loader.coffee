@@ -91,9 +91,9 @@ parseCLIArg = (arg) ->
   # --flash-path=/Applications/Google\ Chrome.app/Contents/Versions/48.0.2564.109/Google\ Chrome\ Framework.framework/Internet\ Plug-Ins/PepperFlash/PepperFlashPlayer.plugin
 
 getPath = ->
-  flashPath = findChromeFlashPath()
+  flashPath = builtInPath
+  flashPath ?= findChromeFlashPath()
   flashPath ?= findSystemFlashPath()
-  flashPath ?= builtInPath
   flashPath
 
 load = ->
