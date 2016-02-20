@@ -110,39 +110,38 @@ parseCLIArg = (arg) ->
   else
     false
 
-getPath = (loc = useFlashLoc) ->
+getPath = (loc) ->
   switch loc
     when 'auto'
       flashPath = getBuiltInFlashPath()
       flashPath ?= findChromeFlashPath()
       flashPath ?= findSystemFlashPath()
+      error 'No installed Pepper Flash Player found' if not flashPath?
       return flashPath
     when 'builtin'
       flashPath = getBuiltInFlashPath()
-      error 'Could not load built-in Pepper Flash Player' if not flashPath?
+      errMsg = 'Could not load built-in Pepper Flash Player'
     when 'chrome'
       flashPath = findChromeFlashPath()
-      error 'Could not load Chrome Pepper Flash Player' if not flashPath?
+      errMsg = 'Could not load Chrome Pepper Flash Player'
     when 'system'
       flashPath = findSystemFlashPath()
-      error 'Could not load system Pepper Flash Player plug-in' if not flashPath?
+      errMsg = 'Could not load system Pepper Flash Player plug-in'
     when 'cli'
-      if validatePath CLIFlashPath
-        flashPath = CLIFlashPath
-      else
-        error "Invalid path to '#{filename}': \n#{CLIFlashPath}"
-  dbg.ex.flashLoader?.log 'Fall back to auto-detection'
-  flashPath ?= getPath 'auto'
+      flashPath = CLIFlashPath if validatePath CLIFlashPath
+      errMsg = "Invalid path to '#{filename}': \n#{CLIFlashPath}"
+  if not flashPath?
+    error errMsg
+    dbg.ex.flashLoader?.log 'Falling back to auto-detection'
+    flashPath = getPath 'auto'
   flashPath
 
 load = ->
-  flashPath = getPath()
+  flashPath = getPath useFlashLoc
   if flashPath?
     dbg.ex.flashLoader?.log "Loading Pepper Flash Player from:"
     dbg.ex.flashLoader?.log flashPath
     app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
-  else
-    error 'No installed Pepper Flash Player found'
 
 
 exports.parseCLIArg = parseCLIArg
