@@ -1,17 +1,17 @@
 {app} = require 'electron'
 {join} = require 'path-extra'
 fs = require 'fs-extra'
-{warn, error} = require './utils'
+{error} = require './utils'
 
-platform = process.platform
-filename = switch platform
+PLATFORM = process.platform
+FILENAME = switch PLATFORM
   when 'darwin' then 'PepperFlashPlayer.plugin'
   when 'linux'  then 'libpepflashplayer.so'
   when 'win32'  then 'pepflashplayer.dll'
-innerPath = join 'PepperFlash', platform, filename
+INNER_PATH = join 'PepperFlash', PLATFORM, FILENAME
 
 validatePath = (path) ->
-  return false if typeof path isnt 'string' or not path.endsWith filename
+  return false if typeof path isnt 'string' or not path.endsWith FILENAME
   try
     fs.accessSync path
   catch
@@ -19,8 +19,8 @@ validatePath = (path) ->
   true
 
 getBuiltInFlashPath = ->
-  builtInPath = join EXECROOT, innerPath if EXECROOT?
-  builtInPath = join ROOT, innerPath if not validatePath builtInPath
+  builtInPath = join EXECROOT, INNER_PATH if EXECROOT?
+  builtInPath = join ROOT, INNER_PATH if not validatePath builtInPath
   if validatePath builtInPath then builtInPath else null
 
 reVerNum = /(\d+)\.(\d+)\.(\d+)\.(\d+)/
@@ -35,7 +35,7 @@ getNewerVersion = (ver1, ver2) ->
 
 findChromeFlashPath = ->
   # Refer to: https://helpx.adobe.com/flash-player/kb/flash-player-google-chrome.html
-  switch platform
+  switch PLATFORM
     when 'darwin'
       try
         # Usually there are 2 directories under the 'Versions' directory,
@@ -57,7 +57,7 @@ findChromeFlashPath = ->
 
 findSystemFlashPath = ->
   # Download/install from: https://get.adobe.com/flashplayer/otherversions/
-  switch platform
+  switch PLATFORM
     when 'darwin'
       try
         systemFlashPath = '/Library/Internet Plug-Ins/PepperFlashPlayer/PepperFlashPlayer.plugin'
@@ -70,7 +70,7 @@ findSystemFlashPath = ->
 
 getFlashVersion = (path) ->
   return '' if not validatePath path
-  switch platform
+  switch PLATFORM
     when 'darwin'
       # The version info is in the Info.plist inside PepperFlashPlayer.plugin
       plistPath = join path, 'Contents', 'Info.plist'
@@ -121,7 +121,7 @@ getPath = (loc = 'auto') ->
       errMsg = 'Could not load system Pepper Flash Player plug-in'
     when 'cli'
       flashPath = CLIFlashPath if validatePath CLIFlashPath
-      errMsg = "Invalid path to '#{filename}': \n#{CLIFlashPath}"
+      errMsg = "Invalid path to '#{FILENAME}': \n#{CLIFlashPath}"
     else
       errMsg = "Invalid Pepper Flash Player location: '@#{loc}'."
   if not flashPath?
