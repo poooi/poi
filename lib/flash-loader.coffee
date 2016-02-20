@@ -119,13 +119,13 @@ getPath = (loc = useFlashLoc) ->
       return flashPath
     when 'builtin'
       flashPath = getBuiltInFlashPath()
-      error 'Could not load built-in Pepper Flash Player'
+      error 'Could not load built-in Pepper Flash Player' if not flashPath?
     when 'chrome'
       flashPath = findChromeFlashPath()
-      error 'Could not load Chrome Pepper Flash Player'
+      error 'Could not load Chrome Pepper Flash Player' if not flashPath?
     when 'system'
       flashPath = findSystemFlashPath()
-      error 'Could not load system Pepper Flash Player plug-in'
+      error 'Could not load system Pepper Flash Player plug-in' if not flashPath?
     when 'cli'
       if validatePath CLIFlashPath
         flashPath = CLIFlashPath
