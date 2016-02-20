@@ -102,11 +102,8 @@ parseCLIArg = (arg) ->
       else
         error "Unknown flash player location: #{value}"
     else
-      if validatePath value
-        useFlashLoc = 'cli'
-        CLIFlashPath = value
-      else
-        error "Invalid flash player path:\n#{value}"
+      useFlashLoc = 'cli'
+      CLIFlashPath = value
     true
   else
     false
@@ -125,7 +122,10 @@ getPath = (loc = useFlashLoc) ->
     when 'system'
       flashPath = findSystemFlashPath()
     when 'cli'
-      flashPath = CLIFlashPath
+      if validatePath CLIFlashPath
+        flashPath = CLIFlashPath
+      else
+        error "Invalid path for flash player: \n#{CLIFlashPath}"
   flashPath ?= getPath 'auto'
   flashPath
 
