@@ -159,6 +159,12 @@ d = if process.platform == 'darwin' then path.join(path.homedir(), 'Pictures', '
 window.screenshotPath = config.get 'poi.screenshotPath', d
 window.notify.morale = config.get 'poi.notify.morale.value', 49
 window.notify.expedition = config.get 'poi.notify.expedition.value', 60
+muter = setInterval =>
+  try
+    if config.get 'poi.content.muted', false
+      $('kan-game webview').setAudioMuted true
+    clearInterval muter
+, 1000
 
 # i18n config
 window.i18n = {}

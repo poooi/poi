@@ -91,14 +91,6 @@ PoiControl = React.createClass
           alertWidth: @alertWidth
       window.dispatchEvent event
     @alertWidth = document.getElementById('alert-container').offsetWidth
-  componentDidMount: ->
-    setTimeout =>
-      try
-        if @state.muted
-          $('kan-game webview').setAudioMuted true
-      catch e
-        false
-    , 1000
   render: ->
     <div className='poi-control-container'>
       <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button'>{__ 'Developer Tools'}</Tooltip>}>
