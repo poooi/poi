@@ -47,17 +47,16 @@ adjustSize = ->
       width: parseInt(newWidth + borderX)
       height: bound.height
   # Get factor
-  if webviewWidth > 0.00001
-    factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
+  if window.layout == 'horizontal'
+    factor = Math.ceil((window.innerHeight - poiControlHeight) / 480.0 * 100) / 100.0
+    if window.innerWidth - factor * 800 < 200
+      factor = Math.ceil((window.innerWidth - 200) / 800.0 * 100) / 100.0
   else
-    if window.layout == 'horizontal'
-      factor = Math.ceil((window.innerHeight - poiControlHeight) / 480.0 * 100) / 100.0
-      if window.innerWidth - factor * 800 < 200
-        factor = Math.ceil((window.innerWidth - 200) / 800.0 * 100) / 100.0
-    else
-      factor = Math.ceil(window.innerWidth / 800.0 * 100) / 100.0
-      if window.innerHeight - factor * 480 < 200
-        factor = Math.ceil((window.innerHeight - 200) / 480.0 * 100) / 100.0
+    factor = Math.ceil(window.innerWidth / 800.0 * 100) / 100.0
+    if window.innerHeight - factor * 480 < 200
+      factor = Math.ceil((window.innerHeight - 200) / 480.0 * 100) / 100.0
+  if window.webviewWidth > 0.00001
+    factor = Math.ceil(window.webviewWidth / 800.0 * 100) / 100.0
   window.webviewFactor = factor
   # Fix poi-info when game size 0x0
   if webviewWidth > -0.00001 and webviewWidth < 0.00001
