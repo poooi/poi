@@ -635,10 +635,6 @@ PoiConfig = React.createClass
             label={__ 'Prevent DMM Network Change Popup'}
             configName="poi.disableNetworkAlert"
             defaultVal=false />
-          <CheckboxLabelConfig
-            label={__ 'Stop Loading When Game Loaded'}
-            configName="poi.stopLoadingOnGameLoaded"
-            defaultVal=false />
         </Grid>
       </div>
     </div>

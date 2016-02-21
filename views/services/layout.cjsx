@@ -215,13 +215,6 @@ window.addEventListener 'resize', handleResize
 window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
 window.addEventListener 'game.payitem', adjustPayitem
-window.addEventListener 'game.response', (e) ->
-  if e?.detail?.path == '/kcsapi/api_start2' && config.get poi.stopLoadingOnGameLoaded, false
-    stopOnLoad = true
-  if e?.detail?.path == '/kcsapi/api_port/port' && stopOnLoad
-    try
-      $('kan-game webview').stop()
-      stopOnLoad = false
 
 document.addEventListener 'DOMContentLoaded', ->
   $('kan-game webview').src = config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
