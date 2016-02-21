@@ -52,8 +52,18 @@ findChromeFlashPath = ->
         chromeFlashPath
       catch
         null
-    when 'linux' then null  # TODO
-    when 'win32' then null  # TODO
+    when 'win32'
+      try
+        chromeVersionsDir = join app.getPath('appData'), 'Local', 'Google', 'Chrome', 'Application'
+        chromeVersions = fs.readdirSync chromeVersionsDir
+        return null if chromeVersions.length is 0 # Broken Chrome...
+        chromeVer = chromeVersions.reduce getNewerVersion
+        chromeFlashPath = join chromeVersionsDir, chromeVer, 'PepperFlash', FILENAME
+        fs.accessSync chromeFlashPath
+        chromeFlashPath
+      catch
+        null
+    else null
 
 findSystemFlashPath = ->
   # Download/install from: https://get.adobe.com/flashplayer/otherversions/
@@ -65,8 +75,7 @@ findSystemFlashPath = ->
         systemFlashPath
       catch
         null
-    when 'linux' then null  # TODO
-    when 'win32' then null  # TODO
+    else null
 
 getFlashVersion = (path) ->
   dbg.ex.flashLoader?.assert path, 'No flash player path passed in!'
@@ -78,8 +87,7 @@ getFlashVersion = (path) ->
       plistContent = fs.readFileSync(plistPath, 'utf8')
       match = /<key>CFBundleVersion<\/key>\s*<string>(\d+(?:\.\d+)*)<\/string>/.exec plistContent
       if match and match.length > 1 then match[1] else ''
-    when 'linux' then ''  # TODO
-    when 'win32' then ''  # TODO
+    else ''
 
 class FlashPlayerVersions
   constructor: (builtInFlashPath, chromeFlashPath, systemFlashPath) ->
