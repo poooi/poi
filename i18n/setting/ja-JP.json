@@ -120,5 +120,6 @@
   "Boss key": "ボスが来た",
   "Press the key, or Esc to cancel": "割り当てるキーを押してください",
   "Disabled": "未設定",
-  "Display \"Tips\"": "「ヒント」を表示"
+  "Display \"Tips\"": "「ヒント」を表示",
+  "Stop Loading When Game Loaded": "ゲームの読み込みが完了後、ページの読み込みを終止します"
 }
