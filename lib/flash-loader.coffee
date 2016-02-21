@@ -103,6 +103,13 @@ parseCLIArg = (arg) ->
   m?
 
 getPath = (loc = 'auto') ->
+  # The order of detecting Pepper Flash Player:
+  # 1. If '@builtin'/'@chrome'/'@system'/[a file path] is passed from CLI,
+  #    try to find flash player from the specified location.
+  # 2. If 1 failed, or '@auto' or nothing is passed from CLI (i.e., auto-detection),
+  #    try to find built-in flash player.
+  # 3. If 2 failed, try to find Google Chrome integrated flash player.
+  # 4. If 3 failed, try to find globally installed flash player.
   switch loc
     when 'auto'
       flashPath = getBuiltInFlashPath()
@@ -136,6 +143,10 @@ load = ->
     dbg.ex.flashLoader?.log "Loading Pepper Flash Player from:"
     dbg.ex.flashLoader?.log flashPath
     app.commandLine.appendSwitch 'ppapi-flash-path', flashPath
+    # Note: the 'ppapi-flash-version' switch is used by Google Chrome to decide
+    # which flash player to load (it'll choose the newest one), and dioplay in
+    # the 'chrome://version', 'chrome://plugins', 'chrome://flash' pages.
+    # But it's useless here, so we just ignore it.
 
 if process.type is 'browser'
   exports.parseCLIArg = parseCLIArg
