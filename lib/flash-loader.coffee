@@ -69,6 +69,7 @@ findSystemFlashPath = ->
     when 'win32' then null  # TODO
 
 getFlashVersion = (path) ->
+  dbg.ex.flashLoader?.assert path, 'No flash player path passed in!'
   return '' if not validatePath path
   switch PLATFORM
     when 'darwin'
@@ -91,7 +92,7 @@ getAllVersions = ->
 
 useFlashLoc = 'auto'
 CLIFlashPath = ''
-reCLIArg = /^--flash-player=(.+)$/i
+reCLIArg = /^--flash=(.+)$/i
 parseCLIArg = (arg) ->
   if (m = reCLIArg.exec arg)?
     value = m[1]
@@ -110,7 +111,7 @@ getPath = (loc = 'auto') ->
   #    try to find built-in flash player.
   # 3. If 2 failed, try to find Google Chrome integrated flash player.
   # 4. If 3 failed, try to find globally installed flash player.
-  switch loc
+  switch loc.toLowerCase()
     when 'auto'
       flashPath = getBuiltInFlashPath()
       flashPath ?= findChromeFlashPath()
@@ -150,7 +151,7 @@ load = ->
 
 if process.type is 'browser'
   exports.parseCLIArg = parseCLIArg
-  exports.loadFlashPlayer = load
+  exports.load = load
 
-exports.getFlashPlayerVersion = getFlashVersion
+exports.getFlashVersion = getFlashVersion
 exports.getAllVersions = getAllVersions
