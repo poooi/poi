@@ -1,6 +1,7 @@
 # Process Command Line Arguments
 {warn} = require './utils'
 Debug = require './debug'
+fl = require './flash-loader'
 
 # At this stage we only support a few flags,
 # so it's OK to process them one by one like this
@@ -57,6 +58,7 @@ process.argv.forEach (arg, idx) ->
     when preprocessArg(arg, idx) then return
     when checkShowVersion(arg) then return
     when parseDebugOptions(arg) then return
+    when fl.parseCLIArg(arg) then return
     # when parseWhateverOtherOptions(arg) then return
     else warn "Invalid argument (ignored): #{arg}"
 
