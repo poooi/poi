@@ -102,9 +102,9 @@ app.on 'ready', ->
   # Default menu
   mainWindow.reloadArea = 'kan-game webview'
   if process.platform == 'darwin'
-    if /electron$/i.test process.argv[0]
-      icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.icns")
-      app.dock?.setIcon? icon
+  #  if /electron$/i.test process.argv[0]
+  #    icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
+  #    app.dock?.setIcon? icon
   else
     mainWindow.setMenu null
 
