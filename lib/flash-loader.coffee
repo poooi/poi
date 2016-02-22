@@ -52,22 +52,6 @@ findChromeFlashPath = ->
         chromeFlashPath
       catch
         null
-    when 'win32'
-      chromeInstallDirs = [
-        join(app.getPath('appData'), 'Local')
-        'C:\\Program Files (x86)'
-        'C:\\Program Files'
-      ]
-      for chromeDir in chromeInstallDirs
-        chromeVersionsDir = join chromeDir, 'Google', 'Chrome', 'Application'
-        try
-          chromeVersions = fs.readdirSync chromeVersionsDir
-          if chromeVersions.length > 0
-            chromeVer = chromeVersions.reduce getNewerVersion
-            chromeFlashPath = join chromeVersionsDir, chromeVer, 'PepperFlash', FILENAME
-            fs.accessSync chromeFlashPath
-            return chromeFlashPath
-      null
     else null
 
 findSystemFlashPath = ->
