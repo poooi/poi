@@ -90,7 +90,7 @@ get_flash_url = (platform) ->
 target_list = [
   # Files
   'app.js', 'bower.json', 'config.cson',
-  'index.html', 'index.js', 'LICENSE', 'package.json',
+  'index.html', 'index.js', 'LICENSE', 'package.json', 'babel.config.js',
   # Folders
   'assets',
   'components',
@@ -152,7 +152,7 @@ extractZipCliAsync = (zip_file, dest_path, descript="") ->
           log "Extracting #{descript} finished"
           resolve()
 
-extractZipAsync = 
+extractZipAsync =
   if process.platform == 'win32'
     extractZipNodeAsync
   else
@@ -308,18 +308,18 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
   asar_path = path.join building_root, "app.asar"
   release_path = path.join release_dir, "app-#{poi_version}.7z"
 
-  try 
+  try
     if !DONT_PACK_APP_IF_EXISTS
       throw true
     yield fs.accessAsync asar_path, fs.R_OK
-  catch 
+  catch
     try
       fs.removeSync stage1_app
       fs.removeSync stage2_app
     catch e
     fs.ensureDirSync stage1_app
     fs.ensureDirSync stage2_app
-  
+
     # Stage1: Everything downloaded and translated
     yield gitArchiveAsync tar_path, stage1_app
     download_themes = downloadThemesAsync theme_root
@@ -334,7 +334,7 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
           )())
       )()
     yield Promise.join download_themes, prepare_app
-  
+
     # Stage2: Filtered copy
     yield filterCopyAppAsync stage1_app, stage2_app
 
