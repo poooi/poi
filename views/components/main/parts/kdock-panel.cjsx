@@ -3,6 +3,7 @@
 {join} = require 'path-extra'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
+{MaterialIcon} = require '../../etc/icon'
 
 showItemDevResultDelay = if window.config.get('poi.delayItemDevResult', false) then 6200 else 500
 
@@ -112,8 +113,7 @@ KdockPanel = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.response', @handleResponse
   getMaterialImage: (idx) ->
-    path = join(ROOT, 'assets', 'img', 'material', "0#{idx}.png")
-    <img src={path} className="material-icon" />
+    <MaterialIcon materialId={idx} className="material-icon" />
   constructionIcon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
   notify: ->
     return if not @canNotify
