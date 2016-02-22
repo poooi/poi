@@ -1,4 +1,5 @@
 require 'coffee-react/register'
+require('babel-register')(require('../babel.config'))
 path = require 'path-extra'
 fs = require 'fs-extra'
 os = require 'os'
