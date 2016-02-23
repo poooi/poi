@@ -88,11 +88,11 @@ class DebuggerBase extends IDebugger
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
   extra: (tag) ->
-    if @validateTagName(tag) and !@ex[tag]?
-      Object.defineProperty @ex, tag,
+    if @validateTagName(tag) and !@h[tag]?
+      Object.defineProperty @h, tag,
         value: new ExOptHandler
         enumerable: true
-      Object.defineProperties @ex[tag],
+      Object.defineProperties @h[tag],
         enable:
           value: @enableExtra.bind(@, tag)
         disable:
@@ -103,9 +103,9 @@ class DebuggerBase extends IDebugger
           value: @_getLogFunc "[#{tag}]"
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
-    @ex[tag]
+    @h[tag]
 
-  Object.defineProperty @prototype, 'ex',
+  Object.defineProperty @prototype, 'h',
     value: new ExtraDebugOptions
     enumerable: true
 
@@ -159,8 +159,8 @@ class DebuggerRenderer extends DebuggerBase
     relist = @list.bind @
     output = new DevToolsBooster
     output['DEBUG'] = new Booster(@, 'main', relist)
-    for opt of @ex
-      output[opt] = new Booster(@ex[opt], 'extra', relist)
+    for opt of @h
+      output[opt] = new Booster(@h[opt], 'extra', relist)
     console.table output
 
 dbg = if isRenderer then new DebuggerRenderer else new DebuggerBrowser
