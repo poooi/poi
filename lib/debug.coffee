@@ -178,6 +178,7 @@ class DebuggerRenderer extends DebuggerBase
     output = new DevToolsBooster
     output['DEBUG'] = new Booster(@, 'main', relist)
     for opt of @h
+      continue if opt is 'main'
       output[opt] = new Booster(@h[opt], 'extra', relist)
     console.table output
 
