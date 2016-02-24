@@ -88,6 +88,9 @@ adjustSize = ->
       top: -16px;
       left: 0;
     }
+    #spacing_top {
+      display: none;
+    }
     .naviapp {
       z-index: -1;
     }
