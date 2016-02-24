@@ -50,6 +50,7 @@ class DebuggerBase extends IDebugger
   definePureVirtual @prototype, '_getLogFunc', doNothing
   constructor: ->
     @_log = @_getLogFunc '[DEBUG]'
+    @main()
 
   initialised = false
   isInitialised: ->
@@ -104,6 +105,23 @@ class DebuggerBase extends IDebugger
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
     @h[tag]
+  main: ->
+    if not @h.main?
+      Object.defineProperty @h, 'main',
+        value: new ExOptHandler
+        enumerable: true
+      Object.defineProperties @h.main,
+        enable:
+          value: @enable.bind @
+        disable:
+          value: @disable.bind @
+        isEnabled:
+          value: @isEnabled.bind @
+        _log:
+          value: @_log
+        toString:
+          value: -> "[main: #{if @isEnabled() then 'enabled' else 'disabled'}]"
+    @h.main
 
   Object.defineProperty @prototype, 'h',
     value: new ExtraDebugOptions
