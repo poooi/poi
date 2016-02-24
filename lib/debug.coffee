@@ -50,6 +50,7 @@ class DebuggerBase extends IDebugger
   definePureVirtual @prototype, '_getLogFunc', doNothing
   constructor: ->
     @_log = @_getLogFunc '[DEBUG]'
+    @main()
 
   initialised = false
   isInitialised: ->
@@ -88,11 +89,11 @@ class DebuggerBase extends IDebugger
   getAllExtraOptionsAsArray: ->
     Array.from extraOpts
   extra: (tag) ->
-    if @validateTagName(tag) and !@ex[tag]?
-      Object.defineProperty @ex, tag,
+    if @validateTagName(tag) and !@h[tag]?
+      Object.defineProperty @h, tag,
         value: new ExOptHandler
         enumerable: true
-      Object.defineProperties @ex[tag],
+      Object.defineProperties @h[tag],
         enable:
           value: @enableExtra.bind(@, tag)
         disable:
@@ -103,9 +104,26 @@ class DebuggerBase extends IDebugger
           value: @_getLogFunc "[#{tag}]"
         toString:
           value: -> "[#{tag}: #{if @isEnabled() then 'enabled' else 'disabled'}]"
-    @ex[tag]
+    @h[tag]
+  main: ->
+    if not @h.main?
+      Object.defineProperty @h, 'main',
+        value: new ExOptHandler
+        enumerable: true
+      Object.defineProperties @h.main,
+        enable:
+          value: @enable.bind @
+        disable:
+          value: @disable.bind @
+        isEnabled:
+          value: @isEnabled.bind @
+        _log:
+          value: @_log
+        toString:
+          value: -> "[main: #{if @isEnabled() then 'enabled' else 'disabled'}]"
+    @h.main
 
-  Object.defineProperty @prototype, 'ex',
+  Object.defineProperty @prototype, 'h',
     value: new ExtraDebugOptions
     enumerable: true
 
@@ -159,8 +177,9 @@ class DebuggerRenderer extends DebuggerBase
     relist = @list.bind @
     output = new DevToolsBooster
     output['DEBUG'] = new Booster(@, 'main', relist)
-    for opt of @ex
-      output[opt] = new Booster(@ex[opt], 'extra', relist)
+    for opt of @h
+      continue if opt is 'main'
+      output[opt] = new Booster(@h[opt], 'extra', relist)
     console.table output
 
 dbg = if isRenderer then new DebuggerRenderer else new DebuggerBrowser
