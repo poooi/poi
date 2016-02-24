@@ -52,12 +52,12 @@ module.exports =
     # retreat status
     if shipId == escapeId || shipId == towId
       return status = 0
+    # repairing
+    else if shipId in _ndocks
+      return status = 1
     # supply
     else if miniFlag and (Math.min _ships[shipId].api_fuel / _ships[shipId].api_fuel_max * 100, _ships[shipId].api_bull / _ships[shipId].api_bull_max * 100) < 100
       return status = 6
-    # repairing
-    if shipId in _ndocks
-      return status = 1
     # special 1 locked phase 1
     else if _ships[shipId].api_sally_area == 1
       return status = 2
