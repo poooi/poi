@@ -49,9 +49,18 @@ CustomCssInjector = React.createClass
     fs.ensureFileSync cssPath
     <link rel='stylesheet' id='custom-css' href={cssPath} />
 
+ScaleCssInjector = React.createClass
+  render: ->
+    scaleCompile = ->
+      return __html: "
+      div[role='tooltip']{transform-origin : 0 0; -webkit-transform : scale(#{window.zoomLevel})}
+      "
+    <style dangerouslySetInnerHTML={scaleCompile()} />
+
 ReactDOM.render <PoiAlert id='poi-alert' />, $('poi-alert')
 ReactDOM.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
 ReactDOM.render <PoiControl />, $('poi-control')
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
 ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
 ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
+ReactDOM.render <ScaleCssInjector />, $('poi-scale-injector')

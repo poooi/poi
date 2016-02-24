@@ -3,7 +3,7 @@ fs = require 'fs-extra'
 {remote} = require 'electron'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
-{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
+{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, ReactDOM} = window
 {Grid, Col, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
@@ -105,6 +105,14 @@ ChangeThemeConfig = React.createClass
       </Col>
     </Grid>
 
+ScaleCssInjector = React.createClass
+  render: ->
+    scaleCompile = ->
+      return __html: "
+      div[role='tooltip']{transform-origin : 0 0; -webkit-transform : scale(#{window.zoomLevel})}
+      "
+    <style dangerouslySetInnerHTML={scaleCompile()} />
+
 ZoomingConfig = React.createClass
   getInitialState: ->
     zoomLevel: config.get 'poi.zoomLevel', 1
@@ -115,6 +123,7 @@ ZoomingConfig = React.createClass
     document.getElementById('poi-app-container').style.transformOrigin = '0 0'
     document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{zoomLevel})"
     document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / zoomLevel)}%"
+    ReactDOM.render <ScaleCssInjector />, $('poi-scale-injector')
     poiappHeight = parseInt(document.getElementsByTagName('poi-app')[0].style.height)
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = "#{poiappHeight / zoomLevel - 40}px"
