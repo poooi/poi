@@ -105,14 +105,6 @@ ChangeThemeConfig = React.createClass
       </Col>
     </Grid>
 
-ScaleCssInjector = React.createClass
-  render: ->
-    scaleCompile = ->
-      return __html: "
-      div[role='tooltip']{transform-origin : 0 0; -webkit-transform : scale(#{window.zoomLevel})}
-      "
-    <style dangerouslySetInnerHTML={scaleCompile()} />
-
 ZoomingConfig = React.createClass
   getInitialState: ->
     zoomLevel: config.get 'poi.zoomLevel', 1
@@ -120,15 +112,12 @@ ZoomingConfig = React.createClass
     zoomLevel = @refs.zoomLevel.getValue()
     zoomLevel = parseFloat(zoomLevel)
     return if @state.zoomLevel == zoomLevel
-    document.getElementById('poi-app-container').style.transformOrigin = '0 0'
-    document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{zoomLevel})"
-    document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / zoomLevel)}%"
-    ReactDOM.render <ScaleCssInjector />, $('poi-scale-injector')
     poiappHeight = parseInt(document.getElementsByTagName('poi-app')[0].style.height)
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = "#{poiappHeight / zoomLevel - 40}px"
       e.style.overflowY = "scroll"
     window.zoomLevel = zoomLevel
+    window.dispatchEvent new Event('zoom')
     window.dispatchEvent new Event('resize')
     config.set('poi.zoomLevel', zoomLevel)
     @setState

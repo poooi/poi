@@ -9,11 +9,6 @@ path = require 'path-extra'
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
-# Set zoom level
-document.getElementById('poi-app-container').style.transformOrigin = '0 0'
-document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{window.zoomLevel})"
-document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / window.zoomLevel)}%"
-
 # Hackable panels
 window.hack = {}
 
@@ -49,18 +44,9 @@ CustomCssInjector = React.createClass
     fs.ensureFileSync cssPath
     <link rel='stylesheet' id='custom-css' href={cssPath} />
 
-ScaleCssInjector = React.createClass
-  render: ->
-    scaleCompile = ->
-      return __html: "
-      div[role='tooltip']{transform-origin : 0 0; -webkit-transform : scale(#{window.zoomLevel})}
-      "
-    <style dangerouslySetInnerHTML={scaleCompile()} />
-
 ReactDOM.render <PoiAlert id='poi-alert' />, $('poi-alert')
 ReactDOM.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
 ReactDOM.render <PoiControl />, $('poi-control')
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
 ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
 ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
-ReactDOM.render <ScaleCssInjector />, $('poi-scale-injector')
