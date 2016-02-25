@@ -67,13 +67,21 @@ window.onbeforeunload = (e) ->
     ]
     e.returnValue = false
 
+class GameResponse
+  constructor: (@path, @body, @postBody) ->
+    Object.defineProperty @, 'ClickToCopy -->',
+      get: ->
+        require('electron').clipboard.writeText JSON.stringify @
+        "Copied: #{@path}"
+
 window.addEventListener 'game.request', (e) ->
   {method} = e.detail
   resPath = e.detail.path
 window.addEventListener 'game.response', (e) ->
   {method, body, postBody} = e.detail
   resPath = e.detail.path
-  dbg.extra('gameResponse').log [resPath, body, postBody]
+  if dbg.extra('gameResponse').isEnabled()
+    dbg._getLogFunc()(new GameResponse(resPath, body, postBody))
   log "#{__ 'Hit'} #{method} #{resPath}"
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail

@@ -165,7 +165,8 @@ class Booster
 class DebuggerRenderer extends DebuggerBase
   style = 'background: linear-gradient(30deg, cyan, white 3ex)'
   _getLogFunc: (prefix) ->
-    console.debug.bind console, "%c#{prefix}", style
+    if prefix? then console.debug.bind console, "%c#{prefix}", style
+    else console.debug.bind console
 
   init: ->
     return Debug.wrap('Already initialised') if @isInitialised()
