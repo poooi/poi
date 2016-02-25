@@ -10,38 +10,38 @@ PoiAlert = React.createClass
     overflow: false
     messagewidth: 0
 
-  updateAlert: (e) ->
-    # Must set innerHTML before getting offsetWidth
-    if React.isValidElement @message
-      displayMessage = @message
-      ReactDOM.render @message, document.getElementById('alert-area')
-      if e
-        containerWidth = e.detail.alertWidth
-      else
-        containerWidth = document.getElementById('alert-container').offsetWidth
-      if containerWidth < document.getElementById('alert-area').offsetWidth
-        overflow = true
-      else
-        overflow = false
-    else
-      document.getElementById('alert-area').innerHTML = @message
-      if e
-        containerWidth = e.detail.alertWidth
-      else
-        containerWidth = document.getElementById('alert-container').offsetWidth
-      if containerWidth < document.getElementById('alert-area').offsetWidth
-        # Twice messages each followed by 5 full-width spaces
-        displayMessage = "#{@message}　　　　　#{@message}　　　　　"
-        overflow = true
-      else
-        displayMessage = @message
-        overflow = false
-      # Must set innerHTML again before getting offsetWidth
-      document.getElementById('alert-area').innerHTML = displayMessage
+  updateAlert: (e, overflow) ->
+    displayMessage = @message
     @setState
       message: displayMessage
       overflowAnim: if overflow then 'overflow-anim' else ''
+
+  alertWidthChange: (e) ->
+    if @state.overflowAnim isnt ''
+      @message = @messageOld
+    @updateAlert()
+
+  handleMessageScroll: (overflow) ->
+    overflowed = @state.overflowAnim isnt ''
+    return if overflow is overflowed
+    if overflow
+      @messageOld = @message
+      if React.isValidElement @message
+        @message = <span>{@message}<span>　　　　　</span>{@message}<span>　　　　　</span></span>
+      else
+        @message = "#{@message}　　　　　#{@message}　　　　　"
+    @updateAlert(null, overflow)
+
+  handleAlertChanged: (e) ->
+    @setState
       messageWidth: document.getElementById('alert-area').offsetWidth
+    if e?.detail?.alertWidth?
+      containerWidth = e.detail.alertWidth
+    else
+      containerWidth = document.getElementById('alert-container').offsetWidth
+    contentWidth = document.getElementById('alert-area').offsetWidth
+    overflow = containerWidth < contentWidth
+    @handleMessageScroll(overflow)
 
   handleAlert: (e) ->
     # Format:
@@ -66,11 +66,18 @@ PoiAlert = React.createClass
 
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
-    window.addEventListener 'alert.change', @updateAlert
+    window.addEventListener 'alert.change', @alertWidthChange
     @message = @state.message
+    observer = new MutationObserver(@handleAlertChanged)
+    target = document.getElementById('alert-area')
+    options =
+      childList: true
+      attributes: true
+      subtree: true
+    observer.observe(target, options)
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
-    window.removeEventListener 'alert.change', @updateAlert
+    window.removeEventListener 'alert.change', @alertWidthChange
   render: ->
     <div id='alert-container' style={overflow: 'hidden'} className="alert alert-#{@messageType}">
       <div className='alert-position' style={width: @state.messageWidth}>
