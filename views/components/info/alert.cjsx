@@ -10,22 +10,24 @@ PoiAlert = React.createClass
     overflow: false
     messagewidth: 0
 
-  updateAlert: (e, overflow) ->
+  updateAlert: (e, overflow, alertChanged) ->
     displayMessage = @message
     @setState
       message: displayMessage
       overflowAnim: if overflow then 'overflow-anim' else ''
+    if alertChanged then @handleAlertChanged()
 
   alertWidthChange: (e) ->
+    @alertWidth = e.detail.alertWidth
     if @state.overflowAnim isnt ''
       @message = @messageOld
-    @updateAlert()
+    @needUpdate = true
+    @updateAlert(null, @state.overflowAnim)
 
   handleMessageScroll: (overflow) ->
     overflowed = @state.overflowAnim isnt ''
-    return if overflow is overflowed
+    return if overflow is overflowed && !@needUpdate
     if overflow
-      @messageOld = @message
       if React.isValidElement @message
         @message = <span>{@message}<span>　　　　　</span>{@message}<span>　　　　　</span></span>
       else
@@ -35,12 +37,8 @@ PoiAlert = React.createClass
   handleAlertChanged: (e) ->
     @setState
       messageWidth: document.getElementById('alert-area').offsetWidth
-    if e?.detail?.alertWidth?
-      containerWidth = e.detail.alertWidth
-    else
-      containerWidth = document.getElementById('alert-container').offsetWidth
     contentWidth = document.getElementById('alert-area').offsetWidth
-    overflow = containerWidth < contentWidth
+    overflow = @alertWidth < contentWidth
     @handleMessageScroll(overflow)
 
   handleAlert: (e) ->
@@ -61,13 +59,17 @@ PoiAlert = React.createClass
       else
         @stickyEnd = null
       @message = e.detail.message
+      @messageOld = @message
       @messageType = e.detail.type
       @updateAlert()
 
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
     window.addEventListener 'alert.change', @alertWidthChange
+    @alertWidth = document.getElementById('alert-container').offsetWidth
     @message = @state.message
+    @messageOld = @message
+    @needUpdate = false
     observer = new MutationObserver(@handleAlertChanged)
     target = document.getElementById('alert-area')
     options =
@@ -75,6 +77,12 @@ PoiAlert = React.createClass
       attributes: true
       subtree: true
     observer.observe(target, options)
+  componentDidUpdate: ->
+    setTimeout =>
+      @alertWidth = document.getElementById('alert-container').offsetWidth
+    , 350
+    if @needUpdate then @handleAlertChanged()
+    @needUpdate = false
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
     window.removeEventListener 'alert.change', @alertWidthChange
