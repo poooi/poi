@@ -84,13 +84,15 @@ PoiControl = React.createClass
     @setState {extend}
   componentDidUpdate: (prevProps, prevState) ->
     if prevState.extend != @state.extend
-      event = new CustomEvent 'alert.change',
-        bubbles: true
-        cancelable: true
-        detail:
-          alertWidth: @alertWidth
-      window.dispatchEvent event
-    @alertWidth = document.getElementById('alert-container').offsetWidth
+      setTimeout =>
+        alertWidth = document.getElementById('alert-container').offsetWidth
+        event = new CustomEvent 'alert.change',
+          bubbles: true
+          cancelable: true
+          detail:
+            alertWidth: alertWidth
+        window.dispatchEvent event
+      , 350
   render: ->
     <div className='poi-control-container'>
       <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button'>{__ 'Developer Tools'}</Tooltip>}>
