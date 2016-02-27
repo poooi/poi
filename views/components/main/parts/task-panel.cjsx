@@ -309,12 +309,10 @@ TaskPanel = React.createClass
           flag = updateQuestRecord('sally', null, 1)
           firstBattle = false
     return unless flag
-    for task in tasks
-      continue if task.id >= 100000
-      if questGoals[task.id]?
-        task.tracking = true
-        task.percent = questRecord[task.id].count / questRecord[task.id].required
-        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+    for task in tasks when task.id < 100000 and questRecord[task.id]?
+      task.tracking = true
+      task.percent = questRecord[task.id].count / questRecord[task.id].required
+      task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
@@ -355,12 +353,10 @@ TaskPanel = React.createClass
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
     if flag
       {tasks} = @state
-      for task in tasks
-        continue if task.id >= 100000
-        if questGoals[task.id]?
-          task.tracking = true
-          task.percent = questRecord[task.id].count / questRecord[task.id].required
-          task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+      for task in tasks when task.id < 100000 and questRecord[task.id]?
+        task.tracking = true
+        task.percent = questRecord[task.id].count / questRecord[task.id].required
+        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
       tasks = _.sortBy tasks, (e) -> e.id
       @setState
         tasks: tasks
