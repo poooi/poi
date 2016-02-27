@@ -14,6 +14,7 @@ shell = require 'shell'
 Divider = require './divider'
 async = Promise.coroutine
 classnames = require 'classnames'
+updateNotif = config.get 'packageManager.enablePluginCheck', true
 
 openLink = (link, e) ->
   shell.openExternal link
@@ -436,7 +437,6 @@ PluginConfig = React.createClass
       @setState
         manuallyInstallStatus: 0
   componentDidMount: async ->
-    updateNotif = config.get 'packageManager.enablePluginCheck', true
     mirrors = yield PluginManager.getMirrors()
     PluginManager.readPlugins(true)
     config = yield PluginManager.getConf()
