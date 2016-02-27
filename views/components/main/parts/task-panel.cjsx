@@ -134,10 +134,11 @@ inactivateQuestRecord = (id) ->
   questRecord[id].active = false
   syncQuestRecord()
 resetQuestRecord = (types, resetInterval, id, questRecord) ->
-  if questGoals[id]? and questGoals[id].type in types
+  return unless questGoals[id]?
+  if questGoals[id].type in types
     questRecord.active = false
     questRecord.count = 0
-  else if questRecord.resetInterval is resetInterval
+  else if questGoals[id].resetInterval is resetInterval
     questRecord.count = 0
 resetQuestRecordDaily = resetQuestRecord.bind(null, [2, 4, 5], 1)
 resetQuestRecordWeekly = resetQuestRecord.bind(null, [3], 2)
@@ -206,12 +207,11 @@ TaskPanel = React.createClass
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
           if questRecord? and questRecord.time?
             now = (new Date()).getTime()
-            isDiffDay = isDifferentDay now, prevTime
-            isDiffWeek = isDifferentWeek now, prevTime
-            isDiffMonth = isDifferentMonth now, prevTime
+            return unless isDifferentDay now, questRecord.time
+            isDiffWeek = isDifferentWeek now, questRecord.time
+            isDiffMonth = isDifferentMonth now, questRecord.time
             for id, q of questRecord when questGoals[id]?
-              if isDiffDay
-                resetQuestRecordDaily id, q
+              resetQuestRecordDaily id, q
               if isDiffWeek
                 resetQuestRecordWeekly id, q
               if isDiffMonth
