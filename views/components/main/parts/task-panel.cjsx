@@ -105,8 +105,7 @@ activateQuestRecord = (id, progress) ->
       count: 0
       required: 0
       active: true
-    for k, v of questGoals[id]
-      continue if k == 'type'
+    for k, v of questGoals[id] when typeof v is 'object' and v isnt null
       questRecord[id][k] =
         count: v.init
         required: v.required
@@ -114,7 +113,8 @@ activateQuestRecord = (id, progress) ->
       questRecord[id].count += v.init
       questRecord[id].required += v.required
   # Only sync progress with game progress if the quest has only one goal.
-  if Object.keys(questGoals[id]).length == 2
+  goals = (k for own k, v of questGoals[id] when typeof v is 'object' and v isnt null)
+  if goals.length is 1
     progress = switch progress
       when __ 'Completed'
         1
@@ -124,16 +124,33 @@ activateQuestRecord = (id, progress) ->
         0.5
       else
         0
-    for k, v of questGoals[id]
-      continue if k == 'type'
-      before = questRecord[id][k].count
-      questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
-      questRecord[id].count += questRecord[id][k].count - before
+    [k] = goals
+    before = questRecord[id][k].count
+    questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
+    questRecord[id].count += questRecord[id][k].count - before
   syncQuestRecord()
 inactivateQuestRecord = (id) ->
   return unless questRecord[id]?
   questRecord[id].active = false
   syncQuestRecord()
+resetQuestRecord = (types, resetInterval, id, questRecord) ->
+  return unless questGoals[id]?
+  if questGoals[id].type in types
+    questRecord.active = false
+    questRecord.count = 0
+  else if questGoals[id].resetInterval is resetInterval
+    questRecord.count = 0
+resetQuestRecordDaily = resetQuestRecord.bind(null, [2, 4, 5], 1)
+resetQuestRecordWeekly = resetQuestRecord.bind(null, [3], 2)
+resetQuestRecordMonthly = resetQuestRecord.bind(null, [6], 3)
+resetTask = (types, resetInterval, tasks, idx, task) ->
+  if task.type in types
+    tasks[idx] = Object.clone(emptyTask)
+  else if questGoals[task.id]? and questGoals[task.id].resetInterval is resetInterval
+    task.count = 0
+resetTaskDaily = resetTask.bind(null, [2, 4, 5], 1)
+resetTaskWeekly = resetTask.bind(null, [3], 2)
+resetTaskMonthly = resetTask.bind(null, [6], 3)
 updateQuestRecord = (e, options, delta) ->
   flag = false
   for id, q of questRecord
@@ -178,8 +195,9 @@ TaskPanel = React.createClass
     flag = false
     switch path
       when '/kcsapi/api_port/port'     #Handle parallel quest show
-        if @state.taskLimits != body.api_parallel_quest_count
-          tasks[5] = Object.clone(emptyTask)
+        if @state.taskLimits < body.api_parallel_quest_count
+          for i in [@state.taskLimits...body.api_parallel_quest_count]
+            tasks[i] = Object.clone(emptyTask)
           @setState
             tasks: tasks
             taskLimits: body.api_parallel_quest_count
@@ -188,18 +206,17 @@ TaskPanel = React.createClass
         try
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
           if questRecord? and questRecord.time?
-            if isDifferentDay((new Date()).getTime(), questRecord.time)
-              for id, q of questRecord
-                continue unless questGoals[id]?
-                delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-            if isDifferentWeek((new Date()).getTime(), questRecord.time)
-              for id, q of questRecord
-                continue unless questGoals[id]?
-                delete questRecord[id] if questGoals[id].type is 3
-            if isDifferentMonth((new Date()).getTime(), questRecord.time)
-              for id, q of questRecord
-                continue unless questGoals[id]?
-                delete questRecord[id] if questGoals[id].type is 6
+            now = (new Date()).getTime()
+            return unless isDifferentDay now, questRecord.time
+            isDiffWeek = isDifferentWeek now, questRecord.time
+            isDiffMonth = isDifferentMonth now, questRecord.time
+            for id, q of questRecord when questGoals[id]?
+              resetQuestRecordDaily id, q
+              if isDiffWeek
+                resetQuestRecordWeekly id, q
+              if isDiffMonth
+                resetQuestRecordMonthly id, q
+            syncQuestRecord()
         catch err
           questRecord = {}
       when '/kcsapi/api_get_member/questlist'
@@ -292,12 +309,10 @@ TaskPanel = React.createClass
           flag = updateQuestRecord('sally', null, 1)
           firstBattle = false
     return unless flag
-    for task in tasks
-      continue if task.id >= 100000
-      if questGoals[task.id]?
-        task.tracking = true
-        task.percent = questRecord[task.id].count / questRecord[task.id].required
-        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+    for task in tasks when task.id < 100000 and questRecord[task.id]?
+      task.tracking = true
+      task.percent = questRecord[task.id].count / questRecord[task.id].required
+      task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
@@ -338,37 +353,32 @@ TaskPanel = React.createClass
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
     if flag
       {tasks} = @state
-      for task in tasks
-        continue if task.id >= 100000
-        if questGoals[task.id]?
-          task.tracking = true
-          task.percent = questRecord[task.id].count / questRecord[task.id].required
-          task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
+      for task in tasks when task.id < 100000 and questRecord[task.id]?
+        task.tracking = true
+        task.percent = questRecord[task.id].count / questRecord[task.id].required
+        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
       tasks = _.sortBy tasks, (e) -> e.id
       @setState
         tasks: tasks
   refreshDay: ->
-    return unless isDifferentDay((new Date()).getTime(), prevTime)
+    now = (new Date()).getTime();
+    return unless isDifferentDay now, prevTime
+    isDiffWeek = isDifferentWeek now, prevTime
+    isDiffMonth = isDifferentMonth now, prevTime
     {tasks} = @state
-    for task, idx in tasks
-      continue if task.id >= 100000
-      if task.type in [2, 4, 5]
-        clearQuestRecord task.id
-        tasks[idx] = Object.clone(emptyTask)
-      if task.type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
-        clearQuestRecord task.id
-        tasks[idx] = Object.clone(emptyTask)
-      if task.type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
-        clearQuestRecord task.id
-        tasks[idx] = Object.clone(emptyTask)
-    for id, q of questRecord
-      continue unless questGoals[id]?
-      if questGoals[id].type in [2, 4, 5]
-        clearQuestRecord id
-      if questGoals[id].type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
-        clearQuestRecord id
-      if questGoals[id].type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
-        clearQuestRecord id
+    for task, idx in tasks when task.id < 100000
+      resetTaskDaily tasks, idx, task
+      if isDiffWeek
+        resetTaskWeekly tasks, idx, task
+      if isDiffMonth
+        resetTaskMonthly tasks, idx, task
+    for id, q of questRecord when questGoals[id]?
+      resetQuestRecordDaily id, q
+      if isDiffWeek
+        resetQuestRecordWeekly id, q
+      if isDiffMonth
+        resetQuestRecordMonthly id, q
+    syncQuestRecord()
     tasks = _.sortBy tasks, (e) -> e.id
     @setState
       tasks: tasks
@@ -378,7 +388,7 @@ TaskPanel = React.createClass
       detail:
         tasks: tasks
     window.dispatchEvent event
-    prevTime = (new Date()).getTime()
+    prevTime = now
   handleTaskInfo: (e) ->
     {tasks} = e.detail
     @setState
