@@ -275,7 +275,8 @@
     required: 10
     init: 0
 311: # 精鋭艦隊演習 同日中に「演習」で7回以上「勝利」をおさめ、我が精鋭艦隊の練度を示そう！
-  type: 2
+  type: 6
+  resetInterval: 1
   "practice_win":
     description: "演習勝利"
     required: 7
