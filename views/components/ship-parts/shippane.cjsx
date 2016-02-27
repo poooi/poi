@@ -68,13 +68,14 @@ class ShipPane extends React.Component
     @setShipData nextProps
   componentWillMount: ->
     @setShipData @props
+    @handleResponseWithThis = @handleResponse.bind(@)
   componentDidMount: ->
-    window.addEventListener 'game.response', @handleResponse.bind(@)
+    window.addEventListener 'game.response', @handleResponseWithThis
     label = @updateLabels()
     @setState
       label: label
   componentWillUnmount: ->
-    window.removeEventListener 'game.response', @handleResponse.bind(@)
+    window.removeEventListener 'game.response', @handleResponseWithThis
   render: ->
     <div>
       <div className='fleet-name'>
