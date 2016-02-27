@@ -113,7 +113,8 @@ activateQuestRecord = (id, progress) ->
       questRecord[id].count += v.init
       questRecord[id].required += v.required
   # Only sync progress with game progress if the quest has only one goal.
-  if Object.keys(questGoals[id]).length == 2
+  goals = (k for own k, v of questGoals[id] when typeof v is 'object' and v isnt null)
+  if goals.length is 1
     progress = switch progress
       when __ 'Completed'
         1
@@ -123,11 +124,10 @@ activateQuestRecord = (id, progress) ->
         0.5
       else
         0
-    for k, v of questGoals[id]
-      continue if k == 'type'
-      before = questRecord[id][k].count
-      questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
-      questRecord[id].count += questRecord[id][k].count - before
+    [k] = goals
+    before = questRecord[id][k].count
+    questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
+    questRecord[id].count += questRecord[id][k].count - before
   syncQuestRecord()
 inactivateQuestRecord = (id) ->
   return unless questRecord[id]?
