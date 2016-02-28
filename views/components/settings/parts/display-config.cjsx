@@ -148,14 +148,13 @@ ChangeResolutionConfig = React.createClass
         config.get 'poi.webview.width', -1
     gameWidth: gameWidth
     useFixedResolution: config.get('poi.webview.width', -1) != -1
-  handleSetWebviewWidth: (node, e) ->
+  handleSetWebviewWidth: (node, useFixedResolution) ->
     @setState
       gameWidth: @refs[node].getValue()
     width = parseInt @refs[node].getValue()
-    return if isNaN(width) || width < 0 || !@state.useFixedResolution
+    return if isNaN(width) || width < 0 || !useFixedResolution
     if config.get('poi.layout', 'horizontal') == 'horizontal'
       width = Math.min(width, window.innerWidth - 150)
-
     # Avoid setting a huge size by mistake
     max_height = window.screen.availHeight
     max_width = window.screen.availWidth
@@ -166,24 +165,15 @@ ChangeResolutionConfig = React.createClass
       max_height = max_height - (200 * zoomLevel)
       max_width = max_height / 480 * 800
     width = Math.min(max_width, width)
-    console.log max_width, max_height, width
-
     window.webviewWidth = width
     window.dispatchEvent new Event('webview.width.change')
     config.set 'poi.webview.width', width
   handleResize: ->
-    {gameWidth} = @state
-    width = parseInt gameWidth
-    return if isNaN(width) || width < 0 || (config.get('poi.layout', 'horizontal') == 'horizontal' && width > window.innerWidth - 150)
-    if !@state.useFixedResolution
-      if config.get('poi.layout', 'horizontal') == 'horizontal'
-        @setState
-          gameWidth: window.innerWidth * (if window.doubleTabbed then 4.0 / 7.0 else 5.0 / 7.0)
-      else
-        @setState
-          gameWidth: window.innerWidth
+    width = Math.ceil window.webviewFactor * 800
+    @setState
+      gameWidth: width
   handleSetFixedResolution: (e) ->
-    current = @state.useFixedResolution
+    current = Object.clone @state.useFixedResolution
     @setState
       useFixedResolution: !current
     if current
@@ -192,7 +182,7 @@ ChangeResolutionConfig = React.createClass
       window.webviewWidth = -1
       window.dispatchEvent new Event('webview.width.change')
     else
-      @handleSetWebviewWidth("webviewWidth")
+      @handleSetWebviewWidth("webviewWidth", !current)
   componentDidMount: ->
     window.addEventListener 'resize', @handleResize
   componentWillUnmount: ->
@@ -209,7 +199,7 @@ ChangeResolutionConfig = React.createClass
         <Input type="select"
          ref="webviewWidthRatio"
          value={@state.gameWidth}
-         onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio"}
+         onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio", @state.useFixedResolution}
          disabled={!@state.useFixedResolution} >
           <option key={-1} value={@state.gameWidth} hidden>{Math.round(@state.gameWidth/800*100)}%</option>
           {
@@ -227,7 +217,7 @@ ChangeResolutionConfig = React.createClass
           <Input type="number"
            ref="webviewWidth"
            value={Math.round(@state.gameWidth)}
-           onChange={@handleSetWebviewWidth.bind @, "webviewWidth"}
+           onChange={@handleSetWebviewWidth.bind @, "webviewWidth", @state.useFixedResolution}
            readOnly={!@state.useFixedResolution} />
         </div>
         <div style={flex: 'none', width: 15, paddingLeft: 5}>
