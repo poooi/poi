@@ -372,7 +372,7 @@ class PluginManager
   # unload one plugin
   # @param {Plugin} plugin
   unloadPlugin: (plugin) ->
-    if plugin.pluginWillUnload? then plugin.pluginWillUnload()
+    if plugin?.pluginWillUnload? then plugin.pluginWillUnload()
 
   removePlugin: (plugin) ->
     delete require.cache[require.resolve plugin.pluginPath]
