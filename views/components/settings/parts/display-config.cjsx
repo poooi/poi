@@ -201,13 +201,11 @@ ChangeResolutionConfig = React.createClass
          value={@state.gameWidth}
          onChange={@handleSetWebviewWidth.bind @, "webviewWidthRatio", @state.useFixedResolution}
          disabled={!@state.useFixedResolution} >
-          <option key={-1} value={@state.gameWidth} hidden>{Math.round(@state.gameWidth/800*100)}%</option>
+          <option key={-1} value="-1" hidden>{Math.round(@state.gameWidth/800*100)}%</option>
           {
-            i = 0
-            while i < 4
-              i++
-              <option key={i} value={i * 400}>
-                {i * 50}%
+            for i in [50..250] by 50
+              <option key={i} value={i * 8}>
+                {i}%
               </option>
           }
         </Input>
