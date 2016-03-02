@@ -203,7 +203,7 @@ ChangeResolutionConfig = React.createClass
          disabled={!@state.useFixedResolution} >
           <option key={-1} value="-1" hidden>{Math.round(@state.gameWidth/800*100)}%</option>
           {
-            for i in [50..250] by 50
+            for i in [50..200] by 50
               <option key={i} value={i * 8}>
                 {i}%
               </option>
