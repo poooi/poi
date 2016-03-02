@@ -83,6 +83,9 @@ class PluginManager
   readPlugins: async (opt_notifyFailed) ->
     pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
     @plugins_ = pluginPaths.map @readPlugin_
+    for plugin_ in @plugins_
+      if config.get "plugin.#{plugin_.name}.enable", true
+        @loadPlugin(plugin_)
     if opt_notifyFailed
       @notifyFailed_()
     @plugins_ = _.sortBy @plugins_, 'priority'
@@ -299,9 +302,10 @@ class PluginManager
     plugin.isUpdating = true
     try
       yield Promise.promisify(npm.commands.install)(["#{plugin.packageName}@#{plugin.lastestVersion}"])
-      plugin.isUpdating = false
-      plugin.isOutdated = false
-      plugin.version = plugin.lastestVersion
+      #plugin.isUpdating = false
+      #plugin.isOutdated = false
+      #plugin.version = plugin.lastestVersion
+      @reloadPlugin(plugin)
     catch error
       plugin.isUpdating = false
       throw error
@@ -322,12 +326,11 @@ class PluginManager
         plugin = readPlugins.find (plugin_) -> packName == plugin_.packageName
         if plugin?
           # If the installed plugin is one of the existing plugins
-          plugin.version = packVersion
-          plugin.isOutdated = semver.gt plugin.lastestVersion, packVersion
+          if plugin.version != packVersion
+            @reloadPlugin(plugin)
         else
           # If the installed plugin is a new plugin
-          plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packName
-          @plugins_.push plugin
+          @addPlugin(path.join @pluginPath, 'node_modules', packName)
           break
       @plugins_ = _.sortBy @plugins_, 'priority'
     catch error
@@ -342,10 +345,8 @@ class PluginManager
     yield @getMirrors()
     try
       yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
-      for plugin_, index in @plugins_
-        if plugin.packageName is plugin_.packageName
-          @plugins_.splice(index, 1)
-          break
+      @unloadPlugin(plugin)
+      @removePlugin(plugin)
     catch error
       console.log "uninstallPlugin error: #{error}"
       console.log error.stack
@@ -355,11 +356,50 @@ class PluginManager
   # @param {Plugin} plugin
   enablePlugin: (plugin) ->
     config.set "plugin.#{plugin.name}.enable", true
+    @loadPlugin(plugin)
 
   # disable one plugin
   # @param {Plugin} plugin
   disablePlugin: (plugin) ->
     config.set "plugin.#{plugin.name}.enable", false
+    @unloadPlugin(plugin)
+
+  # load one plugin
+  # @param {Plugin} plugin
+  loadPlugin: (plugin) ->
+    if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
+
+  # unload one plugin
+  # @param {Plugin} plugin
+  unloadPlugin: (plugin) ->
+    if plugin.pluginShouldUnload? then plugin.pluginShouldUnload()
+
+  removePlugin: (plugin) ->
+    delete require.cache[require.resolve plugin.pluginPath]
+    for plugin_, index in @plugins_
+      if plugin.packageName == plugin_.packageName
+        @plugins_.splice(index, 1)
+        break
+
+  addPlugin: (pluginPath) ->
+    plugin = @readPlugin_ pluginPath
+    @plugins_.push plugin
+    @plugins_ = _.sortBy @plugins_, 'priority'
+    if config.get "plugin.#{plugin.name}.enable", true
+      @loadPlugin(plugin)
+
+  reloadPlugin: (plugin) ->
+    @unloadPlugin(plugin)
+    newPlugin = {}
+    delete require.cache[require.resolve plugin.pluginPath]
+    for plugin_, index in @plugins_
+      if plugin.packageName == plugin_.packageName
+        newPlugin = @readPlugin_ plugin.pluginPath
+        @plugins_[index] = newPlugin
+        break
+    if config.get "plugin.#{newPlugin.name}.enable", true
+      @loadPlugin(newPlugin)
+    @plugins_ = _.sortBy @plugins_, 'priority'
 
   # read a plugin from file system
   # @param {string} pluginPath path to a plugin directory
@@ -379,6 +419,8 @@ class PluginManager
     catch error
       plugin = isRead: false
       plugin.version = '0.0.0'
+
+    plugin.pluginPath = pluginPath
 
     try
       plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
