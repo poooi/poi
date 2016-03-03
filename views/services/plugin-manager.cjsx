@@ -369,6 +369,38 @@ class PluginManager
   # @param {Plugin} plugin
   loadPlugin: (plugin) ->
     if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
+    if plugin.windowURL?
+      if plugin.windowOptions?
+        windowOptions = plugin.windowOptions
+      else
+        windowOptions =
+          x: config.get 'poi.window.x', 0
+          y: config.get 'poi.window.y', 0
+          width: 800
+          height: 600
+      _.extend windowOptions,
+        realClose: plugin.realClose
+      if plugin.multiWindow
+        plugin.handleClick = ->
+          pluginWindow = windowManager.createWindow windowOptions
+          pluginWindow.loadURL plugin.windowURL
+      else
+        if plugin.realClose
+          pluginWindow = null
+          plugin.handleClick = ->
+            if !pluginWindow?
+              pluginWindow = windowManager.createWindow windowOptions
+              pluginWindow.on 'close', ->
+                pluginWindow = null
+              pluginWindow.loadURL plugin.windowURL
+              pluginWindow.show()
+            else
+              pluginWindow.show()
+        else
+          pluginWindow = windowManager.createWindow windowOptions
+          pluginWindow.loadURL plugin.windowURL
+          plugin.handleClick = ->
+            pluginWindow.show()
 
   # unload one plugin
   # @param {Plugin} plugin
@@ -481,40 +513,6 @@ class PluginManager
           for child in displayItems
             if typeof child is "string"
               plugin.stringName = child
-
-    # Handle new window
-    if plugin.windowURL?
-      if plugin.windowOptions?
-        windowOptions = plugin.windowOptions
-      else
-        windowOptions =
-          x: config.get 'poi.window.x', 0
-          y: config.get 'poi.window.y', 0
-          width: 800
-          height: 600
-      _.extend windowOptions,
-        realClose: plugin.realClose
-      if plugin.multiWindow
-        plugin.handleClick = ->
-          pluginWindow = windowManager.createWindow windowOptions
-          pluginWindow.loadURL plugin.windowURL
-      else
-        if plugin.realClose
-          pluginWindow = null
-          plugin.handleClick = ->
-            if !pluginWindow?
-              pluginWindow = windowManager.createWindow windowOptions
-              pluginWindow.on 'close', ->
-                pluginWindow = null
-              pluginWindow.loadURL plugin.windowURL
-              pluginWindow.show()
-            else
-              pluginWindow.show()
-        else
-          pluginWindow = windowManager.createWindow windowOptions
-          pluginWindow.loadURL plugin.windowURL
-          plugin.handleClick = ->
-            pluginWindow.show()
 
     plugin.isInstalled = true
     plugin.isOutdated = false
