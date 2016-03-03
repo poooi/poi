@@ -368,7 +368,6 @@ class PluginManager
   # load one plugin
   # @param {Plugin} plugin
   loadPlugin: (plugin) ->
-    if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
     if plugin.windowURL?
       if plugin.windowOptions?
         windowOptions = plugin.windowOptions
@@ -401,6 +400,7 @@ class PluginManager
           pluginWindow.loadURL plugin.windowURL
           plugin.handleClick = ->
             pluginWindow.show()
+    if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
 
   # unload one plugin
   # @param {Plugin} plugin
