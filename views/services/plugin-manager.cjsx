@@ -381,31 +381,33 @@ class PluginManager
         realClose: plugin.realClose
       if plugin.multiWindow
         plugin.handleClick = ->
-          pluginWindow = windowManager.createWindow windowOptions
-          pluginWindow.loadURL plugin.windowURL
+          plugin.pluginWindow = windowManager.createWindow windowOptions
+          plugin.pluginWindow.loadURL plugin.windowURL
       else
         if plugin.realClose
-          pluginWindow = null
+          plugin.pluginWindow = null
           plugin.handleClick = ->
-            if !pluginWindow?
-              pluginWindow = windowManager.createWindow windowOptions
-              pluginWindow.on 'close', ->
-                pluginWindow = null
-              pluginWindow.loadURL plugin.windowURL
-              pluginWindow.show()
+            if !plugin.pluginWindow?
+              plugin.pluginWindow = windowManager.createWindow windowOptions
+              plugin.pluginWindow.on 'close', ->
+                plugin.pluginWindow = null
+              plugin.pluginWindow.loadURL plugin.windowURL
+              plugin.pluginWindow.show()
             else
-              pluginWindow.show()
+              plugin.pluginWindow.show()
         else
-          pluginWindow = windowManager.createWindow windowOptions
-          pluginWindow.loadURL plugin.windowURL
+          plugin.pluginWindow = windowManager.createWindow windowOptions
+          plugin.pluginWindow.loadURL plugin.windowURL
           plugin.handleClick = ->
-            pluginWindow.show()
+            plugin.pluginWindow.show()
     if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
 
   # unload one plugin
   # @param {Plugin} plugin
   unloadPlugin: (plugin) ->
     if plugin?.pluginWillUnload? then plugin.pluginWillUnload()
+    if plugin.pluginWindow
+      windowManager.closeWindow(plugin.pluginWindow)
 
   removePlugin: (plugin) ->
     delete require.cache[require.resolve plugin.pluginPath]

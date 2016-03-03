@@ -60,6 +60,11 @@ module.exports =
       continue unless win?
       win.close()
       windows[i] = null
+  closeWindow: (win) ->
+    forceClose = true
+    win.on 'closed', (e) ->
+      forceClose = false
+    win.close()
   rememberMain: ->
     win = global.mainWindow
     win.setResizable true # Remove after https://github.com/atom/electron/issues/4483 is fixed
