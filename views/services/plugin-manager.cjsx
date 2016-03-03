@@ -469,12 +469,17 @@ class PluginManager
       plugin.packageData = {}
       utils.error error
 
+    # Package name
     if plugin.packageData?.name?
       plugin.packageName = plugin.packageData.name
     else if plugin.name?
       plugin.packageName = plugin.name
     else
       plugin.packageName = path.basename pluginPath
+
+    # Author
+    if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
+    if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
 
     # Missing data of broken plugins
     if !plugin.displayName?
