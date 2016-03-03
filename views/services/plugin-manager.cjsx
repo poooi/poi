@@ -475,8 +475,8 @@ class PluginManager
 
     # Plugin data
     plugin = packageData['poi-plugin']
-    plugin.packageData = packageData
     if !plugin then plugin = {}
+    plugin.packageData = packageData
     if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
     if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
     if plugin.packageData?.name?
