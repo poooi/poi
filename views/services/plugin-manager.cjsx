@@ -468,22 +468,21 @@ class PluginManager
 
     # Read package.json
     try
-      plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
+      packageData = fs.readJsonSync path.join pluginPath, 'package.json'
     catch error
-      plugin.packageData = {}
+      packageData = {}
       utils.error error
 
-    # Package name
+    # Plugin data
+    plugin = packageData['poi-plugin']
+    plugin.packageData = packageData
+    if !plugin then plugin = {}
+    if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
+    if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
     if plugin.packageData?.name?
       plugin.packageName = plugin.packageData.name
     else
       plugin.packageName = path.basename pluginPath
-
-    # Plugin data
-    plugin = packageData['poi-plugin']
-    if !plugin then plugin = {}
-    if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
-    if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
     if !plugin.link?
       if pluginData[plugin.packageName]?
         plugin.link = pluginData[plugin.packageName].link
