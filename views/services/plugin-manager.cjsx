@@ -495,20 +495,19 @@ class PluginManager
         plugin.description = "unknown"
 
     # i18n
-    if plugin['i18n-dir']?
-      i18nFile = path.join pluginPath, plugin['i18n-dir']
-      namespace = plugin.packageName
-      window.i18n[namespace] = new (require 'i18n-2')
-        locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-        defaultLocale: 'zh-CN',
-        directory: i18nFile,
-        updateFiles: false,
-        indent: "\t",
-        extension: '.json'
-        devMode: false
-      window.i18n[namespace].setLocale(window.language)
-      plugin.name = window.i18n[namespace].__ plugin.name
-      plugin.description = window.i18n[namespace].__ plugin.description
+    i18nFile = path.join pluginPath, (plugin['i18n-dir'] || 'i18n')
+    namespace = plugin.packageName
+    window.i18n[namespace] = new (require 'i18n-2')
+      locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+      defaultLocale: 'zh-CN',
+      directory: i18nFile,
+      updateFiles: false,
+      indent: "\t",
+      extension: '.json'
+      devMode: false
+    window.i18n[namespace].setLocale(window.language)
+    plugin.name = window.i18n[namespace].__ plugin.name
+    plugin.description = window.i18n[namespace].__ plugin.description
 
     plugin.pluginPath = pluginPath
     plugin.enabled = config.get "plugin.#{plugin.packageName}.enable", true
