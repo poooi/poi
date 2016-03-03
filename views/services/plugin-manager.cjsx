@@ -85,7 +85,7 @@ class PluginManager
     pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
     @plugins_ = pluginPaths.map @readPlugin_
     for plugin_ in @plugins_
-      if config.get "plugin.#{plugin_.name}.enable", true
+      if plugin.enabled
         @loadPlugin(plugin_)
     if opt_notifyFailed
       @notifyFailed_()
@@ -293,7 +293,7 @@ class PluginManager
   isEnabled_: (plugin) ->
     if not plugin.isRead
       return false
-    return config.get "plugin.#{plugin.name}.enable", true
+    return plugin.enabled
 
   # update one plugin
   # @param {Plugin} plugin
@@ -357,12 +357,14 @@ class PluginManager
   # @param {Plugin} plugin
   enablePlugin: (plugin) ->
     config.set "plugin.#{plugin.name}.enable", true
+    plugin.enabled = true
     @loadPlugin(plugin)
 
   # disable one plugin
   # @param {Plugin} plugin
   disablePlugin: (plugin) ->
     config.set "plugin.#{plugin.name}.enable", false
+    plugin.enabled = false
     @unloadPlugin(plugin)
 
   # load one plugin
@@ -420,7 +422,7 @@ class PluginManager
     plugin = @readPlugin_ pluginPath
     @plugins_.push plugin
     @plugins_ = _.sortBy @plugins_, 'priority'
-    if config.get "plugin.#{plugin.name}.enable", true
+    if plugin.enabled
       @loadPlugin(plugin)
 
   reloadPlugin: (plugin) ->
@@ -432,7 +434,7 @@ class PluginManager
         newPlugin = @readPlugin_ plugin.pluginPath
         @plugins_[index] = newPlugin
         break
-    if config.get "plugin.#{newPlugin.name}.enable", true
+    if plugin.enabled
       @loadPlugin(newPlugin)
     @plugins_ = _.sortBy @plugins_, 'priority'
 
@@ -456,6 +458,7 @@ class PluginManager
       plugin.version = '0.0.0'
 
     plugin.pluginPath = pluginPath
+    plugin.enabled = config.get "plugin.#{newPlugin.name}.enable", true
 
     try
       plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
