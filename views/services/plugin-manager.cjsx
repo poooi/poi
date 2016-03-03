@@ -85,7 +85,7 @@ class PluginManager
     pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
     @plugins_ = pluginPaths.map @readPlugin_
     for plugin_ in @plugins_
-      if plugin.enabled
+      if plugin_.enabled
         @loadPlugin(plugin_)
     if opt_notifyFailed
       @notifyFailed_()
@@ -458,7 +458,7 @@ class PluginManager
       plugin.version = '0.0.0'
 
     plugin.pluginPath = pluginPath
-    plugin.enabled = config.get "plugin.#{newPlugin.name}.enable", true
+    plugin.enabled = config.get "plugin.#{plugin.name}.enable", true
 
     try
       plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
