@@ -621,7 +621,7 @@ PluginConfig = React.createClass
         {
           for plugin, index in @state.plugins
             <InstalledPlugin
-              key={plugin.name}
+              key={plugin.packageName}
               plugin={plugin}
               handleUpdate={_.partial @handleUpdate, index}
               handleEnable={_.partial @handleEnable, index}

@@ -356,14 +356,28 @@ class PluginManager
   # enable one plugin
   # @param {Plugin} plugin
   enablePlugin: (plugin) ->
-    config.set "plugin.#{plugin.name}.enable", true
+    config.set "plugin.#{plugin.packageName}.enable", true
     plugin.enabled = true
+    if !plugin.isRead
+      for plugin_, index in @plugins_
+        if plugin.packageName == plugin_.packageName
+          try
+            pluginMain = require pluginPath
+            pluginMain.priority ?= 10000
+            pluginMain.isRead = true
+          catch error
+            pluginMain = isRead: false
+            pluginMain.priority ?= 10000
+            pluginMain.version = '0.0.0'
+          _.extend @plugins_[index], pluginMain
+          plugin = @plugins_[index]
+          break
     @loadPlugin(plugin)
 
   # disable one plugin
   # @param {Plugin} plugin
   disablePlugin: (plugin) ->
-    config.set "plugin.#{plugin.name}.enable", false
+    config.set "plugin.#{plugin.packageName}.enable", false
     plugin.enabled = false
     @unloadPlugin(plugin)
 
@@ -452,17 +466,7 @@ class PluginManager
       pluginData = {}
       utils.error error
 
-    try
-      plugin = require pluginPath
-      plugin.priority ?= 10000
-      plugin.isRead = true
-    catch error
-      plugin = isRead: false
-      plugin.version = '0.0.0'
-
-    plugin.pluginPath = pluginPath
-    plugin.enabled = config.get "plugin.#{plugin.name}.enable", true
-
+    # Read package.json
     try
       plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
     catch error
@@ -472,43 +476,71 @@ class PluginManager
     # Package name
     if plugin.packageData?.name?
       plugin.packageName = plugin.packageData.name
-    else if plugin.name?
-      plugin.packageName = plugin.name
     else
       plugin.packageName = path.basename pluginPath
 
-    # Author
+    # Plugin data
+    plugin = packageData['poi-plugin']
+    if !plugin then plugin = {}
     if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
     if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
-
-    # Missing data of broken plugins
-    if !plugin.displayName?
-      if pluginData[plugin.packageName]?
-        plugin.displayName =
-          <span>
-            <FontAwesome key={0} name=pluginData[plugin.packageName].icon />
-            {' ' + pluginData[plugin.packageName][window.language]}
-          </span>
-      else
-        plugin.displayName = plugin.packageName
-
-    if !plugin.author?
-      if pluginData[plugin.packageName]?
-        plugin.author = pluginData[plugin.packageName].author
-      else
-        plugin.author = "unknown"
-
     if !plugin.link?
       if pluginData[plugin.packageName]?
         plugin.link = pluginData[plugin.packageName].link
       else
         plugin.link = "https://github.com/poooi"
-
     if !plugin.description?
       if pluginData[plugin.packageName]?
         plugin.description = pluginData[plugin.packageName]["des#{window.language}"]
       else
         plugin.description = "unknown"
+
+    # i18n
+    if plugin['i18n-dir']?
+      i18nFile = path.join pluginPath, plugin.['i18n-dir']
+      namespace = plugin.packageName
+      window.i18n[namespace] = new (require 'i18n-2')
+        locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+        defaultLocale: 'zh-CN',
+        directory: i18nFile,
+        updateFiles: false,
+        indent: "\t",
+        extension: '.json'
+        devMode: false
+      window.i18n[namespace].setLocale(window.language)
+      plugin.name = window.i18n[namespace].__ plugin.name
+      plugin.description = window.i18n[namespace].__ plugin.description
+
+    plugin.pluginPath = pluginPath
+    plugin.enabled = config.get "plugin.#{plugin.packageName}.enable", true
+
+    # Display name
+    if !plugin.icon? then plugin.icon = 'fa/th-large'
+    icon = plugin.icon.split('/')[1]
+    if !icon then icon = 'th-large'
+    if plugin.name?
+      plugin.displayName =
+        <span>
+          <FontAwesome key={0} name=icon />
+          {' ' + plugin.name}
+        </span>
+    else
+      plugin.displayName =
+        <span>
+          <FontAwesome key={0} name=icon />
+          {' ' + plugin.packageName}
+        </span>
+
+    if plugin.enabled
+      try
+        pluginMain = require pluginPath
+        pluginMain.priority ?= 10000
+        pluginMain.isRead = true
+      catch error
+        pluginMain = isRead: false
+        pluginMain.priority ?= 10000
+        pluginMain.version = '0.0.0'
+      _.extend plugin, pluginMain
 
     # For notifition
     if typeof plugin.displayName is 'string'

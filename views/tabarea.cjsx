@@ -139,7 +139,7 @@ ControlledTabArea = React.createClass
       when 2
         key = 'shipView'
       else
-        key = @state.plugins[num-3]?.name
+        key = @state.plugins[num-3]?.packageName
         isPlugin = if key? then 'plugin'
     @selectTab key
     @selectTab isPlugin if !@state.doubleTabbed
@@ -190,8 +190,8 @@ ControlledTabArea = React.createClass
     window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     window.removeEventListener 'tabarea.change', @handleTabChange
   render: ->
-    activePluginName = @state.activePluginName || @state.plugins[0]?.name
-    activePlugin = @state.plugins.find (p) => p.name == activePluginName
+    activePluginName = @state.activePluginName || @state.plugins[0]?.packageName
+    activePlugin = @state.plugins.find (p) => p.packageName == activePluginName
     defaultPluginTitle = <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
     pluginDropdownContents = if @state.plugins.length == 0
       <MenuItem key={1002} disabled>
@@ -200,11 +200,11 @@ ControlledTabArea = React.createClass
     else
       @state.plugins.map (plugin, index) =>
         if !plugin.enabled then return
-        <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
+        <MenuItem key={plugin.packageName} eventKey={plugin.packageName} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
     pluginContents = for plugin, index in @state.plugins when !plugin.handleClick? && !plugin.windowURL? && plugin.enabled
-      <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin"
+      <div id={plugin.packageName} key={plugin.packageName} className="poi-app-tabpane poi-plugin"
         onSelected={(key) => @setState {activePluginName: key}}>
         <PluginWrap plugin={plugin} />
       </div>
