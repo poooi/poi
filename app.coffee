@@ -101,6 +101,7 @@ app.on 'ready', ->
       'enableLargerThanScreen': true
   # Default menu
   mainWindow.reloadArea = 'kan-game webview'
+  mainWindow.setResizable(config.get 'poi.content.resizeable', true)
   if process.platform == 'darwin'
     if /electron$/i.test process.argv[0]
       icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
