@@ -178,7 +178,7 @@ ControlledTabArea = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.addEventListener 'PluginManager.PLUGIN_RELOAD', (e) => @cachePluginList()
     window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     window.addEventListener 'tabarea.change', @handleTabChange
     @cachePluginList()
@@ -186,7 +186,7 @@ ControlledTabArea = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.start', @handleKeyDown
     window.removeEventListener 'tabarea.reload', @forceUpdate
-    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', (e) => @cachePluginList()
     window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     window.removeEventListener 'tabarea.change', @handleTabChange
   render: ->
@@ -199,10 +199,12 @@ ControlledTabArea = React.createClass
       </MenuItem>
     else
       @state.plugins.map (plugin, index) =>
+        if !plugin.enabled then return
         <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
     pluginContents = for plugin, index in @state.plugins when !plugin.handleClick?
+      if !plugin.enabled then continue
       <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin"
         onSelected={(key) => @setState {activePluginName: key}}>
         <PluginWrap plugin={plugin} />

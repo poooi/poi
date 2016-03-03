@@ -403,6 +403,7 @@ class PluginManager
           plugin.handleClick = ->
             plugin.pluginWindow.show()
     if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
+    @emitReload()
 
   # unload one plugin
   # @param {Plugin} plugin
@@ -410,6 +411,7 @@ class PluginManager
     if plugin?.pluginWillUnload? then plugin.pluginWillUnload()
     if plugin.pluginWindow
       windowManager.closeWindow(plugin.pluginWindow)
+    @emitReload()
 
   removePlugin: (plugin) ->
     delete require.cache[require.resolve plugin.pluginPath]
@@ -417,6 +419,7 @@ class PluginManager
       if plugin.packageName == plugin_.packageName
         @plugins_.splice(index, 1)
         break
+    @emitReload()
 
   addPlugin: (pluginPath) ->
     plugin = @readPlugin_ pluginPath
