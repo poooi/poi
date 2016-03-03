@@ -496,7 +496,7 @@ class PluginManager
 
     # i18n
     if plugin['i18n-dir']?
-      i18nFile = path.join pluginPath, plugin.['i18n-dir']
+      i18nFile = path.join pluginPath, plugin['i18n-dir']
       namespace = plugin.packageName
       window.i18n[namespace] = new (require 'i18n-2')
         locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
