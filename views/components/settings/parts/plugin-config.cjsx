@@ -72,7 +72,7 @@ InstalledPlugin = React.createClass
             </div>
             <div className='update-wrapper'>
               <div>
-                <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                <Label bsStyle="#{if plugin?.lastestVersion?.indexOf('beta') == -1 then 'primary' else 'warning'}"
                        className="update-label #{if not plugin.isOutdated then 'hidden'}"
                        onClick={@props.handleUpdate}>
                   <FontAwesome name={

@@ -190,6 +190,12 @@ class PluginManager
   getUnreadPlugins: ->
     @getFilteredPlugins_ (plugin) -> not plugin.isRead
 
+  # get all broken plugins
+  # @return {Promise<Array<Plugin>>}
+  # @private
+  getBrokenPlugins: ->
+    @getFilteredPlugins_ (plugin) -> plugin.isBroken
+
   # get all valid plugins, see comment of @isValid_
   # @return {Promise<Array<Plugin>>}
   getValidPlugins: ->
@@ -249,8 +255,10 @@ class PluginManager
   # @param {Plugin} plugin
   # @return {number} one of status code
   getStatusOfPlugin: (plugin) ->
-    if not plugin.isRead
+    if plugin.isBroken
       return @BROKEN
+    if not plugin.isRead
+      return @DISABLED
     if not @isMetRequirement_ plugin
       return @NEEDUPDATE
     if not @isEnabled_ plugin
@@ -358,18 +366,19 @@ class PluginManager
   enablePlugin: (plugin) ->
     config.set "plugin.#{plugin.packageName}.enable", true
     plugin.enabled = true
-    if !plugin.isRead
+    if !plugin.isRead && !plugin.isBroken
       for plugin_, index in @plugins_
         if plugin.packageName == plugin_.packageName
           try
-            pluginMain = require pluginPath
+            pluginMain = require plugin.pluginPath
             pluginMain.priority ?= 10000
             pluginMain.isRead = true
           catch error
             pluginMain = isRead: false
             pluginMain.priority ?= 10000
             pluginMain.version = '0.0.0'
-          _.extend @plugins_[index], pluginMain
+          _.extend pluginMain, @plugins_[index]
+          @plugins_[index] = pluginMain
           plugin = @plugins_[index]
           break
     @loadPlugin(plugin)
@@ -479,6 +488,7 @@ class PluginManager
     plugin.packageData = packageData
     if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
     if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
+    if typeof plugin.packageData?.author is 'string' then plugin.author = plugin.packageData?.author
     if plugin.packageData?.name?
       plugin.packageName = plugin.packageData.name
     else
@@ -506,19 +516,19 @@ class PluginManager
         try
           fs.accessSync path.join pluginPath, 'assets', 'i18n'
           i18nFile = path.join pluginPath, 'assets', 'i18n'
-
-    namespace = plugin.packageName
-    window.i18n[namespace] = new (require 'i18n-2')
-      locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-      defaultLocale: 'zh-CN',
-      directory: i18nFile,
-      updateFiles: false,
-      indent: "\t",
-      extension: '.json'
-      devMode: false
-    window.i18n[namespace].setLocale(window.language)
-    plugin.name = window.i18n[namespace].__ plugin.name
-    plugin.description = window.i18n[namespace].__ plugin.description
+    if i18nFile?
+      namespace = plugin.packageName
+      window.i18n[namespace] = new (require 'i18n-2')
+        locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+        defaultLocale: 'zh-CN',
+        directory: i18nFile,
+        updateFiles: false,
+        indent: "\t",
+        extension: '.json'
+        devMode: false
+      window.i18n[namespace].setLocale(window.language)
+      plugin.name = window.i18n[namespace].__ plugin.name
+      plugin.description = window.i18n[namespace].__ plugin.description
 
     plugin.pluginPath = pluginPath
     plugin.enabled = config.get "plugin.#{plugin.packageName}.enable", true
@@ -546,10 +556,12 @@ class PluginManager
         pluginMain.priority ?= 10000
         pluginMain.isRead = true
       catch error
-        pluginMain = isRead: false
+        pluginMain = isBroken: true
         pluginMain.priority ?= 10000
         pluginMain.version = '0.0.0'
-      _.extend plugin, pluginMain
+      _.extend pluginMain, plugin
+      plugin = pluginMain
+      if !plugin.isRead? then plugin.isRead = false
 
     # For notifition
     if typeof plugin.displayName is 'string'
@@ -570,15 +582,15 @@ class PluginManager
 
     plugin.isInstalled = true
     plugin.isOutdated = false
-    if plugin.packageData?.version? && plugin.isRead
-      plugin.version = plugin.packageData.version
+    if plugin.packageData?.version?
+      plugin.version = plugin?.packageData?.version
     plugin.lastestVersion = plugin.version
     return plugin
 
   # notify user about unread plugins, only shown when any exists
   # @private
   notifyFailed_: async ->
-    plugins = yield @getUnreadPlugins()
+    plugins = yield @getBrokenPlugins()
     unreadList = []
     for plugin in plugins
       unreadList.push plugin.stringName
