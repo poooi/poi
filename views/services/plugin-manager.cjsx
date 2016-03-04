@@ -494,6 +494,7 @@ class PluginManager
       plugin.packageName = plugin.packageData.name
     else
       plugin.packageName = path.basename pluginPath
+    if !plugin.name? then plugin.name = plugin.packageName
     if !plugin.link?
       if pluginData[plugin.packageName]?
         plugin.link = pluginData[plugin.packageName].link
