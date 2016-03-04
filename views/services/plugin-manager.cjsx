@@ -483,7 +483,7 @@ class PluginManager
       utils.error error
 
     # Plugin data
-    plugin = packageData['poiPlugin']
+    plugin = packageData.poiPlugin
     if !plugin then plugin = {}
     plugin.packageData = packageData
     if plugin.title? then plugin.name = plugin.title
@@ -495,7 +495,7 @@ class PluginManager
     else
       plugin.packageName = path.basename pluginPath
     if !plugin.name? then plugin.name = plugin.packageName
-    if !plugin.id? then plugin.id = plugin.name
+    if !plugin.id? then plugin.id = plugin.packageName
     if !plugin.link?
       if pluginData[plugin.packageName]?
         plugin.link = pluginData[plugin.packageName].link
@@ -509,8 +509,8 @@ class PluginManager
 
     # i18n
     i18nFile = null
-    if plugin['i18nDir']?
-      i18nFile = path.join pluginPath, plugin['i18nDir']
+    if plugin.i18nDir?
+      i18nFile = path.join pluginPath, plugin.i18nDir
     else
       try
         fs.accessSync path.join pluginPath, 'i18n'
@@ -520,7 +520,7 @@ class PluginManager
           fs.accessSync path.join pluginPath, 'assets', 'i18n'
           i18nFile = path.join pluginPath, 'assets', 'i18n'
     if i18nFile?
-      namespace = plugin.packageName
+      namespace = plugin.id || plugin.packageName
       window.i18n[namespace] = new (require 'i18n-2')
         locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
         defaultLocale: 'zh-CN',
