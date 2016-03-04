@@ -520,7 +520,7 @@ class PluginManager
           fs.accessSync path.join pluginPath, 'assets', 'i18n'
           i18nFile = path.join pluginPath, 'assets', 'i18n'
     if i18nFile?
-      namespace = plugin.id || plugin.packageName
+      namespace = plugin.id
       window.i18n[namespace] = new (require 'i18n-2')
         locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
         defaultLocale: 'zh-CN',
