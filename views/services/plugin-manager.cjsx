@@ -16,6 +16,8 @@ utils = remote.require './lib/utils'
 
 {config, language, notify, proxy} = window
 
+envKeyList = ['$ships', '$shipTypes', '$slotitems', '$slotitemTypes', '$mapareas', '$maps', '$missions', '$useitems', '_teitokuLv', '_nickName', '_nickNameId', '_teitokuExp', '_teitokuId', '_slotitems', '_ships', '_decks', '_ndocks']
+
 # dummy class, no plugin is created by call the constructor
 class Plugin
   # @private
@@ -425,6 +427,12 @@ class PluginManager
           plugin.pluginWindow.loadURL plugin.windowURL
           plugin.handleClick = ->
             plugin.pluginWindow.show()
+      if plugin?.useEnv
+        for key in envKeyList
+          if window[key]?
+            plugin.pluginWindow.executeJavaScriptInDevTools '''
+              window[#{key}] = #{window[key]}
+            '''
     if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
     @emitReload()
 
