@@ -495,7 +495,18 @@ class PluginManager
         plugin.description = "unknown"
 
     # i18n
-    i18nFile = path.join pluginPath, (plugin['i18n-dir'] || 'i18n')
+    i18nFile = null
+    if plugin['i18n-dir']?
+      i18nFile = path.join pluginPath, plugin['i18n-dir']
+    else
+      try
+        fs.accessSync path.join pluginPath, 'i18n'
+        i18nFile = path.join pluginPath, 'i18n'
+      catch error
+        try
+          fs.accessSync path.join pluginPath, 'assets', 'i18n'
+          i18nFile = path.join pluginPath, 'assets', 'i18n'
+
     namespace = plugin.packageName
     window.i18n[namespace] = new (require 'i18n-2')
       locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
