@@ -483,9 +483,10 @@ class PluginManager
       utils.error error
 
     # Plugin data
-    plugin = packageData['poi-plugin']
+    plugin = packageData['poiPlugin']
     if !plugin then plugin = {}
     plugin.packageData = packageData
+    if plugin.title? then plugin.name = plugin.title
     if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
     if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
     if typeof plugin.packageData?.author is 'string' then plugin.author = plugin.packageData?.author
@@ -506,8 +507,8 @@ class PluginManager
 
     # i18n
     i18nFile = null
-    if plugin['i18n-dir']?
-      i18nFile = path.join pluginPath, plugin['i18n-dir']
+    if plugin['i18nDir']?
+      i18nFile = path.join pluginPath, plugin['i18nDir']
     else
       try
         fs.accessSync path.join pluginPath, 'i18n'
