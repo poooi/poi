@@ -204,7 +204,7 @@ ControlledTabArea = React.createClass
           {plugin.displayName}
         </MenuItem>
     pluginContents = for plugin, index in @state.plugins when !plugin.handleClick? && !plugin.windowURL? && plugin.enabled
-      <div id={plugin.packageName} key={plugin.packageName} className="poi-app-tabpane poi-plugin"
+      <div id={plugin.id || plugin.packageName} key={plugin.packageName} className="poi-app-tabpane poi-plugin"
         onSelected={(key) => @setState {activePluginName: key}}>
         <PluginWrap plugin={plugin} />
       </div>
