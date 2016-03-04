@@ -364,7 +364,7 @@ class PluginManager
   # enable one plugin
   # @param {Plugin} plugin
   enablePlugin: (plugin) ->
-    config.set "plugin.#{plugin.packageName}.enable", true
+    config.set "plugin.#{plugin.id}.enable", true
     plugin.enabled = true
     if !plugin.isRead && !plugin.isBroken
       for plugin_, index in @plugins_
@@ -386,7 +386,7 @@ class PluginManager
   # disable one plugin
   # @param {Plugin} plugin
   disablePlugin: (plugin) ->
-    config.set "plugin.#{plugin.packageName}.enable", false
+    config.set "plugin.#{plugin.id}.enable", false
     plugin.enabled = false
     @unloadPlugin(plugin)
 
@@ -534,7 +534,7 @@ class PluginManager
       plugin.description = window.i18n[namespace].__ plugin.description
 
     plugin.pluginPath = pluginPath
-    plugin.enabled = config.get "plugin.#{plugin.packageName}.enable", true
+    plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
 
     # Display name
     if !plugin.icon? then plugin.icon = 'fa/th-large'
