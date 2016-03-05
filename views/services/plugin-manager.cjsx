@@ -15,8 +15,7 @@ globAsync = Promise.promisify require 'glob'
 utils = remote.require './lib/utils'
 
 {config, language, notify, proxy} = window
-
-envKeyList = ['$ships', '$shipTypes', '$slotitems', '$slotitemTypes', '$mapareas', '$maps', '$missions', '$useitems', '_teitokuLv', '_nickName', '_nickNameId', '_teitokuExp', '_teitokuId', '_slotitems', '_ships', '_decks', '_ndocks']
+envKeyList = ['_teitokuLv', '_nickName', '_nickNameId', '_teitokuExp', '_teitokuId', '_slotitems', '_ships', '_decks', '_ndocks']
 
 # dummy class, no plugin is created by call the constructor
 class Plugin
@@ -395,6 +394,10 @@ class PluginManager
   # load one plugin
   # @param {Plugin} plugin
   loadPlugin: (plugin) ->
+    if plugin.useEnv && !window._portStorageUpdated
+      for key in envKeyList
+        localStorage[key] = JSON.stringify window[key]
+      window._portStorageUpdated = true
     if plugin.windowURL?
       if plugin.windowOptions?
         windowOptions = plugin.windowOptions
@@ -427,12 +430,6 @@ class PluginManager
           plugin.pluginWindow.loadURL plugin.windowURL
           plugin.handleClick = ->
             plugin.pluginWindow.show()
-      if plugin?.useEnv
-        for key in envKeyList
-          if window[key]?
-            plugin.pluginWindow.executeJavaScriptInDevTools '''
-              window[#{key}] = #{window[key]}
-            '''
     if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
     @emitReload()
 

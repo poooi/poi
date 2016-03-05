@@ -18,6 +18,7 @@ window.MODULE_PATH = remote.getGlobal 'MODULE_PATH'
 window.appIcon = remote.getGlobal 'appIcon'
 fs.ensureDirSync window.PLUGIN_PATH
 fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
+window._portStorageUpdated = true
 
 # Shortcuts and Components
 (window.dbg = require path.join(ROOT, 'lib', 'debug')).init()
@@ -274,6 +275,7 @@ handleProxyGameOnRequest = (method, path, body) ->
   catch e
     console.log e
 
+envKeyList = ['_teitokuLv', '_nickName', '_nickNameId', '_teitokuExp', '_teitokuId', '_slotitems', '_ships', '_decks', '_ndocks']
 start2Version = 0
 initStart2Value = ->
   if localStorage.start2Version?
@@ -300,6 +302,8 @@ initStart2Value = ->
     $missions[mission.api_id] = mission for mission in body.api_mst_mission
     window.$useitems = []
     $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
+  for key in envKeyList
+    if localStorage[key]? then window[key] = JSON.parse localStorage[key]
 initStart2Value()
 
 responses = []
@@ -380,6 +384,7 @@ resolveResponses = ->
           window._decks = body.api_deck_port
           window._ndocks = body.api_ndock.map (e) -> e.api_ship_id
           window._teitokuLv = body.api_basic.api_level
+          window._portStorageUpdated = false
         when '/kcsapi/api_req_hensei/change'
           decks = window._decks
           deckId = parseInt(postBody.api_id) - 1
