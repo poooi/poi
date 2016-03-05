@@ -72,7 +72,7 @@ InstalledPlugin = React.createClass
             </div>
             <div className='update-wrapper'>
               <div>
-                <Label bsStyle="#{if plugin.lastestVersion.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                <Label bsStyle="#{if plugin?.lastestVersion?.indexOf('beta') == -1 then 'primary' else 'warning'}"
                        className="update-label #{if not plugin.isOutdated then 'hidden'}"
                        onClick={@props.handleUpdate}>
                   <FontAwesome name={
@@ -107,7 +107,7 @@ InstalledPlugin = React.createClass
               {
                 if plugin.settingsClass?
                   <OverlayTrigger placement='top' overlay={
-                     <Tooltip id="#{plugin.name}-set-btn">
+                     <Tooltip id="#{plugin.id}-set-btn">
                        {__ 'Settings'}
                      </Tooltip>
                      }>
@@ -120,7 +120,7 @@ InstalledPlugin = React.createClass
                    </OverlayTrigger>
               }
               <OverlayTrigger placement='top' overlay={
-                <Tooltip id="#{plugin.name}-enb-btn">
+                <Tooltip id="#{plugin.id}-enb-btn">
                 {
                   switch PluginManager.getStatusOfPlugin plugin
                     when PluginManager.VALID
@@ -152,7 +152,7 @@ InstalledPlugin = React.createClass
                 </Button>
               </OverlayTrigger>
               <OverlayTrigger placement='top' overlay={
-                <Tooltip id="#{plugin.name}-rm-btn">
+                <Tooltip id="#{plugin.id}-rm-btn">
                 {
                   if plugin.isUninstalling
                     __ "Removing"
@@ -212,7 +212,7 @@ UninstalledPlugin = React.createClass
           <Col xs={5}>
             <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
               <OverlayTrigger placement='top' overlay={
-                <Tooltip id="#{plugin.name}-ins-btn">
+                <Tooltip id="#{plugin.id}-ins-btn">
                 {
                   if @props.installing
                     __ "Installing"
@@ -621,7 +621,7 @@ PluginConfig = React.createClass
         {
           for plugin, index in @state.plugins
             <InstalledPlugin
-              key={plugin.name}
+              key={plugin.id}
               plugin={plugin}
               handleUpdate={_.partial @handleUpdate, index}
               handleEnable={_.partial @handleEnable, index}

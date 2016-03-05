@@ -139,7 +139,7 @@ ControlledTabArea = React.createClass
       when 2
         key = 'shipView'
       else
-        key = @state.plugins[num-3]?.name
+        key = @state.plugins[num-3]?.packageName
         isPlugin = if key? then 'plugin'
     @selectTab key
     @selectTab isPlugin if !@state.doubleTabbed
@@ -178,7 +178,7 @@ ControlledTabArea = React.createClass
   componentDidMount: ->
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
-    window.addEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.addEventListener 'PluginManager.PLUGIN_RELOAD', (e) => @cachePluginList()
     window.addEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     window.addEventListener 'tabarea.change', @handleTabChange
     @cachePluginList()
@@ -186,12 +186,12 @@ ControlledTabArea = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'game.start', @handleKeyDown
     window.removeEventListener 'tabarea.reload', @forceUpdate
-    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', @cachePluginList
+    window.removeEventListener 'PluginManager.PLUGIN_RELOAD', (e) => @cachePluginList()
     window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     window.removeEventListener 'tabarea.change', @handleTabChange
   render: ->
-    activePluginName = @state.activePluginName || @state.plugins[0]?.name
-    activePlugin = @state.plugins.find (p) => p.name == activePluginName
+    activePluginName = @state.activePluginName || @state.plugins[0]?.packageName
+    activePlugin = @state.plugins.find (p) => p.packageName == activePluginName
     defaultPluginTitle = <span><FontAwesome name='sitemap' />{__ ' Plugins'}</span>
     pluginDropdownContents = if @state.plugins.length == 0
       <MenuItem key={1002} disabled>
@@ -199,11 +199,12 @@ ControlledTabArea = React.createClass
       </MenuItem>
     else
       @state.plugins.map (plugin, index) =>
-        <MenuItem key={plugin.name} eventKey={plugin.name} onSelect={plugin.handleClick}>
+        if !plugin.enabled then return
+        <MenuItem key={plugin.id} eventKey={plugin.id} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
-    pluginContents = for plugin, index in @state.plugins when !plugin.handleClick?
-      <div id={plugin.name} key={plugin.name} className="poi-app-tabpane poi-plugin"
+    pluginContents = for plugin, index in @state.plugins when !plugin.handleClick? && !plugin.windowURL? && plugin.enabled
+      <div id={plugin.id} key={plugin.id} className="poi-app-tabpane poi-plugin"
         onSelected={(key) => @setState {activePluginName: key}}>
         <PluginWrap plugin={plugin} />
       </div>

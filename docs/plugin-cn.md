@@ -21,42 +21,84 @@ appData
         |--node_modules
             |-- plugin1
                   |-- index.js
-                  |-- ...
+                  |-- package.json
                   |-- ...
             |-- plugin2
                   |-- index.cjsx
-                  |-- ...
+                  |-- package.json
                   |-- ...
             |-- plugin3
                   |-- index.coffee
+                  |-- package.json
+                  |-- ...
+            |-- plugin4
+                  |-- index.es
+                  |-- package.json
+                  |-- ...
 ```
 在启动的时候，poi 会寻找 `appData/plugins/node_modules` 目录下的所有名字以 `poi-plugin-` 开头的文件夹，并尝试以插件的方式将其载入。此处 `appData` 为用于存放用户数据的目录，Windows 上是 `%AppData%/poi`，类 unix 操作系统上是 `~/.config/poi`
 
-一个插件只需要有基本的 index 就可以被载入，index 可以是 `index.js`，`index.coffee` 或者 `index.cjsx`。
+一个插件只需要有基本的 index 就可以被载入，index 可以是 `index.js`，`index.coffee`, `index.cjsx` 或者 `index.es`。
+
+## plugin.json 的基本属性
+插件的实质是一个 Node Module。每个插件都应该在根目录下放置一个 `package.json` 文件以存储基本数据，详细参照关于 [package.json](https://docs.npmjs.com/files/package.json) 的文档
+
+除了基本的 `package.json` 字段，还应该具备一个 `poiPlugin` 字段以存储插件信息。
+
+键值如下
+```javascript
+"poiPlugin": {
+  "title": String, // 插件的名字，如果有翻译文件将会自动翻译为相应语言
+  "id": String // 用于辨别插件身份的键值，留空则默认为插件的包名
+  "priority": Number, // 插件在菜单里排序的优先级，值越小插件就会显示在越前
+  "description": String, // 插件基本描述，如果有翻译文件将会自动翻译为相应语言
+  "icon": String, // 用于插件列表中的图标名。字符串中没有"/"时默认为 FontAwesome
+  "earlistCompatibleMain": Semver, // 兼容的最低 poi 版本
+  "lastApiVer": Semver, // 在不兼容的时候回滚的目标版本号
+  "i18nDir": String,  // 可选, i18n 文件的自定义目录相对路径，留空时会在 i18n 及 assets/i18n 下确认是否有翻译文件。详情见下
+}
+```
+
+一个示例的 `package.json` 文件如下
+```javascript
+{
+  "name": "poi-plugin-translator",
+  "version": "0.2.4",
+  "main": "index.cjsx",
+  "author": {
+    "name": "KochiyaOcean",
+    "link": "https://github.com/kochiyaocean"
+  },
+  "poiPlugin": {
+    "title": "Translator",
+    "description": "Translate ships' & equipments' name into English",
+    "icon": "fa/language",
+    "i18nDir": "i18n/translator"
+  }
+}
+```
 
 ## index 的基本属性
 index 可以需要以 `export` 的方式向外暴露以下属性，下面列出的所有属性以及对应的类型。类型为 `String | ReactElement` 表示如果是 String 类型则直接显示，ReactElement 会被 React 渲染。
-```javascript
-module.exports = {
-  name: String // 插件的英文名
-  displayName: String | ReactElement // 插件在界面显示时的名字
-  priority: Number // 插件在菜单里排序的优先级，值越小插件就会显示在越前
-  show: Boolean // 插件是否应该被显示
-  realClose: Boolean // 窗口插件在关闭时是否完全终结进程，默认为否
-  author: String | ReactElement // 插件作者
-  link: String // 插件作者的链接
-  description: String | ReactElement // 插件基本描述
-  version: String | ReactElement // 插件版本
+```coffeescript
+module.exports =
+  // 面板插件的相关属性
   reactClass: ReactClass // 插件的视图和逻辑，将会渲染进 poi 插件面板里，使用 React.createClass 生成
-  handleClick: Function // 如果插件拥有这个属性，那么它的 reactClass 属性会被忽略，并且不会在插件面板里，你可以指定用户点击菜单时的反馈（比如新建窗口等）。
-};
+  // 新窗口插件的相关属性
+  windowURL: String // 新窗口插件加载的 URL。如果插件拥有这个属性，那么它的 reactClass 属性会被忽略
+  realClose: true | false // 新窗口退出时是否完全关闭，默认 false
+  multiWindow: true | false // 是否允许多个新窗口。如果为是， realClose 属性将固定为 true，默认 false
+  useEnv: true | false // 是否在初始化的时候获得舰娘信息、装备信息等的初始化数据，默认 false
+  windowOptions: // 新窗口的初始数据
+    x: Number
+    y: Number
+    width: Number
+    height: Number
 ```
 
 比如，需要编写一个点击后跳到新面板的插件。
 ```javascript
 module.exports = {
-  name: 'Sample',
-  displayName: 'Sample',
   reactClass: React.createClass({
     render: function() {
       return React.createElement('h1', null, 'It works');
@@ -67,8 +109,6 @@ module.exports = {
 当然，可以用 jsx，cjsx 等简化其语法，下列例子将会大部分使用 cjsx，比如上面这个插件等价为。
 ```coffeescript
 module.exports =
-  name: 'Sample'
-  displayName: 'Sample'
   reactClass: React.createClass
     render: ->
       <h1>It works</h1>
@@ -201,29 +241,15 @@ ipc.foreachCall("api_name", arg1, arg2, ...)
 
 ## 窗口插件开发
 
-使用 `windowManager` 来创建新窗口。关于 `createWindow` 的更多说明，参考 Electron 的 [BrowserWindow 中的 new 方法](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
-
 index.cjsx
 ```coffeescript
-{remote} = require 'electron'
-windowManager = remote.require './lib/window'
-
-window.pluginWindow = null # 保留一个全局引用防止 pluginWindow 被 gc
-initialPluginWindow = ->
-  window.pluginWindow = windowManager.createWindow
-    x: config.get 'poi.window.x', 0
-    y: config.get 'poi.window.y', 0
-    width: 820
-    height: 650
-    indexName: 'pluginName' # 如果需要在 global.windowsIndex 里加入该窗口的索引，添加该项
-  window.pluginWindow.loadURL "file://#{__dirname}/index.html"
-initialItemImprovementWindow()
-
 module.exports =
-  name: 'Sample'
-  displayName: 'Sample'
-  handleClick: ->
-    window.pluginWindow.show()
+  windowOptions:
+    x: 0
+    y: 0
+    width: 800
+    height: 600
+  windowURL: "file://#{__dirname}/index.html"
 ```
 index.html
 ```html
@@ -248,31 +274,15 @@ require(ROOT + "/components/coffee-script/extras/coffee-script.js");
 
 poi 内置了 `i18n-2` 模组以进行多语言翻译
 
-建议将将要初始化的 i18n object 附着到 `window.i18n` 下，如下所示：
+将翻译文件放置在 `package.json` 里的 `poiPlugin.i18nDir` 键值指示的路径中，插件将会自动创建 `window.i18n[插件的 id]` 的翻译对象。
 
-```coffeescript
-window.i18n.pluginName = new (require 'i18n-2')
-  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-  defaultLocale: 'zh-CN',
-  directory: path.join(__dirname, 'i18n'),
-  updateFiles: false,
-  indent: "\t",
-  extension: '.json'
-  devMode: false
-window.i18n.pluginName.setLocale(window.language)
-__ = i18n.pluginName.__.bind(i18n.pluginName)
-__n = i18n.pluginName.__n.bind(i18n.pluginName)
-```
+对于面板内插件，可以通过 `translated = window.i18n[插件的 id].__(toTranslate)` 来获得翻译。
 
-在相应目录放置翻译文件之后就可以通过如下方法来获得翻译了
-
-```coffeescript
-translated = __ 'to translate'
-```
+对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件
 
 关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
 
-对于游戏内资源的翻译，poi 预置了一个翻译方法，对于非新窗口插件，可以通过如下方法调用
+poi 预置了一个翻译方法以解决游戏内资源的翻译，对于非新窗口插件，可以通过如下方法调用
 
 ```coffeescript
 resource = window.i18n.resources.__ 'to translate'
@@ -330,7 +340,7 @@ electron poi --debug-plugin=ship-info
 
 在 npm 上发布不仅可以使得版本维护更加简便，而且 poi 将会用重载的 npm 模组进行新版本插件的更新。
 
-详情请参照 npm 关于 [package.json](https://docs.npmjs.com/files/package.json) 和 [npm publish](https://docs.npmjs.com/cli/publish) 的文档
+详情请参照 npm 关于 [npm publish](https://docs.npmjs.com/cli/publish) 的文档
 
 注意包名应该以 `poi-plugin-` 开头以便其被 poi 发现
 

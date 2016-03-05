@@ -7,6 +7,7 @@ React = require 'react'
 fs = Promise.promisifyAll require 'fs-extra'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
+windowManager = remote.require './lib/window'
 
 # we need only glob here
 globAsync = Promise.promisify require 'glob'
@@ -14,6 +15,7 @@ globAsync = Promise.promisify require 'glob'
 utils = remote.require './lib/utils'
 
 {config, language, notify, proxy} = window
+envKeyList = ['_teitokuLv', '_nickName', '_nickNameId', '_teitokuExp', '_teitokuId', '_slotitems', '_ships', '_decks', '_ndocks']
 
 # dummy class, no plugin is created by call the constructor
 class Plugin
@@ -83,6 +85,9 @@ class PluginManager
   readPlugins: async (opt_notifyFailed) ->
     pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
     @plugins_ = pluginPaths.map @readPlugin_
+    for plugin_ in @plugins_
+      if plugin_.enabled
+        @loadPlugin(plugin_)
     if opt_notifyFailed
       @notifyFailed_()
     @plugins_ = _.sortBy @plugins_, 'priority'
@@ -186,6 +191,12 @@ class PluginManager
   getUnreadPlugins: ->
     @getFilteredPlugins_ (plugin) -> not plugin.isRead
 
+  # get all broken plugins
+  # @return {Promise<Array<Plugin>>}
+  # @private
+  getBrokenPlugins: ->
+    @getFilteredPlugins_ (plugin) -> plugin.isBroken
+
   # get all valid plugins, see comment of @isValid_
   # @return {Promise<Array<Plugin>>}
   getValidPlugins: ->
@@ -204,8 +215,11 @@ class PluginManager
     plugins = yield @getInstalledPlugins()
     outdatedPlugins = []
     outdatedList = []
-    tasks = plugins.map async (plugin) =>
-      try
+    tasks = plugins.map async (plugin, index) =>
+      if semver.lt(POI_VERSION, plugin.earlistCompatibleMain)
+        @plugins_[index]?.isOutdated = @plugins_[index].needRollback
+        @plugins_[index]?.lastestVersion = @plugins_[index]?.lastApiVer
+      else try
         distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
         latest = "#{plugin.version}"
         if @config_.betaCheck && distTag.beta?
@@ -215,14 +229,9 @@ class PluginManager
           latest = distTag.latest
         if semver.gt latest, plugin.version
           outdatedPlugins.push plugin
-          index = -1
-          for plugin_, i in @plugins_
-            if plugin.packageName is plugin_.packageName
-              index = i
           @plugins_[index]?.isOutdated = true
           @plugins_[index]?.lastestVersion = latest
-          if plugin.isRead then outdatedList.push plugin.stringName
-      catch error
+          if plugin.isRead then outdatedList.push plugin.name
     yield Promise.all(tasks)
     if isNotif && outdatedList.length > 0
       content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
@@ -245,8 +254,10 @@ class PluginManager
   # @param {Plugin} plugin
   # @return {number} one of status code
   getStatusOfPlugin: (plugin) ->
-    if not plugin.isRead
+    if plugin.isBroken || plugin.needRollback
       return @BROKEN
+    if not plugin.isRead
+      return @DISABLED
     if not @isMetRequirement_ plugin
       return @NEEDUPDATE
     if not @isEnabled_ plugin
@@ -289,7 +300,7 @@ class PluginManager
   isEnabled_: (plugin) ->
     if not plugin.isRead
       return false
-    return config.get "plugin.#{plugin.name}.enable", true
+    return plugin.enabled
 
   # update one plugin
   # @param {Plugin} plugin
@@ -299,9 +310,10 @@ class PluginManager
     plugin.isUpdating = true
     try
       yield Promise.promisify(npm.commands.install)(["#{plugin.packageName}@#{plugin.lastestVersion}"])
-      plugin.isUpdating = false
-      plugin.isOutdated = false
-      plugin.version = plugin.lastestVersion
+      #plugin.isUpdating = false
+      #plugin.isOutdated = false
+      #plugin.version = plugin.lastestVersion
+      @reloadPlugin(plugin)
     catch error
       plugin.isUpdating = false
       throw error
@@ -322,12 +334,11 @@ class PluginManager
         plugin = readPlugins.find (plugin_) -> packName == plugin_.packageName
         if plugin?
           # If the installed plugin is one of the existing plugins
-          plugin.version = packVersion
-          plugin.isOutdated = semver.gt plugin.lastestVersion, packVersion
+          if plugin.version != packVersion
+            @reloadPlugin(plugin)
         else
           # If the installed plugin is a new plugin
-          plugin = @readPlugin_ path.join @pluginPath, 'node_modules', packName
-          @plugins_.push plugin
+          @addPlugin(path.join @pluginPath, 'node_modules', packName)
           break
       @plugins_ = _.sortBy @plugins_, 'priority'
     catch error
@@ -342,10 +353,8 @@ class PluginManager
     yield @getMirrors()
     try
       yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
-      for plugin_, index in @plugins_
-        if plugin.packageName is plugin_.packageName
-          @plugins_.splice(index, 1)
-          break
+      @unloadPlugin(plugin)
+      @removePlugin(plugin)
     catch error
       console.log "uninstallPlugin error: #{error}"
       console.log error.stack
@@ -354,106 +363,205 @@ class PluginManager
   # enable one plugin
   # @param {Plugin} plugin
   enablePlugin: (plugin) ->
-    config.set "plugin.#{plugin.name}.enable", true
+    config.set "plugin.#{plugin.id}.enable", true
+    plugin.enabled = true
+    # Require plugin
+    if !plugin.isRead && !plugin.isBroken
+      for plugin_, index in @plugins_
+        if plugin.packageName == plugin_.packageName
+          try
+            pluginMain = require plugin.pluginPath
+            pluginMain.isRead = true
+          catch error
+            pluginMain = isBroken: true
+          _.extend pluginMain, @plugins_[index]
+          pluginMain.isRead ?= false
+          @plugins_[index] = pluginMain
+          plugin = @plugins_[index]
+          break
+    @loadPlugin(plugin)
 
   # disable one plugin
   # @param {Plugin} plugin
   disablePlugin: (plugin) ->
-    config.set "plugin.#{plugin.name}.enable", false
+    config.set "plugin.#{plugin.id}.enable", false
+    plugin.enabled = false
+    @unloadPlugin(plugin)
+
+  # load one plugin
+  # @param {Plugin} plugin
+  loadPlugin: (plugin) ->
+    return if !plugin?
+    # Update envData of localStorage when plugin.useEnv && envData is outdated
+    if plugin.useEnv && !window._portStorageUpdated
+      for key in envKeyList
+        localStorage[key] = JSON.stringify window[key]
+      window._portStorageUpdated = true
+    # Create window when the plugin has a window
+    if plugin.windowURL?
+      if plugin.windowOptions?
+        windowOptions = plugin.windowOptions
+      else
+        windowOptions =
+          x: config.get 'poi.window.x', 0
+          y: config.get 'poi.window.y', 0
+          width: 800
+          height: 600
+      _.extend windowOptions,
+        realClose: plugin.realClose
+      if plugin.multiWindow
+        plugin.handleClick = ->
+          pluginWindow = windowManager.createWindow windowOptions
+          pluginWindow.loadURL plugin.windowURL
+          pluginWindow.show()
+      else if plugin.realClose
+        plugin.pluginWindow = null
+        plugin.handleClick = ->
+          if !plugin.pluginWindow?
+            plugin.pluginWindow = windowManager.createWindow windowOptions
+            plugin.pluginWindow.on 'close', ->
+              plugin.pluginWindow = null
+            plugin.pluginWindow.loadURL plugin.windowURL
+            plugin.pluginWindow.show()
+          else
+            plugin.pluginWindow.show()
+      else
+        plugin.pluginWindow = windowManager.createWindow windowOptions
+        plugin.pluginWindow.loadURL plugin.windowURL
+        plugin.handleClick = ->
+          plugin.pluginWindow.show()
+    # Lifecycle
+    plugin.pluginDidLoad() if typeof plugin.pluginDidLoad is 'function'
+    @emitReload()
+
+  # unload one plugin
+  # @param {Plugin} plugin
+  unloadPlugin: (plugin) ->
+    return if !plugin?
+    # Lifecycle
+    plugin.pluginWillUnload() if typeof plugin.pluginWillUnload is 'function'
+    # Destroy window
+    windowManager.closeWindow(plugin.pluginWindow) if plugin.pluginWindow?
+    @emitReload()
+
+  removePlugin: (plugin) ->
+    delete require.cache[require.resolve plugin.pluginPath]
+    for plugin_, index in @plugins_
+      if plugin.packageName == plugin_.packageName
+        @plugins_.splice(index, 1)
+        break
+    @emitReload()
+
+  addPlugin: (pluginPath) ->
+    plugin = @readPlugin_ pluginPath
+    @plugins_.push plugin
+    @plugins_ = _.sortBy @plugins_, 'priority'
+    if plugin.enabled
+      @loadPlugin(plugin)
+
+  reloadPlugin: (plugin) ->
+    @unloadPlugin(plugin)
+    newPlugin = {}
+    delete require.cache[require.resolve plugin.pluginPath]
+    for plugin_, index in @plugins_
+      if plugin.packageName == plugin_.packageName
+        newPlugin = @readPlugin_ plugin.pluginPath
+        @plugins_[index] = newPlugin
+        break
+    if plugin.enabled
+      @loadPlugin(newPlugin)
+    @plugins_ = _.sortBy @plugins_, 'priority'
 
   # read a plugin from file system
   # @param {string} pluginPath path to a plugin directory
   # @return {Plugin} the information for that plugin
   # @private
   readPlugin_: (pluginPath) ->
+    # Read plugin.json
     try
       pluginData = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'plugin.json'))
     catch error
       pluginData = {}
       utils.error error
-
+    # Read package.json
     try
-      plugin = require pluginPath
-      plugin.priority ?= 10000
-      plugin.isRead = true
+      packageData = fs.readJsonSync path.join pluginPath, 'package.json'
     catch error
-      plugin = isRead: false
-      plugin.version = '0.0.0'
-
-    try
-      plugin.packageData = fs.readJsonSync path.join pluginPath, 'package.json'
-    catch error
-      plugin.packageData = {}
+      packageData = {}
       utils.error error
-
-    if plugin.packageData?.name?
-      plugin.packageName = plugin.packageData.name
-    else if plugin.name?
-      plugin.packageName = plugin.name
-    else
-      plugin.packageName = path.basename pluginPath
-
-    # Missing data of broken plugins
-
-    if !plugin.displayName?
-      if pluginData[plugin.packageName]?
-        plugin.displayName =
-          <span>
-            <FontAwesome key={0} name=pluginData[plugin.packageName].icon />
-            {' ' + pluginData[plugin.packageName][window.language]}
-          </span>
-      else
-        plugin.displayName = plugin.packageName
-
-    if !plugin.author?
-      if pluginData[plugin.packageName]?
-        plugin.author = pluginData[plugin.packageName].author
-      else
-        plugin.author = "unknown"
-
-    if !plugin.link?
-      if pluginData[plugin.packageName]?
-        plugin.link = pluginData[plugin.packageName].link
-      else
-        plugin.link = "https://github.com/poooi"
-
-    if !plugin.description?
-      if pluginData[plugin.packageName]?
-        plugin.description = pluginData[plugin.packageName]["des#{window.language}"]
-      else
-        plugin.description = "unknown"
-
-    # For notifition
-    if typeof plugin.displayName is 'string'
-      plugin.stringName = plugin.displayName
-    else if pluginData[plugin.packageName]?
-        plugin.stringName = pluginData[plugin.packageName][window.language]
-      else
-        if plugin.displayName.props?.children?
-          displayItems = plugin.displayName.props.children
-        else
-          if plugin.displayName.props?.children?
-            displayItems = plugin.displayName.props.children
-          else
-            displayItems = plugin.displayName
-          for child in displayItems
-            if typeof child is "string"
-              plugin.stringName = child
-
-    plugin.isInstalled = true
-    plugin.isOutdated = false
-    if plugin.packageData?.version? && plugin.isRead
-      plugin.version = plugin.packageData.version
+    # Plugin data
+    plugin = packageData.poiPlugin || {}
+    plugin.packageData = packageData
+    plugin.packageName = plugin.packageData.name || path.basename pluginPath
+    plugin.name ?= plugin.title || plugin.packageName
+    plugin.id ?= plugin.packageName
+    plugin.author = plugin.packageData?.author?.name || 'unknown'
+    plugin.author = plugin.packageData?.author if typeof plugin.packageData?.author is 'string'
+    plugin.link = plugin.packageData?.author?.links || plugin.packageData?.author?.url || pluginData[plugin.packageName]?.link || "https://github.com/poooi"
+    plugin.description ?= plugin.packageData?.description || pluginData[plugin.packageName]?["des#{window.language}"] || "unknown"
+    plugin.pluginPath = pluginPath
+    plugin.icon ?= 'fa/th-large'
+    plugin.version = plugin.packageData?.version || '0.0.0'
     plugin.lastestVersion = plugin.version
+    plugin.earlistCompatibleMain ?= '0.0.0'
+    plugin.lastApiVer ?= plugin.version
+    plugin.priority ?= 10000
+    plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
+    plugin.isInstalled = true
+    plugin.needRollback = semver.lt(POI_VERSION, plugin.earlistCompatibleMain) && semver.gt(plugin.version, plugin.lastApiVer)
+    plugin.isOutdated = plugin.needRollback
+    plugin.lastestVersion = plugin.lastApiVer if semver.lt(POI_VERSION, plugin.earlistCompatibleMain)
+    # i18n
+    i18nFile = null
+    if plugin.i18nDir?
+      i18nFile = path.join pluginPath, plugin.i18nDir
+    else
+      try
+        fs.accessSync path.join pluginPath, 'i18n'
+        i18nFile = path.join pluginPath, 'i18n'
+      catch error
+        try
+          fs.accessSync path.join pluginPath, 'assets', 'i18n'
+          i18nFile = path.join pluginPath, 'assets', 'i18n'
+    if i18nFile?
+      namespace = plugin.id
+      window.i18n[namespace] = new (require 'i18n-2')
+        locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+        defaultLocale: 'zh-CN',
+        directory: i18nFile,
+        updateFiles: false,
+        indent: "\t",
+        extension: '.json'
+        devMode: false
+      window.i18n[namespace].setLocale(window.language)
+      plugin.name = window.i18n[namespace].__ plugin.name
+      plugin.description = window.i18n[namespace].__ plugin.description
+    # Display name
+    icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
+    plugin.displayName =
+      <span>
+        <FontAwesome key={0} name=icon />
+        {' ' + plugin.name}
+      </span>
+    # Require plugin
+    if plugin.enabled && !plugin.needRollback
+      try
+        pluginMain = require pluginPath
+        pluginMain.isRead = true
+      catch error
+        pluginMain = isBroken: true
+      _.extend pluginMain, plugin
+      plugin = pluginMain
+      plugin.isRead ?= false
     return plugin
 
   # notify user about unread plugins, only shown when any exists
   # @private
   notifyFailed_: async ->
-    plugins = yield @getUnreadPlugins()
+    plugins = yield @getBrokenPlugins()
     unreadList = []
     for plugin in plugins
-      unreadList.push plugin.stringName
+      unreadList.push plugin.name
     if unreadList.length > 0
       content = "#{unreadList.join(' ')} #{
         __ 'failed to load. Maybe there are some compatibility problems.'}"

@@ -6,6 +6,7 @@ global.windowsIndex = windowsIndex = {}
 forceClose = false
 state = []  # Window state before hide
 hidden = false
+pluginUnload = false
 
 module.exports =
   createWindow: (options) ->
@@ -37,7 +38,13 @@ module.exports =
     else if options.forceMinimize
       current.on 'close', (e) ->
         current.minimize()
-        e.preventDefault() unless forceClose
+        e.preventDefault() unless forceClose || pluginUnload
+      current.on 'closed', (e) ->
+        if pluginUnload then pluginUnload = false
+        if options.indexName?
+          delete windowsIndex[options.indexName]
+        idx = _.indexOf windows, current
+        windows.splice idx, 1
     else
       current.on 'close', (e) ->
         if current.isFullScreen()
@@ -45,7 +52,13 @@ module.exports =
           current.setFullScreen(false)
         else
           current.hide()
-        e.preventDefault() unless forceClose
+        e.preventDefault() unless forceClose || pluginUnload
+      current.on 'closed', (e) ->
+        if pluginUnload then pluginUnload = false
+        if options.indexName?
+          delete windowsIndex[options.indexName]
+        idx = _.indexOf windows, current
+        windows.splice idx, 1
     # Draggable
     unless options.navigatable
       current.webContents.on 'will-navigate', (e) ->
@@ -60,6 +73,9 @@ module.exports =
       continue unless win?
       win.close()
       windows[i] = null
+  closeWindow: (win) ->
+    pluginUnload = true
+    win.close()
   rememberMain: ->
     win = global.mainWindow
     win.setResizable true # Remove after https://github.com/atom/electron/issues/4483 is fixed
