@@ -215,8 +215,11 @@ class PluginManager
     plugins = yield @getInstalledPlugins()
     outdatedPlugins = []
     outdatedList = []
-    tasks = plugins.map async (plugin) =>
-      try
+    tasks = plugins.map async (plugin, index) =>
+      if plugin.needRollback
+        @plugins_[index]?.isOutdated = true
+        @plugins_[index]?.lastestVersion = @plugins_[index]?.lastApiVer
+      else try
         distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
         latest = "#{plugin.version}"
         if @config_.betaCheck && distTag.beta?
@@ -226,14 +229,9 @@ class PluginManager
           latest = distTag.latest
         if semver.gt latest, plugin.version
           outdatedPlugins.push plugin
-          index = -1
-          for plugin_, i in @plugins_
-            if plugin.packageName is plugin_.packageName
-              index = i
           @plugins_[index]?.isOutdated = true
           @plugins_[index]?.lastestVersion = latest
           if plugin.isRead then outdatedList.push plugin.name
-      catch error
     yield Promise.all(tasks)
     if isNotif && outdatedList.length > 0
       content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
@@ -256,7 +254,7 @@ class PluginManager
   # @param {Plugin} plugin
   # @return {number} one of status code
   getStatusOfPlugin: (plugin) ->
-    if plugin.isBroken
+    if plugin.isBroken || plugin.needRollback
       return @BROKEN
     if not plugin.isRead
       return @DISABLED
@@ -502,13 +500,17 @@ class PluginManager
     plugin.link = plugin.packageData?.author?.links || plugin.packageData?.author?.url || pluginData[plugin.packageName]?.link || "https://github.com/poooi"
     plugin.description ?= plugin.packageData?.description || pluginData[plugin.packageName]?["des#{window.language}"] || "unknown"
     plugin.pluginPath = pluginPath
-    plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
     plugin.icon ?= 'fa/th-large'
-    plugin.isInstalled = true
-    plugin.isOutdated = false
     plugin.version = plugin.packageData?.version || '0.0.0'
     plugin.lastestVersion = plugin.version
+    plugin.earlistCompatibleMain ?= '0.0.0'
+    plugin.lastApiVer ?= plugin.version
     plugin.priority ?= 10000
+    plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
+    plugin.isInstalled = true
+    plugin.needRollback = semver.lt POI_VERSION, plugin.earlistCompatibleMain
+    plugin.isOutdated = plugin.needRollback
+    plugin.lastestVersion = plugin.lastApiVer if plugin.needRollback
     # i18n
     i18nFile = null
     if plugin.i18nDir?
@@ -542,7 +544,7 @@ class PluginManager
         {' ' + plugin.name}
       </span>
     # Require plugin
-    if plugin.enabled
+    if plugin.enabled && !plugin.needRollback
       try
         pluginMain = require pluginPath
         pluginMain.isRead = true
