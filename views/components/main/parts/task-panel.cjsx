@@ -125,6 +125,8 @@ activateQuestRecord = (id, progress) ->
       else
         0
     [k] = goals
+    # forget to reset questRecord[id][k].count to 0 cause questRecord[id][k].count greater than questRecord[id].count
+    questRecord[id][k].count = Math.min(questRecord[id].count, questRecord[id][k].count)
     before = questRecord[id][k].count
     questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
     questRecord[id].count += questRecord[id][k].count - before
