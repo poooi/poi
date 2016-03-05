@@ -232,7 +232,7 @@ class PluginManager
               index = i
           @plugins_[index]?.isOutdated = true
           @plugins_[index]?.lastestVersion = latest
-          if plugin.isRead then outdatedList.push plugin.stringName
+          if plugin.isRead then outdatedList.push plugin.name
       catch error
     yield Promise.all(tasks)
     if isNotif && outdatedList.length > 0
@@ -367,18 +367,17 @@ class PluginManager
   enablePlugin: (plugin) ->
     config.set "plugin.#{plugin.id}.enable", true
     plugin.enabled = true
+    # Require plugin
     if !plugin.isRead && !plugin.isBroken
       for plugin_, index in @plugins_
         if plugin.packageName == plugin_.packageName
           try
             pluginMain = require plugin.pluginPath
-            pluginMain.priority ?= 10000
             pluginMain.isRead = true
           catch error
-            pluginMain = isRead: false
-            pluginMain.priority ?= 10000
-            pluginMain.version = '0.0.0'
+            pluginMain = isBroken: true
           _.extend pluginMain, @plugins_[index]
+          pluginMain.isRead ?= false
           @plugins_[index] = pluginMain
           plugin = @plugins_[index]
           break
@@ -394,10 +393,13 @@ class PluginManager
   # load one plugin
   # @param {Plugin} plugin
   loadPlugin: (plugin) ->
+    return if !plugin?
+    # Update envData of localStorage when plugin.useEnv && envData is outdated
     if plugin.useEnv && !window._portStorageUpdated
       for key in envKeyList
         localStorage[key] = JSON.stringify window[key]
       window._portStorageUpdated = true
+    # Create window when the plugin has a window
     if plugin.windowURL?
       if plugin.windowOptions?
         windowOptions = plugin.windowOptions
@@ -411,34 +413,37 @@ class PluginManager
         realClose: plugin.realClose
       if plugin.multiWindow
         plugin.handleClick = ->
-          plugin.pluginWindow = windowManager.createWindow windowOptions
-          plugin.pluginWindow.loadURL plugin.windowURL
-      else
-        if plugin.realClose
-          plugin.pluginWindow = null
-          plugin.handleClick = ->
-            if !plugin.pluginWindow?
-              plugin.pluginWindow = windowManager.createWindow windowOptions
-              plugin.pluginWindow.on 'close', ->
-                plugin.pluginWindow = null
-              plugin.pluginWindow.loadURL plugin.windowURL
-              plugin.pluginWindow.show()
-            else
-              plugin.pluginWindow.show()
-        else
-          plugin.pluginWindow = windowManager.createWindow windowOptions
-          plugin.pluginWindow.loadURL plugin.windowURL
-          plugin.handleClick = ->
+          pluginWindow = windowManager.createWindow windowOptions
+          pluginWindow.loadURL plugin.windowURL
+          pluginWindow.show()
+      else if plugin.realClose
+        plugin.pluginWindow = null
+        plugin.handleClick = ->
+          if !plugin.pluginWindow?
+            plugin.pluginWindow = windowManager.createWindow windowOptions
+            plugin.pluginWindow.on 'close', ->
+              plugin.pluginWindow = null
+            plugin.pluginWindow.loadURL plugin.windowURL
             plugin.pluginWindow.show()
-    if plugin?.pluginDidLoad? then plugin.pluginDidLoad()
+          else
+            plugin.pluginWindow.show()
+      else
+        plugin.pluginWindow = windowManager.createWindow windowOptions
+        plugin.pluginWindow.loadURL plugin.windowURL
+        plugin.handleClick = ->
+          plugin.pluginWindow.show()
+    # Lifecycle
+    plugin.pluginDidLoad() if typeof plugin.pluginDidLoad is 'function'
     @emitReload()
 
   # unload one plugin
   # @param {Plugin} plugin
   unloadPlugin: (plugin) ->
-    if plugin?.pluginWillUnload? then plugin.pluginWillUnload()
-    if plugin.pluginWindow
-      windowManager.closeWindow(plugin.pluginWindow)
+    return if !plugin?
+    # Lifecycle
+    plugin.pluginWillUnload() if typeof plugin.pluginWillUnload is 'function'
+    # Destroy window
+    windowManager.closeWindow(plugin.pluginWindow) if plugin.pluginWindow?
     @emitReload()
 
   removePlugin: (plugin) ->
@@ -474,44 +479,36 @@ class PluginManager
   # @return {Plugin} the information for that plugin
   # @private
   readPlugin_: (pluginPath) ->
+    # Read plugin.json
     try
       pluginData = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'plugin.json'))
     catch error
       pluginData = {}
       utils.error error
-
     # Read package.json
     try
       packageData = fs.readJsonSync path.join pluginPath, 'package.json'
     catch error
       packageData = {}
       utils.error error
-
     # Plugin data
-    plugin = packageData.poiPlugin
-    if !plugin then plugin = {}
+    plugin = packageData.poiPlugin || {}
     plugin.packageData = packageData
-    if plugin.title? then plugin.name = plugin.title
-    if plugin.packageData?.author?.name? then plugin.author = plugin.packageData.author.name
-    if plugin.packageData?.author?.link? then plugin.link = plugin.packageData.author.links
-    if typeof plugin.packageData?.author is 'string' then plugin.author = plugin.packageData?.author
-    if plugin.packageData?.name?
-      plugin.packageName = plugin.packageData.name
-    else
-      plugin.packageName = path.basename pluginPath
-    if !plugin.name? then plugin.name = plugin.packageName
-    if !plugin.id? then plugin.id = plugin.packageName
-    if !plugin.link?
-      if pluginData[plugin.packageName]?
-        plugin.link = pluginData[plugin.packageName].link
-      else
-        plugin.link = "https://github.com/poooi"
-    if !plugin.description?
-      if pluginData[plugin.packageName]?
-        plugin.description = pluginData[plugin.packageName]["des#{window.language}"]
-      else
-        plugin.description = "unknown"
-
+    plugin.packageName = plugin.packageData.name || path.basename pluginPath
+    plugin.name ?= plugin.title || plugin.packageName
+    plugin.id ?= plugin.packageName
+    plugin.author = plugin.packageData?.author?.name || 'unknown'
+    plugin.author = plugin.packageData?.author if typeof plugin.packageData?.author is 'string'
+    plugin.link = plugin.packageData?.author?.links || plugin.packageData?.author?.url || pluginData[plugin.packageName]?.link || "https://github.com/poooi"
+    plugin.description ?= plugin.packageData?.description || pluginData[plugin.packageName]?["des#{window.language}"] || "unknown"
+    plugin.pluginPath = pluginPath
+    plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
+    plugin.icon = plugin.icon || 'fa/th-large'
+    plugin.isInstalled = true
+    plugin.isOutdated = false
+    plugin.version = plugin.packageData?.version || '0.0.0'
+    plugin.lastestVersion = plugin.version
+    plugin.priority ?= 10000
     # i18n
     i18nFile = null
     if plugin.i18nDir?
@@ -537,62 +534,23 @@ class PluginManager
       window.i18n[namespace].setLocale(window.language)
       plugin.name = window.i18n[namespace].__ plugin.name
       plugin.description = window.i18n[namespace].__ plugin.description
-
-    plugin.pluginPath = pluginPath
-    plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
-
     # Display name
-    if !plugin.icon? then plugin.icon = 'fa/th-large'
-    icon = plugin.icon.split('/')[1]
-    if !icon then icon = 'th-large'
-    if plugin.name?
-      plugin.displayName =
-        <span>
-          <FontAwesome key={0} name=icon />
-          {' ' + plugin.name}
-        </span>
-    else
-      plugin.displayName =
-        <span>
-          <FontAwesome key={0} name=icon />
-          {' ' + plugin.packageName}
-        </span>
-
+    icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
+    plugin.displayName =
+      <span>
+        <FontAwesome key={0} name=icon />
+        {' ' + plugin.name}
+      </span>
+    # Require plugin
     if plugin.enabled
       try
         pluginMain = require pluginPath
-        pluginMain.priority ?= 10000
         pluginMain.isRead = true
       catch error
         pluginMain = isBroken: true
-        pluginMain.priority ?= 10000
-        pluginMain.version = '0.0.0'
       _.extend pluginMain, plugin
       plugin = pluginMain
-      if !plugin.isRead? then plugin.isRead = false
-
-    # For notifition
-    if typeof plugin.displayName is 'string'
-      plugin.stringName = plugin.displayName
-    else if pluginData[plugin.packageName]?
-        plugin.stringName = pluginData[plugin.packageName][window.language]
-      else
-        if plugin.displayName.props?.children?
-          displayItems = plugin.displayName.props.children
-        else
-          if plugin.displayName.props?.children?
-            displayItems = plugin.displayName.props.children
-          else
-            displayItems = plugin.displayName
-          for child in displayItems
-            if typeof child is "string"
-              plugin.stringName = child
-
-    plugin.isInstalled = true
-    plugin.isOutdated = false
-    if plugin.packageData?.version?
-      plugin.version = plugin?.packageData?.version
-    plugin.lastestVersion = plugin.version
+      plugin.isRead ?= false
     return plugin
 
   # notify user about unread plugins, only shown when any exists
@@ -601,7 +559,7 @@ class PluginManager
     plugins = yield @getBrokenPlugins()
     unreadList = []
     for plugin in plugins
-      unreadList.push plugin.stringName
+      unreadList.push plugin.name
     if unreadList.length > 0
       content = "#{unreadList.join(' ')} #{
         __ 'failed to load. Maybe there are some compatibility problems.'}"
