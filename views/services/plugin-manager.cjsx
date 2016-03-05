@@ -503,7 +503,7 @@ class PluginManager
     plugin.description ?= plugin.packageData?.description || pluginData[plugin.packageName]?["des#{window.language}"] || "unknown"
     plugin.pluginPath = pluginPath
     plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
-    plugin.icon = plugin.icon || 'fa/th-large'
+    plugin.icon ?= 'fa/th-large'
     plugin.isInstalled = true
     plugin.isOutdated = false
     plugin.version = plugin.packageData?.version || '0.0.0'
