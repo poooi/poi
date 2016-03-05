@@ -125,6 +125,8 @@ activateQuestRecord = (id, progress) ->
       else
         0
     [k] = goals
+    # forget to reset questRecord[id][k].count to 0 cause questRecord[id][k].count greater than questRecord[id].count
+    questRecord[id][k].count = Math.min(questRecord[id].count, questRecord[id][k].count)
     before = questRecord[id][k].count
     questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
     questRecord[id].count += questRecord[id][k].count - before
@@ -133,13 +135,17 @@ inactivateQuestRecord = (id) ->
   return unless questRecord[id]?
   questRecord[id].active = false
   syncQuestRecord()
-resetQuestRecord = (types, resetInterval, id, questRecord) ->
+clearQuestRecordCount = (id, q) ->
+    q.count = 0
+    for own k, v of questGoals[id] when typeof v is 'object' and v isnt null
+      q[k].count = 0
+resetQuestRecord = (types, resetInterval, id, q) ->
   return unless questGoals[id]?
   if questGoals[id].type in types
-    questRecord.active = false
-    questRecord.count = 0
+    q.active = false
+    clearQuestRecordCount id, q
   else if questGoals[id].resetInterval is resetInterval
-    questRecord.count = 0
+    clearQuestRecordCount id, q
 resetQuestRecordDaily = resetQuestRecord.bind(null, [2, 4, 5], 1)
 resetQuestRecordWeekly = resetQuestRecord.bind(null, [3], 2)
 resetQuestRecordMonthly = resetQuestRecord.bind(null, [6], 3)
