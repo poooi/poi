@@ -216,8 +216,8 @@ class PluginManager
     outdatedPlugins = []
     outdatedList = []
     tasks = plugins.map async (plugin, index) =>
-      if plugin.needRollback
-        @plugins_[index]?.isOutdated = true
+      if semver.lt(POI_VERSION, plugin.earlistCompatibleMain)
+        @plugins_[index]?.isOutdated = @plugins_[index].needRollback
         @plugins_[index]?.lastestVersion = @plugins_[index]?.lastApiVer
       else try
         distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
@@ -508,9 +508,9 @@ class PluginManager
     plugin.priority ?= 10000
     plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
     plugin.isInstalled = true
-    plugin.needRollback = semver.lt POI_VERSION, plugin.earlistCompatibleMain
+    plugin.needRollback = semver.lt(POI_VERSION, plugin.earlistCompatibleMain) && semver.gt(plugin.version, plugin.lastApiVer)
     plugin.isOutdated = plugin.needRollback
-    plugin.lastestVersion = plugin.lastApiVer if plugin.needRollback
+    plugin.lastestVersion = plugin.lastApiVer if semver.lt(POI_VERSION, plugin.earlistCompatibleMain)
     # i18n
     i18nFile = null
     if plugin.i18nDir?
