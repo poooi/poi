@@ -155,6 +155,10 @@ window =
   _ships: Object // 玩家的所有舰船，以 api_id 为 key。
   _slotitems: Object // 玩家的所有装备，以 api_id 为 key。
   _decks: Array // 玩家目前的编队信息。
+  _nickName: String // 玩家的名字。
+  _teitokuId: String // 玩家的 ID。
+  _teitokuLv: Number // 玩家的等级。
+  _teitokuExp: Number // 玩家到经验值。
 ```
 
 poi 以全局事件的方式暴露游戏的通讯信息，可以通过 `window.addEventListener` 获得每次游戏请求的发包收包信息。

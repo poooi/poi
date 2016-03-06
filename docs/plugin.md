@@ -116,6 +116,10 @@ window =
   _ships: Object // all ships owned by player, index by api_id
   _slotitems: Object // all equipments owned by player, index by api_id
   _decks: Array // player fleets
+  _nickName: String // Player's name
+  _teitokuId: String // Player's ID
+  _teitokuLv: Number // Player's level
+  _teitokuExp: Number // Player's experience
 ```
 
 Poi exposes game data communication as global events, can be accessed via `window.addEventListener` to obtain information on data sending/receiving:
