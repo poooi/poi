@@ -204,21 +204,20 @@ class PluginManager
     plugins = yield @getInstalledPlugins()
     outdatedPlugins = []
     outdatedList = []
-    tasks = plugins.map async (plugin) =>
+    tasks = plugins.map async (plugin, index) =>
       try
-        distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
-        latest = "#{plugin.version}"
-        if @config_.betaCheck && distTag.beta?
-          if semver.gt distTag.beta, latest
-            latest = distTag.beta
-        if semver.gt distTag.latest, latest
-          latest = distTag.latest
+        if plugin.highestVersion?
+          latest = plugin.highestVersion
+        else
+          distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
+          latest = "#{plugin.version}"
+          if @config_.betaCheck && distTag.beta?
+            if semver.gt distTag.beta, latest
+              latest = distTag.beta
+          if semver.gt distTag.latest, latest
+            latest = distTag.latest
         if semver.gt latest, plugin.version
           outdatedPlugins.push plugin
-          index = -1
-          for plugin_, i in @plugins_
-            if plugin.packageName is plugin_.packageName
-              index = i
           @plugins_[index]?.isOutdated = true
           @plugins_[index]?.lastestVersion = latest
           if plugin.isRead then outdatedList.push plugin.stringName
@@ -439,6 +438,9 @@ class PluginManager
           for child in displayItems
             if typeof child is "string"
               plugin.stringName = child
+
+    if pluginData[plugin.packageName]?.version? && !semver.eq(pluginData[plugin.packageName]?.version, '0.0.0')
+      plugin.highestVersion = pluginData[plugin.packageName]?.version
 
     plugin.isInstalled = true
     plugin.isOutdated = false
