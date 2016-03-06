@@ -3,7 +3,7 @@ fs = require 'fs-extra'
 {remote} = require 'electron'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
-{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
+{$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, ReactDOM} = window
 {Grid, Col, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
@@ -112,14 +112,12 @@ ZoomingConfig = React.createClass
     zoomLevel = @refs.zoomLevel.getValue()
     zoomLevel = parseFloat(zoomLevel)
     return if @state.zoomLevel == zoomLevel
-    document.getElementById('poi-app-container').style.transformOrigin = '0 0'
-    document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{zoomLevel})"
-    document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / zoomLevel)}%"
     poiappHeight = parseInt(document.getElementsByTagName('poi-app')[0].style.height)
     [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
       e.style.height = "#{poiappHeight / zoomLevel - 40}px"
       e.style.overflowY = "scroll"
     window.zoomLevel = zoomLevel
+    window.dispatchEvent new Event('zoom')
     window.dispatchEvent new Event('resize')
     config.set('poi.zoomLevel', zoomLevel)
     @setState

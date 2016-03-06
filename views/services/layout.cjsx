@@ -12,6 +12,8 @@ factor = null
 poiControlHeight = 30 # Magic number
 dropdownStyleAppended = false
 dropdownStyle = document.createElement 'style'
+zoomStyleAppended = false
+zoomStyle = document.createElement 'style'
 
 # Layout
 adjustWebviewHeight = (h) ->
@@ -257,3 +259,21 @@ document.addEventListener 'DOMContentLoaded', ->
     exWindow.loadURL e.url
     exWindow.show()
     e.preventDefault()
+
+handleZoom = ->
+  if !zoomStyleAppended
+    document.body.appendChild zoomStyle
+    zoomStyleAppended = true
+  zoomStyle.innerHTML = """
+  div[role='tooltip'], #poi-app-container {
+    transform-origin : 0 0;
+    -webkit-transform : scale(#{window.zoomLevel});
+  }
+  #poi-app-container {
+    width: #{Math.floor(100 / window.zoomLevel)}%;
+  }
+  """
+
+window.addEventListener 'zoom', handleZoom
+# initially set zoom level
+window.dispatchEvent new Event('zoom')
