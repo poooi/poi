@@ -158,7 +158,7 @@ window =
   _nickName: String // 玩家的名字。
   _teitokuId: String // 玩家的 ID。
   _teitokuLv: Number // 玩家的等级。
-  _teitokuExp: Number // 玩家到经验值。
+  _teitokuExp: Number // 玩家的经验值。
 ```
 
 poi 以全局事件的方式暴露游戏的通讯信息，可以通过 `window.addEventListener` 获得每次游戏请求的发包收包信息。
@@ -375,6 +375,6 @@ cd .. && tar cvf [repo] [repo].tar.gz
 
 ## 实例参考
 
-poi 的所有内置组件和 plugins 以一样的方式组织，在 poi 代码的 views/componets 下可以看到他们的代码。
+poi 的所有内置组件和 plugins 以一样的方式组织，在 poi 代码的 views/components 下可以看到他们的代码。
 
 在 poooi(https://github.com/poooi) 下有很多可以参考的插件。
