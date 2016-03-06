@@ -548,6 +548,7 @@ class PluginManager
       try
         pluginMain = require pluginPath
         pluginMain.isRead = true
+        # For plugin with api v1
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
       catch error
         pluginMain = isBroken: true
