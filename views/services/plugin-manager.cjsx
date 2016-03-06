@@ -311,6 +311,9 @@ class PluginManager
   installPlugin: async (name) ->
     yield @getMirrors()
     try
+      [name, ver] = packInfo.split('@')
+      if !ver? && pluginData[name]?.version?
+        name = "#{name}@#{pluginData[name]?.version.replace('v', '')}"
       data = yield Promise.promisify(npm.commands.install)([name])
       readPlugins = yield @getReadPlugins()
       # Make sure if the plugin is unavailable.
