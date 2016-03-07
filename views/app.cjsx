@@ -13,6 +13,8 @@ __n = window.i18n.others.__n.bind(i18n.others)
 document.getElementById('poi-app-container').style.transformOrigin = '0 0'
 document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{window.zoomLevel})"
 document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / window.zoomLevel)}%"
+# Disable OSX zoom
+require('web-frame').setZoomLevelLimits(1, 1)
 
 # Hackable panels
 window.hack = {}
