@@ -28,6 +28,11 @@ module.exports =
         current.restore()
       else
         show.bind(current)()
+    # Disable OSX zoom
+    current.webContents.on 'dom-ready', ->
+      current.webContents.executeJavaScript '''
+        require('web-frame').setZoomLevelLimits(1, 1);
+      '''
     # Close window really
     if options.realClose
       current.on 'closed', (e) ->
