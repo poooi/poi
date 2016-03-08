@@ -260,18 +260,6 @@ PluginConfig = React.createClass
   checkCount: 0
   emitReload: ->
     PluginManager.emitReload()
-  readPlugins: async ->
-    initState = @getInitialState()
-    initState.reloading = true
-    @setState initState
-    mirrors = yield PluginManager.getMirrors()
-    config = yield PluginManager.getConf()
-    yield PluginManager.readPlugins()
-    @updateFromPluginManager {
-      mirrors: mirrors
-      config: config
-      reloading: false
-    }
   updateFromPluginManager: async (newState) ->
     newState ?= {}
     state = @state
