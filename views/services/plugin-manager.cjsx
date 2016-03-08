@@ -373,13 +373,14 @@ class PluginManager
             pluginMain = require plugin.pluginPath
             pluginMain.isRead = true
             # For plugin with api v1
-            plugin.id = pluginMain.name if plugin.id == plugin.packageName && pluginMain.name?
+            plugin.id = pluginMain.name if !plugin.packageData?.poiPlugin?.id? && pluginMain.name?
             plugin.displayName = pluginMain.displayName if pluginMain.displayName?
           catch error
             pluginMain = isBroken: true
           _.extend pluginMain, @plugins_[index]
           pluginMain.isRead ?= false
           @plugins_[index] = pluginMain
+          pluginMain = null
           plugin = @plugins_[index]
           break
     @loadPlugin(plugin)
@@ -557,12 +558,13 @@ class PluginManager
         pluginMain = require pluginPath
         pluginMain.isRead = true
         # For plugin with api v1
-        plugin.id = pluginMain.name if plugin.id == plugin.packageName && pluginMain.name?
+        plugin.id = pluginMain.name if !plugin.packageData?.poiPlugin?.id? && pluginMain.name?
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
       catch error
         pluginMain = isBroken: true
       _.extend pluginMain, plugin
       plugin = pluginMain
+      pluginMain = null
       plugin.isRead ?= false
     return plugin
 
