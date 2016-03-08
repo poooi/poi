@@ -460,6 +460,11 @@ class PluginManager
       @loadPlugin(plugin)
 
   reloadPlugin: (plugin) ->
+    if typeof plugin == 'string'
+      for plugin_, index in @plugins_
+        if plugin == plugin_.packageName
+          plugin = plugin_
+          break
     @unloadPlugin(plugin)
     newPlugin = {}
     delete require.cache[require.resolve plugin.pluginPath]
