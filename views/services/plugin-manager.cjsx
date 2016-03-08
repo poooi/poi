@@ -398,7 +398,7 @@ class PluginManager
     # Update envData of localStorage when plugin.useEnv && envData is outdated
     if plugin.useEnv && !window._portStorageUpdated
       for key in envKeyList
-        localStorage[key] = JSON.stringify window[key]
+        localStorage[key] = JSON.stringify window[key] if window[key]?
       window._portStorageUpdated = true
     # Create window when the plugin has a window
     if plugin.windowURL?
