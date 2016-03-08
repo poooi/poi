@@ -438,7 +438,7 @@ PluginConfig = React.createClass
         manuallyInstallStatus: 0
   componentDidMount: async ->
     mirrors = yield PluginManager.getMirrors()
-    PluginManager.readPlugins(true)
+    PluginManager.getPlugins(true)
     config = yield PluginManager.getConf()
     @updateFromPluginManager {
       checkingUpdate: true

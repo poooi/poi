@@ -82,14 +82,13 @@ class PluginManager
   # read all plugins from file system
   # @param {boolean=} opt_notifyFailed notify user about unread plugins
   # @return {Promise<Array<Plugin>>}
-  readPlugins: async (opt_notifyFailed) ->
+  readPlugins: async () ->
     pluginPaths = yield Promise.promisify(globAsync)(path.join @pluginPath, 'node_modules', 'poi-plugin-*')
     @plugins_ = pluginPaths.map @readPlugin_
     for plugin_ in @plugins_
       if plugin_.enabled
         @loadPlugin(plugin_)
-    if opt_notifyFailed
-      @notifyFailed_()
+    @notifyFailed_()
     @plugins_ = _.sortBy @plugins_, 'priority'
     return @plugins_
 
