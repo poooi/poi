@@ -176,6 +176,7 @@ ControlledTabArea = React.createClass
       @setState
         activeMainTab: 'mainView'
   componentDidMount: ->
+    @handleKeyDown()
     window.addEventListener 'game.start', @handleKeyDown
     window.addEventListener 'tabarea.reload', @forceUpdate
     window.addEventListener 'PluginManager.PLUGIN_RELOAD', (e) => @cachePluginList()
