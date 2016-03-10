@@ -153,13 +153,13 @@ ChangeResolutionConfig = React.createClass
       gameWidth: @refs[node].getValue()
     width = parseInt @refs[node].getValue()
     return if isNaN(width) || width < 0 || !useFixedResolution
-    if config.get('poi.layout', 'horizontal') == 'horizontal'
+    if window.layout == 'horizontal'
       width = Math.min(width, window.innerWidth - 150)
     # Avoid setting a huge size by mistake
     max_height = window.screen.availHeight
     max_width = window.screen.availWidth
-    zoomLevel = config.get 'poi.zoomLevel', 1
-    if config.get('poi.layout', 'horizontal') == 'horizontal'
+    zoomLevel = window.zoomLevel
+    if window.layout == 'horizontal'
       max_width = max_width - (if window.doubleTabbed then 450 else 300) * zoomLevel
     else
       max_height = max_height - (200 * zoomLevel)
