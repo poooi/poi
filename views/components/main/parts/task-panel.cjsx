@@ -142,9 +142,9 @@ resetQuestRecord = (types, resetInterval, id, q) ->
   else if questGoals[id].resetInterval is resetInterval
     q.count = 0
     for own k, v of questGoals[id] when typeof v is 'object' and v isnt null
-      init = 0 unless Number.isInteger(v.init)
-      q[k].count = init
-      q.count += init
+      v.init = 0 unless Number.isInteger(v.init)
+      q[k].count = v.init
+      q.count += v.init
 resetQuestRecordDaily = resetQuestRecord.bind(null, [2, 4, 5], 1)
 resetQuestRecordWeekly = resetQuestRecord.bind(null, [3], 2)
 resetQuestRecordMonthly = resetQuestRecord.bind(null, [6], 3)
