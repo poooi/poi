@@ -241,7 +241,7 @@ poi-control .collapsing {
 }
 .overflow-anim {
   animation-name: overflowscroll;
-  animation-duration: 10s;
+  animation-duration: 18s;
   animation-delay: 2s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
