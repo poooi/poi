@@ -1,5 +1,6 @@
 path = require 'path-extra'
 semver = require 'semver'
+os = require 'os'
 
 NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 NOTIFY_NOTIFICATION_API = true
