@@ -45,7 +45,6 @@ if process.env.TRAVIS
   use_taobao_mirror = false
 log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
-bower_exec_path = path.join __dirname, 'node_modules', 'bower', 'bin', 'bower'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
 mirror_json_path = path.join ROOT, 'assets', 'data', 'mirror.json'
@@ -89,11 +88,10 @@ get_flash_url = (platform) ->
 
 target_list = [
   # Files
-  'app.js', 'bower.json', 'config.cson',
+  'app.js', 'config.cson',
   'index.html', 'index.js', 'LICENSE', 'package.json', 'babel.config.js',
   # Folders
   'assets',
-  'components',
   'lib',
   'views',
   'node_modules',
@@ -238,13 +236,6 @@ npmInstallAsync = async (tgt_dir, args=[]) ->
     cwd: tgt_dir
   log "Finished installing npm for #{tgt_dir}"
 
-bowerInstallAsync = async (tgt_dir) ->
-  log "Installing bower for #{tgt_dir}"
-  fs.ensureDirSync tgt_dir
-  yield runScriptAsync bower_exec_path, ['install'],
-    cwd: tgt_dir
-  log "Finished installing bower for #{tgt_dir}"
-
 
 # *** METHODS ***
 filterCopyAppAsync = async (stage1_app, stage2_app) ->
@@ -328,10 +319,7 @@ packageAppAsync = async (poi_version, building_root, release_dir) ->
         path.join(stage1_app, 'config.cson')
       yield Promise.join(
         translateCoffeeAsync(stage1_app),
-        (async ->
-          yield npmInstallAsync stage1_app, ['--production']
-          yield bowerInstallAsync stage1_app
-          )())
+        npmInstallAsync(stage1_app, ['--production']))
       )()
     yield Promise.join download_themes, prepare_app
 
@@ -518,11 +506,9 @@ module.exports.buildLocalAsync = ->
   download_theme = downloadThemesAsync theme_root
   install_flash = installFlashAsync "#{os.platform()}-#{os.arch()}", download_dir,
     flash_dir
-  install_npm_bower = (async ->
-    yield npmInstallAsync __dirname, ['--production']
-    yield bowerInstallAsync __dirname)()
+  install_npm = npmInstallAsync __dirname, ['--production']
 
-  Promise.join download_theme, install_flash, install_npm_bower
+  Promise.join download_theme, install_flash, install_npm
 
 module.exports.buildAppAsync = (poi_version) ->
   module.exports.buildAsync (poi_version)

@@ -25,12 +25,14 @@ window._portStorageUpdated = true
 window._ = require 'underscore'
 window.$ = (param) -> document.querySelector(param)
 window.$$ = (param) -> document.querySelectorAll(param)
-window.jQuery = require path.join(ROOT, 'components/jquery/dist/jquery')
+window.jQuery = require 'jquery'
 window.React = require 'react'
 window.ReactDOM = require 'react-dom'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
 {remoteStringify} = remote.require './lib/utils'
+
+$('#fontawesome-css')?.setAttribute 'href', require.resolve 'font-awesome/css/font-awesome.css'
 
 # Utils
 Object.clone = (obj) ->
@@ -220,7 +222,7 @@ window.loadTheme = (th) ->
   window.theme = th
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test th
   if theme == '__default__'
-    $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/components/bootstrap/dist/css/bootstrap.css"
+    $('#bootstrap-css')?.setAttribute 'href', "file://" + require.resolve('bootstrap/dist/css/bootstrap.css')
   else
     $('#bootstrap-css')?.setAttribute 'href', "file://#{ROOT}/assets/themes/#{theme}/css/#{theme}.css"
   window.reloadCustomCss()

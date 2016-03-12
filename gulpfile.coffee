@@ -9,17 +9,13 @@ gulp = require 'gulp'
 {buildLocalAsync, buildAsync, buildAppAsync, cleanTempFiles, installPluginsAsync} = require './build_detail'
 
 package_json = require './package.json'
-bower_json = require './bower.json'
 
 poi_version = null
 
 gulp.task 'getVersion', ->
   package_version = package_json.version
-  bower_version = bower_json.version
   poi_version = package_version
   log "*** Start building poi v#{poi_version} ***"
-  if package_version != bower_version
-    log "WARNING: package.json has version #{package_version} while bower.json has version #{bower_version}"
 
 gulp.task 'install', async ->
   yield buildLocalAsync()
