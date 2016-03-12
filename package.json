@@ -61,7 +61,6 @@
   },
   "devDependencies": {
     "node-unzip-2": "^0.2.1",
-    "bower": "^1.5.2",
     "coffeelint": "^1.11.1",
     "gulp": "^3.9.0",
     "mocha": "^2.4.5",
