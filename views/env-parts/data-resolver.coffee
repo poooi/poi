@@ -55,7 +55,6 @@ resolveResponses = ->
     _.extend _.clone(window.$slotitems[item.api_slotitem_id]), item
   locked = true
   while responses.length > 0
-    `var path;` # HACK: Force shadowing an variable `path`;
     [method, path, body, postBody] = responses.shift()
     try
       # Delete api_token
