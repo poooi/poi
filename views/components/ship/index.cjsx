@@ -98,7 +98,7 @@ module.exports =
           inBattle = [false, false, false, false]
           goback = {}
           combined = body.api_combined_flag? && body.api_combined_flag > 0
-        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select', '/kcsapi/api_req_kaisou/slot_exchange_index'
+        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship2', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_nyukyo/start', '/kcsapi/api_req_nyukyo/speedchange', '/kcsapi/api_req_hensei/preset_select', '/kcsapi/api_req_kaisou/slot_exchange_index', '/kcsapi/api_req_kaisou/remodeling'
           true
         when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
           {decks} = @state
