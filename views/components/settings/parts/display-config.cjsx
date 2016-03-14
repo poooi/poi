@@ -112,13 +112,6 @@ ZoomingConfig = React.createClass
     zoomLevel = @refs.zoomLevel.getValue()
     zoomLevel = parseFloat(zoomLevel)
     return if @state.zoomLevel == zoomLevel
-    document.getElementById('poi-app-container').style.transformOrigin = '0 0'
-    document.getElementById('poi-app-container').style.WebkitTransform = "scale(#{zoomLevel})"
-    document.getElementById('poi-app-container').style.width = "#{Math.floor(100 / zoomLevel)}%"
-    poiappHeight = parseInt(document.getElementsByTagName('poi-app')[0].style.height)
-    [].forEach.call $$('poi-app div.poi-app-tabpane'), (e) ->
-      e.style.height = "#{poiappHeight / zoomLevel - 40}px"
-      e.style.overflowY = "scroll"
     window.zoomLevel = zoomLevel
     window.dispatchEvent new Event('resize')
     config.set('poi.zoomLevel', zoomLevel)
