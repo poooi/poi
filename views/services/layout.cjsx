@@ -38,6 +38,7 @@ adjustSize = ->
     """
     poi-app {
       height: #{window.innerHeight}px;
+      width: 0px;
     }
     poi-app div.poi-app-tabpane {
       height: #{tabpaneHeight};
