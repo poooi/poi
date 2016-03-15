@@ -308,11 +308,7 @@ TaskPanel = React.createClass
         flag = updateQuestRecord('destory_item', null, 1)
       # type: sally
       when '/kcsapi/api_req_map/start'
-        firstBattle = true
-      when '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
-        if firstBattle
-          flag = updateQuestRecord('sally', null, 1)
-          firstBattle = false
+        flag = updateQuestRecord('sally', null, 1)
     return unless flag
     for task in tasks when task.id < 100000 and questGoals[task.id]?
       task.tracking = true
