@@ -2,6 +2,7 @@
 {Collapse} = ReactBootstrap
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
+keyCount = 0
 
 # Alert info
 PoiAlert = React.createClass
@@ -64,9 +65,8 @@ PoiAlert = React.createClass
       else
         @stickyEnd = null
       if !@dontReserve
-        history = Object.clone @state.history
-        latest = Object.clone @messageOld
-        history.push latest
+        history = @state.history
+        history.push <div key={keyCount++} className='alert alert-history-contents'>{@messageOld}</div>
         if history.length > 5 then history.shift()
         @setState {history}
       @message = e.detail.message
@@ -136,12 +136,7 @@ PoiAlert = React.createClass
            className="alert-history panel #{if @state.showHistory then 'alert-history-show' else 'alert-history-hidden'}"
            style={@state.historyStyle}
            onClick={@toggleHistory}>
-        {
-          for item, index in @state.history
-            <div key={index} className='alert alert-history-contents'>
-              {item}
-            </div>
-        }
+        {@state.history}
       </div>
     </div>
 
