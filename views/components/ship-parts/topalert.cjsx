@@ -27,33 +27,44 @@ getCondCountdown = (deck) ->
     cond: cond
 
 # Tyku
-# 制空値 = [(艦載機の対空値) × √(搭載数)] の総計 + 熟練補正
+# 制空値= ∑ [艦載機の対空値 x √(搭載数) + √(熟練値/10) + 机种制空加值 ] ( [ ] 方括号代表取整)
+
+aircraftExpTable = [0, 10, 25, 40, 55, 70, 85, 100, 121]
+
+aircraftLevelBonus = {
+  '6': [0, 0, 2, 5, 9, 14, 14, 22, 22],
+  '7': [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  '8': [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  '11': [0, 1, 1, 1, 1, 3, 3, 6, 6],
+  '45': [0, 0, 0, 0, 0, 0, 0, 0, 0]
+}
+
 getTyku = (deck) ->
   {$ships, $slotitems, _ships, _slotitems} = window
-  basicTyku = alvTyku = totalTyku = 0
+  minTyku = maxTyku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
     ship = _ships[shipId]
     for itemId, slotId in ship.api_slot
       continue unless itemId != -1 && _slotitems[itemId]?
       item = _slotitems[itemId]
+      tempTyku = 0.0
       # Basic tyku
-      if item.api_type[3] in [6, 7, 8]
-        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-      else if item.api_type[3] == 10 && item.api_type[2] == 11
-        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-      # Alv
-      if item.api_type[3] == 6 && item.api_alv > 0 && item.api_alv <= 7
-        alvTyku += [0, 1, 4, 6, 11, 16, 17, 25][item.api_alv]
-      else if item.api_type[3] in [7, 8] && item.api_alv == 7
-        alvTyku += 3
-      else if item.api_type[3] == 10 && item.api_type[2] == 11 && item.api_alv == 7
-        alvTyku += 9
-  totalTyku = basicTyku + alvTyku
 
-  basic: basicTyku
-  alv: alvTyku
-  total: totalTyku
+      if item.api_type[3] in [6, 7, 8]
+        tempTyku += Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku
+        tempTyku += aircraftLevelBonus[item.api_type[3]][item.api_alv]
+        minTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv] / 10))
+        maxTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv + 1] / 10))
+
+      else if item.api_type[3] == 10 && (item.api_type[2] == 11 || item.api_type[2] == 45)
+        tempTyku += Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku
+        tempTyku += aircraftLevelBonus[item.api_type[2]][item.api_alv]
+        minTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv] / 10))
+        maxTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv + 1] / 10))
+
+  min: minTyku
+  max: maxTyku
 
 # Saku (2-5 旧式)
 # 偵察機索敵値×2 ＋ 電探索敵値 ＋ √(艦隊の装備込み索敵値合計 - 偵察機索敵値 - 電探索敵値)
@@ -296,7 +307,7 @@ TopAlert = React.createClass
       if @props.mini
         <div style={display: "flex", justifyContent: "space-around", width: '100%'}>
           <span style={flex: "none"}>Lv. {@messages.totalLv} </span>
-          <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
+          <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.min}</span>
           <span style={flex: "none", marginLeft: 5}>{__ 'LOS'}: {@messages.saku25a.total}</span>
         </div>
       else
@@ -306,10 +317,10 @@ TopAlert = React.createClass
             <span style={flex: 1}>
               <OverlayTrigger placement='bottom' overlay={
                 <Tooltip id='topalert-FP'>
-                  <span>{__ 'Basic FP'}: {@messages.tyku.basic} {__ 'Rank bonuses'}: {@messages.tyku.alv}</span>
+                  <span>{__ 'Basic FP'}: {@messages.tyku.min} {__ 'Rank bonuses'}: {@messages.tyku.max}</span>
                 </Tooltip>
               }>
-                <span>{__ 'Fighter Power'}: {@messages.tyku.total}</span>
+                <span>{__ 'Fighter Power'}: {@messages.tyku.min}</span>
               </OverlayTrigger>
             </span>
             <span style={flex: 1}>
