@@ -63,13 +63,15 @@ PoiAlert = React.createClass
         @stickyEnd = (new Date).getTime() + e.detail.stickyFor
       else
         @stickyEnd = null
-      history = Object.clone @state.history
-      latest = Object.clone @messageOld
-      history.push latest
-      if history.length > 5 then history.shift()
-      @setState {history}
+      if !@dontReserve
+        history = Object.clone @state.history
+        latest = Object.clone @messageOld
+        history.push latest
+        if history.length > 5 then history.shift()
+        @setState {history}
       @message = e.detail.message
       @messageOld = @message
+      @dontReserve = e.detail.dontReserve
       @messageType = e.detail.type
       @updateAlert()
       @handleThemeChange()
