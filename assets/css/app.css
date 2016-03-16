@@ -3,6 +3,7 @@
 }
 ::-webkit-scrollbar {
   width: 0px;
+  height: 0px;
 }
 body {
   font-size: 13px;
@@ -20,6 +21,28 @@ body {
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.alert-container {
+  z-index: 2;
+  position: relative;
+  overflow: hidden;
+}
+.alert-history {
+  z-index: 1;
+  position: relative;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  transition: 0.3s;
+  overflow: hidden;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.alert-history-contents {
+  overflow: scroll;
+  text-overflow: initial;
+}
+.alert-history-hidden {
+  bottom: -10px !important;
 }
 .tab-content {
   overflow: auto;
