@@ -317,7 +317,7 @@ TopAlert = React.createClass
             <span style={flex: 1}>
               <OverlayTrigger placement='bottom' overlay={
                 <Tooltip id='topalert-FP'>
-                  <span>{__ 'minimum FP'}: {@messages.tyku.min} {__ 'maximum FP'}: {@messages.tyku.max}</span>
+                  <span>{__ 'Minimum FP'}: {@messages.tyku.min} {__ 'Maximum FP'}: {@messages.tyku.max}</span>
                 </Tooltip>
               }>
                 <span>{__ 'Fighter Power'}: {@messages.tyku.max}</span>
