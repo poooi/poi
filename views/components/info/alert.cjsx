@@ -3,6 +3,9 @@
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 keyCount = 0
+alertStyle = document.createElement 'style'
+remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+  document.body.appendChild alertStyle
 
 # Alert info
 PoiAlert = React.createClass
@@ -13,7 +16,6 @@ PoiAlert = React.createClass
     messagewidth: 0
     history: []
     showHistory: false
-    alertStyle: {}
     historyStyle: {}
 
   updateAlert: (e, overflow, alertChanged) ->
@@ -82,9 +84,11 @@ PoiAlert = React.createClass
 
   handleThemeChange: ->
     setTimeout =>
-      alertStyle = {}
-      if @messageType == 'default'
-        alertStyle.backgroundColor = window.getComputedStyle($('body'))?.backgroundColor
+      alertStyle.innerHTML = """
+        #alert-container.alert-default, .alert-history.panel {
+          background-color: #{window.getComputedStyle($('body'))?.backgroundColor};
+        }
+      """
       try
         alertHeight = $('#alert-container').offsetHeight
         historyHeight = $('.alert-history-contents').offsetHeight
@@ -92,7 +96,7 @@ PoiAlert = React.createClass
         alertHeight = 28
         historyHeight = 30
       historyStyle = bottom: @state.history.length * historyHeight + alertHeight
-      @setState {alertStyle, historyStyle}
+      @setState {historyStyle}
     , 350
 
   componentDidMount: ->
@@ -123,7 +127,6 @@ PoiAlert = React.createClass
   render: ->
     <div>
       <div id='alert-container'
-           style={@state.alertStyle}
            className="alert alert-#{@messageType} alert-container"
            onClick={@toggleHistory}>
         <div className='alert-position' style={width: @state.messageWidth}>
