@@ -22,10 +22,14 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.alert-main {
+  pointer-events: none;
+}
 .alert-container {
   z-index: 2;
   position: relative;
   overflow: hidden;
+  pointer-events: auto;
 }
 .alert-history {
   z-index: 1;
@@ -43,6 +47,10 @@ body {
 }
 .alert-history-show {
   top: 0;
+  pointer-events: auto;
+}
+.alert-history-hidden {
+  pointer-events: none
 }
 .tab-content {
   overflow: auto;
