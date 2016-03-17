@@ -16,7 +16,6 @@ PoiAlert = React.createClass
     messagewidth: 0
     history: []
     showHistory: false
-    historyStyle: {}
 
   updateAlert: (e, overflow, alertChanged) ->
     displayMessage = @message
@@ -84,19 +83,32 @@ PoiAlert = React.createClass
 
   handleThemeChange: ->
     setTimeout =>
-      alertStyle.innerHTML = """
-        #alert-container.alert-default, .alert-history.panel {
-          background-color: #{window.getComputedStyle($('body'))?.backgroundColor};
-        }
-      """
       try
-        alertHeight = $('#alert-container').offsetHeight
-        historyHeight = $('.alert-history-contents').offsetHeight
+        alertHeight = $('poi-control').offsetHeight
+        historyHeight = $('.alert-history').offsetHeight
       catch error
         alertHeight = 28
         historyHeight = 30
-      historyStyle = bottom: @state.history.length * historyHeight + alertHeight
-      @setState {historyStyle}
+      alertStyle.innerHTML = """
+        poi-alert {
+          height: #{alertHeight}px;
+        }
+        #alert-container.alert-default, .alert-history.panel {
+          background-color: #{window.getComputedStyle($('body'))?.backgroundColor};
+        }
+        #alert-container {
+          height: #{alertHeight}px;
+        }
+        #alert-main {
+          height: #{historyHeight + alertHeight}px;
+          overflow: #{if @state.showHistory then 'auto' else 'hidden'};
+          position: relative;
+          bottom: #{historyHeight}px;
+        }
+        .alert-history-hidden {
+          top: #{historyHeight + alertHeight}px;
+        }
+      """
     , 350
 
   componentDidMount: ->
@@ -125,7 +137,12 @@ PoiAlert = React.createClass
     window.removeEventListener 'alert.change', @alertWidthChange
     window.removeEventListener 'theme.change', @handleThemeChange
   render: ->
-    <div>
+    <div id='alert-main' className='alert-main'>
+      <div id='alert-history'
+           className="alert-history panel #{if @state.showHistory then 'alert-history-show' else 'alert-history-hidden'}"
+           onClick={@toggleHistory}>
+        {@state.history}
+      </div>
       <div id='alert-container'
            className="alert alert-#{@messageType} alert-container"
            onClick={@toggleHistory}>
@@ -134,12 +151,6 @@ PoiAlert = React.createClass
             {@state.message}
           </span>
         </div>
-      </div>
-      <div id='alert-history'
-           className="alert-history panel #{if @state.showHistory then 'alert-history-show' else 'alert-history-hidden'}"
-           style={@state.historyStyle}
-           onClick={@toggleHistory}>
-        {@state.history}
       </div>
     </div>
 

@@ -41,8 +41,8 @@ body {
   overflow: scroll;
   text-overflow: initial;
 }
-.alert-history-hidden {
-  bottom: -10px !important;
+.alert-history-show {
+  top: 0;
 }
 .tab-content {
   overflow: auto;
