@@ -374,6 +374,7 @@ class PluginManager
             # For plugin with api v1
             plugin.id = pluginMain.name if !plugin.packageData?.poiPlugin?.id? && pluginMain.name?
             plugin.displayName = pluginMain.displayName if pluginMain.displayName?
+            plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
           catch error
             pluginMain = isBroken: true
           _.extend pluginMain, @plugins_[index]
@@ -559,6 +560,7 @@ class PluginManager
         # For plugin with api v1
         plugin.id = pluginMain.name if !plugin.packageData?.poiPlugin?.id? && pluginMain.name?
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
+        plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
       catch error
         pluginMain = isBroken: true
       _.extend pluginMain, plugin
