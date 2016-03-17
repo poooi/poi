@@ -10,8 +10,9 @@ window._delay = false
 $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
 factor = null
 poiControlHeight = 30 # Magic number
-styleAppended = false
 additionalStyle = document.createElement 'style'
+remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+  document.body.appendChild additionalStyle
 
 # Layout
 adjustWebviewHeight = (h) ->
@@ -27,9 +28,6 @@ adjustSize = ->
   catch e
     url = null
   # Autoset style
-  if !styleAppended
-    document.body.appendChild additionalStyle
-    styleAppended = true
   if window.layout == 'horizontal'
     tabpaneHeight = "#{window.innerHeight / window.zoomLevel - poiControlHeight}px"
   else

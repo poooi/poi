@@ -1,6 +1,11 @@
 {React, ReactDOM} = window
+{Collapse} = ReactBootstrap
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
+keyCount = 0
+alertStyle = document.createElement 'style'
+remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+  document.body.appendChild alertStyle
 
 # Alert info
 PoiAlert = React.createClass
@@ -9,6 +14,9 @@ PoiAlert = React.createClass
     type: 'default'
     overflow: false
     messagewidth: 0
+    history: []
+    showHistory: false
+    historyStyle: {}
 
   updateAlert: (e, overflow, alertChanged) ->
     displayMessage = @message
@@ -58,14 +66,43 @@ PoiAlert = React.createClass
         @stickyEnd = (new Date).getTime() + e.detail.stickyFor
       else
         @stickyEnd = null
+      if !@dontReserve
+        history = @state.history
+        history.push <div key={keyCount++} className='alert alert-history-contents'>{@messageOld}</div>
+        if history.length > 5 then history.shift()
+        @setState {history}
       @message = e.detail.message
       @messageOld = @message
+      @dontReserve = e.detail.dontReserve
       @messageType = e.detail.type
       @updateAlert()
+      @handleThemeChange()
+
+  toggleHistory: ->
+    @setState
+      showHistory: !@state.showHistory
+
+  handleThemeChange: ->
+    setTimeout =>
+      alertStyle.innerHTML = """
+        #alert-container.alert-default, .alert-history.panel {
+          background-color: #{window.getComputedStyle($('body'))?.backgroundColor};
+        }
+      """
+      try
+        alertHeight = $('#alert-container').offsetHeight
+        historyHeight = $('.alert-history-contents').offsetHeight
+      catch error
+        alertHeight = 28
+        historyHeight = 30
+      historyStyle = bottom: @state.history.length * historyHeight + alertHeight
+      @setState {historyStyle}
+    , 350
 
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
     window.addEventListener 'alert.change', @alertWidthChange
+    window.addEventListener 'theme.change', @handleThemeChange
     @alertWidth = document.getElementById('alert-container').offsetWidth
     @message = @state.message
     @messageOld = @message
@@ -86,12 +123,23 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
     window.removeEventListener 'alert.change', @alertWidthChange
+    window.removeEventListener 'theme.change', @handleThemeChange
   render: ->
-    <div id='alert-container' style={overflow: 'hidden'} className="alert alert-#{@messageType}">
-      <div className='alert-position' style={width: @state.messageWidth}>
-        <span id='alert-area' className={@state.overflowAnim}>
-          {@state.message}
-        </span>
+    <div>
+      <div id='alert-container'
+           className="alert alert-#{@messageType} alert-container"
+           onClick={@toggleHistory}>
+        <div className='alert-position' style={width: @state.messageWidth}>
+          <span id='alert-area' className={@state.overflowAnim}>
+            {@state.message}
+          </span>
+        </div>
+      </div>
+      <div id='alert-history'
+           className="alert-history panel #{if @state.showHistory then 'alert-history-show' else 'alert-history-hidden'}"
+           style={@state.historyStyle}
+           onClick={@toggleHistory}>
+        {@state.history}
       </div>
     </div>
 
