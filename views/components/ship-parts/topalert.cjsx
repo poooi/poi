@@ -54,14 +54,14 @@ getTyku = (deck) ->
       if item.api_type[3] in [6, 7, 8]
         tempTyku += Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku
         tempTyku += aircraftLevelBonus[item.api_type[3]][item.api_alv]
-        minTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv] / 10))
-        maxTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv + 1] / 10))
+        minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv + 1] / 10))
 
       else if item.api_type[3] == 10 && (item.api_type[2] == 11 || item.api_type[2] == 45)
         tempTyku += Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku
         tempTyku += aircraftLevelBonus[item.api_type[2]][item.api_alv]
-        minTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv] / 10))
-        maxTyku = Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv + 1] / 10))
+        minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[item.api_alv + 1] / 10))
 
   min: minTyku
   max: maxTyku
