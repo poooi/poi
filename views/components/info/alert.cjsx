@@ -109,7 +109,7 @@ PoiAlert = React.createClass
           top: #{historyHeight + alertHeight}px;
         }
       """
-    , 350
+    , 10
 
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
