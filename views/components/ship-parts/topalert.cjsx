@@ -307,7 +307,7 @@ TopAlert = React.createClass
       if @props.mini
         <div style={display: "flex", justifyContent: "space-around", width: '100%'}>
           <span style={flex: "none"}>Lv. {@messages.totalLv} </span>
-          <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.min}</span>
+          <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.max}</span>
           <span style={flex: "none", marginLeft: 5}>{__ 'LOS'}: {@messages.saku25a.total}</span>
         </div>
       else
@@ -317,10 +317,10 @@ TopAlert = React.createClass
             <span style={flex: 1}>
               <OverlayTrigger placement='bottom' overlay={
                 <Tooltip id='topalert-FP'>
-                  <span>{__ 'Basic FP'}: {@messages.tyku.min} {__ 'Rank bonuses'}: {@messages.tyku.max}</span>
+                  <span>{__ 'minimum FP'}: {@messages.tyku.min} {__ 'maximum FP'}: {@messages.tyku.max}</span>
                 </Tooltip>
               }>
-                <span>{__ 'Fighter Power'}: {@messages.tyku.min}</span>
+                <span>{__ 'Fighter Power'}: {@messages.tyku.max}</span>
               </OverlayTrigger>
             </span>
             <span style={flex: 1}>
