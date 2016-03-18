@@ -59,23 +59,30 @@ PoiAlert = React.createClass
     thisPriority = e.detail.priority || 0
     update = !@stickyEnd || @stickyEnd < (new Date).getTime()
     update = update || !@stickyPriority || @stickyPriority <= thisPriority
+    if !@dontReserve
+      history = @state.history
+      history.push <div key={keyCount++} className='alert alert-history-contents'>{@lastMessage}</div>
+      if history.length > 5 then history.shift()
+      @setState {history}
+    @lastMessage = e.detail.message
+    @dontReserve = e.detail.dontReserve
     if (update)
       @stickyPriority = thisPriority
       if e.detail.stickyFor
         @stickyEnd = (new Date).getTime() + e.detail.stickyFor
       else
         @stickyEnd = null
-      if !@dontReserve
-        history = @state.history
-        history.push <div key={keyCount++} className='alert alert-history-contents'>{@messageOld}</div>
-        if history.length > 5 then history.shift()
-        @setState {history}
       @message = e.detail.message
       @messageOld = @message
-      @dontReserve = e.detail.dontReserve
       @messageType = e.detail.type
       @updateAlert()
       @handleThemeChange()
+    else if !@dontReserve
+      history = @state.history
+      history.push <div key={keyCount++} className='alert alert-history-contents'>{@lastMessage}</div>
+      if history.length > 5 then history.shift()
+      @setState {history}
+      @dontReserve = true
 
   toggleHistory: ->
     @setState
