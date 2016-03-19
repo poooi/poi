@@ -27,6 +27,25 @@ adjustSize = ->
     url = webview?.getURL?()
   catch e
     url = null
+
+    # Get factor
+  if window.layout == 'vertical'
+    cap = 200 * window.zoomLevel
+  else if window.doubleTabbed
+    cap = 450 * window.zoomLevel
+  else cap = 300 * window.zoomLevel
+  if window.layout == 'horizontal'
+    factor = Math.ceil((window.innerHeight - poiControlHeight) / 480.0 * 100) / 100.0
+    if window.innerWidth - factor * 800 < cap
+      factor = Math.ceil((window.innerWidth - cap) / 800.0 * 100) / 100.0
+  else
+    factor = Math.ceil(window.innerWidth / 800.0 * 100) / 100.0
+    if window.innerHeight - factor * 480 < cap
+      factor = Math.ceil((window.innerHeight - cap) / 480.0 * 100) / 100.0
+  if window.webviewWidth > 0.00001
+    factor = Math.max(window.webviewWidth / 800.0 * 100 / 100.0, 0.00125)
+  window.webviewFactor = factor
+
   # Autoset style
   if window.layout == 'horizontal'
     tabpaneHeight = "#{window.innerHeight / window.zoomLevel - poiControlHeight}px"
@@ -65,23 +84,7 @@ adjustSize = ->
       y: bound.y
       width: parseInt(newWidth + borderX)
       height: bound.height
-  # Get factor
-  if window.layout == 'vertical'
-    cap = 200 * window.zoomLevel
-  else if window.doubleTabbed
-    cap = 450 * window.zoomLevel
-  else cap = 300 * window.zoomLevel
-  if window.layout == 'horizontal'
-    factor = Math.ceil((window.innerHeight - poiControlHeight) / 480.0 * 100) / 100.0
-    if window.innerWidth - factor * 800 < cap
-      factor = Math.ceil((window.innerWidth - cap) / 800.0 * 100) / 100.0
-  else
-    factor = Math.ceil(window.innerWidth / 800.0 * 100) / 100.0
-    if window.innerHeight - factor * 480 < cap
-      factor = Math.ceil((window.innerHeight - cap) / 480.0 * 100) / 100.0
-  if window.webviewWidth > 0.00001
-    factor = Math.max(window.webviewWidth / 800.0 * 100 / 100.0, 0.00125)
-  window.webviewFactor = factor
+
   # Fix poi-info when game size 0x0
   if webviewWidth > -0.00001 and webviewWidth < 0.00001
     $('kan-game')?.style?.display = 'none'
