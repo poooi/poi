@@ -57,7 +57,10 @@
     "socks5-client": "^1.1.0",
     "socks5-http-client": "^1.0.1",
     "underscore": "^1.8.3",
-    "windows-shortcuts-appid": "^0.3.2"
+    "windows-shortcuts-appid": "^0.3.2",
+    "redux": "^3.3.1",
+    "react-redux": "^4.4.0",
+    "immutable": "^3.7.6"
   },
   "devDependencies": {
     "node-unzip-2": "^0.2.1",
