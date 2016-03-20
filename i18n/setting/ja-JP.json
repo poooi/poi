@@ -99,7 +99,7 @@
   "Notify when expedition returns in": "遠征帰投の通知をはやめる",
   "Notify when morale is greater than": "コンディションがこの数値以上なったとき通知します",
   "Drop plugin packages here to install it, or click here to select them": "ツールパッケージをドロップしてインストール, \nまたはクリックして選択します",
-  "Plugins are installed successfully. Please restart poi to take effect.": "インストールが完了しました。再起動してください。",
+  "Plugins are installed successfully.": "インストールが完了しました",
   "Install failed. Maybe the selected files are not plugin packages.": "インストールが失敗しました。選択したファイルはツールパッケージではないですか？",
   "Install complete": "インストール完了",
   "Install failed": "インストール失敗",

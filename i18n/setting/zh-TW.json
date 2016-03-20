@@ -99,7 +99,7 @@
   "Notify when expedition returns in": "遠征通知提前時間",
   "Notify when morale is greater than": "疲勞度回覆至此時通知",
   "Drop plugin packages here to install it, or click here to select them": "將插件安裝包拖至此處以安裝, 或點選此處以選擇它們",
-  "Plugins are installed successfully. Please restart poi to take effect.": "安裝完成，重啟後生效",
+  "Plugins are installed successfully.": "安裝完成",
   "Install failed. Maybe the selected files are not plugin packages.": "安裝失敗。是否選擇了正確的安裝包？",
   "Install complete": "安裝完成",
   "Install failed": "安裝失敗",

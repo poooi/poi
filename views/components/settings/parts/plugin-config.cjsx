@@ -448,13 +448,6 @@ PluginConfig = React.createClass
         </Row>
         <Row className='plugin-rowspace'>
           <Col xs={12}>
-            <Alert bsStyle='info'>
-              {__ 'You must reboot the app for the changes to take effect.'}
-            </Alert>
-          </Col>
-        </Row>
-        <Row className='plugin-rowspace'>
-          <Col xs={12}>
             <ButtonGroup bsSize='small' className='plugin-buttongroup'>
               <Button onClick={@checkUpdate}
                       disabled={@state.checkingUpdate}
@@ -568,7 +561,7 @@ PluginConfig = React.createClass
                     when 1
                       __("Installing") + "..."
                     when 2
-                      __ "Plugins are installed successfully. Please restart poi to take effect."
+                      __ "Plugins are installed successfully."
                     when 3
                       __ "Install failed. Maybe the selected files are not plugin packages."
                 }
