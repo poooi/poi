@@ -89,7 +89,7 @@ adjustSize = ->
     $('kan-game')?.style?.display = ''
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
     $('kan-game #webview-wrapper')?.style?.width = "#{webviewWidth}px"
-    adjustWebviewHeight "#{Math.ceil(webviewWidth * 0.6)}px"
+    adjustWebviewHeight "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
     return
   # Insert CSS
