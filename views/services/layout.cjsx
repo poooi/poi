@@ -88,7 +88,7 @@ adjustSize = ->
   else
     $('kan-game')?.style?.display = ''
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
-    $('kan-game #webview-wrapper')?.style?.width = "#{webviewWidth}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{Math.ceil(800 * window.webviewFactor)}px"
     adjustWebviewHeight "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
     return
@@ -195,8 +195,7 @@ handleTitleSet = ->
   """
   handleResize()
 
-if webviewWidth != -1
-  document.addEventListener 'DOMContentLoaded', handleResize
+document.addEventListener 'DOMContentLoaded', handleResize
 
 changeBounds = ->
   bound = getBounds()
