@@ -11,9 +11,17 @@ global.EXROOT = global.APPDATA_PATH
 global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
+CONST = require './lib/constant'
+config = require './lib/config'
+proxy = require './lib/proxy'
+proxy.setMaxListeners 30
+update = require './lib/update'
+shortcut = require './lib/shortcut'
+{log, warn, error} = require './lib/utils'
+
 # Add shortcut to start menu when os is windows
 app.setAppUserModelId 'org.poi.poi'
-if process.platform == 'win32'
+if process.platform == 'win32' && config.get 'poi.createShortcut', true
   windowsShortcuts = require 'windows-shortcuts-appid'
   shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
   targetPath = app.getPath('exe')
@@ -31,14 +39,6 @@ if dbg.isEnabled()
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 else
   global.SERVER_HOSTNAME = 'poi.0u0.moe'
-
-CONST = require './lib/constant'
-config = require './lib/config'
-proxy = require './lib/proxy'
-proxy.setMaxListeners 30
-update = require './lib/update'
-shortcut = require './lib/shortcut'
-{log, warn, error} = require './lib/utils'
 
 global.mainWindow = mainWindow = null
 

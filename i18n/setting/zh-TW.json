@@ -121,5 +121,6 @@
   "Press the key, or Esc to cancel": "等待按下快捷鍵中，或按Esc取消",
   "Disabled": "快捷鍵未設定，點此處設定",
   "Display \"Tips\"": "顯示“小提示”",
-  "Stop Loading When Game Loaded": "遊戲載入完成後停止載入頁面"
+  "Stop Loading When Game Loaded": "遊戲載入完成後停止載入頁面",
+  "Create shortcut on startup (Notification may not be working without shortcut)": "啟動時建立快捷方式 (禁用後通知可能不會正常工作)"
 }

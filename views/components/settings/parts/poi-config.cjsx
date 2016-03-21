@@ -635,6 +635,13 @@ PoiConfig = React.createClass
             label={__ 'Prevent DMM Network Change Popup'}
             configName="poi.disableNetworkAlert"
             defaultVal=false />
+          {
+            if process.platform == 'win32'
+              <CheckboxLabelConfig
+                label={__ 'Create shortcut on startup (Notification may not be working without shortcut)'}
+                configName="poi.createShortcut"
+                defaultVal=true />
+          }
         </Grid>
       </div>
     </div>
