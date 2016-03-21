@@ -13,7 +13,7 @@ global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
 # Add shortcut to start menu when os is windows
 app.setAppUserModelId 'org.poi.poi'
-if process.platform == 'win32'
+if process.platform == 'win32' && config.get 'poi.createShortcut', true
   windowsShortcuts = require 'windows-shortcuts-appid'
   shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
   targetPath = app.getPath('exe')
