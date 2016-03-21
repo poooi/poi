@@ -43,6 +43,7 @@ initStart2Value = ->
     window.$useitems = []
     $useitems[useitem.api_id] = useitem for useitem in body.api_mst_useitem
   for key in envKeyList
+    delete localStorage[key] if localStorage[key] == 'undefined'
     if localStorage[key]? then window[key] = JSON.parse localStorage[key]
 initStart2Value()
 
