@@ -24,7 +24,7 @@
   "file": "ファイル",
   "Experimental": "実験的な機能",
   "PAC address": "PAC アドレス",
-  "Local port": "ローカルポート",
+  "poi port": "poi ポート",
   "Default: 0 (Use random port)": "デフォルト：０（ランダムで選びます）",
   "Will connect to server directly.": "インターネットに直接（またはVPNで）接続します。",
   "Times of reconnect": "再試行回数",
