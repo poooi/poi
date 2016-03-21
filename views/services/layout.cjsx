@@ -3,8 +3,6 @@
 {setBounds, getBounds} = remote.require './lib/utils'
 WindowManager = remote.require './lib/window'
 
-window._delay = false
-
 # Initial
 # $('kan-game webview')?.style?.height = $('kan-game webview /deep/ object[is=browserplugin]')?.style?.height = "0px"
 $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
@@ -91,8 +89,8 @@ adjustSize = ->
   else
     $('kan-game')?.style?.display = ''
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
-    $('kan-game #webview-wrapper')?.style?.width = "#{webviewWidth}px"
-    adjustWebviewHeight "#{Math.ceil(webviewWidth * 0.6)}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{Math.ceil(800 * window.webviewFactor)}px"
+    adjustWebviewHeight "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
     return
   # Insert CSS
@@ -145,11 +143,7 @@ adjustSize = ->
     $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, Math.floor((window.innerWidth - Math.floor(800 * factor)) / 2.0))}px"
     $('kan-game')?.style?.marginTop = '0'
 
-if !window._delay
-  adjustSize()
-else
-  setTimeout adjustSize, 500
-  setTimeout adjustSize, 2000
+adjustSize()
 
 adjustPayitem = ->
   webview = $('kan-game webview')
@@ -180,10 +174,7 @@ handleResize = ->
     else
       $('kan-game').style.flex = Math.floor(window.webviewFactor * 800)
       $('poi-app').style.flex = window.innerWidth - Math.floor(window.webviewFactor * 800)
-  if !window._delay
-    adjustSize()
-  else
-    window._delay = false
+  adjustSize()
 
 handleTitleSet = ->
   try
@@ -198,8 +189,7 @@ handleTitleSet = ->
   """
   handleResize()
 
-if webviewWidth != -1
-  document.addEventListener 'DOMContentLoaded', handleResize
+document.addEventListener 'DOMContentLoaded', handleResize
 
 changeBounds = ->
   bound = getBounds()
