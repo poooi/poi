@@ -61,6 +61,7 @@ ChangeThemeConfig = React.createClass
   getInitialState: ->
     theme: config.get 'poi.theme', 'paperdark'
     enableSVGIcon: config.get 'poi.useSVGIcon', false
+    enableTransition: config.get 'poi.transition.enable', true
   handleSetTheme: (theme) ->
     theme = @refs.theme.getValue()
     if @state.theme != theme
@@ -81,6 +82,12 @@ ChangeThemeConfig = React.createClass
     window.useSVGIcon = !enabled
     @setState
       enableSVGIcon: !enabled
+  handleSetTransition: ->
+    enabled = @state.enableTransition
+    config.set 'poi.transition.enable', !enabled
+    window.dispatchEvent new Event('display.transition.change')
+    @setState
+      enableTransition: !enabled
   componentDidMount: ->
     window.addEventListener 'theme.change', @onThemeChange
   componentWillUnmount: ->
@@ -102,6 +109,9 @@ ChangeThemeConfig = React.createClass
       </Col>
       <Col xs={12}>
         <Input type="checkbox" label={__ 'Use SVG Icon'} checked={@state.enableSVGIcon} onChange={@handleSetSVGIcon} />
+      </Col>
+      <Col xs={12}>
+        <Input type="checkbox" label={__ 'Enable Smooth Transition'} checked={@state.enableTransition} onChange={@handleSetTransition} />
       </Col>
     </Grid>
 

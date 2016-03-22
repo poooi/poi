@@ -26,15 +26,21 @@ TabContentsUnion = React.createClass
   getInitialState: ->
     nowKey: null
     preKey: null
+    enableTransition: config.get 'poi.transition.enable', true
   componentDidMount: ->
     window.addEventListener 'TabContentsUnion.show', @handleShowEvent
+    window.addEventListener 'display.transition.change', @handleSetTransition
   componentWillUnmount: ->
     window.removeEventListener 'TabContentsUnion.show', @handleShowEvent
+    window.removeEventListener 'display.transition.change', @handleSetTransition
   componentWillReceiveProps: (nextProps) ->
     if !@state.nowKey? && nextProps.children.length != 0
       @setNewKey nextProps.children[0].key, true
   handleShowEvent: (e) ->
     @setNewKey e.detail.key
+  handleSetTransition: (e) ->
+    @setState
+      enableTransition: config.get 'poi.transition.enable', true
   findChildByKey: (key) ->
     _.filter((React.Children.map @props.children,
         (child) -> if child.key == key then child),
@@ -87,7 +93,7 @@ TabContentsUnion = React.createClass
             100
           <div className='poi-tab-child-sizer'>
             <div className="poi-tab-child-positioner
-              #{if child.key == activeKey || child.key == prevKey then '' else 'no-transition'}
+              #{if (child.key == activeKey || child.key == prevKey) and @state.enableTransition then 'poi-tab-child-positioner-transition'}
               #{if child.key == activeKey then '' else 'transparent'}"
                  style={left: "#{positionLeft}%"}>
               {child}
