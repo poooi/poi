@@ -351,9 +351,9 @@ class PluginManager
   uninstallPlugin: async (plugin) ->
     yield @getMirrors()
     try
-      yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
       @unloadPlugin(plugin)
       @removePlugin(plugin)
+      yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
     catch error
       console.log "uninstallPlugin error: #{error}"
       console.log error.stack
