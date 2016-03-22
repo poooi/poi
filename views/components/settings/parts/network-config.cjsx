@@ -165,7 +165,7 @@ NetworkConfig = React.createClass
           </Alert>
         </Col>
       </Grid>
-      <Divider text={__ 'Local port'} />
+      <Divider text={__ 'poi port'} />
       <Grid>
         <Col xs={12}>
           <Input type="number" ref="port" value={@state.port} onChange={@handleSetPort} placeholder={__ "Default: 0 (Use random port)"} />
