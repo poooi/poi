@@ -324,13 +324,12 @@ class PluginManager
     yield @getMirrors()
     try
       data = yield Promise.promisify(npm.commands.install)([name])
-      readPlugins = yield @getReadPlugins()
       # Make sure if the plugin is unavailable.
       # if available, update information.
       for [packInfo, packPath] in data
         [packName, packVersion] = packInfo.split('@')
         continue if !packName.startsWith('poi-plugin-')
-        plugin = readPlugins.find (plugin_) -> packName == plugin_.packageName
+        plugin = @plugins_.find (plugin_) -> packName == plugin_.packageName
         if plugin?
           # If the installed plugin is one of the existing plugins
           if plugin.version != packVersion

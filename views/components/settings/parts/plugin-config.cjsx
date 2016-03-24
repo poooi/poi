@@ -262,14 +262,11 @@ PluginConfig = React.createClass
     PluginManager.emitReload()
   updateFromPluginManager: async (newState) ->
     newState ?= {}
-    state = @state
     plugins = yield PluginManager.getInstalledPlugins()
     settings = yield PluginManager.getUninstalledPluginSettings()
     newState.plugins = plugins
     newState.uninstalledPluginSettings = settings
-    for key of newState
-      state[key] = newState[key]
-    @setState state
+    @setState newState
   handleEnableBetaPluginCheck: async ->
     config = yield PluginManager.selectConfig(null, null, !@state.config.betaCheck)
     @setState
