@@ -50,6 +50,9 @@ module.exports =
       fs.writeFileSync configPath, CSON.stringify(config, null, 2)
     catch e
       warn e
+  batchSet: (opts) ->
+    for path, value of opts
+      @set(path, value)
   setDefault: (path, value) ->
     if !configCache[path]?
       path = path.split('.').filter (p) -> p != ''
@@ -70,3 +73,6 @@ module.exports =
           fs.writeFileSync configPath, CSON.stringify(config, null, 2)
         catch e
           warn e
+  batchSetDefault: (opts) ->
+    for path, value of opts
+      @setDefault(path, value)
