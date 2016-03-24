@@ -65,6 +65,7 @@ module.exports =
       states: [-1, -1, -1, -1]
       decks: []
       activeDeck: 0
+      enableTransition: config.get 'poi.transition.enable', true
     nowTime: 0
     componentWillUpdate: (nextProps, nextState) ->
       @nowTime = (new Date()).getTime()
@@ -96,13 +97,18 @@ module.exports =
         detail:
           tab: 'shipView'
       window.dispatchEvent event
+    handleSetTransition: (e) ->
+      @setState
+        enableTransition: config.get 'poi.transition.enable', true
     componentDidMount: ->
       window.addEventListener 'MiniShip.deckChange', @handleClickOnce
       window.addEventListener 'MiniShip.getResponse', @setMiniShipState
+      window.addEventListener 'display.transition.change', @handleSetTransition
       window.setMiniShipState = @setMiniShipState
     componentWillUnmount: ->
       window.removeEventListener 'MiniShip.deckChange', @handleClickOnce
       window.removeEventListener 'MiniShip.getResponse', @setMiniShipState
+      window.removeEventListener 'display.transition.change', @handleSetTransition
       @interval = clearInterval @interval if @interval?
     render: ->
       <div style={height: '100%'} onDoubleClick={@changeShipView}>
@@ -121,7 +127,7 @@ module.exports =
             </ButtonGroup>
           </div>
           <div className="no-scroll">
-            <div className="ship-tab-content"
+            <div className="ship-tab-content #{if @state.enableTransition then 'ship-tab-content-transition'}"
                  style={left: "-#{@state.activeDeck}00%"}>
             {
               for deck, i in @state.decks

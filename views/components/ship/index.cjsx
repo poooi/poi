@@ -65,6 +65,7 @@ module.exports =
       states: [-1, -1, -1, -1]
       decks: []
       activeDeck: 0
+      enableTransition: config.get 'poi.transition.enable', true
     nowTime: 0
     shouldComponentUpdate: (nextProps, nextState)->
       nextProps.activeMainTab is @props.activeMainTab
@@ -166,12 +167,17 @@ module.exports =
         detail:
           tab: 'mainView'
       window.dispatchEvent event
+    handleSetTransition: (e) ->
+      @setState
+        enableTransition: config.get 'poi.transition.enable', true
     componentDidMount: ->
       window.addEventListener 'game.response', @handleResponse
       window.addEventListener 'ShipView.deckChange', @handleClickOnce
+      window.addEventListener 'display.transition.change', @handleSetTransition
     componentWillUnmount: ->
       window.removeEventListener 'game.response', @handleResponse
       window.removeEventListener 'ShipView.deckChange', @handleClickOnce
+      window.removeEventListener 'display.transition.change', @handleSetTransition
       @interval = clearInterval @interval if @interval?
     render: ->
       <Panel onDoubleClick={@changeMainView}>
@@ -190,7 +196,7 @@ module.exports =
           </ButtonGroup>
         </div>
         <div className="no-scroll">
-          <div className="ship-tab-content"
+          <div className="ship-tab-content #{if @state.enableTransition then 'ship-tab-content-transition'}"
                style={left: "-#{@state.activeDeck}00%"}>
           {
             for deck, i in @state.decks

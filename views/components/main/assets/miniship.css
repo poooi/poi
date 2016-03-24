@@ -5,8 +5,12 @@
   display: -webkit-box;
   flex-flow: row;
   position: relative;
+}
+
+#MiniShip .ship-tab-content-transition {
   transition: all .3s cubic-bezier(1,0,0,1);
 }
+
 #MiniShip .ship-tabpane {
   width: 100%;
 }

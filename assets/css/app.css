@@ -198,8 +198,10 @@ poi-control .collapsing {
 .poi-tab-child-positioner {
   position: relative;
   width: 100%;
-  transition: .35s ease-in-out;
   opacity: 1;
+}
+.poi-tab-child-positioner-transition {
+  transition: .35s ease-in-out;
 }
 .poi-app-tabpane {
   width: 100%;
