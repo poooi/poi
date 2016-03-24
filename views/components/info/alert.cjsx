@@ -61,7 +61,7 @@ PoiAlert = React.createClass
     update = update || !@stickyPriority || @stickyPriority <= thisPriority
     if !@dontReserve
       history = @state.history
-      history.push <div key={keyCount++} className='alert alert-history-contents'>{@lastMessage}</div>
+      history.push <div key={keyCount++} className='alert alert-default alert-history-contents'>{@lastMessage}</div>
       if history.length > 5 then history.shift()
       @setState {history}
     @lastMessage = e.detail.message
@@ -79,7 +79,7 @@ PoiAlert = React.createClass
       @handleThemeChange()
     else if !@dontReserve
       history = @state.history
-      history.push <div key={keyCount++} className='alert alert-history-contents'>{@lastMessage}</div>
+      history.push <div key={keyCount++} className='alert alert-default alert-history-contents'>{@lastMessage}</div>
       if history.length > 5 then history.shift()
       @setState {history}
       @dontReserve = true
@@ -115,8 +115,11 @@ PoiAlert = React.createClass
         .alert-history-hidden {
           top: #{historyHeight + alertHeight}px;
         }
+        .alert-default {
+          #{if window.theme == 'paper' || window.theme == 'lumen' then 'color: #000' else ''}
+        }
       """
-    , 10
+    , 100
 
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
