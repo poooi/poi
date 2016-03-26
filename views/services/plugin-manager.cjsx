@@ -468,6 +468,9 @@ class PluginManager
         if plugin == plugin_.packageName
           plugin = plugin_
           break
+    if typeof plugin == 'string'
+      console.log 'Plugin not found!'
+      return
     @unloadPlugin(plugin)
     newPlugin = {}
     delete require.cache[require.resolve plugin.pluginPath]
