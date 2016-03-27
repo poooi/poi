@@ -434,7 +434,10 @@ class PluginManager
         plugin.handleClick = ->
           plugin.pluginWindow.show()
     # Lifecycle
-    plugin.pluginDidLoad() if typeof plugin.pluginDidLoad is 'function'
+    try
+      plugin.pluginDidLoad() if typeof plugin.pluginDidLoad is 'function'
+    catch error
+      console.log error
     @emitReload()
 
   # unload one plugin
@@ -442,7 +445,10 @@ class PluginManager
   unloadPlugin: (plugin) ->
     return if !plugin?
     # Lifecycle
-    plugin.pluginWillUnload() if typeof plugin.pluginWillUnload is 'function'
+    try
+      plugin.pluginWillUnload() if typeof plugin.pluginWillUnload is 'function'
+    catch error
+      console.log error
     # Destroy window
     windowManager.closeWindow(plugin.pluginWindow) if plugin.pluginWindow?
     @emitReload()
