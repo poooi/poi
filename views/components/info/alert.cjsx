@@ -10,11 +10,15 @@ remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
 # Alert info
 PoiAlert = React.createClass
   getInitialState: ->
+    history = []
+    for i in [0..4]
+      history.push <div key={keyCount++} className='alert alert-default alert-history-contents'>　</div>
+    @lastMessage = '　'
     message: __ 'Waiting for response...'
     type: 'default'
     overflow: false
     messagewidth: 0
-    history: []
+    history: history
     showHistory: false
 
   updateAlert: (e, overflow, alertChanged) ->
