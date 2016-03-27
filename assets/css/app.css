@@ -59,6 +59,9 @@ body {
 #poi-app-container {
   overflow: hidden;
 }
+kan-game poi-alert {
+  width: 0;
+}
 kan-game poi-info .alert {
   opacity: 0.7;
   padding: 6px 3px 5px 3px;
