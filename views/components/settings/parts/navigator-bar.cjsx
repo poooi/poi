@@ -16,12 +16,13 @@ getIcon = (status) ->
       <FontAwesome name='spinner' spin />
 NavigatorBar = React.createClass
   getInitialState: ->
+    config.setDefault 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
     # Status
     # -1: Waiting
     # 0: Finish
     # 1: Loading
     navigateStatus: 1
-    navigateUrl: config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
+    navigateUrl: config.get 'poi.homepage'
   handleSetUrl: (e) ->
     @setState
       navigateUrl: e.target.value
