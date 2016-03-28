@@ -64,7 +64,7 @@ ShipRow = React.createClass
                   <div className="status-label">
                     <StatusLabel label={@props.label}/>
                   </div>
-                  <div style={getStatusStyle @props.label}>
+                  <div className="status-cond" style={getStatusStyle @props.label}>
                     <span className={"ship-cond " + window.getCondStyle(@props.shipData.cond)}>
                       ★{@props.shipData.cond}
                     </span>

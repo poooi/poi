@@ -50,17 +50,17 @@
   flex: 1;
   display: flex;
   flex-flow: row nowrap;
-  align-items: flex-end;
   overflow: hidden;
   white-space: nowrap;
-  /*margin-right: 15px;*/
 }
 #MiniShip .ship-details-mini .ship-item .ship-info {
   flex: 1;
   font-size: 14px;
+  width: 33%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+  min-width: 0;
 }
 #MiniShip .ship-details-mini .ship-item .ship-info .ship-type {
   margin-left: 5px;
@@ -75,6 +75,7 @@
 #MiniShip .ship-details-mini .ship-item .ship-info .ship-lv-text {
   flex: 2;
   font-size: 70%;
+  margin-top: 1px;
   margin-right: 4px;
   line-height: 1;
   overflow: hidden;
@@ -84,7 +85,7 @@
   font-size: 14px;
   display: flex;
   flex-flow: column nowrap;
-  width: 100%;
+  width: 66%;
   min-width: 125px;
   justify-content: space-between;
 }
@@ -112,7 +113,6 @@
   width: 40px;
   align-self: flex-end;
   margin-left: auto;
-  display: table;
   text-align: right;
 }
 #MiniShip .ship-details-mini .ship-item .ship-stat .ship-cond .cond-indicator {
