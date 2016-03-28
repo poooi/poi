@@ -70,6 +70,7 @@ handler = dbg.h.optionName or dbg.extra('optionName')
   * `dbg.extra('xxxx').log(msg)`
   * `dbg.extra('xxxx').assert(cond, msg)`
 * 在dev tools console一般会用到的是
+  * `dbg.list()`
   * `dbg.h.xxxx.enable()`
   * `dbg.h.xxxx.disable()`
   * `dbg.extra('xxxx')` (如果`dbg.h.xxxx`还没被创建的话)
@@ -82,4 +83,5 @@ handler = dbg.h.optionName or dbg.extra('optionName')
 ## FAQ
 
 #### **Q:** 我在代码中用了`dbg.extra('xyz')`，但是`dbg.list()`里面却没有"xyz"这一项（或者有时有有时没有）
-**A:** 很可能从程序启动到你运行`dbg.list()`的时候，程序都还没运行到任何包含`dbg.extra('xyz')`的代码，因此还没为"xyz"创建相应的handler。如果你想要
+**A:** 很可能从程序启动到你运行`dbg.list()`的时候，程序都还没运行到任何包含`dbg.extra('xyz')`的代码，因此还没为"xyz"创建相应的handler。  
+如果你确实需要确保你的handler从一开始就会被创建，把`dbg.extra('xyz')`放到如index.js顶端，或者init里面这种一定会一开始就被运行到的地方。
