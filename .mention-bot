@@ -1,0 +1,10 @@
+{
+  "maxReviewers": 5,
+  "numFilesToCheck": 10,
+  "findPotentialReviewers": true,
+  "fileBlacklist": ["*.md"],
+  "userBlacklist": [],
+  "userBlacklistForPR": [],
+  "requiredOrgs": [],
+  "actions": ["opened"]
+}
