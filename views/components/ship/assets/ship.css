@@ -149,6 +149,7 @@
 }
 #ShipView .ship-details .ship-item .ship-stat .ship-hp {
   flex: 1;
+  display: inline-flex;
   align-self: flex-start;
 }
 #ShipView .ship-details .ship-item .ship-stat .status-label {
@@ -168,6 +169,7 @@
 }
 #ShipView .ship-details .ship-item .ship-stat .ship-cond {
   width: 40px;
+  display: table;
   align-self: flex-end;
   margin-left: auto;
   text-align: right;

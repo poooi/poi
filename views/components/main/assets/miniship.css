@@ -67,7 +67,7 @@
 }
 #MiniShip .ship-details-mini .ship-item .ship-info .ship-name {
   flex: 1.5;
-  padding-right: 5px;
+  margin-right: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -91,6 +91,7 @@
 }
 #MiniShip .ship-details-mini .ship-item .ship-stat .ship-hp {
   flex: 1;
+  display: inline-flex;
   align-self: flex-start;
 }
 .ship-pop .status-label,
@@ -111,6 +112,7 @@
 }
 #MiniShip .ship-details-mini .ship-item .ship-stat .ship-cond {
   width: 40px;
+  display: table;
   align-self: flex-end;
   margin-left: auto;
   text-align: right;
