@@ -82,8 +82,18 @@ Same to `dbg.h.optionName.isEnabled()`
 
 ## FAQ
 
-#### **Q:**
-**A:**
+#### **Q:** When should I use the "main" Debug Option? When to use the extra options? Which extra option should I use?
+**A:** Theoretically you can use whatever option you like, or simply only use the "main" option.
+However, this is a big project that involves a number of contributors.
+To make the debugging information more accurate, more controllable, and other developers' lives easier,
+it is better to use an extra debug option for your debugging code in some situations:
+* When it produces a large number of logs
+* When it significantly effects the app performance
+* When its behaviour may annoy other developers
+
+For whatever reason, it is better to discuss with other developers before making the choice.
+
+Check out some existing debug options [here](command-line-args.md#Known Extra Debug Options).
 
 #### **Q:** I have used `dbg.extra('xyz')` in my code, but the "xyz" option didn't (always) appear when I typed `dbg.list()` in Dev Tools.
 **A:** It very likely that at the time you typed `dbg.list()`, non of the code contains your `dbg.extra('xyz')` has been executed yet since the app started, so no handler is created for it.  
