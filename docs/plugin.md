@@ -31,7 +31,7 @@ appData
             |-- plugin3
                   |-- index.coffee
 ```
-On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path `appData/plugins/node_modules`, and tries to load them as plugins. Here `appData` is path to store user data, on Windows it will be `%AppData%/poi`, on Unix-like OS it will be `~/.config/poi`.
+On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path `appData/plugins/node_modules`, and tries to load them as plugins. Here `appData` is path to store user data, on OS X it is `$HOME/Library/Application Support/poi`, on Windows it will be `%AppData%/poi`, on other Unix-like OS it will be `~/.config/poi`.
 
 Basically, a plugin can be loaded when it contains an index, which can be `index.js`, `index.coffee` or `index.cjsx`.
 
@@ -305,32 +305,7 @@ resource = window.i18n.resources.__ 'to translate'
 
 ## Debugging
 
-Setting environment variable `DEBUG` can activate debug mode.
-
-Open developer tool and type in console:
-```javascript
-process.env.DEBUG = 1;
-```
-
-If you want to enter debug mode from the start (e.g. you want to debug `app.cjsx`), you can add `--debug` or `-d` argument to start poi:
-```
-electron poi --debug
-```
-
-Plugin can be set to activate debug code or not by `--debug-plugin=plugin-name` argument.
-
-Take an example of ship-info, if following code is added:
-```coffeescript
-if process.env.DEBUG_PLUGIN is 'ship-info'
-    shipInfoWindow.openDevTools
-      detach: true
-```
-When the command to start poi contains `--debug-plugin=ship-info` argument, ship-info's dev tool will automatically prompt:
-```
-electron poi --debug-plugin=ship-info
-```
-
-`--debug` and `--debug-plugin` can be used at the same time
+See [Debugging Guide](debug.md#software-debugging-guide)
 
 ## Plugin publishing specification
 ### Publishing on [npm](http://npmjs.org)
