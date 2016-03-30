@@ -13,7 +13,7 @@ Main Debug Option: `dbg.h.main` or `dbg.main()`.
 
 Extra Debug Options: `dbg.h.optionName` or `dbg.extra('optionName')`
 
-\>> [Debug Option Handlers](#Debug Option Handlers) <<
+\>> [Debug Option Handlers](#debug-option-handlers-1) <<
 
 ## API
 
@@ -64,7 +64,7 @@ Same to `dbg.h.optionName.isEnabled()`
 * The naming rules of Debug Option Handlers are the same to variables.
 * If the handler named "handlerName" already exists, `dbg.extra('handlerName')` simply returns it.
 * All _created_ handlers can be accessed by `dbg.h.handlerName`.
-* Debug Options can be enabled using [Command Line Arguments](command-line-args.md#Debugging).
+* Debug Options can be enabled using [Command Line Arguments](command-line-args.md#debugging).
 * Generally these are functions you'll use in your code:
   * `dbg.extra('xxxx').isEnabled()`
   * `dbg.extra('xxxx').log(msg)`
@@ -93,7 +93,7 @@ it is better to use an extra debug option for your debugging code in some situat
 
 For whatever reason, it is better to discuss with other developers before making the choice.
 
-Check out some existing debug options [here](command-line-args.md#Known Extra Debug Options).
+Check out some existing debug options [here](command-line-args.md#known-extra-debug-options).
 
 #### **Q** I have used `dbg.extra('xyz')` in my code, but the "xyz" option didn't (always) appear when I typed `dbg.list()` in Dev Tools.
 **A** It very likely that at the time you typed `dbg.list()`, non of the code contains your `dbg.extra('xyz')` has been executed yet since the app started, so no handler is created for it.  
@@ -101,4 +101,4 @@ If you really want the handler be always available since app starts, put your `d
 
 #### **Q** I've enabled option 'xyz' in the main window Dev Tools, but the option is not enabled in my new-window plugin.
 **A** Different windows are different processes, they don't share the debug status. You need to enable the option in the Dev Tools of the new window.  
-Alternatively, you can enable the debug option using [Command Line Arguments](command-line-args.md#Debugging). It will then be enabled for _all windows_.
+Alternatively, you can enable the debug option using [Command Line Arguments](command-line-args.md#debugging). It will then be enabled for _all windows_.

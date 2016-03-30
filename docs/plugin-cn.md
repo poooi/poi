@@ -312,32 +312,7 @@ resource = window.i18n.resources.__ 'to translate'
 
 ## 调试
 
-设置环境变量 DEBUG，可以开启调试模式。
-
-打开_开发者工具_，在console输入
-```javascript
-process.env.DEBUG = 1
-```
-
-如果你需要程序从一开始就进入调试模式（例如当你需要调试`app.cjsx`中的代码时），可以在启动poi的命令行后加上`--debug`或`-d`参数
-```
-electron poi --debug
-```
-
-插件可以通过`--debug-plugin=plugin-name`参数来判断是否运行调试代码。
-
-例如插件ShipInfo如果加入下面代码
-```coffeescript
-if process.env.DEBUG_PLUGIN is 'ship-info'
-    shipInfoWindow.openDevTools
-      detach: true
-```
-当启动poi的命令中带有`--debug-plugin=ship-info`时，便会自动打开ShipInfo的开发者工具
-```
-electron poi --debug-plugin=ship-info
-```
-
-此外，如果有需要的话，`--debug`与`--debug-plugin`可同时调用
+见：[软件调试指南](debug-cn.md#软件调试指南)
 
 ## 插件发布规范
 ### 在 [npm](http://npmjs.org) 上发布

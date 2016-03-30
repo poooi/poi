@@ -12,7 +12,7 @@ Main Debug Option: `dbg.h.main` 或 `dbg.main()`。`dbg`本身也可看作是一
 
 Extra Debug Options: `dbg.h.optionName` 或 `dbg.extra('optionName')`
 
-\>> [Debug Option Handlers](#关于 Debug Option Handlers) <<
+\>> [Debug Option Handlers](#关于-debug-option-handlers) <<
 
 ## API
 
@@ -64,7 +64,7 @@ handler = dbg.h.optionName or dbg.extra('optionName')
 * Handler Name 的命名规则同变量命名规则。
 * 如果名为“handlerName”的handler已存在，`dbg.extra('handlerName')`会直接返回该handler。
 * 所有已创建handler都可通过 `dbg.h.handlerName` 访问。
-* Debug Option可利用 [CLI参数](command-line-args.md#Debugging) 开启。
+* Debug Option可利用 [CLI参数](command-line-args.md#debugging) 开启。
 * 在代码中一般会用到的是
   * `dbg.extra('xxxx').isEnabled()`
   * `dbg.extra('xxxx').log(msg)`
@@ -83,14 +83,14 @@ handler = dbg.h.optionName or dbg.extra('optionName')
 ## FAQ
 
 #### **Q** 什么情况下我需要用“Extra Debug Option”？
-**A:** 理论上你可以用任意的option，甚至偷懒只用“main”。不过poi是一个有很多人参与的项目，为了使调试信息更加准确，更有针对性，也为了其他的开发人员能够更加愉~~悦~~快地贡献代码，在一些情况下最好是使用“Extra Debug Option”而不是“main”：
+**A** 理论上你可以用任意的option，甚至偷懒只用“main”。不过poi是一个有很多人参与的项目，为了使调试信息更加准确，更有针对性，也为了其他的开发人员能够更加愉~~悦~~快地贡献代码，在一些情况下最好是使用“Extra Debug Option”而不是“main”：
 * 当你的调试代码会生成大量的log
 * 当你的调试代码会明显影响程序的性能
 * 当调试代码产生的行为可能会引起其他人的不适
 
 不管怎样，再做决定之前与其他开发人员讨论一下永远不失为一个好办法。
 
-点 [这里](command-line-args.md#Known Extra Debug Options) 参考已有的 Debug Options。
+点 [这里](command-line-args.md#known-extra-debug-options) 参考已有的 Debug Options。
 
 #### **Q** 我在代码中用了`dbg.extra('xyz')`，但是`dbg.list()`里面却没有"xyz"这一项（或者有时有有时没有）
 **A** 很可能从程序启动到你运行`dbg.list()`的时候，程序都还没运行到任何包含`dbg.extra('xyz')`的代码，因此还没为"xyz"创建相应的handler。  
@@ -98,4 +98,4 @@ handler = dbg.h.optionName or dbg.extra('optionName')
 
 #### **Q** 我在主窗口的Dev Tools中开启了 debug option “xyz”，但在我的新窗口插件中该option仍是禁用状态。
 **A** 不同的窗口是不同的进程，它们不共享状态。如果你想开启新窗口的debug option，需要在新窗口的Dev Tools中执行。  
-或者，你可以用 [命令行参数](command-line-args.md#Debugging)的方式来开启，这样做对_所有窗口_都有效。
+或者，你可以用 [命令行参数](command-line-args.md#debugging)的方式来开启，这样做对_所有窗口_都有效。
