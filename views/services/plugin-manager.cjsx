@@ -215,7 +215,7 @@ class PluginManager
     outdatedPlugins = []
     outdatedList = []
     tasks = plugins.map async (plugin, index) =>
-      if semver.lt(POI_VERSION, plugin.earlistCompatibleMain)
+      if semver.lt(POI_VERSION, plugin.earliestCompatibleMain)
         @plugins_[index]?.isOutdated = @plugins_[index].needRollback
         @plugins_[index]?.lastestVersion = @plugins_[index]?.lastApiVer
       else try
@@ -520,14 +520,14 @@ class PluginManager
     plugin.icon ?= 'fa/th-large'
     plugin.version = plugin.packageData?.version || '0.0.0'
     plugin.lastestVersion = plugin.version
-    plugin.earlistCompatibleMain ?= '0.0.0'
+    plugin.earliestCompatibleMain ?= '0.0.0'
     plugin.lastApiVer ?= plugin.version
     plugin.priority ?= 10000
     plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
     plugin.isInstalled = true
-    plugin.needRollback = semver.lt(POI_VERSION, plugin.earlistCompatibleMain) && semver.gt(plugin.version, plugin.lastApiVer)
+    plugin.needRollback = semver.lt(POI_VERSION, plugin.earliestCompatibleMain) && semver.gt(plugin.version, plugin.lastApiVer)
     plugin.isOutdated = plugin.needRollback
-    plugin.lastestVersion = plugin.lastApiVer if semver.lt(POI_VERSION, plugin.earlistCompatibleMain)
+    plugin.lastestVersion = plugin.lastApiVer if semver.lt(POI_VERSION, plugin.earliestCompatibleMain)
     # i18n
     i18nFile = null
     if plugin.i18nDir?

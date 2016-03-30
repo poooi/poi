@@ -53,7 +53,7 @@ appData
   "priority": Number, // 插件在菜单里排序的优先级，值越小插件就会显示在越前
   "description": String, // 插件基本描述，如果有翻译文件将会自动翻译为相应语言
   "icon": String, // 用于插件列表中的图标名。字符串中没有"/"时默认为 FontAwesome
-  "earlistCompatibleMain": Semver, // 兼容的最低 poi 版本
+  "earliestCompatibleMain": Semver, // 兼容的最低 poi 版本
   "lastApiVer": Semver, // 在不兼容的时候回滚的目标版本号
   "i18nDir": String,  // 可选, i18n 文件的自定义目录相对路径，留空时会在 i18n 及 assets/i18n 下确认是否有翻译文件。详情见下
 }
