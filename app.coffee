@@ -42,11 +42,6 @@ else
 
 global.mainWindow = mainWindow = null
 
-# Disable HA
-disableHA = config.get 'poi.disableHA', false
-if disableHA
-  app.commandLine.appendSwitch 'disable-gpu'
-
 pepperFlashData =
   linux:
     filename: 'libpepflashplayer.so'
