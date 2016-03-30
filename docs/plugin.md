@@ -31,7 +31,7 @@ appData
             |-- plugin3
                   |-- index.coffee
 ```
-On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path `appData/plugins/node_modules`, and tries to load them as plugins. Here `appData` is path to store user data, on Windows it will be `%AppData%/poi`, on Unix-like OS it will be `~/.config/poi`.
+On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path `appData/plugins/node_modules`, and tries to load them as plugins. Here `appData` is path to store user data, on OS X it is `$HOME/Library/Application Support/poi`, on Windows it will be `%AppData%/poi`, on other Unix-like OS it will be `~/.config/poi`.
 
 Basically, a plugin can be loaded when it contains an index, which can be `index.js`, `index.coffee` or `index.cjsx`.
 
