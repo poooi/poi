@@ -51,15 +51,14 @@ parseDebugOptions = (arg) ->
     else return false
   true
 
+singleton = require './singleton'
+
 # Process Command Line Arguments one by one
 process.argv.forEach (arg, idx) ->
   switch
     when preprocessArg(arg, idx) then return
     when checkShowVersion(arg) then return
     when parseDebugOptions(arg) then return
+    when singleton.parseCLIArg(arg) then return
     # when parseWhateverOtherOptions(arg) then return
     else warn "Invalid argument (ignored): #{arg}"
-
-# Finish initialization of debug environment
-Debug.init()
-global.dbg = Debug
