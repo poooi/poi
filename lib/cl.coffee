@@ -58,7 +58,7 @@ process.argv.forEach (arg, idx) ->
     when checkShowVersion(arg) then return
     when parseDebugOptions(arg) then return
     # when parseWhateverOtherOptions(arg) then return
-    else warn "Invalid argument (ignored): #{arg}"
+    # else - unrecognized argument, just ignore.
 
 # Finish initialization of debug environment
 Debug.init()
