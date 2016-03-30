@@ -82,8 +82,8 @@ Same to `dbg.h.optionName.isEnabled()`
 
 ## FAQ
 
-#### **Q:** When should I use the "main" Debug Option? When to use the extra options? Which extra option should I use?
-**A:** Theoretically you can use whatever option you like, or simply only use the "main" option.
+#### **Q** When should I use the "main" Debug Option? When to use the extra options? Which extra option should I use?
+**A** Theoretically you can use whatever option you like, or simply only use the "main" option.
 However, this is a big project that involves a number of contributors.
 To make the debugging information more accurate, more controllable, and other developers' lives easier,
 it is better to use an extra debug option for your debugging code in some situations:
@@ -95,6 +95,10 @@ For whatever reason, it is better to discuss with other developers before making
 
 Check out some existing debug options [here](command-line-args.md#Known Extra Debug Options).
 
-#### **Q:** I have used `dbg.extra('xyz')` in my code, but the "xyz" option didn't (always) appear when I typed `dbg.list()` in Dev Tools.
-**A:** It very likely that at the time you typed `dbg.list()`, non of the code contains your `dbg.extra('xyz')` has been executed yet since the app started, so no handler is created for it.  
+#### **Q** I have used `dbg.extra('xyz')` in my code, but the "xyz" option didn't (always) appear when I typed `dbg.list()` in Dev Tools.
+**A** It very likely that at the time you typed `dbg.list()`, non of the code contains your `dbg.extra('xyz')` has been executed yet since the app started, so no handler is created for it.  
 If you really want the handler be always available since app starts, put your `dbg.extra('xyz')` somewhere always executes, like at top of index.js, or in the initialisation sequence.
+
+#### **Q** I've enabled option 'xyz' in the main window Dev Tools, but the option is not enabled in my new-window plugin.
+**A** Different windows are different processes, they don't share the debug status. You need to enable the option in the Dev Tools of the new window.  
+Alternatively, you can enable the debug option using [Command Line Arguments](command-line-args.md#Debugging). It will then be enabled for _all windows_.
