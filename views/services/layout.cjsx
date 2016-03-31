@@ -15,8 +15,11 @@ try
 catch error
   console.log error
   setTimeout (e) =>
-    remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-      document.body.appendChild additionalStyle
+    try
+      remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+        document.body.appendChild additionalStyle
+    catch error
+      console.log error
   , 1000
 
 # Layout
