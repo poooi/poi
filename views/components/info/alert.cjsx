@@ -164,6 +164,7 @@ PoiAlert = React.createClass
       attributes: true
       subtree: true
     observer.observe(target, options)
+    @handleStyleChange()
   componentDidUpdate: ->
     setTimeout =>
       @alertWidth = document.getElementById('alert-container').offsetWidth
