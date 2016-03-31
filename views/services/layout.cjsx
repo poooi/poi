@@ -9,8 +9,15 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
 factor = null
 poiControlHeight = 30 # Magic number
 additionalStyle = document.createElement 'style'
-remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-  document.body.appendChild additionalStyle
+try
+  remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+    document.body.appendChild additionalStyle
+catch error
+  console.log error
+  setTimeout (e) =>
+    remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+      document.body.appendChild additionalStyle
+  , 1000
 
 # Layout
 adjustWebviewHeight = (h) ->
@@ -88,6 +95,17 @@ adjustSize = ->
     $('kan-game')?.style?.display = 'none'
   else
     $('kan-game')?.style?.display = ''
+  # Adjust webview height & position
+  if window.layout == 'horizontal'
+    adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
+    $('kan-game #webview-wrapper')?.style?.marginLeft = '0'
+    $('kan-game')?.style?.marginTop = "#{Math.max(0, Math.floor((window.innerHeight - 480 * factor - poiControlHeight) / 2.0))}px"
+  else
+    adjustWebviewHeight "#{Math.floor(480.0 * factor)}px"
+    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
+    $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, Math.floor((window.innerWidth - Math.floor(800 * factor)) / 2.0))}px"
+    $('kan-game')?.style?.marginTop = '0'
   if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
     $('kan-game #webview-wrapper')?.style?.width = "#{Math.ceil(800 * window.webviewFactor)}px"
     adjustWebviewHeight "#{Math.ceil(480 * window.webviewFactor)}px"
@@ -131,17 +149,6 @@ adjustSize = ->
       document.querySelector('html').style.zoom = #{factor};
     }
   """
-  # Adjust webview height & position
-  if window.layout == 'horizontal'
-    adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
-    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
-    $('kan-game #webview-wrapper')?.style?.marginLeft = '0'
-    $('kan-game')?.style?.marginTop = "#{Math.max(0, Math.floor((window.innerHeight - 480 * factor - poiControlHeight) / 2.0))}px"
-  else
-    adjustWebviewHeight "#{Math.floor(480.0 * factor)}px"
-    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
-    $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, Math.floor((window.innerWidth - Math.floor(800 * factor)) / 2.0))}px"
-    $('kan-game')?.style?.marginTop = '0'
 
 adjustSize()
 
