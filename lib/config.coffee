@@ -51,22 +51,5 @@ module.exports =
     catch e
       warn e
   setDefault: (path, value) ->
-    if !configCache[path]?
-      path = path.split('.').filter (p) -> p != ''
-      cur = config
-      len = path.length
-      for p in path
-        cur = cur?[p]
-      if !cur?
-        cur = config
-        for p, i in path
-          if i != len - 1
-            cur[p] = {} if typeof cur[p] != 'object'
-            cur = cur[p]
-          else
-            cur[p] = value
-        # Save to file
-        try
-          fs.writeFileSync configPath, CSON.stringify(config, null, 2)
-        catch e
-          warn e
+    if !this.get(path)
+      this.set(path, value)
