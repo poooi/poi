@@ -4,8 +4,32 @@ __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 keyCount = 0
 alertStyle = document.createElement 'style'
-remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-  document.body.appendChild alertStyle
+alertStyle.innerHTML = """
+  poi-alert {
+    height: 30px;
+  }
+  #alert-container {
+    height: 30px;
+  }
+  #alert-main {
+    height: 182px;
+    overflow: hidden;
+    position: relative;
+    bottom: 152px;
+  }
+  .alert-history-hidden {
+    top: 182px;
+  }
+"""
+try
+  remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+    document.body.appendChild alertStyle
+catch error
+  console.log error
+  setTimeout (e) =>
+    remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+      document.body.appendChild alertStyle
+  , 1000
 
 # Alert info
 PoiAlert = React.createClass
@@ -98,8 +122,8 @@ PoiAlert = React.createClass
         alertHeight = $('poi-control').offsetHeight
         historyHeight = $('.alert-history').offsetHeight
       catch error
-        alertHeight = 28
-        historyHeight = 30
+        alertHeight = 30
+        historyHeight = 152
       alertStyle.innerHTML = """
         poi-alert {
           height: #{alertHeight}px;
