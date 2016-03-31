@@ -104,7 +104,7 @@ PoiAlert = React.createClass
       @messageOld = @message
       @messageType = e.detail.type
       @updateAlert()
-      @handleThemeChange()
+      @handleStyleChange()
     else if !@dontReserve
       history = @state.history
       history.push <div key={keyCount++} className='alert alert-default alert-history-contents'>{@lastMessage}</div>
@@ -116,7 +116,7 @@ PoiAlert = React.createClass
     @setState
       showHistory: !@state.showHistory
 
-  handleThemeChange: ->
+  handleStyleChange: ->
     setTimeout =>
       try
         alertHeight = $('poi-control').offsetHeight
@@ -152,7 +152,7 @@ PoiAlert = React.createClass
   componentDidMount: ->
     window.addEventListener 'poi.alert', @handleAlert
     window.addEventListener 'alert.change', @alertWidthChange
-    window.addEventListener 'theme.change', @handleThemeChange
+    window.addEventListener 'theme.change', @handleStyleChange
     @alertWidth = document.getElementById('alert-container').offsetWidth
     @message = @state.message
     @messageOld = @message
@@ -173,7 +173,7 @@ PoiAlert = React.createClass
   componentWillUnmount: ->
     window.removeEventListener 'poi.alert', @handleAlert
     window.removeEventListener 'alert.change', @alertWidthChange
-    window.removeEventListener 'theme.change', @handleThemeChange
+    window.removeEventListener 'theme.change', @handleStyleChange
   render: ->
     <div id='alert-main' className='alert-main'>
       <div id='alert-history'
