@@ -88,6 +88,7 @@
   width: calc(76% - 104px);
   display: flex;
   align-items: center;
+  padding-right: 4px;
   justify-content: space-between;
 }
 #ShipView .ship-details .ship-item .progress {
@@ -97,7 +98,7 @@
 #ShipView .ship-details .ship-item .ship-info {
   flex: 1;
   width: calc(33% - 4px);
-  padding-left: 4px;
+  padding: 0 4px;
   margin-right: auto;
   display: flex;
   flex-flow: column nowrap;
@@ -117,6 +118,7 @@
   font-size: 75%;
   vertical-align: bottom;
   padding-top: 0px;
+  text-overflow: ellipsis;
   opacity: 0.8;
 }
 #ShipView .ship-details .ship-item .ship-info .ship-type {
@@ -144,12 +146,10 @@
   font-size: 90%;
   justify-content: space-between;
   margin-left: auto;
-  padding-right: 4px;
   min-width: 120px;
 }
 #ShipView .ship-details .ship-item .ship-stat .ship-hp {
   flex: 1;
-  display: inline-flex;
   align-self: flex-start;
 }
 #ShipView .ship-details .ship-item .ship-stat .status-label {

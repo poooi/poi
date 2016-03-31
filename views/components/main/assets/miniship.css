@@ -91,7 +91,6 @@
 }
 #MiniShip .ship-details-mini .ship-item .ship-stat .ship-hp {
   flex: 1;
-  display: inline-flex;
   align-self: flex-start;
 }
 .ship-pop .status-label,
