@@ -89,11 +89,11 @@ app.on 'ready', ->
     height: height
     resizable: config.get 'poi.content.resizeable', true
     alwaysOnTop: config.get 'poi.content.alwaysOnTop', false
-    'title-bar-style': 'hidden'
-    'web-preferences':
-      'web-security': false
-      'plugins': true
-      'enableLargerThanScreen': true
+    titleBarStyle: 'hidden'
+    webPreferences:
+      webSecurity: false
+      plugins: true
+      enableLargerThanScreen: true
   # Default menu
   mainWindow.reloadArea = 'kan-game webview'
   mainWindow.setResizable(config.get 'poi.content.resizeable', true)
