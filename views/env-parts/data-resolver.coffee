@@ -269,7 +269,7 @@ resolveResponses = ->
           body: body
           postBody: postBody
       window.dispatchEvent event
-      if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
+      if path in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
         handleProxyGameStart()
       else if url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
         handleProxyGamePayitem()
