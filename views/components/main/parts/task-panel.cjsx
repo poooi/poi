@@ -206,8 +206,8 @@ TaskPanel = React.createClass
           @setState
             tasks: tasks
             taskLimits: body.api_parallel_quest_count
-      when '/kcsapi/api_get_member/basic'
-        memberId = window._nickNameId
+      when '/kcsapi/api_get_member/require_info'
+        memberId = window._teitokuId
         try
           questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
           if questRecord? and questRecord.time?
@@ -310,7 +310,7 @@ TaskPanel = React.createClass
       when '/kcsapi/api_req_map/start'
         flag = updateQuestRecord('sally', null, 1)
     return unless flag
-    for task in tasks when task.id < 100000 and questGoals[task.id]?
+    for task in tasks when task.id < 100000 and questGoals[task.id]? and questRecord[task.id]?
       task.tracking = true
       task.percent = questRecord[task.id].count / questRecord[task.id].required
       task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
@@ -354,7 +354,7 @@ TaskPanel = React.createClass
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
     if flag
       {tasks} = @state
-      for task in tasks when task.id < 100000 and questGoals[task.id]?
+      for task in tasks when task.id < 100000 and questGoals[task.id]? and questRecord[task.id]?
         task.tracking = true
         task.percent = questRecord[task.id].count / questRecord[task.id].required
         task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
