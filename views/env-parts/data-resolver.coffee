@@ -95,10 +95,6 @@ resolveResponses = ->
         # User datas prefixed by _
         when '/kcsapi/api_get_member/require_info'
           if body.api_basic?
-            window._teitokuLv = body.api_basic.api_level
-            window._nickName = body.api_basic.api_nickname
-            window._nickNameId = body.api_basic.api_nickname_id
-            window._teitokuExp = body.api_basic.api_experience
             window._teitokuId = body.api_basic.api_member_id
           if body.api_slot_item?
             window._slotitems = {}
@@ -137,8 +133,12 @@ resolveResponses = ->
           _ships[ship.api_id] = extendShip ship for ship in body.api_ship
           window._decks = body.api_deck_port
           window._ndocks = body.api_ndock.map (e) -> e.api_ship_id
-          window._teitokuLv = body.api_basic.api_level
           window._portStorageUpdated = false
+          if body.api_basic?
+            window._teitokuLv = body.api_basic.api_level
+            window._nickName = body.api_basic.api_nickname
+            window._nickNameId = body.api_basic.api_nickname_id
+            window._teitokuExp = body.api_basic.api_experience
         when '/kcsapi/api_req_hensei/change'
           decks = window._decks
           deckId = parseInt(postBody.api_id) - 1
