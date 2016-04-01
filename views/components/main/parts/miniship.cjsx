@@ -127,7 +127,7 @@ module.exports =
             </ButtonGroup>
           </div>
           <div className="no-scroll">
-            <div className="ship-tab-content #{if @state.enableTransition then 'ship-tab-content-transition'}"
+            <div className="ship-tab-content #{if @state.enableTransition then 'ship-tab-content-transition' else ''}"
                  style={left: "-#{@state.activeDeck}00%"}>
             {
               for deck, i in @state.decks

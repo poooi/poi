@@ -93,7 +93,7 @@ TabContentsUnion = React.createClass
             100
           <div className='poi-tab-child-sizer'>
             <div className="poi-tab-child-positioner
-              #{if (child.key == activeKey || child.key == prevKey) and @state.enableTransition then 'poi-tab-child-positioner-transition'}
+              #{if (child.key == activeKey || child.key == prevKey) and @state.enableTransition then 'poi-tab-child-positioner-transition' else ''}
               #{if child.key == activeKey then '' else 'transparent'}"
                  style={left: "#{positionLeft}%"}>
               {child}
