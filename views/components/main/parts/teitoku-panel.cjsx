@@ -121,7 +121,10 @@ TeitokuPanel = React.createClass
             else
               <Tooltip id='teitoku-exp'>Total Exp. {@state.exp}</Tooltip>
           }>
-          <span>{"Lv. #{@state.level}　#{@state.nickname}　[#{rankName[@state.rank]}]　"}</span>
+          <span>{"Lv. #{@state.level}　"}
+            <span className="nickname">{@state.nickname}</span>
+            <span id="user-rank">{"　[#{rankName[@state.rank]}]　"}</span>
+          </span>
         </OverlayTrigger>
         {__ 'Ships'}: {@state.shipCount} / {@state.maxChara}　{__ 'Equipment'}: {@state.slotitemCount} / {@state.maxSlotitem}
       </div>
