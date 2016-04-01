@@ -89,6 +89,16 @@ resolveResponses = ->
             localStorage.start2Body = JSON.stringify body
           window.dispatchEvent new Event 'initialize.complete'
         # User datas prefixed by _
+        when '/kcsapi/api_get_member/require_info'
+          if body.api_basic?
+            window._teitokuLv = body.api_basic.api_level
+            window._nickName = body.api_basic.api_nickname
+            window._nickNameId = body.api_basic.api_nickname_id
+            window._teitokuExp = body.api_basic.api_experience
+            window._teitokuId = body.api_basic.api_member_id
+          if body.api_slot_item?
+            window._slotitems = {}
+            _slotitems[item.api_id] = extendSlotitem item for item in body.api_slot_item
         when '/kcsapi/api_get_member/basic'
           window._teitokuLv = body.api_level
           window._nickName = body.api_nickname
