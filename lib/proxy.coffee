@@ -151,26 +151,32 @@ class Proxy extends EventEmitter
                 'Last-Modified': stats.mtime.toGMTString()
               res.end data
           # Enable retry for game api
-          else if isGameApi
+          else
+            domain = req.headers.origin
+            pathname = parsed.pathname
+            requrl = req.url
             success = false
             for i in [0..retries]
               break if success
               try
                 # Emit request event to plugins
-                self.emit 'game.on.request', req.method, parsed.pathname, JSON.stringify(querystring.parse reqBody.toString())
+                reqBody = JSON.stringify(querystring.parse reqBody.toString())
+                self.emit 'network.on.request', req.method, [domain, pathname, requrl], reqBody
                 # Create remote request
                 [response, body] = yield requestAsync resolve options
                 success = true
                 res.writeHead response.statusCode, response.headers
                 res.end body
                 # Emit response events to plugins
-                resolvedBody = yield resolveBody response.headers['content-encoding'], body
+                try
+                  resolvedBody = yield resolveBody response.headers['content-encoding'], body
+                catch e
+                  # Unresolveable binary files are not retried
+                  break
                 if !resolvedBody?
                   throw new Error('Empty Body')
                 if response.statusCode == 200
-                  if resolvedBody.api_result is 1
-                    resolvedBody = resolvedBody.api_data if resolvedBody.api_data?
-                    self.emit 'game.on.response', req.method, parsed.pathname, JSON.stringify(resolvedBody),  JSON.stringify(querystring.parse reqBody.toString())
+                  self.emit 'network.on.response', req.method, [domain, pathname, url], JSON.stringify(resolvedBody),  reqBody
                 else if response.statusCode == 503
                   throw new Error('Service unavailable')
                 else
@@ -180,18 +186,9 @@ class Proxy extends EventEmitter
                 self.emit 'network.error.retry', i + 1 if i < retries
               # Delay 3s for retry
               yield Promise.delay(3000) unless success
-          else
-            [response, body] = yield requestAsync resolve options
-            res.writeHead response.statusCode, response.headers
-            res.end body
-          if parsed.pathname in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
-            self.emit 'game.start'
-          else if req.url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
-            self.emit 'game.payitem'
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
-          if req.url.startsWith('http://www.dmm.com/netgame/') or req.url.indexOf('/kcs/') != -1 or req.url.indexOf('/kcsapi/') != -1
-            self.emit 'network.error'
+          self.emit 'network.error', [domain, pathname, requrl]
     # HTTPS Requests
     @server.on 'connect', (req, client, head) ->
       delete req.headers['proxy-connection']
