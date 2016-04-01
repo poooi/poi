@@ -84,9 +84,12 @@ KdockPanel = React.createClass
         @canNotify = false
       when '/kcsapi/api_port/port'
         @canNotify = true
-      when '/kcsapi/api_get_member/kdock', '/kcsapi/api_req_kousyou/getship'
+      when '/kcsapi/api_get_member/require_info',\
+           '/kcsapi/api_get_member/kdock',\
+           '/kcsapi/api_req_kousyou/getship'
         kdocks = body
-        kdocks = body.api_kdock if path is '/kcsapi/api_req_kousyou/getship'
+        if path is '/kcsapi/api_get_member/require_info' or path is '/kcsapi/api_req_kousyou/getship'
+          kdocks = body.api_kdock
         docks = kdocks.map (kdock) -> new KDockInfo(kdock)
         if !_.isEqual docks, @state.docks
           @setState
