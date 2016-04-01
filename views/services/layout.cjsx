@@ -9,18 +9,8 @@ $('#layout-css').setAttribute 'href', "./assets/css/layout.#{window.layout}.css"
 factor = null
 poiControlHeight = 30 # Magic number
 additionalStyle = document.createElement 'style'
-try
-  remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-    document.body.appendChild additionalStyle
-catch error
-  console.log error
-  setTimeout (e) =>
-    try
-      remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-        document.body.appendChild additionalStyle
-    catch error
-      console.log error
-  , 1000
+remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+  document.body.appendChild additionalStyle
 
 # Layout
 adjustWebviewHeight = (h) ->

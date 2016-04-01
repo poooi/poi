@@ -21,18 +21,8 @@ alertStyle.innerHTML = """
     top: 182px;
   }
 """
-try
-  remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-    document.body.appendChild alertStyle
-catch error
-  console.log error
-  setTimeout (e) =>
-    try
-      remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
-        document.body.appendChild alertStyle
-    catch error
-      console.log error
-  , 1000
+remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
+  document.body.appendChild alertStyle
 
 # Alert info
 PoiAlert = React.createClass
