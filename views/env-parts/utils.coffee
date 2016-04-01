@@ -1,9 +1,7 @@
-{remoteStringify} = remote.require './lib/utils'
-
 Object.clone = (obj) ->
   JSON.parse JSON.stringify obj
 Object.remoteClone = (obj) ->
-  JSON.parse remoteStringify obj
+  JSON.parse remote.require('./lib/utils').remoteStringify obj
 
 pad = (n) ->
   if n < 10 then "0#{n}" else n
