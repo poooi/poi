@@ -176,7 +176,7 @@ class Proxy extends EventEmitter
                 if !resolvedBody?
                   throw new Error('Empty Body')
                 if response.statusCode == 200
-                  self.emit 'network.on.response', req.method, [domain, pathname, url], JSON.stringify(resolvedBody),  reqBody
+                  self.emit 'network.on.response', req.method, [domain, pathname, requrl], JSON.stringify(resolvedBody),  reqBody
                 else if response.statusCode == 503
                   throw new Error('Service unavailable')
                 else
