@@ -12,8 +12,8 @@ module.exports =
   createWindow: (options) ->
     options = _.extend options,
       show: false
-      'web-preferences':
-        'web-security': false
+      'webPreferences':
+        'webSecurity': false
         'plugins': true
     current = new BrowserWindow options
     if options.indexName?
