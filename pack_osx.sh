@@ -3,51 +3,56 @@
 change_icon () {
     FILENAME=$1
     IMAGEPATH=$2
-    TMP_DIR=$3
     TMP_RSRC_PATH=$TMP_DIR/tmpicns.rsrc
-    sips -i $IMAGEPATH
-    DeRez -only icns $IMAGEPATH > $TMP_RSRC_PATH
-    Rez -append $TMP_RSRC_PATH -o $FILENAME
-    SetFile -a C $FILENAME
+    sips -i "$IMAGEPATH"
+    DeRez -only icns "$IMAGEPATH" > "$TMP_RSRC_PATH"
+    Rez -append "$TMP_RSRC_PATH" -o "$FILENAME"
+    SetFile -a C "$FILENAME"
 }
 
-POI_VERSION=$1          ;shift
-RAW_APP_PATH=$1         ;shift
-TMP_DIR=$1              ;shift
-RESOURCES_PATH=$1       ;shift
+set_infostr () {
+    psutil -replace "$1" -string "$2" "${INFO_PLIST}"
+}
+
+POI_VERSION=$1
+RAW_APP_PATH=$2
+TMP_DIR=$3
+RESOURCES_PATH=$4
 
 # Update info.plist to poi
 APP_ROOT="${RAW_APP_PATH}/Contents"
 INFO_PLIST="${APP_ROOT}/Info.plist"
-plutil -replace CFBundleName -string Poi ${INFO_PLIST}
-plutil -replace CFBundleDisplayName -string Poi ${INFO_PLIST}
-plutil -replace CFBundleIdentifier -string com.github.poi ${INFO_PLIST}
-plutil -replace CFBundleVersion -string ${POI_VERSION} ${INFO_PLIST}
-plutil -replace CFBundleShortVersionString -string ${POI_VERSION} ${INFO_PLIST}
+set_infostr	CFBundleName			Poi
+set_infostr	CFBundleDisplayName		Poi
+set_infostr	CFBundleIdentifier		com.github.poi
+set_infostr	CFBundleVersion			"${POI_VERSION}"
+set_infostr	CFBundleShortVersionString	"${POI_VERSION}"
 
 # Executable
-plutil -replace CFBundleExecutable -string Poi ${INFO_PLIST}
-mv ${APP_ROOT}/MacOS/Electron ${APP_ROOT}/MacOS/Poi
+set_infostr	CFBundleExecutable          	Poi
+mv "${APP_ROOT}"/MacOS/{Electron,Poi}
 
 # Icon
-plutil -replace CFBundleIconFile -string poi.icns ${INFO_PLIST}
-mv ${APP_ROOT}/Resources/atom.icns ${APP_ROOT}/Resources/poi.icns
-[[ -f ${RESOURCES_PATH}/poi.icns ]] && cp ${RESOURCES_PATH}/poi.icns ${APP_ROOT}/Resources/poi.icns
+set_infostr	CFBundleIconFile		poi.icns
+mv "${APP_ROOT}"/Resources/{atom,poi}.icns
+if [[ -f ${RESOURCES_PATH}/poi.icns ]]; then
+    cp "${RESOURCES_PATH}/poi.icns" "${APP_ROOT}/Resources/poi.icns"
+fi
 
 # Create .dmg
-mkdir -p $TMP_DIR
-RAW_APP_NAME=`basename $RAW_APP_PATH`
+mkdir -p "$TMP_DIR"
+RAW_APP_NAME=$(basename "$RAW_APP_PATH")
 DMG_PATH="${TMP_DIR}/Poi-v${POI_VERSION}-osx-x64.dmg"
-hdiutil create -format UDRW -srcfolder $RAW_APP_PATH $DMG_PATH
+hdiutil create -format UDRW -srcfolder "$RAW_APP_PATH" "$DMG_PATH"
 # Get the 2nd line of output, the information of the mounted disk
-DEVINFO=`hdiutil attach $DMG_PATH -mountrandom $TMP_DIR | sed -n 2p`
-DEVNAME=`echo $DEVINFO | awk '{print $1}'`  # e.g. '/dev/disk2s1'
-DISKPATH=`echo $DEVINFO | awk '{print $3}'` # e.g. '/Users/[...]/tmp/dmg.RlxCUx'
-DISKNAME=`basename $DISKPATH`               # e.g. 'dmg.RlxCUx'
+DEVINFO=$(hdiutil attach "$DMG_PATH" -mountrandom "$TMP_DIR" | sed -n 2p)
+# e.g. '/dev/disk2s1' ... '/Users/[...]/tmp/dmg.RlxCUx' ...
+read -r DEVNAME trash DISKPATH garbage <<< "$DEVINFO"
+DISKNAME=$(basename "$DISKPATH")               # e.g. 'dmg.RlxCUx'
 
-pushd $DISKPATH >/dev/zero
-ln -s /Applications
-popd >/dev/zero
+pushd "$DISKPATH" >/dev/null
+ln -s /Applications .
+popd >/dev/null
 
 osascript <<EOF
 on delay duration
@@ -80,9 +85,9 @@ EOF
 #[[ -f ${Asepsis_DS_Store} ]] && cp ${Asepsis_DS_Store} .DS_Store
 #popd >/dev/zero
 
-hdiutil detach $DEVNAME
-hdiutil convert $DMG_PATH -format UDBZ -ov -o $DMG_PATH
+hdiutil detach "$DEVNAME"
+hdiutil convert "$DMG_PATH" -format UDBZ -ov -o "$DMG_PATH"
 
-change_icon $DMG_PATH ${RESOURCES_PATH}/poi.png $TMP_DIR
+change_icon "$DMG_PATH" "${RESOURCES_PATH}/poi.png"
 
-echo $DMG_PATH
+printf '%s\n' "$DMG_PATH"
