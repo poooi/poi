@@ -295,7 +295,8 @@ handleProxyGameStart = ->
 handleProxyGamePayitem = ->
   window.dispatchEvent new Event 'game.payitem'
 
-handleProxyNetworkErrorRetry = (counter) ->
+handleProxyNetworkErrorRetry = ([domain, path, url], counter) ->
+  return if !isGameApi path
   event = new CustomEvent 'network.error.retry',
     bubbles: true
     cancelable: true
@@ -303,7 +304,8 @@ handleProxyNetworkErrorRetry = (counter) ->
       counter: counter
   window.dispatchEvent event
 
-handleProxyNetworkInvalidCode = (code) ->
+handleProxyNetworkInvalidCode = ([domain, path, url], code) ->
+  return if !isGameApi path
   event = new CustomEvent 'network.invalid.code',
     bubbles: true
     cancelable: true
