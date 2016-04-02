@@ -13,10 +13,17 @@ remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
   document.body.appendChild additionalStyle
 
 # Layout
-adjustWebviewHeight = (h) ->
-  $('kan-game #webview-wrapper')?.style?.height = h
-  $('kan-game webview')?.style?.height = h
-  $('kan-game webview')?.shadowRoot?.querySelector('object[is=browserplugin]')?.style?.height = h
+adjustWebviewHeight = do () ->
+  lastH = 0
+  (h) ->
+    if h isnt lastH
+      $('kan-game #webview-wrapper')?.style?.height = h
+      $('kan-game webview')?.style?.height = h
+      $('kan-game webview')?.shadowRoot?.querySelector('object[is=browserplugin]')?.style?.height = h
+      lastH = h
+
+isKancollePage = (url) ->
+  url is 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' or url?.startsWith('http://osapi.dmm.com/gadgets/ifr')
 
 adjustSize = ->
   webview = $('kan-game webview')
@@ -90,16 +97,18 @@ adjustSize = ->
     $('kan-game')?.style?.display = ''
   # Adjust webview height & position
   if window.layout == 'horizontal'
-    adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
-    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
+    if isKancollePage(url)
+      adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
+      $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
     $('kan-game #webview-wrapper')?.style?.marginLeft = '0'
     $('kan-game')?.style?.marginTop = "#{Math.max(0, Math.floor((window.innerHeight - 480 * factor - poiControlHeight) / 2.0))}px"
   else
-    adjustWebviewHeight "#{Math.floor(480.0 * factor)}px"
-    $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
+    if isKancollePage(url)
+      adjustWebviewHeight "#{Math.floor(480.0 * factor)}px"
+      $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
     $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, Math.floor((window.innerWidth - Math.floor(800 * factor)) / 2.0))}px"
     $('kan-game')?.style?.marginTop = '0'
-  if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
+  if not isKancollePage(url)
     $('kan-game #webview-wrapper')?.style?.width = "#{Math.ceil(800 * window.webviewFactor)}px"
     adjustWebviewHeight "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
@@ -181,7 +190,7 @@ handleTitleSet = ->
     url = $('kan-game webview')?.getURL?()
   catch e
     url = null
-  return if url != 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' and !(url?.startsWith('http://osapi.dmm.com/gadgets/ifr'))
+  return if not isKancollePage(url)
   @insertCSS """
     #ntg-recommend {
       display: none !important;
