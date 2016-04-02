@@ -100,6 +100,9 @@ resolve = (req) ->
     else
       return req
 
+isKancolleGameApi = (pathname) ->
+  pathname.startsWith '/kcsapi'
+
 class Proxy extends EventEmitter
   constructor: ->
     super()
@@ -180,12 +183,14 @@ class Proxy extends EventEmitter
                 else if response.statusCode == 503
                   throw new Error('Service unavailable')
                 else
-                  self.emit 'network.invalid.code', response.statusCode
+                  self.emit 'network.invalid.code', [domain, pathname, requrl], response.statusCode
               catch e
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
-                self.emit 'network.error.retry', i + 1 if i < retries
+                self.emit 'network.error.retry', [domain, pathname, requrl], i + 1 if i < retries
+              if success || !isKancolleGameApi pathname
+                break
               # Delay 3s for retry
-              yield Promise.delay(3000) unless success
+              yield Promise.delay(3000) 
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
           self.emit 'network.error', [domain, pathname, requrl]
