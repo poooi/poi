@@ -1,5 +1,6 @@
 {relative, join} = require 'path-extra'
 path =  require 'path-extra'
+classnames = require 'classnames'
 {_, $, $$, React, ReactBootstrap, ROOT, FontAwesome, toggleModal} = window
 {$ships, $shipTypes, _ships} = window
 {Button, ButtonGroup} = ReactBootstrap
@@ -127,7 +128,7 @@ module.exports =
             </ButtonGroup>
           </div>
           <div className="no-scroll">
-            <div className="ship-tab-content #{if @state.enableTransition then 'ship-tab-content-transition' else ''}"
+            <div className={classnames "ship-tab-content", {'ship-tab-content-transition': @state.enableTransition}}
                  style={left: "-#{@state.activeDeck}00%"}>
             {
               for deck, i in @state.decks
