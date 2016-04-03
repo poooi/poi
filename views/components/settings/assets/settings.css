@@ -116,7 +116,9 @@
   margin-top: 8px;
   margin-bottom: 0;
 }
-#SettingsView .plugin-content-disabled {
+#SettingsView .plugin-content-disabled .plugin-name,
+#SettingsView .plugin-content-disabled .author-wrapper,
+#SettingsView .plugin-content-disabled .plugin-description {
   opacity: 0.5;
 }
 #SettingsView .plugin-content > .panel-body {
