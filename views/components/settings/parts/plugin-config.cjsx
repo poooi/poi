@@ -57,20 +57,43 @@ InstalledPlugin = React.createClass
 
   render: ->
     plugin = @props.plugin
-    panelClass = classnames('plugin-content', {
+    panelClass = classnames 'plugin-content',
       'plugin-content-disabled': PluginManager.getStatusOfPlugin(plugin) != PluginManager.VALID
-    })
-    outdatedLabelClass = classnames('update-label', {
+    outdatedLabelClass = classnames 'update-label',
       'hidden': !plugin.isOutdated
-    })
-    btnGroupClass = classnames('plugin-buttongroup', {
-      'btn-xs-12': plugin.settingsClass?,
+    outdatedLabelbsStyle = classnames
+      'primary': plugin?.lastestVersion?.indexOf('beta') == -1
+      'warning': plugin?.lastestVersion?.indexOf('beta') != -1
+    outdatedLabelFAname = classnames
+      'spinner': plugin.isUpdating
+      'cloud-download': !plugin.isUpdating && plugin.isOutdated
+      'check': !plugin.isUpdating && !plugin.isOutdated
+    outdatedLabelText = classnames
+      "#{__ 'Updating'}": plugin.isUpdating
+      "Version #{plugin.lastestVersion}": !plugin.isUpdating && plugin.isOutdated
+      "#{__ 'Latest'}": !plugin.isUpdating && !plugin.isOutdated
+    enableBtnText = classnames
+      "#{__ 'Disable'}": PluginManager.getStatusOfPlugin(plugin) == PluginManager.VALID
+      "#{__ 'Enable'}": PluginManager.getStatusOfPlugin(plugin) == PluginManager.DISABLED
+      "#{__ 'Outdated'}": PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE
+      "#{__ 'Error'}": PluginManager.getStatusOfPlugin(plugin) == PluginManager.BROKEN
+    enableBtnFAname = classnames
+      'pause': PluginManager.getStatusOfPlugin(plugin) == PluginManager.VALID
+      'play': PluginManager.getStatusOfPlugin(plugin) == PluginManager.DISABLED
+      'ban': PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE
+      'close': PluginManager.getStatusOfPlugin(plugin) == PluginManager.BROKEN
+    removeBtnText = classnames
+      "#{__ 'Removing'}": plugin.isUninstalling
+      "#{__ 'Remove'}": plugin.isInstalled && !plugin.isUninstalling
+    removeBtnFAname = classnames
+      'trash': plugin.isInstalled
+      'trash-o': !plugin.isInstalled
+    btnGroupClass = classnames 'plugin-buttongroup',
+      'btn-xs-12': plugin.settingsClass?
       'btn-xs-8': !plugin.settingsClass?
-    })
-    btnClass = classnames('plugin-control-button', {
-      'btn-xs-4': plugin.settingsClass?,
+    btnClass = classnames 'plugin-control-button',
+      'btn-xs-4': plugin.settingsClass?
       'btn-xs-6': !plugin.settingsClass?
-    })
     <Row className='plugin-wrapper'>
       <Col xs={12}>
         <Panel className={panelClass}>
@@ -87,26 +110,12 @@ InstalledPlugin = React.createClass
               </div>
               <div className='update-wrapper'>
                 <div>
-                  <Label bsStyle="#{if plugin?.lastestVersion?.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                  <Label bsStyle={outdatedLabelbsStyle}
                          className={outdatedLabelClass}
                          onClick={@props.handleUpdate}>
-                    <FontAwesome name={
-                                   if plugin.isUpdating
-                                     "spinner"
-                                   else if plugin.isOutdated
-                                     "cloud-download"
-                                   else
-                                     "check"
-                                 }
+                    <FontAwesome name={outdatedLabelFAname}
                                  pulse={plugin.isUpdating}/>
-                    {
-                      if plugin.isUpdating
-                         __ "Updating"
-                      else if plugin.isOutdated
-                         "Version #{plugin.lastestVersion}"
-                      else
-                         __ "Latest"
-                    }
+                    {outdatedLabelText}
                   </Label>
                 </div>
                 <div>
@@ -136,53 +145,26 @@ InstalledPlugin = React.createClass
                 }
                 <OverlayTrigger placement='top' overlay={
                   <Tooltip id="#{plugin.id}-enb-btn">
-                  {
-                    switch PluginManager.getStatusOfPlugin plugin
-                      when PluginManager.VALID
-                        __ "Disable"
-                      when PluginManager.DISABLED
-                        __ "Enable"
-                      when PluginManager.NEEDUPDATE
-                        __ "Outdated"
-                      when PluginManager.BROKEN
-                        __ "Error"
-                  }
+                    {enableBtnText}
                   </Tooltip>
                   }>
                   <Button bsStyle='info'
                     disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                     onClick={@props.handleEnable}
                     className={btnClass}>
-                    <FontAwesome name={
-                      switch PluginManager.getStatusOfPlugin plugin
-                        when PluginManager.VALID
-                          "pause"
-                        when PluginManager.DISABLED
-                          "play"
-                        when PluginManager.NEEDUPDATE
-                          "ban"
-                        when PluginManager.BROKEN
-                          "close"
-                      }/>
+                    <FontAwesome name={enableBtnFAname}/>
                   </Button>
                 </OverlayTrigger>
                 <OverlayTrigger placement='top' overlay={
                   <Tooltip id="#{plugin.id}-rm-btn">
-                  {
-                    if plugin.isUninstalling
-                      __ "Removing"
-                    else if plugin.isInstalled
-                      __ "Remove"
-                    else
-                      __ "Removed"
-                  }
+                    {removeBtnText}
                   </Tooltip>
                   }>
                   <Button bsStyle='danger'
                     onClick={@props.handleRemove}
                     disabled={not plugin.isInstalled}
                     className={btnClass}>
-                    <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
+                    <FontAwesome name={removeBtnFAname} />
                   </Button>
                 </OverlayTrigger>
               </ButtonGroup>
@@ -207,52 +189,50 @@ InstalledPlugin = React.createClass
 UninstalledPlugin = React.createClass
   render: ->
     plugin = @props.plugin
+    installButtonText = classnames
+      "#{__ "Installing"}": @props.installing
+      "#{__ "Install"}": !@props.installing
+    installButtonFAname = classnames
+      'spinner': @props.installing
+      'download': !@props.installing
     <Row className='plugin-wrapper'>
       <Col xs={12}>
-        <Row>
-          <Col xs={12} className='div-row'>
-            <span className='plugin-name'>
-              <FontAwesome name={plugin.icon} />
-                {' ' + plugin[window.language]}
-            </span>
-            <div className='author-wrapper'>{'@'}
-              <span className='author-link'
-                onClick={_.partial openLink, plugin.link}>
-                {plugin.author}
+        <Panel className='plugin-content'>
+          <Row>
+            <Col xs={12} className='div-row'>
+              <span className='plugin-name'>
+                <FontAwesome name={plugin.icon} />
+                  {' ' + plugin[window.language]}
               </span>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={7}>{plugin["des#{window.language}"]}</Col>
-          <Col xs={5}>
-            <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
-              <OverlayTrigger placement='top' overlay={
-                <Tooltip id="#{plugin.id}-ins-btn">
-                {
-                  if @props.installing
-                    __ "Installing"
-                  else
-                    __ "Install"
-                }
-                </Tooltip>
-                }>
-                <Button bsStyle='primary'
-                  disabled={@props.npmWorkding}
-                  onClick={@props.handleInstall}
-                  className='plugin-control-button btn-xs-12'>
-                  <FontAwesome name={
-                      if @props.installing
-                        'spinner'
-                      else
-                        'download'
-                    }
-                    pulse={@props.installing}/>
-                </Button>
-              </OverlayTrigger>
-            </ButtonGroup>
-          </Col>
-        </Row>
+              <div className='author-wrapper'>{'@'}
+                <span className='author-link'
+                  onClick={_.partial openLink, plugin.link}>
+                  {plugin.author}
+                </span>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col className='plugin-description' xs={7}>{plugin["des#{window.language}"]}</Col>
+            <Col className='plugin-option-install' xs={5}>
+              <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
+                <OverlayTrigger placement='top' overlay={
+                  <Tooltip id="#{plugin.id}-ins-btn">
+                    {installButtonText}
+                  </Tooltip>
+                  }>
+                  <Button bsStyle='primary'
+                    disabled={@props.npmWorkding}
+                    onClick={@props.handleInstall}
+                    className='plugin-control-button btn-xs-12'>
+                    <FontAwesome name={installButtonFAname}
+                      pulse={@props.installing}/>
+                  </Button>
+                </OverlayTrigger>
+              </ButtonGroup>
+            </Col>
+          </Row>
+        </Panel>
       </Col>
     </Row>
 

@@ -134,6 +134,11 @@
   bottom: 10px;
   right: 10px;
 }
+#SettingsView .plugin-option-install {
+  position: absolute;
+  bottom: 10px;
+  right: 11px;
+}
 #SettingsView .plugin-buttongroup {
   margin-left: auto;
   display: block;
