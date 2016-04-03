@@ -375,6 +375,8 @@ class PluginManager
             plugin.displayName = pluginMain.displayName if pluginMain.displayName?
             plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
           catch error
+            console.log error
+            console.log error.stack
             pluginMain = isBroken: true
           _.extend pluginMain, @plugins_[index]
           pluginMain.isRead ?= false
@@ -570,6 +572,8 @@ class PluginManager
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
         plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
       catch error
+        console.log error
+        console.log error.stack
         pluginMain = isBroken: true
       _.extend pluginMain, plugin
       plugin = pluginMain

@@ -15,8 +15,6 @@ window.MODULE_PATH = remote.getGlobal 'MODULE_PATH'
 window.appIcon = remote.getGlobal 'appIcon'
 fs.ensureDirSync window.PLUGIN_PATH
 fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
-process.stderr.write = console.log.bind(console)
-process.stdout.write = console.log.bind(console)
 
 # Shortcuts and Components
 (window.dbg = require path.join(ROOT, 'lib', 'debug')).init()
@@ -28,6 +26,13 @@ window.React = require 'react'
 window.ReactDOM = require 'react-dom'
 window.ReactBootstrap = require 'react-bootstrap'
 window.FontAwesome = require 'react-fontawesome'
+
+if dbg.isEnabled()
+  process.stderr.write = console.log.bind(console)
+  process.stdout.write = console.log.bind(console)
+else
+  process.stderr.write = (e) -> {}
+  process.stdout.write = (e) -> {}
 
 # Utils
 require './env-parts/utils'
