@@ -282,10 +282,17 @@ handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) ->
   # Parse the json object
   try
     body = JSON.parse(body)
-    return if body.api_result isnt 1
-    body = body.api_data if body.api_data?
-    responses.push [method, [domain, path, url], body, JSON.parse(postBody)]
-    resolveResponses() if !locked
+    if body.api_result == 1
+      body = body.api_data if body.api_data?
+      responses.push [method, [domain, path, url], body, JSON.parse(postBody)]
+      resolveResponses() if !locked
+    else
+      event = new CustomEvent 'network.invalid.result',
+        bubbles: true
+        cancelable: true
+        detail:
+          code: body.api_result
+      window.dispatchEvent event
   catch e
     console.log e
 

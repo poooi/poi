@@ -37,6 +37,7 @@
    },
   "Network error: HTTP %s": "Network error: HTTP %s",
   "Connection failed.": "Connection failed.",
+  "The server presented you a cat. (Error code: %s)": "The server presented you a cat. (Error code: %s)",
 
   "Modernization succeeded! ": "Modernization succeeded! ",
   "Modernization failed.": "Modernization failed.",

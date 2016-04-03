@@ -36,6 +36,7 @@
    },
   "Network error: HTTP %s": "ネットワークエラー、HTTP %s",
   "Connection failed.": "接続できません。ネットワークとプロキシの設定を確認して下さい",
+  "The server presented you a cat. (Error code: %s)": "猫を検出しました。(エラーコード: %s)",
 
   "Modernization succeeded! ": "近代化改修に成功しました！",
   "Modernization failed.": "近代化改修に失敗しました…",
