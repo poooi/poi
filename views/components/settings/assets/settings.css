@@ -116,6 +116,11 @@
 #SettingsView .plugin-name {
   font-size: 150%;
 }
+#SettingsView .plugin-option {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
 #SettingsView .plugin-buttongroup {
   margin-left: auto;
   display: block;

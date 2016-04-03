@@ -101,8 +101,8 @@ InstalledPlugin = React.createClass
           </Col>
         </Row>
         <Row>
-          <Col xs={7}>{plugin.description}</Col>
-          <Col xs={5}>
+          <Col className='plugin-descroption' xs={7}>{plugin.description}</Col>
+          <Col className='plugin-option' xs={5}>
             <ButtonGroup bsSize='small' className="plugin-buttongroup btn-xs-#{if plugin.settingsClass? then 12 else 8}">
               {
                 if plugin.settingsClass?
