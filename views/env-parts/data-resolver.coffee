@@ -282,10 +282,17 @@ handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) ->
   # Parse the json object
   try
     body = JSON.parse(body)
-    return if body.api_result isnt 1
-    body = body.api_data if body.api_data?
-    responses.push [method, [domain, path, url], body, JSON.parse(postBody)]
-    resolveResponses() if !locked
+    if body.api_result == 1
+      body = body.api_data if body.api_data?
+      responses.push [method, [domain, path, url], body, JSON.parse(postBody)]
+      resolveResponses() if !locked
+    else
+      event = new CustomEvent 'network.invalid.result',
+        bubbles: true
+        cancelable: true
+        detail:
+          code: body.api_result
+      window.dispatchEvent event
   catch e
     console.log e
 
@@ -304,15 +311,6 @@ handleProxyNetworkErrorRetry = ([domain, path, url], counter) ->
       counter: counter
   window.dispatchEvent event
 
-handleProxyNetworkInvalidCode = ([domain, path, url], code) ->
-  return if !isGameApi path
-  event = new CustomEvent 'network.invalid.code',
-    bubbles: true
-    cancelable: true
-    detail:
-      code: code
-  window.dispatchEvent event
-
 handleProxyNetworkError = ([domain, path, url]) ->
   if url.startsWith('http://www.dmm.com/netgame/') or url.indexOf('/kcs/') != -1 or url.indexOf('/kcsapi/') != -1
     window.dispatchEvent new Event 'network.error'
@@ -320,9 +318,8 @@ handleProxyNetworkError = ([domain, path, url]) ->
 proxyListener =
   'network.on.request': handleProxyGameOnRequest
   'network.on.response': handleProxyGameOnResponse
-  'network.error.retry': handleProxyNetworkErrorRetry
-  'network.invalid.code': handleProxyNetworkInvalidCode
   'network.error': handleProxyNetworkError
+  'network.error.retry': handleProxyNetworkErrorRetry
 
 window.listenerStatusFlag = false
 

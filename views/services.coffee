@@ -83,11 +83,11 @@ window.addEventListener 'game.response', (e) ->
   if dbg.extra('gameResponse').isEnabled()
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody))
   log "#{__ 'Hit'} #{method} #{resPath}", {dontReserve: true}
+window.addEventListener 'network.error', ->
+  error __('Connection failed.'), {dontReserve: true}
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
   error __n('Connection failed after %s retry',  counter), {dontReserve: true}
-window.addEventListener 'network.invalid.code', (e) ->
+window.addEventListener 'network.invalid.result', (e) ->
   {code} = e.detail
-  error __('Network error: HTTP %s', code), {dontReserve: true}
-window.addEventListener 'network.error', ->
-  error __('Connection failed.'), {dontReserve: true}
+  error __('The server presented you a cat. (Error code: %s)',  code), {dontReserve: true}
