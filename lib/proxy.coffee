@@ -180,10 +180,8 @@ class Proxy extends EventEmitter
                   throw new Error('Empty Body')
                 if response.statusCode == 200
                   self.emit 'network.on.response', req.method, [domain, pathname, requrl], JSON.stringify(resolvedBody),  reqBody
-                else if response.statusCode == 503
-                  throw new Error('Service unavailable')
                 else
-                  self.emit 'network.invalid.code', [domain, pathname, requrl], response.statusCode
+                  self.emit 'network.error', [domain, pathname, requrl], response.statusCode
               catch e
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
                 self.emit 'network.error.retry', [domain, pathname, requrl], i + 1 if i < retries
