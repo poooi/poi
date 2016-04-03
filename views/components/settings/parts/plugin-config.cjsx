@@ -236,6 +236,28 @@ UninstalledPlugin = React.createClass
       </Col>
     </Row>
 
+InstallByNameInput = React.createClass
+  getInitialState: ->
+    manuallyInstallPackage: ''
+  changeInstalledPackage: (e) ->
+    @setState {manuallyInstallPackage: e.target.value}
+  render: ->
+    <Input type="text"
+           value={@state.manuallyInstallPackage}
+           onChange={@changeInstalledPackage}
+           label={__ 'Install directly from npm'}
+           disabled={@props.manuallyInstallStatus == 1 || @props.npmWorkding}
+           placeholder={__ 'Input plugin package name...'}
+           bsSize='small'
+           buttonAfter={
+             <Button bsStyle='primary'
+                     disabled={@props.manuallyInstallStatus == 1 || @props.npmWorkding}
+                     onClick={@props.handleManuallyInstall.bind null, @state.manuallyInstallPackage}>
+               {__ 'Install'}
+             </Button>
+           }>
+    </Input>
+
 PluginConfig = React.createClass
   getInitialState: ->
     checkingUpdate: false
@@ -250,7 +272,6 @@ PluginConfig = React.createClass
     updatingAll: false
     reloading: false
     advanced: false
-    manuallyInstallPackage: ''
     manuallyInstallStatus: 0
   isUpdateAvailable: false
   checkCount: 0
@@ -278,9 +299,6 @@ PluginConfig = React.createClass
   handleAdvancedShow: ->
     advanced = !@state.advanced
     @setState {advanced}
-  changeInstalledPackage: (e) ->
-    manuallyInstallPackage = e.target.value
-    @setState {manuallyInstallPackage}
   handleEnable: async (index) ->
     plugins = yield PluginManager.getInstalledPlugins()
     plugin = plugins[index]
@@ -434,6 +452,24 @@ PluginConfig = React.createClass
       config: config
     }
   render: ->
+    updateStatusFAname = classnames
+      'spinner': @state.updatingAll
+      'cloud-download': !@state.updatingAll
+    installStatusFAname = classnames
+      'spinner': @state.installingAll
+      'download': !@state.installingAll
+    installStatusbsStyle = classnames
+      'info': @state.manuallyInstallStatus == 1
+      'success': @state.manuallyInstallStatus == 2
+      'danger': @state.manuallyInstallStatus == 3
+      'warning': @state.manuallyInstallStatus < 1 || @state.manuallyInstallStatus > 3
+    advanceFAname = classnames
+      'angle-up': @state.advanced
+      'angle-down': !@state.advanced
+    installStatusText = classnames
+      "#{__("Installing")}...": @state.manuallyInstallStatus == 1
+      "#{__ "Plugins are installed successfully."}": @state.manuallyInstallStatus == 2
+      "#{__ "Install failed. Maybe the selected files are not plugin packages."}": @state.manuallyInstallStatus == 3
     <form className='contents-wrapper'>
       <Grid className='correct-container'>
         <Row>
@@ -452,14 +488,14 @@ PluginConfig = React.createClass
                       disabled={@state.npmWorkding ||
                         !@state.hasUpdates || @state.checkingUpdate}
                       className='control-button col-xs-3'>
-                <FontAwesome name={if @state.updatingAll then 'spinner' else 'cloud-download'}
+                <FontAwesome name={updateStatusFAname}
                              pulse={@state.updatingAll}/>
                 <span> {__ "Update all"}</span>
               </Button>
               <Button onClick={@handleInstallAll}
                       disabled={@state.npmWorkding}
                       className='control-button col-xs-3'>
-                <FontAwesome name={if @state.installingAll then 'spinner' else 'download'}
+                <FontAwesome name={installStatusFAname}
                              pulse={@state.installingAll}/>
                 <span> {__ "Install all"}</span>
               </Button>
@@ -467,7 +503,7 @@ PluginConfig = React.createClass
                       className='control-button col-xs-3'>
                 <FontAwesome name="gear" />
                 <span> {__ "Advanced"} </span>
-                <FontAwesome name="#{if @state.advanced then 'angle-up' else 'angle-down'}" />
+                <FontAwesome name={advanceFAname} />
               </Button>
             </ButtonGroup>
           </Col>
@@ -540,46 +576,17 @@ PluginConfig = React.createClass
         <Row className='plugin-rowspace'>
           <Collapse in={@state.manuallyInstallStatus > 0}>
             <Col xs=12>
-              <Alert bsStyle={
-                  switch @state.manuallyInstallStatus
-                    when 1
-                      "info"
-                    when 2
-                      "success"
-                    when 3
-                      "danger"
-                }>
-                {
-                  switch @state.manuallyInstallStatus
-                    when 1
-                      __("Installing") + "..."
-                    when 2
-                      __ "Plugins are installed successfully."
-                    when 3
-                      __ "Install failed. Maybe the selected files are not plugin packages."
-                }
+              <Alert bsStyle={installStatusbsStyle}>
+                {installStatusText}
               </Alert>
             </Col>
           </Collapse>
         </Row>
         <Row className='plugin-rowspace'>
           <Col xs=12>
-            {
-              installButton =
-                <Button bsStyle='primary'
-                        disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
-                        onClick={@handleManuallyInstall.bind @, @state.manuallyInstallPackage}>
-                  {__ 'Install'}
-                </Button>
-              <Input type="text"
-                     value={@state.manuallyInstallPackage}
-                     onChange={@changeInstalledPackage}
-                     label={__ 'Install directly from npm'}
-                     disabled={@state.manuallyInstallStatus == 1 || @state.npmWorkding}
-                     placeholder={__ 'Input plugin package name...'}
-                     bsSize='small'
-                     buttonAfter={installButton} />
-            }
+            <InstallByNameInput handleManuallyInstall={@handleManuallyInstall}
+                                manuallyInstallStatus={@state.manuallyInstallStatus}
+                                npmWorkding={@state.npmWorkding} />
           </Col>
           <Col xs={12}>
             <div className="folder-picker"
