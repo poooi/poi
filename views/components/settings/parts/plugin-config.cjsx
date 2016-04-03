@@ -57,134 +57,150 @@ InstalledPlugin = React.createClass
 
   render: ->
     plugin = @props.plugin
+    panelClass = classnames('plugin-content', {
+      'plugin-content-disabled': PluginManager.getStatusOfPlugin(plugin) != PluginManager.VALID
+    })
+    outdatedLabelClass = classnames('update-label', {
+      'hidden': !plugin.isOutdated
+    })
+    btnGroupClass = classnames('plugin-buttongroup', {
+      'btn-xs-12': plugin.settingsClass?,
+      'btn-xs-8': !plugin.settingsClass?
+    })
+    btnClass = classnames('plugin-control-button', {
+      'btn-xs-4': plugin.settingsClass?,
+      'btn-xs-6': !plugin.settingsClass?
+    })
     <Row className='plugin-wrapper'>
       <Col xs={12}>
-        <Row>
-          <Col xs={12} className='div-row'>
-            <span className='plugin-name'>
-              {plugin.displayName}
-            </span>
-            <div className='author-wrapper'>{'@'}
-              <span className='author-link'
-                onClick={_.partial openLink, plugin.link}>
-                {plugin.author}
+        <Panel className={panelClass}>
+          <Row>
+            <Col xs={12} className='div-row'>
+              <span className='plugin-name'>
+                {plugin.displayName}
               </span>
-            </div>
-            <div className='update-wrapper'>
-              <div>
-                <Label bsStyle="#{if plugin?.lastestVersion?.indexOf('beta') == -1 then 'primary' else 'warning'}"
-                       className="update-label #{if not plugin.isOutdated then 'hidden'}"
-                       onClick={@props.handleUpdate}>
-                  <FontAwesome name={
-                                 if plugin.isUpdating
-                                   "spinner"
-                                 else if plugin.isOutdated
-                                   "cloud-download"
-                                 else
-                                   "check"
-                               }
-                               pulse={plugin.isUpdating}/>
-                  {
-                    if plugin.isUpdating
-                       __ "Updating"
-                    else if plugin.isOutdated
-                       "Version #{plugin.lastestVersion}"
-                    else
-                       __ "Latest"
-                  }
-                </Label>
+              <div className='author-wrapper'>{'@'}
+                <span className='author-link'
+                  onClick={_.partial openLink, plugin.link}>
+                  {plugin.author}
+                </span>
               </div>
-              <div>
-                Version {plugin.version || '1.0.0'}
+              <div className='update-wrapper'>
+                <div>
+                  <Label bsStyle="#{if plugin?.lastestVersion?.indexOf('beta') == -1 then 'primary' else 'warning'}"
+                         className={outdatedLabelClass}
+                         onClick={@props.handleUpdate}>
+                    <FontAwesome name={
+                                   if plugin.isUpdating
+                                     "spinner"
+                                   else if plugin.isOutdated
+                                     "cloud-download"
+                                   else
+                                     "check"
+                                 }
+                                 pulse={plugin.isUpdating}/>
+                    {
+                      if plugin.isUpdating
+                         __ "Updating"
+                      else if plugin.isOutdated
+                         "Version #{plugin.lastestVersion}"
+                      else
+                         __ "Latest"
+                    }
+                  </Label>
+                </div>
+                <div>
+                  Version {plugin.version || '1.0.0'}
+                </div>
               </div>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col className='plugin-descroption' xs={7}>{plugin.description}</Col>
-          <Col className='plugin-option' xs={5}>
-            <ButtonGroup bsSize='small' className="plugin-buttongroup btn-xs-#{if plugin.settingsClass? then 12 else 8}">
-              {
-                if plugin.settingsClass?
-                  <OverlayTrigger placement='top' overlay={
-                     <Tooltip id="#{plugin.id}-set-btn">
-                       {__ 'Settings'}
-                     </Tooltip>
-                     }>
-                     <Button ref='setting-btn'
-                             bsStyle='primary' bsSize='xs'
-                             onClick={@toggleSettingPop}
-                             className='plugin-control-button btn-xs-4'>
-                       <FontAwesome name='gear' />
-                     </Button>
-                   </OverlayTrigger>
-              }
-              <OverlayTrigger placement='top' overlay={
-                <Tooltip id="#{plugin.id}-enb-btn">
+            </Col>
+          </Row>
+          <Row>
+            <Col className='plugin-description' xs={7}>{plugin.description}</Col>
+            <Col className='plugin-option' xs={5}>
+              <ButtonGroup bsSize='small' className={btnGroupClass}>
                 {
-                  switch PluginManager.getStatusOfPlugin plugin
-                    when PluginManager.VALID
-                      __ "Disable"
-                    when PluginManager.DISABLED
-                      __ "Enable"
-                    when PluginManager.NEEDUPDATE
-                      __ "Outdated"
-                    when PluginManager.BROKEN
-                      __ "Error"
+                  if plugin.settingsClass?
+                    <OverlayTrigger placement='top' overlay={
+                       <Tooltip id="#{plugin.id}-set-btn">
+                         {__ 'Settings'}
+                       </Tooltip>
+                       }>
+                       <Button ref='setting-btn'
+                               bsStyle='primary' bsSize='xs'
+                               onClick={@toggleSettingPop}
+                               className='plugin-control-button btn-xs-4'>
+                         <FontAwesome name='gear' />
+                       </Button>
+                     </OverlayTrigger>
                 }
-                </Tooltip>
-                }>
-                <Button bsStyle='info'
-                  disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                  onClick={@props.handleEnable}
-                  className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
-                  <FontAwesome name={
+                <OverlayTrigger placement='top' overlay={
+                  <Tooltip id="#{plugin.id}-enb-btn">
+                  {
                     switch PluginManager.getStatusOfPlugin plugin
                       when PluginManager.VALID
-                        "pause"
+                        __ "Disable"
                       when PluginManager.DISABLED
-                        "play"
+                        __ "Enable"
                       when PluginManager.NEEDUPDATE
-                        "ban"
+                        __ "Outdated"
                       when PluginManager.BROKEN
-                        "close"
-                    }/>
-                </Button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={
-                <Tooltip id="#{plugin.id}-rm-btn">
-                {
-                  if plugin.isUninstalling
-                    __ "Removing"
-                  else if plugin.isInstalled
-                    __ "Remove"
-                  else
-                    __ "Removed"
-                }
-                </Tooltip>
-                }>
-                <Button bsStyle='danger'
-                  onClick={@props.handleRemove}
-                  disabled={not plugin.isInstalled}
-                  className="plugin-control-button btn-xs-#{if plugin.settingsClass? then 4 else 6}">
-                  <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
-                </Button>
-              </OverlayTrigger>
-            </ButtonGroup>
-          </Col>
-        </Row>
-        <Row>
-          {
-            if plugin.settingsClass?
-              <Collapse in={@state.settingOpen} className='plugin-setting-wrapper'>
-                <Col xs={12}>
-                  <Well>
-                    <PluginSettingWrap plugin={plugin} />
-                  </Well>
-                </Col>
-              </Collapse>
-          }
-        </Row>
+                        __ "Error"
+                  }
+                  </Tooltip>
+                  }>
+                  <Button bsStyle='info'
+                    disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
+                    onClick={@props.handleEnable}
+                    className={btnClass}>
+                    <FontAwesome name={
+                      switch PluginManager.getStatusOfPlugin plugin
+                        when PluginManager.VALID
+                          "pause"
+                        when PluginManager.DISABLED
+                          "play"
+                        when PluginManager.NEEDUPDATE
+                          "ban"
+                        when PluginManager.BROKEN
+                          "close"
+                      }/>
+                  </Button>
+                </OverlayTrigger>
+                <OverlayTrigger placement='top' overlay={
+                  <Tooltip id="#{plugin.id}-rm-btn">
+                  {
+                    if plugin.isUninstalling
+                      __ "Removing"
+                    else if plugin.isInstalled
+                      __ "Remove"
+                    else
+                      __ "Removed"
+                  }
+                  </Tooltip>
+                  }>
+                  <Button bsStyle='danger'
+                    onClick={@props.handleRemove}
+                    disabled={not plugin.isInstalled}
+                    className={btnClass}>
+                    <FontAwesome name={if plugin.isInstalled then 'trash' else 'trash-o'} />
+                  </Button>
+                </OverlayTrigger>
+              </ButtonGroup>
+            </Col>
+          </Row>
+          <Row>
+            {
+              if plugin.settingsClass?
+                <Collapse in={@state.settingOpen} className='plugin-setting-wrapper'>
+                  <Col xs={12}>
+                    <Well>
+                      <PluginSettingWrap plugin={plugin} />
+                    </Well>
+                  </Col>
+                </Collapse>
+            }
+          </Row>
+        </Panel>
       </Col>
     </Row>
 
