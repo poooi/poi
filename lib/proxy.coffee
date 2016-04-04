@@ -38,16 +38,23 @@ resolveBody = (encoding, body) ->
       resolve decoded
     catch e
       reject e
-isStaticResource = (pathname) ->
+isStaticResource = (pathname, hostname) ->
+  # KanColle
   return true if pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1
   return true if pathname.startsWith('/gadget/')
   return true if pathname.startsWith('/kcscontents/')
+  # ShiroPro
+  return true if pathname.startsWith('/resource/') && hostname?.startsWith('assets.shiropro-re.net')
+  return true if pathname.startsWith('/html/') && hostname?.startsWith('assets.shiropro-re.net')
+  return true if pathname.startsWith('/js/') && hostname?.startsWith('assets.shiropro-re.net')
+  return true if pathname.startsWith('/news/') && hostname?.startsWith('assets.shiropro-re.net')
+  # Not Static Resource
   return false
 getCachePath = (pathname) ->
   dir = config.get 'poi.cachePath', global.DEFAULT_CACHE_PATH
   path.join dir, pathname
 findHack = (pathname) ->
-  loc = getCachePath pathname
+  loc = getCachePath path.join 'kancolle', pathname
   sp = loc.split '.'
   ext = sp.pop()
   sp.push 'hack'
@@ -58,8 +65,12 @@ findHack = (pathname) ->
     return loc
   catch
     return null
-findCache = (pathname) ->
-  loc = getCachePath pathname
+findCache = (pathname, hostname) ->
+  switch hostname
+    when 'assets.shiropro-re.net'
+      loc = getCachePath path.join 'shiropro', pathname
+    else
+      loc = getCachePath path.join 'kancolle', pathname
   try
     fs.accessSync loc, fs.R_OK
     return loc
@@ -117,8 +128,8 @@ class Proxy extends EventEmitter
       parsed = url.parse req.url
       isGameApi = parsed.pathname.startsWith '/kcsapi'
       cacheFile = null
-      if isStaticResource(parsed.pathname)
-        cacheFile = findHack(parsed.pathname) || findCache(parsed.pathname)
+      if isStaticResource(parsed.pathname, parsed.hostname)
+        cacheFile = findHack(parsed.pathname) || findCache(parsed.pathname, parsed.hostname)
       reqBody = new Buffer(0)
       # Get all request body
       req.on 'data', (data) ->
@@ -188,7 +199,7 @@ class Proxy extends EventEmitter
               if success || !isKancolleGameApi pathname
                 break
               # Delay 3s for retry
-              yield Promise.delay(3000) 
+              yield Promise.delay(3000)
         catch e
           error "#{req.method} #{req.url} #{e.toString()}"
           self.emit 'network.error', [domain, pathname, requrl]
