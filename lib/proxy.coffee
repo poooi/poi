@@ -77,7 +77,7 @@ findCache = (pathname, hostname) ->
     loc = getCachePath path.join 'shiropro', pathname
   else if hostname.match('swordlogic.com').length > 0
     # Shinken
-    loc = getCachePath path.join 'shinken', pathname
+    loc = getCachePath path.join 'Shinken', pathname.replace(/^\/[0-9]{10}/, '')
   else if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
     # FlowerKnightGirl
     loc = getCachePath path.join 'flowerknight', pathname

@@ -33,7 +33,7 @@ PoiControl = React.createClass
       fs.ensureDirSync dir
       fs.ensureDirSync path.join dir, 'kancolle'
       fs.ensureDirSync path.join dir, 'shiropro'
-      fs.ensureDirSync path.join dir, 'shinken'
+      fs.ensureDirSync path.join dir, 'Shinken'
       fs.ensureDirSync path.join dir, 'kanpani'
       fs.ensureDirSync path.join dir, 'flowerknight'
       openItem dir
