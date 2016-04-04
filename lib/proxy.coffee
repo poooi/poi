@@ -51,6 +51,8 @@ isStaticResource = (pathname, hostname) ->
   return true if hostname?.match('swordlogic.com').length > 0
   # FlowerKnightGirl
   return true if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
+  # ToukenRanbu
+  return true if hostname.match('static.touken-ranbu.jp').length > 0
   # Not Static Resource
   return false
 getCachePath = (pathname) ->
@@ -81,6 +83,9 @@ findCache = (pathname, hostname) ->
   else if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
     # FlowerKnightGirl
     loc = getCachePath path.join 'flowerknight', pathname
+  else if hostname.match('static.touken-ranbu.jp').length > 0
+    # ToukenRanbu
+    loc = getCachePath path.join 'tokenranbu', pathname
   else
     # KanColle
     loc = getCachePath path.join 'kancolle', pathname

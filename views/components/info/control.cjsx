@@ -36,6 +36,7 @@ PoiControl = React.createClass
       fs.ensureDirSync path.join dir, 'Shinken'
       fs.ensureDirSync path.join dir, 'kanpani'
       fs.ensureDirSync path.join dir, 'flowerknight'
+      fs.ensureDirSync path.join dir, 'toukenranbu'
       openItem dir
     catch e
       toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
