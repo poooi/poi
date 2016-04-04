@@ -43,14 +43,12 @@ isStaticResource = (pathname, hostname) ->
   return true if pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') == -1
   return true if pathname.startsWith('/gadget/')
   return true if pathname.startsWith('/kcscontents/')
+  # Kanpani
+  return true if hostname?.match('kanpani.jp').length > 0
   # ShiroPro
-  return true if pathname.startsWith('/resource/') && hostname?.startsWith('assets.shiropro-re.net')
-  return true if pathname.startsWith('/html/') && hostname?.startsWith('assets.shiropro-re.net')
-  return true if pathname.startsWith('/js/') && hostname?.startsWith('assets.shiropro-re.net')
-  return true if pathname.startsWith('/news/') && hostname?.startsWith('assets.shiropro-re.net')
+  return true if hostname?.match('assets.shiropro-re.net').length > 0
   # Shinken
-  return true if hostname.startsWith('snkncdn.swordlogic.com')
-  return true if hostname.startsWith('shinken.swordlogic.com')
+  return true if hostname?.match('swordlogic.com').length > 0
   # Not Static Resource
   return false
 getCachePath = (pathname) ->
@@ -69,18 +67,18 @@ findHack = (pathname) ->
   catch
     return null
 findCache = (pathname, hostname) ->
-  switch hostname
-    # ShiroPro
-    when 'assets.shiropro-re.net'
-      loc = getCachePath path.join 'shiropro', pathname
-    # Shinken
-    when 'snkncdn.swordlogic.com'
-      loc = getCachePath path.join 'shinken', pathname
-    when 'shinken.swordlogic.com'
-      loc = getCachePath path.join 'shinken', pathname
-    # KanColle
-    else
-      loc = getCachePath path.join 'kancolle', pathname
+  # Kanpani
+  if hostname.match('kanpani.jp').length > 0
+    loc = getCachePath path.join 'kanpani', pathname
+  # ShiroPro
+  else if hostname.match('shiropro-re.net').length > 0
+    loc = getCachePath path.join 'shiropro', pathname
+  # Shinken
+  else if hostname.match('swordlogic.com').length > 0
+    loc = getCachePath path.join 'shinken', pathname
+  # KanColle
+  else
+    loc = getCachePath path.join 'kancolle', pathname
   try
     fs.accessSync loc, fs.R_OK
     return loc
