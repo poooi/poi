@@ -44,15 +44,15 @@ isStaticResource = (pathname, hostname) ->
   return true if pathname.startsWith('/gadget/')
   return true if pathname.startsWith('/kcscontents/')
   # Kanpani
-  return true if hostname?.match('kanpani.jp').length > 0
+  return true if hostname?.match('kanpani.jp')?
   # ShiroPro
-  return true if hostname?.match('assets.shiropro-re.net').length > 0
+  return true if hostname?.match('assets.shiropro-re.net')?
   # Shinken
-  return true if hostname?.match('swordlogic.com').length > 0
+  return true if hostname?.match('swordlogic.com')?
   # FlowerKnightGirl
-  return true if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
+  return true if hostname?.match('dugrqaqinbtcq.cloudfront.net')?
   # ToukenRanbu
-  return true if hostname.match('static.touken-ranbu.jp').length > 0
+  return true if hostname?.match('static.touken-ranbu.jp')?
   # Not Static Resource
   return false
 getCachePath = (pathname) ->
@@ -71,19 +71,19 @@ findHack = (pathname) ->
   catch
     return null
 findCache = (pathname, hostname) ->
-  if hostname.match('kanpani.jp').length > 0
+  if hostname?.match('kanpani.jp')?
     # Kanpani
     loc = getCachePath path.join 'kanpani', pathname
-  else if hostname.match('assets.shiropro-re.net').length > 0
+  else if hostname?.match('assets.shiropro-re.net')?
     # ShiroPro
     loc = getCachePath path.join 'shiropro', pathname
-  else if hostname.match('swordlogic.com').length > 0
+  else if hostname?.match('swordlogic.com')?
     # Shinken
     loc = getCachePath path.join 'Shinken', pathname.replace(/^\/[0-9]{10}/, '')
-  else if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
+  else if hostname?.match('dugrqaqinbtcq.cloudfront.net')?
     # FlowerKnightGirl
     loc = getCachePath path.join 'flowerknight', pathname
-  else if hostname.match('static.touken-ranbu.jp').length > 0
+  else if hostname?.match('static.touken-ranbu.jp')?
     # ToukenRanbu
     loc = getCachePath path.join 'tokenranbu', pathname
   else
