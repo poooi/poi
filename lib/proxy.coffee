@@ -49,6 +49,8 @@ isStaticResource = (pathname, hostname) ->
   return true if hostname?.match('assets.shiropro-re.net').length > 0
   # Shinken
   return true if hostname?.match('swordlogic.com').length > 0
+  # FlowerKnightGirl
+  return true if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
   # Not Static Resource
   return false
 getCachePath = (pathname) ->
@@ -67,17 +69,20 @@ findHack = (pathname) ->
   catch
     return null
 findCache = (pathname, hostname) ->
-  # Kanpani
   if hostname.match('kanpani.jp').length > 0
+    # Kanpani
     loc = getCachePath path.join 'kanpani', pathname
-  # ShiroPro
-  else if hostname.match('shiropro-re.net').length > 0
+  else if hostname.match('assets.shiropro-re.net').length > 0
+    # ShiroPro
     loc = getCachePath path.join 'shiropro', pathname
-  # Shinken
   else if hostname.match('swordlogic.com').length > 0
+    # Shinken
     loc = getCachePath path.join 'shinken', pathname
-  # KanColle
+  else if hostname.match('dugrqaqinbtcq.cloudfront.net').length > 0
+    # FlowerKnightGirl
+    loc = getCachePath path.join 'flowerknight', pathname
   else
+    # KanColle
     loc = getCachePath path.join 'kancolle', pathname
   try
     fs.accessSync loc, fs.R_OK
