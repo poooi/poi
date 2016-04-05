@@ -42,27 +42,13 @@ else
 
 global.mainWindow = mainWindow = null
 
-pepperFlashData =
-  linux:
-    filename: 'libpepflashplayer.so'
-    version: '20.0.0.248'
-  win32:
-    filename: 'pepflashplayer.dll'
-    version: '20.0.0.248'
-  darwin:
-    filename: 'PepperFlashPlayer.plugin'
-    version: '20.0.0.248'
-
-pepperFlashData = pepperFlashData[process.platform]
-innerFlashPath = path.join 'PepperFlash', process.platform, pepperFlashData.filename
-defaultFlashPath = path.join EXECROOT, innerFlashPath
-try
-  fs.accessSync defaultFlashPath
-  app.commandLine.appendSwitch 'ppapi-flash-path', defaultFlashPath
-  app.commandLine.appendSwitch 'ppapi-flash-version', pepperFlashData.version
-catch
-  app.commandLine.appendSwitch 'ppapi-flash-path', path.join(ROOT, innerFlashPath)
-  app.commandLine.appendSwitch 'ppapi-flash-version', pepperFlashData.version
+flashPath1 = path.join ROOT, 'PepperFlash', process.platform
+flashPath2 = path.join EXECROOT, 'PepperFlash', process.platform
+require('flash-player-loader').debug(
+  enable: dbg.isEnabled()
+  log: dbg._log
+  error: error
+).addSource(flashPath1).addSource(flashPath2).load()
 
 app.on 'window-all-closed', ->
   shortcut.unregister()
