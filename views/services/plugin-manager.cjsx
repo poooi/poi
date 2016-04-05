@@ -340,8 +340,7 @@ class PluginManager
           break
       @plugins_ = _.sortBy @plugins_, 'priority'
     catch error
-      console.log "installPlugin error: #{error}"
-      console.log error.stack
+      console.error error
       throw error
 
   # uninstall one plugin, this won't unload it from memory
@@ -354,8 +353,7 @@ class PluginManager
       @removePlugin(plugin)
       yield Promise.promisify(npm.commands.uninstall)([plugin.packageName])
     catch error
-      console.log "uninstallPlugin error: #{error}"
-      console.log error.stack
+      console.error error
       throw error
 
   # enable one plugin
@@ -375,8 +373,7 @@ class PluginManager
             plugin.displayName = pluginMain.displayName if pluginMain.displayName?
             plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
           catch error
-            console.log error
-            console.log error.stack
+            console.error error
             pluginMain = isBroken: true
           _.extend pluginMain, @plugins_[index]
           pluginMain.isRead ?= false
@@ -572,8 +569,7 @@ class PluginManager
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
         plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
       catch error
-        console.log error
-        console.log error.stack
+        console.error error
         pluginMain = isBroken: true
       _.extend pluginMain, plugin
       plugin = pluginMain
