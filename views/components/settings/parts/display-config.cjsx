@@ -163,7 +163,7 @@ ChangeResolutionConfig = React.createClass
     max_width = window.screen.availWidth
     zoomLevel = window.zoomLevel
     if window.layout == 'horizontal'
-      max_width = max_width - (if window.doubleTabbed then 450 else 300) * zoomLevel
+      max_width = max_width - (if window.doubleTabbed then 500 else 375) * zoomLevel
     else
       max_height = max_height - (200 * zoomLevel)
       max_width = max_height / 480 * 800

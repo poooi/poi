@@ -37,8 +37,8 @@ adjustSize = ->
   if window.layout == 'vertical'
     cap = 200 * window.zoomLevel
   else if window.doubleTabbed
-    cap = 450 * window.zoomLevel
-  else cap = 300 * window.zoomLevel
+    cap = 500 * window.zoomLevel
+  else cap = 375 * window.zoomLevel
   if window.layout == 'horizontal'
     factor = Math.ceil((window.innerHeight - poiControlHeight) / 480.0 * 100) / 100.0
     if window.innerWidth - factor * 800 < cap
