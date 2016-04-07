@@ -73,22 +73,22 @@ findHack = (pathname) ->
 findCache = (pathname, hostname) ->
   if hostname?.match('kanpani.jp')?
     # Kanpani
-    loc = getCachePath path.join 'kanpani', pathname
+    loc = getCachePath path.join 'Kanpani', pathname
   else if hostname?.match('assets.shiropro-re.net')?
     # ShiroPro
-    loc = getCachePath path.join 'shiropro', pathname
+    loc = getCachePath path.join 'ShiroPro', pathname
   else if hostname?.match('swordlogic.com')?
     # Shinken
     loc = getCachePath path.join 'Shinken', pathname.replace(/^\/[0-9]{10}/, '')
   else if hostname?.match('dugrqaqinbtcq.cloudfront.net')?
     # FlowerKnightGirl
-    loc = getCachePath path.join 'flowerknight', pathname
+    loc = getCachePath path.join 'FlowerKnightGirls', pathname
   else if hostname?.match('static.touken-ranbu.jp')?
     # ToukenRanbu
-    loc = getCachePath path.join 'tokenranbu', pathname
+    loc = getCachePath path.join 'ToukenRanbu', pathname
   else
     # KanColle
-    loc = getCachePath path.join 'kancolle', pathname
+    loc = getCachePath path.join 'KanColle', pathname
   try
     fs.accessSync loc, fs.R_OK
     return loc

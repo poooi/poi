@@ -31,12 +31,12 @@ PoiControl = React.createClass
     try
       dir = config.get 'poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH')
       fs.ensureDirSync dir
-      fs.ensureDirSync path.join dir, 'kancolle'
-      fs.ensureDirSync path.join dir, 'shiropro'
+      fs.ensureDirSync path.join dir, 'KanColle'
+      fs.ensureDirSync path.join dir, 'ShiroPro'
       fs.ensureDirSync path.join dir, 'Shinken'
-      fs.ensureDirSync path.join dir, 'kanpani'
-      fs.ensureDirSync path.join dir, 'flowerknight'
-      fs.ensureDirSync path.join dir, 'toukenranbu'
+      fs.ensureDirSync path.join dir, 'Kanpani'
+      fs.ensureDirSync path.join dir, 'FlowerKnightGirls'
+      fs.ensureDirSync path.join dir, 'ToukenRanbu'
       openItem dir
     catch e
       toggleModal __ 'Open cache dir', __ "Failed. Perhaps you don't have permission to it."
