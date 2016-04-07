@@ -315,11 +315,16 @@ handleProxyNetworkError = ([domain, path, url]) ->
   if url.startsWith('http://www.dmm.com/netgame/') or url.indexOf('/kcs/') != -1 or url.indexOf('/kcsapi/') != -1
     window.dispatchEvent new Event 'network.error'
 
+handleGetServer = (server) ->
+  window._serverId = server.num
+  window._serverName = server.name
+
 proxyListener =
   'network.on.request': handleProxyGameOnRequest
   'network.on.response': handleProxyGameOnResponse
   'network.error': handleProxyNetworkError
   'network.error.retry': handleProxyNetworkErrorRetry
+  'network.get.server': handleGetServer
 
 window.listenerStatusFlag = false
 
