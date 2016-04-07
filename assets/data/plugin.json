@@ -278,5 +278,19 @@
     "deszh-TW": "語音字幕插件（艦娘百科支援）",
     "desja-JP": "艦娘セリフの中国語字幕",
     "desen-US": "Chinese subtitle of ship girls' quotes"
+  },
+  "poi-plugin-k2badge": {
+    "zh-CN": "签名生成",
+    "zh-TW": "簽名生成",
+    "ja-JP": "バッジ作成",
+    "en-US": "Badge Generator",
+    "version": "v0.0.0",
+    "icon": "photo",
+    "author": "KochiyaOcean",
+    "link": "https://github.com/KochiyaOcean",
+    "deszh-CN": "传输舰娘数据至 http://threebards.com/kaini 以生成舰娘签名",
+    "deszh-TW": "傳輸艦娘資料至 http://threebards.com/kaini 以生成艦娘簽名",
+    "desja-JP": "艦娘のデータを http://threebards.com/kaini へ転送し、バッジを作成する",
+    "desen-US": "Export data to http://threebards.com/kaini so that you can make a badge for yourself!"
   }
 }
