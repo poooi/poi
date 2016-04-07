@@ -142,6 +142,70 @@ getSaku25a = (deck) ->
   teitoku: parseFloat(teitokuSaku.toFixed(2))
   total: parseFloat(totalSaku.toFixed(2))
 
+  # Saku (33)
+  # 索敵スコア = Sigma(CiSi) + Sigma(sqrt(s)) - Ceil(0.4H) + 2M
+  #     Si(改修): 電探(1.25 * Sqrt(Star)) 水上偵察機(1.2 * Sqrt(Star))
+  #     Ci(装備):
+  #              6 0.6 艦上戦闘機
+  #              7 0.6 艦上爆撃機
+  #              8 0.8 艦上攻撃機
+  #              9 1.0 艦上偵察機
+  #             10 1.2 水上偵察機
+  #             11 1.1 水上爆撃機
+  #             12 0.6 小型電探
+  #             13 0.6 大型電探
+  #             26 0.6 対潜哨戒機
+  #             29 0.6 探照灯
+  #             34 0.6 司令部施設
+  #             35 0.6 航空要員
+  #             39 0.6 水上艦要員
+  #             40 0.6 大型ソナー
+  #             41 0.6 大型飛行艇
+  #             42 0.6 大型探照灯
+	#             45 0.6 水上戦闘機
+  #             93 大型電探(II) null
+  #             94 艦上偵察機(II) null
+  #     S(各艦毎の素索敵)
+  #     H(レベル)
+  #     M(空き数)
+
+getSaku33 = (deck) ->
+  {$ships, $slotitems, _ships, _slotitems} = window
+  totalSaku = shipSaku = itemSaku = teitokuSaku = 0
+  shipCount = 6
+  for shipId in deck.api_ship
+    continue if shipId == -1
+    shipCount -= 1
+    ship = _ships[shipId]
+    shipPureSaku = ship.api_sakuteki[0]
+    for itemId, slotId in ship.api_slot
+      continue unless itemId != -1 && _slotitems[itemId]?
+      item = _slotitems[itemId]
+      shipPureSaku -= item.api_saku
+      switch item.api_type[2]
+        when 8
+          itemSaku += item.api_saku * 0.8
+        when 9
+          itemSaku += item.api_saku * 1.0
+        when 10
+          itemSaku += (item.api_saku + 1.2 * Math.sqrt(item.api_level)) * 1.2
+        when 11
+          itemSaku += item.api_saku * 1.1
+        when 12
+          itemSaku += (item.api_saku + 1.25 * Math.sqrt(item.api_level)) * 0.6
+        when 13
+          itemSaku += (item.api_saku + 1.25 * Math.sqrt(item.api_level)) * 0.6
+        else
+          itemSaku += item.api_saku * 0.6
+    shipSaku += Math.sqrt(shipPureSaku)
+  teitokuSaku = Math.ceil(window._teitokuLv * 0.4)
+  totalSaku = shipSaku + itemSaku - teitokuSaku + 2 * shipCount
+
+  ship: parseFloat(shipSaku.toFixed(4))
+  item: parseFloat(itemSaku.toFixed(4))
+  teitoku: parseFloat(teitokuSaku.toFixed(4))
+  total: parseFloat(totalSaku.toFixed(4))
+
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
   totalLv = totalShip = 0
@@ -155,6 +219,7 @@ getDeckMessage = (deck) ->
   tyku: getTyku(deck)
   saku25: getSaku25(deck)
   saku25a: getSaku25a(deck)
+  saku33: getSaku33(deck)
 
 
 TopAlert = React.createClass
@@ -329,6 +394,7 @@ TopAlert = React.createClass
                 <Tooltip id='topalert-recon'>
                   <div>2-5 {__ 'Autumn'}: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
                   <div>2-5 {__ 'Old'}: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
+                  <div>33: {@messages.saku33.total}</div>
                 </Tooltip>
               }>
                 <span>{__ 'LOS'}: {@messages.saku25a.total}</span>
