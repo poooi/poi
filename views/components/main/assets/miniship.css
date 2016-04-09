@@ -12,6 +12,7 @@
 }
 
 #MiniShip .ship-tabpane {
+  padding: 1px;
   width: 100%;
 }
 #MiniShip .btn-group {
