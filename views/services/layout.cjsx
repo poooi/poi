@@ -19,7 +19,6 @@ adjustWebviewHeight = do () ->
     if h isnt lastH
       $('kan-game #webview-wrapper')?.style?.height = h
       $('kan-game webview')?.style?.height = h
-      $('kan-game webview')?.shadowRoot?.querySelector('object[is=browserplugin]')?.style?.height = h
       lastH = h
 
 isKancollePage = (url) ->
