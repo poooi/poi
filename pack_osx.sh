@@ -11,7 +11,7 @@ change_icon () {
 }
 
 set_infostr () {
-    psutil -replace "$1" -string "$2" "${INFO_PLIST}"
+    plutil -replace "$1" -string "$2" "${INFO_PLIST}"
 }
 
 POI_VERSION=$1
