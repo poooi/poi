@@ -59,6 +59,9 @@ body {
 #poi-app-container {
   overflow: hidden;
 }
+kan-game webview {
+  height: 100%;
+}
 kan-game poi-alert {
   width: 0;
 }

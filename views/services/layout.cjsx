@@ -13,14 +13,6 @@ remote.getCurrentWindow().webContents.on 'dom-ready', (e) ->
   document.body.appendChild additionalStyle
 
 # Layout
-adjustWebviewHeight = do () ->
-  lastH = 0
-  (h) ->
-    if h isnt lastH
-      $('kan-game #webview-wrapper')?.style?.height = h
-      $('kan-game webview')?.style?.height = h
-      lastH = h
-
 isKancollePage = (url) ->
   url is 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' or url?.startsWith('http://osapi.dmm.com/gadgets/ifr')
 
@@ -32,7 +24,7 @@ adjustSize = ->
   catch e
     url = null
 
-    # Get factor
+  # Get factor
   if window.layout == 'vertical'
     cap = 200 * window.zoomLevel
   else if window.doubleTabbed
@@ -97,19 +89,19 @@ adjustSize = ->
   # Adjust webview height & position
   if window.layout == 'horizontal'
     if isKancollePage(url)
-      adjustWebviewHeight "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
+      $('kan-game #webview-wrapper')?.style?.height = "#{Math.min(Math.floor(480 * factor), window.innerHeight - poiControlHeight)}px"
       $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
     $('kan-game #webview-wrapper')?.style?.marginLeft = '0'
     $('kan-game')?.style?.marginTop = "#{Math.max(0, Math.floor((window.innerHeight - 480 * factor - poiControlHeight) / 2.0))}px"
   else
     if isKancollePage(url)
-      adjustWebviewHeight "#{Math.floor(480.0 * factor)}px"
+      $('kan-game #webview-wrapper')?.style?.height = "#{Math.floor(480.0 * factor)}px"
       $('kan-game #webview-wrapper')?.style?.width = "#{Math.floor(800 * factor)}px"
     $('kan-game #webview-wrapper')?.style?.marginLeft = "#{Math.max(0, Math.floor((window.innerWidth - Math.floor(800 * factor)) / 2.0))}px"
     $('kan-game')?.style?.marginTop = '0'
   if not isKancollePage(url)
     $('kan-game #webview-wrapper')?.style?.width = "#{Math.ceil(800 * window.webviewFactor)}px"
-    adjustWebviewHeight "#{Math.ceil(480 * window.webviewFactor)}px"
+    $('kan-game #webview-wrapper')?.style?.height = "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
     return
   # Insert CSS
