@@ -62,6 +62,11 @@ resolveResponses = ->
   while responses.length > 0
     [method, [domain, path, url], body, postBody] = responses.shift()
     try
+      if path in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
+        handleProxyGameStart()
+      else if url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
+        handleProxyGamePayitem()
+      continue if !isGameApi path
       # Delete api_token
       delete postBody.api_token if postBody?.api_token?
       # Fix api
@@ -269,16 +274,11 @@ resolveResponses = ->
           body: body
           postBody: postBody
       window.dispatchEvent event
-      if path in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
-        handleProxyGameStart()
-      else if url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
-        handleProxyGamePayitem()
     catch err
       console.error err
   locked = false
 
 handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) ->
-  return if !isGameApi path
   # Parse the json object
   try
     body = JSON.parse(body)
