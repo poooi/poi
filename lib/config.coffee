@@ -15,12 +15,18 @@ configPath = path.join(EXROOT, 'config.cson')
 try
   fs.accessSync configPath, fs.R_OK | fs.W_OK
   config = CSON.parseCSONFile configPath
+  dbg.log "Config loaded from: #{configPath}"
+catch e
+  dbg.log e
 
 # Read saved config
 if !config?
   try
     fs.accessSync defaultConfigPath, fs.R_OK | fs.W_OK
     config = CSON.parseCSONFile defaultConfigPath
+    dbg.log "Config loaded from: #{defaultConfigPath}"
+  catch e
+    dbg.log e
 
 if !config?
   config = {}
