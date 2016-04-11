@@ -63,6 +63,18 @@ if process.platform != 'darwin'
       label: __ 'View'
       submenu: [
         {
+          label: __ 'Reload'
+          accelerator: 'CmdOrCtrl+R'
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
+        },
+        {
+          label: __ 'Stop'
+          accelerator: 'CmdOrCtrl+.'
+          click: (item, focusedWindow) ->
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
+        },
+        {
           label: __ 'Developer Tools'
           click: (item, focusedWindow) ->
             remote.getGlobal('mainWindow').openDevTools({detach: true})
