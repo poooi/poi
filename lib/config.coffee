@@ -4,7 +4,9 @@ fs = require 'fs-extra'
 CSON = require 'cson'
 {log, warn, error} = require './utils'
 
-{ROOT, EXROOT, dbg} = global
+{ROOT, EXROOT} = global
+
+if not dbg? then dbg = require './debug'
 
 config = null
 configCache = {}
