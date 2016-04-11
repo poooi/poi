@@ -600,7 +600,7 @@ PoiConfig = React.createClass
               <CheckboxLabelConfig
                 label={__ 'Confirm before exit'}
                 configName="poi.confirm.quit"
-                defaultVal=true />
+                defaultVal=false />
             else
               <OverlayTrigger placement="top"
                 overlay={
