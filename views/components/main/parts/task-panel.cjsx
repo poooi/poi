@@ -223,6 +223,7 @@ TaskPanel = React.createClass
                 resetQuestRecordMonthly id, q
             syncQuestRecord()
         catch err
+          console.error err
           questRecord = {}
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
