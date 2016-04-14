@@ -123,5 +123,6 @@
   "Disabled": "未設定",
   "Display \"Tips\"": "「ヒント」を表示",
   "Stop Loading When Game Loaded": "ゲームの読み込みが完了後、ページの読み込みを終止します",
-  "Create shortcut on startup (Notification may not be working without shortcut)": "起動時にショートカットを作成する (無効にすれば通知の不具合の可能性がある)"
+  "Create shortcut on startup (Notification may not be working without shortcut)": "起動時にショートカットを作成する (無効にすれば通知の不具合の可能性がある)",
+  "Show network status in notification bar": "通知バーにネットワーク状態を表示する"
 }

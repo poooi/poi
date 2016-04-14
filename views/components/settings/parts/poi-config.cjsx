@@ -631,6 +631,10 @@ PoiConfig = React.createClass
             label={__ 'Prevent DMM Network Change Popup'}
             configName="poi.disableNetworkAlert"
             defaultVal=false />
+          <CheckboxLabelConfig
+            label={__ 'Show network status in notification bar'}
+            configName="poi.showNetworkLog"
+            defaultVal=true />
           {
             if process.platform == 'win32'
               <CheckboxLabelConfig
