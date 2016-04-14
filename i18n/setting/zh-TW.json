@@ -123,5 +123,6 @@
   "Disabled": "快速鍵未設定，點此處設定",
   "Display \"Tips\"": "顯示「小提示」",
   "Stop Loading When Game Loaded": "遊戲載入完成後停止載入頁面",
-  "Create shortcut on startup (Notification may not be working without shortcut)": "啟動時建立捷徑 (禁用後通知可能不會正常工作)"
+  "Create shortcut on startup (Notification may not be working without shortcut)": "啟動時建立捷徑 (禁用後通知可能不會正常工作)",
+  "Show network status in notification bar": "在通知欄顯示網路狀態"
 }

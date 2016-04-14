@@ -632,7 +632,7 @@ PoiConfig = React.createClass
             configName="poi.disableNetworkAlert"
             defaultVal=false />
           <CheckboxLabelConfig
-            label={__ 'Show network log in alert area'}
+            label={__ 'Show network status in notification bar'}
             configName="poi.showNetworkLog"
             defaultVal=true />
           {
