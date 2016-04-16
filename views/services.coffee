@@ -84,10 +84,10 @@ window.addEventListener 'game.response', (e) ->
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody))
   log("#{__ 'Hit'} #{method} #{resPath}", {dontReserve: true}) if config.get('poi.showNetworkLog', true)
 window.addEventListener 'network.error', ->
-  error(__('Connection failed.'), {dontReserve: true}) if config.get('poi.showNetworkLog', true)
+  error(__('Connection failed.'), {dontReserve: true})
 window.addEventListener 'network.error.retry', (e) ->
   {counter} = e.detail
-  error(__n('Connection failed after %s retry',  counter), {dontReserve: true}) if config.get('poi.showNetworkLog', true)
+  error(__n('Connection failed after %s retry',  counter), {dontReserve: true})
 window.addEventListener 'network.invalid.result', (e) ->
   {code} = e.detail
-  error(__('The server presented you a cat. (Error code: %s)',  code), {dontReserve: true}) if config.get('poi.showNetworkLog', true)
+  error(__('The server presented you a cat. (Error code: %s)',  code), {dontReserve: true})
