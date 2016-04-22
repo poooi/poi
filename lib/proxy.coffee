@@ -185,7 +185,7 @@ class Proxy extends EventEmitter
                 'Server': 'nginx'
                 'Content-Length': data.length
                 'Content-Type': mime.lookup cacheFile
-                'Last-Modified': stats.mtime.toGMTString()
+                # 'Last-Modified': stats.mtime.toGMTString()
               res.end data
           # Enable retry for game api
           else
