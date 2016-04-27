@@ -19,7 +19,7 @@ Slotitems = React.createClass
         continue unless item?
         itemId = item.id
         itemOverlay = if item.isExist
-          <Tooltip id="fleet-#{@props.fleet}-slot-#{@props.key}-item-#{i}-level">
+          <Tooltip id="fleet-#{@props.fleet}-slot-#{@props.shipId}-item-#{i}-level">
             <div>
               <div>
                 {i18n.resources.__ item.name}

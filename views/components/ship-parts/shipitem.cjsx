@@ -23,6 +23,7 @@ class ShipData extends BaseShipData
     super shipId
     ship = window._ships[shipId]
     shipInfo = window.$ships[ship.api_ship_id]
+    @id = shipId
     @ndockTime = ship.api_ndock_time
     @nowFeul = ship.api_fuel
     @maxFeul = ship.api_fuel_max
@@ -77,7 +78,7 @@ ShipRow = React.createClass
               </div>
             if @props.shipData.ndockTime
               <OverlayTrigger show = {@props.shipData.ndockTime} placement='right' overlay={
-                              <Tooltip id="panebody-repair-time-#{@props.key}-#{@props.shipIndex}">
+                              <Tooltip id="panebody-repair-time-#{@props.shipData.id}-#{@props.shipIndex}">
                                 {__ 'Repair Time'}: {resolveTime @props.shipData.ndockTime / 1000}
                               </Tooltip>}>
                 {shipStat}
@@ -89,20 +90,20 @@ ShipRow = React.createClass
       </div>
       <span className="ship-fb" style={getStatusStyle @props.label}>
         <span style={flex: 1}>
-          <OverlayTrigger placement='right' overlay={<Tooltip id="panebody-fuel-#{@props.key}-#{@props.shipIndex}">{@props.shipData.nowFeul} / {@props.shipData.maxFeul}</Tooltip>}>
+          <OverlayTrigger placement='right' overlay={<Tooltip id="panebody-fuel-#{@props.shipData.id}-#{@props.shipIndex}">{@props.shipData.nowFeul} / {@props.shipData.maxFeul}</Tooltip>}>
             <ProgressBar bsStyle={getMaterialStyle @props.shipData.fuelStatus}
                          now={@props.shipData.fuelStatus} />
           </OverlayTrigger>
         </span>
         <span style={flex: 1}>
-          <OverlayTrigger placement='right' overlay={<Tooltip id="panebody-bull-#{@props.key}-#{@props.shipIndex}">{@props.shipData.nowBull} / {@props.shipData.maxBull}</Tooltip>}>
+          <OverlayTrigger placement='right' overlay={<Tooltip id="panebody-bull-#{@props.shipData.id}-#{@props.shipIndex}">{@props.shipData.nowBull} / {@props.shipData.maxBull}</Tooltip>}>
             <ProgressBar bsStyle={getMaterialStyle @props.shipData.bullStatus}
                          now={@props.shipData.bullStatus} />
           </OverlayTrigger>
         </span>
       </span>
       <div className="ship-slot" style={getStatusStyle @props.label}>
-        <Slotitems key={@props.shipIndex} fleet={@props.deckIndex} slots={@props.shipData.slotItems}/>
+        <Slotitems key={@props.shipIndex} shipId={@props.shipData.id} fleet={@props.deckIndex} slots={@props.shipData.slotItems}/>
       </div>
     </div>
 

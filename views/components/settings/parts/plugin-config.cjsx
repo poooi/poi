@@ -548,12 +548,12 @@ PluginConfig = React.createClass
                       </Row>
                       <div>
                         <Input type="checkbox" label={__ 'Connect to npm server through proxy'}
-                               checked={@state.config.proxy}
+                               checked={@state.config.proxy || false}
                                onChange={@handleEnableProxy} />
                       </div>
                       <div>
                         <Input type="checkbox" label={__ 'Developer option: check update of beta version'}
-                               checked={@state.config.betaCheck}
+                               checked={@state.config.betaCheck || false}
                                onChange={@handleEnableBetaPluginCheck} />
                       </div>
                       <Row>

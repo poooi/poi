@@ -33,7 +33,7 @@ module.exports =
       window.removeEventListener 'layout.change', @handleChangeLayout
       window.removeEventListener 'doubleTabbed.change', @toggleDoubleTabbed
     render: ->
-      <div className='main-panel-content' style={left: "#{if @state.show then '-100%' else '0'}"}>
+      <div className='main-panel-content' style={left: "#{if @state.show then '-100%' else '0px'}"}>
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
       {
         if @state.layout == 'horizontal' or @state.doubleTabbed

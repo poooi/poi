@@ -49,7 +49,7 @@ MiniShipRow = React.createClass
   render: ->
     <div className="ship-tile">
       <OverlayTrigger placement={if (!window.doubleTabbed) && (window.layout == 'vertical') then 'left' else 'right'} overlay={
-        <Tooltip id="ship-pop-#{@props.key}-#{@props.shipIndex}" className="ship-pop #{if @props.shipData.slotItemExist then '' else 'hidden'}">
+        <Tooltip id="ship-pop-#{@props.shipData.id}-#{@props.shipIndex}" className="ship-pop #{if @props.shipData.slotItemExist then '' else 'hidden'}">
           <div className="item-name">
             <Slotitems data={@props.shipData.slotItems} />
           </div>
@@ -57,7 +57,7 @@ MiniShipRow = React.createClass
       }>
         <div className="ship-item">
           <OverlayTrigger placement='top' overlay={
-            <Tooltip id="miniship-exp-#{@props.key}-#{@props.shipIndex}">
+            <Tooltip id="miniship-exp-#{@props.shipData.id}-#{@props.shipIndex}">
               Next. {@props.shipData.nextEXP}
             </Tooltip>
           }>
