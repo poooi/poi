@@ -68,14 +68,13 @@ calcDisplayText = (targetShipBefore, sourceShips) ->
               #   2nd term: Something has been added
               if (remaining > 0 && maxDelta != 0) || delta != 0
                 upIcon = if remaining <= 0 || delta == maxDelta then 'angle-double-up' else 'angle-up'
-                <span key={i}>
-                  &nbsp;&nbsp;{nameStatuses[i]}&nbsp;
-                  <FontAwesome key={0} name={upIcon} />
-                  &nbsp;{delta}/
+                <span key={i} style={margin: '0 6px'}>
+                  {nameStatuses[i]}
+                  <FontAwesome key={0} name={upIcon} style={margin: '0 3px'} />
+                  {delta}/
                   <span key={1} style={fontSize:'80%', verticalAlign:'baseline'}>
                     {if remaining <= 0 then 'MAX' else "+#{remaining}"}
                   </span>
-                  &nbsp;&nbsp;
                 </span>
           }
           </span>
