@@ -196,7 +196,7 @@ resolveResponses = ->
         when '/kcsapi/api_req_kaisou/powerup'
           for shipId in postBody.api_id_items.split(',')
             idx = parseInt(shipId)
-            for itemId in _ships[idx].api_slot
+            for itemId in (_ships[idx]?.api_slot || [])
               continue if itemId == -1
               delete _slotitems[itemId]
             delete _ships[idx]
