@@ -82,7 +82,7 @@ window.addEventListener 'game.response', (e) ->
   resPath = e.detail.path
   if dbg.extra('gameResponse').isEnabled()
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody))
-  log("#{__ 'Hit'} #{method} #{resPath}", {dontReserve: true}) if config.get('poi.showNetworkLog', true)
+  log("#{__ 'Hit'} #{method} #{resPath}", {dontReserve: true}) if config.get('poi.showNetworkLog', false)
 window.addEventListener 'network.error', ->
   error(__('Connection failed.'), {dontReserve: true})
 window.addEventListener 'network.error.retry', (e) ->
