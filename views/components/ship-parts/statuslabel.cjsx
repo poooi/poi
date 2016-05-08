@@ -6,19 +6,19 @@ __n = i18n.main.__n.bind(i18n.main)
 texts = [
   ['Retreated'],
   ['Repairing'],
-  ['Ship tag: %s', 'E1, E2, E3'],
-  ['Ship tag: %s', 'E4'],
-  ['Ship tag: %s', '?'],
-  ['Ship tag: %s', '?'],
+  ['Ship tag: %s', 'E1, E4'],
+  ['Ship tag: %s', 'E2, E3'],
+  ['Ship tag: %s', 'E5'],
+  ['Ship tag: %s', 'E6'],
   ['Resupply needed']
 ]
 
 styles = [
   'danger',
   'info',
+  'primary',
   'success',
   'warning',
-  'primary',
   'info',
   'warning'
 ]
