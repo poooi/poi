@@ -67,6 +67,18 @@ resolveResponses = ->
       else if url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
         handleProxyGamePayitem()
       continue if !isGameApi path
+
+      if body.api_result != 1
+        event = new CustomEvent 'network.invalid.result',
+          bubbles: true
+          cancelable: true
+          detail:
+            code: body.api_result
+        window.dispatchEvent event
+        continue
+
+      body = body.api_data if body.api_data?
+
       # Delete api_token
       delete postBody.api_token if postBody?.api_token?
       # Fix api
@@ -281,18 +293,8 @@ resolveResponses = ->
 handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) ->
   # Parse the json object
   try
-    body = JSON.parse(body)
-    if body.api_result == 1
-      body = body.api_data if body.api_data?
-      responses.push [method, [domain, path, url], body, JSON.parse(postBody)]
-      resolveResponses() if !locked
-    else
-      event = new CustomEvent 'network.invalid.result',
-        bubbles: true
-        cancelable: true
-        detail:
-          code: body.api_result
-      window.dispatchEvent event
+    responses.push [method, [domain, path, url], JSON.parse(body), JSON.parse(postBody)]
+    resolveResponses() if !locked
   catch e
     console.log e
 
