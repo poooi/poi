@@ -89,6 +89,11 @@ ResourcePanel = React.createClass
           material[5] -= 1
         @setState
           material: material
+      when '/kcsapi/api_req_air_corps/set_plane'
+        {material} = @state
+        material[4] = body.api_after_bauxite
+        @setState
+          material: material
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'view.main.visible', @handleVisibleResponse
