@@ -1,6 +1,7 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap, useSVGIcon} = window
 {$slotitems} = window
 path = require 'path-extra'
+fs = require 'fs-extra'
 
 SlotitemIcon = React.createClass
   name: 'SlotitemIcon'
@@ -13,7 +14,7 @@ SlotitemIcon = React.createClass
 MaterialIcon = React.createClass
   name: 'MaterialIcon'
   render: ->
-    if useSVGIcon
+    if useSVGIcon && fs.accessSync("file://#{ROOT}/assets/svg/material/#{@props.materialId}.svg")
       <img src="file://#{ROOT}/assets/svg/material/#{@props.materialId}.svg" className="#{@props.className} svg" />
     else
       <img src="file://#{ROOT}/assets/img/material/0#{@props.materialId}.png" className="#{@props.className} png" />
