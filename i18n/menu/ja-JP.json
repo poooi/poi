@@ -6,7 +6,7 @@
   "Show poi": "poiを表示",
   "Hide others": "ほかを隠す",
   "Show All": "すべてを表示",
-  "Always on top": "ウィンドウを常に最前面に表示しする",
+  "Always on top": "ウィンドウを常に最前面に表示する",
   "Resizable": "ウィンドウサイズの変更を許可",
   "Confirm before exit": "終了する前に警告メッセージを表示する",
   "Quit poi": "poiを終了",
@@ -15,7 +15,7 @@
   "Redo": "やり直す",
   "Cut": "切り取り",
   "Copy": "コピー",
-  "Paste": "貼り付り",
+  "Paste": "貼り付け",
   "Select All": "すべてを選択",
   "View": "表示",
   "Reload": "リロード",
@@ -34,5 +34,5 @@
   "Wiki": "ウィキ" ,
   "Poi Statistics": "poi統計データベースツール",
   "Report Issue": "問題の報告",
-  "Search Issues": "問題を檢索"
+  "Search Issues": "問題を検索"
 }
