@@ -2,27 +2,45 @@
 {$slotitems} = window
 path = require 'path-extra'
 fs = require 'fs-extra'
+classnames = require 'classnames'
+
+getClassName = (props, isSVG) ->
+  type = if isSVG then 'svg' else 'png'
+  classnames type, props.className
 
 SlotitemIcon = React.createClass
   name: 'SlotitemIcon'
   render: ->
+    reallyUseSVG = useSVGIcon
+    iconPath = null
     if useSVGIcon
-      <img src="file://#{ROOT}/assets/svg/slotitem/#{@props.slotitemId}.svg" className="#{@props.className} svg" />
+      iconPath = "#{ROOT}/assets/svg/slotitem/#{@props.slotitemId}.svg"
+      try
+        fs.accessSync iconPath
+      catch
+        reallyUseSVG = false
+    if reallyUseSVG
+      <img src="file://#{iconPath}" className={getClassName @props, true} />
     else
-      <img src="file://#{ROOT}/assets/img/slotitem/#{@props.slotitemId + 100}.png" className="#{@props.className} png" />
+      iconPath = "#{ROOT}/assets/img/slotitem/#{@props.slotitemId + 100}.png"
+      try
+        fs.accessSync iconPath
+        <img src="file://#{iconPath}" className={getClassName @props, false} />
+      catch
+        # both png and svg not found
+        <img className={getClassName @props, useSVGIcon} style={visibility: 'hidden'} />
+
+
 
 MaterialIcon = React.createClass
   name: 'MaterialIcon'
   render: ->
-    svgAvailable = true
-    try
-      fs.accessSync("#{ROOT}/assets/svg/material/#{@props.materialId}.svg")
-    catch error
-      svgAvailable = false
-    if useSVGIcon && svgAvailable
-      <img src="file://#{ROOT}/assets/svg/material/#{@props.materialId}.svg" className="#{@props.className} svg" />
+    src = null
+    if useSVGIcon
+      src = "file://#{ROOT}/assets/svg/material/#{@props.materialId}.svg"
     else
-      <img src="file://#{ROOT}/assets/img/material/0#{@props.materialId}.png" className="#{@props.className} png" />
+      src = "file://#{ROOT}/assets/img/material/0#{@props.materialId}.png"
+    <img src={src} className={getClassName @props, useSVGIcon} />
 
 module.exports =
   SlotitemIcon: SlotitemIcon
