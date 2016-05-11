@@ -634,7 +634,7 @@ PoiConfig = React.createClass
           <CheckboxLabelConfig
             label={__ 'Show network status in notification bar'}
             configName="poi.showNetworkLog"
-            defaultVal=true />
+            defaultVal=false />
           {
             if process.platform == 'win32'
               <CheckboxLabelConfig
