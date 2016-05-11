@@ -16,7 +16,7 @@ MaterialIcon = React.createClass
   render: ->
     svgAvailable = true
     try
-      fs.accessSync("file://#{ROOT}/assets/svg/material/#{@props.materialId}.svg")
+      fs.accessSync("#{ROOT}/assets/svg/material/#{@props.materialId}.svg")
     catch error
       svgAvailable = false
     if useSVGIcon && svgAvailable
