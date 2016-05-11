@@ -1,6 +1,6 @@
 {remote} = window
 {Menu} = remote.require('electron')
-{openExternal} = require 'shell'
+{openExternal} = require('electron').shell
 __ = window.i18n.menu.__.bind(i18n.menu)
 __n = window.i18n.menu.__n.bind(i18n.menu)
 

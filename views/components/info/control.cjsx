@@ -1,6 +1,6 @@
 fs = require 'fs-extra'
 path = require 'path-extra'
-{openItem} = require 'shell'
+{openItem} = require('electron').shell
 {Button, OverlayTrigger, Tooltip, Collapse} = ReactBootstrap
 {React, config, remote, err, success, toggleModal} = window
 __ = window.i18n.others.__.bind(i18n.others)

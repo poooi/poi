@@ -4,7 +4,7 @@ __n = i18n.others.__n.bind(i18n.others)
 {remote} = window
 {React, ReactBootstrap, toggleModal} = window
 updateManager = remote.require './lib/update'
-shell = require 'shell'
+{shell} = require 'electron'
 semver = require 'semver'
 
 updateInfo = null

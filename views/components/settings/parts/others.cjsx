@@ -2,7 +2,7 @@
 {Grid, Col, Button, ButtonGroup, Input} = ReactBootstrap
 Divider = require './divider'
 path = require 'path-extra'
-{openExternal} = require 'shell'
+{openExternal} = require('electron').shell
 __ = i18n.setting.__.bind(i18n.setting)
 
 Others = React.createClass
