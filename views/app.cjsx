@@ -10,7 +10,8 @@ __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
 # Disable OSX zoom
-require('web-frame').setZoomLevelLimits(1, 1)
+
+require('electron').webFrame.setZoomLevelLimits(1, 1)
 
 # Hackable panels
 window.hack = {}

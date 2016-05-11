@@ -1,13 +1,13 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
-{remote} = require 'electron'
+{remote, shell} = require 'electron'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {Grid, Col, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
-{showItemInFolder, openItem} = require 'shell'
+{showItemInFolder, openItem} = shell
 Divider = require './divider'
 
 ChangeLayoutConfig = React.createClass

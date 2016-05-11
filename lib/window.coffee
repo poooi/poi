@@ -31,7 +31,7 @@ module.exports =
     # Disable OSX zoom
     current.webContents.on 'dom-ready', ->
       current.webContents.executeJavaScript '''
-        require('web-frame').setZoomLevelLimits(1, 1);
+        require('electron').webFrame.setZoomLevelLimits(1, 1);
       '''
     # Close window really
     if options.realClose

@@ -1,6 +1,6 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
-{remote} = require 'electron'
+{remote, shell} = require 'electron'
 {dialog} = remote.require 'electron'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
@@ -9,7 +9,7 @@ __n = i18n.setting.__n.bind(i18n.setting)
 {OverlayTrigger, Tooltip, Collapse, Well} = ReactBootstrap
 {config, toggleModal} = window
 {APPDATA_PATH} = window
-{showItemInFolder, openItem} = require 'shell'
+{showItemInFolder, openItem} = shell
 mousetrap = require 'mousetrap'
 ipcRenderer = require("electron").ipcRenderer
 

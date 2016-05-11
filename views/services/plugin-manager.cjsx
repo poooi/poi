@@ -7,6 +7,7 @@ React = require 'react'
 fs = Promise.promisifyAll require 'fs-extra'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
+{remote} = require 'electron'
 windowManager = remote.require './lib/window'
 
 # we need only glob here
