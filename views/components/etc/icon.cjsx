@@ -2,12 +2,11 @@
 {$slotitems} = window
 path = require 'path-extra'
 fs = require 'fs-extra'
+classnames = require 'classnames'
 
 getClassName = (props, isSVG) ->
-  className = if isSVG then 'svg' else 'png'
-  if props.className
-    className += ' ' + props.className
-  className
+  type = if isSVG then 'svg' else 'png'
+  classnames type, props.className
 
 SlotitemIcon = React.createClass
   name: 'SlotitemIcon'
