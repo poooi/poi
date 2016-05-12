@@ -124,6 +124,7 @@ class PluginManager
     npmConfig =
       prefix: PLUGIN_PATH
       registry: @config_.mirror.server
+      progress: false
     if @config_.proxy
       npmConfig.http_proxy = 'http://127.0.0.1:#{proxy.port}'
     else
