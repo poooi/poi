@@ -16,7 +16,8 @@ SlotitemIcon = React.createClass
     if useSVGIcon
       iconPath = "#{ROOT}/assets/svg/slotitem/#{@props.slotitemId}.svg"
       try
-        fs.accessSync iconPath
+        # accessSync can not read asar properly
+        fs.statSync iconPath
       catch
         reallyUseSVG = false
     if reallyUseSVG
@@ -24,7 +25,7 @@ SlotitemIcon = React.createClass
     else
       iconPath = "#{ROOT}/assets/img/slotitem/#{@props.slotitemId + 100}.png"
       try
-        fs.accessSync iconPath
+        fs.statSync iconPath
         <img src="file://#{iconPath}" className={getClassName @props, false} />
       catch
         # both png and svg not found
