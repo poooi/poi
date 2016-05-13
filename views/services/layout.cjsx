@@ -129,6 +129,11 @@ adjustSize = ->
     .naviapp {
       z-index: -1;
     }
+    #alert {
+      transform: scale(0.8);
+      left: 80px !important;
+      top: -80px !important;
+    }
   """
   # Set zoom factor
   webview.executeJavaScript """
@@ -144,25 +149,6 @@ adjustSize = ->
   """
 
 adjustSize()
-
-adjustPayitem = ->
-  webview = $('kan-game webview')
-  webview.executeJavaScript """
-    function fixPayitem() {
-      setTimeout(function() {
-        var alert = document.querySelector('#alert');
-        if (alert == null || typeof(alert) == 'undefined')
-          return;
-        alert.style.zoom = 0.8;
-        alert.style.left = '225px';
-        alert.style.top = '0px';
-      }, 500);
-    }
-    fixPayitem();
-    if (typeof(__POI_INJECTED_LISTENER__) == 'undefined') {
-      __POI_INJECTED_LISTENER__ = window.addEventListener('resize', fixPayitem);
-    }
-  """
 
 # Adjust elements layout
 handleResize = ->
@@ -223,7 +209,6 @@ window.addEventListener 'layout.change', (e) ->
 window.addEventListener 'resize', handleResize
 window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
-window.addEventListener 'game.payitem', adjustPayitem
 
 document.addEventListener 'DOMContentLoaded', ->
   $('kan-game webview').src = config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'

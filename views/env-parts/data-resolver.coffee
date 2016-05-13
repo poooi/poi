@@ -64,8 +64,6 @@ resolveResponses = ->
     try
       if path in ['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic']
         handleProxyGameStart()
-      else if url.startsWith 'http://www.dmm.com/netgame/social/application/-/purchase/=/app_id=854854/payment_id='
-        handleProxyGamePayitem()
       continue if !isGameApi path
 
       if body.api_result != 1
@@ -300,9 +298,6 @@ handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) ->
 
 handleProxyGameStart = ->
   window.dispatchEvent new Event 'game.start'
-
-handleProxyGamePayitem = ->
-  window.dispatchEvent new Event 'game.payitem'
 
 handleProxyNetworkErrorRetry = ([domain, path, url], counter) ->
   return if !isGameApi path
