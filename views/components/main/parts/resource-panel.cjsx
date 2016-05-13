@@ -91,7 +91,7 @@ ResourcePanel = React.createClass
           material: material
       when '/kcsapi/api_req_air_corps/set_plane'
         {material} = @state
-        material[4] = body.api_after_bauxite
+        material[4] = body.api_after_bauxite if body.api_after_bauxite?
         @setState
           material: material
       when '/kcsapi/api_req_air_corps/supply'
