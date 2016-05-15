@@ -23,7 +23,7 @@
   "homepage": "https://github.com/poooi/poi",
   "dependencies": {
     "babel-core": "^6.5.2",
-    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-async-to-module-method": "^6.5.2",
     "babel-preset-es2015-node4": "^2.0.3",
     "babel-preset-react": "^6.5.0",
@@ -38,7 +38,7 @@
     "cson": "^3.0.2",
     "flash-player-loader": "^1.1.1",
     "font-awesome": "^4.5.0",
-    "fs-extra": "^0.28.0",
+    "fs-extra": "^0.30.0",
     "glob": "^7.0.0",
     "header-case-normalizer": "^1.0.3",
     "i18n-2": "^0.6.3",
