@@ -59,7 +59,7 @@ getCachePath = (pathname) ->
   dir = config.get 'poi.cachePath', global.DEFAULT_CACHE_PATH
   path.join dir, pathname
 findHack = (pathname) ->
-  loc = getCachePath path.join 'kancolle', pathname
+  loc = getCachePath path.join 'KanColle', pathname
   sp = loc.split '.'
   ext = sp.pop()
   sp.push 'hack'
