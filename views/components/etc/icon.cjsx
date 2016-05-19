@@ -1,5 +1,4 @@
-{ROOT, layout, _, $, $$, React, ReactBootstrap, useSVGIcon} = window
-{$slotitems} = window
+{ROOT, React, useSVGIcon} = window
 path = require 'path-extra'
 fs = require 'fs-extra'
 classnames = require 'classnames'
@@ -8,27 +7,35 @@ getClassName = (props, isSVG) ->
   type = if isSVG then 'svg' else 'png'
   classnames type, props.className
 
+ICON_TYPES =
+  UNAVAILABLE: 0
+  PNG: 1
+  SVG: 2
+iconCache = []
+
 SlotitemIcon = React.createClass
   name: 'SlotitemIcon'
-  render: ->
-    reallyUseSVG = useSVGIcon
-    iconPath = null
+  svgPath: ->
+    "#{ROOT}/assets/svg/slotitem/#{@props.slotitemId}.svg"
+  pngPath: ->
+    "#{ROOT}/assets/img/slotitem/#{@props.slotitemId + 100}.png"
+  determineIconType: ->
     if useSVGIcon
-      iconPath = "#{ROOT}/assets/svg/slotitem/#{@props.slotitemId}.svg"
       try
         # accessSync can not read asar properly
-        fs.statSync iconPath
-      catch
-        reallyUseSVG = false
-    if reallyUseSVG
-      <img src="file://#{iconPath}" className={getClassName @props, true} />
-    else
-      iconPath = "#{ROOT}/assets/img/slotitem/#{@props.slotitemId + 100}.png"
-      try
-        fs.statSync iconPath
-        <img src="file://#{iconPath}" className={getClassName @props, false} />
-      catch
-        # both png and svg not found
+        fs.statSync @svgPath()
+        return ICON_TYPES.SVG
+    try
+      fs.statSync @pngPath()
+      return ICON_TYPES.PNG
+    ICON_TYPES.UNAVAILABLE
+  render: ->
+    switch iconCache[@props.slotitemId] ?= @determineIconType()
+      when ICON_TYPES.PNG
+        <img src="file://#{@pngPath()}" className={getClassName @props, false} />
+      when ICON_TYPES.SVG
+        <img src="file://#{@svgPath()}" className={getClassName @props, true} />
+      else
         <img className={getClassName @props, useSVGIcon} style={visibility: 'hidden'} />
 
 
