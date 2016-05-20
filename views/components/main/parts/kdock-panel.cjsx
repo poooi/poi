@@ -10,23 +10,23 @@ showItemDevResultDelay = if window.config.get('poi.delayItemDevResult', false) t
 
 CountdownTimer = require './countdown-timer'
 CountdownLabel = React.createClass
-  getLabelStyle: (timeRemaining) ->
+  getLabelStyle: (timeRemaining, isLSC) ->
     switch
-      when timeRemaining > 600 and @props.isLSC then 'danger'
+      when timeRemaining > 600 and isLSC then 'danger'
       when timeRemaining > 600 then 'primary'
       when timeRemaining >  0  then 'warning'
       when timeRemaining is 0  then 'success'
       else 'default'
   getInitialState: ->
-    style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime)
+    style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime, @props.isLSC)
   componentWillReceiveProps: (nextProps) ->
     if nextProps.completeTime isnt @props.completeTime
       @setState
-        style: @getLabelStyle(CountdownTimer.getTimeRemaining nextProps.completeTime)
+        style: @getLabelStyle(CountdownTimer.getTimeRemaining(nextProps.completeTime), nextProps.isLSC)
   shouldComponentUpdate: (nextProps, nextState) ->
     nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
   tick: (timeRemaining) ->
-    style = @getLabelStyle timeRemaining
+    style = @getLabelStyle timeRemaining, @props.isLSC
     @setState {style: style} if style isnt @state.style
   render: ->
     <Label className="kdock-timer" bsStyle={@state.style}>
