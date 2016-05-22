@@ -13,10 +13,10 @@ if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])
       language = 'zh-TW'
     when 'ja'
       language = 'ja-JP'
-    when 'en'
-      language = 'en-US'
-    else
+    when 'ko'
       language = 'ko-KR'
+    else
+      language = 'en-US'
 window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.doubleTabbed = config.get 'poi.tabarea.double', false
 window.webviewWidth = config.get 'poi.webview.width', -1

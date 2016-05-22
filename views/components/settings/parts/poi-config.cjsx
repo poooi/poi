@@ -23,10 +23,10 @@ if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])
       language = 'zh-TW'
     when 'ja'
       language = 'ja-JP'
-    when 'en'
-      language = 'en-US'
-    else
+    when 'ko'
       language = 'ko-KR'
+    else
+      language = 'en-US'
 
 SetNotifyIndividualConfig = React.createClass
   getInitialState: ->
