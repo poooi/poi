@@ -6,7 +6,7 @@ i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 for i18nFile in i18nFiles
   namespace = path.basename i18nFile
   window.i18n[namespace] = new (require 'i18n-2')
-    locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+    locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
     defaultLocale: 'zh-CN',
     directory: i18nFile,
     updateFiles: false,

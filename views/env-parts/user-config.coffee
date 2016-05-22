@@ -7,14 +7,16 @@ checkLayout = (layout) ->
   layout
 
 language = navigator.language
-if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
+if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])
   switch language.substr(0,1).toLowerCase()
     when 'zh'
       language = 'zh-TW'
     when 'ja'
       language = 'ja-JP'
-    else
+    when 'en'
       language = 'en-US'
+    else
+      language = 'ko-KR'
 window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
 window.doubleTabbed = config.get 'poi.tabarea.double', false
 window.webviewWidth = config.get 'poi.webview.width', -1

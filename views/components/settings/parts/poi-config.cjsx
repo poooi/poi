@@ -17,14 +17,16 @@ Divider = require './divider'
 NavigatorBar = require './navigator-bar'
 
 language = navigator.language
-if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
+if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])
   switch language.substr(0,1).toLowerCase()
     when 'zh'
       language = 'zh-TW'
     when 'ja'
       language = 'ja-JP'
-    else
+    when 'en'
       language = 'en-US'
+    else
+      language = 'ko-KR'
 
 SetNotifyIndividualConfig = React.createClass
   getInitialState: ->
@@ -324,6 +326,7 @@ SelectLanguageConfig = React.createClass
           <option value="zh-TW">正體中文</option>
           <option value="ja-JP">日本語</option>
           <option value="en-US">English</option>
+          <option value="ko-KR">한국어</option>
         </Input>
       </Col>
     </Grid>
