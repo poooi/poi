@@ -75,7 +75,7 @@ SetNotifyIndividualConfig = React.createClass
   handleChangeNotifyVolume: (e) ->
     volume = @refs.notifyVolume.getValue()
     volume = parseFloat(volume)
-    return if volume is NaN
+    return if isNaN(volume)
     config.set('poi.notify.volume', volume)
     @setState
       notifyVolume: volume
