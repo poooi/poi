@@ -258,7 +258,7 @@ It is recommended that the i18n object be attached to
 
 ```coffeescript
 window.i18n.pluginName = new (require 'i18n-2')
-  locales:['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+  locales:['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
   defaultLocale: 'zh-CN',
   directory: path.join(__dirname, 'i18n'),
   updateFiles: false,

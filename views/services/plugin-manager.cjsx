@@ -544,7 +544,7 @@ class PluginManager
     if i18nFile?
       namespace = plugin.id
       window.i18n[namespace] = new (require 'i18n-2')
-        locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+        locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
         defaultLocale: 'zh-CN',
         directory: i18nFile,
         updateFiles: false,

@@ -4,6 +4,7 @@
     "zh-TW": "航海日誌",
     "ja-JP": "航海日誌",
     "en-US": "Akashic Records",
+    "ko-KR": "항해 일지",
     "version": "v0.0.0",
     "icon": "book",
     "author": "W.G.",
@@ -11,13 +12,15 @@
     "deszh-CN": "日志. 战果部分 by rui",
     "deszh-TW": "日誌. 戰果部份 by rui",
     "desja-JP": "日誌. 戦果の部分はruiにより",
-    "desen-US": "Logs. Senka module is developed by rui"
+    "desen-US": "Logs. Senka module is developed by rui",
+    "desko-KR": "일지. 전과 부분은 rui님이 개발"
   },
   "poi-plugin-battle-detail": {
     "zh-CN": "战斗详情",
     "zh-TW": "戰鬥詳情",
     "ja-JP": "戦闘詳細",
     "en-US": "Battle Detail",
+    "ko-KR": "전투 정보",
     "version": "v0.0.0",
     "icon": "info-circle",
     "author": "Dazzy Ding",
@@ -25,13 +28,15 @@
     "deszh-CN": "显示战斗详情",
     "deszh-TW": "顯示戰鬥詳情",
     "desja-JP": "戦闘情報を表示します",
-    "desen-US": "Show battle detail"
+    "desen-US": "Show battle detail",
+    "desko-KR": "전투 정보 표시"
   },
   "poi-plugin-exp-calc": {
     "zh-CN": "经验计算",
     "zh-TW": "經驗值計算",
     "ja-JP": "経験値計算機",
     "en-US": "Exp calc",
+    "ko-KR": "경험치 계산기",
     "version": "v0.0.0",
     "icon": "calculator",
     "author": "Chiba",
@@ -39,13 +44,15 @@
     "deszh-CN": "经验计算",
     "deszh-TW": "經驗值計算",
     "desja-JP": "経験値計算機",
-    "desen-US": "Exp calculator"
+    "desen-US": "Exp calculator",
+    "desko-KR": "경험치 계산기"
   },
   "poi-plugin-expedition": {
     "zh-CN": "远征信息",
     "zh-TW": "遠征信息",
     "ja-JP": "遠征情報",
     "en-US": "Expedition",
+    "ko-KR": "원정 정보",
     "version": "v0.0.0",
     "icon": "flag",
     "author": "马里酱",
@@ -53,13 +60,15 @@
     "deszh-CN": "远征信息查询 & 成功条件检查",
     "deszh-TW": "远征信息查询 & 成功条件检查",
     "desja-JP": "远征信息查询 & 成功条件检查",
-    "desen-US": "远征信息查询 & 成功条件检查"
+    "desen-US": "远征信息查询 & 成功条件检查",
+    "desko-KR": "원정 정보 조회 & 성공 조건 확인"
   },
   "poi-plugin-hensei-nikki": {
     "zh-CN": "编成日记",
     "zh-TW": "編成日記",
     "ja-JP": "編成日記",
     "en-US": "Organization Records",
+    "ko-KR": "편성 일기",
     "version": "v0.0.0",
     "icon": "folder-open",
     "author": "Rui",
@@ -67,13 +76,15 @@
     "deszh-CN": "记录编成信息",
     "deszh-TW": "記錄編成信息",
     "desja-JP": "編成を記録します",
-    "desen-US": "Record and share fleet compositions"
+    "desen-US": "Record and share fleet compositions",
+    "desko-KR": "편성 정보 기록"
   },
   "poi-plugin-item-improvement": {
     "zh-CN": "装备改修",
     "zh-TW": "裝備修改",
     "ja-JP": "装備改修表",
     "en-US": "Equipment Improvement",
+    "ko-KR": "장비 개수표",
     "version": "v0.0.0",
     "icon": "wrench",
     "author": "Dazzy Ding",
@@ -81,13 +92,15 @@
     "deszh-CN": "查看装备改修信息",
     "deszh-TW": "檢視裝備修改訊息",
     "desja-JP": "簡易装備改修表",
-    "desen-US": "Show possible improvements of the day"
+    "desen-US": "Show possible improvements of the day",
+    "desko-KR": "간이 장비 개수표"
   },
   "poi-plugin-item-info": {
     "zh-CN": "装备信息",
     "zh-TW": "裝備信息",
     "ja-JP": "装備データ",
     "en-US": "Equipment Info",
+    "ko-KR": "장비 정보",
     "version": "v0.0.0",
     "icon": "rocket",
     "author": "taroxd",
@@ -95,13 +108,15 @@
     "deszh-CN": "提供装备详细信息查看",
     "deszh-TW": "提供裝備詳細信息查看",
     "desja-JP": "持っている装備の情報を表示します",
-    "desen-US": "Show detailed information of all owned equipment"
+    "desen-US": "Show detailed information of all owned equipment",
+    "desko-KR": "보유하고 있는 장비 정보 표시"
   },
   "poi-plugin-map-hp": {
     "zh-CN": "海域血量",
     "zh-TW": "海域血量",
     "ja-JP": "海域HPゲージ",
     "en-US": "Map HP",
+    "ko-KR": "Map HP",
     "version": "v0.0.0",
     "icon": "heart",
     "author": "Chiba",
@@ -109,13 +124,15 @@
     "deszh-CN": "点击出击后才能获得数据",
     "deszh-TW": "點選出擊後才能獲得資料",
     "desja-JP": "出撃ボタンをクリックすることでデータを表示します",
-    "desen-US": "Click Sortie to get infromation"
+    "desen-US": "Click Sortie to get infromation",
+    "desko-KR": "해역 목록을 볼 때 데이터가 갱신됩니다."
   },
   "poi-plugin-new-window": {
     "zh-CN": "一心二用",
     "zh-TW": "一心二用",
     "ja-JP": "内蔵ブラウザ",
     "en-US": "Built-in Browser",
+    "ko-KR": "내부 브라우저",
     "version": "v0.0.0",
     "icon": "sitemap",
     "author": "KochiyaOcean",
@@ -123,13 +140,15 @@
     "deszh-CN": "打开新窗口以游玩其他游戏",
     "deszh-TW": "打開新視窗以遊玩其他遊戲",
     "desja-JP": "新たな内蔵ブラウザウインドーを開く",
-    "desen-US": "Open a new browser window"
+    "desen-US": "Open a new browser window",
+    "desko-KR": "내부 브라우저 사용 가능"
   },
   "poi-plugin-prophet": {
     "zh-CN": "未卜先知",
     "zh-TW": "未卜先知",
     "ja-JP": "予知能力",
     "en-US": "Prophet",
+    "ko-KR": "전투 예측",
     "version": "v0.0.0",
     "icon": "compass",
     "author": "Chiba",
@@ -137,13 +156,15 @@
     "deszh-CN": "战况预知",
     "deszh-TW": "戰況預知",
     "desja-JP": "戦况予知",
-    "desen-US": "Sortie Prophet"
+    "desen-US": "Sortie Prophet",
+    "desko-KR": "전투 예측 플러그인"
   },
   "poi-plugin-quest-info": {
     "zh-CN": "任务信息",
     "zh-TW": "任务信息",
     "ja-JP": "任务信息",
     "en-US": "Quest Info",
+    "ko-KR": "Quest Info",
     "version": "v0.0.0",
     "icon": "indent",
     "author": "马里酱",
@@ -151,13 +172,15 @@
     "deszh-CN": "任务信息查询 & 任务面板强化",
     "deszh-TW": "任務信息查詢 & 任務面板強化",
     "desja-JP": "任務攻略データや開放条件一覧",
-    "desen-US": "Show task infomation & improve task panel"
+    "desen-US": "Show task infomation & improve task panel",
+    "desko-KR": "임무 공략 데이터 & 개방 조건"
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
     "zh-TW": "數據匯報",
     "ja-JP": "統計データベースツール",
     "en-US": "Data Report",
+    "ko-KR": "Data Report",
     "version": "v0.0.0",
     "icon": "pie-chart",
     "author": "Magica",
@@ -165,13 +188,15 @@
     "deszh-CN": "汇报建造数据、海域掉落数据、开发数据",
     "deszh-TW": "匯報建造數據、海域掉落數據、開發數據",
     "desja-JP": "統計データベース(http://db.kcwiki.moe)登録用ツール",
-    "desen-US": "Report data to database(http://db.kcwiki.moe)"
+    "desen-US": "Report data to database(http://db.kcwiki.moe)",
+    "desko-KR": "통계 DB(http://db.kcwiki.moe) 데이터 보고용"
   },
   "poi-plugin-kcwiki-report": {
     "zh-CN": "舰娘百科数据收集",
     "zh-TW": "艦娘百科數據收集",
     "ja-JP": "KCwiki データベースツール",
     "en-US": "KCwiki Data Report",
+    "ko-KR": "KCwiki Data Report",
     "version": "v0.0.0",
     "icon": "pie-chart",
     "author": "grzhan",
@@ -179,13 +204,15 @@
     "deszh-CN": "舰娘百科(http://zh.kcwiki.moe)数据汇报",
     "deszh-TW": "艦娘百科(http://zh.kcwiki.moe)數據匯報",
     "desja-JP": "統計データベース(http://zh.kcwiki.moe)登録用ツール",
-    "desen-US": "Report data to database(http://zh.kcwiki.moe)"
+    "desen-US": "Report data to database(http://zh.kcwiki.moe)",
+    "desko-KR": "통계 DB(http://zh.kcwiki.moe) 데이터 보고용"
   },
   "poi-plugin-ship-info": {
     "zh-CN": "舰娘信息",
     "zh-TW": "艦娘信息",
     "ja-JP": "艦娘データ",
     "en-US": "Ship Girls Info",
+    "ko-KR": "칸무스 정보",
     "version": "v0.0.0",
     "icon": "ship",
     "author": "Ayaphis",
@@ -193,13 +220,15 @@
     "deszh-CN": "提供已有舰娘详细信息查看",
     "deszh-TW": "提供已有艦娘詳細信息查看",
     "desja-JP": "持っている艦娘の情報を展示する",
-    "desen-US": "Show detailed information of all owned ship girls"
+    "desen-US": "Show detailed information of all owned ship girls",
+    "desko-KR": "보유하고 있는 칸무스 정보 표시"
   },
   "poi-plugin-secretary": {
     "zh-CN": "秘书通知",
     "zh-TW": "祕書通知",
     "ja-JP": "秘書艦ボイス",
     "en-US": "Secretary",
+    "ko-KR": "Secretary",
     "version": "v0.0.0",
     "icon": "file-audio-o",
     "author": "Dazzy Ding",
@@ -207,13 +236,15 @@
     "deszh-CN": "将秘书舰语音设置为通知语音",
     "deszh-TW": "將祕書艦語音設置爲通知語音",
     "desja-JP": "秘書艦のボイスが通知音を設定します",
-    "desen-US": "Use secretary voice as notification sound."
+    "desen-US": "Use secretary voice as notification sound.",
+    "desko-KR": "알림음으로 비서함의 음성을 사용"
   },
   "poi-plugin-senka-calc": {
     "zh-CN": "我变强了",
     "zh-TW": "戦果計算",
     "ja-JP": "戦果計算",
     "en-US": "Senka Calc",
+    "ko-KR": "전과 계산",
     "version": "v0.0.0",
     "icon": "odnoklassniki",
     "author": "Rui",
@@ -221,13 +252,15 @@
     "deszh-CN": "战果计算器",
     "deszh-TW": "戦果計算器",
     "desja-JP": "戦果計算器",
-    "desen-US": "Senka calculator"
+    "desen-US": "Senka calculator",
+    "desko-KR": "전과 계산기"
   },
   "poi-plugin-almanac": {
     "zh-CN": "舰娘黄历",
     "zh-TW": "艦娘黃曆",
     "ja-JP": "アルマナック",
     "en-US": "Almanac",
+    "ko-KR": "Almanac",
     "version": "v0.0.0",
     "icon": "calendar",
     "author": "Magica",
@@ -235,13 +268,15 @@
     "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
     "deszh-TW": "艦娘老黃曆改二移植版，在此感謝原作者 HY Little",
     "desja-JP": "中國語のアルマナック",
-    "desen-US": "An Chinese almanac"
+    "desen-US": "An Chinese almanac",
+    "desko-KR": "An Chinese almanac"
   },
   "poi-plugin-translator": {
     "zh-CN": "英语翻译",
     "zh-TW": "英語翻譯",
     "ja-JP": "翻訳者",
     "en-US": "Translator",
+    "ko-KR": "영어 번역기",
     "version": "v0.0.0",
     "icon": "language",
     "author": "KochiyaOcean",
@@ -249,13 +284,15 @@
     "deszh-CN": "将舰娘名和装备名翻译为英文",
     "deszh-TW": "將艦娘名和裝備名翻譯爲英文",
     "desja-JP": "艦娘と装備の名前を英訳します",
-    "desen-US": "Translate ships' & equipments' name into English"
+    "desen-US": "Translate ships' & equipments' name into English",
+    "desko-KR": "칸무스와 장비의 이름을 영어로 변경"
   },
   "poi-plugin-wheres-my-fuel-gone": {
     "zh-CN": "耗资记录",
     "zh-TW": "耗資記錄",
     "ja-JP": "資材追跡",
     "en-US": "Where's My Fuel Gone",
+    "ko-KR": "내 자원 다 어디갔어?",
     "version": "v0.0.0",
     "icon": "battery-3",
     "author": "DKWings",
@@ -263,13 +300,15 @@
     "deszh-CN": "记录出击资源消耗，筛选，统计",
     "deszh-TW": "記錄出擊資源消耗，篩選，統計",
     "desja-JP": "資材消費を記録して分析する",
-    "desen-US": "Record, filter and analyse your resource consumption"
+    "desen-US": "Record, filter and analyse your resource consumption",
+    "desko-KR": "자원 소비 기록/분석"
   },
   "poi-plugin-subtitle": {
     "zh-CN": "kcwiki语音字幕",
     "zh-TW": "kcwiki語音字幕",
     "ja-JP": "KCwiki 中國語セリフ",
     "en-US": "KCwiki Chinese Quotes Subtitle",
+    "ko-KR": "KCwiki 중국어 자막",
     "version": "v0.0.0",
     "icon": "microphone",
     "author": "grzhan",
@@ -277,13 +316,15 @@
     "deszh-CN": "语音字幕插件（舰娘百科支持）",
     "deszh-TW": "語音字幕插件（艦娘百科支援）",
     "desja-JP": "艦娘セリフの中国語字幕",
-    "desen-US": "Chinese subtitle of ship girls' quotes"
+    "desen-US": "Chinese subtitle of ship girls' quotes",
+    "desko-KR": "중국어 자막"
   },
   "poi-plugin-k2badge": {
     "zh-CN": "签名生成",
     "zh-TW": "簽名生成",
     "ja-JP": "バッジ作成",
     "en-US": "Badge Generator",
+    "ko-KR": "배지 생성기",
     "version": "v0.0.0",
     "icon": "photo",
     "author": "KochiyaOcean",
@@ -291,6 +332,7 @@
     "deszh-CN": "传输舰娘数据至 http://threebards.com/kaini 以生成舰娘签名",
     "deszh-TW": "傳輸艦娘資料至 http://threebards.com/kaini 以生成艦娘簽名",
     "desja-JP": "艦娘のデータを http://threebards.com/kaini へ転送し、バッジを作成する",
-    "desen-US": "Export data to http://threebards.com/kaini so that you can make a badge for yourself!"
+    "desen-US": "Export data to http://threebards.com/kaini so that you can make a badge for yourself!",
+    "desko-KR": "데이터를 http://threebards.com/kaini로 전송해서 배지를 만드는 플러그인"
   }
 }

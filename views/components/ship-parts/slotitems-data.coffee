@@ -3,7 +3,7 @@ if window.i18n?.data?
 else
   path = require 'path-extra'
   i18n = new (require 'i18n-2')
-    locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW']
+    locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW']
     defaultLocale: 'zh-CN'
     directory: path.join ROOT, 'i18n', 'data'
     updateFiles: false

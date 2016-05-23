@@ -1,0 +1,23 @@
+{
+  "HP": "내구",
+  "Armor": "장갑",
+  "Firepower": "화력",
+  "Torpedo": "뇌장",
+  "Speed": "속력",
+  "Bombing": "폭장",
+  "AA": "대공",
+  "ASW": "대잠",
+  "Accuracy": "명중",
+  "Torpedo Accuracy": "뇌격 명중",
+  "Evasion": "회피",
+  "Torpedo Evasion": "뇌격 회피",
+  "Bombing Evasion": "폭격 회피",
+  "LOS": "색적",
+  "Anti-LOS": "색적 방해",
+  "Luck": "운",
+  "Range": "사정거리",
+  "Short" : "단거리",
+  "Medium": "중거리",
+  "Long": "장거리",
+  "Very Long": "초장거리"
+}

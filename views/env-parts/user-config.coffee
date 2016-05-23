@@ -7,12 +7,14 @@ checkLayout = (layout) ->
   layout
 
 language = navigator.language
-if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US'])
+if !(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])
   switch language.substr(0,1).toLowerCase()
     when 'zh'
       language = 'zh-TW'
     when 'ja'
       language = 'ja-JP'
+    when 'ko'
+      language = 'ko-KR'
     else
       language = 'en-US'
 window.layout = checkLayout(config.get 'poi.layout', 'horizontal')
