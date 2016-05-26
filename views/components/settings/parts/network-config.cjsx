@@ -1,7 +1,7 @@
 path = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, ROOT, toggleModal} = window
 {config} = window
-{FormControl, Checkbox, Grid, Col, Button, Alert} = ReactBootstrap
+{FormControl, ControlLabel, FormGroup, Checkbox, Grid, Col, Button, Alert} = ReactBootstrap
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 Divider = require './divider'
@@ -104,10 +104,16 @@ NetworkConfig = React.createClass
         if @state.use == 'http'
           <Grid>
             <Col xs={6}>
-              <FormControl type="text" label={__ 'Proxy server address'} placeholder={__ 'Proxy server address'} value={@state?.http?.host} onChange={@handleHttpHostChange} />
+              <FormGroup>
+                <ControlLabel>{__ 'Proxy server address'}</ControlLabel>
+                <FormControl type="text" placeholder={__ 'Proxy server address'} value={@state?.http?.host} onChange={@handleHttpHostChange} />
+              </FormGroup>
             </Col>
             <Col xs={6}>
-              <FormControl type="text" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.http?.port} onChange={@handleHttpPortChange} />
+              <FormGroup>
+                <ControlLabel>{__ 'Proxy server port'}</ControlLabel>
+                <FormControl type="text" placeholder={__ 'Proxy server port'} value={@state?.http?.port} onChange={@handleHttpPortChange} />
+              </FormGroup>
             </Col>
             <Col xs={12}>
               <Checkbox type='checkbox' checked={!!@state?.http?.requirePassword} onChange={@handleSetHttpRequirePassword}>
@@ -117,10 +123,16 @@ NetworkConfig = React.createClass
             {
                 <div style={if !@state.http.requirePassword then {display: 'none'} else {}} >
                   <Col xs={6}>
-                    <FormControl type="text" label={__ 'Username'} placeholder={__ 'Username'} value={@state?.http?.username} onChange={@handleHttpUsernameChange} />
+                    <FormGroup>
+                      <ControlLabel><{__ 'Username'}</ControlLabel>
+                      <FormControl type="text" placeholder={__ 'Username'} value={@state?.http?.username} onChange={@handleHttpUsernameChange} />
+                    </FormGroup>
                   </Col>
                   <Col xs={6}>
-                    <FormControl type="password" label={__ 'Password'} placeholder={__ 'Password'} value={@state?.http?.password} onChange={@handleHttpPasswordChange} />
+                    <FormGroup>
+                      <ControlLabel>{__ 'Password'}</ControlLabel>
+                      <FormControl type="password" placeholder={__ 'Password'} value={@state?.http?.password} onChange={@handleHttpPasswordChange} />
+                    </FormGroup>
                   </Col>
                 </div>
             }
@@ -128,16 +140,25 @@ NetworkConfig = React.createClass
         else if @state.use == 'socks5'
           <Grid>
             <Col xs={6}>
-              <FormControl type="text" label={__ 'Proxy server address'} placeholder={__ 'Proxy server address'} value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
+              <FormGroup>
+                <ControlLabel>{__ 'Proxy server address'}</ControlLabel>
+                <FormControl type="text" placeholder={__ 'Proxy server address'} value={@state?.socks5?.host} onChange={@handleSocksHostChange} />
+              </FormGroup>
             </Col>
             <Col xs={6}>
-              <FormControl type="text" label={__ 'Proxy server port'} placeholder={__ 'Proxy server port'} value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
+              <FormGroup>
+                <ControlLabel>{__ 'Proxy server port'}</ControlLabel>
+                <FormControl type="text" placeholder={__ 'Proxy server port'} value={@state?.socks5?.port} onChange={@handleSocksPortChange} />
+              </FormGroup>
             </Col>
           </Grid>
         else if @state.use == 'pac'
           <Grid>
             <Col xs={12}>
-              <FormControl type="text" label={__ 'PAC address'} placeholder={__ 'PAC address'} value={@state?.pacAddr} onChange={@handlePACAddrChange} />
+              <FormGroup>
+                <ControlLabel>{__ 'PAC address'}</ControlLabel>
+                <FormControl type="text" placeholder={__ 'PAC address'} value={@state?.pacAddr} onChange={@handlePACAddrChange} />
+              </FormGroup>
             </Col>
           </Grid>
         else
