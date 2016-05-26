@@ -1,7 +1,7 @@
 glob = require 'glob'
 path = require 'path-extra'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
-{Grid, Col, Input, Tabs, Tab, Alert} = ReactBootstrap
+{Grid, Col, Tabs, Tab, Alert} = ReactBootstrap
 {PoiConfig, DisplayConfig, NetworkConfig, PluginConfig, Others} = require './parts'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
