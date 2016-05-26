@@ -191,7 +191,7 @@ ChangeResolutionConfig = React.createClass
       window.webviewWidth = -1
       window.dispatchEvent new Event('webview.width.change')
     else
-      @handleSetWebviewWidth("webviewWidth", !current)
+      @handleSetWebviewWidth(@state.gameWidth, !current)
   handleSetWebviewWidthWithEvent: (e) ->
     @handleSetWebviewWidth e.target.value, @state.useFixedResolution
   componentDidMount: ->
