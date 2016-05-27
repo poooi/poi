@@ -239,7 +239,8 @@ document.addEventListener 'DOMContentLoaded', ->
     exWindow = WindowManager.createWindow
       realClose: true
       navigatable: true
-      'node-integration': false
+      webPreferences:
+        nodeIntegration: false
     exWindow.loadURL e.url
     exWindow.show()
     e.preventDefault()

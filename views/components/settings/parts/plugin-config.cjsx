@@ -7,7 +7,7 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, PluginManager} = window
-{Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel} = ReactBootstrap
+{Grid, Col, Row, Radio, Checkbox, FormControl, ControlLabel, InputGroup, FormGroup, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel} = ReactBootstrap
 {config} = window
 {dialog} = remote.require 'electron'
 {shell} = require 'electron'
@@ -135,8 +135,7 @@ InstalledPlugin = React.createClass
                          {__ 'Settings'}
                        </Tooltip>
                        }>
-                       <Button ref='setting-btn'
-                               bsStyle='primary' bsSize='xs'
+                       <Button bsStyle='primary' bsSize='xs'
                                onClick={@toggleSettingPop}
                                className='plugin-control-button btn-xs-4'>
                          <FontAwesome name='gear' />
@@ -242,21 +241,26 @@ InstallByNameInput = React.createClass
   changeInstalledPackage: (e) ->
     @setState {manuallyInstallPackage: e.target.value}
   render: ->
-    <Input type="text"
-           value={@state.manuallyInstallPackage}
-           onChange={@changeInstalledPackage}
-           label={__ 'Install directly from npm'}
-           disabled={@props.manuallyInstallStatus == 1 || @props.npmWorkding}
-           placeholder={__ 'Input plugin package name...'}
-           bsSize='small'
-           buttonAfter={
-             <Button bsStyle='primary'
-                     disabled={@props.manuallyInstallStatus == 1 || @props.npmWorkding}
-                     onClick={@props.handleManuallyInstall.bind null, @state.manuallyInstallPackage}>
-               {__ 'Install'}
-             </Button>
-           }>
-    </Input>
+    <FormGroup>
+      <ControlLabel>{__ 'Install directly from npm'}</ControlLabel>
+      <InputGroup>
+        <FormControl type="text"
+          value={@state.manuallyInstallPackage}
+          onChange={@changeInstalledPackage}
+          disabled={@props.manuallyInstallStatus == 1 || @props.npmWorkding}
+          placeholder={__ 'Input plugin package name...'}
+          bsSize='small'
+        />
+        <InputGroup.Button>
+          <Button
+              bsStyle='primary'
+              disabled={@props.manuallyInstallStatus == 1 || @props.npmWorkding}
+              onClick={@props.handleManuallyInstall.bind null, @state.manuallyInstallPackage}>
+            {__ 'Install'}
+          </Button>
+        </InputGroup.Button>
+      </InputGroup>
+    </FormGroup>
 
 PluginConfig = React.createClass
   getInitialState: ->
@@ -529,10 +533,11 @@ PluginConfig = React.createClass
                           index++
                           <OverlayTrigger placement='top' key={index} overlay={<Tooltip id="npm-server-#{index}">{@state.mirrors[server].menuname}</Tooltip>}>
                             <Col key={index} xs=6 className='select-npm-server'>
-                              <Input type='radio'
-                                     label={@state.mirrors[server].name}
-                                     checked={@state.config.mirror.server == @state.mirrors[server].server}
-                                     onChange={@onSelectServer.bind @, server} />
+                              <Radio
+                                checked={@state.config.mirror.server == @state.mirrors[server].server}
+                                onChange={@onSelectServer.bind @, server}>
+                                {@state.mirrors[server].name}
+                              </Radio>
                             </Col>
                           </OverlayTrigger>
                       }
@@ -547,14 +552,18 @@ PluginConfig = React.createClass
                         </Col>
                       </Row>
                       <div>
-                        <Input type="checkbox" label={__ 'Connect to npm server through proxy'}
-                               checked={@state.config.proxy || false}
-                               onChange={@handleEnableProxy} />
+                        <Checkbox
+                           checked={@state.config.proxy || false}
+                           onChange={@handleEnableProxy}>
+                          {__ 'Connect to npm server through proxy'}
+                        </Checkbox>
                       </div>
                       <div>
-                        <Input type="checkbox" label={__ 'Developer option: check update of beta version'}
-                               checked={@state.config.betaCheck || false}
-                               onChange={@handleEnableBetaPluginCheck} />
+                        <Checkbox
+                           checked={@state.config.betaCheck || false}
+                           onChange={@handleEnableBetaPluginCheck}>
+                           {__ 'Developer option: check update of beta version'}
+                        </Checkbox>
                       </div>
                       <Row>
                         <ButtonGroup className='plugin-buttongroup'>
@@ -592,9 +601,9 @@ PluginConfig = React.createClass
             <div className="folder-picker"
                  onClick={@onSelectInstallFromFile}
                  onDrop={@onDropInstallFromFile}
-                 onDragEnter={(e)=> e.preventDefault()}
-                 onDragOver={(e)=> e.preventDefault()}
-                 onDragLeave={(e)=> e.preventDefault()}>
+                 onDragEnter={(e) -> e.preventDefault()}
+                 onDragOver={(e) -> e.preventDefault()}
+                 onDragLeave={(e) -> e.preventDefault()}>
               {__ "Drop plugin packages here to install it, or click here to select them"}
             </div>
           </Col>
