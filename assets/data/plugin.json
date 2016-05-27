@@ -109,7 +109,7 @@
     "deszh-TW": "提供裝備詳細信息查看",
     "desja-JP": "持っている装備の情報を表示します",
     "desen-US": "Show detailed information of all owned equipment",
-    "desko-KR": "보유하고 있는 장비 정보 표시"
+    "desko-KR": "보유하고 있는 장비 현황을 볼 수 있습니다"
   },
   "poi-plugin-map-hp": {
     "zh-CN": "海域血量",
@@ -157,7 +157,7 @@
     "deszh-TW": "戰況預知",
     "desja-JP": "戦况予知",
     "desen-US": "Sortie Prophet",
-    "desko-KR": "전투 예측 플러그인"
+    "desko-KR": "전투 예측"
   },
   "poi-plugin-quest-info": {
     "zh-CN": "任务信息",
@@ -212,7 +212,7 @@
     "zh-TW": "艦娘信息",
     "ja-JP": "艦娘データ",
     "en-US": "Ship Girls Info",
-    "ko-KR": "칸무스 정보",
+    "ko-KR": "함선 정보",
     "version": "v0.0.0",
     "icon": "ship",
     "author": "Ayaphis",
@@ -221,7 +221,7 @@
     "deszh-TW": "提供已有艦娘詳細信息查看",
     "desja-JP": "持っている艦娘の情報を展示する",
     "desen-US": "Show detailed information of all owned ship girls",
-    "desko-KR": "보유하고 있는 칸무스 정보 표시"
+    "desko-KR": "보유하고 있는 함선 현황을 볼 수 있습니다"
   },
   "poi-plugin-secretary": {
     "zh-CN": "秘书通知",
@@ -276,7 +276,7 @@
     "zh-TW": "英語翻譯",
     "ja-JP": "翻訳者",
     "en-US": "Translator",
-    "ko-KR": "영어 번역기",
+    "ko-KR": "번역기",
     "version": "v0.0.0",
     "icon": "language",
     "author": "KochiyaOcean",
@@ -285,7 +285,7 @@
     "deszh-TW": "將艦娘名和裝備名翻譯爲英文",
     "desja-JP": "艦娘と装備の名前を英訳します",
     "desen-US": "Translate ships' & equipments' name into English",
-    "desko-KR": "칸무스와 장비의 이름을 영어로 변경"
+    "desko-KR": "칸무스와 장비 이름 번역"
   },
   "poi-plugin-wheres-my-fuel-gone": {
     "zh-CN": "耗资记录",
