@@ -1,8 +1,9 @@
 glob = require 'glob'
 path = require 'path-extra'
 {ROOT, _, $, $$, React, ReactBootstrap} = window
-{Grid, Col, Tabs, Tab, Alert} = ReactBootstrap
+{Grid, Col, Tabs, Tab, Alert, Nav, NavItem} = ReactBootstrap
 {PoiConfig, DisplayConfig, NetworkConfig, PluginConfig, Others} = require './parts'
+classnames = require 'classnames'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 
@@ -12,24 +13,64 @@ module.exports =
   displayName: <span><FontAwesome name='cog' />{__ " Settings"}</span>
   description: '功能设置界面'
   reactClass: React.createClass
-    shouldComponentUpdate: (nextProps, nextState)->
-      false
+    getInitialState: ->
+      key: 0
+      enableTransition: config.get 'poi.transition.enable', true
+    handleSelect: (key) ->
+      @setState
+        key: key
+    handleSetTransition: (e) ->
+      @setState
+        enableTransition: config.get 'poi.transition.enable', true
+    componentDidMount: ->
+      window.addEventListener 'display.transition.change', @handleSetTransition
+    componentWillUnmount: ->
+      window.removeEventListener 'display.transition.change', @handleSetTransition
     render: ->
-      <Tabs bsStyle="pills" defaultActiveKey={0} animation={false} justified id="settings-view-tabs">
+      <div id="settings-view-tabs">
         <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'settings.css')} />
-        <Tab eventKey={0} title={__ "Common"} className='poi-settings-Tab'>
-          <PoiConfig />
-        </Tab>
-        <Tab eventKey={1} title={__ "Display"} className='poi-settings-Tab'>
-          <DisplayConfig />
-        </Tab>
-        <Tab eventKey={2} title={__ "Proxy"} className='poi-settings-Tab'>
-          <NetworkConfig />
-        </Tab>
-        <Tab eventKey={3} title={__ "Plugins"} className='poi-settings-Tab'>
-          <PluginConfig />
-        </Tab>
-        <Tab eventKey={-1} title={__ "About"} className='poi-settings-Tab'>
-          <Others />
-        </Tab>
-      </Tabs>
+        <Nav bsStyle="pills" activeKey={@state.key} justified onSelect={@handleSelect} >
+          <NavItem eventKey={0} className='poi-settings-Tab'>
+            {__ "Common"}
+          </NavItem>
+          <NavItem eventKey={1} className='poi-settings-Tab'>
+            {__ "Display"}
+          </NavItem>
+          <NavItem eventKey={2} className='poi-settings-Tab'>
+            {__ "Proxy"}
+          </NavItem>
+          <NavItem eventKey={3} className='poi-settings-Tab'>
+            {__ "Plugins"}
+          </NavItem>
+          <NavItem eventKey={4} className='poi-settings-Tab'>
+            {__ "About"}
+          </NavItem>
+        </Nav>
+        <div className="no-scroll">
+          <div className={classnames "setting-tab",
+            'hidden': @state.key != 0
+          }>
+            <PoiConfig />
+          </div>
+          <div className={classnames "setting-tab",
+            'hidden': @state.key != 1
+          }>
+            <DisplayConfig />
+          </div>
+          <div className={classnames "setting-tab",
+            'hidden': @state.key != 2
+          }>
+            <NetworkConfig />
+          </div>
+          <div className={classnames "setting-tab",
+            'hidden': @state.key != 3
+          }>
+            <PluginConfig />
+          </div>
+          <div className={classnames "setting-tab",
+            'hidden': @state.key != 4
+          }>
+            <Others />
+          </div>
+        </div>
+      </div>

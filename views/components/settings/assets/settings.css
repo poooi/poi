@@ -169,3 +169,14 @@
 #SettingsView .btn-xs-12 {
   width: 100%;
 }
+#SettingsView .setting-tab-content {
+  display: -webkit-box;
+  flex-flow: row;
+  position: relative;
+}
+#SettingsView .setting-tab-content-transition {
+  transition: all .3s cubic-bezier(1,0,0,1);
+}
+#SettingsView .setting-tab {
+  width: 100%;
+}
