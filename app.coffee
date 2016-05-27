@@ -1,4 +1,4 @@
-{app, BrowserWindow, ipcMain, nativeImage, Tray} = require 'electron'
+{app, BrowserWindow, ipcMain, Tray} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
 
@@ -18,6 +18,8 @@ proxy.setMaxListeners 30
 update = require './lib/update'
 shortcut = require './lib/shortcut'
 {log, warn, error} = require './lib/utils'
+
+poiIconPath = path.join ROOT, 'assets', 'icons', 'poi.ico'
 
 # Add shortcut to start menu when os is windows
 app.setAppUserModelId 'org.poi.poi'
@@ -73,23 +75,17 @@ app.on 'ready', ->
     y: y
     width: width
     height: height
+    title: 'poi'
+    icon: poiIconPath
     resizable: config.get 'poi.content.resizeable', true
     alwaysOnTop: config.get 'poi.content.alwaysOnTop', false
     titleBarStyle: 'hidden'
     webPreferences:
-      webSecurity: false
       plugins: true
       enableLargerThanScreen: true
   # Default menu
   mainWindow.reloadArea = 'kan-game webview'
-  mainWindow.setResizable(config.get 'poi.content.resizeable', true)
-  if process.platform == 'darwin'
-    if /electron$/i.test process.argv[0]
-      icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
-      app.dock?.setIcon? icon
-  else
-    mainWindow.setMenu null
-
+  mainWindow.setMenu null if process.platform isnt 'darwin'
   mainWindow.loadURL "file://#{__dirname}/index.html"
   if config.get 'poi.window.isMaximized', false
     mainWindow.maximize()
@@ -108,7 +104,7 @@ app.on 'ready', ->
 
   # Tray icon
   if process.platform == 'win32'
-    global.appIcon = appIcon = new Tray(path.join(ROOT, 'assets', 'icons', 'poi.ico'))
+    global.appIcon = appIcon = new Tray(poiIconPath)
     appIcon.on 'click', ->
       win = mainWindow
       if win.isMinimized() then win.restore() else win.show()
