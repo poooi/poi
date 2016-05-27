@@ -54,7 +54,7 @@ module.exports =
               </div>
               <div className="panel-col half bottom-left-area">
                 <Panel className="combined-panels panel-col combined-panels-area-horizontal">
-                  <Tabs defaultActiveKey={1} animation={false}>
+                  <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs">
                     <Tab eventKey={1} title={__ 'Docking'}>
                       <div className="ndock-panel flex">
                         <NdockPanel />
@@ -93,7 +93,7 @@ module.exports =
                 </div>
                 <div className="panel-col half right-bottom-area">
                   <Panel className="combined-panels panel-col combined-panels-area-vertical">
-                    <Tabs defaultActiveKey={1} animation={false}>
+                    <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs">
                       <Tab eventKey={1} title={__ 'Docking'}>
                         <div className="ndock-panel flex">
                           <NdockPanel />

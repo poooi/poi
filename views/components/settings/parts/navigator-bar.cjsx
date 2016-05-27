@@ -1,6 +1,6 @@
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
 {config} = window
-{Button, ButtonGroup, Input, OverlayTrigger, Tooltip} = ReactBootstrap
+{Button, ButtonGroup, FormControl, OverlayTrigger, Tooltip} = ReactBootstrap
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 webview = $('kan-game webview')
@@ -78,7 +78,7 @@ NavigatorBar = React.createClass
   render: ->
     <div style={display: 'flex'}>
       <div style={flex: 1, marginLeft: 15, marginRight: 15}>
-        <Input type='text' bsSize='small' placeholder={__ 'Input address'} value={@state.navigateUrl} onChange={@handleSetUrl} onKeyDown={@handlePressEnter}/>
+        <FormControl type='text' bsSize='small' placeholder={__ 'Input address'} value={@state.navigateUrl} onChange={@handleSetUrl} onKeyDown={@handlePressEnter}/>
       </div>
       <div style={flex: 'none', width: 110}>
         <ButtonGroup>

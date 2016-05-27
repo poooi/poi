@@ -1,17 +1,15 @@
 path = require 'path-extra'
 fs = require 'fs-extra'
-{remote, shell} = require 'electron'
+{remote, shell, ipcRenderer} = require 'electron'
 {dialog} = remote.require 'electron'
 __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT} = window
-{Grid, Col, Row, Button, ButtonGroup, Input, Alert} = ReactBootstrap
+{Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, ControlLabel, InputGroup, Checkbox, Alert} = ReactBootstrap
 {OverlayTrigger, Tooltip, Collapse, Well} = ReactBootstrap
-{config, toggleModal} = window
-{APPDATA_PATH} = window
+{config, toggleModal, APPDATA_PATH} = window
 {showItemInFolder, openItem} = shell
 mousetrap = require 'mousetrap'
-ipcRenderer = require("electron").ipcRenderer
 
 Divider = require './divider'
 NavigatorBar = require './navigator-bar'
@@ -73,7 +71,7 @@ SetNotifyIndividualConfig = React.createClass
     @setState
       enableNotify: !enabled
   handleChangeNotifyVolume: (e) ->
-    volume = @refs.notifyVolume.getValue()
+    volume = e.target.value
     volume = parseFloat(volume)
     return if isNaN(volume)
     config.set('poi.notify.volume', volume)
@@ -117,7 +115,7 @@ SetNotifyIndividualConfig = React.createClass
           <OverlayTrigger placement='top' overlay={
               <Tooltip id='poiconfig-volume'>{__ 'Volume'} <strong>{parseInt(@state.notifyVolume * 100)}%</strong></Tooltip>
             }>
-            <Input type="range" ref="notifyVolume"
+            <FormControl type="range"
               onChange={@handleChangeNotifyVolume} onMouseUp={@handleEndChangeNotifyVolume}
               min={0.0} max={1.0} step={0.05} defaultValue={@state.notifyVolume} />
           </OverlayTrigger>
@@ -163,7 +161,7 @@ SetNotifyIndividualConfig = React.createClass
                     <div className='notif-input-desc'>{__ 'Expedition'}: {__ 'Notify when expedition returns in'}</div>
                   </Col>
                   <Col xs={3} className='notif-container'>
-                    <Input type="number" ref="expeditionValue" id="expeditionValue"
+                    <FormControl type="number" id="expeditionValue"
                            disabled={!@state.expeditionNotify}
                            value={@state.expeditionValue}
                            onChange={@handleSetExpedition}
@@ -178,7 +176,7 @@ SetNotifyIndividualConfig = React.createClass
                     <div className='notif-input-desc'>{__ 'Morale'}: {__ 'Notify when morale is greater than'}</div>
                   </Col>
                   <Col xs={3} className='notif-container'>
-                    <Input type="number" ref="moraleValue" id="moraleValue"
+                    <FormControl type="number" id="moraleValue"
                            disabled={!@state.moraleNotify}
                            value={@state.moraleValue}
                            onChange={@handleSetMorale}
@@ -222,12 +220,12 @@ CheckboxLabelConfig = React.createClass
       <Col xs={12} >
         <Grid>
           <Col xs={12} >
-            <Input
-              type="checkbox"
-              label={@props.label}
+            <Checkbox
               disabled={@props.undecided}
               checked={if @props.undecided then false else @state.myval}
-              onChange={if @props.undecided then null else @handleChange} />
+              onChange={if @props.undecided then null else @handleChange} >
+              {@props.label}
+            </Checkbox>
           </Col>
         </Grid>
       </Col>
@@ -309,8 +307,8 @@ ClearCacheCookieConfig = React.createClass
 SelectLanguageConfig = React.createClass
   getInitialState: ->
     language: config.get 'poi.language', language
-  handleSetLanguage: (language) ->
-    language = @refs.language.getValue()
+  handleSetLanguage: (e) ->
+    language = e.target.value
     return if @state.language == language
     config.set 'poi.language', language
     for namespace of window.i18n
@@ -321,13 +319,13 @@ SelectLanguageConfig = React.createClass
   render: ->
     <Grid>
       <Col xs={6}>
-        <Input type="select" ref="language" value={@state.language} onChange={@handleSetLanguage}>
+        <FormControl componentClass="select" value={@state.language} onChange={@handleSetLanguage}>
           <option value="zh-CN">简体中文</option>
           <option value="zh-TW">正體中文</option>
           <option value="ja-JP">日本語</option>
           <option value="en-US">English</option>
           <option value="ko-KR">한국어</option>
-        </Input>
+        </FormControl>
       </Col>
     </Grid>
 
@@ -385,8 +383,6 @@ SlotCheckConfig = React.createClass
     @setState
       showInput: false
       enable: false
-  selectText: ->
-    @textInput.getInputDOMNode().select()
   render: ->
     toggleBtnStyle = if @state.enable then 'success' else 'default'
     toggleBtnStyle = 'danger' if @state.showInput
@@ -404,16 +400,20 @@ SlotCheckConfig = React.createClass
         <div>
           {__ "#{@props.type} slots"} {toggleBtn}
         </div>
-        <Collapse in={@state.showInput} onEntered={@selectText}>
+        <Collapse in={@state.showInput}>
           <div>
             <Well>
-              <Input type="text" bsSize='small'
-                bsStyle={if inputValid then 'success' else 'error'}
-                label={__ "Warn if the number of free #{@props.type} slots is less than"}
-                value={@state.value}
-                ref={(r) => @textInput = r}
-                onChange={@handleChange}
-                buttonAfter={submitBtn} />
+              <FormGroup>
+                <ControlLabel>{__ "Warn if the number of free #{@props.type} slots is less than"}</ControlLabel>
+                <InputGroup>
+                  <FormControl type="text" bsSize='small'
+                    bsStyle={if inputValid then 'success' else 'error'}
+                    value={@state.value}
+                    onChange={@handleChange}
+                  />
+                  <InputGroup.Button>{submitBtn}</InputGroup.Button>
+                </InputGroup>
+              </FormGroup>
             </Well>
           </div>
         </Collapse>
