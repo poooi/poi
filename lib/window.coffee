@@ -1,5 +1,5 @@
-_ = require 'underscore'
 {BrowserWindow} = require 'electron'
+path = require 'path'
 global.windows = windows = []
 global.windowsIndex = windowsIndex = {}
 
@@ -10,24 +10,23 @@ pluginUnload = false
 
 module.exports =
   createWindow: (options) ->
-    options = _.extend options,
+    options = Object.assign
       show: false
-      'webPreferences':
-        'webSecurity': false
-        'plugins': true
+      icon: path.join ROOT, 'assets', 'icons', 'poi.ico'
+      webPreferences:
+        plugins: true
+    , options
     current = new BrowserWindow options
     if options.indexName?
       windowsIndex[options.indexName] = current
-    # Default menu in v0.27.3
-    if process.versions['electron'] >= '0.27.3'
-      current.setMenu options.menu || null
-      current.reloadArea = null
+    current.setMenu options.menu || null
+    current.reloadArea = null
     show = current.show
     current.show = ->
       if current.isMinimized()
         current.restore()
       else
-        show.bind(current)()
+        show.call(current)
     # Disable OSX zoom
     current.webContents.on 'dom-ready', ->
       current.webContents.executeJavaScript '''
@@ -38,17 +37,17 @@ module.exports =
       current.on 'closed', (e) ->
         if options.indexName?
           delete windowsIndex[options.indexName]
-        idx = _.indexOf windows, current
+        idx = windows.indexOf current
         windows.splice idx, 1
     else if options.forceMinimize
       current.on 'close', (e) ->
         current.minimize()
         e.preventDefault() unless forceClose || pluginUnload
       current.on 'closed', (e) ->
-        if pluginUnload then pluginUnload = false
+        pluginUnload = false
         if options.indexName?
           delete windowsIndex[options.indexName]
-        idx = _.indexOf windows, current
+        idx = windows.indexOf current
         windows.splice idx, 1
     else
       current.on 'close', (e) ->
@@ -59,10 +58,10 @@ module.exports =
           current.hide()
         e.preventDefault() unless forceClose || pluginUnload
       current.on 'closed', (e) ->
-        if pluginUnload then pluginUnload = false
+        pluginUnload = false
         if options.indexName?
           delete windowsIndex[options.indexName]
-        idx = _.indexOf windows, current
+        idx = windows.indexOf current
         windows.splice idx, 1
     # Draggable
     unless options.navigatable
