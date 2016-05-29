@@ -256,7 +256,7 @@ ControlledTabArea = React.createClass
     else
       <div className='poi-tabs-container'>
         <div className="no-scroll">
-          <Nav bsStyle="tabs" activeKey={@state.activeMainTab} onSelect={@handleSelectTab}>
+          <Nav bsStyle="tabs" activeKey={@state.activeMainTab} onSelect={@handleSelectTab} id='split-main-nav'>
             <NavItem key='mainView' eventKey='mainView'>
               {mainview.displayName}
             </NavItem>
@@ -281,8 +281,8 @@ ControlledTabArea = React.createClass
           </TabContentsUnion>
         </div>
         <div className="no-scroll">
-          <Nav bsStyle="tabs" onSelect={@handleSelectDropdown}>
-            <NavDropdown id='plugin-dropdown' pullRight
+          <Nav bsStyle="tabs" onSelect={@handleSelectTab} id='split-plugin-nav'>
+            <NavDropdown id='plugin-dropdown' pullRight onSelect={@handleSelectDropdown}
               title={activePlugin?.displayName || defaultPluginTitle}>
             {pluginDropdownContents}
             </NavDropdown>
