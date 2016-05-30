@@ -61,6 +61,9 @@ adjustSize = ->
       transform-origin : 0 0;
       transform : scale(#{window.zoomLevel});
     }
+    .poi-control-tooltip {
+      max-height: #{parseInt(30 / window.zoomLevel)}px;
+    }
     #poi-app-container {
       width: #{Math.floor(100 / window.zoomLevel)}%;
     }

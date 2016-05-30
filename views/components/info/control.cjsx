@@ -101,24 +101,24 @@ PoiControl = React.createClass
       , 350
   render: ->
     <div className='poi-control-container'>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button'>{__ 'Developer Tools'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__ 'Developer Tools'}</Tooltip>}>
         <Button onClick={@handleOpenDevTools} onContextMenu={@handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button'>{__ 'Take a screenshot'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'>{__ 'Take a screenshot'}</Tooltip>}>
         <Button onClick={@handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
       </OverlayTrigger>
-      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button'>{if @state.muted then __ 'Volume on' else __ 'Volume off'}</Tooltip>}>
+      <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{if @state.muted then __ 'Volume on' else __ 'Volume off'}</Tooltip>}>
         <Button onClick={@handleSetMuted} bsSize='small' className={if @state.muted then 'active' else ''}><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
       <Collapse in={@state.extend} dimension='width' className="poi-control-extender">
         <div>
-          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button'>{__ 'Open cache dir'}</Tooltip>}>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{__ 'Open cache dir'}</Tooltip>}>
             <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
           </OverlayTrigger>
-          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button'>{__ 'Open screenshot dir'}</Tooltip>}>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button' className='poi-control-tooltip'>{__ 'Open screenshot dir'}</Tooltip>}>
             <Button onClick={@handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
           </OverlayTrigger>
-          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button'>{__ 'Auto adjust'}</Tooltip>}>
+          <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{__ 'Auto adjust'}</Tooltip>}>
             <Button onClick={@handleJustifyLayout} onContextMenu={@handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
           </OverlayTrigger>
         </div>
