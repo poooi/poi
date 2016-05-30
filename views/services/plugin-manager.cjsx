@@ -217,22 +217,31 @@ class PluginManager
     outdatedPlugins = []
     outdatedList = []
     tasks = plugins.map async (plugin, index) =>
-      if semver.lt(POI_VERSION, plugin.earliestCompatibleMain)
-        @plugins_[index]?.isOutdated = @plugins_[index].needRollback
-        @plugins_[index]?.lastestVersion = @plugins_[index]?.lastApiVer
-      else try
-        distTag = yield Promise.promisify(npm.commands.distTag)(['ls', plugin.packageName])
-        latest = "#{plugin.version}"
-        if @config_.betaCheck && distTag.beta?
-          if semver.gt distTag.beta, latest
-            latest = distTag.beta
-        if semver.gt distTag.latest, latest
-          latest = distTag.latest
-        if semver.gt latest, plugin.version
-          outdatedPlugins.push plugin
-          @plugins_[index]?.isOutdated = true
-          @plugins_[index]?.lastestVersion = latest
-          if plugin.isRead then outdatedList.push plugin.name
+      if !plugin.needRollback
+        try
+          rawData = yield Promise.promisify(npm.commands.view)([plugin.packageName])
+          for key of rawData
+            data = rawData[key]
+          distTag = data['dist-tags']
+          latest = "#{plugin.version}"
+          notCompatible = false
+          apiVer = data.poiPlugin?.apiVer || plugin.apiVer
+          nearestCompVer = 'v214.748.3647'
+          for mainVersion of apiVer
+            if semver.lte(POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer)
+              notCompatible = true
+              nearestCompVer = mainVersion
+              latest = plugin.apiVer[mainVersion]
+          if !notCompatible && @config_.betaCheck && distTag.beta?
+            if semver.gt distTag.beta, latest
+              latest = distTag.beta
+          if !notCompatible && semver.gt distTag.latest, latest
+            latest = distTag.latest
+          if semver.gt latest, plugin.version
+            outdatedPlugins.push plugin
+            @plugins_[index]?.isOutdated = true
+            @plugins_[index]?.lastestVersion = latest
+            if plugin.isRead then outdatedList.push plugin.name
     yield Promise.all(tasks)
     if isNotif && outdatedList.length > 0
       content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
@@ -526,9 +535,17 @@ class PluginManager
     plugin.priority ?= 10000
     plugin.enabled = config.get "plugin.#{plugin.id}.enable", true
     plugin.isInstalled = true
-    plugin.needRollback = semver.lt(POI_VERSION, plugin.earliestCompatibleMain) && semver.gt(plugin.version, plugin.lastApiVer)
+    plugin.needRollback = false
+    if plugin.apiVer?
+      nearestCompVer = 'v214.748.3647'
+      for mainVersion of plugin.apiVer
+        if semver.lte(POI_VERSION, mainVersion) &&
+           semver.lt(mainVersion, nearestCompVer) &&
+           semver.gt(plugin.version, plugin.apiVer[mainVersion])
+          plugin.needRollback = true
+          nearestCompVer = mainVersion
+          plugin.lastestVersion = plugin.apiVer[mainVersion]
     plugin.isOutdated = plugin.needRollback
-    plugin.lastestVersion = plugin.lastApiVer if semver.lt(POI_VERSION, plugin.earliestCompatibleMain)
     # i18n
     i18nFile = null
     if plugin.i18nDir?
