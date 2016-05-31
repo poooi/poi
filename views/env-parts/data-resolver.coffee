@@ -313,6 +313,7 @@ handleProxyNetworkError = ([domain, path, url]) ->
     window.dispatchEvent new Event 'network.error'
 
 handleGetServer = (server) ->
+  window._serverIp = server.ip
   window._serverId = server.num
   window._serverName = server.name
 

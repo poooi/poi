@@ -147,9 +147,10 @@ class Proxy extends EventEmitter
       req.headers['connection'] = 'close'
       parsed = url.parse req.url
       isGameApi = parsed.pathname.startsWith '/kcsapi'
-      if isGameApi && serverList[parsed.hostname]? && currentServer != serverList[parsed.hostname]?.num
+      if isGameApi && serverList[parsed.hostname]? && currentServer != serverList[parsed.hostname].num
         currentServer = serverList[parsed.hostname].num
-        self.emit 'network.get.server', serverList[parsed.hostname]
+        self.emit 'network.get.server', _.extend serverList[parsed.hostname],
+          ip: parsed.hostname
       cacheFile = null
       if isStaticResource(parsed.pathname, parsed.hostname)
         cacheFile = findHack(parsed.pathname) || findCache(parsed.pathname, parsed.hostname)
