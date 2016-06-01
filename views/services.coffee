@@ -55,11 +55,13 @@ window.addEventListener 'keydown', (e) ->
 confirmExit = false
 exitPoi = ->
   confirmExit = true
+  remote.require('./lib/window').rememberMain()
+  remote.require('./lib/window').closeWindows()
+  window.onbeforeunload = (e) ->
   window.close()
 window.onbeforeunload = (e) ->
   if confirmExit || !config.get('poi.confirm.quit', false)
-    remote.require('./lib/window').rememberMain()
-    e.returnValue = true
+    exitPoi()
   else
     toggleModal __('Exit'), __('Confirm?'), [
       name: __ 'Confirm'
