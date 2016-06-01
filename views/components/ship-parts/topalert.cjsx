@@ -374,7 +374,7 @@ TopAlert = React.createClass
         <div style={display: "flex", justifyContent: "space-around", width: '100%'}>
           <span style={flex: "none"}>Lv. {@messages.totalLv} </span>
           <span style={flex: "none", marginLeft: 5}>{__ 'Fighter Power'}: {@messages.tyku.max}</span>
-          <span style={flex: "none", marginLeft: 5}>{__ 'LOS'}: {@messages.saku33.total}</span>
+          <span style={flex: "none", marginLeft: 5}>{__ 'LOS'}: {@messages.saku33.total.toFixed(2)}</span>
         </div>
       else
         <Alert style={getFontStyle window.theme}>
@@ -397,7 +397,7 @@ TopAlert = React.createClass
                   <div>33: {@messages.saku33.total}</div>
                 </Tooltip>
               }>
-                <span>{__ 'LOS'}: {@messages.saku33.total}</span>
+                <span>{__ 'LOS'}: {@messages.saku33.total.toFixed(2)}</span>
               </OverlayTrigger>
             </span>
             <span style={flex: 1.5}>{@getState()}: <span id={"deck-condition-countdown-#{@props.deckIndex}-#{@componentId}"}>{resolveTime @maxCountdown}</span></span>
