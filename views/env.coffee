@@ -53,10 +53,6 @@ require './env-parts/user-config'
 # i18n config
 require './env-parts/i18n-config'
 
-# Alert helpers.
-#   Requires: window.i18n
-require './env-parts/alert'
-
 # Custom theme
 # You should call window.applyTheme() to apply a theme properly.
 require './env-parts/theme'
