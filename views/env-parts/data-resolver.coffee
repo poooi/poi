@@ -275,6 +275,9 @@ resolveResponses = ->
         when '/kcsapi/api_req_sortie/battleresult'
           window._teitokuExp = body.api_member_exp
           window._teitokuLv = body.api_member_lv
+        when '/kcsapi/api_req_kaisou/slot_deprive'
+          for key, ship of body.api_ship_data
+            Object.assign _ships[ship.api_id], ship
       event = new CustomEvent 'game.response',
         bubbles: true
         cancelable: true
