@@ -3,7 +3,6 @@
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
-require './services/alert'
 require './services/update'
 require './services/layout'
 require './services/welcome'

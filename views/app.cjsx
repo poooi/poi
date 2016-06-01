@@ -19,6 +19,9 @@ window.hack = {}
 # Plugin manager
 window.PluginManager = require './services/plugin-manager'
 
+# Alert functions
+require './services/alert'
+
 # Module path
 require('module').globalPaths.push(path.join(ROOT, "node_modules"))
 
