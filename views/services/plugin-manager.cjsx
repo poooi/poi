@@ -219,7 +219,7 @@ class PluginManager
     tasks = plugins.map async (plugin, index) =>
       if !plugin.needRollback
         try
-          rawData = yield Promise.promisify(npm.commands.view)([plugin.packageName])
+          rawData = yield Promise.promisify(npm.commands.view)([plugin.packageName, 'dist-tags', 'poiPlugin'])
           for key of rawData
             data = rawData[key]
           distTag = data['dist-tags']
