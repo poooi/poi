@@ -213,8 +213,8 @@ window.addEventListener 'resize', handleResize
 window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
 
-document.addEventListener 'DOMContentLoaded', ->
-  $('kan-game webview').src = config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
+remote.getCurrentWebContents().on 'did-finish-load', ->
+  $('kan-game webview').loadURL config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
   # Editing DMM Cookie's Region Flag
   $('kan-game webview').addEventListener 'dom-ready', (e) ->

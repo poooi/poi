@@ -41,7 +41,7 @@ NavigatorBar = React.createClass
     if @state.navigateUrl.substr(0,7).toLowerCase()!='http://'
       if @state.navigateUrl.substr(0,8).toLowerCase()!='https://'
         @state.navigateUrl = "http://#{@state.navigateUrl}"
-    webview.src = @state.navigateUrl
+    webview.loadURL @state.navigateUrl
   handleRefresh: ->
     webview.reload()
   handleRefreshFlash: ->
