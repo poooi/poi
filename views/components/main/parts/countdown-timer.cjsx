@@ -48,6 +48,8 @@ CountdownTimer = React.createClass
     completeTime: @props.completeTime
   componentDidMount: ->
     @startTick()
+    window.addEventListener 'countdown.start', @startTick
+    window.addEventListener 'countdown.stop', @stopTick
   componentWillReceiveProps: (nextProps) ->
     @stopTick() if nextProps.countdownId isnt @props.countdownId
     if nextProps.completeTime isnt @state.completeTime
@@ -59,6 +61,8 @@ CountdownTimer = React.createClass
     @startTick() # Doesn't matter if it didn't stop
   componentWillUnmount: ->
     @stopTick()
+    window.removeEventListener 'countdown.start', @startTick
+    window.removeEventListener 'countdown.stop', @stopTick
   startTick: ->
     ticker.reg @props.countdownId, @tick
   stopTick: ->
