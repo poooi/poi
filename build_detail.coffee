@@ -46,12 +46,9 @@ config = (->
   global.EXROOT = global.APPDATA_PATH
   require './lib/config')()
 
-# If !use_taobao_mirror, download Electron from GitHub.
-#config.set 'buildscript.useTaobaoMirror', false
 use_taobao_mirror = config.get 'buildscript.useTaobaoMirror', true
 if process.env.TRAVIS
   use_taobao_mirror = false
-log "Download electron from #{if use_taobao_mirror then 'taobao mirror' else 'github'}"
 npm_exec_path = path.join __dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js'
 
 plugin_json_path = path.join ROOT, 'assets', 'data', 'plugin.json'
@@ -81,13 +78,6 @@ theme_list =
   paperblack: 'https://raw.githubusercontent.com/PHELiOX/paperblack/master/css/paperblack.css'
   darklykai:  'https://raw.githubusercontent.com/magicae/sleepy/master/dist/sleepy.css'
 
-get_electron_url = (platform, electron_version) ->
-  electron_fullname = "electron-v#{electron_version}-#{platform}.zip"
-  if use_taobao_mirror
-    "https://npm.taobao.org/mirrors/electron/#{electron_version}/#{electron_fullname}"
-  else
-    "https://github.com/atom/electron/releases/download/v#{electron_version}/#{electron_fullname}"
-
 get_flash_url = (platform) ->
   if process.env.TRAVIS || USE_GITHUB_FLASH_MIRROR
     "https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/#{platform}.zip"
@@ -106,17 +96,6 @@ target_list = [
   'i18n']
 
 # *** TOOLS & COMMON METHODS ***
-subdirListAsync = async (root) ->
-  files = yield fs.readdirAsync root
-  subdirs = []
-  for file, index in files
-    if file[0] != '.'
-      subdir = path.join root, file
-      stat = yield fs.statAsync subdir
-      if stat.isDirectory()
-        subdirs.push [file, subdir]
-  subdirs
-
 downloadAsync = async (url, dest_dir, filename, description) ->
   log "Downloading #{description} from #{url}"
   fs.ensureDirSync dest_dir
@@ -187,12 +166,6 @@ installFlashAsync = (platform, download_dir, flash_dir) ->
   flash_url = get_flash_url platform
   downloadExtractZipAsync flash_url, download_dir, "flash-#{platform}.zip",
       flash_dir, 'flash plugin'
-
-copyNoOverwriteAsync = async (src, tgt, options) ->
-  try
-    yield fs.accessAsync tgt, fs.R_OK
-  catch e
-    yield fs.copyAsync src, tgt
 
 compress7zAsync = async (files, archive, options) ->
   try
