@@ -8,6 +8,7 @@
     "deploy": "gulp build && gulp get_flash",
     "deploy_directly": "gulp install_theme && gulp get_flash",
     "build": "gulp build && gulp get_flash_all && build",
+    "build_win": "gulp build && gulp get_flash_all && build --win --x64 && build --win --ia32 ",
     "start": "electron ./app_compiled",
     "start_directly": "electron .",
     "clean": "gulp clean",
