@@ -389,3 +389,12 @@ module.exports.cleanFiles = () ->
 module.exports.installThemeAsync = async ->
   theme_root = path.join __dirname, 'assets', 'themes'
   yield downloadThemesAsync theme_root
+
+module.exports.packWinReleaseAsync = async (poi_version) ->
+  target = path.join __dirname, 'dist', 'win-unpacked'
+  dest = path.join __dirname, 'dist', 'win', "poi-#{poi_version}-win-x64.7z"
+  yield compress7zAsync target, dest
+  target = path.join __dirname, 'dist', 'win-ia32-unpacked'
+  dest = path.join __dirname, 'dist', 'win-ia32', "poi-#{poi_version}-win-ia32.7z"
+  yield compress7zAsync target, dest
+  log "Release packed up"
