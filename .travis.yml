@@ -1,6 +1,9 @@
 language: node_js
 env:
-- NODE_VERSION="5.3"
+  matrix:
+  - NODE_VERSION="5.3"
+  global:
+    secure: cVosDSDwzYohC0iXNYZYcz6mM64WPmqyii3MnxfJO4oHHc3EtsaskB7ThKoY+lQlROidAQTfqGv+beWZjtp9OBbo3ricGK92sFbzP+QCZcFmKepzeHSVe5lL6xxJfA3QdE4r33WpD0679tpApEvpj45SGqAqeKmxJA18SfiEVUQ=
 os:
 - linux
 - osx
@@ -23,15 +26,15 @@ before_script:
 script:
 - npm run build
 before_deploy:
-  - export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
-  - export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
-  - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
+- export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
+- export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
+- echo "deploying $RELEASE_PKG_FILE to GitHub releases"
 deploy:
   provider: releases
-  api_key: "Tl98TtIZUH3LgCVXyEx1rqXa0rHQ/mHpAjnFDKtLZDvImND22a1cGGbbvwb+r1knQokH+MEF4p+PmtoRyQjNQXX6T/keiI/uhG6qo6MWfjZxvSoANvwMO/GWJ2oDjYml5gW9sSZ6nVrw9JySxituujLgVR681Sod40lOKmE5FUg="
+  api_key: Tl98TtIZUH3LgCVXyEx1rqXa0rHQ/mHpAjnFDKtLZDvImND22a1cGGbbvwb+r1knQokH+MEF4p+PmtoRyQjNQXX6T/keiI/uhG6qo6MWfjZxvSoANvwMO/GWJ2oDjYml5gW9sSZ6nVrw9JySxituujLgVR681Sod40lOKmE5FUg=
   file:
-    - "RELEASE_PKG_FILE_OSX"
-    - "RELEASE_PKG_FILE_Linux"
+  - RELEASE_PKG_FILE_OSX
+  - RELEASE_PKG_FILE_Linux
   skip_cleanup: true
   on:
     tags: true
