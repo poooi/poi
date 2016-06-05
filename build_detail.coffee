@@ -388,4 +388,4 @@ module.exports.cleanFiles = () ->
 
 module.exports.installThemeAsync = async ->
   theme_root = path.join __dirname, 'assets', 'themes'
-  downloadThemesAsync theme_root
+  yield downloadThemesAsync theme_root
