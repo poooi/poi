@@ -7,7 +7,7 @@
     "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
     "deploy": "gulp build && gulp get_flash",
     "build": "gulp build && gulp get_flash_all && build",
-    "start": "electron .",
+    "start": "electron ./app",
     "clean": "gulp clean",
     "update": "gulp update"
   },
@@ -69,13 +69,6 @@
     "immutable": "^3.7.6"
   },
   "devDependencies": {
-    "bluebird": "^3.4.0",
-    "path-extra": "^3.0.0",
-    "request": "^2.67.0",
-    "glob": "^7.0.0",
-    "semver": "^5.1.0",
-    "fs-extra": "^0.30.0",
-    "coffee-react": "^5.0.0",
     "node-unzip-2": "^0.2.1",
     "coffeelint": "^1.11.1",
     "gulp": "^3.9.0",

@@ -51,7 +51,7 @@ platform_to_paths =
   'linux-x64': 'linux-x64'
 
 flashPath1 = path.join ROOT, '..', 'PepperFlash', platform_to_paths["#{process.platform}-#{process.arch}"]
-flashPath2 = path.join ROOT, '..', 'PepperFlash', "#{process.platform}-#{process.arch}"
+flashPath2 = path.join ROOT, 'PepperFlash', platform_to_paths["#{process.platform}-#{process.arch}"]
 require('flash-player-loader').debug(
   enable: dbg.isEnabled()
   log: dbg._log

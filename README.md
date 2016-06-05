@@ -39,7 +39,7 @@ First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/
 
 ```bash
 git clone https://github.com/poooi/poi && cd poi
-npm i --only=dev
+npm i
 npm run-script deploy
 npm start
 ```
