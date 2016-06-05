@@ -7,7 +7,7 @@
     "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
     "deploy": "gulp build && gulp get_flash",
     "build": "gulp build && gulp get_flash_all && build",
-    "start": "electron ./app",
+    "start": "electron .",
     "clean": "gulp clean",
     "update": "gulp update"
   },
