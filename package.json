@@ -61,7 +61,7 @@
     "pac-proxy-agent": "^1.0.0",
     "path-extra": "^3.0.0",
     "react": "^15.0.1",
-    "react-bootstrap": "^0.28.5",
+    "react-bootstrap": "0.28.5",
     "react-dom": "^15.0.1",
     "react-fontawesome": "^1.0.0",
     "request": "^2.67.0",
