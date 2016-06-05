@@ -22,7 +22,7 @@ shortcut = require './lib/shortcut'
 poiIconPath = path.join ROOT, 'assets', 'icons', 'poi.ico'
 
 # Add shortcut to start menu when os is windows
-app.setAppUserModelId 'org.poi.poi'
+app.setAppUserModelId 'org.poooi.poi'
 if process.platform == 'win32' && config.get 'poi.createShortcut', true
   windowsShortcuts = require 'windows-shortcuts-appid'
   shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
@@ -31,11 +31,11 @@ if process.platform == 'win32' && config.get 'poi.createShortcut', true
   try
     fs.accessSync shortcutPath
     windowsShortcuts.edit shortcutPath, {target: targetPath, args: argPath}, ->
-      windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+      windowsShortcuts.addAppId shortcutPath, 'org.poooi.poi'
   catch error
     try
       windowsShortcuts.create shortcutPath, {target: targetPath, args: argPath}, ->
-         windowsShortcuts.addAppId shortcutPath, 'org.poi.poi'
+         windowsShortcuts.addAppId shortcutPath, 'org.poooi.poi'
 
 if dbg.isEnabled()
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
@@ -44,13 +44,19 @@ else
 
 global.mainWindow = mainWindow = null
 
-flashPath1 = path.join ROOT, 'PepperFlash', process.platform
-flashPath2 = path.join EXECROOT, 'PepperFlash', process.platform
+platform_to_paths =
+  'win32-ia32': 'win-ia32'
+  'win32-x64': 'win-x64'
+  'darwin-x64': 'osx-x64'
+  'linux-x64': 'linux-x64'
+
+flashPath1 = path.join ROOT, '..', 'PepperFlash', platform_to_paths["#{process.platform}-#{process.arch}"]
+flashPath2 = path.join ROOT, '..', 'PepperFlash', "#{process.platform}-#{process.arch}"
 require('flash-player-loader').debug(
   enable: dbg.isEnabled()
   log: dbg._log
   error: error
-).addSource(flashPath1).addSource(flashPath2).load()
+).addSource(flashPath1, '21.0.0.242').addSource(flashPath2, '21.0.0.242').load()
 
 app.on 'window-all-closed', ->
   shortcut.unregister()

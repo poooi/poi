@@ -40,4 +40,11 @@ node_modules
 *.swp
 
 # poi build directory
-build/
+build/*
+app/
+dist/
+
+# icon
+!build/icon.icns
+!build/icon.ico
+!build/icon.png

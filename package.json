@@ -4,7 +4,12 @@
   "description": "KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register"
+    "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
+    "deploy": "gulp build && gulp get_flash",
+    "build": "gulp build && gulp get_flash_all && build",
+    "start": "electron ./app",
+    "clean": "gulp clean",
+    "update": "gulp update"
   },
   "repository": {
     "type": "git",
@@ -72,6 +77,40 @@
     "asar": "^0.11.0",
     "node-7z": "^0.4.0",
     "walk": "^2.3.9",
-    "tar-fs": "^1.10.0"
+    "tar-fs": "^1.10.0",
+    "rimraf": "^2.5.2",
+    "electron-prebuilt": "^1.2.1",
+    "electron-builder": "^4.2.2"
+  },
+  "build": {
+    "app-bundle-id": "org.poooi.poi",
+    "app-category-type": "public.app-category.games",
+    "extraResources": [
+      "PepperFlash/${os}-${arch}/"
+    ],
+    "osx": {
+      "icon": "assets/icons/poi.icns",
+      "target": "dmg",
+      "contents": [
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file",
+          "path": "computed path to artifact, do not specify it - will be overwritten"
+        }
+      ]
+    },
+    "win": {
+      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true"
+    },
+    "linux" : {
+      "target": "7z"
+    }
   }
 }
