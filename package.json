@@ -110,8 +110,7 @@
       ]
     },
     "win": {
-      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true",
-      "msi": true
+      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true"
     },
     "linux" : {
       "target": "7z"
