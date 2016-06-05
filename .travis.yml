@@ -1,9 +1,8 @@
 language: node_js
 env:
-  matrix:
-  - NODE_VERSION="5.3"
-  global:
-    secure: cVosDSDwzYohC0iXNYZYcz6mM64WPmqyii3MnxfJO4oHHc3EtsaskB7ThKoY+lQlROidAQTfqGv+beWZjtp9OBbo3ricGK92sFbzP+QCZcFmKepzeHSVe5lL6xxJfA3QdE4r33WpD0679tpApEvpj45SGqAqeKmxJA18SfiEVUQ=
+- NODE_VERSION="5.3"
+global:
+  secure: cVosDSDwzYohC0iXNYZYcz6mM64WPmqyii3MnxfJO4oHHc3EtsaskB7ThKoY+lQlROidAQTfqGv+beWZjtp9OBbo3ricGK92sFbzP+QCZcFmKepzeHSVe5lL6xxJfA3QdE4r33WpD0679tpApEvpj45SGqAqeKmxJA18SfiEVUQ=
 os:
 - linux
 - osx
