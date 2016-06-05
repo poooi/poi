@@ -114,9 +114,9 @@
     },
     "linux" : {
       "target": "7z"
-    },
-    "directories": {
-      "app": "app_compiled"
     }
+  },
+  "directories": {
+    "app": "app_compiled"
   }
 }
