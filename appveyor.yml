@@ -21,7 +21,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: 0CGtR9o1TIDwfW1NfqASIdFfPcfJirWQIS+B0ekSs7nRjHEYHhcLZCWC3Uf1VQKO
-  artifact: /dist\\(win|win-ia32)\\.*\.(7z|exe)/
+  artifact: /dist\\win\\.*\.exe/,/dist\\win\\.*\.7z/,/dist\\win-ia32\\.*\.exe/,/dist\\win-ia32\\.*\.7z/
   draft: true
   prerelease: false
   on:
