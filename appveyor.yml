@@ -1,6 +1,10 @@
 environment:
   nodejs_version: "4.4.5"
 
+platform:
+  - x86
+  - x64
+
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm install
@@ -10,7 +14,7 @@ test_script:
   - npm --version
   - npm test
 
-build:
+build_script:
   - ps: Building
   - npm run build_win
 
