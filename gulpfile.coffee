@@ -31,6 +31,9 @@ gulp.task 'get_flash_all', ['getVersion'], async ->
 gulp.task 'build_plugins', ['getVersion'], async ->
   yield installPluginsAsync poi_version
 
+gulp.task 'install_theme', ['getVersion'], async ->
+  yield installThemeAsync poi_version
+
 gulp.task 'clean', async ->
   yield cleanFiles()
 

@@ -44,6 +44,15 @@ npm run-script deploy
 npm start
 ```
 
+or
+
+```bash
+git clone https://github.com/poooi/poi && cd poi
+npm i
+npm run-script deploy_directly
+electron .
+```
+
 ## Available Plugins
 [plugin-prophet](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
 > Show the result of battle.

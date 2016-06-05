@@ -385,3 +385,7 @@ module.exports.cleanFiles = () ->
     rimraf file, ()->
   rimraf path.join(__dirname, 'app'), ()->
   rimraf path.join(__dirname, 'dist'), ()->
+
+module.exports.installThemeAsync = async ->
+  theme_root = path.join __dirname, 'assets', 'themes'
+  downloadThemesAsync theme_root
