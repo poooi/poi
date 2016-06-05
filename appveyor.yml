@@ -1,12 +1,22 @@
-environment:
-  nodejs_version: "4.4.5"
+version: 6.3.0-b.{build}
 
 platform:
   - x64
 
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
+  - '%USERPROFILE%\.electron'
+
+init:
+  - git config --global core.autocrlf input
+
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node 6 x64
+  - git reset --hard HEAD
+  - npm install npm -g
   - npm install
+  - npm prune
 
 test_script:
   - node --version
