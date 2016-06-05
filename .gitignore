@@ -41,7 +41,7 @@ node_modules
 
 # poi build directory
 build/*
-app/
+app_compiled/
 dist/
 
 # icon

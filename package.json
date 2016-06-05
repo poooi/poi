@@ -8,7 +8,7 @@
     "deploy": "gulp build && gulp get_flash",
     "deploy_directly": "gulp install_theme && gulp get_flash",
     "build": "gulp build && gulp get_flash_all && build",
-    "start": "electron ./app",
+    "start": "electron ./app_compiled",
     "start_directly": "electron .",
     "clean": "gulp clean",
     "update": "gulp update"
@@ -109,10 +109,14 @@
       ]
     },
     "win": {
-      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true"
+      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true",
+      "msi": true
     },
     "linux" : {
       "target": "7z"
+    },
+    "directories": {
+      "app": "app_compiled"
     }
   }
 }

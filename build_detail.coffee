@@ -350,7 +350,7 @@ module.exports.installPluginsAsync = async (poi_version) ->
 module.exports.buildAsync = async (poi_version, dontRemove) ->
   build_root = path.join __dirname, build_dir_name
   download_dir = path.join build_root, download_dir_name
-  building_root = path.join __dirname, "app"
+  building_root = path.join __dirname, 'app_compiled'
 
   fs.removeSync building_root if !dontRemove
 
@@ -383,7 +383,7 @@ module.exports.getFlashAllAsync = async (poi_version) ->
 module.exports.cleanFiles = () ->
   for file in glob.sync(path.join __dirname, "build", "!(icon)*")
     rimraf file, ()->
-  rimraf path.join(__dirname, 'app'), ()->
+  rimraf path.join(__dirname, 'app_compiled'), ()->
   rimraf path.join(__dirname, 'dist'), ()->
 
 module.exports.installThemeAsync = async ->
