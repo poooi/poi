@@ -53,6 +53,9 @@ npm run deploy_directly
 npm run start_directly
 ```
 
+You could add the `ELECTRON_MIRROR` enviroment variable to accelerate the download of `electron-prebulit`
+
+
 ## Available Plugins
 [plugin-prophet](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
 > Show the result of battle.
