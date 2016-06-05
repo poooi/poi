@@ -1,5 +1,5 @@
 {$, $$, _, React, ReactBootstrap, FontAwesome, ROOT, POI_VERSION, CONST} = window
-{Grid, Col, Button, ButtonGroup, Input} = ReactBootstrap
+{Grid, Col, Button, ButtonGroup} = ReactBootstrap
 Divider = require './divider'
 path = require 'path-extra'
 {openExternal} = require('electron').shell
