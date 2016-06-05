@@ -1,7 +1,7 @@
 {
   "name": "poi",
   "version": "6.3.0-beta.0",
-  "description": "KanColle Browser Tool",
+  "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
