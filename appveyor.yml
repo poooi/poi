@@ -15,7 +15,6 @@ test_script:
   - npm test
 
 build_script:
-  - ps: Building
   - npm run build_win
 
 deploy:

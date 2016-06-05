@@ -1,6 +1,6 @@
-language: cpp
-env:
-- NODE_VERSION="5.3"
+language: node_js
+node_js:
+  "4.2"
 os:
 - linux
 - osx
@@ -19,8 +19,19 @@ install:
 - npm install
 before_script:
 - export TRAVIS=1
-- npm install -g gulp
-- gulp install
+- npm install
 script:
-- gulp build
-- gulp build_plugins
+- npm run build
+before_deploy:
+  - export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
+  - export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
+  - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
+deploy:
+  provider: releases
+  api_key: "Tl98TtIZUH3LgCVXyEx1rqXa0rHQ/mHpAjnFDKtLZDvImND22a1cGGbbvwb+r1knQokH+MEF4p+PmtoRyQjNQXX6T/keiI/uhG6qo6MWfjZxvSoANvwMO/GWJ2oDjYml5gW9sSZ6nVrw9JySxituujLgVR681Sod40lOKmE5FUg="
+  file:
+    - "RELEASE_PKG_FILE_OSX"
+    - "RELEASE_PKG_FILE_Linux"
+  skip_cleanup: true
+  on:
+    tags: true
