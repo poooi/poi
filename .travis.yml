@@ -1,6 +1,6 @@
 language: node_js
-node_js:
-  "4.2"
+env:
+- NODE_VERSION="5.3"
 os:
 - linux
 - osx
