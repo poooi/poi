@@ -4,14 +4,24 @@ env:
 os:
 - linux
 - osx
+sudo: required
+dist: trusty
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq             ;
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+     sudo add-apt-repository ppa:ubuntu-wine/ppa -y;
+     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF;
+     echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list;
+     sudo apt-get update;
+     sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils;
+     sudo apt-get install --no-install-recommends -y wine1.8;
+     sudo apt-get install --no-install-recommends -y mono-devel ca-certificates-mono;
+     sudo apt-get install --no-install-recommends -y osslsigncode
+     sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
+     sudo apt-get install -y p7zip-full;
   fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew update                         ;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y p7zip-full  ;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew install p7zip                  ;
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then
+     brew update;
+     brew install p7zip;
   fi
 - git clone https://github.com/creationix/nvm.git /tmp/.nvm; source /tmp/.nvm/nvm.sh;
   nvm install $NODE_VERSION; nvm use --delete-prefix $NODE_VERSION;
@@ -22,9 +32,14 @@ before_script:
 - npm install
 script:
 - npm run build
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    npm run build_win;
+  fi
 before_deploy:
-- export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
-- export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
+- export RELEASE_PKG_FILE_OSX = $(ls dist/osx/*.dmg)
+- export RELEASE_PKG_FILE_Linux = $(ls dist/linux/*.7z)
+- export RELEASE_PKG_FILE_WIN_IA32 = $(ls dist/win-ia32/*)
+- export RELEASE_PKG_FILE_WIN_X64 = $(ls dist/win/*)
 - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
 cache:
   directories:
@@ -35,6 +50,8 @@ deploy:
   file:
     - "$RELEASE_PKG_FILE_OSX"
     - "$RELEASE_PKG_FILE_Linux"
+    - "$RELEASE_PKG_FILE_WIN_IA32"
+    - "$RELEASE_PKG_FILE_WIN_X64"
   skip_cleanup: true
   on:
     tags: true
