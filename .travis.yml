@@ -1,10 +1,12 @@
 language: node_js
-node_js:
-  "4.2"
+env:
+- NODE_VERSION="5.3"
 os:
 - linux
 - osx
 before_install:
+- if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN} ;
+  fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq             ;
   fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew update                         ;
@@ -23,15 +25,15 @@ before_script:
 script:
 - npm run build
 before_deploy:
-  - export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
-  - export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
-  - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
+- export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
+- export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
+- echo "deploying $RELEASE_PKG_FILE to GitHub releases"
 deploy:
   provider: releases
-  api_key: "Tl98TtIZUH3LgCVXyEx1rqXa0rHQ/mHpAjnFDKtLZDvImND22a1cGGbbvwb+r1knQokH+MEF4p+PmtoRyQjNQXX6T/keiI/uhG6qo6MWfjZxvSoANvwMO/GWJ2oDjYml5gW9sSZ6nVrw9JySxituujLgVR681Sod40lOKmE5FUg="
+  api_key: "$GH_TOKEN"
   file:
-    - "RELEASE_PKG_FILE_OSX"
-    - "RELEASE_PKG_FILE_Linux"
+    - "$RELEASE_PKG_FILE_OSX"
+    - "$RELEASE_PKG_FILE_Linux"
   skip_cleanup: true
   on:
     tags: true
