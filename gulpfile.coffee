@@ -5,7 +5,7 @@ async = Promise.coroutine
 gulp = require 'gulp'
 
 {log} = require './lib/utils'
-{buildAsync, installPluginsAsync, getFlashAsync, getFlashAllAsync, cleanFiles} = require './build_detail'
+{buildAsync, installPluginsAsync, getFlashAsync, getFlashAllAsync, cleanFiles, installThemeAsync} = require './build_detail'
 
 package_json = require './package.json'
 
