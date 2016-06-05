@@ -328,7 +328,7 @@ installPluginsTo = async (plugin_names, install_root, tarball_root) ->
 
 module.exports.installPluginsAsync = async (poi_version) ->
   build_root = path.join __dirname, 'dist'
-  building_root = path.join build_root, "building_#{poi_version}"
+  building_root = path.join build_root, "plugins"
   release_dir = build_root
 
   packages = fs.readJsonSync plugin_json_path
