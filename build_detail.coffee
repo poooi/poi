@@ -352,7 +352,8 @@ module.exports.buildAsync = async (poi_version, dontRemove) ->
   download_dir = path.join build_root, download_dir_name
   building_root = path.join __dirname, 'app_compiled'
 
-  fs.removeSync building_root if !dontRemove
+  try
+    fs.removeSync building_root if !dontRemove
 
   return if !checkNpmVersion()
 
