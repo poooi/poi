@@ -26,6 +26,9 @@ before_deploy:
 - export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
 - export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
 - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
+cache:
+  directories:
+  - node_modules
 deploy:
   provider: releases
   api_key: "$GH_TOKEN"
