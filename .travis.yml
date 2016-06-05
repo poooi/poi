@@ -17,15 +17,6 @@ cache:
   - node_modules
   - $HOME/.electron
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - libgnome-keyring-dev
-      - icnsutils
-      - clang-3.8
-
 install:
   - nvm install 6
   - npm install
