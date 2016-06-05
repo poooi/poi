@@ -23,7 +23,10 @@
     "Browser",
     "Tool"
   ],
-  "author": "Poi contributors",
+  "author": {
+    "name": "Magica",
+    "email": "readme.md@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/poooi/poi/issues"
