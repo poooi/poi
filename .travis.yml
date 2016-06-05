@@ -1,8 +1,6 @@
 language: node_js
 env:
 - NODE_VERSION="5.3"
-global:
-  secure: cVosDSDwzYohC0iXNYZYcz6mM64WPmqyii3MnxfJO4oHHc3EtsaskB7ThKoY+lQlROidAQTfqGv+beWZjtp9OBbo3ricGK92sFbzP+QCZcFmKepzeHSVe5lL6xxJfA3QdE4r33WpD0679tpApEvpj45SGqAqeKmxJA18SfiEVUQ=
 os:
 - linux
 - osx
@@ -30,10 +28,10 @@ before_deploy:
 - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
 deploy:
   provider: releases
-  api_key: Tl98TtIZUH3LgCVXyEx1rqXa0rHQ/mHpAjnFDKtLZDvImND22a1cGGbbvwb+r1knQokH+MEF4p+PmtoRyQjNQXX6T/keiI/uhG6qo6MWfjZxvSoANvwMO/GWJ2oDjYml5gW9sSZ6nVrw9JySxituujLgVR681Sod40lOKmE5FUg=
+  api_key: oKj1Ka9stU5QNNjPuw+640olio0bigasVzERz8C23AS7TnVHh6AXJ4GvgNxP0aoEMpkslxIHjqn9x86BALRiYlBqtMamxl77w4RlkqJxeMhmY2iVer1+8txHWnDac229ycLwVQ5ErJGdLeB4Sr82xTazMv3jVxnStXyt5+PZ6Cs=
   file:
-  - RELEASE_PKG_FILE_OSX
-  - RELEASE_PKG_FILE_Linux
+    - "${RELEASE_PKG_FILE_OSX}"
+    - "${RELEASE_PKG_FILE_Linux}"
   skip_cleanup: true
   on:
     tags: true
