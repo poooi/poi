@@ -18,9 +18,7 @@ cache:
   - $HOME/.electron
 
 install:
-  - nvm install 6
   - npm install
-  - npm prune
 
 before_script:
   - export TRAVIS=1
