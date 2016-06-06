@@ -266,35 +266,6 @@ checkNpmVersion = ->
   else
     true
 
-packageAppAsync = async (building_root, dontInstallDeps) ->
-  tar_path = path.join building_root, "app_stage1.tar"
-  stage1_app = path.join building_root, 'stage1'
-  stage2_app = building_root
-  theme_root = path.join stage1_app, 'assets', 'themes'
-  try
-    fs.removeSync stage1_app
-  fs.ensureDirSync stage1_app
-  fs.ensureDirSync stage2_app
-  fs.ensureDirSync path.join stage1_app, 'node_modules'
-  # Stage1: Everything downloaded and translated
-  yield gitArchiveAsync tar_path, stage1_app
-  yield downloadThemesAsync theme_root
-  yield translateCoffeeAsync(stage1_app)
-  yield npmInstallAsync(stage1_app, ['--production']) if !dontInstallDeps
-
-  # Stage2: Filtered copy
-  yield filterCopyAppAsync stage1_app, stage2_app
-
-  try
-    fs.removeSync stage1_app
-  packagePath = path.join(stage2_app, 'package.json')
-  packageData = fs.readJsonSync packagePath
-  delete packageData.build
-  delete packageData.devDependencies
-  fs.removeSync packagePath
-  fs.writeJsonSync packagePath, packageData
-  stage2_app
-
 installPluginsTo = async (plugin_names, install_root, tarball_root) ->
   try
     fs.removeSync install_root
@@ -348,16 +319,45 @@ module.exports.installPluginsAsync = async (poi_version) ->
 
 # Build poi for use
 module.exports.buildAsync = async (poi_version, dontRemove) ->
+  return if !checkNpmVersion()
+
   build_root = path.join __dirname, build_dir_name
   download_dir = path.join build_root, download_dir_name
   building_root = path.join __dirname, 'app_compiled'
+  tar_path = path.join building_root, "app_stage1.tar"
+  stage1_app = path.join building_root, 'stage1'
+  stage2_app = building_root
+  theme_root = path.join stage1_app, 'assets', 'themes'
 
+  # Clean files
   try
     fs.removeSync building_root if !dontRemove
+  try
+    fs.removeSync stage1_app
+  fs.ensureDirSync stage1_app
+  fs.ensureDirSync stage2_app
+  fs.ensureDirSync path.join stage1_app, 'node_modules'
 
-  return if !checkNpmVersion()
+  # Stage1: Everything downloaded and translated
+  yield downloadThemesAsync theme_root
+  yield gitArchiveAsync tar_path, stage1_app
+  yield translateCoffeeAsync(stage1_app)
+  yield npmInstallAsync(stage1_app, ['--production']) if !dontRemove
 
-  (yield packageAppAsync building_root, dontRemove)
+  # Stage2: Filtered copy
+  yield filterCopyAppAsync stage1_app, stage2_app
+
+  # Clean files
+  try
+    fs.removeSync stage1_app
+
+  # Rewrite package.json for build
+  packagePath = path.join(stage2_app, 'package.json')
+  packageData = fs.readJsonSync packagePath
+  delete packageData.build
+  delete packageData.devDependencies
+  fs.removeSync packagePath
+  fs.writeJsonSync packagePath, packageData
 
   log "Done."
 
