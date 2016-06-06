@@ -35,13 +35,22 @@ China mainland mirror: [here](http://0u0.moe/poi).
 
 ## Run
 
-First, get the __latest__ __x64__ version of [Electron](https://github.com/atom/electron) and [Node.js](https://nodejs.org).
+First, get the __latest__ __x64__ version of [Node.js](https://nodejs.org).
 
 ```bash
 git clone https://github.com/poooi/poi && cd poi
 npm i
-./node_modules/.bin/gulp install
-/path/to/electron ./
+npm run deploy
+npm start
+```
+
+or
+
+```bash
+git clone https://github.com/poooi/poi && cd poi
+npm i
+npm run deploy_directly
+npm run start_directly
 ```
 
 ## Available Plugins
