@@ -192,6 +192,9 @@ gitArchiveAsync = (tar_path, tgt_dir) ->
     proc.stdout
     .pipe(tar.extract tgt_dir)
     .on('finish', resolve)
+    .on('error', (err) ->
+      log err
+      resolve())
 
 # Run js script
 runScriptAsync = (script_path, args, options) ->

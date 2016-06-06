@@ -34,8 +34,6 @@ before_deploy:
     else
       export RELEASE_PKG_FILE=$(ls dist/osx/*.dmg);
     fi
-  -
-  - echo "$RELEASE_PKG_FILE"
   - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
 
 deploy:
