@@ -19,6 +19,7 @@ child_process = require 'child_process'
 unzip = require 'node-unzip-2'
 glob = require 'glob'
 rimraf = promisify require 'rimraf'
+gitArchive = require 'git-archive'
 
 {log} = require './lib/utils'
 
@@ -178,20 +179,23 @@ changeExt = (src_path, ext) ->
   src_basename = path.basename(src_path, path.extname src_path)
   path.join(src_dir, src_basename+ext)
 
-gitArchiveAsync = (tar_path, tgt_dir) ->
+gitArchiveAsync = async (tar_path, tgt_dir) ->
   log 'Archive file from git..'
   try
     fs.removeSync tar_path
   catch
   try
-    proc = child_process.spawn 'git', ['archive', 'HEAD']
+    yield promisify(gitArchive)
+      commit: 'HEAD'
+      outputPath: tar_path
+      repoPath: __dirname
   catch e
     log e
     log "Error on git archive! Probably you haven't installed git or it does not exist in your PATH."
     process.exit 1
   log 'Archive complete! Extracting...'
-  new Promise (resolve) ->
-    proc.stdout
+  yield new Promise (resolve) ->
+    fs.createReadStream(tar_path)
     .pipe(tar.extract tgt_dir)
     .on('finish', (e) ->
       log 'Extract complete!'
@@ -333,8 +337,8 @@ module.exports.buildAsync = async (poi_version, dontRemove) ->
   build_root = path.join __dirname, build_dir_name
   download_dir = path.join build_root, download_dir_name
   building_root = path.join __dirname, 'app_compiled'
-  tar_path = path.join building_root, "app_stage1.tar"
   stage1_app = path.join building_root, 'stage1'
+  tar_path = path.join stage1_app, "app_stage1.tar"
   stage2_app = building_root
   theme_root = path.join stage1_app, 'assets', 'themes'
 
@@ -348,8 +352,8 @@ module.exports.buildAsync = async (poi_version, dontRemove) ->
   fs.ensureDirSync path.join stage1_app, 'node_modules'
 
   # Stage1: Everything downloaded and translated
-  yield downloadThemesAsync theme_root
   yield gitArchiveAsync tar_path, stage1_app
+  yield downloadThemesAsync theme_root
   yield translateCoffeeAsync(stage1_app)
   yield npmInstallAsync(stage1_app, ['--production']) if !dontRemove
 
