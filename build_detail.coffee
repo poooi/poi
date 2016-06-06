@@ -179,6 +179,7 @@ changeExt = (src_path, ext) ->
   path.join(src_dir, src_basename+ext)
 
 gitArchiveAsync = (tar_path, tgt_dir) ->
+  log 'Archive file from git..'
   try
     fs.removeSync tar_path
   catch
@@ -188,13 +189,18 @@ gitArchiveAsync = (tar_path, tgt_dir) ->
     log e
     log "Error on git archive! Probably you haven't installed git or it does not exist in your PATH."
     process.exit 1
+  log 'Archive complete! Extracting...'
   new Promise (resolve) ->
     proc.stdout
     .pipe(tar.extract tgt_dir)
-    .on('finish', resolve)
+    .on('finish', (e) ->
+      log 'Extract complete!'
+      resolve(e)
+    )
     .on('error', (err) ->
       log err
-      resolve())
+      resolve()
+    )
 
 # Run js script
 runScriptAsync = (script_path, args, options) ->
