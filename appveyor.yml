@@ -26,12 +26,22 @@ test_script:
 build_script:
   - npm run build_win
 
+artifacts:
+  - path: dist\win\*.exe
+    name: x64installer
+  - path: dist\win\*.7z
+    name: x64Archive
+  - path: dist\win-ia32\*.exe
+    name: ia32installer
+  - path: dist\win-ia32\*.7z
+    name: ia32Archive
+
 deploy:
   description: 'editing'
   provider: GitHub
   auth_token:
     secure: 0CGtR9o1TIDwfW1NfqASIdFfPcfJirWQIS+B0ekSs7nRjHEYHhcLZCWC3Uf1VQKO
-  artifact: /dist\\win\\.*\.exe/,/dist\\win\\.*\.7z/,/dist\\win-ia32\\.*\.exe/,/dist\\win-ia32\\.*\.7z/
+  artifact: x64installer, x64Archive, ia32installer, ia32Archive
   draft: true
   prerelease: false
   on:
