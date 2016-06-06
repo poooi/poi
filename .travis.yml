@@ -26,20 +26,3 @@ before_script:
 
 script:
   - npm run build
-
-before_deploy:
-  - if [[ "$TRAVIS_OS_NAME" == "linux"]]
-    then
-      export RELEASE_PKG_FILE=$(ls dist/linux/*.7z);
-    else
-      export RELEASE_PKG_FILE=$(ls dist/osx/*.dmg);
-    fi
-  - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
-
-deploy:
-  provider: releases
-  api_key: "$GH_TOKEN"
-  file: "$RELEASE_PKG_FILE"
-  skip_cleanup: true
-  on:
-    tags: false
