@@ -16,7 +16,13 @@ gulp.task 'getVersion', ->
   poi_version = package_version
   log "*** Start building poi v#{poi_version} ***"
 
-gulp.task 'build', ['getVersion'], async ->
+gulp.task 'deploy', ['getVersion', 'get_flash'], async ->
+  yield buildAsync poi_version
+
+gulp.task 'deploy_directly', ['getVersion', 'get_flash'], async ->
+  yield installThemeAsync poi_version
+
+gulp.task 'build', ['getVersion', 'get_flash_all'], async ->
   yield buildAsync poi_version
 
 gulp.task 'update', ['getVersion'], async ->
@@ -30,9 +36,6 @@ gulp.task 'get_flash_all', ['getVersion'], async ->
 
 gulp.task 'build_plugins', ['getVersion'], async ->
   yield installPluginsAsync poi_version
-
-gulp.task 'install_theme', ['getVersion'], async ->
-  yield installThemeAsync poi_version
 
 gulp.task 'pack_win_release', ['getVersion'], async ->
   yield packWinReleaseAsync poi_version
