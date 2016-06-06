@@ -1,26 +1,45 @@
-language: cpp
-env:
-- NODE_VERSION="5.3"
-os:
-- linux
-- osx
-before_install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq             ;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew update                         ;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y p7zip-full  ;
-  fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew install p7zip                  ;
-  fi
-- git clone https://github.com/creationix/nvm.git /tmp/.nvm; source /tmp/.nvm/nvm.sh;
-  nvm install $NODE_VERSION; nvm use --delete-prefix $NODE_VERSION;
+osx_image: xcode7.3
+
+sudo: required
+dist: trusty
+
+language: c
+
+matrix:
+  include:
+    - os: osx
+    - os: linux
+      env: CC=clang CXX=clang++ npm_config_clang=1
+      compiler: clang
+
+cache:
+  directories:
+  - node_modules
+  - $HOME/.electron
+
 install:
-- npm install
+  - npm install
+
 before_script:
-- export TRAVIS=1
-- npm install -g gulp
-- gulp install
+  - export TRAVIS=1
+  - npm install
+
 script:
-- gulp build
-- gulp build_plugins
+  - npm run build
+
+before_deploy:
+  - if [[ "$TRAVIS_OS_NAME" == "linux"]]
+    then
+      export RELEASE_PKG_FILE=$(ls dist/linux/*.7z);
+    else
+      export RELEASE_PKG_FILE=$(ls dist/osx/*.dmg);
+    fi
+  - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
+
+deploy:
+  provider: releases
+  api_key: "$GH_TOKEN"
+  file: "$RELEASE_PKG_FILE"
+  skip_cleanup: true
+  on:
+    tags: false
