@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "6.3.0-beta.0",
+  "version": "v6.3.0-beta.0-deploy-test.18",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -122,5 +122,6 @@
   },
   "directories": {
     "app": "app_compiled"
-  }
+  },
+  "publish": "onTagOrDraft"
 }
