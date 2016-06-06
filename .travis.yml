@@ -42,4 +42,4 @@ deploy:
   file: "$RELEASE_PKG_FILE"
   skip_cleanup: true
   on:
-    tags: true
+    tags: false

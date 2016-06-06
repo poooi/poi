@@ -41,7 +41,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: 0CGtR9o1TIDwfW1NfqASIdFfPcfJirWQIS+B0ekSs7nRjHEYHhcLZCWC3Uf1VQKO
-  artifact: x64installer, x64Archive, ia32installer, ia32Archive
+  artifact: x64Archive, ia32Archive
   draft: true
   prerelease: false
   on:
