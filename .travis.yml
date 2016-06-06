@@ -28,8 +28,8 @@ script:
   - npm run build
 
 before_deploy:
-  - export RELEASE_PKG_FILE_OSX = $(ls dist/osx/*.dmg)
-  - export RELEASE_PKG_FILE_Linux = $(ls dist/linux/*.7z)
+  - export RELEASE_PKG_FILE_OSX=$(ls dist/osx/*.dmg)
+  - export RELEASE_PKG_FILE_Linux=$(ls dist/linux/*.7z)
   - echo "$RELEASE_PKG_FILE_OSX"
   - echo "$RELEASE_PKG_FILE_Linux"
   - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
