@@ -1,10 +1,18 @@
 {
   "name": "poi",
-  "version": "6.3.0-beta.0",
-  "description": "KanColle Browser Tool",
+  "version": "v6.3.0-beta.0",
+  "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register"
+    "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
+    "deploy": "gulp deploy",
+    "deploy_directly": "gulp deploy_directly",
+    "build": "gulp build && build",
+    "build_win": "gulp build && build --win --x64 && build --win --ia32 && gulp pack_win_release",
+    "start": "electron ./app_compiled",
+    "start_directly": "electron .",
+    "clean": "gulp clean",
+    "update": "gulp update"
   },
   "repository": {
     "type": "git",
@@ -15,7 +23,10 @@
     "Browser",
     "Tool"
   ],
-  "author": "Magica",
+  "author": {
+    "name": "Magica",
+    "email": "readme.md@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/poooi/poi/issues"
@@ -50,7 +61,7 @@
     "pac-proxy-agent": "^1.0.0",
     "path-extra": "^3.0.0",
     "react": "^15.0.1",
-    "react-bootstrap": "^0.28.5",
+    "react-bootstrap": "0.28.5",
     "react-dom": "^15.0.1",
     "react-fontawesome": "^1.0.0",
     "request": "^2.67.0",
@@ -72,6 +83,45 @@
     "asar": "^0.11.0",
     "node-7z": "^0.4.0",
     "walk": "^2.3.9",
-    "tar-fs": "^1.10.0"
-  }
+    "tar-fs": "^1.10.0",
+    "rimraf": "^2.5.2",
+    "git-archive": "^0.1.4",
+    "electron-prebuilt": "^1.2.1",
+    "electron-builder": "^4.2.2"
+  },
+  "build": {
+    "app-bundle-id": "org.poooi.poi",
+    "app-category-type": "public.app-category.games",
+    "extraResources": [
+      "PepperFlash/${os}-${arch}/"
+    ],
+    "osx": {
+      "icon": "assets/icons/poi.icns",
+      "target": "dmg",
+      "contents": [
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file",
+          "path": "computed path to artifact, do not specify it - will be overwritten"
+        }
+      ]
+    },
+    "win": {
+      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true"
+    },
+    "linux" : {
+      "target": "7z"
+    }
+  },
+  "directories": {
+    "app": "app_compiled"
+  },
+  "publish": "onTagOrDraft"
 }
