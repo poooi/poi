@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "v6.3.0-beta.0",
+  "version": "v6.3.0",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
