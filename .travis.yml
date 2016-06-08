@@ -20,6 +20,11 @@ addons:
       - libgnome-keyring-dev
       - icnsutils
       - graphicsmagick
+      - rpm
+      - bsdtar
+      - ruby-dev
+      - gcc
+      - make
 
 cache:
   directories:
@@ -31,6 +36,7 @@ install:
 
 before_script:
   - export TRAVIS=1
+  - gem install fpm
   - npm install
 
 script:
