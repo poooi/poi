@@ -9,7 +9,7 @@ if config.get('poi.first', '0.0.0') != POI_VERSION
   title = 'README'
   content =
     <div>
-      <p>诶嘿！欢迎使用 poi v{POI_VERSION}！使用之前看看下面！</p>
+      <p>诶嘿！欢迎使用 poi {POI_VERSION}！使用之前看看下面！</p>
       <p style={color: '#FFCCFF', fontWeight: 'bold', fontSize: 'large'}>poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！</p>
       <p>poi 默认不使用代理。更改代理的设置在设置面板中可以找到。</p>
       <div>
