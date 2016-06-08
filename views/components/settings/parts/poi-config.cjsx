@@ -627,6 +627,10 @@ PoiConfig = React.createClass
         <Divider text={__ 'Advanced functionalities'} />
         <Grid>
           <CheckboxLabelConfig
+            label={__ 'Disable Hardware Acceleration'}
+            configName="poi.disableHA"
+            defaultVal=false />
+          <CheckboxLabelConfig
             label={__ 'Editing DMM Cookie\'s Region Flag'}
             configName="poi.enableDMMcookie"
             defaultVal=false />
