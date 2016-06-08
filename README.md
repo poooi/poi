@@ -1,7 +1,7 @@
 ![Header](https://raw.githubusercontent.com/poooi/poi/master/assets/img/header.png)
 
 [![Build Status](https://travis-ci.org/poooi/poi.svg?branch=master)](https://travis-ci.org/poooi/poi)
-[![Build status](https://ci.appveyor.com/api/projects/status/bpa1dvvjt33xxx5n?svg=true)](https://ci.appveyor.com/project/magica/poi)
+[![Build status](https://ci.appveyor.com/api/projects/status/apv2xngtej1m17he?svg=true)](https://ci.appveyor.com/project/KochiyaOcean/poi)
 [![Dependencies](https://david-dm.org/poooi/poi.svg)](https://david-dm.org/poooi/poi)
 [![DevDependencies](https://david-dm.org/poooi/poi/dev-status.svg)](https://david-dm.org/poooi/poi#info=devDependencies)
 
