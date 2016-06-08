@@ -117,7 +117,7 @@
       "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true"
     },
     "linux" : {
-      "target": "7z"
+      "target": ["7z", "deb", "rpm", "pacman"]
     }
   },
   "directories": {
