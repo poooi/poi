@@ -21,6 +21,11 @@ shortcut = require './lib/shortcut'
 
 poiIconPath = path.join ROOT, 'assets', 'icons', 'poi.ico'
 
+# Disable HA
+disableHA = config.get 'poi.disableHA', false
+if disableHA
+  app.disableHardwareAcceleration()
+
 # Add shortcut to start menu when os is windows
 app.setAppUserModelId 'org.poooi.poi'
 if process.platform == 'win32' && config.get 'poi.createShortcut', true
