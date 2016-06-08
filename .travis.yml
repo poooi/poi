@@ -19,6 +19,7 @@ addons:
     packages:
       - libgnome-keyring-dev
       - icnsutils
+      - graphicsmagick
 
 cache:
   directories:
