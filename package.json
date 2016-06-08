@@ -86,7 +86,7 @@
     "tar-fs": "^1.10.0",
     "rimraf": "^2.5.2",
     "git-archive": "^0.1.4",
-    "electron-prebuilt": "^1.2.1",
+    "electron-prebuilt": "^1.2.2",
     "electron-builder": "^4.2.2"
   },
   "build": {
