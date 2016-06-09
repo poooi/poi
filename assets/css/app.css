@@ -319,3 +319,24 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 .transparent {
   opacity: 0;
 }
+.navigator {
+  display: flex;
+}
+.navigator-url {
+  flex: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.navigator-url .pad {
+  padding-right: 26px;  /* Fuck theme */
+}
+.navigator-icon {
+  float: right;
+  margin-top: -26px;  /* Fuck theme */
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.navigator-btn {
+  width: 110px;
+}
