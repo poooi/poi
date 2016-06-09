@@ -128,8 +128,7 @@ class NavigatorBar extends React.Component {
     return (
       <div className='navigator'>
         <div className='navigator-url'>
-          <Input className={statusIcon ? 'pad' : ''}
-                 type='text' bsSize='small'
+          <Input type='text' bsSize='small'
                  placeholder={__('Input address')}
                  value={this.state.url}
                  onChange={this.onChangeUrl}
