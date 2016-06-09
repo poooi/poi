@@ -108,7 +108,7 @@ class NavigatorBar extends React.Component {
   render() {
     let {url, status} = this.state
 
-    let statusIcon
+    let statusIcon = <FontAwesome name='check' />
     if (status === wvStatus.Loading) {
       statusIcon = <FontAwesome name='spinner' spin />
     }
@@ -128,8 +128,15 @@ class NavigatorBar extends React.Component {
     return (
       <div className='navigator'>
         <div className='navigator-url'>
-          <Input className={statusIcon ? 'pad' : ''} type='text' bsSize='small' placeholder={__('Input address')} value={this.state.url} onChange={this.onChangeUrl} onKeyDown={this.onKeydown} />
-          {statusIcon ? <Button className='navigator-icon' bsSize='small' disabled>{statusIcon}</Button> : null}
+          <Input className={statusIcon ? 'pad' : ''}
+                 type='text' bsSize='small'
+                 placeholder={__('Input address')}
+                 value={this.state.url}
+                 onChange={this.onChangeUrl}
+                 onKeyDown={this.onKeydown}
+                 addonAfter={
+                   <div className='navigator-icon'>{statusIcon}</div>
+                 }/>
         </div>
         <div className='navigator-btn'>
           <ButtonGroup>

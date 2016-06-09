@@ -169,3 +169,17 @@
 #SettingsView .btn-xs-12 {
   width: 100%;
 }
+#SettingsView .navigator {
+  display: flex;
+}
+#SettingsView .navigator-url {
+  flex: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+#SettingsView .navigator .navigator-url .input-group-addon {
+  padding: 0 6px;
+}
+#SettingsView .navigator-btn {
+  width: 110px;
+}
