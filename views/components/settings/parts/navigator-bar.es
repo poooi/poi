@@ -23,26 +23,34 @@ class NavigatorBar extends React.Component {
     webview.addEventListener('did-start-loading', this.onStartLoading)
     webview.addEventListener('did-stop-loading', this.onStopLoading)
     webview.addEventListener('did-fail-load', this.onFailLoad)
+    webview.addEventListener('will-navigate', this.onWillNavigate)
   }
   componentWillUnmount() {
     webview.removeEventListener('did-start-loading', this.onStartLoading)
     webview.removeEventListener('did-stop-loading', this.onStopLoading)
     webview.removeEventListener('did-fail-load', this.onFailLoad)
+    webview.removeEventListener('will-navigate', this.onWillNavigate)
   }
   // Webview Event
   onStartLoading = (e) => {
     this.setState({
-      status: wvStatus.Loading
+      status: wvStatus.Loading,
     })
   }
   onStopLoading = (e) => {
     this.setState({
-      status: wvStatus.Loaded
+      status: wvStatus.Loaded,
+      url: webview.getURL(),
     })
   }
   onFailLoad = (e) => {
     this.setState({
-      status: wvStatus.Failed
+      status: wvStatus.Failed,
+    })
+  }
+  onWillNavigate = (e) => {
+    this.setState({
+      url: e.url,
     })
   }
   // UI Interaction
