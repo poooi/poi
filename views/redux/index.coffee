@@ -51,7 +51,7 @@ module.exports.reducer = reduceReducers(
 
 # === Actions ===
 
-module.exports.newGameResponse = ({method, path, body, postBody}) -> {
+module.exports.dispatchGameResponse = ({method, path, body, postBody}) -> {
   type: GAME_RESPONSE,
   method, 
   path, 
@@ -59,7 +59,7 @@ module.exports.newGameResponse = ({method, path, body, postBody}) -> {
   postBody, 
 }
 
-module.exports.newGameRequest = ({method, path, body}) -> {
+module.exports.dispatchGameRequest = ({method, path, body}) -> {
   type: GAME_REQUEST,
   method, 
   path, 

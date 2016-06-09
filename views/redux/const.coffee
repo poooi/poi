@@ -1,5 +1,4 @@
 reduceReducers = require 'reduce-reducers'
-INIT_CONST = 'INIT_CONST'
   
 dataFromBody = (body) ->
   $ships: indexify(body.api_mst_ship)
@@ -12,17 +11,6 @@ dataFromBody = (body) ->
   $useitems: indexify(body.api_mst_useitem)
 
 module.exports.reducer = reduceReducers(
-  (state={}, action) ->
-    switch action.type
-      when INIT_CONST
-        return dataFromBody action.body
-    state
-  , 
   listenToResponse '/kcsapi/api_start2', 
     (state={}, {body}) -> dataFromBody body
 )
-
-module.exports.initConst = (body) -> {
-  type: INIT_CONST,
-  body
-}
