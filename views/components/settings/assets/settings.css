@@ -205,3 +205,6 @@
 #SettingsView .navigator-btn {
   width: 110px;
 }
+#SettingsView .navigator-btn button {
+  width: 30px;
+}
