@@ -11,6 +11,7 @@ async = Promise.coroutine
 n7z = require 'node-7z'
 _ = require 'underscore'
 semver = require 'semver'
+babel = require 'babel-core'
 {compile} = require 'coffee-react'
 asar = require 'asar'
 walk = require 'walk'
@@ -237,9 +238,9 @@ filterCopyAppAsync = async (stage1_app, stage2_app) ->
     fs.copyAsync path.join(stage1_app, target), path.join(stage2_app, target),
       clobber: true)
 
-translateCoffeeAsync = (app_dir) ->
+compileToJsAsync = (app_dir, dontRemove) ->
   log "Compiling #{app_dir}"
-  targetExts = ['.coffee', '.cjsx']
+  targetExts = ['.coffee', '.cjsx', '.es']
 
   options =
     followLinks: false
@@ -249,18 +250,22 @@ translateCoffeeAsync = (app_dir) ->
     tasks = []
     walk.walk app_dir, options
     .on 'file', (root, fileStats, next) ->
-      if path.extname(fileStats.name).toLowerCase() in targetExts
+      extname = path.extname(fileStats.name).toLowerCase()
+      if extname in targetExts
         tasks.push (async ->
           src_path = path.join root, fileStats.name
           tgt_path = changeExt src_path, '.js'
           src = yield fs.readFileAsync src_path, 'utf-8'
           try
-            tgt = compile src
+            if extname is '.es'
+              tgt = babel.transform(src, require('./babel.config')).code
+            else
+              tgt = compile src
           catch e
             log "Compiling #{src_path} failed: #{e}"
             return
           yield fs.writeFileAsync tgt_path, tgt
-          yield fs.removeAsync src_path
+          yield fs.removeAsync src_path unless dontRemove
           #log "Compiled #{tgt_path}"
           )()
       next()
@@ -354,7 +359,7 @@ module.exports.buildAsync = async (poi_version, dontRemove) ->
   # Stage1: Everything downloaded and translated
   yield gitArchiveAsync tar_path, stage1_app
   yield downloadThemesAsync theme_root
-  yield translateCoffeeAsync(stage1_app)
+  yield compileToJsAsync(stage1_app, false)
   yield npmInstallAsync(stage1_app, ['--production']) if !dontRemove
 
   # Stage2: Filtered copy
@@ -373,6 +378,9 @@ module.exports.buildAsync = async (poi_version, dontRemove) ->
   fs.writeJsonSync packagePath, packageData
 
   log "Done."
+
+module.exports.compileAsync = async ->
+  yield compileToJsAsync __dirname, true
 
 # Install flash
 module.exports.getFlashAsync = async (poi_version) ->

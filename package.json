@@ -12,7 +12,8 @@
     "start": "electron ./app_compiled",
     "start_directly": "electron .",
     "clean": "gulp clean",
-    "update": "gulp update"
+    "update": "gulp update",
+    "compile": "gulp compile"
   },
   "repository": {
     "type": "git",
