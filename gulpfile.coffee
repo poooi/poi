@@ -5,7 +5,7 @@ async = Promise.coroutine
 gulp = require 'gulp'
 
 {log} = require './lib/utils'
-{buildAsync, installPluginsAsync, getFlashAsync, getFlashAllAsync, cleanFiles, installThemeAsync, packWinReleaseAsync} = require './build_detail'
+{buildAsync, installPluginsAsync, getFlashAsync, getFlashAllAsync, cleanFiles, installThemeAsync, packWinReleaseAsync, compileAsync} = require './build_detail'
 
 package_json = require './package.json'
 
@@ -43,6 +43,8 @@ gulp.task 'pack_win_release', ['getVersion'], async ->
 gulp.task 'clean', async ->
   yield cleanFiles()
 
+gulp.task 'compile', async ->
+  yield compileAsync()
 
 gulp.task 'default', ->
   _gulp = 'gulp'
