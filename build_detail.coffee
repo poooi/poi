@@ -258,7 +258,8 @@ compileToJsAsync = (app_dir, dontRemove) ->
           src = yield fs.readFileAsync src_path, 'utf-8'
           try
             if extname is '.es'
-              tgt = babel.transform(src, require('./babel.config')).code
+              {presets, plugins} = require('./babel.config')
+              tgt = babel.transform(src, {presets, plugins}).code
             else
               tgt = compile src, {bare: true}
           catch e
