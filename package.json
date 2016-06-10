@@ -119,7 +119,7 @@
       "target": ["squirrel", "7z"]
     },
     "linux" : {
-      "target": ["7z", "deb", "rpm", "pacman"]
+      "target": ["7z", "deb"]
     }
   },
   "directories": {
