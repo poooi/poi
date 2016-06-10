@@ -8,7 +8,7 @@
     "deploy": "gulp deploy",
     "deploy_directly": "gulp deploy_directly",
     "build": "gulp build && build",
-    "build_win": "gulp build && build --win --x64 && build --win --ia32 && gulp pack_win_release",
+    "build_win": "gulp build && build --win --x64 && build --win --ia32",
     "start": "electron ./app_compiled",
     "start_directly": "electron .",
     "clean": "gulp clean",
@@ -88,7 +88,7 @@
     "rimraf": "^2.5.2",
     "git-archive": "^0.1.4",
     "electron-prebuilt": "^1.2.2",
-    "electron-builder": "^4.2.2"
+    "electron-builder": "^5.1.0"
   },
   "build": {
     "app-bundle-id": "org.poooi.poi",
@@ -115,7 +115,8 @@
       ]
     },
     "win": {
-      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true"
+      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true",
+      "target": ["squirrel", "7z"]
     },
     "linux" : {
       "target": ["7z", "deb", "rpm", "pacman"]

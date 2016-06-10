@@ -1,4 +1,4 @@
-version: 6.3.0-b.{build}
+version: 6.3.1-b.{build}
 
 platform:
   - x64
