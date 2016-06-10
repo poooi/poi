@@ -260,7 +260,7 @@ compileToJsAsync = (app_dir, dontRemove) ->
             if extname is '.es'
               tgt = babel.transform(src, require('./babel.config')).code
             else
-              tgt = compile src
+              tgt = compile src, {bare: true}
           catch e
             log "Compiling #{src_path} failed: #{e}"
             return
