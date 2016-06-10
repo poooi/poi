@@ -24,7 +24,7 @@ catch e
 # Read saved config
 if !config?
   try
-    fs.accessSync defaultConfigPath, fs.R_OK | fs.W_OK
+    fs.accessSync defaultConfigPath, fs.R_OK
     config = CSON.parseCSONFile defaultConfigPath
     dbg.log "Config loaded from: #{defaultConfigPath}"
   catch e
