@@ -26,6 +26,7 @@ addons:
 cache:
   directories:
   - node_modules
+  - app_compiled/node_modules
   - $HOME/.electron
 
 install:

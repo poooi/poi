@@ -361,10 +361,10 @@ module.exports.buildAsync = async (poi_version, dontRemove) ->
   yield gitArchiveAsync tar_path, stage1_app
   yield downloadThemesAsync theme_root
   yield compileToJsAsync(stage1_app, false)
-  yield npmInstallAsync(stage1_app, ['--production']) if !dontRemove
 
   # Stage2: Filtered copy
   yield filterCopyAppAsync stage1_app, stage2_app
+  yield npmInstallAsync(stage2_app, ['--production']) if !dontRemove
 
   # Clean files
   try
