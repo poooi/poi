@@ -36,14 +36,6 @@ ControlledTabArea = require './tabarea'
 {PoiControl} = require './components/info/control'
 {ModalTrigger} = require './components/etc/modal'
 
-# Set webview muted
-muter = setInterval =>
-  try
-    if config.get 'poi.content.muted', false
-      $('kan-game webview').setAudioMuted true
-    clearInterval muter
-, 1000
-
 # Custom css injector
 CustomCssInjector = React.createClass
   render: ->

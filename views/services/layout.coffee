@@ -225,6 +225,7 @@ remote.getCurrentWebContents().on 'dom-ready', ->
       div.style["pointer-events"] = "none";
       document.body.appendChild(div);
     """
+  $('kan-game webview').setAudioMuted(true) if config.get 'poi.content.muted', false
   $('kan-game webview').loadURL config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
   # Editing DMM Cookie's Region Flag
