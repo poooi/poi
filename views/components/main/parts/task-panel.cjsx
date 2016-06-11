@@ -145,17 +145,17 @@ resetQuestRecord = (types, resetInterval, id, q) ->
       v.init = 0 unless Number.isInteger(v.init)
       q[k].count = v.init
       q.count += v.init
-resetQuestRecordDaily = resetQuestRecord.bind(null, [2, 4, 5], 1)
-resetQuestRecordWeekly = resetQuestRecord.bind(null, [3], 2)
-resetQuestRecordMonthly = resetQuestRecord.bind(null, [6], 3)
+resetQuestRecordDaily = resetQuestRecord.bind(null, [1, 8, 9], 1)
+resetQuestRecordWeekly = resetQuestRecord.bind(null, [2], 2)
+resetQuestRecordMonthly = resetQuestRecord.bind(null, [3], 3)
 resetTask = (types, resetInterval, tasks, idx, task) ->
   if task.type in types
     tasks[idx] = Object.clone(emptyTask)
   else if questGoals[task.id]? and questGoals[task.id].resetInterval is resetInterval
     task.count = 0
-resetTaskDaily = resetTask.bind(null, [2, 4, 5], 1)
-resetTaskWeekly = resetTask.bind(null, [3], 2)
-resetTaskMonthly = resetTask.bind(null, [6], 3)
+resetTaskDaily = resetTask.bind(null, [1, 8, 9], 1)
+resetTaskWeekly = resetTask.bind(null, [2], 2)
+resetTaskMonthly = resetTask.bind(null, [3], 3)
 updateQuestRecord = (e, options, delta) ->
   flag = false
   for id, q of questRecord
