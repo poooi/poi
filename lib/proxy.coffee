@@ -154,7 +154,7 @@ class Proxy extends EventEmitter
       cacheFile = null
       if isStaticResource(parsed.pathname, parsed.hostname)
         cacheFile = findHack(parsed.pathname) || findCache(parsed.pathname, parsed.hostname)
-      reqBody = new Buffer(0)
+      reqBody = Buffer.alloc(0)
       # Get all request body
       req.on 'data', (data) ->
         reqBody = Buffer.concat [reqBody, data]
