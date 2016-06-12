@@ -588,7 +588,7 @@ class PluginManager
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
         plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
       catch error
-        console.error error
+        console.error "[Plugin #{plugin.name}] ", error.stack
         pluginMain = isBroken: true
       _.extend pluginMain, plugin
       plugin = pluginMain
