@@ -3,12 +3,12 @@
 
 {reducer: rootReducer, onGameRequest, onGameResponse} = require('../redux')
 
+cachePosition = '_storeCache'
+targetPaths = ['const', 'info']
 storeCache = try
     JSON.parse(localStorage.getItem(cachePosition) || '{}')
   catch
     {}
-cachePosition = '_storeCache'
-targetPaths = ['const', 'info']
 
 ### Utils ###
 
