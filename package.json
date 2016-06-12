@@ -73,7 +73,8 @@
     "windows-shortcuts-appid": "^0.3.2",
     "redux": "^3.3.1",
     "react-redux": "^4.4.0",
-    "immutable": "^3.7.6"
+    "immutable": "^3.7.6",
+    "moment": "^2.13.0"
   },
   "devDependencies": {
     "node-unzip-2": "^0.2.1",
