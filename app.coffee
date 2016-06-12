@@ -126,4 +126,4 @@ ipcMain.on 'refresh-shortcut', ->
 
 # Uncaught error
 process.on 'uncaughtException', (e) ->
-  error e
+  error e.stack
