@@ -11,6 +11,8 @@ dataFromBody = (body) ->
   $useitems: indexify(body.api_mst_useitem)
 
 module.exports.reducer = reduceReducers(
+  initAs({})
+  ,
   listenToResponse '/kcsapi/api_start2', 
     (state={}, {body}) -> dataFromBody body
 )

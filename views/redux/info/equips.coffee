@@ -35,7 +35,7 @@ module.exports.reducer = reduceReducers(
         mergeIndexifiedEquips state, api_slotitems
   ),
   listenToResponse('/kcsapi/api_req_kousyou/destroyitem2',
-    (state, {postBody: {api_slotitem_ids}) ->
+    (state, {postBody: {api_slotitem_ids}}) ->
       removeEquips state, api_slotitem_ids.split(',')
   ),
   listenToResponse('/kcsapi/api_req_kaisou/lock',
@@ -65,4 +65,5 @@ module.exports.reducer = reduceReducers(
         state = Object.assign {}, state
         state[api_after_slot.api_id] = extendSlotitem api_after_slot
       state
+  ),
 )

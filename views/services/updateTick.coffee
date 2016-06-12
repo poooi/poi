@@ -1,3 +1,3 @@
-{updateTick} = require './redux/tick'
+{updateTick} = require '../redux/tick'
 
 window.setInterval updateTick, 1000

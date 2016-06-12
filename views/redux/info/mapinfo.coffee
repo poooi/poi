@@ -7,7 +7,7 @@ module.exports.reducer = reduceReducers(
     (state, {body}) -> indexify body
   ),
   listenToResponse('/kcsapi/api_req_map/select_eventmap_rank', 
-    (state, {postBody: {api_maparea_id, api_map_no, api_rank}}) -> indexify body
+    (state, {postBody: {api_maparea_id, api_map_no, api_rank}}) ->
       id = "#{api_maparea_id}#{api_map_no}"
       state = state.slice()
       state[id] = Object.assign {}, state[id], 

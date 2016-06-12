@@ -1,7 +1,7 @@
 {createStore} = require 'redux'
 {observer, observe} = require 'redux-observers'
 
-{reducer: rootReducer, dispatchGameRequest, dispatchGameResponse} = require('../redux')
+{reducer: rootReducer, onGameRequest, onGameResponse} = require('../redux')
 
 storeCache = try
     JSON.parse(localStorage.getItem(cachePosition) || '{}')
@@ -89,17 +89,15 @@ window.getStore = (path) ->
   state
 
 window.addEventListener 'game.request', (e) ->
-  dispatchGameRequest e
+  store.dispatch onGameRequest e.detail
 
 window.addEventListener 'game.response', (e) ->
-  dispatchGameResponse e
+  store.dispatch onGameResponse e.detail
 
 # When any targetPath is modified, store it into localStorage
 # observe(store, [myObserver, ...myOtherObservers])
-observe.apply([], 
-  [store].concat(
-    targetPaths.map((path) -> autoCacheObserver(store, path))
-  )
+observe(store,
+  targetPaths.map((path) -> autoCacheObserver(store, path))
 )
 
 module.exports.store = store

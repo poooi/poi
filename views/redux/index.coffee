@@ -6,26 +6,30 @@ GAME_REQUEST = 'GAME_REQUEST'
 
 # === Utils ===
 
-window.initAs = (initVal) -> (state, action) ->
-  initVal if !state? else state
+window.initAs = (initVal) -> (state=initVal, action) ->
+  state
 
-window.listenToResponse = (path, callback) -> (state, action) ->
-  switch action.type
-    when GAME_RESPONSE
-      if (typeof(path) == 'string' && path == action.path) ||
-         (typeof(path) == 'array' && path in action.path)
-        result = callback(state, action)
-        return result if result
-  return state
+window.listenToResponse = (path, callback) ->
+  if typeof path == 'string'
+    path = [path]
+  (state, action) ->
+    switch action.type
+      when GAME_RESPONSE
+        if action.path in path
+          result = callback(state, action)
+          return result if result
+    return state
 
-window.listenToRequest = (path, callback) -> (state, action) ->
-  switch action.type
-    when GAME_REQUEST
-      if (typeof(path) == 'string' && path == action.path) ||
-         (typeof(path) == 'array' && path in action.path)
-        result = callback(state, action)
-        return result if result
-  return state
+window.listenToRequest = (path, callback) ->
+  if typeof path == 'string'
+    path = [path]
+  (state, action) ->
+    switch action.type
+      when GAME_REQUEST
+        if action.path in path
+          result = callback(state, action)
+          return result if result
+    return state
 
 window.indexify = (array, key='api_id') ->
   if typeof key == 'string'
@@ -51,7 +55,7 @@ module.exports.reducer = reduceReducers(
 
 # === Actions ===
 
-module.exports.dispatchGameResponse = ({method, path, body, postBody}) -> {
+module.exports.onGameResponse = ({method, path, body, postBody}) -> {
   type: GAME_RESPONSE,
   method, 
   path, 
@@ -59,7 +63,7 @@ module.exports.dispatchGameResponse = ({method, path, body, postBody}) -> {
   postBody, 
 }
 
-module.exports.dispatchGameRequest = ({method, path, body}) -> {
+module.exports.onGameRequest = ({method, path, body}) -> {
   type: GAME_REQUEST,
   method, 
   path, 
