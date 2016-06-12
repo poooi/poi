@@ -10,8 +10,7 @@ querystring = require 'querystring'
 _ = require 'underscore'
 caseNormalizer = require 'header-case-normalizer'
 fs = Promise.promisifyAll require 'fs-extra'
-request = Promise.promisifyAll require 'request'
-requestAsync = Promise.promisify request, multiArgs: true
+request = require 'request'
 mime = require 'mime'
 socks = require 'socks5-client'
 SocksHttpAgent = require 'socks5-http-client/lib/Agent'
@@ -186,7 +185,7 @@ class Proxy extends EventEmitter
                 'Server': 'nginx'
                 'Content-Length': data.length
                 'Content-Type': mime.lookup cacheFile
-                # 'Last-Modified': stats.mtime.toGMTString()
+                'Last-Modified': stats.mtime.toGMTString()
               res.end data
           # Enable retry for game api
           else
@@ -201,10 +200,12 @@ class Proxy extends EventEmitter
                 reqBody = JSON.stringify(querystring.parse reqBody.toString())
                 self.emit 'network.on.request', req.method, [domain, pathname, requrl], reqBody
                 # Create remote request
-                [response, body] = yield requestAsync resolve options
+                [response, body] = yield new Promise (promise_resolve, promise_reject) ->
+                  request(resolve(options), (err, res_response, res_body) ->
+                    promise_resolve([res_response, res_body]) if !err?
+                    promise_reject(err)
+                  ).pipe(res)
                 success = true
-                res.writeHead response.statusCode, response.headers
-                res.end body
                 # Emit response events to plugins
                 try
                   resolvedBody = yield resolveBody response.headers['content-encoding'], body
@@ -218,6 +219,7 @@ class Proxy extends EventEmitter
                 else
                   self.emit 'network.error', [domain, pathname, requrl], response.statusCode
               catch e
+                success = false
                 error "Api failed: #{req.method} #{req.url} #{e.toString()}"
                 self.emit 'network.error.retry', [domain, pathname, requrl], i + 1 if i < retries
               if success || !isKancolleGameApi pathname
