@@ -3,13 +3,13 @@
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
 
-require './services/initRedux'
 require './services/update'
 require './services/layout'
 require './services/welcome'
 require './services/doyouknow'
 require './services/modernization-delta'
 require './services/updateTick'
+require './services/developmentProphecy'
 
 refreshFlash = ->
   $('kan-game webview').executeJavaScript """

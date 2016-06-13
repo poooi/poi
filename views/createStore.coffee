@@ -1,7 +1,7 @@
 {createStore} = require 'redux'
 {observer, observe} = require 'redux-observers'
 
-{reducer: rootReducer, onGameRequest, onGameResponse} = require('../redux')
+{reducer: rootReducer, onGameRequest, onGameResponse} = require('./redux')
 
 cachePosition = '_storeCache'
 targetPaths = ['const', 'info']

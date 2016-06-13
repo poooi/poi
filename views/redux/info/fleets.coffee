@@ -33,9 +33,9 @@ module.exports.reducer = reduceReducers(
       decks
   ),
   listenToResponse('/kcsapi/api_req_kousyou/destroyship',
-    (state, {postBody: {api_deck_id}, body}) ->
+    (state, {postBody: {api_deck_id, api_ship_id}, body}) ->
       decks = state
-      removeId = parseInt(postBody.api_ship_id)
+      removeId = parseInt(api_ship_id)
       for deck, i in decks
         for shipId, j in deck.api_ship
           if shipId == removeId

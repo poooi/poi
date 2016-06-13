@@ -32,7 +32,7 @@ module.exports.reducer = reduceReducers(
   listenToResponse('/kcsapi/api_req_kousyou/getship',
     (state, {body: {api_slotitem}}) ->
       if api_slotitem?
-        mergeIndexifiedEquips state, api_slotitems
+        mergeIndexifiedEquips state, api_slotitem
   ),
   listenToResponse('/kcsapi/api_req_kousyou/destroyitem2',
     (state, {postBody: {api_slotitem_ids}}) ->

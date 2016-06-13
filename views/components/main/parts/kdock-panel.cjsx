@@ -5,8 +5,6 @@ __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 {MaterialIcon} = require '../../etc/icon'
 
-showItemDevResultDelay = if window.config.get('poi.delayItemDevResult', false) then 6200 else 500
-
 
 CountdownTimer = require './countdown-timer'
 CountdownLabel = React.createClass
@@ -84,33 +82,6 @@ KdockPanel = React.createClass
         @canNotify = false
       when '/kcsapi/api_port/port'
         @canNotify = true
-      when '/kcsapi/api_get_member/require_info',\
-           '/kcsapi/api_get_member/kdock',\
-           '/kcsapi/api_req_kousyou/getship'
-        kdocks = body
-        if path is '/kcsapi/api_get_member/require_info' or path is '/kcsapi/api_req_kousyou/getship'
-          kdocks = body.api_kdock
-        docks = kdocks.map (kdock) -> new KDockInfo(kdock)
-        if !_.isEqual docks, @state.docks
-          @setState
-            docks: docks
-      when '/kcsapi/api_req_kousyou/createship_speedchange'
-        console.assert body.api_result == 1, "body.api_result isn't 1: ", body
-        docks = @state.docks.slice()    # elements still referring to @state
-        idx = postBody.api_kdock_id - 1
-        docks[idx] = docks[idx].clone() # make a copy of the one to be modified
-        docks[idx].completeTime = 0
-        @setState
-          docks: docks
-      when '/kcsapi/api_req_kousyou/createitem'
-        if body.api_create_flag == 0
-          setTimeout warn.bind(@, __("The development of %s was failed.",
-            "#{window.i18n.resources.__ $slotitems[parseInt(body.api_fdata.split(',')[1])].api_name}")),
-            showItemDevResultDelay
-        else if body.api_create_flag == 1
-          setTimeout success.bind(@, __("The development of %s was successful.",
-            "#{window.i18n.resources.__ $slotitems[body.api_slot_item.api_slotitem_id].api_name}")),
-            showItemDevResultDelay
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->

@@ -5,6 +5,7 @@ debugger if dbg.h.brk?.isEnabled()
 {config, toggleModal} = window
 fs = require 'fs-extra'
 path = require 'path-extra'
+{Provider} = require 'react-redux'
 
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
@@ -28,6 +29,9 @@ require('module').globalPaths.push(path.join(ROOT, "node_modules"))
 # poi menu
 require './components/etc/menu'
 
+# Create redux store and add event listener
+{store} = require './createStore'
+
 # Main tabbed area
 ControlledTabArea = require './tabarea'
 
@@ -47,5 +51,9 @@ ReactDOM.render <PoiAlert id='poi-alert' />, $('poi-alert')
 ReactDOM.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
 ReactDOM.render <PoiControl />, $('poi-control')
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
-ReactDOM.render <ControlledTabArea />, $('poi-nav-tabs')
+ReactDOM.render(
+  <Provider store={store}>
+    <ControlledTabArea />
+  </Provider>,
+  $('poi-nav-tabs'))
 ReactDOM.render <CustomCssInjector />, $('poi-css-injector')
