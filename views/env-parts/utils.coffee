@@ -36,3 +36,9 @@ window.getCondStyle = (cond) ->
   else
     s += '0'
   s += if isDarkTheme then ' dark' else ' light'
+
+window.pickId = (collection={}, keys) ->
+  res = {}
+  for key in keys
+    res[key] = collection[key]
+  res

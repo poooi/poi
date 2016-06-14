@@ -1,3 +1,3 @@
 {updateTick} = require '../redux/tick'
 
-window.setInterval updateTick, 1000
+window.setInterval (-> dispatch updateTick()), 1000

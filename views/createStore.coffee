@@ -73,7 +73,7 @@ autoCacheObserver = (store, path) ->
 ### Executing code ###
 
 store = createStore rootReducer, storeCache
-
+window.dispatch = store.dispatch
 
 ### Listeners and exports ###
 

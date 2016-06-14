@@ -28,7 +28,7 @@ module.exports.reducer = reduceReducers(
   listenToResponse([
       '/kcsapi/api_get_member/material', 
       '/kcsapi/api_port/port', 
-    ], (state, {body}) -> 
+    ], (state, {path, body}) -> 
       if path == '/kcsapi/api_port/port'
         body = body.api_material
       pluck body, 'api_value'
@@ -62,7 +62,7 @@ module.exports.reducer = reduceReducers(
   listenToResponse([
       '/kcsapi/api_req_nyukyo/start', 
       '/kcsapi/api_req_nyukyo/speedchange',
-    ], (state, {body}) -> 
+    ], (state, {path, body}) -> 
       if path == '/kcsapi/api_req_nyukyo/start' &&
           parseInt(body.api_highspeed) != 1
         return

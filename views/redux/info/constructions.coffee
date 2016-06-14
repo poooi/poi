@@ -12,7 +12,7 @@ module.exports.reducer = reduceReducers(
       '/kcsapi/api_get_member/require_info',
       '/kcsapi/api_get_member/kdock',
       '/kcsapi/api_req_kousyou/getship',
-    ], (state, {body}) ->
+    ], (state, {path, body}) ->
       if path in ['/kcsapi/api_get_member/require_info', 
           '/kcsapi/api_req_kousyou/getship']
         body = body.api_kdock

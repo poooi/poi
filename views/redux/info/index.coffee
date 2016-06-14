@@ -7,11 +7,11 @@ module.exports.reducer = reduceReducers(
     ships: require('./ships').reducer
     fleets: require('./fleets').reducer
     equips: require('./equips').reducer
-    repair: require('./repair').reducer
-    construction: require('./construction').reducer
-    #expedition: require('./expedition').reducer
+    repairs: require('./repairs').reducer
+    constructions: require('./constructions').reducer
+    #expeditions: require('./expeditions').reducer
     resources: require('./resources').reducer
     #quests: require('./quests').reducer
-    mapinfo: require('./mapinfo').reducer
+    maps: require('./maps').reducer
   ),
 )
