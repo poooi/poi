@@ -1,6 +1,8 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {join} = require 'path-extra'
+{pluck} = require 'underscore'
+{connect} = require 'react-redux'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 
@@ -64,33 +66,14 @@ class MissionInfo
     else
       __ 'Ready'
 
-MissionPanel = React.createClass
-  getInitialState: ->
-    missions: [new MissionInfo, new MissionInfo, new MissionInfo]
-  handleResponse: (e) ->
-    {path, body, postBody} = e.detail
-    switch path
-      when '/kcsapi/api_port/port'
-        missions = body.api_deck_port.slice(1).map (deck) ->
-          mi = new MissionInfo deck.api_name
-          switch deck.api_mission[0]
-            when 0 then mi.setInPort()
-            when 1, 2, 3  # 1: In mission  2: Just returned  3: Returning
-              mi.setInMission deck.api_mission[1], deck.api_mission[2]
-          mi
-        if !_.isEqual missions, @state.missions
-          @setState
-            missions: missions
-      when '/kcsapi/api_req_mission/start', '/kcsapi/api_req_mission/return_instruction'
-        missions = @state.missions.slice()
-        idx = postBody.api_deck_id - 2
-        missions[idx] = new MissionInfo missions[idx].deckName
-        if path is '/kcsapi/api_req_mission/start'
-          missions[idx].setInMission postBody.api_mission_id, body.api_complatetime
-        else
-          missions[idx].setInMission body.api_mission[1], body.api_mission[2]
-        @setState
-          missions: missions
+# TODO: Add canNotify as Kdock does
+MissionPanel = connect(
+  (state) ->
+    fleetMissions = pluck(state.info.fleets, 'api_mission')
+    fleetNames = pluck(state.info.fleets, 'api_name')
+    $missions = state.const.$missions
+    {fleetMissions, fleetNames, $missions}
+) React.createClass
   componentDidMount: ->
     window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
@@ -103,12 +86,18 @@ MissionPanel = React.createClass
   render: ->
     <Panel bsStyle="default">
     {
-      for mission, i in @state.missions
+      for i in [1...4]
+        [status, missionId, completeTime] = @props.fleetMissions[i] || [-1, 0, -1]
+        missionName = switch status
+          when -1 then __ 'Locked'
+          when 0 then __ 'Ready'
+          else (@props.$missions[missionId] || {api_name: __ '???'}).api_name
+        fleetName = @props.fleetNames[i] || '???'
         <div className="panel-item mission-item" key={i} >
-          <span className="mission-name">{mission.getMissionName()}</span>
+          <span className="mission-name">{missionName}</span>
           <CountdownLabel dockIndex={i}
-                          completeTime={mission.completeTime}
-                          notify={@notify.bind @, mission.deckName}/>
+                          completeTime={completeTime}
+                          notify={@notify.bind @, fleetName}/>
         </div>
     }
     </Panel>

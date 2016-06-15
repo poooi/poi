@@ -2,7 +2,6 @@
 {OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
 {connect} = require 'react-redux'
-{pluck} = require 'underscore'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 {MaterialIcon} = require '../../etc/icon'
@@ -43,7 +42,7 @@ CountdownLabel = React.createClass
 KdockPanel = connect(
   (state) ->
     constructions = state.info.constructions
-    $ships = pickId state.const.$ships, pluck(state.info.constructions, 'api_created_ship_id')
+    $ships = state.const.$ships
     {constructions, $ships}
 ) React.createClass
   canNotify: false
