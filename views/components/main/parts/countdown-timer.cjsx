@@ -21,7 +21,7 @@ class Ticker
     @callbacks.delete key
     @stop() if @callbacks.size is 0
 
-ticker = new Ticker()
+window.ticker = new Ticker()
 
 
 CountdownTimer = React.createClass
