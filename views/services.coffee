@@ -8,7 +8,6 @@ require './services/layout'
 require './services/welcome'
 require './services/doyouknow'
 require './services/modernization-delta'
-require './services/updateTick'
 require './services/developmentProphecy'
 
 refreshFlash = ->

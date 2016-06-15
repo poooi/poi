@@ -46,7 +46,6 @@ window.indexify = (array, key='api_id') ->
 
 module.exports.reducer = reduceReducers(
   combineReducers(
-    tick: require('./tick').reducer
     const: require('./const').reducer
     info: require('./info').reducer
   ),
