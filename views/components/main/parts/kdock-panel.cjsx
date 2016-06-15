@@ -1,24 +1,15 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap, success, warn} = window
 {OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
-{pluck} = require 'underscore'
 {connect} = require 'react-redux'
+{pluck} = require 'underscore'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 {MaterialIcon} = require '../../etc/icon'
 
-CountdownLabel = connect(
-  (state) ->
-    tick: state.tick
-) React.createClass
-  getTimeRemaining: (completeTime, currentTime) ->
-    if completeTime < 0
-      -1
-    else if completeTime <= currentTime
-      0
-    else
-      Math.round((completeTime - currentTime) / 1000)
 
+CountdownTimer = require './countdown-timer'
+CountdownLabel = React.createClass
   getLabelStyle: (timeRemaining, isLSC) ->
     switch
       when timeRemaining > 600 and isLSC then 'danger'
@@ -26,14 +17,25 @@ CountdownLabel = connect(
       when timeRemaining >  0  then 'warning'
       when timeRemaining is 0  then 'success'
       else 'default'
-
+  getInitialState: ->
+    style: @getLabelStyle(CountdownTimer.getTimeRemaining @props.completeTime, @props.isLSC)
+  componentWillReceiveProps: (nextProps) ->
+    if nextProps.completeTime isnt @props.completeTime
+      @setState
+        style: @getLabelStyle(CountdownTimer.getTimeRemaining(nextProps.completeTime), nextProps.isLSC)
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.completeTime isnt @props.completeTime or nextState.style isnt @state.style
+  tick: (timeRemaining) ->
+    style = @getLabelStyle timeRemaining, @props.isLSC
+    @setState {style: style} if style isnt @state.style
   render: ->
-    timeRemaining = @getTimeRemaining @props.completeTime, @props.tick
-    bsStyle = @getLabelStyle timeRemaining, @props.isLSC
-    <Label className="kdock-timer" bsStyle={bsStyle}>
+    <Label className="kdock-timer" bsStyle={@state.style}>
     {
-      if @props.isInUse && @props.completeTime >= 0
-        <span>{resolveTime timeRemaining}</span>
+      if @props.completeTime >= 0
+        <CountdownTimer countdownId={"kdock-#{@props.dockIndex+1}"}
+                        completeTime={@props.completeTime}
+                        tickCallback={@tick}
+                        completeCallback={@props.notify} />
     }
     </Label>
 
@@ -73,8 +75,8 @@ KdockPanel = connect(
   render: ->
     <div>
     {
-      for dock, i in @props.constructions
-        dock = dock || {api_state: -1, api_complete_time: 0}
+      for i in [0...4]
+        dock = @props.constructions?[i] || {api_state: -1, api_complete_time: 0}
         isLocked = dock.api_state == -1
         isInUse = dock.api_state > 0
         isLSC = isInUse and dock.api_item1 >= 1000
@@ -82,6 +84,7 @@ KdockPanel = connect(
           when -1 then __ 'Locked'
           when 0 then __ 'Empty'
           else __ i18n.resources.__ @props.$ships[dock.api_created_ship_id].api_name
+        completeTime = if isInUse then dock.api_complete_time else -1
         <OverlayTrigger key={i} placement='top' overlay={
           if isInUse
             <Tooltip id="kdock-material-#{i}">
@@ -101,10 +104,9 @@ KdockPanel = connect(
           <div className="panel-item kdock-item">
             <span className="kdock-name">{dockName}</span>
             <CountdownLabel dockIndex={i}
-                            completeTime={dock.api_complete_time}
+                            completeTime={completeTime}
                             isLSC={isLSC}
-                            isInUse={isInUse}
-              />
+                            notify={if completeTime > 0 then _.once(@notify) else null} />
           </div>
         </OverlayTrigger>
     }
