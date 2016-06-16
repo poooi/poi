@@ -1,4 +1,5 @@
 path = require 'path-extra'
+{connect} = require 'react-redux'
 {ROOT, layout, _, $, $$, React, ReactBootstrap, toggleModal} = window
 {log, warn, error} = window
 {Panel, Grid, Col, OverlayTrigger, Tooltip} = ReactBootstrap
@@ -25,108 +26,47 @@ totalExp = [
 getMaterialImage = (idx) ->
   return "file://#{ROOT}/assets/img/material/0#{idx}.png"
 
-TeitokuPanel = React.createClass
-  getInitialState: ->
-    level: 0
-    nickname: null
-    rank: 0
-    nextExp: '?'
-    exp: '?'
-    shipCount: '??'
-    maxChara: '??'
-    slotitemCount: '??'
-    maxSlotitem: '??'
-    show: true
-  shouldComponentUpdate: (nextProps, nextState) ->
-    nextState.show
-  updateBasic: (body) ->
-    level: body.api_level
-    nickname: body.api_nickname
-    rank: body.api_rank
-    exp: body.api_experience
-    nextExp: totalExp[body.api_level] - body.api_experience
-    maxChara: body.api_max_chara
-    maxSlotitem: body.api_max_slotitem
-  updateCount: ->
-    state = {}
-    state.shipCount = Object.keys(window._ships).length if window._ships?
-    state.slotitemCount = Object.keys(window._slotitems).length if window._slotitems?
-    state
-  updateResult: (body) ->
-    state =
-      level: body.api_member_lv
-      exp: body.api_member_exp
-      nextExp: totalExp[body.api_member_lv] - body.api_member_exp
-    state.shipCount = @state.shipCount + 1 if body.api_get_ship?
-    state
-  handleVisibleResponse: (e) ->
-    {visible} = e.detail
-    @setState
-      show: visible
-  handleResponse: (e) ->
-    {method, path, body} = e.detail
-    switch path
-      when '/kcsapi/api_get_member/basic'
-        @setState @updateBasic(body)
-      when '/kcsapi/api_get_member/material', '/kcsapi/api_get_member/slot_item', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/createitem', '/kcsapi/api_req_kousyou/destroyitem2', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kousyou/getship', '/kcsapi/api_req_kousyou/remodel_slot'
-        @setState @updateCount()
-      when '/kcsapi/api_port/port'
-        @setState Object.assign(@updateBasic(body.api_basic), @updateCount())
-      when '/kcsapi/api_req_mission/result', '/kcsapi/api_req_practice/battle_result', '/kcsapi/api_req_sortie/battleresult', '/kcsapi/api_req_combined_battle/battleresult'
-        @setState @updateResult(body)
-      when '/kcsapi/api_get_member/mapinfo'
-        if config.get 'poi.mapStartCheck.ship.enable', false
-          minFreeShipSlots = config.get 'poi.mapStartCheck.ship.minFreeSlots', 4
-          if @state.maxChara - @state.shipCount < minFreeShipSlots
-            setTimeout =>
-              error __ "Attention! Ship Slot has only %s left.", "#{@state.maxChara - @state.shipCount}"
-            , 1000
-        if config.get 'poi.mapStartCheck.item.enable', false
-          minFreeItemSlots = config.get 'poi.mapStartCheck.item.minFreeSlots', 10
-          slotsLeft = @state.maxSlotitem - @state.slotitemCount
-          if slotsLeft < minFreeItemSlots
-            errMsg = __ "Attention! Item Slot is full."
-            if slotsLeft > 0
-              errMsg = __ "Attention! Only %d free item slot(s) left!", slotsLeft
-            setTimeout =>
-              error errMsg
-            , 1000
-  componentDidMount: ->
-    window.addEventListener 'game.response', @handleResponse
-    window.addEventListener 'view.main.visible', @handleVisibleResponse
-  componentWillUnmount: ->
-    window.removeEventListener 'game.response', @handleResponse
-    window.removeEventListener 'view.main.visible', @handleVisibleResponse
+TeitokuPanel = connect(
+  (state) ->
+    basic: state.info.basic
+    equipNum: Object.keys(state.info.equips).length
+    shipNum: Object.keys(state.info.ships).length
+) React.createClass
+
   getHeader: ->
-    if @state.nickname?
+    if @props.basic? && @props.basic.api_level?
       styleCommon =
         minWidth: '60px'
         padding: '2px'
         float: 'left'
       styleL = Object.assign {}, styleCommon, {textAlign: 'right'}
       styleR = Object.assign {}, styleCommon, {textAlign: 'left'}
+
+      level = @props.basic.api_level
+      exp = @props.basic.api_experience
+      nextExp = totalExp[level] - exp
       <div>
         <OverlayTrigger placement="bottom" overlay={
-            if @state.level < 120
+            if level < 120
               <Tooltip id='teitoku-exp'>
                 <div style={display: 'table'}>
                   <div>
-                    <span style={styleL}>Next.</span><span style={styleR}>{@state.nextExp}</span>
+                    <span style={styleL}>Next.</span><span style={styleR}>{nextExp}</span>
                   </div>
                   <div>
-                    <span style={styleL}>Total Exp.</span><span style={styleR}>{@state.exp}</span>
+                    <span style={styleL}>Total Exp.</span><span style={styleR}>{exp}</span>
                   </div>
                 </div>
               </Tooltip>
             else
-              <Tooltip id='teitoku-exp'>Total Exp. {@state.exp}</Tooltip>
+              <Tooltip id='teitoku-exp'>Total Exp. {exp}</Tooltip>
           }>
-          <span>{"Lv. #{@state.level}　"}
-            <span className="nickname">{@state.nickname}</span>
-            <span id="user-rank">{"　[#{rankName[@state.rank]}]　"}</span>
+          <span>{"Lv. #{level}　"}
+            <span className="nickname">{@props.basic.api_nickname}</span>
+            <span id="user-rank">{"　[#{rankName[@props.basic.api_rank]}]　"}</span>
           </span>
         </OverlayTrigger>
-        {__ 'Ships'}: {@state.shipCount} / {@state.maxChara}　{__ 'Equipment'}: {@state.slotitemCount} / {@state.maxSlotitem}
+        {__ 'Ships'}: {@props.shipNum} / {@props.basic.api_max_chara}　{__ 'Equipment'}: {@props.equipNum} / {@props.basic.api_max_slotitem}
       </div>
     else
       <div>{"#{__ 'Admiral [Not logged in]'}　#{__ "Ships"}：? / ?　#{__ "Equipment"}：? / ?"}</div>

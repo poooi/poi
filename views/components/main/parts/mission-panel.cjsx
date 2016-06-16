@@ -49,23 +49,6 @@ CountdownLabel = React.createClass
       </Label>
     </OverlayTrigger>
 
-
-class MissionInfo
-  constructor: (deckName) ->
-    @deckName = if deckName? then deckName else '???'
-    @setInPort()
-  setInPort: ->
-    @missionId = 0
-    @completeTime = -1
-  setInMission: (missionId, completeTime) ->
-    @missionId = missionId
-    @completeTime = completeTime
-  getMissionName: ->
-    if @missionId > 0
-      i18n.resources.__ window.$missions[@missionId].api_name
-    else
-      __ 'Ready'
-
 # TODO: Add canNotify as Kdock does
 MissionPanel = connect(
   (state) ->
