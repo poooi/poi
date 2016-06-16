@@ -394,7 +394,7 @@ TopAlert = React.createClass
                 <Tooltip id='topalert-recon'>
                   <div>2-5 {__ 'Autumn'}: {@messages.saku25a.ship} + {@messages.saku25a.item} - {@messages.saku25a.teitoku} = {@messages.saku25a.total}</div>
                   <div>2-5 {__ 'Old'}: {@messages.saku25.ship} + {@messages.saku25.recon} + {@messages.saku25.radar} = {@messages.saku25.total}</div>
-                  <div>33: {@messages.saku33.total}</div>
+                  <div>33 {__ 'Formula'}: {@messages.saku33.total}</div>
                 </Tooltip>
               }>
                 <span>{__ 'LOS'}: {@messages.saku33.total.toFixed(2)}</span>
