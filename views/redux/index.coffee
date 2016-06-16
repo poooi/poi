@@ -36,7 +36,7 @@ window.indexify = (array, key='api_id') ->
     keyFunc = (element) -> element[key]
   else
     keyFunc = key
-  result = []
+  result = {}
   for element in array
     result[keyFunc(element)] = element 
   result

@@ -13,7 +13,7 @@ module.exports.reducer = reduceReducers(
       '/kcsapi/api_get_member/require_info', 
     ], 
     (state, {body: {api_basic}}) -> 
-      Object.assign {}, api_basic 
+      Object.assign {}, state, api_basic 
   ),
   listenToResponse('/kcsapi/api_req_mission/result',
     (state, {body}) -> 

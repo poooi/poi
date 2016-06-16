@@ -1,6 +1,6 @@
 reduceReducers = require 'reduce-reducers'
 
-mergeIndexifiedEquips = (state, body) -> 
+mergeIndexifiedEquips = (state, body=[]) -> 
   Object.assign {}, state, indexify(body)
 
 # Returns a clone

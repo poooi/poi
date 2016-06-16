@@ -13,6 +13,10 @@ completeRepair = (ship) ->
 module.exports.reducer = reduceReducers(
   initAs({})
   ,
+  listenToResponse('/kcsapi/api_port/port',
+    (state, {body}) ->
+      indexify body.api_ship
+  ),
   listenToResponse([
       '/kcsapi/api_get_member/ship_deck',
       '/kcsapi/api_get_member/ship3',
@@ -23,10 +27,8 @@ module.exports.reducer = reduceReducers(
     (state, {body}) ->
       mergeIndexifiedShips state, body
   ),
-  listenToResponse([
-      '/kcsapi/api_port/port',
-      '/kcsapi/api_req_hokyu/charge',
-    ], (state, {body}) ->
+  listenToResponse('/kcsapi/api_req_hokyu/charge',
+    (state, {body}) ->
       mergeIndexifiedShips state, body.api_ship
   ),
   listenToResponse('/kcsapi/api_req_hensei/lock',
