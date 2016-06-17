@@ -42,6 +42,7 @@ adjustSize = ->
     factor = Math.max(window.webviewWidth / 800.0 * 100 / 100.0, 0.00125)
   window.webviewFactor = factor
 
+  webviewBounds = webview?.getBoundingClientRect() || {}
   # Autoset style
   if window.layout == 'horizontal'
     tabpaneHeight = "#{window.innerHeight / window.zoomLevel - poiControlHeight}px"
@@ -70,6 +71,14 @@ adjustSize = ->
     poi-nav poi-nav-tabs .nav .dropdown-menu {
       max-height: #{tabpaneHeight};
       overflow: auto;
+    }
+    .webview-focus-area {
+      top: #{webviewBounds.top}px;
+      left: #{webviewBounds.left}px;
+      width: #{webviewBounds.width}px;
+      height: #{webviewBounds.height}px;
+      position: absolute;
+      pointer-events: none;
     }
     """
   # Resize when window size smaller than webview size
@@ -214,17 +223,21 @@ window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
 
 remote.getCurrentWebContents().on 'dom-ready', ->
+  # Workaround for drag area
   if process.platform == 'darwin'
-    remote.getCurrentWebContents().executeJavaScript """
-      var div = document.createElement("div");
-      div.style.position = "absolute";
-      div.style.top = 0;
-      div.style.height = "23px";
-      div.style.width = "100%";
-      div.style["-webkit-app-region"] = "drag";
-      div.style["pointer-events"] = "none";
-      document.body.appendChild(div);
-    """
+    titleBarArea = document.createElement("div");
+    titleBarArea.style.position = "absolute";
+    titleBarArea.style.top = 0;
+    titleBarArea.style.height = "23px";
+    titleBarArea.style.width = "100%";
+    titleBarArea.style["-webkit-app-region"] = "drag";
+    titleBarArea.style["pointer-events"] = "none";
+    document.body.appendChild(titleBarArea);
+  # Workaround for webview focus area
+  webviewFocusArea = document.createElement("div");
+  webviewFocusArea.className = "webview-focus-area"
+  webviewFocusArea.onclick = () => $('webview').focus();
+  document.body.appendChild(webviewFocusArea);
   $('kan-game webview').setAudioMuted(true) if config.get 'poi.content.muted', false
   $('kan-game webview').loadURL config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
