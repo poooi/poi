@@ -89,7 +89,7 @@
     "rimraf": "^2.5.2",
     "git-archive": "^0.1.4",
     "electron-prebuilt": "^1.2.2",
-    "electron-builder": "^5.2.1"
+    "electron-builder": "^5.4.3"
   },
   "build": {
     "app-bundle-id": "org.poooi.poi",
@@ -110,21 +110,19 @@
         {
           "x": 130,
           "y": 220,
-          "type": "file",
-          "path": "computed path to artifact, do not specify it - will be overwritten"
+          "type": "file"
         }
       ]
     },
     "win": {
       "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true",
-      "target": ["default", "7z"]
+      "target": ["squirrel", "7z"]
     },
     "linux" : {
-      "target": ["7z", "deb"]
+      "target": ["7z", "deb", "rpm", "pacman"]
     }
   },
   "directories": {
     "app": "app_compiled"
-  },
-  "publish": "onTagOrDraft"
+  }
 }

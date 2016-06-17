@@ -32,9 +32,9 @@ artifacts:
     name: x64installer
   - path: dist\win\*.7z
     name: x64Archive
-  - path: dist\win-ia32\*.exe
+  - path: dist\**\*.exe
     name: ia32installer
-  - path: dist\win-ia32\*.7z
+  - path: dist\**\*.7z
     name: ia32Archive
 
 deploy:
