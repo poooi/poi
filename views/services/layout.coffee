@@ -42,7 +42,6 @@ adjustSize = ->
     factor = Math.max(window.webviewWidth / 800.0 * 100 / 100.0, 0.00125)
   window.webviewFactor = factor
 
-  webviewBounds = webview?.getBoundingClientRect() || {}
   # Autoset style
   if window.layout == 'horizontal'
     tabpaneHeight = "#{window.innerHeight / window.zoomLevel - poiControlHeight}px"
@@ -71,14 +70,6 @@ adjustSize = ->
     poi-nav poi-nav-tabs .nav .dropdown-menu {
       max-height: #{tabpaneHeight};
       overflow: auto;
-    }
-    .webview-focus-area {
-      top: #{webviewBounds.top}px;
-      left: #{webviewBounds.left}px;
-      width: #{webviewBounds.width}px;
-      height: #{webviewBounds.height}px;
-      position: absolute;
-      pointer-events: none;
     }
     """
   # Resize when window size smaller than webview size
@@ -234,10 +225,10 @@ remote.getCurrentWebContents().on 'dom-ready', ->
     titleBarArea.style["pointer-events"] = "none";
     document.body.appendChild(titleBarArea);
   # Workaround for webview focus area
-  webviewFocusArea = document.createElement("div");
-  webviewFocusArea.className = "webview-focus-area"
-  webviewFocusArea.onclick = () => $('webview').focus();
-  document.body.appendChild(webviewFocusArea);
+  $('poi-main').addEventListener 'touchstart', (e)->
+    if e.target == $('webview')
+      $('webview').focus()
+
   $('kan-game webview').setAudioMuted(true) if config.get 'poi.content.muted', false
   $('kan-game webview').loadURL config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
