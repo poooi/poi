@@ -68,23 +68,9 @@ PoiControl = React.createClass
     window.dispatchEvent new Event('resize')
     e.preventDefault()
   handleUnlockWebview: ->
-    $('kan-game webview').insertCSS """
-      html {
-        overflow: auto;
-      }
-      #w, #main-ntg {
-        position: relative !important;
-        top: 0;
-        left: 0;
-        z-index: 100;
-        margin-left: 0 !important;
-        margin-top: 0 !important;
-      }
-      #game_frame {
-        width: 900px !important;
-        position: relative;
-      }
-    """
+    $('kan-game webview').executeJavaScript '''
+      window.unalign()
+    '''
   handleSetExtend: ->
     extend = !@state.extend
     @setState {extend}

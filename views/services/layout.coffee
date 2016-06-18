@@ -107,41 +107,9 @@ adjustSize = ->
     $('kan-game #webview-wrapper')?.style?.height = "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
     return
-  # Insert CSS
-  webview.insertCSS """
-    html {
-      overflow: hidden;
-    }
-    #w, #main-ntg {
-      position: absolute !important;
-      top: 0;
-      left: 0;
-      z-index: 100;
-      margin-left: 0 !important;
-      margin-top: 0 !important;
-    }
-    #game_frame {
-      width: 800px !important;
-      position: absolute;
-      top: -16px;
-      left: 0;
-    }
-    #spacing_top {
-      display: none;
-    }
-    .naviapp {
-      z-index: -1;
-    }
-    #alert {
-      transform: scale(0.8);
-      left: 80px !important;
-      top: -80px !important;
-    }
-  """
   # Set zoom factor
   webview.executeJavaScript """
-    window.scrollTo(0, 0);
-    window.webFrame.setZoomFactor(#{factor})
+    window.align()
   """
 
 adjustSize()
