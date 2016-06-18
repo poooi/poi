@@ -224,11 +224,6 @@ remote.getCurrentWebContents().on 'dom-ready', ->
     titleBarArea.style["-webkit-app-region"] = "drag";
     titleBarArea.style["pointer-events"] = "none";
     document.body.appendChild(titleBarArea);
-  # Workaround for webview focus area
-  $('poi-main').addEventListener 'touchstart', (e)->
-    if e.target == $('webview')
-      $('webview').focus()
-
   $('kan-game webview').setAudioMuted(true) if config.get 'poi.content.muted', false
   $('kan-game webview').loadURL config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet
