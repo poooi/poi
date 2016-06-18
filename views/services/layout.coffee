@@ -141,14 +141,7 @@ adjustSize = ->
   # Set zoom factor
   webview.executeJavaScript """
     window.scrollTo(0, 0);
-    if (document.querySelector('#game_frame') != null) {
-      var iframe = document.querySelector('#game_frame').contentWindow.document;
-      document.querySelector('html').style.zoom = #{factor};
-      iframe.querySelector('html').style.zoom = #{factor};
-    } else if (document.querySelector('embed') != null) {
-      var iframe = document.querySelector('embed');
-      document.querySelector('html').style.zoom = #{factor};
-    }
+    window.webFrame.setZoomFactor(#{factor})
   """
 
 adjustSize()
