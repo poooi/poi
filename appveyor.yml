@@ -45,3 +45,7 @@ deploy:
   prerelease: false
   on:
     appveyor_repo_tag: true
+
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+.*/
