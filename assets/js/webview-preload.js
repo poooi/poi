@@ -12,6 +12,10 @@ window.onclick = (e) => {
 }
 
 // Faster align setting
+if (window.location.toString() !== "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/") {
+  return
+}
+
 webFrame = electron.webFrame
 var ROOT = remote.getGlobal('ROOT')
 var config = remote.require(`${ROOT}/lib/config`)
