@@ -7,7 +7,7 @@ const {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overl
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
 
-//import Slotitems from './slotitems'
+import {Slotitems} from './slotitems'
 import StatusLabel from './statuslabel'
 import {getHpStyle, getStatusStyle, getShipLabelStatus, BaseShipData} from './utils'
 
@@ -116,9 +116,7 @@ export const ShipRow = connect(
         </span>
       </span>
       <div className="ship-slot" style={labelStatusStyle}>
-      {
-        /*<Slotitems shipId={ship.api_id} />*/
-      }
+        <Slotitems shipId={ship.api_id} />
       </div>
     </div>
   )

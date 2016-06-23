@@ -50,17 +50,25 @@ shipIdToShipData = (shipId, ships, $ships) ->
   return if !shipId? || !ships? || !$ships?
   return if shipId == -1
   ship = ships[shipId]
-  return if !ship
+  return if !ship || !ship.api_ship_id
   $ship = $ships[ship.api_ship_id]
   [ship, $ship]
 
+equipIdToEquipData = (equipId, equips, $equips) ->
+  return if !equipId? || !equips? || !$equips?
+  return if equipId == -1
+  equip = equips[equipId]
+  return if !equip || !equip.api_slotitem_id
+  $equip = $equips[equip.api_slotitem_id]
+  [equip, $equip]
+
 fleetToShipsData = (fleet, ships, $ships) ->
-  return if !fleet? || !ships? || !$ships?
+  return if !fleet? || !Array.isArray(fleet.api_ship)
   fleet.api_ship.map((shipId) -> shipIdToShipData(shipId, ships, $ships)).filter(Boolean)
 
 fleetsSelector = (state) -> state.info?.fleets
 shipsSelector = (state) -> state.info?.ships
-$shipsSelector = (state) -> state.const?.$ships
+window.constSelector = (state) -> state.const || {}
 equipsSelector = (state) -> state.info?.equips
 repairsSelector = (state) -> state.info?.repairs
 window.sortieStatusSelector = (state) -> state.sortie?.sortieStatus
@@ -70,8 +78,6 @@ window.sortieStatusSelector = (state) -> state.sortie?.sortieStatus
 window.inRepairShipsIdSelector = createSelector repairsSelector, (repairs) ->
   return if !repairs
   pluck(repairs.filter((repair) -> parseInt(repair.api_state) == 1), 'api_ship_id')
-
-window.constSelector = (state) -> state.const || {}
 
 
 ## <thisFleet> Reads props.fleetId ##
@@ -100,8 +106,8 @@ window.makeThisFleetShipsIdSelector = () -> createSelector [
 window.makeThisFleetShipsDataSelector = () -> createSelector [
     makeThisFleetSelector(),
     shipsSelector,
-    $shipsSelector,
-  ], (fleet, ships, $ships) ->
+    constSelector,
+  ], (fleet, ships, {$ships}) ->
     fleetToShipsData(fleet, ships, $ships)
     
 
@@ -125,7 +131,28 @@ window.makeThisShipRepairDockSelector = () -> createSelector [
 window.makeThisShipDataSelector = () -> createSelector [
     makeThisShipIdSelector(),
     shipsSelector,
-    $shipsSelector,
-  ], (shipId, ships, $ships) ->
+    constSelector,
+  ], (shipId, ships, {$ships}) ->
     shipIdToShipData(shipId, ships, $ships)
+
+# Reads props.shipId
+# Returns [[_equip, $equip, onslot] for each slot on the ship]
+#   where onslot is the number of airplanes left as in api_onslot
+# length is always slotnum+1, which is all slots plus exslot
+# Slot is undefined for each empty slot
+# Slot is [_equip] for those not found in $equips
+# Returns undefined if anything is undefined
+window.makeThisShipEquipDataSelector = () -> createSelector [
+    makeThisShipDataSelector(),
+    equipsSelector,
+    constSelector,
+  ], (shipData, equips, {$equips}) ->
+    return if !shipData? || !equips? || !$equips?
+    {api_slot, api_onslot, api_slot_ex, api_slotnum} = shipData[0]
+    equipsId = api_slot[0...api_slotnum].concat(api_slot_ex)
+    for equipId, i in equipsId
+      equipData = equipIdToEquipData equipId, equips, $equips
+      onslot = if i == api_slotnum then 0 else (api_onslot[i])
+      if equipData then equipData.concat(onslot) else undefined
+      
 
