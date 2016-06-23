@@ -9,7 +9,8 @@ require './services/welcome'
 require './services/doyouknow'
 require './services/modernization-delta'
 require './services/developmentProphecy'
-require './services/sortieCheck'
+require './services/sortieDangerousCheck'
+require './services/sortieFreeSlotCheck'
 
 refreshFlash = ->
   $('kan-game webview').executeJavaScript """

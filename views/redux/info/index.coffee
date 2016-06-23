@@ -9,7 +9,6 @@ module.exports.reducer = reduceReducers(
     equips: require('./equips').reducer
     repairs: require('./repairs').reducer
     constructions: require('./constructions').reducer
-    #expeditions: require('./expeditions').reducer
     resources: require('./resources').reducer
     #quests: require('./quests').reducer
     maps: require('./maps').reducer

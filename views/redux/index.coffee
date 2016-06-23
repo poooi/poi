@@ -48,6 +48,7 @@ module.exports.reducer = reduceReducers(
   combineReducers(
     const: require('./const').reducer
     info: require('./info').reducer
+    sortie: require('./sortie').reducer
   ),
 )
   

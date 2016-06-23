@@ -47,30 +47,19 @@ module.exports =
     else
       return {}
 
-  getShipStatus: (miniFlag, shipId, escapeId, towId) ->
-    status = -1
-    # retreat status
-    if shipId == escapeId || shipId == towId
-      return status = 0
+  getShipLabelStatus: (ship, $ship, inRepair) ->
+    return -1 if !ship? || !$ship?
     # repairing
-    else if shipId in _ndocks
-      return status = 1
+    if inRepair
+      return 1
     # supply
-    else if miniFlag and (Math.min _ships[shipId].api_fuel / _ships[shipId].api_fuel_max * 100, _ships[shipId].api_bull / _ships[shipId].api_bull_max * 100) < 100
-      return status = 6
-    # special 1 locked phase 1
-    else if _ships[shipId].api_sally_area == 1
-      return status = 2
-    # special 2 locked phase 2
-    else if _ships[shipId].api_sally_area == 2
-      return status = 3
-    # special 3 locked phase 3
-    else if  _ships[shipId].api_sally_area == 3
-      return status = 4
-    # special 4 locked phase 4
-    else if _ships[shipId].api_sally_area == 4
-      return status = 5
-    return status
+    else if Math.min(ship.api_fuel/$ship.api_fuel_max, ship.api_bull/$ship.api_bull_max) < 1
+      return 6
+    # special: locked phase
+    # returns 2 for locked phase 1, 3 for phase 2, etc
+    else if ship.api_sally_area in [1..4]
+      return ship.api_sally_area + 1
+    return -1
 
   getHpStyle: (percent) ->
     if percent <= 25
