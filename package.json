@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "v6.3.1-beta.2",
+  "version": "v6.3.1-beta.3",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -88,7 +88,7 @@
     "tar-fs": "^1.10.0",
     "rimraf": "^2.5.2",
     "git-archive": "^0.1.4",
-    "electron-prebuilt": "^1.2.2",
+    "electron-prebuilt": "^1.2.4",
     "electron-builder": "^5.4.3"
   },
   "build": {
