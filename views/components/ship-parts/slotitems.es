@@ -8,10 +8,7 @@ const {OverlayTrigger, Tooltip} = ReactBootstrap
 
 import {SlotitemIcon} from '../etc/icon'
 import {getItemData} from './slotitems-data'
-
-function between(n, min, max) {
-  return n >= min && n <= max;
-}
+import {equipIsAircraft} from './utils'
 
 function getBackgroundStyle() {
   return window.isDarkTheme ?
@@ -60,20 +57,20 @@ export const Slotitems = connect(
         </Tooltip>
   
       const equipIconId = equipData ? $equip.api_type[3] : 0
-      const isAircraft = between(equipIconId, 6, 10) || between(equipIconId, 21, 22) || equipIconId == 33
-      const showItemSpan = !equipData || isExslot || isAircraft
+      const showOnslot = !equipData || isExslot || equipIsAircraft(equipIconId)
       const maxOnslot = isExslot ? 0 : $ship.api_maxeq[equipIdx]
-      const slotWarning = equipData && onslot < maxOnslot
-      const itemSpanClassName = classNames("slotitem-onslot", {
-        'show': showItemSpan,
-        'hide': !showItemSpan,
-        'text-warning': slotWarning,
+      const onslotText = isExslot ? "+" : equipData ? onslot : maxOnslot
+      const onslotWarning = equipData && onslot < maxOnslot
+      const onslotClassName = classNames("slotitem-onslot", {
+        'show': showOnslot,
+        'hide': !showOnslot,
+        'text-warning': onslotWarning,
       })
       const itemSpan =
         <span>
           <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
-          <span className={itemSpanClassName} style={getBackgroundStyle()} >
-            {isExslot ? "+" : equipData ? onslot : maxOnslot}
+          <span className={onslotClassName} style={getBackgroundStyle()} >
+            {onslotText}
           </span>
         </span>
   

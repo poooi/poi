@@ -62,9 +62,6 @@ module.exports =
   reactClass: React.createClass
     getInitialState: ->
       names: ["#{__ 'I'}", "#{__ 'II'}", "#{__ 'III'}", "#{__ 'IV'}"]
-      fullnames: [__('No.%s fleet', 1), __('No.%s fleet', 2), __('No.%s fleet', 3), __('No.%s fleet', 4)]
-      states: [-1, -1, -1, -1]
-      decks: []
       activeDeck: 0
       enableTransition: config.get 'poi.transition.enable', true
     nowTime: 0
@@ -88,9 +85,6 @@ module.exports =
       if idx? && idx isnt @state.activeDeck
         @setState
           activeDeck: idx
-    setMiniShipState: (e) ->
-      state = e.detail
-      @setState state
     changeShipView: ->
       event = new CustomEvent 'tabarea.change',
         bubbles: true
@@ -103,12 +97,9 @@ module.exports =
         enableTransition: config.get 'poi.transition.enable', true
     componentDidMount: ->
       window.addEventListener 'MiniShip.deckChange', @handleClickOnce
-      window.addEventListener 'MiniShip.getResponse', @setMiniShipState
       window.addEventListener 'display.transition.change', @handleSetTransition
-      window.setMiniShipState = @setMiniShipState
     componentWillUnmount: ->
       window.removeEventListener 'MiniShip.deckChange', @handleClickOnce
-      window.removeEventListener 'MiniShip.getResponse', @setMiniShipState
       window.removeEventListener 'display.transition.change', @handleSetTransition
       @interval = clearInterval @interval if @interval?
     render: ->
@@ -119,7 +110,7 @@ module.exports =
             <ButtonGroup bsSize="xsmall">
             {
               for i in [0..3]
-                <Button key={i} bsStyle={getStyle @state.states[i]}
+                <Button key={i} bsStyle={undefined && getStyle @state.states[i]}
                                 onClick={@handleClick.bind(this, i)}
                                 className={if @state.activeDeck == i then 'active' else ''}>
                   {@state.names[i]}
@@ -131,14 +122,12 @@ module.exports =
             <div className={classnames "ship-tab-content", {'ship-tab-content-transition': @state.enableTransition}}
                  style={left: "-#{@state.activeDeck}00%"}>
             {
-              for deck, i in @state.decks
-                <div className="ship-deck" className="ship-tabpane" key={i}>
+              for i in [0...4]
+                <div className="ship-deck ship-tabpane" key={i}>
                   <PaneBodyMini
                     key={i}
-                    deckIndex={i}
-                    deck={@state.decks[i]}
+                    fleetId={i}
                     activeDeck={@state.activeDeck}
-                    deckName={@state.names[i]}
                   />
                 </div>
             }

@@ -9,7 +9,7 @@ const __n = i18n.main.__n.bind(i18n.main)
 
 import {Slotitems} from './slotitems'
 import StatusLabel from './statuslabel'
-import {getHpStyle, getStatusStyle, getShipLabelStatus, BaseShipData} from './utils'
+import {getHpStyle, getStatusStyle, getShipLabelStatus} from './utils'
 
 function getMaterialStyle(percent) {
   if (percent <= 50)
@@ -121,5 +121,3 @@ export const ShipRow = connect(
     </div>
   )
 })
-
-export const miniFlag = false

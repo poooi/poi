@@ -27,6 +27,9 @@ class BaseShipData
         alv: item.api_alv
         slotitemId: item.api_type[3]
 
+between = (n, min, max) ->
+  n >= min && n <= max
+
 module.exports =
   BaseShipData: BaseShipData
   getMaterialStyle: (percent) ->
@@ -70,3 +73,11 @@ module.exports =
       'info'
     else
       'success'
+
+  # equipIconId: as in $equip.api_type[3]
+  equipIsAircraft: (equipIconId) ->
+    equipIconId? && (
+      between(equipIconId, 6, 10) || 
+      between(equipIconId, 21, 22) || 
+      equipIconId == 33
+    )
