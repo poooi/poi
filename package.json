@@ -77,19 +77,23 @@
     "moment": "^2.13.0"
   },
   "devDependencies": {
-    "node-unzip-2": "^0.2.1",
+    "asar": "^0.11.0",
+    "babel-eslint": "^6.1.0",
     "coffeelint": "^1.11.1",
+    "electron-builder": "^5.4.3",
+    "electron-prebuilt": "^1.2.5",
+    "eslint": "^2.13.1",
+    "eslint-plugin-import": "^1.9.2",
+    "eslint-plugin-react": "^5.2.2",
+    "git-archive": "^0.1.4",
     "gulp": "^3.9.0",
     "mocha": "^2.4.5",
     "mocha-lcov-reporter": "^1.0.0",
-    "asar": "^0.11.0",
     "node-7z": "^0.4.0",
-    "walk": "^2.3.9",
-    "tar-fs": "^1.10.0",
+    "node-unzip-2": "^0.2.1",
     "rimraf": "^2.5.2",
-    "git-archive": "^0.1.4",
-    "electron-prebuilt": "^1.2.5",
-    "electron-builder": "^5.4.3"
+    "tar-fs": "^1.10.0",
+    "walk": "^2.3.9"
   },
   "build": {
     "app-bundle-id": "org.poooi.poi",
@@ -116,10 +120,18 @@
     },
     "win": {
       "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true",
-      "target": ["squirrel", "7z"]
+      "target": [
+        "squirrel",
+        "7z"
+      ]
     },
-    "linux" : {
-      "target": ["7z", "deb", "rpm", "pacman"]
+    "linux": {
+      "target": [
+        "7z",
+        "deb",
+        "rpm",
+        "pacman"
+      ]
     }
   },
   "directories": {
