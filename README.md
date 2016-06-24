@@ -9,9 +9,11 @@ Scalable KanColle browser and tool.
 
 ## Prebuilt Release Downloads
 
-GitHub release: [here](https://github.com/poooi/poi/releases).
+[GitHub release](https://github.com/poooi/poi/releases).
 
-China mainland mirror: [here](http://0u0.moe/poi).
+[cnpm (CN Mainland)](https://npm.taobao.org/mirrors/poi).
+
+[BaiduYun (CN Mainland)](http://pan.baidu.com/s/1kT2zGwf).
 
 ## Features
 
