@@ -55,7 +55,7 @@ const ShipViewSwitchButton = connect(() => {
       const inExpedition = fleet ? fleet.api_mission[0] : false
       const inBattle = sortieStatusSelector(state)[props.fleetId]
       const inRepairShipsId = inRepairShipsIdSelector(state)
-      const shipsData = thisFleetShipsDataSelector(state, props)
+      const shipsData = thisFleetShipsDataSelector(state, props) || []
       const fleetState = getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId)
       return {
         fleetState,

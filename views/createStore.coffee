@@ -2,6 +2,7 @@
 {observer, observe} = require 'redux-observers'
 
 {reducer: rootReducer, onGameRequest, onGameResponse} = require('./redux')
+{updateFatigueTimer} = require('./redux/timers')
 
 cachePosition = '_storeCache'
 targetPaths = ['const', 'info']
