@@ -8,7 +8,7 @@ const {OverlayTrigger, Tooltip} = ReactBootstrap
 
 import {SlotitemIcon} from '../etc/icon'
 import {getItemData} from './slotitems-data'
-import {equipIsAircraft} from './utils'
+import {equipIsAircraft} from '../ship-parts/utils'
 
 function getBackgroundStyle() {
   return window.isDarkTheme ?

@@ -6,8 +6,7 @@ const {Button, ButtonGroup} = ReactBootstrap
 const {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
-
-import {PaneBody} from '../ship-parts'
+import {ShipRow} from './shipitem'
 
 function getStyle(state) {
   if (state >= 0 && state <= 5)
@@ -47,6 +46,7 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
   return state
 }
 
+
 const ShipViewSwitchButton = connect(() => {
     const thisFleetShipsDataSelector = makeThisFleetShipsDataSelector()
     const thisFleetSelector = makeThisFleetSelector()
@@ -73,6 +73,31 @@ const ShipViewSwitchButton = connect(() => {
     {fleetName}
   </Button>
 )
+
+
+const FleetShipView = connect(() => {
+    const thisFleetShipIdSelector = makeThisFleetShipsIdSelector()
+    return (state, props) => ({
+      shipsId: thisFleetShipIdSelector(state, props)
+    })
+  }
+)(({fleetId, shipsId}) =>
+  <div>
+    <div className={"ship-details"}>
+    {
+      (shipsId || []).map((shipId, i) =>
+        <ShipRow
+          key={shipId}
+          fleetId={fleetId}
+          shipId={shipId}
+          shipIndex={i}
+          />
+      )
+    }
+    </div>
+  </div>
+)
+
 
 const ShipView = connect(() => ({
     // TODO: Move config into redux
@@ -162,7 +187,7 @@ const ShipView = connect(() => ({
           {
             [0, 1, 2, 3].map((i) =>
               <div className="ship-deck" key={i}>
-                <PaneBody fleetId={i} />
+                <FleetShipView fleetId={i} />
               </div>
             )
           }

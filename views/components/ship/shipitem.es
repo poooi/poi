@@ -8,8 +8,8 @@ const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
 
 import {Slotitems} from './slotitems'
-import StatusLabel from './statuslabel'
-import {getHpStyle, getStatusStyle, getShipLabelStatus} from './utils'
+import StatusLabel from '../ship-parts/statuslabel'
+import {getHpStyle, getStatusStyle, getShipLabelStatus} from '../ship-parts/utils'
 
 function getMaterialStyle(percent) {
   if (percent <= 50)
