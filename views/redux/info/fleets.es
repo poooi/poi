@@ -68,7 +68,7 @@ export function reducer(state=[], {type, postBody, body}) {
       let shipId = fleet.api_ship[pos] || -1
       // Remove all
       if (pos == -1) {
-        fleets[deckId] = {
+        fleets[fleetId] = {
           ...fleet,
           api_ship: [fleet.api_ship[0], -1, -1, -1, -1, -1]
         }
