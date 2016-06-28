@@ -1,6 +1,5 @@
 import {connect} from 'react-redux'
 //import TopAlert from './topalert'
-import {pluck} from './utils'
 import {MiniShipRow} from './minishipitem'
 
 const {$, $$, _, React} = window

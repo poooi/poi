@@ -8,10 +8,10 @@ const {Button, ButtonGroup} = ReactBootstrap
 const {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
-import StatusLabel from './statuslabel'
-import {SlotitemIcon} from '../etc/icon'
+import StatusLabel from '../../ship-parts/statuslabel'
+import {SlotitemIcon} from '../../etc/icon'
 
-import {equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle, getShipLabelStatu} from './utils'
+import {equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle, getShipLabelStatu} from '../../ship-parts/utils'
 
 function getFontStyle(theme) {
   return window.isDarkTheme ? {color: '#FFF'} : {color: '#000'}

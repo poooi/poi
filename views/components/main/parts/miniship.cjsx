@@ -14,7 +14,7 @@ combined = false
 escapeId = -1
 towId = -1
 
-{PaneBodyMini} = require '../../ship-parts'
+{PaneBodyMini} = require './minishippane'
 
 getStyle = (state) ->
   if state in [0..5]
