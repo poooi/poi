@@ -1,21 +1,16 @@
-import {relative, join} from 'path-extra'
+import {join} from 'path-extra'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-const {_, $, $$, React, ReactBootstrap, ROOT, FontAwesome, toggleModal} = window
-const {$ships, $shipTypes, _ships} = window
-const {Button, ButtonGroup} = ReactBootstrap
-const {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
+import {ProgressBar, OverlayTrigger, Tooltip, Label} from 'react-bootstrap'
+
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
+
 import StatusLabel from '../../ship-parts/statuslabel'
 import {SlotitemIcon} from '../../etc/icon'
 
 import {equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle, getShipLabelStatu} from '../../ship-parts/utils'
-
-function getFontStyle(theme) {
-  return window.isDarkTheme ? {color: '#FFF'} : {color: '#000'}
-}
 
 const Slotitems  = connect(
   () => createSelector([

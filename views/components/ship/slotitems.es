@@ -2,9 +2,9 @@ import {join} from 'path-extra'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
+import {OverlayTrigger, Tooltip} from 'react-bootstrap'
 
-const {$, $$, _, React, ReactBootstrap, ROOT} = window
-const {OverlayTrigger, Tooltip} = ReactBootstrap
+const {ROOT} = window
 
 import {SlotitemIcon} from '../etc/icon'
 import {getItemData} from './slotitems-data'

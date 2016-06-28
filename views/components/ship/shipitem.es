@@ -1,9 +1,9 @@
-import {relative, join} from 'path-extra'
+import {join} from 'path-extra'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
+import {ProgressBar, OverlayTrigger, Tooltip} from 'react-bootstrap'
 
-const {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
-const {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row, Overlay, Label} = ReactBootstrap
+const {resolveTime, notify} = window
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
 

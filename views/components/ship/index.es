@@ -1,11 +1,14 @@
-import {relative, join} from 'path-extra'
+import {join} from 'path-extra'
 import {connect} from 'react-redux'
 import classNames from 'classnames'
-const {_, $, $$, React, ReactBootstrap, ROOT, FontAwesome, toggleModal} = window
-const {Button, ButtonGroup} = ReactBootstrap
-const {ProgressBar, OverlayTrigger, Tooltip, Alert, Overlay, Label, Panel, Popover} = ReactBootstrap
+import {Component} from 'react'
+import {Panel, Button, ButtonGroup} from 'react-bootstrap'
+import FontAwesome from 'react-fontawesome'
+
+const {ROOT, toggleModal} = window
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
+
 import {ShipRow} from './shipitem'
 
 function getStyle(state) {
@@ -103,7 +106,7 @@ const ShipView = connect(() => ({
     // TODO: Move config into redux
     enableTransition: config.get('poi.transition.enable', true),
   })
-)(class extends React.Component {
+)(class extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -165,7 +168,7 @@ const ShipView = connect(() => ({
   render() {
     return (
       <Panel onDoubleClick={this.changeMainView}>
-        <link rel="stylesheet" href={join(relative(ROOT, __dirname), 'assets', 'ship.css')} />
+        <link rel="stylesheet" href={join(__dirname, 'assets', 'ship.css')} />
         <div className="panel-row">
           <ButtonGroup className="fleet-name-button">
           {
