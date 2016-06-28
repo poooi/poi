@@ -2,8 +2,9 @@ import {combineReducers} from 'redux'
 import reduceReducers from 'reduce-reducers'
 
 import {reducer as constReducer} from './const'
-import {reducer as infoReducer} from './info'
-import {reducer as sortieReducer} from './sortie'
+import {reducer as info} from './info'
+import {reducer as sortie} from './sortie'
+import {reducer as timers} from './timers'
 
 // === Utils ===
 
@@ -27,8 +28,9 @@ window.indexify = (array, key='api_id') => {
 export const reducer = reduceReducers(
   combineReducers({
     const: constReducer,
-    info: infoReducer,
-    sortie: sortieReducer,
+    info,
+    sortie,
+    timers,
   }),
 )
   
