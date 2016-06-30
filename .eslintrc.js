@@ -20,11 +20,18 @@ module.exports = {
     'sourceType': 'module',
   },
   'plugins': [
+    'import',
     'react',
   ],
   'parser': 'babel-eslint',
   'rules': {
+    'comma-dangle': ['error', 'always-multiline'],
+    'indent': ['warn', 2],
+    'linebreak-style': ['error', 'unix'],
     'no-console': ['warn', {'allow': ['warn', 'error']}],
+    'no-var': 'error',
     'no-unused-vars': ['warn', {'args': 'none'}],
+    'semi': ['error', 'never'],
+    'unicode-bom': 'error',
   },
 }
