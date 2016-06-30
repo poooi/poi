@@ -33,12 +33,12 @@ checkUpdate = ->
           style: 'success'
         },
         {
-          name: __('Download latest version') + ' (Baidu)'
+          name: "#{__('Download latest version')} (#{__('Aliyun')})"
           func: doUpdate
           style: 'primary'
         },
         {
-          name: __('Download latest version') + ' (Github)'
+          name: "#{__('Download latest version')} (Github)"
           func: doUpdateGithub
           style: 'primary'
         }

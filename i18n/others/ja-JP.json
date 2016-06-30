@@ -30,6 +30,7 @@
   " Plugins": " ツール",
   "Update": "更新",
   "Download latest version": "最新バージョンをダウンロードします",
+  "Aliyun": "Aliyun",
   "Connection failed after %s retry": {
      "one": "ネットワークエラーが発生しました。今第 %s 回の再試行しています",
      "other": "ネットワークエラーが発生しました。今第 %s 回の再試行しています"

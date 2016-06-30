@@ -30,6 +30,7 @@
   " Plugins": " 插件",
   "Update": "更新",
   "Download latest version": "下载最新版",
+  "Aliyun": "阿里云",
   "Connection failed after %s retry": {
      "one": "网络连接错误，正在进行第 %s 次重试",
      "other": "网络连接错误，正在进行第 %s 次重试"

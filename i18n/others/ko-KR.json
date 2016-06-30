@@ -30,6 +30,7 @@
   " Plugins": " 플러그인",
   "Update": "업데이ㅡ",
   "Download latest version": "최신 버전 다운로드",
+  "Aliyun": "Aliyun",
   "Connection failed after %s retry": {
      "one": "네트워크 에러가 발생했습니다. %s번째 재시도중...",
      "other": "네트워크 에러가 발생했습니다. %s번째 재시도중..."
