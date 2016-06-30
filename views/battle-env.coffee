@@ -99,6 +99,12 @@ analogBattle = (sortieHp, enemyHp, combinedHp, isCombined, isWater, body) ->
       hougekiAttack combinedHp, enemyHp, body.api_hougeki
     else
       hougekiAttack sortieHp, enemyHp, body.api_hougeki
+  # Opening taisen
+  if body.api_opening_taisen?
+    if isCombined
+      hougekiAttack combinedHp, enemyHp, body.api_opening_taisen
+    else
+      hougekiAttack sortieHp, enemyHp, body.api_opening_taisen
   # First hougeki battle
   if body.api_hougeki1?
     if isCombined && !isWater
