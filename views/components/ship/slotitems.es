@@ -33,7 +33,7 @@ export const Slotitems = connect(
     equipsData.map((equipData, equipIdx) => {
       const isExslot = equipIdx == (equipsData.length-1)
       if (isExslot && ship.api_slot_ex == 0) {
-        return <div></div>
+        return <div key={equipIdx}></div>
       }
       const [equip, $equip, onslot] = equipData || []
       const itemOverlay = equipData &&
