@@ -1,5 +1,6 @@
 var electron = require('electron')
 var remote = electron.remote
+var Promise = require('bluebird')
 require('coffee-script/register')
 
 // webview focus area fix
@@ -30,9 +31,19 @@ var alertCSS =
 
 var alignCSS = document.createElement('style')
 
-window.align = () => {
+getWebviewWidth = Promise.coroutine(function* () {
+  var width = yield new Promise((resolve, reject) => {
+    remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width", (result) => {
+      resolve(result)
+    })
+  })
+  return width
+})
+
+window.align = Promise.coroutine(function* () {
   var zoom
-  zoom = config.get('poi.webview.width', 800) / 800
+  zoom = yield getWebviewWidth()
+  zoom = zoom / 800
   webFrame.setZoomFactor(zoom)
   window.scrollTo(0, 0)
   alignCSS.innerHTML =
@@ -60,7 +71,7 @@ window.align = () => {
     z-index: -1;
   }
   `
-}
+})
 window.unalign = () => {
   alignCSS.innerHTML = ""
 }
