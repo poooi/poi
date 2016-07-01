@@ -50,6 +50,7 @@ export function reducer(state=[], {type, postBody, body}) {
       state[parseInt(postBody.api_deck_id) - 1] = body
       return state
     case '@@Response/kcsapi/api_req_kousyou/destroyship': {
+      let fleets = state.slice()
       let [fleetId, pos] = findShip(fleets, parseInt(postBody.api_ship_id))
       if (fleetId != -1) {
         state = state.slice()
