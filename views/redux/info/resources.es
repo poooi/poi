@@ -25,7 +25,7 @@ function addArrayResources(state, arr) {
   return state
 }
 
-export function reducer(state=[], {type, body}) {
+export function reducer(state=[], {type, body, postBody}) {
   switch (type) {
     case '@@Response/kcsapi/api_port/port':
       return pluck(body.api_material, 'api_value')

@@ -6,17 +6,17 @@ const completeConstruction = {
   api_state: 3,
 }
 
-export function reducer(state=[], {type, body}) {
+export function reducer(state=[], {type, body, postBody}) {
   switch (type) {
     case '@@Response/kcsapi/api_get_member/require_info':
-    case '@@Response/kcsapi/api_get_member/kdock':
-      return body.api_kdock
     case '@@Response/kcsapi/api_req_kousyou/getship':
+      return body.api_kdock
+    case '@@Response/kcsapi/api_get_member/kdock':
       return body
     case '@@Response/kcsapi/api_req_kousyou/createship_speedchange':
       const {api_kdock_id} = postBody
       state = state.slice()
-      state[api_kdock_id] = Object.assign({}, state[api_kdock_id], completeConstruction)
+      state[api_kdock_id-1] = Object.assign({}, state[api_kdock_id-1], completeConstruction)
       return state
   }
   return state

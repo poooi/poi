@@ -70,7 +70,7 @@ resolveResponses = ->
         detail: details
       window.dispatchEvent event
     catch err
-      console.error err
+      console.error err.stack
   locked = false
 
 handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) ->
