@@ -1,7 +1,7 @@
 {createStore} = require 'redux'
 {observer, observe} = require 'redux-observers'
 
-{reducer: rootReducer, onGameRequest, onGameResponse} = require('./redux')
+{reducer: rootReducer} = require('./redux')
 {updateFatigueTimer} = require('./redux/timers')
 
 cachePosition = '_storeCache'
@@ -25,9 +25,9 @@ splitPath = (path) ->
     path
 
 # deepSelect = (state, path) -> something
-#   Equivalent to 
+#   Equivalent to
 #     state[path]
-#   while allowing deep path (like 'foo.bar.0'). 
+#   while allowing deep path (like 'foo.bar.0').
 deepSelect = (state, path) ->
   path = splitPath path
   if !state?
@@ -39,22 +39,22 @@ deepSelect = (state, path) ->
   state
 
 # deepAssign = (path) -> (state, val) -> state
-#   Equivalent to 
+#   Equivalent to
 #     state[path] = val
-#   while allowing deep path (like 'foo.bar.0'). 
-#   Does NOT clone. 
+#   while allowing deep path (like 'foo.bar.0').
+#   Does NOT clone.
 #   Creates a {} if undefined is found on any level (but should avoid)
 #   Requires non-empty path and non-undefined state
 deepAssign = (path) ->
   if !path
-    throw new Error 'Argument "path" for deepAssign should not be empty ' 
+    throw new Error 'Argument "path" for deepAssign should not be empty '
   path = splitPath path
-  lastField = path[path.length - 1] 
+  lastField = path[path.length - 1]
   bodyFields = path[...-1]
 
   (state, val) ->
     if !state?
-      throw new Error 'Argument "state" for deepAssign should not be empty ' 
+      throw new Error 'Argument "state" for deepAssign should not be empty '
     deepSelect(state, bodyFields)[lastField] = val
     state
 
@@ -62,11 +62,11 @@ autoCacheObserver = (store, path) ->
   doCache = deepAssign path
   observer(
     (state) -> deepSelect(state, path),
-    (dispatch, current, previous) -> 
+    (dispatch, current, previous) ->
       doCache storeCache, current
       # TODO: Here's a potential performance problem where this setItem
       # will be called multiple times if more than one targetPath
-      # is modified in one action. 
+      # is modified in one action.
       localStorage.setItem cachePosition, JSON.stringify storeCache
   )
 
@@ -85,15 +85,9 @@ window.getStore = (path) ->
     path = path.split '.'
   for pathSeg in path
     if !state?
-      return 
+      return
     state = state[pathSeg]
   state
-
-window.addEventListener 'game.request', (e) ->
-  store.dispatch onGameRequest e.detail
-
-window.addEventListener 'game.response', (e) ->
-  store.dispatch onGameResponse e.detail
 
 # When any targetPath is modified, store it into localStorage
 # observe(store, [myObserver, ...myOtherObservers])
@@ -102,4 +96,3 @@ observe(store,
 )
 
 module.exports.store = store
-

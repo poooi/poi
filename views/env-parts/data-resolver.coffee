@@ -1,3 +1,6 @@
+{reducer: rootReducer, onGameRequest, onGameResponse} = require('../redux')
+{store} = require('../createStore')
+
 window._portStorageUpdated = true
 
 isGameApi = (pathname) ->
@@ -8,13 +11,15 @@ handleProxyGameOnRequest = (method, [domain, path], body) ->
   # Parse the json object
   try
     body = JSON.parse body
+    details =
+      method: method
+      path: path
+      body: body
+    store.dispatch onGameRequest details
     event = new CustomEvent 'game.request',
       bubbles: true
       cancelable: true
-      detail:
-        method: method
-        path: path
-        body: body
+      detail: details
     window.dispatchEvent event
   catch e
     console.log e
@@ -22,10 +27,6 @@ handleProxyGameOnRequest = (method, [domain, path], body) ->
 responses = []
 locked = false
 resolveResponses = ->
-  extendShip = (ship) ->
-    _.extend _.clone(window.$ships[ship.api_ship_id]), ship
-  extendSlotitem = (item) ->
-    _.extend _.clone(window.$slotitems[item.api_slotitem_id]), item
   locked = true
   while responses.length > 0
     [method, [domain, path, url], body, postBody] = responses.shift()
@@ -50,17 +51,23 @@ resolveResponses = ->
       # Fix api
       body.api_level = parseInt body.api_level if body?.api_level?
       body.api_member_lv = parseInt body.api_member_lv if body?.api_member_lv?
+
+      details =
+        method: method
+        path: path
+        body: body
+        postBody: postBody
+
+      # Update redux store
+      store.dispatch onGameResponse details
+
       switch path
         when '/kcsapi/api_port/port'
           window._portStorageUpdated = false
       event = new CustomEvent 'game.response',
         bubbles: true
         cancelable: true
-        detail:
-          method: method
-          path: path
-          body: body
-          postBody: postBody
+        detail: details
       window.dispatchEvent event
     catch err
       console.error err

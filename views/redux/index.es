@@ -33,24 +33,24 @@ export const reducer = reduceReducers(
     timers,
   }),
 )
-  
+
 
 // === Actions ===
 
 export function onGameResponse({method, path, body, postBody}) {
   return {
     type: `@@Response${path}`,
-    path, 
-    body, 
-    postBody, 
+    path,
+    body,
+    postBody,
   }
 }
 
 export function onGameRequest({method, path, body}) {
   return {
     type: `@@Request${path}`,
-    method, 
-    path, 
-    body, 
+    method,
+    path,
+    body,
   }
 }
