@@ -15,14 +15,19 @@ handleProxyGameOnRequest = (method, [domain, path], body) ->
       method: method
       path: path
       body: body
-    store.dispatch onGameRequest details
+
+    try 
+      store.dispatch onGameRequest details
+    catch e
+      console.error e.stack
+
     event = new CustomEvent 'game.request',
       bubbles: true
       cancelable: true
       detail: details
     window.dispatchEvent event
   catch e
-    console.log e
+    console.error e.stack
 
 responses = []
 locked = false
@@ -59,7 +64,10 @@ resolveResponses = ->
         postBody: postBody
 
       # Update redux store
-      store.dispatch onGameResponse details
+      try
+        store.dispatch onGameResponse details
+      catch e
+        console.error e.stack
 
       switch path
         when '/kcsapi/api_port/port'
