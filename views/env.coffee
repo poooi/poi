@@ -59,3 +59,6 @@ require './env-parts/theme'
 
 # Global data resolver
 require './env-parts/data-resolver'
+
+# Getter
+require './env-parts/getter'
