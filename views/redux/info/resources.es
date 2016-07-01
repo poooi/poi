@@ -46,10 +46,12 @@ export function reducer(state=[], {type, body, postBody}) {
     case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
       return addArrayResources(state, body.api_get_material)
     case '@@Response/kcsapi/api_req_nyukyo/start':
-      if (body.api_highspeed != 1)
-        return
+      let [fuel, steel] = getStore(`info.ships.${postBody.api_ship_id}.api_ndock_item`)
       state = state.slice()
-      state[5] -= 1
+      state[0] -= fuel
+      state[2] -= steel
+      if (body.api_highspeed == 1)
+        state[5] -= 1
       return state
     case '@@Response/kcsapi/api_req_nyukyo/speedchange':
       state = state.slice()
