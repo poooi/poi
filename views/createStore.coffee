@@ -82,7 +82,7 @@ window.getStore = (path) ->
   state = store.getState()
   return state if !path
   if typeof path == 'string'
-    path = path.split '.'
+    path = path.split(/[.(\[")("\])(\[')(\[')\[\]]/g).filter((e) => return e)
   for pathSeg in path
     if !state?
       return
