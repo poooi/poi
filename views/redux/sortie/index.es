@@ -48,7 +48,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
 
     case '@@Response/kcsapi/api_req_map/start':
       let sortieStatus = initState.sortieStatus.slice()
-      if (state.combinedFlag === 0 && postBody.api_deck_id == 1) {
+      if (state.combinedFlag !== 0 && postBody.api_deck_id == 1) {
         sortieStatus[0] = sortieStatus[1] = true
       } else {
         sortieStatus[postBody.api_deck_id-1] = true
