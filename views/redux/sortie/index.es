@@ -13,31 +13,30 @@ const initState = {
 }
 
 export function reducer(state=initState, {type, path, postBody, body}) {
-  if (type != 'GAME_RESPONSE')
-    return state
-  switch (path) {
-    case '/kcsapi/api_port/port':
+  switch (type) {
+    case '@@Response/kcsapi/api_port/port':
       return {
         ...state,
-        combinedFlag: Math.max(body.api_combined_flag, 0),
+        combinedFlag: body.api_combined_flag,
         sortieStatus: initState.sortieStatus,
         escapedPos: [],
       }
+      break
 
-    case '/kcsapi/api_req_sortie/battleresult':
-    case '/kcsapi/api_req_combined_battle/battleresult':
+    case '@@Response/kcsapi/api_req_sortie/battleresult':
+    case '@@Response/kcsapi/api_req_combined_battle/battleresult':
       if ((body.api_escape_flag != null) && body.api_escape_flag > 0) {
         return {
           ...state,
           _toEscapeIdx: [
-            body.api_escape.api_escape_idx[0] - 1, 
+            body.api_escape.api_escape_idx[0] - 1,
             body.api_escape.api_tow_idx[0] - 1,
           ],
         }
       }
       break
 
-    case '/kcsapi/api_req_combined_battle/goback_port':
+    case '@@Response/kcsapi/api_req_combined_battle/goback_port':
       if (escapeId !== -1 && towId !== -1) {
         return {
           ...state,
@@ -47,9 +46,9 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       }
       break
 
-    case '/kcsapi/api_req_map/start':
+    case '@@Response/kcsapi/api_req_map/start':
       let sortieStatus = initState.sortieStatus.slice()
-      if (state.combinedFlag && postBody.api_deck_id == 1) {
+      if (state.combinedFlag === 0 && postBody.api_deck_id == 1) {
         sortieStatus[0] = sortieStatus[1] = true
       } else {
         sortieStatus[postBody.api_deck_id-1] = true
@@ -59,10 +58,8 @@ export function reducer(state=initState, {type, path, postBody, body}) {
         escapedPos: [],
         _toEscapeIdx: [],
       }
+      break
 
   }
   return state;
 }
-
-
-
