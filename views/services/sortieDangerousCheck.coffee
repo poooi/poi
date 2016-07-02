@@ -1,9 +1,12 @@
-window.addEventListener 'game.response', 
+const __ = i18n.main.__.bind(i18n.main)
+
+window.addEventListener 'game.response',
   ({detail: {path, body, postBody}}) ->
     if path in ['/kcsapi/api_req_map/start', '/kcsapi/api_req_map/next']
       state = getStore()
       {sortieStatus, escapedPos} = state.sortie
       {fleets, ships, equips} = state.info
+      {$equips} = state.const
       damagedShips = []
       for deckId in [0..3]
         continue unless sortieStatus[deckId]
@@ -17,7 +20,7 @@ window.addEventListener 'game.response',
           safe = false
           for slotId in ship.api_slot.concat(ship.api_slot_ex || -1)
             continue if slotId == -1
-            safe = true if equips[slotId]?.api_type[3] == 14
+            safe = true if $equips[equips[slotId]?.api_id].api_type[3] == 14
           if !safe
             damagedShips.push("Lv. #{ship.api_lv} - #{ship.api_name}")
       if damagedShips.length > 0
