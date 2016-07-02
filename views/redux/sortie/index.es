@@ -17,7 +17,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     case '@@Response/kcsapi/api_port/port':
       return {
         ...state,
-        combinedFlag: body.api_combined_flag,
+        combinedFlag: body.api_combined_flag || 0,
         sortieStatus: initState.sortieStatus,
         escapedPos: [],
       }
