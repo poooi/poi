@@ -1,5 +1,5 @@
 import {connect} from 'react-redux'
-//import TopAlert from './topalert'
+import TopAlert from '../../ship-parts/topalert'
 import {MiniShipRow} from './minishipitem'
 
 export const PaneBodyMini = connect(() => {
@@ -10,6 +10,12 @@ export const PaneBodyMini = connect(() => {
   }
 )(({fleetId, shipsId}) =>
   <div>
+    <div className='fleet-name'>
+      <TopAlert
+        fleetId={fleetId}
+        isMini={true}
+      />
+    </div>
     <div className={"ship-details-mini"}>
     {
       (shipsId || []).map((shipId, i) =>

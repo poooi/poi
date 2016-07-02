@@ -74,7 +74,7 @@ repairsSelector = (state) -> state.info?.repairs
 window.sortieStatusSelector = (state) -> state.sortie?.sortieStatus
 
 # Returns [shipId for every ship in repair]
-# Returns undefined if uninitialized 
+# Returns undefined if uninitialized
 window.inRepairShipsIdSelector = createSelector repairsSelector, (repairs) ->
   return if !repairs
   pluck(repairs.filter((repair) -> parseInt(repair.api_state) == 1), 'api_ship_id')
@@ -154,5 +154,3 @@ window.makeThisShipEquipDataSelector = () -> createSelector [
       equipData = equipIdToEquipData equipId, equips, $equips
       onslot = if i == api_slotnum then 0 else (api_onslot[i])
       if equipData then equipData.concat(onslot) else undefined
-      
-

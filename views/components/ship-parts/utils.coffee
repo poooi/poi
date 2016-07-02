@@ -77,7 +77,7 @@ module.exports =
   # equipIconId: as in $equip.api_type[3]
   equipIsAircraft: (equipIconId) ->
     equipIconId? && (
-      between(equipIconId, 6, 10) || 
-      between(equipIconId, 21, 22) || 
+      between(equipIconId, 6, 10) ||
+      between(equipIconId, 21, 22) ||
       equipIconId == 33
     )

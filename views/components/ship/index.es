@@ -1,15 +1,16 @@
-import {join} from 'path-extra'
-import {connect} from 'react-redux'
+import { join } from 'path-extra'
+import { connect } from 'react-redux'
 import classNames from 'classnames'
-import {Component} from 'react'
-import {Panel, Button, ButtonGroup} from 'react-bootstrap'
+import { Component } from 'react'
+import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 
 const {ROOT, toggleModal} = window
 const __ = i18n.main.__.bind(i18n.main)
 const __n = i18n.main.__n.bind(i18n.main)
 
-import {ShipRow} from './shipitem'
+import { ShipRow } from './shipitem'
+import TopAlert from '../ship-parts/topalert'
 
 function getStyle(state) {
   if (state >= 0 && state <= 5)
@@ -32,7 +33,7 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
     state = Math.max(state, 4)
   for (let [ship, $ship] of shipsData) {
     if (!ship || !$ship)
-      continue 
+      continue
     // Cond < 20 or medium damage
     if (ship.api_cond < 20 || ship.api_nowhp / ship.api_maxhp < 0.25)
       state = Math.max(state, 2)
@@ -66,7 +67,7 @@ const ShipViewSwitchButton = connect(() => {
       }
     }
   }
-)(({fleetId, activeFleetId, fleetName, fleetState, onClick}) => 
+)(({fleetId, activeFleetId, fleetName, fleetState, onClick}) =>
   <Button
     bsSize="small"
     bsStyle={getStyle(fleetState)}
@@ -86,6 +87,12 @@ const FleetShipView = connect(() => {
   }
 )(({fleetId, shipsId}) =>
   <div>
+    <div className='fleet-name'>
+      <TopAlert
+        fleetId={fleetId}
+        isMini={false}
+      />
+    </div>
     <div className={"ship-details"}>
     {
       (shipsId || []).map((shipId, i) =>
@@ -206,4 +213,3 @@ export const priority = 100000.1
 export const displayName = <span><FontAwesome key={0} name='bars' />{__(' Fleet')}</span>
 export const description = '舰队展示页面，展示舰队详情信息'
 export const reactClass = ShipView
-  
