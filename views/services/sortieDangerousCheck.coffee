@@ -1,4 +1,4 @@
-const __ = i18n.main.__.bind(i18n.main)
+__ = i18n.main.__.bind(i18n.main)
 
 window.addEventListener 'game.response',
   ({detail: {path, body, postBody}}) ->
