@@ -1,7 +1,7 @@
 {createStore} = require 'redux'
 {observer, observe} = require 'redux-observers'
 
-{reducer: rootReducer} = require('./redux')
+{reducer: rootReducer, onConfigChange} = require('./redux')
 {updateFatigueTimer} = require('./redux/timers')
 
 cachePosition = '_storeCache'
@@ -88,6 +88,15 @@ window.getStore = (path) ->
       return
     state = state[pathSeg]
   state
+
+# Listen to config.set event
+window.config.on('config.set', (path, value) =>
+  details = {
+    path: path
+    value: Object.clone(value)
+  }
+  store.dispatch(onConfigChange(details))
+)
 
 # When any targetPath is modified, store it into localStorage
 # observe(store, [myObserver, ...myOtherObservers])

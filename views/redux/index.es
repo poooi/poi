@@ -5,6 +5,7 @@ import {reducer as constReducer} from './const'
 import {reducer as info} from './info'
 import {reducer as sortie} from './sortie'
 import {reducer as timers} from './timers'
+import {reducer as config} from './config'
 
 // === Utils ===
 
@@ -31,6 +32,7 @@ export const reducer = reduceReducers(
     info,
     sortie,
     timers,
+    config,
   }),
 )
 
@@ -52,5 +54,13 @@ export function onGameRequest({method, path, body}) {
     method,
     path,
     body,
+  }
+}
+
+export function onConfigChange({path, value}) {
+  return {
+    type: `@@Config`,
+    path,
+    value,
   }
 }
