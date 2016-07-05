@@ -61,17 +61,15 @@ config.on('config.set', (path, value) => {
 })
 
 const SetNotifyIndividualConfig = connect(() => {
-  return (state, props) => {
-    let notify = defaultAs(state.config.poi.notify, {})
-    return notify
-  }
+  return (state, props) =>
+    confGet(state.config, 'poi.notify', {})
 })(class extends Component {
   constructor(props) {
     super(props)
     this.state = {
       timeSettingShow: false,
-      moraleValue: Object.clone(props.morale.value || 49),
-      expeditionValue: Object.clone(props.expedition.value || 60),
+      moraleValue: confGet(props, 'morale.value', 49),
+      expeditionValue: confGet(props, 'expedition.value', 60),
     }
   }
   handleSetNotify = (path) => {
@@ -179,7 +177,6 @@ const SetNotifyIndividualConfig = connect(() => {
                     <Col xs={3} className='notif-container'>
                       <Input type="number" ref="expeditionValue" id="expeditionValue"
                              disabled={!(confGet(this.props, 'expedition.enabled', true))}
-                             value={this.state.expeditionValue}
                              onChange={this.handleSetExpedition}
                              onClick={this.selectInput.bind(this, "expeditionValue")}
                              bsSize='small'
@@ -194,7 +191,6 @@ const SetNotifyIndividualConfig = connect(() => {
                     <Col xs={3} className='notif-container'>
                       <Input type="number" ref="moraleValue" id="moraleValue"
                              disabled={!(confGet(this.props, 'morale.enabled', true))}
-                             value={this.state.moraleValue}
                              onChange={this.handleSetMorale}
                              onClick={this.selectInput.bind(this, "moraleValue")}
                              bsSize='small'
@@ -216,14 +212,16 @@ const SetNotifyIndividualConfig = connect(() => {
   }
 })
 
-
-class CheckboxLabelConfig extends Component {
-  state = {
-    myval: defaultAs(this.props.value, this.props.defaultVal)
-  }
+const CheckboxLabelConfig = connect(() => {
+  return (state, props) => ({
+    value: confGet(state.config, props.configName, props.defaultVal),
+    configName: props.configName,
+    undecided: props.undecided,
+    label: props.label,
+  })
+})(class extends Component {
   handleChange = () => {
-    let enabled = this.state.myval
-    config.set(this.props.configName, !enabled)
+    config.set(this.props.configName, !this.props.value)
   }
   render () {
     return (
@@ -235,7 +233,7 @@ class CheckboxLabelConfig extends Component {
                 type="checkbox"
                 label={this.props.label}
                 disabled={this.props.undecided}
-                checked={this.props.undecided ? false : this.state.myval}
+                checked={this.props.undecided ? false : this.props.value}
                 onChange={this.props.undecided ? null : this.handleChange} />
             </Col>
           </Grid>
@@ -243,12 +241,15 @@ class CheckboxLabelConfig extends Component {
       </Row>
     )
   }
-}
+})
 
-class FolderPickerConfig extends Component {
-  state = {
-    myval: defaultAs(this.props.value, this.props.defaultVal)
-  }
+const FolderPickerConfig = connect(() => {
+  return (state, props) => ({
+    value: confGet(state.config, props.configName, props.defaultVal),
+    configName: props.configName,
+    label: props.label
+  })
+})(class extends Component {
   onDrag = (e) => {
     e.preventDefault()
   }
@@ -272,10 +273,10 @@ class FolderPickerConfig extends Component {
   }
   folderPickerOnClick = () => {
     this.synchronize(() => {
-      ensureDirSync(this.state.myval)
+      ensureDirSync(this.props.value)
       let filenames = dialog.showOpenDialog({
         title: this.props.label,
-        defaultPath: this.state.myval,
+        defaultPath: this.props.value,
         properties: [
           'openDirectory',
           'createDirectory'
@@ -296,13 +297,13 @@ class FolderPickerConfig extends Component {
                onDragEnter={this.onDrag}
                onDragOver={this.onDrag}
                onDragLeave={this.onDrag}>
-            {this.state.myval}
+            {this.props.value}
           </div>
         </Col>
       </Grid>
     )
   }
-}
+})
 
 class ClearCacheCookieConfig extends Component {
   handleClearCookie = (e) => {
@@ -338,8 +339,11 @@ class ClearCacheCookieConfig extends Component {
   }
 }
 
-
-class SelectLanguageConfig extends Component {
+const SelectLanguageConfig = connect(() => {
+  return (state, props) => ({
+    value: confGet(state.config, 'poi.language', language)
+  })
+})(class extends Component {
   handleSetLanguage = () => {
     let language = this.refs.language.getValue()
     config.set('poi.language', language)
@@ -359,20 +363,16 @@ class SelectLanguageConfig extends Component {
       </Grid>
     )
   }
-}
+})
 
 const SlotCheckConfig = connect(() => {
-  return (state, props) => {
-    let mapStartCheck = defaultAs(state.config.poi.mapStartCheck, {})
-    return {
-      type: props.type,
-      conf: mapStartCheck[props.type]
-    }
-  }
+  return (state, props) => ({
+    type: props.type,
+    conf: (confGet(state.config, 'poi.mapStartCheck', {}))[props.type],
+  })
 })(class extends Component {
   constructor(props) {
     super(props)
-    console.log(props)
     let mapStartCheck = Object.clone(props.conf || {})
     if (mapStartCheck.enable === undefined) {
       mapStartCheck.enable = false
@@ -468,17 +468,24 @@ const SlotCheckConfig = connect(() => {
   }
 })
 
-class ShortcutConfig extends Component {
-  state = {
-    myval: defaultAs(this.props.value, this.props.defaultVal),
-    recording: false,
+const ShortcutConfig = connect(() => {
+  return (state, props) => ({
+    value: confGet(state.conf, 'poi.shortcut.bosskey', props.defaultVal),
+    configName: props.configName,
+  })
+})(class extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      recording: false,
+    }
   }
   displayText = () => {
     if (this.recording()) {
       return __('Press the key, or Esc to cancel')
     }
     else if (this.enabled()) {
-      return `<${this.state.myval}>`
+      return `<${this.props.value}>`
     } else {
       return __('Disabled')
     }
@@ -486,7 +493,7 @@ class ShortcutConfig extends Component {
   active = () => ((typeof this.props.active == "undefined") ? true : this.props.active)
   showDisableButton = () => (this.active() && this.enabled() && !this.recording())
   recording = () => (this.state.recording)
-  enabled = () => (!!this.state.myval)
+  enabled = () => (!!this.props.value)
   handleClickAnywhere = (e) => {
     document.removeEventListener('mousedown', this.handleClickAnywhere)
     this.abortRecording()
@@ -596,7 +603,7 @@ class ShortcutConfig extends Component {
       </div>
     )
   }
-}
+})
 
 mousetrap.prototype.handleKey = (character, modifiers, e) => {
   if (e.type != 'keydown' || character in ['shift', 'alt', 'ctrl', 'meta']) {
@@ -608,132 +615,121 @@ mousetrap.prototype.handleKey = (character, modifiers, e) => {
   }
 }
 
-const PoiConfig = connect(() => {
-  return (state, props) => {
-    return defaultAs(state.config, {})
-  }
-})((conf) => (
-  <div>
-    <div className="form-group" id='navigator-bar'>
-      <Divider text={__('Browser')} />
-      <NavigatorBar />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Notification')} />
-      <SetNotifyIndividualConfig />
-    </div>
-    <div className="form-group" >
-      <Divider text={__('Slot Check')} />
-      <SlotCheckConfig type="ship" />
-      <SlotCheckConfig type="item" />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Cache and cookies')} />
-      <ClearCacheCookieConfig />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Language')} />
-      <SelectLanguageConfig value={defaultAs(get(conf, "poi.language"), language)} />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Screenshot Folder')} />
-      <FolderPickerConfig
-        label={__('Screenshot Folder')}
-        configName="poi.screenshotPath"
-        value={get(conf, "poi.screenshotPath")}
-        defaultVal={window.screenshotPath}
-        onNewVal={(pathname) => {
-          window.screenshotPath = pathname
-        }} />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Cache Folder')} />
-      <FolderPickerConfig
-        label={__('Cache Folder')}
-        configName="poi.cachePath"
-        value={get(conf, "poi.cachePath")}
-        defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Other settings')} />
-      <Grid>
-        {
-          (process.platform !== 'darwin') ?
-            <ShortcutConfig
-              label={__('Boss key')}
-              configName="poi.shortcut.bosskey"
-              value={get(conf, "poi.shortcut.bosskey")}
-              onNewVal={()=> ipcRenderer.send('refresh-shortcut')} />
-          :
-            <ShortcutConfig
-              label={__('Boss key')}
-              value={undefined}
-              defaultVal="Cmd+H"
-              active={false} />
-        }
-        {
-          (process.platform !== 'darwin') ?
-            <CheckboxLabelConfig
-              label={__('Confirm before exit')}
-              configName="poi.confirm.quit"
-              value={get(conf, "poi.confirm.quit")}
-              defaultVal={false} />
-          :
-            <OverlayTrigger placement="top"
-              overlay={
-                  <Tooltip id="tooltip-confirm-before-exit">
-                    {__('Set this in the OS X App Menu')}
-                  </Tooltip>} >
-              <div>
+class PoiConfig extends Component {
+  render() {
+    return (
+      <div>
+        <div className="form-group" id='navigator-bar'>
+          <Divider text={__('Browser')} />
+          <NavigatorBar />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Notification')} />
+          <SetNotifyIndividualConfig />
+        </div>
+        <div className="form-group" >
+          <Divider text={__('Slot Check')} />
+          <SlotCheckConfig type="ship" />
+          <SlotCheckConfig type="item" />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Cache and cookies')} />
+          <ClearCacheCookieConfig />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Language')} />
+          <SelectLanguageConfig />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Screenshot Folder')} />
+          <FolderPickerConfig
+            label={__('Screenshot Folder')}
+            configName="poi.screenshotPath"
+            defaultVal={window.screenshotPath}
+            onNewVal={(pathname) => {
+              window.screenshotPath = pathname
+            }} />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Cache Folder')} />
+          <FolderPickerConfig
+            label={__('Cache Folder')}
+            configName="poi.cachePath"
+            defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Other settings')} />
+          <Grid>
+            {
+              (process.platform !== 'darwin') ?
+                <ShortcutConfig
+                  label={__('Boss key')}
+                  configName="poi.shortcut.bosskey"
+                  onNewVal={()=> ipcRenderer.send('refresh-shortcut')} />
+              :
+                <ShortcutConfig
+                  label={__('Boss key')}
+                  defaultVal="Cmd+H"
+                  active={false} />
+            }
+            {
+              (process.platform !== 'darwin') ?
                 <CheckboxLabelConfig
                   label={__('Confirm before exit')}
-                  undecided={true} />
-              </div>
-            </OverlayTrigger>
-        }
-        <CheckboxLabelConfig
-          label={__('Display \"Tips\"')}
-          configName="poi.doyouknow.enabled"
-          value={get(conf, "poi.doyouknow.enabled")}
-          defaultVal={true} />
-      </Grid>
-    </div>
-    <div className="form-group">
-      <Divider text={__('Advanced functionalities')} />
-      <Grid>
-        <CheckboxLabelConfig
-          label={__('Disable Hardware Acceleration')}
-          configName="poi.disableHA"
-          value={get(conf, "poi.disableHA")}
-          defaultVal={false} />
-        <CheckboxLabelConfig
-          label={__('Editing DMM Cookie\'s Region Flag')}
-          configName="poi.enableDMMcookie"
-          value={get(conf, "poi.enableDMMcookie")}
-          defaultVal={false} />
-        <CheckboxLabelConfig
-          label={__('Prevent DMM Network Change Popup')}
-          configName="poi.disableNetworkAlert"
-          value={get(conf, "poi.disableNetworkAlert")}
-          defaultVal={false} />
-        <CheckboxLabelConfig
-          label={__('Show network status in notification bar')}
-          configName="poi.showNetworkLog"
-          value={get(conf, "poi.showNetworkLog")}
-          defaultVal={true} />
-        {
-          (process.platform === 'win32') ?
-          <CheckboxLabelConfig
-            label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
-            configName="poi.createShortcut"
-            value={get(conf, "poi.createShortcut")}
-            defaultVal={true} />
-          :
-          null
-        }
-      </Grid>
-    </div>
-  </div>
-))
+                  configName="poi.confirm.quit"
+                  defaultVal={false} />
+              :
+                <OverlayTrigger placement="top"
+                  overlay={
+                      <Tooltip id="tooltip-confirm-before-exit">
+                        {__('Set this in the OS X App Menu')}
+                      </Tooltip>} >
+                  <div>
+                    <CheckboxLabelConfig
+                      label={__('Confirm before exit')}
+                      undecided={true} />
+                  </div>
+                </OverlayTrigger>
+            }
+            <CheckboxLabelConfig
+              label={__('Display \"Tips\"')}
+              configName="poi.doyouknow.enabled"
+              defaultVal={true} />
+          </Grid>
+        </div>
+        <div className="form-group">
+          <Divider text={__('Advanced functionalities')} />
+          <Grid>
+            <CheckboxLabelConfig
+              label={__('Disable Hardware Acceleration')}
+              configName="poi.disableHA"
+              defaultVal={false} />
+            <CheckboxLabelConfig
+              label={__('Editing DMM Cookie\'s Region Flag')}
+              configName="poi.enableDMMcookie"
+              defaultVal={false} />
+            <CheckboxLabelConfig
+              label={__('Prevent DMM Network Change Popup')}
+              configName="poi.disableNetworkAlert"
+              defaultVal={false} />
+            <CheckboxLabelConfig
+              label={__('Show network status in notification bar')}
+              configName="poi.showNetworkLog"
+              defaultVal={true} />
+            {
+              (process.platform === 'win32') ?
+              <CheckboxLabelConfig
+                label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
+                configName="poi.createShortcut"
+                defaultVal={true} />
+              :
+              null
+            }
+          </Grid>
+        </div>
+      </div>
+    )
+  }
+}
 
 export default PoiConfig
