@@ -368,31 +368,26 @@ const SelectLanguageConfig = connect(() => {
 const SlotCheckConfig = connect(() => {
   return (state, props) => ({
     type: props.type,
-    conf: (confGet(state.config, 'poi.mapStartCheck', {}))[props.type],
+    conf: (confGet(state.config, `poi.mapStartCheck.${props.type}`, {
+      enable: false,
+      minFreeSlots: '',
+    })),
   })
 })(class extends Component {
   constructor(props) {
     super(props)
-    let mapStartCheck = Object.clone(props.conf || {})
-    if (mapStartCheck.enable === undefined) {
-      mapStartCheck.enable = false
-    }
-    if (mapStartCheck.minFreeSlots === undefined) {
-      mapStartCheck.minFreeSlots = ''
-    }
     this.state = {
       showInput: false,
-      value: mapStartCheck.minFreeSlots,
+      value: props.minFreeSlots,
     }
   }
-  CheckValid = (v) => {
-    return (!isNaN(parseInt(v)) && parseInt(v) >= 0)
-  }
+  CheckValid = (v) =>
+    (!isNaN(parseInt(v)) && parseInt(v) >= 0)
   handleToggleInput = () => {
     if (this.state.showInput) {
       this.handleDisable()
     } else {
-      let num = this.props.mapStartCheck[this.props.type].minFreeSlots
+      let num = this.state.value
       this.setState({
         showInput: true,
         value: this.CheckValid(num) ? num : ''
@@ -404,7 +399,7 @@ const SlotCheckConfig = connect(() => {
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    if (thisCheckValid(this.state.value)) {
+    if (this.CheckValid(this.state.value)) {
       let n = parseInt(this.state.value)
       config.set(`poi.mapStartCheck.${this.props.type}`, {
         enable: true,
@@ -426,11 +421,11 @@ const SlotCheckConfig = connect(() => {
     this.textInput.getInputDOMNode().select()
   }
   render() {
-    let toggleBtnStyle = this.state.enable ? 'success' : 'default'
+    let toggleBtnStyle = this.props.conf.enable ? 'success' : 'default'
     if (this.state.showInput) {
       toggleBtnStyle = 'danger'
     }
-    let toggleBtnTxt = this.state.enable ? 'ON' : 'OFF'
+    let toggleBtnTxt = this.props.conf.enable ? 'ON' : 'OFF'
     if (this.state.showInput) {
       toggleBtnTxt = __('Disable')
     }
