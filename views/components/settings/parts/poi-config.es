@@ -42,6 +42,7 @@ if (!(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])) {
   }
 }
 
+let keyListener
 
 config.on('config.set', (path, value) => {
   switch(path) {
@@ -56,6 +57,12 @@ config.on('config.set', (path, value) => {
         window.i18n[namespace].setLocale(value)
       }
       window.language = value
+      break
+    case 'poi.screenshotPath':
+      window.screenshotPath = value
+      break
+    case 'poi.shortcut.bosskey':
+      ipcRenderer.send('refresh-shortcut')
       break
   }
 })
@@ -465,7 +472,7 @@ const SlotCheckConfig = connect(() => {
 
 const ShortcutConfig = connect(() => {
   return (state, props) => ({
-    value: confGet(state.conf, 'poi.shortcut.bosskey', props.defaultVal),
+    value: confGet(state.config, props.configName, props.defaultVal),
     configName: props.configName,
   })
 })(class extends Component {
@@ -485,7 +492,7 @@ const ShortcutConfig = connect(() => {
       return __('Disabled')
     }
   }
-  active = () => ((typeof this.props.active == "undefined") ? true : this.props.active)
+  active = () => ((typeof this.props.active === "undefined") ? true : this.props.active)
   showDisableButton = () => (this.active() && this.enabled() && !this.recording())
   recording = () => (this.state.recording)
   enabled = () => (!!this.props.value)
@@ -503,20 +510,20 @@ const ShortcutConfig = connect(() => {
     return false
   }
   handleClickRecord = (e) => {
-    this.constructor.prototype.listener = (character, modifiers, e) => {
+    keyListener = (character, modifiers, e) => {
       if (this.keyShouldIgnore(character, modifiers)) {
         return
       }
-      this.constructor.prototype.listener = null
+      keyListener = null
       if (character === 'esc' && modifiers.length === 0) {
         this.abortRecording()
       }
       else {
         this.setKey(character, modifiers)
       }
-      document.addEventListener('mousedown', this.handleClickAnywhere)
-      this.setState({recording: true})
     }
+    document.addEventListener('mousedown', this.handleClickAnywhere)
+    this.setState({recording: true})
   }
   handleDisable = () => {
     this.setState({
@@ -538,31 +545,26 @@ const ShortcutConfig = connect(() => {
       Ins: 'Insert',
     }
     let str_modifiers = (() => {
-      let i, len, results;
-      results = []
-      for (i = 0, len = modifiers.length; i < len; i++) {
-        m = modifiers[i]
+      let i, results = []
+      for (i = 0; i < modifiers.length; i++) {
+        let m = modifiers[i]
         results.push(mapping[m])
       }
       return results
     })()
     character = character[0].toUpperCase() + character.substr(1)
-    let s = (str_modifiers.concat [mapping[character] || character]).join('+')
+    let s = (str_modifiers.concat([mapping[character] || character])).join('+')
     return s
   }
   setKey = (character, modifiers) => {
     let s = this.transformKeyStr(character, modifiers)
     this.setState({
-      myval: s,
       recording: false,
     })
     this.newVal(s)
   }
   newVal = (val) =>{
     config.set(this.props.configName, val)
-    if (this.props.onNewVal) {
-      this.props.onNewVal(val)
-    }
   }
   render() {
     return (
@@ -601,12 +603,12 @@ const ShortcutConfig = connect(() => {
 })
 
 mousetrap.prototype.handleKey = (character, modifiers, e) => {
-  if (e.type != 'keydown' || character in ['shift', 'alt', 'ctrl', 'meta']) {
+  if (e.type !== 'keydown' || ['shift', 'alt', 'ctrl', 'meta'].indexOf(character) !== -1) {
     return
   }
-  let fn = ShortcutConfig.prototype.listener
-  if (fn) {
-    fn.apply(this, argument)
+  let fn = keyListener
+  if (typeof fn === 'function') {
+    fn(character, modifiers, e)
   }
 }
 
@@ -640,10 +642,7 @@ class PoiConfig extends Component {
           <FolderPickerConfig
             label={__('Screenshot Folder')}
             configName="poi.screenshotPath"
-            defaultVal={window.screenshotPath}
-            onNewVal={(pathname) => {
-              window.screenshotPath = pathname
-            }} />
+            defaultVal={window.screenshotPath} />
         </div>
         <div className="form-group">
           <Divider text={__('Cache Folder')} />
@@ -659,8 +658,7 @@ class PoiConfig extends Component {
               (process.platform !== 'darwin') ?
                 <ShortcutConfig
                   label={__('Boss key')}
-                  configName="poi.shortcut.bosskey"
-                  onNewVal={()=> ipcRenderer.send('refresh-shortcut')} />
+                  configName="poi.shortcut.bosskey" />
               :
                 <ShortcutConfig
                   label={__('Boss key')}
