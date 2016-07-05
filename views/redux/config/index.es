@@ -1,22 +1,41 @@
-const set = (target, path, value) => {
-  let nowLevel = path.split('.', 1)[0]
-  let nowObj = Object.clone(target[nowLevel])
-  if (path.split('.').length === 1) {
-    nowObj = value
-  } else {
-    let arr = path.split('.')
-    arr.shift()
-    nowObj = set(nowObj, arr.join('.'), value)
+import {isEqual} from 'lodash'
+
+function reduxSet(obj, path, val) {
+  const [prop, ...restPath] = path
+  if (typeof prop === 'undefined') {
+    if (!isEqual(obj, val))
+      return val
+    else
+      return obj
   }
-  target[nowLevel] = nowObj
-  return target
+  let before
+  if (prop in obj) {
+    before = obj[prop]
+  } else {
+    before = {}
+  }
+  const after = reduxSet(before, restPath, val)
+  if (after !== before) {
+    let result
+    if (Array.isArray(obj)) {
+      result = obj.slice()
+      result[prop] = after
+    } else {
+      result = {
+        ...obj,
+        [prop]: after,
+      }
+    }
+    return result
+  }
+  return obj
 }
 
 export function reducer(state=Object.clone(config.get('')), {type, path, value}) {
   switch (type) {
     case '@@Config':
       let newState = {...state}
-      set(newState, path, value)
+      newState = reduxSet(newState, path.split('.'), value)
       return newState
       break
     default:

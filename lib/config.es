@@ -25,10 +25,11 @@ class configClass extends EventEmitter {
     if (!this.configData) {
       try {
         fs.accessSync(defaultConfigPath, fs.R_OK)
-        this.configData = CSON.parseCSONFile(defaultConfigPath)
+        this.configData = CSON.parseCSONFile(defaultConfigPath) || {}
         dbg.log `Config loaded from: ${defaultConfigPath}`
       }
       catch (e) {
+        this.configData = {}
         dbg.log(e)
       }
     }
