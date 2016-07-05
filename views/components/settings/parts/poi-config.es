@@ -18,10 +18,6 @@ const __ = i18n.setting.__.bind(i18n.setting)
 const __n = i18n.setting.__n.bind(i18n.setting)
 const { showItemInFolder, openItem } = shell
 
-const defaultAs = (stateVal, defaultVal) =>
-  ((typeof stateVal === "undefined") ? defaultVal : stateVal)
-
-
 const confGet = (target, path, value) =>
   ((typeof get(target, path) === "undefined") ? value : get(target, path))
 
@@ -185,6 +181,7 @@ const SetNotifyIndividualConfig = connect(() => {
                       <Input type="number" ref="expeditionValue" id="expeditionValue"
                              disabled={!(confGet(this.props, 'expedition.enabled', true))}
                              onChange={this.handleSetExpedition}
+                             value={this.state.expeditionValue}
                              onClick={this.selectInput.bind(this, "expeditionValue")}
                              bsSize='small'
                              addonAfter='S'
@@ -199,6 +196,7 @@ const SetNotifyIndividualConfig = connect(() => {
                       <Input type="number" ref="moraleValue" id="moraleValue"
                              disabled={!(confGet(this.props, 'morale.enabled', true))}
                              onChange={this.handleSetMorale}
+                             value={this.state.moraleValue}
                              onClick={this.selectInput.bind(this, "moraleValue")}
                              bsSize='small'
                              className='notif-input' />
