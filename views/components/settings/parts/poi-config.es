@@ -127,11 +127,11 @@ const SetNotifyIndividualConfig = connect(() => {
           </Col>
           <Col xs={6}>
             <OverlayTrigger placement='top' overlay={
-                <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(notify.volume * 100)}%</strong></Tooltip>
+                <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(confGet(this.props, 'volume', 0.8) * 100)}%</strong></Tooltip>
               }>
               <Input type="range" ref="notifyVolume"
                 onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
-                min={0.0} max={1.0} step={0.05} defaultValue={notify.volume} />
+                min={0.0} max={1.0} step={0.05} defaultValue={confGet(this.props, 'volume', 0.8)} />
             </OverlayTrigger>
           </Col>
         </div>
