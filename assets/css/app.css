@@ -59,6 +59,9 @@ body {
 #poi-app-container {
   overflow: hidden;
 }
+kan-game {
+  overflow-x: hidden;
+}
 kan-game webview {
   height: 100%;
 }
@@ -101,6 +104,8 @@ hr {
 }
 poi-app {
   position: static;
+  width: 0;
+  height: 0;
 }
 poi-app .container {
   padding-left: 0px;
@@ -134,6 +139,7 @@ poi-app poi-nav-tabs .nav  li a {
 }
 poi-app poi-nav-tabs .nav .dropdown-menu {
   min-width: 100%;
+  overflow: auto;
 }
 poi-app poi-nav-tabs .nav .dropdown {
   overflow: inherit;
@@ -211,6 +217,7 @@ poi-control .collapsing {
 }
 .poi-app-tabpane {
   width: 100%;
+  overflow-y: scroll;
 }
 .poi-plugin {
   left: 100%;
@@ -318,4 +325,8 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 }
 .transparent {
   opacity: 0;
+}
+div[role='tooltip'],
+#poi-app-container {
+  transform-origin: 0 0;
 }

@@ -41,8 +41,7 @@ getWebviewWidth = Promise.coroutine(function* () {
 })
 
 window.align = Promise.coroutine(function* () {
-  var zoom
-  zoom = yield getWebviewWidth()
+  let zoom = yield getWebviewWidth()
   zoom = zoom / 800
   webFrame.setZoomFactor(zoom)
   window.scrollTo(0, 0)
