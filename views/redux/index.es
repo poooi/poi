@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux'
 import reduceReducers from 'reduce-reducers'
+import {isEqual} from 'lodash'
 
 import {reducer as constReducer} from './const'
 import {reducer as info} from './info'
@@ -21,6 +22,37 @@ window.indexify = (array, key='api_id') => {
     result[keyFunc(e)] = e
   })
   return result
+}
+
+window.reduxSet = (obj, path, val) => {
+  const [prop, ...restPath] = path
+  if (typeof prop === 'undefined') {
+    if (!isEqual(obj, val))
+      return val
+    else
+      return obj
+  }
+  let before
+  if (prop in obj) {
+    before = obj[prop]
+  } else {
+    before = {}
+  }
+  const after = reduxSet(before, restPath, val)
+  if (after !== before) {
+    let result
+    if (Array.isArray(obj)) {
+      result = obj.slice()
+      result[prop] = after
+    } else {
+      result = {
+        ...obj,
+        [prop]: after,
+      }
+    }
+    return result
+  }
+  return obj
 }
 
 
