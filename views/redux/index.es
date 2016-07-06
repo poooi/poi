@@ -36,6 +36,8 @@ export const reducer = reduceReducers(
   }),
 )
 
+console.log(reducer)
+
 
 // === Actions ===
 

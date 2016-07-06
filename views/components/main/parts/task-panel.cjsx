@@ -396,7 +396,7 @@ TaskPanel = React.createClass
     @setState
       tasks: tasks
   componentDidMount: ->
-    window.addEventListener 'game.response', @handleResponse
+    #window.addEventListener 'game.response', @handleResponse
     window.addEventListener 'task.info', @handleTaskInfo
     window.addEventListener 'battle.result', @handleBattleResult
     window.addEventListener 'view.main.visible', @handleVisibleResponse
