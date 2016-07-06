@@ -76,9 +76,12 @@ CountdownTimer = React.createClass
     @timeRemaining = @constructor.getTimeRemaining(@state.completeTime, currentTime)
     @stopTick() if @timeRemaining < 1
     if @state.completeTime >= 0
-      @textLabel.textContent = resolveTime @timeRemaining if @textLabel?
-      @props.tickCallback(@timeRemaining) if @props.tickCallback?
-      @props.completeCallback() if @timeRemaining < 1 and @props.completeCallback?
+      try
+        @textLabel.textContent = resolveTime @timeRemaining if @textLabel?
+        @props.tickCallback(@timeRemaining) if @props.tickCallback?
+        @props.completeCallback() if @timeRemaining < 1 and @props.completeCallback?
+      catch error
+        console.err(error)
     @timeRemaining--
   render: ->
     <span ref={(ref) => @textLabel = ref}>{resolveTime @timeRemaining}</span>
