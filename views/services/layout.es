@@ -1,5 +1,4 @@
 const WindowManager = remote.require('./lib/window')
-const {setBounds, getBounds} = remote.require('./lib/utils')
 const {config, proxy} = window
 
 $('#layout-css').setAttribute('href',
@@ -115,10 +114,10 @@ const adjustSize = () => {
 
   // Resize when window size smaller than webview size
   if (layout === 'vertical' && webviewWidth > window.innerWidth) {
-    let {width, height, x, y} = getBounds()
+    let {width, height, x, y} = remote.getCurrentWindow().getBounds()
     let borderX = width - window.innerWidth
     width = webviewWidth + borderX
-    setBounds({width, height, x, y})
+    remote.getCurrentWindow().setBounds({width, height, x, y})
   }
 
   // Fix poi-info when game size 0x0
@@ -157,7 +156,7 @@ const adjustSize = () => {
 adjustSize()
 
 const changeBounds = () => {
-  let {width, height, x, y} = getBounds()
+  let {width, height, x, y} = remote.getCurrentWindow().getBounds()
   let borderX = width - window.innerWidth
   let borderY = height - window.innerHeight
   let newHeight = window.innerHeight
@@ -171,7 +170,7 @@ const changeBounds = () => {
     newHeight = window.innerWidth / 7 * 5 / 800 * 480 + 420
     newWidth = window.innerWidth / 7 * 5
   }
-  setBounds({
+  remote.getCurrentWindow().setBounds({
     x,
     y,
     width: parseInt(newWidth + borderX),
