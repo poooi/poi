@@ -70,6 +70,9 @@ window.align = Promise.coroutine(function* () {
   .naviapp {
     z-index: -1;
   }
+  #ntg-recommend {
+    display: none !important;
+  }
   `
 })
 window.unalign = () => {
