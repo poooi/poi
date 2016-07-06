@@ -25,6 +25,44 @@ function filterObjectValue(obj, pred=Boolean) {
   return obj
 }
 
+function copyIfSame(obj, to) {
+  // assert(typeof obj === 'object')
+  if (obj === to)
+    return Array.isArray(obj) ? obj.slice() : {...obj}
+  return obj
+}
+
+// Assert one of a and b is a number, and the other is a string
+function stringNumberEqual(a, b) {
+  if (typeof a === 'string')
+    [a, b] = [b, a]
+  b = parseFloat(b)
+  return a == b
+}
+
+// Update all key/val pair of items into obj with Object.assign({}, obj, items)
+// If non of items needs updating, return the original obj.
+// Will handle parseInt.
+function updateObject(obj, items) {
+  const originalObj = obj
+  each(items, (v, k) => {
+    let thisUpdate
+    const typeNew = typeof v
+    const typeOld = typeof obj[k]
+    if ((typeNew === 'string' && typeOld === 'number')
+        || (typeNew === 'number' && typeOld === 'string')) {
+      thisUpdate = !stringNumberEqual(v, obj[k])
+    } else {
+      thisUpdate = v !== obj[k]
+    }
+    if (thisUpdate) {
+      obj = copyIfSame(obj, originalObj)
+      obj[k] = v
+    }
+  })
+  return obj
+}
+
 const zero = 331200000
 function isDifferentDay(time1, time2) {
   const day1 = Math.floor((time1 - zero) / 86400000)
@@ -225,6 +263,8 @@ const initState = {
   records: {},
   activeQuests: [],
   questGoals: {},
+  activeCapacity: 5,
+  activeNum: 0,
 }
 
 export function reducer(state=initState, action) {
@@ -269,63 +309,73 @@ export function reducer(state=initState, action) {
     }
 
     //== Update active quests ==
-    case '@@Response/kcsapi/api_port/port':
-      if (state.activeQuests.length > body.api_parallel_quest_count) {
+    case '@@Response/kcsapi/api_port/port': {
+      let {api_parallel_quest_count: activeCapacity} = body
+      if (state.activeQuests.length > activeCapacity) {
         return {
           ...state,
+          activeCapacity,
           activeQuest: state.activeQuests.slice(0, body.api_parallel_quest_count),
         }
       }
       break
+    }
 
     // Update active quests
     case '@@Response/kcsapi/api_get_member/questlist': {
-      let activeQuests = state.activeQuests.slice()
-      let records = {...state.records}
-      let updated = false
-      ;(body.api_list || []).forEach((quest) => {
+      let {activeQuests, records} = state.activeQuests
+      (body.api_list || []).forEach((quest) => {
         if (typeof quest !== 'object' || quest.api_state < 2)
           return
+        // records
         const {api_no} = quest
         if (!records[api_no] && state.questGoals[api_no]) {
+          records = copyIfSame(records, state.records)
           records[api_no] = newQuestRecord(api_no, state.questGoals)
         }
+        // activeQuests
         let idx = findIndexByQuestId(activeQuests, api_no)
         if (idx == -1)
           idx = activeQuests.length
+        activeQuests = copyIfSame(activeQuests, state.activeQuests)
         activeQuests[idx] = quest
         updated = true
       })
-      if (updated) {
-        return {
-          ...state,
-          activeQuests,
-          records,
-        }
-      }
+      let newState = updateObject(state, {
+        activeQuests,
+        records,
+      })
+      if (newState !== state)
+        return newState
       break
     }
 
     // Completed quest
     case '@@Response/kcsapi/api_req_quest/clearitemget': {
       const {api_quest_id} = postBody
+      // records
       let {activeQuests, records} = state
       if (api_quest_id in records) {
         records = Object.assign(records)
         delete records[api_quest_id]
       }
+      // activeQuests
       let idx = findIndexByQuestId(activeQuests, api_quest_id)
       if (idx != -1) {
         activeQuests = activeQuests.slice()
         activeQuests.splice(idx, 1)
       }
-      if (records !== state.records || activeQuests !== state.activeQuests) {
-        return {
-          ...state,
-          records,
-          activeQuests,
-        }
-      }
+      // activeCapacity
+      let activeCapacity = (body.api_bounus || {}).api_count
+      if (typeof activeCapacity === 'undefined')
+        activeCapacity = state.activeCapacity
+      let newState = updateObject(state, {
+        activeQuests,
+        records,
+        activeCapacity,
+      })
+      if (newState !== state)
+        return newState
       break
     }
 
@@ -357,8 +407,6 @@ export function refreshDay() {
 
 // Subscriber, used after the store is created
 export function saveQuestTracking(questRecords) {
-  // TODO: delete the next line
-  return;
   writeFile(questTrackingPath(questRecords.admiralId), CSON.stringify({
     ...questRecords,
     time: Date.now(),
