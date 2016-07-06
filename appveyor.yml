@@ -30,12 +30,10 @@ build_script:
 artifacts:
   - path: dist\win\*.exe
     name: x64installer
-  - path: dist\win\*.7z
-    name: x64Archive
   - path: dist\win-ia32\*.exe
     name: ia32installer
-  - path: dist\win-ia32\*.7z
-    name: ia32Archive
+  - path: dist\*.7z
+    name: Archive
 
 deploy:
   description: 'editing'
@@ -47,3 +45,7 @@ deploy:
   prerelease: false
   on:
     appveyor_repo_tag: true
+
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+.*/

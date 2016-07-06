@@ -4,7 +4,7 @@ path = require 'path-extra'
 
 stringify = (str) ->
   return str if typeof str == 'string'
-  if str.toString() == '[object Object]'
+  if str.toString().startsWith '[object '
     str = JSON.stringify str
   else
     str = str.toString()

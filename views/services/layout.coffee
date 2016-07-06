@@ -107,48 +107,9 @@ adjustSize = ->
     $('kan-game #webview-wrapper')?.style?.height = "#{Math.ceil(480 * window.webviewFactor)}px"
     factor = null
     return
-  # Insert CSS
-  webview.insertCSS """
-    html {
-      overflow: hidden;
-    }
-    #w, #main-ntg {
-      position: absolute !important;
-      top: 0;
-      left: 0;
-      z-index: 100;
-      margin-left: 0 !important;
-      margin-top: 0 !important;
-    }
-    #game_frame {
-      width: 800px !important;
-      position: absolute;
-      top: -16px;
-      left: 0;
-    }
-    #spacing_top {
-      display: none;
-    }
-    .naviapp {
-      z-index: -1;
-    }
-    #alert {
-      transform: scale(0.8);
-      left: 80px !important;
-      top: -80px !important;
-    }
-  """
   # Set zoom factor
   webview.executeJavaScript """
-    window.scrollTo(0, 0);
-    if (document.querySelector('#game_frame') != null) {
-      var iframe = document.querySelector('#game_frame').contentWindow.document;
-      document.querySelector('html').style.zoom = #{factor};
-      iframe.querySelector('html').style.zoom = #{factor};
-    } else if (document.querySelector('embed') != null) {
-      var iframe = document.querySelector('embed');
-      document.querySelector('html').style.zoom = #{factor};
-    }
+    window.align()
   """
 
 adjustSize()
@@ -214,17 +175,16 @@ window.addEventListener 'webview.width.change', handleResize
 window.addEventListener 'game.start', adjustSize
 
 remote.getCurrentWebContents().on 'dom-ready', ->
+  # Workaround for drag area
   if process.platform == 'darwin'
-    remote.getCurrentWebContents().executeJavaScript """
-      var div = document.createElement("div");
-      div.style.position = "absolute";
-      div.style.top = 0;
-      div.style.height = "23px";
-      div.style.width = "100%";
-      div.style["-webkit-app-region"] = "drag";
-      div.style["pointer-events"] = "none";
-      document.body.appendChild(div);
-    """
+    titleBarArea = document.createElement("div");
+    titleBarArea.style.position = "absolute";
+    titleBarArea.style.top = 0;
+    titleBarArea.style.height = "23px";
+    titleBarArea.style.width = "100%";
+    titleBarArea.style["-webkit-app-region"] = "drag";
+    titleBarArea.style["pointer-events"] = "none";
+    document.body.appendChild(titleBarArea);
   $('kan-game webview').setAudioMuted(true) if config.get 'poi.content.muted', false
   $('kan-game webview').loadURL config.get 'poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
   $('kan-game webview').addEventListener 'page-title-set', handleTitleSet

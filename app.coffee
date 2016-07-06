@@ -1,4 +1,4 @@
-{app, BrowserWindow, ipcMain, Tray} = require 'electron'
+{app, BrowserWindow, ipcMain, Tray, nativeImage} = require 'electron'
 path = require 'path-extra'
 fs = require 'fs-extra'
 
@@ -96,7 +96,12 @@ app.on 'ready', ->
       enableLargerThanScreen: true
   # Default menu
   mainWindow.reloadArea = 'kan-game webview'
-  mainWindow.setMenu null if process.platform isnt 'darwin'
+  if process.platform == 'darwin'
+    if /electron$/i.test process.argv[0]
+      icon = nativeImage.createFromPath("#{ROOT}/assets/icons/poi.png")
+      app.dock?.setIcon? icon
+  else
+    mainWindow.setMenu null
   mainWindow.loadURL "file://#{__dirname}/index.html"
   if config.get 'poi.window.isMaximized', false
     mainWindow.maximize()
@@ -126,4 +131,4 @@ ipcMain.on 'refresh-shortcut', ->
 
 # Uncaught error
 process.on 'uncaughtException', (e) ->
-  error e
+  error e.stack

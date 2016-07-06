@@ -30,6 +30,7 @@
   " Plugins": " 擴展程式",
   "Update": "更新",
   "Download latest version": "下載最新版",
+  "Aliyun": "阿里雲",
   "Connection failed after %s retry": {
      "one": "網路連線錯誤，正在進行第 %s 次重試",
      "other": "網路連線錯誤，正在進行第 %s 次重試"

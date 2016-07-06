@@ -31,6 +31,7 @@
   " Plugins": " Plugins",
   "Update": "Update",
   "Download latest version": "Download latest version",
+  "Aliyun": "Aliyun",
   "Connection failed after %s retry": {
      "one": "one",
      "other": "other"

@@ -3,25 +3,28 @@
 
 class Ticker
   constructor: ->
-    @intervalId = null
+    @counting = false
     @callbacks = new Map()
   tick: () =>
     now = Date.now()
     @callbacks.forEach (f) -> f(now)
+  count: () =>
+    return if !@counting
+    @tick()
+    setTimeout @count, 1000
   start: ->
-    @intervalId = setInterval @tick, 1000
+    @counting = true
+    @count()
   stop: ->
-    @callbacks.clear()
-    clearInterval @intervalId
-    @intervalId = null
+    @counting = false
   reg: (key, func) ->
     @callbacks.set key, func
-    @start() if !@intervalId?
+    @start() if !@counting
   unreg: (key) ->
     @callbacks.delete key
     @stop() if @callbacks.size is 0
 
-ticker = new Ticker()
+window.ticker = new Ticker()
 
 
 CountdownTimer = React.createClass

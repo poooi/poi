@@ -9,6 +9,8 @@ __ = i18n.setting.__.bind(i18n.setting)
 __n = i18n.setting.__n.bind(i18n.setting)
 {remote} = require 'electron'
 windowManager = remote.require './lib/window'
+request = Promise.promisifyAll require 'request'
+requestAsync = Promise.promisify request, multiArgs: true
 
 # we need only glob here
 globAsync = Promise.promisify require 'glob'
@@ -219,10 +221,12 @@ class PluginManager
     tasks = plugins.map async (plugin, index) =>
       if !plugin.needRollback
         try
-          rawData = yield Promise.promisify(npm.commands.view)([plugin.packageName, 'dist-tags', 'poiPlugin'])
-          for key of rawData
-            data = rawData[key]
-          distTag = data['dist-tags']
+          data = JSON.parse (yield requestAsync "#{@config_.mirror.server}#{plugin.packageName}/latest")[1]
+          distTag =
+            latest: data.version
+          if @config_.betaCheck
+            _.extend distTag,
+              beta: JSON.parse((yield requestAsync "#{@config_.mirror.server}#{plugin.packageName}/beta")[1]).version
           latest = "#{plugin.version}"
           notCompatible = false
           apiVer = data.poiPlugin?.apiVer || plugin.apiVer
@@ -242,6 +246,8 @@ class PluginManager
             @plugins_[index]?.isOutdated = true
             @plugins_[index]?.lastestVersion = latest
             if plugin.isRead then outdatedList.push plugin.name
+        catch e
+          console.error e
     yield Promise.all(tasks)
     if isNotif && outdatedList.length > 0
       content = "#{outdatedList.join(' ')} #{__ "have newer version. Please update your plugins."}"
@@ -588,7 +594,7 @@ class PluginManager
         plugin.displayName = pluginMain.displayName if pluginMain.displayName?
         plugin.priority = pluginMain.priority if plugin.priority == 10000 && pluginMain.priority?
       catch error
-        console.error error
+        console.error "[Plugin #{plugin.name}] ", error.stack
         pluginMain = isBroken: true
       _.extend pluginMain, plugin
       plugin = pluginMain

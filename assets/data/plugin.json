@@ -16,19 +16,19 @@
     "desko-KR": "일지. 전과 부분은 rui님이 개발"
   },
   "poi-plugin-battle-detail": {
-    "zh-CN": "战斗详情",
-    "zh-TW": "戰鬥詳情",
-    "ja-JP": "戦闘詳細",
-    "en-US": "Battle Detail",
+    "zh-CN": "战斗记录",
+    "zh-TW": "戰鬥記錄",
+    "ja-JP": "戦闘記録",
+    "en-US": "Battle Records",
     "ko-KR": "전투 정보",
     "version": "v0.0.0",
     "icon": "info-circle",
     "author": "Dazzy Ding",
     "link": "https://github.com/yukixz",
-    "deszh-CN": "显示战斗详情",
-    "deszh-TW": "顯示戰鬥詳情",
-    "desja-JP": "戦闘情報を表示します",
-    "desen-US": "Show battle detail",
+    "deszh-CN": "保存详细的战斗日志",
+    "deszh-TW": "儲存詳細的戰鬥記錄",
+    "desja-JP": "戦闘の詳細ログをセーブする",
+    "desen-US": "Save detailed battle log",
     "desko-KR": "전투 정보 표시"
   },
   "poi-plugin-exp-calc": {
