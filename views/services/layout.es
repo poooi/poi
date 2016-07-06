@@ -128,6 +128,22 @@ const adjustSize = () => {
     $('kan-game').style.display = ''
   }
 
+  // Update redux store
+  window.dispatch({
+    type: '@@LayoutUpdate',
+    value: {
+      window: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      },
+      webview: {
+        width: webviewWidth,
+        height: webviewHeight,
+        useFixedResolution: useFixedResolution,
+      }
+    }
+  })
+
   // Get url
   let url
   try {

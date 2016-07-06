@@ -7,6 +7,7 @@ import {reducer as info} from './info'
 import {reducer as sortie} from './sortie'
 import {reducer as timers} from './timers'
 import {reducer as config} from './config'
+import {reducer as layout} from './layout'
 
 // === Utils ===
 
@@ -65,6 +66,7 @@ export const reducer = reduceReducers(
     sortie,
     timers,
     config,
+    layout,
   }),
 )
 
