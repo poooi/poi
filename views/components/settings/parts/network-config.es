@@ -8,7 +8,7 @@ const {config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
 const __n = i18n.setting.__n.bind(i18n.setting)
 
-let basic = {
+const basic = {
   use: 'none',
   pacAddr: '',
   http: {
@@ -28,7 +28,7 @@ let basic = {
 
 const NetworkConfig = connect(() => (
   (state, props) => (
-    Object.assign(basic, state.config.proxy)
+    Object.assign(Object.clone(basic), state.config.proxy)
   )
 ))(class extends Component {
   constructor(props) {
@@ -42,44 +42,17 @@ const NetworkConfig = connect(() => (
     })
   }
   handleSaveConfig = (e) => {
-    let use = this.refs.use.getValue()
-    switch (use) {
-      case 'http':
-        config.set('proxy.use', 'http')
-        config.set('proxy.http.host', this.refs.httpHost.getValue())
-        config.set('proxy.http.port', this.refs.httpPort.getValue())
-        config.set('proxy.http.requirePassword', this.refs.httpRequirePassword.getChecked())
-        config.set('proxy.http.username', this.refs.httpUsername.getValue())
-        config.set('proxy.http.password', this.refs.httpPassword.getValue())
-        break
-      case 'socks5':
-        config.set('proxy.use', 'socks5')
-        config.set('proxy.socks5.host', this.refs.socksHost.getValue())
-        config.set('proxy.socks5.port', this.refs.socksPort.getValue())
-        break
-      case 'pac':
-        config.set('proxy.use', 'pac')
-        config.set('proxy.pacAddr', this.refs.pacAddr.getValue())
-        break
-      default:
-        config.set('proxy.use', 'none')
-    }
+    let proxy = Object.clone(this.state)
     let retries = parseInt(this.refs.retries.getValue())
     if (isNaN(retries)) {
-      retries = 0
+      proxy.retries = 0
     }
-    config.set('proxy.retries', retries)
     let port = parseInt(this.refs.port.getValue())
     if (isNaN(port) || port < 1024 || port > 65535) {
-      port = 0
+      proxy.port = 0
     }
-    config.set('proxy.port', port)
-    this.setState({
-      retries: retries,
-      port: port
-    })
+    config.set('proxy', proxy)
     toggleModal(__('Proxy setting'), __('Success! It will be available after a restart.'))
-    e.preventDefault()
   }
   handleHttpHostChange = (e) => {
     let http = Object.clone(this.state.http)
@@ -90,7 +63,7 @@ const NetworkConfig = connect(() => (
   }
   handleHttpPortChange = (e) => {
     let http = Object.clone(this.state.http)
-    http.port = e.target.value
+    http.port = parseInt(e.target.value)
     this.setState({
       http: http
     })
@@ -125,7 +98,7 @@ const NetworkConfig = connect(() => (
   }
   handleSocksPortChange = (e) => {
     let socks5 = Object.clone(this.state.socks5)
-    socks5.port = e.target.value
+    socks5.port = parseInt(e.target.value)
     this.setState({
       socks5: socks5
     })
@@ -137,12 +110,12 @@ const NetworkConfig = connect(() => (
   }
   handleSetRetries = (e) => {
     this.setState({
-      retries: e.target.value
+      retries: parseInt(e.target.value)
     })
   }
   handleSetPort = (e) => {
     this.setState({
-      port: e.target.value
+      port: parseInt(e.target.value)
     })
   }
   render() {
