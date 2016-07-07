@@ -99,7 +99,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
   }
 }
 
-const setCSSDebounced = debounce(setCSS, 100)
+const setCSSDebounced = debounce(setCSS, 200)
 
 const adjustSize = () => {
   let webview = $('kan-game webview')
