@@ -61,10 +61,10 @@ const adjustSize = () => {
   let doubleTabbed = config.get('poi.tabarea.double', false)
   let webviewWidth = config.get('poi.webview.width', -1)
   let webviewHeight = Math.min(window.innerHeight - poiControlHeight, Math.round(webviewWidth / 800.0 * 480.0))
-  let useFixedResolution = (webviewWidth === -1)
+  let useFixedResolution = (webviewWidth !== -1)
 
   // Calculate webview size
-  if (useFixedResolution) {
+  if (!useFixedResolution) {
     if (layout === 'horizontal') {
       webviewHeight = window.innerHeight - poiControlHeight
       webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
@@ -90,7 +90,7 @@ const adjustSize = () => {
     }
     if (window.innerWidth - webviewWidth < cap) {
       webviewWidth = window.innerWidth - cap
-      webviewHeight = Math.round(webviewWidth / 800.0 * 480)
+      webviewHeight = Math.min(window.innerHeight - poiControlHeight, Math.round(webviewWidth / 800.0 * 480))
     }
   }
 
