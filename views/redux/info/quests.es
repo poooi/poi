@@ -1,7 +1,7 @@
 import reduceReducers from 'reduce-reducers'
 import CSON from 'cson'
 import {join} from 'path-extra'
-import {mapObject, each} from 'underscore'
+import {sortBy, mapValues, forEach, values, fromPairs} from 'lodash'
 import {observer, observe} from 'redux-observers'
 import {writeFile} from 'fs-extra'
 
@@ -17,7 +17,7 @@ const questGoalsPath = join(ROOT, 'assets', 'data', 'quest_goal.cson')
 // Remove items from an object where its value doesn't satisfy `pred`.
 // The argument `obj` IS MODIFIED.
 function filterObjectValue(obj, pred=Boolean) {
-  each(obj, (v, k) => {
+  forEach(obj, (v, k) => {
     if (!pred(v)) {
       delete obj[k]
     }
@@ -45,7 +45,7 @@ function stringNumberEqual(a, b) {
 // Will handle parseInt.
 function updateObject(obj, items) {
   const originalObj = obj
-  each(items, (v, k) => {
+  forEach(items, (v, k) => {
     let thisUpdate
     const typeNew = typeof v
     const typeOld = typeof obj[k]
@@ -88,7 +88,7 @@ function newQuestRecord(id, questGoals) {
   const record = {
     id,
   }
-  each(questGoal, (v, k) => {
+  forEach(questGoal, (v, k) => {
     if (typeof v !== 'object') {
       return
     }
@@ -99,6 +99,20 @@ function newQuestRecord(id, questGoals) {
     }
   })
   return record
+}
+
+function formActiveQuests(activeQuestList=[]) {
+  return fromPairs(activeQuestList.map((quest) => [quest.detail.api_no, quest]))
+}
+
+// Remove the oldest from activeQuests so that only n items remain
+function limitActiveQuests(activeQuests, n) {
+  if (Object.keys(activeQuests).length <= n)
+    return activeQuests
+  // Remove the ones with earliest time
+  const quests = sortBy(values(activeQuests), 'time')
+  quests.splice(0, quests.length - n)
+  return formActiveQuests(quests)
 }
 
 function resetQuestRecordFactory(types, resetInterval) {
@@ -120,37 +134,36 @@ const resetQuestRecordMonthly = resetQuestRecordFactory([3], 3)
 function outdateRecords(questGoals, records, then, now) {
   if (!isDifferentDay(now, then))
     return records 
-  records = mapObject(records, resetQuestRecordDaily(questGoals))
+  records = mapValues(records, resetQuestRecordDaily(questGoals))
   if (isDifferentWeek(now, then))
-    records = mapObject(records, resetQuestRecordWeekly(questGoals))
+    records = mapValues(records, resetQuestRecordWeekly(questGoals))
   if (isDifferentMonth(now, then))
-    records = mapObject(records, resetQuestRecordMonthly(questGoals))
+    records = mapValues(records, resetQuestRecordMonthly(questGoals))
   return filterObjectValue(records)
 }
 
-function resetActiveQuestFactory(types) {
-  return (q) => {
-    if (types.indexOf(parseInt(q.type)) != -1)
-      return            // This quest will be deleted
-    return q
+function filterActiveQuestFactory(now) {
+  return (activeQuest={}) => {
+    const {time, detail: {api_type}={}} = activeQuest
+    if (!time || !api_type)
+      return false
+    if (!isDifferentDay(now, time))
+      return true
+    // Daily
+    if (api_type == 1 || api_type == 5) return false
+    // Weekly
+    if (isDifferentWeek(now, time) && api_type == 2) return false
+    // Monthly
+    if (isDifferentMonth(now, time) && api_type == 3) return false
+    return true
   }
 }
-const resetActiveQuestDaily = resetActiveQuestFactory([1, 8, 9])
-const resetActiveQuestWeekly = resetActiveQuestFactory([2])
-const resetActiveQuestMonthly = resetActiveQuestFactory([3])
-function outdateActiveQuests(activeQuests, then, now) {
-  if (!isDifferentDay(now, then))
-    return activeQuests 
-  activeQuests = activeQuests.filter(resetActiveQuestDaily)
-  if (isDifferentWeek(now, then))
-    activeQuests = activeQuests.filter(resetActiveQuestWeekly)
-  if (isDifferentMonth(now, then))
-    activeQuests = activeQuests.filter(resetActiveQuestMonthly)
-  return activeQuests
-}
 
-function findIndexByQuestId(quests, id) {
-  return quests.findIndex((quest) => quest.api_no == id)
+function outdateActiveQuests(activeQuests, now) {
+  const activeQuestList = values(activeQuests).filter(filterActiveQuestFactory(now))
+  if (activeQuestList.length === Object.keys(activeQuests).lenfth)
+    return activeQuests
+  return formActiveQuests(activeQuestList)
 }
 
 function satisfyGoal(req, goal, options) {
@@ -162,7 +175,7 @@ function satisfyGoal(req, goal, options) {
 function updateQuestRecordFactory(records, activeQuests, questGoals) {
   return (e, options, delta) => {
     let changed = false
-    activeQuests.forEach((quest) => {
+    forEach(activeQuests, ({detail: quest}={}) => {
       if (typeof quest !== 'object') return
       let {api_no} = quest
       let record = records[api_no]
@@ -260,14 +273,18 @@ function questTrackingReducer(state, {type, postBody, body}) {
 }
 
 const initState = {
-  records: {},
-  activeQuests: [],
-  questGoals: {},
+  records: {},          // {<questId>: {<subgoalName>: {count:, required:, description: }}}
+  activeQuests: {},     // {<questId>: {detail: <quest>, time: <unix ms>}}
+  questGoals: {},       // {<questId>: {type:, <subgoalName>: {init:, required:, description: }}}
   activeCapacity: 5,
   activeNum: 0,
 }
 
 export function reducer(state=initState, action) {
+  // TODO: remove the next if block
+  if (Array.isArray(state.activeQuests)) {
+    state = {...state, activeQuests: {}}
+  }
   const {type, postBody, body} = action
   switch (type) {
     //== Initialization. This takes place once every flash loading ==
@@ -294,6 +311,7 @@ export function reducer(state=initState, action) {
         ...state,
         records,
         questGoals,
+        activeQuests: outdateActiveQuests(state.activeQuests, Date.now()),
       }
     }
 
@@ -304,93 +322,91 @@ export function reducer(state=initState, action) {
       return {
         ...state,
         records: outdateRecords(questGoals, records, now-halfHour, now+halfHour),
-        activeQuests: outdateActiveQuests(activeQuests, now-halfHour, now+halfHour),
+        activeQuests: outdateActiveQuests(activeQuests, now+halfHour),
       }
     }
 
     //== Update active quests ==
     case '@@Response/kcsapi/api_port/port': {
       let {api_parallel_quest_count: activeCapacity} = body
-      if (state.activeQuests.length > activeCapacity) {
-        return {
-          ...state,
-          activeCapacity,
-          activeQuest: state.activeQuests.slice(0, body.api_parallel_quest_count),
-        }
+      let activeQuests = state.activeQuests
+      if (Object.keys(state.activeQuests).length > activeCapacity) {
+        activeQuests = limitActiveQuests(state.activeQuests, activeCapacity)
       }
-      break
+      return updateObject(state, {
+        activeQuests,
+        activeCapacity,
+      })
     }
 
     // Update active quests
     case '@@Response/kcsapi/api_get_member/questlist': {
-      let {activeQuests, records} = state.activeQuests
-      (body.api_list || []).forEach((quest) => {
+      const {api_exec_count: activeNum, api_list} = body
+      let {activeQuests, records, questGoals} = state
+      const now = Date.now()
+      ;(api_list || []).forEach((quest) => {
         if (typeof quest !== 'object' || quest.api_state < 2)
           return
-        // records
         const {api_no} = quest
-        if (!records[api_no] && state.questGoals[api_no]) {
-          records = copyIfSame(records, state.records)
-          records[api_no] = newQuestRecord(api_no, state.questGoals)
-        }
         // activeQuests
-        let idx = findIndexByQuestId(activeQuests, api_no)
-        if (idx == -1)
-          idx = activeQuests.length
         activeQuests = copyIfSame(activeQuests, state.activeQuests)
-        activeQuests[idx] = quest
-        updated = true
+        activeQuests[api_no] = {detail: quest, time: now}
+        // records
+        if (!records[api_no] && questGoals[api_no]) {
+          records = copyIfSame(records, state.records)
+          records[api_no] = newQuestRecord(api_no, questGoals)
+        }
       })
-      let newState = updateObject(state, {
+      activeQuests = limitActiveQuests(activeQuests, activeNum)
+      return updateObject(state, {
         activeQuests,
         records,
+        activeNum,
       })
-      if (newState !== state)
-        return newState
-      break
     }
 
     // Completed quest
     case '@@Response/kcsapi/api_req_quest/clearitemget': {
+      // This api will be followed by a /kcsapi/api_get_member/questlist
       const {api_quest_id} = postBody
       // records
-      let {activeQuests, records} = state
+      let {activeQuests, records, activeNum} = state
+      activeNum--
       if (api_quest_id in records) {
         records = Object.assign(records)
         delete records[api_quest_id]
       }
       // activeQuests
-      let idx = findIndexByQuestId(activeQuests, api_quest_id)
-      if (idx != -1) {
-        activeQuests = activeQuests.slice()
-        activeQuests.splice(idx, 1)
+      if (api_quest_id in activeQuests) {
+        activeQuests = {...activeQuests}
+        delete activeQuests[api_quest_id]
       }
       // activeCapacity
       let activeCapacity = (body.api_bounus || {}).api_count
       if (typeof activeCapacity === 'undefined')
         activeCapacity = state.activeCapacity
-      let newState = updateObject(state, {
+      return updateObject(state, {
+        activeNum,
         activeQuests,
         records,
         activeCapacity,
       })
-      if (newState !== state)
-        return newState
-      break
     }
 
     // Pause quest
     case '@@Response/kcsapi/api_req_quest/stop': {
-      let idx = findIndexByQuestId(state.activeQuests, postBody.api_quest_id)
-      if (idx != -1) {
-        let activeQuests = state.activeQuests.slice()
-        activeQuests.splice(idx, 1)
-        return {
-          ...state,
-          activeQuests,
-        }
+      // This api will be followed by a /kcsapi/api_get_member/questlist
+      const {api_quest_id} = postBody
+      let {activeNum, activeQuests} = state
+      --activeNum
+      if (api_quest_id in state.activeQuests) {
+        activeQuests = {...activeQuests}
+        delete activeQuests[api_quest_id]
       }
-      break
+      return updateObject(state, {
+        activeQuests,
+        activeNum,
+      })
     }
 
   }

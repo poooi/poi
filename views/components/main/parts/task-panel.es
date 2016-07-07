@@ -1,5 +1,5 @@
 import {connect} from 'react-redux'
-import {range, mapValues, forEach, values} from 'lodash'
+import {map, range, mapValues, forEach, values, sortBy} from 'lodash'
 import {Panel, Table, Label, OverlayTrigger, Tooltip} from 'react-bootstrap'
 
 const __ = i18n.main.__.bind(i18n.main)
@@ -214,7 +214,6 @@ const TaskRow = connect(
       />
   )
 })
-TaskRow.shouldComponentUpdate=()=>true
 
 export const TaskPanel = connect(
   ({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
@@ -226,14 +225,14 @@ export const TaskPanel = connect(
   return (
     <Panel bsStyle="default">
     {[
-      activeQuests.map((quest, idx) =>
+      sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) =>
         <TaskRow
-          key={idx}
+          key={(quest || {}).api_no || idx}
           idx={idx}
           quest={quest}
         />
       ),
-      range(activeQuests.length, 6).map((idx) =>
+      range(Object.keys(activeQuests).length, 6).map((idx) =>
         (idx < activeNum) ?
           // Need refreshing
           <TaskRowBase
