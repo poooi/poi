@@ -33,28 +33,73 @@ const getFlexCSS = ({layout, webviewWidth}) => {
 }
 
 const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel}) => {
+  // Apply css
   additionalStyle.innerHTML = `
-  poi-app div.poi-app-tabpane {
-    height: ${tabpaneHeight};
+    poi-app div.poi-app-tabpane {
+      height: ${tabpaneHeight};
+    }
+    div[role='tooltip'], #poi-app-container {
+      transform : scale(${zoomLevel});
+    }
+    .poi-control-tooltip {
+      max-height: ${Math.ceil(poiControlHeight / zoomLevel)}px;
+    }
+    #poi-app-container {
+      width: ${Math.floor(100 / zoomLevel)}%;
+    }
+    poi-nav poi-nav-tabs .nav .dropdown-menu {
+      max-height: ${tabpaneHeight};
+    }
+    kan-game #webview-wrapper {
+      width: ${webviewWidth}px !important;
+      height: ${webviewHeight}px !important;
+    }
+    ${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}
+  `
+
+  // Resize when window size smaller than webview size
+  if (layout === 'vertical' && webviewWidth > window.innerWidth) {
+    let {width, height, x, y} = remote.getCurrentWindow().getBounds()
+    let borderX = width - window.innerWidth
+    width = webviewWidth + borderX
+    remote.getCurrentWindow().setBounds({width, height, x, y})
   }
-  div[role='tooltip'], #poi-app-container {
-    transform : scale(${zoomLevel});
+
+  // Fix poi-info when game size 0x0
+  if (webviewWidth > -0.00001 && webviewWidth < 0.00001) {
+    $('kan-game').style.display = 'none'
   }
-  .poi-control-tooltip {
-    max-height: ${Math.ceil(poiControlHeight / zoomLevel)}px;
+  else {
+    $('kan-game').style.display = ''
   }
-  #poi-app-container {
-    width: ${Math.floor(100 / zoomLevel)}%;
+
+  // Get url
+  let webview = $('kan-game webview')
+  let url
+  try {
+    url = webview.getURL()
   }
-  poi-nav poi-nav-tabs .nav .dropdown-menu {
-    max-height: ${tabpaneHeight};
+  catch (e) {
+    url = null
   }
-  kan-game #webview-wrapper {
-    width: ${webviewWidth}px !important;
-    height: ${webviewHeight}px !important;
+
+  // Adjust webview height & position
+  if (layout === 'horizontal') {
+    $('kan-game #webview-wrapper').style.marginLeft = '0'
+    $('kan-game').style.marginTop = `${Math.max(0, Math.floor((window.innerHeight - webviewHeight - poiControlHeight) / 2.0))}px`
+  } else {
+    $('kan-game #webview-wrapper').style.marginLeft = `${Math.max(0, Math.floor((window.innerWidth - webviewWidth) / 2.0))}px`
+    $('kan-game').style.marginTop = '0'
   }
-  ${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}`
+
+  // Adjust content
+  try {
+    webview.executeJavaScript('window.align()')
+  } catch (e) {
+  }
 }
+
+const setCSSDebounced = debounce(setCSS, 100)
 
 const adjustSize = () => {
   let webview = $('kan-game webview')
@@ -105,31 +150,6 @@ const adjustSize = () => {
     tabpaneHeight = `${(window.innerHeight - webviewHeight - poiControlHeight) / zoomLevel - poiControlHeight}px`
   }
 
-  // Apply calcualted data
-  setCSS({
-    webviewHeight: webviewHeight,
-    webviewWidth: webviewWidth,
-    tabpaneHeight: tabpaneHeight,
-    layout: layout,
-    zoomLevel: zoomLevel,
-  })
-
-  // Resize when window size smaller than webview size
-  if (layout === 'vertical' && webviewWidth > window.innerWidth) {
-    let {width, height, x, y} = remote.getCurrentWindow().getBounds()
-    let borderX = width - window.innerWidth
-    width = webviewWidth + borderX
-    remote.getCurrentWindow().setBounds({width, height, x, y})
-  }
-
-  // Fix poi-info when game size 0x0
-  if (webviewWidth > -0.00001 && webviewWidth < 0.00001) {
-    $('kan-game').style.display = 'none'
-  }
-  else {
-    $('kan-game').style.display = ''
-  }
-
   // Update redux store
   window.dispatch({
     type: '@@LayoutUpdate',
@@ -146,33 +166,17 @@ const adjustSize = () => {
     }
   })
 
-  // Get url
-  let url
-  try {
-    url = webview.getURL()
-  }
-  catch (e) {
-    url = null
-  }
-
-  // Adjust webview height & position
-  if (layout === 'horizontal') {
-    $('kan-game #webview-wrapper').style.marginLeft = '0'
-    $('kan-game').style.marginTop = `${Math.max(0, Math.floor((window.innerHeight - webviewHeight - poiControlHeight) / 2.0))}px`
-  } else {
-    $('kan-game #webview-wrapper').style.marginLeft = `${Math.max(0, Math.floor((window.innerWidth - webviewWidth) / 2.0))}px`
-    $('kan-game').style.marginTop = '0'
-  }
-  // Adjust content
-  try {
-    webview.executeJavaScript('window.align()')
-  } catch (e) {
-  }
+  // Apply calcualted data
+  setCSSDebounced({
+    webviewHeight: webviewHeight,
+    webviewWidth: webviewWidth,
+    tabpaneHeight: tabpaneHeight,
+    layout: layout,
+    zoomLevel: zoomLevel,
+  })
 }
 
 adjustSize()
-
-const adjustSizeDebounced = debounce(adjustSize, 100)
 
 const changeBounds = () => {
   let {width, height, x, y} = remote.getCurrentWindow().getBounds()
@@ -198,7 +202,7 @@ const changeBounds = () => {
 }
 
 window.addEventListener('game.start', adjustSize)
-window.addEventListener('resize', adjustSizeDebounced)
+window.addEventListener('resize', adjustSize)
 
 config.on('config.set', (path, value) => {
   switch (path) {
@@ -214,7 +218,7 @@ config.on('config.set', (path, value) => {
       // window.dispatchEvent(new Event('resize'))
       $('#layout-css').setAttribute('href', `./assets/css/layout.${value}.css`)
       remote.getCurrentWindow().setResizable(resizable)
-      adjustSizeDebounced()
+      adjustSize()
     default:
       break
   }
