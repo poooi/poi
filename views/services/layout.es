@@ -1,3 +1,5 @@
+import {debounce} from 'lodash'
+
 const WindowManager = remote.require('./lib/window')
 const {config, proxy} = window
 
@@ -161,15 +163,16 @@ const adjustSize = () => {
     $('kan-game #webview-wrapper').style.marginLeft = `${Math.max(0, Math.floor((window.innerWidth - webviewWidth) / 2.0))}px`
     $('kan-game').style.marginTop = '0'
   }
-  if (!isKancollePage(url)) {
-    return
-  }
-
   // Adjust content
-  webview.executeJavaScript('window.align()')
+  try {
+    webview.executeJavaScript('window.align()')
+  } catch (e) {
+  }
 }
 
 adjustSize()
+
+const adjustSizeDebounced = debounce(adjustSize, 100)
 
 const changeBounds = () => {
   let {width, height, x, y} = remote.getCurrentWindow().getBounds()
@@ -195,7 +198,7 @@ const changeBounds = () => {
 }
 
 window.addEventListener('game.start', adjustSize)
-window.addEventListener('resize', adjustSize)
+window.addEventListener('resize', adjustSizeDebounced)
 
 config.on('config.set', (path, value) => {
   switch (path) {
@@ -211,7 +214,7 @@ config.on('config.set', (path, value) => {
       // window.dispatchEvent(new Event('resize'))
       $('#layout-css').setAttribute('href', `./assets/css/layout.${value}.css`)
       remote.getCurrentWindow().setResizable(resizable)
-      adjustSize()
+      adjustSizeDebounced()
     default:
       break
   }
