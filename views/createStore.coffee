@@ -3,7 +3,7 @@
 
 {reducer: rootReducer, onConfigChange} = require('./redux')
 {updateFatigueTimer} = require('./redux/timers')
-{saveQuestTracking} = require('./redux/info/quests')
+{saveQuestTracking, schedualDailyRefresh} = require('./redux/info/quests')
 
 cachePosition = '_storeCache'
 targetPaths = ['const', 'info']
@@ -109,5 +109,7 @@ observe(store, [observer(
   (state) -> state.info.quests.records,
   (dispatch, current, previous) -> saveQuestTracking(current)
 )])
+
+schedualDailyRefresh(store.dispatch)
 
 module.exports.store = store

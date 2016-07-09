@@ -63,15 +63,16 @@ function updateObject(obj, items) {
   return obj
 }
 
-const zero = 331200000
+const QUEST_REFRESH_ZERO = 331200000
+const ONE_DAY = 86400000
 function isDifferentDay(time1, time2) {
-  const day1 = Math.floor((time1 - zero) / 86400000)
-  const day2 = Math.floor((time2 - zero) / 86400000)
+  const day1 = Math.floor((time1 - QUEST_REFRESH_ZERO) / ONE_DAY)
+  const day2 = Math.floor((time2 - QUEST_REFRESH_ZERO) / ONE_DAY)
   return day1 != day2
 }
 function isDifferentWeek(time1, time2) {
-  const week1 = Math.floor((time1 - zero) / 604800000)
-  const week2 = Math.floor((time2 - zero) / 604800000)
+  const week1 = Math.floor((time1 - QUEST_REFRESH_ZERO) / 604800000)
+  const week2 = Math.floor((time2 - QUEST_REFRESH_ZERO) / 604800000)
   return week1 != week2
 }
 function isDifferentMonth(time1, time2) {
@@ -317,6 +318,7 @@ export function reducer(state=initState, action) {
 
     //== Daily update ==
     case QUESTS_REFRESH_DAY:  {
+      const {activeQuests, records, questGoals} = state
       let halfHour = 30 * 60 * 1000     // Random suitable margin
       let now = Date.now()
       return {
@@ -415,10 +417,18 @@ export function reducer(state=initState, action) {
 }
 
 // Action
-export function refreshDay() {
+function dailyRefresh() {
   return {
     type: QUESTS_REFRESH_DAY,
   }
+}
+
+export function schedualDailyRefresh(dispatch) {
+  const nextTimeout = ONE_DAY - (Date.now() - QUEST_REFRESH_ZERO) % ONE_DAY
+  setTimeout(() => {
+    dispatch(dailyRefresh())
+    schedualDailyRefresh(dispatch)
+  }, nextTimeout)
 }
 
 // Subscriber, used after the store is created
