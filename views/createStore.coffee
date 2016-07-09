@@ -3,6 +3,8 @@
 
 {reducer: rootReducer, onConfigChange} = require('./redux')
 {updateFatigueTimer} = require('./redux/timers')
+{saveQuestTracking, schedualDailyRefresh} = require('./redux/info/quests')
+{dispatchBattleResult} = require('./redux/battle')
 
 cachePosition = '_storeCache'
 targetPaths = ['const', 'info']
@@ -99,9 +101,22 @@ window.config.on('config.set', (path, value) =>
 )
 
 # When any targetPath is modified, store it into localStorage
-# observe(store, [myObserver, ...myOtherObservers])
 observe(store,
   targetPaths.map((path) -> autoCacheObserver(store, path))
 )
+
+# Save quest tracking to the file when it changes
+observe(store, [observer(
+  (state) -> state.info.quests.records,
+  (dispatch, current, previous) -> saveQuestTracking(current)
+)])
+
+schedualDailyRefresh(store.dispatch)
+
+# Dispatch an action '@@BattleResult' when a battle is completed
+observe(store, [observer(
+  (state) -> state.battle.result,
+  dispatchBattleResult,
+)])
 
 module.exports.store = store

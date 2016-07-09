@@ -9,6 +9,7 @@ import {reducer as repairs} from './repairs'
 import {reducer as constructions} from './constructions'
 import {reducer as resources} from './resources'
 import {reducer as maps} from './maps'
+import {reducer as quests} from './quests'
 
 export const reducer = combineReducers({
   basic,
@@ -19,5 +20,6 @@ export const reducer = combineReducers({
   constructions,
   resources,
   maps,
+  quests,
 })
 

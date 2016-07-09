@@ -8,6 +8,7 @@ import {reducer as sortie} from './sortie'
 import {reducer as timers} from './timers'
 import {reducer as config} from './config'
 import {reducer as layout} from './layout'
+import {reducer as battle} from './battle'
 
 // === Utils ===
 
@@ -67,8 +68,11 @@ export const reducer = reduceReducers(
     timers,
     config,
     layout,
+    battle,
   }),
 )
+
+console.log(reducer)
 
 
 // === Actions ===
