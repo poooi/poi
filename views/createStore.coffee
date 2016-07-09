@@ -4,6 +4,7 @@
 {reducer: rootReducer, onConfigChange} = require('./redux')
 {updateFatigueTimer} = require('./redux/timers')
 {saveQuestTracking, schedualDailyRefresh} = require('./redux/info/quests')
+{dispatchBattleResult} = require('./redux/battle')
 
 cachePosition = '_storeCache'
 targetPaths = ['const', 'info']
@@ -111,5 +112,11 @@ observe(store, [observer(
 )])
 
 schedualDailyRefresh(store.dispatch)
+
+# Dispatch an action '@@BattleResult' when a battle is completed
+observe(store, [observer(
+  (state) -> state.battle.result,
+  dispatchBattleResult,
+)])
 
 module.exports.store = store

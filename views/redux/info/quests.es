@@ -432,6 +432,7 @@ export function schedualDailyRefresh(dispatch) {
 }
 
 // Subscriber, used after the store is created
+// Need to observe on state quests.records
 export function saveQuestTracking(questRecords) {
   writeFile(questTrackingPath(questRecords.admiralId), CSON.stringify({
     ...questRecords,
