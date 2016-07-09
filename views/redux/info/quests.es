@@ -197,9 +197,9 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
   }
 }
 
-function questTrackingReducer(state, {type, postBody, body}) {
+function questTrackingReducer(state, {type, postBody, body, result}) {
   const {activeQuests, questGoals} = state
-  const records = Object.assign(state.records)
+  const records = {...state.records}
   const updateQuestRecord = updateQuestRecordFactory(records, activeQuests, questGoals)
   switch (type) {
     // type: practice, practice_win
@@ -268,7 +268,42 @@ function questTrackingReducer(state, {type, postBody, body}) {
         return {...state, records}
       break
     // type: battle result
-    //case '@@Response/kcsapi/api_req_sortie/battleresult': {
+    case '@@BattleResult': {
+      const {rank, boss, map, enemyHp, enemyShipId} = result
+      let flag = false
+      flag = updateQuestRecord('battle', null, 1) || flag
+      // type: battle_win
+      if (rank === 'S' || rank === 'A' || rank === 'B')
+        flag = updateQuestRecord('battle_win', null, 1) || flag
+      // type: battle_rank_s
+      if (rank === 'S')
+        flag = updateQuestRecord('battle_rank_s', null, 1) || flag
+      // type: battle_boss
+      if (boss) {
+        flag = updateQuestRecord('battle_boss', null, 1) || flag
+        // type: battle_boss_win
+        if (rank === 'S' || rank === 'A' || rank === 'B')
+          flag = updateQuestRecord('battle_boss_win', {maparea: map}, 1) || flag
+        // type: battle_boss_win_rank_a
+        if (rank === 'S' || rank === 'A')
+          flag = updateQuestRecord('battle_boss_win_rank_a', {maparea: map}, 1) || flag
+        // type: battle_boss_win_rank_s
+        if (rank == 'S')
+          flag = updateQuestRecord('battle_boss_win_rank_s', {maparea: map}, 1) || flag
+      }
+      // type: sinking
+      enemyShipId.forEach((shipId, idx) => {
+        if (shipId == -1 || enemyHp[idx] > 0)
+          return
+        const shipType = getStore(`const.$ships.${shipId}.api_stype`)
+        if ([7, 11, 13, 15].indexOf(shipType) != -1)
+          flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
+      })
+      if (flag) {
+        return {...state, records}
+      }
+      break
+    }
   }
   return state
 }
