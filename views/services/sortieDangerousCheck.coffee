@@ -14,7 +14,7 @@ window.addEventListener 'game.response',
         for shipId, idx in fleet.api_ship
           continue if shipId == -1 or idx == 0
           ship = ships[shipId]
-          continue if !ship || ship.api_nowhp / ship.api_maxhp < 0.250001
+          continue if !ship || ship.api_nowhp / ship.api_maxhp >= 0.250001
           continue if (deckId*6 + idx) in escapedPos
           # Check Emergency repair personnel / goddess
           safe = false
