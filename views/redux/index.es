@@ -6,6 +6,7 @@ import {reducer as info} from './info'
 import {reducer as sortie} from './sortie'
 import {reducer as timers} from './timers'
 import {reducer as config} from './config'
+import {reducer as battle} from './battle'
 
 // === Utils ===
 
@@ -33,6 +34,7 @@ export const reducer = reduceReducers(
     sortie,
     timers,
     config,
+    battle,
   }),
 )
 

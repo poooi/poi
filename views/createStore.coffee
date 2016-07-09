@@ -3,6 +3,7 @@
 
 {reducer: rootReducer, onConfigChange} = require('./redux')
 {updateFatigueTimer} = require('./redux/timers')
+{dispatchBattleResult} = require('./redux/battle')
 
 cachePosition = '_storeCache'
 targetPaths = ['const', 'info']
@@ -103,5 +104,12 @@ window.config.on('config.set', (path, value) =>
 observe(store,
   targetPaths.map((path) -> autoCacheObserver(store, path))
 )
+
+# Dispatch an action '@@BattleResult' when a battle is completed
+observe(store, [observer(
+  (state) -> state.battle.result,
+  dispatchBattleResult,
+)])
+
 
 module.exports.store = store
