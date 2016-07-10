@@ -197,6 +197,54 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
   }
 }
 
+function limitProgress(count, required, progressFlag, completed) {
+  if (completed) {
+    return required
+  }
+  switch (progressFlag) {
+    case 0:         // Empty: [0.0, 0.5)
+      return Math.min(count, Math.ceil(required * 0.5)-1)
+    case 1:         // 50%: [0.5, 0.8)
+      return Math.min(Math.max(count, Math.ceil(required * 0.5)), Math.ceil(required * 0.8)-1)
+    case 2:         // 80%: [0.8, 1.0)
+      return Math.min(Math.max(count, Math.ceil(required * 0.8)), required-1)
+    default:
+      return count
+  }
+}
+
+// Update progress of existing records
+// Returns a new copy of record if it needs updating, or undefined o/w
+function updateRecordProgress(record, bodyQuest) {
+  const {api_progress_flag, api_state} = bodyQuest
+  let subgoalKey = null
+  forEach(record, (v, k) => {
+    if (typeof v === 'object') {
+      if (subgoalKey == null) {
+        subgoalKey = k
+      } else {
+        // Only update if this quest has only 1 subgoal
+        subgoalKey = null
+        return false    // break
+      }
+    }
+  })
+  if (subgoalKey != null) {
+    let subgoal = record[subgoalKey]
+    let count = limitProgress(subgoal.count, subgoal.required,
+      api_progress_flag, api_state == 3)
+    if (count != subgoal.count) {
+      return {
+        ...record,
+        [subgoalKey]: {
+          ...subgoal,
+          count,
+        },
+      }
+    }
+  }
+}
+
 function questTrackingReducer(state, {type, postBody, body, result}) {
   const {activeQuests, questGoals} = state
   const records = {...state.records}
@@ -317,10 +365,6 @@ const initState = {
 }
 
 export function reducer(state=initState, action) {
-  // TODO: remove the next if block
-  if (Array.isArray(state.activeQuests)) {
-    state = {...state, activeQuests: {}}
-  }
   const {type, postBody, body} = action
   switch (type) {
     //== Initialization. This takes place once every flash loading ==
@@ -382,17 +426,29 @@ export function reducer(state=initState, action) {
       let {activeQuests, records, questGoals} = state
       const now = Date.now()
       ;(api_list || []).forEach((quest) => {
-        if (typeof quest !== 'object' || quest.api_state < 2)
+        if (typeof quest !== 'object')
           return
-        const {api_no} = quest
-        // activeQuests
-        activeQuests = copyIfSame(activeQuests, state.activeQuests)
-        activeQuests[api_no] = {detail: quest, time: now}
-        // records
+        const {api_state, api_no} = quest
+        // For all quests, create records and update progress
         if (!records[api_no] && questGoals[api_no]) {
+          // Add new records
           records = copyIfSame(records, state.records)
           records[api_no] = newQuestRecord(api_no, questGoals)
+        } else {
+          let newRecord = updateRecordProgress(records[api_no], quest)
+          if (newRecord) {
+            records = copyIfSame(records, state.records)
+            records[api_no] = newRecord
+          }
         }
+        // For active quests, update activeQuests
+        if (api_state >= 2) {
+          activeQuests = copyIfSame(activeQuests, state.activeQuests)
+          activeQuests[api_no] = {detail: quest, time: now}
+        }
+        // We don't need to delete inactive quests, because if we know all 
+        // active quests, then the inactive ones will be deleted by limitActiveQuests
+        // since they have earlier `time`
       })
       activeQuests = limitActiveQuests(activeQuests, activeNum)
       return updateObject(state, {
