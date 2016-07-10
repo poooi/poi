@@ -13,7 +13,7 @@ import {reducer as battle} from './battle'
 // === Utils ===
 
 window.indexify = (array, key='api_id') => {
-  let keyFunc;
+  let keyFunc
   if (typeof key === 'string') {
     keyFunc = (element) => element[key]
   } else {
@@ -40,7 +40,7 @@ window.reduxSet = (obj, path, val) => {
   } else {
     before = {}
   }
-  const after = reduxSet(before, restPath, val)
+  const after = window.reduxSet(before, restPath, val)
   if (after !== before) {
     let result
     if (Array.isArray(obj)) {
@@ -71,9 +71,6 @@ export const reducer = reduceReducers(
     battle,
   }),
 )
-
-console.log(reducer)
-
 
 // === Actions ===
 

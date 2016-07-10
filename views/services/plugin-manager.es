@@ -9,10 +9,10 @@ import glob from 'glob'
 import request from 'request'
 import npm from 'npm'
 import { promisify, promisifyAll } from 'bluebird'
+import FontAwesome from 'react-fontawesome'
 
-const __ = i18n.setting.__.bind(i18n.setting)
-const __n = i18n.setting.__n.bind(i18n.setting)
-const {config, language, notify, proxy} = window
+const __ = window.i18n.setting.__.bind(window.i18n.setting)
+const {config, language, notify, proxy, ROOT, PLUGIN_PATH} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
 const windowManager = remote.require('./lib/window')
@@ -69,10 +69,10 @@ class PluginManager extends EventEmitter {
     }
   }
   async getMirrors() {
-    if (this.mirrors !== null) {
+    if (this.mirrors != null) {
       return Promise.resolve(this.mirrors)
     } else {
-      await this.readMirrors()
+      return await this.readMirrors()
     }
   }
   async readMirrors() {
@@ -99,7 +99,8 @@ class PluginManager extends EventEmitter {
     }
     this.npmConfig.registry = this.config.mirror.server
     if (this.config.proxy) {
-      this.npmConfig.http_proxy = 'http://127.0.0.1:#{proxy.port}'
+      let {port} = proxy
+      this.npmConfig.http_proxy = `http://127.0.0.1:${port}`
     } else {
       if (this.npmConfig.http_proxy) {
         delete this.npmConfig.http_proxy
@@ -109,12 +110,12 @@ class PluginManager extends EventEmitter {
     return this.config
   }
   isMetRequirement(plugin) {
-    let lowest, ref
+    let lowest
     if (!plugin.isRead) {
       return false
     }
     if ((this.requirements[plugin.packageName] || {}).version) {
-      lowest = this.requirements[plugin.packageName].version;
+      lowest = this.requirements[plugin.packageName].version
     } else {
       lowest = 'v0.0.0'
     }
@@ -196,6 +197,14 @@ class PluginManager extends EventEmitter {
   getMetRequirementPlugins() {
     return this.getFilteredPlugins(this.isMetRequirement.bind(this))
   }
+  getUpdateStatus () {
+    for (let i in this.plugins) {
+      if (this.plugins[i].isOutdated) {
+        return true
+      }
+    }
+    return false
+  }
   async getOutdatedPlugins (isNotif) {
     await this.getMirrors()
     let plugins = await this.getInstalledPlugins()
@@ -206,12 +215,12 @@ class PluginManager extends EventEmitter {
         try {
           let data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
           let distTag = {
-            latest: data.version
+            latest: data.version,
           }
           if (this.config.betaCheck) {
             let betaData = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/beta`))[1])
             Object.assign(distTag, {
-              beta: betaData.version
+              beta: betaData.version,
             })
           }
           let latest = `${plugin.version}`
@@ -219,7 +228,7 @@ class PluginManager extends EventEmitter {
           let apiVer = (data.poiPlugin || {}).apiVer || plugin.apiVer
           let nearestCompVer = 'v214.748.3647'
           for (let mainVersion in apiVer) {
-            if (semver.lte(POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer)) {
+            if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer)) {
               notCompatible = true
               nearestCompVer = mainVersion
               latest = plugin.apiVer[mainVersion]
@@ -280,7 +289,7 @@ class PluginManager extends EventEmitter {
       // })
       // await flow(this)
       await promisify(npm.commands.install)([`${plugin.packageName}@${plugin.lastestVersion}`])
-      return this.reloadPlugin(plugin);
+      return this.reloadPlugin(plugin)
     } catch (error) {
       plugin.isUpdating = false
       throw error
@@ -303,7 +312,7 @@ class PluginManager extends EventEmitter {
       // })
       // await flow(this)
       await promisify(npm.commands.install)([name])
-      let [packName, packVersion] = name.split('@')
+      let [packName] = name.split('@')
       if (list.indexOf(packName) !== -1) {
         this.reloadPlugin(packName)
       } else {
@@ -318,6 +327,7 @@ class PluginManager extends EventEmitter {
   async uninstallPlugin(plugin) {
     await this.getMirrors()
     try {
+      plugin.isUninstalling = true
       this.unloadPlugin(plugin)
       this.removePlugin(plugin)
       await promisify(npm.commands.uninstall)([plugin.packageName])
@@ -327,7 +337,7 @@ class PluginManager extends EventEmitter {
     }
   }
   enablePlugin(plugin) {
-    config.set(`plugin.${plugin.id}.enable`, true);
+    config.set(`plugin.${plugin.id}.enable`, true)
     plugin.enabled = true
     if (!plugin.isRead && !plugin.isBroken) {
       for (let index = 0; index < this.plugins.length; index++) {
@@ -337,7 +347,7 @@ class PluginManager extends EventEmitter {
             pluginMain = require(plugin.pluginPath)
             pluginMain.isRead = true
             if (!plugin.packageData.poiPlugin.id && pluginMain.name) {
-              plugin.id = pluginMain.name;
+              plugin.id = pluginMain.name
             }
             if (pluginMain.displayName) {
               plugin.displayName = pluginMain.displayName
@@ -346,17 +356,17 @@ class PluginManager extends EventEmitter {
               plugin.priority = pluginMain.priority
             }
           } catch (error) {
-            console.error(error);
+            console.error(error)
             pluginMain = {
-              isBroken: true
+              isBroken: true,
             }
           }
-          Object.assign(pluginMain, this.plugins[index]);
+          Object.assign(pluginMain, this.plugins[index])
           if (pluginMain.isRead == null) {
             pluginMain.isRead = false
           }
           this.plugins[index] = pluginMain
-          pluginMain = null;
+          pluginMain = null
           plugin = this.plugins[index]
           break
         }
@@ -374,13 +384,13 @@ class PluginManager extends EventEmitter {
       return
     }
     if (plugin.useEnv && !window._portStorageUpdated) {
-      for (i = 0; i < envKeyList.length; i++) {
+      for (let i = 0; i < envKeyList.length; i++) {
         let key = envKeyList[i]
         if (window[key] != null) {
-          localStorage[key] = JSON.stringify(window[key]);
+          localStorage[key] = JSON.stringify(window[key])
         }
       }
-      window._portStorageUpdated = true;
+      window._portStorageUpdated = true
     }
     let windowOptions
     if (plugin.windowURL) {
@@ -395,11 +405,11 @@ class PluginManager extends EventEmitter {
         }
       }
       Object.assign(windowOptions, {
-        realClose: plugin.realClose
-      });
+        realClose: plugin.realClose,
+      })
       if (plugin.multiWindow) {
         plugin.handleClick = function() {
-          let pluginWindow = windowManager.createWindow(windowOptions);
+          let pluginWindow = windowManager.createWindow(windowOptions)
           pluginWindow.loadURL(plugin.windowURL)
           pluginWindow.show()
         }
@@ -407,7 +417,7 @@ class PluginManager extends EventEmitter {
         plugin.pluginWindow = null
         plugin.handleClick = function() {
           if (plugin.pluginWindow == null) {
-            plugin.pluginWindow = windowManager.createWindow(windowOptions);
+            plugin.pluginWindow = windowManager.createWindow(windowOptions)
             plugin.pluginWindow.on('close', function() {
               plugin.pluginWindow = null
             })
@@ -418,19 +428,19 @@ class PluginManager extends EventEmitter {
           }
         }
       } else {
-        plugin.pluginWindow = windowManager.createWindow(windowOptions);
-        plugin.pluginWindow.loadURL(plugin.windowURL);
+        plugin.pluginWindow = windowManager.createWindow(windowOptions)
+        plugin.pluginWindow.loadURL(plugin.windowURL)
         plugin.handleClick = function() {
-          return plugin.pluginWindow.show();
+          return plugin.pluginWindow.show()
         }
       }
     }
     try {
       if (typeof plugin.pluginDidLoad === 'function') {
-        plugin.pluginDidLoad();
+        plugin.pluginDidLoad()
       }
     } catch (error) {
-      console.log(error)
+      console.error(error.stack)
     }
     this.emit('plugin.loaded', plugin.packageName)
   }
@@ -443,7 +453,7 @@ class PluginManager extends EventEmitter {
         plugin.pluginWillUnload()
       }
     } catch (error) {
-      console.log(error)
+      console.error(error.stack)
     }
     if (plugin.pluginWindow) {
       windowManager.closeWindow(plugin.pluginWindow)
@@ -461,9 +471,9 @@ class PluginManager extends EventEmitter {
     this.emit('plugin.removed', plugin.packageName)
   }
   addPlugin(pluginPath) {
-    let plugin = this.readPlugin(pluginPath);
-    this.plugins.push(plugin);
-    this.plugins = sortBy(this.plugins, 'priority');
+    let plugin = this.readPlugin(pluginPath)
+    this.plugins.push(plugin)
+    this.plugins = sortBy(this.plugins, 'priority')
     if (plugin.enabled) {
       this.loadPlugin(plugin)
     }
@@ -479,15 +489,14 @@ class PluginManager extends EventEmitter {
       }
     }
     if (typeof plugin === 'string') {
-      console.log('Plugin not found!');
-      return;
+      console.warn('Plugin not found!')
+      return
     }
     this.unloadPlugin(plugin)
-    delete require.cache[require.resolve(plugin.pluginPath)];
+    delete require.cache[require.resolve(plugin.pluginPath)]
     let newPlugin = {}
     for (let index = 0; index < this.plugins.length; index++) {
       if (plugin.packageName === this.plugins[index].packageName) {
-        console.log(plugin.pluginPath)
         this.plugins[index] = null
         newPlugin = this.readPlugin(plugin.pluginPath)
         this.plugins[index] = newPlugin
@@ -497,18 +506,18 @@ class PluginManager extends EventEmitter {
     if (plugin.enabled) {
       this.loadPlugin(newPlugin)
     }
-    return this.plugins = sortBy(this.plugins, 'priority');
+    return this.plugins = sortBy(this.plugins, 'priority')
   }
   readPlugin(pluginPath) {
     let pluginData, packageData, plugin, pluginMain
     try {
-      pluginData = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'plugin.json'));
+      pluginData = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'plugin.json'))
     } catch (error) {
-      pluginData = {};
+      pluginData = {}
       utils.error(error)
     }
     try {
-      packageData = fs.readJsonSync(path.join(pluginPath, 'package.json'));
+      packageData = fs.readJsonSync(path.join(pluginPath, 'package.json'))
     } catch (error) {
       packageData = {}
       utils.error(error)
@@ -528,11 +537,11 @@ class PluginManager extends EventEmitter {
     }
     plugin.link = get(plugin, 'packageData.author.links') || get(plugin, 'packageData.author.url') || (pluginData[plugin.packageName] || {}).link || "https://github.com/poooi"
     if (plugin.description == null) {
-      plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})["des#{window.language}"] || "unknown"
+      plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || "unknown"
     }
     plugin.pluginPath = pluginPath
     if (plugin.icon == null) {
-      plugin.icon = 'fa/th-large';
+      plugin.icon = 'fa/th-large'
     }
     plugin.version = (plugin.packageData || {}).version || '0.0.0'
     plugin.lastestVersion = plugin.version
@@ -549,9 +558,9 @@ class PluginManager extends EventEmitter {
     plugin.isInstalled = true
     plugin.needRollback = false
     if (plugin.apiVer) {
-      nearestCompVer = 'v214.748.3647';
+      let nearestCompVer = 'v214.748.3647'
       for (let mainVersion in plugin.apiVer) {
-        if (semver.lte(POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer) && semver.gt(plugin.version, plugin.apiVer[mainVersion])) {
+        if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer) && semver.gt(plugin.version, plugin.apiVer[mainVersion])) {
           plugin.needRollback = true
           nearestCompVer = mainVersion
           plugin.lastestVersion = plugin.apiVer[mainVersion]
@@ -561,21 +570,22 @@ class PluginManager extends EventEmitter {
     plugin.isOutdated = plugin.needRollback
     let i18nFile = null
     if (plugin.i18nDir != null) {
-      i18nFile = path.join(pluginPath, plugin.i18nDir);
+      i18nFile = path.join(pluginPath, plugin.i18nDir)
     } else {
       try {
-        fs.accessSync(path.join(pluginPath, 'i18n'));
-        i18nFile = path.join(pluginPath, 'i18n');
+        fs.accessSync(path.join(pluginPath, 'i18n'))
+        i18nFile = path.join(pluginPath, 'i18n')
       } catch (error) {
         try {
-          fs.accessSync(path.join(pluginPath, 'assets', 'i18n'));
-          i18nFile = path.join(pluginPath, 'assets', 'i18n');
+          fs.accessSync(path.join(pluginPath, 'assets', 'i18n'))
+          i18nFile = path.join(pluginPath, 'assets', 'i18n')
         } catch (error) {
+          //console.warn('No translate file found.')
         }
       }
     }
     if (i18nFile != null) {
-      let namespace = plugin.id;
+      let namespace = plugin.id
       window.i18n[namespace] = new (require('i18n-2'))({
         locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
         defaultLocale: 'zh-CN',
@@ -583,13 +593,13 @@ class PluginManager extends EventEmitter {
         updateFiles: false,
         indent: "\t",
         extension: '.json',
-        devMode: false
-      });
+        devMode: false,
+      })
       window.i18n[namespace].setLocale(window.language)
       plugin.name = window.i18n[namespace].__(plugin.name)
       plugin.description = window.i18n[namespace].__(plugin.description)
     }
-    let icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large';
+    let icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
     plugin.displayName = (
       <span>
         <FontAwesome key={0} name={icon} />
@@ -604,15 +614,15 @@ class PluginManager extends EventEmitter {
           plugin.id = pluginMain.name
         }
         if (pluginMain.displayName) {
-          plugin.displayName = pluginMain.displayName;
+          plugin.displayName = pluginMain.displayName
         }
         if (plugin.priority === 10000 && (pluginMain.priority != null)) {
-          plugin.priority = pluginMain.priority;
+          plugin.priority = pluginMain.priority
         }
       } catch (error) {
-        console.error(`[Plugin ${plugin.name}] `, error.stack);
+        console.error(`[Plugin ${plugin.name}] `, error.stack)
         pluginMain = {
-          isBroken: true
+          isBroken: true,
         }
       }
       Object.assign(pluginMain, plugin)
@@ -626,18 +636,18 @@ class PluginManager extends EventEmitter {
   }
   async notifyFailed() {
     let plugins = await this.getBrokenPlugins()
-    let unreadList = [];
+    let unreadList = []
     for (let i = 0; i < plugins.length; i++) {
-      let plugin = plugins[i];
-      unreadList.push(plugin.name);
+      let plugin = plugins[i]
+      unreadList.push(plugin.name)
     }
     if (unreadList.length > 0) {
-      content = `${unreadList.join(' ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
+      let content = `${unreadList.join(' ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
       notify(content, {
         type: 'plugin error',
         title: __('Plugin error'),
         icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png'),
-        audio: "file://" + ROOT + "/assets/audio/fail.mp3"
+        audio: `file://${ROOT}/assets/audio/fail.mp3`,
       })
     }
   }
