@@ -1,13 +1,14 @@
 assert = require 'assert'
 # Environments
 global.ROOT = global.EXROOT = __dirname
+require('babel-register')(require('../babel.config'))
 config = null
 
 describe 'config', ->
   beforeEach ->
     # Require config uncachedly
-    delete require.cache[require.resolve '../lib/config.coffee']
-    config = require '../lib/config.coffee'
+    delete require.cache[require.resolve '../lib/config']
+    config = require '../lib/config'
   # Initial empty
   describe 'initially', ->
     it 'should be empty', ->

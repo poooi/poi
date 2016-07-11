@@ -72,7 +72,7 @@ const Slotitems  = connect(
   }
 })
 
-export const MiniShipRow  = connect(
+export const MiniShipRow = connect(
   () => createSelector([
       makeThisShipDataSelector(),
       makeThisShipRepairDockSelector(),

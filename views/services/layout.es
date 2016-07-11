@@ -1,22 +1,18 @@
-import {debounce} from 'lodash'
+import { debounce } from 'lodash'
+import { remote } from 'electron'
 
 const WindowManager = remote.require('./lib/window')
-const {config, proxy} = window
+const {config, $} = window
 
 $('#layout-css').setAttribute('href',
   `./assets/css/layout.${config.get('poi.layout', 'horizontal')}.css`)
 
 let poiControlHeight = 30
-let additionalStyle = document.createElement('style');
+let additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
-  document.body.appendChild(additionalStyle);
-});
-
-const isKancollePage = (url) => (
-  url === 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
-  || (url || "").startsWith('http://osapi.dmm.com/gadgets/ifr')
-)
+  document.body.appendChild(additionalStyle)
+})
 
 const getFlexCSS = ({layout, webviewWidth}) => {
   if (layout === 'horizontal') {
@@ -73,16 +69,6 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
     $('kan-game').style.display = ''
   }
 
-  // Get url
-  let webview = $('kan-game webview')
-  let url
-  try {
-    url = webview.getURL()
-  }
-  catch (e) {
-    url = null
-  }
-
   // Adjust webview height & position
   if (layout === 'horizontal') {
     $('kan-game #webview-wrapper').style.marginLeft = '0'
@@ -94,15 +80,15 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
 
   // Adjust content
   try {
-    webview.executeJavaScript('window.align()')
+    $('kan-game webview').executeJavaScript('window.align()')
   } catch (e) {
+    console.error(e)
   }
 }
 
 const setCSSDebounced = debounce(setCSS, 200)
 
 const adjustSize = () => {
-  let webview = $('kan-game webview')
   let layout = config.get('poi.layout', 'horizontal')
   let zoomLevel = config.get('poi.zoomLevel', 1)
   let doubleTabbed = config.get('poi.tabarea.double', false)
@@ -162,8 +148,8 @@ const adjustSize = () => {
         width: webviewWidth,
         height: webviewHeight,
         useFixedResolution: useFixedResolution,
-      }
-    }
+      },
+    },
   })
 
   // Apply calcualted data
@@ -184,7 +170,7 @@ const changeBounds = () => {
   let borderY = height - window.innerHeight
   let newHeight = window.innerHeight
   let newWidth = window.innerWidth
-  if (layout === 'horizontal') {
+  if (config.get('poi.layout', 'horizontal') === 'horizontal') {
     // Previous vertical
     newHeight = window.innerWidth / 800 * 480 + 30
     newWidth = window.innerWidth / 5 * 7
@@ -206,21 +192,24 @@ window.addEventListener('resize', adjustSize)
 
 config.on('config.set', (path, value) => {
   switch (path) {
-    case 'poi.zoomLevel':
-    case 'poi.tabarea.double':
-    case 'poi.webview.width':
-      adjustSize()
-      break
-    case 'poi.layout':
-      let resizable = remote.getCurrentWindow().isResizable()
-      remote.getCurrentWindow().setResizable(true)
-      changeBounds()
-      // window.dispatchEvent(new Event('resize'))
-      $('#layout-css').setAttribute('href', `./assets/css/layout.${value}.css`)
-      remote.getCurrentWindow().setResizable(resizable)
-      adjustSize()
-    default:
-      break
+  case 'poi.zoomLevel':
+  case 'poi.tabarea.double':
+  case 'poi.webview.width': {
+    adjustSize()
+    break
+  }
+  case 'poi.layout': {
+    let resizable = remote.getCurrentWindow().isResizable()
+    remote.getCurrentWindow().setResizable(true)
+    changeBounds()
+    // window.dispatchEvent(new Event('resize'))
+    $('#layout-css').setAttribute('href', `./assets/css/layout.${value}.css`)
+    remote.getCurrentWindow().setResizable(resizable)
+    adjustSize()
+    break
+  }
+  default:
+    break
   }
 })
 
@@ -241,7 +230,9 @@ remote.getCurrentWebContents().on('dom-ready', () => {
   if (config.get('poi.content.muted', false)) {
     $('kan-game webview').setAudioMuted(true)
   }
-  $('kan-game webview').loadURL(config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'))
+  if ($('kan-game').style.display !== 'none')  {
+    $('kan-game webview').loadURL(config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'))
+  }
   $('kan-game webview').addEventListener('dom-ready', (e) => {
     if (config.get('poi.enableDMMcookie', false)) {
       $('kan-game webview').executeJavaScript(`
