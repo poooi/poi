@@ -24,52 +24,46 @@ const Slotitems  = connect(
       $ship: $ship || {},
       equipsData,
     }))
-)(class extends Component {
-  shouldComponentUpdate = (nextProps, nextState) => (
-    !isEqual(this.props, nextProps)
-  )
-  render() {
-    const {ship, $ship, equipsData} = this.props
-    return (
-      <div className="slotitems-mini" style={{display: "flex", flexFlow: "column"}}>
-      {
-        equipsData.filter(Boolean).map((equipData, equipIdx) => {
-          const [equip, $equip, onslot] = equipData
-          const equipIconId = $equip.api_type[3]
-          const level = equip.api_level
-          const proficiency = equip.api_alv
-          const isAircraft = equipIsAircraft(equipIconId)
-          const maxOnslot = ($ship.api_maxeq || [])[equipIdx]
-          const onslotText = onslot
-          const onslotWarning = maxOnslot && onslot < maxOnslot
-          const onslotClassName = classNames("slotitem-onslot", {
-            'show': isAircraft,
-            'hide': !isAircraft,
-          })
-          return (
-            <div key={equipIdx} className="slotitem-container-mini">
-              <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
-              <span className="slotitem-name-mini">
-                {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
-                {level ? <strong style={{color: '#45A9A5'}}> ★{level}</strong> : ''}
-                &nbsp;&nbsp;
-                {proficiency &&
-                  <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
-                }
-              </span>
-              <Label
-                className={onslotClassName}
-                bsStyle={`${onslotWarning ? 'warning' : 'default'}`}
-              >
-                {onslotText}
-              </Label>
-            </div>
-          )
+)(function ({ship, $ship, equipsData}) {
+  return (
+    <div className="slotitems-mini" style={{display: "flex", flexFlow: "column"}}>
+    {
+      equipsData.filter(Boolean).map((equipData, equipIdx) => {
+        const [equip, $equip, onslot] = equipData
+        const equipIconId = $equip.api_type[3]
+        const level = equip.api_level
+        const proficiency = equip.api_alv
+        const isAircraft = equipIsAircraft(equipIconId)
+        const maxOnslot = ($ship.api_maxeq || [])[equipIdx]
+        const onslotText = onslot
+        const onslotWarning = maxOnslot && onslot < maxOnslot
+        const onslotClassName = classNames("slotitem-onslot", {
+          'show': isAircraft,
+          'hide': !isAircraft,
         })
-      }
-      </div>
-    )
-  }
+        return (
+          <div key={equipIdx} className="slotitem-container-mini">
+            <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
+            <span className="slotitem-name-mini">
+              {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
+              {level ? <strong style={{color: '#45A9A5'}}> ★{level}</strong> : ''}
+              &nbsp;&nbsp;
+              {proficiency &&
+                <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
+              }
+            </span>
+            <Label
+              className={onslotClassName}
+              bsStyle={`${onslotWarning ? 'warning' : 'default'}`}
+            >
+              {onslotText}
+            </Label>
+          </div>
+        )
+      })
+    }
+    </div>
+  )
 })
 
 export const MiniShipRow = connect(
@@ -82,67 +76,61 @@ export const MiniShipRow = connect(
       repairDock,
       labelStatus: getShipLabelStatus(ship, $ship, repairDock),
     }))
-)(class extends Component {
-  shouldComponentUpdate = (nextProps, nextState) => (
-    !isEqual(this.props, nextProps)
-  )
-  render() {
-    const {ship, $ship, labelStatus, repair} = this.props
-    if (!ship)
-      return <div></div>
-    const labelStatusStyle = getStatusStyle(labelStatus)
-    const hasEquips = ship.api_slot.filter((n) => n != -1).length
-    const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
-    const tooltipClassName = classNames("ship-pop", {
-      "hidden": !hasEquips,
-    })
-    return (
-      <div className="ship-tile">
-        <OverlayTrigger
-          placement={((!window.doubleTabbed) && (window.layout == 'vertical')) ? 'left' : 'right'}
-          overlay={
-            <Tooltip id={`ship-pop-${ship.api_id}`} className={tooltipClassName}>
-              <div className="item-name">
-                <Slotitems shipId={ship.api_id} />
-              </div>
+)(function ({ship, $ship, labelStatus, repair}) {
+  if (!ship)
+    return <div></div>
+  const labelStatusStyle = getStatusStyle(labelStatus)
+  const hasEquips = ship.api_slot.filter((n) => n != -1).length
+  const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
+  const tooltipClassName = classNames("ship-pop", {
+    "hidden": !hasEquips,
+  })
+  return (
+    <div className="ship-tile">
+      <OverlayTrigger
+        placement={((!window.doubleTabbed) && (window.layout == 'vertical')) ? 'left' : 'right'}
+        overlay={
+          <Tooltip id={`ship-pop-${ship.api_id}`} className={tooltipClassName}>
+            <div className="item-name">
+              <Slotitems shipId={ship.api_id} />
+            </div>
+          </Tooltip>
+      }>
+        <div className="ship-item">
+          <OverlayTrigger placement='top' overlay={
+            <Tooltip id={`miniship-exp-${ship.api_id}`}>
+              Next. {ship.api_exp[1]}
             </Tooltip>
-        }>
-          <div className="ship-item">
-            <OverlayTrigger placement='top' overlay={
-              <Tooltip id={`miniship-exp-${ship.api_id}`}>
-                Next. {ship.api_exp[1]}
-              </Tooltip>
-            }>
-              <div className="ship-info">
-                <span className="ship-name" style={labelStatusStyle}>
-                  {i18n.resources.__($ship.api_name || '??')}
-                </span>
-                <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                  Lv. {ship.api_lv || '??'}
-                </span>
-              </div>
-            </OverlayTrigger>
-            <div className="ship-stat">
-              <div className="div-row">
-                <span className="ship-hp" style={labelStatusStyle}>
-                  {ship.api_nowhp} / {ship.api_maxhp}
-                </span>
-                <div className="status-label">
-                  <StatusLabel label={labelStatus} />
-                </div>
-                <div style={labelStatusStyle}>
-                  <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
-                    ★{ship.api_cond}
-                  </span>
-                </div>
-              </div>
-              <span className="hp-progress top-space" style={labelStatusStyle}>
-                <ProgressBar bsStyle={getHpStyle(hpPercentage)} now={hpPercentage} />
+          }>
+            <div className="ship-info">
+              <span className="ship-name" style={labelStatusStyle}>
+                {i18n.resources.__($ship.api_name || '??')}
+              </span>
+              <span className="ship-lv-text top-space" style={labelStatusStyle}>
+                Lv. {ship.api_lv || '??'}
               </span>
             </div>
+          </OverlayTrigger>
+          <div className="ship-stat">
+            <div className="div-row">
+              <span className="ship-hp" style={labelStatusStyle}>
+                {ship.api_nowhp} / {ship.api_maxhp}
+              </span>
+              <div className="status-label">
+                <StatusLabel label={labelStatus} />
+              </div>
+              <div style={labelStatusStyle}>
+                <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
+                  ★{ship.api_cond}
+                </span>
+              </div>
+            </div>
+            <span className="hp-progress top-space" style={labelStatusStyle}>
+              <ProgressBar bsStyle={getHpStyle(hpPercentage)} now={hpPercentage} />
+            </span>
           </div>
-        </OverlayTrigger>
-      </div>
-    )
-  }
+        </div>
+      </OverlayTrigger>
+    </div>
+  )
 })
