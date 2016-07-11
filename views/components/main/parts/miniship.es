@@ -169,7 +169,6 @@ const MiniShip = connect(() => ({
                   <PaneBodyMini
                     key={i}
                     fleetId={i}
-                    activeDeck={this.state.activeDeck}
                   />
                 </div>
               )

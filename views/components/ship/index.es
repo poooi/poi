@@ -98,9 +98,7 @@ const FleetShipView = connect(() => {
       (shipsId || []).map((shipId, i) =>
         <ShipRow
           key={shipId}
-          fleetId={fleetId}
           shipId={shipId}
-          shipIndex={i}
           />
       )
     }

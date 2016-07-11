@@ -21,9 +21,7 @@ export const PaneBodyMini = connect(() => {
       (shipsId || []).map((shipId, i) =>
         <MiniShipRow
           key={shipId}
-          fleetId={fleetId}
           shipId={shipId}
-          shipIndex={i}
           />
       )
     }
