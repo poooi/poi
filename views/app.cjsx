@@ -47,9 +47,21 @@ CustomCssInjector = React.createClass
     fs.ensureFileSync cssPath
     <link rel='stylesheet' id='custom-css' href={cssPath} />
 
-ReactDOM.render <PoiAlert id='poi-alert' />, $('poi-alert')
-ReactDOM.render <PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')
-ReactDOM.render <PoiControl />, $('poi-control')
+ReactDOM.render(
+  <Provider store={store}>
+    <PoiControl />
+  </Provider>,
+  $('poi-control'))
+ReactDOM.render(
+  <Provider store={store}>
+    <PoiAlert id='poi-alert' />
+  </Provider>,
+  $('poi-alert'))
+ReactDOM.render(
+  <Provider store={store}>
+    <PoiMapReminder id='poi-map-reminder'/>
+  </Provider>,
+  $('poi-map-reminder'))
 ReactDOM.render <ModalTrigger />, $('poi-modal-trigger')
 ReactDOM.render(
   <Provider store={store}>

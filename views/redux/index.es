@@ -9,6 +9,7 @@ import {reducer as timers} from './timers'
 import {reducer as config} from './config'
 import {reducer as layout} from './layout'
 import {reducer as battle} from './battle'
+import {reducer as alert} from './alert'
 
 // === Utils ===
 
@@ -147,6 +148,7 @@ export const reducer = reduceReducers(
     config,
     layout,
     battle,
+    alert,
   }),
 )
 

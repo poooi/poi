@@ -24,6 +24,8 @@ body {
 }
 .alert-main {
   pointer-events: none;
+  position: relative;
+  overflow: hidden;
 }
 .alert-container {
   z-index: 2;
@@ -44,13 +46,6 @@ body {
 .alert-history-contents {
   overflow: scroll;
   text-overflow: initial;
-}
-.alert-history-show {
-  top: 0;
-  pointer-events: auto;
-}
-.alert-history-hidden {
-  pointer-events: none
 }
 .tab-content {
   overflow: auto;

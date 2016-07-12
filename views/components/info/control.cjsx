@@ -74,6 +74,13 @@ PoiControl = React.createClass
   handleSetExtend: ->
     extend = !@state.extend
     @setState {extend}
+  sendEvent: (isExtend) ->
+    event = new CustomEvent 'alert.change',
+      bubbles: true
+      cancelable: true
+      detail:
+        isExtend: isExtend
+    window.dispatchEvent event
   componentDidUpdate: (prevProps, prevState) ->
     if prevState.extend != @state.extend
       setTimeout =>
@@ -96,7 +103,7 @@ PoiControl = React.createClass
       <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{if @state.muted then __ 'Volume on' else __ 'Volume off'}</Tooltip>}>
         <Button onClick={@handleSetMuted} bsSize='small' className={if @state.muted then 'active' else ''}><FontAwesome name={if @state.muted then 'volume-off' else 'volume-up'} /></Button>
       </OverlayTrigger>
-      <Collapse in={@state.extend} dimension='width' className="poi-control-extender">
+      <Collapse in={@state.extend} onExited={@sendEvent.bind(@, false)} onEntered={@sendEvent.bind(@, true)} dimension='width' className="poi-control-extender">
         <div>
           <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{__ 'Open cache dir'}</Tooltip>}>
             <Button onClick={@handleOpenCacheFolder}  onContextMenu={@handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
