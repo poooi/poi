@@ -97,10 +97,13 @@ export const PoiAlert = connect((state, props) => ({
     let containerWidth = $('poi-alert').offsetWidth
     if (!this.state.overflow) {
       this.msgWidth = $('#alert-area').offsetWidth
+      $('.alert-position').style.width = `${this.msgWidth}px`
     }
     if ((this.msgWidth > containerWidth) && !this.state.overflow) {
+      $('.alert-position').style.width = `${this.msgWidth + 50}px`
       this.setState({overflow: true})
     } else if ((this.msgWidth < containerWidth) && this.state.overflow) {
+      $('.alert-position').style.width = `${this.msgWidth}px`
       this.setState({overflow: false})
     }
   }
@@ -149,7 +152,14 @@ export const PoiAlert = connect((state, props) => ({
             <span id='alert-area' className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
-                (<span>{this.props.current.content}<span>　　　　　</span>{this.props.current.content}<span>　　　　　</span></span>)
+                <span>
+                  <span style={{marginRight: 50}}>
+                    {this.props.current.content}
+                  </span>
+                  <span style={{marginRight: 50}}>
+                    {this.props.current.content}
+                  </span>
+                </span>
                 : this.props.current.content
               }
             </span>
