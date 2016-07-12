@@ -11,9 +11,9 @@ function removeEquips(equips, idList) {
 export function reducer(state={}, {type, postBody, body}) {
   switch (type) {
     case '@@Response/kcsapi/api_get_member/slot_item':
-      return indexify(body)
+      return compareUpdate(state, indexify(body))
     case '@@Response/kcsapi/api_get_member/require_info':
-      return indexify(body.api_slot_item)
+      return compareUpdate(state, indexify(body.api_slot_item))
     case '@@Response/kcsapi/api_req_kousyou/createitem':
       if (body.api_create_flag == 1) {
         let {api_slot_item} = body

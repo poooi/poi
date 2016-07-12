@@ -1,7 +1,8 @@
 import reduceReducers from 'reduce-reducers'
+import {forEach, isEqual} from 'lodash'
 
 function mergeIndexifiedFleets(state, body) {
-  return Object.assign([], state, indexify(body, (deck) => (deck.api_id - 1)))
+  return compareUpdate(state, indexify(body, (deck) => (deck.api_id - 1), true), 2)
 }
 
 // Return [fleetId, pos] if found
@@ -28,6 +29,8 @@ function setShip(fleet, pos, shipId) {
   } else {
     ships[pos] = shipId
   }
+  if (isEqual(ships, fleet.api_ship))
+    return fleet
   return {
     ...fleet,
     api_ship: ships
@@ -37,7 +40,7 @@ function setShip(fleet, pos, shipId) {
 export function reducer(state=[], {type, postBody, body}) {
   switch(type) {
     case '@@Response/kcsapi/api_port/port':
-      return body.api_deck_port
+      return compareUpdate(state, body.api_deck_port, 2)
     case '@@Response/kcsapi/api_get_member/deck':
       return mergeIndexifiedFleets(state, body)
     case '@@Response/kcsapi/api_req_kaisou/powerup':
@@ -47,8 +50,7 @@ export function reducer(state=[], {type, postBody, body}) {
       return mergeIndexifiedFleets(state, body.api_deck_data)
     case '@@Response/kcsapi/api_req_hensei/preset_select':
       state = state.slice()
-      state[parseInt(postBody.api_deck_id) - 1] = body
-      return state
+      return compareUpdate(state, buildArray([[parseInt(postBody.api_deck_id)-1, body]]), 2)
     case '@@Response/kcsapi/api_req_kousyou/destroyship': {
       let fleets = state.slice()
       let [fleetId, pos] = findShip(fleets, parseInt(postBody.api_ship_id))

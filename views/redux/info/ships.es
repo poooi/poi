@@ -4,28 +4,21 @@ import {values} from 'underscore'
 // Restore a ship with full health and >=40 cond.
 // Returns a clone.
 function completeRepair(ship) {
-  return {
-    ...ship,
+  return compareUpdate(ship, {
     api_nowhp: ship.api_maxhp,
     api_cond: Math.max(40, ship.api_cond),
-  }
+  })
 }
 
 export function reducer(state={}, {type, body, postBody}) {
   switch (type) {
     case '@@Response/kcsapi/api_port/port':
-      return indexify(body.api_ship)
+      return compareUpdate(state, indexify(body.api_ship))
     case '@@Response/kcsapi/api_get_member/ship_deck':
     case '@@Response/kcsapi/api_get_member/ship3':
-      return {
-        ...state,
-        ...indexify(body.api_ship_data),
-      }
+      return compareUpdate(state, indexify(body.api_ship_data))
     case '@@Response/kcsapi/api_get_member/ship2':
-      return {
-        ...state,
-        ...indexify(body),
-      }
+      return compareUpdate(state, indexify(body))
     case '@@Response/kcsapi/api_req_hokyu/charge':
       // Only partial info is given for each ship here 
       state = Object.assign({}, state)

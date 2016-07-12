@@ -25,13 +25,6 @@ function filterObjectValue(obj, pred=Boolean) {
   return obj
 }
 
-function copyIfSame(obj, to) {
-  // assert(typeof obj === 'object')
-  if (obj === to)
-    return Array.isArray(obj) ? obj.slice() : {...obj}
-  return obj
-}
-
 // Assert one of a and b is a number, and the other is a string
 function stringNumberEqual(a, b) {
   if (typeof a === 'string')
