@@ -47,18 +47,6 @@ export function reducer(state={}, {type, body, postBody}) {
         delete state[parseInt(shipId)]
       })
       return state
-    case '@@Response/kcsapi/api_req_kaisou/slotset': {
-      let {api_id, api_slot_idx, api_item_id} = postBody
-      let slot = state[api_id].api_slot.slice()
-      slot[api_slot_idx] = api_item_id
-      return {
-        ...state,
-        [api_id]: {
-          ...state[api_id],
-          api_slot: slot,
-        }
-      }
-    }
     case '@@Response/kcsapi/api_req_kaisou/slot_exchange_index': {
       let {api_id} = postBody
       return {
