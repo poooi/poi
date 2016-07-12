@@ -25,17 +25,16 @@ export const Slotitems = connect(
       makeThisShipEquipDataSelector(),
       constSelector,
     ], ([ship, $ship]=[], equipsData) => ({
-      ship: ship || {},
-      $ship: $ship || {},
+      api_maxeq: ($ship || {}).api_maxeq,
       equipsData,
     }))
-)(function ({ship, $ship, equipsData}) {
+)(function ({api_maxeq, equipsData}) {
   return (
     <div className="slotitems">
     {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const isExslot = equipIdx == (equipsData.length-1)
-        if (isExslot && ship.api_slot_ex == 0) {
+        if (isExslot && !equipData) {
           return <div key={equipIdx}></div>
         }
         const [equip, $equip, onslot] = equipData || []
@@ -61,7 +60,7 @@ export const Slotitems = connect(
 
         const equipIconId = equipData ? $equip.api_type[3] : 0
         const showOnslot = !equipData || isExslot || equipIsAircraft(equipIconId)
-        const maxOnslot = isExslot ? 0 : $ship.api_maxeq[equipIdx]
+        const maxOnslot = isExslot ? 0 : api_maxeq[equipIdx]
         const onslotText = isExslot ? "+" : equipData ? onslot : maxOnslot
         const onslotWarning = equipData && onslot < maxOnslot
         const onslotClassName = classNames("slotitem-onslot", {

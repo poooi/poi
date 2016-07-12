@@ -139,7 +139,7 @@ window.makeThisShipDataSelector = () -> createSelector [
 # Returns [[_equip, $equip, onslot] for each slot on the ship]
 #   where onslot is the number of airplanes left as in api_onslot
 # length is always slotnum+1, which is all slots plus exslot
-# Slot is undefined for each empty slot
+# Slot is padded with undefined for each empty slot
 # Slot is [_equip] for those not found in $equips
 # Returns undefined if anything is undefined
 window.makeThisShipEquipDataSelector = () -> createSelector [
