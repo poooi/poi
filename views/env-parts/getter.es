@@ -50,42 +50,49 @@ Object.defineProperty(window, '_ndock', {get: () => {
   }
 }})
 
+const initShips = (dispatch, current, previous) => {
+  window._ships = new Proxy(window.getStore('info.ships'), {
+    get: (target, property, receiver) => {
+      let ship = target[property]
+      if (ship === undefined) {
+        return undefined
+      }
+      return new Proxy(ship, {
+        get: (innerTarget, innerProperty, innerReceiver) => {
+          return ship[innerProperty] || window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
+        },
+      })
+    },
+  })
+}
+
+const initEquips = (dispatch, current, previous) => {
+  window._slotitems = new Proxy(window.getStore('info.equips'), {
+    get: (target, property, receiver) => {
+      let equip = target[property]
+      if (equip === undefined) {
+        return undefined
+      }
+      return new Proxy(equip, {
+        get: (innerTarget, innerProperty, innerReceiver) => {
+          return equip[innerProperty] || window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
+        },
+      })
+    },
+  })
+}
+
+initShips()
+initEquips()
+
 const shipsObserver = observer(
   (state) => state.info.ships,
-  (dispatch, current, previous) => {
-    window._ships = new Proxy(window.getStore('info.ships'), {
-      get: (target, property, receiver) => {
-        let ship = target[property]
-        if (ship === undefined) {
-          return undefined
-        }
-        return new Proxy(ship, {
-          get: (innerTarget, innerProperty, innerReceiver) => {
-            return ship[innerProperty] || window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
-          }
-        })
-      }
-    })
-  }
+  initShips
 )
 
 const slotitemsObserver = observer(
   (state) => state.info.equips,
-  (dispatch, current, previous) => {
-    window._slotitems = new Proxy(window.getStore('info.equips'), {
-      get: (target, property, receiver) => {
-        let equip = target[property]
-        if (equip === undefined) {
-          return undefined
-        }
-        return new Proxy(equip, {
-          get: (innerTarget, innerProperty, innerReceiver) => {
-            return equip[innerProperty] || window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
-          }
-        })
-      }
-    })
-  }
+  initEquips
 )
 
 observe(store, [shipsObserver, slotitemsObserver])
