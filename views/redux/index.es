@@ -77,13 +77,13 @@ window.copyIfSame = (obj, to) => {
   return obj
 }
 
-// Return Object.assign(prevState, newState) until `depth` level, while 
-// keeping as many parts from prevState as possible. Neither state is modified 
+// Return Object.assign(prevState, newState) until `depth` level, while
+// keeping as many parts from prevState as possible. Neither state is modified
 // in-place.
 // By default `depth` == 1, and every property of the returned value will be the
 // prevProperty if not mentioned in newState or `isEqual` to the corresponding,
 // or o/w the newProperty as a whole. Therefore,
-// - If you only provide one grand-property of a property, its other 
+// - If you only provide one grand-property of a property, its other
 //   grand-properties will be deleted.
 // - If a property is updated, all its grand-properties will be new ones,
 //   even if the grand-property itself isEqual.
@@ -96,7 +96,7 @@ window.compareUpdate = (prevState, newState, depth=1) => {
     return isEqual(prevState, newState) ? prevState : newState
   }
   const prevStateBackup = prevState
-  // Update existing properties 
+  // Update existing properties
   const nextDepth = depth - 1
   forEach(newState, (v, k) => {
     let newV = compareUpdate(prevState[k], v, nextDepth)
