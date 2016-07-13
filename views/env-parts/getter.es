@@ -2,52 +2,53 @@ import {observer, observe} from 'redux-observers'
 import {store} from '../createStore'
 
 Object.defineProperty(window, '$slotitems', {get: () => {
-  return window.getStore('const.$equips')
+  return window.getStore('const.$equips') || {}
 }})
 Object.defineProperty(window, '$slotitemTypes', {get: () => {
-  return window.getStore('const.$equipTypes')
+  return window.getStore('const.$equipTypes') || {}
 }})
 Object.defineProperty(window, '$mapareas', {get: () => {
-  return window.getStore('const.$mapareas')
+  return window.getStore('const.$mapareas') || {}
 }})
 Object.defineProperty(window, '$maps', {get: () => {
-  return window.getStore('const.$maps')
+  return window.getStore('const.$maps') || {}
 }})
 Object.defineProperty(window, '$missions', {get: () => {
-  return window.getStore('const.$missions')
+  return window.getStore('const.$missions') || {}
 }})
 Object.defineProperty(window, '$shipTypes', {get: () => {
-  return window.getStore('const.$shipTypes')
+  return window.getStore('const.$shipTypes') || {}
 }})
 Object.defineProperty(window, '$ships', {get: () => {
-  return window.getStore('const.$ships')
+  return window.getStore('const.$ships') || {}
 }})
 Object.defineProperty(window, '$useitems', {get: () => {
-  return window.getStore('const.$useitems')
+  return window.getStore('const.$useitems') || {}
 }})
 Object.defineProperty(window, '_decks', {get: () => {
-  return window.getStore('info.fleets')
+  return window.getStore('info.fleets') || []
 }})
 Object.defineProperty(window, '_nickName', {get: () => {
-  return window.getStore('info.basic.api_nickname')
+  return window.getStore('info.basic.api_nickname') || ''
 }})
 Object.defineProperty(window, 'api_nickname_id', {get: () => {
-  return window.getStore('info.basic.api_nickname_id')
+  return window.getStore('info.basic.api_nickname_id') || -1
 }})
 Object.defineProperty(window, '_teitokuId', {get: () => {
-  return window.getStore('info.basic.api_member_id')
+  return window.getStore('info.basic.api_member_id') || -1
 }})
 Object.defineProperty(window, '_teitokuExp', {get: () => {
-  return window.getStore('info.basic.api_experience')
+  return window.getStore('info.basic.api_experience') || 0
 }})
 Object.defineProperty(window, '_teitokuLv', {get: () => {
-  return window.getStore('info.basic.api_level')
+  return window.getStore('info.basic.api_level') || 0
 }})
 Object.defineProperty(window, '_ndock', {get: () => {
   let ret = []
   for (let i = 0; i < 4; i++) {
     ret.push(window.getStore(`info.repairs.${i}.api_ship_id`))
   }
+  return ret
 }})
 
 const initShips = (dispatch, current, previous) => {
