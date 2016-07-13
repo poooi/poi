@@ -5,6 +5,7 @@ __ = i18n.others.__.bind(i18n.others)
 __n = i18n.others.__n.bind(i18n.others)
 semver = require 'semver'
 fs = require 'fs-extra'
+PluginManager = require('./services/plugin-manager')
 {_, React, ReactBootstrap, FontAwesome} = window
 {Nav, NavItem, NavDropdown, MenuItem} = ReactBootstrap
 async = Promise.coroutine
