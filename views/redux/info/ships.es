@@ -11,6 +11,7 @@ function completeRepair(ship) {
 }
 
 export function reducer(state={}, {type, body, postBody}) {
+  let newState
   switch (type) {
     case '@@Response/kcsapi/api_port/port':
       return compareUpdate(state, indexify(body.api_ship))
@@ -20,14 +21,13 @@ export function reducer(state={}, {type, body, postBody}) {
     case '@@Response/kcsapi/api_get_member/ship2':
       return compareUpdate(state, indexify(body))
     case '@@Response/kcsapi/api_req_hokyu/charge':
-      // Only partial info is given for each ship here 
-      state = Object.assign({}, state)
+      // Only partial info is given for each ship here
+      newState = {...state}
       body.api_ship.forEach((ship) => {
-        state[ship.api_id] = {
-          ...state[ship.api_id],
-          ...ship,
-        }
+        newState = reduxSet(newState, [ship.api_id, 'api_bull'], ship.api_bull)
+        newState = reduxSet(newState, [ship.api_id, 'api_fuel'], ship.api_fuel)
       })
+      return newState
     case '@@Response/kcsapi/api_req_hensei/lock': {
       let {api_ship_id} = postBody
       return {
@@ -63,9 +63,9 @@ export function reducer(state={}, {type, body, postBody}) {
         ...indexify(values(body.api_ship_data)),
       }
     case '@@Response/kcsapi/api_req_kousyou/destroyship':
-      state = Object.assign({}, state)
-      delete state[postBody.api_ship_id]
-      return state
+      newState = {...state}
+      delete newState[postBody.api_ship_id]
+      return newState
     case '@@Response/kcsapi/api_req_kousyou/getship':
       return {
         ...state,

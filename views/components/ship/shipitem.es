@@ -41,8 +41,9 @@ export const ShipRow = connect(
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp',
       'api_cond', 'api_fuel', 'api_bull']
-    return shallowCompare(this, nextProps) && 
-      !isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps))
+    return shallowCompare(this, nextProps) &&
+      (!isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps)) ||
+      !isEqual(this.props.labelStatus, nextProps.labelStatus))
   }
 
   render() {

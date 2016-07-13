@@ -56,7 +56,7 @@ module.exports =
     if inRepair
       return 1
     # supply
-    else if Math.min(ship.api_fuel/$ship.api_fuel_max, ship.api_bull/$ship.api_bull_max) < 1
+    else if Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1
       return 6
     # special: locked phase
     # returns 2 for locked phase 1, 3 for phase 2, etc
