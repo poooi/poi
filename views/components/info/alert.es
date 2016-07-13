@@ -107,14 +107,11 @@ export const PoiAlert = connect((state, props) => ({
       this.setState({overflow: false})
     }
   }
-  handlePoiControlExpend = (e) => {
-    if (e.propertyName === 'width') {
-      this.handleOverflow()
-    }
-  }
   componentDidUpdate = (prevProps, prevState) => {
     if (this.props.current.content !== prevProps.current.content) {
-      this.setState({overflow: false})
+      if (this.state.overflow) {
+        this.setState({overflow: false})
+      }
     }
   }
   componentDidMount = () => {
@@ -125,6 +122,7 @@ export const PoiAlert = connect((state, props) => ({
       childList: true,
       attributes: true,
       subtree: true,
+      characterData: true,
     }
     this.handleOverflowDebounced = debounce(this.handleOverflow, 100)
     this.observer.observe(target, options)
@@ -135,7 +133,6 @@ export const PoiAlert = connect((state, props) => ({
     config.removeListener('config.set', this.handleStyleChange)
     window.removeEventListener('resize', this.handleOverflowDebounced)
     window.removeEventListener('alert.change', this.handleOverflow)
-    this.observer = null
   }
   render() {
     return (
