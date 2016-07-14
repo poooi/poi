@@ -1,16 +1,15 @@
 import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import { Component } from 'react'
+import React from 'react'
 import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { isEqual } from 'lodash'
-
-const {ROOT} = window
 
 import {SlotitemIcon} from '../etc/icon'
 import {getItemData} from './slotitems-data'
 import {equipIsAircraft} from '../ship-parts/utils'
+
+const {i18n} = window
 
 function getBackgroundStyle() {
   return window.isDarkTheme ?
@@ -19,15 +18,14 @@ function getBackgroundStyle() {
   {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
 }
 
-export const Slotitems = connect(
-  () => createSelector([
-      makeThisShipDataSelector(),
-      makeThisShipEquipDataSelector(),
-      constSelector,
-    ], ([ship, $ship]=[], equipsData) => ({
-      api_maxeq: ($ship || {}).api_maxeq,
-      equipsData,
-    }))
+export const Slotitems = connect(() => createSelector([
+  window.makeThisShipDataSelector(),
+  window.makeThisShipEquipDataSelector(),
+  window.constSelector,
+], ([ship, $ship]=[], equipsData) => ({
+  api_maxeq: ($ship || {}).api_maxeq,
+  equipsData,
+}))
 )(function ({api_maxeq, equipsData}) {
   return (
     <div className="slotitems">

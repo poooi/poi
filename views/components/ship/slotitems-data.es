@@ -1,7 +1,9 @@
 import {join} from 'path-extra'
 import i18n2 from 'i18n-2'
 
-var __; 
+const {ROOT} = window
+
+let __
 
 if((window.i18n||{}).data) {
   __ = window.i18n.data.__.bind(window.i18n.data)

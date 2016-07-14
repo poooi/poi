@@ -1,13 +1,13 @@
-import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
-import { Component } from 'react'
+import React from 'react'
 import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import CountdownTimer from '../main/parts/countdown-timer'
+import { once } from 'lodash'
 
+const {ROOT, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
-const __n = i18n.main.__n.bind(i18n.main)
+const { Component } = React
 
 const getFontStyle = (theme) => {
   if (window.isDarkTheme) {
@@ -74,30 +74,30 @@ const getSaku25 = (shipsData, equipsData) => {
   let radarSaku = 0
   let totalSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
-    let [_ship, $ship] = shipsData[i]
+    let [_ship] = shipsData[i]
     shipSaku += _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      let [_equip, $equip, onslot] = equipsData[i][j]
+      let $equip = equipsData[i][j][1]
       switch ($equip.api_type[3]) {
-        case 9:
+      case 9:
+        reconSaku += $equip.api_saku
+        shipSaku -= $equip.api_saku
+        break
+      case 10:
+        if ($equip.api_type[2] == 10) {
           reconSaku += $equip.api_saku
           shipSaku -= $equip.api_saku
-          break
-        case 10:
-          if ($equip.api_type[2] == 10) {
-            reconSaku += $equip.api_saku
-            shipSaku -= $equip.api_saku
-          }
-          break
-        case 11:
-          radarSaku += $equip.api_saku
-          shipSaku -= $equip.api_saku
-          break
-        default:
-          break
+        }
+        break
+      case 11:
+        radarSaku += $equip.api_saku
+        shipSaku -= $equip.api_saku
+        break
+      default:
+        break
       }
     }
   }
@@ -124,44 +124,44 @@ const getSaku25a = (shipsData, equipsData, teitokuLv) => {
   let equipSaku = 0
   let teitokuSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
-    let [_ship, $ship] = shipsData[i]
+    let [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      let [_equip, $equip, onslot] = equipsData[i][j]
+      let $equip = equipsData[i][j][1]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[3]) {
-        case 7:
-          equipSaku += $equip.api_saku * 1.04
-          break
-        case 8:
-          equipSaku += $equip.api_saku * 1.37
-          break
-        case 9:
-          equipSaku += $equip.api_saku * 1.66
-          break
-        case 10:
-          if ($equip.api_type[2] == 10) {
-            equipSaku += $equip.api_saku * 2.00
-          } else if ($equip.api_type[2] == 11) {
-            equipSaku += $equip.api_saku * 1.78
-          }
-          break
-        case 11:
-          if ($equip.api_type[2] == 12) {
-            equipSaku += $equip.api_saku * 1.00
-          }
-          else if ($equip.api_type[2] == 13) {
-            equipSaku += $equip.api_saku * 0.99
-          }
-          break
-        case 24:
-          equipSaku += $equip.api_saku * 0.91
-          break
-        default:
-          break
+      case 7:
+        equipSaku += $equip.api_saku * 1.04
+        break
+      case 8:
+        equipSaku += $equip.api_saku * 1.37
+        break
+      case 9:
+        equipSaku += $equip.api_saku * 1.66
+        break
+      case 10:
+        if ($equip.api_type[2] == 10) {
+          equipSaku += $equip.api_saku * 2.00
+        } else if ($equip.api_type[2] == 11) {
+          equipSaku += $equip.api_saku * 1.78
+        }
+        break
+      case 11:
+        if ($equip.api_type[2] == 12) {
+          equipSaku += $equip.api_saku * 1.00
+        }
+        else if ($equip.api_type[2] == 13) {
+          equipSaku += $equip.api_saku * 0.99
+        }
+        break
+      case 24:
+        equipSaku += $equip.api_saku * 0.91
+        break
+      default:
+        break
       }
     }
     shipSaku += Math.sqrt(shipPureSaku) * 1.69
@@ -211,36 +211,36 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
   let teitokuSaku = 0
   let shipCount = 6
   for (let i = 0; i < equipsData.length; i++) {
-    let [_ship, $ship] = shipsData[i]
+    let [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      let [_equip, $equip, onslot] = equipsData[i][j]
+      let $equip = equipsData[i][j][1]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[2]) {
-        case 8:
-          equipSaku += $equip.api_saku * 0.8
-          break
-        case 9:
-          equipSaku += $equip.api_saku * 1.0
-          break
-        case 10:
-          equipSaku += ($equip.api_saku + 1.2 * Math.sqrt($equip.api_level || 0)) * 1.2
-          break
-        case 11:
-          equipSaku += $equip.api_saku * 1.1
-          break
-        case 12:
-          equipSaku += ($equip.api_saku + 1.25 * Math.sqrt($equip.api_level || 0)) * 0.6
-          break
-        case 13:
-          equipSaku += ($equip.api_saku + 1.25 * Math.sqrt($equip.api_level || 0)) * 0.6
-          break
-        default:
-          equipSaku += $equip.api_saku * 0.6
-          break
+      case 8:
+        equipSaku += $equip.api_saku * 0.8
+        break
+      case 9:
+        equipSaku += $equip.api_saku * 1.0
+        break
+      case 10:
+        equipSaku += ($equip.api_saku + 1.2 * Math.sqrt($equip.api_level || 0)) * 1.2
+        break
+      case 11:
+        equipSaku += $equip.api_saku * 1.1
+        break
+      case 12:
+        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt($equip.api_level || 0)) * 0.6
+        break
+      case 13:
+        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt($equip.api_level || 0)) * 0.6
+        break
+      default:
+        equipSaku += $equip.api_saku * 0.6
+        break
       }
     }
     shipSaku += Math.sqrt(shipPureSaku)
@@ -258,17 +258,23 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
 
 const notify = (fleetName) => {
   window.notify(`${fleetName} ${__('have recovered from fatigue')}`, {
-            type: 'morale',
-            title: __('Morale'),
-            icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')
-          })
+    type: 'morale',
+    title: __('Morale'),
+    icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
+  })
 }
 
 class CountdownLabel extends Component {
   notify = null
+  static propTypes = {
+    fleetId: React.PropTypes.number,
+    completeTime: React.PropTypes.number,
+    shouldNotify: React.PropTypes.bool,
+    fleetName: React.PropTypes.string,
+  }
   shouldComponentUpdate = (nextProps, nextState) => {
     if (nextProps.completeTime !== this.props.completeTime) {
-      this.notify = _.once(nextProps.notify)
+      this.notify = once(nextProps.notify)
       return true
     }
     return false
@@ -291,6 +297,13 @@ class CountdownLabel extends Component {
 }
 
 export default connect(() => {
+  const {
+    makeThisFleetShipsIdSelector,
+    makeThisFleetShipsDataSelector,
+    makeThisFleetSelector,
+    makeThisShipEquipDataSelector,
+    sortieStatusSelector,
+  } = window
   const thisFleetShipIdSelector = makeThisFleetShipsIdSelector()
   const thisFleetShipsDataSelector = makeThisFleetShipsDataSelector()
   const thisFleetSelector = makeThisFleetSelector()
@@ -314,7 +327,7 @@ export default connect(() => {
       fleetName: fleet ? fleet.api_name : '',
       teitokuLv: state.info.basic.api_level,
       condStartTime: state.timers.cond,
-      expeditionEndTime: fleet? fleet.api_mission[2] : 0
+      expeditionEndTime: fleet? fleet.api_mission[2] : 0,
     }
   }
 })(({inExpedition, inBattle, shipsData, equipsData, isMini, fleetId, fleetName, teitokuLv, condStartTime, expeditionEndTime}) => {

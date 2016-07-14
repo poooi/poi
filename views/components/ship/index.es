@@ -1,13 +1,17 @@
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { Component } from 'react'
+import React from 'react'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
+import { get } from 'lodash'
 
-const {ROOT, toggleModal} = window
+const confGet = (target, path, value) =>
+  ((typeof get(target, path) === "undefined") ? value : get(target, path))
+
+const {i18n, dbg} = window
 const __ = i18n.main.__.bind(i18n.main)
-const __n = i18n.main.__n.bind(i18n.main)
+const {Component} = React
 
 import { ShipRow } from './shipitem'
 import TopAlert from '../ship-parts/topalert'
@@ -26,7 +30,7 @@ function getStyle(state) {
 }
 
 function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
-  var state = 0
+  let state = 0
   if (inBattle)
     state = Math.max(state, 5)
   if (inExpedition)
@@ -52,21 +56,22 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
 
 
 const ShipViewSwitchButton = connect(() => {
-    const thisFleetShipsDataSelector = makeThisFleetShipsDataSelector()
-    const thisFleetSelector = makeThisFleetSelector()
-    return (state, props) => {
-      const fleet = thisFleetSelector(state, props)
-      const inExpedition = fleet ? fleet.api_mission[0] : false
-      const inBattle = sortieStatusSelector(state)[props.fleetId]
-      const inRepairShipsId = inRepairShipsIdSelector(state)
-      const shipsData = thisFleetShipsDataSelector(state, props) || []
-      const fleetState = getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId)
-      return {
-        fleetState,
-        fleetName: fleet ? fleet.api_name : '',
-      }
+  const {makeThisFleetShipsDataSelector, makeThisFleetSelector, sortieStatusSelector, inRepairShipsIdSelector} = window
+  const thisFleetShipsDataSelector = makeThisFleetShipsDataSelector()
+  const thisFleetSelector = makeThisFleetSelector()
+  return (state, props) => {
+    const fleet = thisFleetSelector(state, props)
+    const inExpedition = fleet ? fleet.api_mission[0] : false
+    const inBattle = sortieStatusSelector(state)[props.fleetId]
+    const inRepairShipsId = inRepairShipsIdSelector(state)
+    const shipsData = thisFleetShipsDataSelector(state, props) || []
+    const fleetState = getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId)
+    return {
+      fleetState,
+      fleetName: fleet ? fleet.api_name : '',
     }
   }
+}
 )(({fleetId, activeFleetId, fleetName, fleetState, onClick}) =>
   <Button
     bsSize="small"
@@ -80,11 +85,12 @@ const ShipViewSwitchButton = connect(() => {
 
 
 const FleetShipView = connect(() => {
-    const thisFleetShipIdSelector = makeThisFleetShipsIdSelector()
-    return (state, props) => ({
-      shipsId: thisFleetShipIdSelector(state, props)
-    })
-  }
+  const {makeThisFleetShipsIdSelector} = window
+  const thisFleetShipIdSelector = makeThisFleetShipsIdSelector()
+  return (state, props) => ({
+    shipsId: thisFleetShipIdSelector(state, props),
+  })
+}
 )(({fleetId, shipsId}) =>
   <div>
     <div className='fleet-name'>
@@ -107,11 +113,13 @@ const FleetShipView = connect(() => {
 )
 
 
-const ShipView = connect(() => ({
-    // TODO: Move config into redux
-    enableTransition: config.get('poi.transition.enable', true),
-  })
+const ShipView = connect((state, props) => ({
+  enableTransition: confGet(state, 'config.poi.transition.enable', true),
+})
 )(class extends Component {
+  static propTypes = {
+    enableTransition: React.PropTypes.bool,
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -134,12 +142,12 @@ const ShipView = connect(() => ({
         bubbles: true,
         cancelable: true,
         detail: {
-          idx: idx
+          idx: idx,
         },
       })
       window.dispatchEvent(event)
       this.setState({
-        activeDeck: idx
+        activeDeck: idx,
       })
     }
   }
@@ -148,7 +156,7 @@ const ShipView = connect(() => ({
     const idx = (e.detail || {}).idx
     if (idx != null && idx != this.state.activeDeck)
       this.setState({
-        activeDeck: idx
+        activeDeck: idx,
       })
   }
 
@@ -157,7 +165,7 @@ const ShipView = connect(() => ({
       bubbles: true,
       cancelable: true,
       detail: {
-        tab: 'mainView'
+        tab: 'mainView',
       },
     })
     window.dispatchEvent(event)

@@ -1,9 +1,10 @@
-import {connect} from 'react-redux'
-import {map, range, mapValues, forEach, values, sortBy} from 'lodash'
-import {Panel, Table, Label, OverlayTrigger, Tooltip} from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { map, range, forEach, values, sortBy } from 'lodash'
+import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import React from 'react'
 
+const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
-const __n = i18n.main.__n.bind(i18n.main)
 
 // Return [count, required]
 function sumSubgoals(record) {
@@ -21,25 +22,25 @@ function sumSubgoals(record) {
 
 function getCategory(api_category) {
   switch (api_category) {
-    case 0:
-      return '#ffffff'
-    case 1:
-      return '#19BB2E'
-    case 2:
-    case 8:
-      return '#e73939'
-    case 3:
-      return '#87da61'
-    case 4:
-      return '#16C2A3'
-    case 5:
-      return '#E2C609'
-    case 6:
-      return '#805444'
-    case 7:
-      return '#c792e8'
-    default:
-      return '#fff'
+  case 0:
+    return '#ffffff'
+  case 1:
+    return '#19BB2E'
+  case 2:
+  case 8:
+    return '#e73939'
+  case 3:
+    return '#87da61'
+  case 4:
+    return '#16C2A3'
+  case 5:
+    return '#E2C609'
+  case 6:
+    return '#805444'
+  case 7:
+    return '#c792e8'
+  default:
+    return '#fff'
   }
 }
 
@@ -50,14 +51,14 @@ function getStyleByProgress(quest) {
   if (api_state == 3)
     return 'success'
   switch (api_progress_flag) {
-    case 0:         // Empty
-      return 'warning'
-    case 1:         // 50%
-      return 'primary'
-    case 2:         // 80%
-      return 'info'
-    default:
-      return 'default'
+  case 0:         // Empty
+    return 'warning'
+  case 1:         // 50%
+    return 'primary'
+  case 2:         // 80%
+    return 'info'
+  default:
+    return 'default'
   }
 }
 
@@ -68,12 +69,12 @@ function progressLabelText(quest) {
   if (api_state == 3)
     return __('Completed')
   switch (api_progress_flag) {
-    case 1:         // 50%
-      return '50%'
-    case 2:         // 80%
-      return '80%'
-    default:        // api_progress_flag == 0, which means empty progress
-      return __('In progress')
+  case 1:         // 50%
+    return '50%'
+  case 2:         // 80%
+    return '80%'
+  default:        // api_progress_flag == 0, which means empty progress
+    return __('In progress')
   }
 }
 
@@ -91,7 +92,7 @@ function getToolTip(record) {
   return (
     <div>
     {
-      values(record).map((subgoal, idx) => 
+      values(record).map((subgoal, idx) =>
         (typeof subgoal.required === 'undefined') ? undefined :
           <div key={idx}>{subgoal.description} - {subgoal.count} / {subgoal.required}</div>
       )
@@ -194,12 +195,12 @@ const TaskRow = connect(
   const questContent = quest ? quest.api_detail : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
-    getStyleByPercent(count / required) : 
+    getStyleByPercent(count / required) :
     getStyleByProgress(quest)
   const progressLabel = record ?
     `${count} / ${required}` :
     progressLabelText(quest)
-  const progressOverlay = record ? 
+  const progressOverlay = record ?
     <div>{getToolTip(record || {})}</div> :
     undefined
   return (
@@ -241,14 +242,14 @@ export const TaskPanel = connect(
             leftLabel={__('To be refreshed')}
             leftOverlay={__('Browse your quest list to let poi know your active quests')}
           />
-        : (idx < activeCapacity) ? 
+        : (idx < activeCapacity) ?
           // Empty
           <TaskRowBase
             key={idx}
             idx={idx}
             leftLabel={__('Empty quest')}
           />
-        : 
+        :
           // Can expand
           <TaskRowBase
             key={idx}
@@ -256,7 +257,7 @@ export const TaskPanel = connect(
             leftLabel={__('Locked')}
             leftOverlay={__('Increase your active quest limit with a "Headquarters Personnel".')}
           />
-      )
+      ),
     ]}
     </Panel>
   )

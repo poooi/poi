@@ -1,13 +1,12 @@
-import path from 'path-extra'
 import { Input, Grid, Col, Button, Alert } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Component } from 'react'
+import React from 'react'
 import Divider from './divider'
-import { defaults } from 'lodash'
+import { get } from 'lodash'
 
-const {config} = window
+const {config, i18n, toggleModal} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const __n = i18n.setting.__n.bind(i18n.setting)
+const {Component} = React
 
 const basic = {
   use: 'none',
@@ -28,10 +27,16 @@ const basic = {
 }
 
 const NetworkConfig = connect(() => (
-  (state, props) => (
-    Object.assign(basic, state.config.proxy)
-  )
-))(class extends Component {
+  (state, props) => {
+    let ret = get(state, 'config.proxy') || {}
+    for (let key in basic) {
+      if (!ret[key]) {
+        ret.key = basic.key
+      }
+    }
+    return ret
+  }
+))(class netWorkConfig extends Component {
   constructor(props) {
     super(props)
     this.state = Object.clone(props)
@@ -39,7 +44,7 @@ const NetworkConfig = connect(() => (
   handleChangeUse = () => {
     let use = this.refs.use.getValue()
     this.setState({
-      use
+      use,
     })
   }
   handleSaveConfig = (e) => {
@@ -56,8 +61,8 @@ const NetworkConfig = connect(() => (
     }
     config.set('proxy', proxy)
     this.setState({
-       retries,
-       port,
+      retries,
+      port,
     })
     toggleModal(__('Proxy setting'), __('Success! It will be available after a restart.'))
   }
@@ -65,64 +70,64 @@ const NetworkConfig = connect(() => (
     let http = Object.clone(this.state.http)
     http.host = e.target.value
     this.setState({
-      http
+      http,
     })
   }
   handleHttpPortChange = (e) => {
     let http = Object.clone(this.state.http)
     http.port = parseInt(e.target.value)
     this.setState({
-      http
+      http,
     })
   }
   handleSetHttpRequirePassword = (e) => {
     let http = Object.clone(this.state.http)
     http.requirePassword = !http.requirePassword
     this.setState({
-      http
+      http,
     })
   }
   handleHttpUsernameChange = (e) => {
     let http = Object.clone(this.state.http)
     http.username = e.target.value
     this.setState({
-      http
+      http,
     })
   }
   handleHttpPasswordChange = (e) => {
     let http = Object.clone(this.state.http)
     http.password = e.target.value
     this.setState({
-      http
+      http,
     })
   }
   handleSocksHostChange = (e) => {
     let socks5 = Object.clone(this.state.socks5)
     socks5.host = e.target.value
     this.setState({
-      socks5
+      socks5,
     })
   }
   handleSocksPortChange = (e) => {
     let socks5 = Object.clone(this.state.socks5)
     socks5.port = parseInt(e.target.value)
     this.setState({
-      socks5
+      socks5,
     })
   }
   handlePACAddrChange = (e) => {
     this.setState({
-      pacAddr: e.target.value
+      pacAddr: e.target.value,
     })
   }
   handleSetRetries = (e) => {
     this.setState({
-      retries: parseInt(e.target.value)
+      retries: parseInt(e.target.value),
     })
   }
   handleSetPort = (e) => {
     this.setState({
-      port: parseInt(e.target.value)
+      port: parseInt(e.target.value),
     })
   }
   render() {

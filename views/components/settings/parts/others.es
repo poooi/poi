@@ -1,9 +1,11 @@
-import { Component } from 'react'
+import React from 'react'
 import { shell } from 'electron'
 import Divider from './divider'
-import { Grid, Col, Button, ButtonGroup, Input } from 'react-bootstrap'
+import { Grid, Col } from 'react-bootstrap'
 
+const {ROOT, POI_VERSION, CONST, i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
+const {Component} = React
 
 class Others extends Component {
   render() {

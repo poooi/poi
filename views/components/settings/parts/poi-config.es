@@ -1,22 +1,18 @@
-import { join } from 'path-extra'
-import { statSync, ensureDirSync } from 'fs-extra'
+import React from 'react'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import { Component } from 'react'
 import { Grid, Col, Row, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
-import { remote, shell, ipcRenderer } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
-import { get, set } from 'lodash'
+import { get } from 'lodash'
 import Divider from './divider'
 import NavigatorBar from './navigator-bar'
+import fs from 'fs-extra'
 
-
-const { dialog } = remote.require('electron')
-const { ROOT, config, toggleModal, APPDATA_PATH } = window
+const {dialog} = remote.require('electron')
+const {config, toggleModal, i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const __n = i18n.setting.__n.bind(i18n.setting)
-const { showItemInFolder, openItem } = shell
 
 const confGet = (target, path, value) =>
   ((typeof get(target, path) === "undefined") ? value : get(target, path))
@@ -24,17 +20,17 @@ const confGet = (target, path, value) =>
 let language = navigator.language
 if (!(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])) {
   switch (language.substr(0, 1).toLowerCase()) {
-    case 'zh':
-      language = 'zh-TW';
-      break;
-    case 'ja':
-      language = 'ja-JP';
-      break;
-    case 'ko':
-      language = 'ko-KR';
-      break;
-    default:
-      language = 'en-US';
+  case 'zh':
+    language = 'zh-TW'
+    break
+  case 'ja':
+    language = 'ja-JP'
+    break
+  case 'ko':
+    language = 'ko-KR'
+    break
+  default:
+    language = 'en-US'
   }
 }
 
@@ -42,31 +38,34 @@ let keyListener
 
 config.on('config.set', (path, value) => {
   switch(path) {
-    case 'poi.notify.expedition.value':
-      window.notify.expedition = value
-      break
-    case 'poi.notify.morale.value':
-      window.notify.morale = value
-      break
-    case 'poi.language':
-      for (let namespace in window.i18n) {
-        window.i18n[namespace].setLocale(value)
-      }
-      window.language = value
-      break
-    case 'poi.screenshotPath':
-      window.screenshotPath = value
-      break
-    case 'poi.shortcut.bosskey':
-      ipcRenderer.send('refresh-shortcut')
-      break
+  case 'poi.notify.expedition.value':
+    window.notify.expedition = value
+    break
+  case 'poi.notify.morale.value':
+    window.notify.morale = value
+    break
+  case 'poi.language':
+    for (let namespace in window.i18n) {
+      window.i18n[namespace].setLocale(value)
+    }
+    window.language = value
+    break
+  case 'poi.screenshotPath':
+    window.screenshotPath = value
+    break
+  case 'poi.shortcut.bosskey':
+    ipcRenderer.send('refresh-shortcut')
+    break
   }
 })
 
 const SetNotifyIndividualConfig = connect(() => {
   return (state, props) =>
     confGet(state.config, 'poi.notify', {})
-})(class extends Component {
+})(class setNotifyIndividualConfig extends Component {
+  static propTypes = {
+    enabled: React.PropTypes.bool,
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -125,7 +124,7 @@ const SetNotifyIndividualConfig = connect(() => {
               bsStyle={(confGet(this.props, 'enabled', true)) ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'enabled')}
               style={{width: '100%'}}>
-              {notify.enabled ? '√ ' : ''}{__('Enable notification')}
+              {(confGet(this.props, 'enabled', true)) ? '√ ' : ''}{__('Enable notification')}
             </Button>
           </Col>
           <Col xs={6}>
@@ -224,7 +223,13 @@ const CheckboxLabelConfig = connect(() => {
     undecided: props.undecided,
     label: props.label,
   })
-})(class extends Component {
+})(class checkboxLabelConfig extends Component {
+  static propTypes = {
+    label: React.PropTypes.string,
+    configName: React.PropTypes.string,
+    value: React.PropTypes.bool,
+    undecided: React.PropTypes.bool,
+  }
   handleChange = () => {
     config.set(this.props.configName, !this.props.value)
   }
@@ -252,9 +257,14 @@ const FolderPickerConfig = connect(() => {
   return (state, props) => ({
     value: confGet(state.config, props.configName, props.defaultVal),
     configName: props.configName,
-    label: props.label
+    label: props.label,
   })
 })(class extends Component {
+  static propTypes = {
+    label: React.PropTypes.string,
+    configName: React.PropTypes.string,
+    value: React.PropTypes.string,
+  }
   onDrag = (e) => {
     e.preventDefault()
   }
@@ -278,13 +288,13 @@ const FolderPickerConfig = connect(() => {
   }
   folderPickerOnClick = () => {
     this.synchronize(() => {
-      ensureDirSync(this.props.value)
+      fs.ensureDirSync(this.props.value)
       let filenames = dialog.showOpenDialog({
         title: this.props.label,
         defaultPath: this.props.value,
         properties: [
           'openDirectory',
-          'createDirectory'
+          'createDirectory',
         ],
       })
       if (filenames !== undefined) {
@@ -346,9 +356,12 @@ class ClearCacheCookieConfig extends Component {
 
 const SelectLanguageConfig = connect(() => {
   return (state, props) => ({
-    value: confGet(state.config, 'poi.language', language)
+    value: confGet(state.config, 'poi.language', language),
   })
-})(class extends Component {
+})(class selectLanguageConfig extends Component {
+  static propTypes = {
+    value: React.PropTypes.string,
+  }
   handleSetLanguage = () => {
     let language = this.refs.language.getValue()
     config.set('poi.language', language)
@@ -378,7 +391,12 @@ const SlotCheckConfig = connect(() => {
       minFreeSlots: '',
     })),
   })
-})(class extends Component {
+})(class slotCheckConfig extends Component {
+  static propTypes = {
+    minFreeSlots: React.PropTypes.number,
+    type: React.PropTypes.string,
+    conf: React.PropTypes.object,
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -395,7 +413,7 @@ const SlotCheckConfig = connect(() => {
       let num = this.state.value
       this.setState({
         showInput: true,
-        value: this.CheckValid(num) ? num : ''
+        value: this.CheckValid(num) ? num : '',
       })
     }
   }
@@ -408,11 +426,11 @@ const SlotCheckConfig = connect(() => {
       let n = parseInt(this.state.value)
       config.set(`poi.mapStartCheck.${this.props.type}`, {
         enable: true,
-        minFreeSlots: n
+        minFreeSlots: n,
       })
       this.setState({
         showInput: false,
-        value: n
+        value: n,
       })
     } else {
       this.handleDisable()
@@ -473,7 +491,13 @@ const ShortcutConfig = connect(() => {
     value: confGet(state.config, props.configName, props.defaultVal),
     configName: props.configName,
   })
-})(class extends Component {
+})(class shortcutConfig extends Component {
+  static propTypes = {
+    value: React.PropTypes.string,
+    active: React.PropTypes.bool,
+    configName: React.PropTypes.string,
+    label: React.PropTypes.string,
+  }
   constructor (props) {
     super(props)
     this.state = {

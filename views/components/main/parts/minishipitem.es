@@ -2,28 +2,28 @@ import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowCompare from 'react-addons-shallow-compare'
-import { Component } from 'react'
+import React from 'react'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit } from 'lodash'
 
-const __ = i18n.main.__.bind(i18n.main)
-const __n = i18n.main.__n.bind(i18n.main)
-
 import StatusLabel from '../../ship-parts/statuslabel'
 import { SlotitemIcon } from '../../etc/icon'
 
-import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle, getShipLabelStatu } from '../../ship-parts/utils'
+import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from '../../ship-parts/utils'
+
+const {Component} = React
+const {i18n} = window
 
 const Slotitems  = connect(
   () => createSelector([
-      makeThisShipDataSelector(),
-      makeThisShipEquipDataSelector(),
-    ], ([ship, $ship]=[], equipsData) => ({
-      api_id: (ship || {}).api_id,
-      api_maxeq: ($ship || {}).api_maxeq,
-      equipsData,
-    }))
+    window.makeThisShipDataSelector(),
+    window.makeThisShipEquipDataSelector(),
+  ], ([ship, $ship]=[], equipsData) => ({
+    api_id: (ship || {}).api_id,
+    api_maxeq: ($ship || {}).api_maxeq,
+    equipsData,
+  }))
 )(function ({api_id, api_maxeq, equipsData}) {
   const tooltipClassName = classNames("item-name", {
     "hidden": !equipsData,
@@ -73,14 +73,20 @@ const Slotitems  = connect(
 
 export const MiniShipRow = connect(
   () => createSelector([
-      makeThisShipDataSelector(),
-      makeThisShipRepairDockSelector(),
-    ], ([ship, $ship]=[], repairDock) => ({
-      ship: ship || {},
-      $ship: $ship || {},
-      labelStatus: getShipLabelStatus(ship, $ship, repairDock),
-    }))
-)(class extends Component {
+    window.makeThisShipDataSelector(),
+    window.makeThisShipRepairDockSelector(),
+  ], ([ship, $ship]=[], repairDock) => ({
+    ship: ship || {},
+    $ship: $ship || {},
+    labelStatus: getShipLabelStatus(ship, $ship, repairDock),
+  }))
+)(class miniShipRow extends Component {
+  static propTypes = {
+    ship: React.PropTypes.object,
+    $ship: React.PropTypes.object,
+    labelStatus: React.PropTypes.number,
+  }
+
   shouldComponentUpdate(nextProps) {
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp', 'api_cond']

@@ -1,14 +1,13 @@
-import { join } from 'path-extra'
 import { connect } from 'react-redux'
-import { Component } from 'react'
+import React from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit } from 'lodash'
 
-const {resolveTime, notify} = window
+const {resolveTime, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
-const __n = i18n.main.__n.bind(i18n.main)
+const {Component} = React
 
 import { Slotitems } from './slotitems'
 import StatusLabel from '../ship-parts/statuslabel'
@@ -25,18 +24,25 @@ function getMaterialStyle(percent) {
     return 'success'
 }
 
-export const ShipRow = connect(
-  () => createSelector([
-      makeThisShipDataSelector(),
-      makeThisShipRepairDockSelector(),
-      constSelector,
-    ], ([ship, $ship]=[], repairDock, {$shipTypes}) => ({
-      ship: ship || {},
-      $ship: $ship || {},
-      $shipTypes,
-      labelStatus: getShipLabelStatus(ship, $ship, repairDock),
-    }))
-)(class extends Component {
+export const ShipRow = connect(() => createSelector([
+  window.makeThisShipDataSelector(),
+  window.makeThisShipRepairDockSelector(),
+  window.constSelector,
+], ([ship, $ship]=[], repairDock, {$shipTypes}) => ({
+  ship: ship || {},
+  $ship: $ship || {},
+  $shipTypes,
+  labelStatus: getShipLabelStatus(ship, $ship, repairDock),
+}))
+)(class shipRow extends Component {
+  static propTypes = {
+    ship: React.PropTypes.object,
+    $ship: React.PropTypes.object,
+    $shipTypes: React.PropTypes.object,
+    labelStatus: React.PropTypes.number,
+    repair: React.PropTypes.bool,
+  }
+
   shouldComponentUpdate(nextProps) {
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp',
@@ -78,7 +84,7 @@ export const ShipRow = connect(
                 repair ?
                 /* TODO: repair time */
                 <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
-                  {__('Repair Time')}: {resolveTime((repair.api_complete_time-Date.now())/1000)}
+                  {__('Repair Time')}: {resolveTime((repair.api_complete_time - Date.now())/1000)}
                 </Tooltip>
                 : <noscript />
               }
@@ -92,7 +98,7 @@ export const ShipRow = connect(
                     <StatusLabel label={labelStatus}/>
                   </div>
                   <div className="status-cond" style={labelStatusStyle}>
-                    <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
+                    <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
                       ★{ship.api_cond}
                     </span>
                   </div>
