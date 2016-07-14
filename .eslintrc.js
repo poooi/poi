@@ -41,5 +41,6 @@ module.exports = {
         'extensions': ['', '.js', '.jsx', '.es', '.coffee']
       },
     },
+    'import/core-modules': ['electron'],
   },
 }
