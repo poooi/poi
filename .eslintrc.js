@@ -33,5 +33,6 @@ module.exports = {
     'no-unused-vars': ['warn', {'args': 'none'}],
     'semi': ['error', 'never'],
     'unicode-bom': 'error',
+    'prefer-const': ['error', {'destructuring': 'all'}],
   },
 }
