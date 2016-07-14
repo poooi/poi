@@ -1,5 +1,3 @@
-import reduceReducers from 'reduce-reducers'
-
 // Preserved fields: api_id, api_member_id
 const emptyRepair = {
   api_complete_time: 0,
@@ -14,18 +12,19 @@ const emptyRepair = {
 
 export function reducer(state=[], {type, body, postBody}) {
   switch (type) {
-    case '@@Response/kcsapi/api_get_member/ndock':
-      return body
-    case '@@Response/kcsapi/api_port/port':
-      return body.api_ndock
-    case '@@Response/kcsapi/api_req_nyukyo/speedchange':
-      let {api_ndock_id} = postBody
-      state = state.slice()
-      state[api_ndock_id-1] = {
-        ...state[api_ndock_id-1],
-        emptyRepair
-      }
-      state
+  case '@@Response/kcsapi/api_get_member/ndock':
+    return body
+  case '@@Response/kcsapi/api_port/port':
+    return body.api_ndock
+  case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
+    let {api_ndock_id} = postBody
+    state = state.slice()
+    state[api_ndock_id-1] = {
+      ...state[api_ndock_id-1],
+      emptyRepair,
+    }
+    state
+  }
   }
   return state
 }

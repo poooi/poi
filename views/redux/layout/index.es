@@ -1,3 +1,5 @@
+const {config} = window
+
 const initState = {
   window: {
     width: window.innerWidth,
@@ -12,9 +14,9 @@ const initState = {
 
 export function reducer(state=initState, {type, value}) {
   switch (type) {
-    case '@@LayoutUpdate':
-      return value
-    default:
-      return state
+  case '@@LayoutUpdate':
+    return value
+  default:
+    return state
   }
 }

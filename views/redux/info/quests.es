@@ -1,8 +1,6 @@
-import reduceReducers from 'reduce-reducers'
 import CSON from 'cson'
 import {join} from 'path-extra'
 import {sortBy, mapValues, forEach, values, fromPairs} from 'lodash'
-import {observer, observe} from 'redux-observers'
 import {writeFile} from 'fs-extra'
 
 const {ROOT, APPDATA_PATH} = window
@@ -37,6 +35,7 @@ function stringNumberEqual(a, b) {
 // If non of items needs updating, return the original obj.
 // Will handle parseInt.
 function updateObject(obj, items) {
+  const {copyIfSame} = window
   const originalObj = obj
   forEach(items, (v, k) => {
     let thisUpdate
@@ -127,7 +126,7 @@ const resetQuestRecordWeekly = resetQuestRecordFactory([2], 2)
 const resetQuestRecordMonthly = resetQuestRecordFactory([3], 3)
 function outdateRecords(questGoals, records, then, now) {
   if (!isDifferentDay(now, then))
-    return records 
+    return records
   records = mapValues(records, resetQuestRecordDaily(questGoals))
   if (isDifferentWeek(now, then))
     records = mapValues(records, resetQuestRecordWeekly(questGoals))
@@ -195,14 +194,14 @@ function limitProgress(count, required, progressFlag, completed) {
     return required
   }
   switch (progressFlag) {
-    case 0:         // Empty: [0.0, 0.5)
-      return Math.min(count, Math.ceil(required * 0.5)-1)
-    case 1:         // 50%: [0.5, 0.8)
-      return Math.min(Math.max(count, Math.ceil(required * 0.5)), Math.ceil(required * 0.8)-1)
-    case 2:         // 80%: [0.8, 1.0)
-      return Math.min(Math.max(count, Math.ceil(required * 0.8)), required-1)
-    default:
-      return count
+  case 0:         // Empty: [0.0, 0.5)
+    return Math.min(count, Math.ceil(required * 0.5)-1)
+  case 1:         // 50%: [0.5, 0.8)
+    return Math.min(Math.max(count, Math.ceil(required * 0.5)), Math.ceil(required * 0.8)-1)
+  case 2:         // 80%: [0.8, 1.0)
+    return Math.min(Math.max(count, Math.ceil(required * 0.8)), required-1)
+  default:
+    return count
   }
 }
 
@@ -240,111 +239,112 @@ function updateRecordProgress(record, bodyQuest) {
 
 function questTrackingReducer(state, {type, postBody, body, result}) {
   const {activeQuests, questGoals} = state
+  const {getStore} = window
   const records = {...state.records}
   const updateQuestRecord = updateQuestRecordFactory(records, activeQuests, questGoals)
   switch (type) {
-    // type: practice, practice_win
-    case '@@Response/kcsapi/api_req_practice/battle_result': {
-      let changed = updateQuestRecord('practice', null, 1)
-      if (['S', 'A', 'B'].indexOf(body.api_win_rank) != -1)
-        changed = updateQuestRecord('practice_win', null, 1) || changed 
-      if (changed) {
-        return {
-          ...state,
-          records,
-        }
+  // type: practice, practice_win
+  case '@@Response/kcsapi/api_req_practice/battle_result': {
+    let changed = updateQuestRecord('practice', null, 1)
+    if (['S', 'A', 'B'].indexOf(body.api_win_rank) != -1)
+      changed = updateQuestRecord('practice_win', null, 1) || changed
+    if (changed) {
+      return {
+        ...state,
+        records,
       }
-      break
     }
-    // type: mission_success
-    case '@@Response/kcsapi/api_req_mission/result':
-      if (body.api_clear_result > 0)
-        if (updateQuestRecord('mission_success', {mission: body.api_quest_name}, 1))
-          return {...state, records}
-      break
-    // type: repair
-    case '@@Response/kcsapi/api_req_nyukyo/start':
-      if (updateQuestRecord('repair', null, 1))
+    break
+  }
+  // type: mission_success
+  case '@@Response/kcsapi/api_req_mission/result':
+    if (body.api_clear_result > 0)
+      if (updateQuestRecord('mission_success', {mission: body.api_quest_name}, 1))
         return {...state, records}
-      break
-    // type: supply
-    case '@@Response/kcsapi/api_req_hokyu/charge':
-      if (updateQuestRecord('supply', null, 1))
+    break
+  // type: repair
+  case '@@Response/kcsapi/api_req_nyukyo/start':
+    if (updateQuestRecord('repair', null, 1))
+      return {...state, records}
+    break
+  // type: supply
+  case '@@Response/kcsapi/api_req_hokyu/charge':
+    if (updateQuestRecord('supply', null, 1))
+      return {...state, records}
+    break
+  // type: create_item
+  case '@@Response/kcsapi/api_req_kousyou/createitem':
+    if (updateQuestRecord('create_item', null, 1))
+      return {...state, records}
+    break
+  // type: create_ship
+  case '@@Response/kcsapi/api_req_kousyou/createship':
+    if (updateQuestRecord('create_ship', null, 1))
+      return {...state, records}
+    break
+  // type: destroy_ship
+  case '@@Response/kcsapi/api_req_kousyou/destroyship':
+    if (updateQuestRecord('destroy_ship', null, 1))
+      return {...state, records}
+    break
+  // type: remodel_item
+  case '@@Response/kcsapi/api_req_kousyou/remodel_slot':
+    if (updateQuestRecord('remodel_item', null, 1))
+      return {...state, records}
+    break
+  // type: remodel_ship
+  case '@@Response/kcsapi/api_req_kaisou/powerup':
+    if (body.api_powerup_flag == 1)
+      if (updateQuestRecord('remodel_ship', null, 1))
         return {...state, records}
-      break
-    // type: create_item
-    case '@@Response/kcsapi/api_req_kousyou/createitem':
-      if (updateQuestRecord('create_item', null, 1))
-        return {...state, records}
-      break
-    // type: create_ship
-    case '@@Response/kcsapi/api_req_kousyou/createship':
-      if (updateQuestRecord('create_ship', null, 1))
-        return {...state, records}
-      break
-    // type: destroy_ship
-    case '@@Response/kcsapi/api_req_kousyou/destroyship':
-      if (updateQuestRecord('destroy_ship', null, 1))
-        return {...state, records}
-      break
-    // type: remodel_item
-    case '@@Response/kcsapi/api_req_kousyou/remodel_slot':
-      if (updateQuestRecord('remodel_item', null, 1))
-        return {...state, records}
-      break
-    // type: remodel_ship
-    case '@@Response/kcsapi/api_req_kaisou/powerup':
-      if (body.api_powerup_flag == 1)
-        if (updateQuestRecord('remodel_ship', null, 1))
-          return {...state, records}
-      break
-    // type: destory_item
-    case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
-      if (updateQuestRecord('destory_item', null, 1))
-        return {...state, records}
-      break
-    // type: sally (sortie start)
-    case '@@Response/kcsapi/api_req_map/start':
-      if (updateQuestRecord('sally', null, 1))
-        return {...state, records}
-      break
-    // type: battle result
-    case '@@BattleResult': {
-      const {rank, boss, map, enemyHp, enemyShipId} = result
-      let flag = false
-      flag = updateQuestRecord('battle', null, 1) || flag
-      // type: battle_win
+    break
+  // type: destory_item
+  case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
+    if (updateQuestRecord('destory_item', null, 1))
+      return {...state, records}
+    break
+  // type: sally (sortie start)
+  case '@@Response/kcsapi/api_req_map/start':
+    if (updateQuestRecord('sally', null, 1))
+      return {...state, records}
+    break
+  // type: battle result
+  case '@@BattleResult': {
+    const {rank, boss, map, enemyHp, enemyShipId} = result
+    let flag = false
+    flag = updateQuestRecord('battle', null, 1) || flag
+    // type: battle_win
+    if (rank === 'S' || rank === 'A' || rank === 'B')
+      flag = updateQuestRecord('battle_win', null, 1) || flag
+    // type: battle_rank_s
+    if (rank === 'S')
+      flag = updateQuestRecord('battle_rank_s', null, 1) || flag
+    // type: battle_boss
+    if (boss) {
+      flag = updateQuestRecord('battle_boss', null, 1) || flag
+      // type: battle_boss_win
       if (rank === 'S' || rank === 'A' || rank === 'B')
-        flag = updateQuestRecord('battle_win', null, 1) || flag
-      // type: battle_rank_s
-      if (rank === 'S')
-        flag = updateQuestRecord('battle_rank_s', null, 1) || flag
-      // type: battle_boss
-      if (boss) {
-        flag = updateQuestRecord('battle_boss', null, 1) || flag
-        // type: battle_boss_win
-        if (rank === 'S' || rank === 'A' || rank === 'B')
-          flag = updateQuestRecord('battle_boss_win', {maparea: map}, 1) || flag
-        // type: battle_boss_win_rank_a
-        if (rank === 'S' || rank === 'A')
-          flag = updateQuestRecord('battle_boss_win_rank_a', {maparea: map}, 1) || flag
-        // type: battle_boss_win_rank_s
-        if (rank == 'S')
-          flag = updateQuestRecord('battle_boss_win_rank_s', {maparea: map}, 1) || flag
-      }
-      // type: sinking
-      enemyShipId.forEach((shipId, idx) => {
-        if (shipId == -1 || enemyHp[idx] > 0)
-          return
-        const shipType = getStore(`const.$ships.${shipId}.api_stype`)
-        if ([7, 11, 13, 15].indexOf(shipType) != -1)
-          flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
-      })
-      if (flag) {
-        return {...state, records}
-      }
-      break
+        flag = updateQuestRecord('battle_boss_win', {maparea: map}, 1) || flag
+      // type: battle_boss_win_rank_a
+      if (rank === 'S' || rank === 'A')
+        flag = updateQuestRecord('battle_boss_win_rank_a', {maparea: map}, 1) || flag
+      // type: battle_boss_win_rank_s
+      if (rank == 'S')
+        flag = updateQuestRecord('battle_boss_win_rank_s', {maparea: map}, 1) || flag
     }
+    // type: sinking
+    enemyShipId.forEach((shipId, idx) => {
+      if (shipId == -1 || enemyHp[idx] > 0)
+        return
+      const shipType = getStore(`const.$ships.${shipId}.api_stype`)
+      if ([7, 11, 13, 15].indexOf(shipType) != -1)
+        flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
+    })
+    if (flag) {
+      return {...state, records}
+    }
+    break
+  }
   }
   return state
 }
@@ -358,143 +358,143 @@ const initState = {
 }
 
 export function reducer(state=initState, action) {
+  const {copyIfSame} = window
   const {type, postBody, body} = action
   switch (type) {
-    //== Initialization. This takes place once every flash loading ==
-    case '@@Response/kcsapi/api_get_member/require_info': {
-      const admiralId = body.api_basic.api_member_id
-      // Load static quest goal data
-      let questGoals = {}
-      try {
-        questGoals = CSON.parseCSONFile(questGoalsPath)
-      } catch (e) {
-        console.log('No quest tracking data!')
-      }
-      // Load quest tracking of this account
-      let records = {};
-      try {
-        records = CSON.parseCSONFile(questTrackingPath(admiralId))
-        if (records && records.time) {
-          records = outdateRecords(questGoals, records, records.time, Date.now())
-        }
-      } catch (e) {}
-      delete records.time               // Time is added ad-hoc upon saving
-      records.admiralId = admiralId     // Used for saving
-      return {
-        ...state,
-        records,
-        questGoals,
-        activeQuests: outdateActiveQuests(state.activeQuests, Date.now()),
-      }
+  //== Initialization. This takes place once every flash loading ==
+  case '@@Response/kcsapi/api_get_member/require_info': {
+    const admiralId = body.api_basic.api_member_id
+    // Load static quest goal data
+    let questGoals = {}
+    try {
+      questGoals = CSON.parseCSONFile(questGoalsPath)
+    } catch (e) {
+      console.warn('No quest goal data!')
     }
-
-    //== Daily update ==
-    case QUESTS_REFRESH_DAY:  {
-      const {activeQuests, records, questGoals} = state
-      let halfHour = 30 * 60 * 1000     // Random suitable margin
-      let now = Date.now()
-      return {
-        ...state,
-        records: outdateRecords(questGoals, records, now-halfHour, now+halfHour),
-        activeQuests: outdateActiveQuests(activeQuests, now+halfHour),
+    // Load quest tracking of this account
+    let records = {}
+    try {
+      records = CSON.parseCSONFile(questTrackingPath(admiralId))
+      if (records && records.time) {
+        records = outdateRecords(questGoals, records, records.time, Date.now())
       }
+    } catch (e) {
+      console.warn('No quest tracking data!')
     }
-
-    //== Update active quests ==
-    case '@@Response/kcsapi/api_port/port': {
-      let {api_parallel_quest_count: activeCapacity} = body
-      let activeQuests = state.activeQuests
-      if (Object.keys(state.activeQuests).length > activeCapacity) {
-        activeQuests = limitActiveQuests(state.activeQuests, activeCapacity)
-      }
-      return updateObject(state, {
-        activeQuests,
-        activeCapacity,
-      })
+    delete records.time               // Time is added ad-hoc upon saving
+    records.admiralId = admiralId     // Used for saving
+    return {
+      ...state,
+      records,
+      questGoals,
+      activeQuests: outdateActiveQuests(state.activeQuests, Date.now()),
     }
+  }
 
-    // Update active quests
-    case '@@Response/kcsapi/api_get_member/questlist': {
-      const {api_exec_count: activeNum, api_list} = body
-      let {activeQuests, records, questGoals} = state
-      const now = Date.now()
-      ;(api_list || []).forEach((quest) => {
-        if (typeof quest !== 'object')
-          return
-        const {api_state, api_no} = quest
-        // For all quests, create records and update progress
-        if (!records[api_no] && questGoals[api_no]) {
-          // Add new records
+  //== Daily update ==
+  case QUESTS_REFRESH_DAY:  {
+    const {activeQuests, records, questGoals} = state
+    let halfHour = 30 * 60 * 1000     // Random suitable margin
+    let now = Date.now()
+    return {
+      ...state,
+      records: outdateRecords(questGoals, records, now-halfHour, now+halfHour),
+      activeQuests: outdateActiveQuests(activeQuests, now+halfHour),
+    }
+  }
+
+  //== Update active quests ==
+  case '@@Response/kcsapi/api_port/port': {
+    let {api_parallel_quest_count: activeCapacity} = body
+    let activeQuests = state.activeQuests
+    if (Object.keys(state.activeQuests).length > activeCapacity) {
+      activeQuests = limitActiveQuests(state.activeQuests, activeCapacity)
+    }
+    return updateObject(state, {
+      activeQuests,
+      activeCapacity,
+    })
+  }
+  // Update active quests
+  case '@@Response/kcsapi/api_get_member/questlist': {
+    const {api_exec_count: activeNum, api_list} = body
+    let {activeQuests, records, questGoals} = state
+    const now = Date.now()
+    ;(api_list || []).forEach((quest) => {
+      if (typeof quest !== 'object')
+        return
+      const {api_state, api_no} = quest
+      // For all quests, create records and update progress
+      if (!records[api_no] && questGoals[api_no]) {
+        // Add new records
+        records = copyIfSame(records, state.records)
+        records[api_no] = newQuestRecord(api_no, questGoals)
+      } else {
+        let newRecord = updateRecordProgress(records[api_no], quest)
+        if (newRecord) {
           records = copyIfSame(records, state.records)
-          records[api_no] = newQuestRecord(api_no, questGoals)
-        } else {
-          let newRecord = updateRecordProgress(records[api_no], quest)
-          if (newRecord) {
-            records = copyIfSame(records, state.records)
-            records[api_no] = newRecord
-          }
+          records[api_no] = newRecord
         }
-        // For active quests, update activeQuests
-        if (api_state >= 2) {
-          activeQuests = copyIfSame(activeQuests, state.activeQuests)
-          activeQuests[api_no] = {detail: quest, time: now}
-        }
-        // We don't need to delete inactive quests, because if we know all 
-        // active quests, then the inactive ones will be deleted by limitActiveQuests
-        // since they have earlier `time`
-      })
-      activeQuests = limitActiveQuests(activeQuests, activeNum)
-      return updateObject(state, {
-        activeQuests,
-        records,
-        activeNum,
-      })
-    }
-
-    // Completed quest
-    case '@@Response/kcsapi/api_req_quest/clearitemget': {
-      // This api will be followed by a /kcsapi/api_get_member/questlist
-      const {api_quest_id} = postBody
-      // records
-      let {activeQuests, records, activeNum} = state
-      activeNum--
-      if (api_quest_id in records) {
-        records = Object.assign(records)
-        delete records[api_quest_id]
       }
-      // activeQuests
-      if (api_quest_id in activeQuests) {
-        activeQuests = {...activeQuests}
-        delete activeQuests[api_quest_id]
+      // For active quests, update activeQuests
+      if (api_state >= 2) {
+        activeQuests = copyIfSame(activeQuests, state.activeQuests)
+        activeQuests[api_no] = {detail: quest, time: now}
       }
-      // activeCapacity
-      let activeCapacity = (body.api_bounus || {}).api_count
-      if (typeof activeCapacity === 'undefined')
-        activeCapacity = state.activeCapacity
-      return updateObject(state, {
-        activeNum,
-        activeQuests,
-        records,
-        activeCapacity,
-      })
+      // We don't need to delete inactive quests, because if we know all
+      // active quests, then the inactive ones will be deleted by limitActiveQuests
+      // since they have earlier `time`
+    })
+    activeQuests = limitActiveQuests(activeQuests, activeNum)
+    return updateObject(state, {
+      activeQuests,
+      records,
+      activeNum,
+    })
+  }
+  // Completed quest
+  case '@@Response/kcsapi/api_req_quest/clearitemget': {
+    // This api will be followed by a /kcsapi/api_get_member/questlist
+    const {api_quest_id} = postBody
+    // records
+    let {activeQuests, records, activeNum} = state
+    activeNum--
+    if (api_quest_id in records) {
+      records = Object.assign(records)
+      delete records[api_quest_id]
     }
-
-    // Pause quest
-    case '@@Response/kcsapi/api_req_quest/stop': {
-      // This api will be followed by a /kcsapi/api_get_member/questlist
-      const {api_quest_id} = postBody
-      let {activeNum, activeQuests} = state
-      --activeNum
-      if (api_quest_id in state.activeQuests) {
-        activeQuests = {...activeQuests}
-        delete activeQuests[api_quest_id]
-      }
-      return updateObject(state, {
-        activeQuests,
-        activeNum,
-      })
+    // activeQuests
+    if (api_quest_id in activeQuests) {
+      activeQuests = {...activeQuests}
+      delete activeQuests[api_quest_id]
     }
+    // activeCapacity
+    let activeCapacity = (body.api_bounus || {}).api_count
+    if (typeof activeCapacity === 'undefined')
+      activeCapacity = state.activeCapacity
+    return updateObject(state, {
+      activeNum,
+      activeQuests,
+      records,
+      activeCapacity,
+    })
+  }
 
+  // Pause quest
+  case '@@Response/kcsapi/api_req_quest/stop': {
+    // This api will be followed by a /kcsapi/api_get_member/questlist
+    const {api_quest_id} = postBody
+    let {activeNum, activeQuests} = state
+    --activeNum
+    if (api_quest_id in state.activeQuests) {
+      activeQuests = {...activeQuests}
+      delete activeQuests[api_quest_id]
+    }
+    return updateObject(state, {
+      activeQuests,
+      activeNum,
+    })
+  }
   }
   // Update quest count
   return questTrackingReducer(state, action)
@@ -523,4 +523,3 @@ export function saveQuestTracking(questRecords) {
     time: Date.now(),
   }), null, 2)
 }
-

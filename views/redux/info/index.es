@@ -1,5 +1,4 @@
 import {combineReducers} from 'redux'
-import reduceReducers from 'reduce-reducers'
 
 import {reducer as basic} from './basic'
 import {reducer as ships} from './ships'
@@ -22,4 +21,3 @@ export const reducer = combineReducers({
   maps,
   quests,
 })
-

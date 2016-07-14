@@ -1,4 +1,5 @@
 function dataFromBody(body) {
+  const {indexify} = window
   return {
     $ships: indexify(body.api_mst_ship),
     $shipTypes: indexify(body.api_mst_stype),
@@ -13,8 +14,8 @@ function dataFromBody(body) {
 
 export function reducer(state={}, {type, body}) {
   switch (type) {
-    case '@@Response/kcsapi/api_start2':
-      return dataFromBody(body)
+  case '@@Response/kcsapi/api_start2':
+    return dataFromBody(body)
   }
   return state
 }
