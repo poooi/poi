@@ -4,7 +4,7 @@ let Promise = require('bluebird')
 require('coffee-script/register')
 
 // webview focus area fix
-console.log('This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395')
+// This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395
 window.onclick = (e) => {
   remote.getCurrentWindow().webContents.executeJavaScript(`
     $('webview').blur()
