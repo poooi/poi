@@ -4,7 +4,7 @@ import { Component } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { isEqual, pick } from 'lodash'
+import { isEqual, pick, omit } from 'lodash'
 
 const {resolveTime, notify} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -41,9 +41,8 @@ export const ShipRow = connect(
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp',
       'api_cond', 'api_fuel', 'api_bull']
-    return shallowCompare(this, nextProps) &&
-      (!isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps)) ||
-      !isEqual(this.props.labelStatus, nextProps.labelStatus))
+    return shallowCompare(omit(this, ['ship']), omit(nextProps, ['ship'])) ||
+      !isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps))
   }
 
   render() {
