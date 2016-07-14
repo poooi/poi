@@ -3,7 +3,6 @@ import EventEmitter from 'events'
 import CSON from 'cson'
 import fs from 'fs-extra'
 import path from 'path-extra'
-import Promise from 'bluebird'
 import dbg from './debug'
 
 const {ROOT, EXROOT} = global
@@ -55,7 +54,7 @@ class configClass extends EventEmitter {
       fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
     }
     catch (e) {
-      warn(e)
+      console.warn(e)
     }
   }
   setDefault (path, value) {
