@@ -35,4 +35,11 @@ module.exports = {
     'unicode-bom': 'error',
     'prefer-const': ['error', {'destructuring': 'all'}],
   },
+  'settings': {
+    'import/resolver': {
+      'node': {
+        'extensions': ['', '.js', '.jsx', '.es', '.coffee']
+      },
+    },
+  },
 }
