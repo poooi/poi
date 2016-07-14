@@ -9,6 +9,7 @@ function dataFromBody(body) {
     $maps: indexify(body.api_mst_mapinfo),
     $missions: indexify(body.api_mst_mission),
     $useitems: indexify(body.api_mst_useitem),
+    $shipgraph: body.api_mst_shipgraph,
   }
 }
 
