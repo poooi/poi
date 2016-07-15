@@ -33,5 +33,14 @@ module.exports = {
     'no-unused-vars': ['warn', {'args': 'none'}],
     'semi': ['error', 'never'],
     'unicode-bom': 'error',
+    'prefer-const': ['error', {'destructuring': 'all'}],
+  },
+  'settings': {
+    'import/resolver': {
+      'node': {
+        'extensions': ['', '.js', '.jsx', '.es', '.coffee']
+      },
+    },
+    'import/core-modules': ['electron'],
   },
 }
