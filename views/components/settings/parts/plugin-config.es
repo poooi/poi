@@ -4,7 +4,7 @@ import { shell, remote } from 'electron'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
-import { partial } from 'lodash'
+import { get, partial } from 'lodash'
 
 import PluginManager from '../../../services/plugin-manager'
 import Divider from './divider'
@@ -371,7 +371,7 @@ class PluginConfig extends Component {
     this.updateFromPluginManager()
   }
   handleInstall = async (name, e) => {
-    if (e.target.disabled) {
+    if (get(e, 'target.disabled')) {
       return
     }
     let installingPluginNames = this.state.installingPluginNames
@@ -396,7 +396,7 @@ class PluginConfig extends Component {
     }
   }
   handleUpdate = async (index, e) => {
-    if (e.target.disabled) {
+    if (get(e, 'target.disabled')) {
       return
     }
     this.setState({npmWorking: true})
@@ -419,7 +419,7 @@ class PluginConfig extends Component {
     this.setState({installingAll: false})
   }
   handleUpdateAll = async (e) => {
-    if (e.target.disabled) {
+    if (get(e, 'target.disabled')) {
       return
     }
     this.setState({updatingAll: true})
@@ -446,7 +446,7 @@ class PluginConfig extends Component {
     }
   }
   handleRemove = async (index, e) => {
-    if (e.target.disabled) {
+    if (get(e, 'target.disabled')) {
       return
     }
     this.setState({npmWorking: true})
