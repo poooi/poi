@@ -5,7 +5,7 @@ import React from 'react'
 import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
-import {SlotitemIcon} from '../etc/icon'
+import {SlotitemIcon} from '../etc/icon-redux'
 import {getItemData} from './slotitems-data'
 import {equipIsAircraft} from '../ship-parts/utils'
 

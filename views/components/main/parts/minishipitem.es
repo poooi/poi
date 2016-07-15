@@ -8,7 +8,7 @@ import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit } from 'lodash'
 
 import StatusLabel from '../../ship-parts/statuslabel'
-import { SlotitemIcon } from '../../etc/icon'
+import { SlotitemIcon } from '../../etc/icon-redux'
 
 import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from '../../ship-parts/utils'
 

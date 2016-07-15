@@ -7,7 +7,7 @@ classNames = require 'classnames'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
 order = [0, 2, 1, 3, 4, 6, 5, 7]
-{MaterialIcon} = require '../../etc/icon'
+{MaterialIcon} = require '../../etc/icon-redux'
 
 ResourcePanel = connect(
   (state) ->
