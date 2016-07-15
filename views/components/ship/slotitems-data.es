@@ -44,7 +44,7 @@ const range = ['Short', 'Medium', 'Long', 'Very Long']
 
 export function getItemData(slotitem) {
   const data = []
-  for (let type in types) {
+  for (const type in types) {
     if (slotitem[type] && slotitem[type] != 0) {
       if (type == "api_leng") {
         data.push(`${__(types[type])} ${__(range[slotitem[type] - 1])}`)

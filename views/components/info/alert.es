@@ -6,8 +6,8 @@ import { debounce } from 'lodash'
 const {$, config} = window
 const {Component} = React
 
-let alertStyle = document.createElement('style')
-let historyStyle = document.createElement('style')
+const alertStyle = document.createElement('style')
+const historyStyle = document.createElement('style')
 alertStyle.innerHTML = `
   poi-alert {
     height: 30px;
@@ -94,7 +94,7 @@ export const PoiAlert = connect((state, props) => ({
     }, 100)
   }
   handleOverflow = () => {
-    let containerWidth = $('poi-alert').offsetWidth
+    const containerWidth = $('poi-alert').offsetWidth
     if (!this.state.overflow) {
       this.msgWidth = $('#alert-area').offsetWidth
       $('.alert-position').style.width = `${this.msgWidth}px`
@@ -117,8 +117,8 @@ export const PoiAlert = connect((state, props) => ({
   componentDidMount = () => {
     config.addListener('config.set', this.handleStyleChange)
     this.observer = new MutationObserver(this.handleOverflow)
-    let target = $('#alert-area')
-    let options = {
+    const target = $('#alert-area')
+    const options = {
       childList: true,
       attributes: true,
       subtree: true,

@@ -315,7 +315,6 @@ class InstallByNameInput extends Component {
 class PluginConfig extends Component {
   state = {
     checkingUpdate: false,
-    hasUpdates: false,
     npmWorking: false,
     installingAll: false,
     installingPluginNames: [],
@@ -334,8 +333,8 @@ class PluginConfig extends Component {
     if (!newState) {
       newState = {}
     }
-    let plugins = await PluginManager.getInstalledPlugins()
-    let settings = await PluginManager.getUninstalledPluginSettings()
+    const plugins = await PluginManager.getInstalledPlugins()
+    const settings = await PluginManager.getUninstalledPluginSettings()
     Object.assign(newState, {
       plugins: plugins,
       uninstalledPluginSettings: settings,
@@ -343,23 +342,23 @@ class PluginConfig extends Component {
     this.setState(newState)
   }
   handleEnableBetaPluginCheck = async () => {
-    let config = await PluginManager.selectConfig(null, null, !this.state.config.betaCheck)
+    const config = await PluginManager.selectConfig(null, null, !this.state.config.betaCheck)
     this.setState({config: config})
   }
   handleEnableProxy = async() => {
-    let config = await PluginManager.selectConfig(null, !this.state.config.proxy, null)
+    const config = await PluginManager.selectConfig(null, !this.state.config.proxy, null)
     this.setState({config: config})
   }
   onSelectServer = async (state) => {
-    let config = await PluginManager.selectConfig(state ,null, null)
+    const config = await PluginManager.selectConfig(state ,null, null)
     this.setState({config: config})
   }
   handleAdvancedShow = () => {
     this.setState({advanced: !this.state.advanced})
   }
   handleEnable = async (index) => {
-    let plugins = await PluginManager.getInstalledPlugins()
-    let plugin = plugins[index]
+    const plugins = await PluginManager.getInstalledPlugins()
+    const plugin = plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)){
     case PluginManager.DISABLED:
       PluginManager.enablePlugin(plugin)
@@ -380,7 +379,7 @@ class PluginConfig extends Component {
     try {
       await PluginManager.installPlugin(name)
       installingPluginNames = this.state.installingPluginNames
-      let index = installingPluginNames.indexOf(name)
+      const index = installingPluginNames.indexOf(name)
       if (index > -1) {
         installingPluginNames.splice(index, 1)
         await this.updateFromPluginManager({
@@ -400,8 +399,8 @@ class PluginConfig extends Component {
       return
     }
     this.setState({npmWorking: true})
-    let plugins = await PluginManager.getInstalledPlugins()
-    let plugin = plugins[index]
+    const plugins = await PluginManager.getInstalledPlugins()
+    const plugin = plugins[index]
     try {
       await PluginManager.updatePlugin(plugin)
       await this.updateFromPluginManager({npmWorking: false})
@@ -412,7 +411,7 @@ class PluginConfig extends Component {
   }
   handleInstallAll = async () => {
     this.setState({installingAll: true})
-    let settings = await PluginManager.getUninstalledPluginSettings()
+    const settings = await PluginManager.getUninstalledPluginSettings()
     for (name in settings) {
       await this.handleInstall(name)
     }
@@ -423,8 +422,7 @@ class PluginConfig extends Component {
       return
     }
     this.setState({updatingAll: true})
-    let err = null
-    for (let index in this.state.plugins) {
+    for (const index in this.state.plugins) {
       if (this.state.plugins[index].isOutdated) {
         try {
           await this.handleUpdate(index)
@@ -433,17 +431,9 @@ class PluginConfig extends Component {
         }
       }
     }
-    if (!err) {
-      this.setState({
-        hasUpdates: false,
-        updatingAll: false,
-      })
-    }
-    else {
-      this.setState({
-        updatingAll: false,
-      })
-    }
+    this.setState({
+      updatingAll: false,
+    })
   }
   handleRemove = async (index, e) => {
     if (get(e, 'target.disabled')) {
@@ -451,8 +441,8 @@ class PluginConfig extends Component {
     }
     this.setState({npmWorking: true})
     try {
-      let plugins = await PluginManager.getInstalledPlugins()
-      let plugin = plugins[index]
+      const plugins = await PluginManager.getInstalledPlugins()
+      const plugin = plugins[index]
       await PluginManager.uninstallPlugin(plugin)
       this.updateFromPluginManager({npmWorking: false})
     }
@@ -463,9 +453,8 @@ class PluginConfig extends Component {
   }
   checkUpdate = async () =>{
     this.setState({checkingUpdate: true})
-    let plugins = await PluginManager.getOutdatedPlugins()
+    await PluginManager.getOutdatedPlugins()
     this.updateFromPluginManager({
-      hasUpdates: plugins.length !== 0,
       checkingUpdate: false,
     })
   }
@@ -478,15 +467,15 @@ class PluginConfig extends Component {
   }
   onSelectInstallFromFile = () => {
     this.synchronize(async () => {
-      let filenames = dialog.showOpenDialog({
+      const filenames = dialog.showOpenDialog({
         title: __('Select files'),
         defaultPath: remote.require('electron').app.getPath('downloads'),
         properties: ['openFile', 'multiSelections'],
       })
       if (filenames) {
         await PluginManager.getUninstalledPluginSettings()
-        for (let index in filenames) {
-          let filename = filenames[index]
+        for (const index in filenames) {
+          const filename = filenames[index]
           this.setState({manuallyInstallStatus: 1})
           try {
             await this.handleInstall(filename)
@@ -500,15 +489,15 @@ class PluginConfig extends Component {
   }
   onDropInstallFromFile = async (e) => {
     e.preventDefault()
-    let droppedFiles = e.dataTransfer.files
-    let filenames = []
-    for (let i in droppedFiles) {
+    const droppedFiles = e.dataTransfer.files
+    const filenames = []
+    for (const i in droppedFiles) {
       filenames.push(droppedFiles[i].path)
     }
     if (filenames.length > 0) {
       await PluginManager.getUninstalledPluginSettings()
-      for (let index in filenames) {
-        let filename = filenames[index]
+      for (const index in filenames) {
+        const filename = filenames[index]
         this.setState({manuallyInstallStatus: 1})
         try {
           await this.handleInstall(filename)
@@ -544,17 +533,16 @@ class PluginConfig extends Component {
     }
   }
   componentDidMount = async () => {
-    let mirrors = await PluginManager.getMirrors()
+    const mirrors = await PluginManager.getMirrors()
     await PluginManager.getPlugins(true)
-    let config = await PluginManager.getConf()
+    const config = await PluginManager.getConf()
     this.updateFromPluginManager({
       checkingUpdate: true,
       mirrors: mirrors,
       config: config,
     })
-    let plugins = await PluginManager.getOutdatedPlugins(window.config.get('packageManager.enablePluginCheck', true))
+    await PluginManager.getOutdatedPlugins(window.config.get('packageManager.enablePluginCheck', true))
     this.updateFromPluginManager({
-      hasUpdates: plugins.length !== 0,
       checkingUpdate: false,
       mirrors: mirrors,
       config: config,
@@ -599,7 +587,6 @@ class PluginConfig extends Component {
                 </Button>
                 <Button onClick={this.handleUpdateAll}
                         disabled={this.state.npmWorking ||
-                          !this.state.hasUpdates ||
                           this.state.checkingUpdate ||
                           !PluginManager.getUpdateStatus()}
                         className='control-button col-xs-3'>

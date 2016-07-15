@@ -107,7 +107,7 @@ class NavigatorBar extends React.Component {
   }
 
   render() {
-    let {status} = this.state
+    const {status} = this.state
 
     let statusIcon
     if (status === wvStatus.Loading) {
@@ -155,4 +155,4 @@ class NavigatorBar extends React.Component {
   }
 }
 
-module.exports = NavigatorBar
+export default NavigatorBar

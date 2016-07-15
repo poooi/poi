@@ -49,10 +49,10 @@ class PluginManager extends EventEmitter {
     return this.requirements = fs.readJsonSync(this.packagePath)
   }
   async readPlugins() {
-    let pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
+    const pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
     this.plugins = pluginPaths.map(this.readPlugin)
-    for (let i in this.plugins) {
-      let plugin = this.plugins[i]
+    for (const i in this.plugins) {
+      const plugin = this.plugins[i]
       if (plugin.enabled) {
         this.loadPlugin(plugin)
       }
@@ -77,9 +77,9 @@ class PluginManager extends EventEmitter {
   }
   async readMirrors() {
     this.mirrors = fs.readJsonSync(this.mirrorPath)
-    let mirrorConf = config.get('packageManager.mirrorName', (navigator.language === 'zh-CN') ?  "taobao" : "npm")
-    let proxyConf = config.get("packageManager.proxy", false)
-    let betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
+    const mirrorConf = config.get('packageManager.mirrorName', (navigator.language === 'zh-CN') ?  "taobao" : "npm")
+    const proxyConf = config.get("packageManager.proxy", false)
+    const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
     await this.selectConfig(mirrorConf, proxyConf, betaCheck)
     return this.mirrors
   }
@@ -99,7 +99,7 @@ class PluginManager extends EventEmitter {
     }
     this.npmConfig.registry = this.config.mirror.server
     if (this.config.proxy) {
-      let {port} = proxy
+      const {port} = proxy
       this.npmConfig.http_proxy = `http://127.0.0.1:${port}`
     } else {
       if (this.npmConfig.http_proxy) {
@@ -171,11 +171,11 @@ class PluginManager extends EventEmitter {
   }
   async getUninstalledPluginSettings() {
     this.getRequirements()
-    let installedPlugins = await this.getInstalledPlugins()
-    let installedPluginNames = installedPlugins.map((plugin) => (plugin.packageName))
-    let uninstalled = {}
-    for (let name in this.requirements) {
-      let value = this.requirements[name]
+    const installedPlugins = await this.getInstalledPlugins()
+    const installedPluginNames = installedPlugins.map((plugin) => (plugin.packageName))
+    const uninstalled = {}
+    for (const name in this.requirements) {
+      const value = this.requirements[name]
       if (installedPluginNames.indexOf(name) === -1) {
         uninstalled[name] = value
       }
@@ -198,7 +198,7 @@ class PluginManager extends EventEmitter {
     return this.getFilteredPlugins(this.isMetRequirement.bind(this))
   }
   getUpdateStatus () {
-    for (let i in this.plugins) {
+    for (const i in this.plugins) {
       if (this.plugins[i].isOutdated) {
         return true
       }
@@ -207,27 +207,27 @@ class PluginManager extends EventEmitter {
   }
   async getOutdatedPlugins (isNotif) {
     await this.getMirrors()
-    let plugins = await this.getInstalledPlugins()
-    let outdatedPlugins = []
-    let outdatedList = []
-    let tasks = plugins.map(async function (plugin, index) {
+    const plugins = await this.getInstalledPlugins()
+    const outdatedPlugins = []
+    const outdatedList = []
+    const tasks = plugins.map(async function (plugin, index) {
       if (!plugin.needRollback) {
         try {
-          let data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
-          let distTag = {
+          const data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
+          const distTag = {
             latest: data.version,
           }
           if (this.config.betaCheck) {
-            let betaData = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/beta`))[1])
+            const betaData = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/beta`))[1])
             Object.assign(distTag, {
               beta: betaData.version,
             })
           }
           let latest = `${plugin.version}`
           let notCompatible = false
-          let apiVer = (data.poiPlugin || {}).apiVer || plugin.apiVer
+          const apiVer = (data.poiPlugin || {}).apiVer || plugin.apiVer
           let nearestCompVer = 'v214.748.3647'
-          for (let mainVersion in apiVer) {
+          for (const mainVersion in apiVer) {
             if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer)) {
               notCompatible = true
               nearestCompVer = mainVersion
@@ -257,7 +257,7 @@ class PluginManager extends EventEmitter {
     }, this)
     await Promise.all(tasks)
     if (isNotif && outdatedList.length > 0) {
-      let content = `${outdatedList.join(' ')} ${__("have newer version. Please update your plugins.")}`
+      const content = `${outdatedList.join(' ')} ${__("have newer version. Please update your plugins.")}`
       notify(content, {
         type: 'plugin update',
         title: __('Plugin update'),
@@ -298,7 +298,7 @@ class PluginManager extends EventEmitter {
   async installPlugin(name) {
     await this.getMirrors()
     try {
-      let list = this.plugins.map((plugin) => (plugin.packageName))
+      const list = this.plugins.map((plugin) => (plugin.packageName))
       // let flow = co.wrap(function* (_this) {
       //   yield npminstall({
       //     root: _this.npmConfig.prefix,
@@ -312,7 +312,7 @@ class PluginManager extends EventEmitter {
       // })
       // await flow(this)
       await promisify(npm.commands.install)([name])
-      let [packName] = name.split('@')
+      const [packName] = name.split('@')
       if (list.indexOf(packName) !== -1) {
         this.reloadPlugin(packName)
       } else {
@@ -385,7 +385,7 @@ class PluginManager extends EventEmitter {
     }
     if (plugin.useEnv && !window._portStorageUpdated) {
       for (let i = 0; i < envKeyList.length; i++) {
-        let key = envKeyList[i]
+        const key = envKeyList[i]
         if (window[key] != null) {
           localStorage[key] = JSON.stringify(window[key])
         }
@@ -409,7 +409,7 @@ class PluginManager extends EventEmitter {
       })
       if (plugin.multiWindow) {
         plugin.handleClick = function() {
-          let pluginWindow = windowManager.createWindow(windowOptions)
+          const pluginWindow = windowManager.createWindow(windowOptions)
           pluginWindow.loadURL(plugin.windowURL)
           pluginWindow.show()
         }
@@ -471,7 +471,7 @@ class PluginManager extends EventEmitter {
     this.emit('plugin.removed', plugin.packageName)
   }
   addPlugin(pluginPath) {
-    let plugin = this.readPlugin(pluginPath)
+    const plugin = this.readPlugin(pluginPath)
     this.plugins.push(plugin)
     this.plugins = sortBy(this.plugins, 'priority')
     if (plugin.enabled) {
@@ -559,7 +559,7 @@ class PluginManager extends EventEmitter {
     plugin.needRollback = false
     if (plugin.apiVer) {
       let nearestCompVer = 'v214.748.3647'
-      for (let mainVersion in plugin.apiVer) {
+      for (const mainVersion in plugin.apiVer) {
         if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer) && semver.gt(plugin.version, plugin.apiVer[mainVersion])) {
           plugin.needRollback = true
           nearestCompVer = mainVersion
@@ -585,7 +585,7 @@ class PluginManager extends EventEmitter {
       }
     }
     if (i18nFile != null) {
-      let namespace = plugin.id
+      const namespace = plugin.id
       window.i18n[namespace] = new (require('i18n-2'))({
         locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
         defaultLocale: 'zh-CN',
@@ -635,14 +635,14 @@ class PluginManager extends EventEmitter {
     return plugin
   }
   async notifyFailed() {
-    let plugins = await this.getBrokenPlugins()
-    let unreadList = []
+    const plugins = await this.getBrokenPlugins()
+    const unreadList = []
     for (let i = 0; i < plugins.length; i++) {
-      let plugin = plugins[i]
+      const plugin = plugins[i]
       unreadList.push(plugin.name)
     }
     if (unreadList.length > 0) {
-      let content = `${unreadList.join(' ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
+      const content = `${unreadList.join(' ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
       notify(content, {
         type: 'plugin error',
         title: __('Plugin error'),
@@ -653,7 +653,7 @@ class PluginManager extends EventEmitter {
   }
 }
 
-let pluginManager = new PluginManager(
+const pluginManager = new PluginManager(
   path.join(ROOT, 'assets', 'data', 'plugin.json'),
   PLUGIN_PATH,
   path.join(ROOT, 'assets', 'data', 'mirror.json')

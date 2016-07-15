@@ -37,7 +37,7 @@ class configClass extends EventEmitter {
     if (path === '') {
       return this.configData
     }
-    let ret = get(this.configData, path)
+    const ret = get(this.configData, path)
     if (ret !== undefined) {
       return ret
     } else {

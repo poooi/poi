@@ -1,57 +1,56 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { remote, shell } from 'electron'
-import { Grid, Col, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { shell } from 'electron'
+import { Grid, Col, Button, Input, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Component } from 'react'
+import React from 'react'
 import Divider from './divider'
 import { get } from 'lodash'
 
-const {config, toggleModal} = window
-const {showItemInFolder, openItem} = shell
+const {config, toggleModal, i18n, EXROOT} = window
+const {openItem} = shell
+const {Component} = React
 const __ = i18n.setting.__.bind(i18n.setting)
-const __n = i18n.setting.__n.bind(i18n.setting)
 const confGet = (target, path, value) =>
   ((typeof get(target, path) === "undefined") ? value : get(target, path))
 
 config.on('config.set', (path, value) => {
   let event
   switch (path) {
-    case 'poi.layout':
-      window.layout = value
-      event = new CustomEvent('layout.change', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          layout: value
-        }
-      })
-      window.dispatchEvent(event)
-      toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
-      break
-    case 'poi.tabarea.double':
-      event = new CustomEvent('doubleTabbed.change', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          doubleTabbed: value
-        }
-      })
-      window.dispatchEvent(event)
-      window.doubleTabbed = value
-      toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
-      break
-    case 'poi.useSVGIcon':
-      window.useSVGIcon = value
-      break
-    case 'poi.transition.enable':
-      window.dispatchEvent(new Event('display.transition.change'))
-      break
-    case 'poi.zoomLevel':
-      window.zoomLevel = zoomLevel
-      break
-    default:
-
+  case 'poi.layout':
+    window.layout = value
+    event = new CustomEvent('layout.change', {
+      bubbles: true,
+      cancelable: true,
+      detail: {
+        layout: value,
+      },
+    })
+    window.dispatchEvent(event)
+    toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
+    break
+  case 'poi.tabarea.double':
+    event = new CustomEvent('doubleTabbed.change', {
+      bubbles: true,
+      cancelable: true,
+      detail: {
+        doubleTabbed: value,
+      },
+    })
+    window.dispatchEvent(event)
+    window.doubleTabbed = value
+    toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
+    break
+  case 'poi.useSVGIcon':
+    window.useSVGIcon = value
+    break
+  case 'poi.transition.enable':
+    window.dispatchEvent(new Event('display.transition.change'))
+    break
+  case 'poi.zoomLevel':
+    window.zoomLevel = value
+    break
+  default:
   }
 })
 
@@ -60,12 +59,16 @@ const ChangeLayoutConfig = connect(() => (
     layout: confGet(state.config, 'poi.layout', 'horizontal'),
     enableDoubleTabbed: confGet(state.config, 'poi.tabarea.double', false),
   })
-))(class extends Component {
+))(class changeLayoutConfig extends Component {
+  static propTypes = {
+    enableDoubleTabbed: React.PropTypes.bool,
+    layout: React.PropTypes.string,
+  }
   handleSetLayout = (layout) => {
-    config.set('poi.layout', layout);
+    config.set('poi.layout', layout)
   }
   handleSetDoubleTabbed = () => {
-    config.set('poi.tabarea.double', !this.props.enableDoubleTabbed);
+    config.set('poi.tabarea.double', !this.props.enableDoubleTabbed)
   }
   render() {
     return (
@@ -93,27 +96,32 @@ const ChangeThemeConfig = connect((state, props) => ({
   enableSVGIcon: confGet(state.config, 'poi.useSVGIcon', false),
   enableTransition: confGet(state.config, 'poi.transition.enable', true),
 })
-)(class extends Component {
+)(class changeThemeConfig extends Component {
+  static propTypes = {
+    theme: React.PropTypes.string,
+    enableSVGIcon: React.PropTypes.bool,
+    enableTransition: React.PropTypes.bool,
+  }
   handleSetTheme = () => {
-    let theme = this.refs.theme.getValue();
+    const theme = this.refs.theme.getValue()
     if (this.props.theme !== theme) {
-      return window.applyTheme(theme);
+      return window.applyTheme(theme)
     }
   }
   handleOpenCustomCss = (e) => {
     try {
-      let d = path.join(EXROOT, 'hack', 'custom.css');
-      fs.ensureFileSync(d);
-      return openItem(d);
+      const d = path.join(EXROOT, 'hack', 'custom.css')
+      fs.ensureFileSync(d)
+      return openItem(d)
     } catch (e) {
-      return toggleModal(__('Edit custom CSS'), __("Failed. Perhaps you don't have permission to it."));
+      return toggleModal(__('Edit custom CSS'), __("Failed. Perhaps you don't have permission to it."))
     }
   }
   handleSetSVGIcon = () => {
-    config.set('poi.useSVGIcon', !this.props.enableSVGIcon);
+    config.set('poi.useSVGIcon', !this.props.enableSVGIcon)
   }
   handleSetTransition = () => {
-    config.set('poi.transition.enable', !this.props.enableTransition);
+    config.set('poi.transition.enable', !this.props.enableTransition)
   }
   render() {
     return (
@@ -145,11 +153,14 @@ const ChangeThemeConfig = connect((state, props) => ({
 
 const ZoomingConfig = connect(() => (
   (state, props) => ({
-    zoomLevel: confGet(state.config, 'poi.zoomLevel', 1)
+    zoomLevel: confGet(state.config, 'poi.zoomLevel', 1),
   })
-))(class extends Component {
+))(class zoomingConfig extends Component {
+  static propTypes = {
+    zoomLevel: React.PropTypes.number,
+  }
   handleChangeZoomLevel = (e) => {
-    config.set('poi.zoomLevel', parseFloat(this.refs.zoomLevel.getValue()));
+    config.set('poi.zoomLevel', parseFloat(this.refs.zoomLevel.getValue()))
   }
   render() {
     return (
@@ -169,10 +180,14 @@ const ZoomingConfig = connect(() => (
 
 const ChangeResolutionConfig = connect((state, props) => ({
   webview: state.layout.webview,
-}))(class extends Component {
+}))(class changeResolutionConfig extends Component {
+  static propTypes = {
+    webview: React.PropTypes.object,
+
+  }
   handleSetWebviewWidth = (node, e) => {
-    let useFixedResolution = this.props.webview.useFixedResolution
-    let width = parseInt(this.refs[node].getValue())
+    const useFixedResolution = this.props.webview.useFixedResolution
+    const width = parseInt(this.refs[node].getValue())
     if (isNaN(width) || width < 0 || !useFixedResolution) {
       return
     }

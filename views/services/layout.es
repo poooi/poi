@@ -7,8 +7,8 @@ const {config, $} = window
 $('#layout-css').setAttribute('href',
   `./assets/css/layout.${config.get('poi.layout', 'horizontal')}.css`)
 
-let poiControlHeight = 30
-let additionalStyle = document.createElement('style')
+const poiControlHeight = 30
+const additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
   document.body.appendChild(additionalStyle)
@@ -56,7 +56,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
   // Resize when window size smaller than webview size
   if (layout === 'vertical' && webviewWidth > window.innerWidth) {
     let {width, height, x, y} = remote.getCurrentWindow().getBounds()
-    let borderX = width - window.innerWidth
+    const borderX = width - window.innerWidth
     width = webviewWidth + borderX
     remote.getCurrentWindow().setBounds({width, height, x, y})
   }
@@ -89,12 +89,12 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
 const setCSSDebounced = debounce(setCSS, 200)
 
 const adjustSize = () => {
-  let layout = config.get('poi.layout', 'horizontal')
-  let zoomLevel = config.get('poi.zoomLevel', 1)
-  let doubleTabbed = config.get('poi.tabarea.double', false)
+  const layout = config.get('poi.layout', 'horizontal')
+  const zoomLevel = config.get('poi.zoomLevel', 1)
+  const doubleTabbed = config.get('poi.tabarea.double', false)
   let webviewWidth = config.get('poi.webview.width', -1)
   let webviewHeight = Math.min(window.innerHeight - poiControlHeight, Math.round(webviewWidth / 800.0 * 480.0))
-  let useFixedResolution = (webviewWidth !== -1)
+  const useFixedResolution = (webviewWidth !== -1)
 
   // Calculate webview size
   if (!useFixedResolution) {
@@ -165,9 +165,9 @@ const adjustSize = () => {
 adjustSize()
 
 const changeBounds = () => {
-  let {width, height, x, y} = remote.getCurrentWindow().getBounds()
-  let borderX = width - window.innerWidth
-  let borderY = height - window.innerHeight
+  const {width, height, x, y} = remote.getCurrentWindow().getBounds()
+  const borderX = width - window.innerWidth
+  const borderY = height - window.innerHeight
   let newHeight = window.innerHeight
   let newWidth = window.innerWidth
   if (config.get('poi.layout', 'horizontal') === 'horizontal') {
@@ -199,7 +199,7 @@ config.on('config.set', (path, value) => {
     break
   }
   case 'poi.layout': {
-    let resizable = remote.getCurrentWindow().isResizable()
+    const resizable = remote.getCurrentWindow().isResizable()
     remote.getCurrentWindow().setResizable(true)
     changeBounds()
     // window.dispatchEvent(new Event('resize'))
@@ -253,7 +253,7 @@ remote.getCurrentWebContents().on('dom-ready', () => {
     $('kan-game webview').executeJavaScript('DMM.netgame.reloadDialog=function(){}')
   }
   $('kan-game webview').addEventListener('new-window', (e) => {
-    let exWindow = WindowManager.createWindow({
+    const exWindow = WindowManager.createWindow({
       realClose: true,
       navigatable: true,
       nodeIntegration: false,

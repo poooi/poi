@@ -3,7 +3,7 @@ const {dispatch} = window
 const DEFAULT_STICKYFOR = 3*1000  // Milliseconds
 
 window.log = (msg, options) => {
-  let value = {
+  const value = {
     content: msg,
     type: 'default',
     priority: 0,
@@ -16,7 +16,7 @@ window.log = (msg, options) => {
   })
 }
 window.success = (msg, options) => {
-  let value = {
+  const value = {
     content: msg,
     type: 'success',
     priority: 1,
@@ -29,7 +29,7 @@ window.success = (msg, options) => {
   })
 }
 window.warn = (msg, options) => {
-  let value = {
+  const value = {
     content: msg,
     type: 'warning',
     priority: 2,
@@ -42,7 +42,7 @@ window.warn = (msg, options) => {
   })
 }
 window.error = (msg, options) => {
-  let value = {
+  const value = {
     content: msg,
     type: 'warning',
     priority: 4,

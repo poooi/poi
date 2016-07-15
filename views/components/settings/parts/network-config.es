@@ -28,8 +28,8 @@ const basic = {
 
 const NetworkConfig = connect(() => (
   (state, props) => {
-    let ret = get(state, 'config.proxy') || {}
-    for (let key in basic) {
+    const ret = get(state, 'config.proxy') || {}
+    for (const key in basic) {
       if (!ret[key]) {
         ret.key = basic.key
       }
@@ -42,13 +42,13 @@ const NetworkConfig = connect(() => (
     this.state = Object.clone(props)
   }
   handleChangeUse = () => {
-    let use = this.refs.use.getValue()
+    const use = this.refs.use.getValue()
     this.setState({
       use,
     })
   }
   handleSaveConfig = (e) => {
-    let proxy = Object.clone(this.state)
+    const proxy = Object.clone(this.state)
     let retries = parseInt(this.refs.retries.getValue())
     if (isNaN(retries)) {
       retries = 0
@@ -67,49 +67,49 @@ const NetworkConfig = connect(() => (
     toggleModal(__('Proxy setting'), __('Success! It will be available after a restart.'))
   }
   handleHttpHostChange = (e) => {
-    let http = Object.clone(this.state.http)
+    const http = Object.clone(this.state.http)
     http.host = e.target.value
     this.setState({
       http,
     })
   }
   handleHttpPortChange = (e) => {
-    let http = Object.clone(this.state.http)
+    const http = Object.clone(this.state.http)
     http.port = parseInt(e.target.value)
     this.setState({
       http,
     })
   }
   handleSetHttpRequirePassword = (e) => {
-    let http = Object.clone(this.state.http)
+    const http = Object.clone(this.state.http)
     http.requirePassword = !http.requirePassword
     this.setState({
       http,
     })
   }
   handleHttpUsernameChange = (e) => {
-    let http = Object.clone(this.state.http)
+    const http = Object.clone(this.state.http)
     http.username = e.target.value
     this.setState({
       http,
     })
   }
   handleHttpPasswordChange = (e) => {
-    let http = Object.clone(this.state.http)
+    const http = Object.clone(this.state.http)
     http.password = e.target.value
     this.setState({
       http,
     })
   }
   handleSocksHostChange = (e) => {
-    let socks5 = Object.clone(this.state.socks5)
+    const socks5 = Object.clone(this.state.socks5)
     socks5.host = e.target.value
     this.setState({
       socks5,
     })
   }
   handleSocksPortChange = (e) => {
-    let socks5 = Object.clone(this.state.socks5)
+    const socks5 = Object.clone(this.state.socks5)
     socks5.port = parseInt(e.target.value)
     this.setState({
       socks5,

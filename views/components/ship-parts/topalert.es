@@ -35,7 +35,7 @@ const getTyku = (equipsData) => {
       if (!equipsData[i][j]) {
         continue
       }
-      let [_equip, $equip, onslot] = equipsData[i][j]
+      const [_equip, $equip, onslot] = equipsData[i][j]
       let tempTyku = 0.0
       let tempAlv
       // Basic tyku
@@ -74,13 +74,13 @@ const getSaku25 = (shipsData, equipsData) => {
   let radarSaku = 0
   let totalSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
-    let [_ship] = shipsData[i]
+    const [_ship] = shipsData[i]
     shipSaku += _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      let $equip = equipsData[i][j][1]
+      const $equip = equipsData[i][j][1]
       switch ($equip.api_type[3]) {
       case 9:
         reconSaku += $equip.api_saku
@@ -124,13 +124,13 @@ const getSaku25a = (shipsData, equipsData, teitokuLv) => {
   let equipSaku = 0
   let teitokuSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
-    let [_ship] = shipsData[i]
+    const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      let $equip = equipsData[i][j][1]
+      const $equip = equipsData[i][j][1]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[3]) {
       case 7:
@@ -209,15 +209,15 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
   let shipSaku = 0
   let equipSaku = 0
   let teitokuSaku = 0
-  let shipCount = 6
+  const shipCount = 6
   for (let i = 0; i < equipsData.length; i++) {
-    let [_ship] = shipsData[i]
+    const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      let $equip = equipsData[i][j][1]
+      const $equip = equipsData[i][j][1]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[2]) {
       case 8:
@@ -280,7 +280,7 @@ class CountdownLabel extends Component {
     return false
   }
   tick = (timeRemaining) => {
-    let notifyBefore = 10
+    const notifyBefore = 10
     if (this.props.shouldNotify && 0 < timeRemaining && timeRemaining <= notifyBefore) {
       this.notify(this.props.fleetName)
     }

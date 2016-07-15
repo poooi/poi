@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Component } from 'react'
 import { Grid, Col, Row, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { remote, ipcRenderer } from 'electron'
@@ -13,6 +12,7 @@ import fs from 'fs-extra'
 const {dialog} = remote.require('electron')
 const {config, toggleModal, i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
+const {Component} = React
 
 const confGet = (target, path, value) =>
   ((typeof get(target, path) === "undefined") ? value : get(target, path))
@@ -45,7 +45,7 @@ config.on('config.set', (path, value) => {
     window.notify.morale = value
     break
   case 'poi.language':
-    for (let namespace in window.i18n) {
+    for (const namespace in window.i18n) {
       window.i18n[namespace].setLocale(value)
     }
     window.language = value
@@ -89,28 +89,28 @@ const SetNotifyIndividualConfig = connect(() => {
     window.notify(null)
   }
   handleSetTimeSettingShow = () => {
-    let timeSettingShow = !this.state.timeSettingShow
+    const timeSettingShow = !this.state.timeSettingShow
     this.setState({timeSettingShow})
   }
   selectInput = (id) => {
     document.getElementById(id).select()
   }
   handleSetExpedition = (e) => {
-    let value = parseInt(e.target.value) || 0
+    const value = parseInt(e.target.value) || 0
     if (isNaN(value) || value < 0) {
       return
     }
     this.setState({expeditionValue: value})
   }
   handleSetMorale = (e) => {
-    let value = parseInt(e.target.value) || 0
+    const value = parseInt(e.target.value) || 0
     if (isNaN(value) || value < 0) {
       return
     }
     this.setState({moraleValue: value})
   }
   saveNotifySetting = () => {
-    let {moraleValue, expeditionValue} = this.state
+    const {moraleValue, expeditionValue} = this.state
     config.set('poi.notify.expedition.value', expeditionValue)
     config.set('poi.notify.morale.value', moraleValue)
     this.setState({timeSettingShow: false})
@@ -281,7 +281,7 @@ const FolderPickerConfig = connect(() => {
   }
   folderPickerOnDrop = (e) => {
     e.preventDefault()
-    let droppedFiles = e.dataTransfer.files
+    const droppedFiles = e.dataTransfer.files
     if (fs.statSync(droppedFiles[0].path).isDirectory()) {
       this.setPath(droppedFiles[0].path)
     }
@@ -289,7 +289,7 @@ const FolderPickerConfig = connect(() => {
   folderPickerOnClick = () => {
     this.synchronize(() => {
       fs.ensureDirSync(this.props.value)
-      let filenames = dialog.showOpenDialog({
+      const filenames = dialog.showOpenDialog({
         title: this.props.label,
         defaultPath: this.props.value,
         properties: [
@@ -363,7 +363,7 @@ const SelectLanguageConfig = connect(() => {
     value: React.PropTypes.string,
   }
   handleSetLanguage = () => {
-    let language = this.refs.language.getValue()
+    const language = this.refs.language.getValue()
     config.set('poi.language', language)
   }
   render() {
@@ -410,7 +410,7 @@ const SlotCheckConfig = connect(() => {
     if (this.state.showInput) {
       this.handleDisable()
     } else {
-      let num = this.state.value
+      const num = this.state.value
       this.setState({
         showInput: true,
         value: this.CheckValid(num) ? num : '',
@@ -423,7 +423,7 @@ const SlotCheckConfig = connect(() => {
   handleSubmit = (e) => {
     e.preventDefault()
     if (this.CheckValid(this.state.value)) {
-      let n = parseInt(this.state.value)
+      const n = parseInt(this.state.value)
       config.set(`poi.mapStartCheck.${this.props.type}`, {
         enable: true,
         minFreeSlots: n,
@@ -456,7 +456,7 @@ const SlotCheckConfig = connect(() => {
       bsStyle={toggleBtnStyle} style={{verticalAlign: 'text-bottom'}}>
       {toggleBtnTxt}
     </Button>
-    let inputValid = this.CheckValid(this.state.value)
+    const inputValid = this.CheckValid(this.state.value)
     let submitBtn = <Button type='submit'
       bsStyle={inputValid ? 'success' : 'danger'}>
       {inputValid ? __('Save') : __('Disable')}
@@ -558,7 +558,7 @@ const ShortcutConfig = connect(() => {
     this.setState({recording: false})
   }
   transformKeyStr = (character, modifiers) => {
-    let mapping = {
+    const mapping = {
       shift: 'Shift',
       alt: 'Alt',
       ctrl: 'Ctrl',
@@ -566,20 +566,19 @@ const ShortcutConfig = connect(() => {
       Del: 'Delete',
       Ins: 'Insert',
     }
-    let str_modifiers = (() => {
-      let i, results = []
-      for (i = 0; i < modifiers.length; i++) {
-        let m = modifiers[i]
-        results.push(mapping[m])
+    const str_modifiers = (() => {
+      const results = []
+      for (let i = 0; i < modifiers.length; i++) {
+        results.push(mapping[modifiers[i]])
       }
       return results
     })()
     character = character[0].toUpperCase() + character.substr(1)
-    let s = (str_modifiers.concat([mapping[character] || character])).join('+')
+    const s = (str_modifiers.concat([mapping[character] || character])).join('+')
     return s
   }
   setKey = (character, modifiers) => {
-    let s = this.transformKeyStr(character, modifiers)
+    const s = this.transformKeyStr(character, modifiers)
     this.setState({
       recording: false,
     })
@@ -628,7 +627,7 @@ mousetrap.prototype.handleKey = (character, modifiers, e) => {
   if (e.type !== 'keydown' || ['shift', 'alt', 'ctrl', 'meta'].indexOf(character) !== -1) {
     return
   }
-  let fn = keyListener
+  const fn = keyListener
   if (typeof fn === 'function') {
     fn(character, modifiers, e)
   }
