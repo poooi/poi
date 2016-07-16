@@ -4,7 +4,7 @@ import React from 'react'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
-  classnames(type, props.className)
+  return classnames(type, props.className)
 }
 
 const ICON_TYPES = {
