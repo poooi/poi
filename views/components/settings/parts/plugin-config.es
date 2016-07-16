@@ -382,14 +382,20 @@ const PluginConfig = connect((state, props) => ({
     }
     let installingPluginNames = this.state.installingPluginNames
     installingPluginNames.push(name)
-    this.setState({installingPluginNames: installingPluginNames, npmWorking: true})
+    this.setState({
+      installingPluginNames: installingPluginNames,
+      npmWorking: true,
+    })
     try {
       await PluginManager.installPlugin(name)
       installingPluginNames = this.state.installingPluginNames
       const index = installingPluginNames.indexOf(name)
       if (index > -1) {
         installingPluginNames.splice(index, 1)
-        this.setState({installingPluginNames: installingPluginNames})
+        this.setState({
+          installingPluginNames: installingPluginNames,
+          npmWorking: false,
+        })
       }
     } catch (error) {
       this.setState({npmWorking: false})
@@ -412,18 +418,27 @@ const PluginConfig = connect((state, props) => ({
     }
   }
   handleInstallAll = async () => {
-    this.setState({installingAll: true})
+    this.setState({
+      installingAll: true,
+      npmWorking: true,
+    })
     const settings = PluginManager.getUninstalledPluginSettings()
     for (name in settings) {
       await this.handleInstall(name)
     }
-    this.setState({installingAll: false})
+    this.setState({
+      installingAll: false,
+      npmWorking: false,
+    })
   }
   handleUpdateAll = async (e) => {
     if (get(e, 'target.disabled')) {
       return
     }
-    this.setState({updatingAll: true})
+    this.setState({
+      updatingAll: true,
+      npmWorking: true,
+    })
     const plugins = PluginManager.getInstalledPlugins()
     for (const index in plugins) {
       if (plugins[index].isOutdated) {
@@ -436,6 +451,7 @@ const PluginConfig = connect((state, props) => ({
     }
     this.setState({
       updatingAll: false,
+      npmWorking: false,
     })
   }
   handleRemove = async (index, e) => {
@@ -455,10 +471,14 @@ const PluginConfig = connect((state, props) => ({
     }
   }
   checkUpdate = async () =>{
-    this.setState({checkingUpdate: true})
+    this.setState({
+      checkingUpdate: true,
+      npmWorking: true,
+    })
     await PluginManager.getOutdatedPlugins()
     this.setState({
       checkingUpdate: false,
+      npmWorking: false,
     })
   }
   onSelectOpenFolder = () => {
@@ -535,10 +555,12 @@ const PluginConfig = connect((state, props) => ({
   componentDidMount = async () => {
     this.setState({
       checkingUpdate: true,
+      npmWorking: true,
     })
     await PluginManager.getOutdatedPlugins(window.config.get('packageManager.enablePluginCheck', true))
     this.setState({
       checkingUpdate: false,
+      npmWorking: false,
     })
   }
   render() {
