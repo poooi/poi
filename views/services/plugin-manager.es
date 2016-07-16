@@ -3,7 +3,7 @@ import semver from 'semver'
 import EventEmitter from 'events'
 import React from 'react'
 import { remote } from 'electron'
-import { sortBy, get } from 'lodash'
+import { sortBy, get, set } from 'lodash'
 import fs from 'fs-extra'
 import glob from 'glob'
 import request from 'request'
@@ -396,12 +396,18 @@ class PluginManager extends EventEmitter {
     if (plugin.windowURL) {
       if (plugin.windowOptions) {
         windowOptions = plugin.windowOptions
+        if (!get(windowOptions, 'webPreferences.preload')) {
+          set(windowOptions, 'webPreferences.preload', path.join(ROOT, 'assets', 'js', 'plugin-preload.js'))
+        }
       } else {
         windowOptions = {
           x: config.get('poi.window.x', 0),
           y: config.get('poi.window.y', 0),
           width: 800,
           height: 600,
+          webPreferences: {
+            preload: path.join(ROOT, 'assets', 'js', 'plugin-preload.js'),
+          },
         }
       }
       Object.assign(windowOptions, {
