@@ -4,9 +4,8 @@ import { join } from 'path-extra'
 
 import { getPluginIndexByPackageName, readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed } from './utils'
 
-const {reduxSet} = window
-
 export function reducer (state=[], {type, value, option}) {
+  const {reduxSet} = window
   switch (type) {
   case '@@Plugin/initaialize': {
     const pluginPaths = glob.sync(join(value, 'node_modules', 'poi-plugin-*'))
@@ -22,13 +21,13 @@ export function reducer (state=[], {type, value, option}) {
     return plugins
   }
   case '@@Plugin/replace': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     state = reduxSet(state, [i], value)
     return state
   }
   case '@@Plugin/changeStatus': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     for (const opt of option) {
       const {path, status} = opt
@@ -37,15 +36,15 @@ export function reducer (state=[], {type, value, option}) {
     return state
   }
   case '@@Plugin/enable': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     let plugin = state[i]
     plugin = enablePlugin(plugin)
     state = reduxSet(state, [i], plugin)
     return state
   }
-  case '@@plugin/disable': {
-    state = {...state}
+  case '@@Plugin/disable': {
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     let plugin = state[i]
     plugin = disablePlugin(plugin)
@@ -53,7 +52,7 @@ export function reducer (state=[], {type, value, option}) {
     return state
   }
   case '@@Plugin/load': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     let plugin = state[i]
     plugin = loadPlugin(plugin)
@@ -61,7 +60,7 @@ export function reducer (state=[], {type, value, option}) {
     return state
   }
   case '@@Plugin/unload': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     let plugin = state[i]
     plugin = unloadPlugin(plugin)
@@ -69,7 +68,7 @@ export function reducer (state=[], {type, value, option}) {
     return state
   }
   case '@@Plugin/remove': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     let plugin = state[i]
     plugin = unloadPlugin(plugin)
@@ -78,7 +77,7 @@ export function reducer (state=[], {type, value, option}) {
     return state
   }
   case '@@Plugin/add': {
-    state = {...state}
+    state = [...state]
     let plugin = readPlugin(value)
     if (plugin.enabled) {
       plugin = loadPlugin(plugin)
@@ -88,7 +87,7 @@ export function reducer (state=[], {type, value, option}) {
     return state
   }
   case '@@Plugin/reload': {
-    state = {...state}
+    state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     const plugin = state[i]
     unloadPlugin(plugin)

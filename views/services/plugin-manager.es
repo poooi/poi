@@ -75,11 +75,11 @@ class PluginManager extends EventEmitter {
       this.config.mirror = this.mirrors[name]
       config.set("packageManager.mirrorName", name)
     }
-    if (enable) {
+    if (enable != null) {
       this.config.proxy = enable
       config.set("packageManager.proxy", enable)
     }
-    if (check) {
+    if (check != null) {
       this.config.betaCheck = check
       config.set("packageManager.enableBetaPluginCheck", check)
     }

@@ -94,7 +94,7 @@ const readPlugin = (pluginPath) => {
         fs.accessSync(join(pluginPath, 'assets', 'i18n'))
         i18nFile = join(pluginPath, 'assets', 'i18n')
       } catch (error) {
-        //console.warn('No translate file found.')
+        console.warn(`${plugin.packageName}: No translate file found.`)
       }
     }
   }
@@ -150,7 +150,6 @@ const readPlugin = (pluginPath) => {
 }
 
 const enablePlugin = (plugin) => {
-  config.set(`plugin.${plugin.id}.enable`, true)
   if (!plugin.isRead && !plugin.isBroken) {
     let pluginMain
     try {
@@ -175,13 +174,17 @@ const enablePlugin = (plugin) => {
     if (pluginMain.isRead == null) {
       pluginMain.isRead = false
     }
-    plugin = loadPlugin(pluginMain)
-    return plugin
+    plugin = pluginMain
   }
+  plugin = loadPlugin(plugin)
+  plugin.enabled = true
+  config.set(`plugin.${plugin.id}.enable`, true)
+  return plugin
 }
 
 const disablePlugin = (plugin) => {
   config.set(`plugin.${plugin.id}.enable`, false)
+  plugin.enabled = false
   plugin = unloadPlugin(plugin)
   return plugin
 }
