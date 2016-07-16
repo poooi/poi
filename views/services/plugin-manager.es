@@ -272,10 +272,12 @@ class PluginManager extends EventEmitter {
     dispatch({
       type: '@@Plugin/changeStatus',
       value: plugin,
-      option: {
-        path: 'isUpdating',
-        status: true,
-      },
+      option: [
+        {
+          path: 'isUpdating',
+          status: true,
+        },
+      ],
     })
     try {
       // let flow = co.wrap(function* (_this) {
@@ -296,10 +298,12 @@ class PluginManager extends EventEmitter {
       dispatch({
         type: '@@Plugin/changeStatus',
         value: plugin,
-        option: {
-          path: 'isUpdating',
-          status: false,
-        },
+        option: [
+          {
+            path: 'isUpdating',
+            status: false,
+          },
+        ],
       })
       throw error
     }
@@ -339,10 +343,12 @@ class PluginManager extends EventEmitter {
       dispatch({
         type: '@@Plugin/changeStatus',
         value: plugin,
-        option: {
-          path: 'isUninstalling',
-          status: true,
-        },
+        option: [
+          {
+            path: 'isUninstalling',
+            status: true,
+          },
+        ],
       })
       this.removePlugin(plugin)
       await promisify(npm.commands.uninstall)([plugin.packageName])

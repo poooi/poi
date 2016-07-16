@@ -92,11 +92,11 @@ export function reducer (state=[], {type, value, option}) {
     const plugin = state[i]
     unloadPlugin(plugin)
     delete require.cache[require.resolve(plugin.pluginPath)]
-    const newPlugin = readPlugin(plugin.pluginPath)
-    reduxSet(state, [i], newPlugin)
-    if (plugin.enabled) {
-      loadPlugin(newPlugin)
+    let newPlugin = readPlugin(plugin.pluginPath)
+    if (newPlugin.enabled) {
+      newPlugin = loadPlugin(newPlugin)
     }
+    state = reduxSet(state, [i], newPlugin)
     return state
   }
   default:
