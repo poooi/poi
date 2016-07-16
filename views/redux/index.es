@@ -10,6 +10,7 @@ import {reducer as config} from './config'
 import {reducer as layout} from './layout'
 import {reducer as battle} from './battle'
 import {reducer as alert} from './alert'
+import {reducer as plugins} from './plugins'
 
 // === Utils ===
 
@@ -70,7 +71,7 @@ window.reduxSet = (obj, path, val) => {
   return obj
 }
 
-let copyIfSame = window.copyIfSame = (obj, to) => {
+const copyIfSame = window.copyIfSame = (obj, to) => {
   // assert(typeof obj === 'object')
   if (obj === to)
     return Array.isArray(obj) ? obj.slice() : {...obj}
@@ -87,7 +88,7 @@ let copyIfSame = window.copyIfSame = (obj, to) => {
 //   grand-properties will be deleted.
 // - If a property is updated, all its grand-properties will be new ones,
 //   even if the grand-property itself isEqual.
-let compareUpdate = window.compareUpdate = (prevState, newState, depth=1) => {
+const compareUpdate = window.compareUpdate = (prevState, newState, depth=1) => {
   if (typeof prevState !== typeof newState)
     return newState
   if (prevState === newState)
@@ -99,7 +100,7 @@ let compareUpdate = window.compareUpdate = (prevState, newState, depth=1) => {
   // Update existing properties
   const nextDepth = depth - 1
   forEach(newState, (v, k) => {
-    let newV = compareUpdate(prevState[k], v, nextDepth)
+    const newV = compareUpdate(prevState[k], v, nextDepth)
     // ATTENTION: Any null properties are ignored
     if (newV != null && prevState[k] !== newV) {
       prevState = copyIfSame(prevState, prevStateBackup)
@@ -149,6 +150,7 @@ export const reducer = reduceReducers(
     layout,
     battle,
     alert,
+    plugins,
   }),
 )
 
