@@ -14,9 +14,6 @@ const {config, toggleModal, i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
 const {Component} = React
 
-const confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
-
 let language = navigator.language
 if (!(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])) {
   switch (language.substr(0, 1).toLowerCase()) {

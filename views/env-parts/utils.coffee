@@ -1,10 +1,14 @@
 {createSelector} = require 'reselect'
-{pluck} = require 'underscore'
+{map, get} = require 'lodash'
 
 Object.clone = (obj) ->
   JSON.parse JSON.stringify obj
 Object.remoteClone = (obj) ->
   JSON.parse remote.require('./lib/utils').remoteStringify obj
+
+window.confGet = (target, path, defaultVal) ->
+  getVal = get(target, path)
+  if (typeof getVal == "undefined") then defaultVal else getVal
 
 pad = (n) ->
   if n < 10 then "0#{n}" else n
@@ -77,7 +81,7 @@ window.sortieStatusSelector = (state) -> state.sortie?.sortieStatus
 # Returns undefined if uninitialized
 window.inRepairShipsIdSelector = createSelector repairsSelector, (repairs) ->
   return if !repairs
-  pluck(repairs.filter((repair) -> parseInt(repair.api_state) == 1), 'api_ship_id')
+  map(repairs.filter((repair) -> parseInt(repair.api_state) == 1), 'api_ship_id')
 
 
 ## <thisFleet> Reads props.fleetId ##

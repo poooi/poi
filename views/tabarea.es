@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 import semver from 'semver'
 import fs from 'fs-extra'
 import classNames from 'classnames'
+import {connect} from 'react-redux'
 import {sortBy} from 'lodash'
 import {Component, createElement, Children} from 'react'
 import FontAwesome from 'react-fontawesome'
@@ -144,17 +145,19 @@ class TabContentsUnion extends Component {
   }
 }
 
-export class ControlledTabArea extends Component {
+export const ControlledTabArea = connect(
+  (state) => ({
+    plugins: state.plugins,
+    doubleTabbed: confGet(state.config, 'poi.tabarea.double', false),
+  }),
+  undefined,
+  undefined,
+  {pure: false}
+)(class extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      plugins: [],
-      doubleTabbed: config.get('poi.tabarea.double', false),
     }
-  }
-  toggleDoubleTabbed = (e) => {
-    const doubleTabbed = e.detail.doubleTabbed
-    this.setState({doubleTabbed})
   }
   componentWillUpdate(nextProps, nextState) {
     this.nowTime = (new Date()).getTime()
@@ -162,14 +165,6 @@ export class ControlledTabArea extends Component {
   componentDidUpdate(prevProps, prevState) {
     const cur = (new Date()).getTime()
     dbg.extra('moduleRenderCost').log(`the cost of tab-module's render: ${cur-this.nowTime}ms`)
-  }
-  cachePluginList = async () => {
-    let plugins = await PluginManager.getValidPlugins()
-    plugins = plugins.filter((plugin) => plugin.show !== false)
-    plugins = sortBy(plugins, 'priority')
-    this.setState({
-      plugins: plugins,
-    })
   }
   selectTab = (key) => {
     if (key == null)
@@ -205,12 +200,12 @@ export class ControlledTabArea extends Component {
       key = 'shipView'
       break
     default:
-      key = (this.state.plugins[num-3] || {}).packageName
+      key = (this.props.plugins[num-3] || {}).packageName
       isPlugin = key != null ? null : 'plugin'
       break
     }
     this.selectTab(key)
-    if (!this.state.doubleTabbed)
+    if (!this.props.doubleTabbed)
       this.selectTab(isPlugin)
   }
   handleShiftTabKeyDown = () => {
@@ -249,45 +244,42 @@ export class ControlledTabArea extends Component {
   handleTabChange = (e) => {
     this.selectTab(e.detail.tab)
   }
-  componentDidUpdate = (prevProps, prevState) => {
-    if (prevState.doubleTabbed != this.state.doubleTabbed)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.doubleTabbed != this.props.doubleTabbed)
       this.setState({
         activeMainTab: 'mainView',
       })
   }
-  componentDidMount = () => {
+  componentDidMount() {
     this.handleKeyDown()
     window.addEventListener('game.start', this.handleKeyDown)
-    window.addEventListener('tabarea.reload', this.forceUpdate)
-    window.addEventListener('doubleTabbed.change', this.toggleDoubleTabbed)
     window.addEventListener('tabarea.change', this.handleTabChange)
-    this.cachePluginList()
     window.openSettings = this.handleCmdCommaKeyDown
   }
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
-    window.removeEventListener('tabarea.reload', this.forceUpdate)
-    window.removeEventListener('doubleTabbed.change', this.toggleDoubleTabbed)
     window.removeEventListener('tabarea.change', this.handleTabChange)
   }
   render() {
-    const activePluginName = this.state.activePluginName || (this.state.plugins[0] || {}).packageName
-    const activePlugin = this.state.plugins.find((p) => p.packageName == activePluginName)
+    const activePluginName = this.state.activePluginName || (this.props.plugins[0] || {}).packageName
+    const activePlugin = this.props.plugins.find((p) => p.packageName == activePluginName)
     const defaultPluginTitle = <span><FontAwesome name='sitemap' />{__(' Plugins')}</span>
-    const pluginDropdownContents = this.state.plugins.length == 0 ? (
+    const pluginDropdownContents = this.props.plugins.length == 0 ? (
       <MenuItem key={1002} disabled>
         {window.i18n.setting.__("Install plugins in settings")}
       </MenuItem>
     ) : (
-      this.state.plugins.map((plugin, index) =>
+      this.props.plugins
+      .filter((plugin) => plugin.enabled && (plugin.reactClass || plugin.windowURL))
+      .map((plugin, index) =>
         !plugin.enabled ? undefined :
         <MenuItem key={plugin.id} eventKey={plugin.id} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
       )
     )
-    const pluginContents = this.state.plugins
-    .filter((plugin) => plugin.handleClick == null && plugin.windowURL == null && plugin.enabled)
+    const pluginContents = this.props.plugins
+    .filter((plugin) => plugin.handleClick == null && plugin.windowURL == null && plugin.enabled && plugin.reactClass)
     .map((plugin) => 
       <PluginWrap
         key={plugin.id}
@@ -296,7 +288,7 @@ export class ControlledTabArea extends Component {
       />
     )
 
-    return !this.state.doubleTabbed ? (
+    return !this.props.doubleTabbed ? (
       <div>
         <Nav bsStyle="tabs" activeKey={this.state.activeMainTab} id="top-nav"
           onSelect={this.handleSelectTab}>
@@ -372,4 +364,4 @@ export class ControlledTabArea extends Component {
       </div>
     )
   }
-}
+})
