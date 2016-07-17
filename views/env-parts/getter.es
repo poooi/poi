@@ -1,5 +1,19 @@
 import {observer, observe} from 'redux-observers'
+import {createSelector} from 'reselect'
+import {map, get} from 'lodash'
 import {store} from '../createStore'
+
+const {buildArray} = window
+function object2Array(obj) {
+  return buildArray(map(obj, (v, k) => [k, v]))
+}
+function object2ArraySelectorFactory(path) {
+  const pathSelector = (state) => get(state, path)
+  return createSelector( 
+    pathSelector,
+    (obj) => object2Array(obj)
+  )
+}
 
 Object.defineProperty(window, '$slotitems', {get: () => {
   return window.getStore('const.$equips') || {}
@@ -7,14 +21,16 @@ Object.defineProperty(window, '$slotitems', {get: () => {
 Object.defineProperty(window, '$slotitemTypes', {get: () => {
   return window.getStore('const.$equipTypes') || {}
 }})
+const mapareasObject2ArraySelector = object2ArraySelectorFactory('const.$mapareas')
 Object.defineProperty(window, '$mapareas', {get: () => {
-  return window.getStore('const.$mapareas') || {}
+  return mapareasObject2ArraySelector(window.getStore())
 }})
 Object.defineProperty(window, '$maps', {get: () => {
   return window.getStore('const.$maps') || {}
 }})
+const missionsObject2ArraySelector = object2ArraySelectorFactory('const.$missions')
 Object.defineProperty(window, '$missions', {get: () => {
-  return window.getStore('const.$missions') || {}
+  return missionsObject2ArraySelector(window.getStore())
 }})
 Object.defineProperty(window, '$shipTypes', {get: () => {
   return window.getStore('const.$shipTypes') || {}
@@ -44,7 +60,7 @@ Object.defineProperty(window, '_teitokuLv', {get: () => {
   return window.getStore('info.basic.api_level') || 0
 }})
 Object.defineProperty(window, '_ndock', {get: () => {
-  let ret = []
+  const ret = []
   for (let i = 0; i < 4; i++) {
     ret.push(window.getStore(`info.repairs.${i}.api_ship_id`))
   }
@@ -54,7 +70,7 @@ Object.defineProperty(window, '_ndock', {get: () => {
 const initShips = (dispatch, current, previous) => {
   window._ships = new Proxy(window.getStore('info.ships'), {
     get: (target, property, receiver) => {
-      let ship = target[property]
+      const ship = target[property]
       if (ship === undefined) {
         return undefined
       }
@@ -70,7 +86,7 @@ const initShips = (dispatch, current, previous) => {
 const initEquips = (dispatch, current, previous) => {
   window._slotitems = new Proxy(window.getStore('info.equips'), {
     get: (target, property, receiver) => {
-      let equip = target[property]
+      const equip = target[property]
       if (equip === undefined) {
         return undefined
       }

@@ -25,6 +25,17 @@ window.timeToString = (milliseconds) ->
   date = new Date(milliseconds)
   date.toTimeString().slice(0, 8)  # HH:mm:ss
 
+# Input: [[index, value], ...]
+# Return: Array
+window.buildArray = (pairs) => 
+  ret = []
+  pairs.forEach(([index, value]=[]) => 
+    if (!parseInt(index))
+      return
+    ret[index] = value
+  )
+  return ret
+
 # Not sure where this function should go, leave it here just for now, for easy access.
 window.getCondStyle = (cond) ->
   s = 'poi-ship-cond-'

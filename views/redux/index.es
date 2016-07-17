@@ -18,18 +18,6 @@ window.indexify = (array, key='api_id') => {
   return keyBy(array, key)
 }
 
-// Input: [[index, value], ...]
-// Return: Array
-window.buildArray = (pairs) => {
-  const ret = []
-  pairs.forEach(([index, value]=[]) => {
-    if (!parseInt(index))
-      return
-    ret[index] = value
-  })
-  return ret
-}
-
 window.confGet = (target, path, value) =>
   ((typeof get(target, path) === "undefined") ? value : get(target, path))
 
