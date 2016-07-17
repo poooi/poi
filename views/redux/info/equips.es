@@ -7,12 +7,16 @@ function removeEquips(equips, idList) {
 }
 
 export function reducer(state={}, {type, postBody, body}) {
-  const {getStore, compareUpdate, indexify} = window
+  const {getStore, compareUpdate, indexify, pickExisting} = window
   switch (type) {
-  case '@@Response/kcsapi/api_get_member/slot_item':
-    return compareUpdate(state, indexify(body))
-  case '@@Response/kcsapi/api_get_member/require_info':
-    return compareUpdate(state, indexify(body.api_slot_item))
+  case '@@Response/kcsapi/api_get_member/slot_item': {
+    const bodyEquips = indexify(body)
+    return pickExisting(compareUpdate(state, bodyEquips), bodyEquips)
+  }
+  case '@@Response/kcsapi/api_get_member/require_info': {
+    const bodyEquips = indexify(body.api_slot_item)
+    return pickExisting(compareUpdate(state, bodyEquips), bodyEquips)
+  }
   case '@@Response/kcsapi/api_req_kousyou/createitem':
     if (body.api_create_flag == 1) {
       const {api_slot_item} = body

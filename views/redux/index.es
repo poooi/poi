@@ -131,6 +131,19 @@ test([{1:1}],a)
 
 */
 
+// Remove properties in `state` that no longer exist in `body`.
+// Both `state` and `body` are objects, and only keys are compared.
+window.pickExisting = (state, body) => {
+  const stateBackup = state
+  forEach(state, (v, k) => {
+    if (!(k in body)) {
+      state = copyIfSame(state, stateBackup)
+      delete state[k]
+    }
+  })
+  return state
+}
+
 // === Root reducer ===
 
 export const reducer = reduceReducers(

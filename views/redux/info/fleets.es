@@ -1,8 +1,7 @@
 import {isEqual} from 'lodash'
 
-const {buildArray} = window
-
 function mergeIndexifiedFleets(state, body) {
+  const {buildArray} = window
   const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet]))
   return window.compareUpdate(state, bodyFleet, 2)
 }

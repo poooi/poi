@@ -10,10 +10,12 @@ function completeRepair(ship) {
 }
 
 export function reducer(state={}, {type, body, postBody}) {
-  const {compareUpdate, reduxSet, indexify, getStore} = window
+  const {compareUpdate, reduxSet, indexify, getStore, pickExisting} = window
   switch (type) {
-  case '@@Response/kcsapi/api_port/port':
-    return compareUpdate(state, indexify(body.api_ship))
+  case '@@Response/kcsapi/api_port/port': {
+    const bodyShips = indexify(body.api_ship)
+    return pickExisting(compareUpdate(state, bodyShips), bodyShips)
+  }
   case '@@Response/kcsapi/api_get_member/ship_deck':
   case '@@Response/kcsapi/api_get_member/ship3':
     return compareUpdate(state, indexify(body.api_ship_data))
