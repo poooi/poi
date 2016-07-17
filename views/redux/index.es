@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 import reduceReducers from 'reduce-reducers'
-import {isEqual, forEach} from 'lodash'
+import {isEqual, forEach, get } from 'lodash'
 
 import {reducer as constReducer} from './const'
 import {reducer as info} from './info'
@@ -39,6 +39,9 @@ window.buildArray = (pairs) => {
   })
   return ret
 }
+
+window.confGet = (target, path, value) =>
+  ((typeof get(target, path) === "undefined") ? value : get(target, path))
 
 window.reduxSet = (obj, path, val) => {
   const [prop, ...restPath] = path
