@@ -68,6 +68,9 @@ resolveResponses = ->
         store.dispatch onGameResponse details
       catch e
         console.error e.stack
+      # used for debugging, can delete
+      if store.getState().info.ships.hasOwnProperty('undefined')
+        console.log 'Empty ship emerged!', details
 
       switch path
         when '/kcsapi/api_port/port'
