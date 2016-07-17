@@ -1,23 +1,16 @@
-import path from 'path-extra'
-import glob from 'glob'
-import Promise from 'bluebird'
-import semver from 'semver'
-import fs from 'fs-extra'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
-import {sortBy} from 'lodash'
-import {Component, createElement, Children} from 'react'
+import React, {Component, createElement, Children} from 'react'
 import FontAwesome from 'react-fontawesome'
 import {Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
 
-import PluginManager from './services/plugin-manager'
+//import PluginManager from './services/plugin-manager'
 import * as settings from './components/settings'
 import * as mainview from './components/main'
 import * as shipview from './components/ship'
 
-const async = Promise.coroutine
+const {i18n, confGet, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
-const __n = i18n.others.__n.bind(i18n.others)
 
 
 class PluginWrap extends Component {
@@ -33,22 +26,26 @@ class PluginWrap extends Component {
 
 let lockedTab = false
 
-class TabContentsUnion extends Component {
+const TabContentsUnion = connect(
+  (state) => ({
+    enableTransition: confGet(state.config, 'poi.transition.enable', true),
+  }),
+  undefined,
+  undefined,
+  {pure: false}
+)(class extends Component {
   constructor(props) {
     super(props)
     this.state = {
       nowKey: null,
       preKey: null,
-      enableTransition: config.get('poi.transition.enable', true),
     }
   }
   componentDidMount() {
     window.addEventListener('TabContentsUnion.show', this.handleShowEvent)
-    window.addEventListener('display.transition.change', this.handleSetTransition)
   }
   componentWillUnmount() {
     window.removeEventListener('TabContentsUnion.show', this.handleShowEvent)
-    window.removeEventListener('display.transition.change', this.handleSetTransition)
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.nowKey == null && nextProps.children.length != 0)
@@ -56,11 +53,6 @@ class TabContentsUnion extends Component {
   }
   handleShowEvent = (e) => {
     this.setNewKey(e.detail.key)
-  }
-  handleSetTransition = (e) => {
-    this.setState({
-      enableTransition: config.get('poi.transition.enable', true)
-    })
   }
   findChildByKey = (key) => {
     return Children.map(this.props.children,
@@ -127,7 +119,7 @@ class TabContentsUnion extends Component {
           const positionLeft = child.key === activeKey ?  '0%'
             : onTheLeft ? '-100%' : '100%'
           const tabClassName = classNames("poi-tab-child-positioner", {
-            'poi-tab-child-positioner-transition': (child.key === activeKey || child.key === prevKey) && this.state.enableTransition,
+            'poi-tab-child-positioner-transition': (child.key === activeKey || child.key === prevKey) && this.props.enableTransition,
             'transparent': child.key !== activeKey,
           })
           return (
@@ -143,7 +135,7 @@ class TabContentsUnion extends Component {
       </div>
     )
   }
-}
+})
 
 export const ControlledTabArea = connect(
   (state) => ({

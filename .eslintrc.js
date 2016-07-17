@@ -34,6 +34,7 @@ module.exports = {
     'semi': ['error', 'never'],
     'unicode-bom': 'error',
     'prefer-const': ['error', {'destructuring': 'all'}],
+    'react/prop-types': [0],
   },
   'settings': {
     'import/resolver': {
