@@ -1,31 +1,21 @@
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 import reduceReducers from 'reduce-reducers'
-import {isEqual, forEach, get } from 'lodash'
+import { isEqual, forEach, get, keyBy } from 'lodash'
 
-import {reducer as constReducer} from './const'
-import {reducer as info} from './info'
-import {reducer as sortie} from './sortie'
-import {reducer as timers} from './timers'
-import {reducer as config} from './config'
-import {reducer as layout} from './layout'
-import {reducer as battle} from './battle'
-import {reducer as alert} from './alert'
-import {reducer as plugins} from './plugins'
+import { reducer as constReducer } from './const'
+import { reducer as info } from './info'
+import { reducer as sortie } from './sortie'
+import { reducer as timers } from './timers'
+import { reducer as config } from './config'
+import { reducer as layout } from './layout'
+import { reducer as battle } from './battle'
+import { reducer as alert } from './alert'
+import { reducer as plugins } from './plugins'
 
 // === Utils ===
 
-window.indexify = (array, key='api_id', useArray=false) => {
-  let keyFunc
-  if (typeof key === 'string') {
-    keyFunc = (element) => element[key]
-  } else {
-    keyFunc = key
-  }
-  const result = useArray ? [] : {}
-  array.forEach((e) => {
-    result[keyFunc(e)] = e
-  })
-  return result
+window.indexify = (array, key='api_id') => {
+  return keyBy(array, key)
 }
 
 // Input: [[index, value], ...]
