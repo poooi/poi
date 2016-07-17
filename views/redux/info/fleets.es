@@ -1,14 +1,17 @@
 import {isEqual} from 'lodash'
 
+const {buildArray} = window
+
 function mergeIndexifiedFleets(state, body) {
-  return window.compareUpdate(state, window.indexify(body, (deck) => (deck.api_id - 1), true), 2)
+  const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet]))
+  return window.compareUpdate(state, bodyFleet, 2)
 }
 
 // Return [fleetId, pos] if found
 // [-1, -1] otherwise
 function findShip(fleets, shipId) {
   for (let fleetId = 0; fleetId < 4; fleetId++) {
-    let pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId == shipId)
+    const pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId == shipId)
     if (pos != -1) {
       return [fleetId, pos]
     }
@@ -21,7 +24,7 @@ function findShip(fleets, shipId) {
 // The clone of the fleet is returned.
 // pos is 0..5
 function setShip(fleet, pos, shipId) {
-  let ships = fleet.api_ship.slice()
+  const ships = fleet.api_ship.slice()
   if (shipId == -1) {
     ships.splice(pos, 1)
     ships.concat(-1)
@@ -52,8 +55,8 @@ export function reducer(state=[], {type, postBody, body}) {
     state = state.slice()
     return compareUpdate(state, buildArray([[parseInt(postBody.api_deck_id)-1, body]]), 2)
   case '@@Response/kcsapi/api_req_kousyou/destroyship': {
-    let fleets = state.slice()
-    let [fleetId, pos] = findShip(fleets, parseInt(postBody.api_ship_id))
+    const fleets = state.slice()
+    const [fleetId, pos] = findShip(fleets, parseInt(postBody.api_ship_id))
     if (fleetId != -1) {
       state = state.slice()
       state[fleetId] = setShip(state[fleetId], pos, -1)
@@ -64,11 +67,11 @@ export function reducer(state=[], {type, postBody, body}) {
   case '@@Response/kcsapi/api_req_hensei/change': {
     // Let "ship*" be the ship that is specified by the fleet & position
     // Let "tgtShip*" be the ship that is specified by the shipId
-    let fleets = state.slice()
-    let fleetId = parseInt(postBody.api_id) - 1
-    let fleet = fleets[fleetId] || {api_ship: []}
-    let pos = parseInt(postBody.api_ship_idx)
-    let shipId = fleet.api_ship[pos] || -1
+    const fleets = state.slice()
+    const fleetId = parseInt(postBody.api_id) - 1
+    const fleet = fleets[fleetId] || {api_ship: []}
+    const pos = parseInt(postBody.api_ship_idx)
+    const shipId = fleet.api_ship[pos] || -1
     // Remove all
     if (pos == -1) {
       fleets[fleetId] = {
@@ -77,10 +80,8 @@ export function reducer(state=[], {type, postBody, body}) {
       }
       return fleets
     }
-    let tgtShipId = parseInt(postBody.api_ship_id)
-    let [tgtFleetId, tgtPos] = [-1, -1]
-    if (tgtShipId != -1)
-      [tgtFleetId, tgtPos] = findShip(fleets, tgtShipId)
+    const tgtShipId = parseInt(postBody.api_ship_id)
+    const [tgtFleetId, tgtPos] = (tgtShipId == -1) ? [-1, -1] : findShip(fleets, tgtShipId)
     // Be cautious to the order of double "setShip"s
     // which takes place when tgtShipId != -1 && tgtFleetId != -1.
     // In order to prevent positions from being messed up by removing a ship,

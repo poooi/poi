@@ -28,7 +28,7 @@ export function reducer(state={}, {type, body, postBody}) {
     })
     return state
   case '@@Response/kcsapi/api_req_hensei/lock': {
-    let {api_ship_id} = postBody
+    const {api_ship_id} = postBody
     return {
       ...state,
       [api_ship_id]: {
@@ -47,7 +47,7 @@ export function reducer(state={}, {type, body, postBody}) {
     })
     return state
   case '@@Response/kcsapi/api_req_kaisou/slot_exchange_index': {
-    let {api_id} = postBody
+    const {api_id} = postBody
     return {
       ...state,
       [api_id]: {
@@ -71,7 +71,7 @@ export function reducer(state={}, {type, body, postBody}) {
       [body.api_ship.api_id]: body.api_ship,
     }
   case '@@Response/kcsapi/api_req_nyukyo/start': {
-    let {api_ship_id, api_highspeed} = postBody
+    const {api_ship_id, api_highspeed} = postBody
     if (api_highspeed == '1')
       return {
         ...state,
@@ -80,7 +80,7 @@ export function reducer(state={}, {type, body, postBody}) {
     break
   }
   case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
-    let api_ship_id = getStore(`info.repair.${postBody.api_ndock_id}.api_ship_id`)
+    const api_ship_id = getStore(`info.repair.${postBody.api_ndock_id}.api_ship_id`)
     if (api_ship_id) {
       return {
         ...state,

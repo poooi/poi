@@ -15,7 +15,7 @@ export function reducer(state={}, {type, postBody, body}) {
     return compareUpdate(state, indexify(body.api_slot_item))
   case '@@Response/kcsapi/api_req_kousyou/createitem':
     if (body.api_create_flag == 1) {
-      let {api_slot_item} = body
+      const {api_slot_item} = body
       return {
         ...state,
         [api_slot_item.api_id]: api_slot_item,
@@ -33,8 +33,8 @@ export function reducer(state={}, {type, postBody, body}) {
   case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
     return removeEquips(state, postBody.api_slotitem_ids.split(','))
   case '@@Response/kcsapi/api_req_kaisou/lock': {
-    let {api_slotitem_id} = postBody
-    let {api_locked} = body
+    const {api_slotitem_id} = postBody
+    const {api_locked} = body
     return {
       ...state,
       [api_slotitem_id]: {
@@ -52,7 +52,7 @@ export function reducer(state={}, {type, postBody, body}) {
   case '@@Response/kcsapi/api_req_kousyou/destroyship':
     return removeEquips(state, getStore(`info.ships.${postBody.api_ship_id}.api_slot`))
   case '@@Response/kcsapi/api_req_kousyou/remodel_slot': {
-    let {api_use_slot_id, api_remodel_flag, api_after_slot} = body
+    const {api_use_slot_id, api_remodel_flag, api_after_slot} = body
     if (api_use_slot_id != null) {
       state = removeEquips(state, api_use_slot_id)
     }
