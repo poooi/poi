@@ -5,6 +5,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
+import { connect } from 'react-redux'
 
 import PluginManager from '../../../services/plugin-manager'
 import Divider from './divider'
@@ -18,6 +19,16 @@ const {Component} = React
 const openLink = (link, e) => {
   shell.openExternal(link)
   e.preventDefault()
+}
+const confGet = (target, path, value) =>
+  ((typeof get(target, path) === "undefined") ? value : get(target, path))
+const getPluginIndexByPackageName = (plugins, packageName) => {
+  for (let i = 0; i < plugins.length; i++) {
+    if (plugins[i].packageName === packageName) {
+      return i
+    }
+  }
+  return -1
 }
 
 class PluginSettingWrap extends Component {
@@ -64,7 +75,12 @@ class PluginSettingWrap extends Component {
 //   }
 // }
 
-class InstalledPlugin extends Component {
+const InstalledPlugin = connect((state, props) => ({
+  plugin: state.plugins[getPluginIndexByPackageName(state.plugins, props.plugin)],
+  handleUpdate: props.handleUpdate,
+  handleEnable: props.handleEnable,
+  handleRemove: props.handleRemove,
+}))(class installedPlugin extends Component {
   static propTypes = {
     plugin: React.PropTypes.object,
     handleUpdate: React.PropTypes.func,
@@ -221,7 +237,7 @@ class InstalledPlugin extends Component {
       </Row>
     )
   }
-}
+})
 
 class UninstalledPlugin extends Component {
   static propTypes = {
@@ -312,16 +328,23 @@ class InstallByNameInput extends Component {
   }
 }
 
-class PluginConfig extends Component {
+const PluginConfig = connect((state, props) => ({
+  plugins: state.plugins.map((plugin) => (plugin.packageName)),
+  mirrorName: confGet(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
+  proxy: confGet(state, 'config.packageManager.proxy', false),
+  betaCheck: confGet(state, 'config.packageManager.enableBetaPluginCheck', false),
+}))(class pluginConfig extends Component {
+  static propTypes = {
+    plugins: React.PropTypes.array,
+    mirrorName: React.PropTypes.string,
+    proxy: React.PropTypes.bool,
+    betaCheck: React.PropTypes.bool,
+  }
   state = {
     checkingUpdate: false,
     npmWorking: false,
     installingAll: false,
     installingPluginNames: [],
-    config: {},
-    mirrors: {},
-    plugins: [],
-    uninstalledPluginSettings: [],
     updatingAll: false,
     reloading: false,
     advanced: false,
@@ -329,35 +352,20 @@ class PluginConfig extends Component {
   }
   isUpdateAvailable = false
   checkCount = 0
-  updateFromPluginManager = async (newState) => {
-    if (!newState) {
-      newState = {}
-    }
-    const plugins = await PluginManager.getInstalledPlugins()
-    const settings = await PluginManager.getUninstalledPluginSettings()
-    Object.assign(newState, {
-      plugins: plugins,
-      uninstalledPluginSettings: settings,
-    })
-    this.setState(newState)
+  handleEnableBetaPluginCheck = () => {
+    PluginManager.selectConfig(null, null, !this.props.betaCheck)
   }
-  handleEnableBetaPluginCheck = async () => {
-    const config = await PluginManager.selectConfig(null, null, !this.state.config.betaCheck)
-    this.setState({config: config})
+  handleEnableProxy = () => {
+    PluginManager.selectConfig(null, !this.props.proxy, null)
   }
-  handleEnableProxy = async() => {
-    const config = await PluginManager.selectConfig(null, !this.state.config.proxy, null)
-    this.setState({config: config})
-  }
-  onSelectServer = async (state) => {
-    const config = await PluginManager.selectConfig(state ,null, null)
-    this.setState({config: config})
+  onSelectServer = (state) => {
+    PluginManager.selectConfig(state ,null, null)
   }
   handleAdvancedShow = () => {
     this.setState({advanced: !this.state.advanced})
   }
-  handleEnable = async (index) => {
-    const plugins = await PluginManager.getInstalledPlugins()
+  handleEnable = (index) => {
+    const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)){
     case PluginManager.DISABLED:
@@ -367,7 +375,6 @@ class PluginConfig extends Component {
       PluginManager.disablePlugin(plugin)
       break
     }
-    this.updateFromPluginManager()
   }
   handleInstall = async (name, e) => {
     if (get(e, 'target.disabled')) {
@@ -375,22 +382,23 @@ class PluginConfig extends Component {
     }
     let installingPluginNames = this.state.installingPluginNames
     installingPluginNames.push(name)
-    this.setState({installingPluginNames: installingPluginNames, npmWorking: true})
+    this.setState({
+      installingPluginNames: installingPluginNames,
+      npmWorking: true,
+    })
     try {
       await PluginManager.installPlugin(name)
       installingPluginNames = this.state.installingPluginNames
       const index = installingPluginNames.indexOf(name)
       if (index > -1) {
         installingPluginNames.splice(index, 1)
-        await this.updateFromPluginManager({
+        this.setState({
           installingPluginNames: installingPluginNames,
           npmWorking: false,
         })
-      } else {
-        await this.updateFromPluginManager({npmWorking: false})
       }
     } catch (error) {
-      await this.updateFromPluginManager({npmWorking: false})
+      this.setState({npmWorking: false})
       throw error
     }
   }
@@ -399,31 +407,41 @@ class PluginConfig extends Component {
       return
     }
     this.setState({npmWorking: true})
-    const plugins = await PluginManager.getInstalledPlugins()
+    const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
     try {
       await PluginManager.updatePlugin(plugin)
-      await this.updateFromPluginManager({npmWorking: false})
+      this.setState({npmWorking: false})
     } catch (error) {
-      await this.updateFromPluginManager({npmWorking: false})
+      this.setState({npmWorking: false})
       throw error
     }
   }
   handleInstallAll = async () => {
-    this.setState({installingAll: true})
-    const settings = await PluginManager.getUninstalledPluginSettings()
+    this.setState({
+      installingAll: true,
+      npmWorking: true,
+    })
+    const settings = PluginManager.getUninstalledPluginSettings()
     for (name in settings) {
       await this.handleInstall(name)
     }
-    this.setState({installingAll: false})
+    this.setState({
+      installingAll: false,
+      npmWorking: false,
+    })
   }
   handleUpdateAll = async (e) => {
     if (get(e, 'target.disabled')) {
       return
     }
-    this.setState({updatingAll: true})
-    for (const index in this.state.plugins) {
-      if (this.state.plugins[index].isOutdated) {
+    this.setState({
+      updatingAll: true,
+      npmWorking: true,
+    })
+    const plugins = PluginManager.getInstalledPlugins()
+    for (const index in plugins) {
+      if (plugins[index].isOutdated) {
         try {
           await this.handleUpdate(index)
         } catch (error) {
@@ -433,6 +451,7 @@ class PluginConfig extends Component {
     }
     this.setState({
       updatingAll: false,
+      npmWorking: false,
     })
   }
   handleRemove = async (index, e) => {
@@ -441,10 +460,10 @@ class PluginConfig extends Component {
     }
     this.setState({npmWorking: true})
     try {
-      const plugins = await PluginManager.getInstalledPlugins()
+      const plugins = PluginManager.getInstalledPlugins()
       const plugin = plugins[index]
       await PluginManager.uninstallPlugin(plugin)
-      this.updateFromPluginManager({npmWorking: false})
+      this.setState({npmWorking: false})
     }
     catch (error) {
       this.setState({npmWorking: false})
@@ -452,10 +471,14 @@ class PluginConfig extends Component {
     }
   }
   checkUpdate = async () =>{
-    this.setState({checkingUpdate: true})
+    this.setState({
+      checkingUpdate: true,
+      npmWorking: true,
+    })
     await PluginManager.getOutdatedPlugins()
-    this.updateFromPluginManager({
+    this.setState({
       checkingUpdate: false,
+      npmWorking: false,
     })
   }
   onSelectOpenFolder = () => {
@@ -473,7 +496,6 @@ class PluginConfig extends Component {
         properties: ['openFile', 'multiSelections'],
       })
       if (filenames) {
-        await PluginManager.getUninstalledPluginSettings()
         for (const index in filenames) {
           const filename = filenames[index]
           this.setState({manuallyInstallStatus: 1})
@@ -495,7 +517,6 @@ class PluginConfig extends Component {
       filenames.push(droppedFiles[i].path)
     }
     if (filenames.length > 0) {
-      await PluginManager.getUninstalledPluginSettings()
       for (const index in filenames) {
         const filename = filenames[index]
         this.setState({manuallyInstallStatus: 1})
@@ -510,7 +531,6 @@ class PluginConfig extends Component {
   }
   handleManuallyInstall = async (name) => {
     this.setState({manuallyInstallStatus: 1})
-    await PluginManager.getUninstalledPluginSettings()
     try {
       await this.handleInstall(name)
       this.setState({manuallyInstallStatus: 2})
@@ -533,22 +553,19 @@ class PluginConfig extends Component {
     }
   }
   componentDidMount = async () => {
-    const mirrors = await PluginManager.getMirrors()
-    await PluginManager.getPlugins(true)
-    const config = await PluginManager.getConf()
-    this.updateFromPluginManager({
+    this.setState({
       checkingUpdate: true,
-      mirrors: mirrors,
-      config: config,
+      npmWorking: true,
     })
     await PluginManager.getOutdatedPlugins(window.config.get('packageManager.enablePluginCheck', true))
-    this.updateFromPluginManager({
+    this.setState({
       checkingUpdate: false,
-      mirrors: mirrors,
-      config: config,
+      npmWorking: false,
     })
   }
   render() {
+    const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
+    const mirrors = PluginManager.getMirrors()
     let updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
     let installStatusFAname = this.state.installingAll ? 'spinner' : 'download'
     let installStatusbsStyle, installStatusText
@@ -626,17 +643,17 @@ class PluginConfig extends Component {
                         </Row>
                         <Row>
                         {
-                          Object.keys(this.state.mirrors).map((server, index) => {
+                          Object.keys(mirrors).map((server, index) => {
                             return (
                               <OverlayTrigger placement='top' key={index} overlay={
                                 <Tooltip id={`npm-server-${index}`}>
-                                  {this.state.mirrors[server].menuname}
+                                  {mirrors[server].menuname}
                                 </Tooltip>
                               }>
                                 <Col key={index} xs={6} className='select-npm-server'>
                                   <Input type='radio'
-                                         label={this.state.mirrors[server].name}
-                                         checked={this.state.config.mirror.server == this.state.mirrors[server].server}
+                                         label={mirrors[server].name}
+                                         checked={this.props.mirrorName == server}
                                          onChange={this.onSelectServer.bind(this, server)} />
                                 </Col>
                               </OverlayTrigger>
@@ -655,12 +672,12 @@ class PluginConfig extends Component {
                         </Row>
                         <div>
                           <Input type="checkbox" label={__('Connect to npm server through proxy')}
-                                 checked={this.state.config.proxy || false}
+                                 checked={this.props.proxy || false}
                                  onChange={this.handleEnableProxy} />
                         </div>
                         <div>
                           <Input type="checkbox" label={__('Developer option: check update of beta version')}
-                                 checked={this.state.config.betaCheck || false}
+                                 checked={this.props.betaCheck || false}
                                  onChange={this.handleEnableBetaPluginCheck} />
                         </div>
                         <Row>
@@ -707,9 +724,9 @@ class PluginConfig extends Component {
             </Col>
           </Row>
           {
-            this.state.plugins.map((plugin, index) => {
+            this.props.plugins.map((plugin, index) => {
               return (<InstalledPlugin
-                key={plugin.id}
+                key={plugin}
                 plugin={plugin}
                 handleUpdate={partial(this.handleUpdate, index)}
                 handleEnable={partial(this.handleEnable, index)}
@@ -718,8 +735,8 @@ class PluginConfig extends Component {
             }, this)
           }
           {
-            Object.keys(this.state.uninstalledPluginSettings).map((name, index) => {
-              let value = this.state.uninstalledPluginSettings[name]
+            Object.keys(uninstalledPluginSettings).map((name, index) => {
+              let value = uninstalledPluginSettings[name]
               return (
                 <UninstalledPlugin
                   key={name}
@@ -735,6 +752,6 @@ class PluginConfig extends Component {
       </form>
     )
   }
-}
+})
 
 export default PluginConfig
