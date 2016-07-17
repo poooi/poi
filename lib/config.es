@@ -8,7 +8,6 @@ import dbg from './debug'
 const {ROOT, EXROOT} = global
 const defaultConfigPath = path.join(ROOT, 'config.cson')
 const configPath = path.join(EXROOT, 'config.cson')
-EventEmitter.prototype._maxListeners = 100
 
 class configClass extends EventEmitter {
   constructor () {
@@ -65,4 +64,7 @@ class configClass extends EventEmitter {
   }
 }
 
-export default new configClass()
+const config = new configClass()
+config.setMaxListeners(100)
+
+export default config
