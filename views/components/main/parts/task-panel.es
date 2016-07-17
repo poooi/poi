@@ -216,7 +216,7 @@ const TaskRow = connect(
   )
 })
 
-export const TaskPanel = connect(
+const TaskPanel = connect(
   ({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
     activeQuests,
     activeCapacity,
@@ -262,3 +262,5 @@ export const TaskPanel = connect(
     </Panel>
   )
 })
+
+export default TaskPanel
