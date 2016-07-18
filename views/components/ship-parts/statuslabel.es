@@ -34,6 +34,9 @@ const icons = [
 ]
 
 class StatusLabel extends React.Component {
+  shouldComponentUpdate = (nextProps, nextState) => (
+    nextProps.label !== this.props.label
+  )
   render() {
     const i = this.props.label
     if (i != null && 0 <= i && i <= 6) {

@@ -214,8 +214,10 @@ const ShipView = connect((state, props) => ({
   }
 })
 
-export const name = 'ShipView'
-export const priority = 100000.1
-export const displayName = <span><FontAwesome key={0} name='bars' />{__(' Fleet')}</span>
-export const description = '舰队展示页面，展示舰队详情信息'
-export const reactClass = ShipView
+export default {
+  name: 'ShipView',
+  priority: 100000.1,
+  displayName: <span><FontAwesome key={0} name='bars' />{__(' Fleet')}</span>,
+  description: '舰队展示页面，展示舰队详情信息',
+  reactClass: ShipView,
+}
