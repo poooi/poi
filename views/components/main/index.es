@@ -3,7 +3,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
-import { MissionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel } from './parts'
+import { ExpeditionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel } from './parts'
 
 const {confGet, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -56,7 +56,7 @@ export default {
                     </Tabs>
                   </Panel>
                   <div className="mission-panel mission-panel-area-horizontal" ref="missionPanel">
-                    <MissionPanel />
+                    <ExpeditionPanel />
                   </div>
                   <div className="task-panel task-panel-area-horizontal" ref="taskPanel">
                     <TaskPanel />
@@ -95,7 +95,7 @@ export default {
                       </Tabs>
                     </Panel>
                     <div className="panel-col mission-panel mission-panel-area-vertical" ref="missionPanel">
-                      <MissionPanel />
+                      <ExpeditionPanel />
                     </div>
                   </div>
                 </div>

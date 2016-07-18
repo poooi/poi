@@ -47,7 +47,7 @@ class CountdownLabel extends Component {
     return (
       <OverlayTrigger placement='left' overlay={
         (this.props.completeTime > 0) ? (
-          <Tooltip id={`mission-return-by-${this.props.dockIndex}`}>
+          <Tooltip id={`expedition-return-by-${this.props.dockIndex}`}>
             <strong>{__("Return by : ")}</strong>{timeToString(this.props.completeTime)}
           </Tooltip>
         ) : (
@@ -57,7 +57,7 @@ class CountdownLabel extends Component {
         <Label className="mission-timer" bsStyle={this.state.style}>
         {
           (this.props.completeTime > 0) ? (
-            <CountdownTimer countdownId={`mission-${this.props.dockIndex+1}`}
+            <CountdownTimer countdownId={`expedition-${this.props.dockIndex+1}`}
                             completeTime={this.props.completeTime}
                             tickCallback={this.tick} />
           ) : undefined
@@ -69,20 +69,20 @@ class CountdownLabel extends Component {
 }
 
 // TODO: Add canNotify as Kdock does
-export const MissionPanel = connect(
+export default connect(
   (state) => {
-    const fleetMissions = map(state.info.fleets, 'api_mission')
+    const fleetsExpedition = map(state.info.fleets, 'api_mission')
     const fleetNames = map(state.info.fleets, 'api_name')
-    const $missions = state.const.$missions
+    const $expeditions = state.const.$missions
     return {
-      fleetMissions, 
+      fleetsExpedition, 
       fleetNames,
-      $missions,
+      $expeditions,
     }
   }
 )(class MissionPanel extends Component {
-  notify = (deckName) => {
-    window.notify(`${deckName} ${__('mission complete')}`, {
+  notify = (fleetName) => {
+    window.notify(`${fleetName} ${__('mission complete')}`, {
       type: 'expedition',
       title: __('Expedition'),
       icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
@@ -93,15 +93,15 @@ export const MissionPanel = connect(
       <Panel bsStyle="default">
       {
         range(1, 4).map((i) => {
-          const [status, missionId, completeTime] = this.props.fleetMissions[i] || [-1, 0, -1]
-          const missionName =
+          const [status, expeditionId, completeTime] = this.props.fleetsExpedition[i] || [-1, 0, -1]
+          const expeditionName =
             status == -1 ? __('Locked') :
             status == 0 ? __('Ready') :
-            get(this.props.$missions, [missionId, 'api_name'], __('???'))
+            get(this.props.$expeditions, [expeditionId, 'api_name'], __('???'))
           const fleetName = this.props.fleetNames[i] || '???'
           return (
             <div className="panel-item mission-item" key={i} >
-              <span className="mission-name">{missionName}</span>
+              <span className="mission-name">{expeditionName}</span>
               <CountdownLabel
                 dockIndex={i}
                 completeTime={completeTime}
