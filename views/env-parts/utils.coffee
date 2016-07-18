@@ -82,12 +82,18 @@ fleetToShipsData = (fleet, ships, $ships) ->
   return if !fleet? || !Array.isArray(fleet.api_ship)
   fleet.api_ship.map((shipId) -> shipIdToShipData(shipId, ships, $ships)).filter(Boolean)
 
+configSelector = window.configSelector = (state) -> state.config
 fleetsSelector = (state) -> state.info?.fleets
 shipsSelector = (state) -> state.info?.ships
 window.constSelector = (state) -> state.const || {}
 equipsSelector = (state) -> state.info?.equips
 repairsSelector = (state) -> state.info?.repairs
+
 window.sortieStatusSelector = (state) -> state.sortie?.sortieStatus
+window.configLayoutSelector = createSelector configSelector, (config) ->
+  get(config, 'poi.layout', 'horizontal')
+window.configDoubleTabbedSelector = createSelector configSelector, (config) ->
+  get(config, 'poi.tabarea.double', false)
 
 # Returns [shipId for every ship in repair]
 # Returns undefined if uninitialized

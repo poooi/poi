@@ -2,7 +2,7 @@ import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowCompare from 'react-addons-shallow-compare'
-import React from 'react'
+import React, { Component } from 'react'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit } from 'lodash'
@@ -12,8 +12,7 @@ import { SlotitemIcon } from '../../etc/icon-redux'
 
 import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from '../../ship-parts/utils'
 
-const {Component} = React
-const {i18n} = window
+const { i18n } = window
 
 const Slotitems  = connect(
   () => createSelector([
@@ -75,16 +74,22 @@ export const MiniShipRow = connect(
   () => createSelector([
     window.makeThisShipDataSelector(),
     window.makeThisShipRepairDockSelector(),
-  ], ([ship, $ship]=[], repairDock) => ({
+    window.configLayoutSelector,
+    window.configDoubleTabbedSelector,
+  ], ([ship, $ship]=[], repairDock, layout, doubleTabbed) => ({
     ship: ship || {},
     $ship: $ship || {},
     labelStatus: getShipLabelStatus(ship, $ship, repairDock),
+    layout,
+    doubleTabbed,
   }))
 )(class miniShipRow extends Component {
   static propTypes = {
     ship: React.PropTypes.object,
     $ship: React.PropTypes.object,
     labelStatus: React.PropTypes.number,
+    layout: React.PropTypes.string,
+    doubleTabbed: React.PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -95,7 +100,7 @@ export const MiniShipRow = connect(
   }
 
   render() {
-    const {ship, $ship, labelStatus} = this.props
+    const {ship, $ship, labelStatus, layout, doubleTabbed} = this.props
     if (!ship)
       return <div></div>
     const labelStatusStyle = getStatusStyle(labelStatus)
@@ -103,7 +108,7 @@ export const MiniShipRow = connect(
     return (
       <div className="ship-tile">
         <OverlayTrigger
-          placement={((!window.doubleTabbed) && (window.layout == 'vertical')) ? 'left' : 'right'}
+          placement={(!doubleTabbed && layout == 'vertical') ? 'left' : 'right'}
           overlay={
             <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
               <Slotitems shipId={ship.api_id} />

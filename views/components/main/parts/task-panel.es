@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { map, range, forEach, values, sortBy } from 'lodash'
 import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { createSelector } from 'reselect'
 import React from 'react'
 
 const {i18n} = window
@@ -143,9 +144,12 @@ function getToolTip(record) {
 */
 
 const TaskRowBase = connect(
-  () => ({
-    leftOverlayPlacement: (!window.doubleTabbed) && (window.layout == 'vertical') ? 'top' : 'left',
-  })
+  createSelector([
+    window.configLayoutSelector,
+    window.configDoubleTabbedSelector,
+  ], (layout, doubleTabbed) => ({
+    leftOverlayPlacement: (!doubleTabbed) && (layout == 'vertical') ? 'top' : 'left',
+  }))
 )(function({
     idx,                  // Mandatory: 0..5
     bulletColor='#fff',
