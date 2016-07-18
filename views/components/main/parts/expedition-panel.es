@@ -2,6 +2,7 @@ const { ROOT, i18n, timeToString } = window
 import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React, { Component } from 'react'
 import { join } from 'path-extra'
+import { createSelector } from 'reselect'
 import { map, get, range, once } from 'lodash'
 import { connect } from 'react-redux'
 const __ = i18n.main.__.bind(i18n.main)
@@ -68,11 +69,18 @@ class CountdownLabel extends Component {
   }
 }
 
+const fleetsExpeditionSelector = createSelector([window.fleetsSelector],
+  (fleets) => map(fleets, 'api_mission')
+)
+const fleetsNamesSelector = createSelector([window.fleetsSelector],
+  (fleets) => map(fleets, 'api_name')
+)
+
 // TODO: Add canNotify as Kdock does
 export default connect(
   (state) => {
-    const fleetsExpedition = map(state.info.fleets, 'api_mission')
-    const fleetNames = map(state.info.fleets, 'api_name')
+    const fleetsExpedition = fleetsExpeditionSelector(state)
+    const fleetNames = fleetsNamesSelector(state)
     const $expeditions = state.const.$missions
     return {
       fleetsExpedition, 
