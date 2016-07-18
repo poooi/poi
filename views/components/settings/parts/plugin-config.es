@@ -76,7 +76,7 @@ class PluginSettingWrap extends Component {
 // }
 
 const InstalledPlugin = connect((state, props) => ({
-  plugin: state.plugins[getPluginIndexByPackageName(state.plugins, props.plugin)],
+  plugin: props.plugin,
   handleUpdate: props.handleUpdate,
   handleEnable: props.handleEnable,
   handleRemove: props.handleRemove,
@@ -329,7 +329,7 @@ class InstallByNameInput extends Component {
 }
 
 const PluginConfig = connect((state, props) => ({
-  plugins: state.plugins.map((plugin) => (plugin.packageName)),
+  plugins: state.plugins,
   mirrorName: confGet(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
   proxy: confGet(state, 'config.packageManager.proxy', false),
   betaCheck: confGet(state, 'config.packageManager.enableBetaPluginCheck', false),
@@ -726,7 +726,7 @@ const PluginConfig = connect((state, props) => ({
           {
             this.props.plugins.map((plugin, index) => {
               return (<InstalledPlugin
-                key={plugin}
+                key={plugin.id}
                 plugin={plugin}
                 handleUpdate={partial(this.handleUpdate, index)}
                 handleEnable={partial(this.handleEnable, index)}
