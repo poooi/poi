@@ -2,7 +2,7 @@ const { ROOT, i18n, timeToString } = window
 import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React, { Component } from 'react'
 import { join } from 'path-extra'
-import { map, get, range, once } from 'lodash'
+import { map, get, range, once, isEqual } from 'lodash'
 import { connect } from 'react-redux'
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -38,7 +38,7 @@ class CountdownLabel extends Component {
   tick = (timeRemaining) => {
     const notifyBefore = Math.max(window.notify.expedition || 0, 1)
     if (0 < timeRemaining && timeRemaining <= notifyBefore)
-      this.notify() 
+      this.notify()
     const style = this.getLabelStyle(timeRemaining)
     if (style != this.state.style)
       this.setState({style: style})
@@ -75,12 +75,15 @@ export default connect(
     const fleetNames = map(state.info.fleets, 'api_name')
     const $expeditions = state.const.$missions
     return {
-      fleetsExpedition, 
+      fleetsExpedition,
       fleetNames,
       $expeditions,
     }
   }
 )(class MissionPanel extends Component {
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return !isEqual(nextProps, this.props)
+  }
   notify = (fleetName) => {
     window.notify(`${fleetName} ${__('mission complete')}`, {
       type: 'expedition',
