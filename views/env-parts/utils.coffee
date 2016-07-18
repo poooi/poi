@@ -30,7 +30,8 @@ window.timeToString = (milliseconds) ->
 window.buildArray = (pairs) => 
   ret = []
   pairs.forEach(([index, value]=[]) => 
-    if (!parseInt(index))
+    index = parseInt(index)
+    if (isNaN(index) || index < 0)
       return
     ret[index] = value
   )
