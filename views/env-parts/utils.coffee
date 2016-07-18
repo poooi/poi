@@ -83,7 +83,7 @@ fleetToShipsData = (fleet, ships, $ships) ->
   fleet.api_ship.map((shipId) -> shipIdToShipData(shipId, ships, $ships)).filter(Boolean)
 
 configSelector = window.configSelector = (state) -> state.config
-fleetsSelector = (state) -> state.info?.fleets
+fleetsSelector = window.fleetsSelector = (state) -> state.info?.fleets
 shipsSelector = (state) -> state.info?.ships
 window.constSelector = (state) -> state.const || {}
 equipsSelector = (state) -> state.info?.equips
