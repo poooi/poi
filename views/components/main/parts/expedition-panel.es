@@ -3,7 +3,7 @@ import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React, { Component } from 'react'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
-import { map, get, range, once } from 'lodash'
+import { map, get, range, once, isEqual } from 'lodash'
 import { connect } from 'react-redux'
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -89,6 +89,9 @@ export default connect(
     }
   }
 )(class MissionPanel extends Component {
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return !isEqual(nextProps, this.props)
+  }
   notify = (fleetName) => {
     window.notify(`${fleetName} ${__('mission complete')}`, {
       type: 'expedition',
