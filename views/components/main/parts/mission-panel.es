@@ -1,0 +1,117 @@
+const { ROOT, i18n, timeToString } = window
+import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import React, { Component } from 'react'
+import { join } from 'path-extra'
+import { map, get, range, once } from 'lodash'
+import { connect } from 'react-redux'
+const __ = i18n.main.__.bind(i18n.main)
+
+import CountdownTimer from './countdown-timer'
+
+class CountdownLabel extends Component {
+  getLabelStyle = (timeRemaining) => {
+    return (
+      timeRemaining > 600 ? 'primary' :
+      timeRemaining > 60 ? 'warning' :
+      timeRemaining >= 0 ? 'success' :
+      'default'
+    )
+  }
+  constructor(props) {
+    super(props)
+    this.notify = once(this.props.notify)
+    this.state = {
+      style: this.getLabelStyle(CountdownTimer.getTimeRemaining(this.props.completeTime)),
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.completeTime != this.props.completeTime) {
+      this.notify = once(nextProps.notify)
+      this.setState({
+        style: this.getLabelStyle(CountdownTimer.getTimeRemaining(nextProps.completeTime)),
+      })
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.completeTime != this.props.completeTime || nextState.style != this.state.style
+  }
+  tick = (timeRemaining) => {
+    const notifyBefore = Math.max(window.notify.expedition || 0, 1)
+    if (0 < timeRemaining && timeRemaining <= notifyBefore)
+      this.notify() 
+    const style = this.getLabelStyle(timeRemaining)
+    if (style != this.state.style)
+      this.setState({style: style})
+  }
+  render() {
+    return (
+      <OverlayTrigger placement='left' overlay={
+        (this.props.completeTime > 0) ? (
+          <Tooltip id={`mission-return-by-${this.props.dockIndex}`}>
+            <strong>{__("Return by : ")}</strong>{timeToString(this.props.completeTime)}
+          </Tooltip>
+        ) : (
+          <span />
+        )
+      }>
+        <Label className="mission-timer" bsStyle={this.state.style}>
+        {
+          (this.props.completeTime > 0) ? (
+            <CountdownTimer countdownId={`mission-${this.props.dockIndex+1}`}
+                            completeTime={this.props.completeTime}
+                            tickCallback={this.tick} />
+          ) : undefined
+        }
+        </Label>
+      </OverlayTrigger>
+    )
+  }
+}
+
+// TODO: Add canNotify as Kdock does
+export const MissionPanel = connect(
+  (state) => {
+    const fleetMissions = map(state.info.fleets, 'api_mission')
+    const fleetNames = map(state.info.fleets, 'api_name')
+    const $missions = state.const.$missions
+    return {
+      fleetMissions, 
+      fleetNames,
+      $missions,
+    }
+  }
+)(class MissionPanel extends Component {
+  notify = (deckName) => {
+    window.notify(`${deckName} ${__('mission complete')}`, {
+      type: 'expedition',
+      title: __('Expedition'),
+      icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
+    })
+  }
+  render() {
+    return (
+      <Panel bsStyle="default">
+      {
+        range(1, 4).map((i) => {
+          const [status, missionId, completeTime] = this.props.fleetMissions[i] || [-1, 0, -1]
+          const missionName =
+            status == -1 ? __('Locked') :
+            status == 0 ? __('Ready') :
+            get(this.props.$missions, [missionId, 'api_name'], __('???'))
+          const fleetName = this.props.fleetNames[i] || '???'
+          return (
+            <div className="panel-item mission-item" key={i} >
+              <span className="mission-name">{missionName}</span>
+              <CountdownLabel
+                dockIndex={i}
+                completeTime={completeTime}
+                notify={this.notify.bind(this, fleetName)}
+              />
+            </div>
+          )
+        })
+      }
+      </Panel>
+    )
+  }
+})

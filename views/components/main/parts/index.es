@@ -1,4 +1,4 @@
-import MissionPanel from './mission-panel'
+import { MissionPanel } from './mission-panel'
 import NdockPanel from './ndock-panel'
 import KdockPanel from './kdock-panel'
 import TaskPanel from './task-panel'
