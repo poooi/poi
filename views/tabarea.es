@@ -1,19 +1,23 @@
 import classNames from 'classnames'
-import {connect} from 'react-redux'
-import React, {Component, createElement, Children} from 'react'
+import { connect } from 'react-redux'
+import React, { Component, createElement, Children } from 'react'
 import FontAwesome from 'react-fontawesome'
-import {Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
+import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
+import { isEqual } from 'lodash'
 
 //import PluginManager from './services/plugin-manager'
-import * as settings from './components/settings'
-import * as mainview from './components/main'
-import * as shipview from './components/ship'
+import settings from './components/settings'
+import mainview from './components/main'
+import shipview from './components/ship'
 
 const {i18n, confGet, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
 
 
 class PluginWrap extends Component {
+  shouldComponentUpdate = (nextProps, nextState) => (
+    !isEqual(this.props.plugin, nextProps.plugin)
+  )
   render() {
     const {plugin} = this.props
     return (
@@ -33,7 +37,7 @@ const TabContentsUnion = connect(
   undefined,
   undefined,
   {pure: false}
-)(class extends Component {
+)(class tabContentsUnion extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -137,7 +141,7 @@ const TabContentsUnion = connect(
   }
 })
 
-export const ControlledTabArea = connect(
+export default connect(
   (state) => ({
     plugins: state.plugins,
     doubleTabbed: confGet(state.config, 'poi.tabarea.double', false),
@@ -145,7 +149,7 @@ export const ControlledTabArea = connect(
   undefined,
   undefined,
   {pure: false}
-)(class extends Component {
+)(class controlledTabArea extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -272,7 +276,7 @@ export const ControlledTabArea = connect(
     )
     const pluginContents = this.props.plugins
     .filter((plugin) => plugin.handleClick == null && plugin.windowURL == null && plugin.enabled && plugin.reactClass)
-    .map((plugin) => 
+    .map((plugin) =>
       <PluginWrap
         key={plugin.id}
         plugin={plugin}
