@@ -58,7 +58,7 @@ config.on('config.set', (path, value) => {
 
 const SetNotifyIndividualConfig = connect(() => {
   return (state, props) =>
-    confGet(state.config, 'poi.notify', {})
+    get(state.config, 'poi.notify', {})
 })(class setNotifyIndividualConfig extends Component {
   static propTypes = {
     enabled: React.PropTypes.bool,
@@ -67,12 +67,12 @@ const SetNotifyIndividualConfig = connect(() => {
     super(props)
     this.state = {
       timeSettingShow: false,
-      moraleValue: confGet(props, 'morale.value', 49),
-      expeditionValue: confGet(props, 'expedition.value', 60),
+      moraleValue: get(props, 'morale.value', 49),
+      expeditionValue: get(props, 'expedition.value', 60),
     }
   }
   handleSetNotify = (path) => {
-    config.set(`poi.notify.${path}`, !confGet(this.props, path, true))
+    config.set(`poi.notify.${path}`, !get(this.props, path, true))
   }
   handleChangeNotifyVolume = (e) => {
     let volume = this.refs.notifyVolume.getValue()
@@ -118,46 +118,46 @@ const SetNotifyIndividualConfig = connect(() => {
         <div>
           <Col xs={6}>
             <Button
-              bsStyle={(confGet(this.props, 'enabled', true)) ? 'success' : 'danger'}
+              bsStyle={(get(this.props, 'enabled', true)) ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'enabled')}
               style={{width: '100%'}}>
-              {(confGet(this.props, 'enabled', true)) ? '√ ' : ''}{__('Enable notification')}
+              {(get(this.props, 'enabled', true)) ? '√ ' : ''}{__('Enable notification')}
             </Button>
           </Col>
           <Col xs={6}>
             <OverlayTrigger placement='top' overlay={
-                <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(confGet(this.props, 'volume', 0.8) * 100)}%</strong></Tooltip>
+                <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(get(this.props, 'volume', 0.8) * 100)}%</strong></Tooltip>
               }>
               <Input type="range" ref="notifyVolume"
                 onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
-                min={0.0} max={1.0} step={0.05} defaultValue={confGet(this.props, 'volume', 0.8)} />
+                min={0.0} max={1.0} step={0.05} defaultValue={get(this.props, 'volume', 0.8)} />
             </OverlayTrigger>
           </Col>
         </div>
         <div>
           <Col xs={12} style={{marginTop: 10}}>
             <ButtonGroup style={{display: 'flex'}}>
-              <Button bsStyle={(confGet(this.props, 'construction.enabled', true)) ? 'success' : 'danger'}
+              <Button bsStyle={(get(this.props, 'construction.enabled', true)) ? 'success' : 'danger'}
                       onClick={this.handleSetNotify.bind(this, 'construction.enabled')}
                       className='notif-button'>
                 {__('Construction')}
               </Button>
-              <Button bsStyle={(confGet(this.props, 'expedition.enabled', true)) ? 'success' : 'danger'}
+              <Button bsStyle={(get(this.props, 'expedition.enabled', true)) ? 'success' : 'danger'}
                       onClick={this.handleSetNotify.bind(this, 'expedition.enabled')}
                       className='notif-button'>
                 {__('Expedition')}
               </Button>
-              <Button bsStyle={(confGet(this.props, 'repair.enabled', true)) ? 'success' : 'danger'}
+              <Button bsStyle={(get(this.props, 'repair.enabled', true)) ? 'success' : 'danger'}
                       onClick={this.handleSetNotify.bind(this, 'repair.enabled')}
                       className='notif-button'>
                 {__('Docking')}
               </Button>
-              <Button bsStyle={(confGet(this.props, 'morale.enabled', true)) ? 'success' : 'danger'}
+              <Button bsStyle={(get(this.props, 'morale.enabled', true)) ? 'success' : 'danger'}
                       onClick={this.handleSetNotify.bind(this, 'morale.enabled')}
                       className='notif-button'>
                 {__('Morale')}
               </Button>
-              <Button bsStyle={(confGet(this.props, 'others.enabled', true)) ? 'success' : 'danger'}
+              <Button bsStyle={(get(this.props, 'others.enabled', true)) ? 'success' : 'danger'}
                       onClick={this.handleSetNotify.bind(this, 'others.enabled')}
                       className='notif-button'>
                 {__('Others')}
@@ -175,7 +175,7 @@ const SetNotifyIndividualConfig = connect(() => {
                     </Col>
                     <Col xs={3} className='notif-container'>
                       <Input type="number" ref="expeditionValue" id="expeditionValue"
-                             disabled={!(confGet(this.props, 'expedition.enabled', true))}
+                             disabled={!(get(this.props, 'expedition.enabled', true))}
                              onChange={this.handleSetExpedition}
                              value={this.state.expeditionValue}
                              onClick={this.selectInput.bind(this, "expeditionValue")}
@@ -190,7 +190,7 @@ const SetNotifyIndividualConfig = connect(() => {
                     </Col>
                     <Col xs={3} className='notif-container'>
                       <Input type="number" ref="moraleValue" id="moraleValue"
-                             disabled={!(confGet(this.props, 'morale.enabled', true))}
+                             disabled={!(get(this.props, 'morale.enabled', true))}
                              onChange={this.handleSetMorale}
                              value={this.state.moraleValue}
                              onClick={this.selectInput.bind(this, "moraleValue")}
@@ -215,7 +215,7 @@ const SetNotifyIndividualConfig = connect(() => {
 
 const CheckboxLabelConfig = connect(() => {
   return (state, props) => ({
-    value: confGet(state.config, props.configName, props.defaultVal),
+    value: get(state.config, props.configName, props.defaultVal),
     configName: props.configName,
     undecided: props.undecided,
     label: props.label,
@@ -252,7 +252,7 @@ const CheckboxLabelConfig = connect(() => {
 
 const FolderPickerConfig = connect(() => {
   return (state, props) => ({
-    value: confGet(state.config, props.configName, props.defaultVal),
+    value: get(state.config, props.configName, props.defaultVal),
     configName: props.configName,
     label: props.label,
   })
@@ -353,7 +353,7 @@ class ClearCacheCookieConfig extends Component {
 
 const SelectLanguageConfig = connect(() => {
   return (state, props) => ({
-    value: confGet(state.config, 'poi.language', language),
+    value: get(state.config, 'poi.language', language),
   })
 })(class selectLanguageConfig extends Component {
   static propTypes = {
@@ -383,16 +383,14 @@ const SelectLanguageConfig = connect(() => {
 const SlotCheckConfig = connect(() => {
   return (state, props) => ({
     type: props.type,
-    conf: (confGet(state.config, `poi.mapStartCheck.${props.type}`, {
-      enable: false,
-      minFreeSlots: '',
-    })),
+    enable: get(state.config, `poi.mapStartCheck.${props.type}.enable`, false),
+    minFreeSlots: get(state.config, `poi.mapStartCheck.${props.type}.minFreeSlots`, ''),
   })
 })(class slotCheckConfig extends Component {
   static propTypes = {
     minFreeSlots: React.PropTypes.number,
     type: React.PropTypes.string,
-    conf: React.PropTypes.object,
+    enable: React.PropTypes.bool,
   }
   constructor(props) {
     super(props)
@@ -441,11 +439,11 @@ const SlotCheckConfig = connect(() => {
     this.textInput.getInputDOMNode().select()
   }
   render() {
-    let toggleBtnStyle = this.props.conf.enable ? 'success' : 'default'
+    let toggleBtnStyle = this.props.enable ? 'success' : 'default'
     if (this.state.showInput) {
       toggleBtnStyle = 'danger'
     }
-    let toggleBtnTxt = this.props.conf.enable ? 'ON' : 'OFF'
+    let toggleBtnTxt = this.props.enable ? 'ON' : 'OFF'
     if (this.state.showInput) {
       toggleBtnTxt = __('Disable')
     }
@@ -485,7 +483,7 @@ const SlotCheckConfig = connect(() => {
 
 const ShortcutConfig = connect(() => {
   return (state, props) => ({
-    value: confGet(state.config, props.configName, props.defaultVal),
+    value: get(state.config, props.configName, props.defaultVal),
     configName: props.configName,
   })
 })(class shortcutConfig extends Component {
