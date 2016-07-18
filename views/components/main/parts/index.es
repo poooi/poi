@@ -4,7 +4,7 @@ import KdockPanel from './kdock-panel'
 import TaskPanel from './task-panel'
 import { reactClass as MiniShip } from './miniship'
 import ResourcePanel from './resource-panel'
-import TeitokuPanel from './teitoku-panel'
+import AdmiralPanel from './admiral-panel'
 export {
   ExpeditionPanel,
   NdockPanel,
@@ -12,5 +12,5 @@ export {
   TaskPanel,
   MiniShip,
   ResourcePanel,
-  TeitokuPanel,
+  AdmiralPanel,
 }

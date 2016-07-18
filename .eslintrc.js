@@ -35,6 +35,7 @@ module.exports = {
     'unicode-bom': 'error',
     'prefer-const': ['error', {'destructuring': 'all'}],
     'react/prop-types': [0],
+    'no-irregular-whitespace': ['error', {'skipStrings': true, 'skipTemplates': true}],
   },
   'settings': {
     'import/resolver': {

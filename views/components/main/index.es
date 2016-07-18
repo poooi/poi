@@ -3,7 +3,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
-import { ExpeditionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel } from './parts'
+import { ExpeditionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
 
 const {confGet, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -29,7 +29,7 @@ export default {
           (this.props.layout == 'horizontal' || this.props.doubleTabbed) ?
             <div className="panel-col main-area-horizontal">
               <div className="panel-col teitoku-panel-area">
-                <TeitokuPanel />
+                <AdmiralPanel />
               </div>
               <div className="panel-row bottom-area">
                 <div className="panel-col half bottom-left-area">
@@ -68,7 +68,7 @@ export default {
             <div className="panel-row main-area-vertical">
               <div className="panel-col left-area" style={{width: "60%"}}>
                 <div className="panel-col teitoku-panel-area">
-                  <TeitokuPanel />
+                  <AdmiralPanel />
                 </div>
                 <div className="panel-row bottom-area">
                   <div className="panel-col half left-bottom-area">
