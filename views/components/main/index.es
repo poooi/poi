@@ -55,7 +55,7 @@ export default {
                       </Tab>
                     </Tabs>
                   </Panel>
-                  <div className="mission-panel mission-panel-area-horizontal" ref="missionPanel">
+                  <div className="expedition-panel expedition-panel-area-horizontal">
                     <ExpeditionPanel />
                   </div>
                   <div className="task-panel task-panel-area-horizontal" ref="taskPanel">
@@ -94,7 +94,7 @@ export default {
                         </Tab>
                       </Tabs>
                     </Panel>
-                    <div className="panel-col mission-panel mission-panel-area-vertical" ref="missionPanel">
+                    <div className="panel-col expedition-panel expedition-panel-area-vertical">
                       <ExpeditionPanel />
                     </div>
                   </div>

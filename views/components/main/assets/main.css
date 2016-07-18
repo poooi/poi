@@ -59,7 +59,7 @@
   height: 96px;
 }
 
-#MainView .mission-panel-area-horizontal {
+#MainView .expedition-panel-area-horizontal {
   height: 97px;
 }
 #MainView .combined-panels-area-horizontal {
@@ -75,7 +75,7 @@
 }
 #MainView .main-area-vertical .resource-panel .panel-body,
 #MainView .main-area-vertical .combined-panels .panel-body,
-#MainView .main-area-vertical .mission-panel .panel-body {
+#MainView .main-area-vertical .expedition-panel .panel-body {
   margin-top: 8px;
 }
 #MainView .left-area,
@@ -84,7 +84,7 @@
   height: 100%
 }
 #MainView .resource-panel-area-vertical,
-#MainView .mission-panel-area-vertical {
+#MainView .expedition-panel-area-vertical {
   height: 40%;
 }
 #MainView .combined-panels-area-vertical,
@@ -97,14 +97,14 @@
 /*panels*/
 #MainView .ndock-panel,
 #MainView .kdock-panel,
-#MainView .mission-panel,
+#MainView .expedition-panel,
 #MainView .task-panel,
 #MainView .teitoku-panel,
 #MainView .resource-panel {
   white-space: nowrap;
   overflow: hidden;
 }
-#MainView .mission-panel .panel,
+#MainView .expedition-panel .panel,
 #MainView .task-panel .panel,
 #MainView .resource-panel .panel {
   height: calc(100% - 6px)
@@ -152,16 +152,16 @@
   margin-right: 4px;
   flex: none;
 }
-#MainView .mission-panel .panel-body {
+#MainView .expedition-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
   flex-flow: column nowrap;
 }
-#MainView .mission-item {
+#MainView .expedition-item {
   display: flex;
   flex: 1;
 }
-#MainView .mission-item .mission-name {
+#MainView .expedition-item .expedition-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
@@ -169,7 +169,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .mission-item .mission-timer {
+#MainView .expedition-item .expedition-timer {
   flex: none;
 }
 #MainView .ndock-panel .panel-body {

@@ -287,7 +287,7 @@ class CountdownLabel extends Component {
   }
   render () {
     return (
-      <span className="mission-timer">
+      <span className="expedition-timer">
         <CountdownTimer countdownId={`resting-fleet-${this.props.fleetId}`}
                         completeTime={this.props.completeTime}
                         tickCallback={this.tick} />

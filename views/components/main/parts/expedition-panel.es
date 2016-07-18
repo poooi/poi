@@ -54,7 +54,7 @@ class CountdownLabel extends Component {
           <span />
         )
       }>
-        <Label className="mission-timer" bsStyle={this.state.style}>
+        <Label className="expedition-timer" bsStyle={this.state.style}>
         {
           (this.props.completeTime > 0) ? (
             <CountdownTimer countdownId={`expedition-${this.props.dockIndex+1}`}
@@ -100,8 +100,8 @@ export default connect(
             get(this.props.$expeditions, [expeditionId, 'api_name'], __('???'))
           const fleetName = this.props.fleetNames[i] || '???'
           return (
-            <div className="panel-item mission-item" key={i} >
-              <span className="mission-name">{expeditionName}</span>
+            <div className="panel-item expedition-item" key={i} >
+              <span className="expedition-name">{expeditionName}</span>
               <CountdownLabel
                 dockIndex={i}
                 completeTime={completeTime}
