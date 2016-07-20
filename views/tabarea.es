@@ -1,9 +1,10 @@
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React, { Component, createElement, Children } from 'react'
+import React, { Component, createElement, Children, PropTypes } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual } from 'lodash'
+import shallowCompare from 'react-addons-shallow-compare'
 
 //import PluginManager from './services/plugin-manager'
 import settings from './components/settings'
@@ -45,15 +46,19 @@ const TabContentsUnion = connect(
       preKey: null,
     }
   }
+  static propTypes = {
+    enableTransition: PropTypes.bool.isRequired,
+    children: PropTypes.node.isRequired,
+    onChange: PropTypes.func,
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(nextProps, nextState)
+  }
   componentDidMount() {
     window.addEventListener('TabContentsUnion.show', this.handleShowEvent)
   }
   componentWillUnmount() {
     window.removeEventListener('TabContentsUnion.show', this.handleShowEvent)
-  }
-  componentWillReceiveProps(nextProps) {
-    if (this.state.nowKey == null && nextProps.children.length != 0)
-      this.setNewKey(nextProps.children[0].key, true)
   }
   handleShowEvent = (e) => {
     this.setNewKey(e.detail.key)
@@ -102,7 +107,6 @@ const TabContentsUnion = connect(
     Children.forEach(this.props.children, (child, index) => {
       if (child.key == nowKey) {
         const nextIndex = (index+offset+childrenCount) % childrenCount
-        // Always use the same method to preserve the definition of index
         Children.forEach(this.props.children, (child_, index_) => {
           if (index_ == nextIndex)
             this.setNewKey(child_.key)
