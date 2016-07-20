@@ -145,23 +145,8 @@ const ShipView = connect((state, props) => ({
     }
   }
 
-  handleClickOnce = (e) => {
-    const idx = (e.detail || {}).idx
-    if (idx != null && idx != this.props.activeFleetId)
-      this.setState({
-        activeDeck: idx,
-      })
-  }
-
   changeMainView = () => {
     this.context.selectTab('mainView')
-  }
-
-  componentDidMount() {
-    window.addEventListener('ShipView.deckChange', this.handleClickOnce)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('ShipView.deckChange', this.handleClickOnce)
   }
 
   render() {

@@ -160,6 +160,14 @@ export default connect(
   undefined,
   {pure: false}
 )(class ControlledTabArea extends Component {
+  static propTypes = {
+    plugins: PropTypes.array.isRequired,
+    doubleTabbed: PropTypes.bool.isRequired,
+  }
+  static childContextTypes = {
+    selectTab: PropTypes.func.isRequired,
+    selectFleet: PropTypes.func.isRequired,
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -168,14 +176,6 @@ export default connect(
       // Don't pass activeFleetId via context, see https://github.com/facebook/react/issues/2517
       activeFleetId: 0,
     }
-  }
-  static propTypes = {
-    plugins: PropTypes.array.isRequired,
-    doubleTabbed: PropTypes.bool.isRequired,
-  }
-  static childContextTypes = {
-    selectTab: PropTypes.func.isRequired,
-    selectFleet: PropTypes.func.isRequired,
   }
   getChildContext() {
     return {

@@ -10,9 +10,6 @@ const {dbg, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
-const confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
-
 import {PaneBodyMini} from './minishippane'
 
 function getStyle(state) {
@@ -84,8 +81,7 @@ const ShipViewSwitchButton = connect(() => {
 )
 
 export default connect((state, props) => ({
-    // TODO: Move config into redux
-  enableTransition: confGet(state, 'config.poi.transition.enable', true),
+  enableTransition: get(state, 'config.poi.transition.enable', true),
 })
 )(class MiniShip extends Component {
   static propTypes = {
