@@ -1,7 +1,7 @@
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
@@ -120,6 +120,11 @@ const ShipView = connect((state, props) => ({
   static propTypes = {
     enableTransition: React.PropTypes.bool,
   }
+
+  static contextTypes = {
+    selectTab: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -161,14 +166,7 @@ const ShipView = connect((state, props) => ({
   }
 
   changeMainView = () => {
-    const event = new CustomEvent('tabarea.change', {
-      bubbles: true,
-      cancelable: true,
-      detail: {
-        tab: 'mainView',
-      },
-    })
-    window.dispatchEvent(event)
+    this.context.selectTab('mainView')
   }
 
   componentDidMount() {

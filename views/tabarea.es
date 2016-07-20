@@ -167,6 +167,18 @@ export default connect(
       activePluginName: null,
     }
   }
+  static propTypes = {
+    plugins: PropTypes.array.isRequired,
+    doubleTabbed: PropTypes.bool.isRequired,
+  }
+  static childContextTypes = {
+    selectTab: PropTypes.func.isRequired,
+  }
+  getChildContext() {
+    return {
+      selectTab: this.selectTab,
+    }
+  }
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
   }
@@ -252,9 +264,6 @@ export default connect(
       }
     })
   }
-  handleTabChange = (e) => {
-    this.selectTab(e.detail.tab)
-  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.doubleTabbed != this.props.doubleTabbed)
       this.setState({
@@ -264,12 +273,10 @@ export default connect(
   componentDidMount() {
     this.handleKeyDown()
     window.addEventListener('game.start', this.handleKeyDown)
-    window.addEventListener('tabarea.change', this.handleTabChange)
     window.openSettings = this.handleCmdCommaKeyDown
   }
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
-    window.removeEventListener('tabarea.change', this.handleTabChange)
   }
   // All displaying plugins
   listedPlugins = () => {
