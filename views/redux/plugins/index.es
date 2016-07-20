@@ -24,6 +24,7 @@ export function reducer (state=[], {type, value, option}) {
     state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     state = reduxSet(state, [i], value)
+    state = sortBy(state, 'priority')
     return state
   }
   case '@@Plugin/changeStatus': {
@@ -97,6 +98,7 @@ export function reducer (state=[], {type, value, option}) {
       newPlugin = loadPlugin(newPlugin)
     }
     state = reduxSet(state, [i], newPlugin)
+    state = sortBy(state, 'priority')
     return state
   }
   default:
