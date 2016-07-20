@@ -47,7 +47,7 @@ Object.defineProperty(window, '_decks', {get: () => {
 Object.defineProperty(window, '_nickName', {get: () => {
   return window.getStore('info.basic.api_nickname') || ''
 }})
-Object.defineProperty(window, 'api_nickname_id', {get: () => {
+Object.defineProperty(window, '_nickNameId', {get: () => {
   return window.getStore('info.basic.api_nickname_id') || -1
 }})
 Object.defineProperty(window, '_teitokuId', {get: () => {
