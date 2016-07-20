@@ -1,7 +1,7 @@
 import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import shallowCompare from 'react-addons-shallow-compare'
+import shallowEqual from 'fbjs/lib/shallowEqual'
 import React, { Component } from 'react'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
@@ -95,7 +95,7 @@ export const MiniShipRow = connect(
   shouldComponentUpdate(nextProps) {
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp', 'api_cond']
-    return shallowCompare(omit(this, ['ship']), omit(nextProps, ['ship'])) ||
+    return !shallowEqual(omit(this.props, ['ship']), omit(nextProps, ['ship'])) ||
       !isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps))
   }
 

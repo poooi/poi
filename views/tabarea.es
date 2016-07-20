@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import React, { Component, createElement, Children, PropTypes } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { isEqual } from 'lodash'
+import { isEqual, omit } from 'lodash'
+import shallowEqual from 'fbjs/lib/shallowEqual'
 import shallowCompare from 'react-addons-shallow-compare'
 
 //import PluginManager from './services/plugin-manager'
@@ -29,8 +30,6 @@ class PluginWrap extends Component {
   }
 }
 
-let lockedTab = false
-
 const TabContentsUnion = connect(
   (state) => ({
     enableTransition: confGet(state.config, 'poi.transition.enable', true),
@@ -52,7 +51,9 @@ const TabContentsUnion = connect(
     onChange: PropTypes.func,
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(nextProps, nextState)
+    return !shallowEqual(omit(this.props, ['children']), omit(nextProps, ['children']))
+      || !shallowEqual(this.state, nextState)
+      || !isEqual(this.childrenKey(this.props.children), this.childrenKey(nextProps.children))
   }
   componentDidMount() {
     window.addEventListener('TabContentsUnion.show', this.handleShowEvent)
@@ -63,12 +64,15 @@ const TabContentsUnion = connect(
   handleShowEvent = (e) => {
     this.setNewKey(e.detail.key)
   }
-  findChildByKey = (key) => {
-    return Children.map(this.props.children,
+  childrenKey = (children) => {
+    return Children.map(children, (child) => child.key).filter(Boolean)
+  }
+  findChildByKey = (children, key) => {
+    return Children.map(children,
       (child) => child.key === key ? child : null).filter(Boolean)[0]
   }
   setNewKey = (nxtKey, force=false) => {
-    const nxtChild = this.findChildByKey(nxtKey)
+    const nxtChild = this.findChildByKey(this.props.children, nxtKey)
     const preKey = this.state.nowKey
     if (!nxtChild)
       return
@@ -145,6 +149,8 @@ const TabContentsUnion = connect(
   }
 })
 
+let lockedTab = false
+
 export default connect(
   (state) => ({
     plugins: state.plugins,
@@ -153,11 +159,16 @@ export default connect(
   undefined,
   undefined,
   {pure: false}
-)(class controlledTabArea extends Component {
+)(class ControlledTabArea extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      activeMainTab: 'mainView',
+      activePluginName: null,
     }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
   componentWillUpdate(nextProps, nextState) {
     this.nowTime = (new Date()).getTime()
@@ -260,27 +271,40 @@ export default connect(
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('tabarea.change', this.handleTabChange)
   }
+  // All displaying plugins
+  listedPlugins = () => {
+    return this.props.plugins.filter((plugin) =>
+      plugin.enabled &&
+      (plugin.handleClick || plugin.windowURL || plugin.reactClass)
+    )
+  }
+  // All non-new-window displaying plugins
+  tabbedPlugins = () => {
+    return this.props.plugins.filter((plugin) =>
+      plugin.enabled &&
+      !plugin.handleClick &&
+      !plugin.windowURL &&
+      plugin.reactClass
+    )
+  }
   render() {
-    const activePluginName = this.state.activePluginName || (this.props.plugins[0] || {}).packageName
-    const activePlugin = this.props.plugins.find((p) => p.packageName == activePluginName)
+    const tabbedPlugins = this.tabbedPlugins()
+    const activePlugin = tabbedPlugins.length == 0 ? {} :
+      tabbedPlugins.find((p) => p.packageName === this.state.activePluginName) || tabbedPlugins[0]
+    const activePluginName = activePlugin.packageName
     const defaultPluginTitle = <span><FontAwesome name='sitemap' />{__(' Plugins')}</span>
     const pluginDropdownContents = this.props.plugins.length == 0 ? (
       <MenuItem key={1002} disabled>
         {window.i18n.setting.__("Install plugins in settings")}
       </MenuItem>
     ) : (
-      this.props.plugins
-      .filter((plugin) => plugin.enabled && (plugin.reactClass || plugin.windowURL))
-      .map((plugin, index) =>
-        !plugin.enabled ? undefined :
+      this.listedPlugins().map((plugin, index) =>
         <MenuItem key={plugin.id} eventKey={plugin.id} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
       )
     )
-    const pluginContents = this.props.plugins
-    .filter((plugin) => plugin.handleClick == null && plugin.windowURL == null && plugin.enabled && plugin.reactClass)
-    .map((plugin) =>
+    const pluginContents = this.tabbedPlugins().map((plugin) =>
       <PluginWrap
         key={plugin.id}
         plugin={plugin}

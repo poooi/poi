@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import React from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit } from 'lodash'
@@ -47,7 +47,7 @@ export const ShipRow = connect(() => createSelector([
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp',
       'api_cond', 'api_fuel', 'api_bull']
-    return shallowCompare(omit(this, ['ship']), omit(nextProps, ['ship'])) ||
+    return !shallowEqual(omit(this.props, ['ship']), omit(nextProps, ['ship'])) ||
       !isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps))
   }
 
