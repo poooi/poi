@@ -1,4 +1,4 @@
-import remote from 'electron'
+import { remote } from 'electron'
 
 const {$, config, toggleModal, log, error, i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
