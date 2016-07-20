@@ -65,7 +65,7 @@ const exitPoi = () => {
   confirmExit = true
   remote.require('./lib/window').rememberMain()
   remote.require('./lib/window').closeWindows()
-  window.onbeforeunload = (e) =>
+  window.onbeforeunload = null
   window.close()
 }
 window.onbeforeunload = (e) => {
