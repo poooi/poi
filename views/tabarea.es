@@ -36,7 +36,7 @@ const TabContentsUnion = connect(
   }),
   undefined,
   undefined,
-  {pure: false}
+  {pure: false, withRef: true}
 )(class tabContentsUnion extends Component {
   constructor(props) {
     super(props)
@@ -205,10 +205,10 @@ export default connect(
       this.selectTab(isPlugin)
   }
   handleShiftTabKeyDown = () => {
-    this.refs.tabKeyUnion.setTabOffset(-1)
+    this.refs.tabKeyUnion.getWrappedInstance().setTabOffset(-1)
   }
   handleTabKeyDown = () => {
-    this.refs.tabKeyUnion.setTabOffset(1)
+    this.refs.tabKeyUnion.getWrappedInstance().setTabOffset(1)
   }
   handleKeyDown = () => {
     if (this.listener != null)
