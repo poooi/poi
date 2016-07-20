@@ -1,7 +1,7 @@
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
@@ -11,7 +11,6 @@ const confGet = (target, path, value) =>
 
 const {i18n, dbg} = window
 const __ = i18n.main.__.bind(i18n.main)
-const {Component} = React
 
 import { ShipRow } from './shipitem'
 import TopAlert from '../ship-parts/topalert'
@@ -116,20 +115,19 @@ const FleetShipView = connect(() => {
 const ShipView = connect((state, props) => ({
   enableTransition: confGet(state, 'config.poi.transition.enable', true),
 })
-)(class extends Component {
+)(class ShipView extends Component {
   static propTypes = {
-    enableTransition: React.PropTypes.bool,
+    enableTransition: PropTypes.bool.isRequired,
+    activeFleetId: PropTypes.number.isRequired,
   }
 
   static contextTypes = {
     selectTab: PropTypes.func.isRequired,
+    selectFleet: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      activeDeck: 0,
-    }
     this.nowTime = 0
   }
 
@@ -142,24 +140,14 @@ const ShipView = connect((state, props) => ({
   }
 
   handleClick = (idx) => {
-    if (idx != this.state.activeDeck) {
-      const event = new CustomEvent('MiniShip.deckChange', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          idx: idx,
-        },
-      })
-      window.dispatchEvent(event)
-      this.setState({
-        activeDeck: idx,
-      })
+    if (idx != this.props.activeFleetId) {
+      this.context.selectFleet(idx)
     }
   }
 
   handleClickOnce = (e) => {
     const idx = (e.detail || {}).idx
-    if (idx != null && idx != this.state.activeDeck)
+    if (idx != null && idx != this.props.activeFleetId)
       this.setState({
         activeDeck: idx,
       })
@@ -188,7 +176,7 @@ const ShipView = connect((state, props) => ({
                 key={i}
                 fleetId={i}
                 onClick={this.handleClick.bind(this, i)}
-                activeFleetId={this.state.activeDeck}
+                activeFleetId={this.props.activeFleetId}
                 />
             )
           }
@@ -197,7 +185,7 @@ const ShipView = connect((state, props) => ({
         <div className="no-scroll">
           <div
             className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-            style={{left: `-${this.state.activeDeck}00%`}}>
+            style={{left: `-${this.props.activeFleetId}00%`}}>
           {
             [0, 1, 2, 3].map((i) =>
               <div className="ship-deck" key={i}>

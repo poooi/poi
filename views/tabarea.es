@@ -165,6 +165,8 @@ export default connect(
     this.state = {
       activeMainTab: 'mainView',
       activePluginName: null,
+      // Don't pass activeFleetId via context, see https://github.com/facebook/react/issues/2517
+      activeFleetId: 0,
     }
   }
   static propTypes = {
@@ -173,10 +175,12 @@ export default connect(
   }
   static childContextTypes = {
     selectTab: PropTypes.func.isRequired,
+    selectFleet: PropTypes.func.isRequired,
   }
   getChildContext() {
     return {
       selectTab: this.selectTab,
+      selectFleet: this.selectFleet,
     }
   }
   shouldComponentUpdate(nextProps, nextState) {
@@ -200,6 +204,9 @@ export default connect(
       },
     })
     window.dispatchEvent(event)
+  }
+  selectFleet = (fleetId) => {
+    this.setState({activeFleetId: fleetId})
   }
   handleSelectTab = (key) => {
     this.selectTab(key)
@@ -343,10 +350,10 @@ export default connect(
         <TabContentsUnion ref='tabKeyUnion'
           onChange={(key) => this.setState({activeMainTab: key})}>
           <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-            <mainview.reactClass />
+            <mainview.reactClass activeFleetId={this.state.activeFleetId} />
           </div>
           <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-            <shipview.reactClass />
+            <shipview.reactClass activeFleetId={this.state.activeFleetId} />
           </div>
           {pluginContents}
           <div id={settings.name} className="poi-app-tabpane" key='settings'>
@@ -371,10 +378,10 @@ export default connect(
           <TabContentsUnion
             onChange={(key) => this.setState({activeMainTab: key})}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-              <mainview.reactClass activeMainTab={this.state.activeMainTab}/>
+              <mainview.reactClass activeMainTab={this.state.activeMainTab} activeFleetId={this.state.activeFleetId} />
             </div>
             <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-              <shipview.reactClass activeMainTab={this.state.activeMainTab}/>
+              <shipview.reactClass activeMainTab={this.state.activeMainTab} activeFleetId={this.state.activeFleetId} />
             </div>
             <div id={settings.name} className="poi-app-tabpane" key='settings'>
               <settings.reactClass activeMainTab={this.state.activeMainTab}/>

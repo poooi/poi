@@ -83,24 +83,23 @@ const ShipViewSwitchButton = connect(() => {
   </Button>
 )
 
-const MiniShip = connect((state, props) => ({
+export default connect((state, props) => ({
     // TODO: Move config into redux
   enableTransition: confGet(state, 'config.poi.transition.enable', true),
 })
-)(class extends Component {
+)(class MiniShip extends Component {
   static propTypes = {
-    enableTransition: React.PropTypes.bool,
+    enableTransition: PropTypes.bool.isRequired,
+    activeFleetId: PropTypes.number.isRequired,
   }
 
   static contextTypes = {
     selectTab: PropTypes.func.isRequired,
+    selectFleet: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      activeDeck: 0,
-    }
     this.nowTime = 0
   }
 
@@ -113,38 +112,13 @@ const MiniShip = connect((state, props) => ({
   }
 
   handleClick = (idx) => {
-    if (idx != this.state.activeDeck) {
-      const event = new CustomEvent('ShipView.deckChange', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          idx: idx,
-        },
-      })
-      window.dispatchEvent(event)
-      this.setState({
-        activeDeck: idx,
-      })
+    if (idx != this.props.activeFleetId) {
+      this.context.selectFleet(idx)
     }
-  }
-
-  handleClickOnce = (e) => {
-    const idx = (e.detail || {}).idx
-    if (idx != null && idx != this.state.activeDeck)
-      this.setState({
-        activeDeck: idx,
-      })
   }
 
   changeShipView = () => {
     this.context.selectTab('shipView')
-  }
-
-  componentDidMount() {
-    window.addEventListener('MiniShip.deckChange', this.handleClickOnce)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('MiniShip.deckChange', this.handleClickOnce)
   }
 
   render() {
@@ -160,7 +134,7 @@ const MiniShip = connect((state, props) => ({
                   key={i}
                   fleetId={i}
                   onClick={this.handleClick.bind(this, i)}
-                  activeFleetId={this.state.activeDeck}
+                  activeFleetId={this.props.activeFleetId}
                   />
               )
             }
@@ -168,7 +142,7 @@ const MiniShip = connect((state, props) => ({
           </div>
           <div className="no-scroll">
             <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-                 style={{left: `-${this.state.activeDeck}00%`}}>
+                 style={{left: `-${this.props.activeFleetId}00%`}}>
             {
               [0, 1, 2, 3].map((i) => (
                 <div className="ship-deck ship-tabpane" key={i}>
@@ -186,9 +160,3 @@ const MiniShip = connect((state, props) => ({
     )
   }
 })
-
-export const name = 'MiniShip'
-export const priority = 100000.1
-export const displayName = <span><FontAwesome key={0} name='bars' />{__(' Fleet')}</span>
-export const description = '舰队展示页面，展示舰队详情信息'
-export const reactClass = MiniShip

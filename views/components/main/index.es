@@ -1,5 +1,5 @@
 import path from 'path-extra'
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
@@ -16,10 +16,11 @@ export default {
   reactClass: connect((state, props) => ({
     layout: confGet(state, 'config.poi.layout', 'horizontal'),
     doubleTabbed: confGet(state, 'config.poi.tabarea.double', false),
-  }))(class reactClass extends React.Component {
+  }))(class reactClass extends Component {
     static propTypes = {
-      layout: React.PropTypes.string,
-      doubleTabbed: React.PropTypes,
+      layout: PropTypes.string.isRequired,
+      doubleTabbed: PropTypes.bool.isRequired,
+      activeFleetId: PropTypes.number.isRequired,
     }
     render() {
       return (
@@ -37,7 +38,7 @@ export default {
                     <ResourcePanel />
                   </div>
                   <div className="miniship miniship-area-horizontal" id='MiniShip' ref="miniship">
-                    <MiniShip />
+                    <MiniShip activeFleetId={this.props.activeFleetId} />
                   </div>
                 </div>
                 <div className="panel-col half bottom-left-area">
@@ -101,7 +102,7 @@ export default {
                 </div>
               </div>
               <div className="miniship panel-col" id='MiniShip' ref="miniship" style={{width:"40%"}}>
-                <MiniShip />
+                <MiniShip activeFleetId={this.props.activeFleetId} />
               </div>
             </div>
           }
