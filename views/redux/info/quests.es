@@ -112,7 +112,7 @@ function resetQuestRecordFactory(types, resetInterval) {
   return (questGoals) => (q, id) => {
     if (!q || !questGoals[id])
       return q
-    let questGoal = questGoals[id]
+    const questGoal = questGoals[id]
     if (types.indexOf(parseInt(questGoal.type)) != -1)
       return            // This record will be deleted
     if (questGoal.resetInterval == resetInterval) {
@@ -170,14 +170,14 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
     let changed = false
     forEach(activeQuests, ({detail: quest}={}) => {
       if (typeof quest !== 'object') return
-      let {api_no} = quest
-      let record = records[api_no]
-      let subgoal = (questGoals[api_no] || {})[e]
+      const {api_no} = quest
+      const record = records[api_no]
+      const subgoal = (questGoals[api_no] || {})[e]
       if (!api_no || !record || !subgoal) return
       if (!satisfyGoal('shipType', subgoal, options)) return
       if (!satisfyGoal('mission', subgoal, options)) return
       if (!satisfyGoal('maparea', subgoal, options)) return
-      let subrecord = Object.assign(record[e])
+      const subrecord = Object.assign(record[e])
       subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
       records[api_no] = {
         ...record,
@@ -395,8 +395,8 @@ export function reducer(state=initState, action) {
   //== Daily update ==
   case QUESTS_REFRESH_DAY:  {
     const {activeQuests, records, questGoals} = state
-    let halfHour = 30 * 60 * 1000     // Random suitable margin
-    let now = Date.now()
+    const halfHour = 30 * 60 * 1000     // Random suitable margin
+    const now = Date.now()
     return {
       ...state,
       records: outdateRecords(questGoals, records, now-halfHour, now+halfHour),
@@ -406,7 +406,7 @@ export function reducer(state=initState, action) {
 
   //== Update active quests ==
   case '@@Response/kcsapi/api_port/port': {
-    let {api_parallel_quest_count: activeCapacity} = body
+    const {api_parallel_quest_count: activeCapacity} = body
     let activeQuests = state.activeQuests
     if (Object.keys(state.activeQuests).length > activeCapacity) {
       activeQuests = limitActiveQuests(state.activeQuests, activeCapacity)
