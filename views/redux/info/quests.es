@@ -222,8 +222,8 @@ function updateRecordProgress(record, bodyQuest) {
     }
   })
   if (subgoalKey != null) {
-    let subgoal = record[subgoalKey]
-    let count = limitProgress(subgoal.count, subgoal.required,
+    const subgoal = record[subgoalKey]
+    const count = limitProgress(subgoal.count, subgoal.required,
       api_progress_flag, api_state == 3)
     if (count != subgoal.count) {
       return {
@@ -235,6 +235,7 @@ function updateRecordProgress(record, bodyQuest) {
       }
     }
   }
+  return record
 }
 
 function questTrackingReducer(state, {type, postBody, body, result}) {
@@ -424,16 +425,19 @@ export function reducer(state=initState, action) {
       if (typeof quest !== 'object')
         return
       const {api_state, api_no} = quest
+      let record
       // For all quests, create records and update progress
       if (!records[api_no] && questGoals[api_no]) {
         // Add new records
-        records = copyIfSame(records, state.records)
-        records[api_no] = newQuestRecord(api_no, questGoals)
+        record = newQuestRecord(api_no, questGoals)
       } else {
-        let newRecord = updateRecordProgress(records[api_no], quest)
-        if (newRecord) {
+        record = records[api_no]
+      }
+      if (record) {
+        record = updateRecordProgress(records[api_no], quest)
+        if (record !== records[api_no]) {
           records = copyIfSame(records, state.records)
-          records[api_no] = newRecord
+          records[api_no] = record
         }
       }
       // For active quests, update activeQuests
