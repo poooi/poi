@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import { store } from './createStore'
 import ControlledTabArea from './tabarea'
 import { PoiAlert } from './components/info/alert'
-import { PoiMapReminder } from './components/info/map-reminder'
+import PoiMapReminder from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { ModalTrigger } from './components/etc/modal'
 

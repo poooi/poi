@@ -71,4 +71,4 @@ observe(store, [observer(
   dispatchBattleResult,
 )])
 
-export default store
+export { store }
