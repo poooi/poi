@@ -6,10 +6,6 @@ Object.clone = (obj) ->
 Object.remoteClone = (obj) ->
   JSON.parse remote.require('./lib/utils').remoteStringify obj
 
-window.confGet = (target, path, defaultVal) ->
-  getVal = get(target, path)
-  if (typeof getVal == "undefined") then defaultVal else getVal
-
 pad = (n) ->
   if n < 10 then "0#{n}" else n
 window.resolveTime = (seconds) ->

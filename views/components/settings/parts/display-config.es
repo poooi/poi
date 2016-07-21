@@ -11,8 +11,6 @@ const {config, toggleModal, i18n, EXROOT} = window
 const {openItem} = shell
 const {Component} = React
 const __ = i18n.setting.__.bind(i18n.setting)
-const confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
 
 config.on('config.set', (path, value) => {
   let event
@@ -49,8 +47,8 @@ config.on('config.set', (path, value) => {
 
 const ChangeLayoutConfig = connect(() => (
   (state, props) => ({
-    layout: confGet(state.config, 'poi.layout', 'horizontal'),
-    enableDoubleTabbed: confGet(state.config, 'poi.tabarea.double', false),
+    layout: get(state.config, 'poi.layout', 'horizontal'),
+    enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
   })
 ))(class changeLayoutConfig extends Component {
   static propTypes = {
@@ -85,9 +83,9 @@ const ChangeLayoutConfig = connect(() => (
 })
 
 const ChangeThemeConfig = connect((state, props) => ({
-  theme: confGet(state.config, 'poi.theme', 'paperdark'),
-  enableSVGIcon: confGet(state.config, 'poi.useSVGIcon', false),
-  enableTransition: confGet(state.config, 'poi.transition.enable', true),
+  theme: get(state.config, 'poi.theme', 'paperdark'),
+  enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
+  enableTransition: get(state.config, 'poi.transition.enable', true),
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
@@ -146,7 +144,7 @@ const ChangeThemeConfig = connect((state, props) => ({
 
 const ZoomingConfig = connect(() => (
   (state, props) => ({
-    zoomLevel: confGet(state.config, 'poi.zoomLevel', 1),
+    zoomLevel: get(state.config, 'poi.zoomLevel', 1),
   })
 ))(class zoomingConfig extends Component {
   static propTypes = {

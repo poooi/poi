@@ -4,9 +4,10 @@ import React from 'react'
 import { shell, remote } from 'electron'
 import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 
-const {$, i18n, config, error, success, toggleModal, confGet, APPDATA_PATH} = window
+const {$, i18n, config, error, success, toggleModal, APPDATA_PATH} = window
 const {openItem} = shell
 const __ = i18n.others.__.bind(i18n.others)
 
@@ -24,7 +25,7 @@ config.on('config.set', (path, value) => {
 })
 
 const PoiControl = connect((state, props) => ({
-  muted: confGet(state, 'config.poi.content.muted', false),
+  muted: get(state, 'config.poi.content.muted', false),
 }))(class poiControl extends React.Component {
   static propTypes = {
     muted: React.PropTypes.bool,

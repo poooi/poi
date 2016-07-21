@@ -20,9 +20,6 @@ const openLink = (link, e) => {
   shell.openExternal(link)
   e.preventDefault()
 }
-const confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
-
 class PluginSettingWrap extends Component {
   static propTypes = {
     plugin: React.PropTypes.object,
@@ -322,9 +319,9 @@ class InstallByNameInput extends Component {
 
 const PluginConfig = connect((state, props) => ({
   plugins: state.plugins,
-  mirrorName: confGet(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
-  proxy: confGet(state, 'config.packageManager.proxy', false),
-  betaCheck: confGet(state, 'config.packageManager.enableBetaPluginCheck', false),
+  mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
+  proxy: get(state, 'config.packageManager.proxy', false),
+  betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
 }))(class pluginConfig extends Component {
   static propTypes = {
     plugins: React.PropTypes.array,

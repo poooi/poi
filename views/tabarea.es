@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import React, { Component, createElement, Children, PropTypes } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { isEqual, omit } from 'lodash'
+import { isEqual, omit, get } from 'lodash'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import shallowCompare from 'react-addons-shallow-compare'
 
@@ -12,7 +12,7 @@ import settings from './components/settings'
 import mainview from './components/main'
 import shipview from './components/ship'
 
-const {i18n, confGet, dbg} = window
+const {i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
 
 
@@ -32,7 +32,7 @@ class PluginWrap extends Component {
 
 const TabContentsUnion = connect(
   (state) => ({
-    enableTransition: confGet(state.config, 'poi.transition.enable', true),
+    enableTransition: get(state.config, 'poi.transition.enable', true),
   }),
   undefined,
   undefined,
@@ -154,7 +154,7 @@ let lockedTab = false
 export default connect(
   (state) => ({
     plugins: state.plugins,
-    doubleTabbed: confGet(state.config, 'poi.tabarea.double', false),
+    doubleTabbed: get(state.config, 'poi.tabarea.double', false),
   }),
   undefined,
   undefined,

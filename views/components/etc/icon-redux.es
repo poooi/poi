@@ -9,16 +9,13 @@ const getClassName = (props, isSVG) => {
   return classnames(type, props)
 }
 
-const confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
-
 const {ROOT} = window
 
 const svgAvailableList = {}
 const pngAvailableList = {}
 
 export const SlotitemIcon = connect((state, props) => ({
-  useSVGIcon: confGet(state, 'config.poi.useSVGIcon', false),
+  useSVGIcon: get(state, 'config.poi.useSVGIcon', false),
   slotitemId: props.slotitemId,
   className: props.className,
 }))(class slotitemIcon extends React.Component {
@@ -61,7 +58,7 @@ export const SlotitemIcon = connect((state, props) => ({
 })
 
 export const MaterialIcon = connect((state, props) => ({
-  useSVGIcon: confGet(state, 'config.poi.useSVGIcon', false),
+  useSVGIcon: get(state, 'config.poi.useSVGIcon', false),
   materialId: props.materialId,
   className: props.className,
 }))(class materialIcon extends React.Component {

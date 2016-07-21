@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import reduceReducers from 'reduce-reducers'
-import { isEqual, forEach, get, keyBy } from 'lodash'
+import { isEqual, forEach, keyBy } from 'lodash'
 
 import { reducer as constReducer } from './const'
 import { reducer as info } from './info'
@@ -17,9 +17,6 @@ import { reducer as plugins } from './plugins'
 window.indexify = (array, key='api_id') => {
   return keyBy(array, key)
 }
-
-window.confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
 
 window.reduxSet = (obj, path, val) => {
   const [prop, ...restPath] = path

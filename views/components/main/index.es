@@ -2,10 +2,11 @@ import path from 'path-extra'
 import React, { Component, PropTypes } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
 import { ExpeditionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
 
-const {confGet, i18n} = window
+const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
 
 export default {
@@ -14,8 +15,8 @@ export default {
   displayName: <span><FontAwesome key={0} name='home' />{__(' Overview')}</span>,
   description: '概览面板，提供基本的概览界面',
   reactClass: connect((state, props) => ({
-    layout: confGet(state, 'config.poi.layout', 'horizontal'),
-    doubleTabbed: confGet(state, 'config.poi.tabarea.double', false),
+    layout: get(state, 'config.poi.layout', 'horizontal'),
+    doubleTabbed: get(state, 'config.poi.tabarea.double', false),
   }))(class reactClass extends Component {
     static propTypes = {
       layout: PropTypes.string.isRequired,

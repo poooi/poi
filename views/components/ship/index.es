@@ -6,9 +6,6 @@ import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
 
-const confGet = (target, path, value) =>
-  ((typeof get(target, path) === "undefined") ? value : get(target, path))
-
 const {i18n, dbg} = window
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -113,7 +110,7 @@ const FleetShipView = connect(() => {
 
 
 const ShipView = connect((state, props) => ({
-  enableTransition: confGet(state, 'config.poi.transition.enable', true),
+  enableTransition: get(state, 'config.poi.transition.enable', true),
 })
 )(class ShipView extends Component {
   static propTypes = {
