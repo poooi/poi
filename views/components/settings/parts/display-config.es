@@ -38,17 +38,10 @@ config.on('config.set', (path, value) => {
       },
     })
     window.dispatchEvent(event)
-    window.doubleTabbed = value
     toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
-    break
-  case 'poi.useSVGIcon':
-    window.useSVGIcon = value
     break
   case 'poi.transition.enable':
     window.dispatchEvent(new Event('display.transition.change'))
-    break
-  case 'poi.zoomLevel':
-    window.zoomLevel = value
     break
   default:
   }
