@@ -7,10 +7,9 @@ import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit } from 'lodash'
 
-import StatusLabel from '../../ship-parts/statuslabel'
-import { SlotitemIcon } from '../../etc/icon-redux'
-
-import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from '../../ship-parts/utils'
+import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { SlotitemIcon } from 'views/components/etc/icon-redux'
+import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/components/ship-parts/utils'
 
 const { i18n } = window
 

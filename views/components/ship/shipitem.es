@@ -10,8 +10,8 @@ const __ = i18n.main.__.bind(i18n.main)
 const {Component} = React
 
 import { Slotitems } from './slotitems'
-import StatusLabel from '../ship-parts/statuslabel'
-import { getHpStyle, getStatusStyle, getShipLabelStatus } from '../ship-parts/utils'
+import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/components/ship-parts/utils'
 
 function getMaterialStyle(percent) {
   if (percent <= 50)

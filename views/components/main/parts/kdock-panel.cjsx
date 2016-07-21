@@ -4,7 +4,7 @@
 {connect} = require 'react-redux'
 __ = i18n.main.__.bind(i18n.main)
 __n = i18n.main.__n.bind(i18n.main)
-{MaterialIcon} = require '../../etc/icon'
+{MaterialIcon} = require 'views/components/etc/icon'
 
 
 CountdownTimer = require './countdown-timer'

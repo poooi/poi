@@ -2,8 +2,9 @@ import { connect } from 'react-redux'
 import React from 'react'
 import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
-import CountdownTimer from '../main/parts/countdown-timer'
 import { once } from 'lodash'
+
+import CountdownTimer from 'views/components/main/parts/countdown-timer'
 
 const {ROOT, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)

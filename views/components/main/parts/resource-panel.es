@@ -3,7 +3,8 @@ import { Panel, Grid, Col } from 'react-bootstrap'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import { MaterialIcon } from '../../etc/icon-redux'
+
+import { MaterialIcon } from 'views/components/etc/icon-redux'
 
 const order = [0, 2, 1, 3, 4, 6, 5, 7]
 

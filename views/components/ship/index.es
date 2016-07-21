@@ -13,7 +13,7 @@ const {i18n, dbg} = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { ShipRow } from './shipitem'
-import TopAlert from '../ship-parts/topalert'
+import TopAlert from 'views/components/ship-parts/topalert'
 
 function getStyle(state) {
   if (state >= 0 && state <= 5)

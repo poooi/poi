@@ -5,9 +5,9 @@ import React from 'react'
 import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
-import {SlotitemIcon} from '../etc/icon-redux'
+import {SlotitemIcon} from 'views/components/etc/icon-redux'
 import {getItemData} from './slotitems-data'
-import {equipIsAircraft} from '../ship-parts/utils'
+import {equipIsAircraft} from 'views/components/ship-parts/utils'
 
 const {i18n} = window
 

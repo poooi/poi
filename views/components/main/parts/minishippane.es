@@ -1,7 +1,8 @@
 import { connect } from 'react-redux'
-import TopAlert from '../../ship-parts/topalert'
 import { MiniShipRow } from './minishipitem'
 import React from 'react'
+
+import TopAlert from 'views/components/ship-parts/topalert'
 
 export const PaneBodyMini = connect(() => {
   const thisFleetShipIdSelector = window.makeThisFleetShipsIdSelector()

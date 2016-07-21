@@ -7,7 +7,7 @@ import { Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Wel
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 
-import PluginManager from '../../../services/plugin-manager'
+import PluginManager from 'views/services/plugin-manager'
 import Divider from './divider'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)

@@ -1,7 +1,7 @@
 import {observer, observe} from 'redux-observers'
 import {createSelector} from 'reselect'
 import {map, get} from 'lodash'
-import {store} from '../createStore'
+import {store} from 'views/createStore'
 
 const {buildArray} = window
 function object2Array(obj) {
