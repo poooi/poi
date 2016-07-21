@@ -4,7 +4,7 @@ import glob from 'glob'
 const {ROOT} = window
 
 window.language = navigator.language
-if (!(window.language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])) {
+if (!['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
   case 'zh':
     window.language = 'zh-TW'
