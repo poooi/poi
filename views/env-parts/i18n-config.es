@@ -3,6 +3,23 @@ import glob from 'glob'
 
 const {ROOT} = window
 
+window.language = navigator.language
+if (!(window.language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])) {
+  switch (window.language.substr(0, 2).toLowerCase()) {
+  case 'zh':
+    window.language = 'zh-TW'
+    break
+  case 'ja':
+    window.language = 'ja-JP'
+    break
+  case 'ko':
+    window.language = 'ko-KR'
+    break
+  default:
+    window.language = 'en-US'
+  }
+}
+
 window.i18n = {}
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 for (const i18nFile of i18nFiles) {

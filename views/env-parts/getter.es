@@ -1,20 +1,54 @@
-import {observer, observe} from 'redux-observers'
-import {createSelector} from 'reselect'
-import {map, get} from 'lodash'
-import {store} from 'views/createStore'
+import { observer, observe } from 'redux-observers'
+import { createSelector } from 'reselect'
+import { map, get } from 'lodash'
+import path from 'path-extra'
 
-const {buildArray} = window
+import { store } from 'views/createStore'
+
+const {buildArray, config} = window
 function object2Array(obj) {
   return buildArray(map(obj, (v, k) => [k, v]))
 }
 function object2ArraySelectorFactory(path) {
   const pathSelector = (state) => get(state, path)
-  return createSelector( 
+  return createSelector(
     pathSelector,
     (obj) => object2Array(obj)
   )
 }
 
+// User config
+const language = Object.clone(window.language)
+delete window.language
+Object.defineProperty(window, 'language', {get: () => {
+  return config.get('poi.language', language)
+}})
+Object.defineProperty(window, 'layout', {get: () => {
+  return config.get('poi.layout', 'horizontal')
+}})
+Object.defineProperty(window, 'doubleTabbed', {get: () => {
+  return config.get('poi.tabarea.double', false)
+}})
+Object.defineProperty(window, 'webviewWidth', {get: () => {
+  return config.get('poi.webview.width', -1)
+}})
+Object.defineProperty(window, 'zoomLevel', {get: () => {
+  return config.get('poi.zoomLevel', 1)
+}})
+Object.defineProperty(window, 'useSVGIcon', {get: () => {
+  return config.get('poi.useSVGIcon', false)
+}})
+Object.defineProperty(window, 'screenshotPath', {get: () => {
+  return config.get('poi.screenshotPath', process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(global.APPDATA_PATH, 'screenshots'))
+}})
+Object.defineProperty(window.notify, 'morale', {get: () => {
+  return config.get('poi.notify.morale.value', 49)
+}})
+Object.defineProperty(window.notify, 'expedition', {get: () => {
+  return config.get('poi.notify.expedition.value', 60)
+}})
+
+// Game data
 Object.defineProperty(window, '$slotitems', {get: () => {
   return window.getStore('const.$equips') || {}
 }})
