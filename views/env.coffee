@@ -16,6 +16,8 @@ window.appIcon = remote.getGlobal 'appIcon'
 fs.ensureDirSync window.PLUGIN_PATH
 fs.ensureDirSync path.join window.PLUGIN_PATH, 'node_modules'
 
+require('module').globalPaths.push window.ROOT
+
 # Shortcuts and Components
 (window.dbg = require path.join(ROOT, 'lib', 'debug')).init()
 window._ = require 'underscore'

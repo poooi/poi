@@ -40,7 +40,8 @@ module.exports = {
   'settings': {
     'import/resolver': {
       'node': {
-        'extensions': ['', '.js', '.jsx', '.es', '.coffee', '.cjsx']
+        'extensions': ['', '.js', '.jsx', '.es', '.coffee', '.cjsx'],
+        'paths': [__dirname]
       },
     },
     'import/core-modules': ['electron'],
