@@ -88,7 +88,13 @@ const parseResponses = () => {
   } catch (e) {
     console.error(domain, url, e.stack)
   }
-  // used for debugging, can delete
+
+  // DEBUG use
+  const questRecords = window.getStore('info.quests.records')
+  if (!questRecords || typeof questRecords !== 'object' || !Object.keys(questRecords)) {
+    console.log('Quest record is cleared! ', details)
+  }
+
   const event = new CustomEvent('game.response', {
     bubbles: true,
     cancelable: true,
