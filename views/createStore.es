@@ -40,7 +40,7 @@ window.dispatch = store.dispatch
 //### Listeners and exports ###
 
 window.getStore = (path) => {
-  return get(store.getState(), path)
+  return path ? get(store.getState(), path) : store.getState()
 }
 
 // Listen to config.set event
