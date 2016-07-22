@@ -1,5 +1,5 @@
 import ExpeditionPanel from './expedition-panel'
-import NdockPanel from './ndock-panel'
+import NdockPanel from './repair-panel'
 import KdockPanel from './kdock-panel'
 import TaskPanel from './task-panel'
 import MiniShip from './miniship'

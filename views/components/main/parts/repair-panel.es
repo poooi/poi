@@ -1,6 +1,8 @@
 const { ROOT, _ } = window
 import React, { Component } from 'react'
 import { Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { map, range, once } from 'lodash'
 import { join } from 'path-extra'
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -64,3 +66,56 @@ class CountdownLabel extends Component {
     )
   }
 }
+
+export default connect(
+  (state) => {
+    const repairs = state.info.repairs
+    const ships = state.info.ships
+    return {
+      repairs,
+      ships
+    }
+  }
+)(class RepairPanel extends Component {
+  notify = (dockName) => {
+    window.notify(`${dockName} ${__("repair completed")}`, {
+      type: 'repair',
+      title: __('Docking'),
+      icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
+    })
+  }
+  render() {
+    return (
+      <div>
+        {
+          range(0, 4).map((i) => {
+            const emptyRepair = {
+              api_complete_time: 0,
+              api_complete_time_str: '0',
+              api_item1: 0,
+              api_item2: 0,
+              api_item3: 0,
+              api_item4: 0,
+              api_ship_id: 0,
+              api_state: 0,
+            }
+            const dock = this.props.repairs[i] || emptyRepair
+            const dockName =
+              dock.api_state == -1 ? __('Locked') :
+              dock.api_state == 0 ? __('Empty') :
+              i18n.resources.__(this.props.ships[dock.api_ship_id].api_name)
+            const completeTime = dock.api_complete_time || -1
+            return (
+              <div key={i} className="panel-item ndock-item">
+                <span className="ndock-name">{dockName}</span>
+                <CountdownLabel dockIndex={i}
+                                completeTime={completeTime}
+                                notify={this.notify.bind(this, dockName)}/>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+})
