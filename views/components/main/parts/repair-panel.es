@@ -2,7 +2,7 @@ const { ROOT, _ } = window
 import React, { Component } from 'react'
 import { Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { map, range, once } from 'lodash'
+import { map, range, once, get } from 'lodash'
 import { join } from 'path-extra'
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -68,15 +68,25 @@ class CountdownLabel extends Component {
 }
 
 export default connect(
-  (state) => {
-    const repairs = state.info.repairs
-    const ships = state.info.ships
-    return {
-      repairs,
-      ships
+  (state) => ({
+    repairs: get(state, 'info.repairs', []),
+    $ships: get(state, 'const.$ships', []),
+    ships: get(state, 'info.ships', [])
+  })
+)(class RepairPanel extends Component {
+  constructor(props) {
+    super(props)
+    this.canNotify = false
+  }
+  handleResponse = (e) => {
+    const { path, body, postBody } = e.detail
+    switch (path) {
+    case '/kcsapi/api_start2':
+      this.canNotify = false
+    case '/kcsapi/api_port/port':
+      this.canNotify = true
     }
   }
-)(class RepairPanel extends Component {
   notify = (dockName) => {
     window.notify(`${dockName} ${__("repair completed")}`, {
       type: 'repair',
@@ -97,13 +107,14 @@ export default connect(
               api_item3: 0,
               api_item4: 0,
               api_ship_id: 0,
-              api_state: 0,
+              api_state: 0
             }
-            const dock = this.props.repairs[i] || emptyRepair
+            const { repairs, $ships, ships } = this.props
+            const dock = repairs[i] || emptyRepair
             const dockName =
               dock.api_state == -1 ? __('Locked') :
               dock.api_state == 0 ? __('Empty') :
-              i18n.resources.__(this.props.ships[dock.api_ship_id].api_name)
+              i18n.resources.__($ships[ships[dock.api_ship_id].api_ship_id].api_name)
             const completeTime = dock.api_complete_time || -1
             return (
               <div key={i} className="panel-item ndock-item">
