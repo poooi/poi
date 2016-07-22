@@ -45,7 +45,7 @@ const getTyku = (equipsData) => {
       } else {
         tempAlv = 0
       }
-      if ([6, 7, 8].indexOf($equip.api_type[3]) !== -1) {
+      if ([6, 7, 8].includes($equip.api_type[3])) {
         // 艦载機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]

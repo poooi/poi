@@ -33,7 +33,7 @@ window.notify = (msg, options) => {
   let audio = config.get('poi.notify.audio', `file://${ROOT}/assets/audio/poi.mp3`)
   const type = (options || {}).type || "others"
 
-  if (['construction', 'expedition', 'repair', 'morale'].indexOf(type) !== -1) {
+  if (['construction', 'expedition', 'repair', 'morale'].includes(type)) {
     if (enabled) {
       enabled = config.get(`poi.notify.${type}.enabled`, enabled)
     }

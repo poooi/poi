@@ -44,7 +44,7 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
     if (ship.api_fuel / $ship.api_fuel_max < 0.99 || ship.api_bull / $ship.api_bull_max < 0.99)
       state = Math.max(state, 1)
     // Repairing
-    if (inRepairShipsId.indexOf(ship.api_id) != -1)
+    if (inRepairShipsId.includes(ship.api_id))
       state = Math.max(state, 3)
   }
   return state

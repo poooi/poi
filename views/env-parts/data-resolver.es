@@ -41,7 +41,7 @@ let locked = false
 const parseResponses = () => {
   const {dispatch} = window
   let [method, [domain, path, url], body, postBody] = responses.shift()
-  if (['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic'].indexOf(path) !== -1) {
+  if (['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic'].includes(path)) {
     handleProxyGameStart()
   }
   if (!isGameApi(path)) {
@@ -146,7 +146,7 @@ const handleProxyNetworkErrorRetry = ([domain, path, url], counter) =>{
 }
 
 const handleProxyNetworkError = ([domain, path, url]) => {
-  if (url.startsWith('http://www.dmm.com/netgame/') || url.indexOf('/kcs/') !== -1 || url.indexOf('/kcsapi/') !== -1) {
+  if (url.startsWith('http://www.dmm.com/netgame/') || url.includes('/kcs/') || url.includes('/kcsapi/')) {
     window.dispatchEvent(new Event('network.error'))
   }
 }

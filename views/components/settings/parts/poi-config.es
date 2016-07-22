@@ -632,7 +632,7 @@ const ShortcutConfig = connect(() => {
 })
 
 mousetrap.prototype.handleKey = (character, modifiers, e) => {
-  if (e.type !== 'keydown' || ['shift', 'alt', 'ctrl', 'meta'].indexOf(character) !== -1) {
+  if (e.type !== 'keydown' || ['shift', 'alt', 'ctrl', 'meta'].includes(character)) {
     return
   }
   const fn = keyListener

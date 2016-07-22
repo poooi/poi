@@ -113,7 +113,7 @@ function resetQuestRecordFactory(types, resetInterval) {
     if (!q || !questGoals[id])
       return q
     const questGoal = questGoals[id]
-    if (types.indexOf(parseInt(questGoal.type)) != -1)
+    if (types.includes(parseInt(questGoal.type)))
       return            // This record will be deleted
     if (questGoal.resetInterval == resetInterval) {
       return newQuestRecord(id, questGoals)
@@ -160,7 +160,7 @@ function outdateActiveQuests(activeQuests, now) {
 }
 
 function satisfyGoal(req, goal, options) {
-  const unsatisfy = goal[req] && (!options || goal[req].indexOf(options[req]) == -1)
+  const unsatisfy = goal[req] && (!options || !goal[req].includes(options[req]))
   return !unsatisfy
 }
 
@@ -247,7 +247,7 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
   // type: practice, practice_win
   case '@@Response/kcsapi/api_req_practice/battle_result': {
     let changed = updateQuestRecord('practice', null, 1)
-    if (['S', 'A', 'B'].indexOf(body.api_win_rank) != -1)
+    if (['S', 'A', 'B'].includes(body.api_win_rank))
       changed = updateQuestRecord('practice_win', null, 1) || changed
     if (changed) {
       return {
@@ -338,7 +338,7 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
       if (shipId == -1 || enemyHp[idx] > 0)
         return
       const shipType = getStore(`const.$ships.${shipId}.api_stype`)
-      if ([7, 11, 13, 15].indexOf(shipType) != -1)
+      if ([7, 11, 13, 15].includes(shipType))
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
     })
     if (flag) {

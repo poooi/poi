@@ -162,7 +162,7 @@ class PluginManager extends EventEmitter {
     const uninstalled = {}
     for (const name in this.requirements) {
       const value = this.requirements[name]
-      if (installedPluginNames.indexOf(name) === -1) {
+      if (!installedPluginNames.includes(name)) {
         uninstalled[name] = value
       }
     }
@@ -326,7 +326,7 @@ class PluginManager extends EventEmitter {
       // await flow(this)
       await promisify(npm.commands.install)([name])
       const [packName] = name.split('@')
-      if (list.indexOf(packName) !== -1) {
+      if (list.includes(packName)) {
         this.reloadPlugin(packName)
       } else {
         this.addPlugin(path.join(this.pluginPath, 'node_modules', packName))
