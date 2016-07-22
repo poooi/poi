@@ -434,7 +434,7 @@ export function reducer(state=initState, action) {
         record = records[api_no]
       }
       if (record) {
-        record = updateRecordProgress(records[api_no], quest)
+        record = updateRecordProgress(record, quest)
         if (record !== records[api_no]) {
           records = copyIfSame(records, state.records)
           records[api_no] = record
