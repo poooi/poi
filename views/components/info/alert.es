@@ -64,8 +64,15 @@ export const PoiAlert = connect((state, props) => ({
   handleStyleChange = () => {
     setTimeout(() => {
       try {
-        this.alertHeight = $('poi-control').offsetHeight
-        this.historyHeight = $('.alert-history').offsetHeight
+        const alertHeight =  $('poi-control').offsetHeight
+        const historyHeight = $('.alert-history').offsetHeight
+        const bgColor = window.getComputedStyle($('body')).backgroundColor
+        if (historyHeight === this.historyHeight && alertHeight === this.alertHeight && bgColor === this.bgColor) {
+          return
+        }
+        this.alertHeight = alertHeight
+        this.historyHeight = historyHeight
+        this.bgColor = bgColor
       } catch (error) {
         this.alertHeight = 30
         this.historyHeight = 152
@@ -75,7 +82,7 @@ export const PoiAlert = connect((state, props) => ({
           height: ${this.alertHeight}px;
         }
         #alert-container.alert-default, .alert-history.panel {
-          background-color: ${window.getComputedStyle($('body')).backgroundColor};
+          background-color: ${this.bgColor};
         }
         #alert-container {
           height: ${this.alertHeight}px;
@@ -113,9 +120,14 @@ export const PoiAlert = connect((state, props) => ({
         this.setState({overflow: false})
       }
     }
+    this.handleStyleChange()
   }
   componentDidMount = () => {
-    config.addListener('config.set', this.handleStyleChange)
+    config.addListener('config.set', (path, value) => {
+      if (path === 'poi.theme') {
+        this.handleStyleChange()
+      }
+    })
     this.observer = new MutationObserver(this.handleOverflow)
     const target = $('#alert-area')
     const options = {
@@ -128,6 +140,7 @@ export const PoiAlert = connect((state, props) => ({
     this.observer.observe(target, options)
     window.addEventListener('resize', this.handleOverflowDebounced)
     window.addEventListener('alert.change', this.handleOverflow)
+    this.handleStyleChange()
   }
   componentWillUnmount = () => {
     config.removeListener('config.set', this.handleStyleChange)
