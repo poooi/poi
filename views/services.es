@@ -81,7 +81,10 @@ window.onbeforeunload = (e) => {
   }
 }
 class GameResponse {
-  constructor({path, body, postBody}) {
+  constructor(path, body, postBody) {
+    this.path = path
+    this.body = body
+    this.postBody = postBody
     Object.defineProperty(this, 'ClickToCopy -->', {get: () => {
       require('electron').clipboard.writeText(JSON.stringify({path, body, postBody}))
       return `Copied: ${this.path}`
