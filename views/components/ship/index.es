@@ -4,13 +4,19 @@ import classNames from 'classnames'
 import React, { Component, PropTypes } from 'react'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
-import { get } from 'lodash'
+import { get, memoize } from 'lodash'
+import { createSelector } from 'reselect'
 
 const {i18n, dbg} = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { ShipRow } from './shipitem'
 import TopAlert from 'views/components/ship-parts/topalert'
+import {
+  fleetNameSelectorFactory,
+  fleetStateSelectorFactory,
+  fleetShipsIdSelectorFactory,
+} from 'views/utils/selectors'
 
 function getStyle(state) {
   if (state >= 0 && state <= 5)
@@ -25,49 +31,19 @@ function getStyle(state) {
     return 'default'
 }
 
-function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
-  let state = 0
-  if (inBattle)
-    state = Math.max(state, 5)
-  if (inExpedition)
-    state = Math.max(state, 4)
-  for (const [ship, $ship] of shipsData) {
-    if (!ship || !$ship)
-      continue
-    // Cond < 20 or medium damage
-    if (ship.api_cond < 20 || ship.api_nowhp / ship.api_maxhp < 0.25)
-      state = Math.max(state, 2)
-    // Cond < 40 or heavy damage
-    else if (ship.api_cond < 40 || ship.api_nowhp / ship.api_maxhp < 0.5)
-      state = Math.max(state, 1)
-    // Not supplied
-    if (ship.api_fuel / $ship.api_fuel_max < 0.99 || ship.api_bull / $ship.api_bull_max < 0.99)
-      state = Math.max(state, 1)
-    // Repairing
-    if (inRepairShipsId.includes(ship.api_id))
-      state = Math.max(state, 3)
-  }
-  return state
-}
 
-
-const ShipViewSwitchButton = connect(() => {
-  const {makeThisFleetShipsDataSelector, makeThisFleetSelector, sortieStatusSelector, inRepairShipsIdSelector} = window
-  const thisFleetShipsDataSelector = makeThisFleetShipsDataSelector()
-  const thisFleetSelector = makeThisFleetSelector()
-  return (state, props) => {
-    const fleet = thisFleetSelector(state, props)
-    const inExpedition = fleet ? fleet.api_mission[0] : false
-    const inBattle = sortieStatusSelector(state)[props.fleetId]
-    const inRepairShipsId = inRepairShipsIdSelector(state)
-    const shipsData = thisFleetShipsDataSelector(state, props) || []
-    const fleetState = getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId)
-    return {
-      fleetState,
-      fleetName: fleet ? fleet.api_name : '',
-    }
-  }
-}
+const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
+  createSelector([
+    fleetNameSelectorFactory(fleetId),
+    fleetStateSelectorFactory(fleetId),
+  ], (fleetName, fleetState) => ({
+    fleetState,
+    fleetName,
+  }))
+)
+const ShipViewSwitchButton = connect(
+  (state, {fleetId}) =>
+    shipViewSwitchButtonDataSelectorFactory(fleetId)(state)
 )(({fleetId, activeFleetId, fleetName, fleetState, onClick}) =>
   <Button
     bsSize="small"
@@ -80,13 +56,16 @@ const ShipViewSwitchButton = connect(() => {
 )
 
 
-const FleetShipView = connect(() => {
-  const {makeThisFleetShipsIdSelector} = window
-  const thisFleetShipIdSelector = makeThisFleetShipsIdSelector()
-  return (state, props) => ({
-    shipsId: thisFleetShipIdSelector(state, props),
-  })
-}
+const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
+  createSelector([
+    fleetShipsIdSelectorFactory(fleetId),
+  ], (shipsId) => ({
+    shipsId,
+  }))
+)
+const FleetShipView = connect(
+  (state, {fleetId}) => 
+    fleetShipViewDataSelectorFactory(fleetId)(state)
 )(({fleetId, shipsId}) =>
   <div>
     <div className='fleet-name'>

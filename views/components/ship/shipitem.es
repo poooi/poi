@@ -1,17 +1,21 @@
 import { connect } from 'react-redux'
-import React from 'react'
+import React, { Component } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { isEqual, pick, omit } from 'lodash'
+import { isEqual, pick, omit, memoize } from 'lodash'
 
-const {resolveTime, i18n} = window
+const { resolveTime, i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
-const {Component} = React
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/components/ship-parts/utils'
+import {
+  shipDataSelectorFactory,
+  shipRepairDockSelectorFactory,
+  constSelector,
+} from 'views/utils/selectors'
 
 function getMaterialStyle(percent) {
   if (percent <= 50)
@@ -24,17 +28,22 @@ function getMaterialStyle(percent) {
     return 'success'
 }
 
-export const ShipRow = connect(() => createSelector([
-  window.makeThisShipDataSelector(),
-  window.makeThisShipRepairDockSelector(),
-  window.constSelector,
-], ([ship, $ship]=[], repairDock, {$shipTypes}) => ({
-  ship: ship || {},
-  $ship: $ship || {},
-  $shipTypes,
-  labelStatus: getShipLabelStatus(ship, $ship, repairDock),
-}))
-)(class shipRow extends Component {
+const shipRowDataSelectorFactory = memoize((shipId) =>
+  createSelector([
+    shipDataSelectorFactory(shipId),
+    shipRepairDockSelectorFactory(shipId),
+    constSelector,
+  ], ([ship, $ship]=[], repairDock, {$shipTypes}) => ({
+    ship: ship || {},
+    $ship: $ship || {},
+    $shipTypes,
+    labelStatus: getShipLabelStatus(ship, $ship, repairDock),
+  }))
+)
+export const ShipRow = connect(
+  (state, {shipId}) =>
+    shipRowDataSelectorFactory(shipId)(state)
+)(class ShipRow extends Component {
   static propTypes = {
     ship: React.PropTypes.object,
     $ship: React.PropTypes.object,

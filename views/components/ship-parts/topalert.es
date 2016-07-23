@@ -2,9 +2,20 @@ import { connect } from 'react-redux'
 import React from 'react'
 import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
-import { once } from 'lodash'
+import { once, memoize } from 'lodash'
+import { createSelector } from 'reselect'
 
 import CountdownTimer from 'views/components/main/parts/countdown-timer'
+import {
+  fleetInBattleSelectorFactory,
+  fleetInExpeditionSelectorFactory,
+  fleetShipsDataSelectorFactory,
+  fleetShipsEquipDataSelectorFactory,
+  fleetNameSelectorFactory,
+  basicSelector,
+  condTimerSelector,
+  fleetExpeditionSelectorFactory,
+} from 'views/utils/selectors'
 
 const {ROOT, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -297,51 +308,62 @@ class CountdownLabel extends Component {
   }
 }
 
-export default connect(() => {
-  const {
-    makeThisFleetShipsIdSelector,
-    makeThisFleetShipsDataSelector,
-    makeThisFleetSelector,
-    makeThisShipEquipDataSelector,
-    sortieStatusSelector,
-  } = window
-  const thisFleetShipIdSelector = makeThisFleetShipsIdSelector()
-  const thisFleetShipsDataSelector = makeThisFleetShipsDataSelector()
-  const thisFleetSelector = makeThisFleetSelector()
-  const thisShipEquipDataSelector = makeThisShipEquipDataSelector()
-  return (state, props) => {
-    const fleet = thisFleetSelector(state, props)
-    const inExpedition = fleet ? fleet.api_mission[0] : false
-    const inBattle = sortieStatusSelector(state)[props.fleetId]
-    const shipsData = thisFleetShipsDataSelector(state, props) || []
-    const shipsId = thisFleetShipIdSelector(state, props)
-    const equipsData = (shipsId || []).map((shipId) => {
-      return thisShipEquipDataSelector(state, {shipId})
-    })
-    return {
-      inExpedition,
-      inBattle,
-      shipsData,
-      equipsData,
-      isMini: props.isMini,
-      fleetId: props.fleetId,
-      fleetName: fleet ? fleet.api_name : '',
-      teitokuLv: state.info.basic.api_level,
-      condStartTime: state.timers.cond,
-      expeditionEndTime: fleet? fleet.api_mission[2] : 0,
-    }
-  }
-})(({inExpedition, inBattle, shipsData, equipsData, isMini, fleetId, fleetName, teitokuLv, condStartTime, expeditionEndTime}) => {
+const tykuSelectorFactory = memoize((fleetId) =>
+  createSelector(fleetShipsEquipDataSelectorFactory(fleetId),
+    (equipsData) =>
+      getTyku(equipsData)
+  )
+)
+
+const admiralLevelSelector = createSelector(basicSelector,
+  (basic) => basic.api_level
+)
+
+const sakuSelectorFactory = memoize((fleetId) =>
+  createSelector([
+    fleetShipsDataSelectorFactory(fleetId),
+    fleetShipsEquipDataSelectorFactory(fleetId),
+    admiralLevelSelector,
+  ], (shipsData, equipsData, admiralLevel) =>({
+    saku25: getSaku25(shipsData, equipsData),
+    saku25a: getSaku25a(shipsData, equipsData, admiralLevel),
+    saku33: getSaku33(shipsData, equipsData, admiralLevel),
+  }))
+)
+
+const topAlertSelectorFactory = memoize((fleetId) =>
+  createSelector([
+    fleetInBattleSelectorFactory(fleetId),
+    fleetInExpeditionSelectorFactory(fleetId),
+    fleetShipsDataSelectorFactory(fleetId),
+    fleetNameSelectorFactory(fleetId),
+    condTimerSelector,
+    fleetExpeditionSelectorFactory(fleetId),
+    tykuSelectorFactory(fleetId),
+    sakuSelectorFactory(fleetId),
+  ], (inBattle, inExpedition, shipsData, fleetName, condStartTime, expedition, tyku, saku) => ({
+    inExpedition,
+    inBattle,
+    shipsData,
+    fleetName,
+    condStartTime,
+    expeditionEndTime: expedition[2],
+    tyku,
+    saku,
+  }))
+)
+export default connect(
+  (state, {fleetId}) =>
+    topAlertSelectorFactory(fleetId)(state)
+)(function TopAlert(props) {
+  const {inExpedition, inBattle, shipsData, isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku} = props
+  const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
   shipsData.map(([_ship, $ship]) => {
     totalLv += _ship.api_lv
     minCond = Math.min(minCond, _ship.api_cond)
   })
-  const tyku = getTyku(equipsData)
-  const saku25 = getSaku25(shipsData, equipsData)
-  const saku25a = getSaku25a(shipsData, equipsData, teitokuLv)
-  const saku33 = getSaku33(shipsData, equipsData, teitokuLv)
   let completeTime
   if (inExpedition) {
     completeTime = expeditionEndTime

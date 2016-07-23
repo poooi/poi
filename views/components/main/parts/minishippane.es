@@ -3,11 +3,11 @@ import { MiniShipRow } from './minishipitem'
 import React from 'react'
 
 import TopAlert from 'views/components/ship-parts/topalert'
+import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 
 export const PaneBodyMini = connect(() => {
-  const thisFleetShipIdSelector = window.makeThisFleetShipsIdSelector()
-  return (state, props) => ({
-    shipsId: thisFleetShipIdSelector(state, props),
+  return (state, {fleetId}) => ({
+    shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
   })
 }
 )(({fleetId, shipsId}) =>

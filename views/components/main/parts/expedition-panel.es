@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 const __ = i18n.main.__.bind(i18n.main)
 
 import CountdownTimer from './countdown-timer'
+import { fleetsSelector } from 'views/utils/selectors'
 
 class CountdownLabel extends Component {
   getLabelStyle = (timeRemaining) => {
@@ -69,10 +70,10 @@ class CountdownLabel extends Component {
   }
 }
 
-const fleetsExpeditionSelector = createSelector([window.fleetsSelector],
+const fleetsExpeditionSelector = createSelector(fleetsSelector,
   (fleets) => map(fleets, 'api_mission')
 )
-const fleetsNamesSelector = createSelector([window.fleetsSelector],
+const fleetsNamesSelector = createSelector(fleetsSelector,
   (fleets) => map(fleets, 'api_name')
 )
 

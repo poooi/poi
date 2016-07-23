@@ -4,12 +4,17 @@ import { connect } from 'react-redux'
 import React from 'react'
 import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { memoize } from 'lodash'
 
-import {SlotitemIcon} from 'views/components/etc/icon-redux'
-import {getItemData} from './slotitems-data'
-import {equipIsAircraft} from 'views/components/ship-parts/utils'
+import { SlotitemIcon } from 'views/components/etc/icon-redux'
+import { getItemData } from './slotitems-data'
+import { equipIsAircraft } from 'views/components/ship-parts/utils'
+import {
+  shipDataSelectorFactory,
+  shipEquipDataSelectorFactory,
+} from 'views/utils/selectors'
 
-const {i18n} = window
+const { i18n } = window
 
 function getBackgroundStyle() {
   return window.isDarkTheme ?
@@ -18,14 +23,18 @@ function getBackgroundStyle() {
   {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
 }
 
-export const Slotitems = connect(() => createSelector([
-  window.makeThisShipDataSelector(),
-  window.makeThisShipEquipDataSelector(),
-  window.constSelector,
-], ([ship, $ship]=[], equipsData) => ({
-  api_maxeq: ($ship || {}).api_maxeq,
-  equipsData,
-}))
+const slotitemsDataSelectorFactory = memoize((shipId) =>
+  createSelector([
+    shipDataSelectorFactory(shipId),
+    shipEquipDataSelectorFactory(shipId),
+  ], ([ship, $ship]=[], equipsData) => ({
+    api_maxeq: ($ship || {}).api_maxeq,
+    equipsData,
+  }))
+)
+export const Slotitems = connect(
+  (state, {shipId}) =>
+    slotitemsDataSelectorFactory(shipId)(state)
 )(function ({api_maxeq, equipsData}) {
   return (
     <div className="slotitems">

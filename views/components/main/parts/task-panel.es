@@ -7,6 +7,8 @@ import React from 'react'
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
 
+import { configLayoutSelector, configDoubleTabbedSelector } from 'views/utils/selectors'
+
 // Return [count, required]
 function sumSubgoals(record) {
   if (!record)
@@ -102,51 +104,10 @@ function getToolTip(record) {
   )
 }
 
-/*
-  handleBattleResult: (e) ->
-    flag = false
-    {rank, boss, map, enemyHp, enemyShipId} = e.detail
-    # type: battle
-    flag = updateQuestRecord('battle', null, 1) || flag
-    # type: battle_win
-    if rank == 'S' || rank == 'A' || rank == 'B'
-      flag = updateQuestRecord('battle_win', null, 1) || flag
-    # type: battle_rank_s
-    if rank == 'S'
-      flag = updateQuestRecord('battle_rank_s', null, 1) || flag
-    # type: battle_boss
-    if boss
-      flag = updateQuestRecord('battle_boss', null, 1) || flag
-      # type: battle_boss_win
-      if rank == 'S' || rank == 'A' || rank == 'B'
-        flag = updateQuestRecord('battle_boss_win', {maparea: map}, 1) || flag
-      # type: battle_boss_win_rank_a
-      if rank == 'S' || rank == 'A'
-        flag = updateQuestRecord('battle_boss_win_rank_a', {maparea: map}, 1) || flag
-      # type: battle_boss_win_rank_s
-      if rank == 'S'
-        flag = updateQuestRecord('battle_boss_win_rank_s', {maparea: map}, 1) || flag
-    # type: sinking
-    for shipId, idx in enemyShipId
-      continue if shipId == -1 or enemyHp[idx] > 0
-      shipType = window.$ships[shipId].api_stype
-      if shipType in [7, 11, 13, 15]
-        flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
-    if flag
-      {tasks} = @state
-      for task in tasks when task.id < 100000 and questGoals[task.id]? and questRecord[task.id]?
-        task.tracking = true
-        task.percent = questRecord[task.id].count / questRecord[task.id].required
-        task.progress = questRecord[task.id].count + ' / ' + questRecord[task.id].required
-      tasks = _.sortBy tasks, (e) -> e.id
-      @setState
-        tasks: tasks
-*/
-
 const TaskRowBase = connect(
   createSelector([
-    window.configLayoutSelector,
-    window.configDoubleTabbedSelector,
+    configLayoutSelector,
+    configDoubleTabbedSelector,
   ], (layout, doubleTabbed) => ({
     leftOverlayPlacement: (!doubleTabbed) && (layout == 'vertical') ? 'top' : 'left',
   }))

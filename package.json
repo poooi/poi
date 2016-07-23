@@ -48,6 +48,7 @@
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
     "cson": "^3.0.2",
+    "fast-memoize": "^2.0.2",
     "flash-player-loader": "^1.1.1",
     "font-awesome": "^4.6.0",
     "fs-extra": "^0.30.0",

@@ -5,23 +5,35 @@ import shallowEqual from 'fbjs/lib/shallowEqual'
 import React, { Component } from 'react'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
-import { isEqual, pick, omit } from 'lodash'
+import { isEqual, pick, omit, memoize } from 'lodash'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { SlotitemIcon } from 'views/components/etc/icon-redux'
 import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/components/ship-parts/utils'
+import {
+  shipDataSelectorFactory,
+  shipEquipDataSelectorFactory,
+  shipRepairDockSelectorFactory,
+  configLayoutSelector,
+  configDoubleTabbedSelector,
+} from 'views/utils/selectors'
 
 const { i18n } = window
 
-const Slotitems  = connect(
-  () => createSelector([
-    window.makeThisShipDataSelector(),
-    window.makeThisShipEquipDataSelector(),
+const slotitemsDataSelectorFactory = memoize((shipId) => 
+  createSelector([
+    shipDataSelectorFactory(shipId),
+    shipEquipDataSelectorFactory(shipId),
   ], ([ship, $ship]=[], equipsData) => ({
     api_id: (ship || {}).api_id,
     api_maxeq: ($ship || {}).api_maxeq,
     equipsData,
   }))
+)
+
+const Slotitems  = connect(
+  (state, {shipId}) =>
+    slotitemsDataSelectorFactory(shipId)(state),
 )(function ({api_id, api_maxeq, equipsData}) {
   const tooltipClassName = classNames("item-name", {
     "hidden": !equipsData,
@@ -69,12 +81,12 @@ const Slotitems  = connect(
   )
 })
 
-export const MiniShipRow = connect(
-  () => createSelector([
-    window.makeThisShipDataSelector(),
-    window.makeThisShipRepairDockSelector(),
-    window.configLayoutSelector,
-    window.configDoubleTabbedSelector,
+const miniShipRowDataSelectorFactory = memoize((shipId) => 
+  createSelector([
+    shipDataSelectorFactory(shipId),
+    shipRepairDockSelectorFactory(shipId),
+    configLayoutSelector,
+    configDoubleTabbedSelector,
   ], ([ship, $ship]=[], repairDock, layout, doubleTabbed) => ({
     ship: ship || {},
     $ship: $ship || {},
@@ -82,6 +94,11 @@ export const MiniShipRow = connect(
     layout,
     doubleTabbed,
   }))
+)
+
+export const MiniShipRow = connect(
+  (state, {shipId}) =>
+    miniShipRowDataSelectorFactory(shipId),
 )(class miniShipRow extends Component {
   static propTypes = {
     ship: React.PropTypes.object,
