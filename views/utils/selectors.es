@@ -144,15 +144,13 @@ export const fleetNameSelectorFactory = memoize((fleetId) =>
 )
 export const fleetStateSelectorFactory = memoize((fleetId) =>
   createSelector([
-    fleetNameSelectorFactory(fleetId),
     fleetInBattleSelectorFactory(fleetId),
     fleetInExpeditionSelectorFactory(fleetId),
     inRepairShipsIdSelector,
     fleetShipsDataSelectorFactory(fleetId),
-  ], (fleetName, inBattle, inExpedition, inRepairShipsId, shipsData) => ({
-    fleetState: getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId),
-    fleetName,
-  }))
+  ], (inBattle, inExpedition, inRepairShipsId, shipsData) =>
+    getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId),
+  )
 )
 
 export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
