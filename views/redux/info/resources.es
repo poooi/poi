@@ -1,5 +1,7 @@
 import {map} from 'lodash'
 
+const { compareUpdate } = window
+
 // FORMAT
 // 0: <Fuel>
 // 1: <Ammo>
@@ -9,12 +11,6 @@ import {map} from 'lodash'
 // 5: <Fast repair (bucket)>
 // 6: <Development material>
 // 7: <Improvement material>
-
-function mergeArrayResources(state, arr) {
-  state = state.slice()
-  state.splice(0, arr.length, ...arr)
-  return state
-}
 
 function addArrayResources(state, arr) {
   state = state.slice()
@@ -28,18 +24,19 @@ export function reducer(state=[], {type, body, postBody}) {
   const {getStore} = window
   switch (type) {
   case '@@Response/kcsapi/api_port/port':
-    return map(body.api_material, 'api_value')
+    return compareUpdate(state, map(body.api_material, 'api_value'))
   case '@@Response/kcsapi/api_get_member/material':
-    return map(body, 'api_value')
+    return compareUpdate(state, map(body, 'api_value'))
   case '@@Response/kcsapi/api_req_hokyu/charge':
   case '@@Response/kcsapi/api_req_kousyou/destroyship':
-    return mergeArrayResources(state, body.api_material)
+    // These apis give only 4 resources
+    return compareUpdate(state, body.api_material)
   case '@@Response/kcsapi/api_req_kousyou/createitem':
-    return body.api_material
+    return compareUpdate(state, body.api_material)
   case '@@Response/kcsapi/api_req_kousyou/remodel_slot':
-    return body.api_after_material
+    return compareUpdate(state, body.api_after_material)
   case '@@Response/kcsapi/api_req_kousyou/createship_speedchange': {
-    let lsc = getStore(`info.construct.${postBody.api_kdock_id-1}.api_large_flag`)
+    const lsc = getStore(`info.construct.${postBody.api_kdock_id-1}.api_large_flag`)
     state = state.slice()
     state[4] -= lsc ? 10 : 1
     return state
@@ -47,7 +44,7 @@ export function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
     return addArrayResources(state, body.api_get_material)
   case '@@Response/kcsapi/api_req_nyukyo/start': {
-    let [fuel, steel] = getStore(`info.ships.${postBody.api_ship_id}.api_ndock_item`)
+    const [fuel, steel] = getStore(`info.ships.${postBody.api_ship_id}.api_ndock_item`)
     state = state.slice()
     state[0] -= fuel
     state[2] -= steel

@@ -1,5 +1,5 @@
 import memoize from 'fast-memoize'
-import { get, map } from 'lodash'
+import { get, map, range } from 'lodash'
 import { createSelector } from 'reselect'
 
 //### Helpers ###
@@ -25,12 +25,6 @@ function equipIdToEquipData(equipId, equips, $equips) {
     return
   const $equip = $equips[equip.api_slotitem_id]
   return [equip, $equip]
-}
-
-function fleetToShipsData(fleet, ships, $ships) {
-  if (fleet == null || !Array.isArray(fleet.api_ship))
-    return
-  return fleet.api_ship.map((shipId) => shipIdToShipData(shipId, ships, $ships)).filter(Boolean)
 }
 
 function shipDataToEquipData(shipData, equips, $equips) {
@@ -74,7 +68,7 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
 
 //### Selectors ###
 // Do not export. Use it sparingly
-const stateSelector = (state) => state
+//const stateSelector = (state) => state
 
 export const constSelector = (state) => state.const
 export const basicSelector = (state) => state.info.basic
@@ -117,18 +111,56 @@ export const fleetShipsIdSelectorFactory = memoize((fleetId) =>
   })
 )
 
+// fleetId: 0, .., 3
+// idx: 0, .., 5
+// Returns shipId or undefined
+const fleetIdxShipIdSelectorFactory = memoize((fleetId, idx) =>
+  createSelector(fleetShipsIdSelectorFactory(fleetId), (shipsId) =>
+    shipsId ? shipsId[idx] : undefined
+  )
+)
+// Returns [ship, $ship] or [] or undefined
+const fleetIdxShipDataSelectorFactory = memoize((fleetId, idx) =>
+  createSelector([
+    fleetIdxShipIdSelectorFactory(fleetId, idx),
+    shipsSelector,
+    constSelector,
+  ], (shipId, ships, {$ships}) => {
+    console.log(shipId == null ? undefined : shipIdToShipData(shipId, ships, $ships))
+    return shipId == null ? undefined : shipIdToShipData(shipId, ships, $ships)
+  })
+)
+// Returns [equip, $equip] or [] or undefined, see shipDataToEquipData
+const fleetIdxEquipDataSelectorFactory = memoize((fleetId, idx) =>
+  createSelector([
+    fleetIdxShipDataSelectorFactory(fleetId, idx),
+    equipsSelector,
+    constSelector,
+  ], (shipData, equips, {$equips}) =>
+    shipDataToEquipData(shipData, equips, $equips)
+  )
+)
+
 // Returns [ [_ship, $ship] for ship in thisFleet]
-// See thisFleetShipsDataSelector for detail
+// See fleetShipsDataSelectorFactory for detail
 // A ship not found in _ships is filled with []
 // A ship not found in $ships is filled with [_ship, undefined]
 export const fleetShipsDataSelectorFactory = memoize((fleetId) =>
-  createSelector([
-    fleetSelectorFactory(fleetId),
-    shipsSelector,
-    constSelector,
-  ], (fleet, ships, {$ships}) => {
-    return fleetToShipsData(fleet, ships, $ships)
-  })
+  createSelector(range(6).map(
+    (idx) => fleetIdxShipDataSelectorFactory(fleetId, idx)
+  ), (...args) =>
+    args.filter((arr) => arr && arr.length)
+  )
+)
+
+// Returns [ [_equip, $equip] for ship in thisFleet]
+// See shipDataToEquipData
+export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
+  createSelector(range(6).map(
+    (idx) => fleetIdxEquipDataSelectorFactory(fleetId, idx)
+  ), (...args) =>
+    args.filter((arr) => arr && arr.length)
+  )
 )
 
 export const fleetInBattleSelectorFactory = memoize((fleetId) => 
@@ -150,15 +182,6 @@ export const fleetStateSelectorFactory = memoize((fleetId) =>
     fleetShipsDataSelectorFactory(fleetId),
   ], (inBattle, inExpedition, inRepairShipsId, shipsData) =>
     getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId),
-  )
-)
-
-export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
-  createSelector([
-    stateSelector,
-    fleetShipsIdSelectorFactory(fleetId),
-  ], (state, shipsId) => 
-    shipsId.map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
   )
 )
 

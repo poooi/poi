@@ -1,3 +1,5 @@
+const { compareUpdate } = window
+
 // Preserved fields: api_id, api_member_id
 const emptyRepair = {
   api_complete_time: 0,
@@ -13,11 +15,11 @@ const emptyRepair = {
 export function reducer(state=[], {type, body, postBody}) {
   switch (type) {
   case '@@Response/kcsapi/api_get_member/ndock':
-    return body
+    return compareUpdate(state, body)
   case '@@Response/kcsapi/api_port/port':
-    return body.api_ndock
+    return compareUpdate(state, body.api_ndock)
   case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
-    let {api_ndock_id} = postBody
+    const {api_ndock_id} = postBody
     state = state.slice()
     state[api_ndock_id-1] = {
       ...state[api_ndock_id-1],
