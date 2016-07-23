@@ -79,6 +79,9 @@ export const equipsSelector = (state) => state.info.equips
 export const repairsSelector = (state) => state.info.repairs
 export const sortieStatusSelector = (state) => state.sortie.sortieStatus
 
+export const extensionSelectorFactory = (key) =>
+  (state) => state.ext[key]
+
 export const configLayoutSelector = createSelector(configSelector,
   (config) => get(config, 'poi.layout', 'horizontal'))
 export const configDoubleTabbedSelector = createSelector(configSelector,

@@ -3,7 +3,7 @@ import { observer, observe } from 'redux-observers'
 import { get, set } from 'lodash'
 import { remote } from 'electron'
 
-import { reducer as rootReducer, onConfigChange } from './redux'
+import { reducerFactory, onConfigChange } from './redux'
 import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
 import { dispatchBattleResult } from './redux/battle'
 
@@ -35,7 +35,7 @@ function autoCacheObserver(store, path) {
 
 //### Executing code ###
 
-const store = createStore(rootReducer, storeCache)
+export const store = createStore(reducerFactory(), storeCache)
 window.dispatch = store.dispatch
 
 //### Listeners and exports ###
@@ -76,4 +76,12 @@ observe(store, [observer(
   dispatchBattleResult,
 )])
 
-export { store }
+const _reducerExtensions = {}
+
+// Use this function to extend extra reducers to the store, such as plugin 
+// specific data maintainance.
+// Use extensionSelectorFactory(key) inside utils/selectors to access it.
+export function extendReducer(key, reducer) {
+  _reducerExtensions[key] = reducer
+  store.replaceReducer(reducerFactory(_reducerExtensions))
+}

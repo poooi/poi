@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import reduceReducers from 'reduce-reducers'
 
 import { reducer as constReducer } from './const'
 import { reducer as info } from './info'
@@ -15,8 +14,8 @@ import { reducer as plugins } from './plugins'
 
 // === Root reducer ===
 
-export const reducer = reduceReducers(
-  combineReducers({
+export function reducerFactory(extensionConfig) {
+  return combineReducers({
     const: constReducer,
     info,
     sortie,
@@ -26,8 +25,9 @@ export const reducer = reduceReducers(
     battle,
     alert,
     plugins,
-  }),
-)
+    ext: extensionConfig ? combineReducers(extensionConfig) : (() => ({})),
+  })
+}
 
 // === Actions ===
 
