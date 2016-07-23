@@ -12,7 +12,7 @@ matrix:
   include:
     - os: osx
     - os: linux
-      env: CC=clang CXX=clang++ npm_config_clang=1
+      env: CC=clang CXX=clang++ npm_config_clang=1 TRAVIS_NODE_VERSION="6"
       compiler: clang
 
 addons:
@@ -33,6 +33,7 @@ cache:
   - $HOME/.electron
 
 install:
+  - nvm install $TRAVIS_NODE_VERSION
   - npm install
 
 before_script:
