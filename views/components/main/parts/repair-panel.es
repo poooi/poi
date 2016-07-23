@@ -1,12 +1,21 @@
-const { ROOT, _ } = window
+const { ROOT } = window
 import React, { Component } from 'react'
 import { Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { map, range, once, get } from 'lodash'
+import { range, once } from 'lodash'
 import { join } from 'path-extra'
+import { createSelector } from 'reselect'
+
+const { i18n } = window
+
 const __ = i18n.main.__.bind(i18n.main)
 
 import CountdownTimer from './countdown-timer'
+import { 
+  repairsSelector,
+  constSelector,
+  shipsSelector,
+} from 'views/utils/selectors'
 
 class CountdownLabel extends Component {
   getLabelStyle = (timeRemaining) => {
@@ -47,7 +56,7 @@ class CountdownLabel extends Component {
       <OverlayTrigger placement='left' overlay={
         (this.props.style === 'primary' || this.props.style === 'warning') ? (
           <Tooltip id={`ndock-finish-by-${this.props.dockIndex}`}>
-            <strong>{__("Finish by : ")}</strong>{timeToString(this.props.completeTime)}
+            <strong>{__("Finish by : ")}</strong>{window.timeToString(this.props.completeTime)}
           </Tooltip>
         ) : (
           <span />
@@ -68,23 +77,29 @@ class CountdownLabel extends Component {
 }
 
 export default connect(
-  (state) => ({
-    repairs: get(state, 'info.repairs', []),
-    $ships: get(state, 'const.$ships', []),
-    ships: get(state, 'info.ships', [])
-  })
+  createSelector([
+    repairsSelector,
+    constSelector,
+    shipsSelector,
+  ], (repairs, {$ships}, ships) => ({
+    repairs,
+    $ships,
+    ships,
+  }))
 )(class RepairPanel extends Component {
   constructor(props) {
     super(props)
     this.canNotify = false
   }
   handleResponse = (e) => {
-    const { path, body, postBody } = e.detail
+    const {path} = e.detail
     switch (path) {
     case '/kcsapi/api_start2':
       this.canNotify = false
+      break
     case '/kcsapi/api_port/port':
       this.canNotify = true
+      break
     }
   }
   notify = (dockName) => {
@@ -95,6 +110,7 @@ export default connect(
     })
   }
   render() {
+    const {repairs, $ships, ships} = this.props
     return (
       <div>
         {
@@ -107,9 +123,8 @@ export default connect(
               api_item3: 0,
               api_item4: 0,
               api_ship_id: 0,
-              api_state: 0
+              api_state: 0,
             }
-            const { repairs, $ships, ships } = this.props
             const dock = repairs[i] || emptyRepair
             const dockName =
               dock.api_state == -1 ? __('Locked') :
