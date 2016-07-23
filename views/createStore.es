@@ -1,6 +1,7 @@
 import { createStore } from 'redux'
 import { observer, observe } from 'redux-observers'
 import { get, set } from 'lodash'
+import { remote } from 'electron'
 
 import { reducer as rootReducer, onConfigChange } from './redux'
 import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
@@ -44,12 +45,16 @@ window.getStore = (path) => {
 }
 
 // Listen to config.set event
-window.config.on('config.set', (path, value) => {
+const solveConfSet = (path, value) => {
   const details = {
     path: path,
     value: Object.clone(value),
   }
   store.dispatch(onConfigChange(details))
+}
+window.config.addListener('config.set', solveConfSet)
+remote.getCurrentWindow().on('close', (e) => {
+  window.config.removeListener('config.set', solveConfSet)
 })
 
 // When any targetPath is modified, store it into localStorage
