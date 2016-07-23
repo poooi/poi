@@ -9,6 +9,7 @@
 const initState = {
   combinedFlag: 0,
   sortieStatus: [false, false, false, false],
+  sortieMapId: 0,       // 0 for not in sortie, or the number such as `15` `342`
   escapedPos: [],
 }
 
@@ -20,6 +21,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       combinedFlag: body.api_combined_flag || 0,
       sortieStatus: initState.sortieStatus,
       escapedPos: [],
+      sortieMapId: 0,
     }
 
   case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -46,13 +48,15 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     break
 
   case '@@Response/kcsapi/api_req_map/start': {
-    let sortieStatus = initState.sortieStatus.slice()
+    const sortieStatus = initState.sortieStatus.slice()
+    const mapId = `${postBody.api_maparea_id}${postBody.api_mapinfo_no}`
     if (state.combinedFlag !== 0 && postBody.api_deck_id == 1) {
       sortieStatus[0] = sortieStatus[1] = true
     } else {
       sortieStatus[postBody.api_deck_id-1] = true
     }
     return {
+      sortieMapId: mapId,
       sortieStatus,
       escapedPos: [],
       _toEscapeIdx: [],

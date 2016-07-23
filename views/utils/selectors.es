@@ -66,6 +66,28 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
   return state
 }
 
+function getMapData(mapId, maps, $maps) {
+  if (mapId == 0 || mapId == null || maps == null || $maps == null)
+    return
+  if (!maps[mapId] || !$maps[mapId])
+    return
+  return [maps[mapId], $maps[mapId]]
+}
+
+function getMapHp(map, $map) {
+  if (!map || !$map)
+    return
+  if (map.api_eventmap) {
+    const {api_now_maphp, api_max_maphp, api_gauge_type} = map.api_eventmap
+    return [api_now_maphp, api_max_maphp, api_gauge_type]
+  }
+  const maxHp = $map.api_required_defeat_count
+  if (!maxHp)
+    return
+  const nowHp = map.api_defeat_count || 0
+  return [nowHp, maxHp, undefined]
+}
+
 //### Selectors ###
 // Do not export. Use it sparingly
 //const stateSelector = (state) => state
@@ -77,6 +99,8 @@ export const fleetsSelector = (state) => state.info.fleets
 export const shipsSelector = (state) => state.info.ships
 export const equipsSelector = (state) => state.info.equips
 export const repairsSelector = (state) => state.info.repairs
+export const mapsSelector = (state) => state.info.maps
+export const sortieSelector = (state) => state.sortie
 export const sortieStatusSelector = (state) => state.sortie.sortieStatus
 
 export const extensionSelectorFactory = (key) =>
@@ -128,10 +152,9 @@ const fleetIdxShipDataSelectorFactory = memoize((fleetId, idx) =>
     fleetIdxShipIdSelectorFactory(fleetId, idx),
     shipsSelector,
     constSelector,
-  ], (shipId, ships, {$ships}) => {
-    console.log(shipId == null ? undefined : shipIdToShipData(shipId, ships, $ships))
-    return shipId == null ? undefined : shipIdToShipData(shipId, ships, $ships)
-  })
+  ], (shipId, ships, {$ships}) =>
+    shipId == null ? undefined : shipIdToShipData(shipId, ships, $ships)
+  )
 )
 // Returns [equip, $equip] or [] or undefined, see shipDataToEquipData
 const fleetIdxEquipDataSelectorFactory = memoize((fleetId, idx) =>
@@ -236,3 +259,36 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
     shipDataToEquipData(shipData, equips, $equips)
   )
 )
+
+// Return [map, $map] or undefined
+export const mapDataSelectorFactory = memoize((mapId) =>
+  createSelector([
+    mapsSelector,
+    constSelector,
+  ], (maps, {$maps}) => {
+    if (!maps[mapId] || !$maps[mapId])
+      return
+    return [maps[mapId], $maps[mapId]]
+  })
+)
+
+export const sortieMapIdSelector = createSelector(sortieSelector,
+  (sortie) => sortie.sortieMapId
+)
+export const sortieMapDataSelector = createSelector([
+  sortieMapIdSelector,
+  mapsSelector,
+  constSelector,
+], (mapId, maps, {$maps}) =>
+  getMapData(mapId, maps, $maps)
+)
+export const sortieMapHpSelector = createSelector(sortieMapDataSelector,
+  (mapData) =>
+    mapData ? getMapHp(mapData[0], mapData[1]) : undefined
+)
+
+// Return undefined if doesn't have a gauge, or $map does not exist
+// Return [nowHp, maxHp, gaugeType], where nowHp == 0 means defeated
+// Where gaugeType = undefined   // Normal maps
+//                 = 2           // HP
+//                 = 3           // Transpotation
