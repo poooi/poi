@@ -5,6 +5,9 @@ dist: trusty
 
 language: c
 
+node_js:
+  - "6"
+
 matrix:
   include:
     - os: osx
