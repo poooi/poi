@@ -1,8 +1,8 @@
 import CSON from 'cson'
-import {join} from 'path-extra'
-import {sortBy, mapValues, forEach, values, fromPairs} from 'lodash'
-import {writeFile} from 'fs-extra'
+import { join } from 'path-extra'
+import { sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
 
+import FileWriter from 'views/utils/fileWriter'
 const {ROOT, APPDATA_PATH} = window
 
 const QUESTS_REFRESH_DAY = '@@QUESTS_REFRESH_DAY'
@@ -519,11 +519,13 @@ export function schedualDailyRefresh(dispatch) {
   }, nextTimeout)
 }
 
+const fileWriter = new FileWriter()
+
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
 export function saveQuestTracking(questRecords) {
-  writeFile(questTrackingPath(questRecords.admiralId), CSON.stringify({
+  fileWriter.write(questTrackingPath(questRecords.admiralId), CSON.stringify({
     ...questRecords,
     time: Date.now(),
-  }), null, 2)
+  }))
 }
