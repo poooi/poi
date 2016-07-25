@@ -2,7 +2,7 @@
  * This file contains utility functions that is unrelated to the game mechanism.
  */
 
-import { unzip, sum } from 'lodash'
+import { zip, unzip, sum } from 'lodash'
 
 // For a given array, sum up each position of the subarray respectively.
 // Args:
@@ -17,6 +17,24 @@ export function arrayMultiply(arr, n) {
   return arr.map((i) => i * n)
 }
 
+// Args:
+//   arr - Array
+//   n   - number or Array
 export function arrayAdd(arr, n) {
-  return arr.map((i) => i + n)
+  if (Array.isArray(n)) {
+    return zip(arr, n).map(([a, b]) => a+b)
+  } else {
+    return arr.map((i) => i + n)
+  }
+}
+
+// Args:
+//   arr - Array
+//   n   - number or Array
+export function arraySubstract(arr, n) {
+  if (Array.isArray(n)) {
+    return zip(arr, n).map(([a, b]) => a-b)
+  } else {
+    return arr.map((i) => i - n)
+  }
 }
