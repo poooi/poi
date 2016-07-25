@@ -1,8 +1,10 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
 import { get, set } from 'lodash'
 import { remote } from 'electron'
 
+import { middleware as promiseActionMiddleware } from './middlewares/promiseAction'
 import { reducerFactory, onConfigChange } from './redux'
 import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
 import { dispatchBattleResult } from './redux/battle'
@@ -35,7 +37,14 @@ function autoCacheObserver(store, path) {
 
 //### Executing code ###
 
-export const store = createStore(reducerFactory(), storeCache)
+export const store = createStore(
+  reducerFactory(),
+  storeCache,
+  applyMiddleware(
+    promiseActionMiddleware,
+    thunk
+  ),
+)
 window.dispatch = store.dispatch
 
 //### Listeners and exports ###
