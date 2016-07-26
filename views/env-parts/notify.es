@@ -31,7 +31,10 @@ window.notify = (msg, options) => {
   let title = 'poi'
   let icon = NOTIFY_DEFAULT_ICON
   let audio = config.get('poi.notify.audio', `file://${ROOT}/assets/audio/poi.mp3`)
-  const type = (options || {}).type || "others"
+  let type = (options || {}).type || "others"
+  if (!Object.keys(playAudioDedupedByType).includes(type)) {
+    type = "others"
+  }
 
   if (['construction', 'expedition', 'repair', 'morale'].includes(type)) {
     if (enabled) {
