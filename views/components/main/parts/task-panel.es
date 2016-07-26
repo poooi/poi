@@ -15,7 +15,7 @@ function sumSubgoals(record) {
     return [0, 0]
   let [count, required] = [0, 0]
   forEach(record, (subgoal, key) => {
-    if (typeof subgoal.required !== 'undefined') {
+    if (subgoal && typeof subgoal === 'object') {
       count += subgoal.count
       required += subgoal.required
     }
@@ -96,8 +96,9 @@ function getToolTip(record) {
     <div>
     {
       values(record).map((subgoal, idx) =>
-        (typeof subgoal.required === 'undefined') ? undefined :
-          <div key={idx}>{subgoal.description} - {subgoal.count} / {subgoal.required}</div>
+        (subgoal && typeof subgoal === 'object')
+          ? <div key={idx}>{subgoal.description} - {subgoal.count} / {subgoal.required}</div>
+          : undefined
       )
     }
     </div>
