@@ -24,8 +24,7 @@ const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipEquipDataSelectorFactory(shipId),
-  ], ([ship, $ship]=[], equipsData) => ({
-    api_id: (ship || {}).api_id,
+  ], ([ship, $ship]=[], equipsData, exslot) => ({
     api_maxeq: ($ship || {}).api_maxeq,
     equipsData,
   }))
@@ -34,7 +33,7 @@ const slotitemsDataSelectorFactory = memoize((shipId) =>
 const Slotitems  = connect(
   (state, {shipId}) =>
     slotitemsDataSelectorFactory(shipId)(state),
-)(function ({api_id, api_maxeq, equipsData}) {
+)(function ({api_maxeq, equipsData}) {
   const tooltipClassName = classNames("item-name", {
     "hidden": !equipsData,
   })

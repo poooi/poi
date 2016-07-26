@@ -30,18 +30,19 @@ const slotitemsDataSelectorFactory = memoize((shipId) =>
   ], ([ship, $ship]=[], equipsData) => ({
     api_maxeq: ($ship || {}).api_maxeq,
     equipsData,
+    exslotUnlocked: ship.api_slot_ex != 0,
   }))
 )
 export const Slotitems = connect(
   (state, {shipId}) =>
     slotitemsDataSelectorFactory(shipId)(state)
-)(function ({api_maxeq, equipsData}) {
+)(function ({api_maxeq, equipsData, exslotUnlocked}) {
   return (
     <div className="slotitems">
     {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const isExslot = equipIdx == (equipsData.length-1)
-        if (isExslot && !equipData) {
+        if (isExslot && !equipData && !exslotUnlocked) {
           return <div key={equipIdx}></div>
         }
         const [equip, $equip, onslot] = equipData || []
