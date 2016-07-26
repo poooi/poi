@@ -5,16 +5,18 @@ import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 //### Helpers ###
 
 function deepCompareArray(currentVal, previousVal) {
+  if (currentVal === previousVal)
+    return true
   if (Array.isArray(currentVal) && Array.isArray(previousVal)
     && currentVal.length === previousVal.length) {
     return zip(currentVal, previousVal).every(([a, b]) => a === b)
   } else {
-    return currentVal === previousVal
+    return false
   }
 }
 // This kind of selector specially treats array arguments by `===` comparing
 // its items one by one
-const createDeepCompareArraySelector = createSelectorCreator(
+export const createDeepCompareArraySelector = createSelectorCreator(
   defaultMemoize,
   deepCompareArray
 )
