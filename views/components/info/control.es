@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 
-const {$, i18n, config, error, success, toggleModal, APPDATA_PATH} = window
+const {$, i18n, config, APPDATA_PATH} = window
 const {openItem} = shell
 const __ = i18n.others.__.bind(i18n.others)
 
@@ -45,9 +45,9 @@ const PoiControl = connect((state, props) => ({
     const screenshotPath = config.get('poi.screenshotPath', d)
     capturePageInMainWindow( rect, screenshotPath , (err, filename) => {
       if (err) {
-        error(__('Failed to save the screenshot'))
+        window.error(__('Failed to save the screenshot'))
       } else {
-        success(`${__('screenshot saved to')} ${filename}`)
+        window.success(`${__('screenshot saved to')} ${filename}`)
       }
     })
   }
@@ -64,7 +64,7 @@ const PoiControl = connect((state, props) => ({
       openItem(dir)
     }
     catch (e) {
-      toggleModal(__('Open cache dir'), __("Failed. Perhaps you don't have permission to it."))
+      window.toggleModal(__('Open cache dir'), __("Failed. Perhaps you don't have permission to it."))
     }
   }
   handleOpenMakaiFolder = () => {
@@ -74,7 +74,7 @@ const PoiControl = connect((state, props) => ({
       fs.ensureDirSync(dir)
       openItem(dir)
     } catch (e) {
-      toggleModal(__('Open makai dir'), __("Failed. Perhaps you don't have permission to it."))
+      window.toggleModal(__('Open makai dir'), __("Failed. Perhaps you don't have permission to it."))
     }
   }
   handleOpenScreenshotFolder = () => {
@@ -85,7 +85,7 @@ const PoiControl = connect((state, props) => ({
       openItem(screenshotPath)
     }
     catch (e) {
-      toggleModal(__('Open screenshot dir'), __("Failed. Perhaps you don't have permission to it."))
+      window.toggleModal(__('Open screenshot dir'), __("Failed. Perhaps you don't have permission to it."))
     }
   }
   handleSetMuted = () => {
