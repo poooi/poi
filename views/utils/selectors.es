@@ -212,7 +212,7 @@ const equipBaseDataSelectorFactory = memoize((equipId) =>
     : undefined
   )
 )
-// Reads props.equipId
+
 // Returns [_equip, $equip]
 // Returns undefined if uninitialized, or if equip not found in _equip
 export const equipDataSelectorFactory = memoize((equipId) =>
@@ -250,7 +250,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
         zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
           equipId <= 0
           ? undefined
-          : equipDataSelectorFactory(equipId)(state)
+          : equipDataSelectorFactory(equipId)(state).concat(onslot)
         ), slotnum
       )
   )
