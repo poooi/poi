@@ -1,10 +1,10 @@
-var electron = require('electron')
-var remote = electron.remote
-var Promise = require('bluebird')
+let electron = require('electron')
+let remote = electron.remote
+let Promise = require('bluebird')
 require('coffee-script/register')
 
 // webview focus area fix
-console.log('This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395')
+// This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395
 window.onclick = (e) => {
   remote.getCurrentWindow().webContents.executeJavaScript(`
     $('webview').blur()
@@ -17,11 +17,9 @@ if (window.location.toString() !== "http://www.dmm.com/netgame/social/-/gadgets/
   return
 }
 
-webFrame = electron.webFrame
-var ROOT = remote.getGlobal('ROOT')
-var config = remote.require(`${ROOT}/lib/config`)
+let webFrame = electron.webFrame
 
-var alertCSS =
+let alertCSS =
 `#alert {
   transform: scale(0.8);
   left: 80px !important;
@@ -29,10 +27,10 @@ var alertCSS =
 }
 `
 
-var alignCSS = document.createElement('style')
+let alignCSS = document.createElement('style')
 
-getWebviewWidth = Promise.coroutine(function* () {
-  var width = yield new Promise((resolve, reject) => {
+const getWebviewWidth = Promise.coroutine(function* () {
+  let width = yield new Promise((resolve, reject) => {
     remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width", (result) => {
       resolve(result)
     })
@@ -41,8 +39,7 @@ getWebviewWidth = Promise.coroutine(function* () {
 })
 
 window.align = Promise.coroutine(function* () {
-  var zoom
-  zoom = yield getWebviewWidth()
+  let zoom = yield getWebviewWidth()
   zoom = zoom / 800
   webFrame.setZoomFactor(zoom)
   window.scrollTo(0, 0)
@@ -70,8 +67,12 @@ window.align = Promise.coroutine(function* () {
   .naviapp {
     z-index: -1;
   }
+  #ntg-recommend {
+    display: none !important;
+  }
   `
 })
+
 window.unalign = () => {
   alignCSS.innerHTML = ""
 }

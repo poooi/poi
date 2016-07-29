@@ -33,5 +33,17 @@ module.exports = {
     'no-unused-vars': ['warn', {'args': 'none'}],
     'semi': ['error', 'never'],
     'unicode-bom': 'error',
+    'prefer-const': ['error', {'destructuring': 'all'}],
+    'react/prop-types': [0],
+    'no-irregular-whitespace': ['error', {'skipStrings': true, 'skipTemplates': true}],
+  },
+  'settings': {
+    'import/resolver': {
+      'node': {
+        'extensions': ['', '.js', '.jsx', '.es', '.coffee', '.cjsx'],
+        'paths': [__dirname]
+      },
+    },
+    'import/core-modules': ['electron'],
   },
 }

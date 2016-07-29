@@ -1,8 +1,9 @@
-const {React, ReactBootstrap, FontAwesome} = window
-const {Button, ButtonGroup, Input, OverlayTrigger, Tooltip} = ReactBootstrap
+import React from 'react'
+import FontAwesome from 'react-fontawesome'
+import { Button, ButtonGroup, Input, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
+const {config, i18n, $} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const __n = i18n.setting.__n.bind(i18n.setting)
 const webview = $('kan-game webview')
 const wvStatus = {
   Loading: 0,
@@ -16,7 +17,7 @@ class NavigatorBar extends React.Component {
     config.setDefault('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')
     this.state = {
       status: 1,
-      url: config.get('poi.homepage')
+      url: config.get('poi.homepage'),
     }
   }
   componentDidMount() {
@@ -60,12 +61,12 @@ class NavigatorBar extends React.Component {
     }
     webview.loadURL(url)
     this.setState({
-      url: url
+      url: url,
     })
   }
   onChangeUrl = (e) => {
     this.setState({
-      url: e.target.value
+      url: e.target.value,
     })
   }
   onKeydown = (e) => {
@@ -106,7 +107,7 @@ class NavigatorBar extends React.Component {
   }
 
   render() {
-    let {url, status} = this.state
+    const {status} = this.state
 
     let statusIcon
     if (status === wvStatus.Loading) {
@@ -154,4 +155,4 @@ class NavigatorBar extends React.Component {
   }
 }
 
-module.exports = NavigatorBar
+export default NavigatorBar

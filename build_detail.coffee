@@ -1,4 +1,5 @@
 # *** INCLUDE ***
+require('babel-register')(require('./babel.config'));
 os = require 'os'
 path = require 'path-extra'
 Promise = require 'bluebird'
