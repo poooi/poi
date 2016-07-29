@@ -219,11 +219,11 @@ export const equipDataSelectorFactory = memoize((equipId) =>
   createSelector([
     equipBaseDataSelectorFactory(equipId),
     constSelector,
-  ], (equip, {$equips}) =>
-    $equips && typeof equip === 'object' && equip
-    ? [equip, $equips[equip.api_equip_id]]
-    : undefined
-  )
+  ], (equip, {$equips}) => {
+    if (!equip || !$equips || !$equips[equip.api_slotitem_id])
+      return
+    return [equip, $equips[equip.api_slotitem_id]]
+  })
 )
 
 function effectiveEquips(equipArray, slotnum) {
@@ -243,13 +243,12 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
     shipSlotnumSelectorFactory(shipId),
     shipEquipsIdSelectorFactory(shipId),
     shipOnSlotSelectorFactory(shipId),
-    constSelector,
   ], (state, slotnum, shipEquipsId, onslots) =>
     !Array.isArray(shipEquipsId)
     ? undefined
     : effectiveEquips(
         zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
-          equipId != -1
+          equipId <= 0
           ? undefined
           : equipDataSelectorFactory(equipId)(state)
         ), slotnum
