@@ -1,4 +1,5 @@
 import glob from 'glob'
+import module from 'module'
 import { sortBy } from 'lodash'
 import { join } from 'path-extra'
 
@@ -73,7 +74,16 @@ export function reducer (state=[], {type, value, option}) {
     const i = getPluginIndexByPackageName(state, value.packageName)
     let plugin = state[i]
     plugin = unloadPlugin(plugin)
-    delete require.cache[require.resolve(plugin.pluginPath)]
+    for (const path in module._cache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._cache[path]
+      }
+    }
+    for (const path in module._pathCache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._pathCache[path]
+      }
+    }
     state.splice(i, 1)
     return state
   }
@@ -92,7 +102,16 @@ export function reducer (state=[], {type, value, option}) {
     const i = getPluginIndexByPackageName(state, value.packageName)
     const plugin = state[i]
     unloadPlugin(plugin)
-    delete require.cache[require.resolve(plugin.pluginPath)]
+    for (const path in module._cache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._cache[path]
+      }
+    }
+    for (const path in module._pathCache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._pathCache[path]
+      }
+    }
     let newPlugin = readPlugin(plugin.pluginPath)
     if (newPlugin.enabled) {
       newPlugin = loadPlugin(newPlugin)
