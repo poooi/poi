@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { shell, remote } from 'electron'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Grid, Col, Row, FormControl, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
+import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 
@@ -298,21 +298,25 @@ class InstallByNameInput extends Component {
   }
   render() {
     return (
-      <FormControl type="text"
-             value={this.state.manuallyInstallPackage}
-             onChange={this.changeInstalledPackage}
-             label={__('Install directly from npm')}
-             disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-             placeholder={__('Input plugin package name...')}
-             bsSize='small'
-             buttonAfter={
-               <Button bsStyle='primary'
-                       disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-                       onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
-                 {__('Install')}
-               </Button>
-             }>
-      </FormControl>
+      <FormGroup>
+        <ControlLabel>{__('Install directly from npm')}</ControlLabel>
+        <InputGroup bsSize='small'>
+          <FormControl type="text"
+                 value={this.state.manuallyInstallPackage}
+                 onChange={this.changeInstalledPackage}
+                 label={__('Install directly from npm')}
+                 disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+                 placeholder={__('Input plugin package name...')}>
+          </FormControl>
+          <InputGroup.Button>
+            <Button bsStyle='primary'
+                    disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+                    onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
+              {__('Install')}
+            </Button>
+          </InputGroup.Button>
+        </InputGroup>
+      </FormGroup>
     )
   }
 }
