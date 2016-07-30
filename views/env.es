@@ -29,8 +29,37 @@ window.$$ = (param) => document.querySelectorAll(param)
 window.jQuery = require('jquery')
 window.React = require('react')
 window.ReactDOM = require('react-dom')
-window.ReactBootstrap = require('react-bootstrap')
 window.FontAwesome = require('react-fontawesome')
+window.ReactBootstrap = require('react-bootstrap')
+// Workaround
+const React = window.React
+const {Radio, Checkbox, FormControl} = window.ReactBootstrap
+window.ReactBootstrap.Input = class extends window.React.Component {
+  render() {
+    switch (this.props.type) {
+    case 'radio': {
+      return (
+        <Radio {...this.props}>{this.props.label}</Radio>
+      )
+    }
+    case 'checkbox': {
+      return (
+        <Checkbox {...this.props}>{this.props.label}</Checkbox>
+      )
+    }
+    case 'select': {
+      return (
+        <FormControl componentClass='select' {...this.props}>{this.props.children}</FormControl>
+      )
+    }
+    default: {
+      return (
+        <FormControl {...this.props}>{this.props.children}</FormControl>
+      )
+    }
+    }
+  }
+}
 
 if (window.dbg.isEnabled()) {
   process.stderr.write = console.error.bind(console)
