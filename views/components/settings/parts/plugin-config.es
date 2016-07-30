@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { shell, remote } from 'electron'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
+import { Grid, Col, Row, FormControl, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 
@@ -298,7 +298,7 @@ class InstallByNameInput extends Component {
   }
   render() {
     return (
-      <Input type="text"
+      <FormControl type="text"
              value={this.state.manuallyInstallPackage}
              onChange={this.changeInstalledPackage}
              label={__('Install directly from npm')}
@@ -312,7 +312,7 @@ class InstallByNameInput extends Component {
                  {__('Install')}
                </Button>
              }>
-      </Input>
+      </FormControl>
     )
   }
 }
@@ -640,10 +640,10 @@ const PluginConfig = connect((state, props) => ({
                                 </Tooltip>
                               }>
                                 <Col key={index} xs={6} className='select-npm-server'>
-                                  <Input type='radio'
-                                         label={mirrors[server].name}
-                                         checked={this.props.mirrorName == server}
-                                         onChange={this.onSelectServer.bind(this, server)} />
+                                  <Radio checked={this.props.mirrorName == server}
+                                         onChange={this.onSelectServer.bind(this, server)} >
+                                    {mirrors[server].name}
+                                  </Radio>
                                 </Col>
                               </OverlayTrigger>
                             )
@@ -660,14 +660,16 @@ const PluginConfig = connect((state, props) => ({
                           </Col>
                         </Row>
                         <div>
-                          <Input type="checkbox" label={__('Connect to npm server through proxy')}
-                                 checked={this.props.proxy || false}
-                                 onChange={this.handleEnableProxy} />
+                          <Checkbox checked={this.props.proxy || false}
+                                    onChange={this.handleEnableProxy}>
+                            {__('Connect to npm server through proxy')}
+                          </Checkbox>
                         </div>
                         <div>
-                          <Input type="checkbox" label={__('Developer option: check update of beta version')}
-                                 checked={this.props.betaCheck || false}
-                                 onChange={this.handleEnableBetaPluginCheck} />
+                          <Checkbox checked={this.props.betaCheck || false}
+                                    onChange={this.handleEnableBetaPluginCheck}>
+                            {__('Developer option: check update of beta version')}
+                          </Checkbox>
                         </div>
                         <Row>
                           <ButtonGroup className='plugin-buttongroup'>

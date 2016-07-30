@@ -1,6 +1,6 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Button, ButtonGroup, Input, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Button, ButtonGroup, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 const {config, i18n, $} = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -129,7 +129,7 @@ class NavigatorBar extends React.Component {
     return (
       <div className='navigator'>
         <div className='navigator-url'>
-          <Input type='text' bsSize='small'
+          <FormControl type='text' bsSize='small'
                  placeholder={__('Input address')}
                  className={statusIcon? 'navigator-status' : 'navigator-no-status'}
                  value={this.state.url}
