@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { shell, remote } from 'electron'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Grid, Col, Row, Input, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
+import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 
@@ -298,21 +298,25 @@ class InstallByNameInput extends Component {
   }
   render() {
     return (
-      <Input type="text"
-             value={this.state.manuallyInstallPackage}
-             onChange={this.changeInstalledPackage}
-             label={__('Install directly from npm')}
-             disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-             placeholder={__('Input plugin package name...')}
-             bsSize='small'
-             buttonAfter={
-               <Button bsStyle='primary'
-                       disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-                       onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
-                 {__('Install')}
-               </Button>
-             }>
-      </Input>
+      <FormGroup>
+        <ControlLabel>{__('Install directly from npm')}</ControlLabel>
+        <InputGroup bsSize='small'>
+          <FormControl type="text"
+                 value={this.state.manuallyInstallPackage}
+                 onChange={this.changeInstalledPackage}
+                 label={__('Install directly from npm')}
+                 disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+                 placeholder={__('Input plugin package name...')}>
+          </FormControl>
+          <InputGroup.Button>
+            <Button bsStyle='primary'
+                    disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+                    onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
+              {__('Install')}
+            </Button>
+          </InputGroup.Button>
+        </InputGroup>
+      </FormGroup>
     )
   }
 }
@@ -640,10 +644,10 @@ const PluginConfig = connect((state, props) => ({
                                 </Tooltip>
                               }>
                                 <Col key={index} xs={6} className='select-npm-server'>
-                                  <Input type='radio'
-                                         label={mirrors[server].name}
-                                         checked={this.props.mirrorName == server}
-                                         onChange={this.onSelectServer.bind(this, server)} />
+                                  <Radio checked={this.props.mirrorName == server}
+                                         onChange={this.onSelectServer.bind(this, server)} >
+                                    {mirrors[server].name}
+                                  </Radio>
                                 </Col>
                               </OverlayTrigger>
                             )
@@ -660,14 +664,16 @@ const PluginConfig = connect((state, props) => ({
                           </Col>
                         </Row>
                         <div>
-                          <Input type="checkbox" label={__('Connect to npm server through proxy')}
-                                 checked={this.props.proxy || false}
-                                 onChange={this.handleEnableProxy} />
+                          <Checkbox checked={this.props.proxy || false}
+                                    onChange={this.handleEnableProxy}>
+                            {__('Connect to npm server through proxy')}
+                          </Checkbox>
                         </div>
                         <div>
-                          <Input type="checkbox" label={__('Developer option: check update of beta version')}
-                                 checked={this.props.betaCheck || false}
-                                 onChange={this.handleEnableBetaPluginCheck} />
+                          <Checkbox checked={this.props.betaCheck || false}
+                                    onChange={this.handleEnableBetaPluginCheck}>
+                            {__('Developer option: check update of beta version')}
+                          </Checkbox>
                         </div>
                         <Row>
                           <ButtonGroup className='plugin-buttongroup'>

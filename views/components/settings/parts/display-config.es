@@ -1,7 +1,7 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { shell } from 'electron'
-import { Grid, Col, Button, Input, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Grid, Col, Button, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
 import Divider from './divider'
@@ -75,7 +75,9 @@ const ChangeLayoutConfig = connect(() => (
           </Button>
         </Col>
         <Col xs={12}>
-          <Input type="checkbox" label={__('Split component and plugin panel')} checked={this.props.enableDoubleTabbed} onChange={this.handleSetDoubleTabbed} />
+          <Checkbox checked={this.props.enableDoubleTabbed} onChange={this.handleSetDoubleTabbed}>
+            {__('Split component and plugin panel')}
+          </Checkbox>
         </Col>
       </Grid>
     )
@@ -93,8 +95,8 @@ const ChangeThemeConfig = connect((state, props) => ({
     enableSVGIcon: React.PropTypes.bool,
     enableTransition: React.PropTypes.bool,
   }
-  handleSetTheme = () => {
-    const theme = this.refs.theme.getValue()
+  handleSetTheme = (e) => {
+    const theme = e.target.value
     if (this.props.theme !== theme) {
       return window.applyTheme(theme)
     }
@@ -118,7 +120,7 @@ const ChangeThemeConfig = connect((state, props) => ({
     return (
       <Grid>
         <Col xs={6}>
-          <Input type="select" ref="theme" value={this.props.theme} onChange={this.handleSetTheme}>
+          <FormControl componentClass="select" value={this.props.theme} onChange={this.handleSetTheme}>
             {
               window.allThemes.map((theme, index) =>
                 <option key={index} value={theme}>
@@ -126,16 +128,20 @@ const ChangeThemeConfig = connect((state, props) => ({
                 </option>
               )
             }
-          </Input>
+          </FormControl>
         </Col>
         <Col xs={6}>
           <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
         </Col>
         <Col xs={12}>
-          <Input type="checkbox" label={__('Use SVG Icon')} checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon} />
+          <Checkbox checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon}>
+            {__('Use SVG Icon')}
+          </Checkbox>
         </Col>
         <Col xs={12}>
-          <Input type="checkbox" label={__('Enable Smooth Transition')} checked={this.props.enableTransition} onChange={this.handleSetTransition} />
+          <Checkbox checked={this.props.enableTransition} onChange={this.handleSetTransition}>
+            {__('Enable Smooth Transition')}
+          </Checkbox>
         </Col>
       </Grid>
     )
@@ -151,7 +157,7 @@ const ZoomingConfig = connect(() => (
     zoomLevel: React.PropTypes.number,
   }
   handleChangeZoomLevel = (e) => {
-    config.set('poi.zoomLevel', parseFloat(this.refs.zoomLevel.getValue()))
+    config.set('poi.zoomLevel', parseFloat(e.target.value))
   }
   render() {
     return (
@@ -160,7 +166,7 @@ const ZoomingConfig = connect(() => (
           <OverlayTrigger placement='top' overlay={
               <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.props.zoomLevel * 100)}%</strong></Tooltip>
             }>
-            <Input type="range" ref="zoomLevel" onInput={this.handleChangeZoomLevel}
+            <FormControl type="range" onInput={this.handleChangeZoomLevel}
               min={0.5} max={2.0} step={0.05} defaultValue={this.props.zoomLevel} />
           </OverlayTrigger>
         </Col>
@@ -176,9 +182,9 @@ const ChangeResolutionConfig = connect((state, props) => ({
     webview: React.PropTypes.object,
 
   }
-  handleSetWebviewWidth = (node, e) => {
+  handleSetWebviewWidth = (e) => {
     const useFixedResolution = this.props.webview.useFixedResolution
-    const width = parseInt(this.refs[node].getValue())
+    const width = parseInt(e.target.value)
     if (isNaN(width) || width < 0 || !useFixedResolution) {
       return
     }
@@ -195,16 +201,17 @@ const ChangeResolutionConfig = connect((state, props) => ({
     return (
       <Grid>
         <Col xs={8}>
-          <Input type='checkbox'
-           ref="useFixedResolution"
-           label={__('Adaptive resolution based on the window')}
-           checked={!this.props.webview.useFixedResolution} onChange={this.handleSetFixedResolution} />
+          <Checkbox
+            ref="useFixedResolution"
+            checked={!this.props.webview.useFixedResolution}
+            onChange={this.handleSetFixedResolution}>
+            {__('Adaptive resolution based on the window')}
+          </Checkbox>
         </Col>
         <Col xs={4}>
-          <Input type="select"
-           ref="webviewWidthRatio"
+          <FormControl componentClass="select"
            value={this.props.webview.width}
-           onChange={this.handleSetWebviewWidth.bind(this, "webviewWidthRatio")}
+           onChange={this.handleSetWebviewWidth}
            disabled={!this.props.webview.useFixedResolution} >
             <option key={-1} value={this.props.webview.width} hidden>{Math.round(this.props.webview.width/800*100)}%</option>
             {
@@ -216,21 +223,20 @@ const ChangeResolutionConfig = connect((state, props) => ({
                 )
               })
             }
-          </Input>
+          </FormControl>
         </Col>
         <Col id="poi-resolution-config" xs={12} style={{display: 'flex', alignItems: 'center'}}>
           <div style={{flex: 1}}>
-            <Input type="number"
-             ref="webviewWidth"
+            <FormControl type="number"
              value={Math.round(this.props.webview.width)}
-             onChange={this.handleSetWebviewWidth.bind(this, "webviewWidth")}
+             onChange={this.handleSetWebviewWidth}
              readOnly={!this.props.webview.useFixedResolution} />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             x
           </div>
           <div style={{flex: 1}}>
-            <Input type="number" value={Math.round(this.props.webview.height)} readOnly />
+            <FormControl type="number" value={Math.round(this.props.webview.height)} readOnly />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             px
