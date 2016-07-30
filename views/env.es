@@ -52,7 +52,8 @@ require('./env-parts/i18n-config')
 
 // window.notify
 // msg=null: Sound-only notification.
-require('./env-parts/notify')
+require('./env-parts/notif-center')
+require('./env-parts/modal')
 
 // Custom theme
 // You should call window.applyTheme() to apply a theme properly.

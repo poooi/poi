@@ -4,14 +4,14 @@ const {$, config, toggleModal, log, error, i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
 const __n = i18n.others.__n.bind(i18n.others)
 
-require('./services/update')
-require('./services/layout')
-require('./services/welcome')
-require('./services/doyouknow')
-require('./services/modernization-delta')
-require('./services/developmentProphecy')
-require('./services/sortieDangerousCheck')
-require('./services/sortieFreeSlotCheck')
+import './services/update'
+import './services/layout'
+import './services/welcome'
+import './services/doyouknow'
+import './services/modernization-delta'
+import './services/developmentProphecy'
+import './services/sortieDangerousCheck'
+import './services/sortieFreeSlotCheck'
 
 const refreshFlash = () =>
   $('kan-game webview').executeJavaScript(`
