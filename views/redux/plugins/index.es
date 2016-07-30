@@ -3,7 +3,7 @@ import module from 'module'
 import { sortBy } from 'lodash'
 import { join } from 'path-extra'
 
-import { getPluginIndexByPackageName, readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed } from './utils'
+import { getPluginIndexByPackageName, readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
 
 export function reducer (state=[], {type, value, option}) {
   const {reduxSet} = window
@@ -116,6 +116,7 @@ export function reducer (state=[], {type, value, option}) {
     if (newPlugin.enabled) {
       newPlugin = loadPlugin(newPlugin)
     }
+    newPlugin = updateI18n(newPlugin)
     state = reduxSet(state, [i], newPlugin)
     state = sortBy(state, 'priority')
     return state
