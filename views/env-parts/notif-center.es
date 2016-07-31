@@ -156,7 +156,7 @@ window.notify = (msg, options) => {
     ...options,
     message: msg,
     volume: config.get('poi.notify.volume', 0.8),
-    type: (options || {}).type || "others",
+    type: options ? (options.type || "others") : undefined,
   }
   notifCenter.notify(options)
 }
