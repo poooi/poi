@@ -2,10 +2,11 @@ import { connect } from 'react-redux'
 import React from 'react'
 import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
-import { once, memoize } from 'lodash'
+import { join as joinString, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
 import CountdownTimer from 'views/components/main/parts/countdown-timer'
+import { CountdownNotifier } from 'views/utils/notifiers'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
@@ -268,16 +269,11 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
   }
 }
 
-const notify = (fleetName) => {
-  window.notify(`${fleetName} ${__('have recovered from fatigue')}`, {
-    type: 'morale',
-    title: __('Morale'),
-    icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
-  })
-}
-
 class CountdownLabel extends Component {
-  notify = null
+  constructor(props) {
+    super(props)
+    this.notifier = new CountdownNotifier()
+  }
   static propTypes = {
     fleetId: React.PropTypes.number,
     completeTime: React.PropTypes.number,
@@ -285,17 +281,25 @@ class CountdownLabel extends Component {
     fleetName: React.PropTypes.string,
   }
   shouldComponentUpdate = (nextProps, nextState) => {
-    if (nextProps.completeTime !== this.props.completeTime) {
-      this.notify = once(nextProps.notify)
-      return true
-    }
-    return false
+    return nextProps.completeTime !== this.props.completeTime
   }
   tick = (timeRemaining) => {
-    const notifyBefore = 10
-    if (this.props.shouldNotify && 0 < timeRemaining && timeRemaining <= notifyBefore) {
-      this.notify(this.props.fleetName)
-    }
+    if (this.props.shouldNotify && this.props.completeTime >= 0)
+      this.tryNotify()
+  }
+  static basicNotifyConfig = {
+    type: 'morale',
+    title: __('Morale'),
+    message: (names) => `${joinString(names, ', ')} ${__('have recovered from fatigue')}`,
+    icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
+    preemptTime: 10 * 1000,     // Don't know why but we have this before
+  }
+  tryNotify = () => {
+    this.notifier.tryNotify({
+      ...CountdownLabel.basicNotifyConfig,
+      args: this.props.fleetName,
+      completeTime: this.props.completeTime,
+    })
   }
   render () {
     return (
@@ -366,7 +370,7 @@ export default connect(
   })
   let completeTime
   if (inExpedition) {
-    completeTime = expeditionEndTime
+    completeTime = expeditionEndTime + 3 * 60 *1000
   } else {
     completeTime = Math.ceil((window.notify.morale - minCond) / 3) * 3 * 60 * 1000 + condStartTime
   }
@@ -408,7 +412,6 @@ export default connect(
             <CountdownLabel fleetId={fleetId}
                             fleetName={fleetName}
                             completeTime={completeTime}
-                            notify={notify}
                             shouldNotify={!inExpedition && !inBattle} />
           </span>
         </div>

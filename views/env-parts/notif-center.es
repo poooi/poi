@@ -36,34 +36,12 @@ const defaultNotifOptions = {
   type: 'others',
 }
 
-
-// Notification that supports equalKey.
-// equalKey: Notifications that are emitted from the same OnceNotifier with the 
-//   same (using ===) consecutive equalKey are ignored.
-class OnceNotifier {
-  constructor(notifCenter) {
-    this._lastEqualKey = null
-    this._notifCenter = notifCenter
-  }
-  notify = (o) => {
-    if (o.equalKey != null && this._lastEqualKey != null && o.equalKey === this._lastEqualKey) {
-      return
-    }
-    if (o.equalKey != null) {
-      this._lastEqualKey = o.equalKey
-    }
-    this._notifCenter.notify(o)
-  }
-}
-
 /* Options:
  * [Basic]
  *   type: string. Configs will be fetched from ''
  *   title: string or (([args]) => string)
  *   message: string or (([args]) => string)
  *   args: anything, will be passed to message function and title function
- *   equalKey: anything, when true and ===, will only be called once.
- *     This option is effective only when you notify through OnceNotifier
  *   groupKey: anything, when true and ===, will be grouped when called
  *     multiple times in a short time
  * [Read from config, but you can specify]
@@ -76,10 +54,6 @@ class OnceNotifier {
 
 class NotificationCenter {
   constructor() {
-  }
-
-  createOnceNotifier = () => {
-    return new OnceNotifier(this)
   }
 
   notify = (o) => {

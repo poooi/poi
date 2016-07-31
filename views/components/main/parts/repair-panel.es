@@ -2,7 +2,7 @@ const { ROOT } = window
 import React, { Component } from 'react'
 import { Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { range, once } from 'lodash'
+import { join as joinString, range } from 'lodash'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 
@@ -11,6 +11,7 @@ const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import CountdownTimer from './countdown-timer'
+import { CountdownNotifier } from 'views/utils/notifiers'
 import { 
   repairsSelector,
   constSelector,
@@ -28,14 +29,13 @@ class CountdownLabel extends Component {
   }
   constructor(props) {
     super(props)
-    this.notify = once(this.props.notify)
+    this.notifier = new CountdownNotifier()
     this.state = {
       style: this.getLabelStyle(CountdownTimer.getTimeRemaining(this.props.completeTime)),
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.completeTime != this.props.completeTime) {
-      this.notify = once(nextProps.notify)
       this.setState({
         style: this.getLabelStyle(CountdownTimer.getTimeRemaining(nextProps.completeTime)),
       })
@@ -45,11 +45,25 @@ class CountdownLabel extends Component {
     return nextProps.completeTime != this.props.completeTime || nextState.style != this.state.style
   }
   tick = (timeRemaining) => {
-    if (timeRemaining <= 60)
-      this.notify()
+    if (this.props.completeTime >= 0)
+      this.tryNotify()
     const style = this.getLabelStyle(timeRemaining)
     if (style != this.state.style)
       this.setState({style: style})
+  }
+  static basicNotifyConfig = {
+    type: 'repair',
+    title: __('Docking'),
+    message: (names) => `${joinString(names, ', ')} ${__('repair completed')}`,
+    icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
+    preemptTime: 60 * 1000,
+  }
+  tryNotify = () => {
+    this.notifier.tryNotify({
+      ...CountdownLabel.basicNotifyConfig,
+      args: this.props.fleetName,
+      completeTime: this.props.completeTime,
+    })
   }
   render() {
     return (
@@ -102,13 +116,6 @@ export default connect(
       break
     }
   }
-  notify = (dockName) => {
-    window.notify(`${dockName} ${__("repair completed")}`, {
-      type: 'repair',
-      title: __('Docking'),
-      icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
-    })
-  }
   render() {
     const {repairs, $ships, ships} = this.props
     return (
@@ -134,9 +141,11 @@ export default connect(
             return (
               <div key={i} className="panel-item ndock-item">
                 <span className="ndock-name">{dockName}</span>
-                <CountdownLabel dockIndex={i}
-                                completeTime={completeTime}
-                                notify={this.notify.bind(this, dockName)}/>
+                <CountdownLabel
+                  dockIndex={i}
+                  completeTime={completeTime}
+                  fleetName={dockName}
+                />
               </div>
             )
           })
