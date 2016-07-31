@@ -125,5 +125,6 @@
   "Stop Loading When Game Loaded": "游戏载入完成后停止载入页面（适用于直连与不怎么务正业的代理的用户）",
   "Create shortcut on startup (Notification may not be working without shortcut)": "启动时建立快捷方式 (禁用后通知可能不会正常工作)",
   "Show network status in notification bar": "在通知栏显示网络状态",
-  "Volume": "音量"
+  "Volume": "音量",
+  "Flash Quality": "Flash 画质"
 }
