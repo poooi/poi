@@ -31,6 +31,7 @@ function getStyle(state) {
     return 'default'
 }
 
+const defaultFleetNames = ['I', 'II', 'III', 'IV']
 
 const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
   createSelector([
@@ -51,7 +52,7 @@ const ShipViewSwitchButton = connect(
     onClick={onClick}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
-    {fleetName}
+    {fleetName || defaultFleetNames[fleetId]}
   </Button>
 )
 

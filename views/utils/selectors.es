@@ -21,15 +21,15 @@ export const createDeepCompareArraySelector = createSelectorCreator(
   deepCompareArray
 )
 
-function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
+function getDeckState(shipsData=[], inBattle, inExpedition, inRepairShipsId) {
   let state = 0
   if (inBattle)
     state = Math.max(state, 5)
   if (inExpedition)
     state = Math.max(state, 4)
-  for (const [ship, $ship] of shipsData) {
+  shipsData.forEach(([ship, $ship]) => {
     if (!ship || !$ship)
-      continue
+      return
     // Cond < 20 or medium damage
     if (ship.api_cond < 20 || ship.api_nowhp / ship.api_maxhp < 0.25)
       state = Math.max(state, 2)
@@ -42,7 +42,7 @@ function getDeckState(shipsData, inBattle, inExpedition, inRepairShipsId) {
     // Repairing
     if (inRepairShipsId.includes(ship.api_id))
       state = Math.max(state, 3)
-  }
+  })
   return state
 }
 
@@ -292,6 +292,7 @@ export const fleetShipsDataSelectorFactory = memoize((fleetId) =>
     stateSelector,
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
+    !fleetShipsId ? undefined :
     fleetShipsId.map((shipId) => shipDataSelectorFactory(shipId)(state))
   )
 )
@@ -303,6 +304,7 @@ export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
     stateSelector,
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
+    !fleetShipsId ? undefined :
     fleetShipsId.map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
   )
 )

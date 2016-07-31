@@ -310,7 +310,7 @@ class CountdownLabel extends Component {
 
 const tykuSelectorFactory = memoize((fleetId) =>
   createSelector(fleetShipsEquipDataSelectorFactory(fleetId),
-    (equipsData) =>
+    (equipsData=[]) =>
       getTyku(equipsData)
   )
 )
@@ -324,7 +324,7 @@ const sakuSelectorFactory = memoize((fleetId) =>
     fleetShipsDataSelectorFactory(fleetId),
     fleetShipsEquipDataSelectorFactory(fleetId),
     admiralLevelSelector,
-  ], (shipsData, equipsData, admiralLevel) =>({
+  ], (shipsData=[], equipsData=[], admiralLevel) =>({
     saku25: getSaku25(shipsData, equipsData),
     saku25a: getSaku25a(shipsData, equipsData, admiralLevel),
     saku33: getSaku33(shipsData, equipsData, admiralLevel),
@@ -356,7 +356,7 @@ export default connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
-  const {inExpedition, inBattle, shipsData, isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku} = props
+  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku} = props
   const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
