@@ -175,12 +175,40 @@ const ZoomingConfig = connect(() => (
   }
 })
 
+const FlashQualityConfig = connect((state, props) => ({
+  flashQuality: get(state.config, 'poi.flashQuality', 'high'),
+}))(class flashQualityConfig extends Component {
+  static propTypes = {
+    flashQuality: React.PropTypes.string,
+  }
+  handleSetQuality = (e) => {
+    config.set('poi.flashQuality', e.target.value)
+  }
+  render() {
+    const quality = ["low", "autolow", "autohigh", "medium", "high", "best"]
+    return (
+      <Grid>
+        <Col xs={6}>
+          <FormControl componentClass="select"
+            value={this.props.flashQuality}
+            onChange={this.handleSetQuality}>
+            {
+              quality.map((v, i) => (
+                <option key={i} value={v}>{v}</option>
+              ))
+            }
+          </FormControl>
+        </Col>
+      </Grid>
+    )
+  }
+})
+
 const ChangeResolutionConfig = connect((state, props) => ({
   webview: state.layout.webview,
 }))(class changeResolutionConfig extends Component {
   static propTypes = {
     webview: React.PropTypes.object,
-
   }
   handleSetWebviewWidth = (e) => {
     const useFixedResolution = this.props.webview.useFixedResolution
@@ -263,6 +291,10 @@ class DisplayConfig extends Component {
         <div className="form-group">
           <Divider text={__('Zoom')} />
           <ZoomingConfig />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Flash Quality')} />
+          <FlashQualityConfig />
         </div>
         <div className="form-group">
           <Divider text={__('Game resoultion')} />

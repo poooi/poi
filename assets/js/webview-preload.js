@@ -1,6 +1,8 @@
-let electron = require('electron')
-let remote = electron.remote
-let Promise = require('bluebird')
+const electron = require('electron')
+const remote = electron.remote
+const Promise = require('bluebird')
+const config = remote.require('./lib/config')
+const proxy = remote.require('./lib/proxy')
 require('coffee-script/register')
 
 // webview focus area fix
@@ -17,9 +19,9 @@ if (window.location.toString() !== "http://www.dmm.com/netgame/social/-/gadgets/
   return
 }
 
-let webFrame = electron.webFrame
+const webFrame = electron.webFrame
 
-let alertCSS =
+const alertCSS =
 `#alert {
   transform: scale(0.8);
   left: 80px !important;
@@ -27,10 +29,10 @@ let alertCSS =
 }
 `
 
-let alignCSS = document.createElement('style')
+const alignCSS = document.createElement('style')
 
 const getWebviewWidth = Promise.coroutine(function* () {
-  let width = yield new Promise((resolve, reject) => {
+  const width = yield new Promise((resolve, reject) => {
     remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width", (result) => {
       resolve(result)
     })
@@ -82,4 +84,20 @@ window.align()
 remote.getCurrentWebContents().insertCSS(alertCSS)
 document.addEventListener("DOMContentLoaded", (e) => {
   document.querySelector('body').appendChild(alignCSS)
+  const flashQuality = config.get('poi.flashQuality', 'high')
+  const setQuality = (method, [domain, path], body) => {
+    if (!path.includes('/kcs/')) {
+      return
+    }
+    const iframe = document.querySelector('#game_frame')
+    const flash = iframe.contentWindow.document.querySelector('#externalswf').cloneNode(true)
+    flash.setAttribute('quality', flashQuality)
+    iframe.contentWindow.document.querySelector('#externalswf').remove()
+    iframe.contentWindow.document.querySelector('#flashWrap').appendChild(flash)
+    proxy.removeListener('network.on.request', setQuality)
+  }
+  proxy.addListener('network.on.request', setQuality)
+  window.onbeforeunload = () => {
+    proxy.removeListener('network.on.request', setQuality)
+  }
 })
