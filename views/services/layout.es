@@ -263,3 +263,8 @@ remote.getCurrentWebContents().on('dom-ready', () => {
     e.preventDefault()
   })
 })
+
+window.addEventListener('touchstart', (e) => {
+  e.target.blur()
+  e.target.focus()
+})
