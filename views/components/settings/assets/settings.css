@@ -181,9 +181,6 @@
 #SettingsView .navigator-url .form-group {
   flex: 1;
 }
-#SettingsView .navigator .navigator-url .navigator-status {
-  padding-right: 28px;
-}
 #SettingsView .navigator-btn {
   width: 110px;
 }
