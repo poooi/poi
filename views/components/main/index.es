@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
-import { ExpeditionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
+import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
 
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -47,12 +47,12 @@ export default {
                     <Tabs defaultActiveKey={1} animation={false}>
                       <Tab eventKey={1} title={__('Docking')}>
                         <div className="ndock-panel flex">
-                          <NdockPanel />
+                          <RepairPanel />
                         </div>
                       </Tab>
                       <Tab eventKey={2} title={__('Construction')}>
                         <div className="kdock-panel flex">
-                          <KdockPanel />
+                          <ConstructionPanel />
                         </div>
                       </Tab>
                     </Tabs>
@@ -86,12 +86,12 @@ export default {
                       <Tabs defaultActiveKey={1} animation={false}>
                         <Tab eventKey={1} title={__('Docking')}>
                           <div className="ndock-panel flex">
-                            <NdockPanel />
+                            <RepairPanel />
                           </div>
                         </Tab>
                         <Tab eventKey={2} title={__('Construction')}>
                           <div className="kdock-panel flex">
-                            <KdockPanel />
+                            <ConstructionPanel />
                           </div>
                         </Tab>
                       </Tabs>
