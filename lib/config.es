@@ -32,34 +32,34 @@ class configClass extends EventEmitter {
         dbg.log(e)
       }
     }
-  }
-  get (path, value) {
-    if (path === '') {
-      return this.configData
+    this.get = (path, value) => {
+      if (path === '') {
+        return this.configData
+      }
+      const ret = get(this.configData, path)
+      if (ret !== undefined) {
+        return ret
+      } else {
+        return value
+      }
     }
-    const ret = get(this.configData, path)
-    if (ret !== undefined) {
-      return ret
-    } else {
-      return value
+    this.set = (path, value) => {
+      if (get(this.configData, path) === value) {
+        return
+      }
+      set(this.configData, path, value)
+      this.emit('config.set', path, value)
+      try {
+        fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
+      }
+      catch (e) {
+        console.warn(e)
+      }
     }
-  }
-  set (path, value) {
-    if (get(this.configData, path) === value) {
-      return
-    }
-    set(this.configData, path, value)
-    this.emit('config.set', path, value)
-    try {
-      fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
-    }
-    catch (e) {
-      console.warn(e)
-    }
-  }
-  setDefault (path, value) {
-    if (this.get(path) === undefined) {
-      this.set(path, value)
+    this.setDefault = (path, value) => {
+      if (this.get(path) === undefined) {
+        this.set(path, value)
+      }
     }
   }
 }

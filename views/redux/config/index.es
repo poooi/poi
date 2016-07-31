@@ -1,4 +1,5 @@
-const {config} = window
+import { remote } from 'electron'
+const config = remote.require('./lib/config')
 
 export function reducer(state=Object.clone(config.get('')), {type, path, value}) {
   const {reduxSet} = window
