@@ -126,9 +126,8 @@ const TaskRowBase = connect(
     <div className="panel-item task-item">
       <OverlayTrigger
         placement={leftOverlayPlacement}
-        show={leftOverlay}
         overlay={
-         <Tooltip id={`task-quest-name-${idx}`}>{leftOverlay || <div></div>}</Tooltip>
+          <Tooltip id={`task-quest-name-${idx}`} style={leftOverlay ? null : {display: 'none'}}>{leftOverlay}</Tooltip>
         }
       >
         <div className="quest-name">
@@ -139,9 +138,8 @@ const TaskRowBase = connect(
       <div>
         <OverlayTrigger
           placement='left'
-          show={rightOverlay}
           overlay={
-            <Tooltip id={`task-progress-${idx}`}>{rightOverlay || <div></div>}</Tooltip>
+            <Tooltip id={`task-progress-${idx}`} style={rightOverlay ? null : {display: 'none'}}>{rightOverlay}</Tooltip>
           }
         >
           <Label className="quest-progress" bsStyle={rightBsStyle}>{rightLabel}</Label>

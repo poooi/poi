@@ -12,7 +12,7 @@ const __ = i18n.main.__.bind(i18n.main)
 export default {
   name: 'MainView',
   priority: 0,
-  displayName: <span><FontAwesome key={0} name='home' />{__(' Overview')}</span>,
+  displayName: <span><FontAwesome name='home' />{__(' Overview')}</span>,
   description: '概览面板，提供基本的概览界面',
   reactClass: connect((state, props) => ({
     layout: get(state, 'config.poi.layout', 'horizontal'),
@@ -44,7 +44,7 @@ export default {
                 </div>
                 <div className="panel-col half bottom-left-area">
                   <Panel className="combined-panels panel-col combined-panels-area-horizontal">
-                    <Tabs defaultActiveKey={1} animation={false}>
+                    <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs">
                       <Tab eventKey={1} title={__('Docking')}>
                         <div className="ndock-panel flex">
                           <RepairPanel />
@@ -83,7 +83,7 @@ export default {
                   </div>
                   <div className="panel-col half right-bottom-area">
                     <Panel className="combined-panels panel-col combined-panels-area-vertical">
-                      <Tabs defaultActiveKey={1} animation={false}>
+                      <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs">
                         <Tab eventKey={1} title={__('Docking')}>
                           <div className="ndock-panel flex">
                             <RepairPanel />

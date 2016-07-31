@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Grid, Col, Row, Button, ButtonGroup, Input, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
+import { Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, InputGroup, ControlLabel, Checkbox, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { remote, ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
@@ -88,7 +88,7 @@ const SetNotifyIndividualConfig = connect(() => {
     }
   }
   handleChangeNotifyVolume = (e) => {
-    let volume = this.refs.notifyVolume.getValue()
+    let volume = e.target.value
     volume = parseFloat(volume)
     if (isNaN(volume)) {
       return
@@ -141,7 +141,7 @@ const SetNotifyIndividualConfig = connect(() => {
             <OverlayTrigger placement='top' overlay={
                 <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
               }>
-              <Input type="range" ref="notifyVolume"
+              <FormControl type="range"
                 onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
                 min={0.0} max={1.0} step={0.05} defaultValue={this.props.volume} />
             </OverlayTrigger>
@@ -187,14 +187,17 @@ const SetNotifyIndividualConfig = connect(() => {
                       <div className='notif-input-desc'>{__('Expedition')}: {__('Notify when expedition returns in')}</div>
                     </Col>
                     <Col xs={3} className='notif-container'>
-                      <Input type="number" ref="expeditionValue" id="expeditionValue"
-                             disabled={!this.props.expedition}
-                             onChange={this.handleSetExpedition}
-                             value={this.state.expeditionValue}
-                             onClick={this.selectInput.bind(this, "expeditionValue")}
-                             bsSize='small'
-                             addonAfter='S'
-                             className='notif-input' />
+                      <FormGroup>
+                        <InputGroup bsSize='small'>
+                          <FormControl type="number" ref="expeditionValue" id="expeditionValue"
+                            disabled={!this.props.expedition}
+                            onChange={this.handleSetExpedition}
+                            value={this.state.expeditionValue}
+                            onClick={this.selectInput.bind(this, "expeditionValue")}
+                            className='notif-input' />
+                          <InputGroup.Addon>S</InputGroup.Addon>
+                        </InputGroup>
+                      </FormGroup>
                     </Col>
                   </Row>
                   <Row>
@@ -202,13 +205,14 @@ const SetNotifyIndividualConfig = connect(() => {
                       <div className='notif-input-desc'>{__('Morale')}: {__('Notify when morale is greater than')}</div>
                     </Col>
                     <Col xs={3} className='notif-container'>
-                      <Input type="number" ref="moraleValue" id="moraleValue"
-                             disabled={!this.props.morale}
-                             onChange={this.handleSetMorale}
-                             value={this.state.moraleValue}
-                             onClick={this.selectInput.bind(this, "moraleValue")}
-                             bsSize='small'
-                             className='notif-input' />
+                      <InputGroup bsSize='small'>
+                        <FormControl type="number" ref="moraleValue" id="moraleValue"
+                          disabled={!this.props.morale}
+                          onChange={this.handleSetMorale}
+                          value={this.state.moraleValue}
+                          onClick={this.selectInput.bind(this, "moraleValue")}
+                          className='notif-input' />
+                      </InputGroup>
                     </Col>
                   </Row>
                   <Row>
@@ -249,12 +253,12 @@ const CheckboxLabelConfig = connect(() => {
         <Col xs={12} >
           <Grid>
             <Col xs={12} >
-              <Input
-                type="checkbox"
-                label={this.props.label}
+              <Checkbox
                 disabled={this.props.undecided}
                 checked={this.props.undecided ? false : this.props.value}
-                onChange={this.props.undecided ? null : this.handleChange} />
+                onChange={this.props.undecided ? null : this.handleChange}>
+                {this.props.label}
+              </Checkbox>
             </Col>
           </Grid>
         </Col>
@@ -372,21 +376,21 @@ const SelectLanguageConfig = connect(() => {
   static propTypes = {
     value: React.PropTypes.string,
   }
-  handleSetLanguage = () => {
-    const language = this.refs.language.getValue()
+  handleSetLanguage = (e) => {
+    const language = e.target.value
     config.set('poi.language', language)
   }
   render() {
     return (
       <Grid>
         <Col xs={6}>
-          <Input type="select" ref="language" value={this.props.value} onChange={this.handleSetLanguage}>
+          <FormControl componentClass="select" ref="language" value={this.props.value} onChange={this.handleSetLanguage}>
             <option value="zh-CN">简体中文</option>
             <option value="zh-TW">正體中文</option>
             <option value="ja-JP">日本語</option>
             <option value="en-US">English</option>
             <option value="ko-KR">한국어</option>
-          </Input>
+          </FormControl>
         </Col>
       </Grid>
     )
@@ -448,9 +452,6 @@ const SlotCheckConfig = connect(() => {
     config.set(`poi.mapStartCheck.${this.props.type}.enable`, false)
     this.setState({showInput: false})
   }
-  selectText = () => {
-    this.textInput.getInputDOMNode().select()
-  }
   render() {
     let toggleBtnStyle = this.props.enable ? 'success' : 'default'
     if (this.state.showInput) {
@@ -475,16 +476,21 @@ const SlotCheckConfig = connect(() => {
           <div>
             {__(`${this.props.type} slots`)} {toggleBtn}
           </div>
-          <Collapse in={this.state.showInput} onEntered={this.selectText}>
+          <Collapse in={this.state.showInput}>
             <div>
               <Well>
-                <Input type="text" bsSize='small'
-                  bsStyle={inputValid ? 'success' : 'error'}
-                  label={__(`Warn if the number of free ${this.props.type} slots is less than`)}
-                  value={this.state.value}
-                  ref={(r) => {this.textInput = r}}
-                  onChange={this.handleChange}
-                  buttonAfter={submitBtn} />
+                <FormGroup>
+                  <ControlLabel>{__(`Warn if the number of free ${this.props.type} slots is less than`)}</ControlLabel>
+                  <InputGroup bsSize='small'>
+                    <FormControl type="text"
+                      bsStyle={inputValid ? 'success' : 'error'}
+                      value={this.state.value}
+                      onChange={this.handleChange}/>
+                    <InputGroup.Button>
+                      {submitBtn}
+                    </InputGroup.Button>
+                  </InputGroup>
+                </FormGroup>
               </Well>
             </div>
           </Collapse>

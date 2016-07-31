@@ -22,6 +22,41 @@ const getPluginIndexByPackageName = (plugins, packageName) => {
   return -1
 }
 
+const updateI18n = (plugin) => {
+  let i18nFile = null
+  if (plugin.i18nDir != null) {
+    i18nFile = join(plugin.pluginPath, plugin.i18nDir)
+  } else {
+    try {
+      fs.accessSync(join(plugin.pluginPath, 'i18n'))
+      i18nFile = join(plugin.pluginPath, 'i18n')
+    } catch (error) {
+      try {
+        fs.accessSync(join(plugin.pluginPath, 'assets', 'i18n'))
+        i18nFile = join(plugin.pluginPath, 'assets', 'i18n')
+      } catch (error) {
+        console.warn(`${plugin.packageName}: No translate file found.`)
+      }
+    }
+  }
+  if (i18nFile != null) {
+    const namespace = plugin.id
+    window.i18n[namespace] = new (require('i18n-2'))({
+      locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+      defaultLocale: 'zh-CN',
+      directory: i18nFile,
+      updateFiles: false,
+      indent: "\t",
+      extension: '.json',
+      devMode: false,
+    })
+    window.i18n[namespace].setLocale(window.language)
+    plugin.name = window.i18n[namespace].__(plugin.name)
+    plugin.description = window.i18n[namespace].__(plugin.description)
+  }
+  return plugin
+}
+
 const readPlugin = (pluginPath) => {
   let pluginData, packageData, plugin, pluginMain
   try {
@@ -82,37 +117,7 @@ const readPlugin = (pluginPath) => {
     }
   }
   plugin.isOutdated = plugin.needRollback
-  let i18nFile = null
-  if (plugin.i18nDir != null) {
-    i18nFile = join(pluginPath, plugin.i18nDir)
-  } else {
-    try {
-      fs.accessSync(join(pluginPath, 'i18n'))
-      i18nFile = join(pluginPath, 'i18n')
-    } catch (error) {
-      try {
-        fs.accessSync(join(pluginPath, 'assets', 'i18n'))
-        i18nFile = join(pluginPath, 'assets', 'i18n')
-      } catch (error) {
-        console.warn(`${plugin.packageName}: No translate file found.`)
-      }
-    }
-  }
-  if (i18nFile != null) {
-    const namespace = plugin.id
-    window.i18n[namespace] = new (require('i18n-2'))({
-      locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-      defaultLocale: 'zh-CN',
-      directory: i18nFile,
-      updateFiles: false,
-      indent: "\t",
-      extension: '.json',
-      devMode: false,
-    })
-    window.i18n[namespace].setLocale(window.language)
-    plugin.name = window.i18n[namespace].__(plugin.name)
-    plugin.description = window.i18n[namespace].__(plugin.description)
-  }
+  plugin = updateI18n(plugin)
   let icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
   plugin.displayName = (
     <span>
@@ -289,4 +294,5 @@ export {
   loadPlugin,
   unloadPlugin,
   notifyFailed,
+  updateI18n,
 }

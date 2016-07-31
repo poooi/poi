@@ -184,24 +184,6 @@
 #SettingsView .navigator .navigator-url .navigator-status {
   padding-right: 28px;
 }
-#SettingsView .navigator .navigator-url .status-icon .fa {
-  background-color: transparent;
-  border: 0;
-  padding: 0;
-  height: auto;
-  margin: auto;
-  transition: none;
-  width: auto;
-}
-#SettingsView .navigator .navigator-url .status-icon {
-  width: 0;
-  position: relative;
-  left: -22px;
-  padding: 0;
-  background: transparent;
-  margin: auto;
-  border: 0;
-}
 #SettingsView .navigator-btn {
   width: 110px;
 }
