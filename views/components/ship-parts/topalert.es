@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import React from 'react'
 import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
-import { join as joinString, memoize } from 'lodash'
+import { get, join as joinString, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
@@ -16,13 +16,14 @@ import {
   basicSelector,
   condTimerSelector,
   fleetExpeditionSelectorFactory,
+  configSelector,
 } from 'views/utils/selectors'
 
 const {ROOT, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
-const getFontStyle = (theme) => {
+const getFontStyle = () => {
   if (window.isDarkTheme) {
     return {color: '#FFF'}
   } else {
@@ -345,7 +346,8 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     fleetExpeditionSelectorFactory(fleetId),
     tykuSelectorFactory(fleetId),
     sakuSelectorFactory(fleetId),
-  ], (inBattle, inExpedition, shipsData, fleetName, condStartTime, expedition, tyku, saku) => ({
+    configSelector,
+  ], (inBattle, inExpedition, shipsData, fleetName, condStartTime, expedition, tyku, saku, config) => ({
     inExpedition,
     inBattle,
     shipsData,
@@ -354,13 +356,14 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     expeditionEndTime: expedition[2],
     tyku,
     saku,
+    condTarget: get(config, 'poi.notify.morale.value', 40),
   }))
 )
 export default connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
-  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku} = props
+  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku, condTarget} = props
   const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
@@ -372,7 +375,7 @@ export default connect(
   if (inExpedition) {
     completeTime = expeditionEndTime + 3 * 60 *1000
   } else {
-    completeTime = Math.ceil((window.notify.morale - minCond) / 3) * 3 * 60 * 1000 + condStartTime
+    completeTime = Math.ceil((condTarget - minCond) / 3) * 3 * 60 * 1000 + condStartTime
   }
   return (
     <div style={{width: '100%'}}>
@@ -384,7 +387,7 @@ export default connect(
         <span style={{flex: "none", marginLeft: 5}}>{__('LOS')}: {saku33.total.toFixed(2)}</span>
       </div>
       :
-      <Alert style={getFontStyle(window.theme)}>
+      <Alert style={getFontStyle()}>
         <div style={{display: "flex"}}>
           <span style={{flex: 1}}>{__('Total Lv')}. {totalLv}</span>
           <span style={{flex: 1}}>
