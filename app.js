@@ -54,6 +54,7 @@ if (dbg.isEnabled()) {
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 } else {
   global.SERVER_HOSTNAME = 'poi.0u0.moe'
+  process.env.NODE_ENV = 'production'
 }
 
 const platform_to_paths = {
