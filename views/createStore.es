@@ -57,13 +57,14 @@ window.getStore = (path) => {
 const solveConfSet = (path, value) => {
   const details = {
     path: path,
-    value: Object.clone(value),
+    value: value,
   }
   store.dispatch(onConfigChange(details))
 }
-window.config.addListener('config.set', solveConfSet)
+const config = remote.require('./lib/config')
+config.addListener('config.set', solveConfSet)
 remote.getCurrentWindow().on('close', (e) => {
-  window.config.removeListener('config.set', solveConfSet)
+  config.removeListener('config.set', solveConfSet)
 })
 
 // When any targetPath is modified, store it into localStorage
@@ -87,10 +88,14 @@ observe(store, [observer(
 
 const _reducerExtensions = {}
 
-// Use this function to extend extra reducers to the store, such as plugin 
+// Use this function to extend extra reducers to the store, such as plugin
 // specific data maintainance.
 // Use extensionSelectorFactory(key) inside utils/selectors to access it.
 export function extendReducer(key, reducer) {
   _reducerExtensions[key] = reducer
   store.replaceReducer(reducerFactory(_reducerExtensions))
+}
+
+window.config.get = (path, value) => {
+  return get(window.getStore('config'), path, value)
 }

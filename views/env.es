@@ -70,11 +70,14 @@ if (window.dbg.isEnabled()) {
 require('./env-parts/utils')
 
 // Node modules
-window.config = remote.require('./lib/config')
+const originConfig = remote.require('./lib/config')
 window.ipc = remote.require('./lib/ipc')
 window.proxy = remote.require('./lib/proxy')
 window.CONST = Object.remoteClone(remote.require('./lib/constant'))
-
+window.config = {}
+for (const key in originConfig) {
+  window.config[key] = originConfig[key]
+}
 
 // i18n config
 require('./env-parts/i18n-config')
