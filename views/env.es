@@ -23,7 +23,6 @@ require('module').globalPaths.push(window.ROOT)
 // Shortcuts and Components
 window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
 window.dbg.init()
-window._ = require('underscore')
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
 window.jQuery = require('jquery')
