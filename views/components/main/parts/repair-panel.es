@@ -44,7 +44,7 @@ export default connect(
     title: __('Docking'),
     message: (names) => `${joinString(names, ', ')} ${__('repair completed')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
-    preemptTime: 60 * 1000,
+    preemptTime: 60,
   }
   render() {
     const {canNotify, repairs, $ships, ships} = this.props

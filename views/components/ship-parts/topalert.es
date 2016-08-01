@@ -292,7 +292,7 @@ class CountdownLabel extends Component {
     title: __('Morale'),
     message: (names) => `${joinString(names, ', ')} ${__('have recovered from fatigue')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
-    preemptTime: 10 * 1000,     // Don't know why but we have this before
+    preemptTime: 10,        // Don't know why but we had this before
   }
   tryNotify = () => {
     this.notifier.tryNotify({

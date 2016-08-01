@@ -82,7 +82,7 @@ export default connect(
                     ...this.constructor.basicNotifyConfig,
                     args: fleetName,
                     completeTime: completeTime,
-                    preemptTime: notifyBefore * 1000,
+                    preemptTime: notifyBefore,
                   }}
                 />
               </OverlayTrigger>
