@@ -13,11 +13,9 @@ export class CountdownNotifier {
     if (o.completeTime != null && this._lastCompleteTime != null && o.completeTime === this._lastCompleteTime) {
       return
     }
-    if (o.completeTime != null) {
-      this._lastCompleteTime = o.completeTime
-    }
     const preemptTime = o.preemptTime || 0
     if (o.completeTime <= Date.now() + preemptTime) {
+      this._lastCompleteTime = o.completeTime
       if (!this._justNotified) {
         notifCenter.notify(o)
         this._justNotified = true

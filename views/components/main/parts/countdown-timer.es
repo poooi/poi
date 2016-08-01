@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
+import { Label } from 'react-bootstrap'
 
-const {resolveTime} = window
+const { resolveTime } = window
+import { CountdownNotifier } from 'views/utils/notifiers'
 
 class Ticker {
   constructor() {
@@ -42,7 +44,7 @@ class Ticker {
 window.ticker = new Ticker()
 
 
-class CountdownTimer extends React.Component {
+export class CountdownTimer extends Component {
   constructor(props) {
     super(props)
     this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
@@ -57,10 +59,10 @@ class CountdownTimer extends React.Component {
     }
   }
   static propTypes = {
-    countdownId: React.PropTypes.string.isRequired,
-    completeTime: React.PropTypes.number,
-    tickCallback: React.PropTypes.func,
-    completeCallback: React.PropTypes.func,
+    countdownId: PropTypes.string.isRequired,
+    completeTime: PropTypes.number,
+    tickCallback: PropTypes.func,
+    completeCallback: PropTypes.func,
   }
   defaultProps = {
     completeTime: -1,
@@ -130,4 +132,55 @@ class CountdownTimer extends React.Component {
   }
 }
 
-export default CountdownTimer
+export class CountdownNotifierLabel extends Component {
+  static propTypes = {
+    timerKey: PropTypes.string.isRequired,  // A globally unique string for the timer
+    completeTime: PropTypes.number.isRequired,
+    getNotifyOptions: PropTypes.func,   // (props, timeRemaining) => options | undefined
+    getLabelStyle: PropTypes.func,      // (props, timeRemaining) => bsStyle
+  }
+  static defaultProps = {
+    getNotifyOptions: () => undefined,
+    getLabelStyle: () => 'default',
+  }
+  constructor(props) {
+    super(props)
+    this.notifier = new CountdownNotifier()
+    this.state = {
+      style: this.getLabelStyle(props),
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.completeTime != this.props.completeTime) {
+      this.setState({
+        style: this.getLabelStyle(nextProps),
+      })
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.completeTime !== this.props.completeTime || nextState.style !== this.state.style
+  }
+  getLabelStyle = (props) => {
+    return props.getLabelStyle(props, CountdownTimer.getTimeRemaining(props.completeTime))
+  }
+  tick = (timeRemaining) => {
+    const notifyOptions = this.props.getNotifyOptions(this.props)
+    if (notifyOptions)
+      this.notifier.tryNotify(notifyOptions) 
+    const style = this.getLabelStyle(this.props)
+    if (style !== this.state.style)
+      this.setState({style: style})
+  }
+  render() {
+    return (
+      <Label className="kdock-timer" bsStyle={this.state.style}>
+      {
+        this.props.completeTime >= 0 &&
+          <CountdownTimer countdownId={this.props.timerKey}
+                          completeTime={this.props.completeTime}
+                          tickCallback={this.tick} />
+      }
+      </Label>
+    )
+  }
+}

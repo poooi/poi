@@ -1,6 +1,6 @@
 const { ROOT } = window
 import React, { Component } from 'react'
-import { Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { join as joinString, range } from 'lodash'
 import { join } from 'path-extra'
@@ -10,46 +10,34 @@ const { i18n } = window
 
 const __ = i18n.main.__.bind(i18n.main)
 
-import CountdownTimer from './countdown-timer'
-import { CountdownNotifier } from 'views/utils/notifiers'
+import { CountdownNotifierLabel } from './countdown-timer'
 import { 
   repairsSelector,
   constSelector,
   shipsSelector,
+  miscSelector,
 } from 'views/utils/selectors'
 
-class CountdownLabel extends Component {
-  getLabelStyle = (timeRemaining) => {
+export default connect(
+  createSelector([
+    repairsSelector,
+    constSelector,
+    shipsSelector,
+    miscSelector,
+  ], (repairs, {$ships}, ships, {canNotify}) => ({
+    repairs,
+    $ships,
+    ships,
+    canNotify,
+  }))
+)(class RepairPanel extends Component {
+  getLabelStyle = (props, timeRemaining) => {
     return (
       timeRemaining > 600 ? 'primary' :
       timeRemaining > 60 ? 'warning' :
       timeRemaining >= 0 ? 'success' :
       'default'
     )
-  }
-  constructor(props) {
-    super(props)
-    this.notifier = new CountdownNotifier()
-    this.state = {
-      style: this.getLabelStyle(CountdownTimer.getTimeRemaining(this.props.completeTime)),
-    }
-  }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.completeTime != this.props.completeTime) {
-      this.setState({
-        style: this.getLabelStyle(CountdownTimer.getTimeRemaining(nextProps.completeTime)),
-      })
-    }
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.completeTime != this.props.completeTime || nextState.style != this.state.style
-  }
-  tick = (timeRemaining) => {
-    if (this.props.completeTime >= 0)
-      this.tryNotify()
-    const style = this.getLabelStyle(timeRemaining)
-    if (style != this.state.style)
-      this.setState({style: style})
   }
   static basicNotifyConfig = {
     type: 'repair',
@@ -58,66 +46,8 @@ class CountdownLabel extends Component {
     icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
     preemptTime: 60 * 1000,
   }
-  tryNotify = () => {
-    this.notifier.tryNotify({
-      ...CountdownLabel.basicNotifyConfig,
-      args: this.props.fleetName,
-      completeTime: this.props.completeTime,
-    })
-  }
   render() {
-    return (
-      <OverlayTrigger placement='left' overlay={
-        (this.props.style === 'primary' || this.props.style === 'warning') ? (
-          <Tooltip id={`ndock-finish-by-${this.props.dockIndex}`}>
-            <strong>{__("Finish by : ")}</strong>{window.timeToString(this.props.completeTime)}
-          </Tooltip>
-        ) : (
-          <span />
-        )
-      }>
-        <Label className="ndock-timer" bsStyle={this.state.style}>
-        {
-          (this.props.completeTime >= 0) ? (
-            <CountdownTimer countdownId={`ndock-${this.props.dockIndex+1}`}
-                            completeTime={this.props.completeTime}
-                            tickCallback={this.tick} />
-          ) : undefined
-        }
-        </Label>
-      </OverlayTrigger>
-    )
-  }
-}
-
-export default connect(
-  createSelector([
-    repairsSelector,
-    constSelector,
-    shipsSelector,
-  ], (repairs, {$ships}, ships) => ({
-    repairs,
-    $ships,
-    ships,
-  }))
-)(class RepairPanel extends Component {
-  constructor(props) {
-    super(props)
-    this.canNotify = false
-  }
-  handleResponse = (e) => {
-    const {path} = e.detail
-    switch (path) {
-    case '/kcsapi/api_start2':
-      this.canNotify = false
-      break
-    case '/kcsapi/api_port/port':
-      this.canNotify = true
-      break
-    }
-  }
-  render() {
-    const {repairs, $ships, ships} = this.props
+    const {canNotify, repairs, $ships, ships} = this.props
     return (
       <div>
         {
@@ -141,11 +71,27 @@ export default connect(
             return (
               <div key={i} className="panel-item ndock-item">
                 <span className="ndock-name">{dockName}</span>
-                <CountdownLabel
-                  dockIndex={i}
+
+              <OverlayTrigger placement='left' overlay={
+                (dock.api_state > 0) ? (
+                  <Tooltip id={`ndock-finish-by-${i}`}>
+                    <strong>{__("Finish by : ")}</strong>{window.timeToString(completeTime)}
+                  </Tooltip>
+                ) : (
+                  <noscript />
+                )
+              }>
+                <CountdownNotifierLabel
+                  timerKey={`ndock-${i+1}`}
                   completeTime={completeTime}
-                  fleetName={dockName}
+                  getLabelStyle={this.getLabelStyle}
+                  getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                    ...this.constructor.basicNotifyConfig,
+                    args: dockName,
+                    completeTime: completeTime,
+                  }}
                 />
+              </OverlayTrigger>
               </div>
             )
           })

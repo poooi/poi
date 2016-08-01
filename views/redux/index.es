@@ -9,6 +9,7 @@ import { reducer as layout } from './layout'
 import { reducer as battle } from './battle'
 import { reducer as alert } from './alert'
 import { reducer as plugins } from './plugins'
+import misc from './misc'
 
 // === Utils ===
 
@@ -25,6 +26,7 @@ export function reducerFactory(extensionConfig) {
     battle,
     alert,
     plugins,
+    misc,
     ext: extensionConfig ? combineReducers(extensionConfig) : (() => ({})),
   })
 }

@@ -5,7 +5,7 @@ import { join } from 'path-extra'
 import { join as joinString, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
-import CountdownTimer from 'views/components/main/parts/countdown-timer'
+import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
 import {
   fleetInBattleSelectorFactory,

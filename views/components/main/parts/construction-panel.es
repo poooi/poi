@@ -1,4 +1,4 @@
-import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
@@ -7,74 +7,13 @@ import { join as joinString, range, get } from 'lodash'
 const { ROOT, i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
-import CountdownTimer from './countdown-timer'
-import { CountdownNotifier } from 'views/utils/notifiers'
-
-class CountdownLabel extends Component {
-  getLabelStyle = (timeRemaining, isLSC) => {
-    return (
-      (timeRemaining > 600 && isLSC) ? 'danger' :
-      (timeRemaining > 600) ? 'primary' :
-      (timeRemaining > 0) ? 'warning' :
-      (timeRemaining == 0) ? 'success' :
-      'default'
-    )
-  }
-  constructor(props) {
-    super(props)
-    this.notifier = new CountdownNotifier()
-    this.state = {
-      style: this.getLabelStyle(CountdownTimer.getTimeRemaining(this.props.completeTime, this.props.isLSC)),
-    }
-  }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.completeTime != this.props.completeTime) {
-      this.setState({
-        style: this.getLabelStyle(CountdownTimer.getTimeRemaining(nextProps.completeTime), nextProps.isLSC),
-      })
-    }
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.completeTime !== this.props.completeTime || nextState.style !== this.state.style
-  }
-  tick = (timeRemaining) => {
-    if (this.props.completeTime >= 0)
-      this.tryNotify() 
-    const style = this.getLabelStyle(timeRemaining, this.props.isLSC)
-    if (style !== this.state.style)
-      this.setState({style: style})
-  }
-  static basicNotifyConfig = {
-    icon: join(ROOT, 'assets', 'img', 'operation', 'build.png'),
-    type: 'construction',
-    title: __('Construction'),
-    message: (names) => `${joinString(names, ', ')} ${__('built')}`,
-  }
-  tryNotify = () => {
-    this.notifier.tryNotify({
-      ...CountdownLabel.basicNotifyConfig,
-      args: this.props.shipName,
-      completeTime: this.props.completeTime,
-    })
-  }
-  render() {
-    return (
-      <Label className="kdock-timer" bsStyle={this.state.style}>
-      {
-        this.props.completeTime >= 0 &&
-          <CountdownTimer countdownId={`kdock-${this.props.dockIndex+1}`}
-                          completeTime={this.props.completeTime}
-                          tickCallback={this.tick} />
-      }
-      </Label>
-    )
-  }
-}
+import { CountdownNotifierLabel } from './countdown-timer'
 
 export default connect(
   (state) => ({
     constructions: state.info.constructions,
     $ships: state.const.$ships,
+    canNotify: state.misc.canNotify,
   })
 )(class ConstructionPanel extends Component {
   canNotify: false
@@ -85,7 +24,7 @@ export default connect(
       // Do not notify before entering the game
       this.canNotify = false
       break
-    case '/kcsapi/api_port/port':
+    case '':
       this.canNotify = true
       break
     }
@@ -103,12 +42,28 @@ export default connect(
     const id = get(this.props.constructions, [dockId, 'api_created_ship_id'])
     return id ? __(i18n.resources.__(this.props.$ships[id].api_name)) : defaultVal
   }
+  getLabelStyle = ({isLSC}, timeRemaining) => {
+    return (
+      (timeRemaining > 600 && isLSC) ? 'danger' :
+      (timeRemaining > 600) ? 'primary' :
+      (timeRemaining > 0) ? 'warning' :
+      (timeRemaining == 0) ? 'success' :
+      'default'
+    )
+  }
+  static basicNotifyConfig = {
+    icon: join(ROOT, 'assets', 'img', 'operation', 'build.png'),
+    type: 'construction',
+    title: __('Construction'),
+    message: (names) => `${joinString(names, ', ')} ${__('built')}`,
+  }
   render() {
+    const {constructions, canNotify} = this.props
     return (
       <div>
       {
         range(4).map((i) => {
-          const dock = get(this.props.constructions, i, {api_state: -1, api_complete_time: 0})
+          const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
           const isInUse = dock.api_state > 0
           const isLSC = isInUse && dock.api_item1 >= 1000
           const dockName = dock.api_state == -1 ? __('Locked') :
@@ -135,11 +90,16 @@ export default connect(
             }>
               <div className="panel-item kdock-item">
                 <span className="kdock-name">{dockName}</span>
-                <CountdownLabel
-                  dockIndex={i}
-                  shipName={dockName}
+                <CountdownNotifierLabel
+                  timerKey={`kdock-${i+1}`}
                   completeTime={completeTime}
                   isLSC={isLSC}
+                  getLabelStyle={this.getLabelStyle}
+                  getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                    ...this.constructor.basicNotifyConfig,
+                    args: dockName,
+                    completeTime: completeTime,
+                  }}
                 />
               </div>
             </OverlayTrigger>

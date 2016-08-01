@@ -35,21 +35,6 @@ let keyListener
 
 config.on('config.set', (path, value) => {
   switch(path) {
-  case 'poi.notify.expedition.value':
-    window.notify.expedition = value
-    break
-  case 'poi.notify.morale.value':
-    window.notify.morale = value
-    break
-  case 'poi.language':
-    for (const namespace in window.i18n) {
-      window.i18n[namespace].setLocale(value)
-    }
-    window.language = value
-    break
-  case 'poi.screenshotPath':
-    window.screenshotPath = value
-    break
   case 'poi.shortcut.bosskey':
     ipcRenderer.send('refresh-shortcut')
     break

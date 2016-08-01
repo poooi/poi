@@ -75,6 +75,7 @@ export const stateSelector = (state) => state
 export const constSelector = (state) => state.const
 export const basicSelector = (state) => state.info.basic
 export const configSelector = (state) => state.config
+export const miscSelector = (state) => state.misc
 export const fleetsSelector = (state) => state.info.fleets
 export const shipsSelector = (state) => state.info.ships
 export const equipsSelector = (state) => state.info.equips
