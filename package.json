@@ -80,7 +80,6 @@
     "semver": "^5.1.0",
     "socks5-client": "^1.1.0",
     "socks5-http-client": "^1.0.1",
-    "underscore": "^1.8.3",
     "windows-shortcuts-appid": "^0.3.2"
   },
   "devDependencies": {

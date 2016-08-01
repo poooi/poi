@@ -10,7 +10,6 @@ fs = Promise.promisifyAll require 'fs-extra'
 gulp = require 'gulp'
 async = Promise.coroutine
 n7z = require 'node-7z'
-_ = require 'underscore'
 semver = require 'semver'
 babel = require 'babel-core'
 {compile} = require 'coffee-react'

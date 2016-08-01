@@ -1,4 +1,4 @@
-{_} = window
+{unzip} = require 'lodash'
 
 __ = window.i18n.others.__.bind(i18n.others)
 __n = window.i18n.others.__n.bind(i18n.others)
@@ -34,7 +34,7 @@ calcMaxDelta = (lst) ->
 
 # Given sourceShips, the maximum statuses addable regardless of status cap
 calcMaxDeltas = (sourceShips) ->
-  maxFourDeltas = (calcMaxDelta l for l in _.unzip($ships[id].api_powup for id in sourceShips))
+  maxFourDeltas = (calcMaxDelta l for l in unzip($ships[id].api_powup for id in sourceShips))
   maxLuck = Math.ceil(sum(luckProviders id for id in sourceShips) / 5 - 0.0001)
   maxDeltas = maxFourDeltas.concat [maxLuck]
   maxDeltas
