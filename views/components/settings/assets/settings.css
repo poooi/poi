@@ -50,6 +50,7 @@
 }
 #SettingsView .notif-button {
   flex: 1;
+  overflow: hidden;
 }
 #SettingsView .notif-container {
   display: flex;
