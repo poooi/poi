@@ -17,16 +17,10 @@ gulp.task 'getVersion', ->
   log "*** Start building poi v#{poi_version} ***"
 
 gulp.task 'deploy', ['getVersion', 'get_flash'], async ->
-  yield buildAsync poi_version
-
-gulp.task 'deploy_directly', ['getVersion', 'get_flash'], async ->
   yield installThemeAsync poi_version
 
 gulp.task 'build', ['getVersion', 'get_flash_all'], async ->
   yield buildAsync poi_version
-
-gulp.task 'update', ['getVersion'], async ->
-  yield buildAsync poi_version, true
 
 gulp.task 'get_flash', ['getVersion'], async ->
   yield getFlashAsync poi_version
@@ -42,9 +36,6 @@ gulp.task 'pack_win_release', ['getVersion'], async ->
 
 gulp.task 'clean', async ->
   yield cleanFiles()
-
-gulp.task 'compile', async ->
-  yield compileAsync()
 
 gulp.task 'default', ->
   _gulp = 'gulp'
