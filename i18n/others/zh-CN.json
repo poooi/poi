@@ -47,6 +47,8 @@
   "Armor": "装甲",
   "Luck": "运",
 
+  "Resupply cost %d bauxite": "补给消耗了%d铝土",
+
   "doyouknow-prefix": "【小提示】",
   "doyouknow-contents": [
     "“小提示”时常更新一些不容易注意到的小功能，不过你也可以在设置里关掉~",

@@ -47,6 +47,8 @@
   "Armor": "装甲",
   "Luck": "運",
 
+  "Resupply cost %d bauxite": "ボーキサイトを%d消費した",
+
   "doyouknow-prefix": "ヒント：",
   "doyouknow-contents": [
     ""
