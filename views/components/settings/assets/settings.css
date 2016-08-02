@@ -187,3 +187,6 @@
 #SettingsView .navigator-btn button {
   width: 30px;
 }
+#SettingsView .navigator-status {
+  padding-right: 28px;
+}
