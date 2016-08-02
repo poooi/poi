@@ -17,6 +17,7 @@ import {
   condTimerSelector,
   fleetExpeditionSelectorFactory,
   configSelector,
+  miscSelector,
 } from 'views/utils/selectors'
 
 const {ROOT, i18n} = window
@@ -347,7 +348,8 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     tykuSelectorFactory(fleetId),
     sakuSelectorFactory(fleetId),
     configSelector,
-  ], (inBattle, inExpedition, shipsData, fleetName, condStartTime, expedition, tyku, saku, config) => ({
+    miscSelector,
+  ], (inBattle, inExpedition, shipsData, fleetName, condStartTime, expedition, tyku, saku, config, {canNotify}) => ({
     inExpedition,
     inBattle,
     shipsData,
@@ -357,13 +359,14 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     tyku,
     saku,
     condTarget: get(config, 'poi.notify.morale.value', 40),
+    canNotify,
   }))
 )
 export default connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
-  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku, condTarget} = props
+  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku, condTarget, canNotify} = props
   const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
@@ -415,7 +418,7 @@ export default connect(
             <CountdownLabel fleetId={fleetId}
                             fleetName={fleetName}
                             completeTime={completeTime}
-                            shouldNotify={!inExpedition && !inBattle} />
+                            shouldNotify={!inExpedition && !inBattle && canNotify} />
           </span>
         </div>
       </Alert>
