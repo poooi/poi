@@ -605,7 +605,8 @@ const PluginConfig = connect((state, props) => ({
                   <span> {__("Update all")}</span>
                 </Button>
                 <Button onClick={this.handleInstallAll}
-                        disabled={this.state.npmWorking}
+                        disabled={this.state.npmWorking ||
+                          Object.keys(uninstalledPluginSettings).length === 0}
                         className='control-button col-xs-3'>
                   <FontAwesome name={installStatusFAname}
                                pulse={this.state.installingAll}/>
