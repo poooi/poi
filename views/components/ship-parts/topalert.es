@@ -61,7 +61,7 @@ const getTyku = (equipsData) => {
       }
       if ([6, 7, 8].includes($equip.api_type[3])) {
         // 艦载機
-        tempTyku += Math.sqrt(onslot) * $equip.api_tyku
+        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * 0.2)
         tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
