@@ -3,6 +3,7 @@ require('babel-register')(require('../babel.config'))
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
+import lodash from 'lodash'        // TODO: Backward compatibility
 
 // Environments
 window.remote = remote
@@ -23,6 +24,7 @@ require('module').globalPaths.push(window.ROOT)
 // Shortcuts and Components
 window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
 window.dbg.init()
+window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
 window.jQuery = require('jquery')
