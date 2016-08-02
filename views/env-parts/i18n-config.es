@@ -3,7 +3,7 @@ import glob from 'glob'
 
 const {ROOT} = window
 
-window.language = navigator.language
+window.language = window.config.get('poi.language', navigator.language)
 if (!['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
   case 'zh':
