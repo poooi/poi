@@ -14,7 +14,6 @@ const __ = window.i18n.others.__.bind(window.i18n.others)
 export default connect(
   createSelector([
     sortieMapDataSelector,
-    sortieMapDataSelector,
     sortieMapHpSelector,
   ], (mapData, mapHp) => ({
     inSortieMapData: mapData,
