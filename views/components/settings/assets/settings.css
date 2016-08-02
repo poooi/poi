@@ -50,6 +50,7 @@
 }
 #SettingsView .notif-button {
   flex: 1;
+  overflow: hidden;
 }
 #SettingsView .notif-container {
   display: flex;
@@ -186,4 +187,7 @@
 }
 #SettingsView .navigator-btn button {
   width: 30px;
+}
+#SettingsView .navigator-status {
+  padding-right: 28px;
 }

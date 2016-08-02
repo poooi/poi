@@ -111,10 +111,10 @@ class NavigatorBar extends React.Component {
 
     let statusIcon
     if (status === wvStatus.Loading) {
-      statusIcon = <FontAwesome name='spinner' spin />
+      statusIcon = <div><FontAwesome name='spinner' spin /></div>
     }
     if (status === wvStatus.Failed) {
-      statusIcon = <FontAwesome name='times' />
+      statusIcon = <div><FontAwesome name='times' /></div>
     }
 
     let navigateAction, navigateIcon
