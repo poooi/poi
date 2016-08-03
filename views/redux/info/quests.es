@@ -4,7 +4,7 @@ import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
 
 import FileWriter from 'views/utils/fileWriter'
 import { arraySum } from 'views/utils/tools'
-const {ROOT, APPDATA_PATH, compareUpdate} = window
+const {ROOT, APPDATA_PATH} = window
 
 const QUESTS_REFRESH_DAY = '@@QUESTS_REFRESH_DAY'
 
@@ -384,12 +384,12 @@ export function reducer(state=initState, action) {
       console.warn('No quest tracking data!')
     }
     delete records.time               // Time is added ad-hoc upon saving
-    return compareUpdate(state, {
+    return {
       ...state,
       records,
       questGoals,
       activeQuests: outdateActiveQuests(state.activeQuests, Date.now()),
-    }, 3)
+    }
   }
 
   //== Daily update ==
