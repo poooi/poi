@@ -29,9 +29,9 @@ const basic = {
 const NetworkConfig = connect(() => (
   (state, props) => {
     const ret = get(state, 'config.proxy') || {}
-    for (const key in basic) {
-      if (!ret[key]) {
-        ret.key = basic.key
+    for (const key of Object.keys(basic)) {
+      if (ret[key] === undefined) {
+        ret[key] = basic[key]
       }
     }
     return ret
