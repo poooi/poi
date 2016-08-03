@@ -32,14 +32,19 @@ if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {
   const shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
-  shell.writeShortcutLink(shortcutPath, {
+  const option = {
     target: targetPath,
     args: argPath,
     appUserModelId: 'org.poooi.poi',
-    icon: path.join(ROOT, 'assets', 'icons', 'poi.ico'),
-    iconIndex: 0,
     description: 'poi the KanColle Browser Tool',
-  })
+  }
+  if (!ROOT.includes('.asar')) {
+    Object.assign(option, {
+      icon: path.join(ROOT, 'assets', 'icons', 'poi.ico'),
+      iconIndex: 0,
+    })
+  }
+  shell.writeShortcutLink(shortcutPath, option)
 }
 
 if (dbg.isEnabled()) {
