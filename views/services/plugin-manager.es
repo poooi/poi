@@ -4,11 +4,16 @@ import EventEmitter from 'events'
 import fs from 'fs-extra'
 import request from 'request'
 import npm from 'npm'
+import glob from 'glob'
 import { promisify, promisifyAll } from 'bluebird'
+import module from 'module'
+import { sortBy } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
+
+import { readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -42,9 +47,19 @@ class PluginManager extends EventEmitter {
     return this.requirements = fs.readJsonSync(this.packagePath)
   }
   readPlugins() {
+    const pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
+    let plugins = pluginPaths.map(readPlugin)
+    for (const i in plugins) {
+      const plugin = plugins[i]
+      if (plugin.enabled) {
+        loadPlugin(plugin)
+      }
+    }
+    plugins = sortBy(plugins, 'priority')
+    notifyFailed(plugins)
     dispatch({
       type: `@@Plugin/initaialize`,
-      value: this.pluginPath,
+      value: plugins,
     })
   }
   getRequirements() {
@@ -367,45 +382,88 @@ class PluginManager extends EventEmitter {
     }
   }
   enablePlugin(plugin) {
+    plugin = enablePlugin(plugin)
     dispatch({
-      type: '@@Plugin/enable',
+      type: `@@Plugin/replace`,
       value: plugin,
     })
   }
   disablePlugin(plugin) {
+    plugin = disablePlugin(plugin)
     dispatch({
-      type: '@@Plugin/disable',
+      type: `@@Plugin/replace`,
       value: plugin,
     })
   }
   loadPlugin(plugin) {
+    plugin = loadPlugin(plugin)
     dispatch({
-      type: '@@Plugin/load',
+      type: `@@Plugin/replace`,
       value: plugin,
     })
   }
   unloadPlugin(plugin) {
+    plugin = unloadPlugin(plugin)
     dispatch({
-      type: '@@Plugin/unload',
+      type: `@@Plugin/replace`,
       value: plugin,
     })
   }
   removePlugin(plugin) {
+    plugin = unloadPlugin(plugin)
+    for (const path in module._cache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._cache[path]
+      }
+    }
+    for (const path in module._pathCache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._pathCache[path]
+      }
+    }
     dispatch({
       type: '@@Plugin/remove',
       value: plugin,
     })
   }
   addPlugin(pluginPath) {
+    let plugin = readPlugin(pluginPath)
+    if (plugin.enabled) {
+      plugin = loadPlugin(plugin)
+    }
     dispatch({
       type: '@@Plugin/add',
-      value: pluginPath,
+      value: plugin,
     })
   }
   reloadPlugin(plugin) {
+    if (typeof plugin === 'string') {
+      for (const p of getStore('plugins')) {
+        if (p.packageName === plugin) {
+          plugin = p
+          break
+        }
+      }
+    }
+    unloadPlugin(plugin)
+    for (const path in module._cache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._cache[path]
+      }
+    }
+    for (const path in module._pathCache) {
+      if (path.includes(plugin.packageName)) {
+        delete module._pathCache[path]
+      }
+    }
+    let newPlugin = readPlugin(plugin.pluginPath)
+    if (newPlugin.enabled) {
+      newPlugin = loadPlugin(newPlugin)
+    }
+    newPlugin = updateI18n(newPlugin)
     dispatch({
-      type: '@@Plugin/reload',
-      value: plugin,
+      type: '@@Plugin/replace',
+      value: newPlugin,
     })
   }
 }
