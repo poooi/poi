@@ -98,11 +98,12 @@
     "walk": "^2.3.9"
   },
   "build": {
-    "app-bundle-id": "org.poooi.poi",
+    "appId": "org.poooi.poi",
     "app-category-type": "public.app-category.games",
     "extraResources": [
       "PepperFlash/${os}-${arch}"
     ],
+    "npmRebuild": false,
     "mac": {
       "icon": "assets/icons/poi.icns",
       "target": "dmg"
