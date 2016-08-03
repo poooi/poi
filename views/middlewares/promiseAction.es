@@ -25,12 +25,13 @@ export class PromiseAction {
 
 export const middleware = store => next => action => {
   if (action instanceof PromiseAction) {
+    console.log('yeah', action)
     const {name, generator, args} = action
     next({type: name, args})
-    return next(generator().then(
+    return generator().then(
       (result) => next({type: `${name}@then`, result, args}),
       (error) => next({type: `${name}@reject`, error, args}),
-    ))
+    )
   } else {
     return next(action)
   }
