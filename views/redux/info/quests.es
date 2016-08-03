@@ -1,9 +1,10 @@
 import CSON from 'cson'
 import { join } from 'path-extra'
-import { sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
+import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
 
 import FileWriter from 'views/utils/fileWriter'
-const {ROOT, APPDATA_PATH} = window
+import { arraySum } from 'views/utils/tools'
+const {ROOT, APPDATA_PATH, compareUpdate} = window
 
 const QUESTS_REFRESH_DAY = '@@QUESTS_REFRESH_DAY'
 
@@ -383,13 +384,12 @@ export function reducer(state=initState, action) {
       console.warn('No quest tracking data!')
     }
     delete records.time               // Time is added ad-hoc upon saving
-    records.admiralId = admiralId     // Used for saving
-    return {
+    return compareUpdate(state, {
       ...state,
       records,
       questGoals,
       activeQuests: outdateActiveQuests(state.activeQuests, Date.now()),
-    }
+    }, 3)
   }
 
   //== Daily update ==
@@ -519,13 +519,32 @@ export function schedualDailyRefresh(dispatch) {
   }, nextTimeout)
 }
 
+function processQuestRecords(records, activeQuests) {
+  records = Object.clone(records)
+  forEach(records, (record, recordId) => {
+    if (!record || typeof record !== 'object')
+      return
+    const [count, required] = arraySum(map(record, (subgoal) => {
+      if (!subgoal || typeof subgoal !== 'object')
+        return [0, 0]
+      return [subgoal.count, subgoal.required]
+    }))
+    record.count = count || 0
+    record.required = required || 1
+    if (recordId in activeQuests)
+      record.active = true
+  })
+  records.time = Date.now()
+  return records
+}
+
 const fileWriter = new FileWriter()
 
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
-export function saveQuestTracking(questRecords) {
-  fileWriter.write(questTrackingPath(questRecords.admiralId), CSON.stringify({
-    ...questRecords,
-    time: Date.now(),
-  }))
+export function saveQuestTracking(records) {
+  const {activeQuests} = window.getStore('info.quests')
+  const admiralId = window.getStore('info.basic.api_member_id')
+  fileWriter.write(questTrackingPath(admiralId),
+    CSON.stringify(processQuestRecords(records, activeQuests)))
 }
