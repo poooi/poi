@@ -5,6 +5,7 @@ import fs from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
+import module from 'module'
 
 const {ROOT, config, language, notify, MODULE_PATH} = window
 const windowManager = remote.require('./lib/window')
@@ -147,7 +148,6 @@ const enablePlugin = (plugin) => {
 }
 
 const disablePlugin = (plugin) => {
-  config.set(`plugin.${plugin.id}.enable`, false)
   plugin.enabled = false
   plugin = unloadPlugin(plugin)
   return plugin
@@ -211,6 +211,19 @@ const postEnableProcess = (plugin) => {
     console.error(error.stack)
   }
   return plugin
+}
+
+export function clearPluginCache(packageName) {
+  for (const path in module._cache) {
+    if (path.includes(packageName)) {
+      delete module._cache[path]
+    }
+  }
+  for (const path in module._pathCache) {
+    if (path.includes(packageName)) {
+      delete module._pathCache[path]
+    }
+  }
 }
 
 const unloadPlugin = (plugin) => {

@@ -6,14 +6,13 @@ import request from 'request'
 import npm from 'npm'
 import glob from 'glob'
 import { promisify, promisifyAll } from 'bluebird'
-import module from 'module'
 import { sortBy, map } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
+import { readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed, updateI18n, clearPluginCache } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -364,6 +363,7 @@ class PluginManager extends EventEmitter {
     }
   }
   enablePlugin(plugin) {
+    plugin.enabled = true
     if (!plugin.isRead && !plugin.isBroken) {
       plugin = enablePlugin(plugin)
     }
@@ -374,6 +374,7 @@ class PluginManager extends EventEmitter {
     })
   }
   disablePlugin(plugin) {
+    config.set(`plugin.${plugin.id}.enable`, false)
     plugin = disablePlugin(plugin)
     dispatch({
       type: `@@Plugin/replace`,
@@ -389,16 +390,7 @@ class PluginManager extends EventEmitter {
   }
   removePlugin(plugin) {
     plugin = unloadPlugin(plugin)
-    for (const path in module._cache) {
-      if (path.includes(plugin.packageName)) {
-        delete module._cache[path]
-      }
-    }
-    for (const path in module._pathCache) {
-      if (path.includes(plugin.packageName)) {
-        delete module._pathCache[path]
-      }
-    }
+    clearPluginCache(plugin.packageName)
     dispatch({
       type: '@@Plugin/remove',
       value: plugin,
@@ -407,7 +399,7 @@ class PluginManager extends EventEmitter {
   addPlugin(pluginPath) {
     let plugin = readPlugin(pluginPath)
     if (plugin.enabled) {
-      plugin = enablePlugin()
+      plugin = enablePlugin(plugin)
     }
     dispatch({
       type: '@@Plugin/add',
@@ -424,16 +416,7 @@ class PluginManager extends EventEmitter {
       }
     }
     unloadPlugin(plugin)
-    for (const path in module._cache) {
-      if (path.includes(plugin.packageName)) {
-        delete module._cache[path]
-      }
-    }
-    for (const path in module._pathCache) {
-      if (path.includes(plugin.packageName)) {
-        delete module._pathCache[path]
-      }
-    }
+    clearPluginCache(plugin.packageName)
     let newPlugin = readPlugin(plugin.pluginPath)
     if (newPlugin.enabled) {
       newPlugin = enablePlugin(newPlugin)
