@@ -234,7 +234,7 @@ const postEnableProcess = (plugin) => {
   return plugin
 }
 
-export function clearPluginCache(packageName) {
+function clearPluginCache(packageName) {
   for (const path in module._cache) {
     if (path.includes(packageName)) {
       delete module._cache[path]
@@ -258,6 +258,7 @@ const unloadPlugin = (plugin) => {
   if (plugin.pluginWindow) {
     windowManager.closeWindow(plugin.pluginWindow)
   }
+  clearPluginCache(plugin.packageName)
   return plugin
 }
 

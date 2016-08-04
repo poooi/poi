@@ -12,7 +12,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed, updateI18n, clearPluginCache } from './utils'
+import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -387,7 +387,6 @@ class PluginManager extends EventEmitter {
 
   removePlugin(plugin) {
     plugin = unloadPlugin(plugin)
-    clearPluginCache(plugin.packageName)
     dispatch({
       type: '@@Plugin/remove',
       value: plugin,
@@ -412,7 +411,6 @@ class PluginManager extends EventEmitter {
     if (!plugin)
       return
     unloadPlugin(plugin)
-    clearPluginCache(plugin.packageName)
     let newPlugin = readPlugin(plugin.pluginPath)
     if (newPlugin.enabled) {
       newPlugin = enablePlugin(newPlugin)
