@@ -205,7 +205,7 @@ class PluginManager extends EventEmitter {
   // Resolves the latest plugin if need update
   // Resolves undefined if not
   getPluginOutdateInfo = async (plugin) => {
-    // If needRollback, then we don't need the latest version; we instead 
+    // If needRollback, then we don't need the latest version; we instead
     // display the version it should be rolled back to
     if (plugin.needRollback) {
       return
@@ -264,7 +264,7 @@ class PluginManager extends EventEmitter {
   async getOutdatedPlugins(isNotif) {
     this.getMirrors()
     const plugins = this.getInstalledPlugins()
-    const outdatedList = (await Promise.all(plugins.map((plugin) => 
+    const outdatedList = (await Promise.all(plugins.map((plugin) =>
       this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
     ))).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
@@ -336,7 +336,7 @@ class PluginManager extends EventEmitter {
 
   enablePlugin(plugin) {
     plugin.enabled = true
-    if (!plugin.isRead && !plugin.isBroken) {
+    if (!plugin.isBroken) {
       plugin = enablePlugin(plugin)
     }
     config.set(`plugin.${plugin.id}.enable`, true)
