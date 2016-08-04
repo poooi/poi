@@ -5,7 +5,7 @@ import { getPluginIndexByPackageName } from './utils'
 export function reducer (state=[], {type, value, option}) {
   const {reduxSet} = window
   switch (type) {
-  case '@@Plugin/initaialize': {
+  case '@@Plugin/initialize': {
     return value
   }
   case '@@Plugin/replace': {

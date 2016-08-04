@@ -38,7 +38,7 @@ class PluginManager extends EventEmitter {
     this.NEEDUPDATE = 2
     this.BROKEN = 3
   }
-  initaialize() {
+  initialize() {
     this.getConf()
     this.getPlugins()
   }
@@ -54,7 +54,7 @@ class PluginManager extends EventEmitter {
     plugins = sortBy(plugins, 'priority')
     notifyFailed(plugins)
     dispatch({
-      type: `@@Plugin/initaialize`,
+      type: '@@Plugin/initialize',
       value: plugins,
     })
   }
@@ -187,6 +187,9 @@ class PluginManager extends EventEmitter {
   getMetRequirementPlugins() {
     return this.getFilteredPlugins(this.isMetRequirement.bind(this))
   }
+  getFilteredPlugins(filter) {
+    return getStore('plugins').filter(filter)
+  }
   getUpdateStatus () {
     for (const i in getStore('plugins')) {
       if (getStore('plugins')[i].isOutdated) {
@@ -195,6 +198,7 @@ class PluginManager extends EventEmitter {
     }
     return false
   }
+
   // Resolves the latest plugin if need update
   // Resolves undefined if not
   getPluginOutdateInfo = async (plugin) => {
@@ -270,10 +274,9 @@ class PluginManager extends EventEmitter {
       })
     }
   }
-  getFilteredPlugins(filter) {
-    return getStore('plugins').filter(filter)
-  }
+
   async updatePlugin(plugin) {
+    this.getMirrors()
     dispatch({
       type: '@@Plugin/changeStatus',
       value: plugin,
@@ -313,6 +316,7 @@ class PluginManager extends EventEmitter {
       throw error
     }
   }
+
   async installPlugin(name) {
     this.getMirrors()
     try {
@@ -342,6 +346,7 @@ class PluginManager extends EventEmitter {
       throw error
     }
   }
+
   async uninstallPlugin(plugin) {
     this.getMirrors()
     try {
@@ -358,10 +363,11 @@ class PluginManager extends EventEmitter {
       this.removePlugin(plugin)
       await promisify(npm.commands.uninstall)([plugin.packageName])
     } catch (error) {
-      console.error(error)
+      console.error(error.stack)
       throw error
     }
   }
+
   enablePlugin(plugin) {
     plugin.enabled = true
     if (!plugin.isRead && !plugin.isBroken) {
@@ -369,25 +375,28 @@ class PluginManager extends EventEmitter {
     }
     config.set(`plugin.${plugin.id}.enable`, true)
     dispatch({
-      type: `@@Plugin/replace`,
+      type: '@@Plugin/replace',
       value: plugin,
     })
   }
+
   disablePlugin(plugin) {
     config.set(`plugin.${plugin.id}.enable`, false)
     plugin = disablePlugin(plugin)
     dispatch({
-      type: `@@Plugin/replace`,
+      type: '@@Plugin/replace',
       value: plugin,
     })
   }
+
   unloadPlugin(plugin) {
     plugin = unloadPlugin(plugin)
     dispatch({
-      type: `@@Plugin/replace`,
+      type: '@@Plugin/replace',
       value: plugin,
     })
   }
+
   removePlugin(plugin) {
     plugin = unloadPlugin(plugin)
     clearPluginCache(plugin.packageName)
@@ -396,6 +405,7 @@ class PluginManager extends EventEmitter {
       value: plugin,
     })
   }
+
   addPlugin(pluginPath) {
     let plugin = readPlugin(pluginPath)
     if (plugin.enabled) {
@@ -406,15 +416,13 @@ class PluginManager extends EventEmitter {
       value: plugin,
     })
   }
+
   reloadPlugin(plugin) {
     if (typeof plugin === 'string') {
-      for (const p of getStore('plugins')) {
-        if (p.packageName === plugin) {
-          plugin = p
-          break
-        }
-      }
+      plugin = getStore('plugins').find((p) => p.packageName === plugin)
     }
+    if (!plugin)
+      return
     unloadPlugin(plugin)
     clearPluginCache(plugin.packageName)
     let newPlugin = readPlugin(plugin.pluginPath)
@@ -435,6 +443,6 @@ const pluginManager = new PluginManager(
   path.join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
-pluginManager.initaialize()
+pluginManager.initialize()
 
 export default pluginManager
