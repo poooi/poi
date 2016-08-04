@@ -13,7 +13,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
+import { readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n, requirePluginIfAvailable } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -45,7 +45,7 @@ class PluginManager extends EventEmitter {
   }
   readPlugins() {
     const pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
-    let plugins = pluginPaths.map(readPlugin)
+    let plugins = pluginPaths.map(readPlugin).map(requirePluginIfAvailable)
     for (const i in plugins) {
       const plugin = plugins[i]
       if (plugin.enabled) {
@@ -404,7 +404,7 @@ class PluginManager extends EventEmitter {
     })
   }
   addPlugin(pluginPath) {
-    let plugin = readPlugin(pluginPath)
+    let plugin = requirePluginIfAvailable(readPlugin(pluginPath))
     if (plugin.enabled) {
       plugin = loadPlugin(plugin)
     }
@@ -433,7 +433,7 @@ class PluginManager extends EventEmitter {
         delete module._pathCache[path]
       }
     }
-    let newPlugin = readPlugin(plugin.pluginPath)
+    let newPlugin = requirePluginIfAvailable(readPlugin(plugin.pluginPath))
     if (newPlugin.enabled) {
       newPlugin = loadPlugin(newPlugin)
     }

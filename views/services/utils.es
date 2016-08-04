@@ -49,7 +49,7 @@ const updateI18n = (plugin) => {
 }
 
 const readPlugin = (pluginPath) => {
-  let pluginData, packageData, plugin, pluginMain
+  let pluginData, packageData, plugin
   try {
     pluginData = fs.readJsonSync(join(ROOT, 'assets', 'data', 'plugin.json'))
   } catch (error) {
@@ -116,9 +116,15 @@ const readPlugin = (pluginPath) => {
       {' ' + plugin.name}
     </span>
   )
+  return plugin
+}
+
+// Temporary name
+export function requirePluginIfAvailable(plugin) {
   if (plugin.enabled && !plugin.needRollback) {
+    let pluginMain
     try {
-      pluginMain = require(pluginPath)
+      pluginMain = require(plugin.pluginPath)
       pluginMain.isRead = true
       if (!get(plugin, 'packageData.poiPlugin.id') && pluginMain.name) {
         plugin.id = pluginMain.name
