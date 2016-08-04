@@ -417,7 +417,6 @@ class PluginManager extends EventEmitter {
     if (newPlugin.enabled) {
       newPlugin = enablePlugin(newPlugin)
     }
-    newPlugin = updateI18n(newPlugin)
     dispatch({
       type: '@@Plugin/add',
       value: newPlugin,
