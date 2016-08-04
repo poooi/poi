@@ -11,7 +11,7 @@ const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { CountdownNotifierLabel } from './countdown-timer'
-import { 
+import {
   repairsSelector,
   constSelector,
   shipsSelector,
@@ -73,24 +73,22 @@ export default connect(
                 <span className="ndock-name">{dockName}</span>
 
               <OverlayTrigger placement='left' overlay={
-                (dock.api_state > 0) ? (
-                  <Tooltip id={`ndock-finish-by-${i}`}>
-                    <strong>{__("Finish by : ")}</strong>{window.timeToString(completeTime)}
-                  </Tooltip>
-                ) : (
-                  <noscript />
-                )
+                <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
+                  <strong>{__("Finish by : ")}</strong>{window.timeToString(completeTime)}
+                </Tooltip>
               }>
-                <CountdownNotifierLabel
-                  timerKey={`ndock-${i+1}`}
-                  completeTime={completeTime}
-                  getLabelStyle={this.getLabelStyle}
-                  getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                    ...this.constructor.basicNotifyConfig,
-                    args: dockName,
-                    completeTime: completeTime,
-                  }}
-                />
+                <div>
+                  <CountdownNotifierLabel
+                    timerKey={`ndock-${i+1}`}
+                    completeTime={completeTime}
+                    getLabelStyle={this.getLabelStyle}
+                    getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                      ...this.constructor.basicNotifyConfig,
+                      args: dockName,
+                      completeTime: completeTime,
+                    }}
+                  />
+                </div>
               </OverlayTrigger>
               </div>
             )

@@ -24,7 +24,7 @@ export default connect(
     const $expeditions = state.const.$missions
     const notifyBefore = get(configSelector(state), 'poi.notify.expedition.value', 60)
     return {
-      fleetsExpedition, 
+      fleetsExpedition,
       fleetNames,
       $expeditions,
       notifyBefore,
@@ -66,25 +66,23 @@ export default connect(
             <div className="panel-item expedition-item" key={i} >
               <span className="expedition-name">{expeditionName}</span>
               <OverlayTrigger placement='left' overlay={
-                (completeTime > 0) ? (
-                  <Tooltip id={`expedition-return-by-${i}`}>
-                    <strong>{__("Return by : ")}</strong>{window.timeToString(completeTime)}
-                  </Tooltip>
-                ) : (
-                  <noscript />
-                )
+                <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
+                  <strong>{__("Return by : ")}</strong>{window.timeToString(completeTime)}
+                </Tooltip>
               }>
-                <CountdownNotifierLabel
-                  timerKey={`expedition-${i+1}`}
-                  completeTime={completeTime}
-                  getLabelStyle={this.getLabelStyle}
-                  getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                    ...this.constructor.basicNotifyConfig,
-                    args: fleetName,
-                    completeTime: completeTime,
-                    preemptTime: notifyBefore,
-                  }}
-                />
+                <div>
+                  <CountdownNotifierLabel
+                    timerKey={`expedition-${i+1}`}
+                    completeTime={completeTime}
+                    getLabelStyle={this.getLabelStyle}
+                    getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                      ...this.constructor.basicNotifyConfig,
+                      args: fleetName,
+                      completeTime: completeTime,
+                      preemptTime: notifyBefore,
+                    }}
+                  />
+                </div>
               </OverlayTrigger>
             </div>
           )

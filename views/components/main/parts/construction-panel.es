@@ -67,26 +67,22 @@ export default connect(
           const isInUse = dock.api_state > 0
           const isLSC = isInUse && dock.api_item1 >= 1000
           const dockName = dock.api_state == -1 ? __('Locked') :
-            dock.api_state == 0 ? __('Empty') 
+            dock.api_state == 0 ? __('Empty')
             : this.getDockShipName(i, '???')
           const completeTime = isInUse ? dock.api_complete_time : -1
           const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null
           return (
             <OverlayTrigger key={i} placement='top' overlay={
-              isInUse ? (
-                <Tooltip id={`kdock-material-${i}`}>
-                  {
-                    <span style={tooltipTitleClassname}>{dockName}<br /></span>
-                  }
-                  {this.getMaterialImage(1)} {dock.api_item1}
-                  {this.getMaterialImage(2)} {dock.api_item2}
-                  {this.getMaterialImage(3)} {dock.api_item3}
-                  {this.getMaterialImage(4)} {dock.api_item4}
-                  {this.getMaterialImage(7)} {dock.api_item5}
-                </Tooltip>
-              ) : (
-                <noscript />
-              )
+              <Tooltip id={`kdock-material-${i}`} style={!isInUse && {display: 'none'}}>
+                {
+                  <span style={tooltipTitleClassname}>{dockName}<br /></span>
+                }
+                {this.getMaterialImage(1)} {dock.api_item1}
+                {this.getMaterialImage(2)} {dock.api_item2}
+                {this.getMaterialImage(3)} {dock.api_item3}
+                {this.getMaterialImage(4)} {dock.api_item4}
+                {this.getMaterialImage(7)} {dock.api_item5}
+              </Tooltip>
             }>
               <div className="panel-item kdock-item">
                 <span className="kdock-name">{dockName}</span>
