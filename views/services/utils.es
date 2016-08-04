@@ -119,68 +119,35 @@ const readPlugin = (pluginPath) => {
   return plugin
 }
 
-// Temporary name
-export function requirePluginIfAvailable(plugin) {
-  if (plugin.enabled && !plugin.needRollback) {
-    let pluginMain
-    try {
-      pluginMain = require(plugin.pluginPath)
-      pluginMain.isRead = true
-      if (!get(plugin, 'packageData.poiPlugin.id') && pluginMain.name) {
-        plugin.id = pluginMain.name
-      }
-      if (pluginMain.displayName) {
-        plugin.displayName = pluginMain.displayName
-      }
-      if (plugin.priority === 10000 && (pluginMain.priority != null)) {
-        plugin.priority = pluginMain.priority
-      }
-    } catch (error) {
-      console.error(`[Plugin ${plugin.name}] `, error.stack)
-      pluginMain = {
-        isBroken: true,
-      }
-    }
-    Object.assign(pluginMain, plugin)
-    plugin = pluginMain
-    pluginMain = null
-    if (plugin.isRead == null) {
-      plugin.isRead = false
-    }
-  }
-  return plugin
-}
-
 const enablePlugin = (plugin) => {
-  if (!plugin.isRead && !plugin.isBroken) {
-    let pluginMain
-    try {
-      pluginMain = require(plugin.pluginPath)
-      pluginMain.isRead = true
-      if (!plugin.packageData.poiPlugin.id && pluginMain.name) {
-        plugin.id = pluginMain.name
-      }
-      if (pluginMain.displayName) {
-        plugin.displayName = pluginMain.displayName
-      }
-      if (plugin.priority === 10000 && (pluginMain.priority != null)) {
-        plugin.priority = pluginMain.priority
-      }
-    } catch (error) {
-      console.error(error)
-      pluginMain = {
-        isBroken: true,
-      }
+  if (plugin.needRollback)
+    return plugin
+  let pluginMain
+  try {
+    pluginMain.enabled = true
+    pluginMain = require(plugin.pluginPath)
+    pluginMain.isRead = true
+    if (!plugin.packageData.poiPlugin.id && pluginMain.name) {
+      plugin.id = pluginMain.name
     }
-    Object.assign(pluginMain, plugin)
-    if (pluginMain.isRead == null) {
-      pluginMain.isRead = false
+    if (pluginMain.displayName) {
+      plugin.displayName = pluginMain.displayName
     }
-    plugin = pluginMain
+    if (plugin.priority === 10000 && (pluginMain.priority != null)) {
+      plugin.priority = pluginMain.priority
+    }
+  } catch (error) {
+    console.error(error)
+    pluginMain = {
+      enabled: false,
+      isBroken: true,
+    }
   }
-  plugin = loadPlugin(plugin)
-  plugin.enabled = true
-  config.set(`plugin.${plugin.id}.enable`, true)
+  Object.assign(pluginMain, plugin)
+  if (pluginMain.isRead == null) {
+    pluginMain.isRead = false
+  }
+  plugin = pluginMain
   return plugin
 }
 

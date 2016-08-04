@@ -13,7 +13,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n, requirePluginIfAvailable } from './utils'
+import { readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -45,13 +45,14 @@ class PluginManager extends EventEmitter {
   }
   readPlugins() {
     const pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
-    let plugins = pluginPaths.map(readPlugin).map(requirePluginIfAvailable)
-    for (const i in plugins) {
-      const plugin = plugins[i]
+    let plugins = pluginPaths.map((pluginPath) => {
+      let plugin = readPlugin(pluginPath)
       if (plugin.enabled) {
-        loadPlugin(plugin)
+        plugin = enablePlugin(plugin)
+        plugin = loadPlugin(plugin)
       }
-    }
+      return plugin
+    })
     plugins = sortBy(plugins, 'priority')
     notifyFailed(plugins)
     dispatch({
@@ -197,7 +198,10 @@ class PluginManager extends EventEmitter {
     return false
   }
   // Resolves the latest plugin if need update
+  // Resolves undefined if not
   getPluginOutdateInfo = async (plugin) => {
+    // If needRollback, then we don't need the latest version; we instead 
+    // display the version it should be rolled back to
     if (plugin.needRollback) {
       return
     }
@@ -255,7 +259,9 @@ class PluginManager extends EventEmitter {
   async getOutdatedPlugins(isNotif) {
     this.getMirrors()
     const plugins = this.getInstalledPlugins()
-    const outdatedList = (await Promise.all(plugins.map(this.getPluginOutdateInfo))).filter(Boolean)
+    const outdatedList = (await Promise.all(plugins.map((plugin) => 
+      this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
+    ))).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
       const content = `${map(outdatedList, 'name').join(' ')} ${__("have newer version. Please update your plugins.")}`
       notify(content, {
@@ -359,7 +365,13 @@ class PluginManager extends EventEmitter {
     }
   }
   enablePlugin(plugin) {
-    plugin = enablePlugin(plugin)
+    if (!plugin.isRead && !plugin.isBroken) {
+      plugin = enablePlugin(plugin)
+    }
+    // TODO: Temporarily moved out of enablePlugin
+    plugin = loadPlugin(plugin)
+    config.set(`plugin.${plugin.id}.enable`, true)
+    // End of temp
     dispatch({
       type: `@@Plugin/replace`,
       value: plugin,
@@ -404,8 +416,9 @@ class PluginManager extends EventEmitter {
     })
   }
   addPlugin(pluginPath) {
-    let plugin = requirePluginIfAvailable(readPlugin(pluginPath))
+    let plugin = readPlugin(pluginPath)
     if (plugin.enabled) {
+      plugin = enablePlugin()
       plugin = loadPlugin(plugin)
     }
     dispatch({
@@ -433,8 +446,9 @@ class PluginManager extends EventEmitter {
         delete module._pathCache[path]
       }
     }
-    let newPlugin = requirePluginIfAvailable(readPlugin(plugin.pluginPath))
+    let newPlugin = readPlugin(plugin.pluginPath)
     if (newPlugin.enabled) {
+      newPlugin = enablePlugin(newPlugin)
       newPlugin = loadPlugin(newPlugin)
     }
     newPlugin = updateI18n(newPlugin)
