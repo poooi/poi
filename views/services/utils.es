@@ -124,30 +124,25 @@ const enablePlugin = (plugin) => {
     return plugin
   let pluginMain
   try {
-    pluginMain.enabled = true
     pluginMain = require(plugin.pluginPath)
+    pluginMain.enabled = true
     pluginMain.isRead = true
-    if (!plugin.packageData.poiPlugin.id && pluginMain.name) {
-      plugin.id = pluginMain.name
-    }
-    if (pluginMain.displayName) {
-      plugin.displayName = pluginMain.displayName
-    }
-    if (plugin.priority === 10000 && (pluginMain.priority != null)) {
-      plugin.priority = pluginMain.priority
+    if (!plugin.id && pluginMain.name) {
+      pluginMain.id = pluginMain.name
     }
   } catch (error) {
-    console.error(error)
+    console.error(error.stack)
     pluginMain = {
       enabled: false,
       isBroken: true,
     }
   }
   Object.assign(pluginMain, plugin)
-  if (pluginMain.isRead == null) {
-    pluginMain.isRead = false
+  plugin = {
+    ...plugin,
+    ...pluginMain,
   }
-  plugin = pluginMain
+  plugin = postEnableProcess(plugin)
   return plugin
 }
 
@@ -158,7 +153,7 @@ const disablePlugin = (plugin) => {
   return plugin
 }
 
-const loadPlugin = (plugin) => {
+const postEnableProcess = (plugin) => {
   let windowOptions
   if (plugin.windowURL) {
     if (plugin.windowOptions) {
@@ -254,7 +249,6 @@ export {
   readPlugin,
   enablePlugin,
   disablePlugin,
-  loadPlugin,
   unloadPlugin,
   notifyFailed,
   updateI18n,

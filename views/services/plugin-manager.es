@@ -13,7 +13,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { readPlugin, enablePlugin, disablePlugin, loadPlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
+import { readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed, updateI18n } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -49,7 +49,6 @@ class PluginManager extends EventEmitter {
       let plugin = readPlugin(pluginPath)
       if (plugin.enabled) {
         plugin = enablePlugin(plugin)
-        plugin = loadPlugin(plugin)
       }
       return plugin
     })
@@ -368,10 +367,7 @@ class PluginManager extends EventEmitter {
     if (!plugin.isRead && !plugin.isBroken) {
       plugin = enablePlugin(plugin)
     }
-    // TODO: Temporarily moved out of enablePlugin
-    plugin = loadPlugin(plugin)
     config.set(`plugin.${plugin.id}.enable`, true)
-    // End of temp
     dispatch({
       type: `@@Plugin/replace`,
       value: plugin,
@@ -379,13 +375,6 @@ class PluginManager extends EventEmitter {
   }
   disablePlugin(plugin) {
     plugin = disablePlugin(plugin)
-    dispatch({
-      type: `@@Plugin/replace`,
-      value: plugin,
-    })
-  }
-  loadPlugin(plugin) {
-    plugin = loadPlugin(plugin)
     dispatch({
       type: `@@Plugin/replace`,
       value: plugin,
@@ -419,7 +408,6 @@ class PluginManager extends EventEmitter {
     let plugin = readPlugin(pluginPath)
     if (plugin.enabled) {
       plugin = enablePlugin()
-      plugin = loadPlugin(plugin)
     }
     dispatch({
       type: '@@Plugin/add',
@@ -449,7 +437,6 @@ class PluginManager extends EventEmitter {
     let newPlugin = readPlugin(plugin.pluginPath)
     if (newPlugin.enabled) {
       newPlugin = enablePlugin(newPlugin)
-      newPlugin = loadPlugin(newPlugin)
     }
     newPlugin = updateI18n(newPlugin)
     dispatch({
