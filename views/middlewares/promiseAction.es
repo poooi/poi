@@ -9,7 +9,7 @@
 //     args,
 //   }
 //   action on failure: {
-//     type: `${actionNameBase}@reject`,
+//     type: `${actionNameBase}@catch`,
 //     error: <error>
 //     args,
 //   }
@@ -25,12 +25,11 @@ export class PromiseAction {
 
 export const middleware = store => next => action => {
   if (action instanceof PromiseAction) {
-    console.log('yeah', action)
     const {name, generator, args} = action
     next({type: name, args})
     return generator().then(
       (result) => next({type: `${name}@then`, result, args}),
-      (error) => next({type: `${name}@reject`, error, args}),
+      (error) => next({type: `${name}@catch`, error, args}),
     )
   } else {
     return next(action)

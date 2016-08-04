@@ -9,12 +9,19 @@ import module from 'module'
 import npm from 'npm'
 import { promisify } from 'bluebird'
 
+import { extendReducer } from 'views/createStore'
 const {ROOT, config, language, notify, MODULE_PATH} = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 require('module').globalPaths.push(MODULE_PATH)
+
+// This reducer clears the substore no matter what is given.
+function clearReducer() {
+  return {}
+}
+
 
 export function installPackage(packageName, version) {
   if (version) {
@@ -177,6 +184,13 @@ const disablePlugin = (plugin) => {
 }
 
 const postEnableProcess = (plugin) => {
+  if (plugin.reducer) {
+    try {
+      extendReducer(plugin.packageName, plugin.reducer)
+    } catch (e) {
+      console.error(e.stack)
+    }
+  }
   let windowOptions
   if (plugin.windowURL) {
     if (plugin.windowOptions) {
@@ -261,6 +275,7 @@ const unloadPlugin = (plugin) => {
     windowManager.closeWindow(plugin.pluginWindow)
   }
   clearPluginCache(plugin.packageName)
+  extendReducer(plugin.packageName, clearReducer)
   return plugin
 }
 
