@@ -62,11 +62,6 @@ window.ReactBootstrap.Input = class extends window.React.Component {
   }
 }
 
-if (window.dbg.isEnabled()) {
-  process.stderr.write = console.error.bind(console)
-  process.stdout.write = console.warn.bind(console)
-}
-
 // Utils
 require('./env-parts/utils')
 
