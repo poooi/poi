@@ -12,27 +12,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
-
-function installPackage(packageName, version) {
-  if (version) {
-    packageName = `${packageName}@${version}`
-  }
-  // let flow = co.wrap(function* (_this) {
-  //   yield npminstall({
-  //     root: _this.npmConfig.prefix,
-  //     pkgs: [
-  //       { name: plugin.packageName, version: plugin.lastestVersion},
-  //     ],
-  //     registry: _this.npmConfig.registry,
-  //     debug: true
-  //   })
-  //   return yield Promise.resolve()
-  // })
-  // await flow(this)
-  return promisify(npm.commands.install)([packageName])
-}
-
+import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginRoot, mirrorPath) {
@@ -119,7 +99,6 @@ class PluginManager extends EventEmitter {
         delete this.npmConfig.http_proxy
       }
     }
-    console.log(this.npmConfig)
     npm.load(this.npmConfig)
     return this.config
   }

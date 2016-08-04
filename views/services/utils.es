@@ -16,6 +16,26 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 require('module').globalPaths.push(MODULE_PATH)
 
+export function installPackage(packageName, version) {
+  if (version) {
+    packageName = `${packageName}@${version}`
+  }
+  // let flow = co.wrap(function* (_this) {
+  //   yield npminstall({
+  //     root: _this.npmConfig.prefix,
+  //     pkgs: [
+  //       { name: plugin.packageName, version: plugin.lastestVersion},
+  //     ],
+  //     registry: _this.npmConfig.registry,
+  //     debug: true
+  //   })
+  //   return yield Promise.resolve()
+  // })
+  // await flow(this)
+  return promisify(npm.commands.install)([packageName])
+}
+
+
 const updateI18n = (plugin) => {
   let i18nFile = null
   if (plugin.i18nDir != null) {
