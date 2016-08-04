@@ -6,6 +6,8 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
 import module from 'module'
+import npm from 'npm'
+import { promisify } from 'bluebird'
 
 const {ROOT, config, language, notify, MODULE_PATH} = window
 const windowManager = remote.require('./lib/window')
@@ -13,6 +15,25 @@ const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 require('module').globalPaths.push(MODULE_PATH)
+
+export function installPackage(packageName, version) {
+  if (version) {
+    packageName = `${packageName}@${version}`
+  }
+  // let flow = co.wrap(function* (_this) {
+  //   yield npminstall({
+  //     root: _this.npmConfig.prefix,
+  //     pkgs: [
+  //       { name: plugin.packageName, version: plugin.lastestVersion},
+  //     ],
+  //     registry: _this.npmConfig.registry,
+  //     debug: true
+  //   })
+  //   return yield Promise.resolve()
+  // })
+  // await flow(this)
+  return promisify(npm.commands.install)([packageName])
+}
 
 const updateI18n = (plugin) => {
   let i18nFile = null

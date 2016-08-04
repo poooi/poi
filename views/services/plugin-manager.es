@@ -12,7 +12,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed, updateI18n, clearPluginCache } from './utils'
+import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed, updateI18n, clearPluginCache } from './utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginPath, mirrorPath) {
@@ -288,19 +288,7 @@ class PluginManager extends EventEmitter {
       ],
     })
     try {
-      // let flow = co.wrap(function* (_this) {
-      //   yield npminstall({
-      //     root: _this.npmConfig.prefix,
-      //     pkgs: [
-      //       { name: plugin.packageName, version: plugin.lastestVersion},
-      //     ],
-      //     registry: _this.npmConfig.registry,
-      //     debug: true
-      //   })
-      //   return yield Promise.resolve()
-      // })
-      // await flow(this)
-      await promisify(npm.commands.install)([`${plugin.packageName}@${plugin.lastestVersion}`])
+      await installPackage(plugin.packageName, plugin.lastestVersion)
       return this.reloadPlugin(plugin)
     } catch (error) {
       dispatch({
@@ -333,7 +321,7 @@ class PluginManager extends EventEmitter {
       //   return yield Promise.resolve()
       // })
       // await flow(this)
-      await promisify(npm.commands.install)([name])
+      await installPackage(name)
       const [packName] = name.split('@')
       if (list.includes(packName)) {
         this.reloadPlugin(packName)
