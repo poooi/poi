@@ -363,7 +363,7 @@ class PluginManager extends EventEmitter {
     }
     config.set(`plugin.${plugin.id}.enable`, true)
     dispatch({
-      type: '@@Plugin/replace',
+      type: '@@Plugin/add',
       value: plugin,
     })
   }
@@ -372,7 +372,7 @@ class PluginManager extends EventEmitter {
     config.set(`plugin.${plugin.id}.enable`, false)
     plugin = disablePlugin(plugin)
     dispatch({
-      type: '@@Plugin/replace',
+      type: '@@Plugin/add',
       value: plugin,
     })
   }
@@ -380,7 +380,7 @@ class PluginManager extends EventEmitter {
   unloadPlugin(plugin) {
     plugin = unloadPlugin(plugin)
     dispatch({
-      type: '@@Plugin/replace',
+      type: '@@Plugin/add',
       value: plugin,
     })
   }
@@ -419,7 +419,7 @@ class PluginManager extends EventEmitter {
     }
     newPlugin = updateI18n(newPlugin)
     dispatch({
-      type: '@@Plugin/replace',
+      type: '@@Plugin/add',
       value: newPlugin,
     })
   }

@@ -8,10 +8,13 @@ export function reducer (state=[], {type, value, option}) {
   case '@@Plugin/initialize': {
     return value
   }
-  case '@@Plugin/replace': {
-    state = [...state]
+  case '@@Plugin/add': {
     const i = getPluginIndexByPackageName(state, value.packageName)
-    state = reduxSet(state, [i], value)
+    if (i === -1) {
+      state = state.concat(value)
+    } else {
+      state[i] = value
+    }
     state = sortBy(state, 'priority')
     return state
   }
@@ -29,12 +32,6 @@ export function reducer (state=[], {type, value, option}) {
     state = [...state]
     const i = getPluginIndexByPackageName(state, value.packageName)
     state.splice(i, 1)
-    return state
-  }
-  case '@@Plugin/add': {
-    state = [...state]
-    state.push(value)
-    state = sortBy(state, 'priority')
     return state
   }
   default:
