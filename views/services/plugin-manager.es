@@ -12,13 +12,33 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
+import { readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
+
+function installPackage(packageName, version) {
+  if (version) {
+    packageName = `${packageName}@${version}`
+  }
+  // let flow = co.wrap(function* (_this) {
+  //   yield npminstall({
+  //     root: _this.npmConfig.prefix,
+  //     pkgs: [
+  //       { name: plugin.packageName, version: plugin.lastestVersion},
+  //     ],
+  //     registry: _this.npmConfig.registry,
+  //     debug: true
+  //   })
+  //   return yield Promise.resolve()
+  // })
+  // await flow(this)
+  return promisify(npm.commands.install)([packageName])
+}
+
 
 class PluginManager extends EventEmitter {
-  constructor(packagePath, pluginPath, mirrorPath) {
-    super(packagePath, pluginPath, mirrorPath)
+  constructor(packagePath, pluginRoot, mirrorPath) {
+    super(packagePath, pluginRoot, mirrorPath)
     this.packagePath = packagePath
-    this.pluginPath = pluginPath
+    this.pluginRoot = pluginRoot
     this.mirrorPath = mirrorPath
     this.requirements = null
     this.mirrors = null
@@ -29,7 +49,7 @@ class PluginManager extends EventEmitter {
       betaCheck: null,
     }
     this.npmConfig = {
-      prefix: this.pluginPath,
+      prefix: this.pluginRoot,
       registry: "https://registry.npmjs.org",
       progress: false,
     }
@@ -38,12 +58,15 @@ class PluginManager extends EventEmitter {
     this.NEEDUPDATE = 2
     this.BROKEN = 3
   }
+  getPluginPath(packageName) {
+    return path.join(this.pluginRoot, 'node_modules', packageName)
+  }
   initialize() {
     this.getConf()
     this.getPlugins()
   }
   readPlugins() {
-    const pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
+    const pluginPaths = glob.sync(this.getPluginPath('poi-plugin-*'))
     let plugins = pluginPaths.map((pluginPath) => {
       let plugin = readPlugin(pluginPath)
       if (plugin.enabled) {
@@ -96,6 +119,7 @@ class PluginManager extends EventEmitter {
         delete this.npmConfig.http_proxy
       }
     }
+    console.log(this.npmConfig)
     npm.load(this.npmConfig)
     return this.config
   }
@@ -275,61 +299,36 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  async updatePlugin(plugin) {
+  async installPlugin(packageName, version) {
+    if (packageName.includes('@'))
+      [packageName, version] = packageName.split('@')
     this.getMirrors()
-    dispatch({
-      type: '@@Plugin/changeStatus',
-      value: plugin,
-      option: [
-        {
-          path: 'isUpdating',
-          status: true,
-        },
-      ],
-    })
-    try {
-      await installPackage(plugin.packageName, plugin.lastestVersion)
-      return this.reloadPlugin(plugin)
-    } catch (error) {
+    const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
+    if (nowPlugin) {
+      unloadPlugin(nowPlugin)
       dispatch({
         type: '@@Plugin/changeStatus',
-        value: plugin,
-        option: [
-          {
-            path: 'isUpdating',
-            status: false,
-          },
-        ],
+        value: nowPlugin,
+        option: [{path: 'isUpdating', status: true}],
       })
-      throw error
     }
-  }
-
-  async installPlugin(name) {
-    this.getMirrors()
     try {
-      const list = getStore('plugins').map((plugin) => (plugin.packageName))
-      // let flow = co.wrap(function* (_this) {
-      //   yield npminstall({
-      //     root: _this.npmConfig.prefix,
-      //     pkgs: [
-      //       { name: name},
-      //     ],
-      //     registry: _this.npmConfig.registry,
-      //     debug: true
-      //   })
-      //   return yield Promise.resolve()
-      // })
-      // await flow(this)
-      await installPackage(name)
-      const [packName] = name.split('@')
-      if (list.includes(packName)) {
-        this.reloadPlugin(packName)
-      } else {
-        this.addPlugin(path.join(this.pluginPath, 'node_modules', packName))
+      await installPackage(packageName, version)
+      let plugin = readPlugin(this.getPluginPath(packageName))
+      if (plugin.enabled) {
+        plugin = enablePlugin(plugin)
       }
-      return getStore('plugins')
+      dispatch({
+        type: '@@Plugin/add',
+        value: plugin,
+      })
     } catch (error) {
+      if (nowPlugin)
+        dispatch({
+          type: '@@Plugin/changeStatus',
+          value: nowPlugin,
+          option: [{path: 'isUpdating', status: false}],
+        })
       console.error(error.stack)
       throw error
     }
@@ -377,47 +376,11 @@ class PluginManager extends EventEmitter {
     })
   }
 
-  unloadPlugin(plugin) {
-    plugin = unloadPlugin(plugin)
-    dispatch({
-      type: '@@Plugin/add',
-      value: plugin,
-    })
-  }
-
   removePlugin(plugin) {
     plugin = unloadPlugin(plugin)
     dispatch({
       type: '@@Plugin/remove',
       value: plugin,
-    })
-  }
-
-  addPlugin(pluginPath) {
-    let plugin = readPlugin(pluginPath)
-    if (plugin.enabled) {
-      plugin = enablePlugin(plugin)
-    }
-    dispatch({
-      type: '@@Plugin/add',
-      value: plugin,
-    })
-  }
-
-  reloadPlugin(plugin) {
-    if (typeof plugin === 'string') {
-      plugin = getStore('plugins').find((p) => p.packageName === plugin)
-    }
-    if (!plugin)
-      return
-    unloadPlugin(plugin)
-    let newPlugin = readPlugin(plugin.pluginPath)
-    if (newPlugin.enabled) {
-      newPlugin = enablePlugin(newPlugin)
-    }
-    dispatch({
-      type: '@@Plugin/add',
-      value: newPlugin,
     })
   }
 }

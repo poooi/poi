@@ -22,7 +22,7 @@ export function reducer (state=[], {type, value, option}) {
     const i = getPluginIndexByPackageName(state, value.packageName)
     for (const opt of option) {
       const {path, status} = opt
-      state = reduxSet(state, `${i}.${path}`, status)
+      state = reduxSet(state, [i].concat(path.split('.')), status)
     }
     state = sortBy(state, 'priority')
     return state

@@ -403,7 +403,7 @@ const PluginConfig = connect((state, props) => ({
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
     try {
-      await PluginManager.updatePlugin(plugin)
+      await PluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
       this.setState({npmWorking: false})
     } catch (error) {
       this.setState({npmWorking: false})
@@ -416,7 +416,7 @@ const PluginConfig = connect((state, props) => ({
       npmWorking: true,
     })
     const settings = PluginManager.getUninstalledPluginSettings()
-    for (name in settings) {
+    for (const name in settings) {
       await this.handleInstall(name)
     }
     this.setState({
