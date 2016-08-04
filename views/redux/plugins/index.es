@@ -22,6 +22,7 @@ export function reducer (state=[], {type, value, option}) {
       const {path, status} = opt
       state = reduxSet(state, [i].concat(path.split('.')), status)
     }
+    state = sortBy(state, 'priority')
     return state
   }
   case '@@Plugin/remove': {

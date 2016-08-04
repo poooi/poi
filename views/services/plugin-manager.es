@@ -7,7 +7,7 @@ import npm from 'npm'
 import glob from 'glob'
 import { promisify, promisifyAll } from 'bluebird'
 import module from 'module'
-import { sortBy } from 'lodash'
+import { sortBy, map } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
@@ -43,9 +43,6 @@ class PluginManager extends EventEmitter {
     this.getConf()
     this.getPlugins()
   }
-  readPackage() {
-    return this.requirements = fs.readJsonSync(this.packagePath)
-  }
   readPlugins() {
     const pluginPaths = glob.sync(path.join(this.pluginPath, 'node_modules', 'poi-plugin-*'))
     let plugins = pluginPaths.map(readPlugin)
@@ -63,25 +60,18 @@ class PluginManager extends EventEmitter {
     })
   }
   getRequirements() {
-    if (this.requirements != null)
-      return this.requirements
-    else {
-      return this.readPackage()
-    }
+    if (this.requirements == null)
+      this.requirements = fs.readJsonSync(this.packagePath)
+    return this.requirements
   }
   getMirrors() {
-    if (this.mirrors != null) {
-      return this.mirrors
-    } else {
-      return this.readMirrors()
+    if (this.mirrors == null) {
+      this.mirrors = fs.readJsonSync(this.mirrorPath)
+      const mirrorConf = config.get('packageManager.mirrorName', (navigator.language === 'zh-CN') ?  "taobao" : "npm")
+      const proxyConf = config.get("packageManager.proxy", false)
+      const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
+      this.selectConfig(mirrorConf, proxyConf, betaCheck)
     }
-  }
-  readMirrors() {
-    this.mirrors = fs.readJsonSync(this.mirrorPath)
-    const mirrorConf = config.get('packageManager.mirrorName', (navigator.language === 'zh-CN') ?  "taobao" : "npm")
-    const proxyConf = config.get("packageManager.proxy", false)
-    const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
-    this.selectConfig(mirrorConf, proxyConf, betaCheck)
     return this.mirrors
   }
   selectConfig(name, enable, check) {
@@ -206,80 +196,68 @@ class PluginManager extends EventEmitter {
     }
     return false
   }
-  async getOutdatedPlugins (isNotif) {
+  // Resolves the latest plugin if need update
+  getPluginOutdateInfo = async (plugin) => {
+    if (plugin.needRollback) {
+      return
+    }
+    const data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
+    const distTag = {
+      latest: data.version,
+    }
+    if (this.config.betaCheck) {
+      const betaData = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/beta`))[1])
+      Object.assign(distTag, {
+        beta: betaData.version,
+      })
+    }
+    let latest = `${plugin.version}`
+    let notCompatible = false
+    const apiVer = ((data.poiPlugin || {}).apiVer || plugin.apiVer) || {}
+    let nearestCompVer = 'v214.748.3647'
+    for (const mainVersion of Object.keys(apiVer)) {
+      if (!apiVer[mainVersion]) {
+        continue
+      }
+      if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer)) {
+        notCompatible = true
+        nearestCompVer = mainVersion
+        latest = apiVer[mainVersion]
+      }
+    }
+    if (!notCompatible && this.config.betaCheck && distTag.beta) {
+      if (semver.gt(distTag.beta, latest)) {
+        latest = distTag.beta
+      }
+    }
+    if (!notCompatible && semver.gt(distTag.latest, latest)) {
+      latest = distTag.latest
+    }
+    if (semver.gt(latest, plugin.version)) {
+      dispatch({
+        type: '@@Plugin/changeStatus',
+        value: plugin,
+        option: [
+          {
+            path: 'isOutdated',
+            status: true,
+          },
+          {
+            path: 'lastestVersion',
+            status: latest,
+          },
+        ],
+      })
+      return plugin
+    }
+  }
+
+  async getOutdatedPlugins(isNotif) {
     this.getMirrors()
     const plugins = this.getInstalledPlugins()
-    const outdatedPlugins = []
-    const outdatedList = []
-    const tasks = []
-    for (const plugin of plugins) {
-      tasks.push(new Promise((resolve, reject) => {
-        return (async () => {
-          if (!plugin.needRollback) {
-            try {
-              const data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
-              const distTag = {
-                latest: data.version,
-              }
-              if (this.config.betaCheck) {
-                const betaData = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/beta`))[1])
-                Object.assign(distTag, {
-                  beta: betaData.version,
-                })
-              }
-              let latest = `${plugin.version}`
-              let notCompatible = false
-              const apiVer = ((data.poiPlugin || {}).apiVer || plugin.apiVer) || {}
-              let nearestCompVer = 'v214.748.3647'
-              for (const mainVersion of Object.keys(apiVer)) {
-                if (!apiVer[mainVersion]) {
-                  continue
-                }
-                if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer)) {
-                  notCompatible = true
-                  nearestCompVer = mainVersion
-                  latest = apiVer[mainVersion]
-                }
-              }
-              if (!notCompatible && this.config.betaCheck && distTag.beta) {
-                if (semver.gt(distTag.beta, latest)) {
-                  latest = distTag.beta
-                }
-              }
-              if (!notCompatible && semver.gt(distTag.latest, latest)) {
-                latest = distTag.latest
-              }
-              if (semver.gt(latest, plugin.version)) {
-                outdatedPlugins.push(plugin)
-                dispatch({
-                  type: '@@Plugin/changeStatus',
-                  value: plugin,
-                  option: [
-                    {
-                      path: 'isOutdated',
-                      status: true,
-                    },
-                    {
-                      path: 'lastestVersion',
-                      status: latest,
-                    },
-                  ],
-                })
-                if (plugin.isRead) {
-                  outdatedList.push(plugin.name)
-                }
-              }
-            } catch (e) {
-              reject(e)
-            }
-            resolve()
-          }
-        })()
-      }))
-    }
-    await Promise.all(tasks)
+    const outdatedList = (await Promise.all(plugins.map(this.getPluginOutdateInfo))).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
-      const content = `${outdatedList.join(' ')} ${__("have newer version. Please update your plugins.")}`
+      const content = `${map(outdatedList, 'name').join(' ')} ${__("have newer version. Please update your plugins.")}`
       notify(content, {
         type: 'others',
         title: __('Plugin update'),
@@ -287,7 +265,6 @@ class PluginManager extends EventEmitter {
         audio: `file://${ROOT}/assets/audio/update.mp3`,
       })
     }
-    return outdatedPlugins
   }
   getFilteredPlugins(filter) {
     return getStore('plugins').filter(filter)
