@@ -33,6 +33,11 @@ const handleProxyGameOnRequest = (method, [domain, path], body) => {
   } catch (e) {
     console.error(e.stack)
   }
+
+  // Manaul perform garbage collection because of Chrome 52's bug
+  if (!window.isMain) {
+    window.gc()
+  }
 }
 
 const responses = []
@@ -92,7 +97,7 @@ const parseResponses = () => {
   // DEBUG use
   const questRecords = window.getStore('info.quests.records')
   if (!questRecords || typeof questRecords !== 'object' || !Object.keys(questRecords)) {
-    console.log('Quest record is cleared! ', details)
+    console.warn('Quest record is cleared! ', details)
   }
 
   const event = new CustomEvent('game.response', {
