@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { map, range, forEach, values, sortBy } from 'lodash'
+import { get, map, range, forEach, values, sortBy } from 'lodash'
 import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import React from 'react'
@@ -7,7 +7,11 @@ import React from 'react'
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
 
-import { configLayoutSelector, configDoubleTabbedSelector } from 'views/utils/selectors'
+import {
+  configLayoutSelector,
+  configDoubleTabbedSelector,
+  extensionSelectorFactory,
+} from 'views/utils/selectors'
 
 // Return [count, required]
 function sumSubgoals(record) {
@@ -150,13 +154,14 @@ const TaskRowBase = connect(
 })
 
 const TaskRow = connect(
-  ({info: {quests: {records}}}, {quest}) => ({
+  (state, {quest}) => ({
     quest,
-    record: records[quest.api_no],
+    record: get(state, ['info', 'quests', 'records', quest.api_no]),
+    translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
   })
-)(function ({idx, quest, record}) {
+)(function ({idx, quest, record, translation}) {
   const questName = quest ? quest.api_title : '???'
-  const questContent = quest ? quest.api_detail : '...'
+  const questContent = translation ? translation : quest ? quest.api_detail : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
     getStyleByPercent(count / required) :
