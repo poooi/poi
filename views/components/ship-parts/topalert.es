@@ -224,15 +224,16 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
   let shipSaku = 0
   let equipSaku = 0
   let teitokuSaku = 0
-  const shipCount = 6
+  let shipCount = 6
   for (let i = 0; i < equipsData.length; i++) {
+    shipCount -= 1
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
       }
-      const $equip = equipsData[i][j][1]
+      const [_equip, $equip] = equipsData[i][j]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[2]) {
       case 8:
@@ -242,16 +243,16 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
         equipSaku += $equip.api_saku * 1.0
         break
       case 10:
-        equipSaku += ($equip.api_saku + 1.2 * Math.sqrt($equip.api_level || 0)) * 1.2
+        equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 1.2
         break
       case 11:
         equipSaku += $equip.api_saku * 1.1
         break
       case 12:
-        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt($equip.api_level || 0)) * 0.6
+        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
         break
       case 13:
-        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt($equip.api_level || 0)) * 0.6
+        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
         break
       default:
         equipSaku += $equip.api_saku * 0.6
