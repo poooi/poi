@@ -16,7 +16,6 @@ config.on('config.set', (path, value) => {
   let event
   switch (path) {
   case 'poi.layout':
-    window.layout = value
     event = new CustomEvent('layout.change', {
       bubbles: true,
       cancelable: true,
