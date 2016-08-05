@@ -247,7 +247,7 @@ class UninstalledPlugin extends Component {
               <Col xs={12} className='div-row'>
                 <span className='plugin-name'>
                   <FontAwesome name={plugin.icon} />
-                  {` ${plugin[config.get('poi.language', 'en-US')]}`}
+                  {` ${plugin[window.language]}`}
                 </span>
                 <div className='author-wrapper'>{'@'}
                   <span className='author-link'
@@ -258,7 +258,7 @@ class UninstalledPlugin extends Component {
               </Col>
             </Row>
             <Row>
-              <Col className='plugin-description' xs={7}>{plugin[`des${config.get('poi.language', 'en-US')}`]}</Col>
+              <Col className='plugin-description' xs={7}>{plugin[`des${window.language}`]}</Col>
               <Col className='plugin-option-install' xs={5}>
                 <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
                   <OverlayTrigger placement='top' overlay={
