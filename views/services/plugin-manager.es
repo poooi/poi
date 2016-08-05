@@ -328,6 +328,7 @@ class PluginManager extends EventEmitter {
       })
       this.removePlugin(plugin)
       await promisify(npm.commands.uninstall)([plugin.packageName])
+      fs.removeSync(plugin.pluginPath)
     } catch (error) {
       console.error(error.stack)
       throw error
