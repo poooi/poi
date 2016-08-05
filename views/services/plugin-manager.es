@@ -252,7 +252,7 @@ class PluginManager extends EventEmitter {
             status: true,
           },
           {
-            path: 'lastestVersion',
+            path: 'latestVersion',
             status: latest,
           },
         ],

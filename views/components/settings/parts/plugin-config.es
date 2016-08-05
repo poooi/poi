@@ -84,14 +84,14 @@ const InstalledPlugin = connect((state, props) => ({
   }
   render() {
     const plugin = this.props.plugin
-    const outdatedLabelbsStyle = (!plugin.lastestVersion.includes('beta')) ? 'primary' : 'warning'
+    const outdatedLabelbsStyle = (!plugin.latestVersion.includes('beta')) ? 'primary' : 'warning'
     const outdatedLabelFAname = classnames({
       'spinner': plugin.isUpdating,
       'cloud-download': !plugin.isUpdating && plugin.isOutdated,
       'check': !plugin.isUpdating && !plugin.isOutdated,
     })
     const outdatedLabelText = plugin.isUpdating ? `${__('Updating')}` :
-      (plugin.isOutdated ? `Version ${plugin.lastestVersion}` : `${__('Latest')}` )
+      (plugin.isOutdated ? `Version ${plugin.latestVersion}` : `${__('Latest')}` )
     let enableBtnText, enableBtnFAname
     switch (PluginManager.getStatusOfPlugin(plugin)) {
     case PluginManager.VALID:

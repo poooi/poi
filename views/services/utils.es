@@ -31,7 +31,7 @@ export function installPackage(packageName, version) {
   //   yield npminstall({
   //     root: _this.npmConfig.prefix,
   //     pkgs: [
-  //       { name: plugin.packageName, version: plugin.lastestVersion},
+  //       { name: plugin.packageName, version: plugin.latestVersion},
   //     ],
   //     registry: _this.npmConfig.registry,
   //     debug: true
@@ -114,7 +114,7 @@ const readPlugin = (pluginPath) => {
     plugin.icon = 'fa/th-large'
   }
   plugin.version = (plugin.packageData || {}).version || '0.0.0'
-  plugin.lastestVersion = plugin.version
+  plugin.latestVersion = plugin.version
   if (!plugin.earliestCompatibleMain) {
     plugin.earliestCompatibleMain = '0.0.0'
   }
@@ -134,7 +134,7 @@ const readPlugin = (pluginPath) => {
       if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer) && semver.gt(plugin.version, plugin.apiVer[mainVersion])) {
         plugin.needRollback = true
         nearestCompVer = mainVersion
-        plugin.lastestVersion = plugin.apiVer[mainVersion]
+        plugin.latestVersion = plugin.apiVer[mainVersion]
       }
     }
   }
