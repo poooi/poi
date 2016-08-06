@@ -33,11 +33,6 @@ const handleProxyGameOnRequest = (method, [domain, path], body) => {
   } catch (e) {
     console.error(e.stack)
   }
-
-  // Manaul perform garbage collection because of Chrome 52's bug
-  if (!window.isMain) {
-    window.gc()
-  }
 }
 
 const responses = []
