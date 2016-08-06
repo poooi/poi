@@ -1,10 +1,18 @@
 import { onGameRequest, onGameResponse } from 'views/redux'
 import { remote } from 'electron'
+import { debounce } from 'lodash'
 
 const proxy = remote.require('./lib/proxy')
 
 const isGameApi = (pathname) =>
   (pathname.startsWith('/kcsapi'))
+
+const gc = () => {
+  console.warn('Performing garbage collection')
+  global.gc()
+}
+
+const gcDebounced = debounce(gc, 5000)
 
 const handleProxyGameOnRequest = (method, [domain, path], body) => {
   const {dispatch} = window
@@ -101,6 +109,10 @@ const parseResponses = () => {
     detail: details,
   })
   window.dispatchEvent(event)
+  // Manaul perform garbage collection because of Chrome 52's bug
+  if (!window.isMain) {
+    gcDebounced()
+  }
 }
 
 const resolveResponses = () => {
