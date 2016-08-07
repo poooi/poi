@@ -155,7 +155,10 @@ const enablePlugin = (plugin) => {
     return plugin
   let pluginMain
   try {
-    pluginMain = readPlugin(plugin.pluginPath)
+    pluginMain = {
+      ...require(plugin.pluginPath),
+      ...readPlugin(plugin.pluginPath),
+    }
     pluginMain.enabled = true
     pluginMain.isRead = true
     if (!plugin.id && pluginMain.name) {
