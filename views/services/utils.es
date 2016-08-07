@@ -206,6 +206,11 @@ const postEnableProcess = (plugin) => {
         height: 600,
         webPreferences: {
           preload: join(ROOT, 'assets', 'js', 'plugin-preload.js'),
+          webSecurity: false,
+          plugins: true,
+          experimentalFeatures: true,
+          backgroundThrottling: false,
+          offscreen: true,
         },
       }
     }

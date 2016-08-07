@@ -21,7 +21,8 @@ const dbg = require('./lib/debug')
 proxy.setMaxListeners(30)
 
 // Export garbage collection as global function
-app.commandLine.appendSwitch('js-flags', '--expose_gc')
+app.commandLine.appendSwitch('js-flags', '--optimize_for_size --expose_gc --gc_interval 32 --lazy_sweeping false')
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 // Disable HA
 
