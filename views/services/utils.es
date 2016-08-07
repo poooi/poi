@@ -168,7 +168,6 @@ const enablePlugin = (plugin) => {
       isBroken: true,
     }
   }
-  Object.assign(pluginMain, plugin)
   plugin = {
     ...plugin,
     ...pluginMain,
