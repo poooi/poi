@@ -32,6 +32,7 @@ body {
   position: relative;
   overflow: hidden;
   pointer-events: auto;
+  cursor: pointer;
 }
 .alert-history {
   z-index: 1;
