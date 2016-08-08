@@ -34,6 +34,9 @@ body {
   pointer-events: auto;
   cursor: pointer;
 }
+#alert-area {
+  cursor: pointer;
+}
 .alert-history {
   z-index: 1;
   position: relative;
