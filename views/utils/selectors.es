@@ -227,6 +227,12 @@ export const equipDataSelectorFactory = memoize((equipId) =>
   })
 )
 
+function safeConcat(array, arg) {
+  if (!array || !array.concat)
+    return
+  return array.concat(arg)
+}
+
 function effectiveEquips(equipArray, slotnum) {
   equipArray.splice(slotnum, equipArray.length-slotnum-1)
   return equipArray
@@ -251,7 +257,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
         zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
           equipId <= 0
           ? undefined
-          : equipDataSelectorFactory(equipId)(state).concat(onslot)
+          : safeConcat(equipDataSelectorFactory(equipId)(state), onslot)
         ), slotnum
       )
   )
