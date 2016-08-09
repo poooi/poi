@@ -395,8 +395,8 @@ export function reducer(state=initState, action) {
   //== Daily update ==
   case QUESTS_REFRESH_DAY:  {
     const {activeQuests, records, questGoals} = state
+    const {now} = action
     const halfHour = 30 * 60 * 1000     // Random suitable margin
-    const now = Date.now()
     return {
       ...state,
       records: outdateRecords(questGoals, records, now-halfHour, now+halfHour),
@@ -505,16 +505,21 @@ export function reducer(state=initState, action) {
 }
 
 // Action
-function dailyRefresh() {
+function dailyRefresh(now) {
   return {
     type: QUESTS_REFRESH_DAY,
+    now,
   }
 }
 
 export function schedualDailyRefresh(dispatch) {
-  const nextTimeout = ONE_DAY - (Date.now() - QUEST_REFRESH_ZERO) % ONE_DAY
+  const now = Date.now()
+  const nextTimeout = ONE_DAY - (now - QUEST_REFRESH_ZERO) % ONE_DAY
+  const nextTime = now + nextTimeout
   setTimeout(() => {
-    dispatch(dailyRefresh())
+    // TODO: Debug
+    console.log("Daily refresh at %d scheduled at %d", nextTime, now)
+    dispatch(dailyRefresh(nextTime))
     schedualDailyRefresh(dispatch)
   }, nextTimeout)
 }

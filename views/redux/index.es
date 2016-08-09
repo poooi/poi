@@ -36,6 +36,7 @@ export function reducerFactory(extensionConfig) {
 export function onGameResponse({method, path, body, postBody}) {
   return {
     type: `@@Response${path}`,
+    method,
     path,
     body,
     postBody,
