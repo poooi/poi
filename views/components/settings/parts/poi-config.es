@@ -410,7 +410,7 @@ const SlotCheckConfig = connect(() => {
       const num = this.state.value
       this.setState({
         showInput: true,
-        value: this.CheckValid(num) ? num : '',
+        value: this.CheckValid(num) ? parseInt(num) : '',
       })
     }
   }
