@@ -390,7 +390,10 @@ const SlotCheckConfig = connect(() => {
   })
 })(class slotCheckConfig extends Component {
   static propTypes = {
-    minFreeSlots: React.PropTypes.number,
+    minFreeSlots: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number,
+    ]),
     type: React.PropTypes.string,
     enable: React.PropTypes.bool,
   }
