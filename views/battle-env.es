@@ -1,1 +1,2 @@
-import './createStore'
+// Compatibility
+import './create-store'

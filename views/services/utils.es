@@ -9,7 +9,7 @@ import module from 'module'
 import npm from 'npm'
 import { promisify } from 'bluebird'
 
-import { extendReducer } from 'views/createStore'
+import { extendReducer } from 'views/create-store'
 const {ROOT, config, language, notify, MODULE_PATH} = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')

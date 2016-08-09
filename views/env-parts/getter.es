@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 import { map, get } from 'lodash'
 import path from 'path-extra'
 
-import { store } from 'views/createStore'
+import { store } from 'views/create-store'
 
 const {buildArray, config} = window
 function object2Array(obj) {

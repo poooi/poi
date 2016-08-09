@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import { Provider } from 'react-redux'
 
-import { store } from './createStore'
+import { store } from './create-store'
 import ControlledTabArea from './tabarea'
 import { PoiAlert } from './components/info/alert'
 import PoiMapReminder from './components/info/map-reminder'
