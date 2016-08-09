@@ -1,6 +1,6 @@
 /* FORMAT
- *   combinedFlag:                      // max(api_combined_flag, 0)
- *   sortieStatus: [false|true] * 4     // Whether the fleets is in sortie
+ *   combinedFlag:                      // api_combined_flag
+ *   sortieStatus: [false|true] * 4     // Whether a fleet is in sortie
  *   escapedPos: [] | [idx]             // Array of escapeIdx-1 and towIdx-1
  *     // 0 for fleet1Pos1, 6 for fleet2Pos1, ..., 23 for fleet4Pos6
  *   _toEscapeIdx: [idx]                // Tempvar. As in api_escape but -1

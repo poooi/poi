@@ -304,7 +304,7 @@ export function reducer(state=initState, {type, body, postBody}) {
         enemyShipId: _status.enemyShipId,
         enemyFormation: _status.enemyFormation,
         enemyHp: _status.enemyHp,
-        getEventItem: body.api_get_eventitem != null,
+        eventItem: body.api_get_eventitem,
       }
       return {
         ...state,
