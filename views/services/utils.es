@@ -181,7 +181,11 @@ const enablePlugin = (plugin) => {
 
 const disablePlugin = (plugin) => {
   plugin.enabled = false
-  plugin = unloadPlugin(plugin)
+  try {
+    plugin = unloadPlugin(plugin)
+  } catch (error) {
+    console.error(error.stack)
+  }
   return plugin
 }
 

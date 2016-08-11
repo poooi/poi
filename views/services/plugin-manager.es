@@ -284,7 +284,11 @@ class PluginManager extends EventEmitter {
     this.getMirrors()
     const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
     if (nowPlugin) {
-      unloadPlugin(nowPlugin)
+      try {
+        unloadPlugin(nowPlugin)
+      } catch (error) {
+        console.error(error.stack)
+      }
       dispatch({
         type: '@@Plugin/changeStatus',
         value: nowPlugin,
@@ -327,11 +331,14 @@ class PluginManager extends EventEmitter {
         ],
       })
       this.removePlugin(plugin)
+    } catch (error) {
+      console.error(error.stack)
+    }
+    try {
       await promisify(npm.commands.uninstall)([plugin.packageName])
       fs.removeSync(plugin.pluginPath)
     } catch (error) {
       console.error(error.stack)
-      throw error
     }
   }
 
