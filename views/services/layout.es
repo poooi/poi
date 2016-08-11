@@ -1,7 +1,6 @@
 import { debounce } from 'lodash'
 import { remote } from 'electron'
 
-const WindowManager = remote.require('./lib/window')
 const {config, $} = window
 
 $('#layout-css').setAttribute('href',
@@ -211,60 +210,4 @@ config.on('config.set', (path, value) => {
   default:
     break
   }
-})
-
-
-remote.getCurrentWebContents().on('dom-ready', () => {
-  if (process.platform === 'darwin') {
-    remote.getCurrentWebContents().executeJavaScript(`
-      var div = document.createElement("div");
-      div.style.position = "absolute";
-      div.style.top = 0;
-      div.style.height = "23px";
-      div.style.width = "100%";
-      div.style["-webkit-app-region"] = "drag";
-      div.style["pointer-events"] = "none";
-      document.body.appendChild(div);
-    `)
-  }
-  if (config.get('poi.content.muted', false)) {
-    $('kan-game webview').setAudioMuted(true)
-  }
-  if ($('kan-game').style.display !== 'none')  {
-    $('kan-game webview').loadURL(config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'))
-  }
-  $('kan-game webview').addEventListener('dom-ready', (e) => {
-    if (config.get('poi.enableDMMcookie', false)) {
-      $('kan-game webview').executeJavaScript(`
-        document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/";
-        document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/";
-        document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=osapi.dmm.com;path=/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=203.104.209.7;path=/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=www.dmm.com;path=/netgame/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=log-netgame.dmm.com;path=/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/";
-        document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/";
-      `)
-    }
-  })
-  if (config.get('poi.disableNetworkAlert', false)) {
-    $('kan-game webview').executeJavaScript('DMM.netgame.reloadDialog=function(){}')
-  }
-  $('kan-game webview').addEventListener('new-window', (e) => {
-    const exWindow = WindowManager.createWindow({
-      realClose: true,
-      navigatable: true,
-      nodeIntegration: false,
-    })
-    exWindow.loadURL(e.url)
-    exWindow.show()
-    e.preventDefault()
-  })
-})
-
-window.addEventListener('touchstart', (e) => {
-  e.target.blur()
-  e.target.focus()
 })
