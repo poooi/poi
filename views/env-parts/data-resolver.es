@@ -110,7 +110,7 @@ const parseResponses = () => {
   })
   window.dispatchEvent(event)
   // Manaul perform garbage collection because of Chrome 52's bug
-  if (!window.isMain) {
+  if (!remote.getCurrentWindow().isFocused()) {
     gcDebounced()
   }
 }
