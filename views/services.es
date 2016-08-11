@@ -170,3 +170,24 @@ remote.getCurrentWebContents().on('dom-ready', () => {
     e.preventDefault()
   })
 })
+
+// Workaround for touch screen
+// Dont enable mobile device emulation or it will be a dead loop
+let x, y
+const webContents = remote.getCurrentWebContents()
+window.addEventListener('touchstart', (e) => {
+  x = e.touches[0].clientX
+  y = e.touches[0].clientY
+})
+window.addEventListener('touchend', (e) => {
+  if (x < 0 || y < 0) {
+    return
+  }
+  if (Math.max(Math.abs(x - e.changedTouches[0].clientX), Math.abs(y - e.changedTouches[0].clientY)) < 30) {
+    e.preventDefault()
+    webContents.sendInputEvent({type: 'mouseDown', x: x, y: y, button: 'left', clickCount: 1})
+    webContents.sendInputEvent({type: 'mouseUp', x: x, y: y, button: 'left', clickCount: 1})
+    x = -1
+    y = -1
+  }
+})
