@@ -75,7 +75,7 @@ const NetworkConfig = connect(() => (
   }
   handleHttpPortChange = (e) => {
     const http = Object.clone(this.state.http)
-    http.port = parseInt(e.target.value)
+    http.port = e.target.value
     this.setState({
       http,
     })
@@ -110,7 +110,7 @@ const NetworkConfig = connect(() => (
   }
   handleSocksPortChange = (e) => {
     const socks5 = Object.clone(this.state.socks5)
-    socks5.port = parseInt(e.target.value)
+    socks5.port = e.target.value
     this.setState({
       socks5,
     })
