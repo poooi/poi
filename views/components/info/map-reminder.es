@@ -28,7 +28,7 @@ export default connect(
     const {api_maparea_id, api_no} = mapData[1]
     const rank = api_eventmap ? api_eventmap.api_selected_rank : null
     const mapName = `${api_maparea_id}-${api_no}` +
-      (rank == null ? '' : this.mapRanks[rank])
+      (rank == null ? '' : this.constructor.mapRanks[rank])
     return `${__('Sortie area')}: ${mapName}`
   }
   render() {
