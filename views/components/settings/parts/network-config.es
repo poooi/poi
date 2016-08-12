@@ -49,12 +49,12 @@ const NetworkConfig = connect(() => (
   }
   handleSaveConfig = (e) => {
     const proxy = Object.clone(this.state)
-    let retries = parseInt(this.state.retries)
+    let retries = parseInt(this.state.retries) || 0
     if (isNaN(retries)) {
       retries = 0
       proxy.retries = 0
     }
-    let port = parseInt(this.state.port)
+    let port = parseInt(this.state.port) || 0
     if (isNaN(port) || port < 1024 || port > 65535) {
       port = 0
       proxy.port = 0
