@@ -2,7 +2,7 @@ const { ROOT } = window
 import React, { Component } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { join as joinString, range } from 'lodash'
+import { join as joinString, range, pick } from 'lodash'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 
@@ -16,18 +16,26 @@ import {
   constSelector,
   shipsSelector,
   miscSelector,
+  inRepairShipsIdSelector,
+  createDeepCompareArraySelector,
 } from 'views/utils/selectors'
 
+const inRepairShipsDataSelector = createSelector([
+  inRepairShipsIdSelector,
+  shipsSelector,
+], (inRepairShipsId, ships) => inRepairShipsId.map((shipId) => ships[shipId])
+)
+
 export default connect(
-  createSelector([
+  createDeepCompareArraySelector([
     repairsSelector,
     constSelector,
-    shipsSelector,
+    inRepairShipsDataSelector,
     miscSelector,
-  ], (repairs, {$ships}, ships, {canNotify}) => ({
+  ], (repairs, {$ships}, inRepairShips, {canNotify}) => ({
     repairs,
     $ships,
-    ships,
+    inRepairShips,
     canNotify,
   }))
 )(class RepairPanel extends Component {
@@ -47,7 +55,12 @@ export default connect(
     preemptTime: 60,
   }
   render() {
-    const {canNotify, repairs, $ships, ships} = this.props
+    const {canNotify, repairs, $ships, inRepairShips} = this.props
+    // The reason why we use an array to pass in inRepairShips and indexify it
+    // into ships, is because by passing an array we can make use of
+    // createDeepCompareArraySelector which only deep compares arrays, and
+    // by indexifying it into an object, it becomes easier to use.
+    const ships = window.indexify(inRepairShips)
     return (
       <div>
         {
