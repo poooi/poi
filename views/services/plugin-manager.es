@@ -284,16 +284,16 @@ class PluginManager extends EventEmitter {
     this.getMirrors()
     const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
     if (nowPlugin) {
-      try {
-        unloadPlugin(nowPlugin)
-      } catch (error) {
-        console.error(error.stack)
-      }
       dispatch({
         type: '@@Plugin/changeStatus',
         value: nowPlugin,
         option: [{path: 'isUpdating', status: true}],
       })
+      try {
+        unloadPlugin(nowPlugin)
+      } catch (error) {
+        console.error(error.stack)
+      }
     }
     try {
       await installPackage(packageName, version)
@@ -364,7 +364,11 @@ class PluginManager extends EventEmitter {
   }
 
   removePlugin(plugin) {
-    plugin = unloadPlugin(plugin)
+    try {
+      plugin = unloadPlugin(plugin)
+    } catch (error) {
+      console.error(error.stack)
+    }
     dispatch({
       type: '@@Plugin/remove',
       value: plugin,
