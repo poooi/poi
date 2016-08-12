@@ -49,12 +49,12 @@ const NetworkConfig = connect(() => (
   }
   handleSaveConfig = (e) => {
     const proxy = Object.clone(this.state)
-    let retries = parseInt(this.state.retries) || 0
+    let retries = parseInt(this.state.retries)
     if (isNaN(retries)) {
       retries = 0
       proxy.retries = 0
     }
-    let port = parseInt(this.state.port) || 0
+    let port = parseInt(this.state.port)
     if (isNaN(port) || port < 1024 || port > 65535) {
       port = 0
       proxy.port = 0
@@ -75,7 +75,7 @@ const NetworkConfig = connect(() => (
   }
   handleHttpPortChange = (e) => {
     const http = Object.clone(this.state.http)
-    http.port = parseInt(e.target.value)
+    http.port = parseInt(e.target.value) || 0
     this.setState({
       http,
     })
@@ -110,7 +110,7 @@ const NetworkConfig = connect(() => (
   }
   handleSocksPortChange = (e) => {
     const socks5 = Object.clone(this.state.socks5)
-    socks5.port = parseInt(e.target.value)
+    socks5.port = parseInt(e.target.value) || 0
     this.setState({
       socks5,
     })
@@ -122,12 +122,12 @@ const NetworkConfig = connect(() => (
   }
   handleSetRetries = (e) => {
     this.setState({
-      retries: parseInt(e.target.value),
+      retries: parseInt(e.target.value) || 0,
     })
   }
   handleSetPort = (e) => {
     this.setState({
-      port: parseInt(e.target.value),
+      port: parseInt(e.target.value) || 0,
     })
   }
   render() {
