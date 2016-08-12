@@ -34,7 +34,7 @@ export default {
     } else if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1) {
       // supply
       return 6
-    } else if (ship.api_sally_area in [1, 2, 3, 4]) {
+    } else if ([1, 2, 3, 4].includes(ship.api_sally_area)) {
       // special: locked phase
       // returns 2 for locked phase 1, 3 for phase 2, etc
       return ship.api_sally_area + 1
