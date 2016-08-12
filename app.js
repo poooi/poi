@@ -1,5 +1,6 @@
 const {app, BrowserWindow, ipcMain, Tray, nativeImage, shell} = require('electron')
 const path = require('path-extra')
+const fs = require('fs-extra')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -33,6 +34,7 @@ if (config.get('poi.disableHA', false)) {
 // Add shortcut to start menu when os is windows
 app.setAppUserModelId('org.poooi.poi')
 if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {
+  const windowsShortcuts = require('windows-shortcuts-appid')
   const shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
@@ -48,7 +50,21 @@ if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {
       iconIndex: 0,
     })
   }
-  shell.writeShortcutLink(shortcutPath, option)
+  try {
+    fs.accessSync(shortcutPath)
+    windowsShortcuts.edit( shortcutPath, {target: targetPath, args: argPath}, () => {
+      windowsShortcuts.addAppId(shortcutPath, 'org.poooi.poi')
+    })
+  } catch (error) {
+    try {
+      windowsShortcuts.create (shortcutPath, {target: targetPath, args: argPath}, () =>{
+        windowsShortcuts.addAppId(shortcutPath, 'org.poooi.poi')
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  //shell.writeShortcutLink(shortcutPath, option)
 }
 
 if (dbg.isEnabled()) {
