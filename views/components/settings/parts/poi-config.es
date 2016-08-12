@@ -14,8 +14,8 @@ const {config, toggleModal, i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
 const {Component} = React
 
-let language = navigator.language
-if (!(language in ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'])) {
+let language = window.language
+if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
   switch (language.substr(0, 1).toLowerCase()) {
   case 'zh':
     language = 'zh-TW'
