@@ -8,10 +8,10 @@ const __ = i18n.main.__.bind(i18n.main)
 const texts = [
   ['Retreated'],
   ['Repairing'],
-  ['Ship tag: %s', 'E1, E4'],
-  ['Ship tag: %s', 'E2, E3'],
-  ['Ship tag: %s', 'E5'],
-  ['Ship tag: %s', 'E6'],
+  ['Ship tag: %s', 'E1'],
+  ['Ship tag: %s', 'E2'],
+  ['Ship tag: %s', 'E3'],
+  ['Ship tag: %s', ''],
   ['Resupply needed'],
 ]
 const styles = [
@@ -19,8 +19,8 @@ const styles = [
   'info',
   'primary',
   'success',
-  'warning',
   'info',
+  '',
   'warning',
 ]
 const icons = [
