@@ -112,8 +112,6 @@ const findCache = (pathname, hostname) => {
     return null
   }
 }
-// Network error retries
-const retries = config.get('proxy.retries', 0)
 
 const PacAgents = {}
 const resolve = (req) => {
@@ -231,6 +229,7 @@ class Proxy extends EventEmitter {
             pathname = parsed.pathname
             requrl = req.url
             let success = false
+            const retries = config.get('proxy.retries', 0)
             for (let i = 0; i <= retries; i++) {
               if (success) {
                 break
@@ -275,7 +274,7 @@ class Proxy extends EventEmitter {
                 break
               }
               // Delay 3s for retry
-              await Promise.delay(3000)
+              await bluebird.delay(3000)
             }
           }
         } catch (e) {
