@@ -106,11 +106,11 @@ poi 读取的标准字段包括：
 
 ## 导出变量
 一个 [Node 模组](https://nodejs.org/api/modules.html)的入口文件（如 `index.es` ）可以定义导出变量，这是一个模组向外暴露内部功能和信息的最主要方式。[ECMAScript 7 的导出语法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)是
-```javascript 
+```javascript
 export const windowURL = join(__dirname, 'index.html')
 ```
 相对应地，CoffeeScript 的导出语法是
-```coffeescript 
+```coffeescript
 module.exports.windowURL = join __dirname, 'index.html'
 ```
 
@@ -282,7 +282,7 @@ store.const.
   $maps         // 地图
   $missions     // 远征
   $useitems     // 物品（位于母港アイテム菜单中的物品）
-  $shipgraph    // 
+  $shipgraph    //
 ```
 
 ##### store.info
@@ -380,8 +380,8 @@ store.misc.
       mvp                // Array， 单舰队：[<mvp>, <mvp>] 联合舰队：[<mvpFlee1>, <mvpFleet2>]，其中成员均为 1 | ... | 6 | -1（无）
       dropItem           // Object，见 api_get_useitem
       dropShipId         // Number，获得的船只的 api_id
-      deckShipId         // Array，我方舰队船只的 api_id。联合舰队采用 concat 
-      deckHp             // Array，我方舰队船只的结束 hp。联合舰队采用 concat 
+      deckShipId         // Array，我方舰队船只的 api_id。联合舰队采用 concat
+      deckHp             // Array，我方舰队船只的结束 hp。联合舰队采用 concat
       enemyShipId        // Array，敌方舰队的 api_ship_id
       enemyFormation     // Number，与 api_formation 一致
       enemyHp            // Array，敌方舰队的结束 hp
@@ -477,7 +477,7 @@ import { writeFileSync } from 'fs'
 import { extensionSelectorFactory } from 'views/utils/selectors'
 import { store } from 'views/createStore'
 
-EXTENSION_KEY = 'poi-plugin-some-plugin-name
+EXTENSION_KEY = 'poi-plugin-some-plugin-name'
 
 const countSelector = createSelector(
   extensionSelectorFactory(EXTENSION_KEY),
