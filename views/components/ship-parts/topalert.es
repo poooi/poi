@@ -359,7 +359,7 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     expeditionEndTime: expedition[2],
     tyku,
     saku,
-    condTarget: get(config, 'poi.notify.morale.value', 40),
+    condTarget: get(config, 'poi.notify.morale.value', 49),
     canNotify,
   }))
 )
@@ -371,7 +371,7 @@ export default connect(
   const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
-  shipsData.map(([_ship, $ship]) => {
+  shipsData.forEach(([_ship, $ship]) => {
     totalLv += _ship.api_lv
     minCond = Math.min(minCond, _ship.api_cond)
   })
