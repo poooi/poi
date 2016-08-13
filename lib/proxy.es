@@ -113,7 +113,7 @@ const findCache = (pathname, hostname) => {
   }
 }
 // Network error retries
-const retries = config.get('poi.proxy.retries', 0)
+const retries = config.get('proxy.retries', 0)
 
 const PacAgents = {}
 const resolve = (req) => {
