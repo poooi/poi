@@ -87,7 +87,6 @@ export const ShipRow = connect(
               </span>
             </div>
             <OverlayTrigger
-              show={repair && repair.api_state == 1}
               placement='right'
               overlay={
                 ship.api_ndock_time > 0 ?
