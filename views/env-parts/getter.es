@@ -111,7 +111,8 @@ const initShips = (dispatch, current, previous) => {
       }
       return new Proxy(ship, {
         get: (innerTarget, innerProperty, innerReceiver) => {
-          return ship[innerProperty] || window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
+          if (ship[innerProperty] != null) return ship[innerProperty]
+          return window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
         },
       })
     },
@@ -127,7 +128,8 @@ const initEquips = (dispatch, current, previous) => {
       }
       return new Proxy(equip, {
         get: (innerTarget, innerProperty, innerReceiver) => {
-          return equip[innerProperty] || window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
+          if (equip[innerProperty] != null) return equip[innerProperty]
+          return window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
         },
       })
     },
