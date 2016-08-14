@@ -249,7 +249,7 @@ export function reducer(state=initState, {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_combined_battle/sp_midnight':
   case '@@Response/kcsapi/api_req_combined_battle/ld_airbattle': {
     let enemyFormation = _status.enemyFormation
-    if (type !== '@@Response/kcsapi/api_req_battle_midnight/battle')
+    if (type !== '@@Response/kcsapi/api_req_combined_battle/midnight_battle')
       enemyFormation = body.api_formation[1]
     const beginStatus = {
       ..._status,
