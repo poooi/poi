@@ -19,12 +19,11 @@ import misc from './misc'
 function secureExtensionConfig(extensionConfig) {
   return mapValues(extensionConfig, (func, key) => {
     if (func) {
+      // Use combineReducers to check sanity of `func`
+      const wrappedReducer = combineReducers({_: func})
       return (state={}, action) => {
         try {
-          const new_ = func(state._, action)
-          if (new_ !== state._)
-            return {_: new_}
-          return state
+          return wrappedReducer(state, action)
         } catch(e) {
           console.error(`Error in extension ${key}`, e.stack)
           return state

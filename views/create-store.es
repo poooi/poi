@@ -86,20 +86,21 @@ observe(store, [observer(
   dispatchBattleResult,
 )])
 
-const _reducerExtensions = {}
+let _reducerExtensions = {}
 
 // Use this function to extend extra reducers to the store, such as plugin
 // specific data maintainance.
 // Use extensionSelectorFactory(key) inside utils/selectors to access it.
 export function extendReducer(key, reducer) {
-  const _reducerExtensionsOrigin = {..._reducerExtensions}
-  _reducerExtensions[key] = reducer
+  const _reducerExtensionsNew = {
+    ..._reducerExtensions,
+    [key]: reducer,
+  }
   try {
-    store.replaceReducer(reducerFactory(_reducerExtensions))
+    store.replaceReducer(reducerFactory(_reducerExtensionsNew))
+    _reducerExtensions = _reducerExtensionsNew
   } catch (e) {
-    console.warn('Invalid reducer')
-    console.warn(e.stack)
-    store.replaceReducer(reducerFactory(_reducerExtensionsOrigin))
+    console.warn(`Reducer extension ${key} is not a valid reducer`, e.stack)
   }
 }
 
