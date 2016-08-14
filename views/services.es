@@ -175,3 +175,52 @@ remote.getCurrentWebContents().on('dom-ready', () => {
     $('#poi-app-container').focus()
   })
 })
+
+// Workaround for touch screen
+let x, y, xg, yg, isMoved
+const webContents = remote.getCurrentWebContents()
+window.addEventListener('touchstart', (e) => {
+  x = Math.round(e.touches[0].clientX)
+  xg = Math.round(e.touches[0].screenX)
+  y = Math.round(e.touches[0].clientY)
+  yg = Math.round(e.touches[0].screenY)
+  isMoved = false
+})
+window.addEventListener('touchmove', (e) => {
+  isMoved = true
+})
+window.addEventListener('touchend', (e) => {
+  if (isMoved) {
+    return
+  }
+  if (Math.max(Math.abs(x - e.changedTouches[0].clientX), Math.abs(y - e.changedTouches[0].clientY)) < 30) {
+    e.preventDefault()
+    setTimeout(() => {
+      webContents.sendInputEvent({
+        type: 'mouseMove',
+        x: x,
+        y: y,
+        globalX: xg,
+        globalY: yg,
+      })
+      webContents.sendInputEvent({
+        type: 'mouseDown',
+        x: x,
+        y: y,
+        globalX: xg,
+        globalY: yg,
+        button: 'left',
+        clickCount: 1,
+      })
+      webContents.sendInputEvent({
+        type: 'mouseUp',
+        x: x,
+        y: y,
+        globalX: xg,
+        globalY: yg,
+        button: 'left',
+        clickCount: 1,
+      })
+    }, 20)
+  }
+})
