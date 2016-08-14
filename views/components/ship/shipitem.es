@@ -38,6 +38,7 @@ const shipRowDataSelectorFactory = memoize((shipId) =>
     $ship: $ship || {},
     $shipTypes,
     labelStatus: getShipLabelStatus(ship, $ship, repairDock),
+    repair: repairDock,
   }))
 )
 export const ShipRow = connect(
@@ -49,7 +50,6 @@ export const ShipRow = connect(
     $ship: React.PropTypes.object,
     $shipTypes: React.PropTypes.object,
     labelStatus: React.PropTypes.number,
-    repair: React.PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -61,7 +61,7 @@ export const ShipRow = connect(
   }
 
   render() {
-    const {ship, $ship, $shipTypes, labelStatus, repair} = this.props
+    const {ship, $ship, $shipTypes, labelStatus} = this.props
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
     const fuelPercentage = ship.api_fuel / $ship.api_fuel_max * 100
@@ -90,10 +90,9 @@ export const ShipRow = connect(
               show={repair && repair.api_state == 1}
               placement='right'
               overlay={
-                repair ?
-                /* TODO: repair time */
+                ship.api_ndock_time > 0 ?
                 <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
-                  {__('Repair Time')}: {resolveTime((repair.api_complete_time - Date.now())/1000)}
+                  {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
                 </Tooltip>
                 : <noscript />
               }
