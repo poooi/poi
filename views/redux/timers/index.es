@@ -8,17 +8,17 @@ const threeMinutes = 3 * 60 * 1000
 export function reducer(state=initState, {type, postBody, body}) {
   switch (type) {
   case '@@Response/kcsapi/api_port/port': {
-    let now = Date.now()
+    const now = Date.now()
     // The maximum possible cond regen if the timer is correct
-    let predictElapsedCond = Math.floor((now - (state.cond || now)) / threeMinutes) * 3
+    const predictElapsedCond = Math.floor((now - (state.cond || now)) / threeMinutes) * 3
     // Always update initially
     let update = !state._condTempShips
     let maxElapsedCond = 0
     if (!update) {
-      let shipNum = body.api_ship.length
+      const shipNum = body.api_ship.length
       for (let i = 0; i < shipNum; i++) {
-        let {api_cond: nowCond, api_id} = body.api_ship[i]
-        let prevCond = state._condTempShips[api_id]
+        const {api_cond: nowCond, api_id} = body.api_ship[i]
+        const prevCond = state._condTempShips[api_id]
         if (prevCond == null) {
           continue
         }
@@ -38,7 +38,7 @@ export function reducer(state=initState, {type, postBody, body}) {
         }
       }
     }
-    let _condTempShips = {}
+    const _condTempShips = {}
     body.api_ship.forEach(({api_id, api_cond}) => {
       _condTempShips[api_id] = api_cond
     })

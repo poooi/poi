@@ -2,7 +2,7 @@ import path from 'path-extra'
 import semver from 'semver'
 import os from 'os'
 import { remote } from 'electron'
-import { get, memoize, throttle, debounce } from 'lodash'
+import { get, memoize, throttle, debounce, pickBy } from 'lodash'
 
 const {config, appIcon, ROOT} = window
 const NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
@@ -26,6 +26,9 @@ function defaultAs(val, defaultVal, typeofReq) {
   return val
 }
 
+function nonNull(a) {
+  return pickBy(a, (v) => v != null)
+}
 
 const THROTTLE_TIME = 1000
 const VOLUME_ZERO = 0.0001
@@ -75,7 +78,7 @@ class NotificationCenter {
       return
     info.options = {
       ...info.options,
-      ...o,
+      ...nonNull(o),
     }
     info.buffer = (info.buffer || []).concat([o.args])
     info.notify()
@@ -106,9 +109,9 @@ class NotificationCenter {
       return
     const mergedConfig = {
       ...defaultNotifOptions,
-      ...globalConfig,
-      ...typeConfig,
-      ...o,
+      ...nonNull(globalConfig),
+      ...nonNull(typeConfig),
+      ...nonNull(o),
     }
     const volume = get(globalConfig, 'volume', 1) * get(typeConfig, 'volume', 1)
       * (get(mergedConfig, 'silent', false) ? 0 : 1)
