@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { mapValues } from 'lodash'
 
 import { reducer as constReducer } from './const'
 import { reducer as info } from './info'
@@ -15,6 +16,26 @@ import misc from './misc'
 
 // === Root reducer ===
 
+function secureExtensionConfig(extensionConfig) {
+  return mapValues(extensionConfig, (func, key) => {
+    if (func) {
+      return (state={}, action) => {
+        try {
+          const new_ = func(state._, action)
+          if (new_ !== state._)
+            return {_: new_}
+          return state
+        } catch(e) {
+          console.error(`Error in extension ${key}`, e.stack)
+          return state
+        }
+      }
+    } else {
+      return () => ({})
+    }
+  })
+}
+
 export function reducerFactory(extensionConfig) {
   return combineReducers({
     const: constReducer,
@@ -27,7 +48,7 @@ export function reducerFactory(extensionConfig) {
     alert,
     plugins,
     misc,
-    ext: extensionConfig ? combineReducers(extensionConfig) : (() => ({})),
+    ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => ({})),
   })
 }
 

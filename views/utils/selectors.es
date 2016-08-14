@@ -85,7 +85,7 @@ export const sortieSelector = (state) => state.sortie
 export const sortieStatusSelector = (state) => state.sortie.sortieStatus
 
 export const extensionSelectorFactory = (key) =>
-  (state) => state.ext[key] || {}
+  (state) => get(state.ext, [key, '_']) || {}
 
 export const configLayoutSelector = createSelector(configSelector,
   (config) => get(config, 'poi.layout', 'horizontal'))

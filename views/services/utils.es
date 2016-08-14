@@ -18,10 +18,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 require('module').globalPaths.push(MODULE_PATH)
 
 // This reducer clears the substore no matter what is given.
-function clearReducer() {
-  return {}
-}
-
+const clearReducer = undefined
 
 export function installPackage(packageName, version) {
   if (version) {
