@@ -92,8 +92,15 @@ const _reducerExtensions = {}
 // specific data maintainance.
 // Use extensionSelectorFactory(key) inside utils/selectors to access it.
 export function extendReducer(key, reducer) {
+  const _reducerExtensionsOrigin = {..._reducerExtensions}
   _reducerExtensions[key] = reducer
-  store.replaceReducer(reducerFactory(_reducerExtensions))
+  try {
+    store.replaceReducer(reducerFactory(_reducerExtensions))
+  } catch (e) {
+    console.warn('Invalid reducer')
+    console.warn(e.stack)
+    store.replaceReducer(reducerFactory(_reducerExtensionsOrigin))
+  }
 }
 
 window.config.get = (path, value) => {
