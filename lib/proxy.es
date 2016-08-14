@@ -268,7 +268,7 @@ class Proxy extends EventEmitter {
               } catch (e) {
                 success = false
                 error(`Connection failed: ${req.method} ${req.url} ${e.toString()}`)
-                this.emit('network.error.retry', [domain, pathname, requrl], i < retries ? i + 1 : void 0)
+                this.emit('network.error.retry', [domain, pathname, requrl], i + 1)
               }
               if (success || !isKancolleGameApi(pathname)) {
                 break
