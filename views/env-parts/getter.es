@@ -128,7 +128,8 @@ const initEquips = (dispatch, current, previous) => {
       }
       return new Proxy(equip, {
         get: (innerTarget, innerProperty, innerReceiver) => {
-          return equip[innerProperty] || window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
+          if (equip[innerProperty] != null) return equip[innerProperty]
+          return window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
         },
       })
     },
