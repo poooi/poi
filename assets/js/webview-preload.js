@@ -83,6 +83,7 @@ window.align()
 
 remote.getCurrentWebContents().insertCSS(alertCSS)
 document.addEventListener("DOMContentLoaded", (e) => {
+  window.align()
   document.querySelector('body').appendChild(alignCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
   const setQuality = (method, [domain, path], body) => {
