@@ -1,7 +1,7 @@
-import { get, set } from 'lodash'
+import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import fs from 'fs-extra'
+import { accessSync, readJsonSync, realpathSync } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
@@ -46,11 +46,11 @@ const updateI18n = (plugin) => {
     i18nFile = join(plugin.pluginPath, plugin.i18nDir)
   } else {
     try {
-      fs.accessSync(join(plugin.pluginPath, 'i18n'))
+      accessSync(join(plugin.pluginPath, 'i18n'))
       i18nFile = join(plugin.pluginPath, 'i18n')
     } catch (error) {
       try {
-        fs.accessSync(join(plugin.pluginPath, 'assets', 'i18n'))
+        accessSync(join(plugin.pluginPath, 'assets', 'i18n'))
         i18nFile = join(plugin.pluginPath, 'assets', 'i18n')
       } catch (error) {
         console.warn(`${plugin.packageName}: No translate file found.`)
@@ -78,19 +78,20 @@ const updateI18n = (plugin) => {
 const readPlugin = (pluginPath) => {
   let pluginData, packageData, plugin
   try {
-    pluginData = fs.readJsonSync(join(ROOT, 'assets', 'data', 'plugin.json'))
+    pluginData = readJsonSync(join(ROOT, 'assets', 'data', 'plugin.json'))
   } catch (error) {
     pluginData = {}
     utils.error(error)
   }
   try {
-    packageData = fs.readJsonSync(join(pluginPath, 'package.json'))
+    packageData = readJsonSync(join(pluginPath, 'package.json'))
   } catch (error) {
     packageData = {}
     utils.error(error)
   }
   plugin = packageData.poiPlugin || {}
-  plugin.packageData = packageData
+  // omit poiPlugin to avoid circular object
+  plugin.packageData = omit(packageData, 'poiPlugin')
   plugin.packageName = plugin.packageData.name || basename(pluginPath)
   if (plugin.name == null) {
     plugin.name = plugin.title || plugin.packageName
@@ -106,7 +107,8 @@ const readPlugin = (pluginPath) => {
   if (plugin.description == null) {
     plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || "unknown"
   }
-  plugin.pluginPath = pluginPath
+  // Resolve symlink.
+  plugin.pluginPath = realpathSync(pluginPath)
   if (plugin.icon == null) {
     plugin.icon = 'fa/th-large'
   }
@@ -258,14 +260,14 @@ const postEnableProcess = (plugin) => {
   return plugin
 }
 
-function clearPluginCache(packageName) {
+function clearPluginCache(packagePath) {
   for (const path in module._cache) {
-    if (path.includes(packageName)) {
+    if (path.startsWith(packagePath)) {
       delete module._cache[path]
     }
   }
   for (const path in module._pathCache) {
-    if (path.includes(packageName)) {
+    if (path.startsWith(packagePath)) {
       delete module._pathCache[path]
     }
   }
@@ -282,7 +284,10 @@ const unloadPlugin = (plugin) => {
   if (plugin.pluginWindow) {
     windowManager.closeWindow(plugin.pluginWindow)
   }
-  clearPluginCache(plugin.packageName)
+  // Here we clear caches of files under pluginPath with symlinks resolved.
+  // Problems still exist where deeper symlinks are not resolved.
+  // But this solved the major problem of using `npm link` .
+  clearPluginCache(plugin.pluginPath)
   extendReducer(plugin.packageName, clearReducer)
   return plugin
 }
