@@ -146,6 +146,7 @@ const readPlugin = (pluginPath) => {
       {' ' + plugin.name}
     </span>
   )
+  plugin.timestamp = Date.now()
   return plugin
 }
 

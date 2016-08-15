@@ -18,7 +18,7 @@ const __ = i18n.others.__.bind(i18n.others)
 
 class PluginWrap extends Component {
   shouldComponentUpdate = (nextProps, nextState) => (
-    !isEqual(this.props.plugin, nextProps.plugin)
+    this.props.plugin.timestamp !== nextProps.plugin.timestamp
   )
   render() {
     const {plugin} = this.props
