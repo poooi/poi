@@ -8,7 +8,7 @@ import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
-import { SlotitemIcon } from 'views/components/etc/icon-redux'
+import { SlotitemIcon } from 'views/components/etc/icon'
 import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/components/ship-parts/utils'
 import {
   shipDataSelectorFactory,
@@ -20,7 +20,7 @@ import {
 
 const { i18n } = window
 
-const slotitemsDataSelectorFactory = memoize((shipId) => 
+const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipEquipDataSelectorFactory(shipId),
@@ -80,7 +80,7 @@ const Slotitems  = connect(
   )
 })
 
-const miniShipRowDataSelectorFactory = memoize((shipId) => 
+const miniShipRowDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipRepairDockSelectorFactory(shipId),

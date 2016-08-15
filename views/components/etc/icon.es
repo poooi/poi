@@ -1,75 +1,122 @@
 import fs from 'fs-extra'
 import classnames from 'classnames'
 import React from 'react'
+import { connect } from 'react-redux'
+import { get } from 'lodash'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
-  return classnames(type, props.className)
+  return classnames(type, props)
 }
 
-const ICON_TYPES = {
-  UNAVAILABLE: 0,
-  PNG: 1,
-  SVG: 2,
+const {ROOT, config} = window
+
+const svgAvailableList = {}
+const pngAvailableList = {}
+
+class iconConf {
+  constructor() {
+    this.callbacks = new Map()
+    config.on('config.set', (path, val) => {
+      if (path === 'poi.useSVGIcon') {
+        this.setConf(val)
+      }
+    })
+  }
+  setConf = (val) => {
+    this.callbacks.forEach((f) => f(val))
+  }
+  reg = (key, func) => {
+    this.callbacks.set(key, func)
+  }
+  unreg = (key) => {
+    this.callbacks.delete(key)
+  }
 }
 
-const {config, ROOT} = window
+const iconConfSetter = new iconConf()
 
-const iconCache = []
-
-class SlotitemIcon extends React.Component {
-  name = 'SlotitemIcon'
+export class SlotitemIcon extends React.Component {
   static propTypes = {
     slotitemId: React.PropTypes.number,
+    className: React.PropTypes.string,
   }
+  state = {
+    useSVGIcon: config.get('poi.useSVGIcon', false),
+  }
+  name = 'SlotitemIcon'
   svgPath = () =>
     `${ROOT}/assets/svg/slotitem/${this.props.slotitemId}.svg`
   pngPath = () =>
     `${ROOT}/assets/img/slotitem/${this.props.slotitemId + 100}.png`
-  determineIconType = () => {
-    if (config.get('poi.useSVGIcon', false)) {
-      try {
-        // accessSync can not read asar properly
-        fs.statSync(this.svgPath())
-        return ICON_TYPES.SVG
-      } catch (e) {
-        console.warn(`Icon file ${this.svgPath()} not found.`)
-      }
-    }
+  getAvailable = () => {
     try {
-      fs.statSync(this.pngPath())
-      return ICON_TYPES.PNG
+      fs.statSync(this.state.useSVGIcon ? this.svgPath() : this.pngPath())
+      return true
     } catch (e) {
-      console.warn(`Icon file ${this.pngPath()} not found.`)
+      return false
     }
-    return ICON_TYPES.UNAVAILABLE
+  }
+  setUseSvg = (val) => {
+    this.setState({
+      useSVGIcon: val,
+    })
+  }
+  componentDidMount = () => {
+    this.key = `${process.hrtime()[0]}${process.hrtime()[1]}`
+    iconConfSetter.reg(this.key, this.setUseSvg)
+  }
+  componentWillUnmount = () => {
+    iconConfSetter.unreg(this.key)
   }
   render() {
-    switch (iconCache[this.props.slotitemId] ? iconCache[this.props.slotitemId] : iconCache[this.props.slotitemId] = this.determineIconType()) {
-    case ICON_TYPES.PNG:
-      return <img src={`file://${this.pngPath()}`} className={getClassName(this.props, false)} />
-    case ICON_TYPES.SVG:
-      return <img src={`file://${this.svgPath()}`} className={getClassName(this.props, true)} />
-    default:
-      return <img className={getClassName(this.props, config.get('poi.useSVGIcon', false))} style={{visibility: 'hidden'}} />
+    if (this.state.useSVGIcon) {
+      if (typeof svgAvailableList[this.props.slotitemId] === 'undefined') {
+        svgAvailableList[this.props.slotitemId] = this.getAvailable()
+      }
+    } else {
+      if (typeof pngAvailableList[this.props.slotitemId] === 'undefined') {
+        pngAvailableList[this.props.slotitemId] = this.getAvailable()
+      }
+    }
+    if (this.state.useSVGIcon && svgAvailableList[this.props.slotitemId]) {
+      return <img src={`file://${this.svgPath()}`} className={getClassName(this.props.className, true)} />
+    } else if (pngAvailableList[this.props.slotitemId]) {
+      return <img src={`file://${this.pngPath()}`} className={getClassName(this.props.className, false)} />
+    } else {
+      return <img className={getClassName(this.props.className, this.state.useSVGIcon)} style={{visibility: 'hidden'}} />
     }
   }
 }
 
-class MaterialIcon extends React.Component {
-  name: 'MaterialIcon'
+export class MaterialIcon extends React.Component {
   static propTypes = {
     materialId: React.PropTypes.number,
+    className: React.PropTypes.string,
+  }
+  state = {
+    useSVGIcon: config.get('poi.useSVGIcon', false),
+  }
+  name = 'MaterialIcon'
+  setUseSvg = (val) => {
+    this.setState({
+      useSVGIcon: val,
+    })
+  }
+  componentDidMount = () => {
+    this.key = `${process.hrtime()[0]}${process.hrtime()[1]}`
+    iconConfSetter.reg(this.key, this.setUseSvg)
+  }
+  componentWillUnmount = () => {
+    iconConfSetter.unreg(this.key)
   }
   render() {
     let src = null
-    if (config.get('poi.useSVGIcon', false)) {
+    if (this.state.useSVGIcon) {
       src = `file://${ROOT}/assets/svg/material/${this.props.materialId}.svg`
     } else {
       src = `file://${ROOT}/assets/img/material/0${this.props.materialId}.png`
     }
-    return <img src={src} className={getClassName(this.props, config.get('poi.useSVGIcon', false))} />
+    return <img src={src} className={getClassName(this.props.className, this.state.useSVGIcon)} />
   }
 }
-
-export {SlotitemIcon, MaterialIcon}
