@@ -485,20 +485,20 @@ export function reducer(state=initState, action) {
   }
 
   // Pause quest
-  case '@@Response/kcsapi/api_req_quest/stop': {
-    // This api will be followed by a /kcsapi/api_get_member/questlist
-    const {api_quest_id} = postBody
-    let {activeNum, activeQuests} = state
-    --activeNum
-    if (api_quest_id in state.activeQuests) {
-      activeQuests = {...activeQuests}
-      delete activeQuests[api_quest_id]
-    }
-    return updateObject(state, {
-      activeQuests,
-      activeNum,
-    })
-  }
+  // case '@@Response/kcsapi/api_req_quest/stop': {
+  //   // This api will be followed by a /kcsapi/api_get_member/questlist
+  //   const {api_quest_id} = postBody
+  //   let {activeNum, activeQuests} = state
+  //   --activeNum
+  //   if (api_quest_id in state.activeQuests) {
+  //     activeQuests = {...activeQuests}
+  //     delete activeQuests[api_quest_id]
+  //   }
+  //   return updateObject(state, {
+  //     activeQuests,
+  //     activeNum,
+  //   })
+  // }
   }
   // Update quest count
   return questTrackingReducer(state, action)
