@@ -1,8 +1,6 @@
 import fs from 'fs-extra'
 import classnames from 'classnames'
 import React from 'react'
-import { connect } from 'react-redux'
-import { get } from 'lodash'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
