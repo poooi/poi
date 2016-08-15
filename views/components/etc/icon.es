@@ -43,6 +43,11 @@ export class SlotitemIcon extends React.Component {
     useSVGIcon: config.get('poi.useSVGIcon', false),
   }
   name = 'SlotitemIcon'
+  shouldComponentUpdate = (nextProps, nextState) => (
+    !(nextProps.slotitemId === this.props.slotitemId &&
+      nextProps.className === this.props.className &&
+      nextState.useSVGIcon === this.state.useSVGIcon)
+  )
   svgPath = () =>
     `${ROOT}/assets/svg/slotitem/${this.props.slotitemId}.svg`
   pngPath = () =>
@@ -96,6 +101,11 @@ export class MaterialIcon extends React.Component {
     useSVGIcon: config.get('poi.useSVGIcon', false),
   }
   name = 'MaterialIcon'
+  shouldComponentUpdate = (nextProps, nextState) => (
+    !(nextProps.materialId === this.props.materialId &&
+      nextProps.className === this.props.className &&
+      nextState.useSVGIcon === this.state.useSVGIcon)
+  )
   setUseSvg = (val) => {
     this.setState({
       useSVGIcon: val,
