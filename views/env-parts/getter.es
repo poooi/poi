@@ -1,6 +1,6 @@
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
-import { map, get } from 'lodash'
+import { map, get, mapValues } from 'lodash'
 import path from 'path-extra'
 
 import { store } from 'views/create-store'
@@ -100,6 +100,9 @@ Object.defineProperty(window, '_ndock', {get: () => {
     ret.push(window.getStore(`info.repairs.${i}.api_ship_id`))
   }
   return ret
+}})
+Object.defineProperty(window, '_eventMapRanks', {get: () => {
+  return map(window.getStore('info.maps'), 'api_selected_rank')
 }})
 
 const initShips = (dispatch, current, previous) => {
