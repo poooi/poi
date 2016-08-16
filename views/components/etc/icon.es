@@ -32,7 +32,7 @@ class iconConf {
   }
 }
 
-const iconConfSetter = new iconConf()
+const iconConfSetter = window.iconConfSetter = new iconConf()
 
 export class SlotitemIcon extends React.Component {
   static propTypes = {
