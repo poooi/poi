@@ -92,7 +92,7 @@ export const configLayoutSelector = createSelector(configSelector,
 export const configDoubleTabbedSelector = createSelector(configSelector,
   (config) => get(config, 'poi.tabarea.double', false))
 
-export const condTimerSelector = (state) => state.timers.cond
+export const condTickSelector = (state) => state.timers.cond.tick
 
 // Returns [shipId for every ship in repair]
 // Returns undefined if uninitialized

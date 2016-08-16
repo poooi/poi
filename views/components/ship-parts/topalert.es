@@ -7,6 +7,7 @@ import { createSelector } from 'reselect'
 
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
+import { recoveryEndTime } from 'views/redux/timers/cond'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
@@ -14,7 +15,7 @@ import {
   fleetShipsEquipDataSelectorFactory,
   fleetNameSelectorFactory,
   basicSelector,
-  condTimerSelector,
+  condTickSelector,
   fleetExpeditionSelectorFactory,
   configSelector,
   miscSelector,
@@ -356,18 +357,18 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     fleetInExpeditionSelectorFactory(fleetId),
     fleetShipsDataSelectorFactory(fleetId),
     fleetNameSelectorFactory(fleetId),
-    condTimerSelector,
+    condTickSelector,
     fleetExpeditionSelectorFactory(fleetId),
     tykuSelectorFactory(fleetId),
     sakuSelectorFactory(fleetId),
     configSelector,
     miscSelector,
-  ], (inBattle, inExpedition, shipsData, fleetName, condStartTime, expedition, tyku, saku, config, {canNotify}) => ({
+  ], (inBattle, inExpedition, shipsData, fleetName, condTick, expedition, tyku, saku, config, {canNotify}) => ({
     inExpedition,
     inBattle,
     shipsData,
     fleetName,
-    condStartTime,
+    condTick,
     expeditionEndTime: expedition[2],
     tyku,
     saku,
@@ -379,7 +380,7 @@ export default connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
-  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condStartTime, expeditionEndTime, tyku, saku, condTarget, canNotify} = props
+  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condTick, expeditionEndTime, tyku, saku, condTarget, canNotify} = props
   const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
@@ -391,7 +392,9 @@ export default connect(
   if (inExpedition) {
     completeTime = expeditionEndTime + 3 * 60 *1000
   } else {
-    completeTime = Math.ceil((condTarget - minCond) / 3) * 3 * 60 * 1000 + condStartTime
+    const conds = shipsData.map(([ship={api_cond: 0}]=[]) => ship.api_cond)
+    completeTime = Math.max.apply(null,
+      conds.map((cond) => recoveryEndTime(condTick, cond, condTarget)))
   }
   return (
     <div style={{width: '100%'}}>
