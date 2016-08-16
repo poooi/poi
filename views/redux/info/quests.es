@@ -444,10 +444,10 @@ export function reducer(state=initState, action) {
       if (api_state >= 2) {
         activeQuests = copyIfSame(activeQuests, state.activeQuests)
         activeQuests[api_no] = {detail: quest, time: now}
+      } else {
+        activeQuests = copyIfSame(activeQuests, state.activeQuests)
+        delete activeQuests[api_no]
       }
-      // We don't need to delete inactive quests, because if we know all
-      // active quests, then the inactive ones will be deleted by limitActiveQuests
-      // since they have earlier `time`
     })
     activeQuests = limitActiveQuests(activeQuests, activeNum)
     return updateObject(state, {
