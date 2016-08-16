@@ -177,14 +177,44 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 })
 
 // Workaround for touch screen
-let transformedToMouseEvent = false
+let transformedToMouseEvent = false, isMoved = false
+const webContents = remote.getCurrentWebContents()
 window.addEventListener('touchend', (e) => {
+  isMoved = false
   transformedToMouseEvent = false
   setTimeout(() => {
     if (!transformedToMouseEvent) {
+      console.warn("Blurring focusing element")
       document.activeElement.blur()
+      e.target.focus()
+      if (!isMoved) {
+        let x = Math.round(e.changedTouches[0].clientX),
+            y = Math.round(e.changedTouches[0].clientY)
+        webContents.sendInputEvent({
+          type: 'mouseMove',
+          x: x,
+          y: y,
+        })
+        webContents.sendInputEvent({
+          type: 'mouseDown',
+          x: x,
+          y: y,
+          button: 'left',
+          clickCount: 1,
+        })
+        webContents.sendInputEvent({
+          type: 'mouseUp',
+          x: x,
+          y: y,
+          button: 'left',
+          clickCount: 1,
+        })
+      }
     }
-  }, 150)
+  }, 300)
+})
+window.addEventListener('touchmove', (e) => {
+  isMoved = true
 })
 window.addEventListener('mouseup', (e) => {
   transformedToMouseEvent = true
