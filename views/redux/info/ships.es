@@ -6,6 +6,7 @@ function completeRepair(ship) {
   return window.compareUpdate(ship, {
     api_nowhp: ship.api_maxhp,
     api_cond: Math.max(40, ship.api_cond),
+    api_ndock_time: 0,
   })
 }
 
