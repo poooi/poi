@@ -46,6 +46,9 @@ const getTyku = (equipsData) => {
   let minTyku = 0
   let maxTyku = 0
   for (let i = 0; i < equipsData.length; i++) {
+    if (!equipsData[i]) {
+      continue
+    }
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
@@ -91,6 +94,9 @@ const getSaku25 = (shipsData, equipsData) => {
   for (let i = 0; i < equipsData.length; i++) {
     const [_ship] = shipsData[i]
     shipSaku += _ship.api_sakuteki[0]
+    if (!equipsData[i]) {
+      continue
+    }
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
@@ -141,6 +147,9 @@ const getSaku25a = (shipsData, equipsData, teitokuLv) => {
   for (let i = 0; i < equipsData.length; i++) {
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
+    if (!equipsData[i]) {
+      continue
+    }
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
@@ -229,6 +238,9 @@ const getSaku33 = (shipsData, equipsData, teitokuLv) => {
     shipCount -= 1
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
+    if (!equipsData[i]) {
+      continue
+    }
     for (let j = 0; j < equipsData[i].length; j++) {
       if (!equipsData[i][j]) {
         continue
