@@ -32,29 +32,27 @@ export default function reducer(state=initState, {type, postBody, body}) {
     const predictIncrease = Math.floor((now - oldTick) / threeMinutes) * 3
 
     const conds = {}
-    let condIncreased = false
     let condNeedsUpdate = false
     let misprediction = false
     // Use lodash.forEach because it supports breaking by returning false
     forEach(body.api_ship, (ship) => {
       const {api_cond: cond, api_id} = ship
       conds[api_id] = cond
-      if (!(api_id in oldConds)) {
+      if (cond !== oldConds[api_id]) {
         condNeedsUpdate = true
-        return
-      }
-      if (cond - oldConds[api_id] > 0) {
-        condIncreased = true
-        if (cond - oldConds[api_id] > predictIncrease) {
-          misprediction = true
-          return false  // break; This is as much information as we can get
+        if (!(api_id in oldConds)) {
+          return
         }
       }
+      if (cond - oldConds[api_id] > predictIncrease) {
+        misprediction = true
+        return false  // break; This is as much information as we can get
+      }
     })
-    if (!condIncreased && !condNeedsUpdate && !misprediction)
+    if (!condNeedsUpdate && !misprediction)
       return state
     const newState = {}
-    if (condIncreased || condNeedsUpdate) {
+    if (condNeedsUpdate) {
       newState.conds = conds
       if (misprediction) {
         newState.tick = now
