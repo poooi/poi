@@ -1,7 +1,7 @@
 import React from 'react'
 
 const __ = window.i18n.others.__.bind(window.i18n.others)
-let initState = {
+const initState = {
   history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
   current: {
     type: 'default',
@@ -36,7 +36,7 @@ export function reducer(state=initState, {type, value}) {
     }
     let {history, current} = {...state}
     let newState
-    if ((value.priority) < current.priority && Date.now() < stickyEnd) {
+    if (value.priority < current.priority && Date.now() < stickyEnd) {
       // Old message has higher priority, push new message to history
       history = pushToHistory(history, value)
       newState = {
