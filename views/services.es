@@ -169,11 +169,6 @@ remote.getCurrentWebContents().on('dom-ready', () => {
     exWindow.show()
     e.preventDefault()
   })
-  document.addEventListener('touchstart', (e) => {
-    $('webview').blur()
-    $('#poi-app-container').blur()
-    $('#poi-app-container').focus()
-  })
 })
 
 // Workaround for touch screen
