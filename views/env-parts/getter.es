@@ -94,7 +94,7 @@ Object.defineProperty(window, '_teitokuExp', {get: () => {
 Object.defineProperty(window, '_teitokuLv', {get: () => {
   return window.getStore('info.basic.api_level') || 0
 }})
-Object.defineProperty(window, '_ndock', {get: () => {
+Object.defineProperty(window, '_ndocks', {get: () => {
   const ret = []
   for (let i = 0; i < 4; i++) {
     ret.push(window.getStore(`info.repairs.${i}.api_ship_id`))
