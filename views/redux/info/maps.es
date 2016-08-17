@@ -3,7 +3,7 @@ const { indexify, compareUpdate } = window
 export function reducer(state={}, {type, body, postBody}) {
   // Compatibility: Old api arranges maps in array
   if (Array.isArray(state))
-    state = window.indexify(state.filter('api_id'))
+    state = window.indexify(state.filter((e) => (e && e.api_id)))
   switch (type) {
   case '@@Response/kcsapi/api_get_member/mapinfo':
     return compareUpdate(state, indexify(body), 2)
