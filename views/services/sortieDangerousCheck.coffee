@@ -23,7 +23,7 @@ window.addEventListener 'game.response',
           safe = false
           for slotId in ship.api_slot.concat(ship.api_slot_ex || -1)
             continue if slotId == -1
-            safe = true if parseInt($equips[equips[slotId]?.api_id]?.api_type?[3]) == 14
+            safe = true if parseInt($equips[equips[slotId]?.api_slotitem_id]?.api_type?[3]) == 14
           if !safe
             damagedShips.push("Lv. #{ship.api_lv} - #{$ship.api_name}")
       if damagedShips.length > 0
