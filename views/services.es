@@ -155,10 +155,10 @@ remote.getCurrentWebContents().on('dom-ready', () => {
         document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/";
       `)
     }
+    if (config.get('poi.disableNetworkAlert', false)) {
+      $('kan-game webview').executeJavaScript('DMM.netgame.reloadDialog=function(){}')
+    }
   })
-  if (config.get('poi.disableNetworkAlert', false)) {
-    $('kan-game webview').executeJavaScript('DMM.netgame.reloadDialog=function(){}')
-  }
   $('kan-game webview').addEventListener('new-window', (e) => {
     const exWindow = WindowManager.createWindow({
       realClose: true,
@@ -188,8 +188,8 @@ window.addEventListener('touchend', (e) => {
       document.activeElement.blur()
       e.target.focus()
       if (!isMoved) {
-        let x = Math.round(e.changedTouches[0].clientX),
-            y = Math.round(e.changedTouches[0].clientY)
+        const x = Math.round(e.changedTouches[0].clientX),
+          y = Math.round(e.changedTouches[0].clientY)
         webContents.sendInputEvent({
           type: 'mouseMove',
           x: x,
