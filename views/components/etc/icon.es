@@ -15,11 +15,6 @@ const pngAvailableList = {}
 class iconConf {
   constructor() {
     this.callbacks = new Map()
-    config.on('config.set', (path, val) => {
-      if (path === 'poi.useSVGIcon') {
-        this.setConf(val)
-      }
-    })
   }
   setConf = (val) => {
     this.callbacks.forEach((f) => f(val))
@@ -33,6 +28,12 @@ class iconConf {
 }
 
 const iconConfSetter = window.iconConfSetter = new iconConf()
+
+config.on('config.set', (path, val) => {
+  if (path === 'poi.useSVGIcon') {
+    iconConfSetter.setConf(val)
+  }
+})
 
 export class SlotitemIcon extends React.Component {
   static propTypes = {
