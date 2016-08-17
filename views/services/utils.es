@@ -263,12 +263,12 @@ const postEnableProcess = (plugin) => {
 
 function clearPluginCache(packagePath) {
   for (const path in module._cache) {
-    if (path.startsWith(packagePath)) {
+    if (path.includes(packagePath)) {
       delete module._cache[path]
     }
   }
   for (const path in module._pathCache) {
-    if (path.startsWith(packagePath)) {
+    if (path.includes(packagePath)) {
       delete module._pathCache[path]
     }
   }
