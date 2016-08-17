@@ -24,7 +24,8 @@ export default connect(
   getMapText(mapData) {
     if (!mapData)
       return __('Not in sortie')
-    const {api_eventmap} = mapData[0]
+    const map = mapData[0]
+    const api_eventmap = map.api_eventmap
     const {api_maparea_id, api_no} = mapData[1]
     const rank = api_eventmap ? api_eventmap.api_selected_rank : null
     const mapName = `${api_maparea_id}-${api_no}` +

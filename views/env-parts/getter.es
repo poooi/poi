@@ -102,7 +102,7 @@ Object.defineProperty(window, '_ndock', {get: () => {
   return ret
 }})
 Object.defineProperty(window, '_eventMapRanks', {get: () => {
-  return map(window.getStore('info.maps'), 'api_selected_rank')
+  return mapValues(window.getStore('info.maps'), (m) => get(m, 'api_eventmap.api_selected_rank'))
 }})
 
 const initShips = (dispatch, current, previous) => {
