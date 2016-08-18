@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
-import { get, set } from 'lodash'
+import { get, set, debounce } from 'lodash'
 import { remote } from 'electron'
 
 import { middleware as promiseActionMiddleware } from './middlewares/promise-action'
@@ -21,15 +21,23 @@ const storeCache = (function() {
 
 //### Utils ###
 
+const setLocalStorage = (current, previous, path) => {
+  if (!window.isMain) {
+    return
+  }
+  process.nextTick(() => {
+    set(storeCache, path, current)
+    localStorage.setItem(cachePosition, JSON.stringify(storeCache))
+  })
+}
+
+const setLocalStorageDebounced = debounce(setLocalStorage, 5000)
+
 function autoCacheObserver(store, path) {
   return observer(
     (state) => get(state, path),
     (dispatch, current, previous) => {
-      set(storeCache, path, current)
-      // TODO: Here's a potential performance problem where this setItem
-      // will be called multiple times if more than one targetPath
-      // is modified in one action.
-      localStorage.setItem(cachePosition, JSON.stringify(storeCache))
+      setLocalStorageDebounced(current, previous, path)
     }
   )
 }
