@@ -15,10 +15,6 @@ window.onclick = (e) => {
 }
 
 // Faster align setting
-if (window.location.toString() !== "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/") {
-  return
-}
-
 const webFrame = electron.webFrame
 
 const alertCSS =
@@ -45,6 +41,9 @@ window.align = Promise.coroutine(function* () {
   zoom = zoom / 800
   webFrame.setZoomFactor(zoom)
   window.scrollTo(0, 0)
+  if (!window.location.toString().includes("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/")) {
+    return
+  }
   alignCSS.innerHTML =
   `html {
     overflow: hidden;
@@ -90,11 +89,11 @@ document.addEventListener("DOMContentLoaded", (e) => {
     if (!path.includes('/kcs/')) {
       return
     }
-    const iframe = document.querySelector('#game_frame')
-    const flash = iframe.contentWindow.document.querySelector('#externalswf').cloneNode(true)
+    const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
+    const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
     flash.setAttribute('quality', flashQuality)
-    iframe.contentWindow.document.querySelector('#externalswf').remove()
-    iframe.contentWindow.document.querySelector('#flashWrap').appendChild(flash)
+    iframeDoc.querySelector('#externalswf').remove()
+    iframeDoc.querySelector('#flashWrap').appendChild(flash)
     proxy.removeListener('network.on.request', setQuality)
   }
   proxy.addListener('network.on.request', setQuality)
