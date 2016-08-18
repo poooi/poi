@@ -21,12 +21,11 @@ const storeCache = (function() {
 
 //### Utils ###
 
-const setLocalStorage = (current, previous, path) => {
+const setLocalStorage = () => {
   if (!window.isMain) {
     return
   }
   process.nextTick(() => {
-    set(storeCache, path, current)
     localStorage.setItem(cachePosition, JSON.stringify(storeCache))
   })
 }
@@ -37,7 +36,8 @@ function autoCacheObserver(store, path) {
   return observer(
     (state) => get(state, path),
     (dispatch, current, previous) => {
-      setLocalStorageDebounced(current, previous, path)
+      set(storeCache, path, current)
+      setLocalStorageDebounced()
     }
   )
 }
