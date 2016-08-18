@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import classnames from 'classnames'
 import React from 'react'
+import remote from 'electron'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
@@ -27,12 +28,18 @@ class iconConf {
   }
 }
 
-const iconConfSetter = window.iconConfSetter = new iconConf()
+const iconConfSetter = new iconConf()
 
-config.on('config.set', (path, val) => {
+const setIcon = (path, val) => {
   if (path === 'poi.useSVGIcon') {
     iconConfSetter.setConf(val)
   }
+}
+
+config.addListener('config.set', setIcon)
+
+window.addEventListener('unload', (e) => {
+  config.removeListener('config.set', setIcon)
 })
 
 export class SlotitemIcon extends React.Component {
