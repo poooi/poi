@@ -13,8 +13,8 @@ const { Component } = React
 import { PaneBodyMini } from './minishippane'
 import { fleetNameSelectorFactory, fleetStateSelectorFactory } from 'views/utils/selectors'
 
-function getStyle(state) {
-  if (state >= 0 && state <= 5)
+function getStyle(state, disabled) {
+  if (state >= 0 && state <= 5 && !disabled)
     // 0: Cond >= 40, Supplied, Repaired, In port
     // 1: 20 <= Cond < 40, or not supplied, or medium damage
     // 2: Cond < 20, or heavy damage
@@ -40,11 +40,12 @@ const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
 const ShipViewSwitchButton = connect(
   (state, {fleetId}) =>
     shipViewSwitchButtonDataSelectorFactory(fleetId)(state)
-)(({fleetId, activeFleetId, fleetState, onClick}) =>
+)(({fleetId, activeFleetId, fleetState, onClick, disabled}) =>
   <Button
     bsSize="xsmall"
-    bsStyle={getStyle(fleetState)}
+    bsStyle={getStyle(fleetState, disabled)}
     onClick={onClick}
+    disabled={disabled}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
     {fleetNames[fleetId]}
@@ -53,10 +54,12 @@ const ShipViewSwitchButton = connect(
 
 export default connect((state, props) => ({
   enableTransition: get(state, 'config.poi.transition.enable', true),
+  fleetCount: get(state, 'info.fleets.length', 4),
 })
 )(class MiniShip extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
+    fleetCount: PropTypes.number.isRequired,
     activeFleetId: PropTypes.number.isRequired,
   }
 
@@ -100,6 +103,7 @@ export default connect((state, props) => ({
                 <ShipViewSwitchButton
                   key={i}
                   fleetId={i}
+                  disabled={i + 1 > this.props.fleetCount}
                   onClick={this.handleClick.bind(this, i)}
                   activeFleetId={this.props.activeFleetId}
                   />

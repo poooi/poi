@@ -18,8 +18,8 @@ import {
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
 
-function getStyle(state) {
-  if (state >= 0 && state <= 5)
+function getStyle(state, disabled) {
+  if (state >= 0 && state <= 5 && !disabled)
     // 0: Cond >= 40, Supplied, Repaired, In port
     // 1: 20 <= Cond < 40, or not supplied, or medium damage
     // 2: Cond < 20, or heavy damage
@@ -45,11 +45,12 @@ const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
 const ShipViewSwitchButton = connect(
   (state, {fleetId}) =>
     shipViewSwitchButtonDataSelectorFactory(fleetId)(state)
-)(({fleetId, activeFleetId, fleetName, fleetState, onClick}) =>
+)(({fleetId, activeFleetId, fleetName, fleetState, onClick, disabled}) =>
   <Button
     bsSize="small"
-    bsStyle={getStyle(fleetState)}
+    bsStyle={getStyle(fleetState, disabled)}
     onClick={onClick}
+    disabled={disabled}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
     {fleetName || defaultFleetNames[fleetId]}
@@ -65,7 +66,7 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
   }))
 )
 const FleetShipView = connect(
-  (state, {fleetId}) => 
+  (state, {fleetId}) =>
     fleetShipViewDataSelectorFactory(fleetId)(state)
 )(({fleetId, shipsId}) =>
   <div>
@@ -91,10 +92,12 @@ const FleetShipView = connect(
 
 const ShipView = connect((state, props) => ({
   enableTransition: get(state, 'config.poi.transition.enable', true),
+  fleetCount: get(state, 'info.fleets.length', 4),
 })
 )(class ShipView extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
+    fleetCount: PropTypes.number.isRequired,
     activeFleetId: PropTypes.number.isRequired,
   }
 
@@ -137,6 +140,7 @@ const ShipView = connect((state, props) => ({
               <ShipViewSwitchButton
                 key={i}
                 fleetId={i}
+                disabled={i + 1 > this.props.fleetCount}
                 onClick={this.handleClick.bind(this, i)}
                 activeFleetId={this.props.activeFleetId}
                 />
