@@ -9,6 +9,7 @@ import ControlledTabArea from './tabarea'
 import { PoiAlert } from './components/info/alert'
 import PoiMapReminder from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
+import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 
 const {ROOT, EXROOT, $} = window
@@ -63,4 +64,5 @@ ReactDOM.render(
   $('poi-nav-tabs')
 )
 ReactDOM.render(<ModalTrigger />, $('poi-modal-trigger'))
+ReactDOM.render(<Toastr />, $('poi-toast-trigger'))
 ReactDOM.render(<CustomCssInjector />, $('poi-css-injector'))
