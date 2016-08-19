@@ -118,7 +118,7 @@ const copyIfSame = window.copyIfSame = (obj, to) => {
 //   grand-properties will be deleted.
 // - If a property is updated, all its grand-properties will be new ones,
 //   even if the grand-property itself isEqual.
-const compareUpdate = window.compareUpdate = (prevState, newState, depth=1) => {
+const compareUpdate = window.compareUpdate = (prevState, newState, depth=1, deleteNotExist=false) => {
   if (typeof prevState !== typeof newState)
     return newState
   if (prevState === newState)
@@ -138,6 +138,16 @@ const compareUpdate = window.compareUpdate = (prevState, newState, depth=1) => {
         prevState[k] = newV
     }
   })
+  if (deleteNotExist) {
+    if (prevState instanceof Array && newState instanceof Array && prevState.length > newState.length) {
+      prevState.length = newState
+    }
+    forEach(prevState, (v, k) => {
+      if (typeof newState[k] === "undefined") {
+        delete prevState[k]
+      }
+    })
+  }
   return prevState
 }
 /* TEST
