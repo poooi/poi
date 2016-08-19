@@ -116,6 +116,14 @@ function simulateBattle(state, isCombined, isWater, body) {
     else
       raigekiAttack(sortieHp, enemyHp, body.api_opening_atack)
   }
+  // Opening ASW
+  if (body.api_opening_taisen != null) {
+    if (isCombined) {
+      hougekiAttack(combinedHp, enemyHp, body.api_opening_taisen)
+    } else {
+      hougekiAttack(sortieHp, enemyHp, body.api_opening_taisen)
+    }
+  }
   // Night battle
   if (body.api_hougeki != null) {
     if (isCombined)
