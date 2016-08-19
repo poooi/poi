@@ -1,4 +1,6 @@
 import {combineReducers} from 'redux'
+import reduceReducers from 'reduce-reducers'
+import { get, pick } from 'lodash'
 
 import {reducer as basic} from './basic'
 import {reducer as ships} from './ships'
@@ -10,14 +12,26 @@ import {reducer as resources} from './resources'
 import {reducer as maps} from './maps'
 import {reducer as quests} from './quests'
 
-export const reducer = combineReducers({
-  basic,
-  ships,
-  fleets,
-  equips,
-  repairs,
-  constructions,
-  resources,
-  maps,
-  quests,
-})
+export const reducer = reduceReducers(
+  (state, action) => {
+    if (action.type === '@@Response/kcsapi/api_get_member/require_info') {
+      const oldAdmiralId = get(state, 'basic.api_member_id')
+      const admiralId = action.body.api_basic.api_member_id
+      if (oldAdmiralId != admiralId) {
+        return pick(state, ['basic'])
+      }
+    }
+    return state
+  },
+  combineReducers({
+    basic,
+    ships,
+    fleets,
+    equips,
+    repairs,
+    constructions,
+    resources,
+    maps,
+    quests,
+  }),
+)
