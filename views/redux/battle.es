@@ -65,7 +65,7 @@ function hougekiAttack(sortieHp, enemyHp, hougeki) {
       return
     hougeki.api_damage[i].forEach((damage, j) => {
       damage = Math.floor(damage)
-      let damageTo = hougeki.api_df_list[i][j]
+      const damageTo = hougeki.api_df_list[i][j]
       if (damage <= 0)
         return
       if (damageTo < 7)
@@ -78,6 +78,14 @@ function hougekiAttack(sortieHp, enemyHp, hougeki) {
 
 function simulateBattle(state, isCombined, isWater, body) {
   const {sortieHp, enemyHp, combinedHp} = state
+  // Land base
+  if (body.api_air_base_attack != null ) {
+    for (const air_attack of body.api_air_base_attack) {
+      if (air_attack.api_stage3 != null) {
+        koukuAttack(sortieHp, enemyHp, air_attack.api_stage3)
+      }
+    }
+  }
   // First air battle
   if (body.api_kouku != null) {
     if (body.api_kouku.api_stage3 != null)
