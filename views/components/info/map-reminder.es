@@ -53,7 +53,7 @@ export default connect(
     const {mapHp, mapData} = this.props
     const isFinalAttack = this.isFinalAttack()
     if (isFinalAttack) {
-      toast(__('It\'s final stage'), {
+      toast(__('Possible final stage'), {
         type: 'warning',
         title: __('Sortie'),
       })
