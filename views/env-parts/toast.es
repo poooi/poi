@@ -1,3 +1,13 @@
+/*
+ * Options:
+ *   title: string. message title.
+ *   timeOut: int. How long the toast will display without user interaction
+ *   extendedTimeOut: int. How long the toast will display after a user hovers over it
+ *   closeButton: bool.
+ *   preventDuplicates: bool.
+ *   showAnimation, hideAnimation: string. available options can be found in views/components/info/assets/toast-animate.css
+ */
+
 let toastTrigger = null
 const toastList = []
 window.toastInitializer = (target) => {
