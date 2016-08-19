@@ -27,7 +27,7 @@ function getDeckState(shipsData=[], inBattle, inExpedition, inRepairShipsId) {
     state = Math.max(state, 5)
   if (inExpedition)
     state = Math.max(state, 4)
-  shipsData.forEach(([ship, $ship]) => {
+  shipsData.forEach(([ship, $ship]=[]) => {
     if (!ship || !$ship)
       return
     // Cond < 20 or medium damage
