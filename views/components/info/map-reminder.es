@@ -10,7 +10,8 @@ import {
   extensionSelectorFactory,
 } from 'views/utils/selectors'
 
-const __ = window.i18n.others.__.bind(window.i18n.others)
+const {i18n, toast} = window
+const __ = i18n.others.__.bind(i18n.others)
 
 // Map Reminder
 export default connect(
@@ -50,7 +51,14 @@ export default connect(
 
   render() {
     const {mapHp, mapData} = this.props
-    const finalText = this.isFinalAttack() ? 'Final' : ''
+    const isFinalAttack = this.isFinalAttack()
+    if (isFinalAttack) {
+      toast(__('It\'s final stage'), {
+        type: 'warning',
+        title: __('Sortie'),
+      })
+    }
+    const finalText = isFinalAttack ? __('Final') : ''
     return (
       <div>
         {
