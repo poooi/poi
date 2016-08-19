@@ -10,7 +10,7 @@ import npm from 'npm'
 import { promisify } from 'bluebird'
 
 import { extendReducer } from 'views/create-store'
-const {ROOT, config, language, notify, MODULE_PATH} = window
+const {ROOT, config, language, toast, MODULE_PATH} = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -301,12 +301,10 @@ const notifyFailed = (state) => {
     unreadList.push(plugin.name)
   }
   if (unreadList.length > 0) {
-    const content = `${unreadList.join(' ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
-    notify(content, {
-      type: 'plugin error',
+    const content = `${unreadList.join(' / ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
+    toast(content, {
+      type: 'error',
       title: __('Plugin error'),
-      icon: join(ROOT, 'assets', 'img', 'material', '7_big.png'),
-      audio: `file://${ROOT}/assets/audio/fail.mp3`,
     })
   }
 }

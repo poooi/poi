@@ -69,6 +69,7 @@
     "react-fontawesome": "^1.0.0",
     "react-redux": "^4.4.5",
     "react-safe-render": "^2.0.0",
+    "react-toastr": "^2.8.0",
     "reduce-reducers": "^0.1.2",
     "redux": "^3.5.2",
     "redux-observers": "^2.0.1",

@@ -27,6 +27,31 @@ const getFlexCSS = ({layout, webviewWidth}) => {
   return ''
 }
 
+const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
+  if (webviewWidth === 0) {
+    return `
+      .toast-poi {
+        bottom: 12px;
+        right: 12px;
+      }
+    `
+  } else if (layout === 'horizontal') {
+    return `
+      .toast-poi {
+        bottom: ${(window.innerHeight - webviewHeight - 30) / 2 + 36}px;
+        right: ${(window.innerWidth - webviewWidth) + 12}px;
+      }
+    `
+  } else {
+    return `
+      .toast-poi {
+        bottom: ${(window.innerHeight - webviewHeight - 30) + 36}px;
+        right: ${(window.innerWidth - webviewWidth) / 2 + 12}px;
+      }
+    `
+  }
+}
+
 const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel}) => {
   // Apply css
   additionalStyle.innerHTML = `
@@ -50,6 +75,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
       height: ${webviewHeight}px !important;
     }
     ${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}
+    ${getToastCSS({webviewWidth: webviewWidth, webviewHeight: webviewHeight, layout: layout})}
   `
 
   // Resize when window size smaller than webview size
