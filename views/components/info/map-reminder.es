@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { ProgressBar } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
+  extensionSelectorFactory,
 } from 'views/utils/selectors'
 
 const __ = window.i18n.others.__.bind(window.i18n.others)
@@ -15,25 +17,40 @@ export default connect(
   createSelector([
     sortieMapDataSelector,
     sortieMapHpSelector,
-  ], (mapData, mapHp) => ({
-    inSortieMapData: mapData,
-    inSortieMapHp: mapHp,
+    extensionSelectorFactory('poi-plugin-map-hp'),
+  ], (mapData, mapHp, pluginMapHpData={}) => ({
+    mapId: get(mapData, '0.api_id'),
+    rank: get(mapData, '0.api_eventmap.api_selected_rank'),
+    mapData,
+    mapHp,
+    finalHps: pluginMapHpData.finalHps || {},
   }))
 )(class MapReminder extends Component {
   static mapRanks = ['', ` ${__('丙')}`, ` ${__('乙')}`, ` ${__('甲')}`]
+
   getMapText(mapData) {
     if (!mapData)
       return __('Not in sortie')
-    const map = mapData[0]
-    const api_eventmap = map.api_eventmap
+    const {rank} = this.props
     const {api_maparea_id, api_no} = mapData[1]
-    const rank = api_eventmap ? api_eventmap.api_selected_rank : null
+
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : this.constructor.mapRanks[rank])
     return `${__('Sortie area')}: ${mapName}`
   }
+
+  isFinalAttack() {
+    const {mapHp, rank, mapId} = this.props
+    if (!mapHp || mapHp[0] == 0)
+      return false
+    const finalHpPostfix = ['', '丙', '乙', '甲'][rank] || ''
+    const finalHp = this.props.finalHps[`${mapId}${finalHpPostfix}`] || 0
+    return finalHp >= mapHp[0]
+  }
+
   render() {
-    const {inSortieMapHp: mapHp, inSortieMapData: mapData} = this.props
+    const {mapHp, mapData} = this.props
+    const finalText = this.isFinalAttack() ? 'Final' : ''
     return (
       <div>
         {
@@ -42,7 +59,7 @@ export default connect(
         }
         <div className='alert alert-default'>
           <span id='map-reminder-area'>
-            {this.getMapText(mapData)}
+            {this.getMapText(mapData) + finalText}
           </span>
         </div>
       </div>

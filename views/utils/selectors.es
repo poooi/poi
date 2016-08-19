@@ -54,6 +54,8 @@ function getMapData(mapId, maps, $maps) {
   return [maps[mapId], $maps[mapId]]
 }
 
+// Returns [nowHp, maxHp, gaugeType]
+// where nowHp === 0 means cleared
 function getMapHp(map, $map) {
   if (!map || !$map)
     return
@@ -61,11 +63,12 @@ function getMapHp(map, $map) {
     const {api_now_maphp, api_max_maphp, api_gauge_type} = map.api_eventmap
     return [api_now_maphp, api_max_maphp, api_gauge_type]
   }
-  const maxHp = $map.api_required_defeat_count
-  if (!maxHp)
+  const maxCount = $map.api_required_defeat_count
+  if (!maxCount)
     return
-  const nowHp = map.api_defeat_count || 0
-  return [nowHp, maxHp, undefined]
+  const nowCount = map.api_defeat_count || maxCount
+  const nowHp = maxCount - nowCount
+  return [nowHp, maxCount, undefined]
 }
 
 //### Selectors ###
