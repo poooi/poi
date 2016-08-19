@@ -58,7 +58,6 @@ export default connect(
         title: __('Sortie'),
       })
     }
-    const finalText = isFinalAttack ? __('Final') : ''
     return (
       <div>
         {
@@ -67,7 +66,7 @@ export default connect(
         }
         <div className='alert alert-default'>
           <span id='map-reminder-area'>
-            {this.getMapText(mapData) + finalText}
+            {this.getMapText(mapData)}
           </span>
         </div>
       </div>
