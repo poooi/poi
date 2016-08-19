@@ -9,7 +9,7 @@ import { promisify, promisifyAll } from 'bluebird'
 import { sortBy, map } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
-const {config, notify, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
+const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
 import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
@@ -268,12 +268,10 @@ class PluginManager extends EventEmitter {
       this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
     ))).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
-      const content = `${map(outdatedList, 'name').join(' ')} ${__("have newer version. Please update your plugins.")}`
-      notify(content, {
-        type: 'others',
+      const content = `${map(outdatedList, 'name').join(' / ')} ${__("have newer version. Please update your plugins.")}`
+      toast(content, {
+        type: 'info',
         title: __('Plugin update'),
-        icon: path.join(ROOT, 'assets', 'img', 'material', '7_big.png'),
-        audio: `file://${ROOT}/assets/audio/update.mp3`,
       })
     }
   }
