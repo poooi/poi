@@ -1,12 +1,18 @@
 let toastTrigger = null
-
+const toastList = []
 window.toastInitializer = (target) => {
   toastTrigger = target
+  for (const [msg, options] of toastList) {
+    window.toast(msg, options)
+  }
 }
 
 window.toast = (msg, options={}) => {
-  if (!msg|| !toastTrigger) {
+  if (!msg) {
     return
+  }
+  if (!toastTrigger) {
+    toastList.push([msg, options])
   }
   const type = options.type || 'info'
   const title = options.title || 'poi'
