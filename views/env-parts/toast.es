@@ -23,6 +23,7 @@ window.toast = (msg, options={}) => {
   }
   if (!toastTrigger) {
     toastList.push([msg, options])
+    return
   }
   const type = options.type || 'info'
   const title = options.title || 'poi'
