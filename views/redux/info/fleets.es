@@ -9,7 +9,7 @@ function mergeIndexifiedFleets(state, body) {
 // Return [fleetId, pos] if found
 // [-1, -1] otherwise
 function findShip(fleets, shipId) {
-  for (let fleetId = 0; fleetId < 4; fleetId++) {
+  for (let fleetId = 0; fleetId < fleets.length; fleetId++) {
     const pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId == shipId)
     if (pos != -1) {
       return [fleetId, pos]
