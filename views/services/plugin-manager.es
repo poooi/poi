@@ -1,4 +1,4 @@
-import path from 'path-extra'
+import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
 import fs from 'fs-extra'
@@ -12,7 +12,19 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './plugin-manager-utils'
+import {
+  installPackage,
+  readPlugin,
+  enablePlugin,
+  disablePlugin,
+  unloadPlugin,
+  notifyFailed,
+  safePhysicallyRemove,
+} from './plugin-manager-utils'
+
+function defaultPluginPath(packageName) {
+  return join(PLUGIN_PATH, 'node_modules', packageName)
+}
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginRoot, mirrorPath) {
@@ -39,7 +51,7 @@ class PluginManager extends EventEmitter {
     this.BROKEN = 3
   }
   getPluginPath(packageName) {
-    return path.join(this.pluginRoot, 'node_modules', packageName)
+    return join(this.pluginRoot, 'node_modules', packageName)
   }
   initialize() {
     this.getConf()
@@ -334,9 +346,9 @@ class PluginManager extends EventEmitter {
     }
     try {
       await promisify(npm.commands.uninstall)([plugin.packageName])
-      if (plugin.pluginPath.includes(PLUGIN_PATH)) {
-        fs.removeSync(plugin.pluginPath)
-      }
+      // Make sure the plugin no longer exists in PLUGIN_PATH
+      // (unless it's a git repo)
+      await safePhysicallyRemove(defaultPluginPath(plugin.packageName))
     } catch (error) {
       console.error(error.stack)
     }
@@ -377,9 +389,9 @@ class PluginManager extends EventEmitter {
 }
 
 const pluginManager = new PluginManager(
-  path.join(ROOT, 'assets', 'data', 'plugin.json'),
+  join(ROOT, 'assets', 'data', 'plugin.json'),
   PLUGIN_PATH,
-  path.join(ROOT, 'assets', 'data', 'mirror.json')
+  join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
 pluginManager.initialize()

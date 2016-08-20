@@ -1,7 +1,7 @@
 import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { accessSync, readJsonSync, realpathSync } from 'fs-extra'
+import { accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
@@ -40,7 +40,7 @@ export function installPackage(packageName, version) {
 }
 
 
-const updateI18n = (plugin) => {
+export function updateI18n(plugin) {
   let i18nFile = null
   if (plugin.i18nDir != null) {
     i18nFile = join(plugin.pluginPath, plugin.i18nDir)
@@ -75,7 +75,7 @@ const updateI18n = (plugin) => {
   return plugin
 }
 
-const readPlugin = (pluginPath) => {
+export function readPlugin(pluginPath) {
   let pluginData, packageData, plugin
   try {
     pluginData = readJsonSync(join(ROOT, 'assets', 'data', 'plugin.json'))
@@ -150,7 +150,7 @@ const readPlugin = (pluginPath) => {
   return plugin
 }
 
-const enablePlugin = (plugin) => {
+export function enablePlugin(plugin) {
   if (plugin.needRollback)
     return plugin
   let pluginMain
@@ -179,7 +179,7 @@ const enablePlugin = (plugin) => {
   return plugin
 }
 
-const disablePlugin = (plugin) => {
+export function disablePlugin(plugin) {
   plugin.enabled = false
   try {
     plugin = unloadPlugin(plugin)
@@ -274,7 +274,7 @@ function clearPluginCache(packagePath) {
   }
 }
 
-const unloadPlugin = (plugin) => {
+export function unloadPlugin(plugin) {
   try {
     if (typeof plugin.pluginWillUnload === 'function') {
       plugin.pluginWillUnload()
@@ -293,7 +293,7 @@ const unloadPlugin = (plugin) => {
   return plugin
 }
 
-const notifyFailed = (state) => {
+export function notifyFailed(state) {
   const plugins = state.filter((plugin) => (plugin.isBroken))
   const unreadList = []
   for (let i = 0; i < plugins.length; i++) {
@@ -309,11 +309,29 @@ const notifyFailed = (state) => {
   }
 }
 
-export {
-  readPlugin,
-  enablePlugin,
-  disablePlugin,
-  unloadPlugin,
-  notifyFailed,
-  updateI18n,
+// Unlink a path if it's a symlink.
+// Do nothing (but logging error) if it's a git repo.
+// Remove the directory otherwise.
+export const safePhysicallyRemove = async (packagePath) => {
+  let packageStat
+  try {
+    packageStat = await promisify(lstat)(packagePath)
+  } catch (e) {
+    // No longer exists
+    return
+  }
+  // If it's a symlink, unlink it
+  if (packageStat.isSymbolicLink()) {
+    return await promisify(unlink)(packagePath)
+  }
+  // If it's a git repo, log error and do nothing
+  try {
+    const gitStat = await promisify(lstat)(join(packagePath, '.git'))
+    if (gitStat.isDirectory()) {
+      console.error(`${packagePath} appears to be a git repository. For the safety of your files in development, please use 'npm link' to install plugins from github.`)
+      return 
+    }
+  } catch (e) {
+    return await promisify(rmdir)(packagePath)
+  }
 }
