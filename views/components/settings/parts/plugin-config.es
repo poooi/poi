@@ -64,12 +64,7 @@ class PluginSettingWrap extends Component {
 //   }
 // }
 
-const InstalledPlugin = connect((state, props) => ({
-  plugin: props.plugin,
-  handleUpdate: props.handleUpdate,
-  handleEnable: props.handleEnable,
-  handleRemove: props.handleRemove,
-}))(class installedPlugin extends Component {
+class InstalledPlugin extends Component {
   static propTypes = {
     plugin: React.PropTypes.object,
     handleUpdate: React.PropTypes.func,
@@ -226,7 +221,7 @@ const InstalledPlugin = connect((state, props) => ({
       </Row>
     )
   }
-})
+}
 
 class UninstalledPlugin extends Component {
   static propTypes = {
