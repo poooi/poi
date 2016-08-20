@@ -175,7 +175,6 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 let transformedToMouseEvent = false, isMoved = false
 const webContents = remote.getCurrentWebContents()
 window.addEventListener('touchend', (e) => {
-  isMoved = false
   transformedToMouseEvent = false
   setTimeout(() => {
     if (!transformedToMouseEvent) {
@@ -207,6 +206,9 @@ window.addEventListener('touchend', (e) => {
       }
     }
   }, 300)
+})
+window.addEventListener('touchstart', (e) => {
+  isMoved = false
 })
 window.addEventListener('touchmove', (e) => {
   isMoved = true
