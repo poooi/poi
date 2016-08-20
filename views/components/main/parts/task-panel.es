@@ -161,7 +161,7 @@ const TaskRow = connect(
   })
 )(function ({idx, quest, record, translation}) {
   const questName = quest ? quest.api_title : '???'
-  const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '\n') : '...'
+  const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
     getStyleByPercent(count / required) :
