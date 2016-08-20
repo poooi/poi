@@ -12,7 +12,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
 
-import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './utils'
+import { installPackage, readPlugin, enablePlugin, disablePlugin, unloadPlugin, notifyFailed } from './plugin-manager-utils'
 
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginRoot, mirrorPath) {
