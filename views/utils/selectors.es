@@ -21,6 +21,18 @@ export const createDeepCompareArraySelector = createSelectorCreator(
   deepCompareArray
 )
 
+// This wrapper prevents different array (in terms of ===) being returned 
+// despite having the same elements
+function arrayResultWrapper(selector) {
+  return createDeepCompareArraySelector(selector, (result) => result)
+}
+
+function safeConcat(array, arg) {
+  if (!array || !array.concat)
+    return
+  return array.concat(arg)
+}
+
 function getDeckState(shipsData=[], inBattle, inExpedition, inRepairShipsId) {
   let state = 0
   if (inBattle)
@@ -99,11 +111,13 @@ export const condTickSelector = (state) => state.timers.cond.tick
 
 // Returns [shipId for every ship in repair]
 // Returns undefined if uninitialized
-export const inRepairShipsIdSelector = createSelector(repairsSelector, (repairs) => {
-  if (!repairs)
-    return
-  return map(repairs.filter((repair) => repair.api_state == 1), 'api_ship_id')
-})
+export const inRepairShipsIdSelector = arrayResultWrapper(createSelector(repairsSelector,
+  (repairs) => {
+    if (!repairs)
+      return
+    return map(repairs.filter((repair) => repair.api_state == 1), 'api_ship_id')
+  }
+))
 
 
 export const fleetSelectorFactory = memoize((fleetId) => 
@@ -113,11 +127,11 @@ export const fleetSelectorFactory = memoize((fleetId) =>
 // Returns [shipId] of this fleet
 // Returns undefined if fleet not found
 export const fleetShipsIdSelectorFactory = memoize((fleetId) => 
-  createSelector(fleetSelectorFactory(fleetId), (fleet) => {
+  arrayResultWrapper(createSelector(fleetSelectorFactory(fleetId), (fleet) => {
     if (fleet == null)
       return
     return fleet.api_ship.filter((n) => n != -1)
-  })
+  }))
 )
 
 export const fleetInBattleSelectorFactory = memoize((fleetId) => 
@@ -199,12 +213,12 @@ const shipOnSlotSelectorFactory = memoize((shipId) =>
 // Slot is padded with -1 for each empty slot
 // Returns undefined if ship is undefined
 const shipEquipsIdSelectorFactory = memoize((shipId) =>
-  createSelector([
+  arrayResultWrapper(createSelector([
     shipSlotSelectorFactory(shipId),
     shipExslotSelectorFactory(shipId),
   ], (slot, exslot) =>
     slot ? slot.slice(0, 4).concat(exslot).map((i) => parseInt(i)) : undefined
-  )
+  ))
 )
 
 const equipBaseDataSelectorFactory = memoize((equipId) =>
@@ -230,12 +244,6 @@ export const equipDataSelectorFactory = memoize((equipId) =>
   })
 )
 
-function safeConcat(array, arg) {
-  if (!array || !array.concat)
-    return
-  return array.concat(arg)
-}
-
 function effectiveEquips(equipArray, slotnum) {
   equipArray.splice(slotnum, equipArray.length-slotnum-1)
   return equipArray
@@ -245,10 +253,9 @@ function effectiveEquips(equipArray, slotnum) {
 //   where onslot is the number of airplanes left as in api_onslot
 // length is always slotnum+1, which is all slots plus exslot
 // Slot is padded with undefined for being empty or not fount in _equips
-// Slot is [_equip] for those not found in $equips
-// Returns undefined if anything is undefined
+// Returns undefined if _equips or $equips is undefined
 export const shipEquipDataSelectorFactory = memoize((shipId) => 
-  createDeepCompareArraySelector([
+  arrayResultWrapper(createSelector([
     stateSelector,
     shipSlotnumSelectorFactory(shipId),
     shipEquipsIdSelectorFactory(shipId),
@@ -263,19 +270,19 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
           : safeConcat(equipDataSelectorFactory(equipId)(state), onslot)
         ), slotnum
       )
-  )
+  ))
 )
 
 // Return [map, $map] or undefined
 export const mapDataSelectorFactory = memoize((mapId) =>
-  createSelector([
+  arrayResultWrapper(createSelector([
     mapsSelector,
     constSelector,
   ], (maps, {$maps}) => {
     if (!maps[mapId] || !$maps[mapId])
       return
     return [maps[mapId], $maps[mapId]]
-  })
+  }))
 )
 
 export const sortieMapIdSelector = createSelector(sortieSelector,
@@ -298,23 +305,23 @@ export const sortieMapHpSelector = createSelector(sortieMapDataSelector,
 // A ship not found in _ships is filled with []
 // A ship not found in $ships is filled with [_ship, undefined]
 export const fleetShipsDataSelectorFactory = memoize((fleetId) =>
-  createDeepCompareArraySelector([
+  arrayResultWrapper(createSelector([
     stateSelector,
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
     !fleetShipsId ? undefined :
     fleetShipsId.map((shipId) => shipDataSelectorFactory(shipId)(state))
-  )
+  ))
 )
 
 // Returns [ [_equip, $equip] for ship in thisFleet]
 // See shipDataToEquipData
 export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
-  createDeepCompareArraySelector([
+  arrayResultWrapper(createSelector([
     stateSelector,
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
     !fleetShipsId ? undefined :
     fleetShipsId.map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
-  )
+  ))
 )
