@@ -12,6 +12,7 @@ import {
 
 const {i18n, toast} = window
 const __ = i18n.others.__.bind(i18n.others)
+const emptyFinalHps = {}
 
 // Map Reminder
 export default connect(
@@ -24,7 +25,7 @@ export default connect(
     rank: get(mapData, '0.api_eventmap.api_selected_rank'),
     mapData,
     mapHp,
-    finalHps: pluginMapHpData.finalHps || {},
+    finalHps: pluginMapHpData.finalHps || emptyFinalHps,
   }))
 )(class MapReminder extends Component {
   static mapRanks = ['', ` ${__('丙')}`, ` ${__('乙')}`, ` ${__('甲')}`]
