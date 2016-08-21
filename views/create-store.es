@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
 import { get, set, debounce } from 'lodash'
@@ -45,15 +45,26 @@ function autoCacheObserver(store, path) {
 
 //### Executing code ###
 
-export const store = createStore(
-  reducerFactory(),
-  storeCache,
-  applyMiddleware(
-    promiseActionMiddleware,
-    thunk
-  ),
-  window.devToolsExtension && window.dbg.isEnabled() ? window.devToolsExtension() : f => f
-)
+export const store = window.dbg.isEnabled() ?
+  createStore(
+    reducerFactory(),
+    storeCache,
+    compose(
+      applyMiddleware(
+        promiseActionMiddleware,
+        thunk
+      ),
+      window.devToolsExtension ? window.devToolsExtension() : f => f,
+    )
+  )
+  :createStore(
+    reducerFactory(),
+    storeCache,
+    applyMiddleware(
+      promiseActionMiddleware,
+      thunk
+    ),
+  )
 window.dispatch = store.dispatch
 
 //### Listeners and exports ###
