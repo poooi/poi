@@ -52,6 +52,7 @@ export const store = createStore(
     promiseActionMiddleware,
     thunk
   ),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
 )
 window.dispatch = store.dispatch
 
