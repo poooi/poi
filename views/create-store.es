@@ -1,8 +1,10 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
 import { get, set, debounce } from 'lodash'
 import { remote } from 'electron'
+import { batchedSubscribe } from 'redux-batched-subscribe'
+import { unstable_batchedUpdates as batchedUpdates } from 'react-dom'
 
 import { middleware as promiseActionMiddleware } from './middlewares/promise-action'
 import { reducerFactory, onConfigChange } from './redux'
@@ -45,14 +47,30 @@ function autoCacheObserver(store, path) {
 
 //### Executing code ###
 
-export const store = createStore(
-  reducerFactory(),
-  storeCache,
-  applyMiddleware(
-    promiseActionMiddleware,
-    thunk
-  ),
-)
+export const store = window.dbg.isEnabled() ?
+  createStore(
+    reducerFactory(),
+    storeCache,
+    compose(
+      applyMiddleware(
+        promiseActionMiddleware,
+        thunk,
+      ),
+      batchedSubscribe(batchedUpdates),
+      window.devToolsExtension ? window.devToolsExtension() : f => f,
+    )
+  )
+  :createStore(
+    reducerFactory(),
+    storeCache,
+    compose(
+      applyMiddleware(
+        promiseActionMiddleware,
+        thunk,
+      ),
+      batchedSubscribe(batchedUpdates),
+    )
+  )
 window.dispatch = store.dispatch
 
 //### Listeners and exports ###
