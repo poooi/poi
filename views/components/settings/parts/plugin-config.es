@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
+import shallowCompare from 'react-addons-shallow-compare'
 
 import PluginManager from 'views/services/plugin-manager'
 import Divider from './divider'
@@ -13,7 +14,7 @@ import Divider from './divider'
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const {dialog} = remote.require('electron')
-const {config, PLUGIN_PATH} = window
+const {PLUGIN_PATH} = window
 const {Component} = React
 
 const openLink = (link, e) => {
@@ -24,7 +25,7 @@ class PluginSettingWrap extends Component {
   static propTypes = {
     plugin: React.PropTypes.object,
   }
-  shouldComponentUpdate = (nextProps, nextState) => (false)
+  shouldComponentUpdate = (nextProps, nextState) => (this.props.plugin.timestamp !== nextProps.plugin.timestamp)
   render() {
     return (React.createElement(this.props.plugin.settingsClass))
   }
@@ -76,6 +77,9 @@ class InstalledPlugin extends Component {
   }
   toggleSettingPop = () => {
     this.setState({settingOpen: !this.state.settingOpen})
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
   render() {
     const plugin = this.props.plugin
@@ -230,6 +234,9 @@ class UninstalledPlugin extends Component {
     npmWorking: React.PropTypes.bool,
     handleInstall: React.PropTypes.func,
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
   render() {
     const plugin = this.props.plugin
     const installButtonText = this.props.installing ? `${__('Installing')}` : `${__('Install')}`
@@ -284,6 +291,9 @@ class InstallByNameInput extends Component {
     handleManuallyInstall: React.PropTypes.func,
     manuallyInstallStatus: React.PropTypes.number,
     npmWorking: React.PropTypes.bool,
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
   state = {
     manuallyInstallPackage: '',
