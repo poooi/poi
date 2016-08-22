@@ -12,6 +12,8 @@ import { reducer as alert } from './alert'
 import { reducer as plugins } from './plugins'
 import misc from './misc'
 
+const emptyObject = {}
+
 // === Utils ===
 
 // === Root reducer ===
@@ -30,7 +32,7 @@ function secureExtensionConfig(extensionConfig) {
         }
       }
     } else {
-      return () => ({})
+      return () => emptyObject
     }
   })
 }
@@ -47,7 +49,7 @@ export function reducerFactory(extensionConfig) {
     alert,
     plugins,
     misc,
-    ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => ({})),
+    ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
   })
 }
 
