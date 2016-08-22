@@ -1,10 +1,10 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { remote } from 'electron'
 import { debounce } from 'lodash'
 
 const {$, config} = window
 const {Component} = React
+const __ = window.i18n.others.__.bind(window.i18n.others)
 
 const alertStyle = document.createElement('style')
 const historyStyle = document.createElement('style')
@@ -26,18 +26,37 @@ historyStyle.innerHTML = `
     pointer-events: 'none';
   }
 `
+
 remote.getCurrentWindow().webContents.on('dom-ready', function(e) {
   document.body.appendChild(alertStyle)
   document.body.appendChild(historyStyle)
 })
 
-export const PoiAlert = connect((state, props) => ({
-  history: state.alert.history,
-  current: state.alert.current,
-}))(class poiAlert extends Component {
+const initState = {
+  overflow: false,
+  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
+  current: {
+    type: 'default',
+    content: __('Waiting for response...'),
+    priority: 0,
+    options: {
+      dontReserve: true,
+    },
+  },
+}
+
+let stickyEnd = Date.now()
+
+const pushToHistory = (history, toPush) => {
+  history.push(<div key={Date.now()} className={`alert alert-${toPush.type} alert-history-contents`}>{toPush.content}</div>)
+  if (history.length > 5) {
+    history.shift()
+  }
+  return history
+}
+
+export const PoiAlert = class poiAlert extends Component {
   static propTypes = {
-    history: React.PropTypes.array,
-    current: React.PropTypes.object,
   }
   constructor(props) {
     super(props)
@@ -45,10 +64,11 @@ export const PoiAlert = connect((state, props) => ({
     this.msgWidth = 0
     this.alertHeight = 30
     this.historyHeight = 152
-    this.state = {
-      overflow: false,
-    }
+    this.state = initState
   }
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return nextState !== this.state
+  } 
   toggleHistory = () => {
     this.showHistory = !this.showHistory
     historyStyle.innerHTML = `
@@ -100,6 +120,36 @@ export const PoiAlert = connect((state, props) => ({
       `
     }, 100)
   }
+  handleAddAlert = (e) => {
+    const value = Object.assign({
+      type: 'default',
+      content: '',
+      priority: 0,
+    }, e.detail)
+    if (typeof value.options !== 'object') {
+      value.options = {}
+    }
+    let { history, current } = this.state
+    if (value.priority < current.priority && Date.now() < stickyEnd) {
+      // Old message has higher priority, push new message to history
+      history = pushToHistory(history, value)
+      this.setState({ history })
+    } else if (!current.options.dontReserve) {
+      // push old message to history
+      history = pushToHistory(history, current)
+      stickyEnd = Date.now() + (value.stickyFor || 3000)
+      this.setState({
+        history: history,
+        current: value,
+        overflow: false,
+      })
+    } else {
+      this.setState({
+        current: value,
+        overflow: false,
+      })
+    }
+  }
   handleOverflow = () => {
     const containerWidth = $('poi-alert').offsetWidth
     if (!this.state.overflow) {
@@ -115,11 +165,6 @@ export const PoiAlert = connect((state, props) => ({
     }
   }
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.props.current.content !== prevProps.current.content) {
-      if (this.state.overflow) {
-        this.setState({overflow: false})
-      }
-    }
     this.handleStyleChange()
   }
   componentDidMount = () => {
@@ -138,12 +183,14 @@ export const PoiAlert = connect((state, props) => ({
     }
     this.handleOverflowDebounced = debounce(this.handleOverflow, 100)
     this.observer.observe(target, options)
+    window.addEventListener('alert.new', this.handleAddAlert)
     window.addEventListener('resize', this.handleOverflowDebounced)
     window.addEventListener('alert.change', this.handleOverflow)
     this.handleStyleChange()
   }
   componentWillUnmount = () => {
     config.removeListener('config.set', this.handleStyleChange)
+    window.removeEventListener('alert.new', this.handleAddAlert)
     window.removeEventListener('resize', this.handleOverflowDebounced)
     window.removeEventListener('alert.change', this.handleOverflow)
   }
@@ -153,10 +200,10 @@ export const PoiAlert = connect((state, props) => ({
         <div id='alert-history'
              className='alert-history panel'
              onClick={this.toggleHistory}>
-          {this.props.history}
+          {this.state.history}
         </div>
         <div id='alert-container'
-             className={`alert alert-${this.props.current.type} alert-container`}
+             className={`alert alert-${this.state.current.type} alert-container`}
              onClick={this.toggleHistory}>
           <div className='alert-position'>
             <span id='alert-area' className={this.state.overflow ? 'overflow-anim' : ''}>
@@ -164,13 +211,13 @@ export const PoiAlert = connect((state, props) => ({
                 this.state.overflow ?
                 <span>
                   <span style={{marginRight: 50}}>
-                    {this.props.current.content}
+                    {this.state.current.content}
                   </span>
                   <span style={{marginRight: 50}}>
-                    {this.props.current.content}
+                    {this.state.current.content}
                   </span>
                 </span>
-                : this.props.current.content
+                : this.state.current.content
               }
             </span>
           </div>
@@ -178,4 +225,4 @@ export const PoiAlert = connect((state, props) => ({
       </div>
     )
   }
-})
+}
