@@ -27,12 +27,6 @@ function arrayResultWrapper(selector) {
   return createDeepCompareArraySelector(selector, (result) => result)
 }
 
-function safeConcat(array, arg) {
-  if (!array || !array.concat)
-    return
-  return array.concat(arg)
-}
-
 function getDeckState(shipsData=[], inBattle, inExpedition, inRepairShipsId) {
   let state = 0
   if (inBattle)
@@ -244,6 +238,18 @@ export const equipDataSelectorFactory = memoize((equipId) =>
   })
 )
 
+const modifiedEquipDataSelectorFactory = memoize((equipId) =>
+  createSelector([
+    (state) => equipBaseDataSelectorFactory(equipId)(state.state),
+    (state) => constSelector(state.state),
+    (state) => state.onslot,
+  ], (equip, {$equips}, onslot) => {
+    if (!equip || !$equips || !$equips[equip.api_slotitem_id])
+      return
+    return [equip, $equips[equip.api_slotitem_id], onslot]
+  })
+)
+
 function effectiveEquips(equipArray, slotnum) {
   equipArray.splice(slotnum, equipArray.length-slotnum-1)
   return equipArray
@@ -267,7 +273,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
         zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
           equipId <= 0
           ? undefined
-          : safeConcat(equipDataSelectorFactory(equipId)(state), onslot)
+          : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
         ), slotnum
       )
   ))
