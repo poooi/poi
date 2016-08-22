@@ -2,6 +2,15 @@ const {dispatch} = window
 
 const DEFAULT_STICKYFOR = 3*1000  // Milliseconds
 
+function dispatchAlertEvent(value) {
+  const event = new CustomEvent('alert.new', {
+    bubbles: true,
+    cancelable: false,
+    detail: value,
+  })
+  window.dispatchEvent(event)
+}
+
 window.log = (msg, options) => {
   const value = {
     content: msg,
@@ -10,10 +19,7 @@ window.log = (msg, options) => {
     stickyFor: DEFAULT_STICKYFOR,
     options,
   }
-  dispatch({
-    type: '@@Alert',
-    value,
-  })
+  dispatchAlertEvent(value)
 }
 window.success = (msg, options) => {
   const value = {
@@ -23,10 +29,7 @@ window.success = (msg, options) => {
     stickyFor: DEFAULT_STICKYFOR,
     options,
   }
-  dispatch({
-    type: '@@Alert',
-    value,
-  })
+  dispatchAlertEvent(value)
 }
 window.warn = (msg, options) => {
   const value = {
@@ -36,10 +39,7 @@ window.warn = (msg, options) => {
     stickyFor: DEFAULT_STICKYFOR,
     options,
   }
-  dispatch({
-    type: '@@Alert',
-    value,
-  })
+  dispatchAlertEvent(value)
 }
 window.error = (msg, options) => {
   const value = {
@@ -49,8 +49,5 @@ window.error = (msg, options) => {
     stickyFor: DEFAULT_STICKYFOR,
     options,
   }
-  dispatch({
-    type: '@@Alert',
-    value,
-  })
+  dispatchAlertEvent(value)
 }

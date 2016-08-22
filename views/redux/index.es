@@ -8,7 +8,6 @@ import { reducer as timers } from './timers'
 import { reducer as config } from './config'
 import { reducer as layout } from './layout'
 import { reducer as battle } from './battle'
-import { reducer as alert } from './alert'
 import { reducer as plugins } from './plugins'
 import misc from './misc'
 
@@ -46,7 +45,6 @@ export function reducerFactory(extensionConfig) {
     config,
     layout,
     battle,
-    alert,
     plugins,
     misc,
     ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
