@@ -79,8 +79,7 @@
     "reselect": "^2.5.3",
     "semver": "^5.3.0",
     "socks5-client": "^1.2.0",
-    "socks5-http-client": "^1.0.1",
-    "windows-shortcuts-appid": "^0.3.2"
+    "socks5-http-client": "^1.0.1"
   },
   "devDependencies": {
     "asar": "^0.12.1",
