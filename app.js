@@ -21,9 +21,6 @@ const {error} = require('./lib/utils')
 const dbg = require('./lib/debug')
 proxy.setMaxListeners(30)
 
-// Export garbage collection as global function
-app.commandLine.appendSwitch('js-flags', '--expose_gc')
-
 // Disable HA
 
 if (config.get('poi.disableHA', false)) {
