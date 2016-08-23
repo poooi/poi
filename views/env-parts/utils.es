@@ -24,9 +24,15 @@ window.timeToString = (milliseconds) => {
   return date.toTimeString().slice(0, 8)  // HH:mm:ss
 }
 
-// Input: [[index, value], ...]
+// Input format 1: pairs=[[index, value], ...]
+// Input format 2: id=index, value=value
 // Return: Array
-window.buildArray = (pairs) => {
+window.buildArray = (pairsOrId, value) => {
+  let pairs
+  if (Array.isArray(pairsOrId))
+    pairs = pairsOrId
+  else
+    pairs = [[pairsOrId, value]]
   const ret = []
   pairs.forEach(([index, value]=[]) => {
     index = parseInt(index)
