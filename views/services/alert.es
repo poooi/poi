@@ -17,7 +17,7 @@ window.log = (msg, options) => {
     type: 'default',
     priority: 0,
     stickyFor: DEFAULT_STICKYFOR,
-    options,
+    ...options,
   }
   dispatchAlertEvent(value)
 }
@@ -27,7 +27,7 @@ window.success = (msg, options) => {
     type: 'success',
     priority: 1,
     stickyFor: DEFAULT_STICKYFOR,
-    options,
+    ...options,
   }
   dispatchAlertEvent(value)
 }
@@ -37,7 +37,7 @@ window.warn = (msg, options) => {
     type: 'warning',
     priority: 2,
     stickyFor: DEFAULT_STICKYFOR,
-    options,
+    ...options,
   }
   dispatchAlertEvent(value)
 }
@@ -47,7 +47,7 @@ window.error = (msg, options) => {
     type: 'warning',
     priority: 4,
     stickyFor: DEFAULT_STICKYFOR,
-    options,
+    ...options,
   }
   dispatchAlertEvent(value)
 }

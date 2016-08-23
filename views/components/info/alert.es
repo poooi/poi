@@ -126,21 +126,18 @@ export const PoiAlert = class poiAlert extends Component {
       content: '',
       priority: 0,
     }, e.detail)
-    if (typeof value.options !== 'object') {
-      value.options = {}
-    }
     let { history, current } = this.state
-    //console.log(value.priority, current.priority, Date.now(), stickyEnd)
-    if (value.priority < current.priority && Date.now() < stickyEnd) {
-      if (!value.options.dontReserve) {
+    const nowTS = Date.now()
+    if (value.priority < current.priority && nowTS < stickyEnd) {
+      if (!value.dontReserve) {
         // Old message has higher priority, push new message to history
         history = pushToHistory(history, value)
         this.setState({ history })
       }
-    } else if (!current.options.dontReserve) {
+    } else if (!current.dontReserve) {
       // push old message to history
       history = pushToHistory(history, current)
-      stickyEnd = Date.now() + (value.stickyFor || 3000)
+      stickyEnd = nowTS + (value.stickyFor || 3000)
       this.setState({
         history: history,
         current: value,
