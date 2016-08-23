@@ -68,7 +68,7 @@ export const PoiAlert = class poiAlert extends Component {
   }
   shouldComponentUpdate = (nextProps, nextState) => {
     return nextState !== this.state
-  } 
+  }
   toggleHistory = () => {
     this.showHistory = !this.showHistory
     historyStyle.innerHTML = `
@@ -130,10 +130,13 @@ export const PoiAlert = class poiAlert extends Component {
       value.options = {}
     }
     let { history, current } = this.state
+    //console.log(value.priority, current.priority, Date.now(), stickyEnd)
     if (value.priority < current.priority && Date.now() < stickyEnd) {
-      // Old message has higher priority, push new message to history
-      history = pushToHistory(history, value)
-      this.setState({ history })
+      if (!value.options.dontReserve) {
+        // Old message has higher priority, push new message to history
+        history = pushToHistory(history, value)
+        this.setState({ history })
+      }
     } else if (!current.options.dontReserve) {
       // push old message to history
       history = pushToHistory(history, current)

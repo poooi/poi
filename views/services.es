@@ -99,7 +99,7 @@ window.addEventListener('game.request', (e) => {
   //const {method} = e.detail
   //const resPath = e.detail.path
 })
-window.addEventListener ('game.response', (e) => {
+window.addEventListener('game.response', (e) => {
   const {method, body, postBody} = e.detail
   const resPath = e.detail.path
   if (dbg.extra('gameResponse').isEnabled()) {
