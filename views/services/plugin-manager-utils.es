@@ -263,12 +263,12 @@ const postEnableProcess = (plugin) => {
 
 function clearPluginCache(packagePath) {
   for (const path in module._cache) {
-    if (path.includes(packagePath)) {
+    if (path.includes(basename(packagePath))) {
       delete module._cache[path]
     }
   }
   for (const path in module._pathCache) {
-    if (path.includes(packagePath)) {
+    if (path.includes(basename(packagePath))) {
       delete module._pathCache[path]
     }
   }
@@ -329,7 +329,7 @@ export const safePhysicallyRemove = async (packagePath) => {
     const gitStat = await promisify(lstat)(join(packagePath, '.git'))
     if (gitStat.isDirectory()) {
       console.error(`${packagePath} appears to be a git repository. For the safety of your files in development, please use 'npm link' to install plugins from github.`)
-      return 
+      return
     }
   } catch (e) {
     return await promisify(rmdir)(packagePath)
