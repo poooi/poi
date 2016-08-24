@@ -302,7 +302,7 @@ export default connect(
       </MenuItem>
     ) : (
       this.listedPlugins().map((plugin, index) =>
-        <MenuItem key={plugin.id} eventKey={plugin.id} onSelect={plugin.handleClick}>
+        <MenuItem key={plugin.id} eventKey={this.state.activeMainTab === plugin.id ? '' : plugin.id} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
       )
