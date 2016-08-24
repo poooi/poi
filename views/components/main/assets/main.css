@@ -169,9 +169,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .expedition-item .expedition-timer {
-  flex: none;
-}
 #MainView .ndock-panel .panel-body {
   /*border: 1px solid skyblue;*/
   display: flex;
@@ -191,9 +188,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .ndock-item .ndock-timer {
-  flex: none;
-}
 #MainView .kdock-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
@@ -211,11 +205,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-#MainView .kdock-item .kdock-timer {
-  /*display: flex;*/
-  flex: none;
-  /*margin: 3px;*/
 }
 #MainView .resource-panel .panel-body {
   /*border: 1px solid orange;*/
@@ -255,6 +244,9 @@
 }
 #MainView .glow {
   -webkit-filter: drop-shadow(0px 0px 4px #2196F3)
+}
+#MainView .countdown-timer-label {
+  flex: none;
 }
 .material-icon {
   width: 18px;

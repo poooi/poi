@@ -166,14 +166,14 @@ export class CountdownNotifierLabel extends Component {
   tick = (timeRemaining) => {
     const notifyOptions = this.props.getNotifyOptions(this.props)
     if (notifyOptions)
-      this.notifier.tryNotify(notifyOptions) 
+      this.notifier.tryNotify(notifyOptions)
     const style = this.getLabelStyle(this.props)
     if (style !== this.state.style)
       this.setState({style: style})
   }
   render() {
     return (
-      <Label className="kdock-timer" bsStyle={this.state.style}>
+      <Label className="countdown-timer-label" bsStyle={this.state.style}>
       {
         this.props.completeTime >= 0 &&
           <CountdownTimer countdownId={this.props.timerKey}
