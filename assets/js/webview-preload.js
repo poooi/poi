@@ -78,6 +78,7 @@ window.align = Promise.coroutine(function* () {
 
 window.unalign = () => {
   alignCSS.innerHTML = ""
+  alignInnerCSS.innerHTML = ""
 }
 
 window.align()
