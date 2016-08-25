@@ -25,6 +25,7 @@ const alertCSS =
 `
 
 const alignCSS = document.createElement('style')
+const alignInnerCSS = document.createElement('style')
 
 const getWebviewWidth = Promise.coroutine(function* () {
   const width = yield new Promise((resolve, reject) => {
@@ -58,17 +59,19 @@ window.align = Promise.coroutine(function* () {
   #game_frame {
     width: 800px !important;
     position: absolute;
-    top: -16px;
+    top: 0px;
     left: 0;
-  }
-  #spacing_top {
-    display: none;
   }
   .naviapp {
     z-index: -1;
   }
   #ntg-recommend {
     display: none !important;
+  }
+  `
+  alignInnerCSS.innerHTML = `
+  #spacing_top {
+    display: none;
   }
   `
 })
@@ -84,16 +87,14 @@ document.addEventListener("DOMContentLoaded", (e) => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
-  const setQuality = () => {
-    const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
-    const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
-    flash.setAttribute('quality', flashQuality)
-    iframeDoc.querySelector('#externalswf').remove()
-    iframeDoc.querySelector('#flashWrap').appendChild(flash)
-  }
   const t = setInterval(() => {
     try {
-      setQuality()
+      const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
+      iframeDoc.querySelector('body').appendChild(alignInnerCSS)
+      const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
+      flash.setAttribute('quality', flashQuality)
+      iframeDoc.querySelector('#externalswf').remove()
+      iframeDoc.querySelector('#flashWrap').appendChild(flash)
       console.warn('Successed.', new Date())
       clearInterval(t)
     } catch (e) {
