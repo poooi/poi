@@ -2,7 +2,6 @@ const electron = require('electron')
 const remote = electron.remote
 const Promise = require('bluebird')
 const config = remote.require('./lib/config')
-const proxy = remote.require('./lib/proxy')
 require('coffee-script/register')
 
 // webview focus area fix
@@ -85,19 +84,20 @@ document.addEventListener("DOMContentLoaded", (e) => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
-  const setQuality = (method, [domain, path], body) => {
-    if (!path.includes('/kcs/')) {
-      return
-    }
+  const setQuality = () => {
     const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
     const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
     flash.setAttribute('quality', flashQuality)
     iframeDoc.querySelector('#externalswf').remove()
     iframeDoc.querySelector('#flashWrap').appendChild(flash)
-    proxy.removeListener('network.on.request', setQuality)
   }
-  proxy.addListener('network.on.request', setQuality)
-  window.onbeforeunload = () => {
-    proxy.removeListener('network.on.request', setQuality)
-  }
+  const t = setInterval(() => {
+    try {
+      setQuality()
+      console.warn('Successed.', new Date())
+      clearInterval(t)
+    } catch (e) {
+      console.warn('Failed. Will retry in 100ms.')
+    }
+  }, 100)
 })
