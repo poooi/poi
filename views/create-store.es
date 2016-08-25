@@ -44,6 +44,11 @@ function autoCacheObserver(store, path) {
   )
 }
 
+remote.getCurrentWindow().on('close', (e) => {
+  if (window.isMain) {
+    localStorage.setItem(cachePosition, JSON.stringify(storeCache))
+  }
+})
 
 //### Executing code ###
 
