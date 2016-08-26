@@ -380,9 +380,11 @@ export default connect(
   const {saku25, saku25a, saku33} = saku
   let totalLv = 0
   let minCond = 100
-  shipsData.forEach(([_ship, $ship]) => {
-    totalLv += _ship.api_lv
-    minCond = Math.min(minCond, _ship.api_cond)
+  shipsData.forEach(([_ship]=[]) => {
+    if (_ship) {
+      totalLv += _ship.api_lv
+      minCond = Math.min(minCond, _ship.api_cond)
+    }
   })
   let completeTime
   if (inExpedition) {
