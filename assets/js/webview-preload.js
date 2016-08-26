@@ -84,7 +84,8 @@ window.unalign = () => {
 window.align()
 
 remote.getCurrentWebContents().insertCSS(alertCSS)
-document.addEventListener("DOMContentLoaded", (e) => {
+
+const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
@@ -92,6 +93,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
     try {
       const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
       iframeDoc.querySelector('body').appendChild(alignInnerCSS)
+      if (flashQuality === 'high') {
+        return
+      }
       const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
       flash.setAttribute('quality', flashQuality)
       iframeDoc.querySelector('#externalswf').remove()
@@ -102,4 +106,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
       console.warn('Failed. Will retry in 100ms.')
     }
   }, 100)
-})
+  document.removeEventListener("DOMContentLoaded", handleDOMContentLoaded)
+}
+
+document.addEventListener("DOMContentLoaded", handleDOMContentLoaded)
