@@ -34,7 +34,7 @@ release_dir_name = 'release'
 platform_to_paths = {
   'win32-ia32': 'win-ia32',
   'win32-x64': 'win-x64',
-  'darwin-x64': 'osx-x64',
+  'darwin-x64': 'mac-x64',
   'linux-x64': 'linux-x64'
 }
 config = (->
