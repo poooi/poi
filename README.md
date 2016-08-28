@@ -13,8 +13,6 @@ Scalable KanColle browser and tool.
 
 [cnpm (CN Mainland)](https://npm.taobao.org/mirrors/poi).
 
-[BaiduYun (CN Mainland)](http://pan.baidu.com/s/1kT2zGwf).
-
 ## Features
 
 + Proxy
