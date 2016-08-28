@@ -48,3 +48,7 @@ dist/
 !build/icon.icns
 !build/icon.ico
 !build/icon.png
+!build/icons
+
+# F**k you macOS
+.DS_store
