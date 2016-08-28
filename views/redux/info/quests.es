@@ -516,9 +516,10 @@ export function schedualDailyRefresh(dispatch) {
   const now = Date.now()
   const nextTimeout = ONE_DAY - (now - QUEST_REFRESH_ZERO) % ONE_DAY
   const nextTime = now + nextTimeout
+  console.log("Scheduling daily refresh at %d (now %d)", nextTime, Date.now())
   setTimeout(() => {
     // TODO: Debug
-    console.log("Daily refresh at %d scheduled at %d", nextTime, now)
+    console.log("Daily refresh at %d scheduled at %d (now %d)", nextTime, now, Date.now())
     dispatch(dailyRefresh(nextTime))
     schedualDailyRefresh(dispatch)
   }, nextTimeout)
