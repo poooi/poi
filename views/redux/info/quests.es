@@ -4,6 +4,7 @@ import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
 
 import FileWriter from 'views/utils/fileWriter'
 import { arraySum } from 'views/utils/tools'
+import Scheduler from 'views/services/scheduler'
 const {ROOT, APPDATA_PATH} = window
 
 const QUESTS_REFRESH_DAY = '@@QUESTS_REFRESH_DAY'
@@ -514,15 +515,16 @@ function dailyRefresh(now) {
 
 export function schedualDailyRefresh(dispatch) {
   const now = Date.now()
-  const nextTimeout = ONE_DAY - (now - QUEST_REFRESH_ZERO) % ONE_DAY
-  const nextTime = now + nextTimeout
-  console.log("Scheduling daily refresh at %d (now %d)", nextTime, Date.now())
-  setTimeout(() => {
+  console.log("Scheduling daily refresh at %d (now %d)", QUEST_REFRESH_ZERO, Date.now())
+  Scheduler.schedule((time) => {
     // TODO: Debug
-    console.log("Daily refresh at %d scheduled at %d (now %d)", nextTime, now, Date.now())
-    dispatch(dailyRefresh(nextTime))
-    schedualDailyRefresh(dispatch)
-  }, nextTimeout)
+    console.log("Daily refresh at %d scheduled at %d (now %d)", time, now, Date.now())
+    dispatch(dailyRefresh(time))
+  }, {
+    time: QUEST_REFRESH_ZERO,
+    interval: ONE_DAY,
+    allowImmediate: false,
+  })
 }
 
 function processQuestRecords(records, activeQuests) {
