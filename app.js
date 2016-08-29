@@ -107,9 +107,10 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizeable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     titleBarStyle: 'hidden',
+    enableLargerThanScreen: true,
     webPreferences: {
       plugins: true,
-      enableLargerThanScreen: true,
+      backgroundThrottling: false,
     },
   })
   // Default menu
