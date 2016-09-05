@@ -8,7 +8,7 @@ import { createSelector } from 'reselect'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
 import { recoveryEndTime } from 'views/redux/timers/cond'
-import { getTyku, getSaku25, getSaku25a, getSaku33 } from './utils'
+import { getTyku, getSaku25, getSaku25a, getSaku33 } from 'views/utils/game-utils'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,

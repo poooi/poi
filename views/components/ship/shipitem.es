@@ -10,7 +10,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
-import { getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/components/ship-parts/utils'
+import { getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
   shipRepairDockSelectorFactory,

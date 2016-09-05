@@ -8,7 +8,7 @@ import { memoize } from 'lodash'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { getItemData } from './slotitems-data'
-import { equipIsAircraft } from 'views/components/ship-parts/utils'
+import { equipIsAircraft } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
   shipEquipDataSelectorFactory,

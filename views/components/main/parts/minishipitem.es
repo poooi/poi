@@ -9,7 +9,7 @@ import { isEqual, pick, omit, memoize } from 'lodash'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { SlotitemIcon } from 'views/components/etc/icon'
-import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/components/ship-parts/utils'
+import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
   shipEquipDataSelectorFactory,
