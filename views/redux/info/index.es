@@ -11,6 +11,7 @@ import {reducer as constructions} from './constructions'
 import {reducer as resources} from './resources'
 import {reducer as maps} from './maps'
 import {reducer as quests} from './quests'
+import airbase from './airbase'
 
 export const reducer = reduceReducers(
   (state, action) => {
@@ -33,5 +34,6 @@ export const reducer = reduceReducers(
     resources,
     maps,
     quests,
+    airbase,
   }),
 )

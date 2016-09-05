@@ -210,3 +210,8 @@ export function timeToString(milliseconds) {
 }
 
 
+export function trimArray(state, comparator) {
+  if (Array.isArray(state) && Array.isArray(comparator) && comparator.length > state.length)
+    return state.slice(0, comparator.length)
+  return state
+}
