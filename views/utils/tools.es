@@ -38,3 +38,7 @@ export function arraySubstract(arr, n) {
     return arr.map((i) => i - n)
   }
 }
+
+export function between(n, min, max) {
+  return n >= min && n <= max
+}
