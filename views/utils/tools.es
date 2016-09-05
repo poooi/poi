@@ -2,7 +2,7 @@
  * This file contains utility functions that is unrelated to the game mechanism.
  */
 
-import { zip, unzip, sum } from 'lodash'
+import { isEqual, forEach, keyBy, zip, unzip, sum } from 'lodash'
 
 // For a given array, sum up each position of the subarray respectively.
 // Args:
@@ -42,3 +42,171 @@ export function arraySubstract(arr, n) {
 export function between(n, min, max) {
   return n >= min && n <= max
 }
+
+// Input: 
+//   buildArray(index, value)
+//     index := Integer
+//     value := anything
+//   buildArray(pairs)
+//     pairs := [[index, value], ...]
+// Return: Array
+// Example:
+//   a = buildArray(1, 'abc')   // [undefined x 1, "abc"]
+//   a[1]       // "abc"
+//   0 in a     // false
+export function buildArray(pairsOrIdx, _value) {
+  let pairs
+  if (Array.isArray(pairsOrIdx))
+    pairs = pairsOrIdx
+  else
+    pairs = [[pairsOrIdx, _value]]
+  const ret = []
+  pairs.forEach(([index, value]=[]) => {
+    index = parseInt(index)
+    if (isNaN(index) || index < 0)
+      return
+    ret[index] = value
+  })
+  return ret
+}
+
+export function indexify(array, key='api_id') {
+  return keyBy(array, key)
+}
+
+export function copyIfSame(obj, to) {
+  // assert(typeof obj === 'object')
+  if (obj === to)
+    return Array.isArray(obj) ? obj.slice() : {...obj}
+  return obj
+}
+
+// Remove properties in `state` that no longer exist in `body`.
+// Both `state` and `body` are objects, and only keys are compared.
+export function pickExisting(state, body) {
+  const stateBackup = state
+  forEach(state, (v, k) => {
+    if (!(k in body)) {
+      state = copyIfSame(state, stateBackup)
+      delete state[k]
+    }
+  })
+  return state
+}
+
+// Similar to lodash.set, but if the value needs updating, each object along
+// its path will be shallow-copied instead of modified in-place, therefore 
+// complying with the regulation of redux.
+export function reduxSet(obj, path, val) {
+  const [prop, ...restPath] = path
+  if (typeof prop === 'undefined') {
+    if (!isEqual(obj, val))
+      return val
+    else
+      return obj
+  }
+  let before
+  if (prop in obj) {
+    before = obj[prop]
+  } else {
+    before = {}
+  }
+  const after = window.reduxSet(before, restPath, val)
+  if (after !== before) {
+    let result
+    if (Array.isArray(obj)) {
+      result = obj.slice()
+      result[prop] = after
+    } else {
+      result = {
+        ...obj,
+        [prop]: after,
+      }
+    }
+    return result
+  }
+  return obj
+}
+
+// Return Object.assign(prevState, newState) until `depth` level, while
+// keeping as many parts from prevState as possible. Neither state is modified
+// in-place.
+// By default `depth` == 1, and every property of the returned value will be the
+// prevProperty if not mentioned in newState or `isEqual` to the corresponding,
+// or o/w the newProperty as a whole. Therefore,
+// - If you only provide one grand-property of a property, its other
+//   grand-properties will be deleted.
+// - If a property is updated, all its grand-properties will be new ones,
+//   even if the grand-property itself isEqual.
+export function compareUpdate(prevState, newState, depth=1) {
+  if (typeof prevState !== typeof newState)
+    return newState
+  if (prevState === newState)
+    return prevState
+  if (depth == 0 || typeof depth !== 'number' || typeof prevState !== 'object') {
+    return isEqual(prevState, newState) ? prevState : newState
+  }
+  const prevStateBackup = prevState
+  // Update existing properties
+  const nextDepth = depth - 1
+  forEach(newState, (v, k) => {
+    const newV = compareUpdate(prevState[k], v, nextDepth)
+    // ATTENTION: Any null properties are ignored
+    if (newV != null && prevState[k] !== newV) {
+      prevState = copyIfSame(prevState, prevStateBackup)
+      if (newV != null)
+        prevState[k] = newV
+    }
+  })
+  return prevState
+}
+/* TEST
+function test(a, b, d) {
+  const c = compareUpdate(a, b, d)
+  console.log(c !== a, c)
+}
+
+test(2, 2)
+// false 2
+test({1:'a'},{2:'b'})
+// true {"1":"a","2":"b"}
+test({1:'a'},{1:'b'})
+// true {"1":"b"}
+test({1:'a'},{1:'a'})
+// false {"1":"a"}
+test({1:{1:2}},{1:{1:2}})
+// false {"1":{"1":2}}
+test({1:{1:[], 2:['g']}},{1:{1:[]}})
+// true {"1":{"1":[]}}
+test({1:{1:[], 2:['g']}},{1:{1:[]}}, 2)
+// false {"1":{"1":[],"2":["g"]}}
+
+let a=[]
+a[1] = {1:2}
+test([{1:1}],a)
+// true [{"1":1},{"1":2}]
+
+*/
+
+function pad(n) {
+  return n < 10 ? `0${n}` : n
+}
+
+export function resolveTime(seconds) {
+  seconds = parseInt(seconds)
+  if (seconds >= 0) {
+    const s = seconds % 60
+    const m = Math.trunc(seconds / 60) % 60
+    const h = Math.trunc(seconds / 3600)
+    return `${pad(h)}:${pad(m)}:${pad(s)}`
+  } else {
+    return ''
+  }
+}
+
+export function timeToString(milliseconds) {
+  const date = new Date(milliseconds)
+  return date.toTimeString().slice(0, 8)  // HH:mm:ss
+}
+
+

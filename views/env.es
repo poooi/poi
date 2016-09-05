@@ -62,6 +62,12 @@ window.ReactBootstrap.Input = class extends window.React.Component {
   }
 }
 
+// Polyfills
+Object.clone = (obj) =>
+  JSON.parse(JSON.stringify(obj))
+Object.remoteClone = (obj) =>
+  JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
+
 // Utils
 require('./env-parts/utils')
 

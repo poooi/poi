@@ -1,3 +1,8 @@
+/*
+ * This file contains utility functions that is related to the game mechanism,
+ * or formatting instructions to game data.
+ */
+
 import { between } from './tools'
 
 const aircraftExpTable = [0, 10, 25, 40, 55, 70, 85, 100, 121]
@@ -19,6 +24,26 @@ export function getMaterialStyle(percent) {
   } else {
     return 'success'
   }
+}
+
+export function getCondStyle(cond) {
+  let s = 'poi-ship-cond-'
+  if (cond > 52)
+    s += '53'
+  else if (cond > 49)
+    s += '50'
+  else if (cond == 49)
+    s += '49'
+  else if (cond > 39)
+    s += '40'
+  else if (cond > 29)
+    s += '30'
+  else if (cond > 19)
+    s += '20'
+  else
+    s += '0'
+  s += window.isDarkTheme ? ' dark' : ' light'
+  return s
 }
 
 export function getStatusStyle(status) {
