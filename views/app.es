@@ -37,8 +37,6 @@ const CustomCssInjector = () => {
   )
 }
 
-window.isMain = true
-
 ReactDOM.render(
   <Provider store={store}>
     <PoiControl />
