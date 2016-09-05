@@ -1,9 +1,9 @@
 import { sortBy } from 'lodash'
 
+import { reduxSet } from 'views/utils/tools'
 import { getPluginIndexByPackageName } from './utils'
 
 export function reducer (state=[], {type, value, option}) {
-  const {reduxSet} = window
   switch (type) {
   case '@@Plugin/initialize': {
     return value

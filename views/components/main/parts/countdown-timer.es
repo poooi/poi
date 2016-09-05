@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Label } from 'react-bootstrap'
 
-const { resolveTime } = window
+import { resolveTime } from 'views/utils/tools'
 import { CountdownNotifier } from 'views/utils/notifiers'
 
 class Ticker {

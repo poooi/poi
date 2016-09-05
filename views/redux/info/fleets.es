@@ -1,9 +1,10 @@
-import {isEqual} from 'lodash'
+import { isEqual } from 'lodash'
+
+import { buildArray, compareUpdate } from 'views/utils/tools'
 
 function mergeIndexifiedFleets(state, body) {
-  const {buildArray} = window
   const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet]))
-  return window.compareUpdate(state, bodyFleet, 2)
+  return compareUpdate(state, bodyFleet, 2)
 }
 
 // Return [fleetId, pos] if found
@@ -39,7 +40,6 @@ function setShip(fleet, pos, shipId) {
 }
 
 export function reducer(state=[], {type, postBody, body}) {
-  const {compareUpdate, buildArray} = window
   switch(type) {
   case '@@Response/kcsapi/api_port/port':
     return compareUpdate(state, body.api_deck_port, 2)

@@ -1,5 +1,6 @@
+import { indexify } from 'views/utils/tools'
+
 function dataFromBody(body) {
-  const {indexify} = window
   return {
     $ships: indexify(body.api_mst_ship),
     $shipTypes: indexify(body.api_mst_stype),

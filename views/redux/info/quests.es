@@ -3,7 +3,7 @@ import { join } from 'path-extra'
 import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
 
 import FileWriter from 'views/utils/fileWriter'
-import { arraySum } from 'views/utils/tools'
+import { copyIfSame, arraySum } from 'views/utils/tools'
 import Scheduler from 'views/services/scheduler'
 const {ROOT, APPDATA_PATH} = window
 
@@ -37,7 +37,6 @@ function stringNumberEqual(a, b) {
 // If non of items needs updating, return the original obj.
 // Will handle parseInt.
 function updateObject(obj, items) {
-  const {copyIfSame} = window
   const originalObj = obj
   forEach(items, (v, k) => {
     let thisUpdate
@@ -361,7 +360,6 @@ const initState = {
 }
 
 export function reducer(state=initState, action) {
-  const {copyIfSame} = window
   const {type, postBody, body} = action
   switch (type) {
   //== Initialization. This takes place once every flash loading ==

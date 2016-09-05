@@ -9,7 +9,7 @@ import { isEqual, pick, omit, memoize } from 'lodash'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { SlotitemIcon } from 'views/components/etc/icon'
-import { equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/utils/game-utils'
+import { getCondStyle, equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
   shipEquipDataSelectorFactory,
@@ -154,7 +154,7 @@ export const MiniShipRow = connect(
                   <StatusLabel label={labelStatus} />
                 </div>
                 <div style={labelStatusStyle}>
-                  <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
+                  <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
                     ★{ship.api_cond}
                   </span>
                 </div>

@@ -1,4 +1,4 @@
-const { compareUpdate } = window
+import { compareUpdate } from 'views/utils/tools'
 
 // Preserved fields: api_id, api_member_id
 const emptyRepair = {

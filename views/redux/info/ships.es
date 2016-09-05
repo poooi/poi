@@ -1,9 +1,11 @@
 import {values} from 'lodash'
 
+import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
+
 // Restore a ship with full health and >=40 cond.
 // Returns a clone.
 function completeRepair(ship) {
-  return window.compareUpdate(ship, {
+  return compareUpdate(ship, {
     api_nowhp: ship.api_maxhp,
     api_cond: Math.max(40, ship.api_cond),
     api_ndock_time: 0,
@@ -11,7 +13,7 @@ function completeRepair(ship) {
 }
 
 export function reducer(state={}, {type, body, postBody}) {
-  const {compareUpdate, indexify, getStore, pickExisting} = window
+  const {getStore} = window
   switch (type) {
   case '@@Response/kcsapi/api_port/port': {
     const bodyShips = indexify(body.api_ship)

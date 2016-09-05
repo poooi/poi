@@ -1,8 +1,9 @@
 import { remote } from 'electron'
+
+import { reduxSet } from 'views/utils/tools'
 const config = remote.require('./lib/config')
 
 export function reducer(state=Object.clone(config.get('')), {type, path, value}) {
-  const {reduxSet} = window
   switch (type) {
   case '@@Config':
     state = reduxSet(state, path.split('.'), value)

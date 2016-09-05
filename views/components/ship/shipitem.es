@@ -5,12 +5,13 @@ import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
 
-const { resolveTime, i18n } = window
+const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
-import { getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/utils/game-utils'
+import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/utils/game-utils'
+import { resolveTime } from 'views/utils/tools'
 import {
   shipDataSelectorFactory,
   shipRepairDockSelectorFactory,
@@ -105,7 +106,7 @@ export const ShipRow = connect(
                     <StatusLabel label={labelStatus}/>
                   </div>
                   <div className="status-cond" style={labelStatusStyle}>
-                    <span className={"ship-cond " + window.getCondStyle(ship.api_cond)}>
+                    <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
                       ★{ship.api_cond}
                     </span>
                   </div>

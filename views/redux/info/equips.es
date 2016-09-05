@@ -1,3 +1,5 @@
+import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
+
 // Returns a clone
 // Don't worry about -1 because it won't cause error
 function removeEquips(equips, idList) {
@@ -7,7 +9,7 @@ function removeEquips(equips, idList) {
 }
 
 export function reducer(state={}, {type, postBody, body}) {
-  const {getStore, compareUpdate, indexify, pickExisting} = window
+  const {getStore} = window
   switch (type) {
   case '@@Response/kcsapi/api_get_member/slot_item': {
     const bodyEquips = indexify(body)

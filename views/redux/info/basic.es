@@ -1,4 +1,4 @@
-const { compareUpdate } = window
+import { compareUpdate } from 'views/utils/tools'
 
 export function reducer(state={}, {type, body}) {
   switch (type) {

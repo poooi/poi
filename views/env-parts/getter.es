@@ -4,8 +4,10 @@ import { map, get, mapValues } from 'lodash'
 import path from 'path-extra'
 
 import { store } from 'views/create-store'
+import { buildArray } from 'views/utils/tools'
 
-const {buildArray, config} = window
+const { config } = window
+
 function object2Array(obj) {
   return buildArray(map(obj, (v, k) => [k, v]))
 }

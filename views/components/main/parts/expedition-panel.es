@@ -9,6 +9,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import { fleetsSelector, configSelector } from 'views/utils/selectors'
+import { timeToString } from 'views/utils/tools'
 
 const fleetsExpeditionSelector = createSelector(fleetsSelector,
   (fleets) => map(fleets, 'api_mission')
@@ -67,7 +68,7 @@ export default connect(
               <span className="expedition-name">{expeditionName}</span>
               <OverlayTrigger placement='left' overlay={
                 <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
-                  <strong>{__("Return by : ")}</strong>{window.timeToString(completeTime)}
+                  <strong>{__("Return by : ")}</strong>{timeToString(completeTime)}
                 </Tooltip>
               }>
                 <div>

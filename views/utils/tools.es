@@ -111,7 +111,7 @@ export function reduxSet(obj, path, val) {
   } else {
     before = {}
   }
-  const after = window.reduxSet(before, restPath, val)
+  const after = reduxSet(before, restPath, val)
   if (after !== before) {
     let result
     if (Array.isArray(obj)) {

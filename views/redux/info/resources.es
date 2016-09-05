@@ -1,6 +1,6 @@
-import {map} from 'lodash'
+import { map } from 'lodash'
 
-const { compareUpdate } = window
+import { compareUpdate } from 'views/utils/tools'
 
 // FORMAT
 // 0: <Fuel>

@@ -2,7 +2,7 @@ const { ROOT } = window
 import React, { Component } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { join as joinString, range, pick } from 'lodash'
+import { join as joinString, range } from 'lodash'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 
@@ -19,6 +19,7 @@ import {
   inRepairShipsIdSelector,
   createDeepCompareArraySelector,
 } from 'views/utils/selectors'
+import { indexify, timeToString } from 'views/utils/tools'
 
 const inRepairShipsDataSelector = createSelector([
   inRepairShipsIdSelector,
@@ -60,7 +61,7 @@ export default connect(
     // into ships, is because by passing an array we can make use of
     // createDeepCompareArraySelector which only deep compares arrays, and
     // by indexifying it into an object, it becomes easier to use.
-    const ships = window.indexify(inRepairShips)
+    const ships = indexify(inRepairShips)
     return (
       <div>
         {
@@ -87,7 +88,7 @@ export default connect(
 
               <OverlayTrigger placement='left' overlay={
                 <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
-                  <strong>{__("Finish by : ")}</strong>{window.timeToString(completeTime)}
+                  <strong>{__("Finish by : ")}</strong>{timeToString(completeTime)}
                 </Tooltip>
               }>
                 <div>
