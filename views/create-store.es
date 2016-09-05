@@ -99,15 +99,17 @@ remote.getCurrentWindow().on('close', (e) => {
 })
 
 // When any targetPath is modified, store it into localStorage
-observe(store,
-  targetPaths.map((path) => autoCacheObserver(store, path))
-)
+if (window.isMain)
+  observe(store,
+    targetPaths.map((path) => autoCacheObserver(store, path))
+  )
 
 // Save quest tracking to the file when it changes
-observe(store, [observer(
-  (state) => state.info.quests.records,
-  (dispatch, current, previous) => saveQuestTracking(current)
-)])
+if (window.isMain)
+  observe(store, [observer(
+    (state) => state.info.quests.records,
+    (dispatch, current, previous) => saveQuestTracking(current)
+  )])
 
 schedualDailyRefresh(store.dispatch)
 
