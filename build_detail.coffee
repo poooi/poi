@@ -147,7 +147,8 @@ extractZipAsync =
 
 downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
                                  description, useCli) ->
-  while 1
+  max_retry = 5
+  for retry_count in [1..max_retry]
     try
       zip_path = yield downloadAsync url, download_dir, filename, description
       yield extractZipAsync zip_path, dest_path, description
@@ -156,6 +157,8 @@ downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
       try
         yield fs.removeAsync zip_path
       catch
+      if retry_count == max_retry
+        throw e
       continue
     break
 
