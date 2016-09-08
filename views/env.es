@@ -18,8 +18,6 @@ window.appIcon = remote.getGlobal('appIcon')
 fs.ensureDirSync(window.PLUGIN_PATH)
 fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
 
-window.isMain = true
-
 // Add ROOT to `require` search path
 require('module').globalPaths.push(window.ROOT)
 
