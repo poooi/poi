@@ -14,8 +14,6 @@ import { ModalTrigger } from './components/etc/modal'
 
 const {ROOT, EXROOT, $} = window
 
-window.isMain = true
-
 // Disable OSX zoom
 require('electron').webFrame.setZoomLevelLimits(1, 1)
 
