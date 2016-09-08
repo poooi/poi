@@ -17,7 +17,7 @@ window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appIcon = remote.getGlobal('appIcon')
 fs.ensureDirSync(window.PLUGIN_PATH)
 fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
-window.isMain = path.normalize(remote.getCurrentWindow().getURL()).includes(path.join(window.ROOT, 'index.html'))
+window.isMain = path.normalize(remote.getCurrentWindow().getURL()).includes(path.normalize(path.join(window.ROOT, 'index.html')))
 
 // Add ROOT to `require` search path
 require('module').globalPaths.push(window.ROOT)
