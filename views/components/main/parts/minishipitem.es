@@ -125,9 +125,11 @@ export const MiniShipRow = connect(
         <OverlayTrigger
           placement={(!doubleTabbed && layout == 'vertical') ? 'left' : 'right'}
           overlay={
+            (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0) ?
             <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
               <Slotitems shipId={ship.api_id} />
             </Tooltip>
+            : <Tooltip id={`ship-pop-${ship.api_id}`} style={{display: 'none'}}></Tooltip>
           }
         >
           <div className="ship-item">
