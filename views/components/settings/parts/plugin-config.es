@@ -163,7 +163,7 @@ class InstalledPlugin extends Component {
             </Row>
             <Row>
               <Col className='plugin-description' xs={7}>
-                <ReactMarkdown source={plugin.description} />
+                <ReactMarkdown skipHtml source={plugin.description} />
               </Col>
               <Col className='plugin-option' xs={5}>
                 <ButtonGroup bsSize='small' className={btnGroupClass}>
@@ -264,7 +264,7 @@ class UninstalledPlugin extends Component {
             </Row>
             <Row>
               <Col className='plugin-description' xs={7}>
-                <ReactMarkdown source={plugin[`des${window.language}`]} />
+                <ReactMarkdown skipHtml source={plugin[`des${window.language}`]} />
               </Col>
               <Col className='plugin-option-install' xs={5}>
                 <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
