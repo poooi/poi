@@ -7,6 +7,7 @@ import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Check
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import shallowCompare from 'react-addons-shallow-compare'
+import ReactMarkdown from 'react-markdown'
 
 import PluginManager from 'views/services/plugin-manager'
 import Divider from './divider'
@@ -161,7 +162,9 @@ class InstalledPlugin extends Component {
               </Col>
             </Row>
             <Row>
-              <Col className='plugin-description' xs={7}>{plugin.description}</Col>
+              <Col className='plugin-description' xs={7}>
+                <ReactMarkdown source={plugin.description} />
+              </Col>
               <Col className='plugin-option' xs={5}>
                 <ButtonGroup bsSize='small' className={btnGroupClass}>
                   {
@@ -260,7 +263,9 @@ class UninstalledPlugin extends Component {
               </Col>
             </Row>
             <Row>
-              <Col className='plugin-description' xs={7}>{plugin[`des${window.language}`]}</Col>
+              <Col className='plugin-description' xs={7}>
+                <ReactMarkdown source={plugin[`des${window.language}`]} />
+              </Col>
               <Col className='plugin-option-install' xs={5}>
                 <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
                   <OverlayTrigger placement='top' overlay={
