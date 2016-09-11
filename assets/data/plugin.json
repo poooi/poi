@@ -9,11 +9,11 @@
     "icon": "book",
     "author": "W.G.",
     "link": "https://github.com/JenningsWu",
-    "deszh-CN": "日志. 战果部分 by rui",
-    "deszh-TW": "日誌. 戰果部份 by rui",
-    "desja-JP": "日誌. 戦果の部分はruiにより",
-    "desen-US": "Logs. Senka module is developed by rui",
-    "desko-KR": "일지. 전과 부분은 rui님이 개발"
+    "deszh-CN": "日志",
+    "deszh-TW": "日誌",
+    "desja-JP": "日誌",
+    "desen-US": "Logs",
+    "desko-KR": "일지"
   },
   "poi-plugin-battle-detail": {
     "zh-CN": "战斗记录",
@@ -169,11 +169,11 @@
     "icon": "indent",
     "author": "马里酱",
     "link": "https://github.com/malichan",
-    "deszh-CN": "任务信息查询 & 任务面板强化",
-    "deszh-TW": "任務信息查詢 & 任務面板強化",
-    "desja-JP": "任務攻略データや開放条件一覧",
-    "desen-US": "Show task infomation & improve task panel",
-    "desko-KR": "임무 공략 데이터 & 개방 조건"
+    "deszh-CN": "任务详情查询及翻译。感谢[舰娘百科](https://zh.kcwiki.moe)维护数据。",
+    "deszh-TW": "任務詳情查詢及翻譯。感謝[艦娘百科](https://zh.kcwiki.moe)維護數據。",
+    "desja-JP": "任務攻略データや開放条件一覧。データは[kcwiki](https://zh.kcwiki.moe)によって提供されている。",
+    "desen-US": "Task infomation and requirement explanation. Data maintained by [kcwiki](https://zh.kcwiki.moe).",
+    "desko-KR": "임무 공략 데이터 & 개방 조건. 데이터 제공되어 [kcwiki](https://zh.kcwiki.moe)."
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
@@ -201,11 +201,11 @@
     "icon": "pie-chart",
     "author": "grzhan",
     "link": "https://github.com/grzhan",
-    "deszh-CN": "舰娘百科(http://zh.kcwiki.moe)数据汇报",
-    "deszh-TW": "艦娘百科(http://zh.kcwiki.moe)數據匯報",
-    "desja-JP": "統計データベース(http://zh.kcwiki.moe)登録用ツール",
-    "desen-US": "Report data to database(http://zh.kcwiki.moe)",
-    "desko-KR": "통계 DB(http://zh.kcwiki.moe) 데이터 보고용"
+    "deszh-CN": "[舰娘百科](http://zh.kcwiki.moe)数据汇报",
+    "deszh-TW": "[艦娘百科](http://zh.kcwiki.moe)數據匯報",
+    "desja-JP": "[kcwiki](http://zh.kcwiki.moe)統計データベース登録用ツール",
+    "desen-US": "Report data to [kcwiki](http://zh.kcwiki.moe) database",
+    "desko-KR": "통계 [kcwiki](http://zh.kcwiki.moe) db 데이터 보고용"
   },
   "poi-plugin-ship-info": {
     "zh-CN": "舰娘信息",
@@ -268,8 +268,8 @@
     "deszh-CN": "舰娘老黄历改二移植版，在此感谢原作者 HY Little",
     "deszh-TW": "艦娘老黃曆改二移植版，在此感謝原作者 HY Little",
     "desja-JP": "中國語のアルマナック",
-    "desen-US": "An Chinese almanac",
-    "desko-KR": "An Chinese almanac"
+    "desen-US": "A Chinese almanac",
+    "desko-KR": "A Chinese almanac"
   },
   "poi-plugin-translator": {
     "zh-CN": "英语翻译",
@@ -313,11 +313,11 @@
     "icon": "microphone",
     "author": "grzhan",
     "link": "https://github.com/grzhan",
-    "deszh-CN": "语音字幕插件（舰娘百科支持）",
-    "deszh-TW": "語音字幕插件（艦娘百科支援）",
-    "desja-JP": "艦娘セリフの字幕",
-    "desen-US": "Subtitle of ship girls' quotes",
-    "desko-KR": "중국어 자막"
+    "deszh-CN": "在舰娘说话时显示语音字幕。由[舰娘百科](http://zh.kcwiki.moe)开发维护。",
+    "deszh-TW": "在艦娘說話時顯示語音字幕。由[艦娘百科](http://zh.kcwiki.moe)開發維護。",
+    "desja-JP": "艦娘セリフの字幕。[kcwiki](http://zh.kcwiki.moe)によって開発された。",
+    "desen-US": "Subtitle of ship girls' quotes。Developed by [kcwiki](http://zh.kcwiki.moe)",
+    "desko-KR": "중국어 자막. [kcwiki](http://zh.kcwiki.moe)에 의해 개발."
   },
   "poi-plugin-k2badge": {
     "zh-CN": "签名生成",
@@ -329,10 +329,10 @@
     "icon": "photo",
     "author": "KochiyaOcean",
     "link": "https://github.com/KochiyaOcean",
-    "deszh-CN": "传输舰娘数据至 http://threebards.com/kaini 以生成舰娘签名",
-    "deszh-TW": "傳輸艦娘資料至 http://threebards.com/kaini 以生成艦娘簽名",
-    "desja-JP": "艦娘のデータを http://threebards.com/kaini へ転送し、バッジを作成する",
-    "desen-US": "Export data to http://threebards.com/kaini so that you can make a badge for yourself!",
-    "desko-KR": "데이터를 http://threebards.com/kaini로 전송해서 배지를 만드는 플러그인"
+    "deszh-CN": "自动生成来自[threebards](http://threebards.com/kaini)的舰娘签名，包含改二进度和图鉴列表。",
+    "deszh-TW": "自動生成來自[threebards](http://threebards.com/kaini)的艦娘簽名，包含改二進度和圖鑑列表。",
+    "desja-JP": "自動的に改二と図鑑が含ま[threebards](http://threebards.com/kaini)バッジを生成。",
+    "desen-US": "Automatically generates [threebards](http://threebards.com/kaini) badge that shows your kaini progress and colletion progress.",
+    "desko-KR": "데이터를 [threebards](http://threebards.com/kaini)로 전송해서 배지를 만드는 플러그인"
   }
 }

@@ -132,6 +132,9 @@
   min-height: 30px;
   padding-top: 5px;
 }
+#SettingsView .plugin-description a:not([data-pid=""]) {
+  color: #cbcbff;
+}
 #SettingsView .plugin-option {
   z-index: 1;
   position: absolute;
