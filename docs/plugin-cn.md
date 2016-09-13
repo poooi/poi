@@ -260,9 +260,9 @@ window.theme // 目前使用的主题
 #### Redux store
 poi 用 Redux store 存储了包括所有游戏资料在内的大量数据。
 
-reducer 由 `views/redux` 下各文件定义，最后由 `views/createStore` 创建 store 。以下是你可以利用的接口，但并不推荐直接使用。推荐的做法是尽量多地使用 selector ，reducer 以及来自 `react-redux` 的 `connect` ，
-+ `import store from 'views/createStore'`：全局 store
-+ `import { extendReducer } from 'views/createStore'`：`extendReducer(key, reducer)` 会将 `reducer` 附加到 `store.ext.<key>`下。
+reducer 由 `views/redux` 下各文件定义，最后由 `views/create-store` 创建 store 。以下是你可以利用的接口，但并不推荐直接使用。推荐的做法是尽量多地使用 selector ，reducer 以及来自 `react-redux` 的 `connect` ，
++ `import { store } from 'views/create-store'`：全局 store
++ `import { extendReducer } from 'views/create-store'`：`extendReducer(key, reducer)` 会将 `reducer` 附加到 `store.ext.<key>`下。
 + `const { getStore } = window`：`getStore()` 或 `getStore('a.b.c')` 可以获取 store 的全部数据或某一路径下的数据。这个函数在 debug 时很方便，但在代码中应尽量少使用。在 reducer 中使用它，表明你可能需要调整你的 store 设计，以增强各子项之间的独立性；在 react component 中使用它，表明你应该换用 `connect` 来获取 store 中的数据。不过某些时候，使用这个函数无可避免。
 
 ##### 命名说明
@@ -475,7 +475,7 @@ import { createSelector } from 'reselect'
 import { writeFileSync } from 'fs'
 
 import { extensionSelectorFactory } from 'views/utils/selectors'
-import { store } from 'views/createStore'
+import { store } from 'views/create-store'
 
 EXTENSION_KEY = 'poi-plugin-some-plugin-name'
 
