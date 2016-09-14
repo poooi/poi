@@ -1,7 +1,7 @@
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
-import fs from 'fs-extra'
+import { readJsonSync, accessSync } from 'fs-extra'
 import request from 'request'
 import npm from 'npm'
 import glob from 'glob'
@@ -20,6 +20,7 @@ import {
   unloadPlugin,
   notifyFailed,
   safePhysicallyRemove,
+  findInstalledTarball,
 } from './plugin-manager-utils'
 
 function defaultPluginPath(packageName) {
@@ -75,12 +76,12 @@ class PluginManager extends EventEmitter {
   }
   getRequirements() {
     if (this.requirements == null)
-      this.requirements = fs.readJsonSync(this.packagePath)
+      this.requirements = readJsonSync(this.packagePath)
     return this.requirements
   }
   getMirrors() {
     if (this.mirrors == null) {
-      this.mirrors = fs.readJsonSync(this.mirrorPath)
+      this.mirrors = readJsonSync(this.mirrorPath)
       const mirrorConf = config.get('packageManager.mirrorName', (navigator.language === 'zh-CN') ?  "taobao" : "npm")
       const proxyConf = config.get("packageManager.proxy", false)
       const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
@@ -223,6 +224,10 @@ class PluginManager extends EventEmitter {
       return
     }
     const data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
+    if (data.error) {
+      console.warn(`Can't find update info of plugin ${plugin.packageName}`, data)
+      return
+    }
     const distTag = {
       latest: data.version,
     }
@@ -288,25 +293,47 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  async installPlugin(packageName, version) {
-    if (packageName.includes('@'))
-      [packageName, version] = packageName.split('@')
+  async installPlugin(packageSource, version) {
+    if (packageSource.includes('@'))
+      [packageSource, version] = packageSource.split('@')
     this.getMirrors()
-    const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
-    if (nowPlugin) {
+
+    // 1) See if it is installed by plugin name
+    const installingByPluginName = (function () {
+      try {
+        accessSync(packageSource)
+        return false
+      } catch (e) {
+        return true
+      }
+    })()
+    if (installingByPluginName)
       dispatch({
         type: '@@Plugin/changeStatus',
-        value: nowPlugin,
+        value: {packageName: packageSource},
         option: [{path: 'isUpdating', status: true}],
       })
+    // 2) Install plugin
+    try {
+      await installPackage(packageSource, version)
+    } catch (e) {
+      console.error(e.stack)
+      throw e
+    }
+    // 3) Get plugin name
+    const packageName = installingByPluginName ? packageSource :
+      await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
+    // 4) Unload plugin if it's running
+    const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
+    if (nowPlugin) {
       try {
         unloadPlugin(nowPlugin)
       } catch (error) {
         console.error(error.stack)
       }
     }
+    // 5) Read plugin and load it
     try {
-      await installPackage(packageName, version)
       let plugin = readPlugin(this.getPluginPath(packageName))
       if (plugin.enabled) {
         plugin = enablePlugin(plugin)

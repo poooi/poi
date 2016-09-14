@@ -514,9 +514,9 @@ const PluginConfig = connect((state, props) => ({
   }
   onDropInstallFromFile = async (e) => {
     e.preventDefault()
-    const droppedFiles = e.dataTransfer.files
+    const droppedFiles = e.dataTransfer.files   // Not an Array, but a FileList
     const filenames = []
-    for (const i in droppedFiles) {
+    for (let i = 0; i < droppedFiles.length; i++) {
       filenames.push(droppedFiles[i].path)
     }
     if (filenames.length > 0) {
