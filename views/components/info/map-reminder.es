@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ProgressBar } from 'react-bootstrap'
+import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
@@ -8,6 +8,7 @@ import {
   sortieMapDataSelector,
   sortieMapHpSelector,
   extensionSelectorFactory,
+  currentNodeSelector,
 } from 'views/utils/selectors'
 
 const {i18n, toast} = window
@@ -19,10 +20,12 @@ export default connect(
   createSelector([
     sortieMapDataSelector,
     sortieMapHpSelector,
+    currentNodeSelector,
     extensionSelectorFactory('poi-plugin-map-hp'),
-  ], (mapData, mapHp, pluginMapHpData={}) => ({
+  ], (mapData, mapHp, currentNode, pluginMapHpData={}) => ({
     mapId: get(mapData, '0.api_id'),
     rank: get(mapData, '0.api_eventmap.api_selected_rank'),
+    currentNode,
     mapData,
     mapHp,
     finalHps: pluginMapHpData.finalHps || emptyFinalHps,
@@ -51,7 +54,7 @@ export default connect(
   }
 
   render() {
-    const {mapHp, mapData} = this.props
+    const {mapHp, mapData, currentNode} = this.props
     const isFinalAttack = this.isFinalAttack()
     if (isFinalAttack) {
       toast(__('Possible final stage'), {
@@ -59,18 +62,33 @@ export default connect(
         title: __('Sortie'),
       })
     }
+    const tooltipMsg = []
+    if (currentNode) {
+      tooltipMsg.push(`${__('Node')}: ${currentNode}`)
+    }
+    if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
+      tooltipMsg.push(`${mapHp[0]} / ${mapHp[1]}`)
+    }
     return (
-      <div>
-        {
-          !mapHp ? undefined :
-            <ProgressBar bsStyle="info" now={mapHp[0]} max={mapHp[1]} />
-        }
-        <div className='alert alert-default'>
-          <span id='map-reminder-area'>
-            {this.getMapText(mapData)}
-          </span>
+      <OverlayTrigger
+        placement='top'
+        overlay={
+          <Tooltip id='detail-map-info' style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
+            {tooltipMsg.join(' | ')}
+          </Tooltip>
+        }>
+        <div>
+          {
+            !mapHp ? undefined :
+              <ProgressBar bsStyle="info" now={mapHp[0]} max={mapHp[1]} />
+          }
+          <div className='alert alert-default'>
+            <span id='map-reminder-area'>
+              {this.getMapText(mapData)}
+            </span>
+          </div>
         </div>
-      </div>
+      </OverlayTrigger>
     )
   }
 })

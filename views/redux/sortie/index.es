@@ -11,6 +11,7 @@ const initState = {
   sortieStatus: [false, false, false, false],
   sortieMapId: 0,       // 0 for not in sortie, or the number such as `15` `342`
   escapedPos: [],
+  currentNode: null,
 }
 
 export function reducer(state=initState, {type, path, postBody, body}) {
@@ -22,6 +23,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       sortieStatus: initState.sortieStatus,
       escapedPos: [],
       sortieMapId: 0,
+      currentNode: null,
     }
 
   case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -57,9 +59,17 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     }
     return {
       sortieMapId: mapId,
+      currentNode: body.api_no,
       sortieStatus,
       escapedPos: [],
       _toEscapeIdx: [],
+    }
+  }
+
+  case '@@Response/kcsapi/api_req_map/next': {
+    return {
+      ...state,
+      currentNode: body.api_no,
     }
   }
   }

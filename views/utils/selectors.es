@@ -21,7 +21,7 @@ export const createDeepCompareArraySelector = createSelectorCreator(
   deepCompareArray
 )
 
-// This wrapper prevents different array (in terms of ===) being returned 
+// This wrapper prevents different array (in terms of ===) being returned
 // despite having the same elements
 function arrayResultWrapper(selector) {
   return createDeepCompareArraySelector(selector, (result) => result)
@@ -92,6 +92,7 @@ export const repairsSelector = (state) => state.info.repairs
 export const mapsSelector = (state) => state.info.maps
 export const sortieSelector = (state) => state.sortie
 export const sortieStatusSelector = (state) => state.sortie.sortieStatus
+export const currentNodeSelector = (state) => state.sortie.currentNode
 
 export const extensionSelectorFactory = (key) =>
   (state) => get(state.ext, [key, '_']) || {}
@@ -114,13 +115,13 @@ export const inRepairShipsIdSelector = arrayResultWrapper(createSelector(repairs
 ))
 
 
-export const fleetSelectorFactory = memoize((fleetId) => 
+export const fleetSelectorFactory = memoize((fleetId) =>
   (state) => (state.info.fleets || [])[fleetId]
 )
 
 // Returns [shipId] of this fleet
 // Returns undefined if fleet not found
-export const fleetShipsIdSelectorFactory = memoize((fleetId) => 
+export const fleetShipsIdSelectorFactory = memoize((fleetId) =>
   arrayResultWrapper(createSelector(fleetSelectorFactory(fleetId), (fleet) => {
     if (fleet == null)
       return
@@ -128,14 +129,14 @@ export const fleetShipsIdSelectorFactory = memoize((fleetId) =>
   }))
 )
 
-export const fleetInBattleSelectorFactory = memoize((fleetId) => 
+export const fleetInBattleSelectorFactory = memoize((fleetId) =>
   createSelector(sortieStatusSelector, (sortieStatus) => sortieStatus[fleetId])
 )
-export const fleetInExpeditionSelectorFactory = memoize((fleetId) => 
+export const fleetInExpeditionSelectorFactory = memoize((fleetId) =>
   createSelector(fleetSelectorFactory(fleetId),
     (fleet) => typeof fleet === 'object' ? fleet.api_mission[0] : false)
 )
-export const fleetNameSelectorFactory = memoize((fleetId) => 
+export const fleetNameSelectorFactory = memoize((fleetId) =>
   createSelector(fleetSelectorFactory(fleetId),
     (fleet) => typeof fleet === 'object' ? fleet.api_name : '')
 )
@@ -153,7 +154,7 @@ export const fleetStateSelectorFactory = memoize((fleetId) =>
 const emptyExpedition = [0, 0, 0, 0]
 export const fleetExpeditionSelectorFactory = memoize((fleetId) =>
   createSelector(fleetSelectorFactory(fleetId),
-    (fleet) => 
+    (fleet) =>
       fleet ? fleet.api_mission : emptyExpedition
   )
 )
@@ -194,13 +195,13 @@ export const shipDataSelectorFactory = memoize((shipId) =>
 )
 
 
-const shipSlotnumSelectorFactory = memoize((shipId) => 
+const shipSlotnumSelectorFactory = memoize((shipId) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => ship ? ship.api_slotnum : 0))
-const shipSlotSelectorFactory = memoize((shipId) => 
+const shipSlotSelectorFactory = memoize((shipId) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => ship ? ship.api_slot : undefined))
-const shipExslotSelectorFactory = memoize((shipId) => 
+const shipExslotSelectorFactory = memoize((shipId) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => ship ? ship.api_slot_ex : -1))
-const shipOnSlotSelectorFactory = memoize((shipId) => 
+const shipOnSlotSelectorFactory = memoize((shipId) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => ship ? ship.api_onslot : undefined))
 // Returns [equipId for each slot on the ship]
 // length is always 5
@@ -260,7 +261,7 @@ function effectiveEquips(equipArray, slotnum) {
 // length is always slotnum+1, which is all slots plus exslot
 // Slot is padded with undefined for being empty or not fount in _equips
 // Returns undefined if _equips or $equips is undefined
-export const shipEquipDataSelectorFactory = memoize((shipId) => 
+export const shipEquipDataSelectorFactory = memoize((shipId) =>
   arrayResultWrapper(createSelector([
     stateSelector,
     shipSlotnumSelectorFactory(shipId),
