@@ -590,7 +590,7 @@ const PluginConfig = connect((state, props) => ({
     }
     let advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
     return (
-      <form className='contents-wrapper'>
+      <form className='contents-wrapper' style={{marginTop: '10px'}}>
         <FileDrop
           className="plugin-dropfile panel"
           onDrop={this.onDropInstallFromFile}
