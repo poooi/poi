@@ -7,7 +7,7 @@
     "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
     "deploy": "gulp deploy",
     "build": "gulp build && build",
-    "build_win": "gulp build && build --win --x64 && build --win --ia32",
+    "build_win": "gulp build && build --win --x64 true --ia32 true",
     "start": "electron .",
     "start_debug": "electron . --debug",
     "clean": "gulp clean"
@@ -88,7 +88,7 @@
     "asar": "^0.12.1",
     "babel-eslint": "^6.1.2",
     "coffeelint": "^1.11.1",
-    "electron-builder": "^6.0.2",
+    "electron-builder": "^7.3.0",
     "electron": "1.3.5",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^1.12.0",
