@@ -336,7 +336,7 @@ class PluginManager extends EventEmitter {
     try {
       let plugin = readPlugin(this.getPluginPath(packageName))
       if (plugin.enabled) {
-        plugin = enablePlugin(plugin)
+        plugin = enablePlugin(plugin, false)
       }
       dispatch({
         type: '@@Plugin/add',

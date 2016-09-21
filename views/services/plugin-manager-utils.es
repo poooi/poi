@@ -200,14 +200,14 @@ export function readPlugin(pluginPath) {
   return plugin
 }
 
-export function enablePlugin(plugin) {
+export function enablePlugin(plugin, reread=true) {
   if (plugin.needRollback)
     return plugin
   let pluginMain
   try {
     pluginMain = {
       ...require(plugin.pluginPath),
-      ...readPlugin(plugin.pluginPath),
+      ...reread ? readPlugin(plugin.pluginPath) : {},
     }
     pluginMain.enabled = true
     pluginMain.isRead = true
