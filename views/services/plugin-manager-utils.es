@@ -1,16 +1,18 @@
 import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir } from 'fs-extra'
+import { createReadStream, readJson, accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
 import module from 'module'
 import npm from 'npm'
-import { promisify } from 'bluebird'
+import Promise, { promisify } from 'bluebird'
+import glob from 'glob'
+import crypto from 'crypto'
 
 import { extendReducer } from 'views/create-store'
-const {ROOT, config, language, toast, MODULE_PATH} = window
+const { ROOT, config, language, toast, MODULE_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -19,6 +21,54 @@ require('module').globalPaths.push(MODULE_PATH)
 
 // This reducer clears the substore no matter what is given.
 const clearReducer = undefined
+
+function calculateShasum(path) {
+  return new Promise((resolve, reject) => {
+    try {
+      const hash = crypto.createHash('md5')
+      const stream = createReadStream(path)
+
+      stream.on('data', (data) => {
+        hash.update(data, 'utf8')
+      })
+
+      stream.on('end', function () {
+        resolve(hash.digest('hex'))
+      })
+
+      stream.on('error', function (e) {
+        reject(e)
+      })
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+export const findInstalledTarball = async (pluginRoot, tarballPath) => {
+  const filename = basename(tarballPath)
+  const pluginPaths = await promisify(glob)(join(pluginRoot, 'poi-plugin-*'))
+  const packageDatas = await Promise.all(pluginPaths.map((pluginPath) =>
+    promisify(readJson)(join(pluginPath, 'package.json'))))
+  // packageJson._required.raw should contain full path upon installation
+  const nameMatchDatas = packageDatas.filter((packageData) =>
+    get(packageData, '_requested.raw', '').endsWith(filename))
+  if (nameMatchDatas.length === 1) {
+    return nameMatchDatas[0].name
+  }
+  if (nameMatchDatas.length === 0) {
+    throw new Error(`Error: Can' find a package matching ${tarballPath}.`)
+  }
+  // In EXTREMELY tricky cases 2 differently named packages might have been
+  // installed from the same path. Unbelievable huh? We can still match checksum.
+  // packageJson._shasum should contain shasum.
+  const shasum = await calculateShasum(tarballPath)
+  const shasumMatchDatas = nameMatchDatas.filter((data) => data._shasum === shasum)
+  if (!shasumMatchDatas[0])
+    throw new Error(`Error: Can' find a package installed from ${tarballPath} matching shasum ${shasum}.`)
+  // I believe it won't collide.
+  return shasumMatchDatas[0].name
+}
 
 export function installPackage(packageName, version) {
   if (version) {
@@ -150,14 +200,14 @@ export function readPlugin(pluginPath) {
   return plugin
 }
 
-export function enablePlugin(plugin) {
+export function enablePlugin(plugin, reread=true) {
   if (plugin.needRollback)
     return plugin
   let pluginMain
   try {
     pluginMain = {
       ...require(plugin.pluginPath),
-      ...readPlugin(plugin.pluginPath),
+      ...reread ? readPlugin(plugin.pluginPath) : {},
     }
     pluginMain.enabled = true
     pluginMain.isRead = true

@@ -194,3 +194,51 @@
 #SettingsView .navigator-status {
   padding-right: 28px;
 }
+
+#SettingsView .plugin-dropfile-static {
+  width: 100%;
+  height: 100%;
+  border-width: 2px;
+  border-color: #666;
+  border-style: dashed;
+  border-radius: 0;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+}
+#SettingsView .plugin-dropfile.file-drop {
+  position: absolute;
+  top: 80px;
+  left: 30px;
+  margin: 0;
+  width: calc(100% - 60px);
+  z-index: 10;
+  border: 0;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-target {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-height: 200px;
+  text-align: center;
+  background-color: inherit;
+  border: 3px solid black;
+  padding: 40px 10px;
+  font-size: 20px;
+  transition: all 0.5s;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-dragging-over-target-accept {
+  border: 3px solid #42A5F5;
+  box-shadow: 0px 0px 10px #1976D2;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-dragging-over-target-reject {
+  border: 3px solid #EF5350;
+  box-shadow: 0px 0px 10px #D32F2F;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-target.file-drop-dragging-over-frame{
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-target.file-drop-dragging-over-target{
+  box-shadow: 0 0 13px 3px #45b743;
+}
+#SettingsView .plugin-dropfile-contents {
+}
