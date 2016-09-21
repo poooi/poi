@@ -12,7 +12,7 @@ import glob from 'glob'
 import crypto from 'crypto'
 
 import { extendReducer } from 'views/create-store'
-const {ROOT, config, language, toast, MODULE_PATH} = window
+const { ROOT, config, language, toast, MODULE_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)

@@ -8,6 +8,8 @@ import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import shallowCompare from 'react-addons-shallow-compare'
 import ReactMarkdown from 'react-remarkable'
+import FileDrop from 'react-file-drop'
+import Portal from 'react-portal'
 
 import PluginManager from 'views/services/plugin-manager'
 import Divider from './divider'
@@ -512,10 +514,9 @@ const PluginConfig = connect((state, props) => ({
       }
     })
   }
-  onDropInstallFromFile = async (e) => {
-    e.preventDefault()
-    const droppedFiles = e.dataTransfer.files   // Not an Array, but a FileList
+  onDropInstallFromFile = async (droppedFiles) => {
     const filenames = []
+    // droppedFiles is not an Array, but a FileList
     for (let i = 0; i < droppedFiles.length; i++) {
       filenames.push(droppedFiles[i].path)
     }
@@ -592,10 +593,13 @@ const PluginConfig = connect((state, props) => ({
     let advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
     return (
       <form className='contents-wrapper'>
+        <FileDrop
+          className="plugin-dropfile"
+          onDrop={this.onDropInstallFromFile}
+          >
+          {__('Drop plugin tarballs here to install')}
+        </FileDrop>
         <Grid className='correct-container'>
-          <Row>
-            <Divider text={__('Plugins')} />
-          </Row>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
@@ -719,12 +723,7 @@ const PluginConfig = connect((state, props) => ({
                                   npmWorking={this.state.npmWorking} />
             </Col>
             <Col xs={12}>
-              <div className="folder-picker"
-                   onClick={this.onSelectInstallFromFile}
-                   onDrop={this.onDropInstallFromFile}
-                   onDragEnter={(e)=> e.preventDefault()}
-                   onDragOver={(e)=> e.preventDefault()}
-                   onDragLeave={(e)=> e.preventDefault()}>
+              <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
                 {__("Drop plugin packages here to install it, or click here to select them")}
               </div>
             </Col>

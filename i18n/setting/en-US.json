@@ -52,6 +52,8 @@
   "Themes": "Themes",
   "Game resoultion": "Game resoultion",
   "Adaptive resolution based on the window": "Adaptive resolution based on the window",
+  "Drop plugin packages here to install it, or click here to select them": "Install plugins from files,\nor drop files here to install",
+  "Drop plugin tarballs here to install": "Drop plugin tarballs here to install",
   "Zoom": "Zoom",
   "Zoom level": "Zoom level",
   "Screenshot Folder": "Screenshot Folder",

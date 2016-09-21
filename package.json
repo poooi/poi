@@ -66,6 +66,7 @@
     "react-addons-shallow-compare": "^15.3.1",
     "react-bootstrap": "^0.30.3",
     "react-dom": "^15.3.1",
+    "react-file-drop": "^0.1.8",
     "react-fontawesome": "^1.0.0",
     "react-redux": "^4.4.5",
     "react-remarkable": "^1.1.1",
