@@ -8,11 +8,9 @@ import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import shallowCompare from 'react-addons-shallow-compare'
 import ReactMarkdown from 'react-remarkable'
-import FileDrop from 'react-file-drop'
-import Portal from 'react-portal'
+import FileDrop from 'react-file-dropzone'
 
 import PluginManager from 'views/services/plugin-manager'
-import Divider from './divider'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
@@ -594,8 +592,9 @@ const PluginConfig = connect((state, props) => ({
     return (
       <form className='contents-wrapper'>
         <FileDrop
-          className="plugin-dropfile"
+          className="plugin-dropfile panel"
           onDrop={this.onDropInstallFromFile}
+          acceptType="application/gzip, application/x-gzip"
           >
           {__('Drop plugin tarballs here to install')}
         </FileDrop>

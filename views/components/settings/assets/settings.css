@@ -208,21 +208,32 @@
 }
 #SettingsView .plugin-dropfile.file-drop {
   position: absolute;
+  top: 80px;
+  left: 30px;
   margin: 0;
-  width: 100%;
+  width: calc(100% - 60px);
   z-index: 10;
-  padding: 50px 30px;
+  border: 0;
 }
 #SettingsView .plugin-dropfile.file-drop .file-drop-target {
+  position: relative;
   height: 100%;
   width: 100%;
   max-height: 200px;
   text-align: center;
-  background-color: #232323;
+  background-color: inherit;
   border: 3px solid black;
-  box-shadow: 0 0 13px 3px #000000;
   padding: 40px 10px;
   font-size: 20px;
+  transition: all 0.5s;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-dragging-over-target-accept {
+  border: 3px solid #42A5F5;
+  box-shadow: 0px 0px 10px #1976D2;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-dragging-over-target-reject {
+  border: 3px solid #EF5350;
+  box-shadow: 0px 0px 10px #D32F2F;
 }
 #SettingsView .plugin-dropfile.file-drop .file-drop-target.file-drop-dragging-over-frame{
 }
