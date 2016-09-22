@@ -16,6 +16,11 @@ export default connect(
     admiralLv: get(state, 'info.basic.api_level', 0),
   })
 )(class ResourcePanel extends React.Component {
+  static propTypes = {
+    resources: React.PropTypes.array,
+    admiralLv: React.PropTypes.number,
+  }
+
   state = {
     resourcesIncreasment: [],
   }
