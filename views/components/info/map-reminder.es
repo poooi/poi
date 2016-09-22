@@ -67,14 +67,14 @@ export default connect(
       tooltipMsg.push(`${__('Node')}: ${currentNode}`)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
-      tooltipMsg.push(`${mapHp[0]} / ${mapHp[1]}`)
+      tooltipMsg.push(`HP: ${mapHp[0]} / ${mapHp[1]}`)
     }
     return (
       <OverlayTrigger
         placement='top'
         overlay={
           <Tooltip id='detail-map-info' style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
-            {tooltipMsg.join(' | ')}
+            {tooltipMsg.join('  |  ')}
           </Tooltip>
         }>
         <div>
