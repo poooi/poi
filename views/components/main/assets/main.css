@@ -213,6 +213,25 @@
 }
 #MainView .resource-panel .material-value {
   margin-left: 5px;
+  width: calc(100% - 18px);
+}
+#MainView .resource-panel .additional-value {
+  position: absolute;
+  left: 38px;
+  width: calc(100% - 53px);
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  text-align: right;
+  transition: all 0.3s;
+}
+#MainView .resource-panel .additional-value.inc {
+  background-color: #217dbb;
+  opacity: 1;
+}
+#MainView .resource-panel .additional-value.dec {
+  background-color: #d62c1a;
+  opacity: 1;
 }
 #MainView .resource-panel img {
   width: 18px;
