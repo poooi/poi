@@ -67,7 +67,7 @@ require('flash-player-loader').debug({
   enable: dbg.isEnabled(),
   log: dbg._log,
   error: error,
-}).addSource(flashPath1, '21.0.0.242').addSource(flashPath2, '21.0.0.242').load()
+}).addSource(flashPath1, '23.0.0.162').addSource(flashPath2, '23.0.0.162').load()
 
 let mainWindow, appIcon
 global.mainWindow = mainWindow = null
