@@ -12,6 +12,7 @@ const initState = {
   sortieMapId: 0,       // 0 for not in sortie, or the number such as `15` `342`
   escapedPos: [],
   currentNode: null,
+  dropCount: 0,
 }
 
 export function reducer(state=initState, {type, path, postBody, body}) {
@@ -24,20 +25,28 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       escapedPos: [],
       sortieMapId: 0,
       currentNode: null,
+      dropCount: 0,
     }
 
   case '@@Response/kcsapi/api_req_sortie/battleresult':
-  case '@@Response/kcsapi/api_req_combined_battle/battleresult':
-    if ((body.api_escape_flag != null) && body.api_escape_flag > 0) {
-      return {
-        ...state,
-        _toEscapeIdx: [
-          body.api_escape.api_escape_idx[0] - 1,
-          body.api_escape.api_tow_idx[0] - 1,
-        ],
-      }
+  case '@@Response/kcsapi/api_req_combined_battle/battleresult': {
+    let dropCount = state.dropCount
+    let _toEscapeIdx = state._toEscapeIdx
+    if ((body.api_get_ship || {}).api_ship_id) {
+      dropCount++
     }
-    break
+    if ((body.api_escape_flag != null) && body.api_escape_flag > 0) {
+      _toEscapeIdx = [
+        body.api_escape.api_escape_idx[0] - 1,
+        body.api_escape.api_tow_idx[0] - 1,
+      ]
+    }
+    return {
+      ...state,
+      dropCount,
+      _toEscapeIdx,
+    }
+  }
 
   case '@@Response/kcsapi/api_req_combined_battle/goback_port':
     if (state._toEscapeIdx) {
@@ -63,6 +72,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       sortieStatus,
       escapedPos: [],
       _toEscapeIdx: [],
+      dropCount: 0,
     }
   }
 

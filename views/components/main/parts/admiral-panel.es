@@ -25,10 +25,11 @@ export default connect(
     basic: state.info.basic,
     equipNum: Object.keys(state.info.equips).length,
     shipNum: Object.keys(state.info.ships).length,
+    dropCount: state.sortie.dropCount,
   })
-)(function TeitokuPanel({basic, equipNum, shipNum}) {
+)(function TeitokuPanel({basic, equipNum, shipNum, dropCount}) {
   return (
-    <Panel bsStyle="default" className="teitoku-panel"> 
+    <Panel bsStyle="default" className="teitoku-panel">
     {
       typeof basic === 'object' && basic.api_level ? (function () {
         const styleCommon = {
@@ -64,7 +65,7 @@ export default connect(
                 <span id="user-rank">{`　[${rankName[basic.api_rank]}]　`}</span>
               </span>
             </OverlayTrigger>
-            {__('Ships')}: {shipNum} / {basic.api_max_chara}　{__('Equipment')}: {equipNum} / {basic.api_max_slotitem}
+            {__('Ships')}: {shipNum + dropCount} / {basic.api_max_chara}　{__('Equipment')}: {equipNum} / {basic.api_max_slotitem}
           </div>
         )
       })() : (
