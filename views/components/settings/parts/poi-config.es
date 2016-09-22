@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, InputGroup, ControlLabel, Checkbox, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
+import { Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, InputGroup, ControlLabel, Checkbox, Alert, OverlayTrigger, Tooltip, Collapse, Well, Radio } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { remote, ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
@@ -251,6 +251,44 @@ const CheckboxLabelConfig = connect(() => {
     )
   }
 })
+
+const RadioConfig = connect(() => {
+  return (state, props) => ({
+    value: get(state.config, props.configName, props.defaultVal),
+    configName: props.configName,
+    label: props.label,
+    availableVal: props.availableVal,
+  })
+})(class radioConfig extends Component {
+  static propTypes = {
+    label: React.PropTypes.string,
+    configName: React.PropTypes.string,
+    value: React.PropTypes.string,
+    availableVal: React.PropTypes.array,
+  }
+  onSelect = (value) => {
+    config.set(this.props.configName, value)
+  }
+  render() {
+    return (
+      <Grid>
+        {
+          this.props.availableVal.map((item, index) => {
+            return (
+              <Col key={index} xs={3}>
+                <Radio checked={this.props.value === item.value}
+                       onChange={this.onSelect.bind(this, item.value)} >
+                  {item.name}
+                </Radio>
+              </Col>
+            )
+          })
+        }
+      </Grid>
+    )
+  }
+})
+
 
 const FolderPickerConfig = connect(() => {
   return (state, props) => ({
@@ -659,6 +697,14 @@ class PoiConfig extends Component {
         <div className="form-group">
           <Divider text={__('Language')} />
           <SelectLanguageConfig />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Screenshot Format')} />
+          <RadioConfig
+            label={__('Screenshot Format')}
+            configName="poi.screenshotFormat"
+            defaultVal='png'
+            availableVal={[{name: 'PNG', value: 'png'}, {name: 'JPEG', value: 'jpg'}]} />
         </div>
         <div className="form-group">
           <Divider text={__('Screenshot Folder')} />

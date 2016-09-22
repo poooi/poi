@@ -12,7 +12,6 @@ const {openItem} = shell
 const __ = i18n.others.__.bind(i18n.others)
 
 // Controller icon bar
-const {capturePageInMainWindow} = remote.require('./lib/utils')
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
 config.on('config.set', (path, value) => {
@@ -43,13 +42,14 @@ const PoiControl = connect((state, props) => ({
     }
     const d = process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
     const screenshotPath = config.get('poi.screenshotPath', d)
+    const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
     $('kan-game webview').capturePage(rect, (image) => {
       try {
-        const buf = image.toPng()
+        const buf = usePNG ? image.toPNG() : image.toJPEG(80)
         const now = new Date()
         const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
         fs.ensureDirSync(screenshotPath)
-        const filename = path.join(screenshotPath, `${date}.${config.get('poi.screenshotFormat', 'png')}`)
+        const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
         fs.writeFile(filename, buf, function(err) {
           if (err) {
             throw err
