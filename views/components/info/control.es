@@ -36,18 +36,28 @@ const PoiControl = connect((state, props) => ({
   handleCapturePage = () => {
     const bound = $('kan-game webview').getBoundingClientRect()
     const rect = {
-      x: Math.ceil(bound.left),
-      y: Math.ceil(bound.top),
+      x: 0,
+      y: 0,
       width: Math.floor(bound.width),
       height: Math.floor(bound.height),
     }
     const d = process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
     const screenshotPath = config.get('poi.screenshotPath', d)
-    capturePageInMainWindow( rect, screenshotPath , (err, filename) => {
-      if (err) {
+    $('kan-game webview').capturePage(rect, (image) => {
+      try {
+        const buf = image.toPng()
+        const now = new Date()
+        const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+        fs.ensureDirSync(screenshotPath)
+        const filename = path.join(screenshotPath, `${date}.${config.get('poi.screenshotFormat', 'png')}`)
+        fs.writeFile(filename, buf, function(err) {
+          if (err) {
+            throw err
+          }
+          window.success(`${__('screenshot saved to')} ${filename}`)
+        })
+      } catch (error) {
         window.error(__('Failed to save the screenshot'))
-      } else {
-        window.success(`${__('screenshot saved to')} ${filename}`)
       }
     })
   }
