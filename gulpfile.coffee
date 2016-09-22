@@ -1,5 +1,5 @@
 build_all_platforms = ['win32-ia32', 'win32-x64', 'linux-x64', 'darwin-x64']
-
+require('babel-register')(require('./babel.config'))
 Promise = require 'bluebird'
 async = Promise.coroutine
 gulp = require 'gulp'
