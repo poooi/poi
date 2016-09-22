@@ -224,6 +224,7 @@
   opacity: 0;
   text-align: right;
   transition: all 0.3s;
+  color: white;
 }
 #MainView .resource-panel .additional-value.inc {
   background-color: #217dbb;
