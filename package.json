@@ -7,7 +7,7 @@
     "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
     "deploy": "gulp deploy",
     "build": "gulp build && build",
-    "build_win": "gulp build && build --win --x64 true --ia32 true",
+    "build_win": "gulp build && build --win --x64 && build --win --ia32",
     "start": "electron .",
     "start_debug": "electron . --debug",
     "clean": "gulp clean"
