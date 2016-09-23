@@ -61,7 +61,9 @@ class ModalTrigger extends React.Component {
           {this.state.content}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.handleToggle}>{__('Close')}</Button>
+          <Button onClick={this.handleToggle}>
+            {__((this.state.footer || []).length === 0 ? 'Close' : 'Cancel')}
+          </Button>
           {this.renderFooter(this.state.footer)}
         </Modal.Footer>
       </Modal>
