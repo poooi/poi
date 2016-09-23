@@ -86,7 +86,7 @@ export default connect(
                 <MaterialIcon materialId={i+1} className={iconClassName} />
                 <div className="material-value">{amount}</div>
                 <div className={valClassName}>
-                  {`${this.state.resourcesIncreasment[i] > 0 ? '+' : ''}${this.state.resourcesIncreasment[i]}　`}
+                  {`${this.state.resourcesIncreasment[i] > 0 ? '+' : ''}${this.state.resourcesIncreasment[i] !== 0 ? this.state.resourcesIncreasment[i] : ''}　`}
                 </div>
               </Col>
             )
