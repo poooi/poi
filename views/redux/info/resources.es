@@ -48,7 +48,7 @@ export function reducer(state=[], {type, body, postBody}) {
     state = state.slice()
     state[0] -= fuel
     state[2] -= steel
-    if (body.api_highspeed == 1)
+    if (postBody.api_highspeed == 1)
       state[5] -= 1
     return state
   }
