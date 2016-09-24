@@ -14,7 +14,6 @@ import './services/modernization-delta'
 import './services/developmentProphecy'
 import './services/sortieDangerousCheck'
 import './services/sortieFreeSlotCheck'
-import './services/resupply-bauxite'
 
 const refreshFlash = () =>
   $('kan-game webview').executeJavaScript(`
