@@ -44,7 +44,7 @@ export default connect(
     return `${__('Sortie area')}: ${mapName}`
   }
 
-  isFinalAttack() {
+  isFinalAttack = () => {
     const {mapHp, rank, mapId} = this.props
     if (!mapHp || mapHp[0] == 0)
       return false
@@ -53,15 +53,28 @@ export default connect(
     return finalHp >= mapHp[0]
   }
 
+  notifyFinalAttack = (e) => {
+    if (e.detail.path === '/kcsapi/api_req_map/start') {
+      const isFinalAttack = this.isFinalAttack()
+      if (isFinalAttack) {
+        toast(__('Possible final stage'), {
+          type: 'warning',
+          title: __('Sortie'),
+        })
+      }
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('game.response', this.notifyFinalAttack)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('game.response', this.notifyFinalAttack)
+  }
+
   render() {
     const {mapHp, mapData, currentNode} = this.props
-    const isFinalAttack = this.isFinalAttack()
-    if (isFinalAttack) {
-      toast(__('Possible final stage'), {
-        type: 'warning',
-        title: __('Sortie'),
-      })
-    }
     const tooltipMsg = []
     if (currentNode) {
       tooltipMsg.push(`${__('Node')}: ${currentNode}`)
