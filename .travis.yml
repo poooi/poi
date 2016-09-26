@@ -34,11 +34,11 @@ cache:
 
 install:
   - nvm install $TRAVIS_NODE_VERSION
-  - npm install
+  - npm install --silent
 
 before_script:
   - export TRAVIS=1
-  - npm install
+  - npm install --silent
 
 script:
   - npm run build
