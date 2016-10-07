@@ -23,9 +23,6 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
-// Module path
-require('module').globalPaths.push(path.join(ROOT, "node_modules"))
-
 // poi menu
 require('./components/etc/menu')
 
