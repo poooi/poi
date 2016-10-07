@@ -8,7 +8,7 @@ export function reducer(state={}, {type, body, postBody}) {
   case '@@Response/kcsapi/api_get_member/mapinfo':
     // The 3rd arg shouldn't be 2, because defeated map has no defeat_count
     // and will remain its value in that case
-    return compareUpdate(state, indexify(body), 1)
+    return compareUpdate(state, indexify(body.api_map_info), 1)
   case '@@Response/kcsapi/api_req_map/select_eventmap_rank': {
     const id = `${postBody.api_maparea_id}${postBody.api_map_no}`
     return reduxSet(state,
