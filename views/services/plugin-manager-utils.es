@@ -25,7 +25,7 @@ const clearReducer = undefined
 function calculateShasum(path) {
   return new Promise((resolve, reject) => {
     try {
-      const hash = crypto.createHash('md5')
+      const hash = crypto.createHash('sha1')
       const stream = createReadStream(path)
 
       stream.on('data', (data) => {
