@@ -329,3 +329,28 @@ div[role='tooltip'],
 #poi-app-container {
   transform-origin: 0 0;
 }
+
+.maproutes {
+  background-color: #161616;
+}
+.maproutes rect {
+  fill: white;
+}
+@keyframes maproutes-blink {
+    from {fill: #D50000;}
+    50% {fill: #FF9800;}
+    to {fill: #D50000;}
+}
+.maproutes rect.active {
+  animation: maproutes-blink 1s linear infinite;
+}
+.maproutes rect.passed {
+  fill: #039BE5;
+}
+.maproutes rect.boss {
+  fill: #C62828;
+}
+.maproutes line {
+  stroke-width: 2;
+  stroke: #F5F5F5;
+}
