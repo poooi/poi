@@ -29,25 +29,24 @@ const MapRoutes = connect(
   const histLen = spotHistory.length
   const activeSpot = spotHistory[histLen - 1]
   const bossSpotLoc = mapspots[bossSpot] || [-100, -100]
-  const activeSpotLoc = mapspots[activeSpot] || [-100, -100]
   const locHistory = spotHistory.map((i) => mapspots[i])
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : []
   return (
     <div>
-      <svg width="150" height="80" viewBox="0 0 15000 8000" className="maproutes">
+      <svg width="150" height="80" viewBox="0 0 150 80" className="maproutes">
         {lineHistory.map(([[begX, begY], [endX, endY]]) =>
-          <line x1={begX} y1={begY} x2={endX} y2={endY} />
+          <line x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} />
         )}
-        <circle cx={bossSpotLoc[0]} cy={bossSpotLoc[1]} r={480}
+        <rect x={parseInt(bossSpotLoc[0] / 100) - 3} y={parseInt(bossSpotLoc[1] / 100) - 3} width={6} height={6}
           className='boss' />
-        {// 1) Draw all points 
+        {// 1) Draw all points
         map(mapspots, ([x, y], id) =>
-          <circle cx={x} cy={y} r={280} />
+          <rect x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4} />
         )}
         {// 2) Draw passed points again, highlighting the active one
-         // r is a little larger to make sure it covers 
+         // r is a little larger to make sure it covers
         map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-          <circle cx={x} cy={y} r={290}
+          <rect x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4}
             className={id == activeSpot ? 'active' : 'passed'} />
         )}
       </svg>

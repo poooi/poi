@@ -331,26 +331,26 @@ div[role='tooltip'],
 }
 
 .maproutes {
-  background-color: #c3c3ff;
+  background-color: #161616;
 }
-.maproutes circle {
+.maproutes rect {
   fill: white;
 }
 @keyframes maproutes-blink {
-    from {fill: #cb4f4f; }
-    50% {fill: yellow;}
-    to {fill: #cb4f4f;}
+    from {fill: #D50000;}
+    50% {fill: #FF9800;}
+    to {fill: #D50000;}
 }
-.maproutes circle.active {
+.maproutes rect.active {
   animation: maproutes-blink 1s linear infinite;
 }
-.maproutes circle.passed {
-  fill: blue;
+.maproutes rect.passed {
+  fill: #039BE5;
 }
-.maproutes circle.boss {
-  fill: red;
+.maproutes rect.boss {
+  fill: #C62828;
 }
 .maproutes line {
-  stroke-width: 200;
-  stroke: #735eb3;
+  stroke-width: 2;
+  stroke: #F5F5F5;
 }
