@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, map, zip } from 'lodash'
 
 import {
   sortieMapDataSelector,
@@ -14,6 +14,47 @@ import {
 const {i18n, toast} = window
 const __ = i18n.others.__.bind(i18n.others)
 const emptyFinalHps = {}
+
+const MapRoutes = connect(
+  (state) => ({
+    sortieMapId: get(state, 'sortie.sortieMapId'),
+    spotHistory: get(state, 'sortie.spotHistory'),
+    bossSpot: get(state, 'sortie.bossSpot'),
+    allMapspots: get(state, 'ext.poi-plugin-prophet._.mapspot'),
+  })
+)(({sortieMapId, spotHistory, allMapspots, bossSpot}) => {
+  if (!sortieMapId || !allMapspots)
+    return <div />
+  const mapspots = get(allMapspots, [Math.floor(sortieMapId / 10), sortieMapId % 10])
+  const histLen = spotHistory.length
+  const activeSpot = spotHistory[histLen - 1]
+  const bossSpotLoc = mapspots[bossSpot] || [-100, -100]
+  const activeSpotLoc = mapspots[activeSpot] || [-100, -100]
+  const locHistory = spotHistory.map((i) => mapspots[i])
+  const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : []
+  return (
+    <div>
+      <svg width="150" height="80" viewBox="0 0 15000 8000" className="maproutes">
+        {lineHistory.map(([[begX, begY], [endX, endY]]) =>
+          <line x1={begX} y1={begY} x2={endX} y2={endY} />
+        )}
+        <circle cx={bossSpotLoc[0]} cy={bossSpotLoc[1]} r={480}
+          className='boss' />
+        {// 1) Draw all points 
+        map(mapspots, ([x, y], id) =>
+          <circle cx={x} cy={y} r={280} />
+        )}
+        {// 2) Draw passed points again, highlighting the active one
+         // r is a little larger to make sure it covers 
+        map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
+          <circle cx={x} cy={y} r={290}
+            className={id == activeSpot ? 'active' : 'passed'} />
+        )}
+      </svg>
+    </div>
+  )
+})
+
 
 // Map Reminder
 export default connect(
@@ -87,6 +128,7 @@ export default connect(
         placement='top'
         overlay={
           <Tooltip id='detail-map-info' style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
+            <MapRoutes />
             {tooltipMsg.join('  |  ')}
           </Tooltip>
         }>

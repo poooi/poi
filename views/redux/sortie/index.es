@@ -13,6 +13,7 @@ const initState = {
   escapedPos: [],
   currentNode: null,
   dropCount: 0,
+  spotHistory: [],
 }
 
 export function reducer(state=initState, {type, path, postBody, body}) {
@@ -26,6 +27,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       sortieMapId: 0,
       currentNode: null,
       dropCount: 0,
+      spotHistory: [],
     }
 
   case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -61,6 +63,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
   case '@@Response/kcsapi/api_req_map/start': {
     const sortieStatus = initState.sortieStatus.slice()
     const mapId = `${postBody.api_maparea_id}${postBody.api_mapinfo_no}`
+    const startSpot = body.api_from_no || 0
     if (state.combinedFlag !== 0 && postBody.api_deck_id == 1) {
       sortieStatus[0] = sortieStatus[1] = true
     } else {
@@ -73,6 +76,8 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       escapedPos: [],
       _toEscapeIdx: [],
       dropCount: 0,
+      spotHistory: [startSpot, body.api_no],
+      bossSpot: body.api_bosscell_no,
     }
   }
 
@@ -80,6 +85,8 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     return {
       ...state,
       currentNode: body.api_no,
+      // It is said api_next could be 0
+      spotHistory: state.spotHistory.concat(body.api_no || []),
     }
   }
   }
