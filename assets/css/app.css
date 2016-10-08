@@ -351,6 +351,10 @@ div[role='tooltip'],
   fill: #C62828;
 }
 .maproutes line {
+  stroke-width: 1.5;
+  stroke: #373737;
+}
+.maproutes line.passed {
   stroke-width: 2;
   stroke: #F5F5F5;
 }
