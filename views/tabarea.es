@@ -238,6 +238,9 @@ export default connect(
       return
     this.listener = true
     window.addEventListener('keydown', (e) => {
+      if (document.activeElement.tagName === 'WEBVIEW' || document.activeElement.tagName === 'INPUT') {
+        return
+      }
       if (e.keyCode == 9) {
         e.preventDefault()
         if (lockedTab && e.repeat)
