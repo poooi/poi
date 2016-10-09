@@ -237,8 +237,15 @@ export default connect(
     if (this.listener != null)
       return
     this.listener = true
+    const inGame = () => {
+      try {
+        return document.querySelector('webview').getURL() === "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/"
+      } catch (e) {
+        return false
+      }
+    }
     window.addEventListener('keydown', (e) => {
-      if (document.activeElement.tagName === 'WEBVIEW' || document.activeElement.tagName === 'INPUT') {
+      if ((document.activeElement.tagName === 'WEBVIEW' && !inGame()) || document.activeElement.tagName === 'INPUT') {
         return
       }
       if (e.keyCode == 9) {
