@@ -82,11 +82,15 @@ export default connect(
             })
             const amount = valid ? resources[i] : '??'
             return (
-              <Col key={i} xs={6} style={{marginBottom: 2, marginTop: 2, display: 'flex'}}>
+              <Col key={i} xs={6} className="material-container">
                 <MaterialIcon materialId={i+1} className={iconClassName} />
-                <div className="material-value">{amount}</div>
-                <div className={valClassName}>
-                  {`${this.state.resourcesIncreasment[i] > 0 ? '+' : ''}${this.state.resourcesIncreasment[i] !== 0 ? this.state.resourcesIncreasment[i] : ''}　`}
+                <div className="material-value">
+                  <div className="material-amount">
+                    {amount}
+                  </div>
+                  <div className={valClassName}>
+                    {`${this.state.resourcesIncreasment[i] > 0 ? '+' : ''}${this.state.resourcesIncreasment[i] !== 0 ? this.state.resourcesIncreasment[i] : ''}　`}
+                  </div>
                 </div>
               </Col>
             )
