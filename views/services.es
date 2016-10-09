@@ -33,6 +33,9 @@ const refreshFlash = () =>
 
 // F5 & Ctrl+F5 & Alt+F5
 window.addEventListener('keydown', (e) => {
+  if (document.activeElement.tagName === 'INPUT') {
+    return
+  }
   if (process.platform == 'darwin') {
     if (e.keyCode === 91 || e.keyCode === 93) {
       // When the game (flash) is on focus, it catches all keypress events
