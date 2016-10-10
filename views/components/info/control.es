@@ -35,15 +35,15 @@ const PoiControl = connect((state, props) => ({
   handleCapturePage = () => {
     const bound = $('kan-game webview').getBoundingClientRect()
     const rect = {
-      x: 0,
-      y: 0,
+      x: Math.ceil(bound.left),
+      y: Math.ceil(bound.top),
       width: Math.floor(bound.width),
       height: Math.floor(bound.height),
     }
     const d = process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
     const screenshotPath = config.get('poi.screenshotPath', d)
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
-    $('kan-game webview').capturePage(rect, (image) => {
+    remote.getGlobal("mainWindow").capturePage(rect, (image) => {
       try {
         const buf = usePNG ? image.toPNG() : image.toJPEG(80)
         const now = new Date()
