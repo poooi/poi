@@ -33,7 +33,7 @@ window.loadTheme = (th) => {
 window.applyTheme = (th) => {
   config.set('poi.theme', th)
   window.loadTheme(th)
-  event = new CustomEvent( 'theme.change',{
+  const event = new CustomEvent( 'theme.change',{
     bubbles: true,
     cancelable: true,
     detail: {
