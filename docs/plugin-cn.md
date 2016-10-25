@@ -224,7 +224,7 @@ import * from `${window.ROOT}/views/utils/selectors`    // Actually syntacticall
 #### 全局变量
 ```javascript
 window =
-  ROOT // poi 代码根目录，即 package.json 和 index.html 所在目录
+  ROOT // main-poi 代码根目录，即 package.json 和 index.html 所在目录
   APPDATA_PATH // 可以用于存放用户数据的目录，Windows 上是 %AppData%/poi，Linux 上是 ~/.config/poi
   POI_VERSION // poi 版本号
 ```
@@ -334,7 +334,7 @@ store.misc.
 #### Selectors
 在可以的情况下应采用 [reselect](https://github.com/reactjs/reselect) 库的 selector 来从 store 中提取数据，以避免不必要的计算和渲染。
 
-本体代码的 `'views/utils/selectos'` 文件中导出了大量 selector 以方便使用。详细列表请参见[该文件](https://github.com/poooi/poi/blob/master/views/utils/selectors.es)，这里以舰队、舰船和装备为例，讲解一下本文件中的主要格式。
+本体代码的 `'views/utils/selectos'` 文件中提供了一些常用的计算游戏数据的 selector。详细列表请参见[该文件](https://github.com/poooi/poi/blob/master/views/utils/selectors.es)，这里以舰队、舰船和装备为例，讲解一下本文件中的主要格式。
 + `fleetSelectorFactory(fleetId)`：该函数以 `fleetId` （0到3）调用后返回的值为一个 selector，该 selector 返回指定舰队的资料（即 `store.info.fleets[<fleetId>]`）。
 + `shipDataSelectorFactory(shipId)`：该函数以 `shipId` 调用后返回的 selector， 返回指定船只的资料，该资料为一个二元数组，`[_ship, $ship]`。如果该船无法找到，则返回 `undefined`。
 + `fleetShipDataSelectorFactory(fleetId)`：该函数以 `fleetId` 调用后返回的 selector， 返回指定舰队所有船只的资料，每个船只的资料为二元数组`[_ship, $ship]`，或 `undefined`。
@@ -389,9 +389,9 @@ store.misc.
 ```
 
 #### Promise Action
-poi 整合了 [`redux-thunk`](https://github.com/gaearon/redux-thunk) ，你可以 dispatch 一个 Promise 来进行异步的操作。
+poi 整合了 [`redux-thunk`](https://github.com/gaearon/redux-thunk) 以便于编写异步操作。详情请参阅该库文档。简单来说，你不仅可以 dispatch 一个 plain object，还可以 dispatch 一个函数，其参数满足 `(dispatch, getState) => {}`，即你可以在函数内部异步获取数据及 dispatch actions。
 
-除此之外， 你还可以使用 poi 编写的 `PromiseAction` 接口来方便地处理 Promise 的异步动作。该类接收三个参数，
+除此之外， 如果你想要 dispatch promise 的话，你还可以使用 poi 编写的 `PromiseAction` 接口。该类接收三个参数，
 + `actionNameBase`：String
 + `promiseGenerator`：function，不接受参数，返回一个 promise
 + `args`：anything，可选，将会传递给 promiseGenerator 及各 action
@@ -530,7 +530,8 @@ window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH');
 window.POI_VERSION = remote.getGlobal('POI_VERSION');
 window.MODULE_PATH = remote.getGlobal('MODULE_PATH');
 window.PLUGIN_ROOT = __dirname
-require('module').globalPaths.push(MODULE_PATH);
+require('module').globalPaths.push(MODULE_PATH);   // Allows importing main-poi libraries
+require('module').globalPaths.push(ROOT);          // Allows importing main-poi source files
 ```
 
 ## 插件间调用 IPC
