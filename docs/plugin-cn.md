@@ -143,7 +143,7 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
 ```javascript
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { createStore } from 'reselect'
+import { createSelector } from 'reselect'
 import { Button } from 'react-bootstrap'
 
 // Import selectors defined in poi
@@ -151,12 +151,12 @@ import { extensionSelectorFactory } from 'views/utils/selectors'
 
 EXTENSION_KEY = 'poi-plugin-click-button'
 // This selector gets store.ext['poi-plugin-click-button']
-const pluginDataSelector = createStore(
+const pluginDataSelector = createSelector(
   extensionSelectorFactory(EXTENSION_KEY),
   (state) => state || {}
 )
 // This selector gets store.ext['poi-plugin-click-button'].count
-const clickCountSelector = createStore(
+const clickCountSelector = createSelector(
   pluginDataSelector,
   (state) => state.count
 )
