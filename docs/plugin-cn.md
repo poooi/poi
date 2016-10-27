@@ -166,8 +166,7 @@ export function reducer(state={count: 0}, action) {
   const {type} = action
   if (type === '@@poi-plugin-click-button@click')
     return {
-      ...state,
-      (state.count || 0) + 1,
+      count: (state.count || 0) + 1,
     }
   return state
 }
@@ -180,8 +179,8 @@ function increaseClick() {
 
 // poi will render this component in the plugin panel
 export const reactClass = connect(
-  // Get store.ext['poi-plugin-click-button'].count and set as this.props.click
-  clickCountSelector,
+  // Get store.ext['poi-plugin-click-button'].count and set as this.props.click.count
+  (state, props) => {return {count: clickCountSelector(state, props)}},
   // Wrap increaseClick with dispatch and set as this.props.increaseClick
   {
     increaseClick,
