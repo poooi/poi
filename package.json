@@ -62,6 +62,7 @@
     "objtree": "^0.1.1",
     "pac-proxy-agent": "^1.0.0",
     "path-extra": "3.0.0",
+    "poi-lib-battle": "0.0.2",
     "react": "^15.3.1",
     "react-addons-shallow-compare": "^15.3.1",
     "react-bootstrap": "^0.30.3",
