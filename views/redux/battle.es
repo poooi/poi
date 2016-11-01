@@ -159,17 +159,7 @@ export function reducer(state=initState, {type, body, postBody, path}) {
     // Initialize all info
     return {
       ...state,
-      _status: {
-        ..._status,
-        deckId: -1,
-        combined: false,
-        map: -1,
-        bossCell: -1,
-        currentCell: -1,
-        battle: null,
-        colorNo: -1,
-        enemyFormation: 0,
-      },
+      ...initState,
     }
   // Normal battle
   case '@@Response/kcsapi/api_req_sortie/battle':
