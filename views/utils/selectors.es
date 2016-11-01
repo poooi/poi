@@ -93,6 +93,7 @@ export const mapsSelector = (state) => state.info.maps
 export const sortieSelector = (state) => state.sortie
 export const sortieStatusSelector = (state) => state.sortie.sortieStatus
 export const currentNodeSelector = (state) => state.sortie.currentNode
+export const battleSelector = (state) => state.battle
 
 export const extensionSelectorFactory = (key) =>
   (state) => get(state.ext, [key, '_']) || {}
