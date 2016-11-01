@@ -13,8 +13,7 @@ import { Models, Simulator } from 'poi-lib-battle'
 const {BattleType, Battle, Fleet} = Models
 
 function handleResult(battle, packet) {
-  // HACK: Skip pratice battle.
-  // TODO: Update when lib-battle updated.
+  // Process Normal & Boss battle only.
   if (battle.type === BattleType.Pratice)
     return
 
@@ -27,18 +26,14 @@ function handleResult(battle, packet) {
   const deckShipId = [], deckHp = []
   const deck = [].concat(simulator.mainFleet || [], simulator.escortFleet || [])
   deck.map(ship => {
-    if (ship != null) {
-      deckShipId.push(ship.raw != null ? ship.raw.api_id : -1) // use _ships id in deckShipId
-      deckHp.push(ship.nowHP)
-    }
+    deckShipId.push((ship && ship.raw) ? ship.raw.api_id : -1)  // use _ships id in deckShipId
+    deckHp.push(ship ? ship.nowHP : 0)
   })
   const enemyShipId = [], enemyHp = []
   const enemy = [].concat(simulator.enemyFleet || [], simulator.enemyEscort || [])
   enemy.map(ship => {
-    if (ship != null) {
-      enemyShipId.push(ship.id)
-      enemyHp.push(ship.nowHP)
-    }
+    enemyShipId.push(ship ? ship.id : -1)
+    enemyHp.push(ship ? ship.nowHP : 0)
   })
   const result = {
     rank: packet.api_win_rank,
