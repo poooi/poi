@@ -28,7 +28,7 @@ function handleResult(battle, packet) {
   const deck = [].concat(simulator.mainFleet || [], simulator.escortFleet || [])
   deck.map(ship => {
     if (ship != null) {
-      deckShipId.push(ship.id)
+      deckShipId.push(ship.raw != null ? ship.raw.api_id : -1) // use _ships id in deckShipId
       deckHp.push(ship.nowHP)
     }
   })
