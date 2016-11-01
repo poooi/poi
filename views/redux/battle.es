@@ -56,8 +56,8 @@ function handleResult(battle, packet) {
 function getItem(itemId) {
   const _item = window.getStore(`info.equips.${itemId}`)
   const item = _item ? {
-    ..._item,
     ...window.getStore(`const.$equips.${_item.api_slotitem_id}`),
+    ..._item,
   } : null
   if (item) {
     // Clean up
@@ -69,8 +69,8 @@ function getItem(itemId) {
 function getShip(shipId) {
   const _ship = window.getStore(`info.ships.${shipId}`)
   const ship = _ship ? {
-    ..._ship,
     ...window.getStore(`const.$ships.${_ship.api_ship_id}`),
+    ..._ship,
   } : null
   if (ship) {
     ship.poi_slot = []
