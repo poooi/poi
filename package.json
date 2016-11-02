@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "v7.2.0-beta.0",
+  "version": "v7.2.0-beta.1",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
     "cson": "^3.0.2",
+    "electron": "^1.4.5",
     "fast-memoize": "^2.0.2",
     "flash-player-loader": "^1.1.1",
     "font-awesome": "^4.6.0",
