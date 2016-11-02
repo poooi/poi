@@ -111,7 +111,7 @@ const initShips = (dispatch, current, previous) => {
   window._ships = new Proxy(window.getStore('info.ships'), {
     get: (target, property, receiver) => {
       const ship = target[property]
-      if (ship === undefined) {
+      if (typeof ship === 'undefined') {
         return undefined
       }
       return new Proxy(ship, {
@@ -128,7 +128,7 @@ const initEquips = (dispatch, current, previous) => {
   window._slotitems = new Proxy(window.getStore('info.equips'), {
     get: (target, property, receiver) => {
       const equip = target[property]
-      if (equip === undefined) {
+      if (typeof equip === 'undefined') {
         return undefined
       }
       return new Proxy(equip, {
