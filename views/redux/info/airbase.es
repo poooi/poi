@@ -4,8 +4,10 @@ const { buildArray, compareUpdate } = window
 
 export default function reducer(state=[], {type, body, postBody}) {
   switch (type) {
-  case '@@Response/kcsapi/api_get_member/base_air_corps':
-    return trimArray(compareUpdate(state, body, 3), body)
+  case '@@Response/kcsapi/api_get_member/mapinfo': {
+    const airbase = body.api_air_base
+    return trimArray(compareUpdate(state, airbase, 3), airbase)
+  }
   case '@@Response/kcsapi/api_req_air_corps/set_plane': {
     const {api_base_id} = postBody
     const {api_distance, api_plane_info} = body
