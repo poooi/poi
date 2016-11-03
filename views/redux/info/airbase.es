@@ -6,6 +6,9 @@ export default function reducer(state=[], {type, body, postBody}) {
   switch (type) {
   case '@@Response/kcsapi/api_get_member/mapinfo': {
     const airbase = body.api_air_base
+    if (typeof airbase === 'undefined') {
+      return state
+    }
     return trimArray(compareUpdate(state, airbase, 3), airbase)
   }
   case '@@Response/kcsapi/api_req_air_corps/set_plane': {
