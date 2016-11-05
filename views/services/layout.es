@@ -52,7 +52,27 @@ const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
   }
 }
 
-const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel}) => {
+const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) => {
+  let menuSize, tabWidth
+
+  if (layout === 'horizontal') {
+    tabWidth = (window.innerWidth - webviewWidth) / zoomLevel
+    menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
+    // 0.875 = excluding settings nav width
+  }
+  else {
+    tabWidth = window.innerWidth / zoomLevel
+    menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
+  }
+
+  return `
+    poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] {
+      width: ${menuSize}px;
+    }
+    `
+}
+
+const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed}) => {
   // Apply css
   additionalStyle.innerHTML = `
     poi-app div.poi-app-tabpane {
@@ -76,6 +96,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
     }
     ${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}
     ${getToastCSS({webviewWidth: webviewWidth, webviewHeight: webviewHeight, layout: layout})}
+    ${getPluginDropdownCSS({webviewWidth: webviewWidth, zoomLevel: zoomLevel, layout: layout, doubleTabbed: doubleTabbed})}
   `
 
   // Resize when window size smaller than webview size
@@ -184,6 +205,7 @@ const adjustSize = () => {
     tabpaneHeight: tabpaneHeight,
     layout: layout,
     zoomLevel: zoomLevel,
+    doubleTabbed: doubleTabbed,
   })
 }
 

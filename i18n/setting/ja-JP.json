@@ -80,6 +80,7 @@
   "Prevent DMM Network Change Popup": "DMMネットワーク変更アラートを阻止する",
   "Use SVG Icon": "SVGアイコンを使用する",
   "Enable Smooth Transition": "タブの切り替えをスムースに表示する",
+  "Use Gridded Plugin Menu": "プラグインメニューをグリッド仕様に設定する",
   "Plugin update": "プラグイン更新",
   "have newer version. Please update your plugins.": "は新しいバージョンがあります。更新してください。",
   "Check Update": "更新チェック",
