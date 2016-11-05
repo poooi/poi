@@ -52,7 +52,50 @@ const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
   }
 }
 
-const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel}) => {
+const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) => {
+  let menuSize, itemSize, tabWidth
+
+  if (layout === 'horizontal') {
+    tabWidth = (window.innerWidth - webviewWidth) / zoomLevel
+    menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
+    // 0.875 = excluding settings nav width
+    itemSize = (doubleTabbed ? Math.floor(menuSize / 2) : Math.floor(menuSize / 3)) - 5
+    // some themes defines paddings/margins so it its safer to use smaller size
+  }
+  else {
+    tabWidth = window.innerWidth / zoomLevel
+    menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
+    itemSize = (doubleTabbed ? Math.floor(menuSize / 3) : Math.floor(menuSize / 5)) - 5
+    // some themes defines paddings/margins so it its safer to use smaller size
+  }
+
+  return `
+    poi-nav ul[aria-labelledby=plugin-dropdown] {
+      width: ${menuSize}px;
+      padding-top: 1em;
+    }
+
+    poi-nav ul[aria-labelledby=plugin-dropdown] li {
+      display: block;
+      float: left;
+    }
+
+    poi-nav ul[aria-labelledby=plugin-dropdown] li a {
+      padding-top: 0.5em;
+      white-space: normal;
+      display: block;
+      width: ${itemSize}px;
+      height: 6em;
+    }
+
+    poi-nav ul[aria-labelledby=plugin-dropdown] li .fa {
+      display: block;
+      font-size: 150%;
+    }
+    `
+}
+
+const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed}) => {
   // Apply css
   additionalStyle.innerHTML = `
     poi-app div.poi-app-tabpane {
@@ -76,6 +119,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel})
     }
     ${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}
     ${getToastCSS({webviewWidth: webviewWidth, webviewHeight: webviewHeight, layout: layout})}
+    ${getPluginDropdownCSS({webviewWidth: webviewWidth, zoomLevel: zoomLevel, layout: layout, doubleTabbed: doubleTabbed})}
   `
 
   // Resize when window size smaller than webview size
@@ -184,6 +228,7 @@ const adjustSize = () => {
     tabpaneHeight: tabpaneHeight,
     layout: layout,
     zoomLevel: zoomLevel,
+    doubleTabbed: doubleTabbed,
   })
 }
 
