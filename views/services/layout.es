@@ -53,20 +53,16 @@ const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
 }
 
 const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) => {
-  let menuSize, itemSize, tabWidth
+  let menuSize, tabWidth
 
   if (layout === 'horizontal') {
     tabWidth = (window.innerWidth - webviewWidth) / zoomLevel
     menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
     // 0.875 = excluding settings nav width
-    itemSize = (doubleTabbed ? Math.floor(menuSize / 2) : Math.floor(menuSize / 3)) - 5
-    // some themes defines paddings/margins so it its safer to use smaller size
   }
   else {
     tabWidth = window.innerWidth / zoomLevel
     menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
-    itemSize = (doubleTabbed ? Math.floor(menuSize / 3) : Math.floor(menuSize / 5)) - 5
-    // some themes defines paddings/margins so it its safer to use smaller size
   }
 
   return `
@@ -78,19 +74,22 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
     poi-nav ul[aria-labelledby=plugin-dropdown] li {
       display: block;
       float: left;
+      width: 33%;
     }
 
     poi-nav ul[aria-labelledby=plugin-dropdown] li a {
-      padding-top: 0.5em;
-      white-space: normal;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
       display: block;
-      width: ${itemSize}px;
-      height: 6em;
+      width: 100%;
+      height: 5em;
+      padding-top: 1em;
     }
 
     poi-nav ul[aria-labelledby=plugin-dropdown] li .fa {
       display: block;
-      font-size: 150%;
+      font-size: 175%;
     }
     `
 }
