@@ -87,12 +87,14 @@ const ChangeThemeConfig = connect((state, props) => ({
   theme: get(state.config, 'poi.theme', 'paperdark'),
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
+  useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
     theme: React.PropTypes.string,
     enableSVGIcon: React.PropTypes.bool,
     enableTransition: React.PropTypes.bool,
+    useGridMenu: React.PropTypes.bool,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -114,6 +116,9 @@ const ChangeThemeConfig = connect((state, props) => ({
   }
   handleSetTransition = () => {
     config.set('poi.transition.enable', !this.props.enableTransition)
+  }
+  handleSetGridMenu = () => {
+    config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
   render() {
     return (
@@ -140,6 +145,11 @@ const ChangeThemeConfig = connect((state, props) => ({
         <Col xs={12}>
           <Checkbox checked={this.props.enableTransition} onChange={this.handleSetTransition}>
             {__('Enable Smooth Transition')}
+          </Checkbox>
+        </Col>
+        <Col xs={12}>
+          <Checkbox checked={this.props.useGridMenu} onChange={this.handleSetGridMenu}>
+            {__('Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
       </Grid>

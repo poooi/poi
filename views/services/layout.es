@@ -66,30 +66,8 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
   }
 
   return `
-    poi-nav ul[aria-labelledby=plugin-dropdown] {
+    poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] {
       width: ${menuSize}px;
-      padding-top: 1em;
-    }
-
-    poi-nav ul[aria-labelledby=plugin-dropdown] li {
-      display: block;
-      float: left;
-      width: 33%;
-    }
-
-    poi-nav ul[aria-labelledby=plugin-dropdown] li a {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      display: block;
-      width: 100%;
-      height: 5em;
-      padding-top: 1em;
-    }
-
-    poi-nav ul[aria-labelledby=plugin-dropdown] li .fa {
-      display: block;
-      font-size: 175%;
     }
     `
 }

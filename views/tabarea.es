@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React, { Component, createElement, Children, PropTypes } from 'react'
+import React, { Component, Children, PropTypes } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'
@@ -144,6 +144,7 @@ export default connect(
   (state) => ({
     plugins: state.plugins,
     doubleTabbed: get(state.config, 'poi.tabarea.double', false),
+    useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
   }),
   undefined,
   undefined,
@@ -152,6 +153,7 @@ export default connect(
   static propTypes = {
     plugins: PropTypes.array.isRequired,
     doubleTabbed: PropTypes.bool.isRequired,
+    useGridMenu: PropTypes.bool.isRequired,
   }
   static childContextTypes = {
     selectTab: PropTypes.func.isRequired,
@@ -310,6 +312,9 @@ export default connect(
     )
   }
   render() {
+    const navClass = classNames({
+      'grid-menu': this.props.useGridMenu,
+    })
     const tabbedPlugins = this.tabbedPlugins()
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.state.activePluginName) || tabbedPlugins[0]
@@ -336,7 +341,7 @@ export default connect(
 
     return !this.props.doubleTabbed ? (
       <div>
-        <Nav bsStyle="tabs" activeKey={this.state.activeMainTab} id="top-nav"
+        <Nav bsStyle="tabs" activeKey={this.state.activeMainTab} id="top-nav" className={navClass}
           onSelect={this.handleSelectTab}>
           <NavItem key='mainView' eventKey='mainView'>
             {mainview.displayName}
@@ -397,7 +402,7 @@ export default connect(
           </TabContentsUnion>
         </div>
         <div className="no-scroll">
-          <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav'>
+          <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
             <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
               title={(activePlugin || {}).displayName || defaultPluginTitle}>
             {pluginDropdownContents}
