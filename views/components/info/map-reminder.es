@@ -39,24 +39,24 @@ const MapRoutes = connect(
     <div>
       <svg width="150" height="80" viewBox="0 0 150 80" className="maproutes">
         {// Draw all lines
-        maproutes.map(([beg, end]) => {
+        maproutes.map(([beg, end], i) => {
           const [begX, begY] = mapspots[beg] || [-100, -100]
           const [endX, endY] = mapspots[end] || [-100, -100]
-          return <line x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} />
+          return <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} />
         })}
         {// Draw passed lines
-        lineHistory.map(([[begX, begY], [endX, endY]]) =>
-          <line x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} className="passed" />
+        lineHistory.map(([[begX, begY], [endX, endY]], i) =>
+          <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} className="passed" />
         )}
         <rect x={parseInt(bossSpotLoc[0] / 100) - 3} y={parseInt(bossSpotLoc[1] / 100) - 3} width={6} height={6}
           className='boss' />
         {// Draw all points
         map(mapspots, ([x, y], id) =>
-          <rect x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4} />
+          <rect key={id} x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4} />
         )}
         {// Draw passed points again, highlighting the active one
         map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-          <rect x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4}
+          <rect key={id} x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4}
             className={id == activeSpot ? 'active' : 'passed'} />
         )}
       </svg>
