@@ -738,3 +738,6 @@ cd .. && tar cvf [repo] [repo].tar.gz
 ## 实例参考
 
 在 poooi(https://github.com/poooi) 下有很多可以参考的插件。
+
+## 社区
+欢迎你成为 poi 的开发者，在开发过程中的问题以及想法可以在 issue 中提出。此外可以加入 [telegram 交流群](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ)参与交流讨论。
