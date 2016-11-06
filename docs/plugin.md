@@ -3,77 +3,108 @@
 Poi is based on web, and all UI and procedure are done with web development techniques. Developers
 are supposed to have knowledge of following subjects:
 
-+ Basic HTML, CSS and JavaScript
++ HTML, CSS
++ JavaScript（ECMAScript 7）or [CoffeeScript](http://coffeescript.org/) (not recommended)
++ [Node.js](https://nodejs.org) as well as [npm](http://npmjs.com/)
 + [React.js](http://facebook.github.io/react/)
-+ [Node.js](https://nodejs.org)
++ [Redux](http://redux.js.org/) as well as [react-redux](https://github.com/reactjs/react-redux)
 + [Electron](https://github.com/atom/electron)
 
-For a comfortable developing experience, it is recommended that you know of following stuffs:
+documents of following libraries may be also useful during development:
 
-+ [CoffeeScript](http://coffeescript.org)
-+ [CoffeeReact](https://github.com/jsdf/coffee-react)
-+ [ReactBootstrap](http://react-bootstrap.github.io/components.html)
++ [reselect](https://github.com/reactjs/reselect)
++ [react-bootstrap](http://react-bootstrap.github.io/components.html)
++ [redux-observers](https://github.com/xuoe/redux-observers)
 
-## Plugin Structure
-Current plugin system is constructed as below:
-```
-appData
-  |-- plugins
-        |--node_modules
-            |-- plugin1
-                  |-- index.js
-                  |-- ...
-                  |-- ...
-            |-- plugin2
-                  |-- index.cjsx
-                  |-- ...
-                  |-- ...
-            |-- plugin3
-                  |-- index.coffee
-```
-On initiation, poi will visit all folders whose name begins with `poi-plugin-` under path `appData/plugins/node_modules`, and tries to load them as plugins. Here `appData` is path to store user data, on OS X it is `$HOME/Library/Application Support/poi`, on Windows it will be `%AppData%/poi`, on other Unix-like OS it will be `~/.config/poi`.
+Finally, it is recommended to follow some development instructions below.
 
-Basically, a plugin can be loaded when it contains an index, which can be `index.js`, `index.coffee` or `index.cjsx`.
+## Brief Introduction
+A poi plugin is essentially a node module. Installing, removing or updating the plugin are therefore manupulations on the plugin by poi itself.
 
-## Attributes of index
-Index can expose its attributes via `export` method. Below are all attributes and their respective data type. Data type `String | ReactElement` means it will be directly displayed if it is a string, or rendered by React if a ReactElement.
+A plugin should follow npm related specifications, a [`package.json`](https://docs.npmjs.com/files/package.json) under plugin root directory is necessary. The mounting point is specified in `main` field, and, if not provided, will be `index.js`, `index.coffee`, `index.cjsx`, or `index.es`.
 
+plugin will interact with poi using:
++ information provided in `package.json`
++ code executed when importing (using `import` or `require` syntax) the module
++ imported variables
+
+For example, if a plugin is inside poi main interface (*panel plugin*), a React component should be exported; if it is a standalone window plugin (*window plugin*), it should export content index page (`index.html`); plugins that does not contain any user-interface will just run in the back-end.
+
+Of course there will be many arguments related to installation, upgrade, removing, executing and setting.
+
+## Plugin life cycle
+The procedure between the moment plugin is installed, updated, or enabled in settings panel, and the moment it start to work, is called *enable plugin*. During this procedure, poi will:
+
+1. import plugin module
+1. read and analyze plugin's `package.json`
+1. load plugin's reducer
+1. call `pluginDidLoad`
+1. update plugin list, load plugin component or window
+
+The procedure between the moment plugin is running and and the moment is disabled, is removed or starts being updated, is call *disable plugin*. During this procedure, poi will:
+
+1. call `pluginWillUnload`
+1. close the window for window plugin
+1. update plugin list
+1. remove plugin's reducer and empty plugin store
+1. remove plugin cache such as import cache
+
+## On `package.json`
+`package.json` is standard file for npm module metadata, its structured can be refered in [npm offical documents](https://docs.npmjs.com/files/package.json). poi makes use of parts of its standard field, and also extra field for plugin's own information.
+
+Standard metadata used are:
++ `version`: *String*, plugin version in [Semantic Versioning](http://semver.org/) format, e.g. `x.y.z` for stable version, `x.y.z-beta.a` for beta version.
++ `author`: author for plugin
+ + if *String*, it is the name of author
+ + if *Object*, then `name` is the name of author,`links` or `url` is the links to the author.
++ `description`: *String*, brief description
+
+Extra information is stored in `poiPlugin` field, including:
++ `title`: *String*, title for plugin, displayed in plugin list and menu. Will be translated provided in i18n keys.
++ `id`: *String*, key for identify the plugin. Will be package name if empty.
++ `priority`: *Number*, priority in plugin menu, smaller value will make it more ahead. Generally the order is panel plugin < window plugin < non UI plugin, but it is not obliged.
++ `description`: *String*, description of the plugin, displayed in plugin list. Since standard metadata's `description` is displayed in npm website, this field is for poi specified description. Will be translated provided in i18n keys.
++ `icon`: *String*, icon for plugin in plugin list, supports icons including `FontAwesome`, see [react-icons](https://www.npmjs.com/package/react-icons)
++ `i18nDir`: *String*, custom [i18n](https://github.com/jeresig/i18n-node-2) path relative to plugin root, will be `./i18n` and `./assets/i18n` by default.
++ `apiVer`, *Object*, defines plugin compatibility. Use it if a newer version is not compatible on older poi versions. Poi will check the field for installed plugin to determine its loading, and also check the field in latest version on npm repository, to control the update check, installation, upgrade or rolling back. Its format will be:
 ```javascript
-module.exports = {
-  name: String // plugin name, in English
-  displayName: String | ReactElement // plugin display name on UI
-  priority: Number // priority for plugin order in plugin menu, smaller value appears in front
-  show: Boolean // should the plugin be displayed
-  realClose: Boolean // should the plugin process be terminated if it is closed, default is false
-  author: String | ReactElement // plugin author
-  link: String // plugin author's link
-  description: String | ReactElement // plugin description
-  version: String | ReactElement // plugin version
-  reactClass: ReactClass // plugin's view and model, which will be rendered on poi's plugin panel with React.createClass
-  handleClick: Function // with this attribute plugin's reactClass will be ignored and not displayed in plugin panel, instead developer can define the reaction on clicking, e.g. creating new window
-};
+{
+  <poiVer>: <pluginVer>,
+}
 ```
-Let's take an example, if you need a plugin that jumps to a new panel on clicking:
+which means: plugins versioned above `pluginVer` requires poi version above `poiVer`; if poi version is under `poiVer`, will rollback to `pluginVer`.
+  + Attention, `pluginVer` should exactly exist in npm repository since the rolling back will use the exact version, while `poiVer` is not limited, e.g. you can use `6.99.99` to cover poi versions under 7.0.0
+  + poi will check update and rollback for the most latest stable version.
+
+An example `package.json`:
 ```javascript
-module.exports = {
-  name: 'Sample',
-  displayName: 'Sample',
-  reactClass: React.createClass({
-    render: function() {
-      return React.createElement('h1', null, 'It works');
+{
+  "name": "poi-plugin-translator",
+  "version": "0.2.4",
+  "main": "index.cjsx",
+  "description": "A plugin for poi that translates names."
+  "author": {
+    "name": "KochiyaOcean",
+    "url": "https://github.com/kochiyaocean"
+  },
+  "poiPlugin": {
+    "title": "Translator",
+    "description": "Translate ships' & equipments' name into English",
+    "icon": "fa/language",
+    "i18nDir": "i18n/translator",
+    "apiVer": {
+      "6.3.3": "2.1.1",
+      "7.0.0-beta.1": "3.0.0"
     }
-  })
-};
+  }
+}
 ```
-You can always use jsx, cjsx to simplify the code. Codes provided from now will be in cjsx. Code above is equivalent to:
-```coffeescript
-module.exports =
-  name: 'Sample'
-  displayName: 'Sample'
-  reactClass: React.createClass
-    render: ->
-      <h1>It works</h1>
-```
+
+## Exporting variables
+
+
+
+## Interfaces
 In index, following interfaces are available:
 
 + HTML DOM API
