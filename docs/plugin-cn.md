@@ -68,7 +68,7 @@ poi 读取的标准字段包括：
 + `priority`：Number，插件在插件列表里排序的优先级，值越小插件就会显示在越前。一般遵循“面板插件 < 新窗口插件 < 无窗口插件”顺序的管理，不过并非强制。
 + `description`：String，本插件的简短介绍，将显示在插件列表中。由于标准字段中的 `description` 会显示在 npm 网页中，因此可以在此处指定专用于插件列表的插件介绍。 如果有翻译文件将会以此为 key 翻译为相应语言。
 + `icon`：String，显示于于插件列表中的图标，支持包括 FontAwesome 在内的多个图标集，详见 [react-icons](https://www.npmjs.com/package/react-icons)。
-  范例为 `"fa/beer"` 或 `"md/cancel"`， 字符串中没有`/`时默认为 FontAwesome ，如`"beer"`。
+  范例为 `"fa/beer"` 或 `"md/cancel"`， 字符串中没有 `/` 时默认为 FontAwesome ，如 `"beer"`。
 + `i18nDir`：String， 自定义 [i18n](https://github.com/jeresig/i18n-node-2) 文件夹相对插件根目录的路径，默认时会依次检查 `./i18n` 及 `./assets/i18n` 下是否有翻译文件。
 + `apiVer`：Object，插件兼容性定义。当最新版本的插件不能运行在旧版本的 poi 上时，需定义此字段。poi 会检查已安装插件的该字段来决定是否加载该插件，以及检查 npm 上最新 latest 版本的该字段，来控制检查新版、安装、升级、回滚等操作。 该字段的格式是，
 ```javascript
@@ -77,7 +77,7 @@ poi 读取的标准字段包括：
 }
 ```
  表达的含义是， 大于 `pluginVer` 版本的插件都需要大于 `poiVer` 的本体来运行；如果本体版本小于等于 `poiVer` ，则回滚到 `pluginVer`。
-  + 注意，当下回滚操作会精确回滚到所指定的 `pluginVer` ，因此需要保证 `pluginVer` 是一个存在的版本，而不能给出一个任意大的值。
+  + 注意，当下回滚操作会精确回滚到所指定的 `pluginVer` ，因此需要保证 `pluginVer` 是一个存在的版本，而不能给出一个任意大的值。而 `poiVer` 没有这个限制。例如可以写成 `6.99.99` 的形式来包括 7.0 以下的本体版本。
   + 注意，检查升级和回滚时，poi 只会检查 latest 中的最新版本，而不会检查 beta 中的版本，或 latest 中的较老版本。
 
 示例 `package.json` 文件如下
@@ -105,14 +105,17 @@ poi 读取的标准字段包括：
 ```
 
 ## 导出变量
-一个 [Node 模组](https://nodejs.org/api/modules.html)的入口文件（如 `index.es` ）可以定义导出变量，这是一个模组向外暴露内部功能和信息的最主要方式。[ECMAScript 7 的导出语法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)是
+一个 [Node 模组](https://nodejs.org/api/modules.html)的入口文件（如 `index.es` ）可以定义导出变量，这是一个模组向外暴露内部功能和信息的最主要方式。使用 [ECMAScript 7 的导出语法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)是
 ```javascript
+import {join} from 'path'
 export const windowURL = join(__dirname, 'index.html')
 ```
 相对应地，CoffeeScript 的导出语法是
 ```coffeescript
+{join} = require 'path'
 module.exports.windowURL = join __dirname, 'index.html'
 ```
+其中的 `__dirname` 变量为插件的根目录
 
 poi 要求插件通过导出的方式告知本体和插件运行有关的信息。
 
@@ -128,7 +131,7 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
  + 如果插件拥有这个属性，那么它的 `reactClass` 属性会被忽略。
 + `realClose`：Boolean，新窗口退出时是否完全关闭。如果为 true 的话，“关闭插件”只是隐藏了该窗口；如果为 false 的话，关闭插件就清空进程的内存。默认为 false。
 + `multiWindow`：Boolean，是否允许多个新窗口。如果为true，则每次点击该插件都会开一个新窗口，并且 `realClose` 属性将固定为 true ；否则，点击插件名会切换到已打开的窗口。默认为 false。
-+ `windowOptions`：Boolean，窗口的初始化选项。除了会被 poi 覆盖的个别选项以外，你可以使用 [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) 构造函数中的所有选项，不过一般而言你主要需要以下字段：
++ `windowOptions`：Object，窗口的初始化选项。除了会被 poi 覆盖的个别选项以外，你可以使用 [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) 构造函数中的所有选项，不过一般而言你主要需要以下字段：
  + `x`：Number，窗口横坐标
  + `y`：Number，窗口纵坐标
  + `width`：Number，窗口宽度
@@ -149,7 +152,8 @@ import { Button } from 'react-bootstrap'
 // Import selectors defined in poi
 import { extensionSelectorFactory } from 'views/utils/selectors'
 
-EXTENSION_KEY = 'poi-plugin-click-button'
+const EXTENSION_KEY = 'poi-plugin-click-button'
+
 // This selector gets store.ext['poi-plugin-click-button']
 const pluginDataSelector = createSelector(
   extensionSelectorFactory(EXTENSION_KEY),
@@ -166,12 +170,14 @@ export function reducer(state={count: 0}, action) {
   const {type} = action
   if (type === '@@poi-plugin-click-button@click')
     return {
+      // don't modify the state, use Object Spread Operator
       ...state,
       count: (state.count || 0) + 1,
     }
   return state
 }
 
+// Action
 function increaseClick() {
   return {
     type: '@@poi-plugin-click-button@click'
@@ -180,9 +186,9 @@ function increaseClick() {
 
 // poi will render this component in the plugin panel
 export const reactClass = connect(
-  // Get store.ext['poi-plugin-click-button'].count and set as this.props.click.count
+  // mapStateToProps, get store.ext['poi-plugin-click-button'].count and set as this.props.count
   (state, props) => ({count: clickCountSelector(state, props)}),
-  // Wrap increaseClick with dispatch and set as this.props.increaseClick
+  // mapDispatchToProps, wrap increaseClick with dispatch and set as this.props.increaseClick
   {
     increaseClick,
   }
@@ -224,18 +230,26 @@ import * from `${window.ROOT}/views/utils/selectors`    // Actually syntacticall
 #### 全局变量
 ```javascript
 window =
-  ROOT // main-poi 代码根目录，即 package.json 和 index.html 所在目录
+  ROOT // poi 本体的代码根目录，即 package.json 和 index.html 所在目录
   APPDATA_PATH // 可以用于存放用户数据的目录，Windows 上是 %AppData%/poi，Linux 上是 ~/.config/poi
   POI_VERSION // poi 版本号
 ```
+此外，还有一些全局变量是为了兼容旧版本插件而保留的，例如 `_`, `$ships` 等，不建议在新插件中使用。而是在插件中 `import` 或从 `store` 中使用 `selector` 获取。
 
 #### 通知
+在游戏界面下方的通知区域显示信息
 ```javascript
-window.log('Something'); // 显示在游戏窗口下方的信息条
-window.warn('Something'); // 显示在游戏窗口下方的信息条
-window.error('Something'); // 显示在游戏窗口下方的信息条
-window.success('Something'); // 显示在游戏窗口下方的信息条
+window.log('Something');
+window.warn('Something');
+window.error('Something');
+window.success('Something');
+```
+使用桌面通知，`notify` 函数的参数可以参考 `views/env-parts/notif-center.es#L42`
+```javascript
 window.notify('Something'); // 桌面通知
+```
+使用 modal 通知
+```javascript
 window.toggleModal('Title', 'Content'); // 显示模态框，Content 可以是 HTML 文档
 // 如果需要在模态框下自定义按钮
 var footer = {
@@ -246,15 +260,20 @@ var footer = {
 window.toggleModal('Title', 'Content', footer);
 ```
 
-#### 设置
-全局的 `window.config` 类负责统一管理设置。
+使用 toast 通知，具体参数可参考 `views/env-parts/toast.es#L2`
 ```javascript
-window.config.get('path.to.config', 'default'); // 获取某个用户设置值，获取失败返回默认值（不推荐）
+window.toast("something")
+```
+
+#### 设置
+全局的 `window.config` 类负责统一管理设置。设置存放在 `APPDATA_PATH` 下的 `config.cson` 文件中，同时加载到了 `store.config` 中。
+```javascript
+window.config.get('path.to.config', 'default'); // 获取某个用户设置值，获取失败返回默认值（不推荐，见下方说明）
 window.config.set('path.to.config', 'some value'); // 保存某个用户设置值，若不提供值相当于删除该设置
 window.layout // 目前的布局，'horizontal' || 'vertical'
 window.theme // 目前使用的主题
 ```
-在 React component 内部要用到设置的话，不推荐使用 `config.get` 方法，而建议从 Redux store.config 中获取（参见 `ConfigSelector` ）。
+在 React component 内部要用到设置的话，不推荐使用 `config.get` 方法，而建议从 Redux store.config 中获取（参见 `views/utils/selectors` ）,并搭配 `lodash` 的 get 方法。
 
 ### Redux
 #### Redux store
@@ -346,6 +365,8 @@ store.misc.
 以及以下辅助函数：
 + `createDeepCompareArraySelector`：类似于 `createSelector` ，但对于所有的数组参数，都会对其元素进行逐一 `===` 比较，如果每个元素都相同，则仍然判定为相同。适合由多元素组成数组的 selector 的下一级使用。
 
+为了方便开发中对错误进行追踪，__selector 并不是完全安全的__，需要由开发者进行异常值处理，特别是需要考虑到全新安装 poi，并未登录游戏情况下插件能否正常工作。
+
 #### Redux action
 如果你需要自行维护 reducer ，那么 poi 本体发送的几个 Redux action 是你可能会用到的：
 + `@@Request/kcsapi/<api>`，例如 `@@Request/kcsapi/api_port/port` ，在游戏发出请求前发出，格式为
@@ -433,11 +454,10 @@ function readSomeFile(filename) {
   )
 }
 
-...
+
 
 store.dispatch(readSomeFile('./assets/useful-file.json')
 
-...
 
 function reducer(state, action) {
   const {type, error, result, args} = action
@@ -477,18 +497,20 @@ import { writeFileSync } from 'fs'
 import { extensionSelectorFactory } from 'views/utils/selectors'
 import { store } from 'views/create-store'
 
-EXTENSION_KEY = 'poi-plugin-some-plugin-name'
+const EXTENSION_KEY = 'poi-plugin-some-plugin-name'
 
 const countSelector = createSelector(
   extensionSelectorFactory(EXTENSION_KEY),
   (state) => state.count
 )
 
-const unsubscribeObserve = observe(store, [observer(
-  state => countSelector(state),
-  (dispatch, current, previous) => {
-    writeFileSync('someFile.json', JSON.stringify({count: current}))
-  }
+const unsubscribeObserve = observe(store, [
+  observer(
+    state => countSelector(state),
+    (dispatch, current, previous) => {
+      writeFileSync('someFile.json', JSON.stringify({count: current}))
+    }
+  )]
 )
 
 export funtion pluginWillUnload() {
@@ -532,6 +554,34 @@ window.MODULE_PATH = remote.getGlobal('MODULE_PATH');
 window.PLUGIN_ROOT = __dirname
 require('module').globalPaths.push(MODULE_PATH);   // Allows importing main-poi libraries
 require('module').globalPaths.push(ROOT);          // Allows importing main-poi source files
+```
+
+### 主题
+可以借助 poi 本体提供的主题 api 来使窗口插件使用本体主题:
+```javascript
+require(`${ROOT}/views/env-parts/theme`) // if you've loaded ROOT variable
+```
+该 api 内会载入 `bootstrap`，`font-awesome` 等组件的样式表，以及用户自定义样式表 `custom.css` 的支持，只需要在插件的 `index.html` 的 `<head>` 元素中加入对应的 `<link>`。
+```html
+<link rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" id="fontawesome-css">
+<link rel="stylesheet" id="custom-css">
+```
+poi 本体的缩放参数 `zoomLevel` 不会被窗口插件继承，需要自行按需进行处理，例如只放大字体而避免考虑窗口大小等因素：
+
+```javascript
+const zoomLevel = config.get('poi.zoomLevel', 1)
+const additionalStyle = document.createElement('style')
+
+remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
+  document.body.appendChild(additionalStyle)
+})
+
+additionalStyle.innerHTML = `
+  item-improvement {
+    font-size: ${zoomLevel * 100}%;
+  }
+`
 ```
 
 ## 插件间调用 IPC
@@ -581,37 +631,75 @@ poi 内置了 `i18n-2` 模组以进行多语言翻译
 
 对于面板内插件，可以通过 `translated = window.i18n[插件的 id].__(toTranslate)` 来获得翻译。
 
-对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件
+对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件。
 
-关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档
+关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档。
+
+poi 的 `poi-plugin-translator` 插件提供了对于舰娘名，装备名等的英文/韩文化翻译，可以在插件中按需使用。
 
 poi 预置了一个翻译方法以解决游戏内资源的翻译，对于面板插件，可以通过如下方法调用
 
-```coffeescript
-resource = window.i18n.resources.__ 'to translate'
+```javascript
+resource = window.i18n.resources.__('to translate')
 ```
 
 对于新窗口插件，需要调用相应插件
 
-```coffeescript
-if !window.i18n?
-  window.i18n = {}
-window.i18n.resources = {}
-window.i18n.resources.__ = (str) -> return str
-window.i18n.resources.translate = (locale, str) -> return str
-window.i18n.resources.setLocale = (str) -> return # poi-plugin-translator 不存在时返回原值，如果 require 了 ROOT/view/env 则不需要此项目
+```javascript
+window.language = config.get('poi.language', navigator.language)
+const i18n = new i18n2({
+  locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+  defaultLocale: 'zh-CN',
+  directory: join(__dirname, 'i18n'),
+  extension: '.json',
+  updateFiles: false,
+  devMode: false,
+})
+i18n.setLocale(window.language)
 
-try
-  Translator = require 'poi-plugin-translator'
-catch error
-  console.log error
+if(i18n.resources == null){
+  i18n.resources = {}
+}
 
-resource = window.i18n.resources.__ 'to translate'
+if(i18n.resources.__ == null){
+  i18n.resources.__ = (str) => str
+}
+if(i18n.resources.translate == null){
+  i18n.resources.translate = (locale, str) => str
+}
+if(i18n.resources.setLocale == null){
+  i18n.resources.setLocale = (str) => {}
+}
+
+window.i18n = i18n
+
+try{
+  require('poi-plugin-translator').pluginDidLoad()
+}
+catch(error){
+  console.warn('plugin-translator',error)
+}
+
+
+window.__ = i18n.__.bind(i18n)
+window.__r = i18n.resources.__.bind(i18n.resources)
+
+window.i18n = i18n
+
+resource = window.i18n.resources.__('to translate')
+```
+
+建议对新窗口标题进行翻译：
+```javascript
+document.title = window.__('your-plugin')
 ```
 
 ## 调试
+对于开发版本的插件，推荐的载入 poi 方式为使用 [`npm link`命令](https://docs.npmjs.com/cli/link)。
 
-见：[软件调试指南](debug-cn.md#软件调试指南)
+首先在插件目录下执行 `npm link`（可能需要管理员权限），再在 poi 数据文件夹中的 `plugins` 子目录下执行 `npm link PLUGIN-PACKAGE-NAME`。
+
+其它资料参见：[软件调试指南](debug-cn.md#软件调试指南)
 
 ## 插件发布规范
 ### 在 [npm](http://npmjs.org) 上发布
@@ -645,8 +733,11 @@ cd .. && tar cvf [repo] [repo].tar.gz
 
 ## 一些提示
 
-+ 面板中显示的插件会被包裹在`<div id='插件名' />` 中，所以在自定义 CSS 中，建议用 `#插件名` 保证不影响全局 CSS。
++ 面板中显示的插件会被包裹在`<div id='插件名' />` 中，所以在自定义 CSS 的选择器中，建议加入 `#插件名` 保证不影响全局 CSS。
 
 ## 实例参考
 
 在 poooi(https://github.com/poooi) 下有很多可以参考的插件。
+
+## 社区
+欢迎你成为 poi 的开发者，在开发过程中的问题以及想法可以在 issue 中提出。此外可以加入 [telegram 交流群](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ)参与交流讨论。
