@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "v7.2.0-beta.2",
+  "version": "v7.2.0-beta.3",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -90,7 +90,7 @@
     "babel-eslint": "^7.0.0",
     "coffeelint": "^1.11.1",
     "electron": "^1.4.5",
-    "electron-builder": "^7.11.4",
+    "electron-builder": "^7.23.2",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
