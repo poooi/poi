@@ -126,7 +126,7 @@ const TabContentsUnion = connect(
           return (
             <div className='poi-tab-child-sizer'>
               <div className={tabClassName}
-                style={{left: positionLeft}}>
+                style={{transform: `translateX(${positionLeft})`}}>
                 {child}
               </div>
             </div>

@@ -151,7 +151,7 @@ const ShipView = connect((state, props) => ({
         <div className="no-scroll">
           <div
             className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-            style={{left: `-${this.props.activeFleetId}00%`}}>
+            style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
           {
             [0, 1, 2, 3].map((i) =>
               <div className="ship-deck" key={i}>
