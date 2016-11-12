@@ -303,6 +303,7 @@ poi-control .collapsing {
   margin-right: auto;
 }
 .overflow-anim {
+  display: block;
   animation-name: overflowscroll;
   animation-duration: 18s;
   animation-delay: 2s;
@@ -311,8 +312,8 @@ poi-control .collapsing {
   margin-left: 0%;
 }
 @keyframes overflowscroll {
-    0% {margin-left: 0%;}
-    100% {margin-left: -100%;}
+    0% {transform:translate(0 ,0);}
+    100% {transform:translate(-100%, 0);}
 }
 a:focus {
   outline: none;

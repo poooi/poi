@@ -113,7 +113,7 @@ export default connect((state, props) => ({
           </div>
           <div className="no-scroll">
             <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-                 style={{left: `-${this.props.activeFleetId}00%`}}>
+                 style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
             {
               [0, 1, 2, 3].map((i) => (
                 <div className="ship-deck ship-tabpane" key={i}>
