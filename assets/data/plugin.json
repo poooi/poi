@@ -334,5 +334,21 @@
     "desja-JP": "自動的に改二と図鑑が含ま[threebards](http://threebards.com/kaini)バッジを生成。",
     "desen-US": "Automatically generates [threebards](http://threebards.com/kaini) badge that shows your kaini progress and colletion progress.",
     "desko-KR": "데이터를 [threebards](http://threebards.com/kaini)로 전송해서 배지를 만드는 플러그인"
+  },
+    "poi-plugin-anchorage-repair": {
+    "zh-CN": "泊地修理",
+    "zh-TW": "泊地修理",
+    "ja-JP": "泊地修理",
+    "en-US": "Anchorage repair",
+    "ko-KR": "Anchorage repair",
+    "version": "v0.0.0",
+    "icon": "anchor",
+    "author": "かがみ",
+    "link": "https://github.com/kagamichan",
+    "deszh-CN": "明石泊地修理助手",
+    "deszh-TW": "明石泊地修理助手",
+    "desja-JP": "明石の泊地修理の助手ちゃん",
+    "desen-US": "A plugin to help in Akashi's anchorage repair arrangement",
+    "desko-KR": "A plugin to help in Akashi's anchorage repair arrangement"
   }
 }
