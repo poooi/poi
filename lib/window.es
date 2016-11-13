@@ -108,15 +108,17 @@ export default {
   },
   rememberMain: () => {
     const win = global.mainWindow
+    const isFullScreen = win.isFullScreen()
     if (win.isFullScreen()) {
       win.setFullScreen(false)
     }
+    const isMaximized = win.isMaximized()
     if (win.isMaximized()){
       win.unmaximize()
     }
     const b = win.getBounds()
-    b.isFullScreen = win.isFullScreen()
-    b.isMaximized = win.isMaximized()
+    b.isFullScreen = isFullScreen
+    b.isMaximized = isMaximized
     require('./config').set('poi.window', b)
   },
   toggleAllWindowsVisibility: () =>{
