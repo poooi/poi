@@ -21,7 +21,7 @@ Finally, it is recommended to follow some development instructions below.
 ## Brief Introduction
 A poi plugin is essentially a node module. Installing, removing or updating the plugin are therefore manupulations on the plugin by poi itself.
 
-A plugin should follow npm related specifications, a [`package.json`](https://docs.npmjs.com/files/package.json) under plugin root directory is necessary. The mounting point is specified in `main` field, and, if not provided, will be `index.js`, `index.coffee`, `index.cjsx`, or `index.es`.
+A plugin should follow npm related specifications, a [`package.json`](https://docs.npmjs.com/files/package.json) under plugin root directory is necessary. The entry file is specified in `main` field, and, if not provided, will be `index.js`, `index.coffee`, `index.cjsx`, or `index.es`.
 
 plugin will interact with poi using:
 + information provided in `package.json`
