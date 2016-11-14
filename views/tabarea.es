@@ -13,6 +13,8 @@ import mainview from './components/main'
 import shipview from './components/ship'
 import PluginWrap from './plugin-wrapper'
 
+import isInGame from 'views/utils/game-utils'
+
 const {i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
 
@@ -239,21 +241,6 @@ export default connect(
     if (this.listener != null)
       return
     this.listener = true
-    const isInGame = async () => {
-      try {
-        return (
-          document.querySelector('webview').getURL() === "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/" ||
-          await new Promise((resolve, reject) => {
-            document.querySelector('webview').executeJavaScript(
-              `document.querySelector('embed') !== null`,
-              (e) => resolve(e)
-            )
-          })
-        )
-      } catch (e) {
-        return false
-      }
-    }
     window.addEventListener('keydown', async (e) => {
       const isingame = await isInGame()
       if ((document.activeElement.tagName === 'WEBVIEW' && !isingame) || document.activeElement.tagName === 'INPUT') {
