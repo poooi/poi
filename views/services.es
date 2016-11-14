@@ -1,4 +1,5 @@
 import { remote } from 'electron'
+import isInGame from 'views/utils/game-utils'
 
 const {$, config, toggleModal, log, error, i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
@@ -32,8 +33,9 @@ const refreshFlash = () =>
   `)
 
 // F5 & Ctrl+F5 & Alt+F5
-window.addEventListener('keydown', (e) => {
-  if (document.activeElement.tagName === 'INPUT') {
+window.addEventListener('keydown', async (e) => {
+  const isingame = await isInGame()
+  if ((document.activeElement.tagName === 'WEBVIEW' && !isingame) || document.activeElement.tagName === 'INPUT') {
     return
   }
   if (process.platform == 'darwin') {
