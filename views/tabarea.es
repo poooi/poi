@@ -13,7 +13,7 @@ import mainview from './components/main'
 import shipview from './components/ship'
 import PluginWrap from './plugin-wrapper'
 
-import isInGame from 'views/utils/game-utils'
+import { isInGame } from 'views/utils/game-utils'
 
 const {i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
