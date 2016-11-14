@@ -1,5 +1,5 @@
 import { remote } from 'electron'
-import isInGame from 'views/utils/game-utils'
+import { isInGame } from 'views/utils/game-utils'
 
 const {$, config, toggleModal, log, error, i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
