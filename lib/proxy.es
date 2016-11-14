@@ -234,6 +234,10 @@ class Proxy extends EventEmitter {
               if (success) {
                 break
               }
+              // Delay 3s for retry
+              if (i) {
+                await bluebird.delay(3000)
+              }
               try {
                 // Emit request event to plugins
                 reqBody = JSON.stringify(querystring.parse(reqBody.toString()))
@@ -273,8 +277,6 @@ class Proxy extends EventEmitter {
               if (success || !isKancolleGameApi(pathname)) {
                 break
               }
-              // Delay 3s for retry
-              await bluebird.delay(3000)
             }
           }
         } catch (e) {
