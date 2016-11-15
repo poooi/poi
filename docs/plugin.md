@@ -28,7 +28,7 @@ plugin will interact with poi using:
 + code executed when importing (using `import` or `require` syntax) the module
 + imported variables
 
-For example, if a plugin is inside poi main interface (*panel plugin*), a React component should be exported; if it is a standalone window plugin (*window plugin*), it should export content index page (`index.html`); plugins that does not contain any user-interface will just run in the back-end.
+For example, if a plugin is inside poi main interface (*panel plugin*), a React component should be exported; if it is a standalone window plugin (*window plugin*), it should export content index page (`index.html`); plugins that does not contain any user-interface (*backend plugin*) will just run in the back-end.
 
 Of course there will be many arguments related to installation, upgrade, removing, executing and setting.
 
@@ -102,58 +102,178 @@ An example `package.json`:
 
 ## Exporting variables
 
+Exported variables can de defined in the entry file of a [Node module](https://nodejs.org/api/modules.html), which is the primary way for a module to expose inner functionality and information. If you use [ECMAScript 7's exports statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export), the code will be,
 
+```javascript
+import {join} from 'path'
+export const windowURL = join(__dirname, 'index.html')
+```
+If you use CoffeeScript, it will be:
+```coffeescript
+{join} = require 'path'
+module.exports.windowURL = join __dirname, 'index.html'
+```
 
-## Interfaces
-In index, following interfaces are available:
+Above `_dirname` variable is the root path of your plugin.
+
+Poi demands that plugin inform main program with information using exporting.
+
+Panel plugin is essentially a component rendered within main poi. Following variables are for panel and backend plugin are:
++ `reactClass`: *React Component*, rendered in main poi as a plugin panel.
+
+New window plugin is exactly a new web page window running on another process. Following variables are for new window plugin:
+
++ `windowURL`: *String*, path for new window plugin's index page.
+ + `reactClass` property will be ignored if provided `windowURL`
++ `realClose`: *Boolean*, whether the window is closed on exiting. If set to`true`, "closing the plugin" will just hide the window with plugin running at backend; otherwise closing means empty the process memory. default is `false`
++ `multiWindow`: *Boolean*, whether multiple windows are allowed. If set to `true`, every time clicking the plugin name will open a new window, and `realClose` will be fixed to `true`, otherwise clicking the plugin name will switch to the existing window.
++ `windowOptions`: *Object*, used in window initialization. You are free to use options listed in [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) except for some are overwritten by poi. Generally you need the following:
+ + `x`: *Number*, x coordinate for window
+ + `y`: *Number*, y coordinate for window
+ + `width`: *Number*, window width
+ + `height`: *Number*, window height
+
+And following variables apply to all sorts of plugins:
++ `reducer`: [*Redux reducer*](http://redux.js.org/docs/basics/Reducers.html), as Redux requires a unique global store, if plugin shall maintain the store, a reducer must be provided and main poi will combine it with 
+ + plugin store will be placed at `store.ext.<pluginPackageName>`, e.g. `store.ext['poi-plugin-prophet']`. It is recommended to use `extensionSelectorFactory('poi-plugin-prophet')` to retrieve data, as to improve readability.
+ + plugin store will be emptied upon being disabled
++ `settingClass`: *React Component*, setting panel for plugin, will be rendered in plugin list, settings view
++ `pluginDidLoad`: *function*, no argument, called after plugin is enabled
++ `pluginWillUnload`: *function*, no argument, called before plugin is disabled
+
+Here's an example using custom reducer. It records and shows the count for clicking a button. Though React state is capable for this task, the code uses Redux for showcasing `export reducer` usage. [JSX language](https://facebook.github.io/react/docs/jsx-in-depth.html is used.
+
+```javascript
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
+import { Button } from 'react-bootstrap'
+
+// Import selectors defined in poi
+import { extensionSelectorFactory } from 'views/utils/selectors'
+
+const EXTENSION_KEY = 'poi-plugin-click-button'
+
+// This selector gets store.ext['poi-plugin-click-button']
+const pluginDataSelector = createSelector(
+  extensionSelectorFactory(EXTENSION_KEY),
+  (state) => state || {}
+)
+// This selector gets store.ext['poi-plugin-click-button'].count
+const clickCountSelector = createSelector(
+  pluginDataSelector,
+  (state) => state.count
+)
+
+// poi will insert this reducer into the root reducer of the app
+export function reducer(state={count: 0}, action) {
+  const {type} = action
+  if (type === '@@poi-plugin-click-button@click')
+    return {
+      // don't modify the state, use Object Spread Operator
+      ...state,
+      count: (state.count || 0) + 1,
+    }
+  return state
+}
+
+// Action
+function increaseClick() {
+  return {
+    type: '@@poi-plugin-click-button@click'
+  }
+}
+
+// poi will render this component in the plugin panel
+export const reactClass = connect(
+  // mapStateToProps, get store.ext['poi-plugin-click-button'].count and set as this.props.count
+  (state, props) => ({count: clickCountSelector(state, props)}),
+  // mapDispatchToProps, wrap increaseClick with dispatch and set as this.props.increaseClick
+  {
+    increaseClick,
+  }
+)(class PluginClickButton extends Component {
+  render() {
+    const {count, increaseClick} = this.props
+    return (
+      <div>
+        <h1>Clicked: {count}</h1>
+        <Button onClick={increaseClick}>
+          Click here!
+        </Button>
+      </div>
+    )
+  }
+})
+```
+
+## Interface
+Following interfaces are available:
 
 + HTML DOM API
-+ Javascript in chrome 47
-+ All functionality of Node.js
-+ API exposed by poi
++ Chrome javascript
++ Node.js standard libraries
++ libraries installed in main poi
 
-## API exposed by poi
+for panel and backend plugins, as they are part of main poi, every pieces of code of poi can be imported, they can benefit from poi's APIs, and utility functions.
 
-### Essential development environment and its variables
+poi appends its root path to importing paths, so you can import path relative to poi root, e.g.
+
+```javascript
+import * from 'views/utils/selectors'
+```
+equals to
+
+```javascript
+import * from `${window.ROOT}/views/utils/selectors`    // Actually syntactically illegal
+```
+
+
+### API
+
+#### Globals
 
 ```javascript
 window =
-  React // React
-  ReactBootstrap // React Bootstrap
-  FontAwesome // React FontAwesome
-  jQuery // jQuery, not recommended to use unless you really need it
-  _ // Underscore
-  $ // equivalent to document.querySelector
-  $$ // equivalent to document.querySelectorAll
   ROOT // poi's root path, namely path where package.json and index.html reside
-  APPDATA_PATH // path to store user data on Windows it will be %AppData%/poi, on Linux it will be ~/.config/poi
+  APPDATA_PATH // path to store user data, it will be %AppData%/poi on Windows, ~/.config/poi on Linux, ~/Library/Application Support/poi on macOS
   POI_VERSION // poi version
 ```
 
-### Game data
+some globals are reserved for compatibility, such as `_`, `ships`. It is not recommended to use them in the plugin. Use `import` or `store`'s `selector` instead.
 
-Poi exposes API related to game data as global variables, you can fetch following information in `window`:
-
+#### Notifications
+To display information in the info bar under game area:
 ```javascript
-window =
-  // variable beginning with $ is basic data, not related to user
-  $ships: Array // basic data for all ships in game, same as the received data, index by api_id
-  $shipTypes: Array // basic data for all ships in game, same as the received data, index by api_id
-  $slotitems: Array // basic data for all equipments in game, same as the received data, index by api_id
-  $mapareas: Array // basic data for all map areas in game, same as the received data, index by api_id
-  $maps: Array // basic data for all maps in game, same as the received data, index by api_id
-  $missions: Array // basic data for all expeditions in game, same as the received data, index by api_id
-  // variable beginning with _ is user data
-  _ships: Object // all ships owned by player, index by api_id
-  _slotitems: Object // all equipments owned by player, index by api_id
-  _decks: Array // player fleets
-  _nickName: String // Player's name
-  _teitokuId: String // Player's ID
-  _teitokuLv: Number // Player's level
-  _teitokuExp: Number // Player's experience
+window.log('Something'); // display on the information bar below game window
+window.warn('Something'); // display on the information bar below game window
+window.error('Something'); // display on the information bar below game window
+window.success('Something'); // display on the information bar below game window
 ```
 
-Poi exposes game data communication as global events, can be accessed via `window.addEventListener` to obtain information on data sending/receiving:
+To use desktop noftication, check `views/env-parts/notif-center.es#L42` for more detail:
+```javascript
+window.notify('Something'); // desktop notification
+```
+
+To use modal:
+```javascript
+window.toggleModal('Title', 'Content'); // display modal, Content can be HTML
+// if you need to customize buttons
+var footer = {
+  name: String, // button display name
+  func: Function, // action on clicking the button
+  style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // button style
+}
+window.toggleModal('Title', 'Content', footer);
+```
+
+To use toast, check `views/env-parts/toast.es#L2` for more detail:
+```javascript
+window.toast("something")
+```
+
+
 
 ```javascript
 window.addEventListener('game.request', function (e) {
@@ -169,32 +289,25 @@ window.addEventListener('game.response', function (e) {
 });
 ```
 
-### Notifications API
-
-```javascript
-window.log('Something'); // display on the information bar below game window
-window.warn('Something'); // display on the information bar below game window
-window.error('Something'); // display on the information bar below game window
-window.success('Something'); // display on the information bar below game window
-window.notify('Something'); // desktop notification
-window.toggleModal('Title', 'Content'); // display modal, Content can be HTML
-// if you need to customize buttons
-var footer = {
-  name: String, // button display name
-  func: Function, // action on clicking the button
-  style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // button style
-}
-window.toggleModal('Title', 'Content', footer);
-```
 
 ### Config API
 
+Global `window.config` class handles configurations. The config is saved in `config.cson` that resides in `APPDATA_PATH`, and also loaded in `store.config`.
+
 ```javascript
-window.config.get('path.to.config', 'default'); // get a user config value, if fail, return the default value
+window.config.get('path.to.config', 'default'); // get a user config value, if fail, return the default value (NOT RECOMMENDED, SEE BELOW)
 window.config.set('path.to.config', 'some value'); // save a user config value, not providing value will delete the config path
 window.layout // current layout = 'horizontal' || 'vertical'
 window.theme // current theme
 ```
+
+If you want to use config within React component, instead of `config.get`, the best practice is to use selectors (see `views/utils/selectors`) to retrieve from store.config, with `lodash`'s `get` method.
+
+### Redux
+#### Redux store
+
+
+
 
 ### Inter-Plugin Call
 

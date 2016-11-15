@@ -121,15 +121,12 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
 
 面板插件本质上是在本体中渲染的一个组件。以下是适用于面板插件和无窗口插件的字段：
 + `reactClass`：React Component，面板插件的主要显示部分，将会作为 poi 本体的一部分渲染到插件面板。
-+ `reducer`：[Redux reducer](http://redux.js.org/docs/basics/Reducers.html)，由于 Redux 要求全局只有一个 store ， 面板插件要自行维护 store 的话，需由本体读取 reducer 后合并到本体的主 reducer 当中。
- + 插件的 store 将会放置在 `store.ext.<pluginPackageName>` 处，如 `store.ext['poi-plugin-prophet']` 。建议使用 `extensionSelectorFactory('poi-plugin-prophet')` 的格式来提取数据，以提高可维护性。
- + 插件 store 将会在插件被禁用时清空。
 
 新窗口插件本质上是一个在新进程中运行的网页窗口。以下是适用于新窗口插件的字段：
 
 + `windowURL`：String，新窗口插件页面的文件路径。
  + 如果插件拥有这个属性，那么它的 `reactClass` 属性会被忽略。
-+ `realClose`：Boolean，新窗口退出时是否完全关闭。如果为 true 的话，“关闭插件”只是隐藏了该窗口；如果为 false 的话，关闭插件就清空进程的内存。默认为 false。
++ `realClose`：Boolean，新窗口退出时是否完全关闭。如果为 false 的话，“关闭插件”只是隐藏了该窗口；如果为 true 的话，关闭插件就清空进程的内存。默认为 false。
 + `multiWindow`：Boolean，是否允许多个新窗口。如果为true，则每次点击该插件都会开一个新窗口，并且 `realClose` 属性将固定为 true ；否则，点击插件名会切换到已打开的窗口。默认为 false。
 + `windowOptions`：Object，窗口的初始化选项。除了会被 poi 覆盖的个别选项以外，你可以使用 [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) 构造函数中的所有选项，不过一般而言你主要需要以下字段：
  + `x`：Number，窗口横坐标
@@ -138,6 +135,9 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
  + `height`：Number，窗口高度
 
 以下是适用于所有插件的字段：
++ `reducer`：[Redux reducer](http://redux.js.org/docs/basics/Reducers.html)，由于 Redux 要求全局只有一个 store ， 面板插件要自行维护 store 的话，需由本体读取 reducer 后合并到本体的主 reducer 当中。
+ + 插件的 store 将会放置在 `store.ext.<pluginPackageName>` 处，如 `store.ext['poi-plugin-prophet']` 。建议使用 `extensionSelectorFactory('poi-plugin-prophet')` 的格式来提取数据，以提高可维护性。
+ + 插件 store 将会在插件被禁用时清空。
 + `settingClass`：React Component，插件的设置面板，显示在插件列表中。
 + `pluginDidLoad`：function，不接受参数，在插件启用后被调用。
 + `pluginWillUnload`：function，不接受参数，在插件禁用前被调用。
@@ -231,7 +231,7 @@ import * from `${window.ROOT}/views/utils/selectors`    // Actually syntacticall
 ```javascript
 window =
   ROOT // poi 本体的代码根目录，即 package.json 和 index.html 所在目录
-  APPDATA_PATH // 可以用于存放用户数据的目录，Windows 上是 %AppData%/poi，Linux 上是 ~/.config/poi
+  APPDATA_PATH // 可以用于存放用户数据的目录，Windows 上是 %AppData%/poi，Linux 上是 ~/.config/poi，macOS 上是 ~/Library/Application Support/poi
   POI_VERSION // poi 版本号
 ```
 此外，还有一些全局变量是为了兼容旧版本插件而保留的，例如 `_`, `$ships` 等，不建议在新插件中使用。而是在插件中 `import` 或从 `store` 中使用 `selector` 获取。
