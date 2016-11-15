@@ -129,7 +129,7 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
 
 + `windowURL`：String，新窗口插件页面的文件路径。
  + 如果插件拥有这个属性，那么它的 `reactClass` 属性会被忽略。
-+ `realClose`：Boolean，新窗口退出时是否完全关闭。如果为 true 的话，“关闭插件”只是隐藏了该窗口；如果为 false 的话，关闭插件就清空进程的内存。默认为 false。
++ `realClose`：Boolean，新窗口退出时是否完全关闭。如果为 false 的话，“关闭插件”只是隐藏了该窗口；如果为 true 的话，关闭插件就清空进程的内存。默认为 false。
 + `multiWindow`：Boolean，是否允许多个新窗口。如果为true，则每次点击该插件都会开一个新窗口，并且 `realClose` 属性将固定为 true ；否则，点击插件名会切换到已打开的窗口。默认为 false。
 + `windowOptions`：Object，窗口的初始化选项。除了会被 poi 覆盖的个别选项以外，你可以使用 [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) 构造函数中的所有选项，不过一般而言你主要需要以下字段：
  + `x`：Number，窗口横坐标
@@ -231,7 +231,7 @@ import * from `${window.ROOT}/views/utils/selectors`    // Actually syntacticall
 ```javascript
 window =
   ROOT // poi 本体的代码根目录，即 package.json 和 index.html 所在目录
-  APPDATA_PATH // 可以用于存放用户数据的目录，Windows 上是 %AppData%/poi，Linux 上是 ~/.config/poi
+  APPDATA_PATH // 可以用于存放用户数据的目录，Windows 上是 %AppData%/poi，Linux 上是 ~/.config/poi，macOS 上是 ~/Library/Application Support/poi
   POI_VERSION // poi 版本号
 ```
 此外，还有一些全局变量是为了兼容旧版本插件而保留的，例如 `_`, `$ships` 等，不建议在新插件中使用。而是在插件中 `import` 或从 `store` 中使用 `selector` 获取。
@@ -279,7 +279,7 @@ window.theme // 目前使用的主题
 #### Redux store
 poi 用 Redux store 存储了包括所有游戏资料在内的大量数据。
 
-reducer 由 `views/redux` 下各文件定义，最后由 `views/create-store` 创建 store 。以下是你可以利用的接口，但并不推荐直接使用。推荐的做法是尽量多地使用 selector ，reducer 以及来自 `react-redux` 的 `connect` ，
+Reducer 由 `views/redux` 下各文件定义，最后由 `views/create-store` 创建 store 。以下是你可以利用的接口，但并不推荐直接使用。推荐的做法是尽量多地使用 selector ，reducer 以及来自 `react-redux` 的 `connect` ，
 + `import { store } from 'views/create-store'`：全局 store
 + `import { extendReducer } from 'views/create-store'`：`extendReducer(key, reducer)` 会将 `reducer` 附加到 `store.ext.<key>`下。
 + `const { getStore } = window`：`getStore()` 或 `getStore('a.b.c')` 可以获取 store 的全部数据或某一路径下的数据。这个函数在 debug 时很方便，但在代码中应尽量少使用。在 reducer 中使用它，表明你可能需要调整你的 store 设计，以增强各子项之间的独立性；在 react component 中使用它，表明你应该换用 `connect` 来获取 store 中的数据。不过某些时候，使用这个函数无可避免。
@@ -631,10 +631,6 @@ poi 内置了 `i18n-2` 模组以进行多语言翻译
 
 对于面板内插件，可以通过 `translated = window.i18n[插件的 id].__(toTranslate)` 来获得翻译。
 
-对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件。
-
-关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档。
-
 poi 的 `poi-plugin-translator` 插件提供了对于舰娘名，装备名等的英文/韩文化翻译，可以在插件中按需使用。
 
 poi 预置了一个翻译方法以解决游戏内资源的翻译，对于面板插件，可以通过如下方法调用
@@ -645,6 +641,7 @@ resource = window.i18n.resources.__('to translate')
 
 对于新窗口插件，需要调用相应插件
 
+对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件。
 ```javascript
 window.language = config.get('poi.language', navigator.language)
 const i18n = new i18n2({
@@ -693,6 +690,9 @@ resource = window.i18n.resources.__('to translate')
 ```javascript
 document.title = window.__('your-plugin')
 ```
+
+关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档。
+
 
 ## 调试
 对于开发版本的插件，推荐的载入 poi 方式为使用 [`npm link`命令](https://docs.npmjs.com/cli/link)。
