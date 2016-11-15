@@ -10,7 +10,7 @@ are supposed to have knowledge of following subjects:
 + [Redux](http://redux.js.org/) as well as [react-redux](https://github.com/reactjs/react-redux)
 + [Electron](https://github.com/atom/electron)
 
-documents of following libraries may be also useful during development:
+Documents of following libraries may be also useful during development:
 
 + [reselect](https://github.com/reactjs/reselect)
 + [react-bootstrap](http://react-bootstrap.github.io/components.html)
@@ -23,7 +23,7 @@ A poi plugin is essentially a node module. Installing, removing or updating the 
 
 A plugin should follow npm related specifications, a [`package.json`](https://docs.npmjs.com/files/package.json) under plugin root directory is necessary. The entry file is specified in `main` field, and, if not provided, will be `index.js`, `index.coffee`, `index.cjsx`, or `index.es`.
 
-plugin will interact with poi using:
+Plugin will interact with poi using:
 + information provided in `package.json`
 + code executed when importing (using `import` or `require` syntax) the module
 + imported variables
@@ -33,7 +33,7 @@ For example, if a plugin is inside poi main interface (*panel plugin*), a React 
 Of course there will be many arguments related to installation, upgrade, removing, executing and setting.
 
 ## Plugin life cycle
-The procedure between the moment plugin is installed, updated, or enabled in settings panel, and the moment it start to work, is called *enable plugin*. During this procedure, poi will:
+The procedure between the moment plugin is installed, updated, or enabled in settings panel, and the moment it starts to work, is called *enable plugin*. During this procedure, poi will:
 
 1. import plugin module
 1. read and analyze plugin's `package.json`
@@ -50,19 +50,19 @@ The procedure between the moment plugin is running and and the moment is disable
 1. remove plugin cache such as import cache
 
 ## On `package.json`
-`package.json` is standard file for npm module metadata, its structured can be refered in [npm offical documents](https://docs.npmjs.com/files/package.json). poi makes use of parts of its standard field, and also extra field for plugin's own information.
+`package.json` is the standard file for npm module metadata, its structure can be refered in [npm offical documents](https://docs.npmjs.com/files/package.json). poi makes use of parts of its standard field, and also extra field for plugin's own information.
 
 Standard metadata used are:
 + `version`: *String*, plugin version in [Semantic Versioning](http://semver.org/) format, e.g. `x.y.z` for stable version, `x.y.z-beta.a` for beta version.
 + `author`: author for plugin
- + if *String*, it is the name of author
- + if *Object*, then `name` is the name of author,`links` or `url` is the links to the author.
+  + if *String*, it is the name of author
+  + if *Object*, then `name` is the name of author,`links` or `url` is the links to the author.
 + `description`: *String*, brief description
 
 Extra information is stored in `poiPlugin` field, including:
 + `title`: *String*, title for plugin, displayed in plugin list and menu. Will be translated provided in i18n keys.
 + `id`: *String*, key for identify the plugin. Will be package name if empty.
-+ `priority`: *Number*, priority in plugin menu, smaller value will make it more ahead. Generally the order is panel plugin < window plugin < non UI plugin, but it is not obliged.
++ `priority`: *Number*, priority in plugin menu, smaller value will make it more ahead. Generally the order is panel plugin < window plugin < back end plugin, but it is not obliged.
 + `description`: *String*, description of the plugin, displayed in plugin list. Since standard metadata's `description` is displayed in npm website, this field is for poi specified description. Will be translated provided in i18n keys.
 + `icon`: *String*, icon for plugin in plugin list, supports icons including `FontAwesome`, see [react-icons](https://www.npmjs.com/package/react-icons)
 + `i18nDir`: *String*, custom [i18n](https://github.com/jeresig/i18n-node-2) path relative to plugin root, will be `./i18n` and `./assets/i18n` by default.
@@ -73,8 +73,8 @@ Extra information is stored in `poiPlugin` field, including:
 }
 ```
 which means: plugins versioned above `pluginVer` requires poi version above `poiVer`; if poi version is under `poiVer`, will rollback to `pluginVer`.
-  + Attention, `pluginVer` should exactly exist in npm repository since the rolling back will use the exact version, while `poiVer` is not limited, e.g. you can use `6.99.99` to cover poi versions under 7.0.0
-  + poi will check update and rollback for the most latest stable version.
+   + Attention, `pluginVer` should exactly exist in npm repository since the rolling back will use the exact version, while `poiVer` is not limited, e.g. you can use `6.99.99` to cover poi versions under 7.0.0
+   + poi will check update and rollback for the most latest stable version.
 
 An example `package.json`:
 ```javascript
@@ -118,19 +118,19 @@ Above `_dirname` variable is the root path of your plugin.
 
 poi demands that plugin inform main program with information using exporting.
 
-Panel plugin is essentially a component rendered within main poi. Following variables are for panel and backend plugin are:
+Panel plugin is essentially a component rendered within main poi. Following variables for panel and backend plugin are:
 + `reactClass`: *React Component*, rendered in main poi as a plugin panel.
-+ `reducer`: [*Redux reducer*](http://redux.js.org/docs/basics/Reducers.html), as Redux requires a unique global store, if plugin shall maintain the store, a reducer must be provided and main poi will combine it with 
- + plugin store will be placed at `store.ext.<pluginPackageName>`, e.g. `store.ext['poi-plugin-prophet']`. It is recommended to use `extensionSelectorFactory('poi-plugin-prophet')` to retrieve data, as to improve readability.
- + plugin store will be emptied upon being disabled
++ `reducer`: [*Redux reducer*](http://redux.js.org/docs/basics/Reducers.html), as Redux requires a unique global store, if plugin shall maintain the store, a reducer must be provided and main poi will combine it with its own reducers.
+  + plugin store will be placed at `store.ext.<pluginPackageName>`, e.g. `store.ext['poi-plugin-prophet']`. It is recommended to use `extensionSelectorFactory('poi-plugin-prophet')` to retrieve data, as to improve readability.
+  + plugin store will be emptied upon being disabled
 
 New window plugin is exactly a new web page window running on another process. Following variables are for new window plugin:
 
 + `windowURL`: *String*, path for new window plugin's index page.
  + `reactClass` property will be ignored if provided `windowURL`
-+ `realClose`: *Boolean*, whether the window is closed on exiting. If set to`true`, "closing the plugin" will just hide the window with plugin running at backend; otherwise closing means empty the process memory. default is `false`
++ `realClose`: *Boolean*, whether the window is closed on exiting. If set to `true`, "closing the plugin" will just hide the window with plugin running at backend; otherwise closing means empty the process memory. default is `false`
 + `multiWindow`: *Boolean*, whether multiple windows are allowed. If set to `true`, every time clicking the plugin name will open a new window, and `realClose` will be fixed to `true`, otherwise clicking the plugin name will switch to the existing window.
-+ `windowOptions`: *Object*, used in window initialization. You are free to use options listed in [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) except for some are overwritten by poi. Generally you need the following:
++ `windowOptions`: *Object*, used in window initialization. You are free to use options listed in [Electron BrowserWindow](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#class-browserwindow) except for some that are overwritten by poi. Generally you need the following:
  + `x`: *Number*, x coordinate for window
  + `y`: *Number*, y coordinate for window
  + `width`: *Number*, window width
@@ -141,7 +141,7 @@ And following variables apply to all sorts of plugins:
 + `pluginDidLoad`: *function*, no argument, called after plugin is enabled
 + `pluginWillUnload`: *function*, no argument, called before plugin is disabled
 
-Here's an example using custom reducer. It records and shows the count for clicking a button. Though React state is capable for this task, the code uses Redux for showcasing `export reducer` usage. [JSX language](https://facebook.github.io/react/docs/jsx-in-depth.html is used.
+Here's an example using custom reducer. It records and shows the count for clicking a button. Though React state is capable for this task, the code uses Redux for showcasing `export reducer` usage. [JSX language](https://facebook.github.io/react/docs/jsx-in-depth.html) is used.
 
 ```javascript
 import React, { Component } from 'react'
@@ -215,7 +215,7 @@ Following interfaces are available:
 + Node.js standard libraries
 + libraries installed in main poi
 
-for panel and backend plugins, as they are part of main poi, every pieces of code of poi can be imported, they can benefit from poi's APIs, and utility functions.
+For panel and backend plugins, as they are part of main poi, every pieces of code of poi can be imported, they can benefit from poi's APIs, and utility functions.
 
 poi appends its root path to importing paths, so you can import path relative to poi root, e.g.
 
@@ -273,23 +273,6 @@ To use toast, check `views/env-parts/toast.es#L2` for more detail:
 window.toast("something")
 ```
 
-
-
-```javascript
-window.addEventListener('game.request', function (e) {
-  e.detail.method // HTTP method (POST / GET)
-  e.detail.path // API path
-  e.detail.body // data to send
-});
-window.addEventListener('game.response', function (e) {
-  e.detail.method // HTTP method (POST / GET)
-  e.detail.path // API path
-  e.detail.body // returned data
-  e.detail.postBody // data sended
-});
-```
-
-
 ### Config API
 
 Global `window.config` class handles configurations. The config is saved in `config.cson` that resides in `APPDATA_PATH`, and also loaded in `store.config`.
@@ -314,7 +297,7 @@ Reducers are defined in `views/redux`, and store is created in `views/create-sto
 
 
 #### Naming
-According to [Kancolle API](https://github.com/andanteyk/ElectronicObserver/blob/master/ElectronicObserver/Other/Information/apilist.txt), data including ships, items, maps, etc. compose of 2 sources: one is basic data during game initialization, which is not related to game player; other is player data that is given and kept updated during gaming. For convinient and historical reasons, the former is named with `$` and latter `_`, e.g. `$ships` and `_ships`.
+According to [Kancolle API](https://github.com/andanteyk/ElectronicObserver/blob/master/ElectronicObserver/Other/Information/apilist.txt), data including ships, items, maps, etc. comes from 2 sources: one is basic data during game initialization, which is not related to game player; other is player data that is given and kept updated during gaming. For convinient and historical reasons, the former is named with `$` and latter `_`, e.g. `$ships` and `_ships`.
 
 Following data paths are related to plugin development:
 
@@ -394,7 +377,7 @@ Besides, some special selectors are:
 And also helper function:
 + `createDeepCompareArraySelector`: similar to `createSelector` but will  strict equality compare(`===`) on every element of array. If every element is strictly equal, they will be consider equal. This can be used in slectors with many elements composing arrays.
 
-Pay attention that __slectors are not generally safe__, developers are supposed to hanle exceptions on theri own, especially considering the case of newly installed poi and not logged in (the store is nearly empty).
+Pay attention that __slectors are not generally safe__, developers are supposed to handle exceptions on their own, especially considering the case of freshly installed poi and not logged in (the store is nearly empty).
 
 #### Redux action
 If you consider maintaining reducers, you may need some Redux actions dispatched by main poi:
@@ -415,7 +398,7 @@ If you consider maintaining reducers, you may need some Redux actions dispatched
     body        // Response body
     postBody    // Request body
 ```
-+ `@@BattleResult`, dispatched after a battle ends. If you need battle result, please use this action instead of listening to`@@Response/kcsapi/api_req_sortie/battleresult`. It is because the battle calculation and storage is in the latter action, and the disordered reducer may cause error. it is in format
++ `@@BattleResult`, dispatched after a battle ends. If you need battle result, please use this action instead of listening to `@@Response/kcsapi/api_req_sortie/battleresult`. It is because the battle processing and storage is in the latter action, and the disordered reducer may cause error. it is in format
 ```javascript
     type: '@@BattleResult',
     result:
@@ -439,9 +422,184 @@ If you consider maintaining reducers, you may need some Redux actions dispatched
 ```
 
 #### Promise Action
+poi intergrates [`redux-thunk`](https://github.com/gaearon/redux-thunk) for asynchronous manupulations. Besides dispatching a plain object, you may dispatch a function with argument `(dispatch, getState) => {}`, in which you may asynchronously work with data and dispatch actions.
+
+You may also use poi's `PromiseAction` API for dispatching promise. The arguments are:
++ `actionNameBase`: *String*
++ `promiseGenerator`: *function* with no argument, returning a promise
++ `args`：anything, optional, will be passed to promiseGenerator and each action
+
+dispatching an instance of the class will generate 3 actions:
+```javascript
+   // dispathed before running promiseGenerator
+   {
+     type: `${actionNameBase}`,
+     args,
+   }
+   // dispatched after promise resolve
+   {
+     type: `${actionNameBase}@then`,
+     result: <result>,
+     args,
+   }
+   // dispatch after promise on error
+   {
+     type: `${actionNameBase}@catch`,
+     error: <error>
+     args,
+   }
+```
+
+An example:
+```javascript
+import { PromiseAction } from 'views/middlewares/promise-action'
+import { readFile } from 'fs'
+
+function readSomeFile(filename) {
+  return new PromiseAction('@@TestAction/Readfile',     // action name base
+    ({filename}) =>                 // A function that returns a promise
+      readFile(filename),
+    {                                                   // Optional args
+      filename: filename,
+      time: Date.now()
+    }
+  )
+}
 
 
-### Inter-Plugin Call
+
+store.dispatch(readSomeFile('./assets/useful-file.json')
+
+
+function reducer(state, action) {
+  const {type, error, result, args} = action
+  switch (type) {
+  case '@@TestAction/Readfile':
+    console.log(`About to read file ${args.filename} now!`)
+    break
+  case '@@TestAction/Readfile@then':
+    console.log(`Successfully read file ${args.filename} at ${args.time}!`)
+    console.log(`The file reads:`)
+    console.log(result)
+    return {
+      ...state,
+      ...result,
+    }
+  case '@@TestAction/Readfile@catch':
+    console.log(`Failed to read file ${args.filename} at ${args.time}!`)
+    console.log(error.stack)
+    break
+  }
+}
+
+```
+
+#### Observer
+[`redux-observers`](https://github.com/xuoe/redux-observers) is used to monitor certain path of store and reacts when it changes. The manupulation may be just store the data or compute with some functions, or even dispatch a new action. You can refer to its documents for more details.
+
+It should be note that if you define an observer in your plugin, it should be removed when plugin is disabled with the returned `unsubscribeFunc` from your call of `observe`.
+
+Example:
+
+```javascript
+// index.es
+import { observe, observer } from 'redux-observers'
+import { createSelector } from 'reselect'
+import { writeFileSync } from 'fs'
+
+import { extensionSelectorFactory } from 'views/utils/selectors'
+import { store } from 'views/create-store'
+
+const EXTENSION_KEY = 'poi-plugin-some-plugin-name'
+
+const countSelector = createSelector(
+  extensionSelectorFactory(EXTENSION_KEY),
+  (state) => state.count
+)
+
+const unsubscribeObserve = observe(store, [
+  observer(
+    state => countSelector(state),
+    (dispatch, current, previous) => {
+      writeFileSync('someFile.json', JSON.stringify({count: current}))
+    }
+  )]
+)
+
+export funtion pluginWillUnload() {
+  unsubscribeObserve()
+}
+```
+
+### Events
+poi use a few global events for communication. Since overusing events will break program's hierarchy and complexifies the procedures, avoid events if possible.
+
+Corresponding to `@@Request/kcsapi/<api>` and `@@Response/kcsapi/<api>`, 2 events are emitted before sending request and after receiving responses, they are:
+```javascript
+window.addEventListener('game.request', function (e) {
+  e.detail.method // HTTP method (POST / GET)
+  e.detail.path // API path
+  e.detail.body // data to send
+});
+window.addEventListener('game.response', function (e) {
+  e.detail.method // HTTP method (POST / GET)
+  e.detail.path // API path
+  e.detail.body // returned data
+  e.detail.postBody // data sended
+});
+```
+Normally you don't have to listen to these events, especially when you have react component. You should write reducers and listen to redux actions for data maintenance. If you use events, React will have to re-render 2 times, one after action and one after event, which increases the cost and should be avoid. You should not use these events for data storage, either. Use observer for monitoring store instead.
+
+There do exist cases when you may use them. For backend service, listening to events won't change panel data, but only manupulations like storaging, sending packet for other server, etc.
+
+
+## Developing window plugins
+For window plugins, as they are running on memory-independent processes, they cannot import code from main poi. Electron provides `remote` module for interaction with main program. `remote.require` can import modules from remote, and `remote.getGlobal` can import globals from remote. Note that all methods related to remote is asynchronous with no returned value.
+
+### Environment variables
+You may use the code below for loading same environment variables as main poi.
+```javascript
+// `env-loader.js`
+window.remote = require('electron').remote;
+window.ROOT = remote.getGlobal('ROOT');
+window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH');
+window.POI_VERSION = remote.getGlobal('POI_VERSION');
+window.MODULE_PATH = remote.getGlobal('MODULE_PATH');
+window.PLUGIN_ROOT = __dirname
+require('module').globalPaths.push(MODULE_PATH);   // Allows importing main-poi libraries
+require('module').globalPaths.push(ROOT);          // Allows importing main-poi source files
+```
+
+### Theming
+You may use theme API from main poi to let your window plugin use the same theme.
+```javascript
+require(`${ROOT}/views/env-parts/theme`) // if you've loaded ROOT variable
+```
+The API will load stylesheets for `bootstrap`, `font-awesome`, and user defined `custom.css`, you may append following `<link>` tags into your `<head>`.
+```html
+<link rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" id="fontawesome-css">
+<link rel="stylesheet" id="custom-css">
+```
+
+The zooming factor in main poi is not inherit, so you have to deal with it yourself, for example, zooming the font size only to get rid of window size issues.
+
+```javascript
+const zoomLevel = config.get('poi.zoomLevel', 1)
+const additionalStyle = document.createElement('style')
+
+remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
+  document.body.appendChild(additionalStyle)
+})
+
+additionalStyle.innerHTML = `
+  item-improvement {
+    font-size: ${zoomLevel * 100}%;
+  }
+`
+```
+
+## Inter-Plugin Call
 
 Import IPC module
 ```javascript
@@ -480,108 +638,82 @@ Call an API of all plugins：
 ipc.foreachCall("api_name", arg1, arg2, ...)
 ```
 
-## Window plugin development
-
-New windows are created by `windowManager`. More information about `createWindow` method can be found in Electron's' [new BrowserWindow method](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)。
-
-index.cjsx
-```coffeescript
-{remote} = require 'electron'
-windowManager = remote.require './lib/window'
-
-window.pluginWindow = null # retain a global reference to prevent pluginWindow's GC
-initialPluginWindow = ->
-  window.pluginWindow = windowManager.createWindow
-    x: config.get 'poi.window.x', 0
-    y: config.get 'poi.window.y', 0
-    width: 820
-    height: 650
-    indexName: 'pluginName' # if you want to add an index in global.windowsIndex
-  window.pluginWindow.loadURL "file://#{__dirname}/index.html"
-initialItemImprovementWindow()
-
-module.exports =
-  name: 'Sample'
-  displayName: 'Sample'
-  handleClick: ->
-    window.pluginWindow.show()
-```
-Rendered index.html:
-```html
-<html><body><h1>It works</h1></body></html>
-```
-
-Since environment variables in new window process are different from those in main process, use following code to load same variables from main program.
-
-env-loader.js
-```javascript
-window.remote = require('electron').remote;
-window.ROOT = remote.getGlobal('ROOT');
-window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH');
-window.POI_VERSION = remote.getGlobal('POI_VERSION');
-window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME');
-window.MODULE_PATH = remote.getGlobal('MODULE_PATH');
-require('module').globalPaths.push(MODULE_PATH);
-require(ROOT + "/components/coffee-script/extras/coffee-script.js");
-```
-
 ## i18n
 
-Poi supports i18n with the `i18n-2` package.
+Poi supports i18n with `i18n-2` package.
 
-It is recommended that the i18n object be attached to
-`window.i18n`, as following:
+Place your translation files in the path indicated by `poiPlugin.i18nDir` of `package.json`, and the translation object `window.i18n[plugin id]` will be automatically created.
 
-```coffeescript
-window.i18n.pluginName = new (require 'i18n-2')
-  locales:['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-  defaultLocale: 'zh-CN',
-  directory: path.join(__dirname, 'i18n'),
-  updateFiles: false,
-  indent: "\t",
-  extension: '.json'
-  devMode: false
-window.i18n.pluginName.setLocale(window.language)
-__ = i18n.pluginName.__.bind(i18n.pluginName)
-__n = i18n.pluginName.__n.bind(i18n.pluginName)
-```
+For panel plugin, use `translated = window.i18n[plugin id].__(toTranslate)` to get string translated.
 
-You can get translations after placing files in specified folders
-
-```coffeescript
-translated = __ 'to translate'
-```
-
-For more information on i18n-2 package, please refer to [i18n-2](https://github.com/jeresig/i18n-node-2)
+`poi-plugin-translator` provides English / Korean localization for ship and item names, etc.
 
 For i18n of game resources, poi predefines a translation method, for non-window plugin, it can be called as below:
 
-```coffeescript
-resource = window.i18n.resources.__ 'to translate'
+```javascript
+resource = window.i18n.resources.__('to translate')
 ```
 
-For new-window plugin, package should be called
+For window plugin, you have to create yourself translation object.
 
-```coffeescript
-# returns default value if there's no poi-plugin-translator (the plugin converting kanji names into romaji). If you have already required `ROOT/view/env`, these lines can be omitted.
-if !window.i18n?
-  window.i18n = {}
-window.i18n.resources = {}
-window.i18n.resources.__ = (str) -> str
-window.i18n.resources.translate = (locale, str) -> str
-window.i18n.resources.setLocale = (str) -> return
+```javascript
+window.language = config.get('poi.language', navigator.language)
+const i18n = new i18n2({
+  locales: ['en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
+  defaultLocale: 'zh-CN',
+  directory: join(__dirname, 'i18n'),
+  extension: '.json',
+  updateFiles: false,
+  devMode: false,
+})
+i18n.setLocale(window.language)
 
-try
-  Translator = require 'poi-plugin-translator'
-catch error
-  console.log error
+if(i18n.resources == null){
+  i18n.resources = {}
+}
 
-resource = window.i18n.resources.__ 'to translate'
+if(i18n.resources.__ == null){
+  i18n.resources.__ = (str) => str
+}
+if(i18n.resources.translate == null){
+  i18n.resources.translate = (locale, str) => str
+}
+if(i18n.resources.setLocale == null){
+  i18n.resources.setLocale = (str) => {}
+}
+
+window.i18n = i18n
+
+try{
+  require('poi-plugin-translator').pluginDidLoad()
+}
+catch(error){
+  console.warn('plugin-translator',error)
+}
+
+
+window.__ = i18n.__.bind(i18n)
+window.__r = i18n.resources.__.bind(i18n.resources)
+
+window.i18n = i18n
+
+resource = window.i18n.resources.__('to translate')
 ```
+
+It is recommended to translate the window title
+```javascript
+document.title = window.__('your-plugin')
+```
+
+Please refer to [i18n-2](https://github.com/jeresig/i18n-node-2) for more information on i18n-2 package.
 
 ## Debugging
 
-See [Debugging Guide](debug.md#software-debugging-guide)
+To load you dev version of plugin in poi, the recommended way is to use [npm link](https://docs.npmjs.com/cli/link).
+
+First run `npm link` in your dev directory (may require admin privilege), and them run `npm link PLUGIN-PACKAGE-NAME` in poi's `APPDATA_PATH`'s plugins sub folder.
+
+See [Debugging Guide](debug.md#software-debugging-guide) for more detail
 
 ## Plugin publishing specification
 ### Publishing on [npm](http://npmjs.org)
@@ -622,3 +754,7 @@ cd .. && tar cvf [repo] [repo].tar.gz
 Poi's internal components are structured like plugins, you can find their codes in views/componets.
 
 More plugins are available as reference on poooi(https://github.com/poooi)
+
+
+## Community
+Welcome to become developer for poi. You may post your questions and ideas as github issues, or join our [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ) for discussions.

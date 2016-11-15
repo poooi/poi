@@ -631,10 +631,6 @@ poi 内置了 `i18n-2` 模组以进行多语言翻译
 
 对于面板内插件，可以通过 `translated = window.i18n[插件的 id].__(toTranslate)` 来获得翻译。
 
-对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件。
-
-关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档。
-
 poi 的 `poi-plugin-translator` 插件提供了对于舰娘名，装备名等的英文/韩文化翻译，可以在插件中按需使用。
 
 poi 预置了一个翻译方法以解决游戏内资源的翻译，对于面板插件，可以通过如下方法调用
@@ -645,6 +641,7 @@ resource = window.i18n.resources.__('to translate')
 
 对于新窗口插件，需要调用相应插件
 
+对于新窗口插件，则需要通过自行建立翻译对象以调用翻译文件。
 ```javascript
 window.language = config.get('poi.language', navigator.language)
 const i18n = new i18n2({
@@ -693,6 +690,9 @@ resource = window.i18n.resources.__('to translate')
 ```javascript
 document.title = window.__('your-plugin')
 ```
+
+关于 `i18n-2` 模组的详细使用方法请参照 [i18n-2](https://github.com/jeresig/i18n-node-2) 的文档。
+
 
 ## 调试
 对于开发版本的插件，推荐的载入 poi 方式为使用 [`npm link`命令](https://docs.npmjs.com/cli/link)。
