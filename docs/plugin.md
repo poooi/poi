@@ -120,6 +120,9 @@ Poi demands that plugin inform main program with information using exporting.
 
 Panel plugin is essentially a component rendered within main poi. Following variables are for panel and backend plugin are:
 + `reactClass`: *React Component*, rendered in main poi as a plugin panel.
++ `reducer`: [*Redux reducer*](http://redux.js.org/docs/basics/Reducers.html), as Redux requires a unique global store, if plugin shall maintain the store, a reducer must be provided and main poi will combine it with 
+ + plugin store will be placed at `store.ext.<pluginPackageName>`, e.g. `store.ext['poi-plugin-prophet']`. It is recommended to use `extensionSelectorFactory('poi-plugin-prophet')` to retrieve data, as to improve readability.
+ + plugin store will be emptied upon being disabled
 
 New window plugin is exactly a new web page window running on another process. Following variables are for new window plugin:
 
@@ -134,9 +137,6 @@ New window plugin is exactly a new web page window running on another process. F
  + `height`: *Number*, window height
 
 And following variables apply to all sorts of plugins:
-+ `reducer`: [*Redux reducer*](http://redux.js.org/docs/basics/Reducers.html), as Redux requires a unique global store, if plugin shall maintain the store, a reducer must be provided and main poi will combine it with 
- + plugin store will be placed at `store.ext.<pluginPackageName>`, e.g. `store.ext['poi-plugin-prophet']`. It is recommended to use `extensionSelectorFactory('poi-plugin-prophet')` to retrieve data, as to improve readability.
- + plugin store will be emptied upon being disabled
 + `settingClass`: *React Component*, setting panel for plugin, will be rendered in plugin list, settings view
 + `pluginDidLoad`: *function*, no argument, called after plugin is enabled
 + `pluginWillUnload`: *function*, no argument, called before plugin is disabled

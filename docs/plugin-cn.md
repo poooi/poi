@@ -121,6 +121,9 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
 
 面板插件本质上是在本体中渲染的一个组件。以下是适用于面板插件和无窗口插件的字段：
 + `reactClass`：React Component，面板插件的主要显示部分，将会作为 poi 本体的一部分渲染到插件面板。
++ `reducer`：[Redux reducer](http://redux.js.org/docs/basics/Reducers.html)，由于 Redux 要求全局只有一个 store ， 面板插件要自行维护 store 的话，需由本体读取 reducer 后合并到本体的主 reducer 当中。
+ + 插件的 store 将会放置在 `store.ext.<pluginPackageName>` 处，如 `store.ext['poi-plugin-prophet']` 。建议使用 `extensionSelectorFactory('poi-plugin-prophet')` 的格式来提取数据，以提高可维护性。
+ + 插件 store 将会在插件被禁用时清空。
 
 新窗口插件本质上是一个在新进程中运行的网页窗口。以下是适用于新窗口插件的字段：
 
@@ -135,9 +138,6 @@ poi 要求插件通过导出的方式告知本体和插件运行有关的信息�
  + `height`：Number，窗口高度
 
 以下是适用于所有插件的字段：
-+ `reducer`：[Redux reducer](http://redux.js.org/docs/basics/Reducers.html)，由于 Redux 要求全局只有一个 store ， 面板插件要自行维护 store 的话，需由本体读取 reducer 后合并到本体的主 reducer 当中。
- + 插件的 store 将会放置在 `store.ext.<pluginPackageName>` 处，如 `store.ext['poi-plugin-prophet']` 。建议使用 `extensionSelectorFactory('poi-plugin-prophet')` 的格式来提取数据，以提高可维护性。
- + 插件 store 将会在插件被禁用时清空。
 + `settingClass`：React Component，插件的设置面板，显示在插件列表中。
 + `pluginDidLoad`：function，不接受参数，在插件启用后被调用。
 + `pluginWillUnload`：function，不接受参数，在插件禁用前被调用。
