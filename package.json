@@ -68,7 +68,7 @@
     "react-bootstrap": "^0.30.3",
     "react-dom": "^15.4.0",
     "react-file-dropzone": "^0.2.0",
-    "react-fontawesome": "^1.0.0",
+    "react-fontawesome": "1.3.5",
     "react-portal": "^3.0.0",
     "react-redux": "^4.4.5",
     "react-remarkable": "^1.1.1",
@@ -90,7 +90,7 @@
     "babel-eslint": "^7.0.0",
     "coffeelint": "^1.11.1",
     "electron": "^1.4.7",
-    "electron-builder": "^7.23.2",
+    "electron-builder": "^8.6.0",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
@@ -106,14 +106,14 @@
   },
   "build": {
     "appId": "org.poooi.poi",
-    "app-category-type": "public.app-category.games",
     "extraResources": [
       "PepperFlash/${os}-${arch}"
     ],
     "npmRebuild": false,
     "mac": {
       "icon": "assets/icons/poi.icns",
-      "target": "dmg"
+      "target": "dmg",
+      "category": "public.app-category.games"
     },
     "dmg": {
       "contents": [

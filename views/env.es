@@ -4,6 +4,12 @@ import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
 import lodash from 'lodash'        // TODO: Backward compatibility
+import jQuery from 'jquery'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import FontAwesome  from 'react-fontawesome'
+import * as ReactBootstrap from 'react-bootstrap'
+const { Radio, Checkbox, FormControl } = ReactBootstrap
 
 // Environments
 window.remote = remote
@@ -27,15 +33,13 @@ window.dbg.init()
 window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
-window.jQuery = require('jquery')
-window.React = require('react')
-window.ReactDOM = require('react-dom')
-window.FontAwesome = require('react-fontawesome')
-window.ReactBootstrap = require('react-bootstrap')
+window.jQuery = jQuery
+window.React = React
+window.ReactDOM = ReactDOM
+window.FontAwesome = FontAwesome
+window.ReactBootstrap = ReactBootstrap
 // Workaround
-const React = window.React
-const {Radio, Checkbox, FormControl} = window.ReactBootstrap
-window.ReactBootstrap.Input = class extends window.React.Component {
+window.ReactBootstrap.Input = class InputWorkAround extends React.Component {
   render() {
     switch (this.props.type) {
     case 'radio': {
