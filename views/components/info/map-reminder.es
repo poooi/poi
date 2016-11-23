@@ -33,8 +33,8 @@ const MapRoutes = connect(
   const histLen = spotHistory.length
   const activeSpot = spotHistory[histLen - 1]
   const bossSpotLoc = mapspots[bossSpot] || [-100, -100]
-  const locHistory = spotHistory.map((i) => mapspots[i])
-  const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : []
+  const locHistory = spotHistory.map((i) => mapspots[i] || [-1, -1])
+  const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   return (
     <div>
       <svg width="150" height="80" viewBox="0 0 150 80" className="maproutes">
@@ -46,7 +46,7 @@ const MapRoutes = connect(
         })}
         {// Draw passed lines
         lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-          <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} className="passed" />
+          begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} className="passed" /> : <noscript />
         )}
         <rect x={parseInt(bossSpotLoc[0] / 100) - 3} y={parseInt(bossSpotLoc[1] / 100) - 3} width={6} height={6}
           className='boss' />
@@ -56,8 +56,8 @@ const MapRoutes = connect(
         )}
         {// Draw passed points again, highlighting the active one
         map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-          <rect key={id} x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4}
-            className={id == activeSpot ? 'active' : 'passed'} />
+          x > 0 ? <rect key={id} x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4}
+            className={id == activeSpot ? 'active' : 'passed'} /> : <noscript />
         )}
       </svg>
     </div>
