@@ -14,6 +14,7 @@ import {
   fleetInExpeditionSelectorFactory,
   fleetShipsDataSelectorFactory,
   fleetShipsEquipDataSelectorFactory,
+  fleetShipsEquipDataWithEscapeSelectorFactory,
   fleetNameSelectorFactory,
   basicSelector,
   condTickSelector,
@@ -77,7 +78,7 @@ class CountdownLabel extends Component {
 }
 
 const tykuSelectorFactory = memoize((fleetId) =>
-  createSelector(fleetShipsEquipDataSelectorFactory(fleetId),
+  createSelector(fleetShipsEquipDataWithEscapeSelectorFactory(fleetId),
     (equipsData=[]) =>
       getTyku(equipsData)
   )
