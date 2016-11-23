@@ -172,6 +172,15 @@ export const shipRepairDockSelectorFactory = memoize((shipId) =>
   })
 )
 
+export const escapeStatusSelectorFactory = memoize((shipId) =>
+  createSelector([
+    fleetsSelector,
+    sortieSelector,
+  ], (fleet, {escapedPos}) =>
+    escapedPos.map(pos => get(fleet, `${Math.floor(pos / 6)}.api_ship.${pos % 6}`)).indexOf(shipId) !== -1
+  )
+)
+
 const shipBaseDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipsSelector,

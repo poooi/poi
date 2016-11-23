@@ -15,7 +15,7 @@ const texts = [
   ['Resupply needed'],
 ]
 const styles = [
-  'danger',
+  'warning',
   'info',
   'primary',
   'success',
@@ -24,7 +24,7 @@ const styles = [
   'warning',
 ]
 const icons = [
-  'exclamation-circle',
+  'reply',
   'wrench',
   'tag',
   'tag',

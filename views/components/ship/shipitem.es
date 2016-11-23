@@ -16,6 +16,7 @@ import {
   shipDataSelectorFactory,
   shipRepairDockSelectorFactory,
   constSelector,
+  escapeStatusSelectorFactory,
 } from 'views/utils/selectors'
 
 function getMaterialStyle(percent) {
@@ -34,12 +35,12 @@ const shipRowDataSelectorFactory = memoize((shipId) =>
     shipDataSelectorFactory(shipId),
     shipRepairDockSelectorFactory(shipId),
     constSelector,
-  ], ([ship, $ship]=[], repairDock, {$shipTypes}) => ({
+    escapeStatusSelectorFactory(shipId),
+  ], ([ship, $ship]=[], repairDock, {$shipTypes}, escaped) => ({
     ship: ship || {},
     $ship: $ship || {},
     $shipTypes,
-    labelStatus: getShipLabelStatus(ship, $ship, repairDock),
-    repair: repairDock,
+    labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
   }))
 )
 export const ShipRow = connect(

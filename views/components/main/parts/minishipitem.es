@@ -16,6 +16,7 @@ import {
   shipRepairDockSelectorFactory,
   configLayoutSelector,
   configDoubleTabbedSelector,
+  escapeStatusSelectorFactory,
 } from 'views/utils/selectors'
 
 const { i18n } = window
@@ -84,12 +85,13 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipRepairDockSelectorFactory(shipId),
+    escapeStatusSelectorFactory(shipId),
     configLayoutSelector,
     configDoubleTabbedSelector,
-  ], ([ship, $ship]=[], repairDock, layout, doubleTabbed) => ({
+  ], ([ship, $ship]=[], repairDock, escaped, layout, doubleTabbed) => ({
     ship: ship || {},
     $ship: $ship || {},
-    labelStatus: getShipLabelStatus(ship, $ship, repairDock),
+    labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
     layout,
     doubleTabbed,
   }))

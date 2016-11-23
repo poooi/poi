@@ -57,11 +57,14 @@ export function getStatusStyle(status) {
   }
 }
 
-export function getShipLabelStatus(ship, $ship, inRepair) {
+export function getShipLabelStatus(ship, $ship, inRepair, escaped) {
   if (!ship || !$ship) {
     return -1
   }
-  if (inRepair) {
+  if (escaped) {
+    // retreated
+    return 0
+  } else if (inRepair) {
     // repairing
     return 1
   } else if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1) {
