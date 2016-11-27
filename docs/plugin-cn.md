@@ -329,6 +329,7 @@ store.battle.
     map         // Integer(2-3 => 23)
     enemyHp     // Array of Integer
     deckHp      // Array of Integer
+    deckInitHp  // Array of Integer
     enemyShipId // Array of Integer
     deckShipId  // Array of Integer
 ```
@@ -403,6 +404,7 @@ store.misc.
       dropShipId         // Number，获得的船只的 api_id
       deckShipId         // Array，我方舰队船只的 api_id。联合舰队采用 concat
       deckHp             // Array，我方舰队船只的结束 hp。联合舰队采用 concat
+      deckInitHp         // Array, 我方舰队船只的开始 hp。联合舰队采用 concat
       enemyShipId        // Array，敌方舰队的 api_ship_id
       enemyFormation     // Number，与 api_formation 一致
       enemyHp            // Array，敌方舰队的结束 hp

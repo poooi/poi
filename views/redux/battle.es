@@ -5,6 +5,7 @@ battle.result =
   map: Integer(2-3 => 23)
   enemyHp: Array of Integer
   deckHp: Array of Integer
+  deckInitHp: Array of Integer
   enemyShipId: Array of Integer
   deckShipId: Array of Integer
 */
@@ -23,11 +24,12 @@ function handleResult(battle, packet) {
     stages = stages.concat(simulator.simulate(packet))
   }
 
-  const deckShipId = [], deckHp = []
+  const deckShipId = [], deckHp = [], deckInitHp = []
   const deck = [].concat(simulator.mainFleet || [], simulator.escortFleet || [])
   deck.map(ship => {
     deckShipId.push((ship && ship.raw) ? ship.raw.api_id : -1)  // use _ships id in deckShipId
     deckHp.push(ship ? ship.nowHP : 0)
+    deckInitHp.push(ship ? ship.initHP : 0)
   })
   const enemyShipId = [], enemyHp = []
   const enemy = [].concat(simulator.enemyFleet || [], simulator.enemyEscort || [])
@@ -41,6 +43,7 @@ function handleResult(battle, packet) {
     map:  battle.map,
     deckShipId: deckShipId,
     deckHp:     deckHp,
+    deckInitHp: deckInitHp,
     enemyShipId: enemyShipId,
     enemyHp:     enemyHp,
   }

@@ -341,6 +341,7 @@ store.battle.
     map         // Integer(2-3 => 23)
     enemyHp     // Array of Integer
     deckHp      // Array of Integer
+    deckInitHp  // Array of Integer
     enemyShipId // Array of Integer
     deckShipId  // Array of Integer
 ```
@@ -415,6 +416,7 @@ If you consider maintaining reducers, you may need some Redux actions dispatched
       dropShipId         // *Number*, drop ship's api_id
       deckShipId         // *Array*, ships' api_id, concated when combined fleet
       deckHp             // *Array*, HP at battle's end, concated when combined fleet
+      deckInitHp         // *Array*, HP at battle's start, concated when combined fleet
       enemyShipId        // *Array*, enemy ships' api_ship_id
       enemyFormation     // *Number*, same as api_formation
       enemyHp            // *Array*, HP at battle's end
