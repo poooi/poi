@@ -230,7 +230,7 @@ class Proxy extends EventEmitter {
             requrl = req.url
             let success = false
             const retries = config.get('proxy.retries', 0)
-            for (let i = 0; i < retries; i++) {
+            for (let i = 0; i <= retries; i++) {
               if (success) {
                 break
               }
