@@ -70,6 +70,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       sortieStatus[postBody.api_deck_id-1] = true
     }
     return {
+      ...state,
       sortieMapId: mapId,
       currentNode: body.api_no,
       sortieStatus,
