@@ -241,7 +241,7 @@ class Proxy extends EventEmitter {
               try {
                 // Emit request event to plugins
                 reqBody = JSON.stringify(querystring.parse(reqBody.toString()))
-                this.emit('network.on.request', req.method, [domain, pathname, requrl], reqBody)
+                this.emit('network.on.request', req.method, [domain, pathname, requrl], reqBody, Date.now())
                 // Create remote request
                 const [response, body] = await new Promise((promise_resolve, promise_reject) => {
                   request(resolve(options), (err, res_response, res_body) => {
@@ -265,7 +265,7 @@ class Proxy extends EventEmitter {
                   throw new Error('Empty Body')
                 }
                 if (response.statusCode == 200) {
-                  this.emit('network.on.response', req.method, [domain, pathname, requrl], JSON.stringify(resolvedBody), reqBody)
+                  this.emit('network.on.response', req.method, [domain, pathname, requrl], JSON.stringify(resolvedBody), reqBody, Date.now())
                 } else {
                   this.emit('network.error', [domain, pathname, requrl], response.statusCode)
                 }

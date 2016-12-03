@@ -53,22 +53,24 @@ export function reducerFactory(extensionConfig) {
 
 // === Actions ===
 
-export function onGameResponse({method, path, body, postBody}) {
+export function onGameResponse({method, path, body, postBody, time}) {
   return {
     type: `@@Response${path}`,
     method,
     path,
     body,
     postBody,
+    time,
   }
 }
 
-export function onGameRequest({method, path, body}) {
+export function onGameRequest({method, path, body, time}) {
   return {
     type: `@@Request${path}`,
     method,
     path,
     body,
+    time,
   }
 }
 
