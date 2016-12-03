@@ -6,7 +6,7 @@ const proxy = remote.require('./lib/proxy')
 const isGameApi = (pathname) =>
   (pathname.startsWith('/kcsapi'))
 
-const handleProxyGameOnRequest = (method, [domain, path], body) => {
+const handleProxyGameOnRequest = (method, [domain, path], body, time) => {
   const {dispatch} = window
   if (!isGameApi(path)) {
     return
@@ -18,6 +18,7 @@ const handleProxyGameOnRequest = (method, [domain, path], body) => {
       method: method,
       path: path,
       body: body,
+      time: time,
     }
     try{
       dispatch(onGameRequest(details))
@@ -40,7 +41,7 @@ let locked = false
 
 const parseResponses = () => {
   const {dispatch} = window
-  let [method, [domain, path, url], body, postBody] = responses.shift()
+  let [method, [domain, path, url], body, postBody, time] = responses.shift()
   if (['/kcs/mainD2.swf', '/kcsapi/api_start2', '/kcsapi/api_get_member/basic'].includes(path)) {
     handleProxyGameStart()
   }
@@ -80,6 +81,7 @@ const parseResponses = () => {
     path: path,
     body: body,
     postBody: postBody,
+    time: time,
   }
 
   // Update redux store
@@ -115,10 +117,10 @@ const resolveResponses = () => {
   locked = false
 }
 
-const handleProxyGameOnResponse = (method, [domain, path, url], body, postBody) => {
+const handleProxyGameOnResponse = (method, [domain, path, url], body, postBody, time) => {
   // Parse the json object
   try {
-    responses.push([method, [domain, path, url], JSON.parse(body), JSON.parse(postBody)])
+    responses.push([method, [domain, path, url], JSON.parse(body), JSON.parse(postBody), time])
     if (!locked) {
       resolveResponses()
     }
