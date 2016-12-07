@@ -1,5 +1,19 @@
 import { get } from 'lodash'
 
+if (!window.isMain) {
+  window.addEventListener('storage', e => {
+    if (e.key === '_storeCache') {
+      const {fcd} = JSON.parse(e.newValue)
+      for (const key of Object.keys(fcd)) {
+        window.dispatch({
+          type: '@@updateFCD',
+          value: fcd[key],
+        })
+      }
+    }
+  })
+}
+
 export function reducer(state={}, {type, value}) {
   switch (type) {
   case '@@updateFCD':
