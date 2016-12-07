@@ -8,29 +8,29 @@ const __ = i18n.main.__.bind(i18n.main)
 const texts = [
   ['Retreated'],
   ['Repairing'],
+  ['Resupply needed'],
   ['Ship tag: %s', 'E1'],
   ['Ship tag: %s', 'E2'],
   ['Ship tag: %s', 'E3'],
   ['Ship tag: %s', ''],
-  ['Resupply needed'],
 ]
 const styles = [
   'warning',
   'info',
+  'warning',
   'primary',
   'success',
   'info',
   '',
-  'warning',
 ]
 const icons = [
   'reply',
   'wrench',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
   'database',
+  'tag',
+  'tag',
+  'tag',
+  'tag',
 ]
 
 class StatusLabel extends React.Component {
