@@ -12,7 +12,7 @@ import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
 import { dispatchBattleResult } from './redux/battle'
 
 const cachePosition = '_storeCache'
-const targetPaths = ['const', 'info']
+const targetPaths = ['const', 'info', 'fcd']
 const storeCache = (function() {
   try {
     return JSON.parse(localStorage.getItem(cachePosition) || '{}')
