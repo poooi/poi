@@ -7,11 +7,19 @@ const CSON = require('cson')
 function build_map(dest) {
   fs.writeFileSync(
     path.join(dest, 'mapspot.json'),
-    JSON.stringify(CSON.load('mapspot.cson'))
+    JSON.stringify(CSON.load('mapspot.cson')) + '\n'
   )
   fs.writeFileSync(
     path.join(dest, 'maproute.json'),
-    JSON.stringify(CSON.load('maproute.cson'))
+    JSON.stringify(CSON.load('maproute.cson')) + '\n'
+  )
+  fs.writeFileSync(
+    path.join(dest, 'maphp.json'),
+    JSON.stringify(CSON.load('maphp.cson')) + '\n'
+  )
+  fs.writeFileSync(
+    path.join(dest, 'shiptag.json'),
+    JSON.stringify(CSON.load('shiptag.cson')) + '\n'
   )
 }
 
@@ -23,7 +31,7 @@ function build_meta(dest) {
   }
   fs.writeFileSync(
     path.join(dest, 'meta.json'),
-    JSON.stringify(meta)
+    JSON.stringify(meta) + '\n'
   )
 }
 
