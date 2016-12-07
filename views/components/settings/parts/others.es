@@ -73,7 +73,7 @@ const Others = connect(state => ({
     }
   }
   componentDidMount() {
-    this.updateFCD()
+    this.updateData()
   }
   render() {
     return (
