@@ -16,12 +16,12 @@ const serverList = [
 ]
 
 const Others = connect(state => ({
-  fcd: Object.keys(state.fcd || {}).map(key => (get(state, `fcd.${key}.meta`))),
+  fcd: state.fcd,
 }))(class others extends Component {
   updateData = async () => {
     // Update from local
-    const fileList = globSync(`${ROOT}/assets/data/fcd/*`)
-    for (const file of fileList) {
+    const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
+    for (const file of localFileList) {
       if (!file.includes('meta.json')) {
         this.props.dispatch({
           type: '@@updateFCD',
@@ -44,22 +44,27 @@ const Others = connect(state => ({
           continue
         }
         for (const file of fileList) {
-          const res = await fetch(`${server}${file.name}.json`, {method: "GET"}).catch(e => e)
-          if (res.status !== 200) {
-            flag = false
-            continue
+          if (file.version > get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01')) {
+            console.log(file.version, get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01'))
+            const res = await fetch(`${server}${file.name}.json`, {method: "GET"}).catch(e => e)
+            if (res.status !== 200) {
+              flag = false
+              continue
+            }
+            let body
+            try {
+              body = await res.json()
+            } catch (e) {
+              flag = false
+              continue
+            }
+            this.props.dispatch({
+              type: '@@updateFCD',
+              value: body,
+            })
+          } else {
+            console.log(`No newer version of ${file.name}: current ${get(this.props.fcd, `${file.name}.meta.version`)}, remote ${file.version}`)
           }
-          let body
-          try {
-            body = await res.json()
-          } catch (e) {
-            flag = false
-            continue
-          }
-          this.props.dispatch({
-            type: '@@updateFCD',
-            value: body,
-          })
         }
       } else {
         flag = false
@@ -76,6 +81,7 @@ const Others = connect(state => ({
     this.updateData()
   }
   render() {
+    const fcds = Object.keys(this.props.fcd || {}).map(key => (get(this.props.fcd, `${key}.meta`)))
     return (
       <div id='poi-others'>
         <Grid>
@@ -100,7 +106,7 @@ const Others = connect(state => ({
         <Grid>
           <Col xs={12}>
             {
-              this.props.fcd.map(fcd => (
+              fcds.map(fcd => (
                 fcd ? <p>{`${fcd.name}: ${fcd.version}`}</p> : null
               ))
             }
