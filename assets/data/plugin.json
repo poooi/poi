@@ -169,10 +169,10 @@
     "icon": "indent",
     "author": "马里酱",
     "link": "https://github.com/malichan",
-    "deszh-CN": "任务详情查询及翻译。感谢[舰娘百科](https://zh.kcwiki.moe)维护数据。",
-    "deszh-TW": "任務詳情查詢及翻譯。感謝[艦娘百科](https://zh.kcwiki.moe)維護數據。",
-    "desja-JP": "任務攻略データや開放条件一覧。データは[kcwiki](https://zh.kcwiki.moe)によって提供されている。",
-    "desen-US": "Task infomation and requirement explanation. Data maintained by [kcwiki](https://zh.kcwiki.moe).",
+    "deszh-CN": "任务信息查询 & 任务面板强化，感谢[舰娘百科](https://zh.kcwiki.moe)维护数据。",
+    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝[艦娘百科](https://zh.kcwiki.moe)維護數據。",
+    "desja-JP": "任務攻略データや任務パネルの強化、データは[kcwiki](https://zh.kcwiki.moe)によって提供されている。",
+    "desen-US": "Show task infomation & enhance task panel, Data maintained by [kcwiki](https://zh.kcwiki.moe).",
     "desko-KR": "임무 공략 데이터 & 개방 조건. 데이터 제공되어 [kcwiki](https://zh.kcwiki.moe)."
   },
   "poi-plugin-report": {
