@@ -26,18 +26,28 @@ const fetchFromRemote = async (url) => {
   }
 }
 
+const initState = {}
+
 const Others = connect(state => ({
-  fcd: state.fcd,
+  version: state.fcd.version || initState,
 }))(class others extends Component {
   updateData = async () => {
     // Update from local
     const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
     for (const file of localFileList) {
       if (!file.includes('meta.json')) {
-        this.props.dispatch({
-          type: '@@updateFCD',
-          value: require(file),
-        })
+        const data = require(file)
+        const version = get(data, 'meta.version')
+        const name = get(data, 'meta.name')
+        if (name && version) {
+          const localVersion = get(this.props.version, name, '1970/01/01/01')
+          if (version > localVersion) {
+            this.props.dispatch({
+              type: '@@updateFCD',
+              value: data,
+            })
+          }
+        }
       }
     }
     // Update from server
@@ -47,8 +57,9 @@ const Others = connect(state => ({
       const fileList = await fetchFromRemote(`${server}meta.json`)
       if (fileList) {
         for (const file of fileList) {
-          if (file.version > get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01')) {
-            console.log(`Updating ${file.name}: current ${get(this.props.fcd, `${file.name}.meta.version`)}, remote ${file.version}`)
+          const localVersion = get(this.props.version, file.name, '1970/01/01/01')
+          if (file.version > localVersion) {
+            console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}`)
             const data = await fetchFromRemote(`${server}${file.name}.json`)
             if (data) {
               this.props.dispatch({
@@ -59,7 +70,7 @@ const Others = connect(state => ({
               flag = false
             }
           } else {
-            console.log(`No newer version of ${file.name}: current ${get(this.props.fcd, `${file.name}.meta.version`)}, remote ${file.version}`)
+            console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}`)
           }
         }
       } else {
@@ -77,7 +88,7 @@ const Others = connect(state => ({
     this.updateData()
   }
   render() {
-    const fcds = Object.keys(this.props.fcd || {}).map(key => (get(this.props.fcd, `${key}.meta`)))
+    const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
       <div id='poi-others'>
         <Grid>
@@ -103,7 +114,7 @@ const Others = connect(state => ({
           <Col xs={12}>
             {
               fcds.map(fcd => (
-                fcd ? <p>{`${fcd.name}: ${fcd.version}`}</p> : null
+                fcd ? <p>{`${fcd[0]}: ${fcd[1]}`}</p> : null
               ))
             }
           </Col>

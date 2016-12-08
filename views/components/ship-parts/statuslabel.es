@@ -29,7 +29,7 @@ const initState = {
 }
 
 const StatusLabel = connect(state => ({
-  shipTag: get(state, 'fcd.shiptag.data', initState),
+  shipTag: state.fcd.shiptag || initState,
 }))(class statusLabel extends React.Component {
   shouldComponentUpdate = (nextProps, nextState) => (
     nextProps.label !== this.props.label || !isEqual(this.props.shipTag, nextProps.shipTag)

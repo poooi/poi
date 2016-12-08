@@ -14,15 +14,23 @@ if (!window.isMain) {
   })
 }
 
-export function reducer(state={}, {type, value}) {
+const initState = {
+  version: {},
+}
+
+export function reducer(state=initState, {type, value}) {
   switch (type) {
   case '@@updateFCD':
-    if (value.data && value.meta && value.meta.name && value.meta.version) {
+    if (value.data && value.meta) {
       const {name, version} = value.meta
-      if (!state[name] || (version > get(state, `${name}.meta.version`, '1970/01/01/01'))) {
+      if (name && version) {
         state = {
           ...state,
-          [name]: value,
+          version: {
+            ...state.version,
+            [name]: version,
+          },
+          [name]: value.data,
         }
       }
     }

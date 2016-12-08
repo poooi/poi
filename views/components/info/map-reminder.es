@@ -20,8 +20,8 @@ const MapRoutes = connect(
     sortieMapId: get(state, 'sortie.sortieMapId'),
     spotHistory: get(state, 'sortie.spotHistory'),
     bossSpot: get(state, 'sortie.bossSpot'),
-    allMapspots: get(state, 'fcd.mapspot.data'),
-    allMaproutes: get(state, 'fcd.maproute.data'),
+    allMapspots: get(state, 'fcd.mapspot'),
+    allMaproutes: get(state, 'fcd.maproute'),
   })
 )(({sortieMapId, spotHistory, allMapspots, bossSpot, allMaproutes}) => {
   if (!sortieMapId || !allMapspots)
@@ -78,7 +78,7 @@ export default connect(
     currentNode,
     mapData,
     mapHp,
-    finalHps: get(finalHpData, 'maphp.data') || emptyFinalHps,
+    finalHps: finalHpData.maphp || emptyFinalHps,
   }))
 )(class MapReminder extends Component {
   static mapRanks = ['', ` ${__('丙')}`, ` ${__('乙')}`, ` ${__('甲')}`]
