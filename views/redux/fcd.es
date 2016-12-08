@@ -1,14 +1,19 @@
-import { get } from 'lodash'
+import { isEqual } from 'lodash'
 
 if (!window.isMain) {
   window.addEventListener('storage', e => {
     if (e.key === '_storeCache') {
       const {fcd} = JSON.parse(e.newValue)
       for (const key of Object.keys(fcd)) {
-        window.dispatch({
-          type: '@@updateFCD',
-          value: fcd[key],
-        })
+        if (!isEqual(fcd[key], window.getStore(`fcd.${key}`))) {
+          window.dispatch({
+            type: "@@replaceFCD",
+            value: {
+              path: key,
+              data: fcd[key],
+            },
+          })
+        }
       }
     }
   })
@@ -32,6 +37,14 @@ export function reducer(state=initState, {type, value}) {
           },
           [name]: value.data,
         }
+      }
+    }
+    break
+  case '@@replaceFCD':
+    if (value.path && value.data) {
+      state = {
+        ...state,
+        [value.path]: value.data,
       }
     }
   }
