@@ -2,7 +2,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, isEqual } from 'lodash'
 
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -32,7 +32,7 @@ const StatusLabel = connect(state => ({
   shipTag: get(state, 'fcd.shiptag.data', initState),
 }))(class statusLabel extends React.Component {
   shouldComponentUpdate = (nextProps, nextState) => (
-    nextProps.label !== this.props.label
+    nextProps.label !== this.props.label || !isEqual(this.props.shipTag, nextProps.shipTag)
   )
   render() {
     const i = this.props.label
