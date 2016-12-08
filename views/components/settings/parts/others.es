@@ -15,6 +15,17 @@ const serverList = [
   "http://7xj6zx.com1.z0.glb.clouddn.com/",
 ]
 
+const fetchFromRemote = async (url) => {
+  const res = await fetch(url, {method: "GET"}).catch(e => e)
+  if (res.status === 200) {
+    try {
+      return await res.json()
+    } catch (e) {
+      return
+    }
+  }
+}
+
 const Others = connect(state => ({
   fcd: state.fcd,
 }))(class others extends Component {
@@ -33,35 +44,20 @@ const Others = connect(state => ({
     let flag
     for (const server of serverList) {
       flag = true
-      const meta = await fetch(`${server}meta.json`, {method: "GET"}).catch(e => e)
-      if (meta.status === 200) {
-        let fileList
-        try {
-          fileList = await meta.json()
-        } catch (e) {
-          flag = false
-          console.warn(`Update fcd from ${server} failed.`)
-          continue
-        }
+      const fileList = await fetchFromRemote(`${server}meta.json`)
+      if (fileList) {
         for (const file of fileList) {
           if (file.version > get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01')) {
-            console.log(file.version, get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01'))
-            const res = await fetch(`${server}${file.name}.json`, {method: "GET"}).catch(e => e)
-            if (res.status !== 200) {
+            console.log(`Updating ${file.name}: current ${get(this.props.fcd, `${file.name}.meta.version`)}, remote ${file.version}`)
+            const data = await fetchFromRemote(`${server}${file.name}.json`)
+            if (data) {
+              this.props.dispatch({
+                type: '@@updateFCD',
+                value: data,
+              })
+            } else {
               flag = false
-              continue
             }
-            let body
-            try {
-              body = await res.json()
-            } catch (e) {
-              flag = false
-              continue
-            }
-            this.props.dispatch({
-              type: '@@updateFCD',
-              value: body,
-            })
           } else {
             console.log(`No newer version of ${file.name}: current ${get(this.props.fcd, `${file.name}.meta.version`)}, remote ${file.version}`)
           }
