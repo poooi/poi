@@ -129,5 +129,7 @@
   "Create shortcut on startup (Notification may not be working without shortcut)": "启动时建立快捷方式 (禁用后通知可能不会正常工作)",
   "Show network status in notification bar": "在通知栏显示网络状态",
   "Volume": "音量",
-  "Flash Quality": "Flash 画质"
+  "Flash Quality": "Flash 画质",
+  "Data version": "数据版本",
+  "Update data": "更新数据"
 }

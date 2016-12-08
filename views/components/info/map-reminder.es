@@ -7,7 +7,7 @@ import { get, map, zip } from 'lodash'
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
-  extensionSelectorFactory,
+  fcdSelector,
   currentNodeSelector,
 } from 'views/utils/selectors'
 
@@ -20,8 +20,8 @@ const MapRoutes = connect(
     sortieMapId: get(state, 'sortie.sortieMapId'),
     spotHistory: get(state, 'sortie.spotHistory'),
     bossSpot: get(state, 'sortie.bossSpot'),
-    allMapspots: get(state, 'ext.poi-plugin-prophet._.mapspot'),
-    allMaproutes: get(state, 'ext.poi-plugin-prophet._.maproute'),
+    allMapspots: get(state, 'fcd.mapspot.data'),
+    allMaproutes: get(state, 'fcd.maproute.data'),
   })
 )(({sortieMapId, spotHistory, allMapspots, bossSpot, allMaproutes}) => {
   if (!sortieMapId || !allMapspots)
@@ -71,14 +71,14 @@ export default connect(
     sortieMapDataSelector,
     sortieMapHpSelector,
     currentNodeSelector,
-    extensionSelectorFactory('poi-plugin-map-hp'),
-  ], (mapData, mapHp, currentNode, pluginMapHpData={}) => ({
+    fcdSelector,
+  ], (mapData, mapHp, currentNode, finalHpData={}) => ({
     mapId: get(mapData, '0.api_id'),
     rank: get(mapData, '0.api_eventmap.api_selected_rank'),
     currentNode,
     mapData,
     mapHp,
-    finalHps: pluginMapHpData.finalHps || emptyFinalHps,
+    finalHps: get(finalHpData, 'maphp.data') || emptyFinalHps,
   }))
 )(class MapReminder extends Component {
   static mapRanks = ['', ` ${__('丙')}`, ` ${__('乙')}`, ` ${__('甲')}`]

@@ -1,14 +1,87 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { shell } from 'electron'
 import Divider from './divider'
-import { Grid, Col } from 'react-bootstrap'
+import { Grid, Col, Button } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { get } from 'lodash'
+import { sync as globSync } from 'glob'
 
 const {ROOT, POI_VERSION, CONST, i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const {Component} = React
 
-class Others extends Component {
+const serverList = [
+  "https://poi.io/fcd/",
+  "https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/",
+  "http://7xj6zx.com1.z0.glb.clouddn.com/",
+]
+
+const Others = connect(state => ({
+  fcd: state.fcd,
+}))(class others extends Component {
+  updateData = async () => {
+    // Update from local
+    const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
+    for (const file of localFileList) {
+      if (!file.includes('meta.json')) {
+        this.props.dispatch({
+          type: '@@updateFCD',
+          value: require(file),
+        })
+      }
+    }
+    // Update from server
+    let flag
+    for (const server of serverList) {
+      flag = true
+      const meta = await fetch(`${server}meta.json`, {method: "GET"}).catch(e => e)
+      if (meta.status === 200) {
+        let fileList
+        try {
+          fileList = await meta.json()
+        } catch (e) {
+          flag = false
+          console.warn(`Update fcd from ${server} failed.`)
+          continue
+        }
+        for (const file of fileList) {
+          if (file.version > get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01')) {
+            console.log(file.version, get(this.props.fcd, `${file.name}.meta.version`, '1970/01/01/01'))
+            const res = await fetch(`${server}${file.name}.json`, {method: "GET"}).catch(e => e)
+            if (res.status !== 200) {
+              flag = false
+              continue
+            }
+            let body
+            try {
+              body = await res.json()
+            } catch (e) {
+              flag = false
+              continue
+            }
+            this.props.dispatch({
+              type: '@@updateFCD',
+              value: body,
+            })
+          } else {
+            console.log(`No newer version of ${file.name}: current ${get(this.props.fcd, `${file.name}.meta.version`)}, remote ${file.version}`)
+          }
+        }
+      } else {
+        flag = false
+      }
+      if (flag) {
+        console.log(`Update fcd from ${server} successfully.`)
+        break
+      } else {
+        console.warn(`Update fcd from ${server} failed.`)
+      }
+    }
+  }
+  componentDidMount() {
+    this.updateData()
+  }
   render() {
+    const fcds = Object.keys(this.props.fcd || {}).map(key => (get(this.props.fcd, `${key}.meta`)))
     return (
       <div id='poi-others'>
         <Grid>
@@ -29,6 +102,21 @@ class Others extends Component {
             <p>GitHub：<a onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}> https://github.com/poooi/poi </a></p>
           </Col>
         </Grid>
+        <Divider text={__("Data version")} />
+        <Grid>
+          <Col xs={12}>
+            {
+              fcds.map(fcd => (
+                fcd ? <p>{`${fcd.name}: ${fcd.version}`}</p> : null
+              ))
+            }
+          </Col>
+          <Col xs={12}>
+            <Button onClick={this.updateData}>
+              {__("Update data")}
+            </Button>
+          </Col>
+        </Grid>
         <Divider text="Contributors" />
         <Grid>
         {
@@ -42,6 +130,6 @@ class Others extends Component {
       </div>
     )
   }
-}
+})
 
 export default Others

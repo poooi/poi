@@ -9,6 +9,7 @@ import { reducer as config } from './config'
 import { reducer as layout } from './layout'
 import { reducer as battle } from './battle'
 import { reducer as plugins } from './plugins'
+import { reducer as fcd } from './fcd'
 import misc from './misc'
 
 const emptyObject = {}
@@ -47,6 +48,7 @@ export function reducerFactory(extensionConfig) {
     battle,
     plugins,
     misc,
+    fcd,
     ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
   })
 }
