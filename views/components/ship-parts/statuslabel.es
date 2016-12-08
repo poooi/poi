@@ -44,7 +44,12 @@ const StatusLabel = connect(state => ({
             {__(texts[i] || 'Ship tag: %s', i > 2 ? mapname[i - 3] || i - 2 : null)}
           </Tooltip>
         }>
-          <Label bsStyle={styles[i] || color[i - 3] || 'primary'}><FontAwesome key={0} name={icons[i] || 'tag'} /></Label>
+          <Label
+            bsStyle={styles[i] || 'default'}
+            style={i > 2 ? {color: color[i - 3] || '' } : {} }
+          >
+            <FontAwesome key={0} name={icons[i] || 'tag'} />
+          </Label>
         </OverlayTrigger>
       )
     } else {
