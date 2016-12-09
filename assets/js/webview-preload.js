@@ -89,19 +89,20 @@ const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
+  const flashWindowMode = config.get('poi.flashWindowMode', 'window')
   const t = setInterval(() => {
     try {
       const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
       iframeDoc.querySelector('body').appendChild(alignInnerCSS)
-      if (flashQuality === 'high') {
-        return
+      if (flashQuality !== 'high' || flashWindowMode !== 'window') {
+        const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
+        flash.setAttribute('quality', flashQuality)
+        flash.setAttribute('wmode', flashWindowMode)
+        iframeDoc.querySelector('#externalswf').remove()
+        iframeDoc.querySelector('#flashWrap').appendChild(flash)  
+        clearInterval(t)
+        console.warn('Successed.', new Date())
       }
-      const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
-      flash.setAttribute('quality', flashQuality)
-      iframeDoc.querySelector('#externalswf').remove()
-      iframeDoc.querySelector('#flashWrap').appendChild(flash)
-      console.warn('Successed.', new Date())
-      clearInterval(t)
     } catch (e) {
       console.warn('Failed. Will retry in 100ms.')
     }
