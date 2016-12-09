@@ -2,8 +2,7 @@ import { remote } from 'electron'
 
 const { POI_VERSION, getStore } = window
 
-
-remote.getCurrentWebContents().on('devtools-opened',
+remote.getCurrentWebContents().addListener('devtools-opened',
   () => {
     const PLUGINS = getStore('plugins') || []
     const FCD = getStore('fcd.version') || {}
