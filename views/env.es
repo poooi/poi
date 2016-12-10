@@ -103,3 +103,6 @@ require('./env-parts/data-resolver')
 
 // Getter
 require('./env-parts/getter')
+
+// add devtool debug message print
+require('./env-parts/devtool-message')
