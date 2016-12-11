@@ -421,7 +421,7 @@ If you consider maintaining reducers, you may need some Redux actions dispatched
       enemyFormation     // *Number*, same as api_formation
       enemyHp            // *Array*, HP at battle's end
       eventItem          // *Object* | null, same as api_get_eventitem
-      time               // *Number* Unique ID of the battle
+      time               // *Number* Start time of the battle
 ```
 
 #### Promise Action
