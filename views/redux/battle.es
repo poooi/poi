@@ -76,9 +76,17 @@ function getFleet(deckId) {
   }
 }
 
+function getSortieType() {
+  const combinedFlag = window.getStore('sortie.combinedFlag')
+  const sortieFleet = []
+  for (const [i, status] of (window.getStore('sortie.sortieStatus') || []).entries()) {
+    if (status) sortieFleet.push(i)
+  }
+  return sortieFleet.length === 2 ? combinedFlag : 0
+}
+
 const statusInitState = {
   deckId: -1,
-  combinedFlag: -1,
   map: -1,
   bossCell: -1,
   currentCell: -1,
@@ -106,14 +114,7 @@ export function reducer(state=initState, {type, path, body, postBody, time}) {
   switch (type) {
   case '@@Response/kcsapi/api_port/port':
     // Initialize all info
-    return {
-      ...state,
-      result: initState.result,
-      _status: {
-        ...initState._status,
-        combinedFlag: body.api_combined_flag || 0,
-      },
-    }
+    return initState
   case '@@Response/kcsapi/api_req_map/start':
     // Refresh current map info
     return {
@@ -156,12 +157,13 @@ export function reducer(state=initState, {type, path, body, postBody, time}) {
   case '@@Response/kcsapi/api_req_combined_battle/midnight_battle':
   case '@@Response/kcsapi/api_req_combined_battle/sp_midnight':
   case '@@Response/kcsapi/api_req_combined_battle/ec_midnight_battle': {
+    const sortieTypeFlag = getSortieType()
     const enemyFormation = (body.api_formation || [])[1] || _status.enemyFormation
     const fleetId = [body.api_deck_id, body.api_dock_id].find((x) => x != null)
-    const escortId = (_status.combinedFlag > 0) ? 2 : -1
+    const escortId = (sortieTypeFlag > 0) ? 2 : -1
     const battle = _status.battle ? _status.battle : new Battle({
       fleet:  new Fleet({
-        type:    _status.combinedFlag,
+        type:    sortieTypeFlag,
         main:    getFleet(fleetId),
         escort:  getFleet(escortId),
       }),
@@ -196,8 +198,8 @@ export function reducer(state=initState, {type, path, body, postBody, time}) {
         mapCell: _status.currentCell,
         quest: body.api_quest_name,
         enemy: body.api_enemy_info.api_deck_name,
-        combined: _status.combinedFlag > 0,
-        mvp: _status.combinedFlag > 0 ? [body.api_mvp-1, body.api_mvp_combined-1] : [body.api_mvp-1, body.api_mvp-1],
+        combined: getSortieType() > 0,
+        mvp: getSortieType() > 0 ? [body.api_mvp-1, body.api_mvp_combined-1] : [body.api_mvp-1, body.api_mvp-1],
         dropItem: body.api_get_useitem,
         dropShipId: (body.api_get_ship != null) ? body.api_get_ship.api_ship_id : -1,
         enemyFormation: _status.enemyFormation,
