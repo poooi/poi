@@ -32,6 +32,15 @@
   border-radius: 20px;
   margin-top: 10px;
 }
+#SettingsView #poi-others .thanks-to-img {
+  cursor: pointer !important;
+  margin-top: 10px;
+  max-width: 100%;
+  height: 65px;
+}
+#SettingsView #poi-others .thanks-to-container {
+  text-align: center;
+}
 #SettingsView #poi-others .avatar-img:hover {
   transform: rotate(360deg);
   transition-duration: 3s;

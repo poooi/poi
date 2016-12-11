@@ -134,6 +134,21 @@ const Others = connect(state => ({
           ))
         }
         </Grid>
+        <Divider text="Thanks To" />
+        <Grid>
+        {
+          CONST.thanksTo.map((e, i) => (
+            [
+              <Col className='thanks-to-container' xs={12}>
+                <img className="thanks-to-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+              </Col>,
+              <Col className='thanks-to-container'  xs={12}>
+                {e.description}
+              </Col>,
+            ]
+          ))
+        }
+        </Grid>
       </div>
     )
   }
