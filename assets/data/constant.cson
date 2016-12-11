@@ -81,7 +81,7 @@ thanksTo: [
     name: 'KCwiki'
     link: 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91'
     avatar: 'https://upload.kcwiki.moe/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png'
-    description: 'For providing data of equip imporvment, task info, shipgirl qoutes, etc.'
+    description: 'For providing data of item imporvment, task info, shipgirl qoutes, etc.'
   ,
     name: 'TaoNPM'
     link: 'https://npm.taobao.org/'
@@ -101,5 +101,5 @@ thanksTo: [
     name: 'Kensuke Tanaka'
     link: 'https://www.facebook.com/kensuke.tanaka.790'
     avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
-    description: 'For providing development difficulties (We enjoyed them a lot, sincerely).'
+    description: 'For providing development difficulties (which we enjoy a lot, sincerely).'
 ]
