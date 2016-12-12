@@ -1,28 +1,9 @@
-/*
-battle.result =
-  rank: String
-  boss: Boolean
-  map: Integer(2-3 => 23)
-  enemyHp: Array of Integer
-  deckHp: Array of Integer
-  deckInitHp: Array of Integer
-  enemyShipId: Array of Integer
-  deckShipId: Array of Integer
-*/
 
 import { Models, Simulator } from 'poi-lib-battle'
-const {BattleType, Battle, Fleet} = Models
+const {Battle, Fleet} = Models
 
-function handleResult(battle, packet) {
-  // Process Normal & Boss battle only.
-  if (battle.type === BattleType.Pratice)
-    return
-
-  const simulator = new Simulator(battle.fleet)
-  let stages = []
-  for (const packet of battle.packet) {
-    stages = stages.concat(simulator.simulate(packet))
-  }
+function simulate(battle) {
+  const simulator = Simulator.auto(battle)
 
   const deckShipId = [], deckHp = [], deckInitHp = []
   const deck = [].concat(simulator.mainFleet || [], simulator.escortFleet || [])
@@ -37,18 +18,14 @@ function handleResult(battle, packet) {
     enemyShipId.push(ship ? ship.id : -1)
     enemyHp.push(ship ? ship.nowHP : 0)
   })
-  const result = {
-    rank: packet.api_win_rank,
-    boss: battle.type === BattleType.Boss,
-    map:  battle.map,
-    deckShipId: deckShipId,
-    deckHp:     deckHp,
-    deckInitHp: deckInitHp,
-    enemyShipId: enemyShipId,
-    enemyHp:     enemyHp,
-  }
 
-  return result
+  return {
+    deckShipId : deckShipId,
+    deckHp     : deckHp,
+    deckInitHp : deckInitHp,
+    enemyShipId: enemyShipId,
+    enemyHp    : enemyHp,
+  }
 }
 
 function getItem(itemId) {
@@ -99,9 +76,17 @@ function getFleet(deckId) {
   }
 }
 
+function getSortieType() {
+  const combinedFlag = window.getStore('sortie.combinedFlag')
+  const sortieFleet = []
+  for (const [i, status] of (window.getStore('sortie.sortieStatus') || []).entries()) {
+    if (status) sortieFleet.push(i)
+  }
+  return sortieFleet.length === 2 ? combinedFlag : 0
+}
+
 const statusInitState = {
   deckId: -1,
-  combined: false,
   map: -1,
   bossCell: -1,
   currentCell: -1,
@@ -110,6 +95,7 @@ const statusInitState = {
   colorNo: -1,
   packet: [],
   battle: null,
+  time: 0,
 }
 
 const resultInitState = {
@@ -123,16 +109,18 @@ const initState = {
   result: resultInitState,
 }
 
-export function reducer(state=initState, {type, body, postBody, path}) {
+export function reducer(state=initState, {type, path, body, postBody, time}) {
   const {_status} = state
   switch (type) {
+  case '@@Response/kcsapi/api_port/port':
+    // Initialize all info
+    return initState
   case '@@Response/kcsapi/api_req_map/start':
     // Refresh current map info
     return {
       ...state,
       _status: {
         ..._status,
-        combined: false,
         battle: null,
         map: body.api_maparea_id * 10 + body.api_mapinfo_no,
         bossCell: body.api_bosscell_no,
@@ -153,46 +141,38 @@ export function reducer(state=initState, {type, body, postBody, path}) {
         enemyFormation: 0,
       },
     }
-  case '@@Response/kcsapi/api_port/port':
-    // Initialize all info
-    return {
-      ...state,
-      ...initState,
-    }
   // Normal battle
   case '@@Response/kcsapi/api_req_sortie/battle':
+  case '@@Response/kcsapi/api_req_sortie/airbattle':
+  case '@@Response/kcsapi/api_req_sortie/ld_airbattle':
+  case '@@Response/kcsapi/api_req_combined_battle/battle':
+  case '@@Response/kcsapi/api_req_combined_battle/battle_water':
+  case '@@Response/kcsapi/api_req_combined_battle/airbattle':
+  case '@@Response/kcsapi/api_req_combined_battle/ld_airbattle':
+  case '@@Response/kcsapi/api_req_combined_battle/ec_battle':
+  case '@@Response/kcsapi/api_req_combined_battle/each_battle':
+  case '@@Response/kcsapi/api_req_combined_battle/each_battle_water':
   case '@@Response/kcsapi/api_req_battle_midnight/battle':
   case '@@Response/kcsapi/api_req_battle_midnight/sp_midnight':
-  case '@@Response/kcsapi/api_req_sortie/airbattle':
-  case '@@Response/kcsapi/api_req_sortie/ld_airbattle': // Event Combined battle
-  case '@@Response/kcsapi/api_req_combined_battle/airbattle':
-  case '@@Response/kcsapi/api_req_combined_battle/battle':
   case '@@Response/kcsapi/api_req_combined_battle/midnight_battle':
   case '@@Response/kcsapi/api_req_combined_battle/sp_midnight':
-  case '@@Response/kcsapi/api_req_combined_battle/ld_airbattle':
-  case '@@Response/kcsapi/api_req_combined_battle/battle_water': {
+  case '@@Response/kcsapi/api_req_combined_battle/ec_midnight_battle': {
+    const sortieTypeFlag = getSortieType()
     const enemyFormation = (body.api_formation || [])[1] || _status.enemyFormation
     const fleetId = [body.api_deck_id, body.api_dock_id].find((x) => x != null)
-    const escortId = (_status.combined) ? 2 : -1
-    const packet = Object.clone(body)
-    packet.poi_path = path
-    packet.poi_time = null
+    const escortId = (sortieTypeFlag > 0) ? 2 : -1
     const battle = _status.battle ? _status.battle : new Battle({
-      type:   null,
-      map:    _status.map,
-      desc:   null,
-      time:   null,
       fleet:  new Fleet({
-        type:    _status.combined ? 1 : 0,
+        type:    sortieTypeFlag,
         main:    getFleet(fleetId),
         escort:  getFleet(escortId),
-        support: null,
-        LBAC:    null,
       }),
       packet: [],
     })
+    const packet = Object.clone(body)
+    packet.poi_path = path
     battle.packet.push(packet)
-    const result = handleResult(battle, packet)
+    const result = simulate(battle)
 
     return {
       ...state,
@@ -201,30 +181,28 @@ export function reducer(state=initState, {type, body, postBody, path}) {
         battle,
         result,
         enemyFormation,
+        time: _status.time ? _status.time : time,
       },
     }
   }
   case '@@Response/kcsapi/api_req_sortie/battleresult':
   case '@@Response/kcsapi/api_req_combined_battle/battleresult':
     if (_status.result) {
-      const {deckHp, enemyHp, deckShipId, enemyShipId} = _status.result
       const result = {
+        ..._status.result,
         valid: true,
+        time: _status.time,
         rank: body.api_win_rank,
         boss: _status.bossCell == _status.currentCell || _status.colorNo == 5,
         map: _status.map,
         mapCell: _status.currentCell,
         quest: body.api_quest_name,
         enemy: body.api_enemy_info.api_deck_name,
-        combined: _status.combined,
-        mvp: _status.combined ? [body.api_mvp-1, body.api_mvp_combined-1] : [body.api_mvp-1, body.api_mvp-1],
+        combined: getSortieType() > 0,
+        mvp: getSortieType() > 0 ? [body.api_mvp-1, body.api_mvp_combined-1] : [body.api_mvp-1, body.api_mvp-1],
         dropItem: body.api_get_useitem,
         dropShipId: (body.api_get_ship != null) ? body.api_get_ship.api_ship_id : -1,
-        deckShipId,
-        deckHp,
-        enemyShipId,
         enemyFormation: _status.enemyFormation,
-        enemyHp,
         eventItem: body.api_get_eventitem,
       }
       return {

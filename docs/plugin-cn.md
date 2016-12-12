@@ -409,6 +409,7 @@ store.misc.
       enemyFormation     // Number，与 api_formation 一致
       enemyHp            // Array，敌方舰队的结束 hp
       eventItem          // Object | null，与 api_get_eventitem 一致
+      time               // Number, 此战斗的开始时间
 ```
 
 #### Promise Action
