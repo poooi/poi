@@ -4,48 +4,35 @@ const fs = require('fs-extra')
 const path = require('path')
 const CSON = require('cson')
 
-function build_map(dest) {
-  fs.writeFileSync(
-    path.join(dest, 'mapspot.json'),
-    JSON.stringify(CSON.load('mapspot.cson')) + '\n'
-  )
-  fs.writeFileSync(
-    path.join(dest, 'maproute.json'),
-    JSON.stringify(CSON.load('maproute.cson')) + '\n'
-  )
-  fs.writeFileSync(
-    path.join(dest, 'maphp.json'),
-    JSON.stringify(CSON.load('maphp.cson')) + '\n'
-  )
-  fs.writeFileSync(
-    path.join(dest, 'shiptag.json'),
-    JSON.stringify(CSON.load('shiptag.cson')) + '\n'
-  )
+const DEST = '../assets/data/fcd'
+
+function writeJSON(filename, data) {
+  const JSON_OPTIONS = { spaces: '' }
+  fs.writeJSONSync(path.join(DEST, filename), data, JSON_OPTIONS)
 }
 
-function build_meta(dest) {
+// If build can write in one line, put it here.
+function build_misc() {
+  writeJSON('mapspot.json', CSON.load('mapspot.cson'))
+  writeJSON('maproute.json', CSON.load('maproute.cson'))
+  writeJSON('maphp.json', CSON.load('maphp.cson'))
+  writeJSON('shiptag.json', CSON.load('shiptag.cson'))
+}
+
+function build_meta() {
   const meta = []
-  for (const fpath of fs.walkSync(dest)) {
+  for (const fpath of fs.walkSync(DEST)) {
     const fdata = JSON.parse(fs.readFileSync(fpath))
     meta.push(fdata.meta)
   }
-  fs.writeFileSync(
-    path.join(dest, 'meta.json'),
-    JSON.stringify(meta) + '\n'
-  )
+  writeJSON('meta.json', meta)
 }
 
 function build() {
-  const dest = '../assets/data/fcd'
+  fs.emptyDirSync(DEST)
 
-  // Remove old
-  fs.emptyDirSync(dest)
-
-  // Build JSON
-  build_map(dest)
-
-  // Build meta
-  build_meta(dest)
+  build_misc()
+  build_meta()
 }
 
 build()
