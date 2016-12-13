@@ -2,6 +2,10 @@
   font-size: 12px;
   min-width: 250px;
 }
+#MainView .main-panel-content {
+  position: relative;
+  transition: all .3s ease-in-out;
+}
 #MainView .nav {
   margin-top: -6px;
   margin-bottom: 5px;
@@ -38,7 +42,7 @@
 #MainView .teitoku-panel-area {
   height: 39px;
 }
-/*horizonal*/
+/*horizontal*/
 #MainView .main-area-horizontal {
   height: 467px;
   overflow: hidden;
@@ -48,23 +52,31 @@
   height: 100%;
 }
 #MainView .miniship-area-horizontal {
-  height: calc(100% - 97px);
+  height: calc(100% - 96px);
   min-height: 328px;
 }
-#MainView .resource-panel-area-horizontal,
-#MainView .mission-panel-area-horizontal {
+#MainView .resource-panel-area-horizontal{
+  height: 96px;
+}
+
+#MainView .expedition-panel-area-horizontal {
   height: 97px;
 }
 #MainView .combined-panels-area-horizontal {
   height: 150px;
 }
 #MainView .task-panel-area-horizontal {
-  height: calc(100% - 255px);
+  height: calc(100% - 253px);
   min-height: 172px;
 }
 /*vertical*/
 #MainView .main-area-vertical {
   height: 328px;
+}
+#MainView .main-area-vertical .resource-panel .panel-body,
+#MainView .main-area-vertical .combined-panels .panel-body,
+#MainView .main-area-vertical .expedition-panel .panel-body {
+  margin-top: 8px;
 }
 #MainView .left-area,
 #MainView .right-bottom-area,
@@ -72,7 +84,7 @@
   height: 100%
 }
 #MainView .resource-panel-area-vertical,
-#MainView .mission-panel-area-vertical {
+#MainView .expedition-panel-area-vertical {
   height: 40%;
 }
 #MainView .combined-panels-area-vertical,
@@ -85,14 +97,14 @@
 /*panels*/
 #MainView .ndock-panel,
 #MainView .kdock-panel,
-#MainView .mission-panel,
+#MainView .expedition-panel,
 #MainView .task-panel,
 #MainView .teitoku-panel,
 #MainView .resource-panel {
   white-space: nowrap;
   overflow: hidden;
 }
-#MainView .mission-panel .panel,
+#MainView .expedition-panel .panel,
 #MainView .task-panel .panel,
 #MainView .resource-panel .panel {
   height: calc(100% - 6px)
@@ -140,25 +152,22 @@
   margin-right: 4px;
   flex: none;
 }
-#MainView .mission-panel .panel-body {
+#MainView .expedition-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
   flex-flow: column nowrap;
 }
-#MainView .mission-item {
+#MainView .expedition-item {
   display: flex;
   flex: 1;
 }
-#MainView .mission-item .mission-name {
+#MainView .expedition-item .expedition-name {
   flex: 1;
   padding-right: 10px;
   margin-right: auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-#MainView .mission-item .mission-timer {
-  flex: none;
 }
 #MainView .ndock-panel .panel-body {
   /*border: 1px solid skyblue;*/
@@ -179,9 +188,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .ndock-item .ndock-timer {
-  flex: none;
-}
 #MainView .kdock-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
@@ -200,18 +206,41 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#MainView .kdock-item .kdock-timer {
-  /*display: flex;*/
-  flex: none;
-  /*margin: 3px;*/
-}
 #MainView .resource-panel .panel-body {
   /*border: 1px solid orange;*/
   padding-top: 1px;
   padding-bottom: 1px;
 }
+#MainView .resource-panel .material-container {
+  margin-bottom: 2px;
+  margin-top: 2px;
+  display: flex;
+  padding-right: 0;
+}
 #MainView .resource-panel .material-value {
   margin-left: 5px;
+  width: calc(100% - 18px);
+}
+#MainView .resource-panel .additional-value {
+  position: absolute;
+  left: 38px;
+  top: 0px;
+  min-width: 42px;
+  width: calc(100% - 53px);
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  text-align: right;
+  transition: all 0.3s;
+  color: white;
+}
+#MainView .resource-panel .additional-value.inc {
+  background-color: #217dbb;
+  opacity: 1;
+}
+#MainView .resource-panel .additional-value.dec {
+  background-color: #d62c1a;
+  opacity: 1;
 }
 #MainView .resource-panel img {
   width: 18px;
@@ -240,4 +269,14 @@
 }
 #MainView .panel-heading {
   padding: 8px;
+}
+#MainView .glow {
+  -webkit-filter: drop-shadow(0px 0px 4px #2196F3)
+}
+#MainView .countdown-timer-label {
+  flex: none;
+}
+.material-icon {
+  width: 18px;
+  height: 18px;
 }

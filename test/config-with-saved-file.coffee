@@ -2,6 +2,7 @@ assert = require 'assert'
 fs = require 'fs-extra'
 path = require 'path-extra'
 CSON = require 'cson'
+require('babel-register')(require('../babel.config'))
 
 # Environments
 global.ROOT = global.EXROOT = __dirname
@@ -15,8 +16,8 @@ describe 'config with saved file', ->
           initial:
             value: "Hello World"
     # Require config uncachedly
-    delete require.cache[require.resolve '../lib/config.coffee']
-    config = require '../lib/config.coffee'
+    delete require.cache[require.resolve '../lib/config']
+    config = require '../lib/config'
   # Initial empty
   describe 'initially', ->
     it 'should be a initial object', ->

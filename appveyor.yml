@@ -1,16 +1,51 @@
-environment:
-  nodejs_version: "1"
+version: 6.3.1-b.{build}
+
+platform:
+  - x64
+
+cache:
+  - node_modules
+  - app_compiled\node_modules
+  - '%APPDATA%\npm-cache'
+  - '%USERPROFILE%\.electron'
+
+init:
+  - git config --global core.autocrlf input
 
 install:
-  - ps: Install-Product node $env:nodejs_version
-  - npm install
-  - npm install -g coffeelint bower
-  - coffeelint .\
-  - bower install
+  - ps: Install-Product node 6 x64
+  - git reset --hard HEAD
+  - npm install npm -g
+  - npm install --silent
+  - npm prune
 
 test_script:
   - node --version
   - npm --version
   - npm test
 
-build: off
+build_script:
+  - npm run build_win
+
+artifacts:
+  - path: dist\win\*.exe
+    name: x64installer
+  - path: dist\win-ia32\*.exe
+    name: ia32installer
+  - path: dist\*.7z
+    name: Archive
+
+deploy:
+  description: 'editing'
+  provider: GitHub
+  auth_token:
+    secure: 0CGtR9o1TIDwfW1NfqASIdFfPcfJirWQIS+B0ekSs7nRjHEYHhcLZCWC3Uf1VQKO
+  artifact: x64Archive, ia32Archive
+  draft: true
+  prerelease: false
+  on:
+    appveyor_repo_tag: true
+
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+.*/

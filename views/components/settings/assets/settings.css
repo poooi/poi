@@ -10,16 +10,16 @@
   align-items: center;
 }
 #SettingsView #navigator-bar {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 #SettingsView #navigator-bar .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 #SettingsView #navigator-bar .container .btn-group {
   float: right;
 }
 #SettingsView #poi-config .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 #SettingsView #poi-config #poi-resolutionr-config {
   display: flex;
@@ -32,6 +32,15 @@
   border-radius: 20px;
   margin-top: 10px;
 }
+#SettingsView #poi-others .thanks-to-img {
+  cursor: pointer !important;
+  margin-top: 10px;
+  max-width: 100%;
+  height: 65px;
+}
+#SettingsView #poi-others .thanks-to-container {
+  text-align: center;
+}
 #SettingsView #poi-others .avatar-img:hover {
   transform: rotate(360deg);
   transition-duration: 3s;
@@ -43,4 +52,202 @@
   border: none;
   box-shadow: none;
   padding: 0;
+}
+#SettingsView .nav-pills > li > a {
+  padding-left: 0;
+  padding-right: 0;
+}
+#SettingsView .notif-button {
+  flex: 1;
+  overflow: hidden;
+}
+#SettingsView .notif-container {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 6px;
+}
+#SettingsView .notif-input-desc {
+  padding: 6px 0;
+}
+#SettingsView .folder-picker {
+  width: 100%;
+  height: 100%;
+  border-width: 2px;
+  border-color: #666;
+  border-style: dashed;
+  border-radius: 0;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+}
+#SettingsView .div-col {
+  display: flex;
+  flex-flow: column;
+}
+#SettingsView .div-row {
+  display: flex;
+  flex-flow: row;
+}
+#SettingsView .control-button {
+  margin: 0;
+  height: 30px;
+}
+#SettingsView .control-button > button,
+#SettingsView .plugin-control-button {
+  padding: 5px 7px;
+}
+#SettingsView #mirror-select {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#SettingsView button .fa {
+  margin-right: 2px;
+}
+#SettingsView .author-link,
+#SettingsView .update-label,
+#SettingsView .update-label span {
+  cursor: pointer;
+}
+#SettingsView .update-wrapper {
+  padding-top: 2px;
+  margin-left: auto;
+  display: flex;
+}
+#SettingsView .author-link:hover {
+  -webkit-filter: drop-shadow(0px 0px 4px #2196F3)
+}
+#SettingsView .author-wrapper {
+  padding-top: 2px;
+  padding-left: 2px;
+}
+#SettingsView .plugin-wrapper {
+}
+#SettingsView .plugin-content {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+#SettingsView .plugin-content-disabled .plugin-name,
+#SettingsView .plugin-content-disabled .author-wrapper,
+#SettingsView .plugin-content-disabled .plugin-description {
+  opacity: 0.5;
+}
+#SettingsView .plugin-content > .panel-body {
+  padding: 10px;
+}
+#SettingsView .plugin-name {
+  font-size: 150%;
+}
+#SettingsView .plugin-description {
+  min-height: 30px;
+  padding-top: 5px;
+}
+#SettingsView .plugin-description a:not([data-pid=""]) {
+  color: #cbcbff;
+}
+#SettingsView .plugin-option {
+  z-index: 1;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+#SettingsView .plugin-option-install {
+  z-index: 1;
+  position: absolute;
+  bottom: 10px;
+  right: 11px;
+}
+#SettingsView .plugin-buttongroup {
+  margin-left: auto;
+  display: block;
+}
+.popover-content .container {
+  width: auto;
+}
+#SettingsView .contents-wrapper {
+}
+#SettingsView .plugin-rowspace {
+  margin-bottom: 5px;
+}
+#SettingsView .select-npm-server {
+}
+#SettingsView .btn-xs-4 {
+  width: 33.33333333%;
+}
+#SettingsView .btn-xs-6 {
+  width: 50%;
+}
+#SettingsView .btn-xs-8 {
+  width: 66.66666666%;
+}
+#SettingsView .btn-xs-12 {
+  width: 100%;
+}
+#SettingsView .navigator {
+  display: flex;
+}
+#SettingsView .navigator-url {
+  flex: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+  display: flex;
+}
+#SettingsView .navigator-url .form-group {
+  flex: 1;
+}
+#SettingsView .navigator-btn {
+  width: 110px;
+}
+#SettingsView .navigator-btn button {
+  width: 30px;
+}
+#SettingsView .navigator-status {
+  padding-right: 28px;
+}
+
+#SettingsView .plugin-dropfile-static {
+  width: 100%;
+  height: 100%;
+  border-width: 2px;
+  border-color: #666;
+  border-style: dashed;
+  border-radius: 0;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+}
+#SettingsView .plugin-dropfile.file-drop {
+  position: absolute;
+  top: 80px;
+  left: 30px;
+  margin: 0;
+  width: calc(100% - 60px);
+  z-index: 10;
+  border: 0;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-target {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-height: 200px;
+  text-align: center;
+  background-color: inherit;
+  border: 3px solid black;
+  padding: 40px 10px;
+  font-size: 20px;
+  transition: all 0.5s;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-dragging-over-target-accept {
+  border: 3px solid #42A5F5;
+  box-shadow: 0px 0px 10px #1976D2;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-dragging-over-target-reject {
+  border: 3px solid #EF5350;
+  box-shadow: 0px 0px 10px #D32F2F;
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-target.file-drop-dragging-over-frame{
+}
+#SettingsView .plugin-dropfile.file-drop .file-drop-target.file-drop-dragging-over-target{
+  box-shadow: 0 0 13px 3px #45b743;
+}
+#SettingsView .plugin-dropfile-contents {
 }

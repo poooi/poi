@@ -1,11 +1,48 @@
-language: node_js
-os:
-  - "linux"
+osx_image: xcode7.3
+
+sudo: required
+dist: trusty
+
+language: c
+
 node_js:
-  - "iojs"
-  - "node"
+  - "6"
+
+matrix:
+  include:
+    - os: osx
+    - os: linux
+      env: CC=clang CXX=clang++ npm_config_clang=1 TRAVIS_NODE_VERSION="6"
+      compiler: clang
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libgnome-keyring-dev
+      - icnsutils
+      - graphicsmagick
+      - rpm
+      - bsdtar
+
+cache:
+  directories:
+  - node_modules
+  - app_compiled/node_modules
+  - $HOME/.electron
+
+install:
+  - nvm install $TRAVIS_NODE_VERSION
+  - npm install --silent
+
 before_script:
-  - "./node_modules/coffeelint/bin/coffeelint ."
-  - "./node_modules/bower/bin/bower install"
-after_script:
-  - "npm test"
+  - export TRAVIS=1
+  - npm install --silent
+
+script:
+  - npm run build
+
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+.*/"

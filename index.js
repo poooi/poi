@@ -1,2 +1,4 @@
-require('coffee-script/register');
-require('./app.coffee');
+require('coffee-script/register')
+require('babel-register')(require('./babel.config'))
+require('./lib/cl')
+require('./app')

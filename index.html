@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <title>poi</title>
-  <link rel="stylesheet" id="bootstrap-css" href="./components/bootstrap/dist/css/bootstrap.css">
-  <link rel="stylesheet" href="./components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" id="bootstrap-css">
+  <link rel="stylesheet" id="fontawesome-css">
   <link rel="stylesheet" href="./assets/css/app.css">
-  <link rel="stylesheet" id="layout-css" href="./assets/css/layout.horizonal.css">
+  <link rel="stylesheet" id="layout-css" href="./assets/css/layout.horizontal.css">
   <script>
+    window.isMain = true
     require('coffee-script/register');
+    require('babel-register')(require('./babel.config'));
     require('./views/env');
-    require('./views/battle-env')
-    require('./views/layout');
   </script>
 </head>
 <body>
@@ -19,7 +19,7 @@
   <poi-main>
     <kan-game>
       <div id="webview-wrapper" style="height: 480px">
-        <webview src="" ondrop="event.preventDefault();" plugins disablewebsecurity style="height: 480px;"></webview>
+        <webview src="about:blank" ondrop="event.preventDefault();" plugins disablewebsecurity preload="./assets/js/webview-preload.js"></webview>
       </div>
       <hr>
       <poi-info>
@@ -32,6 +32,9 @@
     <poi-modal>
       <poi-modal-trigger />
     </poi-modal>
+    <poi-toast>
+      <poi-toast-trigger />
+    </poi-toast>
     <poi-app>
       <div id='poi-app-container'>
         <poi-nav>
@@ -42,7 +45,7 @@
   </poi-main>
   <script>
     require('./views/app');
-    require('./views/update');
+    require('./views/services');
   </script>
 </body>
 </html>

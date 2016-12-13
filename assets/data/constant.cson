@@ -1,0 +1,105 @@
+# Contributors
+contributors: [
+    name: 'Season千'
+    avatar: 'http://7xkd7e.com1.z0.glb.clouddn.com/season.jpg'
+    link: 'http://www.pixiv.net/member.php?id=3991162'
+  ,
+    name: 'Magica'
+    avatar: 'https://avatars0.githubusercontent.com/u/6753092?v=3&s=460'
+    link: 'http://weibo.com/maginya'
+  ,
+    name: 'Yunze'
+    avatar: 'https://avatars3.githubusercontent.com/u/3362438?v=3&s=460'
+    link: 'http://weibo.com/myzwillmake'
+  ,
+    name: 'Chiba'
+    avatar: 'https://avatars1.githubusercontent.com/u/6986642?v=3&s=460'
+    link: 'http://weibo.com/chibaheit'
+  ,
+    name: 'KochiyaOcean'
+    avatar: 'https://avatars3.githubusercontent.com/u/8194131?v=3&s=460'
+    link: 'http://www.kochiyaocean.org'
+  ,
+    name: '马里酱'
+    avatar: 'https://avatars3.githubusercontent.com/u/10855724?v=3&s=460'
+    link: 'http://www.weibo.com/1791427467'
+  ,
+    name: '吴钩霜雪明'
+    avatar: 'https://avatars2.githubusercontent.com/u/6861365?v=3&s=460'
+    link: 'http://www.weibo.com/jenningswu'
+  ,
+    name: 'Rui'
+    avatar: 'https://avatars3.githubusercontent.com/u/11897118?v=3&s=460'
+    link: 'https://github.com/ruiii'
+  ,
+    name: 'Artoria'
+    avatar: 'https://avatars1.githubusercontent.com/u/1183568?v=3&s=460'
+    link: 'http://www.weibo.com/pheliox'
+  ,
+    name: 'Alvin'
+    avatar: 'https://avatars3.githubusercontent.com/u/13615512?v=3&s=460'
+    link: 'https://github.com/alvin-777'
+  ,
+    name: 'Ayaphis'
+    avatar: 'https://avatars2.githubusercontent.com/u/11754367?v=3&s=400'
+    link: 'https://github.com/ayaphis'
+  ,
+    name: 'ZYC'
+    avatar: 'https://avatars3.githubusercontent.com/u/13725370?v=3&s=460'
+    link: 'http://weibo.com/zyc43'
+  ,
+    name: 'Dazzy Ding'
+    avatar: 'https://avatars1.githubusercontent.com/u/3337921'
+    link: 'http://dazzyd.org/'
+  ,
+    name: 'taroxd'
+    avatar: 'https://avatars3.githubusercontent.com/u/6070540?v=3&s=460'
+    link: 'http://github.com/taroxd'
+  ,
+    name: 'edwardaaaa'
+    avatar: 'https://avatars1.githubusercontent.com/u/11089376?v=3&s=460'
+    link: 'https://github.com/edwardaaaa'
+  ,
+    name: 'DKWings'
+    avatar: 'https://avatars3.githubusercontent.com/u/1596656?v=3&s=460'
+    link: 'https://github.com/dkwingsmt'
+  ,
+    name: 'grzhan'
+    avatar: 'https://avatars2.githubusercontent.com/u/2235314?v=3&s=460'
+    link: 'https://github.com/grzhan'
+  ,
+    name: 'Gizeta'
+    avatar: 'https://avatars2.githubusercontent.com/u/1572561?v=3&s=400'
+    link: 'https://github.com/Gizeta'
+  ,
+    name: 'KagamiChan'
+    avatar: 'https://avatars2.githubusercontent.com/u/3816900?v=3&s=400'
+    link: 'https://github.com/KagamiChan'
+]
+
+thanksTo: [
+    name: 'KCwiki'
+    link: 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91'
+    avatar: 'https://upload.kcwiki.moe/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png'
+    description: 'For providing data of item imporvment, task info, shipgirl qoutes, etc.'
+  ,
+    name: 'TaoNPM'
+    link: 'https://npm.taobao.org/'
+    avatar: 'https://zos.alipayobjects.com/rmsportal/UQvFKvLLWPPmxTM.png'
+    description: 'For providing China mirror for the project.'
+  ,
+    name: 'Kancolle English Wikia'
+    link: 'http://kancolle.wikia.com/wiki/Kancolle_Wiki'
+    avatar: 'http://vignette4.wikia.nocookie.net/kancolle/images/8/89/Wiki-wordmark.png/revision/latest?cb=20141226051229'
+    description: 'For providing English translation.'
+  ,
+    name: 'Type 74 Electronic Observer'
+    link: 'https://github.com/andanteyk/ElectronicObserver'
+    avatar: 'https://github.com/andanteyk/ElectronicObserver/blob/develop/ElectronicObserver/Assets/AppIcon_64.png?raw=true'
+    description: 'For providing KanColle API references.'
+  ,
+    name: 'Kensuke Tanaka'
+    link: 'https://www.facebook.com/kensuke.tanaka.790'
+    avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
+    description: 'For providing development difficulties (which we enjoy a lot, sincerely).'
+]

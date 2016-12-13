@@ -36,3 +36,19 @@ node_modules
 /assets/themes
 
 /cache
+
+*.swp
+
+# poi build directory
+build/*
+app_compiled/
+dist/
+
+# icon
+!build/icon.icns
+!build/icon.ico
+!build/icon.png
+!build/icons
+
+# F**k you macOS
+.DS_store

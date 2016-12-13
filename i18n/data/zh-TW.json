@@ -1,0 +1,23 @@
+{
+  "HP": "耐久",
+  "Armor": "裝甲",
+  "Firepower": "火力",
+  "Torpedo": "雷裝",
+  "Speed": "速力",
+  "Bombing": "爆裝",
+  "AA": "對空",
+  "ASW": "對潛",
+  "Accuracy": "命中",
+  "Torpedo Accuracy": "雷撃命中",
+  "Evasion": "迴避",
+  "Torpedo Evasion": "雷撃迴避",
+  "Bombing Evasion": "爆撃迴避",
+  "LOS": "索敵",
+  "Anti-LOS": "索敵妨害",
+  "Luck": "運",
+  "Range": "射程",
+  "Short" : "短",
+  "Medium": "中",
+  "Long": "長",
+  "Very Long": "超長"
+}
