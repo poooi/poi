@@ -95,7 +95,7 @@ export function equipIsAircraft(equipIconId) {
   return equipIconId != null && (
     between(equipIconId, 6, 10) ||
     between(equipIconId, 21, 22) ||
-    equipIconId == 33
+    [33, 39, 40].includes(equipIconId)
   )
 }
 
