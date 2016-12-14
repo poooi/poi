@@ -127,7 +127,7 @@ export default connect(
   render() {
     const {mapHp, mapData, currentNode, mapId, maps} = this.props
     const tooltipMsg = []
-    const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`)
+    const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
       tooltipMsg.push(`${__('Node')}: ${alphaNode} (${currentNode})`)
     }
