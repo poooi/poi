@@ -114,7 +114,7 @@ const Others = connect(state => ({
           <Col xs={12}>
             {
               fcds.map(fcd => (
-                fcd ? <p>{`${fcd[0]}: ${fcd[1]}`}</p> : null
+                fcd ? <p key={fcd[0]}>{`${fcd[0]}: ${fcd[1]}`}</p> : null
               ))
             }
           </Col>
