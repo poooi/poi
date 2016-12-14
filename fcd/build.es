@@ -45,8 +45,6 @@ async function build_meta() {
 
   await Promise.all([
     build_map(),
-    CSON2JSON('mapspot'),
-    CSON2JSON('maproute'),
     CSON2JSON('maphp'),
     CSON2JSON('shiptag'),
   ])
