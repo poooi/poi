@@ -12,6 +12,8 @@ const aircraftLevelBonus = {
   '8': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 艦上攻撃機
   '11': [0, 1, 1, 1, 1, 3, 3, 6, 6],      // 水上爆撃機
   '45': [0, 0, 2, 5, 9, 14, 14, 22, 22],  // 水上戦闘機
+  '39': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式景雲改
+  '40': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 橘花改
 }
 
 export function getMaterialStyle(percent) {
@@ -125,11 +127,16 @@ export function getTyku(equipsData) {
         tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
-      }
-      else if ($equip.api_type[3] == 10 && ($equip.api_type[2] == 11 || $equip.api_type[2] == 45)) {
+      } else if ($equip.api_type[3] == 10 && ($equip.api_type[2] == 11 || $equip.api_type[2] == 45)) {
         // 水上機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
+        minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
+      } else if ([39, 40].includes($equip.api_type[3])) {
+        // 噴式機
+        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * 0.2)
+        tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
       }
