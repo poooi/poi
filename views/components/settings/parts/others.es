@@ -15,8 +15,8 @@ const serverList = [
   "http://7xj6zx.com1.z0.glb.clouddn.com/",
 ]
 
-const fetchFromRemote = async (url) => {
-  const res = await fetch(url, {method: "GET"}).catch(e => e)
+const fetchFromRemote = async (url, cacheMode = "default") => {
+  const res = await fetch(url, {method: "GET", cache: cacheMode}).catch(e => e)
   if (res.status === 200) {
     try {
       return await res.json()
@@ -54,7 +54,7 @@ const Others = connect(state => ({
     let flag
     for (const server of serverList) {
       flag = true
-      const fileList = await fetchFromRemote(`${server}meta.json`)
+      const fileList = await fetchFromRemote(`${server}meta.json`, "no-store")
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
