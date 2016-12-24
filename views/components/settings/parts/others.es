@@ -31,7 +31,7 @@ const initState = {}
 const Others = connect(state => ({
   version: state.fcd.version || initState,
 }))(class others extends Component {
-  updateData = async () => {
+  updateData = (cacheMode = 'default') => async () => {
     // Update from local
     const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
     for (const file of localFileList) {
@@ -54,13 +54,13 @@ const Others = connect(state => ({
     let flag
     for (const server of serverList) {
       flag = true
-      const fileList = await fetchFromRemote(`${server}meta.json`, "no-store")
+      const fileList = await fetchFromRemote(`${server}meta.json`, cacheMode)
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
-            console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}`)
-            const data = await fetchFromRemote(`${server}${file.name}.json`)
+            console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
+            const data = await fetchFromRemote(`${server}${file.name}.json`, cacheMode)
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',
@@ -70,22 +70,22 @@ const Others = connect(state => ({
               flag = false
             }
           } else {
-            console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}`)
+            console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
           }
         }
       } else {
         flag = false
       }
       if (flag) {
-        console.log(`Update fcd from ${server} successfully.`)
+        console.log(`Update fcd from ${server} successfully in mode ${cacheMode}.`)
         break
       } else {
-        console.warn(`Update fcd from ${server} failed.`)
+        console.warn(`Update fcd from ${server} failed in mode ${cacheMode}.`)
       }
     }
   }
   componentDidMount() {
-    this.updateData()
+    this.updateData()()
   }
   render() {
     const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
@@ -119,7 +119,7 @@ const Others = connect(state => ({
             }
           </Col>
           <Col xs={12}>
-            <Button onClick={this.updateData}>
+            <Button onClick={this.updateData('reload')}>
               {__("Update data")}
             </Button>
           </Col>
