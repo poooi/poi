@@ -1,14 +1,16 @@
-import { reduxSet, indexify, compareUpdate } from 'views/utils/tools'
+import { reduxSet, indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
 export function reducer(state={}, {type, body, postBody}) {
   // Compatibility: Old api arranges maps in array
   if (Array.isArray(state))
     state = indexify(state.filter((e) => (e && e.api_id)))
   switch (type) {
-  case '@@Response/kcsapi/api_get_member/mapinfo':
+  case '@@Response/kcsapi/api_get_member/mapinfo': {
+    const newState = indexify(body.api_map_info)
     // The 3rd arg shouldn't be 2, because defeated map has no defeat_count
     // and will remain its value in that case
-    return compareUpdate(state, indexify(body.api_map_info), 1)
+    return pickExisting(compareUpdate(state, newState, 1), newState)
+  }
   case '@@Response/kcsapi/api_req_map/select_eventmap_rank': {
     const id = `${postBody.api_maparea_id}${postBody.api_map_no}`
     return reduxSet(state,
