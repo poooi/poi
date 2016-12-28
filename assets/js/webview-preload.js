@@ -36,15 +36,20 @@ const getWebviewWidth = Promise.coroutine(function* () {
   return width
 })
 
-//function setZoomHarder(wv,zoomlevel) {
-//  wv.setLayoutZoomlevelLimits(zoomlevel,zoomlevel);
-//  wv.setZoomLevel(zoomLevel);
-//}
+function factortolevel(factor) {
+  return Math.log(factor) / Math.log(1.2)
+}
+  
+function setZoomHarder(wv,zoomlevel) {
+  wv.setLayoutZoomlevelLimits(zoomlevel,zoomlevel);
+  wv.setZoomLevel(zoomLevel);
+}
 
 window.align = Promise.coroutine(function* () {
   let zoom = yield getWebviewWidth()
   zoom = zoom / 800
-  webview.setZoomFactor(zoom)
+  //webFrame.setZoomFactor(zoom)
+  setZoomHarder(webFrame,factortolevel(zoom))
   window.scrollTo(0, 0)
   if (!window.location.toString().includes("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/")) {
     return
