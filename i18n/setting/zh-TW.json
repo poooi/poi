@@ -24,7 +24,7 @@
   "file": "檔案",
   "Experimental": "實驗性功能",
   "PAC address": "PAC 位址",
-  "poi port": "poi 埠",
+  "poi port (Don't touch!)": "poi 埠（請勿修改！）",
   "Default: 0 (Use random port)": "預設值：0（使用隨機埠）",
   "Will connect to server directly.": "將會直接連線網路或者通過全局 VPN 存取網路",
   "Times of reconnect": "網路錯誤重試次數",

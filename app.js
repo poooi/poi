@@ -72,6 +72,12 @@ require('flash-player-loader').debug({
 let mainWindow, appIcon
 global.mainWindow = mainWindow = null
 
+// Fix confused cursor in HiDPI
+// https://github.com/electron/electron/issues/7655#issuecomment-259688853
+if (process.platform === 'win32') {
+  app.commandLine.appendSwitch('enable-use-zoom-for-dsf', 'false')
+}
+
 app.on ('window-all-closed', () => {
   shortcut.unregister()
   app.quit()

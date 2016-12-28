@@ -223,7 +223,7 @@ const NetworkConfig = connect(() => (
             </Alert>
           </Col>
         </Grid>
-        <Divider text={__('poi port')} />
+        <Divider text={__("poi port (Don't touch!)")} />
         <Grid>
           <Col xs={12}>
             <FormControl type="number" ref="port" value={this.state.port} onChange={this.handleSetPort} placeholder={__("Default: 0 (Use random port)")} />

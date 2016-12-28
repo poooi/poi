@@ -13,35 +13,35 @@ import {
 
 const {i18n, toast} = window
 const __ = i18n.others.__.bind(i18n.others)
-const emptyFinalHps = {}
+const emptyObj = {}
 
 const MapRoutes = connect(
   (state) => ({
     sortieMapId: get(state, 'sortie.sortieMapId'),
     spotHistory: get(state, 'sortie.spotHistory'),
     bossSpot: get(state, 'sortie.bossSpot'),
-    allMapspots: get(state, 'fcd.mapspot'),
-    allMaproutes: get(state, 'fcd.maproute'),
+    allMaps: get(state, 'fcd.map'),
   })
-)(({sortieMapId, spotHistory, allMapspots, bossSpot, allMaproutes}) => {
-  if (!sortieMapId || !allMapspots)
+)(({sortieMapId, spotHistory, bossSpot, allMaps}) => {
+  if (!sortieMapId || !allMaps)
     return <div />
-  const mapspots = get(allMapspots, [Math.floor(sortieMapId / 10), sortieMapId % 10], [])
+  const mapspots = get(allMaps, `${Math.floor(sortieMapId / 10)}-${sortieMapId % 10}.spots`, {})
   if (!mapspots || !Object.keys(mapspots).length)
     return <div />
-  const maproutes = get(allMaproutes, [Math.floor(sortieMapId / 10), sortieMapId % 10], [])
+  const maproutes = get(allMaps, `${Math.floor(sortieMapId / 10)}-${sortieMapId % 10}.route`, {})
   const histLen = spotHistory.length
   const activeSpot = spotHistory[histLen - 1]
-  const bossSpotLoc = mapspots[bossSpot] || [-100, -100]
-  const locHistory = spotHistory.map((i) => mapspots[i] || [-1, -1])
+  const bossSpotLoc = mapspots[get(maproutes, `${bossSpot}.1`)] || [-100, -100]
+  const locHistory = spotHistory.map(i => mapspots[get(maproutes, `${i}.1`)] || [-1, -1])
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   return (
     <div>
       <svg width="150" height="80" viewBox="0 0 150 80" className="maproutes">
         {// Draw all lines
-        maproutes.map(([beg, end], i) => {
-          const [begX, begY] = mapspots[beg] || [-100, -100]
-          const [endX, endY] = mapspots[end] || [-100, -100]
+        map(maproutes, ([beg, end], i) => {
+          if (!(mapspots[beg] && mapspots[end])) return null
+          const [begX, begY] = mapspots[beg]
+          const [endX, endY] = mapspots[end]
           return <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} />
         })}
         {// Draw passed lines
@@ -72,13 +72,14 @@ export default connect(
     sortieMapHpSelector,
     currentNodeSelector,
     fcdSelector,
-  ], (mapData, mapHp, currentNode, finalHpData={}) => ({
+  ], (mapData, mapHp, currentNode, fcd={}) => ({
     mapId: get(mapData, '0.api_id'),
     rank: get(mapData, '0.api_eventmap.api_selected_rank'),
     currentNode,
     mapData,
     mapHp,
-    finalHps: finalHpData.maphp || emptyFinalHps,
+    finalHps: fcd.maphp || emptyObj,
+    maps: fcd.map || emptyObj,
   }))
 )(class MapReminder extends Component {
   static mapRanks = ['', ` ${__('丙')}`, ` ${__('乙')}`, ` ${__('甲')}`]
@@ -124,10 +125,11 @@ export default connect(
   }
 
   render() {
-    const {mapHp, mapData, currentNode} = this.props
+    const {mapHp, mapData, currentNode, mapId, maps} = this.props
     const tooltipMsg = []
+    const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(`${__('Node')}: ${currentNode}`)
+      tooltipMsg.push(`${__('Node')}: ${alphaNode} (${currentNode})`)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
       tooltipMsg.push(`HP: ${mapHp[0]} / ${mapHp[1]}`)
