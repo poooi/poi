@@ -82,7 +82,6 @@ window.unalign = () => {
 }
 
 window.align()
-
 remote.getCurrentWebContents().insertCSS(alertCSS)
 
 const handleDOMContentLoaded = () => {
@@ -99,7 +98,7 @@ const handleDOMContentLoaded = () => {
         flash.setAttribute('quality', flashQuality)
         flash.setAttribute('wmode', flashWindowMode)
         iframeDoc.querySelector('#externalswf').remove()
-        iframeDoc.querySelector('#flashWrap').appendChild(flash)  
+        iframeDoc.querySelector('#flashWrap').appendChild(flash)
         clearInterval(t)
         console.warn('Successed.', new Date())
       }
