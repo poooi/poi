@@ -163,7 +163,9 @@ export default connect(
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={
               <Tooltip id={`topalert-FP-fleet-${fleetId}`}>
-                <span>{__('Minimum FP')}: {tyku.min} {__('Maximum FP')}: {tyku.max}</span>
+              <div>{__('Minimum FP')}: {tyku.min}</div>
+              <div>{__('Maximum FP')}: {tyku.max}</div>
+              <div>{__('Legacy FP')}: {tyku.legacy}</div>
               </Tooltip>
             }>
               <span>{__('Fighter Power')}: {tyku.max}</span>
