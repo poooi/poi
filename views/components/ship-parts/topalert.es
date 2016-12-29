@@ -165,7 +165,7 @@ export default connect(
               <Tooltip id={`topalert-FP-fleet-${fleetId}`}>
                 <div>{__('Minimum FP')}: {tyku.min}</div>
                 <div>{__('Maximum FP')}: {tyku.max}</div>
-                <div>{__('Legacy FP')}: {tyku.legacy}</div>
+                <div>{__('Basic FP')}: {tyku.basic}</div>
               </Tooltip>
             }>
               <span>{__('Fighter Power')}: {tyku.max}</span>
