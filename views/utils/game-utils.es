@@ -122,9 +122,11 @@ export function getTyku(equipsData) {
       } else {
         tempAlv = 0
       }
+      // 改修：艦戦×0.2、爆戦×0.25
+      const levelFactor = $equip.api_baku > 0 ? 0.25 : 0.2
       if ([6, 7, 8].includes($equip.api_type[3])) {
         // 艦载機
-        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * 0.2)
+        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
         legacyTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
@@ -138,7 +140,7 @@ export function getTyku(equipsData) {
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
       } else if ([39, 40].includes($equip.api_type[3])) {
         // 噴式機
-        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * 0.2)
+        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
         legacyTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
