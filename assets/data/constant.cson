@@ -110,13 +110,16 @@ thanksTo: [
     link: 'https://github.com/andanteyk/ElectronicObserver'
     avatar: 'https://github.com/andanteyk/ElectronicObserver/blob/develop/ElectronicObserver/Assets/AppIcon_64.png?raw=true'
     description: 'For providing KanColle API references.'
+    extraCSS:
+      margin: "auto"
+      display: "block"
   ,
     name: 'Kensuke Tanaka'
     link: 'https://www.facebook.com/kensuke.tanaka.790'
     avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
     description: 'For providing development difficulties (which we enjoyed a lot, sincerely).'
     extraCSS:
-        maxHeight: "200%"
-        marginLeft: "-65%"
-        marginTop: "-20%"
+      maxHeight: "200%"
+      marginLeft: "-65%"
+      marginTop: "-20%"
 ]
