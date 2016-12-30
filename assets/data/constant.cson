@@ -82,16 +82,29 @@ thanksTo: [
     link: 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91'
     avatar: 'https://upload.kcwiki.moe/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png'
     description: 'For providing data of item imporvment, task info, shipgirl qoutes, etc.'
+    extraCSS:
+      WebkitClipPath: "inset(0px 78% 0px 0px)"
+      maxHeight: "100%"
+      marginLeft: "5%"
   ,
     name: 'TaoNPM'
     link: 'https://npm.taobao.org/'
     avatar: 'https://zos.alipayobjects.com/rmsportal/UQvFKvLLWPPmxTM.png'
     description: 'For providing China mirror for the project.'
+    extraCSS:
+      maxWidth: "100%"
+      marginTop: "40%"
   ,
     name: 'Kancolle English Wikia'
     link: 'http://kancolle.wikia.com/wiki/Kancolle_Wiki'
     avatar: 'http://vignette4.wikia.nocookie.net/kancolle/images/8/89/Wiki-wordmark.png/revision/latest?cb=20141226051229'
     description: 'For providing English translation.'
+    extraCSS:
+      WebkitClipPath: "inset(0px 74% 0px 0px)"
+      maxHeight: "100%"
+      marginLeft: "5%"
+      marginTop: "7%"
+
   ,
     name: 'Type 74 Electronic Observer'
     link: 'https://github.com/andanteyk/ElectronicObserver'
@@ -102,4 +115,8 @@ thanksTo: [
     link: 'https://www.facebook.com/kensuke.tanaka.790'
     avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
     description: 'For providing development difficulties (which we enjoy a lot, sincerely).'
+    extraCSS:
+        maxHeight: "200%"
+        marginLeft: "-65%"
+        marginTop: "-20%"
 ]

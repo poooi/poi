@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { shell } from 'electron'
 import Divider from './divider'
-import { Grid, Col, Button } from 'react-bootstrap'
+import { Grid, Col, Button, Table } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { sync as globSync } from 'glob'
@@ -135,17 +135,18 @@ const Others = connect(state => ({
         }
         </Grid>
         <Divider text="Thanks To" />
-        <Grid>
+        <Grid className='thanks-to'>
         {
           CONST.thanksTo.map((e, i) => (
-            [
-              <Col className='thanks-to-container' xs={12}>
-                <img className="thanks-to-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
-              </Col>,
-              <Col className='thanks-to-container'  xs={12}>
-                {e.description}
-              </Col>,
-            ]
+            <div className="div-row thanks-to-item">
+              <div className='thanks-to-img-container'>
+                <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+              </div>
+              <div className='thanks-to-container'>
+                <b>{e.name}</b>
+                <p>{e.description}</p>
+              </div>
+            </div>
           ))
         }
         </Grid>
