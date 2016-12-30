@@ -33,8 +33,8 @@
   "Download latest version": "Download latest version",
   "Aliyun": "Aliyun",
   "Connection failed after %s retry": {
-     "one": "one",
-     "other": "other"
+     "one": "Connection failed, now reconnecting, retry count: %s",
+     "other": "Connection failed, now reconnecting, retry count: %s"
    },
   "Network error: HTTP %s": "Network error: HTTP %s",
   "Connection failed.": "Connection failed.",
