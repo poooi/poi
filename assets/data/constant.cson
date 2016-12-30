@@ -114,7 +114,7 @@ thanksTo: [
     name: 'Kensuke Tanaka'
     link: 'https://www.facebook.com/kensuke.tanaka.790'
     avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
-    description: 'For providing development difficulties (which we enjoy a lot, sincerely).'
+    description: 'For providing development difficulties (which we enjoyed a lot, sincerely).'
     extraCSS:
         maxHeight: "200%"
         marginLeft: "-65%"
