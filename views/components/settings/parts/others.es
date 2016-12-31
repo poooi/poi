@@ -138,7 +138,7 @@ const Others = connect(state => ({
         <Grid className='thanks-to'>
         {
           CONST.thanksTo.map((e, i) => (
-            <div className="div-row thanks-to-item">
+            <div className="div-row thanks-to-item" key={i}>
               <div className='thanks-to-img-container'>
                 <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
               </div>
