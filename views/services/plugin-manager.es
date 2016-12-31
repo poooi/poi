@@ -82,10 +82,12 @@ class PluginManager extends EventEmitter {
   getMirrors() {
     if (this.mirrors == null) {
       this.mirrors = readJsonSync(this.mirrorPath)
-      const mirrorConf = config.get('packageManager.mirrorName', (navigator.language === 'zh-CN') ?  "taobao" : "npm")
+      const mirrorConf = config.get('packageManager.mirrorName')
+      const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ? 
+        mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
       const proxyConf = config.get("packageManager.proxy", false)
       const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
-      this.selectConfig(mirrorConf, proxyConf, betaCheck)
+      this.selectConfig(mirrorName, proxyConf, betaCheck)
     }
     return this.mirrors
   }
