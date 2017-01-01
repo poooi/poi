@@ -10,7 +10,7 @@ semver = require 'semver'
 updateInfo = null
 
 doUpdate = ->
-  shell.openExternal 'http://0u0.moe/poi'
+  shell.openExternal 'http://poi.io'
 
 doUpdateGithub = ->
   shell.openExternal 'https://github.com/poooi/poi/releases'
