@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { shell } from 'electron'
 import Divider from './divider'
-import { Grid, Col, Button, Table } from 'react-bootstrap'
+import { Grid, Col, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { sync as globSync } from 'glob'
