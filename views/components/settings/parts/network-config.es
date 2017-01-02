@@ -50,7 +50,7 @@ const NetworkConfig = connect(() => (
   handleSaveConfig = (e) => {
     const proxy = Object.clone(this.state)
     let retries = parseInt(this.state.retries)
-    if (isNaN(retries)) {
+    if (isNaN(retries) || retries < 0) {
       retries = 0
       proxy.retries = 0
     }
