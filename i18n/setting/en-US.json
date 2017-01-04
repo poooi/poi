@@ -6,7 +6,6 @@
   "About": "About",
   "poi-description %s %s": "poi %s is an open source Kancolle browser based on Electron v%s. poi behaves the same as Chrome and does not modify game data, packets or implement bots/macros. The main poi provides basic functionalities and is complemented by a variety of plugins.",
   "Proxy setting": "Proxy setting",
-  "Success! It will be available after a restart": "Success! Restart to adjust it",
   "Proxy protocol": "Proxy protocol",
   "proxy": "proxy",
   "No proxy": "No proxy",
