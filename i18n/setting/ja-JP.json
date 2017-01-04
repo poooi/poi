@@ -10,6 +10,7 @@
   "Database": "統計データベース",
   "Wiki": "ウィキ",
   "Proxy setting": "プロキシ設定",
+  "Success! It will be available after a restart.": "設定完了，変更を適用するには再起動する必要があります。",
   "Proxy protocol": "プロキシプロトコル",
   "proxy": "プロキシ",
   "No proxy": "プロキシを使用しません",
