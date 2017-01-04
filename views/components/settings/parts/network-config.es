@@ -68,6 +68,7 @@ const NetworkConfig = connect(() => (
       retries,
       port,
     })
+    toggleModal(__('Proxy setting'), __('Success! It will be available after a restart.'))
   }
   handleHttpHostChange = (e) => {
     const http = Object.clone(this.state.http)
