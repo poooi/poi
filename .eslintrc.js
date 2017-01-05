@@ -44,6 +44,6 @@ module.exports = {
         'paths': [__dirname]
       },
     },
-    'import/core-modules': ['electron'],
+    'import/core-modules': ['electron', 'redux-observers'],
   },
 }
