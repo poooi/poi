@@ -1,7 +1,10 @@
 import React from 'react'
 export default class Divider extends React.Component{
   static propTypes = {
-    text: React.PropTypes.string,
+    text: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.element,
+    ]),
     onClick: React.PropTypes.func,
   }
   onClick = (e) => {
