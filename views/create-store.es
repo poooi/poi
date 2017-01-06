@@ -94,7 +94,7 @@ const solveConfSet = (path, value) => {
 }
 const config = remote.require('./lib/config')
 config.addListener('config.set', solveConfSet)
-remote.getCurrentWindow().on('close', (e) => {
+window.addEventListener('unload', (e) => {
   config.removeListener('config.set', solveConfSet)
 })
 
