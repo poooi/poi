@@ -182,6 +182,7 @@ export const escapeStatusSelectorFactory = memoize((shipId) =>
   )
 )
 
+// There's a Number type check
 const shipBaseDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipsSelector,
@@ -194,6 +195,8 @@ const shipBaseDataSelectorFactory = memoize((shipId) =>
 // Reads props.shipId
 // Returns [_ship, $ship]
 // Returns undefined if uninitialized, or if ship not found in _ship
+// Attention: shipId here only accepts Number type, 
+//   otherwise will always return undefined
 export const shipDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipBaseDataSelectorFactory(shipId),
@@ -227,6 +230,7 @@ const shipEquipsIdSelectorFactory = memoize((shipId) =>
   ))
 )
 
+// There's a Number type check
 const equipBaseDataSelectorFactory = memoize((equipId) =>
   createSelector([
     equipsSelector,
@@ -239,6 +243,8 @@ const equipBaseDataSelectorFactory = memoize((equipId) =>
 
 // Returns [_equip, $equip]
 // Returns undefined if uninitialized, or if equip not found in _equip
+// Attention: equipId here only accepts Number type, 
+//   otherwise will always return undefined
 export const equipDataSelectorFactory = memoize((equipId) =>
   createSelector([
     equipBaseDataSelectorFactory(equipId),
