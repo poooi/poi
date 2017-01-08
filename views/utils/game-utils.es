@@ -297,7 +297,7 @@ export function getSaku25a(shipsData, equipsData, teitokuLv) {
 //     H(レベル)
 //     M(空き数)
 
-export function getSaku33(shipsData, equipsData, teitokuLv) {
+export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0) {
   let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
@@ -341,6 +341,7 @@ export function getSaku33(shipsData, equipsData, teitokuLv) {
     }
     shipSaku += Math.sqrt(shipPureSaku)
   }
+  equipSaku *= mapModifier
   teitokuSaku = Math.ceil(teitokuLv * 0.4)
   totalSaku = shipSaku + equipSaku - teitokuSaku + 2 * shipCount
 
