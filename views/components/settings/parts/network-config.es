@@ -1,4 +1,5 @@
-import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Alert } from 'react-bootstrap'
+import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Alert, Collapse, Well } from 'react-bootstrap'
+import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import React from 'react'
 import Divider from './divider'
@@ -24,6 +25,8 @@ const basic = {
   },
   retries: 0,
   port: 0,
+  allowLAN: false,
+  showAdvanced: false,
 }
 
 const NetworkConfig = connect(() => (
@@ -59,6 +62,7 @@ const NetworkConfig = connect(() => (
       port = 0
       proxy.port = 0
     }
+    delete proxy.showAdvanced
     config.set('proxy', proxy)
     this.setState({
       retries,
@@ -130,10 +134,20 @@ const NetworkConfig = connect(() => (
       port: parseInt(e.target.value) || 0,
     })
   }
+  handleSetAllowLAN = (e) => {
+    this.setState({
+      allowLAN: !this.state.allowLAN,
+    })
+  }
+  handleShowAdvanced = (e) => {
+    this.setState({
+      showAdvanced: !this.state.showAdvanced,
+    })
+  }
   render() {
     return (
       <form>
-        <Divider text={__('Proxy protocol')} />
+        <Divider text={__('Proxy server information')} />
         <Grid>
           <Col xs={12}>
             <FormControl componentClass="select" ref="use" value={this.state.use || "none"} onChange={this.handleChangeUse}>
@@ -144,7 +158,6 @@ const NetworkConfig = connect(() => (
             </FormControl>
           </Col>
         </Grid>
-        <Divider text={__('Proxy server information')} />
         {
           (this.state.use === 'http') ?
             <Grid>
@@ -223,11 +236,24 @@ const NetworkConfig = connect(() => (
             </Alert>
           </Col>
         </Grid>
-        <Divider text={__("poi port (Don't touch!)")} />
+        <Divider onClick={this.handleShowAdvanced} text={
+          <span>
+            <span>{__('Advanced (require restart)')}</span>
+            <FontAwesome name={this.state.showAdvanced ? 'angle-up' : 'angle-down'} />
+          </span>
+        } />
         <Grid>
-          <Col xs={12}>
-            <FormControl type="number" ref="port" value={this.state.port} onChange={this.handleSetPort} placeholder={__("Default: 0 (Use random port)")} />
-          </Col>
+          <Collapse in={this.state.showAdvanced}>
+            <div>
+              <Col xs={12}>
+                <ControlLabel>{__("poi port")}</ControlLabel>
+                <FormControl type="number" ref="port" value={this.state.port} onChange={this.handleSetPort} placeholder={__("Default: 0 (Use random port)")} />
+              </Col>
+              <Col xs={12}>
+                <Checkbox checked={this.state.allowLAN} onChange={this.handleSetAllowLAN}>{__("Allow connections from LAN")}</Checkbox>
+              </Col>
+            </div>
+          </Collapse>
         </Grid>
         <Divider text={__('Save settings')} />
         <Grid>
