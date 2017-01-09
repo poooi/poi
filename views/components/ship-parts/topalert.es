@@ -94,6 +94,8 @@ const sakuSelectorFactory = memoize((fleetId) =>
     fleetShipsEquipDataSelectorFactory(fleetId),
     admiralLevelSelector,
   ], (shipsData=[], equipsData=[], admiralLevel) =>({
+    saku25: getSaku25(shipsData, equipsData),
+    saku25a: getSaku25a(shipsData, equipsData, admiralLevel),
     saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0),
     saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0),
     saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0),
@@ -130,7 +132,7 @@ export default connect(
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
   const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condTick, expeditionEndTime, tyku, saku, condTarget, canNotify} = props
-  const {saku33, saku33x3, saku33x4} = saku
+  const {saku25, saku25a, saku33, saku33x3, saku33x4} = saku
   let totalLv = 0
   let minCond = 100
   shipsData.forEach(([_ship]=[]) => {
@@ -173,11 +175,12 @@ export default connect(
           </span>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={
-              <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='topalert-recon-tooltip'>
-                <div>{__('Formula 33')}</div>
-                <div>x1: {saku33.total}</div>
-                <div>{`x3 (6-2 & 6-3): ${saku33x3.total}`}</div>
-                <div>{`x4 (3-5 & 6-1): ${saku33x4.total}`}</div>
+              <Tooltip id={`topalert-recon-fleet-${fleetId}`}>
+                <div>{__('2-5 fall formula')}: {saku25a.ship} + {saku25a.item} - {saku25a.teitoku} = {saku25a.total}</div>
+                <div>{__('2-5 old formula')}: {saku25.ship} + {saku25.recon} + {saku25.radar} = {saku25.total}</div>
+                <div>{__('Formula 33')}x1: {saku33.total}</div>
+                <div>{__('Formula 33')}{`x3 (6-2 & 6-3): ${saku33x3.total}`}</div>
+                <div>{__('Formula 33')}{`x4 (3-5 & 6-1): ${saku33x4.total}`}</div>
               </Tooltip>
             }>
               <span>{__('LOS')}: {saku33.total.toFixed(2)}</span>
