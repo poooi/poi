@@ -175,12 +175,32 @@ export default connect(
           </span>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={
-              <Tooltip id={`topalert-recon-fleet-${fleetId}`}>
-                <div>{__('2-5 fall formula')}: {saku25a.ship} + {saku25a.item} - {saku25a.teitoku} = {saku25a.total}</div>
-                <div>{__('2-5 old formula')}: {saku25.ship} + {saku25.recon} + {saku25.radar} = {saku25.total}</div>
-                <div>{__('Formula 33')}x1: {saku33.total}</div>
-                <div>{__('Formula 33')}{`x3 (6-2 & 6-3): ${saku33x3.total}`}</div>
-                <div>{__('Formula 33')}{`x4 (3-5 & 6-1): ${saku33x4.total}`}</div>
+              <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='topalert-recon-tooltip'>
+                <div className='recon-title'>
+                  <span>{__('Formula 33')}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>× 1</span>
+                  <span>{saku33.total}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{`× 3 (6-2 & 6-3)`}</span>
+                  <span>{saku33x3.total}</span></div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{`× 4 (3-5 & 6-1)`}</span>
+                  <span>{saku33x4.total}</span>
+                </div>
+                <div className='recon-title'>
+                  <span>{__('Formula 2-5')}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{__('Fall')}</span>
+                  <span>{saku25a.total}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{__('Legacy')}</span>
+                  <span>{saku25.total}</span>
+                </div>
               </Tooltip>
             }>
               <span>{__('LOS')}: {saku33.total.toFixed(2)}</span>
