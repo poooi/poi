@@ -96,7 +96,9 @@ const sakuSelectorFactory = memoize((fleetId) =>
   ], (shipsData=[], equipsData=[], admiralLevel) =>({
     saku25: getSaku25(shipsData, equipsData),
     saku25a: getSaku25a(shipsData, equipsData, admiralLevel),
-    saku33: getSaku33(shipsData, equipsData, admiralLevel),
+    saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0),
+    saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0),
+    saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0),
   }))
 )
 
@@ -130,7 +132,7 @@ export default connect(
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
   const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condTick, expeditionEndTime, tyku, saku, condTarget, canNotify} = props
-  const {saku25, saku25a, saku33} = saku
+  const {saku25, saku25a, saku33, saku33x3, saku33x4} = saku
   let totalLv = 0
   let minCond = 100
   shipsData.forEach(([_ship]=[]) => {
@@ -173,10 +175,32 @@ export default connect(
           </span>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={
-              <Tooltip id={`topalert-recon-fleet-${fleetId}`}>
-                <div>{__('2-5 fall formula')}: {saku25a.ship} + {saku25a.item} - {saku25a.teitoku} = {saku25a.total}</div>
-                <div>{__('2-5 old formula')}: {saku25.ship} + {saku25.recon} + {saku25.radar} = {saku25.total}</div>
-                <div>{__('Formula 33')}: {saku33.total}</div>
+              <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='topalert-recon-tooltip'>
+                <div className='recon-title'>
+                  <span>{__('Formula 33')}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>× 1</span>
+                  <span>{saku33.total}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{`× 3 (6-2 & 6-3)`}</span>
+                  <span>{saku33x3.total}</span></div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{`× 4 (3-5 & 6-1)`}</span>
+                  <span>{saku33x4.total}</span>
+                </div>
+                <div className='recon-title'>
+                  <span>{__('Formula 2-5')}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{__('Fall')}</span>
+                  <span>{saku25a.total}</span>
+                </div>
+                <div className='recon-entry'>
+                  <span className='recon-item'>{__('Legacy')}</span>
+                  <span>{saku25.total}</span>
+                </div>
               </Tooltip>
             }>
               <span>{__('LOS')}: {saku33.total.toFixed(2)}</span>
