@@ -10,7 +10,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
-import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus } from 'views/utils/game-utils'
+import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus, getSpeedLabel } from 'views/utils/game-utils'
 import { resolveTime } from 'views/utils/tools'
 import {
   shipDataSelectorFactory,
@@ -79,6 +79,9 @@ export const ShipRow = connect(
                 </span>
                 <span className='ship-type'>
                   {i18n.resources.__(($shipTypes[$ship.api_stype] || {api_name: '??'}).api_name)}
+                </span>
+                <span className="ship-speed">
+                  {__(getSpeedLabel(ship.api_soku))}
                 </span>
               </div>
               <span className="ship-name">

@@ -166,14 +166,14 @@ export default connect(
     {
       isMini ?
       <div style={{display: "flex", justifyContent: "space-around", width: '100%'}}>
-        <span style={Object.assign({flex: "none"}, getSpeedStyle(speed))}>{__(getSpeedLabel(speed))} </span>
+        <span style={{flex: "none"}}>{__(getSpeedLabel(speed))} </span>
         <span style={{flex: "none", marginLeft: 5}}>{__('Fighter Power')}: {tyku.max}</span>
         <span style={{flex: "none", marginLeft: 5}}>{__('LOS')}: {saku33.total.toFixed(2)}</span>
       </div>
       :
       <Alert style={getFontStyle()}>
         <div style={{display: "flex"}}>
-          <span style={Object.assign({flex: "1"}, getSpeedStyle(speed))}>{__(getSpeedLabel(speed))} </span>
+          <span style={{flex: "1"}}>{__(getSpeedLabel(speed))} </span>
           <span style={{flex: 1}}>{__('Total Lv')}. {totalLv}</span>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={

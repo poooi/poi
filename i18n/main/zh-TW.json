@@ -50,5 +50,10 @@
   "Retreated": "退避",
   "Repairing": "修理中",
   "Resupply needed": "需要補給",
-  "Ship tag: %s": "出擊限定: %s"
+  "Ship tag: %s": "出擊限定: %s",
+  "Very Long": "超長",
+  "Slow":"低速",
+  "Fast": "高速",
+  "Fast+": "高速+",
+  "Fastest": "最速"
 }
