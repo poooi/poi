@@ -8,7 +8,8 @@ import { createSelector } from 'reselect'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
 import { recoveryEndTime } from 'views/redux/timers/cond'
-import { getTyku, getSaku25, getSaku25a, getSaku33 } from 'views/utils/game-utils'
+import { getTyku, getSaku25, getSaku25a, getSaku33, 
+  getFleetSpeed, getSpeedLabel, getSpeedStyle } from 'views/utils/game-utils'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
@@ -102,6 +103,13 @@ const sakuSelectorFactory = memoize((fleetId) =>
   }))
 )
 
+const speedSelectorFactory = memoize((fleetId) =>
+  createSelector([
+    fleetShipsDataSelectorFactory(fleetId),
+  ], (shipsData=[]) => getFleetSpeed(shipsData),
+  )
+)
+
 const topAlertSelectorFactory = memoize((fleetId) =>
   createSelector([
     fleetInBattleSelectorFactory(fleetId),
@@ -112,9 +120,10 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     fleetExpeditionSelectorFactory(fleetId),
     tykuSelectorFactory(fleetId),
     sakuSelectorFactory(fleetId),
+    speedSelectorFactory(fleetId),
     configSelector,
     miscSelector,
-  ], (inBattle, inExpedition, shipsData, fleetName, condTick, expedition, tyku, saku, config, {canNotify}) => ({
+  ], (inBattle, inExpedition, shipsData, fleetName, condTick, expedition, tyku, saku, fleetSpeed, config, {canNotify}) => ({
     inExpedition,
     inBattle,
     shipsData,
@@ -123,6 +132,7 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     expeditionEndTime: expedition[2],
     tyku,
     saku,
+    fleetSpeed,
     condTarget: get(config, 'poi.notify.morale.value', 49),
     canNotify,
   }))
@@ -131,8 +141,10 @@ export default connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
-  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, condTick, expeditionEndTime, tyku, saku, condTarget, canNotify} = props
+  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, 
+    condTick, expeditionEndTime, tyku, saku, fleetSpeed, condTarget, canNotify} = props
   const {saku25, saku25a, saku33, saku33x3, saku33x4} = saku
+  const {speed} = fleetSpeed
   let totalLv = 0
   let minCond = 100
   shipsData.forEach(([_ship]=[]) => {
@@ -154,13 +166,14 @@ export default connect(
     {
       isMini ?
       <div style={{display: "flex", justifyContent: "space-around", width: '100%'}}>
-        <span style={{flex: "none"}}>Lv. {totalLv} </span>
+        <span style={Object.assign({flex: "none"}, getSpeedStyle(speed))}>{__(getSpeedLabel(speed))} </span>
         <span style={{flex: "none", marginLeft: 5}}>{__('Fighter Power')}: {tyku.max}</span>
         <span style={{flex: "none", marginLeft: 5}}>{__('LOS')}: {saku33.total.toFixed(2)}</span>
       </div>
       :
       <Alert style={getFontStyle()}>
         <div style={{display: "flex"}}>
+          <span style={Object.assign({flex: "1"}, getSpeedStyle(speed))}>{__(getSpeedLabel(speed))} </span>
           <span style={{flex: 1}}>{__('Total Lv')}. {totalLv}</span>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={
