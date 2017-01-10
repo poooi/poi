@@ -353,6 +353,20 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0) {
   }
 }
 
+// returns fleet's minimal api_soku value, returns 0 when all elements undefined
+export function getFleetSpeed (shipsData) {
+  const fleetSpeed = shipsData.reduce((speed, ship) => {
+    return (typeof ship != 'undefined' || !Number.isNaN(speed)) 
+    ? Math.min(speed, ship.api_soku) 
+    : ship.api_soku
+  }, NaN)
+
+  return {
+    fleetSpeed: Number.isNaN(fleetSpeed) ? 0 : fleetSpeed,
+  }
+}
+
+
 export async function isInGame () {
   try {
     return (
