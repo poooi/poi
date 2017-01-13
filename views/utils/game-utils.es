@@ -16,6 +16,18 @@ const aircraftLevelBonus = {
   '40': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 橘花改
 }
 
+const speedInterpretation = {
+  [5]: 'Slow',
+  [10]: 'Fast',
+  [15]: 'Fast+',
+  [20]: 'Fastest',
+}
+
+const speedStyles = {
+  [15]: {color: '#1E88E5'},
+  [20]: {color: '#64B5F6'},
+}
+
 export function getMaterialStyle(percent) {
   if (percent <= 50) {
     return 'danger'
@@ -47,6 +59,10 @@ export function getCondStyle(cond) {
   s += window.isDarkTheme ? ' dark' : ' light'
   return s
 }
+
+export const getSpeedLabel = (speed) => speedInterpretation[speed] || 'Unknown'
+
+export const getSpeedStyle = (speed) => speedStyles[speed] || {}
 
 export function getStatusStyle(status) {
   if (status != null) {
@@ -352,6 +368,18 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0) {
     total: parseFloat(totalSaku.toFixed(2)),
   }
 }
+
+// returns fleet's minimal api_soku value, returns 0 when all elements undefined
+export function getFleetSpeed (shipsData) {
+  const speed = shipsData.reduce((speed, [ship, $ship]) => {
+    return typeof ship != 'undefined' ? Math.min(speed, ship.api_soku) : ship.api_soku
+  }, Infinity)
+
+  return {
+    speed,
+  }
+}
+
 
 export async function isInGame () {
   try {
