@@ -278,6 +278,7 @@ class Proxy extends EventEmitter {
                 }
               }
               if (success || !isKancolleGameApi(pathname)) {
+                res.end()
                 break
               }
             }
