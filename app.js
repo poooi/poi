@@ -116,7 +116,6 @@ app.on('ready', () => {
     enableLargerThanScreen: true,
     webPreferences: {
       plugins: true,
-      backgroundThrottling: false,
     },
   })
   // Default menu

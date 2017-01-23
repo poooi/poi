@@ -12,7 +12,7 @@ export function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_get_member/kdock':
     return body
   case '@@Response/kcsapi/api_req_kousyou/createship_speedchange': {
-    let {api_kdock_id} = postBody
+    const {api_kdock_id} = postBody
     state = state.slice()
     state[api_kdock_id-1] = Object.assign({}, state[api_kdock_id-1], completeConstruction)
     return state

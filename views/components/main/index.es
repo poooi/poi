@@ -11,9 +11,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 export default {
   name: 'MainView',
-  priority: 0,
   displayName: <span><FontAwesome name='home' />{__(' Overview')}</span>,
-  description: '概览面板，提供基本的概览界面',
   reactClass: connect((state, props) => ({
     layout: get(state, 'config.poi.layout', 'horizontal'),
     doubleTabbed: get(state, 'config.poi.tabarea.double', false),

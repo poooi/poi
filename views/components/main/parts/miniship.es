@@ -11,7 +11,7 @@ const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
 import { PaneBodyMini } from './minishippane'
-import { fleetNameSelectorFactory, fleetStateSelectorFactory } from 'views/utils/selectors'
+import { fleetStateSelectorFactory } from 'views/utils/selectors'
 
 function getStyle(state, disabled) {
   if (state >= 0 && state <= 5 && !disabled)

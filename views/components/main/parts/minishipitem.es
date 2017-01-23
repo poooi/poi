@@ -97,7 +97,7 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
   }))
 )
 
-export const MiniShipRow = connect(
+export default connect(
   (state, {shipId}) =>
     miniShipRowDataSelectorFactory(shipId),
 )(class miniShipRow extends Component {

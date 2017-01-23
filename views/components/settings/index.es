@@ -9,9 +9,7 @@ const __ = i18n.setting.__.bind(i18n.setting)
 
 export default {
   name: 'SettingsView',
-  priority: 10001,
   displayName: <span><FontAwesome name='cog' />{__(" Settings")}</span>,
-  description: '功能设置界面',
   reactClass: class reactClass extends React.Component {
     shouldComponentUpdate = (nextProps, nextState) => (false)
     render() {

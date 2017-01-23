@@ -1,5 +1,4 @@
 // Process Command Line Arguments
-import { warn } from './utils'
 import Debug from './debug'
 import { app } from 'electron'
 // At this stage we only support a few flags,

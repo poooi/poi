@@ -8,8 +8,7 @@ import { createSelector } from 'reselect'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
 import { recoveryEndTime } from 'views/redux/timers/cond'
-import { getTyku, getSaku25, getSaku25a, getSaku33, 
-  getFleetSpeed, getSpeedLabel, getSpeedStyle } from 'views/utils/game-utils'
+import { getTyku, getSaku25, getSaku25a, getSaku33, getFleetSpeed, getSpeedLabel } from 'views/utils/game-utils'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
@@ -141,7 +140,7 @@ export default connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {
-  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName, 
+  const {inExpedition, inBattle, shipsData=[], isMini, fleetId, fleetName,
     condTick, expeditionEndTime, tyku, saku, fleetSpeed, condTarget, canNotify} = props
   const {saku25, saku25a, saku33, saku33x3, saku33x4} = saku
   const {speed} = fleetSpeed

@@ -12,7 +12,7 @@ import { PoiControl } from './components/info/control'
 import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 
-const {ROOT, EXROOT, $} = window
+const {EXROOT, $} = window
 
 // Disable OSX zoom
 require('electron').webFrame.setZoomLevelLimits(1, 1)
@@ -27,7 +27,7 @@ require('./services/alert')
 require('./components/etc/menu')
 
 const CustomCssInjector = () => {
-  let cssPath = path.join(EXROOT, 'hack', 'custom.css')
+  const cssPath = path.join(EXROOT, 'hack', 'custom.css')
   fs.ensureFileSync(cssPath)
   return (
     <link rel='stylesheet' id='custom-css' href={cssPath} />

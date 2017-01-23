@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Alert, Collapse, Well } from 'react-bootstrap'
+import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Alert, Collapse } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import React from 'react'

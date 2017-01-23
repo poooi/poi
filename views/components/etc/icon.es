@@ -1,7 +1,6 @@
 import fs from 'fs-extra'
 import classnames from 'classnames'
 import React from 'react'
-import remote from 'electron'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'

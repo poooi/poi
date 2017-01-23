@@ -168,8 +168,6 @@ const ShipView = connect((state, props) => ({
 
 export default {
   name: 'ShipView',
-  priority: 100000.1,
   displayName: <span><FontAwesome key={0} name='bars' />{__(' Fleet')}</span>,
-  description: '舰队展示页面，展示舰队详情信息',
   reactClass: ShipView,
 }

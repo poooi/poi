@@ -1,5 +1,3 @@
-const {dispatch} = window
-
 const DEFAULT_STICKYFOR = 3*1000  // Milliseconds
 
 function dispatchAlertEvent(value) {

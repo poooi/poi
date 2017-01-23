@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { MiniShipRow } from './minishipitem'
+import MiniShipRow from './minishipitem'
 import React from 'react'
 
 import TopAlert from 'views/components/ship-parts/topalert'
