@@ -487,12 +487,12 @@ const SlotCheckConfig = connect(() => {
     if (this.state.showInput) {
       toggleBtnTxt = __('Disable')
     }
-    let toggleBtn = <Button onClick={this.handleToggleInput} bsSize='xs'
+    const toggleBtn = <Button onClick={this.handleToggleInput} bsSize='xs'
       bsStyle={toggleBtnStyle} style={{verticalAlign: 'text-bottom'}}>
       {toggleBtnTxt}
     </Button>
     const inputValid = this.CheckValid(this.state.value)
-    let submitBtn = <Button type='submit'
+    const submitBtn = <Button type='submit'
       bsStyle={inputValid ? 'success' : 'danger'}>
       {inputValid ? __('Save') : __('Disable')}
     </Button>
