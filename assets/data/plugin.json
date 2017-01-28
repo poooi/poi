@@ -59,8 +59,8 @@
     "link": "https://github.com/malichan",
     "deszh-CN": "远征信息查询 & 成功条件检查",
     "deszh-TW": "遠征信息查詢 & 成功條件檢查",
-    "desja-JP": "遠征情報お調べと成功条件チェック",
-    "desen-US": "Inquiry & Verify Expedition requirement",
+    "desja-JP": "遠征情報お調べ & 成功条件チェック",
+    "desen-US": "Expedition requirements inquiry & validation",
     "desko-KR": "원정 정보 조회 & 성공 조건 확인"
   },
   "poi-plugin-hensei-nikki": {
@@ -156,7 +156,7 @@
     "deszh-CN": "战况预知",
     "deszh-TW": "戰況預知",
     "desja-JP": "戦况予知",
-    "desen-US": "Battle outcome prediction",
+    "desen-US": "Battle result prediction",
     "desko-KR": "전투 예측"
   },
   "poi-plugin-quest-info": {
