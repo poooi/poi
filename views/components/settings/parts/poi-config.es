@@ -757,6 +757,10 @@ class PoiConfig extends Component {
               label={__('Display \"Tips\"')}
               configName="poi.doyouknow.enabled"
               defaultVal={true} />
+            <CheckboxLabelConfig
+              label={__('Display Final Stage Notification')}
+              configName="poi.lastbattle.enabled"
+              defaultVal={true} />
           </Grid>
         </div>
         <div className="form-group">

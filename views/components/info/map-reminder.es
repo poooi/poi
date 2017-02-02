@@ -11,7 +11,7 @@ import {
   currentNodeSelector,
 } from 'views/utils/selectors'
 
-const {i18n, toast} = window
+const {i18n, toast, config} = window
 const __ = i18n.others.__.bind(i18n.others)
 const emptyObj = {}
 
@@ -107,7 +107,7 @@ export default connect(
   notifyFinalAttack = (e) => {
     if (e.detail.path === '/kcsapi/api_req_map/start') {
       const isFinalAttack = this.isFinalAttack()
-      if (isFinalAttack) {
+      if (isFinalAttack && config.get("poi.lastbattle.enabled", true)) {
         toast(__('Possible final stage'), {
           type: 'warning',
           title: __('Sortie'),
