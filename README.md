@@ -14,6 +14,15 @@ Scalable KanColle browser and tool.
 
 [cnpm (CN Mainland)](https://npm.taobao.org/mirrors/poi).
 
+### UNOFFICIAL releases maintained by the community
+
+[AUR (Arch Linux, maintained by @swordfeng)](https://aur.archlinux.org/packages/poi/).
+
+Homebrew Cask (macOS, maintained by @darg20127).
+```shell
+brew cask update && brew cask install poi
+```
+
 ## Features
 
 + Proxy
