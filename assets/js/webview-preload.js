@@ -83,11 +83,13 @@ window.unalign = () => {
 
 window.align()
 
-remote.getCurrentWebContents().insertCSS(alertCSS)
+// ref for item purchase css insertion
+const webcontent = remote.getCurrentWebContents()
 
 const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
+  webcontent.insertCSS(alertCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
   const flashWindowMode = config.get('poi.flashWindowMode', 'window')
   const t = setInterval(() => {
