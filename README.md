@@ -20,7 +20,7 @@ Scalable KanColle browser and tool.
 
 Homebrew Cask (macOS, maintained by @darg20127).
 ```shell
-brew cask update && brew cask install poi
+brew update && brew cask install poi
 ```
 
 ## Features
