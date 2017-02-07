@@ -95,7 +95,7 @@
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
     "git-archive": "^0.1.4",
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
     "mocha": "^3.0.1",
     "mocha-lcov-reporter": "^1.0.0",
     "node-7z": "^0.4.0",
