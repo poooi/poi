@@ -211,6 +211,7 @@ export function reducer(state=initState, {type, path, body, postBody, time}) {
         _status: {
           ..._status,
           battle: null,
+          time: 0,
         },
       }
     }
