@@ -1,5 +1,5 @@
 <!--
-感谢你向 poi 提交 issue，请尽量填写以下内容以方便双方的沟通，
+感谢你向 poi 提交 issue，请尽量填写以下内容以方便沟通，
 你也许能在 https://github.com/poooi/poi/wiki 找到一些答案。
 Thanks for opening an issue, please fill the following template,
 If you need general information, see https://github.com/poooi/poi/wiki.
@@ -14,10 +14,9 @@ If you need general information, see https://github.com/poooi/poi/wiki.
 **插件名和版本 / Plugin name & version:**
 
 <!-- 
-请填写插件名与版本，如果这是一个关于插件的 issue。
+如果这是一个关于插件的 issue，请填写插件名及其版本。
 If this is an issue about plugin.
 -->
-
 
 
 **你遇到了什么样的问题 / The problem you've met:**
@@ -28,9 +27,9 @@ If this is an issue about plugin.
 
 <!-- 
 可以的话请提供开发者工具 Console 选项卡的截图，
-打开方式是按 `ctrl`/`cmd`+`shift`+`I`，或游戏区域下方信息栏的最左边齿轮按钮。
-Please provide a screenshot of developer tool's console tab, if possible,
-Press `ctrl`/`cmd`+`shift`+`I`, or the leftmost gear button on the info bar below the game area.
+开发者工具的打开方式是按 `ctrl`/`cmd`+`shift`+`I`，或游戏区域下方信息栏的最左边齿轮按钮。
+Please provide a screenshot of developer tool's console tab, if possible.
+To open the dev tool, press `ctrl`/`cmd`+`shift`+`I`, or the leftmost gear button on the info bar below the game area.
 -->
 
 
