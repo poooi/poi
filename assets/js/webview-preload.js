@@ -40,7 +40,7 @@ window.align = Promise.coroutine(function* () {
   let zoom = yield getWebviewWidth()
   zoom = zoom / 800
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
-  // might be remove if https://github.com/electron/electron/pull/8537 lands
+  // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
   webFrame.setLayoutZoomLevelLimits(-999999, 999999)
   webFrame.setZoomFactor(zoom)
   const zl = webFrame.getZoomLevel()
