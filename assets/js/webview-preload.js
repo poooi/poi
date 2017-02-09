@@ -39,7 +39,12 @@ const getWebviewWidth = Promise.coroutine(function* () {
 window.align = Promise.coroutine(function* () {
   let zoom = yield getWebviewWidth()
   zoom = zoom / 800
+  // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
+  // might be remove if https://github.com/electron/electron/pull/8537 lands
+  webFrame.setLayoutZoomLevelLimits(-999999, 999999)
   webFrame.setZoomFactor(zoom)
+  const zl = webFrame.getZoomLevel()
+  webFrame.setLayoutZoomLevelLimits(zl, zl)
   window.scrollTo(0, 0)
   if (!window.location.toString().includes("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/")) {
     return
@@ -84,12 +89,12 @@ window.unalign = () => {
 window.align()
 
 // ref for item purchase css insertion
-const webcontent = remote.getCurrentWebContents()
+const webContent = remote.getCurrentWebContents()
 
 const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
-  webcontent.insertCSS(alertCSS)
+  webContent.insertCSS(alertCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
   const flashWindowMode = config.get('poi.flashWindowMode', 'window')
   const t = setInterval(() => {
