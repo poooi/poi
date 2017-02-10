@@ -27,9 +27,9 @@ If this is an issue about plugin.
 
 <!-- 
 可以的话请提供开发者工具 Console 选项卡的截图，
-开发者工具的打开方式是按 ctrl + shift + I (macOS 上为 ⌥ + ⌘ + I），或游戏区域下方信息栏的最左边齿轮按钮。
+开发者工具的打开方式是按 ctrl + shift + i (macOS 上为 ⌥ + ⌘ + i），或游戏区域下方信息栏的最左边齿轮按钮。
 Please provide a screenshot of developer tool's console tab, if possible.
-To open the dev tool, press ctrl + shift + I (⌥ + ⌘ + I for macOS), or the leftmost gear button on the info bar below the game area.
+To open the dev tool, press ctrl + shift + i (⌥ + ⌘ + i for macOS), or the leftmost gear button on the info bar below the game area.
 -->
 
 
