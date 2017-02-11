@@ -91,6 +91,7 @@
     "coffeelint": "^1.11.1",
     "electron": "^1.4.13",
     "electron-builder": "^10.4.0",
+    "electron-chromedriver": "^1.6.0",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
@@ -101,6 +102,7 @@
     "node-7z": "^0.4.0",
     "node-unzip-2": "^0.2.1",
     "rimraf": "^2.5.4",
+    "spectron": "^3.6.0",
     "tar-fs": "^1.10.0",
     "walk": "^2.3.9"
   },
