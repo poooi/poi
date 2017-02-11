@@ -50,5 +50,6 @@ branches:
   except:
     - /^v\d+\.\d+\.\d+.*/
 
-os: unstable
+os:
+  - unstable
 
