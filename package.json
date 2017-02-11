@@ -88,6 +88,8 @@
   "devDependencies": {
     "asar": "^0.12.1",
     "babel-eslint": "^7.0.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "coffeelint": "^1.11.1",
     "electron": "^1.4.13",
     "electron-builder": "^10.4.0",

@@ -1,5 +1,8 @@
 var Application = require('spectron').Application
 var assert = require('assert')
+var chai = require('chai')
+var chaiAsPromised = require('chai-as-promised')
+var path = require('path')
 
 describe('application launch', function () {
   this.timeout(60000)
