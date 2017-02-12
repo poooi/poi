@@ -24,7 +24,7 @@ async function build_map() {
   const data= await fs.readJSONAsync('map.json')
   const meta = {
     name: "map",
-    version: "2016/12/22/01",
+    version: "2017/02/12/01",
   }
   await writeJSON('map.json', {meta, data})
 }
