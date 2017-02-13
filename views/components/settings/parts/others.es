@@ -15,8 +15,11 @@ const serverList = [
   "http://7xj6zx.com1.z0.glb.clouddn.com/",
 ]
 
+const fetchHeader = new Headers()
+fetchHeader.set("Cache-Control", "max-age=0")
+
 const fetchFromRemote = async (url, cacheMode = "default") => {
-  const res = await fetch(url, {method: "GET", cache: cacheMode}).catch(e => e)
+  const res = await fetch(url, {method: "GET", cache: cacheMode, headers: fetchHeader}).catch(e => e)
   if (res.status === 200) {
     try {
       return await res.json()
