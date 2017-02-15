@@ -13,8 +13,15 @@ export function reducer(state={}, {type, body, postBody}) {
   }
   case '@@Response/kcsapi/api_req_map/select_eventmap_rank': {
     const id = `${postBody.api_maparea_id}${postBody.api_map_no}`
-    return reduxSet(state,
-      [id, 'api_eventmap', 'api_selected_rank'], parseInt(postBody.api_rank))
+    return compareUpdate(state, {
+      [id]: {
+        api_eventmap: {
+          api_selected_rank: parseInt(postBody.api_rank),
+          api_max_maphp: parseInt(body.api_max_maphp),
+          api_now_maphp: parseInt(body.api_max_maphp),
+        },
+      },
+    }, 3)
   }
   case '@@Response/kcsapi/api_req_map/start': {
     const {api_eventmap} = body
