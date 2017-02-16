@@ -712,7 +712,7 @@ const PluginConfig = connect((state, props) => ({
                         <div>
                           <Checkbox checked={this.props.autoUpdate || false}
                                     onChange={this.handleEnableAutoUpdate}>
-                            {__('Update all plugins on startup')}
+                            {__('Automatically update plugins')}
                           </Checkbox>
                         </div>
                         <div>

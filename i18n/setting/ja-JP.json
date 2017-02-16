@@ -122,6 +122,7 @@
   "Search for plugins": "プラグインを検索する",
   "Connect to npm server through proxy": "プロキシサーバ経由て NPM サーバーに接続する",
   "Developer option: check update of beta version": "開発者向けオプション: プラグインのベータ版を確認する",
+  "Automatically update plugins": "プラグインを自動に更新する",
   "Other settings": "他の機能",
   "Boss key": "緊急回避キー",
   "Press the key, or Esc to cancel": "割り当てたいキーを押してください",
