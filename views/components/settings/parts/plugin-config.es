@@ -156,6 +156,9 @@ class InstalledPlugin extends Component {
                     </Label>
                   </div>
                   <div>
+                    <span>
+                      {plugin.linkedPlugin && <FontAwesome name='link' />}
+                    </span>
                     {`Ver. ${plugin.version || '1.0.0'}`}
                   </div>
                 </div>
@@ -418,6 +421,9 @@ const PluginConfig = connect((state, props) => ({
     this.setState({npmWorking: true})
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
+    if (plugin.linkedPlugin) {
+      return
+    }
     try {
       await PluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
       this.setState({npmWorking: false})
