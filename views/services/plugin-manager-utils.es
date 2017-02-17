@@ -1,7 +1,7 @@
 import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { createReadStream, readJson, accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir } from 'fs-extra'
+import { createReadStream, readJson, accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir, lstatSync } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
@@ -159,7 +159,11 @@ export function readPlugin(pluginPath) {
   }
   // Resolve symlink.
   plugin.pluginPath = realpathSync(pluginPath)
-  if (plugin.pluginPath != pluginPath) {
+  // check if it is symbolic linked plugin
+  // since function will be called when checking update, the second call
+  // will check with real path, make sure to attribute it only when symbolic link
+  const pluginStat = lstatSync(pluginPath)
+  if (pluginStat.isSymbolicLink()) {
     plugin.linkedPlugin = true
   }
   if (plugin.icon == null) {
