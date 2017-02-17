@@ -159,6 +159,9 @@ export function readPlugin(pluginPath) {
   }
   // Resolve symlink.
   plugin.pluginPath = realpathSync(pluginPath)
+  if (plugin.pluginPath != pluginPath) {
+    plugin.linkedPlugin = true
+  }
   if (plugin.icon == null) {
     plugin.icon = 'fa/th-large'
   }

@@ -122,6 +122,7 @@
   "Search for plugins": "尋找擴展程式",
   "Connect to npm server through proxy": "使用代理連線至 npm 伺服器",
   "Developer option: check update of beta version": "開發者選項: 檢查 beta 版擴展程式更新",
+  "Automatically update plugins": "自動更新擴展程式",
   "Other settings": "其它功能",
   "Boss key": "老闆鍵",
   "Press the key, or Esc to cancel": "等待按下快速鍵中，或按Esc取消",

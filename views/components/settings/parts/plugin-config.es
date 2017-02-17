@@ -156,6 +156,9 @@ class InstalledPlugin extends Component {
                     </Label>
                   </div>
                   <div>
+                    <span>
+                      {plugin.linkedPlugin && <FontAwesome name='link' />}
+                    </span>
                     {`Ver. ${plugin.version || '1.0.0'}`}
                   </div>
                 </div>
@@ -336,12 +339,14 @@ const PluginConfig = connect((state, props) => ({
   mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
   proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
+  autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', false),
 }))(class pluginConfig extends Component {
   static propTypes = {
     plugins: React.PropTypes.array,
     mirrorName: React.PropTypes.string,
     proxy: React.PropTypes.bool,
     betaCheck: React.PropTypes.bool,
+    autoUpdate: React.PropTypes.bool,
   }
   state = {
     checkingUpdate: false,
@@ -360,6 +365,10 @@ const PluginConfig = connect((state, props) => ({
   }
   handleEnableProxy = () => {
     PluginManager.selectConfig(null, !this.props.proxy, null)
+  }
+  handleEnableAutoUpdate = () => {
+    // unlike other options, autoUpdate will not write to npm conf
+    window.config.set('packageManager.enableAutoUpdate', !this.props.autoUpdate)
   }
   onSelectServer = (state) => {
     PluginManager.selectConfig(state ,null, null)
@@ -412,6 +421,9 @@ const PluginConfig = connect((state, props) => ({
     this.setState({npmWorking: true})
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
+    if (plugin.linkedPlugin) {
+      return
+    }
     try {
       await PluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
       this.setState({npmWorking: false})
@@ -559,7 +571,21 @@ const PluginConfig = connect((state, props) => ({
       checkingUpdate: true,
       npmWorking: true,
     })
-    await PluginManager.getOutdatedPlugins(window.config.get('packageManager.enablePluginCheck', true))
+    const isNotif = window.config.get('config.packageManager.enablePluginCheck', true)
+      && !this.props.autoUpdate // if we auto update plugins, don't toast notify
+    await PluginManager.getOutdatedPlugins(isNotif)
+    if (this.props.autoUpdate) {
+      const plugins = PluginManager.getInstalledPlugins()
+      for (const index in plugins) {
+        if (plugins[index].isOutdated) {
+          try {
+            await this.handleUpdate(index)
+          } catch (error) {
+            throw error
+          }
+        }
+      }
+    }
     this.setState({
       checkingUpdate: false,
       npmWorking: false,
@@ -681,6 +707,12 @@ const PluginConfig = connect((state, props) => ({
                           <Checkbox checked={this.props.proxy || false}
                                     onChange={this.handleEnableProxy}>
                             {__('Connect to npm server through proxy')}
+                          </Checkbox>
+                        </div>
+                        <div>
+                          <Checkbox checked={this.props.autoUpdate || false}
+                                    onChange={this.handleEnableAutoUpdate}>
+                            {__('Automatically update plugins')}
                           </Checkbox>
                         </div>
                         <div>

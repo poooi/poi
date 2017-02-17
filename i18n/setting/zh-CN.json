@@ -122,6 +122,7 @@
   "Search for plugins": "查找插件",
   "Connect to npm server through proxy": "使用代理连接至 npm 服务器",
   "Developer option: check update of beta version": "开发者选项: 检查 beta 版插件更新",
+  "Automatically update plugins": "自动更新插件",
   "Other settings": "其它功能",
   "Boss key": "老板键",
   "Press the key, or Esc to cancel": "等待按下快捷键中，或按Esc取消",
