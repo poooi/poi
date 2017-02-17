@@ -90,6 +90,17 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       spotHistory: state.spotHistory.concat(body.api_no || []),
     }
   }
+
+  // sortieStatus for the fleet in practice = true
+  case '@@Request/kcsapi/api_req_practice/battle': {
+    const deckId = parseInt(body.api_deck_id || 1)
+    const sortieStatus = initState.sortieStatus.slice()
+    sortieStatus[deckId - 1] = true
+    return {
+      ...state,
+      sortieStatus,
+    }
+  }
   }
   return state
 }
