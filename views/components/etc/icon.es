@@ -89,12 +89,14 @@ export class SlotitemIcon extends React.Component {
         pngAvailableList[this.props.slotitemId] = this.getAvailable()
       }
     }
-    if (this.state.useSVGIcon && svgAvailableList[this.props.slotitemId]) {
-      return <img src={`file://${this.svgPath()}`} className={getClassName(this.props.className, true)} />
+    if (this.state.useSVGIcon) {
+      return svgAvailableList[this.props.slotitemId]
+      ? <img src={`file://${this.svgPath()}`} className={getClassName(this.props.className, true)} />
+      : <img src={`file://${ROOT}/assets/svg/slotitem/-1.svg`} className={getClassName(this.props.className, true)} />
     } else if (pngAvailableList[this.props.slotitemId]) {
       return <img src={`file://${this.pngPath()}`} className={getClassName(this.props.className, false)} />
     } else {
-      return <img className={getClassName(this.props.className, this.state.useSVGIcon)} style={{visibility: 'hidden'}} />
+      return <img src={`file://${ROOT}/assets/img/slotitem/-1.png`} className={getClassName(this.props.className, false)} />
     }
   }
 }
