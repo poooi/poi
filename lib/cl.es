@@ -81,6 +81,7 @@ const reSafeMode = /^-(-safe|S)$/i
 const checkSafeMode = (arg) => {
   if (reSafeMode.test(arg)) {
     global.isSafeMode = true
+    console.warn('Entering SAFE MODE.')
     return true
   } else {
     return false
