@@ -15,7 +15,9 @@ const cachePosition = '_storeCache'
 const targetPaths = ['const', 'info', 'fcd']
 const storeCache = (function() {
   try {
-    return JSON.parse(localStorage.getItem(cachePosition) || '{}')
+    // clears store when in safe mode
+    const item = !window.isSafeMode ? localStorage.getItem(cachePosition) : '{}'
+    return JSON.parse(item || '{}')
   } catch (e) {
     return {}
   }
