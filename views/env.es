@@ -23,6 +23,7 @@ window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appIcon = remote.getGlobal('appIcon')
 fs.ensureDirSync(window.PLUGIN_PATH)
 fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
+window.isSafeMode = remote.getGlobal('isSafeMode')
 
 // Add ROOT to `require` search path
 require('module').globalPaths.push(window.ROOT)

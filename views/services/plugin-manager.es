@@ -59,10 +59,11 @@ class PluginManager extends EventEmitter {
     this.getPlugins()
   }
   readPlugins() {
+    // window.isSafeMode = true
     const pluginPaths = glob.sync(this.getPluginPath('poi-plugin-*'))
     let plugins = pluginPaths.map((pluginPath) => {
       let plugin = readPlugin(pluginPath)
-      if (plugin.enabled) {
+      if (plugin.enabled && !window.isSafeMode) {
         plugin = enablePlugin(plugin)
       }
       return plugin
