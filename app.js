@@ -26,6 +26,13 @@ if (config.get('poi.disableHA', false)) {
   app.disableHardwareAcceleration()
 }
 
+// check safe mode config
+if (config.get('poi.enterSafeMode', false)) {
+  console.warn('Entering SAFE MODE according to config.')
+  global.isSafeMode = true
+  config.set('poi.enterSafeMode')
+}
+
 // Add shortcut to start menu when os is windows
 app.setAppUserModelId('org.poooi.poi')
 if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {

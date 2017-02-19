@@ -791,6 +791,10 @@ class PoiConfig extends Component {
               :
               null
             }
+            <CheckboxLabelConfig
+              label={__('Enter safe mode on next startup')}
+              configName="poi.enterSafeMode"
+              defaultVal={false} />
           </Grid>
         </div>
       </div>

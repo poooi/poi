@@ -135,5 +135,8 @@
   "Flash Quality & Window Mode": "Flash 画质和窗口模式",
   "Data version": "数据版本",
   "Update data": "更新数据",
-  "Display Final Stage Notification": "显示最终战提示"
+  "Display Final Stage Notification": "显示最终战提示",
+  "Safe Mode": "安全模式",
+  "Poi is running in safe mode, plugins are not enabled automatically.": "Poi 运行在安全模式下，插件没有自动启用。",
+  "Enter safe mode on next startup": "下次启动进入安全模式"
 }

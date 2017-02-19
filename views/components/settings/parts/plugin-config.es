@@ -627,6 +627,11 @@ const PluginConfig = connect((state, props) => ({
         <Grid className='correct-container'>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
+              { window.isSafeMode && 
+                <Panel header={__('Safe Mode')} bsStyle='warning'>
+                  {__('Poi is running in safe mode, plugins are not enabled automatically.')}
+                </Panel>
+              }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
                 <Button onClick={this.checkUpdate}
                         disabled={this.state.checkingUpdate}

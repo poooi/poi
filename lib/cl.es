@@ -76,12 +76,25 @@ const parseDebugOptions = (arg) => {
   return true
 }
 
+const reSafeMode = /^-(-safe|S)$/i
+
+const checkSafeMode = (arg) => {
+  if (reSafeMode.test(arg)) {
+    global.isSafeMode = true
+    console.warn('Entering SAFE MODE.')
+    return true
+  } else {
+    return false
+  }
+}
+
 // Process Command Line Arguments one by one
 process.argv.forEach((arg, idx) =>{
   switch (true) {
   case preprocessArg(arg, idx): return
   case checkShowVersion(arg): return
   case parseDebugOptions(arg): return
+  case checkSafeMode(arg): return
   // case parseWhateverOtherOptions(arg): return
   // else - unrecognized argument, just ignore.
   }
