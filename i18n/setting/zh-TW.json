@@ -137,5 +137,5 @@
   "Update data": "更新資料",
   "Display Final Stage Notification": "顯示最終戰提示",
   "Safe Mode": "安全模式",
-  "Poi is running in safe mode, plugins are not automatically enabled.": "Poi 運行在安全模式下，擴展程式沒有自動啓用。"
+  "Poi is running in safe mode, plugins are not enabled automatically.": "Poi 運行在安全模式下，擴展程式沒有自動啓用。"
 }
