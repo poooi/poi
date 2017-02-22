@@ -138,6 +138,7 @@ const adjustSize = () => {
   const layout = config.get('poi.layout', 'horizontal')
   const zoomLevel = config.get('poi.zoomLevel', 1)
   const doubleTabbed = config.get('poi.tabarea.double', false)
+  const panelMinSize = config.get('poi.panelMinSize', 1)
   let webviewWidth = config.get('poi.webview.width', -1)
   let webviewHeight = Math.min(window.innerHeight - poiControlHeight, Math.round(webviewWidth / 800.0 * 480.0))
   const useFixedResolution = (webviewWidth !== -1)
@@ -156,16 +157,16 @@ const adjustSize = () => {
   // Set a smaller webview size if it takes too much place
   let cap
   if (layout === 'vertical') {
-    cap = Math.ceil(200 * zoomLevel)
+    cap = Math.ceil(300 * panelMinSize * zoomLevel)
     if (window.innerHeight - webviewHeight < cap) {
       webviewHeight = window.innerHeight - cap
       webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
     }
   } else {
     if (doubleTabbed) {
-      cap = Math.ceil(500 * zoomLevel)
+      cap = Math.ceil(500 * panelMinSize * zoomLevel)
     } else {
-      cap = Math.ceil(375 * zoomLevel)
+      cap = Math.ceil(375 * panelMinSize * zoomLevel)
     }
     if (window.innerWidth - webviewWidth < cap) {
       webviewWidth = window.innerWidth - cap
@@ -240,6 +241,7 @@ window.addEventListener('resize', adjustSize)
 config.on('config.set', (path, value) => {
   switch (path) {
   case 'poi.zoomLevel':
+  case 'poi.panelMinSize':
   case 'poi.tabarea.double':
   case 'poi.webview.width': {
     adjustSize()

@@ -179,6 +179,39 @@ const ZoomingConfig = connect(() => (
               min={0.5} max={2.0} step={0.05} defaultValue={this.props.zoomLevel} />
           </OverlayTrigger>
         </Col>
+        <Col xs={6}>
+          {__('Zoom level')} <strong>{parseInt(this.props.zoomLevel * 100)}%</strong>
+        </Col>
+      </Grid>
+    )
+  }
+})
+
+const PanelMinSizeConfig = connect(() => (
+  (state, props) => ({
+    panelMinSize: get(state.config, 'poi.panelMinSize', 1),
+  })
+))(class zoomingConfig extends Component {
+  static propTypes = {
+    panelMinSize: React.PropTypes.number,
+  }
+  handleChangeZoomLevel = (e) => {
+    config.set('poi.panelMinSize', parseFloat(e.target.value))
+  }
+  render() {
+    return (
+      <Grid>
+        <Col xs={6}>
+          <OverlayTrigger placement='top' overlay={
+              <Tooltip id='displayconfig-zoom'>{__('Minimal size')} <strong>{parseInt(this.props.panelMinSize * 100)}%</strong></Tooltip>
+            }>
+            <FormControl type="range" onInput={this.handleChangeZoomLevel}
+              min={1.0} max={2.0} step={0.05} defaultValue={this.props.panelMinSize} />
+          </OverlayTrigger>
+        </Col>
+        <Col xs={6}>
+          {__('Minimal size')} <strong>{parseInt(this.props.panelMinSize * 100)}%</strong>
+        </Col>
       </Grid>
     )
   }
@@ -316,6 +349,10 @@ class DisplayConfig extends Component {
         <div className="form-group">
           <Divider text={__('Zoom')} />
           <ZoomingConfig />
+        </div>
+        <div className="form-group">
+          <Divider text={__('Panel area')} />
+          <PanelMinSizeConfig />
         </div>
         <div className="form-group">
           <Divider text={__('Flash Quality & Window Mode')} />
