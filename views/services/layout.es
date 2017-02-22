@@ -157,7 +157,7 @@ const adjustSize = () => {
   // Set a smaller webview size if it takes too much place
   let cap
   if (layout === 'vertical') {
-    cap = Math.ceil(300 * panelMinSize * zoomLevel)
+    cap = Math.ceil(200 * panelMinSize * zoomLevel)
     if (window.innerHeight - webviewHeight < cap) {
       webviewHeight = window.innerHeight - cap
       webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
