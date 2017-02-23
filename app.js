@@ -16,7 +16,7 @@ const poiIconPath = path.join(ROOT, 'assets', 'icons', 'poi.ico')
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
-const {error} = require('./lib/utils')
+const {warn, error} = require('./lib/utils')
 const dbg = require('./lib/debug')
 proxy.setMaxListeners(30)
 
@@ -28,7 +28,7 @@ if (config.get('poi.disableHA', false)) {
 
 // check safe mode config
 if (config.get('poi.enterSafeMode', false)) {
-  console.warn('Entering SAFE MODE according to config.')
+  warn('Entering SAFE MODE according to config.')
   global.isSafeMode = true
   config.set('poi.enterSafeMode')
 }

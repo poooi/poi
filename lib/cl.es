@@ -1,6 +1,7 @@
 // Process Command Line Arguments
 import Debug from './debug'
 import { app } from 'electron'
+import { warn } from './utils'
 // At this stage we only support a few flags,
 // so it's OK to process them one by one like this
 // If one day we need to process more command line arguments,
@@ -81,7 +82,7 @@ const reSafeMode = /^-(-safe|S)$/i
 const checkSafeMode = (arg) => {
   if (reSafeMode.test(arg)) {
     global.isSafeMode = true
-    console.warn('Entering SAFE MODE.')
+    warn('Entering SAFE MODE.')
     return true
   } else {
     return false
