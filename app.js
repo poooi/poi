@@ -11,7 +11,8 @@ global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
 const {ROOT} = global
-const poiIconPath = path.join(ROOT, 'assets', 'icons', 'poi.ico')
+const poiIconPath = path.join(ROOT, 'assets', 'icons',
+  process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico')
 
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
@@ -167,6 +168,8 @@ app.on('ready', () => {
         mainWindow.show()
       }
     })
+  } else if (process.platform === 'linux') {
+    global.appIcon = appIcon = new Tray(poiIconPath)
   }
 })
 
