@@ -413,7 +413,7 @@ if (process.platform === 'darwin') {
   win.setMenu(appMenu)
   win.setAutoHideMenuBar(true)
   win.setMenuBarVisibility(false)
-  if (process.platform === 'win32' && window.appIcon) {
+  if (['win32', 'linux'].includes(process.platform) && window.appIcon) {
     window.appIcon.setContextMenu(appMenu)
   }
 }
