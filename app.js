@@ -159,7 +159,7 @@ app.on('ready', () => {
   })
 
   // Tray icon
-  if (process.platform === 'win32') {
+  if (process.platform === 'win32' || process.platform === 'linux') {
     global.appIcon = appIcon = new Tray(poiIconPath)
     appIcon.on('click', () => {
       if (mainWindow.isMinimized()) {
@@ -168,10 +168,6 @@ app.on('ready', () => {
         mainWindow.show()
       }
     })
-  } else if (process.platform === 'linux') {
-    if(config.get('poi.linuxTrayIcon', true)) {
-      global.appIcon = appIcon = new Tray(poiIconPath)
-    }
   }
 })
 
