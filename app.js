@@ -169,7 +169,9 @@ app.on('ready', () => {
       }
     })
   } else if (process.platform === 'linux') {
-    global.appIcon = appIcon = new Tray(poiIconPath)
+    if(config.get('poi.linuxTrayIcon', true)) {
+      global.appIcon = appIcon = new Tray(poiIconPath)
+    }
   }
 })
 

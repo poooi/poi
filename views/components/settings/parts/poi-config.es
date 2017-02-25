@@ -791,6 +791,15 @@ class PoiConfig extends Component {
               :
               null
             }
+            {
+              (process.platform === 'linux') ?
+              <CheckboxLabelConfig
+                label={__('Display tray icon')}
+                configName="poi.linuxTrayIcon"
+                defaultVal={true} />
+              :
+              null
+            }
             <CheckboxLabelConfig
               label={__('Enter safe mode on next startup')}
               configName="poi.enterSafeMode"
