@@ -303,9 +303,11 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     break
   // type: destory_item
   case '@@Response/kcsapi/api_req_kousyou/destroyitem2': {
-    const slotitems = postBody.api_slotitem_ids || []
+    // e.g. api_slotitem_ids = "24004,24020"
+    const slotitems = postBody.api_slotitem_ids || ''
+    const ids = slotitems.split(',')
     let flag = false
-    slotitems.forEach(id =>{
+    ids.forEach(id =>{
       const equip_id = getStore(`info.equips.${id}.api_slotitem_id`)
       const slotitemId = getStore(`const.$equips.${equip_id}.api_type.3`)
       if (slotitemId === 15) {
