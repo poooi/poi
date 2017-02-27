@@ -257,6 +257,13 @@
     description: "近代化改修"
     required: 15
     init: 0
+638: # 対空機銃量産
+  type: 2
+  "destory_item":
+    description: "廃棄"
+    slotitemId: 15
+    required: 6
+    init: 0
 ###
 # Monthly
 ###
@@ -280,4 +287,14 @@
   "practice_win":
     description: "演習勝利"
     required: 7
+    init: 0
+###
+# Quarterly
+###
+822: #沖ノ島海域迎撃戦
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "勝利"
+    maparea: [24]
+    required: 2
     init: 0

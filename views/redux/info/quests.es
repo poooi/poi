@@ -178,6 +178,7 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
       if (!satisfyGoal('shipType', subgoal, options)) return
       if (!satisfyGoal('mission', subgoal, options)) return
       if (!satisfyGoal('maparea', subgoal, options)) return
+      if (!satisfyGoal('slotitemId', subgoal, options)) return
       const subrecord = Object.assign(record[e])
       subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
       records[api_no] = {
@@ -301,10 +302,21 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
         return {...state, records}
     break
   // type: destory_item
-  case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
-    if (updateQuestRecord('destory_item', null, 1))
+  case '@@Response/kcsapi/api_req_kousyou/destroyitem2': {
+    const slotitems = postBody.api_slotitem_ids || []
+    let flag = false
+    slotitems.forEach(id =>{
+      const equip_id = getStore(`info.equips.${id}.api_slotitem_id`)
+      const slotitemId = getStore(`const.$equips.${equip_id}.api_type.3`)
+      if (slotitemId === 15) {
+        flag = updateQuestRecord('destory_item', {slotitemId: slotitemId}, 1) || flag
+      }
+    })
+    
+    if (updateQuestRecord('destory_item', null, 1) || flag)
       return {...state, records}
     break
+  }
   // type: sally (sortie start)
   case '@@Response/kcsapi/api_req_map/start':
     if (updateQuestRecord('sally', null, 1))
