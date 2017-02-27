@@ -53,6 +53,13 @@ if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {
     })
   }
   shell.writeShortcutLink(shortcutPath, option)
+  const safeModeShortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk"
+  const safeModeOption = Object.assign({}, option)
+  Object.assign(safeModeOption, {
+    description: 'poi the KanColle Browser Tool (safe mode)',
+    args: `${argPath} --safe`,
+  })
+  shell.writeShortcutLink(safeModeShortcutPath, safeModeOption)
 }
 
 if (dbg.isEnabled()) {
