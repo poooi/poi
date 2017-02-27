@@ -261,7 +261,7 @@
   type: 2
   "destory_item":
     description: "廃棄"
-    slotitemId: 15
+    slotitemId: [15]
     required: 6
     init: 0
 ###
