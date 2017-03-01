@@ -112,7 +112,9 @@
     "npmRebuild": false,
     "mac": {
       "icon": "assets/icons/poi.icns",
-      "target": "dmg",
+      "target": [
+        "dmg"
+      ],
       "category": "public.app-category.games"
     },
     "dmg": {
@@ -131,7 +133,7 @@
       ]
     },
     "win": {
-      "iconUrl": "https://github.com/poooi/poi/blob/master/assets/icons/poi.ico?raw=true",
+      "icon": "assets/icons/poi.ico",
       "target": [
         "squirrel",
         "7z"
