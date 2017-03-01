@@ -91,6 +91,7 @@
     "coffeelint": "^1.11.1",
     "electron": "^1.4.15",
     "electron-builder": "^14.5.3",
+    "electron-builder-squirrel-windows": "^15.0.0",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
