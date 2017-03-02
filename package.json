@@ -4,7 +4,7 @@
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --harmony --compilers coffee:coffee-script/register",
+    "test": "mocha test",
     "deploy": "gulp deploy",
     "build": "gulp build && build",
     "build_win": "gulp build && build --win --x64 && build --win --ia32",
@@ -88,6 +88,8 @@
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-eslint": "^7.0.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "coffeelint": "^1.11.1",
     "electron": "^1.4.15",
     "electron-builder": "^14.5.3",
@@ -97,11 +99,12 @@
     "eslint-plugin-react": "^6.3.0",
     "git-archive": "^0.1.4",
     "gulp": "^3.9.1",
-    "mocha": "^3.0.1",
+    "mocha": "^3.2.0",
     "mocha-lcov-reporter": "^1.0.0",
     "node-7z": "^0.4.0",
     "node-unzip-2": "^0.2.1",
     "rimraf": "^2.5.4",
+    "spectron": "^3.6.0",
     "tar-fs": "^1.10.0",
     "walk": "^2.3.9"
   },
