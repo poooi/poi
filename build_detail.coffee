@@ -81,7 +81,7 @@ theme_list =
   darklykai:  'https://raw.githubusercontent.com/magicae/sleepy/master/dist/sleepy.css'
 
 get_flash_url = (platform) ->
-  if process.env.TRAVIS || USE_GITHUB_FLASH_MIRROR
+  if USE_GITHUB_FLASH_MIRROR
     "https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/#{platform}.zip"
   else
     "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
