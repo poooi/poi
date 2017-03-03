@@ -15,17 +15,9 @@ const flashPath = (() => {
   }
 })()
 
-const checkFlash = () => {
-  try {
-    fs.accessSync(flashPath, fs.R_OK | fs.W_OK)
-    return true
-  } catch (e) {
-    return false
-  }
-}
 
 describe('Flash', () => {
   it('should exist', () => {
-    assert.equal(checkFlash(), true)
+    fs.accessSync(flashPath, fs.R_OK | fs.W_OK)
   })
 })
