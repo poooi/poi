@@ -13,7 +13,7 @@ import './services/welcome'
 import './services/do-you-know'
 import './services/modernization-delta'
 import './services/development-prophecy'
-import './services/sortieDangerousCheck'
+import './services/sortie-dangerous-check'
 import './services/sortieFreeSlotCheck'
 
 const refreshFlash = () =>
