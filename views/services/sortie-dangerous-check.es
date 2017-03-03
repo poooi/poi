@@ -35,7 +35,7 @@ window.addEventListener('game.response', ({detail: {path, body, postBody}}) => {
           if (slotId === -1) {
             return
           }
-          if (parseInt((($equips[(equips[slotId] || {}).api_slotitem_id] || {}).api_type || [])[3]) === 14) {
+          if (parseInt(((($equips || {})[((equips || {})[slotId] || {}).api_slotitem_id] || {}).api_type || [])[3]) === 14) {
             safe = true
           }
         })
