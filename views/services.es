@@ -10,9 +10,9 @@ const WindowManager = remote.require('./lib/window')
 import './services/update'
 import './services/layout'
 import './services/welcome'
-import './services/doyouknow'
+import './services/do-you-know'
 import './services/modernization-delta'
-import './services/developmentProphecy'
+import './services/development-prophecy'
 import './services/sortieDangerousCheck'
 import './services/sortieFreeSlotCheck'
 
