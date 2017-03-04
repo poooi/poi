@@ -6,7 +6,7 @@ dist: trusty
 language: c
 
 node_js:
-  - "6"
+  - "7"
 
 matrix:
   include:

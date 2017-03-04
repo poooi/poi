@@ -1,5 +1,3 @@
-version: 6.3.1-b.{build}
-
 platform:
   - x64
 
@@ -13,7 +11,7 @@ init:
   - git config --global core.autocrlf input
 
 install:
-  - ps: Install-Product node 6 x64
+  - ps: Install-Product node 7 x64
   - git reset --hard HEAD
   - npm install npm -g
   - npm install --silent
