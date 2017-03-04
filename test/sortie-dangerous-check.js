@@ -47,18 +47,22 @@ describe('Validate sortie dangerous check', () => {
     }
   }
   beforeEach(reset)
+
   it('normal condition without warning', () => {
     assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
   })
+
   it('heavy damage for non sortie fleet is safe', () => {
     ships[9].api_nowhp = 8
     assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
   })
+
   it('heavy damage for sortie fleet is dangerous', () => {
     ships[2].api_nowhp = 8
     assert.equal(1, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
     assert.equal('Lv. 2 - 睦月', damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips})[0])
   })
+
   it('heavy damage for sortie fleet flag ship is safe', () => {
     ships[1].api_nowhp = 8
     assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
