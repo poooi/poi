@@ -103,7 +103,6 @@ const onRequest = (e) => {
     // may be delayed to when ship is deleted from _ships
     const ships = clone(_ships)
     const sourceShips = api_id_items.split(',').map(id_item => {
-      console.log(id_item, ships[id_item])
       return (ships[id_item] || {}).api_ship_id
     })
     requestRecord = calcDisplayText(_ships[api_id], sourceShips)
