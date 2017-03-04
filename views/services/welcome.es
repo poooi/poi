@@ -8,7 +8,7 @@ const __n = window.i18n.others.__n.bind(i18n.others)
 const dontShowAgain = () =>
   config.set('poi.first', POI_VERSION)
 
-if (config.get('poi.first', '0.0.0') != POI_VERSION){
+if (config.get('poi.first', '0.0.0') != POI_VERSION) {
   const isHan = ['zh-CN', 'zh-TW'].includes(window.language)
   const isEn = window.language === 'en-US'
   const isCN = window.language === 'zh-CN'
