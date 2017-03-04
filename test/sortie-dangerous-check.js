@@ -20,7 +20,7 @@ const randomSetSlot = (ship) => {
 }
 
 describe('Validate sortie dangerous check', () => {
-  beforeEach(() => {
+  const reset = () => {
     fleets = range(0, 4).map(id => ({api_ship: range(id * 6 + 1 , 6 * id + 7 )}))
     sortieStatus = [true, false, false, false]
     escapedPos = []
@@ -45,7 +45,8 @@ describe('Validate sortie dangerous check', () => {
         api_slotitem_id: 43, // 応急修理女神
       },
     }
-  })
+  }
+  beforeEach(reset)
   it('normal condition without warning', () => {
     assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
   })
@@ -62,15 +63,20 @@ describe('Validate sortie dangerous check', () => {
     ships[1].api_nowhp = 8
     assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
   })
-  range(LOOP_TIMES).forEach(time => {
-    it(`heavy damage for sortie fleet is dangerous (many ships version)-${time}`, () => {
+
+  it(`heavy damage for sortie fleet is dangerous (many ships version)`, () => {
+    range(LOOP_TIMES).forEach(time => {
+      reset()
       const sampleCount = random(1, 5)
       sampleSize(range(2, 7), sampleCount).forEach(id => ships[id].api_nowhp = 8)
       assert.equal(sampleCount, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
     })
+  })
 
 
-    it(`heavy damage for ships with personel or goddess is safe-${time}`, () => {
+  it(`heavy damage for ships with personel or goddess is safe`, () => {
+    range(LOOP_TIMES).forEach(time => {
+      reset()
       const damageCount = random(1, 5)
       const repairCount = random(1, damageCount)
       const damages = sampleSize(range(2, 7), damageCount)
@@ -78,8 +84,11 @@ describe('Validate sortie dangerous check', () => {
       sampleSize(damages, repairCount).forEach(id => randomSetSlot(ships[id]))
       assert.equal((damageCount - repairCount), damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
     })
+  })
 
-    it(`heavy damage for ships in combined fleets-${time}`, () => {
+  it(`heavy damage for ships in combined fleets`, () => {
+    range(LOOP_TIMES).forEach(time => {
+      reset()
       sortieStatus = [true, true, false, false]
       let damageCount = random(1, 5)
       let repairCount = random(1, damageCount)
@@ -96,7 +105,9 @@ describe('Validate sortie dangerous check', () => {
       sampleSize(damages, repairCount).forEach(id => randomSetSlot(ships[id]))
 
       const count = mainCount + escortCount
+
       assert.equal(count, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
     })
   })
+
 })
