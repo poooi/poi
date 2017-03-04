@@ -10,11 +10,11 @@ const WindowManager = remote.require('./lib/window')
 import './services/update'
 import './services/layout'
 import './services/welcome'
-import './services/doyouknow'
+import './services/do-you-know'
 import './services/modernization-delta'
-import './services/developmentProphecy'
-import './services/sortieDangerousCheck'
-import './services/sortieFreeSlotCheck'
+import './services/development-prophecy'
+import './services/sortie-dangerous-check'
+import './services/sortie-free-slot-check'
 
 const refreshFlash = () =>
   $('kan-game webview').executeJavaScript(`
