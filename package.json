@@ -89,7 +89,7 @@
     "asar": "^0.13.0",
     "babel-eslint": "^7.0.0",
     "coffeelint": "^1.11.1",
-    "electron": "^1.4.15",
+    "electron": "~1.4.15",
     "electron-builder": "^14.5.3",
     "electron-builder-squirrel-windows": "^15.0.0",
     "eslint": "^3.2.2",
