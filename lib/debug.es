@@ -6,6 +6,9 @@
 // when certain function is called through the dev-tool console.
 // (e.g., shows "Debug {enabled: true}" instead of "undefined")
 // It should NOT be used for any other purpose.
+
+const colors = require('colors/safe')
+
 class Debug {
   static wrap(o) {
     if (typeof o === 'string') {
@@ -35,13 +38,6 @@ const definePureVirtual = (obj, name, defaultReturn = false) =>
     writable: true,
   }
 )
-
-const virtualFunction = (name, defaultReturn = false) => {
-  return () => {
-    console.error(`[ERROR] Child class must implement "${name}!"`)
-    return defaultReturn
-  }
-}
 
 class IDebugger {
   get log() {
@@ -96,9 +92,9 @@ class DebuggerBase extends IDebugger {
   }
 
 
-  setEnabled(b) {
+  setEnabled(b = true) {
     enabled = b
-    Debug.wrap({enabled: b})
+    return Debug.wrap({enabled: b})
   }
 
   enable() {
@@ -109,7 +105,7 @@ class DebuggerBase extends IDebugger {
     this.setEnabled(false)
   }
 
-  isEnabled = () => enabled
+  isEnabled = () => enabled || false
 
   validateTagName(tag) {
     const valid = typeof tag === 'string' && tag.length > 0
@@ -209,9 +205,9 @@ Object.defineProperty(DebuggerBase.prototype, 'h', {
 
 // For the Browser Process
 class DebuggerBrowser extends DebuggerBase {
-  colors = require('colors/safe')
-  _getLogFunc = (prefix) =>
-    console.log.bind(console, this.colors.cyan("#{prefix} %s"))
+  _getLogFunc(prefix) {
+    return console.log.bind(console, colors.cyan(`${prefix} %s`))
+  }
 
   init() {
     if (this.isInitialised()) {
@@ -261,7 +257,7 @@ class DebuggerRenderer extends DebuggerBase {
   style = 'background: linear-gradient(30deg, cyan, white 3ex)'
   _getLogFunc(prefix) {
     if (prefix != null) {
-      return console.debug.bind(console, "%c#{prefix}", this.style)
+      return console.debug.bind(console, `%c${prefix}`, this.style)
     } else {
       return console.debug.bind(console)
     }
