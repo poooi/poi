@@ -16,7 +16,6 @@ export const checkUpdate = async () => {
         'User-Agent': `poi v${POI_VERSION}`,
       },
     })
-    console.log(response, body)
     if (response.statusCode == 200){
       return body
     } else {
