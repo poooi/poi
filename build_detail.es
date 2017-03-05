@@ -399,7 +399,7 @@ export const installPluginsAsync = async (poi_version) => {
   const building_root = path.join(build_root, "plugins")
   const release_dir = build_root
 
-  const packages = await fs.readJson(plugin_json_path)
+  const packages = await fs.readJsonAsync(plugin_json_path)
 
   const plugin_names = Object.keys(packages)
 
@@ -469,7 +469,7 @@ export const buildAsync = async (poi_version, dontRemove) => {
 
   // Rewrite package.json for build
   const packagePath = path.join(stage2_app, 'package.json')
-  const packageData = await fs.readJson(packagePath)
+  const packageData = await fs.readJsonAsync(packagePath)
   delete packageData.build
   delete packageData.devDependencies
   await fs.removeAsync(packagePath)
