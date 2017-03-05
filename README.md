@@ -45,7 +45,7 @@ brew update && brew cask install poi
 
 ## Run
 
-First, get the __latest__ __x64__ version of [Node.js](https://nodejs.org).
+First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org).
 
 ```bash
 git clone https://github.com/poooi/poi && cd poi
