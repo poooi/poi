@@ -89,8 +89,8 @@ const theme_list = {
 
 const get_flash_url = (platform) =>
   USE_GITHUB_FLASH_MIRROR
-  ? "https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/#{platform}.zip"
-  : "http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/#{platform}.zip"
+  ? `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
+  : `http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/${platform}.zip`
 
 const target_list = [
   // Files
@@ -107,7 +107,7 @@ const target_list = [
 // *** TOOLS & COMMON METHODS ***
 const downloadAsync = async (url, dest_dir, filename = path.basename(url), description) => {
   log(`Downloading ${description} from ${url}`)
-  await fs.ensureDir(dest_dir)
+  await fs.ensureDirAsync(dest_dir)
   const dest_path = path.join(dest_dir, filename)
   try {
     await fs.accessAsync(dest_path, fs.R_OK)
@@ -276,7 +276,7 @@ const runScriptReturnStdoutAsync = (script_path, args, options) =>
 const npmInstallAsync = async (tgt_dir, args=[]) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   log(`Installing npm for ${tgt_dir}`)
-  await fs.ensureDir(tgt_dir)
+  await fs.ensureDirAsync(tgt_dir)
   await runScriptAsync(npm_exec_path, ['install', '--registry', npm_server].concat(args),{
     cwd: tgt_dir,
   })
@@ -358,13 +358,13 @@ const checkNpmVersion = async () => {
 
 const installPluginsTo = async (plugin_names, install_root, tarball_root) => {
   try{
-    await fs.remove(install_root)
-    await fs.remove(tarball_root)
+    await fs.removeAsync(install_root)
+    await fs.removeAsync(tarball_root)
   } catch (e) {
     console.log(e.stack)
   }
-  await fs.ensureDir(install_root)
-  await fs.ensureDir(tarball_root)
+  await fs.ensureDirAsync(install_root)
+  await fs.ensureDirAsync(tarball_root)
 
   // Install plugins
   await npmInstallAsync(install_root, ['--production', '--prefix', '.'].concat(plugin_names))
@@ -432,19 +432,19 @@ export const buildAsync = async (poi_version, dontRemove) => {
   // Clean files
   try {
     if (!dontRemove) {
-      await fs.remove(building_root)
+      await fs.removeAsync(building_root)
     }
   } catch (e) {
     console.log(e.stack)
   }
   try {
-    await fs.remove(stage1_app)
+    await fs.removeAsync(stage1_app)
   } catch (e) {
     console.log(e.stack)
   }
-  await fs.ensureDir(stage1_app)
-  await fs.ensureDir(stage2_app)
-  await fs.ensureDir(path.join(stage1_app, 'node_modules'))
+  await fs.ensureDirAsync(stage1_app)
+  await fs.ensureDirAsync(stage2_app)
+  await fs.ensureDirAsync(path.join(stage1_app, 'node_modules'))
 
   // Stage1: Everything downloaded and translated
   await gitArchiveAsync(tar_path, stage1_app)
@@ -459,7 +459,7 @@ export const buildAsync = async (poi_version, dontRemove) => {
 
   // Clean files
   try {
-    await fs.remove(stage1_app)
+    await fs.removeAsync(stage1_app)
   } catch (e) {
     console.log(e.stack)
   }
@@ -468,7 +468,7 @@ export const buildAsync = async (poi_version, dontRemove) => {
   const packageData = await fs.readJson(packagePath)
   delete packageData.build
   delete packageData.devDependencies
-  await fs.remove(packagePath)
+  await fs.removeAsync(packagePath)
   await fs.writeJson(packagePath, packageData)
 
   log ("Done.")
@@ -482,7 +482,7 @@ export const getFlashAsync = async (poi_version) => {
   const build_root = path.join(__dirname, build_dir_name)
   const download_dir = path.join(build_root, download_dir_name)
   const platform = `${process.platform}-${process.arch}`
-  await fs.remove(path.join(__dirname, 'PepperFlash'))
+  await fs.removeAsync(path.join(__dirname, 'PepperFlash'))
   const flash_dir = path.join(__dirname, 'PepperFlash', platform_to_paths[platform])
   await installFlashAsync(platform, download_dir, flash_dir)
 }
@@ -491,7 +491,7 @@ export const getFlashAllAsync = async (poi_version) => {
   const build_root = path.join(__dirname, build_dir_name)
   const download_dir = path.join(build_root, download_dir_name)
   const platforms = ['win32-ia32', 'win32-x64', 'darwin-x64', 'linux-x64']
-  await fs.remove (path.join (__dirname, 'PepperFlash'))
+  await fs.removeAsync(path.join (__dirname, 'PepperFlash'))
   const tasks = platforms.map(platform => {
     const flash_dir = path.join(__dirname, 'PepperFlash', platform_to_paths[platform])
     return installFlashAsync(platform, download_dir, flash_dir)
