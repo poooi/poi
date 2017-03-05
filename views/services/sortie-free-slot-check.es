@@ -11,7 +11,11 @@ window.addEventListener('game.response',
         const minShipSlots = config.get('poi.mapStartCheck.ship.minFreeSlots', 4)
         const shipSlots = basic.api_max_chara - Object.keys(getStore('info.ships')).length
         if (shipSlots < minShipSlots) {
-          errMsg = errMsg + __("Attention! Ship Slot has only %s left.", shipSlots)
+          if (shipSlots > 0){
+            errMsg = errMsg + __("Only %s free ship slot(s) left. ", shipSlots)
+          } else {
+            errMsg = errMsg + __("Ship slot is full. ")
+          }
         }
       }
       if (config.get('poi.mapStartCheck.item.enable', false)) {
@@ -19,18 +23,13 @@ window.addEventListener('game.response',
         const equipSlots = basic.api_max_slotitem - Object.keys(getStore('info.equips')).length
         if (equipSlots < minEquipSlots) {
           if (equipSlots > 0){
-            errMsg = errMsg + __("Attention! Only %d free item slot(s) left!", equipSlots)
+            errMsg = errMsg + __("Only %d free equip slot(s) left. ", equipSlots)
           } else {
-            errMsg = errMsg + __("Attention! Item Slot is full.")
+            errMsg = errMsg + __("Equip slot is full. ")
           }
         }
       }
       if (errMsg.length > 0) {
-        if(window.language === 'zh-CN' || window.language === 'zh-TW') {
-          errMsg = errMsg + __("Sally Attention!")
-        } else {
-          errMsg = __("Sally Attention!") + errMsg
-        }
         setTimeout(() => error(errMsg)
           , 1000)
       }
