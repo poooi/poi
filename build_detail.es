@@ -45,7 +45,7 @@ const config = (() => {
     : '/var/local')
   global.APPDATA_PATH = path.join(system_appdata_path, 'poi')
   global.EXROOT = global.APPDATA_PATH
-  require('./lib/config')
+  return require('./lib/config')
 })()
 
 let use_taobao_mirror = config.get('buildscript.useTaobaoMirror', true)
