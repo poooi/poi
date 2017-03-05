@@ -285,7 +285,7 @@ const npmInstallAsync = async (tgt_dir, args=[]) => {
 
 // *** METHODS ***
 const filterCopyAppAsync = async (stage1_app, stage2_app) =>
-  await Promise.all((() => {
+  Promise.all((() => {
     const jobs = []
     for (const target of target_list) {
       jobs.push(fs.copyAsync(path.join(stage1_app, target), path.join(stage2_app, target), {
@@ -450,12 +450,14 @@ export const buildAsync = async (poi_version, dontRemove) => {
   await gitArchiveAsync(tar_path, stage1_app)
   await downloadThemesAsync(theme_root)
   await compileToJsAsync(stage1_app, false)
+  log('stage 1 finished')
 
   // Stage2: Filtered copy
   await filterCopyAppAsync(stage1_app, stage2_app)
   if (!dontRemove){
     await npmInstallAsync(stage2_app, ['--production'])
   }
+  log('stage 2 finished')
 
   // Clean files
   try {
@@ -463,6 +465,8 @@ export const buildAsync = async (poi_version, dontRemove) => {
   } catch (e) {
     console.log(e.stack)
   }
+  log('file cleaned')
+
   // Rewrite package.json for build
   const packagePath = path.join(stage2_app, 'package.json')
   const packageData = await fs.readJson(packagePath)
