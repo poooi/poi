@@ -280,7 +280,7 @@ class DebuggerRenderer extends DebuggerBase {
     const relist = this.list.bind(this)
     const output = new DevToolsBooster
     output['DEBUG'] = new Booster(this, 'main', relist)
-    for (const opt of this.h) {
+    for (const opt of Object.keys(this.h)) {
       if (opt === 'main') {
         continue
       }
