@@ -473,8 +473,11 @@ export const buildAsync = async (poi_version, dontRemove) => {
   delete packageData.build
   delete packageData.devDependencies
   await fs.removeAsync(packagePath)
-  await fs.writeJson(packagePath, packageData)
-
+  try {
+    await fs.writeJsonAsync(packagePath, packageData)
+  } catch (e) {
+    console.log(e.stack)
+  }
   log ("Done.")
 }
 
