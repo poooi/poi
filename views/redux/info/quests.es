@@ -314,9 +314,12 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
         flag = updateQuestRecord('destory_item', {slotitemId: slotitemId}, 1) || flag
       }
     })
-    
-    if (updateQuestRecord('destory_item', null, 1) || flag)
+
+    if (flag) {
       return {...state, records}
+    } else if (updateQuestRecord('destory_item', null, 1)) {
+      return {...state, records}
+    }
     break
   }
   // type: sally (sortie start)
