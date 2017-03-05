@@ -2,13 +2,12 @@
 //                                 Debug Suite                                  //
 //////////////////////////////////////////////////////////////////////////////////
 
-// This class is only for the purpose of giving some feedbacks
+const colors = require('colors/safe')
+
+// Debug wrapper class is only for the purpose of beautifying
 // when certain function is called through the dev-tool console.
 // (e.g., shows "Debug {enabled: true}" instead of "undefined")
 // It should NOT be used for any other purpose.
-
-const colors = require('colors/safe')
-
 class Debug {
   static wrap(o) {
     if (typeof o === 'string') {
@@ -23,12 +22,17 @@ class Debug {
 
 // Globals
 console.assert(process, "process doesn't exist")
+
+// The debug instance depends on Electron process type
 const isRenderer = (process || {}).type === 'renderer'
 
+// debugger enable flag, and extra options set
 let enabled = false
 const extraOpts = new Set()
 
 const doNothing = () => {}
+
+// helper method to assign function to a class
 const definePureVirtual = (obj, name, defaultReturn = false) =>
   Object.defineProperty(obj, name, {
     value: () => {
@@ -39,6 +43,7 @@ const definePureVirtual = (obj, name, defaultReturn = false) =>
   }
 )
 
+// the very base class
 class IDebugger {
   get log() {
     if (this.isEnabled()) {
@@ -57,6 +62,7 @@ class IDebugger {
   }
 }
 
+// add fallback function for IDebugger
 definePureVirtual(IDebugger.prototype, 'isEnabled')
 definePureVirtual(IDebugger.prototype, '_log')
 
@@ -196,8 +202,10 @@ class DebuggerBase extends IDebugger {
   }
 }
 
+// add fallback function for _getLogFunc
 definePureVirtual(DebuggerBase.prototype, '_getLogFunc', doNothing)
 
+// manually set h to be enumerable
 Object.defineProperty(DebuggerBase.prototype, 'h', {
   value: new ExtraDebugOptions,
   enumerable: true,
@@ -226,6 +234,7 @@ class DebuggerBrowser extends DebuggerBase {
 // Helper classes to make life easier with DevTools
 class DevToolsBooster {}
 
+// add two clickable method to enable/disable
 class Booster {
   constructor(dbgr, type, relistFunc) {
     this.Enabled = dbgr.isEnabled()
