@@ -306,18 +306,22 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     // e.g. api_slotitem_ids = "24004,24020"
     const slotitems = postBody.api_slotitem_ids || ''
     const ids = slotitems.split(',')
-    let flag = false
+    // now it only supports gun quest, slotitemId = $ietm.api_type[3]
+    let gunCount = 0
     ids.forEach(id =>{
-      const equip_id = getStore(`info.equips.${id}.api_slotitem_id`)
-      const slotitemId = getStore(`const.$equips.${equip_id}.api_type.3`)
+      const equipId = getStore(`info.equips.${id}.api_slotitem_id`)
+      const slotitemId = getStore(`const.$equips.${equipId}.api_type.3`)
       if (slotitemId === 15) {
-        flag = updateQuestRecord('destory_item', {slotitemId: slotitemId}, 1) || flag
+        gunCount += 1
       }
     })
 
-    if (flag) {
-      return {...state, records}
-    } else if (updateQuestRecord('destory_item', null, 1)) {
+    let flag = false
+    if (gunCount > 0) {
+      flag = updateQuestRecord('destory_item', {slotitemId: 15}, gunCount)
+    }
+
+    if (updateQuestRecord('destory_item', null, 1)|| flag) {
       return {...state, records}
     }
     break
