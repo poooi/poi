@@ -6,7 +6,7 @@ window.addEventListener('game.response',
   ({detail: {path, body}}) => {
     if (path === '/kcsapi/api_get_member/mapinfo') {
       const basic = getStore('info.basic')
-      let errMsg
+      let errMsg = ''
       if (config.get('poi.mapStartCheck.ship.enable', false)) {
         const minShipSlots = config.get('poi.mapStartCheck.ship.minFreeSlots', 4)
         const shipSlots = basic.api_max_chara - Object.keys(getStore('info.ships')).length
@@ -20,13 +20,17 @@ window.addEventListener('game.response',
         if (equipSlots < minEquipSlots) {
           if (equipSlots > 0){
             errMsg = errMsg + __("Attention! Only %d free item slot(s) left!", equipSlots)
-          }
-          else {
+          } else {
             errMsg = errMsg + __("Attention! Item Slot is full.")
           }
         }
       }
       if (errMsg.length > 0) {
+        if(window.language === 'zh-CN' || window.language === 'zh-TW') {
+          errMsg = errMsg + __("Sally Attention!")
+        } else {
+          errMsg = __("Sally Attention!") + errMsg
+        }
         setTimeout(() => error(errMsg)
           , 1000)
       }
