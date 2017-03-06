@@ -10,7 +10,7 @@ const fs = Promise.promisifyAll(require('fs-extra'))
 const gulp = require('gulp')
 const n7z = require('node-7z')
 const semver = require('semver')
-const babel = require('babel-core')
+const babel = Promise.promisifyAll(require('babel-core'))
 const {compile} = require('coffee-react')
 const asar = require('asar')
 const walk = require('walk')
@@ -297,32 +297,29 @@ const filterCopyAppAsync = async (stage1_app, stage2_app) =>
 
 const compileToJsAsync = (app_dir, dontRemove) => {
   log(`Compiling ${app_dir}`)
-  const targetExts = ['.coffee', '.cjsx', '.es']
+  const targetExts = ['.es']
 
   const options = {
     followLinks: false,
     filters: ['node_modules', 'assets', path.join(__dirname, 'components')],
   }
 
+  const {presets, plugins} = require('./babel.config')
+
   return new Promise ((resolve) => {
     const tasks = []
     walk.walk(app_dir, options)
     .on('file', (root, fileStats, next) => {
       const extname = path.extname(fileStats.name).toLowerCase()
-      log(`${fileStats.name} / ${extname} / ${targetExts.includes(extname)}`)
       if (targetExts.includes(extname)) {
         tasks.push(async () => {
           const src_path = path.join(root, fileStats.name)
           const tgt_path = changeExt(src_path, '.js')
-          const src = await fs.readFileAsync(src_path, 'utf-8')
+          // const src = await fs.readFileAsync(src_path, 'utf-8')
           let tgt
           try {
-            if (extname === '.es'){
-              const {presets, plugins} = require('./babel.config')
-              tgt = babel.transform(src, {presets, plugins}).code
-            } else {
-              tgt = compile(src, {bare: true})
-            }
+            const result = await babel.transformFileAsync(src_path, {presets, plugins})
+            tgt = result.code
           } catch (e) {
             log(`Compiling ${src_path} failed: ${e}`)
             return
@@ -337,9 +334,8 @@ const compileToJsAsync = (app_dir, dontRemove) => {
       next()
     })
     .on('end', async () => {
-      log(`File to compile: ${tasks.length} files`)
-      resolve(await Promise.all(tasks))
-      log('Compiling ended')
+      log(`Files to compile: ${tasks.length} files`)
+      resolve(await Promise.all(tasks.map(f => f())))
     })
   })
 }
@@ -463,7 +459,7 @@ export const buildAsync = async (poi_version, dontRemove) => {
   log('stage 2 finished')
 
   // Clean files
-  
+
   await fs.removeAsync(stage1_app)
   log('file cleaned')
 
