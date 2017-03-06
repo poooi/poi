@@ -309,6 +309,7 @@ const compileToJsAsync = (app_dir, dontRemove) => {
     walk.walk(app_dir, options)
     .on('file', (root, fileStats, next) => {
       const extname = path.extname(fileStats.name).toLowerCase()
+      log(`${fileStats.name} / ${extname} / ${targetExts.includes(extname)}`)
       if (targetExts.includes(extname)) {
         tasks.push(async () => {
           const src_path = path.join(root, fileStats.name)
@@ -336,9 +337,9 @@ const compileToJsAsync = (app_dir, dontRemove) => {
       next()
     })
     .on('end', async () => {
-      log('Compiling ended')
+      log(`File to compile: ${tasks.length} files`)
       resolve(await Promise.all(tasks))
-      log('compilation completes')
+      log('Compiling ended')
     })
   })
 }
