@@ -2,10 +2,9 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 
 const {unzip, sum, clone} = require('lodash')
-const {$ships, _ships, i18n, config} = window
+const {i18n, config} = window
 
 const __ = window.i18n.others.__.bind(i18n.others)
-const __n = window.i18n.others.__n.bind(i18n.others)
 
 const nameStatuses = [
   __('Firepower'),
@@ -39,7 +38,7 @@ const calcMaxDelta = (lst) => {
 // Given sourceShips, the maximum statuses addable regardless of status cap
 const calcMaxDeltas = (sourceShips) => {
   const maxFourDeltas =
-    unzip(sourceShips.map(id => ($ships[id] || {} ).api_powup || [0, 0, 0, 0]))
+    unzip(sourceShips.map(id => (window.$ships[id] || {} ).api_powup || [0, 0, 0, 0]))
     .map(delta => calcMaxDelta(delta))
   const maxLuck = Math.ceil(sum(sourceShips.map(id => luckProviders(id))) / 5 - 0.0001)
   return maxFourDeltas.concat([maxLuck])
@@ -48,7 +47,7 @@ const calcMaxDeltas = (sourceShips) => {
 const apiStatuses = ['api_houg', 'api_raig', 'api_tyku', 'api_souk', 'api_luck']
 
 const calcRemainingStatuses = (ship) =>
-  [...Array(4).keys()].map(i =>
+  [...Array(5).keys()].map(i =>
     ship[apiStatuses[i]][1] - (ship[apiStatuses[i]][0] + ship.api_kyouka[i])
   )
 
@@ -66,7 +65,7 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
         <span>
         {__('Modernization succeeded! ')}
         {
-          [...Array(4).keys()].map(i => {
+          [...Array(5).keys()].map(i => {
             const delta = kyoukaAfter[i] - kyoukaBefore[i]
             const maxDelta = maxDeltas[i]
             const remaining = remainingAfter[i]
@@ -101,11 +100,10 @@ const onRequest = (e) => {
     const {api_id, api_id_items} = e.detail.body
     // Read the status before modernization, use a copy because map's callback
     // may be delayed to when ship is deleted from _ships
-    const ships = clone(_ships)
     const sourceShips = api_id_items.split(',').map(id_item => {
-      return (ships[id_item] || {}).api_ship_id
+      return (window._ships[id_item] || {}).api_ship_id
     })
-    requestRecord = calcDisplayText(_ships[api_id], sourceShips)
+    requestRecord = calcDisplayText(window._ships[api_id], sourceShips)
   }
 }
 
@@ -117,7 +115,7 @@ const onResponse = (e) => {
       if (requestRecord != null) {
         requestRecord.then((calcText) =>
           setTimeout(window.success, 100, calcText({
-            ...$ships[target.api_ship_id],
+            ...window.$ships[target.api_ship_id],
             ...target,
           })))
       }
