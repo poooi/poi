@@ -7,12 +7,9 @@ const {promisify} = Promise
 const request = Promise.promisifyAll(require('request'))
 const requestAsync = promisify(request, {multiArgs: true})
 const fs = Promise.promisifyAll(require('fs-extra'))
-const gulp = require('gulp')
 const n7z = require('node-7z')
 const semver = require('semver')
 const babel = Promise.promisifyAll(require('babel-core'))
-const {compile} = require('coffee-react')
-const asar = require('asar')
 const walk = require('walk')
 const tar = require('tar-fs')
 const child_process = require('child_process')
@@ -27,10 +24,10 @@ const DONT_PACK_APP_IF_EXISTS = false
 const USE_GITHUB_FLASH_MIRROR = false
 
 // *** CONSTANTS ***
-const build_dir_name = 'build'
-const download_dir_name = 'download'
-const release_dir_name = 'release'
-const platform_to_paths = {
+const BUILD_DIR_NAME = 'build'
+const DOWNLOADDIR_NAME = 'download'
+const REALEASE_DIR_NAME = 'release'
+const PLATFORM_TO_PATHS = {
   'win32-ia32': 'win-ia32',
   'win32-x64': 'win-x64',
   'darwin-x64': 'mac-x64',
@@ -39,27 +36,26 @@ const platform_to_paths = {
 const config = (() => {
   // global.* variables are assigned to adapt for requiring 'config'
   global.ROOT = __dirname
-  const system_appdata_path = process.env.APPDATA || (
+  const SYS_APPDATA_PATH = process.env.APPDATA || (
     process.platform == 'darwin'
     ? path.join(process.env.HOME, 'Library/Application Support')
     : '/var/local')
-  global.APPDATA_PATH = path.join(system_appdata_path, 'poi')
+  global.APPDATA_PATH = path.join(SYS_APPDATA_PATH, 'poi')
   global.EXROOT = global.APPDATA_PATH
   return require('./lib/config')
 })()
 
-let use_taobao_mirror = config.get('buildscript.useTaobaoMirror', true)
+let USE_TAOBAO_MIRROR = config.get('buildscript.useTaobaoMirror', true)
 if (process.env.TRAVIS) {
-  use_taobao_mirror = false
+  USE_TAOBAO_MIRROR = false
 }
-const npm_exec_path = path.join(__dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js')
+const NPM_EXEC_PATH = path.join(__dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
-const plugin_json_path = path.join(global.ROOT, 'assets', 'data', 'plugin.json')
-const mirror_json_path = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
+const PLUGIN_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'plugin.json')
+const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
 
-// see if async IIFE works
-const npm_server = (() => {
-  const mirrors = fs.readJsonSync(mirror_json_path)
+const NPM_SERVER = (() => {
+  const mirrors = fs.readJsonSync(MIRROR_JSON_PATH)
   // Don't want to mess with detecting system language here without window.navigator
   const language = config.get('poi.language', 'zh-CN')
   const primaryServer = language == 'zh-CN' ? 'taobao' : 'npm'
@@ -70,9 +66,9 @@ const npm_server = (() => {
   return mirrors[server].server
 })()
 
-log(`Using npm mirror ${npm_server}`)
+log(`Using npm mirror ${NPM_SERVER}`)
 
-const theme_list = {
+const THEME_LIST = {
   darkly:     'https://bootswatch.com/darkly/bootstrap.css',
   flatly:     'https://bootswatch.com/flatly/bootstrap.css',
   lumen:      'https://bootswatch.com/lumen/bootstrap.css',
@@ -87,12 +83,12 @@ const theme_list = {
   darklykai:  'https://raw.githubusercontent.com/magicae/sleepy/master/dist/sleepy.css',
 }
 
-const get_flash_url = (platform) =>
+const getFlashUrl = (platform) =>
   USE_GITHUB_FLASH_MIRROR
   ? `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
   : `http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/${platform}.zip`
 
-const target_list = [
+const TARGET_LIST = [
   // Files
   'app.js',
   'index.html', 'index.js', 'LICENSE', 'package.json', 'babel.config.js',
@@ -105,13 +101,13 @@ const target_list = [
 ]
 
 // *** TOOLS & COMMON METHODS ***
-const downloadAsync = async (url, dest_dir, filename = path.basename(url), description) => {
+const downloadAsync = async (url, destDir, filename = path.basename(url), description) => {
   log(`Downloading ${description} from ${url}`)
-  await fs.ensureDirAsync(dest_dir)
-  const dest_path = path.join(dest_dir, filename)
+  await fs.ensureDirAsync(destDir)
+  const destPath = path.join(destDir, filename)
   try {
-    await fs.accessAsync(dest_path, fs.R_OK)
-    log(`Use existing ${dest_path}`)
+    await fs.accessAsync(destPath, fs.R_OK)
+    log(`Use existing ${destPath}`)
   }catch (e) {
     const [response, body] = await requestAsync({
       url: url,
@@ -120,18 +116,18 @@ const downloadAsync = async (url, dest_dir, filename = path.basename(url), descr
     if (response.statusCode != 200) {
       throw new Error(`Response status code ${response.statusCode}`)
     }
-    await fs.writeFileAsync(dest_path, body)
-    log(`Successfully downloaded to ${dest_path}`)
+    await fs.writeFileAsync(destPath, body)
+    log(`Successfully downloaded to ${destPath}`)
   }
-  return dest_path
+  return destPath
 }
 
-const extractZipNodeAsync = (zip_file, dest_path, descript="") => {
+const extractZipNodeAsync = (zipFile, destPath, descript="") => {
   log(`Extract ${descript}`)
   return new Promise((resolve) => {
-    fs.ensureDirSync(path.dirname(dest_path))
-    fs.createReadStream(zip_file)
-    .pipe(unzip.Extract({ path: dest_path }))
+    fs.ensureDirSync(path.dirname(destPath))
+    fs.createReadStream(zipFile)
+    .pipe(unzip.Extract({ path: destPath }))
     .on('close', () => {
       log(`Extracting ${descript} finished`)
       return resolve()
@@ -139,13 +135,13 @@ const extractZipNodeAsync = (zip_file, dest_path, descript="") => {
   })
 }
 
-const extractZipCliAsync = (zip_file, dest_path, descript="") => {
+const extractZipCliAsync = (zipFile, destPath, descript="") => {
   log(`Extract ${descript}`)
-  fs.ensureDirSync(dest_path)
+  fs.ensureDirSync(destPath)
   return new Promise ((resolve, reject) => {
-    const command = `unzip '${zip_file}'`
+    const command = `unzip '${zipFile}'`
     child_process.exec(command, {
-      cwd: dest_path,
+      cwd: destPath,
     },
       (error) => {
         if (error != null) {
@@ -164,22 +160,22 @@ const extractZipAsync =
   ? extractZipNodeAsync
   : extractZipCliAsync
 
-const downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
+const downloadExtractZipAsync = async (url, downloadDir, filename, destPath,
                                  description, useCli) => {
-  const max_retry = 5
-  let zip_path
-  for (let retry_count = 1; retry_count <= max_retry; retry_count++){
+  const MAX_RETRY = 5
+  let zipPath
+  for (let retryCount = 1; retryCount <= MAX_RETRY; retryCount++){
     try {
-      zip_path = await downloadAsync(url, download_dir, filename, description)
-      await extractZipAsync(zip_path, dest_path, description)
+      zipPath = await downloadAsync(url, downloadDir, filename, description)
+      await extractZipAsync(zipPath, destPath, description)
     } catch (e) {
       log(`Downloading failed, retrying ${url}, reason: ${e}`)
       try {
-        await fs.removeAsync(zip_path)
+        await fs.removeAsync(zipPath)
       } catch (e) {
         console.log(e.stack)
       }
-      if (retry_count === max_retry) {
+      if (retryCount === MAX_RETRY) {
         throw e
       }
       continue
@@ -188,20 +184,20 @@ const downloadExtractZipAsync = async (url, download_dir, filename, dest_path,
   }
 }
 
-const downloadThemesAsync = (theme_root) =>
+const downloadThemesAsync = (themeRoot) =>
   Promise.all((() => {
     const jobs = []
-    for (const theme of Object.keys(theme_list)){
-      const theme_url = theme_list[theme]
-      const download_dir = path.join(theme_root, theme, 'css')
-      jobs.push(downloadAsync(theme_url, download_dir,`${theme}.css`, `${theme} theme`))
+    for (const theme of Object.keys(THEME_LIST)){
+      const themeUrl = THEME_LIST[theme]
+      const downloadDir = path.join(themeRoot, theme, 'css')
+      jobs.push(downloadAsync(themeUrl, downloadDir,`${theme}.css`, `${theme} theme`))
     }
     return jobs
   })())
 
-const installFlashAsync = async (platform, download_dir, flash_dir) => {
-  const flash_url = get_flash_url(platform)
-  await downloadExtractZipAsync(flash_url, download_dir, `flash-${platform}.zip`, flash_dir, 'flash plugin')
+const installFlashAsync = async (platform, downloadDir, flashDir) => {
+  const flash_url = getFlashUrl(platform)
+  await downloadExtractZipAsync(flash_url, downloadDir, `flash-${platform}.zip`, flashDir, 'flash plugin')
 }
 
 const compress7zAsync = async (files, archive, options) => {
@@ -213,23 +209,23 @@ const compress7zAsync = async (files, archive, options) => {
   await (new n7z()).add(archive, files, options)
 }
 
-const changeExt = (src_path, ext) => {
-  const src_dir = path.dirname(src_path)
-  const src_basename = path.basename(src_path, path.extname(src_path))
-  return path.join(src_dir, src_basename + ext)
+const changeExt = (srcPath, ext) => {
+  const srcDir = path.dirname(srcPath)
+  const srcBasename = path.basename(srcPath, path.extname(srcPath))
+  return path.join(srcDir, srcBasename + ext)
 }
 
-const gitArchiveAsync = async (tar_path, tgt_dir) => {
+const gitArchiveAsync = async (tarPath, tgtDir) => {
   log('Archive file from git..')
   try{
-    await fs.removeAsync(tar_path)
+    await fs.removeAsync(tarPath)
   } catch (e) {
     console.log(e.stack)
   }
   try {
     await promisify(gitArchive)({
       commit: 'HEAD',
-      outputPath: tar_path,
+      outputPath: tarPath,
       repoPath: __dirname,
     })
   } catch (e) {
@@ -239,8 +235,8 @@ const gitArchiveAsync = async (tar_path, tgt_dir) => {
   }
   log('Archive complete! Extracting...')
   await new Promise((resolve) => {
-    fs.createReadStream(tar_path)
-    .pipe(tar.extract(tgt_dir))
+    fs.createReadStream(tarPath)
+    .pipe(tar.extract(tgtDir))
     .on('finish', (e) => {
       log ('Extract complete!')
       resolve(e)
@@ -253,16 +249,16 @@ const gitArchiveAsync = async (tar_path, tgt_dir) => {
 }
 
 // Run js script
-const runScriptAsync = (script_path, args, options) =>
+const runScriptAsync = (scriptPath, args, options) =>
   new Promise ((resolve) => {
-    const proc = child_process.fork(script_path, args, options)
+    const proc = child_process.fork(scriptPath, args, options)
     proc.on('exit', () => resolve())
   })
 
 // Run js script, but suppress stdout and stores it into a string used to resolve
-const runScriptReturnStdoutAsync = (script_path, args, options) =>
+const runScriptReturnStdoutAsync = (scriptPath, args, options) =>
   new Promise ((resolve) => {
-    const proc = child_process.fork(script_path, args, Object.assign({silent: true}, options))
+    const proc = child_process.fork(scriptPath, args, Object.assign({silent: true}, options))
     let data = ''
     let chunk
     proc.stdout.on('readable', () => {
@@ -273,30 +269,30 @@ const runScriptReturnStdoutAsync = (script_path, args, options) =>
     proc.on('exit', () => resolve(data))
   })
 
-const npmInstallAsync = async (tgt_dir, args=[]) => {
+const npmInstallAsync = async (tgtDir, args=[]) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
-  log(`Installing npm for ${tgt_dir}`)
-  await fs.ensureDirAsync(tgt_dir)
-  await runScriptAsync(npm_exec_path, ['install', '--registry', npm_server].concat(args),{
-    cwd: tgt_dir,
+  log(`Installing npm for ${tgtDir}`)
+  await fs.ensureDirAsync(tgtDir)
+  await runScriptAsync(NPM_EXEC_PATH, ['install', '--registry', NPM_SERVER].concat(args),{
+    cwd: tgtDir,
   })
-  log(`Finished installing npm for ${tgt_dir}`)
+  log(`Finished installing npm for ${tgtDir}`)
 }
 
 // *** METHODS ***
-const filterCopyAppAsync = async (stage1_app, stage2_app) =>
+const filterCopyAppAsync = async (stage1App, stage2App) =>
   Promise.all((() => {
     const jobs = []
-    for (const target of target_list) {
-      jobs.push(fs.copyAsync(path.join(stage1_app, target), path.join(stage2_app, target), {
+    for (const target of TARGET_LIST) {
+      jobs.push(fs.copyAsync(path.join(stage1App, target), path.join(stage2App, target), {
         clobber: true,
       }))
     }
     return jobs
   })())
 
-const compileToJsAsync = (app_dir, dontRemove) => {
-  log(`Compiling ${app_dir}`)
+const compileToJsAsync = (appDir, dontRemove) => {
+  log(`Compiling ${appDir}`)
   const targetExts = ['.es']
 
   const options = {
@@ -308,27 +304,27 @@ const compileToJsAsync = (app_dir, dontRemove) => {
 
   return new Promise ((resolve) => {
     const tasks = []
-    walk.walk(app_dir, options)
+    walk.walk(appDir, options)
     .on('file', (root, fileStats, next) => {
       const extname = path.extname(fileStats.name).toLowerCase()
       if (targetExts.includes(extname)) {
         tasks.push(async () => {
-          const src_path = path.join(root, fileStats.name)
-          const tgt_path = changeExt(src_path, '.js')
-          // const src = await fs.readFileAsync(src_path, 'utf-8')
+          const srcPath = path.join(root, fileStats.name)
+          const tgtPath = changeExt(srcPath, '.js')
+          // const src = await fs.readFileAsync(srcPath, 'utf-8')
           let tgt
           try {
-            const result = await babel.transformFileAsync(src_path, {presets, plugins})
+            const result = await babel.transformFileAsync(srcPath, {presets, plugins})
             tgt = result.code
           } catch (e) {
-            log(`Compiling ${src_path} failed: ${e}`)
+            log(`Compiling ${srcPath} failed: ${e}`)
             return
           }
-          await fs.writeFileAsync(tgt_path, tgt)
+          await fs.writeFileAsync(tgtPath, tgt)
           if (!dontRemove) {
-            await fs.removeAsync(src_path)
+            await fs.removeAsync(srcPath)
           }
-          log(`Compiled ${tgt_path}`)
+          log(`Compiled ${tgtPath}`)
         })
       }
       next()
@@ -342,9 +338,9 @@ const compileToJsAsync = (app_dir, dontRemove) => {
 
 const checkNpmVersion = async () => {
   // Check npm version
-  const npm_version = (await runScriptReturnStdoutAsync(npm_exec_path, ['--version'])).trim()
-  log(`You are using npm v${npm_version}`)
-  if (semver.major(npm_version) == 2) {
+  const npmVersion = (await runScriptReturnStdoutAsync(NPM_EXEC_PATH, ['--version'])).trim()
+  log(`You are using npm v${npmVersion}`)
+  if (semver.major(npmVersion) == 2) {
     log("*** USING npm 2 TO BUILD poi IS PROHIBITED ***")
     log("Aborted.")
     return false
@@ -355,116 +351,116 @@ const checkNpmVersion = async () => {
 
 
 
-const installPluginsTo = async (plugin_names, install_root, tarball_root) => {
+const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   try{
-    await fs.removeAsync(install_root)
-    await fs.removeAsync(tarball_root)
+    await fs.removeAsync(installRoot)
+    await fs.removeAsync(tarRoot)
   } catch (e) {
     console.log(e.stack)
   }
-  await fs.ensureDirAsync(install_root)
-  await fs.ensureDirAsync(tarball_root)
+  await fs.ensureDirAsync(installRoot)
+  await fs.ensureDirAsync(tarRoot)
 
   // Install plugins
-  await npmInstallAsync(install_root, ['--production', '--prefix', '.'].concat(plugin_names))
+  await npmInstallAsync(installRoot, ['--production', '--prefix', '.'].concat(pluginNames))
 
-  const plugins_dir = (() =>{
+  const pluginDirs = (() =>{
     const dirs = []
-    for (const name of plugin_names) {
-      const plugin_dir = path.join(install_root, 'node_modules', name)
+    for (const name of pluginNames) {
+      const dir = path.join(installRoot, 'node_modules', name)
 
       // Modify package.json
-      const plugin_package_json = path.join(plugin_dir, 'package.json')
-      const contents = require(plugin_package_json)
+      const packageJson = path.join(dir, 'package.json')
+      const contents = require(packageJson)
       // Delete this key, otherwise npm install won't succeed
       delete contents._requiredBy
       contents.bundledDependencies = Object.keys(contents.dependencies)
-      fs.writeFileSync(plugin_package_json, JSON.stringify(contents))
-      dirs.push(plugin_dir)
+      fs.writeFileSync(packageJson, JSON.stringify(contents))
+      dirs.push(dir)
     }
     return dirs})()
 
-  await Promise.all(plugins_dir.map(dir =>
+  await Promise.all(pluginDirs.map(dir =>
     npmInstallAsync(dir, ['--no-bin-links', '--no-progress', '--production'])))
 
   log("Now packing plugins into tarballs.")
-  await runScriptAsync(npm_exec_path, ['pack'].concat(plugins_dir), {
-    cwd: tarball_root,
+  await runScriptAsync(NPM_EXEC_PATH, ['pack'].concat(pluginDirs), {
+    cwd: tarRoot,
   })
 }
 
-export const installPluginsAsync = async (poi_version) => {
-  const build_root = path.join(__dirname, 'dist')
-  const building_root = path.join(build_root, "plugins")
-  const release_dir = build_root
+export const installPluginsAsync = async (poiVersion) => {
+  const BUILD_ROOT = path.join(__dirname, 'dist')
+  const BUILDING_ROOT = path.join(BUILD_ROOT, "plugins")
+  const RELEASE_DIR = BUILD_ROOT
 
-  const packages = await fs.readJsonAsync(plugin_json_path)
+  const packages = await fs.readJsonAsync(PLUGIN_JSON_PATH)
 
-  const plugin_names = Object.keys(packages)
+  const pluginNames = Object.keys(packages)
 
-  const install_root = path.join(building_root, 'poi-plugins_install')
-  const gzip_root = path.join(building_root, 'poi-plugins')
-  await installPluginsTo(plugin_names, install_root, gzip_root)
+  const installRoot = path.join(BUILDING_ROOT, 'poi-plugins_install')
+  const gzip_root = path.join(BUILDING_ROOT, 'poi-plugins')
+  await installPluginsTo(pluginNames, installRoot, gzip_root)
 
   const d = new Date()
   const str_date = `${d.getUTCFullYear()}-${d.getUTCMonth()+1}-${d.getUTCDate()}`
-  const archive_path = path.join(release_dir, `poi-plugins_${str_date}.7z`)
+  const archive_path = path.join(RELEASE_DIR, `poi-plugins_${str_date}.7z`)
   await compress7zAsync (gzip_root, archive_path)
 
   log(`Successfully built tarballs at ${archive_path}`)
 }
 
 // Build poi for use
-export const buildAsync = async (poi_version, dontRemove) => {
+export const buildAsync = async (poiVersion, dontRemove) => {
   if (!checkNpmVersion()) {
     return
   }
 
-  const build_root = path.join(__dirname, build_dir_name)
-  const download_dir = path.join(build_root, download_dir_name)
-  const building_root = path.join(__dirname, 'app_compiled')
-  const stage1_app = path.join(building_root, 'stage1')
-  const tar_path = path.join(stage1_app, "app_stage1.tar")
-  const stage2_app = building_root
-  const theme_root = path.join(stage1_app, 'assets', 'themes')
+  const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
+  const BUILDING_ROOT = path.join(__dirname, 'app_compiled')
+  const stage1App = path.join(BUILDING_ROOT, 'stage1')
+  const tarPath = path.join(stage1App, "app_stage1.tar")
+  const stage2App = BUILDING_ROOT
+  const themeRoot = path.join(stage1App, 'assets', 'themes')
 
   // Clean files
   try {
     if (!dontRemove) {
-      await fs.removeAsync(building_root)
+      await fs.removeAsync(BUILDING_ROOT)
     }
   } catch (e) {
     console.log(e.stack)
   }
   try {
-    await fs.removeAsync(stage1_app)
+    await fs.removeAsync(stage1App)
   } catch (e) {
     console.log(e.stack)
   }
-  await fs.ensureDirAsync(stage1_app)
-  await fs.ensureDirAsync(stage2_app)
-  await fs.ensureDirAsync(path.join(stage1_app, 'node_modules'))
+  await fs.ensureDirAsync(stage1App)
+  await fs.ensureDirAsync(stage2App)
+  await fs.ensureDirAsync(path.join(stage1App, 'node_modules'))
 
   // Stage1: Everything downloaded and translated
-  await gitArchiveAsync(tar_path, stage1_app)
-  await downloadThemesAsync(theme_root)
-  await compileToJsAsync(stage1_app, false)
+  await gitArchiveAsync(tarPath, stage1App)
+  await downloadThemesAsync(themeRoot)
+  await compileToJsAsync(stage1App, false)
   log('stage 1 finished')
 
   // Stage2: Filtered copy
-  await filterCopyAppAsync(stage1_app, stage2_app)
+  await filterCopyAppAsync(stage1App, stage2App)
   if (!dontRemove){
-    await npmInstallAsync(stage2_app, ['--production'])
+    await npmInstallAsync(stage2App, ['--production'])
   }
   log('stage 2 finished')
 
   // Clean files
 
-  await fs.removeAsync(stage1_app)
+  await fs.removeAsync(stage1App)
   log('file cleaned')
 
   // Rewrite package.json for build
-  const packagePath = path.join(stage2_app, 'package.json')
+  const packagePath = path.join(stage2App, 'package.json')
   const packageData = await fs.readJsonAsync(packagePath)
   delete packageData.build
   delete packageData.devDependencies
@@ -477,23 +473,23 @@ export const compileAsync = async () =>
   await compileToJsAsync(__dirname, true)
 
 // Install flash
-export const getFlashAsync = async (poi_version) => {
-  const build_root = path.join(__dirname, build_dir_name)
-  const download_dir = path.join(build_root, download_dir_name)
+export const getFlashAsync = async (poiVersion) => {
+  const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const platform = `${process.platform}-${process.arch}`
   await fs.removeAsync(path.join(__dirname, 'PepperFlash'))
-  const flash_dir = path.join(__dirname, 'PepperFlash', platform_to_paths[platform])
-  await installFlashAsync(platform, download_dir, flash_dir)
+  const flashDir = path.join(__dirname, 'PepperFlash', PLATFORM_TO_PATHS[platform])
+  await installFlashAsync(platform, downloadDir, flashDir)
 }
 
-export const getFlashAllAsync = async (poi_version) => {
-  const build_root = path.join(__dirname, build_dir_name)
-  const download_dir = path.join(build_root, download_dir_name)
+export const getFlashAllAsync = async (poiVersion) => {
+  const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const platforms = ['win32-ia32', 'win32-x64', 'darwin-x64', 'linux-x64']
   await fs.removeAsync(path.join (__dirname, 'PepperFlash'))
   const tasks = platforms.map(platform => {
-    const flash_dir = path.join(__dirname, 'PepperFlash', platform_to_paths[platform])
-    return installFlashAsync(platform, download_dir, flash_dir)
+    const flashDir = path.join(__dirname, 'PepperFlash', PLATFORM_TO_PATHS[platform])
+    return installFlashAsync(platform, downloadDir, flashDir)
   })
   await Promise.all(tasks)
 }
@@ -506,16 +502,16 @@ export const cleanFiles = () => {
 }
 
 export const installThemeAsync = async () => {
-  const theme_root = path.join(__dirname, 'assets', 'themes')
-  await downloadThemesAsync(theme_root)
+  const themeRoot = path.join(__dirname, 'assets', 'themes')
+  await downloadThemesAsync(themeRoot)
 }
 
-export const packWinReleaseAsync = async (poi_version) => {
+export const packWinReleaseAsync = async (poiVersion) => {
   let target = path.join(__dirname, 'dist', 'win-unpacked')
-  let dest = path.join(__dirname, 'dist', 'win', `poi-${poi_version}-win-x64.7z`)
+  let dest = path.join(__dirname, 'dist', 'win', `poi-${poiVersion}-win-x64.7z`)
   await compress7zAsync(target, dest)
   target = path.join(__dirname, 'dist', 'win-ia32-unpacked')
-  dest = path.join(__dirname, 'dist', 'win-ia32', `poi-${poi_version}-win-ia32.7z`)
+  dest = path.join(__dirname, 'dist', 'win-ia32', `poi-${poiVersion}-win-ia32.7z`)
   await compress7zAsync(target, dest)
   log("Release packed up")
 }
