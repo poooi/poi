@@ -1,6 +1,5 @@
 require('coffee-script/register')
 require('babel-register')(require('./babel.config'))
-const Promise = require('bluebird')
 const gulp = require('gulp')
 
 const {log} = require('./lib/utils')
@@ -10,42 +9,40 @@ const {buildAsync,
   getFlashAllAsync,
   cleanFiles,
   installThemeAsync,
-  packWinReleaseAsync,
-  compileAsync} = require('./build_detail')
+  packWinReleaseAsync} = require('./build_detail')
 
 const package_json = require('./package.json')
 
-const build_all_platforms = ['win32-ia32', 'win32-x64', 'linux-x64', 'darwin-x64']
-let poi_version = null
+let poiVersion = null
 
 gulp.task('getVersion', () => {
   const package_version = package_json.version
-  poi_version = package_version
-  log(`*** Start building poi v${poi_version} ***`)
+  poiVersion = package_version
+  log(`*** Start building poi v${poiVersion} ***`)
 })
 
 gulp.task ('deploy', ['getVersion', 'get_flash'], async() => {
-  await installThemeAsync(poi_version)
+  await installThemeAsync(poiVersion)
 })
 
 gulp.task ('build', ['getVersion', 'get_flash_all'], async() => {
-  await buildAsync(poi_version)
+  await buildAsync(poiVersion)
 })
 
 gulp.task('get_flash', ['getVersion'], async() => {
-  await getFlashAsync(poi_version)
+  await getFlashAsync(poiVersion)
 })
 
 gulp.task('get_flash_all', ['getVersion'], async() => {
-  await getFlashAllAsync(poi_version)
+  await getFlashAllAsync(poiVersion)
 })
 
 gulp.task('build_plugins', ['getVersion'], async() => {
-  await installPluginsAsync(poi_version)
+  await installPluginsAsync(poiVersion)
 })
 
 gulp.task('pack_win_release', ['getVersion'], async() => {
-  await packWinReleaseAsync(poi_version)
+  await packWinReleaseAsync(poiVersion)
 })
 
 gulp.task('clean', async () => {
