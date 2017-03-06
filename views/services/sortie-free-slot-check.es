@@ -6,15 +6,15 @@ window.addEventListener('game.response',
   ({detail: {path, body}}) => {
     if (path === '/kcsapi/api_get_member/mapinfo') {
       const basic = getStore('info.basic')
-      let errMsg = ''
+      const errMsg = []
       if (config.get('poi.mapStartCheck.ship.enable', false)) {
         const minShipSlots = config.get('poi.mapStartCheck.ship.minFreeSlots', 4)
         const shipSlots = basic.api_max_chara - Object.keys(getStore('info.ships')).length
         if (shipSlots < minShipSlots) {
           if (shipSlots > 0){
-            errMsg = errMsg + __("Only %s free ship slot(s) left. ", shipSlots)
+            errMsg.push(__("Only %s free ship slot(s) left. ", shipSlots))
           } else {
-            errMsg = errMsg + __("Ship slot is full. ")
+            errMsg.push(__("Ship slot is full. "))
           }
         }
       }
@@ -23,16 +23,16 @@ window.addEventListener('game.response',
         const equipSlots = basic.api_max_slotitem - Object.keys(getStore('info.equips')).length
         if (equipSlots < minEquipSlots) {
           if (equipSlots > 0){
-            errMsg = errMsg + __("Only %d free equip slot(s) left. ", equipSlots)
+            errMsg.push(__("Only %d free equip slot(s) left. ", equipSlots))
           } else {
-            errMsg = errMsg + __("Equip slot is full. ")
+            errMsg.push(__("Equip slot is full. "))
           }
         }
       }
       if (errMsg.length > 0) {
-        setTimeout(() => error(errMsg)
-          , 1000)
+        const msg = errMsg.join('')
+        setTimeout(() => error(msg) , 1000)
       }
     }
   }
-  )
+)
