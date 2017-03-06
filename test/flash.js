@@ -1,7 +1,5 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
-const assert = require('assert')
-const utils = require('../lib/utils')
 const ROOT = path.join(__dirname, '..')
 
 const flashPath = (() => {
