@@ -9,7 +9,7 @@ let config = null
 
 describe('config with saved file', function() {
   beforeEach(function() {
-    fs.writeFileSync(path.resolve(__dirname, '../fixtures/config.cson'), CSON.stringify({
+    fs.writeFileSync(path.resolve(__dirname, './config.cson'), CSON.stringify({
       path: {
         to: {
           initial: {
@@ -18,8 +18,8 @@ describe('config with saved file', function() {
         },
       },
     }))
-    delete require.cache[require.resolve('..../lib/config')]
-    config = require('..../lib/config')
+    delete require.cache[require.resolve('../../lib/config')]
+    config = require('../../lib/config')
   })
   describe('initially', function() {
     it('should be a initial object', function() {

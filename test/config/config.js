@@ -5,8 +5,8 @@ let config = null
 
 describe('config', function() {
   beforeEach(function() {
-    delete require.cache[require.resolve('..../lib/config')]
-    config = require('..../lib/config')
+    delete require.cache[require.resolve('../../lib/config')]
+    config = require('../../lib/config')
   })
   describe('initially', function() {
     it('should be empty', function() {
