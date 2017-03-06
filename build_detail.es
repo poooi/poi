@@ -309,7 +309,7 @@ const compileToJsAsync = (app_dir, dontRemove) => {
     walk.walk(app_dir, options)
     .on('file', (root, fileStats, next) => {
       const extname = path.extname(fileStats.name).toLowerCase()
-      if (targetExts.includes(extname))
+      if (targetExts.includes(extname)) {
         tasks.push(async () => {
           const src_path = path.join(root, fileStats.name)
           const tgt_path = changeExt(src_path, '.js')
@@ -330,13 +330,15 @@ const compileToJsAsync = (app_dir, dontRemove) => {
           if (!dontRemove) {
             await fs.removeAsync(src_path)
           }
-          //log `Compiled ${tgt_path}`
+          log(`Compiled ${tgt_path}`)
         })
+      }
       next()
     })
     .on('end', async () => {
       log('Compiling ended')
       resolve(await Promise.all(tasks))
+      log('compilation completes')
     })
   })
 }
@@ -460,11 +462,8 @@ export const buildAsync = async (poi_version, dontRemove) => {
   log('stage 2 finished')
 
   // Clean files
-  try {
-    await fs.removeAsync(stage1_app)
-  } catch (e) {
-    console.log(e.stack)
-  }
+  
+  await fs.removeAsync(stage1_app)
   log('file cleaned')
 
   // Rewrite package.json for build
@@ -473,11 +472,7 @@ export const buildAsync = async (poi_version, dontRemove) => {
   delete packageData.build
   delete packageData.devDependencies
   await fs.removeAsync(packagePath)
-  try {
-    await fs.writeJsonAsync(packagePath, packageData)
-  } catch (e) {
-    console.log(e.stack)
-  }
+  await fs.writeJsonAsync(packagePath, packageData)
   log ("Done.")
 }
 
