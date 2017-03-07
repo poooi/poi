@@ -179,6 +179,7 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
       if (!satisfyGoal('mission', subgoal, options)) return
       if (!satisfyGoal('maparea', subgoal, options)) return
       if (!satisfyGoal('slotitemId', subgoal, options)) return
+      if (!satisfyGoal('times', subgoal, options)) return
       const subrecord = Object.assign(record[e])
       subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
       records[api_no] = {
@@ -321,7 +322,7 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
       flag = updateQuestRecord('destory_item', {slotitemId: 15}, gunCount)
     }
 
-    if (updateQuestRecord('destory_item', null, 1)|| flag) {
+    if (updateQuestRecord('destory_item', {times: 1}, 1)|| flag) {
       return {...state, records}
     }
     break

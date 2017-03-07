@@ -249,6 +249,7 @@
   type: 2
   "destory_item":
     description: "廃棄"
+    times: [1]
     required: 24
     init: 0
 703: # 「近代化改修」を進め、戦備を整えよ！ 进行舰船近代化改修15次
