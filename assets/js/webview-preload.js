@@ -97,19 +97,24 @@ const handleDOMContentLoaded = () => {
   webContent.insertCSS(alertCSS)
   const flashQuality = config.get('poi.flashQuality', 'high')
   const flashWindowMode = config.get('poi.flashWindowMode', 'window')
+  let count = -1
   const t = setInterval(() => {
     try {
+      count++
+      if (count > 1245) clearInterval(t)
       const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
       iframeDoc.querySelector('body').appendChild(alignInnerCSS)
       if (flashQuality !== 'high' || flashWindowMode !== 'window') {
-        const flash = iframeDoc.querySelector('#externalswf').cloneNode(true)
+        const flashNode =  iframeDoc.querySelector('#externalswf') ? iframeDoc.querySelector('#externalswf') : iframeDoc.querySelector('embed')
+        const flashParentNode = flashNode.parentNode
+        const flash = flashNode.cloneNode(true)
         flash.setAttribute('quality', flashQuality)
         flash.setAttribute('wmode', flashWindowMode)
-        iframeDoc.querySelector('#externalswf').remove()
-        iframeDoc.querySelector('#flashWrap').appendChild(flash)  
-        clearInterval(t)
-        console.warn('Successed.', new Date())
+        flashNode.remove()
+        flashParentNode.appendChild(flash)
       }
+      clearInterval(t)
+      console.warn('Successed.', new Date(), `retry count: ${count}`)
     } catch (e) {
       console.warn('Failed. Will retry in 100ms.')
     }
