@@ -10,7 +10,7 @@ poi uses [eslint](http://eslint.org/) as code linter, and is bundled with `.esli
 
 You should avoid eslint errors, and leave as few warnings as you can; our rules, however, cannot be 100% perfect, so if you encounter errors that cannot be fixed, please provide the information in code comments or Pull Request.
 
-## Other style
+## Other styles
 ### Naming
 Game api's variable naming are snake_case (e.g. `api_mst_slotitems`), you're allow to use them, for your variable definition, however, [camelCase](https://en.wikipedia.org/wiki/Camel_case) naming is recommended, for example, `apiMstSlotitems`.
 

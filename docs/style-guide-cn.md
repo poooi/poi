@@ -34,7 +34,8 @@ import { unstable_batchedUpdates as batchedUpdates } from 'react-dom'
 
 export const extendReducer = ...
 ```
-请留意大括号与变量名之间会保留一个空格
+请留意大括号与变量名之间会保留一个空格。
+
 在一些特殊情况下，也允许使用 `require`，如：
 ``` javascript
 import Promise from 'bluebird'
@@ -44,7 +45,7 @@ const fs = Promise.promisifyAll(require('fs-extra'))
 ### 文件末尾留空行
 
 ### 注释
-可以在任何你认为有需要的地方留下注释
+可以在任何你认为有需要的地方留下注释。
 
 ### JSX 的缩进
-JSX 的不同层次元素的缩进也请按照 2 个空格的方式来进行
+JSX 的不同层次元素的缩进也请按照 2 个空格的方式来进行。
