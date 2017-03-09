@@ -2,7 +2,7 @@ import CSON from 'cson'
 import { join } from 'path-extra'
 import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
 
-import FileWriter from 'views/utils/fileWriter'
+import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
 import Scheduler from 'views/services/scheduler'
 const {ROOT, APPDATA_PATH} = window
