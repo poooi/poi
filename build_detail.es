@@ -495,7 +495,7 @@ export const getFlashAllAsync = async (poiVersion) => {
 }
 
 export const cleanFiles = () => {
-  glob.sync(path.join(__dirname, "build", "!(icon)*")).forEach(file =>
+  glob.sync(path.join(__dirname, "build", "!(icon|install-spinner)*")).forEach(file =>
     rimraf(file, () => {}))
   rimraf(path.join(__dirname, 'app_compiled'), () => {})
   rimraf(path.join(__dirname, 'dist'), () => {})
