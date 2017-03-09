@@ -58,6 +58,7 @@ if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {
   Object.assign(safeModeOption, {
     description: 'poi the KanColle Browser Tool (safe mode)',
     args: `${argPath} --safe`,
+    appUserModelId: 'org.poooi.poi.safe',
   })
   shell.writeShortcutLink(safeModeShortcutPath, safeModeOption)
 }
