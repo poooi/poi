@@ -154,7 +154,7 @@ export default connect(
   })
   let completeTime
   if (inExpedition) {
-    completeTime = expeditionEndTime + 3 * 60 *1000
+    completeTime = expeditionEndTime
   } else {
     const conds = shipsData.map(([ship={api_cond: 0}]=[]) => ship.api_cond)
     completeTime = Math.max.apply(null,
