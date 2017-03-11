@@ -103,9 +103,9 @@ const handleDOMContentLoaded = () => {
       count++
       if (count > 1245) clearInterval(t)
       const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
+      const flashNode =  iframeDoc.querySelector('#externalswf') ? iframeDoc.querySelector('#externalswf') : iframeDoc.querySelector('embed')
+      const flashParentNode = flashNode.parentNode
       if (flashQuality !== 'high' || flashWindowMode !== 'window') {
-        const flashNode =  iframeDoc.querySelector('#externalswf') ? iframeDoc.querySelector('#externalswf') : iframeDoc.querySelector('embed')
-        const flashParentNode = flashNode.parentNode
         const flash = flashNode.cloneNode(true)
         flash.setAttribute('quality', flashQuality)
         flash.setAttribute('wmode', flashWindowMode)
