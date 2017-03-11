@@ -111,8 +111,8 @@ const handleDOMContentLoaded = () => {
         flash.setAttribute('wmode', flashWindowMode)
         flashNode.remove()
         flashParentNode.appendChild(flash)
-        iframeDoc.querySelector('body').appendChild(alignInnerCSS)
       }
+      iframeDoc.querySelector('body').appendChild(alignInnerCSS)
       clearInterval(t)
       console.warn('Successed.', new Date(), `retry count: ${count}`)
     } catch (e) {
