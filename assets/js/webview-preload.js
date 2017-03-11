@@ -103,7 +103,6 @@ const handleDOMContentLoaded = () => {
       count++
       if (count > 1245) clearInterval(t)
       const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
-      iframeDoc.querySelector('body').appendChild(alignInnerCSS)
       if (flashQuality !== 'high' || flashWindowMode !== 'window') {
         const flashNode =  iframeDoc.querySelector('#externalswf') ? iframeDoc.querySelector('#externalswf') : iframeDoc.querySelector('embed')
         const flashParentNode = flashNode.parentNode
@@ -112,6 +111,7 @@ const handleDOMContentLoaded = () => {
         flash.setAttribute('wmode', flashWindowMode)
         flashNode.remove()
         flashParentNode.appendChild(flash)
+        iframeDoc.querySelector('body').appendChild(alignInnerCSS)
       }
       clearInterval(t)
       console.warn('Successed.', new Date(), `retry count: ${count}`)
