@@ -100,7 +100,7 @@ npm start
 [plugin-repair](https://github.com/Ayaphis/plugin-repair) by [Ayaphis](https://github.com/Ayaphis)
 > Calculate the time required of repair.
 
-[plugin-secretary](https://github.com/dazzyd/poi-secretary) by [Dazzy Ding](https://github.com/dazzyd)
+[plugin-secretary](https://github.com/dazzyd/poi-secretary) by [Dazzy Ding](https://github.com/yukixz)
 > Use secretary voice as notification sound.
 
 [plugin-hairstrength](https://github.com/ruiii/plugin-hairstrength.git) by [Rui](https://github.com/ruiii)
