@@ -1,6 +1,6 @@
 # Code style guide
 
-The document introduces the style guide for codes submited to poi. Codes of good and coherent style is friendly to other contributors and yourself in the future. Please follow them.
+This document introduces the style guide for code submitted to poi. Good and coherent code style is friendly to other contributors and yourself in the future. Please follow them.
 
 ## Make eslint happy
 poi uses [eslint](http://eslint.org/) as code linter, and is bundled with `.eslintrc.js` conf file. Eslint is accessible through [command line](http://eslint.org/docs/user-guide/command-line-interface), or you may try editors with eslint extensions, e.g.
