@@ -25,9 +25,11 @@ config.on('config.set', (path, value) => {
 
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
+  refreshBtn: get(state, 'config.poi.showControlBarRefresh', false)
 }))(class poiControl extends React.Component {
   static propTypes = {
     muted: React.PropTypes.bool,
+    refreshBtn: React.PropTypes.bool
   }
   state = {
     extend: false,
@@ -114,6 +116,27 @@ const PoiControl = connect((state, props) => ({
   handleUnlockWebview = () => {
     $('kan-game webview').executeJavaScript('window.unalign()')
   }
+  handleRefreshGame = (e) => {
+    const webview = $('kan-game webview');
+    if (e.altKey) {
+      webview.reload();
+    } else {
+      webview.executeJavaScript(`
+        var doc;
+          if (document.getElementById('game_frame')) {
+            doc = document.getElementById('game_frame').contentDocument;
+          } else {
+            doc = document;
+          }
+          var flash = doc.getElementById('flashWrap');
+          if(flash) {
+            var flashInnerHTML = flash.innerHTML;
+            flash.innerHTML = '';
+            flash.innerHTML = flashInnerHTML;
+          }
+       `)
+    }
+  }
   handleSetExtend = () => {
     this.setState({extend: !this.state.extend})
   }
@@ -150,6 +173,15 @@ const PoiControl = connect((state, props) => ({
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{__('Auto adjust')}</Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
             </OverlayTrigger>
+            { !(this.props.refreshBtn)
+              ? null :
+              <OverlayTrigger placement='right' overlay={
+                  <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
+                    {"Reload Flash (Double Click), Refresh page (Alt+Double Click)"}
+                  </Tooltip>}>
+                <Button onDoubleClick={this.handleRefreshGame} bsSize='small'><FontAwesome name='refresh' /></Button>
+              </OverlayTrigger>
+            }
           </div>
         </Collapse>
         <Button onClick={this.handleSetExtend} bsSize='small' className={this.state.extend ? 'active' : ''}><FontAwesome name={this.state.extend ? 'angle-left' : 'angle-right'} /></Button>
