@@ -101,7 +101,7 @@ function getToolTip(record) {
     {
       values(record).map((subgoal, idx) =>
         (subgoal && typeof subgoal === 'object')
-          ? <div key={idx}>{subgoal.description} - {subgoal.count} / {subgoal.required}</div>
+          ? <div key={idx}>{i18n.data.__(subgoal.description)} - {subgoal.count} / {subgoal.required}</div>
           : undefined
       )
     }

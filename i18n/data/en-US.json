@@ -1,2 +1,22 @@
 {
+  "BOSS戰": "Boss battle",
+  "BOSS戰勝利": "Boss battle victories",
+  "S勝利": "S-Rank victories",
+  "作戰": "Battle",
+  "入渠": "Repair",
+  "出擊": "Sortie",
+  "勝利": "Victories",
+  "廃棄": "Scrapping",
+  "建造": "Construction",
+  "改修": "Equipment improvement",
+  "敵潜水艦": "Enemy submarines sunk",
+  "敵空母": "Enemy carriers sunk",
+  "敵補給艦": "Enemy transport ships sunk",
+  "演習": "Exercise",
+  "演習勝利": "Exercise victories",
+  "補給": "Resupply",
+  "解体": "Dismantle",
+  "近代化改修": "Modernization",
+  "遠征": "Expedition",
+  "開発": "Development"
 }
