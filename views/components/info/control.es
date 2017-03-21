@@ -121,10 +121,9 @@ const PoiControl = connect((state, props) => ({
       return
     }
 
-    let tipTexts = __("RefreshGameDialogTip");
-    if (typeof tipTexts === "string") {
-      tipTexts = i18n.others.locales[i18n.others.defaultLocale]["RefreshGameDialogTip"];
-    }
+    const tipTexts =
+      i18n.others.__("RefreshGameDialogTip") ||
+      i18n.others.locales["en-US"]["RefreshGameDialogTip"]
 
     toggleModal(
       __("Confirm Refreshing"),
