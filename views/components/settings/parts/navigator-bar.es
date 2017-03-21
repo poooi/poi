@@ -2,6 +2,8 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Button, ButtonGroup, FormControl, InputGroup, FormGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
+import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
+
 const {config, i18n, $} = window
 const __ = i18n.setting.__.bind(i18n.setting)
 const webview = $('kan-game webview')
@@ -80,25 +82,6 @@ class NavigatorBar extends React.Component {
   onClickStop = (e) => {
     webview.stop()
   }
-  onClickRefresh = (e) => {
-    webview.reload()
-  }
-  onRightClickRefresh = (e) => {
-    webview.executeJavaScript(`
-      var doc;
-      if (document.getElementById('game_frame')) {
-        doc = document.getElementById('game_frame').contentDocument;
-      } else {
-        doc = document;
-      }
-      var flash = doc.getElementById('flashWrap');
-      if(flash) {
-        var flashInnerHTML = flash.innerHTML;
-        flash.innerHTML = '';
-        flash.innerHTML = flashInnerHTML;
-      }
-    `)
-  }
   onClickHomepage = (e) => {
     config.set('poi.homepage', this.state.url)
   }
@@ -146,7 +129,7 @@ class NavigatorBar extends React.Component {
         <div className='navigator-btn'>
           <ButtonGroup>
             <Button bsSize='small' bsStyle='primary' onClick={navigateAction}>{navigateIcon}</Button>
-            <Button bsSize='small' bsStyle='warning' onClick={this.onClickRefresh} onContextMenu={this.onRightClickRefresh}><FontAwesome name='refresh' /></Button>
+            <Button bsSize='small' bsStyle='warning' onClick={gameRefreshPage} onContextMenu={gameReloadFlash}><FontAwesome name='refresh' /></Button>
           </ButtonGroup>
           <ButtonGroup style={{marginLeft: 5}}>
             <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'>{__ ('Set as homepage')}</Tooltip>}>
