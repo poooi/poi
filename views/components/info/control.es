@@ -122,21 +122,19 @@ const PoiControl = connect((state, props) => ({
       }
 
       toggleModal(
-        "Confirm Refreshing",
+        __("Confirm Refreshing"),
           <div>
-              Are you sure to refresh the game?
+              {__("Are you sure to refresh the game?")}
               <ul>
-              <li>"Refresh page" is the same as pressing F5.</li>
-              <li>"Reload Flash" reloads only the Flash part,
-              this is usually faster but could result in catbomb.</li>
+              <li>{__('"Refresh page" is the same as pressing F5.')}</li>
+              <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
               </ul>
-              Tip: Right clicking on this button reloads Flash and Left clicking with Alt key pressed refreshes the page,
-              both are <b>without confirmation</b>, use at your own risk.
+              {__('Tip: Right clicking on this button reloads Flash and Left clicking with Alt key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.')}
           </div>,
-          [{ name: "Refresh page",
+          [{ name: __("Refresh page"),
              func: gameRefreshPage,
              style: "warning" },
-           { name: "Reload Flash",
+           { name: __("Reload Flash"),
              func: gameReloadFlash,
              style: "danger" }]);
   }
@@ -178,7 +176,7 @@ const PoiControl = connect((state, props) => ({
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={
                 <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
-                  {"Refresh game"}
+                  {__("Refresh game")}
                 </Tooltip>}>
               <Button
                 onClick={this.handleRefreshGameDialog}
