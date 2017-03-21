@@ -116,7 +116,7 @@ const PoiControl = connect((state, props) => ({
     $('kan-game webview').executeJavaScript('window.unalign()')
   }
   handleRefreshGameDialog = (e) => {
-      if (e.altKey) {
+      if (e.shiftKey) {
           gameRefreshPage();
           return;
       }
@@ -129,7 +129,7 @@ const PoiControl = connect((state, props) => ({
               <li>{__('"Refresh page" is the same as pressing F5.')}</li>
               <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
               </ul>
-              {__('Tip: Right clicking on this button reloads Flash and Left clicking with Alt key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.')}
+              {__('Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.')}
           </div>,
           [{ name: __("Refresh page"),
              func: gameRefreshPage,
