@@ -25,10 +25,10 @@ config.on('config.set', (path, value) => {
 })
 
 const PoiControl = connect((state, props) => ({
-  muted: get(state, 'config.poi.content.muted', false)
+  muted: get(state, 'config.poi.content.muted', false),
 }))(class poiControl extends React.Component {
   static propTypes = {
-    muted: React.PropTypes.bool
+    muted: React.PropTypes.bool,
   }
   state = {
     extend: false,
@@ -117,8 +117,8 @@ const PoiControl = connect((state, props) => ({
   }
   handleRefreshGameDialog = (e) => {
     if (e.shiftKey) {
-      gameRefreshPage();
-      return;
+      gameRefreshPage()
+      return
     }
 
     let tipTexts = __("RefreshGameDialogTip");
@@ -136,12 +136,14 @@ const PoiControl = connect((state, props) => ({
         </ul>
         {tipTexts.text1}<b>{tipTexts.b1}</b>{tipTexts.text2}
       </div>,
-      [{ name: __("Refresh page"),
-         func: gameRefreshPage,
-         style: "warning" },
-       { name: __("Reload Flash"),
-         func: gameReloadFlash,
-         style: "danger" }]);
+      [ 
+        { name: __("Refresh page"),
+          func: gameRefreshPage,
+          style: "warning" },
+        { name: __("Reload Flash"),
+          func: gameReloadFlash,
+          style: "danger" },
+      ])
   }
   handleSetExtend = () => {
     this.setState({extend: !this.state.extend})
