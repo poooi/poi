@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg style="enable-background:new 0 0 1024 1024;" x="0px" y="0px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-  <style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFFFC5;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:3;stroke-miterlimit:10;}
-	.st5{fill:#62CC72;}
-</style>
-  <g id="Layer_1" class="st0">
-    <g id="XMLID_1_" class="st1">
-      <path id="XMLID_64_" class="st2" d="M512,64c60.5,0,119.2,11.8,174.4,35.2c53.3,22.6,101.3,54.9,142.4,96&#10;&#9;&#9;&#9;c41.2,41.2,73.5,89.1,96,142.4C948.2,392.8,960,451.5,960,512s-11.8,119.2-35.2,174.4c-22.6,53.3-54.9,101.3-96,142.4&#10;&#9;&#9;&#9;c-41.2,41.2-89.1,73.5-142.4,96C631.2,948.2,572.5,960,512,960s-119.2-11.8-174.4-35.2c-53.3-22.6-101.3-54.9-142.4-96&#10;&#9;&#9;&#9;c-41.2-41.2-73.5-89.1-96-142.4C75.8,631.2,64,572.5,64,512s11.8-119.2,35.2-174.4c22.6-53.3,54.9-101.3,96-142.4&#10;&#9;&#9;&#9;s89.1-73.5,142.4-96C392.8,75.8,451.5,64,512,64 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0&#10;&#9;&#9;&#9;L512,0z"/>
-    </g>
-    <circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-    <rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-    <circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-    <rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-    <circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-    <rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-    <circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-  </g>
-  <path d="M 543.995 492.215 L 851.203 453.041 L 974.609 453.084 L 974.828 1022.456 L 355.508 1022.952 L 355.584 830.046 L 488.59 591.558 L 22.891 125.859 L 77.267 71.483 L 527.527 521.743 L 543.995 492.215 Z" style="fill: rgb(98, 204, 114);"/>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="レイヤー_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="1024px" height="1024px" viewBox="0 0 1024 1024" enable-background="new 0 0 1024 1024" xml:space="preserve">
+<g id="Layer_1" display="none">
+	<g id="XMLID_1_" display="inline">
+		<path id="XMLID_64_" fill="#FFFFC5" d="M512,64c60.5,0,119.2,11.8,174.4,35.2c53.3,22.6,101.3,54.9,142.399,96
+			c41.2,41.2,73.5,89.1,96,142.4C948.2,392.8,960,451.5,960,512s-11.8,119.2-35.2,174.4c-22.6,53.3-54.899,101.3-96,142.399
+			c-41.2,41.2-89.1,73.5-142.399,96C631.2,948.2,572.5,960,512,960s-119.2-11.8-174.4-35.2c-53.3-22.6-101.3-54.899-142.399-96
+			c-41.2-41.2-73.5-89.1-96-142.399C75.8,631.2,64,572.5,64,512s11.8-119.2,35.2-174.4c22.6-53.3,54.9-101.3,96-142.4
+			c41.1-41.1,89.1-73.5,142.399-96C392.8,75.8,451.5,64,512,64 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512
+			S794.8,0,512,0L512,0z"/>
+	</g>
+	<circle id="XMLID_5_" display="inline" fill="none" cx="32" cy="32" r="32"/>
+	
+		<rect id="XMLID_22_" x="160.5" y="160" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" width="704" height="704"/>
+	
+		<circle id="XMLID_24_" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" cx="512.5" cy="512" r="352"/>
+	
+		<rect id="XMLID_33_" x="288" y="288" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" width="448" height="449.6"/>
+	
+		<circle id="XMLID_34_" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" cx="512" cy="513.6" r="224"/>
+	
+		<rect id="XMLID_35_" x="352" y="352" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" width="318.3" height="318.3"/>
+	
+		<circle id="XMLID_36_" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" cx="511.2" cy="511.2" r="159.2"/>
+</g>
+<path fill="#62CC72" d="M543.995,492.215L851.203,450H1000v572H355.508l0.076-191.954L488.59,591.558L22.891,125.859l54.376-54.376
+	l450.26,450.26L543.995,492.215z"/>
 </svg>
