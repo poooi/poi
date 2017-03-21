@@ -804,10 +804,6 @@ class PoiConfig extends Component {
               label={__('Enter safe mode on next startup')}
               configName="poi.enterSafeMode"
               defaultVal={false} />
-            <CheckboxLabelConfig
-              label={__('Show Refresh button on control bar')}
-              configName="poi.showControlBarRefresh"
-              defaultVal={false} />
           </Grid>
         </div>
       </div>
