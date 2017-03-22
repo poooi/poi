@@ -6,7 +6,7 @@ import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
-const { dbg, i18n } = window
+const { dbg, i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
@@ -55,17 +55,13 @@ const ShipViewSwitchButton = connect(
 export default connect((state, props) => ({
   enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
+  activeFleetId: get(state, 'ui.activeFleetId', 0),
 })
 )(class MiniShip extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     fleetCount: PropTypes.number.isRequired,
     activeFleetId: PropTypes.number.isRequired,
-  }
-
-  static contextTypes = {
-    selectTab: PropTypes.func.isRequired,
-    selectFleet: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -83,12 +79,22 @@ export default connect((state, props) => ({
 
   handleClick = (idx) => {
     if (idx != this.props.activeFleetId) {
-      this.context.selectFleet(idx)
+      dispatch({
+        type: '@@TabSwitch',
+        tabInfo: {
+          activeFleetId: idx,
+        },
+      })
     }
   }
 
   changeShipView = () => {
-    this.context.selectTab('shipView')
+    dispatch({
+      type: '@@TabSwitch',
+      tabInfo: {
+        activeMainTab: 'shipView',
+      },
+    })
   }
 
   render() {

@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
-const {i18n, dbg} = window
+const {i18n, dbg, dispatch} = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { ShipRow } from './shipitem'
@@ -93,17 +93,13 @@ const FleetShipView = connect(
 const ShipView = connect((state, props) => ({
   enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
+  activeFleetId: get(state, 'ui.activeFleetId', 0),
 })
 )(class ShipView extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     fleetCount: PropTypes.number.isRequired,
     activeFleetId: PropTypes.number.isRequired,
-  }
-
-  static contextTypes = {
-    selectTab: PropTypes.func.isRequired,
-    selectFleet: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -121,12 +117,22 @@ const ShipView = connect((state, props) => ({
 
   handleClick = (idx) => {
     if (idx != this.props.activeFleetId) {
-      this.context.selectFleet(idx)
+      dispatch({
+        type: '@@TabSwitch',
+        tabInfo: {
+          activeFleetId: idx,
+        },
+      })
     }
   }
 
   changeMainView = () => {
-    this.context.selectTab('mainView')
+    dispatch({
+      type: '@@TabSwitch',
+      tabInfo: {
+        activeMainTab: 'mainView',
+      },
+    })
   }
 
   render() {
