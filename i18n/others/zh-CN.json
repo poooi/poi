@@ -10,7 +10,6 @@
   "Open cache dir": "打开缓存目录",
   "Open screenshot dir": "打开截图目录",
   "Failed. Perhaps you don't have permission to it.": "打开失败，可能没有创建文件夹的权限",
-  "Open cache dir": "打开缓存目录",
   "Volume off": "关闭游戏声音",
   "Volume on": "开启游戏声音",
   "Volume": "音量",
@@ -35,13 +34,12 @@
   "Download latest version": "下载最新版",
   "Aliyun": "阿里云",
   "Connection failed after %s retry": {
-     "one": "网络连接错误，正在进行第 %s 次重试",
-     "other": "网络连接错误，正在进行第 %s 次重试"
-   },
+    "one": "网络连接错误，正在进行第 %s 次重试",
+    "other": "网络连接错误，正在进行第 %s 次重试"
+  },
   "Network error: HTTP %s": "服务器返回非正常的 HTTP 状态码，HTTP %s",
   "Connection failed.": "网络连接失败，请检查网络与代理设置",
   "The server presented you a cat. (Error code: %s)": "服务器向你扔了一只猫娘（错误代码：%s）",
-
   "Modernization succeeded! ": "近代化改修成功！",
   "Modernization failed.": "近代化改修失败…",
   "Firepower": "火力",
@@ -49,22 +47,19 @@
   "AntiAir": "对空",
   "Armor": "装甲",
   "Luck": "运",
-
   "Resupply cost %d bauxite": "补给消耗了%d铝土",
-
-  "Refresh game": "刷新游戏确认",
-  "Confirm Refreshing": "刷新游戏",
+  "Refresh game": "刷新游戏",
+  "Confirm Refreshing": "刷新游戏确认",
   "Are you sure to refresh the game?": "确定要刷新游戏吗？",
   "Refresh page": "刷新游戏页面",
-  "Reload Flash": "重新载入Flash",
+  "Reload Flash": "重新载入 Flash",
   "RefreshGameDialogTip": {
-      "text1": "提示：右键单击此按钮可重新载入Flash，按住Shift同时左键单击此按钮可刷新游戏页面，但这两种刷新方法都",
-      "b1": "不会弹出该确认对话框",
-      "text2": "，请自担使用风险。"
+    "text1": "提示：右键单击此按钮可重新载入 Flash，按住 Shift 同时左键单击此按钮可刷新游戏页面，但这两种刷新方法都",
+    "b1": "不会弹出该确认对话框",
+    "text2": "，请自担使用风险。"
   },
-  "\"Refresh page\" is the same as pressing F5.": "“刷新游戏页面”与在页面上按F5效果相同。",
-  "\"Reload Flash\" reloads only the Flash part, this is usually faster but could result in catbomb.": "“重新载入Flash”只重新载入Flash部分，一般更快，但可能会导致网络异常错误。",
-
+  "\"Refresh page\" is the same as pressing F5.": "“刷新游戏页面”与在页面上按 F5 效果相同。",
+  "\"Reload Flash\" reloads only the Flash part, this is usually faster but could result in catbomb.": "“重新载入 Flash”只重新载入 Flash 部分，一般更快，但可能会导致网络异常错误。",
   "Good day and welcome to poi %s! Before your use, here are some information for you": "诶嘿！欢迎使用 poi %s！使用之前看看下面！",
   "poi will never modify your game data package, but please use trusted executables and plugins!": "poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！",
   "poi does not use proxy by default, which you may change in settings panel.": "poi 默认不使用代理。更改代理的设置在设置面板中可以找到。",
@@ -74,7 +69,6 @@
   "If you see error on displaying, manually set content size and it will auto-adjust.": "poi 如果有显示错误，可以手动调整一下内容大小，布局会自动适配。",
   "If poi is under performance, you may disable some plugins and do a restart.": "如果 poi 的运行不流畅，可以在设置中关闭一部分插件，对插件的操作重启后生效。",
   "Draft an issue, contribute your code, or plugins for poi": "为 poi 提交建议，贡献代码和编写插件",
-
   "doyouknow-prefix": "【小提示】",
   "doyouknow-contents": [
     "“小提示”时常更新一些不容易注意到的小功能，不过你也可以在设置里关掉~",

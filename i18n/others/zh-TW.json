@@ -10,7 +10,6 @@
   "Open cache dir": "開啟快取目錄",
   "Open screenshot dir": "開啟截圖目錄",
   "Failed. Perhaps you don't have permission to it.": "開啟失敗，可能沒有建立資料夾的權限",
-  "Open cache dir": "開啟快取目錄",
   "Volume off": "關閉遊戲聲音",
   "Volume on": "開啟遊戲聲音",
   "Volume": "聲音",
@@ -35,13 +34,12 @@
   "Download latest version": "下載最新版",
   "Aliyun": "阿里雲",
   "Connection failed after %s retry": {
-     "one": "網路連線錯誤，正在進行第 %s 次重試",
-     "other": "網路連線錯誤，正在進行第 %s 次重試"
-   },
+    "one": "網路連線錯誤，正在進行第 %s 次重試",
+    "other": "網路連線錯誤，正在進行第 %s 次重試"
+  },
   "Network error: HTTP %s": "伺服器返回非正常的 HTTP 狀態碼，HTTP %s",
   "Connection failed.": "網路連線失敗，請檢查網路與代理設定",
   "The server presented you a cat. (Error code: %s)": "伺服器向你扔了一隻貓娘（錯誤代碼：%s）",
-
   "Modernization succeeded! ": "近代化改修成功！",
   "Modernization failed.": "近代化改修失敗…",
   "Firepower": "火力",
@@ -49,11 +47,19 @@
   "AntiAir": "對空",
   "Armor": "裝甲",
   "Luck": "運",
-
-  "RefreshGameDialogTip": false,
-
   "Resupply cost %d bauxite": "補給消耗了%d鋁土",
-
+  "Refresh game": "重新整理遊戲",
+  "Confirm Refreshing": "重新整理遊戲確認",
+  "Are you sure to refresh the game?": "確定要重新整理遊戲嗎？",
+  "Refresh page": "重新整理遊戲頁面",
+  "Reload Flash": "重新載入 Flash",
+  "RefreshGameDialogTip": {
+    "text1": "提示：右鍵單擊此按鈕可重新載入 Flash，按住 Shift 同時左鍵單擊此按鈕可重新整理遊戲頁面，但這兩種重新整理方法都",
+    "b1": "不會彈出該確認對話方塊",
+    "text2": "，請自擔使用風險。"
+  },
+  "\"Refresh page\" is the same as pressing F5.": "“重新整理遊戲頁面”與在頁面上按 F5 效果相同。",
+  "\"Reload Flash\" reloads only the Flash part, this is usually faster but could result in catbomb.": "“重新載入 Flash ”只重新載入 Flash 部分，一般更快，但可能會導致網路異常錯誤。",
   "Good day and welcome to poi %s! Before your use, here are some information for you": "誒嘿！歡迎使用 poi %s！使用之前看看下面！",
   "poi will never modify your game data package, but please use trusted executables and plugins!": "poi 不會修改任何遊戲內的發包與收包，但是請使用可信的 poi 版本和可信的插件！",
   "poi does not use proxy by default, which you may change in settings panel.": "poi 默認不使用代理。更改代理的設置在設置面板中可以找到。",
@@ -66,7 +72,6 @@
   "For cookie method, check Editing DMM Cookie Region Flag setting.": "烤餅乾的用戶請打開設定 DMM 地區 Cookie。",
   "更多帮助参考": "更多幫助參考",
   "poi 交流群：": "poi 交流 QQ 羣：",
-
   "doyouknow-prefix": "【小提示】",
   "doyouknow-contents": [
     "“小提示”時常更新一些不容易注意到的小功能，不過你也可以在設定裡關掉~",

@@ -10,7 +10,6 @@
   "Open cache dir": "キャッシュの保存先",
   "Open screenshot dir": "スクリーンショットのフォルダを開きます",
   "Failed. Perhaps you don't have permission to it.": "失敗しました。権限の有無を確認して下さい",
-  "Open cache dir": "キャッシュの保存先",
   "Volume off": "ボリューム　オフ",
   "Volume on": "ボリューム　オン",
   "Volume": "ボリューム",
@@ -35,13 +34,12 @@
   "Download latest version": "最新バージョンをダウンロードします",
   "Aliyun": "Aliyun",
   "Connection failed after %s retry": {
-     "one": "ネットワークエラーが発生しました。今第 %s 回の再試行しています",
-     "other": "ネットワークエラーが発生しました。今第 %s 回の再試行しています"
-   },
+    "one": "ネットワークエラーが発生しました。今第 %s 回の再試行しています",
+    "other": "ネットワークエラーが発生しました。今第 %s 回の再試行しています"
+  },
   "Network error: HTTP %s": "ネットワークエラー、HTTP %s",
   "Connection failed.": "接続できません。ネットワークとプロキシの設定を確認して下さい",
   "The server presented you a cat. (Error code: %s)": "猫を検出しました。(エラーコード: %s)",
-
   "Modernization succeeded! ": "近代化改修に成功しました！",
   "Modernization failed.": "近代化改修に失敗しました…",
   "Firepower": "火力",
@@ -49,11 +47,19 @@
   "AntiAir": "対空",
   "Armor": "装甲",
   "Luck": "運",
-
-  "RefreshGameDialogTip": false,
-
+  "Refresh game": "ゲームをリロード",
+  "Confirm Refreshing": "リロードの確認",
+  "Are you sure to refresh the game?": "リロードですか？",
+  "Refresh page": "ページをリロード",
+  "Reload Flash": "ゲームだけをリロード",
+  "RefreshGameDialogTip": {
+    "text1": "ヒント：右クリックしてゲームだけをリロード、Shift キーを押して左クリックしてページをリロード。この二つの方法は",
+    "b1": "確認ダイアログがありません",
+    "text2": "。注意してください。"
+  },
+  "\"Refresh page\" is the same as pressing F5.": "“ページをリロード”は通常の再読み込みと同じです。",
+  "\"Reload Flash\" reloads only the Flash part, this is usually faster but could result in catbomb.": "“ゲームだけをリロード”はゲームエリアをリロード、速いだけど成功率が不安定です。",
   "Resupply cost %d bauxite": "ボーキサイトを%d消費した",
-
   "doyouknow-prefix": "ヒント：",
   "doyouknow-contents": [
     ""
