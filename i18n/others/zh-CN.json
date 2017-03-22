@@ -52,6 +52,19 @@
 
   "Resupply cost %d bauxite": "补给消耗了%d铝土",
 
+  "Refresh game": "刷新游戏确认",
+  "Confirm Refreshing": "刷新游戏",
+  "Are you sure to refresh the game?": "确定要刷新游戏吗？",
+  "Refresh page": "刷新游戏页面",
+  "Reload Flash": "重新载入Flash",
+  "RefreshGameDialogTip": {
+      "text1": "提示：右键单击此按钮可重新载入Flash，按住Shift同时左键单击此按钮可刷新游戏页面，但这两种刷新方法都",
+      "b1": "不会弹出该确认对话框",
+      "text2": "，请自担使用风险。"
+  },
+  "\"Refresh page\" is the same as pressing F5.": "“刷新游戏页面”与在页面上按F5效果相同。",
+  "\"Reload Flash\" reloads only the Flash part, this is usually faster but could result in catbomb.": "“重新载入Flash”只重新载入Flash部分，一般更快，但可能会导致网络异常错误。",
+
   "Good day and welcome to poi %s! Before your use, here are some information for you": "诶嘿！欢迎使用 poi %s！使用之前看看下面！",
   "poi will never modify your game data package, but please use trusted executables and plugins!": "poi 不会修改任何游戏内的发包与收包，但是请使用可信的 poi 版本和可信的插件！",
   "poi does not use proxy by default, which you may change in settings panel.": "poi 默认不使用代理。更改代理的设置在设置面板中可以找到。",

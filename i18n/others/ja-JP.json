@@ -50,6 +50,8 @@
   "Armor": "装甲",
   "Luck": "運",
 
+  "RefreshGameDialogTip": false,
+
   "Resupply cost %d bauxite": "ボーキサイトを%d消費した",
 
   "doyouknow-prefix": "ヒント：",

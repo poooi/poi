@@ -6,8 +6,9 @@ import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
+import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
-const {$, i18n, config, APPDATA_PATH} = window
+const {$, i18n, config, APPDATA_PATH, toggleModal} = window
 const {openItem} = shell
 const __ = i18n.others.__.bind(i18n.others)
 
@@ -114,6 +115,35 @@ const PoiControl = connect((state, props) => ({
   handleUnlockWebview = () => {
     $('kan-game webview').executeJavaScript('window.unalign()')
   }
+  handleRefreshGameDialog = (e) => {
+    if (e.shiftKey) {
+      gameRefreshPage()
+      return
+    }
+
+    const tipTexts =
+      i18n.others.__("RefreshGameDialogTip") ||
+      i18n.others.locales["en-US"]["RefreshGameDialogTip"]
+
+    toggleModal(
+      __("Confirm Refreshing"),
+        <div>
+        {__("Are you sure to refresh the game?")}
+        <ul>
+        <li>{__('"Refresh page" is the same as pressing F5.')}</li>
+        <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
+        </ul>
+        {tipTexts.text1}<b>{tipTexts.b1}</b>{tipTexts.text2}
+      </div>,
+      [ 
+        { name: __("Refresh page"),
+          func: gameRefreshPage,
+          style: "warning" },
+        { name: __("Reload Flash"),
+          func: gameReloadFlash,
+          style: "danger" },
+      ])
+  }
   handleSetExtend = () => {
     this.setState({extend: !this.state.extend})
   }
@@ -149,6 +179,16 @@ const PoiControl = connect((state, props) => ({
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{__('Auto adjust')}</Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='right' overlay={
+                <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
+                  {__("Refresh game")}
+                </Tooltip>}>
+              <Button
+                onClick={this.handleRefreshGameDialog}
+                onContextMenu={gameReloadFlash}
+                bsSize='small'><FontAwesome name='refresh' />
+              </Button>
             </OverlayTrigger>
           </div>
         </Collapse>

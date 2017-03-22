@@ -50,6 +50,8 @@
   "Armor": "裝甲",
   "Luck": "運",
 
+  "RefreshGameDialogTip": false,
+
   "Resupply cost %d bauxite": "補給消耗了%d鋁土",
 
   "Good day and welcome to poi %s! Before your use, here are some information for you": "誒嘿！歡迎使用 poi %s！使用之前看看下面！",

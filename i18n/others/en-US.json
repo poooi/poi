@@ -48,6 +48,12 @@
   "Armor": "Armor",
   "Luck": "Luck",
 
+  "RefreshGameDialogTip": {
+      "text1": "Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are ",
+      "b1": "without confirmation",
+      "text2": ", use at your own risk."
+  },
+
   "doyouknow-prefix": "#Tips# ",
   "doyouknow-contents": [
     "We frequently introduce new features in \"Tips\". You may disable it in settings though",
