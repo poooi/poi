@@ -19,7 +19,6 @@ export default {
     static propTypes = {
       layout: PropTypes.string.isRequired,
       doubleTabbed: PropTypes.bool.isRequired,
-      activeFleetId: PropTypes.number.isRequired,
     }
     render() {
       return (
@@ -37,7 +36,7 @@ export default {
                     <ResourcePanel />
                   </div>
                   <div className="miniship miniship-area-horizontal" id='MiniShip' ref="miniship">
-                    <MiniShip activeFleetId={this.props.activeFleetId} />
+                    <MiniShip />
                   </div>
                 </div>
                 <div className="panel-col half bottom-left-area">
@@ -101,7 +100,7 @@ export default {
                 </div>
               </div>
               <div className="miniship panel-col" id='MiniShip' ref="miniship" style={{width:"40%"}}>
-                <MiniShip activeFleetId={this.props.activeFleetId} />
+                <MiniShip />
               </div>
             </div>
           }

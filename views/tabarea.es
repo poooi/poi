@@ -15,7 +15,7 @@ import PluginWrap from './plugin-wrapper'
 
 import { isInGame } from 'views/utils/game-utils'
 
-const {i18n, dbg} = window
+const {i18n, dbg, dispatch} = window
 const __ = i18n.others.__.bind(i18n.others)
 
 
@@ -45,15 +45,6 @@ const TabContentsUnion = connect(
     return !shallowEqual(omit(this.props, ['children']), omit(nextProps, ['children']))
       || !shallowEqual(this.state, nextState)
       || !isEqual(this.childrenKey(this.props.children), this.childrenKey(nextProps.children))
-  }
-  componentDidMount() {
-    window.addEventListener('TabContentsUnion.show', this.handleShowEvent)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('TabContentsUnion.show', this.handleShowEvent)
-  }
-  handleShowEvent = (e) => {
-    this.setNewKey(e.detail.key)
   }
   childrenKey = (children) => {
     return Children.map(children, (child) => child.key).filter(Boolean)
@@ -147,6 +138,8 @@ export default connect(
     plugins: state.plugins,
     doubleTabbed: get(state.config, 'poi.tabarea.double', false),
     useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
+    activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
+    activePluginName: get(state.ui, 'activePluginName', ''),
   }),
   undefined,
   undefined,
@@ -156,25 +149,8 @@ export default connect(
     plugins: PropTypes.array.isRequired,
     doubleTabbed: PropTypes.bool.isRequired,
     useGridMenu: PropTypes.bool.isRequired,
-  }
-  static childContextTypes = {
-    selectTab: PropTypes.func.isRequired,
-    selectFleet: PropTypes.func.isRequired,
-  }
-  constructor(props) {
-    super(props)
-    this.state = {
-      activeMainTab: 'mainView',
-      activePluginName: null,
-      // Don't pass activeFleetId via context, see https://github.com/facebook/react/issues/2517
-      activeFleetId: 0,
-    }
-  }
-  getChildContext() {
-    return {
-      selectTab: this.selectTab,
-      selectFleet: this.selectFleet,
-    }
+    activeMainTab: PropTypes.string.isRequired,
+    activePluginName: PropTypes.string.isRequired,
   }
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
@@ -186,20 +162,18 @@ export default connect(
     const cur = (new Date()).getTime()
     dbg.extra('moduleRenderCost').log(`the cost of tab-module's render: ${cur-this.nowTime}ms`)
   }
+  dispatchTabChangeEvent = (tabInfo) =>
+    dispatch({
+      type: '@@TabSwitch',
+      tabInfo,
+    })
   selectTab = (key) => {
     if (key == null)
       return
-    const event = new CustomEvent('TabContentsUnion.show', {
-      bubbles: true,
-      cancelable: false,
-      detail: {
-        key: key,
-      },
-    })
-    window.dispatchEvent(event)
-  }
-  selectFleet = (fleetId) => {
-    this.setState({activeFleetId: fleetId})
+    this.refs.tabKeyUnion.getWrappedInstance().setNewKey(key)
+    if (this.refs.mainTabKeyUnion) {
+      this.refs.mainTabKeyUnion.getWrappedInstance().setNewKey(key)
+    }
   }
   handleSelectTab = (key) => {
     this.selectTab(key)
@@ -270,7 +244,7 @@ export default connect(
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.doubleTabbed != this.props.doubleTabbed)
-      this.setState({
+      this.dispatchTabChangeEvent({
         activeMainTab: 'mainView',
       })
   }
@@ -304,7 +278,7 @@ export default connect(
     })
     const tabbedPlugins = this.tabbedPlugins()
     const activePlugin = tabbedPlugins.length == 0 ? {} :
-      tabbedPlugins.find((p) => p.packageName === this.state.activePluginName) || tabbedPlugins[0]
+      tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const activePluginName = activePlugin.packageName
     const defaultPluginTitle = <span><FontAwesome name='sitemap' />{__(' Plugins')}</span>
     const pluginDropdownContents = this.props.plugins.length == 0 ? (
@@ -313,7 +287,7 @@ export default connect(
       </MenuItem>
     ) : (
       this.listedPlugins().map((plugin, index) =>
-        <MenuItem key={plugin.id} eventKey={this.state.activeMainTab === plugin.id ? '' : plugin.id} onSelect={plugin.handleClick}>
+        <MenuItem key={plugin.id} eventKey={this.props.activeMainTab === plugin.id ? '' : plugin.id} onSelect={plugin.handleClick}>
           {plugin.displayName}
         </MenuItem>
       )
@@ -322,13 +296,13 @@ export default connect(
       <PluginWrap
         key={plugin.id}
         plugin={plugin}
-        onSelected={(key) => this.setState({activePluginName: key})}
+        onSelected={(key) => this.dispatchTabChangeEvent({activePluginName: key})}
       />
     )
 
     return !this.props.doubleTabbed ? (
       <div>
-        <Nav bsStyle="tabs" activeKey={this.state.activeMainTab} id="top-nav" className={navClass}
+        <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} id="top-nav" className={navClass}
           onSelect={this.handleSelectTab}>
           <NavItem key='mainView' eventKey='mainView'>
             {mainview.displayName}
@@ -348,12 +322,12 @@ export default connect(
           </NavItem>
         </Nav>
         <TabContentsUnion ref='tabKeyUnion'
-          onChange={(key) => this.setState({activeMainTab: key})}>
+          onChange={(key) => this.dispatchTabChangeEvent({activeMainTab: key})}>
           <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-            <mainview.reactClass activeFleetId={this.state.activeFleetId} />
+            <mainview.reactClass />
           </div>
           <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-            <shipview.reactClass activeFleetId={this.state.activeFleetId} />
+            <shipview.reactClass />
           </div>
           {pluginContents}
           <div id={settings.name} className="poi-app-tabpane" key='settings'>
@@ -364,7 +338,7 @@ export default connect(
     ) : (
       <div className='poi-tabs-container'>
         <div className="no-scroll">
-          <Nav bsStyle="tabs" activeKey={this.state.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
+          <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
             <NavItem key='mainView' eventKey='mainView'>
               {mainview.displayName}
             </NavItem>
@@ -376,15 +350,16 @@ export default connect(
             </NavItem>
           </Nav>
           <TabContentsUnion
-            onChange={(key) => this.setState({activeMainTab: key})}>
+            ref='mainTabKeyUnion'
+            onChange={(key) => this.dispatchTabChangeEvent({activeMainTab: key})}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
-              <mainview.reactClass activeMainTab={this.state.activeMainTab} activeFleetId={this.state.activeFleetId} />
+              <mainview.reactClass activeMainTab={this.props.activeMainTab} />
             </div>
             <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
-              <shipview.reactClass activeMainTab={this.state.activeMainTab} activeFleetId={this.state.activeFleetId} />
+              <shipview.reactClass activeMainTab={this.props.activeMainTab} />
             </div>
             <div id={settings.name} className="poi-app-tabpane" key='settings'>
-              <settings.reactClass activeMainTab={this.state.activeMainTab}/>
+              <settings.reactClass activeMainTab={this.props.activeMainTab}/>
             </div>
           </TabContentsUnion>
         </div>
