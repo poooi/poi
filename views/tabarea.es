@@ -29,22 +29,20 @@ const TabContentsUnion = connect(
   undefined,
   {pure: false, withRef: true}
 )(class tabContentsUnion extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      nowKey: null,
-      preKey: null,
-    }
-  }
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     children: PropTypes.node.isRequired,
-    onChange: PropTypes.func,
+    activeTab: PropTypes.string.isRequired,
   }
   shouldComponentUpdate(nextProps, nextState) {
     return !shallowEqual(omit(this.props, ['children']), omit(nextProps, ['children']))
       || !shallowEqual(this.state, nextState)
       || !isEqual(this.childrenKey(this.props.children), this.childrenKey(nextProps.children))
+  }
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.activeTab != this.props.activeTab) {
+      this.prevTab = this.props.activeTab
+    }
   }
   childrenKey = (children) => {
     return Children.map(children, (child) => child.key).filter(Boolean)
@@ -53,52 +51,11 @@ const TabContentsUnion = connect(
     return Children.map(children,
       (child) => child.key === key ? child : null).filter(Boolean)[0]
   }
-  setNewKey = (nxtKey, force=false) => {
-    const nxtChild = this.findChildByKey(this.props.children, nxtKey)
-    const preKey = this.state.nowKey
-    if (!nxtChild)
-      return
-    if (!force) {
-      const nowKey = this.state.nowKey || (this.props.children[0] || {}).key
-      if (nowKey && nxtKey === nowKey)
-        return
-    }
-    this.setState({
-      nowKey: nxtKey,
-      preKey: preKey,
-    })
-    if (this.props.onChange)
-      this.props.onChange(nxtKey)
-    if (nxtChild.props.onSelected) {
-      nxtChild.props.onSelected(nxtKey)
-    }
-  }
   activeKey = () => {
-    return this.state.nowKey || (this.props.children[0] || {}).key
+    return this.props.activeTab || (this.props.children[0] || {}).key
   }
   prevKey = () => {
-    return this.state.preKey || (this.props.children[0] || {}).key
-  }
-  setTabShow = (key) => {
-    Children.forEach(this.props.children, (child) => {
-      if (child.key === key)
-        this.setNewKey(key)
-    })
-  }
-  setTabOffset = (offset) => {
-    if (this.props.children == null)
-      return
-    const nowKey = this.activeKey()
-    const childrenCount = Children.count(this.props.children)
-    Children.forEach(this.props.children, (child, index) => {
-      if (child.key == nowKey) {
-        const nextIndex = (index+offset+childrenCount) % childrenCount
-        Children.forEach(this.props.children, (child_, index_) => {
-          if (index_ == nextIndex)
-            this.setNewKey(child_.key)
-        })
-      }
-    })
+    return this.prevTab || (this.props.children[0] || {}).key
   }
   render() {
     let onTheLeft = true
@@ -170,10 +127,24 @@ export default connect(
   selectTab = (key) => {
     if (key == null)
       return
-    this.refs.tabKeyUnion.getWrappedInstance().setNewKey(key)
-    if (this.refs.mainTabKeyUnion) {
-      this.refs.mainTabKeyUnion.getWrappedInstance().setNewKey(key)
+    let tabInfo = {}
+    const mainTabKeyUnion = this.props.doubleTabbed ? this.refs.mainTabKeyUnion : this.refs.tabKeyUnion
+    const mainTabInstance = mainTabKeyUnion.getWrappedInstance()
+    if (mainTabInstance.findChildByKey(mainTabInstance.props.children, key)) {
+      tabInfo = {
+        ...tabInfo,
+        activeMainTab: key,
+      }
     }
+    const tabKeyUnionInstance = this.refs.tabKeyUnion.getWrappedInstance()
+    if ((!['mainView', 'shipView', 'settings'].includes(key)) &&
+      tabKeyUnionInstance.findChildByKey(tabKeyUnionInstance.props.children, key)) {
+      tabInfo = {
+        ...tabInfo,
+        activePluginName: key,
+      }
+    }
+    this.dispatchTabChangeEvent(tabInfo)
   }
   handleSelectTab = (key) => {
     this.selectTab(key)
@@ -188,7 +159,7 @@ export default connect(
     this.selectTab('settings')
   }
   handleCtrlOrCmdNumberKeyDown = (num) => {
-    let key, isPlugin
+    let key
     switch (num) {
     case 1:
       key = 'mainView'
@@ -198,18 +169,21 @@ export default connect(
       break
     default:
       key = (this.props.plugins[num-3] || {}).packageName
-      isPlugin = key != null ? null : 'plugin'
       break
     }
     this.selectTab(key)
-    if (!this.props.doubleTabbed)
-      this.selectTab(isPlugin)
   }
   handleShiftTabKeyDown = () => {
-    this.refs.tabKeyUnion.getWrappedInstance().setTabOffset(-1)
+    this.handleSetTabOffset(-1)
   }
   handleTabKeyDown = () => {
-    this.refs.tabKeyUnion.getWrappedInstance().setTabOffset(1)
+    this.handleSetTabOffset(1)
+  }
+  handleSetTabOffset = (offset) => {
+    const tabKeyUnionInstance = this.refs.tabKeyUnion.getWrappedInstance()
+    const childrenKey = tabKeyUnionInstance.childrenKey(tabKeyUnionInstance.props.children)
+    const nowIndex = childrenKey.indexOf(this.props.doubleTabbed ? this.props.activePluginName : this.props.activeMainTab)
+    this.selectTab(childrenKey[(nowIndex + childrenKey.length + offset) % childrenKey.length])
   }
   handleKeyDown = () => {
     if (this.listener != null)
@@ -296,7 +270,6 @@ export default connect(
       <PluginWrap
         key={plugin.id}
         plugin={plugin}
-        onSelected={(key) => this.dispatchTabChangeEvent({activePluginName: key})}
       />
     )
 
@@ -321,8 +294,7 @@ export default connect(
             <FontAwesome key={0} name='cog' />
           </NavItem>
         </Nav>
-        <TabContentsUnion ref='tabKeyUnion'
-          onChange={(key) => this.dispatchTabChangeEvent({activeMainTab: key})}>
+        <TabContentsUnion ref='tabKeyUnion' activeTab={this.props.activeMainTab}>
           <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
             <mainview.reactClass />
           </div>
@@ -351,7 +323,7 @@ export default connect(
           </Nav>
           <TabContentsUnion
             ref='mainTabKeyUnion'
-            onChange={(key) => this.dispatchTabChangeEvent({activeMainTab: key})}>
+            activeTab={this.props.activeMainTab}>
             <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
               <mainview.reactClass activeMainTab={this.props.activeMainTab} />
             </div>
@@ -370,7 +342,8 @@ export default connect(
             {pluginDropdownContents}
             </NavDropdown>
           </Nav>
-          <TabContentsUnion ref='tabKeyUnion'>
+          <TabContentsUnion ref='tabKeyUnion'
+            activeTab={this.props.activePluginName}>
             {pluginContents}
           </TabContentsUnion>
         </div>
