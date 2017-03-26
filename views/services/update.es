@@ -62,8 +62,12 @@ const checkUpdate = async () => {
 
 const toggleUpdate = (version, log) => {
   const title = <span>{__('Update')} poi-v{version}</span>
+  // react-remarkable uses remarkable as parser，
+  // remarkable disables HTML by default，
+  // react-remarkable's default option dose not enable HTML，
+  // it could be considered safe
   const content = (
-    <Markdown source={log} className="markdown-body"/>
+    <Markdown source={log} />
   )
   const footer = [
     {
