@@ -27,7 +27,7 @@ const TabContentsUnion = connect(
   }),
   undefined,
   undefined,
-  {pure: false, withRef: true}
+  {pure: true, withRef: true}
 )(class tabContentsUnion extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
@@ -100,7 +100,7 @@ export default connect(
   }),
   undefined,
   undefined,
-  {pure: false}
+  {pure: true}
 )(class ControlledTabArea extends Component {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
