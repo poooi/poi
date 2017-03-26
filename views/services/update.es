@@ -29,7 +29,7 @@ const checkUpdate = async () => {
     [response, body] = await requestAsync(`http://${global.SERVER_HOSTNAME}/update/latest.json`, {
       method: 'GET',
       json: true,
-      headers:{
+      headers: {
         'User-Agent': `poi v${POI_VERSION}`,
       },
     })
@@ -38,16 +38,23 @@ const checkUpdate = async () => {
     console.log('Check update error.')
   }
 
-  if (response.statusCode === 200){
+  if ((response || {}).statusCode === 200){
     const version = body.version
     console.log(`Remote version: ${version}. Current version: ${POI_VERSION}`)
     const knownVersion = config.get('poi.update.knownVersion', POI_VERSION)
 
     if (semver.lt(POI_VERSION, version) && semver.lt(knownVersion, version)) {
+      let resp
+      let log
       try {
         const currentLang = LANG.includes(language) ? language : 'en-US'
-        let [resp, log] = await requestAsync(`http://${global.SERVER_HOSTNAME}/update/${currentLang}.md`)
-        if (resp.statusCode != 200) {
+        ;[resp, log] = await requestAsync(`http://${global.SERVER_HOSTNAME}/update/${currentLang}.md`, {
+          method: 'GET',
+          headers: {
+            'User-Agent': `poi v${POI_VERSION}`,
+          },
+        })
+        if ((resp || {}).statusCode != 200) {
           console.log('fetch update log error')
           log = ''
         }
