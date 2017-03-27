@@ -54,6 +54,8 @@ npm run deploy
 npm start
 ```
 
+You do not have to run `npm i` and `npm run deploy` with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
+
 ## Available Plugins
 [plugin-prophet](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
 > Show the result of battle.
@@ -106,15 +108,24 @@ npm start
 [plugin-hairstrength](https://github.com/ruiii/plugin-hairstrength.git) by [Rui](https://github.com/ruiii)
 > Senka calculator.
 
-## Guides for developers
+[plugin-anchorage-repair](https://github.com/KagamiChan/plugin-anchorage-repair.git) by [かがみ](https://github.com/KagamiChan)
+> Helper for akashi repair
 
-About plugin, read the [docs](https://github.com/poooi/poi/tree/master/docs).
+## Contributing
+
+Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
+
+On plugin development, the [docs](https://github.com/poooi/poi/tree/master/docs) are available in Chinese and English.
+
+Please feel free to contact us via github issues, [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ), QQ group, weibo or anything else.
+ 
 
 ## Based on
 
 + [Electron](https://github.com/atom/electron)
 + [React](https://github.com/facebook/react)
 + [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
++ [Redux](https://github.com/reactjs/redux)
 
 ## License
 [The MIT License](https://github.com/poooi/poi/blob/master/LICENSE)
