@@ -4,9 +4,9 @@ module.exports = {
     "add-module-exports",
     ["transform-async-to-module-method", {
       module: "bluebird",
-      method: "coroutine"
-    }]
+      method: "coroutine",
+    }],
   ],
   ignore: false,
-  only: /.es$/
+  only: /.es$/,
 }

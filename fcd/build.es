@@ -1,6 +1,5 @@
-
 import Promise from 'bluebird'
-import _ from 'lodash'
+// import _ from 'lodash'
 import fs from 'fs-extra'
 import path from 'path'
 import request from 'request'

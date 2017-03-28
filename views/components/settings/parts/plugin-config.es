@@ -594,8 +594,8 @@ const PluginConfig = connect((state, props) => ({
   render() {
     const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
     const mirrors = PluginManager.getMirrors()
-    let updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
-    let installStatusFAname = this.state.installingAll ? 'spinner' : 'download'
+    const updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
+    const installStatusFAname = this.state.installingAll ? 'spinner' : 'download'
     let installStatusbsStyle, installStatusText
     switch (this.state.manuallyInstallStatus) {
     case 1:
@@ -614,7 +614,7 @@ const PluginConfig = connect((state, props) => ({
       installStatusbsStyle = 'warning'
       installStatusText = ''
     }
-    let advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
+    const advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
     return (
       <form className='contents-wrapper' style={{marginTop: '10px'}}>
         <FileDrop
@@ -627,7 +627,7 @@ const PluginConfig = connect((state, props) => ({
         <Grid className='correct-container'>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
-              { window.isSafeMode && 
+              { window.isSafeMode &&
                 <Panel header={__('Safe Mode')} bsStyle='warning'>
                   {__('Poi is running in safe mode, plugins are not enabled automatically.')}
                 </Panel>
@@ -777,7 +777,7 @@ const PluginConfig = connect((state, props) => ({
           }
           {
             Object.keys(uninstalledPluginSettings).map((name, index) => {
-              let value = uninstalledPluginSettings[name]
+              const value = uninstalledPluginSettings[name]
               return (
                 <UninstalledPlugin
                   key={name}

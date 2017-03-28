@@ -2,7 +2,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get, isEqual } from 'lodash'
+import { isEqual } from 'lodash'
 
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)

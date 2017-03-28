@@ -196,7 +196,7 @@ export function readPlugin(pluginPath) {
   }
   plugin.isOutdated = plugin.needRollback
   plugin = updateI18n(plugin)
-  let icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
+  const icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
   plugin.displayName = (
     <span>
       <FontAwesome key={0} name={icon} />

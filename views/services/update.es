@@ -3,11 +3,9 @@ import { shell } from 'electron'
 import semver from 'semver'
 import Promise from 'bluebird'
 import Markdown from 'react-remarkable'
-import path from 'path'
 
 const {POI_VERSION, i18n, toggleModal, config, language} = window
 const __ = i18n.others.__.bind(i18n.others)
-const __n = i18n.others.__n.bind(i18n.others)
 
 const request = Promise.promisifyAll(require('request'))
 const requestAsync = Promise.promisify(request, {multiArgs: true})
@@ -35,7 +33,7 @@ const checkUpdate = async () => {
     })
   } catch (e) {
     error(e.stack)
-    console.log('Check update error.')
+    console.warn('Check update error.')
   }
 
   if ((response || {}).statusCode === 200){
@@ -55,16 +53,16 @@ const checkUpdate = async () => {
           },
         })
         if ((resp || {}).statusCode != 200) {
-          console.log('fetch update log error')
+          console.warn('fetch update log error')
           log = ''
         }
         toggleUpdate(version, log)
       } catch (e) {
         error(e.stack)
-        console.log('fetch update log error')
+        console.warn('fetch update log error')
       }
     }
-  } 
+  }
 }
 
 const toggleUpdate = (version, log) => {

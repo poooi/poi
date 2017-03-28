@@ -1,7 +1,7 @@
 const {i18n, config} = window
 
 const __ = window.i18n.others.__.bind(i18n.others)
-const __n = window.i18n.others.__n.bind(i18n.others)
+// const __n = window.i18n.others.__n.bind(i18n.others)
 const INTERVAL = config.get('poi.doyouknow.interval', 1800)
 const STICKY_TIME = 20
 const PREFIX = __("doyouknow-prefix")

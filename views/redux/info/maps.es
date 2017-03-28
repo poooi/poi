@@ -1,4 +1,4 @@
-import { reduxSet, indexify, compareUpdate, pickExisting } from 'views/utils/tools'
+import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
 export function reducer(state={}, {type, body, postBody}) {
   // Compatibility: Old api arranges maps in array

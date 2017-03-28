@@ -1,6 +1,6 @@
 // *** INCLUDE ***
 require('babel-register')(require('./babel.config'))
-const os = require('os')
+//const os = require('os')
 const path = require('path-extra')
 const Promise = require('bluebird')
 const {promisify} = Promise
@@ -20,13 +20,13 @@ const gitArchive = require('git-archive')
 
 const {log} = require('./lib/utils')
 
-const DONT_PACK_APP_IF_EXISTS = false
+//const DONT_PACK_APP_IF_EXISTS = false
 const USE_GITHUB_FLASH_MIRROR = false
 
 // *** CONSTANTS ***
 const BUILD_DIR_NAME = 'build'
 const DOWNLOADDIR_NAME = 'download'
-const REALEASE_DIR_NAME = 'release'
+//const REALEASE_DIR_NAME = 'release'
 const PLATFORM_TO_PATHS = {
   'win32-ia32': 'win-ia32',
   'win32-x64': 'win-x64',
@@ -45,10 +45,10 @@ const config = (() => {
   return require('./lib/config')
 })()
 
-let USE_TAOBAO_MIRROR = config.get('buildscript.useTaobaoMirror', true)
-if (process.env.TRAVIS) {
-  USE_TAOBAO_MIRROR = false
-}
+// let USE_TAOBAO_MIRROR = config.get('buildscript.useTaobaoMirror', true)
+// if (process.env.TRAVIS) {
+//   USE_TAOBAO_MIRROR = false
+// }
 const NPM_EXEC_PATH = path.join(__dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 const PLUGIN_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'plugin.json')
@@ -173,7 +173,7 @@ const downloadExtractZipAsync = async (url, downloadDir, filename, destPath,
       try {
         await fs.removeAsync(zipPath)
       } catch (e) {
-        console.log(e.stack)
+        console.error(e.stack)
       }
       if (retryCount === MAX_RETRY) {
         throw e
@@ -204,7 +204,7 @@ const compress7zAsync = async (files, archive, options) => {
   try {
     await fs.removeAsync(archive)
   } catch (e) {
-    console.log(e.stack)
+    console.error(e.stack)
   }
   await (new n7z()).add(archive, files, options)
 }
@@ -220,7 +220,7 @@ const gitArchiveAsync = async (tarPath, tgtDir) => {
   try{
     await fs.removeAsync(tarPath)
   } catch (e) {
-    console.log(e.stack)
+    console.error(e.stack)
   }
   try {
     await promisify(gitArchive)({
@@ -356,7 +356,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
     await fs.removeAsync(installRoot)
     await fs.removeAsync(tarRoot)
   } catch (e) {
-    console.log(e.stack)
+    console.error(e.stack)
   }
   await fs.ensureDirAsync(installRoot)
   await fs.ensureDirAsync(tarRoot)
@@ -416,8 +416,8 @@ export const buildAsync = async (poiVersion, dontRemove) => {
     return
   }
 
-  const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
-  const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
+  // const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  // const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const BUILDING_ROOT = path.join(__dirname, 'app_compiled')
   const stage1App = path.join(BUILDING_ROOT, 'stage1')
   const tarPath = path.join(stage1App, "app_stage1.tar")
@@ -430,12 +430,12 @@ export const buildAsync = async (poiVersion, dontRemove) => {
       await fs.removeAsync(BUILDING_ROOT)
     }
   } catch (e) {
-    console.log(e.stack)
+    console.error(e.stack)
   }
   try {
     await fs.removeAsync(stage1App)
   } catch (e) {
-    console.log(e.stack)
+    console.error(e.stack)
   }
   await fs.ensureDirAsync(stage1App)
   await fs.ensureDirAsync(stage2App)

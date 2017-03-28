@@ -1,7 +1,7 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 
-const {unzip, sum, clone} = require('lodash')
+const {unzip, sum} = require('lodash')
 const {i18n, config} = window
 
 const __ = window.i18n.others.__.bind(i18n.others)

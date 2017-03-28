@@ -39,11 +39,11 @@ export const damagedCheck = ({$ships, $equips}, {sortieStatus, escapedPos}, {fle
 }
 
 export const gameRefreshPage = () => {
-  $('kan-game webview').reload();
+  window.$('kan-game webview').reload()
 }
 
 export const gameReloadFlash = () => {
-  $('kan-game webview').executeJavaScript(`
+  window.$('kan-game webview').executeJavaScript(`
   var doc;
   if (document.getElementById('game_frame')) {
     doc = document.getElementById('game_frame').contentDocument;

@@ -2,7 +2,6 @@ import React from 'react'
 
 const {config, i18n, POI_VERSION} = window
 const __ = window.i18n.others.__.bind(i18n.others)
-const __n = window.i18n.others.__n.bind(i18n.others)
 
 // Readme contents
 const dontShowAgain = () =>

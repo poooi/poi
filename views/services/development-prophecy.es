@@ -1,6 +1,5 @@
 const {success, warn, $slotitems, i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
-const __n = i18n.main.__n.bind(i18n.main)
 
 const showItemDevResultDelay = window.config.get('poi.delayItemDevResult', false) ? 6200 : 500
 
