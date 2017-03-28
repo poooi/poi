@@ -216,6 +216,29 @@ export default connect(
       }
     })
   }
+  handleResponse = (e) => {
+    let toSwitch
+    if (['/kcsapi/api_port/port',
+      '/kcsapi/api_get_member/ndock',
+      '/kcsapi/api_get_member/kdock',
+    ].includes(e.detail.path)) {
+      toSwitch = 'mainView'
+    }
+    if (['/kcsapi/api_get_member/preset_deck',
+      '/kcsapi/api_req_hensei/change',
+      '/kcsapi/api_req_kaisou/slot_exchange_index',
+      '/kcsapi/api_req_kaisou/slotset',
+    ].includes(e.detail.path)) {
+      toSwitch = 'shipView'
+    }
+    for (const [id, switchPluginPath] of this.props.plugins.map(plugin => [plugin.id, plugin.switchPluginPath || []])) {
+      if (switchPluginPath.includes(e.detail.path)) {
+        toSwitch = id
+        break
+      }
+    }
+    this.selectTab(toSwitch)
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.doubleTabbed != this.props.doubleTabbed)
       this.dispatchTabChangeEvent({
@@ -225,10 +248,12 @@ export default connect(
   componentDidMount() {
     this.handleKeyDown()
     window.addEventListener('game.start', this.handleKeyDown)
+    window.addEventListener('game.response', this.handleResponse)
     window.openSettings = this.handleCmdCommaKeyDown
   }
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
+    window.removeEventListener('game.response', this.handleResponse)
   }
   // All displaying plugins
   listedPlugins = () => {
