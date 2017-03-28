@@ -36,6 +36,7 @@ install:
 before_script:
   - export TRAVIS=1
   - npm install --silent
+  - npm run lint
 
 script:
   - npm run build
