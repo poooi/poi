@@ -10,7 +10,8 @@
     "build_win": "gulp build && build --win --x64 && build --win --ia32",
     "start": "electron .",
     "start_debug": "electron . --debug",
-    "clean": "gulp clean"
+    "clean": "gulp clean",
+    "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore"
   },
   "repository": {
     "type": "git",
