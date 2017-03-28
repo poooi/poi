@@ -761,6 +761,10 @@ class PoiConfig extends Component {
               label={__('Display Final Stage Notification')}
               configName="poi.lastbattle.enabled"
               defaultVal={true} />
+            <CheckboxLabelConfig
+              label={__('Switch to Plugin Automatically')}
+              configName="poi.autoswitch.enabled"
+              defaultVal={true} />
           </Grid>
         </div>
         <div className="form-group">
