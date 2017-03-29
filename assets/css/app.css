@@ -382,3 +382,7 @@ div[role='tooltip'],
   height: 15px;
   margin-right: 0.5ex;
 }
+.reminder-pop .tooltip-inner {
+  max-width: initial;
+  width: fit-content;
+}

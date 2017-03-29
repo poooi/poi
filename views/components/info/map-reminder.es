@@ -37,7 +37,7 @@ const MapRoutes = connect(
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   return (
     <div>
-      <svg width="150" height="80" viewBox="0 0 150 80" className="maproutes">
+      <svg width="225" height="120" viewBox="0 0 150 80" className="maproutes">
         {// Draw all lines
         map(maproutes, ([beg, end], i) => {
           if (!(mapspots[beg] && mapspots[end])) return null
@@ -80,7 +80,7 @@ const ItemStat = connect(
   })
   return (
     <div>
-      {__('Resources: ')}
+      {Object.keys(stat).length > 0 && __('Resources: ')}
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
@@ -168,7 +168,7 @@ export default connect(
       <OverlayTrigger
         placement='top'
         overlay={
-          <Tooltip id='detail-map-info' style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
+          <Tooltip id='detail-map-info' className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
             <MapRoutes />
             <div>{tooltipMsg.join('  |  ')}</div>
             <ItemStat />
