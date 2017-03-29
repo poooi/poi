@@ -26,6 +26,7 @@ for (const i18nFile of i18nFiles) {
   const namespace = path.basename(i18nFile)
   window.i18n[namespace] = new (require('i18n-2'))({
     locales: ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'],
+    defaultLocale: 'en-US',
     directory: i18nFile,
     updateFiles: false,
     indent: "\t",

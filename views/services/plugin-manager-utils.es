@@ -111,7 +111,7 @@ export function updateI18n(plugin) {
     const namespace = plugin.id
     window.i18n[namespace] = new (require('i18n-2'))({
       locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-      defaultLocale: 'zh-CN',
+      defaultLocale: 'en-US',
       directory: i18nFile,
       updateFiles: false,
       indent: "\t",
