@@ -3,6 +3,7 @@ import Promise from 'bluebird'
 import fs from 'fs-extra'
 import path from 'path'
 import request from 'request'
+import walk from 'walk'
 import CSON from 'cson'
 Promise.promisifyAll(fs)
 Promise.promisifyAll(path)
@@ -29,7 +30,7 @@ async function build_map() {
 }
 
 async function build_meta() {
-  const flist = fs.walkSync(DEST)
+  const flist = walk.walkSync(DEST)
   const meta = await Promise.all(
     flist.map(async (fpath) => {
       const data = JSON.parse(await fs.readFileAsync(fpath))

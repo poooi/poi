@@ -2,6 +2,7 @@ import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { map, get, mapValues } from 'lodash'
 import path from 'path-extra'
+import { remote } from 'electron'
 
 import { store } from 'views/create-store'
 import { buildArray } from 'views/utils/tools'
@@ -41,7 +42,7 @@ Object.defineProperty(window, 'useSVGIcon', {get: () => {
   return config.get('poi.useSVGIcon', false)
 }})
 Object.defineProperty(window, 'screenshotPath', {get: () => {
-  return config.get('poi.screenshotPath', process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(global.APPDATA_PATH, 'screenshots'))
+  return config.get('poi.screenshotPath', process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(global.APPDATA_PATH, 'screenshots'))
 }})
 window.notify = window.notify || {}
 Object.defineProperty(window.notify, 'morale', {get: () => {

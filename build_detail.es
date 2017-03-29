@@ -285,7 +285,7 @@ const filterCopyAppAsync = async (stage1App, stage2App) =>
     const jobs = []
     for (const target of TARGET_LIST) {
       jobs.push(fs.copyAsync(path.join(stage1App, target), path.join(stage2App, target), {
-        clobber: true,
+        overwrite: true,
       }))
     }
     return jobs

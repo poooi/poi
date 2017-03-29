@@ -41,7 +41,7 @@ const PoiControl = connect((state, props) => ({
       width: Math.floor(bound.width),
       height: Math.floor(bound.height),
     }
-    const d = process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
+    const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
     const screenshotPath = config.get('poi.screenshotPath', d)
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
     remote.getGlobal("mainWindow").capturePage(rect, (image) => {
@@ -90,7 +90,7 @@ const PoiControl = connect((state, props) => ({
   }
   handleOpenScreenshotFolder = () => {
     try {
-      const d = process.platform == 'darwin' ? path.join(path.homedir(), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
+      const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
       const screenshotPath = config.get('poi.screenshotPath', d)
       fs.ensureDirSync(screenshotPath)
       openItem(screenshotPath)
@@ -135,7 +135,7 @@ const PoiControl = connect((state, props) => ({
         </ul>
         {tipTexts.text1}<b>{tipTexts.b1}</b>{tipTexts.text2}
       </div>,
-      [ 
+      [
         { name: __("Refresh page"),
           func: gameRefreshPage,
           style: "warning" },
