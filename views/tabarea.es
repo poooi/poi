@@ -234,9 +234,10 @@ export default connect(
         toSwitch = 'shipView'
       }
       for (const [id, switchPluginPath] of this.props.plugins.map(plugin => [plugin.id, plugin.switchPluginPath || []])) {
-        if (switchPluginPath.includes(e.detail.path)) {
-          toSwitch = id
-          break
+        for (const switchPath of switchPluginPath) {
+          if (switchPath === e.detail.path || (switchPath.path === e.detail.path && switchPath.valid && switchPath.valid())) {
+            toSwitch = id
+          }
         }
       }
       this.selectTab(toSwitch)
