@@ -377,3 +377,8 @@ div[role='tooltip'],
   stroke-width: 2;
   stroke: #F5F5F5;
 }
+.material-icon.reminder {
+  width: 15px;
+  height: 15px;
+  margin-right: 0.5ex;
+}

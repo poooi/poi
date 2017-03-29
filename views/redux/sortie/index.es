@@ -77,7 +77,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     let item
     const {api_itemget, api_happening, api_itemget_eo_comment} = body
     // we assume api_itemget, api_happening and api_itemget_eo_comment will not happen at same node
-    const itemGet = api_itemget || api_itemget_eo_comment
+    const itemGet = (api_itemget || [])[0] || api_itemget_eo_comment
     if (typeof itemGet != 'undefined'){
       item = {
         [(itemGet.api_id || 0)]: itemGet.api_getcount || 0,
@@ -107,7 +107,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     let item
     const {api_itemget, api_happening, api_itemget_eo_comment} = body
     // we assume api_itemget, api_happening and api_itemget_eo_comment will not happen at same node
-    const itemGet = api_itemget || api_itemget_eo_comment
+    const itemGet = (api_itemget || [])[0] || api_itemget_eo_comment
     if (typeof itemGet != 'undefined'){
       item = {
         [(itemGet.api_id || 0)]: itemGet.api_getcount || 0,

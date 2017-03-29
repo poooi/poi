@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
-import { get, map, zip } from 'lodash'
+import { get, map, zip, each } from 'lodash'
 
+import { MaterialIcon } from 'views/components/etc/icon'
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
@@ -64,6 +65,35 @@ const MapRoutes = connect(
   )
 })
 
+const ItemStat = connect(
+  (state) => ({
+    itemHistoty: get(state, 'sortie.itemHistory'),
+  })
+)(({itemHistoty}) => {
+  let stat = {}
+  each(itemHistoty, item => {
+    const itemKey = Object.keys(item)[0]
+    stat = {
+      ...stat,
+      [itemKey]: item[itemKey] + (stat[itemKey] || 0),
+    }
+  })
+  return (
+    <div>
+      {__('Resources: ')}
+      {
+        map(Object.keys(stat), itemKey => (
+          itemKey &&
+          <span key={itemKey}>
+            <MaterialIcon materialId={itemKey} className="material-icon reminder"/>
+            {stat[itemKey]}
+          </span>
+          )
+        )
+      }
+    </div>
+  )
+})
 
 // Map Reminder
 export default connect(
@@ -140,7 +170,8 @@ export default connect(
         overlay={
           <Tooltip id='detail-map-info' style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
             <MapRoutes />
-            {tooltipMsg.join('  |  ')}
+            <div>{tooltipMsg.join('  |  ')}</div>
+            <ItemStat />
           </Tooltip>
         }>
         <div>
