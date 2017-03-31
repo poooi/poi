@@ -32,6 +32,8 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       currentNode: null,
       dropCount: 0,
       spotHistory: [],
+      item: null,
+      itemHistory: [],
     }
 
   case '@@Response/kcsapi/api_req_sortie/battleresult':
