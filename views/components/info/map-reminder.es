@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
-import { get, map, zip } from 'lodash'
+import { get, map, zip, each } from 'lodash'
 
+import { MaterialIcon } from 'views/components/etc/icon'
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
@@ -36,7 +37,7 @@ const MapRoutes = connect(
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   return (
     <div>
-      <svg width="150" height="80" viewBox="0 0 150 80" className="maproutes">
+      <svg width="225" height="120" viewBox="0 0 150 80" className="maproutes">
         {// Draw all lines
         map(maproutes, ([beg, end], i) => {
           if (!(mapspots[beg] && mapspots[end])) return null
@@ -64,6 +65,35 @@ const MapRoutes = connect(
   )
 })
 
+const ItemStat = connect(
+  (state) => ({
+    itemHistoty: get(state, 'sortie.itemHistory'),
+  })
+)(({itemHistoty}) => {
+  let stat = {}
+  each(itemHistoty, item => {
+    const itemKey = Object.keys(item)[0]
+    stat = {
+      ...stat,
+      [itemKey]: item[itemKey] + (stat[itemKey] || 0),
+    }
+  })
+  return (
+    <div>
+      {Object.keys(stat).length > 0 && __('Resources: ')}
+      {
+        map(Object.keys(stat), itemKey => (
+          itemKey &&
+          <span key={itemKey}>
+            <MaterialIcon materialId={itemKey} className="material-icon reminder"/>
+            {stat[itemKey]}
+          </span>
+          )
+        )
+      }
+    </div>
+  )
+})
 
 // Map Reminder
 export default connect(
@@ -92,7 +122,7 @@ export default connect(
 
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : this.constructor.mapRanks[rank])
-    return `${__('Sortie area')}: ${mapName}`
+    return `${__('Sortie area: ')}${mapName}`
   }
 
   isFinalAttack = () => {
@@ -129,7 +159,7 @@ export default connect(
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(`${__('Node')}: ${alphaNode} (${currentNode})`)
+      tooltipMsg.push(`${__('Node: ')}${alphaNode} (${currentNode})`)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
       tooltipMsg.push(`HP: ${mapHp[0]} / ${mapHp[1]}`)
@@ -138,9 +168,10 @@ export default connect(
       <OverlayTrigger
         placement='top'
         overlay={
-          <Tooltip id='detail-map-info' style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
+          <Tooltip id='detail-map-info' className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
             <MapRoutes />
-            {tooltipMsg.join('  |  ')}
+            <div>{tooltipMsg.join('  |  ')}</div>
+            <ItemStat />
           </Tooltip>
         }>
         <div>

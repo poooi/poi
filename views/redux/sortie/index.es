@@ -4,6 +4,8 @@
  *   escapedPos: [] | [idx]             // Array of escapeIdx-1 and towIdx-1
  *     // 0 for fleet1Pos1, 6 for fleet2Pos1, ..., 23 for fleet4Pos6
  *   _toEscapeIdx: [idx]                // Tempvar. As in api_escape but -1
+ *   item:                              // item drop or lost at node, undefined if no drop / lost, {0: 0} if Tanaka loves you
+ *   itemHistory:                       // Array of drop or lost history, added only when it happens, does not match spotHistory
  */
 
 const initState = {
@@ -14,6 +16,8 @@ const initState = {
   currentNode: null,
   dropCount: 0,
   spotHistory: [],
+  item: null,
+  itemHistory: [],
 }
 
 export function reducer(state=initState, {type, path, postBody, body}) {
@@ -28,6 +32,8 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       currentNode: null,
       dropCount: 0,
       spotHistory: [],
+      item: null,
+      itemHistory: [],
     }
 
   case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -69,6 +75,21 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     } else {
       sortieStatus[postBody.api_deck_id-1] = true
     }
+
+    let item
+    const {api_itemget, api_happening, api_itemget_eo_comment} = body
+    // we assume api_itemget, api_happening and api_itemget_eo_comment will not happen at same node
+    const itemGet = (api_itemget || [])[0] || api_itemget_eo_comment
+    if (typeof itemGet != 'undefined'){
+      item = {
+        [(itemGet.api_id || 0)]: itemGet.api_getcount || 0,
+      }
+    }
+    if (typeof api_happening != 'undefined') {
+      item = {
+        [(api_happening.api_icon_id || 0)]: -api_happening.api_count || 0, 
+      }
+    }
     return {
       ...state,
       sortieMapId: mapId,
@@ -79,15 +100,32 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       dropCount: 0,
       spotHistory: [startSpot, body.api_no],
       bossSpot: body.api_bosscell_no,
+      item,
+      itemHistory: state.itemHistory.concat(item || []),
     }
   }
 
   case '@@Response/kcsapi/api_req_map/next': {
+    let item
+    const {api_itemget, api_happening, api_itemget_eo_comment} = body
+    // we assume api_itemget, api_happening and api_itemget_eo_comment will not happen at same node
+    const itemGet = (api_itemget || [])[0] || api_itemget_eo_comment
+    if (typeof itemGet != 'undefined'){
+      item = {
+        [(itemGet.api_id || 0)]: itemGet.api_getcount || 0,
+      }
+    } else if (typeof api_happening != 'undefined') {
+      item = {
+        [(api_happening.api_icon_id || 0)]: -api_happening.api_count || 0, 
+      }
+    }
     return {
       ...state,
       currentNode: body.api_no,
       // It is said api_next could be 0
       spotHistory: state.spotHistory.concat(body.api_no || []),
+      item,
+      itemHistory: state.itemHistory.concat(item || []),
     }
   }
 
