@@ -122,7 +122,7 @@ export default connect(
 
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : this.constructor.mapRanks[rank])
-    return `${__('Sortie area')}: ${mapName}`
+    return `${__('Sortie area: ')}${mapName}`
   }
 
   isFinalAttack = () => {
@@ -159,7 +159,7 @@ export default connect(
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(`${__('Node')}: ${alphaNode} (${currentNode})`)
+      tooltipMsg.push(`${__('Node: ')}${alphaNode} (${currentNode})`)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
       tooltipMsg.push(`HP: ${mapHp[0]} / ${mapHp[1]}`)
