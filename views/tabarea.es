@@ -233,9 +233,9 @@ export default connect(
       ].includes(e.detail.path)) {
         toSwitch = 'shipView'
       }
-      for (const [id, switchPluginPath] of this.props.plugins.map(plugin => [plugin.id, plugin.switchPluginPath || []])) {
+      for (const [id, enabled, switchPluginPath] of this.props.plugins.map(plugin => [plugin.id, plugin.enabled, plugin.switchPluginPath || []])) {
         for (const switchPath of switchPluginPath) {
-          if (switchPath === e.detail.path || (switchPath.path === e.detail.path && switchPath.valid && switchPath.valid())) {
+          if (enabled && (switchPath === e.detail.path || (switchPath.path === e.detail.path && switchPath.valid && switchPath.valid()))) {
             toSwitch = id
           }
         }
