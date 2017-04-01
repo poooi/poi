@@ -48,6 +48,7 @@ export class CountdownTimer extends Component {
   constructor(props) {
     super(props)
     this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
+    this.resolveTime = props.resolveTime || resolveTime
   }
   static getTimeRemaining = (completeTime, currentTime=Date.now()) => {
     if (completeTime < 0) {
@@ -128,7 +129,7 @@ export class CountdownTimer extends Component {
     this.timeRemaining--
   }
   render() {
-    return <span ref={(ref) => {this.textLabel = ref}}>{resolveTime(this.timeRemaining)}</span>
+    return <span ref={(ref) => {this.textLabel = ref}}>{this.resolveTime(this.timeRemaining)}</span>
   }
 }
 
@@ -138,10 +139,12 @@ export class CountdownNotifierLabel extends Component {
     completeTime: PropTypes.number.isRequired,
     getNotifyOptions: PropTypes.func,   // (props, timeRemaining) => options | undefined
     getLabelStyle: PropTypes.func,      // (props, timeRemaining) => bsStyle
+    resolveTime: PropTypes.func,        // (timeRemaining) => interpreted time string
   }
   static defaultProps = {
     getNotifyOptions: () => undefined,
     getLabelStyle: () => 'default',
+    resolveTime: resolveTime,
   }
   constructor(props) {
     super(props)
@@ -178,7 +181,8 @@ export class CountdownNotifierLabel extends Component {
         this.props.completeTime >= 0 &&
           <CountdownTimer countdownId={this.props.timerKey}
                           completeTime={this.props.completeTime}
-                          tickCallback={this.tick} />
+                          tickCallback={this.tick}
+                          resolveTime={this.props.resolveTime} />
       }
       </Label>
     )
