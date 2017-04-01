@@ -25,17 +25,12 @@ const alertCSS =
 const alignCSS = document.createElement('style')
 const alignInnerCSS = document.createElement('style')
 
-const getWebviewWidth = async function () {
-  const width = await new Promise((resolve, reject) => {
+window.align = async function () {
+  let zoom = await new Promise((resolve, reject) => {
     remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width", (result) => {
       resolve(result)
     })
   })
-  return width
-}
-
-window.align = async function () {
-  let zoom = await getWebviewWidth()
   zoom = zoom / 800
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
