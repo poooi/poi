@@ -1,8 +1,6 @@
 const electron = require('electron')
-const remote = electron.remote
-const Promise = require('bluebird')
+const { remote } = electron
 const config = remote.require('./lib/config')
-require('coffee-script/register')
 
 // webview focus area fix
 // This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395
@@ -27,17 +25,17 @@ const alertCSS =
 const alignCSS = document.createElement('style')
 const alignInnerCSS = document.createElement('style')
 
-const getWebviewWidth = Promise.coroutine(function* () {
-  const width = yield new Promise((resolve, reject) => {
+const getWebviewWidth = async function () {
+  const width = await new Promise((resolve, reject) => {
     remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width", (result) => {
       resolve(result)
     })
   })
   return width
-})
+}
 
-window.align = Promise.coroutine(function* () {
-  let zoom = yield getWebviewWidth()
+window.align = async function () {
+  let zoom = await getWebviewWidth()
   zoom = zoom / 800
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
@@ -79,7 +77,7 @@ window.align = Promise.coroutine(function* () {
     display: none;
   }
   `
-})
+}
 
 window.unalign = () => {
   alignCSS.innerHTML = ""
