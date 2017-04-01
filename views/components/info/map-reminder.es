@@ -37,27 +37,27 @@ const MapRoutes = connect(
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   return (
     <div>
-      <svg width="225" height="120" viewBox="0 0 150 80" className="maproutes">
+      <svg width="225" height="120" viewBox="0 0 225 120" className="maproutes">
         {// Draw all lines
         map(maproutes, ([beg, end], i) => {
           if (!(mapspots[beg] && mapspots[end])) return null
           const [begX, begY] = mapspots[beg]
           const [endX, endY] = mapspots[end]
-          return <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} />
+          return <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} />
         })}
         {// Draw passed lines
         lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-          begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 100)} y1={parseInt(begY / 100)} x2={parseInt(endX / 100)} y2={parseInt(endY / 100)} className="passed" /> : <noscript />
+          begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} className="passed" /> : <noscript />
         )}
-        <rect x={parseInt(bossSpotLoc[0] / 100) - 3} y={parseInt(bossSpotLoc[1] / 100) - 3} width={6} height={6}
+        <rect x={parseInt(bossSpotLoc[0] / 200 * 3) - 4.5} y={parseInt(bossSpotLoc[1] / 200 * 3) - 4.5} width={9} height={9}
           className='boss' />
         {// Draw all points
         map(mapspots, ([x, y], id) =>
-          <rect key={id} x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4} />
+          <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6} />
         )}
         {// Draw passed points again, highlighting the active one
         map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-          x > 0 ? <rect key={id} x={parseInt(x / 100) - 2} y={parseInt(y / 100) - 2} width={4} height={4}
+          x > 0 ? <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6}
             className={id == activeSpot ? 'active' : 'passed'} /> : <noscript />
         )}
       </svg>
