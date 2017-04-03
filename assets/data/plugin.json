@@ -59,7 +59,7 @@
     "link": "https://github.com/malichan",
     "deszh-CN": "远征信息查询 & 成功条件检查",
     "deszh-TW": "遠征信息查詢 & 成功條件檢查",
-    "desja-JP": "遠征情報お調べ & 成功条件チェック",
+    "desja-JP": "遠征情報 & 成功条件チェック",
     "desen-US": "Expedition requirements inquiry & validation",
     "desko-KR": "원정 정보 조회 & 성공 조건 확인"
   },
@@ -335,7 +335,7 @@
     "desen-US": "Automatically generates [threebards](http://threebards.com/kaini) badge that shows your kaini progress and colletion progress.",
     "desko-KR": "데이터를 [threebards](http://threebards.com/kaini)로 전송해서 배지를 만드는 플러그인"
   },
-    "poi-plugin-anchorage-repair": {
+  "poi-plugin-anchorage-repair": {
     "zh-CN": "泊地修理",
     "zh-TW": "泊地修理",
     "ja-JP": "泊地修理",
@@ -354,7 +354,7 @@
   "poi-plugin-ezexped": {
     "zh-CN": "易及远征",
     "zh-TW": "易及遠征",
-    "ja-JP": "EZ Exped",
+    "ja-JP": "イージー遠征",
     "en-US": "EZ Exped",
     "ko-KR": "EZ Exped",
     "version": "v0.0.0",
@@ -363,7 +363,7 @@
     "link": "https://github.com/Javran",
     "deszh-CN": "远征条件检查与精确收入预测",
     "deszh-TW": "遠征條件檢查與精確收入預測",
-    "desja-JP": "Expedition made easy",
+    "desja-JP": "遠征報酬早見表",
     "desen-US": "Expedition made easy",
     "desko-KR": "Expedition made easy"
   }
