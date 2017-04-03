@@ -151,7 +151,7 @@
       ]
     },
     "directories": {
-      "app": "app_compiled"
+      "app": "app_compiled/stage2"
     }
   }
 }

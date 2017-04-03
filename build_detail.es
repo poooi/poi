@@ -420,7 +420,7 @@ export const buildAsync = async (poiVersion, dontRemove) => {
   const BUILDING_ROOT = path.join(__dirname, 'app_compiled')
   const stage1App = path.join(BUILDING_ROOT, 'stage1')
   const tarPath = path.join(stage1App, "app_stage1.tar")
-  const stage2App = BUILDING_ROOT
+  const stage2App = path.join(BUILDING_ROOT, 'stage2')
   const themeRoot = path.join(stage1App, 'assets', 'themes')
 
   // Clean files
