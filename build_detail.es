@@ -96,7 +96,6 @@ const TARGET_LIST = [
   'assets',
   'lib',
   'views',
-  'node_modules',
   'i18n',
 ]
 
