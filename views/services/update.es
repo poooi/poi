@@ -15,7 +15,7 @@ const {error} = require('../../lib/utils')
 const LANG = ['zh-CN', 'zh-TW', 'en-US']
 
 const doUpdate = () =>
-  shell.openExternal('http://poi.io')
+  shell.openExternal('https://poi.io')
 
 const doUpdateGithub = () =>
   shell.openExternal('https://github.com/poooi/poi/releases')
@@ -24,7 +24,7 @@ const checkUpdate = async () => {
   let response
   let body
   try {
-    [response, body] = await requestAsync(`http://${global.SERVER_HOSTNAME}/update/latest.json`, {
+    [response, body] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/latest.json`, {
       method: 'GET',
       json: true,
       headers: {
@@ -46,7 +46,7 @@ const checkUpdate = async () => {
       let log
       try {
         const currentLang = LANG.includes(language) ? language : 'en-US'
-        ;[resp, log] = await requestAsync(`http://${global.SERVER_HOSTNAME}/update/${currentLang}.md`, {
+        ;[resp, log] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/${currentLang}.md`, {
           method: 'GET',
           headers: {
             'User-Agent': `poi v${POI_VERSION}`,
