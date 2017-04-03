@@ -350,5 +350,21 @@
     "desja-JP": "明石の泊地修理の助手ちゃん",
     "desen-US": "A plugin to help in Akashi's anchorage repair arrangement",
     "desko-KR": "A plugin to help in Akashi's anchorage repair arrangement"
+  },
+  "poi-plugin-ezexped": {
+    "zh-CN": "易及远征",
+    "zh-TW": "易及遠征",
+    "ja-JP": "EZ Exped",
+    "en-US": "EZ Exped",
+    "ko-KR": "EZ Exped",
+    "version": "v0.0.0",
+    "icon": "check-square-o",
+    "author": "Javran",
+    "link": "https://github.com/Javran",
+    "deszh-CN": "远征条件检查与精确收入预测",
+    "deszh-TW": "遠征條件檢查與精確收入預測",
+    "desja-JP": "Expedition made easy",
+    "desen-US": "Expedition made easy",
+    "desko-KR": "Expedition made easy"
   }
 }

@@ -111,6 +111,9 @@ You do not have to run `npm i` and `npm run deploy` with every `git pull`, howev
 [plugin-anchorage-repair](https://github.com/KagamiChan/plugin-anchorage-repair.git) by [かがみ](https://github.com/KagamiChan)
 > Helper for akashi repair
 
+[plugin-ezexped](https://github.com/poooi/poi-plugin-ezexped) by [Javran](https://github.com/Javran)
+> Expedition made easy
+
 ## Contributing
 
 Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
