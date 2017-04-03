@@ -362,7 +362,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   await fs.ensureDirAsync(tarRoot)
 
   // Install plugins
-  await npmInstallAsync(installRoot, ['--production', '--prefix', '.'].concat(pluginNames))
+  await npmInstallAsync(installRoot, ['--only=production', '--prefix', '.'].concat(pluginNames))
 
   const pluginDirs = (() =>{
     const dirs = []
@@ -450,7 +450,7 @@ export const buildAsync = async (poiVersion, dontRemove) => {
   // Stage2: Filtered copy
   await filterCopyAppAsync(stage1App, stage2App)
   if (!dontRemove){
-    await npmInstallAsync(stage2App, ['--production'])
+    await npmInstallAsync(stage2App, ['--only=production'])
   }
   log('stage 2 finished')
 
