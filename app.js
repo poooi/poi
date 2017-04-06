@@ -92,6 +92,8 @@ global.mainWindow = mainWindow = null
 // https://github.com/electron/electron/issues/7655#issuecomment-259688853
 if (process.platform === 'win32') {
   app.commandLine.appendSwitch('enable-use-zoom-for-dsf', 'false')
+  app.commandLine.appendSwitch('high-dpi-support', 'true')
+  app.commandLine.appendSwitch('force-device-scale-factor', '1')
 }
 
 app.on ('window-all-closed', () => {
