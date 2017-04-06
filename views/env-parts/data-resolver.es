@@ -23,7 +23,7 @@ const handleProxyGameOnRequest = (method, [domain, path], body, time) => {
     try{
       dispatch(onGameRequest(details))
     } catch (e) {
-      console.error(e.stack)
+      console.error(details, e.stack)
     }
     const event = new CustomEvent('game.request', {
       bubbles: true,
@@ -88,7 +88,7 @@ const parseResponses = () => {
   try {
     dispatch(onGameResponse(details))
   } catch (e) {
-    console.error(domain, url, e.stack)
+    console.error(domain, url, details, e.stack)
   }
 
   // DEBUG use
