@@ -109,8 +109,8 @@ export const PoiAlert = class poiAlert extends Component {
           height: ${this.alertHeight}px;
         }
         #alert-main {
-          height: ${this.historyHeight + this.alertHeight}px;
-          bottom: ${this.historyHeight}px;
+          height: ${this.historyHeight + this.alertHeight - 1}px;
+          bottom: ${this.historyHeight - 1}px;
         }
         .alert-history-hidden {
           top:
