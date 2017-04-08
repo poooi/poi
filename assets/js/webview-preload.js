@@ -1,5 +1,4 @@
-const electron = require('electron')
-const { remote } = electron
+const { remote, webFrame } = require('electron')
 const config = remote.require('./lib/config')
 
 // webview focus area fix
@@ -12,8 +11,6 @@ window.onclick = (e) => {
 }
 
 // Faster align setting
-const webFrame = electron.webFrame
-
 const alertCSS =
 `#alert {
   transform: scale(0.8);
