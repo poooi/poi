@@ -90,7 +90,7 @@ window.getStore = (path) => {
 const solveConfSet = (path, value) => {
   const details = {
     path: path,
-    value: value,
+    value: JSON.parse(JSON.stringify(value)),
   }
   store.dispatch(onConfigChange(details))
 }
