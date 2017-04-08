@@ -165,22 +165,34 @@ const ZoomingConfig = connect(() => (
   static propTypes = {
     zoomLevel: React.PropTypes.number,
   }
+  state = {
+    zoomLevel: config.get('poi.zoomLevel', 1),
+  }
   handleChangeZoomLevel = (e) => {
-    config.set('poi.zoomLevel', parseFloat(e.target.value))
+    config.set('poi.zoomLevel', this.state.zoomLevel)
+  }
+  componentWillReceiveProps = (nextProps) => {
+    if (this.state.zoomLevel !== nextProps.zoomLevel) {
+      this.setState({
+        zoomLevel: nextProps.zoomLevel,
+      })
+    }
   }
   render() {
     return (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-              <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.props.zoomLevel * 100)}%</strong></Tooltip>
+              <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
             }>
-            <FormControl type="range" onInput={this.handleChangeZoomLevel}
-              min={0.5} max={2.0} step={0.05} defaultValue={this.props.zoomLevel} />
+            <FormControl type="range" onInput={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
+              min={0.5} max={2.0} step={0.05} defaultValue={this.state.zoomLevel}
+              onMouseUp={this.handleChangeZoomLevel}
+              onTouchEnd={this.handleChangeZoomLevel} />
           </OverlayTrigger>
         </Col>
         <Col xs={6}>
-          {__('Zoom level')} <strong>{parseInt(this.props.zoomLevel * 100)}%</strong>
+          {__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong>
         </Col>
       </Grid>
     )
@@ -197,8 +209,18 @@ const PanelMinSizeConfig = connect(() => (
     panelMinSize: React.PropTypes.number,
     layout: React.PropTypes.string,
   }
+  state = {
+    panelMinSize: config.get('poi.panelMinSize', 1),
+  }
   handleChangePanelMinSize = (e) => {
-    config.set('poi.panelMinSize', parseFloat(e.target.value))
+    config.set('poi.panelMinSize', this.state.panelMinSize)
+  }
+  componentWillReceiveProps = (nextProps) => {
+    if (this.state.panelMinSize !== nextProps.panelMinSize) {
+      this.setState({
+        panelMinSize: nextProps.panelMinSize,
+      })
+    }
   }
   render() {
     const configName = this.props.layout == 'horizontal' ? 'Minimal width' : 'Minimal height'
@@ -206,14 +228,16 @@ const PanelMinSizeConfig = connect(() => (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-              <Tooltip id='displayconfig-panel-size'>{__(configName)} <strong>{parseInt(this.props.panelMinSize * 100)}%</strong></Tooltip>
+              <Tooltip id='displayconfig-panel-size'>{__(configName)} <strong>{parseInt(this.state.panelMinSize * 100)}%</strong></Tooltip>
             }>
-            <FormControl type="range" onInput={this.handleChangePanelMinSize}
-              min={1.0} max={2.0} step={0.05} defaultValue={this.props.panelMinSize} />
+            <FormControl type="range" onInput={(e) => this.setState({ panelMinSize: parseFloat(e.target.value) })}
+              min={1.0} max={2.0} step={0.05} defaultValue={this.state.panelMinSize}
+              onMouseUp={this.handleChangePanelMinSize}
+              onTouchEnd={this.handleChangePanelMinSize} />
           </OverlayTrigger>
         </Col>
         <Col xs={6}>
-          {__(configName)} <strong>{parseInt(this.props.panelMinSize * 100)}%</strong>
+          {__(configName)} <strong>{parseInt(this.state.panelMinSize * 100)}%</strong>
         </Col>
       </Grid>
     )
