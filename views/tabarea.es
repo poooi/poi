@@ -226,11 +226,7 @@ export default connect(
       ].includes(e.detail.path)) {
         toSwitch = 'mainView'
       }
-      if (['/kcsapi/api_get_member/preset_deck',
-        '/kcsapi/api_req_hensei/change',
-        '/kcsapi/api_req_kaisou/slot_exchange_index',
-        '/kcsapi/api_req_kaisou/slotset',
-      ].includes(e.detail.path)) {
+      if (['/kcsapi/api_get_member/preset_deck'].includes(e.detail.path)) {
         toSwitch = 'shipView'
       }
       for (const [id, enabled, switchPluginPath] of this.props.plugins.map(plugin => [plugin.id, plugin.enabled, plugin.switchPluginPath || []])) {
