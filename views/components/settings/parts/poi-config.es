@@ -1,18 +1,17 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, InputGroup, ControlLabel, Checkbox, Alert, OverlayTrigger, Tooltip, Collapse, Well, Radio } from 'react-bootstrap'
+import { Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, InputGroup, ControlLabel, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { remote, ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
 import { get } from 'lodash'
 import Divider from './divider'
 import NavigatorBar from './navigator-bar'
-import fs from 'fs-extra'
 
-const {dialog} = remote.require('electron')
-const {config, toggleModal, i18n} = window
+import { CheckboxLabelConfig, RadioConfig, FolderPickerConfig } from './utils'
+
+const { config, toggleModal, i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const {Component} = React
 
 let language = window.language
 if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
@@ -210,148 +209,6 @@ const SetNotifyIndividualConfig = connect(() => {
             </Collapse>
           </Col>
         </div>
-      </Grid>
-    )
-  }
-})
-
-const CheckboxLabelConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-    undecided: props.undecided,
-    label: props.label,
-  })
-})(class checkboxLabelConfig extends Component {
-  static propTypes = {
-    label: React.PropTypes.string,
-    configName: React.PropTypes.string,
-    value: React.PropTypes.bool,
-    undecided: React.PropTypes.bool,
-  }
-  handleChange = () => {
-    config.set(this.props.configName, !this.props.value)
-  }
-  render () {
-    return (
-      <Row className={this.props.undecided ? 'undecided-checkbox-inside' : ''} >
-        <Col xs={12} >
-          <Grid>
-            <Col xs={12} >
-              <Checkbox
-                disabled={this.props.undecided}
-                checked={this.props.undecided ? false : this.props.value}
-                onChange={this.props.undecided ? null : this.handleChange}>
-                {this.props.label}
-              </Checkbox>
-            </Col>
-          </Grid>
-        </Col>
-      </Row>
-    )
-  }
-})
-
-const RadioConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-    label: props.label,
-    availableVal: props.availableVal,
-  })
-})(class radioConfig extends Component {
-  static propTypes = {
-    label: React.PropTypes.string,
-    configName: React.PropTypes.string,
-    value: React.PropTypes.string,
-    availableVal: React.PropTypes.array,
-  }
-  onSelect = (value) => {
-    config.set(this.props.configName, value)
-  }
-  render() {
-    return (
-      <Grid>
-        {
-          this.props.availableVal.map((item, index) => {
-            return (
-              <Col key={index} xs={3}>
-                <Radio checked={this.props.value === item.value}
-                       onChange={this.onSelect.bind(this, item.value)} >
-                  {item.name}
-                </Radio>
-              </Col>
-            )
-          })
-        }
-      </Grid>
-    )
-  }
-})
-
-
-const FolderPickerConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-    label: props.label,
-  })
-})(class extends Component {
-  static propTypes = {
-    label: React.PropTypes.string,
-    configName: React.PropTypes.string,
-    value: React.PropTypes.string,
-  }
-  onDrag = (e) => {
-    e.preventDefault()
-  }
-  synchronize = (callback) => {
-    if (this.lock) {
-      return
-    }
-    this.lock = true
-    callback()
-    this.lock = false
-  }
-  setPath = (val) => {
-    config.set(this.props.configName, val)
-  }
-  folderPickerOnDrop = (e) => {
-    e.preventDefault()
-    const droppedFiles = e.dataTransfer.files
-    if (fs.statSync(droppedFiles[0].path).isDirectory()) {
-      this.setPath(droppedFiles[0].path)
-    }
-  }
-  folderPickerOnClick = () => {
-    this.synchronize(() => {
-      fs.ensureDirSync(this.props.value)
-      const filenames = dialog.showOpenDialog({
-        title: this.props.label,
-        defaultPath: this.props.value,
-        properties: [
-          'openDirectory',
-          'createDirectory',
-        ],
-      })
-      if (filenames !== undefined) {
-        this.setPath(filenames[0])
-      }
-    })
-  }
-  render() {
-    return (
-      <Grid>
-        <Col xs={12}>
-          <div className="folder-picker"
-               onClick={this.folderPickerOnClick}
-               onDrop={this.folderPickerOnDrop}
-               onDragEnter={this.onDrag}
-               onDragOver={this.onDrag}
-               onDragLeave={this.onDrag}>
-            {this.props.value}
-          </div>
-        </Col>
       </Grid>
     )
   }
@@ -723,91 +580,91 @@ class PoiConfig extends Component {
         <div className="form-group">
           <Divider text={__('Other settings')} />
           <Grid>
-            {
-              (process.platform !== 'darwin') ?
-                <ShortcutConfig
-                  label={__('Boss key')}
-                  configName="poi.shortcut.bosskey" />
-              :
-                <ShortcutConfig
-                  label={__('Boss key')}
-                  defaultVal="Cmd+H"
-                  active={false} />
-            }
-            {
-              (process.platform !== 'darwin') ?
-                <CheckboxLabelConfig
-                  label={__('Confirm before exit')}
-                  configName="poi.confirm.quit"
-                  defaultVal={false} />
-              :
-                <OverlayTrigger placement="top"
-                  overlay={
-                      <Tooltip id="tooltip-confirm-before-exit">
-                        {__('Set this in the OS X App Menu')}
-                      </Tooltip>} >
-                  <div>
-                    <CheckboxLabelConfig
-                      label={__('Confirm before exit')}
-                      undecided={true} />
-                  </div>
-                </OverlayTrigger>
-            }
-            <CheckboxLabelConfig
-              label={__('Display \"Tips\"')}
-              configName="poi.doyouknow.enabled"
-              defaultVal={true} />
-            <CheckboxLabelConfig
-              label={__('Display Final Stage Notification')}
-              configName="poi.lastbattle.enabled"
-              defaultVal={true} />
-            <CheckboxLabelConfig
-              label={__('Switch to Plugin Automatically')}
-              configName="poi.autoswitch.enabled"
-              defaultVal={true} />
+            <Col xs={12}>
+              {
+                (process.platform !== 'darwin') ?
+                  <ShortcutConfig
+                    label={__('Boss key')}
+                    configName="poi.shortcut.bosskey" />
+                :
+                  <ShortcutConfig
+                    label={__('Boss key')}
+                    defaultVal="Cmd+H"
+                    active={false} />
+              }
+              {
+                (process.platform !== 'darwin') ?
+                  <CheckboxLabelConfig
+                    label={__('Confirm before exit')}
+                    configName="poi.confirm.quit"
+                    defaultVal={false} />
+                :
+                  <OverlayTrigger placement="top"
+                    overlay={
+                        <Tooltip id="tooltip-confirm-before-exit">
+                          {__('Set this in the OS X App Menu')}
+                        </Tooltip>} >
+                    <div>
+                      <CheckboxLabelConfig
+                        label={__('Confirm before exit')}
+                        undecided={true} />
+                    </div>
+                  </OverlayTrigger>
+              }
+              <CheckboxLabelConfig
+                label={__('Display \"Tips\"')}
+                configName="poi.doyouknow.enabled"
+                defaultVal={true} />
+              <CheckboxLabelConfig
+                label={__('Display Final Stage Notification')}
+                configName="poi.lastbattle.enabled"
+                defaultVal={true} />
+            </Col>
           </Grid>
         </div>
         <div className="form-group">
           <Divider text={__('Advanced functionalities')} />
           <Grid>
-            <CheckboxLabelConfig
-              label={__('Disable Hardware Acceleration')}
-              configName="poi.disableHA"
-              defaultVal={false} />
-            <CheckboxLabelConfig
-              label={__('Editing DMM Cookie\'s Region Flag')}
-              configName="poi.enableDMMcookie"
-              defaultVal={false} />
-            <CheckboxLabelConfig
-              label={__('Prevent DMM Network Change Popup')}
-              configName="poi.disableNetworkAlert"
-              defaultVal={false} />
-            <CheckboxLabelConfig
-              label={__('Show network status in notification bar')}
-              configName="poi.showNetworkLog"
-              defaultVal={true} />
-            {
-              (process.platform === 'win32') ?
+            <Col xs={12}>
               <CheckboxLabelConfig
-                label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
-                configName="poi.createShortcut"
-                defaultVal={true} />
-              :
-              null
-            }
-            {
-              (process.platform === 'linux') ?
+                label={__('Disable Hardware Acceleration')}
+                configName="poi.disableHA"
+                defaultVal={false} />
               <CheckboxLabelConfig
-                label={__('Display tray icon')}
-                configName="poi.linuxTrayIcon"
+                label={__('Editing DMM Cookie\'s Region Flag')}
+                configName="poi.enableDMMcookie"
+                defaultVal={false} />
+              <CheckboxLabelConfig
+                label={__('Prevent DMM Network Change Popup')}
+                configName="poi.disableNetworkAlert"
+                defaultVal={false} />
+              <CheckboxLabelConfig
+                label={__('Show network status in notification bar')}
+                configName="poi.showNetworkLog"
                 defaultVal={true} />
-              :
-              null
-            }
-            <CheckboxLabelConfig
-              label={__('Enter safe mode on next startup')}
-              configName="poi.enterSafeMode"
-              defaultVal={false} />
+              {
+                (process.platform === 'win32') ?
+                <CheckboxLabelConfig
+                  label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
+                  configName="poi.createShortcut"
+                  defaultVal={true} />
+                :
+                null
+              }
+              {
+                (process.platform === 'linux') ?
+                <CheckboxLabelConfig
+                  label={__('Display tray icon')}
+                  configName="poi.linuxTrayIcon"
+                  defaultVal={true} />
+                :
+                null
+              }
+              <CheckboxLabelConfig
+                label={__('Enter safe mode on next startup')}
+                configName="poi.enterSafeMode"
+                defaultVal={false} />
+            </Col>
           </Grid>
         </div>
       </div>

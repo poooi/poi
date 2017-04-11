@@ -10,6 +10,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import ReactMarkdown from 'react-remarkable'
 import FileDrop from 'react-file-dropzone'
 
+import { CheckboxLabelConfig } from './utils'
 import PluginManager from 'views/services/plugin-manager'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -215,11 +216,25 @@ class InstalledPlugin extends Component {
             </Row>
             <Row>
               {
-                (plugin.settingsClass)?
+                (plugin.settingsClass || plugin.switchPluginPath)?
                   <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
                     <Col xs={12}>
                       <Well>
-                        <PluginSettingWrap plugin={plugin} />
+                        {
+                          !!plugin.switchPluginPath &&
+                          <div>
+                            <CheckboxLabelConfig
+                              label={__('Enable auto switch')}
+                              configName={`poi.autoswitch.${plugin.id}`}
+                              defaultVal={true} />
+                          </div>
+                        }
+                        {
+                          !!plugin.settingsClass &&
+                          <div>
+                            <PluginSettingWrap plugin={plugin} />
+                          </div>
+                        }
                       </Well>
                     </Col>
                   </Collapse>
@@ -762,6 +777,26 @@ const PluginConfig = connect((state, props) => ({
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
                 {__("Drop plugin packages here to install it, or click here to select them")}
               </div>
+            </Col>
+          </Row>
+          <Row className='plugin-rowspace'>
+            <Col xs={12}>
+              <Well>
+                <Row>
+                  <Col xs={12}>
+                    <CheckboxLabelConfig
+                      label={__('Switch to Plugin Automatically')}
+                      configName="poi.autoswitch.enabled"
+                      defaultVal={true} />
+                  </Col>
+                  <Col xs={12}>
+                    <CheckboxLabelConfig
+                      label={__('Enable autoswitch for main panel')}
+                      configName="poi.autoswitch.main"
+                      defaultVal={true} />
+                  </Col>
+                </Row>
+              </Well>
             </Col>
           </Row>
           {
