@@ -27,16 +27,14 @@ export const CheckboxLabelConfig = connect(() => {
   }
   render () {
     return (
-      <Row className={this.props.undecided ? 'undecided-checkbox-inside' : ''} >
-        <Col xs={12} >
-          <Checkbox
-            disabled={this.props.undecided}
-            checked={this.props.undecided ? false : this.props.value}
-            onChange={this.props.undecided ? null : this.handleChange}>
-            {this.props.label}
-          </Checkbox>
-        </Col>
-      </Row>
+      <div className={this.props.undecided ? 'undecided-checkbox-inside' : ''} >
+        <Checkbox
+          disabled={this.props.undecided}
+          checked={this.props.undecided ? false : this.props.value}
+          onChange={this.props.undecided ? null : this.handleChange}>
+          {this.props.label}
+        </Checkbox>
+      </div>
     )
   }
 })

@@ -682,9 +682,21 @@ const PluginConfig = connect((state, props) => ({
           </Row>
           <Row>
             <Col xs={12}>
-              <Collapse in={this.state.advanced}>
-                <div>
-                  <Well>
+              <Well>
+                <Row>
+                  <Col xs={12}>
+                    <CheckboxLabelConfig
+                      label={__('Switch to Plugin Automatically')}
+                      configName="poi.autoswitch.enabled"
+                      defaultVal={true} />
+                    <CheckboxLabelConfig
+                      label={__('Enable autoswitch for main panel')}
+                      configName="poi.autoswitch.main"
+                      defaultVal={true} />
+                  </Col>
+                </Row>
+                <Collapse in={this.state.advanced}>
+                  <div>
                     <Row>
                       <Col xs={12}>
                         <Row>
@@ -753,9 +765,9 @@ const PluginConfig = connect((state, props) => ({
                         </Row>
                       </Col>
                     </Row>
-                  </Well>
-                </div>
-              </Collapse>
+                  </div>
+                </Collapse>
+              </Well>
             </Col>
           </Row>
           <Row className='plugin-rowspace'>
@@ -777,26 +789,6 @@ const PluginConfig = connect((state, props) => ({
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
                 {__("Drop plugin packages here to install it, or click here to select them")}
               </div>
-            </Col>
-          </Row>
-          <Row className='plugin-rowspace'>
-            <Col xs={12}>
-              <Well>
-                <Row>
-                  <Col xs={12}>
-                    <CheckboxLabelConfig
-                      label={__('Switch to Plugin Automatically')}
-                      configName="poi.autoswitch.enabled"
-                      defaultVal={true} />
-                  </Col>
-                  <Col xs={12}>
-                    <CheckboxLabelConfig
-                      label={__('Enable autoswitch for main panel')}
-                      configName="poi.autoswitch.main"
-                      defaultVal={true} />
-                  </Col>
-                </Row>
-              </Well>
             </Col>
           </Row>
           {
