@@ -10,6 +10,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import ReactMarkdown from 'react-remarkable'
 import FileDrop from 'react-file-dropzone'
 
+import { CheckboxLabelConfig } from './utils'
 import PluginManager from 'views/services/plugin-manager'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -215,11 +216,25 @@ class InstalledPlugin extends Component {
             </Row>
             <Row>
               {
-                (plugin.settingsClass)?
+                (plugin.settingsClass || plugin.switchPluginPath)?
                   <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
                     <Col xs={12}>
                       <Well>
-                        <PluginSettingWrap plugin={plugin} />
+                        {
+                          !!plugin.switchPluginPath &&
+                          <div>
+                            <CheckboxLabelConfig
+                              label={__('Enable auto switch')}
+                              configName={`poi.autoswitch.${plugin.id}`}
+                              defaultVal={true} />
+                          </div>
+                        }
+                        {
+                          !!plugin.settingsClass &&
+                          <div>
+                            <PluginSettingWrap plugin={plugin} />
+                          </div>
+                        }
                       </Well>
                     </Col>
                   </Collapse>
@@ -667,9 +682,21 @@ const PluginConfig = connect((state, props) => ({
           </Row>
           <Row>
             <Col xs={12}>
-              <Collapse in={this.state.advanced}>
-                <div>
-                  <Well>
+              <Well>
+                <Row>
+                  <Col xs={12}>
+                    <CheckboxLabelConfig
+                      label={__('Switch to Plugin Automatically')}
+                      configName="poi.autoswitch.enabled"
+                      defaultVal={true} />
+                    <CheckboxLabelConfig
+                      label={__('Enable autoswitch for main panel')}
+                      configName="poi.autoswitch.main"
+                      defaultVal={true} />
+                  </Col>
+                </Row>
+                <Collapse in={this.state.advanced}>
+                  <div>
                     <Row>
                       <Col xs={12}>
                         <Row>
@@ -738,9 +765,9 @@ const PluginConfig = connect((state, props) => ({
                         </Row>
                       </Col>
                     </Row>
-                  </Well>
-                </div>
-              </Collapse>
+                  </div>
+                </Collapse>
+              </Well>
             </Col>
           </Row>
           <Row className='plugin-rowspace'>

@@ -265,3 +265,7 @@
 }
 #SettingsView .plugin-dropfile-contents {
 }
+#SettingsView .well {
+  margin: 0;
+  padding: 14px;
+}

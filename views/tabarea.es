@@ -219,19 +219,21 @@ export default connect(
   handleResponse = (e) => {
     if (config.get('poi.autoswitch.enabled', true)) {
       let toSwitch
-      if (['/kcsapi/api_port/port',
-        '/kcsapi/api_get_member/ndock',
-        '/kcsapi/api_get_member/kdock',
-        '/kcsapi/api_get_member/questlist',
-      ].includes(e.detail.path)) {
-        toSwitch = 'mainView'
-      }
-      if (['/kcsapi/api_get_member/preset_deck'].includes(e.detail.path)) {
-        toSwitch = 'shipView'
+      if (config.get('poi.autoswitch.main', true)) {
+        if (['/kcsapi/api_port/port',
+          '/kcsapi/api_get_member/ndock',
+          '/kcsapi/api_get_member/kdock',
+          '/kcsapi/api_get_member/questlist',
+        ].includes(e.detail.path)) {
+          toSwitch = 'mainView'
+        }
+        if (['/kcsapi/api_get_member/preset_deck'].includes(e.detail.path)) {
+          toSwitch = 'shipView'
+        }
       }
       for (const [id, enabled, switchPluginPath] of this.props.plugins.map(plugin => [plugin.id, plugin.enabled, plugin.switchPluginPath || []])) {
         for (const switchPath of switchPluginPath) {
-          if (enabled && (switchPath === e.detail.path || (switchPath.path === e.detail.path && switchPath.valid && switchPath.valid()))) {
+          if ((config.get(`poi.autoswitch.${id}`, true) && enabled) && (switchPath === e.detail.path || (switchPath.path === e.detail.path && switchPath.valid && switchPath.valid()))) {
             toSwitch = id
           }
         }
