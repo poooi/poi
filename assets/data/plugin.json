@@ -366,5 +366,21 @@
     "desja-JP": "遠征報酬早見表",
     "desen-US": "Expedition made easy",
     "desko-KR": "Expedition made easy"
+  },
+  "poi-plugin-starcraft": {
+    "zh-CN": "星级争霸",
+    "zh-TW": "星海爭霸",
+    "ja-JP": "Starcraft",
+    "en-US": "Starcraft",
+    "ko-KR": "Starcraft",
+    "version": "v0.0.0",
+    "icon": "asterisk",
+    "author": "Javran",
+    "link": "https://github.com/Javran",
+    "deszh-CN": "装备改修规划书",
+    "deszh-TW": "裝備改修規劃書",
+    "desja-JP": "Your personal planner for crafting stars",
+    "desen-US": "Your personal planner for crafting stars",
+    "desko-KR": "Your personal planner for crafting stars"
   }
 }
