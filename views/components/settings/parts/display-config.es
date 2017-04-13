@@ -186,7 +186,7 @@ const ZoomingConfig = connect(() => (
               <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
             }>
             <FormControl type="range" onInput={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
-              min={0.5} max={2.0} step={0.05} defaultValue={this.state.zoomLevel}
+              min={0.5} max={4.0} step={0.05} defaultValue={this.state.zoomLevel}
               onMouseUp={this.handleChangeZoomLevel}
               onTouchEnd={this.handleChangeZoomLevel} />
           </OverlayTrigger>
