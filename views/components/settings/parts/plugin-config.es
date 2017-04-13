@@ -124,12 +124,12 @@ class InstalledPlugin extends Component {
       'hidden': !plugin.isOutdated,
     })
     const btnGroupClass = classnames('plugin-buttongroup', {
-      'btn-xs-12': plugin.settingsClass,
-      'btn-xs-8': !plugin.settingsClass,
+      'btn-xs-12': plugin.settingsClass || plugin.switchPluginPath,
+      'btn-xs-8': !plugin.settingsClass && !plugin.switchPluginPath,
     })
     const btnClass = classnames('plugin-control-button', {
-      'btn-xs-4': plugin.settingsClass,
-      'btn-xs-6': !plugin.settingsClass,
+      'btn-xs-4': plugin.settingsClass || plugin.switchPluginPath,
+      'btn-xs-6': !plugin.settingsClass && !plugin.switchPluginPath,
     })
     return (
       <Row className='plugin-wrapper'>
@@ -172,7 +172,7 @@ class InstalledPlugin extends Component {
               <Col className='plugin-option' xs={5}>
                 <ButtonGroup bsSize='small' className={btnGroupClass}>
                   {
-                    (plugin.settingsClass)?
+                    (plugin.settingsClass || plugin.switchPluginPath)?
                       <OverlayTrigger placement='top' overlay={
                          <Tooltip id={`${plugin.id}-set-btn`}>
                            {__('Settings')}
