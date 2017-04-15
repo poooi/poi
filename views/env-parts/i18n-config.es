@@ -1,7 +1,7 @@
 import path from 'path-extra'
 import glob from 'glob'
 
-const {ROOT} = window
+const {ROOT, isMain, config} = window
 
 window.language = window.config.get('poi.language', navigator.language)
 if (!['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(window.language)) {
@@ -39,4 +39,13 @@ window.i18n.resources = {
   __: (str) => (str),
   translate: (locale, str) => (str),
   setLocale: (str) => (str),
+}
+
+// inject translator for English names
+if (!isMain && config.get('plugin.poi-plugin-translator.enable', false)) {
+  try {
+    require('poi-plugin-translator').pluginDidLoad()
+  } catch (e) {
+    console.warn('poi-plugin-translator', e)
+  }
 }
