@@ -9,7 +9,10 @@ If you need general information, see https://github.com/poooi/poi/wiki.
 
 
 **操作系统 / OS:**
-
+<!--
+Windows 10 用户请说明具体的发行版本号（可以通过 `winver` 命令来获得）
+For Windows 10 users, please specify your build version (can be obtained through `winver` command)
+-->
 
 **插件名和版本 / Plugin name & version:**
 
