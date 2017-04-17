@@ -11,10 +11,16 @@ const onZoomChange = (value) => {
   document.body.style.zoom = value
 }
 
-config.on('config.set', (path, value) => {
+const handleZoom = (path, value) => {
   if (path === 'poi.zoomLevel') {
     onZoomChange(value)
   }
+}
+
+config.on('config.set', handleZoom)
+
+window.addEventListener('unload', (e) => {
+  config.removeListener('config.set', handleZoom)
 })
 
 document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.zoomLevel', 1)))
