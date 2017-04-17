@@ -17,7 +17,7 @@ const handleZoom = (path, value) => {
   }
 }
 
-config.on('config.set', handleZoom)
+config.addListener('config.set', handleZoom)
 
 window.addEventListener('unload', (e) => {
   config.removeListener('config.set', handleZoom)
