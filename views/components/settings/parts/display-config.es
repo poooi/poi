@@ -69,7 +69,7 @@ const ChangeLayoutConfig = connect(() => (
     const rightActive = this.props.layout === 'horizontal' && !this.props.reversed
     return (
       <Grid>
-        <Col xs={6}>
+        <Col xs={12}>
           <ButtonGroup>
             <Button bsStyle={leftActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('horizontal', true)}>
