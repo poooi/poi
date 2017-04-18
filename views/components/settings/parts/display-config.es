@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { shell } from 'electron'
+import { shell, screen } from 'electron'
 import { Grid, Col, Button, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
@@ -157,16 +157,18 @@ const ChangeThemeConfig = connect((state, props) => ({
   }
 })
 
+const defaultZoomLevel = screen.getPrimaryDisplay().scaleFactor
+
 const ZoomingConfig = connect(() => (
   (state, props) => ({
-    zoomLevel: get(state.config, 'poi.zoomLevel', 1),
+    zoomLevel: get(state.config, 'poi.zoomLevel', defaultZoomLevel),
   })
 ))(class zoomingConfig extends Component {
   static propTypes = {
     zoomLevel: React.PropTypes.number,
   }
   state = {
-    zoomLevel: config.get('poi.zoomLevel', 1),
+    zoomLevel: config.get('poi.zoomLevel', defaultZoomLevel),
   }
   handleChangeZoomLevel = (e) => {
     config.set('poi.zoomLevel', this.state.zoomLevel)
