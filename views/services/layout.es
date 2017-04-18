@@ -72,11 +72,14 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
     `
 }
 
-const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed}) => {
+const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed, reversed}) => {
   // Apply css
   additionalStyle.innerHTML = `
     poi-app div.poi-app-tabpane {
       height: ${tabpaneHeight};
+    }
+    poi-main {
+      ${layout === 'horizontal' && reversed && 'flex-flow: row-reverse nowrap;'}
     }
     poi-app {
       top: ${layout === 'vertical' ? `calc(30px * ${zoomLevel - 1})` : 0};
@@ -139,6 +142,7 @@ const setCSSDebounced = debounce(setCSS, 200)
 
 const adjustSize = () => {
   const layout = config.get('poi.layout', 'horizontal')
+  const reversed = config.get('poi.reverseLayout', false)
   const zoomLevel = config.get('poi.zoomLevel', screen.getPrimaryDisplay().scaleFactor)
   const doubleTabbed = config.get('poi.tabarea.double', false)
   const panelMinSize = config.get('poi.panelMinSize', 1)
@@ -204,12 +208,13 @@ const adjustSize = () => {
 
   // Apply calcualted data
   setCSSDebounced({
-    webviewHeight: webviewHeight,
-    webviewWidth: webviewWidth,
-    tabpaneHeight: tabpaneHeight,
-    layout: layout,
-    zoomLevel: zoomLevel,
-    doubleTabbed: doubleTabbed,
+    webviewHeight,
+    webviewWidth,
+    tabpaneHeight,
+    layout,
+    zoomLevel,
+    doubleTabbed,
+    reversed,
   })
 }
 
@@ -246,7 +251,8 @@ config.on('config.set', (path, value) => {
   case 'poi.zoomLevel':
   case 'poi.panelMinSize':
   case 'poi.tabarea.double':
-  case 'poi.webview.width': {
+  case 'poi.webview.width':
+  case 'poi.reverseLayout': {
     adjustSize()
     break
   }

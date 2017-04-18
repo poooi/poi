@@ -1,11 +1,12 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { shell, screen } from 'electron'
-import { Grid, Col, Button, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
 import Divider from './divider'
 import { get } from 'lodash'
+import FontAwesome from 'react-fontawesome'
 
 const {config, toggleModal, i18n, EXROOT} = window
 const {openItem} = shell
@@ -48,30 +49,41 @@ const ChangeLayoutConfig = connect(() => (
   (state, props) => ({
     layout: get(state.config, 'poi.layout', 'horizontal'),
     enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
+    reversed: get(state.config, 'poi.reverseLayout', false),
   })
 ))(class changeLayoutConfig extends Component {
   static propTypes = {
     enableDoubleTabbed: React.PropTypes.bool,
     layout: React.PropTypes.string,
   }
-  handleSetLayout = (layout) => {
+  handleSetLayout = (layout, rev) => {
     config.set('poi.layout', layout)
+    config.set('poi.reverseLayout', rev)
   }
   handleSetDoubleTabbed = () => {
     config.set('poi.tabarea.double', !this.props.enableDoubleTabbed)
   }
   render() {
+    const leftActive = this.props.layout === 'horizontal' && this.props.reversed
+    const downActive = this.props.layout !== 'horizontal'
+    const rightActive = this.props.layout === 'horizontal' && !this.props.reversed
     return (
       <Grid>
         <Col xs={6}>
-          <Button bsStyle={(this.props.layout === 'horizontal') ? 'success' : 'danger'} onClick={this.handleSetLayout.bind(this, 'horizontal')} style={{width: '100%'}}>
-            {(this.props.layout === 'horizontal') ? '√ ' : ''}{__('Use horizontal layout')}
-          </Button>
-        </Col>
-        <Col xs={6}>
-          <Button bsStyle={(this.props.layout === 'vertical') ? 'success' : 'danger'} onClick={this.handleSetLayout.bind(this, 'vertical')} style={{width: '100%'}}>
-            {(this.props.layout === 'vertical') ? '√ ' : ''}{__('Use vertical layout')}
-          </Button>
+          <ButtonGroup>
+            <Button bsStyle={leftActive ? 'success' : 'danger'}
+              onClick={e => this.handleSetLayout('horizontal', true)}>
+              <FontAwesome name='window-maximize' rotate={90} />
+            </Button>
+            <Button bsStyle={downActive ? 'success' : 'danger'}
+              onClick={e => this.handleSetLayout('vertical', false)}>
+              <FontAwesome name='window-maximize' />
+            </Button>
+            <Button bsStyle={rightActive ? 'success' : 'danger'}
+              onClick={e => this.handleSetLayout('horizontal', false)}>
+              <FontAwesome name='window-maximize' rotate={270} />
+            </Button>
+          </ButtonGroup>
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.enableDoubleTabbed} onChange={this.handleSetDoubleTabbed}>
