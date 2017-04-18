@@ -26,7 +26,7 @@ If this is an issue about plugin.
 
 
 
-**有没有重现的方法，或者与问题相关的任何信息 / The way to reproduce, or any information that might be related:**
+**有没有重现的方法，或者与问题相关的任何信息 / How to reproduce, or any information that might be related:**
 
 <!-- 
 可以的话请提供开发者工具 Console 选项卡的截图，
