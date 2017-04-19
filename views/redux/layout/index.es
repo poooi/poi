@@ -1,4 +1,4 @@
-const {config} = window
+const { config, devicePixelRatio } = window
 
 const initState = {
   window: {
@@ -6,8 +6,8 @@ const initState = {
     height: window.innerHeight,
   },
   webview: {
-    width: config.get('poi.webview.width', 800),
-    height: config.get('poi.webview.width', 800) * 0.6,
+    width: config.get('poi.webview.width', 800 * Math.round(devicePixelRatio)),
+    height: config.get('poi.webview.width', 800 * Math.round(devicePixelRatio)) * 0.6,
     useFixedResolution: true,
   },
 }

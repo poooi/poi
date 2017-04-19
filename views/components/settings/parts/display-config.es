@@ -319,10 +319,12 @@ const ChangeResolutionConfig = connect((state, props) => ({
     if (this.props.webview.useFixedResolution) {
       config.set('poi.webview.width', -1)
     } else {
-      config.set('poi.webview.width', this.props.webview.width)
+      const { devicePixelRatio } = window
+      config.set('poi.webview.width', Math.round(this.props.webview.width * devicePixelRatio))
     }
   }
   render() {
+    const { devicePixelRatio } = window
     return (
       <Grid>
         <Col xs={8}>
@@ -338,7 +340,9 @@ const ChangeResolutionConfig = connect((state, props) => ({
            value={this.props.webview.width}
            onChange={this.handleSetWebviewWidth}
            disabled={!this.props.webview.useFixedResolution} >
-            <option key={-1} value={this.props.webview.width} hidden>{Math.round(this.props.webview.width/800*100)}%</option>
+            <option key={-1} value={Math.round(this.props.webview.width * devicePixelRatio)} hidden>
+              {Math.round(this.props.webview.width / 800 * 100)}%
+            </option>
             {
               [0, 1, 2, 3].map((i) => {
                 return (
@@ -353,7 +357,7 @@ const ChangeResolutionConfig = connect((state, props) => ({
         <Col id="poi-resolution-config" xs={12} style={{display: 'flex', alignItems: 'center'}}>
           <div style={{flex: 1}}>
             <FormControl type="number"
-             value={Math.round(this.props.webview.width)}
+             value={Math.round(this.props.webview.width * devicePixelRatio)}
              onChange={this.handleSetWebviewWidth}
              readOnly={!this.props.webview.useFixedResolution} />
           </div>

@@ -159,6 +159,11 @@ const adjustSize = () => {
       webviewWidth = window.innerWidth
       webviewHeight = Math.round(webviewWidth / 800.0 * 480.0)
     }
+  } else {
+    // HiDPI fix
+    const { devicePixelRatio } = window
+    webviewWidth = Math.round(webviewWidth / devicePixelRatio)
+    webviewHeight = Math.round(webviewHeight / devicePixelRatio)
   }
 
   // Set a smaller webview size if it takes too much place
