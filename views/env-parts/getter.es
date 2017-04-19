@@ -2,7 +2,7 @@ import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { map, get, mapValues } from 'lodash'
 import path from 'path-extra'
-import { remote, screen } from 'electron'
+import { remote } from 'electron'
 
 import { store } from 'views/create-store'
 import { buildArray } from 'views/utils/tools'
@@ -36,7 +36,7 @@ Object.defineProperty(window, 'webviewWidth', {get: () => {
   return config.get('poi.webview.width', -1)
 }})
 Object.defineProperty(window, 'zoomLevel', {get: () => {
-  return config.get('poi.zoomLevel', screen.getPrimaryDisplay().scaleFactor)
+  return config.get('poi.zoomLevel', 1)
 }})
 Object.defineProperty(window, 'useSVGIcon', {get: () => {
   return config.get('poi.useSVGIcon', false)

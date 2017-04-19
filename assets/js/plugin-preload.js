@@ -1,4 +1,4 @@
-const { remote, screen } = require('electron')
+const { remote } = require('electron')
 const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const config = remote.require('./lib/config')
@@ -23,4 +23,4 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', handleZoom)
 })
 
-document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.zoomLevel', screen.getPrimaryDisplay().scaleFactor)))
+document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.zoomLevel', 1)))

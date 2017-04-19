@@ -1,5 +1,6 @@
 import { debounce } from 'lodash'
-import { remote, screen } from 'electron'
+import { remote } from 'electron'
+import { devicePixelRatioDetector } from './device-pixel-ratio-detector'
 
 const {config, $} = window
 
@@ -143,7 +144,7 @@ const setCSSDebounced = debounce(setCSS, 200)
 const adjustSize = () => {
   const layout = config.get('poi.layout', 'horizontal')
   const reversed = config.get('poi.reverseLayout', false)
-  const zoomLevel = config.get('poi.zoomLevel', screen.getPrimaryDisplay().scaleFactor)
+  const zoomLevel = config.get('poi.zoomLevel', 1)
   const doubleTabbed = config.get('poi.tabarea.double', false)
   const panelMinSize = config.get('poi.panelMinSize', 1)
   let webviewWidth = config.get('poi.webview.width', -1)
@@ -159,6 +160,11 @@ const adjustSize = () => {
       webviewWidth = window.innerWidth
       webviewHeight = Math.round(webviewWidth / 800.0 * 480.0)
     }
+  } else {
+    // HiDPI fix
+    const { devicePixelRatio } = window
+    webviewWidth = Math.round(webviewWidth / devicePixelRatio)
+    webviewHeight = Math.round(webviewHeight / devicePixelRatio)
   }
 
   // Set a smaller webview size if it takes too much place
@@ -270,3 +276,6 @@ config.on('config.set', (path, value) => {
     break
   }
 })
+
+const detector = new devicePixelRatioDetector()
+detector.on('change', adjustSize)

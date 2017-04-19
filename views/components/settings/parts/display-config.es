@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { shell, screen } from 'electron'
+import { shell } from 'electron'
 import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
@@ -169,18 +169,16 @@ const ChangeThemeConfig = connect((state, props) => ({
   }
 })
 
-const defaultZoomLevel = screen.getPrimaryDisplay().scaleFactor
-
 const ZoomingConfig = connect(() => (
   (state, props) => ({
-    zoomLevel: get(state.config, 'poi.zoomLevel', defaultZoomLevel),
+    zoomLevel: get(state.config, 'poi.zoomLevel', 1),
   })
 ))(class zoomingConfig extends Component {
   static propTypes = {
     zoomLevel: React.PropTypes.number,
   }
   state = {
-    zoomLevel: config.get('poi.zoomLevel', defaultZoomLevel),
+    zoomLevel: config.get('poi.zoomLevel', 1),
   }
   handleChangeZoomLevel = (e) => {
     config.set('poi.zoomLevel', this.state.zoomLevel)
@@ -321,10 +319,12 @@ const ChangeResolutionConfig = connect((state, props) => ({
     if (this.props.webview.useFixedResolution) {
       config.set('poi.webview.width', -1)
     } else {
-      config.set('poi.webview.width', this.props.webview.width)
+      const { devicePixelRatio } = window
+      config.set('poi.webview.width', Math.round(this.props.webview.width * devicePixelRatio))
     }
   }
   render() {
+    const { devicePixelRatio } = window
     return (
       <Grid>
         <Col xs={8}>
@@ -337,10 +337,12 @@ const ChangeResolutionConfig = connect((state, props) => ({
         </Col>
         <Col xs={4}>
           <FormControl componentClass="select"
-           value={this.props.webview.width}
+           value={Math.round(this.props.webview.width * devicePixelRatio)}
            onChange={this.handleSetWebviewWidth}
            disabled={!this.props.webview.useFixedResolution} >
-            <option key={-1} value={this.props.webview.width} hidden>{Math.round(this.props.webview.width/800*100)}%</option>
+            <option key={-1} value={Math.round(this.props.webview.width * devicePixelRatio)} hidden>
+              {Math.round(this.props.webview.width / 800 * 100)}%
+            </option>
             {
               [0, 1, 2, 3].map((i) => {
                 return (
@@ -355,7 +357,7 @@ const ChangeResolutionConfig = connect((state, props) => ({
         <Col id="poi-resolution-config" xs={12} style={{display: 'flex', alignItems: 'center'}}>
           <div style={{flex: 1}}>
             <FormControl type="number"
-             value={Math.round(this.props.webview.width)}
+             value={Math.round(this.props.webview.width * devicePixelRatio)}
              onChange={this.handleSetWebviewWidth}
              readOnly={!this.props.webview.useFixedResolution} />
           </div>
@@ -363,7 +365,7 @@ const ChangeResolutionConfig = connect((state, props) => ({
             x
           </div>
           <div style={{flex: 1}}>
-            <FormControl type="number" value={Math.round(this.props.webview.height)} readOnly />
+            <FormControl type="number" value={Math.round(this.props.webview.height * devicePixelRatio)} readOnly />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             px
