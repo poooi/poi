@@ -337,7 +337,7 @@ const ChangeResolutionConfig = connect((state, props) => ({
         </Col>
         <Col xs={4}>
           <FormControl componentClass="select"
-           value={this.props.webview.width}
+           value={Math.round(this.props.webview.width * devicePixelRatio)}
            onChange={this.handleSetWebviewWidth}
            disabled={!this.props.webview.useFixedResolution} >
             <option key={-1} value={Math.round(this.props.webview.width * devicePixelRatio)} hidden>
