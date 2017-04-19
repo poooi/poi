@@ -365,7 +365,7 @@ const ChangeResolutionConfig = connect((state, props) => ({
             x
           </div>
           <div style={{flex: 1}}>
-            <FormControl type="number" value={Math.round(this.props.webview.height)} readOnly />
+            <FormControl type="number" value={Math.round(this.props.webview.height * devicePixelRatio)} readOnly />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             px
