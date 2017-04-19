@@ -44,5 +44,7 @@ if (config.get('poi.first', '0.0.0') != POI_VERSION) {
       style: 'success',
     },
   ]
-  window.toggleModal(title, content, footer)
+  const toggle = () => window.toggleModal(title, content, footer)
+  // using setTimeout to avoid disturbing the magic being cast in layout.es
+  setTimeout(toggle, 5000)
 }
