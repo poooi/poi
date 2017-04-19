@@ -1,5 +1,6 @@
 import { debounce } from 'lodash'
 import { remote } from 'electron'
+import { devicePixelRatioDetector } from './device-pixel-ratio-detector'
 
 const {config, $} = window
 
@@ -275,3 +276,6 @@ config.on('config.set', (path, value) => {
     break
   }
 })
+
+const detector = new devicePixelRatioDetector()
+detector.on('change', adjustSize)
