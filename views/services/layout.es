@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { remote, screen } from 'electron'
+import { remote } from 'electron'
 
 const {config, $} = window
 
@@ -143,7 +143,7 @@ const setCSSDebounced = debounce(setCSS, 200)
 const adjustSize = () => {
   const layout = config.get('poi.layout', 'horizontal')
   const reversed = config.get('poi.reverseLayout', false)
-  const zoomLevel = config.get('poi.zoomLevel', screen.getPrimaryDisplay().scaleFactor)
+  const zoomLevel = config.get('poi.zoomLevel', 1)
   const doubleTabbed = config.get('poi.tabarea.double', false)
   const panelMinSize = config.get('poi.panelMinSize', 1)
   let webviewWidth = config.get('poi.webview.width', -1)
