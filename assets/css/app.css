@@ -399,8 +399,9 @@ poi-info {
 .info-tooltip .tooltip-inner .info-tooltip-entry {
   display:flex;
   text-align: left;
-  width: 160px;
+  min-width: 100px;
 }
 .info-tooltip .tooltip-inner .info-tooltip-item {
   flex-grow: 1;
+  margin-right: 2em;
 }

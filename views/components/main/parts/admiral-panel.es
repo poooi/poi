@@ -46,7 +46,7 @@ const getLabelStyle = (_, timeRemaining) => {
   case timeRemaining > 900:
     return 'warning'
   default:
-    return 'default'
+    return 'danger'
   }
 }
 
