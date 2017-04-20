@@ -125,7 +125,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
   // Adjust webview height & position
   if (layout === 'horizontal') {
     $('kan-game #webview-wrapper').style.marginLeft = '0'
-    $('kan-game').style.marginTop = `${Math.max(0, Math.floor((window.innerHeight - webviewHeight - poiControlHeight) / 2.0))}px`
+    $('kan-game').style.marginTop = `${Math.max(0, Math.floor((window.innerHeight - webviewHeight - poiControlHeight * zoomLevel) / 2.0))}px`
   } else {
     $('kan-game #webview-wrapper').style.marginLeft = `${Math.max(0, Math.floor((window.innerWidth - webviewWidth) / 2.0))}px`
     $('kan-game').style.marginTop = '0'
@@ -142,19 +142,20 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
 const setCSSDebounced = debounce(setCSS, 200)
 
 const adjustSize = () => {
+  const { devicePixelRatio } = window
   const layout = config.get('poi.layout', 'horizontal')
   const reversed = config.get('poi.reverseLayout', false)
   const zoomLevel = config.get('poi.zoomLevel', 1)
   const doubleTabbed = config.get('poi.tabarea.double', false)
   const panelMinSize = config.get('poi.panelMinSize', 1)
   let webviewWidth = config.get('poi.webview.width', -1)
-  let webviewHeight = Math.min(window.innerHeight - poiControlHeight, Math.round(webviewWidth / 800.0 * 480.0))
+  let webviewHeight = Math.min((window.innerHeight - poiControlHeight * zoomLevel) * devicePixelRatio , Math.round(webviewWidth / 800.0 * 480.0))
   const useFixedResolution = (webviewWidth !== -1)
 
   // Calculate webview size
   if (!useFixedResolution) {
     if (layout === 'horizontal') {
-      webviewHeight = window.innerHeight - poiControlHeight
+      webviewHeight = window.innerHeight - poiControlHeight * zoomLevel
       webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
     } else {
       webviewWidth = window.innerWidth
@@ -162,7 +163,6 @@ const adjustSize = () => {
     }
   } else {
     // HiDPI fix
-    const { devicePixelRatio } = window
     webviewWidth = Math.round(webviewWidth / devicePixelRatio)
     webviewHeight = Math.round(webviewHeight / devicePixelRatio)
   }
@@ -183,17 +183,17 @@ const adjustSize = () => {
     }
     if (window.innerWidth - webviewWidth < cap) {
       webviewWidth = window.innerWidth - cap
-      webviewHeight = Math.min(window.innerHeight - poiControlHeight, Math.round(webviewWidth / 800.0 * 480))
+      webviewHeight = Math.min(window.innerHeight - poiControlHeight * zoomLevel, Math.round(webviewWidth / 800.0 * 480))
     }
   }
 
   // Calculate tabpanes' height
   let tabpaneHeight
   if (layout === 'horizontal') {
-    tabpaneHeight = `${window.innerHeight / zoomLevel - poiControlHeight}px`
+    tabpaneHeight = `${window.innerHeight / zoomLevel - poiControlHeight * zoomLevel}px`
   }
   else {
-    tabpaneHeight = `${(window.innerHeight - webviewHeight - poiControlHeight) / zoomLevel - poiControlHeight}px`
+    tabpaneHeight = `${(window.innerHeight - webviewHeight - poiControlHeight * zoomLevel) / zoomLevel - poiControlHeight * zoomLevel}px`
   }
 
   // Update redux store
