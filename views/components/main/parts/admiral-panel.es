@@ -20,6 +20,19 @@ const totalExp = [
   1300000, 1600000, 1900000, 2200000, 2600000, 3000000, 3500000, 4000000, 4600000, 5200000,
   5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000]
 
+const resolveDayTime = (seconds) => {
+  seconds = parseInt(seconds)
+  if (seconds >= 0) {
+    const s = seconds % 60
+    const m = Math.trunc(seconds / 60) % 60
+    const h = Math.trunc(seconds / 3600) % 24
+    const d = Math.trunc(seconds / 86400)
+    return [d ? `${d}${__('d')}` : '', h ? `${h}${__('h')}` : '', m ? `${m}${__('m')}` : '', s ? `${s}${__('s')}` : ''].join(' ')
+  } else {
+    return ''
+  }
+}
+
 export default connect(
   (state) => ({
     basic: state.info.basic,
