@@ -115,7 +115,7 @@ export class CountdownTimer extends Component {
     if (this.state.completeTime >= 0)
       try {
         if (this.textLabel) {
-          this.textLabel.textContent = resolveTime(this.timeRemaining)
+          this.textLabel.textContent = this.resolveTime(this.timeRemaining)
         }
         if (this.props.tickCallback) {
           this.props.tickCallback(this.timeRemaining)

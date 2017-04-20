@@ -2,6 +2,9 @@ import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React from 'react'
 import { get } from 'lodash'
+import moment from 'moment'
+
+import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -22,8 +25,8 @@ const totalExp = [
   1300000, 1600000, 1900000, 2200000, 2600000, 3000000, 3500000, 4000000, 4600000, 5200000,
   5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000]
 
-const resolveDayTime = (seconds) => {
-  seconds = parseInt(seconds)
+const resolveDayTime = (time) => {
+  const seconds = parseInt(time)
   if (seconds >= 0) {
     const s = seconds % 60
     const m = Math.trunc(seconds / 60) % 60
@@ -55,22 +58,75 @@ const ExpContent = connect(
   </div>
 ))
 
+// Refresh time:
+// - Practice: JST 3h00, 15h00, UTC 18h00, 6h00
+// - Quest: JST 5h00, UTC 20h00
+// - Senka: JST 22h00 on last day of every month, UTC 13h00
+// - Extra Operation: JST 0h00 on first day of every month, UTC 15h00 on last day of every month
+
+const CountdownContent = () => {
+  const now = moment.utc()
+  const nowHour = now.hour()
+  const nextPractice = now.clone()
+  if (nowHour <= 6) {
+    nextPractice.hour(6)
+  } else if (nowHour <= 18) {
+    nextPractice.hour(18)
+  } else {
+    nextPractice.hour(30)
+  }
+  nextPractice.startOf('hour')
+
+  const nextQuest = now.clone()
+  if (nowHour <= 20) {
+    nextQuest.hour(20)
+  } else {
+    nextQuest.hour(44)
+  }
+  nextQuest.startOf('hour')
+
+  const endOfMonth = now.clone().endOf('month')
+  const nextSenka = endOfMonth.clone().subtract(11, 'hours')
+  const nextEO = endOfMonth.clone().subtract(9, 'hours')
+
+  return(
+    <div style={{display: 'table'}}>
+      <div>
+        <span>Next Practice</span>
+        <span><CountdownTimer countdownId="next-practice" completeTime={+nextPractice} resolveTime={resolveDayTime}/></span>
+      </div>
+      <div>
+        <span>Next Quest Refresh</span>
+        <span><CountdownTimer countdownId="next-quest" completeTime={+nextQuest} resolveTime={resolveDayTime}/></span>
+      </div>
+      <div>
+        <span>Next Senka Refresh</span>
+        <span><CountdownTimer countdownId="next-senka" completeTime={+nextSenka} resolveTime={resolveDayTime}/></span>
+      </div>
+      <div>
+        <span>Next EO Refresh</span>
+        <span><CountdownTimer countdownId="next-EO" completeTime={+nextEO} resolveTime={resolveDayTime}/></span>
+      </div>
+    </div>
+  )
+}
+
 export default connect(
   (state) => ({
     level: get(state, 'info.basic.api_level', -1),
     nickname: get(state, 'info.basic.api_nickname', ''),
     rank: get(state, 'info.basic.api_rank', 0),
-    maxKanmusu: get(state, 'info.basic.api_max_chara', 0),
+    maxShip: get(state, 'info.basic.api_max_chara', 0),
     maxSlotitem: get(state, 'info.basic.api_max_slotitem', 0),
     equipNum: Object.keys(state.info.equips).length,
     shipNum: Object.keys(state.info.ships).length,
     dropCount: state.sortie.dropCount,
   })
-)(function TeitokuPanel({ level, nickname, rank, maxKanmusu, maxSlotitem, equipNum, shipNum, dropCount }) {
+)(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem, equipNum, shipNum, dropCount }) {
   return (
     <Panel bsStyle="default" className="teitoku-panel">
     {
-      level>=0 ?
+      level >= 0 ?
       <div>
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp"><ExpContent/></Tooltip>}>
           <span>{`Lv. ${level}　`}
@@ -78,7 +134,11 @@ export default connect(
             <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
           </span>
         </OverlayTrigger>
-        {__('Ships')}: {shipNum + dropCount} / {maxKanmusu}　{__('Equipment')}: {equipNum} / {maxSlotitem}
+        {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time"><CountdownContent/></Tooltip>}>
+          <span> Timer
+          </span>
+        </OverlayTrigger>
       </div>
     : 
       <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
