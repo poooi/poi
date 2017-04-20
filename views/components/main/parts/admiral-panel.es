@@ -1,6 +1,8 @@
 import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React from 'react'
+import { get } from 'lodash'
+
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -33,57 +35,53 @@ const resolveDayTime = (seconds) => {
   }
 }
 
+const ExpContent = connect(
+  (state) => ({
+    level: get(state, 'info.basic.api_level', 0),
+    exp: get(state, 'info.basic.api_experience', 0),
+  })
+)(({ level, exp }) => (
+  <div style={{display: 'table'}}>
+    { level < 120 &&
+      <div>
+        <span>Next.</span>
+        <span>{totalExp[level] - exp}</span>
+      </div>
+    }
+    <div>
+      <span>Total Exp.</span>
+      <span>{exp}</span>
+    </div>
+  </div>
+))
+
 export default connect(
   (state) => ({
-    basic: state.info.basic,
+    level: get(state, 'info.basic.api_level', -1),
+    nickname: get(state, 'info.basic.api_nickname', ''),
+    rank: get(state, 'info.basic.api_rank', 0),
+    maxKanmusu: get(state, 'info.basic.api_max_chara', 0),
+    maxSlotitem: get(state, 'info.basic.api_max_slotitem', 0),
     equipNum: Object.keys(state.info.equips).length,
     shipNum: Object.keys(state.info.ships).length,
     dropCount: state.sortie.dropCount,
   })
-)(function TeitokuPanel({basic, equipNum, shipNum, dropCount}) {
+)(function TeitokuPanel({ level, nickname, rank, maxKanmusu, maxSlotitem, equipNum, shipNum, dropCount }) {
   return (
     <Panel bsStyle="default" className="teitoku-panel">
     {
-      typeof basic === 'object' && basic.api_level ? (function () {
-        const styleCommon = {
-          minWidth: '60px',
-          padding: '2px',
-          float: 'left',
-        }
-        const styleL = Object.assign({}, styleCommon, {textAlign: 'right'})
-        const styleR = Object.assign({}, styleCommon, {textAlign: 'left'})
-        const level = basic.api_level
-        const exp = basic.api_experience
-        const nextExp = totalExp[level] - exp
-        return (
-          <div>
-            <OverlayTrigger placement="bottom" overlay={
-              level < 120 ? (
-                <Tooltip id='teitoku-exp'>
-                  <div style={{display: 'table'}}>
-                    <div>
-                      <span style={styleL}>Next.</span><span style={styleR}>{nextExp}</span>
-                    </div>
-                    <div>
-                      <span style={styleL}>Total Exp.</span><span style={styleR}>{exp}</span>
-                    </div>
-                  </div>
-                </Tooltip>
-              ) : (
-                <Tooltip id='teitoku-exp'>Total Exp. {exp}</Tooltip>
-              )
-            }>
-              <span>{`Lv. ${level}　`}
-                <span className="nickname">{basic.api_nickname}</span>
-                <span id="user-rank">{`　[${rankName[basic.api_rank]}]　`}</span>
-              </span>
-            </OverlayTrigger>
-            {__('Ships')}: {shipNum + dropCount} / {basic.api_max_chara}　{__('Equipment')}: {equipNum} / {basic.api_max_slotitem}
-          </div>
-        )
-      })() : (
-        <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
-      )
+      level>=0 ?
+      <div>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp"><ExpContent/></Tooltip>}>
+          <span>{`Lv. ${level}　`}
+            <span className="nickname">{nickname}</span>
+            <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
+          </span>
+        </OverlayTrigger>
+        {__('Ships')}: {shipNum + dropCount} / {maxKanmusu}　{__('Equipment')}: {equipNum} / {maxSlotitem}
+      </div>
+    : 
+      <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
     }
     </Panel>
   )
