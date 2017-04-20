@@ -58,13 +58,13 @@ const ExpContent = connect(
 )(({ level, exp }) => (
   <div>
     { level < 120 &&
-      <div className='recon-entry'>
-        <span className='recon-item'>{__('Next')}</span>
+      <div className='info-tooltip-entry'>
+        <span className='info-tooltip-item'>{__('Next')}</span>
         <span>{totalExp[level] - exp}</span>
       </div>
     }
-    <div className='recon-entry'>
-      <span className='recon-item'>{__('Total Exp.')}</span>
+    <div className='info-tooltip-entry'>
+      <span className='info-tooltip-item'>{__('Total Exp.')}</span>
       <span>{exp}</span>
     </div>
   </div>
@@ -103,8 +103,8 @@ const CountdownContent = () => {
 
   return(
     <div>
-      <div className='recon-entry'>
-        <span className='recon-item'>{__('Next Practice')}</span>
+      <div className='info-tooltip-entry'>
+        <span className='info-tooltip-item'>{__('Next Practice')}</span>
         <span><CountdownNotifierLabel 
           timerKey="next-practice" 
           completeTime={+nextPractice} 
@@ -113,8 +113,8 @@ const CountdownContent = () => {
         />
         </span>
       </div>
-      <div className='recon-entry'>
-        <span className='recon-item'>{__('Next Quest')}</span>
+      <div className='info-tooltip-entry'>
+        <span className='info-tooltip-item'>{__('Next Quest')}</span>
         <span><CountdownNotifierLabel 
           timerKey="next-quest" 
           completeTime={+nextQuest} 
@@ -123,8 +123,8 @@ const CountdownContent = () => {
         />
         </span>
       </div>
-      <div className='recon-entry'>
-        <span className='recon-item'>{__('Next Senka')}</span>
+      <div className='info-tooltip-entry'>
+        <span className='info-tooltip-item'>{__('Next Senka')}</span>
         <span><CountdownNotifierLabel
           timerKey="next-senka" 
           completeTime={+nextSenka} 
@@ -133,8 +133,8 @@ const CountdownContent = () => {
         />
         </span>
       </div>
-      <div className='recon-entry'>
-        <span  className='recon-item'>{__('Next EO')}</span>
+      <div className='info-tooltip-entry'>
+        <span  className='info-tooltip-item'>{__('Next EO')}</span>
         <span><CountdownNotifierLabel
           timerKey="next-EO"
           completeTime={+nextEO}
@@ -164,14 +164,14 @@ export default connect(
     {
       level >= 0 ?
       <div>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='topalert-recon-tooltip'><ExpContent/></Tooltip>}>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
           <span>{`Lv. ${level}　`}
             <span className="nickname">{nickname}</span>
             <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
           </span>
         </OverlayTrigger>
         {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time" className='topalert-recon-tooltip'><CountdownContent/></Tooltip>}>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time" className='info-tooltip'><CountdownContent/></Tooltip>}>
           <Label><FontAwesome name="calendar" /></Label>
         </OverlayTrigger>
       </div>

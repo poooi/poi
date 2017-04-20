@@ -187,30 +187,30 @@ export default connect(
           </span>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='bottom' overlay={
-              <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='topalert-recon-tooltip'>
+              <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='info-tooltip'>
                 <div className='recon-title'>
                   <span>{__('Formula 33')}</span>
                 </div>
-                <div className='recon-entry'>
-                  <span className='recon-item'>× 1</span>
+                <div className='info-tooltip-entry'>
+                  <span className='info-tooltip-item'>× 1</span>
                   <span>{saku33.total}</span>
                 </div>
-                <div className='recon-entry'>
-                  <span className='recon-item'>{`× 3 (6-2 & 6-3)`}</span>
+                <div className='info-tooltip-entry'>
+                  <span className='info-tooltip-item'>{`× 3 (6-2 & 6-3)`}</span>
                   <span>{saku33x3.total}</span></div>
-                <div className='recon-entry'>
-                  <span className='recon-item'>{`× 4 (3-5 & 6-1)`}</span>
+                <div className='info-tooltip-entry'>
+                  <span className='info-tooltip-item'>{`× 4 (3-5 & 6-1)`}</span>
                   <span>{saku33x4.total}</span>
                 </div>
                 <div className='recon-title'>
                   <span>{__('Formula 2-5')}</span>
                 </div>
-                <div className='recon-entry'>
-                  <span className='recon-item'>{__('Fall')}</span>
+                <div className='info-tooltip-entry'>
+                  <span className='info-tooltip-item'>{__('Fall')}</span>
                   <span>{saku25a.total}</span>
                 </div>
-                <div className='recon-entry'>
-                  <span className='recon-item'>{__('Legacy')}</span>
+                <div className='info-tooltip-entry'>
+                  <span className='info-tooltip-item'>{__('Legacy')}</span>
                   <span>{saku25.total}</span>
                 </div>
               </Tooltip>
