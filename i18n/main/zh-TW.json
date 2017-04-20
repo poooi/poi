@@ -55,5 +55,15 @@
   "Slow":"低速",
   "Fast": "高速",
   "Fast+": "高速+",
-  "Fastest": "最速"
+  "Fastest": "最速",
+  "Next Practice": "距下次演習刷新",
+  "Next Quest": "距下次任務刷新",
+  "Next Senka": "距下次戰果刷新",
+  "Next EO": "距下次 EO 刷新",
+  "d": "天",
+  "h": "時",
+  "m": "分",
+  "s": "秒",
+  "Next": "下次升級",
+  "Total Exp.": "總經驗值"
 }
