@@ -80,9 +80,9 @@ const CountdownContent = () => {
   const now = moment.utc()
   const nowHour = now.hour()
   const nextPractice = now.clone()
-  if (nowHour <= 6) {
+  if (nowHour < 6) {
     nextPractice.hour(6)
-  } else if (nowHour <= 18) {
+  } else if (nowHour < 18) {
     nextPractice.hour(18)
   } else {
     nextPractice.hour(30)
@@ -90,7 +90,7 @@ const CountdownContent = () => {
   nextPractice.startOf('hour')
 
   const nextQuest = now.clone()
-  if (nowHour <= 20) {
+  if (nowHour < 20) {
     nextQuest.hour(20)
   } else {
     nextQuest.hour(44)
