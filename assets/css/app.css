@@ -405,3 +405,10 @@ poi-info {
   flex-grow: 1;
   margin-right: 2em;
 }
+.info-tooltip .tooltip-inner {
+  max-width: initial;
+  width: fit-content;
+}
+#teitoku-timer {
+  margin-left: 0.5em;
+}

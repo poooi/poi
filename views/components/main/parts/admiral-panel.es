@@ -172,7 +172,7 @@ export default connect(
         </OverlayTrigger>
         {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time" className='info-tooltip'><CountdownContent/></Tooltip>}>
-          <Label><FontAwesome name="calendar" /></Label>
+          <Label id="teitoku-timer"><FontAwesome name="calendar" /></Label>
         </OverlayTrigger>
       </div>
     : 
