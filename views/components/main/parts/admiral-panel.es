@@ -1,10 +1,11 @@
 import { connect } from 'react-redux'
-import { Panel, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import React from 'react'
 import { get } from 'lodash'
 import moment from 'moment'
+import FontAwesome from 'react-fontawesome'
 
-import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
+import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
 
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -38,21 +39,32 @@ const resolveDayTime = (time) => {
   }
 }
 
+const getLabelStyle = (_, timeRemaining) => {
+  switch (true) {
+  case timeRemaining > 1800:
+    return 'default'
+  case timeRemaining > 900:
+    return 'warning'
+  default:
+    return 'default'
+  }
+}
+
 const ExpContent = connect(
   (state) => ({
     level: get(state, 'info.basic.api_level', 0),
     exp: get(state, 'info.basic.api_experience', 0),
   })
 )(({ level, exp }) => (
-  <div style={{display: 'table'}}>
+  <div>
     { level < 120 &&
-      <div>
-        <span>Next.</span>
+      <div className='recon-entry'>
+        <span className='recon-item'>{__('Next')}</span>
         <span>{totalExp[level] - exp}</span>
       </div>
     }
-    <div>
-      <span>Total Exp.</span>
+    <div className='recon-entry'>
+      <span className='recon-item'>{__('Total Exp.')}</span>
       <span>{exp}</span>
     </div>
   </div>
@@ -90,22 +102,46 @@ const CountdownContent = () => {
   const nextEO = endOfMonth.clone().subtract(9, 'hours')
 
   return(
-    <div style={{display: 'table'}}>
-      <div>
-        <span>Next Practice</span>
-        <span><CountdownTimer countdownId="next-practice" completeTime={+nextPractice} resolveTime={resolveDayTime}/></span>
+    <div>
+      <div className='recon-entry'>
+        <span className='recon-item'>{__('Next Practice')}</span>
+        <span><CountdownNotifierLabel 
+          timerKey="next-practice" 
+          completeTime={+nextPractice} 
+          resolveTime={resolveDayTime} 
+          getLabelStyle={getLabelStyle}
+        />
+        </span>
       </div>
-      <div>
-        <span>Next Quest Refresh</span>
-        <span><CountdownTimer countdownId="next-quest" completeTime={+nextQuest} resolveTime={resolveDayTime}/></span>
+      <div className='recon-entry'>
+        <span className='recon-item'>{__('Next Quest')}</span>
+        <span><CountdownNotifierLabel 
+          timerKey="next-quest" 
+          completeTime={+nextQuest} 
+          resolveTime={resolveDayTime}
+          getLabelStyle={getLabelStyle}
+        />
+        </span>
       </div>
-      <div>
-        <span>Next Senka Refresh</span>
-        <span><CountdownTimer countdownId="next-senka" completeTime={+nextSenka} resolveTime={resolveDayTime}/></span>
+      <div className='recon-entry'>
+        <span className='recon-item'>{__('Next Senka')}</span>
+        <span><CountdownNotifierLabel
+          timerKey="next-senka" 
+          completeTime={+nextSenka} 
+          resolveTime={resolveDayTime}
+          getLabelStyle={getLabelStyle}
+        />
+        </span>
       </div>
-      <div>
-        <span>Next EO Refresh</span>
-        <span><CountdownTimer countdownId="next-EO" completeTime={+nextEO} resolveTime={resolveDayTime}/></span>
+      <div className='recon-entry'>
+        <span  className='recon-item'>{__('Next EO')}</span>
+        <span><CountdownNotifierLabel
+          timerKey="next-EO"
+          completeTime={+nextEO}
+          resolveTime={resolveDayTime}
+          getLabelStyle={getLabelStyle}
+        />
+        </span>
       </div>
     </div>
   )
@@ -128,16 +164,15 @@ export default connect(
     {
       level >= 0 ?
       <div>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp"><ExpContent/></Tooltip>}>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='topalert-recon-tooltip'><ExpContent/></Tooltip>}>
           <span>{`Lv. ${level}　`}
             <span className="nickname">{nickname}</span>
             <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
           </span>
         </OverlayTrigger>
         {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time"><CountdownContent/></Tooltip>}>
-          <span> Timer
-          </span>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time" className='topalert-recon-tooltip'><CountdownContent/></Tooltip>}>
+          <Label><FontAwesome name="calendar" /></Label>
         </OverlayTrigger>
       </div>
     : 
