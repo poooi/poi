@@ -277,19 +277,3 @@
   margin-top: 5px;
   text-align: center;
 }
-.info-tooltip .tooltip-inner .recon-title {
-  font-weight: bold;
-  font-size: 110%;
-  text-align: left;
-}
-.info-tooltip .tooltip-inner .recon-title:not(:first-child) {
-  margin-top: 0.5em;
-}
-.info-tooltip .tooltip-inner .info-tooltip-entry {
-  display:flex;
-  text-align: left;
-  width: 160px;
-}
-.info-tooltip .tooltip-inner .info-tooltip-item {
-  flex-grow: 1;
-}
