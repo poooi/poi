@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
-import React from 'react'
-import { get } from 'lodash'
+import React, { Component } from 'react'
+import { get, map } from 'lodash'
 import moment from 'moment'
 import FontAwesome from 'react-fontawesome'
 
@@ -76,76 +76,139 @@ const ExpContent = connect(
 // - Senka: JST 22h00 on last day of every month, UTC 13h00
 // - Extra Operation: JST 0h00 on first day of every month, UTC 15h00 on last day of every month
 
-const CountdownContent = () => {
+const getNextPractice = () => {
   const now = moment.utc()
   const nowHour = now.hour()
-  const nextPractice = now.clone()
   if (nowHour < 6) {
-    nextPractice.hour(6)
+    now.hour(6)
   } else if (nowHour < 18) {
-    nextPractice.hour(18)
+    now.hour(18)
   } else {
-    nextPractice.hour(30)
+    now.hour(30)
   }
-  nextPractice.startOf('hour')
-
-  const nextQuest = now.clone()
-  if (nowHour < 20) {
-    nextQuest.hour(20)
-  } else {
-    nextQuest.hour(44)
-  }
-  nextQuest.startOf('hour')
-
-  const endOfMonth = now.clone().endOf('month')
-  const nextSenka = endOfMonth.clone().subtract(11, 'hours')
-  const nextEO = endOfMonth.clone().subtract(9, 'hours')
-
-  return(
-    <div>
-      <div className='info-tooltip-entry'>
-        <span className='info-tooltip-item'>{__('Next Practice')}</span>
-        <span><CountdownNotifierLabel 
-          timerKey="next-practice" 
-          completeTime={+nextPractice} 
-          resolveTime={resolveDayTime} 
-          getLabelStyle={getLabelStyle}
-        />
-        </span>
-      </div>
-      <div className='info-tooltip-entry'>
-        <span className='info-tooltip-item'>{__('Next Quest')}</span>
-        <span><CountdownNotifierLabel 
-          timerKey="next-quest" 
-          completeTime={+nextQuest} 
-          resolveTime={resolveDayTime}
-          getLabelStyle={getLabelStyle}
-        />
-        </span>
-      </div>
-      <div className='info-tooltip-entry'>
-        <span className='info-tooltip-item'>{__('Next Senka')}</span>
-        <span><CountdownNotifierLabel
-          timerKey="next-senka" 
-          completeTime={+nextSenka} 
-          resolveTime={resolveDayTime}
-          getLabelStyle={getLabelStyle}
-        />
-        </span>
-      </div>
-      <div className='info-tooltip-entry'>
-        <span  className='info-tooltip-item'>{__('Next EO')}</span>
-        <span><CountdownNotifierLabel
-          timerKey="next-EO"
-          completeTime={+nextEO}
-          resolveTime={resolveDayTime}
-          getLabelStyle={getLabelStyle}
-        />
-        </span>
-      </div>
-    </div>
-  )
+  return now.startOf('hour')
 }
+
+const getNextQuest = () => {
+  const now = moment.utc()
+  const nowHour = now.hour()
+  if (nowHour < 20) {
+    now.hour(20)
+  } else {
+    now.hour(44)
+  }
+  return now.startOf('hour')
+}
+
+const getNextSenka = () => {
+  const endOfMonth = moment.utc().endOf('month')
+  return endOfMonth.subtract(11, 'hours')
+}
+
+const getNextEO = () => {
+  const endOfMonth = moment.utc().endOf('month')
+  return endOfMonth.subtract(9, 'hours')
+}
+
+const getNewMomentMap = {
+  Practice: getNextPractice,
+  Quest: getNextQuest,
+  Senka: getNextSenka,
+  EO: getNextEO,
+}
+
+class CountDownControl extends Component {
+  constructor(props) {
+    super(props)
+    this.moments = {
+      Practice: getNextPractice(),
+      Quest: getNextQuest(),
+      Senka: getNextSenka(),
+      EO: getNextEO(),
+    }
+    this.state = {
+      style: 'default',
+    }
+  }
+
+  componentDidMount = () => {
+    this.startTick()
+    window.addEventListener('countdown.start', this.startTick)
+    window.addEventListener('countdown.stop', this.stopTick)
+  }
+
+  componentWillUnmount = () => {
+    this.stopTick()
+    window.removeEventListener('countdown.start', this.startTick)
+    window.removeEventListener('countdown.stop', this.stopTick)
+  }
+
+  startTick = () => {
+    window.ticker.reg('admiral-panel', this.tick)
+  }
+
+  stopTick = () => {
+    window.ticker.unreg('admiral-panel')
+  }
+
+  tick = (currentTime) => {
+    // update moments
+    Object.keys(this.moments).forEach(key => {
+      if (this.moments[key] - currentTime < 0) {
+        this.moments[key] = getNewMomentMap[key]()
+      }
+    })
+
+    // check styles
+    const minRemaining = Math.min(...map(this.moments, moment => moment - currentTime))
+    const style = getLabelStyle(null, minRemaining / 1000)
+
+    if (style !== this.state.style) {
+      this.setState({
+        style,
+      })
+    }
+  }
+
+  render() {
+    const { style } = this.state
+    return(
+      <span>
+        <OverlayTrigger
+          placement="bottom"
+          overlay={
+            <Tooltip id="next-time" className='info-tooltip'>
+              <CountdownContent moments={this.moments}/>
+            </Tooltip>
+          }
+        >
+          <Label id="teitoku-timer" bsStyle={style}><FontAwesome name="calendar" /></Label>
+        </OverlayTrigger>
+      </span>
+    )
+  }
+}
+
+const CountdownContent = ({moments}) => (
+  <div>
+    {
+      ['Practice', 'Quest', 'Senka', 'EO'].map(name => (
+        <div className='info-tooltip-entry' key={name}>
+          <span className='info-tooltip-item'>{__(`Next ${name}`)}</span>
+          <span>
+            <CountdownNotifierLabel
+              timerKey={`next-${name}`}
+              completeTime={+moments[name]}
+              resolveTime={resolveDayTime}
+              getLabelStyle={getLabelStyle}
+            />
+          </span>
+        </div>
+      ))
+    }
+  </div>
+)
+
 
 export default connect(
   (state) => ({
@@ -171,11 +234,9 @@ export default connect(
           </span>
         </OverlayTrigger>
         {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="next-time" className='info-tooltip'><CountdownContent/></Tooltip>}>
-          <Label id="teitoku-timer"><FontAwesome name="calendar" /></Label>
-        </OverlayTrigger>
+        <CountDownControl/>
       </div>
-    : 
+    :
       <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
     }
     </Panel>
