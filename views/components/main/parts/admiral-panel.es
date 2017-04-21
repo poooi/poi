@@ -256,14 +256,14 @@ export default connect(
             <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
           </span>
         </OverlayTrigger>
-        <span>{__('Ships')}: </span>
+        <span>{__('Ships: ')}</span>
         <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
-        <span>  {__('Equipment')}: </span>
+        <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
         <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
         <CountDownControl/>
       </div>
     :
-      <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
+      <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
     }
     </Panel>
   )
