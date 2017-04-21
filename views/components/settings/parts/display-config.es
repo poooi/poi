@@ -13,6 +13,8 @@ const {openItem} = shell
 const {Component} = React
 const __ = i18n.setting.__.bind(i18n.setting)
 
+const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
+
 config.on('config.set', (path, value) => {
   let event
   switch (path) {
@@ -25,7 +27,7 @@ config.on('config.set', (path, value) => {
       },
     })
     window.dispatchEvent(event)
-    toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
+    toggleModalWithDelay(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
     break
   case 'poi.tabarea.double':
     event = new CustomEvent('doubleTabbed.change', {
@@ -36,7 +38,7 @@ config.on('config.set', (path, value) => {
       },
     })
     window.dispatchEvent(event)
-    toggleModal(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
+    toggleModalWithDelay(__('Layout settings'), __('Some plugins may not work before you refresh the page.'))
     break
   case 'poi.transition.enable':
     window.dispatchEvent(new Event('display.transition.change'))
@@ -120,7 +122,7 @@ const ChangeThemeConfig = connect((state, props) => ({
       fs.ensureFileSync(d)
       return openItem(d)
     } catch (e) {
-      return toggleModal(__('Edit custom CSS'), __("Failed. Perhaps you don't have permission to it."))
+      return toggleModalWithDelay(__('Edit custom CSS'), __("Failed. Perhaps you don't have permission to it."))
     }
   }
   handleSetSVGIcon = () => {
