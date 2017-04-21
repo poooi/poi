@@ -58,10 +58,6 @@ body {
 #poi-app-container {
   overflow: hidden;
 }
-kan-game {
-  overflow-x: hidden;
-  height: 100vh;
-}
 kan-game webview {
   height: 100%;
 }
