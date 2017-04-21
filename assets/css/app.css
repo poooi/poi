@@ -384,3 +384,27 @@ poi-info {
   max-width: initial;
   width: fit-content;
 }
+.info-tooltip .tooltip-inner .recon-title {
+  font-weight: bold;
+  font-size: 110%;
+  text-align: left;
+}
+.info-tooltip .tooltip-inner .recon-title:not(:first-child) {
+  margin-top: 0.5em;
+}
+.info-tooltip .tooltip-inner .info-tooltip-entry {
+  display:flex;
+  text-align: left;
+  min-width: 100px;
+}
+.info-tooltip .tooltip-inner .info-tooltip-item {
+  flex-grow: 1;
+  margin-right: 2em;
+}
+.info-tooltip .tooltip-inner {
+  max-width: initial;
+  width: fit-content;
+}
+#teitoku-timer {
+  margin-left: 0.5em;
+}

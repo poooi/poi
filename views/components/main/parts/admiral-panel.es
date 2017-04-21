@@ -1,6 +1,12 @@
 import { connect } from 'react-redux'
-import { Panel, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import React from 'react'
+import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
+import React, { Component } from 'react'
+import { get, map } from 'lodash'
+import moment from 'moment'
+import FontAwesome from 'react-fontawesome'
+
+import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
+
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -20,57 +26,218 @@ const totalExp = [
   1300000, 1600000, 1900000, 2200000, 2600000, 3000000, 3500000, 4000000, 4600000, 5200000,
   5900000, 6600000, 7400000, 8200000, 9100000, 10000000, 11000000, 12000000, 13000000, 14000000, 15000000]
 
+const resolveDayTime = (time) => {
+  const seconds = parseInt(time)
+  if (seconds >= 0) {
+    const s = seconds % 60
+    const m = Math.trunc(seconds / 60) % 60
+    const h = Math.trunc(seconds / 3600) % 24
+    const d = Math.trunc(seconds / 86400)
+    return [d ? `${d}${__('d')}` : '', h ? `${h}${__('h')}` : '', m ? `${m}${__('m')}` : '', s ? `${s}${__('s')}` : ''].join(' ')
+  } else {
+    return ''
+  }
+}
+
+const getLabelStyle = (_, timeRemaining) => {
+  switch (true) {
+  case timeRemaining > 1800:
+    return 'default'
+  case timeRemaining > 900:
+    return 'warning'
+  default:
+    return 'danger'
+  }
+}
+
+const ExpContent = connect(
+  (state) => ({
+    level: get(state, 'info.basic.api_level', 0),
+    exp: get(state, 'info.basic.api_experience', 0),
+  })
+)(({ level, exp }) => (
+  <div>
+    { level < 120 &&
+      <div className='info-tooltip-entry'>
+        <span className='info-tooltip-item'>{__('Next')}</span>
+        <span>{totalExp[level] - exp}</span>
+      </div>
+    }
+    <div className='info-tooltip-entry'>
+      <span className='info-tooltip-item'>{__('Total Exp.')}</span>
+      <span>{exp}</span>
+    </div>
+  </div>
+))
+
+// Refresh time:
+// - Practice: JST 3h00, 15h00, UTC 18h00, 6h00
+// - Quest: JST 5h00, UTC 20h00
+// - Senka: JST 22h00 on last day of every month, UTC 13h00
+// - Extra Operation: JST 0h00 on first day of every month, UTC 15h00 on last day of every month
+
+const getNextPractice = () => {
+  const now = moment.utc()
+  const nowHour = now.hour()
+  if (nowHour < 6) {
+    now.hour(6)
+  } else if (nowHour < 18) {
+    now.hour(18)
+  } else {
+    now.hour(30)
+  }
+  return now.startOf('hour')
+}
+
+const getNextQuest = () => {
+  const now = moment.utc()
+  const nowHour = now.hour()
+  if (nowHour < 20) {
+    now.hour(20)
+  } else {
+    now.hour(44)
+  }
+  return now.startOf('hour')
+}
+
+const getNextSenka = () => {
+  const endOfMonth = moment.utc().endOf('month')
+  return endOfMonth.subtract(11, 'hours')
+}
+
+const getNextEO = () => {
+  const endOfMonth = moment.utc().endOf('month')
+  return endOfMonth.subtract(9, 'hours')
+}
+
+const getNewMomentMap = {
+  Practice: getNextPractice,
+  Quest: getNextQuest,
+  Senka: getNextSenka,
+  EO: getNextEO,
+}
+
+class CountDownControl extends Component {
+  constructor(props) {
+    super(props)
+    this.moments = {
+      Practice: getNextPractice(),
+      Quest: getNextQuest(),
+      Senka: getNextSenka(),
+      EO: getNextEO(),
+    }
+    this.state = {
+      style: 'default',
+    }
+  }
+
+  componentDidMount = () => {
+    this.startTick()
+    window.addEventListener('countdown.start', this.startTick)
+    window.addEventListener('countdown.stop', this.stopTick)
+  }
+
+  componentWillUnmount = () => {
+    this.stopTick()
+    window.removeEventListener('countdown.start', this.startTick)
+    window.removeEventListener('countdown.stop', this.stopTick)
+  }
+
+  startTick = () => {
+    window.ticker.reg('admiral-panel', this.tick)
+  }
+
+  stopTick = () => {
+    window.ticker.unreg('admiral-panel')
+  }
+
+  tick = (currentTime) => {
+    // update moments
+    Object.keys(this.moments).forEach(key => {
+      if (this.moments[key] - currentTime < 0) {
+        this.moments[key] = getNewMomentMap[key]()
+      }
+    })
+
+    // check styles
+    const minRemaining = Math.min(...map(this.moments, moment => moment - currentTime))
+    const style = getLabelStyle(null, minRemaining / 1000)
+
+    if (style !== this.state.style) {
+      this.setState({
+        style,
+      })
+    }
+  }
+
+  render() {
+    const { style } = this.state
+    return(
+      <span>
+        <OverlayTrigger
+          placement="bottom"
+          overlay={
+            <Tooltip id="next-time" className='info-tooltip'>
+              <CountdownContent moments={this.moments}/>
+            </Tooltip>
+          }
+        >
+          <Label id="teitoku-timer" bsStyle={style}><FontAwesome name="calendar" /></Label>
+        </OverlayTrigger>
+      </span>
+    )
+  }
+}
+
+const CountdownContent = ({moments}) => (
+  <div>
+    {
+      ['Practice', 'Quest', 'Senka', 'EO'].map(name => (
+        <div className='info-tooltip-entry' key={name}>
+          <span className='info-tooltip-item'>{__(`Next ${name}`)}</span>
+          <span>
+            <CountdownNotifierLabel
+              timerKey={`next-${name}`}
+              completeTime={+moments[name]}
+              resolveTime={resolveDayTime}
+              getLabelStyle={getLabelStyle}
+            />
+          </span>
+        </div>
+      ))
+    }
+  </div>
+)
+
+
 export default connect(
   (state) => ({
-    basic: state.info.basic,
+    level: get(state, 'info.basic.api_level', -1),
+    nickname: get(state, 'info.basic.api_nickname', ''),
+    rank: get(state, 'info.basic.api_rank', 0),
+    maxShip: get(state, 'info.basic.api_max_chara', 0),
+    maxSlotitem: get(state, 'info.basic.api_max_slotitem', 0),
     equipNum: Object.keys(state.info.equips).length,
     shipNum: Object.keys(state.info.ships).length,
     dropCount: state.sortie.dropCount,
   })
-)(function TeitokuPanel({basic, equipNum, shipNum, dropCount}) {
+)(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem, equipNum, shipNum, dropCount }) {
   return (
     <Panel bsStyle="default" className="teitoku-panel">
     {
-      typeof basic === 'object' && basic.api_level ? (function () {
-        const styleCommon = {
-          minWidth: '60px',
-          padding: '2px',
-          float: 'left',
-        }
-        const styleL = Object.assign({}, styleCommon, {textAlign: 'right'})
-        const styleR = Object.assign({}, styleCommon, {textAlign: 'left'})
-        const level = basic.api_level
-        const exp = basic.api_experience
-        const nextExp = totalExp[level] - exp
-        return (
-          <div>
-            <OverlayTrigger placement="bottom" overlay={
-              level < 120 ? (
-                <Tooltip id='teitoku-exp'>
-                  <div style={{display: 'table'}}>
-                    <div>
-                      <span style={styleL}>Next.</span><span style={styleR}>{nextExp}</span>
-                    </div>
-                    <div>
-                      <span style={styleL}>Total Exp.</span><span style={styleR}>{exp}</span>
-                    </div>
-                  </div>
-                </Tooltip>
-              ) : (
-                <Tooltip id='teitoku-exp'>Total Exp. {exp}</Tooltip>
-              )
-            }>
-              <span>{`Lv. ${level}　`}
-                <span className="nickname">{basic.api_nickname}</span>
-                <span id="user-rank">{`　[${rankName[basic.api_rank]}]　`}</span>
-              </span>
-            </OverlayTrigger>
-            {__('Ships')}: {shipNum + dropCount} / {basic.api_max_chara}　{__('Equipment')}: {equipNum} / {basic.api_max_slotitem}
-          </div>
-        )
-      })() : (
-        <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
-      )
+      level >= 0 ?
+      <div>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
+          <span>{`Lv. ${level}　`}
+            <span className="nickname">{nickname}</span>
+            <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
+          </span>
+        </OverlayTrigger>
+        {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
+        <CountDownControl/>
+      </div>
+    :
+      <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
     }
     </Panel>
   )
