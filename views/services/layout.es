@@ -86,7 +86,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
       top: ${layout === 'vertical' ? `calc(30px * ${zoomLevel - 1})` : 0};
     }
     div[role='tooltip'], #poi-app-container, poi-info {
-      transform : scale(${zoomLevel});
+      ${zoomLevel !== 1 && `transform: scale(${zoomLevel});`}
     }
     .poi-control-tooltip {
       max-height: ${Math.ceil(poiControlHeight / zoomLevel)}px;
