@@ -1,11 +1,13 @@
 import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import React, { Component } from 'react'
+import { createSelector } from 'reselect'
 import { get, map } from 'lodash'
 import moment from 'moment'
 import FontAwesome from 'react-fontawesome'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
+import { configSelector, basicSelector } from 'views/utils/selectors'
 
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -209,19 +211,40 @@ const CountdownContent = ({moments}) => (
   </div>
 )
 
+const admiralInfoSelector = createSelector(
+  [basicSelector],
+  (basic) => ({
+    level: get(basic, 'api_level', -1),
+    nickname: get(basic, 'api_nickname', ''),
+    rank: get(basic, 'api_rank', 0),
+    maxShip: get(basic, 'api_max_chara', 0),
+    maxSlotitem: get(basic, 'api_max_slotitem', 0),
+  })
+)
+
+const numCheckSelector = createSelector(
+  [configSelector],
+  (config) => ({
+    shipNumCheck: get(config, 'poi.mapStartCheck.ship.enable', false),
+    minShipNum: get(config, 'poi.mapStartCheck.ship.minFreeSlots', 4),
+    slotNumCheck: get(config, 'poi.mapStartCheck.item.enable', false),
+    minSlotNum: get(config, 'poi.mapStartCheck.item.minFreeSlots', 10),
+  })
+)
 
 export default connect(
   (state) => ({
-    level: get(state, 'info.basic.api_level', -1),
-    nickname: get(state, 'info.basic.api_nickname', ''),
-    rank: get(state, 'info.basic.api_rank', 0),
-    maxShip: get(state, 'info.basic.api_max_chara', 0),
-    maxSlotitem: get(state, 'info.basic.api_max_slotitem', 0),
+    ...admiralInfoSelector(state),
     equipNum: Object.keys(state.info.equips).length,
     shipNum: Object.keys(state.info.ships).length,
     dropCount: state.sortie.dropCount,
+    ...numCheckSelector(state),
   })
-)(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem, equipNum, shipNum, dropCount }) {
+)(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem,
+  equipNum, shipNum, dropCount,
+  shipNumCheck, minShipNum, slotNumCheck, minSlotNum }) {
+  const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-warning' : ''
+  const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-warning' : ''
   return (
     <Panel bsStyle="default" className="teitoku-panel">
     {
@@ -233,11 +256,14 @@ export default connect(
             <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
           </span>
         </OverlayTrigger>
-        {__('Ships')}: {shipNum + dropCount} / {maxShip}　{__('Equipment')}: {equipNum} / {maxSlotitem}
+        <span>{__('Ships: ')}</span>
+        <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
+        <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
+        <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
         <CountDownControl/>
       </div>
     :
-      <div>{`${__('Admiral [Not logged in]')}　${__("Ships")}：? / ?　${__("Equipment")}：? / ?`}</div>
+      <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
     }
     </Panel>
   )
