@@ -243,8 +243,8 @@ export default connect(
 )(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem,
   equipNum, shipNum, dropCount,
   shipNumCheck, minShipNum, slotNumCheck, minSlotNum }) {
-  const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-danger' : ''
-  const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-danger' : ''
+  const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-warning' : ''
+  const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-warning' : ''
   return (
     <Panel bsStyle="default" className="teitoku-panel">
     {
