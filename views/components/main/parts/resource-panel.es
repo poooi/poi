@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Panel, Grid, Col } from 'react-bootstrap'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
@@ -17,8 +18,8 @@ export default connect(
   })
 )(class ResourcePanel extends React.Component {
   static propTypes = {
-    resources: React.PropTypes.array,
-    admiralLv: React.PropTypes.number,
+    resources: PropTypes.array,
+    admiralLv: PropTypes.number,
   }
 
   state = {

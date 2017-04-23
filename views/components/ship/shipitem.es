@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -48,10 +49,10 @@ export const ShipRow = connect(
     shipRowDataSelectorFactory(shipId)(state)
 )(class ShipRow extends Component {
   static propTypes = {
-    ship: React.PropTypes.object,
-    $ship: React.PropTypes.object,
-    $shipTypes: React.PropTypes.object,
-    labelStatus: React.PropTypes.number,
+    ship: PropTypes.object,
+    $ship: PropTypes.object,
+    $shipTypes: PropTypes.object,
+    labelStatus: PropTypes.number,
   }
 
   shouldComponentUpdate(nextProps) {

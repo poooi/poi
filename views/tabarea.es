@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React, { Component, Children, PropTypes } from 'react'
+import React, { Component, Children } from 'react'
+import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'

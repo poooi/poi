@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Row, Col, Grid, Checkbox, Radio } from 'react-bootstrap'
 import fs from 'fs-extra'
@@ -17,10 +18,10 @@ export const CheckboxLabelConfig = connect(() => {
   })
 })(class checkboxLabelConfig extends Component {
   static propTypes = {
-    label: React.PropTypes.string,
-    configName: React.PropTypes.string,
-    value: React.PropTypes.bool,
-    undecided: React.PropTypes.bool,
+    label: PropTypes.string,
+    configName: PropTypes.string,
+    value: PropTypes.bool,
+    undecided: PropTypes.bool,
   }
   handleChange = () => {
     config.set(this.props.configName, !this.props.value)
@@ -48,10 +49,10 @@ export const RadioConfig = connect(() => {
   })
 })(class radioConfig extends Component {
   static propTypes = {
-    label: React.PropTypes.string,
-    configName: React.PropTypes.string,
-    value: React.PropTypes.string,
-    availableVal: React.PropTypes.array,
+    label: PropTypes.string,
+    configName: PropTypes.string,
+    value: PropTypes.string,
+    availableVal: PropTypes.array,
   }
   onSelect = (value) => {
     config.set(this.props.configName, value)
@@ -85,9 +86,9 @@ export const FolderPickerConfig = connect(() => {
   })
 })(class extends Component {
   static propTypes = {
-    label: React.PropTypes.string,
-    configName: React.PropTypes.string,
-    value: React.PropTypes.string,
+    label: PropTypes.string,
+    configName: PropTypes.string,
+    value: PropTypes.string,
   }
   onDrag = (e) => {
     e.preventDefault()

@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
@@ -102,11 +103,11 @@ export default connect(
     miniShipRowDataSelectorFactory(shipId),
 )(class miniShipRow extends Component {
   static propTypes = {
-    ship: React.PropTypes.object,
-    $ship: React.PropTypes.object,
-    labelStatus: React.PropTypes.number,
-    layout: React.PropTypes.string,
-    doubleTabbed: React.PropTypes.bool,
+    ship: PropTypes.object,
+    $ship: PropTypes.object,
+    labelStatus: PropTypes.number,
+    layout: PropTypes.string,
+    doubleTabbed: PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {

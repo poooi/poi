@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Grid, Col, Row, Button, ButtonGroup, FormControl, FormGroup, InputGroup, ControlLabel, Alert, OverlayTrigger, Tooltip, Collapse, Well } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -54,7 +55,7 @@ const SetNotifyIndividualConfig = connect(() => {
   })
 })(class setNotifyIndividualConfig extends Component {
   static propTypes = {
-    enabled: React.PropTypes.bool,
+    enabled: PropTypes.bool,
   }
   constructor(props) {
     super(props)
@@ -254,7 +255,7 @@ const SelectLanguageConfig = connect(() => {
   })
 })(class selectLanguageConfig extends Component {
   static propTypes = {
-    value: React.PropTypes.string,
+    value: PropTypes.string,
   }
   handleSetLanguage = (e) => {
     const language = e.target.value
@@ -285,12 +286,12 @@ const SlotCheckConfig = connect(() => {
   })
 })(class slotCheckConfig extends Component {
   static propTypes = {
-    minFreeSlots: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+    minFreeSlots: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
     ]),
-    type: React.PropTypes.string,
-    enable: React.PropTypes.bool,
+    type: PropTypes.string,
+    enable: PropTypes.bool,
   }
   constructor(props) {
     super(props)
@@ -390,10 +391,10 @@ const ShortcutConfig = connect(() => {
   })
 })(class shortcutConfig extends Component {
   static propTypes = {
-    value: React.PropTypes.string,
-    active: React.PropTypes.bool,
-    configName: React.PropTypes.string,
-    label: React.PropTypes.string,
+    value: PropTypes.string,
+    active: PropTypes.bool,
+    configName: PropTypes.string,
+    label: PropTypes.string,
   }
   constructor (props) {
     super(props)

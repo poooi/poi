@@ -1,11 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 export default class Divider extends React.Component{
   static propTypes = {
-    text: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.element,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
     ]),
-    onClick: React.PropTypes.func,
+    onClick: PropTypes.func,
   }
   onClick = (e) => {
     if (this.props.onClick)

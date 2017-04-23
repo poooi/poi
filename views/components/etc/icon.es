@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import classnames from 'classnames'
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
@@ -43,8 +44,8 @@ window.addEventListener('unload', (e) => {
 
 export class SlotitemIcon extends React.Component {
   static propTypes = {
-    slotitemId: React.PropTypes.number,
-    className: React.PropTypes.string,
+    slotitemId: PropTypes.number,
+    className: PropTypes.string,
   }
   state = {
     useSVGIcon: config.get('poi.useSVGIcon', false),
@@ -103,8 +104,8 @@ export class SlotitemIcon extends React.Component {
 
 export class MaterialIcon extends React.Component {
   static propTypes = {
-    materialId: React.PropTypes.number,
-    className: React.PropTypes.string,
+    materialId: PropTypes.number,
+    className: PropTypes.string,
   }
   state = {
     useSVGIcon: config.get('poi.useSVGIcon', false),

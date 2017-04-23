@@ -2,6 +2,7 @@ import path from 'path-extra'
 import classnames from 'classnames'
 import { shell, remote } from 'electron'
 import React from 'react'
+import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
@@ -25,7 +26,7 @@ const openLink = (link, e) => {
 }
 class PluginSettingWrap extends Component {
   static propTypes = {
-    plugin: React.PropTypes.object,
+    plugin: PropTypes.object,
   }
   shouldComponentUpdate = (nextProps, nextState) => (this.props.plugin.timestamp !== nextProps.plugin.timestamp)
   render() {
@@ -35,9 +36,9 @@ class PluginSettingWrap extends Component {
 
 // class CollapsiblePanel extends Component {
 //   static propTypes = {
-//     expanded: React.PropTypes.bool,
-//     transitionTime: React.PropTypes.number,
-//     className: React.PropTypes.string,
+//     expanded: PropTypes.bool,
+//     transitionTime: PropTypes.number,
+//     className: PropTypes.string,
 //   }
 //   constructor(props) {
 //     super(props)
@@ -69,10 +70,10 @@ class PluginSettingWrap extends Component {
 
 class InstalledPlugin extends Component {
   static propTypes = {
-    plugin: React.PropTypes.object,
-    handleUpdate: React.PropTypes.func,
-    handleEnable: React.PropTypes.func,
-    handleRemove: React.PropTypes.func,
+    plugin: PropTypes.object,
+    handleUpdate: PropTypes.func,
+    handleEnable: PropTypes.func,
+    handleRemove: PropTypes.func,
   }
   state = {
     settingOpen: false,
@@ -250,10 +251,10 @@ class InstalledPlugin extends Component {
 
 class UninstalledPlugin extends Component {
   static propTypes = {
-    plugin: React.PropTypes.object,
-    installing: React.PropTypes.bool,
-    npmWorking: React.PropTypes.bool,
-    handleInstall: React.PropTypes.func,
+    plugin: PropTypes.object,
+    installing: PropTypes.bool,
+    npmWorking: PropTypes.bool,
+    handleInstall: PropTypes.func,
   }
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
@@ -311,9 +312,9 @@ class UninstalledPlugin extends Component {
 
 class InstallByNameInput extends Component {
   static propTypes = {
-    handleManuallyInstall: React.PropTypes.func,
-    manuallyInstallStatus: React.PropTypes.number,
-    npmWorking: React.PropTypes.bool,
+    handleManuallyInstall: PropTypes.func,
+    manuallyInstallStatus: PropTypes.number,
+    npmWorking: PropTypes.bool,
   }
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
@@ -357,11 +358,11 @@ const PluginConfig = connect((state, props) => ({
   autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', false),
 }))(class pluginConfig extends Component {
   static propTypes = {
-    plugins: React.PropTypes.array,
-    mirrorName: React.PropTypes.string,
-    proxy: React.PropTypes.bool,
-    betaCheck: React.PropTypes.bool,
-    autoUpdate: React.PropTypes.bool,
+    plugins: PropTypes.array,
+    mirrorName: PropTypes.string,
+    proxy: PropTypes.bool,
+    betaCheck: PropTypes.bool,
+    autoUpdate: PropTypes.bool,
   }
   state = {
     checkingUpdate: false,

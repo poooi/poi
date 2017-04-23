@@ -4,6 +4,7 @@ import { shell } from 'electron'
 import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
+import PropTypes from 'prop-types'
 import Divider from './divider'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
@@ -55,8 +56,8 @@ const ChangeLayoutConfig = connect(() => (
   })
 ))(class changeLayoutConfig extends Component {
   static propTypes = {
-    enableDoubleTabbed: React.PropTypes.bool,
-    layout: React.PropTypes.string,
+    enableDoubleTabbed: PropTypes.bool,
+    layout: PropTypes.string,
   }
   handleSetLayout = (layout, rev) => {
     config.set('poi.layout', layout)
@@ -105,10 +106,10 @@ const ChangeThemeConfig = connect((state, props) => ({
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
-    theme: React.PropTypes.string,
-    enableSVGIcon: React.PropTypes.bool,
-    enableTransition: React.PropTypes.bool,
-    useGridMenu: React.PropTypes.bool,
+    theme: PropTypes.string,
+    enableSVGIcon: PropTypes.bool,
+    enableTransition: PropTypes.bool,
+    useGridMenu: PropTypes.bool,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -177,7 +178,7 @@ const ZoomingConfig = connect(() => (
   })
 ))(class zoomingConfig extends Component {
   static propTypes = {
-    zoomLevel: React.PropTypes.number,
+    zoomLevel: PropTypes.number,
   }
   state = {
     zoomLevel: config.get('poi.zoomLevel', 1),
@@ -220,8 +221,8 @@ const PanelMinSizeConfig = connect(() => (
   })
 ))(class PanelMinSizeConfig extends Component {
   static propTypes = {
-    panelMinSize: React.PropTypes.number,
-    layout: React.PropTypes.string,
+    panelMinSize: PropTypes.number,
+    layout: PropTypes.string,
   }
   state = {
     panelMinSize: config.get('poi.panelMinSize', 1),
@@ -263,7 +264,7 @@ const FlashQualityConfig = connect((state, props) => ({
   flashWindowMode: get(state.config, 'poi.flashWindowMode', 'window'),
 }))(class flashQualityConfig extends Component {
   static propTypes = {
-    flashQuality: React.PropTypes.string,
+    flashQuality: PropTypes.string,
   }
   handleSetQuality = (e) => {
     config.set('poi.flashQuality', e.target.value)
@@ -307,7 +308,7 @@ const ChangeResolutionConfig = connect((state, props) => ({
   webview: state.layout.webview,
 }))(class changeResolutionConfig extends Component {
   static propTypes = {
-    webview: React.PropTypes.object,
+    webview: PropTypes.object,
   }
   handleSetWebviewWidth = (e) => {
     const useFixedResolution = this.props.webview.useFixedResolution

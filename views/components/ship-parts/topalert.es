@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { get, join as joinString, memoize } from 'lodash'
@@ -41,10 +42,10 @@ class CountdownLabel extends Component {
     this.notifier = new CountdownNotifier()
   }
   static propTypes = {
-    fleetId: React.PropTypes.number,
-    completeTime: React.PropTypes.number,
-    shouldNotify: React.PropTypes.bool,
-    fleetName: React.PropTypes.string,
+    fleetId: PropTypes.number,
+    completeTime: PropTypes.number,
+    shouldNotify: PropTypes.bool,
+    fleetName: PropTypes.string,
   }
   shouldComponentUpdate = (nextProps, nextState) => {
     return nextProps.completeTime !== this.props.completeTime

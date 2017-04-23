@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import path from 'path-extra'
 import React from 'react'
+import PropTypes from 'prop-types'
 import { shell, remote } from 'electron'
 import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
 import { connect } from 'react-redux'
@@ -28,7 +29,7 @@ const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
 }))(class poiControl extends React.Component {
   static propTypes = {
-    muted: React.PropTypes.bool,
+    muted: PropTypes.bool,
   }
   state = {
     extend: false,
