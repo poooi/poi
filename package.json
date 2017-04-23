@@ -69,7 +69,7 @@
     "react-addons-shallow-compare": "^15.4.0",
     "react-bootstrap": "^0.30.10",
     "react-dom": "^15.5.4",
-    "react-file-dropzone": "^0.2.0",
+    "react-file-dropzone": "^0.3.0",
     "react-fontawesome": "^1.6.1",
     "react-portal": "^3.0.0",
     "react-redux": "^5.0.4",
