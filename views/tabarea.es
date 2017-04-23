@@ -1,12 +1,11 @@
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React, { Component, Children } from 'react'
+import React, { Component, Children, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import shallowCompare from 'react-addons-shallow-compare'
 
 //import PluginManager from './services/plugin-manager'
 import settings from './components/settings'
@@ -102,16 +101,13 @@ export default connect(
   undefined,
   undefined,
   {pure: true}
-)(class ControlledTabArea extends Component {
+)(class ControlledTabArea extends PureComponent {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
     doubleTabbed: PropTypes.bool.isRequired,
     useGridMenu: PropTypes.bool.isRequired,
     activeMainTab: PropTypes.string.isRequired,
     activePluginName: PropTypes.string.isRequired,
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
   componentWillUpdate(nextProps, nextState) {
     this.nowTime = (new Date()).getTime()

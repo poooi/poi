@@ -1,13 +1,12 @@
 import path from 'path-extra'
 import classnames from 'classnames'
 import { shell, remote } from 'electron'
-import React from 'react'
+import React, { Component, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
-import shallowCompare from 'react-addons-shallow-compare'
 import ReactMarkdown from 'react-remarkable'
 import FileDrop from 'react-file-dropzone'
 
@@ -18,7 +17,6 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
-const {Component} = React
 
 const openLink = (link, e) => {
   shell.openExternal(link)
@@ -68,7 +66,7 @@ class PluginSettingWrap extends Component {
 //   }
 // }
 
-class InstalledPlugin extends Component {
+class InstalledPlugin extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,
     handleUpdate: PropTypes.func,
@@ -80,9 +78,6 @@ class InstalledPlugin extends Component {
   }
   toggleSettingPop = () => {
     this.setState({settingOpen: !this.state.settingOpen})
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
   render() {
     const plugin = this.props.plugin
@@ -249,15 +244,12 @@ class InstalledPlugin extends Component {
   }
 }
 
-class UninstalledPlugin extends Component {
+class UninstalledPlugin extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,
     installing: PropTypes.bool,
     npmWorking: PropTypes.bool,
     handleInstall: PropTypes.func,
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
   render() {
     const plugin = this.props.plugin
@@ -310,14 +302,11 @@ class UninstalledPlugin extends Component {
   }
 }
 
-class InstallByNameInput extends Component {
+class InstallByNameInput extends PureComponent {
   static propTypes = {
     handleManuallyInstall: PropTypes.func,
     manuallyInstallStatus: PropTypes.number,
     npmWorking: PropTypes.bool,
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
   state = {
     manuallyInstallPackage: '',
