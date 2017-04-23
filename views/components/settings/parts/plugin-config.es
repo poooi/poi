@@ -325,6 +325,10 @@ class InstallByNameInput extends Component {
   changeInstalledPackage = (e) => {
     this.setState({manuallyInstallPackage: e.target.value})
   }
+  validPackageName = () => {
+    return get(this.state, 'manuallyInstallPackage.length', 0) > 0 &&
+      /^poi-plugin-.*$/.test(this.state.manuallyInstallPackage)
+  }
   render() {
     return (
       <FormGroup>
@@ -339,7 +343,9 @@ class InstallByNameInput extends Component {
           </FormControl>
           <InputGroup.Button>
             <Button bsStyle='primary'
-                    disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+                    disabled={this.props.manuallyInstallStatus === 1 ||
+                      this.props.npmWorking ||
+                      !this.validPackageName()}
                     onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
               {__('Install')}
             </Button>
