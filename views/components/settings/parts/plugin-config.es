@@ -678,21 +678,21 @@ const PluginConfig = connect((state, props) => ({
           </Row>
           <Row>
             <Col xs={12}>
-              <Well>
-                <Row>
-                  <Col xs={12}>
-                    <CheckboxLabelConfig
-                      label={__('Switch to Plugin Automatically')}
-                      configName="poi.autoswitch.enabled"
-                      defaultVal={true} />
-                    <CheckboxLabelConfig
-                      label={__('Enable autoswitch for main panel')}
-                      configName="poi.autoswitch.main"
-                      defaultVal={true} />
-                  </Col>
-                </Row>
-                <Collapse in={this.state.advanced}>
+              <Collapse in={this.state.advanced}>
+                <Well>
                   <div>
+                    <Row>
+                      <Col xs={12}>
+                        <CheckboxLabelConfig
+                          label={__('Switch to Plugin Automatically')}
+                          configName="poi.autoswitch.enabled"
+                          defaultVal={true} />
+                        <CheckboxLabelConfig
+                          label={__('Enable autoswitch for main panel')}
+                          configName="poi.autoswitch.main"
+                          defaultVal={true} />
+                      </Col>
+                    </Row>
                     <Row>
                       <Col xs={12}>
                         <Row>
@@ -762,8 +762,8 @@ const PluginConfig = connect((state, props) => ({
                       </Col>
                     </Row>
                   </div>
-                </Collapse>
-              </Well>
+                </Well>
+              </Collapse>
             </Col>
           </Row>
           <Row className='plugin-rowspace'>
