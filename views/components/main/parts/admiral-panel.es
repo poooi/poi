@@ -3,7 +3,7 @@ import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import React, { Component } from 'react'
 import { createSelector } from 'reselect'
 import { get, map } from 'lodash'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
@@ -103,12 +103,14 @@ const getNextQuest = () => {
 }
 
 const getNextSenka = () => {
-  const endOfMonth = moment.utc().endOf('month')
+  const currentMonth = moment.tz('Asia/Tokyo').month()
+  const endOfMonth = moment.utc().month(currentMonth).endOf('month')
   return endOfMonth.subtract(11, 'hours')
 }
 
 const getNextEO = () => {
-  const endOfMonth = moment.utc().endOf('month')
+  const currentMonth = moment.tz('Asia/Tokyo').month()
+  const endOfMonth = moment.utc().month(currentMonth).endOf('month')
   return endOfMonth.subtract(9, 'hours')
 }
 
