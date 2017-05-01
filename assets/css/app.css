@@ -26,6 +26,7 @@ body {
   pointer-events: none;
   position: relative;
   overflow: hidden;
+  transition: 0.3s;
 }
 .alert-container {
   z-index: 2;
@@ -33,6 +34,7 @@ body {
   overflow: hidden;
   pointer-events: auto;
   cursor: pointer;
+  transition: 0.3s;
 }
 #alert-area {
   cursor: pointer;
