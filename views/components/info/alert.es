@@ -21,7 +21,7 @@ alertStyle.innerHTML = `
 `
 historyStyle.innerHTML = `
   .alert-history {
-    transform: translateY(182px);
+    transform: translateY(30px);
     pointer-events: 'none';
   }
   #alert-container {
@@ -77,11 +77,11 @@ export const PoiAlert = class poiAlert extends Component {
     historyStyle.innerHTML = `
       #alert-main {
         overflow: ${this.showHistory ? 'auto' : 'hidden'};
-        transform: translateY(-${this.showHistory ? this.historyHeight - 1 : 0}px);
+        transform: translateY(${this.showHistory ? - this.historyHeight + 1 : 0}px);
         height: ${this.showHistory ? this.historyHeight + this.alertHeight - 1 : this.alertHeight - 1}px;
       }
       #alert-container {
-        transform: translateY(-${!this.showHistory ? this.historyHeight : 1}px);
+        transform: translateY(${!this.showHistory ? - this.historyHeight : -1}px);
       }
       .alert-history {
         transform: translateY(${this.showHistory ? 0 : this.alertHeight}px);
