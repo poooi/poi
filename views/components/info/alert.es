@@ -17,13 +17,15 @@ alertStyle.innerHTML = `
   }
   #alert-main {
     height: 182px;
-    bottom: 152px;
   }
 `
 historyStyle.innerHTML = `
   .alert-history {
-    top: 182px;
+    transform: translateY(182px);
     pointer-events: 'none';
+  }
+  #alert-container {
+    transform: translateY(-152px);
   }
 `
 
@@ -75,9 +77,14 @@ export const PoiAlert = class poiAlert extends Component {
     historyStyle.innerHTML = `
       #alert-main {
         overflow: ${this.showHistory ? 'auto' : 'hidden'};
+        transform: translateY(-${this.showHistory ? this.historyHeight - 1 : 0}px);
+        height: ${this.showHistory ? this.historyHeight + this.alertHeight - 1 : this.alertHeight - 1}px;
+      }
+      #alert-container {
+        transform: translateY(-${!this.showHistory ? this.historyHeight - 1 : 0}px);
       }
       .alert-history {
-        top: ${this.showHistory ? 0 : this.historyHeight + this.alertHeight}px;
+        transform: translateY(${this.showHistory ? 0 : this.alertHeight}px);
         pointer-events: ${this.showHistory ? 'auto' : 'none'};
       }
     `
@@ -108,15 +115,8 @@ export const PoiAlert = class poiAlert extends Component {
         #alert-container {
           height: ${this.alertHeight}px;
         }
-        #alert-main {
-          height: ${this.historyHeight + this.alertHeight - 1}px;
-          bottom: ${this.historyHeight - 1}px;
-        }
-        .alert-history-hidden {
-          top:
-        }
         .alert-default {
-          ${(window.theme == 'paper' || window.theme == 'lumen') ? 'color: #000' : ''}
+          ${(window.theme == 'paper' || window.theme == 'lumen') ? 'color: #000;' : ''}
         }
       `
     }, 100)
