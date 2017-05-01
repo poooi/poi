@@ -81,7 +81,7 @@ export const PoiAlert = class poiAlert extends Component {
         height: ${this.showHistory ? this.historyHeight + this.alertHeight - 1 : this.alertHeight - 1}px;
       }
       #alert-container {
-        transform: translateY(-${!this.showHistory ? this.historyHeight : 0}px);
+        transform: translateY(-${!this.showHistory ? this.historyHeight : 1}px);
       }
       .alert-history {
         transform: translateY(${this.showHistory ? 0 : this.alertHeight}px);
