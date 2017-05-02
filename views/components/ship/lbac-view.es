@@ -72,7 +72,7 @@ export const SquardRow = connect((state, { squardId }) =>
         </div>
       </div>
       <div className="ship-slot">
-        <LandbaseSlotitems landbaseId={squardId} />
+        <LandbaseSlotitems landbaseId={squardId} isMini={false} />
       </div>
     </div>
   )

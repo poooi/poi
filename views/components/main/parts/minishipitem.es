@@ -9,8 +9,9 @@ import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import { SlotitemIcon } from 'views/components/etc/icon'
-import { getCondStyle, equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle } from 'views/utils/game-utils'
+import { getCondStyle, equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle, getTyku } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
   shipEquipDataSelectorFactory,
@@ -18,9 +19,12 @@ import {
   configLayoutSelector,
   configDoubleTabbedSelector,
   escapeStatusSelectorFactory,
+  landbaseSelectorFactory,
+  landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
 
 const { i18n } = window
+const __ = i18n.main.__.bind(i18n.main)
 
 const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector([
@@ -98,7 +102,7 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
   }))
 )
 
-export default connect(
+export const MiniShipRow = connect(
   (state, {shipId}) =>
     miniShipRowDataSelectorFactory(shipId),
 )(class miniShipRow extends Component {
@@ -173,4 +177,54 @@ export default connect(
       </div>
     )
   }
+})
+
+export const MiniSquardRow = connect((state, { squardId }) =>
+  createSelector([
+    landbaseSelectorFactory(squardId),
+    landbaseEquipDataSelectorFactory(squardId),
+  ], (landbase, equipsData) => ({
+    landbase,
+    tyku: getTyku([equipsData]),
+    squardId,
+  }))
+)(({landbase, tyku, squardId}) => {
+  const { api_action_kind, api_name } = landbase
+  const statuslabel = (() => {
+    switch (api_action_kind) {
+    // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
+    case 0:
+      return <Label bsStyle='default'>{__('Standby')}</Label>
+    case 1:
+      return <Label bsStyle='danger'>{__('Sortie')}</Label>
+    case 2:
+      return <Label bsStyle='warning'>{__('Defense')}</Label>
+    case 3:
+      return <Label bsStyle='primary'>{__('Retreat')}</Label>
+    case 4:
+      return <Label bsStyle='success'>{__('Rest')}</Label>
+    }
+  })()
+  return (
+    <div className="ship-tile">
+      <div className="ship-item">
+        <div className="ship-info">
+          <span className="ship-name">
+            {api_name}
+          </span>
+          <span className="ship-lv-text top-space">
+            <div className="ship-fp">
+              {__('Fighter Power')}: {tyku.max}
+            </div>
+            {statuslabel}
+          </span>
+        </div>
+        <div className="ship-stat landbase-stat">
+          <div className="div-row">
+            <LandbaseSlotitems landbaseId={squardId} isMini={true} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 })

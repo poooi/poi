@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
+import FontAwesome from 'react-fontawesome'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
@@ -11,7 +12,7 @@ const { dbg, i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
-import { PaneBodyMini } from './minishippane'
+import { PaneBodyMini, LBViewMini } from './minishippane'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 
 function getStyle(state, disabled) {
@@ -49,7 +50,7 @@ const ShipViewSwitchButton = connect(
     disabled={disabled}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
-    {fleetNames[fleetId]}
+    {fleetId < 4 ? fleetNames[fleetId] : <FontAwesome name='plane' />}
   </Button>
 )
 
@@ -117,6 +118,14 @@ export default connect((state, props) => ({
               )
             }
             </ButtonGroup>
+            <ButtonGroup className='plane-button-mini'>
+              <ShipViewSwitchButton key={4}
+                fleetId={4}
+                disabled={this.props.airBaseCnt === 0}
+                onClick={e => this.handleClick(4)}
+                activeFleetId={this.props.activeFleetId}
+                />
+            </ButtonGroup>
           </div>
           <div className="no-scroll">
             <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
@@ -131,6 +140,9 @@ export default connect((state, props) => ({
                 </div>
               ))
             }
+              <div className="ship-deck ship-tabpane" key={4}>
+                <LBViewMini />
+              </div>
             </div>
           </div>
         </Panel>

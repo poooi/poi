@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { connect } from 'react-redux'
 import React from 'react'
 import { createSelector } from 'reselect'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { memoize } from 'lodash'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
@@ -118,32 +118,12 @@ export const Slotitems = connect(
 export const LandbaseSlotitems = connect(
   (state, { landbaseId }) =>
     landbaseSlotitemsDataSelectorFactory(landbaseId)(state)
-)(function ({api_maxeq, equipsData}) {
+)(function ({api_maxeq, equipsData, isMini}) {
   return (
     <div className="slotitems">
     {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const [equip, $equip, onslot] = equipData || []
-        const itemOverlay = equipData &&
-          <Tooltip id={`equip-${equip.api_id}`}>
-            <div>
-              <div>
-                {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
-                {(equip.api_level == null || equip.api_level == 0) ? undefined :
-                  <strong style={{color: '#45A9A5'}}> ★{equip.api_level}</strong>
-                }
-                {(equip.api_alv && equip.api_alv >= 1 && equip.api_alv <= 7) &&
-                  <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)} />
-                }
-              </div>
-              {$equip &&
-                getItemData($equip).map((data, propId) =>
-                  <div key={propId}>{data}</div>
-                )
-              }
-            </div>
-          </Tooltip>
-
         const equipIconId = equipData ? $equip.api_type[3] : 0
         const showOnslot = !equipData || equipIsAircraft(equipIconId)
         const maxOnslot = api_maxeq[equipIdx]
@@ -154,12 +134,34 @@ export const LandbaseSlotitems = connect(
           'hide': !showOnslot,
           'text-warning': onslotWarning,
         })
+        const itemOverlay = equipData &&
+          <Tooltip id={`equip-${equip.api_id}`}>
+            <div>
+              <div style={{display: 'flex'}}>
+                {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
+                {(equip.api_level == null || equip.api_level == 0) ? undefined :
+                  <strong style={{color: '#45A9A5'}}> ★{equip.api_level}</strong>
+                }
+                {(equip.api_alv && equip.api_alv >= 1 && equip.api_alv <= 7) &&
+                  <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)} />
+                }
+                {isMini && <Label className={onslotClassName} bsStyle={`${onslotWarning ? 'warning' : 'default'}`}>
+                  {onslotText}
+                </Label>}
+              </div>
+              {$equip &&
+                getItemData($equip).map((data, propId) =>
+                  <div key={propId}>{data}</div>
+                )
+              }
+            </div>
+          </Tooltip>
         const itemSpan =
           <span>
             <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
-            <span className={onslotClassName} style={getBackgroundStyle()} >
+            {!isMini && <span className={onslotClassName} style={getBackgroundStyle()}>
               {onslotText}
-            </span>
+            </span>}
           </span>
 
         return (
