@@ -32,6 +32,13 @@
 }
 #ShipView .fleet-name-button {
 }
+#ShipView .plane-button {
+  width: 40px;
+}
+#ShipView .airbase-area {
+  text-align: left !important;
+  padding-left: 8px;
+}
 #ShipView .btn-group .btn {
   flex: 1;
   border-bottom-right-radius: 0;
