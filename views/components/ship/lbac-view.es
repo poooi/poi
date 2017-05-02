@@ -55,7 +55,7 @@ export const SquardRow = connect((state, { squardId }) =>
               </span>
             </div>
           </div>
-          <div className="ship-stat">
+          <div className="ship-stat landbase-stat">
             <div className="div-row">
               <span className="ship-hp">
                 {api_nowhp} / {api_maxhp}

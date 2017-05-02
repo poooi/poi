@@ -156,6 +156,10 @@
   margin-left: auto;
   min-width: 120px;
 }
+#ShipView .ship-details .ship-item .ship-stat.landbase-stat {
+  flex: 1;
+  min-width: 90px;
+}
 #ShipView .ship-details .ship-item .ship-stat .ship-hp {
   flex: 1;
   align-self: flex-start;
