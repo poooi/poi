@@ -20,7 +20,7 @@
   "Empty quest": "未受注",
   "To be refreshed": "情報の更新が必要",
   "Browse your quest list to let poi know your active quests": "Browse your quest list to let poi know your active quests",
-  "Increase your active quest limit with a \"Headquarters Personnel\".":"「司令部要員」を消費し、一度に受けることのできる任務を+1。",
+  "Increase your active quest limit with a \"Headquarters Personnel\".": "「司令部要員」を消費し、一度に受けることのできる任務を+1。",
   "Quest": "任務(クエスト)",
   "Ships: ": "艦娘：",
   "Equip.: ": "装備：",
@@ -52,7 +52,7 @@
   "Repairing": "入渠中",
   "Resupply needed": "補給不足",
   "Ship tag: %s": "出擊限定: %s",
-  "Slow":"低速",
+  "Slow": "低速",
   "Fast": "高速",
   "Fast+": "高速+",
   "Fastest": "最速",
@@ -65,5 +65,11 @@
   "m": "分",
   "s": "秒",
   "Next": "次のレベルまで",
-  "Total Exp.": "総経験値"
+  "Total Exp.": "総経験値",
+  "Standby": "待機",
+  "Sortie": "出撃",
+  "Defense": "防空",
+  "Retreat": "退避",
+  "Rest": "休息",
+  "Range": "行動半径"
 }
