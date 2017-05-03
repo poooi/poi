@@ -13,6 +13,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { ShipRow } from './shipitem'
 import { SquardRow } from './lbac-view'
+import { LandbaseButton } from '../ship-parts/landbase-button'
 import TopAlert from 'views/components/ship-parts/topalert'
 import {
   fleetNameSelectorFactory,
@@ -55,7 +56,7 @@ const ShipViewSwitchButton = connect(
     disabled={disabled}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
-    {fleetId < 4 ? fleetName || defaultFleetNames[fleetId] : <FontAwesome name='plane' />}
+    {fleetName || defaultFleetNames[fleetId]}
   </Button>
 )
 
@@ -186,11 +187,12 @@ const ShipView = connect((state, props) => ({
           }
           </ButtonGroup>
           <ButtonGroup className='plane-button'>
-            <ShipViewSwitchButton key={4}
+            <LandbaseButton key={4}
               fleetId={4}
               disabled={this.props.airBaseCnt === 0}
               onClick={e => this.handleClick(4)}
               activeFleetId={this.props.activeFleetId}
+              isMini={false}
               />
           </ButtonGroup>
         </div>

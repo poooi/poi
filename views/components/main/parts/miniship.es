@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
-import FontAwesome from 'react-fontawesome'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
@@ -13,6 +12,7 @@ const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
 import { PaneBodyMini, LBViewMini } from './minishippane'
+import { LandbaseButton } from '../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 
 function getStyle(state, disabled) {
@@ -50,7 +50,7 @@ const ShipViewSwitchButton = connect(
     disabled={disabled}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
-    {fleetId < 4 ? fleetNames[fleetId] : <FontAwesome name='plane' />}
+    {fleetNames[fleetId]}
   </Button>
 )
 
@@ -119,11 +119,12 @@ export default connect((state, props) => ({
             }
             </ButtonGroup>
             <ButtonGroup className='plane-button-mini'>
-              <ShipViewSwitchButton key={4}
+              <LandbaseButton key={4}
                 fleetId={4}
                 disabled={this.props.airBaseCnt === 0}
                 onClick={e => this.handleClick(4)}
                 activeFleetId={this.props.activeFleetId}
+                isMini={true}
                 />
             </ButtonGroup>
           </div>
