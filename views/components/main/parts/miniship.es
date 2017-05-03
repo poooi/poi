@@ -11,7 +11,8 @@ const { dbg, i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
-import { PaneBodyMini } from './minishippane'
+import { PaneBodyMini, LBViewMini } from './minishippane'
+import { LandbaseButton } from '../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 
 function getStyle(state, disabled) {
@@ -117,6 +118,15 @@ export default connect((state, props) => ({
               )
             }
             </ButtonGroup>
+            <ButtonGroup bsSize="xsmall" className='plane-button-mini'>
+              <LandbaseButton key={4}
+                fleetId={4}
+                disabled={this.props.airBaseCnt === 0}
+                onClick={e => this.handleClick(4)}
+                activeFleetId={this.props.activeFleetId}
+                isMini={true}
+                />
+            </ButtonGroup>
           </div>
           <div className="no-scroll">
             <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
@@ -131,6 +141,9 @@ export default connect((state, props) => ({
                 </div>
               ))
             }
+              <div className="ship-deck ship-tabpane" key={4}>
+                <LBViewMini />
+              </div>
             </div>
           </div>
         </Panel>

@@ -120,6 +120,7 @@ export const inRepairShipsIdSelector = arrayResultWrapper(createSelector(repairs
 export const fleetSelectorFactory = memoize((fleetId) =>
   (state) => (state.info.fleets || [])[fleetId]
 )
+export const landbaseSelectorFactory = memoize(landbaseId => state => (state.info.airbase || [])[landbaseId])
 
 // Returns [shipId] of this fleet
 // Returns undefined if fleet not found
@@ -192,10 +193,11 @@ const shipBaseDataSelectorFactory = memoize((shipId) =>
     : undefined
   )
 )
+
 // Reads props.shipId
 // Returns [_ship, $ship]
 // Returns undefined if uninitialized, or if ship not found in _ship
-// Attention: shipId here only accepts Number type, 
+// Attention: shipId here only accepts Number type,
 //   otherwise will always return undefined
 export const shipDataSelectorFactory = memoize((shipId) =>
   createSelector([
@@ -217,6 +219,10 @@ const shipExslotSelectorFactory = memoize((shipId) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => ship ? ship.api_slot_ex : -1))
 const shipOnSlotSelectorFactory = memoize((shipId) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => ship ? ship.api_onslot : undefined))
+const landbaseSlotnumSelectorFactory = memoize(landbaseId =>
+  createSelector(landbaseSelectorFactory(landbaseId), landbase => landbase ? landbase.api_plane_info.length : 0))
+const landbaseOnSlotSelectorFactory = memoize((landbaseId) =>
+  createSelector(landbaseSelectorFactory(landbaseId), landbase => landbase ? landbase.api_plane_info.map(l => l.api_count) : undefined))
 // Returns [equipId for each slot on the ship]
 // length is always 5
 // Slot is padded with -1 for each empty slot
@@ -229,6 +235,8 @@ const shipEquipsIdSelectorFactory = memoize((shipId) =>
     slot ? slot.slice(0, 4).concat(exslot).map((i) => parseInt(i)) : undefined
   ))
 )
+const landbaseEquipsIdSelectorFactory = memoize(landbaseId =>
+  createSelector(landbaseSelectorFactory(landbaseId), landbase => landbase ? landbase.api_plane_info.map(l => l.api_slotid) : []))
 
 // There's a Number type check
 const equipBaseDataSelectorFactory = memoize((equipId) =>
@@ -243,7 +251,7 @@ const equipBaseDataSelectorFactory = memoize((equipId) =>
 
 // Returns [_equip, $equip]
 // Returns undefined if uninitialized, or if equip not found in _equip
-// Attention: equipId here only accepts Number type, 
+// Attention: equipId here only accepts Number type,
 //   otherwise will always return undefined
 export const equipDataSelectorFactory = memoize((equipId) =>
   createSelector([
@@ -289,6 +297,25 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
     ? undefined
     : effectiveEquips(
         zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
+          equipId <= 0
+          ? undefined
+          : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
+        ), slotnum
+      )
+  ))
+)
+
+export const landbaseEquipDataSelectorFactory = memoize(landbaseId =>
+  arrayResultWrapper(createSelector([
+    stateSelector,
+    landbaseSlotnumSelectorFactory(landbaseId),
+    landbaseEquipsIdSelectorFactory(landbaseId),
+    landbaseOnSlotSelectorFactory(landbaseId),
+  ], (state, slotnum, landbaseEquipsId, onslots) => 
+    !Array.isArray(landbaseEquipsId)
+    ? undefined
+    : effectiveEquips(
+        zip(landbaseEquipsId, onslots).map(([equipId, onslot]) =>
           equipId <= 0
           ? undefined
           : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })

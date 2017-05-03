@@ -24,6 +24,9 @@
 #MiniShip .btn-group .btn {
   flex: 1;
 }
+#MiniShip .plane-button-mini {
+  width: 30px;
+}
 #MiniShip .hidden {
   display: none;
 }
@@ -67,6 +70,9 @@
 #MiniShip .ship-details-mini .ship-item .ship-info .ship-speed {
   margin-left: 5px;
 }
+#MiniShip .ship-details-mini .ship-item .ship-info .ship-fp {
+  width: 60px;
+}
 #MiniShip .ship-details-mini .ship-item .ship-info .ship-name {
   height: 20px;
   margin-right: 5px;
@@ -81,6 +87,7 @@
   margin-right: 4px;
   line-height: 1;
   overflow: hidden;
+  display: flex;
 }
 #MiniShip .ship-details-mini .ship-item .ship-stat {
   flex: 2;
@@ -90,6 +97,11 @@
   width: 66%;
   min-width: 125px;
   justify-content: space-between;
+}
+#MiniShip .ship-details-mini .ship-item .ship-stat.landbase-stat {
+  flex: 0;
+  width: 110px;
+  min-width: 110px;
 }
 #MiniShip .ship-details-mini .ship-item .ship-stat .ship-hp {
   flex: 1;
@@ -244,4 +256,22 @@
 #MiniShip .ship-deck {
   height: calc(100% - 35px);
   overflow: auto;
+}
+#MiniShip .slotitems {
+  display: flex;
+}
+#MiniShip .slotitem-container img.png {
+  width: 32px;
+  height: 32px;
+  margin-top: -5px;
+  margin-bottom: -3px;
+  margin-left: -5px;
+}
+#MiniShip .slotitem-container img.svg {
+  width: 26px;
+  height: 23px;
+  margin-right: 2px;
+}
+#MiniShip .airbase-area {
+  text-align: left !important;
 }

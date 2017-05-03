@@ -40,6 +40,12 @@ const types = {
   "api_luck": "Luck",
   "api_leng": "Range",
 }
+
+const landbaseFighterTypes = {
+  "api_houm": "Anti-Bomber",
+  "api_houk": "Interception",
+}
+
 const range = ['Short', 'Medium', 'Long', 'Very Long']
 
 export function getItemData(slotitem) {
@@ -48,11 +54,11 @@ export function getItemData(slotitem) {
     if (slotitem[type] && slotitem[type] != 0) {
       if (type == "api_leng") {
         data.push(`${__(types[type])} ${__(range[slotitem[type] - 1])}`)
-      }
-      else if (slotitem[type] > 0) {
+      } else if ([38, 44].includes(slotitem.api_type[3]) && ['api_houk', 'api_houm'].includes(type) && slotitem[type] > 0) {
+        data.push(`${__(landbaseFighterTypes[type])} +${slotitem[type]}`)
+      } else if (slotitem[type] > 0) {
         data.push(`${__(types[type])} +${slotitem[type]}`)
-      }
-      else {
+      } else {
         data.push(`${__(types[type])} ${slotitem[type]}`)
       }
     }

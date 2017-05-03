@@ -271,7 +271,7 @@
   padding: 8px;
 }
 #MainView .glow {
-  -webkit-filter: drop-shadow(0px 0px 4px #2196F3)
+  filter: drop-shadow(0px 0px 4px #2196F3)
 }
 #MainView .countdown-timer-label {
   flex: none;

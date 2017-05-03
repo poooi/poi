@@ -52,7 +52,7 @@
   "Repairing": "修理中",
   "Resupply needed": "需要补给",
   "Ship tag: %s": "出击限定: %s",
-  "Slow":"低速",
+  "Slow": "低速",
   "Fast": "高速",
   "Fast+": "高速+",
   "Fastest": "最速",
@@ -65,5 +65,11 @@
   "m": "分",
   "s": "秒",
   "Next": "下次升级",
-  "Total Exp.": "总经验值"
+  "Total Exp.": "总经验值",
+  "Standby": "待机",
+  "Sortie": "出击",
+  "Defense": "防空",
+  "Retreat": "退避",
+  "Rest": "休息",
+  "Range": "行动半径"
 }
