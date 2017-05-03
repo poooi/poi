@@ -185,11 +185,12 @@ export const MiniSquardRow = connect((state, { squardId }) =>
     landbaseEquipDataSelectorFactory(squardId),
   ], (landbase, equipsData) => ({
     landbase,
-    tyku: getTyku([equipsData]),
+    equipsData,
     squardId,
   }))
-)(({landbase, tyku, squardId}) => {
+)(({landbase, equipsData, squardId}) => {
   const { api_action_kind, api_name } = landbase
+  const tyku = getTyku([equipsData], api_action_kind)
   const statuslabel = (() => {
     switch (api_action_kind) {
     // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息

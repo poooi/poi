@@ -15,13 +15,14 @@ export const SquardRow = connect((state, { squardId }) =>
     landbaseEquipDataSelectorFactory(squardId),
   ], (landbase, equipsData) => ({
     landbase,
-    tyku: getTyku([equipsData]),
+    equipsData,
     squardId,
   }))
-)(({landbase, tyku, squardId}) => {
+)(({landbase, equipsData, squardId}) => {
   let { api_action_kind, api_distance, api_name, api_nowhp, api_maxhp } = landbase
   api_nowhp = api_nowhp || 200
   api_maxhp = api_maxhp || 200
+  const tyku = getTyku([equipsData], api_action_kind)
   const hpPercentage = api_nowhp / api_maxhp * 100
   const statuslabel = (() => {
     switch (api_action_kind) {
