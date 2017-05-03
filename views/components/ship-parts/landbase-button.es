@@ -11,6 +11,7 @@ export const LandbaseButton = connect(state => ({
   const needSupply = airbase.map(a => a.api_plane_info.map(s => s.api_count !== s.api_max_count).reduce((a, b) => a || b)).reduce((a, b) => a || b)
   const squardState = airbase.map(a => a.api_plane_info.map(s => s.api_state).reduce((a, b) => a * b)).reduce((a, b) => a * b)
   const squardCond = airbase.map(a => a.api_plane_info.map(s => s.api_cond || 1).reduce((a, b) => a * b)).reduce((a, b) => a * b)
+  const notStandbyOrDefense = airbase.api_action_kind === 1 || airbase.api_action_kind === 2
   const sortie = sortieStatus.reduce((a, b) => a || b)
   const bsStyle = (() => {
     if (sortie) {
@@ -19,6 +20,8 @@ export const LandbaseButton = connect(state => ({
       return 'danger'
     } else if (squardState !== 1 || needSupply) {
       return 'warning'
+    } else if (notStandbyOrDefense) {
+      return 'info'
     } else {
       return 'success'
     }
