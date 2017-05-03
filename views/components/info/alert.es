@@ -16,7 +16,7 @@ alertStyle.innerHTML = `
     height: 30px;
   }
   #alert-main {
-    height: 182px;
+    height: 29px;
   }
 `
 historyStyle.innerHTML = `
