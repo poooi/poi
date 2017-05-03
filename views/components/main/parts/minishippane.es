@@ -46,7 +46,7 @@ export const LBViewMini = connect(state => ({
             key={i}
             squardId={i}
           /> :
-          <div>
+          <div key={i}>
             <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
               [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name)}
             </Alert>

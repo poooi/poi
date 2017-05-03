@@ -105,7 +105,7 @@ const LBView = connect(state => ({
             key={i}
             squardId={i}
           /> :
-          <div>
+          <div key={i}>
             <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
               [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name)}
             </Alert>
@@ -175,7 +175,7 @@ const ShipView = connect((state, props) => ({
         <div className="div-row">
           <ButtonGroup className="fleet-name-button">
           {
-            times(4).map((i) =>
+            times(4).map(i =>
               <ShipViewSwitchButton
                 key={i}
                 fleetId={i}
@@ -201,15 +201,15 @@ const ShipView = connect((state, props) => ({
             className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
             style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
           {
-            times(4).map((i) =>
+            times(4).map(i =>
               <div className="ship-deck" key={i}>
                 <FleetShipView fleetId={i} />
               </div>
             )
           }
-          <div className="ship-deck" key={4}>
-            <LBView />
-          </div>
+            <div className="ship-deck" key={4}>
+              <LBView />
+            </div>
           </div>
         </div>
       </Panel>
