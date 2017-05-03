@@ -1,9 +1,10 @@
+// Run as `babel --presets=es2017-node7 build.es | node`
+
 import Promise from 'bluebird'
-// import _ from 'lodash'
 import fs from 'fs-extra'
 import path from 'path'
+import moment from 'moment'
 import request from 'request'
-import walk from 'walk'
 import CSON from 'cson'
 Promise.promisifyAll(fs)
 Promise.promisifyAll(path)
@@ -21,18 +22,21 @@ async function CSON2JSON(name) {
 }
 
 async function build_map() {
-  const data= await fs.readJSONAsync('map.json')
+  const data = await fs.readJSONAsync('map.json')
+  const stat = fs.statSync('map.json')
+  const date = moment(stat.mtime).format('YYYY/MM/DD')
   const meta = {
     name: "map",
-    version: "2017/02/13/01",
+    version: `${date}/01`,
   }
   await writeJSON('map.json', {meta, data})
 }
 
 async function build_meta() {
-  const flist = walk.walkSync(DEST)
+  const flist = fs.readdirSync(DEST)
   const meta = await Promise.all(
-    flist.map(async (fpath) => {
+    flist.map(async (fname) => {
+      const fpath = path.join(DEST, fname)
       const data = JSON.parse(await fs.readFileAsync(fpath))
       return data.meta
     })
