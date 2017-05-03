@@ -118,7 +118,7 @@ export default connect((state, props) => ({
               )
             }
             </ButtonGroup>
-            <ButtonGroup className='plane-button-mini'>
+            <ButtonGroup bsSize="xsmall" className='plane-button-mini'>
               <LandbaseButton key={4}
                 fleetId={4}
                 disabled={this.props.airBaseCnt === 0}
