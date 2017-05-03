@@ -42,6 +42,8 @@ const landbaseSlotitemsDataSelectorFactory = memoize(landbaseId =>
     landbaseEquipDataSelectorFactory(landbaseId),
   ], (landbase={}, equipsData) => ({
     api_maxeq: (landbase.api_plane_info || []).map(l => l.api_max_count),
+    api_cond: (landbase.api_plane_info || []).map(l => l.api_cond),
+    api_state: (landbase.api_plane_info || []).map(l => l.api_state),
     equipsData,
   }))
 )
@@ -118,7 +120,7 @@ export const Slotitems = connect(
 export const LandbaseSlotitems = connect(
   (state, { landbaseId }) =>
     landbaseSlotitemsDataSelectorFactory(landbaseId)(state)
-)(function ({api_maxeq, equipsData, isMini}) {
+)(function ({api_maxeq, api_cond, api_state, equipsData, isMini}) {
   return (
     <div className="slotitems">
     {equipsData &&
@@ -130,10 +132,14 @@ export const LandbaseSlotitems = connect(
         const onslotWarning = equipData && onslot < maxOnslot
         const onslotText = equipData ? onslot : maxOnslot
         const onslotClassName = classNames("slotitem-onslot", {
-          'show': showOnslot,
-          'hide': !showOnslot,
+          'show': showOnslot && api_state[equipIdx] === 1,
+          'hide': !showOnslot || api_state[equipIdx] !== 1,
           'text-warning': onslotWarning,
         })
+        const iconStyle = {
+          opacity: api_state[equipIdx] === 2 ? 0.5 : null,
+          filter: api_cond[equipIdx] > 1 ? `drop-shadow(0px 0px 4px ${api_cond[equipIdx] === 2 ? '#FB8C00' : '#E53935' })` : null,
+        }
         const itemOverlay = equipData &&
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
@@ -158,7 +164,9 @@ export const LandbaseSlotitems = connect(
           </Tooltip>
         const itemSpan =
           <span>
-            <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
+            <span style={iconStyle}>
+              <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
+            </span>
             {!isMini && <span className={onslotClassName} style={getBackgroundStyle()}>
               {onslotText}
             </span>}
