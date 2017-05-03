@@ -15,17 +15,19 @@ alertStyle.innerHTML = `
   #alert-container {
     height: 30px;
   }
-  #alert-main {
-    height: 29px;
-  }
 `
 historyStyle.innerHTML = `
-  .alert-history {
-    transform: translateY(30px);
-    pointer-events: 'none';
+  #alert-main {
+    overflow: 'hidden';
+    transform: translateY(0);
+    height: 29px;
   }
   #alert-container {
     transform: translateY(-152px);
+  }
+  .alert-history {
+    transform: translateY(30px);
+    pointer-events: 'none';
   }
 `
 
