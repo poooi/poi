@@ -26,7 +26,7 @@ export default function reducer(state=[], {type, body, postBody}) {
   }
   case '@@Response/kcsapi/api_req_air_corps/change_name': {
     const {api_base_id, api_name, api_area_id} = postBody
-    const baseIndex = findIndex(state,  
+    const baseIndex = findIndex(state,
       squad => squad.api_rid == api_base_id && squad.api_area_id == api_area_id
     )
     const index = baseIndex === -1 ? api_base_id - 1 : baseIndex
@@ -38,7 +38,7 @@ export default function reducer(state=[], {type, body, postBody}) {
     const {api_action_kind, api_base_id, api_area_id} = postBody
     const update = zip(api_base_id.split(','), api_action_kind.split(',')).map(
       ([base_id, action_kind]) => {
-        const baseIndex = findIndex(state, 
+        const baseIndex = findIndex(state,
           squad => squad.api_rid == base_id && squad.api_area_id == api_area_id
         )
         const index = baseIndex === -1 ? base_id - 1 : baseIndex
@@ -50,7 +50,7 @@ export default function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_air_corps/supply': {
     const {api_base_id, api_area_id} = postBody
     const {api_plane_info} = body
-    const baseIndex = findIndex(state,  
+    const baseIndex = findIndex(state,
       squad => squad.api_rid == api_base_id && squad.api_area_id == api_area_id
     )
     const index = baseIndex === -1 ? api_base_id - 1 : baseIndex
@@ -58,6 +58,56 @@ export default function reducer(state=[], {type, body, postBody}) {
     return compareUpdate(state, buildArray(index, {
       api_plane_info: squadrons,
     }), 3)
+  }
+  case '@@Response/kcsapi/api_req_map/next': {
+    const { api_destruction_battle } = body
+    if (api_destruction_battle) {
+      const { api_maxhps, api_nowhps } = api_destruction_battle
+      let newState = [...state]
+      for (let i = 0; i < state.length; i++) {
+        const rid = state[i].api_rid
+        let airbase = {
+          ...state[i],
+        }
+        if (api_maxhps[rid] != null) {
+          airbase = {
+            api_maxhp: api_maxhps[rid],
+            ...airbase,
+          }
+        }
+        if (api_nowhps[rid] != null) {
+          airbase = {
+            api_nowhp: api_nowhps[rid],
+            ...airbase,
+          }
+        }
+        newState = [
+          ...newState.slice(0, i),
+          airbase,
+          ...newState.slice(i + 1, newState.length),
+        ]
+      }
+      return newState
+    }
+    break
+  }
+  case '@@Response/kcsapi/api_port/port': {
+    let newState = [...state]
+    for (let i = 0; i < state.length; i++) {
+      const airbase = {
+        ...state[i],
+      }
+      if (airbase.api_nowhp != null || airbase.api_maxhp != null) {
+        delete airbase.api_nowhp
+        delete airbase.api_maxhp
+        newState = [
+          ...newState.slice(0, i),
+          airbase,
+          ...newState.slice(i + 1, newState.length),
+        ]
+      }
+    }
+    return newState
   }
   }
   return state
