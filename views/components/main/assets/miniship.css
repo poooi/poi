@@ -259,6 +259,7 @@
 }
 #MiniShip .slotitems {
   display: flex;
+  padding-top: 6px;
 }
 #MiniShip .slotitem-container img.png {
   width: 32px;
