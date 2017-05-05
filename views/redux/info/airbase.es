@@ -72,14 +72,14 @@ export default function reducer(state=[], {type, body, postBody}) {
         }
         if (api_maparea_id === api_area_id && api_maxhps[api_rid] != null && api_maxhps[api_rid] >= 0) {
           airbase = {
-            api_maxhp: api_maxhps[api_rid],
             ...airbase,
+            api_maxhp: api_maxhps[api_rid],
           }
         }
         if (api_maparea_id === api_area_id && api_nowhps[api_rid] != null && api_nowhps[api_rid] >= 0) {
           airbase = {
-            api_nowhp: api_nowhps[api_rid] - (api_fdam[api_rid] >= 0 ? api_fdam[api_rid] : 0),
             ...airbase,
+            api_nowhp: api_nowhps[api_rid] - (api_fdam[api_rid] >= 0 ? api_fdam[api_rid] : 0),
           }
         }
         newState = [
