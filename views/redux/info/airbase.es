@@ -1,5 +1,5 @@
 import { trimArray } from 'views/utils/tools'
-import { zip, findIndex } from 'lodash'
+import { zip, findIndex, get } from 'lodash'
 const { buildArray, compareUpdate } = window
 
 export default function reducer(state=[], {type, body, postBody}) {
@@ -60,25 +60,25 @@ export default function reducer(state=[], {type, body, postBody}) {
     }), 3)
   }
   case '@@Response/kcsapi/api_req_map/next': {
-    const { api_destruction_battle } = body
+    const { api_destruction_battle, api_maparea_id } = body
     if (api_destruction_battle) {
-      const mapId = Math.floor(parseInt(window.getStore('sortie.sortieMapId')) / 10)
-      const { api_maxhps, api_nowhps } = api_destruction_battle
+      const { api_maxhps, api_nowhps, api_air_base_attack } = api_destruction_battle
+      const api_fdam = get(api_air_base_attack, 'api_stage3.api_fdam', [])
       let newState = [...state]
       for (let i = 0; i < state.length; i++) {
         const { api_area_id, api_rid } = state[i]
         let airbase = {
           ...state[i],
         }
-        if (mapId === api_area_id && api_maxhps[api_rid] != null) {
+        if (api_maparea_id === api_area_id && api_maxhps[api_rid] != null && api_maxhps[api_rid] >= 0) {
           airbase = {
             api_maxhp: api_maxhps[api_rid],
             ...airbase,
           }
         }
-        if (mapId === api_area_id && api_nowhps[api_rid] != null) {
+        if (api_maparea_id === api_area_id && api_nowhps[api_rid] != null && api_nowhps[api_rid] >= 0) {
           airbase = {
-            api_nowhp: api_nowhps[api_rid],
+            api_nowhp: api_nowhps[api_rid] - (api_fdam[api_rid] >= 0 ? api_fdam[api_rid] : 0),
             ...airbase,
           }
         }
