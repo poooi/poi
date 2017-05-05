@@ -1,6 +1,6 @@
 import { trimArray } from 'views/utils/tools'
 import { zip, findIndex } from 'lodash'
-const { buildArray, compareUpdate, getStore } = window
+const { buildArray, compareUpdate } = window
 
 export default function reducer(state=[], {type, body, postBody}) {
   switch (type) {
@@ -62,7 +62,7 @@ export default function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_map/next': {
     const { api_destruction_battle } = body
     if (api_destruction_battle) {
-      const mapId = Math.floor(parseInt(getStore('sortie.sortieMapId')) / 10)
+      const mapId = Math.floor(parseInt(window.getStore('sortie.sortieMapId')) / 10)
       const { api_maxhps, api_nowhps } = api_destruction_battle
       let newState = [...state]
       for (let i = 0; i < state.length; i++) {
