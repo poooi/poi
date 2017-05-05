@@ -12,11 +12,11 @@ const aircraftLevelBonus = {
   '8': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 艦上攻撃機
   '11': [0, 1, 1, 1, 1, 3, 3, 6, 6],      // 水上爆撃機
   '45': [0, 0, 2, 5, 9, 14, 14, 22, 22],  // 水上戦闘機
-  '39': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式景雲改
-  '40': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 橘花改
-  '38': [0, 0, 2, 5, 9, 14, 14, 22, 22],   // 局地戦闘機
-  '44': [0, 0, 2, 5, 9, 14, 14, 22, 22],   // 陸軍戦闘機
-  '37': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 陸上攻撃機
+  '47': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 陸上攻撃機
+  '48': [0, 0, 2, 5, 9, 14, 14, 22, 22],   // 局地戦闘機 陸軍戦闘機
+  '56': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式戦闘機
+  '57': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式戦闘爆撃機
+  '58': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式攻撃機
 }
 
 const speedInterpretation = {
@@ -145,31 +145,31 @@ export function getTyku(equipsData, landbaseStatus=0) {
       }
       // 改修：艦戦×0.2、爆戦×0.25
       const levelFactor = $equip.api_baku > 0 ? 0.25 : 0.2
-      if ([6, 7, 8, 37, 39, 40].includes($equip.api_type[3]) || [47].includes($equip.api_type[2])) {
+      if ([6, 7, 8, 47, 56, 57, 58].includes($equip.api_type[2])) {
         // 艦载機 · 陸上攻撃機 · 噴式機
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
-        tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
+        tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
-      } else if ([10, 43].includes($equip.api_type[3]) && ($equip.api_type[2] == 11 || $equip.api_type[2] == 45)) {
+      } else if ([11, 45].includes($equip.api_type[2])) {
         // 水上機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
-      } else if ([38, 44].includes($equip.api_type[3]) && [48].includes($equip.api_type[2])) {
+      } else if ([48].includes($equip.api_type[2])) {
         // 局戦 · 陸戦
         let landbaseBonus = 0
         if (landbaseStatus === 1) landbaseBonus = 1.5 * $equip.api_houk // (対空 ＋ 迎撃 × 1.5)
         if (landbaseStatus === 2) landbaseBonus = $equip.api_houk + 2 * $equip.api_houm // (対空 ＋ 迎撃 ＋ 対爆 × 2)
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + landbaseBonus + (_equip.api_level || 0) * levelFactor)
-        tempTyku += aircraftLevelBonus[$equip.api_type[3]][tempAlv]
+        tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
-      } else if ([33, 10].includes($equip.api_type[3]) && landbaseStatus == 2) {
+      } else if ([10, 41].includes($equip.api_type[2]) && landbaseStatus == 2) {
         // 水偵・飛行艇
         if ($equip.api_saku >= 9) {
           reconBonus = Math.max(reconBonus, 1.16)
@@ -178,7 +178,7 @@ export function getTyku(equipsData, landbaseStatus=0) {
         } else {
           reconBonus = Math.max(reconBonus, 1.1)
         }
-      } else if ([9].includes($equip.api_type[3]) && landbaseStatus == 2) {
+      } else if ([9].includes($equip.api_type[2]) && landbaseStatus == 2) {
         // 艦偵
         if ($equip.api_saku >= 9) {
           reconBonus = Math.max(reconBonus, 1.3)
