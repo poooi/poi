@@ -58,7 +58,7 @@ export const ShipRow = connect(
   shouldComponentUpdate(nextProps) {
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = ['api_lv', 'api_exp', 'api_id', 'api_nowhp', 'api_maxhp',
-      'api_cond', 'api_fuel', 'api_bull']
+      'api_cond', 'api_fuel', 'api_bull', 'api_soku']
     return !shallowEqual(omit(this.props, ['ship']), omit(nextProps, ['ship'])) ||
       !isEqual(pick(this.props.ship, shipPickProps), pick(nextProps.ship, shipPickProps))
   }
