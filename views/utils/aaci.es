@@ -226,7 +226,7 @@ declareAACI({
 
 // *** Maya K2
 declareAACI({
-  name: 'Maya Kai 2',
+  name: '摩耶改二',
   id: 10,
   fixed: 8,
   modifier: 1.65,
@@ -239,7 +239,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Maya Kai 2',
+  name: '摩耶改二',
   id: 11,
   fixed: 6,
   modifier: 1.5,
@@ -252,7 +252,7 @@ declareAACI({
 
 // *** Isuzu K2
 declareAACI({
-  name: 'Isuzu Kai 2',
+  name: '五十鈴改二',
   id: 14,
   fixed: 4,
   modifier: 1.45,
@@ -265,7 +265,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Isuzu Kai 2',
+  name: '五十鈴改二',
   id: 15,
   fixed: 3,
   modifier: 1.3,
@@ -278,7 +278,7 @@ declareAACI({
 
 // *** Kasumi K2B
 declareAACI({
-  name: 'Kasumi Kai 2 B',
+  name: '霞改二乙',
   id: 16,
   fixed: 4,
   modifier: 1.4,
@@ -291,7 +291,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Kasumi Kai 2 B',
+  name: '霞改二乙',
   id: 17,
   fixed: 2,
   modifier: 1.25,
@@ -304,7 +304,7 @@ declareAACI({
 
 // *** Satsuki K2
 declareAACI({
-  name: 'Satruki Kai 2',
+  name: '皐月改二',
   id: 18,
   fixed: 2,
   modifier: 1.2,
@@ -317,7 +317,7 @@ declareAACI({
 // *** Kinu K2
 // any HA with builtin AAFD will not work
 declareAACI({
-  name: 'Kinu Kai 2',
+  name: '鬼怒改二',
   id: 19,
   fixed: 5,
   modifier: 1.45,
@@ -330,7 +330,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Kinu Kai 2',
+  name: '鬼怒改二',
   id: 20,
   fixed: 3,
   modifier: 1.25,

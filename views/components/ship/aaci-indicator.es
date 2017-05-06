@@ -36,7 +36,7 @@ const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              {__('Type %s', id)}{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__(AACITable[id].name)}` : ''}
+              {__('Type %s', id)}{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__(i18n.resources.__(AACITable[id].name))}` : ''}
             </span>
             <span>
               {__('Shot down: %s', AACITable[id].fixed)}
