@@ -85,7 +85,7 @@ export const ShipRow = connect(
                 <span className="ship-speed">
                   {__(getSpeedLabel(ship.api_soku))}
                 </span>
-                <AACIIndicator className="ship-aaci" shipId={ship.api_id} />
+                <AACIIndicator shipId={ship.api_id} />
               </div>
               <span className="ship-name">
                 {i18n.resources.__($ship.api_name || '??')}

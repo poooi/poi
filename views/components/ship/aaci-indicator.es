@@ -48,7 +48,7 @@ const AACIIndicator = connect(
   )
 
   return(
-    <span>
+    <span className="ship-aaci">
       {
         AACIs.length ?
           <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
