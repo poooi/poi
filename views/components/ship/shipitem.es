@@ -11,6 +11,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
+import AACIIndicator from './aaci-indicator'
 import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus, getSpeedLabel } from 'views/utils/game-utils'
 import { resolveTime } from 'views/utils/tools'
 import {
@@ -84,6 +85,7 @@ export const ShipRow = connect(
                 <span className="ship-speed">
                   {__(getSpeedLabel(ship.api_soku))}
                 </span>
+                <AACIIndicator className="ship-aaci" shipId={ship.api_id} />
               </div>
               <span className="ship-name">
                 {i18n.resources.__($ship.api_name || '??')}

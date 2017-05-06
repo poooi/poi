@@ -129,7 +129,8 @@
   opacity: 0.8;
 }
 #ShipView .ship-details .ship-item .ship-info .ship-type,
-#ShipView .ship-details .ship-item .ship-info .ship-speed {
+#ShipView .ship-details .ship-item .ship-info .ship-speed,
+#ShipView .ship-details .ship-item .ship-info .ship-aaci {
   margin-left: 5px;
   margin-right: 5px;
 }

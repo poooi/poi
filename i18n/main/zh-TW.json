@@ -75,5 +75,15 @@
   "Fatigued": "疲勞",
   "Empty slot": "未配屬",
   "Relocating": "配置轉換中",
-  "No action": "未出擊・防空"
+  "No action": "未出擊・防空",
+  "AACI": "對空 CI",
+  "Battle Ship": "戰艦",
+  "Kinu Kai 2": "鬼怒改二",
+  "Akitsuki Class": "秋月級",
+  "Kasumi Kai 2 B": "霞改二乙",
+  "Satruki Kai 2": "皋月改二",
+  "Maya Kai 2": "摩耶改二",
+  "Isuzu Kai 2": "五十鈴改二",
+  "Shot down: %s": "擊墜數：%s",
+  "Type %s": "類型：%s"
 }
