@@ -71,5 +71,9 @@
   "Defense": "防空",
   "Retreat": "退避",
   "Rest": "休息",
-  "Range": "行动半径"
+  "Range": "行动半径",
+  "Fatigued": "疲劳",
+  "Empty slot": "未配属",
+  "Relocating": "配置转换中",
+  "No action": "未出击・防空"
 }
