@@ -5,6 +5,7 @@
   display: -webkit-box;
   flex-flow: row;
   position: relative;
+  height: 296px;
 }
 
 #MiniShip .ship-tab-content-transition {
@@ -254,8 +255,8 @@
   transition: 0.2s;
 }
 #MiniShip .ship-deck {
-  height: calc(100% - 35px);
-  overflow: auto;
+  height: 100%;
+  overflow: scroll;
 }
 #MiniShip .slotitems {
   display: flex;
@@ -275,4 +276,5 @@
 }
 #MiniShip .airbase-area {
   text-align: left !important;
+  margin-top: 0;
 }
