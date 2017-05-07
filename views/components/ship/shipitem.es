@@ -5,6 +5,7 @@ import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
+import FontAwesome from 'react-fontawesome'
 
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -112,7 +113,7 @@ export const ShipRow = connect(
                   </div>
                   <div className="status-cond" style={labelStatusStyle}>
                     <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
-                      ★{ship.api_cond}
+                      <FontAwesome name='star' />{ship.api_cond}
                     </span>
                   </div>
                 </div>

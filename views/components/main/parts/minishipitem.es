@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
+import FontAwesome from 'react-fontawesome'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
@@ -65,7 +66,7 @@ const Slotitems  = connect(
               <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
               <span className="slotitem-name-mini">
                 {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
-                {level ? <strong style={{color: '#45A9A5'}}> ★{level}</strong> : ''}
+                {level ? <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong> : ''}
                 &nbsp;&nbsp;
                 {proficiency &&
                   <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
@@ -164,7 +165,7 @@ export const MiniShipRow = connect(
                 </div>
                 <div style={labelStatusStyle}>
                   <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
-                    ★{ship.api_cond}
+                    <FontAwesome name='star' />{ship.api_cond}
                   </span>
                 </div>
               </div>
