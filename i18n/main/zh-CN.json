@@ -75,5 +75,10 @@
   "Fatigued": "疲劳",
   "Empty slot": "未配属",
   "Relocating": "配置转换中",
-  "No action": "未出击・防空"
+  "No action": "未出击・防空",
+  "AACI": "对空 CI",
+  "Battle Ship": "战舰",
+  "Akitsuki Class": "秋月级",
+  "Shot down: %s": "击坠数：%s",
+  "Type %s": "类型：%s"
 }
