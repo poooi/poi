@@ -15,18 +15,13 @@ alertStyle.innerHTML = `
   #alert-container {
     height: 30px;
   }
-`
-historyStyle.innerHTML = `
   #alert-main {
-    overflow: 'hidden';
-    transform: translateY(0);
     height: 29px;
   }
-  #alert-container {
-    transform: translateY(-152px);
-  }
+`
+historyStyle.innerHTML = `
   .alert-history {
-    transform: translateY(30px);
+    transform: translateY(0px);
     pointer-events: 'none';
   }
 `
@@ -78,15 +73,9 @@ export const PoiAlert = class poiAlert extends Component {
     this.showHistory = !this.showHistory
     historyStyle.innerHTML = `
       #alert-main {
-        overflow: ${this.showHistory ? 'auto' : 'hidden'};
-        transform: translateY(${this.showHistory ? - this.historyHeight + 1 : 0}px);
-        height: ${this.showHistory ? this.historyHeight + this.alertHeight - 1 : this.alertHeight - 1}px;
-      }
-      #alert-container {
-        transform: translateY(${!this.showHistory ? - this.historyHeight : -1}px);
       }
       .alert-history {
-        transform: translateY(${this.showHistory ? 0 : this.alertHeight}px);
+        transform: translateY(${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 0}px);
         pointer-events: ${this.showHistory ? 'auto' : 'none'};
       }
     `
@@ -119,6 +108,9 @@ export const PoiAlert = class poiAlert extends Component {
         }
         .alert-default {
           ${(window.theme == 'paper' || window.theme == 'lumen') ? 'color: #000;' : ''}
+        }
+        #alert-main {
+          height: 29px;
         }
       `
     }, 100)
@@ -203,12 +195,6 @@ export const PoiAlert = class poiAlert extends Component {
   render() {
     return (
       <div id='alert-main' className='alert-main'>
-        <div id='alert-history'
-          ref='alertHistory'
-          className='alert-history panel'
-          onClick={this.toggleHistory}>
-          {this.state.history}
-        </div>
         <div id='alert-container'
              className={`alert alert-${this.state.current.type} alert-container`}
              onClick={this.toggleHistory}>
@@ -228,6 +214,12 @@ export const PoiAlert = class poiAlert extends Component {
               }
             </span>
           </div>
+        </div>
+        <div id='alert-history'
+          ref='alertHistory'
+          className='alert-history panel'
+          onClick={this.toggleHistory}>
+          {this.state.history}
         </div>
       </div>
     )

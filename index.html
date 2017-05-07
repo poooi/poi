@@ -18,16 +18,18 @@
   <poi-css-injector></poi-css-injector>
   <poi-main>
     <kan-game>
-      <div id="webview-wrapper" style="height: 480px">
-        <webview src="about:blank" ondrop="event.preventDefault();" plugins disablewebsecurity preload="./assets/js/webview-preload.js"></webview>
+      <div class="kan-game-warpper">
+        <div id="webview-wrapper" style="height: 480px">
+          <webview src="about:blank" ondrop="event.preventDefault();" plugins disablewebsecurity preload="./assets/js/webview-preload.js"></webview>
+        </div>
+        <hr>
+        <poi-info>
+          <poi-control></poi-control>
+          <poi-alert></poi-alert>
+          <poi-map-reminder></poi-map-reminder>
+        </poi-info>
+        <hr>
       </div>
-      <hr>
-      <poi-info>
-        <poi-control></poi-control>
-        <poi-alert></poi-alert>
-        <poi-map-reminder></poi-map-reminder>
-      </poi-info>
-      <hr>
     </kan-game>
     <poi-modal>
       <poi-modal-trigger />

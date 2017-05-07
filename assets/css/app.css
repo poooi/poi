@@ -25,7 +25,6 @@ body {
 .alert-main {
   pointer-events: none;
   position: relative;
-  overflow: hidden;
   transition: 0.3s;
 }
 .alert-container {
@@ -62,6 +61,9 @@ body {
 }
 kan-game webview {
   height: 100%;
+}
+kan-game .kan-game-warpper {
+  overflow: hidden;
 }
 kan-game poi-alert {
   width: 0;
