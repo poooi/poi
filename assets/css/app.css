@@ -85,8 +85,9 @@ kan-game poi-map-reminder .progress {
   border-radius: 0;
   background-color: transparent;
 }
-span, img, .panel-heading, .table tbody tr td {
+span, img, a, .panel-heading, .table tbody tr td {
   -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
   cursor: default;
 }
 input + span {
