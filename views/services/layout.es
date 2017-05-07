@@ -77,7 +77,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
   // Apply css
   additionalStyle.innerHTML = `
     .kan-game-warpper {
-      height: ${layout === 'vertical' ? `calc(${webviewHeight}px + 30px * ${zoomLevel})` : 0};
+      height: calc(${webviewHeight}px + 30px * ${zoomLevel});
     }
     poi-app div.poi-app-tabpane {
       height: ${tabpaneHeight};
