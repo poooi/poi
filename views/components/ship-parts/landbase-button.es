@@ -78,18 +78,16 @@ export const LandbaseButton = connect(state => ({
     }
   </Tooltip>
   return (
-    <div>
-      <OverlayTrigger placement='bottom' overlay={propTooltip}>
-        <Button
-          bsSize={isMini ? 'xsmall' : 'small'}
-          bsStyle={bsStyle}
-          onClick={onClick}
-          disabled={disabled}
-          className={fleetId == activeFleetId ? 'active' : ''}
-        >
-          <FontAwesome name='plane' />
-        </Button>
-      </OverlayTrigger>
-    </div>
+    <OverlayTrigger placement='bottom' overlay={propTooltip}>
+      <Button
+        bsSize={isMini ? 'xsmall' : 'small'}
+        bsStyle={bsStyle}
+        onClick={onClick}
+        disabled={disabled}
+        className={fleetId == activeFleetId ? 'active' : ''}
+      >
+        <FontAwesome name='plane' />
+      </Button>
+    </OverlayTrigger>
   )
 })

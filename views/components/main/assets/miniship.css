@@ -25,6 +25,8 @@
 #MiniShip .btn-group .btn {
   flex: 1;
   border-width: 0 0 1px;
+  margin-top: 0;
+  height: 100%;
 }
 #MiniShip .plane-button-mini {
   width: 30px;
