@@ -103,7 +103,7 @@ const slotNumAtLeast = n => ship => ship.api_slot_num >= n
 // *** all non-submarine ships
 declareAACI({
   id: 5,
-  fixed: 3,
+  fixed: 4,
   modifier: 1.5,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
   equipsValid: validAll(hasAtLeast(
@@ -385,14 +385,18 @@ export const getShipAllAACIs = ship =>
 // return the AACIs to trigger for a ship, it will be array due to exceptions
 export const getShipAACIs = (ship, equips) => {
   const AACIs = getShipAvaliableAACIs(ship, equips)
-  // Kinu kai 2 exception
-  if (AACIs.includes(20)) {
-    return [20]
-  }
   const maxFixed = maxBy(AACIs, id => (AACITable[id] || {}).fixed || 0) || 0
+  // Kinu kai 2 exception
+  if (AACIs.includes(19)) {
+    return [19, 20]
+  }
+  if (maxFixed === 8 && AACIs.includes(20)) {
+    return [8, 20]
+  }
   if (maxFixed === 8 && AACIs.includes(7)) {
     return [7, 8]
   }
+
   return maxFixed ? [maxFixed] : []
 }
 
