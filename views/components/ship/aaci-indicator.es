@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
@@ -66,7 +66,7 @@ const AACIIndicator = connect(
       {
         AACIs.length ?
           <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
-            <span>{__('AACI')}</span>
+            <Label bsStyle='warning'><span>{__('AACI')}</span></Label>
           </OverlayTrigger>
         :
           ''
