@@ -80,5 +80,6 @@
   "Battle Ship": "戰艦",
   "Akitsuki Class": "秋月級",
   "Shot down: %s": "擊墜數：%s",
-  "Type %s": "類型：%s"
+  "Type %s": "類型：%s",
+  "Max shot down not reached": "未達到最大擊墜數"
 }

@@ -5,7 +5,7 @@ import { memoize, get } from 'lodash'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
-import { getShipAACIs, AACITable } from 'views/utils/aaci'
+import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -23,13 +23,24 @@ const AACISelectorFactory = memoize(shipId =>
   })
 )
 
+const maxAACIShotdownSelectorFactory = memoize(shipId =>
+  createSelector([
+    shipDataSelectorFactory(shipId),
+  ], ([_ship = {}, $ship = {}] = []) => {
+    const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
+    return Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
+  })
+)
+
 const AACIIndicator = connect(
   (state, { shipId }) => ({
     AACIs: AACISelectorFactory(shipId)(state) || [],
+    maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),
   })
-)(({ AACIs, shipId }) => {
+)(({ AACIs, maxShotdown, shipId }) => {
+  const currentMax = Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
 
-  const tooltip =
+  const tooltip = AACIs.length &&
   (
     <div>
       {
@@ -43,6 +54,9 @@ const AACIIndicator = connect(
             </span>
           </div>
         )
+      }
+      {
+        currentMax < maxShotdown && <span>{__('Max shot down not reached')}</span>
       }
     </div>
   )

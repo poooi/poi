@@ -80,5 +80,6 @@
   "Battle Ship": "戦艦",
   "Akitsuki Class": "秋月型",
   "Shot down: %s": "固定ボーナス：%s",
-  "Type %s": "種別：%s"
+  "Type %s": "種別：%s",
+  "Max shot down not reached": "最大のボーナスに達していません"
 }
