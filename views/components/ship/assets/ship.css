@@ -289,3 +289,11 @@
   margin-top: 5px;
   text-align: center;
 }
+#ShipView .ship-aaci {
+  position: relative;
+  top: -1px;
+}
+#ShipView .ship-aaci .label {
+  padding: .125em .6em;
+  font-size: 80%;
+}
