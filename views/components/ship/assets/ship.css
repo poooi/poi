@@ -46,6 +46,7 @@
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
   overflow: hidden;
+  border-width: 0 0 1px;
 }
 #ShipView .hidden {
   display: none;
