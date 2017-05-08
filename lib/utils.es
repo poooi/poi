@@ -1,4 +1,5 @@
-require('colors')
+import 'colors'
+import { webContents } from 'electron'
 
 const stringify = (str) => {
   if (typeof str === 'string') {
@@ -34,4 +35,11 @@ export function setBounds(options) {
 }
 export function getBounds() {
   return global.mainWindow.getBounds()
+}
+export function stopFileNavigate(id) {
+  webContents.fromId(id).addListener('will-navigate', (e, url) => {
+    if (url.startsWith('file')) {
+      e.preventDefault()
+    }
+  })
 }
