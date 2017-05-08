@@ -10,7 +10,7 @@ body {
   -webkit-font-smoothing: antialiased;
   line-height: 1.42857143;
   overflow: hidden;
-  -webkit-user-select: none;
+  user-select: none;
   -webkit-user-drag: none;
 }
 .alert {
@@ -86,7 +86,7 @@ kan-game poi-map-reminder .progress {
   background-color: transparent;
 }
 span, img, a, .panel-heading, .table tbody tr td {
-  -webkit-user-select: none !important;
+  user-select: none !important;
   -webkit-user-drag: none !important;
   cursor: default;
 }
