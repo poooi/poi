@@ -135,6 +135,9 @@ export function getTyku(equipsData, landbaseStatus=0) {
         continue
       }
       const [_equip, $equip, onslot] = equipsData[i][j]
+      if (onslot < 1) {
+        continue
+      }
       let tempTyku = 0.0
       let tempAlv
       // Basic tyku
