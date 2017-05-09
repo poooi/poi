@@ -34,12 +34,14 @@ export const LandbaseButton = connect(state => ({
         .map(a => a.api_plane_info.map(s => s.api_cond || 1).reduce((a, b) => a * b, 1)).reduce((a, b) => a * b, 1),
       noAction: airbase.filter(a => a.api_area_id === i)
         .map(a => a.api_action_kind !== 1 && a.api_action_kind !== 2).reduce((a, b) => a || b, false),
+      allEmpty:  airbase.filter(a => a.api_area_id === i)
+        .map(a => a.api_plane_info.map(s => s.api_state === 0).reduce((a, b) => a && b, true)).reduce((a, b) => a && b, true),
     }))
-  const needSupply = airbaseProps.map(a => a.needSupply).reduce((a, b) => a || b, false)
-  const squardState = airbaseProps.map(a => a.squardState).reduce((a, b) => a * b, 1)
-  const squardCond = airbaseProps.map(a => a.squardCond).reduce((a, b) => a * b, 1)
-  const noAction = airbaseProps.map(a => a.noAction).reduce((a, b) => a || b, false)
-  const sortie = sortieStatus.reduce((a, b) => a || b, false)
+  const needSupply = airbaseProps.filter(a => !a.allEmpty).map(a => a.needSupply).reduce((a, b) => a || b, false)
+  const squardState = airbaseProps.filter(a => !a.allEmpty).map(a => a.squardState).reduce((a, b) => a * b, 1)
+  const squardCond = airbaseProps.filter(a => !a.allEmpty).map(a => a.squardCond).reduce((a, b) => a * b, 1)
+  const noAction = airbaseProps.filter(a => !a.allEmpty).map(a => a.noAction).reduce((a, b) => a || b, false)
+  const sortie = sortieStatus.filter(a => !a.allEmpty).reduce((a, b) => a || b, false)
   const bsStyle = (() => {
     if (sortie) {
       return 'default'
