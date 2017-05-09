@@ -87,7 +87,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     }
     if (typeof api_happening != 'undefined') {
       item = {
-        [(api_happening.api_icon_id || 0)]: -api_happening.api_count || 0, 
+        [(api_happening.api_icon_id || 0)]: -api_happening.api_count || 0,
       }
     }
     return {
@@ -116,7 +116,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
       }
     } else if (typeof api_happening != 'undefined') {
       item = {
-        [(api_happening.api_icon_id || 0)]: -api_happening.api_count || 0, 
+        [(api_happening.api_icon_id || 0)]: -api_happening.api_count || 0,
       }
     }
     return {
@@ -137,6 +137,13 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     return {
       ...state,
       sortieStatus,
+    }
+  }
+  case '@@Response/kcsapi/api_req_hensei/combined': {
+    const combinedFlag = parseInt(postBody.api_combined_type)
+    return {
+      ...state,
+      combinedFlag,
     }
   }
   }
