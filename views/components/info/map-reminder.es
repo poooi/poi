@@ -70,13 +70,11 @@ const ItemStat = connect(
     itemHistoty: get(state, 'sortie.itemHistory'),
   })
 )(({itemHistoty}) => {
-  let stat = {}
-  each(itemHistoty, item => {
-    const itemKey = Object.keys(item)[0]
-    stat = {
-      ...stat,
-      [itemKey]: item[itemKey] + (stat[itemKey] || 0),
-    }
+  const stat = {}
+  each(itemHistoty, (item = {}) => {
+    each(Object.keys(item), itemKey =>
+      stat[itemKey] = item[itemKey] + (stat[itemKey] || 0)
+    )
   })
   return (
     <div>
