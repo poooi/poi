@@ -82,7 +82,7 @@ const ItemStat = connect(
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
-          <span key={itemKey}>
+          <span key={itemKey} className="item-stat">
             <MaterialIcon materialId={parseInt(itemKey)} className="material-icon reminder"/>
             {stat[itemKey] > 0 ? `+${stat[itemKey]}` : String(stat[itemKey])}
           </span>
