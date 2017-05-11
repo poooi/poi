@@ -88,7 +88,7 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-end;
-  overflow: hidden;
+  width: 100%;
   white-space: nowrap;
 }
 #ShipView .ship-details .ship-item .ship-tile {
