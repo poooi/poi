@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Row, Col, Grid, Checkbox, Radio } from 'react-bootstrap'
+import { Col, Grid, Checkbox, Radio } from 'react-bootstrap'
 import fs from 'fs-extra'
 import { get } from 'lodash'
 import { remote } from 'electron'
@@ -113,10 +113,16 @@ export const FolderPickerConfig = connect(() => {
   }
   folderPickerOnClick = () => {
     this.synchronize(() => {
-      fs.ensureDirSync(this.props.value)
+      let defaultPath
+      try {
+        fs.ensureDirSync(this.props.value)
+        defaultPath = this.props.value
+      } catch (e) {
+        defaultPath = remote.app.getPath('desktop')
+      }
       const filenames = dialog.showOpenDialog({
         title: this.props.label,
-        defaultPath: this.props.value,
+        defaultPath,
         properties: [
           'openDirectory',
           'createDirectory',
