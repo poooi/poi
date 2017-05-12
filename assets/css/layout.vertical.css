@@ -5,3 +5,6 @@ poi-main {
 hr {
   display: none;
 }
+poi-app {
+  overflow: hidden;
+}
