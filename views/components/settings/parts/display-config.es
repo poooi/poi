@@ -68,7 +68,8 @@ const ChangeLayoutConfig = connect(() => (
   }
   render() {
     const leftActive = this.props.layout === 'horizontal' && this.props.reversed
-    const downActive = this.props.layout !== 'horizontal'
+    const downActive = this.props.layout !== 'horizontal' && !this.props.reversed
+    const upActive = this.props.layout !== 'horizontal' && this.props.reversed
     const rightActive = this.props.layout === 'horizontal' && !this.props.reversed
     return (
       <Grid>
@@ -81,6 +82,10 @@ const ChangeLayoutConfig = connect(() => (
             <Button bsStyle={downActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('vertical', false)}>
               <FontAwesome name='window-maximize' />
+            </Button>
+            <Button bsStyle={upActive ? 'success' : 'danger'}
+              onClick={e => this.handleSetLayout('vertical', true)}>
+              <FontAwesome name='window-maximize' rotate={180} />
             </Button>
             <Button bsStyle={rightActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('horizontal', false)}>

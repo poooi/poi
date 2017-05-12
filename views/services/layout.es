@@ -76,6 +76,14 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
 const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed, reversed}) => {
   // Apply css
   additionalStyle.innerHTML = `
+    poi-app {
+      ${layout === 'horizontal' ? `
+        width: 0;
+        height: 0;
+      ` : `
+        height: calc(${window.innerHeight}px - ${webviewHeight}px - 30px * ${zoomLevel})
+      `}
+    }
     .kan-game-warpper {
       height: calc(${webviewHeight}px + 30px * ${zoomLevel});
     }
@@ -83,7 +91,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
       height: ${tabpaneHeight};
     }
     poi-main {
-      ${layout === 'horizontal' && reversed && 'flex-flow: row-reverse nowrap;'}
+      ${reversed ? layout === 'horizontal' ? 'flex-flow: row-reverse nowrap;' : 'flex-flow: column-reverse nowrap;' : ''}
     }
     div[role='tooltip'], #poi-app-container, poi-info {
       ${zoomLevel !== 1 && `transform: scale(${zoomLevel});`}
