@@ -59,7 +59,7 @@
         let ElectronCookies = require('@exponent/electron-cookies');
         ElectronCookies.enable({ origin: 'https://app.poi.io/' });
         ga('create', 'UA-99082354-1', 'auto');
-        ga('set', 'location', 'https://app.poi.io/');
+        ga('set', 'location', `https://app.poi.io/${window.POI_VERSION}/`);
         ga('set', 'checkProtocolTask', null);
         ga('send', 'pageview');
       })();
