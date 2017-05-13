@@ -665,6 +665,10 @@ class PoiConfig extends Component {
                 label={__('Enter safe mode on next startup')}
                 configName="poi.enterSafeMode"
                 defaultVal={false} />
+              <CheckboxLabelConfig
+                label={__('Send data to Google Analytics')}
+                configName="poi.sendAnalytics"
+                defaultVal={true} />
             </Col>
           </Grid>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { CheckboxLabelConfig } from 'views/components/settings/parts/utils'
 
 const {config, i18n, POI_VERSION} = window
 const __ = window.i18n.others.__.bind(i18n.others)
@@ -14,6 +15,12 @@ if (config.get('poi.first', '0.0.0') != POI_VERSION) {
   const title = 'README'
   const content =
     <div>
+      <div>
+        <CheckboxLabelConfig
+          label={__('Send data to Google Analytics')}
+          configName="poi.sendAnalytics"
+          defaultVal={true} />
+      </div>
       <p>{__('Good day and welcome to poi %s! Before your use, here are some information for you', POI_VERSION)}</p>
       <p style={{color: '#FFCCFF', fontWeight: 'bold', fontSize: 'large'}}>
         {__('poi will never modify your game data package, but please use trusted executables and plugins!')}
