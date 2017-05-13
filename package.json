@@ -81,7 +81,8 @@
     "reselect": "^3.0.0",
     "semver": "^5.3.0",
     "socks5-client": "^1.2.0",
-    "socks5-http-client": "^1.0.1"
+    "socks5-http-client": "^1.0.1",
+    "yargs": "^8.0.1"
   },
   "devDependencies": {
     "asar": "^0.13.0",

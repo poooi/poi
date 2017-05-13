@@ -2,104 +2,54 @@
 import Debug from './debug'
 import { app } from 'electron'
 import { warn } from './utils'
-// At this stage we only support a few flags,
-// so it's OK to process them one by one like this
-// If one day we need to process more command line arguments,
-// it's better to find a 3rd party command line library to do this job.
+import yargs from 'yargs'
 
-// Pre-process Arguments
-let ignore2ndArg = false
-
-const reElectron = /electron(.exe)?$/i
-
-const preprocessArg = (arg, idx) => {
-  switch (idx) {
-  case 0:
-    if (reElectron.test(arg)) {
-      ignore2ndArg = true
-    }
-    return true
-  case 1:
-    return ignore2ndArg
-  default:
-    return false
-  }
-}
+const argv = yargs
+  .help('h')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .describe('v', 'prints the version')
+  .boolean('d')
+  .alias('d', 'dev')
+  .describe('dev', 'enable developer debug mode')
+  .array('extra')
+  .alias('extra', 'dev-extra')
+  .describe('extra', `enable extra debug option, usage --dev-extra extraA extraB`)
+  .boolean('s')
+  .alias('s', 'safe')
+  .describe('s', 'enables safe mode, reset the redux store and disables all plugins')
+  .argv
 
 // Print Version Info to Console and Exit
 const printVersionAndExit = () => {
-  console.warn(`${app.getName()} ${app.getVersion()}`.bold.blue,
-    `(electron v${process.versions.electron},
-      node v${process.versions.node},
-      chrome v${process.versions.chrome},
-      react v${require('react').version})`.cyan)
+  console.warn(`${app.getName()} ${app.getVersion()}`.bold.blue)
+  console.warn([
+    `(electron@${process.versions.electron}`,
+    `node@${process.versions.node}`,
+    `chrome@${process.versions.chrome}`,
+    `react@${require('react').version})`,
+  ].join(' ').cyan)
   app.exit(0)
 }
 
-const reVersion = /^-(-version|v)$/i
-
-const checkShowVersion = (arg) => {
-  if (!reVersion.test(arg)) {
-    return false
-  }
+if (argv.v) {
   printVersionAndExit()
 }
-// Parse Debug Options
-const reDebug = /^-(?:-debug(?:=(true|false))?|d)$/i
-const ex = "[A-Za-z_]\\w*"
-const reDebugEx = new RegExp(`^--debug-extra=${ex}(,${ex})*$`, 'i')
-const reDebugExD = new RegExp(`^--debug-extra-d=${ex}(,${ex})*$`, 'i')
-const reExtra = new RegExp(`${ex}(?=,|$)`, 'gi')
-const reDebugBrk = /^--debug-brk$/ // CLI for node. You'll need node debugger to continue.
-const parseDebugOptions = (arg) => {
-  switch (true) {
-  case reDebug.test(arg):
-    Debug.setEnabled(reDebug.exec(arg)[1] !== 'false')
-    break
-  case reDebugEx.test(arg): {
-    for (let i = 0; i < arg.match(reExtra).length; i++) {
-      Debug.enableExtra(arg.match(reExtra)[i])
-    }
-    break
-  }
-  case reDebugExD.test(arg): {
-    for (let i = 0; i < arg.match(reExtra).length; i++) {
-      Debug.disableExtra(arg.match(reExtra)[i])
-    }
-    break
-  }
-  case reDebugBrk.test(arg):
-    Debug.enableExtra('brk')
-    break
-  default:
-    return false
-  }
-  return true
+
+// dev, debug mode
+if (argv.d) {
+  Debug.setEnabled()
 }
 
-const reSafeMode = /^-(-safe|S)$/i
-
-const checkSafeMode = (arg) => {
-  if (reSafeMode.test(arg)) {
-    global.isSafeMode = true
-    warn('Entering SAFE MODE.')
-    return true
-  } else {
-    return false
-  }
+if (argv.extra) {
+  argv.extra.forEach(extra => Debug.enableExtra(extra))
 }
 
-// Process Command Line Arguments one by one
-process.argv.forEach((arg, idx) =>{
-  switch (true) {
-  case preprocessArg(arg, idx): return
-  case checkShowVersion(arg): return
-  case parseDebugOptions(arg): return
-  case checkSafeMode(arg): return
-  // case parseWhateverOtherOptions(arg): return
-  // else - unrecognized argument, just ignore.
-  }
-})
+// safe mode
+if (argv.s) {
+  global.isSafeMode = true
+  warn('Entering SAFE MODE.')
+}
 
 // Finish initialization of debug environment
 Debug.init()
