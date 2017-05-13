@@ -4,6 +4,8 @@ import { app } from 'electron'
 import { warn } from './utils'
 import yargs from 'yargs'
 
+console.log(process.defaultApp)
+console.log(process.argv)
 const argv = yargs
   .help('h')
   .alias('h', 'help')
@@ -18,7 +20,7 @@ const argv = yargs
   .boolean('s')
   .alias('s', 'safe')
   .describe('s', 'enables safe mode, reset the redux store and disables all plugins')
-  .argv
+  .parse(process.argv)
 
 // Print Version Info to Console and Exit
 const printVersionAndExit = () => {
