@@ -4,8 +4,11 @@ import { app } from 'electron'
 import { warn } from './utils'
 import yargs from 'yargs'
 
-console.log(process.defaultApp)
-console.log(process.argv)
+// check if starts with Electron app, e.g. `electron .`
+// with Electron app: process.argv = [path to electron bin, '.', ...args ]
+// without: process.argv = [path to poi bin, ...args]
+const rawArgv = process.defaultApp ? process.argv.slice(2) : process.argv.slice(1)
+
 const argv = yargs
   .help('h')
   .alias('h', 'help')
@@ -20,7 +23,7 @@ const argv = yargs
   .boolean('s')
   .alias('s', 'safe')
   .describe('s', 'enables safe mode, reset the redux store and disables all plugins')
-  .parse(process.argv)
+  .parse(rawArgv)
 
 // Print Version Info to Console and Exit
 const printVersionAndExit = () => {
