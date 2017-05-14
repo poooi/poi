@@ -263,12 +263,11 @@ class Booster {
 
 // For the Renderer Processes
 class DebuggerRenderer extends DebuggerBase {
-  style = 'background: linear-gradient(30deg, cyan, white 3ex)'
   _getLogFunc(prefix) {
     if (prefix != null) {
-      return console.debug.bind(console, `%c${prefix}`, this.style)
+      return console.log.bind(console, `%c${prefix}`, 'background: linear-gradient(30deg, cyan, white 3ex)')
     } else {
-      return console.debug.bind(console)
+      return console.log.bind(console)
     }
   }
   init() {
