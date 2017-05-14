@@ -88,10 +88,13 @@ window.onbeforeunload = (e) => {
   }
 }
 class GameResponse {
-  constructor(path, body, postBody) {
+  constructor(path, body, postBody, time) {
     this.path = path
     this.body = body
     this.postBody = postBody
+    Object.defineProperty(this, 'time', {
+      get: () => String(new Date(time)),
+    })
     Object.defineProperty(this, 'ClickToCopy -->', {get: () => {
       require('electron').clipboard.writeText(JSON.stringify({path, body, postBody}))
       return `Copied: ${this.path}`
@@ -104,10 +107,10 @@ window.addEventListener('game.request', (e) => {
   //const resPath = e.detail.path
 })
 window.addEventListener('game.response', (e) => {
-  const {method, body, postBody} = e.detail
+  const {method, body, postBody, time} = e.detail
   const resPath = e.detail.path
   if (dbg.extra('gameResponse').isEnabled()) {
-    dbg._getLogFunc()(new GameResponse(resPath, body, postBody))
+    dbg._getLogFunc()(new GameResponse(resPath, body, postBody, time))
   }
   if (config.get('poi.showNetworkLog', true)) {
     log(`${__('Hit')} ${method} ${resPath}`, {dontReserve: true})
