@@ -21,10 +21,17 @@ case 'linux':
   break
 }
 const flashPaths = [
-  app.getPath('pepperFlashSystemPlugin'),
   path.join(ROOT, '..', 'PepperFlash', folderName, pluginName),
   path.join(ROOT, 'PepperFlash', folderName, pluginName),
 ]
+
+try {
+  const path = app.getPath('pepperFlashSystemPlugin')
+  flashPaths.unshift(path)
+} catch (e) {
+  warn('Cannot get system flash plugin path')
+}
+
 for (const flashPath of flashPaths) {
   try {
     fs.accessSync(flashPath, fs.R_OK)
