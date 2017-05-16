@@ -1,5 +1,5 @@
-import React from 'react'
-import { CheckboxLabelConfig } from 'views/components/settings/parts/utils'
+import React, { Component } from 'react'
+import { Checkbox } from 'react-bootstrap'
 
 const {config, i18n, POI_VERSION} = window
 const __ = window.i18n.others.__.bind(i18n.others)
@@ -7,6 +7,25 @@ const __ = window.i18n.others.__.bind(i18n.others)
 // Readme contents
 const dontShowAgain = () =>
   config.set('poi.first', POI_VERSION)
+
+class GoogleAnalyticsOption extends Component {
+  state = {
+    checked: config.get('poi.sendAnalytics', true),
+  }
+  handleChange = e => {
+    config.set('poi.sendAnalytics', !this.state.checked)
+    this.setState({ checked: !this.state.checked })
+  }
+  render() {
+    return (
+      <Checkbox
+        checked={this.state.checked}
+        onChange={this.handleChange}>
+        {window.i18n.setting.__('Send data to Google Analytics')}
+      </Checkbox>
+    )
+  }
+}
 
 if (config.get('poi.first', '0.0.0') != POI_VERSION) {
   const isHan = ['zh-CN', 'zh-TW'].includes(window.language)
@@ -16,10 +35,7 @@ if (config.get('poi.first', '0.0.0') != POI_VERSION) {
   const content =
     <div>
       <div>
-        <CheckboxLabelConfig
-          label={__('Send data to Google Analytics')}
-          configName="poi.sendAnalytics"
-          defaultVal={true} />
+        <GoogleAnalyticsOption />
       </div>
       <p>{__('Good day and welcome to poi %s! Before your use, here are some information for you', POI_VERSION)}</p>
       <p style={{color: '#FFCCFF', fontWeight: 'bold', fontSize: 'large'}}>
