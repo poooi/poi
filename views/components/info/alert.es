@@ -12,16 +12,13 @@ alertStyle.innerHTML = `
   poi-alert {
     height: 30px;
   }
-  #alert-container {
-    height: 30px;
-  }
   #alert-main {
     height: 29px;
   }
 `
 historyStyle.innerHTML = `
   .alert-history {
-    transform: translateY(0px);
+    transform: translateY(1px);
     pointer-events: 'none';
   }
 `
@@ -75,7 +72,7 @@ export const PoiAlert = class poiAlert extends Component {
       #alert-main {
       }
       .alert-history {
-        transform: translateY(${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 0}px);
+        transform: translateY(${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1}px);
         pointer-events: ${this.showHistory ? 'auto' : 'none'};
       }
     `
@@ -102,9 +99,6 @@ export const PoiAlert = class poiAlert extends Component {
         }
         #alert-container.alert-default, .alert-history.panel {
           background-color: ${this.bgColor};
-        }
-        #alert-container {
-          height: ${this.alertHeight}px;
         }
         .alert-default {
           ${(window.theme == 'paper' || window.theme == 'lumen') ? 'color: #000;' : ''}

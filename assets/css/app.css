@@ -34,6 +34,7 @@ body {
   pointer-events: auto;
   cursor: pointer;
   transition: 0.3s;
+  height: 30px;
 }
 #alert-area {
   cursor: pointer;
@@ -176,6 +177,7 @@ poi-control .btn-sm {
   border-width: 2px;
   padding: 2px 7px;
   font-size: 15px;
+  height: 30px;
 }
 poi-control button .fa {
   cursor: pointer !important;
