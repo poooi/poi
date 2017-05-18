@@ -10,9 +10,14 @@ const isPF = ship => ship.api_stype === 1
 const isTaiyou = ship => ship.api_ship_id === 526
 const isTaiyouKai = ship => ship.api_ship_id === 380 || ship.api_ship_id === 529
 
-export const isOASW = (ship, equips) =>
-  isIsuzuK2(ship) ||
-  (isPF(ship) && taisenAbove(60)(ship) && hasSome(isSonar)(equips)) ||
-  (isTaiyou(ship) && taisenAbove(65)(ship) && hasSome(is931)(equips)) ||
-  (isTaiyouKai(ship) && taisenAbove(65)(ship)) ||
-  (taisenAbove(100)(ship) && hasSome(isSonar)(equips))
+const map = f => xs => xs.map(x => f(x))
+const sumAbove = value => xs => xs.reduce((s, x) => s + x, 0) >= value
+const equipTais = equip => equip.api_tais || 0
+
+export const isOASW = (ship, equips) => false
+  || isIsuzuK2(ship)
+  || (isPF(ship) && taisenAbove(60)(ship) && hasSome(isSonar)(equips))
+  || (isPF(ship) && taisenAbove(75)(ship) && sumAbove(4)(map(equipTais)(equips)))
+  || (isTaiyou(ship) && taisenAbove(65)(ship) && hasSome(is931)(equips))
+  || (isTaiyouKai(ship) && taisenAbove(65)(ship))
+  || (taisenAbove(100)(ship) && hasSome(isSonar)(equips))
