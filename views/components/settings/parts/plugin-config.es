@@ -350,7 +350,7 @@ const PluginConfig = connect((state, props) => ({
   mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
   proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
-  autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', false),
+  autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
 }))(class pluginConfig extends Component {
   static propTypes = {
     plugins: PropTypes.array,
