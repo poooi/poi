@@ -36,10 +36,12 @@ export function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_kousyou/remodel_slot':
     return compareUpdate(state, body.api_after_material)
   case '@@Response/kcsapi/api_req_kousyou/createship_speedchange': {
-    const lsc = getStore(`info.construct.${postBody.api_kdock_id-1}.api_large_flag`)
-    state = state.slice()
-    state[4] -= lsc ? 10 : 1
-    return state
+    // There's no large ship construction flag in kdock, judge by resources
+    const item1 = getStore(`info.constructions.${postBody.api_kdock_id-1}.api_item1`)
+    const lsc = item1 > 1000
+    const newState = state.slice()
+    newState[4] -= (lsc ? 10 : 1)
+    return newState
   }
   case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
     return addArrayResources(state, body.api_get_material)
