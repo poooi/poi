@@ -72,6 +72,18 @@ export const ShipRow = connect(
     const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
     const fuelPercentage = ship.api_fuel / $ship.api_fuel_max * 100
     const ammoPercentage = ship.api_bull / $ship.api_bull_max * 100
+    const fuelTip = (
+      <span>
+        {ship.api_fuel} / {$ship.api_fuel_max}
+        {fuelPercentage < 100 && ` (-${Math.floor(($ship.api_fuel_max - ship.api_fuel) * (ship.api_lv > 99 ? 0.85 : 1))})`}
+      </span>
+    )
+    const ammoTip = (
+      <span>
+        {ship.api_bull} / {$ship.api_bull_max}
+        {ammoPercentage < 100 && ` (-${Math.floor(($ship.api_bull_max - ship.api_bull) * (ship.api_lv > 99 ? 0.85 : 1))})`}
+      </span>
+    )
     return (
       <div className="ship-item">
         <div className="ship-tile">
@@ -133,7 +145,7 @@ export const ShipRow = connect(
           <span style={{flex: 1}}>
             <OverlayTrigger placement='right' overlay={
               <Tooltip id={`panebody-fuel-${ship.api_id}`}>
-                {ship.api_fuel} / {$ship.api_fuel_max}
+                  {fuelTip}
               </Tooltip>
             }>
               <ProgressBar bsStyle={getMaterialStyle(fuelPercentage)}
@@ -143,7 +155,7 @@ export const ShipRow = connect(
           <span style={{flex: 1}}>
             <OverlayTrigger placement='right' overlay={
               <Tooltip id={`panebody-bull-${ship.api_id}`}>
-                {ship.api_bull} / {$ship.api_bull_max}
+                {ammoTip}
               </Tooltip>
             }>
               <ProgressBar bsStyle={getMaterialStyle(ammoPercentage)}
