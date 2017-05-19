@@ -62,7 +62,7 @@ export function reducer(state=[], {type, body, postBody}) {
     if (body.api_after_bauxite) {
       state = state.slice()
       state[3] = body.api_after_bauxite
-      state
+      return state
     }
     break
   case '@@Response/kcsapi/api_req_air_corps/supply':
