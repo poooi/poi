@@ -1,6 +1,6 @@
 import { globalShortcut } from 'electron'
 import config from './config'
-import Window from './window'
+import windowManager from './window'
 import dbg from './debug'
 
 const registerShortcut = (acc, desc, func) => {
@@ -17,12 +17,12 @@ const registerShortcut = (acc, desc, func) => {
 const registerBossKey = () => {
   const accelerator = config.get('poi.shortcut.bosskey', '')
   if (accelerator)
-    if (!registerShortcut(accelerator, 'Boss Key', Window.toggleAllWindowsVisibility))
+    if (!registerShortcut(accelerator, 'Boss Key', windowManager.toggleAllWindowsVisibility))
       config.set('poi.shortcut.bosskey', '')
 }
 const registerDevToolShortcut = () => {
   const accelerator = 'Ctrl+Shift+I'
-  registerShortcut(accelerator, 'Open Focused Window Dev Tools', Window.openFocusedWindowDevTools)
+  registerShortcut(accelerator, 'Open Focused Window Dev Tools', windowManager.openFocusedWindowDevTools)
 }
 
 export default {
