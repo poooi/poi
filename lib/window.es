@@ -1,4 +1,4 @@
-import {BrowserWindow} from 'electron'
+import { BrowserWindow, screen } from 'electron'
 import path from 'path-extra'
 const windows = global.windows = []
 const windowsIndex = global.windowsIndex = {}
@@ -9,15 +9,34 @@ const state = []  // Window state before hide
 let hidden = false
 const ROOT = global.ROOT
 
+const inRange = (n, min, range) => (n != null && n >= min && n < min + range)
+
+const withinDisplay = (display, x, y) => {
+  const wa = display.workArea
+  return inRange(x, wa.x, wa.width) && inRange(y, wa.y, wa.height)
+}
+
+const normalizePosition = (options) => {
+  // user's workArea may change during game
+  const { workArea } = screen.getPrimaryDisplay()
+  let { x, y } = options
+  if (!screen.getAllDisplays().some(display => withinDisplay(display, x, y))) {
+    x = workArea.x
+    y = workArea.y
+  }
+
+  return Object.assign(options, {
+    x,
+    y,
+  })
+}
+
 export default {
   createWindow: (options) => {
     options = Object.assign({
       show: false,
       icon: path.join(ROOT, 'assets', 'icons', 'poi.ico'),
-      webPreferences: {
-        plugins: true,
-      },
-    }, options)
+    }, normalizePosition(options))
     const current = new BrowserWindow(options)
     if (options.indexName) {
       windowsIndex[options.indexName] = current
