@@ -41,20 +41,22 @@ export const LBViewMini = connect(state => ({
       <div className="ship-details-mini">
       {
         areaIds.map((id, i) => (
-          id === areaIds[i - 1] ?
-          <MiniSquardRow
-            key={i}
-            squardId={i}
-          /> :
-          <div key={i}>
-            <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-              [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name || '')}
-            </Alert>
+          mapareas[id] != null && (
+            id === areaIds[i - 1] ?
             <MiniSquardRow
               key={i}
               squardId={i}
-              />
-          </div>
+            /> :
+            <div key={i}>
+              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
+                [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name || '')}
+              </Alert>
+              <MiniSquardRow
+                key={i}
+                squardId={i}
+                />
+            </div>
+          )
         ))
       }
       </div>

@@ -100,7 +100,7 @@ const LBView = connect(state => ({
       <div className="ship-details">
       {
         areaIds.map((id, i) => (
-          mapareas[id] != undefined && (
+          mapareas[id] != null && (
             id === areaIds[i - 1] ?
             <SquardRow
               key={i}
