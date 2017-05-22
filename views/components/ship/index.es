@@ -100,20 +100,22 @@ const LBView = connect(state => ({
       <div className="ship-details">
       {
         areaIds.map((id, i) => (
-          id === areaIds[i - 1] ?
-          <SquardRow
-            key={i}
-            squardId={i}
-          /> :
-          <div key={i}>
-            <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-              [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name)}
-            </Alert>
+          mapareas[id] != undefined && (
+            id === areaIds[i - 1] ?
             <SquardRow
               key={i}
               squardId={i}
-              />
-          </div>
+            /> :
+            <div key={i}>
+              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
+                [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name)}
+              </Alert>
+              <SquardRow
+                key={i}
+                squardId={i}
+                />
+            </div>
+          )
         ))
       }
       </div>
