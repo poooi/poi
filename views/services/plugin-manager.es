@@ -2,15 +2,23 @@ import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync } from 'fs-extra'
-import request from 'request'
 import npm from 'npm'
 import glob from 'glob'
-import { promisify, promisifyAll } from 'bluebird'
+import { promisify, delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
-const requestAsync = promisify(promisifyAll(request), {multiArgs: true})
+
+const fetchHeader = new Headers()
+fetchHeader.set("Cache-Control", "max-age=0")
+const fetchFromRemote = async (url, cacheMode = "default") => {
+  try {
+    return (await fetch(url, {method: "GET", cache: cacheMode, headers: fetchHeader}).catch(e => null)).json()
+  } catch (e) {
+    return {}
+  }
+}
 
 import {
   installPackage,
@@ -80,19 +88,25 @@ class PluginManager extends EventEmitter {
     return this.requirements
   }
   getMirrors() {
+    return readJsonSync(this.mirrorPath)
+  }
+  async loadConfig() {
     if (this.mirrors == null) {
       this.mirrors = readJsonSync(this.mirrorPath)
       const mirrorConf = config.get('packageManager.mirrorName')
-      const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ? 
+      const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ?
         mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
       const proxyConf = config.get("packageManager.proxy", false)
       const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
-      this.selectConfig(mirrorName, proxyConf, betaCheck)
+      await this.selectConfig(mirrorName, proxyConf, betaCheck, false)
+      this.npmLoaded = true
+    }
+    while (!this.npmLoaded) {
+      await delay(1000)
     }
     return this.mirrors
   }
-  selectConfig(name, enable, check) {
-    this.getMirrors()
+  async selectConfig(name, enable, check) {
     if (name) {
       this.config.mirror = this.mirrors[name]
       config.set("packageManager.mirrorName", name)
@@ -114,7 +128,7 @@ class PluginManager extends EventEmitter {
         delete this.npmConfig.http_proxy
       }
     }
-    npm.load(this.npmConfig)
+    await new Promise((resolve, reject) => npm.load(this.npmConfig, e => resolve()))
     return this.config
   }
   isMetRequirement(plugin) {
@@ -170,8 +184,8 @@ class PluginManager extends EventEmitter {
       return this.readPlugins()
     }
   }
-  getConf() {
-    this.getMirrors()
+  async getConf() {
+    await this.loadConfig()
     return this.config
   }
   getInstalledPlugins() {
@@ -225,7 +239,7 @@ class PluginManager extends EventEmitter {
     if (plugin.needRollback) {
       return
     }
-    const data = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/latest`))[1])
+    const data = await fetchFromRemote(`${this.config.mirror.server}${plugin.packageName}/latest`)
     if (data.error) {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`, data)
       return
@@ -234,7 +248,7 @@ class PluginManager extends EventEmitter {
       latest: data.version,
     }
     if (this.config.betaCheck) {
-      const betaData = JSON.parse((await requestAsync(`${this.config.mirror.server}${plugin.packageName}/beta`))[1])
+      const betaData = await fetchFromRemote(`${this.config.mirror.server}${plugin.packageName}/beta`)
       Object.assign(distTag, {
         beta: betaData.version,
       })
@@ -281,7 +295,7 @@ class PluginManager extends EventEmitter {
   }
 
   async getOutdatedPlugins(isNotif) {
-    this.getMirrors()
+    await this.loadConfig()
     const plugins = this.getInstalledPlugins()
     const outdatedList = (await Promise.all(plugins.map((plugin) =>
       this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
@@ -298,7 +312,7 @@ class PluginManager extends EventEmitter {
   async installPlugin(packageSource, version) {
     if (packageSource.includes('@'))
       [packageSource, version] = packageSource.split('@')
-    this.getMirrors()
+    await this.loadConfig()
 
     // 1) See if it is installed by plugin name
     const installingByPluginName = (function () {
@@ -357,7 +371,7 @@ class PluginManager extends EventEmitter {
   }
 
   async uninstallPlugin(plugin) {
-    this.getMirrors()
+    await this.loadConfig()
     try {
       dispatch({
         type: '@@Plugin/changeStatus',
