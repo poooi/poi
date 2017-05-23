@@ -15,8 +15,10 @@ const __ = i18n.others.__.bind(i18n.others)
 
 const openItemAsync = (dir, source=null) => {
   openExternal(`file://${dir}`, {}, err => {
-    if (err)
-      console.error('${dir}: Failed to open item asynchronously', err)
+    if (err) {
+      const prefix = (source && `${source}: `) || ''
+      console.error(`${prefix}Failed to open item "${dir}" asynchronously`, err)
+    }
   })
 }
 
