@@ -289,6 +289,13 @@
     description: "演習勝利"
     required: 7
     init: 0
+424:
+  type: 3
+  "mission_success":
+    description: "遠征"
+    required: 4
+    mission: ['海上護衛任務']
+    init: 0
 ###
 # Quarterly
 ###
