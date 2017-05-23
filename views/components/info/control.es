@@ -10,8 +10,17 @@ import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
 const {$, i18n, config, APPDATA_PATH, toggleModal} = window
-const {openItem} = shell
+const {openExternal} = shell
 const __ = i18n.others.__.bind(i18n.others)
+
+const openItemAsync = (dir, source=null) => {
+  openExternal(`file://${dir}`, {}, err => {
+    if (err) {
+      const prefix = (source && `${source}: `) || ''
+      console.error(`${prefix}Failed to open item "${dir}" asynchronously`, err)
+    }
+  })
+}
 
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
@@ -73,7 +82,7 @@ const PoiControl = connect((state, props) => ({
       fs.ensureDirSync(path.join(dir, 'Kanpani'))
       fs.ensureDirSync(path.join(dir, 'FlowerKnightGirls'))
       fs.ensureDirSync(path.join(dir, 'ToukenRanbu'))
-      openItem(dir)
+      openItemAsync(dir, 'handleOpenCacheFolder')
     }
     catch (e) {
       window.toggleModal(__('Open cache dir'), __("Failed. Perhaps you don't have permission to it."))
@@ -84,7 +93,7 @@ const PoiControl = connect((state, props) => ({
     dir = path.join(dir, 'kancolle', 'kcs', 'resources', 'swf', 'ships')
     try {
       fs.ensureDirSync(dir)
-      openItem(dir)
+      openItemAsync(dir, 'handleOpenMakaiFolder')
     } catch (e) {
       window.toggleModal(__('Open makai dir'), __("Failed. Perhaps you don't have permission to it."))
     }
@@ -94,7 +103,7 @@ const PoiControl = connect((state, props) => ({
       const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
       const screenshotPath = config.get('poi.screenshotPath', d)
       fs.ensureDirSync(screenshotPath)
-      openItem(screenshotPath)
+      openItemAsync(screenshotPath,'handleOpenScreenshotFolder')
     }
     catch (e) {
       window.toggleModal(__('Open screenshot dir'), __("Failed. Perhaps you don't have permission to it."))
