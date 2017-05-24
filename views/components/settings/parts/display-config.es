@@ -410,7 +410,7 @@ class DisplayConfig extends Component {
           <FlashQualityConfig />
         </div>
         <div className="form-group">
-          <Divider text={__('Game resoultion')} />
+          <Divider text={__('Game resolution')} />
           <ChangeResolutionConfig />
         </div>
       </form>
