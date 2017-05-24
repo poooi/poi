@@ -87,6 +87,8 @@ const findHack = (pathname) => {
     fs.accessSync(loc, fs.R_OK)
     return loc
   } catch (e) {
+    if (e.code !== 'ENOENT')
+      console.error(`error while loading hack file ${loc}`,e)
     return null
   }
 }
