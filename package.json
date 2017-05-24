@@ -89,7 +89,6 @@
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-eslint": "^7.0.0",
-    "coffeelint": "^1.11.1",
     "electron": "~1.6.7",
     "electron-builder": "^16.6.1",
     "electron-builder-squirrel-windows": "^16.6.0",
