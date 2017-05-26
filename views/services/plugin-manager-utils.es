@@ -212,7 +212,7 @@ export function readPlugin(pluginPath) {
 }
 
 export function enablePlugin(plugin, reread=true) {
-  if (!pathAdded.get(plugin.packageName)) {
+  if (!pathAdded.get(plugin.packageName) && !plugin.windowURL) {
     allowedPath.push(plugin.pluginPath)
     setAllowedPath(allowedPath)
     pathAdded.set(plugin.packageName, true)
