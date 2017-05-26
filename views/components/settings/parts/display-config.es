@@ -355,7 +355,6 @@ const ChangeResolutionConfig = connect((state, props) => ({
     }
   }
   render() {
-    const { devicePixelRatio } = window
     return (
       <Grid>
         <Col xs={8}>
