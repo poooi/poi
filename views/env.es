@@ -25,7 +25,6 @@ fs.ensureDirSync(window.PLUGIN_PATH)
 fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
 window.isSafeMode = remote.getGlobal('isSafeMode')
 
-require('../lib/module-path').setAllowedPath([ window.ROOT, window.APPDATA_PATH ])
 // Add ROOT to `require` search path
 require('module').globalPaths.push(window.ROOT)
 

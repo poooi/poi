@@ -10,12 +10,16 @@ import npm from 'npm'
 import Promise, { promisify } from 'bluebird'
 import glob from 'glob'
 import crypto from 'crypto'
+import { setAllowedPath } from 'lib/module-path'
 
 import { extendReducer } from 'views/create-store'
-const { ROOT, config, language, toast, MODULE_PATH } = window
+const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
+
+const allowedPath = [ ROOT, APPDATA_PATH ]
+const pathAdded = new Map()
 
 require('module').globalPaths.push(MODULE_PATH)
 
@@ -208,6 +212,11 @@ export function readPlugin(pluginPath) {
 }
 
 export function enablePlugin(plugin, reread=true) {
+  if (!pathAdded.get(plugin.packageName)) {
+    allowedPath.push(plugin.pluginPath)
+    setAllowedPath(allowedPath)
+    pathAdded.set(plugin.packageName, true)
+  }
   if (plugin.needRollback)
     return plugin
   let pluginMain
