@@ -1,11 +1,13 @@
 const { remote } = require('electron')
 const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
+const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 const config = remote.require('./lib/config')
 
 require('module').globalPaths.push(MODULE_PATH)
 require('babel-register')(require(`${ROOT}/babel.config`))
 require('coffee-react/register')
+require(`${ROOT}/lib/module-path`).setAllowedPath([ ROOT, APPDATA_PATH ])
 
 const onZoomChange = (value) => {
   document.body.style.zoom = value

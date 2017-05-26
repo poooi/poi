@@ -14,6 +14,7 @@ const {ROOT} = global
 const poiIconPath = path.join(ROOT, 'assets', 'icons',
   process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico')
 
+require('./lib/module-path').setAllowedPath([ global.ROOT, global.APPDATA_PATH ])
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
