@@ -18,10 +18,6 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
 
-const openLink = (link, e) => {
-  shell.openExternal(link)
-  e.preventDefault()
-}
 class PluginSettingWrap extends Component {
   static propTypes = {
     plugin: PropTypes.object,
