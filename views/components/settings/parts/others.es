@@ -101,15 +101,15 @@ const Others = connect(state => ({
             {
               (window.language === "zh-CN" || window.language === "zh-TW") ?
                 <div>
-                  <p>微博: <a onClick={shell.openExternal.bind(this, 'http://weibo.com/letspoi')}>  今天 poi 出新版本了吗 </a></p>
+                  <p>微博: <a href='http://weibo.com/letspoi'>  今天 poi 出新版本了吗 </a></p>
                   <p>开发讨论与意见交流群: 378320628 </p>
                 </div>
               :
               null
             }
-            <p>{__("Database")}:<a onClick={shell.openExternal.bind(this, 'http://db.kcwiki.moe')}> http://db.kcwiki.moe </a></p>
-            <p>{__("Wiki")}: <a onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}> https://github.com/poooi/poi/wiki </a></p>
-            <p>GitHub：<a onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}> https://github.com/poooi/poi </a></p>
+            <p>{__("Database")}:<a href='http://db.kcwiki.moe'> http://db.kcwiki.moe </a></p>
+            <p>{__("Wiki")}: <a href='https://github.com/poooi/poi/wiki'> https://github.com/poooi/poi/wiki </a></p>
+            <p>GitHub：<a href='https://github.com/poooi/poi'> https://github.com/poooi/poi </a></p>
           </Col>
         </Grid>
         <Divider text={__("Data version")} />

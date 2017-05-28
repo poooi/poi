@@ -1,4 +1,4 @@
-import { remote } from 'electron'
+import { remote, shell } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
 
 const {$, config, toggleModal, log, error, i18n, dbg} = window
@@ -126,6 +126,16 @@ window.addEventListener('network.error.retry', (e) => {
 window.addEventListener('network.invalid.result', (e) => {
   const {code} = e.detail
   error(__('The server presented you a cat. (Error code: %s)',  code), {dontReserve: true})
+})
+
+remote.getCurrentWebContents().on('new-window', (e, url) => {
+  e.preventDefault()
+  shell.openExternal(url)
+})
+
+remote.getCurrentWebContents().on('will-navigate', (e, url) => {
+  e.preventDefault()
+  shell.openExternal(url)
 })
 
 remote.getCurrentWebContents().on('dom-ready', () => {

@@ -137,10 +137,10 @@ class InstalledPlugin extends PureComponent {
                   {plugin.displayName}
                 </span>
                 <div className='author-wrapper'>{'@'}
-                  <span className='author-link'
-                    onClick={partial(openLink, plugin.link)}>
+                  <a className='author-link'
+                    href={plugin.link}>
                     {plugin.author}
-                  </span>
+                  </a>
                 </div>
                 <div className='update-wrapper'>
                   <div>
@@ -266,10 +266,10 @@ class UninstalledPlugin extends PureComponent {
                   {` ${plugin[window.language]}`}
                 </span>
                 <div className='author-wrapper'>{'@'}
-                  <span className='author-link'
-                    onClick={partial(openLink, plugin.link)}>
+                  <a className='author-link'
+                    href={plugin.link}>
                     {plugin.author}
-                  </span>
+                  </a>
                 </div>
               </Col>
             </Row>
