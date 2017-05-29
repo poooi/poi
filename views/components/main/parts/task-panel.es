@@ -158,9 +158,10 @@ const TaskRow = connect(
     quest,
     record: get(state, ['info', 'quests', 'records', quest.api_no]),
     translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
+    wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
   })
-)(function ({idx, quest, record, translation}) {
-  const questName = quest ? quest.api_title : '???'
+)(function ({idx, quest, record, translation, wikiId}) {
+  const questName = quest ? i18n.resources.__(quest.api_title || '') : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
@@ -177,7 +178,7 @@ const TaskRow = connect(
       idx={idx}
       bulletColor={quest ? getCategory(quest.api_category) : '#fff'}
       leftLabel={questName}
-      leftOverlay={<div><strong>{questName}</strong><br />{questContent}</div>}
+      leftOverlay={<div><strong>{wikiId ? `${wikiId} - ` : ''}{questName}</strong><br />{questContent}</div>}
       rightLabel={progressLabel}
       rightBsStyle={progressBsStyle}
       rightOverlay={progressOverlay}
