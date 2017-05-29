@@ -291,7 +291,7 @@ const filterCopyAppAsync = async (stage1App, stage2App) =>
     return jobs
   })())
 
-const compileToJsAsync = (appDir, dontRemove) => {
+export const compileToJsAsync = (appDir, dontRemove) => {
   log(`Compiling ${appDir}`)
   const targetExts = ['.es']
 
@@ -314,7 +314,10 @@ const compileToJsAsync = (appDir, dontRemove) => {
           // const src = await fs.readFileAsync(srcPath, 'utf-8')
           let tgt
           try {
-            const result = await babel.transformFileAsync(srcPath, {presets, plugins})
+            const result = await babel.transformFileAsync(srcPath, {
+              presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
+              plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
+            })
             tgt = result.code
           } catch (e) {
             log(`Compiling ${srcPath} failed: ${e}`)

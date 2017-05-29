@@ -1,15 +1,17 @@
 require('coffee-script/register')
 require('babel-register')(require('./babel.config'))
 const gulp = require('gulp')
+const argv = require('yargs').argv
 
 const {log} = require('./lib/utils')
-const {buildAsync,
+const { buildAsync,
   installPluginsAsync,
   getFlashAsync,
   getFlashAllAsync,
   cleanFiles,
   installThemeAsync,
-  packWinReleaseAsync} = require('./build_detail')
+  packWinReleaseAsync,
+  compileToJsAsync } = require('./build_detail')
 
 const package_json = require('./package.json')
 
@@ -45,6 +47,14 @@ gulp.task('pack_win_release', ['getVersion'], async() => {
   await packWinReleaseAsync(poiVersion)
 })
 
+gulp.task('complie_plugin', async() => {
+  if (argv.path) {
+    await compileToJsAsync(argv.path, true)
+  } else {
+    log('Please specify plugin\'s path by --path parameter')
+  }
+})
+
 gulp.task('clean', async () => {
   await cleanFiles()
 })
@@ -52,6 +62,8 @@ gulp.task('clean', async () => {
 gulp.task('default', () => {
   const _gulp = 'gulp'
   log("Usage:")
-  log(`  ${_gulp} build         - Build release complete packages under ./dist/`)
-  log(`  ${_gulp} build_plugins - Pack up latest plugin tarballs under ./dist/`)
+  log(`  ${_gulp} deploy          - Make this repo ready to use`)
+  log(`  ${_gulp} complie_plugins - Precomplie plugin's es6+ codes`)
+  log(`  ${_gulp} build           - Build release complete packages under ./dist/`)
+  log(`  ${_gulp} build_plugins   - Pack up latest plugin tarballs under ./dist/`)
 })
