@@ -47,7 +47,7 @@ gulp.task('pack_win_release', ['getVersion'], async() => {
   await packWinReleaseAsync(poiVersion)
 })
 
-gulp.task('complie_plugin', async() => {
+gulp.task('compile_plugin', async() => {
   if (argv.path) {
     await compileToJsAsync(argv.path, true)
   } else {
@@ -63,7 +63,7 @@ gulp.task('default', () => {
   const _gulp = 'gulp'
   log("Usage:")
   log(`  ${_gulp} deploy          - Make this repo ready to use`)
-  log(`  ${_gulp} complie_plugins - Precomplie plugin's es6+ codes`)
+  log(`  ${_gulp} compile_plugin  - Precomplie plugin's es6+ codes`)
   log(`  ${_gulp} build           - Build release complete packages under ./dist/`)
   log(`  ${_gulp} build_plugins   - Pack up latest plugin tarballs under ./dist/`)
 })
