@@ -72,7 +72,7 @@ export const PoiAlert = class poiAlert extends Component {
       #alert-main {
       }
       .alert-history {
-        transform: translateY(${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1}px);
+        transform: translateY(${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1 * Math.ceil(config.get('poi.zoomLevel', 1))}px);
         pointer-events: ${this.showHistory ? 'auto' : 'none'};
       }
     `
