@@ -125,8 +125,8 @@ export const PoiAlert = class poiAlert extends Component {
       }
     } else if (!current.dontReserve) {
       // push old message to history
-      history = pushToHistory(history, current)
       updateTime = value.stickyFor || 3000
+      history = pushToHistory(history, current)
       this.setState({
         history: history,
         current: value,
@@ -154,10 +154,12 @@ export const PoiAlert = class poiAlert extends Component {
       this.setState({overflow: false})
     }
   }
-  componentDidUpdate = (prevProps, prevState) => {
-    this.handleStyleChange()
+  componentWillUpdate = (nextProps, nextState) => {
     stickyEnd = Date.now() + updateTime
     updateTime = 0
+  }
+  componentDidUpdate = (prevProps, prevState) => {
+    this.handleStyleChange()
   }
   componentDidMount = () => {
     config.addListener('config.set', (path, value) => {
