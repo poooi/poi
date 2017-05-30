@@ -106,6 +106,7 @@
     "walk": "^2.3.9"
   },
   "build": {
+    "artifactName": "poi-${version}-${os}-${arch}.${ext}",
     "appId": "org.poooi.poi",
     "asar": {
       "smartUnpack": false
