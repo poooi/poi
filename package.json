@@ -7,7 +7,7 @@
     "test": "mocha --recursive --harmony --require ./test/babelhook",
     "deploy": "gulp deploy",
     "build": "gulp build && build",
-    "build_win": "gulp build && build --win --x64 && build --win --ia32",
+    "build_win": "gulp build && build --win --x64 --publish onTagOrDraft && build --win --ia32 --publish onTagOrDraft",
     "start": "electron .",
     "start_debug": "electron . --dev",
     "dev": "electron . --dev",
