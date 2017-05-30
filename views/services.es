@@ -6,6 +6,7 @@ const __ = i18n.others.__.bind(i18n.others)
 const __n = i18n.others.__n.bind(i18n.others)
 
 const WindowManager = remote.require('./lib/window')
+const { stopNavigateAndNewWindow } = remote.require('./lib/utils')
 
 import './services/update'
 import './services/layout'
@@ -128,15 +129,15 @@ window.addEventListener('network.invalid.result', (e) => {
   error(__('The server presented you a cat. (Error code: %s)',  code), {dontReserve: true})
 })
 
-remote.getCurrentWebContents().on('new-window', (e, url) => {
+const handleExternalURL = (e, url) => {
   e.preventDefault()
-  shell.openExternal(url)
-})
+  if (!url.startsWith('file'))
+    shell.openExternal(url)
+}
 
-remote.getCurrentWebContents().on('will-navigate', (e, url) => {
-  e.preventDefault()
-  shell.openExternal(url)
-})
+remote.getCurrentWebContents().on('new-window', handleExternalURL)
+remote.getCurrentWebContents().on('will-navigate', handleExternalURL)
+stopNavigateAndNewWindow(remote.getCurrentWebContents().id)
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   if (process.platform === 'darwin') {
