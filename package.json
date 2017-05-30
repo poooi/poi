@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "v7.8.0-beta.1",
+  "version": "v7.8.0-beta.2",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -90,7 +90,7 @@
     "asar": "^0.13.0",
     "babel-eslint": "^7.0.0",
     "electron": "~1.6.7",
-    "electron-builder": "^18.2.2",
+    "electron-builder": "^18.1.1",
     "electron-builder-squirrel-windows": "^18.0.0",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^2.0.0",
@@ -116,6 +116,9 @@
     ],
     "npmRebuild": false,
     "mac": {
+      "publish": [
+        "github"
+      ],
       "icon": "assets/icons/poi.icns",
       "target": [
         "dmg"
@@ -138,6 +141,9 @@
       ]
     },
     "win": {
+      "publish": [
+        "github"
+      ],
       "icon": "assets/icons/poi.ico",
       "target": [
         "squirrel",
@@ -145,6 +151,9 @@
       ]
     },
     "linux": {
+      "publish": [
+        "github"
+      ],
       "target": [
         "7z",
         "deb",
