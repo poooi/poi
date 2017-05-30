@@ -366,5 +366,21 @@
     "desja-JP": "遠征報酬早見表",
     "desen-US": "Expedition made easy",
     "desko-KR": "Expedition made easy"
+  },
+  "poi-plugin-leveling": {
+    "zh-CN": "舰步如飞",
+    "zh-TW": "艦步如飛",
+    "ja-JP": "Leveling",
+    "en-US": "Leveling",
+    "ko-KR": "Leveling",
+    "version": "v0.0.0",
+    "icon": "angle-double-up",
+    "author": "Javran",
+    "link": "https://github.com/Javran",
+    "deszh-CN": "舰娘练级规划管理（舰娘属性信息来自[是谁呼叫舰队](https://github.com/Diablohu/WhoCallsTheFleet)）",
+    "deszh-TW": "艦娘練級規劃管理（艦娘屬性信息來自[是誰呼叫艦隊](https://github.com/Diablohu/WhoCallsTheFleet)）",
+    "desja-JP": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
+    "desen-US": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
+    "desko-KR": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))"
   }
 }
