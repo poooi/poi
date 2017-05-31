@@ -1,13 +1,13 @@
 {
   "name": "poi",
-  "version": "v7.8.0-beta.1",
+  "version": "v7.8.0-beta.2",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive --harmony --require ./test/babelhook",
     "deploy": "gulp deploy",
     "build": "gulp build && build",
-    "build_win": "gulp build && build --win --x64 && build --win --ia32",
+    "build_win": "gulp build && build --win --x64 --ia32",
     "start": "electron .",
     "start_debug": "electron . --dev",
     "dev": "electron . --dev",
@@ -90,8 +90,8 @@
     "asar": "^0.13.0",
     "babel-eslint": "^7.0.0",
     "electron": "~1.6.7",
-    "electron-builder": "^16.6.1",
-    "electron-builder-squirrel-windows": "^16.6.0",
+    "electron-builder": "^17.3.0",
+    "electron-builder-squirrel-windows": "^18.0.0",
     "eslint": "^3.2.2",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
@@ -115,10 +115,10 @@
     ],
     "npmRebuild": false,
     "mac": {
-      "icon": "assets/icons/poi.icns",
-      "target": [
-        "dmg"
+      "publish": [
+        "github"
       ],
+      "icon": "assets/icons/poi.icns",
       "category": "public.app-category.games"
     },
     "dmg": {
@@ -137,13 +137,20 @@
       ]
     },
     "win": {
+      "artifactName": "poi-setup-${version}.${ext}",
+      "publish": [
+        "github"
+      ],
       "icon": "assets/icons/poi.ico",
       "target": [
-        "squirrel",
+        "nsis",
         "7z"
       ]
     },
     "linux": {
+      "publish": [
+        "github"
+      ],
       "target": [
         "7z",
         "deb",
