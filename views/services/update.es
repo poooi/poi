@@ -19,38 +19,42 @@ const openHomePage = () =>
   shell.openExternal('https://poi.io')
 
 const doUpdate = async () => {
-  try {
-    await updater.checkForUpdates()
-    await updater.downloadUpdate()
-  } catch (e) {
-    window.toast(__('Please try again or download manually.'), {
-      type: 'danger',
-      title: __('Update failed'),
-    })
+  if (process.platform == 'win32') {
+    try {
+      await updater.checkForUpdates()
+      await updater.downloadUpdate()
+    } catch (e) {
+      window.toast(__('Please try again or download manually.'), {
+        type: 'danger',
+        title: __('Update failed'),
+      })
+    }
   }
 }
 
-updater.on('update-available', () => {
-  console.log('Update from poi.io available')
-})
-
-updater.on('update-downloaded', () => {
-  window.toast(__('Quit app and install updates'), {
-    type: 'success',
-    title: __('Update successful'),
+if (process.platform === 'win32') {
+  updater.on('update-available', () => {
+    console.log('Update from poi.io available')
   })
-})
 
-updater.on('update-not-available', () => {
-  console.warn('Update from poi.io not available')
-})
-
-updater.on('error', (event, error) => {
-  window.toast(__('Please try again or download manually'), {
-    type: 'danger',
-    title: __('Update failed'),
+  updater.on('update-downloaded', () => {
+    window.toast(__('Quit app and install updates'), {
+      type: 'success',
+      title: __('Update successful'),
+    })
   })
-})
+
+  updater.on('update-not-available', () => {
+    console.warn('Update from poi.io not available')
+  })
+
+  updater.on('error', (event, error) => {
+    window.toast(__('Please try again or download manually'), {
+      type: 'danger',
+      title: __('Update failed'),
+    })
+  })
+}
 
 export const checkUpdate = async () => {
   let response
@@ -119,12 +123,14 @@ const toggleUpdate = (version, log) => {
       func: openHomePage,
       style: 'primary',
     },
-    {
+  ]
+  if (process.platform === 'win32') {
+    footer.push({
       name: `${__('Auto update')}`,
       func: doUpdate,
       style: 'primary',
-    },
-  ]
+    })
+  }
   toggleModal(title, content, footer)
 }
 
