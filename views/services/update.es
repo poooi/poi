@@ -1,5 +1,5 @@
 import React from 'react'
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import semver from 'semver'
 import Promise from 'bluebird'
 import Markdown from 'react-remarkable'
@@ -9,20 +9,53 @@ const __ = i18n.others.__.bind(i18n.others)
 
 const request = Promise.promisifyAll(require('request'))
 const requestAsync = Promise.promisify(request, {multiArgs: true})
+const { updater } = remote.require('./lib/updater')
 
 const {error} = require('../../lib/utils')
 
 const LANG = ['zh-CN', 'zh-TW', 'en-US']
 
-const doUpdate = () =>
+const openHomePage = () =>
   shell.openExternal('https://poi.io')
 
-const doUpdateGithub = () =>
-  shell.openExternal('https://github.com/poooi/poi/releases')
+const doUpdate = async () => {
+  try {
+    await updater.checkForUpdates()
+    await updater.downloadUpdate()
+  } catch (e) {
+    window.toast(__('Please try again or download manually.'), {
+      type: 'danger',
+      title: __('Update failed'),
+    })
+  }
+}
+
+updater.on('update-available', () => {
+  console.log('Update from poi.io available')
+})
+
+updater.on('update-downloaded', () => {
+  window.toast(__('Quit app to install to take effect.'), {
+    type: 'success',
+    title: __('Update successful'),
+  })
+})
+
+updater.on('update-not-available', () => {
+  console.warn('Update from poi.io not available')
+})
+
+updater.on('error', (event, error) => {
+  window.toast(__('Please try again or download manually.'), {
+    type: 'danger',
+    title: __('Update failed'),
+  })
+})
 
 const checkUpdate = async () => {
   let response
   let body
+  const betaChannel = config.get('poi.betaChannel', false)
   try {
     [response, body] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/latest.json`, {
       method: 'GET',
@@ -37,7 +70,8 @@ const checkUpdate = async () => {
   }
 
   if ((response || {}).statusCode === 200){
-    const version = body.version
+    const version = betaChannel && semver.gt(body.betaVersion, body.version) ? body.betaVersion || 'v0.0.0' : body.version
+    const channel = version.includes('beta') ? '-beta' : ''
     console.log(`Remote version: ${version}. Current version: ${POI_VERSION}`)
     const knownVersion = config.get('poi.update.knownVersion', POI_VERSION)
 
@@ -46,7 +80,7 @@ const checkUpdate = async () => {
       let log
       try {
         const currentLang = LANG.includes(language) ? language : 'en-US'
-        ;[resp, log] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/${currentLang}.md`, {
+        ;[resp, log] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`, {
           method: 'GET',
           headers: {
             'User-Agent': `poi v${POI_VERSION}`,
@@ -81,13 +115,13 @@ const toggleUpdate = (version, log) => {
       style: 'success',
     },
     {
-      name: `${__('Download latest version')} (${__('Aliyun')})`,
-      func: doUpdate,
+      name: `${__('Download latest version')} (${__('Manually')})`,
+      func: openHomePage,
       style: 'primary',
     },
     {
-      name: `${__('Download latest version')} (Github)`,
-      func: doUpdateGithub,
+      name: `${__('Download latest version')} (${__('Auto update')})`,
+      func: doUpdate,
       style: 'primary',
     },
   ]
