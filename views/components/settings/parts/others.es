@@ -105,8 +105,11 @@ const Others = connect(state => ({
       <div id='poi-others'>
         <Grid>
           <Col xs={12}>
-            {(__("Current version"))}: {POI_VERSION}
+            <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />
           </Col>
+        </Grid>
+        <Divider text={`${__("Current version")}: ${POI_VERSION}`} />
+        <Grid>
           <Col xs={6}>
             <Button onClick={checkUpdate}>{__("Check Update")}</Button>
           </Col>
@@ -116,10 +119,7 @@ const Others = connect(state => ({
                     configName="poi.betaChannel"
                     defaultVal={false} />
           </Col>
-        </Grid>
-        <Grid>
           <Col xs={12}>
-            <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />
             <p>{__("poi-description %s", process.versions.electron)}</p>
             {
               (window.language === "zh-CN" || window.language === "zh-TW") ?
