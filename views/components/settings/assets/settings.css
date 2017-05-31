@@ -269,3 +269,11 @@
   margin: 0;
   padding: 14px;
 }
+#SettingsView .update-progress {
+  padding-right: 20px;
+}
+#SettingsView .update-progress .progress {
+  height: 10px;
+  margin-bottom: 4px;
+}
+

@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { shell, remote } from 'electron'
 import Divider from './divider'
-import { Grid, Col, Button } from 'react-bootstrap'
+import { Grid, Col, Row, Button, ProgressBar } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, throttle } from 'lodash'
 import { sync as globSync } from 'glob'
 import { CheckboxLabelConfig } from './utils'
 import { checkUpdate } from 'views/services/update'
 
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const { changeChannel } = remote.require('./lib/updater')
+const { changeChannel, updater } = remote.require('./lib/updater')
 
 config.on('config.set', (path, value) => {
   if (path === 'poi.betaChannel') {
@@ -35,6 +35,38 @@ const fetchFromRemote = async (url, cacheMode = "default") => {
     } catch (e) {
       return
     }
+  }
+}
+
+class DownloadProgress extends Component {
+  state = {
+    bytesPerSecond: 0,
+    percent: 0,
+    total: 0,
+    transferred: 0,
+  }
+  updateProgress = progress => {
+    console.log(progress.bytePerSecond)
+    this.setState(progress)
+  }
+  componentDidMount() {
+    if (!this.updateProgressDebounced) {
+      this.updateProgressDebounced = throttle(this.updateProgress, 1500)
+    }
+    if (process.platform === 'win32') {
+      updater.on('download-progress', progress => this.updateProgressDebounced(progress))
+    }
+  }
+  render () {
+    return this.state.percent > 0 && process.platform === 'win32' && (
+      <h5 className="update-progress">
+        <ProgressBar bsStyle='success'
+          now={this.state.percent} />
+        <span>
+          {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
+        </span>
+      </h5>
+    )
   }
 }
 
@@ -108,7 +140,16 @@ const Others = connect(state => ({
             <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />
           </Col>
         </Grid>
-        <Divider text={`${__("Current version")}: ${POI_VERSION}`} />
+        <Grid>
+          <Row>
+            <Col xs={6}>
+              <Divider text={`${__("Current version")}: ${POI_VERSION}`} />
+            </Col>
+            <Col xs={6}>
+              <DownloadProgress />
+            </Col>
+          </Row>
+        </Grid>
         <Grid>
           <Col xs={6}>
             <Button onClick={checkUpdate}>{__("Check Update")}</Button>
