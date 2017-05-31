@@ -52,7 +52,7 @@ updater.on('error', (event, error) => {
   })
 })
 
-const checkUpdate = async () => {
+export const checkUpdate = async () => {
   let response
   let body
   const betaChannel = config.get('poi.betaChannel', false)

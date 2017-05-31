@@ -6,7 +6,7 @@
   "Proxy": "プロキシ",
   "Plugins": "プラグイン(拡張機能)",
   "About": "poiについて",
-  "poi-description %s %s": "poi %s は Electron v%s と React.js で開発した、クロスプラットフォーム対応のオープンソースの艦コレ専用ブラウザです。poi でゲームをプレイする場合の送受信情報は Chrome でプレイしている場合と同じです、送受信内容に対する改変は、一切行っておりません。poi 本体は基本的なブラウジング機能を提供し、拡張機能はプラグインとしで提供する。",
+  "poi-description %s": "poi は Electron v%s と React.js で開発した、クロスプラットフォーム対応のオープンソースの艦コレ専用ブラウザです。poi でゲームをプレイする場合の送受信情報は Chrome でプレイしている場合と同じです、送受信内容に対する改変は、一切行っておりません。poi 本体は基本的なブラウジング機能を提供し、拡張機能はプラグインとしで提供する。",
   "Database": "統計データベース",
   "Wiki": "ウィキ",
   "Proxy setting": "プロキシ設定",
@@ -146,5 +146,7 @@
   "Poi is running in safe mode, plugins are not enabled automatically.": "poi がセーフモードで実行されている、プラグインは自動的に有効になっていません。",
   "Enter safe mode on next startup": "次回起動時にセーフモードにする",
   "Display tray icon": "トレイのアイコンを表示する",
-  "Send data to Google Analytics": "使用統計データを Google Analytics に自動送信する"
+  "Send data to Google Analytics": "使用統計データを Google Analytics に自動送信する",
+  "Current version": "現在のバージョン",
+  "Check update of beta version": "ベータ版を確認する"
 }

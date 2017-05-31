@@ -1,13 +1,22 @@
 import React, { Component } from 'react'
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import Divider from './divider'
 import { Grid, Col, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { sync as globSync } from 'glob'
+import { CheckboxLabelConfig } from './utils'
+import { checkUpdate } from 'views/services/update'
 
-const {ROOT, POI_VERSION, CONST, i18n} = window
+const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
+const { changeChannel } = remote.require('./lib/updater')
+
+config.on('config.set', (path, value) => {
+  if (path === 'poi.betaChannel') {
+    changeChannel(value ? "beta" : "latest")
+  }
+})
 
 const serverList = [
   "https://poi.io/fcd/",
@@ -96,8 +105,22 @@ const Others = connect(state => ({
       <div id='poi-others'>
         <Grid>
           <Col xs={12}>
+            {(__("Current version"))}: {POI_VERSION}
+          </Col>
+          <Col xs={6}>
+            <Button onClick={checkUpdate}>{__("Check Update")}</Button>
+          </Col>
+          <Col xs={6}>
+            <CheckboxLabelConfig
+                    label={__('Check update of beta version')}
+                    configName="poi.betaChannel"
+                    defaultVal={false} />
+          </Col>
+        </Grid>
+        <Grid>
+          <Col xs={12}>
             <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />
-            <p>{__("poi-description %s %s", POI_VERSION, process.versions.electron)}</p>
+            <p>{__("poi-description %s", process.versions.electron)}</p>
             {
               (window.language === "zh-CN" || window.language === "zh-TW") ?
                 <div>

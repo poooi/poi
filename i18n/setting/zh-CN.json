@@ -6,7 +6,7 @@
   "Proxy": "网络代理",
   "Plugins": "扩展程序",
   "About": "关于 poi",
-  "poi-description %s %s": "poi %s 基于 Electron v%s 和 React.js 开发，是一个开源的跨平台舰队 Collection 浏览器。poi 的游戏行为与 Chrome 一致，原则上不提供任何影响收发包的功能。poi 仅提供基本浏览器功能，扩展功能请等待插件开发。",
+  "poi-description %s": "poi 基于 Electron v%s 和 React.js 开发，是一个开源的跨平台舰队 Collection 浏览器。poi 的游戏行为与 Chrome 一致，原则上不提供任何影响收发包的功能。poi 仅提供基本浏览器功能，扩展功能请等待插件开发。",
   "Database": "掉落数据统计",
   "Wiki": "更多帮助与指南查看 poi wiki",
   "Proxy setting": "代理设置",
@@ -146,5 +146,7 @@
   "Poi is running in safe mode, plugins are not enabled automatically.": "Poi 运行在安全模式下，插件没有自动启用。",
   "Enter safe mode on next startup": "下次启动进入安全模式",
   "Display tray icon": "显示托盘图标",
-  "Send data to Google Analytics": "向 Google Analytics 发送统计数据"
+  "Send data to Google Analytics": "向 Google Analytics 发送统计数据",
+  "Current version": "现在版本",
+  "Check update of beta version": "检查测试版更新"
 }
