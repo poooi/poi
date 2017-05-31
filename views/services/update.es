@@ -35,7 +35,7 @@ updater.on('update-available', () => {
 })
 
 updater.on('update-downloaded', () => {
-  window.toast(__('Quit app to install to take effect.'), {
+  window.toast(__('Quit app and install updates'), {
     type: 'success',
     title: __('Update successful'),
   })
@@ -46,7 +46,7 @@ updater.on('update-not-available', () => {
 })
 
 updater.on('error', (event, error) => {
-  window.toast(__('Please try again or download manually.'), {
+  window.toast(__('Please try again or download manually'), {
     type: 'danger',
     title: __('Update failed'),
   })
@@ -115,12 +115,12 @@ const toggleUpdate = (version, log) => {
       style: 'success',
     },
     {
-      name: `${__('Download latest version')} (${__('Manually')})`,
+      name: `${__('Manually download')}`,
       func: openHomePage,
       style: 'primary',
     },
     {
-      name: `${__('Download latest version')} (${__('Auto update')})`,
+      name: `${__('Auto update')}`,
       func: doUpdate,
       style: 'primary',
     },

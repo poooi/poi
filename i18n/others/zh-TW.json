@@ -34,6 +34,12 @@
   "Update": "更新",
   "Download latest version": "下載最新版",
   "Aliyun": "阿里雲",
+  "Manually download": "手動下載",
+  "Auto update": "自動更新",
+  "Update successful": "更新成功",
+  "Quit app and install updates": "退出以安裝更新",
+  "Update failed": "更新失敗",
+  "Please try again or download manually": "重新更新或者手動下載更新",
   "Connection failed after %s retry": {
     "one": "網路連線錯誤，正在進行第 %s 次重試",
     "other": "網路連線錯誤，正在進行第 %s 次重試"

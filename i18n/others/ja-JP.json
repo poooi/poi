@@ -34,6 +34,12 @@
   "Update": "更新",
   "Download latest version": "最新バージョンをダウンロードします",
   "Aliyun": "Aliyun",
+  "Manually download": "手動ダウンロード",
+  "Auto update": "自動更新",
+  "Update successful": "更新成功",
+  "Quit app and install updates": "アプリを終了して更新をインストールする",
+  "Update failed": "更新失敗",
+  "Please try again or download manually": "再試行或は手動でダウンロードする",
   "Connection failed after %s retry": {
     "one": "ネットワークエラーが発生しました。今第 %s 回の再試行しています",
     "other": "ネットワークエラーが発生しました。今第 %s 回の再試行しています"
