@@ -419,3 +419,16 @@ poi-info {
 .airbase-state-label {
   margin: 2px;
 }
+/*progress bar*/
+.progress-bar-red {
+  background-color: #D50000;
+}
+.progress-bar-orange {
+  background-color: #F57C00;
+}
+.progress-bar-yellow {
+  background-color: #FDD835;
+}
+.progress-bar-green {
+  background-color: #43A047;
+}

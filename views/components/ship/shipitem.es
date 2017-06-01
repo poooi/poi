@@ -25,13 +25,13 @@ import {
 
 function getMaterialStyle(percent) {
   if (percent <= 50)
-    return 'danger'
+    return 'red'
   else if (percent <= 75)
-    return 'warning'
+    return 'orange'
   else if (percent < 100)
-    return 'info'
+    return 'yellow'
   else
-    return 'success'
+    return 'green'
 }
 
 const shipRowDataSelectorFactory = memoize((shipId) =>

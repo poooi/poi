@@ -101,13 +101,13 @@ export function getShipLabelStatus(ship, $ship, inRepair, escaped) {
 
 export function getHpStyle(percent) {
   if (percent <= 25) {
-    return 'danger'
+    return 'red'
   } else if (percent <= 50){
-    return 'warning'
+    return 'orange'
   } else if (percent <= 75){
-    return 'info'
+    return 'yellow'
   } else {
-    return 'success'
+    return 'green'
   }
 }
 
