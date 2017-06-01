@@ -62,7 +62,9 @@
         ga('set', 'location', `https://app.poi.io/${window.POI_VERSION}/`);
         ga('set', 'checkProtocolTask', null);
         ga('send', 'pageview');
-        ga('send', 'event', 'theme', window.config.get('poi.theme'));
+        setTimeout(() => {
+          ga('send', 'event', 'theme', window.config.get('poi.theme', 'paperdark'));
+        }, 5000);
         setInterval(() => {
           ga('send', 'event', 'heartbeat');
         }, 300000);
