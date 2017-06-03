@@ -9,7 +9,7 @@ const __ = i18n.others.__.bind(i18n.others)
 
 const request = Promise.promisifyAll(require('request'))
 const requestAsync = Promise.promisify(request, {multiArgs: true})
-const { updater } = remote.require('./lib/updater')
+const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 const {error} = require('../../lib/utils')
 

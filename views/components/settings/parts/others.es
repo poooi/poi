@@ -10,7 +10,7 @@ import { checkUpdate } from 'views/services/update'
 
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const { changeChannel, updater } = remote.require('./lib/updater')
+const { changeChannel, updater } = process.platform !== linux ? remote.require('./lib/updater') : {}
 
 config.on('config.set', (path, value) => {
   if (path === 'poi.betaChannel') {
