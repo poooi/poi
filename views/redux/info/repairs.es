@@ -23,7 +23,7 @@ export function reducer(state=[], {type, body, postBody}) {
     state = state.slice()
     state[api_ndock_id-1] = {
       ...state[api_ndock_id-1],
-      emptyRepair,
+      ...emptyRepair,
     }
     state
   }
