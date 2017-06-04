@@ -11,7 +11,7 @@ const { buildAsync,
   cleanFiles,
   installThemeAsync,
   packWinReleaseAsync,
-  compileToJsAsync } = require('./build_detail')
+  compileToJsAsync } = require('./build-detail')
 
 const package_json = require('./package.json')
 
