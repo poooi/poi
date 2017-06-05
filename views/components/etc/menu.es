@@ -104,10 +104,6 @@ if (process.platform !== 'darwin') {
     {
       label: __('Themes'),
       submenu: [
-        {
-          label: __('Apply Theme'),
-          submenu: [],
-        },
         { type: 'separator' },
         {
           label: __('Next Theme'),
@@ -311,10 +307,6 @@ if (process.platform !== 'darwin') {
     {
       label: __('Themes'),
       submenu: [
-        {
-          label: __('Apply Theme'),
-          submenu: [],
-        },
         { type: 'separator' },
         {
           label: __('Next Theme'),
@@ -392,8 +384,9 @@ if (process.platform !== 'darwin') {
 }
 
 const themepos = process.platform === 'darwin' ? 3 : 2
-window.allThemes.map((th) => {
-  template[themepos].submenu[0].submenu.push({
+for (let i = window.allThemes.length - 1; i >=0; i--) {
+  const th = window.allThemes[i]
+  template[themepos].submenu.unshift({
     label: th === '__default__' ? 'Default' : th.charAt(0).toUpperCase() + th.slice(1),
     type: 'radio',
     checked: window.theme === th,
@@ -403,7 +396,7 @@ window.allThemes.map((th) => {
       }
     },
   })
-})
+}
 
 const appMenu = Menu.buildFromTemplate(template)
 if (process.platform === 'darwin') {
@@ -418,9 +411,11 @@ if (process.platform === 'darwin') {
   }
 }
 
-const themeMenuList = appMenu.items[themepos].submenu.items[0].submenu.items
+const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
   if (path === 'poi.theme') {
     themeMenuList[window.allThemes.indexOf(value)].checked = true
   }
 })
+
+export const menuTemplate = template

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
 import { Provider } from 'react-redux'
+import { TitleBar } from 'electron-react-titlebar'
 
 import { store } from './create-store'
 import ControlledTabArea from './tabarea'
@@ -24,7 +25,7 @@ window.hack = {}
 require('./services/alert')
 
 // poi menu
-require('./components/etc/menu')
+const { menuTemplate } = require('./components/etc/menu')
 
 const CustomCssInjector = () => {
   const cssPath = path.join(EXROOT, 'hack', 'custom.css')
@@ -34,6 +35,12 @@ const CustomCssInjector = () => {
   )
 }
 
+if (process.platform === 'win32') {
+  ReactDOM.render(
+    <TitleBar menu={menuTemplate} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />,
+    $('title-bar')
+  )
+}
 ReactDOM.render(
   <Provider store={store}>
     <PoiControl />

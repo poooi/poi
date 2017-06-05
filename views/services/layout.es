@@ -8,6 +8,7 @@ $('#layout-css').setAttribute('href',
   `./assets/css/layout.${config.get('poi.layout', 'horizontal')}.css`)
 
 const poiControlHeight = 30
+const titleBarHeight = process.platform === 'win32' ? 28 : 0
 const additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
@@ -29,6 +30,8 @@ const getFlexCSS = ({layout, webviewWidth}) => {
 }
 
 const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
+  let { innerHeight, innerWidth } = window
+  innerHeight -= titleBarHeight
   if (webviewWidth === 0) {
     return `
       .toast-poi {
@@ -39,15 +42,15 @@ const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
   } else if (layout === 'horizontal') {
     return `
       .toast-poi {
-        bottom: ${(window.innerHeight - webviewHeight - 30) / 2 + 36}px;
-        right: ${(window.innerWidth - webviewWidth) + 12}px;
+        bottom: ${(innerHeight - webviewHeight - 30) / 2 + 36}px;
+        right: ${(innerWidth - webviewWidth) + 12}px;
       }
     `
   } else {
     return `
       .toast-poi {
-        bottom: ${(window.innerHeight - webviewHeight - 30) + 36}px;
-        right: ${(window.innerWidth - webviewWidth) / 2 + 12}px;
+        bottom: ${(innerHeight - webviewHeight - 30) + 36}px;
+        right: ${(innerWidth - webviewWidth) / 2 + 12}px;
       }
     `
   }
@@ -75,13 +78,15 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
 
 const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed, reversed}) => {
   // Apply css
+  let { innerHeight } = window
+  innerHeight -= titleBarHeight
   additionalStyle.innerHTML = `
     poi-app {
       ${layout === 'horizontal' ? `
         width: 0;
         height: 0;
       ` : `
-        height: calc(${window.innerHeight}px - ${webviewHeight}px - 30px * ${zoomLevel})
+        height: calc(${innerHeight}px - ${webviewHeight}px - 30px * ${zoomLevel})
       `}
     }
     .kan-game-warpper {
@@ -133,7 +138,7 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
   // Adjust webview height & position
   if (layout === 'horizontal') {
     $('kan-game #webview-wrapper').style.marginLeft = '0'
-    $('kan-game').style.marginTop = `${Math.max(0, Math.floor((window.innerHeight - webviewHeight - poiControlHeight * zoomLevel) / 2.0))}px`
+    $('kan-game').style.marginTop = `${Math.max(0, Math.floor((innerHeight - webviewHeight - poiControlHeight * zoomLevel) / 2.0))}px`
   } else {
     $('kan-game #webview-wrapper').style.marginLeft = `${Math.max(0, Math.floor((window.innerWidth - webviewWidth) / 2.0))}px`
     $('kan-game').style.marginTop = '0'
@@ -157,13 +162,15 @@ const adjustSize = () => {
   const doubleTabbed = config.get('poi.tabarea.double', false)
   const panelMinSize = config.get('poi.panelMinSize', 1)
   let webviewWidth = config.get('poi.webview.width', -1)
-  let webviewHeight = Math.min((window.innerHeight - poiControlHeight * zoomLevel) * devicePixelRatio , Math.round(webviewWidth / 800.0 * 480.0))
+  let webviewHeight = Math.min((window.innerHeight - poiControlHeight * zoomLevel - titleBarHeight) * devicePixelRatio , Math.round(webviewWidth / 800.0 * 480.0))
   const useFixedResolution = (webviewWidth !== -1)
+  let { innerHeight } = window
+  innerHeight -= titleBarHeight
 
   // Calculate webview size
   if (!useFixedResolution) {
     if (layout === 'horizontal') {
-      webviewHeight = window.innerHeight - poiControlHeight * zoomLevel
+      webviewHeight = innerHeight - poiControlHeight * zoomLevel
       webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
     } else {
       webviewWidth = window.innerWidth
@@ -179,8 +186,8 @@ const adjustSize = () => {
   let cap
   if (layout === 'vertical') {
     cap = Math.ceil(200 * panelMinSize * zoomLevel)
-    if (window.innerHeight - webviewHeight < cap) {
-      webviewHeight = window.innerHeight - cap
+    if (innerHeight - webviewHeight < cap) {
+      webviewHeight = innerHeight - cap
       webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
     }
   } else {
@@ -191,17 +198,17 @@ const adjustSize = () => {
     }
     if (window.innerWidth - webviewWidth < cap) {
       webviewWidth = window.innerWidth - cap
-      webviewHeight = Math.min(window.innerHeight - poiControlHeight * zoomLevel, Math.round(webviewWidth / 800.0 * 480))
+      webviewHeight = Math.min(innerHeight - poiControlHeight * zoomLevel, Math.round(webviewWidth / 800.0 * 480))
     }
   }
 
   // Calculate tabpanes' height
   let tabpaneHeight
   if (layout === 'horizontal') {
-    tabpaneHeight = `${window.innerHeight / zoomLevel - poiControlHeight * zoomLevel}px`
+    tabpaneHeight = `${innerHeight / zoomLevel - poiControlHeight * zoomLevel}px`
   }
   else {
-    tabpaneHeight = `${(window.innerHeight - webviewHeight - poiControlHeight * zoomLevel) / zoomLevel - poiControlHeight * zoomLevel}px`
+    tabpaneHeight = `${(innerHeight - webviewHeight - poiControlHeight * zoomLevel) / zoomLevel - poiControlHeight * zoomLevel}px`
   }
 
   // Update redux store
@@ -210,7 +217,7 @@ const adjustSize = () => {
     value: {
       window: {
         width: window.innerWidth,
-        height: window.innerHeight,
+        height: innerHeight,
       },
       webview: {
         width: webviewWidth,

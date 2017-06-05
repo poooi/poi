@@ -432,3 +432,6 @@ poi-info {
 .progress-bar-green {
   background-color: #4CAF50;
 }
+#electron-app-title-bar {
+  background-color: transparent !important;
+}

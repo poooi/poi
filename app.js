@@ -118,6 +118,7 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizeable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     titleBarStyle: 'hidden',
+    frame: process.platform !== 'win32',
     enableLargerThanScreen: true,
     webPreferences: {
       plugins: true,
