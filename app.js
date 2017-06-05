@@ -120,6 +120,7 @@ app.on('ready', () => {
     titleBarStyle: 'hidden',
     frame: process.platform !== 'win32',
     enableLargerThanScreen: true,
+    maximizable: true,
     webPreferences: {
       plugins: true,
     },
