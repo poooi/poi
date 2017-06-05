@@ -48,7 +48,7 @@
     "colors": "^1.1.2",
     "cson": "^4.0.0",
     "electron-log": "^2.2.6",
-    "electron-react-titlebar": "^0.1.0",
+    "electron-react-titlebar": "^0.2.0",
     "electron-updater": "^1.16.0",
     "fast-memoize": "^2.0.2",
     "font-awesome": "^4.7.0",
