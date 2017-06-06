@@ -365,7 +365,7 @@ export const sortFleetPossibleAaciList = triggeredShipAaciIds =>
 // return a list of AACIs that meet the requirement of ship and equipmenmt
 // ship: ship
 // equips: [[equip, onslot] for equip on ship]
-export const getShipAvaliableAACIs = (ship, equips) =>
+export const getShipAvailableAACIs = (ship, equips) =>
   Object.keys(AACITable)
   .filter((key) => {
     const type = AACITable[key]
@@ -384,7 +384,7 @@ export const getShipAllAACIs = ship =>
 
 // return the AACIs to trigger for a ship, it will be array due to exceptions
 export const getShipAACIs = (ship, equips) => {
-  const AACIs = getShipAvaliableAACIs(ship, equips)
+  const AACIs = getShipAvailableAACIs(ship, equips)
   const maxFixed = maxBy(AACIs, id => (AACITable[id] || {}).fixed || 0) || 0
   // Kinu kai 2 exception
   if (AACIs.includes(19)) {
