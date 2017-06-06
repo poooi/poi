@@ -32,8 +32,7 @@ window.loadTheme = (th) => {
 
 window.applyTheme = (th) => {
   config.set('poi.theme', th)
-  window.loadTheme(th)
-  const event = new CustomEvent( 'theme.change',{
+  const event = new CustomEvent('theme.change',{
     bubbles: true,
     cancelable: true,
     detail: {
@@ -46,3 +45,14 @@ window.applyTheme = (th) => {
 window.allThemes = ['__default__'].concat(glob.sync(`${ROOT}/assets/themes/*/`).map((dirPath) => (path.basename(dirPath))))
 config.setDefault('poi.theme', 'paperdark')
 window.loadTheme(config.get('poi.theme', 'paperdark'))
+
+const themeChangeHandler = (path, value) => {
+  if (path === 'poi.theme') {
+    window.loadTheme(value)
+  }
+}
+
+config.addListener('config.set', themeChangeHandler)
+window.addEventListener('unload', (e) => {
+  config.removeListener('config.set', themeChangeHandler)
+})
