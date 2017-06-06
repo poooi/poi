@@ -435,3 +435,6 @@ poi-info {
 #electron-app-title-bar {
   background-color: transparent !important;
 }
+#electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
+  opacity: 0.9 !important;
+}
