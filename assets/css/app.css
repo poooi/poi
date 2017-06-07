@@ -464,7 +464,7 @@ poi-info {
 }
 
 .metric-row>span {
-  width: calc(100% / 7);
+  width: calc(100% / 8);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: hidden;
