@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import { shell, remote } from 'electron'
 import Divider from './divider'
 import { Grid, Col, Row, Button, ProgressBar } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get, throttle } from 'lodash'
+import { get, throttle, sortBy } from 'lodash'
 import { sync as globSync } from 'glob'
 import { CheckboxLabelConfig } from './utils'
 import { checkUpdate } from 'views/services/update'
@@ -65,6 +65,87 @@ class DownloadProgress extends Component {
           {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
         </span>
       </h5>
+    )
+  }
+}
+
+class AppMetrics extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.getAppMetrics = remote.require('electron').app.getAppMetrics
+
+    this.state = {
+      metrics: [],
+      active: false,
+    }
+  }
+
+  collect = () => {
+    const metrics = this.getAppMetrics()
+
+    this.setState({
+      metrics: sortBy(JSON.parse(JSON.stringify(metrics)), 'pid'),
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.cycle) {
+      clearInterval(this.cycle)
+    }
+  }
+
+  handleClick = () => {
+    const { active } = this.state
+    if (active) {
+      this.cycle()
+      clearInterval(this.cycle)
+    } else {
+      this.cycle = setInterval(this.collect.bind(this), 5 * 1000)
+    }
+
+    this.setState({
+      active: !active,
+    })
+  }
+
+  render() {
+    const { metrics, active } = this.state
+    return (
+      <div>
+        <div><Button onClick={this.handleClick}>{__(active ? 'Turn monitor off' :'Turn monitor on')}</Button></div>
+        {
+          active &&
+          <div>
+            <div>
+              <span>PID</span>
+              {
+                ['type', 'working', 'peak', 'private', 'shared', 'CPU', 'wakeup'].map(str =>
+                  <span key={str}>{str}</span>
+                )
+              }
+            </div>
+            {
+              metrics.map(metric => (
+                <div className='info-tooltip-entry' key={metric.pid}>
+                  <span className='info-tooltip-item'>{metric.pid}</span>
+                  <span>{metric.type}</span>
+                  {
+                    ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
+                      <span key={prop}>{(metric.memory || [])[prop] || 'NA'}</span>
+                    )
+                  }
+                  {
+                    ['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop =>
+                      <span key={prop}>{(metric.cpu || [])[prop] || 'NA'}</span>
+                    )
+                  }
+                </div>
+              ))
+            }
+          </div>
+        }
+      </div>
     )
   }
 }
@@ -190,6 +271,10 @@ const Others = connect(state => ({
             </Button>
           </Col>
         </Grid>
+        <Divider text={__('Performance Monitor')} />
+        <Col xs={12}>
+          <AppMetrics />
+        </Col>
         <Divider text="Contributors" />
         <Grid>
         {
