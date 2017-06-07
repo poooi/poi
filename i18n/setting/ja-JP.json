@@ -151,5 +151,9 @@
   "Display tray icon": "トレイのアイコンを表示する",
   "Send data to Google Analytics": "使用統計データを Google Analytics に自動送信する",
   "Current version": "現在のバージョン",
-  "Check update of beta version": "ベータ版を確認する"
+  "Check update of beta version": "ベータ版を確認する",
+  "Performance Monitor": "パフォーマンスモニタ",
+  "Monitor on": "モニターオン",
+  "Monitor off": "モニターオフ",
+  "TOTAL": "合計"
 }

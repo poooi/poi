@@ -151,5 +151,9 @@
   "Display tray icon": "显示托盘图标",
   "Send data to Google Analytics": "向 Google Analytics 发送统计数据",
   "Current version": "现在版本",
-  "Check update of beta version": "检查测试版更新"
+  "Check update of beta version": "检查测试版更新",
+  "Performance Monitor": "性能监视器",
+  "Monitor on": "监视器已打开",
+  "Monitor off": "监视器未开启",
+  "TOTAL": "总计"
 }
