@@ -2,6 +2,13 @@
  * This file contains utility functions that is related to the game mechanism,
  * or formatting instructions to game data.
  */
+import { ProgressBar } from 'react-bootstrap'
+import bootstrapUtils from 'react-bootstrap/lib/utils/bootstrapUtils'
+
+bootstrapUtils.addStyle(ProgressBar, 'green')
+bootstrapUtils.addStyle(ProgressBar, 'yellow')
+bootstrapUtils.addStyle(ProgressBar, 'orange')
+bootstrapUtils.addStyle(ProgressBar, 'red')
 
 import { between } from './tools'
 
