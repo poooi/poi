@@ -3,7 +3,7 @@ import { shell, remote } from 'electron'
 import Divider from './divider'
 import { Grid, Col, Row, Button, ProgressBar } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get, throttle, sortBy } from 'lodash'
+import { get, throttle, sortBy, round, sumBy } from 'lodash'
 import { sync as globSync } from 'glob'
 import { CheckboxLabelConfig } from './utils'
 import { checkUpdate } from 'views/services/update'
@@ -77,6 +77,7 @@ class AppMetrics extends PureComponent {
 
     this.state = {
       metrics: [],
+      total: {},
       active: false,
     }
   }
@@ -84,8 +85,17 @@ class AppMetrics extends PureComponent {
   collect = () => {
     const metrics = this.getAppMetrics()
 
+    const total = {}
+
+    ;['workingSetSize', 'peakWorkingSetSize'].map(prop =>
+      total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)
+    )
+
+    total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
+
     this.setState({
       metrics: sortBy(JSON.parse(JSON.stringify(metrics)), 'pid'),
+      total,
     })
   }
 
@@ -98,9 +108,9 @@ class AppMetrics extends PureComponent {
   handleClick = () => {
     const { active } = this.state
     if (active) {
-      this.cycle()
       clearInterval(this.cycle)
     } else {
+      this.collect()
       this.cycle = setInterval(this.collect.bind(this), 5 * 1000)
     }
 
@@ -110,39 +120,65 @@ class AppMetrics extends PureComponent {
   }
 
   render() {
-    const { metrics, active } = this.state
+    const { metrics, active, total } = this.state
     return (
       <div>
-        <div><Button onClick={this.handleClick}>{__(active ? 'Turn monitor off' :'Turn monitor on')}</Button></div>
+        <div>
+          <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
+            {
+              active
+              ? <span>{__('Monitor on')}</span>
+              : <span>{__('Monitor off')}</span>
+            }
+          </Button>
+        </div>
         {
           active &&
-          <div>
-            <div>
+          <div className="metric-table">
+            <div className="metric-row metric-haeder">
               <span>PID</span>
               {
-                ['type', 'working', 'peak', 'private', 'shared', 'CPU', 'wakeup'].map(str =>
+                ['type', 'working/MB', 'peak/MB', 'private/MB', 'shared/MB', 'CPU/%', 'wakeup'].map(str =>
                   <span key={str}>{str}</span>
                 )
               }
             </div>
             {
               metrics.map(metric => (
-                <div className='info-tooltip-entry' key={metric.pid}>
-                  <span className='info-tooltip-item'>{metric.pid}</span>
+                <div className='metric-row' key={metric.pid}>
+                  <span>{metric.pid}</span>
                   <span>{metric.type}</span>
                   {
                     ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
-                      <span key={prop}>{(metric.memory || [])[prop] || 'NA'}</span>
+                      <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
                     )
                   }
                   {
                     ['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop =>
-                      <span key={prop}>{(metric.cpu || [])[prop] || 'NA'}</span>
+                      <span key={prop}>{round((metric.cpu || [])[prop], 1)}</span>
                     )
                   }
                 </div>
               ))
             }
+            <div className='metric-row metric-total'>
+              <span>
+                TOTAL
+              </span>
+              <span />
+              <span>
+                {total.workingSetSize}
+              </span>
+              <span>
+                {total.peakWorkingSetSize}
+              </span>
+              <span />
+              <span />
+              <span>
+                {total.percentCPUUsage}
+              </span>
+              <span />
+            </div>
           </div>
         }
       </div>
