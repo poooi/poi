@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import { Provider } from 'react-redux'
 import { TitleBar } from 'electron-react-titlebar'
+import { remote, webFrame } from 'electron'
 
 import { store } from './create-store'
 import ControlledTabArea from './tabarea'
@@ -14,9 +15,15 @@ import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 
 const {EXROOT, $} = window
+const config = remote.require('./lib/config')
 
 // Disable OSX zoom
-require('electron').webFrame.setZoomLevelLimits(1, 1)
+webFrame.setZoomLevelLimits(1, 1)
+
+// Workaround for false BrowserWindow size
+if (config.get('poi.window.width') && config.get('poi.window.height')) {
+  remote.getCurrentWindow().setSize(config.get('poi.window.width'), config.get('poi.window.height'))
+}
 
 // Hackable panels
 window.hack = {}
