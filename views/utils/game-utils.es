@@ -3,12 +3,12 @@
  * or formatting instructions to game data.
  */
 import { ProgressBar } from 'react-bootstrap'
-import bootstrapUtils from 'react-bootstrap/lib/utils/bootstrapUtils'
+import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
 
-bootstrapUtils.addStyle(ProgressBar, 'green')
-bootstrapUtils.addStyle(ProgressBar, 'yellow')
-bootstrapUtils.addStyle(ProgressBar, 'orange')
-bootstrapUtils.addStyle(ProgressBar, 'red')
+addStyle(ProgressBar, 'green')
+addStyle(ProgressBar, 'yellow')
+addStyle(ProgressBar, 'orange')
+addStyle(ProgressBar, 'red')
 
 import { between } from './tools'
 
