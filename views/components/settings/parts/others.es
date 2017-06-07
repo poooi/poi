@@ -139,7 +139,7 @@ class AppMetrics extends PureComponent {
               <span>PID</span>
               {
                 ['type', 'working/MB', 'peak/MB', 'private/MB', 'shared/MB', 'CPU/%', 'wakeup'].map(str =>
-                  <span key={str}>{str}</span>
+                  <span key={str} title={str}>{str}</span>
                 )
               }
             </div>
@@ -147,7 +147,7 @@ class AppMetrics extends PureComponent {
               metrics.map(metric => (
                 <div className='metric-row' key={metric.pid}>
                   <span>{metric.pid}</span>
-                  <span>{metric.type}</span>
+                  <span title={metric.type}>{metric.type}</span>
                   {
                     ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
                       <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
