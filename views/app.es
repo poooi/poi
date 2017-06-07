@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
 import { Provider } from 'react-redux'
-import { TitleBar } from 'electron-react-titlebar'
 import { remote, webFrame } from 'electron'
 
 import { store } from './create-store'
@@ -31,9 +30,6 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
-// poi menu
-const { menuTemplate } = require('./components/etc/menu')
-
 const CustomCssInjector = () => {
   const cssPath = path.join(EXROOT, 'hack', 'custom.css')
   fs.ensureFileSync(cssPath)
@@ -43,8 +39,9 @@ const CustomCssInjector = () => {
 }
 
 if (process.platform === 'win32') {
+  const { TitleBarWrapper } = require('./components/etc/menu')
   ReactDOM.render(
-    <TitleBar menu={menuTemplate} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />,
+    <TitleBarWrapper />,
     $('title-bar')
   )
 }

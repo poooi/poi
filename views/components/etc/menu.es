@@ -1,4 +1,9 @@
+import React, { Component } from 'react'
 import { remote, shell } from 'electron'
+import { TitleBar } from 'electron-react-titlebar'
+import { reduxSet } from 'views/utils/tools'
+import { get } from 'lodash'
+import path from 'path'
 
 const {Menu} = remote.require('electron')
 const {openExternal} = shell
@@ -418,4 +423,27 @@ config.on('config.set', (path, value) => {
   }
 })
 
-export const menuTemplate = template
+export class TitleBarWrapper extends Component {
+  state = {
+    menu: template,
+  }
+  handleThemeChange = (path, value) => {
+    if (path === 'poi.theme') {
+      let newTemplate = [...this.state.menu]
+      for (let i = 0; i < newTemplate[themepos].submenu.length; i++) {
+        if (get(newTemplate, `${themepos}.submenu.${i}.type`) === 'radio')
+          newTemplate = reduxSet(newTemplate, [themepos, 'submenu', i, 'checked'], get(newTemplate, `${themepos}.submenu.${i}.label`).toLowerCase() === value)
+      }
+      this.setState({ menu: newTemplate })
+    }
+  }
+  componentDidMount = () => {
+    config.addListener('config.set', this.handleThemeChange)
+  }
+  componentWillUnmount = () => {
+    config.removeListener('config.set', this.handleThemeChange)
+  }
+  render () {
+    return <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />
+  }
+}
