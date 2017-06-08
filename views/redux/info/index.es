@@ -12,6 +12,7 @@ import {reducer as resources} from './resources'
 import {reducer as maps} from './maps'
 import {reducer as quests} from './quests'
 import airbase from './airbase'
+import presets from './presets'
 
 export const reducer = reduceReducers(
   (state, action) => {
@@ -35,5 +36,6 @@ export const reducer = reduceReducers(
     maps,
     quests,
     airbase,
+    presets,
   }),
 )
