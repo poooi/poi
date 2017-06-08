@@ -434,6 +434,10 @@ poi-info {
 }
 #electron-app-title-bar {
   background-color: transparent !important;
+  box-sizing: content-box !important;
+}
+#electron-app-title-bar * {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
 }
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
   opacity: 0.9 !important;
