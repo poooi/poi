@@ -3,8 +3,7 @@ require('babel-register')(require('../babel.config'))
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
-import lodash from 'lodash'        // TODO: Backward compatibility
-import jQuery from 'jquery'
+import lodash from 'lodash'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import FontAwesome  from 'react-fontawesome'
@@ -34,7 +33,6 @@ window.dbg.init()
 window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
-window.jQuery = jQuery
 window.React = React
 window.ReactDOM = ReactDOM
 window.FontAwesome = FontAwesome
@@ -93,7 +91,6 @@ require('./env-parts/i18n-config')
 // msg=null: Sound-only notification.
 require('./env-parts/notif-center')
 require('./env-parts/modal')
-require('./env-parts/toast')
 
 // Custom theme
 // You should call window.applyTheme() to apply a theme properly.
@@ -105,5 +102,10 @@ require('./env-parts/data-resolver')
 // Getter
 require('./env-parts/getter')
 
-// add devtool debug message print
-require('./env-parts/devtool-message')
+// Only used by main window
+if (window.isMain) {
+  // Toast
+  require('./env-parts/toast')
+  // Add devtool debug message print
+  require('./env-parts/devtool-message')
+}
