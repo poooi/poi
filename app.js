@@ -83,6 +83,9 @@ if (process.platform === 'win32') {
   app.commandLine.appendSwitch('enable-use-zoom-for-dsf', 'false')
 }
 
+// Test: enable JavaScript experimental features
+app.commandLine.appendSwitch('js-flags', "--harmony")
+
 app.on ('window-all-closed', () => {
   shortcut.unregister()
   app.quit()
