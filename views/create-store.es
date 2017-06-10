@@ -52,7 +52,7 @@ remote.getCurrentWindow().on('close', (e) => {
 
 //### Executing code ###
 
-export const store = window.dbg.isEnabled() ?
+export const store = (window.dbg && window.dbg.isEnabled()) ?
   createStore(
     reducerFactory(),
     storeCache,

@@ -20,16 +20,21 @@ window.POI_VERSION = remote.getGlobal('POI_VERSION')
 window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME')
 window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appIcon = remote.getGlobal('appIcon')
-fs.ensureDirSync(window.PLUGIN_PATH)
-fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
 window.isSafeMode = remote.getGlobal('isSafeMode')
+
+if (window.isMain) {
+  // Plugins
+  fs.ensureDirSync(window.PLUGIN_PATH)
+  fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
+  // Debug
+  window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
+  window.dbg.init()
+}
 
 // Add ROOT to `require` search path
 require('module').globalPaths.push(window.ROOT)
 
 // Shortcuts and Components
-window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
-window.dbg.init()
 window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
