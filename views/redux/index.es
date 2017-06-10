@@ -45,12 +45,12 @@ export function reducerFactory(extensionConfig) {
     sortie,
     timers,
     config,
-    layout,
     battle,
-    plugins,
     misc,
     fcd,
-    ui,
+    plugins: window.isMain ? plugins: (() => emptyObject),
+    layout: window.isMain ? layout: (() => emptyObject),
+    ui: window.isMain ? ui: (() => emptyObject),
     ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
   })
 }
