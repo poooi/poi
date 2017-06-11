@@ -244,7 +244,6 @@ export function enablePlugin(plugin, reread=true) {
   if (plugin.windowURL) {
     plugin.realClose = !config.get(`poi.backgroundProcess.${plugin.id}`, !plugin.realClose)
   }
-  console.log(plugin.id, plugin.realClose)
   plugin = postEnableProcess(plugin)
   return plugin
 }
