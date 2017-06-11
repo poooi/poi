@@ -142,6 +142,7 @@
   "Switch to Plugin Automatically": "自動切換至擴展",
   "Enable autoswitch for main panel": "允許自動切換至主面板",
   "Enable auto switch": "允許自動切換",
+  "Keep plugin process running in background (re-enable to apply changes)": "允許擴展程式常駐後臺 (重新啟用擴展程式以生效)",
   "Safe Mode": "安全模式",
   "Poi is running in safe mode, plugins are not enabled automatically.": "Poi 運行在安全模式下，擴展程式沒有自動啓用。",
   "Enter safe mode on next startup": "下次啓動進入安全模式",

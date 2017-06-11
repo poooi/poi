@@ -115,13 +115,14 @@ class InstalledPlugin extends PureComponent {
     const outdatedLabelClass = classnames('update-label', {
       'hidden': !plugin.isOutdated,
     })
+    const settingAvailable = plugin.settingsClass || plugin.switchPluginPath || (!plugin.multiWindow && plugin.windowURL)
     const btnGroupClass = classnames('plugin-buttongroup', {
-      'btn-xs-12': plugin.settingsClass || plugin.switchPluginPath,
-      'btn-xs-8': !plugin.settingsClass && !plugin.switchPluginPath,
+      'btn-xs-12': settingAvailable,
+      'btn-xs-8': !settingAvailable,
     })
     const btnClass = classnames('plugin-control-button', {
-      'btn-xs-4': plugin.settingsClass || plugin.switchPluginPath,
-      'btn-xs-6': !plugin.settingsClass && !plugin.switchPluginPath,
+      'btn-xs-4': settingAvailable,
+      'btn-xs-6': !settingAvailable,
     })
     return (
       <Row className='plugin-wrapper'>
@@ -164,7 +165,7 @@ class InstalledPlugin extends PureComponent {
               <Col className='plugin-option' xs={5}>
                 <ButtonGroup bsSize='small' className={btnGroupClass}>
                   {
-                    (plugin.settingsClass || plugin.switchPluginPath)?
+                    settingAvailable?
                       <OverlayTrigger placement='top' overlay={
                          <Tooltip id={`${plugin.id}-set-btn`}>
                            {__('Settings')}
@@ -208,7 +209,7 @@ class InstalledPlugin extends PureComponent {
             </Row>
             <Row>
               {
-                (plugin.settingsClass || plugin.switchPluginPath)?
+                settingAvailable?
                   <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
                     <Col xs={12}>
                       <Well>
@@ -219,6 +220,15 @@ class InstalledPlugin extends PureComponent {
                               label={__('Enable auto switch')}
                               configName={`poi.autoswitch.${plugin.id}`}
                               defaultVal={true} />
+                          </div>
+                        }
+                        {
+                          (!plugin.multiWindow && plugin.windowURL) &&
+                          <div>
+                            <CheckboxLabelConfig
+                              label={__('Keep plugin process running in background (re-enable to apply changes)')}
+                              configName={`poi.backgroundProcess.${plugin.id}`}
+                              defaultVal={!plugin.realClose} />
                           </div>
                         }
                         {
