@@ -46,7 +46,6 @@ class DownloadProgress extends Component {
     transferred: 0,
   }
   updateProgress = progress => {
-    console.log(progress.bytePerSecond)
     this.setState(progress)
   }
   componentDidMount() {
