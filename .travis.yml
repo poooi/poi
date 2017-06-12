@@ -9,7 +9,7 @@ matrix:
   include:
     - os: osx
     - os: linux
-      env: CC=clang CXX=clang++ npm_config_clang=1 TRAVIS_NODE_VERSION="7.7.1"
+      env: CC=clang CXX=clang++ npm_config_clang=1 TRAVIS_NODE_VERSION="7.7.4"
       compiler: clang
 
 addons:
@@ -31,6 +31,8 @@ cache:
 
 install:
   - nvm install $TRAVIS_NODE_VERSION
+  - nvm use 7
+  - npm install -g npm@latest
   - npm install --silent
 
 before_script:

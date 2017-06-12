@@ -12,9 +12,8 @@ init:
 install:
   - ps: Install-Product node 7 x64
   - git reset --hard HEAD
-  - npm install npm -g
+  - npm install npm@latest -g
   - npm install --silent
-  - npm prune
   - npm run lint
 
 test_script:
