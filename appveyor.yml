@@ -2,8 +2,8 @@ platform:
   - x64
 
 cache:
-  - node_modules
-  - '%APPDATA%\npm-cache'
+  # - node_modules
+  # - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
 init:
