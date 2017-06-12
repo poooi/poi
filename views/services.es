@@ -135,6 +135,7 @@ const handleExternalURL = (e, url) => {
     shell.openExternal(url)
 }
 
+remote.getCurrentWebContents().on('devtools-opened', e => window.dispatchEvent(new Event('resize')))
 remote.getCurrentWebContents().on('new-window', handleExternalURL)
 remote.getCurrentWebContents().on('will-navigate', handleExternalURL)
 stopNavigateAndNewWindow(remote.getCurrentWebContents().id)
