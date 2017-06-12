@@ -388,7 +388,7 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      await promisify(npm.commands.uninstall)([plugin.packageName])
+      await promisify(npm.commands.uninstall)(['--no-save', plugin.packageName])
       // Make sure the plugin no longer exists in PLUGIN_PATH
       // (unless it's a git repo)
       await safePhysicallyRemove(defaultPluginPath(plugin.packageName))
