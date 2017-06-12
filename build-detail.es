@@ -91,7 +91,12 @@ const getFlashUrl = (platform) =>
 const TARGET_LIST = [
   // Files
   'app.js',
-  'index.html', 'index.js', 'LICENSE', 'package.json', 'babel.config.js',
+  'index.html',
+  'index.js',
+  'LICENSE',
+  'package.json',
+  'babel.config.js',
+  'package-lock.json',
   // Folders
   'assets',
   'lib',
