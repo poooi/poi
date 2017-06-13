@@ -29,8 +29,8 @@ if (config.get('poi.disableHA', false)) {
 }
 
 // Cache size
-if (Number.isInteger(config.get('poi.cacheSize'))) {
-  app.commandLine.appendSwitch('disk-cache-size', 1048576 * config.get('poi.cacheSize', 320))
+if (Number.isInteger(parseInt(config.get('poi.cacheSize')))) {
+  app.commandLine.appendSwitch('disk-cache-size', 1048576 * parseInt(config.get('poi.cacheSize', 320)))
 }
 
 // check safe mode config
