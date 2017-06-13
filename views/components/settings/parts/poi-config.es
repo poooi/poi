@@ -13,6 +13,7 @@ import { CheckboxLabelConfig, RadioConfig, FolderPickerConfig } from './utils'
 
 const { config, toggleModal, i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
+const { session } = remote.require('electron')
 
 let language = window.language
 if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
@@ -215,7 +216,13 @@ const SetNotifyIndividualConfig = connect(() => {
   }
 })
 
-class ClearCacheCookieConfig extends Component {
+let t
+const ClearCacheCookieConfig = connect(state => ({
+  cacheSize: get(state.config, 'poi.cacheSize', 320),
+}))(class clearCacheCookieConfig extends Component {
+  state = {
+    cacheSize: 0,
+  }
   handleClearCookie = (e) => {
     remote.getCurrentWebContents().session.clearStorageData({storages: ['cookies']}, () => {
       toggleModal(__('Delete cookies'), __('Success!'))
@@ -226,9 +233,49 @@ class ClearCacheCookieConfig extends Component {
       toggleModal(__('Delete cache'), __('Success!'))
     })
   }
+  handleValueChange = e => {
+    config.set('poi.cacheSize', e.target.value)
+  }
+  handleUpdateCacheSize = () => {
+    session.defaultSession.getCacheSize(cacheSize => this.setState({ cacheSize }))
+  }
+  componentDidMount = () => {
+    this.handleUpdateCacheSize()
+    t = setInterval(this.handleUpdateCacheSize, 6000000)
+  }
+  componentWillUnmount = () => {
+    clearInterval(t)
+  }
   render() {
     return (
       <Grid>
+        <Col xs={6}>
+          <FormGroup>
+            <ControlLabel>{__('Current cache size')}</ControlLabel>
+            <InputGroup>
+              <InputGroup.Button>
+                <Button onClick={this.handleUpdateCacheSize}>{__('Update')}</Button>
+              </InputGroup.Button>
+              <FormControl type="number"
+                disabled
+                value={Math.round(this.state.cacheSize / 1048576)}
+                className='' />
+              <InputGroup.Addon>MB</InputGroup.Addon>
+            </InputGroup>
+          </FormGroup>
+        </Col>
+        <Col xs={6}>
+          <FormGroup>
+            <ControlLabel>{__('Maximum cache size')}</ControlLabel>
+            <InputGroup>
+              <FormControl type="number"
+                onChange={this.handleValueChange}
+                value={this.props.cacheSize}
+                className='' />
+              <InputGroup.Addon>MB</InputGroup.Addon>
+            </InputGroup>
+          </FormGroup>
+        </Col>
         <Col xs={6}>
           <Button bsStyle="danger" onClick={this.handleClearCookie} style={{width: '100%'}}>
             {__('Delete cookies')}
@@ -247,7 +294,7 @@ class ClearCacheCookieConfig extends Component {
       </Grid>
     )
   }
-}
+})
 
 const SelectLanguageConfig = connect(() => {
   return (state, props) => ({

@@ -37,6 +37,8 @@
   "You must reboot the app for the changes to take effect.": "关闭或者开启插件的设置在重新启动后生效。",
   "Some plugins may not work before you refresh the page.": "部分插件需要刷新游戏页面后才会恢复工作。",
   "Layout settings": "布局设置",
+  "Current cache size": "当前缓存大小",
+  "Maximum cache size": "最大缓存大小",
   "Delete cookies": "删除 Cookies",
   "Delete cache": "删除缓存",
   "Success!": "删除成功。",

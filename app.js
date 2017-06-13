@@ -24,9 +24,13 @@ if (process.platform !== 'linux') require('./lib/updater')
 proxy.setMaxListeners(30)
 
 // Disable HA
-
 if (config.get('poi.disableHA', false)) {
   app.disableHardwareAcceleration()
+}
+
+// Cache size
+if (Number.isInteger(config.get('poi.cacheSize'))) {
+  app.commandLine.appendSwitch('disk-cache-size', 1048576 * config.get('poi.cacheSize', 320))
 }
 
 // check safe mode config

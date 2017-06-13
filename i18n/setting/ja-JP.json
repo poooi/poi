@@ -37,6 +37,8 @@
   "You must reboot the app for the changes to take effect.": "設定変更を適用するには再起動する必要があります。",
   "Some plugins may not work before you refresh the page.": "一部のプラグインが正しく動作しない場合、ゲーム画面の更新を行って下さい。",
   "Layout settings": "レイアウト設定",
+  "Current cache size": "キャッシュのサイズ",
+  "Maximum cache size": "キャッシュの最大サイズ",
   "Delete cookies": "クッキーを削除します",
   "Delete cache": "キャッシュを削除します",
   "Success!": "削除完了。",

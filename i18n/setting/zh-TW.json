@@ -37,6 +37,8 @@
   "You must reboot the app for the changes to take effect.": "關閉或者開啟擴展程式的設定在重新啟動後生效。",
   "Some plugins may not work before you refresh the page.": "部分擴展程式需要重新整理遊戲頁面後才會取消復原工作。",
   "Layout settings": "布局設定",
+  "Current cache size": "當前快取大小",
+  "Maximum cache size": "最大快取大小",
   "Delete cookies": "刪除 Cookies",
   "Delete cache": "刪除快取",
   "Success!": "刪除成功。",
