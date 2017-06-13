@@ -439,4 +439,23 @@ const pluginManager = new PluginManager(
 
 pluginManager.initialize()
 
+window.reloadPlugin = (pkgName, verbose=false) => {
+  const { plugins } = getStore()
+  const plugin =
+    plugins.find(pkg => pkg.packageName === pkgName) ||
+    plugins.find(pkg => pkg.packageName === `poi-plugin-${pkgName}`)
+  if (!plugin) {
+    console.error(`plugin "${pkgName}" not found`)
+    return
+  }
+  pluginManager.disablePlugin(plugin)
+  if (verbose)
+    // eslint-disable-next-line no-console
+    console.log(`plugin "${plugin.id}" disabled, re-enabling...`)
+  pluginManager.enablePlugin(plugin)
+  if (verbose)
+    // eslint-disable-next-line no-console
+    console.log(`plugin "${plugin.id}" enabled.`)
+}
+
 export default pluginManager
