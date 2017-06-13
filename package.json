@@ -82,7 +82,7 @@
     "react-virtualized": "^9.7.6",
     "reduce-reducers": "^0.1.2",
     "redux": "^3.6.0",
-    "redux-observers": "^2.0.1",
+    "redux-observers": "^2.0.2",
     "redux-thunk": "^2.1.0",
     "request": "^2.74.0",
     "reselect": "^3.0.0",
