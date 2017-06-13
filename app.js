@@ -28,11 +28,6 @@ if (config.get('poi.disableHA', false)) {
   app.disableHardwareAcceleration()
 }
 
-// Cache size
-if (Number.isInteger(parseInt(config.get('poi.cacheSize')))) {
-  app.commandLine.appendSwitch('disk-cache-size', 1048576 * parseInt(config.get('poi.cacheSize', 320)))
-}
-
 // check safe mode config
 if (config.get('poi.enterSafeMode', false)) {
   warn('Entering SAFE MODE according to config.')
@@ -89,6 +84,12 @@ if (process.platform === 'win32') {
 
 // Test: enable JavaScript experimental features
 app.commandLine.appendSwitch('js-flags', "--harmony")
+
+// Cache size
+const cacheSize = parseInt(config.get('poi.cacheSize'))
+if (Number.isInteger(cacheSize)) {
+  app.commandLine.appendSwitch('disk-cache-size', `${1048576 * cacheSize}`)
+}
 
 app.on ('window-all-closed', () => {
   shortcut.unregister()
