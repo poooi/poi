@@ -20,7 +20,7 @@ let poiVersion = null
 gulp.task('getVersion', () => {
   const package_version = package_json.version
   poiVersion = package_version
-  log(`*** Start building poi v${poiVersion} ***`)
+  log(`*** Start building poi ${poiVersion} ***`)
 })
 
 gulp.task ('deploy', ['getVersion', 'get_flash'], async() => {
