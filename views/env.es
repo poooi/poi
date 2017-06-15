@@ -32,7 +32,7 @@ if (window.isMain) {
 }
 
 // Add ROOT to `require` search path
-require('module').globalPaths.push(window.ROOT)
+require('module').globalPaths.unshift(window.ROOT)
 
 // Shortcuts and Components
 window._ = lodash           // TODO: Backward compatibility
