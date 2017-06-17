@@ -86,7 +86,7 @@ window.getStore = (path) => {
 const solveConfSet = (path, value) => {
   const details = {
     path: path,
-    value: JSON.parse(JSON.stringify(value)),
+    value: typeof value === 'undefined' ? undefined : JSON.parse(JSON.stringify(value)),
   }
   store.dispatch(onConfigChange(details))
 }
