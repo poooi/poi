@@ -8,8 +8,15 @@ $('#layout-css').setAttribute('href',
   `./assets/css/layout.${config.get('poi.layout', 'horizontal')}.css`)
 
 const poiControlHeight = 30
-const titleBarHeight = process.platform === 'win32' || process.platform === 'linux' ? 28 : 0
 const additionalStyle = document.createElement('style')
+let titleBarHeight
+const getTitlebarHeight = () => {
+  if ($('title-bar') && getComputedStyle($('title-bar')).display === 'none') {
+    titleBarHeight = 0
+  } else {
+    titleBarHeight = process.platform === 'win32' || process.platform === 'linux' ? 28 : 0
+  }
+}
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
   document.body.appendChild(additionalStyle)
@@ -77,6 +84,7 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
 }
 
 const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed, reversed}) => {
+  getTitlebarHeight()
   // Apply css
   let { innerHeight } = window
   innerHeight -= titleBarHeight
