@@ -329,11 +329,11 @@
     "icon": "photo",
     "author": "KochiyaOcean",
     "link": "https://github.com/KochiyaOcean",
-    "deszh-CN": "自动生成来自[threebards](http://threebards.com/kaini)的舰娘签名，包含改二进度和图鉴列表。",
-    "deszh-TW": "自動生成來自[threebards](http://threebards.com/kaini)的艦娘簽名，包含改二進度和圖鑑列表。",
-    "desja-JP": "自動的に改二と図鑑が含ま[threebards](http://threebards.com/kaini)バッジを生成。",
-    "desen-US": "Automatically generates [threebards](http://threebards.com/kaini) badge that shows your kaini progress and colletion progress.",
-    "desko-KR": "데이터를 [threebards](http://threebards.com/kaini)로 전송해서 배지를 만드는 플러그인"
+    "deszh-CN": "自动生成来自[Sanya.moe](http://www.sanya.moe/kcbadge)的舰娘签名，包含改二进度和图鉴列表。",
+    "deszh-TW": "自動生成來自[Sanya.moe](http://www.sanya.moe/kcbadge)的艦娘簽名，包含改二進度和圖鑑列表。",
+    "desja-JP": "自動的に改二と図鑑が含ま[Sanya.moe](http://www.sanya.moe/kcbadge)バッジを生成。",
+    "desen-US": "Automatically generates [Sanya.moe](http://www.sanya.moe/kcbadge) badge that shows your kaini progress and colletion progress.",
+    "desko-KR": "데이터를 [Sanya.moe](http://www.sanya.moe/kcbadge)로 전송해서 배지를 만드는 플러그인"
   },
   "poi-plugin-anchorage-repair": {
     "zh-CN": "泊地修理",
