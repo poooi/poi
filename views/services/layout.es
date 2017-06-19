@@ -8,7 +8,7 @@ $('#layout-css').setAttribute('href',
   `./assets/css/layout.${config.get('poi.layout', 'horizontal')}.css`)
 
 const poiControlHeight = 30
-const titleBarHeight = process.platform === 'win32' ? 28 : 0
+const titleBarHeight = process.platform === 'win32' || process.platform === 'linux' ? 28 : 0
 const additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
