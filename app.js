@@ -126,7 +126,7 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizeable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     titleBarStyle: 'hidden',
-    frame: process.platform !== 'win32' && process.platform !== 'linux',
+    frame: config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
     enableLargerThanScreen: true,
     maximizable: true,
     webPreferences: {

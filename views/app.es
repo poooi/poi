@@ -38,7 +38,7 @@ const CustomCssInjector = () => {
   )
 }
 
-if (process.platform === 'win32' || process.platform === 'linux') {
+if (config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')) {
   const { TitleBarWrapper } = require('./components/etc/menu')
   ReactDOM.render(
     <TitleBarWrapper />,

@@ -14,7 +14,7 @@ const getTitlebarHeight = () => {
   if ($('title-bar') && getComputedStyle($('title-bar')).display === 'none') {
     titleBarHeight = 0
   } else {
-    titleBarHeight = process.platform === 'win32' || process.platform === 'linux' ? 28 : 0
+    titleBarHeight = config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') ? 28 : 0
   }
 }
 
