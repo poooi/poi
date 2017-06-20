@@ -45,7 +45,7 @@ brew update && brew cask install poi
 
 ## Run
 
-First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) an d [npm](https://npmjs.org) >= __5.0.x__.
+First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) and [npm](https://npmjs.org) >= __5.0.x__.
 
 ``` shell
 git clone https://github.com/poooi/poi && cd poi
@@ -54,9 +54,12 @@ npm run deploy
 npm start
 ```
 
-You do not have to run `npm install` and `npm run deploy` with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
+Tips:
+- You do not have to run `npm install` and `npm run deploy` with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
 
-For users who have installed packages with npm < 5.0, it is highly recommended to completely remove current `node_modules` folder and re-run `npm install`.
+- If you have installed packages with npm < 5.0, it is highly recommended to completely remove current `node_modules` folder and re-run `npm install`.
+
+- If you have trouble downloading electron executables from github/amazonaws, [you may set ELECTRON_MIRROR environment variable](https://github.com/electron-userland/electron-download).
 
 ## Available Plugins
 [plugin-prophet](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
