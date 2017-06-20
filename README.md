@@ -45,16 +45,18 @@ brew update && brew cask install poi
 
 ## Run
 
-First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org).
+First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) an d [npm](https://npmjs.org) >= __5.0.x__.
 
-```bash
+``` shell
 git clone https://github.com/poooi/poi && cd poi
-npm i
+npm install
 npm run deploy
 npm start
 ```
 
-You do not have to run `npm i` and `npm run deploy` with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
+You do not have to run `npm install` and `npm run deploy` with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
+
+For users who have installed packages with npm < 5.0, it is highly recommended to completely remove current `node_modules` folder and re-run `npm install`.
 
 ## Available Plugins
 [plugin-prophet](https://github.com/poooi/plugin-prophet) by [Chiba](https://github.com/Chibaheit)
@@ -121,7 +123,7 @@ Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
 On plugin development, the [docs](https://github.com/poooi/poi/tree/master/docs) are available in Chinese and English.
 
 Please feel free to contact us via github issues, [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ), QQ group, weibo or anything else.
- 
+
 
 ## Based on
 
