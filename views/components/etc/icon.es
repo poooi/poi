@@ -46,6 +46,7 @@ export class SlotitemIcon extends React.Component {
   static propTypes = {
     slotitemId: PropTypes.number,
     className: PropTypes.string,
+    alt: PropTypes.string,
   }
   state = {
     useSVGIcon: config.get('poi.useSVGIcon', false),
@@ -81,23 +82,24 @@ export class SlotitemIcon extends React.Component {
     iconConfSetter.unreg(this.key)
   }
   render() {
+    const { alt, slotitemId, className } = this.props
     if (this.state.useSVGIcon) {
-      if (typeof svgAvailableList[this.props.slotitemId] === 'undefined') {
-        svgAvailableList[this.props.slotitemId] = this.getAvailable()
+      if (typeof svgAvailableList[slotitemId] === 'undefined') {
+        svgAvailableList[slotitemId] = this.getAvailable()
       }
     } else {
-      if (typeof pngAvailableList[this.props.slotitemId] === 'undefined') {
-        pngAvailableList[this.props.slotitemId] = this.getAvailable()
+      if (typeof pngAvailableList[slotitemId] === 'undefined') {
+        pngAvailableList[slotitemId] = this.getAvailable()
       }
     }
     if (this.state.useSVGIcon) {
-      return svgAvailableList[this.props.slotitemId]
-      ? <img src={`file://${this.svgPath()}`} className={getClassName(this.props.className, true)} />
-      : <img src={`file://${ROOT}/assets/svg/slotitem/-1.svg`} className={getClassName(this.props.className, true)} />
-    } else if (pngAvailableList[this.props.slotitemId]) {
-      return <img src={`file://${this.pngPath()}`} className={getClassName(this.props.className, false)} />
+      return svgAvailableList[slotitemId]
+      ? <img alt={alt} src={`file://${this.svgPath()}`} className={getClassName(className, true)} />
+      : <img alt={alt} src={`file://${ROOT}/assets/svg/slotitem/-1.svg`} className={getClassName(className, true)} />
+    } else if (pngAvailableList[slotitemId]) {
+      return <img alt={alt} src={`file://${this.pngPath()}`} className={getClassName(className, false)} />
     } else {
-      return <img src={`file://${ROOT}/assets/img/slotitem/-1.png`} className={getClassName(this.props.className, false)} />
+      return <img alt={alt} src={`file://${ROOT}/assets/img/slotitem/-1.png`} className={getClassName(className, false)} />
     }
   }
 }
@@ -106,6 +108,7 @@ export class MaterialIcon extends React.Component {
   static propTypes = {
     materialId: PropTypes.number,
     className: PropTypes.string,
+    alt: PropTypes.string,
   }
   state = {
     useSVGIcon: config.get('poi.useSVGIcon', false),
@@ -135,6 +138,6 @@ export class MaterialIcon extends React.Component {
     } else {
       src = `file://${ROOT}/assets/img/material/0${this.props.materialId}.png`
     }
-    return <img src={src} className={getClassName(this.props.className, this.state.useSVGIcon)} />
+    return <img alt={this.props.alt} src={src} className={getClassName(this.props.className, this.state.useSVGIcon)} />
   }
 }
