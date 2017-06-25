@@ -78,18 +78,6 @@ export function installPackage(packageName, version) {
   if (version) {
     packageName = `${packageName}@${version}`
   }
-  // let flow = co.wrap(function* (_this) {
-  //   yield npminstall({
-  //     root: _this.npmConfig.prefix,
-  //     pkgs: [
-  //       { name: plugin.packageName, version: plugin.latestVersion},
-  //     ],
-  //     registry: _this.npmConfig.registry,
-  //     debug: true
-  //   })
-  //   return yield Promise.resolve()
-  // })
-  // await flow(this)
   return promisify(npm.commands.install)([packageName])
 }
 
