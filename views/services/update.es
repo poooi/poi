@@ -1,14 +1,14 @@
 import React from 'react'
 import { shell, remote } from 'electron'
 import semver from 'semver'
-import Promise from 'bluebird'
+import { promisifyAll, promisify } from 'bluebird'
 import Markdown from 'react-remarkable'
 
 const {POI_VERSION, i18n, toggleModal, config, language} = window
 const __ = i18n.others.__.bind(i18n.others)
 
-const request = Promise.promisifyAll(require('request'))
-const requestAsync = Promise.promisify(request, {multiArgs: true})
+const request = promisifyAll(require('request'))
+const requestAsync = promisify(request, {multiArgs: true})
 const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 const {error} = require('../../lib/utils')
