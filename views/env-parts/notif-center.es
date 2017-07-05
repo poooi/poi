@@ -48,7 +48,7 @@ const defaultNotifOptions = {
  *   groupKey: anything, when true and ===, will be grouped when called
  *     multiple times in a short time
  * [Read from config, but you can specify]
- *   enabled: 
+ *   enabled:
  *   volume: [0.0, 1.0]
  *   silent: Boolean, make volume always 0
  *   audio: file path (with file://)
@@ -119,11 +119,12 @@ class NotificationCenter {
     const message = mergedConfig.message
     if (message){
       if (NOTIFY_NOTIFICATION_API) {
-        new Notification (title, {
+        const currentNotif = new Notification (title, {
           icon: mergedConfig.icon,
           body: message,
           silent: true,
         })
+        currentNotif.onclick = () => remote.getCurrentWindow().focus()
       } else{
         try {
           appIcon.displayBalloon({
