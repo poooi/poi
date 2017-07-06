@@ -123,7 +123,7 @@ app.on('ready', () => {
     height: height,
     title: 'poi',
     icon: poiIconPath,
-    resizable: config.get('poi.content.resizeable', true),
+    resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     titleBarStyle: 'hidden',
     frame: !config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
