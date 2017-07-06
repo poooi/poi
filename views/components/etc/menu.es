@@ -49,7 +49,10 @@ if (process.platform !== 'darwin') {
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
-            remote.getGlobal('mainWindow').setResizable(item.checked)
+            const mainWindow = remote.getGlobal('mainWindow')
+            mainWindow.setResizable(item.checked)
+            mainWindow.setMaximizable(item.checked)
+            mainWindow.setFullScreenable(item.checked)
             config.set('poi.content.resizable', item.checked)
           },
         },
@@ -204,7 +207,10 @@ if (process.platform !== 'darwin') {
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
-            remote.getGlobal('mainWindow').setResizable(item.checked)
+            const mainWindow = remote.getGlobal('mainWindow')
+            mainWindow.setResizable(item.checked)
+            mainWindow.setMaximizable(item.checked)
+            mainWindow.setFullScreenable(item.checked)
             config.set('poi.content.resizable', item.checked)
           },
         },

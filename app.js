@@ -128,7 +128,8 @@ app.on('ready', () => {
     titleBarStyle: 'hidden',
     frame: !config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
     enableLargerThanScreen: true,
-    maximizable: true,
+    maximizable: config.get('poi.content.resizable', true),
+    fullscreenable: config.get('poi.content.resizable', true),
     webPreferences: {
       plugins: true,
     },
