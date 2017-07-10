@@ -154,8 +154,8 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
   equipsValid: validAll(
     hasSome(isCDMG),
-    hasSome(isAAGun, 2),
-    hasSome(isAAFD)
+    hasAtLeast(isAAGun, 2),
+    hasSome(isAARadar)
   ),
 })
 
