@@ -192,21 +192,21 @@ export const PoiAlert = class poiAlert extends Component {
     return (
       <div id='alert-main' className='alert-main'>
         <div id='alert-container'
-             className={`alert alert-${this.state.current.type} alert-container`}
-             onClick={this.toggleHistory}>
+          className={`alert alert-${this.state.current.type} alert-container`}
+          onClick={this.toggleHistory}>
           <div className='alert-position' ref="alertPosition">
             <span id='alert-area' ref='alertArea' className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
-                <span>
-                  <span style={{marginRight: 50}}>
-                    {this.state.current.content}
+                  <span>
+                    <span style={{marginRight: 50}}>
+                      {this.state.current.content}
+                    </span>
+                    <span style={{marginRight: 50}}>
+                      {this.state.current.content}
+                    </span>
                   </span>
-                  <span style={{marginRight: 50}}>
-                    {this.state.current.content}
-                  </span>
-                </span>
-                : this.state.current.content
+                  : this.state.current.content
               }
             </span>
           </div>

@@ -115,14 +115,14 @@ class NavigatorBar extends React.Component {
           <FormGroup>
             <InputGroup bsSize='small' style={{width: '100%'}}>
               <FormControl type='text'
-                 placeholder={__('Input address')}
-                 className={statusIcon? 'navigator-status' : 'navigator-no-status'}
-                 value={this.state.url}
-                 onChange={this.onChangeUrl}
-                 onKeyDown={this.onKeydown} />
+                placeholder={__('Input address')}
+                className={statusIcon? 'navigator-status' : 'navigator-no-status'}
+                value={this.state.url}
+                onChange={this.onChangeUrl}
+                onKeyDown={this.onKeydown} />
               {statusIcon ? <FormControl.Feedback>
-                              {statusIcon}
-                            </FormControl.Feedback> : null}
+                {statusIcon}
+              </FormControl.Feedback> : null}
             </InputGroup>
           </FormGroup>
         </div>

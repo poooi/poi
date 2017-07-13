@@ -11,11 +11,11 @@ class Toastr extends React.Component {
   render () {
     return (
       <div>
-      <link rel="stylesheet" href={join(__dirname, 'assets', 'toast-animate.css')} />
-      <link rel="stylesheet" href={join(__dirname, 'assets', 'toast.css')} />
+        <link rel="stylesheet" href={join(__dirname, 'assets', 'toast-animate.css')} />
+        <link rel="stylesheet" href={join(__dirname, 'assets', 'toast.css')} />
         <ToastContainer ref="container"
-                        toastMessageFactory={ToastMessageFactory}
-                        className="toast-poi" />
+          toastMessageFactory={ToastMessageFactory}
+          className="toast-poi" />
       </div>
     )
   }

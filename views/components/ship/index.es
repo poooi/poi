@@ -80,14 +80,14 @@ const FleetShipView = connect(
       />
     </div>
     <div className="ship-details">
-    {
-      (shipsId || []).map((shipId, i) =>
-        <ShipRow
-          key={shipId}
-          shipId={shipId}
+      {
+        (shipsId || []).map((shipId, i) =>
+          <ShipRow
+            key={shipId}
+            shipId={shipId}
           />
-      )
-    }
+        )
+      }
     </div>
   </div>
 )
@@ -96,31 +96,31 @@ const LBView = connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
 }))(({areaIds, mapareas}) => (
-    <div>
-      <div className="ship-details">
+  <div>
+    <div className="ship-details">
       {
         areaIds.map((id, i) => (
           mapareas[id] != null && (
             id === areaIds[i - 1] ?
-            <SquardRow
-              key={i}
-              squardId={i}
-            /> :
-            <div key={i}>
-              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-                [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name || '')}
-              </Alert>
               <SquardRow
                 key={i}
                 squardId={i}
+              /> :
+              <div key={i}>
+                <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
+                [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name || '')}
+                </Alert>
+                <SquardRow
+                  key={i}
+                  squardId={i}
                 />
-            </div>
+              </div>
           )
         ))
       }
-      </div>
     </div>
-  )
+  </div>
+)
 )
 
 
@@ -176,17 +176,17 @@ const ShipView = connect((state, props) => ({
         <link rel="stylesheet" href={join(__dirname, 'assets', 'ship.css')} />
         <div className="div-row">
           <ButtonGroup className="fleet-name-button">
-          {
-            times(4).map(i =>
-              <ShipViewSwitchButton
-                key={i}
-                fleetId={i}
-                disabled={i + 1 > this.props.fleetCount}
-                onClick={e => this.handleClick(i)}
-                activeFleetId={this.props.activeFleetId}
+            {
+              times(4).map(i =>
+                <ShipViewSwitchButton
+                  key={i}
+                  fleetId={i}
+                  disabled={i + 1 > this.props.fleetCount}
+                  onClick={e => this.handleClick(i)}
+                  activeFleetId={this.props.activeFleetId}
                 />
-            )
-          }
+              )
+            }
           </ButtonGroup>
           <ButtonGroup className='plane-button'>
             <LandbaseButton key={4}
@@ -195,20 +195,20 @@ const ShipView = connect((state, props) => ({
               onClick={e => this.handleClick(4)}
               activeFleetId={this.props.activeFleetId}
               isMini={false}
-              />
+            />
           </ButtonGroup>
         </div>
         <div className="no-scroll">
           <div
             className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
             style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
-          {
-            times(4).map(i =>
-              <div className="ship-deck" key={i}>
-                <FleetShipView fleetId={i} />
-              </div>
-            )
-          }
+            {
+              times(4).map(i =>
+                <div className="ship-deck" key={i}>
+                  <FleetShipView fleetId={i} />
+                </div>
+              )
+            }
             <div className="ship-deck" key={4}>
               <LBView />
             </div>

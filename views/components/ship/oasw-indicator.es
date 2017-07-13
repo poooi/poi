@@ -17,7 +17,7 @@ const OASWSelectorFactory = memoize(shipId =>
   ], ([_ship = {}, $ship = {}] = [], _equips = []) => {
     const ship = { ...$ship, ..._ship }
     const equips = _equips.filter(([_equip, $equip, onslot] = []) => !!_equip && !!$equip)
-                          .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
+      .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
 
     return isOASW(ship, equips)
   })
@@ -30,10 +30,10 @@ const OASWIndicator = connect(
   })
 )(({ isOASW, shipId }) => (
   isOASW ?
-  <span className="ship-oasw">
-    <Label bsStyle='primary'>{__('OASW')}</Label>
-  </span>
-  : <noscript />
+    <span className="ship-oasw">
+      <Label bsStyle='primary'>{__('OASW')}</Label>
+    </span>
+    : <noscript />
 ))
 
 export default OASWIndicator

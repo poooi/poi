@@ -38,8 +38,8 @@ const config = (() => {
   global.ROOT = __dirname
   const SYS_APPDATA_PATH = process.env.APPDATA || (
     process.platform == 'darwin'
-    ? path.join(process.env.HOME, 'Library/Application Support')
-    : '/var/local')
+      ? path.join(process.env.HOME, 'Library/Application Support')
+      : '/var/local')
   global.APPDATA_PATH = path.join(SYS_APPDATA_PATH, 'poi')
   global.EXROOT = global.APPDATA_PATH
   return require('./lib/config')
@@ -85,8 +85,8 @@ const THEME_LIST = {
 
 const getFlashUrl = (platform) =>
   USE_GITHUB_FLASH_MIRROR
-  ? `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
-  : `http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/${platform}.zip`
+    ? `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
+    : `http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/${platform}.zip`
 
 const TARGET_LIST = [
   // Files
@@ -132,11 +132,11 @@ const extractZipNodeAsync = (zipFile, destPath, descript="") => {
   return new Promise((resolve) => {
     fs.ensureDirSync(path.dirname(destPath))
     fs.createReadStream(zipFile)
-    .pipe(unzip.Extract({ path: destPath }))
-    .on('close', () => {
-      log(`Extracting ${descript} finished`)
-      return resolve()
-    })
+      .pipe(unzip.Extract({ path: destPath }))
+      .on('close', () => {
+        log(`Extracting ${descript} finished`)
+        return resolve()
+      })
   })
 }
 
@@ -148,25 +148,25 @@ const extractZipCliAsync = (zipFile, destPath, descript="") => {
     child_process.exec(command, {
       cwd: destPath,
     },
-      (error) => {
-        if (error != null) {
-          return reject(error)
-        } else {
-          log(`Extracting ${descript} finished`)
-          return resolve()
-        }
+    (error) => {
+      if (error != null) {
+        return reject(error)
+      } else {
+        log(`Extracting ${descript} finished`)
+        return resolve()
       }
+    }
     )
   })
 }
 
 const extractZipAsync =
   process.platform == 'win32'
-  ? extractZipNodeAsync
-  : extractZipCliAsync
+    ? extractZipNodeAsync
+    : extractZipCliAsync
 
 const downloadExtractZipAsync = async (url, downloadDir, filename, destPath,
-                                 description, useCli) => {
+  description, useCli) => {
   const MAX_RETRY = 5
   let zipPath
   for (let retryCount = 1; retryCount <= MAX_RETRY; retryCount++){
@@ -241,16 +241,16 @@ const gitArchiveAsync = async (tarPath, tgtDir) => {
   log('Archive complete! Extracting...')
   await new Promise((resolve) => {
     fs.createReadStream(tarPath)
-    .pipe(tar.extract(tgtDir))
-    .on('finish', (e) => {
-      log ('Extract complete!')
-      resolve(e)
-    })
-    .on('error', (err) => {
-      log(err)
-      resolve()
-    }
-  )})
+      .pipe(tar.extract(tgtDir))
+      .on('finish', (e) => {
+        log ('Extract complete!')
+        resolve(e)
+      })
+      .on('error', (err) => {
+        log(err)
+        resolve()
+      }
+      )})
 }
 
 // Run js script
@@ -315,37 +315,37 @@ export const compileToJsAsync = (appDir, dontRemove) => {
   return new Promise ((resolve) => {
     const tasks = []
     walk.walk(appDir, options)
-    .on('file', (root, fileStats, next) => {
-      const extname = path.extname(fileStats.name).toLowerCase()
-      if (targetExts.includes(extname)) {
-        tasks.push(async () => {
-          const srcPath = path.join(root, fileStats.name)
-          const tgtPath = changeExt(srcPath, '.js')
-          // const src = await fs.readFileAsync(srcPath, 'utf-8')
-          let tgt
-          try {
-            const result = await babel.transformFileAsync(srcPath, {
-              presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
-              plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
-            })
-            tgt = result.code
-          } catch (e) {
-            log(`Compiling ${srcPath} failed: ${e}`)
-            return
-          }
-          await fs.writeFileAsync(tgtPath, tgt)
-          if (!dontRemove) {
-            await fs.removeAsync(srcPath)
-          }
-          log(`Compiled ${tgtPath}`)
-        })
-      }
-      next()
-    })
-    .on('end', async () => {
-      log(`Files to compile: ${tasks.length} files`)
-      resolve(await Promise.all(tasks.map(f => f())))
-    })
+      .on('file', (root, fileStats, next) => {
+        const extname = path.extname(fileStats.name).toLowerCase()
+        if (targetExts.includes(extname)) {
+          tasks.push(async () => {
+            const srcPath = path.join(root, fileStats.name)
+            const tgtPath = changeExt(srcPath, '.js')
+            // const src = await fs.readFileAsync(srcPath, 'utf-8')
+            let tgt
+            try {
+              const result = await babel.transformFileAsync(srcPath, {
+                presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
+                plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
+              })
+              tgt = result.code
+            } catch (e) {
+              log(`Compiling ${srcPath} failed: ${e}`)
+              return
+            }
+            await fs.writeFileAsync(tgtPath, tgt)
+            if (!dontRemove) {
+              await fs.removeAsync(srcPath)
+            }
+            log(`Compiled ${tgtPath}`)
+          })
+        }
+        next()
+      })
+      .on('end', async () => {
+        log(`Files to compile: ${tasks.length} files`)
+        resolve(await Promise.all(tasks.map(f => f())))
+      })
   })
 }
 

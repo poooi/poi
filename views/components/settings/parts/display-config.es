@@ -203,8 +203,8 @@ const ZoomingConfig = connect(() => (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-              <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
-            }>
+            <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
+          }>
             <FormControl type="range" onInput={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
               min={0.5} max={4.0} step={0.05} defaultValue={this.state.zoomLevel}
               onMouseUp={this.handleChangeZoomLevel}
@@ -248,8 +248,8 @@ const PanelMinSizeConfig = connect(() => (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-              <Tooltip id='displayconfig-panel-size'>{__(configName)} <strong>{parseInt(this.state.panelMinSize * 100)}%</strong></Tooltip>
-            }>
+            <Tooltip id='displayconfig-panel-size'>{__(configName)} <strong>{parseInt(this.state.panelMinSize * 100)}%</strong></Tooltip>
+          }>
             <FormControl type="range" onInput={(e) => this.setState({ panelMinSize: parseFloat(e.target.value) })}
               min={1.0} max={2.0} step={0.05} defaultValue={this.state.panelMinSize}
               onMouseUp={this.handleChangePanelMinSize}
@@ -367,9 +367,9 @@ const ChangeResolutionConfig = connect((state, props) => ({
         </Col>
         <Col xs={4}>
           <FormControl componentClass="select"
-           value={this.state.width}
-           onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
-           disabled={!this.props.webview.useFixedResolution} >
+            value={this.state.width}
+            onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
+            disabled={!this.props.webview.useFixedResolution} >
             <option key={-1} value={this.state.width} hidden>
               {Math.round(this.props.webview.width / 800 * 100)}%
             </option>
@@ -387,9 +387,9 @@ const ChangeResolutionConfig = connect((state, props) => ({
         <Col id="poi-resolution-config" xs={12} style={{display: 'flex', alignItems: 'center'}}>
           <div style={{flex: 1}}>
             <FormControl type="number"
-             value={this.state.width}
-             onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, true)}
-             readOnly={!this.props.webview.useFixedResolution} />
+              value={this.state.width}
+              onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, true)}
+              readOnly={!this.props.webview.useFixedResolution} />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             x

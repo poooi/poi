@@ -41,7 +41,7 @@ const definePureVirtual = (obj, name, defaultReturn = false) =>
     },
     writable: true,
   }
-)
+  )
 
 // the very base class
 class IDebugger {

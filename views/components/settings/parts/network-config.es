@@ -194,36 +194,36 @@ const NetworkConfig = connect(() => (
               </div>
 
             </Grid>
-          :(this.state.use == 'socks5') ?
-            <Grid>
-              <Col xs={6}>
-                <FormGroup>
-                  <ControlLabel>{__('Proxy server address')}</ControlLabel>
-                  <FormControl type="text" ref="socksHost" placeholder={__('Proxy server address')} value={this.state.socks5.host} onChange={this.handleSocksHostChange} />
-                </FormGroup>
-              </Col>
-              <Col xs={6}>
-                <FormGroup>
-                  <ControlLabel>{__('Proxy server port')}</ControlLabel>
-                  <FormControl type="text" ref="socksPort" placeholder={__('Proxy server port')} value={this.state.socks5.port} onChange={this.handleSocksPortChange} />
-                </FormGroup>
-              </Col>
-            </Grid>
-          : (this.state.use === 'pac') ?
-            <Grid>
-              <Col xs={12}>
-                <FormGroup>
-                  <ControlLabel>{__('PAC address')}</ControlLabel>
-                  <FormControl type="text" ref="pacAddr" placeholder={__('PAC address')} value={this.state.pacAddr} onChange={this.handlePACAddrChange} />
-                </FormGroup>
-              </Col>
-            </Grid>
-          :
-            <Grid>
-              <Col xs={12}>
-                <center>{__('Will connect to server directly.')}</center>
-              </Col>
-            </Grid>
+            :(this.state.use == 'socks5') ?
+              <Grid>
+                <Col xs={6}>
+                  <FormGroup>
+                    <ControlLabel>{__('Proxy server address')}</ControlLabel>
+                    <FormControl type="text" ref="socksHost" placeholder={__('Proxy server address')} value={this.state.socks5.host} onChange={this.handleSocksHostChange} />
+                  </FormGroup>
+                </Col>
+                <Col xs={6}>
+                  <FormGroup>
+                    <ControlLabel>{__('Proxy server port')}</ControlLabel>
+                    <FormControl type="text" ref="socksPort" placeholder={__('Proxy server port')} value={this.state.socks5.port} onChange={this.handleSocksPortChange} />
+                  </FormGroup>
+                </Col>
+              </Grid>
+              : (this.state.use === 'pac') ?
+                <Grid>
+                  <Col xs={12}>
+                    <FormGroup>
+                      <ControlLabel>{__('PAC address')}</ControlLabel>
+                      <FormControl type="text" ref="pacAddr" placeholder={__('PAC address')} value={this.state.pacAddr} onChange={this.handlePACAddrChange} />
+                    </FormGroup>
+                  </Col>
+                </Grid>
+                :
+                <Grid>
+                  <Col xs={12}>
+                    <center>{__('Will connect to server directly.')}</center>
+                  </Col>
+                </Grid>
         }
         <Divider text={__('Times of reconnect')} />
         <Grid>

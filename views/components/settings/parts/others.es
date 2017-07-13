@@ -127,8 +127,8 @@ class AppMetrics extends PureComponent {
           <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
             {
               active
-              ? <span>{__('Monitor on')}</span>
-              : <span>{__('Monitor off')}</span>
+                ? <span>{__('Monitor on')}</span>
+                : <span>{__('Monitor off')}</span>
             }
           </Button>
         </div>
@@ -272,9 +272,9 @@ const Others = connect(state => ({
           </Col>
           <Col xs={6}>
             <CheckboxLabelConfig
-                    label={__('Check update of beta version')}
-                    configName="poi.betaChannel"
-                    defaultVal={false} />
+              label={__('Check update of beta version')}
+              configName="poi.betaChannel"
+              defaultVal={false} />
           </Col>
           <Col xs={12}>
             <p>{__("poi-description %s", process.versions.electron)}</p>
@@ -284,8 +284,8 @@ const Others = connect(state => ({
                   <p>微博: <a href='http://weibo.com/letspoi'>  今天 poi 出新版本了吗 </a></p>
                   <p>开发讨论与意见交流群: 378320628 </p>
                 </div>
-              :
-              null
+                :
+                null
             }
             <p>{__("Database")}:<a href='http://db.kcwiki.moe'> http://db.kcwiki.moe </a></p>
             <p>{__("Wiki")}: <a href='https://github.com/poooi/poi/wiki'> https://github.com/poooi/poi/wiki </a></p>
@@ -313,29 +313,29 @@ const Others = connect(state => ({
         </Col>
         <Divider text="Contributors" />
         <Grid>
-        {
-          CONST.contributors.map((e, i) => (
-            <Col xs={2} key={i}>
-              <img className="avatar-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
-            </Col>
-          ))
-        }
+          {
+            CONST.contributors.map((e, i) => (
+              <Col xs={2} key={i}>
+                <img className="avatar-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+              </Col>
+            ))
+          }
         </Grid>
         <Divider text="Thanks To" />
         <Grid className='thanks-to'>
-        {
-          CONST.thanksTo.map((e, i) => (
-            <div className="div-row thanks-to-item" key={i}>
-              <div className='thanks-to-img-container'>
-                <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+          {
+            CONST.thanksTo.map((e, i) => (
+              <div className="div-row thanks-to-item" key={i}>
+                <div className='thanks-to-img-container'>
+                  <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+                </div>
+                <div className='thanks-to-container'>
+                  <b>{e.name}</b>
+                  <p>{e.description}</p>
+                </div>
               </div>
-              <div className='thanks-to-container'>
-                <b>{e.name}</b>
-                <p>{e.description}</p>
-              </div>
-            </div>
-          ))
-        }
+            ))
+          }
         </Grid>
       </div>
     )

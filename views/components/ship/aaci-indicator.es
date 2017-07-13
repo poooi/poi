@@ -17,7 +17,7 @@ const AACISelectorFactory = memoize(shipId =>
   ], ([_ship = {}, $ship = {}] = [], _equips = []) => {
     const ship = { ...$ship, ..._ship }
     const equips = _equips.filter(([_equip, $equip, onslot] = []) => !!_equip && !!$equip)
-                          .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
+      .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
 
     return getShipAACIs(ship, equips)
   })
@@ -63,12 +63,12 @@ const AACIIndicator = connect(
 
   return(
     AACIs.length ?
-    <span className="ship-aaci">
-      <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
-        <Label bsStyle='warning'>{__('AACI')}</Label>
-      </OverlayTrigger>
-    </span>
-    : <noscript />
+      <span className="ship-aaci">
+        <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
+          <Label bsStyle='warning'>{__('AACI')}</Label>
+        </OverlayTrigger>
+      </span>
+      : <noscript />
   )
 })
 

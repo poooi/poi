@@ -63,26 +63,26 @@ const TabContentsUnion = connect(
     const prevKey = this.prevKey()
     return (
       <div className='poi-tab-contents'>
-      {
-        Children.map(this.props.children, (child, index) => {
-          if (child.key === activeKey)
-            onTheLeft = false
-          const positionLeft = child.key === activeKey ?  '0%'
-            : onTheLeft ? '-100%' : '100%'
-          const tabClassName = classNames("poi-tab-child-positioner", {
-            'poi-tab-child-positioner-transition': (child.key === activeKey || child.key === prevKey) && this.props.enableTransition,
-            'transparent': child.key !== activeKey,
-          })
-          return (
-            <div className='poi-tab-child-sizer'>
-              <div className={tabClassName}
-                style={{transform: `translateX(${positionLeft})`}}>
-                {child}
+        {
+          Children.map(this.props.children, (child, index) => {
+            if (child.key === activeKey)
+              onTheLeft = false
+            const positionLeft = child.key === activeKey ?  '0%'
+              : onTheLeft ? '-100%' : '100%'
+            const tabClassName = classNames("poi-tab-child-positioner", {
+              'poi-tab-child-positioner-transition': (child.key === activeKey || child.key === prevKey) && this.props.enableTransition,
+              'transparent': child.key !== activeKey,
+            })
+            return (
+              <div className='poi-tab-child-sizer'>
+                <div className={tabClassName}
+                  style={{transform: `translateX(${positionLeft})`}}>
+                  {child}
+                </div>
               </div>
-            </div>
-          )
-        })
-      }
+            )
+          })
+        }
       </div>
     )
   }
@@ -363,7 +363,7 @@ export default connect(
           <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
             <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
               title={(activePlugin || {}).displayName || defaultPluginTitle}>
-            {pluginDropdownContents}
+              {pluginDropdownContents}
             </NavDropdown>
           </Nav>
           <TabContentsUnion ref='tabKeyUnion'

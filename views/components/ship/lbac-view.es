@@ -67,7 +67,7 @@ export const SquardRow = connect((state, { squardId }) =>
             </div>
             <span className="hp-progress top-space">
               <ProgressBar bsStyle={getHpStyle(hpPercentage)}
-                           now={hpPercentage} />
+                now={hpPercentage} />
             </span>
           </div>
         </div>
