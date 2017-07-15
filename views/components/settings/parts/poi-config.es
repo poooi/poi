@@ -660,7 +660,7 @@ class PoiConfig extends Component {
                   </OverlayTrigger>
               }
               <CheckboxLabelConfig
-                label={__('Display \"Tips\"')}
+                label={__('Display "Tips"')}
                 configName="poi.doyouknow.enabled"
                 defaultVal={true} />
               <CheckboxLabelConfig
