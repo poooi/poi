@@ -359,7 +359,6 @@ const ChangeResolutionConfig = connect((state, props) => ({
       <Grid>
         <Col xs={8}>
           <Checkbox
-            ref={(ref) => { this.useFixedResolution = ref }}
             checked={!this.props.webview.useFixedResolution}
             onChange={this.handleSetFixedResolution}>
             {__('Adaptive resolution based on the window')}
