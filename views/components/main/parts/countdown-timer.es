@@ -178,13 +178,13 @@ export class CountdownNotifierLabel extends Component {
   render() {
     return (
       <Label className="countdown-timer-label" bsStyle={this.state.style}>
-      {
-        this.props.completeTime >= 0 &&
+        {
+          this.props.completeTime >= 0 &&
           <CountdownTimer countdownId={this.props.timerKey}
-                          completeTime={this.props.completeTime}
-                          tickCallback={this.tick}
-                          resolveTime={this.props.resolveTime} />
-      }
+            completeTime={this.props.completeTime}
+            tickCallback={this.tick}
+            resolveTime={this.props.resolveTime} />
+        }
       </Label>
     )
   }

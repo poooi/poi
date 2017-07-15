@@ -43,9 +43,9 @@ export default connect(
   getLabelStyle = (props, timeRemaining) => {
     return (
       timeRemaining > 600 ? 'primary' :
-      timeRemaining > 60 ? 'warning' :
-      timeRemaining >= 0 ? 'success' :
-      'default'
+        timeRemaining > 60 ? 'warning' :
+          timeRemaining >= 0 ? 'success' :
+            'default'
     )
   }
   static basicNotifyConfig = {
@@ -79,31 +79,31 @@ export default connect(
             const dock = repairs[i] || emptyRepair
             const dockName =
               dock.api_state == -1 ? __('Locked') :
-              dock.api_state == 0 ? __('Empty') :
-              i18n.resources.__($ships[ships[dock.api_ship_id].api_ship_id].api_name)
+                dock.api_state == 0 ? __('Empty') :
+                  i18n.resources.__($ships[ships[dock.api_ship_id].api_ship_id].api_name)
             const completeTime = dock.api_complete_time || -1
             return (
               <div key={i} className="panel-item ndock-item">
                 <span className="ndock-name">{dockName}</span>
 
-              <OverlayTrigger placement='left' overlay={
-                <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
-                  <strong>{__("Finish by : ")}</strong>{timeToString(completeTime)}
-                </Tooltip>
-              }>
-                <div>
-                  <CountdownNotifierLabel
-                    timerKey={`ndock-${i+1}`}
-                    completeTime={completeTime}
-                    getLabelStyle={this.getLabelStyle}
-                    getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                      ...this.constructor.basicNotifyConfig,
-                      args: dockName,
-                      completeTime: completeTime,
-                    }}
-                  />
-                </div>
-              </OverlayTrigger>
+                <OverlayTrigger placement='left' overlay={
+                  <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
+                    <strong>{__("Finish by : ")}</strong>{timeToString(completeTime)}
+                  </Tooltip>
+                }>
+                  <div>
+                    <CountdownNotifierLabel
+                      timerKey={`ndock-${i+1}`}
+                      completeTime={completeTime}
+                      getLabelStyle={this.getLabelStyle}
+                      getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                        ...this.constructor.basicNotifyConfig,
+                        args: dockName,
+                        completeTime: completeTime,
+                      }}
+                    />
+                  </div>
+                </OverlayTrigger>
               </div>
             )
           })

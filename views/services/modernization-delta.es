@@ -39,7 +39,7 @@ const calcMaxDelta = (lst) => {
 const calcMaxDeltas = (sourceShips) => {
   const maxFourDeltas =
     unzip(sourceShips.map(id => (window.$ships[id] || {} ).api_powup || [0, 0, 0, 0]))
-    .map(delta => calcMaxDelta(delta))
+      .map(delta => calcMaxDelta(delta))
   const maxLuck = Math.ceil(sum(sourceShips.map(id => luckProviders(id))) / 5 - 0.0001)
   return maxFourDeltas.concat([maxLuck])
 }
@@ -63,17 +63,17 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
       const remainingAfter = calcRemainingStatuses(targetShipAfter)
       return(
         <span>
-        {__('Modernization succeeded! ')}
-        {
-          [...Array(5).keys()].map(i => {
-            const delta = kyoukaAfter[i] - kyoukaBefore[i]
-            const maxDelta = maxDeltas[i]
-            const remaining = remainingAfter[i]
-            // Explaination for if condition:
-            //   1st term: Something could have been added, but maybe delta == 0
-            //   2nd term: Something has been added
-            return (
-            ((remaining > 0 && maxDelta != 0) || delta != 0) &&
+          {__('Modernization succeeded! ')}
+          {
+            [...Array(5).keys()].map(i => {
+              const delta = kyoukaAfter[i] - kyoukaBefore[i]
+              const maxDelta = maxDeltas[i]
+              const remaining = remainingAfter[i]
+              // Explaination for if condition:
+              //   1st term: Something could have been added, but maybe delta == 0
+              //   2nd term: Something has been added
+              return (
+                ((remaining > 0 && maxDelta != 0) || delta != 0) &&
 
               <span key={i} style={{margin: '0 6px'}}>
                 {nameStatuses[i]}
@@ -86,9 +86,9 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
                   {remaining <= 0 ? 'MAX' : `+${remaining}`}
                 </span>
               </span>
-            )
-          })
-        }
+              )
+            })
+          }
         </span>
       )
     })

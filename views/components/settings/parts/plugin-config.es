@@ -142,10 +142,10 @@ class InstalledPlugin extends PureComponent {
                 <div className='update-wrapper'>
                   <div>
                     <Label bsStyle={outdatedLabelbsStyle}
-                           className={outdatedLabelClass}
-                           onClick={this.props.handleUpdate}>
+                      className={outdatedLabelClass}
+                      onClick={this.props.handleUpdate}>
                       <FontAwesome name={outdatedLabelFAname}
-                                   pulse={plugin.isUpdating}/>
+                        pulse={plugin.isUpdating}/>
                       {outdatedLabelText}
                     </Label>
                   </div>
@@ -167,24 +167,24 @@ class InstalledPlugin extends PureComponent {
                   {
                     settingAvailable?
                       <OverlayTrigger placement='top' overlay={
-                         <Tooltip id={`${plugin.id}-set-btn`}>
-                           {__('Settings')}
-                         </Tooltip>
-                         }>
-                         <Button ref='setting-btn'
-                                 bsStyle='primary' bsSize='xs'
-                                 onClick={this.toggleSettingPop}
-                                 className='plugin-control-button btn-xs-4'>
-                           <FontAwesome name='gear' />
-                         </Button>
-                       </OverlayTrigger>
-                    : null
+                        <Tooltip id={`${plugin.id}-set-btn`}>
+                          {__('Settings')}
+                        </Tooltip>
+                      }>
+                        <Button
+                          bsStyle='primary' bsSize='xs'
+                          onClick={this.toggleSettingPop}
+                          className='plugin-control-button btn-xs-4'>
+                          <FontAwesome name='gear' />
+                        </Button>
+                      </OverlayTrigger>
+                      : null
                   }
                   <OverlayTrigger placement='top' overlay={
                     <Tooltip id={`${plugin.id}-enb-btn`}>
                       {enableBtnText}
                     </Tooltip>
-                    }>
+                  }>
                     <Button bsStyle='info'
                       disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                       onClick={this.props.handleEnable}
@@ -196,7 +196,7 @@ class InstalledPlugin extends PureComponent {
                     <Tooltip id={`${plugin.id}-rm-btn`}>
                       {removeBtnText}
                     </Tooltip>
-                    }>
+                  }>
                     <Button bsStyle='danger'
                       onClick={this.props.handleRemove}
                       disabled={!plugin.isInstalled}
@@ -240,7 +240,7 @@ class InstalledPlugin extends PureComponent {
                       </Well>
                     </Col>
                   </Collapse>
-                : null
+                  : null
               }
             </Row>
           </Panel>
@@ -289,7 +289,7 @@ class UninstalledPlugin extends PureComponent {
                     <Tooltip id={`${plugin.id}-ins-btn`}>
                       {installButtonText}
                     </Tooltip>
-                    }>
+                  }>
                     <Button bsStyle='primary'
                       disabled={this.props.npmWorking}
                       onClick={this.props.handleInstall}
@@ -330,18 +330,18 @@ class InstallByNameInput extends PureComponent {
         <ControlLabel>{__('Install directly from npm')}</ControlLabel>
         <InputGroup bsSize='small'>
           <FormControl type="text"
-                 value={this.state.manuallyInstallPackage}
-                 onChange={this.changeInstalledPackage}
-                 label={__('Install directly from npm')}
-                 disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-                 placeholder={__('Input plugin package name...')}>
+            value={this.state.manuallyInstallPackage}
+            onChange={this.changeInstalledPackage}
+            label={__('Install directly from npm')}
+            disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+            placeholder={__('Input plugin package name...')}>
           </FormControl>
           <InputGroup.Button>
             <Button bsStyle='primary'
-                    disabled={this.props.manuallyInstallStatus === 1 ||
+              disabled={this.props.manuallyInstallStatus === 1 ||
                       this.props.npmWorking ||
                       !this.validPackageName()}
-                    onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
+              onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
               {__('Install')}
             </Button>
           </InputGroup.Button>
@@ -638,7 +638,7 @@ const PluginConfig = connect((state, props) => ({
           className="plugin-dropfile panel"
           onDrop={this.onDropInstallFromFile}
           acceptType="application/gzip, application/x-gzip"
-          >
+        >
           {__('Drop plugin tarballs here to install')}
         </FileDrop>
         <Grid className='correct-container'>
@@ -651,30 +651,30 @@ const PluginConfig = connect((state, props) => ({
               }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
                 <Button onClick={this.checkUpdate}
-                        disabled={this.state.checkingUpdate}
-                        className='control-button col-xs-3'>
+                  disabled={this.state.checkingUpdate}
+                  className='control-button col-xs-3'>
                   <FontAwesome name='refresh' spin={this.state.checkingUpdate} />
                   <span> {__("Check Update")}</span>
                 </Button>
                 <Button onClick={this.handleUpdateAll}
-                        disabled={this.state.npmWorking ||
+                  disabled={this.state.npmWorking ||
                           this.state.checkingUpdate ||
                           !PluginManager.getUpdateStatus()}
-                        className='control-button col-xs-3'>
+                  className='control-button col-xs-3'>
                   <FontAwesome name={updateStatusFAname}
-                               pulse={this.state.updatingAll}/>
+                    pulse={this.state.updatingAll}/>
                   <span> {__("Update all")}</span>
                 </Button>
                 <Button onClick={this.handleInstallAll}
-                        disabled={this.state.npmWorking ||
+                  disabled={this.state.npmWorking ||
                           Object.keys(uninstalledPluginSettings).length === 0}
-                        className='control-button col-xs-3'>
+                  className='control-button col-xs-3'>
                   <FontAwesome name={installStatusFAname}
-                               pulse={this.state.installingAll}/>
+                    pulse={this.state.installingAll}/>
                   <span> {__("Install all")}</span>
                 </Button>
                 <Button onClick={this.handleAdvancedShow}
-                        className='control-button col-xs-3'>
+                  className='control-button col-xs-3'>
                   <FontAwesome name="gear" />
                   <span> {__("Advanced")} </span>
                   <FontAwesome name={advanceFAname} />
@@ -709,24 +709,24 @@ const PluginConfig = connect((state, props) => ({
                           </Col>
                         </Row>
                         <Row>
-                        {
-                          Object.keys(mirrors).map((server, index) => {
-                            return (
-                              <OverlayTrigger placement='top' key={index} overlay={
-                                <Tooltip id={`npm-server-${index}`}>
-                                  {mirrors[server].menuname}
-                                </Tooltip>
-                              }>
-                                <Col key={index} xs={6} className='select-npm-server'>
-                                  <Radio checked={this.props.mirrorName == server}
-                                         onChange={this.onSelectServer.bind(this, server)} >
-                                    {mirrors[server].name}
-                                  </Radio>
-                                </Col>
-                              </OverlayTrigger>
-                            )
-                          }, this)
-                        }
+                          {
+                            Object.keys(mirrors).map((server, index) => {
+                              return (
+                                <OverlayTrigger placement='top' key={index} overlay={
+                                  <Tooltip id={`npm-server-${index}`}>
+                                    {mirrors[server].menuname}
+                                  </Tooltip>
+                                }>
+                                  <Col key={index} xs={6} className='select-npm-server'>
+                                    <Radio checked={this.props.mirrorName == server}
+                                      onChange={this.onSelectServer.bind(this, server)} >
+                                      {mirrors[server].name}
+                                    </Radio>
+                                  </Col>
+                                </OverlayTrigger>
+                              )
+                            }, this)
+                          }
                         </Row>
                       </Col>
                       <Col xs={12}>
@@ -739,19 +739,19 @@ const PluginConfig = connect((state, props) => ({
                         </Row>
                         <div>
                           <Checkbox checked={this.props.proxy || false}
-                                    onChange={this.handleEnableProxy}>
+                            onChange={this.handleEnableProxy}>
                             {__('Connect to npm server through proxy')}
                           </Checkbox>
                         </div>
                         <div>
                           <Checkbox checked={this.props.autoUpdate || false}
-                                    onChange={this.handleEnableAutoUpdate}>
+                            onChange={this.handleEnableAutoUpdate}>
                             {__('Automatically update plugins')}
                           </Checkbox>
                         </div>
                         <div>
                           <Checkbox checked={this.props.betaCheck || false}
-                                    onChange={this.handleEnableBetaPluginCheck}>
+                            onChange={this.handleEnableBetaPluginCheck}>
                             {__('Developer option: check update of beta version')}
                           </Checkbox>
                         </div>
@@ -784,8 +784,8 @@ const PluginConfig = connect((state, props) => ({
           <Row className='plugin-rowspace'>
             <Col xs={12}>
               <InstallByNameInput handleManuallyInstall={this.handleManuallyInstall}
-                                  manuallyInstallStatus={this.state.manuallyInstallStatus}
-                                  npmWorking={this.state.npmWorking} />
+                manuallyInstallStatus={this.state.manuallyInstallStatus}
+                npmWorking={this.state.npmWorking} />
             </Col>
             <Col xs={12}>
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
@@ -801,7 +801,7 @@ const PluginConfig = connect((state, props) => ({
                 handleUpdate={partial(this.handleUpdate, index)}
                 handleEnable={partial(this.handleEnable, index)}
                 handleRemove={partial(this.handleRemove, index)}
-                />)
+              />)
             }, this)
           }
           {
@@ -814,7 +814,7 @@ const PluginConfig = connect((state, props) => ({
                   npmWorking={this.state.npmWorking}
                   installing={this.state.installingPluginNames.includes(name)}
                   handleInstall={partial(this.handleInstall, name)}
-                  />
+                />
               )
             }, this)
           }

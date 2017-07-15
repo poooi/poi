@@ -65,7 +65,7 @@ export const RadioConfig = connect(() => {
             return (
               <Col key={index} xs={3}>
                 <Radio checked={this.props.value === item.value}
-                       onChange={this.onSelect.bind(this, item.value)} >
+                  onChange={this.onSelect.bind(this, item.value)} >
                   {item.name}
                 </Radio>
               </Col>
@@ -138,11 +138,11 @@ export const FolderPickerConfig = connect(() => {
       <Grid>
         <Col xs={12}>
           <div className="folder-picker"
-               onClick={this.folderPickerOnClick}
-               onDrop={this.folderPickerOnDrop}
-               onDragEnter={this.onDrag}
-               onDragOver={this.onDrag}
-               onDragLeave={this.onDrag}>
+            onClick={this.folderPickerOnClick}
+            onDrop={this.folderPickerOnDrop}
+            onDragEnter={this.onDrag}
+            onDragOver={this.onDrag}
+            onDragLeave={this.onDrag}>
             {this.props.value}
           </div>
         </Col>

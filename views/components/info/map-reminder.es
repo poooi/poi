@@ -39,27 +39,27 @@ const MapRoutes = connect(
     <div>
       <svg width="225" height="120" viewBox="0 0 225 120" className="maproutes">
         {// Draw all lines
-        map(maproutes, ([beg, end], i) => {
-          if (!(mapspots[beg] && mapspots[end])) return null
-          const [begX, begY] = mapspots[beg]
-          const [endX, endY] = mapspots[end]
-          return <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} />
-        })}
+          map(maproutes, ([beg, end], i) => {
+            if (!(mapspots[beg] && mapspots[end])) return null
+            const [begX, begY] = mapspots[beg]
+            const [endX, endY] = mapspots[end]
+            return <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} />
+          })}
         {// Draw passed lines
-        lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-          begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} className="passed" /> : <noscript />
-        )}
+          lineHistory.map(([[begX, begY], [endX, endY]], i) =>
+            begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} className="passed" /> : <noscript />
+          )}
         <rect x={parseInt(bossSpotLoc[0] / 200 * 3) - 4.5} y={parseInt(bossSpotLoc[1] / 200 * 3) - 4.5} width={9} height={9}
           className='boss' />
         {// Draw all points
-        map(mapspots, ([x, y], id) =>
-          <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6} />
-        )}
+          map(mapspots, ([x, y], id) =>
+            <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6} />
+          )}
         {// Draw passed points again, highlighting the active one
-        map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-          x > 0 ? <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6}
-            className={id == activeSpot ? 'active' : 'passed'} /> : <noscript />
-        )}
+          map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
+            x > 0 ? <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6}
+              className={id == activeSpot ? 'active' : 'passed'} /> : <noscript />
+          )}
       </svg>
     </div>
   )
@@ -86,7 +86,7 @@ const ItemStat = connect(
             <MaterialIcon materialId={parseInt(itemKey)} className="material-icon reminder"/>
             {stat[itemKey] > 0 ? `+${stat[itemKey]}` : String(stat[itemKey])}
           </span>
-          )
+        )
         )
       }
     </div>

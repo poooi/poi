@@ -125,8 +125,8 @@ const SetNotifyIndividualConfig = connect(() => {
           </Col>
           <Col xs={6}>
             <OverlayTrigger placement='top' overlay={
-                <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
-              }>
+              <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
+            }>
               <FormControl type="range"
                 onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
                 min={0.0} max={1.0} step={0.05} defaultValue={this.props.volume} />
@@ -137,28 +137,28 @@ const SetNotifyIndividualConfig = connect(() => {
           <Col xs={12} style={{marginTop: 10}}>
             <ButtonGroup style={{display: 'flex'}}>
               <Button bsStyle={this.props.construction ? 'success' : 'danger'}
-                      onClick={this.handleSetNotify.bind(this, 'construction')}
-                      className='notif-button'>
+                onClick={this.handleSetNotify.bind(this, 'construction')}
+                className='notif-button'>
                 {__('Construction')}
               </Button>
               <Button bsStyle={this.props.expedition ? 'success' : 'danger'}
-                      onClick={this.handleSetNotify.bind(this, 'expedition')}
-                      className='notif-button'>
+                onClick={this.handleSetNotify.bind(this, 'expedition')}
+                className='notif-button'>
                 {__('Expedition')}
               </Button>
               <Button bsStyle={this.props.repair ? 'success' : 'danger'}
-                      onClick={this.handleSetNotify.bind(this, 'repair')}
-                      className='notif-button'>
+                onClick={this.handleSetNotify.bind(this, 'repair')}
+                className='notif-button'>
                 {__('Docking')}
               </Button>
               <Button bsStyle={this.props.morale ? 'success' : 'danger'}
-                      onClick={this.handleSetNotify.bind(this, 'morale')}
-                      className='notif-button'>
+                onClick={this.handleSetNotify.bind(this, 'morale')}
+                className='notif-button'>
                 {__('Morale')}
               </Button>
               <Button bsStyle={this.props.others ? 'success' : 'danger'}
-                      onClick={this.handleSetNotify.bind(this, 'others')}
-                      className='notif-button'>
+                onClick={this.handleSetNotify.bind(this, 'others')}
+                className='notif-button'>
                 {__('Others')}
               </Button>
               <Button onClick={this.handleSetTimeSettingShow} bsStyle='primary' style={{width: 40}}>
@@ -175,7 +175,7 @@ const SetNotifyIndividualConfig = connect(() => {
                     <Col xs={3} className='notif-container'>
                       <FormGroup>
                         <InputGroup bsSize='small'>
-                          <FormControl type="number" ref="expeditionValue" id="expeditionValue"
+                          <FormControl type="number" id="expeditionValue"
                             disabled={!this.props.expedition}
                             onChange={this.handleSetExpedition}
                             value={this.state.expeditionValue}
@@ -192,7 +192,7 @@ const SetNotifyIndividualConfig = connect(() => {
                     </Col>
                     <Col xs={3} className='notif-container'>
                       <InputGroup bsSize='small'>
-                        <FormControl type="number" ref="moraleValue" id="moraleValue"
+                        <FormControl type="number" id="moraleValue"
                           disabled={!this.props.morale}
                           onChange={this.handleSetMorale}
                           value={this.state.moraleValue}
@@ -312,7 +312,7 @@ const SelectLanguageConfig = connect(() => {
     return (
       <Grid>
         <Col xs={6}>
-          <FormControl componentClass="select" ref="language" value={this.props.value} onChange={this.handleSetLanguage}>
+          <FormControl componentClass="select" value={this.props.value} onChange={this.handleSetLanguage}>
             <option value="zh-CN">简体中文</option>
             <option value="zh-TW">正體中文</option>
             <option value="ja-JP">日本語</option>
@@ -558,8 +558,8 @@ const ShortcutConfig = connect(() => {
                   style={{width: '15%'}}>
                   <i className="fa fa-times"></i>
                 </Button>
-              :
-              null
+                :
+                null
             }
           </ButtonGroup>
         </Col>
@@ -634,7 +634,7 @@ class PoiConfig extends Component {
                   <ShortcutConfig
                     label={__('Boss key')}
                     configName="poi.shortcut.bosskey" />
-                :
+                  :
                   <ShortcutConfig
                     label={__('Boss key')}
                     defaultVal="Cmd+H"
@@ -646,12 +646,12 @@ class PoiConfig extends Component {
                     label={__('Confirm before exit')}
                     configName="poi.confirm.quit"
                     defaultVal={false} />
-                :
+                  :
                   <OverlayTrigger placement="top"
                     overlay={
-                        <Tooltip id="tooltip-confirm-before-exit">
-                          {__('Set this in the OS X App Menu')}
-                        </Tooltip>} >
+                      <Tooltip id="tooltip-confirm-before-exit">
+                        {__('Set this in the OS X App Menu')}
+                      </Tooltip>} >
                     <div>
                       <CheckboxLabelConfig
                         label={__('Confirm before exit')}
@@ -660,7 +660,7 @@ class PoiConfig extends Component {
                   </OverlayTrigger>
               }
               <CheckboxLabelConfig
-                label={__('Display \"Tips\"')}
+                label={__('Display "Tips"')}
                 configName="poi.doyouknow.enabled"
                 defaultVal={true} />
               <CheckboxLabelConfig
@@ -692,21 +692,21 @@ class PoiConfig extends Component {
                 defaultVal={true} />
               {
                 (process.platform === 'win32') ?
-                <CheckboxLabelConfig
-                  label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
-                  configName="poi.createShortcut"
-                  defaultVal={true} />
-                :
-                null
+                  <CheckboxLabelConfig
+                    label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
+                    configName="poi.createShortcut"
+                    defaultVal={true} />
+                  :
+                  null
               }
               {
                 (process.platform === 'linux') ?
-                <CheckboxLabelConfig
-                  label={__('Display tray icon')}
-                  configName="poi.linuxTrayIcon"
-                  defaultVal={true} />
-                :
-                null
+                  <CheckboxLabelConfig
+                    label={__('Display tray icon')}
+                    configName="poi.linuxTrayIcon"
+                    defaultVal={true} />
+                  :
+                  null
               }
               <CheckboxLabelConfig
                 label={__('Enter safe mode on next startup')}

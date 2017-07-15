@@ -11,7 +11,6 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
   ],
-  'installedESLint': true,
   'parserOptions': {
     'ecmaVersion': 7,
     'ecmaFeatures': {

@@ -81,7 +81,7 @@ export const PoiAlert = class poiAlert extends Component {
     setTimeout(() => {
       try {
         const alertHeight =  $('poi-control').offsetHeight
-        const historyHeight = this.refs.alertHistory.offsetHeight
+        const historyHeight = this.alertHistory.offsetHeight
         const bgColor = window.getComputedStyle($('body')).backgroundColor
         if (historyHeight === this.historyHeight && alertHeight === this.alertHeight && bgColor === this.bgColor) {
           return
@@ -143,14 +143,14 @@ export const PoiAlert = class poiAlert extends Component {
   handleOverflow = () => {
     const containerWidth = $('poi-alert').offsetWidth
     if (!this.state.overflow) {
-      this.msgWidth = this.refs.alertArea.offsetWidth
-      this.refs.alertPosition.style.width = `${this.msgWidth}px`
+      this.msgWidth = this.alertArea.offsetWidth
+      this.alertPosition.style.width = `${this.msgWidth}px`
     }
     if ((this.msgWidth > containerWidth) && !this.state.overflow) {
-      this.refs.alertPosition.style.width = `${this.msgWidth + 50}px`
+      this.alertPosition.style.width = `${this.msgWidth + 50}px`
       this.setState({overflow: true})
     } else if ((this.msgWidth < containerWidth) && this.state.overflow) {
-      this.refs.alertPosition.style.width = `${this.msgWidth}px`
+      this.alertPosition.style.width = `${this.msgWidth}px`
       this.setState({overflow: false})
     }
   }
@@ -168,7 +168,7 @@ export const PoiAlert = class poiAlert extends Component {
       }
     })
     this.observer = new MutationObserver(this.handleOverflow)
-    const target = this.refs.alertArea
+    const target = this.alertArea
     const options = {
       childList: true,
       attributes: true,
@@ -191,28 +191,30 @@ export const PoiAlert = class poiAlert extends Component {
   render() {
     return (
       <div id='alert-main' className='alert-main'>
-        <div id='alert-container'
-             className={`alert alert-${this.state.current.type} alert-container`}
-             onClick={this.toggleHistory}>
-          <div className='alert-position' ref="alertPosition">
-            <span id='alert-area' ref='alertArea' className={this.state.overflow ? 'overflow-anim' : ''}>
+        <div
+          id='alert-container'
+          className={`alert alert-${this.state.current.type} alert-container`}
+          onClick={this.toggleHistory}
+        >
+          <div className='alert-position' ref={(ref) => { this.alertPosition = ref }}>
+            <span id='alert-area' ref={(ref) => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
-                <span>
-                  <span style={{marginRight: 50}}>
-                    {this.state.current.content}
+                  <span>
+                    <span style={{marginRight: 50}}>
+                      {this.state.current.content}
+                    </span>
+                    <span style={{marginRight: 50}}>
+                      {this.state.current.content}
+                    </span>
                   </span>
-                  <span style={{marginRight: 50}}>
-                    {this.state.current.content}
-                  </span>
-                </span>
-                : this.state.current.content
+                  : this.state.current.content
               }
             </span>
           </div>
         </div>
         <div id='alert-history'
-          ref='alertHistory'
+          ref={(ref) => { this.alertHistory = ref }}
           className='alert-history panel'
           onClick={this.toggleHistory}>
           {this.state.history}

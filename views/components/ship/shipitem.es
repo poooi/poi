@@ -113,10 +113,10 @@ export const ShipRow = connect(
               placement='right'
               overlay={
                 ship.api_ndock_time > 0 ?
-                <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
-                  {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
-                </Tooltip>
-                : <noscript />
+                  <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
+                    {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
+                  </Tooltip>
+                  : <noscript />
               }
             >
               <div className="ship-stat">
@@ -135,7 +135,7 @@ export const ShipRow = connect(
                 </div>
                 <span className="hp-progress top-space" style={labelStatusStyle}>
                   <ProgressBar bsStyle={getHpStyle(hpPercentage)}
-                               now={hpPercentage} />
+                    now={hpPercentage} />
                 </span>
               </div>
             </OverlayTrigger>
@@ -145,11 +145,11 @@ export const ShipRow = connect(
           <span style={{flex: 1}}>
             <OverlayTrigger placement='right' overlay={
               <Tooltip id={`panebody-fuel-${ship.api_id}`}>
-                  {fuelTip}
+                {fuelTip}
               </Tooltip>
             }>
               <ProgressBar bsStyle={getMaterialStyle(fuelPercentage)}
-                           now={fuelPercentage} />
+                now={fuelPercentage} />
             </OverlayTrigger>
           </span>
           <span style={{flex: 1}}>
@@ -159,7 +159,7 @@ export const ShipRow = connect(
               </Tooltip>
             }>
               <ProgressBar bsStyle={getMaterialStyle(ammoPercentage)}
-                           now={ammoPercentage} />
+                now={ammoPercentage} />
             </OverlayTrigger>
           </span>
         </span>

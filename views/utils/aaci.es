@@ -108,7 +108,7 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
   equipsValid: validAll(hasAtLeast(
     isBuiltinHighAngleMount, 2),
-    hasSome(isAARadar)
+  hasSome(isAARadar)
   ),
 })
 
@@ -360,27 +360,27 @@ const sortAaciIds = (aaciIds,
 
 // Order by AACI id desc
 export const sortFleetPossibleAaciList = triggeredShipAaciIds =>
-   sortAaciIds(triggeredShipAaciIds, (a, b) => b.id - a.id)
+  sortAaciIds(triggeredShipAaciIds, (a, b) => b.id - a.id)
 
 // return a list of AACIs that meet the requirement of ship and equipmenmt
 // ship: ship
 // equips: [[equip, onslot] for equip on ship]
 export const getShipAvailableAACIs = (ship, equips) =>
   Object.keys(AACITable)
-  .filter((key) => {
-    const type = AACITable[key]
-    return type.shipValid(ship) && type.equipsValid(equips)
-  })
-  .map(key => Number(key))
+    .filter((key) => {
+      const type = AACITable[key]
+      return type.shipValid(ship) && type.equipsValid(equips)
+    })
+    .map(key => Number(key))
 
 // return a list of all possible AACIs for the ship herself
 export const getShipAllAACIs = ship =>
   Object.keys(AACITable)
-  .filter((key) => {
-    const type = AACITable[key]
-    return type.shipValid(ship)
-  })
-  .map(key => Number(key))
+    .filter((key) => {
+      const type = AACITable[key]
+      return type.shipValid(ship)
+    })
+    .map(key => Number(key))
 
 // return the AACIs to trigger for a ship, it will be array due to exceptions
 export const getShipAACIs = (ship, equips) => {

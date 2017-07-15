@@ -46,8 +46,8 @@ if (config.get('poi.first', '0.0.0') != POI_VERSION) {
         <ul>
           {
             isCN
-            ? <li>{__('For Shimakaze Go, use HTTP proxy with address 127.0.0.1 and port 8099 (default case).')}</li>
-            : <li>{__('For cookie method, check Editing DMM Cookie Region Flag setting.')}</li>
+              ? <li>{__('For Shimakaze Go, use HTTP proxy with address 127.0.0.1 and port 8099 (default case).')}</li>
+              : <li>{__('For cookie method, check Editing DMM Cookie Region Flag setting.')}</li>
           }
           <li>{__('For Shadowsocks and other Socks5 proxies, use Socks5.')}</li>
           <li>{__('For VPN, simply leave it unset.')}</li>

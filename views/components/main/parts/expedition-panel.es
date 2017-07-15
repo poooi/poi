@@ -39,9 +39,9 @@ export default connect(
   getLabelStyle = (props, timeRemaining) => {
     return (
       timeRemaining > 600 ? 'primary' :
-      timeRemaining > 60 ? 'warning' :
-      timeRemaining >= 0 ? 'success' :
-      'default'
+        timeRemaining > 60 ? 'warning' :
+          timeRemaining >= 0 ? 'success' :
+            'default'
     )
   }
   static basicNotifyConfig = {
@@ -54,41 +54,41 @@ export default connect(
     const {fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore} = this.props
     return (
       <Panel bsStyle="default">
-      {
-        range(1, 4).map((i) => {
-          const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
-          const fleetName = get(fleetNames, i, '???')
-          const expeditionName =
+        {
+          range(1, 4).map((i) => {
+            const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
+            const fleetName = get(fleetNames, i, '???')
+            const expeditionName =
             status == -1 ? __('Locked') :
-            status == 0 ? __('Ready') :
-            get($expeditions, [expeditionId, 'api_name'], __('???'))
-          const completeTime = status > 0 ? rawCompleteTime : -1
-          return (
-            <div className="panel-item expedition-item" key={i} >
-              <span className="expedition-name">{expeditionName}</span>
-              <OverlayTrigger placement='left' overlay={
-                <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
-                  <strong>{__("Return by : ")}</strong>{timeToString(completeTime)}
-                </Tooltip>
-              }>
-                <div>
-                  <CountdownNotifierLabel
-                    timerKey={`expedition-${i+1}`}
-                    completeTime={completeTime}
-                    getLabelStyle={this.getLabelStyle}
-                    getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                      ...this.constructor.basicNotifyConfig,
-                      args: fleetName,
-                      completeTime: completeTime,
-                      preemptTime: notifyBefore,
-                    }}
-                  />
-                </div>
-              </OverlayTrigger>
-            </div>
-          )
-        })
-      }
+              status == 0 ? __('Ready') :
+                get($expeditions, [expeditionId, 'api_name'], __('???'))
+            const completeTime = status > 0 ? rawCompleteTime : -1
+            return (
+              <div className="panel-item expedition-item" key={i} >
+                <span className="expedition-name">{expeditionName}</span>
+                <OverlayTrigger placement='left' overlay={
+                  <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
+                    <strong>{__("Return by : ")}</strong>{timeToString(completeTime)}
+                  </Tooltip>
+                }>
+                  <div>
+                    <CountdownNotifierLabel
+                      timerKey={`expedition-${i+1}`}
+                      completeTime={completeTime}
+                      getLabelStyle={this.getLabelStyle}
+                      getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                        ...this.constructor.basicNotifyConfig,
+                        args: fleetName,
+                        completeTime: completeTime,
+                        preemptTime: notifyBefore,
+                      }}
+                    />
+                  </div>
+                </OverlayTrigger>
+              </div>
+            )
+          })
+        }
       </Panel>
     )
   }
