@@ -140,6 +140,8 @@ app.on('ready', () => {
     if (/electron$/i.test(process.argv[0])) {
       const icon = nativeImage.createFromPath(`${ROOT}/assets/icons/poi.png`)
       app.dock.setIcon(icon)
+      const {touchBar} = require('./lib/touchbar')
+      mainWindow.setTouchBar(touchBar)
     }
   } else {
     mainWindow.setMenu(null)

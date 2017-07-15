@@ -24,6 +24,8 @@ const openItemAsync = (dir, source=null) => {
 
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
+const {touchBarreinit, refreshconfirm} = remote.require('./lib/touchbar')
+
 
 config.on('config.set', (path, value) => {
   switch (path) {
@@ -36,6 +38,7 @@ config.on('config.set', (path, value) => {
 
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
+  tbtriggered: get(state, 'config.poi.touchbar.triggered', null),
 }))(class poiControl extends React.Component {
   static propTypes = {
     muted: PropTypes.bool,
@@ -157,6 +160,50 @@ const PoiControl = connect((state, props) => ({
   handleSetExtend = () => {
     this.setState({extend: !this.state.extend})
   }
+  handleTouchbar = (props) => {
+    //workaround for the input event not defined
+    let a = {
+      shiftKey: false
+    }
+    switch (props) {
+      case 'refresh':
+        this.handleRefreshGameDialog(a)
+        refreshconfirm(__("Refresh page"),__("Reload Flash"))
+        break
+      case 'adjust':
+        window.dispatchEvent(new Event('resize'))
+        break
+      case 'unlock':
+        this.handleUnlockWebview()
+        break
+      case 'screenshotdir':
+        this.handleOpenScreenshotFolder()
+        break
+      case 'cachedir':
+        this.handleOpenCacheFolder()
+        break
+      case 'mute':
+        config.set('poi.content.muted', true)
+        touchBarreinit(true)
+        break
+      case 'unmute':
+        config.set('poi.content.muted', false)
+        touchBarreinit(false)
+        break
+      case 'screenshot':
+        this.handleCapturePage()
+        break
+      case 'gameReloadFlash':
+        gameReloadFlash()
+        break
+      case 'gameRefreshPage':
+        gameRefreshPage()
+        break
+    default:
+    }
+    config.set('poi.touchbar.triggered', null)
+    //console.log(this.props.tbtriggered)
+  }
   sendEvent = (isExtend) => {
     const event = new CustomEvent('alert.change', {
       bubbles: true,
@@ -170,6 +217,7 @@ const PoiControl = connect((state, props) => ({
   render() {
     return (
       <div className='poi-control-container'>
+        <script>{this.handleTouchbar(this.props.tbtriggered)}</script>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__('Developer Tools')}</Tooltip>}>
           <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
         </OverlayTrigger>
@@ -207,5 +255,22 @@ const PoiControl = connect((state, props) => ({
     )
   }
 })
+
+//Touchbar input receiver
+require('electron').ipcRenderer.on('touchbar', (event, message) => {
+  switch (message) {
+    //workaround for mute function is called twice
+    case 'volume':
+      if (config.get('poi.content.muted')){
+        config.set('poi.touchbar.triggered', 'unmute')
+      }
+      else {
+        config.set('poi.touchbar.triggered', 'mute')
+      }
+    break
+    default: config.set('poi.touchbar.triggered', message)
+  }
+})
+
 
 export { PoiControl }
