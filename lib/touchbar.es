@@ -3,7 +3,7 @@ const {TouchBarLabel, TouchBarButton, TouchBarGroup, TouchBarSpacer} = TouchBar
 const config = require('../lib/config')
 
 // simulate Escape key
-const touchbaresc = () => {
+export const touchbaresc = () => {
   mainWindow.webContents.sendInputEvent({
     type: "keyDown",
     keyCode: 'Escape'
@@ -106,3 +106,5 @@ export const touchBarreinit = (muted) => {
     volume.icon = './assets/img/touchbar/volume-up.png'
   }
 }
+//Touchbar reset
+export const touchBarReset = () => {mainWindow.setTouchBar(touchBar)}

@@ -24,7 +24,7 @@ const openItemAsync = (dir, source=null) => {
 
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
-const {touchBarreinit, refreshconfirm} = remote.require('./lib/touchbar')
+const {touchBarreinit, refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
 
 
 config.on('config.set', (path, value) => {
@@ -162,12 +162,32 @@ const PoiControl = connect((state, props) => ({
   }
   handleTouchbar = (props) => {
     //workaround for the input event not defined
-    let a = {
-      shiftKey: false
-    }
     switch (props) {
       case 'refresh':
-        this.handleRefreshGameDialog(a)
+        //this.handleRefreshGameDialog(a)
+        const tipTexts =
+        i18n.others.__("RefreshGameDialogTip") ||
+        i18n.others.locales["en-US"]["RefreshGameDialogTip"]
+
+        toggleModal(
+          __("Confirm Refreshing"),
+          <div>
+            {__("Are you sure to refresh the game?")}
+            <ul>
+              <li>{__('"Refresh page" is the same as pressing F5.')}</li>
+              <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
+            </ul>
+          </div>,
+          [
+            { name: __("Refresh page"),
+              func: gameRefreshPage,
+              style: "warning" },
+            { name: __("Reload Flash"),
+              func: gameReloadFlash,
+              style: "danger" },
+          ],
+          () => {touchBarReset()}
+        )
         refreshconfirm(__("Refresh page"),__("Reload Flash"))
         break
       case 'adjust':
