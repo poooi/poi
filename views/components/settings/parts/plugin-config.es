@@ -171,7 +171,7 @@ class InstalledPlugin extends PureComponent {
                           {__('Settings')}
                         </Tooltip>
                       }>
-                        <Button ref='setting-btn'
+                        <Button
                           bsStyle='primary' bsSize='xs'
                           onClick={this.toggleSettingPop}
                           className='plugin-control-button btn-xs-4'>

@@ -175,7 +175,7 @@ const SetNotifyIndividualConfig = connect(() => {
                     <Col xs={3} className='notif-container'>
                       <FormGroup>
                         <InputGroup bsSize='small'>
-                          <FormControl type="number" ref="expeditionValue" id="expeditionValue"
+                          <FormControl type="number" ref={(ref) => { this.expeditionValue = ref }} id="expeditionValue"
                             disabled={!this.props.expedition}
                             onChange={this.handleSetExpedition}
                             value={this.state.expeditionValue}
@@ -192,7 +192,7 @@ const SetNotifyIndividualConfig = connect(() => {
                     </Col>
                     <Col xs={3} className='notif-container'>
                       <InputGroup bsSize='small'>
-                        <FormControl type="number" ref="moraleValue" id="moraleValue"
+                        <FormControl type="number" ref={(ref) => { this.moraleValue = ref }} id="moraleValue"
                           disabled={!this.props.morale}
                           onChange={this.handleSetMorale}
                           value={this.state.moraleValue}
@@ -312,7 +312,7 @@ const SelectLanguageConfig = connect(() => {
     return (
       <Grid>
         <Col xs={6}>
-          <FormControl componentClass="select" ref="language" value={this.props.value} onChange={this.handleSetLanguage}>
+          <FormControl componentClass="select" ref={(ref) => { this.language = ref }} value={this.props.value} onChange={this.handleSetLanguage}>
             <option value="zh-CN">简体中文</option>
             <option value="zh-TW">正體中文</option>
             <option value="ja-JP">日本語</option>

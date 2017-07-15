@@ -150,7 +150,7 @@ const NetworkConfig = connect(() => (
         <Divider text={__('Proxy server information')} />
         <Grid>
           <Col xs={12}>
-            <FormControl componentClass="select" ref="use" value={this.state.use || "none"} onChange={this.handleChangeUse}>
+            <FormControl componentClass="select" ref={(ref) => { this.use = ref }} value={this.state.use || "none"} onChange={this.handleChangeUse}>
               <option key={0} value="http">HTTP {__("proxy")}</option>
               <option key={1} value="socks5">Socks5 {__("proxy")}</option>
               <option key={2} value="pac">PAC {__("file")} ({__("Experimental")})</option>
@@ -164,17 +164,17 @@ const NetworkConfig = connect(() => (
               <Col xs={6}>
                 <FormGroup>
                   <ControlLabel>{__('Proxy server address')}</ControlLabel>
-                  <FormControl type="text" ref="httpHost" placeholder={__('Proxy server address')} value={this.state.http.host} onChange={this.handleHttpHostChange} />
+                  <FormControl type="text" ref={(ref) => { this.httpHost = ref }} placeholder={__('Proxy server address')} value={this.state.http.host} onChange={this.handleHttpHostChange} />
                 </FormGroup>
               </Col>
               <Col xs={6}>
                 <FormGroup>
                   <ControlLabel>{__('Proxy server port')}</ControlLabel>
-                  <FormControl type="text" ref="httpPort" placeholder={__('Proxy server port')} value={this.state.http.port} onChange={this.handleHttpPortChange} />
+                  <FormControl type="text" ref={(ref) => { this.httpPort = ref }} placeholder={__('Proxy server port')} value={this.state.http.port} onChange={this.handleHttpPortChange} />
                 </FormGroup>
               </Col>
               <Col xs={12}>
-                <Checkbox ref="httpRequirePassword" checked={!!this.state.http.requirePassword} onChange={this.handleSetHttpRequirePassword}>
+                <Checkbox ref={(ref) => { this.httpRequirePassword = ref }} checked={!!this.state.http.requirePassword} onChange={this.handleSetHttpRequirePassword}>
                   {__('Proxy server requires password')}
                 </Checkbox>
               </Col>
@@ -182,13 +182,13 @@ const NetworkConfig = connect(() => (
                 <Col xs={6}>
                   <FormGroup>
                     <ControlLabel>{__('Username')}</ControlLabel>
-                    <FormControl type="text" ref="httpUsername" placeholder={__('Username')} value={this.state.http.username} onChange={this.handleHttpUsernameChange} />
+                    <FormControl type="text" ref={(ref) => { this.httpUsername = ref }} placeholder={__('Username')} value={this.state.http.username} onChange={this.handleHttpUsernameChange} />
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
                   <FormGroup>
                     <ControlLabel>{__('Password')}</ControlLabel>
-                    <FormControl type="password" ref="httpPassword" placeholder={__('Password')} value={this.state.http.password} onChange={this.handleHttpPasswordChange} />
+                    <FormControl type="password" ref={(ref) => { this.httpPassword = ref }} placeholder={__('Password')} value={this.state.http.password} onChange={this.handleHttpPasswordChange} />
                   </FormGroup>
                 </Col>
               </div>
@@ -199,13 +199,13 @@ const NetworkConfig = connect(() => (
                 <Col xs={6}>
                   <FormGroup>
                     <ControlLabel>{__('Proxy server address')}</ControlLabel>
-                    <FormControl type="text" ref="socksHost" placeholder={__('Proxy server address')} value={this.state.socks5.host} onChange={this.handleSocksHostChange} />
+                    <FormControl type="text" ref={(ref) => { this.socksHost = ref }} placeholder={__('Proxy server address')} value={this.state.socks5.host} onChange={this.handleSocksHostChange} />
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
                   <FormGroup>
                     <ControlLabel>{__('Proxy server port')}</ControlLabel>
-                    <FormControl type="text" ref="socksPort" placeholder={__('Proxy server port')} value={this.state.socks5.port} onChange={this.handleSocksPortChange} />
+                    <FormControl type="text" ref={(ref) => { this.socksPort = ref }} placeholder={__('Proxy server port')} value={this.state.socks5.port} onChange={this.handleSocksPortChange} />
                   </FormGroup>
                 </Col>
               </Grid>
@@ -214,7 +214,7 @@ const NetworkConfig = connect(() => (
                   <Col xs={12}>
                     <FormGroup>
                       <ControlLabel>{__('PAC address')}</ControlLabel>
-                      <FormControl type="text" ref="pacAddr" placeholder={__('PAC address')} value={this.state.pacAddr} onChange={this.handlePACAddrChange} />
+                      <FormControl type="text" ref={(ref) => { this.pacAddr = ref }} placeholder={__('PAC address')} value={this.state.pacAddr} onChange={this.handlePACAddrChange} />
                     </FormGroup>
                   </Col>
                 </Grid>
@@ -228,7 +228,7 @@ const NetworkConfig = connect(() => (
         <Divider text={__('Times of reconnect')} />
         <Grid>
           <Col xs={12}>
-            <FormControl type="number" ref="retries" value={this.state.retries} onChange={this.handleSetRetries} />
+            <FormControl type="number" ref={(ref) => { this.retries = ref }} value={this.state.retries} onChange={this.handleSetRetries} />
           </Col>
           <Col xs={12}>
             <Alert bsStyle='danger'>
@@ -247,7 +247,7 @@ const NetworkConfig = connect(() => (
             <div>
               <Col xs={12}>
                 <ControlLabel>{__("poi port")}</ControlLabel>
-                <FormControl type="number" ref="port" value={this.state.port} onChange={this.handleSetPort} placeholder={__("Default: 0 (Use random port)")} />
+                <FormControl type="number" ref={(ref) => { this.port = ref }} value={this.state.port} onChange={this.handleSetPort} placeholder={__("Default: 0 (Use random port)")} />
               </Col>
               <Col xs={12}>
                 <Checkbox checked={this.state.allowLAN} onChange={this.handleSetAllowLAN}>{__("Allow connections from LAN")}</Checkbox>
