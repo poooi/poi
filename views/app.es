@@ -30,6 +30,7 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
+const { TitleBarWrapper } = require('./components/etc/menu')
 const CustomCssInjector = () => {
   const cssPath = path.join(EXROOT, 'hack', 'custom.css')
   fs.ensureFileSync(cssPath)
@@ -39,7 +40,6 @@ const CustomCssInjector = () => {
 }
 
 if (config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')) {
-  const { TitleBarWrapper } = require('./components/etc/menu')
   ReactDOM.render(
     <TitleBarWrapper />,
     $('title-bar')
