@@ -5,7 +5,6 @@ const path = require('path-extra')
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
-console.log(config.get('poi.content.muted'))
 // simulate Escape key
 export const touchbaresc = () => {
   mainWindow.webContents.sendInputEvent({
