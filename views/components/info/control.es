@@ -166,14 +166,14 @@ const PoiControl = connect((state, props) => ({
     switch (props) {
     case 'refresh':
       toggleModal(
-         __("Confirm Refreshing"),
-         <div>
-           {__("Are you sure to refresh the game?")}
-           <ul>
-             <li>{__('"Refresh page" is the same as pressing F5.')}</li>
-             <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
-           </ul>
-         </div>,
+        __("Confirm Refreshing"),
+        <div>
+          {__("Are you sure to refresh the game?")}
+          <ul>
+            <li>{__('"Refresh page" is the same as pressing F5.')}</li>
+            <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
+          </ul>
+        </div>,
         [
           { name: __("Refresh page"),
             func: gameRefreshPage,
@@ -182,8 +182,8 @@ const PoiControl = connect((state, props) => ({
             func: gameReloadFlash,
             style: "danger" },
         ],
-         () => {touchBarReset()}
-       )
+        () => {touchBarReset()}
+      )
       refreshconfirm(__("Refresh page"),__("Reload Flash"))
       break
     case 'adjust':

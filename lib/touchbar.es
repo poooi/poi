@@ -1,7 +1,10 @@
-const {TouchBar} = require('electron')
-const {TouchBarButton, TouchBarSpacer} = TouchBar
-const config = require('../lib/config')
+import { TouchBar } from 'electron'
+import config from './config'
+import path from 'path-extra'
+
+const { TouchBarButton, TouchBarSpacer } = TouchBar
 const mainWindow = global.mainWindow
+const ROOT = global.ROOT
 
 // simulate Escape key
 export const touchbaresc = () => {
@@ -16,37 +19,36 @@ export const touchbaresc = () => {
 }
 // buttons
 const devtools = new TouchBarButton({
-  icon: './assets/img/touchbar/gears.png',
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'gears.png'),
   click: () => {mainWindow.openDevTools({detach: true})},
 })
 const screenshot = new TouchBarButton({
-  icon: './assets/img/touchbar/camera-retro.png',
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'camera-retro.png'),
   click: () => {mainWindow.webContents.send('touchbar','screenshot')},
 })
 const volume = new TouchBarButton({
-  //icon: './assets/img/touchbar/volume-off.png',
-  icon: config.get('poi.content.muted') ? './assets/img/touchbar/volume-off.png' : './assets/img/touchbar/volume-up.png',
+  icon: config.get('poi.content.muted') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png'),
   click: () => {mainWindow.webContents.send('touchbar','volume')},
 })
 const cachedir = new TouchBarButton({
-  icon: './assets/img/touchbar/bolt.png',
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'bolt.png'),
   click: () => {mainWindow.webContents.send('touchbar','cachedir')},
 })
 const screenshotdir = new TouchBarButton({
-  icon: './assets/img/touchbar/photo.png',
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'photo.png'),
   click: () => {mainWindow.webContents.send('touchbar','screenshotdir')},
 })
 const adjust = new TouchBarButton({
-  icon: './assets/img/touchbar/arrows-alt.png',
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'arrows-alt.png'),
   click: () => {mainWindow.webContents.send('touchbar','adjust')},
 })
 const refresh = new TouchBarButton({
-  icon: './assets/img/touchbar/refresh.png',
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'refresh.png'),
   click: () => {mainWindow.webContents.send('touchbar','refresh')},
 })
 // poi esc
 const poibutton = new TouchBarButton({
-  icon: './assets/icons/poi_36x36.png',
+  icon: path.join(ROOT, 'assets', 'icons', 'poi_36x36.png'),
   backgroundColor: '#000000',
 })
 //confirmation modal
@@ -92,10 +94,10 @@ export const touchBar = new TouchBar({
 //Change Volume btn
 export const touchBarreinit = (muted) => {
   if (muted) {
-    volume.icon = './assets/img/touchbar/volume-off.png'
+    volume.icon = path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png')
   }
   else {
-    volume.icon = './assets/img/touchbar/volume-up.png'
+    volume.icon = path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
   }
 }
 //Touchbar reset
