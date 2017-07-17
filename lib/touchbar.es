@@ -1,7 +1,8 @@
-const {TouchBar} = require('electron')
-const {TouchBarButton, TouchBarSpacer} = TouchBar
-const config = require('./config')
-const path = require('path-extra')
+import { TouchBar } from 'electron'
+import config from './config'
+import path from 'path-extra'
+
+const { TouchBarButton, TouchBarSpacer } = TouchBar
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
