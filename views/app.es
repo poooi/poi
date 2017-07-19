@@ -12,6 +12,7 @@ import PoiMapReminder from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
+import { BasicAuth } from './utils/http-basic-auth'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
@@ -72,3 +73,4 @@ ReactDOM.render(
 ReactDOM.render(<ModalTrigger />, $('poi-modal-trigger'))
 ReactDOM.render(<Toastr />, $('poi-toast-trigger'))
 ReactDOM.render(<CustomCssInjector />, $('poi-css-injector'))
+ReactDOM.render(<BasicAuth />, $('poi-auth-trigger'))
