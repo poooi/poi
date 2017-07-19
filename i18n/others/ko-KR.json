@@ -46,7 +46,9 @@
   "AntiAir": "대공",
   "Armor": "장갑",
   "Luck": "운",
-
+  "Website requires login": "Website requires login",
+  "Username":"Username",
+  "Password":"Password",
   "RefreshGameDialogTip": false,
 
   "doyouknow-prefix": "[TIP] ",

@@ -47,7 +47,9 @@
   "AntiAir": "AntiAir",
   "Armor": "Armor",
   "Luck": "Luck",
-
+  "Website requires login": "Website requires login",
+  "Username":"Username",
+  "Password":"Password",
   "RefreshGameDialogTip": {
       "text1": "Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are ",
       "b1": "without confirmation",

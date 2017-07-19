@@ -60,6 +60,9 @@
   "Are you sure to refresh the game?": "确定要刷新游戏吗？",
   "Refresh page": "刷新游戏页面",
   "Reload Flash": "重新载入 Flash",
+  "Website requires login": "网站需要登陆",
+  "Username":"用户名",
+  "Password":"密码",
   "RefreshGameDialogTip": {
     "text1": "提示：右键单击此按钮可重新载入 Flash，按住 Shift 同时左键单击此按钮可刷新游戏页面，但这两种刷新方法都",
     "b1": "不会弹出该确认对话框",

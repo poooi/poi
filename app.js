@@ -180,6 +180,15 @@ app.on('ready', () => {
     })
   }
 })
+// http basic auth
+app.on('login', (event, webContents, request, authInfo, callback) => {
+  event.preventDefault()
+  mainWindow.webContents.send('http-basic-auth', 'login')
+  ipcMain.once ('basic-auth-info', (event, usr, pwd) => {
+    callback(usr, pwd)
+  })
+})
+
 
 ipcMain.on ('refresh-shortcut', () => {
   shortcut.unregister()
