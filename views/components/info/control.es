@@ -37,7 +37,7 @@ config.on('config.set', (path, value) => {
 
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
-  tbtriggered: get(state, 'config.poi.touchbar.triggered', null),
+  //tbtriggered: get(state, 'config.poi.touchbar.triggered', null),
 }))(class poiControl extends React.Component {
   static propTypes = {
     muted: PropTypes.bool,
@@ -198,13 +198,9 @@ const PoiControl = connect((state, props) => ({
     case 'cachedir':
       this.handleOpenCacheFolder()
       break
-    case 'mute':
-      config.set('poi.content.muted', true)
-      touchBarreinit(true)
-      break
-    case 'unmute':
-      config.set('poi.content.muted', false)
-      touchBarreinit(false)
+    case 'volume':
+      this.handleSetMuted()
+      touchBarreinit()
       break
     case 'screenshot':
       this.handleCapturePage()
@@ -217,7 +213,6 @@ const PoiControl = connect((state, props) => ({
       break
     default:
     }
-    config.set('poi.touchbar.triggered', null)
   }
   sendEvent = (isExtend) => {
     const event = new CustomEvent('alert.change', {
@@ -229,8 +224,15 @@ const PoiControl = connect((state, props) => ({
     })
     window.dispatchEvent(event)
   }
+  componentDidMount = () => {
+    //Stateless touchbar input receiver
+    if (process.platform === 'darwin') {
+      require('electron').ipcRenderer.on('touchbar', (event, message) => {
+        this.handleTouchbar(message)
+      })
+    }
+  }
   render() {
-    if (process.platform === 'darwin') {this.handleTouchbar(this.props.tbtriggered)}
     return (
       <div className='poi-control-container'>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__('Developer Tools')}</Tooltip>}>
@@ -270,23 +272,5 @@ const PoiControl = connect((state, props) => ({
     )
   }
 })
-
-//Touchbar input receiver
-if (process.platform === 'darwin') {
-  require('electron').ipcRenderer.on('touchbar', (event, message) => {
-    switch (message) {
-      //workaround for mute function is called twice
-    case 'volume':
-      if (config.get('poi.content.muted')){
-        config.set('poi.touchbar.triggered', 'unmute')
-      }
-      else {
-        config.set('poi.touchbar.triggered', 'mute')
-      }
-      break
-    default: config.set('poi.touchbar.triggered', message)
-    }
-  })
-}
 
 export { PoiControl }
