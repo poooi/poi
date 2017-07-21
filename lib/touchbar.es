@@ -92,7 +92,7 @@ export const touchBar = new TouchBar({
   escapeItem: poibutton,
 })
 //Change Volume btn
-export const touchBarreinit = () => {
+export const touchBarReInit = () => {
   volume.icon = config.get('poi.content.muted') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
 }
 //Touchbar reset

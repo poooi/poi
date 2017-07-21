@@ -37,7 +37,6 @@ config.on('config.set', (path, value) => {
 
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
-  //tbtriggered: get(state, 'config.poi.touchbar.triggered', null),
 }))(class poiControl extends React.Component {
   static propTypes = {
     muted: PropTypes.bool,
@@ -161,7 +160,7 @@ const PoiControl = connect((state, props) => ({
   }
   handleTouchbar = (props) => {
     //load Touchbar-related functions only when touchbar is triggered
-    const {touchBarreinit, refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
+    const {touchBarReInit, refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
     //workaround for the input event not defined
     switch (props) {
     case 'refresh':
@@ -200,7 +199,7 @@ const PoiControl = connect((state, props) => ({
       break
     case 'volume':
       this.handleSetMuted()
-      touchBarreinit()
+      touchBarReInit()
       break
     case 'screenshot':
       this.handleCapturePage()
