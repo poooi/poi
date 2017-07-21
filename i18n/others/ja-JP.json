@@ -59,9 +59,9 @@
   "Are you sure to refresh the game?": "リロードですか？",
   "Refresh page": "ページをリロード",
   "Reload Flash": "ゲームだけをリロード",
-  "Website requires login": "Website requires login",
-  "Username":"Username",
-  "Password":"Password",
+  "Website requires login": "ログインが必要",
+  "Username":"ユーザー",
+  "Password":"パスワード",
   "RefreshGameDialogTip": {
     "text1": "ヒント：右クリックしてゲームだけをリロード、Shift キーを押して左クリックしてページをリロード。この二つの方法は",
     "b1": "確認ダイアログがありません",
