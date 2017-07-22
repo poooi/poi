@@ -1,4 +1,3 @@
-require('coffee-script/register')
 require('babel-register')(require('./babel.config'))
 const gulp = require('gulp')
 const argv = require('yargs').argv
@@ -9,7 +8,6 @@ const { buildAsync,
   getFlashAsync,
   getFlashAllAsync,
   cleanFiles,
-  installThemeAsync,
   packWinReleaseAsync,
   compileToJsAsync } = require('./build-detail')
 
@@ -23,11 +21,9 @@ gulp.task('getVersion', () => {
   log(`*** Start building poi ${poiVersion} ***`)
 })
 
-gulp.task ('deploy', ['getVersion', 'get_flash'], async() => {
-  await installThemeAsync(poiVersion)
-})
+gulp.task('deploy', ['getVersion', 'get_flash'], () => {})
 
-gulp.task ('build', ['getVersion', 'get_flash_all'], async() => {
+gulp.task('build', ['getVersion', 'get_flash_all'], async() => {
   await buildAsync(poiVersion)
 })
 
