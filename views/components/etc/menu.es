@@ -83,14 +83,14 @@ if (process.platform !== 'darwin') {
       submenu: [
         {
           label: __('Reload'),
-          accelerator: 'CmdOrCtrl+R',
+          accelerator: 'Ctrl+R',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
           },
         },
         {
           label: __('Stop'),
-          accelerator: 'CmdOrCtrl+.',
+          accelerator: 'Ctrl+.',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
           },
