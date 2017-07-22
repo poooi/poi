@@ -68,21 +68,6 @@ const NPM_SERVER = (() => {
 
 log(`Using npm mirror ${NPM_SERVER}`)
 
-const THEME_LIST = {
-  darkly:     'https://bootswatch.com/darkly/bootstrap.css',
-  flatly:     'https://bootswatch.com/flatly/bootstrap.css',
-  lumen:      'https://bootswatch.com/lumen/bootstrap.css',
-  paper:      'https://bootswatch.com/paper/bootstrap.css',
-  slate:      'https://bootswatch.com/slate/bootstrap.css',
-  superhero:  'https://bootswatch.com/superhero/bootstrap.css',
-  united:     'https://bootswatch.com/united/bootstrap.css',
-  lumendark:  'https://raw.githubusercontent.com/PHELiOX/poi-theme-lumendark/master/lumendark.css',
-  paperdark:  'https://raw.githubusercontent.com/ruiii/poi_theme_paper_dark/master/paperdark.css',
-  papercyan:  'https://raw.githubusercontent.com/govizlora/theme-papercyan/master/papercyan.css',
-  paperblack: 'https://raw.githubusercontent.com/PHELiOX/paperblack/master/css/paperblack.css',
-  darklykai:  'https://raw.githubusercontent.com/magicae/sleepy/master/dist/sleepy.css',
-}
-
 const getFlashUrl = (platform) =>
   USE_GITHUB_FLASH_MIRROR
     ? `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
@@ -188,17 +173,6 @@ const downloadExtractZipAsync = async (url, downloadDir, filename, destPath,
     break
   }
 }
-
-const downloadThemesAsync = (themeRoot) =>
-  Promise.all((() => {
-    const jobs = []
-    for (const theme of Object.keys(THEME_LIST)){
-      const themeUrl = THEME_LIST[theme]
-      const downloadDir = path.join(themeRoot, theme, 'css')
-      jobs.push(downloadAsync(themeUrl, downloadDir,`${theme}.css`, `${theme} theme`))
-    }
-    return jobs
-  })())
 
 const installFlashAsync = async (platform, downloadDir, flashDir) => {
   const flash_url = getFlashUrl(platform)
@@ -435,7 +409,6 @@ export const buildAsync = async (poiVersion, dontRemove) => {
   const stage1App = path.join(BUILDING_ROOT, 'stage1')
   const tarPath = path.join(stage1App, "app_stage1.tar")
   const stage2App = BUILDING_ROOT
-  const themeRoot = path.join(stage1App, 'assets', 'themes')
 
   // Clean files
   try {
@@ -456,7 +429,6 @@ export const buildAsync = async (poiVersion, dontRemove) => {
 
   // Stage1: Everything downloaded and translated
   await gitArchiveAsync(tarPath, stage1App)
-  await downloadThemesAsync(themeRoot)
   await compileToJsAsync(stage1App, false)
   log('stage 1 finished')
 
@@ -512,11 +484,6 @@ export const cleanFiles = () => {
     rimraf(file, () => {}))
   rimraf(path.join(__dirname, 'app_compiled'), () => {})
   rimraf(path.join(__dirname, 'dist'), () => {})
-}
-
-export const installThemeAsync = async () => {
-  const themeRoot = path.join(__dirname, 'assets', 'themes')
-  await downloadThemesAsync(themeRoot)
 }
 
 export const packWinReleaseAsync = async (poiVersion) => {
