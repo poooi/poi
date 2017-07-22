@@ -18,7 +18,7 @@ window.loadTheme = (th) => {
   const {theme} = window
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(th)
   if ($('#bootstrap-css')) {
-    $('#bootstrap-css').setAttribute('href', `file://${ROOT}/node_modules/poi-asset-themes/dist/${theme}.css`)
+    $('#bootstrap-css').setAttribute('href', require.resolve(`poi-asset-themes/dist/${theme}.css`))
   }
   window.reloadCustomCss()
 }
