@@ -2,9 +2,8 @@ import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync } from 'fs-extra'
-import npm from 'npm'
 import glob from 'glob'
-import { promisify, delay } from 'bluebird'
+import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -22,6 +21,7 @@ const fetchFromRemote = async (url, cacheMode = "default") => {
 
 import {
   installPackage,
+  removePackage,
   readPlugin,
   enablePlugin,
   disablePlugin,
@@ -128,7 +128,6 @@ class PluginManager extends EventEmitter {
         delete this.npmConfig.http_proxy
       }
     }
-    await new Promise((resolve, reject) => npm.load(this.npmConfig, e => resolve()))
     return this.config
   }
   isMetRequirement(plugin) {
@@ -331,7 +330,7 @@ class PluginManager extends EventEmitter {
       })
     // 2) Install plugin
     try {
-      await installPackage(packageSource, version)
+      await installPackage(packageSource, version, this.npmConfig)
     } catch (e) {
       console.error(e.stack)
       throw e
@@ -388,7 +387,7 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      await promisify(npm.commands.uninstall)(['--no-save', plugin.packageName])
+      await removePackage(plugin.packageName, this.npmConfig)
       // Make sure the plugin no longer exists in PLUGIN_PATH
       // (unless it's a git repo)
       await safePhysicallyRemove(defaultPluginPath(plugin.packageName))
