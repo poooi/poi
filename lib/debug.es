@@ -21,6 +21,7 @@ class Debug {
 }
 
 // Globals
+// eslint-disable-next-line no-console
 console.assert(process, "process doesn't exist")
 
 // The debug instance depends on Electron process type
@@ -55,6 +56,7 @@ class IDebugger {
 
   get assert() {
     if (this.isEnabled()) {
+      // eslint-disable-next-line no-console
       return console.assert.bind(console)
     } else {
       return doNothing
@@ -115,6 +117,7 @@ class DebuggerBase extends IDebugger {
 
   validateTagName(tag) {
     const valid = typeof tag === 'string' && tag.length > 0
+    // eslint-disable-next-line no-console
     console.assert(valid, 'You must pass a non-empty string! Current:', tag)
     return valid
   }
@@ -214,6 +217,7 @@ Object.defineProperty(DebuggerBase.prototype, 'h', {
 // For the Browser Process
 class DebuggerBrowser extends DebuggerBase {
   _getLogFunc(prefix) {
+    // eslint-disable-next-line no-console
     return console.log.bind(console, colors.cyan(`${prefix} %s`))
   }
 
@@ -265,8 +269,10 @@ class Booster {
 class DebuggerRenderer extends DebuggerBase {
   _getLogFunc(prefix) {
     if (prefix != null) {
+      // eslint-disable-next-line no-console
       return console.log.bind(console, `%c${prefix}`, 'background: linear-gradient(30deg, cyan, white 3ex)')
     } else {
+      // eslint-disable-next-line no-console
       return console.log.bind(console)
     }
   }
@@ -290,6 +296,7 @@ class DebuggerRenderer extends DebuggerBase {
       }
       output[opt] = new Booster(this.h[opt], 'extra', relist)
     }
+    // eslint-disable-next-line no-console
     console.table(output)
   }
 }

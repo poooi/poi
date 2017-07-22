@@ -219,6 +219,7 @@ const Others = connect(state => ({
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
+            // eslint-disable-next-line no-console
             console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
             const data = await fetchFromRemote(`${server}${file.name}.json`, cacheMode)
             if (data) {
@@ -230,6 +231,7 @@ const Others = connect(state => ({
               flag = false
             }
           } else {
+            // eslint-disable-next-line no-console
             console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
           }
         }
@@ -237,6 +239,7 @@ const Others = connect(state => ({
         flag = false
       }
       if (flag) {
+        // eslint-disable-next-line no-console
         console.log(`Update fcd from ${server} successfully in mode ${cacheMode}.`)
         break
       } else {
