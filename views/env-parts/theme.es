@@ -1,5 +1,4 @@
-import path from 'path-extra'
-import glob from 'glob'
+import themes from 'poi-asset-themes/index.json'
 
 const {$, ROOT, EXROOT, config} = window
 
@@ -15,17 +14,11 @@ window.reloadCustomCss = () => {
 }
 
 window.loadTheme = (th) => {
-  window.theme = th
+  window.theme = th || 'paperdark'
   const {theme} = window
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(th)
-  if (!$('#bootstrap-css')) {
-    return
-  }
-  if (theme === '__default__') {
-    $('#bootstrap-css').setAttribute('href', `file://${require.resolve('bootstrap/dist/css/bootstrap.css')}`)
-  }
-  else {
-    $('#bootstrap-css').setAttribute('href', `file://${ROOT}/assets/themes/${theme}/css/${theme}.css`)
+  if ($('#bootstrap-css')) {
+    $('#bootstrap-css').setAttribute('href', `file://${ROOT}/node_modules/poi-asset-themes/dist/${theme}.css`)
   }
   window.reloadCustomCss()
 }
@@ -42,7 +35,7 @@ window.applyTheme = (th) => {
   window.dispatchEvent(event)
 }
 
-window.allThemes = ['__default__'].concat(glob.sync(`${ROOT}/assets/themes/*/`).map((dirPath) => (path.basename(dirPath))))
+window.allThemes = themes
 config.setDefault('poi.theme', 'paperdark')
 window.loadTheme(config.get('poi.theme', 'paperdark'))
 
