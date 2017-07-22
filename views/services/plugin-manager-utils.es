@@ -6,11 +6,12 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
 import module from 'module'
-import npm from 'npm'
 import { promisify } from 'bluebird'
 import glob from 'glob'
 import crypto from 'crypto'
 import { setAllowedPath } from 'lib/module-path'
+import child_process from 'child_process'
+import path from 'path'
 
 import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
@@ -20,6 +21,7 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const allowedPath = [ ROOT, APPDATA_PATH ]
 const pathAdded = new Map()
+const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 require('module').globalPaths.push(MODULE_PATH)
 
@@ -74,11 +76,34 @@ export const findInstalledTarball = async (pluginRoot, tarballPath) => {
   return shasumMatchDatas[0].name
 }
 
-export function installPackage(packageName, version) {
+const runScriptAsync = (scriptPath, args, options) =>
+  new Promise ((resolve) => {
+    const proc = child_process.fork(scriptPath, args, options)
+    proc.on('exit', () => resolve())
+  })
+
+export async function installPackage (packageName, version, npmConfig) {
+  if (!packageName) {
+    return
+  }
   if (version) {
     packageName = `${packageName}@${version}`
   }
-  return promisify(npm.commands.install)([packageName])
+  let args = ['install', '--registry', npmConfig.registry]
+  if (npmConfig.http_proxy) {
+    args = [...args, '--proxy', npmConfig.http_proxy]
+  }
+  args = [...args, packageName]
+  await runScriptAsync(NPM_EXEC_PATH, args, {
+    cwd: npmConfig.prefix,
+  })
+}
+
+export async function removePackage (target, npmConfig) {
+  const args = ['uninstall', '--no-save', target]
+  await runScriptAsync(NPM_EXEC_PATH, args, {
+    cwd: npmConfig.prefix,
+  })
 }
 
 
