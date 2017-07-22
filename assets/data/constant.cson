@@ -72,7 +72,7 @@ contributors: [
     avatar: 'https://avatars2.githubusercontent.com/u/1572561?v=3&s=400'
     link: 'https://github.com/Gizeta'
   ,
-    name: 'KagamiChan'
+    name: 'かがみ'
     avatar: 'https://avatars2.githubusercontent.com/u/3816900?v=3&s=400'
     link: 'https://github.com/KagamiChan'
   ,
@@ -83,6 +83,14 @@ contributors: [
     name: 'Javran'
     avatar: 'https://gist.githubusercontent.com/Javran/02ac7ebefc307829d02e5dc942f8ef28/raw/250x250.png'
     link: 'https://github.com/Javran'
+  ,
+    name: 'govizlora'
+    avatar: 'https://avatars2.githubusercontent.com/u/12785565?v=4&s=400'
+    link: 'https://github.com/govizlora'
+  ,
+    name: 'Gnattu'
+    avatar: 'https://avatars0.githubusercontent.com/u/12995396?v=4&s=400'
+    link: 'https://github.com/gnattu'
 ]
 
 thanksTo: [
