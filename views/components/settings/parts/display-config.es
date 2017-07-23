@@ -108,6 +108,7 @@ const ChangeThemeConfig = connect((state, props) => ({
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
+  enableDarwinVibrancy: get(state.config, 'poi.macOS.vibrancy', false),
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
@@ -115,6 +116,7 @@ const ChangeThemeConfig = connect((state, props) => ({
     enableSVGIcon: PropTypes.bool,
     enableTransition: PropTypes.bool,
     useGridMenu: PropTypes.bool,
+    enableDarwinVibrancy: PropTypes.bool,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -139,6 +141,11 @@ const ChangeThemeConfig = connect((state, props) => ({
   }
   handleSetGridMenu = () => {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
+  }
+  handleSetDarwinVibrancy = () => {
+    config.set('poi.macOS.vibrancy', !this.props.enableDarwinVibrancy)
+    const {setDarwinVibrancy} = remote.require('./lib/utils')
+    setDarwinVibrancy()
   }
   render() {
     return (
@@ -172,6 +179,13 @@ const ChangeThemeConfig = connect((state, props) => ({
             {__('Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
+        {process.platform === 'darwin' &&
+          <Col xs={12}>
+            <Checkbox checked={this.props.enableDarwinVibrancy} onChange={this.handleSetDarwinVibrancy}>
+              Enable Vibrance
+            </Checkbox>
+          </Col>
+        }
       </Grid>
     )
   }

@@ -302,6 +302,9 @@ const postEnableProcess = (plugin) => {
         },
       }
     }
+    //if (process.platform === 'darwin') {
+      //config.get('poi.macOS.vibrancy') ? windowOptions.vibrancy = 'ultra-dark' :  windowOptions.vibrancy = null
+    //} 
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
     })

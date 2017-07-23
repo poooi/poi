@@ -52,3 +52,6 @@ export function stopNavigateAndNewWindow(id) {
     e.preventDefault()
   })
 }
+export function setDarwinVibrancy () {
+  require('./config').get('poi.macOS.vibrancy') ? global.mainWindow.setVibrancy('ultra-dark') : global.mainWindow.setVibrancy(null)
+}
