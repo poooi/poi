@@ -144,7 +144,7 @@ const ChangeThemeConfig = connect((state, props) => ({
   handleSetGridMenu = () => {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
-  handleSetVibrancy = (value) => {
+  handleSetVibrancy = () => {
     config.set('poi.vibrant', !this.props.enableVibrant)
   }
   render() {
@@ -180,7 +180,7 @@ const ChangeThemeConfig = connect((state, props) => ({
           </Checkbox>
         </Col>
         {
-          ['darwin', 'win32'].includes(process.platform) &&
+          ['darwin'].includes(process.platform) &&
           <Col xs={12}>
             <Checkbox checked={this.props.enableVibrant} onChange={this.handleSetVibrancy}>
               {__('Enable Vibrance')}

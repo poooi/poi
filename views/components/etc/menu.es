@@ -410,7 +410,7 @@ for (let i = window.normalThemes.length - 1; i >=0; i--) {
   })
 }
 
-if (['darwin', 'win32'].includes(process.platform)) {
+if (['darwin'].includes(process.platform)) {
   template[themepos].submenu.push({
     type: 'separator',
   })
