@@ -424,7 +424,7 @@ if (process.platform === 'darwin') {
 
 const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
-  if (path === 'poi.theme') {
+  if (path === 'poi.theme' && value != null) {
     themeMenuList[window.allThemes.indexOf(value)].checked = true
   }
 })

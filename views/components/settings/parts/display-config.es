@@ -147,7 +147,6 @@ const ChangeThemeConfig = connect((state, props) => ({
     const {setDarwinVibrancy} = remote.require('./lib/utils')
     setDarwinVibrancy()
     window.applyTheme(this.props.theme)
-    console.log(this.props.theme)
   }
   render() {
     return (
