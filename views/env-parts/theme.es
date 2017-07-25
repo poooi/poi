@@ -4,7 +4,7 @@ const { getAllWindows } = remote.require('./lib/window')
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
 
-const {$, ROOT, EXROOT, config} = window
+const {$, EXROOT, config} = window
 
 if ($('#fontawesome-css')) {
   $('#fontawesome-css').setAttribute('href', require.resolve('font-awesome/css/font-awesome.css'))
@@ -43,6 +43,7 @@ window.setVibrancy = value => {
 window.allThemes = normalThemes
 config.setDefault('poi.theme', 'paperdark')
 window.setVibrancy(config.get('poi.vibrancy', null))
+
 window.loadTheme(config.get('poi.theme', 'paperdark'))
 
 const themeChangeHandler = (path, value) => {

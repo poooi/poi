@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
@@ -146,6 +146,8 @@ const ChangeThemeConfig = connect((state, props) => ({
     config.set('poi.macOS.vibrancy', !this.props.enableDarwinVibrancy)
     const {setDarwinVibrancy} = remote.require('./lib/utils')
     setDarwinVibrancy()
+    window.applyTheme(this.props.theme)
+    console.log(this.props.theme)
   }
   render() {
     return (

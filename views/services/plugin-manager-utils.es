@@ -302,9 +302,6 @@ const postEnableProcess = (plugin) => {
         },
       }
     }
-    //if (process.platform === 'darwin') {
-      //config.get('poi.macOS.vibrancy') ? windowOptions.vibrancy = 'ultra-dark' :  windowOptions.vibrancy = null
-    //} 
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
     })
@@ -312,6 +309,9 @@ const postEnableProcess = (plugin) => {
       plugin.handleClick = function() {
         const pluginWindow = windowManager.createWindow(windowOptions)
         pluginWindow.loadURL(plugin.windowURL)
+        if (process.platform === 'darwin') {
+          config.get('poi.macOS.vibrancy') ? pluginWindow.setVibrancy('ultra-dark') : pluginWindow.setVibrancy(null)
+        }
         pluginWindow.show()
       }
     } else if (plugin.realClose) {
@@ -323,6 +323,9 @@ const postEnableProcess = (plugin) => {
             plugin.pluginWindow = null
           })
           plugin.pluginWindow.loadURL(plugin.windowURL)
+          if (process.platform === 'darwin') {
+            config.get('poi.macOS.vibrancy') ? plugin.pluginWindow.setVibrancy('ultra-dark') : plugin.pluginWindow.setVibrancy(null)
+          }
           plugin.pluginWindow.show()
         } else {
           plugin.pluginWindow.show()
