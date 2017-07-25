@@ -104,19 +104,21 @@ const ChangeLayoutConfig = connect(() => (
 })
 
 const ChangeThemeConfig = connect((state, props) => ({
+  themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.theme', 'paperdark'),
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
-  enableDarwinVibrancy: get(state.config, 'poi.macOS.vibrancy', false),
+  enableVibrant: get(state.config, 'poi.vibrant', false),
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
+    themes: PropTypes.arrayOf(PropTypes.string),
     theme: PropTypes.string,
     enableSVGIcon: PropTypes.bool,
     enableTransition: PropTypes.bool,
     useGridMenu: PropTypes.bool,
-    enableDarwinVibrancy: PropTypes.bool,
+    enableVibrant: PropTypes.bool,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -142,11 +144,8 @@ const ChangeThemeConfig = connect((state, props) => ({
   handleSetGridMenu = () => {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
-  handleSetDarwinVibrancy = () => {
-    config.set('poi.macOS.vibrancy', !this.props.enableDarwinVibrancy)
-    const {setDarwinVibrancy} = remote.require('./lib/utils')
-    setDarwinVibrancy()
-    window.applyTheme(this.props.theme)
+  handleSetVibrancy = (value) => {
+    config.set('poi.vibrant', !this.props.enableVibrant)
   }
   render() {
     return (
@@ -154,7 +153,7 @@ const ChangeThemeConfig = connect((state, props) => ({
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.theme} onChange={this.handleSetTheme}>
             {
-              window.allThemes.map((theme, index) =>
+              (this.props.themes.length ? this.props.themes : window.allThemes).map((theme, index) =>
                 <option key={index} value={theme}>
                   {(theme === '__default__') ? 'Default' : (theme[0].toUpperCase() + theme.slice(1))}
                 </option>
@@ -180,10 +179,11 @@ const ChangeThemeConfig = connect((state, props) => ({
             {__('Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
-        {process.platform === 'darwin' &&
+        {
+          process.platform === 'darwin' &&
           <Col xs={12}>
-            <Checkbox checked={this.props.enableDarwinVibrancy} onChange={this.handleSetDarwinVibrancy}>
-              Enable Vibrance
+            <Checkbox checked={this.props.enableVibrant} onChange={this.handleSetVibrancy}>
+              {__('Enable Vibrance')}
             </Checkbox>
           </Col>
         }

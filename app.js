@@ -138,7 +138,6 @@ app.on('ready', () => {
   mainWindow.reloadArea = 'kan-game webview'
   if (process.platform === 'darwin') {
     const {touchBar} = require('./lib/touchbar')
-    config.get('poi.macOS.vibrancy') ? mainWindow.setVibrancy('ultra-dark') : mainWindow.setVibrancy(null)
     mainWindow.setTouchBar(touchBar)
     if (/electron$/i.test(process.argv[0])) {
       const icon = nativeImage.createFromPath(`${ROOT}/assets/icons/poi.png`)

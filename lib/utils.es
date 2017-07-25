@@ -1,5 +1,5 @@
 import 'colors'
-import { webContents, BrowserWindow } from 'electron'
+import { webContents } from 'electron'
 
 const stringify = (str) => {
   if (typeof str === 'string') {
@@ -50,11 +50,5 @@ export function stopNavigateAndNewWindow(id) {
   })
   webContents.fromId(id).addListener('new-window', (e, url) => {
     e.preventDefault()
-  })
-}
-export function setDarwinVibrancy () {
-  const wins = BrowserWindow.getAllWindows()
-  wins.forEach(function(win) {
-    require('./config').get('poi.macOS.vibrancy') ? win.setVibrancy('ultra-dark') : win.setVibrancy(null) 
   })
 }
