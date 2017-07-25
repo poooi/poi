@@ -1,6 +1,5 @@
 import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
-const { getAllWindows } = remote.require('./lib/window')
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
 
@@ -18,8 +17,7 @@ window.reloadCustomCss = () => {
 }
 
 window.loadTheme = theme => {
-  const themes = window.isVibrant ? vibrantThemes : normalThemes
-  window.theme = theme = themes.includes(theme) ? theme : 'paperdark'
+  window.theme = theme
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(theme)
   if ($('#bootstrap-css')) {
     $('#bootstrap-css').setAttribute('href', require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`))
@@ -30,35 +28,31 @@ window.loadTheme = theme => {
 window.applyTheme = theme => config.set('poi.theme', theme)
 
 window.setVibrancy = value => {
-  if (process.platform !== 'darwin') {
-    return
-  }
   const themes = value ? vibrantThemes : normalThemes
-  if (window.dispatch) {
+  if (window.isMain && window.dispatch) {
     window.dispatch({
       type: '@@UpdateThemes',
       themes,
     })
   }
   window.allThemes = themes
-  const windows = getAllWindows()
-  if (windows) {
-    windows.forEach(window => {
-      window.setVibrancy(value ? 'ultra-dark' : null)
-    })
-  }
+  remote.getCurrentWindow().setVibrancy(value ? 'ultra-dark' : null)
   window.isVibrant = Boolean(value)
   const theme = config.get('poi.theme', 'paperdark')
-  window.applyTheme(themes.includes(theme) ? theme : 'paperdark')
+  if (themes.includes(theme)) {
+    window.loadTheme(theme)
+  } else {
+    config.set('poi.theme', 'paperdark')
+  }
 }
 
 window.allThemes = normalThemes
 config.setDefault('poi.theme', 'paperdark')
-if (process.platform === 'darwin') {
+if (['darwin', 'win32'].includes(process.platform)) {
   window.setVibrancy(config.get('poi.vibrant', null))
+} else {
+  window.loadTheme(config.get('poi.theme', 'paperdark'))
 }
-
-window.loadTheme(config.get('poi.theme', 'paperdark'))
 
 const themeChangeHandler = (path, value) => {
   if (path === 'poi.theme') {

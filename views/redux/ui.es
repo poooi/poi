@@ -2,7 +2,7 @@ const initState = {
   activeMainTab: 'mainView',
   activePluginName: '',
   activeFleetId: 0,
-  themes: [],
+  themes: window.allThemes.slice(),
 }
 
 export function reducer(state=initState, {type, tabInfo, themes}) {

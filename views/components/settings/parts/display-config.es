@@ -153,7 +153,7 @@ const ChangeThemeConfig = connect((state, props) => ({
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.theme} onChange={this.handleSetTheme}>
             {
-              (this.props.themes.length ? this.props.themes : window.allThemes).map((theme, index) =>
+              this.props.themes.map((theme, index) =>
                 <option key={index} value={theme}>
                   {(theme === '__default__') ? 'Default' : (theme[0].toUpperCase() + theme.slice(1))}
                 </option>
@@ -180,7 +180,7 @@ const ChangeThemeConfig = connect((state, props) => ({
           </Checkbox>
         </Col>
         {
-          process.platform === 'darwin' &&
+          ['darwin', 'win32'].includes(process.platform) &&
           <Col xs={12}>
             <Checkbox checked={this.props.enableVibrant} onChange={this.handleSetVibrancy}>
               {__('Enable Vibrance')}
