@@ -13,7 +13,7 @@ export function reducer(state=initState, {type, tabInfo, themes}) {
       ...tabInfo,
     }
   }
-  case '@UpdateThemes': {
+  case '@@UpdateThemes': {
     return {
       ...state,
       themes,

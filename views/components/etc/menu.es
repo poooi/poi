@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { remote, shell } from 'electron'
 import { TitleBar } from 'electron-react-titlebar'
 import { reduxSet } from 'views/utils/tools'
-import { get } from 'lodash'
+import { get, capitalize } from 'lodash'
 import path from 'path'
 
 const {Menu} = remote.require('electron')
@@ -395,16 +395,31 @@ if (process.platform !== 'darwin') {
 }
 
 const themepos = process.platform === 'darwin' ? 3 : 2
-for (let i = window.allThemes.length - 1; i >=0; i--) {
-  const th = window.allThemes[i]
+for (let i = window.normalThemes.length - 1; i >=0; i--) {
+  const th = window.normalThemes[i]
   template[themepos].submenu.unshift({
-    label: th === '__default__' ? 'Default' : th.charAt(0).toUpperCase() + th.slice(1),
+    label: th === '__default__' ? 'Default' : capitalize(th),
     type: 'radio',
     checked: window.theme === th,
+    enabled: !window.isVibrant || window.vibrantThemes.includes(th),
     click: (item, focusedWindow) => {
       if (th !== window.theme) {
         window.applyTheme(th)
       }
+    },
+  })
+}
+
+if (['darwin', 'win32'].includes(process.platform)) {
+  template[themepos].submenu.push({
+    type: 'separator',
+  })
+  template[themepos].submenu.push({
+    label: __('Enable Vibrancy'),
+    type: 'radio',
+    checked: window.isVibrant,
+    click: (item, focusedWindow) => {
+      window.setVibrancy(!window.isVibrant)
     },
   })
 }
@@ -425,9 +440,12 @@ if (process.platform === 'darwin') {
 const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
   if (path === 'poi.theme' && value != null) {
-    if (themeMenuList[window.allThemes.indexOf(value)]){
-      themeMenuList[window.allThemes.indexOf(value)].checked = true
+    if (themeMenuList[window.normalThemes.indexOf(value)]){
+      themeMenuList[window.normalThemes.indexOf(value)].checked = true
     }
+  }
+  if (path === 'poi.vibrant') {
+    themeMenuList.forEach((menuItem, i) => menuItem.enabled = !value || window.vibrantThemes.includes(window.normalThemes[i]))
   }
 })
 

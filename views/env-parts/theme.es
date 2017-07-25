@@ -47,6 +47,8 @@ window.setVibrancy = value => {
 }
 
 window.allThemes = normalThemes
+window.normalThemes = normalThemes
+window.vibrantThemes = vibrantThemes
 config.setDefault('poi.theme', 'paperdark')
 if (['darwin', 'win32'].includes(process.platform)) {
   window.setVibrancy(config.get('poi.vibrant', null))
