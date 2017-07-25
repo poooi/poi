@@ -16,7 +16,7 @@ window.reloadCustomCss = () => {
   $('#custom-css').setAttribute('href', `file://${EXROOT}/hack/custom.css`)
 }
 
-window.loadTheme = theme => {
+window.loadTheme = (theme = 'paperdark') => {
   window.theme = theme
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(theme)
   if ($('#bootstrap-css')) {
