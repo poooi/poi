@@ -415,11 +415,11 @@ if (['darwin', 'win32'].includes(process.platform)) {
     type: 'separator',
   })
   template[themepos].submenu.push({
-    label: __('Enable Vibrancy'),
-    type: 'radio',
+    label: __('Enable Vibrance'),
+    type: 'checkbox',
     checked: window.isVibrant,
     click: (item, focusedWindow) => {
-      window.setVibrancy(!window.isVibrant)
+      config.set('poi.vibrant', !window.isVibrant)
     },
   })
 }
@@ -445,7 +445,9 @@ config.on('config.set', (path, value) => {
     }
   }
   if (path === 'poi.vibrant') {
-    themeMenuList.forEach((menuItem, i) => menuItem.enabled = !value || window.vibrantThemes.includes(window.normalThemes[i]))
+    window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
+    console.log(value, themeMenuList)
+    themeMenuList[themeMenuList.length - 1].checked = value
   }
 })
 
