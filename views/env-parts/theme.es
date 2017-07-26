@@ -1,6 +1,6 @@
 import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
-import { fileUrl } from 'views/utils/tools'
+import { fileUrl } from '../utils/tools'
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
 
