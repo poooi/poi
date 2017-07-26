@@ -104,7 +104,7 @@ div.style.display = 'none'
 
 const setBackground = p => {
   if (p) {
-    div.style.backgroundImage = `url(${fileUrl(p)})`
+    div.style.backgroundImage = `url(${CSS.escape(fileUrl(p))})`
   } else {
     div.style.backgroundImage = ''
   }
