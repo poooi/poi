@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { shell, remote } from 'electron'
+import { shell } from 'electron'
 import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
