@@ -156,5 +156,7 @@
   "Monitor on": "監視器已打開",
   "Monitor off": "監視器未開啓",
   "TOTAL": "總計",
-  "Enable Vibrance": "半透明主題"
+  "Default": "默認",
+  "Vibrance": "半透明",
+  "Custom background": "自定義背景"
 }

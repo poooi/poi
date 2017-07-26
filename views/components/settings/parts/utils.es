@@ -89,6 +89,10 @@ export const FolderPickerConfig = connect(() => {
     label: PropTypes.string,
     configName: PropTypes.string,
     value: PropTypes.string,
+    isFolder: PropTypes.bool,
+  }
+  static defaultProps = {
+    isFolder: true,
   }
   onDrag = (e) => {
     e.preventDefault()
@@ -107,7 +111,7 @@ export const FolderPickerConfig = connect(() => {
   folderPickerOnDrop = (e) => {
     e.preventDefault()
     const droppedFiles = e.dataTransfer.files
-    if (fs.statSync(droppedFiles[0].path).isDirectory()) {
+    if (fs.statSync(droppedFiles[0].path).isDirectory() || !this.props.isFolder) {
       this.setPath(droppedFiles[0].path)
     }
   }
@@ -115,17 +119,21 @@ export const FolderPickerConfig = connect(() => {
     this.synchronize(() => {
       let defaultPath
       try {
-        fs.ensureDirSync(this.props.value)
-        defaultPath = this.props.value
+        if (this.props.isFolder) {
+          fs.ensureDirSync(this.props.value)
+          defaultPath = this.props.value
+        }
       } catch (e) {
         defaultPath = remote.app.getPath('desktop')
       }
       const filenames = dialog.showOpenDialog({
         title: this.props.label,
         defaultPath,
-        properties: [
+        properties: this.props.isFolder ? [
           'openDirectory',
           'createDirectory',
+        ] : [
+          'openFile',
         ],
       })
       if (filenames !== undefined) {

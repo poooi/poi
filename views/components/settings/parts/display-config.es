@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { shell, remote } from 'electron'
+import { shell } from 'electron'
 import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 import Divider from './divider'
 import { get, debounce } from 'lodash'
 import FontAwesome from 'react-fontawesome'
+import { FolderPickerConfig } from './utils'
 
 const {config, toggleModal, i18n, EXROOT} = window
 const {openItem} = shell
@@ -109,7 +110,7 @@ const ChangeThemeConfig = connect((state, props) => ({
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
-  enableVibrant: get(state.config, 'poi.vibrant', false),
+  vibrant: get(state.config, 'poi.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
@@ -118,7 +119,7 @@ const ChangeThemeConfig = connect((state, props) => ({
     enableSVGIcon: PropTypes.bool,
     enableTransition: PropTypes.bool,
     useGridMenu: PropTypes.bool,
-    enableVibrant: PropTypes.bool,
+    vibrant: PropTypes.number,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -144,8 +145,8 @@ const ChangeThemeConfig = connect((state, props) => ({
   handleSetGridMenu = () => {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
-  handleSetVibrancy = () => {
-    config.set('poi.vibrant', !this.props.enableVibrant)
+  handleSetVibrancy = e => {
+    config.set('poi.vibrant', parseInt(e.target.value))
   }
   render() {
     return (
@@ -179,14 +180,22 @@ const ChangeThemeConfig = connect((state, props) => ({
             {__('Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
-        {
-          ['darwin'].includes(process.platform) &&
-          <Col xs={12}>
-            <Checkbox checked={this.props.enableVibrant} onChange={this.handleSetVibrancy}>
-              {__('Enable Vibrance')}
-            </Checkbox>
-          </Col>
-        }
+        <Col xs={6}>
+          <FormControl componentClass="select" value={this.props.vibrant} onChange={this.handleSetVibrancy}>
+            <option key={0} value={0}>{__('Default')}</option>
+            { ['darwin'].includes(process.platform) && <option key={1} value={1}>{__("Vibrance")}</option> }
+            <option key={2} value={2}>{__("Custom background")}</option>
+          </FormControl>
+        </Col>
+        <Col xs={6}>
+          { this.props.vibrant === 2 && (
+            <FolderPickerConfig
+              label={__('Custom background')}
+              configName="poi.background"
+              defaultVal={''}
+              isFolder={false} />
+          ) }
+        </Col>
       </Grid>
     )
   }
