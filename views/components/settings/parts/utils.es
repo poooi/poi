@@ -143,18 +143,14 @@ export const FolderPickerConfig = connect(() => {
   }
   render() {
     return (
-      <Grid>
-        <Col xs={12}>
-          <div className="folder-picker"
-            onClick={this.folderPickerOnClick}
-            onDrop={this.folderPickerOnDrop}
-            onDragEnter={this.onDrag}
-            onDragOver={this.onDrag}
-            onDragLeave={this.onDrag}>
-            {this.props.value}
-          </div>
-        </Col>
-      </Grid>
+      <div className="folder-picker"
+        onClick={this.folderPickerOnClick}
+        onDrop={this.folderPickerOnDrop}
+        onDragEnter={this.onDrag}
+        onDragOver={this.onDrag}
+        onDragLeave={this.onDrag}>
+        {this.props.value}
+      </div>
     )
   }
 })

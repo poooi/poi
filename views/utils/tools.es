@@ -222,5 +222,5 @@ export function fileUrl(str) {
   if (pathName[0] !== '/') {
     pathName = '/' + pathName
   }
-  return encodeURI('file://' + pathName)
+  return 'file://' + pathName
 }

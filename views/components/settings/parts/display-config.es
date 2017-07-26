@@ -163,16 +163,16 @@ const ChangeThemeConfig = connect((state, props) => ({
           </FormControl>
         </Col>
         <Col xs={6}>
-          <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
-        </Col>
-        <Col xs={6}>
           <FormControl componentClass="select" value={this.props.vibrant} onChange={this.handleSetVibrancy}>
             <option key={0} value={0}>{__('Default')}</option>
             { ['darwin'].includes(process.platform) && <option key={1} value={1}>{__("Vibrance")}</option> }
             <option key={2} value={2}>{__("Custom background")}</option>
           </FormControl>
         </Col>
-        <Col xs={6}>
+        <Col xs={6} style={{ marginTop: '1ex' }}>
+          <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
+        </Col>
+        <Col xs={6} style={{ marginTop: '1ex' }}>
           { this.props.vibrant === 2 && (
             <FolderPickerConfig
               label={__('Custom background')}
