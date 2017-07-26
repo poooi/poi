@@ -52,11 +52,7 @@ window.allThemes = normalThemes
 window.normalThemes = normalThemes
 window.vibrantThemes = vibrantThemes
 config.setDefault('poi.theme', 'paperdark')
-if (config.get('poi.vibrant', null)) {
-  window.setVibrancy(config.get('poi.vibrant', null))
-} else {
-  window.loadTheme(config.get('poi.theme', 'paperdark'))
-}
+window.setVibrancy(config.get('poi.vibrant', null))
 
 const themeChangeHandler = (path, value) => {
   if (path === 'poi.theme') {
