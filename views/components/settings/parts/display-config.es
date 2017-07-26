@@ -165,21 +165,6 @@ const ChangeThemeConfig = connect((state, props) => ({
         <Col xs={6}>
           <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
         </Col>
-        <Col xs={12}>
-          <Checkbox checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon}>
-            {__('Use SVG Icon')}
-          </Checkbox>
-        </Col>
-        <Col xs={12}>
-          <Checkbox checked={this.props.enableTransition} onChange={this.handleSetTransition}>
-            {__('Enable Smooth Transition')}
-          </Checkbox>
-        </Col>
-        <Col xs={12}>
-          <Checkbox checked={this.props.useGridMenu} onChange={this.handleSetGridMenu}>
-            {__('Use Gridded Plugin Menu')}
-          </Checkbox>
-        </Col>
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.vibrant} onChange={this.handleSetVibrancy}>
             <option key={0} value={0}>{__('Default')}</option>
@@ -195,6 +180,21 @@ const ChangeThemeConfig = connect((state, props) => ({
               defaultVal={''}
               isFolder={false} />
           ) }
+        </Col>
+        <Col xs={12}>
+          <Checkbox checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon}>
+            {__('Use SVG Icon')}
+          </Checkbox>
+        </Col>
+        <Col xs={12}>
+          <Checkbox checked={this.props.enableTransition} onChange={this.handleSetTransition}>
+            {__('Enable Smooth Transition')}
+          </Checkbox>
+        </Col>
+        <Col xs={12}>
+          <Checkbox checked={this.props.useGridMenu} onChange={this.handleSetGridMenu}>
+            {__('Use Gridded Plugin Menu')}
+          </Checkbox>
         </Col>
       </Grid>
     )
