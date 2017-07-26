@@ -73,13 +73,29 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', themeChangeHandler)
 })
 
+const glass = document.createElement("div")
+glass.id = 'bg-overlay'
+glass.style.position = 'absolute'
+glass.style.top = '-15px'
+glass.style.left = '-15px'
+glass.style.height = 'calc(100% + 30px)'
+glass.style.width = 'calc(100% + 30px)'
+glass.style.zIndex = -1
+glass.style.backgroundRepeat = 'no-repeat'
+glass.style.backgroundPosition = 'center center'
+glass.style.backgroundSize = 'cover'
+glass.style.backgroundColor = 'rgba(42,42,42,0.9)'
+glass.style.color = '#000'
+glass.style.display = 'none'
+
 const div = document.createElement("div")
+div.id = 'custom-bg'
 div.style.position = 'absolute',
 div.style.top = '-15px'
 div.style.left = '-15px'
 div.style.height = 'calc(100% + 30px)'
 div.style.width = 'calc(100% + 30px)'
-div.style.zIndex = -1
+div.style.zIndex = -2
 div.style.backgroundRepeat = 'no-repeat'
 div.style.backgroundPosition = 'center center'
 div.style.backgroundSize = 'cover'
@@ -97,16 +113,19 @@ const setBackground = p => {
 
 const toggleBackground = value => {
   if (value === 2) {
-    div.style.filter = 'blur(8px) brightness(0.4)'
+    div.style.filter = 'blur(10px)'
     div.style.display = 'block'
+    glass.style.display = 'block'
   } else {
     div.style.filter = ''
     div.style.display = 'none'
+    glass.style.display = 'none'
   }
 }
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   document.body.appendChild(div)
+  document.body.appendChild(glass)
   setBackground(config.get('poi.background'))
   toggleBackground(config.get('poi.vibrant'))
 })
