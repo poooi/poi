@@ -446,7 +446,6 @@ config.on('config.set', (path, value) => {
   }
   if (path === 'poi.vibrant') {
     window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
-    console.log(value, themeMenuList)
     themeMenuList[themeMenuList.length - 1].checked = value
   }
 })
