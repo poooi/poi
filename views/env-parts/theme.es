@@ -1,6 +1,9 @@
 import themes from 'poi-asset-themes/index.json'
+import { remote } from 'electron'
 
-const {$, ROOT, EXROOT, config} = window
+const { normal: normalThemes, vibrant: vibrantThemes } = themes
+
+const {$, EXROOT, config} = window
 
 if ($('#fontawesome-css')) {
   $('#fontawesome-css').setAttribute('href', require.resolve('font-awesome/css/font-awesome.css'))
@@ -13,35 +16,52 @@ window.reloadCustomCss = () => {
   $('#custom-css').setAttribute('href', `file://${EXROOT}/hack/custom.css`)
 }
 
-window.loadTheme = (th) => {
-  window.theme = th || 'paperdark'
-  const {theme} = window
-  window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(th)
+window.loadTheme = (theme = 'paperdark') => {
+  window.theme = theme
+  window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(theme)
   if ($('#bootstrap-css')) {
-    $('#bootstrap-css').setAttribute('href', require.resolve(`poi-asset-themes/dist/${theme}.css`))
+    $('#bootstrap-css').setAttribute('href', require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`))
   }
   window.reloadCustomCss()
 }
 
-window.applyTheme = (th) => {
-  config.set('poi.theme', th)
-  const event = new CustomEvent('theme.change',{
-    bubbles: true,
-    cancelable: true,
-    detail: {
-      theme: th,
-    },
-  })
-  window.dispatchEvent(event)
+window.applyTheme = theme => config.set('poi.theme', theme)
+
+window.setVibrancy = value => {
+  const themes = value ? vibrantThemes : normalThemes
+  if (window.isMain && window.dispatch) {
+    window.dispatch({
+      type: '@@UpdateThemes',
+      themes,
+    })
+  }
+  window.allThemes = themes
+  remote.getCurrentWindow().setVibrancy(value ? 'ultra-dark' : null)
+  window.isVibrant = Boolean(value)
+  const theme = config.get('poi.theme', 'paperdark')
+  if (themes.includes(theme)) {
+    window.loadTheme(theme)
+  } else {
+    config.set('poi.theme', 'paperdark')
+  }
 }
 
-window.allThemes = themes
+window.allThemes = normalThemes
+window.normalThemes = normalThemes
+window.vibrantThemes = vibrantThemes
 config.setDefault('poi.theme', 'paperdark')
-window.loadTheme(config.get('poi.theme', 'paperdark'))
+if (['darwin'].includes(process.platform)) {
+  window.setVibrancy(config.get('poi.vibrant', null))
+} else {
+  window.loadTheme(config.get('poi.theme', 'paperdark'))
+}
 
 const themeChangeHandler = (path, value) => {
   if (path === 'poi.theme') {
     window.loadTheme(value)
+  }
+  if (path === 'poi.vibrant') {
+    window.setVibrancy(value)
   }
 }
 

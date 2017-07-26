@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
@@ -104,17 +104,21 @@ const ChangeLayoutConfig = connect(() => (
 })
 
 const ChangeThemeConfig = connect((state, props) => ({
+  themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.theme', 'paperdark'),
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
+  enableVibrant: get(state.config, 'poi.vibrant', false),
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
+    themes: PropTypes.arrayOf(PropTypes.string),
     theme: PropTypes.string,
     enableSVGIcon: PropTypes.bool,
     enableTransition: PropTypes.bool,
     useGridMenu: PropTypes.bool,
+    enableVibrant: PropTypes.bool,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -140,13 +144,16 @@ const ChangeThemeConfig = connect((state, props) => ({
   handleSetGridMenu = () => {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
+  handleSetVibrancy = () => {
+    config.set('poi.vibrant', !this.props.enableVibrant)
+  }
   render() {
     return (
       <Grid>
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.theme} onChange={this.handleSetTheme}>
             {
-              window.allThemes.map((theme, index) =>
+              this.props.themes.map((theme, index) =>
                 <option key={index} value={theme}>
                   {(theme === '__default__') ? 'Default' : (theme[0].toUpperCase() + theme.slice(1))}
                 </option>
@@ -172,6 +179,14 @@ const ChangeThemeConfig = connect((state, props) => ({
             {__('Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
+        {
+          ['darwin'].includes(process.platform) &&
+          <Col xs={12}>
+            <Checkbox checked={this.props.enableVibrant} onChange={this.handleSetVibrancy}>
+              {__('Enable Vibrance')}
+            </Checkbox>
+          </Col>
+        }
       </Grid>
     )
   }

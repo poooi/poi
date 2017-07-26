@@ -305,6 +305,11 @@ const postEnableProcess = (plugin) => {
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
     })
+    if (['darwin'].includes(process.platform) && config.get('poi.vibrant', false)) {
+      Object.assign(windowOptions, {
+        vibrancy: 'ultra-dark',
+      })
+    }
     if (plugin.multiWindow) {
       plugin.handleClick = function() {
         const pluginWindow = windowManager.createWindow(windowOptions)

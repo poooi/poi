@@ -2,15 +2,23 @@ const initState = {
   activeMainTab: 'mainView',
   activePluginName: '',
   activeFleetId: 0,
+  themes: window.allThemes.slice(),
 }
 
-export function reducer(state=initState, {type, tabInfo}) {
+export function reducer(state=initState, {type, tabInfo, themes}) {
   switch (type) {
-  case '@@TabSwitch':{
+  case '@@TabSwitch': {
     return {
       ...state,
       ...tabInfo,
-    }}
+    }
+  }
+  case '@@UpdateThemes': {
+    return {
+      ...state,
+      themes,
+    }
+  }
   default:
     return state
   }
