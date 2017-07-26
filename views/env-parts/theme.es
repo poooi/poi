@@ -103,7 +103,6 @@ div.style.backgroundColor = '#000'
 div.style.display = 'none'
 
 const setBackground = p => {
-  window.pp = p
   if (p) {
     div.style.backgroundImage = `url(${fileUrl(p)})`
   } else {
