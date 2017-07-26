@@ -113,7 +113,7 @@ const setBackground = p => {
 
 const toggleBackground = value => {
   if (value === 2) {
-    div.style.filter = 'blur(10px)'
+    div.style.filter = 'blur(10px) saturate(50%)'
     div.style.display = 'block'
     glass.style.display = 'block'
   } else {
