@@ -37,8 +37,8 @@ window.setVibrancy = value => {
     })
   }
   window.allThemes = themes
-  if (['darwin'].includes(process.platform) && value === 1) {
-    remote.getCurrentWindow().setVibrancy(value ? 'ultra-dark' : null)
+  if (['darwin'].includes(process.platform)) {
+    remote.getCurrentWindow().setVibrancy((value === 1) ? 'ultra-dark' : null)
   }
   window.isVibrant = Boolean(value)
   const theme = config.get('poi.theme', 'paperdark')
