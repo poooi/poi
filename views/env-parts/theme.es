@@ -17,6 +17,7 @@ window.reloadCustomCss = () => {
 }
 
 window.loadTheme = (theme = 'paperdark') => {
+  theme = themes.normal.includes(theme) ? theme : 'paperdark'
   window.theme = theme
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(theme)
   if ($('#bootstrap-css')) {
