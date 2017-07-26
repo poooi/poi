@@ -75,7 +75,7 @@ window.addEventListener('unload', (e) => {
 
 const glass = document.createElement("div")
 glass.id = 'bg-overlay'
-glass.style.position = 'absolute'
+glass.style.position = 'fixed'
 glass.style.top = '-15px'
 glass.style.left = '-15px'
 glass.style.height = 'calc(100% + 30px)'
@@ -90,7 +90,7 @@ glass.style.display = 'none'
 
 const div = document.createElement("div")
 div.id = 'custom-bg'
-div.style.position = 'absolute',
+div.style.position = 'fixed',
 div.style.top = '-15px'
 div.style.left = '-15px'
 div.style.height = 'calc(100% + 30px)'
