@@ -36,7 +36,9 @@ window.setVibrancy = value => {
     })
   }
   window.allThemes = themes
-  remote.getCurrentWindow().setVibrancy(value ? 'ultra-dark' : null)
+  if (['darwin'].includes(process.platform)) {
+    remote.getCurrentWindow().setVibrancy(value ? 'ultra-dark' : null)
+  }
   window.isVibrant = Boolean(value)
   const theme = config.get('poi.theme', 'paperdark')
   if (themes.includes(theme)) {
@@ -50,7 +52,7 @@ window.allThemes = normalThemes
 window.normalThemes = normalThemes
 window.vibrantThemes = vibrantThemes
 config.setDefault('poi.theme', 'paperdark')
-if (['darwin'].includes(process.platform)) {
+if (config.get('poi.vibrant', null)) {
   window.setVibrancy(config.get('poi.vibrant', null))
 } else {
   window.loadTheme(config.get('poi.theme', 'paperdark'))
