@@ -3,6 +3,7 @@
  */
 
 import { isEqual, forEach, keyBy, zip, unzip, sum } from 'lodash'
+import path from 'path'
 
 // For a given array, sum up each position of the subarray respectively.
 // Args:
@@ -43,7 +44,7 @@ export function between(n, min, max) {
   return n >= min && n <= max
 }
 
-// Input: 
+// Input:
 //   buildArray(index, value)
 //     index := Integer
 //     value := anything
@@ -95,7 +96,7 @@ export function pickExisting(state, body) {
 }
 
 // Similar to lodash.set, but if the value needs updating, each object along
-// its path will be shallow-copied instead of modified in-place, therefore 
+// its path will be shallow-copied instead of modified in-place, therefore
 // complying with the regulation of redux.
 export function reduxSet(obj, path, val) {
   const [prop, ...restPath] = path
@@ -214,4 +215,12 @@ export function trimArray(state, comparator) {
   if (Array.isArray(state) && Array.isArray(comparator) && comparator.length < state.length)
     return state.slice(0, comparator.length)
   return state
+}
+
+export function fileUrl(str) {
+  let pathName = path.resolve(str).replace(/\\/g, '/')
+  if (pathName[0] !== '/') {
+    pathName = '/' + pathName
+  }
+  return 'file://' + pathName
 }

@@ -93,6 +93,10 @@
   text-align: center;
   padding: 5px;
   cursor: pointer;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: rtl;
+  overflow: hidden;
 }
 #SettingsView .div-col {
   display: flex;

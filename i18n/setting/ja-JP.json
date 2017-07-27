@@ -156,5 +156,7 @@
   "Monitor on": "モニターオン",
   "Monitor off": "モニターオフ",
   "TOTAL": "合計",
-  "Enable Vibrance": "バイブランス"
+  "Default": "ディフォルト",
+  "Vibrance": "バイブランス",
+  "Custom background": "カスタム背景"
 }

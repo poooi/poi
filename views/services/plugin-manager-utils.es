@@ -305,7 +305,7 @@ const postEnableProcess = (plugin) => {
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
     })
-    if (['darwin'].includes(process.platform) && config.get('poi.vibrant', false)) {
+    if (['darwin'].includes(process.platform) && config.get('poi.vibrant', 0) === 1) {
       Object.assign(windowOptions, {
         vibrancy: 'ultra-dark',
       })
