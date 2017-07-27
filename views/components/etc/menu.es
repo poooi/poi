@@ -410,20 +410,6 @@ for (let i = window.normalThemes.length - 1; i >=0; i--) {
   })
 }
 
-if (['darwin'].includes(process.platform)) {
-  template[themepos].submenu.push({
-    type: 'separator',
-  })
-  template[themepos].submenu.push({
-    label: __('Enable Vibrance'),
-    type: 'checkbox',
-    checked: window.isVibrant,
-    click: (item, focusedWindow) => {
-      config.set('poi.vibrant', !window.isVibrant)
-    },
-  })
-}
-
 const appMenu = Menu.buildFromTemplate(template)
 if (process.platform === 'darwin') {
   Menu.setApplicationMenu(appMenu)
@@ -446,7 +432,6 @@ config.on('config.set', (path, value) => {
   }
   if (path === 'poi.vibrant') {
     window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
-    themeMenuList[themeMenuList.length - 1].checked = value
   }
 })
 
