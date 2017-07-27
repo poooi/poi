@@ -90,6 +90,7 @@ export const FolderPickerConfig = connect(() => {
     configName: PropTypes.string,
     value: PropTypes.string,
     isFolder: PropTypes.bool,
+    placeholder: PropTypes.string,
   }
   static defaultProps = {
     isFolder: true,
@@ -148,8 +149,9 @@ export const FolderPickerConfig = connect(() => {
         onDrop={this.folderPickerOnDrop}
         onDragEnter={this.onDrag}
         onDragOver={this.onDrag}
-        onDragLeave={this.onDrag}>
-        {this.props.value}
+        onDragLeave={this.onDrag}
+      >
+        {this.props.value || this.props.placeholder}
       </div>
     )
   }

@@ -1,7 +1,7 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { shell } from 'electron'
-import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Overlay, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -124,6 +124,9 @@ const ChangeThemeConfig = connect((state, props) => ({
     vibrant: PropTypes.number,
     background: PropTypes.string,
   }
+  state = {
+    show: false,
+  }
   handleSetTheme = (e) => {
     const theme = e.target.value
     if (this.props.theme !== theme) {
@@ -151,6 +154,16 @@ const ChangeThemeConfig = connect((state, props) => ({
   handleSetVibrancy = e => {
     config.set('poi.vibrant', parseInt(e.target.value))
   }
+  handleMouseEnter = () => {
+    this.setState({
+      show: true,
+    })
+  }
+  handleMouseLeave = () => {
+    this.setState({
+      show: false,
+    })
+  }
   render() {
     return (
       <Grid>
@@ -176,27 +189,34 @@ const ChangeThemeConfig = connect((state, props) => ({
           <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
         </Col>
         <Col xs={6} style={{ marginTop: '1ex' }}>
-          <OverlayTrigger
-            placement='bottom'
-            overlay={
-              <Tooltip id='background-preview'>
-                <div>
-                  <img src={encodeURI(fileUrl(this.props.background))} alt="" style={{ maxHeight: '100%', maxWidth: '100%'}}/>
-                </div>
-              </Tooltip>
-            }
+
+          <Overlay
+            show={this.props.background && this.state.show }
+            placement="bottom"
+            target={this.fileSelect}
           >
-            <div>
-              {
-                this.props.vibrant === 2 &&
-                <FolderPickerConfig
-                  label={__('Custom background')}
-                  configName="poi.background"
-                  defaultVal={''}
-                  isFolder={false} />
-              }
-            </div>
-          </OverlayTrigger>
+            <Tooltip id='background-preview'>
+              <div>
+                <img src={encodeURI(fileUrl(this.props.background))} alt="" style={{ maxHeight: '100%', maxWidth: '100%'}}/>
+              </div>
+            </Tooltip>
+          </Overlay>
+          <div
+            ref={(ref) => this.fileSelect = ref}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
+          >
+            {
+              this.props.vibrant === 2 &&
+              <FolderPickerConfig
+                label={__('Custom background')}
+                configName="poi.background"
+                defaultVal={''}
+                isFolder={false}
+                placeholder={__('No background image selected')}
+              />
+            }
+          </div>
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon}>

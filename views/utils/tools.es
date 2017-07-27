@@ -217,7 +217,7 @@ export function trimArray(state, comparator) {
   return state
 }
 
-export function fileUrl(str) {
+export const fileUrl = (str = '') => {
   let pathName = path.resolve(str).replace(/\\/g, '/')
   if (pathName[0] !== '/') {
     pathName = '/' + pathName
