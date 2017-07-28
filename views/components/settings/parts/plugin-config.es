@@ -584,7 +584,7 @@ const PluginConfig = connect((state, props) => ({
     }
   }
   componentDidMount = async () => {
-      this.setState({
+    this.setState({
       checkingUpdate: true,
       npmWorking: true,
     })
