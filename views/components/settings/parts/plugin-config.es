@@ -824,4 +824,8 @@ const PluginConfig = connect((state, props) => ({
   }
 })
 
+remote.getCurrentWebContents().on('did-stop-loading', () => {
+  PluginManager.initialize()
+})
+
 export default PluginConfig
