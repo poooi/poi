@@ -436,8 +436,6 @@ const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
-pluginManager.initialize()
-
 window.reloadPlugin = (pkgName, verbose=false) => {
   const { plugins } = getStore()
   const plugin =
