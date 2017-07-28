@@ -584,8 +584,7 @@ const PluginConfig = connect((state, props) => ({
     }
   }
   componentDidMount = async () => {
-    PluginManager.initialize()
-    this.setState({
+      this.setState({
       checkingUpdate: true,
       npmWorking: true,
     })
@@ -823,6 +822,10 @@ const PluginConfig = connect((state, props) => ({
       </form>
     )
   }
+})
+
+remote.getCurrentWebContents().on('did-stop-loading', () => {
+  PluginManager.initialize()
 })
 
 export default PluginConfig
