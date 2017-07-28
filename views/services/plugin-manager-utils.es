@@ -1,7 +1,7 @@
 import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { createReadStream, readJson, accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir, lstatSync } from 'fs-extra'
+import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, rmdir, lstatSync } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
@@ -142,16 +142,16 @@ export function updateI18n(plugin) {
   return plugin
 }
 
-export function readPlugin(pluginPath) {
+export async function readPlugin(pluginPath) {
   let pluginData, packageData, plugin
   try {
-    pluginData = readJsonSync(join(ROOT, 'assets', 'data', 'plugin.json'))
+    pluginData = await readJson(join(ROOT, 'assets', 'data', 'plugin.json'))
   } catch (error) {
     pluginData = {}
     utils.error(error)
   }
   try {
-    packageData = readJsonSync(join(pluginPath, 'package.json'))
+    packageData = await readJson(join(pluginPath, 'package.json'))
   } catch (error) {
     packageData = {}
     utils.error(error)
@@ -224,7 +224,7 @@ export function readPlugin(pluginPath) {
   return plugin
 }
 
-export function enablePlugin(plugin, reread=true) {
+export async function enablePlugin(plugin, reread=true) {
   if (!pathAdded.get(plugin.packageName) && !plugin.windowURL) {
     allowedPath.push(plugin.pluginPath)
     setAllowedPath(allowedPath)
@@ -236,7 +236,7 @@ export function enablePlugin(plugin, reread=true) {
   try {
     pluginMain = {
       ...require(plugin.pluginPath),
-      ...reread ? readPlugin(plugin.pluginPath) : {},
+      ...reread ? await readPlugin(plugin.pluginPath) : {},
     }
     pluginMain.enabled = true
     pluginMain.isRead = true
@@ -261,7 +261,7 @@ export function enablePlugin(plugin, reread=true) {
   return plugin
 }
 
-export function disablePlugin(plugin) {
+export async function disablePlugin(plugin) {
   plugin.enabled = false
   try {
     plugin = unloadPlugin(plugin)
