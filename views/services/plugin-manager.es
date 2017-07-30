@@ -5,7 +5,6 @@ import { readJsonSync, accessSync } from 'fs-extra'
 import glob from 'glob'
 import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
-import { remote } from 'electron'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
