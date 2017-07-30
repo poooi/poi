@@ -116,3 +116,5 @@ document.addEventListener("DOMContentLoaded", handleDOMContentLoaded)
 
 // A workaround for drop-and-drag navigation
 remote.require('./lib/utils').stopFileNavigate(remote.getCurrentWebContents().id)
+
+remote.getCurrentWindow().webContents.executeJavaScript('window.dispatchEvent(new Event(\'webview-loaded\'))')

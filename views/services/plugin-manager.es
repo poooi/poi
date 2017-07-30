@@ -5,6 +5,7 @@ import { readJsonSync, accessSync } from 'fs-extra'
 import glob from 'glob'
 import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
+import { remote } from 'electron'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
@@ -62,19 +63,19 @@ class PluginManager extends EventEmitter {
   getPluginPath(packageName) {
     return join(this.pluginRoot, 'node_modules', packageName)
   }
-  initialize() {
+  async initialize() {
     this.getConf()
     this.getPlugins()
   }
-  readPlugins() {
-    const pluginPaths = glob.sync(this.getPluginPath('poi-plugin-*'))
-    let plugins = pluginPaths.map((pluginPath) => {
-      let plugin = readPlugin(pluginPath)
+  async readPlugins() {
+    const pluginPaths = await new Promise(res => glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)))
+    let plugins = await Promise.all(pluginPaths.map(async(pluginPath) => {
+      let plugin = await readPlugin(pluginPath)
       if (plugin.enabled && !window.isSafeMode) {
-        plugin = enablePlugin(plugin)
+        plugin = await enablePlugin(plugin)
       }
       return plugin
-    })
+    }))
     plugins = sortBy(plugins, 'priority')
     notifyFailed(plugins)
     dispatch({
@@ -175,12 +176,12 @@ class PluginManager extends EventEmitter {
     }
     return this.VALID
   }
-  getPlugins() {
+  async getPlugins() {
     if (getStore('plugins').length > 0) {
       return getStore('plugins')
     }
     else {
-      return this.readPlugins()
+      return await this.readPlugins()
     }
   }
   async getConf() {
@@ -351,7 +352,7 @@ class PluginManager extends EventEmitter {
     try {
       let plugin = readPlugin(this.getPluginPath(packageName))
       if (plugin.enabled) {
-        plugin = enablePlugin(plugin, false)
+        plugin = await enablePlugin(plugin, false)
       }
       dispatch({
         type: '@@Plugin/add',
@@ -396,10 +397,10 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  enablePlugin(plugin) {
+  async enablePlugin(plugin) {
     plugin.enabled = true
     if (!plugin.isBroken) {
-      plugin = enablePlugin(plugin)
+      plugin = await enablePlugin(plugin)
     }
     config.set(`plugin.${plugin.id}.enable`, true)
     dispatch({
@@ -408,9 +409,9 @@ class PluginManager extends EventEmitter {
     })
   }
 
-  disablePlugin(plugin) {
+  async disablePlugin(plugin) {
     config.set(`plugin.${plugin.id}.enable`, false)
-    plugin = disablePlugin(plugin)
+    plugin = await disablePlugin(plugin)
     dispatch({
       type: '@@Plugin/add',
       value: plugin,
@@ -436,8 +437,6 @@ const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
-pluginManager.initialize()
-
 window.reloadPlugin = (pkgName, verbose=false) => {
   const { plugins } = getStore()
   const plugin =
@@ -456,5 +455,11 @@ window.reloadPlugin = (pkgName, verbose=false) => {
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" enabled.`)
 }
+
+function initPlugin() {
+  window.removeEventListener('webview-loaded', initPlugin)
+  pluginManager.initialize()
+}
+window.addEventListener('webview-loaded', initPlugin)
 
 export default pluginManager

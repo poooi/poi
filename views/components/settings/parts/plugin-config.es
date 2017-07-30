@@ -393,15 +393,15 @@ const PluginConfig = connect((state, props) => ({
   handleAdvancedShow = () => {
     this.setState({advanced: !this.state.advanced})
   }
-  handleEnable = (index) => {
+  handleEnable = async (index) => {
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)){
     case PluginManager.DISABLED:
-      PluginManager.enablePlugin(plugin)
+      await PluginManager.enablePlugin(plugin)
       break
     case PluginManager.VALID:
-      PluginManager.disablePlugin(plugin)
+      await PluginManager.disablePlugin(plugin)
       break
     }
   }

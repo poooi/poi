@@ -51,7 +51,7 @@
     "electron-updater": "^1.16.0",
     "fast-memoize": "^2.0.2",
     "font-awesome": "^4.7.0",
-    "fs-extra": "^2.1.2",
+    "fs-extra": "^4.0.0",
     "fuse.js": "^3.0.5",
     "glob": "^7.0.5",
     "header-case-normalizer": "^1.0.3",
