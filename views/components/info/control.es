@@ -160,7 +160,7 @@ const PoiControl = connect((state, props) => ({
   }
   handleTouchbar = (props) => {
     //load Touchbar-related functions only when touchbar is triggered
-    const {touchBarReInit, refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
+    const {refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
     //workaround for the input event not defined
     switch (props) {
     case 'refresh':
@@ -198,8 +198,7 @@ const PoiControl = connect((state, props) => ({
       this.handleOpenCacheFolder()
       break
     case 'volume':
-      this.handleSetMuted()
-      touchBarReInit()
+      this.handleSetMuted() 
       break
     case 'screenshot':
       this.handleCapturePage()
@@ -232,6 +231,10 @@ const PoiControl = connect((state, props) => ({
     }
   }
   render() {
+    if (process.platform === 'darwin') {
+      const {touchBarReInit} = remote.require('./lib/touchbar')
+      touchBarReInit()
+    }
     return (
       <div className='poi-control-container'>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__('Developer Tools')}</Tooltip>}>
