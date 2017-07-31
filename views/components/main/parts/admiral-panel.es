@@ -103,8 +103,14 @@ const getNextQuest = () => {
 }
 
 const getNextSenka = () => {
+  const now = moment.utc()
+  const nowDate = now.date()
+  const nowHour = now.hour()
   const currentMonth = moment.tz('Asia/Tokyo').month()
   const endOfMonth = moment.utc().month(currentMonth).endOf('month')
+  if (endOfMonth.date() === nowDate && nowHour >= 13 && nowHour < 15) {
+    return endOfMonth.subtract(11, 'hours').add(1, 'months')
+  }
   return endOfMonth.subtract(11, 'hours')
 }
 
