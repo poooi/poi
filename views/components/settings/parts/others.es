@@ -101,7 +101,6 @@ class AppMetrics extends PureComponent {
       const pid = win.webContents.getOSProcessId()
       const title = win.getTitle()
       pidmap[pid] = title
-      return pidmap
     })
     this.setState({
       metrics: sortBy(JSON.parse(JSON.stringify(metrics)), 'pid'),
