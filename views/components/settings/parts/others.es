@@ -159,7 +159,7 @@ class AppMetrics extends PureComponent {
                   <span>{metric.pid}</span>
                   <span title={metric.type}>
                     {
-                      Object.keys(pidmap).includes(metric.pid.toString()) ? pidmap[metric.pid] : metric.type
+                      pidmap[metric.pid] || metric.type
                     }
                   </span>
                   {
