@@ -74,10 +74,13 @@ class AppMetrics extends PureComponent {
     super(props)
 
     this.getAppMetrics = remote.require('electron').app.getAppMetrics
-
+    
+    this.getAllWindows = remote.require('electron').BrowserWindow.getAllWindows
+    
     this.state = {
       metrics: [],
       total: {},
+      pidmap: {},
       active: false,
     }
   }
@@ -86,16 +89,24 @@ class AppMetrics extends PureComponent {
     const metrics = this.getAppMetrics()
 
     const total = {}
-
+    
+    const pidmap = {}
     ;['workingSetSize', 'peakWorkingSetSize'].map(prop =>
       total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)
     )
 
     total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
 
+    this.getAllWindows().map(win => {
+      const pid = win.webContents.getOSProcessId()
+      const title = win.getTitle()
+      pidmap[pid] = title
+      return pidmap
+    })
     this.setState({
       metrics: sortBy(JSON.parse(JSON.stringify(metrics)), 'pid'),
       total,
+      pidmap,
     })
   }
 
@@ -120,7 +131,7 @@ class AppMetrics extends PureComponent {
   }
 
   render() {
-    const { metrics, active, total } = this.state
+    const { metrics, active, total, pidmap } = this.state
     return (
       <div>
         <div>
@@ -147,7 +158,11 @@ class AppMetrics extends PureComponent {
               metrics.map(metric => (
                 <div className='metric-row' key={metric.pid}>
                   <span>{metric.pid}</span>
-                  <span title={metric.type}>{metric.type}</span>
+                  <span title={metric.type}>
+                    {
+                      Object.keys(pidmap).includes(metric.pid.toString()) ? pidmap[metric.pid] : metric.type
+                    }
+                  </span>
                   {
                     ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
                       <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
