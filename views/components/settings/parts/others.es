@@ -157,10 +157,8 @@ class AppMetrics extends PureComponent {
               metrics.map(metric => (
                 <div className='metric-row' key={metric.pid}>
                   <span>{metric.pid}</span>
-                  <span title={metric.type}>
-                    {
-                      pidmap[metric.pid] || metric.type
-                    }
+                  <span title={pidmap[metric.pid] || metric.type}>
+                    {pidmap[metric.pid] || metric.type}
                   </span>
                   {
                     ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
