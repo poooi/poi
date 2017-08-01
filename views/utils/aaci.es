@@ -87,6 +87,8 @@ const isIsuzuK2 = shipIdIs(141)
 const isKasumiK2B = shipIdIs(470)
 const isSatsukiK2 = shipIdIs(418)
 const isKinuK2 = shipIdIs(487)
+const isYuraK2 = shipIdIs(488)
+const isFumitsukiK2 = shipIdIs(548)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -106,9 +108,9 @@ declareAACI({
   fixed: 4,
   modifier: 1.5,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(hasAtLeast(
-    isBuiltinHighAngleMount, 2),
-  hasSome(isAARadar)
+  equipsValid: validAll(
+    hasAtLeast(isBuiltinHighAngleMount, 2),
+    hasSome(isAARadar),
   ),
 })
 
@@ -120,7 +122,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isBuiltinHighAngleMount),
     hasSome(isAAFD),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -131,7 +133,7 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
   equipsValid: validAll(
     hasSome(isBuiltinHighAngleMount),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -142,7 +144,7 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isAAFD)
+    hasSome(isAAFD),
   ),
 })
 
@@ -155,7 +157,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isCDMG),
     hasAtLeast(isAAGun, 2),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -170,7 +172,7 @@ declareAACI({
     hasSome(isLargeCaliberMainGun),
     hasSome(isType3Shell),
     hasSome(isAAFD),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -197,7 +199,7 @@ declareAACI({
   shipValid: isAkizukiClass,
   equipsValid: validAll(
     hasAtLeast(isHighAngleMount, 2),
-    hasSome(isRadar)
+    hasSome(isRadar),
   ),
 })
 
@@ -209,7 +211,7 @@ declareAACI({
   shipValid: isAkizukiClass,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isRadar)
+    hasSome(isRadar),
   ),
 })
 
@@ -234,7 +236,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isHighAngleMount),
     hasSome(isCDMG),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -246,7 +248,7 @@ declareAACI({
   shipValid: isMayaK2,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isCDMG)
+    hasSome(isCDMG),
   ),
 })
 
@@ -260,7 +262,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isHighAngleMount),
     hasSome(isAAGun),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -272,7 +274,7 @@ declareAACI({
   shipValid: isIsuzuK2,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isAAGun)
+    hasSome(isAAGun),
   ),
 })
 
@@ -286,7 +288,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isHighAngleMount),
     hasSome(isAAGun),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -298,7 +300,7 @@ declareAACI({
   shipValid: isKasumiK2B,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isAAGun)
+    hasSome(isAAGun),
   ),
 })
 
@@ -310,7 +312,7 @@ declareAACI({
   modifier: 1.2,
   shipValid: isSatsukiK2,
   equipsValid: validAll(
-    hasSome(isCDMG)
+    hasSome(isCDMG),
   ),
 })
 
@@ -325,7 +327,7 @@ declareAACI({
   equipsValid: validAll(
     validNot(hasSome(isBuiltinHighAngleMount)),
     hasSome(isHighAngleMount),
-    hasSome(isCDMG)
+    hasSome(isCDMG),
   ),
 })
 
@@ -336,7 +338,30 @@ declareAACI({
   modifier: 1.25,
   shipValid: isKinuK2,
   equipsValid: validAll(
-    hasSome(isCDMG)
+    hasSome(isCDMG),
+  ),
+})
+
+declareAACI({
+  name: '由良改二',
+  id: 21,
+  fixed: 5,
+  modifier: 1.45,
+  shipValid: isYuraK2,
+  equipsValid: validAll(
+    hasSome(isHighAngleMount),
+    hasSome(isAARadar),
+  ),
+})
+
+declareAACI({
+  name: '文月改二',
+  id: 22,
+  fixed: 2,
+  modifier: 1.25,
+  shipValid: isFumitsukiK2,
+  equipsValid: validAll(
+    hasSome(isCDMG),
   ),
 })
 
