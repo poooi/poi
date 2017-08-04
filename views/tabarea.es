@@ -116,12 +116,13 @@ export default connect(
     const cur = (new Date()).getTime()
     dbg.extra('moduleRenderCost').log(`the cost of tab-module's render: ${cur-this.nowTime}ms`)
   }
-  dispatchTabChangeEvent = (tabInfo) =>
+  dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
       tabInfo,
+      autoSwitch,
     })
-  selectTab = (key) => {
+  selectTab = (key, autoSwitch=false) => {
     if (key == null)
       return
     let tabInfo = {}
@@ -141,7 +142,7 @@ export default connect(
         activePluginName: key,
       }
     }
-    this.dispatchTabChangeEvent(tabInfo)
+    this.dispatchTabChangeEvent(tabInfo, autoSwitch)
   }
   handleSelectTab = (key) => {
     this.selectTab(key)
@@ -235,7 +236,7 @@ export default connect(
           }
         }
       }
-      this.selectTab(toSwitch)
+      this.selectTab(toSwitch, true)
     }
   }
   componentWillReceiveProps(nextProps) {
