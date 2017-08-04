@@ -65,7 +65,7 @@
     "objtree": "^0.1.1",
     "pac-proxy-agent": "^2.0.0",
     "path-extra": "4.1.0",
-    "poi-asset-themes": "^3.1.0",
+    "poi-asset-themes": "^3.2.0",
     "poi-lib-battle": "2.3.0",
     "prop-types": "^15.5.8",
     "react": "^15.6.1",
