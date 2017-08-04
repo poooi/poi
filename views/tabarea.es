@@ -116,15 +116,16 @@ export default connect(
     const cur = (new Date()).getTime()
     dbg.extra('moduleRenderCost').log(`the cost of tab-module's render: ${cur-this.nowTime}ms`)
   }
-  dispatchTabChangeEvent = (tabInfo) =>
+  dispatchTabChangeEvent = (tabInfo, autoSwitch) =>
     dispatch({
       type: '@@TabSwitch',
       tabInfo,
+      autoSwitch,
     })
-  selectTab = (key, autoSwitched=false) => {
+  selectTab = (key, autoSwitch=false) => {
     if (key == null)
       return
-    let tabInfo = {autoSwitched}
+    let tabInfo = {}
     const mainTabKeyUnion = this.props.doubleTabbed ? this.mainTabKeyUnion : this.tabKeyUnion
     const mainTabInstance = mainTabKeyUnion.getWrappedInstance()
     if (mainTabInstance.findChildByKey(mainTabInstance.props.children, key)) {
@@ -141,7 +142,7 @@ export default connect(
         activePluginName: key,
       }
     }
-    this.dispatchTabChangeEvent(tabInfo)
+    this.dispatchTabChangeEvent(tabInfo, autoSwitch)
   }
   handleSelectTab = (key) => {
     this.selectTab(key)
