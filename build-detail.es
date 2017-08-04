@@ -6,7 +6,7 @@ const Promise = require('bluebird')
 const {promisify} = Promise
 const request = Promise.promisifyAll(require('request'))
 const requestAsync = promisify(request, {multiArgs: true})
-const fs = Promise.promisifyAll(require('fs-extra'))
+const fs = require('fs-extra')
 const n7z = require('node-7z')
 const semver = require('semver')
 const babel = Promise.promisifyAll(require('babel-core'))
@@ -93,12 +93,12 @@ const TARGET_LIST = [
 // *** TOOLS & COMMON METHODS ***
 const downloadAsync = async (url, destDir, filename = path.basename(url), description) => {
   log(`Downloading ${description} from ${url}`)
-  await fs.ensureDirAsync(destDir)
+  await fs.ensureDir(destDir)
   const destPath = path.join(destDir, filename)
   try {
-    await fs.accessAsync(destPath, fs.R_OK)
+    await fs.access(destPath, fs.R_OK)
     log(`Use existing ${destPath}`)
-  }catch (e) {
+  } catch (e) {
     const [response, body] = await requestAsync({
       url: url,
       encoding: null,
@@ -106,7 +106,7 @@ const downloadAsync = async (url, destDir, filename = path.basename(url), descri
     if (response.statusCode != 200) {
       throw new Error(`Response status code ${response.statusCode}`)
     }
-    await fs.writeFileAsync(destPath, body)
+    await fs.writeFile(destPath, body)
     log(`Successfully downloaded to ${destPath}`)
   }
   return destPath
@@ -161,7 +161,7 @@ const downloadExtractZipAsync = async (url, downloadDir, filename, destPath,
     } catch (e) {
       log(`Downloading failed, retrying ${url}, reason: ${e}`)
       try {
-        await fs.removeAsync(zipPath)
+        await fs.remove(zipPath)
       } catch (e) {
         console.error(e.stack)
       }
@@ -181,7 +181,7 @@ const installFlashAsync = async (platform, downloadDir, flashDir) => {
 
 const compress7zAsync = async (files, archive, options) => {
   try {
-    await fs.removeAsync(archive)
+    await fs.remove(archive)
   } catch (e) {
     console.error(e.stack)
   }
@@ -197,7 +197,7 @@ const changeExt = (srcPath, ext) => {
 const gitArchiveAsync = async (tarPath, tgtDir) => {
   log('Archive file from git..')
   try{
-    await fs.removeAsync(tarPath)
+    await fs.remove(tarPath)
   } catch (e) {
     console.error(e.stack)
   }
@@ -251,7 +251,7 @@ const runScriptReturnStdoutAsync = (scriptPath, args, options) =>
 const npmInstallAsync = async (tgtDir, args=[], dedupe=false) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   log(`Installing npm for ${tgtDir}`)
-  await fs.ensureDirAsync(tgtDir)
+  await fs.ensureDir(tgtDir)
   await runScriptAsync(NPM_EXEC_PATH, ['install', '--registry', NPM_SERVER].concat(args),{
     cwd: tgtDir,
   })
@@ -268,7 +268,7 @@ const filterCopyAppAsync = async (stage1App, stage2App) =>
   Promise.all((() => {
     const jobs = []
     for (const target of TARGET_LIST) {
-      jobs.push(fs.copyAsync(path.join(stage1App, target), path.join(stage2App, target), {
+      jobs.push(fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
         overwrite: true,
       }))
     }
@@ -295,7 +295,7 @@ export const compileToJsAsync = (appDir, dontRemove) => {
           tasks.push(async () => {
             const srcPath = path.join(root, fileStats.name)
             const tgtPath = changeExt(srcPath, '.js')
-            // const src = await fs.readFileAsync(srcPath, 'utf-8')
+            // const src = await fs.readFile(srcPath, 'utf-8')
             let tgt
             try {
               const result = await babel.transformFileAsync(srcPath, {
@@ -307,9 +307,9 @@ export const compileToJsAsync = (appDir, dontRemove) => {
               log(`Compiling ${srcPath} failed: ${e}`)
               return
             }
-            await fs.writeFileAsync(tgtPath, tgt)
+            await fs.writeFile(tgtPath, tgt)
             if (!dontRemove) {
-              await fs.removeAsync(srcPath)
+              await fs.remove(srcPath)
             }
             log(`Compiled ${tgtPath}`)
           })
@@ -340,13 +340,13 @@ const checkNpmVersion = async () => {
 
 const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   try{
-    await fs.removeAsync(installRoot)
-    await fs.removeAsync(tarRoot)
+    await fs.remove(installRoot)
+    await fs.remove(tarRoot)
   } catch (e) {
     console.error(e.stack)
   }
-  await fs.ensureDirAsync(installRoot)
-  await fs.ensureDirAsync(tarRoot)
+  await fs.ensureDir(installRoot)
+  await fs.ensureDir(tarRoot)
 
   // Install plugins
   await npmInstallAsync(installRoot, ['--only=production', '--prefix', '.'].concat(pluginNames))
@@ -381,7 +381,7 @@ export const installPluginsAsync = async (poiVersion) => {
   const BUILDING_ROOT = path.join(BUILD_ROOT, "plugins")
   const RELEASE_DIR = BUILD_ROOT
 
-  const packages = await fs.readJsonAsync(PLUGIN_JSON_PATH)
+  const packages = await fs.readJson(PLUGIN_JSON_PATH)
 
   const pluginNames = Object.keys(packages)
 
@@ -413,19 +413,19 @@ export const buildAsync = async (poiVersion, dontRemove) => {
   // Clean files
   try {
     if (!dontRemove) {
-      await fs.removeAsync(BUILDING_ROOT)
+      await fs.remove(BUILDING_ROOT)
     }
   } catch (e) {
     console.error(e.stack)
   }
   try {
-    await fs.removeAsync(stage1App)
+    await fs.remove(stage1App)
   } catch (e) {
     console.error(e.stack)
   }
-  await fs.ensureDirAsync(stage1App)
-  await fs.ensureDirAsync(stage2App)
-  await fs.ensureDirAsync(path.join(stage1App, 'node_modules'))
+  await fs.ensureDir(stage1App)
+  await fs.ensureDir(stage2App)
+  await fs.ensureDir(path.join(stage1App, 'node_modules'))
 
   // Stage1: Everything downloaded and translated
   await gitArchiveAsync(tarPath, stage1App)
@@ -441,16 +441,16 @@ export const buildAsync = async (poiVersion, dontRemove) => {
 
   // Clean files
 
-  await fs.removeAsync(stage1App)
+  await fs.remove(stage1App)
   log('file cleaned')
 
   // Rewrite package.json for build
   const packagePath = path.join(stage2App, 'package.json')
-  const packageData = await fs.readJsonAsync(packagePath)
+  const packageData = await fs.readJson(packagePath)
   delete packageData.build
   delete packageData.devDependencies
-  await fs.removeAsync(packagePath)
-  await fs.writeJsonAsync(packagePath, packageData)
+  await fs.remove(packagePath)
+  await fs.outputJson(packagePath, packageData)
   log ("Done.")
 }
 
@@ -462,7 +462,7 @@ export const getFlashAsync = async (poiVersion) => {
   const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
   const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const platform = `${process.platform}-${process.arch}`
-  await fs.removeAsync(path.join(__dirname, 'PepperFlash'))
+  await fs.remove(path.join(__dirname, 'PepperFlash'))
   const flashDir = path.join(__dirname, 'PepperFlash', PLATFORM_TO_PATHS[platform])
   await installFlashAsync(platform, downloadDir, flashDir)
 }
@@ -471,7 +471,7 @@ export const getFlashAllAsync = async (poiVersion) => {
   const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
   const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const platforms = ['win32-ia32', 'win32-x64', 'darwin-x64', 'linux-x64']
-  await fs.removeAsync(path.join (__dirname, 'PepperFlash'))
+  await fs.remove(path.join (__dirname, 'PepperFlash'))
   const tasks = platforms.map(platform => {
     const flashDir = path.join(__dirname, 'PepperFlash', PLATFORM_TO_PATHS[platform])
     return installFlashAsync(platform, downloadDir, flashDir)
