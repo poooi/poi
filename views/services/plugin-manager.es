@@ -436,7 +436,7 @@ const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
-window.reloadPlugin = (pkgName, verbose=false) => {
+window.reloadPlugin = async (pkgName, verbose=false) => {
   const { plugins } = getStore()
   const plugin =
     plugins.find(pkg => pkg.packageName === pkgName) ||
@@ -445,11 +445,11 @@ window.reloadPlugin = (pkgName, verbose=false) => {
     console.error(`plugin "${pkgName}" not found`)
     return
   }
-  pluginManager.disablePlugin(plugin)
+  await pluginManager.disablePlugin(plugin)
   if (verbose)
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" disabled, re-enabling...`)
-  pluginManager.enablePlugin(plugin)
+  await pluginManager.enablePlugin(plugin)
   if (verbose)
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" enabled.`)
