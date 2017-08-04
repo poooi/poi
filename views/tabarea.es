@@ -121,10 +121,10 @@ export default connect(
       type: '@@TabSwitch',
       tabInfo,
     })
-  selectTab = (key) => {
+  selectTab = (key, autoSwitched=false) => {
     if (key == null)
       return
-    let tabInfo = {}
+    let tabInfo = {autoSwitched}
     const mainTabKeyUnion = this.props.doubleTabbed ? this.mainTabKeyUnion : this.tabKeyUnion
     const mainTabInstance = mainTabKeyUnion.getWrappedInstance()
     if (mainTabInstance.findChildByKey(mainTabInstance.props.children, key)) {
@@ -235,7 +235,7 @@ export default connect(
           }
         }
       }
-      this.selectTab(toSwitch)
+      this.selectTab(toSwitch, true)
     }
   }
   componentWillReceiveProps(nextProps) {

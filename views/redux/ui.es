@@ -2,6 +2,11 @@ const initState = {
   activeMainTab: 'mainView',
   activePluginName: '',
   activeFleetId: 0,
+  /*
+     indicate whether last change made to
+     active{MainTab, PluginName, FleetId} is made by auto switch
+   */
+  autoSwitched: false,
   themes: window.allThemes.slice(),
 }
 
