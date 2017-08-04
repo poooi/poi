@@ -116,7 +116,7 @@ export default connect(
     const cur = (new Date()).getTime()
     dbg.extra('moduleRenderCost').log(`the cost of tab-module's render: ${cur-this.nowTime}ms`)
   }
-  dispatchTabChangeEvent = (tabInfo, autoSwitch) =>
+  dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
       tabInfo,
