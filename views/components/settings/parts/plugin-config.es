@@ -590,19 +590,22 @@ const PluginConfig = connect((state, props) => ({
     })
     const isNotif = window.config.get('config.packageManager.enablePluginCheck', true)
       && !this.props.autoUpdate // if we auto update plugins, don't toast notify
-    await PluginManager.getOutdatedPlugins(isNotif)
-    if (this.props.autoUpdate) {
-      const plugins = PluginManager.getInstalledPlugins()
-      for (const index in plugins) {
-        if (plugins[index].isOutdated) {
-          try {
-            await this.handleUpdate(index)
-          } catch (error) {
-            throw error
+    const handleAutoUpdate = async () => {
+      await PluginManager.getOutdatedPlugins(isNotif)
+      if (this.props.autoUpdate) {
+        const plugins = PluginManager.getInstalledPlugins()
+        for (const index in plugins) {
+          if (plugins[index].isOutdated) {
+            try {
+              await this.handleUpdate(index)
+            } catch (error) {
+              throw error
+            }
           }
         }
       }
     }
+    PluginManager.on('initialized', handleAutoUpdate)
     this.setState({
       checkingUpdate: false,
       npmWorking: false,

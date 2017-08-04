@@ -64,7 +64,8 @@ class PluginManager extends EventEmitter {
   }
   async initialize() {
     this.getConf()
-    this.getPlugins()
+    await this.getPlugins()
+    this.emit('initialized')
   }
   async readPlugins() {
     const pluginPaths = await new Promise(res => glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)))
