@@ -52,7 +52,7 @@ export const SquardRow = connect((state, { squardId }) =>
                 {__('Range')}: {api_distance}
               </span>
               <span className="ship-speed">
-                {__('Fighter Power')}: {tyku.panel}
+                {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
               </span>
             </div>
           </div>
