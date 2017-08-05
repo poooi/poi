@@ -11,6 +11,7 @@ import {reducer as constructions} from './constructions'
 import {reducer as resources} from './resources'
 import {reducer as maps} from './maps'
 import {reducer as quests} from './quests'
+import {reducer as server} from './server'
 import airbase from './airbase'
 import presets from './presets'
 
@@ -37,5 +38,6 @@ export const reducer = reduceReducers(
     quests,
     airbase,
     presets,
+    server,
   }),
 )
