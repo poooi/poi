@@ -132,7 +132,6 @@ export function getTyku(equipsData, landbaseStatus=0) {
   let minTyku = 0
   let maxTyku = 0
   let basicTyku = 0
-  let panelTyku = 0
   let reconBonus = 1
   for (let i = 0; i < equipsData.length; i++) {
     if (!equipsData[i]) {
@@ -161,17 +160,15 @@ export function getTyku(equipsData, landbaseStatus=0) {
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-        panelTyku += Math.floor(tempTyku + Math.sqrt((tempAlv === 0) ? 0 : aircraftExpTable[tempAlv + 1] / 10))
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([11, 45].includes($equip.api_type[2])) {
         // 水上機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-        panelTyku += Math.floor(tempTyku + Math.sqrt((tempAlv === 0) ? 0 : aircraftExpTable[tempAlv + 1] / 10))
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([48].includes($equip.api_type[2])) {
         // 局戦 · 陸戦
         let landbaseBonus = 0
@@ -180,9 +177,8 @@ export function getTyku(equipsData, landbaseStatus=0) {
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + landbaseBonus + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-        panelTyku += Math.floor(tempTyku + Math.sqrt((tempAlv === 0) ? 0 : aircraftExpTable[tempAlv + 1] / 10))
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([10, 41].includes($equip.api_type[2]) && landbaseStatus == 2) {
         // 水偵・飛行艇
         if ($equip.api_saku >= 9) {
@@ -204,7 +200,6 @@ export function getTyku(equipsData, landbaseStatus=0) {
   }
   return {
     basic: Math.floor(basicTyku * reconBonus),
-    panel: Math.floor(panelTyku * reconBonus),
     min: Math.floor(minTyku * reconBonus),
     max: Math.floor(maxTyku * reconBonus),
   }
