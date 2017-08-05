@@ -216,7 +216,7 @@ export const MiniSquardRow = connect((state, { squardId }) =>
           </span>
           <span className="ship-lv-text top-space">
             <div className="ship-fp">
-              {__('Fighter Power')}: {tyku.max}
+              {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
             </div>
             {statuslabel}
           </span>
