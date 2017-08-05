@@ -167,7 +167,7 @@ export default connect(
         isMini ?
           <div style={{display: "flex", justifyContent: "space-around", width: '100%'}}>
             <span style={{flex: "none"}}>{__(getSpeedLabel(speed))} </span>
-            <span style={{flex: "none", marginLeft: 5}}>{__('Fighter Power')}: {tyku.min}</span>
+            <span style={{flex: "none", marginLeft: 5}}>{__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
             <span style={{flex: "none", marginLeft: 5}}>{__('LOS')}: {saku33.total.toFixed(2)}</span>
           </div>
           :
@@ -183,7 +183,7 @@ export default connect(
                     <div>{__('Basic FP')}: {tyku.basic}</div>
                   </Tooltip>
                 }>
-                  <span>{__('Fighter Power')}: {tyku.min}</span>
+                  <span>{__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
                 </OverlayTrigger>
               </span>
               <span style={{flex: 1}}>
