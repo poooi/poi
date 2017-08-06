@@ -89,8 +89,8 @@
     "icon": "wrench",
     "author": "Dazzy Ding",
     "link": "https://github.com/yukixz",
-    "deszh-CN": "查看装备改修信息，感谢 [舰娘百科](https://zh.kcwiki.moe) 提供数据",
-    "deszh-TW": "檢視裝備修改訊息，感謝 [艦娘百科](https://zh.kcwiki.moe) 提供數據",
+    "deszh-CN": "查看装备改修信息，感谢[舰娘百科](https://zh.kcwiki.moe)提供数据",
+    "deszh-TW": "檢視裝備修改訊息，感謝[艦娘百科](https://zh.kcwiki.moe)提供數據",
     "desja-JP": "簡易装備改修表、データは [kcwiki](https://zh.kcwiki.moe) によって提供されている",
     "desen-US": "Show possible improvements of the day based on data from [Kcwiki](https://zh.kcwiki.moe)",
     "desko-KR": "간이 장비 개수표, 데이터 제공되어 [kcwiki](https://zh.kcwiki.moe)"
@@ -169,9 +169,9 @@
     "icon": "indent",
     "author": "马里酱",
     "link": "https://github.com/malichan",
-    "deszh-CN": "任务信息查询 & 任务面板强化，感谢 [舰娘百科](https://zh.kcwiki.moe) 维护数据。",
-    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝 [艦娘百科](https://zh.kcwiki.moe) 維護數據。",
-    "desja-JP": "任務攻略データや任務パネルの強化、データは [kcwiki](https://zh.kcwiki.moe) によって提供されている。",
+    "deszh-CN": "任务信息查询 & 任务面板强化，感谢[舰娘百科](https://zh.kcwiki.moe)维护数据。",
+    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝[艦娘百科](https://zh.kcwiki.moe)維護數據。",
+    "desja-JP": "任務攻略データや任務パネルの強化、データは[kcwiki](https://zh.kcwiki.moe)によって提供されている。",
     "desen-US": "Show task infomation & enhance task panel, Data maintained by [kcwiki](https://zh.kcwiki.moe).",
     "desko-KR": "임무 공략 데이터 & 개방 조건. 데이터 제공되어 [kcwiki](https://zh.kcwiki.moe)."
   },
@@ -201,9 +201,9 @@
     "icon": "pie-chart",
     "author": "grzhan",
     "link": "https://github.com/grzhan",
-    "deszh-CN": "[舰娘百科](http://zh.kcwiki.moe) 数据汇报",
-    "deszh-TW": "[艦娘百科](http://zh.kcwiki.moe) 數據匯報",
-    "desja-JP": "[kcwiki](http://zh.kcwiki.moe) 統計データベース登録用ツール",
+    "deszh-CN": "[舰娘百科](http://zh.kcwiki.moe)数据汇报",
+    "deszh-TW": "[艦娘百科](http://zh.kcwiki.moe)數據匯報",
+    "desja-JP": "[kcwiki](http://zh.kcwiki.moe)統計データベース登録用ツール",
     "desen-US": "Report data to [kcwiki](http://zh.kcwiki.moe) database",
     "desko-KR": "통계 [kcwiki](http://zh.kcwiki.moe) db 데이터 보고용"
   },
@@ -313,11 +313,11 @@
     "icon": "microphone",
     "author": "grzhan",
     "link": "https://github.com/grzhan",
-    "deszh-CN": "在舰娘说话时显示语音字幕。由 [舰娘百科](http://zh.kcwiki.moe) 开发维护。",
-    "deszh-TW": "在艦娘說話時顯示語音字幕。由 [艦娘百科](http://zh.kcwiki.moe) 開發維護。",
-    "desja-JP": "艦娘セリフの字幕。[kcwiki](http://zh.kcwiki.moe) によって開発された。",
+    "deszh-CN": "在舰娘说话时显示语音字幕。由[舰娘百科](http://zh.kcwiki.moe)开发维护。",
+    "deszh-TW": "在艦娘說話時顯示語音字幕。由[艦娘百科](http://zh.kcwiki.moe)開發維護。",
+    "desja-JP": "艦娘セリフの字幕。[kcwiki](http://zh.kcwiki.moe)によって開発された。",
     "desen-US": "Subtitle of ship girls' quotes, developed by [kcwiki](http://zh.kcwiki.moe)",
-    "desko-KR": "중국어 자막. [kcwiki](http://zh.kcwiki.moe) 에 의해 개발."
+    "desko-KR": "중국어 자막. [kcwiki](http://zh.kcwiki.moe)에 의해 개발."
   },
   "poi-plugin-k2badge": {
     "zh-CN": "签名生成",
@@ -329,11 +329,11 @@
     "icon": "photo",
     "author": "KochiyaOcean",
     "link": "https://github.com/KochiyaOcean",
-    "deszh-CN": "自动生成来自 [Sanya.moe](http://www.sanya.moe/kcbadge) 的舰娘签名，包含改二进度和图鉴列表。",
-    "deszh-TW": "自動生成來自 [Sanya.moe](http://www.sanya.moe/kcbadge) 的艦娘簽名，包含改二進度和圖鑑列表。",
-    "desja-JP": "自動的に改二と図鑑が含ま [Sanya.moe](http://www.sanya.moe/kcbadge) バッジを生成。",
+    "deszh-CN": "自动生成来自[Sanya.moe](http://www.sanya.moe/kcbadge)的舰娘签名，包含改二进度和图鉴列表。",
+    "deszh-TW": "自動生成來自[Sanya.moe](http://www.sanya.moe/kcbadge)的艦娘簽名，包含改二進度和圖鑑列表。",
+    "desja-JP": "自動的に改二と図鑑が含ま[Sanya.moe](http://www.sanya.moe/kcbadge)バッジを生成。",
     "desen-US": "Automatically generates [Sanya.moe](http://www.sanya.moe/kcbadge) badge that shows your kaini progress and colletion progress.",
-    "desko-KR": "데이터를 [Sanya.moe](http://www.sanya.moe/kcbadge) 로 전송해서 배지를 만드는 플러그인"
+    "desko-KR": "데이터를 [Sanya.moe](http://www.sanya.moe/kcbadge)로 전송해서 배지를 만드는 플러그인"
   },
   "poi-plugin-anchorage-repair": {
     "zh-CN": "泊地修理",
@@ -382,21 +382,5 @@
     "desja-JP": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
     "desen-US": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
     "desko-KR": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))"
-  },
-  "poi-plugin-navy-album": {
-    "zh-CN": "海色相簿",
-    "zh-TW": "海色相簿",
-    "ja-JP": "海色アルバム",
-    "en-US": "Navy Album",
-    "ko-KR": "Navy Album",
-    "version": "v0.0.0",
-    "icon": "th-list",
-    "author": "Javran",
-    "link": "https://github.com/Javran",
-    "deszh-CN": "舰娘与装备资料库（舰娘属性信息来自[是谁呼叫舰队](https://github.com/Diablohu/WhoCallsTheFleet)）",
-    "deszh-TW": "艦娘與裝備資料庫（艦娘屬性信息來自[是誰呼叫艦隊](https://github.com/Diablohu/WhoCallsTheFleet)）",
-    "desja-JP": "艦娘と装備のデータベース（データは [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet) によって提供されている）",
-    "desen-US": "Ship & Equipment database (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
-    "desko-KR": "Ship & Equipment database (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))"
   }
 }
