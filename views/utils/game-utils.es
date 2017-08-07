@@ -142,7 +142,7 @@ export function getTyku(equipsData, landbaseStatus=0) {
         continue
       }
       const [_equip, $equip, onslot] = equipsData[i][j]
-      if (onslot < 1) {
+      if (onslot < 1 || onslot == undefined) {
         continue
       }
       let tempTyku = 0.0
