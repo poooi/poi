@@ -12,7 +12,12 @@ function dataFromBody(body) {
     $missions: indexify(body.api_mst_mission),
     $useitems: indexify(body.api_mst_useitem),
     $shipgraph: body.api_mst_shipgraph,
-    $shipUpgrades: indexify(body.api_mst_shipupgrade),
+    /*
+       IMPORTANT: do not indexify api_mst_shipupgrade,
+       because api_id does not suggest uniqueness in this part
+       due to having cyclic remodel chains.
+     */
+    $shipUpgrades: body.api_mst_shipupgrade,
     $exslotEquips: body.api_mst_equip_exslot,
     $exslotEquipShips: keyBy(body.api_mst_equip_exslot_ship, 'api_slotitem_id'),
   }
