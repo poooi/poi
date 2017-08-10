@@ -44,6 +44,7 @@ class DownloadProgress extends Component {
     percent: 0,
     total: 0,
     transferred: 0,
+    downloaded: false,
   }
   updateProgress = progress => {
     this.setState(progress)
@@ -54,6 +55,7 @@ class DownloadProgress extends Component {
     }
     if (process.platform === 'win32') {
       updater.on('download-progress', progress => this.updateProgressDebounced(progress))
+      updater.on('update-downloaded', () => this.setState({downloaded: true}))
     }
   }
   render () {
@@ -61,9 +63,16 @@ class DownloadProgress extends Component {
       <h5 className="update-progress">
         <ProgressBar bsStyle='success'
           now={this.state.percent} />
-        <span>
-          {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
-        </span>
+        {
+          this.state.downloaded
+            ? <span>{__('Quit app and install updates')}</span>
+            : (this.state.percent >= 100
+              ? <span>{__('Deploying, please wait')}</span>
+              : <span>
+                {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
+              </span>
+            )
+        }
       </h5>
     )
   }
@@ -74,9 +83,9 @@ class AppMetrics extends PureComponent {
     super(props)
 
     this.getAppMetrics = remote.require('electron').app.getAppMetrics
-    
+
     this.getAllWindows = remote.require('electron').BrowserWindow.getAllWindows
-    
+
     this.state = {
       metrics: [],
       total: {},
@@ -89,7 +98,7 @@ class AppMetrics extends PureComponent {
     const metrics = this.getAppMetrics()
 
     const total = {}
-    
+
     const pidmap = {}
     ;['workingSetSize', 'peakWorkingSetSize'].map(prop =>
       total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)

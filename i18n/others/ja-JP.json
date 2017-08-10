@@ -40,6 +40,7 @@
   "Quit app and install updates": "アプリを終了して更新をインストールする",
   "Update failed": "更新失敗",
   "Please try again or download manually": "再試行或は手動でダウンロードする",
+  "Deploying, please wait": "展開しています、しばらくお待ちください",
   "Connection failed after %s retry": {
     "one": "ネットワークエラーが発生しました。今第 %s 回の再試行しています",
     "other": "ネットワークエラーが発生しました。今第 %s 回の再試行しています"

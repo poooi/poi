@@ -40,6 +40,7 @@
   "Quit app and install updates": "退出以安裝更新",
   "Update failed": "更新失敗",
   "Please try again or download manually": "重新更新或者手動下載更新",
+  "Deploying, please wait": "部署中，請等待",
   "Connection failed after %s retry": {
     "one": "網路連線錯誤，正在進行第 %s 次重試",
     "other": "網路連線錯誤，正在進行第 %s 次重試"
@@ -62,7 +63,7 @@
   "Reload Flash": "重新載入 Flash",
   "Website requires login": "網站需要登錄",
   "Username":"帳號",
-  "Password":"密碼", 
+  "Password":"密碼",
   "RefreshGameDialogTip": {
     "text1": "提示：右鍵單擊此按鈕可重新載入 Flash，按住 Shift 同時左鍵單擊此按鈕可重新整理遊戲頁面，但這兩種重新整理方法都",
     "b1": "不會彈出該確認對話方塊",
