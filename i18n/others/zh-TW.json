@@ -40,7 +40,6 @@
   "Quit app and install updates": "退出以安裝更新",
   "Update failed": "更新失敗",
   "Please try again or download manually": "重新更新或者手動下載更新",
-  "Deploying, please wait": "部署中，請等待",
   "Connection failed after %s retry": {
     "one": "網路連線錯誤，正在進行第 %s 次重試",
     "other": "網路連線錯誤，正在進行第 %s 次重試"

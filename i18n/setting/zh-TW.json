@@ -159,5 +159,7 @@
   "Default": "默認",
   "Vibrance": "半透明",
   "Custom background": "自定義背景",
-  "No background image selected": "未選擇背景圖片"
+  "No background image selected": "未選擇背景圖片",
+  "Deploying, please wait": "部署中，請等待",
+  "Quit app and install updates": "退出以安裝更新"
 }
