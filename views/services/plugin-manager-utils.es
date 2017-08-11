@@ -235,7 +235,7 @@ export async function enablePlugin(plugin, reread=true) {
   let pluginMain
   try {
     pluginMain = {
-      ...require(plugin.pluginPath),
+      ...await import(plugin.pluginPath),
       ...reread ? await readPlugin(plugin.pluginPath) : {},
     }
     pluginMain.enabled = true
