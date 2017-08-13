@@ -25,8 +25,8 @@ export default connect(
     const $expeditions = state.const.$missions
     const $ships = state.const.$ships
     const notifyBefore = get(configSelector(state), 'poi.notify.expedition.value', 60)
-    const ships = shipsSelector(state)
-    const fleets = fleetsSelector(state)
+    const ships = shipsSelector(state) || {}
+    const fleets = fleetsSelector(state) || {}
     return {
       fleetsExpedition,
       fleetNames,
@@ -81,7 +81,7 @@ export default connect(
           range(1, 4).map((i) => {
             const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
             const fleetName = get(fleetNames, i, '???')
-            const fleetShips = fleets[i].api_ship.filter((n) => n != -1)
+            const fleetShips = fleets[i] ? fleets[i].api_ship.filter((n) => n != -1) : []
             const expeditionName =
             status == -1 ? __('Locked') :
               status == 0 ? __('Ready') :
