@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 const __ = i18n.main.__.bind(i18n.main)
 
 import { CountdownNotifierLabel } from './countdown-timer'
-import { fleetsSelector, configSelector, shipsSelector} from 'views/utils/selectors'
+import { fleetsSelector, configSelector, shipsSelector } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
 
 const fleetsExpeditionSelector = createSelector(fleetsSelector,
@@ -84,7 +84,7 @@ export default connect(
             const fleetShips = fleets[i].api_ship.filter((n) => n != -1)
             const expeditionName =
             status == -1 ? __('Locked') :
-              status == 0 ?  __('Ready') :
+              status == 0 ? __('Ready') :
                 get($expeditions, [expeditionId, 'api_name'], __('???'))
             const completeTime = status > 0 ? rawCompleteTime : -1
             return (
