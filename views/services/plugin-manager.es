@@ -5,6 +5,7 @@ import { readJsonSync, accessSync } from 'fs-extra'
 import glob from 'glob'
 import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
+import { remote } from 'electron'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
@@ -456,10 +457,6 @@ window.reloadPlugin = async (pkgName, verbose=false) => {
     console.log(`plugin "${plugin.id}" enabled.`)
 }
 
-function initPlugin() {
-  window.removeEventListener('webview-loaded', initPlugin)
-  pluginManager.initialize()
-}
-window.addEventListener('webview-loaded', initPlugin)
+remote.getCurrentWebContents().once('dom-ready', () => pluginManager.initialize())
 
 export default pluginManager
