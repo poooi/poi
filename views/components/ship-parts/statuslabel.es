@@ -37,7 +37,7 @@ const StatusLabel = connect(state => ({
   render() {
     const i = this.props.label
     const {color, mapname} = this.props.shipTag
-    if (i != null && 0 <= i && i <= 6) {
+    if (i != null && 0 <= i) {
       return (
         <OverlayTrigger placement="top" overlay={
           <Tooltip id={`statuslabel-status-${i}`}>

@@ -98,9 +98,9 @@ export function getShipLabelStatus(ship, $ship, inRepair, escaped) {
   } else if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1) {
     // supply
     return 2
-  } else if ([1, 2, 3, 4, 5, 6].includes(ship.api_sally_area)) {
+  } else if (ship.api_sally_area > 0) {
     // special: locked phase
-    // returns 2 for locked phase 1, 3 for phase 2, etc
+    // returns 3 for locked phase 1, 4 for phase 2, etc
     return ship.api_sally_area + 2
   }
   return -1
