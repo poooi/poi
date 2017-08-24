@@ -12,7 +12,8 @@
     "start_debug": "electron . --dev",
     "dev": "electron . --dev",
     "clean": "gulp clean",
-    "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore"
+    "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore",
+    "postinstall": "opencollective postinstall"
   },
   "repository": {
     "type": "git",
@@ -64,6 +65,7 @@
     "mousetrap": "^1.5.3",
     "npm": "^5.3.0",
     "objtree": "^0.1.1",
+    "opencollective": "^1.0.3",
     "pac-proxy-agent": "^2.0.0",
     "path-extra": "4.1.0",
     "poi-asset-themes": "^3.2.0",
@@ -171,5 +173,10 @@
       "app": "app_compiled"
     }
   },
-  "false": {}
+  "false": {},
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/poi",
+    "logo": "https://opencollective.com/opencollective/logo.txt"
+  }
 }
