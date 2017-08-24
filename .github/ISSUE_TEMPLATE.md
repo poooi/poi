@@ -36,3 +36,6 @@ To open the dev tool, press ctrl + shift + i (⌥ + ⌘ + i for macOS), or the l
 -->
 
 
+
+<!-- Love poi? Please consider supporting our collective:
+👉  https://opencollective.com/poi/donate -->
