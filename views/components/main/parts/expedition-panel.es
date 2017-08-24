@@ -8,7 +8,12 @@ import { connect } from 'react-redux'
 const __ = i18n.main.__.bind(i18n.main)
 
 import { CountdownNotifierLabel } from './countdown-timer'
-import { fleetsSelector, configSelector, shipsSelector } from 'views/utils/selectors'
+import {
+  fleetsSelector,
+  configSelector,
+  fleetShipsDataSelectorFactory,
+  fleetInBattleSelectorFactory,
+} from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
 
 const fleetsExpeditionSelector = createSelector(fleetsSelector,
@@ -17,25 +22,52 @@ const fleetsExpeditionSelector = createSelector(fleetsSelector,
 const fleetsNamesSelector = createSelector(fleetsSelector,
   (fleets) => map(fleets, 'api_name')
 )
+const fleetInBattleSelector = createSelector(fleetInBattleSelectorFactory,
+  (inBattle) => inBattle
+)
+
+const FleetStatus = connect((state, {fleetId}) => {
+  const fleetShipsData = fleetShipsDataSelectorFactory(fleetId)(state)
+  const fleetInBattle = fleetInBattleSelector(fleetId)(state)
+  return {
+    fleetId,
+    fleetShipsData,
+    fleetInBattle,
+  }
+})(class fleetStatus extends Component {
+  fleetNotSupplied = () => {
+    const notSuppliedShips = []
+    const {fleetShipsData} = this.props
+    fleetShipsData.map(shipData => {
+      const ship = shipData[0]
+      const $ship = shipData[1]
+      if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1){
+        notSuppliedShips.push(ship.api_ship_id)
+      }
+    })
+    if (notSuppliedShips.length > 0) {return true}
+    else {return false}
+  }
+  render() {
+    const {fleetInBattle} = this.props
+    if (fleetInBattle) {return (<span className="expedition-name text-success">{__('In Sortie')}</span>)}
+    else if (this.fleetNotSupplied()) {return (<span className="expedition-name text-warning">{__('Resupply needed')}</span>)}
+    else {return (<span className="expedition-name">{__('Ready')}</span>)}
+  }
+})
 
 export default connect(
   (state) => {
     const fleetsExpedition = fleetsExpeditionSelector(state)
     const fleetNames = fleetsNamesSelector(state)
     const $expeditions = state.const.$missions
-    const $ships = state.const.$ships
     const notifyBefore = get(configSelector(state), 'poi.notify.expedition.value', 60)
-    const ships = shipsSelector(state) || {}
-    const fleets = fleetsSelector(state) || {}
     return {
       fleetsExpedition,
       fleetNames,
       $expeditions,
-      $ships,
       notifyBefore,
       canNotify: state.misc.canNotify,
-      ships,
-      fleets,
     }
   }
 )(class ExpeditionPanel extends Component {
@@ -50,23 +82,6 @@ export default connect(
             'default'
     )
   }
-  whetherFleetSupplied = (fleetShips) => {
-    const notSuppliedShips = []
-    const {ships, $ships} = this.props
-    Object.keys(ships).map(shipId => {
-      const ship = ships[shipId]
-      const $ship = $ships[ship.api_ship_id]
-      if (Math.min(ships[shipId].api_fuel / $ship.api_fuel_max, ships[shipId].api_bull / $ship.api_bull_max) < 1){
-        notSuppliedShips.push(shipId)
-      }
-    })
-    const whetherAllShipsSupplied = () => {
-      const notSuppliedShip = [...new Set(fleetShips)].filter(x => new Set(notSuppliedShips).has(x.toString()))
-      if (notSuppliedShip.length > 0) {return false}
-      else {return true}
-    }
-    return whetherAllShipsSupplied()
-  }
   static basicNotifyConfig = {
     type: 'expedition',
     title: __('Expedition'),
@@ -74,25 +89,27 @@ export default connect(
     icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
   }
   render() {
-    const {fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore, fleets} = this.props
+    const {fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore} = this.props
     return (
       <Panel bsStyle="default">
         {
           range(1, 4).map((i) => {
             const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
             const fleetName = get(fleetNames, i, '???')
-            const fleetShips = fleets[i] ? fleets[i].api_ship.filter((n) => n != -1) : []
+            const useStatusPanel = () => {
+              if (status == 0) {return true}
+              else {return false}
+            }
             const expeditionName =
-            status == -1 ? __('Locked') :
-              status == 0 ? __('Ready') :
-                get($expeditions, [expeditionId, 'api_name'], __('???'))
+            status == -1 ? __('Locked') : get($expeditions, [expeditionId, 'api_name'], __('???'))
             const completeTime = status > 0 ? rawCompleteTime : -1
             return (
               <div className="panel-item expedition-item" key={i} >
-                {this.whetherFleetSupplied(fleetShips) ? (
-                  <span className="expedition-name">{expeditionName}</span>
+                {useStatusPanel() ? (
+                  <FleetStatus fleetId={i} />
                 ) : (
-                  <span className="expedition-name text-warning">{__('Resupply needed')}</span>
+                  <span className="expedition-name">{expeditionName}</span>
+
                 )}
                 <OverlayTrigger placement='left' overlay={
                   <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
