@@ -22,7 +22,7 @@ test_script:
   - npm test
 
 build_script:
-  - npm run build_win
+  - npm run build
 
 artifacts:
   - path: dist\*.exe

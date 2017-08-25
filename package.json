@@ -7,7 +7,6 @@
     "test": "mocha --recursive --harmony --require ./test/babelhook",
     "deploy": "gulp deploy",
     "build": "gulp build && electron-builder",
-    "build_win": "gulp build && electron-builder --win --x64 --ia32",
     "start": "electron .",
     "start_debug": "electron . --dev",
     "dev": "electron . --dev",
@@ -139,17 +138,29 @@
       ]
     },
     "win": {
-      "artifactName": "poi-setup-${version}.${ext}",
       "publish": [
         "github"
       ],
       "icon": "assets/icons/poi.ico",
       "target": [
-        "nsis",
-        "7z"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "7z",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     },
     "nsis": {
+      "artifactName": "poi-setup-${version}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "multiLanguageInstaller": true
