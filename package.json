@@ -6,8 +6,8 @@
   "scripts": {
     "test": "mocha --recursive --harmony --require ./test/babelhook",
     "deploy": "gulp deploy",
-    "build": "gulp build && build",
-    "build_win": "gulp build && build --win --x64 --ia32",
+    "build": "gulp build && electron-builder",
+    "build_win": "gulp build && electron-builder --win --x64 --ia32",
     "start": "electron .",
     "start_debug": "electron . --dev",
     "dev": "electron . --dev",
