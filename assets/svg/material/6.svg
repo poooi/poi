@@ -19,15 +19,11 @@
                 <use fill="#5FB4C4" fill-rule="evenodd" xlink:href="#path-1"></use>
             </g>
             <g id="Group" transform="translate(200.000000, 50.000000)">
-                <polygon id="Path-2-Copy-2" fill="#5497A4" points="-4.54747351e-13 100 -1.96620498e-13 900 200 1000 400 900 400 100 200 200"></polygon>
-                <polygon id="Path-Copy" fill="#5FB4C4" points="-4.54747351e-13 100 200 0 400 100 200 200"></polygon>
-                <polygon id="Path-2-Copy-5" fill="#5FB4C4" points="0 100 3.94430453e-29 900 200 1000 200 200"></polygon>
+                <polygon id="Path-2-Copy-2" fill="#4C8A95" points="400 1100 800 900 800 200 400 400"></polygon>
+                <polygon id="Path-Copy" fill="#5FB4C4" points="0 200 400 0 800 200 400 400"></polygon>
+                <polygon id="Path-2-Copy-5" fill="#5FB4C4" points="2.27373675e-13 200 0 900 400 1100 400 400"></polygon>
             </g>
-            <g id="Group-2" transform="translate(600.000000, 400.000000)">
-                <polygon id="Path-2-Copy-3" fill="#5497A4" points="-4.54747351e-13 100 2.54185561e-13 550 200 650 400 550 400 100 200 200"></polygon>
-                <polygon id="Path-Copy-2" fill="#5FB4C4" points="-4.54747351e-13 100 200 2.27373675e-13 400 100 200 200"></polygon>
-                <polygon id="Path-2-Copy-6" fill="#5FB4C4" points="-4.54747351e-13 100 2.22044605e-16 550 200 650 200 200"></polygon>
-            </g>
+            <polygon id="Path-Copy-2" fill="#4C8A95" points="400 260 600 160 600 360"></polygon>
         </g>
     </g>
 </svg>
