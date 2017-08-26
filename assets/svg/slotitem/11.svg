@@ -1,24 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{fill:#DD9223;}
-</style>
-<g id="Layer_1" class="st0">
-</g>
-<g id="Layer_2">
-	<g id="XMLID_1_">
-		<path id="XMLID_36_" class="st1" d="M512,65C247.2,65,32.5,279.7,32.5,544.5S247.2,1024,512,1024s479.5-214.7,479.5-479.5
-			S776.8,65,512,65z M108.3,665 M891.3,725.9C823.5,867.3,678.9,965,511.6,965s-312-97.7-379.8-239.1L108.3,665
-			c-12-39.2-17.6-77.8-17.6-120.9c0-232.5,188.5-420.9,420.9-420.9s420.9,188.5,420.9,420.9c0,42-6.2,82.6-17.6,120.9L891.3,725.9z
-			 M722.4,545l-30,60l-180-480l-120,330l-60-120l-81.6,210H62v60h225.3l48-111.7L392.5,605l120-300l162.2,440.6L752.4,605h197.8
-			l0-60H722.4z M131.9,725.9"/>
-		<polygon id="XMLID_5_" class="st1" points="347.9,859.8 272.9,859.5 272.9,785.9 347.9,785.9 		"/>
-		<polygon id="XMLID_34_" class="st1" points="482.9,859.8 407.9,859.5 407.9,785.9 482.9,785.9 		"/>
-		<polygon id="XMLID_38_" class="st1" points="618.4,859.8 543.4,859.5 543.4,785.9 618.4,785.9 		"/>
-		<polygon id="XMLID_39_" class="st1" points="752.9,859.8 677.9,859.5 677.9,785.9 752.9,785.9 		"/>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>11</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="50%" x2="47.9326172%" y2="47.9545898%" id="linearGradient-1">
+            <stop stop-color="#D88D2C" offset="0%"></stop>
+            <stop stop-color="#E59835" offset="100%"></stop>
+        </linearGradient>
+        <path d="M120,120 L520,120 L520,520 L120,520 L120,120 Z M160,359.763925 L160,420 L220,280 L240,339.785387 L300,199.935616 L300,140 L240,280 L220,219.914155 L160,359.763925 Z M360,280 L300,140 L300,200.085845 L360,340 L360,280 Z M420,420 L360,280 L360,340.085845 L420,480 L420,420 Z M420,420 L420,480 L480,340.085845 L480,280 L420,420 Z M160,440 L160,480 L200,480 L200,440 L160,440 Z M240,440 L240,480 L280,480 L280,440 L240,440 Z M320,440 L320,480 L360,480 L360,440 L320,440 Z" id="path-2"></path>
+        <filter x="-3.8%" y="-3.8%" width="115.0%" height="115.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="11">
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+        </g>
+    </g>
 </svg>

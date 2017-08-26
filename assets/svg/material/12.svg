@@ -1,68 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="400px" height="400px" viewBox="0 0 400 400" style="enable-background:new 0 0 400 400;" xml:space="preserve">
-<g>
-	<g>
-		<g>
-			<g style="enable-background:new    ;">
-				<g>
-					<polygon style="fill:#81231C;" points="369.937,132.298 369.475,295.33 200.328,393.628 200.79,230.595 					"/>
-				</g>
-				<g>
-					<polygon style="fill:#B93329;" points="200.79,230.595 200.328,393.628 30.068,295.328 30.53,132.296 					"/>
-				</g>
-				<g>
-					<polygon style="fill:#D43A2F;" points="369.937,132.298 200.79,230.595 30.53,132.296 199.677,33.998 					"/>
-				</g>
-			</g>
-		</g>
-	</g>
-	<g>
-		<g>
-			<g style="enable-background:new    ;">
-				<g>
-					<polygon style="fill:#81231C;" points="398.013,120.03 397.967,136.333 200.625,251.016 200.671,234.713 					"/>
-				</g>
-				<g>
-					<polygon style="fill:#B93329;" points="200.671,234.713 200.625,251.016 1.992,136.335 2.038,120.032 					"/>
-				</g>
-				<g>
-					<polygon style="fill:#D43A2F;" points="398.013,120.03 200.671,234.713 2.038,120.032 199.38,5.349 					"/>
-				</g>
-			</g>
-		</g>
-	</g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200px" height="1200px" viewBox="0 0 1200 1200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>12</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="600 1070 280 910 600 750 920 910"></polygon>
+        <filter x="-9.4%" y="-9.4%" width="118.8%" height="137.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="30" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12">
+            <g id="Path-3">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#663DA6" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Group-2" transform="translate(280.000000, 430.000000)">
+                <polygon id="Path-3-Copy" fill="#482D72" points="320 320 0 160 320 0"></polygon>
+                <polygon id="Path-3-Copy-3" fill="#3A245C" transform="translate(480.000000, 160.000000) scale(-1, 1) translate(-480.000000, -160.000000) " points="640 320 320 160 640 0"></polygon>
+                <polygon id="Path-4-Copy" fill="#482D72" points="320 320 320 640 640 480 640 160"></polygon>
+                <polygon id="Path-4-Copy-2" fill="#563589" transform="translate(160.000000, 400.000000) scale(-1, 1) translate(-160.000000, -400.000000) " points="1.13686838e-13 320 1.13686838e-13 640 320 480 320 160"></polygon>
+            </g>
+            <g id="Group" transform="translate(280.000000, 170.000000)">
+                <polygon id="Path-4-Copy-4" fill="#482D72" points="320 320 320 420 640 260 640 160"></polygon>
+                <polygon id="Path-4-Copy-3" fill="#563589" transform="translate(160.000000, 290.000000) scale(-1, 1) translate(-160.000000, -290.000000) " points="1.13686838e-13 320 2.27373675e-13 420 320 260 320 160"></polygon>
+                <polygon id="Path-3-Copy-4" fill="#663DA6" points="320 320 -1.13686838e-13 160 320 5.68434189e-14 640 160"></polygon>
+            </g>
+        </g>
+    </g>
 </svg>

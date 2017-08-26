@@ -1,40 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#C1A2F6;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_81_">
-			<path id="XMLID_82_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<g id="XMLID_37_">
-		<polygon id="XMLID_38_" class="st5" points="652,116.6 468.5,145.4 524.7,-1.7 372.7,221.7 542.4,199.9 506,358.3 		"/>
-		<path id="XMLID_46_" class="st5" d="M512.4,338.1l-319,685.9h79.8l28.7-80.7l210-119.6l212.4,119.6l27.4,80.7h79.8L512.4,338.1z
-			 M510.8,580.7l69.8,40.3h2.5l-69.4,40.3L443.8,621h-2.5L510.8,580.7z M654,744l-141.7,80.7L369.1,744h1.2L512,663.3L655.3,744H654
-			z"/>
-		<polygon id="XMLID_42_" class="st5" points="768.8,169 511.1,343.7 250,169 69.8,169 512.4,461 955,169 		"/>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>28</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-4.2%" y="-3.0%" width="116.7%" height="112.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="126.170654%" y1="117.801403%" x2="0%" y2="0%" id="linearGradient-2">
+            <stop stop-color="#6A568F" offset="0%"></stop>
+            <stop stop-color="#746098" offset="25.7577956%"></stop>
+            <stop stop-color="#907CB4" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="28">
+            <g id="Group" filter="url(#filter-1)" transform="translate(139.000000, 70.000000)" fill="#907CB4">
+                <polygon id="Path-30-Copy" transform="translate(180.000000, 350.000000) scale(1, -1) translate(-180.000000, -350.000000) " points="20 200 140 500 220 500 340 200 280 200 180 460 80 200"></polygon>
+                <rect id="Rectangle" x="130" y="280" width="100" height="40"></rect>
+                <rect id="Rectangle-Copy" x="80" y="420" width="200" height="40"></rect>
+                <polygon id="Path-30" points="0 120 0 160 140 200 220 200 360 160 360 120"></polygon>
+                <polygon id="Path-32" points="180 320 140 420 220 420"></polygon>
+                <polygon id="Path-31-Copy" points="180 0 120 60 180 120 240 60"></polygon>
+            </g>
+            <path d="M388.230769,490 L349.769231,390 L319,390 L319,350 L334.384615,350 L319,310 L319,270 L359,270 L479,570 L419,570 L403.615385,530 L319,530 L319,490 L388.230769,490 Z M319,190 L499,190 L501.557617,230 L359,270 L319,270 L319,190 Z M319,390 L359,490 L319,490 L319,390 Z M319,70 L379,130 L319,190 L319,70 Z" id="Combined-Shape" fill="url(#linearGradient-2)"></path>
+        </g>
+    </g>
 </svg>

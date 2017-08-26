@@ -1,19 +1,41 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="688px" height="688px" viewBox="0 0 688 688" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
-    <title>Group</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>38</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#4EA915" offset="0%"></stop>
+            <stop stop-color="#267009" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M373.48,385.08 L373.48,438.54 L448.5,438.54 L448.5,385.08 L373.48,385.08 Z M437.72,428.2 L384.48,428.2 L384.48,395.42 L437.72,395.42 L437.72,428.2 Z M474.68,289.82 L474.68,317.54 L350.16,317.54 L350.16,289.82 L474.68,289.82 Z M350.16,328.76 L486.34,328.76 L486.34,278.38 L338.28,278.38 L338.28,363.08 C338.06,402.68 328.82,435.02 310.56,460.1 L319.8,468.24 C339.82,438.98 349.94,404 350.16,363.08 L350.16,361.98 L485.68,361.98 C485.24,409.06 484.36,437.44 482.82,447.34 C481.5,454.38 476.88,458.12 468.74,458.12 C459.94,458.12 449.6,457.9 437.72,457.46 L440.36,467.58 C454.44,468.02 464.34,468.24 470.06,468.24 C484.36,468.24 492.28,462.3 493.82,450.86 C496.02,438.1 497.12,404.66 497.12,350.98 L350.16,350.98 L350.16,328.76 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" transform="translate(370.622979, 317.622979) rotate(-135.000000) translate(-370.622979, -317.622979) translate(-29.377021, -31.377021)" fill="#30B847">
-            <path d="M360,78.0028877 C360,58.0057755 379.206337,38 400,38 C420.79406,38 440,58 440,78.0028877 C440,98.0057755 460,238 460,238 L420.794061,638.000891 C418.698659,671.137484 409.390905,698 400,698 C390.611159,698 381.301259,671.136195 379.206337,638.007184 L340,238 C340,238 360,98 360,78.0028877 Z" id="Rectangle-3"></path>
-            <path d="M400.000008,18 C405.812152,18 410.993647,26.9494658 411.573776,38.0001277 L419.973312,197.999872 C420.553184,209.045638 411.613384,218 400.000008,218 C388.389185,218 379.446575,209.050534 380.026703,197.999872 L388.42624,38.0001277 C389.006111,26.9543622 394.186586,18 400.000008,18 Z" id="Rectangle-3-Copy"></path>
-            <path d="M400,18.3953423 C400,29.4410373 391.054067,37.6457528 379.999135,36.7194479 L300.000865,30.0163051 C288.954692,29.0907341 280,23.8890595 280,18.3953423 C280,12.9028327 288.945933,7.7006844 300.000865,6.7743795 L379.999135,0.0712367221 C391.045308,-0.854334216 400,7.34721865 400,18.3953423 Z" id="Rectangle-3-Copy" transform="translate(340.000000, 18.395384) rotate(-180.000000) translate(-340.000000, -18.395384) "></path>
-            <path d="M520,18.3953423 C520,29.4410373 511.054067,37.6457528 499.999135,36.7194479 L420.000865,30.0163051 C408.954692,29.0907341 400,23.8890595 400,18.3953423 C400,12.9028327 408.945933,7.7006844 420.000865,6.7743795 L499.999135,0.0712367221 C511.045308,-0.854334216 520,7.34721865 520,18.3953423 Z" id="Rectangle-3-Copy"></path>
-            <path d="M340.003438,181.076408 C373.138624,179.41884 400,204.930744 400,238.075115 C400,271.2122 373.140695,296.731494 340.001036,295.073702 C340.001036,295.073702 257.688897,290.956086 200,288.070232 C144.357978,285.286773 60.0045075,281.06704 60.0045075,281.06704 C26.8649331,279.409252 0,260.165968 0,238.075115 C0,215.989119 26.8531779,196.741566 59.9941536,195.083709 L200,188.079998 L340.003438,181.076408 Z" id="Rectangle-3"></path>
-            <path d="M740.003438,181.076408 C773.138624,179.41884 800,204.930744 800,238.075115 C800,271.2122 773.140695,296.731494 740.001036,295.073702 C740.001036,295.073702 657.688897,290.956086 600,288.070232 C544.357978,285.286773 460.004508,281.06704 460.004508,281.06704 C426.864933,279.409252 400,260.165968 400,238.075115 C400,215.989119 426.853178,196.741566 459.994154,195.083709 L600,188.079998 L740.003438,181.076408 Z" id="Rectangle-3-Copy-2" transform="translate(600.000000, 238.075055) rotate(-180.000000) translate(-600.000000, -238.075055) "></path>
-            <path d="M399.737161,698 L319.744412,698 C286.603322,698 280.185741,680.567009 305.400727,659.070524 L400.494973,578 L399.737161,698 Z" id="Triangle-1"></path>
-            <path d="M509.737161,698 L429.744412,698 C396.603322,698 390.185741,680.567009 415.400727,659.070524 L510.494973,578 L509.737161,698 Z" id="Triangle-1" transform="translate(455.247487, 638.000000) scale(-1, 1) translate(-455.247487, -638.000000) "></path>
+        <g id="38">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#267009">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
         </g>
     </g>
 </svg>

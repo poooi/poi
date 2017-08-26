@@ -1,53 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#60CA71;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_81_">
-			<path id="XMLID_82_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="321"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_4">
-	<path id="XMLID_57_" class="st5" d="M710,410.9c0,0,41.2-50.6,22.9-93l2.9-2.9c11.4-11.4,40.3-50.9,30.5-60.9s-49,18.7-60.9,30.5
-		c-0.9,0.9-1.7,1.7-2.4,2.4c-43.8-21.3-94.5,22.4-94.5,22.4l-100.8,81.8l-91.3,91.3c0,0-225.3,252.2-281,329.5
-		c-47.2,71.2-94.1,147.5-84.2,157.3c9.9,9.8,88-35,158.9-82.6C287,830.7,537.9,604,537.9,604l91.3-91.3L710,410.9z"/>
-	<path id="XMLID_65_" class="st5" d="M468.5,325.8c12.6,12.6,27.5,17.9,33.8,11.6l38-38c6.3-6.3,1.6-21.7-11.1-34.3L514,249.9
-		c-12.6-12.6-28.2-17.5-34.5-11.2l-38,38c-6.3,6.3-0.8,21.3,11.8,33.9L468.5,325.8z"/>
-	<path id="XMLID_64_" class="st5" d="M759.9,495.7c-12.6-12.6-28.2-17.5-34.5-11.2l-38,38c-6.3,6.3-0.8,21.4,11.8,33.9l15.2,15.2
-		c12.6,12.6,27.5,17.9,33.8,11.6l38-38c6.3-6.3,1.5-21.8-11.1-34.3L759.9,495.7z"/>
-	<path id="XMLID_75_" class="st5" d="M203,854.3c-7.7,5.3-15.8,10.9-23.9,16.4c-40.1,27.4-67.1,41.6-67.1,41.6l107.8,107.8
-		c0,0,15.3,15.3,52.5-21.9c37.2-37.2,21.9-52.5,21.9-52.5L203,854.3z"/>
-	<path id="XMLID_74_" class="st5" d="M152.3,844.5c5.5-8.1,10.7-15.8,16-23.5L77,729.7c0,0-15-15.6-52.2,21.6
-		c-37.2,37.2-21.6,52.2-21.6,52.2L111,911.2C111,911.2,124.9,884.6,152.3,844.5z"/>
-	<path id="XMLID_66_" class="st5" d="M582.4,0C338.5,0,140.8,197.7,140.8,441.6s197.7,441.6,441.6,441.6S1024,685.5,1024,441.6
-		S826.3,0,582.4,0z M582.4,809.1c-203,0-367.5-164.6-367.5-367.5S379.4,74.1,582.4,74.1s367.5,164.6,367.5,367.5
-		S785.4,809.1,582.4,809.1z"/>
-	
-		<rect id="XMLID_79_" x="609.1" y="434.8" transform="matrix(-0.9659 0.2588 -0.2588 -0.9659 1418.4614 1102.3016)" class="st5" width="55.2" height="419.4"/>
-	
-		<rect id="XMLID_78_" x="351.9" y="178" transform="matrix(0.2588 -0.9659 0.9659 0.2588 -93.1859 653.9502)" class="st5" width="55.2" height="419.4"/>
-	
-		<rect id="XMLID_77_" x="703.1" y="83.6" transform="matrix(0.7071 0.7071 -0.7071 0.7071 421.386 -430.7794)" class="st5" width="55.2" height="419.4"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>21</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="2.37571023%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#6CD37D" offset="0%"></stop>
+            <stop stop-color="#57A965" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M418.36,290.92 L333.88,372.54 L333.88,290.92 L315.84,290.92 L315.84,448 L333.88,448 L333.88,393 L358.3,369.9 L427.6,448 L451.8,448 L370.84,358.24 L441.9,290.92 L418.36,290.92 Z M514.94,331.18 C501.3,331.18 490.52,333.82 482.16,339.1 C472.92,344.82 466.98,353.84 464.56,365.72 L481.94,367.04 C483.7,359.78 487.44,354.28 493.38,350.76 C498.66,347.24 505.48,345.7 513.84,345.7 C533.64,345.7 543.54,355.16 543.54,374.3 L543.54,380.24 L516.26,380.68 C499.1,380.9 485.9,384.2 476.66,390.36 C466.1,396.96 461.04,406.64 461.04,419.62 C461.04,428.86 464.56,436.56 471.6,442.5 C478.42,448.22 487.44,451.08 498.88,451.08 C509.44,451.08 518.9,448.66 527.26,444.04 C534.3,440.08 540.24,435.02 544.64,428.86 L544.64,448 L561.14,448 L561.14,374.96 C561.14,361.76 557.62,351.42 551.02,343.94 C543.1,335.36 531.22,331.18 514.94,331.18 Z M543.54,393.44 L543.54,403.12 C543.54,411.92 539.36,419.84 531.22,426.66 C522.86,433.7 513.4,437.22 502.62,437.22 C495.58,437.22 489.86,435.46 485.46,432.16 C481.06,428.64 479.08,424.46 479.08,419.18 C479.08,402.68 491.84,394.32 517.36,393.88 L543.54,393.44 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="21">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#57A965">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
 </svg>
