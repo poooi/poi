@@ -4,7 +4,7 @@
     <title>5</title>
     <desc>Created with Sketch.</desc>
     <defs>
-        <polygon id="path-1" points="600 1150 200 950 600 750 1000 950"></polygon>
+        <polygon id="path-1" points="600 1140 200 940 600 740 1000 940"></polygon>
         <filter x="-7.5%" y="-7.5%" width="115.0%" height="130.0%" filterUnits="objectBoundingBox" id="filter-2">
             <feMorphology radius="5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
             <feOffset dx="0" dy="30" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
@@ -18,15 +18,13 @@
                 <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
                 <use fill="#FFA64A" fill-rule="evenodd" xlink:href="#path-1"></use>
             </g>
-            <g id="Group" transform="translate(600.000000, 400.000000)">
-                <polygon id="Path-2-Copy-2" fill="#CA7225" points="-6.82121026e-13 100 -8.52651283e-14 550 200 650 400 550 400 100 200 200"></polygon>
-                <polygon id="Path-Copy" fill="#FFA64A" points="-7.95807864e-13 100 200 0 400 100 200 200"></polygon>
-                <polygon id="Path-2-Copy-6" fill="#FFA64A" points="-3.41060513e-13 100 5.04870979e-29 550 200 650 200 200"></polygon>
-            </g>
-            <g id="Group-2" transform="translate(200.000000, 50.000000)">
-                <polygon id="Path-2-Copy-3" fill="#CA7225" points="0 100 2.55795385e-13 900 200 1000 400 900 400 100 200 200"></polygon>
-                <polygon id="Path-Copy-2" fill="#FFA64A" points="-5.68434189e-14 100 200 0 400 100 200 200"></polygon>
-                <polygon id="Path-2-Copy-5" fill="#FFA64A" points="-5.68434189e-14 100 0 900 200 1000 200 200"></polygon>
+            <g id="Group-2" transform="translate(200.000000, 60.000000)">
+                <polygon id="Path-2-Copy-3" fill="#CA7225" points="400 1080 800 880 800 300 400 500"></polygon>
+                <polygon id="Path-2-Copy-5" fill="#FFA64A" points="1.70530257e-13 300 0 880 400 1080 400 500"></polygon>
+                <polygon id="Path-Copy-2" fill="#FFA64A" points="2.84217094e-13 300 400 100 800 300 400 500"></polygon>
+                <polygon id="Path-2-Copy-7" fill="#CA7225" transform="translate(500.000000, 250.000000) scale(-1, 1) translate(-500.000000, -250.000000) " points="400 100 400 300 600 400 600 200"></polygon>
+                <polygon id="Path-2-Copy-6" fill="#FFA64A" points="200 100 200 300 400 400 400 200"></polygon>
+                <polygon id="Path-Copy-3" fill="#FFA64A" points="200 100 400 0 600 100 400 200"></polygon>
             </g>
         </g>
     </g>
