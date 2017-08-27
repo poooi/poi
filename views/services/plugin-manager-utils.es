@@ -12,6 +12,7 @@ import crypto from 'crypto'
 import { setAllowedPath } from 'lib/module-path'
 import child_process from 'child_process'
 import path from 'path'
+import i18n from 'i18n-2'
 
 import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
@@ -24,6 +25,11 @@ const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 require('module').globalPaths.push(MODULE_PATH)
+
+// overwrites i18n-2's translation file cache, to be removed if we change to other lib
+i18n.localeCache = new Proxy({}, {
+  get: () => null,
+})
 
 // This reducer clears the substore no matter what is given.
 const clearReducer = undefined
@@ -126,7 +132,7 @@ export function updateI18n(plugin) {
   }
   if (i18nFile != null) {
     const namespace = plugin.id
-    window.i18n[namespace] = new (require('i18n-2'))({
+    window.i18n[namespace] = new i18n({
       locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
       defaultLocale: 'en-US',
       directory: i18nFile,
