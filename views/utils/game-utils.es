@@ -124,7 +124,7 @@ export function equipIsAircraft(equipIconId) {
     between(equipIconId, 6, 10) ||
     between(equipIconId, 21, 22) ||
     between(equipIconId, 37, 40) ||
-    [33, 43, 44].includes(equipIconId)
+    [33, 43, 44, 45].includes(equipIconId)
   )
 }
 
