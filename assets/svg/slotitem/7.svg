@@ -1,43 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#294754;}
-	.st6{fill:#E54E4E;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_81_">
-			<path id="XMLID_82_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<path id="XMLID_37_" class="st5" d="M299.2,331.3"/>
-	<path id="XMLID_40_" class="st6" d="M989.7,724c-11.2-1.4-148.5,34.2-185.4,43.8C702.7,640,575.2,480.4,578.5,459.5
-		c5.9-37.3,246.2-273.7,291.6-362.9c45.4-89.2,5.4-114.4-57-80.5c-62.4,34-379.5,313.7-379.5,313.7s-51.7-40.9-96.4-82.8
-		c-20.7-20.9-45.1-12.6-61.6-2.3c0,0-0.1-0.1-0.1-0.1c-9.9-9.9-21.1-16.5-30.8-19.2c45.3-23.2,137.1-83.1,142.3-98.7
-		c7.8-23.1-24.8-60.1-50.7-57.1c-18.8,2.2-126.3,147.7-126.3,147.7C180,234.8,68.8,320,66.8,338.8c-2.8,26,34.5,58.3,57.5,50.3
-		c15.3-5.3,73.2-95.2,96.6-141.3c2.4,9.9,9.3,21.6,19.7,31.9c-9.9,16.1-17.3,39.8,3.7,61.1c40.7,44.1,82.7,96.6,82.7,96.6
-		S54.2,752.4,20.8,815.1c-33.4,62.7-13.5,108.1,75.3,62c88.8-46.1,321.1-286.1,358.4-292.3c20.9-3.5,181.2,123.6,309.4,224.8
-		c-10.2,39.2-44.8,172.7-43.4,183.7c2.3,18.1,26.6,60.6,112.5-11c29.9-24.9,64.7-69,64.7-69l11.3-11.5c0,0,44.3-34.7,69.7-65.3
-		C1050.4,750.6,1007.8,726.3,989.7,724z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>7</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FF7A7A" offset="0%"></stop>
+            <stop stop-color="#ED6B6B" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M315.18,310.28 C314.74,331.4 312.54,351.42 309.02,370.34 L321.34,373.86 C325.3,354.06 327.5,333.16 327.94,311.16 L315.18,310.28 Z M340.04,270.02 L340.04,349.88 C339.6,400.48 329.92,437 310.56,459.88 L322,470 C334.98,454.6 344,433.48 349.28,406.86 C355,415.88 362.04,427.98 369.96,443.16 L378.76,429.96 C369.52,415.66 360.72,402.68 351.92,391.24 C353.46,378.48 354.34,364.84 354.56,349.88 L354.56,344.6 C366,334.04 375.46,323.26 382.94,312.04 L374.14,301.04 C368.86,310.28 362.26,319.08 354.56,327.44 L354.56,270.02 L340.04,270.02 Z M392.62,274.64 L392.62,332.5 L414.84,332.5 L414.84,345.7 L384.7,345.7 L384.7,357.58 L414.84,357.58 L414.84,371.66 L376.12,371.66 L376.12,383.98 L412.2,383.98 C404.06,393 391.74,400.48 375.46,406.64 L383.16,419.4 C389.76,416.32 395.7,412.8 401.42,409.06 C408.46,414.34 414.18,419.62 418.58,424.46 L427.16,415.88 C422.76,411.26 417.26,406.64 410.88,401.8 C417.04,396.52 422.32,390.58 426.28,383.98 L462.8,383.98 C465.88,389.26 469.84,394.76 475.12,400.26 C470.28,405.54 464.78,410.38 458.62,414.56 L465.66,424.02 C472.7,419.4 478.86,414.34 484.36,408.62 C489.64,413.02 495.8,417.64 502.84,422.04 L511.86,410.6 C495.58,402.68 483.92,393.66 476.44,383.98 L509,383.98 L509,371.66 L475.34,371.66 L475.34,357.58 L505.04,357.58 L505.04,345.7 L475.34,345.7 L475.34,332.5 L497.56,332.5 L497.56,274.64 L392.62,274.64 Z M428.92,371.66 L428.92,357.58 L461.48,357.58 L461.48,371.66 L428.92,371.66 Z M461.48,345.7 L428.92,345.7 L428.92,332.5 L461.48,332.5 L461.48,345.7 Z M483.48,321.72 L406.48,321.72 L406.48,309.18 L483.48,309.18 L483.48,321.72 Z M406.48,298.84 L406.48,286.08 L483.48,286.08 L483.48,298.84 L406.48,298.84 Z M436.18,469.78 C446.52,469.78 451.8,464.5 451.8,454.16 L451.8,391.68 L436.84,391.68 L436.84,450.64 C436.84,455.04 434.86,457.24 431.34,457.24 C426.5,457.24 421.66,456.8 416.38,456.14 L419.46,469.78 L436.18,469.78 Z M424.74,427.76 C411.98,434.8 396.8,440.96 379.2,445.8 L385.14,459.44 C402.3,453.72 416.6,446.9 428.04,439.42 L424.74,427.76 Z M464.56,429.3 L457.3,440.08 C471.16,445.8 484.8,453.72 498,464.06 L506.14,451.3 C493.6,442.72 479.74,435.46 464.56,429.3 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="7">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#ED6B6B">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
 </svg>

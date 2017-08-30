@@ -1,126 +1,41 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   x="0px"
-   y="0px"
-   viewBox="0 0 1024 1024"
-   style="enable-background:new 0 0 1024 1024;"
-   xml:space="preserve"
-   id="svg2"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="39.svg"><metadata
-     id="metadata24"><rdf:RDF><cc:Work
-         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
-     id="defs22" /><sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1016"
-     id="namedview20"
-     showgrid="false"
-     inkscape:zoom="0.32593203"
-     inkscape:cx="1305.104"
-     inkscape:cy="199.64344"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" /><style
-     type="text/css"
-     id="style4">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#294754;}
-	.st6{fill:#E54E4E;}
-</style><g
-     id="Layer_1"
-     class="st0"><g
-       id="XMLID_1_"
-       class="st1"><g
-         id="XMLID_81_"><path
-           id="XMLID_82_"
-           class="st2"
-           d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3     s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1     s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3     S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1     C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z" /></g></g><circle
-       id="XMLID_5_"
-       class="st3"
-       cx="32"
-       cy="32"
-       r="32" /><rect
-       id="XMLID_22_"
-       x="160.5"
-       y="160"
-       class="st4"
-       width="704"
-       height="704" /><circle
-       id="XMLID_24_"
-       class="st4"
-       cx="512.5"
-       cy="512"
-       r="352" /><rect
-       id="XMLID_33_"
-       x="288"
-       y="288"
-       class="st4"
-       width="448"
-       height="449.6" /><circle
-       id="XMLID_34_"
-       class="st4"
-       cx="512"
-       cy="513.6"
-       r="224" /><rect
-       id="XMLID_35_"
-       x="352"
-       y="352"
-       class="st4"
-       width="318.3"
-       height="318.3" /><circle
-       id="XMLID_36_"
-       class="st4"
-       cx="511.2"
-       cy="511.2"
-       r="159.2" /></g><g
-     id="Layer_2"
-     transform="translate(0,-4.3860765e-5)"><path
-       id="XMLID_37_"
-       class="st5"
-       d="M 299.2,331.3"
-       inkscape:connector-curvature="0"
-       style="fill:#294754" /><path
-       id="XMLID_40_"
-       class="st6"
-       d="M 989.7,724 C 978.5,722.6 841.2,758.2 804.3,767.8 702.7,640 575.2,480.4 578.5,459.5 584.4,422.2 824.7,185.8 870.1,96.6 915.5,7.4 875.5,-17.8 813.1,16.1 750.7,50.1 433.6,329.8 433.6,329.8 L 217.3356,166.72881 c -26.67746,-23.30728 -71.08042,19.76453 -45.54341,49.8678 L 327,437.4 c 0,0 -272.8,315 -306.2,377.7 -33.4,62.7 -13.5,108.1 75.3,62 C 184.9,831 417.2,591 454.5,584.8 c 20.9,-3.5 181.2,123.6 309.4,224.8 -10.2,39.2 -44.8,172.7 -43.4,183.7 2.3,18.1 26.6,60.6 112.5,-11 29.9,-24.9 64.7,-69 64.7,-69 L 909,901.8 c 0,0 44.3,-34.7 69.7,-65.3 71.7,-85.9 29.1,-110.2 11,-112.5 z"
-       inkscape:connector-curvature="0"
-       style="fill:#e54e4e"
-       sodipodi:nodetypes="cccscccccsscccccccc" /></g><ellipse
-     style="fill:#e54e4e;fill-opacity:1"
-     id="path3390"
-     cx="252.93408"
-     cy="653.89563"
-     rx="54.952435"
-     ry="221.28813"
-     transform="matrix(0.70066388,-0.7134915,0.7134915,0.70066388,0,0)" /><ellipse
-     style="fill:#e54e4e;fill-opacity:1"
-     id="path3390-6"
-     cx="-260.57602"
-     cy="631.15302"
-     rx="54.952435"
-     ry="221.28813"
-     transform="matrix(0.70066388,-0.7134915,0.7134915,0.70066388,0,0)" /></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>39</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#58DCB0" offset="0%"></stop>
+            <stop stop-color="#48B38F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M341.36,375.18 L341.36,419.62 L404.72,419.62 L404.72,447.12 C404.72,452.62 402.52,455.48 398.12,455.48 C390.42,455.48 382.28,455.04 373.92,454.38 L377.22,469.12 L403.4,469.12 C414.62,469.12 420.34,462.96 420.34,450.86 L420.34,419.62 L480.4,419.62 L480.4,375.18 L341.36,375.18 Z M465,407.08 L356.76,407.08 L356.76,387.72 L465,387.72 L465,407.08 Z M337.62,274.64 L337.62,337.34 L396.36,337.34 C398.78,341.3 401.2,345.48 403.4,350.1 L313.2,350.1 L313.2,363.3 L506.8,363.3 L506.8,350.1 L419.9,350.1 C418.14,345.7 416.38,341.3 414.4,337.34 L482.6,337.34 L482.6,274.64 L337.62,274.64 Z M467.2,324.8 L353.02,324.8 L353.02,311.6 L467.2,311.6 L467.2,324.8 Z M353.02,299.94 L353.02,287.18 L467.2,287.18 L467.2,299.94 L353.02,299.94 Z M448.5,427.54 L441.9,440.08 C463.46,446.68 484.14,455.7 504.16,467.36 L509.66,452.84 C490.08,441.84 469.62,433.26 448.5,427.54 Z M365.34,426.44 C352.58,437.44 334.32,446.68 310.34,454.38 L319.14,467.36 C342.02,459.44 360.72,449.1 375.24,436.56 L365.34,426.44 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="39">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#48B38F">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,51 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#847934;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_78_">
-			<path id="XMLID_79_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<g id="XMLID_39_">
-		<path id="XMLID_42_" class="st5" d="M194,602c-66.1,0-119-25.2-119-32.8V946c0,0,0,72.5,119,72.5s119-72.8,119-72.8V569.2
-			C313,576.8,260.1,602,194,602z"/>
-		<path id="XMLID_40_" class="st5" d="M313.9,387c0-50-47.9-195.3-122.2-195.3C117.5,191.7,75.3,337,75.3,387l-0.1,104
-			c3.9,12,55.8,39,119.4,39s115.5-27,119.4-39L313.9,387z"/>
-	</g>
-	<g id="XMLID_37_">
-		<path id="XMLID_41_" class="st5" d="M511,508c-66.1,0-119-25.2-119-32.8V852c0,0,0,72.5,119,72.5s119-72.8,119-72.8V475.2
-			C630,482.8,577.1,508,511,508z"/>
-		<path id="XMLID_38_" class="st5" d="M630.9,293c0-50-47.9-195.3-122.2-195.3C434.5,97.7,392.3,243,392.3,293l-0.1,104
-			c3.9,12,55.8,39,119.4,39s115.5-27,119.4-39L630.9,293z"/>
-	</g>
-	<g id="XMLID_46_">
-		<path id="XMLID_55_" class="st5" d="M823,410c-66.1,0-119-25.2-119-32.8V754c0,0,0,72.5,119,72.5s119-72.8,119-72.8V377.2
-			C942,384.8,889.1,410,823,410z"/>
-		<path id="XMLID_51_" class="st5" d="M942.9,195c0-50-47.9-195.3-122.2-195.3C746.5-0.3,704.3,145,704.3,195l-0.1,104
-			c3.9,12,55.8,39,119.4,39s115.5-27,119.4-39L942.9,195z"/>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200px" height="1200px" viewBox="0 0 1200 1200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="600 1150 200 950 600 750 1000 950"></polygon>
+        <filter x="-7.5%" y="-7.5%" width="115.0%" height="130.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="30" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2">
+            <g id="Path-3">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#7E7620" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Group" transform="translate(200.000000, 450.000000)">
+                <polygon id="Path-2" fill="#6A620E" points="2.8449465e-14 100 0 500 200 600 400 500 400 100 200 200"></polygon>
+                <polygon id="Path-Copy-2" fill="#7E7620" points="-1.13686838e-13 100 200 -5.68434189e-14 400 100 200 200"></polygon>
+                <polygon id="Path-2-Copy-7" fill="#7E7620" points="2.84217094e-14 100 0 500 200 600 200 200"></polygon>
+            </g>
+            <g id="Group-2" transform="translate(600.000000, 450.000000)">
+                <polygon id="Path-Copy-3" fill="#7E7620" points="-1.13686838e-13 100 200 -5.68434189e-14 400 100 200 200"></polygon>
+                <polygon id="Path-2-Copy" fill="#6A620E" points="2.8449465e-14 100 0 500 200 600 400 500 400 100 200 200"></polygon>
+                <polygon id="Path-2-Copy-5" fill="#7E7620" points="2.84217094e-14 100 0 500 200 600 200 200"></polygon>
+            </g>
+            <g id="Group-3" transform="translate(400.000000, 50.000000)">
+                <polygon id="Path-2-Copy-2" fill="#6A620E" points="2.84217094e-14 100 0 500 200 600 400 500 400 100 200 200"></polygon>
+                <polygon id="Path-Copy" fill="#7E7620" points="-1.13686838e-13 100 200 -5.68434189e-14 400 100 200 200"></polygon>
+                <polygon id="Path-2-Copy-6" fill="#7E7620" points="2.84217094e-14 100 0 500 200 600 200 200"></polygon>
+            </g>
+        </g>
+    </g>
 </svg>

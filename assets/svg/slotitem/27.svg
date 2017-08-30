@@ -1,45 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#FCA844;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_81_">
-			<path id="XMLID_82_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<g id="XMLID_37_">
-		<path id="XMLID_38_" class="st5" d="M263.6,969.1c58.5-63.2,56.6-155.9-4.3-207.1c-60.9-51.2-157.7-41.5-216.2,21.7
-			s-56.6,155.9,4.3,207.1C108.3,1042,205.1,1032.3,263.6,969.1z"/>
-		<polygon id="XMLID_66_" class="st5" points="286.9,881.9 252.8,829.4 869,679.2 902.2,746.5 		"/>
-		<polygon id="XMLID_68_" class="st5" points="136.8,751.5 194.1,795.6 264.9,223.5 195.1,152.5 		"/>
-		<polygon id="XMLID_69_" class="st5" points="230,822.9 162.5,807.6 472.2,229.1 535.5,271 		"/>
-		<polygon id="XMLID_70_" class="st5" points="247,775.7 226.1,861.2 826.6,509.3 776.8,434.7 		"/>
-		<path id="XMLID_71_" class="st5" d="M903.8,747.8c21.5-23.2-119.6-175.4-315.2-339.9S217,128.9,195.5,152.1S315.1,327.5,510.7,492
-			S882.3,771.1,903.8,747.8z"/>
-		<path id="XMLID_67_" class="st5" d="M902.2,746.5c9.6-8.4,18.9-17.4,27.7-26.9c151.9-163.9,116-430.5-80-595.4
-			s-478.1-165.7-630-1.7c-8.8,9.5-17,19.4-24.5,29.5L902.2,746.5z"/>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>27</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="110" y="410" width="120" height="120"></rect>
+        <filter x="-12.5%" y="-12.5%" width="150.0%" height="150.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M230,170 L230,390 L340,280 L230,170 Z M210,150 L230,150 L230,170 Z M490,430 L230,430 L210,410 L210,150 L250,110 L410,110 L530,230 L530,390 L490,430 Z M470,410 L360,300 L250,410 L470,410 Z" id="path-3"></path>
+        <filter x="-5.4%" y="-19.6%" width="125.0%" height="135.7%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-5">
+            <stop stop-color="#FCA825" offset="0%"></stop>
+            <stop stop-color="#CC881F" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="62.4273682%" x2="0%" y2="13.1170654%" id="linearGradient-6">
+            <stop stop-color="#FCA825" offset="0%"></stop>
+            <stop stop-color="#CC891F" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="27">
+            <g id="Rectangle">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FCA825" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="#FCA825" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+            <polygon id="Path-52" fill="url(#linearGradient-5)" points="110 410 110 530 230 410"></polygon>
+            <polygon id="Path-51" fill="url(#linearGradient-6)" points="210 150 490 430 530 390 250 110"></polygon>
+        </g>
+    </g>
 </svg>

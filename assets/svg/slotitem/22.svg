@@ -1,53 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#7DE2EF;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_81_">
-			<path id="XMLID_82_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="321"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<path id="XMLID_39_" class="st5" d="M786.8,348c0,0,46-56.5,25.6-103.8l3.2-3.2c12.7-12.7,44.6-57.2,33.7-68.4
-		c-11-11.2-55.1,20.4-68.4,33.7c-1,1-1.8,1.8-2.7,2.7c-48.1-23-105.5,25-105.5,25l-112.5,91.3L458.3,427.1
-		c0,0-251.3,281.8-313.5,368c-52.7,79.4-105,164.7-93.9,175.7c11,11,98.5-38.8,177.7-92c85.8-62.5,366.2-315.3,366.2-315.3
-		l101.9-101.9L786.8,348z"/>
-	<path id="XMLID_64_" class="st5" d="M441.4,478.3l101.9-101.9L169.5,2.4c0,0-17.5-16-67.8,34.3c-50.2,50.2-34.1,67.6-34.1,67.6
-		L441.4,478.3z"/>
-	<path id="XMLID_65_" class="st5" d="M243,835.5c-8.6,5.9-17.6,12.1-26.6,18.3c-44.8,30.6-74.9,46.5-74.9,46.5l120.3,120.3
-		c0,0,17.1,17,58.6-24.5c41.5-41.5,24.5-58.6,24.5-58.6L243,835.5z"/>
-	<path id="XMLID_66_" class="st5" d="M1020.5,853.4l-374-373.8L544.6,581.5l374,373.8c0,0,17.4,16.2,67.6-34.1
-		C1036.4,870.9,1020.5,853.4,1020.5,853.4z"/>
-	<path id="XMLID_67_" class="st5" d="M170.2,806.8c6.1-9,12-17.6,17.9-26.2L86.2,678.7c0,0-16.7-17.5-58.2,24.1S3.9,761,3.9,761
-		l120.3,120.3C124.2,881.3,139.6,851.6,170.2,806.8z"/>
-	<path id="XMLID_68_" class="st5" d="M501.3,265.7c14.1,14.1,30.7,19.9,37.7,12.9l42.5-42.5c7-7,1.7-24.1-12.4-38.2l-17-17
-		c-14.1-14.1-31.4-19.7-38.4-12.6l-42.5,42.5c-7,7-1,23.9,13.1,38L501.3,265.7z"/>
-	<path id="XMLID_69_" class="st5" d="M825,453.7c-14-14-31.4-19.6-38.4-12.6l-42.5,42.5c-7,7-0.9,23.9,13.1,38l17,17
-		c14,14,30.7,19.9,37.7,12.9l42.5-42.5c7-7,1.6-24.2-12.4-38.2L825,453.7z"/>
-	<path id="XMLID_70_" class="st5" d="M916.1,276.6c10.5,10.5,24.7,13.1,31.7,6.1l8.5-8.5c7-7,4.1-21-6.3-31.5L885,177.7
-		c-10.5-10.5-24.2-13.1-31.2-6.1l-8.5,8.5c-7,7-4.6,21,5.8,31.5L916.1,276.6z"/>
-	<path id="XMLID_71_" class="st5" d="M814.4,173.9c10.4,10.4,24.3,12.7,31.3,5.6l8.5-8.5c7-7,4.5-20.7-5.9-31.1L784,75.7
-		c-10.4-10.4-24.5-13.4-31.5-6.4l-8.5,8.5c-7,7-4.3,21.4,6.1,31.8L814.4,173.9z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>22</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#94E4F0" offset="0%"></stop>
+            <stop stop-color="#8CCFD9" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,180 L640,400 L420,620 L200,400 L420,180 Z M325.96,306.9 L325.96,329.34 L494.48,329.34 L494.48,306.9 L325.96,306.9 Z M340.92,382.14 L340.92,404.58 L479.3,404.58 L479.3,382.14 L340.92,382.14 Z M310.12,463.1 L310.12,485.98 L509.88,485.98 L509.88,463.1 L310.12,463.1 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="22">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#8CCFD9">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
 </svg>

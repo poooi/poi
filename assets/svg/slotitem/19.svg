@@ -1,46 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFFFC5;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:3;stroke-miterlimit:10;}
-	.st5{display:inline;fill:none;stroke:#FFD02C;stroke-width:0.25;stroke-miterlimit:10;}
-	.st6{fill:#FAC840;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<path id="XMLID_64_" class="st2" d="M512,64c60.5,0,119.2,11.8,174.4,35.2c53.3,22.6,101.3,54.9,142.4,96
-			c41.2,41.2,73.5,89.1,96,142.4C948.2,392.8,960,451.5,960,512s-11.8,119.2-35.2,174.4c-22.6,53.3-54.9,101.3-96,142.4
-			c-41.2,41.2-89.1,73.5-142.4,96C631.2,948.2,572.5,960,512,960s-119.2-11.8-174.4-35.2c-53.3-22.6-101.3-54.9-142.4-96
-			c-41.2-41.2-73.5-89.1-96-142.4C75.8,631.2,64,572.5,64,512s11.8-119.2,35.2-174.4c22.6-53.3,54.9-101.3,96-142.4
-			s89.1-73.5,142.4-96C392.8,75.8,451.5,64,512,64 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0
-			L512,0z"/>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st5" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st5" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st5" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st5" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<path id="XMLID_42_" class="st6" d="M1023.5,511.7c0-10.1-0.3-20.1-0.9-30.1l-143.3-18.6l133.7-55c-4.1-19.8-9.3-39.2-15.6-58.1
-		l-143.3,19.2l114.8-87.7c-9.1-18-19.2-35.4-30.3-52.1l-133.2,55.5l87.9-114.1c-13.4-15-27.7-29.2-42.8-42.5l-113.9,87.8l55.3-132.6
-		c-16.8-11-34.3-21.1-52.4-30.1l-87.1,114.1l19-142c-19-6.2-38.6-11.4-58.5-15.4l-54.5,132.3L540.1,0.8C530.7,0.3,521.3,0,511.7,0
-		c-10.8,0-21.6,0.3-32.3,1l-18.3,141.3L407,10.7c-20,4.2-39.6,9.5-58.7,15.9l18.9,140.8L281.1,54.8c-18.2,9.2-35.8,19.5-52.6,30.7
-		L283,216.1l-111.9-86.2c-15.2,13.6-29.6,28-43.1,43.3l86.1,111.7L84,230.7c-11.2,17-21.4,34.6-30.5,52.9l112,85.5L25.9,350.5
-		c-6.4,19.2-11.6,38.9-15.7,59.1l130.1,53.6l-139.4,18C0.3,491.3,0,501.5,0,511.7c0,10.3,0.3,20.5,0.9,30.6l139.4,18L10.2,614
-		c4.1,20.2,9.4,39.9,15.7,59.1l139.6-18.7l-112,85.5c9.1,18.3,19.3,36,30.5,52.9l130.1-54.2L128,850.3
-		c13.5,15.3,27.9,29.7,43.1,43.3L283,807.4L228.5,938c16.9,11.2,34.4,21.5,52.6,30.7L367.2,856l-18.9,140.8
-		c19.1,6.4,38.7,11.8,58.7,15.9l54.2-131.5l18.3,141.3c10.7,0.7,21.4,1,32.3,1c9.5,0,19-0.3,28.4-0.8l18.3-141.5l54.5,132.3
-		c20-4,39.5-9.2,58.5-15.4l-19-142l87.1,114.1c18.1-9,35.6-19.1,52.4-30.1l-55.3-132.6l113.9,87.8c15.1-13.3,29.4-27.5,42.8-42.5
-		l-87.9-114.1l133.2,55.5c11.1-16.7,21.2-34.1,30.3-52.1l-114.8-87.7l143.3,19.2c6.3-18.9,11.5-38.3,15.6-58.1l-133.7-55l143.3-18.6
-		C1023.2,531.9,1023.5,521.9,1023.5,511.7z M509.6,836c-179.1,0-324.2-145.2-324.2-324.2s145.2-324.2,324.2-324.2
-		s324.2,145.2,324.2,324.2S688.6,836,509.6,836z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>19</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="54.7695312%" y1="53.0776367%" x2="50%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#E7AB28" offset="0%"></stop>
+            <stop stop-color="#F8C04B" offset="100%"></stop>
+        </linearGradient>
+        <path d="M240,160 L400,160 L480,240 L480,400 L400,480 L240,480 L160,400 L160,240 L240,160 Z M280,220 L220,280 L220,360 L280,420 L360,420 L420,360 L420,280 L360,220 L280,220 Z M300,120 L340,120 L340,160 L300,160 L300,120 Z M300,480 L340,480 L340,520 L300,520 L300,480 Z M120,300 L160,300 L160,340 L120,340 L120,300 Z M480,300 L520,300 L520,340 L480,340 L480,300 Z M240,120 L280,120 L280,160 L240,160 L240,120 Z M360,120 L400,120 L400,160 L360,160 L360,120 Z M360,480 L400,480 L400,520 L360,520 L360,480 Z M240,480 L280,480 L280,520 L240,520 L240,480 Z M120,360 L160,360 L160,400 L120,400 L120,360 Z M120,240 L160,240 L160,280 L120,280 L120,240 Z M480,240 L520,240 L520,280 L480,280 L480,240 Z M480,360 L520,360 L520,400 L480,400 L480,360 Z M440,440 L480,440 L480,480 L440,480 L440,440 Z M160,160 L200,160 L200,200 L160,200 L160,160 Z M440,160 L480,160 L480,200 L440,200 L440,160 Z M160,440 L200,440 L200,480 L160,480 L160,440 Z" id="path-2"></path>
+        <filter x="-3.8%" y="-3.8%" width="115.0%" height="115.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="19">
+            <path d="M240,160 L400,160 L480,240 L480,400 L400,480 L240,480 L160,400 L160,240 L240,160 Z M280,220 L220,280 L220,360 L280,420 L360,420 L420,360 L420,280 L360,220 L280,220 Z" id="Combined-Shape" fill="#F8C04B"></path>
+            <rect id="Rectangle-7" fill="#F8C04B" x="300" y="120" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy" fill="#F8C04B" x="300" y="480" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-2" fill="#F8C04B" x="120" y="300" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-3" fill="#F8C04B" x="480" y="300" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-4" fill="#F8C04B" x="240" y="120" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-5" fill="#F8C04B" x="360" y="120" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-6" fill="#F8C04B" x="360" y="480" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-7" fill="#F8C04B" x="240" y="480" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-8" fill="#F8C04B" x="120" y="360" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-9" fill="#F8C04B" x="120" y="240" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-10" fill="#F8C04B" x="480" y="240" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-11" fill="#F8C04B" x="480" y="360" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-12" fill="#F8C04B" x="440" y="440" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-13" fill="#F8C04B" x="160" y="160" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-14" fill="#F8C04B" x="440" y="160" width="40" height="40"></rect>
+            <rect id="Rectangle-7-Copy-15" fill="#F8C04B" x="160" y="440" width="40" height="40"></rect>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+        </g>
+    </g>
 </svg>

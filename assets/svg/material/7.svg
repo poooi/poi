@@ -1,48 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#199980;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_78_">
-			<path id="XMLID_79_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_2">
-	<path id="XMLID_46_" class="st5" d="M974,512.1c0-9.1-0.3-18.2-0.8-27.2l-129.4-16.7l120.7-49.7c-3.7-17.9-8.4-35.4-14.1-52.5
-		l-129.3,17.3l103.6-79.1c-8.2-16.2-17.3-31.9-27.3-47l-120.2,50.1l79.4-103c-12.1-13.5-25-26.4-38.6-38.4l-102.9,79.3L765,125.4
-		c-15.2-9.9-31-19-47.3-27.2l-78.7,103L656.2,73c-17.2-5.6-34.8-10.3-52.8-13.9l-49.2,119.4L537.7,50.8c-8.5-0.5-17-0.7-25.6-0.7
-		c-9.8,0-19.5,0.3-29.2,0.9l-16.5,127.5L417.5,59.8c-18.1,3.8-35.7,8.6-53,14.4l17,127.1L303.9,99.6c-16.4,8.3-32.3,17.6-47.5,27.7
-		l49.1,117.9l-101-77.8c-13.7,12.2-26.7,25.3-38.9,39.1l77.7,100.9l-117.5-49c-10.1,15.3-19.3,31.3-27.5,47.8l101.1,77.2l-126-16.9
-		c-5.8,17.3-10.5,35.1-14.2,53.3l117.5,48.4L50.9,484.4c-0.5,9.1-0.8,18.3-0.8,27.6c0,9.3,0.3,18.5,0.8,27.6L176.8,556L59.3,604.3
-		c3.7,18.2,8.4,36,14.2,53.3l126-16.9L98.4,718c8.2,16.5,17.4,32.5,27.5,47.8l117.5-49l-77.7,100.9c12.2,13.8,25.1,26.8,38.9,39.1
-		l101-77.8l-49.1,117.9c15.2,10.1,31.1,19.4,47.5,27.7l77.7-101.7l-17,127.1c17.2,5.8,34.9,10.6,53,14.4l48.9-118.7l16.5,127.5
-		c9.6,0.6,19.4,0.9,29.2,0.9c8.6,0,17.1-0.2,25.6-0.7l16.5-127.7L603.4,965c18-3.6,35.6-8.3,52.8-13.9L639,822.8l78.7,103
-		c16.3-8.1,32.1-17.2,47.3-27.2l-49.9-119.7l102.9,79.3c13.6-12,26.5-24.9,38.6-38.4l-79.4-103l120.2,50.1
-		c10-15.1,19.1-30.8,27.3-47l-103.6-79.1l129.3,17.3c5.7-17.1,10.4-34.6,14.1-52.5L843.8,556l129.4-16.7
-		C973.7,530.2,974,521.2,974,512.1z M509.4,719.6c-115.4,0-208.9-93.5-208.9-208.9s93.5-208.9,208.9-208.9s208.9,93.5,208.9,208.9
-		S624.8,719.6,509.4,719.6z"/>
-</g>
-<g id="Layer_3">
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200px" height="1200px" viewBox="0 0 1200 1200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>7</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="600 1150 200 950 600 750 1000 950"></polygon>
+        <filter x="-7.5%" y="-7.5%" width="115.0%" height="130.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="30" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="7">
+            <g id="Path-3">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#58887E" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <polygon id="Path-3-Copy" fill="#465E55" points="600 1050 400 950 600 850 800 950"></polygon>
+            <g id="Group-3" transform="translate(400.000000, 550.000000)">
+                <polygon id="Path-2-Copy-4" fill="#465E55" points="2.58126853e-14 100 0 300 200 400 400 300 400 100 200 200"></polygon>
+                <polygon id="Combined-Shape-Copy" fill="#58887E" points="0 100 200 2.84217094e-14 400 100 200 200"></polygon>
+                <polygon id="Path-2-Copy-5" fill="#58887E" points="0 100 0 300 200 400 200 200"></polygon>
+            </g>
+            <g id="Group" transform="translate(200.000000, 50.000000)">
+                <polygon id="Path-2-Copy-7" fill="#465E55" points="0 200 9.09494702e-13 400 400 600 800 400 800 200 400 400"></polygon>
+                <polygon id="Path-2-Copy-6" fill="#465E55" transform="translate(400.000000, 200.000000) scale(1, -1) translate(-400.000000, -200.000000) " points="200 200 400 300 600 200 400 100"></polygon>
+                <path d="M0,200 L400,0 L800,200 L400,400 L0,200 Z M200,200 L400,300 L600,200 L400,100 L200,200 Z" id="Combined-Shape-Copy-2" fill="#58887E"></path>
+                <polygon id="Path-2-Copy-8" fill="#58887E" points="0 200 0 400 400 600 400 400"></polygon>
+                <polygon id="Path-2-Copy-9" fill="#58887E" points="400 100 400 300 600 200"></polygon>
+            </g>
+        </g>
+    </g>
 </svg>

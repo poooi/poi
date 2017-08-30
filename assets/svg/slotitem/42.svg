@@ -1,66 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 128 128"
-   version="1.1"
-   id="svg11"
-   sodipodi:docname="42.svg"
-   inkscape:version="0.92.0 r15299">
-  <metadata
-     id="metadata15">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>sub scope1</dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1016"
-     id="namedview13"
-     showgrid="false"
-     inkscape:zoom="1.84375"
-     inkscape:cx="-49.084746"
-     inkscape:cy="64"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg11" />
-  <defs
-     id="defs4">
-    <style
-       id="style2">.cls-1{fill:#9fbce3;}</style>
-  </defs>
-  <title
-     id="title6">sub scope1</title>
-  <g
-     id="图层_2"
-     data-name="图层 2"
-     transform="matrix(1.3234585,0,0,1.3234585,-20.43518,-22.883089)"
-     style="fill:#80b3ff">
-    <path
-       class="cls-1"
-       d="M 82.5,74.2 V 24.71 l -4,-0.81 V 55.66 L 75.9,55.2 V 21.79 L 72.35,21.06 V 54.58 L 69,54 v -21.86 0 -13.21 l -4,-0.82 v 13.3 L 55.1,29.67 51.48,35.3 65,37.68 v 15.6 L 60.27,52.45 V 48.87 L 58.35,48 v -5.5 l 1.32,-2 -10.78,-1.9 V 24.81 l 3.31,0.58 2.46,-3.83 -15.39,-2.71 -2.46,3.83 8.76,1.54 V 38 l -5.08,-0.9 -2.32,3.61 4.32,0.76 V 83.66 L 17.08,81.58 a 51.15,51.15 0 0 0 93.84,-5.36 z M 69,66.78 l 3.31,0.58 v 6.11 L 69,73.24 Z m 6.87,1.22 2.6,0.46 v 5.46 l -2.6,-0.19 z m 2.6,-8.77 v 5.67 l -2.6,-0.46 v -5.68 z m -6.16,-1.09 v 5.68 L 69,63.23 V 57.55 Z M 65,56.84 v 5.68 L 60.27,61.69 V 56 Z M 48.88,54 l 5,0.88 v 5.68 l -5,-0.88 z m 5,-2.68 -5,-0.88 v -7.86 l 5,0.88 z m -5,14.25 v -2.34 l 5,0.88 v 20.48 l -5,-0.41 z M 60.24,85.11 V 65.24 l 4.73,0.83 v 19.42 z"
-       id="path8"
-       inkscape:connector-curvature="0"
-       style="fill:#80b3ff" />
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>42</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-3.4%" y="-3.3%" width="113.6%" height="113.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="63.0892852%" y1="0%" x2="28.3868506%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#9EBAE0" offset="0%"></stop>
+            <stop stop-color="#8299B7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="42">
+            <g id="Group" filter="url(#filter-1)" transform="translate(100.000000, 90.000000)">
+                <path d="M120,40 L100,40 L100,0 L180,0 L180,40 L160,40 L160,140 L180,140 L180,100 L160,100 L160,60 L240,60 L240,100 L220,100 L220,140 L240,140 L240,120 L260,120 L260,140 L280,140 L280,120 L300,120 L300,140 L320,140 L320,120 L340,120 L340,300 L320,300 L320,260 L300,260 L300,300 L280,300 L280,260 L260,260 L260,300 L240,300 L240,260 L220,260 L220,320 L180,320 L180,260 L160,260 L160,320 L120,320 L120,40 Z M160,180 L160,220 L180,220 L180,180 L160,180 Z M220,220 L240,220 L240,180 L220,180 L220,220 Z M260,220 L280,220 L280,180 L260,180 L260,220 Z M300,220 L320,220 L320,180 L300,180 L300,220 Z" id="Combined-Shape" fill="#9EBAE0"></path>
+                <polygon id="Path-26" fill="#9EBAE0" points="0 320 0 360 120 460 320 460 440 340 440 300 240 300 240 320"></polygon>
+                <polygon id="Path-2" fill="url(#linearGradient-2)" points="240 300 240 320 0 320 0 360 120 460 320 460 440.193359 340 440 300"></polygon>
+            </g>
+        </g>
+    </g>
 </svg>
