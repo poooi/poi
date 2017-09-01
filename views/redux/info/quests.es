@@ -200,11 +200,12 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
         // 'fuzzy' will also appears in Object.keys(goal)
         // use @ as separator because we could have battle_boss_win and battle_boss_win_s
         match = Object.keys(goal).filter(x => x.startsWith(`${event}@`))
-      } else {
-        match = [event]
       }
-      forEach(match, _event => {
+      forEach([...match, event], _event => {
         const subgoal = goal[_event]
+        if (!subgoal) {
+          return
+        }
         if (!satisfyGoal('shipType', subgoal, options)) return
         if (!satisfyGoal('mission', subgoal, options)) return
         if (!satisfyGoal('maparea', subgoal, options)) return
