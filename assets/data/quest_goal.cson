@@ -1,4 +1,9 @@
 ###
+type: 1-daily, 2-weekly, 3-monthly, 4-quarterly, 8-special daily, 9-special daily
+for more details see views/redux/quests.es
+###
+
+###
 # Daily
 ###
 201: # 敵艦隊を撃破せよ！ 获得胜利1次
@@ -299,10 +304,66 @@
 ###
 # Quarterly
 ###
+426: #海上通商航路の警戒を厳とせよ
+  type: 4
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "3"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@強行偵察任務":
+    description: "10"
+    required: 1
+    mission: ['強行偵察任務']
+    init: 0
+
+663: #新型艤装の継続研究
+  type: 4
+  "destory_item":
+    description: "廃棄"
+    slotitemId: [3]
+    required: 10
+    init: 0
+
 822: #沖ノ島海域迎撃戦
-  type: 3
+  type: 4
   "battle_boss_win_rank_s":
     description: "勝利"
     maparea: [24]
     required: 2
+    init: 0
+
+854: #戦果拡張任務！「Z作戦」前段作戦
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@24":
+    description: "2-4"
+    maparea: [24]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@61":
+    description: "6-1"
+    maparea: [61]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@63":
+    description: "6-3"
+    maparea: [63]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4"
+    maparea: [64]
+    required: 1
     init: 0
