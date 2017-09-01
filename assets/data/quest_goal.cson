@@ -308,22 +308,22 @@ for more details see views/redux/quests.es
   type: 4
   fuzzy: true
   "mission_success@警備任務":
-    description: "警備任務"
+    description: "3"
     required: 1
     mission: ['警備任務']
     init: 0
   "mission_success@対潜警戒任務":
-    description: "対潜警戒任務"
+    description: "4"
     required: 1
     mission: ['対潜警戒任務']
     init: 0
   "mission_success@海上護衛任務":
-    description: "海上護衛任務"
+    description: "5"
     required: 1
     mission: ['海上護衛任務']
     init: 0
   "mission_success@強行偵察任務":
-    description: "強行偵察任務"
+    description: "10"
     required: 1
     mission: ['強行偵察任務']
     init: 0
