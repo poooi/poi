@@ -75,6 +75,17 @@ function isDifferentMonth(time1, time2) {
   return date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
 }
 
+const getQuarter = (time) => {
+  const month = time.getUTCMonth()
+  return month - month % 3
+}
+
+const isDifferentQuarter = (time1, time2) => {
+  const date1 = new Date(time1 + 14400000)
+  const date2 = new Date(time2 + 14400000)
+  return getQuarter(date1) !== getQuarter(date2) || date1.getUTCFullYear() != date2.getUTCFullYear()
+}
+
 function newQuestRecord(id, questGoals) {
   const questGoal = questGoals[id]
   if (!questGoal)
@@ -125,14 +136,21 @@ function resetQuestRecordFactory(types, resetInterval) {
 const resetQuestRecordDaily = resetQuestRecordFactory([1, 8, 9], 1)
 const resetQuestRecordWeekly = resetQuestRecordFactory([2], 2)
 const resetQuestRecordMonthly = resetQuestRecordFactory([3], 3)
+const resetQuestRecordQuarterly = resetQuestRecordFactory([4], 4)
 function outdateRecords(questGoals, records, then, now) {
-  if (!isDifferentDay(now, then))
+  if (!isDifferentDay(now, then)) {
     return records
+  }
   records = mapValues(records, resetQuestRecordDaily(questGoals))
-  if (isDifferentWeek(now, then))
+  if (isDifferentWeek(now, then)) {
     records = mapValues(records, resetQuestRecordWeekly(questGoals))
-  if (isDifferentMonth(now, then))
+  }
+  if (isDifferentMonth(now, then)) {
     records = mapValues(records, resetQuestRecordMonthly(questGoals))
+  }
+  if (isDifferentQuarter(now, then)) {
+    records = mapValues(records, resetQuestRecordQuarterly(questGoals))
+  }
   return filterObjectValue(records)
 }
 
@@ -180,7 +198,7 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
       if (!satisfyGoal('maparea', subgoal, options)) return
       if (!satisfyGoal('slotitemId', subgoal, options)) return
       if (!satisfyGoal('times', subgoal, options)) return
-      const subrecord = Object.assign(record[e])
+      const subrecord = Object.assign({}, record[e])
       subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
       records[api_no] = {
         ...record,
@@ -485,7 +503,7 @@ export function reducer(state=initState, action) {
     let {activeQuests, records, activeNum} = state
     activeNum--
     if (api_quest_id in records) {
-      records = Object.assign(records)
+      records = Object.assign({}, records)
       delete records[api_quest_id]
     }
     // activeQuests

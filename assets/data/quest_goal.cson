@@ -1,4 +1,9 @@
 ###
+type: 1-daily, 2-weekly, 3-monthly, 4-quarterly, 8-special daily, 9-special daily
+for more details see views/redux/quests.es
+###
+
+###
 # Daily
 ###
 201: # 敵艦隊を撃破せよ！ 获得胜利1次
@@ -300,7 +305,7 @@
 # Quarterly
 ###
 822: #沖ノ島海域迎撃戦
-  type: 3
+  type: 4
   "battle_boss_win_rank_s":
     description: "勝利"
     maparea: [24]
