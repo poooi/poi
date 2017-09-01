@@ -362,7 +362,7 @@ for more details see views/redux/quests.es
     maparea: [63]
     required: 1
     init: 0
-  "battle_boss_win_rank_a@64":
+  "battle_boss_win_rank_s@64":
     description: "6-4"
     maparea: [64]
     required: 1
