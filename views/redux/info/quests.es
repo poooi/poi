@@ -1,6 +1,6 @@
 import CSON from 'cson'
 import { join } from 'path-extra'
-import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
+import { map, sortBy, mapValues, forEach, values, fromPairs, countBy } from 'lodash'
 
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -340,19 +340,15 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     const slotitems = postBody.api_slotitem_ids || ''
     const ids = slotitems.split(',')
     // now it only supports gun quest, slotitemId = $ietm.api_type[3]
-    let gunCount = 0
-    ids.forEach(id =>{
+    const typeCounts = countBy(ids, id => {
       const equipId = getStore(`info.equips.${id}.api_slotitem_id`)
-      const slotitemId = getStore(`const.$equips.${equipId}.api_type.3`)
-      if (slotitemId === 15) {
-        gunCount += 1
-      }
+      return getStore(`const.$equips.${equipId}.api_type.3`)
     })
 
     let flag = false
-    if (gunCount > 0) {
-      flag = updateQuestRecord('destory_item', {slotitemId: 15}, gunCount)
-    }
+    forEach(Object.keys(typeCounts), slotitemId => {
+      flag = flag || updateQuestRecord('destory_item', {slotitemId: +slotitemId}, typeCounts[slotitemId])
+    })
 
     if (updateQuestRecord('destory_item', {times: 1}, 1)|| flag) {
       return {...state, records}
