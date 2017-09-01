@@ -304,7 +304,7 @@ for more details see views/redux/quests.es
 ###
 # Quarterly
 ###
-426:
+426: #海上通商航路の警戒を厳とせよ
   type: 4
   fuzzy: true
   "mission_success@警備任務":
@@ -328,10 +328,42 @@ for more details see views/redux/quests.es
     mission: ['強行偵察任務']
     init: 0
 
+663: #新型艤装の継続研究
+  type: 4
+  "destory_item":
+    description: "廃棄"
+    slotitemId: [3]
+    required: 10
+    init: 0
+
 822: #沖ノ島海域迎撃戦
   type: 4
   "battle_boss_win_rank_s":
     description: "勝利"
     maparea: [24]
     required: 2
+    init: 0
+
+854: #戦果拡張任務！「Z作戦」前段作戦
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@24":
+    description: "2-4"
+    maparea: [24]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@61":
+    description: "6-1"
+    maparea: [61]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@63":
+    description: "6-3"
+    maparea: [63]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@64":
+    description: "6-4"
+    maparea: [64]
+    required: 1
     init: 0
