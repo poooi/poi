@@ -304,6 +304,30 @@ for more details see views/redux/quests.es
 ###
 # Quarterly
 ###
+426:
+  type: 4
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "警備任務"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@対潜警戒任務":
+    description: "対潜警戒任務"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "海上護衛任務"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@強行偵察任務":
+    description: "強行偵察任務"
+    required: 1
+    mission: ['強行偵察任務']
+    init: 0
+
 822: #沖ノ島海域迎撃戦
   type: 4
   "battle_boss_win_rank_s":

@@ -185,26 +185,39 @@ function satisfyGoal(req, goal, options) {
 
 // `records` will be modified
 function updateQuestRecordFactory(records, activeQuests, questGoals) {
-  return (e, options, delta) => {
+  return (event, options, delta) => {
     let changed = false
     forEach(activeQuests, ({detail: quest}={}) => {
       if (typeof quest !== 'object') return
       const {api_no} = quest
       const record = records[api_no]
-      const subgoal = (questGoals[api_no] || {})[e]
-      if (!api_no || !record || !subgoal) return
-      if (!satisfyGoal('shipType', subgoal, options)) return
-      if (!satisfyGoal('mission', subgoal, options)) return
-      if (!satisfyGoal('maparea', subgoal, options)) return
-      if (!satisfyGoal('slotitemId', subgoal, options)) return
-      if (!satisfyGoal('times', subgoal, options)) return
-      const subrecord = Object.assign({}, record[e])
-      subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
-      records[api_no] = {
-        ...record,
-        [e]: subrecord,
+      const goal = questGoals[api_no] || {}
+      let match = []
+      if (!api_no || !record) {
+        return
       }
-      changed = true
+      if (goal.fuzzy) {
+        // 'fuzzy' will also appears in Object.keys(goal)
+        // use @ as separator because we could have battle_boss_win and battle_boss_win_s
+        match = Object.keys(goal).filter(x => x.startsWith(`${event}@`))
+      } else {
+        match = [event]
+      }
+      forEach(match, _event => {
+        const subgoal = goal[_event]
+        if (!satisfyGoal('shipType', subgoal, options)) return
+        if (!satisfyGoal('mission', subgoal, options)) return
+        if (!satisfyGoal('maparea', subgoal, options)) return
+        if (!satisfyGoal('slotitemId', subgoal, options)) return
+        if (!satisfyGoal('times', subgoal, options)) return
+        const subrecord = Object.assign({}, record[_event])
+        subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
+        records[api_no] = {
+          ...record,
+          [_event]: subrecord,
+        }
+        changed = true
+      })
     })
     return changed
   }
