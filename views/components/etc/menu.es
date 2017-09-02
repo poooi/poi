@@ -97,8 +97,9 @@ if (process.platform !== 'darwin') {
         },
         {
           label: __('Developer Tools'),
+          accelerator: 'Ctrl+Shift+I',
           click: (item, focusedWindow) => {
-            remote.getGlobal('mainWindow').openDevTools({detach: true})
+            focusedWindow.openDevTools({detach: true})
           },
         },
         {
@@ -302,7 +303,7 @@ if (process.platform !== 'darwin') {
         { type: 'separator' },
         {
           label: __ ('Developer Tools'),
-          accelerator: 'Alt+CmdOrCtrl+I',
+          accelerator: 'Cmd+Shift+I',
           click: (item, focusedWindow) => {
             focusedWindow.openDevTools({detach: true})
           },
@@ -410,7 +411,7 @@ for (let i = window.normalThemes.length - 1; i >=0; i--) {
   })
 }
 
-const appMenu = Menu.buildFromTemplate(template)
+export const appMenu = Menu.buildFromTemplate(template)
 if (process.platform === 'darwin') {
   Menu.setApplicationMenu(appMenu)
 } else {
