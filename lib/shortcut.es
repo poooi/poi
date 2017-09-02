@@ -30,7 +30,9 @@ export default {
     if (process.platform !== 'darwin') {
       registerBossKey()
     }
-    registerDevToolShortcut()
+    if (config.get('poi.shortcut.useGlobalDevToolShortCut', false)){
+      registerDevToolShortcut()
+    }
   },
   unregister: () => {
     globalShortcut.unregisterAll()

@@ -319,6 +319,9 @@ const postEnableProcess = (plugin) => {
     if (plugin.multiWindow) {
       plugin.handleClick = function() {
         const pluginWindow = windowManager.createWindow(windowOptions)
+        pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
+        pluginWindow.setAutoHideMenuBar(true)
+        pluginWindow.setMenuBarVisibility(false)
         pluginWindow.loadURL(plugin.windowURL)
         pluginWindow.show()
       }
@@ -327,6 +330,9 @@ const postEnableProcess = (plugin) => {
       plugin.handleClick = function() {
         if (plugin.pluginWindow == null) {
           plugin.pluginWindow = windowManager.createWindow(windowOptions)
+          plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
+          plugin.pluginWindow.setAutoHideMenuBar(true)
+          plugin.pluginWindow.setMenuBarVisibility(false)
           plugin.pluginWindow.on('close', function() {
             plugin.pluginWindow = null
           })
@@ -338,6 +344,9 @@ const postEnableProcess = (plugin) => {
       }
     } else {
       plugin.pluginWindow = windowManager.createWindow(windowOptions)
+      plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
+      plugin.pluginWindow.setAutoHideMenuBar(true)
+      plugin.pluginWindow.setMenuBarVisibility(false)
       plugin.pluginWindow.loadURL(plugin.windowURL)
       plugin.handleClick = function() {
         return plugin.pluginWindow.show()
