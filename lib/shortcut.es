@@ -20,18 +20,11 @@ const registerBossKey = () => {
     if (!registerShortcut(accelerator, 'Boss Key', windowManager.toggleAllWindowsVisibility))
       config.set('poi.shortcut.bosskey', '')
 }
-const registerDevToolShortcut = () => {
-  const accelerator = 'Ctrl+Shift+I'
-  registerShortcut(accelerator, 'Open Focused Window Dev Tools', windowManager.openFocusedWindowDevTools)
-}
 
 export default {
   register: () => {
     if (process.platform !== 'darwin') {
       registerBossKey()
-    }
-    if (config.get('poi.shortcut.useGlobalDevToolShortCut', false)){
-      registerDevToolShortcut()
     }
   },
   unregister: () => {
