@@ -120,7 +120,7 @@ declareAACI({
   modifier: 1.35,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
   equipsValid: validAll(
-    hasSome(isBuiltinHighAngleMount),
+    hasSome(isHighAngleMount),
     hasSome(isAAFD),
     hasSome(isAARadar),
   ),
