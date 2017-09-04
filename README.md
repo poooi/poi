@@ -43,7 +43,7 @@ brew update && brew cask install poi
 ![Preview 8](https://cloud.githubusercontent.com/assets/6753092/10863975/f70264ae-8018-11e5-8b71-2fb9a78819d5.png)
 ![Preview 9](https://cloud.githubusercontent.com/assets/6753092/10863976/f8458094-8018-11e5-9164-c9127fee9257.png)
 
-## Run
+## Run from dev version
 
 First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) and [npm](https://npmjs.org) >= __5.0.x__.
 
@@ -125,7 +125,13 @@ Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
 
 On plugin development, the [docs](https://github.com/poooi/poi/tree/master/docs) are available in Chinese and English.
 
-Please feel free to contact us via github issues, [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ), QQ group, weibo or anything else.
+Please feel free to contact us via:
+- github issues
+- [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ) for Chinese speaking user
+- [telegram group](https://t.me/joinchat/ENYTxwoB7sKsPQmgKEFzJw) for world wide user (English / français / 日本語)
+- QQ group
+- weibo
+- or anything else.
 
 
 ## Based on
@@ -138,7 +144,7 @@ Please feel free to contact us via github issues, [telegram group](https://teleg
 ## Contributors
 
 This project exists thanks to all the people who contribute.
-<a href="graphs/contributors"><img src="https://opencollective.com/poi/contributors.svg?width=890" /></a>
+<a href="//github.com/poooi/poi/graphs/contributors"><img src="https://opencollective.com/poi/contributors.svg?width=890" /></a>
 
 
 ## Backers
