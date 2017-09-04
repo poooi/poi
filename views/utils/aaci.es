@@ -21,6 +21,8 @@ const validAll = (...func) => x => func.every(f => f(x))
 
 const validNot = f => x => !f(x)
 
+const validAny = (...func) => x => func.some(f => f(x))
+
 // AA Radar
 // Surface Radar are excluded by checking whether
 // the equipment gives AA stat (api_tyku)
@@ -89,6 +91,8 @@ const isSatsukiK2 = shipIdIs(418)
 const isKinuK2 = shipIdIs(487)
 const isYuraK2 = shipIdIs(488)
 const isFumitsukiK2 = shipIdIs(548)
+const isUIT25 = shipIdIs(539)
+const isI504 = shipIdIs(530)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -362,6 +366,17 @@ declareAACI({
   shipValid: isFumitsukiK2,
   equipsValid: validAll(
     hasSome(isCDMG),
+  ),
+})
+
+declareAACI({
+  name: 'UIT-25 / 伊504',
+  id: 23,
+  fixed: 1,
+  modifier: 1.05,
+  shipValid: validAny(isUIT25, isI504),
+  equipsValid: validAll(
+    hasSome(validAll(isAAGun, validNot(isCDMG))),
   ),
 })
 

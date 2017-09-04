@@ -10,6 +10,10 @@ import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
+const __t = str => str.includes('/')
+  ? str.split(' / ').map(i18n.resources.__).map(__).join(' / ')
+  : __(i18n.resources.__(str))
+
 const AACISelectorFactory = memoize(shipId =>
   createSelector([
     shipDataSelectorFactory(shipId),
@@ -47,10 +51,13 @@ const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              {__('Type %s', id)}{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__(i18n.resources.__(AACITable[id].name))}` : ''}
+              {__('Type %s', id)}{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
             </span>
             <span>
               {__('Shot down: %s', AACITable[id].fixed)}
+            </span>
+            <span style={{ marginLeft: '2ex'}}>
+              {__('Modifier: %s', AACITable[id].modifier)}
             </span>
           </div>
         )
