@@ -85,7 +85,7 @@ Please feel free to contact us via:
 ## Contributors
 
 This project exists thanks to all the people who contribute.
-<a href="//github.com/poooi/poi/graphs/contributors"><img src="https://opencollective.com/poi/contributors.svg?width=890" /></a>
+<a href="//github.com/poooi/poi/graphs/contributors"><img src="https://poooi.github.io/contributors/graph.svg" /></a>
 
 
 ## Backers
