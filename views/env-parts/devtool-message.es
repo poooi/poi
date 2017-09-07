@@ -18,9 +18,10 @@ if(isMain) {
         key => `${key}@${FCD[key]}`
       ).join(', ')
 
+      // eslint-disable-next-line no-console
       console.log(
-        `%cThis is poi@${POI_VERSION} on ${process.platform} ${process.arch} with Electron@${process.versions.electron}, 
-        PLUGINS: ${pluginMessage}, 
+        `%cThis is poi@${POI_VERSION} on ${process.platform} ${process.arch} with Electron@${process.versions.electron},
+        PLUGINS: ${pluginMessage},
         FCD: ${fcdMessage}`,
         'font-size: 120%'
       )

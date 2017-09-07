@@ -25,6 +25,7 @@ const openItemAsync = (dir, source=null) => {
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
+
 config.on('config.set', (path, value) => {
   switch (path) {
   case 'poi.content.muted':
@@ -137,11 +138,11 @@ const PoiControl = connect((state, props) => ({
 
     toggleModal(
       __("Confirm Refreshing"),
-        <div>
+      <div>
         {__("Are you sure to refresh the game?")}
         <ul>
-        <li>{__('"Refresh page" is the same as pressing F5.')}</li>
-        <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
+          <li>{__('"Refresh page" is the same as pressing F5.')}</li>
+          <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
         </ul>
         {tipTexts.text1}<b>{tipTexts.b1}</b>{tipTexts.text2}
       </div>,
@@ -157,6 +158,60 @@ const PoiControl = connect((state, props) => ({
   handleSetExtend = () => {
     this.setState({extend: !this.state.extend})
   }
+  handleTouchbar = (props) => {
+    //load Touchbar-related functions only when touchbar is triggered
+    const {refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
+    //workaround for the input event not defined
+    switch (props) {
+    case 'refresh':
+      toggleModal(
+        __("Confirm Refreshing"),
+        <div>
+          {__("Are you sure to refresh the game?")}
+          <ul>
+            <li>{__('"Refresh page" is the same as pressing F5.')}</li>
+            <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
+          </ul>
+        </div>,
+        [
+          { name: __("Refresh page"),
+            func: gameRefreshPage,
+            style: "warning" },
+          { name: __("Reload Flash"),
+            func: gameReloadFlash,
+            style: "danger" },
+        ],
+        () => {touchBarReset()}
+      )
+      refreshconfirm(__("Refresh page"),__("Reload Flash"))
+      break
+    case 'adjust':
+      window.dispatchEvent(new Event('resize'))
+      break
+    case 'unlock':
+      this.handleUnlockWebview()
+      break
+    case 'screenshotdir':
+      this.handleOpenScreenshotFolder()
+      break
+    case 'cachedir':
+      this.handleOpenCacheFolder()
+      break
+    case 'volume':
+      this.handleSetMuted() 
+      break
+    case 'screenshot':
+      this.handleCapturePage()
+      break
+    case 'gameReloadFlash':
+      gameReloadFlash()
+      break
+    case 'gameRefreshPage':
+      gameRefreshPage()
+      break
+    default:
+    }
+  }
   sendEvent = (isExtend) => {
     const event = new CustomEvent('alert.change', {
       bubbles: true,
@@ -167,7 +222,19 @@ const PoiControl = connect((state, props) => ({
     })
     window.dispatchEvent(event)
   }
+  componentDidMount = () => {
+    //Stateless touchbar input receiver
+    if (process.platform === 'darwin') {
+      require('electron').ipcRenderer.on('touchbar', (event, message) => {
+        this.handleTouchbar(message)
+      })
+    }
+  }
   render() {
+    if (process.platform === 'darwin') {
+      const {touchBarReInit} = remote.require('./lib/touchbar')
+      touchBarReInit()
+    }
     return (
       <div className='poi-control-container'>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__('Developer Tools')}</Tooltip>}>
@@ -191,9 +258,9 @@ const PoiControl = connect((state, props) => ({
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={
-                <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
-                  {__("Refresh game")}
-                </Tooltip>}>
+              <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
+                {__("Refresh game")}
+              </Tooltip>}>
               <Button
                 onClick={this.handleRefreshGameDialog}
                 onContextMenu={gameReloadFlash}

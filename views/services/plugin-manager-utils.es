@@ -1,16 +1,18 @@
 import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { createReadStream, readJson, accessSync, readJsonSync, realpathSync, lstat, unlink, rmdir, lstatSync } from 'fs-extra'
+import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, rmdir, lstatSync } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
 import module from 'module'
-import npm from 'npm'
 import { promisify } from 'bluebird'
 import glob from 'glob'
 import crypto from 'crypto'
 import { setAllowedPath } from 'lib/module-path'
+import child_process from 'child_process'
+import path from 'path'
+import i18n from 'i18n-2'
 
 import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
@@ -20,8 +22,14 @@ const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const allowedPath = [ ROOT, APPDATA_PATH ]
 const pathAdded = new Map()
+const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 require('module').globalPaths.push(MODULE_PATH)
+
+// overwrites i18n-2's translation file cache, to be removed if we change to other lib
+i18n.localeCache = new Proxy({}, {
+  get: () => null,
+})
 
 // This reducer clears the substore no matter what is given.
 const clearReducer = undefined
@@ -74,11 +82,34 @@ export const findInstalledTarball = async (pluginRoot, tarballPath) => {
   return shasumMatchDatas[0].name
 }
 
-export function installPackage(packageName, version) {
+const runScriptAsync = (scriptPath, args, options) =>
+  new Promise ((resolve) => {
+    const proc = child_process.fork(scriptPath, args, options)
+    proc.on('exit', () => resolve())
+  })
+
+export async function installPackage (packageName, version, npmConfig) {
+  if (!packageName) {
+    return
+  }
   if (version) {
     packageName = `${packageName}@${version}`
   }
-  return promisify(npm.commands.install)([packageName])
+  let args = ['install', '--registry', npmConfig.registry]
+  if (npmConfig.http_proxy) {
+    args = [...args, '--proxy', npmConfig.http_proxy, '--no-progress', '--global-style', '--no-package-lock']
+  }
+  args = [...args, packageName]
+  await runScriptAsync(NPM_EXEC_PATH, args, {
+    cwd: npmConfig.prefix,
+  })
+}
+
+export async function removePackage (target, npmConfig) {
+  const args = ['uninstall', '--no-progress', '--no-save', target]
+  await runScriptAsync(NPM_EXEC_PATH, args, {
+    cwd: npmConfig.prefix,
+  })
 }
 
 
@@ -101,7 +132,7 @@ export function updateI18n(plugin) {
   }
   if (i18nFile != null) {
     const namespace = plugin.id
-    window.i18n[namespace] = new (require('i18n-2'))({
+    window.i18n[namespace] = new i18n({
       locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
       defaultLocale: 'en-US',
       directory: i18nFile,
@@ -117,16 +148,16 @@ export function updateI18n(plugin) {
   return plugin
 }
 
-export function readPlugin(pluginPath) {
+export async function readPlugin(pluginPath) {
   let pluginData, packageData, plugin
   try {
-    pluginData = readJsonSync(join(ROOT, 'assets', 'data', 'plugin.json'))
+    pluginData = await readJson(join(ROOT, 'assets', 'data', 'plugin.json'))
   } catch (error) {
     pluginData = {}
     utils.error(error)
   }
   try {
-    packageData = readJsonSync(join(pluginPath, 'package.json'))
+    packageData = await readJson(join(pluginPath, 'package.json'))
   } catch (error) {
     packageData = {}
     utils.error(error)
@@ -199,7 +230,7 @@ export function readPlugin(pluginPath) {
   return plugin
 }
 
-export function enablePlugin(plugin, reread=true) {
+export async function enablePlugin(plugin, reread=true) {
   if (!pathAdded.get(plugin.packageName) && !plugin.windowURL) {
     allowedPath.push(plugin.pluginPath)
     setAllowedPath(allowedPath)
@@ -210,8 +241,8 @@ export function enablePlugin(plugin, reread=true) {
   let pluginMain
   try {
     pluginMain = {
-      ...require(plugin.pluginPath),
-      ...reread ? readPlugin(plugin.pluginPath) : {},
+      ...await import(plugin.pluginPath),
+      ...reread ? await readPlugin(plugin.pluginPath) : {},
     }
     pluginMain.enabled = true
     pluginMain.isRead = true
@@ -236,7 +267,7 @@ export function enablePlugin(plugin, reread=true) {
   return plugin
 }
 
-export function disablePlugin(plugin) {
+export async function disablePlugin(plugin) {
   plugin.enabled = false
   try {
     plugin = unloadPlugin(plugin)
@@ -280,9 +311,17 @@ const postEnableProcess = (plugin) => {
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
     })
+    if (['darwin'].includes(process.platform) && config.get('poi.vibrant', 0) === 1) {
+      Object.assign(windowOptions, {
+        vibrancy: 'ultra-dark',
+      })
+    }
     if (plugin.multiWindow) {
       plugin.handleClick = function() {
         const pluginWindow = windowManager.createWindow(windowOptions)
+        pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
+        pluginWindow.setAutoHideMenuBar(true)
+        pluginWindow.setMenuBarVisibility(false)
         pluginWindow.loadURL(plugin.windowURL)
         pluginWindow.show()
       }
@@ -291,6 +330,9 @@ const postEnableProcess = (plugin) => {
       plugin.handleClick = function() {
         if (plugin.pluginWindow == null) {
           plugin.pluginWindow = windowManager.createWindow(windowOptions)
+          plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
+          plugin.pluginWindow.setAutoHideMenuBar(true)
+          plugin.pluginWindow.setMenuBarVisibility(false)
           plugin.pluginWindow.on('close', function() {
             plugin.pluginWindow = null
           })
@@ -302,6 +344,9 @@ const postEnableProcess = (plugin) => {
       }
     } else {
       plugin.pluginWindow = windowManager.createWindow(windowOptions)
+      plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
+      plugin.pluginWindow.setAutoHideMenuBar(true)
+      plugin.pluginWindow.setMenuBarVisibility(false)
       plugin.pluginWindow.loadURL(plugin.windowURL)
       plugin.handleClick = function() {
         return plugin.pluginWindow.show()

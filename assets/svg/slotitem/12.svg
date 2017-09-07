@@ -1,49 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
-<style type="text/css">
-	.st0{display:none;}
-	.st1{display:inline;}
-	.st2{fill:#FFD02C;}
-	.st3{display:inline;fill:none;}
-	.st4{display:inline;fill:none;stroke:#FFD02C;stroke-width:2;stroke-miterlimit:10;}
-	.st5{fill:#5BBF6A;}
-</style>
-<g id="Layer_1" class="st0">
-	<g id="XMLID_1_" class="st1">
-		<g id="XMLID_81_">
-			<path id="XMLID_82_" class="st2" d="M512,2c68.9,0,135.6,13.5,198.5,40.1c60.7,25.7,115.3,62.5,162.1,109.3
-				s83.6,101.4,109.3,162.1c26.6,62.9,40.1,129.7,40.1,198.5s-13.5,135.6-40.1,198.5c-25.7,60.7-62.5,115.3-109.3,162.1
-				s-101.4,83.6-162.1,109.3c-62.9,26.6-129.7,40.1-198.5,40.1s-135.6-13.5-198.5-40.1c-60.7-25.7-115.3-62.5-162.1-109.3
-				S67.8,771.2,42.1,710.5C15.5,647.6,2,580.9,2,512s13.5-135.6,40.1-198.5c25.7-60.7,62.5-115.3,109.3-162.1S252.8,67.8,313.5,42.1
-				C376.4,15.5,443.1,2,512,2 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512S794.8,0,512,0L512,0z"/>
-		</g>
-	</g>
-	<circle id="XMLID_5_" class="st3" cx="32" cy="32" r="32"/>
-	<rect id="XMLID_22_" x="160.5" y="160" class="st4" width="704" height="704"/>
-	<circle id="XMLID_24_" class="st4" cx="512.5" cy="512" r="352"/>
-	<rect id="XMLID_33_" x="288" y="288" class="st4" width="448" height="449.6"/>
-	<circle id="XMLID_34_" class="st4" cx="512" cy="513.6" r="224"/>
-	<rect id="XMLID_35_" x="352" y="352" class="st4" width="318.3" height="318.3"/>
-	<circle id="XMLID_36_" class="st4" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<g id="Layer_3">
-	<path id="XMLID_37_" class="st5" d="M463.6,25.1C435.6,50,434,91.9,460,118.6c26,26.8,69.7,28.3,97.7,3.4
-		c27.9-24.9,29.5-66.8,3.5-93.5C535.2,1.7,491.5,0.2,463.6,25.1z"/>
-	<path id="XMLID_39_" class="st5" d="M1005.2,774.8c-3.3-3.4-7.5-5.8-12.5-7.3l1.9-1.7L859.6,627c7.1,22.9-36.6,84.3-103.7,144.2
-		c-72.7,64.8-145.5,103.2-162.5,85.6l-1.5,1.4l138.7,142.7l1.9-1.7c1.2,4.9,3.4,9.1,6.7,12.5c25.5,26.3,105.8-5.5,179.2-70.9
-		S1030.7,801,1005.2,774.8z"/>
-	<path id="XMLID_56_" class="st5" d="M611.3,365.6L364.7,111.9C245.6-10.7,15.9,8.4,15.9,8.4s-36.4,217.9,82.8,340.5l246.6,253.7
-		c17,17.5,90.4-21.3,163.8-86.8C582.6,450.4,628.3,383.1,611.3,365.6z M200.4,199.2c-18.3,16.3-46.9,15.3-63.9-2.2
-		c-17-17.5-16-44.9,2.3-61.2s46.9-15.3,63.9,2.2C219.7,155.5,218.7,182.9,200.4,199.2z M290.6,355.5c-18.3,16.3-46.9,15.3-63.9-2.2
-		c-17-17.5-16-44.9,2.3-61.2c18.3-16.3,46.9-15.3,63.9,2.2C309.9,311.8,308.8,339.2,290.6,355.5z M449.3,391.7
-		c-18.3,16.3-46.9,15.3-63.9-2.2c-17-17.5-16-44.9,2.3-61.2c18.3-16.3,46.9-15.3,63.9,2.2C468.6,347.9,467.6,375.4,449.3,391.7z"/>
-	<path id="XMLID_68_" class="st5" d="M828.1,588.6L647.9,403.3c7,22.9-37.2,84.9-105,145.3c-73.5,65.5-146.8,104.3-163.8,86.8
-		L562,825.6c17,17.5,90.4-21.3,163.8-86.8C799.3,673.4,845.1,606.1,828.1,588.6z"/>
-	<path id="XMLID_69_" class="st5" d="M236.9,743.5c-27.9,24.9-29.5,66.8-3.5,93.5c26,26.8,69.7,28.3,97.7,3.4
-		c27.9-24.9,29.5-66.8,3.5-93.5C308.6,720.1,264.8,718.6,236.9,743.5z"/>
-	<path id="XMLID_38_" class="st5" d="M666,192.9c-27.9,24.9-29.5,66.8-3.5,93.5c26,26.8,69.7,28.3,97.7,3.4
-		c27.9-24.9,29.5-66.8,3.5-93.5C737.6,169.5,693.9,168,666,192.9z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>12</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-5.2%" y="-3.1%" width="110.4%" height="112.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="91.4941406%" id="linearGradient-2">
+            <stop stop-color="#61AA6E" offset="0%"></stop>
+            <stop stop-color="#74CC83" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="72.8306362%" y1="28.2561384%" x2="28.6802455%" y2="72.0326451%" id="linearGradient-3">
+            <stop stop-color="#62AB6E" offset="0%"></stop>
+            <stop stop-color="#74CC83" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12">
+            <g id="Group" filter="url(#filter-1)" transform="translate(80.000000, 80.000000)">
+                <path d="M0,0 L140,0 L480,340 L480,400 L400,480 L340,480 L0,140 L0,0 Z M80,140 L80,180 L120,180 L120,140 L80,140 Z M200,140 L200,180 L240,180 L240,140 L200,140 Z M200,260 L200,300 L240,300 L240,260 L200,260 Z" id="Combined-Shape" fill="url(#linearGradient-2)"></path>
+                <rect id="Rectangle" fill="#74CC83" x="40" y="280" width="60" height="60"></rect>
+                <rect id="Rectangle-Copy" fill="#74CC83" x="260" y="20" width="60" height="60"></rect>
+                <rect id="Rectangle-Copy-2" fill="#74CC83" x="340" y="100" width="60" height="60"></rect>
+                <polygon id="Path-53" fill="url(#linearGradient-3)" points="0 0 0 140 140 0"></polygon>
+            </g>
+        </g>
+    </g>
 </svg>

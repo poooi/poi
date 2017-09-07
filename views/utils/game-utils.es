@@ -98,9 +98,9 @@ export function getShipLabelStatus(ship, $ship, inRepair, escaped) {
   } else if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1) {
     // supply
     return 2
-  } else if ([1, 2, 3, 4, 5, 6].includes(ship.api_sally_area)) {
+  } else if (ship.api_sally_area > 0) {
     // special: locked phase
-    // returns 2 for locked phase 1, 3 for phase 2, etc
+    // returns 3 for locked phase 1, 4 for phase 2, etc
     return ship.api_sally_area + 2
   }
   return -1
@@ -124,7 +124,7 @@ export function equipIsAircraft(equipIconId) {
     between(equipIconId, 6, 10) ||
     between(equipIconId, 21, 22) ||
     between(equipIconId, 37, 40) ||
-    [33, 43, 44].includes(equipIconId)
+    [33, 43, 44, 45].includes(equipIconId)
   )
 }
 
@@ -142,7 +142,7 @@ export function getTyku(equipsData, landbaseStatus=0) {
         continue
       }
       const [_equip, $equip, onslot] = equipsData[i][j]
-      if (onslot < 1) {
+      if (onslot < 1 || onslot == undefined) {
         continue
       }
       let tempTyku = 0.0
@@ -161,14 +161,14 @@ export function getTyku(equipsData, landbaseStatus=0) {
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([11, 45].includes($equip.api_type[2])) {
         // 水上機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
+        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([48].includes($equip.api_type[2])) {
         // 局戦 · 陸戦
         let landbaseBonus = 0
@@ -178,22 +178,34 @@ export function getTyku(equipsData, landbaseStatus=0) {
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv + 1] / 10))
-      } else if ([10, 41].includes($equip.api_type[2]) && landbaseStatus == 2) {
+        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
+      } else if ([10, 41].includes($equip.api_type[2])) {
         // 水偵・飛行艇
-        if ($equip.api_saku >= 9) {
-          reconBonus = Math.max(reconBonus, 1.16)
-        } else if ($equip.api_saku == 8) {
-          reconBonus = Math.max(reconBonus, 1.13)
-        } else {
-          reconBonus = Math.max(reconBonus, 1.1)
+        if (landbaseStatus == 2) {
+          if ($equip.api_saku >= 9) {
+            reconBonus = Math.max(reconBonus, 1.16)
+          } else if ($equip.api_saku == 8) {
+            reconBonus = Math.max(reconBonus, 1.13)
+          } else {
+            reconBonus = Math.max(reconBonus, 1.1)
+          }
+        } else if (landbaseStatus == 1) {
+          tempTyku += Math.sqrt(onslot) * $equip.api_tyku
+          minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
+          maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
         }
       } else if ([9].includes($equip.api_type[2]) && landbaseStatus == 2) {
         // 艦偵
-        if ($equip.api_saku >= 9) {
-          reconBonus = Math.max(reconBonus, 1.3)
-        } else {
-          reconBonus = Math.max(reconBonus, 1.2)
+        if (landbaseStatus == 2) {
+          if ($equip.api_saku >= 9) {
+            reconBonus = Math.max(reconBonus, 1.3)
+          } else {
+            reconBonus = Math.max(reconBonus, 1.2)
+          }
+        } else if (landbaseStatus == 1) {
+          tempTyku += Math.sqrt(onslot) * $equip.api_tyku
+          minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
+          maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
         }
       }
     }

@@ -34,6 +34,7 @@ const doUpdate = async () => {
 
 if (process.platform === 'win32') {
   updater.on('update-available', () => {
+    // eslint-disable-next-line no-console
     console.log('Update from poi.io available')
   })
 
@@ -76,6 +77,7 @@ export const checkUpdate = async () => {
   if ((response || {}).statusCode === 200){
     const version = betaChannel && semver.gt(body.betaVersion, body.version) ? body.betaVersion || 'v0.0.0' : body.version
     const channel = version.includes('beta') ? '-beta' : ''
+    // eslint-disable-next-line no-console
     console.log(`Remote version: ${version}. Current version: ${POI_VERSION}`)
     const knownVersion = config.get('poi.update.knownVersion', POI_VERSION)
 

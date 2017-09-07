@@ -1,6 +1,6 @@
 import CSON from 'cson'
 import { join } from 'path-extra'
-import { map, sortBy, mapValues, forEach, values, fromPairs } from 'lodash'
+import { map, sortBy, mapValues, forEach, values, fromPairs, countBy } from 'lodash'
 
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -75,6 +75,17 @@ function isDifferentMonth(time1, time2) {
   return date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
 }
 
+const getQuarter = (time) => {
+  const month = time.getUTCMonth()
+  return month - month % 3
+}
+
+const isDifferentQuarter = (time1, time2) => {
+  const date1 = new Date(time1 + 14400000)
+  const date2 = new Date(time2 + 14400000)
+  return getQuarter(date1) !== getQuarter(date2) || date1.getUTCFullYear() != date2.getUTCFullYear()
+}
+
 function newQuestRecord(id, questGoals) {
   const questGoal = questGoals[id]
   if (!questGoal)
@@ -125,14 +136,21 @@ function resetQuestRecordFactory(types, resetInterval) {
 const resetQuestRecordDaily = resetQuestRecordFactory([1, 8, 9], 1)
 const resetQuestRecordWeekly = resetQuestRecordFactory([2], 2)
 const resetQuestRecordMonthly = resetQuestRecordFactory([3], 3)
+const resetQuestRecordQuarterly = resetQuestRecordFactory([4], 4)
 function outdateRecords(questGoals, records, then, now) {
-  if (!isDifferentDay(now, then))
+  if (!isDifferentDay(now, then)) {
     return records
+  }
   records = mapValues(records, resetQuestRecordDaily(questGoals))
-  if (isDifferentWeek(now, then))
+  if (isDifferentWeek(now, then)) {
     records = mapValues(records, resetQuestRecordWeekly(questGoals))
-  if (isDifferentMonth(now, then))
+  }
+  if (isDifferentMonth(now, then)) {
     records = mapValues(records, resetQuestRecordMonthly(questGoals))
+  }
+  if (isDifferentQuarter(now, then)) {
+    records = mapValues(records, resetQuestRecordQuarterly(questGoals))
+  }
   return filterObjectValue(records)
 }
 
@@ -167,26 +185,40 @@ function satisfyGoal(req, goal, options) {
 
 // `records` will be modified
 function updateQuestRecordFactory(records, activeQuests, questGoals) {
-  return (e, options, delta) => {
+  return (event, options, delta) => {
     let changed = false
     forEach(activeQuests, ({detail: quest}={}) => {
       if (typeof quest !== 'object') return
       const {api_no} = quest
       const record = records[api_no]
-      const subgoal = (questGoals[api_no] || {})[e]
-      if (!api_no || !record || !subgoal) return
-      if (!satisfyGoal('shipType', subgoal, options)) return
-      if (!satisfyGoal('mission', subgoal, options)) return
-      if (!satisfyGoal('maparea', subgoal, options)) return
-      if (!satisfyGoal('slotitemId', subgoal, options)) return
-      if (!satisfyGoal('times', subgoal, options)) return
-      const subrecord = Object.assign(record[e])
-      subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
-      records[api_no] = {
-        ...record,
-        [e]: subrecord,
+      const goal = questGoals[api_no] || {}
+      let match = []
+      if (!api_no || !record) {
+        return
       }
-      changed = true
+      if (goal.fuzzy) {
+        // 'fuzzy' will also appears in Object.keys(goal)
+        // use @ as separator because we could have battle_boss_win and battle_boss_win_s
+        match = Object.keys(goal).filter(x => x.startsWith(`${event}@`))
+      }
+      forEach([...match, event], _event => {
+        const subgoal = goal[_event]
+        if (!subgoal) {
+          return
+        }
+        if (!satisfyGoal('shipType', subgoal, options)) return
+        if (!satisfyGoal('mission', subgoal, options)) return
+        if (!satisfyGoal('maparea', subgoal, options)) return
+        if (!satisfyGoal('slotitemId', subgoal, options)) return
+        if (!satisfyGoal('times', subgoal, options)) return
+        const subrecord = Object.assign({}, record[_event])
+        subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
+        records[api_no] = {
+          ...record,
+          [_event]: subrecord,
+        }
+        changed = true
+      })
     })
     return changed
   }
@@ -308,19 +340,15 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     const slotitems = postBody.api_slotitem_ids || ''
     const ids = slotitems.split(',')
     // now it only supports gun quest, slotitemId = $ietm.api_type[3]
-    let gunCount = 0
-    ids.forEach(id =>{
+    const typeCounts = countBy(ids, id => {
       const equipId = getStore(`info.equips.${id}.api_slotitem_id`)
-      const slotitemId = getStore(`const.$equips.${equipId}.api_type.3`)
-      if (slotitemId === 15) {
-        gunCount += 1
-      }
+      return getStore(`const.$equips.${equipId}.api_type.3`)
     })
 
     let flag = false
-    if (gunCount > 0) {
-      flag = updateQuestRecord('destory_item', {slotitemId: 15}, gunCount)
-    }
+    forEach(Object.keys(typeCounts), slotitemId => {
+      flag = flag || updateQuestRecord('destory_item', {slotitemId: +slotitemId}, typeCounts[slotitemId])
+    })
 
     if (updateQuestRecord('destory_item', {times: 1}, 1)|| flag) {
       return {...state, records}
@@ -485,7 +513,7 @@ export function reducer(state=initState, action) {
     let {activeQuests, records, activeNum} = state
     activeNum--
     if (api_quest_id in records) {
-      records = Object.assign(records)
+      records = Object.assign({}, records)
       delete records[api_quest_id]
     }
     // activeQuests
@@ -535,9 +563,11 @@ function dailyRefresh(now) {
 
 export function schedualDailyRefresh(dispatch) {
   const now = Date.now()
+  // eslint-disable-next-line no-console
   console.log("Scheduling daily refresh at %d (now %d)", QUEST_REFRESH_ZERO, Date.now())
   Scheduler.schedule((time) => {
     // TODO: Debug
+    // eslint-disable-next-line no-console
     console.log("Daily refresh at %d scheduled at %d (now %d)", time, now, Date.now())
     dispatch(dailyRefresh(time))
   }, {

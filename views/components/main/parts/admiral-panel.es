@@ -103,8 +103,14 @@ const getNextQuest = () => {
 }
 
 const getNextSenka = () => {
+  const now = moment.utc()
+  const nowDate = now.date()
+  const nowHour = now.hour()
   const currentMonth = moment.tz('Asia/Tokyo').month()
   const endOfMonth = moment.utc().month(currentMonth).endOf('month')
+  if (endOfMonth.date() === nowDate && nowHour >= 13 && nowHour < 15) {
+    return endOfMonth.subtract(11, 'hours').add(1, 'months')
+  }
   return endOfMonth.subtract(11, 'hours')
 }
 
@@ -249,24 +255,24 @@ export default connect(
   const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-warning' : ''
   return (
     <Panel bsStyle="default" className="teitoku-panel">
-    {
-      level >= 0 ?
-      <div>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
-          <span>{`Lv. ${level}　`}
-            <span className="nickname">{nickname}</span>
-            <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
-          </span>
-        </OverlayTrigger>
-        <span>{__('Ships: ')}</span>
-        <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
-        <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
-        <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
-        <CountDownControl/>
-      </div>
-    :
-      <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
-    }
+      {
+        level >= 0 ?
+          <div>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
+              <span>{`Lv. ${level}　`}
+                <span className="nickname">{nickname}</span>
+                <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
+              </span>
+            </OverlayTrigger>
+            <span>{__('Ships: ')}</span>
+            <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
+            <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
+            <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
+            <CountDownControl/>
+          </div>
+          :
+          <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
+      }
     </Panel>
   )
 })

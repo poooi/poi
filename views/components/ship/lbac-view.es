@@ -51,8 +51,9 @@ export const SquardRow = connect((state, { squardId }) =>
               <span className='ship-lv'>
                 {__('Range')}: {api_distance}
               </span>
-              <span className="ship-speed">
-                {__('Fighter Power')}: {tyku.max}
+              <br />
+              <span className="ship-lv">
+                {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
               </span>
             </div>
           </div>
@@ -67,7 +68,7 @@ export const SquardRow = connect((state, { squardId }) =>
             </div>
             <span className="hp-progress top-space">
               <ProgressBar bsStyle={getHpStyle(hpPercentage)}
-                           now={hpPercentage} />
+                now={hpPercentage} />
             </span>
           </div>
         </div>

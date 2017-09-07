@@ -6,23 +6,22 @@ import path from 'path'
 import moment from 'moment'
 import request from 'request'
 import CSON from 'cson'
-Promise.promisifyAll(fs)
 Promise.promisifyAll(path)
 Promise.promisifyAll(request)
 const DEST = '../assets/data/fcd'
 
 async function writeJSON(fname, data) {
   const JSON_OPTIONS = { spaces: '' }
-  await fs.writeJSONAsync(path.join(DEST, fname), data, JSON_OPTIONS)
+  await fs.outputJSON(path.join(DEST, fname), data, JSON_OPTIONS)
 }
 
 async function CSON2JSON(name) {
-  const data = await fs.readFileAsync(`${name}.cson`)
+  const data = await fs.readFile(`${name}.cson`)
   await writeJSON(`${name}.json`, CSON.parse(data))
 }
 
 async function build_map() {
-  const data = await fs.readJSONAsync('map.json')
+  const data = await fs.readJSON('map.json')
   const stat = fs.statSync('map.json')
   const date = moment(stat.mtime).format('YYYY/MM/DD')
   const meta = {
@@ -37,7 +36,7 @@ async function build_meta() {
   const meta = await Promise.all(
     flist.map(async (fname) => {
       const fpath = path.join(DEST, fname)
-      const data = JSON.parse(await fs.readFileAsync(fpath))
+      const data = JSON.parse(await fs.readFile(fpath))
       return data.meta
     })
   )

@@ -18,6 +18,7 @@ export const remoteStringify = JSON.stringify
 
 export function log(str) {
   str = stringify(str)
+  // eslint-disable-next-line no-console
   return console.log("[INFO] " + str)
 }
 

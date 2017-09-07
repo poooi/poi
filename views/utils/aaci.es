@@ -21,6 +21,8 @@ const validAll = (...func) => x => func.every(f => f(x))
 
 const validNot = f => x => !f(x)
 
+const validAny = (...func) => x => func.some(f => f(x))
+
 // AA Radar
 // Surface Radar are excluded by checking whether
 // the equipment gives AA stat (api_tyku)
@@ -87,6 +89,10 @@ const isIsuzuK2 = shipIdIs(141)
 const isKasumiK2B = shipIdIs(470)
 const isSatsukiK2 = shipIdIs(418)
 const isKinuK2 = shipIdIs(487)
+const isYuraK2 = shipIdIs(488)
+const isFumitsukiK2 = shipIdIs(548)
+const isUIT25 = shipIdIs(539)
+const isI504 = shipIdIs(530)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -106,9 +112,9 @@ declareAACI({
   fixed: 4,
   modifier: 1.5,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(hasAtLeast(
-    isBuiltinHighAngleMount, 2),
-    hasSome(isAARadar)
+  equipsValid: validAll(
+    hasAtLeast(isBuiltinHighAngleMount, 2),
+    hasSome(isAARadar),
   ),
 })
 
@@ -118,9 +124,9 @@ declareAACI({
   modifier: 1.35,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
   equipsValid: validAll(
-    hasSome(isBuiltinHighAngleMount),
+    hasSome(isHighAngleMount),
     hasSome(isAAFD),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -131,7 +137,7 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
   equipsValid: validAll(
     hasSome(isBuiltinHighAngleMount),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -142,7 +148,7 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isAAFD)
+    hasSome(isAAFD),
   ),
 })
 
@@ -154,8 +160,8 @@ declareAACI({
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
   equipsValid: validAll(
     hasSome(isCDMG),
-    hasSome(isAAGun, 2),
-    hasSome(isAAFD)
+    hasAtLeast(isAAGun, 2),
+    hasSome(isAARadar),
   ),
 })
 
@@ -170,7 +176,7 @@ declareAACI({
     hasSome(isLargeCaliberMainGun),
     hasSome(isType3Shell),
     hasSome(isAAFD),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -197,7 +203,7 @@ declareAACI({
   shipValid: isAkizukiClass,
   equipsValid: validAll(
     hasAtLeast(isHighAngleMount, 2),
-    hasSome(isRadar)
+    hasSome(isRadar),
   ),
 })
 
@@ -209,7 +215,7 @@ declareAACI({
   shipValid: isAkizukiClass,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isRadar)
+    hasSome(isRadar),
   ),
 })
 
@@ -234,7 +240,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isHighAngleMount),
     hasSome(isCDMG),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -246,7 +252,7 @@ declareAACI({
   shipValid: isMayaK2,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isCDMG)
+    hasSome(isCDMG),
   ),
 })
 
@@ -260,7 +266,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isHighAngleMount),
     hasSome(isAAGun),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -272,7 +278,7 @@ declareAACI({
   shipValid: isIsuzuK2,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isAAGun)
+    hasSome(isAAGun),
   ),
 })
 
@@ -286,7 +292,7 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isHighAngleMount),
     hasSome(isAAGun),
-    hasSome(isAARadar)
+    hasSome(isAARadar),
   ),
 })
 
@@ -298,7 +304,7 @@ declareAACI({
   shipValid: isKasumiK2B,
   equipsValid: validAll(
     hasSome(isHighAngleMount),
-    hasSome(isAAGun)
+    hasSome(isAAGun),
   ),
 })
 
@@ -310,7 +316,7 @@ declareAACI({
   modifier: 1.2,
   shipValid: isSatsukiK2,
   equipsValid: validAll(
-    hasSome(isCDMG)
+    hasSome(isCDMG),
   ),
 })
 
@@ -325,7 +331,7 @@ declareAACI({
   equipsValid: validAll(
     validNot(hasSome(isBuiltinHighAngleMount)),
     hasSome(isHighAngleMount),
-    hasSome(isCDMG)
+    hasSome(isCDMG),
   ),
 })
 
@@ -336,7 +342,41 @@ declareAACI({
   modifier: 1.25,
   shipValid: isKinuK2,
   equipsValid: validAll(
-    hasSome(isCDMG)
+    hasSome(isCDMG),
+  ),
+})
+
+declareAACI({
+  name: '由良改二',
+  id: 21,
+  fixed: 5,
+  modifier: 1.45,
+  shipValid: isYuraK2,
+  equipsValid: validAll(
+    hasSome(isHighAngleMount),
+    hasSome(isAARadar),
+  ),
+})
+
+declareAACI({
+  name: '文月改二',
+  id: 22,
+  fixed: 2,
+  modifier: 1.25,
+  shipValid: isFumitsukiK2,
+  equipsValid: validAll(
+    hasSome(isCDMG),
+  ),
+})
+
+declareAACI({
+  name: 'UIT-25 / 伊504',
+  id: 23,
+  fixed: 1,
+  modifier: 1.05,
+  shipValid: validAny(isUIT25, isI504),
+  equipsValid: validAll(
+    hasSome(validAll(isAAGun, validNot(isCDMG))),
   ),
 })
 
@@ -360,27 +400,27 @@ const sortAaciIds = (aaciIds,
 
 // Order by AACI id desc
 export const sortFleetPossibleAaciList = triggeredShipAaciIds =>
-   sortAaciIds(triggeredShipAaciIds, (a, b) => b.id - a.id)
+  sortAaciIds(triggeredShipAaciIds, (a, b) => b.id - a.id)
 
 // return a list of AACIs that meet the requirement of ship and equipmenmt
 // ship: ship
 // equips: [[equip, onslot] for equip on ship]
 export const getShipAvailableAACIs = (ship, equips) =>
   Object.keys(AACITable)
-  .filter((key) => {
-    const type = AACITable[key]
-    return type.shipValid(ship) && type.equipsValid(equips)
-  })
-  .map(key => Number(key))
+    .filter((key) => {
+      const type = AACITable[key]
+      return type.shipValid(ship) && type.equipsValid(equips)
+    })
+    .map(key => Number(key))
 
 // return a list of all possible AACIs for the ship herself
 export const getShipAllAACIs = ship =>
   Object.keys(AACITable)
-  .filter((key) => {
-    const type = AACITable[key]
-    return type.shipValid(ship)
-  })
-  .map(key => Number(key))
+    .filter((key) => {
+      const type = AACITable[key]
+      return type.shipValid(ship)
+    })
+    .map(key => Number(key))
 
 // return the AACIs to trigger for a ship, it will be array due to exceptions
 export const getShipAACIs = (ship, equips) => {
@@ -395,6 +435,22 @@ export const getShipAACIs = (ship, equips) => {
   }
   if (maxFixed === 8 && AACIs.includes(7)) {
     return [7, 8]
+  }
+  // Kasumi Kai 2 B since 17 and 9 have same shotdown
+  if (AACIs.includes(17) && maxFixed === 9) {
+    return [17]
+  }
+  // Isuzu Kai 2 since 14 and 8 have same shotdown
+  if (AACIs.includes(14) && maxFixed === 8) {
+    return [14]
+  }
+  // Satsuki Kai 2
+  if (AACIs.includes(18)) {
+    return [...new Set([maxFixed, 18])]
+  }
+  // Fumitsuki Kai 2, not verified, only assumption
+  if (AACIs.includes(22)) {
+    return [...new Set([maxFixed, 22])]
   }
 
   return maxFixed ? [maxFixed] : []

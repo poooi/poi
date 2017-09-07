@@ -1,3 +1,5 @@
+import { isArray } from 'lodash'
+
 /* FORMAT
  *   combinedFlag:                      // api_combined_flag
  *   sortieStatus: [false|true] * 4     // Whether a fleet is in sortie
@@ -20,10 +22,12 @@ const initState = {
   itemHistory: [],
 }
 
+const ensureArray = x => isArray(x) ? x : [x]
+
 const getItem = ({ api_itemget = [], api_happening = {}, api_itemget_eo_comment = {} }) => {
   const item = {}
 
-  api_itemget.concat(api_itemget_eo_comment).forEach(({ api_id = 0, api_getcount = 0 }) => {
+  ensureArray(api_itemget).concat(api_itemget_eo_comment).forEach(({ api_id = 0, api_getcount = 0 } = {}) => {
     if (api_id) {
       item[api_id] = (item[api_id] || 0) + api_getcount
     }

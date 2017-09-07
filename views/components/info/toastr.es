@@ -6,16 +6,16 @@ const ToastMessageFactory = React.createFactory(ToastMessage.animation)
 
 class Toastr extends React.Component {
   componentDidMount = () => {
-    window.toastInitializer(this.refs.container)
+    window.toastInitializer(this.container)
   }
   render () {
     return (
       <div>
-      <link rel="stylesheet" href={join(__dirname, 'assets', 'toast-animate.css')} />
-      <link rel="stylesheet" href={join(__dirname, 'assets', 'toast.css')} />
-        <ToastContainer ref="container"
-                        toastMessageFactory={ToastMessageFactory}
-                        className="toast-poi" />
+        <link rel="stylesheet" href={join(__dirname, 'assets', 'toast-animate.css')} />
+        <link rel="stylesheet" href={join(__dirname, 'assets', 'toast.css')} />
+        <ToastContainer ref={(ref) => { this.container = ref }}
+          toastMessageFactory={ToastMessageFactory}
+          className="toast-poi" />
       </div>
     )
   }

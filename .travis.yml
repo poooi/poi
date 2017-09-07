@@ -8,8 +8,9 @@ language: c
 matrix:
   include:
     - os: osx
+      env: TRAVIS_NODE_VERSION="8.4.0"
     - os: linux
-      env: CC=clang CXX=clang++ npm_config_clang=1 TRAVIS_NODE_VERSION="7.7.4"
+      env: CC=clang CXX=clang++ npm_config_clang=1 TRAVIS_NODE_VERSION="8.4.0"
       compiler: clang
 
 addons:
@@ -29,8 +30,8 @@ cache:
 
 install:
   - nvm install $TRAVIS_NODE_VERSION
-  - nvm use 7
-  - npm install -g npm@latest
+  - nvm use 8
+  - npm install -g npm@5.3.0
   - npm install --silent
 
 before_script:

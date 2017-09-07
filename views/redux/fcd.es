@@ -6,6 +6,7 @@ if (!window.isMain) {
       const {fcd} = JSON.parse(e.newValue)
       for (const key of Object.keys(fcd)) {
         if (!isEqual(fcd[key], window.getStore(`fcd.${key}`))) {
+          // eslint-disable-next-line no-console
           console.log(`Update ${key} from localStorage`)
           window.dispatch({
             type: "@@replaceFCD",

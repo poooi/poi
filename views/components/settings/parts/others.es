@@ -44,6 +44,7 @@ class DownloadProgress extends Component {
     percent: 0,
     total: 0,
     transferred: 0,
+    downloaded: false,
   }
   updateProgress = progress => {
     this.setState(progress)
@@ -54,6 +55,7 @@ class DownloadProgress extends Component {
     }
     if (process.platform === 'win32') {
       updater.on('download-progress', progress => this.updateProgressDebounced(progress))
+      updater.on('update-downloaded', () => this.setState({downloaded: true}))
     }
   }
   render () {
@@ -61,9 +63,16 @@ class DownloadProgress extends Component {
       <h5 className="update-progress">
         <ProgressBar bsStyle='success'
           now={this.state.percent} />
-        <span>
-          {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
-        </span>
+        {
+          this.state.downloaded
+            ? <span>{__('Quit app and install updates')}</span>
+            : (this.state.percent >= 100
+              ? <span>{__('Deploying, please wait')}</span>
+              : <span>
+                {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
+              </span>
+            )
+        }
       </h5>
     )
   }
@@ -75,9 +84,12 @@ class AppMetrics extends PureComponent {
 
     this.getAppMetrics = remote.require('electron').app.getAppMetrics
 
+    this.getAllWindows = remote.require('electron').BrowserWindow.getAllWindows
+
     this.state = {
       metrics: [],
       total: {},
+      pidmap: {},
       active: false,
     }
   }
@@ -87,15 +99,22 @@ class AppMetrics extends PureComponent {
 
     const total = {}
 
+    const pidmap = {}
     ;['workingSetSize', 'peakWorkingSetSize'].map(prop =>
       total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)
     )
 
     total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
 
+    this.getAllWindows().map(win => {
+      const pid = win.webContents.getOSProcessId()
+      const title = win.getTitle()
+      pidmap[pid] = title
+    })
     this.setState({
       metrics: sortBy(JSON.parse(JSON.stringify(metrics)), 'pid'),
       total,
+      pidmap,
     })
   }
 
@@ -120,15 +139,15 @@ class AppMetrics extends PureComponent {
   }
 
   render() {
-    const { metrics, active, total } = this.state
+    const { metrics, active, total, pidmap } = this.state
     return (
       <div>
         <div>
           <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
             {
               active
-              ? <span>{__('Monitor on')}</span>
-              : <span>{__('Monitor off')}</span>
+                ? <span>{__('Monitor on')}</span>
+                : <span>{__('Monitor off')}</span>
             }
           </Button>
         </div>
@@ -147,7 +166,9 @@ class AppMetrics extends PureComponent {
               metrics.map(metric => (
                 <div className='metric-row' key={metric.pid}>
                   <span>{metric.pid}</span>
-                  <span title={metric.type}>{metric.type}</span>
+                  <span title={pidmap[metric.pid] || metric.type}>
+                    {pidmap[metric.pid] || metric.type}
+                  </span>
                   {
                     ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
                       <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
@@ -219,6 +240,7 @@ const Others = connect(state => ({
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
+            // eslint-disable-next-line no-console
             console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
             const data = await fetchFromRemote(`${server}${file.name}.json`, cacheMode)
             if (data) {
@@ -230,6 +252,7 @@ const Others = connect(state => ({
               flag = false
             }
           } else {
+            // eslint-disable-next-line no-console
             console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
           }
         }
@@ -237,6 +260,7 @@ const Others = connect(state => ({
         flag = false
       }
       if (flag) {
+        // eslint-disable-next-line no-console
         console.log(`Update fcd from ${server} successfully in mode ${cacheMode}.`)
         break
       } else {
@@ -272,9 +296,9 @@ const Others = connect(state => ({
           </Col>
           <Col xs={6}>
             <CheckboxLabelConfig
-                    label={__('Check update of beta version')}
-                    configName="poi.betaChannel"
-                    defaultVal={false} />
+              label={__('Check update of beta version')}
+              configName="poi.betaChannel"
+              defaultVal={false} />
           </Col>
           <Col xs={12}>
             <p>{__("poi-description %s", process.versions.electron)}</p>
@@ -284,8 +308,8 @@ const Others = connect(state => ({
                   <p>微博: <a href='http://weibo.com/letspoi'>  今天 poi 出新版本了吗 </a></p>
                   <p>开发讨论与意见交流群: 378320628 </p>
                 </div>
-              :
-              null
+                :
+                null
             }
             <p>{__("Database")}:<a href='http://db.kcwiki.moe'> http://db.kcwiki.moe </a></p>
             <p>{__("Wiki")}: <a href='https://github.com/poooi/poi/wiki'> https://github.com/poooi/poi/wiki </a></p>
@@ -313,29 +337,29 @@ const Others = connect(state => ({
         </Col>
         <Divider text="Contributors" />
         <Grid>
-        {
-          CONST.contributors.map((e, i) => (
-            <Col xs={2} key={i}>
-              <img className="avatar-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
-            </Col>
-          ))
-        }
+          {
+            CONST.contributors.map((e, i) => (
+              <Col xs={2} key={i}>
+                <img className="avatar-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+              </Col>
+            ))
+          }
         </Grid>
         <Divider text="Thanks To" />
         <Grid className='thanks-to'>
-        {
-          CONST.thanksTo.map((e, i) => (
-            <div className="div-row thanks-to-item" key={i}>
-              <div className='thanks-to-img-container'>
-                <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+          {
+            CONST.thanksTo.map((e, i) => (
+              <div className="div-row thanks-to-item" key={i}>
+                <div className='thanks-to-img-container'>
+                  <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
+                </div>
+                <div className='thanks-to-container'>
+                  <b>{e.name}</b>
+                  <p>{e.description}</p>
+                </div>
               </div>
-              <div className='thanks-to-container'>
-                <b>{e.name}</b>
-                <p>{e.description}</p>
-              </div>
-            </div>
-          ))
-        }
+            ))
+          }
         </Grid>
       </div>
     )

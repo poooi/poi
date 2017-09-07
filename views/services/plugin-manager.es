@@ -2,10 +2,10 @@ import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync } from 'fs-extra'
-import npm from 'npm'
 import glob from 'glob'
-import { promisify, delay } from 'bluebird'
+import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
+import { remote } from 'electron'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
@@ -22,6 +22,7 @@ const fetchFromRemote = async (url, cacheMode = "default") => {
 
 import {
   installPackage,
+  removePackage,
   readPlugin,
   enablePlugin,
   disablePlugin,
@@ -62,19 +63,20 @@ class PluginManager extends EventEmitter {
   getPluginPath(packageName) {
     return join(this.pluginRoot, 'node_modules', packageName)
   }
-  initialize() {
+  async initialize() {
     this.getConf()
-    this.getPlugins()
+    await this.getPlugins()
+    this.emit('initialized')
   }
-  readPlugins() {
-    const pluginPaths = glob.sync(this.getPluginPath('poi-plugin-*'))
-    let plugins = pluginPaths.map((pluginPath) => {
-      let plugin = readPlugin(pluginPath)
+  async readPlugins() {
+    const pluginPaths = await new Promise(res => glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)))
+    let plugins = await Promise.all(pluginPaths.map(async(pluginPath) => {
+      let plugin = await readPlugin(pluginPath)
       if (plugin.enabled && !window.isSafeMode) {
-        plugin = enablePlugin(plugin)
+        plugin = await enablePlugin(plugin)
       }
       return plugin
-    })
+    }))
     plugins = sortBy(plugins, 'priority')
     notifyFailed(plugins)
     dispatch({
@@ -128,7 +130,6 @@ class PluginManager extends EventEmitter {
         delete this.npmConfig.http_proxy
       }
     }
-    await new Promise((resolve, reject) => npm.load(this.npmConfig, e => resolve()))
     return this.config
   }
   isMetRequirement(plugin) {
@@ -176,12 +177,12 @@ class PluginManager extends EventEmitter {
     }
     return this.VALID
   }
-  getPlugins() {
+  async getPlugins() {
     if (getStore('plugins').length > 0) {
       return getStore('plugins')
     }
     else {
-      return this.readPlugins()
+      return await this.readPlugins()
     }
   }
   async getConf() {
@@ -331,7 +332,7 @@ class PluginManager extends EventEmitter {
       })
     // 2) Install plugin
     try {
-      await installPackage(packageSource, version)
+      await installPackage(packageSource, version, this.npmConfig)
     } catch (e) {
       console.error(e.stack)
       throw e
@@ -350,9 +351,9 @@ class PluginManager extends EventEmitter {
     }
     // 5) Read plugin and load it
     try {
-      let plugin = readPlugin(this.getPluginPath(packageName))
+      let plugin = await readPlugin(this.getPluginPath(packageName))
       if (plugin.enabled) {
-        plugin = enablePlugin(plugin, false)
+        plugin = await enablePlugin(plugin, false)
       }
       dispatch({
         type: '@@Plugin/add',
@@ -388,7 +389,7 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      await promisify(npm.commands.uninstall)(['--no-save', plugin.packageName])
+      await removePackage(plugin.packageName, this.npmConfig)
       // Make sure the plugin no longer exists in PLUGIN_PATH
       // (unless it's a git repo)
       await safePhysicallyRemove(defaultPluginPath(plugin.packageName))
@@ -397,10 +398,10 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  enablePlugin(plugin) {
+  async enablePlugin(plugin) {
     plugin.enabled = true
     if (!plugin.isBroken) {
-      plugin = enablePlugin(plugin)
+      plugin = await enablePlugin(plugin)
     }
     config.set(`plugin.${plugin.id}.enable`, true)
     dispatch({
@@ -409,9 +410,9 @@ class PluginManager extends EventEmitter {
     })
   }
 
-  disablePlugin(plugin) {
+  async disablePlugin(plugin) {
     config.set(`plugin.${plugin.id}.enable`, false)
-    plugin = disablePlugin(plugin)
+    plugin = await disablePlugin(plugin)
     dispatch({
       type: '@@Plugin/add',
       value: plugin,
@@ -437,9 +438,7 @@ const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
-pluginManager.initialize()
-
-window.reloadPlugin = (pkgName, verbose=false) => {
+window.reloadPlugin = async (pkgName, verbose=false) => {
   const { plugins } = getStore()
   const plugin =
     plugins.find(pkg => pkg.packageName === pkgName) ||
@@ -448,14 +447,16 @@ window.reloadPlugin = (pkgName, verbose=false) => {
     console.error(`plugin "${pkgName}" not found`)
     return
   }
-  pluginManager.disablePlugin(plugin)
+  await pluginManager.disablePlugin(plugin)
   if (verbose)
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" disabled, re-enabling...`)
-  pluginManager.enablePlugin(plugin)
+  await pluginManager.enablePlugin(plugin)
   if (verbose)
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" enabled.`)
 }
+
+remote.getCurrentWebContents().once('dom-ready', () => pluginManager.initialize())
 
 export default pluginManager

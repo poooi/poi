@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { remote, shell } from 'electron'
 import { TitleBar } from 'electron-react-titlebar'
 import { reduxSet } from 'views/utils/tools'
-import { get } from 'lodash'
+import { get, capitalize } from 'lodash'
 import path from 'path'
 
 const {Menu} = remote.require('electron')
@@ -47,10 +47,13 @@ if (process.platform !== 'darwin') {
         {
           label: __('Resizable'),
           type: 'checkbox',
-          checked: config.get('poi.content.resizeable', true),
+          checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
-            remote.getGlobal('mainWindow').setResizable(item.checked)
-            config.set('poi.content.resizeable', item.checked)
+            const mainWindow = remote.getGlobal('mainWindow')
+            mainWindow.setResizable(item.checked)
+            mainWindow.setMaximizable(item.checked)
+            mainWindow.setFullScreenable(item.checked)
+            config.set('poi.content.resizable', item.checked)
           },
         },
         {
@@ -80,22 +83,23 @@ if (process.platform !== 'darwin') {
       submenu: [
         {
           label: __('Reload'),
-          accelerator: 'CmdOrCtrl+R',
+          accelerator: 'Ctrl+R',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
           },
         },
         {
           label: __('Stop'),
-          accelerator: 'CmdOrCtrl+.',
+          accelerator: 'Ctrl+.',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
           },
         },
         {
           label: __('Developer Tools'),
+          accelerator: 'Ctrl+Shift+I',
           click: (item, focusedWindow) => {
-            remote.getGlobal('mainWindow').openDevTools({detach: true})
+            focusedWindow.openDevTools({detach: true})
           },
         },
         {
@@ -202,10 +206,13 @@ if (process.platform !== 'darwin') {
         {
           label: __('Resizable'),
           type: 'checkbox',
-          checked: config.get('poi.content.resizeable', true),
+          checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
-            remote.getGlobal('mainWindow').setResizable(item.checked)
-            config.set('poi.content.resizeable', item.checked)
+            const mainWindow = remote.getGlobal('mainWindow')
+            mainWindow.setResizable(item.checked)
+            mainWindow.setMaximizable(item.checked)
+            mainWindow.setFullScreenable(item.checked)
+            config.set('poi.content.resizable', item.checked)
           },
         },
         {
@@ -296,7 +303,7 @@ if (process.platform !== 'darwin') {
         { type: 'separator' },
         {
           label: __ ('Developer Tools'),
-          accelerator: 'Alt+CmdOrCtrl+I',
+          accelerator: 'Cmd+Shift+I',
           click: (item, focusedWindow) => {
             focusedWindow.openDevTools({detach: true})
           },
@@ -389,12 +396,13 @@ if (process.platform !== 'darwin') {
 }
 
 const themepos = process.platform === 'darwin' ? 3 : 2
-for (let i = window.allThemes.length - 1; i >=0; i--) {
-  const th = window.allThemes[i]
+for (let i = window.normalThemes.length - 1; i >=0; i--) {
+  const th = window.normalThemes[i]
   template[themepos].submenu.unshift({
-    label: th === '__default__' ? 'Default' : th.charAt(0).toUpperCase() + th.slice(1),
+    label: th === '__default__' ? 'Default' : capitalize(th),
     type: 'radio',
     checked: window.theme === th,
+    enabled: !window.isVibrant || window.vibrantThemes.includes(th),
     click: (item, focusedWindow) => {
       if (th !== window.theme) {
         window.applyTheme(th)
@@ -403,7 +411,7 @@ for (let i = window.allThemes.length - 1; i >=0; i--) {
   })
 }
 
-const appMenu = Menu.buildFromTemplate(template)
+export const appMenu = Menu.buildFromTemplate(template)
 if (process.platform === 'darwin') {
   Menu.setApplicationMenu(appMenu)
 } else {
@@ -418,8 +426,13 @@ if (process.platform === 'darwin') {
 
 const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
-  if (path === 'poi.theme') {
-    themeMenuList[window.allThemes.indexOf(value)].checked = true
+  if (path === 'poi.theme' && value != null) {
+    if (themeMenuList[window.normalThemes.indexOf(value)]){
+      themeMenuList[window.normalThemes.indexOf(value)].checked = true
+    }
+  }
+  if (path === 'poi.vibrant') {
+    window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
   }
 })
 
@@ -444,6 +457,9 @@ export class TitleBarWrapper extends Component {
     config.removeListener('config.set', this.handleThemeChange)
   }
   render () {
-    return <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />
+    return <div>
+      <link rel="stylesheet" type="text/css" href={require.resolve('electron-react-titlebar/assets/style.css')} />
+      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />
+    </div>
   }
 }

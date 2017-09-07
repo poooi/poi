@@ -166,4 +166,7 @@ export default {
   getMainWindow: () => {
     return global.mainWindow
   },
+  getAllWindows: () => {
+    return BrowserWindow.getAllWindows()
+  },
 }

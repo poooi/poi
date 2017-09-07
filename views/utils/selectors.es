@@ -189,8 +189,8 @@ const shipBaseDataSelectorFactory = memoize((shipId) =>
     shipsSelector,
   ], (ships) =>
     ships && typeof shipId === 'number' && shipId
-    ? ships[shipId]
-    : undefined
+      ? ships[shipId]
+      : undefined
   )
 )
 
@@ -205,8 +205,8 @@ export const shipDataSelectorFactory = memoize((shipId) =>
     constSelector,
   ], (ship, {$ships}) =>
     $ships && typeof ship === 'object' && ship
-    ? [ship, $ships[ship.api_ship_id]]
-    : undefined
+      ? [ship, $ships[ship.api_ship_id]]
+      : undefined
   )
 )
 
@@ -244,8 +244,8 @@ const equipBaseDataSelectorFactory = memoize((equipId) =>
     equipsSelector,
   ], (equips) =>
     equips && typeof equipId === 'number' && equipId
-    ? equips[equipId]
-    : undefined
+      ? equips[equipId]
+      : undefined
   )
 )
 
@@ -294,12 +294,12 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
     shipOnSlotSelectorFactory(shipId),
   ], (state, slotnum, shipEquipsId, onslots) =>
     !Array.isArray(shipEquipsId)
-    ? undefined
-    : effectiveEquips(
+      ? undefined
+      : effectiveEquips(
         zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
           equipId <= 0
-          ? undefined
-          : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
+            ? undefined
+            : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
         ), slotnum
       )
   ))
@@ -313,12 +313,12 @@ export const landbaseEquipDataSelectorFactory = memoize(landbaseId =>
     landbaseOnSlotSelectorFactory(landbaseId),
   ], (state, slotnum, landbaseEquipsId, onslots) => 
     !Array.isArray(landbaseEquipsId)
-    ? undefined
-    : effectiveEquips(
+      ? undefined
+      : effectiveEquips(
         zip(landbaseEquipsId, onslots).map(([equipId, onslot]) =>
           equipId <= 0
-          ? undefined
-          : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
+            ? undefined
+            : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
         ), slotnum
       )
   ))
@@ -361,7 +361,7 @@ export const fleetShipsDataSelectorFactory = memoize((fleetId) =>
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
     !fleetShipsId ? undefined :
-    fleetShipsId.map((shipId) => shipDataSelectorFactory(shipId)(state))
+      fleetShipsId.map((shipId) => shipDataSelectorFactory(shipId)(state))
   ))
 )
 
@@ -373,7 +373,7 @@ export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
     !fleetShipsId ? undefined :
-    fleetShipsId.map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
+      fleetShipsId.map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
   ))
 )
 
@@ -383,10 +383,10 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId) =>
     fleetShipsIdSelectorFactory(fleetId),
   ], (state, fleetShipsId) =>
     !fleetShipsId ? undefined :
-    fleetShipsId.filter(shipId =>
-      !escapeStatusSelectorFactory(shipId)(state)
-    ).map(shipId =>
-      shipEquipDataSelectorFactory(shipId)(state)
-    )
+      fleetShipsId.filter(shipId =>
+        !escapeStatusSelectorFactory(shipId)(state)
+      ).map(shipId =>
+        shipEquipDataSelectorFactory(shipId)(state)
+      )
   ))
 )

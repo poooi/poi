@@ -1,13 +1,15 @@
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { shell } from 'electron'
-import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Grid, Col, Button, ButtonGroup, FormControl, Checkbox, OverlayTrigger, Overlay, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Divider from './divider'
 import { get, debounce } from 'lodash'
 import FontAwesome from 'react-fontawesome'
+import { FolderPickerConfig } from './utils'
+import { fileUrl } from 'views/utils/tools'
 
 const {config, toggleModal, i18n, EXROOT} = window
 const {openItem} = shell
@@ -104,17 +106,26 @@ const ChangeLayoutConfig = connect(() => (
 })
 
 const ChangeThemeConfig = connect((state, props) => ({
+  themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.theme', 'paperdark'),
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
+  vibrant: get(state.config, 'poi.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
+  background: get(state.config, 'poi.background'),
 })
 )(class changeThemeConfig extends Component {
   static propTypes = {
+    themes: PropTypes.arrayOf(PropTypes.string),
     theme: PropTypes.string,
     enableSVGIcon: PropTypes.bool,
     enableTransition: PropTypes.bool,
     useGridMenu: PropTypes.bool,
+    vibrant: PropTypes.number,
+    background: PropTypes.string,
+  }
+  state = {
+    show: false,
   }
   handleSetTheme = (e) => {
     const theme = e.target.value
@@ -140,13 +151,26 @@ const ChangeThemeConfig = connect((state, props) => ({
   handleSetGridMenu = () => {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
+  handleSetVibrancy = e => {
+    config.set('poi.vibrant', parseInt(e.target.value))
+  }
+  handleMouseEnter = () => {
+    this.setState({
+      show: true,
+    })
+  }
+  handleMouseLeave = () => {
+    this.setState({
+      show: false,
+    })
+  }
   render() {
     return (
       <Grid>
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.theme} onChange={this.handleSetTheme}>
             {
-              window.allThemes.map((theme, index) =>
+              this.props.themes.map((theme, index) =>
                 <option key={index} value={theme}>
                   {(theme === '__default__') ? 'Default' : (theme[0].toUpperCase() + theme.slice(1))}
                 </option>
@@ -155,7 +179,44 @@ const ChangeThemeConfig = connect((state, props) => ({
           </FormControl>
         </Col>
         <Col xs={6}>
+          <FormControl componentClass="select" value={this.props.vibrant} onChange={this.handleSetVibrancy}>
+            <option key={0} value={0}>{__('Default')}</option>
+            { ['darwin'].includes(process.platform) && <option key={1} value={1}>{__("Vibrance")}</option> }
+            <option key={2} value={2}>{__("Custom background")}</option>
+          </FormControl>
+        </Col>
+        <Col xs={6} style={{ marginTop: '1ex' }}>
           <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
+        </Col>
+        <Col xs={6} style={{ marginTop: '1ex' }}>
+
+          <Overlay
+            show={this.props.background && this.state.show }
+            placement="bottom"
+            target={this.fileSelect}
+          >
+            <Tooltip id='background-preview'>
+              <div>
+                <img src={encodeURI(fileUrl(this.props.background))} alt="" style={{ maxHeight: '100%', maxWidth: '100%'}}/>
+              </div>
+            </Tooltip>
+          </Overlay>
+          <div
+            ref={(ref) => this.fileSelect = ref}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
+          >
+            {
+              this.props.vibrant === 2 &&
+              <FolderPickerConfig
+                label={__('Custom background')}
+                configName="poi.background"
+                defaultVal={''}
+                isFolder={false}
+                placeholder={__('No background image selected')}
+              />
+            }
+          </div>
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon}>
@@ -203,8 +264,8 @@ const ZoomingConfig = connect(() => (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-              <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
-            }>
+            <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
+          }>
             <FormControl type="range" onInput={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
               min={0.5} max={4.0} step={0.05} defaultValue={this.state.zoomLevel}
               onMouseUp={this.handleChangeZoomLevel}
@@ -248,8 +309,8 @@ const PanelMinSizeConfig = connect(() => (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-              <Tooltip id='displayconfig-panel-size'>{__(configName)} <strong>{parseInt(this.state.panelMinSize * 100)}%</strong></Tooltip>
-            }>
+            <Tooltip id='displayconfig-panel-size'>{__(configName)} <strong>{parseInt(this.state.panelMinSize * 100)}%</strong></Tooltip>
+          }>
             <FormControl type="range" onInput={(e) => this.setState({ panelMinSize: parseFloat(e.target.value) })}
               min={1.0} max={2.0} step={0.05} defaultValue={this.state.panelMinSize}
               onMouseUp={this.handleChangePanelMinSize}
@@ -359,7 +420,6 @@ const ChangeResolutionConfig = connect((state, props) => ({
       <Grid>
         <Col xs={8}>
           <Checkbox
-            ref="useFixedResolution"
             checked={!this.props.webview.useFixedResolution}
             onChange={this.handleSetFixedResolution}>
             {__('Adaptive resolution based on the window')}
@@ -367,9 +427,9 @@ const ChangeResolutionConfig = connect((state, props) => ({
         </Col>
         <Col xs={4}>
           <FormControl componentClass="select"
-           value={this.state.width}
-           onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
-           disabled={!this.props.webview.useFixedResolution} >
+            value={this.state.width}
+            onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
+            disabled={!this.props.webview.useFixedResolution} >
             <option key={-1} value={this.state.width} hidden>
               {Math.round(this.props.webview.width / 800 * 100)}%
             </option>
@@ -387,9 +447,9 @@ const ChangeResolutionConfig = connect((state, props) => ({
         <Col id="poi-resolution-config" xs={12} style={{display: 'flex', alignItems: 'center'}}>
           <div style={{flex: 1}}>
             <FormControl type="number"
-             value={this.state.width}
-             onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, true)}
-             readOnly={!this.props.webview.useFixedResolution} />
+              value={this.state.width}
+              onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, true)}
+              readOnly={!this.props.webview.useFixedResolution} />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             x

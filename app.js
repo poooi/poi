@@ -123,12 +123,13 @@ app.on('ready', () => {
     height: height,
     title: 'poi',
     icon: poiIconPath,
-    resizable: config.get('poi.content.resizeable', true),
+    resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     titleBarStyle: 'hidden',
     frame: !config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
     enableLargerThanScreen: true,
-    maximizable: true,
+    maximizable: config.get('poi.content.resizable', true),
+    fullscreenable: config.get('poi.content.resizable', true),
     webPreferences: {
       plugins: true,
     },
@@ -136,6 +137,8 @@ app.on('ready', () => {
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
   if (process.platform === 'darwin') {
+    const {touchBar} = require('./lib/touchbar')
+    mainWindow.setTouchBar(touchBar)
     if (/electron$/i.test(process.argv[0])) {
       const icon = nativeImage.createFromPath(`${ROOT}/assets/icons/poi.png`)
       app.dock.setIcon(icon)
@@ -177,6 +180,15 @@ app.on('ready', () => {
     })
   }
 })
+// http basic auth
+app.on('login', (event, webContents, request, authInfo, callback) => {
+  event.preventDefault()
+  mainWindow.webContents.send('http-basic-auth', 'login')
+  ipcMain.once ('basic-auth-info', (event, usr, pwd) => {
+    callback(usr, pwd)
+  })
+})
+
 
 ipcMain.on ('refresh-shortcut', () => {
   shortcut.unregister()

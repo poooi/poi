@@ -45,10 +45,10 @@ export default connect(
   getLabelStyle = ({isLSC}, timeRemaining) => {
     return (
       (timeRemaining > 600 && isLSC) ? 'danger' :
-      (timeRemaining > 600) ? 'primary' :
-      (timeRemaining > 0) ? 'warning' :
-      (timeRemaining == 0) ? 'success' :
-      'default'
+        (timeRemaining > 600) ? 'primary' :
+          (timeRemaining > 0) ? 'warning' :
+            (timeRemaining == 0) ? 'success' :
+              'default'
     )
   }
   static basicNotifyConfig = {
@@ -61,47 +61,47 @@ export default connect(
     const {constructions, canNotify} = this.props
     return (
       <div>
-      {
-        range(4).map((i) => {
-          const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
-          const isInUse = dock.api_state > 0
-          const isLSC = isInUse && dock.api_item1 >= 1000
-          const dockName = dock.api_state == -1 ? __('Locked') :
-            dock.api_state == 0 ? __('Empty')
-            : this.getDockShipName(i, '???')
-          const completeTime = isInUse ? dock.api_complete_time : -1
-          const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null
-          return (
-            <OverlayTrigger key={i} placement='top' overlay={
-              <Tooltip id={`kdock-material-${i}`} style={!isInUse && {display: 'none'}}>
-                {
-                  <span style={tooltipTitleClassname}>{dockName}<br /></span>
-                }
-                {this.getMaterialImage(1)} {dock.api_item1}
-                {this.getMaterialImage(2)} {dock.api_item2}
-                {this.getMaterialImage(3)} {dock.api_item3}
-                {this.getMaterialImage(4)} {dock.api_item4}
-                {this.getMaterialImage(7)} {dock.api_item5}
-              </Tooltip>
-            }>
-              <div className="panel-item kdock-item">
-                <span className="kdock-name">{dockName}</span>
-                <CountdownNotifierLabel
-                  timerKey={`kdock-${i+1}`}
-                  completeTime={completeTime}
-                  isLSC={isLSC}
-                  getLabelStyle={this.getLabelStyle}
-                  getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                    ...this.constructor.basicNotifyConfig,
-                    args: dockName,
-                    completeTime: completeTime,
-                  }}
-                />
-              </div>
-            </OverlayTrigger>
-          )
-        })
-      }
+        {
+          range(4).map((i) => {
+            const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
+            const isInUse = dock.api_state > 0
+            const isLSC = isInUse && dock.api_item1 >= 1000
+            const dockName = dock.api_state == -1 ? __('Locked') :
+              dock.api_state == 0 ? __('Empty')
+                : this.getDockShipName(i, '???')
+            const completeTime = isInUse ? dock.api_complete_time : -1
+            const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null
+            return (
+              <OverlayTrigger key={i} placement='top' overlay={
+                <Tooltip id={`kdock-material-${i}`} style={!isInUse && {display: 'none'}}>
+                  {
+                    <span style={tooltipTitleClassname}>{dockName}<br /></span>
+                  }
+                  {this.getMaterialImage(1)} {dock.api_item1}
+                  {this.getMaterialImage(2)} {dock.api_item2}
+                  {this.getMaterialImage(3)} {dock.api_item3}
+                  {this.getMaterialImage(4)} {dock.api_item4}
+                  {this.getMaterialImage(7)} {dock.api_item5}
+                </Tooltip>
+              }>
+                <div className="panel-item kdock-item">
+                  <span className="kdock-name">{dockName}</span>
+                  <CountdownNotifierLabel
+                    timerKey={`kdock-${i+1}`}
+                    completeTime={completeTime}
+                    isLSC={isLSC}
+                    getLabelStyle={this.getLabelStyle}
+                    getNotifyOptions={() => canNotify && (completeTime >= 0) && {
+                      ...this.constructor.basicNotifyConfig,
+                      args: dockName,
+                      completeTime: completeTime,
+                    }}
+                  />
+                </div>
+              </OverlayTrigger>
+            )
+          })
+        }
       </div>
     )
   }

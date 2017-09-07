@@ -155,5 +155,11 @@
   "Performance Monitor": "性能监视器",
   "Monitor on": "监视器已打开",
   "Monitor off": "监视器未开启",
-  "TOTAL": "总计"
+  "TOTAL": "总计",
+  "Default": "默认",
+  "Vibrance": "半透明",
+  "Custom background": "自定义背景",
+  "No background image selected": "未选择背景图片",
+  "Deploying, please wait": "部署中，请等待",
+  "Quit app and install updates": "退出以安装更新"
 }

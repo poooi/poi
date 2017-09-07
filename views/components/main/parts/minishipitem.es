@@ -47,41 +47,41 @@ const Slotitems  = connect(
   return (
     <div className={tooltipClassName}>
       <div className="slotitems-mini" style={{display: "flex", flexFlow: "column"}}>
-      {
-        equipsData.filter(Boolean).map((equipData, equipIdx) => {
-          const [equip, $equip, onslot] = equipData
-          const equipIconId = $equip.api_type[3]
-          const level = equip.api_level
-          const proficiency = equip.api_alv
-          const isAircraft = equipIsAircraft(equipIconId)
-          const maxOnslot = (api_maxeq || [])[equipIdx]
-          const onslotText = onslot
-          const onslotWarning = maxOnslot && onslot < maxOnslot
-          const onslotClassName = classNames("slotitem-onslot", {
-            'show': isAircraft,
-            'hide': !isAircraft,
-          })
-          return (
-            <div key={equipIdx} className="slotitem-container-mini">
-              <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
-              <span className="slotitem-name-mini">
-                {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
-                {level ? <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong> : ''}
+        {
+          equipsData.filter(Boolean).map((equipData, equipIdx) => {
+            const [equip, $equip, onslot] = equipData
+            const equipIconId = $equip.api_type[3]
+            const level = equip.api_level
+            const proficiency = equip.api_alv
+            const isAircraft = equipIsAircraft(equipIconId)
+            const maxOnslot = (api_maxeq || [])[equipIdx]
+            const onslotText = onslot
+            const onslotWarning = maxOnslot && onslot < maxOnslot
+            const onslotClassName = classNames("slotitem-onslot", {
+              'show': isAircraft,
+              'hide': !isAircraft,
+            })
+            return (
+              <div key={equipIdx} className="slotitem-container-mini">
+                <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
+                <span className="slotitem-name-mini">
+                  {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
+                  {level ? <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong> : ''}
                 &nbsp;&nbsp;
-                {proficiency &&
+                  {proficiency &&
                   <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
-                }
-              </span>
-              <Label
-                className={onslotClassName}
-                bsStyle={`${onslotWarning ? 'warning' : 'default'}`}
-              >
-                {onslotText}
-              </Label>
-            </div>
-          )
-        })
-      }
+                  }
+                </span>
+                <Label
+                  className={onslotClassName}
+                  bsStyle={`${onslotWarning ? 'warning' : 'default'}`}
+                >
+                  {onslotText}
+                </Label>
+              </div>
+            )
+          })
+        }
       </div>
     </div>
   )
@@ -134,10 +134,10 @@ export const MiniShipRow = connect(
           placement={(!doubleTabbed && layout == 'vertical') ? 'left' : 'right'}
           overlay={
             (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0) ?
-            <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
-              <Slotitems shipId={ship.api_id} />
-            </Tooltip>
-            : <Tooltip id={`ship-pop-${ship.api_id}`} style={{display: 'none'}}></Tooltip>
+              <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
+                <Slotitems shipId={ship.api_id} />
+              </Tooltip>
+              : <Tooltip id={`ship-pop-${ship.api_id}`} style={{display: 'none'}}></Tooltip>
           }
         >
           <div className="ship-item">
@@ -216,7 +216,7 @@ export const MiniSquardRow = connect((state, { squardId }) =>
           </span>
           <span className="ship-lv-text top-space">
             <div className="ship-fp">
-              {__('Fighter Power')}: {tyku.max}
+              {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
             </div>
             {statuslabel}
           </span>

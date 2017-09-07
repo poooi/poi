@@ -72,31 +72,31 @@ export default connect(
     return (
       <Panel bsStyle="default">
         <Grid>
-        {
-          order.map((i) => {
-            const iconClassName = classNames('material-icon', {
-              'glow': valid && i < 4 && resources[i] < limit,
-            })
-            const valClassName = classNames('additional-value', {
-              'inc': this.state.resourcesIncreasment[i] > 0,
-              'dec': this.state.resourcesIncreasment[i] < 0,
-            })
-            const amount = valid ? resources[i] : '??'
-            return (
-              <Col key={i} xs={6} className="material-container">
-                <MaterialIcon materialId={i+1} className={iconClassName} />
-                <div className="material-value">
-                  <div className="material-amount">
-                    {amount}
+          {
+            order.map((i) => {
+              const iconClassName = classNames('material-icon', {
+                'glow': valid && i < 4 && resources[i] < limit,
+              })
+              const valClassName = classNames('additional-value', {
+                'inc': this.state.resourcesIncreasment[i] > 0,
+                'dec': this.state.resourcesIncreasment[i] < 0,
+              })
+              const amount = valid ? resources[i] : '??'
+              return (
+                <Col key={i} xs={6} className="material-container">
+                  <MaterialIcon materialId={i+1} className={iconClassName} />
+                  <div className="material-value">
+                    <div className="material-amount">
+                      {amount}
+                    </div>
+                    <div className={valClassName}>
+                      {`${this.state.resourcesIncreasment[i] > 0 ? '+' : ''}${this.state.resourcesIncreasment[i] !== 0 ? this.state.resourcesIncreasment[i] : ''}　`}
+                    </div>
                   </div>
-                  <div className={valClassName}>
-                    {`${this.state.resourcesIncreasment[i] > 0 ? '+' : ''}${this.state.resourcesIncreasment[i] !== 0 ? this.state.resourcesIncreasment[i] : ''}　`}
-                  </div>
-                </div>
-              </Col>
-            )
-          })
-        }
+                </Col>
+              )
+            })
+          }
         </Grid>
       </Panel>
     )

@@ -25,6 +25,7 @@ class ModalTrigger extends React.Component {
       title: e.detail.title,
       content: e.detail.content,
       footer: e.detail.footer,
+      onExiting: e.detail.onExiting,
     })
   }
   componentDidMount = () => {
@@ -51,9 +52,10 @@ class ModalTrigger extends React.Component {
   render() {
     return (
       <Modal autoFocus={true}
-             animation={true}
-             show={this.state.isModalOpen}
-             onHide={this.handleToggle}>
+        animation={true}
+        show={this.state.isModalOpen}
+        onHide={this.handleToggle}
+        onExiting={this.state.onExiting}>
         <Modal.Header closeButton>
           <Modal.Title>{this.state.title}</Modal.Title>
         </Modal.Header>

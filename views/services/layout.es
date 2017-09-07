@@ -286,12 +286,22 @@ config.on('config.set', (path, value) => {
     break
   }
   case 'poi.layout': {
-    const resizable = remote.getCurrentWindow().isResizable()
-    remote.getCurrentWindow().setResizable(true)
+    const current = remote.getCurrentWindow()
+    const resizable = current.isResizable()
+    const maximizable = current.isMaximizable()
+    const fullscreenable = current.isFullScreenable()
+    current.setResizable(true)
+    current.setMaximizable(true)
+    current.setFullScreenable(true)
+
     changeBounds()
     // window.dispatchEvent(new Event('resize'))
     $('#layout-css').setAttribute('href', `./assets/css/layout.${value}.css`)
-    remote.getCurrentWindow().setResizable(resizable)
+
+    current.setResizable(resizable)
+    current.setMaximizable(maximizable)
+    current.setFullScreenable(fullscreenable)
+
     adjustSize()
     break
   }

@@ -22,6 +22,9 @@ window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appIcon = remote.getGlobal('appIcon')
 window.isSafeMode = remote.getGlobal('isSafeMode')
 
+// Temp: remove package-lock.json of plugin folder
+fs.remove(path.join(window.PLUGIN_PATH, 'package-lock.json'))
+
 if (window.isMain) {
   // Plugins
   fs.ensureDirSync(window.PLUGIN_PATH)

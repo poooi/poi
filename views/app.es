@@ -12,6 +12,7 @@ import PoiMapReminder from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
+import { BasicAuth } from './utils/http-basic-auth'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
@@ -20,7 +21,8 @@ const config = remote.require('./lib/config')
 webFrame.setZoomLevelLimits(1, 1)
 
 // Workaround for false BrowserWindow size
-if (config.get('poi.window.width') && config.get('poi.window.height')) {
+if (!config.get('poi.window.isMaximized', false) && !config.get('poi.window.isFullScreen', false) &&
+  config.get('poi.window.width') && config.get('poi.window.height')) {
   remote.getCurrentWindow().setSize(config.get('poi.window.width'), config.get('poi.window.height'))
 }
 
@@ -30,6 +32,7 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
+const { TitleBarWrapper } = require('./components/etc/menu')
 const CustomCssInjector = () => {
   const cssPath = path.join(EXROOT, 'hack', 'custom.css')
   fs.ensureFileSync(cssPath)
@@ -39,7 +42,6 @@ const CustomCssInjector = () => {
 }
 
 if (config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')) {
-  const { TitleBarWrapper } = require('./components/etc/menu')
   ReactDOM.render(
     <TitleBarWrapper />,
     $('title-bar')
@@ -72,3 +74,4 @@ ReactDOM.render(
 ReactDOM.render(<ModalTrigger />, $('poi-modal-trigger'))
 ReactDOM.render(<Toastr />, $('poi-toast-trigger'))
 ReactDOM.render(<CustomCssInjector />, $('poi-css-injector'))
+ReactDOM.render(<BasicAuth />, $('poi-auth-trigger'))

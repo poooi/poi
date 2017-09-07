@@ -51,6 +51,7 @@
   "Retreated": "退避",
   "Repairing": "修理中",
   "Resupply needed": "需要補給",
+  "In Sortie": "出擊中",
   "Ship tag: %s": "出擊限定: %s",
   "Slow": "低速",
   "Fast": "高速",
@@ -79,7 +80,8 @@
   "AACI": "對空 CI",
   "Battle Ship": "戰艦",
   "Akitsuki Class": "秋月級",
-  "Shot down: %s": "擊墜數：%s",
+  "Shot down: %s": "固定擊墜：%s",
+  "Modifier: %s": "獎勵係數：%s",
   "Type %s": "類型：%s",
   "Max shot down not reached": "未達到最大擊墜數",
   "OASW": "先制對潛"

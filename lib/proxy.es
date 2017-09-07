@@ -17,7 +17,7 @@ import { log, error } from './utils'
 
 const {ROOT} = global
 
-const fs = bluebird.promisifyAll(require('fs-extra'))
+const fs = require('fs-extra')
 const zlib = bluebird.promisifyAll(require('zlib'))
 
 const resolveBody = (encoding, body) => {
@@ -206,7 +206,7 @@ class Proxy extends EventEmitter {
           }
           // Use cache file
           if (cacheFile){
-            const stats = await fs.statAsync(cacheFile)
+            const stats = await fs.stat(cacheFile)
             // Cache is new
             if (req.headers['if-modified-since'] && (new Date(req.headers['if-modified-since']) >= stats.mtime)) {
               res.writeHead(304, {
@@ -216,7 +216,7 @@ class Proxy extends EventEmitter {
               res.end()
             } else {
               // Cache is old
-              const data = await fs.readFileAsync(cacheFile)
+              const data = await fs.readFile(cacheFile)
               res.writeHead(200, {
                 'Server': 'nginx',
                 'Content-Length': data.length,

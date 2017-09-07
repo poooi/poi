@@ -1,31 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="レイヤー_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="1024px" height="1024px" viewBox="0 0 1024 1024" enable-background="new 0 0 1024 1024" xml:space="preserve">
-<g id="Layer_1" display="none">
-	<g id="XMLID_1_" display="inline">
-		<path id="XMLID_64_" fill="#FFFFC5" d="M512,64c60.5,0,119.2,11.8,174.4,35.2c53.3,22.6,101.3,54.9,142.399,96
-			c41.2,41.2,73.5,89.1,96,142.4C948.2,392.8,960,451.5,960,512s-11.8,119.2-35.2,174.4c-22.6,53.3-54.899,101.3-96,142.399
-			c-41.2,41.2-89.1,73.5-142.399,96C631.2,948.2,572.5,960,512,960s-119.2-11.8-174.4-35.2c-53.3-22.6-101.3-54.899-142.399-96
-			c-41.2-41.2-73.5-89.1-96-142.399C75.8,631.2,64,572.5,64,512s11.8-119.2,35.2-174.4c22.6-53.3,54.9-101.3,96-142.4
-			c41.1-41.1,89.1-73.5,142.399-96C392.8,75.8,451.5,64,512,64 M512,0C229.2,0,0,229.2,0,512s229.2,512,512,512s512-229.2,512-512
-			S794.8,0,512,0L512,0z"/>
-	</g>
-	<circle id="XMLID_5_" display="inline" fill="none" cx="32" cy="32" r="32"/>
-	
-		<rect id="XMLID_22_" x="160.5" y="160" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" width="704" height="704"/>
-	
-		<circle id="XMLID_24_" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" cx="512.5" cy="512" r="352"/>
-	
-		<rect id="XMLID_33_" x="288" y="288" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" width="448" height="449.6"/>
-	
-		<circle id="XMLID_34_" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" cx="512" cy="513.6" r="224"/>
-	
-		<rect id="XMLID_35_" x="352" y="352" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" width="318.3" height="318.3"/>
-	
-		<circle id="XMLID_36_" display="inline" fill="none" stroke="#FFD02C" stroke-width="3" stroke-miterlimit="10" cx="511.2" cy="511.2" r="159.2"/>
-</g>
-<path fill="#62CC72" d="M543.995,492.215L851.203,450H1000v572H355.508l0.076-191.954L488.59,591.558L22.891,125.859l54.376-54.376
-	l450.26,450.26L543.995,492.215z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>16</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="160 450 160 390 260 270 140 150 160 130 280.736328 251.445312 405.078125 251.445312 500 350 500 450 440 510 220 510"></polygon>
+        <filter x="-4.2%" y="-3.9%" width="116.7%" height="115.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="66.7486979%" y1="-21.125%" x2="100%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#66CC77" offset="0%"></stop>
+            <stop stop-color="#5AB469" offset="81.5092845%"></stop>
+            <stop stop-color="#57AE65" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="16">
+            <g id="Path-23">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#66CC77" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <rect id="Rectangle-13" fill="url(#linearGradient-3)" x="200" y="350" width="300" height="100"></rect>
+        </g>
+    </g>
 </svg>

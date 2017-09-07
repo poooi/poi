@@ -106,17 +106,17 @@ export default connect((state, props) => ({
           <link rel="stylesheet" href={join(__dirname, '..', 'assets', 'miniship.css')} />
           <div className="panel-row">
             <ButtonGroup bsSize="xsmall">
-            {
-              [0, 1, 2, 3].map((i) =>
-                <ShipViewSwitchButton
-                  key={i}
-                  fleetId={i}
-                  disabled={i + 1 > this.props.fleetCount}
-                  onClick={this.handleClick.bind(this, i)}
-                  activeFleetId={this.props.activeFleetId}
+              {
+                [0, 1, 2, 3].map((i) =>
+                  <ShipViewSwitchButton
+                    key={i}
+                    fleetId={i}
+                    disabled={i + 1 > this.props.fleetCount}
+                    onClick={this.handleClick.bind(this, i)}
+                    activeFleetId={this.props.activeFleetId}
                   />
-              )
-            }
+                )
+              }
             </ButtonGroup>
             <ButtonGroup bsSize="xsmall" className='plane-button-mini'>
               <LandbaseButton key={4}
@@ -125,22 +125,22 @@ export default connect((state, props) => ({
                 onClick={e => this.handleClick(4)}
                 activeFleetId={this.props.activeFleetId}
                 isMini={true}
-                />
+              />
             </ButtonGroup>
           </div>
           <div className="no-scroll">
             <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-                 style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
-            {
-              [0, 1, 2, 3].map((i) => (
-                <div className="ship-deck ship-tabpane" key={i}>
-                  <PaneBodyMini
-                    key={i}
-                    fleetId={i}
-                  />
-                </div>
-              ))
-            }
+              style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
+              {
+                [0, 1, 2, 3].map((i) => (
+                  <div className="ship-deck ship-tabpane" key={i}>
+                    <PaneBodyMini
+                      key={i}
+                      fleetId={i}
+                    />
+                  </div>
+                ))
+              }
               <div className="ship-deck ship-tabpane" key={4}>
                 <LBViewMini />
               </div>

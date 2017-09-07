@@ -21,9 +21,9 @@ const { i18n } = window
 
 function getBackgroundStyle() {
   return window.isDarkTheme ?
-  {backgroundColor: 'rgba(33, 33, 33, 0.7)'}
-  :
-  {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
+    {backgroundColor: 'rgba(33, 33, 33, 0.7)'}
+    :
+    {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
 }
 
 const slotitemsDataSelectorFactory = memoize((shipId) =>
@@ -55,7 +55,7 @@ export const Slotitems = connect(
 )(function ({api_maxeq, equipsData, exslotUnlocked}) {
   return (
     <div className="slotitems">
-    {equipsData &&
+      {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const isExslot = equipIdx == (equipsData.length-1)
         if (isExslot && !equipData && !exslotUnlocked) {
@@ -102,18 +102,18 @@ export const Slotitems = connect(
 
         return (
           <div key={equipIdx} className="slotitem-container">
-          {
-            itemOverlay ?
-              <OverlayTrigger placement='left' overlay={itemOverlay}>
-                {itemSpan}
-              </OverlayTrigger>
-            :
-              itemSpan
-          }
+            {
+              itemOverlay ?
+                <OverlayTrigger placement='left' overlay={itemOverlay}>
+                  {itemSpan}
+                </OverlayTrigger>
+                :
+                itemSpan
+            }
           </div>
         )
       })
-    }
+      }
     </div>
   )
 })
@@ -124,7 +124,7 @@ export const LandbaseSlotitems = connect(
 )(function ({api_maxeq, api_cond, api_state, equipsData, isMini}) {
   return (
     <div className="slotitems">
-    {equipsData &&
+      {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const [equip, $equip, onslot] = equipData || []
         const equipIconId = equipData ? $equip.api_type[3] : 0
@@ -175,18 +175,18 @@ export const LandbaseSlotitems = connect(
 
         return (
           <div key={equipIdx} className="slotitem-container">
-          {
-            itemOverlay ?
-              <OverlayTrigger placement='left' overlay={itemOverlay}>
-                {itemSpan}
-              </OverlayTrigger>
-            :
-              itemSpan
-          }
+            {
+              itemOverlay ?
+                <OverlayTrigger placement='left' overlay={itemOverlay}>
+                  {itemSpan}
+                </OverlayTrigger>
+                :
+                itemSpan
+            }
           </div>
         )
       })
-    }
+      }
     </div>
   )
 })
