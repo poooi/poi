@@ -439,14 +439,15 @@ const PluginConfig = connect((state, props) => ({
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
     if (plugin.linkedPlugin) {
+      this.setState({npmWorking: false})
       return
     }
     try {
       await PluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
-      this.setState({npmWorking: false})
     } catch (error) {
-      this.setState({npmWorking: false})
       throw error
+    } finally {
+      this.setState({npmWorking: false})
     }
   }
   handleInstallAll = async () => {
