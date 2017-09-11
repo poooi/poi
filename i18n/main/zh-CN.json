@@ -84,5 +84,7 @@
   "Modifier: %s": "奖励系数：%s",
   "Type %s": "类型：%s",
   "Max shot down not reached": "未达到最大击坠数",
-  "OASW": "先制对潜"
+  "OASW": "先制对潜",
+  "At least one ship in your fleet has not been locked": "至少有一位舰娘没有贴条",
+  "Event ship locking warning": "活动锁船警告"
 }

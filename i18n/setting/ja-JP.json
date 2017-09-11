@@ -141,6 +141,7 @@
   "Data version": "データバージョン",
   "Update data": "データを更新する",
   "Display Final Stage Notification": "最終戦ヒントを表示する",
+  "Display Event Ship Locking Notification": "札なし艦娘出撃時にヒントを表示する",
   "Switch to Plugin Automatically": "場によってプラグインを自動に表示する",
   "Enable autoswitch for main panel": "一覧と艦隊の自動表示を有効する",
   "Enable auto switch": "自動表示を有効する",

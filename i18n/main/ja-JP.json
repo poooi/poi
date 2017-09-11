@@ -83,5 +83,7 @@
   "Modifier: %s": "変動ボーナス補正",
   "Type %s": "種別：%s",
   "Max shot down not reached": "最上位の組合せを満たしていない",
-  "OASW": "先制対潜"
+  "OASW": "先制対潜",
+  "At least one ship in your fleet has not been locked": "少なくとも1つの艦娘が出撃札がついていない",
+  "Event ship locking warning": "誤出撃警告"
 }
