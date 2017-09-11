@@ -667,6 +667,10 @@ class PoiConfig extends Component {
                 label={__('Display Final Stage Notification')}
                 configName="poi.lastbattle.enabled"
                 defaultVal={true} />
+              <CheckboxLabelConfig
+                label={__('Display Event Ship Locking Notification')}
+                configName="poi.eventSortieCheck.enable"
+                defaultVal={true} />
             </Col>
           </Grid>
         </div>
