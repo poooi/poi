@@ -21,6 +21,7 @@ window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME')
 window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appIcon = remote.getGlobal('appIcon')
 window.isSafeMode = remote.getGlobal('isSafeMode')
+window.isDevVersion = remote.getGlobal('isDevVersion')
 
 // Temp: remove package-lock.json of plugin folder
 fs.remove(path.join(window.PLUGIN_PATH, 'package-lock.json'))

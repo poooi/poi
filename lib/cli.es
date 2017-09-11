@@ -59,3 +59,6 @@ if (argv.s) {
 // Finish initialization of debug environment
 Debug.init()
 global.dbg = Debug
+
+// detect git version or release
+global.isDevVersion = !!process.defaultApp
