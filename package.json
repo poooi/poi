@@ -186,5 +186,10 @@
     "type": "opencollective",
     "url": "https://opencollective.com/poi",
     "logo": "https://opencollective.com/opencollective/logo.txt"
+  },
+  "optionalDependencies": {
+    "7zip-bin-linux": "^1.1.0",
+    "7zip-bin-mac": "^1.0.1",
+    "7zip-bin-win": "^2.1.0"
   }
 }
