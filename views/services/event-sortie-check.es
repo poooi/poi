@@ -22,7 +22,8 @@ window.addEventListener('game.request', ({ detail: { path } }) => {
         .filter(Boolean)
     }
 
-    const freeShipCount = deckData.filter(ship => ship.api_sally_area === 0)
+    const freeShipCount = deckData.filter(ship => ship.api_sally_area === 0).length
+
     const taggedCount = [
       ...new Set(deckData
         .filter(ship => ship.api_sally_area > 0)
