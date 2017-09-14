@@ -23,7 +23,7 @@ function getBackgroundStyle() {
   return window.isDarkTheme ?
     {backgroundColor: 'rgba(33, 33, 33, 0.7)'}
     :
-    {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
+    {backgroundColor: 'rgba(255, 255, 255, 0.7)'}
 }
 
 const slotitemsDataSelectorFactory = memoize((shipId) =>
