@@ -133,6 +133,7 @@ app.on('ready', () => {
     webPreferences: {
       plugins: true,
     },
+    backgroundColor: '#00000000',
   })
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
