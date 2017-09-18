@@ -374,7 +374,7 @@ class Proxy extends EventEmitter {
       error(err)
     })
     const listenPort = config.get('proxy.port', 0)
-    this.server.listen(listenPort, '127.0.0.1', () => {
+    this.server.listen(listenPort, config.get('proxy.allowLAN', false) ? '0.0.0.0' : '127.0.0.1', () => {
       this.port = this.server.address().port
       app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
       app.commandLine.appendSwitch('ignore-certificate-errors')
