@@ -457,9 +457,10 @@ export class TitleBarWrapper extends Component {
     config.removeListener('config.set', this.handleThemeChange)
   }
   render () {
-    return <div>
-      <link rel="stylesheet" type="text/css" href={require.resolve('electron-react-titlebar/assets/style.css')} />
-      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />
-    </div>
+    return (
+      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')}>
+        <link rel="stylesheet" type="text/css" href={require.resolve('electron-react-titlebar/assets/style.css')} />
+      </TitleBar>
+    )
   }
 }
