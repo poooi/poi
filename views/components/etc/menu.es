@@ -303,7 +303,7 @@ if (process.platform !== 'darwin') {
         { type: 'separator' },
         {
           label: __ ('Developer Tools'),
-          accelerator: 'Cmd+Shift+I',
+          accelerator: 'Alt+CmdOrCtrl+I',
           click: (item, focusedWindow) => {
             focusedWindow.openDevTools({detach: true})
           },
