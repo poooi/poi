@@ -12,7 +12,7 @@ init:
 install:
   - ps: Install-Product node 8 x64
   - git reset --hard HEAD
-  - npm install npm@5.3.0 -g
+  - npm install npm -g
   - npm install --silent
   - npm run lint
 
