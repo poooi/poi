@@ -310,7 +310,7 @@ const postEnableProcess = (plugin) => {
     }
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
-      backgroundColor: '#00000000',
+      backgroundColor: process.platform === 'darwin' ? '#00000000' : '#222222',
     })
     if (['darwin'].includes(process.platform) && config.get('poi.vibrant', 0) === 1) {
       Object.assign(windowOptions, {
