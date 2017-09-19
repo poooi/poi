@@ -83,7 +83,7 @@ export const Slotitems = connect(
           </Tooltip>
 
         const equipIconId = equipData ? $equip.api_type[3] : 0
-        const showOnslot = !equipData || isExslot || equipIsAircraft(equipIconId)
+        const showOnslot = !equipData || isExslot || equipIsAircraft($equip)
         const maxOnslot = isExslot ? 0 : api_maxeq[equipIdx]
         const onslotText = isExslot ? "+" : equipData ? onslot : maxOnslot
         const onslotWarning = equipData && onslot < maxOnslot
@@ -128,7 +128,7 @@ export const LandbaseSlotitems = connect(
       equipsData.map((equipData, equipIdx) => {
         const [equip, $equip, onslot] = equipData || []
         const equipIconId = equipData ? $equip.api_type[3] : 0
-        const showOnslot = !equipData || equipIsAircraft(equipIconId)
+        const showOnslot = !equipData || equipIsAircraft($equip)
         const maxOnslot = api_maxeq[equipIdx]
         const onslotWarning = equipData && onslot < maxOnslot
         const onslotText = equipData ? onslot : maxOnslot

@@ -7,7 +7,7 @@ const validAll = (...func) => x => func.every(f => f(x))
 
 const isSonar = iconIs(18)
 const isIsuzuK2 = shipIdIs(141)
-const isAircraft = equip => equipIsAircraft(equip.api_type[3])
+const isAircraft = equip => equipIsAircraft(equip)
 const is931 = equip => equip.api_slotitem_id === 82 || equip.api_slotitem_id === 83
 
 const taisenAbove = value => ship => ship.api_taisen[0] >= value

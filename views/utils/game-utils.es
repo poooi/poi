@@ -4,6 +4,7 @@
  */
 import { ProgressBar } from 'react-bootstrap'
 import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
+import { get } from 'lodash'
 
 addStyle(ProgressBar, 'green')
 addStyle(ProgressBar, 'yellow')
@@ -119,13 +120,23 @@ export function getHpStyle(percent) {
 }
 
 // equipIconId: as in $equip.api_type[3]
-export function equipIsAircraft(equipIconId) {
-  return equipIconId != null && (
-    between(equipIconId, 6, 10) ||
-    between(equipIconId, 21, 22) ||
-    between(equipIconId, 37, 40) ||
-    [33, 43, 44, 45].includes(equipIconId)
-  )
+export function equipIsAircraft(equip) {
+  if (Number.isInteger(equip)) {
+    return equip != null && (
+      between(equip, 6, 10) ||
+      between(equip, 21, 22) ||
+      between(equip, 37, 40) ||
+      between(equip, 43, 46) ||
+      [33].includes(equip)
+    )
+  } else {
+    const id = get(equip, 'api_type.2', 0)
+    return between(id, 6, 11) ||
+    between(equip, 25, 26) ||
+    between(equip, 47, 48) ||
+    between(id, 56, 59) ||
+    [41, 45, 94].includes(id)
+  }
 }
 
 export function getTyku(equipsData, landbaseStatus=0) {
