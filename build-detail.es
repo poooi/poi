@@ -431,6 +431,9 @@ export const buildAsync = async (poiVersion, dontRemove) => {
   await filterCopyAppAsync(stage1App, stage2App)
   if (!dontRemove){
     await npmInstallAsync(stage2App, ['--only=production'])
+    await runScriptAsync(NPM_EXEC_PATH, ['dedupe'], {
+      cwd: path.join(stage2App, 'node_modules', 'npm'),
+    })
   }
   log('stage 2 finished')
 
