@@ -119,7 +119,7 @@ export function getHpStyle(percent) {
   }
 }
 
-// equipIconId: as in $equip.api_type[3]
+// equip: $equip or $equip.api_type[3]
 export function equipIsAircraft(equip) {
   if (Number.isInteger(equip)) {
     return equip != null && (
@@ -132,8 +132,8 @@ export function equipIsAircraft(equip) {
   } else {
     const id = get(equip, 'api_type.2', 0)
     return between(id, 6, 11) ||
-    between(equip, 25, 26) ||
-    between(equip, 47, 48) ||
+    between(id, 25, 26) ||
+    between(id, 47, 48) ||
     between(id, 56, 59) ||
     [41, 45, 94].includes(id)
   }
