@@ -248,18 +248,13 @@ const runScriptReturnStdoutAsync = (scriptPath, args, options) =>
     proc.on('exit', () => resolve(data))
   })
 
-const npmInstallAsync = async (tgtDir, args=[], dedupe=false) => {
+const npmInstallAsync = async (tgtDir, args=[]) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   log(`Installing npm for ${tgtDir}`)
   await fs.ensureDir(tgtDir)
   await runScriptAsync(NPM_EXEC_PATH, ['install', '--registry', NPM_SERVER].concat(args),{
     cwd: tgtDir,
   })
-  if(dedupe) {
-    await runScriptAsync(NPM_EXEC_PATH, ['dedupe'], {
-      cwd: tgtDir,
-    })
-  }
   log(`Finished installing npm for ${tgtDir}`)
 }
 
@@ -435,7 +430,7 @@ export const buildAsync = async (poiVersion, dontRemove) => {
   // Stage2: Filtered copy
   await filterCopyAppAsync(stage1App, stage2App)
   if (!dontRemove){
-    await npmInstallAsync(stage2App, ['--only=production'], true)
+    await npmInstallAsync(stage2App, ['--only=production'])
   }
   log('stage 2 finished')
 
