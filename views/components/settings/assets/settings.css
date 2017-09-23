@@ -25,12 +25,19 @@
   display: flex;
   align-items: center;
 }
+#SettingsView #poi-others .contributors {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#SettingsView #poi-others .contributor-item {
+  margin: 10px;
+}
 #SettingsView #poi-others .avatar-img {
   cursor: pointer !important;
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  margin-top: 10px;
 }
 #SettingsView #poi-others .thanks-to {
   display: flex;

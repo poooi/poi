@@ -7,6 +7,7 @@ import { get, throttle, sortBy, round, sumBy } from 'lodash'
 import { sync as globSync } from 'glob'
 import { CheckboxLabelConfig } from './utils'
 import { checkUpdate } from 'views/services/update'
+import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -37,6 +38,10 @@ const fetchFromRemote = async (url, cacheMode = "default") => {
     }
   }
 }
+
+const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
+  ? `${url}&s=160`
+  : url
 
 class DownloadProgress extends Component {
   state = {
@@ -336,12 +341,17 @@ const Others = connect(state => ({
           <AppMetrics />
         </Col>
         <Divider text="Contributors" />
-        <Grid>
+        <Grid className="contributors">
           {
-            CONST.contributors.map((e, i) => (
-              <Col xs={2} key={i}>
-                <img className="avatar-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
-              </Col>
+            CONTRIBUTORS.map((e, i) => (
+              <div key={i} className="contributor-item">
+                <img
+                  className="avatar-img"
+                  src={getAvatarUrl(e.avatar_url)}
+                  onClick={shell.openExternal.bind(this, e.link)}
+                  title={e.name || e.login}
+                />
+              </div>
             ))
           }
         </Grid>
