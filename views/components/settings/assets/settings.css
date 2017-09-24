@@ -40,13 +40,16 @@
   flex-wrap: wrap;
 }
 #SettingsView #poi-others .contributor-item {
-  margin: 10px;
+  margin: 5px;
 }
 #SettingsView #poi-others .avatar-img {
   cursor: pointer !important;
   width: 40px;
   height: 40px;
   border-radius: 20px;
+}
+#SettingsView #poi-others .opencollective img {
+  cursor: pointer !important;
 }
 #SettingsView #poi-others .thanks-to {
   display: flex;
