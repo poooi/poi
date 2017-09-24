@@ -359,39 +359,43 @@ const Others = connect(state => ({
           <AppMetrics />
         </Col>
         <Divider text="Contributors" />
-        <Grid className="contributors">
-          {
-            CONTRIBUTORS.map((e, i) => (
-              <div key={i} className="contributor-item">
-                <img
-                  className="avatar-img"
-                  src={getAvatarUrl(e.avatar_url)}
-                  onClick={shell.openExternal.bind(this, e.html_url)}
-                  title={e.name || e.login}
-                />
-              </div>
-            ))
-          }
+        <Grid>
+          <Col xs={12} className="contributors">
+            {
+              CONTRIBUTORS.map((e, i) => (
+                <div key={i} className="contributor-item">
+                  <img
+                    className="avatar-img"
+                    src={getAvatarUrl(e.avatar_url)}
+                    onClick={shell.openExternal.bind(this, e.html_url)}
+                    title={e.name || e.login}
+                  />
+                </div>
+              ))
+            }
+          </Col>
         </Grid>
         <Divider text="Open Collective" />
         <Grid className="opencollective container">
-          <div>
-            <a href="https://opencollective.com/poi/sponsor/0/website"><img src="https://opencollective.com/poi/sponsor/0/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/1/website"><img src="https://opencollective.com/poi/sponsor/1/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/2/website"><img src="https://opencollective.com/poi/sponsor/2/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/3/website"><img src="https://opencollective.com/poi/sponsor/3/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/4/website"><img src="https://opencollective.com/poi/sponsor/4/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/5/website"><img src="https://opencollective.com/poi/sponsor/5/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/6/website"><img src="https://opencollective.com/poi/sponsor/6/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/7/website"><img src="https://opencollective.com/poi/sponsor/7/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/8/website"><img src="https://opencollective.com/poi/sponsor/8/avatar.svg" /></a>
-            <a href="https://opencollective.com/poi/sponsor/9/website"><img src="https://opencollective.com/poi/sponsor/9/avatar.svg" /></a>
-          </div>
-          <div>
-            <a href="https://opencollective.com/poi#backers">
-              <img src={`https://opencollective.com/poi/backers.svg?width=${this.props.layout === 'horizontal' ? 450 : 900}`} />
-            </a>
-          </div>
+          <Col xs={12}>
+            <div>
+              <a href="https://opencollective.com/poi/sponsor/0/website"><img src="https://opencollective.com/poi/sponsor/0/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/1/website"><img src="https://opencollective.com/poi/sponsor/1/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/2/website"><img src="https://opencollective.com/poi/sponsor/2/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/3/website"><img src="https://opencollective.com/poi/sponsor/3/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/4/website"><img src="https://opencollective.com/poi/sponsor/4/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/5/website"><img src="https://opencollective.com/poi/sponsor/5/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/6/website"><img src="https://opencollective.com/poi/sponsor/6/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/7/website"><img src="https://opencollective.com/poi/sponsor/7/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/8/website"><img src="https://opencollective.com/poi/sponsor/8/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/9/website"><img src="https://opencollective.com/poi/sponsor/9/avatar.svg" /></a>
+            </div>
+            <div>
+              <a href="https://opencollective.com/poi#backers">
+                <img src={`https://opencollective.com/poi/backers.svg?width=${this.props.layout === 'horizontal' ? 450 : 900}`} />
+              </a>
+            </div>
+          </Col>
         </Grid>
         <Divider text="Special Thanks To" />
         <Grid className='thanks-to sp-thanks-to'>
