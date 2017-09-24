@@ -1,13 +1,14 @@
 import React, { Component, PureComponent } from 'react'
 import { shell, remote } from 'electron'
 import Divider from './divider'
-import { Grid, Col, Row, Button, ProgressBar } from 'react-bootstrap'
+import { Grid, Col, Row, Button, ProgressBar, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, throttle, sortBy, round, sumBy } from 'lodash'
 import { sync as globSync } from 'glob'
 import { CheckboxLabelConfig } from './utils'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
+import FA from 'react-fontawesome'
 
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -307,18 +308,30 @@ const Others = connect(state => ({
           </Col>
           <Col xs={12}>
             <p>{__("poi-description %s", process.versions.electron)}</p>
-            {
-              (window.language === "zh-CN" || window.language === "zh-TW") ?
-                <div>
-                  <p>微博: <a href='http://weibo.com/letspoi'>  今天 poi 出新版本了吗 </a></p>
-                  <p>开发讨论与意见交流群: 378320628 </p>
-                </div>
-                :
-                null
-            }
-            <p>{__("Database")}:<a href='http://db.kcwiki.moe'> http://db.kcwiki.moe </a></p>
-            <p>{__("Wiki")}: <a href='https://github.com/poooi/poi/wiki'> https://github.com/poooi/poi/wiki </a></p>
-            <p>GitHub：<a href='https://github.com/poooi/poi'> https://github.com/poooi/poi </a></p>
+            <div className="desc-buttons">
+              {
+                ['zh-CN', 'zh-TW'].includes(window.language) &&
+                    <Button onClick={shell.openExternal.bind(this, 'http://weibo.com/letspoi')}>
+                      <FA name="weibo" /> @今天poi出新版本了吗
+                    </Button>
+              }
+              {
+                ['zh-CN', 'zh-TW'].includes(window.language)
+                  ? <Button><FA name="qq" /> 用户交流群： 378320628 </Button>
+                  : <Button onClick={shell.openExternal.bind(this, 'https://t.me/joinchat/ENYTxwoB7sKsPQmgKEFzJw')}>
+                    <FA name="telegram" /> Telegram
+                  </Button>
+              }
+              <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.moe')}>
+                <FA name="database" /> {__("Database")}
+              </Button>
+              <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}>
+                <FA name="question" /> {__("Wiki")}
+              </Button>
+              <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}>
+                <FA name="github" /> GitHub
+              </Button>
+            </div>
           </Col>
         </Grid>
         <Divider text={__("Data version")} />
@@ -326,7 +339,11 @@ const Others = connect(state => ({
           <Col xs={12}>
             {
               fcds.map(fcd => (
-                fcd ? <p key={fcd[0]}>{`${fcd[0]}: ${fcd[1]}`}</p> : null
+                fcd
+                  ? <span key={fcd[0]}>
+                    {fcd[0]}: <Label bsStyle="primary">{fcd[1]}</Label>
+                  </span>
+                  : null
               ))
             }
           </Col>
@@ -348,12 +365,33 @@ const Others = connect(state => ({
                 <img
                   className="avatar-img"
                   src={getAvatarUrl(e.avatar_url)}
-                  onClick={shell.openExternal.bind(this, e.link)}
+                  onClick={shell.openExternal.bind(this, e.html_url)}
                   title={e.name || e.login}
                 />
               </div>
             ))
           }
+        </Grid>
+        <Divider text="Special Thanks To" />
+        <Grid className='thanks-to sp-thanks-to'>
+          <div className="div-row thanks-to-item">
+            <div className='thanks-to-img-container'>
+              <img className="thanks-to-img"
+                src="https://upload.kcwiki.moe/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png"
+                style={{
+                  WebkitClipPath: 'inset(0px 78% 0px 0px)',
+                  maxHeight: '100%',
+                  marginLeft: '5%',
+                }}
+                onClick={shell.openExternal.bind(this, 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91')}
+                title="KCWiki"
+              />
+            </div>
+            <div className='thanks-to-container'>
+              <b>KCWiki</b>
+              <p>For sponsing poi data server, providing data of item imporvment, task info, shipgirl qoutes, etc.</p>
+            </div>
+          </div>
         </Grid>
         <Divider text="Thanks To" />
         <Grid className='thanks-to'>

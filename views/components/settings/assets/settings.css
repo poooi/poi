@@ -25,6 +25,15 @@
   display: flex;
   align-items: center;
 }
+#SettingsView #poi-others .desc-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#SettingsView #poi-others .desc-buttons > button {
+  margin-right: 1em;
+}
 #SettingsView #poi-others .contributors {
   display: flex;
   flex-direction: row;
@@ -48,6 +57,9 @@
   width: 50%;
   padding-left: 15px;
   padding-right: 15px;
+}
+#SettingsView #poi-others .sp-thanks-to .thanks-to-item {
+  width: initial;
 }
 #SettingsView #poi-others .thanks-to-img-container {
   overflow: hidden;
