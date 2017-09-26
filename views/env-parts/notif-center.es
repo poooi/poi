@@ -1,16 +1,9 @@
 import path from 'path-extra'
-import semver from 'semver'
-import os from 'os'
 import { remote } from 'electron'
 import { get, memoize, throttle, debounce, pickBy } from 'lodash'
 
-const {config, appIcon, ROOT} = window
+const {config, ROOT} = window
 const NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
-
-let NOTIFY_NOTIFICATION_API = true
-if (process.platform === 'win32' && semver.lt(os.release(), '6.2.0')) {
-  NOTIFY_NOTIFICATION_API = false
-}
 
 function maybeFunctionString(func, args) {
   if (typeof func === 'function')
@@ -118,25 +111,12 @@ class NotificationCenter {
     const title = mergedConfig.title
     const message = mergedConfig.message
     if (message){
-      if (NOTIFY_NOTIFICATION_API) {
-        const currentNotif = new Notification (title, {
-          icon: mergedConfig.icon,
-          body: message,
-          silent: true,
-        })
-        currentNotif.onclick = () => remote.getCurrentWindow().focus()
-      } else{
-        try {
-          appIcon.displayBalloon({
-            title: title,
-            icon: mergedConfig.icon,
-            content: message,
-          })
-          appIcon.on('balloon-click', remote.getGlobal('mainWindow').focus)
-        } catch (e) {
-          console.error(e.stack)
-        }
-      }
+      const currentNotif = new Notification (title, {
+        icon: mergedConfig.icon,
+        body: message,
+        silent: true,
+      })
+      currentNotif.onclick = () => remote.getCurrentWindow().focus()
     }
     if (volume > VOLUME_ZERO) {
       const sound = new Audio(mergedConfig.audio)
