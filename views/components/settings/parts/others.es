@@ -332,6 +332,9 @@ const Others = connect(state => ({
               <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}>
                 <FA name="github" /> GitHub
               </Button>
+              <Button onClick={shell.openExternal.bind(this, 'https://opencollective.com/poi')}>
+                <FA name="thumbs-up" /> OpenCollective
+              </Button>
             </div>
           </Col>
         </Grid>
@@ -375,7 +378,7 @@ const Others = connect(state => ({
             }
           </Col>
         </Grid>
-        <Divider text="Open Collective" />
+        <Divider text="OpenCollective" />
         <Grid className="opencollective container">
           <Col xs={12}>
             <div>
