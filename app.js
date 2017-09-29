@@ -125,7 +125,8 @@ app.on('ready', () => {
     icon: poiIconPath,
     resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
-    titleBarStyle: 'hidden',
+    //workaround for low-alpha title-bar
+    titleBarStyle: process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17 ? null : 'hidden',
     frame: !config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
     enableLargerThanScreen: true,
     maximizable: config.get('poi.content.resizable', true),
