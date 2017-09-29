@@ -1,7 +1,7 @@
 import { omit, get, set } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, rmdir, lstatSync } from 'fs-extra'
+import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, remove, lstatSync } from 'fs-extra'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import semver from 'semver'
@@ -15,7 +15,7 @@ import path from 'path'
 import i18n from 'i18n-2'
 
 import { extendReducer } from 'views/create-store'
-const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
+const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH, PLUGIN_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -110,6 +110,7 @@ export async function removePackage (target, npmConfig) {
   await runScriptAsync(NPM_EXEC_PATH, args, {
     cwd: npmConfig.prefix,
   })
+  await repairDep([], npmConfig)
 }
 
 
@@ -396,12 +397,14 @@ export function unloadPlugin(plugin) {
   return plugin
 }
 
-export function notifyFailed(state) {
+export function notifyFailed(state, npmConfig) {
   const plugins = state.filter((plugin) => (plugin.isBroken))
   const unreadList = []
+  const reinstallList = []
   for (let i = 0; i < plugins.length; i++) {
     const plugin = plugins[i]
     unreadList.push(plugin.name)
+    reinstallList.push(plugin.packageName)
   }
   if (unreadList.length > 0) {
     const content = `${unreadList.join(' / ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
@@ -410,6 +413,23 @@ export function notifyFailed(state) {
       title: __('Plugin error'),
     })
   }
+  repairDep(reinstallList, npmConfig)
+}
+
+export async function repairDep(brokenList, npmConfig) {
+  const depList = (await new Promise(res => {
+    glob(path.join(PLUGIN_PATH, 'node_modules', '*'), (err, matches) => res(matches))
+  })).filter(p => !p.includes('poi-plugin'))
+  depList.forEach(p => {
+    try {
+      require(p)
+    } catch (e) {
+      safePhysicallyRemove(p, npmConfig)
+    }
+  })
+  brokenList.forEach(pluginName => {
+    installPackage(pluginName, null, npmConfig)
+  })
 }
 
 // Unlink a path if it's a symlink.
@@ -435,6 +455,6 @@ export const safePhysicallyRemove = async (packagePath) => {
       return
     }
   } catch (e) {
-    return await promisify(rmdir)(packagePath)
+    return await remove(packagePath)
   }
 }

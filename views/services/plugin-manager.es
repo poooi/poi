@@ -78,7 +78,7 @@ class PluginManager extends EventEmitter {
       return plugin
     }))
     plugins = sortBy(plugins, 'priority')
-    notifyFailed(plugins)
+    notifyFailed(plugins, this.npmConfig)
     dispatch({
       type: '@@Plugin/initialize',
       value: plugins,
