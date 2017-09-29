@@ -15,7 +15,7 @@ import path from 'path'
 import i18n from 'i18n-2'
 
 import { extendReducer } from 'views/create-store'
-const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH, PLUGIN_PATH } = window
+const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
@@ -418,7 +418,7 @@ export function notifyFailed(state, npmConfig) {
 
 export async function repairDep(brokenList, npmConfig) {
   const depList = (await new Promise(res => {
-    glob(path.join(PLUGIN_PATH, 'node_modules', '*'), (err, matches) => res(matches))
+    glob(path.join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches))
   })).filter(p => !p.includes('poi-plugin'))
   depList.forEach(p => {
     try {
