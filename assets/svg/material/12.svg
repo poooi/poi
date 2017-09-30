@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="1200px" height="1200px" viewBox="0 0 1200 1200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
-    <title>12</title>
+    <title>10</title>
     <desc>Created with Sketch.</desc>
     <defs>
         <polygon id="path-1" points="600 1070 280 910 600 750 920 910"></polygon>
@@ -13,21 +13,21 @@
         </filter>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="12">
+        <g id="10">
             <g id="Path-3">
                 <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
-                <use fill="#663DA6" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <use fill="#D7443B" fill-rule="evenodd" xlink:href="#path-1"></use>
             </g>
             <g id="Group-2" transform="translate(280.000000, 430.000000)">
-                <polygon id="Path-3-Copy" fill="#482D72" points="320 320 0 160 320 0"></polygon>
-                <polygon id="Path-3-Copy-3" fill="#3A245C" transform="translate(480.000000, 160.000000) scale(-1, 1) translate(-480.000000, -160.000000) " points="640 320 320 160 640 0"></polygon>
-                <polygon id="Path-4-Copy" fill="#482D72" points="320 320 320 640 640 480 640 160"></polygon>
-                <polygon id="Path-4-Copy-2" fill="#563589" transform="translate(160.000000, 400.000000) scale(-1, 1) translate(-160.000000, -400.000000) " points="1.13686838e-13 320 1.13686838e-13 640 320 480 320 160"></polygon>
+                <polygon id="Path-3-Copy" fill="#9A2923" points="320 320 0 160 320 0"></polygon>
+                <polygon id="Path-3-Copy-3" fill="#741E19" transform="translate(480.000000, 160.000000) scale(-1, 1) translate(-480.000000, -160.000000) " points="640 320 320 160 640 0"></polygon>
+                <polygon id="Path-4-Copy" fill="#9A2923" points="320 320 320 640 640 480 640 160"></polygon>
+                <polygon id="Path-4-Copy-2" fill="#BF3C33" transform="translate(160.000000, 400.000000) scale(-1, 1) translate(-160.000000, -400.000000) " points="1.13686838e-13 320 1.13686838e-13 640 320 480 320 160"></polygon>
             </g>
             <g id="Group" transform="translate(280.000000, 170.000000)">
-                <polygon id="Path-4-Copy-4" fill="#482D72" points="320 320 320 420 640 260 640 160"></polygon>
-                <polygon id="Path-4-Copy-3" fill="#563589" transform="translate(160.000000, 290.000000) scale(-1, 1) translate(-160.000000, -290.000000) " points="1.13686838e-13 320 2.27373675e-13 420 320 260 320 160"></polygon>
-                <polygon id="Path-3-Copy-4" fill="#663DA6" points="320 320 -1.13686838e-13 160 320 5.68434189e-14 640 160"></polygon>
+                <polygon id="Path-4-Copy-4" fill="#9A2923" points="320 320 320 420 640 260 640 160"></polygon>
+                <polygon id="Path-4-Copy-3" fill="#BF3C33" transform="translate(160.000000, 290.000000) scale(-1, 1) translate(-160.000000, -290.000000) " points="5.68434189e-14 320 1.70530257e-13 420 320 260 320 160"></polygon>
+                <polygon id="Path-3-Copy-4" fill="#D7443B" points="320 320 -1.13686838e-13 160 320 5.68434189e-14 640 160"></polygon>
             </g>
         </g>
     </g>
