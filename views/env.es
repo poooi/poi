@@ -6,6 +6,7 @@ import { remote } from 'electron'
 import lodash from 'lodash'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import createClass from 'create-react-class'
 import FontAwesome  from 'react-fontawesome'
 import * as ReactBootstrap from 'react-bootstrap'
 const { Radio, Checkbox, FormControl } = ReactBootstrap
@@ -43,6 +44,7 @@ window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
 window.React = React
+window.React.createClass = createClass
 window.ReactDOM = ReactDOM
 window.FontAwesome = FontAwesome
 window.ReactBootstrap = ReactBootstrap
