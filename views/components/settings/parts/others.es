@@ -1,12 +1,14 @@
 import React, { Component, PureComponent } from 'react'
 import { shell, remote } from 'electron'
 import Divider from './divider'
-import { Grid, Col, Row, Button, ProgressBar } from 'react-bootstrap'
+import { Grid, Col, Row, Button, ProgressBar, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get, throttle, sortBy, round, sumBy } from 'lodash'
 import { sync as globSync } from 'glob'
 import { CheckboxLabelConfig } from './utils'
 import { checkUpdate } from 'views/services/update'
+import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
+import FA from 'react-fontawesome'
 
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -37,6 +39,10 @@ const fetchFromRemote = async (url, cacheMode = "default") => {
     }
   }
 }
+
+const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
+  ? `${url}&s=160`
+  : url
 
 class DownloadProgress extends Component {
   state = {
@@ -211,6 +217,7 @@ const initState = {}
 
 const Others = connect(state => ({
   version: state.fcd.version || initState,
+  layout: get(state, 'config.poi.layout', 'horizontal'),
 }))(class others extends Component {
   updateData = (cacheMode = 'default') => async () => {
     // Update from local
@@ -302,18 +309,33 @@ const Others = connect(state => ({
           </Col>
           <Col xs={12}>
             <p>{__("poi-description %s", process.versions.electron)}</p>
-            {
-              (window.language === "zh-CN" || window.language === "zh-TW") ?
-                <div>
-                  <p>微博: <a href='http://weibo.com/letspoi'>  今天 poi 出新版本了吗 </a></p>
-                  <p>开发讨论与意见交流群: 378320628 </p>
-                </div>
-                :
-                null
-            }
-            <p>{__("Database")}:<a href='http://db.kcwiki.moe'> http://db.kcwiki.moe </a></p>
-            <p>{__("Wiki")}: <a href='https://github.com/poooi/poi/wiki'> https://github.com/poooi/poi/wiki </a></p>
-            <p>GitHub：<a href='https://github.com/poooi/poi'> https://github.com/poooi/poi </a></p>
+            <div className="desc-buttons">
+              {
+                ['zh-CN', 'zh-TW'].includes(window.language) &&
+                    <Button onClick={shell.openExternal.bind(this, 'http://weibo.com/letspoi')}>
+                      <FA name="weibo" /> @今天poi出新版本了吗
+                    </Button>
+              }
+              {
+                ['zh-CN', 'zh-TW'].includes(window.language)
+                  ? <Button><FA name="qq" /> 用户交流群： 378320628 </Button>
+                  : <Button onClick={shell.openExternal.bind(this, 'https://t.me/joinchat/ENYTxwoB7sKsPQmgKEFzJw')}>
+                    <FA name="telegram" /> Telegram
+                  </Button>
+              }
+              <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.moe')}>
+                <FA name="database" /> {__("Database")}
+              </Button>
+              <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}>
+                <FA name="question" /> {__("Wiki")}
+              </Button>
+              <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}>
+                <FA name="github" /> GitHub
+              </Button>
+              <Button onClick={shell.openExternal.bind(this, 'https://opencollective.com/poi')}>
+                <FA name="thumbs-up" /> OpenCollective
+              </Button>
+            </div>
           </Col>
         </Grid>
         <Divider text={__("Data version")} />
@@ -321,7 +343,11 @@ const Others = connect(state => ({
           <Col xs={12}>
             {
               fcds.map(fcd => (
-                fcd ? <p key={fcd[0]}>{`${fcd[0]}: ${fcd[1]}`}</p> : null
+                fcd
+                  ? <span key={fcd[0]}>
+                    {fcd[0]}: <Label bsStyle="primary">{fcd[1]}</Label>
+                  </span>
+                  : null
               ))
             }
           </Col>
@@ -337,13 +363,63 @@ const Others = connect(state => ({
         </Col>
         <Divider text="Contributors" />
         <Grid>
-          {
-            CONST.contributors.map((e, i) => (
-              <Col xs={2} key={i}>
-                <img className="avatar-img" src={e.avatar} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
-              </Col>
-            ))
-          }
+          <Col xs={12} className="contributors">
+            {
+              CONTRIBUTORS.map((e, i) => (
+                <div key={i} className="contributor-item">
+                  <img
+                    className="avatar-img"
+                    src={getAvatarUrl(e.avatar_url)}
+                    onClick={shell.openExternal.bind(this, e.html_url)}
+                    title={e.name || e.login}
+                  />
+                </div>
+              ))
+            }
+          </Col>
+        </Grid>
+        <Divider text="OpenCollective" />
+        <Grid className="opencollective container">
+          <Col xs={12}>
+            <div>
+              <a href="https://opencollective.com/poi/sponsor/0/website"><img src="https://opencollective.com/poi/sponsor/0/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/1/website"><img src="https://opencollective.com/poi/sponsor/1/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/2/website"><img src="https://opencollective.com/poi/sponsor/2/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/3/website"><img src="https://opencollective.com/poi/sponsor/3/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/4/website"><img src="https://opencollective.com/poi/sponsor/4/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/5/website"><img src="https://opencollective.com/poi/sponsor/5/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/6/website"><img src="https://opencollective.com/poi/sponsor/6/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/7/website"><img src="https://opencollective.com/poi/sponsor/7/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/8/website"><img src="https://opencollective.com/poi/sponsor/8/avatar.svg" /></a>
+              <a href="https://opencollective.com/poi/sponsor/9/website"><img src="https://opencollective.com/poi/sponsor/9/avatar.svg" /></a>
+            </div>
+            <div>
+              <a href="https://opencollective.com/poi#backers">
+                <img src={`https://opencollective.com/poi/backers.svg?width=${this.props.layout === 'horizontal' ? 450 : 900}`} />
+              </a>
+            </div>
+          </Col>
+        </Grid>
+        <Divider text="Special Thanks To" />
+        <Grid className='thanks-to sp-thanks-to'>
+          <div className="div-row thanks-to-item">
+            <div className='thanks-to-img-container'>
+              <img className="thanks-to-img"
+                src="https://upload.kcwiki.moe/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png"
+                style={{
+                  WebkitClipPath: 'inset(0px 78% 0px 0px)',
+                  maxHeight: '100%',
+                  marginLeft: '5%',
+                }}
+                onClick={shell.openExternal.bind(this, 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91')}
+                title="KCWiki"
+              />
+            </div>
+            <div className='thanks-to-container'>
+              <b>KCWiki</b>
+              <p>For sponsing poi data server, providing data of item imporvment, task info, shipgirl qoutes, etc.</p>
+            </div>
+          </div>
         </Grid>
         <Divider text="Thanks To" />
         <Grid className='thanks-to'>
