@@ -69,7 +69,7 @@ On plugin development, the [docs](https://github.com/poooi/poi/tree/master/docs)
 Please feel free to contact us via:
 - github issues
 - [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ) for Chinese speaking user
-- [telegram group](https://t.me/joinchat/ENYTxwoB7sKsPQmgKEFzJw) for world wide user (English / français / 日本語)
+- [#poi-viewer channel](https://discordapp.com/channels/118339803660943369/201057772597411840) under `/r/kancolle` discord for world wide user, [How to join](https://github.com/poooi/poi/issues/1596)
 - QQ group
 - weibo
 - or anything else.
