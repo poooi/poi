@@ -32,6 +32,8 @@
   flex-wrap: wrap;
 }
 #SettingsView #poi-others .desc-buttons > button {
+  margin-top: .25ex;
+  margin-bottom: .25ex;
   margin-right: 1em;
 }
 #SettingsView #poi-others .contributors {

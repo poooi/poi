@@ -319,8 +319,8 @@ const Others = connect(state => ({
               {
                 ['zh-CN', 'zh-TW'].includes(window.language)
                   ? <Button><FA name="qq" /> 用户交流群： 378320628 </Button>
-                  : <Button onClick={shell.openExternal.bind(this, 'https://t.me/joinchat/ENYTxwoB7sKsPQmgKEFzJw')}>
-                    <FA name="telegram" /> Telegram
+                  : <Button onClick={shell.openExternal.bind(this, 'https://discordapp.com/channels/118339803660943369/201057772597411840')}>
+                    Discord channel
                   </Button>
               }
               <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.moe')}>
@@ -333,7 +333,7 @@ const Others = connect(state => ({
                 <FA name="github" /> GitHub
               </Button>
               <Button onClick={shell.openExternal.bind(this, 'https://opencollective.com/poi')}>
-                <FA name="thumbs-up" /> OpenCollective
+                OpenCollective
               </Button>
             </div>
           </Col>
