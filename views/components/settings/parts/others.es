@@ -319,7 +319,7 @@ const Others = connect(state => ({
               {
                 ['zh-CN', 'zh-TW'].includes(window.language)
                   ? <Button><FA name="qq" /> 用户交流群： 378320628 </Button>
-                  : <Button onClick={shell.openExternal.bind(this, 'https://discordapp.com/channels/118339803660943369/201057772597411840')}>
+                  : <Button onClick={shell.openExternal.bind(this, 'https://discordapp.com/channels/118339803660943369/367575898313981952')}>
                     Discord channel
                   </Button>
               }
