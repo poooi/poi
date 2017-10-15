@@ -2,11 +2,12 @@ import path from 'path-extra'
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
-import { PluginConfig, Others } from './parts'
+import { Others } from './parts'
 
 import MainConfig from './main'
 import DisplayConfig from './display'
 import NetworkConfig from './network'
+import PluginConfig from './plugin'
 
 const {i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
