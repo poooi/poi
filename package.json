@@ -72,7 +72,7 @@
     "prop-types": "^15.5.8",
     "react": "^16.0.0",
     "react-addons-shallow-compare": "^15.6.0",
-    "react-bootstrap": "^0.31.2",
+    "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0",
     "react-file-dropzone": "^0.4.1",
     "react-fontawesome": "^1.6.1",

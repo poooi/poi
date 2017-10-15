@@ -14,12 +14,6 @@ import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 
-// FIXME: Hack for letting react-bootstrap modal works under 16
-import { Modal } from 'react-overlays'
-Modal.prototype.componentWillMount = function () {
-  this.focus = () => {}
-}
-
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
 

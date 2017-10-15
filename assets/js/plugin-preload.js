@@ -29,9 +29,3 @@ window.addEventListener('unload', (e) => {
 })
 
 document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.zoomLevel', 1)))
-
-// FIXME: Hack for letting react-bootstrap modal work under 16
-const { Modal } = require('react-overlays')
-Modal.prototype.componentWillMount = function () {
-  this.focus = () => {}
-}
