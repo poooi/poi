@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, FormControl, FormGroup, InputGroup, ControlLabel, Collapse, Well } from 'react-bootstrap'
-import { remote } from 'electron'
 import { get } from 'lodash'
 
 const { config, i18n } = window

@@ -220,7 +220,7 @@ const TaskPanel = connect(
       leftLabel={__('Empty quest')}
     />
               :
-          // Can expand
+              // Can expand
               <TaskRowBase
                 key={idx}
                 idx={idx}

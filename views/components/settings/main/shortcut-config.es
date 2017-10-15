@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Col, Button, ButtonGroup } from 'react-bootstrap'
-import { remote, ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
 import { get } from 'lodash'
 

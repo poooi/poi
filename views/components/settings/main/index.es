@@ -10,7 +10,9 @@ import LanguageConfig from './language-config'
 import SlotCheckConfig from './slot-check-config'
 import ShortcutConfig from './shortcut-config'
 
-import { CheckboxLabelConfig, RadioConfig, FolderPickerConfig } from '../parts/utils'
+import CheckboxLabel from '../components/checkbox'
+import Radio from '../components/radio'
+import FolderPicker from '../components/folder-picker'
 
 const { i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -40,7 +42,7 @@ const PoiConfig = () => (
     </div>
     <div className="form-group">
       <Divider text={__('Screenshot Format')} />
-      <RadioConfig
+      <Radio
         label={__('Screenshot Format')}
         configName="poi.screenshotFormat"
         defaultVal='png'
@@ -48,14 +50,14 @@ const PoiConfig = () => (
     </div>
     <div className="form-group">
       <Divider text={__('Screenshot Folder')} />
-      <FolderPickerConfig
+      <FolderPicker
         label={__('Screenshot Folder')}
         configName="poi.screenshotPath"
         defaultVal={window.screenshotPath} />
     </div>
     <div className="form-group">
       <Divider text={__('Cache Folder')} />
-      <FolderPickerConfig
+      <FolderPicker
         label={__('Cache Folder')}
         configName="poi.cachePath"
         defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
@@ -77,7 +79,7 @@ const PoiConfig = () => (
           }
           {
             (process.platform !== 'darwin') ?
-              <CheckboxLabelConfig
+              <CheckboxLabel
                 label={__('Confirm before exit')}
                 configName="poi.confirm.quit"
                 defaultVal={false} />
@@ -88,21 +90,21 @@ const PoiConfig = () => (
                     {__('Set this in the OS X App Menu')}
                   </Tooltip>} >
                 <div>
-                  <CheckboxLabelConfig
+                  <CheckboxLabel
                     label={__('Confirm before exit')}
                     undecided={true} />
                 </div>
               </OverlayTrigger>
           }
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Display "Tips"')}
             configName="poi.doyouknow.enabled"
             defaultVal={true} />
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Display Final Stage Notification')}
             configName="poi.lastbattle.enabled"
             defaultVal={true} />
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Display Event Ship Locking Notification')}
             configName="poi.eventSortieCheck.enable"
             defaultVal={true} />
@@ -113,25 +115,25 @@ const PoiConfig = () => (
       <Divider text={__('Advanced functionalities')} />
       <Grid>
         <Col xs={12}>
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Disable Hardware Acceleration')}
             configName="poi.disableHA"
             defaultVal={false} />
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Editing DMM Cookie\'s Region Flag')}
             configName="poi.enableDMMcookie"
             defaultVal={false} />
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Prevent DMM Network Change Popup')}
             configName="poi.disableNetworkAlert"
             defaultVal={false} />
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Show network status in notification bar')}
             configName="poi.showNetworkLog"
             defaultVal={true} />
           {
             (process.platform === 'win32') ?
-              <CheckboxLabelConfig
+              <CheckboxLabel
                 label={__('Create shortcut on startup (Notification may not be working without shortcut)')}
                 configName="poi.createShortcut"
                 defaultVal={true} />
@@ -140,18 +142,18 @@ const PoiConfig = () => (
           }
           {
             (process.platform === 'linux') ?
-              <CheckboxLabelConfig
+              <CheckboxLabel
                 label={__('Display tray icon')}
                 configName="poi.linuxTrayIcon"
                 defaultVal={true} />
               :
               null
           }
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Enter safe mode on next startup')}
             configName="poi.enterSafeMode"
             defaultVal={false} />
-          <CheckboxLabelConfig
+          <CheckboxLabel
             label={__('Send data to Google Analytics')}
             configName="poi.sendAnalytics"
             defaultVal={true} />
