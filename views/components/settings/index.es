@@ -2,8 +2,10 @@ import path from 'path-extra'
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
-import { DisplayConfig, NetworkConfig, PluginConfig, Others } from './parts'
+import { NetworkConfig, PluginConfig, Others } from './parts'
+
 import MainConfig from './main'
+import DisplayConfig from './display'
 
 const {i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
