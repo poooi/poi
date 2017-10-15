@@ -2,12 +2,12 @@ import path from 'path-extra'
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
-import { Others } from './parts'
 
 import MainConfig from './main'
 import DisplayConfig from './display'
 import NetworkConfig from './network'
 import PluginConfig from './plugin'
+import Misc from './misc'
 
 const {i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -34,7 +34,7 @@ export default {
             <PluginConfig />
           </Tab>
           <Tab eventKey={-1} title={__("About")} className='poi-settings-Tab'>
-            <Others />
+            <Misc />
           </Tab>
         </Tabs>
       )
