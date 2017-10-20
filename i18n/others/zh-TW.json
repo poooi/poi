@@ -63,6 +63,9 @@
   "Website requires login": "網站需要登錄",
   "Username":"帳號",
   "Password":"密碼",
+  "A 🐢 found in %s": "擴展程式「%s」變成了🐢",
+  "Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.": "擴展程式當中發生了某些異常，你可以將它彙報給擴展程式作者，或者 poi 開發團隊，並附上如下代碼。",
+  "Copy to clipboard": "複製到剪貼板",
   "RefreshGameDialogTip": {
     "text1": "提示：右鍵單擊此按鈕可重新載入 Flash，按住 Shift 同時左鍵單擊此按鈕可重新整理遊戲頁面，但這兩種重新整理方法都",
     "b1": "不會彈出該確認對話方塊",

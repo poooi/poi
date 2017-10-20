@@ -62,6 +62,9 @@
   "Website requires login": "ログインが必要",
   "Username":"ユーザー",
   "Password":"パスワード",
+  "A 🐢 found in %s": "プラグイン「%s」は　🐢　になりました",
+  "Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.": "プラグインで不具合が発生しました。プラグイン作者または poi の開発チームに下記のコードを報告してください。",
+  "Copy to clipboard": "クリップボードえコピー",
   "RefreshGameDialogTip": {
     "text1": "ヒント：右クリックしてゲームだけをリロード、Shift キーを押して左クリックしてページをリロード。この二つの方法は",
     "b1": "確認ダイアログがありません",

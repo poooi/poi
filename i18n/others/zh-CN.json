@@ -63,6 +63,9 @@
   "Website requires login": "网站需要登陆",
   "Username":"用户名",
   "Password":"密码",
+  "A 🐢 found in %s": "插件「%s」变成了🐢",
+  "Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.": "插件当中发生了某些异常，你可以将它汇报给插件作者，或者 poi 开发团队，并附上如下代码。",
+  "Copy to clipboard": "复制到剪贴板",
   "RefreshGameDialogTip": {
     "text1": "提示：右键单击此按钮可重新载入 Flash，按住 Shift 同时左键单击此按钮可刷新游戏页面，但这两种刷新方法都",
     "b1": "不会弹出该确认对话框",
