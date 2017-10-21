@@ -34,26 +34,25 @@ const FleetStatus = connect((state, {fleetId}) => {
     fleetShipsData,
     fleetInBattle,
   }
-})(class fleetStatus extends Component {
-  fleetNotSupplied = () => {
-    const notSuppliedShips = []
-    const {fleetShipsData} = this.props
-    fleetShipsData.map(shipData => {
-      const ship = shipData[0]
-      const $ship = shipData[1]
-      if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1){
-        notSuppliedShips.push(ship.api_ship_id)
-      }
-    })
-    if (notSuppliedShips.length > 0) {return true}
-    else {return false}
+})(({ fleetInBattle, fleetShipsData }) => {
+  if (fleetInBattle) {
+    return (
+      <span className="expedition-name text-success">{__('In Sortie')}</span>
+    )
   }
-  render() {
-    const {fleetInBattle} = this.props
-    if (fleetInBattle) {return (<span className="expedition-name text-success">{__('In Sortie')}</span>)}
-    else if (this.fleetNotSupplied()) {return (<span className="expedition-name text-warning">{__('Resupply needed')}</span>)}
-    else {return (<span className="expedition-name">{__('Ready')}</span>)}
+
+  const notSuppliedShips = fleetShipsData.filter(([ship, $ship] = []) =>
+    Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1
+  )
+  if (notSuppliedShips.length) {
+    return (
+      <span className="expedition-name text-warning">{__('Resupply needed')}</span>
+    )
   }
+
+  return (
+    <span className="expedition-name">{__('Ready')}</span>
+  )
 })
 
 export default connect(
@@ -96,20 +95,18 @@ export default connect(
           range(1, 4).map((i) => {
             const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
             const fleetName = get(fleetNames, i, '???')
-            const useStatusPanel = () => {
-              if (status == 0) {return true}
-              else {return false}
-            }
-            const expeditionName =
-            status == -1 ? __('Locked') : get($expeditions, [expeditionId, 'api_name'], __('???'))
+            const expedition = get($expeditions, expeditionId, {})
+            const expeditionName = status == -1
+              ? __('Locked')
+              : `[${expedition.api_disp_no ||__('???')}] ${expedition.api_name || __('???')}`
             const completeTime = status > 0 ? rawCompleteTime : -1
+
             return (
               <div className="panel-item expedition-item" key={i} >
-                {useStatusPanel() ? (
+                {status === 0 ? (
                   <FleetStatus fleetId={i} />
                 ) : (
                   <span className="expedition-name">{expeditionName}</span>
-
                 )}
                 <OverlayTrigger placement='left' overlay={
                   <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
