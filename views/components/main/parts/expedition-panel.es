@@ -98,7 +98,7 @@ export default connect(
             const expedition = get($expeditions, expeditionId, {})
             const expeditionName = status == -1
               ? __('Locked')
-              : `[${expedition.api_disp_no ||__('???')}] ${expedition.api_name || __('???')}`
+              : `${expedition.api_disp_no ||__('???')} ${expedition.api_name || __('???')}`
             const completeTime = status > 0 ? rawCompleteTime : -1
 
             return (
