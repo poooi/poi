@@ -398,5 +398,21 @@
     "desja-JP": "艦娘と装備のデータベース（データは [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet) によって提供されている）",
     "desen-US": "Ship & Equipment database (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
     "desko-KR": "Ship & Equipment database (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))"
+  },
+  "poi-plugin-mo2": {
+    "zh-CN": "士气速查",
+    "zh-TW": "士氣速查",
+    "ja-JP": "Morale Monitor",
+    "en-US": "Morale Monitor",
+    "ko-KR": "Morale Monitor",
+    "version": "v0.0.0",
+    "icon": "smile-o",
+    "author": "Javran",
+    "link": "https://github.com/Javran",
+    "deszh-CN": "舰队与舰娘士气值速查",
+    "deszh-TW": "艦隊與艦娘士氣值速查",
+    "desja-JP": "Monitoring morale for your fleets and ships",
+    "desen-US": "Monitoring morale for your fleets and ships",
+    "desko-KR": "Monitoring morale for your fleets and ships"
   }
 }
