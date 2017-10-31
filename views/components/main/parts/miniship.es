@@ -7,7 +7,7 @@ import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
-const { dbg, i18n, dispatch } = window
+const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 

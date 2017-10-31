@@ -8,7 +8,7 @@ import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
 
-const {i18n, dbg, dispatch} = window
+const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { ShipRow } from './shipitem'
