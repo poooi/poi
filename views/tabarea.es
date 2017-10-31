@@ -97,10 +97,7 @@ export default connect(
     useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
     activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
     activePluginName: get(state.ui, 'activePluginName', ''),
-  }),
-  undefined,
-  undefined,
-  {pure: true}
+  })
 )(class ControlledTabArea extends PureComponent {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
@@ -108,13 +105,6 @@ export default connect(
     useGridMenu: PropTypes.bool.isRequired,
     activeMainTab: PropTypes.string.isRequired,
     activePluginName: PropTypes.string.isRequired,
-  }
-  componentWillUpdate(nextProps, nextState) {
-    this.nowTime = (new Date()).getTime()
-  }
-  componentDidUpdate(prevProps, prevState) {
-    const cur = (new Date()).getTime()
-    dbg.extra('moduleRenderCost').log(`the cost of tab-module's render: ${cur-this.nowTime}ms`)
   }
   dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({

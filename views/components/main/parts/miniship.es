@@ -71,14 +71,6 @@ export default connect((state, props) => ({
     this.nowTime = 0
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    this.nowTime = (new Date()).getTime()
-  }
-  componentDidUpdate(prevProps, prevState) {
-    const cur = Date.now()
-    dbg.extra('moduleRenderCost').log(`the cost of mini-ship-module render: ${cur-this.nowTime}ms`)
-  }
-
   handleClick = (idx) => {
     if (idx != this.props.activeFleetId) {
       dispatch({

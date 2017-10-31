@@ -148,7 +148,7 @@ app.on('ready', () => {
   } else {
     mainWindow.setMenu(null)
   }
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  mainWindow.loadURL(`file://${__dirname}/index.html${dbg.isEnabled() ? '?react_perf' : ''}`)
   if (config.get('poi.window.isMaximized', false)) {
     mainWindow.maximize()
   }
