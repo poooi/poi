@@ -6,18 +6,17 @@ import glob from 'glob'
 import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
 import { remote } from 'electron'
+import fetch from 'node-fetch'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 
 const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
-const fetchFromRemote = async (url, cacheMode = "default") => {
-  try {
-    return (await fetch(url, {method: "GET", cache: cacheMode, headers: fetchHeader}).catch(e => null)).json()
-  } catch (e) {
-    return {}
-  }
+const defaultFetchOption = {
+  method: "GET", 
+  cache: "default", 
+  headers: fetchHeader,
 }
 
 import {
@@ -240,7 +239,9 @@ class PluginManager extends EventEmitter {
     if (plugin.needRollback) {
       return
     }
-    const data = await fetchFromRemote(`${this.config.mirror.server}${plugin.packageName}/latest`)
+    const data = await fetch(`${this.config.mirror.server}${plugin.packageName}/latest`, defaultFetchOption)
+      .then(res => res.json())
+      .catch(e => ({}))
     if (data.error) {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`, data)
       return
@@ -249,7 +250,9 @@ class PluginManager extends EventEmitter {
       latest: data.version,
     }
     if (this.config.betaCheck) {
-      const betaData = await fetchFromRemote(`${this.config.mirror.server}${plugin.packageName}/beta`)
+      const betaData = await fetch(`${this.config.mirror.server}${plugin.packageName}/beta`, defaultFetchOption)
+        .then(res => res.json())
+        .catch(e => ({}))
       Object.assign(distTag, {
         beta: betaData.version,
       })

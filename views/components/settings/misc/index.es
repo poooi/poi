@@ -9,6 +9,7 @@ import CheckboxLabel from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
+import fetch from 'node-fetch'
 
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
@@ -31,16 +32,10 @@ const serverList = [
 
 const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
-
-const fetchFromRemote = async (url, cacheMode = "default") => {
-  const res = await fetch(url, {method: "GET", cache: cacheMode, headers: fetchHeader}).catch(e => e)
-  if (res.status === 200) {
-    try {
-      return await res.json()
-    } catch (e) {
-      return
-    }
-  }
+const defaultFetchOption = {
+  method: "GET", 
+  cache: "default", 
+  headers: fetchHeader,
 }
 
 const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
@@ -76,14 +71,18 @@ const Misc = connect(state => ({
     let flag
     for (const server of serverList) {
       flag = true
-      const fileList = await fetchFromRemote(`${server}meta.json`, cacheMode)
+      const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
+        .then(res => res.json())
+        .catch(e => ({})) 
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
             // eslint-disable-next-line no-console
             console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
-            const data = await fetchFromRemote(`${server}${file.name}.json`, cacheMode)
+            const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
+              .then(res => res.json())
+              .catch(e => ({})) 
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',

@@ -1,14 +1,21 @@
 import React from 'react'
 import { shell, remote } from 'electron'
 import semver from 'semver'
-import { promisifyAll, promisify } from 'bluebird'
 import Markdown from 'react-remarkable'
+import fetch from 'node-fetch'
 
 const {POI_VERSION, i18n, toggleModal, config, language} = window
 const __ = i18n.others.__.bind(i18n.others)
 
-const request = promisifyAll(require('request'))
-const requestAsync = promisify(request, {multiArgs: true})
+const fetchHeader = new Headers()
+fetchHeader.set("Cache-Control", "max-age=0")
+fetchHeader.set('User-Agent', `poi v${POI_VERSION}`)
+const defaultFetchOption = {
+  method: "GET", 
+  cache: "default", 
+  headers: fetchHeader,
+}
+
 const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 const {error} = require('../../lib/utils')
@@ -58,49 +65,30 @@ if (process.platform === 'win32') {
 }
 
 export const checkUpdate = async () => {
-  let response
-  let body
   const betaChannel = config.get('poi.betaChannel', false)
-  try {
-    [response, body] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/latest.json`, {
-      method: 'GET',
-      json: true,
-      headers: {
-        'User-Agent': `poi v${POI_VERSION}`,
-      },
+  const versionInfo = await fetch(`https://${global.SERVER_HOSTNAME}/update/latest.json`, defaultFetchOption)
+    .then(res => res.json())
+    .catch(e => {
+      error(e.stack)
+      console.warn('Check update error.')
+      return {}
     })
-  } catch (e) {
-    error(e.stack)
-    console.warn('Check update error.')
-  }
-
-  if ((response || {}).statusCode === 200){
-    const version = betaChannel && semver.gt(body.betaVersion, body.version) ? body.betaVersion || 'v0.0.0' : body.version
+  if (versionInfo.version) {
+    const version = betaChannel && semver.gt(versionInfo.betaVersion, versionInfo.version) ? versionInfo.betaVersion || 'v0.0.0' : versionInfo.version
     const channel = version.includes('beta') ? '-beta' : ''
     // eslint-disable-next-line no-console
     console.log(`Remote version: ${version}. Current version: ${POI_VERSION}`)
     const knownVersion = config.get('poi.update.knownVersion', POI_VERSION)
 
     if (semver.lt(POI_VERSION, version) && semver.lt(knownVersion, version)) {
-      let resp
-      let log
-      try {
-        const currentLang = LANG.includes(language) ? language : 'en-US'
-        ;[resp, log] = await requestAsync(`https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`, {
-          method: 'GET',
-          headers: {
-            'User-Agent': `poi v${POI_VERSION}`,
-          },
-        })
-        if ((resp || {}).statusCode != 200) {
+      const currentLang = LANG.includes(language) ? language : 'en-US'
+      const log = await fetch(`https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`, defaultFetchOption)
+        .then(res => res.text())
+        .catch(res => {
           console.warn('fetch update log error')
-          log = ''
-        }
-        toggleUpdate(version, log)
-      } catch (e) {
-        error(e.stack)
-        console.warn('fetch update log error')
-      }
+          return ""
+        })
+      toggleUpdate(version, log)
     }
   }
 }

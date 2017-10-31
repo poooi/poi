@@ -62,6 +62,7 @@
     "mime": "^1.4.1",
     "moment-timezone": "^0.5.11",
     "mousetrap": "^1.5.3",
+    "node-fetch": "^1.7.3",
     "npm": "=5.4.2",
     "objtree": "^0.1.1",
     "pac-proxy-agent": "^2.0.0",
