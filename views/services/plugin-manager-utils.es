@@ -304,8 +304,6 @@ const postEnableProcess = (plugin) => {
           webSecurity: false,
           plugins: true,
           experimentalFeatures: true,
-          backgroundThrottling: false,
-          offscreen: true,
         },
       }
     }
