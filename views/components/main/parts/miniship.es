@@ -7,7 +7,7 @@ import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
-const { dbg, i18n, dispatch } = window
+const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 const { Component } = React
 
@@ -69,14 +69,6 @@ export default connect((state, props) => ({
   constructor(props) {
     super(props)
     this.nowTime = 0
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    this.nowTime = (new Date()).getTime()
-  }
-  componentDidUpdate(prevProps, prevState) {
-    const cur = Date.now()
-    dbg.extra('moduleRenderCost').log(`the cost of mini-ship-module render: ${cur-this.nowTime}ms`)
   }
 
   handleClick = (idx) => {

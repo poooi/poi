@@ -254,7 +254,7 @@ export default connect(
   const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-warning' : ''
   const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-warning' : ''
   return (
-    <Panel bsStyle="default" className="teitoku-panel">
+    <Panel bsStyle="default">
       {
         level >= 0 ?
           <div>

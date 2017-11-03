@@ -8,7 +8,7 @@ import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
 
-const {i18n, dbg, dispatch} = window
+const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
 
 import { ShipRow } from './shipitem'
@@ -140,14 +140,6 @@ const ShipView = connect((state, props) => ({
   constructor(props) {
     super(props)
     this.nowTime = 0
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    this.nowTime = (new Date()).getTime()
-  }
-  componentDidUpdate(prevProps, prevState) {
-    const cur = Date.now()
-    dbg.extra('moduleRenderCost').log(`the cost of ship-module render: ${cur-this.nowTime}ms`)
   }
 
   handleClick = (idx) => {

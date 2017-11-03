@@ -1,355 +1,24 @@
 import path from 'path-extra'
-import classnames from 'classnames'
 import { shell, remote } from 'electron'
-import React, { Component, PureComponent } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
-import { Grid, Col, Row, FormControl, ControlLabel, InputGroup, FormGroup, Checkbox, Radio, Alert, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
+import { Grid, Col, Row, Checkbox, Radio, Alert, Button, ButtonGroup, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
-import ReactMarkdown from 'react-remarkable'
 import FileDrop from 'react-file-dropzone'
 
-import { CheckboxLabelConfig } from './utils'
+import CheckboxLabel from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
+
+import NameInput from './name-input'
+import InstalledPlugin from './installed-plugin'
+import UninstalledPlugin from './uninstalled-plugin'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
-
-class PluginSettingWrap extends Component {
-  static propTypes = {
-    plugin: PropTypes.object,
-  }
-  shouldComponentUpdate = (nextProps, nextState) => (this.props.plugin.timestamp !== nextProps.plugin.timestamp)
-  render() {
-    return (React.createElement(this.props.plugin.settingsClass))
-  }
-}
-
-// class CollapsiblePanel extends Component {
-//   static propTypes = {
-//     expanded: PropTypes.bool,
-//     transitionTime: PropTypes.number,
-//     className: PropTypes.string,
-//   }
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       expanded: props.expanded,
-//       hide: !props.expanded,
-//     }
-//   }
-//   componentWillReceiveProps = (nextProps) => {
-//     let transitionTime = this.props.transitionTime || 400
-//     if (this.props.expanded && !nextProps.expanded) {
-//       this.setState({expanded: false})
-//       delay(() => {this.setState({hide: true})}, transitionTime)
-//     }
-//     else if (!this.props.expanded && nextProps.expanded) {
-//       this.setState({hide: false})
-//       defer(() => {this.setState({expanded: true})})
-//     }
-//   }
-//   render() {
-//     let className = classnames(this.props.className, {
-//       'hidden': this.state.hide,
-//     })
-//     return (
-//       <Panel {...this.props} className={className} />
-//     )
-//   }
-// }
-
-class InstalledPlugin extends PureComponent {
-  static propTypes = {
-    plugin: PropTypes.object,
-    handleUpdate: PropTypes.func,
-    handleEnable: PropTypes.func,
-    handleRemove: PropTypes.func,
-  }
-  state = {
-    settingOpen: false,
-  }
-  toggleSettingPop = () => {
-    this.setState({settingOpen: !this.state.settingOpen})
-  }
-  render() {
-    const plugin = this.props.plugin
-    const outdatedLabelbsStyle = (!plugin.latestVersion.includes('beta')) ? 'primary' : 'warning'
-    const outdatedLabelFAname = classnames({
-      'spinner': plugin.isUpdating,
-      'cloud-download': !plugin.isUpdating && plugin.isOutdated,
-      'check': !plugin.isUpdating && !plugin.isOutdated,
-    })
-    const outdatedLabelText = plugin.isUpdating ? `${__('Updating')}` :
-      (plugin.isOutdated ? `Version ${plugin.latestVersion}` : `${__('Latest')}` )
-    let enableBtnText, enableBtnFAname
-    switch (PluginManager.getStatusOfPlugin(plugin)) {
-    case PluginManager.VALID:
-      enableBtnText = `${__('Disable')}`
-      enableBtnFAname = 'pause'
-      break
-    case PluginManager.DISABLED:
-      enableBtnText = `${__('Enable')}`
-      enableBtnFAname = 'play'
-      break
-    case PluginManager.NEEDUPDATE:
-      enableBtnText = `${__('Outdated')}`
-      enableBtnFAname = 'ban'
-      break
-    case PluginManager.BROKEN:
-      enableBtnText = `${__('Error')}`
-      enableBtnFAname = 'close'
-      break
-    default:
-      enableBtnText = ''
-      enableBtnFAname = ''
-    }
-    const removeBtnText = plugin.isUninstalling ? `${__('Removing')}` : `${__('Remove')}`
-    const removeBtnFAname = plugin.isInstalled ? 'trash' : 'trash-o'
-    const panelClass = classnames('plugin-content', {
-      'plugin-content-disabled': PluginManager.getStatusOfPlugin(plugin) !== PluginManager.VALID,
-    })
-    const outdatedLabelClass = classnames('update-label', {
-      'hidden': !plugin.isOutdated,
-    })
-    const settingAvailable = plugin.settingsClass || plugin.switchPluginPath || (!plugin.multiWindow && plugin.windowURL)
-    const btnGroupClass = classnames('plugin-buttongroup', {
-      'btn-xs-12': settingAvailable,
-      'btn-xs-8': !settingAvailable,
-    })
-    const btnClass = classnames('plugin-control-button', {
-      'btn-xs-4': settingAvailable,
-      'btn-xs-6': !settingAvailable,
-    })
-    return (
-      <Row className='plugin-wrapper'>
-        <Col xs={12}>
-          <Panel className={panelClass}>
-            <Row>
-              <Col xs={12} className='div-row'>
-                <span className='plugin-name'>
-                  {plugin.displayName}
-                </span>
-                <div className='author-wrapper'>{'@'}
-                  <a className='author-link'
-                    href={plugin.link}>
-                    {plugin.author}
-                  </a>
-                </div>
-                <div className='update-wrapper'>
-                  <div>
-                    <Label bsStyle={outdatedLabelbsStyle}
-                      className={outdatedLabelClass}
-                      onClick={this.props.handleUpdate}>
-                      <FontAwesome name={outdatedLabelFAname}
-                        pulse={plugin.isUpdating}/>
-                      {outdatedLabelText}
-                    </Label>
-                  </div>
-                  <div>
-                    <span>
-                      {plugin.linkedPlugin && <FontAwesome name='link' />}
-                    </span>
-                    {`Ver. ${plugin.version || '1.0.0'}`}
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col className='plugin-description' xs={7}>
-                <ReactMarkdown source={plugin.description} />
-              </Col>
-              <Col className='plugin-option' xs={5}>
-                <ButtonGroup bsSize='small' className={btnGroupClass}>
-                  {
-                    settingAvailable?
-                      <OverlayTrigger placement='top' overlay={
-                        <Tooltip id={`${plugin.id}-set-btn`}>
-                          {__('Settings')}
-                        </Tooltip>
-                      }>
-                        <Button
-                          bsStyle='primary' bsSize='xs'
-                          onClick={this.toggleSettingPop}
-                          className='plugin-control-button btn-xs-4'>
-                          <FontAwesome name='gear' />
-                        </Button>
-                      </OverlayTrigger>
-                      : null
-                  }
-                  <OverlayTrigger placement='top' overlay={
-                    <Tooltip id={`${plugin.id}-enb-btn`}>
-                      {enableBtnText}
-                    </Tooltip>
-                  }>
-                    <Button bsStyle='info'
-                      disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                      onClick={this.props.handleEnable}
-                      className={btnClass}>
-                      <FontAwesome name={enableBtnFAname}/>
-                    </Button>
-                  </OverlayTrigger>
-                  <OverlayTrigger placement='top' overlay={
-                    <Tooltip id={`${plugin.id}-rm-btn`}>
-                      {removeBtnText}
-                    </Tooltip>
-                  }>
-                    <Button bsStyle='danger'
-                      onClick={this.props.handleRemove}
-                      disabled={!plugin.isInstalled}
-                      className={btnClass}>
-                      <FontAwesome name={removeBtnFAname} />
-                    </Button>
-                  </OverlayTrigger>
-                </ButtonGroup>
-              </Col>
-            </Row>
-            <Row>
-              {
-                settingAvailable?
-                  <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
-                    <Col xs={12}>
-                      <Well>
-                        {
-                          !!plugin.switchPluginPath &&
-                          <div>
-                            <CheckboxLabelConfig
-                              label={__('Enable auto switch')}
-                              configName={`poi.autoswitch.${plugin.id}`}
-                              defaultVal={true} />
-                          </div>
-                        }
-                        {
-                          (!plugin.multiWindow && plugin.windowURL) &&
-                          <div>
-                            <CheckboxLabelConfig
-                              label={__('Keep plugin process running in background (re-enable to apply changes)')}
-                              configName={`poi.backgroundProcess.${plugin.id}`}
-                              defaultVal={!plugin.realClose} />
-                          </div>
-                        }
-                        {
-                          !!plugin.settingsClass &&
-                          <div>
-                            <PluginSettingWrap plugin={plugin} />
-                          </div>
-                        }
-                      </Well>
-                    </Col>
-                  </Collapse>
-                  : null
-              }
-            </Row>
-          </Panel>
-        </Col>
-      </Row>
-    )
-  }
-}
-
-class UninstalledPlugin extends PureComponent {
-  static propTypes = {
-    plugin: PropTypes.object,
-    installing: PropTypes.bool,
-    npmWorking: PropTypes.bool,
-    handleInstall: PropTypes.func,
-  }
-  render() {
-    const plugin = this.props.plugin
-    const installButtonText = this.props.installing ? `${__('Installing')}` : `${__('Install')}`
-    const installButtonFAname = this.props.installing ? 'spinner' : 'download'
-    return (
-      <Row className='plugin-wrapper'>
-        <Col xs={12}>
-          <Panel className='plugin-content'>
-            <Row>
-              <Col xs={12} className='div-row'>
-                <span className='plugin-name'>
-                  <FontAwesome name={plugin.icon} />
-                  {` ${plugin[window.language]}`}
-                </span>
-                <div className='author-wrapper'>{'@'}
-                  <a className='author-link'
-                    href={plugin.link}>
-                    {plugin.author}
-                  </a>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col className='plugin-description' xs={7}>
-                <ReactMarkdown source={plugin[`des${window.language}`]} />
-              </Col>
-              <Col className='plugin-option-install' xs={5}>
-                <ButtonGroup bsSize='small' className='plugin-buttongroup btn-xs-4'>
-                  <OverlayTrigger placement='top' overlay={
-                    <Tooltip id={`${plugin.id}-ins-btn`}>
-                      {installButtonText}
-                    </Tooltip>
-                  }>
-                    <Button bsStyle='primary'
-                      disabled={this.props.npmWorking}
-                      onClick={this.props.handleInstall}
-                      className='plugin-control-button btn-xs-12'>
-                      <FontAwesome name={installButtonFAname}
-                        pulse={this.props.installing}/>
-                    </Button>
-                  </OverlayTrigger>
-                </ButtonGroup>
-              </Col>
-            </Row>
-          </Panel>
-        </Col>
-      </Row>
-    )
-  }
-}
-
-class InstallByNameInput extends PureComponent {
-  static propTypes = {
-    handleManuallyInstall: PropTypes.func,
-    manuallyInstallStatus: PropTypes.number,
-    npmWorking: PropTypes.bool,
-  }
-  state = {
-    manuallyInstallPackage: '',
-  }
-  changeInstalledPackage = (e) => {
-    this.setState({manuallyInstallPackage: e.target.value})
-  }
-  validPackageName = () => {
-    return get(this.state, 'manuallyInstallPackage.length', 0) > 0 &&
-      /^poi-plugin-.*$/.test(this.state.manuallyInstallPackage)
-  }
-  render() {
-    return (
-      <FormGroup>
-        <ControlLabel>{__('Install directly from npm')}</ControlLabel>
-        <InputGroup bsSize='small'>
-          <FormControl type="text"
-            value={this.state.manuallyInstallPackage}
-            onChange={this.changeInstalledPackage}
-            label={__('Install directly from npm')}
-            disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-            placeholder={__('Input plugin package name...')}>
-          </FormControl>
-          <InputGroup.Button>
-            <Button bsStyle='primary'
-              disabled={this.props.manuallyInstallStatus === 1 ||
-                      this.props.npmWorking ||
-                      !this.validPackageName()}
-              onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
-              {__('Install')}
-            </Button>
-          </InputGroup.Button>
-        </InputGroup>
-      </FormGroup>
-    )
-  }
-}
 
 const PluginConfig = connect((state, props) => ({
   plugins: state.plugins,
@@ -693,11 +362,11 @@ const PluginConfig = connect((state, props) => ({
                   <div>
                     <Row>
                       <Col xs={12}>
-                        <CheckboxLabelConfig
+                        <CheckboxLabel
                           label={__('Switch to Plugin Automatically')}
                           configName="poi.autoswitch.enabled"
                           defaultVal={true} />
-                        <CheckboxLabelConfig
+                        <CheckboxLabel
                           label={__('Enable autoswitch for main panel')}
                           configName="poi.autoswitch.main"
                           defaultVal={true} />
@@ -787,7 +456,7 @@ const PluginConfig = connect((state, props) => ({
           </Row>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
-              <InstallByNameInput handleManuallyInstall={this.handleManuallyInstall}
+              <NameInput handleManuallyInstall={this.handleManuallyInstall}
                 manuallyInstallStatus={this.state.manuallyInstallStatus}
                 npmWorking={this.state.npmWorking} />
             </Col>

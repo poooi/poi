@@ -1,18 +1,22 @@
-import React, { Component, PureComponent } from 'react'
+import React, { Component } from 'react'
 import { shell, remote } from 'electron'
-import Divider from './divider'
-import { Grid, Col, Row, Button, ProgressBar, Label } from 'react-bootstrap'
+import Divider from '../components/divider'
+import { Grid, Col, Row, Button, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get, throttle, sortBy, round, sumBy } from 'lodash'
+import { get } from 'lodash'
 import { sync as globSync } from 'glob'
-import { CheckboxLabelConfig } from './utils'
+import CheckboxLabel from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
+import fetch from 'node-fetch'
+
+import DownloadProgress from './download-progress'
+import AppMetrics from './app-metrics'
 
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const { changeChannel, updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
+const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 config.on('config.set', (path, value) => {
   if (path === 'poi.betaChannel' && process.platform !== 'linux') {
@@ -28,197 +32,22 @@ const serverList = [
 
 const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
-
-const fetchFromRemote = async (url, cacheMode = "default") => {
-  const res = await fetch(url, {method: "GET", cache: cacheMode, headers: fetchHeader}).catch(e => e)
-  if (res.status === 200) {
-    try {
-      return await res.json()
-    } catch (e) {
-      return
-    }
-  }
+const defaultFetchOption = {
+  method: "GET", 
+  cache: "default", 
+  headers: fetchHeader,
 }
 
 const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
   ? `${url}&s=160`
   : url
 
-class DownloadProgress extends Component {
-  state = {
-    bytesPerSecond: 0,
-    percent: 0,
-    total: 0,
-    transferred: 0,
-    downloaded: false,
-  }
-  updateProgress = progress => {
-    this.setState(progress)
-  }
-  componentDidMount() {
-    if (!this.updateProgressDebounced) {
-      this.updateProgressDebounced = throttle(this.updateProgress, 1500)
-    }
-    if (process.platform === 'win32') {
-      updater.on('download-progress', progress => this.updateProgressDebounced(progress))
-      updater.on('update-downloaded', () => this.setState({downloaded: true}))
-    }
-  }
-  render () {
-    return this.state.percent > 0 && process.platform === 'win32' && (
-      <h5 className="update-progress">
-        <ProgressBar bsStyle='success'
-          now={this.state.percent} />
-        {
-          this.state.downloaded
-            ? <span>{__('Quit app and install updates')}</span>
-            : (this.state.percent >= 100
-              ? <span>{__('Deploying, please wait')}</span>
-              : <span>
-                {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
-              </span>
-            )
-        }
-      </h5>
-    )
-  }
-}
-
-class AppMetrics extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.getAppMetrics = remote.require('electron').app.getAppMetrics
-
-    this.getAllWindows = remote.require('electron').BrowserWindow.getAllWindows
-
-    this.state = {
-      metrics: [],
-      total: {},
-      pidmap: {},
-      active: false,
-    }
-  }
-
-  collect = () => {
-    const metrics = this.getAppMetrics()
-
-    const total = {}
-
-    const pidmap = {}
-    ;['workingSetSize', 'peakWorkingSetSize'].map(prop =>
-      total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)
-    )
-
-    total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
-
-    this.getAllWindows().map(win => {
-      const pid = win.webContents.getOSProcessId()
-      const title = win.getTitle()
-      pidmap[pid] = title
-    })
-    this.setState({
-      metrics: sortBy(JSON.parse(JSON.stringify(metrics)), 'pid'),
-      total,
-      pidmap,
-    })
-  }
-
-  componentWillUnmount() {
-    if (this.cycle) {
-      clearInterval(this.cycle)
-    }
-  }
-
-  handleClick = () => {
-    const { active } = this.state
-    if (active) {
-      clearInterval(this.cycle)
-    } else {
-      this.collect()
-      this.cycle = setInterval(this.collect.bind(this), 5 * 1000)
-    }
-
-    this.setState({
-      active: !active,
-    })
-  }
-
-  render() {
-    const { metrics, active, total, pidmap } = this.state
-    return (
-      <div>
-        <div>
-          <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
-            {
-              active
-                ? <span>{__('Monitor on')}</span>
-                : <span>{__('Monitor off')}</span>
-            }
-          </Button>
-        </div>
-        {
-          active &&
-          <div className="metric-table">
-            <div className="metric-row metric-haeder">
-              <span>PID</span>
-              {
-                ['type', 'working/MB', 'peak/MB', 'private/MB', 'shared/MB', 'CPU/%', 'wakeup'].map(str =>
-                  <span key={str} title={str}>{str}</span>
-                )
-              }
-            </div>
-            {
-              metrics.map(metric => (
-                <div className='metric-row' key={metric.pid}>
-                  <span>{metric.pid}</span>
-                  <span title={pidmap[metric.pid] || metric.type}>
-                    {pidmap[metric.pid] || metric.type}
-                  </span>
-                  {
-                    ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
-                      <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
-                    )
-                  }
-                  {
-                    ['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop =>
-                      <span key={prop}>{round((metric.cpu || [])[prop], 1)}</span>
-                    )
-                  }
-                </div>
-              ))
-            }
-            <div className='metric-row metric-total'>
-              <span>
-                {__('TOTAL')}
-              </span>
-              <span />
-              <span>
-                {total.workingSetSize}
-              </span>
-              <span>
-                {total.peakWorkingSetSize}
-              </span>
-              <span />
-              <span />
-              <span>
-                {total.percentCPUUsage}
-              </span>
-              <span />
-            </div>
-          </div>
-        }
-      </div>
-    )
-  }
-}
-
 const initState = {}
 
-const Others = connect(state => ({
+const Misc = connect(state => ({
   version: state.fcd.version || initState,
   layout: get(state, 'config.poi.layout', 'horizontal'),
-}))(class others extends Component {
+}))(class Misc extends Component {
   updateData = (cacheMode = 'default') => async () => {
     // Update from local
     const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
@@ -242,14 +71,18 @@ const Others = connect(state => ({
     let flag
     for (const server of serverList) {
       flag = true
-      const fileList = await fetchFromRemote(`${server}meta.json`, cacheMode)
+      const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
+        .then(res => res.json())
+        .catch(e => ({})) 
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
             // eslint-disable-next-line no-console
             console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
-            const data = await fetchFromRemote(`${server}${file.name}.json`, cacheMode)
+            const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
+              .then(res => res.json())
+              .catch(e => ({})) 
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',
@@ -302,7 +135,7 @@ const Others = connect(state => ({
             <Button onClick={checkUpdate}>{__("Check Update")}</Button>
           </Col>
           <Col xs={6}>
-            <CheckboxLabelConfig
+            <CheckboxLabel
               label={__('Check update of beta version')}
               configName="poi.betaChannel"
               defaultVal={false} />
@@ -442,4 +275,4 @@ const Others = connect(state => ({
   }
 })
 
-export default Others
+export default Misc

@@ -66,7 +66,7 @@ export class CountdownTimer extends Component {
     tickCallback: PropTypes.func,
     completeCallback: PropTypes.func,
   }
-  defaultProps = {
+  static defaultProps = {
     completeTime: -1,
     tickCallback: null,
     completeCallback: null,

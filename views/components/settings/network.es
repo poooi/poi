@@ -1,13 +1,12 @@
 import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Alert, Collapse } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import React from 'react'
-import Divider from './divider'
+import React, { Component } from 'react'
+import Divider from './components/divider'
 import { get } from 'lodash'
 
 const {config, i18n, toggleModal} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const {Component} = React
 
 const basic = {
   use: 'none',

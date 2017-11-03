@@ -35,66 +35,90 @@
   /*padding: 8px;*/
   width: 100%;
 }
-/*universal*/
-#MainView .bottom-area {
-  height: calc(100% - 39px);
+/* universal */
+#MainView .teitoku-panel,
+#MainView .resource-panel,
+#MainView .miniship,
+#MainView .combined-panels,
+#MainView .expedition-panel,
+#MainView .task-panel {
+  position: absolute;
 }
-#MainView .teitoku-panel-area {
+/* horizontal */
+#MainView .main-area-horizontal .teitoku-panel {
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 39px;
 }
-/*horizontal*/
-#MainView .main-area-horizontal {
-  height: 467px;
-  overflow: hidden;
-}
-#MainView .bottom-right-area,
-#MainView .bottom-left-area {
-  height: 100%;
-}
-#MainView .miniship-area-horizontal {
-  height: calc(100% - 96px);
-  min-height: 328px;
-}
-#MainView .resource-panel-area-horizontal{
+#MainView .main-area-horizontal .resource-panel {
+  top: 39px;
+  left: 0;
+  width: 50%;
   height: 96px;
 }
-
-#MainView .expedition-panel-area-horizontal {
-  height: 97px;
+#MainView .main-area-horizontal .miniship {
+  top: 135px;
+  left: 0;
+  width: 50%;
+  height: 332px;
 }
-#MainView .combined-panels-area-horizontal {
+#MainView .main-area-horizontal .combined-panels {
+  top: 39px;
+  left: 50%;
+  width: calc(50% - 6px);
   height: 150px;
 }
-#MainView .task-panel-area-horizontal {
-  height: calc(100% - 253px);
-  min-height: 172px;
+#MainView .main-area-horizontal .expedition-panel {
+  top: 195px;
+  left: 50%;
+  width: 50%;
+  height: 97px;
 }
-/*vertical*/
-#MainView .main-area-vertical {
-  height: 328px;
+#MainView .main-area-horizontal .task-panel {
+  top: 292px;
+  left: 50%;
+  width: 50%;
+  height: 175px;
 }
-#MainView .main-area-vertical .resource-panel .panel-body,
-#MainView .main-area-vertical .combined-panels .panel-body,
-#MainView .main-area-vertical .expedition-panel .panel-body {
-  margin-top: 8px;
+/* vertical */
+#MainView .main-area-vertical .teitoku-panel {
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 39px;
 }
-#MainView .left-area,
-#MainView .right-bottom-area,
-#MainView .left-bottom-area {
-  height: 100%
+#MainView .main-area-vertical .resource-panel {
+  top: 39px;
+  left: 0;
+  width: 30%;
+  height: 116px;
 }
-#MainView .resource-panel-area-vertical,
-#MainView .expedition-panel-area-vertical {
-  height: 40%;
-}
-#MainView .combined-panels-area-vertical,
-#MainView .task-panel-area-vertical {
-  height: 60%;
-}
-#MainView .miniship-area-vertical {
+#MainView .main-area-vertical .miniship {
+  top: 0;
+  left: 60%;
+  width: 40%;
   height: 100%;
 }
-/*panels*/
+#MainView .main-area-vertical .combined-panels {
+  top: 39px;
+  left: 30%;
+  width: calc(30% - 6px);
+  height: 170px;
+}
+#MainView .main-area-vertical .expedition-panel {
+  top: 215px;
+  left: 30%;
+  width: 30%;
+  height: 113px;
+}
+#MainView .main-area-vertical .task-panel {
+  top: 156px;
+  left: 0;
+  width: 30%;
+  height: 172px;
+}
+/* panels */
 #MainView .ndock-panel,
 #MainView .kdock-panel,
 #MainView .expedition-panel,
