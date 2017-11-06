@@ -13,6 +13,7 @@ import { PoiControl } from './components/info/control'
 import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
+import { TitleBarWrapper } from './components/etc/menu'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
@@ -32,7 +33,6 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
-const { TitleBarWrapper } = require('./components/etc/menu')
 const CustomCssInjector = () => {
   const cssPath = path.join(EXROOT, 'hack', 'custom.css')
   fs.ensureFileSync(cssPath)
@@ -41,37 +41,19 @@ const CustomCssInjector = () => {
   )
 }
 
-if (config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')) {
-  ReactDOM.render(
-    <TitleBarWrapper />,
-    $('title-bar')
-  )
-}
 ReactDOM.render(
   <Provider store={store}>
-    <PoiControl />
-  </Provider>,
-  $('poi-control')
-)
-ReactDOM.render(
-  <Provider store={store}>
-    <PoiAlert id='poi-alert' />
-  </Provider>,
-  $('poi-alert')
-)
-ReactDOM.render(
-  <Provider store={store}>
-    <PoiMapReminder id='poi-map-reminder'/>
-  </Provider>,
-  $('poi-map-reminder')
-)
-ReactDOM.render(
-  <Provider store={store}>
-    <ControlledTabArea />
+    <div>
+      { config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') && ReactDOM.createPortal(<TitleBarWrapper />, $('title-bar')) }
+      { ReactDOM.createPortal(<PoiControl />, $('poi-control')) }
+      { ReactDOM.createPortal(<PoiAlert id='poi-alert' />, $('poi-alert')) }
+      { ReactDOM.createPortal(<PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')) }
+      <ControlledTabArea />
+      { ReactDOM.createPortal(<ModalTrigger />, $('poi-modal-trigger')) }
+      { ReactDOM.createPortal(<Toastr />, $('poi-toast-trigger')) }
+      { ReactDOM.createPortal(<CustomCssInjector />, $('poi-css-injector')) }
+      { ReactDOM.createPortal(<BasicAuth />, $('poi-auth-trigger')) }
+    </div>
   </Provider>,
   $('poi-nav-tabs')
 )
-ReactDOM.render(<ModalTrigger />, $('poi-modal-trigger'))
-ReactDOM.render(<Toastr />, $('poi-toast-trigger'))
-ReactDOM.render(<CustomCssInjector />, $('poi-css-injector'))
-ReactDOM.render(<BasicAuth />, $('poi-auth-trigger'))
