@@ -9,7 +9,7 @@ $('#layout-css').setAttribute('href',
 
 const poiControlHeight = 30
 const additionalStyle = document.createElement('style')
-let titleBarHeight
+let titleBarHeight = config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') ? 28 : 0
 const getTitlebarHeight = () => {
   if ($('title-bar') && getComputedStyle($('title-bar')).display === 'none') {
     titleBarHeight = 0
