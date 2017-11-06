@@ -257,6 +257,10 @@ class PluginManager extends EventEmitter {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`, e)
       return
     }
+    if (!data || !data.version) {
+      console.warn(`Can't find update info of plugin ${plugin.packageName}`)
+      return
+    }
 
     const distTag = {
       latest: data.version,
