@@ -33,8 +33,8 @@ const serverList = [
 const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
 const defaultFetchOption = {
-  method: "GET", 
-  cache: "default", 
+  method: "GET",
+  cache: "default",
   headers: fetchHeader,
 }
 
@@ -71,18 +71,34 @@ const Misc = connect(state => ({
     let flag
     for (const server of serverList) {
       flag = true
-      const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
-        .then(res => res.json())
-        .catch(e => ({})) 
+
+      let fileList
+      try {
+        const resp = await fetch(`${server}meta.json`, defaultFetchOption)
+        if (resp.ok) {
+          fileList = await resp.json()
+        }
+      } catch (e) {
+        /* do nothing */
+      }
+
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
             // eslint-disable-next-line no-console
             console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
-            const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
-              .then(res => res.json())
-              .catch(e => ({})) 
+
+            let data
+            try {
+              const resp = await fetch(`${server}${file.name}.json`, defaultFetchOption)
+              if (resp.ok) {
+                data = await resp.json()
+              }
+            } catch (e) {
+              /* do nothing */
+            }
+
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',
