@@ -1,10 +1,10 @@
 import { ToastContainer, ToastMessage } from 'react-toastr'
 import { join } from 'path'
-import React from 'react'
+import React, { PureComponent } from 'react'
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation)
 
-class Toastr extends React.Component {
+class Toastr extends PureComponent {
   componentDidMount = () => {
     window.toastInitializer(this.container)
   }

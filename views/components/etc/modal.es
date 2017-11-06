@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
 const {i18n} = window
 const __ = i18n.others.__.bind(i18n.others)
 
 // Notification modal
-class ModalTrigger extends React.Component {
+class ModalTrigger extends PureComponent {
   state = {
     isModalOpen: false,
     title: null,

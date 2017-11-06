@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import classnames from 'classnames'
-import React from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 
 const getClassName = (props, isSVG) => {
@@ -42,7 +42,7 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', setIcon)
 })
 
-export class SlotitemIcon extends React.Component {
+export class SlotitemIcon extends PureComponent {
   static propTypes = {
     slotitemId: PropTypes.number,
     className: PropTypes.string,
@@ -52,11 +52,6 @@ export class SlotitemIcon extends React.Component {
     useSVGIcon: config.get('poi.useSVGIcon', false),
   }
   name = 'SlotitemIcon'
-  shouldComponentUpdate = (nextProps, nextState) => (
-    !(nextProps.slotitemId === this.props.slotitemId &&
-      nextProps.className === this.props.className &&
-      nextState.useSVGIcon === this.state.useSVGIcon)
-  )
   svgPath = () =>
     `${ROOT}/assets/svg/slotitem/${this.props.slotitemId}.svg`
   pngPath = () =>
@@ -104,7 +99,7 @@ export class SlotitemIcon extends React.Component {
   }
 }
 
-export class MaterialIcon extends React.Component {
+export class MaterialIcon extends PureComponent {
   static propTypes = {
     materialId: PropTypes.number,
     className: PropTypes.string,
@@ -114,11 +109,6 @@ export class MaterialIcon extends React.Component {
     useSVGIcon: config.get('poi.useSVGIcon', false),
   }
   name = 'MaterialIcon'
-  shouldComponentUpdate = (nextProps, nextState) => (
-    !(nextProps.materialId === this.props.materialId &&
-      nextProps.className === this.props.className &&
-      nextState.useSVGIcon === this.state.useSVGIcon)
-  )
   setUseSvg = (val) => {
     this.setState({
       useSVGIcon: val,

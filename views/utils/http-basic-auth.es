@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import React from 'react'
+import React, { PureComponent } from 'react'
 import { Modal, Form, FormGroup, Col, ControlLabel, FormControl, Button } from 'react-bootstrap'
 const {i18n} = window
 const __ = i18n.others.__.bind(i18n.others)
@@ -7,7 +7,7 @@ const __ = i18n.others.__.bind(i18n.others)
 const BALogin = (usr,pwd) => {
   ipcRenderer.send('basic-auth-info', usr, pwd)
 }
-class BasicAuth extends React.Component {
+class BasicAuth extends PureComponent {
   state ={
     showModal: false,
     user:'',

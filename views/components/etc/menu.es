@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { remote, shell } from 'electron'
 import { TitleBar } from 'electron-react-titlebar'
 import { reduxSet } from 'views/utils/tools'
@@ -436,7 +436,7 @@ config.on('config.set', (path, value) => {
   }
 })
 
-export class TitleBarWrapper extends Component {
+export class TitleBarWrapper extends PureComponent {
   state = {
     menu: template,
   }
