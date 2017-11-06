@@ -25,7 +25,8 @@ export default class PluginSettingWrapper extends Component {
     })
   }
 
-  shouldComponentUpdate = (nextProps, nextState) => this.props.plugin.timestamp !== nextProps.plugin.timestamp ||
+  shouldComponentUpdate = (nextProps, nextState) =>
+    this.props.plugin.timestamp !== nextProps.plugin.timestamp ||
     nextState.hasError === true
 
   render() {
@@ -47,6 +48,6 @@ export default class PluginSettingWrapper extends Component {
         </div>
       )
     }
-    return <plugin.reactClass />
+    return <plugin.settingsClass />
   }
 }
