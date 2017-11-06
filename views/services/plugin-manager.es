@@ -14,8 +14,8 @@ const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
 const defaultFetchOption = {
-  method: "GET", 
-  cache: "default", 
+  method: "GET",
+  cache: "default",
   headers: fetchHeader,
 }
 
@@ -33,6 +33,17 @@ import {
 
 function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
+}
+
+const getAsync = async (url) => {
+  try {
+    const resp = await fetch(url, defaultFetchOption)
+    if (resp.ok) {
+      return resp.json()
+    }
+  } catch (e) {
+    return Promise.reject(e)
+  }
 }
 
 class PluginManager extends EventEmitter {
@@ -239,23 +250,29 @@ class PluginManager extends EventEmitter {
     if (plugin.needRollback) {
       return
     }
-    const data = await fetch(`${this.config.mirror.server}${plugin.packageName}/latest`, defaultFetchOption)
-      .then(res => res.json())
-      .catch(e => ({}))
-    if (data.error) {
-      console.warn(`Can't find update info of plugin ${plugin.packageName}`, data)
+    let data
+    try {
+      data = await getAsync(`${this.config.mirror.server}${plugin.packageName}/latest`)
+    } catch (e) {
+      console.warn(`Can't find update info of plugin ${plugin.packageName}`, e)
       return
     }
+
     const distTag = {
       latest: data.version,
     }
     if (this.config.betaCheck) {
-      const betaData = await fetch(`${this.config.mirror.server}${plugin.packageName}/beta`, defaultFetchOption)
-        .then(res => res.json())
-        .catch(e => ({}))
-      Object.assign(distTag, {
-        beta: betaData.version,
-      })
+      let betaData
+      try {
+        betaData = await getAsync(`${this.config.mirror.server}${plugin.packageName}/beta`)
+      } catch (e) {
+        /* do nothing */
+      }
+      if (betaData && betaData.version) {
+        Object.assign(distTag, {
+          beta: betaData.version,
+        })
+      }
     }
     let latest = `${plugin.version}`
     let notCompatible = false
