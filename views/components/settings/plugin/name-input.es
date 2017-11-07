@@ -19,7 +19,7 @@ export default class NameInput extends PureComponent {
   }
   validPackageName = () => {
     return get(this.state, 'manuallyInstallPackage.length', 0) > 0 &&
-      /^poi-plugin-.*$/.test(this.state.manuallyInstallPackage)
+      /^(poi-plugin-\S+)$/.exec(this.state.manuallyInstallPackage)
   }
   render() {
     return (
@@ -34,13 +34,28 @@ export default class NameInput extends PureComponent {
             placeholder={__('Input plugin package name...')}>
           </FormControl>
           <InputGroup.Button>
-            <Button bsStyle='primary'
-              disabled={this.props.manuallyInstallStatus === 1 ||
+            {
+              (() => {
+                const matchResult = this.validPackageName()
+                return (
+                  <Button
+                    bsStyle='primary'
+                    disabled={
+                      this.props.manuallyInstallStatus === 1 ||
                       this.props.npmWorking ||
-                      !this.validPackageName()}
-              onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
-              {__('Install')}
-            </Button>
+                      !matchResult
+                    }
+                    onClick={
+                      matchResult ?
+                        this.props.handleManuallyInstall.bind(null, matchResult[1]) :
+                        null
+                    }
+                  >
+                    {__('Install')}
+                  </Button>
+                )
+              })()
+            }
           </InputGroup.Button>
         </InputGroup>
       </FormGroup>
