@@ -36,13 +36,9 @@ function defaultPluginPath(packageName) {
 }
 
 const getAsync = async (url) => {
-  try {
-    const resp = await fetch(url, defaultFetchOption)
-    if (resp.ok) {
-      return resp.json()
-    }
-  } catch (e) {
-    return Promise.reject(e)
+  const resp = await fetch(url, defaultFetchOption)
+  if (resp.ok) {
+    return resp.json()
   }
 }
 
