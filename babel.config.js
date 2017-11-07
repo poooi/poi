@@ -3,6 +3,7 @@ module.exports = {
   plugins: [
     "add-module-exports",
     "dynamic-import-node",
+    "closure-elimination",
   ],
   ignore: false,
   only: /.es$/,
