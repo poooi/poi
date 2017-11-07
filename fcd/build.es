@@ -50,6 +50,7 @@ async function build_meta() {
     build_map(),
     CSON2JSON('maphp'),
     CSON2JSON('shiptag'),
+    CSON2JSON('safenodes'),
   ])
 
   await build_meta()
