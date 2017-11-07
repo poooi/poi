@@ -38,17 +38,6 @@ const defaultFetchOption = {
   headers: fetchHeader,
 }
 
-const getAsync = async (url) => {
-  try {
-    const resp = await fetch(url, defaultFetchOption)
-    if (resp.ok) {
-      return resp.json()
-    }
-  } catch (e) {
-    /* do nothing */
-  }
-}
-
 const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
   ? `${url}&s=160`
   : url
@@ -83,7 +72,9 @@ const Misc = connect(state => ({
     for (const server of serverList) {
       flag = true
 
-      const fileList = await getAsync(`${server}meta.json`)
+      const fileList = await await fetch(`${server}meta.json`, defaultFetchOption)
+        .then(res => res.ok ? res.json() : undefined)
+        .catch(e => undefined)
 
       if (fileList) {
         for (const file of fileList) {
@@ -92,7 +83,9 @@ const Misc = connect(state => ({
             // eslint-disable-next-line no-console
             console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
 
-            const data = await getAsync(`${server}${file.name}.json`)
+            const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
+              .then(res => res.ok ? res.json() : undefined)
+              .catch(e => undefined)
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',

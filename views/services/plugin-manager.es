@@ -35,13 +35,6 @@ function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
 }
 
-const getAsync = async (url) => {
-  const resp = await fetch(url, defaultFetchOption)
-  if (resp.ok) {
-    return resp.json()
-  }
-}
-
 class PluginManager extends EventEmitter {
   constructor(packagePath, pluginRoot, mirrorPath) {
     super(packagePath, pluginRoot, mirrorPath)
@@ -246,13 +239,9 @@ class PluginManager extends EventEmitter {
     if (plugin.needRollback) {
       return
     }
-    let data
-    try {
-      data = await getAsync(`${this.config.mirror.server}${plugin.packageName}/latest`)
-    } catch (e) {
-      console.warn(`Can't find update info of plugin ${plugin.packageName}`, e)
-      return
-    }
+    const data = await await fetch(`${this.config.mirror.server}${plugin.packageName}/latest`, defaultFetchOption)
+      .then(res => res.ok ? res.json() : undefined)
+      .catch(e => undefined)
     if (!data || !data.version) {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`)
       return
@@ -262,12 +251,9 @@ class PluginManager extends EventEmitter {
       latest: data.version,
     }
     if (this.config.betaCheck) {
-      let betaData
-      try {
-        betaData = await getAsync(`${this.config.mirror.server}${plugin.packageName}/beta`)
-      } catch (e) {
-        /* do nothing */
-      }
+      const betaData = await fetch(`${this.config.mirror.server}${plugin.packageName}/beta`, defaultFetchOption)
+        .then(res => res.ok ? res.json() : undefined)
+        .catch(e => undefined)
       if (betaData && betaData.version) {
         Object.assign(distTag, {
           beta: betaData.version,
