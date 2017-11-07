@@ -75,7 +75,6 @@ const Misc = connect(state => ({
       const fileList = await await fetch(`${server}meta.json`, defaultFetchOption)
         .then(res => res.ok ? res.json() : undefined)
         .catch(e => undefined)
-
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')

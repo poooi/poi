@@ -11,8 +11,8 @@ const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
 fetchHeader.set('User-Agent', `poi v${POI_VERSION}`)
 const defaultFetchOption = {
-  method: "GET", 
-  cache: "default", 
+  method: "GET",
+  cache: "default",
   headers: fetchHeader,
 }
 
@@ -69,8 +69,7 @@ export const checkUpdate = async () => {
   const versionInfo = await fetch(`https://${global.SERVER_HOSTNAME}/update/latest.json`, defaultFetchOption)
     .then(res => res.json())
     .catch(e => {
-      error(e.stack)
-      console.warn('Check update error.')
+      console.warn('Check update error.', e.stack)
       return {}
     })
   if (versionInfo.version) {
