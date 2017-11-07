@@ -17,14 +17,7 @@ const defaultFetchOption = {
 }
 
 const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
-
-const {error} = require('../../lib/utils')
-
 const LANG = ['zh-CN', 'zh-TW', 'en-US']
-
-const openHomePage = () =>
-  shell.openExternal('https://poi.io')
-
 const doUpdate = async () => {
   if (process.platform == 'win32') {
     try {
@@ -109,7 +102,7 @@ const toggleUpdate = (version, log) => {
     },
     {
       name: `${__('Manually download')}`,
-      func: openHomePage,
+      func: () => shell.openExternal('https://poi.io'),
       style: 'primary',
     },
   ]
