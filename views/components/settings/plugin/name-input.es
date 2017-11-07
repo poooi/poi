@@ -19,7 +19,7 @@ export default class NameInput extends PureComponent {
   }
   validPackageName = () => {
     return get(this.state, 'manuallyInstallPackage.length', 0) > 0 &&
-      /^(poi-plugin-\S+)$/.exec(this.state.manuallyInstallPackage)
+      /^\s*(poi-plugin-\S+)\s*$/.exec(this.state.manuallyInstallPackage)
   }
   render() {
     return (
