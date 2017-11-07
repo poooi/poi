@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { FormControl, ControlLabel, InputGroup, FormGroup, Button } from 'react-bootstrap'
-import { get } from 'lodash'
+import { get, trim } from 'lodash'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
@@ -15,7 +15,7 @@ export default class NameInput extends PureComponent {
     manuallyInstallPackage: '',
   }
   changeInstalledPackage = (e) => {
-    this.setState({manuallyInstallPackage: e.target.value})
+    this.setState({manuallyInstallPackage: trim(e.target.value)})
   }
   validPackageName = () => {
     return get(this.state, 'manuallyInstallPackage.length', 0) > 0 &&
