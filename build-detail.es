@@ -344,7 +344,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   await fs.ensureDir(tarRoot)
 
   // Install plugins
-  await npmInstallAsync(installRoot, ['--only=production', '--prefix', '.'].concat(pluginNames))
+  await npmInstallAsync(installRoot, ['--global-style', '--only=production', '--prefix', '.'].concat(pluginNames))
 
   const pluginDirs = (() =>{
     const dirs = []
@@ -356,14 +356,12 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
       const contents = require(packageJson)
       // Delete this key, otherwise npm install won't succeed
       delete contents._requiredBy
-      contents.bundledDependencies = Object.keys(contents.dependencies)
+      delete contents.scripts
+      contents.bundledDependencies = Object.keys(contents.dependencies || {})
       fs.writeFileSync(packageJson, JSON.stringify(contents))
       dirs.push(dir)
     }
     return dirs})()
-
-  await Promise.all(pluginDirs.map(dir =>
-    npmInstallAsync(dir, ['--no-bin-links', '--no-progress', '--production'])))
 
   log("Now packing plugins into tarballs.")
   await runScriptAsync(NPM_EXEC_PATH, ['pack'].concat(pluginDirs), {

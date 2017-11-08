@@ -134,7 +134,8 @@ app.on('ready', () => {
     webPreferences: {
       plugins: true,
     },
-    backgroundColor: process.platform === 'darwin' ? '#00000000' : '#222222',
+    backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
+    transparent: true,
   })
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'

@@ -91,7 +91,7 @@ const ThemeConfig = connect((state, props) => ({
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.vibrant} onChange={this.handleSetVibrancy}>
             <option key={0} value={0}>{__('Default')}</option>
-            { ['darwin'].includes(process.platform) && <option key={1} value={1}>{__("Vibrance")}</option> }
+            { ['darwin', 'win32'].includes(process.platform) && <option key={1} value={1}>{__("Vibrance")}</option> }
             <option key={2} value={2}>{__("Custom background")}</option>
           </FormControl>
         </Col>
