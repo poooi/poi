@@ -41,11 +41,15 @@ window.setVibrancy = value => {
   if ('darwin' === process.platform) {
     remote.getCurrentWindow().setVibrancy((value === 1) ? 'ultra-dark' : null)
   } else if('win32' === process.platform) {
-    const electronVibrancy = remote.require('electron-vibrancy')
-    if (value === 1) {
-      electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
-    } else {
-      electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
+    try {
+      const electronVibrancy = remote.require('electron-vibrancy')
+      if (value === 1) {
+        electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
+      } else {
+        electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
+      }
+    } catch (e) {
+      console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.')
     }
   }
   window.isVibrant = Boolean(value)
