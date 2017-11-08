@@ -11,7 +11,8 @@ function dataFromBody(body) {
     $maps: indexify(body.api_mst_mapinfo),
     $missions: indexify(body.api_mst_mission),
     $useitems: indexify(body.api_mst_useitem),
-    $shipgraph: body.api_mst_shipgraph,
+    $graphs: indexify(body.api_mst_shipgraph),
+    $shipgraph: body.api_mst_shipgraph, // FIXME: finally deprecate $shipgraph in favor of $graphs
     /*
        IMPORTANT: do not indexify api_mst_shipupgrade,
        because api_id does not suggest uniqueness in this part
