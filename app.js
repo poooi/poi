@@ -134,7 +134,7 @@ app.on('ready', () => {
     webPreferences: {
       plugins: true,
     },
-    backgroundColor: process.platform === 'darwin' ? '#00000000' : '#DE2A2A2A',
+    backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
     transparent: true,
   })
   // Default menu
