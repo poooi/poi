@@ -11,7 +11,8 @@
     "start_debug": "electron . --dev",
     "dev": "electron . --dev",
     "clean": "gulp clean",
-    "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore"
+    "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore",
+    "rebuild": "cd node_modules/electron-vibrancy && npm run rebuild --target=1.7.9 --no-debug"
   },
   "repository": {
     "type": "git",
@@ -120,7 +121,6 @@
       "PepperFlash/${os}-${arch}"
     ],
     "npmRebuild": true,
-    "npmArgs": "--target=1.7.9",
     "mac": {
       "publish": [
         "github"
