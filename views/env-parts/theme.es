@@ -38,8 +38,15 @@ window.setVibrancy = value => {
     })
   }
   window.allThemes = themes
-  if (['darwin'].includes(process.platform)) {
+  if ('darwin' === process.platform) {
     remote.getCurrentWindow().setVibrancy((value === 1) ? 'ultra-dark' : null)
+  } else if('win32' === process.platform) {
+    const electronVibrancy = remote.require('electron-vibrancy')
+    if (value === 1) {
+      electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
+    } else {
+      electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
+    }
   }
   window.isVibrant = Boolean(value)
   const theme = config.get('poi.theme', 'paperdark')
