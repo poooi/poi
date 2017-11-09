@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { FormControl, ControlLabel, InputGroup, FormGroup, Button } from 'react-bootstrap'
-import { get, trim } from 'lodash'
+import { trim } from 'lodash'
+import validate from 'validate-npm-package-name'
 
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
@@ -17,11 +18,11 @@ export default class NameInput extends PureComponent {
   changeInstalledPackage = (e) => {
     this.setState({manuallyInstallPackage: trim(e.target.value)})
   }
-  validPackageName = () => {
-    return get(this.state, 'manuallyInstallPackage.length', 0) > 0 &&
-      /^poi-plugin-.*$/.test(this.state.manuallyInstallPackage)
-  }
   render() {
+    const { manuallyInstallPackage } = this.state
+    const validPackageName = manuallyInstallPackage.length > 0 &&
+      /^poi-plugin-.*$/.test(manuallyInstallPackage) &&
+      validate(manuallyInstallPackage).validForNewPackages
     return (
       <FormGroup>
         <ControlLabel>{__('Install directly from npm')}</ControlLabel>
@@ -37,7 +38,7 @@ export default class NameInput extends PureComponent {
             <Button bsStyle='primary'
               disabled={this.props.manuallyInstallStatus === 1 ||
                       this.props.npmWorking ||
-                      !this.validPackageName()}
+                      !validPackageName}
               onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
               {__('Install')}
             </Button>
