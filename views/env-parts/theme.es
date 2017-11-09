@@ -29,6 +29,19 @@ window.loadTheme = (theme = 'paperdark') => {
 
 window.applyTheme = theme => config.set('poi.theme', theme)
 
+const windowsSetVibrancy = value => {
+  try {
+    const electronVibrancy = remote.require('electron-vibrancy')
+    if (value === 1) {
+      electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
+    } else {
+      electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
+    }
+  } catch (e) {
+    console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
+  }
+}
+
 window.setVibrancy = value => {
   const themes = value ? vibrantThemes : normalThemes
   if (window.isMain && window.dispatch) {
@@ -41,15 +54,8 @@ window.setVibrancy = value => {
   if ('darwin' === process.platform) {
     remote.getCurrentWindow().setVibrancy((value === 1) ? 'ultra-dark' : null)
   } else if('win32' === process.platform) {
-    try {
-      const electronVibrancy = remote.require('electron-vibrancy')
-      if (value === 1) {
-        electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
-      } else {
-        electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
-      }
-    } catch (e) {
-      console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.')
+    if (remote.getCurrentWindow().isVisible()) {
+      windowsSetVibrancy(value)
     }
   }
   window.isVibrant = Boolean(value)
@@ -59,6 +65,19 @@ window.setVibrancy = value => {
   } else {
     config.set('poi.theme', 'paperdark')
   }
+}
+
+if ('win32' === process.platform) {
+  remote.getCurrentWindow().on('hide', () => {
+    if (config.get('poi.vibrant', 0) === 1) {
+      windowsSetVibrancy(0)
+    }
+  })
+  remote.getCurrentWindow().on('show', () => {
+    if (config.get('poi.vibrant', 0) === 1) {
+      windowsSetVibrancy(1)
+    }
+  })
 }
 
 window.allThemes = normalThemes
