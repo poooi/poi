@@ -29,3 +29,19 @@ window.addEventListener('unload', (e) => {
 })
 
 document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.zoomLevel', 1)))
+document.addEventListener('DOMContentLoaded', () => {
+  if (config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')) {
+    const titlebar = document.createElement('div')
+    titlebar.id = "electron-titlebar"
+    document.body.insertBefore(titlebar, document.body.firstElementChild)
+    const ReactDOM = require('react-dom')
+    const React = require('react')
+    const path = require('path')
+    const { TitleBar } = require('electron-react-titlebar')
+    ReactDOM.render(React.createElement(
+      TitleBar,
+      { icon: path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png'), menu: [] },
+      React.createElement('link', { rel: 'stylesheet', type: 'text/css', href: require.resolve('electron-react-titlebar/assets/style.css') })
+    ), document.querySelector('#electron-titlebar'))
+  }
+})
