@@ -3,7 +3,7 @@ import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync, ensureDir } from 'fs-extra'
 import glob from 'glob'
-import { sortBy, map } from 'lodash'
+import _, { sortBy, map, get } from 'lodash'
 import { remote } from 'electron'
 import fetch from 'node-fetch'
 
@@ -313,7 +313,9 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  async installPlugin(packageSource, version) {
+  // possible options:
+  //   skipEnable: true | false, skips enabling the plugin after installation
+  async installPlugin(packageSource, version, options = {}) {
     if (packageSource.includes('@'))
       [packageSource, version] = packageSource.split('@')
 
@@ -357,7 +359,7 @@ class PluginManager extends EventEmitter {
     // 5) Read plugin and load it
     try {
       let plugin = await readPlugin(this.getPluginPath(packageName))
-      if (plugin.enabled) {
+      if (plugin.enabled || !get(options, 'skipEnable', false)) {
         plugin = await enablePlugin(plugin, false)
       }
       dispatch({
@@ -402,12 +404,21 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  async gracefulReset() {
+  async gracefulRepair(repair = true) {
     const plugins = this.getInstalledPlugins()
+    const enabledPlugins = _(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.packageName).value()
+    const disabledPlugins = _(plugins).filter(plugin => !plugin.enabled).map(plugin => plugin.packageName).value()
     const modulePath = join(PLUGIN_PATH, 'node_modules')
     await safePhysicallyRemove(modulePath)
     await ensureDir(modulePath)
     await Promise.all(plugins.map(this.uninstallPlugin.bind(this)))
+
+    if (!repair) {
+      return
+    }
+
+    await Promise.all(enabledPlugins.map(this.installPlugin.bind(this)))
+    await Promise.all(disabledPlugins.map(plugin => this.installPlugin(plugin, null, { skipEnable: true})))
   }
 
   async enablePlugin(plugin) {
@@ -468,6 +479,8 @@ window.reloadPlugin = async (pkgName, verbose=false) => {
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" enabled.`)
 }
+
+window.gracefulResetPlugin = () => pluginManager.gracefulRepair(false)
 
 remote.getCurrentWebContents().once('dom-ready', () => pluginManager.initialize())
 

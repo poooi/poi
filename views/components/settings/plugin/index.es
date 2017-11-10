@@ -167,11 +167,11 @@ const PluginConfig = connect((state, props) => ({
       const plugins = PluginManager.getInstalledPlugins()
       const plugin = plugins[index]
       await PluginManager.uninstallPlugin(plugin)
-      this.setState({npmWorking: false})
     }
     catch (error) {
-      this.setState({npmWorking: false})
       throw error
+    } finally {
+      this.setState({npmWorking: false})
     }
   }
   checkUpdate = async () =>{
@@ -241,11 +241,18 @@ const PluginConfig = connect((state, props) => ({
       this.setState({manuallyInstallStatus: 3})
     }
   }
-  handleGracefulReset = async () => {
+  handleGracefulRepair = async () => {
+    this.setState({
+      npmWorking: true,
+    })
     try {
-      await PluginManager.gracefulReset()
+      await PluginManager.gracefulRepair()
     } catch (e) {
       console.error(e)
+    } finally {
+      this.setState({
+        npmWorking: false,
+      })
     }
   }
   synchronize = (callback) => {
@@ -474,8 +481,8 @@ const PluginConfig = connect((state, props) => ({
                             <Button className='col-xs-4' onClick={this.onSelectOpenSite}>
                               {__('Search for plugins')}
                             </Button>
-                            <Button className='col-xs-4' onClick={this.handleGracefulReset}>
-                              {__('Reset plugins')}
+                            <Button className='col-xs-4' onClick={this.handleGracefulRepair}>
+                              {__('Repair plugins')}
                             </Button>
                           </ButtonGroup>
                         </Row>
