@@ -1,7 +1,7 @@
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
-import { readJsonSync, accessSync } from 'fs-extra'
+import { readJsonSync, accessSync, ensureDir } from 'fs-extra'
 import glob from 'glob'
 import { sortBy, map } from 'lodash'
 import { remote } from 'electron'
@@ -57,6 +57,9 @@ class PluginManager extends EventEmitter {
     this.DISABLED = 1
     this.NEEDUPDATE = 2
     this.BROKEN = 3
+
+    this.getMirrors()
+    this.loadConfig()
   }
   getPluginPath(packageName) {
     return join(this.pluginRoot, 'node_modules', packageName)
@@ -94,15 +97,13 @@ class PluginManager extends EventEmitter {
     return this.mirrors
   }
   loadConfig() {
-    if (!this.mirrors) {
-      this.getMirrors()
-      const mirrorConf = config.get('packageManager.mirrorName')
-      const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ?
-        mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
-      const proxyConf = config.get("packageManager.proxy", false)
-      const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
-      this.selectConfig(mirrorName, proxyConf, betaCheck, false)
-    }
+    const mirrorConf = config.get('packageManager.mirrorName')
+    const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ?
+      mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
+    const proxyConf = config.get("packageManager.proxy", false)
+    const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
+    this.selectConfig(mirrorName, proxyConf, betaCheck, false)
+
     return this.mirrors
   }
   selectConfig(name, enable, check) {
@@ -183,7 +184,6 @@ class PluginManager extends EventEmitter {
     }
   }
   getConf() {
-    this.loadConfig()
     return this.config
   }
   getInstalledPlugins() {
@@ -300,7 +300,6 @@ class PluginManager extends EventEmitter {
   }
 
   async getOutdatedPlugins(isNotif) {
-    this.loadConfig()
     const plugins = this.getInstalledPlugins()
     const outdatedList = (await Promise.all(plugins.map((plugin) =>
       this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
@@ -317,7 +316,6 @@ class PluginManager extends EventEmitter {
   async installPlugin(packageSource, version) {
     if (packageSource.includes('@'))
       [packageSource, version] = packageSource.split('@')
-    this.loadConfig()
 
     // 1) See if it is installed by plugin name
     const installingByPluginName = (function () {
@@ -379,7 +377,6 @@ class PluginManager extends EventEmitter {
   }
 
   async uninstallPlugin(plugin) {
-    this.loadConfig()
     try {
       dispatch({
         type: '@@Plugin/changeStatus',
@@ -403,6 +400,14 @@ class PluginManager extends EventEmitter {
     } catch (error) {
       console.error(error.stack)
     }
+  }
+
+  async gracefulReset() {
+    const plugins = this.getInstalledPlugins()
+    const modulePath = join(PLUGIN_PATH, 'node_modules')
+    await safePhysicallyRemove(modulePath)
+    await ensureDir(modulePath)
+    await Promise.all(plugins.map(this.uninstallPlugin.bind(this)))
   }
 
   async enablePlugin(plugin) {

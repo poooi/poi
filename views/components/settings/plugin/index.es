@@ -241,6 +241,13 @@ const PluginConfig = connect((state, props) => ({
       this.setState({manuallyInstallStatus: 3})
     }
   }
+  handleGracefulReset = async () => {
+    try {
+      await PluginManager.gracefulReset()
+    } catch (e) {
+      console.error(e)
+    }
+  }
   synchronize = (callback) => {
     if (this.lock) {
       return
@@ -461,11 +468,14 @@ const PluginConfig = connect((state, props) => ({
                         </div>
                         <Row>
                           <ButtonGroup className='plugin-buttongroup'>
-                            <Button className='col-xs-6' onClick={this.onSelectOpenFolder}>
+                            <Button className='col-xs-4' onClick={this.onSelectOpenFolder}>
                               {__('Open plugin folder')}
                             </Button>
-                            <Button className='col-xs-6' onClick={this.onSelectOpenSite}>
+                            <Button className='col-xs-4' onClick={this.onSelectOpenSite}>
                               {__('Search for plugins')}
+                            </Button>
+                            <Button className='col-xs-4' onClick={this.handleGracefulReset}>
+                              {__('Reset plugins')}
                             </Button>
                           </ButtonGroup>
                         </Row>
