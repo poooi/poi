@@ -125,6 +125,7 @@
   "Select npm server": "选择 npm 服务器",
   "Open plugin folder": "打开插件目录",
   "Search for plugins": "查找插件",
+  "Repair plugins": "自动修复",
   "Connect to npm server through proxy": "使用代理连接至 npm 服务器",
   "Developer option: check update of beta version": "开发者选项: 检查 beta 版插件更新",
   "Automatically update plugins": "自动更新插件",
