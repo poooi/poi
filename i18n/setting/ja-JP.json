@@ -125,6 +125,7 @@
   "Select npm server": "NPM サーバーを選択する",
   "Open plugin folder": "プラグインのフォルダを開く",
   "Search for plugins": "プラグインを検索する",
+  "Repair plugins": "自動修復",
   "Connect to npm server through proxy": "プロキシサーバ経由て NPM サーバーに接続する",
   "Developer option: check update of beta version": "開発者向けオプション: プラグインのベータ版を確認する",
   "Automatically update plugins": "プラグインを自動に更新する",

@@ -125,6 +125,7 @@
   "Select npm server": "選擇 npm 伺服器",
   "Open plugin folder": "開啟擴展程式目錄",
   "Search for plugins": "尋找擴展程式",
+  "Repair plugins": "自動修復",
   "Connect to npm server through proxy": "使用代理連線至 npm 伺服器",
   "Developer option: check update of beta version": "開發者選項: 檢查 beta 版擴展程式更新",
   "Automatically update plugins": "自動更新擴展程式",
