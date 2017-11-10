@@ -44,8 +44,7 @@ const PluginConfig = connect((state, props) => ({
     advanced: false,
     manuallyInstallStatus: 0,
   }
-  isUpdateAvailable = false
-  checkCount = 0
+
   handleEnableBetaPluginCheck = () => {
     PluginManager.selectConfig(null, null, !this.props.betaCheck)
   }
@@ -63,8 +62,7 @@ const PluginConfig = connect((state, props) => ({
     this.setState({advanced: !this.state.advanced})
   }
   handleEnable = async (index) => {
-    const plugins = PluginManager.getInstalledPlugins()
-    const plugin = plugins[index]
+    const plugin = this.props.plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)){
     case PluginManager.DISABLED:
       await PluginManager.enablePlugin(plugin)
@@ -78,20 +76,20 @@ const PluginConfig = connect((state, props) => ({
     if (get(e, 'target.disabled')) {
       return
     }
-    let installingPluginNames = this.state.installingPluginNames
+    let installingPluginNames = this.state.installingPluginNames.slice()
     installingPluginNames.push(name)
     this.setState({
-      installingPluginNames: installingPluginNames,
+      installingPluginNames,
       npmWorking: true,
     })
     try {
       await PluginManager.installPlugin(name)
-      installingPluginNames = this.state.installingPluginNames
+      installingPluginNames = this.state.installingPluginNames.slice()
       const index = installingPluginNames.indexOf(name)
       if (index > -1) {
         installingPluginNames.splice(index, 1)
         this.setState({
-          installingPluginNames: installingPluginNames,
+          installingPluginNames,
           npmWorking: false,
         })
       }
@@ -126,7 +124,11 @@ const PluginConfig = connect((state, props) => ({
     })
     const settings = PluginManager.getUninstalledPluginSettings()
     for (const name in settings) {
-      await this.handleInstall(name)
+      try {
+        await this.handleInstall(name)
+      } catch (e) {
+        console.error(e)
+      }
     }
     this.setState({
       installingAll: false,
@@ -294,11 +296,11 @@ const PluginConfig = connect((state, props) => ({
       break
     case 2:
       installStatusbsStyle = 'success'
-      installStatusText = `${__("Plugins are installed successfully.")}`
+      installStatusText = __("Plugins are installed successfully.")
       break
     case 3:
       installStatusbsStyle = 'danger'
-      installStatusText = `${__("Install failed. Maybe the selected files are not plugin packages.")}`
+      installStatusText = __("Install failed. Maybe the selected files are not plugin packages.")
       break
     default:
       installStatusbsStyle = 'warning'
@@ -317,37 +319,52 @@ const PluginConfig = connect((state, props) => ({
         <Grid className='correct-container'>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
-              { window.isSafeMode &&
+              {
+                window.isSafeMode &&
                 <Panel header={__('Safe Mode')} bsStyle='warning'>
                   {__('Poi is running in safe mode, plugins are not enabled automatically.')}
                 </Panel>
               }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
-                <Button onClick={this.checkUpdate}
+                <Button
+                  onClick={this.checkUpdate}
                   disabled={this.state.checkingUpdate}
-                  className='control-button col-xs-3'>
+                  className='control-button col-xs-3'
+                >
                   <FontAwesome name='refresh' spin={this.state.checkingUpdate} />
                   <span> {__("Check Update")}</span>
                 </Button>
-                <Button onClick={this.handleUpdateAll}
+                <Button
+                  onClick={this.handleUpdateAll}
                   disabled={this.state.npmWorking ||
                           this.state.checkingUpdate ||
-                          !PluginManager.getUpdateStatus()}
-                  className='control-button col-xs-3'>
-                  <FontAwesome name={updateStatusFAname}
-                    pulse={this.state.updatingAll}/>
+                          !PluginManager.getUpdateStatus()
+                  }
+                  className='control-button col-xs-3'
+                >
+                  <FontAwesome
+                    name={updateStatusFAname}
+                    pulse={this.state.updatingAll}
+                  />
                   <span> {__("Update all")}</span>
                 </Button>
-                <Button onClick={this.handleInstallAll}
+                <Button
+                  onClick={this.handleInstallAll}
                   disabled={this.state.npmWorking ||
-                          Object.keys(uninstalledPluginSettings).length === 0}
-                  className='control-button col-xs-3'>
-                  <FontAwesome name={installStatusFAname}
-                    pulse={this.state.installingAll}/>
+                          Object.keys(uninstalledPluginSettings).length === 0
+                  }
+                  className='control-button col-xs-3'
+                >
+                  <FontAwesome
+                    name={installStatusFAname}
+                    pulse={this.state.installingAll}
+                  />
                   <span> {__("Install all")}</span>
                 </Button>
-                <Button onClick={this.handleAdvancedShow}
-                  className='control-button col-xs-3'>
+                <Button
+                  onClick={this.handleAdvancedShow}
+                  className='control-button col-xs-3'
+                >
                   <FontAwesome name="gear" />
                   <span> {__("Advanced")} </span>
                   <FontAwesome name={advanceFAname} />
@@ -365,11 +382,13 @@ const PluginConfig = connect((state, props) => ({
                         <CheckboxLabel
                           label={__('Switch to Plugin Automatically')}
                           configName="poi.autoswitch.enabled"
-                          defaultVal={true} />
+                          defaultVal={true}
+                        />
                         <CheckboxLabel
                           label={__('Enable autoswitch for main panel')}
                           configName="poi.autoswitch.main"
-                          defaultVal={true} />
+                          defaultVal={true}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -385,14 +404,20 @@ const PluginConfig = connect((state, props) => ({
                           {
                             Object.keys(mirrors).map((server, index) => {
                               return (
-                                <OverlayTrigger placement='top' key={index} overlay={
-                                  <Tooltip id={`npm-server-${index}`}>
-                                    {mirrors[server].menuname}
-                                  </Tooltip>
-                                }>
+                                <OverlayTrigger
+                                  placement='top'
+                                  key={index}
+                                  overlay={
+                                    <Tooltip id={`npm-server-${index}`}>
+                                      {mirrors[server].menuname}
+                                    </Tooltip>
+                                  }
+                                >
                                   <Col key={index} xs={6} className='select-npm-server'>
-                                    <Radio checked={this.props.mirrorName == server}
-                                      onChange={this.onSelectServer.bind(this, server)} >
+                                    <Radio
+                                      checked={this.props.mirrorName == server}
+                                      onChange={this.onSelectServer.bind(this, server)}
+                                    >
                                       {mirrors[server].name}
                                     </Radio>
                                   </Col>
@@ -411,20 +436,26 @@ const PluginConfig = connect((state, props) => ({
                           </Col>
                         </Row>
                         <div>
-                          <Checkbox checked={this.props.proxy || false}
-                            onChange={this.handleEnableProxy}>
+                          <Checkbox
+                            checked={this.props.proxy || false}
+                            onChange={this.handleEnableProxy}
+                          >
                             {__('Connect to npm server through proxy')}
                           </Checkbox>
                         </div>
                         <div>
-                          <Checkbox checked={this.props.autoUpdate || false}
-                            onChange={this.handleEnableAutoUpdate}>
+                          <Checkbox
+                            checked={this.props.autoUpdate || false}
+                            onChange={this.handleEnableAutoUpdate}
+                          >
                             {__('Automatically update plugins')}
                           </Checkbox>
                         </div>
                         <div>
-                          <Checkbox checked={this.props.betaCheck || false}
-                            onChange={this.handleEnableBetaPluginCheck}>
+                          <Checkbox
+                            checked={this.props.betaCheck || false}
+                            onChange={this.handleEnableBetaPluginCheck}
+                          >
                             {__('Developer option: check update of beta version')}
                           </Checkbox>
                         </div>
@@ -456,9 +487,11 @@ const PluginConfig = connect((state, props) => ({
           </Row>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
-              <NameInput handleManuallyInstall={this.handleManuallyInstall}
+              <NameInput
+                handleManuallyInstall={this.handleManuallyInstall}
                 manuallyInstallStatus={this.state.manuallyInstallStatus}
-                npmWorking={this.state.npmWorking} />
+                npmWorking={this.state.npmWorking}
+              />
             </Col>
             <Col xs={12}>
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
@@ -468,13 +501,15 @@ const PluginConfig = connect((state, props) => ({
           </Row>
           {
             this.props.plugins.map((plugin, index) => {
-              return (<InstalledPlugin
-                key={plugin.id}
-                plugin={plugin}
-                handleUpdate={partial(this.handleUpdate, index)}
-                handleEnable={partial(this.handleEnable, index)}
-                handleRemove={partial(this.handleRemove, index)}
-              />)
+              return (
+                <InstalledPlugin
+                  key={plugin.id}
+                  plugin={plugin}
+                  handleUpdate={partial(this.handleUpdate, index)}
+                  handleEnable={partial(this.handleEnable, index)}
+                  handleRemove={partial(this.handleRemove, index)}
+                />
+              )
             }, this)
           }
           {

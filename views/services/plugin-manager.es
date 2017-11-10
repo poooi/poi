@@ -3,7 +3,6 @@ import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync } from 'fs-extra'
 import glob from 'glob'
-import { delay } from 'bluebird'
 import { sortBy, map } from 'lodash'
 import { remote } from 'electron'
 import fetch from 'node-fetch'
@@ -84,30 +83,29 @@ class PluginManager extends EventEmitter {
     })
   }
   getRequirements() {
-    if (this.requirements == null)
+    if (!this.requirements)
       this.requirements = readJsonSync(this.packagePath)
     return this.requirements
   }
   getMirrors() {
-    return readJsonSync(this.mirrorPath)
-  }
-  async loadConfig() {
-    if (this.mirrors == null) {
+    if (!this.mirrors) {
       this.mirrors = readJsonSync(this.mirrorPath)
+    }
+    return this.mirrors
+  }
+  loadConfig() {
+    if (!this.mirrors) {
+      this.getMirrors()
       const mirrorConf = config.get('packageManager.mirrorName')
       const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ?
         mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
       const proxyConf = config.get("packageManager.proxy", false)
       const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
-      await this.selectConfig(mirrorName, proxyConf, betaCheck, false)
-      this.npmLoaded = true
-    }
-    while (!this.npmLoaded) {
-      await delay(1000)
+      this.selectConfig(mirrorName, proxyConf, betaCheck, false)
     }
     return this.mirrors
   }
-  async selectConfig(name, enable, check) {
+  selectConfig(name, enable, check) {
     if (name) {
       this.config.mirror = this.mirrors[name]
       config.set("packageManager.mirrorName", name)
@@ -184,8 +182,8 @@ class PluginManager extends EventEmitter {
       return await this.readPlugins()
     }
   }
-  async getConf() {
-    await this.loadConfig()
+  getConf() {
+    this.loadConfig()
     return this.config
   }
   getInstalledPlugins() {
@@ -302,7 +300,7 @@ class PluginManager extends EventEmitter {
   }
 
   async getOutdatedPlugins(isNotif) {
-    await this.loadConfig()
+    this.loadConfig()
     const plugins = this.getInstalledPlugins()
     const outdatedList = (await Promise.all(plugins.map((plugin) =>
       this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
@@ -319,7 +317,7 @@ class PluginManager extends EventEmitter {
   async installPlugin(packageSource, version) {
     if (packageSource.includes('@'))
       [packageSource, version] = packageSource.split('@')
-    await this.loadConfig()
+    this.loadConfig()
 
     // 1) See if it is installed by plugin name
     const installingByPluginName = (function () {
@@ -336,6 +334,7 @@ class PluginManager extends EventEmitter {
         value: {packageName: packageSource},
         option: [{path: 'isUpdating', status: true}],
       })
+
     // 2) Install plugin
     try {
       await installPackage(packageSource, version, this.npmConfig)
@@ -343,10 +342,12 @@ class PluginManager extends EventEmitter {
       console.error(e.stack)
       throw e
     }
+
     // 3) Get plugin name
     const packageName = installingByPluginName ? packageSource :
       await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
-    // 4) Unload plugin if it's running
+
+      // 4) Unload plugin if it's running
     const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
     if (nowPlugin) {
       try {
@@ -378,7 +379,7 @@ class PluginManager extends EventEmitter {
   }
 
   async uninstallPlugin(plugin) {
-    await this.loadConfig()
+    this.loadConfig()
     try {
       dispatch({
         type: '@@Plugin/changeStatus',
@@ -446,9 +447,9 @@ const pluginManager = new PluginManager(
 
 window.reloadPlugin = async (pkgName, verbose=false) => {
   const { plugins } = getStore()
-  const plugin =
-    plugins.find(pkg => pkg.packageName === pkgName) ||
-    plugins.find(pkg => pkg.packageName === `poi-plugin-${pkgName}`)
+  const plugin = plugins.find(
+    pkg => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName)
+  )
   if (!plugin) {
     console.error(`plugin "${pkgName}" not found`)
     return
