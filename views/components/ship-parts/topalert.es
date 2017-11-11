@@ -22,6 +22,7 @@ import {
   fleetExpeditionSelectorFactory,
   configSelector,
   miscSelector,
+  fleetSlotCountSelectorFactory,
 } from 'views/utils/selectors'
 
 const {ROOT, i18n} = window
@@ -94,12 +95,13 @@ const sakuSelectorFactory = memoize((fleetId) =>
     fleetShipsDataSelectorFactory(fleetId),
     fleetShipsEquipDataSelectorFactory(fleetId),
     admiralLevelSelector,
-  ], (shipsData=[], equipsData=[], admiralLevel) =>({
+    fleetSlotCountSelectorFactory(fleetId),
+  ], (shipsData=[], equipsData=[], admiralLevel, slotCount) =>({
     saku25: getSaku25(shipsData, equipsData),
     saku25a: getSaku25a(shipsData, equipsData, admiralLevel),
-    saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0),
-    saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0),
-    saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0),
+    saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0, slotCount),
+    saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0, slotCount),
+    saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0, slotCount),
   }))
 )
 

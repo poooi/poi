@@ -370,16 +370,16 @@ export function getSaku25a(shipsData, equipsData, teitokuLv) {
 //     H(レベル)
 //     M(空き数)
 
-export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0) {
+export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0, slotCount = 6) {
   let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
   let teitokuSaku = 0
-  let shipCount = 6
+  let emptySlot = slotCount
   for (let i = 0; i < equipsData.length; i++) {
     if (!shipsData[i] || !equipsData[i])
       continue
-    shipCount -= 1
+    emptySlot -= 1
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
@@ -416,7 +416,7 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0) {
   }
   equipSaku *= mapModifier
   teitokuSaku = Math.ceil(teitokuLv * 0.4)
-  totalSaku = shipSaku + equipSaku - teitokuSaku + 2 * shipCount
+  totalSaku = shipSaku + equipSaku - teitokuSaku + 2 * emptySlot
 
   return {
     ship: parseFloat(shipSaku.toFixed(2)),

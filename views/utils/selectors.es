@@ -132,6 +132,12 @@ export const fleetShipsIdSelectorFactory = memoize((fleetId) =>
   }))
 )
 
+export const fleetSlotCountSelectorFactory = memoize((fleetId) => createSelector(
+  [
+    fleetSelectorFactory(fleetId),
+  ], fleet => get(fleet, 'api_ship.length', 0)
+))
+
 export const fleetInBattleSelectorFactory = memoize((fleetId) =>
   createSelector(sortieStatusSelector, (sortieStatus) => sortieStatus[fleetId])
 )
@@ -311,7 +317,7 @@ export const landbaseEquipDataSelectorFactory = memoize(landbaseId =>
     landbaseSlotnumSelectorFactory(landbaseId),
     landbaseEquipsIdSelectorFactory(landbaseId),
     landbaseOnSlotSelectorFactory(landbaseId),
-  ], (state, slotnum, landbaseEquipsId, onslots) => 
+  ], (state, slotnum, landbaseEquipsId, onslots) =>
     !Array.isArray(landbaseEquipsId)
       ? undefined
       : effectiveEquips(
