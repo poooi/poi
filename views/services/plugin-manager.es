@@ -411,13 +411,13 @@ class PluginManager extends EventEmitter {
     const modulePath = join(PLUGIN_PATH, 'node_modules')
     await safePhysicallyRemove(modulePath)
     await ensureDir(modulePath)
-    await Promise.all(plugins.map(this.uninstallPlugin.bind(this)))
+    await Promise.all(plugins.map(plugin => this.uninstallPlugin(plugin)))
 
     if (!repair) {
       return
     }
 
-    await Promise.all(enabledPlugins.map(this.installPlugin.bind(this)))
+    await Promise.all(enabledPlugins.map(plugin => this.installPlugin(plugin)))
     await Promise.all(disabledPlugins.map(plugin => this.installPlugin(plugin, null, { skipEnable: true})))
   }
 
