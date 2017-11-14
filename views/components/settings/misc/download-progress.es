@@ -5,7 +5,7 @@ import { throttle } from 'lodash'
 
 const { i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
+const { updater } = remote.require('./lib/updater')
 
 class DownloadProgress extends Component {
   state = {
@@ -22,13 +22,11 @@ class DownloadProgress extends Component {
     if (!this.updateProgressDebounced) {
       this.updateProgressDebounced = throttle(this.updateProgress, 1500)
     }
-    if (process.platform === 'win32') {
-      updater.on('download-progress', progress => this.updateProgressDebounced(progress))
-      updater.on('update-downloaded', () => this.setState({downloaded: true}))
-    }
+    updater.on('download-progress', progress => this.updateProgressDebounced(progress))
+    updater.on('update-downloaded', () => this.setState({downloaded: true}))
   }
   render () {
-    return this.state.percent > 0 && process.platform === 'win32' && (
+    return this.state.percent > 0 && (
       <h5 className="update-progress">
         <ProgressBar bsStyle='success'
           now={this.state.percent} />

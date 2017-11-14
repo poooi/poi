@@ -14,7 +14,7 @@ if (process.platform === 'win32') {
 }
 
 export function changeChannel (channel) {
-  if (process.platform == 'win32') {
+  if (process.platform !== 'darwin') {
     autoUpdater.setFeedURL({
       provider: "generic",
       url: "https://poi.io/dist",

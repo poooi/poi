@@ -20,7 +20,7 @@ const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
 const {warn, error} = require('./lib/utils')
 const dbg = require('./lib/debug')
-if (process.platform !== 'linux') require('./lib/updater')
+require('./lib/updater')
 proxy.setMaxListeners(30)
 
 // Disable HA
