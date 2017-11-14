@@ -116,7 +116,8 @@ require('./env-parts/getter')
 // Only used by main window
 if (window.isMain) {
   // Toast
-  require('./env-parts/toast')
+  const { triggleToast } = require('./env-parts/toast')
+  window.toast = triggleToast
   // Add devtool debug message print
   require('./env-parts/devtool-message')
 }

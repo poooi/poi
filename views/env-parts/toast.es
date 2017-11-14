@@ -10,14 +10,15 @@
 
 let toastTrigger = null
 const toastList = []
-window.toastInitializer = (target) => {
+
+export function toastInitializer(target) {
   toastTrigger = target
   for (const [msg, options] of toastList) {
     window.toast(msg, options)
   }
 }
 
-window.toast = (msg, options={}) => {
+export function triggleToast(msg, options={}) {
   if (!msg) {
     return
   }
