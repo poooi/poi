@@ -11,6 +11,7 @@ import { reducer as battle } from './battle'
 import { reducer as plugins } from './plugins'
 import { reducer as fcd } from './fcd'
 import { reducer as ui } from './ui'
+import { reducer as ipc } from './ipc'
 import misc from './misc'
 
 const emptyObject = {}
@@ -52,6 +53,7 @@ export function reducerFactory(extensionConfig) {
     layout: window.isMain ? layout: (() => emptyObject),
     ui: window.isMain ? ui: (() => emptyObject),
     ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
+    ipc,
   })
 }
 
