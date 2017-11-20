@@ -1,4 +1,4 @@
-import { isArray } from 'lodash'
+import { isArray, get } from 'lodash'
 
 /* FORMAT
  *   combinedFlag:                      // api_combined_flag
@@ -66,9 +66,9 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     }
     if ((body.api_escape_flag != null) && body.api_escape_flag > 0) {
       _toEscapeIdx = [
-        body.api_escape.api_escape_idx[0] - 1,
-        body.api_escape.api_tow_idx[0] - 1,
-      ]
+        get(body.api_escape, ['api_escape_idx', 0]) - 1,
+        get(body.api_escape, ['api_tow_idx', 0]) - 1,
+      ].filter(Number.isFinite)
     }
     return {
       ...state,
