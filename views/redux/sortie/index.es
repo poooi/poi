@@ -4,7 +4,8 @@ import { isArray, get } from 'lodash'
  *   combinedFlag:                      // api_combined_flag
  *   sortieStatus: [false|true] * 4     // Whether a fleet is in sortie
  *   escapedPos: [] | [idx]             // Array of escapeIdx-1 and towIdx-1
- *     // 0 for fleet1Pos1, 6 for fleet2Pos1, ..., 23 for fleet4Pos6
+ *     // It is based on current sortie fleet (flatten if combined fleet)
+ *     // Be care for the existence of 7 ship fleet
  *   _toEscapeIdx: [idx]                // Tempvar. As in api_escape but -1
  *   item:                              // item drop or lost at node, undefined if no drop / lost, {0: 0} if Tanaka loves you
  *   itemHistory:                       // Array of drop or lost history, added only when it happens, does not match spotHistory
