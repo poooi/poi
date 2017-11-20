@@ -1,5 +1,5 @@
 import memoize from 'fast-memoize'
-import { get, map, zip } from 'lodash'
+import { get, map, zip, flatMap } from 'lodash'
 import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
 //### Helpers ###
@@ -180,12 +180,22 @@ export const shipRepairDockSelectorFactory = memoize((shipId) =>
   })
 )
 
+// Selector for all ship ids that in sortie, including the -1 placeholders
+const sortieShipIdSelector = arrayResultWrapper(createSelector(
+  [
+    fleetsSelector, // we need the -1 placeholder here because escapedPos is by index
+    sortieSelector,
+  ], (fleet, { sortieStatus }) => flatMap(sortieStatus, (sortie, index) =>
+    sortie ? get(fleet, [index, 'api_ship'], []) : []
+  )
+))
+
 export const escapeStatusSelectorFactory = memoize((shipId) =>
   createSelector([
-    fleetsSelector,
+    sortieShipIdSelector,
     sortieSelector,
-  ], (fleet, {escapedPos}) =>
-    escapedPos.map(pos => get(fleet, `${Math.floor(pos / 6)}.api_ship.${pos % 6}`)).indexOf(shipId) !== -1
+  ], (sortieShipIds, {escapedPos}) =>
+    shipId > 0 && escapedPos.some(pos => sortieShipIds[pos] === shipId)
   )
 )
 
