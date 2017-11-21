@@ -1,5 +1,5 @@
 import { trimArray } from 'views/utils/tools'
-import { zip, findIndex, get } from 'lodash'
+import { zip, findIndex, get, map, omit } from 'lodash'
 const { buildArray, compareUpdate } = window
 
 export default function reducer(state=[], {type, body, postBody}) {
@@ -62,53 +62,36 @@ export default function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_map/next': {
     const { api_destruction_battle, api_maparea_id } = body
     if (api_destruction_battle) {
-      const { api_maxhps, api_nowhps, api_air_base_attack } = api_destruction_battle
+      const { api_f_maxhps, api_f_nowhps, api_air_base_attack } = api_destruction_battle
       const api_fdam = get(api_air_base_attack, 'api_stage3.api_fdam', [])
-      let newState = [...state]
-      for (let i = 0; i < state.length; i++) {
-        const { api_area_id, api_rid } = state[i]
-        let airbase = {
-          ...state[i],
+      return map(state, airbase => {
+        const { api_area_id, api_rid } = airbase
+        if (api_maparea_id !== api_area_id) {
+          return airbase
         }
-        if (api_maparea_id === api_area_id && api_maxhps[api_rid] != null && api_maxhps[api_rid] >= 0) {
-          airbase = {
-            ...airbase,
-            api_maxhp: api_maxhps[api_rid],
-          }
+
+        const index = api_rid - 1
+        const newBase = { ...airbase }
+
+        if (get(api_f_maxhps, index) >= 0) {
+          newBase.api_maxhp = api_f_maxhps[index]
         }
-        if (api_maparea_id === api_area_id && api_nowhps[api_rid] != null && api_nowhps[api_rid] >= 0) {
-          airbase = {
-            ...airbase,
-            api_nowhp: api_nowhps[api_rid] - (api_fdam[api_rid] >= 0 ? api_fdam[api_rid] : 0),
-          }
+
+        if (get(api_f_nowhps, index) >= 0) {
+          newBase.api_nowhp = api_f_nowhps[index] - get(api_fdam, index, 0)
         }
-        newState = [
-          ...newState.slice(0, i),
-          airbase,
-          ...newState.slice(i + 1, newState.length),
-        ]
-      }
-      return newState
+
+        return newBase
+      })
     }
     break
   }
   case '@@Response/kcsapi/api_port/port': {
-    let newState = [...state]
-    for (let i = 0; i < state.length; i++) {
-      const airbase = {
-        ...state[i],
-      }
-      if (airbase.api_nowhp != null || airbase.api_maxhp != null) {
-        delete airbase.api_nowhp
-        delete airbase.api_maxhp
-        newState = [
-          ...newState.slice(0, i),
-          airbase,
-          ...newState.slice(i + 1, newState.length),
-        ]
-      }
-    }
-    return newState
+    return map(state, airbase =>
+      (typeof airbase.api_nowhp !== 'undefined' || typeof airbase.api_maxhp !== 'undefined')
+        ? omit(airbase, ['api_nowhp', 'api_maxhp'])
+        : airbase
+    )
   }
   }
   return state
