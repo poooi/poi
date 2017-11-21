@@ -82,7 +82,6 @@ describe('Validate sortie dangerous check', () => {
   it('heavy damage for sortie fleet is dangerous (all possible slots)', () => {
     range(0, 4).forEach((fleetId) => {
       range(7).forEach(index => {
-        reset()
         const { api_ship } = fleets[fleetId]
         if (index >= api_ship.length) {
           return
@@ -95,6 +94,7 @@ describe('Validate sortie dangerous check', () => {
         ships[id].api_nowhp = 8
         assert.equal(count, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
         assert.deepEqual(result, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}))
+        ships[id].api_nowhp = ships[id].api_maxhp
       })
     })
   })
