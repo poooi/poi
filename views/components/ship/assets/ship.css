@@ -1,10 +1,14 @@
 #ShipView {
   font-size: 15px;
 }
+#ShipView .ship-tab-container {
+  height: calc(100% - 32px);
+}
 #ShipView .ship-tab-content {
   display: -webkit-box;
   flex-flow: row;
   position: relative;
+  height: 100%;
 }
 
 #ShipView .ship-tab-content-transition {
@@ -14,6 +18,7 @@
 #ShipView .ship-tabpane,
 #ShipView .ship-deck {
   width: 100%;
+  height: 100%;
 }
 #ShipView .panel {
   margin: 2px;
@@ -22,6 +27,7 @@
 }
 #ShipView .panel-body {
   padding: 2px;
+  height: 100%;
 }
 #ShipView .btn-group {
   display: flex;
@@ -29,8 +35,6 @@
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 5px;
-}
-#ShipView .fleet-name-button {
 }
 #ShipView .plane-button {
   width: 40px;
@@ -72,6 +76,8 @@
 }
 #ShipView .ship-details {
   margin-bottom: 1px;
+  height: calc(100% - 25px);
+  overflow: scroll;
 }
 #ShipView .ship-details .ship-item {
   padding-top: 7px;

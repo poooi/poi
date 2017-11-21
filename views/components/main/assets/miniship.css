@@ -47,6 +47,8 @@
 }
 #MiniShip .ship-details-mini {
   margin-bottom: 1px;
+  height: calc(100% - 32px);
+  overflow: scroll;
 }
 #MiniShip .ship-details-mini .ship-tile {
   margin: 5px 0 5px 0;
