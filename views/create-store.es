@@ -96,6 +96,9 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', solveConfSet)
 })
 
+const ipc = remote.require('./lib/ipc')
+ipc.on('update', action => store.dispatch(action))
+
 // When any targetPath is modified, store it into localStorage
 if (window.isMain)
   observe(store,

@@ -1,9 +1,11 @@
 //
 // ipc: Inter-Plugins Call
 //
+import { EventEmitter } from 'events'
 
-class IPC {
+class IPC extends EventEmitter {
   constructor() {
+    super()
     this.data = new Object()
   }
 
@@ -21,6 +23,7 @@ class IPC {
     for (const key in opts) {
       this.data[scope][key] = opts[key]
     }
+    this.emit('update', {type: '@@registerIPC', value: { scope, opts }})
     return
   }
 
@@ -43,11 +46,13 @@ class IPC {
     for (const key of keys) {
       delete this.data[scope][key]
     }
+    this.emit('update', {type: '@@unregisterIPC', value: { scope, keys }})
     return
   }
 
   unregisterAll = (scope) => {
     delete this.data[scope]
+    this.emit('update', {type: '@@unregisterAllIPC', value: { scope }})
   }
 
   access = (scope) => {

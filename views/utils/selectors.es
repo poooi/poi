@@ -95,6 +95,7 @@ export const sortieStatusSelector = (state) => state.sortie.sortieStatus
 export const currentNodeSelector = (state) => state.sortie.currentNode
 export const battleSelector = (state) => state.battle
 export const fcdSelector = (state) => state.fcd
+export const ipcSelector = state => state.ipc
 
 export const extensionSelectorFactory = (key) =>
   (state) => get(state.ext, [key, '_']) || {}
