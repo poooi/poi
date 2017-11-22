@@ -78,6 +78,7 @@ export function reducer(state=initState, {type, path, postBody, body}) {
     }
   }
 
+  case '@@Response/kcsapi/api_req_sortie/goback_port':
   case '@@Response/kcsapi/api_req_combined_battle/goback_port':
     if (state._toEscapeIdx) {
       return {
