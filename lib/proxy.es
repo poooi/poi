@@ -220,7 +220,7 @@ class Proxy extends EventEmitter {
               res.writeHead(200, {
                 'Server': 'nginx',
                 'Content-Length': data.length,
-                'Content-Type': mime.lookup(cacheFile),
+                'Content-Type': mime.getType(cacheFile),
                 'Last-Modified': stats.mtime.toGMTString(),
               })
               res.end(data)
