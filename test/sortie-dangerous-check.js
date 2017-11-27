@@ -1,4 +1,4 @@
-const { keyBy, range, random, sampleSize, times, shuffle, chunk, take } = require('lodash')
+const { keyBy, range, random, sampleSize, times, shuffle } = require('lodash')
 const start2 = require('./fixtures/start2.json')
 const assert = require('assert')
 
