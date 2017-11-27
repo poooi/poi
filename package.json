@@ -67,6 +67,7 @@
     "node-fetch": "^1.7.3",
     "npm": "=5.4.2",
     "pac-proxy-agent": "^2.0.0",
+    "pangu": "^3.3.0",
     "path-extra": "^4.2.1",
     "poi-asset-contributor-data": "^1.0.3",
     "poi-asset-themes": "^3.2.0",
