@@ -1,5 +1,6 @@
 import path from 'path-extra'
 import glob from 'glob'
+import { spacing } from 'pangu'
 
 const {ROOT, isMain, config} = window
 
@@ -41,8 +42,8 @@ if (window.isMain) {
 }
 
 window.i18n.resources = {
-  __: (str) => (str),
-  translate: (locale, str) => (str),
+  __: (str) => spacing(str),
+  translate: (locale, str) => spacing(str),
   setLocale: (str) => (str),
 }
 
