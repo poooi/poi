@@ -36,6 +36,13 @@ for (const flashPath of flashPaths) {
   try {
     fs.accessSync(flashPath, fs.R_OK)
     app.commandLine.appendSwitch('ppapi-flash-path', flashPath)
+    let flashVersion = '27.0.0.187'
+    try {
+      flashVersion = require(path.join(path.dirname(flashPath), 'manifest.json')).version
+    } catch (e) {
+      warn('Get flash metadata failed.')
+    }
+    app.commandLine.appendSwitch('ppapi-flash-version', flashVersion)
     break
   } catch (e) {
     warn(`Flash in ${flashPath} not found.`)
