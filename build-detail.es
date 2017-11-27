@@ -21,7 +21,6 @@ const gitArchive = require('git-archive')
 const {log} = require('./lib/utils')
 
 //const DONT_PACK_APP_IF_EXISTS = false
-const USE_GITHUB_FLASH_MIRROR = false
 
 // *** CONSTANTS ***
 const BUILD_DIR_NAME = 'build'
@@ -69,9 +68,7 @@ const NPM_SERVER = (() => {
 log(`Using npm mirror ${NPM_SERVER}`)
 
 const getFlashUrl = (platform) =>
-  USE_GITHUB_FLASH_MIRROR
-    ? `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
-    : `http://7xj6zx.com1.z0.glb.clouddn.com/poi/PepperFlash/${platform}.zip`
+  `https://github.com/dkwingsmt/PepperFlashFork/releases/download/latest/${platform}.zip`
 
 const TARGET_LIST = [
   // Files
