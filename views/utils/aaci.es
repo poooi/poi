@@ -77,10 +77,8 @@ const isNotSubmarine = ship => ![13, 14].includes(ship.api_stype)
 
 const isBattleship = ship => [8, 9, 10].includes(ship.api_stype)
 
-// 421, 330: 秋月
-// 422, 346: 照月
-// 423, 357: 初月
-const isAkizukiClass = ship => [421, 330, 422, 346, 423, 357].includes(ship.api_ship_id)
+// 54=秋月型
+const isAkizukiClass = ship => ship.api_ctype === 54
 
 const shipIdIs = n => ship => ship.api_ship_id === n
 
