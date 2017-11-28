@@ -24,9 +24,9 @@ const ResolutionConfig = connect((state, props) => ({
       this.handleSetWebviewWidthDebounced = debounce(this.handleSetWebviewWidth, 1000, {leading:false, trailing:true})
     }
     if (isDebounced) {
-      this.handleSetWebviewWidthDebounced(value * devicePixelRatio)
+      this.handleSetWebviewWidthDebounced(value)
     } else {
-      this.handleSetWebviewWidth(value * devicePixelRatio)
+      this.handleSetWebviewWidth(value)
     }
   }
   handleSetWebviewWidth = (value) => {
@@ -41,8 +41,7 @@ const ResolutionConfig = connect((state, props) => ({
     if (this.props.webview.useFixedResolution) {
       config.set('poi.webview.width', -1)
     } else {
-      const { devicePixelRatio } = window
-      config.set('poi.webview.width', Math.round(this.props.webview.width * devicePixelRatio))
+      config.set('poi.webview.width', Math.round(this.props.webview.width))
     }
   }
   componentWillReceiveProps = (nextProps) => {
