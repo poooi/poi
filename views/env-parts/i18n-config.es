@@ -5,7 +5,9 @@ import { isString, toString } from 'lodash'
 
 const {ROOT, isMain, config} = window
 
-const spacing = str => isString(str) ? _spacing(str) : toString(str)
+const textSpacingCJK = config.get('poi.textSpacingCJK', true)
+
+const spacing = str => textSpacingCJK && isString(str) ? _spacing(str) : toString(str)
 
 window.language = window.config.get('poi.language', navigator.language)
 if (!['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(window.language)) {
