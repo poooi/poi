@@ -1,6 +1,3 @@
-// *** INCLUDE ***
-require('babel-register')(require('./babel.config'))
-//const os = require('os')
 const path = require('path-extra')
 const Promise = require('bluebird')
 const {promisify} = Promise
@@ -34,13 +31,7 @@ const PLATFORM_TO_PATHS = {
 }
 const config = (() => {
   // global.* variables are assigned to adapt for requiring 'config'
-  global.ROOT = __dirname
-  const SYS_APPDATA_PATH = process.env.APPDATA || (
-    process.platform == 'darwin'
-      ? path.join(process.env.HOME, 'Library/Application Support')
-      : '/var/local')
-  global.APPDATA_PATH = path.join(SYS_APPDATA_PATH, 'poi')
-  global.EXROOT = global.APPDATA_PATH
+
   return require('./lib/config')
 })()
 
@@ -57,9 +48,9 @@ const NPM_SERVER = (() => {
   const mirrors = fs.readJsonSync(MIRROR_JSON_PATH)
   // Don't want to mess with detecting system language here without window.navigator
   const language = config.get('poi.language', 'zh-CN')
-  const primaryServer = language == 'zh-CN' ? 'taobao' : 'npm'
+  const primaryServer = language === 'zh-CN' ? 'taobao' : 'npm'
   let server = config.get("packageManager.mirrorName", primaryServer)
-  if (process.env.TRAVIS) {
+  if (process.env.TRAVIS || process.env.APPVEYOR) {
     server = 'npm'
   }
   return mirrors[server].server
