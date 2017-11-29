@@ -1,22 +1,22 @@
-const path = require('path-extra')
-const Promise = require('bluebird')
-const {promisify} = Promise
-const request = Promise.promisifyAll(require('request'))
-const requestAsync = promisify(request, {multiArgs: true})
-const fs = require('fs-extra')
-const n7z = require('node-7z')
-const semver = require('semver')
-const babel = Promise.promisifyAll(require('babel-core'))
-const walk = require('walk')
-const tar = require('tar-fs')
-const child_process = require('child_process')
-const unzip = require('node-unzip-2')
-const glob = require('glob')
-const rimraf = promisify(require('rimraf'))
-const gitArchive = require('git-archive')
+import path from 'path-extra'
+import Promise, { promisify } from 'bluebird'
+import fs from 'fs-extra'
+import n7z from 'node-7z'
+import semver from 'semver'
+import walk from 'walk'
+import tar from 'tar-fs'
+import child_process from 'child_process'
+import unzip from 'node-unzip-2'
+import glob from 'glob'
+import gitArchive from 'git-archive'
+import { log } from './lib/utils'
+import _request from 'request'
+import { transformFile } from 'babel-core'
+import _rimraf from 'rimraf'
+import BabelConfig from './babel.config'
 
-const {log} = require('./lib/utils')
-
+const requestAsync = promisify(_request, { multiArgs: true })
+const rimraf = promisify(_rimraf)
 //const DONT_PACK_APP_IF_EXISTS = false
 
 // *** CONSTANTS ***
@@ -267,7 +267,7 @@ export const compileToJsAsync = (appDir, dontRemove) => {
     filters: ['node_modules', 'assets', path.join(__dirname, 'components')],
   }
 
-  const {presets, plugins} = require('./babel.config')
+  const { presets, plugins } = BabelConfig
 
   return new Promise ((resolve) => {
     const tasks = []
@@ -281,7 +281,7 @@ export const compileToJsAsync = (appDir, dontRemove) => {
             // const src = await fs.readFile(srcPath, 'utf-8')
             let tgt
             try {
-              const result = await babel.transformFileAsync(srcPath, {
+              const result = await promisify(transformFile)(srcPath, {
                 presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
                 plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
               })
@@ -340,16 +340,17 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
       const dir = path.join(installRoot, 'node_modules', name)
 
       // Modify package.json
-      const packageJson = path.join(dir, 'package.json')
-      const contents = require(packageJson)
+      const packageJsonPath = path.join(dir, 'package.json')
+      const contents = fs.readJsonSync(packageJsonPath)
       // Delete this key, otherwise npm install won't succeed
       delete contents._requiredBy
       delete contents.scripts
       contents.bundledDependencies = Object.keys(contents.dependencies || {})
-      fs.writeFileSync(packageJson, JSON.stringify(contents))
+      fs.writeJsonSync(packageJsonPath, contents)
       dirs.push(dir)
     }
-    return dirs})()
+    return dirs
+  })()
 
   log("Now packing plugins into tarballs.")
   await runScriptAsync(NPM_EXEC_PATH, ['pack'].concat(pluginDirs), {
