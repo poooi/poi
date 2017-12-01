@@ -328,6 +328,25 @@ for more details see views/redux/quests.es
     mission: ['強行偵察任務']
     init: 0
 
+428: #近海に侵入する敵潜を制圧せよ！
+  type: 4
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 2
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    required: 2
+    mission: ['海峡警備行動']
+    init: 0
+  "mission_success@長時間対潜警戒":
+    description: "A3"
+    required: 2
+    mission: ['長時間対潜警戒']
+    init: 0
+
 663: #新型艤装の継続研究
   type: 4
   "destory_item":
