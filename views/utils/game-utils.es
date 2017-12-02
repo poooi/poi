@@ -4,7 +4,7 @@
  */
 import { ProgressBar } from 'react-bootstrap'
 import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
-import { get } from 'lodash'
+import _, { get } from 'lodash'
 
 addStyle(ProgressBar, 'green')
 addStyle(ProgressBar, 'yellow')
@@ -28,10 +28,10 @@ const aircraftLevelBonus = {
 }
 
 const speedInterpretation = {
-  [5]: 'Slow',
-  [10]: 'Fast',
-  [15]: 'Fast+',
-  [20]: 'Fastest',
+  5: 'Slow',
+  10: 'Fast',
+  15: 'Fast+',
+  20: 'Fastest',
 }
 
 const speedStyles = {
@@ -427,16 +427,9 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0, slo
 }
 
 // returns fleet's minimal api_soku value, returns 0 when all elements undefined
-export function getFleetSpeed (shipsData) {
-  const speed = shipsData.reduce((speed, [ship, $ship]) => {
-    return typeof ship != 'undefined' ? Math.min(speed, ship.api_soku) : ship.api_soku
-  }, Infinity)
-
-  return {
-    speed,
-  }
-}
-
+export const getFleetSpeed = (shipsData) => ({
+  speed: _(shipsData).map(([ship = {}] = []) => ship.api_soku || Infinity).min() || 0,
+})
 
 export async function isInGame () {
   try {
