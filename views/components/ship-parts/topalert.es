@@ -14,7 +14,7 @@ import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
   fleetShipsDataSelectorFactory,
-  fleetShipsEquipDataSelectorFactory,
+  fleetShipsDataWithEscapeSelectorFactory,
   fleetShipsEquipDataWithEscapeSelectorFactory,
   fleetNameSelectorFactory,
   basicSelector,
@@ -92,8 +92,8 @@ const admiralLevelSelector = createSelector(basicSelector,
 
 const sakuSelectorFactory = memoize((fleetId) =>
   createSelector([
-    fleetShipsDataSelectorFactory(fleetId),
-    fleetShipsEquipDataSelectorFactory(fleetId),
+    fleetShipsDataWithEscapeSelectorFactory(fleetId),
+    fleetShipsEquipDataWithEscapeSelectorFactory(fleetId),
     admiralLevelSelector,
     fleetSlotCountSelectorFactory(fleetId),
   ], (shipsData=[], equipsData=[], admiralLevel, slotCount) =>({
@@ -107,7 +107,7 @@ const sakuSelectorFactory = memoize((fleetId) =>
 
 const speedSelectorFactory = memoize((fleetId) =>
   createSelector([
-    fleetShipsDataSelectorFactory(fleetId),
+    fleetShipsDataWithEscapeSelectorFactory(fleetId),
   ], (shipsData=[]) => getFleetSpeed(shipsData),
   )
 )

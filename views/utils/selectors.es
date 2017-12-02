@@ -394,6 +394,21 @@ export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
   ))
 )
 
+// excludes escaped ships
+export const fleetShipsDataWithEscapeSelectorFactory = memoize((fleetId) =>
+  arrayResultWrapper(createSelector([
+    stateSelector,
+    fleetShipsIdSelectorFactory(fleetId),
+  ], (state, fleetShipsId) =>
+    !fleetShipsId ? undefined :
+      fleetShipsId.filter(shipId =>
+        !escapeStatusSelectorFactory(shipId)(state)
+      ).map(shipId =>
+        shipDataSelectorFactory(shipId)(state)
+      )
+  ))
+)
+
 export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId) =>
   arrayResultWrapper(createSelector([
     stateSelector,
