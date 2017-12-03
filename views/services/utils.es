@@ -1,4 +1,4 @@
-import { flatMap, get } from 'lodash'
+import { flatMap, map, get } from 'lodash'
 
 export const damagedCheck = ({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}) => {
   const damagedShips = []
@@ -6,8 +6,10 @@ export const damagedCheck = ({$ships, $equips}, {sortieStatus, escapedPos}, {fle
     sortie ? get(fleets, [index, 'api_ship'], []) : []
   )
 
+  const flagships = map(sortieStatus, (sortie, index) => sortie ? get(fleets, [index, 'api_ship', 0], -1) : -1).filter(id => id > -1)
+
   sortieShips.forEach((shipId, idx) => {
-    if (shipId === -1 || idx === 0) {
+    if (shipId === -1 || flagships.includes(shipId)) {
       return
     }
     const ship = ships[shipId]

@@ -149,22 +149,25 @@ describe('Validate sortie dangerous check', () => {
       const { api_ship: mainFleet } = fleets[0]
       const { api_ship: escortFleet } = fleets[1]
 
-      let damageCount = random(1, mainFleet.length - 1)
-      let repairCount = random(1, damageCount)
-      const mainCount = damageCount - repairCount
-      let damages = sampleSize(mainFleet.slice(1), damageCount)
-      damages.forEach(id => ships[id].api_nowhp = 8)
-      sampleSize(damages, repairCount).forEach(id => randomSetSlot(ships[id]))
+      const setFleet = fleet => {
+        const damageCount = random(1, fleet.length)
+        const repairCount = random(1, damageCount)
+        let count = damageCount - repairCount
 
-      // FIXME: It is told that escort fleet flagship is no longer safe
-      damageCount = random(1, escortFleet.length)
-      repairCount = random(1, damageCount)
-      const escortCount = damageCount - repairCount
-      damages = sampleSize(escortFleet, damageCount)
-      damages.forEach(id => ships[id].api_nowhp = 8)
-      sampleSize(damages, repairCount).forEach(id => randomSetSlot(ships[id]))
+        const damages = sampleSize(fleet, damageCount)
+        damages.forEach(id => ships[id].api_nowhp = 8)
 
-      const count = mainCount + escortCount
+        const repairs = sampleSize(damages, repairCount)
+        repairs.forEach(id => randomSetSlot(ships[id]))
+
+        // both flagships are always safe
+        if (damages.includes(fleet[0]) && !repairs.includes(fleet[0]) ) {
+          count -= 1
+        }
+        return count
+      }
+
+      const count = setFleet(mainFleet) + setFleet(escortFleet)
 
       assert.equal(count, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
     })
