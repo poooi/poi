@@ -1,4 +1,3 @@
-import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import React from 'react'
@@ -14,6 +13,8 @@ const { Component } = React
 import { PaneBodyMini, LBViewMini } from './minishippane'
 import { LandbaseButton } from '../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
+
+import '../assets/miniship.css'
 
 function getStyle(state, disabled) {
   if (state >= 0 && state <= 5 && !disabled)
@@ -95,7 +96,6 @@ export default connect((state, props) => ({
     return (
       <div style={{height: '100%'}} onDoubleClick={this.changeShipView}>
         <Panel id="ShipViewMini" bsStyle="default" style={{minHeight: 322, height: 'calc(100% - 6px)'}}>
-          <link rel="stylesheet" href={join(__dirname, '..', 'assets', 'miniship.css')} />
           <div className="panel-row">
             <ButtonGroup bsSize="xsmall">
               {

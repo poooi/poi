@@ -1,4 +1,3 @@
-import path from 'path-extra'
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -8,6 +7,8 @@ import DisplayConfig from './display'
 import NetworkConfig from './network'
 import PluginConfig from './plugin'
 import Misc from './misc'
+
+import './assets/settings.css'
 
 const {i18n} = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -20,7 +21,6 @@ export default {
     render() {
       return (
         <Tabs bsStyle="pills" defaultActiveKey={0} animation={false} justified id="settings-view-tabs">
-          <link rel="stylesheet" href={path.join(__dirname, 'assets', 'settings.css')} />
           <Tab eventKey={0} title={__("Common")} className='poi-settings-Tab'>
             <MainConfig />
           </Tab>
