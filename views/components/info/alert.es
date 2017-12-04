@@ -6,28 +6,6 @@ const {$, config} = window
 const {Component} = React
 const __ = window.i18n.others.__.bind(window.i18n.others)
 
-const alertStyle = document.createElement('style')
-const historyStyle = document.createElement('style')
-alertStyle.innerHTML = `
-  poi-alert {
-    height: 30px;
-  }
-  #alert-main {
-    height: 29px;
-  }
-`
-historyStyle.innerHTML = `
-  .alert-history {
-    transform: translateY(1px);
-    pointer-events: 'none';
-  }
-`
-
-remote.getCurrentWindow().webContents.on('dom-ready', function(e) {
-  document.body.appendChild(alertStyle)
-  document.body.appendChild(historyStyle)
-})
-
 const initState = {
   overflow: false,
   history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
@@ -38,6 +16,10 @@ const initState = {
     options: {
       dontReserve: true,
     },
+  },
+  alertHistoryStyle: {
+    transform: 'translate3d(0, 1px, 0)',
+    pointerEvents: 'none',
   },
 }
 
@@ -68,14 +50,12 @@ export const PoiAlert = class poiAlert extends Component {
   }
   toggleHistory = () => {
     this.showHistory = !this.showHistory
-    historyStyle.innerHTML = `
-      #alert-main {
-      }
-      .alert-history {
-        transform: translateY(${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1 * Math.ceil(config.get('poi.zoomLevel', 1))}px);
-        pointer-events: ${this.showHistory ? 'auto' : 'none'};
-      }
-    `
+    this.setState({
+      alertHistoryStyle: {
+        transform: `translate3d(0, ${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1 * Math.ceil(config.get('poi.zoomLevel', 1))}px, 0)`,
+        pointerEvents: this.showHistory ? 'auto' : 'none',
+      },
+    })
   }
   handleStyleChange = () => {
     setTimeout(() => {
@@ -93,20 +73,8 @@ export const PoiAlert = class poiAlert extends Component {
         this.alertHeight = 30
         this.historyHeight = 152
       }
-      alertStyle.innerHTML = `
-        poi-alert {
-          height: ${this.alertHeight}px;
-        }
-        #alert-container.alert-default, .alert-history.panel {
-          background-color: ${this.bgColor};
-        }
-        .alert-default {
-          ${(window.theme == 'paper' || window.theme == 'lumen') ? 'color: #000;' : ''}
-        }
-        #alert-main {
-          height: 29px;
-        }
-      `
+      $('#alert-container.alert-default, .alert-history.panel').style.backgroundColor = this.bgColor
+      $('poi-alert').style.height = `${this.alertHeight}px`
     }, 100)
   }
   handleAddAlert = (e) => {
@@ -216,6 +184,7 @@ export const PoiAlert = class poiAlert extends Component {
         <div id='alert-history'
           ref={(ref) => { this.alertHistory = ref }}
           className='alert-history panel'
+          style={this.state.alertHistoryStyle}
           onClick={this.toggleHistory}>
           {this.state.history}
         </div>
