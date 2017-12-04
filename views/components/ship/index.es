@@ -1,4 +1,3 @@
-import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import React, { Component } from 'react'
@@ -20,6 +19,8 @@ import {
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
+
+import './assets/ship.css'
 
 function getStyle(state, disabled) {
   if (state >= 0 && state <= 5 && !disabled)
@@ -161,7 +162,6 @@ const ShipView = connect((state, props) => ({
   render() {
     return (
       <Panel onDoubleClick={this.changeMainView}>
-        <link rel="stylesheet" href={join(__dirname, 'assets', 'ship.css')} />
         <div className="div-row">
           <ButtonGroup className="fleet-name-button">
             {

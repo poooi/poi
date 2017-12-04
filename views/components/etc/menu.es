@@ -436,6 +436,8 @@ config.on('config.set', (path, value) => {
   }
 })
 
+import 'electron-react-titlebar/assets/style.css'
+
 export class TitleBarWrapper extends PureComponent {
   state = {
     menu: template,
@@ -458,9 +460,7 @@ export class TitleBarWrapper extends PureComponent {
   }
   render () {
     return (
-      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')}>
-        <link rel="stylesheet" type="text/css" href={require.resolve('electron-react-titlebar/assets/style.css')} />
-      </TitleBar>
+      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />
     )
   }
 }

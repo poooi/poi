@@ -26,6 +26,7 @@ body {
   pointer-events: none;
   position: relative;
   transition: 0.3s;
+  height: 29px;
 }
 .alert-container {
   z-index: 2;
@@ -68,6 +69,7 @@ kan-game .kan-game-warpper {
 }
 kan-game poi-alert {
   width: 0;
+  height: 30px;
 }
 kan-game poi-info .alert {
   opacity: 0.7;

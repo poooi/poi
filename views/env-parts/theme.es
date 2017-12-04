@@ -1,10 +1,19 @@
 import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
 import { fileUrl } from '../utils/tools'
+import { accessSync } from 'fs-extra'
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
 
-const {$, EXROOT, config} = window
+const { $, EXROOT, config } = window
+
+require.extensions['.css'] = (m, name) => {
+  accessSync(name)
+  const link = document.createElement('link')
+  link.setAttribute('rel', 'stylesheet')
+  link.setAttribute('href', name)
+  document.head.appendChild(link)
+}
 
 if ($('#fontawesome-css')) {
   $('#fontawesome-css').setAttribute('href', require.resolve('font-awesome/css/font-awesome.css'))

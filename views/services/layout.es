@@ -18,19 +18,17 @@ const getTitlebarHeight = () => {
 }
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
-  document.body.appendChild(additionalStyle)
+  document.head.appendChild(additionalStyle)
 })
 
 const getFlexCSS = ({layout, webviewWidth}) => {
   if (layout === 'horizontal') {
-    return `
-      kan-game {
-        flex: ${webviewWidth};
-      }
-      poi-app {
-        flex: ${window.innerWidth - webviewWidth};
-      }
-    `
+    return `kan-game {
+  flex: ${webviewWidth};
+}
+poi-app {
+  flex: ${window.innerWidth - webviewWidth};
+}`
   }
   return ''
 }
@@ -39,26 +37,20 @@ const getToastCSS = ({layout, webviewWidth, webviewHeight}) => {
   let { innerHeight, innerWidth } = window
   innerHeight -= titleBarHeight
   if (webviewWidth === 0) {
-    return `
-      .toast-poi {
-        bottom: 12px;
-        right: 12px;
-      }
-    `
+    return `.toast-poi {
+  bottom: 12px;
+  right: 12px;
+}`
   } else if (layout === 'horizontal') {
-    return `
-      .toast-poi {
-        bottom: ${(innerHeight - webviewHeight - 30) / 2 + 36}px;
-        right: ${(innerWidth - webviewWidth) + 12}px;
-      }
-    `
+    return `.toast-poi {
+  bottom: ${(innerHeight - webviewHeight - 30) / 2 + 36}px;
+  right: ${(innerWidth - webviewWidth) + 12}px;
+}`
   } else {
-    return `
-      .toast-poi {
-        bottom: ${(innerHeight - webviewHeight - 30) + 36}px;
-        right: ${(innerWidth - webviewWidth) / 2 + 12}px;
-      }
-    `
+    return `.toast-poi {
+  bottom: ${(innerHeight - webviewHeight - 30) + 36}px;
+  right: ${(innerWidth - webviewWidth) / 2 + 12}px;
+}`
   }
 }
 
@@ -75,11 +67,9 @@ const getPluginDropdownCSS = ({webviewWidth, layout, zoomLevel, doubleTabbed}) =
     menuSize = doubleTabbed ? Math.floor(tabWidth / 2) : Math.floor(tabWidth * 0.875)
   }
 
-  return `
-    poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] {
-      width: ${menuSize}px;
-    }
-    `
+  return `poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] {
+  width: ${menuSize}px;
+}`
 }
 
 const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, doubleTabbed, reversed}) => {
@@ -88,43 +78,37 @@ const setCSS = ({webviewWidth, webviewHeight, tabpaneHeight, layout, zoomLevel, 
   let { innerHeight } = window
   innerHeight -= titleBarHeight
   additionalStyle.innerHTML = `
-    poi-app {
-      ${layout === 'horizontal' ? `
-        width: 0;
-        height: 0;
-      ` : `
-        height: calc(${innerHeight}px - ${webviewHeight}px - 30px * ${zoomLevel})
-      `}
-    }
-    .kan-game-warpper {
-      height: calc(${webviewHeight}px + 30px * ${zoomLevel});
-    }
-    poi-app div.poi-app-tabpane {
-      height: ${tabpaneHeight};
-    }
-    poi-main {
-      ${reversed ? layout === 'horizontal' ? 'flex-flow: row-reverse nowrap;' : 'flex-flow: column-reverse nowrap;' : ''}
-    }
-    div[role='tooltip'], #poi-app-container, poi-info {
-      ${zoomLevel !== 1 && `transform: scale(${zoomLevel});`}
-    }
-    .poi-control-tooltip {
-      max-height: ${Math.ceil(poiControlHeight / zoomLevel)}px;
-    }
-    #poi-app-container, poi-info {
-      width: calc(100% / ${zoomLevel});
-    }
-    poi-nav poi-nav-tabs .nav .dropdown-menu {
-      max-height: ${tabpaneHeight};
-    }
-    kan-game #webview-wrapper {
-      width: ${webviewWidth}px !important;
-      height: ${webviewHeight}px !important;
-    }
-    ${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}
-    ${getToastCSS({webviewWidth: webviewWidth, webviewHeight: webviewHeight, layout: layout})}
-    ${getPluginDropdownCSS({webviewWidth: webviewWidth, zoomLevel: zoomLevel, layout: layout, doubleTabbed: doubleTabbed})}
-  `
+poi-app {
+  ${layout === 'horizontal' ? "height: 0;\n  width: 0;" : `height: calc(${innerHeight}px - ${webviewHeight}px - 30px * ${zoomLevel});`}
+}
+.kan-game-warpper {
+  height: calc(${webviewHeight}px + 30px * ${zoomLevel});
+}
+poi-app div.poi-app-tabpane {
+  height: ${tabpaneHeight};
+}
+poi-main {
+  ${reversed ? layout === 'horizontal' ? 'flex-flow: row-reverse nowrap;' : 'flex-flow: column-reverse nowrap;' : ''}
+}
+div[role='tooltip'], #poi-app-container, poi-info {
+  ${zoomLevel !== 1 && `transform: scale(${zoomLevel});`}
+}
+.poi-control-tooltip {
+  max-height: ${Math.ceil(poiControlHeight / zoomLevel)}px;
+}
+#poi-app-container, poi-info {
+  width: calc(100% / ${zoomLevel});
+}
+poi-nav poi-nav-tabs .nav .dropdown-menu {
+  max-height: ${tabpaneHeight};
+}
+kan-game #webview-wrapper {
+  width: ${webviewWidth}px !important;
+  height: ${webviewHeight}px !important;
+}
+${getFlexCSS({webviewWidth: webviewWidth, layout: layout})}
+${getToastCSS({webviewWidth: webviewWidth, webviewHeight: webviewHeight, layout: layout})}
+${getPluginDropdownCSS({webviewWidth: webviewWidth, zoomLevel: zoomLevel, layout: layout, doubleTabbed: doubleTabbed})}`
 
   // Resize when window size smaller than webview size
   if (layout === 'vertical' && webviewWidth > window.innerWidth) {

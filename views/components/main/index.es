@@ -1,4 +1,3 @@
-import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
@@ -7,6 +6,8 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
 import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
+
+import './assets/main.css'
 
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -25,7 +26,6 @@ export default {
     render() {
       return (
         <div className='main-panel-content'>
-          <link rel="stylesheet" href={path.join(__dirname, 'assets', 'main.css')} />
           <div className={classnames({
             "main-area-horizontal": this.props.layout == 'horizontal' || this.props.doubleTabbed,
             "main-area-vertical": this.props.layout != 'horizontal' && !this.props.doubleTabbed,
