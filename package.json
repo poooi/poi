@@ -65,7 +65,7 @@
     "moment-timezone": "^0.5.11",
     "mousetrap": "^1.5.3",
     "node-fetch": "^1.7.3",
-    "npm": "=5.4.2",
+    "npm": "=5.6.0",
     "pac-proxy-agent": "^2.0.0",
     "pangu": "^3.3.0",
     "path-extra": "^4.2.1",
@@ -191,10 +191,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/poi",
     "logo": "https://opencollective.com/opencollective/logo.txt"
-  },
-  "optionalDependencies": {
-    "7zip-bin-linux": "^1.1.0",
-    "7zip-bin-mac": "^1.0.1",
-    "7zip-bin-win": "^2.1.0"
   }
 }
