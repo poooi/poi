@@ -7,7 +7,7 @@ const {ROOT, isMain, config} = window
 
 const textSpacingCJK = config.get('poi.textSpacingCJK', true)
 
-const spacing = str => textSpacingCJK && isString(str) ? _spacing(str) : toString(str)
+const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
 
 window.language = window.config.get('poi.language', navigator.language)
 if (!['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(window.language)) {
