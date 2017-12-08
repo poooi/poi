@@ -174,6 +174,8 @@ remote.getCurrentWebContents().on('dom-ready', () => {
         document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/";
         document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/";
       `)
+      const ua = $('kan-game webview').getWebContents().session.getUserAgent()
+      $('kan-game webview').getWebContents().session.setUserAgent(ua, 'ja-JP')
     }
     if (config.get('poi.disableNetworkAlert', false)) {
       $('kan-game webview').executeJavaScript('DMM.netgame.reloadDialog=function(){}')
