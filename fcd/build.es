@@ -10,6 +10,8 @@ Promise.promisifyAll(path)
 Promise.promisifyAll(request)
 const DEST = '../assets/data/fcd'
 
+const mapVersion = process.env.MAPVERSION
+
 async function writeJSON(fname, data) {
   const JSON_OPTIONS = { spaces: '' }
   await fs.outputJSON(path.join(DEST, fname), data, JSON_OPTIONS)
@@ -26,7 +28,7 @@ async function build_map() {
   const date = moment(stat.mtime).format('YYYY/MM/DD')
   const meta = {
     name: "map",
-    version: `${date}/01`,
+    version: mapVersion || `${date}/01`,
   }
   await writeJSON('map.json', {meta, data})
 }

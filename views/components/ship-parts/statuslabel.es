@@ -2,7 +2,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { isEqual } from 'lodash'
+import { isEqual, get } from 'lodash'
 
 const {i18n} = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -36,12 +36,17 @@ const StatusLabel = connect(state => ({
   )
   render() {
     const i = this.props.label
-    const {color, mapname} = this.props.shipTag
+    const {color, mapname, fleetname} = this.props.shipTag
+    const { language } = window
     if (i != null && 0 <= i) {
       return (
         <OverlayTrigger placement="top" overlay={
           <Tooltip id={`statuslabel-status-${i}`}>
-            {__(texts[i] || 'Ship tag: %s', i > 2 ? mapname[i - 3] || i - 2 : null)}
+            {
+              i > 2
+                ? `${get(fleetname, [language, i - 3], __('Ship tag'))} - ${mapname[i - 3] || i - 2}`
+                : __(texts[i])
+            }
           </Tooltip>
         }>
           <Label
