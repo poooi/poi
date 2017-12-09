@@ -8,8 +8,8 @@
     "deploy": "gulp deploy",
     "build": "gulp build && electron-builder",
     "start": "electron .",
-    "start_debug": "electron . --dev",
-    "dev": "electron . --dev",
+    "start_debug": "electron . --dev --inspect",
+    "dev": "electron . --dev --inspect",
     "clean": "gulp clean",
     "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore"
   },
