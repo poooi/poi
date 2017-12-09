@@ -2,7 +2,7 @@
 //                                 Debug Suite                                  //
 //////////////////////////////////////////////////////////////////////////////////
 
-const colors = require('colors/safe')
+const chalk = require('chalk')
 
 // Debug wrapper class is only for the purpose of beautifying
 // when certain function is called through the dev-tool console.
@@ -214,11 +214,11 @@ Object.defineProperty(DebuggerBase.prototype, 'h', {
   enumerable: true,
 })
 
-// For the Browser Process
-class DebuggerBrowser extends DebuggerBase {
+// For the Main Process
+class DebuggerMain extends DebuggerBase {
   _getLogFunc(prefix) {
     // eslint-disable-next-line no-console
-    return console.log.bind(console, colors.cyan(`${prefix} %s`))
+    return console.log.bind(console, chalk.cyan(`${prefix} %s`))
   }
 
   init() {
@@ -301,6 +301,6 @@ class DebuggerRenderer extends DebuggerBase {
   }
 }
 
-const dbg = isRenderer ? new DebuggerRenderer : new DebuggerBrowser
+const dbg = isRenderer ? new DebuggerRenderer : new DebuggerMain
 
 export default dbg

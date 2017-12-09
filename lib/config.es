@@ -16,7 +16,7 @@ class configClass extends EventEmitter {
     try {
       fs.accessSync(configPath, fs.R_OK | fs.W_OK)
       this.configData = CSON.parseCSONFile(configPath)
-      dbg.log `Config loaded from: ${configPath}`
+      dbg.log(`Config loaded from: ${configPath}`)
     }
     catch (e) {
       dbg.log(e)
@@ -25,7 +25,7 @@ class configClass extends EventEmitter {
       try {
         fs.accessSync(defaultConfigPath, fs.R_OK)
         this.configData = CSON.parseCSONFile(defaultConfigPath) || {}
-        dbg.log `Config loaded from: ${defaultConfigPath}`
+        dbg.log(`Config loaded from: ${defaultConfigPath}`)
       }
       catch (e) {
         this.configData = {}
