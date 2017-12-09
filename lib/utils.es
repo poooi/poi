@@ -1,4 +1,4 @@
-import 'colors'
+import chalk from 'chalk'
 import { webContents } from 'electron'
 
 const stringify = (str) => {
@@ -24,12 +24,12 @@ export function log(str) {
 
 export function  warn(str) {
   str = stringify(str)
-  return console.warn(("[WARN] " + str).yellow)
+  return console.warn(chalk.yellow("[WARN] " + str))
 }
 
 export function error(str) {
   str = stringify(str)
-  return console.error(("[ERROR] " + str).bold.red)
+  return console.error(chalk.red.bold("[ERROR] " + str))
 }
 export function setBounds(options) {
   return global.mainWindow.setBounds(options)
