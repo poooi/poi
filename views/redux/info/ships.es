@@ -63,7 +63,9 @@ export function reducer(state={}, {type, body, postBody}) {
     }
   case '@@Response/kcsapi/api_req_kousyou/destroyship':
     state = {...state}
-    delete state[postBody.api_ship_id]
+    postBody.api_ship_id.split(',').forEach((shipId) => {
+      delete state[parseInt(shipId)]
+    })
     return state
   case '@@Response/kcsapi/api_req_kousyou/getship':
     return {

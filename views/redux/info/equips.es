@@ -1,4 +1,5 @@
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
+import { flatMap } from 'lodash'
 
 // Returns a clone
 // Don't worry about -1 because it won't cause error
@@ -56,7 +57,11 @@ export function reducer(state={}, {type, postBody, body}) {
       )
     ))
   case '@@Response/kcsapi/api_req_kousyou/destroyship':
-    return removeEquips(state, getStore(`info.ships.${postBody.api_ship_id}.api_slot`))
+    return parseInt(postBody.api_slot_dest_flag) === 0 ? state :
+      removeEquips(state, flatMap(
+        postBody.api_ship_id.split(','),
+        shipId => getStore(`info.ships.${shipId}.api_slot`) || [],
+      ))
   case '@@Response/kcsapi/api_req_kousyou/remodel_slot': {
     const {api_use_slot_id, api_remodel_flag, api_after_slot} = body
     if (api_use_slot_id != null) {
