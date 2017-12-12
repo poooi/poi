@@ -1,5 +1,4 @@
 import React from 'react'
-import { remote } from 'electron'
 import { debounce } from 'lodash'
 
 const {$, config} = window
