@@ -2,6 +2,7 @@ import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
 import { fileUrl } from '../utils/tools'
 import { accessSync } from 'fs-extra'
+import { join } from 'path-extra'
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
 
@@ -40,7 +41,7 @@ window.applyTheme = theme => config.set('poi.theme', theme)
 
 const windowsSetVibrancy = value => {
   try {
-    const electronVibrancy = remote.require('electron-vibrancy')
+    const electronVibrancy = remote.require(join(window.ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
     if (value === 1) {
       electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
     } else {
