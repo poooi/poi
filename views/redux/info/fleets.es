@@ -27,7 +27,7 @@ function setShip(fleet, pos, shipId) {
   const ships = fleet.api_ship.slice()
   if (shipId == -1) {
     ships.splice(pos, 1)
-    ships.concat(-1)
+    ships.push(-1)
   } else {
     ships[pos] = shipId
   }
@@ -55,11 +55,14 @@ export function reducer(state=[], {type, postBody, body}) {
     return compareUpdate(state, buildArray([[parseInt(postBody.api_deck_id)-1, body]]), 2)
   case '@@Response/kcsapi/api_req_kousyou/destroyship': {
     const fleets = state.slice()
-    const [fleetId, pos] = findShip(fleets, parseInt(postBody.api_ship_id))
-    if (fleetId != -1) {
-      state = state.slice()
-      state[fleetId] = setShip(state[fleetId], pos, -1)
-      return state
+    const shipIds = postBody.api_ship_id.split(',').filter(
+      shipId => findShip(fleets, parseInt(shipId))[0] !== -1)
+    if (shipIds.length > 0) {
+      shipIds.forEach((shipId) => {
+        const [fleetId, pos] = findShip(fleets, parseInt(shipId))
+        fleets[fleetId] = setShip(fleets[fleetId], pos, -1)
+      })
+      return fleets
     }
     break
   }
