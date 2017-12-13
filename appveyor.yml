@@ -3,7 +3,7 @@ platform:
 
 cache:
   # - node_modules
-  # - '%APPDATA%\npm-cache'
+  - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
 init:
@@ -24,10 +24,6 @@ test_script:
 build_script:
   - npm run build
   - .\node_modules\.bin\gulp build_plugins
-  - cd .\dist\win-ia32-unpacked\resources\app\node_modules\
-  - npm pack .\electron-vibrancy
-  - cd ..\..\..\..\win-unpacked\resources\app\node_modules\
-  - npm pack .\electron-vibrancy
 
 artifacts:
   - path: dist\*.exe
@@ -36,10 +32,6 @@ artifacts:
     name: Archive
   - path: dist\*.7z
     name: Archive
-  - path: dist\win-ia32-unpacked\resources\app\node_modules\electron-vibrancy*.tgz
-    name: electron-vibrancy-prebuilt-ia32
-  - path: dist\win-unpacked\resources\app\node_modules\electron-vibrancy*.tgz
-    name: electron-vibrancy-prebuilt-x64
 
 branches:
   except:
