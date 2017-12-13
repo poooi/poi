@@ -209,7 +209,7 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
         if (!satisfyGoal('shipType', subgoal, options)) return
         if (!satisfyGoal('mission', subgoal, options)) return
         if (!satisfyGoal('maparea', subgoal, options)) return
-        if (!satisfyGoal('slotitemId', subgoal, options)) return
+        if (!satisfyGoal('slotitemType2', subgoal, options)) return
         if (!satisfyGoal('times', subgoal, options)) return
         const subrecord = Object.assign({}, record[_event])
         subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
@@ -340,15 +340,15 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     // e.g. api_slotitem_ids = "24004,24020"
     const slotitems = postBody.api_slotitem_ids || ''
     const ids = slotitems.split(',')
-    // now it only supports gun quest, slotitemId = $ietm.api_type[3]
+    // now it only supports gun quest, slotitemType2 = $item.api_type[2]
     const typeCounts = countBy(ids, id => {
       const equipId = getStore(`info.equips.${id}.api_slotitem_id`)
-      return getStore(`const.$equips.${equipId}.api_type.3`)
+      return getStore(`const.$equips.${equipId}.api_type.2`)
     })
 
     let flag = false
-    forEach(Object.keys(typeCounts), slotitemId => {
-      flag = flag || updateQuestRecord('destory_item', {slotitemId: +slotitemId}, typeCounts[slotitemId])
+    forEach(Object.keys(typeCounts), slotitemType2 => {
+      flag = flag || updateQuestRecord('destory_item', {slotitemType2: +slotitemType2}, typeCounts[slotitemType2])
     })
 
     if (updateQuestRecord('destory_item', {times: 1}, 1)|| flag) {

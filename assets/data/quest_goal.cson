@@ -117,12 +117,27 @@ for more details see views/redux/quests.es
     description: "改修"
     required: 1
     init: 0
+673: # 装備開発力の整備 (「小口径主砲」系装備x4を廃棄)
+  type: 1
+  "destory_item":
+    description: "廃棄"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 4
+    init: 0
+674: # 工廠環境の整備 (「機銃」系装備x3を廃棄)
+  type: 1
+  "destory_item":
+    description: "廃棄"
+    slotitemType2: [21] # 21=対空機銃
+    required: 3
+    init: 0
 702: # 艦の「近代化改修」を実施せよ！ 近代化改修2次
   type: 1
   "remodel_ship":
     description: "近代化改修"
     required: 2
     init: 0
+
 ###
 # Someday
 ###
@@ -267,7 +282,7 @@ for more details see views/redux/quests.es
   type: 2
   "destory_item":
     description: "廃棄"
-    slotitemId: [15]
+    slotitemType2: [21] # 21=対空機銃
     required: 6
     init: 0
 ###
@@ -347,11 +362,11 @@ for more details see views/redux/quests.es
     mission: ['長時間対潜警戒']
     init: 0
 
-663: #新型艤装の継続研究
+663: #新型艤装の継続研究 (大口径主砲を10個廃棄)
   type: 4
   "destory_item":
     description: "廃棄"
-    slotitemId: [3]
+    slotitemType2: [3] # 3=大口径主砲
     required: 10
     init: 0
 
