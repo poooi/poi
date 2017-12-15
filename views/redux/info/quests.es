@@ -321,7 +321,7 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
   // type: destroy_ship
   case '@@Response/kcsapi/api_req_kousyou/destroyship':
     if (updateQuestRecord('destroy_ship', null,
-        postBody.api_ship_id.split(',').length))
+      postBody.api_ship_id.split(',').length))
       return {...state, records}
     break
   // type: remodel_item
