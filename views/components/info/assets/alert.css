@@ -1,0 +1,71 @@
+poi-alert {
+  flex: 1;
+  height: 30px;
+  width: 0;
+}
+poi-info .alert {
+  margin-bottom: 0;
+  min-height: 100%;
+  opacity: 0.7;
+  padding: 6px 3px 5px 3px;
+}
+.alert {
+  border-radius: 0;
+  font-size: 12px;
+  margin-bottom: 1px;
+  padding: 3px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.alert-main {
+  height: 29px;
+  pointer-events: none;
+  position: relative;
+  transition: 0.3s;
+}
+.alert-container {
+  cursor: pointer;
+  height: 30px;
+  overflow: hidden;
+  pointer-events: auto;
+  position: relative;
+  transition: 0.3s;
+  z-index: 2;
+}
+.alert-history {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+  position: relative;
+  transition: 0.3s;
+  z-index: 1;
+}
+.alert-history-contents {
+  overflow: scroll;
+  text-overflow: initial;
+}
+.alert-position {
+  margin-left: auto;
+  margin-right: auto;
+}
+.overflow-anim {
+  animation-delay: 2s;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-name: overflowscroll;
+  animation-timing-function: linear;
+  display: block;
+  margin-left: 0;
+}
+@keyframes overflowscroll {
+  0% { transform:translate3d(0, 0, 0); }
+  100% { transform:translate3d(-100%, 0, 0); }
+}
+/* csslint ignore:start */
+#alert-area {
+  cursor: pointer;
+}
+/* csslint ignore:end */

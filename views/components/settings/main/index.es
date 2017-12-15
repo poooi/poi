@@ -19,7 +19,7 @@ const __ = i18n.setting.__.bind(i18n.setting)
 
 const PoiConfig = () => (
   <div>
-    <div className="form-group" id='navigator-bar'>
+    <div className="form-group navigator-bar" id='navigator-bar'>
       <Divider text={__('Browser')} />
       <NavigatorBar />
     </div>

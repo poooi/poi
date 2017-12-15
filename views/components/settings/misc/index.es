@@ -14,6 +14,8 @@ import fetch from 'node-fetch'
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
 
+import '../assets/misc.css'
+
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
@@ -116,7 +118,7 @@ const Misc = connect(state => ({
   render() {
     const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
-      <div id='poi-others'>
+      <div id='poi-others' className='poi-others'>
         <Grid>
           <Col xs={12}>
             <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />

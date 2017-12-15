@@ -13,6 +13,8 @@ const wvStatus = {
   Failed: 2,
 }
 
+import '../assets/navigator-bar.css'
+
 class NavigatorBar extends React.Component {
   constructor() {
     super()

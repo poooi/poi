@@ -90,13 +90,13 @@ poi-app div.poi-app-tabpane {
 poi-main {
   ${reversed ? layout === 'horizontal' ? 'flex-flow: row-reverse nowrap;' : 'flex-flow: column-reverse nowrap;' : ''}
 }
-div[role='tooltip'], #poi-app-container, poi-info {
+div[role='tooltip'], .poi-app-container, poi-info {
   ${zoomLevel !== 1 && `transform: scale(${zoomLevel});`}
 }
 .poi-control-tooltip {
   max-height: ${Math.ceil(poiControlHeight / zoomLevel)}px;
 }
-#poi-app-container, poi-info {
+.poi-app-container, poi-info {
   width: calc(100% / ${zoomLevel});
 }
 poi-nav poi-nav-tabs .nav .dropdown-menu {

@@ -16,6 +16,8 @@ import {
 } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
 
+import '../assets/expedition-panel.css'
+
 const fleetsExpeditionSelector = createSelector(fleetsSelector,
   (fleets) => map(fleets, 'api_mission')
 )

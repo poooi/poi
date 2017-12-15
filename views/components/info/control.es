@@ -9,6 +9,8 @@ import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
+import './assets/control.css'
+
 const {$, i18n, config, APPDATA_PATH, toggleModal} = window
 const {openExternal} = shell
 const __ = i18n.others.__.bind(i18n.others)
@@ -198,7 +200,7 @@ const PoiControl = connect((state, props) => ({
       this.handleOpenCacheFolder()
       break
     case 'volume':
-      this.handleSetMuted() 
+      this.handleSetMuted()
       break
     case 'screenshot':
       this.handleCapturePage()

@@ -1,6 +1,8 @@
 import React from 'react'
 import { debounce } from 'lodash'
 
+import './assets/alert.css'
+
 const {$, config} = window
 const {Component} = React
 const __ = window.i18n.others.__.bind(window.i18n.others)

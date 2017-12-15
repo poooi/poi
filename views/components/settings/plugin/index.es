@@ -15,6 +15,8 @@ import NameInput from './name-input'
 import InstalledPlugin from './installed-plugin'
 import UninstalledPlugin from './uninstalled-plugin'
 
+import '../assets/plugins.css'
+
 const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const {dialog} = remote.require('electron')

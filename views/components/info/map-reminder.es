@@ -12,6 +12,8 @@ import {
   currentNodeSelector,
 } from 'views/utils/selectors'
 
+import './assets/map-reminder.css'
+
 const {i18n, toast, config} = window
 const __ = i18n.others.__.bind(i18n.others)
 const emptyObj = {}

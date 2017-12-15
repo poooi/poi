@@ -5,6 +5,9 @@ import path from 'path-extra'
 import { Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
 
+import '../assets/css/app.css'
+import '../assets/css/global.css'
+
 import { store } from './create-store'
 import ControlledTabArea from './tabarea'
 import { PoiAlert } from './components/info/alert'

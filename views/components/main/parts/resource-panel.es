@@ -7,6 +7,8 @@ import { get, isEqual } from 'lodash'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 
+import '../assets/resource-panel.css'
+
 const order = [0, 2, 1, 3, 4, 6, 5, 7]
 const animTimeStamp = [0, 0, 0, 0, 0, 0, 0, 0]
 let t

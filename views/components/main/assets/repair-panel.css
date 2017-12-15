@@ -1,0 +1,19 @@
+.MainView .ndock-panel .panel-body {
+  /*border: 1px solid skyblue;*/
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+.MainView .ndock-item {
+  display: flex;
+  flex: 1;
+  /*margin: 3px;*/
+}
+.MainView .ndock-item .ndock-name {
+  flex: 1;
+  margin-right: auto;
+  overflow: hidden;
+  padding-right: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

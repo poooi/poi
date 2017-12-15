@@ -9,6 +9,8 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { CountdownNotifierLabel } from './countdown-timer'
 
+import '../assets/construction-panel.css'
+
 export default connect(
   (state) => ({
     constructions: state.info.constructions,
@@ -16,7 +18,6 @@ export default connect(
     canNotify: state.misc.canNotify,
   })
 )(class ConstructionPanel extends Component {
-  canNotify: false
   handleResponse = (e) => {
     const {path} = e.detail
     switch (path) {
