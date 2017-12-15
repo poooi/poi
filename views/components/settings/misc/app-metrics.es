@@ -3,8 +3,6 @@ import { remote } from 'electron'
 import { Button } from 'react-bootstrap'
 import { sortBy, round, sumBy } from 'lodash'
 
-import '../assets/app-metrics.css'
-
 const { i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
 

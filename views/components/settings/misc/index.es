@@ -14,6 +14,8 @@ import fetch from 'node-fetch'
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
 
+import '../assets/misc.css'
+
 const {ROOT, POI_VERSION, CONST, i18n, config} = window
 const __ = i18n.setting.__.bind(i18n.setting)
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}

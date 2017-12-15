@@ -14,6 +14,8 @@ import CheckboxLabel from '../components/checkbox'
 import Radio from '../components/radio'
 import FolderPicker from '../components/folder-picker'
 
+import '../assets/poi-config.css'
+
 const { i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
 

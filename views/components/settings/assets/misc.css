@@ -1,0 +1,89 @@
+#SettingsView #poi-others .desc-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#SettingsView #poi-others .desc-buttons > button {
+  margin-top: .25ex;
+  margin-bottom: .25ex;
+  margin-right: 1em;
+}
+#SettingsView #poi-others .contributors {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#SettingsView #poi-others .contributor-item {
+  margin: 5px;
+}
+#SettingsView #poi-others .avatar-img {
+  cursor: pointer !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+#SettingsView #poi-others .opencollective img {
+  cursor: pointer !important;
+}
+#SettingsView #poi-others .thanks-to {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#SettingsView #poi-others .thanks-to-item {
+  width: 50%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#SettingsView #poi-others .sp-thanks-to .thanks-to-item {
+  width: initial;
+}
+#SettingsView #poi-others .thanks-to-img-container {
+  overflow: hidden;
+  border-radius: 4px;
+  width: 75px;
+  height: 75px;
+}
+#SettingsView #poi-others .thanks-to-img {
+  cursor: pointer !important;
+}
+#SettingsView #poi-others .thanks-to-container {
+  flex: 1;
+  padding-left: 5px;
+}
+#SettingsView #poi-others .avatar-img:hover {
+  transform: rotate(360deg);
+  transition-duration: 3s;
+}
+#SettingsView #poi-others .metric-table {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  font-family: monospace;
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+#SettingsView #poi-others .metric-row {
+  display: flex;
+  flex-grow: 1;
+}
+
+#SettingsView #poi-others .metric-haeder {
+  font-weight: 600;
+  border-bottom: 1px solid #777;
+  margin-bottom: 1ex;
+}
+
+#SettingsView #poi-others .metric-row > span {
+  width: calc(100% / 8);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
+#SettingsView #poi-others .metric-total {
+  border-top: 1px solid #777;
+  margin-top: 1ex;
+}

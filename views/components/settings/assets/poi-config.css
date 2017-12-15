@@ -1,0 +1,7 @@
+#SettingsView #poi-config .form-group {
+  margin-bottom: 0;
+}
+#SettingsView #poi-config #poi-resolutionr-config {
+  display: flex;
+  align-items: center;
+}
