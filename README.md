@@ -1,5 +1,6 @@
 ![Header](https://raw.githubusercontent.com/poooi/poi/master/assets/img/header.png)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b239a37253a3486c946b047acae5f1ac)](https://www.codacy.com/app/KochiyaOcean/poi?utm_source=github.com&utm_medium=referral&utm_content=poooi/poi&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/poooi/poi.svg?branch=master)](https://travis-ci.org/poooi/poi)
 [![Backers on Open Collective](https://opencollective.com/poi/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/poi/sponsors/badge.svg)](#sponsors) [![Build status](https://ci.appveyor.com/api/projects/status/apv2xngtej1m17he?svg=true)](https://ci.appveyor.com/project/KochiyaOcean/poi)
 [![Dependencies](https://david-dm.org/poooi/poi.svg)](https://david-dm.org/poooi/poi)
