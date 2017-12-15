@@ -13,6 +13,8 @@ import {
   extensionSelectorFactory,
 } from 'views/utils/selectors'
 
+import '../assets/task-panel.css'
+
 // Return [count, required]
 function sumSubgoals(record) {
   if (!record)

@@ -134,3 +134,7 @@ div[role='tooltip'],
 #poi-app-container {
   transform-origin: 0 0;
 }
+.material-icon {
+  width: 18px;
+  height: 18px;
+}

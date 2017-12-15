@@ -1,0 +1,40 @@
+#MainView .task-panel.panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: column nowrap;
+}
+#MainView .task-panel table tr td {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+#MainView .task-panel .label {
+  min-width: 50px;
+}
+#MainView .task-item {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+#MainView .task-item .quest-name {
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#MainView .task-item .quest-progress {
+  min-width: 50px;
+  flex: none;
+}
+#MainView .task-item .cat-indicator {
+  display: inline-block;
+  height: 1em;
+  width: 4px;
+  vertical-align: middle;
+  margin-right: 4px;
+  flex: none;
+}

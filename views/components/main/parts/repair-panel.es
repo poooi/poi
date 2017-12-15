@@ -21,6 +21,8 @@ import {
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
 
+import '../assets/repair-panel.css'
+
 const inRepairShipsDataSelector = createSelector([
   inRepairShipsIdSelector,
   shipsSelector,
