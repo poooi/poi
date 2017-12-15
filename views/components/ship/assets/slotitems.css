@@ -1,0 +1,32 @@
+#ShipView .slotitem-container {
+  position: relative;
+  vertical-align: bottom;
+  display: inline;
+}
+#ShipView .slotitem-container .slotitem-onslot {
+  position: absolute;
+  font-size: 12px;
+  text-align: center;
+  left: -3px;
+  bottom: -3px;
+  border-radius: 9px;
+  width: 18px;
+  height: 18px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+#ShipView .slotitem-container span.show {
+  display: inline !important;
+}
+#ShipView .slotitem-container img.png {
+  width: 32px;
+  height: 32px;
+  margin-top: -5px;
+  margin-bottom: -3px;
+  margin-left: -5px;
+}
+#ShipView .slotitem-container img.svg {
+  width: 26px;
+  height: 23px;
+  margin-right: 2px;
+}

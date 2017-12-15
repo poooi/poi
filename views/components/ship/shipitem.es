@@ -23,6 +23,8 @@ import {
   escapeStatusSelectorFactory,
 } from 'views/utils/selectors'
 
+import './assets/ship-item.css'
+
 function getMaterialStyle(percent) {
   if (percent <= 50)
     return 'red'

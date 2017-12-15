@@ -17,6 +17,8 @@ import {
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
 
+import './assets/slotitems.css'
+
 const { i18n } = window
 
 function getBackgroundStyle() {
