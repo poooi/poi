@@ -72,7 +72,7 @@ export const PoiAlert = class poiAlert extends Component {
         this.alertHeight = 30
         this.historyHeight = 152
       }
-      $('#alert-container.alert-default, .alert-history.panel').style.backgroundColor = this.bgColor
+      $('.alert-history.panel').style.backgroundColor = this.bgColor
       $('poi-alert').style.height = `${this.alertHeight}px`
     }, 100)
   }
