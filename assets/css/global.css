@@ -1,0 +1,136 @@
+*, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+body {
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.42857143;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+table {
+  table-layout: fixed;
+}
+span, img, a, .panel-heading, .table tbody tr td {
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+  cursor: default;
+}
+input + span {
+  cursor: inherit;
+}
+button > span {
+  cursor: inherit;
+}
+a, button {
+  cursor: pointer;
+}
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.table tbody tr td {
+  padding: 8px;
+}
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+  outline: none !important;
+}
+.div-col {
+  display: flex;
+  flex-flow: column;
+}
+.poi-ship-cond-0 {  /* cond 0~19  */
+  color: #DD514C;
+  font-weight: bold;
+}
+.poi-ship-cond-20 { /* cond 20~29 */
+  color: #F37B1D;
+}
+.poi-ship-cond-30 { /* cond 30~39 */
+  color: #FFC880;
+}
+.poi-ship-cond-40 { /* cond 40~48 */
+
+}
+.poi-ship-cond-49 { /* cond 49 */
+
+}
+.poi-ship-cond-50 { /* cond 50~52 */
+  color: #FFEE00
+}
+.poi-ship-cond-53 { /* cond 53~100 */
+  color: #FFFF40;
+  font-weight: bold;
+}
+a:focus {
+  outline: none;
+}
+.undecided-checkbox-inside label {
+  cursor: help;
+}
+.undecided-checkbox-inside label input[type="checkbox"] {
+  cursor: help;
+}
+.undecided-checkbox-inside input[type="checkbox"]:not(:checked):after {
+  content: "?";
+  text-align: center;
+}
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.no-scroll {
+  overflow: hidden;
+}
+.correct-container {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+.no-transition {
+  transition: 0s;
+}
+.transparent {
+  opacity: 0;
+}
+.info-tooltip .tooltip-inner .recon-title {
+  font-weight: bold;
+  font-size: 110%;
+  text-align: left;
+}
+.info-tooltip .tooltip-inner .recon-title:not(:first-child) {
+  margin-top: 0.5em;
+}
+.info-tooltip .tooltip-inner .info-tooltip-entry {
+  display:flex;
+  text-align: left;
+  min-width: 100px;
+}
+.info-tooltip .tooltip-inner .info-tooltip-item {
+  flex-grow: 1;
+  margin-right: 2em;
+}
+.info-tooltip .tooltip-inner {
+  max-width: initial;
+  width: fit-content;
+}
+/*progress bar*/
+.progress-bar-red {
+  background-color: #D50000;
+}
+.progress-bar-orange {
+  background-color: #F57C00;
+}
+.progress-bar-yellow {
+  background-color: #FBC02D;
+}
+.progress-bar-green {
+  background-color: #4CAF50;
+}
+div[role='tooltip'],
+#poi-app-container {
+  transform-origin: 0 0;
+}

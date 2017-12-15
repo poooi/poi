@@ -15,6 +15,9 @@ import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
 
+import '../assets/css/app.css'
+import '../assets/css/global.css'
+
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
 

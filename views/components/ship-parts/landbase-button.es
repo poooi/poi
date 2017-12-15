@@ -4,6 +4,8 @@ import { Button, Label, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
 
+import './assets/landbase-button.css'
+
 const __ = window.i18n.main.__.bind(window.i18n.main)
 
 const fatiguedLabel = <Label bsStyle='danger' className='airbase-state-label'>{__('Fatigued')}</Label>

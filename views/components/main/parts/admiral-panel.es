@@ -9,6 +9,8 @@ import FontAwesome from 'react-fontawesome'
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
 
+import '../assets/admiral-panel.css'
+
 const { i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 

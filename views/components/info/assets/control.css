@@ -1,0 +1,33 @@
+poi-control {
+  height: 100%;
+}
+poi-control .btn-sm {
+  border-radius: 0px;
+  border-width: 2px;
+  padding: 2px 7px;
+  font-size: 15px;
+  height: 30px;
+}
+poi-control button .fa {
+  cursor: pointer !important;
+  width: 20px;
+}
+poi-control .poi-control-container {
+  display: flex;
+  flex-direction: row;
+}
+poi-control .poi-control-extender {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: 0.3s;
+  display: block;
+}
+poi-control .collapse {
+  width: 0px;
+}
+poi-control .collapse.in {
+  width: auto;
+}
+poi-control .collapsing {
+  width: auto;
+}
