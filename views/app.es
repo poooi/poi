@@ -5,6 +5,9 @@ import path from 'path-extra'
 import { Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
 
+import '../assets/css/app.css'
+import '../assets/css/global.css'
+
 import { store } from './create-store'
 import ControlledTabArea from './tabarea'
 import { PoiAlert } from './components/info/alert'
@@ -14,9 +17,6 @@ import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
-
-import '../assets/css/app.css'
-import '../assets/css/global.css'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
