@@ -3,11 +3,11 @@ kan-game poi-map-reminder {
   width: 135px;
 }
 kan-game poi-map-reminder .progress {
+  background-color: transparent;
+  border-radius: 0;
+  height: 3px;
   position: absolute;
   width: 100%;
-  height: 3px;
-  border-radius: 0;
-  background-color: transparent;
 }
 .maproutes {
   background-color: #161616;
@@ -20,27 +20,27 @@ kan-game poi-map-reminder .progress {
     50% {fill: #FF9800;}
     to {fill: #D50000;}
 }
-.maproutes rect.active {
+.maproutes .active {
   animation: maproutes-blink 1s linear infinite;
 }
-.maproutes rect.passed {
+.maproutes .passed {
   fill: #039BE5;
 }
-.maproutes rect.boss {
+.maproutes .boss {
   fill: #C62828;
 }
 .maproutes line {
-  stroke-width: 1.5;
   stroke: #373737;
+  stroke-width: 1.5;
 }
 .maproutes line.passed {
-  stroke-width: 2;
   stroke: #F5F5F5;
+  stroke-width: 2;
 }
-.material-icon.reminder {
-  width: 15px;
+.reminder {
   height: 15px;
   margin-right: 0.5ex;
+  width: 15px;
 }
 .reminder-pop .tooltip-inner {
   max-width: initial;

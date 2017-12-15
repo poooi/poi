@@ -1,168 +1,168 @@
-#MainView {
+.MainView {
   font-size: 12px;
   min-width: 250px;
 }
-#MainView .main-panel-content {
+.MainView .main-panel-content {
   position: relative;
   transition: all .3s ease-in-out;
 }
-#MainView .nav {
-  margin-top: -6px;
+.MainView .nav {
   margin-bottom: 5px;
+  margin-top: -6px;
 }
-#MainView .nav > li {
+.MainView .nav > li {
   overflow: inherit;
 }
-#MainView .panel {
+.MainView .panel {
   margin: 3px;
 }
-#MainView .panel-container,
-#MainView .panel-col {
+.MainView .panel-container,
+.MainView .panel-col {
   display: flex;
   flex-flow: column;
 }
-#MainView .panel-row {
+.MainView .panel-row {
   display: flex;
   flex-flow: row;
 }
-#MainView .half {
+.MainView .half {
   width: 50%;
 }
-#MainView .flex {
+.MainView .flex {
   flex: 1;
 }
-#MainView .panel-body {
+.MainView .panel-body {
   /*padding: 8px;*/
   width: 100%;
 }
 /* universal */
-#MainView .teitoku-panel,
-#MainView .resource-panel,
-#MainView .miniship,
-#MainView .combined-panels,
-#MainView .expedition-panel,
-#MainView .task-panel {
+.MainView .teitoku-panel,
+.MainView .resource-panel,
+.MainView .miniship,
+.MainView .combined-panels,
+.MainView .expedition-panel,
+.MainView .task-panel {
   position: absolute;
 }
 /* horizontal */
-#MainView .main-area-horizontal .teitoku-panel {
-  top: 0;
-  left: 0;
-  width: 100%;
+.MainView .main-area-horizontal .teitoku-panel {
   height: 39px;
-}
-#MainView .main-area-horizontal .resource-panel {
-  top: 39px;
   left: 0;
-  width: 50%;
+  top: 0;
+  width: 100%;
+}
+.MainView .main-area-horizontal .resource-panel {
   height: 96px;
-}
-#MainView .main-area-horizontal .miniship {
-  top: 135px;
   left: 0;
-  width: 50%;
-  height: 332px;
-}
-#MainView .main-area-horizontal .combined-panels {
   top: 39px;
-  left: 50%;
-  width: calc(50% - 6px);
+  width: 50%;
+}
+.MainView .main-area-horizontal .miniship {
+  height: 332px;
+  left: 0;
+  top: 135px;
+  width: 50%;
+}
+.MainView .main-area-horizontal .combined-panels {
   height: 150px;
-}
-#MainView .main-area-horizontal .expedition-panel {
-  top: 195px;
   left: 50%;
-  width: 50%;
+  top: 39px;
+  width: calc(50% - 6px);
+}
+.MainView .main-area-horizontal .expedition-panel {
   height: 97px;
-}
-#MainView .main-area-horizontal .task-panel {
-  top: 292px;
   left: 50%;
+  top: 195px;
   width: 50%;
+}
+.MainView .main-area-horizontal .task-panel {
   height: 175px;
+  left: 50%;
+  top: 292px;
+  width: 50%;
 }
 /* vertical */
-#MainView .main-area-vertical .teitoku-panel {
-  top: 0;
-  left: 0;
-  width: 60%;
+.MainView .main-area-vertical .teitoku-panel {
   height: 39px;
-}
-#MainView .main-area-vertical .resource-panel {
-  top: 39px;
   left: 0;
-  width: 30%;
-  height: 116px;
-}
-#MainView .main-area-vertical .miniship {
   top: 0;
-  left: 60%;
-  width: 40%;
-  height: 100%;
+  width: 60%;
 }
-#MainView .main-area-vertical .combined-panels {
-  top: 39px;
-  left: 30%;
-  width: calc(30% - 6px);
-  height: 170px;
-}
-#MainView .main-area-vertical .expedition-panel {
-  top: 215px;
-  left: 30%;
-  width: 30%;
-  height: 113px;
-}
-#MainView .main-area-vertical .task-panel {
-  top: 156px;
+.MainView .main-area-vertical .resource-panel {
+  height: 116px;
   left: 0;
+  top: 39px;
   width: 30%;
+}
+.MainView .main-area-vertical .miniship {
+  height: 100%;
+  left: 60%;
+  top: 0;
+  width: 40%;
+}
+.MainView .main-area-vertical .combined-panels {
+  height: 170px;
+  left: 30%;
+  top: 39px;
+  width: calc(30% - 6px);
+}
+.MainView .main-area-vertical .expedition-panel {
+  height: 113px;
+  left: 30%;
+  top: 215px;
+  width: 30%;
+}
+.MainView .main-area-vertical .task-panel {
   height: 172px;
+  left: 0;
+  top: 156px;
+  width: 30%;
 }
 /* panels */
-#MainView .ndock-panel,
-#MainView .kdock-panel,
-#MainView .expedition-panel,
-#MainView .task-panel,
-#MainView .teitoku-panel,
-#MainView .resource-panel {
-  white-space: nowrap;
+.MainView .ndock-panel,
+.MainView .kdock-panel,
+.MainView .expedition-panel,
+.MainView .task-panel,
+.MainView .teitoku-panel,
+.MainView .resource-panel {
   overflow: hidden;
+  white-space: nowrap;
 }
-#MainView .expedition-panel .panel,
-#MainView .task-panel .panel,
-#MainView .resource-panel .panel {
+.MainView .expedition-panel .panel,
+.MainView .task-panel .panel,
+.MainView .resource-panel .panel {
   height: calc(100% - 6px)
 }
-#MainView .panel-item {
+.MainView .panel-item {
   padding: 4px;
 }
-#MainView .label {
+.MainView .label {
   font-size: 90%;
   font-weight: normal;
-  padding-top: .2em;
   padding-bottom: .2em;
+  padding-top: .2em;
 }
-#MainView .panel-body table td {
+.MainView .panel-body table td {
+  border: none;
+  line-height: 1.42857143;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border: none;
-  line-height: 1.42857143;
 }
-#MainView table tr td {
+.MainView table tr td {
   font-size: 12px;
-  padding-top: 4px;
   padding-bottom: 5px;
+  padding-top: 4px;
 }
-#MainView .panel-body {
+.MainView .panel-body {
   padding: 8px;
 }
-#MainView .panel-heading {
+.MainView .panel-heading {
   padding: 8px;
 }
-#MainView .glow {
+.MainView .glow {
   filter: drop-shadow(0px 0px 4px #2196F3)
 }
-#MainView .countdown-timer-label {
+.MainView .countdown-timer-label {
   flex: none;
 }

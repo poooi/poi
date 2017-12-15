@@ -118,7 +118,7 @@ const Misc = connect(state => ({
   render() {
     const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
-      <div id='poi-others'>
+      <div id='poi-others' className='poi-others'>
         <Grid>
           <Col xs={12}>
             <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />

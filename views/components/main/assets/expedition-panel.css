@@ -1,17 +1,17 @@
-#MainView .expedition-panel .panel-body {
+.MainView .expedition-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
   flex-flow: column nowrap;
 }
-#MainView .expedition-item {
+.MainView .expedition-item {
   display: flex;
   flex: 1;
 }
-#MainView .expedition-item .expedition-name {
+.MainView .expedition-item .expedition-name {
   flex: 1;
-  padding-right: 10px;
   margin-right: auto;
   overflow: hidden;
+  padding-right: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

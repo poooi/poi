@@ -1,4 +1,4 @@
-#poi-app-container {
+.poi-app-container {
   overflow: hidden;
 }
 kan-game webview {
@@ -14,19 +14,10 @@ poi-app {
   position: relative;
 }
 poi-app .container {
-  padding-left: 0px;
-  padding-right: 0px;
-  width: auto;
   overflow-x: hidden;
-}
-#top-nav {
-  display: inherit;
-}
-#top-nav > li {
-  width:26%;
-}
-#top-nav > li.dropdown, #top-nav > li.tab-narrow{
-  width:11%;
+  padding-left: 0;
+  padding-right: 0;
+  width: auto;
 }
 poi-app poi-nav-tabs .nav {
   display: flex;
@@ -53,21 +44,21 @@ poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li {
   width: calc(100% / 3);
 }
 poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li a {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
   display: block;
-  width: 100%;
-  height: 5em;
+  min-height: 5em;
+  overflow: hidden;
   padding-top: 1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li .fa {
   display: block;
   font-size: 175%;
 }
 poi-info {
-  display: flex;
   align-items: stretch;
+  display: flex;
 }
 .poi-tabs-container {
   display: flex;
@@ -81,26 +72,36 @@ poi-info {
 }
 .poi-tab-child-sizer {
   left: 0;
+  margin-right: -100%;
+  overflow: hidden;
+  padding: 0;
   top: 0;
   width: 100%;
-  margin-right: -100%;
-  padding: 0;
-  overflow: hidden;
 }
 .poi-tab-child-positioner {
+  opacity: 1;
   position: relative;
   width: 100%;
-  opacity: 1;
 }
 .poi-tab-child-positioner-transition {
   transition: .35s ease-in-out;
 }
 .poi-app-tabpane {
-  width: 100%;
   overflow-y: scroll;
+  width: 100%;
 }
 .poi-plugin {
   left: 100%;
+}
+/* csslint ignore:start */
+#top-nav {
+  display: inherit;
+}
+#top-nav > li {
+  width:26%;
+}
+#top-nav > li.dropdown, #top-nav > li.tab-narrow {
+  width:11%;
 }
 #electron-app-title-bar {
   background-color: transparent !important;
@@ -112,3 +113,4 @@ poi-info {
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
   opacity: 0.9 !important;
 }
+/* csslint ignore:end */

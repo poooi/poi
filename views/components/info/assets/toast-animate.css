@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2016 Daniel Eden
  */
-
+/* csslint ignore:start */
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
@@ -3338,3 +3338,4 @@
   -webkit-animation-name: slideOutUp;
   animation-name: slideOutUp;
 }
+/* csslint ignore:end */

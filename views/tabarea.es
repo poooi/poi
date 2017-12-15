@@ -262,7 +262,7 @@ export default connect(
     )
   }
   render() {
-    const navClass = classNames({
+    const navClass = classNames('top-nav', {
       'grid-menu': this.props.useGridMenu,
     })
     const tabbedPlugins = this.tabbedPlugins()
@@ -310,14 +310,14 @@ export default connect(
           </NavItem>
         </Nav>
         <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }} activeTab={this.props.activeMainTab}>
-          <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
+          <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
             <mainview.reactClass />
           </div>
-          <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
+          <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
             <shipview.reactClass />
           </div>
           {pluginContents}
-          <div id={settings.name} className="poi-app-tabpane" key='settings'>
+          <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
             <settings.reactClass />
           </div>
         </TabContentsUnion>
@@ -339,13 +339,13 @@ export default connect(
           <TabContentsUnion
             ref={(ref) => {this.mainTabKeyUnion = ref }}
             activeTab={this.props.activeMainTab}>
-            <div id={mainview.name} className="poi-app-tabpane" key='mainView'>
+            <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
               <mainview.reactClass activeMainTab={this.props.activeMainTab} />
             </div>
-            <div id={shipview.name} className="poi-app-tabpane" key='shipView'>
+            <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
               <shipview.reactClass activeMainTab={this.props.activeMainTab} />
             </div>
-            <div id={settings.name} className="poi-app-tabpane" key='settings'>
+            <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
               <settings.reactClass activeMainTab={this.props.activeMainTab}/>
             </div>
           </TabContentsUnion>

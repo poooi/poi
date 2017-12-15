@@ -1,16 +1,16 @@
 poi-alert {
-  width: 0;
-  height: 30px;
   flex: 1;
+  height: 30px;
+  width: 0;
 }
 poi-info .alert {
+  margin-bottom: 0;
+  min-height: 100%;
   opacity: 0.7;
   padding: 6px 3px 5px 3px;
-  margin-bottom: 0px;
-  height: 100%;
 }
 .alert {
-  border-radius: 0px;
+  border-radius: 0;
   font-size: 12px;
   margin-bottom: 1px;
   padding: 3px;
@@ -19,32 +19,29 @@ poi-info .alert {
   white-space: nowrap;
 }
 .alert-main {
+  height: 29px;
   pointer-events: none;
   position: relative;
   transition: 0.3s;
-  height: 29px;
 }
 .alert-container {
-  z-index: 2;
-  position: relative;
+  cursor: pointer;
+  height: 30px;
   overflow: hidden;
   pointer-events: auto;
-  cursor: pointer;
+  position: relative;
   transition: 0.3s;
-  height: 30px;
-}
-#alert-area {
-  cursor: pointer;
+  z-index: 2;
 }
 .alert-history {
-  z-index: 1;
-  position: relative;
-  margin-bottom: 0;
-  padding-bottom: 0;
-  transition: 0.3s;
-  overflow: hidden;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+  position: relative;
+  transition: 0.3s;
+  z-index: 1;
 }
 .alert-history-contents {
   overflow: scroll;
@@ -55,15 +52,20 @@ poi-info .alert {
   margin-right: auto;
 }
 .overflow-anim {
-  display: block;
-  animation-name: overflowscroll;
-  animation-duration: 18s;
   animation-delay: 2s;
+  animation-duration: 18s;
   animation-iteration-count: infinite;
+  animation-name: overflowscroll;
   animation-timing-function: linear;
-  margin-left: 0%;
+  display: block;
+  margin-left: 0;
 }
 @keyframes overflowscroll {
   0% { transform:translate3d(0, 0, 0); }
   100% { transform:translate3d(-100%, 0, 0); }
 }
+/* csslint ignore:start */
+#alert-area {
+  cursor: pointer;
+}
+/* csslint ignore:end */

@@ -2,30 +2,33 @@ poi-control {
   height: 100%;
 }
 poi-control .btn-sm {
-  border-radius: 0px;
+  border-radius: 0;
   border-width: 2px;
-  padding: 2px 7px;
   font-size: 15px;
-  height: 30px;
+  min-height: 30px;
+  padding: 2px 7px;
 }
 poi-control button .fa {
-  cursor: pointer !important;
+  cursor: pointer;
   width: 20px;
+}
+poi-control button .fa::before {
+  cursor: pointer;
 }
 poi-control .poi-control-container {
   display: flex;
   flex-direction: row;
 }
 poi-control .poi-control-extender {
-  white-space: nowrap;
+  display: block;
   overflow: hidden;
   transition: 0.3s;
-  display: block;
+  white-space: nowrap;
 }
 poi-control .collapse {
-  width: 0px;
+  width: 0;
 }
-poi-control .collapse.in {
+poi-control .in {
   width: auto;
 }
 poi-control .collapsing {

@@ -194,7 +194,7 @@ class CountDownControl extends Component {
             </Tooltip>
           }
         >
-          <Label id="teitoku-timer" bsStyle={style}><FontAwesome name="calendar" /></Label>
+          <Label id="teitoku-timer" className="teitoku-timer" bsStyle={style}><FontAwesome name="calendar" /></Label>
         </OverlayTrigger>
       </span>
     )

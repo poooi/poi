@@ -1,18 +1,18 @@
-#MainView .kdock-panel .panel-body {
+.MainView .kdock-panel .panel-body {
   /*border: 1px solid orange;*/
   display: flex;
   flex-flow: column;
   justify-content: space-between;
 }
-#MainView .kdock-item {
+.MainView .kdock-item {
   display: flex;
   flex: 1;
 }
-#MainView .kdock-item .kdock-name {
+.MainView .kdock-item .kdock-name {
   flex: 1;
-  padding-right: 10px;
   margin-right: auto;
   overflow: hidden;
+  padding-right: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
