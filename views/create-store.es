@@ -96,7 +96,11 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', solveConfSet)
 })
 
+const clone = obj => JSON.parse(JSON.stringify(obj))
 const ipc = remote.require('./lib/ipc')
+if (!window.isMain) {
+  store.dispatch({ type: '@@initIPC', content: clone(ipc.list()) })
+}
 ipc.on('update', action => store.dispatch(action))
 
 // When any targetPath is modified, store it into localStorage

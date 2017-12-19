@@ -3,8 +3,14 @@ import { mapValues, omit } from 'lodash'
 
 const INIT_STATE = {}
 
-export const reducer = (state = INIT_STATE, {type, value: { scope, opts, keys } = {} }) => {
+export const reducer = (state = INIT_STATE, {type, value: { scope, opts, keys } = {}, content }) => {
   switch(type) {
+  case '@@initIPC': {
+    return {
+      ...state,
+      ...content,
+    }
+  }
   case '@@registerIPC': {
     return {
       ...state,

@@ -2,6 +2,7 @@
 // ipc: Inter-Plugins Call
 //
 import { EventEmitter } from 'events'
+import { mapValues } from 'lodash'
 
 class IPC extends EventEmitter {
   constructor() {
@@ -58,6 +59,8 @@ class IPC extends EventEmitter {
   access = (scope) => {
     return this.data[scope]
   }
+
+  list = () => mapValues(this.data, scope => mapValues(scope, () => true))
 
   // key:    string
   // args:   arguments passing to api
