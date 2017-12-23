@@ -35,7 +35,7 @@ const FolderPickerConfig = connect(() => {
   componentDidMount = () => {
     const { exclude, value, defaultVal, configName } = this.props
     if (exclude.length && exclude.some(parent => isSubdirectory(parent, value))) {
-      this.toggleModal()
+      this.emitErrorMessage()
       config.set(configName, defaultVal)
     }
   }
@@ -50,14 +50,14 @@ const FolderPickerConfig = connect(() => {
     callback()
     this.lock = false
   }
-  toggleModal = () => window.toast(__('Selected directory for %s is not valid.', this.props.label), {
+  emitErrorMessage = () => window.toast(__('Selected directory for %s is not valid.', this.props.label), {
     type: 'warning',
     title: __('Error'),
   })
   setPath = (val) => {
     const { exclude } = this.props
     if (exclude.length && exclude.some(parent => isSubdirectory(parent, val))) {
-      this.toggleModal()
+      this.emitErrorMessage()
       return
     }
     config.set(this.props.configName, val)
