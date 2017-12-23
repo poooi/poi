@@ -8,6 +8,9 @@ global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
 global.EXROOT = global.APPDATA_PATH
 global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
+global.DEFAULT_SCREENSHOT_PATH = process.platform == 'darwin'
+  ? path.join(app.getPath('home'), 'Pictures', 'Poi')
+  : path.join(global.APPDATA_PATH, 'screenshots')
 global.MODULE_PATH = path.join(global.ROOT, "node_modules")
 
 const {ROOT} = global
