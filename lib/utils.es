@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import { webContents } from 'electron'
+import path from 'path'
 
 const stringify = (str) => {
   if (typeof str === 'string') {
@@ -51,4 +52,12 @@ export function stopNavigateAndNewWindow(id) {
   webContents.fromId(id).addListener('new-window', (e, url) => {
     e.preventDefault()
   })
+}
+
+// check if dir is a subdirectory of parent,
+// if parent and dir are the same, also returns true
+export const isSubdirectory = (parent, dir) => {
+  const relative = path.relative(parent, dir)
+  return !relative ||
+    (!relative.startsWith('..') && !path.isAbsolute(relative))
 }
