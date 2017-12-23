@@ -163,5 +163,6 @@
   "Custom background": "自定义背景",
   "No background image selected": "未选择背景图片",
   "Deploying, please wait": "部署中，请等待",
-  "Quit app and install updates": "退出以安装更新"
+  "Quit app and install updates": "退出以安装更新",
+  "Selected directory for %s is not valid.": "为%s所选择的路径无效。"
 }
