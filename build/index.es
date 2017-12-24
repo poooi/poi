@@ -108,7 +108,7 @@ export const build = async (poiVersion, dontRemove) => {
   await filterCopyApp(stage1App, stage2App)
   if (!dontRemove){
     await npmInstall(stage2App, ['--only=production'])
-    await runScript(NPM_EXEC_PATH, ['dedupe'], {
+    await runScript(NPM_EXEC_PATH, ['dedupe', '--no-package-lock'], {
       cwd: path.join(stage2App, 'node_modules', 'npm'),
     })
   }
