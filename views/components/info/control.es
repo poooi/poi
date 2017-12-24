@@ -54,8 +54,7 @@ const PoiControl = connect((state, props) => ({
       width: Math.floor(bound.width),
       height: Math.floor(bound.height),
     }
-    const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
-    const screenshotPath = config.get('poi.screenshotPath', d)
+    const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
     remote.getGlobal("mainWindow").capturePage(rect, (image) => {
       try {
@@ -103,8 +102,7 @@ const PoiControl = connect((state, props) => ({
   }
   handleOpenScreenshotFolder = () => {
     try {
-      const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
-      const screenshotPath = config.get('poi.screenshotPath', d)
+      const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
       fs.ensureDirSync(screenshotPath)
       openItemAsync(screenshotPath,'handleOpenScreenshotFolder')
     }

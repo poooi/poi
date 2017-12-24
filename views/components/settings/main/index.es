@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Col, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { remote } from 'electron'
+
 import Divider from '../components/divider'
 
 import NotificationConfig from './notification-config'
@@ -16,6 +17,10 @@ import FolderPicker from '../components/folder-picker'
 
 const { i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
+
+const screenshotPathExclude = [
+  window.ROOT,
+]
 
 const PoiConfig = () => (
   <div>
@@ -53,7 +58,9 @@ const PoiConfig = () => (
       <FolderPicker
         label={__('Screenshot Folder')}
         configName="poi.screenshotPath"
-        defaultVal={window.screenshotPath} />
+        defaultVal={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
+        exclude={screenshotPathExclude}
+      />
     </div>
     <div className="form-group">
       <Divider text={__('Cache Folder')} />

@@ -42,7 +42,7 @@ Object.defineProperty(window, 'useSVGIcon', {get: () => {
   return config.get('poi.useSVGIcon', false)
 }})
 Object.defineProperty(window, 'screenshotPath', {get: () => {
-  return config.get('poi.screenshotPath', process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(global.APPDATA_PATH, 'screenshots'))
+  return config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
 }})
 window.notify = window.notify || {}
 Object.defineProperty(window.notify, 'morale', {get: () => {

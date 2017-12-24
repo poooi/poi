@@ -5,8 +5,12 @@ import fs from 'fs-extra'
 import { get } from 'lodash'
 import { remote } from 'electron'
 
+import { isSubdirectory } from 'views/utils/tools'
+
 const { dialog } = remote.require('electron')
-const { config } = window
+const { config, i18n } = window
+
+const __ = i18n.setting.__.bind(i18n.setting)
 
 const FolderPickerConfig = connect(() => {
   return (state, props) => ({
@@ -21,11 +25,21 @@ const FolderPickerConfig = connect(() => {
     value: PropTypes.string,
     isFolder: PropTypes.bool,
     placeholder: PropTypes.string,
+    exclude: PropTypes.arrayOf(PropTypes.string),
+    defaultVal: PropTypes.string,
   }
   static defaultProps = {
     isFolder: true,
+    exclude: [],
   }
-  onDrag = (e) => {
+  componentDidMount = () => {
+    const { exclude, value, defaultVal, configName } = this.props
+    if (exclude.length && exclude.some(parent => isSubdirectory(parent, value))) {
+      this.emitErrorMessage()
+      config.set(configName, defaultVal)
+    }
+  }
+  handleOnDrag = (e) => {
     e.preventDefault()
   }
   synchronize = (callback) => {
@@ -36,17 +50,26 @@ const FolderPickerConfig = connect(() => {
     callback()
     this.lock = false
   }
+  emitErrorMessage = () => window.toast(__('Selected directory for %s is not valid.', this.props.label), {
+    type: 'warning',
+    title: __('Error'),
+  })
   setPath = (val) => {
+    const { exclude } = this.props
+    if (exclude.length && exclude.some(parent => isSubdirectory(parent, val))) {
+      this.emitErrorMessage()
+      return
+    }
     config.set(this.props.configName, val)
   }
-  folderPickerOnDrop = (e) => {
+  handleOnDrop = (e) => {
     e.preventDefault()
     const droppedFiles = e.dataTransfer.files
     if (fs.statSync(droppedFiles[0].path).isDirectory() || !this.props.isFolder) {
       this.setPath(droppedFiles[0].path)
     }
   }
-  folderPickerOnClick = () => {
+  handleOnClick = () => {
     this.synchronize(() => {
       let defaultPath
       try {
@@ -75,11 +98,11 @@ const FolderPickerConfig = connect(() => {
   render() {
     return (
       <div className="folder-picker"
-        onClick={this.folderPickerOnClick}
-        onDrop={this.folderPickerOnDrop}
-        onDragEnter={this.onDrag}
-        onDragOver={this.onDrag}
-        onDragLeave={this.onDrag}
+        onClick={this.handleOnClick}
+        onDrop={this.handleOnDrop}
+        onDragEnter={this.handleOnDrag}
+        onDragOver={this.handleOnDrag}
+        onDragLeave={this.handleOnDrag}
       >
         {this.props.value || this.props.placeholder}
       </div>
