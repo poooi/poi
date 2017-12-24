@@ -1,5 +1,5 @@
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { flatMap } from 'lodash'
+import { flatMap, isArray } from 'lodash'
 
 // Returns a clone
 // Don't worry about -1 because it won't cause error
@@ -8,6 +8,8 @@ function removeEquips(equips, idList) {
   idList.forEach((itemId) => delete equips[itemId])
   return equips
 }
+
+const ensureArray = x => isArray(x) ? x : [x]
 
 export function reducer(state={}, {type, postBody, body}) {
   const {getStore} = window
@@ -74,6 +76,14 @@ export function reducer(state={}, {type, postBody, body}) {
       }
     }
     return state
+  }
+  case '@@Response/kcsapi/api_req_member/itemuse': {
+    if (body.api_slotitem) {
+      return {
+        ...state,
+        ...indexify(ensureArray(body.api_slotitem)),
+      }
+    }
   }
   }
   return state
