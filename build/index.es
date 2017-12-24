@@ -1,9 +1,7 @@
 import path from 'path-extra'
 import Promise, { promisify } from 'bluebird'
 import fs from 'fs-extra'
-import semver from 'semver'
 import tar from 'tar-fs'
-import child_process from 'child_process'
 import gitArchive from 'git-archive'
 import { log } from '../lib/utils'
 
@@ -35,7 +33,7 @@ const TARGET_LIST = [
   'i18n',
 ]
 
-const gitArchiveAsync = async (tarPath, tgtDir) => {
+const gitArchiveAndClone = async (tarPath, tgtDir) => {
   log('Archive file from git..')
   try{
     await fs.remove(tarPath)
@@ -68,53 +66,15 @@ const gitArchiveAsync = async (tarPath, tgtDir) => {
       )})
 }
 
-// Run js script, but suppress stdout and stores it into a string used to resolve
-const runScriptReturnStdoutAsync = (scriptPath, args, options) =>
-  new Promise ((resolve) => {
-    const proc = child_process.fork(scriptPath, args, Object.assign({silent: true}, options))
-    let data = ''
-    let chunk
-    proc.stdout.on('readable', () => {
-      while ((chunk = proc.stdout.read()) != null) {
-        data += chunk
-      }
-    })
-    proc.on('exit', () => resolve(data))
-  })
-
 // *** METHODS ***
-const filterCopyApp = async (stage1App, stage2App) =>
-  Promise.all((() => {
-    const jobs = []
-    for (const target of TARGET_LIST) {
-      jobs.push(fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
-        overwrite: true,
-      }))
-    }
-    return jobs
-  })())
-
-
-const checkNpmVersion = async () => {
-  // Check npm version
-  const npmVersion = (await runScriptReturnStdoutAsync(NPM_EXEC_PATH, ['--version'])).trim()
-  log(`You are using npm v${npmVersion}`)
-  if (semver.major(npmVersion) == 2) {
-    log("*** USING npm 2 TO BUILD poi IS PROHIBITED ***")
-    log("Aborted.")
-    return false
-  } else {
-    return true
-  }
-}
-
+const filterCopyApp = async (stage1App, stage2App) => Promise.map(TARGET_LIST, target =>
+  fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
+    overwrite: true,
+  })
+)
 
 // Build poi for use
 export const build = async (poiVersion, dontRemove) => {
-  if (!checkNpmVersion()) {
-    return
-  }
-
   // const BUILD_ROOT = path.join(ROOT, BUILD_DIR_NAME)
   // const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const BUILDING_ROOT = path.join(ROOT, 'app_compiled')
@@ -140,7 +100,7 @@ export const build = async (poiVersion, dontRemove) => {
   await fs.ensureDir(path.join(stage1App, 'node_modules'))
 
   // Stage1: Everything downloaded and translated
-  await gitArchiveAsync(tarPath, stage1App)
+  await gitArchiveAndClone(tarPath, stage1App)
   await compileToJs(stage1App, false)
   log('stage 1 finished')
 
