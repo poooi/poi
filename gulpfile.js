@@ -11,21 +11,23 @@ const SYS_APPDATA_PATH = process.env.APPDATA || (
 global.APPDATA_PATH = path.join(SYS_APPDATA_PATH, 'poi')
 global.EXROOT = global.APPDATA_PATH
 
-const {log} = require('./lib/utils')
-const { buildAsync,
+const { log } = require('./lib/utils')
+const {
+  buildAsync,
   installPluginsAsync,
   getFlashAsync,
   getFlashAllAsync,
   cleanFiles,
   packWinReleaseAsync,
-  compileToJsAsync } = require('./build-detail')
+  compileToJsAsync,
+} = require('./build')
 
-const package_json = require('./package.json')
+const packageMeta = require('./package.json')
 
 let poiVersion = null
 
 gulp.task('getVersion', () => {
-  const package_version = package_json.version
+  const package_version = packageMeta.version
   poiVersion = package_version
   log(`*** Start building poi ${poiVersion} ***`)
 })

@@ -9,11 +9,13 @@ import child_process from 'child_process'
 import unzip from 'node-unzip-2'
 import glob from 'glob'
 import gitArchive from 'git-archive'
-import { log } from './lib/utils'
+import { log } from '../lib/utils'
 import _request from 'request'
 import { transformFile } from 'babel-core'
 import _rimraf from 'rimraf'
-import BabelConfig from './babel.config'
+import BabelConfig from '../babel.config'
+
+const { ROOT } = global
 
 const requestAsync = promisify(_request, { multiArgs: true })
 const rimraf = promisify(_rimraf)
@@ -32,17 +34,17 @@ const PLATFORM_TO_PATHS = {
 const config = (() => {
   // global.* variables are assigned to adapt for requiring 'config'
 
-  return require('./lib/config')
+  return require('../lib/config')
 })()
 
 // let USE_TAOBAO_MIRROR = config.get('buildscript.useTaobaoMirror', true)
 // if (process.env.TRAVIS) {
 //   USE_TAOBAO_MIRROR = false
 // }
-const NPM_EXEC_PATH = path.join(__dirname, 'node_modules', 'npm', 'bin', 'npm-cli.js')
+const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
-const PLUGIN_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'plugin.json')
-const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
+const PLUGIN_JSON_PATH = path.join(ROOT, 'assets', 'data', 'plugin.json')
+const MIRROR_JSON_PATH = path.join(ROOT, 'assets', 'data', 'mirror.json')
 
 const NPM_SERVER = (() => {
   const mirrors = fs.readJsonSync(MIRROR_JSON_PATH)
@@ -193,7 +195,7 @@ const gitArchiveAsync = async (tarPath, tgtDir) => {
     await promisify(gitArchive)({
       commit: 'HEAD',
       outputPath: tarPath,
-      repoPath: __dirname,
+      repoPath: ROOT,
     })
   } catch (e) {
     log(e)
@@ -264,7 +266,7 @@ export const compileToJsAsync = (appDir, dontRemove) => {
 
   const options = {
     followLinks: false,
-    filters: ['node_modules', 'assets', path.join(__dirname, 'components')],
+    filters: ['node_modules', 'assets', path.join(ROOT, 'components')],
   }
 
   const { presets, plugins } = BabelConfig
@@ -359,7 +361,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
 }
 
 export const installPluginsAsync = async (poiVersion) => {
-  const BUILD_ROOT = path.join(__dirname, 'dist')
+  const BUILD_ROOT = path.join(ROOT, 'dist')
   const BUILDING_ROOT = path.join(BUILD_ROOT, "plugins")
   const RELEASE_DIR = BUILD_ROOT
 
@@ -385,9 +387,9 @@ export const buildAsync = async (poiVersion, dontRemove) => {
     return
   }
 
-  // const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  // const BUILD_ROOT = path.join(ROOT, BUILD_DIR_NAME)
   // const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
-  const BUILDING_ROOT = path.join(__dirname, 'app_compiled')
+  const BUILDING_ROOT = path.join(ROOT, 'app_compiled')
   const stage1App = path.join(BUILDING_ROOT, 'stage1')
   const tarPath = path.join(stage1App, "app_stage1.tar")
   const stage2App = BUILDING_ROOT
@@ -440,43 +442,43 @@ export const buildAsync = async (poiVersion, dontRemove) => {
 }
 
 export const compileAsync = async () =>
-  await compileToJsAsync(__dirname, true)
+  await compileToJsAsync(ROOT, true)
 
 // Install flash
 export const getFlashAsync = async (poiVersion) => {
-  const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  const BUILD_ROOT = path.join(ROOT, BUILD_DIR_NAME)
   const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const platform = `${process.platform}-${process.arch}`
-  await fs.remove(path.join(__dirname, 'PepperFlash'))
-  const flashDir = path.join(__dirname, 'PepperFlash', PLATFORM_TO_PATHS[platform])
+  await fs.remove(path.join(ROOT, 'PepperFlash'))
+  const flashDir = path.join(ROOT, 'PepperFlash', PLATFORM_TO_PATHS[platform])
   await installFlashAsync(platform, downloadDir, flashDir)
 }
 
 export const getFlashAllAsync = async (poiVersion) => {
-  const BUILD_ROOT = path.join(__dirname, BUILD_DIR_NAME)
+  const BUILD_ROOT = path.join(ROOT, BUILD_DIR_NAME)
   const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const platforms = ['win32-ia32', 'win32-x64', 'darwin-x64', 'linux-x64']
-  await fs.remove(path.join (__dirname, 'PepperFlash'))
+  await fs.remove(path.join (ROOT, 'PepperFlash'))
   const tasks = platforms.map(platform => {
-    const flashDir = path.join(__dirname, 'PepperFlash', PLATFORM_TO_PATHS[platform])
+    const flashDir = path.join(ROOT, 'PepperFlash', PLATFORM_TO_PATHS[platform])
     return installFlashAsync(platform, downloadDir, flashDir)
   })
   await Promise.all(tasks)
 }
 
 export const cleanFiles = () => {
-  glob.sync(path.join(__dirname, "build", "!(*.es)")).forEach(file =>
+  glob.sync(path.join(ROOT, "build", "!(*.es)")).forEach(file =>
     rimraf(file, () => {}))
-  rimraf(path.join(__dirname, 'app_compiled'), () => {})
-  rimraf(path.join(__dirname, 'dist'), () => {})
+  rimraf(path.join(ROOT, 'app_compiled'), () => {})
+  rimraf(path.join(ROOT, 'dist'), () => {})
 }
 
 export const packWinReleaseAsync = async (poiVersion) => {
-  let target = path.join(__dirname, 'dist', 'win-unpacked')
-  let dest = path.join(__dirname, 'dist', 'win', `poi-${poiVersion}-win-x64.7z`)
+  let target = path.join(ROOT, 'dist', 'win-unpacked')
+  let dest = path.join(ROOT, 'dist', 'win', `poi-${poiVersion}-win-x64.7z`)
   await compress7zAsync(target, dest)
-  target = path.join(__dirname, 'dist', 'win-ia32-unpacked')
-  dest = path.join(__dirname, 'dist', 'win-ia32', `poi-${poiVersion}-win-ia32.7z`)
+  target = path.join(ROOT, 'dist', 'win-ia32-unpacked')
+  dest = path.join(ROOT, 'dist', 'win-ia32', `poi-${poiVersion}-win-ia32.7z`)
   await compress7zAsync(target, dest)
   log("Release packed up")
 }
