@@ -6,6 +6,8 @@
   "Construction": "건조",
   "The development of %s was successful.": "%s 개발 성공!",
   "The development of %s was failed.": "%s 개발 실패...",
+  "The improvement of %s was successful.": "%s 개수 성공!",
+  "The improvement of %s was failed.": "%s 개수 실패...",
   "No.%s fleet": "제 %s함대",
   "mission complete": "원정 성공!",
   "Expedition": "원정",

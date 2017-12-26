@@ -6,6 +6,8 @@
   "Construction": "建造",
   "The development of %s was successful.": "%s 開発成功",
   "The development of %s was failed.": "%s 開発失敗",
+  "The improvement of %s was successful.": "%s 改修成功",
+  "The improvement of %s was failed.": "%s 改修失敗",
   "No.%s fleet": "第%s艦隊",
   "mission complete": "遠征成功",
   "Expedition": "遠征",
