@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup, Alert } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -72,24 +72,25 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
 const FleetShipView = connect(
   (state, {fleetId}) =>
     fleetShipViewDataSelectorFactory(fleetId)(state)
-)(({fleetId, shipsId}) => [
-  <div className='fleet-name' key={1}>
-    <TopAlert
-      fleetId={fleetId}
-      isMini={false}
-    />
-  </div>,
-  <div className="ship-details" key={2}>
-    {
-      (shipsId || []).map((shipId, i) =>
-        <ShipRow
-          key={shipId}
-          shipId={shipId}
-        />
-      )
-    }
-  </div>,
-]
+)(({fleetId, shipsId}) =>
+  <Fragment>
+    <div className='fleet-name'>
+      <TopAlert
+        fleetId={fleetId}
+        isMini={false}
+      />
+    </div>
+    <div className="ship-details">
+      {
+        (shipsId || []).map((shipId, i) =>
+          <ShipRow
+            key={shipId}
+            shipId={shipId}
+          />
+        )
+      }
+    </div>
+  </Fragment>
 )
 
 const LBView = connect(state => ({

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { MiniShipRow, MiniSquardRow } from './minishipitem'
-import React from 'react'
+import React, { Fragment } from 'react'
 import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
 
@@ -13,14 +13,14 @@ export const PaneBodyMini = connect(() => {
   })
 }
 )(({fleetId, shipsId}) =>
-  [
-    <div className='fleet-name' key={1}>
+  <Fragment>
+    <div className='fleet-name'>
       <TopAlert
         fleetId={fleetId}
         isMini={true}
       />
-    </div>,
-    <div className={"ship-details-mini"} key={2}>
+    </div>
+    <div className={"ship-details-mini"}>
       {
         (shipsId || []).map((shipId, i) =>
           <MiniShipRow
@@ -29,8 +29,8 @@ export const PaneBodyMini = connect(() => {
           />
         )
       }
-    </div>,
-  ]
+    </div>
+  </Fragment>
 )
 
 export const LBViewMini = connect(state => ({
