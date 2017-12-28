@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import path from 'path-extra'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { shell, remote } from 'electron'
 import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
@@ -247,7 +247,7 @@ const PoiControl = connect((state, props) => ({
           <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
         </OverlayTrigger>
         <Collapse in={this.state.extend} onExited={this.sendEvent.bind(this, false)} onEntered={this.sendEvent.bind(this, true)} dimension='width' className="poi-control-extender">
-          <Fragment>
+          <div>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{__('Open cache dir')}</Tooltip>}>
               <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
             </OverlayTrigger>
@@ -267,7 +267,7 @@ const PoiControl = connect((state, props) => ({
                 bsSize='small'><FontAwesome name='refresh' />
               </Button>
             </OverlayTrigger>
-          </Fragment>
+          </div>
         </Collapse>
         <Button onClick={this.handleSetExtend} bsSize='small' className={this.state.extend ? 'active' : ''}><FontAwesome name={this.state.extend ? 'angle-left' : 'angle-right'} /></Button>
       </div>

@@ -90,22 +90,20 @@ const SlotCheckConfig = connect(() => {
             {__(`${this.props.type} slots`)} {toggleBtn}
           </div>
           <Collapse in={this.state.showInput}>
-            <div>
-              <Well>
-                <FormGroup>
-                  <ControlLabel>{__(`Warn if the number of free ${this.props.type} slots is less than`)}</ControlLabel>
-                  <InputGroup bsSize='small'>
-                    <FormControl type="text"
-                      bsStyle={inputValid ? 'success' : 'error'}
-                      value={this.state.value}
-                      onChange={this.handleChange}/>
-                    <InputGroup.Button>
-                      {submitBtn}
-                    </InputGroup.Button>
-                  </InputGroup>
-                </FormGroup>
-              </Well>
-            </div>
+            <Well>
+              <FormGroup>
+                <ControlLabel>{__(`Warn if the number of free ${this.props.type} slots is less than`)}</ControlLabel>
+                <InputGroup bsSize='small'>
+                  <FormControl type="text"
+                    bsStyle={inputValid ? 'success' : 'error'}
+                    value={this.state.value}
+                    onChange={this.handleChange}/>
+                  <InputGroup.Button>
+                    {submitBtn}
+                  </InputGroup.Button>
+                </InputGroup>
+              </FormGroup>
+            </Well>
           </Collapse>
         </form>
       </div>

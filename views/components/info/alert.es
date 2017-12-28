@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { Component, Fragment } from 'react'
 import { debounce } from 'lodash'
 
 import './assets/alert.css'
 
 const {$, config} = window
-const {Component} = React
 const __ = window.i18n.others.__.bind(window.i18n.others)
 
 const initState = {
@@ -169,14 +168,14 @@ export const PoiAlert = class poiAlert extends Component {
             <span id='alert-area' ref={(ref) => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
-                  <span>
+                  <Fragment>
                     <span style={{marginRight: 50}}>
                       {this.state.current.content}
                     </span>
                     <span style={{marginRight: 50}}>
                       {this.state.current.content}
                     </span>
-                  </span>
+                  </Fragment>
                   : this.state.current.content
               }
             </span>

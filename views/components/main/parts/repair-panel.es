@@ -1,5 +1,5 @@
 const { ROOT } = window
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { join as joinString, range } from 'lodash'
@@ -65,7 +65,7 @@ export default connect(
     // by indexifying it into an object, it becomes easier to use.
     const ships = indexify(inRepairShips)
     return (
-      <div>
+      <Fragment>
         {
           range(0, 4).map((i) => {
             const emptyRepair = {
@@ -110,7 +110,7 @@ export default connect(
             )
           })
         }
-      </div>
+      </Fragment>
     )
   }
 })

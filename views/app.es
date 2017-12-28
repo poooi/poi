@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
@@ -46,7 +46,7 @@ const CustomCssInjector = () => {
 
 ReactDOM.render(
   <Provider store={store}>
-    <div>
+    <Fragment>
       { config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') && ReactDOM.createPortal(<TitleBarWrapper />, $('title-bar')) }
       { ReactDOM.createPortal(<PoiControl />, $('poi-control')) }
       { ReactDOM.createPortal(<PoiAlert id='poi-alert' />, $('poi-alert')) }
@@ -56,7 +56,7 @@ ReactDOM.render(
       { ReactDOM.createPortal(<Toastr />, $('poi-toast-trigger')) }
       { ReactDOM.createPortal(<CustomCssInjector />, $('poi-css-injector')) }
       { ReactDOM.createPortal(<BasicAuth />, $('poi-auth-trigger')) }
-    </div>
+    </Fragment>
   </Provider>,
   $('poi-nav-tabs')
 )

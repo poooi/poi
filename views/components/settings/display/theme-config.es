@@ -106,9 +106,7 @@ const ThemeConfig = connect((state, props) => ({
             target={this.fileSelect}
           >
             <Tooltip id='background-preview'>
-              <div>
-                <img src={encodeURI(fileUrl(this.props.background))} alt="" style={{ maxHeight: '100%', maxWidth: '100%'}}/>
-              </div>
+              <img src={encodeURI(fileUrl(this.props.background))} alt="" style={{ maxHeight: '100%', maxWidth: '100%'}}/>
             </Tooltip>
           </Overlay>
           <div

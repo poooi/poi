@@ -93,103 +93,97 @@ const NotificationConfig = connect(() => {
   render () {
     return (
       <Grid>
-        <div>
-          <Col xs={6}>
-            <Button
-              bsStyle={this.props.enabled ? 'success' : 'danger'}
-              onClick={this.handleSetNotify.bind(this, null)}
-              style={{width: '100%'}}>
-              {(get(this.props, 'enabled', true)) ? '√ ' : ''}{__('Enable notification')}
+        <Col xs={6}>
+          <Button
+            bsStyle={this.props.enabled ? 'success' : 'danger'}
+            onClick={this.handleSetNotify.bind(this, null)}
+            style={{width: '100%'}}>
+            {(get(this.props, 'enabled', true)) ? '√ ' : ''}{__('Enable notification')}
+          </Button>
+        </Col>
+        <Col xs={6}>
+          <OverlayTrigger placement='top' overlay={
+            <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
+          }>
+            <FormControl type="range"
+              onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
+              min={0.0} max={1.0} step={0.05} defaultValue={this.props.volume} />
+          </OverlayTrigger>
+        </Col>
+        <Col xs={12} style={{marginTop: 10}}>
+          <ButtonGroup style={{display: 'flex'}}>
+            <Button bsStyle={this.props.construction ? 'success' : 'danger'}
+              onClick={this.handleSetNotify.bind(this, 'construction')}
+              className='notif-button'>
+              {__('Construction')}
             </Button>
-          </Col>
-          <Col xs={6}>
-            <OverlayTrigger placement='top' overlay={
-              <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
-            }>
-              <FormControl type="range"
-                onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
-                min={0.0} max={1.0} step={0.05} defaultValue={this.props.volume} />
-            </OverlayTrigger>
-          </Col>
-        </div>
-        <div>
-          <Col xs={12} style={{marginTop: 10}}>
-            <ButtonGroup style={{display: 'flex'}}>
-              <Button bsStyle={this.props.construction ? 'success' : 'danger'}
-                onClick={this.handleSetNotify.bind(this, 'construction')}
-                className='notif-button'>
-                {__('Construction')}
-              </Button>
-              <Button bsStyle={this.props.expedition ? 'success' : 'danger'}
-                onClick={this.handleSetNotify.bind(this, 'expedition')}
-                className='notif-button'>
-                {__('Expedition')}
-              </Button>
-              <Button bsStyle={this.props.repair ? 'success' : 'danger'}
-                onClick={this.handleSetNotify.bind(this, 'repair')}
-                className='notif-button'>
-                {__('Docking')}
-              </Button>
-              <Button bsStyle={this.props.morale ? 'success' : 'danger'}
-                onClick={this.handleSetNotify.bind(this, 'morale')}
-                className='notif-button'>
-                {__('Morale')}
-              </Button>
-              <Button bsStyle={this.props.others ? 'success' : 'danger'}
-                onClick={this.handleSetNotify.bind(this, 'others')}
-                className='notif-button'>
-                {__('Others')}
-              </Button>
-              <Button onClick={this.handleSetTimeSettingShow} bsStyle='primary' style={{width: 40}}>
-                <FontAwesome name={this.state.timeSettingShow ? 'angle-up' : 'angle-down'} />
-              </Button>
-            </ButtonGroup>
-            <Collapse in={this.state.timeSettingShow}>
-              <div>
-                <Well>
-                  <Row>
-                    <Col xs={9} className='notif-container'>
-                      <div className='notif-input-desc'>{__('Expedition')}: {__('Notify when expedition returns in')}</div>
-                    </Col>
-                    <Col xs={3} className='notif-container'>
-                      <FormGroup>
-                        <InputGroup bsSize='small'>
-                          <FormControl type="number" id="expeditionValue"
-                            disabled={!this.props.expedition}
-                            onChange={this.handleSetExpedition}
-                            value={this.state.expeditionValue}
-                            onClick={this.selectInput.bind(this, "expeditionValue")}
-                            className='notif-input' />
-                          <InputGroup.Addon>S</InputGroup.Addon>
-                        </InputGroup>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={9} className='notif-container'>
-                      <div className='notif-input-desc'>{__('Morale')}: {__('Notify when morale is greater than')}</div>
-                    </Col>
-                    <Col xs={3} className='notif-container'>
-                      <InputGroup bsSize='small'>
-                        <FormControl type="number" id="moraleValue"
-                          disabled={!this.props.morale}
-                          onChange={this.handleSetMorale}
-                          value={this.state.moraleValue}
-                          onClick={this.selectInput.bind(this, "moraleValue")}
-                          className='notif-input' />
-                      </InputGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={2} xsOffset={10}>
-                      <Button bsSize='small' onClick={this.saveNotifySetting}>{__('Save')}</Button>
-                    </Col>
-                  </Row>
-                </Well>
-              </div>
-            </Collapse>
-          </Col>
-        </div>
+            <Button bsStyle={this.props.expedition ? 'success' : 'danger'}
+              onClick={this.handleSetNotify.bind(this, 'expedition')}
+              className='notif-button'>
+              {__('Expedition')}
+            </Button>
+            <Button bsStyle={this.props.repair ? 'success' : 'danger'}
+              onClick={this.handleSetNotify.bind(this, 'repair')}
+              className='notif-button'>
+              {__('Docking')}
+            </Button>
+            <Button bsStyle={this.props.morale ? 'success' : 'danger'}
+              onClick={this.handleSetNotify.bind(this, 'morale')}
+              className='notif-button'>
+              {__('Morale')}
+            </Button>
+            <Button bsStyle={this.props.others ? 'success' : 'danger'}
+              onClick={this.handleSetNotify.bind(this, 'others')}
+              className='notif-button'>
+              {__('Others')}
+            </Button>
+            <Button onClick={this.handleSetTimeSettingShow} bsStyle='primary' style={{width: 40}}>
+              <FontAwesome name={this.state.timeSettingShow ? 'angle-up' : 'angle-down'} />
+            </Button>
+          </ButtonGroup>
+          <Collapse in={this.state.timeSettingShow}>
+            <Well>
+              <Row>
+                <Col xs={9} className='notif-container'>
+                  <div className='notif-input-desc'>{__('Expedition')}: {__('Notify when expedition returns in')}</div>
+                </Col>
+                <Col xs={3} className='notif-container'>
+                  <FormGroup>
+                    <InputGroup bsSize='small'>
+                      <FormControl type="number" id="expeditionValue"
+                        disabled={!this.props.expedition}
+                        onChange={this.handleSetExpedition}
+                        value={this.state.expeditionValue}
+                        onClick={this.selectInput.bind(this, "expeditionValue")}
+                        className='notif-input' />
+                      <InputGroup.Addon>S</InputGroup.Addon>
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={9} className='notif-container'>
+                  <div className='notif-input-desc'>{__('Morale')}: {__('Notify when morale is greater than')}</div>
+                </Col>
+                <Col xs={3} className='notif-container'>
+                  <InputGroup bsSize='small'>
+                    <FormControl type="number" id="moraleValue"
+                      disabled={!this.props.morale}
+                      onChange={this.handleSetMorale}
+                      value={this.state.moraleValue}
+                      onClick={this.selectInput.bind(this, "moraleValue")}
+                      className='notif-input' />
+                  </InputGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={2} xsOffset={10}>
+                  <Button bsSize='small' onClick={this.saveNotifySetting}>{__('Save')}</Button>
+                </Col>
+              </Row>
+            </Well>
+          </Collapse>
+        </Col>
       </Grid>
     )
   }

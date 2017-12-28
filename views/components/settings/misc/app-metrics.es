@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import { remote } from 'electron'
 import { Button } from 'react-bootstrap'
 import { sortBy, round, sumBy } from 'lodash'
@@ -69,16 +69,14 @@ class AppMetrics extends PureComponent {
   render() {
     const { metrics, active, total, pidmap } = this.state
     return (
-      <div>
-        <div>
-          <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
-            {
-              active
-                ? <span>{__('Monitor on')}</span>
-                : <span>{__('Monitor off')}</span>
-            }
-          </Button>
-        </div>
+      <Fragment>
+        <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
+          {
+            active
+              ? <span>{__('Monitor on')}</span>
+              : <span>{__('Monitor off')}</span>
+          }
+        </Button>
         {
           active &&
           <div className="metric-table">
@@ -130,7 +128,7 @@ class AppMetrics extends PureComponent {
             </div>
           </div>
         }
-      </div>
+      </Fragment>
     )
   }
 }
