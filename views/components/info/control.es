@@ -11,7 +11,7 @@ import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
 import './assets/control.css'
 
-const {$, i18n, config, APPDATA_PATH, toggleModal} = window
+const {$, i18n, config, toggleModal} = window
 const {openExternal} = shell
 const __ = i18n.others.__.bind(i18n.others)
 

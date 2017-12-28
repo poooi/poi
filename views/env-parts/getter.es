@@ -1,7 +1,6 @@
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { map, get, mapValues } from 'lodash'
-import path from 'path-extra'
 import { remote } from 'electron'
 
 import { store } from 'views/create-store'
