@@ -12,6 +12,7 @@ import FA from 'react-fontawesome'
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
 import FCD from './fcd'
+import WctfDB from './wctf-db'
 
 import '../assets/misc.css'
 
@@ -95,6 +96,9 @@ const Misc = connect(state => ({
         <Grid>
           <Col xs={12}>
             <FCD />
+          </Col>
+          <Col xs={12}>
+            <WctfDB />
           </Col>
         </Grid>
         <Divider text={__('Performance Monitor')} />
