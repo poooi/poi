@@ -79,14 +79,14 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
       }
     })
   )
-  postMessage('Ready', mstId)
+  postMessage([ 'Ready', mstId ])
   // release lock
   fetchLocks.set(path, false)
 }
 
 const mkRequestShipGraph = (mstId, version = [], fileName, serverIp, forced = false) => {
   if (!forced && versionMap[mstId] && version.toString() === versionMap[mstId].toString() && checkExistence(mstId)) {
-    postMessage('Ready', mstId)
+    postMessage([ 'Ready', mstId ])
     return
   }
 
