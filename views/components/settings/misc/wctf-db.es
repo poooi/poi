@@ -79,6 +79,13 @@ const WctfDB = connect(
     }
   }
 
+  // updateDB is similar to update a plugin
+  // Steps:
+  // - get npm config data
+  // - fetch latest release info json
+  // - if update available, install the npm package
+  // - load the new db if package update
+  // @params force: Boolean, reloads DB if no update available
   updateDB = async (force = false) => {
     this.setState({
       updating: true,
