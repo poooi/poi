@@ -33,6 +33,7 @@ const DB_KEY = {
   ship_type_collections: 'id',
   ship_types: 'id',
   ships: 'id',
+  ship_namesuffix: 'id',
 }
 
 const fetchHeader = new Headers()
