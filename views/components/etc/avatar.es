@@ -47,7 +47,7 @@ export class Avatar extends PureComponent {
 
   render() {
     return (
-      <div className="ship-avart-container">
+      <div className="ship-avatar-container">
         {
           this.state.available ?
             <img

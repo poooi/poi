@@ -1,4 +1,4 @@
-.ship-avart-container {
+.ship-avatar-container {
   /* csslint ignore:start */
   -webkit-mask-image: -webkit-gradient(linear, 50% 100%, 100% 100%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
   /* csslint ignore:end */
@@ -6,11 +6,11 @@
 
 }
 
-.ShipView .ship-avart-container {
+.ShipView .ship-avatar-container {
   width: 100px;
 }
 
-.miniship .ship-avart-container {
+.miniship .ship-avatar-container {
   width: 60px;
 }
 
