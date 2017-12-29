@@ -48,6 +48,7 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
     return
 
   fetchLocks.set(path, true)
+  const [ normalPath, damagedPath ] = getFilePath(mstId)
   const fetched = await fetch(`http://${serverIp}${path}`)
   if (!fetched.ok)
     throw new Error('fetch failed.')
@@ -56,7 +57,6 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
   await Promise.all(
     extractImages(swfData.tags).map(async p => {
       const data = await p
-      const [ normalPath, damagedPath ] = getFilePath(mstId)
       if (
         'characterId' in data &&
         ['jpeg', 'png', 'gif'].includes(data.imgType)
