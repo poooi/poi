@@ -136,6 +136,7 @@ app.on('ready', () => {
     fullscreenable: config.get('poi.content.resizable', true),
     webPreferences: {
       plugins: true,
+      nodeIntegrationInWorker: true,
     },
     backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
   })
