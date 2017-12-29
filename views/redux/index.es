@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { mapValues } from 'lodash'
+import { mapValues, isEqual } from 'lodash'
 
 import { reducer as constReducer } from './const'
 import { reducer as info } from './info'
@@ -12,6 +12,7 @@ import { reducer as plugins } from './plugins'
 import { reducer as fcd } from './fcd'
 import { reducer as ui } from './ui'
 import { reducer as ipc } from './ipc'
+import { reducer as wctf } from './wctf'
 import misc from './misc'
 
 const emptyObject = {}
@@ -54,6 +55,7 @@ export function reducerFactory(extensionConfig) {
     ui: window.isMain ? ui: (() => emptyObject),
     ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
     ipc,
+    wctf,
   })
 }
 
@@ -86,4 +88,34 @@ export function onConfigChange({path, value}) {
     path,
     value,
   }
+}
+
+// publish data changes to plugin windows
+if (!window.isMain) {
+  window.addEventListener('storage', e => {
+    if (e.key === '_storeCache') {
+      const { fcd, wctf = {} } = JSON.parse(e.newValue)
+      for (const key of Object.keys(fcd)) {
+        if (!isEqual(fcd[key], window.getStore(`fcd.${key}`))) {
+          // eslint-disable-next-line no-console
+          console.log(`Update ${key} from localStorage`)
+          window.dispatch({
+            type: "@@replaceFCD",
+            value: {
+              path: key,
+              data: fcd[key],
+            },
+          })
+        }
+      }
+      if (wctf.version && wctf.version !== window.getStore('wctf.version')) {
+        // eslint-disable-next-line no-console
+        console.log(`Update Who Calls The Fleet database to ${wctf.version} from localstorage`)
+        window.dispatch({
+          type: '@@wctf-db-update',
+          payload: wctf,
+        })
+      }
+    }
+  })
 }

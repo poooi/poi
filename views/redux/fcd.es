@@ -1,26 +1,3 @@
-import { isEqual } from 'lodash'
-
-if (!window.isMain) {
-  window.addEventListener('storage', e => {
-    if (e.key === '_storeCache') {
-      const {fcd} = JSON.parse(e.newValue)
-      for (const key of Object.keys(fcd)) {
-        if (!isEqual(fcd[key], window.getStore(`fcd.${key}`))) {
-          // eslint-disable-next-line no-console
-          console.log(`Update ${key} from localStorage`)
-          window.dispatch({
-            type: "@@replaceFCD",
-            value: {
-              path: key,
-              data: fcd[key],
-            },
-          })
-        }
-      }
-    }
-  })
-}
-
 const initState = {
   version: {},
 }
