@@ -91,6 +91,7 @@
     "semver": "^5.4.1",
     "socks5-client": "^1.2.5",
     "socks5-http-client": "^1.0.1",
+    "swf-extract": "^1.0.2",
     "validate-npm-package-name": "^3.0.0",
     "wanakana": "^2.3.1",
     "yargs": "^10.0.3"
