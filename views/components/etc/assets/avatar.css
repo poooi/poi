@@ -1,0 +1,31 @@
+.ship-avart-container {
+  /* csslint ignore:start */
+  -webkit-mask-image: -webkit-gradient(linear, 50% 100%, 100% 100%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+  /* csslint ignore:end */
+  position: absolute;
+
+}
+
+.ShipView .ship-avart-container {
+  width: 100px;
+}
+
+.miniship .ship-avart-container {
+  width: 60px;
+}
+
+.ShipView .ship-avatar {
+  height: 54px;
+  margin-left: -40px;
+}
+
+.miniship .ship-avatar {
+  height: 33px;
+  margin-left: -30px;
+}
+
+
+
+.ShipView .ship-basic-item {
+  padding-left: 95px;
+}

@@ -61,6 +61,7 @@
   margin: 5px 0 5px 0;
 }
 .miniship .ship-details-mini .ship-item {
+  align-items: center;
   display: flex;
   flex: 1;
   flex-flow: row nowrap;
@@ -74,6 +75,9 @@
   font-size: 14px;
   justify-content: space-between;
   min-width: 0;
+  /* csslint ignore:start */
+  padding-left: 55px;
+  /* csslint ignore:end */
   width: 33%;
 }
 .miniship .ship-details-mini .ship-item .ship-info .ship-type,

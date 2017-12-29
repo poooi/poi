@@ -2,7 +2,7 @@ import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
@@ -12,6 +12,7 @@ import FontAwesome from 'react-fontawesome'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import { SlotitemIcon } from 'views/components/etc/icon'
+import { Avatar } from 'views/components/etc/avatar'
 import { getCondStyle, equipIsAircraft, getShipLabelStatus, getHpStyle, getStatusStyle, getTyku } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
@@ -146,15 +147,16 @@ export const MiniShipRow = connect(
                 Next. {(ship.api_exp || [])[1]}
               </Tooltip>
             }>
-              <div className="ship-info">
-                <span className="ship-name" style={labelStatusStyle}>
-                  {i18n.resources.__($ship.api_name || '??')}
-                </span>
-                <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                  Lv. {ship.api_lv || '??'}
-                </span>
-              </div>
+              <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} />
             </OverlayTrigger>
+            <div className="ship-info">
+              <span className="ship-name" style={labelStatusStyle}>
+                {i18n.resources.__($ship.api_name || '??')}
+              </span>
+              <span className="ship-lv-text top-space" style={labelStatusStyle}>
+                Lv. {ship.api_lv || '??'}
+              </span>
+            </div>
             <div className="ship-stat">
               <div className="div-row">
                 <span className="ship-hp" style={labelStatusStyle}>

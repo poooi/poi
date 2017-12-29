@@ -12,6 +12,7 @@ const __ = i18n.main.__.bind(i18n.main)
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { Avatar } from 'views/components/etc/avatar'
 import AACIIndicator from './aaci-indicator'
 import OASWndicator from './oasw-indicator'
 import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus, getSpeedLabel } from 'views/utils/game-utils'
@@ -89,6 +90,7 @@ export const ShipRow = connect(
     return (
       <div className="ship-item">
         <div className="ship-tile">
+          <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} />
           <div className="ship-basic-item">
             <div className="ship-info" style={labelStatusStyle}>
               <div className="ship-basic">
