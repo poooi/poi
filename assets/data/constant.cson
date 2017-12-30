@@ -26,6 +26,11 @@ thanksTo: [
       margin: "auto"
       display: "block"
   ,
+    name: 'Who Calls The Fleet'
+    link: 'http://fleet.moe'
+    avatar: 'https://avatars1.githubusercontent.com/u/31863156?s=64&v=4'
+    description: 'For providing Who Calls The Fleet database.'
+  ,
     name: 'Kensuke Tanaka'
     link: 'https://www.facebook.com/kensuke.tanaka.790'
     avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
