@@ -109,23 +109,23 @@ const FCD = connect(state => ({
     const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
       <Fragment>
+        <Button
+          onClick={this.updateData('reload')}
+          disabled={updating}
+          bsSize="small"
+          style={{ marginRight: '1em' }}
+        >
+          <FA name="refresh" spin={updating} ></FA>
+        </Button>
         {
           fcds.map(fcd => (
             fcd
-              ? <span key={fcd[0]}>
+              ? <span key={fcd[0]} className="data-version">
                 {fcd[0]}: <Label bsStyle="primary">{fcd[1]}</Label>
               </span>
               : null
           ))
         }
-        <Button
-          onClick={this.updateData('reload')}
-          disabled={updating}
-          bsSize="small"
-          style={{ marginLeft: '2em' }}
-        >
-          <FA name="refresh" spin={updating} ></FA>
-        </Button>
       </Fragment>
     )
   }

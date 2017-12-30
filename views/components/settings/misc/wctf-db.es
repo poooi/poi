@@ -7,7 +7,7 @@ import semver from 'semver'
 import glob from 'glob'
 import Promise from 'bluebird'
 import FA from 'react-fontawesome'
-import { Button } from 'react-bootstrap'
+import { Button, Label } from 'react-bootstrap'
 
 import { wctfSelector } from 'views/utils/selectors'
 import { installPackage } from 'views/services/plugin-manager-utils'
@@ -187,15 +187,15 @@ const WctfDB = connect(
     const { updating } = this.state
     return (
       <Fragment>
-        {__('Who Calls The Fleet Database')}: {this.props.version}
         <Button
           bsSize="small"
           onClick={this.handleRefesh}
           disabled={updating}
-          style={{ marginLeft: '2em' }}
+          style={{ marginRight: '1em' }}
         >
           <FA name="refresh" spin={updating} />
         </Button>
+        {__('Who Calls The Fleet Database')}: <Label bsStyle="primary">{this.props.version}</Label>
       </Fragment>
     )
   }
