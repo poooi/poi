@@ -59,6 +59,7 @@
   display: flex;
   justify-content: space-between;
   margin: 5px 0 5px 0;
+  position: relative;
 }
 .miniship .ship-details-mini .ship-item {
   align-items: center;
@@ -66,6 +67,7 @@
   flex: 1;
   flex-flow: row nowrap;
   overflow: hidden;
+  position: relative;
   white-space: nowrap;
 }
 .miniship .ship-details-mini .ship-item .ship-info {

@@ -22,6 +22,7 @@
   flex: 4.2;
   justify-content: space-between;
   padding-right: 4px;
+  position: relative;
   width: calc(76% - 104px);
 }
 .ShipView .ship-item .progress {
