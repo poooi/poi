@@ -108,7 +108,7 @@ if (!window.isMain) {
           })
         }
       }
-      if (wctf.version && wctf.version !== window.getStore('wctf.version')) {
+      if (wctf.lastModified && wctf.lastModified !== window.getStore('wctf.lastModified')) {
         // eslint-disable-next-line no-console
         console.log(`Update Who Calls The Fleet database to ${wctf.version} from localstorage`)
         window.dispatch({
