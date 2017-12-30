@@ -68,7 +68,7 @@ const WctfDB = connect(
           type: '@@wctf-db-update',
           payload: {
             version: meta.version,
-            lastModified: +new Date(),
+            lastModified: +new Date(), // reloading database should effective for plugin windows
             ...data,
           },
         })
@@ -130,7 +130,7 @@ const WctfDB = connect(
       .then(res => res.ok ? res.json() : undefined)
       .catch(e => undefined)
     if (!data || !data.version) {
-      console.warn(`Can't find update info for Who Calls The Fleet Database`)
+      console.warn(`Can't find update info for wctf-db`)
     }
 
     updateFlag = updateFlag || semver.gt(get(data, 'version', '0.0.0'), this.props.version)
@@ -140,7 +140,7 @@ const WctfDB = connect(
         await installPackage(PACKAGE_NAME, data.version, npmConfig)
         this.loadDB()
         // eslint-disable-next-line no-console
-        console.log(`Who Calls The Fleet Database updated to ${data.version}`)
+        console.log(`wctf-db updated to ${data.version}`)
       } catch (e) {
         console.error(e)
       }
@@ -149,7 +149,7 @@ const WctfDB = connect(
         this.loadDB()
       }
       // eslint-disable-next-line no-console
-      console.log(`No update for Who Calls The Fleet Database, current: ${this.props.version}, remote: ${data.version}`)
+      console.log(`No update for wctf-db, current: ${this.props.version}, remote: ${data.version}`)
     }
 
 

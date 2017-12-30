@@ -110,7 +110,7 @@ if (!window.isMain) {
       }
       if (wctf.lastModified && wctf.lastModified !== window.getStore('wctf.lastModified')) {
         // eslint-disable-next-line no-console
-        console.log(`Update Who Calls The Fleet database to ${wctf.version} from localstorage`)
+        console.log(`Update wctf-db to ${wctf.version} from localstorage`)
         window.dispatch({
           type: '@@wctf-db-update',
           payload: wctf,
