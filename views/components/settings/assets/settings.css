@@ -71,3 +71,7 @@
   display: inline-block;
   margin-right: 1em;
 }
+
+.SettingsView .poi-others {
+  padding-bottom: 20px;
+}
