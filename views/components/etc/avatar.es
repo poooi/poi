@@ -12,7 +12,13 @@ const avatarCachePath = join(APPDATA_PATH, 'avatar','cache')
 export class Avatar extends PureComponent {
   static propTypes = {
     mstId: PropTypes.number.isRequired,
+    height: PropTypes.number,
     isDamaged: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    height: 121,
+    isDamaged: false,
   }
 
   state = {
@@ -47,11 +53,14 @@ export class Avatar extends PureComponent {
 
   render() {
     return (
-      <div className="ship-avatar-container">
+      <div className="ship-avatar-container" style={{
+        width: Math.round(1.85 * this.props.height),
+      }}>
         {
           this.state.available ?
             <img
               className="ship-avatar"
+              style={{ height: this.props.height, marginLeft: -Math.round(0.555 * this.props.height) }}
               src={join(avatarCachePath, `${this.props.mstId}_${this.props.isDamaged ? 'd' : 'n'}.png`)} />
             : <div />
         }

@@ -70,6 +70,12 @@
   position: relative;
   white-space: nowrap;
 }
+.miniship .ship-avatar-container {
+  position: absolute;
+}
+.miniship .ship-details-mini .ship-item .ship-info {
+  padding-left: 55px;
+}
 .miniship .ship-details-mini .ship-item .ship-info {
   display: flex;
   flex: 1;
@@ -77,9 +83,6 @@
   font-size: 14px;
   justify-content: space-between;
   min-width: 0;
-  /* csslint ignore:start */
-  padding-left: 55px;
-  /* csslint ignore:end */
   width: 33%;
 }
 .miniship .ship-details-mini .ship-item .ship-info .ship-type,

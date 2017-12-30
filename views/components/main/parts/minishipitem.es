@@ -142,21 +142,21 @@ export const MiniShipRow = connect(
           }
         >
           <div className="ship-item">
+            <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} height={33} />
             <OverlayTrigger placement='top' overlay={
               <Tooltip id={`miniship-exp-${ship.api_id}`}>
                 Next. {(ship.api_exp || [])[1]}
               </Tooltip>
             }>
-              <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} />
+              <div className="ship-info">
+                <span className="ship-name" style={labelStatusStyle}>
+                  {i18n.resources.__($ship.api_name || '??')}
+                </span>
+                <span className="ship-lv-text top-space" style={labelStatusStyle}>
+                  Lv. {ship.api_lv || '??'}
+                </span>
+              </div>
             </OverlayTrigger>
-            <div className="ship-info">
-              <span className="ship-name" style={labelStatusStyle}>
-                {i18n.resources.__($ship.api_name || '??')}
-              </span>
-              <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                Lv. {ship.api_lv || '??'}
-              </span>
-            </div>
             <div className="ship-stat">
               <div className="div-row">
                 <span className="ship-hp" style={labelStatusStyle}>

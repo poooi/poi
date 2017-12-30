@@ -8,6 +8,12 @@
   padding-top: 7px;
   white-space: nowrap;
 }
+.ShipView .ship-avatar-container {
+  position: absolute;
+}
+.ShipView .ship-basic-item {
+  padding-left: 95px;
+}
 .ShipView .ship-basic-item {
   align-items: flex-end;
   display: flex;
