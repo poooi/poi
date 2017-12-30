@@ -92,7 +92,7 @@ export const ShipRow = connect(
     return (
       <div className="ship-item">
         <div className="ship-tile">
-          { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} height={54} /> }
+          { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} /> }
           <div className={classNames("ship-basic-item", { "ship-avatar-padding": enableAvatar })}>
             <div className="ship-info" style={labelStatusStyle}>
               <div className="ship-basic">
