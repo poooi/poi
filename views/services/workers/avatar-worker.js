@@ -10,6 +10,7 @@ const {
 
 let fetchLocks
 let APPDATA_PATH
+let fileWriteStatus = {}
 
 const getCacheDirPath = () => {
   const path = join(APPDATA_PATH, 'avatar','cache')
@@ -44,14 +45,13 @@ class FileWriter {
 }
 
 const fw = new FileWriter()
-const status = {}
 
 const reportStatus = (mstId, type) => () => {
-  if (!status[mstId]) {
-    status[mstId] = {}
+  if (!fileWriteStatus[mstId]) {
+    fileWriteStatus[mstId] = {}
   }
-  status[mstId][type] = true
-  if (status[mstId].normal && status[mstId].damaged) {
+  fileWriteStatus[mstId][type] = true
+  if (fileWriteStatus[mstId].normal && fileWriteStatus[mstId].damaged) {
     postMessage([ 'Ready', mstId ])
   }
 }
@@ -146,6 +146,7 @@ onmessage = e => {
     APPDATA_PATH = data.shift()
     versionMap = getVersionMap()
     fetchLocks = new Map()
+    fileWriteStatus = {}
     break
   }
   case 'Request': {
