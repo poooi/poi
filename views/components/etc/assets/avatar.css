@@ -1,6 +1,6 @@
 .ship-avatar-container {
   /* csslint ignore:start */
-  -webkit-mask-image: -webkit-gradient(linear, 50% 100%, 100% 100%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+  -webkit-mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
   /* csslint ignore:end */
   position: absolute;
 
@@ -16,12 +16,12 @@
 
 .ShipView .ship-avatar {
   height: 54px;
-  margin-left: -40px;
+  margin-left: -30px;
 }
 
 .miniship .ship-avatar {
   height: 33px;
-  margin-left: -30px;
+  margin-left: -18px;
 }
 
 
