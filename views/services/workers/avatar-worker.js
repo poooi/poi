@@ -44,6 +44,17 @@ class FileWriter {
 }
 
 const fw = new FileWriter()
+const status = {}
+
+const reportStatus = (mstId, type) => () => {
+  if (!status[mstId]) {
+    status[mstId] = {}
+  }
+  status[mstId][type] = true
+  if (status[mstId].normal && status[mstId].damaged) {
+    postMessage([ 'Ready', mstId ])
+  }
+}
 
 const getVersionMap = () => {
   try {
@@ -86,13 +97,6 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
     throw new Error('fetch failed.')
   const ab = await fetched.arrayBuffer()
   const swfData = await readFromBufferP(new Buffer(ab))
-  const status = {}
-  const reportStatus = type => () => {
-    status[type] = true
-    if (status.normal && status.damaged) {
-      postMessage([ 'Ready', mstId ])
-    }
-  }
   await Promise.all(
     extractImages(swfData.tags).map(async p => {
       const data = await p
@@ -104,11 +108,11 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
         getCacheDirPath()
         switch (characterId) {
         case 21: {
-          fw.write(normalPath, imgData, reportStatus('normal'))
+          fw.write(normalPath, imgData, reportStatus(mstId, 'normal'))
           break
         }
         case 23: {
-          fw.write(damagedPath, imgData, reportStatus('damaged'))
+          fw.write(damagedPath, imgData, reportStatus(mstId, 'damaged'))
           break
         }
         }
