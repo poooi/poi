@@ -10,14 +10,14 @@ const {
   open,
   close,
 } = require('fs-extra')
-const fetchLocks = new Map()
+let fetchLocks
 let APPDATA_PATH
 
-const getCacheDirPath = _.memoize(() => {
+const getCacheDirPath = () => {
   const path = join(APPDATA_PATH, 'avatar','cache')
   ensureDirSync(path)
   return path
-})
+}
 
 const getVersionMap = () => {
   try {
@@ -27,7 +27,13 @@ const getVersionMap = () => {
   }
 }
 
-const setVersionMap = (data) => writeJsonSync(join(getCacheDirPath(), '..', 'version.json'), data)
+const setVersionMap = (data) => {
+  try {
+    writeJsonSync(join(getCacheDirPath(), '..', 'version.json'), data)
+  } catch (e) {
+    return
+  }
+}
 
 let versionMap
 
@@ -62,6 +68,7 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
         ['jpeg', 'png', 'gif'].includes(data.imgType)
       ) {
         const {characterId, imgData} = data
+        getCacheDirPath()
         switch (characterId) {
         case 21: {
           const fd = await open(normalPath, 'w+')
@@ -105,6 +112,7 @@ onmessage = e => {
   case 'Initialize': {
     APPDATA_PATH = data.shift()
     versionMap = getVersionMap()
+    fetchLocks = new Map()
     break
   }
   case 'Request': {

@@ -8,9 +8,10 @@ import PropTypes from 'prop-types'
 import { get } from 'lodash'
 import FolderPicker from '../components/folder-picker'
 import { fileUrl } from 'views/utils/tools'
+import { avatarWorker } from 'views/services/worker'
 
-const {config, toggleModal, i18n, EXROOT} = window
-const {openItem} = shell
+const { config, toggleModal, i18n, EXROOT, APPDATA_PATH } = window
+const { openItem } = shell
 const __ = i18n.setting.__.bind(i18n.setting)
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
@@ -23,6 +24,7 @@ const ThemeConfig = connect((state, props) => ({
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
   vibrant: get(state.config, 'poi.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
   background: get(state.config, 'poi.background'),
+  enableAvatar: get(state.config, 'poi.enableAvatar', true),
 })
 )(class ThemeConfig extends Component {
   static propTypes = {
@@ -33,6 +35,7 @@ const ThemeConfig = connect((state, props) => ({
     useGridMenu: PropTypes.bool,
     vibrant: PropTypes.number,
     background: PropTypes.string,
+    enableAvatar: PropTypes.bool,
   }
   state = {
     show: false,
@@ -52,6 +55,15 @@ const ThemeConfig = connect((state, props) => ({
       return toggleModalWithDelay(__('Edit custom CSS'), __("Failed. Perhaps you don't have permission to it."))
     }
   }
+  handleDeleteAvatarCache = async e => {
+    try {
+      const d = path.join(APPDATA_PATH, 'avatar')
+      await fs.remove(d)
+      avatarWorker.postMessage([ 'Initialize', window.APPDATA_PATH ])
+    } catch (e) {
+      return toggleModalWithDelay(__('Delete avatar cache'), __("Failed. Perhaps you don't have permission to it."))
+    }
+  }
   handleSetSVGIcon = () => {
     config.set('poi.useSVGIcon', !this.props.enableSVGIcon)
   }
@@ -63,6 +75,9 @@ const ThemeConfig = connect((state, props) => ({
   }
   handleSetVibrancy = e => {
     config.set('poi.vibrant', parseInt(e.target.value))
+  }
+  handleSetAvatar = e => {
+    config.set('poi.enableAvatar', !this.props.enableAvatar)
   }
   handleMouseEnter = () => {
     this.setState({
@@ -99,7 +114,6 @@ const ThemeConfig = connect((state, props) => ({
           <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{__('Edit custom CSS')}</Button>
         </Col>
         <Col xs={6} style={{ marginTop: '1ex' }}>
-
           <Overlay
             show={this.props.background && this.state.show }
             placement="bottom"
@@ -140,6 +154,14 @@ const ThemeConfig = connect((state, props) => ({
           <Checkbox checked={this.props.useGridMenu} onChange={this.handleSetGridMenu}>
             {__('Use Gridded Plugin Menu')}
           </Checkbox>
+        </Col>
+        <Col xs={6}>
+          <Checkbox checked={this.props.enableAvatar} onChange={this.handleSetAvatar}>
+            {__('Show shipgirl avatar')}
+          </Checkbox>
+        </Col>
+        <Col xs={6}>
+          <Button bsStyle='primary' onClick={this.handleDeleteAvatarCache} block>{__('Delete avatar cache')}</Button>
         </Col>
       </Grid>
     )

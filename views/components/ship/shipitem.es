@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import shallowEqual from 'fbjs/lib/shallowEqual'
+import classNames from 'classnames'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
@@ -59,6 +60,7 @@ export const ShipRow = connect(
     $ship: PropTypes.object,
     $shipTypes: PropTypes.object,
     labelStatus: PropTypes.number,
+    enableAvatar: PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -70,7 +72,7 @@ export const ShipRow = connect(
   }
 
   render() {
-    const {ship, $ship, $shipTypes, labelStatus} = this.props
+    const { ship, $ship, $shipTypes, labelStatus, enableAvatar } = this.props
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
     const fuelPercentage = ship.api_fuel / $ship.api_fuel_max * 100
@@ -90,8 +92,8 @@ export const ShipRow = connect(
     return (
       <div className="ship-item">
         <div className="ship-tile">
-          <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} height={54} />
-          <div className="ship-basic-item">
+          { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} height={54} /> }
+          <div className={classNames("ship-basic-item", { "ship-avatar-padding": enableAvatar })}>
             <div className="ship-info" style={labelStatusStyle}>
               <div className="ship-basic">
                 <span className="ship-lv">

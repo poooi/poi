@@ -164,5 +164,7 @@
   "No background image selected": "選択されていません",
   "Deploying, please wait": "展開しています、しばらくお待ちください",
   "Quit app and install updates": "アプリを終了して更新をインストールする",
-  "Selected directory for %s is not valid.": "%sに設定されているディレクトリが無効です。"
+  "Selected directory for %s is not valid.": "%sに設定されているディレクトリが無効です。",
+  "Show shipgirl avatar": "艦娘詳細にアバターを表示する",
+  "Delete avatar cache": "艦娘アバターのキャッシュを削除する"
 }

@@ -73,7 +73,7 @@
 .miniship .ship-avatar-container {
   position: absolute;
 }
-.miniship .ship-details-mini .ship-item .ship-info {
+.miniship .ship-avatar-padding {
   padding-left: 55px;
 }
 .miniship .ship-details-mini .ship-item .ship-info {

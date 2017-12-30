@@ -114,6 +114,7 @@ export const MiniShipRow = connect(
     labelStatus: PropTypes.number,
     layout: PropTypes.string,
     doubleTabbed: PropTypes.bool,
+    enableAvatar: PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -124,7 +125,7 @@ export const MiniShipRow = connect(
   }
 
   render() {
-    const {ship, $ship, labelStatus, layout, doubleTabbed} = this.props
+    const { ship, $ship, labelStatus, layout, doubleTabbed, enableAvatar } = this.props
     if (!ship)
       return <div></div>
     const labelStatusStyle = getStatusStyle(labelStatus)
@@ -142,13 +143,13 @@ export const MiniShipRow = connect(
           }
         >
           <div className="ship-item">
-            <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} height={33} />
+            { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage < 50} height={33} /> }
             <OverlayTrigger placement='top' overlay={
               <Tooltip id={`miniship-exp-${ship.api_id}`}>
                 Next. {(ship.api_exp || [])[1]}
               </Tooltip>
             }>
-              <div className="ship-info">
+              <div className={classNames("ship-info", { "ship-avatar-padding": enableAvatar })}>
                 <span className="ship-name" style={labelStatusStyle}>
                   {i18n.resources.__($ship.api_name || '??')}
                 </span>
