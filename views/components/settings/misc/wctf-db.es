@@ -55,6 +55,7 @@ const WctfDB = connect(
 
   componentDidMount = async () => {
     await fs.ensureDir(DB_ROOT)
+    await fs.ensureDir(path.join(DB_ROOT, 'node_modules'))
     this.updateDB()
   }
 
