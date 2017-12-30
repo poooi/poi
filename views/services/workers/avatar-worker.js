@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const { readFromBufferP, extractImages } = require('swf-extract')
 const { join } = require('path-extra')
 const {
