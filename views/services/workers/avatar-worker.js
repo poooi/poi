@@ -5,10 +5,9 @@ const {
   writeJsonSync,
   readJsonSync,
   accessSync,
-  write,
-  open,
-  close,
+  writeFile,
 } = require('fs-extra')
+
 let fetchLocks
 let APPDATA_PATH
 
@@ -17,6 +16,34 @@ const getCacheDirPath = () => {
   ensureDirSync(path)
   return path
 }
+
+class FileWriter {
+  constructor() {
+    this.writing = false
+    this._queue = []
+  }
+
+  write(path, data, callback) {
+    this._queue.push([path, data, callback])
+    this._continueWriting()
+  }
+
+  async _continueWriting() {
+    if (this.writing)
+      return
+    this.writing = true
+    while (this._queue.length) {
+      const [path, data, callback] = this._queue.shift()
+      const err = await writeFile(path, data)
+      if (callback)
+        callback(err)
+    }
+    this.writing = false
+  }
+
+}
+
+const fw = new FileWriter()
 
 const getVersionMap = () => {
   try {
@@ -59,6 +86,13 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
     throw new Error('fetch failed.')
   const ab = await fetched.arrayBuffer()
   const swfData = await readFromBufferP(new Buffer(ab))
+  const status = {}
+  const reportStatus = type => () => {
+    status[type] = true
+    if (status.normal && status.damaged) {
+      postMessage([ 'Ready', mstId ])
+    }
+  }
   await Promise.all(
     extractImages(swfData.tags).map(async p => {
       const data = await p
@@ -70,15 +104,11 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
         getCacheDirPath()
         switch (characterId) {
         case 21: {
-          const fd = await open(normalPath, 'w+')
-          write(fd, imgData)
-          await close(fd)
+          fw.write(normalPath, imgData, reportStatus('normal'))
           break
         }
         case 23: {
-          const fd = await open(damagedPath, 'w+')
-          write(fd, imgData)
-          await close(fd)
+          fw.write(damagedPath, imgData, reportStatus('damaged'))
           break
         }
         }
