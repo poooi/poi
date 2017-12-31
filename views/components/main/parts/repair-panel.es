@@ -95,6 +95,10 @@ export default connect(
                 dock.api_state == 0 ? __('Empty') :
                   i18n.resources.__($ships[ships[dock.api_ship_id].api_ship_id].api_name)
             const completeTime = dock.api_complete_time || -1
+            let hpPercentage
+            if (dock.api_state > 0) {
+              hpPercentage = (100 * get(ships, [dock.api_ship_id, 'api_nowhp'])) / get(ships, [dock.api_ship_id, 'api_maxhp'])
+            }
             return (
               <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})}>
                 {
@@ -102,7 +106,11 @@ export default connect(
                   <Fragment>
                     {
                       dock.api_state > 0
-                        ? <Avatar height={20} mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])} />
+                        ? <Avatar
+                          height={20}
+                          mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])}
+                          isDamaged={hpPercentage <= 50}
+                        />
                         : <EmptyDock state={dock.api_state} />
                     }
                   </Fragment>
