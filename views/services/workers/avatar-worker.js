@@ -7,53 +7,13 @@ const {
   accessSync,
   writeFile,
 } = require('fs-extra')
-
 let fetchLocks
 let APPDATA_PATH
-let fileWriteStatus = {}
 
 const getCacheDirPath = () => {
   const path = join(APPDATA_PATH, 'avatar','cache')
   ensureDirSync(path)
   return path
-}
-
-class FileWriter {
-  constructor() {
-    this.writing = false
-    this._queue = []
-  }
-
-  write(path, data, callback) {
-    this._queue.push([path, data, callback])
-    this._continueWriting()
-  }
-
-  async _continueWriting() {
-    if (this.writing)
-      return
-    this.writing = true
-    while (this._queue.length) {
-      const [path, data, callback] = this._queue.shift()
-      const err = await writeFile(path, data)
-      if (callback)
-        callback(err)
-    }
-    this.writing = false
-  }
-
-}
-
-const fw = new FileWriter()
-
-const reportStatus = (mstId, type) => () => {
-  if (!fileWriteStatus[mstId]) {
-    fileWriteStatus[mstId] = {}
-  }
-  fileWriteStatus[mstId][type] = true
-  if (fileWriteStatus[mstId].normal && fileWriteStatus[mstId].damaged) {
-    postMessage([ 'Ready', mstId ])
-  }
 }
 
 const getVersionMap = () => {
@@ -108,11 +68,11 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
         getCacheDirPath()
         switch (characterId) {
         case 21: {
-          fw.write(normalPath, imgData, reportStatus(mstId, 'normal'))
+          await writeFile(normalPath, imgData)
           break
         }
         case 23: {
-          fw.write(damagedPath, imgData, reportStatus(mstId, 'damaged'))
+          await writeFile(damagedPath, imgData)
           break
         }
         }
@@ -146,7 +106,6 @@ onmessage = e => {
     APPDATA_PATH = data.shift()
     versionMap = getVersionMap()
     fetchLocks = new Map()
-    fileWriteStatus = {}
     break
   }
   case 'Request': {
