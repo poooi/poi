@@ -37,13 +37,13 @@
 }
 .ShipView .ship-info {
   display: flex;
-  flex: 1;
+  /* flex: 1; */
   flex-flow: column nowrap;
   justify-content: space-between;
   margin-right: auto;
   min-width: 0;
   padding: 0 4px;
-  width: calc(33% - 4px);
+  width: calc(40% - 4px);
 }
 .ShipView .ship-basic {
   flex: 1;
@@ -76,13 +76,13 @@
 }
 .ShipView .ship-stat {
   display: flex;
-  flex: 1.2;
+  /* flex: 1.2; */
   flex-flow: column nowrap;
   font-size: 90%;
   justify-content: space-between;
   margin-left: auto;
   min-width: 120px;
-  width: calc(66% - 4px);
+  width: calc(60% - 4px);
 }
 .ShipView .landbase-stat {
   flex: 1;
