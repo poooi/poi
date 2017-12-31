@@ -1,18 +1,16 @@
-.MainView .ndock-panel.flex {
-  /*border: 1px solid skyblue;*/
+.MainView .ndock-panel {
   display: flex;
   flex-flow: column;
-  justify-content: space-between;
   flex-grow: 1;
+  justify-content: space-between;
 }
 
-.MainView .panel-item.ndock-item {
+.MainView .ndock-item {
+  align-items: center;
   display: flex;
   flex: 1;
-  align-items: center;
-  padding-top: 0;
   padding-bottom: 0;
-  /*margin: 3px;*/
+  padding-top: 0;
 }
 
 .MainView .ndock-item .ndock-name {
@@ -25,9 +23,9 @@
 }
 
 .MainView .ndock-item .empty-dock {
-  width: 37px;
+  color: #777;
+  font-size: 16px;
   height: 20px;
   text-align: center;
-  font-size: 16px;
-  color: #777;
+  width: 37px;
 }
