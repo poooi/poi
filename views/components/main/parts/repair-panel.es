@@ -2,14 +2,16 @@ const { ROOT } = window
 import React, { Component, Fragment } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { join as joinString, range } from 'lodash'
+import { join as joinString, range, get } from 'lodash'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
+import cls from 'classnames'
 
 const { i18n } = window
 
 const __ = i18n.main.__.bind(i18n.main)
 
+import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
   repairsSelector,
@@ -35,11 +37,13 @@ export default connect(
     constSelector,
     inRepairShipsDataSelector,
     miscSelector,
-  ], (repairs, {$ships}, inRepairShips, {canNotify}) => ({
+    state => get(state, 'config.poi.enableAvatar', true),
+  ], (repairs, {$ships}, inRepairShips, {canNotify}, enableAvatar) => ({
     repairs,
     $ships,
     inRepairShips,
     canNotify,
+    enableAvatar,
   }))
 )(class RepairPanel extends Component {
   getLabelStyle = (props, timeRemaining) => {
@@ -58,7 +62,7 @@ export default connect(
     preemptTime: 60,
   }
   render() {
-    const {canNotify, repairs, $ships, inRepairShips} = this.props
+    const {canNotify, repairs, $ships, inRepairShips, enableAvatar} = this.props
     // The reason why we use an array to pass in inRepairShips and indexify it
     // into ships, is because by passing an array we can make use of
     // createDeepCompareArraySelector which only deep compares arrays, and
@@ -85,7 +89,17 @@ export default connect(
                   i18n.resources.__($ships[ships[dock.api_ship_id].api_ship_id].api_name)
             const completeTime = dock.api_complete_time || -1
             return (
-              <div key={i} className="panel-item ndock-item">
+              <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})}>
+                {
+                  enableAvatar &&
+                  <Fragment>
+                    {
+                      dock.api_state > 0
+                        ? <Avatar height={20} mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])} />
+                        : <div style={{ width: 37 }}></div>
+                    }
+                  </Fragment>
+                }
                 <span className="ndock-name">{dockName}</span>
 
                 <OverlayTrigger placement='left' overlay={

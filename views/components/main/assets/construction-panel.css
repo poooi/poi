@@ -1,13 +1,19 @@
-.MainView .kdock-panel .panel-body {
+.MainView .kdock-panel.flex {
   /*border: 1px solid orange;*/
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  flex-grow: 1;
 }
-.MainView .kdock-item {
+
+.MainView .panel-item.kdock-item {
   display: flex;
   flex: 1;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
 }
+
 .MainView .kdock-item .kdock-name {
   flex: 1;
   margin-right: auto;

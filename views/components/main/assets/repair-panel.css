@@ -1,14 +1,20 @@
-.MainView .ndock-panel .panel-body {
+.MainView .ndock-panel.flex {
   /*border: 1px solid skyblue;*/
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  flex-grow: 1;
 }
-.MainView .ndock-item {
+
+.MainView .panel-item.ndock-item {
   display: flex;
   flex: 1;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
   /*margin: 3px;*/
 }
+
 .MainView .ndock-item .ndock-name {
   flex: 1;
   margin-right: auto;
