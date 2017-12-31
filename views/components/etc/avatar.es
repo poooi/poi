@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { avatarWorker } from 'views/services/worker'
+import FontAwesome from 'react-fontawesome'
 
 import './assets/avatar.css'
 
@@ -62,7 +63,7 @@ export class Avatar extends PureComponent {
               className="ship-avatar"
               style={{ height: this.props.height, marginLeft: -Math.round(0.555 * this.props.height) }}
               src={join(avatarCachePath, `${this.props.mstId}_${this.props.isDamaged ? 'd' : 'n'}.png`)} />
-            : <div />
+            : <div className="ship-avatar-loading"><FontAwesome name='spinner' pulse /></div>
         }
       </div>
     )
