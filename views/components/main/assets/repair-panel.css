@@ -26,6 +26,7 @@
 
 .MainView .ndock-item .empty-dock {
   width: 37px;
+  height: 20px;
   text-align: center;
   font-size: 16px;
   color: #777;
