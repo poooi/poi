@@ -125,10 +125,10 @@
 }
 .ShipView .ship-fb {
   display: flex;
-  flex: 1;
+  flex: 0.75;
   flex-direction: column;
   margin: 5px 5px 0 5px;
-  width: calc(24% - 50px);
+  width: calc(24% - 100px);
 }
 .ShipView .hp-progress {
   /*border-radius: 0px;*/
