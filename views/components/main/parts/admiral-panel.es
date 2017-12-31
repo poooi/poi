@@ -104,23 +104,9 @@ const getNextQuest = () => {
   return now.startOf('hour')
 }
 
-const getNextSenka = () => {
-  const now = moment.utc()
-  const nowDate = now.date()
-  const nowHour = now.hour()
-  const currentMonth = moment.tz('Asia/Tokyo').month()
-  const endOfMonth = moment.utc().month(currentMonth).endOf('month')
-  if (endOfMonth.date() === nowDate && nowHour >= 13 && nowHour < 15) {
-    return endOfMonth.subtract(11, 'hours').add(1, 'months')
-  }
-  return endOfMonth.subtract(11, 'hours')
-}
+const getNextSenka = () => moment.tz('Asia/Tokyo').endOf('month').subtract(2, 'hour')
 
-const getNextEO = () => {
-  const currentMonth = moment.tz('Asia/Tokyo').month()
-  const endOfMonth = moment.utc().month(currentMonth).endOf('month')
-  return endOfMonth.subtract(9, 'hours')
-}
+const getNextEO = () => moment.tz('Asia/Tokyo').endOf('month')
 
 const getNewMomentMap = {
   Practice: getNextPractice,
