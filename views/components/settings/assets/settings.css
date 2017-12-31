@@ -66,3 +66,12 @@
   margin-bottom: 4px;
 }
 
+.SettingsView .data-version {
+  white-space: nowrap;
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.SettingsView .poi-others {
+  padding-bottom: 20px;
+}

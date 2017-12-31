@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 import { shell, remote } from 'electron'
 import Divider from '../components/divider'
-import { Grid, Col, Row, Button, Label } from 'react-bootstrap'
+import { Grid, Col, Row, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
-import { sync as globSync } from 'glob'
+import { get, range } from 'lodash'
 import CheckboxLabel from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
-import fetch from 'node-fetch'
 
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
+import FCD from './fcd'
+import WctfDB from './wctf-db'
 
 import '../assets/misc.css'
 
@@ -26,97 +26,14 @@ config.on('config.set', (path, value) => {
   }
 })
 
-const serverList = [
-  "https://poi.io/fcd/",
-  "https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/",
-  "http://7xj6zx.com1.z0.glb.clouddn.com/",
-]
-
-const fetchHeader = new Headers()
-fetchHeader.set("Cache-Control", "max-age=0")
-const defaultFetchOption = {
-  method: "GET",
-  cache: "default",
-  headers: fetchHeader,
-}
-
 const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
   ? `${url}&s=160`
   : url
 
-const initState = {}
-
 const Misc = connect(state => ({
-  version: state.fcd.version || initState,
   layout: get(state, 'config.poi.layout', 'horizontal'),
 }))(class Misc extends Component {
-  updateData = (cacheMode = 'default') => async () => {
-    // Update from local
-    const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
-    for (const file of localFileList) {
-      if (!file.includes('meta.json')) {
-        const data = require(file)
-        const version = get(data, 'meta.version')
-        const name = get(data, 'meta.name')
-        if (name && version) {
-          const localVersion = get(this.props.version, name, '1970/01/01/01')
-          if (version > localVersion) {
-            this.props.dispatch({
-              type: '@@updateFCD',
-              value: data,
-            })
-          }
-        }
-      }
-    }
-    // Update from server
-    let flag
-    for (const server of serverList) {
-      flag = true
-
-      const fileList = await await fetch(`${server}meta.json`, defaultFetchOption)
-        .then(res => res.ok ? res.json() : undefined)
-        .catch(e => undefined)
-      if (fileList) {
-        for (const file of fileList) {
-          const localVersion = get(this.props.version, file.name, '1970/01/01/01')
-          if (file.version > localVersion) {
-            // eslint-disable-next-line no-console
-            console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
-
-            const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
-              .then(res => res.ok ? res.json() : undefined)
-              .catch(e => undefined)
-            if (data) {
-              this.props.dispatch({
-                type: '@@updateFCD',
-                value: data,
-              })
-            } else {
-              flag = false
-            }
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
-          }
-        }
-      } else {
-        flag = false
-      }
-      if (flag) {
-        // eslint-disable-next-line no-console
-        console.log(`Update fcd from ${server} successfully in mode ${cacheMode}.`)
-        break
-      } else {
-        console.warn(`Update fcd from ${server} failed in mode ${cacheMode}.`)
-      }
-    }
-  }
-  componentDidMount() {
-    this.updateData()()
-  }
   render() {
-    const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
       <div id='poi-others' className='poi-others'>
         <Grid>
@@ -178,20 +95,10 @@ const Misc = connect(state => ({
         <Divider text={__("Data version")} />
         <Grid>
           <Col xs={12}>
-            {
-              fcds.map(fcd => (
-                fcd
-                  ? <span key={fcd[0]}>
-                    {fcd[0]}: <Label bsStyle="primary">{fcd[1]}</Label>
-                  </span>
-                  : null
-              ))
-            }
+            <FCD />
           </Col>
           <Col xs={12}>
-            <Button onClick={this.updateData('reload')}>
-              {__("Update data")}
-            </Button>
+            <WctfDB />
           </Col>
         </Grid>
         <Divider text={__('Performance Monitor')} />
@@ -219,16 +126,16 @@ const Misc = connect(state => ({
         <Grid className="opencollective container">
           <Col xs={12}>
             <div>
-              <a href="https://opencollective.com/poi/sponsor/0/website"><img src="https://opencollective.com/poi/sponsor/0/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/1/website"><img src="https://opencollective.com/poi/sponsor/1/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/2/website"><img src="https://opencollective.com/poi/sponsor/2/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/3/website"><img src="https://opencollective.com/poi/sponsor/3/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/4/website"><img src="https://opencollective.com/poi/sponsor/4/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/5/website"><img src="https://opencollective.com/poi/sponsor/5/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/6/website"><img src="https://opencollective.com/poi/sponsor/6/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/7/website"><img src="https://opencollective.com/poi/sponsor/7/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/8/website"><img src="https://opencollective.com/poi/sponsor/8/avatar.svg" /></a>
-              <a href="https://opencollective.com/poi/sponsor/9/website"><img src="https://opencollective.com/poi/sponsor/9/avatar.svg" /></a>
+              {
+                range(10).map(i => (
+                  <a
+                    href={`https://opencollective.com/poi/sponsor/${i}/website`}
+                    key={i}
+                  >
+                    <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
+                  </a>
+                ))
+              }
             </div>
             <div>
               <a href="https://opencollective.com/poi#backers">

@@ -10,7 +10,7 @@ import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
 import { dispatchBattleResult } from './redux/battle'
 
 const cachePosition = '_storeCache'
-const targetPaths = ['const', 'info', 'fcd']
+const targetPaths = ['const', 'info', 'fcd', 'wctf']
 const storeCache = (function() {
   try {
     // clears store when in safe mode

@@ -165,6 +165,7 @@
   "Deploying, please wait": "部署中，請等待",
   "Quit app and install updates": "退出以安裝更新",
   "Selected directory for %s is not valid.": "爲%s所選擇的路徑無效。",
+  "Who Calls The Fleet Database": "「是誰呼叫艦隊」數據庫",
   "Show shipgirl avatar": "顯示艦娘頭像",
   "Delete avatar cache": "刪除頭像快取"
 }
