@@ -69,10 +69,11 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
     shipsId,
   }))
 )
+
 const FleetShipView = connect(
   (state, {fleetId}) =>
     fleetShipViewDataSelectorFactory(fleetId)(state)
-)(({fleetId, shipsId}) =>
+)(({ fleetId, shipsId, enableAvatar }) =>
   <Fragment>
     <div className='fleet-name'>
       <TopAlert
@@ -86,6 +87,7 @@ const FleetShipView = connect(
           <ShipRow
             key={shipId}
             shipId={shipId}
+            enableAvatar={enableAvatar}
           />
         )
       }
@@ -127,12 +129,15 @@ const ShipView = connect((state, props) => ({
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
   airBaseCnt: get(state, 'info.airbase.length', 0),
+  enableAvatar: get(state, 'config.poi.enableAvatar', true),
 })
 )(class ShipView extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     fleetCount: PropTypes.number.isRequired,
     activeFleetId: PropTypes.number.isRequired,
+    airBaseCnt: PropTypes.number.isRequired,
+    enableAvatar: PropTypes.bool,
   }
 
   constructor(props) {
@@ -194,7 +199,7 @@ const ShipView = connect((state, props) => ({
             {
               times(4).map(i =>
                 <div className="ship-deck" key={i}>
-                  <FleetShipView fleetId={i} />
+                  <FleetShipView fleetId={i} enableAvatar={this.props.enableAvatar} />
                 </div>
               )
             }

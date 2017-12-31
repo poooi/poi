@@ -59,13 +59,22 @@
   display: flex;
   justify-content: space-between;
   margin: 5px 0 5px 0;
+  position: relative;
 }
 .miniship .ship-details-mini .ship-item {
+  align-items: center;
   display: flex;
   flex: 1;
   flex-flow: row nowrap;
   overflow: hidden;
+  position: relative;
   white-space: nowrap;
+}
+.miniship .ship-avatar-container {
+  position: absolute;
+}
+.miniship .ship-avatar-padding {
+  padding-left: 55px;
 }
 .miniship .ship-details-mini .ship-item .ship-info {
   display: flex;

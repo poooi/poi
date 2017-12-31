@@ -1,41 +1,33 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { join as joinString, range, get } from 'lodash'
+import FA from 'react-fontawesome'
+
 const { ROOT, i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
+import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
 
 import '../assets/construction-panel.css'
+
+const EmptyDock = ({ state }) => (
+  <div className="empty-dock">
+    <FA name={state === 0 ? 'inbox' : 'lock'} />
+  </div>
+)
 
 export default connect(
   (state) => ({
     constructions: state.info.constructions,
     $ships: state.const.$ships,
     canNotify: state.misc.canNotify,
+    enableAvatar: get(state, 'config.poi.enableAvatar', true),
   })
 )(class ConstructionPanel extends Component {
-  handleResponse = (e) => {
-    const {path} = e.detail
-    switch (path) {
-    case '/kcsapi/api_start2':
-      // Do not notify before entering the game
-      this.canNotify = false
-      break
-    case '':
-      this.canNotify = true
-      break
-    }
-  }
-  componentDidMount() {
-    window.addEventListener('game.response', this.handleResponse)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('game.response', this.handleResponse)
-  }
   getMaterialImage = (idx) => {
     return <MaterialIcon materialId={idx} className="material-icon" />
   }
@@ -59,9 +51,9 @@ export default connect(
     message: (names) => `${joinString(names, ', ')} ${__('built')}`,
   }
   render() {
-    const {constructions, canNotify} = this.props
+    const {constructions, canNotify, enableAvatar} = this.props
     return (
-      <div>
+      <Fragment>
         {
           range(4).map((i) => {
             const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
@@ -86,6 +78,16 @@ export default connect(
                 </Tooltip>
               }>
                 <div className="panel-item kdock-item">
+                  {
+                    enableAvatar &&
+                    <Fragment>
+                      {
+                        dock.api_state > 0
+                          ? <Avatar height={20} mstId={get(constructions, [i, 'api_created_ship_id'])} />
+                          : <EmptyDock state={dock.api_state} />
+                      }
+                    </Fragment>
+                  }
                   <span className="kdock-name">{dockName}</span>
                   <CountdownNotifierLabel
                     timerKey={`kdock-${i+1}`}
@@ -103,7 +105,7 @@ export default connect(
             )
           })
         }
-      </div>
+      </Fragment>
     )
   }
 })

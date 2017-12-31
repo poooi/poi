@@ -34,6 +34,7 @@
 .MainView .panel-body {
   /*padding: 8px;*/
   width: 100%;
+  height: 100%;
 }
 /* universal */
 .MainView .teitoku-panel,
@@ -165,4 +166,23 @@
 }
 .MainView .countdown-timer-label {
   flex: none;
+}
+
+#dock-panel-tabs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+#dock-panel-tabs .tab-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#dock-panel-tabs .tab-content .tab-pane.active {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }

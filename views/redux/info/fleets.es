@@ -94,6 +94,23 @@ export function reducer(state=[], {type, postBody, body}) {
     }
     return fleets
   }
+  case '@@Response/kcsapi/api_req_member/updatedeckname': {
+    const newName = postBody.api_name
+    const fleetId = parseInt(postBody.api_deck_id)
+    // assertion: fleetIndex !== -1 as this comes from in-game action
+    const fleetIndex = state.findIndex(f => f.api_id === fleetId)
+    const fleet = state[fleetIndex]
+    if (fleet.api_name !== newName) {
+      const newState = [...state]
+      newState[fleetIndex] = {
+        ...fleet,
+        api_name: newName,
+      }
+      return newState
+    } else {
+      return state
+    }
+  }
   }
   return state
 }

@@ -10,9 +10,9 @@ import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 export const PaneBodyMini = connect(() => {
   return (state, {fleetId}) => ({
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
+    enableAvatar: get(state, 'config.poi.enableAvatar', true),
   })
-}
-)(({fleetId, shipsId}) =>
+})(({ fleetId, shipsId, enableAvatar }) =>
   <Fragment>
     <div className='fleet-name'>
       <TopAlert
@@ -26,6 +26,7 @@ export const PaneBodyMini = connect(() => {
           <MiniShipRow
             key={shipId}
             shipId={shipId}
+            enableAvatar={enableAvatar}
           />
         )
       }
