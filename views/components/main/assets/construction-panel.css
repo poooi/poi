@@ -22,3 +22,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.MainView .kdock-item .empty-dock {
+  width: 37px;
+  text-align: center;
+  font-size: 16px;
+  color: #777;
+}

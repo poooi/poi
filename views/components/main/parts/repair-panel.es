@@ -6,6 +6,7 @@ import { join as joinString, range, get } from 'lodash'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import cls from 'classnames'
+import FA from 'react-fontawesome'
 
 const { i18n } = window
 
@@ -29,6 +30,12 @@ const inRepairShipsDataSelector = createSelector([
   inRepairShipsIdSelector,
   shipsSelector,
 ], (inRepairShipsId, ships) => inRepairShipsId.map((shipId) => ships[shipId])
+)
+
+const EmptyDock = ({ state }) => (
+  <div className="empty-dock">
+    <FA name={state === 0 ? 'bath' : 'lock'} />
+  </div>
 )
 
 export default connect(
@@ -96,7 +103,7 @@ export default connect(
                     {
                       dock.api_state > 0
                         ? <Avatar height={20} mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])} />
-                        : <div style={{ width: 37 }}></div>
+                        : <EmptyDock state={dock.api_state} />
                     }
                   </Fragment>
                 }

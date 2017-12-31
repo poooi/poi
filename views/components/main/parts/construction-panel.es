@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import React, { Component, Fragment } from 'react'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { join as joinString, range, get } from 'lodash'
+import FA from 'react-fontawesome'
+
 const { ROOT, i18n } = window
 const __ = i18n.main.__.bind(i18n.main)
 
@@ -11,6 +13,12 @@ import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
 
 import '../assets/construction-panel.css'
+
+const EmptyDock = ({ state }) => (
+  <div className="empty-dock">
+    <FA name={state === 0 ? 'inbox' : 'lock'} />
+  </div>
+)
 
 export default connect(
   (state) => ({
@@ -76,7 +84,7 @@ export default connect(
                       {
                         dock.api_state > 0
                           ? <Avatar height={20} mstId={get(constructions, [i, 'api_created_ship_id'])} />
-                          : <div style={{ width: 37 }}></div>
+                          : <EmptyDock state={dock.api_state} />
                       }
                     </Fragment>
                   }
