@@ -2,7 +2,7 @@ import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
@@ -141,7 +141,7 @@ export const MiniShipRow = connect(
               <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
                 {
                   hideShipName &&
-                  <div className="ship-info">
+                  <div className="ship-info" >
                     <div>
                       {i18n.resources.__($ship.api_name || '??')}
                     </div>
@@ -157,23 +157,25 @@ export const MiniShipRow = connect(
         >
           <div className="ship-item">
             { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33} /> }
-            {
-              !hideShipName &&
-              <OverlayTrigger placement='top' overlay={
-                <Tooltip id={`miniship-exp-${ship.api_id}`}>
-                  Next. {(ship.api_exp || [])[1]}
-                </Tooltip>
-              }>
-                <div className="ship-info">
-                  <span className="ship-name" style={labelStatusStyle}>
-                    {i18n.resources.__($ship.api_name || '??')}
-                  </span>
-                  <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                    Lv. {ship.api_lv || '??'}
-                  </span>
-                </div>
-              </OverlayTrigger>
-            }
+            <OverlayTrigger placement='top' overlay={
+              <Tooltip id={`miniship-exp-${ship.api_id}`}>
+                Next. {(ship.api_exp || [])[1]}
+              </Tooltip>
+            }>
+              <div className={classNames("ship-info", { "ship-avatar-padding": enableAvatar })}>
+                {
+                  !hideShipName &&
+                  <Fragment>
+                    <span className="ship-name" style={labelStatusStyle}>
+                      {i18n.resources.__($ship.api_name || '??')}
+                    </span>
+                    <span className="ship-lv-text top-space" style={labelStatusStyle}>
+                      Lv. {ship.api_lv || '??'}
+                    </span>
+                  </Fragment>
+                }
+              </div>
+            </OverlayTrigger>
             <div className="ship-stat">
               <div className="div-row">
                 <span className="ship-hp" style={labelStatusStyle}>
