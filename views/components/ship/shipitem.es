@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import classNames from 'classnames'
@@ -61,6 +61,7 @@ export const ShipRow = connect(
     $shipTypes: PropTypes.object,
     labelStatus: PropTypes.number,
     enableAvatar: PropTypes.bool,
+    compact: PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -72,7 +73,13 @@ export const ShipRow = connect(
   }
 
   render() {
-    const { ship, $ship, $shipTypes, labelStatus, enableAvatar } = this.props
+    const { ship, $ship, $shipTypes, labelStatus, enableAvatar, compact } = this.props
+    const hideShipName = enableAvatar && compact
+    const shipInfoClass = classNames("ship-info", {
+      "ship-avatar-padding": enableAvatar,
+      "ship-info-show": !hideShipName,
+      "ship-info-hidden": hideShipName,
+    })
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
     const fuelPercentage = ship.api_fuel / $ship.api_fuel_max * 100
@@ -91,62 +98,79 @@ export const ShipRow = connect(
     )
     return (
       <div className="ship-item">
-        <div className="ship-tile">
-          { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} /> }
-          <div className={classNames("ship-basic-item", { "ship-avatar-padding": enableAvatar })}>
-            <div className="ship-info" style={labelStatusStyle}>
-              <div className="ship-basic">
-                <span className="ship-lv">
-                  Lv. {ship.api_lv || '??'}
-                </span>
-                <span className='ship-type'>
-                  {i18n.resources.__(($shipTypes[$ship.api_stype] || {api_name: '??'}).api_name)}
-                </span>
-                <span className="ship-speed">
-                  {__(getSpeedLabel(ship.api_soku))}
-                </span>
-                <AACIIndicator shipId={ship.api_id} />
-                <OASWndicator shipId={ship.api_id} />
-              </div>
-              <span className="ship-name">
-                {i18n.resources.__($ship.api_name || '??')}
-              </span>
-              <span className="ship-exp">
-                Next. {(ship.api_exp || [])[1]}
-              </span>
-            </div>
-            <OverlayTrigger
-              placement='right'
-              overlay={
-                ship.api_ndock_time > 0 ?
-                  <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
-                    {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
-                  </Tooltip>
-                  : <noscript />
-              }
-            >
-              <div className="ship-stat">
-                <div className="div-row">
-                  <span className="ship-hp" style={labelStatusStyle}>
-                    {ship.api_nowhp} / {ship.api_maxhp}
-                  </span>
-                  <div className="status-label">
-                    <StatusLabel label={labelStatus}/>
-                  </div>
-                  <div className="status-cond" style={labelStatusStyle}>
-                    <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
-                      <FontAwesome name='star' />{ship.api_cond}
-                    </span>
-                  </div>
+        { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} /> }
+        <OverlayTrigger placement='top' overlay={
+          hideShipName ? (
+            <Tooltip id={`miniship-exp-${ship.api_id}`}>
+              <div className="ship-info">
+                <div>
+                  {i18n.resources.__($ship.api_name || '??')}
                 </div>
-                <span className="hp-progress top-space" style={labelStatusStyle}>
-                  <ProgressBar bsStyle={getHpStyle(hpPercentage)}
-                    now={hpPercentage} />
+                <div>
+                  Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
+                </div>
+              </div>
+            </Tooltip>
+          ) : <span />
+        }>
+          <div className={shipInfoClass} style={labelStatusStyle}>
+            <div className="ship-basic">
+              <span className="ship-lv">
+                Lv. {ship.api_lv || '??'}
+              </span>
+              <span className='ship-type'>
+                {i18n.resources.__(($shipTypes[$ship.api_stype] || {api_name: '??'}).api_name)}
+              </span>
+              <span className="ship-speed">
+                {__(getSpeedLabel(ship.api_soku))}
+              </span>
+              <AACIIndicator shipId={ship.api_id} />
+              <OASWndicator shipId={ship.api_id} />
+            </div>
+            {
+              !hideShipName && (
+                <Fragment>
+                  <span className="ship-name">
+                    {i18n.resources.__($ship.api_name || '??')}
+                  </span>
+                  <span className="ship-exp">
+                    Next. {(ship.api_exp || [])[1]}
+                  </span>
+                </Fragment>
+              )
+            }
+          </div>
+        </OverlayTrigger>
+        <OverlayTrigger
+          placement='right'
+          overlay={
+            ship.api_ndock_time > 0 ?
+              <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
+                {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
+              </Tooltip>
+              : <span />
+          }
+        >
+          <div className="ship-stat">
+            <div className="div-row">
+              <span className="ship-hp" style={labelStatusStyle}>
+                {ship.api_nowhp} / {ship.api_maxhp}
+              </span>
+              <div className="status-label">
+                <StatusLabel label={labelStatus}/>
+              </div>
+              <div className="status-cond" style={labelStatusStyle}>
+                <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
+                  <FontAwesome name='star' />{ship.api_cond}
                 </span>
               </div>
-            </OverlayTrigger>
+            </div>
+            <span className="hp-progress top-space" style={labelStatusStyle}>
+              <ProgressBar bsStyle={getHpStyle(hpPercentage)}
+                now={hpPercentage} />
+            </span>
           </div>
-        </div>
+        </OverlayTrigger>
         <span className="ship-fb" style={labelStatusStyle}>
           <span style={{flex: 1}}>
             <OverlayTrigger placement='right' overlay={

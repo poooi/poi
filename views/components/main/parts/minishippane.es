@@ -3,16 +3,37 @@ import { MiniShipRow, MiniSquardRow } from './minishipitem'
 import React, { Fragment } from 'react'
 import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
+import { createSelector } from 'reselect'
 
 import TopAlert from 'views/components/ship-parts/topalert'
-import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
+import { fleetShipsIdSelectorFactory, layoutSelector, configLayoutSelector, configDoubleTabbedSelector } from 'views/utils/selectors'
+
+const miniShipRowWidthSelector = createSelector(
+  [
+    layoutSelector,
+    configLayoutSelector,
+    configDoubleTabbedSelector,
+  ], ({ webview, window }, layout, doubleTabbed) => {
+    if (layout === 'horizontal') {
+      if (doubleTabbed) {
+        return ((window.width - webview.width) / 4) - 16
+      }
+      return ((window.width - webview.width) / 2) - 16
+    }
+    if (doubleTabbed) {
+      return (window.width / 4) - 16
+    }
+    return (window.width * 0.4) - 16
+  }
+)
 
 export const PaneBodyMini = connect(() => {
   return (state, {fleetId}) => ({
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
     enableAvatar: get(state, 'config.poi.enableAvatar', true),
+    width: miniShipRowWidthSelector(state),
   })
-})(({ fleetId, shipsId, enableAvatar }) =>
+})(({ fleetId, shipsId, enableAvatar, width }) =>
   <Fragment>
     <div className='fleet-name'>
       <TopAlert
@@ -27,6 +48,7 @@ export const PaneBodyMini = connect(() => {
             key={shipId}
             shipId={shipId}
             enableAvatar={enableAvatar}
+            compact={width < 240}
           />
         )
       }

@@ -74,17 +74,27 @@
   position: absolute;
   z-index: -1;
 }
-.miniship .ship-avatar-padding {
-  padding-left: 55px;
-}
 .miniship .ship-details-mini .ship-item .ship-info {
   display: flex;
-  flex: 1;
+  flex-basis: 0;
   flex-flow: column nowrap;
   font-size: 14px;
   justify-content: space-between;
   min-width: 0;
-  width: 33%;
+  z-index: 1;
+}
+.miniship .ship-details-mini .ship-item .ship-avatar-padding {
+  flex-basis: 61px;
+  padding-left: 58px;
+}
+.miniship .ship-details-mini .ship-item .ship-info-show {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+.miniship .ship-details-mini .ship-item .ship-info-hidden {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 37px;
 }
 .miniship .ship-details-mini .ship-item .ship-info .ship-type,
 .miniship .ship-details-mini .ship-item .ship-info .ship-speed {
@@ -116,7 +126,6 @@
   font-size: 14px;
   justify-content: space-between;
   min-width: 125px;
-  width: 66%;
 }
 .miniship .ship-details-mini .ship-item .landbase-stat {
   flex: 0;

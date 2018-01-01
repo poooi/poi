@@ -18,6 +18,9 @@ import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
+  configLayoutSelector,
+  configDoubleTabbedSelector,
+  layoutSelector,
 } from 'views/utils/selectors'
 
 import './assets/ship.css'
@@ -36,6 +39,25 @@ function getStyle(state, disabled) {
 }
 
 const defaultFleetNames = ['I', 'II', 'III', 'IV']
+
+const shipRowWidthSelector = createSelector(
+  [
+    layoutSelector,
+    configLayoutSelector,
+    configDoubleTabbedSelector,
+  ], ({ webview, window }, layout, doubleTabbed) => {
+    if (layout === 'horizontal') {
+      if (doubleTabbed) {
+        return ((window.width - webview.width) / 2) - 10
+      }
+      return window.width - webview.width - 10
+    }
+    if (doubleTabbed) {
+      return (window.width / 2) - 10
+    }
+    return window.width - 10
+  }
+)
 
 const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
   createSelector([
@@ -61,7 +83,6 @@ const ShipViewSwitchButton = connect(
   </Button>
 )
 
-
 const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
   createSelector([
     fleetShipsIdSelectorFactory(fleetId),
@@ -73,7 +94,7 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
 const FleetShipView = connect(
   (state, {fleetId}) =>
     fleetShipViewDataSelectorFactory(fleetId)(state)
-)(({ fleetId, shipsId, enableAvatar }) =>
+)(({ fleetId, shipsId, enableAvatar, width }) =>
   <Fragment>
     <div className='fleet-name'>
       <TopAlert
@@ -88,6 +109,7 @@ const FleetShipView = connect(
             key={shipId}
             shipId={shipId}
             enableAvatar={enableAvatar}
+            compact={width < 480}
           />
         )
       }
@@ -130,6 +152,7 @@ const ShipView = connect((state, props) => ({
   activeFleetId: get(state, 'ui.activeFleetId', 0),
   airBaseCnt: get(state, 'info.airbase.length', 0),
   enableAvatar: get(state, 'config.poi.enableAvatar', true),
+  width: shipRowWidthSelector(state),
 })
 )(class ShipView extends Component {
   static propTypes = {
@@ -138,6 +161,7 @@ const ShipView = connect((state, props) => ({
     activeFleetId: PropTypes.number.isRequired,
     airBaseCnt: PropTypes.number.isRequired,
     enableAvatar: PropTypes.bool,
+    width: PropTypes.number,
   }
 
   constructor(props) {
@@ -199,7 +223,11 @@ const ShipView = connect((state, props) => ({
             {
               times(4).map(i =>
                 <div className="ship-deck" key={i}>
-                  <FleetShipView fleetId={i} enableAvatar={this.props.enableAvatar} />
+                  <FleetShipView
+                    fleetId={i}
+                    enableAvatar={this.props.enableAvatar}
+                    width={this.props.width}
+                  />
                 </div>
               )
             }

@@ -95,12 +95,12 @@ export const Slotitems = connect(
           'text-warning': onslotWarning,
         })
         const itemSpan =
-          <span>
+          <div>
             <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
             <span className={onslotClassName} style={getBackgroundStyle()} >
               {onslotText}
             </span>
-          </span>
+          </div>
 
         return (
           <div key={equipIdx} className="slotitem-container">
@@ -166,14 +166,14 @@ export const LandbaseSlotitems = connect(
             </div>
           </Tooltip>
         const itemSpan =
-          <span>
+          <div>
             <span style={iconStyle}>
               <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
             </span>
             {!isMini && <span className={onslotClassName} style={getBackgroundStyle()}>
               {onslotText}
             </span>}
-          </span>
+          </div>
 
         return (
           <div key={equipIdx} className="slotitem-container">
