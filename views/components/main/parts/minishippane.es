@@ -18,7 +18,7 @@ const miniShipRowWidthSelector = createSelector(
       if (doubleTabbed) {
         return ((window.width - webview.width) / 4) - 16
       }
-      return (window.width - webview.width / 2) - 16
+      return ((window.width - webview.width) / 2) - 16
     }
     if (doubleTabbed) {
       return (window.width / 4) - 16
@@ -33,31 +33,28 @@ export const PaneBodyMini = connect(() => {
     enableAvatar: get(state, 'config.poi.enableAvatar', true),
     width: miniShipRowWidthSelector(state),
   })
-})(({ fleetId, shipsId, enableAvatar, width }) => {
-  const compact = width < 240
-  return (
-    <Fragment>
-      <div className='fleet-name'>
-        <TopAlert
-          fleetId={fleetId}
-          isMini={true}
-        />
-      </div>
-      <div className={"ship-details-mini"}>
-        {
-          (shipsId || []).map((shipId, i) =>
-            <MiniShipRow
-              key={shipId}
-              shipId={shipId}
-              enableAvatar={enableAvatar}
-              compact={compact}
-            />
-          )
-        }
-      </div>
-    </Fragment>
-  )
-})
+})(({ fleetId, shipsId, enableAvatar, width }) =>
+  <Fragment>
+    <div className='fleet-name'>
+      <TopAlert
+        fleetId={fleetId}
+        isMini={true}
+      />
+    </div>
+    <div className={"ship-details-mini"}>
+      {
+        (shipsId || []).map((shipId, i) =>
+          <MiniShipRow
+            key={shipId}
+            shipId={shipId}
+            enableAvatar={enableAvatar}
+            compact={width < 240}
+          />
+        )
+      }
+    </div>
+  </Fragment>
+)
 
 export const LBViewMini = connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
