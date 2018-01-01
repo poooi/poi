@@ -23,12 +23,7 @@ const alignCSS = document.createElement('style')
 const alignInnerCSS = document.createElement('style')
 
 window.align = async function () {
-  let zoom = await new Promise((resolve, reject) => {
-    remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width", (result) => {
-      resolve(result)
-    })
-  })
-  zoom = zoom / 800
+  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width") / 800
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
   webFrame.setLayoutZoomLevelLimits(-999999, 999999)
@@ -40,35 +35,35 @@ window.align = async function () {
     return
   }
   alignCSS.innerHTML =
-  `html {
-    overflow: hidden;
-  }
-  #w, #main-ntg {
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-  }
-  #game_frame {
-    width: 800px !important;
-    position: absolute;
-    top: 0px;
-    left: 0;
-  }
-  .naviapp {
-    z-index: -1;
-  }
-  #ntg-recommend {
-    display: none !important;
-  }
-  `
+`html {
+  overflow: hidden;
+}
+#w, #main-ntg {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+}
+#game_frame {
+  width: 800px !important;
+  position: absolute;
+  top: 0px;
+  left: 0;
+}
+.naviapp {
+  z-index: -1;
+}
+#ntg-recommend {
+  display: none !important;
+}
+`
   alignInnerCSS.innerHTML = `
-  #spacing_top {
-    display: none;
-  }
-  `
+#spacing_top {
+  display: none;
+}
+`
 }
 
 window.unalign = () => {
@@ -106,9 +101,9 @@ const handleDOMContentLoaded = () => {
       clearInterval(t)
       console.warn('Successed.', new Date(), `retry count: ${count}`)
     } catch (e) {
-      console.warn('Failed. Will retry in 100ms.')
+      console.warn('Failed. Will retry in 1000ms.')
     }
-  }, 100)
+  }, 1000)
   document.removeEventListener("DOMContentLoaded", handleDOMContentLoaded)
 }
 
