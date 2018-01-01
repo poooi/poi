@@ -20,25 +20,26 @@
 }
 .ShipView .ship-info {
   display: flex;
+  flex-basis: 0;
   flex-flow: column nowrap;
   justify-content: space-between;
   margin-right: auto;
   min-width: 0;
   padding: 0 4px;
-  width: calc(40% - 4px);
-}
-.ShipView .ship-avatar-padding {
-  flex-basis: 100px;
-  padding-left: 95px;
 }
 .ShipView .ship-info-show {
-  flex-grow: 1;
+  flex-grow: 1.2;
   flex-shrink: 0;
 }
 .ShipView .ship-info-hidden {
   flex-grow: 0;
   flex-shrink: 0;
   height: 58px;
+}
+.ShipView .ship-avatar-padding {
+  flex-basis: 100px;
+  flex-grow: 1;
+  padding-left: 95px;
 }
 .ShipView .ship-basic {
   flex: 1;
@@ -150,7 +151,7 @@
   padding-right: 0;
 }
 .ShipView .ship-slot{
-  flex-basis: 145px;
+  flex-basis: 142px;
   flex-grow: 0;
   flex-shrink: 0;
   overflow: hidden;

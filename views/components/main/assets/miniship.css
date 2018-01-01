@@ -76,6 +76,7 @@
 }
 .miniship .ship-details-mini .ship-item .ship-info {
   display: flex;
+  flex-basis: 0;
   flex-flow: column nowrap;
   font-size: 14px;
   justify-content: space-between;
