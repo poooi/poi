@@ -109,7 +109,7 @@ const FleetShipView = connect(
             key={shipId}
             shipId={shipId}
             enableAvatar={enableAvatar}
-            compact={width < 500}
+            compact={width < 480}
           />
         )
       }
