@@ -111,7 +111,7 @@ export const ShipRow = connect(
                 </div>
               </div>
             </Tooltip>
-          ) : <noscript />
+          ) : <span />
         }>
           <div className={shipInfoClass} style={labelStatusStyle}>
             <div className="ship-basic">
@@ -148,7 +148,7 @@ export const ShipRow = connect(
               <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
                 {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
               </Tooltip>
-              : <noscript />
+              : <span />
           }
         >
           <div className="ship-stat">
