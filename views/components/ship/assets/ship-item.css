@@ -6,31 +6,13 @@
   overflow: hidden;
   padding-left: 3px;
   padding-top: 7px;
+  position: relative;
   white-space: nowrap;
 }
 .ShipView .ship-avatar-container {
   position: absolute;
+  top: 9px;
   z-index: -1;
-}
-.ShipView .ship-avatar-padding {
-  padding-left: 95px;
-}
-.ShipView .ship-basic-item {
-  align-items: flex-end;
-  display: flex;
-  flex: 1;
-  flex-flow: row nowrap;
-  white-space: nowrap;
-  width: 100%;
-}
-.ShipView .ship-tile {
-  align-items: center;
-  display: flex;
-  flex: 4.2;
-  justify-content: space-between;
-  padding-right: 4px;
-  position: relative;
-  width: calc(76% - 104px);
 }
 .ShipView .ship-item .progress {
   height: 7px;
@@ -38,7 +20,6 @@
 }
 .ShipView .ship-info {
   display: flex;
-  /* flex: 1; */
   flex-flow: column nowrap;
   justify-content: space-between;
   margin-right: auto;
@@ -46,12 +27,28 @@
   padding: 0 4px;
   width: calc(40% - 4px);
 }
+.ShipView .ship-avatar-padding {
+  flex-basis: 100px;
+  padding-left: 95px;
+}
+.ShipView .ship-info-show {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+.ShipView .ship-info-hidden {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 58px;
+}
 .ShipView .ship-basic {
   flex: 1;
   font-size: 80%;
   opacity: 0.8;
   padding-top: 0;
   vertical-align: bottom;
+}
+.ShipView .ship-info-hidden .ship-basic {
+  padding-left: 5px;
 }
 .ShipView .ship-exp {
   flex: 1;
@@ -77,13 +74,13 @@
 }
 .ShipView .ship-stat {
   display: flex;
-  /* flex: 1.2; */
+  flex-basis: 0;
   flex-flow: column nowrap;
+  flex-grow: 2;
   font-size: 90%;
   justify-content: space-between;
   margin-left: auto;
   min-width: 120px;
-  width: calc(60% - 4px);
 }
 .ShipView .landbase-stat {
   flex: 1;
@@ -128,11 +125,9 @@
   display: flex;
   flex: 0.75;
   flex-direction: column;
-  margin: 5px 5px 0 5px;
-  width: calc(24% - 100px);
+  margin: 5px 2px 0 5px;
 }
 .ShipView .hp-progress {
-  /*border-radius: 0px;*/
   background-color: inherit;
   vertical-align: bottom;
 }
@@ -155,9 +150,11 @@
   padding-right: 0;
 }
 .ShipView .ship-slot{
-  flex: none;
-  margin: 5px 5px 5px 5px;
-  width: 130px;
+  flex-basis: 145px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 5px 5px 5px 5px;
 }
 .ShipView .ship-aaci,
 .ShipView .ship-oasw {

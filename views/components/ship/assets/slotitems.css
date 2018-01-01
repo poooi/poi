@@ -1,7 +1,14 @@
+.ShipView .slotitems {
+  display: flex;
+}
 .ShipView .slotitem-container {
   display: inline;
+  margin-right: 2px;
   position: relative;
   vertical-align: bottom;
+}
+.ShipView .slotitem-container > div {
+  width: max-content;
 }
 .ShipView .slotitem-container .slotitem-onslot {
   border-radius: 9px;
@@ -31,6 +38,5 @@
 }
 .ShipView .slotitem-container .svg {
   height: 23px;
-  margin-right: 2px;
   width: 26px;
 }
