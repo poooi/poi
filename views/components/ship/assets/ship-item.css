@@ -10,6 +10,7 @@
 }
 .ShipView .ship-avatar-container {
   position: absolute;
+  z-index: -1;
 }
 .ShipView .ship-avatar-padding {
   padding-left: 95px;

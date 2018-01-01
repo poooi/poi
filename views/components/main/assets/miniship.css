@@ -72,6 +72,7 @@
 }
 .miniship .ship-avatar-container {
   position: absolute;
+  z-index: -1;
 }
 .miniship .ship-avatar-padding {
   padding-left: 55px;
