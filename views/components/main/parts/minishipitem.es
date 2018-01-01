@@ -115,6 +115,7 @@ export const MiniShipRow = connect(
     layout: PropTypes.string,
     doubleTabbed: PropTypes.bool,
     enableAvatar: PropTypes.bool,
+    compact: PropTypes.bool,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -125,7 +126,8 @@ export const MiniShipRow = connect(
   }
 
   render() {
-    const { ship, $ship, labelStatus, layout, doubleTabbed, enableAvatar } = this.props
+    const { ship, $ship, labelStatus, layout, doubleTabbed, enableAvatar, compact } = this.props
+    const hideShipName = enableAvatar && compact
     if (!ship)
       return <div></div>
     const labelStatusStyle = getStatusStyle(labelStatus)
@@ -133,10 +135,21 @@ export const MiniShipRow = connect(
     return (
       <div className="ship-tile">
         <OverlayTrigger
-          placement={(!doubleTabbed && layout == 'vertical') ? 'left' : 'right'}
+          placement={(!doubleTabbed && layout === 'vertical') ? 'left' : 'right'}
           overlay={
-            (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0) ?
+            (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0 || hideShipName) ?
               <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
+                {
+                  hideShipName &&
+                  <div className="ship-info">
+                    <div>
+                      {i18n.resources.__($ship.api_name || '??')}
+                    </div>
+                    <div>
+                      Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
+                    </div>
+                  </div>
+                }
                 <Slotitems shipId={ship.api_id} />
               </Tooltip>
               : <Tooltip id={`ship-pop-${ship.api_id}`} style={{display: 'none'}}></Tooltip>
@@ -144,20 +157,23 @@ export const MiniShipRow = connect(
         >
           <div className="ship-item">
             { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33} /> }
-            <OverlayTrigger placement='top' overlay={
-              <Tooltip id={`miniship-exp-${ship.api_id}`}>
-                Next. {(ship.api_exp || [])[1]}
-              </Tooltip>
-            }>
-              <div className={classNames("ship-info", { "ship-avatar-padding": enableAvatar })}>
-                <span className="ship-name" style={labelStatusStyle}>
-                  {i18n.resources.__($ship.api_name || '??')}
-                </span>
-                <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                  Lv. {ship.api_lv || '??'}
-                </span>
-              </div>
-            </OverlayTrigger>
+            {
+              !hideShipName &&
+              <OverlayTrigger placement='top' overlay={
+                <Tooltip id={`miniship-exp-${ship.api_id}`}>
+                  Next. {(ship.api_exp || [])[1]}
+                </Tooltip>
+              }>
+                <div className="ship-info">
+                  <span className="ship-name" style={labelStatusStyle}>
+                    {i18n.resources.__($ship.api_name || '??')}
+                  </span>
+                  <span className="ship-lv-text top-space" style={labelStatusStyle}>
+                    Lv. {ship.api_lv || '??'}
+                  </span>
+                </div>
+              </OverlayTrigger>
+            }
             <div className="ship-stat">
               <div className="div-row">
                 <span className="ship-hp" style={labelStatusStyle}>
