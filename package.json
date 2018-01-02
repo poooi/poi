@@ -176,11 +176,18 @@
         "github"
       ],
       "target": [
+        "snap",
         "7z",
         "deb",
         "rpm",
         "pacman",
         "AppImage"
+      ]
+    },
+    "snap": {
+      "plugs": [
+        "default",
+        "desktop"
       ]
     },
     "directories": {
