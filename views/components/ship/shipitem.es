@@ -102,7 +102,7 @@ export const ShipRow = connect(
         <OverlayTrigger placement='top' overlay={
           hideShipName ? (
             <Tooltip id={`miniship-exp-${ship.api_id}`}>
-              <div className="ship-info">
+              <div className="ship-tooltip-info">
                 <div>
                   {i18n.resources.__($ship.api_name || '??')}
                 </div>

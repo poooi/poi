@@ -118,7 +118,7 @@ export const LandbaseSlotitems = connect(
         const maxOnslot = api_maxeq[equipIdx]
         const onslotWarning = equipData && onslot < maxOnslot
         const onslotText = equipData ? onslot : maxOnslot
-        const onslotClassName = classNames("slotitem-onslot", {
+        const onslotClassName = classNames("slotitem-onslot-mini", {
           'show': showOnslot && api_state[equipIdx] === 1,
           'hide': !showOnslot || api_state[equipIdx] !== 1,
           'text-warning': onslotWarning,

@@ -41,37 +41,32 @@ export const SquardRow = connect((state, { squardId }) =>
   })()
   return (
     <div className="ship-item">
-      <div className="ship-tile">
-        <div className="ship-basic-item">
-          <div className="ship-info">
-            <span className="ship-name">
-              {api_name}
-            </span>
-            <div className="ship-exp">
-              <span className='ship-lv'>
-                {__('Range')}: {api_distance}
-              </span>
-              <br />
-              <span className="ship-lv">
-                {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
-              </span>
-            </div>
-          </div>
-          <div className="ship-stat landbase-stat">
-            <div className="div-row">
-              <span className="ship-hp">
-                {api_nowhp} / {api_maxhp}
-              </span>
-              <div className="lbac-status-label">
-                {statuslabel}
-              </div>
-            </div>
-            <span className="hp-progress top-space">
-              <ProgressBar bsStyle={getHpStyle(hpPercentage)}
-                now={hpPercentage} />
-            </span>
+      <div className="ship-info ship-info-show">
+        <span className="ship-name">
+          {api_name}
+        </span>
+        <div className="ship-exp">
+          <span className='ship-lv'>
+            {__('Range')}: {api_distance}
+          </span>
+          <span className="ship-type">
+            {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
+          </span>
+        </div>
+      </div>
+      <div className="ship-stat landbase-stat">
+        <div className="div-row">
+          <span className="ship-hp">
+            {api_nowhp} / {api_maxhp}
+          </span>
+          <div className="lbac-status-label">
+            {statuslabel}
           </div>
         </div>
+        <span className="hp-progress top-space">
+          <ProgressBar bsStyle={getHpStyle(hpPercentage)}
+            now={hpPercentage} />
+        </span>
       </div>
       <div className="ship-slot">
         <LandbaseSlotitems landbaseId={squardId} isMini={false} />

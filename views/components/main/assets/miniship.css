@@ -128,7 +128,8 @@
   min-width: 125px;
 }
 .miniship .ship-details-mini .ship-item .landbase-stat {
-  flex: 0;
+  flex-basis: 110px;
+  flex-grow: 0;
   min-width: 110px;
   width: 110px;
 }
@@ -204,12 +205,12 @@
   flex-flow: row;
   margin-top: 4px;
 }
-.ship-pop .slotitem-container-mini .slotitem-name-mini {
+.ship-pop .slotitem-name-mini {
   max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
 }
-.ship-pop .slotitem-container-mini .slotitem-onslot-mini {
+.slotitem-onslot-mini {
   font-size: 90%;
   margin-left: 2px;
   padding: 3px 6px 3px 5px;

@@ -83,8 +83,10 @@
   min-width: 120px;
 }
 .ShipView .landbase-stat {
-  flex: 1;
+  flex-basis: 90px;
+  flex-grow: 0.8;
   min-width: 90px;
+  padding-right: 5px;
 }
 .ShipView .ship-hp {
   align-self: flex-start;

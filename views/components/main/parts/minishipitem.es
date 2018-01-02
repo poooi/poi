@@ -155,7 +155,7 @@ export const MiniShipRow = connect(
               <Tooltip id={`miniship-exp-${ship.api_id}`}>
                 {
                   hideShipName ? (
-                    <div className="ship-info">
+                    <div className="ship-tooltip-info">
                       <div>
                         {i18n.resources.__($ship.api_name || '??')}
                       </div>
@@ -237,7 +237,7 @@ export const MiniSquardRow = connect((state, { squardId }) =>
   return (
     <div className="ship-tile">
       <div className="ship-item">
-        <div className="ship-info">
+        <div className="ship-info ship-info-show">
           <span className="ship-name">
             {api_name}
           </span>
