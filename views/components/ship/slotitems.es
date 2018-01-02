@@ -21,13 +21,6 @@ import './assets/slotitems.css'
 
 const { i18n } = window
 
-function getBackgroundStyle() {
-  return window.isDarkTheme ?
-    {backgroundColor: 'rgba(33, 33, 33, 0.7)'}
-    :
-    {backgroundColor: 'rgba(255, 255, 255, 0.7)'}
-}
-
 const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipDataSelectorFactory(shipId),
@@ -87,32 +80,23 @@ export const Slotitems = connect(
         const equipIconId = equipData ? $equip.api_type[3] : 0
         const showOnslot = !equipData || isExslot || equipIsAircraft($equip)
         const maxOnslot = isExslot ? 0 : api_maxeq[equipIdx]
-        const onslotText = isExslot ? "+" : equipData ? onslot : maxOnslot
+        const onslotText = isExslot ? "+" : equipData ? `${onslot}` : `${maxOnslot}`
         const onslotWarning = equipData && onslot < maxOnslot
-        const onslotClassName = classNames("slotitem-onslot", {
-          'show': showOnslot,
-          'hide': !showOnslot,
+        const slotitemClassName = classNames("slotitem-container", {
+          'slotitem-onslot-show': showOnslot,
+          'slotitem-onslot-hide': !showOnslot,
           'text-warning': onslotWarning,
         })
-        const itemSpan =
-          <div>
-            <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
-            <span className={onslotClassName} style={getBackgroundStyle()} >
-              {onslotText}
-            </span>
-          </div>
+
+        const item = <div className={slotitemClassName} data-onslot={onslotText}><SlotitemIcon className="slotitem-img" slotitemId={equipIconId} /></div>
 
         return (
-          <div key={equipIdx} className="slotitem-container">
-            {
-              itemOverlay ?
-                <OverlayTrigger placement='left' overlay={itemOverlay}>
-                  {itemSpan}
-                </OverlayTrigger>
-                :
-                itemSpan
-            }
-          </div>
+          itemOverlay ?
+            <OverlayTrigger placement='left' overlay={itemOverlay}>
+              {item}
+            </OverlayTrigger>
+            :
+            item
         )
       })
       }
@@ -137,6 +121,11 @@ export const LandbaseSlotitems = connect(
         const onslotClassName = classNames("slotitem-onslot", {
           'show': showOnslot && api_state[equipIdx] === 1,
           'hide': !showOnslot || api_state[equipIdx] !== 1,
+          'text-warning': onslotWarning,
+        })
+        const slotitemClassName = classNames("slotitem-container", {
+          'slotitem-onslot-show': showOnslot,
+          'slotitem-onslot-hide': !showOnslot,
           'text-warning': onslotWarning,
         })
         const iconStyle = {
@@ -165,27 +154,15 @@ export const LandbaseSlotitems = connect(
               }
             </div>
           </Tooltip>
-        const itemSpan =
-          <div>
-            <span style={iconStyle}>
-              <SlotitemIcon className='slotitem-img' slotitemId={equipIconId} />
-            </span>
-            {!isMini && <span className={onslotClassName} style={getBackgroundStyle()}>
-              {onslotText}
-            </span>}
-          </div>
+        const itemSpan = <div className={slotitemClassName} data-onslot={onslotText} style={iconStyle}><SlotitemIcon className="slotitem-img" slotitemId={equipIconId} /></div>
 
         return (
-          <div key={equipIdx} className="slotitem-container">
-            {
-              itemOverlay ?
-                <OverlayTrigger placement='left' overlay={itemOverlay}>
-                  {itemSpan}
-                </OverlayTrigger>
-                :
-                itemSpan
-            }
-          </div>
+          itemOverlay ?
+            <OverlayTrigger placement='left' overlay={itemOverlay}>
+              {itemSpan}
+            </OverlayTrigger>
+            :
+            itemSpan
         )
       })
       }

@@ -215,8 +215,11 @@
   padding: 3px 6px 3px 5px;
 }
 .ship-pop .slotitem-container-mini span.show {
+  height: 16px;
+  line-height: 10px;
+  margin-left: 5px;
   /* csslint ignore:start */
-  display: inline !important;
+  padding: 3px 6px 3px;
   /* csslint ignore:end */
 }
 .ship-pop .slotitem-container-mini .png {
