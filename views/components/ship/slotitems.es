@@ -135,7 +135,7 @@ export const LandbaseSlotitems = connect(
         const itemOverlay = equipData &&
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
-              <div style={{display: 'flex'}}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>

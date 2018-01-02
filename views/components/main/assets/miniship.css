@@ -200,8 +200,9 @@
 .miniship .top-space {
   margin-top: 5px;
 }
-.ship-pop .slotitem-container-mini {
-  display :flex;
+.slotitem-container-mini {
+  align-items: center;
+  display: flex;
   flex-flow: row;
   margin-top: 4px;
 }
