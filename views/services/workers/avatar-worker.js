@@ -1,5 +1,3 @@
-import { setTimeout } from 'timers';
-
 const { readFromBufferP, extractImages } = require('swf-extract')
 const { join } = require('path-extra')
 const {
