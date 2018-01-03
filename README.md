@@ -115,3 +115,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 ## License
 [The MIT License](https://github.com/poooi/poi/blob/master/LICENSE)
+
+NOTE: THE SOFTWARE ICON AND SVG ICONS IS NOT LICENSED BY MIT AND COULD NOT BE USED
+IN PROJECTS NOT ASSOCIATED WITH POI.
