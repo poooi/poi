@@ -1,3 +1,5 @@
+import { setTimeout } from 'timers';
+
 const { readFromBufferP, extractImages } = require('swf-extract')
 const { join } = require('path-extra')
 const {
@@ -45,6 +47,11 @@ const checkExistence = (mstId) => getFilePath(mstId).map(path => {
   }
 }).reduce((a, b) => a && b)
 
+const runRetry = ({ serverIp, path, mstId }) => {
+  fetchLocks.set(path, false)
+  setTimeout(() => mayExtractWithLock({ serverIp, path, mstId }), 1000)
+}
+
 const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
   // some other process is already fetching that data
   if (fetchLocks.get(path) || !serverIp)
@@ -53,6 +60,10 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
   fetchLocks.set(path, true)
   const [ normalPath, damagedPath ] = getFilePath(mstId)
   const fetched = await fetch(`http://${serverIp}${path}`)
+    .catch(e => {
+      runRetry({ serverIp, path, mstId })
+      throw e
+    })
   if (!fetched.ok)
     throw new Error('fetch failed.')
   const ab = await fetched.arrayBuffer()
@@ -78,7 +89,10 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
         }
       }
     })
-  )
+  ).catch(e => {
+    runRetry({ serverIp, path, mstId })
+    throw e
+  })
   postMessage([ 'Ready', mstId ])
   // release lock
   fetchLocks.set(path, false)
