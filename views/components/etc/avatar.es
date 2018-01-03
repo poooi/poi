@@ -14,11 +14,13 @@ export class Avatar extends PureComponent {
   static propTypes = {
     mstId: PropTypes.number.isRequired,
     height: PropTypes.number,
+    marginMagic: PropTypes.number,
     isDamaged: PropTypes.bool,
   }
 
   static defaultProps = {
     height: 121,
+    marginMagic: 0.555,
     isDamaged: false,
   }
 
@@ -69,7 +71,7 @@ export class Avatar extends PureComponent {
             : this.state.available ?
               <img
                 className="ship-avatar"
-                style={{ height: this.props.height, marginLeft: -Math.round(0.555 * this.props.height) }}
+                style={{ height: this.props.height, marginLeft: -Math.round(this.props.marginMagic * this.props.height) }}
                 src={join(avatarCachePath, `${this.props.mstId}_${this.props.isDamaged ? 'd' : 'n'}.png`)} />
               : <div className="ship-avatar-loading"><FontAwesome name='spinner' pulse /></div>
         }
