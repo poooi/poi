@@ -24,11 +24,16 @@ export class Avatar extends PureComponent {
 
   state = {
     available: false,
+    failed: false,
   }
 
   onMessage = e => {
-    if (e.data[0] === 'Ready' && e.data[1] === this.props.mstId) {
-      this.setState({ available: true })
+    if (e.data[1] === this.props.mstId) {
+      if (e.data[0] === 'Ready') {
+        this.setState({ available: true })
+      } else if (e.data[0] === 'Failed') {
+        this.setState({ failed: true })
+      }
     }
   }
 
@@ -56,14 +61,17 @@ export class Avatar extends PureComponent {
     return (
       <div className="ship-avatar-container" style={{
         width: Math.round(1.85 * this.props.height),
+        height: this.props.height,
       }}>
         {
-          this.state.available ?
-            <img
-              className="ship-avatar"
-              style={{ height: this.props.height, marginLeft: -Math.round(0.555 * this.props.height) }}
-              src={join(avatarCachePath, `${this.props.mstId}_${this.props.isDamaged ? 'd' : 'n'}.png`)} />
-            : <div className="ship-avatar-loading"><FontAwesome name='spinner' pulse /></div>
+          this.state.failed ?
+            <div className="ship-avatar-loading"><FontAwesome name='times' /></div>
+            : this.state.available ?
+              <img
+                className="ship-avatar"
+                style={{ height: this.props.height, marginLeft: -Math.round(0.555 * this.props.height) }}
+                src={join(avatarCachePath, `${this.props.mstId}_${this.props.isDamaged ? 'd' : 'n'}.png`)} />
+              : <div className="ship-avatar-loading"><FontAwesome name='spinner' pulse /></div>
         }
       </div>
     )

@@ -45,12 +45,16 @@ const checkExistence = (mstId) => getFilePath(mstId).map(path => {
   }
 }).reduce((a, b) => a && b)
 
-const runRetry = ({ serverIp, path, mstId }) => {
+const runRetry = ({ serverIp, path, mstId }, retryCnt) => {
   fetchLocks.set(path, false)
-  setTimeout(() => mayExtractWithLock({ serverIp, path, mstId }), 1000)
+  if (retryCnt > 5) {
+    postMessage([ 'Failed', mstId ])
+    return
+  }
+  setTimeout(() => mayExtractWithLock({ serverIp, path, mstId }, retryCnt), 1000)
 }
 
-const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
+const mayExtractWithLock = async ({ serverIp, path, mstId }, retryCnt = 0) => {
   // some other process is already fetching that data
   if (fetchLocks.get(path) || !serverIp)
     return
@@ -59,11 +63,9 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
   const [ normalPath, damagedPath ] = getFilePath(mstId)
   const fetched = await fetch(`http://${serverIp}${path}`)
     .catch(e => {
-      runRetry({ serverIp, path, mstId })
+      runRetry({ serverIp, path, mstId }, retryCnt + 1)
       throw e
     })
-  if (!fetched.ok)
-    throw new Error('fetch failed.')
   const ab = await fetched.arrayBuffer()
   const swfData = await readFromBufferP(new Buffer(ab))
   await Promise.all(
@@ -73,7 +75,7 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
         'characterId' in data &&
         ['jpeg', 'png', 'gif'].includes(data.imgType)
       ) {
-        const {characterId, imgData} = data
+        const { characterId, imgData } = data
         getCacheDirPath()
         switch (characterId) {
         case 21: {
@@ -88,7 +90,7 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }) => {
       }
     })
   ).catch(e => {
-    runRetry({ serverIp, path, mstId })
+    runRetry({ serverIp, path, mstId }, retryCnt + 1)
     throw e
   })
   postMessage([ 'Ready', mstId ])
