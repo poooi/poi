@@ -40,7 +40,7 @@ export default {
               <MiniShip />
             </div>
             <Panel className="combined-panels panel-col">
-              <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs">
+              <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs" className="dock-panel-tabs">
                 <Tab eventKey={1} title={__('Docking')}>
                   <div className="ndock-panel flex">
                     <RepairPanel />

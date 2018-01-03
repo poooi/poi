@@ -1,7 +1,9 @@
 .MainView .resource-panel .panel-body {
-  /*border: 1px solid orange;*/
+  align-items: center;
+  display: flex;
   padding-bottom: 1px;
   padding-top: 1px;
+
 }
 .MainView .resource-panel .material-container {
   display: flex;
