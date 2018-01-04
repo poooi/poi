@@ -147,6 +147,7 @@
   flex-shrink: 1;
   margin-left: 5px;
   margin-top: -1px;
+  padding-right: 40px;
   position: relative;
   text-align: center;
   vertical-align: middle;
@@ -164,8 +165,9 @@
   flex-basis: inherit;
   flex-flow: nowrap;
   flex-grow: 0;
-  flex-shrink: 0;
-  position: relative;
+  flex-shrink: 1;
+  position: absolute;
+  right: 0;
   text-align: right;
   white-space: nowrap;
 }
