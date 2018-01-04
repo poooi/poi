@@ -3,7 +3,10 @@
   display: flex;
   padding-bottom: 1px;
   padding-top: 1px;
-
+}
+.MainView .resource-panel .panel-body>.container{
+  flex: 1;
+  margin: 0;
 }
 .MainView .resource-panel .material-container {
   display: flex;
