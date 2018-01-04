@@ -68,7 +68,6 @@
   flex-flow: row nowrap;
   overflow: hidden;
   position: relative;
-  white-space: nowrap;
 }
 .miniship .ship-avatar-container {
   position: absolute;
@@ -121,11 +120,12 @@
 }
 .miniship .ship-details-mini .ship-item .ship-stat {
   display: flex;
-  flex: 2;
+  flex-basis: 0;
   flex-flow: column nowrap;
+  flex-grow: 2;
+  flex-shrink: 1;
   font-size: 14px;
   justify-content: space-between;
-  min-width: 125px;
 }
 .miniship .ship-details-mini .ship-item .landbase-stat {
   flex-basis: 110px;
@@ -135,17 +135,21 @@
 }
 .miniship .ship-details-mini .ship-item .ship-stat .ship-hp {
   align-self: flex-start;
-  flex: 1;
+  flex-basis: 60px;
+  flex-grow: 1;
+  flex-shrink: 0;
 }
 .ship-pop .status-label,
 .miniship .ship-details-mini .ship-item .ship-stat .status-label {
   display: inline-block;
+  flex-basis: 20px;
+  flex-grow: 0;
+  flex-shrink: 1;
   margin-left: 5px;
   margin-top: -1px;
   position: relative;
   text-align: center;
   vertical-align: middle;
-  width: 20px;
   z-index: 100;
 }
 .miniship .ship-details-mini .ship-item .ship-stat .status-label .label {
@@ -157,9 +161,12 @@
 }
 .miniship .ship-details-mini .ship-item .ship-stat .ship-cond {
   align-self: flex-end;
-  display: table;
-  margin-left: auto;
+  flex-basis: inherit;
+  flex-flow: nowrap;
+  flex-grow: 0;
+  flex-shrink: 0;
   text-align: right;
+  white-space: nowrap;
   width: 40px;
 }
 .miniship .ship-details-mini .ship-item .ship-stat .ship-cond .cond-indicator {

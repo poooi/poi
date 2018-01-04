@@ -190,10 +190,8 @@ export const MiniShipRow = connect(
                 <div className="status-label">
                   <StatusLabel label={labelStatus} />
                 </div>
-                <div style={labelStatusStyle}>
-                  <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
-                    <FontAwesome name='star' />{ship.api_cond}
-                  </span>
+                <div className={"ship-cond " + getCondStyle(ship.api_cond)}>
+                  <FontAwesome name='star' />{ship.api_cond}
                 </div>
               </div>
               <span className="hp-progress top-space" style={labelStatusStyle}>
