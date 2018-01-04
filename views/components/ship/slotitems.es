@@ -1,7 +1,7 @@
 import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React from 'react'
+import React, { Fragment } from 'react'
 import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { memoize } from 'lodash'
@@ -92,11 +92,11 @@ export const Slotitems = connect(
 
         return (
           itemOverlay ?
-            <OverlayTrigger placement='left' overlay={itemOverlay}>
+            <OverlayTrigger placement='left' overlay={itemOverlay} key={equipIdx}>
               {item}
             </OverlayTrigger>
             :
-            item
+            <Fragment key={equipIdx}>item</Fragment>
         )
       })
       }
@@ -157,12 +157,11 @@ export const LandbaseSlotitems = connect(
         const itemSpan = <div className={slotitemClassName} data-onslot={onslotText} style={iconStyle}><SlotitemIcon className="slotitem-img" slotitemId={equipIconId} /></div>
 
         return (
-          itemOverlay ?
-            <OverlayTrigger placement='left' overlay={itemOverlay}>
+          itemOverlay
+            ? <OverlayTrigger placement='left' overlay={itemOverlay} key={equipIdx}>
               {itemSpan}
             </OverlayTrigger>
-            :
-            itemSpan
+            : <Fragment key={equipIdx}>{itemSpan}</Fragment>
         )
       })
       }
