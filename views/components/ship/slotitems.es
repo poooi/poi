@@ -96,7 +96,7 @@ export const Slotitems = connect(
               {item}
             </OverlayTrigger>
             :
-            <Fragment key={equipIdx}>item</Fragment>
+            <Fragment key={equipIdx}>{item}</Fragment>
         )
       })
       }
