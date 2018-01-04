@@ -14,7 +14,7 @@
 
 .miniship .ship-tabpane {
   /* csslint ignore:start */
-  padding: 1px;
+  padding: 2px;
   /* csslint ignore:end */
   width: 100%;
 }
@@ -165,9 +165,9 @@
   flex-flow: nowrap;
   flex-grow: 0;
   flex-shrink: 0;
+  position: relative;
   text-align: right;
   white-space: nowrap;
-  width: 40px;
 }
 .miniship .ship-details-mini .ship-item .ship-stat .ship-cond .cond-indicator {
   display: inline-block;
