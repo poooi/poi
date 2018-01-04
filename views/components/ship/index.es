@@ -20,6 +20,7 @@ import {
   fleetShipsIdSelectorFactory,
   configLayoutSelector,
   configDoubleTabbedSelector,
+  configZoomLevelSelector,
   layoutSelector,
 } from 'views/utils/selectors'
 
@@ -45,17 +46,18 @@ const shipRowWidthSelector = createSelector(
     layoutSelector,
     configLayoutSelector,
     configDoubleTabbedSelector,
-  ], ({ webview, window }, layout, doubleTabbed) => {
+    configZoomLevelSelector,
+  ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
     if (layout === 'horizontal') {
       if (doubleTabbed) {
-        return ((window.width - webview.width) / 2) - 10
+        return (((window.width - webview.width) / 2) - 10) / zoomLevel
       }
-      return window.width - webview.width - 10
+      return (window.width - webview.width - 10) / zoomLevel
     }
     if (doubleTabbed) {
-      return (window.width / 2) - 10
+      return ((window.width / 2) - 10) / zoomLevel
     }
-    return window.width - 10
+    return (window.width - 10) / zoomLevel
   }
 )
 

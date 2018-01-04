@@ -6,24 +6,31 @@ import { Alert } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 
 import TopAlert from 'views/components/ship-parts/topalert'
-import { fleetShipsIdSelectorFactory, layoutSelector, configLayoutSelector, configDoubleTabbedSelector } from 'views/utils/selectors'
+import {
+  fleetShipsIdSelectorFactory,
+  layoutSelector,
+  configLayoutSelector,
+  configZoomLevelSelector,
+  configDoubleTabbedSelector,
+} from 'views/utils/selectors'
 
 const miniShipRowWidthSelector = createSelector(
   [
     layoutSelector,
     configLayoutSelector,
     configDoubleTabbedSelector,
-  ], ({ webview, window }, layout, doubleTabbed) => {
+    configZoomLevelSelector,
+  ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
     if (layout === 'horizontal') {
       if (doubleTabbed) {
-        return ((window.width - webview.width) / 4) - 16
+        return (((window.width - webview.width) / 4) - 16) / zoomLevel
       }
-      return ((window.width - webview.width) / 2) - 16
+      return (((window.width - webview.width) / 2) - 16) / zoomLevel
     }
     if (doubleTabbed) {
-      return (window.width / 4) - 16
+      return ((window.width / 4) - 16) / zoomLevel
     }
-    return (window.width * 0.4) - 16
+    return ((window.width * 0.4) - 16) / zoomLevel
   }
 )
 

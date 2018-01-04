@@ -106,6 +106,9 @@ export const configLayoutSelector = createSelector(configSelector,
   (config) => get(config, 'poi.layout', 'horizontal'))
 export const configDoubleTabbedSelector = createSelector(configSelector,
   (config) => get(config, 'poi.tabarea.double', false))
+export const configZoomLevelSelector = createSelector(configSelector,
+  (config) => get(config, 'poi.zoomLevel', 1))
+
 
 export const condTickSelector = (state) => state.timers.cond.tick
 
