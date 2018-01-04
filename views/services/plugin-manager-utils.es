@@ -293,6 +293,9 @@ const postEnableProcess = (plugin) => {
       if (!get(windowOptions, 'webPreferences.preload')) {
         set(windowOptions, 'webPreferences.preload', join(ROOT, 'assets', 'js', 'plugin-preload.js'))
       }
+      if (!get(windowOptions, 'webPreferences.nodeIntegrationInWorker')) {
+        set(windowOptions, 'webPreferences.nodeIntegrationInWorker', true)
+      }
     } else {
       windowOptions = {
         x: config.get('poi.window.x', 0),
@@ -304,6 +307,7 @@ const postEnableProcess = (plugin) => {
           webSecurity: false,
           plugins: true,
           experimentalFeatures: true,
+          nodeIntegrationInWorker: true,
         },
       }
     }
