@@ -91,6 +91,13 @@ export function reducer(state={}, {type, body, postBody}) {
     }
     break
   }
+  case '@@info.ships@RepairCompleted': {
+    const {api_ship_id} = body
+    return {
+      ...state,
+      [api_ship_id]: completeRepair(state[api_ship_id]),
+    }
+  }
   }
   return state
 }
