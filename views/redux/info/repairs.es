@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { compareUpdate } from 'views/utils/tools'
 import { observer } from 'redux-observers'
 
@@ -12,8 +13,6 @@ const emptyRepair = {
   api_ship_id: 0,
   api_state: 0,
 }
-
-import _ from 'lodash'
 
 export function reducer(state=[], {type, body, postBody}) {
   switch (type) {
