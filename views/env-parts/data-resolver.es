@@ -155,10 +155,6 @@ const handleProxyNetworkError = ([domain, path, url]) => {
 
 const handleGetServer = (server) => {
   const {ip, num: id, name} = server
-  window._serverIp = ip
-  window._serverId = id
-  window._serverName = name
-
   const {dispatch} = window
   dispatch({
     type: '@@ServerReady',

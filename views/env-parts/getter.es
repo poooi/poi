@@ -106,7 +106,15 @@ Object.defineProperty(window, '_ndocks', {get: () => {
 Object.defineProperty(window, '_eventMapRanks', {get: () => {
   return mapValues(window.getStore('info.maps'), (m) => get(m, 'api_eventmap.api_selected_rank'))
 }})
-
+Object.defineProperty(window, '_serverIp', {get: () => {
+  return window.getStore('info.server.ip')
+}})
+Object.defineProperty(window, '_serverId', {get: () => {
+  return window.getStore('info.server.id')
+}})
+Object.defineProperty(window, '_serverName', {get: () => {
+  return window.getStore('info.server.name')
+}})
 const initShips = (dispatch, current, previous) => {
   window._ships = new Proxy(window.getStore('info.ships'), {
     get: (target, property, receiver) => {
