@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
-import { get, set, debounce } from 'lodash'
+import { get, set, debounce, compact } from 'lodash'
 import { remote } from 'electron'
 
 import { middleware as promiseActionMiddleware } from './middlewares/promise-action'
@@ -104,26 +104,28 @@ if (!window.isMain) {
 }
 ipc.on('update', action => store.dispatch(action))
 
-// When any targetPath is modified, store it into localStorage
-if (window.isMain)
-  observe(store,
-    targetPaths.map((path) => autoCacheObserver(store, path))
-  )
+observe(store, compact([
+  // When any targetPath is modified, store it into localStorage
+  ...(window.isMain ? targetPaths.map((path) => autoCacheObserver(store, path)) : []),
 
-// Save quest tracking to the file when it changes
-if (window.isMain)
-  observe(store, [observer(
+  // Save quest tracking to the file when it changes
+  window.isMain && observer(
     (state) => state.info.quests.records,
     (dispatch, current, previous) => saveQuestTracking(current)
-  )])
+  ),
+
+  // Dispatch an action '@@BattleResult' when a battle is completed
+  observer(
+    (state) => state.battle.result,
+    dispatchBattleResult,
+  ),
+
+  // observe on docking status and send an action to update info.ships
+  // when docking is done.
+  dockingCompleteObserver,
+]))
 
 schedualDailyRefresh(store.dispatch)
-
-// Dispatch an action '@@BattleResult' when a battle is completed
-observe(store, [observer(
-  (state) => state.battle.result,
-  dispatchBattleResult,
-)])
 
 // Use this function to extend extra reducers to the store, such as plugin
 // specific data maintainance.
@@ -148,7 +150,3 @@ export const extendReducer = (function () {
 window.config.get = (path, value) => {
   return get(window.getStore('config'), path, value)
 }
-
-// observe on docking status and send an action to update info.ships
-// when docking is done.
-observe(store, [dockingCompleteObserver])
