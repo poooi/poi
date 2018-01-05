@@ -33,6 +33,18 @@ async function build_map() {
   await writeJSON('map.json', {meta, data})
 }
 
+async function build_shipavatar() {
+  const data = await fs.readJSON('shipavatar.json')
+  const stat = fs.statSync('shipavatar.json')
+  const date = moment(stat.mtime).format('YYYY/MM/DD')
+  const meta = {
+    name: "shipavatar",
+    version: `${date}/01`,
+  }
+  await writeJSON('shipavatar.json', {meta, data})
+}
+
+
 async function build_meta() {
   const flist = fs.readdirSync(DEST)
   const meta = await Promise.all(
@@ -50,6 +62,7 @@ async function build_meta() {
 
   await Promise.all([
     build_map(),
+    build_shipavatar(),
     CSON2JSON('maphp'),
     CSON2JSON('shiptag'),
   ])
