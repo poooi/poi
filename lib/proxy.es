@@ -173,15 +173,15 @@ class Proxy extends EventEmitter {
       req.headers['connection'] = 'close'
       const parsed = url.parse(req.url)
       const isGameApi = parsed.pathname.startsWith('/kcsapi')
-      if (isGameApi) {
-        if (serverList[parsed.hostname] && currentServer !== serverList[parsed.hostname].num) {
-          currentServer = serverList[parsed.hostname].num
+      const serverNum = serverList[parsed.hostname] ? serverList[parsed.hostname].num : -1
+      if (isGameApi && currentServer !== serverNum) {
+        currentServer = serverNum
+        if (serverList[parsed.hostname]) {
           this.emit('network.get.server', {
             ...serverList[parsed.hostname],
             ip: parsed.hostname,
           })
         } else {
-          currentServer = -1
           this.emit('network.get.server', {
             num: -1,
             name: '__UNKNOWN',
