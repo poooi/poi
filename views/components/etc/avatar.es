@@ -5,12 +5,15 @@ import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { avatarWorker } from 'views/services/worker'
 import FontAwesome from 'react-fontawesome'
+import { readJsonSync } from 'fs-extra'
 
 import './assets/avatar.css'
 
-const { APPDATA_PATH, getStore } = window
+const { APPDATA_PATH, getStore, ROOT } = window
 
 const avatarCachePath = join(APPDATA_PATH, 'avatar','cache')
+const serverList = Object.keys(readJsonSync(join(ROOT, 'assets', 'data', 'server.json')))
+
 
 export const Avatar = connect((state, props) => ({
   marginMagic: props.marginMagic || get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`),
@@ -44,7 +47,13 @@ export const Avatar = connect((state, props) => ({
   }
 
   sendMessage = mstId => {
-    avatarWorker.postMessage([ 'Request', mstId, getStore(`const.$graphs.${mstId}.api_version`), getStore(`const.$graphs.${mstId}.api_filename`), getStore('info.server.ip') ])
+    avatarWorker.postMessage([
+      'Request',
+      mstId,
+      getStore(`const.$graphs.${mstId}.api_version`),
+      getStore(`const.$graphs.${mstId}.api_filename`),
+      getStore('info.server.ip', serverList[Math.floor(Math.random() * serverList.length)]),
+    ])
   }
 
   componentDidMount = () => {
