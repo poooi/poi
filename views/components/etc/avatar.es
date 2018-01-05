@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import { get } from 'lodash'
 import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { avatarWorker } from 'views/services/worker'
@@ -10,7 +12,9 @@ const { APPDATA_PATH, getStore } = window
 
 const avatarCachePath = join(APPDATA_PATH, 'avatar','cache')
 
-export class Avatar extends PureComponent {
+export const Avatar = connect((state, props) => ({
+  marginMagic: props.marginMagic || get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`),
+}))(class avatar extends PureComponent {
   static propTypes = {
     mstId: PropTypes.number.isRequired,
     height: PropTypes.number,
@@ -78,4 +82,4 @@ export class Avatar extends PureComponent {
       </div>
     )
   }
-}
+})
