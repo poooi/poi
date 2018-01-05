@@ -7,6 +7,7 @@ import { remote } from 'electron'
 import { middleware as promiseActionMiddleware } from './middlewares/promise-action'
 import { reducerFactory, onConfigChange } from './redux'
 import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
+import { dockingCompleteObserver } from './redux/info/repairs'
 import { dispatchBattleResult } from './redux/battle'
 
 const cachePosition = '_storeCache'
@@ -147,3 +148,7 @@ export const extendReducer = (function () {
 window.config.get = (path, value) => {
   return get(window.getStore('config'), path, value)
 }
+
+// observe on docking status and send an action to update info.ships
+// when docking is done.
+observe(store, [dockingCompleteObserver])

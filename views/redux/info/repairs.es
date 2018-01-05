@@ -1,4 +1,5 @@
 import { compareUpdate } from 'views/utils/tools'
+import { observer } from 'redux-observers'
 
 // Preserved fields: api_id, api_member_id
 const emptyRepair = {
@@ -11,6 +12,8 @@ const emptyRepair = {
   api_ship_id: 0,
   api_state: 0,
 }
+
+import _ from 'lodash'
 
 export function reducer(state=[], {type, body, postBody}) {
   switch (type) {
@@ -30,3 +33,42 @@ export function reducer(state=[], {type, body, postBody}) {
   }
   return state
 }
+
+// observe docking complete events and modify ship HP accordingly.
+export const dockingCompleteObserver = observer(
+  state => state.info.repairs,
+  (dispatch, current, previous) => {
+    /*
+       only observe valid state changes:
+       - the state should be available before and after
+       - no length change allowed
+     */
+    if (
+      !Array.isArray(current) ||
+      !Array.isArray(previous) ||
+      current.length !== previous.length
+    ) {
+      return
+    }
+
+    current.map((repairDataCur, ind) => {
+      const repairDataPrev = previous[ind]
+      const rstId = repairDataPrev.api_ship_id
+
+      if (
+        // roster id is valid
+        _.isInteger(rstId) && rstId > 0 &&
+        // sanity check: now current position should be empty
+        repairDataCur.api_ship_id === 0 &&
+        // state transition: docking complete
+        repairDataPrev.api_state === 1 &&
+        repairDataCur.api_state === 0
+      ) {
+        dispatch({
+          type: '@@info.ships@RepairCompleted',
+          body: {api_ship_id: rstId},
+        })
+      }
+    })
+  }
+)
