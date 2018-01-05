@@ -176,17 +176,17 @@ class Proxy extends EventEmitter {
       if (isGameApi) {
         if (serverList[parsed.hostname] && currentServer !== serverList[parsed.hostname].num) {
           currentServer = serverList[parsed.hostname].num
-          this.emit('network.get.server', Object.assign({}, serverList[parsed.hostname], {
+          this.emit('network.get.server', {
+            ...serverList[parsed.hostname],
             ip: parsed.hostname,
-          }))
+          })
         } else {
           currentServer = -1
-          this.emit('network.get.server', Object.assign({
+          this.emit('network.get.server', {
             num: -1,
             name: '__UNKNOWN',
-          }, {
             ip: parsed.hostname,
-          }))
+          })
         }
       }
       let cacheFile = null
