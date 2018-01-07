@@ -145,7 +145,7 @@ if (process.platform !== 'darwin') {
         {
           label: __('Poi Statistics'),
           click: () => {
-            openExternal('http://db.kcwiki.moe/')
+            openExternal('http://db.kcwiki.org/')
           },
         },
         { type: 'separator' },
@@ -374,7 +374,7 @@ if (process.platform !== 'darwin') {
         {
           label: __('Poi Statistics'),
           click: () => {
-            openExternal('http://db.kcwiki.moe/')
+            openExternal('http://db.kcwiki.org/')
           },
         },
         { type: 'separator' },

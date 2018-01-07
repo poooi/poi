@@ -89,11 +89,11 @@
     "icon": "wrench",
     "author": "Dazzy Ding",
     "link": "https://github.com/yukixz",
-    "deszh-CN": "查看装备改修信息，感谢 [舰娘百科](https://zh.kcwiki.moe) 提供数据",
-    "deszh-TW": "檢視裝備修改訊息，感謝 [艦娘百科](https://zh.kcwiki.moe) 提供數據",
-    "desja-JP": "簡易装備改修表、データは [kcwiki](https://zh.kcwiki.moe) によって提供されている",
-    "desen-US": "Show possible improvements of the day based on data from [Kcwiki](https://zh.kcwiki.moe)",
-    "desko-KR": "간이 장비 개수표, 데이터 제공되어 [kcwiki](https://zh.kcwiki.moe)"
+    "deszh-CN": "查看装备改修信息，感谢 [舰娘百科](https://zh.kcwiki.org) 提供数据",
+    "deszh-TW": "檢視裝備修改訊息，感謝 [艦娘百科](https://zh.kcwiki.org) 提供數據",
+    "desja-JP": "簡易装備改修表、データは [kcwiki](https://zh.kcwiki.org) によって提供されている",
+    "desen-US": "Show possible improvements of the day based on data from [Kcwiki](https://zh.kcwiki.org)",
+    "desko-KR": "간이 장비 개수표, 데이터 제공되어 [kcwiki](https://zh.kcwiki.org)"
   },
   "poi-plugin-item-info": {
     "zh-CN": "装备信息",
@@ -169,11 +169,11 @@
     "icon": "indent",
     "author": "马里酱",
     "link": "https://github.com/malichan",
-    "deszh-CN": "任务信息查询 & 任务面板强化，感谢 [舰娘百科](https://zh.kcwiki.moe) 维护数据。",
-    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝 [艦娘百科](https://zh.kcwiki.moe) 維護數據。",
-    "desja-JP": "任務攻略データや任務パネルの強化、データは [kcwiki](https://zh.kcwiki.moe) によって提供されている。",
-    "desen-US": "Show task infomation & enhance task panel, Data maintained by [kcwiki](https://zh.kcwiki.moe).",
-    "desko-KR": "임무 공략 데이터 & 개방 조건. 데이터 제공되어 [kcwiki](https://zh.kcwiki.moe)."
+    "deszh-CN": "任务信息查询 & 任务面板强化，感谢 [舰娘百科](https://zh.kcwiki.org) 维护数据。",
+    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝 [艦娘百科](https://zh.kcwiki.org) 維護數據。",
+    "desja-JP": "任務攻略データや任務パネルの強化、データは [kcwiki](https://zh.kcwiki.org) によって提供されている。",
+    "desen-US": "Show task infomation & enhance task panel, Data maintained by [kcwiki](https://zh.kcwiki.org).",
+    "desko-KR": "임무 공략 데이터 & 개방 조건. 데이터 제공되어 [kcwiki](https://zh.kcwiki.org)."
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
@@ -187,9 +187,9 @@
     "link": "https://github.com/magicae",
     "deszh-CN": "汇报建造数据、海域掉落数据、开发数据",
     "deszh-TW": "匯報建造數據、海域掉落數據、開發數據",
-    "desja-JP": "統計データベース(http://db.kcwiki.moe)登録用ツール",
-    "desen-US": "Report data to database(http://db.kcwiki.moe)",
-    "desko-KR": "통계 DB(http://db.kcwiki.moe) 데이터 보고용"
+    "desja-JP": "統計データベース(http://db.kcwiki.org)登録用ツール",
+    "desen-US": "Report data to database(http://db.kcwiki.org)",
+    "desko-KR": "통계 DB(http://db.kcwiki.org) 데이터 보고용"
   },
   "poi-plugin-kcwiki-report": {
     "zh-CN": "舰娘百科数据收集",
@@ -201,11 +201,11 @@
     "icon": "pie-chart",
     "author": "grzhan",
     "link": "https://github.com/grzhan",
-    "deszh-CN": "[舰娘百科](http://zh.kcwiki.moe) 数据汇报",
-    "deszh-TW": "[艦娘百科](http://zh.kcwiki.moe) 數據匯報",
-    "desja-JP": "[kcwiki](http://zh.kcwiki.moe) 統計データベース登録用ツール",
-    "desen-US": "Report data to [kcwiki](http://zh.kcwiki.moe) database",
-    "desko-KR": "통계 [kcwiki](http://zh.kcwiki.moe) db 데이터 보고용"
+    "deszh-CN": "[舰娘百科](http://zh.kcwiki.org) 数据汇报",
+    "deszh-TW": "[艦娘百科](http://zh.kcwiki.org) 數據匯報",
+    "desja-JP": "[kcwiki](http://zh.kcwiki.org) 統計データベース登録用ツール",
+    "desen-US": "Report data to [kcwiki](http://zh.kcwiki.org) database",
+    "desko-KR": "통계 [kcwiki](http://zh.kcwiki.org) db 데이터 보고용"
   },
   "poi-plugin-ship-info": {
     "zh-CN": "舰娘信息",
@@ -313,11 +313,11 @@
     "icon": "microphone",
     "author": "grzhan",
     "link": "https://github.com/grzhan",
-    "deszh-CN": "在舰娘说话时显示语音字幕。由 [舰娘百科](http://zh.kcwiki.moe) 开发维护。",
-    "deszh-TW": "在艦娘說話時顯示語音字幕。由 [艦娘百科](http://zh.kcwiki.moe) 開發維護。",
-    "desja-JP": "艦娘セリフの字幕。[kcwiki](http://zh.kcwiki.moe) によって開発された。",
-    "desen-US": "Subtitle of ship girls' quotes, developed by [kcwiki](http://zh.kcwiki.moe)",
-    "desko-KR": "중국어 자막. [kcwiki](http://zh.kcwiki.moe) 에 의해 개발."
+    "deszh-CN": "在舰娘说话时显示语音字幕。由 [舰娘百科](http://zh.kcwiki.org) 开发维护。",
+    "deszh-TW": "在艦娘說話時顯示語音字幕。由 [艦娘百科](http://zh.kcwiki.org) 開發維護。",
+    "desja-JP": "艦娘セリフの字幕。[kcwiki](http://zh.kcwiki.org) によって開発された。",
+    "desen-US": "Subtitle of ship girls' quotes, developed by [kcwiki](http://zh.kcwiki.org)",
+    "desko-KR": "중국어 자막. [kcwiki](http://zh.kcwiki.org) 에 의해 개발."
   },
   "poi-plugin-k2badge": {
     "zh-CN": "签名生成",

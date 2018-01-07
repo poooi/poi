@@ -77,7 +77,7 @@ const Misc = connect(state => ({
                     Discord channel
                   </Button>
               }
-              <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.moe')}>
+              <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.org')}>
                 <FA name="database" /> {__("Database")}
               </Button>
               <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}>
@@ -149,13 +149,13 @@ const Misc = connect(state => ({
           <div className="div-row thanks-to-item">
             <div className='thanks-to-img-container'>
               <img className="thanks-to-img"
-                src="https://upload.kcwiki.moe/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png"
+                src="https://upload.kcwiki.org/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png"
                 style={{
                   WebkitClipPath: 'inset(0px 78% 0px 0px)',
                   maxHeight: '100%',
                   marginLeft: '5%',
                 }}
-                onClick={shell.openExternal.bind(this, 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91')}
+                onClick={shell.openExternal.bind(this, 'https://zh.kcwiki.org/wiki/')}
                 title="KCWiki"
               />
             </div>
