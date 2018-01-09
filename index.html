@@ -49,30 +49,21 @@
     </poi-app>
   </poi-main>
   <script>
+    // Google analytics
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (() => {
+      'use strict';
+      let ElectronCookies = require('@exponent/electron-cookies');
+      ElectronCookies.enable({ origin: 'https://app.poi.io/' });
+      ga('create', 'UA-99082354-1', 'auto');
+      ga('set', 'location', `https://app.poi.io/${window.POI_VERSION}/`);
+      ga('set', 'checkProtocolTask', null);
+    })();
     require('./views/app');
     require('./views/services');
-    // Google analytics
-    if (window.config.get('poi.sendAnalytics', true)) {
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      (() => {
-        'use strict';
-        let ElectronCookies = require('@exponent/electron-cookies');
-        ElectronCookies.enable({ origin: 'https://app.poi.io/' });
-        ga('create', 'UA-99082354-1', 'auto');
-        ga('set', 'location', `https://app.poi.io/${window.POI_VERSION}/`);
-        ga('set', 'checkProtocolTask', null);
-        ga('send', 'pageview');
-        setTimeout(() => {
-          ga('send', 'event', 'theme', window.config.get('poi.theme', 'paperdark'));
-        }, 5000);
-        setInterval(() => {
-          ga('send', 'event', 'heartbeat');
-        }, 300000);
-      })();
-    }
   </script>
 </body>
 </html>

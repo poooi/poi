@@ -17,6 +17,7 @@ import './services/development-prophecy'
 import './services/sortie-dangerous-check'
 import './services/sortie-free-slot-check'
 import './services/event-sortie-check'
+import './services/google-analytics'
 
 const refreshFlash = () =>
   $('kan-game webview').executeJavaScript(`
