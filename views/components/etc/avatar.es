@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { avatarWorker } from 'views/services/worker'
 import FontAwesome from 'react-fontawesome'
-import { readJsonSync } from 'fs-extra'
+import { readJsonSync, accessSync } from 'fs-extra'
 
 import './assets/avatar.css'
 
@@ -14,6 +14,16 @@ const { APPDATA_PATH, getStore, ROOT } = window
 const avatarCachePath = join(APPDATA_PATH, 'avatar','cache')
 const serverList = Object.keys(readJsonSync(join(ROOT, 'assets', 'data', 'server.json')))
 
+const getFilePath = (mstId) => [join(APPDATA_PATH, `${mstId}_n.png`), join(APPDATA_PATH, `${mstId}_d.png`)]
+
+const checkExistence = (mstId) => getFilePath(mstId).map(path => {
+  try {
+    accessSync(path)
+    return true
+  } catch (e) {
+    return false
+  }
+}).reduce((a, b) => a && b)
 
 export const Avatar = connect((state, props) => ({
   marginMagic: props.marginMagic || get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`),
@@ -32,7 +42,7 @@ export const Avatar = connect((state, props) => ({
   }
 
   state = {
-    available: false,
+    available: checkExistence(this.props.mstId),
     failed: false,
   }
 
