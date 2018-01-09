@@ -134,6 +134,11 @@ onconnect = function(e) {
     }
     case 'Request': {
       mkRequestShipGraph(...data)
+      break
+    }
+    case 'Disconnect': {
+      portList.splice(portList.indexOf(currentPort), 1)
+      break
     }
     }
   })
