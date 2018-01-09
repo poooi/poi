@@ -14,7 +14,7 @@ const { APPDATA_PATH, getStore, ROOT } = window
 const avatarCachePath = join(APPDATA_PATH, 'avatar','cache')
 const serverList = Object.keys(readJsonSync(join(ROOT, 'assets', 'data', 'server.json')))
 
-const getFilePath = (mstId) => [join(APPDATA_PATH, `${mstId}_n.png`), join(APPDATA_PATH, `${mstId}_d.png`)]
+const getFilePath = (mstId) => [join(avatarCachePath, `${mstId}_n.png`), join(avatarCachePath, `${mstId}_d.png`)]
 
 const checkExistence = (mstId) => getFilePath(mstId).map(path => {
   try {
@@ -79,8 +79,11 @@ export const Avatar = connect((state, props) => ({
 
   componentWillReceiveProps = nextProps => {
     if (this.props.mstId !== nextProps.mstId) {
-      this.setState({ available: false })
-      this.sendMessage(nextProps.mstId)
+      const available = checkExistence(nextProps.mstId)
+      this.setState({ available })
+      if (!available) {
+        this.sendMessage(nextProps.mstId)
+      }
     }
   }
 
