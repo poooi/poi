@@ -68,7 +68,9 @@ export const Avatar = connect((state, props) => ({
 
   componentDidMount = () => {
     avatarWorker.port.addEventListener('message', this.onMessage)
-    this.sendMessage(this.props.mstId)
+    if (!this.state.available) {
+      this.sendMessage(this.props.mstId)
+    }
   }
 
   componentWillUnmount = () => {
