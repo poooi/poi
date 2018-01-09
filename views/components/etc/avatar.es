@@ -47,7 +47,7 @@ export const Avatar = connect((state, props) => ({
   }
 
   sendMessage = mstId => {
-    avatarWorker.postMessage([
+    avatarWorker.port.postMessage([
       'Request',
       mstId,
       getStore(`const.$graphs.${mstId}.api_version`),
@@ -57,12 +57,12 @@ export const Avatar = connect((state, props) => ({
   }
 
   componentDidMount = () => {
-    avatarWorker.addEventListener('message', this.onMessage)
+    avatarWorker.port.addEventListener('message', this.onMessage)
     this.sendMessage(this.props.mstId)
   }
 
   componentWillUnmount = () => {
-    avatarWorker.removeEventListener('message', this.onMessage)
+    avatarWorker.port.removeEventListener('message', this.onMessage)
   }
 
   componentWillReceiveProps = nextProps => {

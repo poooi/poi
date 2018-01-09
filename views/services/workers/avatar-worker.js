@@ -9,6 +9,7 @@ const {
 } = require('fs-extra')
 let fetchLocks
 let APPDATA_PATH
+let defaultPort
 
 const getCacheDirPath = () => {
   const path = join(APPDATA_PATH, 'avatar','cache')
@@ -48,7 +49,7 @@ const checkExistence = (mstId) => getFilePath(mstId).map(path => {
 const runRetry = ({ serverIp, path, mstId }, retryCnt) => {
   fetchLocks.set(path, false)
   if (retryCnt > 5) {
-    postMessage([ 'Failed', mstId ])
+    defaultPort.postMessage([ 'Failed', mstId ])
     return
   }
   setTimeout(() => mayExtractWithLock({ serverIp, path, mstId }, retryCnt), 1000)
@@ -93,14 +94,14 @@ const mayExtractWithLock = async ({ serverIp, path, mstId }, retryCnt = 0) => {
     runRetry({ serverIp, path, mstId }, retryCnt + 1)
     throw e
   })
-  postMessage([ 'Ready', mstId ])
+  defaultPort.postMessage([ 'Ready', mstId ])
   // release lock
   fetchLocks.set(path, false)
 }
 
 const mkRequestShipGraph = (mstId, version = [], fileName, serverIp, forced = false) => {
   if (!forced && versionMap[mstId] && version.toString() === versionMap[mstId].toString() && checkExistence(mstId)) {
-    postMessage([ 'Ready', mstId ])
+    defaultPort.postMessage([ 'Ready', mstId ])
     return
   }
 
@@ -112,18 +113,22 @@ const mkRequestShipGraph = (mstId, version = [], fileName, serverIp, forced = fa
 }
 
 // eslint-disable-next-line no-undef
-onmessage = e => {
-  const data = [...e.data]
-  const type = data.shift()
-  switch (type) {
-  case 'Initialize': {
-    APPDATA_PATH = data.shift()
-    versionMap = getVersionMap()
-    fetchLocks = new Map()
-    break
-  }
-  case 'Request': {
-    mkRequestShipGraph(...data)
-  }
-  }
+onconnect = function(e) {
+  defaultPort = e.ports[0]
+  defaultPort.addEventListener('message', e => {
+    const data = [...e.data]
+    const type = data.shift()
+    switch (type) {
+    case 'Initialize': {
+      APPDATA_PATH = data.shift()
+      versionMap = getVersionMap()
+      fetchLocks = new Map()
+      break
+    }
+    case 'Request': {
+      mkRequestShipGraph(...data)
+    }
+    }
+  })
+  defaultPort.start()
 }
