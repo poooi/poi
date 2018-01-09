@@ -127,6 +127,9 @@ onconnect = function(e) {
     const type = data.shift()
     switch (type) {
     case 'Initialize': {
+      if (!data.shift() && APPDATA_PATH) {
+        break
+      }
       APPDATA_PATH = data.shift()
       versionMap = getVersionMap()
       fetchLocks = new Map()

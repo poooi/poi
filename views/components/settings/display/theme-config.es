@@ -59,7 +59,7 @@ const ThemeConfig = connect((state, props) => ({
     try {
       const d = path.join(APPDATA_PATH, 'avatar')
       await fs.remove(d)
-      avatarWorker.port.postMessage([ 'Initialize', window.APPDATA_PATH ])
+      avatarWorker.port.postMessage([ 'Initialize', true, window.APPDATA_PATH ])
     } catch (e) {
       return toggleModalWithDelay(__('Delete avatar cache'), __("Failed. Perhaps you don't have permission to it."))
     }
