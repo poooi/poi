@@ -117,16 +117,18 @@ export function reducer(state={}, {type, body, postBody}) {
     }
   case '@@Response/kcsapi/api_req_nyukyo/start': {
     const {api_ship_id, api_highspeed, api_ndock_id} = postBody
-    instantDockingCompletionState = {
-      rstId: api_ship_id,
-      dockId: Number(api_ndock_id),
-    }
 
-    if (api_highspeed == '1')
+    if (api_highspeed == '1') {
       return {
         ...state,
         [api_ship_id]: completeRepair(state[api_ship_id]),
       }
+    } else {
+      instantDockingCompletionState = {
+        rstId: api_ship_id,
+        dockId: Number(api_ndock_id),
+      }
+    }
     break
   }
   case '@@Response/kcsapi/api_get_member/ndock': {
