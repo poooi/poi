@@ -29,6 +29,7 @@ poi-app poi-nav-tabs .nav li {
   white-space: nowrap;
 }
 poi-app poi-nav-tabs .nav  li a {
+  margin: 0;
   text-align: center;
 }
 poi-app poi-nav-tabs .nav .dropdown-menu {
