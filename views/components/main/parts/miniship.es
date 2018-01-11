@@ -96,48 +96,50 @@ export default connect((state, props) => ({
     return (
       <div style={{height: '100%'}} onDoubleClick={this.changeShipView}>
         <Panel id="ShipViewMini" bsStyle="default" style={{minHeight: 322, height: 'calc(100% - 6px)'}}>
-          <div className="panel-row">
-            <ButtonGroup bsSize="xsmall">
-              {
-                [0, 1, 2, 3].map((i) =>
-                  <ShipViewSwitchButton
-                    key={i}
-                    fleetId={i}
-                    disabled={i + 1 > this.props.fleetCount}
-                    onClick={this.handleClick.bind(this, i)}
-                    activeFleetId={this.props.activeFleetId}
-                  />
-                )
-              }
-            </ButtonGroup>
-            <ButtonGroup bsSize="xsmall" className='plane-button-mini'>
-              <LandbaseButton key={4}
-                fleetId={4}
-                disabled={this.props.airBaseCnt === 0}
-                onClick={e => this.handleClick(4)}
-                activeFleetId={this.props.activeFleetId}
-                isMini={true}
-              />
-            </ButtonGroup>
-          </div>
-          <div className="no-scroll">
-            <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-              style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
-              {
-                [0, 1, 2, 3].map((i) => (
-                  <div className="ship-deck ship-tabpane" key={i}>
-                    <PaneBodyMini
+          <Panel.Body>
+            <div className="panel-row">
+              <ButtonGroup bsSize="xsmall">
+                {
+                  [0, 1, 2, 3].map((i) =>
+                    <ShipViewSwitchButton
                       key={i}
                       fleetId={i}
+                      disabled={i + 1 > this.props.fleetCount}
+                      onClick={this.handleClick.bind(this, i)}
+                      activeFleetId={this.props.activeFleetId}
                     />
-                  </div>
-                ))
-              }
-              <div className="ship-deck ship-tabpane" key={4}>
-                <LBViewMini />
+                  )
+                }
+              </ButtonGroup>
+              <ButtonGroup bsSize="xsmall" className='plane-button-mini'>
+                <LandbaseButton key={4}
+                  fleetId={4}
+                  disabled={this.props.airBaseCnt === 0}
+                  onClick={e => this.handleClick(4)}
+                  activeFleetId={this.props.activeFleetId}
+                  isMini={true}
+                />
+              </ButtonGroup>
+            </div>
+            <div className="no-scroll">
+              <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
+                style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
+                {
+                  [0, 1, 2, 3].map((i) => (
+                    <div className="ship-deck ship-tabpane" key={i}>
+                      <PaneBodyMini
+                        key={i}
+                        fleetId={i}
+                      />
+                    </div>
+                  ))
+                }
+                <div className="ship-deck ship-tabpane" key={4}>
+                  <LBViewMini />
+                </div>
               </div>
             </div>
-          </div>
+          </Panel.Body>
         </Panel>
       </div>
     )

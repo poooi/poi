@@ -243,24 +243,26 @@ export default connect(
   const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-warning' : ''
   return (
     <Panel bsStyle="default">
-      {
-        level >= 0 ?
-          <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
-              <span>{`Lv. ${level}　`}
-                <span className="nickname">{nickname}</span>
-                <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
-              </span>
-            </OverlayTrigger>
-            <span>{__('Ships: ')}</span>
-            <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
-            <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
-            <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
-            <CountDownControl/>
-          </div>
-          :
-          <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
-      }
+      <Panel.Body>
+        {
+          level >= 0 ?
+            <div>
+              <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
+                <span>{`Lv. ${level}　`}
+                  <span className="nickname">{nickname}</span>
+                  <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
+                </span>
+              </OverlayTrigger>
+              <span>{__('Ships: ')}</span>
+              <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
+              <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
+              <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
+              <CountDownControl/>
+            </div>
+            :
+            <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
+        }
+      </Panel.Body>
     </Panel>
   )
 })

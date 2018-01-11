@@ -194,50 +194,52 @@ const ShipView = connect((state, props) => ({
   render() {
     return (
       <Panel onDoubleClick={this.changeMainView}>
-        <div className="div-row">
-          <ButtonGroup className="fleet-name-button">
-            {
-              times(4).map(i =>
-                <ShipViewSwitchButton
-                  key={i}
-                  fleetId={i}
-                  disabled={i + 1 > this.props.fleetCount}
-                  onClick={e => this.handleClick(i)}
-                  activeFleetId={this.props.activeFleetId}
-                />
-              )
-            }
-          </ButtonGroup>
-          <ButtonGroup className='plane-button'>
-            <LandbaseButton key={4}
-              fleetId={4}
-              disabled={this.props.airBaseCnt === 0}
-              onClick={e => this.handleClick(4)}
-              activeFleetId={this.props.activeFleetId}
-              isMini={false}
-            />
-          </ButtonGroup>
-        </div>
-        <div className="no-scroll ship-tab-container">
-          <div
-            className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
-            style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
-            {
-              times(4).map(i =>
-                <div className="ship-deck" key={i}>
-                  <FleetShipView
+        <Panel.Body>
+          <div className="div-row">
+            <ButtonGroup className="fleet-name-button">
+              {
+                times(4).map(i =>
+                  <ShipViewSwitchButton
+                    key={i}
                     fleetId={i}
-                    enableAvatar={this.props.enableAvatar}
-                    width={this.props.width}
+                    disabled={i + 1 > this.props.fleetCount}
+                    onClick={e => this.handleClick(i)}
+                    activeFleetId={this.props.activeFleetId}
                   />
-                </div>
-              )
-            }
-            <div className="ship-deck" key={4}>
-              <LBView />
+                )
+              }
+            </ButtonGroup>
+            <ButtonGroup className='plane-button'>
+              <LandbaseButton key={4}
+                fleetId={4}
+                disabled={this.props.airBaseCnt === 0}
+                onClick={e => this.handleClick(4)}
+                activeFleetId={this.props.activeFleetId}
+                isMini={false}
+              />
+            </ButtonGroup>
+          </div>
+          <div className="no-scroll ship-tab-container">
+            <div
+              className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
+              style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
+              {
+                times(4).map(i =>
+                  <div className="ship-deck" key={i}>
+                    <FleetShipView
+                      fleetId={i}
+                      enableAvatar={this.props.enableAvatar}
+                      width={this.props.width}
+                    />
+                  </div>
+                )
+              }
+              <div className="ship-deck" key={4}>
+                <LBView />
+              </div>
             </div>
           </div>
-        </div>
+        </Panel.Body>
       </Panel>
     )
   }

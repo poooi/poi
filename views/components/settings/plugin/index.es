@@ -338,7 +338,7 @@ const PluginConfig = connect((state, props) => ({
               {
                 window.isSafeMode &&
                 <Panel header={__('Safe Mode')} bsStyle='warning'>
-                  {__('Poi is running in safe mode, plugins are not enabled automatically.')}
+                  <Panel.Body>{__('Poi is running in safe mode, plugins are not enabled automatically.')}</Panel.Body>
                 </Panel>
               }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
