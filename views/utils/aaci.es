@@ -194,7 +194,7 @@ declareAACI({
 
 // *** Akizuki-class AACIs
 declareAACI({
-  name: 'Akitsuki Class',
+  name: 'Akizuki Class',
   id: 1,
   fixed: 7,
   modifier: 1.7,
@@ -206,7 +206,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Akitsuki Class',
+  name: 'Akizuki Class',
   id: 2,
   fixed: 6,
   modifier: 1.7,
@@ -218,7 +218,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Akitsuki Class',
+  name: 'Akizuki Class',
   id: 3,
   fixed: 4,
   modifier: 1.6,
