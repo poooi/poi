@@ -3,7 +3,7 @@ import { shell, remote } from 'electron'
 import Divider from '../components/divider'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { get, range } from 'lodash'
+import { get } from 'lodash'
 import CheckboxLabel from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
@@ -13,6 +13,7 @@ import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
 import FCD from './fcd'
 import WctfDB from './wctf-db'
+import OpenCollective from './open-collective'
 
 import '../assets/misc.css'
 
@@ -125,23 +126,7 @@ const Misc = connect(state => ({
         <Divider text="OpenCollective" />
         <Grid className="opencollective container">
           <Col xs={12}>
-            <div>
-              {
-                range(10).map(i => (
-                  <a
-                    href={`https://opencollective.com/poi/sponsor/${i}/website`}
-                    key={i}
-                  >
-                    <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
-                  </a>
-                ))
-              }
-            </div>
-            <div>
-              <a href="https://opencollective.com/poi#backers">
-                <img src={`https://opencollective.com/poi/backers.svg?width=${this.props.layout === 'horizontal' ? 450 : 900}`} />
-              </a>
-            </div>
+            <OpenCollective />
           </Col>
         </Grid>
         <Divider text="Special Thanks To" />
