@@ -23,14 +23,14 @@ const miniShipRowWidthSelector = createSelector(
   ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
     if (layout === 'horizontal') {
       if (doubleTabbed) {
-        return (((window.width - webview.width) / 4) - 16) / zoomLevel
+        return ((window.width - webview.width) / 4 / zoomLevel) - 16
       }
-      return (((window.width - webview.width) / 2) - 16) / zoomLevel
+      return ((window.width - webview.width) / 2 / zoomLevel) - 16
     }
     if (doubleTabbed) {
-      return ((window.width / 4) - 16) / zoomLevel
+      return (window.width / 4 / zoomLevel) - 16
     }
-    return ((window.width * 0.4) - 16) / zoomLevel
+    return (window.width * 0.4 / zoomLevel) - 16
   }
 )
 

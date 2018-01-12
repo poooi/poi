@@ -50,14 +50,14 @@ const shipRowWidthSelector = createSelector(
   ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
     if (layout === 'horizontal') {
       if (doubleTabbed) {
-        return (((window.width - webview.width) / 2) - 10) / zoomLevel
+        return ((window.width - webview.width) / 2 / zoomLevel) - 10
       }
-      return (window.width - webview.width - 10) / zoomLevel
+      return ((window.width - webview.width) / zoomLevel) - 10
     }
     if (doubleTabbed) {
-      return ((window.width / 2) - 10) / zoomLevel
+      return (window.width / 2 / zoomLevel) - 10
     }
-    return (window.width - 10) / zoomLevel
+    return (window.width / zoomLevel) - 10
   }
 )
 
