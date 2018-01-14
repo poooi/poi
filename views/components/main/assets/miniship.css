@@ -73,6 +73,16 @@
   position: absolute;
   z-index: -1;
 }
+.miniship .ship-lv-avatar {
+  bottom: 0;
+  display: flex;
+  filter: drop-shadow(0 0 2px black);
+  font-size: 70%;
+  left: 0;
+  line-height: 1;
+  position: absolute;
+  text-shadow: 0 0 2px rgba(0,0,0,1);
+}
 .miniship .ship-details-mini .ship-item .ship-info {
   display: flex;
   flex-basis: 0;

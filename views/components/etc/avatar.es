@@ -33,12 +33,14 @@ export const Avatar = connect((state, props) => ({
     height: PropTypes.number,
     marginMagic: PropTypes.number,
     isDamaged: PropTypes.bool,
+    children: PropTypes.node,
   }
 
   static defaultProps = {
     height: 121,
     marginMagic: 0.555,
     isDamaged: false,
+    children: null,
   }
 
   state = {
@@ -103,6 +105,7 @@ export const Avatar = connect((state, props) => ({
                 src={join(avatarCachePath, `${this.props.mstId}_${this.props.isDamaged ? 'd' : 'n'}.png`)} />
               : <div className="ship-avatar-loading"><FontAwesome name='spinner' pulse /></div>
         }
+        { this.props.children }
       </div>
     )
   }

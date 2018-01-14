@@ -150,7 +150,11 @@ export const MiniShipRow = connect(
           }
         >
           <div className="ship-item">
-            { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33} /> }
+            { enableAvatar && (
+              <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33}>
+                {compact ? <div className='ship-lv-avatar'>Lv. {ship.api_lv || '??'}</div> : null}
+              </Avatar>
+            ) }
             <OverlayTrigger placement='top' overlay={
               <Tooltip id={`miniship-exp-${ship.api_id}`}>
                 {
