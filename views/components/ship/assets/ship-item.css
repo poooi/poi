@@ -14,16 +14,6 @@
   top: 9px;
   z-index: -1;
 }
-.ShipView .ship-lv-avatar {
-  bottom: 0;
-  display: flex;
-  filter: drop-shadow(0 0 2px black);
-  font-size: 80%;
-  left: 0;
-  line-height: 1;
-  position: absolute;
-  text-shadow: 0 0 2px rgba(0,0,0,1);
-}
 .ShipView .ship-item .progress {
   height: 7px;
   margin-bottom: 5px;
