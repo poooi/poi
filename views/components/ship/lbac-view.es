@@ -49,7 +49,8 @@ export const SquardRow = connect((state, { squardId }) =>
           <span className='ship-lv'>
             {__('Range')}: {api_distance}
           </span>
-          <span className="ship-type">
+          <br />
+          <span className="ship-lv">
             {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
           </span>
         </div>
