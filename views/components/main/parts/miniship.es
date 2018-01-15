@@ -56,12 +56,14 @@ const ShipViewSwitchButton = connect(
 )
 
 export default connect((state, props) => ({
+  airBaseCnt: get(state, 'info.airbase.length', 0),
   enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
 })
 )(class MiniShip extends Component {
   static propTypes = {
+    airBaseCnt: PropTypes.number.isRequired,
     enableTransition: PropTypes.bool.isRequired,
     fleetCount: PropTypes.number.isRequired,
     activeFleetId: PropTypes.number.isRequired,
