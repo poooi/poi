@@ -21,7 +21,7 @@
   "Completed": "完成",
   "Empty quest": "未受注",
   "To be refreshed": "情報の更新が必要",
-  "Browse your quest list to let poi know your active quests": "Browse your quest list to let poi know your active quests",
+  "Browse your quest list to let poi know your active quests": "任務画面を開くと、任務リストが更新されます",
   "Increase your active quest limit with a \"Headquarters Personnel\".": "「司令部要員」を使用し、同時受託可能任務数が＋1拡張する。",
   "Quest": "任務(クエスト)",
   "Ships: ": "艦娘：",
@@ -33,7 +33,7 @@
   "Only %s free ship slot(s) left. ": "艦娘の空き枠は %s 隻だ。",
   " Fleet": " 艦隊",
   "Attention!": "進撃警告！",
-  "is heavily damaged!": "大破した艦娘がいる！轟沈しかねない！",
+  "is heavily damaged!": "大破した艦娘がいる！轟沈する可能性がある！",
   "No data": "データ無し",
   "Resting": "回復",
   "have recovered from fatigue": "コンディション回復完了",
@@ -86,6 +86,6 @@
   "Type %s": "種別：%s",
   "Max shot down not reached": "最上位の組合せを満たしていない",
   "OASW": "先制対潜",
-  "At least one ship in your fleet has not been locked": "少なくとも1つの艦娘が出撃札がついていない",
+  "At least one ship in your fleet has not been locked": "少なくとも1つの艦娘は出撃札がついていない",
   "Event ship locking warning": "誤出撃警告"
 }
