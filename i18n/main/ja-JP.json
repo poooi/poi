@@ -22,7 +22,7 @@
   "Empty quest": "未受注",
   "To be refreshed": "情報の更新が必要",
   "Browse your quest list to let poi know your active quests": "Browse your quest list to let poi know your active quests",
-  "Increase your active quest limit with a \"Headquarters Personnel\".": "「司令部要員」を消費し、一度に受けることのできる任務を+1。",
+  "Increase your active quest limit with a \"Headquarters Personnel\".": "「司令部要員」を使用し、同時受託可能任務数が＋1拡張する。",
   "Quest": "任務(クエスト)",
   "Ships: ": "艦娘：",
   "Equip.: ": "装備：",
