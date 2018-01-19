@@ -359,7 +359,7 @@ class PluginManager extends EventEmitter {
     // 5) Read plugin and load it
     try {
       let plugin = await readPlugin(this.getPluginPath(packageName))
-      if (plugin.enabled || !get(options, 'skipEnable', false)) {
+      if (plugin.enabled || get(options, 'skipEnable', false)) {
         plugin = await enablePlugin(plugin, false)
       }
       dispatch({
