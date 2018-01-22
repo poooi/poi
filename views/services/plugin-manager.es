@@ -3,7 +3,7 @@ import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync, ensureDir } from 'fs-extra'
 import glob from 'glob'
-import _, { sortBy, map, get } from 'lodash'
+import _, { map, get } from 'lodash'
 import { remote } from 'electron'
 import fetch from 'node-fetch'
 
@@ -29,6 +29,9 @@ import {
   safePhysicallyRemove,
   findInstalledTarball,
 } from './plugin-manager-utils'
+import {
+  sortPlugins,
+} from '../redux/plugins'
 
 function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
@@ -71,14 +74,13 @@ class PluginManager extends EventEmitter {
   }
   async readPlugins() {
     const pluginPaths = await new Promise(res => glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)))
-    let plugins = await Promise.all(pluginPaths.map(async(pluginPath) => {
+    const plugins = sortPlugins(await Promise.all(pluginPaths.map(async(pluginPath) => {
       let plugin = await readPlugin(pluginPath)
       if (plugin.enabled && !window.isSafeMode) {
         plugin = await enablePlugin(plugin)
       }
       return plugin
-    }))
-    plugins = sortBy(plugins, 'priority')
+    })))
     notifyFailed(plugins, this.npmConfig)
     dispatch({
       type: '@@Plugin/initialize',
