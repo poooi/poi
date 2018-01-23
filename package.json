@@ -182,7 +182,8 @@
         "rpm",
         "pacman",
         "AppImage"
-      ]
+      ],
+      "icon": "assets/icons"
     },
     "directories": {
       "app": "app_compiled"

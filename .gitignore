@@ -40,7 +40,7 @@ node_modules
 *.swp
 
 # poi build directory
-build/*
+build/download
 app_compiled/
 dist/
 
