@@ -158,9 +158,6 @@ remote.getCurrentWebContents().on('dom-ready', () => {
   if (config.get('poi.content.muted', false)) {
     $('kan-game webview').setAudioMuted(true)
   }
-  if ($('kan-game').style.display !== 'none')  {
-    $('kan-game webview').loadURL(config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'))
-  }
   $('kan-game webview').addEventListener('dom-ready', (e) => {
     if (config.get('poi.enableDMMcookie', false)) {
       $('kan-game webview').executeJavaScript(`

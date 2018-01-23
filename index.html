@@ -14,40 +14,7 @@
   </script>
 </head>
 <body>
-  <poi-css-injector></poi-css-injector>
-  <title-bar></title-bar>
-  <poi-main>
-    <kan-game>
-      <div class="kan-game-warpper">
-        <div id="webview-wrapper" style="height: 480px">
-          <webview src="about:blank" ondrop="event.preventDefault();" plugins disablewebsecurity webpreferences="allowRunningInsecureContent=no" preload="./assets/js/webview-preload.js"></webview>
-        </div>
-        <hr>
-        <poi-info>
-          <poi-control></poi-control>
-          <poi-alert></poi-alert>
-          <poi-map-reminder></poi-map-reminder>
-        </poi-info>
-        <hr>
-      </div>
-    </kan-game>
-    <poi-modal>
-      <poi-modal-trigger />
-    </poi-modal>
-    <poi-toast>
-      <poi-toast-trigger />
-    </poi-toast>
-    <poi-auth>
-      <poi-auth-trigger />
-    </poi-auth>
-    <poi-app>
-      <div id='poi-app-container' class='poi-app-container'>
-        <poi-nav>
-          <poi-nav-tabs />
-        </poi-nav>
-      </div>
-    </poi-app>
-  </poi-main>
+  <poi />
   <script>
     // Google analytics
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

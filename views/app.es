@@ -17,6 +17,7 @@ import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
+import WebView from 'react-electron-web-view'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
@@ -47,16 +48,46 @@ const CustomCssInjector = () => {
 ReactDOM.render(
   <Provider store={store}>
     <Fragment>
-      { config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') && ReactDOM.createPortal(<TitleBarWrapper />, $('title-bar')) }
-      { ReactDOM.createPortal(<PoiControl />, $('poi-control')) }
-      { ReactDOM.createPortal(<PoiAlert id='poi-alert' />, $('poi-alert')) }
-      { ReactDOM.createPortal(<PoiMapReminder id='poi-map-reminder'/>, $('poi-map-reminder')) }
-      <ControlledTabArea />
-      { ReactDOM.createPortal(<ModalTrigger />, $('poi-modal-trigger')) }
-      { ReactDOM.createPortal(<Toastr />, $('poi-toast-trigger')) }
-      { ReactDOM.createPortal(<CustomCssInjector />, $('poi-css-injector')) }
-      { ReactDOM.createPortal(<BasicAuth />, $('poi-auth-trigger')) }
+      <CustomCssInjector />
+      <title-bar>
+        { config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') && <TitleBarWrapper />}
+      </title-bar>
+      <poi-main>
+        <kan-game>
+          <div className="kan-game-warpper">
+            <div id="webview-wrapper" style={{ height: 480 }}>
+              <WebView
+                src={config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
+                plugins
+                disablewebsecurity
+                webpreferences="allowRunningInsecureContent=no"
+                preload={`${__dirname}/../assets/js/webview-preload.js`}
+                style={{ height: '100%' }}
+              />
+            </div>
+            <hr />
+            <poi-info>
+              <poi-control><PoiControl /></poi-control>
+              <poi-alert><PoiAlert id='poi-alert' /></poi-alert>
+              <poi-map-reminder><PoiMapReminder id='poi-map-reminder'/></poi-map-reminder>
+            </poi-info>
+            <hr />
+          </div>
+        </kan-game>
+        <ModalTrigger />
+        <Toastr />
+        <BasicAuth />
+        <poi-app>
+          <div id='poi-app-container' className='poi-app-container'>
+            <poi-nav>
+              <poi-nav-tabs>
+                <ControlledTabArea />
+              </poi-nav-tabs>
+            </poi-nav>
+          </div>
+        </poi-app>
+      </poi-main>
     </Fragment>
   </Provider>,
-  $('poi-nav-tabs')
+  $('poi')
 )
