@@ -18,8 +18,8 @@ remote.getCurrentWebContents().addListener('dom-ready', (e) => {
     document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/"
     document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/"
     document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/"
-    const ua = remote.getCurrentWebContents().getWebContents().session.getUserAgent()
-    remote.getCurrentWebContents().getWebContents().session.setUserAgent(ua, 'ja-JP')
+    const ua = remote.getCurrentWebContents().session.getUserAgent()
+    remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
   }
   if (config.get('poi.disableNetworkAlert', false)) {
     // eslint-disable-next-line no-undef
