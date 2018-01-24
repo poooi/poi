@@ -49,9 +49,12 @@ const Poi = connect(state => ({
 }))(({ isHorizontal, reversed }) => (
   <Fragment>
     <CustomCssInjector />
-    <title-bar>
-      { config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') && <TitleBarWrapper />}
-    </title-bar>
+    {
+      config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
+      <title-bar>
+        <TitleBarWrapper />
+      </title-bar>
+    }
     <poi-main style={{
       flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
       ...!isHorizontal && { overflow: 'hidden' },
