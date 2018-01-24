@@ -27,16 +27,6 @@ const openItemAsync = (dir, source=null) => {
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
-
-config.on('config.set', (path, value) => {
-  switch (path) {
-  case 'poi.content.muted':
-    $('kan-game webview').setAudioMuted(value)
-    break
-  default:
-  }
-})
-
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
 }))(class poiControl extends Component {

@@ -289,7 +289,7 @@ export default connect(
     )
 
     return !this.props.doubleTabbed ? (
-      <div>
+      <div className="poi-tab-container">
         <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} id="top-nav" className={navClass}
           onSelect={this.handleSelectTab}>
           <NavItem key='mainView' eventKey='mainView'>
@@ -324,7 +324,7 @@ export default connect(
       </div>
     ) : (
       <div className='poi-tabs-container'>
-        <div className="no-scroll">
+        <div className="poi-tab-container no-scroll">
           <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
             <NavItem key='mainView' eventKey='mainView'>
               {mainview.displayName}
@@ -350,7 +350,7 @@ export default connect(
             </div>
           </TabContentsUnion>
         </div>
-        <div className="no-scroll">
+        <div className="poi-tab-container no-scroll">
           <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
             <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
               title={(activePlugin || {}).displayName || defaultPluginTitle}>

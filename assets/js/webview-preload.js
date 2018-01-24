@@ -1,5 +1,41 @@
 const { remote, webFrame } = require('electron')
 const config = remote.require('./lib/config')
+const WindowManager = remote.require('./lib/window')
+
+if (config.get('poi.content.muted', false)) {
+  remote.getCurrentWebContents().setAudioMuted(true)
+}
+
+remote.getCurrentWebContents().addListener('dom-ready', (e) => {
+  if (config.get('poi.enableDMMcookie', false)) {
+    document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/"
+    document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/"
+    document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=osapi.dmm.com;path=/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=203.104.209.7;path=/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=www.dmm.com;path=/netgame/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=log-netgame.dmm.com;path=/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/"
+    document.cookie = "ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/"
+    const ua = remote.getCurrentWebContents().getWebContents().session.getUserAgent()
+    remote.getCurrentWebContents().getWebContents().session.setUserAgent(ua, 'ja-JP')
+  }
+  if (config.get('poi.disableNetworkAlert', false)) {
+    // eslint-disable-next-line no-undef
+    DMM.netgame.reloadDialog=function(){}
+  }
+})
+remote.getCurrentWebContents().addListener('new-window', (e) => {
+  const exWindow = WindowManager.createWindow({
+    realClose: true,
+    navigatable: true,
+    nodeIntegration: false,
+  })
+  exWindow.loadURL(e.url)
+  exWindow.show()
+  e.preventDefault()
+})
 
 // webview focus area fix
 // This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395

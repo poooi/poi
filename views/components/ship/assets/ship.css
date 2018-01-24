@@ -18,8 +18,8 @@
   height: 100%;
   width: 100%;
 }
-.ShipView .panel {
-  height: calc(100% - 20px);
+.ShipView > .panel {
+  height: calc(100% - 10px);
   margin: 2px;
   overflow: auto;
 }
@@ -72,6 +72,9 @@
 .ShipView .div-row {
   display: flex;
   flex-flow: row;
+}
+.ShipView .fleet-name-button-container {
+  overflow: scroll;
 }
 .ShipView .deck-status {
   padding-left: 0;

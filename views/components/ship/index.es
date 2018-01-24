@@ -195,7 +195,7 @@ const ShipView = connect((state, props) => ({
     return (
       <Panel onDoubleClick={this.changeMainView}>
         <Panel.Body>
-          <div className="div-row">
+          <div className="div-row fleet-name-button-container">
             <ButtonGroup className="fleet-name-button">
               {
                 times(4).map(i =>
