@@ -86,7 +86,7 @@ export const checkUpdate = async () => {
 }
 
 const toggleUpdate = (version, log) => {
-  const title = <span>{__('Update')} poi-v{version}</span>
+  const title = <span>{__('Update')} poi-{version}</span>
   // react-remarkable uses remarkable as parser，
   // remarkable disables HTML by default，
   // react-remarkable's default option dose not enable HTML，
