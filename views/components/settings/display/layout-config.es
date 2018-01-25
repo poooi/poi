@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
-import FontAwesome from 'react-fontawesome'
 
 const {config, i18n } = window
 const __ = i18n.setting.__.bind(i18n.setting)
@@ -37,19 +36,19 @@ const LayoutConfig = connect(() => (
           <ButtonGroup>
             <Button bsStyle={leftActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('horizontal', true)}>
-              <FontAwesome name='window-maximize' rotate={90} />
+              <a className="layout-button layout-side" style={{ transform: 'scaleX(-1)' }} />
             </Button>
             <Button bsStyle={downActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('vertical', false)}>
-              <FontAwesome name='window-maximize' />
+              <a className="layout-button layout-land" />
             </Button>
             <Button bsStyle={upActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('vertical', true)}>
-              <FontAwesome name='window-maximize' rotate={180} />
+              <a className="layout-button layout-land" style={{ transform: 'scaleY(-1)' }} />
             </Button>
             <Button bsStyle={rightActive ? 'success' : 'danger'}
               onClick={e => this.handleSetLayout('horizontal', false)}>
-              <FontAwesome name='window-maximize' rotate={270} />
+              <a className="layout-button layout-side" />
             </Button>
           </ButtonGroup>
         </Col>
