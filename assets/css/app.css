@@ -168,4 +168,7 @@ poi-info {
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
   opacity: 0.9 !important;
 }
+#electron-app-title-bar img.icon {
+  margin: 6px 10px !important;
+}
 /* csslint ignore:end */
