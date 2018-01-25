@@ -30,7 +30,15 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'no-console': ['warn', {'allow': ['warn', 'error']}],
     'no-var': 'error',
-    'no-unused-vars': ['warn', {'args': 'none'}],
+    'no-unused-vars':
+      [
+        'warn',
+        {
+          'vars': 'all',
+          'varsIgnorePattern': '^_[a-zA-Z].*',
+          'args': 'none',
+        }
+      ],
     'semi': ['error', 'never'],
     'unicode-bom': 'error',
     'prefer-const': ['error', {'destructuring': 'all'}],
