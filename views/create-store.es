@@ -9,6 +9,7 @@ import { reducerFactory, onConfigChange } from './redux'
 import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
 import { dockingCompleteObserver } from './redux/info/repairs'
 import { dispatchBattleResult } from './redux/battle'
+import { pluginHelperObserver } from './services/plugin-helper'
 
 const cachePosition = '_storeCache'
 const targetPaths = ['const', 'info', 'fcd', 'wctf']
@@ -123,6 +124,8 @@ observe(store, compact([
   // observe on docking status and send an action to update info.ships
   // when docking is done.
   dockingCompleteObserver,
+
+  window.isMain && pluginHelperObserver,
 ]))
 
 schedualDailyRefresh(store.dispatch)
