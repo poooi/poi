@@ -315,9 +315,7 @@ class PluginManager extends EventEmitter {
     }
   }
 
-  // possible options:
-  //   skipEnable: true | false, skips enabling the plugin after installation
-  async installPlugin(packageSource, version, options = {}) {
+  async installPlugin(packageSource, version) {
     if (packageSource.includes('@'))
       [packageSource, version] = packageSource.split('@')
 
@@ -361,7 +359,7 @@ class PluginManager extends EventEmitter {
     // 5) Read plugin and load it
     try {
       let plugin = await readPlugin(this.getPluginPath(packageName))
-      if (plugin.enabled || get(options, 'skipEnable', false)) {
+      if (plugin.enabled) {
         plugin = await enablePlugin(plugin, false)
       }
       dispatch({
@@ -408,8 +406,6 @@ class PluginManager extends EventEmitter {
 
   async gracefulRepair(repair = true) {
     const plugins = this.getInstalledPlugins()
-    const enabledPlugins = _(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.packageName).value()
-    const disabledPlugins = _(plugins).filter(plugin => !plugin.enabled).map(plugin => plugin.packageName).value()
     const modulePath = join(PLUGIN_PATH, 'node_modules')
     await safePhysicallyRemove(modulePath)
     await ensureDir(modulePath)
@@ -419,8 +415,7 @@ class PluginManager extends EventEmitter {
       return
     }
 
-    await Promise.all(enabledPlugins.map(plugin => this.installPlugin(plugin)))
-    await Promise.all(disabledPlugins.map(plugin => this.installPlugin(plugin, null, { skipEnable: true})))
+    await Promise.all(plugins.map(plugin => this.installPlugin(plugin.packageName)))
   }
 
   async enablePlugin(plugin) {
