@@ -153,26 +153,12 @@ const handleProxyNetworkError = ([domain, path, url]) => {
   }
 }
 
-const handleGetServer = (server) => {
-  const {ip, num: id, name} = server
-  const t = setInterval(() => {
-    if (window.getStore('info.server.ip') !== ip) {
-      window.dispatch({
-        type: '@@ServerReady',
-        serverInfo: {ip, id, name},
-      })
-    } else {
-      clearInterval(t)
-    }
-  }, 1000)
-}
 
 const proxyListener = {
   'network.on.request': handleProxyGameOnRequest,
   'network.on.response': handleProxyGameOnResponse,
   'network.error': handleProxyNetworkError,
   'network.error.retry': handleProxyNetworkErrorRetry,
-  'network.get.server': handleGetServer,
 }
 
 window.listenerStatusFlag = false

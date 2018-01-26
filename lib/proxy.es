@@ -163,9 +163,12 @@ class Proxy extends EventEmitter {
     super()
     this.load()
   }
+  serverInfo = {}
+  getServerInfo = () => {
+    return this.serverInfo
+  }
   load = () => {
     const serverList = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
-    let currentServer = null
     // HTTP Requests
     this.server = http.createServer((req, res) => {
       delete req.headers['proxy-connection']
@@ -173,19 +176,18 @@ class Proxy extends EventEmitter {
       req.headers['connection'] = 'close'
       const parsed = url.parse(req.url)
       const isGameApi = parsed.pathname.startsWith('/kcsapi')
-      if (isGameApi && currentServer !== parsed.hostname) {
-        currentServer = parsed.hostname
+      if (isGameApi && this.serverInfo.ip !== parsed.hostname) {
         if (serverList[parsed.hostname]) {
-          this.emit('network.get.server', {
+          this.serverInfo = {
             ...serverList[parsed.hostname],
             ip: parsed.hostname,
-          })
+          }
         } else {
-          this.emit('network.get.server', {
+          this.serverInfo = {
             num: -1,
             name: '__UNKNOWN',
             ip: parsed.hostname,
-          })
+          }
         }
       }
       let cacheFile = null

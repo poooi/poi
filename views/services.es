@@ -1,6 +1,9 @@
 import { remote, shell } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
+import { observer, observe } from 'redux-observers'
+import { store } from 'views/create-store'
 
+const proxy = remote.require('./lib/proxy')
 const {$, config, toggleModal, log, error, i18n, dbg} = window
 const __ = i18n.others.__.bind(i18n.others)
 const __n = i18n.others.__n.bind(i18n.others)
@@ -18,6 +21,34 @@ import './services/sortie-dangerous-check'
 import './services/sortie-free-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
+
+// Update server info
+const setUpdateServer = (dispatch) => {
+  const t = setInterval(() => {
+    const {ip, num: id, name} = proxy.getServerInfo()
+    if (window.getStore('info.server.ip') !== ip) {
+      if (ip) {
+        dispatch({
+          type: '@@ServerReady',
+          serverInfo: {ip, id, name},
+        })
+      }
+    } else {
+      clearInterval(t)
+    }
+  }, 1000)
+}
+const serverObserver = observer(
+  (state) => state.info.server.ip,
+  (dispatch, current, previous) => {
+    if (!current) {
+      setUpdateServer(dispatch)
+    }
+  }
+)
+setUpdateServer(window.dispatch)
+
+observe(store, [serverObserver])
 
 const refreshFlash = () =>
   $('kan-game webview').executeJavaScript(`
