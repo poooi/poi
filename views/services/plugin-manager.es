@@ -458,25 +458,6 @@ const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'mirror.json')
 )
 
-window.reloadPlugin = async (pkgName, verbose=false) => {
-  const { plugins } = getStore()
-  const plugin = plugins.find(
-    pkg => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName)
-  )
-  if (!plugin) {
-    console.error(`plugin "${pkgName}" not found`)
-    return
-  }
-  await pluginManager.disablePlugin(plugin)
-  if (verbose)
-    // eslint-disable-next-line no-console
-    console.log(`plugin "${plugin.id}" disabled, re-enabling...`)
-  await pluginManager.enablePlugin(plugin)
-  if (verbose)
-    // eslint-disable-next-line no-console
-    console.log(`plugin "${plugin.id}" enabled.`)
-}
-
 window.gracefulResetPlugin = () => pluginManager.gracefulRepair(false)
 
 remote.getCurrentWebContents().once('dom-ready', () => pluginManager.initialize())
