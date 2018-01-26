@@ -258,7 +258,7 @@ var footer = [
     func: Function, // 点击按钮后的动作
     style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // 颜色
   }  
-];
+]
 window.toggleModal('Title', 'Content', footer);
 ```
 
