@@ -155,11 +155,16 @@ const handleProxyNetworkError = ([domain, path, url]) => {
 
 const handleGetServer = (server) => {
   const {ip, num: id, name} = server
-  const {dispatch} = window
-  dispatch({
-    type: '@@ServerReady',
-    serverInfo: {ip, id, name},
-  })
+  const t = setInterval(() => {
+    if (window.getStore('info.server.ip') !== ip) {
+      window.dispatch({
+        type: '@@ServerReady',
+        serverInfo: {ip, id, name},
+      })
+    } else {
+      clearInterval(t)
+    }
+  }, 1000)
 }
 
 const proxyListener = {
