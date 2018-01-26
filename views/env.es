@@ -4,23 +4,13 @@ import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
 import lodash from 'lodash'
-import React from 'react'
-import ReactDOM from 'react-dom'
-import createClass from 'create-react-class'
-import FontAwesome  from 'react-fontawesome'
-import * as ReactBootstrap from 'react-bootstrap'
-import { OverlayTrigger, Modal } from './utils/overlay'
-
-// polyfill for react-fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
-
+// polyfill for react-fontawesome
 import '@skagami/react-fontawesome/inject'
 library.add(fas, far, fab)
-
-const { Radio, Checkbox, FormControl } = ReactBootstrap
 
 // Environments
 window.remote = remote
@@ -59,43 +49,6 @@ window.eval = global.eval = function () {
 window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
 window.$$ = (param) => document.querySelectorAll(param)
-window.React = React
-window.React.createClass = createClass
-window.ReactDOM = ReactDOM
-window.FontAwesome = FontAwesome
-window.ReactBootstrap = ReactBootstrap
-// Workaround
-window.ReactBootstrap.Input = class InputWorkAround extends React.Component {
-  render() {
-    switch (this.props.type) {
-    case 'radio': {
-      return (
-        <Radio {...this.props}>{this.props.label}</Radio>
-      )
-    }
-    case 'checkbox': {
-      return (
-        <Checkbox {...this.props}>{this.props.label}</Checkbox>
-      )
-    }
-    case 'select': {
-      return (
-        <FormControl componentClass='select' {...this.props}>{this.props.children}</FormControl>
-      )
-    }
-    default: {
-      return (
-        <FormControl {...this.props}>{this.props.children}</FormControl>
-      )
-    }
-    }
-  }
-}
-
-if (window.isMain) {
-  window.ReactBootstrap.OverlayTrigger = OverlayTrigger
-  window.ReactBootstrap.Modal = Modal
-}
 
 // Polyfills
 Object.clone = (obj) =>
