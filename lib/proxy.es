@@ -20,30 +20,24 @@ const {ROOT} = global
 const fs = require('fs-extra')
 const zlib = bluebird.promisifyAll(require('zlib'))
 
-const resolveBody = (encoding, body) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let decoded = null
-      switch (encoding) {
-      case 'gzip':
-        decoded = await zlib.gunzipAsync(body)
-        break
-      case 'deflate':
-        decoded = await zlib.inflateAsync(body)
-        break
-      default:
-        decoded = body
-      }
-      decoded = decoded.toString()
-      if (decoded.indexOf('svdata=') === 0) {
-        decoded = decoded.substring(7)
-      }
-      decoded = JSON.parse(decoded)
-      resolve(decoded)
-    } catch (e) {
-      reject(e)
-    }
-  })
+const resolveBody = async (encoding, body) => {
+  let decoded = null
+  switch (encoding) {
+  case 'gzip':
+    decoded = await zlib.gunzipAsync(body)
+    break
+  case 'deflate':
+    decoded = await zlib.inflateAsync(body)
+    break
+  default:
+    decoded = body
+  }
+  decoded = decoded.toString()
+  if (decoded.indexOf('svdata=') === 0) {
+    decoded = decoded.substring(7)
+  }
+  decoded = JSON.parse(decoded)
+  return decoded
 }
 const isStaticResource = (pathname, hostname) => {
   if (pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') === -1) {
@@ -164,9 +158,7 @@ class Proxy extends EventEmitter {
     this.load()
   }
   serverInfo = {}
-  getServerInfo = () => {
-    return this.serverInfo
-  }
+  getServerInfo = () => this.serverInfo
   load = () => {
     const serverList = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
     // HTTP Requests
