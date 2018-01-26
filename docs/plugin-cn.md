@@ -252,11 +252,13 @@ window.notify('Something'); // 桌面通知
 ```javascript
 window.toggleModal('Title', 'Content'); // 显示模态框，Content 可以是 HTML 文档
 // 如果需要在模态框下自定义按钮
-var footer = {
-  name: String, // 按钮显示的名字
-  func: Function, // 点击按钮后的动作
-  style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // 颜色
-}
+var footer = [
+  {
+    name: String, // 按钮显示的名字
+    func: Function, // 点击按钮后的动作
+    style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // 颜色
+  }  
+];
 window.toggleModal('Title', 'Content', footer);
 ```
 
@@ -516,7 +518,7 @@ const unsubscribeObserve = observe(store, [
   )]
 )
 
-export funtion pluginWillUnload() {
+export function pluginWillUnload() {
   unsubscribeObserve()
 }
 ```

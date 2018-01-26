@@ -260,11 +260,13 @@ To use modal:
 ```javascript
 window.toggleModal('Title', 'Content'); // display modal, Content can be HTML
 // if you need to customize buttons
-var footer = {
-  name: String, // button display name
-  func: Function, // action on clicking the button
-  style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // button style
-}
+var footer = [
+  {
+    name: String, // button display name
+    func: Function, // action on clicking the button
+    style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // button style
+  }  
+];
 window.toggleModal('Title', 'Content', footer);
 ```
 
@@ -407,7 +409,7 @@ If you consider maintaining reducers, you may need some Redux actions dispatched
       rank               // *String*, 'S' | ... | 'D'
       boss               // *Boolean*
       map                // *Number*, 11 | ... | 54 | ...
-      mapCell            // *Number*, same as api_no in api_req_map/next, it is actually route number not cell number 
+      mapCell            // *Number*, same as api_no in api_req_map/next, it is actually route number not cell number
       quest              // *String*, map name
       enemy              // *String*, enemy fleet name
       combined           // *Boolean*
@@ -529,7 +531,7 @@ const unsubscribeObserve = observe(store, [
   )]
 )
 
-export funtion pluginWillUnload() {
+export function pluginWillUnload() {
   unsubscribeObserve()
 }
 ```
