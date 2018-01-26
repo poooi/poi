@@ -56,9 +56,6 @@ Object.clone = (obj) =>
 Object.remoteClone = (obj) =>
   JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
 
-// Utils
-require('./env-parts/utils')
-
 // Node modules
 const originConfig = remote.require('./lib/config')
 window.ipc = remote.require('./lib/ipc')
