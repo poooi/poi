@@ -266,7 +266,7 @@ var footer = [
     func: Function, // action on clicking the button
     style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // button style
   }  
-];
+]
 window.toggleModal('Title', 'Content', footer);
 ```
 
