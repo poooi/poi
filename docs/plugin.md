@@ -265,7 +265,7 @@ var footer = [
     name: String, // button display name
     func: Function, // action on clicking the button
     style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // button style
-  }  
+  }
 ]
 window.toggleModal('Title', 'Content', footer);
 ```
@@ -307,15 +307,15 @@ Following data paths are related to plugin development:
 Data in this path are all basic information during game initialization, generally *Object*s keyed by `api_id`, same as server packet.
 ```javascript
 store.const.
-  $ships         
-  $shipTypes    
-  $equips        
-  $equipTypes    
-  $mapareas      
-  $maps          
-  $missions      
+  $ships
+  $shipTypes
+  $equips
+  $equipTypes
+  $mapareas
+  $maps
+  $missions
   $useitems     // items list in アイテム menu
-  $shipgraph    
+  $shipgraph
 ```
 
 ##### store.info
@@ -323,13 +323,13 @@ Data in this path are player data, generally *Object*s keyed by `api_id`, same a
 ```javascript
 store.info.
   basic         // player/teitoku basic information, name, id, level, exp, etc.
-  ships         
+  ships
   fleets        // 0-base, *Array* of lenth 4
-  equips        
+  equips
   repairs       // 0-base, *Array* of lenth 4
   constructions // 0-base, *Array* of lenth 4
   resources     // *Array* of 8 *Number*
-  maps          
+  maps
   quests        // format {records: <quest progress>, activeQuests: <active quests> }
 ```
 
@@ -611,7 +611,7 @@ Import IPC module
 var ipc = window.ipc;
 ```
 
-Register plugin's API:  
+Register plugin's API:
 You should use `pluginName` as `scope_name`.
 ```javascript
 ipc.register("scope_name", {
@@ -631,7 +631,7 @@ ipc.unregister("scope_name", {
 ipc.unregisterAll("scope_name");
 ```
 
-Call other plugin's API:  
+Call other plugin's API:
 NOTICE: All calls are asynchronous. You mustn't expect a return value.
 ```coffeescript
 scope = ipc.access("scope_name");

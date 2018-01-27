@@ -257,7 +257,7 @@ var footer = [
     name: String, // 按钮显示的名字
     func: Function, // 点击按钮后的动作
     style: String in ['default', 'primary', 'success', 'info', 'danger', 'warning'] // 颜色
-  }  
+  }
 ]
 window.toggleModal('Title', 'Content', footer);
 ```
@@ -596,7 +596,7 @@ additionalStyle.innerHTML = `
 var ipc = window.ipc;
 ```
 
-注册插件 API：  
+注册插件 API：
 建议使用 `pluginName` 作为 `scope_name`。
 ```javascript
 ipc.register("scope_name", {
@@ -616,7 +616,7 @@ ipc.unregister("scope_name", {
 ipc.unregisterAll("scope_name");
 ```
 
-调用其他插件的 API：  
+调用其他插件的 API：
 注意：所有调用均为异步调用，无法获得返回值。
 ```coffeescript
 scope = ipc.access("scope_name");

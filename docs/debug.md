@@ -3,8 +3,8 @@
 ## Access
 
 #### Debug Module
-Main (browser) process: `global.dbg`  
-Renderer process: `window.dbg`  
+Main (browser) process: `global.dbg`
+Renderer process: `window.dbg`
 Both can be accessed simply using `dbg`
 
 #### Debug Option Handlers
@@ -38,7 +38,7 @@ Logs only when the Debug Option is enabled
 #### `handler.assert(cond, msg)`
 Asserts only when the Debug Option is enabled
 
-An example：  
+An example：
 ![image](https://cloud.githubusercontent.com/assets/13615512/14062260/36946042-f3e4-11e5-9615-1e024035681a.png)
 
 ### Methods of dbg
@@ -76,8 +76,8 @@ Same to `dbg.h.optionName.isEnabled()`
   * `dbg.extra('xxxx')` (only if `dbg.h.xxxx` hasn't been created yet)
 * Accessing the handlers using `dbg.h.xxxx` in Dev Tools console can take advantage of Dev Tools' "Auto-Completion" feature, like:
   ![image](https://cloud.githubusercontent.com/assets/13615512/14062285/708745c0-f3e5-11e5-9df3-9a082d678180.png)
-* Rarely, if you _deliberately_ want to access certain Debug Option **_without_** creating the handler, you can take advantage of the coffee script `?` operator, like `dbg.h.xxxx?.log('Some info.')`.  
-  Take Debug Option `brk` as an example. It is used to break main renderer process code execution on the first line of app.cjsx. It's used only once on start of the app, and it will be unreasonable to create a handler for it. therefore, the code using it should be:  
+* Rarely, if you _deliberately_ want to access certain Debug Option **_without_** creating the handler, you can take advantage of the coffee script `?` operator, like `dbg.h.xxxx?.log('Some info.')`.
+  Take Debug Option `brk` as an example. It is used to break main renderer process code execution on the first line of app.cjsx. It's used only once on start of the app, and it will be unreasonable to create a handler for it. therefore, the code using it should be:
   `debugger if dbg.h.brk?.isEnabled()`
 
 ## FAQ
@@ -96,9 +96,9 @@ For whatever reason, it is better to discuss with other developers before making
 Check out some existing debug options [here](command-line-args.md#known-extra-debug-options).
 
 #### **Q** I have used `dbg.extra('xyz')` in my code, but the "xyz" option didn't (always) appear when I typed `dbg.list()` in Dev Tools.
-**A** It very likely that at the time you typed `dbg.list()`, non of the code contains your `dbg.extra('xyz')` has been executed yet since the app started, so no handler is created for it.  
+**A** It very likely that at the time you typed `dbg.list()`, non of the code contains your `dbg.extra('xyz')` has been executed yet since the app started, so no handler is created for it.
 If you really want the handler be always available since app starts, put your `dbg.extra('xyz')` somewhere always executes, like at top of index.js, or in the initialisation sequence.
 
 #### **Q** I've enabled option 'xyz' in the main window Dev Tools, but the option is not enabled in my new-window plugin.
-**A** Different windows are different processes, they don't share the debug status. You need to enable the option in the Dev Tools of the new window.  
+**A** Different windows are different processes, they don't share the debug status. You need to enable the option in the Dev Tools of the new window.
 Alternatively, you can enable the debug option using [Command Line Arguments](command-line-args.md#debugging). It will then be enabled for _all windows_.
