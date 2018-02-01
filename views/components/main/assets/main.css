@@ -14,7 +14,7 @@
   overflow: inherit;
 }
 .MainView .panel {
-  margin: 3px;
+  margin: 0;
 }
 .MainView .panel-container,
 .MainView .panel-col {
@@ -126,13 +126,13 @@
 .MainView .task-panel,
 .MainView .teitoku-panel,
 .MainView .resource-panel {
-  overflow: hidden;
+  overflow: scroll;
   white-space: nowrap;
 }
-.MainView .expedition-panel .panel,
-.MainView .task-panel .panel,
-.MainView .resource-panel .panel {
-  height: calc(100% - 6px)
+.MainView .react-grid-item > div {
+  height: 100%;
+  overflow: scroll;
+  width: 100%;
 }
 .MainView .panel-item {
   padding: 4px;

@@ -1,10 +1,23 @@
 .miniship {
   font-size: 14px;
 }
+.miniship .ship-view-mini {
+  height: 100%;
+}
+.miniship .ship-view-mini > .panel-body {
+  display: flex;
+  flex-direction: column;
+}
+.miniship .miniship-fleet-btn {
+  flex: 0 0 20px;
+}
+.miniship .miniship-fleet-content {
+  flex: 1;
+}
 .miniship .ship-tab-content {
   display: -webkit-box;
   flex-flow: row;
-  height: 296px;
+  height: 100%;
   position: relative;
 }
 
@@ -60,6 +73,12 @@
   justify-content: space-between;
   margin: 5px 0 5px 0;
   position: relative;
+}
+.miniship .ship-details-mini .ship-tile:first-child {
+  margin-top: 0;
+}
+.miniship .ship-details-mini .ship-tile:last-child {
+  margin-bottom: 0;
 }
 .miniship .ship-details-mini .ship-item {
   align-items: center;

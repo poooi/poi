@@ -97,9 +97,9 @@ export default connect((state, props) => ({
   render() {
     return (
       <div style={{height: '100%'}} onDoubleClick={this.changeShipView}>
-        <Panel id="ShipViewMini" bsStyle="default" style={{minHeight: 322, height: 'calc(100% - 6px)'}}>
+        <Panel id="ShipViewMini" className="ship-view-mini" bsStyle="default">
           <Panel.Body>
-            <div className="panel-row">
+            <div className="panel-row miniship-fleet-btn">
               <ButtonGroup bsSize="xsmall">
                 {
                   [0, 1, 2, 3].map((i) =>
@@ -123,7 +123,7 @@ export default connect((state, props) => ({
                 />
               </ButtonGroup>
             </div>
-            <div className="no-scroll">
+            <div className="no-scroll miniship-fleet-content">
               <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
                 style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
                 {
