@@ -1,6 +1,5 @@
-import { trimArray } from 'views/utils/tools'
+import { trimArray, buildArray, compareUpdate } from 'views/utils/tools'
 import { zip, findIndex, get, map, omit } from 'lodash'
-const { buildArray, compareUpdate } = window
 
 export default function reducer(state=[], {type, body, postBody}) {
   switch (type) {
