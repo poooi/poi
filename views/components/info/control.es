@@ -206,16 +206,6 @@ const PoiControl = connect((state, props) => ({
     default:
     }
   }
-  sendEvent = (isExtend) => {
-    const event = new CustomEvent('alert.change', {
-      bubbles: true,
-      cancelable: true,
-      detail: {
-        isExtend: isExtend,
-      },
-    })
-    window.dispatchEvent(event)
-  }
   componentDidMount = () => {
     //Stateless touchbar input receiver
     if (process.platform === 'darwin') {
@@ -240,7 +230,7 @@ const PoiControl = connect((state, props) => ({
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? __('Volume on') : __('Volume off')}</Tooltip>}>
           <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
         </OverlayTrigger>
-        <Collapse in={this.state.extend} onExited={this.sendEvent.bind(this, false)} onEntered={this.sendEvent.bind(this, true)} dimension='width' className="poi-control-extender">
+        <Collapse in={this.state.extend} dimension='width' className="poi-control-extender">
           <div>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{__('Open cache dir')}</Tooltip>}>
               <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>

@@ -73,7 +73,7 @@ export const PoiAlert = class poiAlert extends Component {
         this.alertHeight = 30
         this.historyHeight = 152
       }
-      $('.alert-history.panel').style.backgroundColor = this.bgColor
+      this.alertHistory.style.backgroundColor = this.bgColor
       $('poi-alert').style.height = `${this.alertHeight}px`
     }, 100)
   }
@@ -109,7 +109,7 @@ export const PoiAlert = class poiAlert extends Component {
     }
   }
   handleOverflow = () => {
-    const containerWidth = $('poi-alert').offsetWidth
+    const containerWidth = this.alertMain.offsetWidth
     if (!this.state.overflow) {
       this.msgWidth = this.alertArea.offsetWidth
       this.alertPosition.style.width = `${this.msgWidth}px`
@@ -128,6 +128,7 @@ export const PoiAlert = class poiAlert extends Component {
   }
   componentDidUpdate = (prevProps, prevState) => {
     this.handleStyleChange()
+    this.handleOverflow()
   }
   componentDidMount = () => {
     config.addListener('config.set', (path, value) => {
@@ -135,37 +136,26 @@ export const PoiAlert = class poiAlert extends Component {
         this.handleStyleChange()
       }
     })
-    this.observer = new MutationObserver(this.handleOverflow)
-    const target = this.alertArea
-    const options = {
-      childList: true,
-      attributes: true,
-      subtree: true,
-      characterData: true,
-    }
-    this.handleOverflowDebounced = debounce(this.handleOverflow, 100)
-    this.observer.observe(target, options)
+    this.observer = new ResizeObserver(this.handleOverflow)
+    this.observer.observe(this.alertMain)
     window.addEventListener('alert.new', this.handleAddAlert)
-    window.addEventListener('resize', this.handleOverflowDebounced)
-    window.addEventListener('alert.change', this.handleOverflow)
     this.handleStyleChange()
   }
   componentWillUnmount = () => {
+    this.observer.unobserve(this.alertMain)
     config.removeListener('config.set', this.handleStyleChange)
     window.removeEventListener('alert.new', this.handleAddAlert)
-    window.removeEventListener('resize', this.handleOverflowDebounced)
-    window.removeEventListener('alert.change', this.handleOverflow)
   }
   render() {
     return (
-      <div id='alert-main' className='alert-main'>
+      <div id='alert-main' className='alert-main' ref={ref => { this.alertMain = ref }}>
         <div
           id='alert-container'
           className={`alert alert-${this.state.current.type} alert-container`}
           onClick={this.toggleHistory}
         >
           <div className='alert-position' ref={(ref) => { this.alertPosition = ref }}>
-            <span id='alert-area' ref={(ref) => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
+            <span id='alert-area' ref={ref => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
                   <Fragment>
@@ -182,7 +172,7 @@ export const PoiAlert = class poiAlert extends Component {
           </div>
         </div>
         <div id='alert-history'
-          ref={(ref) => { this.alertHistory = ref }}
+          ref={ref => { this.alertHistory = ref }}
           className='alert-history panel'
           style={this.state.alertHistoryStyle}
           onClick={this.toggleHistory}>
