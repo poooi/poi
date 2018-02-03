@@ -21,6 +21,7 @@ export default {
   displayName: <span><FontAwesome name='home' />{__(' Overview')}</span>,
   reactClass: connect((state, props) => ({
     layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
+    editable: get(state, 'config.poi.layouteditable', false),
   }))(class reactClass extends Component {
     static propTypes = {
       layouts: PropTypes.object.isRequired,
@@ -41,6 +42,8 @@ export default {
             cols={{ lg: 20, sm: 10 }}
             breakpoints={{ lg: 750, sm: 0 }}
             measureBeforeMount
+            isResizable={this.props.editable}
+            isDraggable={this.props.editable}
             compactType="vertical"
           >
             <div className="teitoku-panel" key="teitoku-panel">

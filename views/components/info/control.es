@@ -29,6 +29,7 @@ const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
+  editable: get(state, 'config.poi.layouteditable', false),
 }))(class poiControl extends Component {
   static propTypes = {
     muted: PropTypes.bool,
@@ -102,6 +103,9 @@ const PoiControl = connect((state, props) => ({
   }
   handleSetMuted = () => {
     config.set('poi.content.muted', !this.props.muted)
+  }
+  handleSetEditable = () => {
+    config.set('poi.layouteditable', !this.props.editable)
   }
   handleOpenDevTools = () => {
     openFocusedWindowDevTools()
@@ -246,6 +250,9 @@ const PoiControl = connect((state, props) => ({
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{__('Auto adjust')}</Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{__('Arrange panel')}</Tooltip>}>
+              <Button onClick={this.handleSetEditable} bsSize='small'><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={
               <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
