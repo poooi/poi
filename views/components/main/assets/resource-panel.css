@@ -11,7 +11,7 @@
 .MainView .resource-panel .material-container {
   display: flex;
   margin-bottom: 2px;
-  margin-top: 2px;
+  margin-top: 1px;
   padding-right: 0;
 }
 .MainView .resource-panel .material-value {
