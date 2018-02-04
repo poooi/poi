@@ -110,6 +110,7 @@ poi-info {
   display: flex;
   flex: 1;
   flex-direction: column;
+  height: 100%;
 }
 .poi-tab-container > .nav-tabs {
   flex: 0 0 40px;

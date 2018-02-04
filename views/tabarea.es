@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'
+import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 
 //import PluginManager from './services/plugin-manager'
@@ -97,6 +98,8 @@ export default connect(
     useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
     activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
     activePluginName: get(state.ui, 'activePluginName', ''),
+    mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+    editable: get(state.config, 'poi.layouteditable', false),
   })
 )(class ControlledTabArea extends PureComponent {
   static propTypes = {
@@ -105,7 +108,13 @@ export default connect(
     useGridMenu: PropTypes.bool.isRequired,
     activeMainTab: PropTypes.string.isRequired,
     activePluginName: PropTypes.string.isRequired,
+    mainPanelWidth: PropTypes.shape({
+      px: PropTypes.number,
+      percent: PropTypes.number,
+    }),
+    editable: PropTypes.bool.isRequired,
   }
+  state = {}
   dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
@@ -323,33 +332,43 @@ export default connect(
         </TabContentsUnion>
       </div>
     ) : (
-      <div className='poi-tabs-container'>
-        <div className="poi-tab-container no-scroll">
-          <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
-            <NavItem key='mainView' eventKey='mainView'>
-              {mainview.displayName}
-            </NavItem>
-            <NavItem key='shipView' eventKey='shipView'>
-              {shipview.displayName}
-            </NavItem>
-            <NavItem key='settings' eventKey='settings'>
-              {settings.displayName}
-            </NavItem>
-          </Nav>
-          <TabContentsUnion
-            ref={(ref) => {this.mainTabKeyUnion = ref }}
-            activeTab={this.props.activeMainTab}>
-            <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
-              <mainview.reactClass activeMainTab={this.props.activeMainTab} />
-            </div>
-            <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
-              <shipview.reactClass activeMainTab={this.props.activeMainTab} />
-            </div>
-            <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
-              <settings.reactClass activeMainTab={this.props.activeMainTab}/>
-            </div>
-          </TabContentsUnion>
-        </div>
+      <div className='poi-tabs-container' ref={r => this.setState({ resizeContainer: r })}>
+        <ResizableArea
+          minimumWidth={{ px: 0, percent: 10 }}
+          defaultWidth={{ px: 0, percent: 50 }}
+          initWidth={this.props.mainPanelWidth}
+          initHeight={{ px: 0, percent: 100 }}
+          parentContainer={this.state.resizeContainer}
+          disable={{ width: !this.props.editable, height: true }}
+          onResized={({ width }) => config.set('poi.tabarea.mainpanelwidth', width)}
+        >
+          <div className="poi-tab-container no-scroll">
+            <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
+              <NavItem key='mainView' eventKey='mainView'>
+                {mainview.displayName}
+              </NavItem>
+              <NavItem key='shipView' eventKey='shipView'>
+                {shipview.displayName}
+              </NavItem>
+              <NavItem key='settings' eventKey='settings'>
+                {settings.displayName}
+              </NavItem>
+            </Nav>
+            <TabContentsUnion
+              ref={(ref) => {this.mainTabKeyUnion = ref }}
+              activeTab={this.props.activeMainTab}>
+              <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
+                <mainview.reactClass activeMainTab={this.props.activeMainTab} />
+              </div>
+              <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
+                <shipview.reactClass activeMainTab={this.props.activeMainTab} />
+              </div>
+              <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
+                <settings.reactClass activeMainTab={this.props.activeMainTab}/>
+              </div>
+            </TabContentsUnion>
+          </div>
+        </ResizableArea>
         <div className="poi-tab-container no-scroll">
           <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
             <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
