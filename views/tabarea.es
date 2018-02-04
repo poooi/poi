@@ -340,7 +340,11 @@ export default connect(
           initHeight={{ px: 0, percent: 100 }}
           parentContainer={this.state.resizeContainer}
           disable={{ width: !this.props.editable, height: true }}
-          onResized={({ width }) => config.set('poi.tabarea.mainpanelwidth', width)}
+          onResized={({ width }) => {
+            // polyfill: react-grid-layout do not support resizeobserver
+            window.dispatchEvent(new Event('resize'))
+            config.set('poi.tabarea.mainpanelwidth', width)
+          }}
           // polyfill: react-grid-layout do not support resizeobserver
           onResizing={e => window.dispatchEvent(new Event('resize'))}
         >
