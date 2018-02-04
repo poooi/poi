@@ -341,6 +341,8 @@ export default connect(
           parentContainer={this.state.resizeContainer}
           disable={{ width: !this.props.editable, height: true }}
           onResized={({ width }) => config.set('poi.tabarea.mainpanelwidth', width)}
+          // polyfill: react-grid-layout do not support resizeobserver
+          onResizing={e => window.dispatchEvent(new Event('resize'))}
         >
           <div className="poi-tab-container no-scroll">
             <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
