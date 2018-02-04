@@ -118,26 +118,31 @@ config.on('config.set', (path, value) => {
   }
 })
 
-remote.getCurrentWindow().on('dom-ready', e => {
-  const layoutResizeObserver = new ResizeObserver(entries => {
-    let value = {}
-    entries.forEach(entry => {
-      value = {
-        ...value,
-        [entry.target.tagName === 'POI-MAIN' ? 'window' : 'webview']: {
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-          ...entry.target.tagName === 'WEBVIEW' ? {
-            useFixedResolution: window.getStore('config.poi.webview.width', -1) !== -1,
-          } : {},
-        },
-      }
-    })
-    window.dispatch({
-      type: '@@LayoutUpdate',
-      value,
-    })
+const layoutResizeObserver = new ResizeObserver(entries => {
+  let value = {}
+  entries.forEach(entry => {
+    const key = entry.target.tagName === 'POI-MAIN'
+      ? 'window' : entry.target.tagName === 'WEBVIEW'
+        ? 'webview' : entry.target.className.includes('miniship-fleet-content')
+          ? 'minishippane' : entry.target.className.includes('ship-tab-container')
+            ? 'shippane' : null
+    value = {
+      ...value,
+      [key]: {
+        width: entry.contentRect.width,
+        height: entry.contentRect.height,
+        ...key === 'webview' ? {
+          useFixedResolution: window.getStore('config.poi.webview.width', -1) !== -1,
+        } : {},
+      },
+    }
   })
-  layoutResizeObserver.observe($('poi-main'))
-  layoutResizeObserver.observe($('kan-game webview'))
+  window.dispatch({
+    type: '@@LayoutUpdate',
+    value,
+  })
 })
+layoutResizeObserver.observe($('poi-main'))
+layoutResizeObserver.observe($('kan-game webview'))
+layoutResizeObserver.observe($('.miniship-fleet-content'))
+layoutResizeObserver.observe($('.ship-tab-container'))

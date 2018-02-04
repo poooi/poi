@@ -18,10 +18,6 @@ import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
-  configLayoutSelector,
-  configDoubleTabbedSelector,
-  configZoomLevelSelector,
-  layoutSelector,
 } from 'views/utils/selectors'
 
 import './assets/ship.css'
@@ -41,25 +37,7 @@ function getStyle(state, disabled) {
 
 const defaultFleetNames = ['I', 'II', 'III', 'IV']
 
-const shipRowWidthSelector = createSelector(
-  [
-    layoutSelector,
-    configLayoutSelector,
-    configDoubleTabbedSelector,
-    configZoomLevelSelector,
-  ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
-    if (layout === 'horizontal') {
-      if (doubleTabbed) {
-        return ((window.width - webview.width) / 2 / zoomLevel) - 10
-      }
-      return ((window.width - webview.width) / zoomLevel) - 10
-    }
-    if (doubleTabbed) {
-      return (window.width / 2 / zoomLevel) - 10
-    }
-    return (window.width / zoomLevel) - 10
-  }
-)
+const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 
 const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
   createSelector([
