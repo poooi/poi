@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
 import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
-import { Responsive, WidthProvider } from 'react-grid-layout'
+import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import defaultLayout from './default-layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -14,7 +14,6 @@ import './assets/main.css'
 
 const { i18n, config } = window
 const __ = i18n.main.__.bind(i18n.main)
-const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 export default {
   name: 'MainView',
@@ -22,6 +21,7 @@ export default {
   reactClass: connect((state, props) => ({
     layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
     editable: get(state, 'config.poi.layouteditable', false),
+    mainpanewidth: get(state, 'layout.mainpane.width', 450),
   }))(class reactClass extends Component {
     static propTypes = {
       layouts: PropTypes.object.isRequired,
@@ -41,7 +41,7 @@ export default {
             margin={[3, 3]}
             cols={{ lg: 20, sm: 10 }}
             breakpoints={{ lg: 750, sm: 0 }}
-            measureBeforeMount
+            width={this.props.mainpanewidth}
             isResizable={this.props.editable}
             isDraggable={this.props.editable}
             compactType="vertical"

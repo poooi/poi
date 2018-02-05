@@ -18,6 +18,10 @@ const initState = {
     width: 450,
     height: 433,
   },
+  mainpane: {
+    width: 450,
+    height: 433,
+  },
 }
 
 export function reducer(state=initState, {type, value}) {

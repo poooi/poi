@@ -125,7 +125,8 @@ const layoutResizeObserver = new ResizeObserver(entries => {
       ? 'window' : entry.target.tagName === 'WEBVIEW'
         ? 'webview' : entry.target.className.includes('miniship-fleet-content')
           ? 'minishippane' : entry.target.className.includes('ship-tab-container')
-            ? 'shippane' : null
+            ? 'shippane' : entry.target.className.includes('MainView')
+              ? 'mainpane': null
     value = {
       ...value,
       [key]: {
@@ -146,3 +147,4 @@ layoutResizeObserver.observe($('poi-main'))
 layoutResizeObserver.observe($('kan-game webview'))
 layoutResizeObserver.observe($('.miniship-fleet-content'))
 layoutResizeObserver.observe($('.ship-tab-container'))
+layoutResizeObserver.observe($('.MainView'))
