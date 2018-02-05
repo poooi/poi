@@ -14,6 +14,7 @@ const { Component } = React
 import { PaneBodyMini, LBViewMini } from './minishippane'
 import { LandbaseButton } from '../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
+import { layoutResizeObserver } from 'views/services/layout'
 
 import '../assets/miniship.css'
 
@@ -96,15 +97,13 @@ export default connect((state, props) => ({
   }
 
   componentWillUnmount() {
-    executeUntilReady(async () => {
-      const { layoutResizeObserver } = await import('views/services/layout')
+    executeUntilReady(() => {
       layoutResizeObserver.unobserve(this.minishippane)
     })
   }
 
   componentDidMount() {
-    executeUntilReady(async () => {
-      const { layoutResizeObserver } = await import('views/services/layout')
+    executeUntilReady(() => {
       layoutResizeObserver.observe(this.minishippane)
     })
   }

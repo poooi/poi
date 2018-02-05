@@ -8,6 +8,7 @@ import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, R
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import defaultLayout from './default-layout'
 import { executeUntilReady } from 'views/utils/tools'
+import { layoutResizeObserver } from 'views/services/layout'
 
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
@@ -34,15 +35,13 @@ export default {
     }
 
     componentWillUnmount() {
-      executeUntilReady(async () => {
-        const { layoutResizeObserver } = await import('views/services/layout')
+      executeUntilReady(() => {
         layoutResizeObserver.unobserve(this.mainpane)
       })
     }
 
     componentDidMount() {
-      executeUntilReady(async () => {
-        const { layoutResizeObserver } = await import('views/services/layout')
+      executeUntilReady(() => {
         layoutResizeObserver.observe(this.mainpane)
       })
     }

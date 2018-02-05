@@ -17,6 +17,7 @@ import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { PoiApp } from './poi-app'
+import { layoutResizeObserver } from 'views/services/layout'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
@@ -49,15 +50,13 @@ const Poi = connect(state => ({
   reversed: get(state, 'config.poi.reverseLayout', false),
 }))(class poi extends Component {
   componentWillUnmount() {
-    executeUntilReady(async () => {
-      const { layoutResizeObserver } = await import('views/services/layout')
+    executeUntilReady(() => {
       layoutResizeObserver.unobserve(this.poimain)
     })
   }
 
   componentDidMount() {
-    executeUntilReady(async () => {
-      const { layoutResizeObserver } = await import('views/services/layout')
+    executeUntilReady(() => {
       layoutResizeObserver.observe(this.poimain)
     })
   }

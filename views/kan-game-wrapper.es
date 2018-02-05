@@ -8,6 +8,7 @@ import { PoiAlert } from './components/info/alert'
 import PoiMapReminder from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { executeUntilReady } from 'views/utils/tools'
+import { layoutResizeObserver } from 'views/services/layout'
 
 const config = remote.require('./lib/config')
 const poiControlHeight = 30
@@ -45,16 +46,14 @@ export const KanGameWrapper = connect((state, props) => ({
   componentDidMount = () => {
     this.setWindowSizeDebounced = debounce(this.setWindowSize, 200)
     window.addEventListener('resize', this.setWindowSizeDebounced)
-    executeUntilReady(async () => {
-      const { layoutResizeObserver } = await import('views/services/layout')
+    executeUntilReady(() => {
       layoutResizeObserver.observe(document.querySelector('kan-game webview'))
     })
   }
 
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.setWindowSizeDebounced)
-    executeUntilReady(async () => {
-      const { layoutResizeObserver } = await import('views/services/layout')
+    executeUntilReady(() => {
       layoutResizeObserver.unobserve(document.querySelector('kan-game webview'))
     })
   }
