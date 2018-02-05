@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, Component } from 'react'
 import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
@@ -9,6 +9,7 @@ import { get } from 'lodash'
 import '../assets/css/app.css'
 import '../assets/css/global.css'
 
+import { executeUntilReady } from 'views/utils/tools'
 import { store } from './create-store'
 import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
@@ -46,27 +47,48 @@ const CustomCssInjector = () => {
 const Poi = connect(state => ({
   isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.reverseLayout', false),
-}))(({ isHorizontal, reversed }) => (
-  <Fragment>
-    <CustomCssInjector />
-    {
-      config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
-      <title-bar>
-        <TitleBarWrapper />
-      </title-bar>
-    }
-    <poi-main style={{
-      flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
-      ...!isHorizontal && { overflow: 'hidden' },
-    }}>
-      <KanGameWrapper />
-      <PoiApp />
-    </poi-main>
-    <ModalTrigger />
-    <Toastr />
-    <BasicAuth />
-  </Fragment>
-))
+}))(class poi extends Component {
+  componentWillUnmount() {
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.unobserve(this.poimain)
+    })
+  }
+
+  componentDidMount() {
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.observe(this.poimain)
+    })
+  }
+  render() {
+    const { isHorizontal, reversed } = this.props
+    return (
+      <Fragment>
+        <CustomCssInjector />
+        {
+          config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
+          <title-bar>
+            <TitleBarWrapper />
+          </title-bar>
+        }
+        <poi-main
+          ref={ref => { this.poimain = ref }}
+          style={{
+            flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
+            ...!isHorizontal && { overflow: 'hidden' },
+          }}
+        >
+          <KanGameWrapper />
+          <PoiApp />
+        </poi-main>
+        <ModalTrigger />
+        <Toastr />
+        <BasicAuth />
+      </Fragment>
+    )
+  }
+})
 
 ReactDOM.render(
   <Provider store={store}>

@@ -7,6 +7,7 @@ import { Tab, Tabs, Panel } from 'react-bootstrap'
 import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import defaultLayout from './default-layout'
+import { executeUntilReady } from 'views/utils/tools'
 
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
@@ -32,9 +33,23 @@ export default {
       config.set('poi.mainpanel.layout', layouts)
     }
 
+    componentWillUnmount() {
+      executeUntilReady(async () => {
+        const { layoutResizeObserver } = await import('views/services/layout')
+        layoutResizeObserver.unobserve(this.mainpane)
+      })
+    }
+
+    componentDidMount() {
+      executeUntilReady(async () => {
+        const { layoutResizeObserver } = await import('views/services/layout')
+        layoutResizeObserver.observe(this.mainpane)
+      })
+    }
+
     render() {
       return (
-        <div className='main-panel-content'>
+        <div className='main-panel-content' ref={ref => { this.mainpane = ref }}>
           <ResponsiveReactGridLayout
             onLayoutChange={this.onLayoutChange}
             layouts={this.props.layouts}

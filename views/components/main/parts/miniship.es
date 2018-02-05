@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
+import { executeUntilReady } from 'views/utils/tools'
 
 const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -94,6 +95,20 @@ export default connect((state, props) => ({
     })
   }
 
+  componentWillUnmount() {
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.unobserve(this.minishippane)
+    })
+  }
+
+  componentDidMount() {
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.observe(this.minishippane)
+    })
+  }
+
   render() {
     return (
       <div style={{height: '100%'}} onDoubleClick={this.changeShipView}>
@@ -123,7 +138,7 @@ export default connect((state, props) => ({
                 />
               </ButtonGroup>
             </div>
-            <div className="no-scroll miniship-fleet-content">
+            <div className="no-scroll miniship-fleet-content" ref={ref => { this.minishippane = ref }}>
               <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
                 style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
                 {

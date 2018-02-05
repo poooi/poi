@@ -19,6 +19,7 @@ import {
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
+import { executeUntilReady } from 'views/utils/tools'
 
 import './assets/ship.css'
 
@@ -169,6 +170,20 @@ const ShipView = connect((state, props) => ({
     })
   }
 
+  componentWillUnmount() {
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.unobserve(this.shiptabpane)
+    })
+  }
+
+  componentDidMount() {
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.observe(this.shiptabpane)
+    })
+  }
+
   render() {
     return (
       <Panel onDoubleClick={this.changeMainView}>
@@ -197,7 +212,7 @@ const ShipView = connect((state, props) => ({
               />
             </ButtonGroup>
           </div>
-          <div className="no-scroll ship-tab-container">
+          <div className="no-scroll ship-tab-container" ref={ref => { this.shiptabpane = ref }}>
             <div
               className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
               style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>

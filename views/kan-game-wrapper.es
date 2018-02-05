@@ -7,6 +7,7 @@ import { get, debounce } from 'lodash'
 import { PoiAlert } from './components/info/alert'
 import PoiMapReminder from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
+import { executeUntilReady } from 'views/utils/tools'
 
 const config = remote.require('./lib/config')
 const poiControlHeight = 30
@@ -28,6 +29,7 @@ export const KanGameWrapper = connect((state, props) => ({
     windowWidth: window.innerWidth,
     windowHeight: window.innerHeight,
   }
+
   setWindowSize = () => {
     this.setState({
       windowWidth: window.innerWidth,
@@ -39,13 +41,24 @@ export const KanGameWrapper = connect((state, props) => ({
       return
     }
   }
+
   componentDidMount = () => {
     this.setWindowSizeDebounced = debounce(this.setWindowSize, 200)
     window.addEventListener('resize', this.setWindowSizeDebounced)
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.observe(document.querySelector('kan-game webview'))
+    })
   }
+
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.setWindowSizeDebounced)
+    executeUntilReady(async () => {
+      const { layoutResizeObserver } = await import('views/services/layout')
+      layoutResizeObserver.unobserve(document.querySelector('kan-game webview'))
+    })
   }
+
   componentDidUpdate = () => {
     const { width, height } = this.webviewWrapper.getBoundingClientRect()
     this.props.dispatch({
@@ -56,6 +69,7 @@ export const KanGameWrapper = connect((state, props) => ({
       },
     })
   }
+
   render () {
     const { configWebviewWidth , zoomLevel, layout, muted } = this.props
     const { windowHeight, windowWidth } = this.state

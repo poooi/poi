@@ -205,3 +205,12 @@ export const isSubdirectory = (parent, dir) => {
   return !relative ||
     (!relative.startsWith('..') && !path.isAbsolute(relative))
 }
+
+// Execute function until dom ready
+export const executeUntilReady = func => {
+  if (document.readyState === 'complete') {
+    func()
+  } else {
+    document.addEventListener('DOMContentLoaded', func)
+  }
+}

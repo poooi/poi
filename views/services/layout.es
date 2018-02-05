@@ -118,14 +118,14 @@ config.on('config.set', (path, value) => {
   }
 })
 
-const layoutResizeObserver = new ResizeObserver(entries => {
+export const layoutResizeObserver = new ResizeObserver(entries => {
   let value = {}
   entries.forEach(entry => {
     const key = entry.target.tagName === 'POI-MAIN'
       ? 'window' : entry.target.tagName === 'WEBVIEW'
         ? 'webview' : entry.target.className.includes('miniship-fleet-content')
           ? 'minishippane' : entry.target.className.includes('ship-tab-container')
-            ? 'shippane' : entry.target.className.includes('MainView')
+            ? 'shippane' : entry.target.className.includes('main-panel-content')
               ? 'mainpane': null
     value = {
       ...value,
@@ -143,8 +143,3 @@ const layoutResizeObserver = new ResizeObserver(entries => {
     value,
   })
 })
-layoutResizeObserver.observe($('poi-main'))
-layoutResizeObserver.observe($('kan-game webview'))
-layoutResizeObserver.observe($('.miniship-fleet-content'))
-layoutResizeObserver.observe($('.ship-tab-container'))
-layoutResizeObserver.observe($('.MainView'))
