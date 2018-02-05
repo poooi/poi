@@ -1,16 +1,49 @@
+.poi {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
 .poi-app-container {
   overflow: hidden;
 }
+title-bar {
+  flex: 0 0 29px;
+}
+poi-main {
+  align-items: center;
+  display: flex;
+  flex: 1 0 0;
+}
 kan-game webview {
   height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
-kan-game .kan-game-warpper {
+kan-game {
+  display: flex;
+  flex-direction: column;
+  max-height: max-content;
   overflow: hidden;
 }
+.webview-wrapper {
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: max-content;
+  width: 100%;
+}
 poi-info {
+  flex-grow: 0;
+  flex-shrink: 0;
   transform-origin: 0 0;
 }
 poi-app {
+  flex-shrink: 0;
   position: relative;
 }
 poi-app .container {
@@ -19,7 +52,16 @@ poi-app .container {
   padding-right: 0;
   width: auto;
 }
-poi-app poi-nav-tabs .nav {
+poi-app poi-nav,
+poi-app poi-nav-tabs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+poi-app poi-nav-tabs .poi-tabs-container-doubletabbed .nav,
+poi-app poi-nav-tabs .poi-tab-contents .nav {
   display: flex;
 }
 poi-app poi-nav-tabs .nav li {
@@ -63,15 +105,27 @@ poi-info {
 }
 .poi-tabs-container {
   display: flex;
+  height: 100%;
 }
-.poi-tabs-container > div {
+.poi-tab-container {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  height: 100%;
+}
+.poi-tab-container > .nav-tabs {
+  flex: 0 0 40px;
 }
 .poi-tab-contents {
   display: -webkit-box;
+  flex: 1 0 0;
+  overflow: scroll;
   position: relative;
 }
 .poi-tab-child-sizer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   left: 0;
   margin-right: -100%;
   overflow: hidden;
@@ -80,6 +134,9 @@ poi-info {
   width: 100%;
 }
 .poi-tab-child-positioner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   opacity: 1;
   position: relative;
   width: 100%;
@@ -88,6 +145,8 @@ poi-info {
   transition: .35s ease-in-out;
 }
 .poi-app-tabpane {
+  flex: 1;
+  height: 100%;
   overflow-y: scroll;
   width: 100%;
 }
@@ -95,9 +154,6 @@ poi-info {
   left: 100%;
 }
 /* csslint ignore:start */
-#top-nav {
-  display: inherit;
-}
 #top-nav > li {
   width:26%;
 }
@@ -113,5 +169,8 @@ poi-info {
 }
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
   opacity: 0.9 !important;
+}
+#electron-app-title-bar img.icon {
+  margin: 6px 10px !important;
 }
 /* csslint ignore:end */

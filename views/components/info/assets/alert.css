@@ -23,6 +23,7 @@ poi-info .alert {
   pointer-events: none;
   position: relative;
   transition: 0.3s;
+  width: 100%;
 }
 .alert-container {
   cursor: pointer;

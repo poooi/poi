@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
+import { executeUntilReady } from 'views/utils/tools'
 
 const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -13,6 +14,7 @@ const { Component } = React
 import { PaneBodyMini, LBViewMini } from './minishippane'
 import { LandbaseButton } from '../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
+import { layoutResizeObserver } from 'views/services/layout'
 
 import '../assets/miniship.css'
 
@@ -94,12 +96,24 @@ export default connect((state, props) => ({
     })
   }
 
+  componentWillUnmount() {
+    executeUntilReady(() => {
+      layoutResizeObserver.unobserve(this.minishippane)
+    })
+  }
+
+  componentDidMount() {
+    executeUntilReady(() => {
+      layoutResizeObserver.observe(this.minishippane)
+    })
+  }
+
   render() {
     return (
       <div style={{height: '100%'}} onDoubleClick={this.changeShipView}>
-        <Panel id="ShipViewMini" bsStyle="default" style={{minHeight: 322, height: 'calc(100% - 6px)'}}>
+        <Panel id="ShipViewMini" className="ship-view-mini" bsStyle="default">
           <Panel.Body>
-            <div className="panel-row">
+            <div className="panel-row miniship-fleet-btn">
               <ButtonGroup bsSize="xsmall">
                 {
                   [0, 1, 2, 3].map((i) =>
@@ -123,7 +137,7 @@ export default connect((state, props) => ({
                 />
               </ButtonGroup>
             </div>
-            <div className="no-scroll">
+            <div className="no-scroll miniship-fleet-content" ref={ref => { this.minishippane = ref }}>
               <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
                 style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
                 {

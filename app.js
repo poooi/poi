@@ -137,6 +137,7 @@ app.on('ready', () => {
     webPreferences: {
       plugins: true,
       nodeIntegrationInWorker: true,
+      experimentalFeatures: true,
     },
     backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
   })

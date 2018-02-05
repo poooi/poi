@@ -18,11 +18,9 @@ import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
-  configLayoutSelector,
-  configDoubleTabbedSelector,
-  configZoomLevelSelector,
-  layoutSelector,
 } from 'views/utils/selectors'
+import { executeUntilReady } from 'views/utils/tools'
+import { layoutResizeObserver } from 'views/services/layout'
 
 import './assets/ship.css'
 
@@ -41,25 +39,7 @@ function getStyle(state, disabled) {
 
 const defaultFleetNames = ['I', 'II', 'III', 'IV']
 
-const shipRowWidthSelector = createSelector(
-  [
-    layoutSelector,
-    configLayoutSelector,
-    configDoubleTabbedSelector,
-    configZoomLevelSelector,
-  ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
-    if (layout === 'horizontal') {
-      if (doubleTabbed) {
-        return ((window.width - webview.width) / 2 / zoomLevel) - 10
-      }
-      return ((window.width - webview.width) / zoomLevel) - 10
-    }
-    if (doubleTabbed) {
-      return (window.width / 2 / zoomLevel) - 10
-    }
-    return (window.width / zoomLevel) - 10
-  }
-)
+const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 
 const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
   createSelector([
@@ -191,11 +171,23 @@ const ShipView = connect((state, props) => ({
     })
   }
 
+  componentWillUnmount() {
+    executeUntilReady(() => {
+      layoutResizeObserver.unobserve(this.shiptabpane)
+    })
+  }
+
+  componentDidMount() {
+    executeUntilReady(() => {
+      layoutResizeObserver.observe(this.shiptabpane)
+    })
+  }
+
   render() {
     return (
       <Panel onDoubleClick={this.changeMainView}>
         <Panel.Body>
-          <div className="div-row">
+          <div className="div-row fleet-name-button-container">
             <ButtonGroup className="fleet-name-button">
               {
                 times(4).map(i =>
@@ -219,7 +211,7 @@ const ShipView = connect((state, props) => ({
               />
             </ButtonGroup>
           </div>
-          <div className="no-scroll ship-tab-container">
+          <div className="no-scroll ship-tab-container" ref={ref => { this.shiptabpane = ref }}>
             <div
               className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
               style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>

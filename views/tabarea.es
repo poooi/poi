@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'
+import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 
 //import PluginManager from './services/plugin-manager'
@@ -97,6 +98,8 @@ export default connect(
     useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
     activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
     activePluginName: get(state.ui, 'activePluginName', ''),
+    mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+    editable: get(state.config, 'poi.layouteditable', false),
   })
 )(class ControlledTabArea extends PureComponent {
   static propTypes = {
@@ -105,7 +108,13 @@ export default connect(
     useGridMenu: PropTypes.bool.isRequired,
     activeMainTab: PropTypes.string.isRequired,
     activePluginName: PropTypes.string.isRequired,
+    mainPanelWidth: PropTypes.shape({
+      px: PropTypes.number,
+      percent: PropTypes.number,
+    }),
+    editable: PropTypes.bool.isRequired,
   }
+  state = {}
   dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
@@ -288,80 +297,120 @@ export default connect(
       />
     )
 
-    return !this.props.doubleTabbed ? (
-      <div>
-        <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} id="top-nav" className={navClass}
-          onSelect={this.handleSelectTab}>
-          <NavItem key='mainView' eventKey='mainView'>
-            {mainview.displayName}
-          </NavItem>
-          <NavItem key='shipView' eventKey='shipView'>
-            {shipview.displayName}
-          </NavItem>
-          <NavItem key='plugin' eventKey={activePluginName} onSelect={this.handleSelect}>
-            {(activePlugin || {}).displayName || defaultPluginTitle}
-          </NavItem>
-          <NavDropdown id='plugin-dropdown' pullRight title=' '
-            onSelect={this.handleSelectDropdown}>
-            {pluginDropdownContents}
-          </NavDropdown>
-          <NavItem key='settings' eventKey='settings' className="tab-narrow">
-            <FontAwesome key={0} name='cog' />
-          </NavItem>
-        </Nav>
-        <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }} activeTab={this.props.activeMainTab}>
-          <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
-            <mainview.reactClass />
-          </div>
-          <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
-            <shipview.reactClass />
-          </div>
-          {pluginContents}
-          <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
-            <settings.reactClass />
-          </div>
-        </TabContentsUnion>
-      </div>
+    const firstPanelNav = !this.props.doubleTabbed ? (
+      <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} id="top-nav" className={navClass}
+        onSelect={this.handleSelectTab}>
+        <NavItem key='mainView' eventKey='mainView'>
+          {mainview.displayName}
+        </NavItem>
+        <NavItem key='shipView' eventKey='shipView'>
+          {shipview.displayName}
+        </NavItem>
+        <NavItem key='plugin' eventKey={activePluginName} onSelect={this.handleSelect}>
+          {(activePlugin || {}).displayName || defaultPluginTitle}
+        </NavItem>
+        <NavDropdown id='plugin-dropdown' pullRight title=' '
+          onSelect={this.handleSelectDropdown}>
+          {pluginDropdownContents}
+        </NavDropdown>
+        <NavItem key='settings' eventKey='settings' className="tab-narrow">
+          <FontAwesome key={0} name='cog' />
+        </NavItem>
+      </Nav>
     ) : (
-      <div className='poi-tabs-container'>
-        <div className="no-scroll">
-          <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
-            <NavItem key='mainView' eventKey='mainView'>
-              {mainview.displayName}
-            </NavItem>
-            <NavItem key='shipView' eventKey='shipView'>
-              {shipview.displayName}
-            </NavItem>
-            <NavItem key='settings' eventKey='settings'>
-              {settings.displayName}
-            </NavItem>
-          </Nav>
-          <TabContentsUnion
-            ref={(ref) => {this.mainTabKeyUnion = ref }}
-            activeTab={this.props.activeMainTab}>
-            <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
-              <mainview.reactClass activeMainTab={this.props.activeMainTab} />
-            </div>
-            <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
-              <shipview.reactClass activeMainTab={this.props.activeMainTab} />
-            </div>
-            <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
-              <settings.reactClass activeMainTab={this.props.activeMainTab}/>
-            </div>
-          </TabContentsUnion>
+      <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
+        <NavItem key='mainView' eventKey='mainView'>
+          {mainview.displayName}
+        </NavItem>
+        <NavItem key='shipView' eventKey='shipView'>
+          {shipview.displayName}
+        </NavItem>
+        <NavItem key='settings' eventKey='settings'>
+          {settings.displayName}
+        </NavItem>
+      </Nav>
+    )
+
+    const firstPanelCnt = !this.props.doubleTabbed ? (
+      <TabContentsUnion
+        ref={ref => {
+          if (this.props.doubleTabbed) {
+            this.mainTabKeyUnion = ref
+          } else {
+            this.tabKeyUnion = ref
+          }
+        }}
+        activeTab={this.props.activeMainTab}>
+        <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
+          <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div className="no-scroll">
-          <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
-            <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
-              title={(activePlugin || {}).displayName || defaultPluginTitle}>
-              {pluginDropdownContents}
-            </NavDropdown>
-          </Nav>
-          <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }}
-            activeTab={this.props.activePluginName}>
-            {pluginContents}
-          </TabContentsUnion>
+        <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
+          <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
+        { pluginContents }
+        <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
+          <settings.reactClass activeMainTab={this.props.activeMainTab}/>
+        </div>
+      </TabContentsUnion>
+    ) : (
+      <TabContentsUnion
+        ref={ref => {
+          if (this.props.doubleTabbed) {
+            this.mainTabKeyUnion = ref
+          } else {
+            this.tabKeyUnion = ref
+          }
+        }}
+        activeTab={this.props.activeMainTab}>
+        <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
+          <mainview.reactClass activeMainTab={this.props.activeMainTab} />
+        </div>
+        <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
+          <shipview.reactClass activeMainTab={this.props.activeMainTab} />
+        </div>
+        <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
+          <settings.reactClass activeMainTab={this.props.activeMainTab}/>
+        </div>
+      </TabContentsUnion>
+    )
+
+    return (
+      <div className={classNames('poi-tabs-container', {
+        'poi-tabs-container-doubletabbed': this.props.doubleTabbed,
+        'poi-tabs-container-singletabbed': !this.props.doubleTabbed,
+      })} ref={r => this.setState({ resizeContainer: r })}>
+        <ResizableArea
+          minimumWidth={{ px: 0, percent: this.props.doubleTabbed ? 10 : 100 }}
+          defaultWidth={{ px: 0, percent: 50 }}
+          initWidth={this.props.mainPanelWidth}
+          initHeight={{ px: 0, percent: 100 }}
+          parentContainer={this.state.resizeContainer}
+          disable={{ width: !this.props.doubleTabbed || !this.props.editable, height: true }}
+          onResized={({ width }) => {
+            config.set('poi.tabarea.mainpanelwidth', width)
+          }}
+        >
+          <div className="poi-tab-container no-scroll">
+            { firstPanelNav }
+            { firstPanelCnt }
+          </div>
+        </ResizableArea>
+        {
+          this.props.doubleTabbed && (
+            <div className="poi-tab-container no-scroll">
+              <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
+                <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
+                  title={(activePlugin || {}).displayName || defaultPluginTitle}>
+                  {pluginDropdownContents}
+                </NavDropdown>
+              </Nav>
+              <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }}
+                activeTab={this.props.activePluginName}>
+                {pluginContents}
+              </TabContentsUnion>
+            </div>
+          )
+        }
       </div>
     )
   }

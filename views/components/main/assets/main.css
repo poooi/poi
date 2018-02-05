@@ -14,7 +14,7 @@
   overflow: inherit;
 }
 .MainView .panel {
-  margin: 3px;
+  margin: 0;
 }
 .MainView .panel-container,
 .MainView .panel-col {
@@ -45,80 +45,6 @@
 .MainView .task-panel {
   position: absolute;
 }
-/* horizontal */
-.MainView .main-area-horizontal .teitoku-panel {
-  height: 39px;
-  left: 0;
-  top: 0;
-  width: 100%;
-}
-.MainView .main-area-horizontal .resource-panel {
-  height: 96px;
-  left: 0;
-  top: 39px;
-  width: 50%;
-}
-.MainView .main-area-horizontal .miniship {
-  height: 332px;
-  left: 0;
-  top: 135px;
-  width: 50%;
-}
-.MainView .main-area-horizontal .combined-panels {
-  height: 150px;
-  left: 50%;
-  top: 39px;
-  width: calc(50% - 6px);
-}
-.MainView .main-area-horizontal .expedition-panel {
-  height: 97px;
-  left: 50%;
-  top: 195px;
-  width: 50%;
-}
-.MainView .main-area-horizontal .task-panel {
-  height: 175px;
-  left: 50%;
-  top: 292px;
-  width: 50%;
-}
-/* vertical */
-.MainView .main-area-vertical .teitoku-panel {
-  height: 39px;
-  left: 0;
-  top: 0;
-  width: 60%;
-}
-.MainView .main-area-vertical .resource-panel {
-  height: 116px;
-  left: 0;
-  top: 39px;
-  width: 30%;
-}
-.MainView .main-area-vertical .miniship {
-  height: 100%;
-  left: 60%;
-  top: 0;
-  width: 40%;
-}
-.MainView .main-area-vertical .combined-panels {
-  height: 170px;
-  left: 30%;
-  top: 39px;
-  width: calc(30% - 6px);
-}
-.MainView .main-area-vertical .expedition-panel {
-  height: 113px;
-  left: 30%;
-  top: 215px;
-  width: 30%;
-}
-.MainView .main-area-vertical .task-panel {
-  height: 172px;
-  left: 0;
-  top: 156px;
-  width: 30%;
-}
 /* panels */
 .MainView .ndock-panel,
 .MainView .kdock-panel,
@@ -126,13 +52,13 @@
 .MainView .task-panel,
 .MainView .teitoku-panel,
 .MainView .resource-panel {
-  overflow: hidden;
+  overflow: scroll;
   white-space: nowrap;
 }
-.MainView .expedition-panel .panel,
-.MainView .task-panel .panel,
-.MainView .resource-panel .panel {
-  height: calc(100% - 6px)
+.MainView .react-grid-item > div {
+  height: 100%;
+  overflow: scroll;
+  width: 100%;
 }
 .MainView .panel-item {
   padding: 4px;

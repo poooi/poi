@@ -3,36 +3,13 @@ import { MiniShipRow, MiniSquardRow } from './minishipitem'
 import React, { Fragment } from 'react'
 import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
-import { createSelector } from 'reselect'
 
 import TopAlert from 'views/components/ship-parts/topalert'
 import {
   fleetShipsIdSelectorFactory,
-  layoutSelector,
-  configLayoutSelector,
-  configZoomLevelSelector,
-  configDoubleTabbedSelector,
 } from 'views/utils/selectors'
 
-const miniShipRowWidthSelector = createSelector(
-  [
-    layoutSelector,
-    configLayoutSelector,
-    configDoubleTabbedSelector,
-    configZoomLevelSelector,
-  ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
-    if (layout === 'horizontal') {
-      if (doubleTabbed) {
-        return ((window.width - webview.width) / 4 / zoomLevel) - 16
-      }
-      return ((window.width - webview.width) / 2 / zoomLevel) - 16
-    }
-    if (doubleTabbed) {
-      return (window.width / 4 / zoomLevel) - 16
-    }
-    return (window.width * 0.4 / zoomLevel) - 16
-  }
-)
+const miniShipRowWidthSelector = state => get(state, 'layout.minishippane.width', 250)
 
 export const PaneBodyMini = connect(() => {
   return (state, {fleetId}) => ({

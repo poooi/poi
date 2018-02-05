@@ -27,18 +27,9 @@ const openItemAsync = (dir, source=null) => {
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
-
-config.on('config.set', (path, value) => {
-  switch (path) {
-  case 'poi.content.muted':
-    $('kan-game webview').setAudioMuted(value)
-    break
-  default:
-  }
-})
-
 const PoiControl = connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
+  editable: get(state, 'config.poi.layouteditable', false),
 }))(class poiControl extends Component {
   static propTypes = {
     muted: PropTypes.bool,
@@ -112,6 +103,9 @@ const PoiControl = connect((state, props) => ({
   }
   handleSetMuted = () => {
     config.set('poi.content.muted', !this.props.muted)
+  }
+  handleSetEditable = () => {
+    config.set('poi.layouteditable', !this.props.editable)
   }
   handleOpenDevTools = () => {
     openFocusedWindowDevTools()
@@ -212,16 +206,6 @@ const PoiControl = connect((state, props) => ({
     default:
     }
   }
-  sendEvent = (isExtend) => {
-    const event = new CustomEvent('alert.change', {
-      bubbles: true,
-      cancelable: true,
-      detail: {
-        isExtend: isExtend,
-      },
-    })
-    window.dispatchEvent(event)
-  }
   componentDidMount = () => {
     //Stateless touchbar input receiver
     if (process.platform === 'darwin') {
@@ -238,7 +222,7 @@ const PoiControl = connect((state, props) => ({
     return (
       <div className='poi-control-container'>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__('Developer Tools')}</Tooltip>}>
-          <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='gears' /></Button>
+          <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='terminal' /></Button>
         </OverlayTrigger>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'>{__('Take a screenshot')}</Tooltip>}>
           <Button onClick={this.handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
@@ -246,7 +230,7 @@ const PoiControl = connect((state, props) => ({
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? __('Volume on') : __('Volume off')}</Tooltip>}>
           <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
         </OverlayTrigger>
-        <Collapse in={this.state.extend} onExited={this.sendEvent.bind(this, false)} onEntered={this.sendEvent.bind(this, true)} dimension='width' className="poi-control-extender">
+        <Collapse in={this.state.extend} dimension='width' className="poi-control-extender">
           <div>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{__('Open cache dir')}</Tooltip>}>
               <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
@@ -256,6 +240,9 @@ const PoiControl = connect((state, props) => ({
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{__('Auto adjust')}</Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{__('Arrange panel')}</Tooltip>}>
+              <Button onClick={this.handleSetEditable} bsSize='small'><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={
               <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>

@@ -6,7 +6,6 @@ import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
 const {config, i18n, $} = window
 const __ = i18n.setting.__.bind(i18n.setting)
-const webview = $('kan-game webview')
 const wvStatus = {
   Loading: 0,
   Loaded: 1,
@@ -25,12 +24,14 @@ class NavigatorBar extends React.Component {
     }
   }
   componentDidMount() {
+    const webview = $('kan-game webview')
     webview.addEventListener('did-start-loading', this.onStartLoading)
     webview.addEventListener('did-stop-loading', this.onStopLoading)
     webview.addEventListener('did-fail-load', this.onFailLoad)
     webview.addEventListener('will-navigate', this.onWillNavigate)
   }
   componentWillUnmount() {
+    const webview = $('kan-game webview')
     webview.removeEventListener('did-start-loading', this.onStartLoading)
     webview.removeEventListener('did-stop-loading', this.onStopLoading)
     webview.removeEventListener('did-fail-load', this.onFailLoad)
@@ -43,6 +44,7 @@ class NavigatorBar extends React.Component {
     })
   }
   onStopLoading = (e) => {
+    const webview = $('kan-game webview')
     this.setState({
       status: wvStatus.Loaded,
       url: webview.getURL(),
@@ -60,6 +62,7 @@ class NavigatorBar extends React.Component {
   }
   // UI Interaction
   navigate(url) {
+    const webview = $('kan-game webview')
     if (!(url.startsWith('http://') || url.startsWith('https://'))) {
       url = `http://${this.state.url}`
     }
@@ -82,6 +85,7 @@ class NavigatorBar extends React.Component {
     this.navigate(this.state.url)
   }
   onClickStop = (e) => {
+    const webview = $('kan-game webview')
     webview.stop()
   }
   onClickHomepage = (e) => {

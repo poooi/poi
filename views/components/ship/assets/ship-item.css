@@ -9,6 +9,9 @@
   position: relative;
   white-space: nowrap;
 }
+.ShipView .ship-item:last-child {
+  margin-bottom: 7px;
+}
 .ShipView .ship-avatar-container {
   position: absolute;
   top: 9px;

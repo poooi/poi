@@ -7,6 +7,9 @@
   height: 0;
   width: 0;
 }
+hr {
+  display: none;
+}
 body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
@@ -134,5 +137,11 @@ div[role='tooltip'],
 /* csslint ignore:start */
 a:focus, .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
   outline: none !important;
+}
+.react-grid-item.react-grid-placeholder {
+  background: #2196F3 !important;
+}
+.react-resizable-handle {
+  filter: opacity(.5) drop-shadow(0 0 0 white);
 }
 /* csslint ignore:end */
