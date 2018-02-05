@@ -60,7 +60,7 @@ poi-app poi-nav-tabs {
   position: absolute;
   width: 100%;
 }
-poi-app poi-nav-tabs .poi-tabs-container .nav {
+poi-app poi-nav-tabs .poi-tabs-container-doubletabbed .nav {
   display: flex;
 }
 poi-app poi-nav-tabs .nav li {
