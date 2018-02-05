@@ -10,7 +10,7 @@ remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
 })
 
 const setCSS = ({ layout, zoomLevel }) => {
-  const tabSize = $('.poi-tab-container:last-child .poi-tab-contents').getBoundingClientRect()
+  const tabSize = ($('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')).getBoundingClientRect()
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
   const { right, bottom, width } =  config.get('poi.webview.width', -1) !== 0 ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
