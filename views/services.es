@@ -20,6 +20,11 @@ import './services/sortie-dangerous-check'
 import './services/sortie-free-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
+import {
+  gameRefreshPage,
+  gameRefreshPageIgnoringCache,
+  gameReloadFlash,
+} from './services/utils'
 
 // Update server info
 const setUpdateServer = (dispatch) => {
@@ -49,22 +54,6 @@ setUpdateServer(window.dispatch)
 
 observe(store, [serverObserver])
 
-const refreshFlash = () =>
-  $('kan-game webview').executeJavaScript(`
-    var doc;
-    if (document.getElementById('game_frame')) {
-      doc = document.getElementById('game_frame').contentDocument;
-    } else {
-      doc = document;
-    }
-    var flash = doc.getElementById('flashWrap');
-    if(flash) {
-      var flashInnerHTML = flash.innerHTML;
-      flash.innerHTML = '';
-      flash.innerHTML = flashInnerHTML;
-    }
-  `)
-
 // F5 & Ctrl+F5 & Alt+F5
 window.addEventListener('keydown', async (e) => {
   const isingame = await isInGame()
@@ -79,9 +68,9 @@ window.addEventListener('keydown', async (e) => {
       remote.getCurrentWindow().blurWebView()
     } else if (e.keyCode === 82 && e.metaKey) {
       if (e.shiftKey) { // cmd + shift + r
-        $('kan-game webview').reloadIgnoringCache()
+        gameRefreshPageIgnoringCache()
       } else if (e.altKey) { // cmd + alt + r
-        refreshFlash()
+        gameReloadFlash()
       } else { // cmd + r
         // Catched by menu
         // $('kan-game webview').reload()
@@ -90,11 +79,11 @@ window.addEventListener('keydown', async (e) => {
     }
   } else if (e.keyCode === 116){
     if (e.ctrlKey) { // ctrl + f5
-      $('kan-game webview').reloadIgnoringCache()
+      gameRefreshPageIgnoringCache()
     } else if (e.altKey){ // alt + f5
-      refreshFlash()
+      gameReloadFlash()
     } else if (!e.metaKey){ // f5
-      $('kan-game webview').reload()
+      gameRefreshPage()
     }
   }
 })

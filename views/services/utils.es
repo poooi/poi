@@ -43,6 +43,10 @@ export const gameRefreshPage = () => {
   window.$('kan-game webview').reload()
 }
 
+export const gameRefreshPageIgnoringCache = () => {
+  window.$('kan-game webview').reloadIgnoringCache()
+}
+
 export const gameReloadFlash = () => {
   window.$('kan-game webview').executeJavaScript(`
   var doc;
