@@ -12,8 +12,9 @@ remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
 const setCSS = ({ layout, zoomLevel }) => {
   const tabSize = ($('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')).getBoundingClientRect()
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom, width } =  config.get('poi.webview.width', -1) !== 0 ?
+  const { right, bottom } =  config.get('poi.webview.width', -1) !== 0 ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
+  const realWidth = config.get('poi.webview.width', -1) > 0 ? config.get('poi.webview.width', -1) : $('kan-game webview').clientWidth
   // Apply css
   additionalStyle.innerHTML = `
 div[role='tooltip'], .poi-app-container, poi-info {
@@ -32,10 +33,10 @@ div[role='tooltip'], .poi-app-container, poi-info {
 }`
 
   // Resize when window size smaller than webview size
-  if (layout === 'vertical' && width > window.innerWidth) {
+  if (layout === 'vertical' && realWidth > window.innerWidth) {
     let {width, height, x, y} = remote.getCurrentWindow().getBounds()
     const borderX = width - window.innerWidth
-    width = width + borderX
+    width = realWidth + borderX
     remote.getCurrentWindow().setBounds({width, height, x, y})
   }
 }
