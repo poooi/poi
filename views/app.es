@@ -9,7 +9,6 @@ import { get } from 'lodash'
 import '../assets/css/app.css'
 import '../assets/css/global.css'
 
-import { executeUntilReady } from 'views/utils/tools'
 import { store } from './create-store'
 import { Toastr } from './components/info/toastr'
 import { ModalTrigger } from './components/etc/modal'
@@ -50,15 +49,11 @@ const Poi = connect(state => ({
   reversed: get(state, 'config.poi.reverseLayout', false),
 }))(class poi extends Component {
   componentWillUnmount() {
-    executeUntilReady(() => {
-      layoutResizeObserver.unobserve(this.poimain)
-    })
+    layoutResizeObserver.unobserve(this.poimain)
   }
 
   componentDidMount() {
-    executeUntilReady(() => {
-      layoutResizeObserver.observe(this.poimain)
-    })
+    layoutResizeObserver.observe(this.poimain)
   }
   render() {
     const { isHorizontal, reversed } = this.props

@@ -19,7 +19,6 @@ import {
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
-import { executeUntilReady } from 'views/utils/tools'
 import { layoutResizeObserver } from 'views/services/layout'
 
 import './assets/ship.css'
@@ -172,15 +171,11 @@ const ShipView = connect((state, props) => ({
   }
 
   componentWillUnmount() {
-    executeUntilReady(() => {
-      layoutResizeObserver.unobserve(this.shiptabpane)
-    })
+    layoutResizeObserver.unobserve(this.shiptabpane)
   }
 
   componentDidMount() {
-    executeUntilReady(() => {
-      layoutResizeObserver.observe(this.shiptabpane)
-    })
+    layoutResizeObserver.observe(this.shiptabpane)
   }
 
   render() {

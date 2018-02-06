@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { executeUntilReady } from 'views/utils/tools'
 
 const { i18n, dispatch } = window
 const __ = i18n.main.__.bind(i18n.main)
@@ -97,15 +96,11 @@ export default connect((state, props) => ({
   }
 
   componentWillUnmount() {
-    executeUntilReady(() => {
-      layoutResizeObserver.unobserve(this.minishippane)
-    })
+    layoutResizeObserver.unobserve(this.minishippane)
   }
 
   componentDidMount() {
-    executeUntilReady(() => {
-      layoutResizeObserver.observe(this.minishippane)
-    })
+    layoutResizeObserver.observe(this.minishippane)
   }
 
   render() {

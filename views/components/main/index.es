@@ -7,7 +7,6 @@ import { Tab, Tabs, Panel } from 'react-bootstrap'
 import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, ResourcePanel, AdmiralPanel } from './parts'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import defaultLayout from './default-layout'
-import { executeUntilReady } from 'views/utils/tools'
 import { layoutResizeObserver } from 'views/services/layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -35,15 +34,11 @@ export default {
     }
 
     componentWillUnmount() {
-      executeUntilReady(() => {
-        layoutResizeObserver.unobserve(this.mainpane)
-      })
+      layoutResizeObserver.unobserve(this.mainpane)
     }
 
     componentDidMount() {
-      executeUntilReady(() => {
-        layoutResizeObserver.observe(this.mainpane)
-      })
+      layoutResizeObserver.observe(this.mainpane)
     }
 
     render() {
