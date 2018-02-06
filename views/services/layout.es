@@ -45,7 +45,6 @@ div[role='tooltip'], .poi-app-container, poi-info {
 
     if (layout !== 'vertical' && realHeight > window.getStore('layout.window.height')) {
       let { width, height, x, y } = remote.getCurrentWindow().getBounds()
-      console.log(width, height, x, y, window.getStore('layout.window.height'))
       height += realHeight - window.getStore('layout.window.height')
       remote.getCurrentWindow().setBounds({ width, height, x, y })
     }
