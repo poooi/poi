@@ -72,21 +72,21 @@ export const KanGameWrapper = connect((state, props) => ({
     const titleBarHeight = getTitlebarHeight()
     const zoomedPoiControlHeight = Math.floor(poiControlHeight * zoomLevel)
     let webviewWidth = configWebviewWidth
-    let webviewHeight = Math.min(windowHeight - zoomedPoiControlHeight - titleBarHeight , Math.round(configWebviewWidth / 800.0 * 480.0))
+    let webviewHeight = Math.min(windowHeight - zoomedPoiControlHeight - titleBarHeight , Math.floor(configWebviewWidth * 0.6))
     if (!useFixedResolution) {
       if (isHorizontal) {
         webviewHeight = windowHeight - zoomedPoiControlHeight - titleBarHeight
-        webviewWidth = Math.round(webviewHeight / 480.0 * 800.0)
+        webviewWidth = Math.floor(webviewHeight / 0.6)
       } else {
         webviewWidth = windowWidth
-        webviewHeight = Math.round(webviewWidth / 800.0 * 480.0)
+        webviewHeight = Math.floor(webviewWidth * 0.6)
       }
     }
     return (
       <kan-game style={{
         flexBasis: (isHorizontal ? webviewWidth : webviewHeight + zoomedPoiControlHeight),
         flexGrow: 0,
-        flexShrink: 1,
+        flexShrink: 0,
         ... isHorizontal ? {
           height: webviewHeight + zoomedPoiControlHeight,
         } : {

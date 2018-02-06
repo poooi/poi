@@ -25,7 +25,6 @@ kan-game webview {
 kan-game {
   display: flex;
   flex-direction: column;
-  max-height: max-content;
   overflow: hidden;
 }
 .webview-wrapper {

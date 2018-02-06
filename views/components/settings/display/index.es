@@ -4,7 +4,6 @@ import Divider from '../components/divider'
 import LayoutConfig from './layout-config'
 import ThemeConfig from './theme-config'
 import ZoomingConfig from './zooming-config'
-import PanelMinSizeConfig from './panel-min-size-config'
 import FlashQualityConfig from './flash-quality-config'
 import ResolutionConfig from './resolution-config'
 
@@ -58,10 +57,6 @@ const DisplayConfig = () => (
     <div className="form-group">
       <Divider text={__('Zoom')} />
       <ZoomingConfig />
-    </div>
-    <div className="form-group">
-      <Divider text={__('Panel area')} />
-      <PanelMinSizeConfig />
     </div>
     <div className="form-group">
       <Divider text={__('Flash Quality & Window Mode')} />

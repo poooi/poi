@@ -14,7 +14,6 @@ const setCSS = ({ layout, zoomLevel }) => {
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
   const { right, bottom } =  config.get('poi.webview.width', -1) !== 0 ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
-  const realWidth = config.get('poi.webview.width', -1) > 0 ? config.get('poi.webview.width', -1) : $('kan-game webview').clientWidth
   // Apply css
   additionalStyle.innerHTML = `
 div[role='tooltip'], .poi-app-container, poi-info {
@@ -33,11 +32,23 @@ div[role='tooltip'], .poi-app-container, poi-info {
 }`
 
   // Resize when window size smaller than webview size
-  if (layout === 'vertical' && realWidth > window.innerWidth) {
-    let {width, height, x, y} = remote.getCurrentWindow().getBounds()
-    const borderX = width - window.innerWidth
-    width = realWidth + borderX
-    remote.getCurrentWindow().setBounds({width, height, x, y})
+  const useForceResize = config.get('poi.webview.width', -1) > 0
+  if (useForceResize) {
+    const realWidth = config.get('poi.webview.width', -1)
+    const realHeight = Math.floor(realWidth * 0.6 + $('poi-info').clientHeight * zoomLevel)
+    if (layout === 'vertical' && realWidth > window.innerWidth) {
+      let { width, height, x, y } = remote.getCurrentWindow().getBounds()
+      const borderX = width - window.innerWidth
+      width = realWidth + borderX
+      remote.getCurrentWindow().setBounds({ width, height, x, y })
+    }
+
+    if (layout !== 'vertical' && realHeight > window.getStore('layout.window.height')) {
+      let { width, height, x, y } = remote.getCurrentWindow().getBounds()
+      console.log(width, height, x, y, window.getStore('layout.window.height'))
+      height += realHeight - window.getStore('layout.window.height')
+      remote.getCurrentWindow().setBounds({ width, height, x, y })
+    }
   }
 }
 

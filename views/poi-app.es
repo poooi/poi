@@ -6,18 +6,14 @@ import ControlledTabArea from './tabarea'
 
 
 export const PoiApp = connect((state, props) => ({
-  webviewWidth: get(state, 'config.poi.webview.width', -1),
-  zoomLevel: get(state, 'config.poi.zoomLevel', 1),
   layout: get(state, 'config.poi.layout', 'horizontal'),
-  doubleTabbed: get(state, 'config.poi.tabarea.double', false),
-  panelMinSize: get(state, 'config.poi.panelMinSize', 1),
 }))(class poiApp extends Component {
   render() {
-    const { doubleTabbed, panelMinSize, zoomLevel, layout } = this.props
+    const { layout } = this.props
     const isHorizontal = layout === 'horizontal'
     return (
       <poi-app style={{
-        flexBasis: Math.ceil(panelMinSize * zoomLevel * (isHorizontal ? (doubleTabbed ? 500 : 375) : 200)),
+        flexBasis: 0,
         flexGrow: 1,
         [isHorizontal ? 'height' : 'width']: '100%',
         [!isHorizontal ? 'height' : 'width']: 0,
