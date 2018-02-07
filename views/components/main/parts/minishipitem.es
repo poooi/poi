@@ -6,7 +6,7 @@ import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
-import { isEqual, pick, omit, memoize } from 'lodash'
+import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 
 import StatusLabel from 'views/components/ship-parts/statuslabel'
@@ -93,14 +93,12 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
     shipDataSelectorFactory(shipId),
     shipRepairDockSelectorFactory(shipId),
     escapeStatusSelectorFactory(shipId),
-    configLayoutSelector,
-    configDoubleTabbedSelector,
-  ], ([ship, $ship]=[], repairDock, escaped, layout, doubleTabbed) => ({
+    state => get(state, 'layout.mainpane.width', 450),
+  ], ([ship, $ship]=[], repairDock, escaped, mainPanelWidth ) => ({
     ship: ship || {},
     $ship: $ship || {},
     labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
-    layout,
-    doubleTabbed,
+    mainPanelWidth,
   }))
 )
 
@@ -112,8 +110,7 @@ export const MiniShipRow = connect(
     ship: PropTypes.object,
     $ship: PropTypes.object,
     labelStatus: PropTypes.number,
-    layout: PropTypes.string,
-    doubleTabbed: PropTypes.bool,
+    mainPanelWidth: PropTypes.number,
     enableAvatar: PropTypes.bool,
     compact: PropTypes.bool,
   }
@@ -126,7 +123,7 @@ export const MiniShipRow = connect(
   }
 
   render() {
-    const { ship, $ship, labelStatus, layout, doubleTabbed, enableAvatar, compact } = this.props
+    const { ship, $ship, labelStatus, mainPanelWidth, enableAvatar, compact } = this.props
     const hideShipName = enableAvatar && compact
     if (!ship)
       return <div></div>
@@ -140,7 +137,7 @@ export const MiniShipRow = connect(
     return (
       <div className="ship-tile">
         <OverlayTrigger
-          placement={(!doubleTabbed && layout == 'vertical') ? 'left' : 'right'}
+          placement={mainPanelWidth > 750 ? 'left' : 'right'}
           overlay={
             (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0) ?
               <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
