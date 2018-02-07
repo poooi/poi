@@ -60,7 +60,7 @@ const ExpContent = connect(
     exp: get(state, 'info.basic.api_experience', 0),
   })
 )(({ level, exp }) => level >= 0
-  ?<Fragment>
+  ? <Fragment>
     { level < 120 &&
       <div className='info-tooltip-entry'>
         <span className='info-tooltip-item'>{__('Next')}</span>
@@ -175,8 +175,9 @@ class CountDownControl extends Component {
       <span className="teitoku-timer">
         <OverlayTrigger
           placement="bottom"
+          trigger="click"
           overlay={
-            <Tooltip id="next-time" className='info-tooltip'>
+            <Tooltip id="next-time" className="info-tooltip next-time-tooltip">
               <CountdownContent moments={this.moments}/>
             </Tooltip>
           }

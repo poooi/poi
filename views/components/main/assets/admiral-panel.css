@@ -2,3 +2,6 @@
   position: absolute;
   right: .5em;
 }
+.next-time-tooltip {
+  white-space: nowrap
+}
