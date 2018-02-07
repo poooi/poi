@@ -115,7 +115,7 @@ export default connect(
               })
               const amount = valid ? resources[i] : '??'
               return (
-                <div key={i} className="material-container" style={{ flexBasis: `${100 / dimension}%` }}>
+                <div key={i} className="material-container" style={{ flexBasis: dimension === 1 ? '75px' : `${100 / dimension}%` }}>
                   <MaterialIcon materialId={i+1} className={iconClassName} />
                   <div className="material-value">
                     <div className="material-amount">
