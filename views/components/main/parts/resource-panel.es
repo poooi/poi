@@ -10,9 +10,21 @@ import { MaterialIcon } from 'views/components/etc/icon'
 import '../assets/resource-panel.css'
 
 const order = [0, 2, 1, 3, 4, 6, 5, 7]
-const compactOrder = range(8)
 const animTimeStamp = [0, 0, 0, 0, 0, 0, 0, 0]
 let t
+
+const getPanelDimension = width => {
+  if (width < 150) {
+    return 1
+  }
+  if (width > 600) {
+    return 8
+  }
+  if (width > 300) {
+    return 4
+  }
+  return 2
+}
 
 export default connect(
   (state) => ({
@@ -27,7 +39,7 @@ export default connect(
 
   state = {
     resourcesIncreasment: [],
-    compact: false,
+    dimension: 2,
   }
 
   checkAnimTime = () => {
@@ -63,57 +75,60 @@ export default connect(
 
   componentDidMount() {
     t = setInterval(this.checkAnimTime, 1000)
-    this.observer = new ResizeObserver(this.handleResize)
-    this.observer.observe(this.panelArea)
+    this.panelArea = document.querySelector('.MainView .resource-panel .panel-body')
+    if (this.panelArea) {
+      this.observer = new ResizeObserver(this.handleResize)
+      this.observer.observe(this.panelArea)
+    }
   }
 
   componentWillUnmount() {
-    this.observer.unobserve(this.panelArea)
+    if (this.observer) {
+      this.observer.unobserve(this.panelArea)
+    }
     clearInterval(t)
   }
 
   handleResize = () => {
-    const compact = this.panelArea.clientWidth < 150
-    if (compact !== this.state.compact) {
-      this.setState({ compact })
+    const dimension = getPanelDimension(this.panelArea.clientWidth)
+    if (dimension !== this.state.dimension) {
+      this.setState({ dimension })
     }
   }
 
   render() {
     const { admiralLv, resources } = this.props
-    const { compact, resourcesIncreasment } = this.state
+    const { dimension, resourcesIncreasment } = this.state
     const valid = !!admiralLv
     const limit = 750 + admiralLv * 250
     return (
       <Panel bsStyle="default">
         <Panel.Body>
-          <div ref={(ref) => { this.panelArea = ref }}>
-            {
-              (compact ? compactOrder : order).map((i) => {
-                const iconClassName = classNames('material-icon', {
-                  'glow': valid && i < 4 && resources[i] < limit,
-                })
-                const valClassName = classNames('additional-value', {
-                  'inc': resourcesIncreasment[i] > 0,
-                  'dec': resourcesIncreasment[i] < 0,
-                })
-                const amount = valid ? resources[i] : '??'
-                return (
-                  <div key={i} className={compact ? 'material-container-compact' : 'material-container'}>
-                    <MaterialIcon materialId={i+1} className={iconClassName} />
-                    <div className="material-value">
-                      <div className="material-amount">
-                        {amount}
-                      </div>
-                      <div className={valClassName}>
-                        {`${resourcesIncreasment[i] > 0 ? '+' : ''}${resourcesIncreasment[i] !== 0 ? resourcesIncreasment[i] : ''}　`}
-                      </div>
+          {
+            (dimension === 2 ? order : range(8)).map((i) => {
+              const iconClassName = classNames('material-icon', {
+                'glow': valid && i < 4 && resources[i] < limit,
+              })
+              const valClassName = classNames('additional-value', {
+                'inc': resourcesIncreasment[i] > 0,
+                'dec': resourcesIncreasment[i] < 0,
+              })
+              const amount = valid ? resources[i] : '??'
+              return (
+                <div key={i} className="material-container" style={{ flexBasis: `${100 / dimension}%` }}>
+                  <MaterialIcon materialId={i+1} className={iconClassName} />
+                  <div className="material-value">
+                    <div className="material-amount">
+                      {amount}
+                    </div>
+                    <div className={valClassName}>
+                      {`${resourcesIncreasment[i] > 0 ? '+' : ''}${resourcesIncreasment[i] !== 0 ? resourcesIncreasment[i] : ''}　`}
                     </div>
                   </div>
-                )
-              })
-            }
-          </div>
+                </div>
+              )
+            })
+          }
         </Panel.Body>
       </Panel>
     )
