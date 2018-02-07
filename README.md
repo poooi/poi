@@ -34,9 +34,9 @@ brew update && brew cask install poi
 
 ## Screenshots
 
-![Preview 1](https://cloud.githubusercontent.com/assets/6753092/10863967/ebcc2b60-8018-11e5-9f74-9d0cf214fe49.png)
+![Preview 1](https://gist.githubusercontent.com/KochiyaOcean/79d405dfa1c15fbad60c9ae92b981c8f/raw/4a9879a22ebc5675d37b84b72347d66bb885985c/L.png)
 
-![Preview 2](https://cloud.githubusercontent.com/assets/6753092/10863968/ee4d8a96-8018-11e5-92ae-7f794864dca8.png)
+![Preview 2](https://gist.githubusercontent.com/KochiyaOcean/79d405dfa1c15fbad60c9ae92b981c8f/raw/4a9879a22ebc5675d37b84b72347d66bb885985c/V.png)
 
 [More screenshots are available here](https://github.com/poooi/poi/wiki/Screenshots)
 
