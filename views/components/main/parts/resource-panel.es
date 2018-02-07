@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Panel, Grid, Col } from 'react-bootstrap'
+import { Panel } from 'react-bootstrap'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { get, isEqual, range } from 'lodash'
