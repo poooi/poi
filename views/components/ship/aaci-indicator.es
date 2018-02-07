@@ -75,7 +75,7 @@ const AACIIndicator = connect(
           <Label bsStyle='warning'>{__('AACI')}</Label>
         </OverlayTrigger>
       </span>
-      : <noscript />
+      : <span />
   )
 })
 

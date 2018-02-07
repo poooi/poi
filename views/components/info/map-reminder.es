@@ -49,7 +49,7 @@ const MapRoutes = connect(
           })}
         {// Draw passed lines
           lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-            begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} className="passed" /> : <noscript />
+            begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} className="passed" /> : <span />
           )}
         <rect x={parseInt(bossSpotLoc[0] / 200 * 3) - 4.5} y={parseInt(bossSpotLoc[1] / 200 * 3) - 4.5} width={9} height={9}
           className='boss' />
@@ -60,7 +60,7 @@ const MapRoutes = connect(
         {// Draw passed points again, highlighting the active one
           map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
             x > 0 ? <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6}
-              className={id == activeSpot ? 'active' : 'passed'} /> : <noscript />
+              className={id == activeSpot ? 'active' : 'passed'} /> : <span />
           )}
       </svg>
     </div>

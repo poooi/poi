@@ -33,7 +33,7 @@ const OASWIndicator = connect(
     <span className="ship-oasw">
       <Label bsStyle='primary'>{__('OASW')}</Label>
     </span>
-    : <noscript />
+    : <span />
 ))
 
 export default OASWIndicator
