@@ -1,4 +1,4 @@
-export default {
+const defaultLayout = {
   sm: [
     {
       w: 10,
@@ -136,3 +136,23 @@ export default {
     },
   ],
 }
+
+// Override maxsize
+const configLayout = window.config.get('poi.mainpanel.layout')
+const keys = ['minW', 'maxW', 'minH', 'maxH']
+let flag = false
+for (const bp of Object.keys(defaultLayout)) {
+  for (let i = 0; i < configLayout[bp].length; i++) {
+    for (const key of keys) {
+      if (configLayout[bp][i][key] !== defaultLayout[bp][i][key]) {
+        flag = true
+        configLayout[bp][i][key] = defaultLayout[bp][i][key]
+      }
+    }
+  }
+}
+if (flag) {
+  window.config.set('poi.mainpanel.layout', configLayout)
+}
+
+export default defaultLayout
