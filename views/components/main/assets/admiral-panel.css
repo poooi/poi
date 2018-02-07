@@ -1,3 +1,4 @@
 .teitoku-timer {
-  margin-left: 0.5em;
+  position: absolute;
+  right: .5em;
 }

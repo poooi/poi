@@ -1,6 +1,6 @@
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
-import React, { Component } from 'react'
 import { createSelector } from 'reselect'
 import { get, map } from 'lodash'
 import moment from 'moment-timezone'
@@ -59,8 +59,8 @@ const ExpContent = connect(
     level: get(state, 'info.basic.api_level', 0),
     exp: get(state, 'info.basic.api_experience', 0),
   })
-)(({ level, exp }) => (
-  <div>
+)(({ level, exp }) => level >= 0
+  ?<Fragment>
     { level < 120 &&
       <div className='info-tooltip-entry'>
         <span className='info-tooltip-item'>{__('Next')}</span>
@@ -71,8 +71,9 @@ const ExpContent = connect(
       <span className='info-tooltip-item'>{__('Total Exp.')}</span>
       <span>{exp}</span>
     </div>
-  </div>
-))
+  </Fragment>
+  : <span />
+)
 
 // Refresh time:
 // - Practice: JST 3h00, 15h00, UTC 18h00, 6h00
@@ -171,7 +172,7 @@ class CountDownControl extends Component {
   render() {
     const { style } = this.state
     return(
-      <span>
+      <span className="teitoku-timer">
         <OverlayTrigger
           placement="bottom"
           overlay={
@@ -180,7 +181,7 @@ class CountDownControl extends Component {
             </Tooltip>
           }
         >
-          <Label id="teitoku-timer" className="teitoku-timer" bsStyle={style}><FontAwesome name="calendar" /></Label>
+          <Label bsStyle={style}><FontAwesome name="calendar" /></Label>
         </OverlayTrigger>
       </span>
     )
@@ -241,27 +242,30 @@ export default connect(
   shipNumCheck, minShipNum, slotNumCheck, minSlotNum }) {
   const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-warning' : ''
   const slotNumClass = (slotNumCheck && maxSlotitem - equipNum < minSlotNum) ? 'alert alert-warning' : ''
+
   return (
     <Panel bsStyle="default">
       <Panel.Body>
-        {
-          level >= 0 ?
-            <div>
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
-                <span>{`Lv. ${level}　`}
-                  <span className="nickname">{nickname}</span>
-                  <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
-                </span>
-              </OverlayTrigger>
-              <span>{__('Ships: ')}</span>
-              <span className={shipNumClass}>{shipNum + dropCount} / {maxShip}</span>
-              <span style={{marginLeft: '1em'}}>{__('Equip.: ')}</span>
-              <span className={slotNumClass}>{equipNum} / {maxSlotitem}</span>
-              <CountDownControl/>
-            </div>
-            :
-            <div>{`${__('Admiral [Not logged in]')}　${__("Ships: ")}：? / ?　${__("Equip.: ")}：? / ?`}</div>
-        }
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
+          {
+            level >= 0
+              ? <span>
+                {`Lv. ${level}　`}
+                <span className="nickname">{nickname}</span>
+                <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
+              </span>
+              : <span>{__('Admiral [Not logged in]')}</span>
+          }
+        </OverlayTrigger>
+        <CountDownControl/>
+        <span style={{marginRight: '1em'}}>
+          <span>{__('Ships: ')}</span>
+          <span className={shipNumClass}>{((shipNum || 0) + (dropCount || 0)) || '?'} / {maxShip || '?'}</span>
+        </span>
+        <span>
+          <span>{__('Equip.: ')}</span>
+          <span className={slotNumClass}>{equipNum || '?'} / {maxSlotitem || '?'}</span>
+        </span>
       </Panel.Body>
     </Panel>
   )

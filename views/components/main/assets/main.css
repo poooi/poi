@@ -112,3 +112,7 @@
 .MainView .react-grid-item {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+.MainView .teitoku-panel .panel-body {
+  display: flex;
+  flex-wrap: wrap;
+}
