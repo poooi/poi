@@ -9,6 +9,7 @@ import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 
+import defaultLayout from '../default-layout'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import { SlotitemIcon } from 'views/components/etc/icon'
@@ -19,7 +20,7 @@ import {
   shipEquipDataSelectorFactory,
   shipRepairDockSelectorFactory,
   configLayoutSelector,
-  configDoubleTabbedSelector,
+  configReverseLayoutSelector,
   escapeStatusSelectorFactory,
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
@@ -93,13 +94,23 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
     shipDataSelectorFactory(shipId),
     shipRepairDockSelectorFactory(shipId),
     escapeStatusSelectorFactory(shipId),
+    configLayoutSelector,
+    configReverseLayoutSelector,
     state => get(state, 'layout.mainpane.width', 450),
-  ], ([ship, $ship]=[], repairDock, escaped, mainPanelWidth ) => ({
-    ship: ship || {},
-    $ship: $ship || {},
-    labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
-    mainPanelWidth,
-  }))
+    state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
+  ], ([ship, $ship]=[], repairDock, escaped, layout, reversed, mainPanelWidth, mainPanelLayout ) => {
+    const miniShipPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm']
+      .find(panel => panel.i === 'miniship')
+    const colCnt = mainPanelWidth > 750 ? 20 : 10
+    const colWidth = mainPanelWidth / colCnt
+    const rightDist = (colCnt - miniShipPanelLayout.x - miniShipPanelLayout.w) * colWidth
+    return {
+      ship: ship || {},
+      $ship: $ship || {},
+      labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
+      tooltipPos: (layout === 'horizontal' && reversed) || rightDist >= 180 ? 'right' : 'left',
+    }
+  })
 )
 
 export const MiniShipRow = connect(
@@ -110,7 +121,7 @@ export const MiniShipRow = connect(
     ship: PropTypes.object,
     $ship: PropTypes.object,
     labelStatus: PropTypes.number,
-    mainPanelWidth: PropTypes.number,
+    tooltipPos: PropTypes.string,
     enableAvatar: PropTypes.bool,
     compact: PropTypes.bool,
   }
@@ -123,7 +134,7 @@ export const MiniShipRow = connect(
   }
 
   render() {
-    const { ship, $ship, labelStatus, mainPanelWidth, enableAvatar, compact } = this.props
+    const { ship, $ship, labelStatus, tooltipPos, enableAvatar, compact } = this.props
     const hideShipName = enableAvatar && compact
     if (!ship)
       return <div></div>
@@ -137,7 +148,7 @@ export const MiniShipRow = connect(
     return (
       <div className="ship-tile">
         <OverlayTrigger
-          placement={mainPanelWidth > 750 ? 'left' : 'right'}
+          placement={tooltipPos}
           overlay={
             (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0) ?
               <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
