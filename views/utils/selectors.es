@@ -248,7 +248,7 @@ const landbaseSlotnumSelectorFactory = memoize(landbaseId =>
 const landbaseOnSlotSelectorFactory = memoize((landbaseId) =>
   createSelector(landbaseSelectorFactory(landbaseId), landbase => landbase ? landbase.api_plane_info.map(l => l.api_count) : undefined))
 // Returns [equipId for each slot on the ship]
-// length is always 5
+// length is always 5 + 1(ex slot)
 // Slot is padded with -1 for each empty slot
 // Returns undefined if ship is undefined
 const shipEquipsIdSelectorFactory = memoize((shipId) =>
@@ -256,7 +256,7 @@ const shipEquipsIdSelectorFactory = memoize((shipId) =>
     shipSlotSelectorFactory(shipId),
     shipExslotSelectorFactory(shipId),
   ], (slot, exslot) =>
-    slot ? slot.slice(0, 4).concat(exslot).map((i) => parseInt(i)) : undefined
+    slot ? slot.concat(exslot).map((i) => parseInt(i)) : undefined
   ))
 )
 const landbaseEquipsIdSelectorFactory = memoize(landbaseId =>
@@ -308,6 +308,7 @@ function effectiveEquips(equipArray, slotnum) {
 // Returns [[_equip, $equip, onslot] for each slot on the ship]
 //   where onslot is the number of airplanes left as in api_onslot
 // length is always slotnum+1, which is all slots plus exslot
+// onslots (length 5) is padded with a 0 since onslot for exslot is assumed to be 0
 // Slot is padded with undefined for being empty or not fount in _equips
 // Returns undefined if _equips or $equips is undefined
 export const shipEquipDataSelectorFactory = memoize((shipId) =>
@@ -320,7 +321,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
     !Array.isArray(shipEquipsId)
       ? undefined
       : effectiveEquips(
-        zip(shipEquipsId, onslots).map(([equipId, onslot]) =>
+        zip(shipEquipsId, onslots.concat(0)).map(([equipId, onslot]) =>
           equipId <= 0
             ? undefined
             : modifiedEquipDataSelectorFactory(equipId)({ state, onslot })
