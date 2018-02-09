@@ -245,8 +245,6 @@
   margin-top: 4px;
 }
 .ship-pop .slotitem-name-mini {
-  max-width: 200px;
-  overflow: hidden;
   white-space: nowrap;
 }
 .slotitem-onslot-mini {
@@ -287,7 +285,6 @@
 }
 .ship-pop .item-name {
   margin-bottom: 5px;
-  width: 220px
 }
 .ship-pop .progress {
   height: 9px;
@@ -300,8 +297,8 @@
   font-size: 13px;
 }
 .ship-pop .tooltip-inner {
-  max-width: 230px;
-  width: 230px;
+  max-width: initial;
+  width: fit-content;
 }
 
 .alv-img{

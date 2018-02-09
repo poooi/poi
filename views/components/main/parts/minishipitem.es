@@ -66,17 +66,20 @@ const Slotitems  = connect(
             return (
               <div key={equipIdx} className="slotitem-container-mini">
                 <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
-                <span className="slotitem-name-mini">
-                  {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
-                  {level ? <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong> : ''}
-                &nbsp;&nbsp;
-                  {proficiency &&
+                <span style={{ flex: 1, textAlign: 'left' }}>{i18n.resources.__(($equip || {api_name: '??'}).api_name)}</span>
+                {
+                  Boolean(level) &&
+                  <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong>
+                }
+                <span style={{ width: '1ex', display: 'inline-block' }} />
+                {
+                  proficiency &&
                   <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
-                  }
-                </span>
+                }
                 <Label
                   className={onslotClassName}
                   bsStyle={`${onslotWarning ? 'warning' : 'default'}`}
+                  style={{ width: '3em' }}
                 >
                   {onslotText}
                 </Label>
