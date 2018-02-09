@@ -1,3 +1,5 @@
+import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
+
 const defaultLayout = {
   sm: [
     {
@@ -140,19 +142,16 @@ const defaultLayout = {
 // Override maxsize
 const configLayout = window.config.get('poi.mainpanel.layout')
 const keys = ['minW', 'maxW', 'minH', 'maxH']
-let flag = false
-for (const bp of Object.keys(defaultLayout)) {
-  for (let i = 0; i < configLayout[bp].length; i++) {
-    for (const key of keys) {
-      if (configLayout[bp][i][key] !== defaultLayout[bp][i][key]) {
-        flag = true
-        configLayout[bp][i][key] = defaultLayout[bp][i][key]
-      }
-    }
-  }
-}
-if (flag) {
-  window.config.set('poi.mainpanel.layout', configLayout)
+const newLayout = fromPairs(map(entries(defaultLayout), ([bp, conf]) => ([
+  bp,
+  map(conf, (panelConf, i) => ({
+    ...get(configLayout, [bp, i], panelConf),
+    ...pick(panelConf, keys),
+  })),
+])))
+
+if (!isEqual(newLayout, configLayout)) {
+  window.config.set('poi.mainpanel.layout', newLayout)
 }
 
 export default defaultLayout
