@@ -301,7 +301,7 @@ const modifiedEquipDataSelectorFactory = memoize((equipId) =>
 )
 
 function effectiveEquips(equipArray, slotnum) {
-  equipArray.splice(slotnum, equipArray.length-slotnum-1)
+  equipArray.splice(slotnum, equipArray.length - slotnum - 1)
   return equipArray
 }
 

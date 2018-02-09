@@ -33,7 +33,7 @@ const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipEquipDataSelectorFactory(shipId),
-  ], ([ship, $ship]=[], equipsData, exslot) => ({
+  ], ([ship, $ship]=[], equipsData) => ({
     api_maxeq: ($ship || {}).api_maxeq,
     equipsData,
   }))
