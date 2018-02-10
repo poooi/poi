@@ -115,6 +115,8 @@
     "node-7z": "^0.4.0",
     "node-unzip-2": "^0.2.1",
     "rimraf": "^2.6.2",
+    "stylelint": "^8.4.0",
+    "stylelint-config-standard": "^18.0.0",
     "tar-fs": "^1.16.0",
     "walk": "^2.3.9"
   },
