@@ -5,6 +5,8 @@ module.exports = {
       ignoreTypes: [
         'kan-game',
         '/^poi-/',
+        'title-bar',
+        'webview',
       ],
     }]
   },
