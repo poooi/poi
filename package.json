@@ -11,7 +11,9 @@
     "start_debug": "electron . --dev --inspect",
     "dev": "electron . --dev --inspect",
     "clean": "gulp clean",
-    "lint": "eslint . --ext .es --ext .js --ignore-path .gitignore"
+    "lint:js": "eslint . --ext .es --ext .js --ignore-path .gitignore",
+    "lint:css": "stylelint views/**/*.css",
+    "lint": "npm run lint:js && npm run lint:css"
   },
   "repository": {
     "type": "git",
