@@ -9,8 +9,10 @@ const textSpacingCJK = config.get('poi.textSpacingCJK', true)
 
 const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
 
+const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
+
 window.language = window.config.get('poi.language', navigator.language)
-if (!['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(window.language)) {
+if (!locales.includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
   case 'zh':
     window.language = 'zh-TW'
@@ -34,7 +36,7 @@ if (window.isMain) {
   for (const i18nFile of i18nFiles) {
     const namespace = path.basename(i18nFile)
     window.i18n[namespace] = new (require('i18n-2'))({
-      locales: ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'],
+      locales,
       defaultLocale: 'en-US',
       directory: i18nFile,
       updateFiles: false,
