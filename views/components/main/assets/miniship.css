@@ -1,19 +1,24 @@
 .miniship {
   font-size: 14px;
 }
+
 .miniship .ship-view-mini {
   height: 100%;
 }
+
 .miniship .ship-view-mini > .panel-body {
   display: flex;
   flex-direction: column;
 }
+
 .miniship .miniship-fleet-btn {
   flex: 0 0 20px;
 }
+
 .miniship .miniship-fleet-content {
   flex: 1;
 }
+
 .miniship .ship-tab-content {
   display: -webkit-box;
   flex-flow: row;
@@ -22,51 +27,56 @@
 }
 
 .miniship .ship-tab-content-transition {
-  transition: all .3s cubic-bezier(1,0,0,1);
+  transition: all 0.3s cubic-bezier(1, 0, 0, 1);
 }
 
 .miniship .ship-tabpane {
-  /* csslint ignore:start */
   padding: 2px;
-  /* csslint ignore:end */
   width: 100%;
 }
+
 .miniship .btn-group {
   display: flex;
-  /* csslint ignore:start */
   padding-left: 5px;
   padding-right: 5px;
-  /* csslint ignore:end */
   width: 100%;
 }
+
 .miniship .btn-group .btn {
   border-width: 0 0 1px;
   flex: 1;
   height: 100%;
   margin-top: 0;
 }
+
 .miniship .plane-button-mini {
   width: 30px;
 }
+
 .miniship .hidden {
   display: none;
 }
+
 .miniship .show {
   display: block;
 }
+
 .miniship .deck-status {
   padding-left: 0;
   padding-right: 0;
   text-align: center;
 }
+
 .miniship .progress {
   margin-bottom: 5px;
 }
+
 .miniship .ship-details-mini {
   height: calc(100% - 32px);
   margin-bottom: 1px;
   overflow: scroll;
 }
+
 .miniship .ship-details-mini .ship-tile {
   align-items: center;
   display: flex;
@@ -74,12 +84,15 @@
   margin: 5px 0 5px 0;
   position: relative;
 }
+
 .miniship .ship-details-mini .ship-tile:first-child {
   margin-top: 0;
 }
+
 .miniship .ship-details-mini .ship-tile:last-child {
   margin-bottom: 0;
 }
+
 .miniship .ship-details-mini .ship-item {
   align-items: center;
   display: flex;
@@ -88,10 +101,12 @@
   overflow: hidden;
   position: relative;
 }
+
 .miniship .ship-avatar-container {
   position: absolute;
   z-index: -1;
 }
+
 .miniship .ship-lv-avatar {
   bottom: 0;
   display: flex;
@@ -100,8 +115,9 @@
   left: 0;
   line-height: 1;
   position: absolute;
-  text-shadow: 0 0 2px rgba(0,0,0,1);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
+
 .miniship .ship-details-mini .ship-item .ship-info {
   display: flex;
   flex-basis: 0;
@@ -111,26 +127,32 @@
   min-width: 0;
   z-index: 1;
 }
+
 .miniship .ship-details-mini .ship-item .ship-avatar-padding {
   flex-basis: 61px;
   padding-left: 58px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-info-show {
   flex-grow: 1;
   flex-shrink: 0;
 }
+
 .miniship .ship-details-mini .ship-item .ship-info-hidden {
   flex-grow: 0;
   flex-shrink: 0;
   height: 37px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-info .ship-type,
 .miniship .ship-details-mini .ship-item .ship-info .ship-speed {
   margin-left: 5px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-info .ship-fp {
   width: 60px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-info .ship-name {
   height: 20px;
   margin-right: 5px;
@@ -138,6 +160,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .miniship .ship-details-mini .ship-item .ship-info .ship-lv-text {
   display: flex;
   font-size: 70%;
@@ -147,6 +170,7 @@
   margin-top: 2px;
   overflow: hidden;
 }
+
 .miniship .ship-details-mini .ship-item .ship-stat {
   display: flex;
   flex-basis: 0;
@@ -156,18 +180,21 @@
   font-size: 14px;
   justify-content: space-between;
 }
+
 .miniship .ship-details-mini .ship-item .landbase-stat {
   flex-basis: 110px;
   flex-grow: 0;
   min-width: 110px;
   width: 110px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-stat .ship-hp {
   align-self: flex-start;
   flex-basis: 60px;
   flex-grow: 1;
   flex-shrink: 0;
 }
+
 .ship-pop .status-label,
 .miniship .ship-details-mini .ship-item .ship-stat .status-label {
   display: inline-block;
@@ -182,13 +209,13 @@
   vertical-align: middle;
   z-index: 100;
 }
+
 .miniship .ship-details-mini .ship-item .ship-stat .status-label .label {
   display: inline-block;
-  /* csslint ignore:start */
   padding: 3px 3px;
-  /* csslint ignore:end */
   width: 20px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-stat .ship-cond {
   align-self: flex-end;
   flex-basis: inherit;
@@ -200,6 +227,7 @@
   text-align: right;
   white-space: nowrap;
 }
+
 .miniship .ship-details-mini .ship-item .ship-stat .ship-cond .cond-indicator {
   display: inline-block;
   height: 30px;
@@ -207,13 +235,21 @@
   vertical-align: middle;
   width: 4px;
 }
+
+.ship-pop .progress {
+  height: 9px;
+  margin-top: 5px;
+}
+
 .miniship .ship-details-mini .ship-item .ship-stat .hp-progress {
   flex: 1;
 }
+
 .miniship .ship-details-mini .ship-item .ship-stat .hp-progress .progress {
   flex: auto;
   height: 7px;
 }
+
 .miniship .ship-details-mini .ship-item .ship-slot {
   flex: none;
   margin-bottom: 3px;
@@ -221,121 +257,138 @@
   margin-right: 4px;
   width: 105px;
 }
+
 .miniship .alert {
   background-color: transparent;
   border-color: transparent;
   margin-top: 9px;
   text-align: center;
 }
+
 .miniship .fleet-name {
   display: flex;
   justify-content: space-between;
   margin: 5px 0;
 }
+
 .miniship .flex {
   flex: 1;
 }
+
 .miniship .top-space {
   margin-top: 5px;
 }
+
 .slotitem-container-mini {
   align-items: center;
   display: flex;
   flex-flow: row;
   margin-top: 4px;
 }
+
 .ship-pop .slotitem-name-mini {
   white-space: nowrap;
 }
+
 .slotitem-onslot-mini {
   font-size: 90%;
   margin-left: 2px;
   padding: 3px 6px 3px 5px;
 }
+
 .ship-pop .slotitem-container-mini span.show {
   height: 16px;
   line-height: 10px;
   margin-left: 5px;
-  /* csslint ignore:start */
   padding: 3px 6px 3px;
-  /* csslint ignore:end */
 }
+
 .ship-pop .slotitem-container-mini .png {
   height: 32px;
   margin-bottom: -8px;
   margin-top: -8px;
   width: 32px;
 }
+
 .ship-pop .slotitem-container-mini .svg {
   height: 20px;
   width: 20px;
 }
+
 .miniship .div-col,
 .ship-pop .div-col {
   display: flex;
   flex-flow: column;
 }
+
 .miniship .div-row,
 .ship-pop .div-row {
   display: flex;
   flex-flow: row;
 }
+
 .ship-pop .flex {
   flex: 1;
 }
+
 .ship-pop .item-name {
   margin-bottom: 5px;
 }
-.ship-pop .progress {
-  height: 9px;
-  margin-top: 5px;
-}
+
 .ship-pop .material-icon {
   margin-right: auto;
 }
+
 .ship-pop {
   font-size: 13px;
 }
+
 .ship-pop .tooltip-inner {
   max-width: initial;
   width: fit-content;
 }
 
-.alv-img{
+.alv-img {
   height: 14px;
   margin-bottom: 2px;
 }
+
 .miniship .ship-panel-full .panel-body,
 .miniship .ship-panel-half .panel-body {
   height: 100%;
-  /* csslint ignore:start */
   padding: 1px;
-  /* csslint ignore:end */
 }
+
 .toleft {
   left: 0;
   transition: 0.2s;
 }
+
 .toright {
   right: 0;
   transition: 0.2s;
 }
+
 .top-vertical {
   height: calc(100% - 42px);
   transition: 0.2s;
 }
+
 .top-horizontal {
   height: calc(100% - 180px);
   transition: 0.2s;
 }
+
 .miniship .ship-deck {
   height: 100%;
   overflow: scroll;
 }
+
 .miniship .slotitems {
   display: flex;
   padding-top: 6px;
 }
+
 .miniship .slotitem-container img.png {
   height: 32px;
   margin-bottom: -3px;
@@ -343,14 +396,14 @@
   margin-top: -5px;
   width: 32px;
 }
+
 .miniship .slotitem-container img.svg {
   height: 23px;
   margin-right: 2px;
   width: 26px;
 }
+
 .miniship .airbase-area {
   margin-top: 0;
-  /* csslint ignore:start */
   text-align: left !important;
-  /* csslint ignore:end */
 }

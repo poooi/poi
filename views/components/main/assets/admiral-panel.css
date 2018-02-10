@@ -1,7 +1,8 @@
 .teitoku-timer {
   position: absolute;
-  right: .5em;
+  right: 0.5em;
 }
+
 .next-time-tooltip {
-  white-space: nowrap
+  white-space: nowrap;
 }

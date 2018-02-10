@@ -4,60 +4,71 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .SettingsView .poi-others .desc-buttons > button {
-  margin-bottom: .25ex;
+  margin-bottom: 0.25ex;
   margin-right: 1em;
-  margin-top: .25ex;
+  margin-top: 0.25ex;
 }
+
 .SettingsView .poi-others .contributors {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .SettingsView .poi-others .contributor-item {
   margin: 5px;
 }
+
 .SettingsView .poi-others .avatar-img {
   border-radius: 20px;
   cursor: pointer;
   height: 40px;
   width: 40px;
 }
+
 .SettingsView .poi-others .opencollective img {
   cursor: pointer;
 }
+
 .SettingsView .poi-others .thanks-to {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .SettingsView .poi-others .thanks-to-item {
-  /* csslint ignore:start */
   padding-left: 15px;
   padding-right: 15px;
-  /* csslint ignore:end */
   width: 50%;
 }
+
 .SettingsView .poi-others .sp-thanks-to .thanks-to-item {
   width: initial;
 }
+
 .SettingsView .poi-others .thanks-to-img-container {
   border-radius: 4px;
   height: 75px;
   overflow: hidden;
   width: 75px;
 }
+
 .SettingsView .poi-others .thanks-to-img {
   cursor: pointer;
 }
+
 .SettingsView .poi-others .thanks-to-container {
   flex: 1;
   padding-left: 5px;
 }
+
 .SettingsView .poi-others .avatar-img:hover {
   transform: rotate(360deg);
   transition-duration: 3s;
 }
+
 .SettingsView .poi-others .metric-table {
   display: flex;
   flex-direction: column;
