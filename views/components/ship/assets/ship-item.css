@@ -9,18 +9,22 @@
   position: relative;
   white-space: nowrap;
 }
+
 .ShipView .ship-item:last-child {
   margin-bottom: 7px;
 }
+
 .ShipView .ship-avatar-container {
   position: absolute;
   top: 9px;
   z-index: -1;
 }
+
 .ShipView .ship-item .progress {
   height: 7px;
   margin-bottom: 5px;
 }
+
 .ShipView .ship-info {
   display: flex;
   flex-basis: 0;
@@ -30,19 +34,23 @@
   min-width: 0;
   padding: 0 4px;
 }
+
 .ShipView .ship-info-show {
   flex-grow: 1.2;
   flex-shrink: 0;
 }
+
 .ShipView .ship-info-hidden {
   flex-grow: 0;
   flex-shrink: 0;
   height: 58px;
 }
+
 .ShipView .ship-avatar-padding {
   flex-basis: 100px;
   padding-left: 95px;
 }
+
 .ShipView .ship-basic {
   flex: 1;
   font-size: 80%;
@@ -50,9 +58,11 @@
   padding-top: 0;
   vertical-align: bottom;
 }
+
 .ShipView .ship-info-hidden .ship-basic {
   padding-left: 5px;
 }
+
 .ShipView .ship-exp {
   flex: 1;
   font-size: 75%;
@@ -62,6 +72,7 @@
   text-overflow: ellipsis;
   vertical-align: bottom;
 }
+
 .ShipView .ship-type,
 .ShipView .ship-speed,
 .ShipView .ship-aaci,
@@ -69,12 +80,14 @@
   margin-left: 5px;
   margin-right: 5px;
 }
+
 .ShipView .ship-name {
   flex: 1;
   font-size: 120%;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .ShipView .ship-stat {
   display: flex;
   flex-basis: 0;
@@ -85,16 +98,19 @@
   margin-left: auto;
   min-width: 120px;
 }
+
 .ShipView .landbase-stat {
   flex-basis: 90px;
   flex-grow: 0.8;
   min-width: 90px;
   padding-right: 5px;
 }
+
 .ShipView .ship-hp {
   align-self: flex-start;
   flex: 1;
 }
+
 .ShipView .status-label {
   display: inline-block;
   margin-left: 5px;
@@ -105,13 +121,13 @@
   width: 18px;
   z-index: 100;
 }
+
 .ShipView .status-label .label {
   display: inline-block;
-  /* csslint ignore:start */
   padding: 3px 3px;
-  /* csslint ignore:end */
   width: 18px;
 }
+
 .ShipView .ship-cond {
   align-self: flex-end;
   display: table;
@@ -119,6 +135,7 @@
   text-align: right;
   width: 40px;
 }
+
 .ShipView .cond-indicator {
   display: inline-block;
   height: 30px;
@@ -126,48 +143,58 @@
   vertical-align: middle;
   width: 4px;
 }
+
 .ShipView .ship-fb {
   display: flex;
   flex: 0.75;
   flex-direction: column;
   margin: 5px 2px 0 5px;
 }
+
 .ShipView .hp-progress {
   background-color: inherit;
   vertical-align: bottom;
 }
+
 .ShipView .hp-progress .progress .progress-bar {
   font-size: 11px;
   line-height: 0.9;
-  /*color: #666;*/
+
+  /* color: #666; */
 }
+
 .ShipView .hp-progress .progress {
   height: 7px;
   position: relative;
 }
+
 .ShipView .hp-progress .progress-bar span span {
   display: block;
   position: absolute;
   width: 100%;
 }
+
 .ShipView .material-progress .col-xs-6 {
   padding-left: 0;
   padding-right: 0;
 }
-.ShipView .ship-slot{
+
+.ShipView .ship-slot {
   flex-basis: 142px;
   flex-grow: 0;
   flex-shrink: 0;
   overflow: hidden;
   padding: 5px 5px 5px 5px;
 }
+
 .ShipView .ship-aaci,
 .ShipView .ship-oasw {
   position: relative;
   top: -1px;
 }
+
 .ShipView .ship-aaci .label,
 .ShipView .ship-oasw .label {
   font-size: 80%;
-  padding: .125em .6em;
+  padding: 0.125em 0.6em;
 }

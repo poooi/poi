@@ -4,17 +4,21 @@
   height: 100vh;
   width: 100vw;
 }
+
 .poi-app-container {
   overflow: hidden;
 }
+
 title-bar {
   flex: 0 0 29px;
 }
+
 poi-main {
   align-items: center;
   display: flex;
   flex: 1 0 0;
 }
+
 kan-game webview {
   height: 100%;
   left: 0;
@@ -22,11 +26,13 @@ kan-game webview {
   top: 0;
   width: 100%;
 }
+
 kan-game {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
+
 .webview-wrapper {
   flex-basis: 0;
   flex-grow: 1;
@@ -36,21 +42,27 @@ kan-game {
   max-height: max-content;
   width: 100%;
 }
+
 poi-info {
   flex-grow: 0;
   flex-shrink: 0;
   transform-origin: 0 0;
+  align-items: stretch;
+  display: flex;
 }
+
 poi-app {
   flex-shrink: 0;
   position: relative;
 }
+
 poi-app .container {
   overflow-x: hidden;
   padding-left: 0;
   padding-right: 0;
   width: auto;
 }
+
 poi-app poi-nav,
 poi-app poi-nav-tabs {
   display: flex;
@@ -59,33 +71,40 @@ poi-app poi-nav-tabs {
   position: absolute;
   width: 100%;
 }
+
 poi-app poi-nav-tabs .poi-tabs-container-doubletabbed .nav,
 poi-app poi-nav-tabs .poi-tab-contents .nav {
   display: flex;
 }
+
 poi-app poi-nav-tabs .nav li {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-poi-app poi-nav-tabs .nav  li a {
+
+poi-app poi-nav-tabs .nav li a {
   margin: 0;
   text-align: center;
 }
+
 poi-app poi-nav-tabs .nav .dropdown-menu {
   min-width: 100%;
   overflow: auto;
 }
+
 poi-app poi-nav-tabs .nav .dropdown {
   overflow: inherit;
 }
-poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li {
+
+poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li {
   display: block;
   float: left;
   width: calc(100% / 3);
 }
-poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li a {
+
+poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li a {
   display: block;
   min-height: 5em;
   overflow: hidden;
@@ -94,33 +113,35 @@ poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li a {
   white-space: nowrap;
   width: 100%;
 }
-poi-nav .grid-menu ul[aria-labelledby=plugin-dropdown] li .fa {
+
+poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li .fa {
   display: block;
   font-size: 175%;
 }
-poi-info {
-  align-items: stretch;
-  display: flex;
-}
+
 .poi-tabs-container {
   display: flex;
   height: 100%;
 }
+
 .poi-tab-container {
   display: flex;
   flex: 1;
   flex-direction: column;
   height: 100%;
 }
+
 .poi-tab-container > .nav-tabs {
   flex: 0 0 40px;
 }
+
 .poi-tab-contents {
   display: -webkit-box;
   flex: 1 0 0;
   overflow: scroll;
   position: relative;
 }
+
 .poi-tab-child-sizer {
   display: flex;
   flex-direction: column;
@@ -132,6 +153,7 @@ poi-info {
   top: 0;
   width: 100%;
 }
+
 .poi-tab-child-positioner {
   display: flex;
   flex: 1;
@@ -140,36 +162,44 @@ poi-info {
   position: relative;
   width: 100%;
 }
+
 .poi-tab-child-positioner-transition {
-  transition: .35s ease-in-out;
+  transition: 0.35s ease-in-out;
 }
+
 .poi-app-tabpane {
   flex: 1;
   height: 100%;
   overflow-y: scroll;
   width: 100%;
 }
+
 .poi-plugin {
   left: 100%;
 }
-/* csslint ignore:start */
+
 #top-nav > li {
-  width:26%;
+  width: 26%;
 }
-#top-nav > li.dropdown, #top-nav > li.tab-narrow {
-  width:11%;
+
+#top-nav > li.dropdown,
+#top-nav > li.tab-narrow {
+  width: 11%;
 }
+
 #electron-app-title-bar {
   background-color: transparent !important;
   box-sizing: content-box !important;
 }
+
 #electron-app-title-bar * {
   font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft Yahei UI Light", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
 }
+
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
   opacity: 0.9 !important;
 }
+
 #electron-app-title-bar img.icon {
   margin: 6px 10px !important;
 }
-/* csslint ignore:end */

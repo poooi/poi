@@ -1,52 +1,56 @@
 .ShipView {
   font-size: 15px;
 }
+
 .ShipView .ship-tab-container {
   height: calc(100% - 32px);
 }
+
 .ShipView .ship-tab-content {
   display: -webkit-box;
   flex-flow: row;
   height: 100%;
   position: relative;
 }
+
 .ShipView .ship-tab-content-transition {
-  transition: all .3s cubic-bezier(1,0,0,1);
+  transition: all 0.3s cubic-bezier(1, 0, 0, 1);
 }
+
 .ShipView .ship-tabpane,
 .ShipView .ship-deck {
   height: 100%;
   width: 100%;
 }
+
 .ShipView > .panel {
   height: calc(100% - 10px);
   margin: 2px;
   overflow: auto;
 }
+
 .ShipView .panel-body {
   height: 100%;
-  /* csslint ignore:start */
   padding: 2px;
-  /* csslint ignore:end */
 }
+
 .ShipView .btn-group {
   display: flex;
-  /* csslint ignore:start */
   padding-left: 5px;
   padding-right: 5px;
-  /* csslint ignore:end */
   padding-top: 5px;
   width: 100%;
 }
+
 .ShipView .plane-button {
   width: 40px;
 }
+
 .ShipView .airbase-area {
   padding-left: 8px;
-  /* csslint ignore:start */
   text-align: left !important;
-  /* csslint ignore:end */
 }
+
 .ShipView .btn-group .btn {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -56,36 +60,45 @@
   flex: 1;
   overflow: hidden;
 }
+
 .ShipView .hidden {
   display: none;
 }
+
 .ShipView .show {
   display: block;
 }
+
 .ShipView .top-space {
   margin-top: 5px;
 }
+
 .ShipView .div-col {
   display: flex;
   flex-flow: column;
 }
+
 .ShipView .div-row {
   display: flex;
   flex-flow: row;
 }
+
 .ShipView .fleet-name-button-container {
   overflow: scroll;
 }
+
 .ShipView .deck-status {
   padding-left: 0;
   padding-right: 0;
   text-align: center;
 }
+
 .ShipView .ship-details {
   height: calc(100% - 25px);
   margin-bottom: 1px;
   overflow: scroll;
 }
+
 .ShipView .alert {
   background-color: transparent;
   border-color: transparent;

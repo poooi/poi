@@ -1,16 +1,16 @@
 .ShipView .slotitems {
   display: flex;
 }
+
 .ShipView .slotitem-container {
   display: inline;
   margin-right: 2px;
   position: relative;
   vertical-align: bottom;
 }
+
 .ShipView .slotitem-container::after {
-  /* csslint ignore:start */
   background-color: rgba(33, 33, 33, 0.7);
-  /* csslint ignore:end */
   border-radius: 9px;
   bottom: -3px;
   content: attr(data-onslot);
@@ -18,20 +18,21 @@
   height: 18px;
   left: -3px;
   line-height: 18px;
-  /* csslint ignore:start */
   padding-left: 2px;
   padding-right: 2px;
-  /* csslint ignore:end */
   position: absolute;
   text-align: center;
   width: 18px;
 }
+
 .ShipView .slotitem-onslot-show::after {
   display: inline;
 }
+
 .ShipView .slotitem-onslot-hide::after {
   display: none;
 }
+
 .ShipView .slotitem-container .png {
   height: 32px;
   margin-bottom: -3px;
@@ -39,6 +40,7 @@
   margin-top: -5px;
   width: 32px;
 }
+
 .ShipView .slotitem-container .svg {
   height: 23px;
   width: 26px;

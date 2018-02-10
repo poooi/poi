@@ -2,6 +2,7 @@ kan-game poi-map-reminder {
   position: relative;
   width: 135px;
 }
+
 kan-game poi-map-reminder .progress {
   background-color: transparent;
   border-radius: 0;
@@ -9,43 +10,62 @@ kan-game poi-map-reminder .progress {
   position: absolute;
   width: 100%;
 }
+
 .maproutes {
   background-color: #161616;
 }
+
 .maproutes rect {
   fill: white;
 }
+
 @keyframes maproutes-blink {
-    from {fill: #D50000;}
-    50% {fill: #FF9800;}
-    to {fill: #D50000;}
+  from {
+    fill: #d50000;
+  }
+
+  50% {
+    fill: #ff9800;
+  }
+
+  to {
+    fill: #d50000;
+  }
 }
+
 .maproutes .active {
   animation: maproutes-blink 1s linear infinite;
 }
+
 .maproutes .passed {
-  fill: #039BE5;
+  fill: #039be5;
 }
+
 .maproutes .boss {
-  fill: #C62828;
+  fill: #c62828;
 }
+
 .maproutes line {
   stroke: #373737;
   stroke-width: 1.5;
 }
+
 .maproutes line.passed {
-  stroke: #F5F5F5;
+  stroke: #f5f5f5;
   stroke-width: 2;
 }
+
 .reminder {
   height: 15px;
   margin-right: 0.5ex;
   width: 15px;
 }
+
 .reminder-pop .tooltip-inner {
   max-width: initial;
   width: fit-content;
 }
+
 .reminder-pop .item-stat:not(:last-child) {
   margin-right: 1ex;
 }
