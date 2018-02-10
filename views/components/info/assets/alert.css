@@ -80,9 +80,6 @@ poi-info .alert {
   }
 }
 
-/* csslint ignore:start */
 #alert-area {
   cursor: pointer;
 }
-
-/* csslint ignore:end */

@@ -178,7 +178,6 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li .fa {
   left: 100%;
 }
 
-/* csslint ignore:start */
 #top-nav > li {
   width: 26%;
 }
@@ -204,5 +203,3 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li .fa {
 #electron-app-title-bar img.icon {
   margin: 6px 10px !important;
 }
-
-/* csslint ignore:end */
