@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Grid, Col, FormControl } from 'react-bootstrap'
+import i18next from 'views/env-parts/i18next'
 
 const { config } = window
 
@@ -34,6 +35,7 @@ const LanguageConfig = connect(() => {
   handleSetLanguage = (e) => {
     const language = e.target.value
     config.set('poi.language', language)
+    i18next.changeLanguage(language)
   }
   render() {
     return (

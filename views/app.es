@@ -2,9 +2,10 @@ import React, { Fragment, Component } from 'react'
 import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
-import { Provider, connect } from 'react-redux'
+import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
 import { get } from 'lodash'
+import { I18nextProvider } from 'react-i18next'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
@@ -17,6 +18,7 @@ import { TitleBarWrapper } from './components/etc/menu'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { PoiApp } from './poi-app'
 import { layoutResizeObserver } from 'views/services/layout'
+import i18next from './env-parts/i18next'
 
 const {EXROOT, $} = window
 const config = remote.require('./lib/config')
@@ -85,8 +87,10 @@ const Poi = connect(state => ({
 })
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Poi />
-  </Provider>,
+  <I18nextProvider i18n={i18next} >
+    <Provider store={store} >
+      <Poi />
+    </Provider>
+  </I18nextProvider>,
   $('#poi')
 )

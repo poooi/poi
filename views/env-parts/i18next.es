@@ -5,10 +5,11 @@ import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 
 const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
-const {ROOT} = window
+const { ROOT, language } = window
 const i18nResources = {}
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
+// create options.resources in i18next init()
 forEach(locales, locale => {
   const translations = {}
   forEach(i18nFiles, i18nFile => {
@@ -20,6 +21,7 @@ forEach(locales, locale => {
 
 i18next.use(reactI18nextModule)
   .init({
+    lng: language,
     fallbackLng: 'en-US',
     resources: i18nResources,
     ns: i18nFiles.map(i => path.basename(i)),
