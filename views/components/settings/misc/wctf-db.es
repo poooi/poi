@@ -132,7 +132,7 @@ const WctfDB = connect(
       console.warn(`Can't find update info for wctf-db`)
     }
 
-    updateFlag = updateFlag || get(data, 'version', '0.0.0') !== this.props.version
+    updateFlag = updateFlag || get(data, 'version', this.props.version) !== this.props.version
 
     if (updateFlag) {
       try {
