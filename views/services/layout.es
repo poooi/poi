@@ -9,7 +9,7 @@ remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
   document.head.appendChild(additionalStyle)
 })
 
-const setCSS = ({ layout, zoomLevel }) => {
+const setCSS = ({ layout, zoomLevel, reversed }) => {
   const tabSize = ($('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')).getBoundingClientRect()
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
   const { right, bottom } =  config.get('poi.webview.width', -1) !== 0 ?
@@ -19,17 +19,33 @@ const setCSS = ({ layout, zoomLevel }) => {
 div[role='tooltip'], .poi-app-container, poi-info {
   ${zoomLevel !== 1 ? `zoom: ${zoomLevel};` : ''}
 }
+
 .dropdown-menu[aria-labelledby=plugin-dropdown] {
   max-height: ${tabSize.height}px;
 }
+
 .grid-menu ul[aria-labelledby=plugin-dropdown] {
   max-width: ${tabSize.width}px;
   width: ${panelRect.width * 0.875}px;
 }
+
 .toast-poi {
   bottom: ${window.innerHeight - bottom + 12}px;
   right: ${window.innerWidth - right + 12}px;
-}`
+}
+${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
+#detail-map-info {
+  left: initial !important;
+  right: 0 !important;
+}
+
+#detail-map-info .tooltip-arrow {
+  left: initial !important;
+  right: 60px;
+}
+` : ''
+}
+`
 
   // Resize when window size smaller than webview size
   const useForceResize = config.get('poi.webview.width', -1) > 0
@@ -56,10 +72,12 @@ const setCSSDebounced = debounce(setCSS, 200)
 const adjustSize = () => {
   const layout = config.get('poi.layout', 'horizontal')
   const zoomLevel = config.get('poi.zoomLevel', 1)
+  const reversed = config.get('poi.reverseLayout', false)
   // Apply calcualted data
   setCSSDebounced({
     layout,
     zoomLevel,
+    reversed,
   })
   window.dispatch({
     type: '@@LayoutUpdate/webview/useFixedResolution',
