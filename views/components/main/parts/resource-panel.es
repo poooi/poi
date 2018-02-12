@@ -89,8 +89,8 @@ export default connect(
     clearInterval(t)
   }
 
-  handleResize = () => {
-    const dimension = getPanelDimension(this.panelArea.clientWidth)
+  handleResize = entries => {
+    const dimension = getPanelDimension(entries[0].contentRect.width)
     if (dimension !== this.state.dimension) {
       this.setState({ dimension })
     }
