@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
-import { Panel, Label, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Panel, Label, OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import React, { Fragment } from 'react'
 
@@ -14,6 +14,19 @@ import {
 } from 'views/utils/selectors'
 
 import '../assets/task-panel.css'
+
+const getPanelDimension = width => {
+  if (width > 700) {
+    return 4
+  }
+  if (width > 525) {
+    return 3
+  }
+  if (width > 350) {
+    return 2
+  }
+  return 1
+}
 
 // Return [count, required]
 function sumSubgoals(record) {
@@ -127,9 +140,10 @@ const TaskRowBase = connect(
   rightOverlay,
   rightBsStyle='success',
   leftOverlayPlacement,
+  colwidth,
 }) {
   return (
-    <div className="panel-item task-item">
+    <Col className="panel-item task-item" xs={colwidth}>
       <OverlayTrigger
         placement={leftOverlayPlacement}
         overlay={
@@ -151,7 +165,7 @@ const TaskRowBase = connect(
           <Label className="quest-progress" bsStyle={rightBsStyle}>{rightLabel}</Label>
         </OverlayTrigger>
       </div>
-    </div>
+    </Col>
   )
 })
 
@@ -194,46 +208,79 @@ const TaskPanel = connect(
     activeCapacity,
     activeNum,
   })
-)(function ({activeQuests, activeCapacity, activeNum}) {
-  return (
-    <Panel bsStyle="default">
-      <Panel.Body>
-        {[
-          sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) =>
-            <TaskRow
-              key={(quest || {}).api_no || idx}
-              idx={idx}
-              quest={quest}
-            />
-          ),
-          range(Object.keys(activeQuests).length, 6).map((idx) =>
-            (idx < activeNum) ?  (
-              // Need refreshing
-              <TaskRowBase
-                key={idx}
+)(class taskPanel extends React.Component {
+  state = {
+    dimension: 1,
+  }
+
+  componentDidMount() {
+    this.panelArea = document.querySelector('.MainView .task-panel .panel-body')
+    if (this.panelArea) {
+      this.observer = new ResizeObserver(this.handleResize)
+      this.observer.observe(this.panelArea)
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.observer) {
+      this.observer.unobserve(this.panelArea)
+    }
+  }
+
+  handleResize = entries => {
+    const dimension = getPanelDimension(entries[0].contentRect.width)
+    if (dimension !== this.state.dimension) {
+      this.setState({ dimension })
+    }
+  }
+
+  render () {
+    const {activeQuests, activeCapacity, activeNum} = this.props
+    const colwidth = Math.floor(12 / this.state.dimension)
+    return (
+      <Panel bsStyle="default">
+        <Panel.Body>
+          {[
+            sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) =>
+              <TaskRow
+                key={(quest || {}).api_no || idx}
                 idx={idx}
-                leftLabel={__('To be refreshed')}
-                leftOverlay={__('Browse your quest list to let poi know your active quests')}
+                quest={quest}
+                colwidth={colwidth}
               />
-            ) : (idx < activeCapacity) ? (
-              // Empty
-              <TaskRowBase
-                key={idx}
-                idx={idx}
-                leftLabel={__('Empty quest')}
-              /> ) : (
-              // Can expand
-              <TaskRowBase
-                key={idx}
-                idx={idx}
-                leftLabel={__('Locked')}
-                leftOverlay={__('Increase your active quest limit with a "Headquarters Personnel".')}
-              /> )
-          ),
-        ]}
-      </Panel.Body>
-    </Panel>
-  )
+            ),
+            range(Object.keys(activeQuests).length, 6).map((idx) =>
+              (idx < activeNum) ?  (
+                // Need refreshing
+                <TaskRowBase
+                  key={idx}
+                  idx={idx}
+                  leftLabel={__('To be refreshed')}
+                  leftOverlay={__('Browse your quest list to let poi know your active quests')}
+                  colwidth={colwidth}
+                />
+              ) : (idx < activeCapacity) ? (
+                // Empty
+                <TaskRowBase
+                  key={idx}
+                  idx={idx}
+                  leftLabel={__('Empty quest')}
+                  colwidth={colwidth}
+                /> ) : (
+                // Can expand
+                <TaskRowBase
+                  key={idx}
+                  idx={idx}
+                  leftLabel={__('Locked')}
+                  leftOverlay={__('Increase your active quest limit with a "Headquarters Personnel".')}
+                  colwidth={colwidth}
+                /> )
+            ),
+          ]}
+        </Panel.Body>
+      </Panel>
+    )
+  }
 })
 
 export default TaskPanel
