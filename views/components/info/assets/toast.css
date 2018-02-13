@@ -146,6 +146,10 @@ button.toast-close-button {
   cursor: pointer;
 }
 
+.toast {
+  background-color: #030303;
+}
+
 .toast-success {
   background-color: #51a351;
 }
@@ -190,10 +194,6 @@ button.toast-close-button {
   width: 96%;
   margin-left: auto;
   margin-right: auto;
-}
-
-.toast {
-  background-color: #030303;
 }
 
 .toast-progress {
