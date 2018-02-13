@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, each } from 'lodash'
 import { Grid, Col, FormControl } from 'react-bootstrap'
 import i18next from 'views/env-parts/i18next'
 
 const { config } = window
+const setWindowI18nLng = language => {
+  each(i18next.options.ns, (ns) => {
+    window.i18n[ns].fixedT = i18next.getFixedT(language, ns)
+  })
+}
 
 let language = window.language
 if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
@@ -36,6 +41,7 @@ const LanguageConfig = connect(() => {
     const language = e.target.value
     config.set('poi.language', language)
     i18next.changeLanguage(language)
+    setWindowI18nLng(language)
   }
   render() {
     return (
