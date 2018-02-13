@@ -5,7 +5,7 @@ import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 
 const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
-const { ROOT, language } = window
+const { ROOT } = window
 const i18nResources = {}
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
@@ -19,9 +19,26 @@ forEach(locales, locale => {
   set(i18nResources, locale, translations)
 })
 
+window.language = window.config.get('poi.language', navigator.language)
+if (!locales.includes(window.language)) {
+  switch (window.language.substr(0, 2).toLowerCase()) {
+  case 'zh':
+    window.language = 'zh-TW'
+    break
+  case 'ja':
+    window.language = 'ja-JP'
+    break
+  case 'ko':
+    window.language = 'ko-KR'
+    break
+  default:
+    window.language = 'en-US'
+  }
+}
+
 i18next.use(reactI18nextModule)
   .init({
-    lng: language,
+    lng: window.language,
     fallbackLng: 'en-US',
     resources: i18nResources,
     ns: i18nFiles.map(i => path.basename(i)),
@@ -29,7 +46,9 @@ i18next.use(reactI18nextModule)
     interpolation: {
       escapeValue: false,
     },
-    debug: false,
+    nsSeparator: false, // allow using : in key
+    returnObjects: true, // allow returning objects
+    debug: window.dbg && window.dbg.isEnabled(),
     react: {
       wait: false,
       nsMode: true,
@@ -37,6 +56,8 @@ i18next.use(reactI18nextModule)
   })
 
 // for test
-window.isDevVersion && (window.i18next = i18next)
+if (window.dbg && window.dbg.isEnabled()) {
+  window.i18next = i18next
+}
 
 export default i18next

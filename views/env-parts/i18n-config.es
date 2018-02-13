@@ -1,51 +1,25 @@
-import path from 'path-extra'
-import glob from 'glob'
 import { spacing as _spacing } from 'pangu'
-import { isString, toString } from 'lodash'
+import { isString, toString, each } from 'lodash'
+import i18next from './i18next'
+import { format } from 'util'
 
-const {ROOT, isMain, config} = window
+const { isMain, config } = window
 
 const textSpacingCJK = config.get('poi.textSpacingCJK', true)
 
 const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
 
-const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
-
-window.language = window.config.get('poi.language', navigator.language)
-if (!locales.includes(window.language)) {
-  switch (window.language.substr(0, 2).toLowerCase()) {
-  case 'zh':
-    window.language = 'zh-TW'
-    break
-  case 'ja':
-    window.language = 'ja-JP'
-    break
-  case 'ko':
-    window.language = 'ko-KR'
-    break
-  default:
-    window.language = 'en-US'
-  }
-}
-
 window.i18n = {}
 
-// Add translation file only on main window
 if (window.isMain) {
-  const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
-  for (const i18nFile of i18nFiles) {
-    const namespace = path.basename(i18nFile)
-    window.i18n[namespace] = new (require('i18n-2'))({
-      locales,
-      defaultLocale: 'en-US',
-      directory: i18nFile,
-      updateFiles: false,
-      indent: "\t",
-      extension: '.json',
-      devMode: false,
-    })
-    window.i18n[namespace].setLocale(window.language)
-  }
+  each(i18next.options.ns, (ns) => {
+    window.i18n[ns] = {
+      fixedT: i18next.getFixedT(window.language, ns),
+    }
+
+    window.i18n[ns].__ = (str, ...args) => format(window.i18n[ns].fixedT(str), ...args)
+    window.i18n[ns].__n = (str, ...args) => format(window.i18n[ns].fixedT(str), ...args)
+  })
 }
 
 window.i18n.resources = {
