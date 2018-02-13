@@ -383,7 +383,7 @@ export default connect(
           minimumWidth={{ px: 0, percent: this.props.doubleTabbed ? 10 : 100 }}
           defaultWidth={{ px: 0, percent: 50 }}
           initWidth={this.props.mainPanelWidth}
-          minimumHeight={{ px: 0, height: 100 }}
+          minimumHeight={{ px: 0, percent: 100 }}
           initHeight={{ px: 0, percent: 100 }}
           parentContainer={this.state.resizeContainer}
           disable={{ width: !this.props.doubleTabbed || !this.props.editable, height: true }}
