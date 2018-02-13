@@ -176,7 +176,7 @@ const TaskRow = connect(
     translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
     wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
   })
-)(function ({idx, quest, record, translation, wikiId}) {
+)(function ({idx, quest, record, translation, wikiId, colwidth}) {
   const questName = quest ? i18n.resources.__(quest.api_title || '') : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
@@ -198,6 +198,7 @@ const TaskRow = connect(
       rightLabel={progressLabel}
       rightBsStyle={progressBsStyle}
       rightOverlay={progressOverlay}
+      colwidth={colwidth}
     />
   )
 })
