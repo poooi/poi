@@ -1,6 +1,6 @@
 const { ROOT } = window
 import React, { Component, Fragment } from 'react'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { join as joinString, range, get } from 'lodash'
 import { join } from 'path-extra'
@@ -38,6 +38,16 @@ const EmptyDock = ({ state }) => (
   </div>
 )
 
+const getPanelDimension = width => {
+  if (width > 700) {
+    return 4
+  }
+  if (width > 350) {
+    return 2
+  }
+  return 1
+}
+
 export default connect(
   createDeepCompareArraySelector([
     repairsSelector,
@@ -45,12 +55,14 @@ export default connect(
     inRepairShipsDataSelector,
     miscSelector,
     state => get(state, 'config.poi.enableAvatar', true),
-  ], (repairs, {$ships}, inRepairShips, {canNotify}, enableAvatar) => ({
+    state => getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
+  ], (repairs, {$ships}, inRepairShips, {canNotify}, enableAvatar, dimension) => ({
     repairs,
     $ships,
     inRepairShips,
     canNotify,
     enableAvatar,
+    dimension,
   }))
 )(class RepairPanel extends Component {
   getLabelStyle = (props, timeRemaining) => {
@@ -69,7 +81,7 @@ export default connect(
     preemptTime: 60,
   }
   render() {
-    const {canNotify, repairs, $ships, inRepairShips, enableAvatar} = this.props
+    const {canNotify, repairs, $ships, inRepairShips, enableAvatar, dimension} = this.props
     // The reason why we use an array to pass in inRepairShips and indexify it
     // into ships, is because by passing an array we can make use of
     // createDeepCompareArraySelector which only deep compares arrays, and
@@ -100,7 +112,7 @@ export default connect(
               hpPercentage = (100 * get(ships, [dock.api_ship_id, 'api_nowhp'])) / get(ships, [dock.api_ship_id, 'api_maxhp'])
             }
             return (
-              <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})}>
+              <Col key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} xs={12 / dimension}>
                 {
                   enableAvatar &&
                   <Fragment>
@@ -135,7 +147,7 @@ export default connect(
                     />
                   </div>
                 </OverlayTrigger>
-              </div>
+              </Col>
             )
           })
         }

@@ -1,4 +1,4 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import React, { Component, Fragment } from 'react'
@@ -20,12 +20,23 @@ const EmptyDock = ({ state }) => (
   </div>
 )
 
+const getPanelDimension = width => {
+  if (width > 700) {
+    return 4
+  }
+  if (width > 350) {
+    return 2
+  }
+  return 1
+}
+
 export default connect(
   (state) => ({
     constructions: state.info.constructions,
     $ships: state.const.$ships,
     canNotify: state.misc.canNotify,
     enableAvatar: get(state, 'config.poi.enableAvatar', true),
+    dimension: getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
   })
 )(class ConstructionPanel extends Component {
   getMaterialImage = (idx) => {
@@ -51,7 +62,7 @@ export default connect(
     message: (names) => `${joinString(names, ', ')} ${__('built')}`,
   }
   render() {
-    const {constructions, canNotify, enableAvatar} = this.props
+    const {constructions, canNotify, enableAvatar, dimension} = this.props
     return (
       <Fragment>
         {
@@ -77,7 +88,7 @@ export default connect(
                   {this.getMaterialImage(7)} {dock.api_item5}
                 </Tooltip>
               }>
-                <div className="panel-item kdock-item">
+                <Col className="panel-item kdock-item" xs={12 / dimension}>
                   {
                     enableAvatar &&
                     <Fragment>
@@ -100,7 +111,7 @@ export default connect(
                       completeTime: completeTime,
                     }}
                   />
-                </div>
+                </Col>
               </OverlayTrigger>
             )
           })

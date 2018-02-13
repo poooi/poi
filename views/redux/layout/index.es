@@ -22,6 +22,10 @@ const initState = {
     width: 450,
     height: 433,
   },
+  combinedpane: {
+    width: 250,
+    height: 135,
+  },
 }
 
 export function reducer(state=initState, {type, value}) {

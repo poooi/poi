@@ -11,6 +11,7 @@
 .MainView .nav {
   margin-bottom: 5px;
   margin-top: -6px;
+  min-height: 40px;
 }
 
 .MainView .nav > li {
@@ -75,6 +76,11 @@
 
 .MainView .panel-item {
   padding: 4px;
+}
+
+.MainView .ndock-panel .panel-item,
+.MainView .kdock-panel .panel-item {
+  padding: 2px 4px;
 }
 
 .MainView .label {

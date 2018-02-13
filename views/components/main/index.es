@@ -35,10 +35,13 @@ export default {
 
     componentWillUnmount() {
       layoutResizeObserver.unobserve(this.mainpane)
+      layoutResizeObserver.unobserve(this.combinedpane)
     }
 
     componentDidMount() {
+      this.combinedpane = document.querySelector('.MainView .combined-panels')
       layoutResizeObserver.observe(this.mainpane)
+      layoutResizeObserver.observe(this.combinedpane)
     }
 
     render() {
@@ -59,10 +62,10 @@ export default {
             <div className="teitoku-panel" key="teitoku-panel">
               <AdmiralPanel />
             </div>
-            <div className="resource-panel" key="resource-panel" ref={(ref) => { this.resourcePanel = ref }}>
+            <div className="resource-panel" key="resource-panel">
               <ResourcePanel />
             </div>
-            <div className="miniship" key="miniship" id='MiniShip' ref={(ref) => { this.miniship = ref }}>
+            <div className="miniship" key="miniship" id='MiniShip' ref={ref => { this.miniship = ref }}>
               <MiniShip />
             </div>
             <Panel className="combined-panels panel-col" key="combined-panels">
