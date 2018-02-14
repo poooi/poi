@@ -1,7 +1,7 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { readJsonSync } from 'fs-extra'
-import _, { set, isString, toString, each } from 'lodash'
+import { readJson } from 'fs-extra'
+import _, { isString, toString, each } from 'lodash'
 import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
@@ -10,30 +10,13 @@ import { format } from 'util'
 const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
 const { ROOT, isMain, config } = window
 
-const i18nResources = {}
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
-const escapeDot = str => str.replace(/\.\W/g, '').replace(/\.$/, '')
+const ensureString = str => isString(str) ? str : toString(str)
 
-// create options.resources in i18next init()
-each(locales, locale => {
-  const translations = {}
-  each(i18nFiles, i18nFile => {
-    const namespace = path.basename(i18nFile)
-    try {
-      let data = readJsonSync(path.join(i18nFile, `${locale}.json`))
-      data = _(data)
-        .entries()
-        .map(([key, v]) => [escapeDot(key), v])
-        .fromPairs()
-        .value()
-      set(translations, namespace, data)
-    } catch (e) {
-      return
-    }
-  })
-  set(i18nResources, locale, translations)
-})
+const escapeDot = str => ensureString(str)
+  .replace(/\.\W/g, '')
+  .replace(/\.$/, '')
 
 window.language = window.config.get('poi.language', navigator.language)
 if (!locales.includes(window.language)) {
@@ -56,7 +39,7 @@ i18next.use(reactI18nextModule)
   .init({
     lng: window.language,
     fallbackLng: 'en-US',
-    resources: i18nResources,
+    resources: {},
     ns: i18nFiles.map(i => path.basename(i)),
     defaultNS: 'main',
     interpolation: {
@@ -70,6 +53,28 @@ i18next.use(reactI18nextModule)
       nsMode: true,
     },
   })
+
+i18next.readResources = async (language, namespace, filePath) => {
+  try {
+    let data = await readJson(filePath)
+    data = _(data)
+      .entries()
+      .map(([key, v]) => [escapeDot(key), v])
+      .fromPairs()
+      .value()
+
+    i18next.addResources(language, namespace, data)
+  } catch (e) {
+    console.error('No translation found: ', language, namespace, filePath)
+  }
+}
+
+each(locales, locale => {
+  each(i18nFiles, i18nFile => {
+    const namespace = path.basename(i18nFile)
+    i18next.readResources(locale, namespace, path.join(i18nFile, `${locale}.json`))
+  })
+})
 
 // for test
 if (window.dbg && window.dbg.isEnabled()) {
