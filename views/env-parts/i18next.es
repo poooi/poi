@@ -7,7 +7,7 @@ import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
 
-const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
+const LOCALES = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
 const { ROOT, isMain, config } = window
 
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
@@ -18,8 +18,9 @@ const escapeDot = str => ensureString(str)
   .replace(/\.\W/g, '')
   .replace(/\.$/, '')
 
+window.LOCALES = LOCALES
 window.language = window.config.get('poi.language', navigator.language)
-if (!locales.includes(window.language)) {
+if (!LOCALES.includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
   case 'zh':
     window.language = 'zh-TW'
@@ -69,7 +70,7 @@ i18next.readResources = async (language, namespace, filePath) => {
   }
 }
 
-each(locales, locale => {
+each(LOCALES, locale => {
   each(i18nFiles, i18nFile => {
     const namespace = path.basename(i18nFile)
     i18next.readResources(locale, namespace, path.join(i18nFile, `${locale}.json`))
@@ -87,14 +88,18 @@ const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toStrin
 
 window.i18n = {}
 
+window.addI18nNamespace = namespace => {
+  window.i18n[namespace] = {
+    fixedT: i18next.getFixedT(window.language, namespace),
+  }
+
+  window.i18n[namespace].__ = (str, ...args) => format(window.i18n[namespace].fixedT(escapeDot(str)), ...args)
+  window.i18n[namespace].__n = (str, ...args) => format(window.i18n[namespace].fixedT(escapeDot(str)), ...args)
+}
+
 if (window.isMain) {
   each(i18next.options.ns, (ns) => {
-    window.i18n[ns] = {
-      fixedT: i18next.getFixedT(window.language, ns),
-    }
-
-    window.i18n[ns].__ = (str, ...args) => format(window.i18n[ns].fixedT(escapeDot(str)), ...args)
-    window.i18n[ns].__n = (str, ...args) => format(window.i18n[ns].fixedT(escapeDot(str)), ...args)
+    window.addI18nNamespace(ns)
   })
 }
 
