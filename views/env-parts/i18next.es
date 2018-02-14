@@ -1,18 +1,21 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { forEach, set } from 'lodash'
+import { set, isString, toString, each } from 'lodash'
 import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
+import { spacing as _spacing } from 'pangu'
+import { format } from 'util'
 
 const locales = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
-const { ROOT } = window
+const { ROOT, isMain, config } = window
+
 const i18nResources = {}
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
 // create options.resources in i18next init()
-forEach(locales, locale => {
+each(locales, locale => {
   const translations = {}
-  forEach(i18nFiles, i18nFile => {
+  each(i18nFiles, i18nFile => {
     const namespace = path.basename(i18nFile)
     set(translations, namespace, require(path.join(i18nFile, `${locale}.json`)))
   })
@@ -58,6 +61,38 @@ i18next.use(reactI18nextModule)
 // for test
 if (window.dbg && window.dbg.isEnabled()) {
   window.i18next = i18next
+}
+
+const textSpacingCJK = config.get('poi.textSpacingCJK', true)
+
+const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
+
+window.i18n = {}
+
+if (window.isMain) {
+  each(i18next.options.ns, (ns) => {
+    window.i18n[ns] = {
+      fixedT: i18next.getFixedT(window.language, ns),
+    }
+
+    window.i18n[ns].__ = (str, ...args) => format(window.i18n[ns].fixedT(str), ...args)
+    window.i18n[ns].__n = (str, ...args) => format(window.i18n[ns].fixedT(str), ...args)
+  })
+}
+
+window.i18n.resources = {
+  __: (str) => spacing(str),
+  translate: (locale, str) => spacing(str),
+  setLocale: (str) => (str),
+}
+
+// inject translator for English names
+if (!isMain && config.get('plugin.poi-plugin-translator.enable', false)) {
+  try {
+    require('poi-plugin-translator').pluginDidLoad()
+  } catch (e) {
+    console.warn('poi-plugin-translator', e)
+  }
 }
 
 export default i18next

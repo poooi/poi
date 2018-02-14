@@ -96,7 +96,7 @@ for (const key in originConfig) {
 }
 
 // i18n config
-require('./env-parts/i18n-config')
+require('./env-parts/i18next')
 
 // window.notify
 // msg=null: Sound-only notification.
