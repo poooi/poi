@@ -1,6 +1,7 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { set, isString, toString, each } from 'lodash'
+import { readJsonSync } from 'fs-extra'
+import _, { set, isString, toString, each } from 'lodash'
 import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
@@ -12,12 +13,24 @@ const { ROOT, isMain, config } = window
 const i18nResources = {}
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
+const escapeDot = str => str.replace(/\.\W/g, '').replace(/\.$/, '')
+
 // create options.resources in i18next init()
 each(locales, locale => {
   const translations = {}
   each(i18nFiles, i18nFile => {
     const namespace = path.basename(i18nFile)
-    set(translations, namespace, require(path.join(i18nFile, `${locale}.json`)))
+    try {
+      let data = readJsonSync(path.join(i18nFile, `${locale}.json`))
+      data = _(data)
+        .entries()
+        .map(([key, v]) => [escapeDot(key), v])
+        .fromPairs()
+        .value()
+      set(translations, namespace, data)
+    } catch (e) {
+      return
+    }
   })
   set(i18nResources, locale, translations)
 })
@@ -75,8 +88,8 @@ if (window.isMain) {
       fixedT: i18next.getFixedT(window.language, ns),
     }
 
-    window.i18n[ns].__ = (str, ...args) => format(window.i18n[ns].fixedT(str), ...args)
-    window.i18n[ns].__n = (str, ...args) => format(window.i18n[ns].fixedT(str), ...args)
+    window.i18n[ns].__ = (str, ...args) => format(window.i18n[ns].fixedT(escapeDot(str)), ...args)
+    window.i18n[ns].__n = (str, ...args) => format(window.i18n[ns].fixedT(escapeDot(str)), ...args)
   })
 }
 
