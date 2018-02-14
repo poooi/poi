@@ -1,22 +1,31 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { readJson } from 'fs-extra'
-import _, { isString, toString, each } from 'lodash'
+import { isString, toString, each } from 'lodash'
 import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
 
+import { readI18nResources, escapeDot } from 'views/utils/tools'
+
 const LOCALES = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
 const { ROOT, isMain, config } = window
 
+const textSpacingCJK = config.get('poi.textSpacingCJK', true)
+const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
+
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
-const ensureString = str => isString(str) ? str : toString(str)
+const mainPoiNs = i18nFiles.map(i => path.basename(i))
+const mainPoiRes = {}
 
-const escapeDot = str => ensureString(str)
-  .replace(/\.\W/g, '')
-  .replace(/\.$/, '')
+each(LOCALES, locale => {
+  mainPoiRes[locale] = {}
+  each(i18nFiles, i18nFile => {
+    const namespace = path.basename(i18nFile)
+    mainPoiRes[locale][namespace] = readI18nResources(path.join(i18nFile, `${locale}.json`))
+  })
+})
 
 window.LOCALES = LOCALES
 window.language = window.config.get('poi.language', navigator.language)
@@ -40,8 +49,8 @@ i18next.use(reactI18nextModule)
   .init({
     lng: window.language,
     fallbackLng: 'en-US',
-    resources: {},
-    ns: i18nFiles.map(i => path.basename(i)),
+    resources: mainPoiRes,
+    ns: mainPoiNs,
     defaultNS: 'main',
     interpolation: {
       escapeValue: false,
@@ -55,40 +64,15 @@ i18next.use(reactI18nextModule)
     },
   })
 
-i18next.readResources = async (language, namespace, filePath) => {
-  try {
-    let data = await readJson(filePath)
-    data = _(data)
-      .entries()
-      .map(([key, v]) => [escapeDot(key), v])
-      .fromPairs()
-      .value()
-
-    i18next.addResources(language, namespace, data)
-  } catch (e) {
-    console.error('No translation found: ', language, namespace, filePath)
-  }
-}
-
-each(LOCALES, locale => {
-  each(i18nFiles, i18nFile => {
-    const namespace = path.basename(i18nFile)
-    i18next.readResources(locale, namespace, path.join(i18nFile, `${locale}.json`))
-  })
-})
-
 // for test
 if (window.dbg && window.dbg.isEnabled()) {
   window.i18next = i18next
 }
 
-const textSpacingCJK = config.get('poi.textSpacingCJK', true)
-
-const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
-
+// FIXME: simulating window.i18n with i18next
+// to be removed in next major release
 window.i18n = {}
-
-window.addI18nNamespace = namespace => {
+const addGlobalI18n = (namespace) => {
   window.i18n[namespace] = {
     fixedT: i18next.getFixedT(window.language, namespace),
   }
@@ -98,10 +82,11 @@ window.addI18nNamespace = namespace => {
 }
 
 if (window.isMain) {
-  each(i18next.options.ns, (ns) => {
-    window.addI18nNamespace(ns)
-  })
+  each(mainPoiNs, ns => addGlobalI18n(ns))
 }
+
+// export addGlobalI18n for plugin manager usage
+i18next.addGlobalI18n = addGlobalI18n
 
 window.i18n.resources = {
   __: (str) => spacing(str),

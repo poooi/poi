@@ -13,6 +13,7 @@ import { setAllowedPath } from 'lib/module-path'
 import child_process from 'child_process'
 import path from 'path'
 import i18next from 'views/env-parts/i18next'
+import { readI18nResources } from 'views/utils/tools'
 
 import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
@@ -129,9 +130,15 @@ export function updateI18n(plugin) {
   if (i18nFile != null) {
     const namespace = plugin.id
     each(window.LOCALES, (language) => {
-      i18next.readResources(language, namespace, join(i18nFile, `${language}.json`))
+      i18next.addGlobalI18n(namespace)
+      i18next.addResourceBundle(
+        language,
+        namespace,
+        readI18nResources(join(i18nFile, `${language}.json`,)),
+        true,
+        true,
+      )
     })
-    window.addI18nNamespace(namespace)
     plugin.name = window.i18n[namespace].__(plugin.name)
     plugin.description = window.i18n[namespace].__(plugin.description)
   }
