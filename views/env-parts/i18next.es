@@ -6,7 +6,7 @@ import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
 
-import { readI18nResources, escapeDot } from 'views/utils/tools'
+import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 
 const LOCALES = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
 const { ROOT, isMain, config } = window
@@ -55,7 +55,6 @@ i18next.use(reactI18nextModule)
     interpolation: {
       escapeValue: false,
     },
-    nsSeparator: false, // allow using : in key
     returnObjects: true, // allow returning objects
     debug: window.dbg && window.dbg.isEnabled(),
     react: {
@@ -77,8 +76,8 @@ const addGlobalI18n = (namespace) => {
     fixedT: i18next.getFixedT(window.language, namespace),
   }
 
-  window.i18n[namespace].__ = (str, ...args) => format(window.i18n[namespace].fixedT(escapeDot(str)), ...args)
-  window.i18n[namespace].__n = (str, ...args) => format(window.i18n[namespace].fixedT(escapeDot(str)), ...args)
+  window.i18n[namespace].__ = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
+  window.i18n[namespace].__n = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
 }
 
 if (window.isMain) {

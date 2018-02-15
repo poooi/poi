@@ -217,16 +217,18 @@ export const executeUntilReady = func => {
 }
 
 const ensureString = str => isString(str) ? str : toString(str)
-export const escapeDot = str => ensureString(str)
+export const escapeI18nKey = str => ensureString(str)
   .replace(/\.\W/g, '')
   .replace(/\.$/, '')
+  .replace(/:\s/g, '')
+  .replace(/:$/g, '')
 
 export const readI18nResources = (filePath) => {
   try {
     let data = readJsonSync(filePath)
     data = _(data)
       .entries()
-      .map(([key, v]) => [escapeDot(key), v])
+      .map(([key, v]) => [escapeI18nKey(key), v])
       .fromPairs()
       .value()
     return data
