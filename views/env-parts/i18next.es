@@ -80,6 +80,7 @@ const addGlobalI18n = (namespace) => {
 
   window.i18n[namespace].__ = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
   window.i18n[namespace].__n = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
+  window.i18n[namespace].setLocale = () => {}
 }
 
 if (window.isMain) {
