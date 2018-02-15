@@ -1,7 +1,7 @@
 import path from 'path-extra'
 import glob from 'glob'
 import { isString, toString, each } from 'lodash'
-import i18next, { use, getFixedT } from 'i18next'
+import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
@@ -45,7 +45,8 @@ if (!LOCALES.includes(window.language)) {
   }
 }
 
-use(reactI18nextModule)
+// eslint-disable-next-line import/no-named-as-default-member
+i18next.use(reactI18nextModule)
   .init({
     lng: window.language,
     fallbackLng: 'en-US',
@@ -73,7 +74,8 @@ if (window.dbg && window.dbg.isEnabled()) {
 window.i18n = {}
 const addGlobalI18n = (namespace) => {
   window.i18n[namespace] = {
-    fixedT: getFixedT(window.language, namespace),
+    // eslint-disable-next-line import/no-named-as-default-member
+    fixedT: i18next.getFixedT(window.language, namespace),
   }
 
   window.i18n[namespace].__ = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
