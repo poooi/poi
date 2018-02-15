@@ -2,8 +2,9 @@
  * This file contains utility functions that is unrelated to the game mechanism.
  */
 
-import { isEqual, forEach, keyBy, zip, unzip, sum } from 'lodash'
+import _, { isEqual, forEach, keyBy, zip, unzip, sum, isString, toString } from 'lodash'
 import path from 'path'
+import { readJsonSync } from 'fs-extra'
 
 // For a given array, sum up each position of the subarray respectively.
 // Args:
@@ -212,5 +213,26 @@ export const executeUntilReady = func => {
     func()
   } else {
     document.addEventListener('DOMContentLoaded', func)
+  }
+}
+
+const ensureString = str => isString(str) ? str : toString(str)
+export const escapeI18nKey = str => ensureString(str)
+  .replace(/\.\W/g, '')
+  .replace(/\.$/, '')
+  .replace(/:\s/g, '')
+  .replace(/:$/g, '')
+
+export const readI18nResources = (filePath) => {
+  try {
+    let data = readJsonSync(filePath)
+    data = _(data)
+      .entries()
+      .map(([key, v]) => [escapeI18nKey(key), v])
+      .fromPairs()
+      .value()
+    return data
+  } catch (e) {
+    return {}
   }
 }

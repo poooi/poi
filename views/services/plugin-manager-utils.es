@@ -1,4 +1,4 @@
-import { omit, get, set } from 'lodash'
+import { omit, get, set, each } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
 import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, remove, lstatSync } from 'fs-extra'
@@ -12,7 +12,8 @@ import crypto from 'crypto'
 import { setAllowedPath } from 'lib/module-path'
 import child_process from 'child_process'
 import path from 'path'
-import i18n from 'i18n-2'
+import i18next from 'views/env-parts/i18next'
+import { readI18nResources } from 'views/utils/tools'
 
 import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
@@ -25,11 +26,6 @@ const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 require('module').globalPaths.push(MODULE_PATH)
-
-// overwrites i18n-2's translation file cache, to be removed if we change to other lib
-i18n.localeCache = new Proxy({}, {
-  get: () => null,
-})
 
 // This reducer clears the substore no matter what is given.
 const clearReducer = undefined
@@ -133,16 +129,16 @@ export function updateI18n(plugin) {
   }
   if (i18nFile != null) {
     const namespace = plugin.id
-    window.i18n[namespace] = new i18n({
-      locales: ['ko-KR', 'en-US', 'ja-JP', 'zh-CN', 'zh-TW'],
-      defaultLocale: 'en-US',
-      directory: i18nFile,
-      updateFiles: false,
-      indent: "\t",
-      extension: '.json',
-      devMode: false,
+    each(window.LOCALES, (language) => {
+      i18next.addGlobalI18n(namespace)
+      i18next.addResourceBundle(
+        language,
+        namespace,
+        readI18nResources(join(i18nFile, `${language}.json`,)),
+        true,
+        true,
+      )
     })
-    window.i18n[namespace].setLocale(window.language)
     plugin.name = window.i18n[namespace].__(plugin.name)
     plugin.description = window.i18n[namespace].__(plugin.description)
   }

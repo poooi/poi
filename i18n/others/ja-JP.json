@@ -73,9 +73,5 @@
   },
   "\"Refresh page\" is the same as pressing F5.": "“ページをリロード”は通常の再読み込みと同じです。",
   "\"Reload Flash\" reloads only the Flash part, this is usually faster but could result in catbomb.": "“ゲームだけをリロード”はゲームエリアをリロード、速いけど猫が出る可能性がある。",
-  "Resupply cost %d bauxite": "ボーキサイトを %d 消費した",
-  "doyouknow-prefix": "ヒント：",
-  "doyouknow-contents": [
-    ""
-  ]
+  "Resupply cost %d bauxite": "ボーキサイトを %d 消費した"
 }

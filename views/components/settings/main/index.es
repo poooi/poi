@@ -104,10 +104,6 @@ const PoiConfig = () => (
               </OverlayTrigger>
           }
           <CheckboxLabel
-            label={__('Display "Tips"')}
-            configName="poi.doyouknow.enabled"
-            defaultVal={true} />
-          <CheckboxLabel
             label={__('Display Final Stage Notification')}
             configName="poi.lastbattle.enabled"
             defaultVal={true} />
