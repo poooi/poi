@@ -49,7 +49,7 @@ if (!LOCALES.includes(window.language)) {
 i18next.use(reactI18nextModule)
   .init({
     lng: window.language,
-    fallbackLng: 'en-US',
+    fallbackLng: false,
     resources: mainPoiRes,
     ns: mainPoiNs,
     defaultNS: 'main',
