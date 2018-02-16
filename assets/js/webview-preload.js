@@ -26,13 +26,14 @@ remote.getCurrentWebContents().addListener('dom-ready', (e) => {
     DMM.netgame.reloadDialog=function(){}
   }
 })
-remote.getCurrentWebContents().addListener('new-window', (e) => {
+window.WindowManager = WindowManager
+remote.getCurrentWebContents().addListener('new-window', (e, url) => {
   const exWindow = WindowManager.createWindow({
     realClose: true,
     navigatable: true,
     nodeIntegration: false,
   })
-  exWindow.loadURL(e.url)
+  exWindow.loadURL(url)
   exWindow.show()
   e.preventDefault()
 })
