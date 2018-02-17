@@ -131,7 +131,7 @@ export default connect(
 
                 <OverlayTrigger placement='left' overlay={
                   <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
-                    <strong>{__("Finish by : ")}</strong>{timeToString(completeTime)}
+                    <strong>{__("Finish By")}: </strong>{timeToString(completeTime)}
                   </Tooltip>
                 }>
                   <div>

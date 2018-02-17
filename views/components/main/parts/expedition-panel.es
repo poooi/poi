@@ -1,11 +1,11 @@
-const { ROOT, i18n } = window
 import { Panel, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React, { Component } from 'react'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
@@ -17,6 +17,8 @@ import {
 import { timeToString } from 'views/utils/tools'
 
 import '../assets/expedition-panel.css'
+
+const { ROOT } = window
 
 const fleetsExpeditionSelector = createSelector(fleetsSelector,
   (fleets) => map(fleets, 'api_mission')
@@ -39,7 +41,7 @@ const FleetStatus = connect((state, {fleetId}) => {
 })(({ fleetInBattle, fleetShipsData }) => {
   if (fleetInBattle) {
     return (
-      <span className="expedition-name text-success">{__('In Sortie')}</span>
+      <span className="expedition-name text-success"><Trans>main:In Sortie</Trans></span>
     )
   }
 
@@ -48,12 +50,12 @@ const FleetStatus = connect((state, {fleetId}) => {
   )
   if (notSuppliedShips.length) {
     return (
-      <span className="expedition-name text-warning">{__('Resupply needed')}</span>
+      <span className="expedition-name text-warning"><Trans>main:Resupply Needed</Trans></span>
     )
   }
 
   return (
-    <span className="expedition-name">{__('Ready')}</span>
+    <span className="expedition-name"><Trans>main:Ready</Trans></span>
   )
 })
 
@@ -85,8 +87,8 @@ export default connect(
   }
   static basicNotifyConfig = {
     type: 'expedition',
-    title: __('Expedition'),
-    message: (names) => `${joinString(names, ', ')} ${__('mission complete')}`,
+    title: i18next.t('main:Expedition'),
+    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:mission complete')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
   }
   render() {
@@ -100,8 +102,8 @@ export default connect(
               const fleetName = get(fleetNames, i, '???')
               const expedition = get($expeditions, expeditionId, {})
               const expeditionName = status == -1
-                ? __('Locked')
-                : `${expedition.api_disp_no ||__('???')} ${expedition.api_name || __('???')}`
+                ? <Trans>main:Locked</Trans>
+                : `${expedition.api_disp_no || '???'} ${expedition.api_name || '???'}`
               const completeTime = status > 0 ? rawCompleteTime : -1
 
               return (
@@ -113,7 +115,7 @@ export default connect(
                   )}
                   <OverlayTrigger placement='left' overlay={
                     <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
-                      <strong>{__("Return by : ")}</strong>{timeToString(completeTime)}
+                      <strong><Trans>main:Return By</Trans>: </strong>{timeToString(completeTime)}
                     </Tooltip>
                   }>
                     <div>

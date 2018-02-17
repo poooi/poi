@@ -3,9 +3,8 @@ import { get, map, range, forEach, values, sortBy } from 'lodash'
 import { Panel, Label, OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import React, { Fragment } from 'react'
-
-const {i18n} = window
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
+import { escapeI18nKey } from 'views/utils/tools'
 
 import {
   configLayoutSelector,
@@ -89,14 +88,14 @@ function progressLabelText(quest) {
     return ''
   const {api_progress_flag, api_state} = quest
   if (api_state == 3)
-    return __('Completed')
+    return <Trans>main:Completed</Trans>
   switch (api_progress_flag) {
   case 1:         // 50%
     return '50%'
   case 2:         // 80%
     return '80%'
   default:        // api_progress_flag == 0, which means empty progress
-    return __('In progress')
+    return <Trans>main:In progress</Trans>
   }
 }
 
@@ -116,7 +115,7 @@ function getToolTip(record) {
       {
         values(record).map((subgoal, idx) =>
           (subgoal && typeof subgoal === 'object')
-            ? <div key={idx}>{i18n.data.__(subgoal.description)} - {subgoal.count} / {subgoal.required}</div>
+            ? <div key={idx}><Trans i18nKey={`data:${ escapeI18nKey(subgoal.description) }`}>{ subgoal.description }</Trans> - {subgoal.count} / {subgoal.required}</div>
             : undefined
         )
       }
@@ -177,7 +176,7 @@ const TaskRow = connect(
     wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
   })
 )(function ({idx, quest, record, translation, wikiId, colwidth}) {
-  const questName = quest ? i18n.resources.__(quest.api_title || '') : '???'
+  const questName = quest && quest.api_title ? <Trans i18nKey={`resources:${ escapeI18nKey(quest.api_title) }`}>{ escapeI18nKey(quest.api_title) }</Trans> : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
@@ -256,8 +255,8 @@ const TaskPanel = connect(
                 <TaskRowBase
                   key={idx}
                   idx={idx}
-                  leftLabel={__('To be refreshed')}
-                  leftOverlay={__('Browse your quest list to let poi know your active quests')}
+                  leftLabel={<Trans>main:To be refreshed</Trans>}
+                  leftOverlay={<Trans>main:Browse your quest list to let poi know your active quests</Trans>}
                   colwidth={colwidth}
                 />
               ) : (idx < activeCapacity) ? (
@@ -265,15 +264,15 @@ const TaskPanel = connect(
                 <TaskRowBase
                   key={idx}
                   idx={idx}
-                  leftLabel={__('Empty quest')}
+                  leftLabel={<Trans>main:Empty quest</Trans>}
                   colwidth={colwidth}
                 /> ) : (
                 // Can expand
                 <TaskRowBase
                   key={idx}
                   idx={idx}
-                  leftLabel={__('Locked')}
-                  leftOverlay={__('Increase your active quest limit with a "Headquarters Personnel".')}
+                  leftLabel={<Trans>main:Locked</Trans>}
+                  leftOverlay={<Trans>main:QuestLimitMsg</Trans>}
                   colwidth={colwidth}
                 /> )
             ),

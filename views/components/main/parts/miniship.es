@@ -6,8 +6,7 @@ import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
-const { i18n, dispatch } = window
-const __ = i18n.main.__.bind(i18n.main)
+const { dispatch } = window
 const { Component } = React
 
 import { PaneBodyMini, LBViewMini } from './minishippane'
@@ -31,7 +30,7 @@ function getStyle(state, disabled) {
 }
 
 
-const fleetNames = [`${__('I')}`, `${__('II')}`, `${__('III')}`, `${__('IV')}`]
+const fleetNames = ['I', 'II', 'III', 'IV']
 
 const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
   createSelector([

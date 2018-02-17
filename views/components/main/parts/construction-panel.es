@@ -5,9 +5,8 @@ import React, { Component, Fragment } from 'react'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { join as joinString, range, get } from 'lodash'
 import FA from 'react-fontawesome'
-
-const { ROOT, i18n } = window
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -44,7 +43,7 @@ export default connect(
   }
   getDockShipName = (dockId, defaultVal) => {
     const id = get(this.props.constructions, [dockId, 'api_created_ship_id'])
-    return id ? __(i18n.resources.__(this.props.$ships[id].api_name)) : defaultVal
+    return id ? <Trans i18nKey={`resources:${ this.props.$ships[id].api_name }`}>{ this.props.$ships[id].api_name }</Trans> : defaultVal
   }
   getLabelStyle = ({isLSC}, timeRemaining) => {
     return (
@@ -56,10 +55,10 @@ export default connect(
     )
   }
   static basicNotifyConfig = {
-    icon: join(ROOT, 'assets', 'img', 'operation', 'build.png'),
+    icon: join(window.ROOT, 'assets', 'img', 'operation', 'build.png'),
     type: 'construction',
-    title: __('Construction'),
-    message: (names) => `${joinString(names, ', ')} ${__('built')}`,
+    title: i18next.t('main:Construction'),
+    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:built')}`,
   }
   render() {
     const {constructions, canNotify, enableAvatar, dimension} = this.props
@@ -70,8 +69,8 @@ export default connect(
             const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
             const isInUse = dock.api_state > 0
             const isLSC = isInUse && dock.api_item1 >= 1000
-            const dockName = dock.api_state == -1 ? __('Locked') :
-              dock.api_state == 0 ? __('Empty')
+            const dockName = dock.api_state == -1 ? <Trans>main:Locked</Trans> :
+              dock.api_state == 0 ? <Trans>main:Empty</Trans>
                 : this.getDockShipName(i, '???')
             const completeTime = isInUse ? dock.api_complete_time : -1
             const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null

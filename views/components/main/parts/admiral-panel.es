@@ -5,14 +5,13 @@ import { createSelector } from 'reselect'
 import { get, map } from 'lodash'
 import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
 
 import '../assets/admiral-panel.css'
-
-const { i18n } = window
-const __ = i18n.main.__.bind(i18n.main)
 
 const rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
 
@@ -37,7 +36,7 @@ const resolveDayTime = (time) => {
     const m = Math.trunc(seconds / 60) % 60
     const h = Math.trunc(seconds / 3600) % 24
     const d = Math.trunc(seconds / 86400)
-    return [d ? `${d}${__('d')}` : '', h ? `${h}${__('h')}` : '', m ? `${m}${__('m')}` : '', s ? `${s}${__('s')}` : ''].join(' ')
+    return [d ? `${d}${i18next.t('main:d')}` : '', h ? `${h}${i18next.t('main:h')}` : '', m ? `${m}${i18next.t('main:m')}` : '', s ? `${s}${i18next.t('main:s')}` : ''].join(' ')
   } else {
     return ''
   }
@@ -63,12 +62,12 @@ const ExpContent = connect(
   ? <Fragment>
     { level < 120 &&
       <div className='info-tooltip-entry'>
-        <span className='info-tooltip-item'>{__('Next')}</span>
+        <span className='info-tooltip-item'><Trans>main:Next</Trans></span>
         <span>{totalExp[level] - exp}</span>
       </div>
     }
     <div className='info-tooltip-entry'>
-      <span className='info-tooltip-item'>{__('Total Exp.')}</span>
+      <span className='info-tooltip-item'><Trans>main:Total Exp</Trans></span>
       <span>{exp}</span>
     </div>
   </Fragment>
@@ -193,7 +192,7 @@ const CountdownContent = ({moments}) => (
     {
       ['Practice', 'Quest', 'Senka', 'EO'].map(name => (
         <div className='info-tooltip-entry' key={name}>
-          <span className='info-tooltip-item'>{__(`Next ${name}`)}</span>
+          <span className='info-tooltip-item'><Trans>main:Next {name}</Trans></span>
           <span>
             <CountdownNotifierLabel
               timerKey={`next-${name}`}
@@ -254,16 +253,16 @@ export default connect(
                 <span className="nickname">{nickname}</span>
                 <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
               </span>
-              : <span>{__('Admiral [Not logged in]')}</span>
+              : <span><Trans>Admiral [Not logged in]</Trans></span>
           }
         </OverlayTrigger>
         <CountDownControl/>
         <span style={{marginRight: '1em'}}>
-          <span>{__('Ships: ')}</span>
+          <span><Trans>main:Ships</Trans>: </span>
           <span className={shipNumClass}>{((shipNum || 0) + (dropCount || 0)) || '?'} / {maxShip || '?'}</span>
         </span>
         <span>
-          <span>{__('Equip.: ')}</span>
+          <span><Trans>main:Equip</Trans>.: </span>
           <span className={slotNumClass}>{equipNum || '?'} / {maxSlotitem || '?'}</span>
         </span>
       </Panel.Body>
