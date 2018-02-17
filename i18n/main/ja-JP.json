@@ -1,5 +1,5 @@
 {
-  " Overview": " 一覧",
+  "Overview": "一覧",
   "Empty": "未使用",
   "Locked": "未開放",
   "built": "建造完了",
@@ -31,7 +31,7 @@
   "Ship slot is full. ": "艦娘の空き枠がない。",
   "Only %d free equip slot(s) left. ": "装備の空き枠は %d 個しか残りません。",
   "Only %s free ship slot(s) left. ": "艦娘の空き枠は %d 個しか残っていません。",
-  " Fleet": " 艦隊",
+  "Fleet": "艦隊",
   "Attention!": "進撃警告！",
   "is heavily damaged!": "大破した艦娘がいる！轟沈する可能性がある！",
   "No data": "データ無し",

@@ -1,5 +1,5 @@
 {
-  " Overview": " 概覽",
+  "Overview": "概覽",
   "Empty": "未使用",
   "Locked": "未解鎖",
   "built": "建造完成",
@@ -31,7 +31,7 @@
   "Ship slot is full. ": "船位已滿。",
   "Only %d free equip slot(s) left. ": "裝備槽僅剩 %d 個。",
   "Only %s free ship slot(s) left. ": "船位僅剩 %s 個。",
-  " Fleet": " 艦隊",
+  "Fleet": "艦隊",
   "Attention!": "進擊注意！",
   "is heavily damaged!": "大破，可能會被擊沉！",
   "No data": "沒有艦隊資訊",

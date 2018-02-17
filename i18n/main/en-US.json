@@ -1,5 +1,5 @@
 {
-  " Overview": " Overview",
+  "Overview": "Overview",
   "Empty": "Empty",
   "Locked": "Locked",
   "built": "built",
@@ -27,7 +27,7 @@
   "Ship slot is full. ": "Ship slot is full. ",
   "Only %d free equip slot(s) left. ": "Only %d free equip slot(s) left. ",
   "Only %s free ship slot(s) left. ": "Only %s free ship slot(s) left. ",
-  " Fleet": " Fleet",
+  "Fleet": "Fleet",
   "Attention!": "Attention!",
   "is heavily damaged!": "is heavily damaged!",
   "No data": "No data",

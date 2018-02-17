@@ -1,5 +1,5 @@
 {
-  " Overview": " 종합",
+  "Overview": "종합",
   "Empty": "미사용",
   "Locked": "잠김",
   "built": "건조 완료",
@@ -29,7 +29,7 @@
   "Ship slot is full. ": "전함 여유공간이 없습니다. ",
   "Only %d free equip slot(s) left. ": "장비 여유공간이 %d 칸 밖에 남지 않았습니다. ",
   "Only %s free ship slot(s) left. ": "전함 여유공간이 %s 칸 밖에 남지 않았습니다. ",
-  " Fleet": " 함대",
+  "Fleet": "함대",
   "is heavily damaged!": "대파한 칸무스가 있습니다!! 굉침할 수 있으니 주의해주세요!!!",
   "No data": "데이터 없음",
   "Resting": "회복",
