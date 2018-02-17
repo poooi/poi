@@ -160,7 +160,7 @@
   "No background image selected": "背景画像は選択されていません",
   "Deploying, please wait": "展開しています、しばらくお待ちください",
   "Quit app and install updates": "アプリを終了してアップデートをインストールする",
-  "DirectoryNotAvailable": "%s に設定されたディレクトリが無効です。",
+  "DirectoryNotAvailable": "{{path}} に設定されたディレクトリが無効です。",
   "Who Calls The Fleet Database": "「Who Calls The Fleet」データベース",
   "Show shipgirl avatar": "艦娘アバターを表示する",
   "Delete avatar cache": "艦娘アバターのキャッシュを削除する"

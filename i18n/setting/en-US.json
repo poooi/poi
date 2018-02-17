@@ -68,5 +68,6 @@
   "Press the key, or Esc to cancel": "Press the key, or Esc to cancel",
   "Disabled": "Hotkey disabled, click to record",
   "Display \"Tips\"": "Display \"Tips\"",
+  "DirectoryNotAvailable": "Selected directory for {{path}} is not valid.",
   "Volume": "Volume"
 }
