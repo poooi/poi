@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
+import { Trans } from 'react-i18next'
 
-const {config, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 const ResolutionConfig = connect((state, props) => ({
   webview: state.layout.webview,
@@ -58,7 +58,7 @@ const ResolutionConfig = connect((state, props) => ({
           <Checkbox
             checked={!this.props.webview.useFixedResolution}
             onChange={this.handleSetFixedResolution}>
-            {__('Adaptive resolution based on the window')}
+            <Trans>setting:Adaptive resolution based on the window</Trans>
           </Checkbox>
         </Col>
         <Col xs={4}>

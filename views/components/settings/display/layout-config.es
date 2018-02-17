@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
+import { Trans } from 'react-i18next'
 
-const {config, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 const LayoutConfig = connect(() => (
   (state, props) => ({
@@ -54,7 +54,7 @@ const LayoutConfig = connect(() => (
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.enableDoubleTabbed} onChange={this.handleSetDoubleTabbed}>
-            {__('Split component and plugin panel')}
+            <Trans>setting:Split component and plugin panel</Trans>
           </Checkbox>
         </Col>
       </Grid>

@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Col, Row, Button, ButtonGroup, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import ReactMarkdown from 'react-remarkable'
-
-const __ = window.i18n.setting.__.bind(window.i18n.setting)
+import { Trans } from 'react-i18next'
 
 class UninstalledPlugin extends PureComponent {
   static propTypes = {
@@ -15,7 +14,7 @@ class UninstalledPlugin extends PureComponent {
   }
   render() {
     const plugin = this.props.plugin
-    const installButtonText = this.props.installing ? `${__('Installing')}` : `${__('Install')}`
+    const installButtonText = this.props.installing ? <Trans>setting:Installing</Trans> : <Trans>setting:Install</Trans>
     const installButtonFAname = this.props.installing ? 'spinner' : 'download'
     return (
       <Row className='plugin-wrapper'>

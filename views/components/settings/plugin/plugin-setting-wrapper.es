@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { FormControl, Button } from 'react-bootstrap'
-
-const {i18n } = window
-
-const __ = window.i18n.others.__.bind(i18n.others)
+import { Trans } from 'react-i18next'
 
 export default class PluginSettingWrapper extends Component {
   static propTypes = {
@@ -44,7 +41,7 @@ export default class PluginSettingWrapper extends Component {
             value={code}
             style={{ height: '10em' }}
           />
-          <Button bsStyle="primary" onClick={this.handleCopy}>{__('Copy to clipboard')}</Button>
+          <Button bsStyle="primary" onClick={this.handleCopy}><Trans>Copy to clipboard</Trans></Button>
         </div>
       )
     }

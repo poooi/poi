@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, FormControl, FormGroup, InputGroup, ControlLabel, Collapse, Well } from 'react-bootstrap'
 import { get } from 'lodash'
+import { Trans } from 'react-i18next'
 
-const { config, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 const SlotCheckConfig = connect(() => {
   return (state, props) => ({
@@ -72,7 +72,7 @@ const SlotCheckConfig = connect(() => {
     }
     let toggleBtnTxt = this.props.enable ? 'ON' : 'OFF'
     if (this.state.showInput) {
-      toggleBtnTxt = __('Disable')
+      toggleBtnTxt = <Trans>setting:Disable</Trans>
     }
     const toggleBtn = <Button onClick={this.handleToggleInput} bsSize='xs'
       bsStyle={toggleBtnStyle} style={{verticalAlign: 'text-bottom'}}>
@@ -81,18 +81,18 @@ const SlotCheckConfig = connect(() => {
     const inputValid = this.CheckValid(this.state.value)
     const submitBtn = <Button type='submit'
       bsStyle={inputValid ? 'success' : 'danger'}>
-      {inputValid ? __('Save') : __('Disable')}
+      {inputValid ? <Trans>setting:Save</Trans> : <Trans>setting:Disable</Trans>}
     </Button>
     return (
       <div style={{margin: '5px 15px'}}>
         <form onSubmit={this.handleSubmit}>
           <div>
-            {__(`${this.props.type} slots`)} {toggleBtn}
+            <Trans>setting:{`${this.props.type} slots`}</Trans> {toggleBtn}
           </div>
           <Collapse in={this.state.showInput}>
             <Well>
               <FormGroup>
-                <ControlLabel>{__(`Warn if the number of free ${this.props.type} slots is less than`)}</ControlLabel>
+                <ControlLabel><Trans>setting:{`Warn if the number of free ${this.props.type} slots is less than`}</Trans></ControlLabel>
                 <InputGroup bsSize='small'>
                   <FormControl type="text"
                     bsStyle={inputValid ? 'success' : 'error'}

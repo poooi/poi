@@ -2,9 +2,7 @@ import React, { PureComponent, Fragment } from 'react'
 import { remote } from 'electron'
 import { Button } from 'react-bootstrap'
 import { sortBy, round, sumBy } from 'lodash'
-
-const { i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+import { Trans } from 'react-i18next'
 
 class AppMetrics extends PureComponent {
   constructor(props) {
@@ -73,8 +71,8 @@ class AppMetrics extends PureComponent {
         <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
           {
             active
-              ? <span>{__('Monitor on')}</span>
-              : <span>{__('Monitor off')}</span>
+              ? <span><Trans>setting:Monitor on</Trans></span>
+              : <span><Trans>setting:Monitor off</Trans></span>
           }
         </Button>
         {
@@ -110,7 +108,7 @@ class AppMetrics extends PureComponent {
             }
             <div className='metric-row metric-total'>
               <span>
-                {__('TOTAL')}
+                <Trans>setting:TOTAL</Trans>
               </span>
               <span />
               <span>

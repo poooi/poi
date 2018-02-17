@@ -17,9 +17,9 @@ import {
   Collapse,
   Well,
 } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
 
-const { config, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 const NotificationConfig = connect(() => {
   return (state, props) => ({
@@ -98,12 +98,13 @@ const NotificationConfig = connect(() => {
             bsStyle={this.props.enabled ? 'success' : 'danger'}
             onClick={this.handleSetNotify.bind(this, null)}
             style={{width: '100%'}}>
-            {(get(this.props, 'enabled', true)) ? '√ ' : ''}{__('Enable notification')}
+            {(get(this.props, 'enabled', true)) ? '√ ' : ''}
+            <Trans>setting:Enable notification</Trans>
           </Button>
         </Col>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-            <Tooltip id='poiconfig-volume'>{__('Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
+            <Tooltip id='poiconfig-volume'><Trans>setting:Volume</Trans> <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
           }>
             <FormControl type="range"
               onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
@@ -115,27 +116,27 @@ const NotificationConfig = connect(() => {
             <Button bsStyle={this.props.construction ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'construction')}
               className='notif-button'>
-              {__('Construction')}
+              <Trans>setting:Construction</Trans>
             </Button>
             <Button bsStyle={this.props.expedition ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'expedition')}
               className='notif-button'>
-              {__('Expedition')}
+              <Trans>setting:Expedition</Trans>
             </Button>
             <Button bsStyle={this.props.repair ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'repair')}
               className='notif-button'>
-              {__('Docking')}
+              <Trans>setting:Docking</Trans>
             </Button>
             <Button bsStyle={this.props.morale ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'morale')}
               className='notif-button'>
-              {__('Morale')}
+              <Trans>setting:Morale</Trans>
             </Button>
             <Button bsStyle={this.props.others ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'others')}
               className='notif-button'>
-              {__('Others')}
+              <Trans>setting:Others</Trans>
             </Button>
             <Button onClick={this.handleSetTimeSettingShow} bsStyle='primary' style={{width: 40}}>
               <FontAwesome name={this.state.timeSettingShow ? 'angle-up' : 'angle-down'} />
@@ -145,7 +146,7 @@ const NotificationConfig = connect(() => {
             <Well>
               <Row>
                 <Col xs={9} className='notif-container'>
-                  <div className='notif-input-desc'>{__('Expedition')}: {__('Notify when expedition returns in')}</div>
+                  <div className='notif-input-desc'><Trans>setting:Expedition</Trans>: <Trans>setting:Notify when expedition returns in</Trans></div>
                 </Col>
                 <Col xs={3} className='notif-container'>
                   <FormGroup>
@@ -163,7 +164,7 @@ const NotificationConfig = connect(() => {
               </Row>
               <Row>
                 <Col xs={9} className='notif-container'>
-                  <div className='notif-input-desc'>{__('Morale')}: {__('Notify when morale is greater than')}</div>
+                  <div className='notif-input-desc'><Trans>setting:Morale</Trans>: <Trans>setting:Notify when morale is greater than</Trans></div>
                 </Col>
                 <Col xs={3} className='notif-container'>
                   <InputGroup bsSize='small'>
@@ -178,7 +179,7 @@ const NotificationConfig = connect(() => {
               </Row>
               <Row>
                 <Col xs={2} xsOffset={10}>
-                  <Button bsSize='small' onClick={this.saveNotifySetting}>{__('Save')}</Button>
+                  <Button bsSize='small' onClick={this.saveNotifySetting}><Trans>setting:Save</Trans></Button>
                 </Col>
               </Row>
             </Well>

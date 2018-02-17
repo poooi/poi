@@ -8,6 +8,7 @@ import CheckboxLabel from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
+import { Trans } from 'react-i18next'
 
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
@@ -58,7 +59,7 @@ const Misc = connect(state => ({
           </Col>
           <Col xs={6}>
             <CheckboxLabel
-              label={__('Check update of beta version')}
+              label={<Trans>setting:Check update of beta version</Trans>}
               configName="poi.betaChannel"
               defaultVal={false} />
           </Col>
@@ -102,7 +103,7 @@ const Misc = connect(state => ({
             <WctfDB />
           </Col>
         </Grid>
-        <Divider text={__('Performance Monitor')} />
+        <Divider text={<Trans>setting:Performance Monitor</Trans>} />
         <Col xs={12}>
           <AppMetrics />
         </Col>
