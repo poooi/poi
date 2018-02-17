@@ -86,7 +86,7 @@
   "Enable Smooth Transition": "启用平滑切换动画",
   "Use Gridded Plugin Menu": "使用网格式插件菜单",
   "Plugin update": "插件更新",
-  "have newer version. Please update your plugins.": "有新版本。请更新插件。",
+  "PluginUpdateMsg": "有新版本。请更新插件。",
   "Check Update": "检查更新",
   "Install all": "全部安装",
   "Update all": "全部更新",

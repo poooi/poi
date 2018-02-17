@@ -85,7 +85,7 @@
   "Enable Smooth Transition": "タブの切り替えをスムースに表示する",
   "Use Gridded Plugin Menu": "プラグインメニューをグリッド仕様に設定する",
   "Plugin update": "プラグイン更新",
-  "have newer version. Please update your plugins.": "は新しいバージョンがあります。アップデートを行って下さい。",
+  "PluginUpdateMsg": "は新しいバージョンがあります。アップデートを行って下さい。",
   "Check Update": "アップデートをチェック",
   "Install all": "一括インストール",
   "Update all": "一括アップデート",
