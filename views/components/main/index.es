@@ -18,7 +18,7 @@ const { config } = window
 
 export default {
   name: 'MainView',
-  displayName: <span><FontAwesome name='home' /><Trans>main:Overview</Trans></span>,
+  displayName: <span><FontAwesome name='home' /> <Trans>main:Overview</Trans></span>,
   reactClass: connect((state, props) => ({
     layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
     editable: get(state, 'config.poi.layouteditable', false),

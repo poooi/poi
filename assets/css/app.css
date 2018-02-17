@@ -98,10 +98,6 @@ poi-app poi-nav-tabs .nav .dropdown {
   overflow: inherit;
 }
 
-poi-app poi-nav-tabs .nav .fa {
-  margin-right: 5px;
-}
-
 poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li {
   display: block;
   float: left;

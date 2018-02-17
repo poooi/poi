@@ -13,7 +13,7 @@ import './assets/settings.css'
 
 export default {
   name: 'SettingsView',
-  displayName: <span><FontAwesome name='cog' />{<Trans>setting: Settings</Trans>}</span>,
+  displayName: <span><FontAwesome name='cog' /> <Trans>setting: Settings</Trans></span>,
   reactClass: class reactClass extends React.Component {
     shouldComponentUpdate = (nextProps, nextState) => (false)
     render() {

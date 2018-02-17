@@ -234,6 +234,6 @@ const ShipView = connect((state, props) => ({
 
 export default {
   name: 'ShipView',
-  displayName: <span><FontAwesome key={0} name='bars' /><Trans>main:Fleet</Trans></span>,
+  displayName: <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>,
   reactClass: ShipView,
 }
