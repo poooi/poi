@@ -52,7 +52,7 @@ i18next.use(reactI18nextModule)
     fallbackLng: false,
     resources: mainPoiRes,
     ns: mainPoiNs,
-    defaultNS: 'main',
+    defaultNS: 'others',
     interpolation: {
       escapeValue: false,
     },
