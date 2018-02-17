@@ -33,8 +33,8 @@ export default class PluginSettingWrapper extends Component {
       const code = [error.stack, info.componentStack].join('\n')
       return (
         <div>
-          <h1>{__('A 🐢 found in %s', plugin.name)}</h1>
-          <p>{__('Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.')}</p>
+          <h1><Trans name={plugin.name}>PluginErrTitle</Trans></h1>
+          <p><Trans>PluginErrorMsg</Trans></p>
           <FormControl
             componentClass="textarea"
             readOnly
