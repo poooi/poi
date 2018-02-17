@@ -45,7 +45,6 @@ if (!LOCALES.includes(window.language)) {
   }
 }
 
-// eslint-disable-next-line import/no-named-as-default-member
 i18next.use(reactI18nextModule)
   .init({
     lng: window.language,
@@ -74,7 +73,6 @@ if (window.dbg && window.dbg.isEnabled()) {
 window.i18n = {}
 const addGlobalI18n = (namespace) => {
   window.i18n[namespace] = {
-    // eslint-disable-next-line import/no-named-as-default-member
     fixedT: i18next.getFixedT(window.language, namespace),
   }
 
