@@ -6,6 +6,7 @@ import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { memoize } from 'lodash'
 import FontAwesome from 'react-fontawesome'
+import { Trans } from 'react-i18next'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { getItemData } from './slotitems-data'
@@ -18,8 +19,6 @@ import {
 } from 'views/utils/selectors'
 
 import './assets/slotitems.css'
-
-const { i18n } = window
 
 const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector([
@@ -61,7 +60,7 @@ export const Slotitems = connect(
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
               <div>
-                {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
+                {$equip.api_name ? <Trans i18nKey={`resources:${$equip.api_name}`}>{$equip.api_name}</Trans> : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
                 }
@@ -136,7 +135,7 @@ export const LandbaseSlotitems = connect(
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {i18n.resources.__(($equip || {api_name: '??'}).api_name)}
+                {$equip.api_name ? <Trans i18nKey={`resources:${$equip.api_name}`}>{$equip.api_name}</Trans> : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
                 }

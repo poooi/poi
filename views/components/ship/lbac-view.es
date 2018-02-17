@@ -5,9 +5,7 @@ import { createSelector } from 'reselect'
 import { getHpStyle, getTyku } from 'views/utils/game-utils'
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
-
-const { i18n } = window
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
 
 export const SquardRow = connect((state, { squardId }) =>
   createSelector([
@@ -28,15 +26,15 @@ export const SquardRow = connect((state, { squardId }) =>
     switch (api_action_kind) {
     // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
     case 0:
-      return <Label bsStyle='default'>{__('Standby')}</Label>
+      return <Label bsStyle='default'><Trans>main:Standby</Trans></Label>
     case 1:
-      return <Label bsStyle='danger'>{__('Sortie')}</Label>
+      return <Label bsStyle='danger'><Trans>main:Sortie</Trans></Label>
     case 2:
-      return <Label bsStyle='warning'>{__('Defense')}</Label>
+      return <Label bsStyle='warning'><Trans>main:Defense</Trans></Label>
     case 3:
-      return <Label bsStyle='primary'>{__('Retreat')}</Label>
+      return <Label bsStyle='primary'><Trans>main:Retreat</Trans></Label>
     case 4:
-      return <Label bsStyle='success'>{__('Rest')}</Label>
+      return <Label bsStyle='success'><Trans>main:Rest</Trans></Label>
     }
   })()
   return (
@@ -47,11 +45,11 @@ export const SquardRow = connect((state, { squardId }) =>
         </span>
         <div className="ship-exp">
           <span className='ship-lv'>
-            {__('Range')}: {api_distance}
+            <Trans>main:Range</Trans>: {api_distance}
           </span>
           <br />
           <span className="ship-lv">
-            {__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
+            <Trans>main:Fighter Power</Trans>: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
           </span>
         </div>
       </div>

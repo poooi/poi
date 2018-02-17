@@ -7,9 +7,7 @@ import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
 import FontAwesome from 'react-fontawesome'
-
-const { i18n } = window
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
 
 import { Slotitems } from './slotitems'
 import StatusLabel from 'views/components/ship-parts/statuslabel'
@@ -104,7 +102,7 @@ export const ShipRow = connect(
             <Tooltip id={`miniship-exp-${ship.api_id}`}>
               <div className="ship-tooltip-info">
                 <div>
-                  {i18n.resources.__($ship.api_name || '??')}
+                  {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
                 </div>
                 <div>
                   Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
@@ -119,10 +117,14 @@ export const ShipRow = connect(
                 Lv. {ship.api_lv || '??'}
               </span>
               <span className='ship-type'>
-                {i18n.resources.__(($shipTypes[$ship.api_stype] || {api_name: '??'}).api_name)}
+                {
+                  $shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name ?
+                    <Trans i18nKey={`resources:${$shipTypes[$ship.api_stype].api_name}`}>{$shipTypes[$ship.api_stype].api_name}</Trans>
+                    : '??'
+                }
               </span>
               <span className="ship-speed">
-                {__(getSpeedLabel(ship.api_soku))}
+                <Trans>main:{getSpeedLabel(ship.api_soku)}</Trans>
               </span>
               <AACIIndicator shipId={ship.api_id} />
               <OASWndicator shipId={ship.api_id} />
@@ -131,7 +133,7 @@ export const ShipRow = connect(
               !hideShipName && (
                 <Fragment>
                   <span className="ship-name">
-                    {i18n.resources.__($ship.api_name || '??')}
+                    {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
                   </span>
                   <span className="ship-exp">
                     Next. {(ship.api_exp || [])[1]}
@@ -146,7 +148,7 @@ export const ShipRow = connect(
           overlay={
             ship.api_ndock_time > 0 ?
               <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
-                {__('Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
+                <Trans>main:Repair Time</Trans>: {resolveTime(ship.api_ndock_time/1000)}
               </Tooltip>
               : <span />
           }

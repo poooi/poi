@@ -54,5 +54,8 @@
   "Repairing": "Repairing",
   "Resupply Needed": "Resupply needed",
   "In Sortie": "In Sortie",
-  "Ship tag": "Ship tag"
+  "Ship tag": "Ship tag",
+  "Shot down": "Shot down: {{count}}",
+  "Modifier": "Modifier: {{count}}",
+  "AACIType": "Type: {{count}}"
 }

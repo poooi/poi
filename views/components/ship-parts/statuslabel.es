@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { isEqual, get } from 'lodash'
-
-const {i18n} = window
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
 
 const texts = [
   ['Retreated'],
@@ -44,8 +42,8 @@ const StatusLabel = connect(state => ({
           <Tooltip id={`statuslabel-status-${i}`}>
             {
               i > 2
-                ? `${get(fleetname, [language, i - 3], __('Ship tag'))} - ${mapname[i - 3] || i - 2}`
-                : __(texts[i])
+                ? <Fragment>{ get(fleetname, [language, i - 3], <Trans>main:Ship tag</Trans>) } - {mapname[i - 3] || i - 2}</Fragment>
+                : <Trans>main:{ texts[i] }</Trans>
             }
           </Tooltip>
         }>

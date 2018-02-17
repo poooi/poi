@@ -3,16 +3,15 @@ import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 
-const { i18n } = window
-const __ = i18n.main.__.bind(i18n.main)
 
 const __t = str => str.includes('/')
-  ? str.split(' / ').map(i18n.resources.__).map(__).join(' / ')
-  : __(i18n.resources.__(str))
+  ? str.split(' / ').map(s => i18next.t(`resources:${s}`)).map(s => i18next.t(`main:${s}`)).join(' / ') : i18next.t(`resources:${str}`)
 
 const AACISelectorFactory = memoize(shipId =>
   createSelector([
@@ -51,19 +50,19 @@ const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              {__('Type %s', id)}{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
+              <Trans count={id}>main:AACIType</Trans>{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
             </span>
             <span>
-              {__('Shot down: %s', AACITable[id].fixed)}
+              <Trans count={AACITable[id].fixed}>main:Shot down</Trans>
             </span>
             <span style={{ marginLeft: '2ex'}}>
-              {__('Modifier: %s', AACITable[id].modifier)}
+              <Trans count={AACITable[id].modifier}>main:Modifier</Trans>
             </span>
           </div>
         )
       }
       {
-        currentMax < maxShotdown && <span>{__('Max shot down not reached')}</span>
+        currentMax < maxShotdown && <span><Trans>main:Max shot down not reached</Trans></span>
       }
     </Fragment>
   )
@@ -72,7 +71,7 @@ const AACIIndicator = connect(
     AACIs.length ?
       <span className="ship-aaci">
         <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle='warning'>{__('AACI')}</Label>
+          <Label bsStyle='warning'><Trans>main:AACI</Trans></Label>
         </OverlayTrigger>
       </span>
       : <span />
