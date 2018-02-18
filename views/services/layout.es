@@ -76,7 +76,7 @@ const setMinSize = () => {
   if (width < 0) {
     remote.getCurrentWindow().setMinimumSize(1, 1)
   } else {
-    remote.getCurrentWindow().setMinimumSize(width, Math.floor(width * 0.6 + $('poi-info').clientHeight * zoomLevel + $('title-bar').clientHeight))
+    remote.getCurrentWindow().setMinimumSize(width, Math.floor(width * 0.6 + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
   }
 }
 
