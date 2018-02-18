@@ -11,7 +11,7 @@ import { readJSONSync, writeFileSync } from 'fs-extra'
 import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 
 const LOCALES = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
-const { ROOT, isMain, config } = window
+const { ROOT, isMain, config, dbg } = window
 
 const textSpacingCJK = config.get('poi.textSpacingCJK', true)
 const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
@@ -60,12 +60,12 @@ i18next.use(reactI18nextModule)
       escapeValue: false,
     },
     returnObjects: true, // allow returning objects
-    debug: window.dbg && window.dbg.isEnabled(),
+    debug: dbg.extra('i18next').isEnabled(),
     react: {
       wait: false,
       nsMode: true,
     },
-    saveMissing: window.dbg && window.dbg.isEnabled(),
+    saveMissing: dbg.extra('i18next').isEnabled(),
     missingKeyHandler: function (lng, ns, key, fallbackValue) {
       if (!ns || ns == '') {
         ns = 'others'
