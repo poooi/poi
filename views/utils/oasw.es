@@ -26,4 +26,4 @@ export const isOASW = (ship, equips) => false
   || (isPF(ship) && taisenAbove(75)(ship) && sumAbove(4)(map(equipTais)(equips)))
   || (isTaiyou(ship) && taisenAbove(65)(ship) && hasSome(is931)(equips))
   || (isTaiyouKai(ship) && taisenAbove(65)(ship) && hasSome(validAll(equipTais, isAircraft))(equips))
-  || (taisenAbove(100)(ship) && hasSome(isSonar)(equips))
+  || (taisenAbove(100)(ship) && hasSome(isSonar)(equips) && !(isTaiyou(ship) || isTaiyouKai(ship)))
