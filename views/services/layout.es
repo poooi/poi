@@ -7,12 +7,13 @@ const additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
   document.head.appendChild(additionalStyle)
+  setMinSize()
 })
 
 const setCSS = ({ layout, zoomLevel, reversed }) => {
   const tabSize = ($('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')).getBoundingClientRect()
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', -1) !== 0 ?
+  const { right, bottom } =  config.get('poi.webview.width', 800) !== 0 ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
@@ -48,9 +49,9 @@ ${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
 `
 
   // Resize when window size smaller than webview size
-  const useForceResize = config.get('poi.webview.width', -1) > 0
+  const useForceResize = config.get('poi.webview.width', 800) > 0
   if (useForceResize) {
-    const realWidth = config.get('poi.webview.width', -1)
+    const realWidth = config.get('poi.webview.width', 800)
     const realHeight = Math.floor(realWidth * 0.6 + $('poi-info').clientHeight * zoomLevel)
     if (layout === 'vertical' && realWidth > window.innerWidth) {
       let { width, height, x, y } = remote.getCurrentWindow().getBounds()
@@ -68,6 +69,16 @@ ${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
 }
 
 const setCSSDebounced = debounce(setCSS, 200)
+
+const setMinSize = () => {
+  const width = config.get('poi.webview.width', 800)
+  const zoomLevel = config.get('poi.zoomLevel', 1)
+  if (width < 0) {
+    remote.getCurrentWindow().setMinimumSize(1, 1)
+  } else {
+    remote.getCurrentWindow().setMinimumSize(width, Math.floor(width * 0.6 + $('poi-info').clientHeight * zoomLevel + $('title-bar').clientHeight))
+  }
+}
 
 const adjustSize = () => {
   const layout = config.get('poi.layout', 'horizontal')
@@ -144,6 +155,9 @@ config.on('config.set', (path, value) => {
   }
   default:
     break
+  }
+  if (path === 'poi.webview.width' || path === 'poi.layout') {
+    setMinSize()
   }
 })
 
