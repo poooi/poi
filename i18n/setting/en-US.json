@@ -17,6 +17,7 @@
   "Password": "Password",
   "Encryption algorithm": "Encryption algorithm",
   "Will connect to server directly": "Will connect to server directly.",
+  "PoiDefaultPort": "Default: 0 (Use random port)",
   "Times of reconnect": "Times of reconnect",
   "It may be unsafe!": "It may be unsafe!",
   "Save settings": "Save settings",

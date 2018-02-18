@@ -25,7 +25,7 @@
   "PAC address": "PAC 位址",
   "Advanced (require restart)": "高階設定（需要重新啟動）",
   "poi port": "poi 埠",
-  "Default: 0 (Use random port)": "預設值：0（使用隨機埠）",
+  "PoiDefaultPort": "預設值：0（使用隨機埠）",
   "Allow connections from LAN": "允許來自區域網路的連線",
   "Will connect to server directly": "將會直接連線網路或者通過全局 VPN 存取網路",
   "Times of reconnect": "網路錯誤重試次數",

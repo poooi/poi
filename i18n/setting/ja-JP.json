@@ -25,7 +25,7 @@
   "PAC address": "PAC アドレス",
   "Advanced (require restart)": "高度な設定（再起動が必要）",
   "poi port": "poi ポート",
-  "Default: 0 (Use random port)": "デフォルト：０（自動割当）",
+  "PoiDefaultPort": "デフォルト：０（自動割当）",
   "Allow connections from LAN": "LANからの接続を許可する",
   "Will connect to server directly": "インターネットに直接（またはVPN経由で）接続します。",
   "Times of reconnect": "再試行回数",

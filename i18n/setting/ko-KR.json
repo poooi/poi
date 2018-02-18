@@ -23,7 +23,7 @@
   "file": "파일",
   "Experimental": "실험적인 기능",
   "PAC address": "PAC Address",
-  "Default: 0 (Use random port)": "기본값：０（랜덤 포트 사용）",
+  "PoiDefaultPort": "기본값：０（랜덤 포트 사용）",
   "Will connect to server directly": "인터넷에 직접 (또는 VPN에) 연결합니다.",
   "Times of reconnect": "재시도 횟수",
   "It may be unsafe!": "문제가 발생할수도 있습니다!",

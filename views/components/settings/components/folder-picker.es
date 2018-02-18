@@ -23,7 +23,7 @@ const FolderPickerConfig = connect(() => {
     configName: PropTypes.string,
     value: PropTypes.string,
     isFolder: PropTypes.bool,
-    placeholder: PropTypes.string,
+    placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     exclude: PropTypes.arrayOf(PropTypes.string),
     defaultVal: PropTypes.string,
   }

@@ -247,7 +247,7 @@ const NetworkConfig = translate(['setting'])(connect(() => (
             <div>
               <Col xs={12}>
                 <ControlLabel><Trans>setting:poi port</Trans></ControlLabel>
-                <FormControl type="number" value={this.state.port} onChange={this.handleSetPort} placeholder={<Trans>setting:Default: 0 (Use random port)</Trans>} />
+                <FormControl type="number" value={this.state.port} onChange={this.handleSetPort} placeholder={t('setting:PoiDefaultPort')} />
               </Col>
               <Col xs={12}>
                 <Checkbox checked={this.state.allowLAN} onChange={this.handleSetAllowLAN}>{<Trans>setting:Allow connections from LAN</Trans>}</Checkbox>
