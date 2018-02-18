@@ -65,6 +65,9 @@ i18next.use(reactI18nextModule)
     },
     saveMissing: window.dbg && window.dbg.isEnabled(),
     missingKeyHandler: function (lng, ns, key, fallbackValue) {
+      if (!ns || ns == '') {
+        ns = 'others'
+      }
       if (ns !== 'data' && i18nFiles.map(i => path.basename(i)).includes(ns)) {
         try {
           const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
