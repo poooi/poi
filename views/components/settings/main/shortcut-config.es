@@ -29,7 +29,7 @@ const ShortcutConfig = connect(() => {
     value: PropTypes.string,
     active: PropTypes.bool,
     configName: PropTypes.string,
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   }
   constructor (props) {
     super(props)

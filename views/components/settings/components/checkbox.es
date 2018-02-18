@@ -15,7 +15,7 @@ const CheckboxLabelConfig = connect(() => {
   })
 })(class checkboxLabelConfig extends Component {
   static propTypes = {
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     configName: PropTypes.string,
     value: PropTypes.bool,
     undecided: PropTypes.bool,

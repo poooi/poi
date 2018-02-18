@@ -19,7 +19,7 @@ const FolderPickerConfig = connect(() => {
   })
 })(class extends Component {
   static propTypes = {
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     configName: PropTypes.string,
     value: PropTypes.string,
     isFolder: PropTypes.bool,
