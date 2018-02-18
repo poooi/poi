@@ -88,7 +88,7 @@ export default connect(
                   {this.getMaterialImage(7)} {dock.api_item5}
                 </Tooltip>
               }>
-                <Col className="panel-item kdock-item" xs={12 / dimension}>
+                <div className="panel-item kdock-item" style={{ flexBasis: `${100 / dimension}%` }}>
                   {
                     enableAvatar &&
                     <Fragment>
@@ -111,7 +111,7 @@ export default connect(
                       completeTime: completeTime,
                     }}
                   />
-                </Col>
+                </div>
               </OverlayTrigger>
             )
           })

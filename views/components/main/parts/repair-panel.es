@@ -112,7 +112,7 @@ export default connect(
               hpPercentage = (100 * get(ships, [dock.api_ship_id, 'api_nowhp'])) / get(ships, [dock.api_ship_id, 'api_maxhp'])
             }
             return (
-              <Col key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} xs={12 / dimension}>
+              <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} style={{ flexBasis: `${100 / dimension}%` }}>
                 {
                   enableAvatar &&
                   <Fragment>
@@ -147,7 +147,7 @@ export default connect(
                     />
                   </div>
                 </OverlayTrigger>
-              </Col>
+              </div>
             )
           })
         }
