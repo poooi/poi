@@ -35,7 +35,6 @@
   "ConnectionFailedMsg": "Connection failed, now reconnecting, retry count: <0>{{count}}</0>",
   "Connection failed.": "Connection failed.",
   "CatError": "The server presented you a cat. (Error code: <0>{{code}}</0>)",
-
   "PluginUpdateMsg": "have newer version. Please update your plugins.",
   "Modernization succeeded": "Modernization succeeded! ",
   "Modernization failed": "Modernization failed.",
@@ -45,10 +44,14 @@
   "Armor": "Armor",
   "Luck": "Luck",
   "Website requires login": "Website requires login",
-  "Username":"Username",
-  "Password":"Password",
+  "Username": "Username",
+  "Password": "Password",
   "PluginErrTitle": "A 🐢 found in <0>{{name}}</0>",
   "PluginErrorMsg": "Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.",
   "RefreshGameDialogTip": "Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</1></1>Tip  Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk.",
-  "Good day and welcome to poi! Before your use, here are some information for you": "Good day and welcome to poi {{version}}! Before your use, here are some information for you"
+  "Good day and welcome to poi! Before your use, here are some information for you": "Good day and welcome to poi {{version}}! Before your use, here are some information for you",
+  "Copy to clipboard": "Copy to clipboard",
+  "Node": "Node",
+  "Refresh game": "Refresh game",
+  "Arrange panel": "Arrange panel"
 }

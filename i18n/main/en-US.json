@@ -58,5 +58,21 @@
   "Ship tag": "Ship tag",
   "Shot down": "Shot down: <0>{{count}}</0>",
   "Modifier": "Modifier: <0>{{count}}</0>",
-  "AACIType": "Type: <0>{{count}}</0>"
+  "AACIType": "Type: <0>{{count}}</0>",
+  "Morale": "Morale",
+  "Fast": "Fast",
+  "Slow": "Slow",
+  "Sortie": "Sortie",
+  "Standby": "Standby",
+  "Range": "Range",
+  "Total Exp": "Total Exp",
+  "Next": "Next",
+  "Resupply needed": "Resupply needed",
+  "Empty slot": "Empty slot",
+  "No action": "No action",
+  "h": "h",
+  "m": "m",
+  "s": "s",
+  "d": "d",
+  "<1>{{0}}</1>": "<1>{{0}}</1>"
 }

@@ -1,3 +1,21 @@
 {
-  "Preferences": "Preferences..."
+  "Preferences": "Preferences...",
+  "Hide poi": "Hide poi",
+  "Show poi": "Show poi",
+  "Resizable": "Resizable",
+  "Always on top": "Always on top",
+  "Quit poi": "Quit poi",
+  "View": "View",
+  "Reload": "Reload",
+  "Stop": "Stop",
+  "Developer Tools": "Developer Tools",
+  "Developer Tools of WebView": "Developer Tools of WebView",
+  "Themes": "Themes",
+  "Next Theme": "Next Theme",
+  "Previous Theme": "Previous Theme",
+  "Help": "Help",
+  "Wiki": "Wiki",
+  "Poi Statistics": "Poi Statistics",
+  "Report Issue": "Report Issue",
+  "Search Issues": "Search Issues"
 }
