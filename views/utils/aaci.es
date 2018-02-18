@@ -165,7 +165,7 @@ declareAACI({
 
 // *** BattleShip
 declareAACI({
-  name: 'Battle Ship',
+  name: ['Battle Ship'],
   id: 4,
   fixed: 6,
   modifier: 1.4,
@@ -179,7 +179,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Battle Ship',
+  name: ['Battle Ship'],
   id: 6,
   fixed: 4,
   modifier: 1.45,
@@ -194,7 +194,7 @@ declareAACI({
 
 // *** Akizuki-class AACIs
 declareAACI({
-  name: 'Akizuki Class',
+  name: ['Akizuki Class'],
   id: 1,
   fixed: 7,
   modifier: 1.7,
@@ -206,7 +206,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Akizuki Class',
+  name: ['Akizuki Class'],
   id: 2,
   fixed: 6,
   modifier: 1.7,
@@ -218,7 +218,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'Akizuki Class',
+  name: ['Akizuki Class'],
   id: 3,
   fixed: 4,
   modifier: 1.6,
@@ -230,7 +230,7 @@ declareAACI({
 
 // *** Maya K2
 declareAACI({
-  name: '摩耶改二',
+  name: ['摩耶改二'],
   id: 10,
   fixed: 8,
   modifier: 1.65,
@@ -243,7 +243,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: '摩耶改二',
+  name: ['摩耶改二'],
   id: 11,
   fixed: 6,
   modifier: 1.5,
@@ -256,7 +256,7 @@ declareAACI({
 
 // *** Isuzu K2
 declareAACI({
-  name: '五十鈴改二',
+  name: ['五十鈴改二'],
   id: 14,
   fixed: 4,
   modifier: 1.45,
@@ -269,7 +269,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: '五十鈴改二',
+  name: ['五十鈴改二'],
   id: 15,
   fixed: 3,
   modifier: 1.3,
@@ -282,7 +282,7 @@ declareAACI({
 
 // *** Kasumi K2B
 declareAACI({
-  name: '霞改二乙',
+  name: ['霞改二乙'],
   id: 16,
   fixed: 4,
   modifier: 1.4,
@@ -295,7 +295,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: '霞改二乙',
+  name: ['霞改二乙'],
   id: 17,
   fixed: 2,
   modifier: 1.25,
@@ -308,7 +308,7 @@ declareAACI({
 
 // *** Satsuki K2
 declareAACI({
-  name: '皐月改二',
+  name: ['皐月改二'],
   id: 18,
   fixed: 2,
   modifier: 1.2,
@@ -321,7 +321,7 @@ declareAACI({
 // *** Kinu K2
 // any HA with builtin AAFD will not work
 declareAACI({
-  name: '鬼怒改二',
+  name: ['鬼怒改二'],
   id: 19,
   fixed: 5,
   modifier: 1.45,
@@ -334,7 +334,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: '鬼怒改二',
+  name: ['鬼怒改二'],
   id: 20,
   fixed: 3,
   modifier: 1.25,
@@ -345,7 +345,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: '由良改二',
+  name: ['由良改二'],
   id: 21,
   fixed: 5,
   modifier: 1.45,
@@ -357,7 +357,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: '文月改二',
+  name: ['文月改二'],
   id: 22,
   fixed: 2,
   modifier: 1.25,
@@ -368,7 +368,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: 'UIT-25 / 伊504',
+  name: ['UIT-25', '伊504'],
   id: 23,
   fixed: 1,
   modifier: 1.05,

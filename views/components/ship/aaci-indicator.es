@@ -9,9 +9,11 @@ import i18next from 'i18next'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 
+const getAvailableTranslation = memoize(str => i18next.translator.exists(`main:${str}`) ? <Trans>main:{str}</Trans>
+  : i18next.translator.exists(`resources:${str}`) ? <Trans>resources:{str}</Trans>
+    : str)
 
-const __t = str => str.includes('/')
-  ? str.split(' / ').map(s => i18next.t(`resources:${s}`)).map(s => i18next.t(`main:${s}`)).join(' / ') : i18next.t(`resources:${str}`)
+const __t = name => name.map((n, i) => <span className='aaci-type-name' key={i}>{ getAvailableTranslation(n) }</span>)
 
 const AACISelectorFactory = memoize(shipId =>
   createSelector([
@@ -50,7 +52,8 @@ const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              <Trans i18nKey='main:AACIType'>{{ count: id }}</Trans>{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
+              <Trans i18nKey='main:AACIType'>{{ count: id }}</Trans>
+              <span>{ get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : '' }</span>
             </span>
             <span>
               <Trans i18nKey='main:Shot down'>{{ count: AACITable[id].fixed }}</Trans>
