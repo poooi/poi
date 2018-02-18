@@ -65,7 +65,7 @@ i18next.use(reactI18nextModule)
       wait: false,
       nsMode: true,
     },
-    saveMissing: dbg.extra('i18next').isEnabled(),
+    saveMissing: dbg.extra('i18next-save-missing').isEnabled(),
     missingKeyHandler: function (lng, ns, key, fallbackValue) {
       if (!ns || ns == '') {
         ns = 'others'
