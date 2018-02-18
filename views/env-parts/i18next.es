@@ -73,7 +73,7 @@ i18next.use(reactI18nextModule)
           const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
           const cnt = readJSONSync(p)
           let val = fallbackValue
-          if (val.startWith(ns)) {
+          if (val.startsWith(ns)) {
             val = val.split(/:(.+)/)[1]
           }
           cnt[key] = val
