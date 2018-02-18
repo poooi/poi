@@ -4,7 +4,7 @@ import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -41,7 +41,7 @@ const FleetStatus = connect((state, {fleetId}) => {
 })(({ fleetInBattle, fleetShipsData }) => {
   if (fleetInBattle) {
     return (
-      <span className="expedition-name text-success"><Trans>main:In Sortie</Trans></span>
+      <span className="expedition-name text-success">{this.props.t('main:In Sortie')}</span>
     )
   }
 
@@ -50,16 +50,16 @@ const FleetStatus = connect((state, {fleetId}) => {
   )
   if (notSuppliedShips.length) {
     return (
-      <span className="expedition-name text-warning"><Trans>main:Resupply Needed</Trans></span>
+      <span className="expedition-name text-warning">{this.props.t('main:Resupply Needed')}</span>
     )
   }
 
   return (
-    <span className="expedition-name"><Trans>main:Ready</Trans></span>
+    <span className="expedition-name">{this.props.t('main:Ready')}</span>
   )
 })
 
-export default connect(
+export default translate(['main'])(connect(
   (state) => {
     const fleetsExpedition = fleetsExpeditionSelector(state)
     const fleetNames = fleetsNamesSelector(state)
@@ -102,7 +102,7 @@ export default connect(
               const fleetName = get(fleetNames, i, '???')
               const expedition = get($expeditions, expeditionId, {})
               const expeditionName = status == -1
-                ? <Trans>main:Locked</Trans>
+                ? this.props.t('main:Locked')
                 : `${expedition.api_disp_no || '???'} ${expedition.api_name || '???'}`
               const completeTime = status > 0 ? rawCompleteTime : -1
 
@@ -115,7 +115,7 @@ export default connect(
                   )}
                   <OverlayTrigger placement='left' overlay={
                     <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
-                      <strong><Trans>main:Return By</Trans>: </strong>{timeToString(completeTime)}
+                      <strong>{this.props.t('main:Return By')}: </strong>{timeToString(completeTime)}
                     </Tooltip>
                   }>
                     <div>
@@ -140,4 +140,4 @@ export default connect(
       </Panel>
     )
   }
-})
+}))

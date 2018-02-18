@@ -7,7 +7,7 @@ import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
 import { Avatar } from 'views/components/etc/avatar'
@@ -46,7 +46,7 @@ const getPanelDimension = width => {
   return 1
 }
 
-export default connect(
+export default translate(['main'])(connect(
   createDeepCompareArraySelector([
     repairsSelector,
     constSelector,
@@ -101,9 +101,9 @@ export default connect(
             }
             const dock = repairs[i] || emptyRepair
             const dockName =
-              dock.api_state == -1 ? <Trans>main:Locked</Trans> :
-                dock.api_state == 0 ? <Trans>main:Empty</Trans> :
-                  <Trans i18nKey={`resources:${ $ships[ships[dock.api_ship_id].api_ship_id].api_name }`}>{ $ships[ships[dock.api_ship_id].api_ship_id].api_name }</Trans>
+              dock.api_state == -1 ? this.props.t('main:Locked') :
+                dock.api_state == 0 ? this.props.t('main:Empty') :
+                  this.props.t(`resources:${ $ships[ships[dock.api_ship_id].api_ship_id].api_name }`)
             const completeTime = dock.api_complete_time || -1
             let hpPercentage
             if (dock.api_state > 0) {
@@ -129,7 +129,7 @@ export default connect(
 
                 <OverlayTrigger placement='left' overlay={
                   <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
-                    <strong><Trans>main:Finish By</Trans>: </strong>{timeToString(completeTime)}
+                    <strong>{this.props.t('main:Finish By')}: </strong>{timeToString(completeTime)}
                   </Tooltip>
                 }>
                   <div>
@@ -152,4 +152,4 @@ export default connect(
       </Fragment>
     )
   }
-})
+}))
