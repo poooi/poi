@@ -1,6 +1,6 @@
 const { ROOT } = window
 import React, { Component, Fragment } from 'react'
-import { OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { join as joinString, range, get } from 'lodash'
 import { join } from 'path-extra'

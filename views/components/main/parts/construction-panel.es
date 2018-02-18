@@ -1,4 +1,4 @@
-import { OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import React, { Component, Fragment } from 'react'
