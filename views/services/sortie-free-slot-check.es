@@ -1,6 +1,7 @@
-const {i18n, error, config, getStore} = window
+import i18next from 'i18next'
 
-const __ = i18n.main.__.bind(i18n.main)
+const { error, config, getStore } = window
+
 
 window.addEventListener('game.response',
   ({detail: {path, body}}) => {
@@ -12,9 +13,9 @@ window.addEventListener('game.response',
         const shipSlots = basic.api_max_chara - Object.keys(getStore('info.ships')).length
         if (shipSlots < minShipSlots) {
           if (shipSlots > 0){
-            errMsg.push(__("Only %s free ship slot(s) left. ", shipSlots))
+            errMsg.push(i18next.t("main:ShipSlotWarning", { count: shipSlots }))
           } else {
-            errMsg.push(__("Ship slot is full. "))
+            errMsg.push(i18next.t("main:ShipSlotFull"))
           }
         }
       }
@@ -23,9 +24,9 @@ window.addEventListener('game.response',
         const equipSlots = basic.api_max_slotitem - Object.keys(getStore('info.equips')).length
         if (equipSlots < minEquipSlots) {
           if (equipSlots > 0){
-            errMsg.push(__("Only %d free equip slot(s) left. ", equipSlots))
+            errMsg.push(i18next.t("main:EquipSlotWarning", { count: equipSlots }))
           } else {
-            errMsg.push(__("Equip slot is full. "))
+            errMsg.push(i18next.t("main:EquipSlotFull"))
           }
         }
       }

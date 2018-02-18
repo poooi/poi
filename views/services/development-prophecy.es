@@ -1,13 +1,12 @@
 /*
    Item development & improvement prophecy
  */
-const {success, warn, i18n, getStore} = window
-const __ = i18n.main.__.bind(i18n.main)
+import i18next from 'i18next'
+
+const {success, warn, getStore} = window
 
 const lookupItemName = slotitemId =>
-  i18n.resources.__(
-    getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')
-  )
+  i18next.t(`resources:${getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')}`)
 
 const devResultDelay =
   window.config.get('poi.delayItemDevResult', false) ? 6200 : 500
@@ -29,10 +28,10 @@ window.addEventListener('game.response',
     if (path === '/kcsapi/api_req_kousyou/createitem') {
       if (body.api_create_flag === 0) {
         const name = lookupItemName(body.api_fdata.split(',')[1])
-        warnAfterDelay(__("The development of %s was failed.", name), devResultDelay)
+        warnAfterDelay(i18next.t("main:DevelopFailed", {name}), devResultDelay)
       } else if (body.api_create_flag === 1) {
         const name = lookupItemName(body.api_slot_item.api_slotitem_id)
-        successAfterDelay(__("The development of %s was successful.", name), devResultDelay)
+        successAfterDelay(i18next.t("main:DevelopSuccess", {name}), devResultDelay)
       }
     }
 
@@ -41,9 +40,9 @@ window.addEventListener('game.response',
       const [eqpIdBefore] = body.api_remodel_id
       const name = lookupItemName(eqpIdBefore)
       if (body.api_remodel_flag === 0) {
-        warnAfterDelay(__("The improvement of %s was failed.", name), improveResultDelay)
+        warnAfterDelay(i18next.t("main:ImproveFailed", {name}), improveResultDelay)
       } else if (body.api_remodel_flag === 1) {
-        successAfterDelay(__("The improvement of %s was successful.", name), improveResultDelay)
+        successAfterDelay(i18next.t("main:ImproveSuccess", {name}), improveResultDelay)
       }
     }
   }

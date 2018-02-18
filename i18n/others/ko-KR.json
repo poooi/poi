@@ -35,8 +35,8 @@
   "Connection failed.": "연결할 수 없습니다.",
   "CatError": "에러코 발견! (에러 코드: <0>{{code}}</0>)",
 
-  "Modernization succeeded! ": "근대화 개수 성공!",
-  "Modernization failed.": "근대화 개수 실패…",
+  "Modernization succeeded": "근대화 개수 성공!",
+  "Modernization failed": "근대화 개수 실패…",
   "Firepower": "화력",
   "Torpedo": "뇌장",
   "AntiAir": "대공",

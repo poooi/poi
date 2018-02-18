@@ -1,11 +1,9 @@
 import React, { PureComponent } from 'react'
 import { Modal, Button } from 'react-bootstrap'
-
-const {i18n} = window
-const __ = i18n.others.__.bind(i18n.others)
+import { Trans } from 'react-i18next'
 
 // Notification modal
-class ModalTrigger extends PureComponent {
+export class ModalTrigger extends PureComponent {
   state = {
     isModalOpen: false,
     title: null,
@@ -64,7 +62,9 @@ class ModalTrigger extends PureComponent {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.handleToggle}>
-            {__((this.state.footer || []).length === 0 ? 'Close' : 'Cancel')}
+            {
+              (this.state.footer || []).length === 0 ? <Trans>Close</Trans> : <Trans>Cancel</Trans>
+            }
           </Button>
           {this.renderFooter(this.state.footer)}
         </Modal.Footer>
@@ -72,4 +72,3 @@ class ModalTrigger extends PureComponent {
     )
   }
 }
-export { ModalTrigger }

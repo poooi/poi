@@ -1,8 +1,8 @@
 import {damagedCheck} from './utils'
+import { Trans } from 'react-i18next'
+import React, { Fragment } from 'react'
 
-const {i18n, getStore, toggleModal} =  window
-
-const __ = i18n.main.__.bind(i18n.main)
+const { getStore, toggleModal } =  window
 
 window.addEventListener('game.response', ({detail: {path, body, postBody}}) => {
   if (path === '/kcsapi/api_req_map/start' || path === '/kcsapi/api_req_map/next') {
@@ -11,7 +11,7 @@ window.addEventListener('game.response', ({detail: {path, body, postBody}}) => {
     // const {fleets, ships, equips} = getStore('info') || {}
     const damagedShips = damagedCheck(getStore('const'), getStore('sortie'), getStore('info'))
     if (damagedShips.length > 0) {
-      return toggleModal(__('Attention!'), damagedShips.join(' ') + __('is heavily damaged!'))
+      return toggleModal(<Trans>main:Attention!</Trans>), <Fragment>{damagedShips.join(' ')} <Trans>main:is heavily damaged!</Trans></Fragment>
     }
   }
 })

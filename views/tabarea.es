@@ -7,20 +7,15 @@ import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
+import { Trans } from 'react-i18next'
 
-//import PluginManager from './services/plugin-manager'
 import settings from './components/settings'
 import mainview from './components/main'
 import shipview from './components/ship'
 import PluginWrap from './plugin-wrapper'
-
 import { isInGame } from 'views/utils/game-utils'
 
-const {i18n, dispatch, config} = window
-const __ = i18n.others.__.bind(i18n.others)
-
-
-
+const { config, dispatch } = window
 
 const TabContentsUnion = connect(
   (state) => ({
@@ -278,10 +273,10 @@ export default connect(
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const activePluginName = activePlugin.packageName
-    const defaultPluginTitle = <span><FontAwesome name='sitemap' />{__(' Plugins')}</span>
+    const defaultPluginTitle = <span><FontAwesome name='sitemap' /> <Trans>Plugins</Trans></span>
     const pluginDropdownContents = this.props.plugins.length == 0 ? (
       <MenuItem key={1002} disabled>
-        {window.i18n.setting.__("Install plugins in settings")}
+        <Trans>setting:Install plugins in settings</Trans>
       </MenuItem>
     ) : (
       this.listedPlugins().map((plugin, index) =>

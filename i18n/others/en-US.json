@@ -37,8 +37,8 @@
   "CatError": "The server presented you a cat. (Error code: <0>{{code}}</0>)",
 
   "PluginUpdateMsg": "have newer version. Please update your plugins.",
-  "Modernization succeeded! ": "Modernization succeeded! ",
-  "Modernization failed.": "Modernization failed.",
+  "Modernization succeeded": "Modernization succeeded! ",
+  "Modernization failed": "Modernization failed.",
   "Firepower": "Firepower",
   "Torpedo": "Torpedo",
   "AntiAir": "AntiAir",

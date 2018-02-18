@@ -1,17 +1,18 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
+import i18next from 'i18next'
+import { Trans } from 'react-i18next'
 
-const {unzip, sum} = require('lodash')
-const {i18n, config} = window
+const { unzip, sum } = require('lodash')
+const { config } = window
 
-const __ = window.i18n.others.__.bind(i18n.others)
 
 const nameStatuses = [
-  __('Firepower'),
-  __('Torpedo'),
-  __('AntiAir'),
-  __('Armor'),
-  __('Luck'),
+  i18next.t('Firepower'),
+  i18next.t('Torpedo'),
+  i18next.t('AntiAir'),
+  i18next.t('Armor'),
+  i18next.t('Luck'),
 ]
 
 
@@ -63,7 +64,7 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
       const remainingAfter = calcRemainingStatuses(targetShipAfter)
       return(
         <span>
-          {__('Modernization succeeded! ')}
+          <Trans>Modernization succeeded</Trans>
           {
             [...Array(5).keys()].map(i => {
               const delta = kyoukaAfter[i] - kyoukaBefore[i]
@@ -120,7 +121,7 @@ const onResponse = (e) => {
           })))
       }
     } else {
-      setTimeout(window.warn, 100, __('Modernization failed.'))
+      setTimeout(window.warn, 100, <Trans>Modernization failed</Trans>)
     }
   }
 }
