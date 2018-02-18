@@ -80,7 +80,7 @@ const ItemStat = connect(
   })
   return (
     <div>
-      {Object.keys(stat).length > 0 && <Trans>Resources: </Trans>}
+      {Object.keys(stat).length > 0 && <Fragment><Trans>Resources</Trans>: </Fragment>}
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
@@ -122,7 +122,7 @@ export default connect(
 
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : this.constructor.mapRanks[rank])
-    return <Fragment><Trans>Sortie area: </Trans> {mapName}</Fragment>
+    return <Fragment><Trans>Sortie area</Trans>: {mapName}</Fragment>
   }
 
   isFinalAttack = () => {
@@ -159,10 +159,10 @@ export default connect(
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(<Fragment><Trans>Node: </Trans>{alphaNode} {currentNode}</Fragment>)
+      tooltipMsg.push(<span className='map-tooltip-msg' key='node'><Trans>Node</Trans>: {alphaNode} ({currentNode})</span>)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
-      tooltipMsg.push(`HP: ${mapHp[0]} / ${mapHp[1]}`)
+      tooltipMsg.push(<span className='map-tooltip-msg' key='hp'>HP: {mapHp[0]} / {mapHp[1]}</span>)
     }
     return (
       <OverlayTrigger
@@ -170,7 +170,7 @@ export default connect(
         overlay={
           <Tooltip id='detail-map-info' className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
             <MapRoutes />
-            <div>{tooltipMsg.join('  |  ')}</div>
+            <div>{ tooltipMsg }</div>
             <ItemStat />
           </Tooltip>
         }>

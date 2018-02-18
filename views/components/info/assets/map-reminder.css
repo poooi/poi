@@ -69,3 +69,11 @@ kan-game poi-map-reminder .progress {
 .reminder-pop .item-stat:not(:last-child) {
   margin-right: 1ex;
 }
+
+.map-tooltop-msg::after {
+  content: "  |  ";
+}
+
+.map-tooltop-msg:last-child::after {
+  content: "";
+}

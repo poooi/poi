@@ -246,7 +246,7 @@ const NetworkConfig = translate(['setting'])(connect(() => (
           <Collapse in={this.state.showAdvanced}>
             <div>
               <Col xs={12}>
-                <ControlLabel>{<Trans>setting:poi port</Trans>}</ControlLabel>
+                <ControlLabel><Trans>setting:poi port</Trans></ControlLabel>
                 <FormControl type="number" value={this.state.port} onChange={this.handleSetPort} placeholder={<Trans>setting:Default: 0 (Use random port)</Trans>} />
               </Col>
               <Col xs={12}>

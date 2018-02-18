@@ -1,11 +1,9 @@
 {
   "Waiting for response": "poi 読み込み中",
   "Sortie": "出撃",
-  "Node: ": "マス：",
+  "Node": "マス",
   "Possible final stage": "これは最終戦の可能性がある",
   "Not in sortie": "出撃していません",
-  "Sortie area: ": "出撃海域：",
-  "Resources: ": "資材変更：",
   "failed to save the screenshot": "スクリーンショットの保存は失敗しました",
   "screenshot saved to": "スクリーンショットの保存先",
   "Open cache dir": "キャッシュの保存先",
