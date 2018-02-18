@@ -50,13 +50,13 @@ const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              <Trans count={id}>main:AACIType</Trans>{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
+              <Trans i18nKey='main:AACIType'>{{ count: id }}</Trans>{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
             </span>
             <span>
-              <Trans count={AACITable[id].fixed}>main:Shot down</Trans>
+              <Trans i18nKey='main:Shot down'>{{ count: AACITable[id].fixed }}</Trans>
             </span>
             <span style={{ marginLeft: '2ex'}}>
-              <Trans count={AACITable[id].modifier}>main:Modifier</Trans>
+              <Trans i18nKey='main:Modifier'>{{ count: AACITable[id].modifier }}</Trans>
             </span>
           </div>
         )

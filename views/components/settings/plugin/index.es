@@ -472,7 +472,7 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.betaCheck || false}
                             onChange={this.handleEnableBetaPluginCheck}
                           >
-                            <Trans>setting:Developer option: check update of beta version</Trans>
+                            <Trans>setting:Developer option check update of beta version</Trans>
                           </Checkbox>
                         </div>
                         <Row>

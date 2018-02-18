@@ -33,7 +33,7 @@ export default class PluginSettingWrapper extends Component {
       const code = [error.stack, info.componentStack].join('\n')
       return (
         <div>
-          <h1><Trans name={plugin.name}>PluginErrTitle</Trans></h1>
+          <h1><Trans i18nKey='PluginErrTitle'>{{ name: plugin.name }}</Trans></h1>
           <p><Trans>PluginErrorMsg</Trans></p>
           <FormControl
             componentClass="textarea"

@@ -49,7 +49,7 @@ const FolderPickerConfig = connect(() => {
     callback()
     this.lock = false
   }
-  emitErrorMessage = () => window.toast(i18next.t('setting:Selected directory for %s is not valid.', { path: this.props.label }), {
+  emitErrorMessage = () => window.toast(i18next.t('setting:DirectoryNotAvailable', { path: this.props.label }), {
     type: 'warning',
     title: i18next.t('setting:Error'),
   })
