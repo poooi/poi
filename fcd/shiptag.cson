@@ -1,36 +1,42 @@
 meta:
   name: "shiptag"
-  version: "2017/12/09/01"
+  version: "2018/02/18/01"
 
 data:
   mapname: [
-    "E1, E2"
+    "E1"
+    "E2, E4"
+    "E2, E4"
     "E3"
-    "E4"
   ]
   color: [
-    "#4CAF50"
     "#9E9E9E"
+    "#4CAF50"
     "#FF9800"
+    "#03A9F4"
   ]
   fleetname:
     "zh-CN": [
-      "志摩舰队"
-      "主力舰队"
+      "警戒部队"
+      "栗田舰队"
       "西村舰队"
+      "小泽舰队"
     ]
     "zh-TW": [
-      "志摩艦隊"
-      "主力艦隊"
+      "警戒部隊"
+      "栗田艦隊"
       "西村艦隊"
+      "小澤艦隊"
     ]
     "ja-JP": [
-      "志摩艦隊"
-      "主力艦隊"
+      "警戒部隊"
+      "栗田艦隊"
       "西村艦隊"
+      "小沢艦隊"
     ]
     "en-US": [
-      "Shima Fleet"
-      "Main Fleet"
+      "Patrol Force"
+      "Kurita Fleet"
       "Nishimura Fleet"
+      "Kozawa Fleet"
     ]

@@ -11,6 +11,7 @@ Promise.promisifyAll(request)
 const DEST = '../assets/data/fcd'
 
 const mapVersion = process.env.MAPVERSION
+const avatarVersion = process.env.AVATARVERSION
 
 async function writeJSON(fname, data) {
   const JSON_OPTIONS = { spaces: '' }
@@ -39,7 +40,7 @@ async function build_shipavatar() {
   const date = moment(stat.mtime).format('YYYY/MM/DD')
   const meta = {
     name: "shipavatar",
-    version: `${date}/01`,
+    version: avatarVersion || `${date}/01`,
   }
   await writeJSON('shipavatar.json', {meta, data})
 }
