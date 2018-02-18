@@ -37,7 +37,7 @@ if (config.get('poi.first', '0.0.0') != POI_VERSION) {
       <div>
         <GoogleAnalyticsOption />
       </div>
-      <p>{i18next.t('Good day and welcome to poi %s! Before your use, here are some information for you', POI_VERSION)}</p>
+      <p>{i18next.t('Good day and welcome to poi! Before your use, here are some information for you', { version: POI_VERSION })}</p>
       <p style={{color: '#FFCCFF', fontWeight: 'bold', fontSize: 'large'}}>
         {i18next.t('poi will never modify your game data package, but please use trusted executables and plugins!')}
       </p>
