@@ -1,7 +1,7 @@
 import path from 'path-extra'
 import glob from 'glob'
 import { isString, toString, each } from 'lodash'
-import i18next from 'i18next'
+import I18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
@@ -46,6 +46,8 @@ if (!LOCALES.includes(window.language)) {
     window.language = 'en-US'
   }
 }
+
+const i18next = I18next.createInstance()
 
 i18next.use(reactI18nextModule)
   .init({
