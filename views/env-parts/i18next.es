@@ -5,6 +5,8 @@ import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
+import formatJson from 'json-format'
+import { readJSONSync, writeFileSync } from 'fs-extra'
 
 import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 
@@ -60,6 +62,18 @@ i18next.use(reactI18nextModule)
     react: {
       wait: false,
       nsMode: true,
+    },
+    saveMissing: window.dbg && window.dbg.isEnabled(),
+    missingKeyHandler: function (lng, ns, key, fallbackValue) {
+      if (i18nFiles.map(i => path.basename(i)).includes(ns)) {
+        const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
+        const cnt = readJSONSync(p)
+        cnt[key] = fallbackValue
+        writeFileSync(p, formatJson(cnt, {
+          type: 'space',
+          size: 2,
+        }) + '\n')
+      }
     },
   })
 
