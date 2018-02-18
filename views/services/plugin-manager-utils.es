@@ -19,7 +19,6 @@ import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
-const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const allowedPath = [ ROOT, APPDATA_PATH ]
 const pathAdded = new Map()
@@ -139,8 +138,8 @@ export function updateI18n(plugin) {
         true,
       )
     })
-    plugin.name = window.i18n[namespace].__(plugin.name)
-    plugin.description = window.i18n[namespace].__(plugin.description)
+    plugin.name = i18next.t(`${namespace}:${plugin.name}`)
+    plugin.description = i18next.t(`${namespace}:${plugin.description}`)
   }
   return plugin
 }
@@ -405,10 +404,10 @@ export function notifyFailed(state, npmConfig) {
     reinstallList.push(plugin.packageName)
   }
   if (unreadList.length > 0) {
-    const content = `${unreadList.join(' / ')} ${__('failed to load. Maybe there are some compatibility problems.')}`
+    const content = `${unreadList.join(' / ')} ${i18next.t('setting:PluginLoadFailed')}`
     toast(content, {
       type: 'error',
-      title: __('Plugin error'),
+      title: i18next.t('setting:Plugin error'),
     })
   }
   repairDep(reinstallList, npmConfig)

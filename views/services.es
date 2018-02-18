@@ -2,11 +2,11 @@ import { remote, shell } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
+import { Trans } from 'react-i18next'
+import React from 'react'
 
 const proxy = remote.require('./lib/proxy')
-const {$, config, toggleModal, log, error, i18n, dbg} = window
-const __ = i18n.others.__.bind(i18n.others)
-const __n = i18n.others.__n.bind(i18n.others)
+const { config, toggleModal, log, error, dbg } = window
 
 const { stopNavigateAndNewWindow } = remote.require('./lib/utils')
 
@@ -100,8 +100,8 @@ window.onbeforeunload = (e) => {
   if (confirmExit || !config.get('poi.confirm.quit', false)) {
     exitPoi()
   } else {
-    toggleModal(__('Exit'), __('Confirm?'), [{
-      name: __('Confirm'),
+    toggleModal(<Trans>Exit</Trans>, <Trans>Confirm?</Trans>, [{
+      name: <Trans>Confirm</Trans>,
       func: exitPoi,
       style: 'warning',
     }])
@@ -134,19 +134,19 @@ window.addEventListener('game.response', (e) => {
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody, time))
   }
   if (config.get('poi.showNetworkLog', true)) {
-    log(`${__('Hit')} ${method} ${resPath}`, {dontReserve: true})
+    log(<span><Trans>Hit</Trans>{method} {resPath}</span>, {dontReserve: true})
   }
 })
 window.addEventListener ('network.error', () => {
-  error(__('Connection failed.'), {dontReserve: true})
+  error(<Trans>Connection failed.</Trans>, {dontReserve: true})
 })
 window.addEventListener('network.error.retry', (e) => {
   const {counter} = e.detail
-  error(__n('Connection failed after %s retry',  counter), {dontReserve: true})
+  error(<Trans i18nKey='ConnectionFailedMsg'>{{ count: counter }}</Trans>, {dontReserve: true})
 })
 window.addEventListener('network.invalid.result', (e) => {
   const {code} = e.detail
-  error(__('The server presented you a cat. (Error code: %s)',  code), {dontReserve: true})
+  error(<Trans i18nKey='CatError'>{{ code }}</Trans>, {dontReserve: true})
 })
 
 const handleExternalURL = (e, url) => {

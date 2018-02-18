@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { shell, remote } from 'electron'
 import Divider from '../components/divider'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
@@ -8,6 +8,7 @@ import CheckboxLabel from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
+import { Trans } from 'react-i18next'
 
 import DownloadProgress from './download-progress'
 import AppMetrics from './app-metrics'
@@ -17,8 +18,7 @@ import OpenCollective from './open-collective'
 
 import '../assets/misc.css'
 
-const {ROOT, POI_VERSION, CONST, i18n, config} = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const {ROOT, POI_VERSION, CONST, config} = window
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 config.on('config.set', (path, value) => {
@@ -45,7 +45,7 @@ const Misc = connect(state => ({
         <Grid>
           <Row>
             <Col xs={6}>
-              <Divider text={`${__("Current version")}: ${POI_VERSION}`} />
+              <Divider text={<Fragment><Trans>setting:Current version</Trans>: v{POI_VERSION}</Fragment>} />
             </Col>
             <Col xs={6}>
               <DownloadProgress />
@@ -54,16 +54,18 @@ const Misc = connect(state => ({
         </Grid>
         <Grid>
           <Col xs={6}>
-            <Button onClick={checkUpdate}>{__("Check Update")}</Button>
+            <Button onClick={checkUpdate}><Trans>setting:Check Update</Trans></Button>
           </Col>
           <Col xs={6}>
             <CheckboxLabel
-              label={__('Check update of beta version')}
+              label={<Trans>setting:Check update of beta version</Trans>}
               configName="poi.betaChannel"
               defaultVal={false} />
           </Col>
           <Col xs={12}>
-            <p>{__("poi-description %s", process.versions.electron)}</p>
+            <Trans i18nKey='setting:poi description'>
+              <p>poi is an open source Kancolle browser based on Electron {{version: process.versions.electron}} . poi behaves the same as Chrome and does not modify game data, packets or implement bots/macros. The main poi provides basic functionalities and is complemented by a variety of plugins.</p>
+            </Trans>
             <div className="desc-buttons">
               {
                 ['zh-CN', 'zh-TW'].includes(window.language) &&
@@ -79,10 +81,10 @@ const Misc = connect(state => ({
                   </Button>
               }
               <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.org')}>
-                <FA name="database" /> {__("Database")}
+                <FA name="database" /> <Trans>setting:Database</Trans>
               </Button>
               <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}>
-                <FA name="question" /> {__("Wiki")}
+                <FA name="question" /><Trans>setting:Wiki</Trans>
               </Button>
               <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}>
                 <FA name="github" /> GitHub
@@ -93,7 +95,7 @@ const Misc = connect(state => ({
             </div>
           </Col>
         </Grid>
-        <Divider text={__("Data version")} />
+        <Divider text={<Trans>setting:Data version</Trans>} />
         <Grid>
           <Col xs={12}>
             <FCD />
@@ -102,7 +104,7 @@ const Misc = connect(state => ({
             <WctfDB />
           </Col>
         </Grid>
-        <Divider text={__('Performance Monitor')} />
+        <Divider text={<Trans>setting:Performance Monitor</Trans>} />
         <Col xs={12}>
           <AppMetrics />
         </Col>

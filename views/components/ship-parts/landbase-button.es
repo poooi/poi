@@ -3,17 +3,16 @@ import React from 'react'
 import { Button, Label, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
+import { Trans } from 'react-i18next'
 
 import './assets/landbase-button.css'
 
-const __ = window.i18n.main.__.bind(window.i18n.main)
-
-const fatiguedLabel = <Label bsStyle='danger' className='airbase-state-label'>{__('Fatigued')}</Label>
-const emptyLabel = <Label bsStyle='warning' className='airbase-state-label'>{__('Empty slot')}</Label>
-const relocateLabel = <Label bsStyle='warning' className='airbase-state-label'>{__('Relocating')}</Label>
-const resupplyLabel = <Label bsStyle='warning' className='airbase-state-label'>{__('Resupply needed')}</Label>
-const noActionLabel = <Label bsStyle='warning' className='airbase-state-label'>{__('No action')}</Label>
-const readyLabel = <Label bsStyle='success' className='airbase-state-label'>{__('Ready')}</Label>
+const fatiguedLabel = <Label bsStyle='danger' className='airbase-state-label'><Trans>main:Fatigued</Trans></Label>
+const emptyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Empty slot</Trans></Label>
+const relocateLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Relocating</Trans></Label>
+const resupplyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Resupply needed</Trans></Label>
+const noActionLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:No action</Trans></Label>
+const readyLabel = <Label bsStyle='success' className='airbase-state-label'><Trans>main:Ready</Trans></Label>
 
 export const LandbaseButton = connect(state => ({
   sortieStatus: get(state, 'sortie.sortieStatus', []),
@@ -63,7 +62,7 @@ export const LandbaseButton = connect(state => ({
         const { mapId, needSupply, squardState, squardCond, noAction } = airbase
         return (
           <div key={i}>
-            <div>[{mapId}] {window.i18n.resources.__((mapareas[mapId] || {}).api_name)}</div>
+            <div>[{mapId}] {mapareas[mapId] ? <Trans i18nKey={`resources:${ mapareas[mapId].api_name }`}>{ mapareas[mapId].api_name }</Trans> : ''}</div>
             { squardCond > 1 && fatiguedLabel }
             { squardState < 1 && emptyLabel }
             { squardState > 1 && relocateLabel }

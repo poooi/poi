@@ -8,17 +8,17 @@ import { ExpeditionPanel, RepairPanel, ConstructionPanel, TaskPanel, MiniShip, R
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import defaultLayout from './default-layout'
 import { layoutResizeObserver } from 'views/services/layout'
+import { Trans } from 'react-i18next'
 
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import './assets/main.css'
 
-const { i18n, config } = window
-const __ = i18n.main.__.bind(i18n.main)
+const { config } = window
 
 export default {
   name: 'MainView',
-  displayName: <span><FontAwesome name='home' />{__(' Overview')}</span>,
+  displayName: <span><FontAwesome name='home' /> <Trans>main:Overview</Trans></span>,
   reactClass: connect((state, props) => ({
     layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
     editable: get(state, 'config.poi.layouteditable', false),
@@ -71,12 +71,12 @@ export default {
             <Panel className="combined-panels panel-col" key="combined-panels">
               <Panel.Body>
                 <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs" className="dock-panel-tabs">
-                  <Tab eventKey={1} title={__('Docking')}>
+                  <Tab eventKey={1} title={<Trans>main:Docking</Trans>}>
                     <div className="ndock-panel flex">
                       <RepairPanel />
                     </div>
                   </Tab>
-                  <Tab eventKey={2} title={__('Construction')}>
+                  <Tab eventKey={2} title={<Trans>main:Construction</Trans>}>
                     <div className="kdock-panel flex">
                       <ConstructionPanel />
                     </div>

@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { FormControl, Button } from 'react-bootstrap'
 import { clipboard } from 'electron'
-
-const {i18n } = window
-
-const __ = window.i18n.others.__.bind(i18n.others)
+import { Trans } from 'react-i18next'
 
 class PluginWrap extends Component {
   state = {
@@ -40,15 +37,15 @@ class PluginWrap extends Component {
       const code = [error.stack, info.componentStack].join('\n')
       return (
         <div id={plugin.id} className="poi-app-tabpane poi-plugin" style={{padding : '1em'}}>
-          <h1>{__('A 🐢 found in %s', plugin.name)}</h1>
-          <p>{__('Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.')}</p>
+          <h1><Trans i18nKey='PluginErrTitle'>{{ name: plugin.name }}</Trans></h1>
+          <p><Trans>PluginErrorMsg</Trans></p>
           <FormControl
             componentClass="textarea"
             readOnly
             value={code}
             style={{ height: '10em' }}
           />
-          <Button bsStyle="primary" onClick={this.handleCopy}>{__('Copy to clipboard')}</Button>
+          <Button bsStyle="primary" onClick={this.handleCopy}><Trans>Copy to clipboard</Trans></Button>
         </div>
       )
     }

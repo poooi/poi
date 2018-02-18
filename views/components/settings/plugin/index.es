@@ -1,12 +1,14 @@
 import path from 'path-extra'
 import { shell, remote } from 'electron'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, Checkbox, Radio, Alert, Button, ButtonGroup, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import FileDrop from 'react-file-dropzone'
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import CheckboxLabel from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
@@ -16,8 +18,6 @@ import InstalledPlugin from './installed-plugin'
 import UninstalledPlugin from './uninstalled-plugin'
 
 import '../assets/plugins.css'
-
-const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
@@ -197,7 +197,7 @@ const PluginConfig = connect((state, props) => ({
   onSelectInstallFromFile = () => {
     this.synchronize(async () => {
       const filenames = dialog.showOpenDialog({
-        title: __('Select files'),
+        title: i18next.t('setting:Select files'),
         defaultPath: remote.require('electron').app.getPath('downloads'),
         properties: ['openFile', 'multiSelections'],
       })
@@ -308,15 +308,15 @@ const PluginConfig = connect((state, props) => ({
     switch (this.state.manuallyInstallStatus) {
     case 1:
       installStatusbsStyle = 'info'
-      installStatusText = `${__("Installing")}...`
+      installStatusText = <Fragment><Trans>setting:Installing</Trans>...</Fragment>
       break
     case 2:
       installStatusbsStyle = 'success'
-      installStatusText = __("Plugins are installed successfully.")
+      installStatusText = <Trans>setting:Plugins are installed successfully</Trans>
       break
     case 3:
       installStatusbsStyle = 'danger'
-      installStatusText = __("Install failed. Maybe the selected files are not plugin packages.")
+      installStatusText = <Trans>setting:InstallFailedMsg</Trans>
       break
     default:
       installStatusbsStyle = 'warning'
@@ -330,15 +330,15 @@ const PluginConfig = connect((state, props) => ({
           onDrop={this.onDropInstallFromFile}
           acceptType="application/gzip, application/x-gzip"
         >
-          {__('Drop plugin tarballs here to install')}
+          <Trans>setting:Drop plugin tarballs here to install</Trans>
         </FileDrop>
         <Grid className='correct-container'>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
               {
                 window.isSafeMode &&
-                <Panel header={__('Safe Mode')} bsStyle='warning'>
-                  <Panel.Body>{__('Poi is running in safe mode, plugins are not enabled automatically.')}</Panel.Body>
+                <Panel header={<Trans>setting:Safe Mode</Trans>} bsStyle='warning'>
+                  <Panel.Body><Trans>setting:Poi is running in safe mode, plugins are not enabled automatically</Trans></Panel.Body>
                 </Panel>
               }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
@@ -348,7 +348,7 @@ const PluginConfig = connect((state, props) => ({
                   className='control-button col-xs-3'
                 >
                   <FontAwesome name='refresh' spin={this.state.checkingUpdate} />
-                  <span> {__("Check Update")}</span>
+                  <span> {<Trans>setting:Check Update</Trans>}</span>
                 </Button>
                 <Button
                   onClick={this.handleUpdateAll}
@@ -362,7 +362,7 @@ const PluginConfig = connect((state, props) => ({
                     name={updateStatusFAname}
                     pulse={this.state.updatingAll}
                   />
-                  <span> {__("Update all")}</span>
+                  <span> <Trans>setting:Update all</Trans></span>
                 </Button>
                 <Button
                   onClick={this.handleInstallAll}
@@ -375,14 +375,14 @@ const PluginConfig = connect((state, props) => ({
                     name={installStatusFAname}
                     pulse={this.state.installingAll}
                   />
-                  <span> {__("Install all")}</span>
+                  <span> <Trans>setting:Install all</Trans></span>
                 </Button>
                 <Button
                   onClick={this.handleAdvancedShow}
                   className='control-button col-xs-3'
                 >
                   <FontAwesome name="gear" />
-                  <span> {__("Advanced")} </span>
+                  <span> <Trans>setting:Advanced</Trans></span>
                   <FontAwesome name={advanceFAname} />
                 </Button>
               </ButtonGroup>
@@ -396,12 +396,12 @@ const PluginConfig = connect((state, props) => ({
                     <Row>
                       <Col xs={12}>
                         <CheckboxLabel
-                          label={__('Switch to Plugin Automatically')}
+                          label={<Trans>setting:Switch to Plugin Automatically</Trans>}
                           configName="poi.autoswitch.enabled"
                           defaultVal={true}
                         />
                         <CheckboxLabel
-                          label={__('Enable autoswitch for main panel')}
+                          label={<Trans>setting:Enable autoswitch for main panel</Trans>}
                           configName="poi.autoswitch.main"
                           defaultVal={true}
                         />
@@ -412,7 +412,7 @@ const PluginConfig = connect((state, props) => ({
                         <Row>
                           <Col xs={12}>
                             <label className='control-label'>
-                              {__('Select npm server')}
+                              <Trans>setting:Select npm server</Trans>
                             </label>
                           </Col>
                         </Row>
@@ -447,7 +447,7 @@ const PluginConfig = connect((state, props) => ({
                         <Row>
                           <Col xs={12}>
                             <label className='control-label'>
-                              {__('Others')}
+                              <Trans>setting:Others</Trans>
                             </label>
                           </Col>
                         </Row>
@@ -456,7 +456,7 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.proxy || false}
                             onChange={this.handleEnableProxy}
                           >
-                            {__('Connect to npm server through proxy')}
+                            <Trans>setting:Connect to npm server through proxy</Trans>
                           </Checkbox>
                         </div>
                         <div>
@@ -464,7 +464,7 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.autoUpdate || false}
                             onChange={this.handleEnableAutoUpdate}
                           >
-                            {__('Automatically update plugins')}
+                            <Trans>setting:Automatically update plugins</Trans>
                           </Checkbox>
                         </div>
                         <div>
@@ -472,19 +472,19 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.betaCheck || false}
                             onChange={this.handleEnableBetaPluginCheck}
                           >
-                            {__('Developer option: check update of beta version')}
+                            <Trans>setting:Developer option check update of beta version</Trans>
                           </Checkbox>
                         </div>
                         <Row>
                           <ButtonGroup className='plugin-buttongroup'>
                             <Button className='col-xs-4' onClick={this.onSelectOpenFolder}>
-                              {__('Open plugin folder')}
+                              <Trans>setting:Open plugin folder</Trans>
                             </Button>
                             <Button className='col-xs-4' onClick={this.onSelectOpenSite}>
-                              {__('Search for plugins')}
+                              <Trans>setting:Search for plugins</Trans>
                             </Button>
                             <Button className='col-xs-4' onClick={this.handleGracefulRepair}>
-                              {__('Repair plugins')}
+                              <Trans>setting:Repair plugins</Trans>
                             </Button>
                           </ButtonGroup>
                         </Row>
@@ -514,7 +514,7 @@ const PluginConfig = connect((state, props) => ({
             </Col>
             <Col xs={12}>
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
-                {__("Drop plugin packages here to install it, or click here to select them")}
+                <Trans>setting:Drop plugin packages here to install it, or click here to select them</Trans>
               </div>
             </Col>
           </Row>

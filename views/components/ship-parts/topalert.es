@@ -5,6 +5,8 @@ import { Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { get, join as joinString, memoize } from 'lodash'
 import { createSelector } from 'reselect'
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
@@ -25,8 +27,7 @@ import {
   fleetSlotCountSelectorFactory,
 } from 'views/utils/selectors'
 
-const {ROOT, i18n} = window
-const __ = i18n.main.__.bind(i18n.main)
+const { ROOT } = window
 const { Component } = React
 
 const getFontStyle = () => {
@@ -57,8 +58,8 @@ class CountdownLabel extends Component {
   }
   static basicNotifyConfig = {
     type: 'morale',
-    title: __('Morale'),
-    message: (names) => `${joinString(names, ', ')} ${__('have recovered from fatigue')}`,
+    title: i18next.t('main:Morale'),
+    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:have recovered from fatigue')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
   }
   tryNotify = () => {
@@ -168,31 +169,31 @@ export default connect(
       {
         isMini ?
           <div style={{display: "flex", justifyContent: "space-around", width: '100%'}}>
-            <span style={{flex: "none"}}>{__(getSpeedLabel(speed))} </span>
-            <span style={{flex: "none", marginLeft: 5}}>{__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
-            <span style={{flex: "none", marginLeft: 5}}>{__('LOS')}: {saku33.total.toFixed(2)}</span>
+            <span style={{flex: "none"}}><Trans>main:{getSpeedLabel(speed)}</Trans> </span>
+            <span style={{flex: "none", marginLeft: 5}}><Trans>main:Fighter Power</Trans>: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
+            <span style={{flex: "none", marginLeft: 5}}><Trans>main:LOS</Trans>: {saku33.total.toFixed(2)}</span>
           </div>
           :
           <Alert style={getFontStyle()}>
             <div style={{display: "flex"}}>
-              <span style={{flex: "1"}}>{__(getSpeedLabel(speed))} </span>
-              <span style={{flex: 1}}>{__('Total Lv')}. {totalLv}</span>
+              <span style={{flex: "1"}}><Trans>main:{getSpeedLabel(speed)}</Trans> </span>
+              <span style={{flex: 1}}><Trans>main:Total Lv</Trans>. {totalLv}</span>
               <span style={{flex: 1}}>
                 <OverlayTrigger placement='bottom' overlay={
                   <Tooltip id={`topalert-FP-fleet-${fleetId}`}>
-                    <div>{__('Minimum FP')}: {tyku.min}</div>
-                    <div>{__('Maximum FP')}: {tyku.max}</div>
-                    <div>{__('Basic FP')}: {tyku.basic}</div>
+                    <div><Trans>main:Minimum FP</Trans>: {tyku.min}</div>
+                    <div><Trans>main:Maximum FP</Trans>: {tyku.max}</div>
+                    <div><Trans>main:Basic FP</Trans>: {tyku.basic}</div>
                   </Tooltip>
                 }>
-                  <span>{__('Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
+                  <span><Trans>main:Fighter Power</Trans>: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
                 </OverlayTrigger>
               </span>
               <span style={{flex: 1}}>
                 <OverlayTrigger placement='bottom' overlay={
                   <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='info-tooltip'>
                     <div className='recon-title'>
-                      <span>{__('Formula 33')}</span>
+                      <span><Trans>main:Formula 33</Trans></span>
                     </div>
                     <div className='info-tooltip-entry'>
                       <span className='info-tooltip-item'>× 1</span>
@@ -206,22 +207,22 @@ export default connect(
                       <span>{saku33x4.total}</span>
                     </div>
                     <div className='recon-title'>
-                      <span>{__('Formula 2-5')}</span>
+                      <span><Trans>main:Formula 2-5</Trans></span>
                     </div>
                     <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>{__('Fall')}</span>
+                      <span className='info-tooltip-item'><Trans>main:Fall</Trans></span>
                       <span>{saku25a.total}</span>
                     </div>
                     <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>{__('Legacy')}</span>
+                      <span className='info-tooltip-item'><Trans>main:Legacy</Trans></span>
                       <span>{saku25.total}</span>
                     </div>
                   </Tooltip>
                 }>
-                  <span>{__('LOS')}: {saku33.total.toFixed(2)}</span>
+                  <span><Trans>main:LOS</Trans>: {saku33.total.toFixed(2)}</span>
                 </OverlayTrigger>
               </span>
-              <span style={{flex: 1}}>{inExpedition ? __('Expedition') : __('Resting')}:
+              <span style={{ flex: 1 }}>{inExpedition ? <Trans>main:Expedition</Trans> : <Trans>main:Resting</Trans>}
                 <span> </span>
                 <CountdownLabel fleetId={fleetId}
                   fleetName={fleetName}

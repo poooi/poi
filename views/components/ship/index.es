@@ -6,9 +6,9 @@ import { Panel, Button, ButtonGroup, Alert } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
+import { Trans } from 'react-i18next'
 
-const { i18n, dispatch } = window
-const __ = i18n.main.__.bind(i18n.main)
+const { dispatch } = window
 
 import { ShipRow } from './shipitem'
 import { SquardRow } from './lbac-view'
@@ -113,7 +113,7 @@ const LBView = connect(state => ({
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-              [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name || '')}
+                [{id}] {mapareas[id] ? <Trans i18nKey={`resources:${ mapareas[id].api_name }`}>{ mapareas[id].api_name }</Trans> : ''}
               </Alert>
               <SquardRow
                 key={i}
@@ -234,6 +234,6 @@ const ShipView = connect((state, props) => ({
 
 export default {
   name: 'ShipView',
-  displayName: <span><FontAwesome key={0} name='bars' />{__(' Fleet')}</span>,
+  displayName: <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>,
   reactClass: ShipView,
 }

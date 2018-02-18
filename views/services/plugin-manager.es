@@ -3,11 +3,11 @@ import semver from 'semver'
 import EventEmitter from 'events'
 import { readJsonSync, accessSync, ensureDir } from 'fs-extra'
 import glob from 'glob'
-import _, { map, get } from 'lodash'
+import { map } from 'lodash'
 import { remote } from 'electron'
 import fetch from 'node-fetch'
+import i18next from 'views/env-parts/i18next'
 
-const __ = window.i18n.setting.__.bind(window.i18n.setting)
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 
 const fetchHeader = new Headers()
@@ -307,10 +307,10 @@ class PluginManager extends EventEmitter {
       this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
     ))).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
-      const content = `${map(outdatedList, 'name').join(' / ')} ${__("have newer version. Please update your plugins.")}`
+      const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t('setting:PluginUpdateMsg')}`
       toast(content, {
         type: 'info',
-        title: __('Plugin update'),
+        title: i18next.t('setting:Plugin update'),
       })
     }
   }

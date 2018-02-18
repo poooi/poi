@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { FormControl, ControlLabel, InputGroup, FormGroup, Button } from 'react-bootstrap'
 import { trim } from 'lodash'
 import validate from 'validate-npm-package-name'
-
-const __ = window.i18n.setting.__.bind(window.i18n.setting)
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 export default class NameInput extends PureComponent {
   static propTypes = {
@@ -25,14 +25,14 @@ export default class NameInput extends PureComponent {
       validate(manuallyInstallPackage).validForNewPackages
     return (
       <FormGroup>
-        <ControlLabel>{__('Install directly from npm')}</ControlLabel>
+        <ControlLabel><Trans>setting:Install directly from npm</Trans></ControlLabel>
         <InputGroup bsSize='small'>
           <FormControl type="text"
             value={this.state.manuallyInstallPackage}
             onChange={this.changeInstalledPackage}
-            label={__('Install directly from npm')}
+            label={<Trans>setting:Install directly from npm</Trans>}
             disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-            placeholder={__('Input plugin package name...')}>
+            placeholder={i18next.t('setting:Input plugin package name') + '...'}>
           </FormControl>
           <InputGroup.Button>
             <Button bsStyle='primary'
@@ -40,7 +40,7 @@ export default class NameInput extends PureComponent {
                       this.props.npmWorking ||
                       !validPackageName}
               onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
-              {__('Install')}
+              <Trans>setting:Install</Trans>
             </Button>
           </InputGroup.Button>
         </InputGroup>

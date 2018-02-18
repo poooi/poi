@@ -1,11 +1,12 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Button, ButtonGroup, FormControl, InputGroup, FormGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
-const {config, i18n, $} = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config, $ } = window
 const wvStatus = {
   Loading: 0,
   Loaded: 1,
@@ -121,7 +122,7 @@ class NavigatorBar extends React.Component {
           <FormGroup>
             <InputGroup bsSize='small' style={{width: '100%'}}>
               <FormControl type='text'
-                placeholder={__('Input address')}
+                placeholder={i18next.t('setting:Input address')}
                 className={statusIcon? 'navigator-status' : 'navigator-no-status'}
                 value={this.state.url}
                 onChange={this.onChangeUrl}
@@ -138,7 +139,7 @@ class NavigatorBar extends React.Component {
             <Button bsSize='small' bsStyle='warning' onClick={gameRefreshPage} onContextMenu={gameReloadFlash}><FontAwesome name='refresh' /></Button>
           </ButtonGroup>
           <ButtonGroup style={{marginLeft: 5}}>
-            <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'>{__ ('Set as homepage')}</Tooltip>}>
+            <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'><Trans>setting:Set as homepage</Trans></Tooltip>}>
               <Button bsSize='small' onClick={this.onClickHomepage} onContextMenu={this.onRightClickHomepage}><FontAwesome name='bookmark' /></Button>
             </OverlayTrigger>
           </ButtonGroup>

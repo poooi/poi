@@ -1,9 +1,8 @@
 import { fleetShipsDataSelectorFactory, fleetStateSelectorFactory } from '../utils/selectors'
 import _ from 'lodash'
+import i18next from 'i18next'
 
-const { i18n, config } =  window
-
-const __ = i18n.main.__.bind(i18n.main)
+const { config } =  window
 
 // event sortie check notify for fleets that
 // - is not in mission
@@ -54,8 +53,8 @@ window.addEventListener('game.request', ({ detail: { path } }) => {
 
     if (flag) {
       window.toast(
-        __('At least one ship in your fleet has not been locked'),
-        { type: 'warning', title: __('Event ship locking warning') }
+        i18next.t('main:At least one ship in your fleet has not been locked'),
+        { type: 'warning', title: i18next.t('main:Event ship locking warning') }
       )
     }
   }

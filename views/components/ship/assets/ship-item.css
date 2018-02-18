@@ -198,3 +198,15 @@
   font-size: 80%;
   padding: 0.125em 0.6em;
 }
+
+.aaci-type-name:first-child::before {
+  content: ' - ';
+}
+
+.aaci-type-name::after {
+  content: ' / ';
+}
+
+.aaci-type-name:last-child::after {
+  content: '';
+}

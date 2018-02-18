@@ -3,9 +3,9 @@ import { shell, remote } from 'electron'
 import semver from 'semver'
 import Markdown from 'react-remarkable'
 import fetch from 'node-fetch'
+import i18next from 'i18next'
 
-const {POI_VERSION, i18n, toggleModal, config, language} = window
-const __ = i18n.others.__.bind(i18n.others)
+const {POI_VERSION, toggleModal, config, language} = window
 
 const fetchHeader = new Headers()
 fetchHeader.set("Cache-Control", "max-age=0")
@@ -24,9 +24,9 @@ const doUpdate = async () => {
       await updater.checkForUpdates()
       await updater.downloadUpdate()
     } catch (e) {
-      window.toast(__('Please try again or download manually.'), {
+      window.toast(i18next.t('Please try again or download manually.'), {
         type: 'danger',
-        title: __('Update failed'),
+        title: i18next.t('Update failed'),
       })
     }
   }
@@ -39,9 +39,9 @@ if (process.platform === 'win32') {
   })
 
   updater.on('update-downloaded', () => {
-    window.toast(__('Quit app and install updates'), {
+    window.toast(i18next.t('Quit app and install updates'), {
       type: 'success',
-      title: __('Update successful'),
+      title: i18next.t('Update successful'),
     })
   })
 
@@ -50,9 +50,9 @@ if (process.platform === 'win32') {
   })
 
   updater.on('error', (event, error) => {
-    window.toast(__('Please try again or download manually'), {
+    window.toast(i18next.t('Please try again or download manually'), {
       type: 'danger',
-      title: __('Update failed'),
+      title: i18next.t('Update failed'),
     })
   })
 }
@@ -86,7 +86,7 @@ export const checkUpdate = async () => {
 }
 
 const toggleUpdate = (version, log) => {
-  const title = <span>{__('Update')} poi-{version}</span>
+  const title = <span>{i18next.t('Update')} poi-{version}</span>
   // react-remarkable uses remarkable as parser，
   // remarkable disables HTML by default，
   // react-remarkable's default option dose not enable HTML，
@@ -96,19 +96,19 @@ const toggleUpdate = (version, log) => {
   )
   const footer = [
     {
-      name: __('I know'),
+      name: i18next.t('I know'),
       func: () => config.set('poi.update.knownVersion', version),
       style: 'success',
     },
     {
-      name: `${__('Manually download')}`,
+      name: `${i18next.t('Manually download')}`,
       func: () => shell.openExternal('https://poi.io'),
       style: 'primary',
     },
   ]
   if (process.platform === 'win32') {
     footer.push({
-      name: `${__('Auto update')}`,
+      name: `${i18next.t('Auto update')}`,
       func: doUpdate,
       style: 'primary',
     })

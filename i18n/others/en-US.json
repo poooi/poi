@@ -1,15 +1,16 @@
 {
+  "丁": "D",
   "丙": "C",
   "乙": "B",
   "甲": "A",
-  "Waiting for response...": "Waiting for response...",
+  "Waiting for response": "Waiting for response...",
   "Not in sortie": "Not in sortie",
-  "Sortie area: ": "Sortie area: ",
+  "Sortie area": "Sortie area",
   "failed to save the screenshot": "failed to save the screenshot",
   "screenshot saved to": "Screenshot saved to",
   "Open cache dir": "Open cache dir",
   "Open screenshot dir": "Open screenshot dir",
-  "Failed. Perhaps you don't have permission to it.": "Failed. Perhaps you don't have permission to it.",
+  "NoPermission": "Failed. Perhaps you don't have permission to it.",
   "Volume off": "Volume off",
   "Volume on": "Volume on",
   "Volume": "Volume",
@@ -27,20 +28,17 @@
   "Requesting": "Requesting",
   "Hit": "Got",
   "I know": "Got it!",
-  " Plugins": " Plugins",
+  "Plugins": "Plugins",
   "Update": "Update",
   "Download latest version": "Download latest version",
   "Aliyun": "Aliyun",
-  "Connection failed after %s retry": {
-     "one": "Connection failed, now reconnecting, retry count: %s",
-     "other": "Connection failed, now reconnecting, retry count: %s"
-   },
-  "Network error: HTTP %s": "Network error: HTTP %s",
+  "ConnectionFailedMsg": "Connection failed, now reconnecting, retry count: <0>{{count}}</0>",
   "Connection failed.": "Connection failed.",
-  "The server presented you a cat. (Error code: %s)": "The server presented you a cat. (Error code: %s)",
+  "CatError": "The server presented you a cat. (Error code: <0>{{code}}</0>)",
 
-  "Modernization succeeded! ": "Modernization succeeded! ",
-  "Modernization failed.": "Modernization failed.",
+  "PluginUpdateMsg": "have newer version. Please update your plugins.",
+  "Modernization succeeded": "Modernization succeeded! ",
+  "Modernization failed": "Modernization failed.",
   "Firepower": "Firepower",
   "Torpedo": "Torpedo",
   "AntiAir": "AntiAir",
@@ -49,9 +47,8 @@
   "Website requires login": "Website requires login",
   "Username":"Username",
   "Password":"Password",
-  "RefreshGameDialogTip": {
-      "text1": "Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are ",
-      "b1": "without confirmation",
-      "text2": ", use at your own risk."
-  }
+  "PluginErrTitle": "A 🐢 found in <0>{{name}}</0>",
+  "PluginErrorMsg": "Something went wrong in the plugin, you may report this to plugin author or poi dev team, with the code below.",
+  "RefreshGameDialogTip": "Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</1></1>Tip  Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk.",
+  "Good day and welcome to poi! Before your use, here are some information for you": "Good day and welcome to poi {{version}}! Before your use, here are some information for you"
 }

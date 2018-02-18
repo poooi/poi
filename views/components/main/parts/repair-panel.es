@@ -7,10 +7,8 @@ import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
-
-const { i18n } = window
-
-const __ = i18n.main.__.bind(i18n.main)
+import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -75,8 +73,8 @@ export default connect(
   }
   static basicNotifyConfig = {
     type: 'repair',
-    title: __('Docking'),
-    message: (names) => `${joinString(names, ', ')} ${__('repair completed')}`,
+    title: i18next.t('main:Docking'),
+    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:repair completed')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
     preemptTime: 60,
   }
@@ -103,9 +101,9 @@ export default connect(
             }
             const dock = repairs[i] || emptyRepair
             const dockName =
-              dock.api_state == -1 ? __('Locked') :
-                dock.api_state == 0 ? __('Empty') :
-                  i18n.resources.__($ships[ships[dock.api_ship_id].api_ship_id].api_name)
+              dock.api_state == -1 ? <Trans>main:Locked</Trans> :
+                dock.api_state == 0 ? <Trans>main:Empty</Trans> :
+                  <Trans i18nKey={`resources:${ $ships[ships[dock.api_ship_id].api_ship_id].api_name }`}>{ $ships[ships[dock.api_ship_id].api_ship_id].api_name }</Trans>
             const completeTime = dock.api_complete_time || -1
             let hpPercentage
             if (dock.api_state > 0) {
@@ -131,7 +129,7 @@ export default connect(
 
                 <OverlayTrigger placement='left' overlay={
                   <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
-                    <strong>{__("Finish by : ")}</strong>{timeToString(completeTime)}
+                    <strong><Trans>main:Finish By</Trans>: </strong>{timeToString(completeTime)}
                   </Tooltip>
                 }>
                   <div>

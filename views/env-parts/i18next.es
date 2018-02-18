@@ -5,6 +5,8 @@ import i18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
+import formatJson from 'json-format'
+import { readJSONSync, writeFileSync } from 'fs-extra'
 
 import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 
@@ -45,14 +47,13 @@ if (!LOCALES.includes(window.language)) {
   }
 }
 
-// eslint-disable-next-line import/no-named-as-default-member
 i18next.use(reactI18nextModule)
   .init({
     lng: window.language,
     fallbackLng: false,
     resources: mainPoiRes,
     ns: mainPoiNs,
-    defaultNS: 'main',
+    defaultNS: 'others',
     interpolation: {
       escapeValue: false,
     },
@@ -61,6 +62,18 @@ i18next.use(reactI18nextModule)
     react: {
       wait: false,
       nsMode: true,
+    },
+    saveMissing: window.dbg && window.dbg.isEnabled(),
+    missingKeyHandler: function (lng, ns, key, fallbackValue) {
+      if (ns !== 'data' && i18nFiles.map(i => path.basename(i)).includes(ns)) {
+        const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
+        const cnt = readJSONSync(p)
+        cnt[key] = fallbackValue
+        writeFileSync(p, formatJson(cnt, {
+          type: 'space',
+          size: 2,
+        }) + '\n')
+      }
     },
   })
 
@@ -74,7 +87,6 @@ if (window.dbg && window.dbg.isEnabled()) {
 window.i18n = {}
 const addGlobalI18n = (namespace) => {
   window.i18n[namespace] = {
-    // eslint-disable-next-line import/no-named-as-default-member
     fixedT: i18next.getFixedT(window.language, namespace),
   }
 

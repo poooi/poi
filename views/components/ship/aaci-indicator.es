@@ -3,16 +3,17 @@ import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 
-const { i18n } = window
-const __ = i18n.main.__.bind(i18n.main)
+const getAvailableTranslation = memoize(str => i18next.translator.exists(`main:${str}`) ? <Trans>main:{str}</Trans>
+  : i18next.translator.exists(`resources:${str}`) ? <Trans>resources:{str}</Trans>
+    : str)
 
-const __t = str => str.includes('/')
-  ? str.split(' / ').map(i18n.resources.__).map(__).join(' / ')
-  : __(i18n.resources.__(str))
+const __t = name => name.map((n, i) => <span className='aaci-type-name' key={i}>{ getAvailableTranslation(n) }</span>)
 
 const AACISelectorFactory = memoize(shipId =>
   createSelector([
@@ -51,19 +52,20 @@ const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              {__('Type %s', id)}{get(AACITable, `${id}.name.length`, 0) > 0 ? ` - ${__t(AACITable[id].name)}` : ''}
+              <Trans i18nKey='main:AACIType'>{{ count: id }}</Trans>
+              <span>{ get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : '' }</span>
             </span>
             <span>
-              {__('Shot down: %s', AACITable[id].fixed)}
+              <Trans i18nKey='main:Shot down'>{{ count: AACITable[id].fixed }}</Trans>
             </span>
             <span style={{ marginLeft: '2ex'}}>
-              {__('Modifier: %s', AACITable[id].modifier)}
+              <Trans i18nKey='main:Modifier'>{{ count: AACITable[id].modifier }}</Trans>
             </span>
           </div>
         )
       }
       {
-        currentMax < maxShotdown && <span>{__('Max shot down not reached')}</span>
+        currentMax < maxShotdown && <span><Trans>main:Max shot down not reached</Trans></span>
       }
     </Fragment>
   )
@@ -72,7 +74,7 @@ const AACIIndicator = connect(
     AACIs.length ?
       <span className="ship-aaci">
         <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle='warning'>{__('AACI')}</Label>
+          <Label bsStyle='warning'><Trans>main:AACI</Trans></Label>
         </OverlayTrigger>
       </span>
       : <span />

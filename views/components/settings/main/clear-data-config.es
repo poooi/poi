@@ -13,11 +13,11 @@ import {
   ControlLabel,
   Alert,
 } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
 
 const { session } = remote.require('electron')
 
-const { config, toggleModal, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config, toggleModal } = window
 
 const ClearDataConfig = connect(state => ({
   cacheSize: get(state.config, 'poi.cacheSize', 320),
@@ -30,12 +30,12 @@ const ClearDataConfig = connect(state => ({
   }
   handleClearCookie = (e) => {
     remote.getCurrentWebContents().session.clearStorageData({storages: ['cookies']}, () => {
-      toggleModal(__('Delete cookies'), __('Success!'))
+      toggleModal(<Trans>setting:Delete cookies</Trans>, <Trans>setting:Success!</Trans>)
     })
   }
   handleClearCache = (e) => {
     remote.getCurrentWebContents().session.clearCache(()=> {
-      toggleModal(__('Delete cache'), __('Success!'))
+      toggleModal(<Trans>setting:Delete cache</Trans>, <Trans>setting:Success!</Trans>)
     })
   }
   handleValueChange = e => {
@@ -58,10 +58,10 @@ const ClearDataConfig = connect(state => ({
       <Grid>
         <Col xs={6}>
           <FormGroup>
-            <ControlLabel>{__('Current cache size')}</ControlLabel>
+            <ControlLabel><Trans>setting:Current cache size</Trans></ControlLabel>
             <InputGroup>
               <InputGroup.Button>
-                <Button onClick={this.handleUpdateCacheSize}>{__('Update')}</Button>
+                <Button onClick={this.handleUpdateCacheSize}><Trans>setting:Update</Trans></Button>
               </InputGroup.Button>
               <FormControl type="number"
                 disabled
@@ -73,7 +73,7 @@ const ClearDataConfig = connect(state => ({
         </Col>
         <Col xs={6}>
           <FormGroup>
-            <ControlLabel>{__('Maximum cache size')}</ControlLabel>
+            <ControlLabel><Trans>setting:Maximum cache size</Trans></ControlLabel>
             <InputGroup>
               <FormControl type="number"
                 onChange={this.handleValueChange}
@@ -85,17 +85,17 @@ const ClearDataConfig = connect(state => ({
         </Col>
         <Col xs={6}>
           <Button bsStyle="danger" onClick={this.handleClearCookie} style={{width: '100%'}}>
-            {__('Delete cookies')}
+            <Trans>setting:Delete cookies</Trans>
           </Button>
         </Col>
         <Col xs={6}>
           <Button bsStyle="danger" onClick={this.handleClearCache} style={{width: '100%'}}>
-            {__('Delete cache')}
+            <Trans>setting:Delete cache</Trans>
           </Button>
         </Col>
         <Col xs={12}>
           <Alert bsStyle='warning' style={{marginTop: '10px'}}>
-            {__('If connection error occurs frequently, delete both of them.')}
+            <Trans>setting:If connection error occurs frequently, delete both of them</Trans>
           </Alert>
         </Col>
       </Grid>

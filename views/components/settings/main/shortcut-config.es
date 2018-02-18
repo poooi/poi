@@ -5,9 +5,9 @@ import { Col, Button, ButtonGroup } from 'react-bootstrap'
 import { ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
 import { get } from 'lodash'
+import { Trans } from 'react-i18next'
 
-const { config, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 let keyListener
 
@@ -29,7 +29,7 @@ const ShortcutConfig = connect(() => {
     value: PropTypes.string,
     active: PropTypes.bool,
     configName: PropTypes.string,
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   }
   constructor (props) {
     super(props)
@@ -39,12 +39,12 @@ const ShortcutConfig = connect(() => {
   }
   displayText = () => {
     if (this.recording()) {
-      return __('Press the key, or Esc to cancel')
+      return <Trans>setting:Press the key, or Esc to cancel</Trans>
     }
     else if (this.enabled()) {
       return `<${this.props.value}>`
     } else {
-      return __('Disabled')
+      return <Trans>setting:Disabled</Trans>
     }
   }
   active = () => ((typeof this.props.active === "undefined") ? true : this.props.active)

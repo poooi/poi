@@ -3,6 +3,7 @@ import { MiniShipRow, MiniSquardRow } from './minishipitem'
 import React, { Fragment } from 'react'
 import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
 
 import TopAlert from 'views/components/ship-parts/topalert'
 import {
@@ -55,7 +56,7 @@ export const LBViewMini = connect(state => ({
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-              [{id}] {window.i18n.resources.__((mapareas[id] || {}).api_name || '')}
+                [{id}] {mapareas[id] ? <Trans i18nKey={`resources:${ mapareas[id].api_name }`}>{ mapareas[id].api_name }</Trans> : ''}
               </Alert>
               <MiniSquardRow
                 key={i}

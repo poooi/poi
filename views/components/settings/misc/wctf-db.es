@@ -7,12 +7,12 @@ import glob from 'glob'
 import Promise from 'bluebird'
 import FA from 'react-fontawesome'
 import { Button, Label } from 'react-bootstrap'
+import { Trans } from 'react-i18next'
 
 import { wctfSelector } from 'views/utils/selectors'
 import { installPackage } from 'views/services/plugin-manager-utils'
 
-const { APPDATA_PATH, config, proxy, i18n } = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { APPDATA_PATH, config, proxy } = window
 
 const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS = require(MIRROR_JSON_PATH)
@@ -194,7 +194,7 @@ const WctfDB = connect(
         >
           <FA name="refresh" spin={updating} />
         </Button>
-        {__('Who Calls The Fleet Database')}: <Label bsStyle="primary">{this.props.version}</Label>
+        <Trans>setting:Who Calls The Fleet Database</Trans>: <Label bsStyle="primary">{this.props.version}</Label>
       </Fragment>
     )
   }

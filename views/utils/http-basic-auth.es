@@ -1,8 +1,8 @@
 import { ipcRenderer } from 'electron'
 import React, { PureComponent } from 'react'
 import { Modal, Form, FormGroup, Col, ControlLabel, FormControl, Button } from 'react-bootstrap'
-const {i18n} = window
-const __ = i18n.others.__.bind(i18n.others)
+import { Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 const BALogin = (usr,pwd) => {
   ipcRenderer.send('basic-auth-info', usr, pwd)
@@ -15,7 +15,7 @@ class BasicAuth extends PureComponent {
   }
   login = (usr, passwd) => {
     BALogin(this.state.user, this.state.password)
-    this.setState({ 
+    this.setState({
       showModal: false,
       user: '',
       password: '',
@@ -42,32 +42,32 @@ class BasicAuth extends PureComponent {
     return (
       <Modal show={this.state.showModal} onHide={this.close}>
         <Modal.Header closeButton>
-          <Modal.Title>{__("Website requires login")}</Modal.Title>
+          <Modal.Title><Trans>Website requires login</Trans></Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form horizontal>
             <FormGroup controlId="formHorizontalEmail">
               <Col componentClass={ControlLabel} sm={2}>
-                {__("Username")}
+                <Trans>Username</Trans>
               </Col>
               <Col sm={10}>
-                <FormControl value={this.state.user} type="username" placeholder={__("Username")} onChange={this.handleUser} />
+                <FormControl value={this.state.user} type="username" placeholder={i18next.t("Username")} onChange={this.handleUser} />
               </Col>
             </FormGroup>
-  
+
             <FormGroup controlId="formHorizontalPassword">
               <Col componentClass={ControlLabel} sm={2}>
-                {__("Password")}
+                <Trans>Password</Trans>
               </Col>
               <Col sm={10}>
-                <FormControl value={this.state.password} type="password" placeholder={__("Password")} onChange={this.handlePassword}/>
+                <FormControl value={this.state.password} type="password" placeholder={i18next.t("Password")} onChange={this.handlePassword}/>
               </Col>
             </FormGroup>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.close}>{__("Cancel")}</Button>
-          <Button bsStyle="primary" onClick={this.login}>{__("Confirm")}</Button>
+          <Button onClick={this.close}><Trans>Cancel</Trans></Button>
+          <Button bsStyle="primary" onClick={this.login}><Trans>Confirm</Trans></Button>
         </Modal.Footer>
       </Modal>
     )

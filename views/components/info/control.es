@@ -8,12 +8,12 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
+import { Trans } from 'react-i18next'
 
 import './assets/control.css'
 
-const {$, i18n, config, toggleModal} = window
+const {$, config, toggleModal} = window
 const {openExternal} = shell
-const __ = i18n.others.__.bind(i18n.others)
 
 const openItemAsync = (dir, source=null) => {
   openExternal(`file://${dir}`, {}, err => {
@@ -58,10 +58,10 @@ const PoiControl = connect((state, props) => ({
           if (err) {
             throw err
           }
-          window.success(`${__('screenshot saved to')} ${filename}`)
+          window.success(<span><Trans>screenshot saved to</Trans> {filename}</span>)
         })
       } catch (error) {
-        window.error(__('Failed to save the screenshot'))
+        window.error(<Trans>Failed to save the screenshot</Trans>)
       }
     })
   }
@@ -78,7 +78,7 @@ const PoiControl = connect((state, props) => ({
       openItemAsync(dir, 'handleOpenCacheFolder')
     }
     catch (e) {
-      window.toggleModal(__('Open cache dir'), __("Failed. Perhaps you don't have permission to it."))
+      window.toggleModal(<Trans>Open cache dir</Trans>, <Trans>NoPermission</Trans>)
     }
   }
   handleOpenMakaiFolder = () => {
@@ -88,7 +88,7 @@ const PoiControl = connect((state, props) => ({
       fs.ensureDirSync(dir)
       openItemAsync(dir, 'handleOpenMakaiFolder')
     } catch (e) {
-      window.toggleModal(__('Open makai dir'), __("Failed. Perhaps you don't have permission to it."))
+      window.toggleModal(<Trans>Open makai dir</Trans>, <Trans>NoPermission</Trans>)
     }
   }
   handleOpenScreenshotFolder = () => {
@@ -98,7 +98,7 @@ const PoiControl = connect((state, props) => ({
       openItemAsync(screenshotPath,'handleOpenScreenshotFolder')
     }
     catch (e) {
-      window.toggleModal(__('Open screenshot dir'), __("Failed. Perhaps you don't have permission to it."))
+      window.toggleModal(<Trans>Open screenshot dir</Trans>, <Trans>NoPermission</Trans>)
     }
   }
   handleSetMuted = () => {
@@ -126,25 +126,23 @@ const PoiControl = connect((state, props) => ({
       return
     }
 
-    const tipTexts =
-      i18n.others.__("RefreshGameDialogTip") ||
-      i18n.others.locales["en-US"]["RefreshGameDialogTip"]
-
     toggleModal(
-      __("Confirm Refreshing"),
+      <Trans>Confirm Refreshing</Trans>,
       <div>
-        {__("Are you sure to refresh the game?")}
-        <ul>
-          <li>{__('"Refresh page" is the same as pressing F5.')}</li>
-          <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
-        </ul>
-        {tipTexts.text1}<b>{tipTexts.b1}</b>{tipTexts.text2}
+        <Trans i18nKey="RefreshGameDialogTip">
+          Are you sure to refresh the game?
+          <ul>
+            <li>Refresh page is the same as pressing F5.</li>
+            <li>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</li>
+          </ul>
+          Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
+        </Trans>
       </div>,
       [
-        { name: __("Refresh page"),
+        { name: <Trans>Refresh page</Trans>,
           func: gameRefreshPage,
           style: "warning" },
-        { name: __("Reload Flash"),
+        { name: <Trans>Reload Flash</Trans>,
           func: gameReloadFlash,
           style: "danger" },
       ])
@@ -159,25 +157,28 @@ const PoiControl = connect((state, props) => ({
     switch (props) {
     case 'refresh':
       toggleModal(
-        __("Confirm Refreshing"),
+        <Trans>Confirm Refreshing</Trans>,
         <div>
-          {__("Are you sure to refresh the game?")}
-          <ul>
-            <li>{__('"Refresh page" is the same as pressing F5.')}</li>
-            <li>{__('"Reload Flash" reloads only the Flash part, this is usually faster but could result in catbomb.')}</li>
-          </ul>
+          <Trans i18nKey="RefreshGameDialogTip">
+            Are you sure to refresh the game?
+            <ul>
+              <li>Refresh page is the same as pressing F5.</li>
+              <li>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</li>
+            </ul>
+            Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
+          </Trans>
         </div>,
         [
-          { name: __("Refresh page"),
+          { name: <Trans>Refresh page</Trans>,
             func: gameRefreshPage,
             style: "warning" },
-          { name: __("Reload Flash"),
+          { name: <Trans>Reload Flash</Trans>,
             func: gameReloadFlash,
             style: "danger" },
         ],
         () => {touchBarReset()}
       )
-      refreshconfirm(__("Refresh page"),__("Reload Flash"))
+      refreshconfirm(<Trans>Refresh page</Trans>,<Trans>Reload Flash</Trans>)
       break
     case 'adjust':
       window.dispatchEvent(new Event('resize'))
@@ -221,33 +222,30 @@ const PoiControl = connect((state, props) => ({
     }
     return (
       <div className='poi-control-container'>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{__('Developer Tools')}</Tooltip>}>
+        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'><Trans>Developer Tools</Trans></Tooltip>}>
           <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='terminal' /></Button>
         </OverlayTrigger>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'>{__('Take a screenshot')}</Tooltip>}>
+        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'><Trans>Take a screenshot</Trans></Tooltip>}>
           <Button onClick={this.handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
         </OverlayTrigger>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? __('Volume on') : __('Volume off')}</Tooltip>}>
+        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? <Trans>Volume on</Trans> : <Trans>Volume off</Trans>}</Tooltip>}>
           <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
         </OverlayTrigger>
         <Collapse in={this.state.extend} dimension='width' className="poi-control-extender">
           <div>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{__('Open cache dir')}</Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'><Trans>Open cache dir</Trans></Tooltip>}>
               <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button' className='poi-control-tooltip'>{__('Open screenshot dir')}</Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button' className='poi-control-tooltip'><Trans>Open screenshot dir</Trans></Tooltip>}>
               <Button onClick={this.handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{__('Auto adjust')}</Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'><Trans>Auto adjust</Trans></Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{__('Arrange panel')}</Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'><Trans>Arrange panel</Trans></Tooltip>}>
               <Button onClick={this.handleSetEditable} bsSize='small'><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={
-              <Tooltip id='poi-refresh-button' className='poi-control-tooltip'>
-                {__("Refresh game")}
-              </Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-refresh-button' className='poi-control-tooltip'><Trans>Refresh game</Trans></Tooltip>}>
               <Button
                 onClick={this.handleRefreshGameDialog}
                 onContextMenu={gameReloadFlash}

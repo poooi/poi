@@ -4,11 +4,11 @@ import { TitleBar } from 'electron-react-titlebar'
 import { reduxSet } from 'views/utils/tools'
 import { get, capitalize } from 'lodash'
 import path from 'path'
+import i18next from 'views/env-parts/i18next'
 
-const {Menu} = remote.require('electron')
-const {openExternal} = shell
-const {i18n, config} = window
-const __ = window.i18n.menu.__.bind(i18n.menu)
+const { Menu } = remote.require('electron')
+const { openExternal } = shell
+const { config } = window
 
 const exeCodeOnWindowHasReloadArea = (win, f) => {
   if ((win || {}).reloadArea) {
@@ -25,27 +25,27 @@ if (process.platform !== 'darwin') {
       label: 'Poi',
       submenu: [
         {
-          label: __('Preferences...'),
+          label: i18next.t('menu:Preferences'),
           click: (item, focusedWindow) => {
             window.openSettings()
           },
         },
         { type: 'separator' },
         {
-          label: __('Hide poi'),
+          label: i18next.t('menu:Hide poi'),
           click: (item, focusedWindow) => {
             remote.getGlobal('mainWindow').hide()
           },
         },
         {
-          label: __('Show poi'),
+          label: i18next.t('menu:Show poi'),
           click: (item, focusedWindow) => {
             remote.getGlobal('mainWindow').show()
           },
         },
         { type: 'separator' },
         {
-          label: __('Resizable'),
+          label: i18next.t('menu:Resizable'),
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
@@ -57,7 +57,7 @@ if (process.platform !== 'darwin') {
           },
         },
         {
-          label: __('Always on top'),
+          label: i18next.t('menu:Always on top'),
           type: 'checkbox',
           checked: config.get('poi.content.alwaysOnTop', false),
           click: (item, focusedWindow) => {
@@ -67,7 +67,7 @@ if (process.platform !== 'darwin') {
         },
         { type: 'separator' },
         {
-          label: __('Quit poi'),
+          label: i18next.t('menu:Quit poi'),
           click: () => {
             // The terminate selector will ignore the 'poi.confirm.quit' setting
             // and try to close any (plugin) window it can close first.
@@ -79,31 +79,31 @@ if (process.platform !== 'darwin') {
       ],
     },
     {
-      label: __('View'),
+      label: i18next.t('menu:View'),
       submenu: [
         {
-          label: __('Reload'),
+          label: i18next.t('menu:Reload'),
           accelerator: 'Ctrl+R',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
           },
         },
         {
-          label: __('Stop'),
+          label: i18next.t('menu:Stop'),
           accelerator: 'Ctrl+.',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
           },
         },
         {
-          label: __('Developer Tools'),
+          label: i18next.t('menu:Developer Tools'),
           accelerator: 'Ctrl+Shift+I',
           click: (item, focusedWindow) => {
             focusedWindow.openDevTools({detach: true})
           },
         },
         {
-          label: __('Developer Tools of WebView'),
+          label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(remote.getGlobal('mainWindow'), 'openDevTools({detach: true})')
           },
@@ -111,11 +111,11 @@ if (process.platform !== 'darwin') {
       ],
     },
     {
-      label: __('Themes'),
+      label: i18next.t('menu:Themes'),
       submenu: [
         { type: 'separator' },
         {
-          label: __('Next Theme'),
+          label: i18next.t('menu:Next Theme'),
           click: (item, focusedWindow) => {
             const all = window.allThemes
             const nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
@@ -123,7 +123,7 @@ if (process.platform !== 'darwin') {
           },
         },
         {
-          label: __('Previous Theme'),
+          label: i18next.t('menu:Previous Theme'),
           click: (item, focusedWindow) => {
             const all = window.allThemes
             const prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
@@ -133,30 +133,30 @@ if (process.platform !== 'darwin') {
       ],
     },
     {
-      label: __('Help'),
+      label: i18next.t('menu:Help'),
       role: 'help',
       submenu: [
         {
-          label: __('Wiki'),
+          label: i18next.t('menu:Wiki'),
           click: () => {
             openExternal('https://github.com/poooi/poi/wiki')
           },
         },
         {
-          label: __('Poi Statistics'),
+          label: i18next.t('menu:Poi Statistics'),
           click: () => {
             openExternal('http://db.kcwiki.org/')
           },
         },
         { type: 'separator' },
         {
-          label: __('Report Issue'),
+          label: i18next.t('menu:Report Issue'),
           click: () => {
             openExternal('https://github.com/poooi/poi/issues')
           },
         },
         {
-          label: __('Search Issues'),
+          label: i18next.t('menu:Search Issues'),
           click: () => {
             openExternal('https://github.com/issues?q=+is%3Aissue+user%3Apoooi')
           },
@@ -170,12 +170,12 @@ if (process.platform !== 'darwin') {
       label: 'Poi',
       submenu: [
         {
-          label: __('About poi'),
+          label: i18next.t('menu:About poi'),
           role: 'about',
         },
         { type: 'separator' },
         {
-          label: __('Preferences...'),
+          label: i18next.t('menu:Preferences...'),
           accelerator: 'CmdOrCtrl+,',
           click: (item, focusedWindow) => {
             window.openSettings()
@@ -183,28 +183,28 @@ if (process.platform !== 'darwin') {
         },
         { type: 'separator' },
         {
-          label: __('Services'),
+          label: i18next.t('menu:Services'),
           role: 'services',
           submenu: [],
         },
         { type: 'separator' },
         {
-          label: __('Hide poi'),
+          label: i18next.t('menu:Hide poi'),
           accelerator: 'CmdOrCtrl+H',
           role: 'hide',
         },
         {
-          label: __('Hide others'),
+          label: i18next.t('menu:Hide others'),
           accelerator: 'CmdOrCtrl+Shift+H',
           role: 'hideothers',
         },
         {
-          label: __('Show All'),
+          label: i18next.t('menu:Show All'),
           role: 'unhide',
         },
         { type: 'separator' },
         {
-          label: __('Resizable'),
+          label: i18next.t('menu:Resizable'),
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
@@ -216,7 +216,7 @@ if (process.platform !== 'darwin') {
           },
         },
         {
-          label: __('Always on top'),
+          label: i18next.t('menu:Always on top'),
           type: 'checkbox',
           checked: config.get('poi.content.alwaysOnTop', false),
           click: (item, focusedWindow) => {
@@ -226,7 +226,7 @@ if (process.platform !== 'darwin') {
         },
         { type: 'separator' },
         {
-          label: __('Confirm before exit'),
+          label: i18next.t('menu:Confirm before exit'),
           type: 'checkbox',
           checked: config.get('poi.confirm.quit', false),
           click: (item, focusedWindow) => {
@@ -235,7 +235,7 @@ if (process.platform !== 'darwin') {
         },
         { type: 'separator' },
         {
-          label: __('Quit poi'),
+          label: i18next.t('menu:Quit poi'),
           accelerator: 'CmdOrCtrl+Q',
           click: () => {
             // The terminate selector will ignore the 'poi.confirm.quit' setting
@@ -248,53 +248,53 @@ if (process.platform !== 'darwin') {
       ],
     },
     {
-      label: __('Edit'),
+      label: i18next.t('menu:Edit'),
       submenu: [
         {
-          label: __('Undo'),
+          label: i18next.t('menu:Undo'),
           accelerator: 'CmdOrCtrl+Z',
           role: 'undo',
         },
         {
-          label: __('Redo'),
+          label: i18next.t('menu:Redo'),
           accelerator: 'Shift+CmdOrCtrl+Z',
           role: 'redo',
         },
         { type: 'separator' },
         {
-          label: __('Cut'),
+          label: i18next.t('menu:Cut'),
           accelerator: 'CmdOrCtrl+X',
           role: 'cut',
         },
         {
-          label: __('Copy'),
+          label: i18next.t('menu:Copy'),
           accelerator: 'CmdOrCtrl+C',
           role: 'copy',
         },
         {
-          label: __('Paste'),
+          label: i18next.t('menu:Paste'),
           accelerator: 'CmdOrCtrl+V',
           role: 'paste',
         },
         {
-          label: __('Select All'),
+          label: i18next.t('menu:Select All'),
           accelerator: 'CmdOrCtrl+A',
           role: 'selectall',
         },
       ],
     },
     {
-      label: __('View'),
+      label: i18next.t('menu:View'),
       submenu: [
         {
-          label: __('Reload'),
+          label: i18next.t('menu:Reload'),
           accelerator: 'CmdOrCtrl+R',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
           },
         },
         {
-          label: __('Stop'),
+          label: i18next.t('menu:Stop'),
           accelerator: 'CmdOrCtrl+.',
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
@@ -302,14 +302,14 @@ if (process.platform !== 'darwin') {
         },
         { type: 'separator' },
         {
-          label: __ ('Developer Tools'),
+          label: i18next.t('menu:Developer Tools'),
           accelerator: 'Alt+CmdOrCtrl+I',
           click: (item, focusedWindow) => {
             focusedWindow.openDevTools({detach: true})
           },
         },
         {
-          label: __('Developer Tools of WebView'),
+          label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
             exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({detach: true})')
           },
@@ -317,11 +317,11 @@ if (process.platform !== 'darwin') {
       ],
     },
     {
-      label: __('Themes'),
+      label: i18next.t('menu:Themes'),
       submenu: [
         { type: 'separator' },
         {
-          label: __('Next Theme'),
+          label: i18next.t('menu:Next Theme'),
           accelerator: 'CmdOrCtrl+T',
           click: (item, focusedWindow) => {
             const all = window.allThemes
@@ -330,7 +330,7 @@ if (process.platform !== 'darwin') {
           },
         },
         {
-          label: __('Previous Theme'),
+          label: i18next.t('menu:Previous Theme'),
           accelerator: 'CmdOrCtrl+Shift+T',
           click: (item, focusedWindow) => {
             const all = window.allThemes
@@ -341,51 +341,51 @@ if (process.platform !== 'darwin') {
       ],
     },
     {
-      label: __('Window'),
+      label: i18next.t('menu:Window'),
       role: 'window',
       submenu: [
         {
-          label: __('Minimize'),
+          label: i18next.t('menu:Minimize'),
           accelerator: 'CmdOrCtrl+M',
           role: 'minimize',
         },
         {
-          label: __('Close'),
+          label: i18next.t('menu:Close'),
           accelerator: 'CmdOrCtrl+W',
           role: 'close',
         },
         { type: 'separator' },
         {
-          label: __('Bring All to Front'),
+          label: i18next.t('menu:Bring All to Front'),
           role: 'front',
         },
       ],
     },
     {
-      label: __('Help'),
+      label: i18next.t('menu:Help'),
       role: 'help',
       submenu: [
         {
-          label: __('Wiki'),
+          label: i18next.t('menu:Wiki'),
           click: () => {
             openExternal('https://github.com/poooi/poi/wiki')
           },
         },
         {
-          label: __('Poi Statistics'),
+          label: i18next.t('menu:Poi Statistics'),
           click: () => {
             openExternal('http://db.kcwiki.org/')
           },
         },
         { type: 'separator' },
         {
-          label: __('Report Issue'),
+          label: i18next.t('menu:Report Issue'),
           click: () => {
             openExternal('https://github.com/poooi/poi/issues')
           },
         },
         {
-          label: __('Search Issues'),
+          label: i18next.t('menu:Search Issues'),
           click: () => {
             openExternal('https://github.com/issues?q=+is%3Aissue+user%3Apoooi')
           },

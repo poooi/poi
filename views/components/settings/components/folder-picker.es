@@ -4,13 +4,12 @@ import { connect } from 'react-redux'
 import fs from 'fs-extra'
 import { get } from 'lodash'
 import { remote } from 'electron'
+import i18next from 'views/env-parts/i18next'
 
 import { isSubdirectory } from 'views/utils/tools'
 
 const { dialog } = remote.require('electron')
-const { config, i18n } = window
-
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 const FolderPickerConfig = connect(() => {
   return (state, props) => ({
@@ -20,11 +19,11 @@ const FolderPickerConfig = connect(() => {
   })
 })(class extends Component {
   static propTypes = {
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     configName: PropTypes.string,
     value: PropTypes.string,
     isFolder: PropTypes.bool,
-    placeholder: PropTypes.string,
+    placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     exclude: PropTypes.arrayOf(PropTypes.string),
     defaultVal: PropTypes.string,
   }
@@ -50,9 +49,9 @@ const FolderPickerConfig = connect(() => {
     callback()
     this.lock = false
   }
-  emitErrorMessage = () => window.toast(__('Selected directory for %s is not valid.', this.props.label), {
+  emitErrorMessage = () => window.toast(i18next.t('setting:DirectoryNotAvailable', { path: this.props.label }), {
     type: 'warning',
-    title: __('Error'),
+    title: i18next.t('setting:Error'),
   })
   setPath = (val) => {
     const { exclude } = this.props

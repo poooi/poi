@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
+import { Trans } from 'react-i18next'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 import {
@@ -14,8 +15,7 @@ import {
 
 import './assets/map-reminder.css'
 
-const {i18n, toast, config} = window
-const __ = i18n.others.__.bind(i18n.others)
+const { toast, config } = window
 const emptyObj = {}
 
 const MapRoutes = connect(
@@ -80,7 +80,7 @@ const ItemStat = connect(
   })
   return (
     <div>
-      {Object.keys(stat).length > 0 && __('Resources: ')}
+      {Object.keys(stat).length > 0 && <Fragment><Trans>Resources</Trans>: </Fragment>}
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
@@ -112,17 +112,17 @@ export default connect(
     maps: fcd.map || emptyObj,
   }))
 )(class MapReminder extends Component {
-  static mapRanks = ['', ` ${__('丙')}`, ` ${__('乙')}`, ` ${__('甲')}`]
+  static mapRanks = ['', <Trans key={3}>丙</Trans>, <Trans key={2}>乙</Trans>, <Trans key={1}>甲</Trans>]
 
   getMapText(mapData) {
     if (!mapData)
-      return __('Not in sortie')
+      return <Trans>Not in sortie</Trans>
     const {rank} = this.props
     const {api_maparea_id, api_no} = mapData[1]
 
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : this.constructor.mapRanks[rank])
-    return `${__('Sortie area: ')}${mapName}`
+    return <Fragment><Trans>Sortie area</Trans>: {mapName}</Fragment>
   }
 
   isFinalAttack = () => {
@@ -138,9 +138,9 @@ export default connect(
     if (e.detail.path === '/kcsapi/api_req_map/start') {
       const isFinalAttack = this.isFinalAttack()
       if (isFinalAttack && config.get("poi.lastbattle.enabled", true)) {
-        toast(__('Possible final stage'), {
+        toast(<Trans>Possible final stage</Trans>, {
           type: 'warning',
-          title: __('Sortie'),
+          title: <Trans>Sortie</Trans>,
         })
       }
     }
@@ -159,10 +159,10 @@ export default connect(
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(`${__('Node: ')}${alphaNode} (${currentNode})`)
+      tooltipMsg.push(<span className='map-tooltip-msg' key='node'><Trans>Node</Trans>: {alphaNode} ({currentNode})</span>)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
-      tooltipMsg.push(`HP: ${mapHp[0]} / ${mapHp[1]}`)
+      tooltipMsg.push(<span className='map-tooltip-msg' key='hp'>HP: {mapHp[0]} / {mapHp[1]}</span>)
     }
     return (
       <OverlayTrigger
@@ -170,7 +170,7 @@ export default connect(
         overlay={
           <Tooltip id='detail-map-info' className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
             <MapRoutes />
-            <div>{tooltipMsg.join('  |  ')}</div>
+            <div>{ tooltipMsg }</div>
             <ItemStat />
           </Tooltip>
         }>

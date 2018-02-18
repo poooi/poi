@@ -4,13 +4,12 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Col, Row, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import ReactMarkdown from 'react-remarkable'
+import { Trans } from 'react-i18next'
 
 import CheckboxLabel from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
 
 import PluginSettingWrapper from './plugin-setting-wrapper'
-
-const __ = window.i18n.setting.__.bind(window.i18n.setting)
 
 class InstalledPlugin extends PureComponent {
   static propTypes = {
@@ -33,31 +32,31 @@ class InstalledPlugin extends PureComponent {
       'cloud-download': !plugin.isUpdating && plugin.isOutdated,
       'check': !plugin.isUpdating && !plugin.isOutdated,
     })
-    const outdatedLabelText = plugin.isUpdating ? `${__('Updating')}` :
-      (plugin.isOutdated ? `Version ${plugin.latestVersion}` : `${__('Latest')}` )
+    const outdatedLabelText = plugin.isUpdating ? <Trans>setting:Updating</Trans> :
+      ( plugin.isOutdated ? `Version ${plugin.latestVersion}` : <Trans>setting:Latest</Trans> )
     let enableBtnText, enableBtnFAname
     switch (PluginManager.getStatusOfPlugin(plugin)) {
     case PluginManager.VALID:
-      enableBtnText = `${__('Disable')}`
+      enableBtnText = <Trans>setting:Disable</Trans>
       enableBtnFAname = 'pause'
       break
     case PluginManager.DISABLED:
-      enableBtnText = `${__('Enable')}`
+      enableBtnText = <Trans>setting:Enable</Trans>
       enableBtnFAname = 'play'
       break
     case PluginManager.NEEDUPDATE:
-      enableBtnText = `${__('Outdated')}`
+      enableBtnText = <Trans>setting:Outdated</Trans>
       enableBtnFAname = 'ban'
       break
     case PluginManager.BROKEN:
-      enableBtnText = `${__('Error')}`
+      enableBtnText = <Trans>setting:Error</Trans>
       enableBtnFAname = 'close'
       break
     default:
       enableBtnText = ''
       enableBtnFAname = ''
     }
-    const removeBtnText = plugin.isUninstalling ? `${__('Removing')}` : `${__('Remove')}`
+    const removeBtnText = plugin.isUninstalling ? <Trans>setting:Removing</Trans> : <Trans>setting:Remove</Trans>
     const removeBtnFAname = plugin.isInstalled ? 'trash' : 'trash-o'
     const panelClass = classnames('plugin-content', {
       'plugin-content-disabled': PluginManager.getStatusOfPlugin(plugin) !== PluginManager.VALID,
@@ -119,7 +118,7 @@ class InstalledPlugin extends PureComponent {
                       settingAvailable?
                         <OverlayTrigger placement='top' overlay={
                           <Tooltip id={`${plugin.id}-set-btn`}>
-                            {__('Settings')}
+                            <Trans>setting:Settings</Trans>
                           </Tooltip>
                         }>
                           <Button
@@ -168,7 +167,7 @@ class InstalledPlugin extends PureComponent {
                             !!plugin.switchPluginPath &&
                             <div>
                               <CheckboxLabel
-                                label={__('Enable auto switch')}
+                                label={<Trans>setting:Enable auto switch</Trans>}
                                 configName={`poi.autoswitch.${plugin.id}`}
                                 defaultVal={true} />
                             </div>
@@ -177,7 +176,7 @@ class InstalledPlugin extends PureComponent {
                             (!plugin.multiWindow && plugin.windowURL) &&
                             <div>
                               <CheckboxLabel
-                                label={__('Keep plugin process running in background (re-enable to apply changes)')}
+                                label={<Trans>setting:Keep plugin process running in background (re-enable to apply changes)</Trans>}
                                 configName={`poi.backgroundProcess.${plugin.id}`}
                                 defaultVal={!plugin.realClose} />
                             </div>

@@ -36,6 +36,7 @@ module.exports = {
     'prefer-const': ['error', {'destructuring': 'all'}],
     'react/prop-types': [0],
     'no-irregular-whitespace': ['error', {'skipStrings': true, 'skipTemplates': true}],
+    'import/no-named-as-default-member': [0],
   },
   'settings': {
     'import/resolver': {

@@ -1,17 +1,16 @@
 import React, { Component, Fragment } from 'react'
-import { debounce } from 'lodash'
+import { Trans } from 'react-i18next'
 
 import './assets/alert.css'
 
 const {$, config} = window
-const __ = window.i18n.others.__.bind(window.i18n.others)
 
 const initState = {
   overflow: false,
   history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
   current: {
     type: 'default',
-    content: __('Waiting for response...'),
+    content: <Trans>Waiting for response</Trans>,
     priority: 0,
     options: {
       dontReserve: true,

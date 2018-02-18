@@ -1,12 +1,12 @@
 {
-  "Waiting for response...": "poi 로딩중",
+  "Waiting for response": "poi 로딩중",
   "Not in sortie": "출격중이 아닙니다",
-  "Sortie area: ": "출격 해역：",
+  "Sortie area": "출격 해역：",
   "failed to save the screenshot": "스크린샷 저장 실패!",
   "screenshot saved to": "스크린샷 저장 위치",
   "Open cache dir": "캐시 폴더 열기",
   "Open screenshot dir": "스크린샷 폴더 열기",
-  "Failed. Perhaps you don't have permission to it.": "실패했습니다. 권한이 있는지 확인해주세요.",
+  "NoPermission": "실패했습니다. 권한이 있는지 확인해주세요.",
   "Volume off": "음소거",
   "Volume on": "음소거 해제",
   "Volume": "볼륨",
@@ -26,20 +26,16 @@
   "Requesting": "요청중",
   "Hit": "데이터 수신",
   "I know": "확인",
-  " Plugins": " 플러그인",
+  "Plugins": "플러그인",
   "Update": "업데이ㅡ",
   "Download latest version": "최신 버전 다운로드",
   "Aliyun": "Aliyun",
-  "Connection failed after %s retry": {
-     "one": "네트워크 에러가 발생했습니다. %s번째 재시도중...",
-     "other": "네트워크 에러가 발생했습니다. %s번째 재시도중..."
-   },
-  "Network error: HTTP %s": "네트워크 에러、HTTP %s",
+  "ConnectionFailedMsg": "네트워크 에러가 발생했습니다. <0>{{count}}</0>번째 재시도중...",
   "Connection failed.": "연결할 수 없습니다.",
-  "The server presented you a cat. (Error code: %s)": "에러코 발견! (에러 코드: %s)",
+  "CatError": "에러코 발견! (에러 코드: <0>{{code}}</0>)",
 
-  "Modernization succeeded! ": "근대화 개수 성공!",
-  "Modernization failed.": "근대화 개수 실패…",
+  "Modernization succeeded": "근대화 개수 성공!",
+  "Modernization failed": "근대화 개수 실패…",
   "Firepower": "화력",
   "Torpedo": "뇌장",
   "AntiAir": "대공",
@@ -48,5 +44,5 @@
   "Website requires login": "Website requires login",
   "Username":"Username",
   "Password":"Password",
-  "RefreshGameDialogTip": false
+  "RefreshGameDialogTip": "Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</1></1>Tip  Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk. Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</1></1>Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk."
 }

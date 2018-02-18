@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
+import { Trans } from 'react-i18next'
 
-const {config, i18n} = window
-const __ = i18n.setting.__.bind(i18n.setting)
+const { config } = window
 
 const ZoomingConfig = connect(() => (
   (state, props) => ({
@@ -33,7 +33,7 @@ const ZoomingConfig = connect(() => (
       <Grid>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-            <Tooltip id='displayconfig-zoom'>{__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
+            <Tooltip id='displayconfig-zoom'><Trans>setting:Zoom level</Trans> <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
           }>
             <FormControl type="range" onInput={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
               min={0.5} max={4.0} step={0.05} defaultValue={this.state.zoomLevel}
@@ -42,7 +42,7 @@ const ZoomingConfig = connect(() => (
           </OverlayTrigger>
         </Col>
         <Col xs={6}>
-          {__('Zoom level')} <strong>{parseInt(this.state.zoomLevel * 100)}%</strong>
+          <Trans>setting:Zoom level</Trans> <strong>{parseInt(this.state.zoomLevel * 100)}%</strong>
         </Col>
       </Grid>
     )
