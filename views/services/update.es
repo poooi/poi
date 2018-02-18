@@ -3,7 +3,7 @@ import { shell, remote } from 'electron'
 import semver from 'semver'
 import Markdown from 'react-remarkable'
 import fetch from 'node-fetch'
-import i18next from 'i18next'
+import i18next from 'views/env-parts/i18next'
 
 const {POI_VERSION, toggleModal, config, language} = window
 

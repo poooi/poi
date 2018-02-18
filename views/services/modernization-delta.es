@@ -1,6 +1,6 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import i18next from 'i18next'
+import i18next from 'views/env-parts/i18next'
 import { Trans } from 'react-i18next'
 
 const { unzip, sum } = require('lodash')

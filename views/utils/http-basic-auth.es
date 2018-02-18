@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron'
 import React, { PureComponent } from 'react'
 import { Modal, Form, FormGroup, Col, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
-import i18next from 'i18next'
+import i18next from 'views/env-parts/i18next'
 
 const BALogin = (usr,pwd) => {
   ipcRenderer.send('basic-auth-info', usr, pwd)

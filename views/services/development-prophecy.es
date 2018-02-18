@@ -1,7 +1,7 @@
 /*
    Item development & improvement prophecy
  */
-import i18next from 'i18next'
+import i18next from 'views/env-parts/i18next'
 
 const {success, warn, getStore} = window
 

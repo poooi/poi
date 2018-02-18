@@ -4,7 +4,7 @@ import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
-import i18next from 'i18next'
+import i18next from 'views/env-parts/i18next'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'

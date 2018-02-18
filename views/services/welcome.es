@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Checkbox } from 'react-bootstrap'
-import i18next from 'i18next'
+import i18next from 'views/env-parts/i18next'
 
 const { config, POI_VERSION } = window
 
