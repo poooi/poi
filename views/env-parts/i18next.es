@@ -69,7 +69,11 @@ i18next.use(reactI18nextModule)
         try {
           const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
           const cnt = readJSONSync(p)
-          cnt[key] = fallbackValue
+          let val = fallbackValue
+          if (val.startWith(ns)) {
+            val = val.split(/:(.+)/)[1]
+          }
+          cnt[key] = val
           writeFileSync(p, formatJson(cnt, {
             type: 'space',
             size: 2,
