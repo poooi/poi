@@ -1,7 +1,7 @@
 module.exports = {
   presets: [
     [
-      "env",
+      "@babel/preset-env",
       {
         targets: {
           electron: "1.8",
@@ -9,8 +9,8 @@ module.exports = {
         loose: true,
       },
     ],
-    "stage-0",
-    "react",
+    "@babel/preset-stage-0",
+    "@babel/preset-react",
   ],
   plugins: [
     "transform-export-extensions",

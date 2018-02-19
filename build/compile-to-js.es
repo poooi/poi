@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import Promise, { promisify } from 'bluebird'
 import { log } from '../lib/utils'
-import { transformFile } from 'babel-core'
+import { transformFile } from '@babel/core'
 import BabelConfig from '../babel.config'
 import walk from 'walk'
 

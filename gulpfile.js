@@ -1,4 +1,4 @@
-require('babel-register')(require('./babel.config'))
+require('@babel/register')(require('./babel.config'))
 const gulp = require('gulp')
 const path = require('path')
 
