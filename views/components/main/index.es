@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Tab, Tabs, Panel } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 
 import defaultLayout from './default-layout'
 import { layoutResizeObserver } from 'views/services/layout'
@@ -23,6 +23,7 @@ import './assets/main.css'
 
 const { config } = window
 
+@translate(['main'])
 @connect((state, props) => ({
   layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
   editable: get(state, 'config.poi.layouteditable', false),
@@ -50,6 +51,7 @@ export class reactClass extends Component {
   }
 
   render() {
+    const { t } = this.props
     return (
       <div className='main-panel-content' ref={ref => { this.mainpane = ref }}>
         <ResponsiveReactGridLayout
@@ -76,12 +78,12 @@ export class reactClass extends Component {
           <Panel className="combined-panels panel-col" key="combined-panels">
             <Panel.Body>
               <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs" className="dock-panel-tabs">
-                <Tab eventKey={1} title={<Trans>main:Docking</Trans>}>
+                <Tab eventKey={1} title={t('main:Docking')}>
                   <div className="ndock-panel flex">
                     <RepairPanel />
                   </div>
                 </Tab>
-                <Tab eventKey={2} title={<Trans>main:Construction</Trans>}>
+                <Tab eventKey={2} title={t('main:Construction')}>
                   <div className="kdock-panel flex">
                     <ConstructionPanel />
                   </div>

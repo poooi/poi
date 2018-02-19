@@ -6,7 +6,7 @@ import { createSelector } from 'reselect'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { memoize } from 'lodash'
 import FontAwesome from 'react-fontawesome'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { getItemData } from './slotitems-data'
@@ -43,10 +43,10 @@ const landbaseSlotitemsDataSelectorFactory = memoize(landbaseId =>
   }))
 )
 
-export const Slotitems = connect(
+export const Slotitems = translate(['resources'])(connect(
   (state, { shipId }) =>
     slotitemsDataSelectorFactory(shipId)(state)
-)(function ({api_maxeq, equipsData, exslotUnlocked}) {
+)(function ({ api_maxeq, equipsData, exslotUnlocked, t }) {
   return (
     <div className="slotitems">
       {equipsData &&
@@ -60,7 +60,7 @@ export const Slotitems = connect(
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
               <div>
-                {$equip.api_name ? <Trans i18nKey={`resources:${$equip.api_name}`}>{$equip.api_name}</Trans> : '??'}
+                {$equip.api_name ? t(`resources:${$equip.api_name}`) : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
                 }
@@ -101,12 +101,12 @@ export const Slotitems = connect(
       }
     </div>
   )
-})
+}))
 
-export const LandbaseSlotitems = connect(
+export const LandbaseSlotitems = translate(['resources'])(connect(
   (state, { landbaseId }) =>
     landbaseSlotitemsDataSelectorFactory(landbaseId)(state)
-)(function ({api_maxeq, api_cond, api_state, equipsData, isMini}) {
+)(function ({ api_maxeq, api_cond, api_state, equipsData, isMini, t }) {
   return (
     <div className="slotitems">
       {equipsData &&
@@ -135,7 +135,7 @@ export const LandbaseSlotitems = connect(
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {$equip.api_name ? <Trans i18nKey={`resources:${$equip.api_name}`}>{$equip.api_name}</Trans> : '??'}
+                {$equip.api_name ? t(`resources:${$equip.api_name}`) : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
                 }
@@ -166,4 +166,4 @@ export const LandbaseSlotitems = connect(
       }
     </div>
   )
-})
+}))

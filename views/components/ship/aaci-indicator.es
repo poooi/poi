@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
@@ -37,12 +37,12 @@ const maxAACIShotdownSelectorFactory = memoize(shipId =>
   })
 )
 
-export const AACIIndicator = connect(
+export const AACIIndicator = translate(['main'])(connect(
   (state, { shipId }) => ({
     AACIs: AACISelectorFactory(shipId)(state) || [],
     maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),
   })
-)(({ AACIs, maxShotdown, shipId }) => {
+)(({ AACIs, maxShotdown, shipId, t }) => {
   const currentMax = Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
 
   const tooltip = AACIs.length &&
@@ -52,20 +52,20 @@ export const AACIIndicator = connect(
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
             <span className="info-tooltip-item">
-              <Trans i18nKey='main:AACIType'>{{ count: id }}</Trans>
+              {t('main:AACIType', { count: id })}
               <span>{ get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : '' }</span>
             </span>
             <span>
-              <Trans i18nKey='main:Shot down'>{{ count: AACITable[id].fixed }}</Trans>
+              {t('main:Shot down', { count: AACITable[id].fixed })}
             </span>
             <span style={{ marginLeft: '2ex'}}>
-              <Trans i18nKey='main:Modifier'>{{ count: AACITable[id].modifier }}</Trans>
+              {t('main:Modifier', { count: AACITable[id].modifier })}
             </span>
           </div>
         )
       }
       {
-        currentMax < maxShotdown && <span><Trans>main:Max shot down not reached</Trans></span>
+        currentMax < maxShotdown && <span>{t('main:Max shot down not reached')}</span>
       }
     </>
   )
@@ -74,10 +74,10 @@ export const AACIIndicator = connect(
     AACIs.length ?
       <span className="ship-aaci">
         <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle='warning'><Trans>main:AACI</Trans></Label>
+          <Label bsStyle='warning'>{t('main:AACI')}</Label>
         </OverlayTrigger>
       </span>
       : <span />
   )
-})
+}))
 

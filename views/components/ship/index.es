@@ -6,7 +6,7 @@ import { Panel, Button, ButtonGroup, Alert } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 
 const { dispatch } = window
 
@@ -98,10 +98,10 @@ const FleetShipView = connect(
   </>
 )
 
-const LBView = connect(state => ({
+const LBView = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
-}))(({areaIds, mapareas}) => (
+}))(({areaIds, mapareas, t}) => (
   <div className="ship-details">
     {
       areaIds.map((id, i) => (
@@ -113,7 +113,7 @@ const LBView = connect(state => ({
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-                [{id}] {mapareas[id] ? <Trans i18nKey={`resources:${ mapareas[id].api_name }`}>{ mapareas[id].api_name }</Trans> : ''}
+                [{id}] {mapareas[id] ? t(`resources:${ mapareas[id].api_name }`) : ''}
               </Alert>
               <SquardRow
                 key={i}
@@ -124,7 +124,7 @@ const LBView = connect(state => ({
       ))
     }
   </div>
-))
+)))
 
 
 @connect((state, props) => ({

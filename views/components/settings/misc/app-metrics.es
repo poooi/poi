@@ -2,8 +2,9 @@ import React, { PureComponent } from 'react'
 import { remote } from 'electron'
 import { Button } from 'react-bootstrap'
 import { sortBy, round, sumBy } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
+@translate(['setting'])
 export class AppMetrics extends PureComponent {
   constructor(props) {
     super(props)
@@ -65,14 +66,15 @@ export class AppMetrics extends PureComponent {
   }
 
   render() {
+    const { t } = this.props
     const { metrics, active, total, pidmap } = this.state
     return (
       <>
         <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
           {
             active
-              ? <span><Trans>setting:Monitor on</Trans></span>
-              : <span><Trans>setting:Monitor off</Trans></span>
+              ? <span>{t('setting:Monitor on')}</span>
+              : <span>{t('setting:Monitor off')}</span>
           }
         </Button>
         {
@@ -108,7 +110,7 @@ export class AppMetrics extends PureComponent {
             }
             <div className='metric-row metric-total'>
               <span>
-                <Trans>setting:TOTAL</Trans>
+                {t('setting:TOTAL')}
               </span>
               <span />
               <span>

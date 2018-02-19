@@ -3,7 +3,7 @@ import React from 'react'
 import { Button, Label, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 
 import './assets/landbase-button.css'
 
@@ -14,11 +14,11 @@ const resupplyLabel = <Label bsStyle='warning' className='airbase-state-label'><
 const noActionLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:No action</Trans></Label>
 const readyLabel = <Label bsStyle='success' className='airbase-state-label'><Trans>main:Ready</Trans></Label>
 
-export const LandbaseButton = connect(state => ({
+export const LandbaseButton = translate(['resources'])(connect(state => ({
   sortieStatus: get(state, 'sortie.sortieStatus', []),
   airbase: get(state, 'info.airbase', []),
   mapareas: get(state, 'const.$mapareas', {}),
-}))(({ fleetId, activeFleetId, onClick, disabled, airbase, sortieStatus, mapareas, isMini }) => {
+}))(({ fleetId, activeFleetId, onClick, disabled, airbase, sortieStatus, mapareas, isMini, t }) => {
   const airbaseProps = airbase.map(a => a.api_area_id).filter(a => mapareas[a])
     .sort((a, b) => a - b)
     .filter((a, i, arr) => a != arr[i - 1])
@@ -62,7 +62,7 @@ export const LandbaseButton = connect(state => ({
         const { mapId, needSupply, squardState, squardCond, noAction } = airbase
         return (
           <div key={i}>
-            <div>[{mapId}] {mapareas[mapId] ? <Trans i18nKey={`resources:${ mapareas[mapId].api_name }`}>{ mapareas[mapId].api_name }</Trans> : ''}</div>
+            <div>[{mapId}] {mapareas[mapId] ? t(`resources:${ mapareas[mapId].api_name }`) : ''}</div>
             { squardCond > 1 && fatiguedLabel }
             { squardState < 1 && emptyLabel }
             { squardState > 1 && relocateLabel }
@@ -93,4 +93,4 @@ export const LandbaseButton = connect(state => ({
       </Button>
     </OverlayTrigger>
   )
-})
+}))

@@ -7,7 +7,7 @@ import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize } from 'lodash'
 import FontAwesome from 'react-fontawesome'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import { Slotitems } from './slotitems'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
@@ -50,6 +50,7 @@ const shipRowDataSelectorFactory = memoize((shipId) =>
   }))
 )
 
+@translate(['main', 'resources'])
 @connect((state, {shipId}) => shipRowDataSelectorFactory(shipId)(state))
 export class ShipRow extends Component {
   static propTypes = {
@@ -70,7 +71,7 @@ export class ShipRow extends Component {
   }
 
   render() {
-    const { ship, $ship, $shipTypes, labelStatus, enableAvatar, compact } = this.props
+    const { ship, $ship, $shipTypes, labelStatus, enableAvatar, compact, t } = this.props
     const hideShipName = enableAvatar && compact
     const shipInfoClass = classNames("ship-info", {
       "ship-avatar-padding": enableAvatar,
@@ -101,7 +102,7 @@ export class ShipRow extends Component {
             <Tooltip id={`miniship-exp-${ship.api_id}`}>
               <div className="ship-tooltip-info">
                 <div>
-                  {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
+                  {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
                 </div>
                 <div>
                   Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
@@ -118,12 +119,12 @@ export class ShipRow extends Component {
               <span className='ship-type'>
                 {
                   $shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name ?
-                    <Trans i18nKey={`resources:${$shipTypes[$ship.api_stype].api_name}`}>{$shipTypes[$ship.api_stype].api_name}</Trans>
+                    t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
                     : '??'
                 }
               </span>
               <span className="ship-speed">
-                <Trans>main:{getSpeedLabel(ship.api_soku)}</Trans>
+                {t(`main:${getSpeedLabel(ship.api_soku)}`)}
               </span>
               <AACIIndicator shipId={ship.api_id} />
               <OASWIndicator shipId={ship.api_id} />
@@ -132,7 +133,7 @@ export class ShipRow extends Component {
               !hideShipName && (
                 <>
                   <span className="ship-name">
-                    {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
+                    {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
                   </span>
                   <span className="ship-exp">
                     Next. {(ship.api_exp || [])[1]}
@@ -147,7 +148,7 @@ export class ShipRow extends Component {
           overlay={
             ship.api_ndock_time > 0 ?
               <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
-                <Trans>main:Repair Time</Trans>: {resolveTime(ship.api_ndock_time/1000)}
+                {t('main:Repair Time')}: {resolveTime(ship.api_ndock_time/1000)}
               </Tooltip>
               : <span />
           }

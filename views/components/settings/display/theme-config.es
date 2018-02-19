@@ -9,13 +9,14 @@ import { get } from 'lodash'
 import { FolderPickerConfig } from '../components/folder-picker'
 import { fileUrl } from 'views/utils/tools'
 import { avatarWorker } from 'views/services/worker'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const { config, toggleModal, EXROOT, APPDATA_PATH } = window
 const { openItem } = shell
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
 
+@translate(['setting'])
 @connect((state, props) => ({
   themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.theme', 'paperdark'),
@@ -52,7 +53,7 @@ export class ThemeConfig extends Component {
       fs.ensureFileSync(d)
       return openItem(d)
     } catch (e) {
-      return toggleModalWithDelay(<Trans>setting:Edit custom CSS</Trans>, <Trans>NoPermission</Trans>)
+      return toggleModalWithDelay(this.props.t('setting:Edit custom CSS'), this.props.t('NoPermission'))
     }
   }
   handleDeleteAvatarCache = async e => {
@@ -61,7 +62,7 @@ export class ThemeConfig extends Component {
       await fs.remove(d)
       avatarWorker.port.postMessage([ 'Initialize', true, window.APPDATA_PATH ])
     } catch (e) {
-      return toggleModalWithDelay(<Trans>setting:Delete avatar cache</Trans>, <Trans>NoPermission</Trans>)
+      return toggleModalWithDelay(this.props.t('setting:Delete avatar cache'), this.props.t('NoPermission'))
     }
   }
   handleSetSVGIcon = () => {
@@ -90,6 +91,7 @@ export class ThemeConfig extends Component {
     })
   }
   render() {
+    const { t } = this.props
     return (
       <Grid>
         <Col xs={6}>
@@ -105,13 +107,13 @@ export class ThemeConfig extends Component {
         </Col>
         <Col xs={6}>
           <FormControl componentClass="select" value={this.props.vibrant} onChange={this.handleSetVibrancy}>
-            <option key={0} value={0}><Trans>setting:Default</Trans></option>
-            { ['darwin', 'win32'].includes(process.platform) && <option key={1} value={1}><Trans>setting:Vibrance</Trans></option> }
-            <option key={2} value={2}><Trans>setting:Custom background</Trans></option>
+            <option key={0} value={0}>{t('setting:Default')}</option>
+            { ['darwin', 'win32'].includes(process.platform) && <option key={1} value={1}>{t('setting:Vibrance')}</option> }
+            <option key={2} value={2}>{t('setting:Custom background')}</option>
           </FormControl>
         </Col>
         <Col xs={6} style={{ marginTop: '1ex' }}>
-          <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block><Trans>setting:Edit custom CSS</Trans></Button>
+          <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{t('setting:Edit custom CSS')}</Button>
         </Col>
         <Col xs={6} style={{ marginTop: '1ex' }}>
           <Overlay
@@ -131,37 +133,37 @@ export class ThemeConfig extends Component {
             {
               this.props.vibrant === 2 &&
               <FolderPickerConfig
-                label={<Trans>setting:Custom background</Trans>}
+                label={t('setting:Custom background')}
                 configName="poi.background"
                 defaultVal={''}
                 isFolder={false}
-                placeholder={<Trans>setting:No background image selected</Trans>}
+                placeholder={t('setting:No background image selected')}
               />
             }
           </div>
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.enableSVGIcon} onChange={this.handleSetSVGIcon}>
-            <Trans>setting:Use SVG Icon</Trans>
+            {t('setting:Use SVG Icon')}
           </Checkbox>
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.enableTransition} onChange={this.handleSetTransition}>
-            <Trans>setting:Enable Smooth Transition</Trans>
+            {t('setting:Enable Smooth Transition')}
           </Checkbox>
         </Col>
         <Col xs={12}>
           <Checkbox checked={this.props.useGridMenu} onChange={this.handleSetGridMenu}>
-            <Trans>setting:Use Gridded Plugin Menu</Trans>
+            {t('setting:Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
         <Col xs={6}>
           <Checkbox checked={this.props.enableAvatar} onChange={this.handleSetAvatar}>
-            <Trans>setting:Show shipgirl avatar</Trans>
+            {t('setting:Show shipgirl avatar')}
           </Checkbox>
         </Col>
         <Col xs={6}>
-          <Button bsStyle='primary' onClick={this.handleDeleteAvatarCache} block><Trans>setting:Delete avatar cache</Trans></Button>
+          <Button bsStyle='primary' onClick={this.handleDeleteAvatarCache} block>{t('setting:Delete avatar cache')}</Button>
         </Col>
       </Grid>
     )

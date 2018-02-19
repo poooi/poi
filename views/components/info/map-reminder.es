@@ -3,7 +3,7 @@ import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 import {
@@ -67,11 +67,11 @@ const MapRoutes = connect(
   )
 })
 
-const ItemStat = connect(
+const ItemStat = translate()(connect(
   (state) => ({
     itemHistoty: get(state, 'sortie.itemHistory'),
   })
-)(({itemHistoty}) => {
+)(({ itemHistoty, t }) => {
   const stat = {}
   each(itemHistoty, (item = {}) => {
     each(Object.keys(item), itemKey =>
@@ -80,7 +80,7 @@ const ItemStat = connect(
   })
   return (
     <div>
-      {Object.keys(stat).length > 0 && <><Trans>Resources</Trans>: </>}
+      {Object.keys(stat).length > 0 && `${t('Resources')}: `}
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
@@ -93,9 +93,10 @@ const ItemStat = connect(
       }
     </div>
   )
-})
+}))
 
 // Map Reminder
+@translate()
 @connect(createSelector([
   sortieMapDataSelector,
   sortieMapHpSelector,
@@ -111,23 +112,22 @@ const ItemStat = connect(
   maps: fcd.map || emptyObj,
 })))
 export class PoiMapReminder extends Component {
-  static mapRanks = ['', <Trans key={3}>丙</Trans>, <Trans key={2}>乙</Trans>, <Trans key={1}>甲</Trans>]
-  getMapText(mapData) {
+  getMapText(mapData, mapRanks) {
     if (!mapData)
-      return <Trans>Not in sortie</Trans>
+      return this.props.t('Not in sortie')
     const {rank} = this.props
     const {api_maparea_id, api_no} = mapData[1]
 
     const mapName = `${api_maparea_id}-${api_no}` +
-      (rank == null ? '' : this.constructor.mapRanks[rank])
-    return <><Trans>Sortie area</Trans>: {mapName}</>
+      (rank == null ? '' : mapRanks[rank])
+    return <>t('Sortie area'): {mapName}</>
   }
 
   isFinalAttack = () => {
     const {mapHp, rank, mapId} = this.props
     if (!mapHp || mapHp[0] == 0)
       return false
-    const finalHpPostfix = ['', '丙', '乙', '甲'][rank] || ''
+    const finalHpPostfix = ['丁', '丙', '乙', '甲'][rank] || ''
     const finalHp = this.props.finalHps[`${mapId}${finalHpPostfix}`] || 0
     return finalHp >= mapHp[0]
   }
@@ -136,9 +136,9 @@ export class PoiMapReminder extends Component {
     if (e.detail.path === '/kcsapi/api_req_map/start') {
       const isFinalAttack = this.isFinalAttack()
       if (isFinalAttack && config.get("poi.lastbattle.enabled", true)) {
-        toast(<Trans>Possible final stage</Trans>, {
+        toast(this.props.t('Possible final stage'), {
           type: 'warning',
-          title: <Trans>Sortie</Trans>,
+          title: this.props.t('Sortie'),
         })
       }
     }
@@ -153,11 +153,11 @@ export class PoiMapReminder extends Component {
   }
 
   render() {
-    const {mapHp, mapData, currentNode, mapId, maps} = this.props
+    const { mapHp, mapData, currentNode, mapId, maps, t } = this.props
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(<span className='map-tooltip-msg' key='node'><Trans>Node</Trans>: {alphaNode} ({currentNode})</span>)
+      tooltipMsg.push(<span className='map-tooltip-msg' key='node'>{t('Node')}: {alphaNode} ({currentNode})</span>)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
       tooltipMsg.push(<span className='map-tooltip-msg' key='hp'>HP: {mapHp[0]} / {mapHp[1]}</span>)
@@ -179,7 +179,7 @@ export class PoiMapReminder extends Component {
           }
           <div className='alert alert-default'>
             <span id='map-reminder-area'>
-              {this.getMapText(mapData)}
+              {this.getMapText(mapData, [this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
             </span>
           </div>
         </div>

@@ -7,7 +7,7 @@ import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { isEqual, omit, get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import * as settings from './components/settings'
 import * as mainview from './components/main'
@@ -87,6 +87,7 @@ class TabContentsUnion extends Component {
 
 let lockedTab = false
 
+@translate(['setting', 'others'])
 @connect((state) => ({
   plugins: state.plugins,
   doubleTabbed: get(state.config, 'poi.tabarea.double', false),
@@ -266,6 +267,7 @@ export class ControlledTabArea extends PureComponent {
     )
   }
   render() {
+    const { t } = this.props
     const navClass = classNames('top-nav', {
       'grid-menu': this.props.useGridMenu,
     })
@@ -273,10 +275,10 @@ export class ControlledTabArea extends PureComponent {
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const activePluginName = activePlugin.packageName
-    const defaultPluginTitle = <span><FontAwesome name='sitemap' /> <Trans>Plugins</Trans></span>
+    const defaultPluginTitle = <span><FontAwesome name='sitemap' /> {t('others:Plugins')}</span>
     const pluginDropdownContents = this.props.plugins.length == 0 ? (
       <MenuItem key={1002} disabled>
-        <Trans>setting:Install plugins in settings</Trans>
+        {t('setting:Install plugins in settings')}
       </MenuItem>
     ) : (
       this.listedPlugins().map((plugin, index) =>

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { FormControl, Button } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
+@translate(['setting'])
 export class PluginSettingWrapper extends Component {
   static propTypes = {
     plugin: PropTypes.object,
@@ -28,20 +29,20 @@ export class PluginSettingWrapper extends Component {
 
   render() {
     const { hasError, error, info } = this.state
-    const {plugin} = this.props
+    const { plugin, t } = this.props
     if (hasError) {
       const code = [error.stack, info.componentStack].join('\n')
       return (
         <div>
-          <h1><Trans i18nKey='PluginErrTitle'>{{ name: plugin.name }}</Trans></h1>
-          <p><Trans>PluginErrorMsg</Trans></p>
+          <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
+          <p>{t('PluginErrorMsg')}</p>
           <FormControl
             componentClass="textarea"
             readOnly
             value={code}
             style={{ height: '10em' }}
           />
-          <Button bsStyle="primary" onClick={this.handleCopy}><Trans>Copy to clipboard</Trans></Button>
+          <Button bsStyle="primary" onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
         </div>
       )
     }

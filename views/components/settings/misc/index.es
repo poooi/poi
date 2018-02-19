@@ -8,7 +8,7 @@ import { CheckboxLabelConfig } from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import { DownloadProgress } from './download-progress'
 import { AppMetrics } from './app-metrics'
@@ -31,11 +31,13 @@ const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
   ? `${url}&s=160`
   : url
 
+@translate(['setting'])
 @connect(state => ({
   layout: get(state, 'config.poi.layout', 'horizontal'),
 }))
 export class Misc extends Component {
   render() {
+    const { t } = this.props
     return (
       <div id='poi-others' className='poi-others'>
         <Grid>
@@ -46,7 +48,7 @@ export class Misc extends Component {
         <Grid>
           <Row>
             <Col xs={6}>
-              <Divider text={<><Trans>setting:Current version</Trans>: v{POI_VERSION}</>} />
+              <Divider text={`${t('setting:Current version')}: v${POI_VERSION}`} />
             </Col>
             <Col xs={6}>
               <DownloadProgress />
@@ -55,18 +57,16 @@ export class Misc extends Component {
         </Grid>
         <Grid>
           <Col xs={6}>
-            <Button onClick={checkUpdate}><Trans>setting:Check Update</Trans></Button>
+            <Button onClick={checkUpdate}>{t('setting:Check Update')}</Button>
           </Col>
           <Col xs={6}>
             <CheckboxLabelConfig
-              label={<Trans>setting:Check update of beta version</Trans>}
+              label={t('setting:Check update of beta version')}
               configName="poi.betaChannel"
               defaultVal={false} />
           </Col>
           <Col xs={12}>
-            <Trans i18nKey='setting:poi description'>
-              <p>poi is an open source Kancolle browser based on Electron {{version: process.versions.electron}} . poi behaves the same as Chrome and does not modify game data, packets or implement bots/macros. The main poi provides basic functionalities and is complemented by a variety of plugins.</p>
-            </Trans>
+            <p>{t('setting:poi description', {version: process.versions.electron})}</p>
             <div className="desc-buttons">
               {
                 ['zh-CN', 'zh-TW'].includes(window.language) &&
@@ -82,10 +82,10 @@ export class Misc extends Component {
                   </Button>
               }
               <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.org')}>
-                <FA name="database" /> <Trans>setting:Database</Trans>
+                <FA name="database" /> {t('setting:Database')}
               </Button>
               <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}>
-                <FA name="question" /><Trans>setting:Wiki</Trans>
+                <FA name="question" /> {t('setting:Wiki')}
               </Button>
               <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}>
                 <FA name="github" /> GitHub
@@ -96,7 +96,7 @@ export class Misc extends Component {
             </div>
           </Col>
         </Grid>
-        <Divider text={<Trans>setting:Data version</Trans>} />
+        <Divider text={t('setting:Data version')} />
         <Grid>
           <Col xs={12}>
             <FCD />
@@ -105,7 +105,7 @@ export class Misc extends Component {
             <WctfDB />
           </Col>
         </Grid>
-        <Divider text={<Trans>setting:Performance Monitor</Trans>} />
+        <Divider text={t('setting:Performance Monitor')} />
         <Col xs={12}>
           <AppMetrics />
         </Col>

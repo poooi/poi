@@ -1,8 +1,7 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Button, ButtonGroup, FormControl, InputGroup, FormGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
+import { translate } from 'react-i18next'
 
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
@@ -15,6 +14,7 @@ const wvStatus = {
 
 import '../assets/navigator-bar.css'
 
+@translate(['setting'])
 export class NavigatorBar extends React.Component {
   constructor() {
     super()
@@ -97,7 +97,8 @@ export class NavigatorBar extends React.Component {
   }
 
   render() {
-    const {status} = this.state
+    const { status } = this.state
+    const { t } = this.props
 
     let statusIcon
     if (status === wvStatus.Loading) {
@@ -122,7 +123,7 @@ export class NavigatorBar extends React.Component {
           <FormGroup>
             <InputGroup bsSize='small' style={{width: '100%'}}>
               <FormControl type='text'
-                placeholder={i18next.t('setting:Input address')}
+                placeholder={t('setting:Input address')}
                 className={statusIcon? 'navigator-status' : 'navigator-no-status'}
                 value={this.state.url}
                 onChange={this.onChangeUrl}
@@ -139,7 +140,7 @@ export class NavigatorBar extends React.Component {
             <Button bsSize='small' bsStyle='warning' onClick={gameRefreshPage} onContextMenu={gameReloadFlash}><FontAwesome name='refresh' /></Button>
           </ButtonGroup>
           <ButtonGroup style={{marginLeft: 5}}>
-            <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'><Trans>setting:Set as homepage</Trans></Tooltip>}>
+            <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'>{t('setting:Set as homepage')}</Tooltip>}>
               <Button bsSize='small' onClick={this.onClickHomepage} onContextMenu={this.onRightClickHomepage}><FontAwesome name='bookmark' /></Button>
             </OverlayTrigger>
           </ButtonGroup>

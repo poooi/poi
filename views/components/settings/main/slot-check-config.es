@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, FormControl, FormGroup, InputGroup, ControlLabel, Collapse, Well } from 'react-bootstrap'
 import { get } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const { config } = window
 
+@translate(['setting'])
 @connect((state, props) => ({
   type: props.type,
   enable: get(state.config, `poi.mapStartCheck.${props.type}.enable`, false),
@@ -65,13 +66,14 @@ export class SlotCheckConfig extends Component {
     this.setState({showInput: false})
   }
   render() {
-    let toggleBtnStyle = this.props.enable ? 'success' : 'default'
+    const { t, enable } = this.props
+    let toggleBtnStyle = enable ? 'success' : 'default'
     if (this.state.showInput) {
       toggleBtnStyle = 'danger'
     }
-    let toggleBtnTxt = this.props.enable ? 'ON' : 'OFF'
+    let toggleBtnTxt = enable ? 'ON' : 'OFF'
     if (this.state.showInput) {
-      toggleBtnTxt = <Trans>setting:Disable</Trans>
+      toggleBtnTxt = t('setting:Disable')
     }
     const toggleBtn = <Button onClick={this.handleToggleInput} bsSize='xs'
       bsStyle={toggleBtnStyle} style={{verticalAlign: 'text-bottom'}}>
@@ -80,18 +82,18 @@ export class SlotCheckConfig extends Component {
     const inputValid = this.CheckValid(this.state.value)
     const submitBtn = <Button type='submit'
       bsStyle={inputValid ? 'success' : 'danger'}>
-      {inputValid ? <Trans>setting:Save</Trans> : <Trans>setting:Disable</Trans>}
+      {inputValid ? t('setting:Save') : t('setting:Disable')}
     </Button>
     return (
       <div style={{margin: '5px 15px'}}>
         <form onSubmit={this.handleSubmit}>
           <div>
-            <Trans>setting:{`${this.props.type} slots`}</Trans> {toggleBtn}
+            {t(`setting:${this.props.type} slots`)} {toggleBtn}
           </div>
           <Collapse in={this.state.showInput}>
             <Well>
               <FormGroup>
-                <ControlLabel><Trans>setting:{`Warn if the number of free ${this.props.type} slots is less than`}</Trans></ControlLabel>
+                <ControlLabel>{t(`setting:Warn if the number of free ${this.props.type} slots is less than`)}</ControlLabel>
                 <InputGroup bsSize='small'>
                   <FormControl type="text"
                     bsStyle={inputValid ? 'success' : 'error'}

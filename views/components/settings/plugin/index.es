@@ -7,7 +7,7 @@ import { Grid, Col, Row, Checkbox, Radio, Alert, Button, ButtonGroup, Collapse, 
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import FileDrop from 'react-file-dropzone'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
@@ -22,6 +22,7 @@ import '../assets/plugins.css'
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
 
+@translate(['setting'])
 @connect((state, props) => ({
   plugins: state.plugins,
   mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
@@ -301,6 +302,7 @@ export class PluginConfig extends Component {
     })
   }
   render() {
+    const { t } = this.props
     const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
     const mirrors = PluginManager.getMirrors()
     const updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
@@ -309,15 +311,15 @@ export class PluginConfig extends Component {
     switch (this.state.manuallyInstallStatus) {
     case 1:
       installStatusbsStyle = 'info'
-      installStatusText = <><Trans>setting:Installing</Trans>...</>
+      installStatusText = <>t('setting:Installing')...</>
       break
     case 2:
       installStatusbsStyle = 'success'
-      installStatusText = <Trans>setting:Plugins are installed successfully</Trans>
+      installStatusText = t('setting:Plugins are installed successfully')
       break
     case 3:
       installStatusbsStyle = 'danger'
-      installStatusText = <Trans>setting:InstallFailedMsg</Trans>
+      installStatusText = t('setting:InstallFailedMsg')
       break
     default:
       installStatusbsStyle = 'warning'
@@ -331,15 +333,15 @@ export class PluginConfig extends Component {
           onDrop={this.onDropInstallFromFile}
           acceptType="application/gzip, application/x-gzip"
         >
-          <Trans>setting:Drop plugin tarballs here to install</Trans>
+          {t('setting:Drop plugin tarballs here to install')}
         </FileDrop>
         <Grid className='correct-container'>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
               {
                 window.isSafeMode &&
-                <Panel header={<Trans>setting:Safe Mode</Trans>} bsStyle='warning'>
-                  <Panel.Body><Trans>setting:Poi is running in safe mode, plugins are not enabled automatically</Trans></Panel.Body>
+                <Panel header={t('setting:Safe Mode')} bsStyle='warning'>
+                  <Panel.Body>{t('setting:Poi is running in safe mode, plugins are not enabled automatically')}</Panel.Body>
                 </Panel>
               }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
@@ -349,7 +351,7 @@ export class PluginConfig extends Component {
                   className='control-button col-xs-3'
                 >
                   <FontAwesome name='refresh' spin={this.state.checkingUpdate} />
-                  <span> {<Trans>setting:Check Update</Trans>}</span>
+                  <span> {t('setting:Check Update')}</span>
                 </Button>
                 <Button
                   onClick={this.handleUpdateAll}
@@ -363,7 +365,7 @@ export class PluginConfig extends Component {
                     name={updateStatusFAname}
                     pulse={this.state.updatingAll}
                   />
-                  <span> <Trans>setting:Update all</Trans></span>
+                  <span> {t('setting:Update all')}</span>
                 </Button>
                 <Button
                   onClick={this.handleInstallAll}
@@ -376,14 +378,14 @@ export class PluginConfig extends Component {
                     name={installStatusFAname}
                     pulse={this.state.installingAll}
                   />
-                  <span> <Trans>setting:Install all</Trans></span>
+                  <span> {t('setting:Install all')}</span>
                 </Button>
                 <Button
                   onClick={this.handleAdvancedShow}
                   className='control-button col-xs-3'
                 >
                   <FontAwesome name="gear" />
-                  <span> <Trans>setting:Advanced</Trans></span>
+                  <span> {t('setting:Advanced')}</span>
                   <FontAwesome name={advanceFAname} />
                 </Button>
               </ButtonGroup>
@@ -397,12 +399,12 @@ export class PluginConfig extends Component {
                     <Row>
                       <Col xs={12}>
                         <CheckboxLabelConfig
-                          label={<Trans>setting:Switch to Plugin Automatically</Trans>}
+                          label={t('setting:Switch to Plugin Automatically')}
                           configName="poi.autoswitch.enabled"
                           defaultVal={true}
                         />
                         <CheckboxLabelConfig
-                          label={<Trans>setting:Enable autoswitch for main panel</Trans>}
+                          label={t('setting:Enable autoswitch for main panel')}
                           configName="poi.autoswitch.main"
                           defaultVal={true}
                         />
@@ -413,7 +415,7 @@ export class PluginConfig extends Component {
                         <Row>
                           <Col xs={12}>
                             <label className='control-label'>
-                              <Trans>setting:Select npm server</Trans>
+                              {t('setting:Select npm server')}
                             </label>
                           </Col>
                         </Row>
@@ -448,7 +450,7 @@ export class PluginConfig extends Component {
                         <Row>
                           <Col xs={12}>
                             <label className='control-label'>
-                              <Trans>setting:Others</Trans>
+                              {t('setting:Others')}
                             </label>
                           </Col>
                         </Row>
@@ -457,7 +459,7 @@ export class PluginConfig extends Component {
                             checked={this.props.proxy || false}
                             onChange={this.handleEnableProxy}
                           >
-                            <Trans>setting:Connect to npm server through proxy</Trans>
+                            {t('setting:Connect to npm server through proxy')}
                           </Checkbox>
                         </div>
                         <div>
@@ -465,7 +467,7 @@ export class PluginConfig extends Component {
                             checked={this.props.autoUpdate || false}
                             onChange={this.handleEnableAutoUpdate}
                           >
-                            <Trans>setting:Automatically update plugins</Trans>
+                            {t('setting:Automatically update plugins')}
                           </Checkbox>
                         </div>
                         <div>
@@ -473,19 +475,19 @@ export class PluginConfig extends Component {
                             checked={this.props.betaCheck || false}
                             onChange={this.handleEnableBetaPluginCheck}
                           >
-                            <Trans>setting:Developer option check update of beta version</Trans>
+                            {t('setting:Developer option check update of beta version')}
                           </Checkbox>
                         </div>
                         <Row>
                           <ButtonGroup className='plugin-buttongroup'>
                             <Button className='col-xs-4' onClick={this.onSelectOpenFolder}>
-                              <Trans>setting:Open plugin folder</Trans>
+                              {t('setting:Open plugin folder')}
                             </Button>
                             <Button className='col-xs-4' onClick={this.onSelectOpenSite}>
-                              <Trans>setting:Search for plugins</Trans>
+                              {t('setting:Search for plugins')}
                             </Button>
                             <Button className='col-xs-4' onClick={this.handleGracefulRepair}>
-                              <Trans>setting:Repair plugins</Trans>
+                              {t('setting:Repair plugins')}
                             </Button>
                           </ButtonGroup>
                         </Row>
@@ -515,7 +517,7 @@ export class PluginConfig extends Component {
             </Col>
             <Col xs={12}>
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
-                <Trans>setting:Drop plugin packages here to install it, or click here to select them</Trans>
+                {t('setting:Drop plugin packages here to install it, or click here to select them')}
               </div>
             </Col>
           </Row>

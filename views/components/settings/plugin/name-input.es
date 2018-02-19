@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { FormControl, ControlLabel, InputGroup, FormGroup, Button } from 'react-bootstrap'
 import { trim } from 'lodash'
 import validate from 'validate-npm-package-name'
-import { Trans } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
+import { translate } from 'react-i18next'
 
+@translate(['setting'])
 export class NameInput extends PureComponent {
   static propTypes = {
     handleManuallyInstall: PropTypes.func,
@@ -20,19 +20,20 @@ export class NameInput extends PureComponent {
   }
   render() {
     const { manuallyInstallPackage } = this.state
+    const { t } = this.props
     const validPackageName = manuallyInstallPackage.length > 0 &&
       /^poi-plugin-.*$/.test(manuallyInstallPackage) &&
       validate(manuallyInstallPackage).validForNewPackages
     return (
       <FormGroup>
-        <ControlLabel><Trans>setting:Install directly from npm</Trans></ControlLabel>
+        <ControlLabel>{t('setting:Install directly from npm')}</ControlLabel>
         <InputGroup bsSize='small'>
           <FormControl type="text"
             value={this.state.manuallyInstallPackage}
             onChange={this.changeInstalledPackage}
-            label={<Trans>setting:Install directly from npm</Trans>}
+            label={t('setting:Install directly from npm')}
             disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-            placeholder={i18next.t('setting:Input plugin package name') + '...'}>
+            placeholder={t('setting:Input plugin package name') + '...'}>
           </FormControl>
           <InputGroup.Button>
             <Button bsStyle='primary'
@@ -40,7 +41,7 @@ export class NameInput extends PureComponent {
                       this.props.npmWorking ||
                       !validPackageName}
               onClick={this.props.handleManuallyInstall.bind(null, this.state.manuallyInstallPackage)}>
-              <Trans>setting:Install</Trans>
+              {t('setting:Install')}
             </Button>
           </InputGroup.Button>
         </InputGroup>

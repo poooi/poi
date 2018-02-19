@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { isEqual, get } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const texts = [
   ['Retreated'],
@@ -26,6 +26,7 @@ const initState = {
   mapname: [],
 }
 
+@translate(['main'])
 @connect(state => ({
   shipTag: state.fcd.shiptag || initState,
 }))
@@ -34,7 +35,7 @@ export class StatusLabel extends React.Component {
     nextProps.label !== this.props.label || !isEqual(this.props.shipTag, nextProps.shipTag)
   )
   render() {
-    const i = this.props.label
+    const { label: i, t} = this.props
     const {color, mapname, fleetname} = this.props.shipTag
     const { language } = window
     if (i != null && 0 <= i) {
@@ -43,8 +44,8 @@ export class StatusLabel extends React.Component {
           <Tooltip id={`statuslabel-status-${i}`}>
             {
               i > 2
-                ? <>{ get(fleetname, [language, i - 3], <Trans>main:Ship tag</Trans>) } - {mapname[i - 3] || i - 2}</>
-                : <Trans>main:{ texts[i] }</Trans>
+                ? `${ get(fleetname, [language, i - 3], t('main:Ship tag')) } - ${mapname[i - 3] || i - 2}`
+                : t(`main:${ texts[i] }`)
             }
           </Tooltip>
         }>

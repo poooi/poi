@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 
 import './assets/alert.css'
 
@@ -10,7 +10,7 @@ const initState = {
   history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
   current: {
     type: 'default',
-    content: <Trans>Waiting for response</Trans>,
+    content: i18next.t('Waiting for response'),
     priority: 0,
     options: {
       dontReserve: true,
