@@ -4,6 +4,7 @@ module.exports = {
     "add-module-exports",
     "dynamic-import-node",
     "closure-elimination",
+    "transform-decorators",
   ],
   ignore: false,
   only: /.es$/,
