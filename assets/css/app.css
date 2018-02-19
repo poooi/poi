@@ -178,13 +178,17 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li .fa {
   left: 100%;
 }
 
+#top-nav {
+  display: flex;
+}
+
 #top-nav > li {
-  width: 26%;
+  flex-basis: 26%;
 }
 
 #top-nav > li.dropdown,
 #top-nav > li.tab-narrow {
-  width: 11%;
+  flex-basis: 11%;
 }
 
 #electron-app-title-bar {
