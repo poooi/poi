@@ -6,7 +6,7 @@ module.exports = {
         targets: {
           electron: "1.8",
         },
-        spec: true,
+        loose: true,
       },
     ],
     "stage-0",
