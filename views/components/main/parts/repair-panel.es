@@ -8,7 +8,6 @@ import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -71,10 +70,10 @@ export default translate(['main'])(connect(
             'default'
     )
   }
-  static basicNotifyConfig = {
+  basicNotifyConfig = {
     type: 'repair',
-    title: i18next.t('main:Docking'),
-    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:repair completed')}`,
+    title: this.props.t('main:Docking'),
+    message: (names) => `${joinString(names, ', ')} ${this.props.t('main:repair completed')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
     preemptTime: 60,
   }
@@ -138,7 +137,7 @@ export default translate(['main'])(connect(
                       completeTime={completeTime}
                       getLabelStyle={this.getLabelStyle}
                       getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                        ...this.constructor.basicNotifyConfig,
+                        ...this.basicNotifyConfig,
                         args: dockName,
                         completeTime: completeTime,
                       }}

@@ -38,10 +38,10 @@ const FleetStatus = translate(['main'])(connect((state, {fleetId}) => {
     fleetShipsData,
     fleetInBattle,
   }
-})(({ fleetInBattle, fleetShipsData }) => {
+})(({ fleetInBattle, fleetShipsData, t }) => {
   if (fleetInBattle) {
     return (
-      <span className="expedition-name text-success">{this.props.t('main:In Sortie')}</span>
+      <span className="expedition-name text-success">{t('main:In Sortie')}</span>
     )
   }
 
@@ -50,12 +50,12 @@ const FleetStatus = translate(['main'])(connect((state, {fleetId}) => {
   )
   if (notSuppliedShips.length) {
     return (
-      <span className="expedition-name text-warning">{this.props.t('main:Resupply Needed')}</span>
+      <span className="expedition-name text-warning">{t('main:Resupply Needed')}</span>
     )
   }
 
   return (
-    <span className="expedition-name">{this.props.t('main:Ready')}</span>
+    <span className="expedition-name">{t('main:Ready')}</span>
   )
 }))
 
