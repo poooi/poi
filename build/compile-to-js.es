@@ -38,7 +38,7 @@ const compileToJs = (appDir, dontRemove) => {
             let tgt
             try {
               const result = await promisify(transformFile)(srcPath, {
-                presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
+                presets: presets.map(p => require.resolve(p)),
                 plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
               })
               tgt = result.code
