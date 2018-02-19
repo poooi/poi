@@ -54,6 +54,9 @@ const isBuiltinHighAngleMount = equip => [122, 130, 135, 172].includes(equip.api
 // 191: QF 2ポンド8連装ポンポン砲
 const isCDMG = equip => [131, 173, 191].includes(equip.api_slotitem_id)
 
+// 274: 12cm30連装噴進砲改二
+const isRocketK2 = equip => equip.api_slotitem_id === 274
+
 // avoid modifying this structure directly, use "declareAACI" instead.
 export const AACITable = {}
 
@@ -91,6 +94,11 @@ const isYuraK2 = shipIdIs(488)
 const isFumitsukiK2 = shipIdIs(548)
 const isUIT25 = shipIdIs(539)
 const isI504 = shipIdIs(530)
+const isTastutaK2 = shipIdIs(478)
+const isIseK = shipIdIs(82)
+const isHyuuGaK = shipIdIs(88)
+const isMusashiK = shipIdIs(148)
+// const isMusashiK2 = shipIdIs(546)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -375,6 +383,50 @@ declareAACI({
   shipValid: validAny(isUIT25, isI504),
   equipsValid: validAll(
     hasSome(validAll(isAAGun, validNot(isCDMG))),
+  ),
+})
+
+declareAACI({
+  name: ['龍田改二'],
+  id: 24,
+  fixed: 4,
+  modifier: 1.25,
+  shipValid: isTastutaK2,
+  equipsValid: validAll(
+    hasSome(validAll(isAAGun, validNot(isCDMG))),
+    hasSome(isHighAngleMount),
+  ),
+})
+
+declareAACI({
+  name: ['伊勢改', '日向改'],
+  id: 25,
+  fixed: 7,
+  modifier: 1.55,
+  shipValid: validAny(
+    isIseK,
+    isHyuuGaK,
+  ),
+  equipsValid: validAll(
+    hasSome(isRocketK2),
+    hasSome(isAARadar),
+    hasSome(isType3Shell),
+  ),
+})
+
+declareAACI({
+  name: ['伊勢改', '日向改', '武蔵改'],
+  id: 28,
+  fixed: 4,
+  modifier: 1.4,
+  shipValid: validAny(
+    isIseK,
+    isHyuuGaK,
+    isMusashiK,
+  ),
+  equipsValid: validAll(
+    hasSome(isRocketK2),
+    hasSome(isAARadar),
   ),
 })
 
