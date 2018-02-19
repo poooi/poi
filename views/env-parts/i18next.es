@@ -60,12 +60,12 @@ i18next.use(reactI18nextModule)
       escapeValue: false,
     },
     returnObjects: true, // allow returning objects
-    debug: dbg.extra('i18next').isEnabled(),
+    debug: dbg && dbg.extra('i18next').isEnabled(),
     react: {
       wait: false,
       nsMode: true,
     },
-    saveMissing: dbg.extra('i18next-save-missing').isEnabled(),
+    saveMissing: dbg && dbg.extra('i18next-save-missing').isEnabled(),
     missingKeyHandler: function (lng, ns, key, fallbackValue) {
       if (!ns || ns == '') {
         ns = 'others'
