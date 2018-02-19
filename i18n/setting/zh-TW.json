@@ -5,7 +5,7 @@
   "Proxy": "網路代理",
   "Plugins": "擴展程式",
   "About": "關於 poi",
-  "poi description": "<0>poi 基於 Electron <1>{{version}}</1> 和 React.js 開發，是一個開源的跨平臺艦隊 Collection 瀏覽器。poi 的遊戲行為與 Chrome 一致，原則上不提供任何影響收發包的功能。poi 僅提供基本瀏覽器功能，擴充功能請等待擴展程式開發。</0>",
+  "poi description": "poi 基於 Electron {{version}} 和 React.js 開發，是一個開源的跨平臺艦隊 Collection 瀏覽器。poi 的遊戲行為與 Chrome 一致，原則上不提供任何影響收發包的功能。poi 僅提供基本瀏覽器功能，擴充功能請等待擴展程式開發。",
   "Database": "掉落資料統計",
   "Wiki": "幫助與指南",
   "Proxy setting": "代理設定",
