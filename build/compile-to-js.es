@@ -38,12 +38,13 @@ const compileToJs = (appDir, dontRemove) => {
             let tgt
             try {
               const result = await promisify(transformFile)(srcPath, {
-                presets: presets.map(p => require.resolve(p)),
+                presets,
                 plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
               })
               tgt = result.code
             } catch (e) {
               log(`Compiling ${srcPath} failed: ${e}`)
+              log(e.stack)
               return
             }
             await fs.writeFile(tgtPath, tgt)
