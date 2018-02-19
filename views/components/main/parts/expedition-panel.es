@@ -30,7 +30,7 @@ const fleetInBattleSelector = createSelector(fleetInBattleSelectorFactory,
   (inBattle) => inBattle
 )
 
-const FleetStatus = connect((state, {fleetId}) => {
+const FleetStatus = translate(['main'])(connect((state, {fleetId}) => {
   const fleetShipsData = fleetShipsDataSelectorFactory(fleetId)(state)
   const fleetInBattle = fleetInBattleSelector(fleetId)(state)
   return {
@@ -57,7 +57,7 @@ const FleetStatus = connect((state, {fleetId}) => {
   return (
     <span className="expedition-name">{this.props.t('main:Ready')}</span>
   )
-})
+}))
 
 export default translate(['main'])(connect(
   (state) => {
