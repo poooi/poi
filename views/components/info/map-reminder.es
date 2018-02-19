@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
@@ -80,7 +80,7 @@ const ItemStat = connect(
   })
   return (
     <div>
-      {Object.keys(stat).length > 0 && <Fragment><Trans>Resources</Trans>: </Fragment>}
+      {Object.keys(stat).length > 0 && <><Trans>Resources</Trans>: </>}
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
@@ -120,7 +120,7 @@ export class PoiMapReminder extends Component {
 
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : this.constructor.mapRanks[rank])
-    return <Fragment><Trans>Sortie area</Trans>: {mapName}</Fragment>
+    return <><Trans>Sortie area</Trans>: {mapName}</>
   }
 
   isFinalAttack = () => {

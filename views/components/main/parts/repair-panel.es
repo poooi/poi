@@ -1,5 +1,5 @@
 const { ROOT } = window
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { join as joinString, range, get } from 'lodash'
@@ -87,7 +87,7 @@ export class RepairPanel extends Component {
     // by indexifying it into an object, it becomes easier to use.
     const ships = indexify(inRepairShips)
     return (
-      <Fragment>
+      <>
         {
           range(0, 4).map((i) => {
             const emptyRepair = {
@@ -114,7 +114,7 @@ export class RepairPanel extends Component {
               <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} style={{ flexBasis: `${100 / dimension}%` }}>
                 {
                   enableAvatar &&
-                  <Fragment>
+                  <>
                     {
                       dock.api_state > 0
                         ? <Avatar
@@ -124,7 +124,7 @@ export class RepairPanel extends Component {
                         />
                         : <EmptyDock state={dock.api_state} />
                     }
-                  </Fragment>
+                  </>
                 }
                 <span className="ndock-name">{dockName}</span>
 
@@ -150,7 +150,7 @@ export class RepairPanel extends Component {
             )
           })
         }
-      </Fragment>
+      </>
     )
   }
 }

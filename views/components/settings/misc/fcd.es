@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Button, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
@@ -109,7 +109,7 @@ export class FCD extends Component {
     const { updating } = this.state
     const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
-      <Fragment>
+      <>
         <Button
           onClick={this.updateData('reload')}
           disabled={updating}
@@ -127,7 +127,7 @@ export class FCD extends Component {
               : null
           ))
         }
-      </Fragment>
+      </>
     )
   }
 }

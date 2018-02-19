@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import classNames from 'classnames'
@@ -130,14 +130,14 @@ export class ShipRow extends Component {
             </div>
             {
               !hideShipName && (
-                <Fragment>
+                <>
                   <span className="ship-name">
                     {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
                   </span>
                   <span className="ship-exp">
                     Next. {(ship.api_exp || [])[1]}
                   </span>
-                </Fragment>
+                </>
               )
             }
           </div>

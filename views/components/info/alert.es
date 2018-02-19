@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Trans } from 'react-i18next'
 
 import './assets/alert.css'
@@ -157,14 +157,14 @@ export const PoiAlert = class poiAlert extends Component {
             <span id='alert-area' ref={ref => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
-                  <Fragment>
-                    <span style={{marginRight: 50}}>
-                      {this.state.current.content}
-                    </span>
-                    <span style={{marginRight: 50}}>
-                      {this.state.current.content}
-                    </span>
-                  </Fragment>
+                  <>
+                  <span style={{marginRight: 50}}>
+                    {this.state.current.content}
+                  </span>
+                  <span style={{marginRight: 50}}>
+                    {this.state.current.content}
+                  </span>
+                  </>
                   : this.state.current.content
               }
             </span>

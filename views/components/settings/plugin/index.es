@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import { shell, remote } from 'electron'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, Checkbox, Radio, Alert, Button, ButtonGroup, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
@@ -309,7 +309,7 @@ export class PluginConfig extends Component {
     switch (this.state.manuallyInstallStatus) {
     case 1:
       installStatusbsStyle = 'info'
-      installStatusText = <Fragment><Trans>setting:Installing</Trans>...</Fragment>
+      installStatusText = <><Trans>setting:Installing</Trans>...</>
       break
     case 2:
       installStatusbsStyle = 'success'

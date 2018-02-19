@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup, Alert } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -76,7 +76,7 @@ const FleetShipView = connect(
   (state, {fleetId}) =>
     fleetShipViewDataSelectorFactory(fleetId)(state)
 )(({ fleetId, shipsId, enableAvatar, width }) =>
-  <Fragment>
+  <>
     <div className='fleet-name'>
       <TopAlert
         fleetId={fleetId}
@@ -95,7 +95,7 @@ const FleetShipView = connect(
         )
       }
     </div>
-  </Fragment>
+  </>
 )
 
 const LBView = connect(state => ({

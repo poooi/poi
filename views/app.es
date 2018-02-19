@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
@@ -61,7 +61,7 @@ class Poi extends Component {
   render() {
     const { isHorizontal, reversed } = this.props
     return (
-      <Fragment>
+      <>
         <CustomCssInjector />
         {
           config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
@@ -82,7 +82,7 @@ class Poi extends Component {
         <ModalTrigger />
         <Toastr />
         <BasicAuth />
-      </Fragment>
+      </>
     )
   }
 }

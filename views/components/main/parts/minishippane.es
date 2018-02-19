@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { MiniShipRow, MiniSquardRow } from './minishipitem'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
@@ -19,7 +19,7 @@ export const PaneBodyMini = connect(() => {
     width: miniShipRowWidthSelector(state),
   })
 })(({ fleetId, shipsId, enableAvatar, width }) =>
-  <Fragment>
+  <>
     <div className='fleet-name'>
       <TopAlert
         fleetId={fleetId}
@@ -38,7 +38,7 @@ export const PaneBodyMini = connect(() => {
         )
       }
     </div>
-  </Fragment>
+  </>
 )
 
 export const LBViewMini = connect(state => ({

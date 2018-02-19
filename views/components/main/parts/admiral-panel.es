@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { createSelector } from 'reselect'
@@ -59,18 +59,18 @@ const ExpContent = connect(
     exp: get(state, 'info.basic.api_experience', 0),
   })
 )(({ level, exp }) => level >= 0
-  ? <Fragment>
-    { level < 120 &&
-      <div className='info-tooltip-entry'>
-        <span className='info-tooltip-item'><Trans>main:Next</Trans></span>
-        <span>{totalExp[level] - exp}</span>
-      </div>
-    }
+  ? <>
+  { level < 120 &&
     <div className='info-tooltip-entry'>
-      <span className='info-tooltip-item'><Trans>main:Total Exp</Trans></span>
-      <span>{exp}</span>
+      <span className='info-tooltip-item'><Trans>main:Next</Trans></span>
+      <span>{totalExp[level] - exp}</span>
     </div>
-  </Fragment>
+  }
+  <div className='info-tooltip-entry'>
+    <span className='info-tooltip-item'><Trans>main:Total Exp</Trans></span>
+    <span>{exp}</span>
+  </div>
+  </>
   : <span />
 )
 

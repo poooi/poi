@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
@@ -47,7 +47,7 @@ export const AACIIndicator = connect(
 
   const tooltip = AACIs.length &&
   (
-    <Fragment>
+    <>
       {
         AACIs.map(id =>
           <div className="info-tooltip-entry" key={id}>
@@ -67,7 +67,7 @@ export const AACIIndicator = connect(
       {
         currentMax < maxShotdown && <span><Trans>main:Max shot down not reached</Trans></span>
       }
-    </Fragment>
+    </>
   )
 
   return(

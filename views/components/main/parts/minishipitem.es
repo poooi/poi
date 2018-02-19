@@ -2,7 +2,7 @@ import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
@@ -174,21 +174,21 @@ export class MiniShipRow extends Component {
                         Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
                       </div>
                     </div>
-                  ) : <Fragment>Next. {(ship.api_exp || [])[1]}</Fragment>
+                  ) : <>Next. {(ship.api_exp || [])[1]}</>
                 }
               </Tooltip>
             }>
               <div className={shipInfoClass}>
                 {
                   !hideShipName && (
-                    <Fragment>
+                    <>
                       <span className="ship-name" style={labelStatusStyle}>
                         {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
                       </span>
                       <span className="ship-lv-text top-space" style={labelStatusStyle}>
                         Lv. {ship.api_lv || '??'}
                       </span>
-                    </Fragment>
+                    </>
                   )
                 }
               </div>

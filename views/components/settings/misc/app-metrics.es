@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent } from 'react'
 import { remote } from 'electron'
 import { Button } from 'react-bootstrap'
 import { sortBy, round, sumBy } from 'lodash'
@@ -67,7 +67,7 @@ export class AppMetrics extends PureComponent {
   render() {
     const { metrics, active, total, pidmap } = this.state
     return (
-      <Fragment>
+      <>
         <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
           {
             active
@@ -126,7 +126,7 @@ export class AppMetrics extends PureComponent {
             </div>
           </div>
         }
-      </Fragment>
+      </>
     )
   }
 }

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _, { get } from 'lodash'
 import path from 'path'
@@ -184,7 +184,7 @@ export class WctfDB extends Component {
   render() {
     const { updating } = this.state
     return (
-      <Fragment>
+      <>
         <Button
           bsSize="small"
           onClick={this.handleRefesh}
@@ -194,7 +194,7 @@ export class WctfDB extends Component {
           <FA name="refresh" spin={updating} />
         </Button>
         <Trans>setting:Who Calls The Fleet Database</Trans>: <Label bsStyle="primary">{this.props.version}</Label>
-      </Fragment>
+      </>
     )
   }
 }

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { shell, remote } from 'electron'
 import { Divider } from '../components/divider'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
@@ -46,7 +46,7 @@ export class Misc extends Component {
         <Grid>
           <Row>
             <Col xs={6}>
-              <Divider text={<Fragment><Trans>setting:Current version</Trans>: v{POI_VERSION}</Fragment>} />
+              <Divider text={<><Trans>setting:Current version</Trans>: v{POI_VERSION}</>} />
             </Col>
             <Col xs={6}>
               <DownloadProgress />

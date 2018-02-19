@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
@@ -43,7 +43,7 @@ export class StatusLabel extends React.Component {
           <Tooltip id={`statuslabel-status-${i}`}>
             {
               i > 2
-                ? <Fragment>{ get(fleetname, [language, i - 3], <Trans>main:Ship tag</Trans>) } - {mapname[i - 3] || i - 2}</Fragment>
+                ? <>{ get(fleetname, [language, i - 3], <Trans>main:Ship tag</Trans>) } - {mapname[i - 3] || i - 2}</>
                 : <Trans>main:{ texts[i] }</Trans>
             }
           </Tooltip>

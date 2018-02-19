@@ -1,7 +1,7 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { join as joinString, range, get } from 'lodash'
 import FA from 'react-fontawesome'
@@ -63,7 +63,7 @@ export class ConstructionPanel extends Component {
   render() {
     const {constructions, canNotify, enableAvatar, dimension} = this.props
     return (
-      <Fragment>
+      <>
         {
           range(4).map((i) => {
             const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
@@ -90,13 +90,13 @@ export class ConstructionPanel extends Component {
                 <div className="panel-item kdock-item" style={{ flexBasis: `${100 / dimension}%` }}>
                   {
                     enableAvatar &&
-                    <Fragment>
+                    <>
                       {
                         dock.api_state > 0
                           ? <Avatar height={20} mstId={get(constructions, [i, 'api_created_ship_id'])} />
                           : <EmptyDock state={dock.api_state} />
                       }
-                    </Fragment>
+                    </>
                   }
                   <span className="kdock-name">{dockName}</span>
                   <CountdownNotifierLabel
@@ -115,7 +115,7 @@ export class ConstructionPanel extends Component {
             )
           })
         }
-      </Fragment>
+      </>
     )
   }
 }

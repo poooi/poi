@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
 import { Panel, Label, OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
 import { createSelector } from 'reselect'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Trans } from 'react-i18next'
 import { escapeI18nKey } from 'views/utils/tools'
 
@@ -111,7 +111,7 @@ function getStyleByPercent(percent) {
 
 function getToolTip(record) {
   return (
-    <Fragment>
+    <>
       {
         values(record).map((subgoal, idx) =>
           (subgoal && typeof subgoal === 'object')
@@ -119,7 +119,7 @@ function getToolTip(record) {
             : undefined
         )
       }
-    </Fragment>
+    </>
   )
 }
 
