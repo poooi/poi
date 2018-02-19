@@ -96,24 +96,22 @@ const ItemStat = connect(
 })
 
 // Map Reminder
-export default connect(
-  createSelector([
-    sortieMapDataSelector,
-    sortieMapHpSelector,
-    currentNodeSelector,
-    fcdSelector,
-  ], (mapData, mapHp, currentNode, fcd={}) => ({
-    mapId: get(mapData, '0.api_id'),
-    rank: get(mapData, '0.api_eventmap.api_selected_rank'),
-    currentNode,
-    mapData,
-    mapHp,
-    finalHps: fcd.maphp || emptyObj,
-    maps: fcd.map || emptyObj,
-  }))
-)(class MapReminder extends Component {
+@connect(createSelector([
+  sortieMapDataSelector,
+  sortieMapHpSelector,
+  currentNodeSelector,
+  fcdSelector,
+], (mapData, mapHp, currentNode, fcd={}) => ({
+  mapId: get(mapData, '0.api_id'),
+  rank: get(mapData, '0.api_eventmap.api_selected_rank'),
+  currentNode,
+  mapData,
+  mapHp,
+  finalHps: fcd.maphp || emptyObj,
+  maps: fcd.map || emptyObj,
+})))
+export class PoiMapReminder extends Component {
   static mapRanks = ['', <Trans key={3}>丙</Trans>, <Trans key={2}>乙</Trans>, <Trans key={1}>甲</Trans>]
-
   getMapText(mapData) {
     if (!mapData)
       return <Trans>Not in sortie</Trans>
@@ -188,4 +186,4 @@ export default connect(
       </OverlayTrigger>
     )
   }
-})
+}

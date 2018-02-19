@@ -5,7 +5,7 @@ import { Col, Row, Button, ButtonGroup, OverlayTrigger, Tooltip, Panel } from 'r
 import ReactMarkdown from 'react-remarkable'
 import { Trans } from 'react-i18next'
 
-class UninstalledPlugin extends PureComponent {
+export class UninstalledPlugin extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,
     installing: PropTypes.bool,
@@ -64,5 +64,3 @@ class UninstalledPlugin extends PureComponent {
     )
   }
 }
-
-export default UninstalledPlugin

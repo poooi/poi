@@ -5,7 +5,7 @@ import WebView from 'react-electron-web-view'
 import { get, debounce } from 'lodash'
 
 import { PoiAlert } from './components/info/alert'
-import PoiMapReminder from './components/info/map-reminder'
+import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { layoutResizeObserver } from 'views/services/layout'
 
@@ -19,12 +19,13 @@ const getTitlebarHeight = () => {
   }
 }
 
-export const KanGameWrapper = connect((state, props) => ({
+@connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', -1),
   zoomLevel: get(state, 'config.poi.zoomLevel', 1),
   layout: get(state, 'config.poi.layout', 'horizontal'),
   muted: get(state, 'config.poi.content.muted', false),
-}))(class kanGameWrapper extends Component {
+}))
+export class KanGameWrapper extends Component {
   state = {
     windowWidth: window.innerWidth,
     windowHeight: window.innerHeight,
@@ -122,4 +123,4 @@ export const KanGameWrapper = connect((state, props) => ({
       </kan-game>
     )
   }
-})
+}

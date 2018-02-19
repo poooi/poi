@@ -7,13 +7,12 @@ import { Trans } from 'react-i18next'
 
 const { config } = window
 
-const SlotCheckConfig = connect(() => {
-  return (state, props) => ({
-    type: props.type,
-    enable: get(state.config, `poi.mapStartCheck.${props.type}.enable`, false),
-    minFreeSlots: get(state.config, `poi.mapStartCheck.${props.type}.minFreeSlots`, ''),
-  })
-})(class SlotCheckConfig extends Component {
+@connect((state, props) => ({
+  type: props.type,
+  enable: get(state.config, `poi.mapStartCheck.${props.type}.enable`, false),
+  minFreeSlots: get(state.config, `poi.mapStartCheck.${props.type}.minFreeSlots`, ''),
+}))
+export class SlotCheckConfig extends Component {
   static propTypes = {
     minFreeSlots: PropTypes.oneOfType([
       PropTypes.string,
@@ -109,6 +108,4 @@ const SlotCheckConfig = connect(() => {
       </div>
     )
   }
-})
-
-export default SlotCheckConfig
+}

@@ -37,7 +37,7 @@ const maxAACIShotdownSelectorFactory = memoize(shipId =>
   })
 )
 
-const AACIIndicator = connect(
+export const AACIIndicator = connect(
   (state, { shipId }) => ({
     AACIs: AACISelectorFactory(shipId)(state) || [],
     maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),
@@ -81,4 +81,3 @@ const AACIIndicator = connect(
   )
 })
 
-export default AACIIndicator

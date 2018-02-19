@@ -3,7 +3,7 @@ import { FormControl, Button } from 'react-bootstrap'
 import { clipboard } from 'electron'
 import { Trans } from 'react-i18next'
 
-class PluginWrap extends Component {
+export class PluginWrap extends Component {
   state = {
     hasError: false,
     error: null,
@@ -56,5 +56,3 @@ class PluginWrap extends Component {
     )
   }
 }
-
-export default PluginWrap

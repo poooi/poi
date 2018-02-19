@@ -7,13 +7,12 @@ import { Trans } from 'react-i18next'
 
 const { config } = window
 
-const LayoutConfig = connect(() => (
-  (state, props) => ({
-    layout: get(state.config, 'poi.layout', 'horizontal'),
-    enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
-    reversed: get(state.config, 'poi.reverseLayout', false),
-  })
-))(class LayoutConfig extends Component {
+@connect((state, props) => ({
+  layout: get(state.config, 'poi.layout', 'horizontal'),
+  enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
+  reversed: get(state.config, 'poi.reverseLayout', false),
+}))
+export class LayoutConfig extends Component {
   static propTypes = {
     enableDoubleTabbed: PropTypes.bool,
     layout: PropTypes.string,
@@ -60,6 +59,4 @@ const LayoutConfig = connect(() => (
       </Grid>
     )
   }
-})
-
-export default LayoutConfig
+}

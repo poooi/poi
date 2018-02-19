@@ -6,7 +6,7 @@ import validate from 'validate-npm-package-name'
 import { Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
-export default class NameInput extends PureComponent {
+export class NameInput extends PureComponent {
   static propTypes = {
     handleManuallyInstall: PropTypes.func,
     manuallyInstallStatus: PropTypes.number,

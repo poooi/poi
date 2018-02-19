@@ -26,9 +26,10 @@ const initState = {
   mapname: [],
 }
 
-const StatusLabel = connect(state => ({
+@connect(state => ({
   shipTag: state.fcd.shiptag || initState,
-}))(class statusLabel extends React.Component {
+}))
+export class StatusLabel extends React.Component {
   shouldComponentUpdate = (nextProps, nextState) => (
     nextProps.label !== this.props.label || !isEqual(this.props.shipTag, nextProps.shipTag)
   )
@@ -59,6 +60,4 @@ const StatusLabel = connect(state => ({
       return <Label bsStyle="default" style={{opacity: 0}}></Label>
     }
   }
-})
-
-export default StatusLabel
+}

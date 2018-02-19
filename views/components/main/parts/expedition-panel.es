@@ -59,21 +59,21 @@ const FleetStatus = translate(['main'])(connect((state, {fleetId}) => {
   )
 }))
 
-export default translate(['main'])(connect(
-  (state) => {
-    const fleetsExpedition = fleetsExpeditionSelector(state)
-    const fleetNames = fleetsNamesSelector(state)
-    const $expeditions = state.const.$missions
-    const notifyBefore = get(configSelector(state), 'poi.notify.expedition.value', 60)
-    return {
-      fleetsExpedition,
-      fleetNames,
-      $expeditions,
-      notifyBefore,
-      canNotify: state.misc.canNotify,
-    }
+@translate(['main'])
+@connect(state => {
+  const fleetsExpedition = fleetsExpeditionSelector(state)
+  const fleetNames = fleetsNamesSelector(state)
+  const $expeditions = state.const.$missions
+  const notifyBefore = get(configSelector(state), 'poi.notify.expedition.value', 60)
+  return {
+    fleetsExpedition,
+    fleetNames,
+    $expeditions,
+    notifyBefore,
+    canNotify: state.misc.canNotify,
   }
-)(class ExpeditionPanel extends Component {
+})
+export class ExpeditionPanel extends Component {
   shouldComponentUpdate = (nextProps, nextState) => {
     return !isEqual(nextProps, this.props)
   }
@@ -140,4 +140,4 @@ export default translate(['main'])(connect(
       </Panel>
     )
   }
-}))
+}

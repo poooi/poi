@@ -9,22 +9,23 @@ import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { Trans } from 'react-i18next'
 
-import settings from './components/settings'
-import mainview from './components/main'
-import shipview from './components/ship'
-import PluginWrap from './plugin-wrapper'
+import * as settings from './components/settings'
+import * as mainview from './components/main'
+import * as shipview from './components/ship'
+import { PluginWrap } from './plugin-wrapper'
 import { isInGame } from 'views/utils/game-utils'
 
 const { config, dispatch } = window
 
-const TabContentsUnion = connect(
+@connect(
   (state) => ({
     enableTransition: get(state.config, 'poi.transition.enable', true),
   }),
   undefined,
   undefined,
   {pure: true, withRef: true}
-)(class tabContentsUnion extends Component {
+)
+class TabContentsUnion extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     children: PropTypes.node.isRequired,
@@ -82,21 +83,20 @@ const TabContentsUnion = connect(
       </div>
     )
   }
-})
+}
 
 let lockedTab = false
 
-export default connect(
-  (state) => ({
-    plugins: state.plugins,
-    doubleTabbed: get(state.config, 'poi.tabarea.double', false),
-    useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
-    activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
-    activePluginName: get(state.ui, 'activePluginName', ''),
-    mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
-    editable: get(state.config, 'poi.layouteditable', false),
-  })
-)(class ControlledTabArea extends PureComponent {
+@connect((state) => ({
+  plugins: state.plugins,
+  doubleTabbed: get(state.config, 'poi.tabarea.double', false),
+  useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
+  activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
+  activePluginName: get(state.ui, 'activePluginName', ''),
+  mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+  editable: get(state.config, 'poi.layouteditable', false),
+}))
+export class ControlledTabArea extends PureComponent {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
     doubleTabbed: PropTypes.bool.isRequired,
@@ -336,14 +336,14 @@ export default connect(
           }
         }}
         activeTab={this.props.activeMainTab}>
-        <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
+        <div id={mainview.name} className="MainView poi-app-tabpane" key='mainView'>
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
+        <div id={shipview.name} className="ShipView poi-app-tabpane" key='shipView'>
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
         { pluginContents }
-        <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
+        <div id={settings.name} className="SettingsView poi-app-tabpane" key='settings'>
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </div>
       </TabContentsUnion>
@@ -357,13 +357,13 @@ export default connect(
           }
         }}
         activeTab={this.props.activeMainTab}>
-        <div id={mainview.name} className={classNames(mainview.name, "poi-app-tabpane")} key='mainView'>
+        <div id={mainview.name} className="MainView poi-app-tabpane" key='mainView'>
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={shipview.name} className={classNames(shipview.name, "poi-app-tabpane")} key='shipView'>
+        <div id={shipview.name} className="ShipView poi-app-tabpane" key='shipView'>
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={settings.name} className={classNames(settings.name, "poi-app-tabpane")} key='settings'>
+        <div id={settings.name} className="SettingsView poi-app-tabpane" key='settings'>
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </div>
       </TabContentsUnion>
@@ -410,4 +410,4 @@ export default connect(
       </div>
     )
   }
-})
+}

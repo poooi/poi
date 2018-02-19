@@ -25,9 +25,10 @@ const checkExistence = (mstId) => getFilePath(mstId).map(path => {
   }
 }).reduce((a, b) => a && b)
 
-export const Avatar = connect((state, props) => ({
+@connect((state, props) => ({
   marginMagic: props.marginMagic || get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`),
-}))(class avatar extends PureComponent {
+}))
+export class Avatar extends PureComponent {
   static propTypes = {
     mstId: PropTypes.number.isRequired,
     height: PropTypes.number,
@@ -109,4 +110,4 @@ export const Avatar = connect((state, props) => ({
       </div>
     )
   }
-})
+}

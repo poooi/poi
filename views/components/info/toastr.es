@@ -7,7 +7,7 @@ import './assets/toast.css'
 
 const ToastMessageFactory = React.createFactory(ToastMessageAnimated)
 
-class Toastr extends PureComponent {
+export class Toastr extends PureComponent {
   componentDidMount = () => {
     toastInitializer(this.container)
   }
@@ -19,5 +19,3 @@ class Toastr extends PureComponent {
     )
   }
 }
-
-export { Toastr }

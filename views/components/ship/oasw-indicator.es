@@ -22,7 +22,7 @@ const OASWSelectorFactory = memoize(shipId =>
 )
 
 
-const OASWIndicator = connect(
+export const OASWIndicator = connect(
   (state, { shipId }) => ({
     isOASW: OASWSelectorFactory(shipId)(state),
   })
@@ -33,5 +33,3 @@ const OASWIndicator = connect(
     </span>
     : <span />
 ))
-
-export default OASWIndicator

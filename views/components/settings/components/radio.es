@@ -6,14 +6,13 @@ import { get } from 'lodash'
 
 const { config } = window
 
-const RadioConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-    label: props.label,
-    availableVal: props.availableVal,
-  })
-})(class RadioConfig extends Component {
+@connect((state, props) => ({
+  value: get(state.config, props.configName, props.defaultVal),
+  configName: props.configName,
+  label: props.label,
+  availableVal: props.availableVal,
+}))
+export class RadioConfig extends Component {
   static propTypes = {
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     configName: PropTypes.string,
@@ -41,6 +40,4 @@ const RadioConfig = connect(() => {
       </Grid>
     )
   }
-})
-
-export default RadioConfig
+}

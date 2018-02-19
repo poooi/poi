@@ -26,9 +26,10 @@ const defaultFetchOption = {
 
 const initState = {}
 
-const FCD = connect(state => ({
+@connect(state => ({
   version: state.fcd.version || initState,
-}))(class FCD extends Component {
+}))
+export class FCD extends Component {
   state = {
     updating: false,
   }
@@ -129,6 +130,4 @@ const FCD = connect(state => ({
       </Fragment>
     )
   }
-})
-
-export default FCD
+}

@@ -6,7 +6,7 @@ import { Trans } from 'react-i18next'
 
 const { updater } = remote.require('./lib/updater')
 
-class DownloadProgress extends Component {
+export class DownloadProgress extends Component {
   state = {
     bytesPerSecond: 0,
     percent: 0,
@@ -43,5 +43,3 @@ class DownloadProgress extends Component {
     )
   }
 }
-
-export default DownloadProgress

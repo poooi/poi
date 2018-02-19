@@ -43,11 +43,10 @@ const defaultFetchOption = {
   headers: fetchHeader,
 }
 
-const WctfDB = connect(
-  state => ({
-    version: get(wctfSelector(state), 'version', '0.0.0'),
-  })
-)(class WctfDB extends Component {
+@connect(state => ({
+  version: get(wctfSelector(state), 'version', '0.0.0'),
+}))
+export class WctfDB extends Component {
   state = {
     updating: false,
   }
@@ -198,6 +197,4 @@ const WctfDB = connect(
       </Fragment>
     )
   }
-})
-
-export default WctfDB
+}

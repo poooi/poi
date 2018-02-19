@@ -228,7 +228,7 @@ const numCheckSelector = createSelector(
   })
 )
 
-export default connect(
+export const AdmiralPanel = connect(
   (state) => ({
     ...admiralInfoSelector(state),
     equipNum: Object.keys(state.info.equips).length,
@@ -236,7 +236,7 @@ export default connect(
     dropCount: state.sortie.dropCount,
     ...numCheckSelector(state),
   })
-)(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem,
+)(function AdmiralPanel({ level, nickname, rank, maxShip, maxSlotitem,
   equipNum, shipNum, dropCount,
   shipNumCheck, minShipNum, slotNumCheck, minSlotNum }) {
   const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-warning' : ''

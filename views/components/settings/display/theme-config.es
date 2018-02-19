@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
-import FolderPicker from '../components/folder-picker'
+import { FolderPickerConfig } from '../components/folder-picker'
 import { fileUrl } from 'views/utils/tools'
 import { avatarWorker } from 'views/services/worker'
 import { Trans } from 'react-i18next'
@@ -16,7 +16,7 @@ const { openItem } = shell
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
 
-const ThemeConfig = connect((state, props) => ({
+@connect((state, props) => ({
   themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.theme', 'paperdark'),
   enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
@@ -25,8 +25,8 @@ const ThemeConfig = connect((state, props) => ({
   vibrant: get(state.config, 'poi.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
   background: get(state.config, 'poi.background'),
   enableAvatar: get(state.config, 'poi.enableAvatar', true),
-})
-)(class ThemeConfig extends Component {
+}))
+export class ThemeConfig extends Component {
   static propTypes = {
     themes: PropTypes.arrayOf(PropTypes.string),
     theme: PropTypes.string,
@@ -130,7 +130,7 @@ const ThemeConfig = connect((state, props) => ({
           >
             {
               this.props.vibrant === 2 &&
-              <FolderPicker
+              <FolderPickerConfig
                 label={<Trans>setting:Custom background</Trans>}
                 configName="poi.background"
                 defaultVal={''}
@@ -166,6 +166,4 @@ const ThemeConfig = connect((state, props) => ({
       </Grid>
     )
   }
-})
-
-export default ThemeConfig
+}

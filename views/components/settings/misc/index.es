@@ -1,20 +1,20 @@
 import React, { Component, Fragment } from 'react'
 import { shell, remote } from 'electron'
-import Divider from '../components/divider'
+import { Divider } from '../components/divider'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import CheckboxLabel from '../components/checkbox'
+import { CheckboxLabelConfig } from '../components/checkbox'
 import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
 import { Trans } from 'react-i18next'
 
-import DownloadProgress from './download-progress'
-import AppMetrics from './app-metrics'
-import FCD from './fcd'
-import WctfDB from './wctf-db'
-import OpenCollective from './open-collective'
+import { DownloadProgress } from './download-progress'
+import { AppMetrics } from './app-metrics'
+import { FCD } from './fcd'
+import { WctfDB } from './wctf-db'
+import { OpenCollective } from './open-collective'
 
 import '../assets/misc.css'
 
@@ -31,9 +31,10 @@ const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
   ? `${url}&s=160`
   : url
 
-const Misc = connect(state => ({
+@connect(state => ({
   layout: get(state, 'config.poi.layout', 'horizontal'),
-}))(class Misc extends Component {
+}))
+export class Misc extends Component {
   render() {
     return (
       <div id='poi-others' className='poi-others'>
@@ -57,7 +58,7 @@ const Misc = connect(state => ({
             <Button onClick={checkUpdate}><Trans>setting:Check Update</Trans></Button>
           </Col>
           <Col xs={6}>
-            <CheckboxLabel
+            <CheckboxLabelConfig
               label={<Trans>setting:Check update of beta version</Trans>}
               configName="poi.betaChannel"
               defaultVal={false} />
@@ -171,6 +172,4 @@ const Misc = connect(state => ({
       </div>
     )
   }
-})
-
-export default Misc
+}

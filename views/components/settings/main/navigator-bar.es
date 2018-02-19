@@ -15,7 +15,7 @@ const wvStatus = {
 
 import '../assets/navigator-bar.css'
 
-class NavigatorBar extends React.Component {
+export class NavigatorBar extends React.Component {
   constructor() {
     super()
     config.setDefault('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')
@@ -148,5 +148,3 @@ class NavigatorBar extends React.Component {
     )
   }
 }
-
-export default NavigatorBar

@@ -26,12 +26,11 @@ const getPanelDimension = width => {
   return 2
 }
 
-export default connect(
-  (state) => ({
-    resources: get(state, 'info.resources', []),
-    admiralLv: get(state, 'info.basic.api_level', 0),
-  })
-)(class ResourcePanel extends React.Component {
+@connect(state => ({
+  resources: get(state, 'info.resources', []),
+  admiralLv: get(state, 'info.basic.api_level', 0),
+}))
+export class ResourcePanel extends React.Component {
   static propTypes = {
     resources: PropTypes.array,
     admiralLv: PropTypes.number,
@@ -133,4 +132,4 @@ export default connect(
       </Panel>
     )
   }
-})
+}

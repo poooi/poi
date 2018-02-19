@@ -5,7 +5,7 @@ import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
 
-import TopAlert from 'views/components/ship-parts/topalert'
+import { TopAlert } from 'views/components/ship-parts/topalert'
 import {
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'

@@ -10,25 +10,26 @@ import FileDrop from 'react-file-dropzone'
 import { Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
-import CheckboxLabel from '../components/checkbox'
+import { CheckboxLabelConfig } from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
 
-import NameInput from './name-input'
-import InstalledPlugin from './installed-plugin'
-import UninstalledPlugin from './uninstalled-plugin'
+import { NameInput } from './name-input'
+import { InstalledPlugin } from './installed-plugin'
+import { UninstalledPlugin } from './uninstalled-plugin'
 
 import '../assets/plugins.css'
 
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
 
-const PluginConfig = connect((state, props) => ({
+@connect((state, props) => ({
   plugins: state.plugins,
   mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
   proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
   autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
-}))(class pluginConfig extends Component {
+}))
+export class PluginConfig extends Component {
   static propTypes = {
     plugins: PropTypes.array,
     mirrorName: PropTypes.string,
@@ -395,12 +396,12 @@ const PluginConfig = connect((state, props) => ({
                   <div>
                     <Row>
                       <Col xs={12}>
-                        <CheckboxLabel
+                        <CheckboxLabelConfig
                           label={<Trans>setting:Switch to Plugin Automatically</Trans>}
                           configName="poi.autoswitch.enabled"
                           defaultVal={true}
                         />
-                        <CheckboxLabel
+                        <CheckboxLabelConfig
                           label={<Trans>setting:Enable autoswitch for main panel</Trans>}
                           configName="poi.autoswitch.main"
                           defaultVal={true}
@@ -549,6 +550,4 @@ const PluginConfig = connect((state, props) => ({
       </form>
     )
   }
-})
-
-export default PluginConfig
+}

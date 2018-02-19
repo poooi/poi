@@ -27,10 +27,11 @@ const openItemAsync = (dir, source=null) => {
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
-const PoiControl = connect((state, props) => ({
+@connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
   editable: get(state, 'config.poi.layouteditable', false),
-}))(class poiControl extends Component {
+}))
+export class PoiControl extends Component {
   static propTypes = {
     muted: PropTypes.bool,
   }
@@ -258,6 +259,4 @@ const PoiControl = connect((state, props) => ({
       </div>
     )
   }
-})
-
-export { PoiControl }
+}

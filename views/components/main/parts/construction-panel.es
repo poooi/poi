@@ -29,15 +29,15 @@ const getPanelDimension = width => {
   return 1
 }
 
-export default translate(['main'])(connect(
-  (state) => ({
-    constructions: state.info.constructions,
-    $ships: state.const.$ships,
-    canNotify: state.misc.canNotify,
-    enableAvatar: get(state, 'config.poi.enableAvatar', true),
-    dimension: getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
-  })
-)(class ConstructionPanel extends Component {
+@translate(['main'])
+@connect((state) => ({
+  constructions: state.info.constructions,
+  $ships: state.const.$ships,
+  canNotify: state.misc.canNotify,
+  enableAvatar: get(state, 'config.poi.enableAvatar', true),
+  dimension: getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
+}))
+export class ConstructionPanel extends Component {
   getMaterialImage = (idx) => {
     return <MaterialIcon materialId={idx} className="material-icon" />
   }
@@ -118,4 +118,4 @@ export default translate(['main'])(connect(
       </Fragment>
     )
   }
-}))
+}

@@ -11,7 +11,7 @@ import FontAwesome from 'react-fontawesome'
 import { Trans } from 'react-i18next'
 
 import defaultLayout from '../default-layout'
-import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
@@ -114,10 +114,8 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
   })
 )
 
-export const MiniShipRow = connect(
-  (state, {shipId}) =>
-    miniShipRowDataSelectorFactory(shipId),
-)(class miniShipRow extends Component {
+@connect((state, {shipId}) => miniShipRowDataSelectorFactory(shipId))
+export class MiniShipRow extends Component {
   static propTypes = {
     ship: PropTypes.object,
     $ship: PropTypes.object,
@@ -216,7 +214,7 @@ export const MiniShipRow = connect(
       </div>
     )
   }
-})
+}
 
 export const MiniSquardRow = connect((state, { squardId }) =>
   createSelector([

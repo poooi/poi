@@ -10,10 +10,10 @@ import FontAwesome from 'react-fontawesome'
 import { Trans } from 'react-i18next'
 
 import { Slotitems } from './slotitems'
-import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { Avatar } from 'views/components/etc/avatar'
-import AACIIndicator from './aaci-indicator'
-import OASWndicator from './oasw-indicator'
+import { AACIIndicator } from './aaci-indicator'
+import { OASWIndicator } from './oasw-indicator'
 import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus, getSpeedLabel } from 'views/utils/game-utils'
 import { resolveTime } from 'views/utils/tools'
 import {
@@ -49,10 +49,9 @@ const shipRowDataSelectorFactory = memoize((shipId) =>
     labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
   }))
 )
-export const ShipRow = connect(
-  (state, {shipId}) =>
-    shipRowDataSelectorFactory(shipId)(state)
-)(class ShipRow extends Component {
+
+@connect((state, {shipId}) => shipRowDataSelectorFactory(shipId)(state))
+export class ShipRow extends Component {
   static propTypes = {
     ship: PropTypes.object,
     $ship: PropTypes.object,
@@ -127,7 +126,7 @@ export const ShipRow = connect(
                 <Trans>main:{getSpeedLabel(ship.api_soku)}</Trans>
               </span>
               <AACIIndicator shipId={ship.api_id} />
-              <OASWndicator shipId={ship.api_id} />
+              <OASWIndicator shipId={ship.api_id} />
             </div>
             {
               !hideShipName && (
@@ -201,4 +200,4 @@ export const ShipRow = connect(
       </div>
     )
   }
-})
+}

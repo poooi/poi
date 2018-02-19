@@ -6,12 +6,12 @@ import { Col, Row, Button, ButtonGroup, Label, Collapse, Well, OverlayTrigger, T
 import ReactMarkdown from 'react-remarkable'
 import { Trans } from 'react-i18next'
 
-import CheckboxLabel from '../components/checkbox'
+import { CheckboxLabelConfig } from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
 
-import PluginSettingWrapper from './plugin-setting-wrapper'
+import { PluginSettingWrapper } from './plugin-setting-wrapper'
 
-class InstalledPlugin extends PureComponent {
+export class InstalledPlugin extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,
     handleUpdate: PropTypes.func,
@@ -166,7 +166,7 @@ class InstalledPlugin extends PureComponent {
                           {
                             !!plugin.switchPluginPath &&
                             <div>
-                              <CheckboxLabel
+                              <CheckboxLabelConfig
                                 label={<Trans>setting:Enable auto switch</Trans>}
                                 configName={`poi.autoswitch.${plugin.id}`}
                                 defaultVal={true} />
@@ -175,7 +175,7 @@ class InstalledPlugin extends PureComponent {
                           {
                             (!plugin.multiWindow && plugin.windowURL) &&
                             <div>
-                              <CheckboxLabel
+                              <CheckboxLabelConfig
                                 label={<Trans>setting:Keep plugin process running in background (re-enable to apply changes)</Trans>}
                                 configName={`poi.backgroundProcess.${plugin.id}`}
                                 defaultVal={!plugin.realClose} />
@@ -200,5 +200,3 @@ class InstalledPlugin extends PureComponent {
     )
   }
 }
-
-export default InstalledPlugin

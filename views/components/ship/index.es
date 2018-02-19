@@ -13,7 +13,7 @@ const { dispatch } = window
 import { ShipRow } from './shipitem'
 import { SquardRow } from './lbac-view'
 import { LandbaseButton } from '../ship-parts/landbase-button'
-import TopAlert from 'views/components/ship-parts/topalert'
+import { TopAlert } from 'views/components/ship-parts/topalert'
 import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
@@ -127,15 +127,15 @@ const LBView = connect(state => ({
 ))
 
 
-const ShipView = connect((state, props) => ({
+@connect((state, props) => ({
   enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
   airBaseCnt: get(state, 'info.airbase.length', 0),
   enableAvatar: get(state, 'config.poi.enableAvatar', true),
   width: shipRowWidthSelector(state),
-})
-)(class ShipView extends Component {
+}))
+export class reactClass extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     fleetCount: PropTypes.number.isRequired,
@@ -230,10 +230,6 @@ const ShipView = connect((state, props) => ({
       </Panel>
     )
   }
-})
-
-export default {
-  name: 'ShipView',
-  displayName: <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>,
-  reactClass: ShipView,
 }
+
+export const displayName = <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>

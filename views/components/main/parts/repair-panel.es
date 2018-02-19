@@ -45,7 +45,8 @@ const getPanelDimension = width => {
   return 1
 }
 
-export default translate(['main'])(connect(
+@translate(['main'])
+@connect(
   createDeepCompareArraySelector([
     repairsSelector,
     constSelector,
@@ -61,7 +62,8 @@ export default translate(['main'])(connect(
     enableAvatar,
     dimension,
   }))
-)(class RepairPanel extends Component {
+)
+export class RepairPanel extends Component {
   getLabelStyle = (props, timeRemaining) => {
     return (
       timeRemaining > 600 ? 'primary' :
@@ -151,4 +153,4 @@ export default translate(['main'])(connect(
       </Fragment>
     )
   }
-}))
+}

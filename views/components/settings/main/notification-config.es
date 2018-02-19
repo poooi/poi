@@ -21,19 +21,18 @@ import { Trans } from 'react-i18next'
 
 const { config } = window
 
-const NotificationConfig = connect(() => {
-  return (state, props) => ({
-    enabled: get(state.config, 'poi.notify.enabled', true),
-    expedition: get(state.config, 'poi.notify.expedition.enabled', true),
-    expeditionValue: get(state.config, 'poi.notify.expedition.value', 60),
-    construction: get(state.config, 'poi.notify.construction.enabled', true),
-    repair: get(state.config, 'poi.notify.repair.enabled', true),
-    morale: get(state.config, 'poi.notify.morale.enabled', true),
-    moraleValue: get(state.config, 'poi.notify.morale.value', 49),
-    others: get(state.config, 'poi.notify.others.enabled', true),
-    volume: get(state.config, 'poi.notify.volume', 0.8),
-  })
-})(class NotificationConfig extends Component {
+@connect((state, props) => ({
+  enabled: get(state.config, 'poi.notify.enabled', true),
+  expedition: get(state.config, 'poi.notify.expedition.enabled', true),
+  expeditionValue: get(state.config, 'poi.notify.expedition.value', 60),
+  construction: get(state.config, 'poi.notify.construction.enabled', true),
+  repair: get(state.config, 'poi.notify.repair.enabled', true),
+  morale: get(state.config, 'poi.notify.morale.enabled', true),
+  moraleValue: get(state.config, 'poi.notify.morale.value', 49),
+  others: get(state.config, 'poi.notify.others.enabled', true),
+  volume: get(state.config, 'poi.notify.volume', 0.8),
+}))
+export class NotificationConfig extends Component {
   static propTypes = {
     enabled: PropTypes.bool,
   }
@@ -188,6 +187,4 @@ const NotificationConfig = connect(() => {
       </Grid>
     )
   }
-})
-
-export default NotificationConfig
+}

@@ -2,7 +2,7 @@ import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Aler
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import Divider from './components/divider'
+import { Divider } from './components/divider'
 import { get, pick } from 'lodash'
 import { Trans, translate } from 'react-i18next'
 
@@ -28,17 +28,17 @@ const basic = {
   showAdvanced: false,
 }
 
-const NetworkConfig = translate(['setting'])(connect(() => (
-  (state, props) => {
-    const ret = get(state, 'config.proxy') || {}
-    for (const key of Object.keys(basic)) {
-      if (ret[key] === undefined) {
-        ret[key] = basic[key]
-      }
+@translate(['setting'])
+@connect((state, props) => {
+  const ret = get(state, 'config.proxy') || {}
+  for (const key of Object.keys(basic)) {
+    if (ret[key] === undefined) {
+      ret[key] = basic[key]
     }
-    return ret
   }
-))(class netWorkConfig extends Component {
+  return ret
+})
+export class NetworkConfig extends Component {
   constructor(props) {
     super(props)
     this.state = pick(props, Object.keys(basic))
@@ -264,6 +264,4 @@ const NetworkConfig = translate(['setting'])(connect(() => (
       </form>
     )
   }
-}))
-
-export default NetworkConfig
+}

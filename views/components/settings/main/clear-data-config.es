@@ -19,9 +19,10 @@ const { session } = remote.require('electron')
 
 const { config, toggleModal } = window
 
-const ClearDataConfig = connect(state => ({
+@connect(state => ({
   cacheSize: get(state.config, 'poi.cacheSize', 320),
-}))(class ClearDataConfig extends Component {
+}))
+export class ClearDataConfig extends Component {
   static propTypes = {
     cacheSize: PropTypes.number,
   }
@@ -101,6 +102,4 @@ const ClearDataConfig = connect(state => ({
       </Grid>
     )
   }
-})
-
-export default ClearDataConfig
+}

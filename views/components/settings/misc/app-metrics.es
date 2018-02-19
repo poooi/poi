@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import { sortBy, round, sumBy } from 'lodash'
 import { Trans } from 'react-i18next'
 
-class AppMetrics extends PureComponent {
+export class AppMetrics extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -130,5 +130,3 @@ class AppMetrics extends PureComponent {
     )
   }
 }
-
-export default AppMetrics

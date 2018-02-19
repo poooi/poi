@@ -202,13 +202,12 @@ const TaskRow = connect(
   )
 })
 
-const TaskPanel = connect(
-  ({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
-    activeQuests,
-    activeCapacity,
-    activeNum,
-  })
-)(class taskPanel extends React.Component {
+@connect(({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
+  activeQuests,
+  activeCapacity,
+  activeNum,
+}))
+export class TaskPanel extends React.Component {
   state = {
     dimension: 1,
   }
@@ -281,6 +280,4 @@ const TaskPanel = connect(
       </Panel>
     )
   }
-})
-
-export default TaskPanel
+}

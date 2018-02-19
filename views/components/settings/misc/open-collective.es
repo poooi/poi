@@ -32,11 +32,9 @@ const openCollectiveWidthWidthSelector = createSelector(
   }
 )
 
-const OpenCollective = connect(
-  state => ({
-    width: openCollectiveWidthWidthSelector(state),
-  })
-)(({ width }) => (
+export const OpenCollective = connect(state => ({
+  width: openCollectiveWidthWidthSelector(state),
+}))(({ width }) => (
   <Fragment>
     <div>
       {
@@ -57,5 +55,3 @@ const OpenCollective = connect(
     </div>
   </Fragment>
 ))
-
-export default OpenCollective

@@ -46,10 +46,11 @@ const CustomCssInjector = () => {
   )
 }
 
-const Poi = connect(state => ({
+@connect(state => ({
   isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.reverseLayout', false),
-}))(class poi extends Component {
+}))
+class Poi extends Component {
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.poimain)
   }
@@ -84,7 +85,7 @@ const Poi = connect(state => ({
       </Fragment>
     )
   }
-})
+}
 
 ReactDOM.render(
   <I18nextProvider i18n={i18next} >

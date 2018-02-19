@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { FormControl, Button } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
 
-export default class PluginSettingWrapper extends Component {
+export class PluginSettingWrapper extends Component {
   static propTypes = {
     plugin: PropTypes.object,
   }

@@ -7,11 +7,10 @@ import { Trans } from 'react-i18next'
 
 const { config } = window
 
-const ZoomingConfig = connect(() => (
-  (state, props) => ({
-    zoomLevel: get(state.config, 'poi.zoomLevel', 1),
-  })
-))(class zoomingConfig extends Component {
+@connect((state, props) => ({
+  zoomLevel: get(state.config, 'poi.zoomLevel', 1),
+}))
+export class ZoomingConfig extends Component {
   static propTypes = {
     zoomLevel: PropTypes.number,
   }
@@ -47,7 +46,4 @@ const ZoomingConfig = connect(() => (
       </Grid>
     )
   }
-})
-
-
-export default ZoomingConfig
+}
