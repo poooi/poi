@@ -13,7 +13,6 @@ module.exports = {
     "@babel/preset-react",
   ],
   plugins: [
-    "transform-export-extensions",
     "dynamic-import-node",
     "add-module-exports",
   ],

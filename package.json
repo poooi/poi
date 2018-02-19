@@ -42,7 +42,6 @@
     "@exponent/electron-cookies": "^2.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dynamic-import-node": "^1.2.0",
-    "babel-plugin-transform-export-extensions": "^7.0.0-alpha.19",
     "bindings": "^1.3.0",
     "bluebird": "^3.5.1",
     "chalk": "^2.3.0",
