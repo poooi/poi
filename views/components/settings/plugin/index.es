@@ -311,7 +311,7 @@ export class PluginConfig extends Component {
     switch (this.state.manuallyInstallStatus) {
     case 1:
       installStatusbsStyle = 'info'
-      installStatusText = <>t('setting:Installing')...</>
+      installStatusText = <>{t('setting:Installing')}...</>
       break
     case 2:
       installStatusbsStyle = 'success'

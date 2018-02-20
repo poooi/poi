@@ -120,7 +120,7 @@ export class PoiMapReminder extends Component {
 
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : mapRanks[rank])
-    return <>t('Sortie area'): {mapName}</>
+    return <>{this.props.t('Sortie area')}: {mapName}</>
   }
 
   isFinalAttack = () => {
