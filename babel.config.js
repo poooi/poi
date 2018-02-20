@@ -1,20 +1,20 @@
 module.exports = {
   presets: [
     [
-      "@babel/preset-env",
+      require.resolve('@babel/preset-env'),
       {
         targets: {
-          electron: "1.8",
+          electron: '1.8',
         },
         loose: true,
       },
     ],
-    "@babel/preset-stage-0",
-    "@babel/preset-react",
+    require.resolve('@babel/preset-stage-0'),
+    require.resolve('@babel/preset-react'),
   ],
   plugins: [
-    "dynamic-import-node",
-    "add-module-exports",
+    require.resolve('babel-plugin-dynamic-import-node'),
+    require.resolve('babel-plugin-add-module-exports'),
   ],
   ignore: [],
   only: [/.es$/],

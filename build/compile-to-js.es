@@ -39,7 +39,7 @@ const compileToJs = (appDir, dontRemove) => {
             try {
               const result = await promisify(transformFile)(srcPath, {
                 presets,
-                plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
+                plugins,
               })
               tgt = result.code
             } catch (e) {
