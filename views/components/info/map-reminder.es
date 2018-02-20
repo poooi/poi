@@ -127,7 +127,7 @@ export class PoiMapReminder extends Component {
     const {mapHp, rank, mapId} = this.props
     if (!mapHp || mapHp[0] == 0)
       return false
-    const finalHpPostfix = ['丁', '丙', '乙', '甲'][rank] || ''
+    const finalHpPostfix = ['', '丁', '丙', '乙', '甲'][rank] || ''
     const finalHp = this.props.finalHps[`${mapId}${finalHpPostfix}`] || 0
     return finalHp >= mapHp[0]
   }
@@ -179,7 +179,7 @@ export class PoiMapReminder extends Component {
           }
           <div className='alert alert-default'>
             <span id='map-reminder-area'>
-              {this.getMapText(mapData, [this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
+              {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
             </span>
           </div>
         </div>
