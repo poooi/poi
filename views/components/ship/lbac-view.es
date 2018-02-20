@@ -5,9 +5,9 @@ import { createSelector } from 'reselect'
 import { getHpStyle, getTyku } from 'views/utils/game-utils'
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
-export const SquardRow = connect((state, { squardId }) =>
+export const SquardRow = translate(['main'])(connect((state, { squardId }) =>
   createSelector([
     landbaseSelectorFactory(squardId),
     landbaseEquipDataSelectorFactory(squardId),
@@ -16,7 +16,7 @@ export const SquardRow = connect((state, { squardId }) =>
     equipsData,
     squardId,
   }))
-)(({landbase, equipsData, squardId}) => {
+)(({landbase, equipsData, squardId, t}) => {
   let { api_action_kind, api_distance, api_name, api_nowhp, api_maxhp } = landbase
   api_nowhp = api_nowhp || 200
   api_maxhp = api_maxhp || 200
@@ -26,15 +26,15 @@ export const SquardRow = connect((state, { squardId }) =>
     switch (api_action_kind) {
     // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
     case 0:
-      return <Label bsStyle='default'><Trans>main:Standby</Trans></Label>
+      return <Label bsStyle='default'>{t('main:Standby')}</Label>
     case 1:
-      return <Label bsStyle='danger'><Trans>main:Sortie</Trans></Label>
+      return <Label bsStyle='danger'>{t('main:Sortie')}</Label>
     case 2:
-      return <Label bsStyle='warning'><Trans>main:Defense</Trans></Label>
+      return <Label bsStyle='warning'>{t('main:Defense')}</Label>
     case 3:
-      return <Label bsStyle='primary'><Trans>main:Retreat</Trans></Label>
+      return <Label bsStyle='primary'>{t('main:Retreat')}</Label>
     case 4:
-      return <Label bsStyle='success'><Trans>main:Rest</Trans></Label>
+      return <Label bsStyle='success'>{t('main:Rest')}</Label>
     }
   })()
   return (
@@ -45,11 +45,11 @@ export const SquardRow = connect((state, { squardId }) =>
         </span>
         <div className="ship-exp">
           <span className='ship-lv'>
-            <Trans>main:Range</Trans>: {api_distance}
+            {t('main:Range')}: {api_distance}
           </span>
           <br />
           <span className="ship-lv">
-            <Trans>main:Fighter Power</Trans>: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
+            {t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
           </span>
         </div>
       </div>
@@ -72,4 +72,4 @@ export const SquardRow = connect((state, { squardId }) =>
       </div>
     </div>
   )
-})
+}))

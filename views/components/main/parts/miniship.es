@@ -1,13 +1,12 @@
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 
 const { dispatch } = window
-const { Component } = React
 
 import { PaneBodyMini, LBViewMini } from './minishippane'
 import { LandbaseButton } from '../../ship-parts/landbase-button'
@@ -55,13 +54,13 @@ const ShipViewSwitchButton = connect(
   </Button>
 )
 
-export default connect((state, props) => ({
+@connect((state, props) => ({
   airBaseCnt: get(state, 'info.airbase.length', 0),
   enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
-})
-)(class MiniShip extends Component {
+}))
+export class MiniShip extends Component {
   static propTypes = {
     airBaseCnt: PropTypes.number.isRequired,
     enableTransition: PropTypes.bool.isRequired,
@@ -154,4 +153,4 @@ export default connect((state, props) => ({
       </div>
     )
   }
-})
+}

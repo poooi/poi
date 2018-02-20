@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react'
-import { Trans } from 'react-i18next'
+import React, { Component } from 'react'
+import i18next from 'views/env-parts/i18next'
 
 import './assets/alert.css'
 
@@ -10,7 +10,7 @@ const initState = {
   history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
   current: {
     type: 'default',
-    content: <Trans>Waiting for response</Trans>,
+    content: i18next.t('Waiting for response'),
     priority: 0,
     options: {
       dontReserve: true,
@@ -157,14 +157,14 @@ export const PoiAlert = class poiAlert extends Component {
             <span id='alert-area' ref={ref => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
-                  <Fragment>
-                    <span style={{marginRight: 50}}>
-                      {this.state.current.content}
-                    </span>
-                    <span style={{marginRight: 50}}>
-                      {this.state.current.content}
-                    </span>
-                  </Fragment>
+                  <>
+                  <span style={{marginRight: 50}}>
+                    {this.state.current.content}
+                  </span>
+                  <span style={{marginRight: 50}}>
+                    {this.state.current.content}
+                  </span>
+                  </>
                   : this.state.current.content
               }
             </span>

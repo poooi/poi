@@ -13,15 +13,17 @@ import {
   ControlLabel,
   Alert,
 } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const { session } = remote.require('electron')
 
 const { config, toggleModal } = window
 
-const ClearDataConfig = connect(state => ({
+@translate(['setting'])
+@connect(state => ({
   cacheSize: get(state.config, 'poi.cacheSize', 320),
-}))(class ClearDataConfig extends Component {
+}))
+export class ClearDataConfig extends Component {
   static propTypes = {
     cacheSize: PropTypes.number,
   }
@@ -30,12 +32,12 @@ const ClearDataConfig = connect(state => ({
   }
   handleClearCookie = (e) => {
     remote.getCurrentWebContents().session.clearStorageData({storages: ['cookies']}, () => {
-      toggleModal(<Trans>setting:Delete cookies</Trans>, <Trans>setting:Success!</Trans>)
+      toggleModal(this.props.t('setting:Delete cookies'), this.props.t('setting:Success!'))
     })
   }
   handleClearCache = (e) => {
     remote.getCurrentWebContents().session.clearCache(()=> {
-      toggleModal(<Trans>setting:Delete cache</Trans>, <Trans>setting:Success!</Trans>)
+      toggleModal(this.props.t('setting:Delete cache'), this.props.t('setting:Success!'))
     })
   }
   handleValueChange = e => {
@@ -54,14 +56,15 @@ const ClearDataConfig = connect(state => ({
     }
   }
   render() {
+    const { t } = this.props
     return (
       <Grid>
         <Col xs={6}>
           <FormGroup>
-            <ControlLabel><Trans>setting:Current cache size</Trans></ControlLabel>
+            <ControlLabel>{t('setting:Current cache size')}</ControlLabel>
             <InputGroup>
               <InputGroup.Button>
-                <Button onClick={this.handleUpdateCacheSize}><Trans>setting:Update</Trans></Button>
+                <Button onClick={this.handleUpdateCacheSize}>{t('setting:Update')}</Button>
               </InputGroup.Button>
               <FormControl type="number"
                 disabled
@@ -73,7 +76,7 @@ const ClearDataConfig = connect(state => ({
         </Col>
         <Col xs={6}>
           <FormGroup>
-            <ControlLabel><Trans>setting:Maximum cache size</Trans></ControlLabel>
+            <ControlLabel>{t('setting:Maximum cache size')}</ControlLabel>
             <InputGroup>
               <FormControl type="number"
                 onChange={this.handleValueChange}
@@ -85,22 +88,20 @@ const ClearDataConfig = connect(state => ({
         </Col>
         <Col xs={6}>
           <Button bsStyle="danger" onClick={this.handleClearCookie} style={{width: '100%'}}>
-            <Trans>setting:Delete cookies</Trans>
+            {t('setting:Delete cookies')}
           </Button>
         </Col>
         <Col xs={6}>
           <Button bsStyle="danger" onClick={this.handleClearCache} style={{width: '100%'}}>
-            <Trans>setting:Delete cache</Trans>
+            {t('setting:Delete cache')}
           </Button>
         </Col>
         <Col xs={12}>
           <Alert bsStyle='warning' style={{marginTop: '10px'}}>
-            <Trans>setting:If connection error occurs frequently, delete both of them</Trans>
+            {t('setting:If connection error occurs frequently, delete both of them')}
           </Alert>
         </Col>
       </Grid>
     )
   }
-})
-
-export default ClearDataConfig
+}

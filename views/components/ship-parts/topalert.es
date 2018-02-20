@@ -140,7 +140,7 @@ const topAlertSelectorFactory = memoize((fleetId) =>
     canNotify,
   }))
 )
-export default translate(['main'])(connect(
+export const TopAlert = translate(['main'])(connect(
   (state, {fleetId}) =>
     topAlertSelectorFactory(fleetId)(state)
 )(function TopAlert(props) {

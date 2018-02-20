@@ -11,13 +11,12 @@ import { isSubdirectory } from 'views/utils/tools'
 const { dialog } = remote.require('electron')
 const { config } = window
 
-const FolderPickerConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-    label: props.label,
-  })
-})(class extends Component {
+@connect((state, props) => ({
+  value: get(state.config, props.configName, props.defaultVal),
+  configName: props.configName,
+  label: props.label,
+}))
+export class FolderPickerConfig extends Component {
   static propTypes = {
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     configName: PropTypes.string,
@@ -107,6 +106,4 @@ const FolderPickerConfig = connect(() => {
       </div>
     )
   }
-})
-
-export default FolderPickerConfig
+}

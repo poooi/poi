@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import { MiniShipRow, MiniSquardRow } from './minishipitem'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { get } from 'lodash'
 import { Alert } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
-import TopAlert from 'views/components/ship-parts/topalert'
+import { TopAlert } from 'views/components/ship-parts/topalert'
 import {
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
@@ -19,7 +19,7 @@ export const PaneBodyMini = connect(() => {
     width: miniShipRowWidthSelector(state),
   })
 })(({ fleetId, shipsId, enableAvatar, width }) =>
-  <Fragment>
+  <>
     <div className='fleet-name'>
       <TopAlert
         fleetId={fleetId}
@@ -38,13 +38,13 @@ export const PaneBodyMini = connect(() => {
         )
       }
     </div>
-  </Fragment>
+  </>
 )
 
-export const LBViewMini = connect(state => ({
+export const LBViewMini = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
-}))(({areaIds, mapareas}) => (
+}))(({ areaIds, mapareas, t }) => (
   <div className="ship-details-mini">
     {
       areaIds.map((id, i) => (
@@ -56,7 +56,7 @@ export const LBViewMini = connect(state => ({
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-                [{id}] {mapareas[id] ? <Trans i18nKey={`resources:${ mapareas[id].api_name }`}>{ mapareas[id].api_name }</Trans> : ''}
+                [{id}] {mapareas[id] ? t(`resources:${ mapareas[id].api_name }`) : ''}
               </Alert>
               <MiniSquardRow
                 key={i}
@@ -67,5 +67,4 @@ export const LBViewMini = connect(state => ({
       ))
     }
   </div>
-)
-)
+)))

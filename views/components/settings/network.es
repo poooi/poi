@@ -2,9 +2,9 @@ import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Aler
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import Divider from './components/divider'
+import { Divider } from './components/divider'
 import { get, pick } from 'lodash'
-import { Trans, translate } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const { config, toggleModal } = window
 
@@ -28,17 +28,17 @@ const basic = {
   showAdvanced: false,
 }
 
-const NetworkConfig = translate(['setting'])(connect(() => (
-  (state, props) => {
-    const ret = get(state, 'config.proxy') || {}
-    for (const key of Object.keys(basic)) {
-      if (ret[key] === undefined) {
-        ret[key] = basic[key]
-      }
+@translate(['setting'])
+@connect((state, props) => {
+  const ret = get(state, 'config.proxy') || {}
+  for (const key of Object.keys(basic)) {
+    if (ret[key] === undefined) {
+      ret[key] = basic[key]
     }
-    return ret
   }
-))(class netWorkConfig extends Component {
+  return ret
+})
+export class NetworkConfig extends Component {
   constructor(props) {
     super(props)
     this.state = pick(props, Object.keys(basic))
@@ -67,7 +67,7 @@ const NetworkConfig = translate(['setting'])(connect(() => (
       retries,
       port,
     })
-    toggleModal(<Trans>setting:Proxy setting</Trans>, <Trans>setting:Success! It will be available after a restart</Trans>)
+    toggleModal(this.props.t('setting:Proxy setting'), this.props.t('setting:Success! It will be available after a restart'))
   }
   handleHttpHostChange = (e) => {
     const http = Object.clone(this.state.http)
@@ -147,7 +147,7 @@ const NetworkConfig = translate(['setting'])(connect(() => (
     const { t } = this.props
     return (
       <form>
-        <Divider text={<Trans>setting:Proxy server information</Trans>} />
+        <Divider text={t('setting:Proxy server information')} />
         <Grid>
           <Col xs={12}>
             <FormControl componentClass="select" value={this.state.use || "none"} onChange={this.handleChangeUse}>
@@ -163,31 +163,31 @@ const NetworkConfig = translate(['setting'])(connect(() => (
             <Grid>
               <Col xs={6}>
                 <FormGroup>
-                  <ControlLabel><Trans>setting:Proxy server address</Trans></ControlLabel>
+                  <ControlLabel>{t('setting:Proxy server address')}</ControlLabel>
                   <FormControl type="text" placeholder={t('setting:Proxy server address')} value={this.state.http.host} onChange={this.handleHttpHostChange} />
                 </FormGroup>
               </Col>
               <Col xs={6}>
                 <FormGroup>
-                  <ControlLabel><Trans>setting:Proxy server port</Trans></ControlLabel>
+                  <ControlLabel>{t('setting:Proxy server port')}</ControlLabel>
                   <FormControl type="text" placeholder={t('setting:Proxy server port')} value={this.state.http.port} onChange={this.handleHttpPortChange} />
                 </FormGroup>
               </Col>
               <Col xs={12}>
                 <Checkbox checked={!!this.state.http.requirePassword} onChange={this.handleSetHttpRequirePassword}>
-                  <Trans>setting:Proxy server requires password</Trans>
+                  {t('setting:Proxy server requires password')}
                 </Checkbox>
               </Col>
               <div style={(!this.state.http.requirePassword) ? {display: 'none'} : {}} >
                 <Col xs={6}>
                   <FormGroup>
-                    <ControlLabel><Trans>setting:Username</Trans></ControlLabel>
+                    <ControlLabel>{t('setting:Username')}</ControlLabel>
                     <FormControl type="text" placeholder={t('setting:Username')} value={this.state.http.username} onChange={this.handleHttpUsernameChange} />
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
                   <FormGroup>
-                    <ControlLabel><Trans>setting:Password</Trans></ControlLabel>
+                    <ControlLabel>{t('setting:Password')}</ControlLabel>
                     <FormControl type="password" placeholder={t('setting:Password')} value={this.state.http.password} onChange={this.handleHttpPasswordChange} />
                   </FormGroup>
                 </Col>
@@ -198,13 +198,13 @@ const NetworkConfig = translate(['setting'])(connect(() => (
               <Grid>
                 <Col xs={6}>
                   <FormGroup>
-                    <ControlLabel><Trans>setting:Proxy server address</Trans></ControlLabel>
+                    <ControlLabel>{t('setting:Proxy server address')}</ControlLabel>
                     <FormControl type="text" placeholder={t('setting:Proxy server address')} value={this.state.socks5.host} onChange={this.handleSocksHostChange} />
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
                   <FormGroup>
-                    <ControlLabel><Trans>setting:Proxy server port</Trans></ControlLabel>
+                    <ControlLabel>{t('setting:Proxy server port')}</ControlLabel>
                     <FormControl type="text" placeholder={t('setting:Proxy server port')} value={this.state.socks5.port} onChange={this.handleSocksPortChange} />
                   </FormGroup>
                 </Col>
@@ -213,7 +213,7 @@ const NetworkConfig = translate(['setting'])(connect(() => (
                 <Grid>
                   <Col xs={12}>
                     <FormGroup>
-                      <ControlLabel><Trans>setting:PAC address</Trans></ControlLabel>
+                      <ControlLabel>{t('setting:PAC address')}</ControlLabel>
                       <FormControl type="text" placeholder={t('setting:PAC address')} value={this.state.pacAddr} onChange={this.handlePACAddrChange} />
                     </FormGroup>
                   </Col>
@@ -221,24 +221,24 @@ const NetworkConfig = translate(['setting'])(connect(() => (
                 :
                 <Grid>
                   <Col xs={12}>
-                    <center>{<Trans>setting:Will connect to server directly</Trans>}</center>
+                    <center>{t('setting:Will connect to server directly')}</center>
                   </Col>
                 </Grid>
         }
-        <Divider text={<Trans>setting:Times of reconnect</Trans>} />
+        <Divider text={t('setting:Times of reconnect')} />
         <Grid>
           <Col xs={12}>
             <FormControl type="number" value={this.state.retries} onChange={this.handleSetRetries} />
           </Col>
           <Col xs={12}>
             <Alert bsStyle='danger'>
-              {<Trans>setting:It may be unsafe!</Trans>}
+              {t('setting:It may be unsafe!')}
             </Alert>
           </Col>
         </Grid>
         <Divider onClick={this.handleShowAdvanced} text={
           <span>
-            <span>{<Trans>setting:Advanced (require restart)</Trans>}</span>
+            <span>{t('setting:Advanced (require restart)')}</span>
             <FontAwesome name={this.state.showAdvanced ? 'angle-up' : 'angle-down'} />
           </span>
         } />
@@ -246,24 +246,22 @@ const NetworkConfig = translate(['setting'])(connect(() => (
           <Collapse in={this.state.showAdvanced}>
             <div>
               <Col xs={12}>
-                <ControlLabel><Trans>setting:poi port</Trans></ControlLabel>
+                <ControlLabel>{t('setting:poi port')}</ControlLabel>
                 <FormControl type="number" value={this.state.port} onChange={this.handleSetPort} placeholder={t('setting:PoiDefaultPort')} />
               </Col>
               <Col xs={12}>
-                <Checkbox checked={this.state.allowLAN} onChange={this.handleSetAllowLAN}>{<Trans>setting:Allow connections from LAN</Trans>}</Checkbox>
+                <Checkbox checked={this.state.allowLAN} onChange={this.handleSetAllowLAN}>{t('setting:Allow connections from LAN')}</Checkbox>
               </Col>
             </div>
           </Collapse>
         </Grid>
-        <Divider text={<Trans>setting:Save settings</Trans>} />
+        <Divider text={t('setting:Save settings')} />
         <Grid>
           <Col xs={12}>
-            <Button bsStyle="success" onClick={this.handleSaveConfig} style={{width: '100%'}}>{<Trans>setting:Save</Trans>}</Button>
+            <Button bsStyle="success" onClick={this.handleSaveConfig} style={{width: '100%'}}>{t('setting:Save')}</Button>
           </Col>
         </Grid>
       </form>
     )
   }
-}))
-
-export default NetworkConfig
+}

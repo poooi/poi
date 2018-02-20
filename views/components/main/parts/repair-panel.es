@@ -1,5 +1,5 @@
 const { ROOT } = window
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { join as joinString, range, get } from 'lodash'
@@ -45,7 +45,8 @@ const getPanelDimension = width => {
   return 1
 }
 
-export default translate(['main'])(connect(
+@translate(['main'])
+@connect(
   createDeepCompareArraySelector([
     repairsSelector,
     constSelector,
@@ -61,7 +62,8 @@ export default translate(['main'])(connect(
     enableAvatar,
     dimension,
   }))
-)(class RepairPanel extends Component {
+)
+export class RepairPanel extends Component {
   getLabelStyle = (props, timeRemaining) => {
     return (
       timeRemaining > 600 ? 'primary' :
@@ -85,7 +87,7 @@ export default translate(['main'])(connect(
     // by indexifying it into an object, it becomes easier to use.
     const ships = indexify(inRepairShips)
     return (
-      <Fragment>
+      <>
         {
           range(0, 4).map((i) => {
             const emptyRepair = {
@@ -112,7 +114,7 @@ export default translate(['main'])(connect(
               <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} style={{ flexBasis: `${100 / dimension}%` }}>
                 {
                   enableAvatar &&
-                  <Fragment>
+                  <>
                     {
                       dock.api_state > 0
                         ? <Avatar
@@ -122,7 +124,7 @@ export default translate(['main'])(connect(
                         />
                         : <EmptyDock state={dock.api_state} />
                     }
-                  </Fragment>
+                  </>
                 }
                 <span className="ndock-name">{dockName}</span>
 
@@ -148,7 +150,7 @@ export default translate(['main'])(connect(
             )
           })
         }
-      </Fragment>
+      </>
     )
   }
-}))
+}

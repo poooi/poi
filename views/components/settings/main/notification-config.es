@@ -17,23 +17,23 @@ import {
   Collapse,
   Well,
 } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const { config } = window
 
-const NotificationConfig = connect(() => {
-  return (state, props) => ({
-    enabled: get(state.config, 'poi.notify.enabled', true),
-    expedition: get(state.config, 'poi.notify.expedition.enabled', true),
-    expeditionValue: get(state.config, 'poi.notify.expedition.value', 60),
-    construction: get(state.config, 'poi.notify.construction.enabled', true),
-    repair: get(state.config, 'poi.notify.repair.enabled', true),
-    morale: get(state.config, 'poi.notify.morale.enabled', true),
-    moraleValue: get(state.config, 'poi.notify.morale.value', 49),
-    others: get(state.config, 'poi.notify.others.enabled', true),
-    volume: get(state.config, 'poi.notify.volume', 0.8),
-  })
-})(class NotificationConfig extends Component {
+@translate(['setting'])
+@connect((state, props) => ({
+  enabled: get(state.config, 'poi.notify.enabled', true),
+  expedition: get(state.config, 'poi.notify.expedition.enabled', true),
+  expeditionValue: get(state.config, 'poi.notify.expedition.value', 60),
+  construction: get(state.config, 'poi.notify.construction.enabled', true),
+  repair: get(state.config, 'poi.notify.repair.enabled', true),
+  morale: get(state.config, 'poi.notify.morale.enabled', true),
+  moraleValue: get(state.config, 'poi.notify.morale.value', 49),
+  others: get(state.config, 'poi.notify.others.enabled', true),
+  volume: get(state.config, 'poi.notify.volume', 0.8),
+}))
+export class NotificationConfig extends Component {
   static propTypes = {
     enabled: PropTypes.bool,
   }
@@ -91,6 +91,7 @@ const NotificationConfig = connect(() => {
     this.setState({timeSettingShow: false})
   }
   render () {
+    const { t } = this.props
     return (
       <Grid>
         <Col xs={6}>
@@ -99,12 +100,12 @@ const NotificationConfig = connect(() => {
             onClick={this.handleSetNotify.bind(this, null)}
             style={{width: '100%'}}>
             {(get(this.props, 'enabled', true)) ? '√ ' : ''}
-            <Trans>setting:Enable notification</Trans>
+            {t('setting:Enable notification')}
           </Button>
         </Col>
         <Col xs={6}>
           <OverlayTrigger placement='top' overlay={
-            <Tooltip id='poiconfig-volume'><Trans>setting:Volume</Trans> <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
+            <Tooltip id='poiconfig-volume'>{t('setting:Volume')} <strong>{parseInt(this.props.volume * 100)}%</strong></Tooltip>
           }>
             <FormControl type="range"
               onChange={this.handleChangeNotifyVolume} onMouseUp={this.handleEndChangeNotifyVolume}
@@ -116,27 +117,27 @@ const NotificationConfig = connect(() => {
             <Button bsStyle={this.props.construction ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'construction')}
               className='notif-button'>
-              <Trans>setting:Construction</Trans>
+              {t('setting:Construction')}
             </Button>
             <Button bsStyle={this.props.expedition ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'expedition')}
               className='notif-button'>
-              <Trans>setting:Expedition</Trans>
+              {t('setting:Expedition')}
             </Button>
             <Button bsStyle={this.props.repair ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'repair')}
               className='notif-button'>
-              <Trans>setting:Docking</Trans>
+              {t('setting:Docking')}
             </Button>
             <Button bsStyle={this.props.morale ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'morale')}
               className='notif-button'>
-              <Trans>setting:Morale</Trans>
+              {t('setting:Morale')}
             </Button>
             <Button bsStyle={this.props.others ? 'success' : 'danger'}
               onClick={this.handleSetNotify.bind(this, 'others')}
               className='notif-button'>
-              <Trans>setting:Others</Trans>
+              {t('setting:Others')}
             </Button>
             <Button onClick={this.handleSetTimeSettingShow} bsStyle='primary' style={{width: 40}}>
               <FontAwesome name={this.state.timeSettingShow ? 'angle-up' : 'angle-down'} />
@@ -146,7 +147,7 @@ const NotificationConfig = connect(() => {
             <Well>
               <Row>
                 <Col xs={9} className='notif-container'>
-                  <div className='notif-input-desc'><Trans>setting:Expedition</Trans>: <Trans>setting:Notify when expedition returns in</Trans></div>
+                  <div className='notif-input-desc'>{t('setting:Expedition')}: {t('setting:Notify when expedition returns in')}</div>
                 </Col>
                 <Col xs={3} className='notif-container'>
                   <FormGroup>
@@ -164,7 +165,7 @@ const NotificationConfig = connect(() => {
               </Row>
               <Row>
                 <Col xs={9} className='notif-container'>
-                  <div className='notif-input-desc'><Trans>setting:Morale</Trans>: <Trans>setting:Notify when morale is greater than</Trans></div>
+                  <div className='notif-input-desc'>{t('setting:Morale')}: {t('setting:Notify when morale is greater than')}</div>
                 </Col>
                 <Col xs={3} className='notif-container'>
                   <InputGroup bsSize='small'>
@@ -179,7 +180,7 @@ const NotificationConfig = connect(() => {
               </Row>
               <Row>
                 <Col xs={2} xsOffset={10}>
-                  <Button bsSize='small' onClick={this.saveNotifySetting}><Trans>setting:Save</Trans></Button>
+                  <Button bsSize='small' onClick={this.saveNotifySetting}>{t('setting:Save')}</Button>
                 </Col>
               </Row>
             </Well>
@@ -188,6 +189,4 @@ const NotificationConfig = connect(() => {
       </Grid>
     )
   }
-})
-
-export default NotificationConfig
+}

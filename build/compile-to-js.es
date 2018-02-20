@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import Promise, { promisify } from 'bluebird'
 import { log } from '../lib/utils'
-import { transformFile } from 'babel-core'
+import { transformFile } from '@babel/core'
 import BabelConfig from '../babel.config'
 import walk from 'walk'
 
@@ -38,12 +38,13 @@ const compileToJs = (appDir, dontRemove) => {
             let tgt
             try {
               const result = await promisify(transformFile)(srcPath, {
-                presets: presets.map(p => require.resolve(`babel-preset-${p}`)),
+                presets,
                 plugins: plugins.map(p => require.resolve(`babel-plugin-${p}`)),
               })
               tgt = result.code
             } catch (e) {
               log(`Compiling ${srcPath} failed: ${e}`)
+              log(e.stack)
               return
             }
             await fs.writeFile(tgtPath, tgt)

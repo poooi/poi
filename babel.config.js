@@ -1,10 +1,21 @@
 module.exports = {
-  presets: ["es2017-node7", "stage-0", "react"],
-  plugins: [
-    "add-module-exports",
-    "dynamic-import-node",
-    "closure-elimination",
+  presets: [
+    [
+      "@babel/preset-env",
+      {
+        targets: {
+          electron: "1.8",
+        },
+        loose: true,
+      },
+    ],
+    "@babel/preset-stage-0",
+    "@babel/preset-react",
   ],
-  ignore: false,
-  only: /.es$/,
+  plugins: [
+    "dynamic-import-node",
+    "add-module-exports",
+  ],
+  ignore: [],
+  only: [/.es$/],
 }

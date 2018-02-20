@@ -6,10 +6,11 @@ import { get } from 'lodash'
 
 const {config } = window
 
-const FlashQualityConfig = connect((state, props) => ({
+@connect((state, props) => ({
   flashQuality: get(state.config, 'poi.flashQuality', 'high'),
   flashWindowMode: get(state.config, 'poi.flashWindowMode', 'window'),
-}))(class flashQualityConfig extends Component {
+}))
+export class FlashQualityConfig extends Component {
   static propTypes = {
     flashQuality: PropTypes.string,
   }
@@ -49,6 +50,4 @@ const FlashQualityConfig = connect((state, props) => ({
       </Grid>
     )
   }
-})
-
-export default FlashQualityConfig
+}

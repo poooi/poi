@@ -29,11 +29,10 @@ if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
   }
 }
 
-const LanguageConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, 'poi.language', language),
-  })
-})(class LanguageConfig extends Component {
+@connect((state, props) => ({
+  value: get(state.config, 'poi.language', language),
+}))
+export class LanguageConfig extends Component {
   static propTypes = {
     value: PropTypes.string,
   }
@@ -58,6 +57,4 @@ const LanguageConfig = connect(() => {
       </Grid>
     )
   }
-})
-
-export default LanguageConfig
+}

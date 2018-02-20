@@ -2,16 +2,16 @@ import { join } from 'path-extra'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { ProgressBar, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import defaultLayout from '../default-layout'
-import StatusLabel from 'views/components/ship-parts/statuslabel'
+import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
@@ -37,10 +37,10 @@ const slotitemsDataSelectorFactory = memoize((shipId) =>
   }))
 )
 
-const Slotitems  = connect(
+const Slotitems = translate(['resources'])(connect(
   (state, {shipId}) =>
     slotitemsDataSelectorFactory(shipId)(state),
-)(function ({api_maxeq, equipsData}) {
+)(function ({api_maxeq, equipsData, t}) {
   const tooltipClassName = classNames("item-name", {
     "hidden": !equipsData,
   })
@@ -64,7 +64,7 @@ const Slotitems  = connect(
             return (
               <div key={equipIdx} className="slotitem-container-mini">
                 <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
-                <span style={{ flex: 1, textAlign: 'left' }}>{$equip ? <Trans i18nKey={`resources:${$equip.api_name}`}>{$equip.api_name}</Trans> : '???'}</span>
+                <span style={{ flex: 1, textAlign: 'left' }}>{$equip ? t(`resources:${$equip.api_name}`) : '???'}</span>
                 {
                   Boolean(level) &&
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong>
@@ -88,7 +88,7 @@ const Slotitems  = connect(
       </div>
     </div>
   )
-})
+}))
 
 const miniShipRowDataSelectorFactory = memoize((shipId) =>
   createSelector([
@@ -114,10 +114,9 @@ const miniShipRowDataSelectorFactory = memoize((shipId) =>
   })
 )
 
-export const MiniShipRow = connect(
-  (state, {shipId}) =>
-    miniShipRowDataSelectorFactory(shipId),
-)(class miniShipRow extends Component {
+@translate(['resources', 'main'])
+@connect((state, {shipId}) => miniShipRowDataSelectorFactory(shipId))
+export class MiniShipRow extends Component {
   static propTypes = {
     ship: PropTypes.object,
     $ship: PropTypes.object,
@@ -135,7 +134,7 @@ export const MiniShipRow = connect(
   }
 
   render() {
-    const { ship, $ship, labelStatus, tooltipPos, enableAvatar, compact } = this.props
+    const { ship, $ship, labelStatus, tooltipPos, enableAvatar, compact, t } = this.props
     const hideShipName = enableAvatar && compact
     if (!ship)
       return <div></div>
@@ -170,27 +169,27 @@ export const MiniShipRow = connect(
                   hideShipName ? (
                     <div className="ship-tooltip-info">
                       <div>
-                        {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
+                        {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
                       </div>
                       <div>
                         Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
                       </div>
                     </div>
-                  ) : <Fragment>Next. {(ship.api_exp || [])[1]}</Fragment>
+                  ) : <>Next. {(ship.api_exp || [])[1]}</>
                 }
               </Tooltip>
             }>
               <div className={shipInfoClass}>
                 {
                   !hideShipName && (
-                    <Fragment>
+                    <>
                       <span className="ship-name" style={labelStatusStyle}>
-                        {$ship.api_name ? <Trans i18nKey={`resources:${$ship.api_name}`}>{$ship.api_name}</Trans> : '??'}
+                        {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
                       </span>
                       <span className="ship-lv-text top-space" style={labelStatusStyle}>
                         Lv. {ship.api_lv || '??'}
                       </span>
-                    </Fragment>
+                    </>
                   )
                 }
               </div>
@@ -216,9 +215,9 @@ export const MiniShipRow = connect(
       </div>
     )
   }
-})
+}
 
-export const MiniSquardRow = connect((state, { squardId }) =>
+export const MiniSquardRow = translate(['main'])(connect((state, { squardId }) =>
   createSelector([
     landbaseSelectorFactory(squardId),
     landbaseEquipDataSelectorFactory(squardId),
@@ -227,22 +226,22 @@ export const MiniSquardRow = connect((state, { squardId }) =>
     equipsData,
     squardId,
   }))
-)(({landbase, equipsData, squardId}) => {
+)(({landbase, equipsData, squardId, t}) => {
   const { api_action_kind, api_name } = landbase
   const tyku = getTyku([equipsData], api_action_kind)
   const statuslabel = (() => {
     switch (api_action_kind) {
     // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
     case 0:
-      return <Label bsStyle='default'><Trans>main:Standby</Trans></Label>
+      return <Label bsStyle='default'>{t('main:Standby')}</Label>
     case 1:
-      return <Label bsStyle='danger'><Trans>main:Sortie</Trans></Label>
+      return <Label bsStyle='danger'>{t('main:Sortie')}</Label>
     case 2:
-      return <Label bsStyle='warning'><Trans>main:Defense</Trans></Label>
+      return <Label bsStyle='warning'>{t('main:Defense')}</Label>
     case 3:
-      return <Label bsStyle='primary'><Trans>main:Retreat</Trans></Label>
+      return <Label bsStyle='primary'>{t('main:Retreat')}</Label>
     case 4:
-      return <Label bsStyle='success'><Trans>main:Rest</Trans></Label>
+      return <Label bsStyle='success'>{t('main:Rest')}</Label>
     }
   })()
   return (
@@ -254,7 +253,7 @@ export const MiniSquardRow = connect((state, { squardId }) =>
           </span>
           <span className="ship-lv-text top-space">
             <div className="ship-fp">
-              <Trans>main:Fighter Power</Trans>: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
+              {t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
             </div>
             {statuslabel}
           </span>
@@ -267,4 +266,4 @@ export const MiniSquardRow = connect((state, { squardId }) =>
       </div>
     </div>
   )
-})
+}))

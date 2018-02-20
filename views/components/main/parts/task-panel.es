@@ -2,8 +2,8 @@ import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
 import { Panel, Label, OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
 import { createSelector } from 'reselect'
-import React, { Fragment } from 'react'
-import { Trans } from 'react-i18next'
+import React from 'react'
+import { translate, Trans } from 'react-i18next'
 import { escapeI18nKey } from 'views/utils/tools'
 
 import {
@@ -111,7 +111,7 @@ function getStyleByPercent(percent) {
 
 function getToolTip(record) {
   return (
-    <Fragment>
+    <>
       {
         values(record).map((subgoal, idx) =>
           (subgoal && typeof subgoal === 'object')
@@ -119,7 +119,7 @@ function getToolTip(record) {
             : undefined
         )
       }
-    </Fragment>
+    </>
   )
 }
 
@@ -168,15 +168,15 @@ const TaskRowBase = connect(
   )
 })
 
-const TaskRow = connect(
+const TaskRow = translate(['resources'])(connect(
   (state, {quest}) => ({
     quest,
     record: get(state, ['info', 'quests', 'records', quest.api_no]),
     translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
     wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
   })
-)(function ({idx, quest, record, translation, wikiId, colwidth}) {
-  const questName = quest && quest.api_title ? <Trans i18nKey={`resources:${ escapeI18nKey(quest.api_title) }`}>{ escapeI18nKey(quest.api_title) }</Trans> : '???'
+)(function ({idx, quest, record, translation, wikiId, colwidth, t}) {
+  const questName = quest && quest.api_title ? t(`resources:${ escapeI18nKey(quest.api_title) }`) : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
@@ -200,15 +200,15 @@ const TaskRow = connect(
       colwidth={colwidth}
     />
   )
-})
+}))
 
-const TaskPanel = connect(
-  ({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
-    activeQuests,
-    activeCapacity,
-    activeNum,
-  })
-)(class taskPanel extends React.Component {
+@translate(['main'])
+@connect(({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
+  activeQuests,
+  activeCapacity,
+  activeNum,
+}))
+export class TaskPanel extends React.Component {
   state = {
     dimension: 1,
   }
@@ -235,7 +235,7 @@ const TaskPanel = connect(
   }
 
   render () {
-    const {activeQuests, activeCapacity, activeNum} = this.props
+    const { activeQuests, activeCapacity, activeNum, t} = this.props
     const colwidth = Math.floor(12 / this.state.dimension)
     return (
       <Panel bsStyle="default">
@@ -255,8 +255,8 @@ const TaskPanel = connect(
                 <TaskRowBase
                   key={idx}
                   idx={idx}
-                  leftLabel={<Trans>main:To be refreshed</Trans>}
-                  leftOverlay={<Trans>main:Browse your quest list to let poi know your active quests</Trans>}
+                  leftLabel={t('main:To be refreshed')}
+                  leftOverlay={t('main:Browse your quest list to let poi know your active quests')}
                   colwidth={colwidth}
                 />
               ) : (idx < activeCapacity) ? (
@@ -264,15 +264,15 @@ const TaskPanel = connect(
                 <TaskRowBase
                   key={idx}
                   idx={idx}
-                  leftLabel={<Trans>main:Empty quest</Trans>}
+                  leftLabel={t('main:Empty quest')}
                   colwidth={colwidth}
                 /> ) : (
                 // Can expand
                 <TaskRowBase
                   key={idx}
                   idx={idx}
-                  leftLabel={<Trans>main:Locked</Trans>}
-                  leftOverlay={<Trans>main:QuestLimitMsg</Trans>}
+                  leftLabel={t('main:Locked')}
+                  leftOverlay={t('main:QuestLimitMsg')}
                   colwidth={colwidth}
                 /> )
             ),
@@ -281,6 +281,4 @@ const TaskPanel = connect(
       </Panel>
     )
   }
-})
-
-export default TaskPanel
+}

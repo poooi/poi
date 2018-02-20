@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import { remote } from 'electron'
 import { ProgressBar } from 'react-bootstrap'
 import { throttle } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const { updater } = remote.require('./lib/updater')
 
-class DownloadProgress extends Component {
+@translate(['setting'])
+export class DownloadProgress extends Component {
   state = {
     bytesPerSecond: 0,
     percent: 0,
@@ -25,15 +26,16 @@ class DownloadProgress extends Component {
     updater.on('update-downloaded', () => this.setState({downloaded: true}))
   }
   render () {
+    const { t } = this.props
     return this.state.percent > 0 && (
       <h5 className="update-progress">
         <ProgressBar bsStyle='success'
           now={this.state.percent} />
         {
           this.state.downloaded
-            ? <span><Trans>setting:Quit app and install updates</Trans></span>
+            ? <span>{t('setting:Quit app and install updates')}</span>
             : (this.state.percent >= 100
-              ? <span><Trans>setting:Deploying, please wait</Trans></span>
+              ? <span>{t('setting:Deploying, please wait')}</span>
               : <span>
                 {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
               </span>
@@ -43,5 +45,3 @@ class DownloadProgress extends Component {
     )
   }
 }
-
-export default DownloadProgress

@@ -6,7 +6,7 @@ import { Label } from 'react-bootstrap'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { isOASW } from 'views/utils/oasw'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const OASWSelectorFactory = memoize(shipId =>
   createSelector([
@@ -22,16 +22,14 @@ const OASWSelectorFactory = memoize(shipId =>
 )
 
 
-const OASWIndicator = connect(
+export const OASWIndicator = translate(['main'])(connect(
   (state, { shipId }) => ({
     isOASW: OASWSelectorFactory(shipId)(state),
   })
-)(({ isOASW, shipId }) => (
+)(({ isOASW, shipId, t }) => (
   isOASW ?
     <span className="ship-oasw">
-      <Label bsStyle='primary'><Trans>main:OASW</Trans></Label>
+      <Label bsStyle='primary'>{t('main:OASW')}</Label>
     </span>
     : <span />
-))
-
-export default OASWIndicator
+)))

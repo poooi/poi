@@ -5,7 +5,7 @@
   "Proxy": "프록시",
   "Plugins": "플러그인",
   "About": "Poi?",
-  "poi description": "<0>poi 는 Electron <1>{{version}}</1> 과 React.js 를 기반으로 한 함대 컬렉션 전용 브라우저입니다. Poi의 동작은 Chrome에서 작동하는 것과 동일하며 통신 내용의 변경 등은 일체하지 않습니다. Poi 자체는 기본적으로 브라우저 기능만을 제공하므로 고급 기능은 플러그인을 이용해주세요.</0>",
+  "poi description": "poi 는 Electron {{version}} 과 React.js 를 기반으로 한 함대 컬렉션 전용 브라우저입니다. Poi의 동작은 Chrome에서 작동하는 것과 동일하며 통신 내용의 변경 등은 일체하지 않습니다. Poi 자체는 기본적으로 브라우저 기능만을 제공하므로 고급 기능은 플러그인을 이용해주세요.",
   "Database": "통계 DB",
   "Wiki": "위키",
   "Proxy setting": "프록시 설정",

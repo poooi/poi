@@ -1,34 +1,36 @@
 import path from 'path-extra'
 import { shell, remote } from 'electron'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, Checkbox, Radio, Alert, Button, ButtonGroup, Collapse, Well, OverlayTrigger, Tooltip, Panel } from 'react-bootstrap'
 import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import FileDrop from 'react-file-dropzone'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
-import CheckboxLabel from '../components/checkbox'
+import { CheckboxLabelConfig } from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
 
-import NameInput from './name-input'
-import InstalledPlugin from './installed-plugin'
-import UninstalledPlugin from './uninstalled-plugin'
+import { NameInput } from './name-input'
+import { InstalledPlugin } from './installed-plugin'
+import { UninstalledPlugin } from './uninstalled-plugin'
 
 import '../assets/plugins.css'
 
 const {dialog} = remote.require('electron')
 const {PLUGIN_PATH} = window
 
-const PluginConfig = connect((state, props) => ({
+@translate(['setting'])
+@connect((state, props) => ({
   plugins: state.plugins,
   mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
   proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
   autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
-}))(class pluginConfig extends Component {
+}))
+export class PluginConfig extends Component {
   static propTypes = {
     plugins: PropTypes.array,
     mirrorName: PropTypes.string,
@@ -300,6 +302,7 @@ const PluginConfig = connect((state, props) => ({
     })
   }
   render() {
+    const { t } = this.props
     const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
     const mirrors = PluginManager.getMirrors()
     const updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
@@ -308,15 +311,15 @@ const PluginConfig = connect((state, props) => ({
     switch (this.state.manuallyInstallStatus) {
     case 1:
       installStatusbsStyle = 'info'
-      installStatusText = <Fragment><Trans>setting:Installing</Trans>...</Fragment>
+      installStatusText = <>t('setting:Installing')...</>
       break
     case 2:
       installStatusbsStyle = 'success'
-      installStatusText = <Trans>setting:Plugins are installed successfully</Trans>
+      installStatusText = t('setting:Plugins are installed successfully')
       break
     case 3:
       installStatusbsStyle = 'danger'
-      installStatusText = <Trans>setting:InstallFailedMsg</Trans>
+      installStatusText = t('setting:InstallFailedMsg')
       break
     default:
       installStatusbsStyle = 'warning'
@@ -330,15 +333,15 @@ const PluginConfig = connect((state, props) => ({
           onDrop={this.onDropInstallFromFile}
           acceptType="application/gzip, application/x-gzip"
         >
-          <Trans>setting:Drop plugin tarballs here to install</Trans>
+          {t('setting:Drop plugin tarballs here to install')}
         </FileDrop>
         <Grid className='correct-container'>
           <Row className='plugin-rowspace'>
             <Col xs={12}>
               {
                 window.isSafeMode &&
-                <Panel header={<Trans>setting:Safe Mode</Trans>} bsStyle='warning'>
-                  <Panel.Body><Trans>setting:Poi is running in safe mode, plugins are not enabled automatically</Trans></Panel.Body>
+                <Panel header={t('setting:Safe Mode')} bsStyle='warning'>
+                  <Panel.Body>{t('setting:Poi is running in safe mode, plugins are not enabled automatically')}</Panel.Body>
                 </Panel>
               }
               <ButtonGroup bsSize='small' className='plugin-buttongroup'>
@@ -348,7 +351,7 @@ const PluginConfig = connect((state, props) => ({
                   className='control-button col-xs-3'
                 >
                   <FontAwesome name='refresh' spin={this.state.checkingUpdate} />
-                  <span> {<Trans>setting:Check Update</Trans>}</span>
+                  <span> {t('setting:Check Update')}</span>
                 </Button>
                 <Button
                   onClick={this.handleUpdateAll}
@@ -362,7 +365,7 @@ const PluginConfig = connect((state, props) => ({
                     name={updateStatusFAname}
                     pulse={this.state.updatingAll}
                   />
-                  <span> <Trans>setting:Update all</Trans></span>
+                  <span> {t('setting:Update all')}</span>
                 </Button>
                 <Button
                   onClick={this.handleInstallAll}
@@ -375,14 +378,14 @@ const PluginConfig = connect((state, props) => ({
                     name={installStatusFAname}
                     pulse={this.state.installingAll}
                   />
-                  <span> <Trans>setting:Install all</Trans></span>
+                  <span> {t('setting:Install all')}</span>
                 </Button>
                 <Button
                   onClick={this.handleAdvancedShow}
                   className='control-button col-xs-3'
                 >
                   <FontAwesome name="gear" />
-                  <span> <Trans>setting:Advanced</Trans></span>
+                  <span> {t('setting:Advanced')}</span>
                   <FontAwesome name={advanceFAname} />
                 </Button>
               </ButtonGroup>
@@ -395,13 +398,13 @@ const PluginConfig = connect((state, props) => ({
                   <div>
                     <Row>
                       <Col xs={12}>
-                        <CheckboxLabel
-                          label={<Trans>setting:Switch to Plugin Automatically</Trans>}
+                        <CheckboxLabelConfig
+                          label={t('setting:Switch to Plugin Automatically')}
                           configName="poi.autoswitch.enabled"
                           defaultVal={true}
                         />
-                        <CheckboxLabel
-                          label={<Trans>setting:Enable autoswitch for main panel</Trans>}
+                        <CheckboxLabelConfig
+                          label={t('setting:Enable autoswitch for main panel')}
                           configName="poi.autoswitch.main"
                           defaultVal={true}
                         />
@@ -412,7 +415,7 @@ const PluginConfig = connect((state, props) => ({
                         <Row>
                           <Col xs={12}>
                             <label className='control-label'>
-                              <Trans>setting:Select npm server</Trans>
+                              {t('setting:Select npm server')}
                             </label>
                           </Col>
                         </Row>
@@ -447,7 +450,7 @@ const PluginConfig = connect((state, props) => ({
                         <Row>
                           <Col xs={12}>
                             <label className='control-label'>
-                              <Trans>setting:Others</Trans>
+                              {t('setting:Others')}
                             </label>
                           </Col>
                         </Row>
@@ -456,7 +459,7 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.proxy || false}
                             onChange={this.handleEnableProxy}
                           >
-                            <Trans>setting:Connect to npm server through proxy</Trans>
+                            {t('setting:Connect to npm server through proxy')}
                           </Checkbox>
                         </div>
                         <div>
@@ -464,7 +467,7 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.autoUpdate || false}
                             onChange={this.handleEnableAutoUpdate}
                           >
-                            <Trans>setting:Automatically update plugins</Trans>
+                            {t('setting:Automatically update plugins')}
                           </Checkbox>
                         </div>
                         <div>
@@ -472,19 +475,19 @@ const PluginConfig = connect((state, props) => ({
                             checked={this.props.betaCheck || false}
                             onChange={this.handleEnableBetaPluginCheck}
                           >
-                            <Trans>setting:Developer option check update of beta version</Trans>
+                            {t('setting:Developer option check update of beta version')}
                           </Checkbox>
                         </div>
                         <Row>
                           <ButtonGroup className='plugin-buttongroup'>
                             <Button className='col-xs-4' onClick={this.onSelectOpenFolder}>
-                              <Trans>setting:Open plugin folder</Trans>
+                              {t('setting:Open plugin folder')}
                             </Button>
                             <Button className='col-xs-4' onClick={this.onSelectOpenSite}>
-                              <Trans>setting:Search for plugins</Trans>
+                              {t('setting:Search for plugins')}
                             </Button>
                             <Button className='col-xs-4' onClick={this.handleGracefulRepair}>
-                              <Trans>setting:Repair plugins</Trans>
+                              {t('setting:Repair plugins')}
                             </Button>
                           </ButtonGroup>
                         </Row>
@@ -514,7 +517,7 @@ const PluginConfig = connect((state, props) => ({
             </Col>
             <Col xs={12}>
               <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
-                <Trans>setting:Drop plugin packages here to install it, or click here to select them</Trans>
+                {t('setting:Drop plugin packages here to install it, or click here to select them')}
               </div>
             </Col>
           </Row>
@@ -549,6 +552,4 @@ const PluginConfig = connect((state, props) => ({
       </form>
     )
   }
-})
-
-export default PluginConfig
+}

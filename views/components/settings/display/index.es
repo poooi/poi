@@ -1,11 +1,11 @@
 import React from 'react'
-import Divider from '../components/divider'
+import { Divider } from '../components/divider'
 
-import LayoutConfig from './layout-config'
-import ThemeConfig from './theme-config'
-import ZoomingConfig from './zooming-config'
-import FlashQualityConfig from './flash-quality-config'
-import ResolutionConfig from './resolution-config'
+import { LayoutConfig } from './layout-config'
+import { ThemeConfig } from './theme-config'
+import { ZoomingConfig } from './zooming-config'
+import { FlashQualityConfig } from './flash-quality-config'
+import { ResolutionConfig } from './resolution-config'
 import { Trans } from 'react-i18next'
 
 const {config, toggleModal } = window
@@ -44,7 +44,7 @@ config.on('config.set', (path, value) => {
   }
 })
 
-const DisplayConfig = () => (
+export const DisplayConfig = () => (
   <form>
     <div className="form-group">
       <Divider text={<Trans>setting:Layout</Trans>} />
@@ -68,5 +68,3 @@ const DisplayConfig = () => (
     </div>
   </form>
 )
-
-export default DisplayConfig

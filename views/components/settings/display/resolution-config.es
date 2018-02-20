@@ -7,9 +7,10 @@ import { Trans } from 'react-i18next'
 
 const { config } = window
 
-const ResolutionConfig = connect((state, props) => ({
+@connect((state, props) => ({
   webview: state.layout.webview,
-}))(class ResolutionConfig extends Component {
+}))
+export class ResolutionConfig extends Component {
   static propTypes = {
     webview: PropTypes.object,
   }
@@ -100,6 +101,4 @@ const ResolutionConfig = connect((state, props) => ({
       </Grid>
     )
   }
-})
-
-export default ResolutionConfig
+}

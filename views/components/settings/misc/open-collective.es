@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { range } from 'lodash'
@@ -32,12 +32,10 @@ const openCollectiveWidthWidthSelector = createSelector(
   }
 )
 
-const OpenCollective = connect(
-  state => ({
-    width: openCollectiveWidthWidthSelector(state),
-  })
-)(({ width }) => (
-  <Fragment>
+export const OpenCollective = connect(state => ({
+  width: openCollectiveWidthWidthSelector(state),
+}))(({ width }) => (
+  <>
     <div>
       {
         range(10).map(i => (
@@ -55,7 +53,5 @@ const OpenCollective = connect(
         <img src={`https://opencollective.com/poi/backers.svg?width=${width}`} />
       </a>
     </div>
-  </Fragment>
+  </>
 ))
-
-export default OpenCollective

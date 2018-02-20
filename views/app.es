@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import fs from 'fs-extra'
 import path from 'path-extra'
@@ -46,10 +46,11 @@ const CustomCssInjector = () => {
   )
 }
 
-const Poi = connect(state => ({
+@connect(state => ({
   isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.reverseLayout', false),
-}))(class poi extends Component {
+}))
+class Poi extends Component {
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.poimain)
   }
@@ -60,7 +61,7 @@ const Poi = connect(state => ({
   render() {
     const { isHorizontal, reversed } = this.props
     return (
-      <Fragment>
+      <>
         <CustomCssInjector />
         {
           config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
@@ -81,10 +82,10 @@ const Poi = connect(state => ({
         <ModalTrigger />
         <Toastr />
         <BasicAuth />
-      </Fragment>
+      </>
     )
   }
-})
+}
 
 ReactDOM.render(
   <I18nextProvider i18n={i18next} >

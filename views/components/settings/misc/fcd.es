@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Button, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
@@ -26,9 +26,10 @@ const defaultFetchOption = {
 
 const initState = {}
 
-const FCD = connect(state => ({
+@connect(state => ({
   version: state.fcd.version || initState,
-}))(class FCD extends Component {
+}))
+export class FCD extends Component {
   state = {
     updating: false,
   }
@@ -108,7 +109,7 @@ const FCD = connect(state => ({
     const { updating } = this.state
     const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
-      <Fragment>
+      <>
         <Button
           onClick={this.updateData('reload')}
           disabled={updating}
@@ -126,9 +127,7 @@ const FCD = connect(state => ({
               : null
           ))
         }
-      </Fragment>
+      </>
     )
   }
-})
-
-export default FCD
+}

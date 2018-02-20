@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 // Notification modal
+@translate()
 export class ModalTrigger extends PureComponent {
   state = {
     isModalOpen: false,
@@ -48,6 +49,7 @@ export class ModalTrigger extends PureComponent {
     })
   }
   render() {
+    const { t } = this.props
     return (
       <Modal autoFocus={true}
         animation={true}
@@ -63,7 +65,7 @@ export class ModalTrigger extends PureComponent {
         <Modal.Footer>
           <Button onClick={this.handleToggle}>
             {
-              (this.state.footer || []).length === 0 ? <Trans>Close</Trans> : <Trans>Cancel</Trans>
+              (this.state.footer || []).length === 0 ? t('Close') : t('Cancel')
             }
           </Button>
           {this.renderFooter(this.state.footer)}

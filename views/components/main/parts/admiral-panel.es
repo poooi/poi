@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Panel, OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { createSelector } from 'reselect'
 import { get, map } from 'lodash'
 import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
@@ -53,26 +53,26 @@ const getLabelStyle = (_, timeRemaining) => {
   }
 }
 
-const ExpContent = connect(
+const ExpContent = translate(['main'])(connect(
   (state) => ({
     level: get(state, 'info.basic.api_level', 0),
     exp: get(state, 'info.basic.api_experience', 0),
   })
-)(({ level, exp }) => level >= 0
-  ? <Fragment>
-    { level < 120 &&
-      <div className='info-tooltip-entry'>
-        <span className='info-tooltip-item'><Trans>main:Next</Trans></span>
-        <span>{totalExp[level] - exp}</span>
-      </div>
-    }
+)(({ level, exp, t }) => level >= 0
+  ? <>
+  { level < 120 &&
     <div className='info-tooltip-entry'>
-      <span className='info-tooltip-item'><Trans>main:Total Exp</Trans></span>
-      <span>{exp}</span>
+      <span className='info-tooltip-item'>{t('main:Next')}</span>
+      <span>{totalExp[level] - exp}</span>
     </div>
-  </Fragment>
+  }
+  <div className='info-tooltip-entry'>
+    <span className='info-tooltip-item'>{t('main:Total Exp')}</span>
+    <span>{exp}</span>
+  </div>
+  </>
   : <span />
-)
+))
 
 // Refresh time:
 // - Practice: JST 3h00, 15h00, UTC 18h00, 6h00
@@ -228,7 +228,7 @@ const numCheckSelector = createSelector(
   })
 )
 
-export default connect(
+export const AdmiralPanel = translate(['main'])(connect(
   (state) => ({
     ...admiralInfoSelector(state),
     equipNum: Object.keys(state.info.equips).length,
@@ -236,7 +236,7 @@ export default connect(
     dropCount: state.sortie.dropCount,
     ...numCheckSelector(state),
   })
-)(function TeitokuPanel({ level, nickname, rank, maxShip, maxSlotitem,
+)(function AdmiralPanel({ t, level, nickname, rank, maxShip, maxSlotitem,
   equipNum, shipNum, dropCount,
   shipNumCheck, minShipNum, slotNumCheck, minSlotNum }) {
   const shipNumClass = (shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum) ? 'alert alert-warning' : ''
@@ -253,19 +253,19 @@ export default connect(
                 <span className="nickname">{nickname}</span>
                 <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
               </span>
-              : <span><Trans>Admiral [Not logged in]</Trans></span>
+              : <span>{t('Admiral [Not logged in]')}</span>
           }
         </OverlayTrigger>
         <CountDownControl/>
         <span style={{marginRight: '1em'}}>
-          <span><Trans>main:Ships</Trans>: </span>
+          <span>{t('main:Ships')}: </span>
           <span className={shipNumClass}>{((shipNum || 0) + (dropCount || 0)) || '?'} / {maxShip || '?'}</span>
         </span>
         <span>
-          <span><Trans>main:Equip</Trans>.: </span>
+          <span>{t('main:Equip')}: </span>
           <span className={slotNumClass}>{equipNum || '?'} / {maxSlotitem || '?'}</span>
         </span>
       </Panel.Body>
     </Panel>
   )
-})
+}))

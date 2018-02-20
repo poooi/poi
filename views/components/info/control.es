@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 
 import './assets/control.css'
 
@@ -27,10 +27,12 @@ const openItemAsync = (dir, source=null) => {
 // Controller icon bar
 const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
-const PoiControl = connect((state, props) => ({
+@translate()
+@connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
   editable: get(state, 'config.poi.layouteditable', false),
-}))(class poiControl extends Component {
+}))
+export class PoiControl extends Component {
   static propTypes = {
     muted: PropTypes.bool,
   }
@@ -38,7 +40,7 @@ const PoiControl = connect((state, props) => ({
     extend: false,
   }
   handleCapturePage = () => {
-    const bound = $('kan-game webview').getBoundingClientRect()
+    const bound = $('kan-game webview').getBoundingClientRecthis.props.t()
     const rect = {
       x: Math.ceil(bound.left),
       y: Math.ceil(bound.top),
@@ -58,10 +60,10 @@ const PoiControl = connect((state, props) => ({
           if (err) {
             throw err
           }
-          window.success(<span><Trans>screenshot saved to</Trans> {filename}</span>)
+          window.success(`${this.props.t('screenshot saved to')} ${{filename}}`)
         })
       } catch (error) {
-        window.error(<Trans>Failed to save the screenshot</Trans>)
+        window.error(this.props.t('Failed to save the screenshot'))
       }
     })
   }
@@ -78,7 +80,7 @@ const PoiControl = connect((state, props) => ({
       openItemAsync(dir, 'handleOpenCacheFolder')
     }
     catch (e) {
-      window.toggleModal(<Trans>Open cache dir</Trans>, <Trans>NoPermission</Trans>)
+      window.toggleModal(this.props.t('Open cache dir'), this.props.t('NoPermission'))
     }
   }
   handleOpenMakaiFolder = () => {
@@ -88,7 +90,7 @@ const PoiControl = connect((state, props) => ({
       fs.ensureDirSync(dir)
       openItemAsync(dir, 'handleOpenMakaiFolder')
     } catch (e) {
-      window.toggleModal(<Trans>Open makai dir</Trans>, <Trans>NoPermission</Trans>)
+      window.toggleModal(this.props.t('Open makai dir'), this.props.t('NoPermission'))
     }
   }
   handleOpenScreenshotFolder = () => {
@@ -98,14 +100,14 @@ const PoiControl = connect((state, props) => ({
       openItemAsync(screenshotPath,'handleOpenScreenshotFolder')
     }
     catch (e) {
-      window.toggleModal(<Trans>Open screenshot dir</Trans>, <Trans>NoPermission</Trans>)
+      window.toggleModal(this.props.t('Open screenshot dir'), this.props.t('NoPermission'))
     }
   }
   handleSetMuted = () => {
-    config.set('poi.content.muted', !this.props.muted)
+    config.sethis.props.t('poi.content.muted', !this.props.muted)
   }
   handleSetEditable = () => {
-    config.set('poi.layouteditable', !this.props.editable)
+    config.sethis.props.t('poi.layouteditable', !this.props.editable)
   }
   handleOpenDevTools = () => {
     openFocusedWindowDevTools()
@@ -114,11 +116,11 @@ const PoiControl = connect((state, props) => ({
     $('kan-game webview').openDevTools({detach: true})
   }
   handleJustifyLayout = (e) => {
-    window.dispatchEvent(new Event('resize'))
-    e.preventDefault()
+    window.dispatchEventhis.props.t(new Event('resize'))
+    e.preventDefaulthis.props.t()
   }
   handleUnlockWebview = () => {
-    $('kan-game webview').executeJavaScript('window.unalign()')
+    $('kan-game webview').executeJavaScripthis.props.t('window.unalign()')
   }
   handleRefreshGameDialog = (e) => {
     if (e.shiftKey) {
@@ -127,7 +129,7 @@ const PoiControl = connect((state, props) => ({
     }
 
     toggleModal(
-      <Trans>Confirm Refreshing</Trans>,
+      this.props.t('Confirm Refreshing'),
       <div>
         <Trans i18nKey="RefreshGameDialogTip">
           Are you sure to refresh the game?
@@ -139,10 +141,10 @@ const PoiControl = connect((state, props) => ({
         </Trans>
       </div>,
       [
-        { name: <Trans>Refresh page</Trans>,
+        { name: this.props.t('Refresh page'),
           func: gameRefreshPage,
           style: "warning" },
-        { name: <Trans>Reload Flash</Trans>,
+        { name: this.props.t('Reload Flash'),
           func: gameReloadFlash,
           style: "danger" },
       ])
@@ -157,7 +159,7 @@ const PoiControl = connect((state, props) => ({
     switch (props) {
     case 'refresh':
       toggleModal(
-        <Trans>Confirm Refreshing</Trans>,
+        this.props.t('Confirm Refreshing'),
         <div>
           <Trans i18nKey="RefreshGameDialogTip">
             Are you sure to refresh the game?
@@ -169,19 +171,19 @@ const PoiControl = connect((state, props) => ({
           </Trans>
         </div>,
         [
-          { name: <Trans>Refresh page</Trans>,
+          { name: this.props.t('Refresh page'),
             func: gameRefreshPage,
             style: "warning" },
-          { name: <Trans>Reload Flash</Trans>,
+          { name: this.props.t('Reload Flash'),
             func: gameReloadFlash,
             style: "danger" },
         ],
         () => {touchBarReset()}
       )
-      refreshconfirm(<Trans>Refresh page</Trans>,<Trans>Reload Flash</Trans>)
+      refreshconfirm(this.props.t('Refresh page'),this.props.t('Reload Flash'))
       break
     case 'adjust':
-      window.dispatchEvent(new Event('resize'))
+      window.dispatchEventhis.props.t(new Event('resize'))
       break
     case 'unlock':
       this.handleUnlockWebview()
@@ -217,35 +219,35 @@ const PoiControl = connect((state, props) => ({
   }
   render() {
     if (process.platform === 'darwin') {
-      const {touchBarReInit} = remote.require('./lib/touchbar')
+      const { touchBarReInit } = remote.require('./lib/touchbar')
       touchBarReInit()
     }
     return (
       <div className='poi-control-container'>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'><Trans>Developer Tools</Trans></Tooltip>}>
+        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{this.props.t('Developer Tools')}</Tooltip>}>
           <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='terminal' /></Button>
         </OverlayTrigger>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'><Trans>Take a screenshot</Trans></Tooltip>}>
+        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'>{this.props.t('Take a screenshot')}</Tooltip>}>
           <Button onClick={this.handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
         </OverlayTrigger>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? <Trans>Volume on</Trans> : <Trans>Volume off</Trans>}</Tooltip>}>
+        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off')}</Tooltip>}>
           <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
         </OverlayTrigger>
         <Collapse in={this.state.extend} dimension='width' className="poi-control-extender">
           <div>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'><Trans>Open cache dir</Trans></Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{this.props.t('Open cache dir')}</Tooltip>}>
               <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button' className='poi-control-tooltip'><Trans>Open screenshot dir</Trans></Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button' className='poi-control-tooltip'>{this.props.t('Open screenshot dir')}</Tooltip>}>
               <Button onClick={this.handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'><Trans>Auto adjust</Trans></Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{this.props.t('Auto adjust')}</Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'><Trans>Arrange panel</Trans></Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.t('Arrange panel')}</Tooltip>}>
               <Button onClick={this.handleSetEditable} bsSize='small'><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-refresh-button' className='poi-control-tooltip'><Trans>Refresh game</Trans></Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-refresh-button' className='poi-control-tooltip'>{this.props.t('Refresh game')}</Tooltip>}>
               <Button
                 onClick={this.handleRefreshGameDialog}
                 onContextMenu={gameReloadFlash}
@@ -258,6 +260,4 @@ const PoiControl = connect((state, props) => ({
       </div>
     )
   }
-})
-
-export { PoiControl }
+}

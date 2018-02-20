@@ -6,14 +6,13 @@ import { get } from 'lodash'
 
 const { config } = window
 
-const CheckboxLabelConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-    undecided: props.undecided,
-    label: props.label,
-  })
-})(class checkboxLabelConfig extends Component {
+@connect((state, props) => ({
+  value: get(state.config, props.configName, props.defaultVal),
+  configName: props.configName,
+  undecided: props.undecided,
+  label: props.label,
+}))
+export class CheckboxLabelConfig extends Component {
   static propTypes = {
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     configName: PropTypes.string,
@@ -35,6 +34,4 @@ const CheckboxLabelConfig = connect(() => {
       </div>
     )
   }
-})
-
-export default CheckboxLabelConfig
+}

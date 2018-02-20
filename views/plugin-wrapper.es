@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { FormControl, Button } from 'react-bootstrap'
 import { clipboard } from 'electron'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
-class PluginWrap extends Component {
+@translate()
+export class PluginWrap extends Component {
   state = {
     hasError: false,
     error: null,
@@ -32,20 +33,20 @@ class PluginWrap extends Component {
 
   render() {
     const { hasError, error, info } = this.state
-    const {plugin} = this.props
+    const { plugin, t } = this.props
     if (hasError) {
       const code = [error.stack, info.componentStack].join('\n')
       return (
         <div id={plugin.id} className="poi-app-tabpane poi-plugin" style={{padding : '1em'}}>
-          <h1><Trans i18nKey='PluginErrTitle'>{{ name: plugin.name }}</Trans></h1>
-          <p><Trans>PluginErrorMsg</Trans></p>
+          <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
+          <p>{t('PluginErrorMsg')}</p>
           <FormControl
             componentClass="textarea"
             readOnly
             value={code}
             style={{ height: '10em' }}
           />
-          <Button bsStyle="primary" onClick={this.handleCopy}><Trans>Copy to clipboard</Trans></Button>
+          <Button bsStyle="primary" onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
         </div>
       )
     }
@@ -56,5 +57,3 @@ class PluginWrap extends Component {
     )
   }
 }
-
-export default PluginWrap

@@ -19,12 +19,11 @@ config.on('config.set', (path, value) => {
   }
 })
 
-const ShortcutConfig = connect(() => {
-  return (state, props) => ({
-    value: get(state.config, props.configName, props.defaultVal),
-    configName: props.configName,
-  })
-})(class shortcutConfig extends Component {
+@connect((state, props) => ({
+  value: get(state.config, props.configName, props.defaultVal),
+  configName: props.configName,
+}))
+export class ShortcutConfig extends Component {
   static propTypes = {
     value: PropTypes.string,
     active: PropTypes.bool,
@@ -152,7 +151,7 @@ const ShortcutConfig = connect(() => {
       </Col>
     )
   }
-})
+}
 
 mousetrap.prototype.handleKey = (character, modifiers, e) => {
   if (e.type !== 'keydown' || ['shift', 'alt', 'ctrl', 'meta'].includes(character)) {
@@ -163,5 +162,3 @@ mousetrap.prototype.handleKey = (character, modifiers, e) => {
     fn(character, modifiers, e)
   }
 }
-
-export default ShortcutConfig

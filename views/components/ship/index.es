@@ -1,19 +1,19 @@
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Panel, Button, ButtonGroup, Alert } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
-import { Trans } from 'react-i18next'
+import { translate, Trans } from 'react-i18next'
 
 const { dispatch } = window
 
 import { ShipRow } from './shipitem'
 import { SquardRow } from './lbac-view'
 import { LandbaseButton } from '../ship-parts/landbase-button'
-import TopAlert from 'views/components/ship-parts/topalert'
+import { TopAlert } from 'views/components/ship-parts/topalert'
 import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
@@ -76,7 +76,7 @@ const FleetShipView = connect(
   (state, {fleetId}) =>
     fleetShipViewDataSelectorFactory(fleetId)(state)
 )(({ fleetId, shipsId, enableAvatar, width }) =>
-  <Fragment>
+  <>
     <div className='fleet-name'>
       <TopAlert
         fleetId={fleetId}
@@ -95,13 +95,13 @@ const FleetShipView = connect(
         )
       }
     </div>
-  </Fragment>
+  </>
 )
 
-const LBView = connect(state => ({
+const LBView = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
-}))(({areaIds, mapareas}) => (
+}))(({areaIds, mapareas, t}) => (
   <div className="ship-details">
     {
       areaIds.map((id, i) => (
@@ -113,7 +113,7 @@ const LBView = connect(state => ({
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
-                [{id}] {mapareas[id] ? <Trans i18nKey={`resources:${ mapareas[id].api_name }`}>{ mapareas[id].api_name }</Trans> : ''}
+                [{id}] {mapareas[id] ? t(`resources:${ mapareas[id].api_name }`) : ''}
               </Alert>
               <SquardRow
                 key={i}
@@ -124,18 +124,18 @@ const LBView = connect(state => ({
       ))
     }
   </div>
-))
+)))
 
 
-const ShipView = connect((state, props) => ({
+@connect((state, props) => ({
   enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
   airBaseCnt: get(state, 'info.airbase.length', 0),
   enableAvatar: get(state, 'config.poi.enableAvatar', true),
   width: shipRowWidthSelector(state),
-})
-)(class ShipView extends Component {
+}))
+export class reactClass extends Component {
   static propTypes = {
     enableTransition: PropTypes.bool.isRequired,
     fleetCount: PropTypes.number.isRequired,
@@ -230,10 +230,6 @@ const ShipView = connect((state, props) => ({
       </Panel>
     )
   }
-})
-
-export default {
-  name: 'ShipView',
-  displayName: <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>,
-  reactClass: ShipView,
 }
+
+export const displayName = <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>

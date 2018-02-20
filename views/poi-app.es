@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 
-import ControlledTabArea from './tabarea'
+import { ControlledTabArea } from './tabarea'
 
-
-export const PoiApp = connect((state, props) => ({
+@connect((state, props) => ({
   layout: get(state, 'config.poi.layout', 'horizontal'),
-}))(class poiApp extends Component {
+}))
+export class PoiApp extends Component {
   render() {
     const { layout } = this.props
     const isHorizontal = layout === 'horizontal'
@@ -28,4 +28,4 @@ export const PoiApp = connect((state, props) => ({
       </poi-app>
     )
   }
-})
+}

@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { isEqual, get } from 'lodash'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 const texts = [
   ['Retreated'],
@@ -26,14 +26,16 @@ const initState = {
   mapname: [],
 }
 
-const StatusLabel = connect(state => ({
+@translate(['main'])
+@connect(state => ({
   shipTag: state.fcd.shiptag || initState,
-}))(class statusLabel extends React.Component {
+}))
+export class StatusLabel extends React.Component {
   shouldComponentUpdate = (nextProps, nextState) => (
     nextProps.label !== this.props.label || !isEqual(this.props.shipTag, nextProps.shipTag)
   )
   render() {
-    const i = this.props.label
+    const { label: i, t} = this.props
     const {color, mapname, fleetname} = this.props.shipTag
     const { language } = window
     if (i != null && 0 <= i) {
@@ -42,8 +44,8 @@ const StatusLabel = connect(state => ({
           <Tooltip id={`statuslabel-status-${i}`}>
             {
               i > 2
-                ? <Fragment>{ get(fleetname, [language, i - 3], <Trans>main:Ship tag</Trans>) } - {mapname[i - 3] || i - 2}</Fragment>
-                : <Trans>main:{ texts[i] }</Trans>
+                ? `${ get(fleetname, [language, i - 3], t('main:Ship tag')) } - ${mapname[i - 3] || i - 2}`
+                : t(`main:${ texts[i] }`)
             }
           </Tooltip>
         }>
@@ -59,6 +61,4 @@ const StatusLabel = connect(state => ({
       return <Label bsStyle="default" style={{opacity: 0}}></Label>
     }
   }
-})
-
-export default StatusLabel
+}
