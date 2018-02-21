@@ -18,4 +18,5 @@ module.exports = {
   ],
   ignore: [],
   only: [/.es$/],
+  babelrc: false,
 }
