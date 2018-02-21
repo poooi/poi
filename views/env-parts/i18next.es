@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { isString, toString, each, merge } from 'lodash'
+import { isString, toString, each, merge, debounce, keys, get } from 'lodash'
 import I18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
@@ -115,8 +115,14 @@ if (window.isMain) {
 // export addGlobalI18n for plugin manager usage
 i18next.addGlobalI18n = addGlobalI18n
 
+i18next.emitResourceAddedDebounce = debounce(() => {
+  // simulate added event
+  i18next.store.emit('added', 'zh-CN', 'others', {})
+}, 500)
+
 i18next.addResourcePack = (pack) => {
   i18next.store.data = merge(i18next.store.data, pack)
+  i18next.emitResourceAddedDebounce()
 }
 
 window.i18n.resources = {
