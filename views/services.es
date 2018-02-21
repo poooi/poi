@@ -3,7 +3,6 @@ import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
-import React from 'react'
 
 const proxy = remote.require('./lib/proxy')
 const { config, toggleModal, log, error, dbg } = window
