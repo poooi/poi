@@ -8,7 +8,7 @@ import { translate } from 'react-i18next'
 const texts = [
   ['Retreated'],
   ['Repairing'],
-  ['Resupply needed'],
+  ['Resupply Needed'],
 ]
 const styles = [
   'warning',
