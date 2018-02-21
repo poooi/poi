@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { isString, toString, each } from 'lodash'
+import { isString, toString, each, merge } from 'lodash'
 import I18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
@@ -114,6 +114,10 @@ if (window.isMain) {
 
 // export addGlobalI18n for plugin manager usage
 i18next.addGlobalI18n = addGlobalI18n
+
+i18next.addResourcePack = (pack) => {
+  i18next.store.data = merge(i18next.store.data, pack)
+}
 
 window.i18n.resources = {
   __: (str) => spacing(str),

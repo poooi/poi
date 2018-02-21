@@ -130,13 +130,11 @@ export function updateI18n(plugin) {
     const namespace = plugin.id
     each(window.LOCALES, (language) => {
       i18next.addGlobalI18n(namespace)
-      i18next.addResourceBundle(
-        language,
-        namespace,
-        readI18nResources(join(i18nFile, `${language}.json`,)),
-        true,
-        true,
-      )
+      i18next.addResourcePack({
+        [language]: {
+          [namespace]: readI18nResources(join(i18nFile, `${language}.json`,)),
+        },
+      })
     })
     plugin.name = i18next.t(`${namespace}:${plugin.name}`)
     plugin.description = i18next.t(`${namespace}:${plugin.description}`)
