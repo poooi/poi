@@ -8,10 +8,10 @@ import { translate, Trans } from 'react-i18next'
 import './assets/landbase-button.css'
 
 const fatiguedLabel = <Label bsStyle='danger' className='airbase-state-label'><Trans>main:Fatigued</Trans></Label>
-const emptyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Empty slot</Trans></Label>
+const emptyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Empty Slot</Trans></Label>
 const relocateLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Relocating</Trans></Label>
-const resupplyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Resupply needed</Trans></Label>
-const noActionLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:No action</Trans></Label>
+const resupplyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Resupply Needed</Trans></Label>
+const noActionLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:No Action</Trans></Label>
 const readyLabel = <Label bsStyle='success' className='airbase-state-label'><Trans>main:Ready</Trans></Label>
 
 export const LandbaseButton = translate(['resources'])(connect(state => ({
