@@ -40,7 +40,7 @@ export class PoiControl extends Component {
     extend: false,
   }
   handleCapturePage = () => {
-    const bound = $('kan-game webview').getBoundingClientRecthis.props.t()
+    const bound = $('kan-game webview').getBoundingClientRect()
     const rect = {
       x: Math.ceil(bound.left),
       y: Math.ceil(bound.top),
@@ -104,10 +104,10 @@ export class PoiControl extends Component {
     }
   }
   handleSetMuted = () => {
-    config.sethis.props.t('poi.content.muted', !this.props.muted)
+    config.set('poi.content.muted', !this.props.muted)
   }
   handleSetEditable = () => {
-    config.sethis.props.t('poi.layouteditable', !this.props.editable)
+    config.set('poi.layouteditable', !this.props.editable)
   }
   handleOpenDevTools = () => {
     openFocusedWindowDevTools()
@@ -116,11 +116,11 @@ export class PoiControl extends Component {
     $('kan-game webview').openDevTools({detach: true})
   }
   handleJustifyLayout = (e) => {
-    window.dispatchEventhis.props.t(new Event('resize'))
-    e.preventDefaulthis.props.t()
+    window.dispatchEvent(new Event('resize'))
+    e.preventDefault()
   }
   handleUnlockWebview = () => {
-    $('kan-game webview').executeJavaScripthis.props.t('window.unalign()')
+    $('kan-game webview').executeJavaScript('window.unalign()')
   }
   handleRefreshGameDialog = (e) => {
     if (e.shiftKey) {
@@ -180,10 +180,10 @@ export class PoiControl extends Component {
         ],
         () => {touchBarReset()}
       )
-      refreshconfirm(this.props.t('Refresh page'),this.props.t('Reload Flash'))
+      refreshconfirm(this.props.t('Refresh page'), this.props.t('Reload Flash'))
       break
     case 'adjust':
-      window.dispatchEventhis.props.t(new Event('resize'))
+      window.dispatchEvent(new Event('resize'))
       break
     case 'unlock':
       this.handleUnlockWebview()
