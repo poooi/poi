@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, Col, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { remote } from 'electron'
-import { Trans } from 'react-i18next'
+import { translate } from 'react-i18next'
 
 import { Divider } from '../components/divider'
 
@@ -20,122 +20,122 @@ const screenshotPathExclude = [
   window.ROOT,
 ]
 
-export const PoiConfig = () => (
+export const PoiConfig = translate(['setting'])(({ t }) => (
   <div>
     <div className="form-group navigator-bar" id='navigator-bar'>
-      <Divider text={<Trans>setting:Browser</Trans>} />
+      <Divider text={t('setting:Browser')} />
       <NavigatorBar />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Notification</Trans>} />
+      <Divider text={t('setting:Notification')} />
       <NotificationConfig />
     </div>
     <div className="form-group" >
-      <Divider text={<Trans>setting:Slot Check</Trans>} />
+      <Divider text={t('setting:Slot Check')} />
       <SlotCheckConfig type="ship" />
       <SlotCheckConfig type="item" />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Cache and cookies</Trans>} />
+      <Divider text={t('setting:Cache and cookies')} />
       <ClearDataConfig />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Language</Trans>} />
+      <Divider text={t('setting:Language')} />
       <LanguageConfig />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Screenshot Format</Trans>} />
+      <Divider text={t('setting:Screenshot Format')} />
       <RadioConfig
-        label={<Trans>setting:Screenshot Format</Trans>}
+        label={t('setting:Screenshot Format')}
         configName="poi.screenshotFormat"
         defaultVal='png'
         availableVal={[{name: 'PNG', value: 'png'}, {name: 'JPEG', value: 'jpg'}]} />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Screenshot Folder</Trans>} />
+      <Divider text={t('setting:Screenshot Folder')} />
       <FolderPickerConfig
-        label={<Trans>setting:Screenshot Folder</Trans>}
+        label={t('setting:Screenshot Folder')}
         configName="poi.screenshotPath"
         defaultVal={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
         exclude={screenshotPathExclude}
       />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Cache Folder</Trans>} />
+      <Divider text={t('setting:Cache Folder')} />
       <FolderPickerConfig
-        label={<Trans>setting:Cache Folder</Trans>}
+        label={t('setting:Cache Folder')}
         configName="poi.cachePath"
         defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Other settings</Trans>} />
+      <Divider text={t('setting:Other settings')} />
       <Grid>
         <Col xs={12}>
           {
             (process.platform !== 'darwin') ?
               <ShortcutConfig
-                label={<Trans>setting:Boss key</Trans>}
+                label={t('setting:Boss key')}
                 configName="poi.shortcut.bosskey" />
               :
               <ShortcutConfig
-                label={<Trans>setting:Boss key</Trans>}
+                label={t('setting:Boss key')}
                 defaultVal="Cmd+H"
                 active={false} />
           }
           {
             (process.platform !== 'darwin') ?
               <CheckboxLabelConfig
-                label={<Trans>setting:Confirm before exit</Trans>}
+                label={t('setting:Confirm before exit')}
                 configName="poi.confirm.quit"
                 defaultVal={false} />
               :
               <OverlayTrigger placement="top"
                 overlay={
                   <Tooltip id="tooltip-confirm-before-exit">
-                    {<Trans>setting:Set this in the OS X App Menu</Trans>}
+                    {t('setting:Set this in the OS X App Menu')}
                   </Tooltip>} >
                 <div>
                   <CheckboxLabelConfig
-                    label={<Trans>setting:Confirm before exit</Trans>}
+                    label={t('setting:Confirm before exit')}
                     undecided={true} />
                 </div>
               </OverlayTrigger>
           }
           <CheckboxLabelConfig
-            label={<Trans>setting:Display Final Stage Notification</Trans>}
+            label={t('setting:Display Final Stage Notification')}
             configName="poi.lastbattle.enabled"
             defaultVal={true} />
           <CheckboxLabelConfig
-            label={<Trans>setting:Display Event Ship Locking Notification</Trans>}
+            label={t('setting:Display Event Ship Locking Notification')}
             configName="poi.eventSortieCheck.enable"
             defaultVal={true} />
         </Col>
       </Grid>
     </div>
     <div className="form-group">
-      <Divider text={<Trans>setting:Advanced functionalities</Trans>} />
+      <Divider text={t('setting:Advanced functionalities')} />
       <Grid>
         <Col xs={12}>
           <CheckboxLabelConfig
-            label={<Trans>setting:Disable Hardware Acceleration</Trans>}
+            label={t('setting:Disable Hardware Acceleration')}
             configName="poi.disableHA"
             defaultVal={false} />
           <CheckboxLabelConfig
-            label={<Trans>setting:Editing DMM Cookie Region Flag</Trans>}
+            label={t('setting:Editing DMM Cookie Region Flag')}
             configName="poi.enableDMMcookie"
             defaultVal={false} />
           <CheckboxLabelConfig
-            label={<Trans>setting:Prevent DMM Network Change Popup</Trans>}
+            label={t('setting:Prevent DMM Network Change Popup')}
             configName="poi.disableNetworkAlert"
             defaultVal={false} />
           <CheckboxLabelConfig
-            label={<Trans>setting:Show network status in notification bar</Trans>}
+            label={t('setting:Show network status in notification bar')}
             configName="poi.showNetworkLog"
             defaultVal={true} />
           {
             (process.platform === 'win32') ?
               <CheckboxLabelConfig
-                label={<Trans>setting:Create shortcut on startup (Notification may not be working without shortcut)</Trans>}
+                label={t('setting:Create shortcut on startup (Notification may not be working without shortcut)')}
                 configName="poi.createShortcut"
                 defaultVal={true} />
               :
@@ -144,22 +144,22 @@ export const PoiConfig = () => (
           {
             (process.platform === 'linux') ?
               <CheckboxLabelConfig
-                label={<Trans>setting:Display tray icon</Trans>}
+                label={t('setting:Display tray icon')}
                 configName="poi.linuxTrayIcon"
                 defaultVal={true} />
               :
               null
           }
           <CheckboxLabelConfig
-            label={<Trans>setting:Enter safe mode on next startup</Trans>}
+            label={t('setting:Enter safe mode on next startup')}
             configName="poi.enterSafeMode"
             defaultVal={false} />
           <CheckboxLabelConfig
-            label={<Trans>setting:Send data to Google Analytics</Trans>}
+            label={t('setting:Send data to Google Analytics')}
             configName="poi.sendAnalytics"
             defaultVal={true} />
         </Col>
       </Grid>
     </div>
   </div>
-)
+))

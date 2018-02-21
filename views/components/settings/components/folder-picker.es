@@ -18,7 +18,7 @@ const { config } = window
 }))
 export class FolderPickerConfig extends Component {
   static propTypes = {
-    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    label: PropTypes.string,
     configName: PropTypes.string,
     value: PropTypes.string,
     isFolder: PropTypes.bool,
