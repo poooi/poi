@@ -2,7 +2,7 @@ import { remote, shell } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
-import { Trans } from 'react-i18next'
+import i18next from 'views/env-parts/i18next'
 import React from 'react'
 
 const proxy = remote.require('./lib/proxy')
@@ -100,8 +100,8 @@ window.onbeforeunload = (e) => {
   if (confirmExit || !config.get('poi.confirm.quit', false)) {
     exitPoi()
   } else {
-    toggleModal(<Trans>Exit</Trans>, <Trans>Confirm?</Trans>, [{
-      name: <Trans>Confirm</Trans>,
+    toggleModal(i18next.t('Exit'), i18next.t('Confirm?'), [{
+      name: i18next.t('Confirm'),
       func: exitPoi,
       style: 'warning',
     }])
@@ -134,19 +134,19 @@ window.addEventListener('game.response', (e) => {
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody, time))
   }
   if (config.get('poi.showNetworkLog', true)) {
-    log(<span><Trans>Hit</Trans>{method} {resPath}</span>, {dontReserve: true})
+    log(`${i18next.t('Hit')}: ${method} ${resPath}`, {dontReserve: true})
   }
 })
 window.addEventListener ('network.error', () => {
-  error(<Trans>Connection failed.</Trans>, {dontReserve: true})
+  error(i18next.t('Connection failed.'), {dontReserve: true})
 })
 window.addEventListener('network.error.retry', (e) => {
   const {counter} = e.detail
-  error(<Trans i18nKey='ConnectionFailedMsg'>{{ count: counter }}</Trans>, {dontReserve: true})
+  error(i18next.t('ConnectionFailedMsg', { count: counter }), {dontReserve: true})
 })
 window.addEventListener('network.invalid.result', (e) => {
   const {code} = e.detail
-  error(<Trans i18nKey='CatError'>{{ code }}</Trans>, {dontReserve: true})
+  error(i18next.t('CatError', { code }), {dontReserve: true})
 })
 
 const handleExternalURL = (e, url) => {
