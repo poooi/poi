@@ -60,7 +60,7 @@ export class PoiControl extends Component {
           if (err) {
             throw err
           }
-          window.success(`${this.props.t('screenshot saved to')} ${{filename}}`)
+          window.success(`${this.props.t('screenshot saved to')} ${filename}`)
         })
       } catch (error) {
         window.error(this.props.t('Failed to save the screenshot'))
