@@ -38,4 +38,4 @@ export class reactClass extends React.Component {
   }
 }
 
-export const displayName = <span><FontAwesome name='cog' /> <Trans>setting: Settings</Trans></span>
+export const displayName = <span><FontAwesome name='cog' /> <Trans>setting:Settings</Trans></span>
