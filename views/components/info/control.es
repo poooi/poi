@@ -56,7 +56,7 @@ export class PoiControl extends Component {
         const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
         fs.ensureDirSync(screenshotPath)
         const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
-        fs.writeFile(filename, buf, function(err) {
+        fs.writeFile(filename, buf, err => {
           if (err) {
             throw err
           }
