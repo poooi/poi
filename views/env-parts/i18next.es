@@ -1,6 +1,6 @@
 import path from 'path-extra'
 import glob from 'glob'
-import { isString, toString, each, merge, debounce, keys, get } from 'lodash'
+import { isString, toString, each, merge, debounce } from 'lodash'
 import I18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
