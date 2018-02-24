@@ -64,7 +64,7 @@ const Slotitems = translate(['resources'])(connect(
             return (
               <div key={equipIdx} className="slotitem-container-mini">
                 <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
-                <span style={{ flex: 1, textAlign: 'left' }}>{$equip ? t(`resources:${$equip.api_name}`) : '???'}</span>
+                <span style={{ flex: 1, textAlign: 'left' }}>{$equip ? t(`resources:${$equip.api_name}`, {keySeparator: '%%%%'}) : '???'}</span>
                 {
                   Boolean(level) &&
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong>

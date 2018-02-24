@@ -60,7 +60,7 @@ export const Slotitems = translate(['resources'])(connect(
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
               <div>
-                {$equip.api_name ? t(`resources:${$equip.api_name}`) : '??'}
+                {$equip.api_name ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
                 }
@@ -135,7 +135,7 @@ export const LandbaseSlotitems = translate(['resources'])(connect(
           <Tooltip id={`equip-${equip.api_id}`}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {$equip.api_name ? t(`resources:${$equip.api_name}`) : '??'}
+                {$equip.api_name ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
                   <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
                 }
