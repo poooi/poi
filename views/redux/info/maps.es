@@ -17,8 +17,7 @@ export function reducer(state={}, {type, body, postBody}) {
       [id]: {
         api_eventmap: {
           api_selected_rank: parseInt(postBody.api_rank),
-          api_max_maphp: parseInt(body.api_max_maphp),
-          api_now_maphp: parseInt(body.api_max_maphp),
+          ...(body.api_maphp || {}),
         },
       },
     }, 3)
