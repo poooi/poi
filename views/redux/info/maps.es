@@ -1,3 +1,4 @@
+import { mapValues } from 'lodash'
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
 export function reducer(state={}, {type, body, postBody}) {
@@ -17,7 +18,7 @@ export function reducer(state={}, {type, body, postBody}) {
       [id]: {
         api_eventmap: {
           api_selected_rank: parseInt(postBody.api_rank),
-          ...(body.api_maphp || {}),
+          ...mapValues(body.api_maphp, Number),
         },
       },
     }, 3)
