@@ -6,7 +6,7 @@ import i18next from 'views/env-parts/i18next'
 const {success, warn, getStore} = window
 
 const lookupItemName = slotitemId =>
-  i18next.t(`resources:${getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')}`)
+  i18next.t(`resources:${getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')}`, { keySeparator: '%%%%' })
 
 const devResultDelay =
   window.config.get('poi.delayItemDevResult', false) ? 6200 : 500
