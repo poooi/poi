@@ -145,6 +145,7 @@ export const LandbaseSlotitems = translate(['resources'])(connect(
                 {isMini && <Label className={onslotClassName} bsStyle={`${onslotWarning ? 'warning' : 'default'}`}>
                   {onslotText}
                 </Label>}
+                <FontAwesome name="dot-circle-o"/> {$equip.api_distance}
               </div>
               {$equip &&
                 getItemData($equip).map((data, propId) =>
