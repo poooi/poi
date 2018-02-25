@@ -100,3 +100,7 @@
 .SettingsView .layout-land {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E.icon-canvas-transparent,.icon-vs-out{fill:%232d2d30}.icon-canvas-transparent{opacity:0}.icon-vs-fg{fill:%232b282e}.icon-vs-bg{fill:%23c5c5c5}%3C/style%3E%3C/defs%3E%3Ctitle%3EDockBottom_16x%3C/title%3E%3Cpath class='icon-canvas-transparent' d='M16 0v16H0V0z'/%3E%3Cpath class='icon-vs-bg' d='M1 2v12h14V2zm13 7H2V3h12z'/%3E%3C/svg%3E") 100% no-repeat;
 }
+
+.SettingsView .plugin-setting-wrapper {
+  margin-bottom: 30px;
+}

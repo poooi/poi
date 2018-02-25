@@ -159,7 +159,7 @@ export class InstalledPlugin extends PureComponent {
               </Row>
               <Row>
                 {
-                  settingAvailable?
+                  settingAvailable &&
                     <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
                       <Col xs={12}>
                         <Well>
@@ -190,7 +190,6 @@ export class InstalledPlugin extends PureComponent {
                         </Well>
                       </Col>
                     </Collapse>
-                    : null
                 }
               </Row>
             </Panel.Body>
