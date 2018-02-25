@@ -204,6 +204,12 @@ export const fileUrl = (str = '') => {
   })
 }
 
+export const normalizeURL = (str = '') => {
+  const path = str.split('.htm')
+  path[0] = path[0].replace('#', '%23').replace('?', '%3F')
+  return path.join('.htm')
+}
+
 // check if dir is a subdirectory of parent,
 // if parent and dir are the same, also returns true
 export const isSubdirectory = (parent, dir) => {

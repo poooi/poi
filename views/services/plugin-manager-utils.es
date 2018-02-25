@@ -13,7 +13,7 @@ import { setAllowedPath } from 'lib/module-path'
 import child_process from 'child_process'
 import path from 'path'
 import i18next from 'views/env-parts/i18next'
-import { readI18nResources } from 'views/utils/tools'
+import { readI18nResources, normalizeURL } from 'views/utils/tools'
 
 import { extendReducer } from 'views/create-store'
 const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
@@ -313,13 +313,14 @@ const postEnableProcess = (plugin) => {
         vibrancy: 'ultra-dark',
       })
     }
+    const windowURL = normalizeURL(plugin.windowURL)
     if (plugin.multiWindow) {
       plugin.handleClick = function() {
         const pluginWindow = windowManager.createWindow(windowOptions)
         pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
         pluginWindow.setAutoHideMenuBar(true)
         pluginWindow.setMenuBarVisibility(false)
-        pluginWindow.loadURL(plugin.windowURL)
+        pluginWindow.loadURL(windowURL)
         pluginWindow.show()
       }
     } else if (plugin.realClose) {
@@ -333,7 +334,7 @@ const postEnableProcess = (plugin) => {
           plugin.pluginWindow.on('close', function() {
             plugin.pluginWindow = null
           })
-          plugin.pluginWindow.loadURL(plugin.windowURL)
+          plugin.pluginWindow.loadURL(windowURL)
           plugin.pluginWindow.show()
         } else {
           plugin.pluginWindow.show()
@@ -344,7 +345,7 @@ const postEnableProcess = (plugin) => {
       plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
       plugin.pluginWindow.setAutoHideMenuBar(true)
       plugin.pluginWindow.setMenuBarVisibility(false)
-      plugin.pluginWindow.loadURL(plugin.windowURL)
+      plugin.pluginWindow.loadURL(windowURL)
       plugin.handleClick = function() {
         return plugin.pluginWindow.show()
       }
