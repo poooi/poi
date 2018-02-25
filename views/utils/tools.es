@@ -5,6 +5,7 @@
 import _, { isEqual, forEach, keyBy, zip, unzip, sum, isString, toString } from 'lodash'
 import path from 'path'
 import { readJsonSync } from 'fs-extra'
+import url from 'url'
 
 // For a given array, sum up each position of the subarray respectively.
 // Args:
@@ -196,7 +197,11 @@ export const fileUrl = (str = '') => {
   if (pathName[0] !== '/') {
     pathName = '/' + pathName
   }
-  return 'file://' + pathName
+  return url.format({
+    protocol: 'file',
+    slashes: true,
+    pathname: pathName,
+  })
 }
 
 // check if dir is a subdirectory of parent,
