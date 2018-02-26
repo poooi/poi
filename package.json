@@ -74,7 +74,7 @@
     "path-extra": "^4.2.1",
     "poi-asset-contributor-data": "^1.0.5",
     "poi-asset-themes": "^3.2.0",
-    "poi-lib-battle": "^2.5.0-beta.0",
+    "poi-lib-battle": "^2.5.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.0",
