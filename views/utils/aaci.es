@@ -57,6 +57,9 @@ const isCDMG = equip => [131, 173, 191].includes(equip.api_slotitem_id)
 // 274: 12cm30連装噴進砲改二
 const isRocketK2 = equip => equip.api_slotitem_id === 274
 
+// 275: 10cm連装高角砲改+増設機銃
+const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
+
 // avoid modifying this structure directly, use "declareAACI" instead.
 export const AACITable = {}
 
@@ -98,7 +101,7 @@ const isTastutaK2 = shipIdIs(478)
 const isIseK = shipIdIs(82)
 const isHyuuGaK = shipIdIs(88)
 const isMusashiK = shipIdIs(148)
-// const isMusashiK2 = shipIdIs(546)
+const isMusashiK2 = shipIdIs(546)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -389,7 +392,7 @@ declareAACI({
 declareAACI({
   name: ['龍田改二'],
   id: 24,
-  fixed: 4,
+  fixed: 3,
   modifier: 1.25,
   shipValid: isTastutaK2,
   equipsValid: validAll(
@@ -415,7 +418,19 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['伊勢改', '日向改', '武蔵改'],
+  name: ['武蔵改二'],
+  id: 26,
+  fixed: 6,
+  modifier: 1.4,
+  shipValid: isMusashiK2,
+  equipsValid: validAll(
+    hasSome(isHighAngleMountGun),
+    hasSome(isAARadar),
+  ),
+})
+
+declareAACI({
+  name: ['伊勢改', '日向改', '武蔵改', '武蔵改二'],
   id: 28,
   fixed: 4,
   modifier: 1.4,
@@ -423,6 +438,7 @@ declareAACI({
     isIseK,
     isHyuuGaK,
     isMusashiK,
+    isMusashiK2,
   ),
   equipsValid: validAll(
     hasSome(isRocketK2),
