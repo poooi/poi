@@ -10,6 +10,7 @@ import { translate, Trans } from 'react-i18next'
 
 const { dispatch } = window
 
+import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { ShipRow } from './shipitem'
 import { SquardRow } from './lbac-view'
 import { LandbaseButton } from '../ship-parts/landbase-button'
@@ -83,7 +84,7 @@ const FleetShipView = connect(
         isMini={false}
       />
     </div>
-    <div className="ship-details">
+    <ScrollShadow className="ship-details" observerPath="layout.shippane">
       {
         (shipsId || []).map((shipId, i) =>
           <ShipRow
@@ -94,7 +95,7 @@ const FleetShipView = connect(
           />
         )
       }
-    </div>
+    </ScrollShadow>
   </>
 )
 
@@ -102,7 +103,7 @@ const LBView = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
 }))(({areaIds, mapareas, t}) => (
-  <div className="ship-details">
+  <ScrollShadow className="ship-details" observerPath="layout.shippane">
     {
       areaIds.map((id, i) => (
         mapareas[id] != null && (
@@ -123,7 +124,7 @@ const LBView = translate(['resources'])(connect(state => ({
         )
       ))
     }
-  </div>
+  </ScrollShadow>
 )))
 
 

@@ -6,6 +6,7 @@ import { Alert } from 'react-bootstrap'
 import { translate } from 'react-i18next'
 
 import { TopAlert } from 'views/components/ship-parts/topalert'
+import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import {
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
@@ -26,7 +27,7 @@ export const PaneBodyMini = connect(() => {
         isMini={true}
       />
     </div>
-    <div className={"ship-details-mini"}>
+    <ScrollShadow className="ship-details-mini" observerPath="layout.minishippane">
       {
         (shipsId || []).map((shipId, i) =>
           <MiniShipRow
@@ -37,7 +38,7 @@ export const PaneBodyMini = connect(() => {
           />
         )
       }
-    </div>
+    </ScrollShadow>
   </>
 )
 
@@ -45,7 +46,7 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
 }))(({ areaIds, mapareas, t }) => (
-  <div className="ship-details-mini">
+  <ScrollShadow className="ship-details-mini" observerPath="layout.minishippane">
     {
       areaIds.map((id, i) => (
         mapareas[id] != null && (
@@ -66,5 +67,5 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
         )
       ))
     }
-  </div>
+  </ScrollShadow>
 )))
