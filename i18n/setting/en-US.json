@@ -135,5 +135,11 @@
   "Monitor on": "Monitor on",
   "TOTAL": "TOTAL",
   "Set as homepage": "Set as homepage",
-  "Disable": "Disable"
+  "Disable": "Disable",
+  "Enable": "Enable",
+  "Remove": "Remove",
+  "Installing": "Installing",
+  "PluginUpdateMsg": "have newer version. Please update your plugins.",
+  "Plugin update": "Plugin update",
+  "Updating": "Updating"
 }
