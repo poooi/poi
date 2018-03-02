@@ -143,7 +143,7 @@ export class MiniShip extends Component {
                     </div>
                   ))
                 }
-                <div className="ship-deck ship-tabpane" key={4}>
+                <div className="ship-deck ship-tabpane ship-lbac" key={4}>
                   <LBViewMini />
                 </div>
               </div>

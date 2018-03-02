@@ -221,7 +221,7 @@ export class reactClass extends Component {
                   </div>
                 )
               }
-              <div className="ship-deck" key={4}>
+              <div className="ship-deck ship-lbac" key={4}>
                 <LBView />
               </div>
             </div>

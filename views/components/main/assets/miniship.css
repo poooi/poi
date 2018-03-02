@@ -73,8 +73,11 @@
 
 .miniship .ship-details-mini {
   height: calc(100% - 32px);
-  margin-bottom: 1px;
   overflow: scroll;
+}
+
+.miniship .ship-lbac .ship-details-mini {
+  height: 100%;
 }
 
 .miniship .ship-details-mini .ship-tile {

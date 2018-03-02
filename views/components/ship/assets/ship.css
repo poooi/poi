@@ -95,8 +95,11 @@
 
 .ShipView .ship-details {
   height: calc(100% - 25px);
-  margin-bottom: 1px;
   overflow: scroll;
+}
+
+.ShipView .ship-lbac .ship-details {
+  height: 100%;
 }
 
 .ShipView .alert {
