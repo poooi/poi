@@ -39,11 +39,7 @@ export class ResolutionConfig extends Component {
     config.set('poi.webview.width', width)
   }
   handleSetFixedResolution = (e) => {
-    if (this.props.webview.useFixedResolution) {
-      config.set('poi.webview.width', -1)
-    } else {
-      config.set('poi.webview.width', Math.round(this.props.webview.width))
-    }
+    config.set('poi.webview.useFixedResolution', !this.props.webview.useFixedResolution)
   }
   componentWillReceiveProps = (nextProps) => {
     if (this.state.width !== nextProps.webview.width) {
@@ -57,9 +53,9 @@ export class ResolutionConfig extends Component {
       <Grid>
         <Col xs={8}>
           <Checkbox
-            checked={!this.props.webview.useFixedResolution}
+            checked={this.props.webview.useFixedResolution}
             onChange={this.handleSetFixedResolution}>
-            <Trans>setting:Adaptive resolution based on the window</Trans>
+            <Trans>setting:Use certain resolution for game area</Trans>
           </Checkbox>
         </Col>
         <Col xs={4}>

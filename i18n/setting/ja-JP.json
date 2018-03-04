@@ -68,7 +68,7 @@
   "If connection error occurs frequently, delete both of them": "通信エラーが頻発する場合、クッキーとキャッシュを削除して下さい。",
   "Themes": "テーマ",
   "Game resolution": "解像度",
-  "Adaptive resolution based on the window": "ゲーム解像度はウィンドウの幅に合わせて表示を自動変更する",
+  "Use certain resolution for game area": "特定のゲーム解像度を使用する",
   "Input address": "アドレスを入力",
   "Set as homepage": "ホームページを設定",
   "Zoom": "ズーム",
