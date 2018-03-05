@@ -377,6 +377,7 @@ export class ControlledTabArea extends PureComponent {
         'poi-tabs-container-singletabbed': !this.props.doubleTabbed,
       })} ref={r => this.setState({ resizeContainer: r })}>
         <ResizableArea
+          className={classNames({ 'width-resize': this.props.doubleTabbed && this.props.editable })}
           minimumWidth={{ px: 0, percent: this.props.doubleTabbed ? 10 : 100 }}
           defaultWidth={{ px: 0, percent: 50 }}
           initWidth={this.props.mainPanelWidth}

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import WebView from 'react-electron-web-view'
 import { get, debounce } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
+import classnames from 'classnames'
 
 import { PoiAlert } from './components/info/alert'
 import { PoiMapReminder } from './components/info/map-reminder'
@@ -148,10 +149,15 @@ export class KanGameWrapper extends Component {
       px: zoomedPoiControlHeight,
       percent: verticalRatio,
     }
+    const disableWidth = !editable || useFixedResolution || !isHorizontal
+    const disableHeight = !editable || useFixedResolution || isHorizontal
 
     return (
       <ResizableArea
-        className="webview-resizable-area"
+        className={classnames("webview-resizable-area", {
+          'width-resize': !disableWidth,
+          'height-resize': !disableHeight,
+        })}
         minimumWidth={!isHorizontal ? { px: 0, percent: 100 } : { px: 0, percent: 0 }}
         defaultWidth={defaultWidth}
         initWidth={this.resizableAreaWidth}
@@ -160,12 +166,8 @@ export class KanGameWrapper extends Component {
         initHeight={this.resizableAreaHeight}
         parentContainer={document.querySelector('poi-main')}
         disable={{
-          width: !editable || useFixedResolution || !isHorizontal,
-          height: !editable || useFixedResolution || isHorizontal,
-        }}
-        usePercentageResize={{
-          width: !editable || useFixedResolution || isHorizontal,
-          height: !editable || useFixedResolution || !isHorizontal,
+          width: disableWidth,
+          height: disableHeight,
         }}
         onResized={this.setRatio}
         ref={r => this.resizableArea = r}

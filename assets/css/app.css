@@ -214,3 +214,13 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li .fa {
 #electron-app-title-bar img.icon {
   margin: 6px 10px !important;
 }
+
+.resizable-component.width-resize > .resize-handle-right {
+  background: linear-gradient(90deg, transparent 40%, #666 60%, transparent 51%);
+  z-index: 10;
+}
+
+.resizable-component.height-resize > .resize-handle-bottom {
+  background: linear-gradient(0deg, transparent 40%, #666 60%, transparent 51%);
+  z-index: 10;
+}
