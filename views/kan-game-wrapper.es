@@ -57,6 +57,7 @@ export class KanGameWrapper extends Component {
   }
 
   componentDidMount = () => {
+    window.r = this.resizableArea
     this.setWindowSizeDebounced = debounce(this.setWindowSize, 200)
     window.addEventListener('resize', this.setWindowSizeDebounced)
     layoutResizeObserver.observe(document.querySelector('kan-game webview'))
@@ -115,15 +116,15 @@ export class KanGameWrapper extends Component {
       px: 0,
       percent: 60,
     } : {
-      px: webviewWidth,
-      percent: 0,
+      px: 0,
+      percent: 100,
     }
     const defaultHeight = useFixedResolution ? {
       px: 480 + zoomedPoiControlHeight,
       percent: 0,
     } : isHorizontal ? {
-      px: webviewHeight + zoomedPoiControlHeight,
-      percent: 0,
+      px: 0,
+      percent: 100,
     } : {
       px: zoomedPoiControlHeight,
       percent: 50,
@@ -135,15 +136,15 @@ export class KanGameWrapper extends Component {
       px: 0,
       percent: horizontalRatio,
     } : {
-      px: webviewWidth,
-      percent: 0,
+      px: 0,
+      percent: 100,
     }
     this.resizableAreaHeight = useFixedResolution ? {
       px: webviewHeight + zoomedPoiControlHeight,
       percent: 0,
     } : isHorizontal ? {
-      px: webviewHeight + zoomedPoiControlHeight,
-      percent: 0,
+      px: 0,
+      percent: 100,
     } : {
       px: zoomedPoiControlHeight,
       percent: verticalRatio,
@@ -151,10 +152,11 @@ export class KanGameWrapper extends Component {
 
     return (
       <ResizableArea
-        minimumWidth={{ px: 0, percent: 0 }}
+        className="webview-resizable-area"
+        minimumWidth={!isHorizontal ? { px: 0, percent: 100 } : { px: 0, percent: 0 }}
         defaultWidth={defaultWidth}
         initWidth={this.resizableAreaWidth}
-        minimumHeight={{ px: 0, percent: 0 }}
+        minimumHeight={isHorizontal ? { px: 0, percent: 100 } : { px: zoomedPoiControlHeight, percent: 0 }}
         defaultHeight={defaultHeight}
         initHeight={this.resizableAreaHeight}
         parentContainer={document.querySelector('poi-main')}
@@ -170,14 +172,7 @@ export class KanGameWrapper extends Component {
         ref={r => this.resizableArea = r}
       >
         <kan-game style={{
-          flexBasis: (isHorizontal ? webviewWidth : webviewHeight + zoomedPoiControlHeight),
-          flexGrow: 0,
-          flexShrink: 0,
-          ... isHorizontal ? {
-            height: webviewHeight + zoomedPoiControlHeight,
-          } : {
-            width: '100%',
-          },
+          width: webviewWidth,
         }}>
           <div id="webview-wrapper"
             className="webview-wrapper"

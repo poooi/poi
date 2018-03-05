@@ -19,6 +19,11 @@ poi-main {
   flex: 1 0 0;
 }
 
+.webview-resizable-area {
+  display: flex;
+  align-items: center;
+}
+
 kan-game webview {
   height: 100%;
   left: 0;
@@ -30,6 +35,8 @@ kan-game webview {
 kan-game {
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
   overflow: hidden;
 }
 
