@@ -3,6 +3,11 @@ import { remote } from 'electron'
 
 const {config, $} = window
 
+// polyfill
+if (config.get('poi.webview.width', 800) < 0) {
+  config.set('poi.webview.width', 800)
+}
+
 const additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
@@ -47,36 +52,34 @@ ${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
 ` : ''
 }
 `
-
-  // Resize when window size smaller than webview size
-  const useForceResize = config.get('poi.webview.width', 800) > 0
-  if (useForceResize) {
-    const realWidth = config.get('poi.webview.width', 800)
-    const realHeight = Math.floor(realWidth * 0.6 + $('poi-info').clientHeight * zoomLevel)
-    if (layout === 'vertical' && realWidth > window.innerWidth) {
-      let { width, height, x, y } = remote.getCurrentWindow().getBounds()
-      const borderX = width - window.innerWidth
-      width = realWidth + borderX
-      remote.getCurrentWindow().setBounds({ width, height, x, y })
-    }
-
-    if (layout !== 'vertical' && realHeight > window.getStore('layout.window.height')) {
-      let { width, height, x, y } = remote.getCurrentWindow().getBounds()
-      height += realHeight - window.getStore('layout.window.height')
-      remote.getCurrentWindow().setBounds({ width, height, x, y })
-    }
-  }
 }
 
 const setCSSDebounced = debounce(setCSS, 200)
 
 const setMinSize = () => {
-  const width = config.get('poi.webview.width', 800)
+  const { width, height } = window.getStore('layout.webview')
   const zoomLevel = config.get('poi.zoomLevel', 1)
-  if (width < 0) {
-    remote.getCurrentWindow().setMinimumSize(1, 1)
-  } else {
-    remote.getCurrentWindow().setMinimumSize(width, Math.floor(width * 0.6 + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
+  remote.getCurrentWindow().setMinimumSize(width, Math.floor(height + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
+}
+
+const setProperWindowSize = () => {
+  // Resize when window size smaller than webview size
+  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
+  const zoomLevel = config.get('poi.zoomLevel', 1)
+  const layout = config.get('poi.layout', 'horizontal')
+  const realWidth = webviewWidth
+  const realHeight = Math.floor(webviewHeight + $('poi-info').clientHeight * zoomLevel)
+  if (layout === 'vertical' && realWidth > window.innerWidth) {
+    let { width, height, x, y } = remote.getCurrentWindow().getBounds()
+    const borderX = width - window.innerWidth
+    width = realWidth + borderX
+    remote.getCurrentWindow().setBounds({ width, height, x, y })
+  }
+
+  if (layout !== 'vertical' && realHeight > window.getStore('layout.window.height')) {
+    let { width, height, x, y } = remote.getCurrentWindow().getBounds()
+    height += realHeight - window.getStore('layout.window.height')
+    remote.getCurrentWindow().setBounds({ width, height, x, y })
   }
 }
 
@@ -92,7 +95,7 @@ const adjustSize = () => {
   })
   window.dispatch({
     type: '@@LayoutUpdate/webview/useFixedResolution',
-    value: window.getStore('config.poi.webview.width', -1) !== -1,
+    value: window.getStore('config.poi.webview.useFixedResolution', true),
   })
 }
 
@@ -130,6 +133,9 @@ config.on('config.set', (path, value) => {
   case 'poi.panelMinSize':
   case 'poi.tabarea.double':
   case 'poi.webview.width':
+  case 'poi.webview.useFixedResolution':
+  case 'poi.webview.ratio.vertical':
+  case 'poi.webview.ratio.horizontal':
   case 'poi.reverseLayout': {
     adjustSize()
     break
@@ -156,9 +162,6 @@ config.on('config.set', (path, value) => {
   default:
     break
   }
-  if (path === 'poi.webview.width' || path === 'poi.layout') {
-    setMinSize()
-  }
 })
 
 export const layoutResizeObserver = new ResizeObserver(entries => {
@@ -177,9 +180,13 @@ export const layoutResizeObserver = new ResizeObserver(entries => {
         width: entry.contentRect.width,
         height: entry.contentRect.height,
         ...key === 'webview' ? {
-          useFixedResolution: window.getStore('config.poi.webview.width', -1) !== -1,
+          useFixedResolution: window.getStore('config.poi.webview.useFixedResolution', true),
         } : {},
       },
+    }
+    if (entry.target.tagName === 'WEBVIEW') {
+      setMinSize()
+      setProperWindowSize()
     }
   })
   window.dispatch({

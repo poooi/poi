@@ -52,7 +52,7 @@
   "If connection error occurs frequently, delete both of them": "If connection error occurs frequently, delete both of them",
   "Themes": "Themes",
   "Game resolution": "Game resolution",
-  "Adaptive resolution based on the window": "Adaptive resolution based on the window",
+  "Use certain resolution for game area": "Use certain resolution for game area",
   "Drop plugin packages here to install it, or click here to select them": "Install plugins from files,\nor drop files here to install",
   "Drop plugin tarballs here to install": "Drop plugin tarballs here to install",
   "Developer option check update of beta version": "Developer option: check update of beta version",
