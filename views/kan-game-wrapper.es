@@ -57,7 +57,6 @@ export class KanGameWrapper extends Component {
   }
 
   componentDidMount = () => {
-    window.r = this.resizableArea
     this.setWindowSizeDebounced = debounce(this.setWindowSize, 200)
     window.addEventListener('resize', this.setWindowSizeDebounced)
     layoutResizeObserver.observe(document.querySelector('kan-game webview'))
