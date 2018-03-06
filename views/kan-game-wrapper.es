@@ -98,8 +98,8 @@ export class KanGameWrapper extends Component {
       px: 800,
       percent: 0,
     } : isHorizontal ? {
-      px: (windowHeight - zoomedPoiControlHeight) * 500 / (windowWidth * 3),
-      percent: 60,
+      px: 0,
+      percent: (windowHeight - zoomedPoiControlHeight) * 500 / (windowWidth * 3),
     } : {
       px: windowWidth,
       percent: 0,
