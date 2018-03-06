@@ -84,7 +84,7 @@ const FleetShipView = connect(
         isMini={false}
       />
     </div>
-    <ScrollShadow className="ship-details" observerPath="layout.shippane">
+    <ScrollShadow className="ship-details" observerPath={[ 'layout.shippane', `info.fleets.${fleetId}.api_ship` ]}>
       {
         (shipsId || []).map((shipId, i) =>
           <ShipRow
@@ -103,7 +103,7 @@ const LBView = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
 }))(({areaIds, mapareas, t}) => (
-  <ScrollShadow className="ship-details" observerPath="layout.shippane">
+  <ScrollShadow className="ship-details" observerPath={[ 'layout.shippane', 'info.airbase' ]}>
     {
       areaIds.map((id, i) => (
         mapareas[id] != null && (

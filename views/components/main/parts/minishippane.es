@@ -27,7 +27,7 @@ export const PaneBodyMini = connect(() => {
         isMini={true}
       />
     </div>
-    <ScrollShadow className="ship-details-mini" observerPath="layout.minishippane">
+    <ScrollShadow className="ship-details-mini" observerPath={[ 'layout.minishippane', `info.fleets.${fleetId}.api_ship` ]}>
       {
         (shipsId || []).map((shipId, i) =>
           <MiniShipRow
@@ -46,7 +46,7 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
 }))(({ areaIds, mapareas, t }) => (
-  <ScrollShadow className="ship-details-mini" observerPath="layout.minishippane">
+  <ScrollShadow className="ship-details-mini" observerPath={[ 'layout.minishippane', 'info.airbase' ]}>
     {
       areaIds.map((id, i) => (
         mapareas[id] != null && (

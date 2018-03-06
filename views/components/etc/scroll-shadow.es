@@ -35,11 +35,11 @@ export class ScrollShadow extends PureComponent {
 
   componentDidMount = e => {
     this.onScroll()
-    const sizeObserver = new observer(
-      state => get(state, this.props.observerPath),
+    const sizeObservers = this.props.observerPath.map(p => new observer(
+      state => get(state, p),
       this.onScroll,
-    )
-    this.unobserve = observe(store, [ sizeObserver ])
+    ))
+    this.unobserve = observe(store, sizeObservers)
   }
 
   componentWillUnmount = e => {
