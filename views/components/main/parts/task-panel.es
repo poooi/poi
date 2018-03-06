@@ -8,9 +8,10 @@ import { escapeI18nKey } from 'views/utils/tools'
 
 import {
   configLayoutSelector,
-  configDoubleTabbedSelector,
+  configReverseLayoutSelector,
   extensionSelectorFactory,
 } from 'views/utils/selectors'
+import defaultLayout from '../default-layout'
 
 import '../assets/task-panel.css'
 
@@ -126,10 +127,19 @@ function getToolTip(record) {
 const TaskRowBase = connect(
   createSelector([
     configLayoutSelector,
-    configDoubleTabbedSelector,
-  ], (layout, doubleTabbed) => ({
-    leftOverlayPlacement: (!doubleTabbed) && (layout == 'vertical') ? 'top' : 'left',
-  }))
+    configReverseLayoutSelector,
+    state => get(state, 'layout.mainpane.width', 450),
+    state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
+  ], (layout, reversed, mainPanelWidth, mainPanelLayout) => {
+    const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm']
+      .find(panel => panel.i === 'task-panel')
+    const colCnt = mainPanelWidth > 750 ? 20 : 10
+    const colWidth = mainPanelWidth / colCnt
+    const leftDist = taskPanelLayout.x * colWidth
+    return {
+      leftOverlayPlacement: (layout !== 'horizontal' || (layout === 'horizontal' && reversed)) && (leftDist < 180) ? 'top' : 'left',
+    }
+  })
 )(function({
   idx,                  // Mandatory: 0..5
   bulletColor='#fff',
