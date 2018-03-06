@@ -13,13 +13,6 @@ import { layoutResizeObserver } from 'views/services/layout'
 
 const config = remote.require('./lib/config')
 const poiControlHeight = 30
-const getTitlebarHeight = () => {
-  if (document.querySelector('title-bar') && getComputedStyle(document.querySelector('title-bar')).display === 'none') {
-    return 0
-  } else {
-    return config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') ? 29 : 0
-  }
-}
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 800),
@@ -30,18 +23,10 @@ const getTitlebarHeight = () => {
   horizontalRatio: get(state, 'config.poi.webview.ratio.horizontal', 60),
   verticalRatio: get(state, 'config.poi.webview.ratio.vertical', 50),
   editable: get(state, 'config.poi.layouteditable', false),
+  windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
 }))
 export class KanGameWrapper extends Component {
-  state = {
-    windowWidth: window.innerWidth,
-    windowHeight: window.innerHeight,
-  }
-
-  setWindowSize = () => {
-    this.setState({
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-    })
+  alignWebview = () => {
     try {
       document.querySelector('kan-game webview').executeJavaScript('window.align()')
     } catch(e) {
@@ -58,13 +43,13 @@ export class KanGameWrapper extends Component {
   }
 
   componentDidMount = () => {
-    this.setWindowSizeDebounced = debounce(this.setWindowSize, 200)
-    window.addEventListener('resize', this.setWindowSizeDebounced)
+    this.alignWebviewDebounced = debounce(this.alignWebview, 200)
+    window.addEventListener('resize', this.alignWebviewDebounced)
     layoutResizeObserver.observe(document.querySelector('kan-game webview'))
   }
 
   componentWillUnmount = () => {
-    window.removeEventListener('resize', this.setWindowSizeDebounced)
+    window.removeEventListener('resize', this.alignWebviewDebounced)
     layoutResizeObserver.unobserve(document.querySelector('kan-game webview'))
   }
 
@@ -93,9 +78,9 @@ export class KanGameWrapper extends Component {
       horizontalRatio,
       verticalRatio,
       editable,
+      windowSize,
     } = this.props
-    const { windowHeight, windowWidth } = this.state
-    const titleBarHeight = getTitlebarHeight()
+    const { width: windowWidth, height: windowHeight } = windowSize
     const zoomedPoiControlHeight = Math.floor(poiControlHeight * zoomLevel)
     let webviewWidth = configWebviewWidth
     let webviewHeight = Math.floor(configWebviewWidth * 0.6)
@@ -104,7 +89,7 @@ export class KanGameWrapper extends Component {
         webviewWidth = Math.floor(windowWidth * horizontalRatio / 100)
         webviewHeight = Math.floor(webviewWidth * 0.6)
       } else {
-        webviewHeight = Math.floor((windowHeight - titleBarHeight) * verticalRatio / 100)
+        webviewHeight = Math.floor(windowHeight * verticalRatio / 100)
         webviewWidth = Math.floor(webviewHeight / 0.6)
       }
     }
@@ -113,21 +98,21 @@ export class KanGameWrapper extends Component {
       px: 800,
       percent: 0,
     } : isHorizontal ? {
-      px: 0,
+      px: (windowHeight - zoomedPoiControlHeight) * 500 / (windowWidth * 3),
       percent: 60,
     } : {
-      px: 0,
-      percent: 100,
+      px: windowWidth,
+      percent: 0,
     }
     const defaultHeight = useFixedResolution ? {
       px: 480 + zoomedPoiControlHeight,
       percent: 0,
     } : isHorizontal ? {
-      px: 0,
-      percent: 100,
+      px: windowHeight,
+      percent: 0,
     } : {
       px: zoomedPoiControlHeight,
-      percent: 50,
+      percent: windowWidth * 60 / windowHeight,
     }
     this.resizableAreaWidth =  useFixedResolution ? {
       px: webviewWidth,
