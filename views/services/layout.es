@@ -63,6 +63,11 @@ const setMinSize = () => {
 }
 
 const setProperWindowSize = () => {
+  const current = remote.getCurrentWindow()
+  // Dont set size on maximized
+  if (current.isMaximized() || current.isFullScreen()) {
+    return
+  }
   // Resize when window size smaller than webview size
   const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
   const zoomLevel = config.get('poi.zoomLevel', 1)
@@ -70,16 +75,16 @@ const setProperWindowSize = () => {
   const realWidth = webviewWidth
   const realHeight = Math.floor(webviewHeight + $('poi-info').clientHeight * zoomLevel)
   if (layout === 'vertical' && realWidth > window.innerWidth) {
-    let { width, height, x, y } = remote.getCurrentWindow().getBounds()
+    let { width, height, x, y } = current.getBounds()
     const borderX = width - window.innerWidth
     width = realWidth + borderX
-    remote.getCurrentWindow().setBounds({ width, height, x, y })
+    current.setBounds({ width, height, x, y })
   }
 
   if (layout !== 'vertical' && realHeight > window.getStore('layout.window.height')) {
-    let { width, height, x, y } = remote.getCurrentWindow().getBounds()
+    let { width, height, x, y } = current.getBounds()
     height += realHeight - window.getStore('layout.window.height')
-    remote.getCurrentWindow().setBounds({ width, height, x, y })
+    current.setBounds({ width, height, x, y })
   }
 }
 
