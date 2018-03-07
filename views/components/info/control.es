@@ -40,31 +40,26 @@ export class PoiControl extends Component {
     extend: false,
   }
   handleCapturePage = () => {
-    const bound = $('kan-game webview').getBoundingClientRect()
     const rect = {
-      x: Math.ceil(bound.left),
-      y: Math.ceil(bound.top),
-      width: Math.floor(bound.width),
-      height: Math.floor(bound.height),
+      x: 0,
+      y: 0,
+      width: 800 * devicePixelRatio,
+      height: 480 * devicePixelRatio,
     }
     const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
-    remote.getGlobal("mainWindow").capturePage(rect, (image) => {
-      try {
-        const buf = usePNG ? image.toPNG() : image.toJPEG(80)
-        const now = new Date()
-        const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
-        fs.ensureDirSync(screenshotPath)
-        const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
-        fs.writeFile(filename, buf, err => {
-          if (err) {
-            throw err
-          }
-          window.success(`${this.props.t('screenshot saved to')} ${filename}`)
-        })
-      } catch (error) {
+    $('kan-game webview').capturePage(rect, image => {
+      image = image.resize({ width: 800, height: 480 })
+      const buf = usePNG ? image.toPNG() : image.toJPEG(80)
+      const now = new Date()
+      const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+      fs.ensureDirSync(screenshotPath)
+      const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
+      fs.writeFile(filename, buf).then(() => {
+        window.success(`${this.props.t('screenshot saved to')} ${filename}`)
+      }).catch(err => {
         window.error(this.props.t('Failed to save the screenshot'))
-      }
+      })
     })
   }
   handleOpenCacheFolder = () => {
