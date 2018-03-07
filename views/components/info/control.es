@@ -113,7 +113,7 @@ export class PoiControl extends Component {
     openFocusedWindowDevTools()
   }
   handleOpenWebviewDevTools = () => {
-    $('kan-game webview').openDevTools({detach: true})
+    $('kan-game webview').openDevTools({mode: 'detach'})
   }
   handleJustifyLayout = (e) => {
     window.dispatchEvent(new Event('resize'))

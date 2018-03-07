@@ -154,7 +154,7 @@ export default {
   },
   openFocusedWindowDevTools: () =>{
     BrowserWindow.getFocusedWindow().openDevTools({
-      detach: true,
+      mode: 'detach',
     })
   },
   getWindowsIndex: () => {
