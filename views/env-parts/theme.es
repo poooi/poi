@@ -169,3 +169,8 @@ remote.getCurrentWebContents().on('dom-ready', () => {
   setBackground(config.get('poi.background'))
   toggleBackground(config.get('poi.vibrant'))
 })
+
+// Workaround for window transparency on 2.0.0
+remote.getCurrentWebContents().once('devtools-opened', () => {
+  remote.getCurrentWindow().setBackgroundColor('#00000000')
+})
