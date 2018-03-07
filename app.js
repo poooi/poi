@@ -163,7 +163,7 @@ app.on('ready', () => {
   }
   if (dbg.isEnabled()) {
     mainWindow.openDevTools({
-      detach: true,
+      mode: 'detach',
     })
   }
   // Never wants navigate

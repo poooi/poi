@@ -24,7 +24,7 @@ const {EXROOT, $} = window
 const config = remote.require('./lib/config')
 
 // Disable OSX zoom
-webFrame.setZoomLevelLimits(1, 1)
+webFrame.setVisualZoomLevelLimits(1, 1)
 
 // Workaround for false BrowserWindow size
 if (!config.get('poi.window.isMaximized', false) && !config.get('poi.window.isFullScreen', false) &&

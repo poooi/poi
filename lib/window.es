@@ -53,7 +53,7 @@ export default {
     }
     // Disable OSX zoom
     current.webContents.on('dom-ready', () => {
-      current.webContents.executeJavaScript('require(\'electron\').webFrame.setZoomLevelLimits(1, 1)')
+      current.webContents.executeJavaScript('require(\'electron\').webFrame.setVisualZoomLevelLimits(1, 1)')
     })
     // Close window really
     if (options.realClose) {
@@ -154,7 +154,7 @@ export default {
   },
   openFocusedWindowDevTools: () =>{
     BrowserWindow.getFocusedWindow().openDevTools({
-      detach: true,
+      mode: 'detach',
     })
   },
   getWindowsIndex: () => {

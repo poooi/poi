@@ -99,13 +99,13 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Ctrl+Shift+I',
           click: (item, focusedWindow) => {
-            focusedWindow.openDevTools({detach: true})
+            focusedWindow.openDevTools({mode: 'detach'})
           },
         },
         {
           label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(remote.getGlobal('mainWindow'), 'openDevTools({detach: true})')
+            exeCodeOnWindowHasReloadArea(remote.getGlobal('mainWindow'), 'openDevTools({mode: "detach"})')
           },
         },
       ],
@@ -305,13 +305,13 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Alt+CmdOrCtrl+I',
           click: (item, focusedWindow) => {
-            focusedWindow.openDevTools({detach: true})
+            focusedWindow.openDevTools({mode: 'detach'})
           },
         },
         {
           label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({detach: true})')
+            exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({mode: "detach"})')
           },
         },
       ],

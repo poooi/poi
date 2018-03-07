@@ -20,7 +20,7 @@ export const touchbaresc = () => {
 // buttons
 const devtools = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'gears.png'),
-  click: () => {mainWindow.openDevTools({detach: true})},
+  click: () => {mainWindow.openDevTools({mode: 'detach'})},
 })
 const screenshot = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'camera-retro.png'),
