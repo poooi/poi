@@ -18,8 +18,9 @@ export const PaneBodyMini = connect(() => {
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
     enableAvatar: get(state, 'config.poi.enableAvatar', true),
     width: miniShipRowWidthSelector(state),
+    zoomLevel: get(state, 'config.poi.zoomLevel', 1),
   })
-})(({ fleetId, shipsId, enableAvatar, width }) =>
+})(({ fleetId, shipsId, enableAvatar, width, zoomLevel }) =>
   <>
     <div className='fleet-name'>
       <TopAlert
@@ -34,7 +35,7 @@ export const PaneBodyMini = connect(() => {
             key={shipId}
             shipId={shipId}
             enableAvatar={enableAvatar}
-            compact={width < 240}
+            compact={width / zoomLevel < 240}
           />
         )
       }
