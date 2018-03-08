@@ -17,10 +17,10 @@ const getPanelDimension = width => {
   if (width < 150) {
     return 1
   }
-  if (width > 600) {
+  if (width > 700) {
     return 8
   }
-  if (width > 300) {
+  if (width > 350) {
     return 4
   }
   return 2
