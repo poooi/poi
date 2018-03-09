@@ -16,7 +16,7 @@ export class DownloadProgress extends Component {
     downloaded: false,
   }
   updateProgress = progress => {
-    remote.getCurrentWindow().setProgressBar(progress.percent)
+    remote.getCurrentWindow().setProgressBar(progress.percent / 100)
     this.setState(progress)
   }
   componentDidMount() {
