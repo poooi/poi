@@ -7,6 +7,21 @@
   margin-bottom: 15.5px;
 }
 
+.SettingsView #settings-view-tabs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.SettingsView #settings-view-tabs > .nav {
+  flex: 0 0 38px;
+}
+
+.SettingsView #settings-view-tabs > .tab-content {
+  flex: 1 0 0;
+  overflow: scroll;
+}
+
 .SettingsView input[type="range"],
 .SettingsView input[type="range"]:focus,
 .SettingsView input[type="range"]:active,
