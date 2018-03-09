@@ -16,6 +16,7 @@ export class DownloadProgress extends Component {
     downloaded: false,
   }
   updateProgress = progress => {
+    remote.getCurrentWindow().setProgressBar(progress.percent)
     this.setState(progress)
   }
   componentDidMount() {
@@ -23,7 +24,10 @@ export class DownloadProgress extends Component {
       this.updateProgressDebounced = throttle(this.updateProgress, 1500)
     }
     updater.on('download-progress', progress => this.updateProgressDebounced(progress))
-    updater.on('update-downloaded', () => this.setState({downloaded: true}))
+    updater.on('update-downloaded', () => {
+      remote.getCurrentWindow().setProgressBar(-1)
+      this.setState({downloaded: true})
+    })
   }
   render () {
     const { t } = this.props
