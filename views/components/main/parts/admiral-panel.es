@@ -173,7 +173,7 @@ class CountDownControl extends Component {
     return(
       <span className="teitoku-timer">
         <OverlayTrigger
-          placement="bottom"
+          placement="left"
           overlay={
             <Tooltip id="next-time" className="info-tooltip next-time-tooltip">
               <CountdownContent moments={this.moments}/>
