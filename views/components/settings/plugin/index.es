@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import FileDrop from 'react-file-dropzone'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
+import Promise from 'bluebird'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
@@ -121,23 +122,33 @@ export class PluginConfig extends Component {
       this.setState({npmWorking: false})
     }
   }
-  handleInstallAll = async () => {
+  doInstallAll = async () => {
     this.setState({
       installingAll: true,
       npmWorking: true,
     })
     const settings = PluginManager.getUninstalledPluginSettings()
-    for (const name in settings) {
+
+    await Promise.each(Object.keys(settings), async (name) => {
       try {
         await this.handleInstall(name)
       } catch (e) {
         console.error(e)
       }
-    }
+    })
     this.setState({
       installingAll: false,
       npmWorking: false,
     })
+  }
+  handleInstallAll = () => {
+    window.toggleModal(i18next.t('Install all'),
+      i18next.t('install-all-confirmation'),
+      [{
+        name: i18next.t('Confirm'),
+        func: this.doInstallAll,
+        style: 'warning',
+      }])
   }
   handleUpdateAll = async (e) => {
     if (get(e, 'target.disabled')) {
