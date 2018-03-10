@@ -11,13 +11,6 @@ import FontAwesome  from 'react-fontawesome'
 import * as ReactBootstrap from 'react-bootstrap'
 const { Radio, Checkbox, FormControl } = ReactBootstrap
 
-// Hacks for remote.getCurrentWindow() & remote.getCurrentWebContents()
-// Details: https://electronjs.org/blog/electron-internals-weak-references#maps-with-weak-values
-remote.originGetCurrentWindow = remote.getCurrentWindow
-remote.getCurrentWindow = lodash.memoize(remote.originGetCurrentWindow)
-remote.originGetCurrentWebContents = remote.getCurrentWebContents
-remote.getCurrentWebContents = lodash.memoize(remote.originGetCurrentWebContents)
-
 // Environments
 window.remote = remote
 window.ROOT = path.join(__dirname, '..')
