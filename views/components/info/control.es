@@ -40,16 +40,17 @@ export class PoiControl extends Component {
     extend: false,
   }
   handleCapturePage = () => {
+    const { width, height } = window.getStore('layout.webview')
     const rect = {
       x: 0,
       y: 0,
-      width: 800 * devicePixelRatio,
-      height: 480 * devicePixelRatio,
+      width: width * devicePixelRatio,
+      height: height * devicePixelRatio,
     }
     const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
-    $('kan-game webview').capturePage(rect, image => {
-      image = image.resize({ width: 800, height: 480 })
+    $('kan-game webview').getWebContents().capturePage(rect, image => {
+      image = image.resize({ width, height })
       const buf = usePNG ? image.toPNG() : image.toJPEG(80)
       const now = new Date()
       const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
