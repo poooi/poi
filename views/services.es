@@ -3,6 +3,7 @@ import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
+import { debounce } from 'lodash'
 
 const proxy = remote.require('./lib/proxy')
 const { config, toggleModal, log, error, dbg } = window
@@ -173,6 +174,13 @@ remote.getCurrentWebContents().on('dom-ready', () => {
     `)
   }
 })
+
+// Workaround for flash freeze
+const resetFreeze = debounce(() => {
+  document.querySelector('kan-game webview').executeJavaScript('document.body.style.display="flex";setTimeout(()=>document.body.style.display=null, 1)')
+}, 100)
+remote.getCurrentWindow().on('show', resetFreeze)
+remote.getCurrentWindow().on('restore', resetFreeze)
 
 // Workaround for touch screen
 // List of active touches.
