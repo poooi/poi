@@ -284,6 +284,7 @@ const postEnableProcess = (plugin) => {
     if (plugin.windowOptions) {
       windowOptions = plugin.windowOptions
       if (!get(windowOptions, 'webPreferences.preload')) {
+        set(windowOptions, 'webPreferences.affinity', 'poi-plugin')
         set(windowOptions, 'webPreferences.preload', join(ROOT, 'assets', 'js', 'plugin-preload.js'))
       }
       if (!get(windowOptions, 'webPreferences.nodeIntegrationInWorker')) {
@@ -300,6 +301,7 @@ const postEnableProcess = (plugin) => {
           plugins: true,
           experimentalFeatures: true,
           nodeIntegrationInWorker: true,
+          affinity: 'poi-plugin',
         },
       }
     }
