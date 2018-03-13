@@ -175,6 +175,9 @@ remote.getCurrentWebContents().on('dom-ready', () => {
   }
 })
 
+// Workaround for pen
+document.addEventListener('pointerup', e => { e.preventDefault() })
+
 // Workaround for flash freeze
 const resetFreeze = debounce(() => {
   document.querySelector('kan-game webview').executeJavaScript('document.body.style.display="flex";setTimeout(()=>document.body.style.display=null, 10)')
