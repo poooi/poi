@@ -158,7 +158,7 @@ export class KanGameWrapper extends Component {
         ref={r => this.resizableArea = r}
       >
         <kan-game style={{
-          width: webviewWidth,
+          width: "100%",
         }}>
           <div id="webview-wrapper"
             className="webview-wrapper"
