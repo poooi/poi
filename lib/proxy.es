@@ -111,6 +111,11 @@ const findCache = (pathname, hostname) => {
 
 const PacAgents = {}
 const resolve = (req) => {
+  // Bypass localhost
+  if (url.parse(req.url).hostname == ('localhost' || '127.0.0.1')){
+    return req
+  }
+
   switch (config.get('proxy.use')) {
   // HTTP Request via SOCKS5 proxy
   case 'socks5':
