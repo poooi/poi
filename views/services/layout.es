@@ -89,7 +89,6 @@ const setProperWindowSize = () => {
 }
 
 const adjustSize = () => {
-  setThumbnails()
   const layout = config.get('poi.layout', 'horizontal')
   const zoomLevel = config.get('poi.zoomLevel', 1)
   const reversed = config.get('poi.reverseLayout', false)
@@ -103,18 +102,6 @@ const adjustSize = () => {
     type: '@@LayoutUpdate/webview/useFixedResolution',
     value: window.getStore('config.poi.webview.useFixedResolution', true),
   })
-}
-
-const setThumbnails = () => {
-  if (process.platform === 'win32' && $('kan-game webview')) {
-    const rect = $('kan-game webview').getBoundingClientRect()
-    remote.getCurrentWindow().setThumbnailClip({
-      x: Math.round(rect.x),
-      y: 80 + Math.round(rect.y),
-      width: Math.round(rect.width),
-      height: Math.round(rect.height),
-    })
-  }
 }
 
 adjustSize()
@@ -205,7 +192,6 @@ export const layoutResizeObserver = new ResizeObserver(entries => {
     if (entry.target.tagName === 'WEBVIEW') {
       setMinSize()
       setProperWindowSize()
-      setThumbnails()
     }
   })
   window.dispatch({
