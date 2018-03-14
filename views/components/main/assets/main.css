@@ -81,6 +81,7 @@
 .MainView .ndock-panel .panel-item,
 .MainView .kdock-panel .panel-item {
   padding: 2px 4px;
+  max-width: 100%;
 }
 
 .MainView .label {
