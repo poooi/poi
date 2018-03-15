@@ -380,6 +380,7 @@ class Proxy extends EventEmitter {
     this.server.listen(listenPort, config.get('proxy.allowLAN', false) ? '0.0.0.0' : '127.0.0.1', () => {
       this.port = this.server.address().port
       app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
+      app.commandLine.appendSwitch('proxy-bypass-list', '<local>')
       app.commandLine.appendSwitch('ignore-certificate-errors')
       app.commandLine.appendSwitch('ssl-version-fallback-min', "tls1")
       log(`Proxy listening on ${this.port}`)
