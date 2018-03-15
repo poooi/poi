@@ -150,7 +150,7 @@ export class MiniShipRow extends Component {
         <OverlayTrigger
           placement={tooltipPos}
           overlay={
-            (ship.api_slot[0] !== -1 || ship.api_slot_ex > 0) ?
+            (( ship.api_slot && ship.api_slot[0] !== -1) || ship.api_slot_ex > 0) ?
               <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
                 <Slotitems shipId={ship.api_id} />
               </Tooltip>
