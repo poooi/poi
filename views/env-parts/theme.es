@@ -24,10 +24,6 @@ customCSS.setAttribute('id', 'custom-css')
 customCSS.setAttribute('href', customCSSPath)
 document.head.appendChild(customCSS)
 
-if ($('#fontawesome-css')) {
-  $('#fontawesome-css').setAttribute('href', require.resolve('font-awesome/css/font-awesome.css'))
-}
-
 window.reloadCustomCss = () => {
   if (!$('#custom-css')) {
     return

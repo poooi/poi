@@ -10,6 +10,7 @@ import createClass from 'create-react-class'
 import FontAwesome  from 'react-fontawesome'
 import * as ReactBootstrap from 'react-bootstrap'
 import { OverlayTrigger, Modal } from './utils/overlay'
+
 const { Radio, Checkbox, FormControl } = ReactBootstrap
 
 // Environments
