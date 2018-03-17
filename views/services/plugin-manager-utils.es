@@ -217,10 +217,9 @@ export async function readPlugin(pluginPath) {
   plugin = updateI18n(plugin)
   const icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
   plugin.displayName = (
-    <span>
-      <FontAwesome key={0} name={icon} />
-      {' ' + plugin.name}
-    </span>
+    <>
+      <FontAwesome key={0} name={icon} /> {plugin.name}
+    </>
   )
   plugin.timestamp = Date.now()
   return plugin

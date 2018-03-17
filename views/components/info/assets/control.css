@@ -10,13 +10,9 @@ poi-control .btn-sm {
   padding: 2px 7px;
 }
 
-poi-control button .fa {
+poi-control button [class*="fa-"].svg-inline--fa {
   cursor: pointer;
   width: 20px;
-}
-
-poi-control button .fa::before {
-  cursor: pointer;
 }
 
 poi-control .poi-control-container {

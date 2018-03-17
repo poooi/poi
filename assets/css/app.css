@@ -112,16 +112,18 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li {
 }
 
 poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li a {
-  display: block;
+  display: flex;
   min-height: 5em;
   overflow: hidden;
   padding-top: 1em;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+  flex-direction: column;
+  align-items: center;
 }
 
-poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li .fa {
+poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-inline--fa {
   display: block;
   font-size: 175%;
 }
