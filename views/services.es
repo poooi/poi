@@ -8,7 +8,7 @@ import { debounce } from 'lodash'
 const proxy = remote.require('./lib/proxy')
 const { config, toggleModal, log, error, dbg } = window
 
-const { stopNavigateAndNewWindow } = remote.require('./lib/utils')
+const { stopNavigate } = remote.require('./lib/utils')
 
 import './services/update'
 import './services/layout'
@@ -150,15 +150,18 @@ window.addEventListener('network.invalid.result', (e) => {
 })
 
 const handleExternalURL = (e, url) => {
-  e.preventDefault()
-  if (!url.startsWith('file'))
-    shell.openExternal(url)
+  if (url !== 'about:blank') {
+    e.preventDefault()
+    if (!url.startsWith('file')) {
+      shell.openExternal(url)
+    }
+  }
 }
 
 remote.getCurrentWebContents().on('devtools-opened', e => window.dispatchEvent(new Event('resize')))
 remote.getCurrentWebContents().on('new-window', handleExternalURL)
 remote.getCurrentWebContents().on('will-navigate', handleExternalURL)
-stopNavigateAndNewWindow(remote.getCurrentWebContents().id)
+stopNavigate(remote.getCurrentWebContents().id)
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   if (process.platform === 'darwin') {

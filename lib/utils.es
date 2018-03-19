@@ -44,11 +44,8 @@ export function stopFileNavigate(id) {
     }
   })
 }
-export function stopNavigateAndNewWindow(id) {
+export function stopNavigate(id) {
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
-    e.preventDefault()
-  })
-  webContents.fromId(id).addListener('new-window', (e, url) => {
     e.preventDefault()
   })
 }
