@@ -85,15 +85,18 @@ Object.remoteClone = (obj) =>
 // Utils
 require('./env-parts/utils')
 
-// Node modules
-const originConfig = remote.require('./lib/config')
-window.ipc = remote.require('./lib/ipc')
-window.proxy = remote.require('./lib/proxy')
-window.CONST = Object.remoteClone(remote.require('./lib/constant'))
-window.config = {}
-for (const key in originConfig) {
-  window.config[key] = originConfig[key]
+if (!window.isWindowMode) {
+  // Node modules
+  const originConfig = remote.require('./lib/config')
+  window.ipc = remote.require('./lib/ipc')
+  window.proxy = remote.require('./lib/proxy')
+  window.CONST = Object.remoteClone(remote.require('./lib/constant'))
+  window.config = {}
+  for (const key in originConfig) {
+    window.config[key] = originConfig[key]
+  }
 }
+
 
 // i18n config
 require('./env-parts/i18next')
@@ -107,8 +110,10 @@ require('./env-parts/modal')
 // You should call window.applyTheme() to apply a theme properly.
 require('./env-parts/theme')
 
-// Global data resolver
-require('./env-parts/data-resolver')
+if (!window.isWindowMode) {
+  // Global data resolver
+  require('./env-parts/data-resolver')
+}
 
 // Getter
 require('./env-parts/getter')
