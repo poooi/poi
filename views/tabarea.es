@@ -275,7 +275,6 @@ export class ControlledTabArea extends PureComponent {
     this.props.windowmode[plugin.id] && this.state.openedWindow[plugin.id]
   )
   openWindow = plugin => {
-    console.log(plugin, this.state)
     if (!this.state.openedWindow[plugin.id]) {
       this.setState({
         openedWindow: {
@@ -302,7 +301,6 @@ export class ControlledTabArea extends PureComponent {
     })
     const tabbedPlugins = this.tabbedPlugins()
     const windowModePlugins = this.windowModePlugins()
-    console.log(windowModePlugins, this.props.windowmode)
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const activePluginName = activePlugin.packageName
@@ -313,10 +311,11 @@ export class ControlledTabArea extends PureComponent {
       </MenuItem>
     ) : (
       this.listedPlugins().map((plugin, index) => {
-        const handleClick = plugin.handleClick ||
+        const handleClick = plugin.handleClick ?
+          plugin.handleClick :
           this.props.windowmode[plugin.id] ?
-          e => this.openWindow(plugin) :
-          undefined
+            e => this.openWindow(plugin) :
+            undefined
         return (
           <MenuItem key={plugin.id} eventKey={this.props.activeMainTab === plugin.id ? '' : plugin.id} onSelect={handleClick}>
             {plugin.displayName}
