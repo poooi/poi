@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
+import { TitleBar } from 'electron-react-titlebar'
 
 export class PluginWindowWrap extends PureComponent {
   constructor(props) {
@@ -38,9 +39,16 @@ export class PluginWindowWrap extends PureComponent {
     this.externalWindow.close()
   }
 
-  focusWindow = e => this.externalWindow.focus()
+  focusWindow = e => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
 
   render() {
-    return this.state.loaded ? ReactDOM.createPortal(<this.props.plugin.reactClass />, this.externalWindow.document.querySelector('.poi-plugin')) : null
+    return this.state.loaded ? ReactDOM.createPortal(
+      <div>
+        <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()}>
+          <link rel="stylesheet" type="text/css" href={require.resolve('electron-react-titlebar/assets/style.css')} />
+        </TitleBar>
+        <this.props.plugin.reactClass />
+      </div>,
+      this.externalWindow.document.querySelector('.poi-plugin')) : null
   }
 }

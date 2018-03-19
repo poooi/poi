@@ -51,7 +51,7 @@
     "create-react-class": "^15.6.2",
     "cson": "^5.1.0",
     "electron-log": "^2.2.14",
-    "electron-react-titlebar": "^0.7.1",
+    "electron-react-titlebar": "^0.8.1",
     "electron-updater": "^2.18.2",
     "fast-memoize": "^2.2.8",
     "font-awesome": "^4.7.0",
