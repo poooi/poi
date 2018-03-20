@@ -1,4 +1,4 @@
-import { remote, shell } from 'electron'
+import { remote } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
