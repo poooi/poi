@@ -164,13 +164,13 @@ export class InstalledPlugin extends PureComponent {
                       <Col xs={12}>
                         <Well>
                           {
-                            // !!plugin.reactClass &&
-                            // <div>
-                            //   <CheckboxLabelConfig
-                            //     label={<Trans>setting:Window mode</Trans>}
-                            //     configName={`poi.windowmode.${plugin.id}`}
-                            //     defaultVal={false} />
-                            // </div>
+                            !!plugin.reactClass &&
+                            <div>
+                              <CheckboxLabelConfig
+                                label={<Trans>setting:Window mode</Trans>}
+                                configName={`poi.windowmode.${plugin.id}`}
+                                defaultVal={false} />
+                            </div>
                           }
                           {
                             !!plugin.switchPluginPath &&
