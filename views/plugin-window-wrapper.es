@@ -48,10 +48,17 @@ export class PluginWindowWrap extends PureComponent {
     this.externalWindow.close()
   }
 
+  componentDidCatch = (error, info) => {
+    console.error(error, info)
+    this.setState({
+      hasError: true,
+    })
+  }
+
   focusWindow = e => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
 
   render() {
-    return this.state.loaded ? ReactDOM.createPortal(
+    return this.state.hasError ? null : this.state.loaded ? ReactDOM.createPortal(
       <div>
         {
           window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
