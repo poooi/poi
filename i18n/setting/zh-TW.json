@@ -164,5 +164,6 @@
   "DirectoryNotAvailable": "爲 {{path}} 所選擇的路徑無效。",
   "Who Calls The Fleet Database": "「是誰呼叫艦隊」數據庫",
   "Show shipgirl avatar": "顯示艦娘頭像",
-  "Delete avatar cache": "刪除頭像快取"
+  "Delete avatar cache": "刪除頭像快取",
+  "Open plugin in new window": "在新視窗中開啟擴展程式"
 }

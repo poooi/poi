@@ -141,5 +141,6 @@
   "Installing": "Installing",
   "PluginUpdateMsg": "have newer version. Please update your plugins.",
   "Plugin update": "Plugin update",
-  "Updating": "Updating"
+  "Updating": "Updating",
+  "Open plugin in new window": "Open plugin in new window"
 }
