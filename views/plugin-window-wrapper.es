@@ -25,9 +25,9 @@ export class PluginWindowWrap extends PureComponent {
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('electron-react-titlebar/assets/style.css'))}" />
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('react-resizable/css/style.css'))}" />
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('react-grid-layout/css/style.css'))}" />
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('electron-react-titlebar/assets/style.css'))}">
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('react-resizable/css/styles.css'))}">
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('react-grid-layout/css/styles.css'))}">
 <link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/etc/assets/avatar.css'))}">
 <link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/etc/assets/scroll-shadow.css'))}">`
       if (process.platform === 'darwin') {
