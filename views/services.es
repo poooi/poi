@@ -149,22 +149,6 @@ window.addEventListener('network.invalid.result', (e) => {
   error(i18next.t('CatError', { code }), {dontReserve: true})
 })
 
-const handleExternalURL = (e, url, frameName, disposition, options, additionalFeatures) => {
-  e.preventDefault()
-  if (url.startsWith('http')) {
-    shell.openExternal(url)
-  } else {
-    Object.assign(options, {
-      width: 600,
-      height: 500,
-      x: config.get('poi.window.x'),
-      y: config.get('poi.window.y'),
-      backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
-    })
-    e.newGuest = new remote.BrowserWindow(options)
-  }
-}
-
 remote.getCurrentWebContents().on('devtools-opened', e => window.dispatchEvent(new Event('resize')))
 stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
 
