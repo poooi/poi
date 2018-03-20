@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom'
 import createClass from 'create-react-class'
 import FontAwesome  from 'react-fontawesome'
 import * as ReactBootstrap from 'react-bootstrap'
+import { OverlayTrigger } from './utils/overlay-trigger'
 const { Radio, Checkbox, FormControl } = ReactBootstrap
 
 // Environments
@@ -75,6 +76,7 @@ window.ReactBootstrap.Input = class InputWorkAround extends React.Component {
     }
   }
 }
+window.ReactBootstrap.OverlayTrigger = OverlayTrigger
 
 // Polyfills
 Object.clone = (obj) =>

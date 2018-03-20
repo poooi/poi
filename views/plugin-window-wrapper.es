@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
 import { normalizeURL } from 'views/utils/tools'
+import PropTypes from 'prop-types'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 
@@ -18,6 +19,16 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   state = {}
+
+  getChildContext() {
+    return {
+      overlayMountPoint: this.containerEl,
+    }
+  }
+
+  static childContextTypes = {
+    overlayMountPoint: PropTypes.node,
+  }
 
   componentDidMount() {
     this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, this.props.plugin.id)
