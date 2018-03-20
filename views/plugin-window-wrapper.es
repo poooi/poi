@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
 
+const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
+
 export class PluginWindowWrap extends PureComponent {
   constructor(props) {
     super(props)
@@ -22,11 +24,15 @@ export class PluginWindowWrap extends PureComponent {
     this.externalWindow.document.body.appendChild(this.containerEl)
     this.externalWindow.document.title = this.props.plugin.id
     this.externalWindow.isWindowMode = true
-    this.externalWindow.require('coffee-script/register')
-    this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(window.ROOT, 'babel.config')))
-    this.externalWindow.config = window.config
-    this.externalWindow.getStore = window.getStore
-    this.externalWindow.require(path.join(__dirname, 'env'))
+    if (require.resolve(path.join(__dirname, 'env-parts', 'theme')).endsWith('.es')) {
+      this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(window.ROOT, 'babel.config')))
+    }
+    this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
+    this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
+    for (const pickOption of pickOptions) {
+      this.externalWindow[pickOption] = window[pickOption]
+    }
+    this.externalWindow.require(path.join(__dirname, 'env-parts', 'theme'))
     this.externalWindow.addEventListener('beforeunload', () => {
       this.props.closeWindowPortal()
     })
