@@ -124,7 +124,7 @@ const defaultProps = {
 }
 
 const contextTypes = {
-  overlayMountPoint: PropTypes.node,
+  overlayMountPoint: PropTypes.instanceOf(<div></div>),
 }
 
 export class OverlayTrigger extends React.Component {

@@ -27,7 +27,7 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   static childContextTypes = {
-    overlayMountPoint: PropTypes.node,
+    overlayMountPoint: PropTypes.instanceOf(<div></div>),
   }
 
   componentDidMount() {
