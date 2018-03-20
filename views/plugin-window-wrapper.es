@@ -17,30 +17,32 @@ export class PluginWindowWrap extends PureComponent {
   state = {}
 
   componentDidMount() {
-    this.externalWindow = window.open('', '', '')
-    this.externalWindow.document.head.innerHTML =
+    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, 'plugin')
+    this.externalWindow.addEventListener('DOMContentLoaded', e => {
+      this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
 <link rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" id="fontawesome-css">
 <link rel="stylesheet" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" href="${normalizeURL(require.resolve('assets/css/global.css'))}">`
-    this.externalWindow.document.body.appendChild(this.containerEl)
-    this.externalWindow.document.title = this.props.plugin.name
-    this.externalWindow.isWindowMode = true
-    if (require.resolve(path.join(__dirname, 'env-parts', 'theme')).endsWith('.es')) {
-      this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(window.ROOT, 'babel.config')))
-    }
-    this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
-    this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
-    for (const pickOption of pickOptions) {
-      this.externalWindow[pickOption] = window[pickOption]
-    }
-    this.externalWindow.require(path.join(__dirname, 'env-parts', 'theme'))
-    this.externalWindow.addEventListener('beforeunload', () => {
-      this.props.closeWindowPortal()
+      this.externalWindow.document.body.appendChild(this.containerEl)
+      this.externalWindow.document.title = this.props.plugin.name
+      this.externalWindow.isWindowMode = true
+      if (require.resolve(path.join(__dirname, 'env-parts', 'theme')).endsWith('.es')) {
+        this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(window.ROOT, 'babel.config')))
+      }
+      this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
+      this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
+      for (const pickOption of pickOptions) {
+        this.externalWindow[pickOption] = window[pickOption]
+      }
+      this.externalWindow.require(require.resolve('./env-parts/theme'))
+      this.externalWindow.addEventListener('beforeunload', () => {
+        this.props.closeWindowPortal()
+      })
+      window.addEventListener(`${this.props.plugin.id}-focus`, this.focusWindow)
+      this.setState({ loaded: true })
     })
-    window.addEventListener(`${this.props.plugin.id}-focus`, this.focusWindow)
-    this.setState({ loaded: true })
   }
 
   componentWillUnmount() {
@@ -59,7 +61,8 @@ export class PluginWindowWrap extends PureComponent {
   focusWindow = e => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
 
   render() {
-    return this.state.hasError ? null : this.state.loaded ? ReactDOM.createPortal(
+    if (this.state.hasError || !this.state.loaded) return null
+    return ReactDOM.createPortal(
       <div>
         {
           window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
@@ -69,6 +72,6 @@ export class PluginWindowWrap extends PureComponent {
         }
         <this.props.plugin.reactClass />
       </div>,
-      this.externalWindow.document.querySelector('.poi-plugin')) : null
+      this.externalWindow.document.querySelector('.poi-plugin'))
   }
 }
