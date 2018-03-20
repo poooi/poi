@@ -25,6 +25,16 @@ export class PluginWindowWrap extends PureComponent {
 <link rel="stylesheet" id="fontawesome-css">
 <link rel="stylesheet" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" href="${normalizeURL(require.resolve('assets/css/global.css'))}">`
+      if (process.platform === 'darwin') {
+        const div = document.createElement("div")
+        div.style.position = "absolute"
+        div.style.top = 0
+        div.style.height = "23px"
+        div.style.width = "100%"
+        div.style["-webkit-app-region"] = "drag"
+        div.style["pointer-events"] = "none"
+        this.externalWindow.document.body.appendChild(div)
+      }
       this.externalWindow.document.body.appendChild(this.containerEl)
       this.externalWindow.document.title = this.props.plugin.name
       this.externalWindow.isWindowMode = true
