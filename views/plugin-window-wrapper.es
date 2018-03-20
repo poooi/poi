@@ -21,10 +21,15 @@ export class PluginWindowWrap extends PureComponent {
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
-<link rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" id="fontawesome-css">
-<link rel="stylesheet" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
-<link rel="stylesheet" href="${normalizeURL(require.resolve('assets/css/global.css'))}">`
+<link rel="stylesheet" type="text/css" id="bootstrap-css">
+<link rel="stylesheet" type="text/css" id="fontawesome-css">
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/global.css'))}">
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('electron-react-titlebar/assets/style.css'))}" />
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('react-resizable/css/style.css'))}" />
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('react-grid-layout/css/style.css'))}" />
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/etc/assets/avatar.css'))}">
+<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/etc/assets/scroll-shadow.css'))}">`
       if (process.platform === 'darwin') {
         const div = document.createElement("div")
         div.style.position = "absolute"
@@ -76,9 +81,7 @@ export class PluginWindowWrap extends PureComponent {
       <div>
         {
           window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
-          <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()}>
-            <link rel="stylesheet" type="text/css" href={require.resolve('electron-react-titlebar/assets/style.css')} />
-          </TitleBar>
+          <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
         <this.props.plugin.reactClass />
       </div>,
