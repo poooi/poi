@@ -10,14 +10,17 @@ export class PluginWindowWrap extends PureComponent {
   constructor(props) {
     super(props)
     this.containerEl = document.createElement('div')
-    this.containerEl.className = "poi-app-tabpane poi-plugin"
+    this.containerEl.id = "plugin-mountpoint"
+    this.containerEl.style['display'] = 'flex'
+    this.containerEl.style['flex-direction'] = "column"
+    this.containerEl.style['height'] = "100vh"
     this.externalWindow = null
   }
 
   state = {}
 
   componentDidMount() {
-    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, 'plugin')
+    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, this.props.plugin.id)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
@@ -78,13 +81,15 @@ export class PluginWindowWrap extends PureComponent {
   render() {
     if (this.state.hasError || !this.state.loaded) return null
     return ReactDOM.createPortal(
-      <div>
+      <>
         {
           window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
           <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
-        <this.props.plugin.reactClass />
-      </div>,
-      this.externalWindow.document.querySelector('.poi-plugin'))
+        <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }}>
+          <this.props.plugin.reactClass />
+        </div>
+      </>,
+      this.externalWindow.document.querySelector('#plugin-mountpoint'))
   }
 }
