@@ -8,7 +8,7 @@ import { debounce } from 'lodash'
 const proxy = remote.require('./lib/proxy')
 const { config, toggleModal, log, error, dbg } = window
 
-const { stopNavigate } = remote.require('./lib/utils')
+const { stopNavigateAndHandleNewWindow } = remote.require('./lib/utils')
 
 import './services/update'
 import './services/layout'
@@ -149,19 +149,24 @@ window.addEventListener('network.invalid.result', (e) => {
   error(i18next.t('CatError', { code }), {dontReserve: true})
 })
 
-const handleExternalURL = (e, url) => {
-  if (url !== 'about:blank') {
-    e.preventDefault()
-    if (!url.startsWith('file')) {
-      shell.openExternal(url)
-    }
+const handleExternalURL = (e, url, frameName, disposition, options, additionalFeatures) => {
+  e.preventDefault()
+  if (url.startsWith('http')) {
+    shell.openExternal(url)
+  } else {
+    Object.assign(options, {
+      width: 600,
+      height: 500,
+      x: config.get('poi.window.x'),
+      y: config.get('poi.window.y'),
+      backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
+    })
+    e.newGuest = new remote.BrowserWindow(options)
   }
 }
 
 remote.getCurrentWebContents().on('devtools-opened', e => window.dispatchEvent(new Event('resize')))
-remote.getCurrentWebContents().on('new-window', handleExternalURL)
-remote.getCurrentWebContents().on('will-navigate', handleExternalURL)
-stopNavigate(remote.getCurrentWebContents().id)
+stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   if (process.platform === 'darwin') {
