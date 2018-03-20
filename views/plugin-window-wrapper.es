@@ -53,6 +53,7 @@ export class PluginWindowWrap extends PureComponent {
     this.setState({
       hasError: true,
     })
+    this.externalWindow.close()
   }
 
   focusWindow = e => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
