@@ -6,6 +6,7 @@ import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
 import { get } from 'lodash'
 import { I18nextProvider } from 'react-i18next'
+import PropTypes from 'prop-types'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
@@ -53,6 +54,17 @@ const CustomCssInjector = () => {
 class Poi extends Component {
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.poimain)
+  }
+
+
+  getChildContext() {
+    return {
+      overlayMountPoint: document.body,
+    }
+  }
+
+  static childContextTypes = {
+    overlayMountPoint: PropTypes.instanceOf(<div></div>),
   }
 
   componentDidMount() {

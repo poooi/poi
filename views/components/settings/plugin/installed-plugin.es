@@ -64,7 +64,7 @@ export class InstalledPlugin extends PureComponent {
     const outdatedLabelClass = classnames('update-label', {
       'hidden': !plugin.isOutdated,
     })
-    const settingAvailable = plugin.settingsClass || plugin.switchPluginPath || (!plugin.multiWindow && plugin.windowURL)
+    const settingAvailable = plugin.reactClass || plugin.settingsClass || plugin.switchPluginPath || (!plugin.multiWindow && plugin.windowURL)
     const btnGroupClass = classnames('plugin-buttongroup', {
       'btn-xs-12': settingAvailable,
       'btn-xs-8': !settingAvailable,
@@ -163,6 +163,15 @@ export class InstalledPlugin extends PureComponent {
                     <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
                       <Col xs={12}>
                         <Well>
+                          {
+                            !!plugin.reactClass &&
+                            <div>
+                              <CheckboxLabelConfig
+                                label={<Trans>setting:Open plugin in new window</Trans>}
+                                configName={`poi.windowmode.${plugin.id}`}
+                                defaultVal={false} />
+                            </div>
+                          }
                           {
                             !!plugin.switchPluginPath &&
                             <div>

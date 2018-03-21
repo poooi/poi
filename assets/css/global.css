@@ -209,3 +209,13 @@ a:focus,
 .react-resizable-handle {
   filter: opacity(0.5) drop-shadow(0 0 0 white);
 }
+
+.alert {
+  border-radius: 0;
+  font-size: 12px;
+  margin-bottom: 1px;
+  padding: 3px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,4 +1,4 @@
-import { remote, shell } from 'electron'
+import { remote } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
@@ -8,7 +8,7 @@ import { debounce } from 'lodash'
 const proxy = remote.require('./lib/proxy')
 const { config, toggleModal, log, error, dbg } = window
 
-const { stopNavigateAndNewWindow } = remote.require('./lib/utils')
+const { stopNavigateAndHandleNewWindow } = remote.require('./lib/utils')
 
 import './services/update'
 import './services/layout'
@@ -149,16 +149,8 @@ window.addEventListener('network.invalid.result', (e) => {
   error(i18next.t('CatError', { code }), {dontReserve: true})
 })
 
-const handleExternalURL = (e, url) => {
-  e.preventDefault()
-  if (!url.startsWith('file'))
-    shell.openExternal(url)
-}
-
 remote.getCurrentWebContents().on('devtools-opened', e => window.dispatchEvent(new Event('resize')))
-remote.getCurrentWebContents().on('new-window', handleExternalURL)
-remote.getCurrentWebContents().on('will-navigate', handleExternalURL)
-stopNavigateAndNewWindow(remote.getCurrentWebContents().id)
+stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   if (process.platform === 'darwin') {

@@ -13,9 +13,12 @@ import * as settings from './components/settings'
 import * as mainview from './components/main'
 import * as shipview from './components/ship'
 import { PluginWrap } from './plugin-wrapper'
+import { PluginWindowWrap } from './plugin-window-wrapper'
 import { isInGame } from 'views/utils/game-utils'
 
 const { config, dispatch } = window
+
+const emptyObj = {}
 
 @connect(
   (state) => ({
@@ -96,6 +99,7 @@ let lockedTab = false
   activePluginName: get(state.ui, 'activePluginName', ''),
   mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
   editable: get(state.config, 'poi.layouteditable', false),
+  windowmode: get(state.config, 'poi.windowmode', emptyObj),
 }))
 export class ControlledTabArea extends PureComponent {
   static propTypes = {
@@ -110,7 +114,9 @@ export class ControlledTabArea extends PureComponent {
     }),
     editable: PropTypes.bool.isRequired,
   }
-  state = {}
+  state = {
+    openedWindow: {},
+  }
   dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
@@ -258,13 +264,35 @@ export class ControlledTabArea extends PureComponent {
     )
   }
   // All non-new-window displaying plugins
-  tabbedPlugins = () => {
-    return this.props.plugins.filter((plugin) =>
-      plugin.enabled &&
-      !plugin.handleClick &&
-      !plugin.windowURL &&
-      plugin.reactClass
-    )
+  tabbedPlugins = () => this.props.plugins.filter((plugin) =>
+    plugin.enabled &&
+    !plugin.handleClick &&
+    !plugin.windowURL &&
+    !this.props.windowmode[plugin.id] &&
+    plugin.reactClass
+  )
+  windowModePlugins = () => this.props.plugins.filter(plugin =>
+    this.props.windowmode[plugin.id] && this.state.openedWindow[plugin.id]
+  )
+  openWindow = plugin => {
+    if (!this.state.openedWindow[plugin.id]) {
+      this.setState({
+        openedWindow: {
+          ...this.state.openedWindow,
+          [plugin.id]: true,
+        },
+      })
+    } else {
+      window.dispatchEvent(new Event(`${plugin.id}-focus`))
+    }
+  }
+  closeWindow = plugin => {
+    this.setState({
+      openedWindow: {
+        ...this.state.openedWindow,
+        [plugin.id]: false,
+      },
+    })
   }
   render() {
     const { t } = this.props
@@ -272,6 +300,7 @@ export class ControlledTabArea extends PureComponent {
       'grid-menu': this.props.useGridMenu,
     })
     const tabbedPlugins = this.tabbedPlugins()
+    const windowModePlugins = this.windowModePlugins()
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const activePluginName = activePlugin.packageName
@@ -281,16 +310,30 @@ export class ControlledTabArea extends PureComponent {
         {t('setting:Install plugins in settings')}
       </MenuItem>
     ) : (
-      this.listedPlugins().map((plugin, index) =>
-        <MenuItem key={plugin.id} eventKey={this.props.activeMainTab === plugin.id ? '' : plugin.id} onSelect={plugin.handleClick}>
-          {plugin.displayName}
-        </MenuItem>
-      )
+      this.listedPlugins().map((plugin, index) => {
+        const handleClick = plugin.handleClick ?
+          plugin.handleClick :
+          this.props.windowmode[plugin.id] ?
+            e => this.openWindow(plugin) :
+            undefined
+        return (
+          <MenuItem key={plugin.id} eventKey={this.props.activeMainTab === plugin.id ? '' : plugin.id} onSelect={handleClick}>
+            {plugin.displayName}
+          </MenuItem>
+        )
+      })
     )
-    const pluginContents = this.tabbedPlugins().map((plugin) =>
+    const pluginContents = tabbedPlugins.map(plugin =>
       <PluginWrap
         key={plugin.id}
         plugin={plugin}
+      />
+    )
+    const windowModePluginContents = windowModePlugins.map(plugin =>
+      <PluginWindowWrap
+        key={plugin.id}
+        plugin={plugin}
+        closeWindowPortal={e => this.closeWindow(plugin)}
       />
     )
 
@@ -392,6 +435,7 @@ export class ControlledTabArea extends PureComponent {
           <div className="poi-tab-container no-scroll">
             { firstPanelNav }
             { firstPanelCnt }
+            { windowModePluginContents }
           </div>
         </ResizableArea>
         {

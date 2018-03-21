@@ -164,5 +164,6 @@
   "DirectoryNotAvailable": "为 {{path}} 所选择的路径无效。",
   "Who Calls The Fleet Database": "「是谁呼叫舰队」数据库",
   "Show shipgirl avatar": "显示舰娘头像",
-  "Delete avatar cache": "删除头像缓存"
+  "Delete avatar cache": "删除头像缓存",
+  "Open plugin in new window": "在新窗口中打开插件"
 }

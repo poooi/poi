@@ -164,5 +164,6 @@
   "DirectoryNotAvailable": "{{path}} に設定されたディレクトリが無効です。",
   "Who Calls The Fleet Database": "「Who Calls The Fleet」データベース",
   "Show shipgirl avatar": "艦娘アバターを表示する",
-  "Delete avatar cache": "艦娘アバターのキャッシュを削除する"
+  "Delete avatar cache": "艦娘アバターのキャッシュを削除する",
+  "Open plugin in new window": "新しいウィンドウで開く"
 }

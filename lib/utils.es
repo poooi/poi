@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { webContents } from 'electron'
+import { webContents, shell, BrowserWindow } from 'electron'
 
 const stringify = (str) => {
   if (typeof str === 'string') {
@@ -44,11 +44,30 @@ export function stopFileNavigate(id) {
     }
   })
 }
-export function stopNavigateAndNewWindow(id) {
+export function stopNavigateAndHandleNewWindow(id) {
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
     e.preventDefault()
+    if (url.startsWith('http')) {
+      shell.openExternal(url)
+    }
   })
-  webContents.fromId(id).addListener('new-window', (e, url) => {
+  webContents.fromId(id).addListener('new-window', (e, url, frameName, disposition, options, additionalFeatures) => {
     e.preventDefault()
+    if (url.startsWith('http')) {
+      shell.openExternal(url)
+    } else {
+      const [x, y] = global.mainWindow.getPosition()
+      Object.assign(options, {
+        width: 600,
+        height: 500,
+        minWidth: 200,
+        minHeight: 200,
+        x,
+        y,
+        backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
+        titleBarStyle: 'hidden',
+      })
+      e.newGuest = new BrowserWindow(options)
+    }
   })
 }
