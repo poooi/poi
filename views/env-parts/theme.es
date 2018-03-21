@@ -44,8 +44,14 @@ const windowsSetVibrancy = value => {
     const electronVibrancy = remote.require(join(window.ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
     if (value === 1) {
       electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
+      if (window.isWindowMode) {
+        remote.getCurrentWindow().setBackgroundColor('#002A2A2A')
+      }
     } else {
       electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
+      if (window.isWindowMode) {
+        remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
+      }
     }
   } catch (e) {
     console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
