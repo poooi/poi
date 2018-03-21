@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import fs from 'fs-extra'
-import path from 'path-extra'
 import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
 import { get } from 'lodash'
@@ -21,7 +19,7 @@ import { PoiApp } from './poi-app'
 import { layoutResizeObserver } from 'views/services/layout'
 import i18next from './env-parts/i18next'
 
-const {EXROOT, $} = window
+const {$} = window
 const config = remote.require('./lib/config')
 
 // Disable OSX zoom
