@@ -1,7 +1,7 @@
 import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
 import { fileUrl } from '../utils/tools'
-import { accessSync } from 'fs-extra'
+import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path-extra'
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
@@ -15,6 +15,14 @@ require.extensions['.css'] = (m, name) => {
   link.setAttribute('href', name)
   document.head.appendChild(link)
 }
+
+const customCSSPath = join(EXROOT, 'hack', 'custom.css')
+ensureFileSync(customCSSPath)
+const customCSS = document.createElement('link')
+customCSS.setAttribute('rel', 'stylesheet')
+customCSS.setAttribute('id', 'custom-css')
+customCSS.setAttribute('href', customCSSPath)
+document.head.appendChild(customCSS)
 
 if ($('#fontawesome-css')) {
   $('#fontawesome-css').setAttribute('href', require.resolve('font-awesome/css/font-awesome.css'))

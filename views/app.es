@@ -39,13 +39,7 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
-const CustomCssInjector = () => {
-  const cssPath = path.join(EXROOT, 'hack', 'custom.css')
-  fs.ensureFileSync(cssPath)
-  return (
-    <link rel='stylesheet' id='custom-css' href={cssPath} />
-  )
-}
+
 
 @connect(state => ({
   isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
@@ -74,7 +68,6 @@ class Poi extends Component {
     const { isHorizontal, reversed } = this.props
     return (
       <>
-        <CustomCssInjector />
         {
           config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
           <title-bar>
