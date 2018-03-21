@@ -169,7 +169,7 @@ export class InstalledPlugin extends PureComponent {
                               <CheckboxLabelConfig
                                 label={<Trans>setting:Open plugin in new window</Trans>}
                                 configName={`poi.windowmode.${plugin.id}`}
-                                defaultVal={false} />
+                                defaultVal={plugin.windowMode} />
                             </div>
                           }
                           {
