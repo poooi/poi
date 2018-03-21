@@ -113,6 +113,7 @@ export class ControlledTabArea extends PureComponent {
       percent: PropTypes.number,
     }),
     editable: PropTypes.bool.isRequired,
+    windowmode: PropTypes.object.isRequired,
   }
   state = {
     openedWindow: {},
@@ -268,11 +269,12 @@ export class ControlledTabArea extends PureComponent {
     plugin.enabled &&
     !plugin.handleClick &&
     !plugin.windowURL &&
-    !this.props.windowmode[plugin.id] &&
+    !this.isWindowMode(plugin) &&
     plugin.reactClass
   )
+  isWindowMode = plugin => this.props.windowmode[plugin.id] != null ? this.props.windowmode[plugin.id] : plugin.windowMode
   windowModePlugins = () => this.props.plugins.filter(plugin =>
-    this.props.windowmode[plugin.id] && this.state.openedWindow[plugin.id]
+    this.isWindowMode(plugin) && this.state.openedWindow[plugin.id]
   )
   openWindow = plugin => {
     if (!this.state.openedWindow[plugin.id]) {
@@ -313,7 +315,7 @@ export class ControlledTabArea extends PureComponent {
       this.listedPlugins().map((plugin, index) => {
         const handleClick = plugin.handleClick ?
           plugin.handleClick :
-          this.props.windowmode[plugin.id] ?
+          this.isWindowMode(plugin) ?
             e => this.openWindow(plugin) :
             undefined
         return (

@@ -31,7 +31,38 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   componentDidMount() {
-    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, this.props.plugin.id)
+    try {
+      this.initWindow()
+    } catch(e) {
+      console.error(e)
+      this.props.closeWindowPortal()
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener(`${this.props.plugin.id}-focus`, this.focusWindow)
+    this.externalWindow.close()
+  }
+
+  componentDidCatch = (error, info) => {
+    console.error(error, info)
+    this.setState({
+      hasError: true,
+    })
+    this.externalWindow.close()
+  }
+
+  initWindow = () => {
+    const windowOptions = this.props.plugin.windowOptions || { width: 600, height: 500 }
+    const windowFeatures = Object.keys(windowOptions).map(key => {
+      switch (key) {
+      case 'x': return `left=${windowOptions.x}`
+      case 'y': return `top=${windowOptions.y}`
+      case 'width': return `width=${windowOptions.width}`
+      case 'height': return `height=${windowOptions.height}`
+      }
+    }).join(',')
+    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, this.props.plugin.id, windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
@@ -74,20 +105,7 @@ export class PluginWindowWrap extends PureComponent {
     })
   }
 
-  componentWillUnmount() {
-    window.removeEventListener(`${this.props.plugin.id}-focus`, this.focusWindow)
-    this.externalWindow.close()
-  }
-
-  componentDidCatch = (error, info) => {
-    console.error(error, info)
-    this.setState({
-      hasError: true,
-    })
-    this.externalWindow.close()
-  }
-
-  focusWindow = e => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
+  focusWindow = () => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
 
   render() {
     if (this.state.hasError || !this.state.loaded) return null

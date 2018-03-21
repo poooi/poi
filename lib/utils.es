@@ -56,14 +56,9 @@ export function stopNavigateAndHandleNewWindow(id) {
     if (url.startsWith('http')) {
       shell.openExternal(url)
     } else {
-      const [x, y] = global.mainWindow.getPosition()
       Object.assign(options, {
-        width: 600,
-        height: 500,
         minWidth: 200,
         minHeight: 200,
-        x,
-        y,
         backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
         titleBarStyle: 'hidden',
       })
