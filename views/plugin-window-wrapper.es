@@ -40,7 +40,6 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(`${this.props.plugin.id}-focus`, this.focusWindow)
     this.externalWindow.close()
   }
 
@@ -100,7 +99,6 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.addEventListener('beforeunload', () => {
         this.props.closeWindowPortal()
       })
-      window.addEventListener(`${this.props.plugin.id}-focus`, this.focusWindow)
       this.setState({ loaded: true })
     })
   }

@@ -118,6 +118,7 @@ export class ControlledTabArea extends PureComponent {
   state = {
     openedWindow: {},
   }
+  windowRefs = {}
   dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
@@ -285,7 +286,9 @@ export class ControlledTabArea extends PureComponent {
         },
       })
     } else {
-      window.dispatchEvent(new Event(`${plugin.id}-focus`))
+      if (this.windowRefs[plugin.id]) {
+        this.windowRefs[plugin.id].focusWindow()
+      }
     }
   }
   closeWindow = plugin => {
@@ -335,6 +338,7 @@ export class ControlledTabArea extends PureComponent {
       <PluginWindowWrap
         key={plugin.id}
         plugin={plugin}
+        ref={r => this.windowRefs[plugin.id] = r}
         closeWindowPortal={e => this.closeWindow(plugin)}
       />
     )
