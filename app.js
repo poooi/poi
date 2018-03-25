@@ -86,7 +86,7 @@ if (process.platform === 'win32') {
 }
 
 // Test: enable JavaScript experimental features
-app.commandLine.appendSwitch('js-flags', "--harmony")
+app.commandLine.appendSwitch('js-flags', "--harmony --harmony-do-expressions")
 
 // Cache size
 const cacheSize = parseInt(config.get('poi.cacheSize'))
