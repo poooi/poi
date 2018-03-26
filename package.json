@@ -126,7 +126,7 @@
   },
   "build": {
     "appId": "org.poooi.poi",
-    "asar": false,
+    "asar": true,
     "extraResources": [
       "PepperFlash/${os}-${arch}"
     ],
