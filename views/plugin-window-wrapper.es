@@ -23,11 +23,13 @@ export class PluginWindowWrap extends PureComponent {
   getChildContext() {
     return {
       overlayMountPoint: this.containerEl,
+      getWindow: () => this.externalWindow,
     }
   }
 
   static childContextTypes = {
     overlayMountPoint: PropTypes.instanceOf(<div></div>),
+    getWindow: PropTypes.func,
   }
 
   componentDidMount() {
@@ -92,6 +94,7 @@ export class PluginWindowWrap extends PureComponent {
       }
       this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
+      this.externalWindow.remote = this.externalWindow.require('electron').remote
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
