@@ -24,6 +24,13 @@ customCSS.setAttribute('id', 'custom-css')
 customCSS.setAttribute('href', customCSSPath)
 document.head.appendChild(customCSS)
 
+const FACSSPath = require.resolve('@fortawesome/fontawesome/styles.css')
+const FACSS = document.createElement('link')
+FACSS.setAttribute('rel', 'stylesheet')
+FACSS.setAttribute('id', 'fontawesome')
+FACSS.setAttribute('href', FACSSPath)
+document.head.appendChild(FACSS)
+
 window.reloadCustomCss = () => {
   if (!$('#custom-css')) {
     return
