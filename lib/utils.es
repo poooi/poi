@@ -55,7 +55,7 @@ export function stopNavigateAndHandleNewWindow(id) {
     e.preventDefault()
     if (url.startsWith('http')) {
       shell.openExternal(url)
-    } else {
+    } else if (frameName === 'plugin') {
       Object.assign(options, {
         minWidth: 200,
         minHeight: 200,

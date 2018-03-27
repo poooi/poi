@@ -61,7 +61,7 @@ export class PluginWindowWrap extends PureComponent {
       case 'height': return `height=${windowOptions.height}`
       }
     }).join(',')
-    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, this.props.plugin.id, windowFeatures)
+    this.externalWindow = window.open(`file:///${__dirname}/index-plugin.html?${this.props.plugin.id}`, 'plugin', windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
