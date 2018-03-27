@@ -4,6 +4,8 @@ import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
 import lodash from 'lodash'
+import * as ReactBootstrap from 'react-bootstrap'
+import { OverlayTrigger, Modal } from './utils/overlay'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
@@ -93,3 +95,11 @@ if (window.isMain) {
   // Add devtool debug message print
   require('./env-parts/devtool-message')
 }
+
+// polyfill for React-Bootstrap's overlays
+/* eslint-disable import/namespace */
+if (window.isMain) {
+  ReactBootstrap.OverlayTrigger = OverlayTrigger
+  ReactBootstrap.Modal = Modal
+}
+/* eslint-enable import/namespace */
