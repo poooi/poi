@@ -59,6 +59,7 @@
     "electron-react-titlebar": "^0.8.1",
     "electron-updater": "^2.21.4",
     "fast-memoize": "^2.2.8",
+    "font-awesome": "^4.7.0",
     "fs-extra": "^5.0.0",
     "fuse.js": "^3.2.0",
     "glob": "^7.1.2",
