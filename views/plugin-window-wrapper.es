@@ -23,13 +23,13 @@ export class PluginWindowWrap extends PureComponent {
   getChildContext() {
     return {
       overlayMountPoint: this.containerEl,
-      getWindow: () => this.externalWindow,
+      window: this.externalWindow,
     }
   }
 
   static childContextTypes = {
     overlayMountPoint: PropTypes.instanceOf(<div></div>),
-    getWindow: PropTypes.func,
+    window: PropTypes.object,
   }
 
   componentDidMount() {
