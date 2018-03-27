@@ -11,6 +11,13 @@ import FontAwesome  from 'react-fontawesome'
 import * as ReactBootstrap from 'react-bootstrap'
 import { OverlayTrigger, Modal } from './utils/overlay'
 
+// polyfill for react-fontawesome
+import '@fortawesome/fontawesome-free-solid'
+import '@fortawesome/fontawesome-free-regular'
+import '@fortawesome/fontawesome-free-brands'
+import '@skagami/react-fontawesome/inject'
+
+
 const { Radio, Checkbox, FormControl } = ReactBootstrap
 
 // Environments
