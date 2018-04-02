@@ -18,7 +18,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   await fs.ensureDir(tarRoot)
 
   // Install plugins
-  await npmInstall(installRoot, ['--global-style', '--only=production', '--prefix', '.'].concat(pluginNames))
+  await npmInstall(installRoot, ['--global-style', '--only=production', '--prefix', '.'].concat(pluginNames), false)
 
   const pluginDirs = (() =>{
     const dirs = []

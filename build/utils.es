@@ -141,11 +141,11 @@ export const runScript = (scriptPath, args, options) => new Promise ((resolve) =
 })
 
 
-export const npmInstall = async (tgtDir, args=[]) => {
+export const npmInstall = async (tgtDir, args=[], ci=true) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   log(`Installing npm for ${tgtDir}`)
   await fs.ensureDir(tgtDir)
-  await runScript(NPM_EXEC_PATH, ['ci', '--registry', NPM_SERVER].concat(args),{
+  await runScript(NPM_EXEC_PATH, [ci ? 'ci' : 'i', '--registry', NPM_SERVER].concat(args),{
     cwd: tgtDir,
   })
   log(`Finished installing npm for ${tgtDir}`)
