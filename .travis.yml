@@ -30,13 +30,13 @@ cache:
 
 install:
   - nvm install $TRAVIS_NODE_VERSION
-  - nvm use 8
+  - nvm use 9
   - npm install -g npm
-  - npm install --silent
+  - npm ci
 
 before_script:
   - export TRAVIS=1
-  - npm install --silent
+  - npm ci
   - npm run lint
 
 script:
