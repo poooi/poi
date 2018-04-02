@@ -6,6 +6,11 @@ node_js:
   - 'node'
   - '9'
 
+matrix:
+  include:
+    - os: osx
+    - os: linux
+
 addons:
   apt:
     sources:
