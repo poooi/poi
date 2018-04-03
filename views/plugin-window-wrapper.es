@@ -100,7 +100,11 @@ export class PluginWindowWrap extends PureComponent {
       }
       this.externalWindow.require(require.resolve('./env-parts/theme'))
       this.externalWindow.addEventListener('beforeunload', () => {
-        this.props.closeWindowPortal()
+        try {
+          this.props.closeWindowPortal()
+        } catch(e) {
+          console.error(e)
+        }
       })
       this.setState({ loaded: true })
     })
