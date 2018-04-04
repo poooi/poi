@@ -119,6 +119,7 @@ export class ControlledTabArea extends PureComponent {
     openedWindow: {},
   }
   windowRefs = {}
+  resizeContainer = React.createRef()
   dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
     dispatch({
       type: '@@TabSwitch',
@@ -424,7 +425,7 @@ export class ControlledTabArea extends PureComponent {
       <div className={classNames('poi-tabs-container', {
         'poi-tabs-container-doubletabbed': this.props.doubleTabbed,
         'poi-tabs-container-singletabbed': !this.props.doubleTabbed,
-      })} ref={r => this.setState({ resizeContainer: r })}>
+      })} ref={this.resizeContainer}>
         <ResizableArea
           className={classNames({ 'width-resize': this.props.doubleTabbed && this.props.editable })}
           minimumWidth={{ px: 0, percent: this.props.doubleTabbed ? 10 : 100 }}
@@ -432,7 +433,7 @@ export class ControlledTabArea extends PureComponent {
           initWidth={this.props.mainPanelWidth}
           minimumHeight={{ px: 0, percent: 100 }}
           initHeight={{ px: 0, percent: 100 }}
-          parentContainer={this.state.resizeContainer}
+          parentContainer={this.resizeContainer.current}
           disable={{ width: !this.props.doubleTabbed || !this.props.editable, height: true }}
           onResized={({ width }) => {
             config.set('poi.tabarea.mainpanelwidth', width)
