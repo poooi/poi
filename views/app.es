@@ -11,6 +11,7 @@ import '../assets/css/global.css'
 
 import { store } from './create-store'
 import { Toastr } from './components/info/toastr'
+import { WindowEnv } from './components/etc/window-env'
 import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
@@ -48,17 +49,6 @@ class Poi extends Component {
     layoutResizeObserver.unobserve(this.poimain)
   }
 
-
-  getChildContext() {
-    return {
-      overlayMountPoint: document.body,
-    }
-  }
-
-  static childContextTypes = {
-    overlayMountPoint: PropTypes.instanceOf(<div></div>),
-  }
-
   componentDidMount() {
     layoutResizeObserver.observe(this.poimain)
   }
@@ -93,7 +83,12 @@ class Poi extends Component {
 ReactDOM.render(
   <I18nextProvider i18n={i18next} >
     <Provider store={store} >
-      <Poi />
+      <WindowEnv.Provider value={{
+        window,
+        mountPoint: document.body,
+      }}>
+        <Poi />
+      </WindowEnv.Provider>
     </Provider>
   </I18nextProvider>,
   $('#poi')

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
 import { normalizeURL } from 'views/utils/tools'
-import PropTypes from 'prop-types'
+import { WindowEnv } from 'views/components/etc/window-env'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 
@@ -19,18 +19,6 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   state = {}
-
-  getChildContext() {
-    return {
-      overlayMountPoint: this.containerEl,
-      window: this.externalWindow,
-    }
-  }
-
-  static childContextTypes = {
-    overlayMountPoint: PropTypes.instanceOf(<div></div>),
-    window: PropTypes.object,
-  }
 
   componentDidMount() {
     try {
@@ -120,9 +108,14 @@ export class PluginWindowWrap extends PureComponent {
           window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
           <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
-        <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }}>
-          <this.props.plugin.reactClass />
-        </div>
+        <WindowEnv.Provider value={{
+          window: this.externalWindow,
+          mountPoint: this.containerEl,
+        }}>
+          <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }}>
+            <this.props.plugin.reactClass />
+          </div>
+        </WindowEnv.Provider>
       </>,
       this.externalWindow.document.querySelector('#plugin-mountpoint'))
   }
