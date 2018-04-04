@@ -39,10 +39,8 @@ class TabContentsUnion extends Component {
       || !shallowEqual(this.state, nextState)
       || !isEqual(this.childrenKey(this.props.children), this.childrenKey(nextProps.children))
   }
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.activeTab != this.props.activeTab) {
-      this.prevTab = this.props.activeTab
-    }
+  componentDidUpdate() {
+    this.prevTab = this.props.activeTab
   }
   childrenKey = (children) => {
     return Children.map(children, (child) => child.key).filter(Boolean)
@@ -90,6 +88,13 @@ class TabContentsUnion extends Component {
 
 let lockedTab = false
 
+const dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
+  dispatch({
+    type: '@@TabSwitch',
+    tabInfo,
+    autoSwitch,
+  })
+
 @translate(['setting', 'others'])
 @connect((state) => ({
   plugins: state.plugins,
@@ -120,12 +125,6 @@ export class ControlledTabArea extends PureComponent {
   }
   windowRefs = {}
   resizeContainer = React.createRef()
-  dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
-    dispatch({
-      type: '@@TabSwitch',
-      tabInfo,
-      autoSwitch,
-    })
   selectTab = (key, autoSwitch=false) => {
     if (key == null)
       return
@@ -146,7 +145,7 @@ export class ControlledTabArea extends PureComponent {
         activePluginName: key,
       }
     }
-    this.dispatchTabChangeEvent(tabInfo, autoSwitch)
+    dispatchTabChangeEvent(tabInfo, autoSwitch)
   }
   handleSelectTab = (key) => {
     this.selectTab(key)
@@ -243,11 +242,16 @@ export class ControlledTabArea extends PureComponent {
       this.selectTab(toSwitch, true)
     }
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.doubleTabbed != this.props.doubleTabbed)
-      this.dispatchTabChangeEvent({
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (nextProps.doubleTabbed !== (prevState || {}).prevDoubleTabbed) {
+      dispatchTabChangeEvent({
         activeMainTab: 'mainView',
       })
+      return {
+        prevDoubleTabbed: nextProps.doubleTabbed,
+      }
+    }
+    return null
   }
   componentDidMount() {
     this.handleKeyDown()

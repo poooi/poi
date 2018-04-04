@@ -80,13 +80,21 @@ export class Avatar extends PureComponent {
     avatarWorker.port.removeEventListener('message', this.onMessage)
   }
 
-  componentWillReceiveProps = nextProps => {
-    if (this.props.mstId !== nextProps.mstId) {
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (prevState.prevMstId !== nextProps.mstId) {
       const available = checkExistence(nextProps.mstId)
-      this.setState({ available })
-      if (!available) {
-        this.sendMessage(nextProps.mstId)
+      return {
+        available,
+        failed: false,
+        prevMstId: nextProps.mstId,
       }
+    }
+    return null
+  }
+
+  componentDidUpdate = () => {
+    if (!this.state.failed && !this.state.available) {
+      this.sendMessage(this.props.mstId)
     }
   }
 

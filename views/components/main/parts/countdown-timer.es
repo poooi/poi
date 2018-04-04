@@ -79,14 +79,22 @@ export class CountdownTimer extends Component {
     window.addEventListener('countdown.start', this.startTick)
     window.addEventListener('countdown.stop', this.stopTick)
   }
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.countdownId !== this.props.countdownId) {
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (nextProps.completeTime !== prevState.completeTime) {
+      return {
+        completeTime: nextProps.completeTime,
+      }
+    }
+    return null
+  }
+  getSnapshotBeforeUpdate = (prevProps, prevState) => {
+    if (prevProps.countdownId !== this.props.countdownId) {
       this.stopTick()
     }
-    if (nextProps.completeTime !== this.state.completeTime) {
-      this.setState({completeTime: nextProps.completeTime})
-      this.timeRemaining = this.constructor.getTimeRemaining(nextProps.completeTime)
+    if (prevProps.completeTime !== this.state.completeTime) {
+      this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
     }
+    return null
   }
   shouldComponentUpdate = (nextProps, nextState) =>
     nextProps.countdownId !== this.props.countdownId || nextState.completeTime !== this.state.completeTime
@@ -154,11 +162,10 @@ export class CountdownNotifierLabel extends Component {
       style: this.getLabelStyle(props),
     }
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.completeTime != this.props.completeTime) {
-      this.setState({
-        style: this.getLabelStyle(nextProps),
-      })
+  componentDidMount() {
+    const style = this.getLabelStyle(this.props)
+    if (this.state.style !== style) {
+      this.setState({ style })
     }
   }
   shouldComponentUpdate(nextProps, nextState) {

@@ -20,12 +20,13 @@ export class ZoomingConfig extends Component {
   handleChangeZoomLevel = (e) => {
     config.set('poi.zoomLevel', this.state.zoomLevel)
   }
-  componentWillReceiveProps = (nextProps) => {
-    if (this.state.zoomLevel !== nextProps.zoomLevel) {
-      this.setState({
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (prevState.zoomLevel !== nextProps.zoomLevel) {
+      return {
         zoomLevel: nextProps.zoomLevel,
-      })
+      }
     }
+    return null
   }
   render() {
     return (

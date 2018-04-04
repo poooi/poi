@@ -121,9 +121,10 @@ export const PoiAlert = class poiAlert extends Component {
       this.setState({overflow: false})
     }
   }
-  componentWillUpdate = (nextProps, nextState) => {
+  getSnapshotBeforeUpdate(prevProps, prevState) {
     stickyEnd = Date.now() + updateTime
     updateTime = 0
+    return null
   }
   componentDidUpdate = (prevProps, prevState) => {
     this.handleStyleChange()

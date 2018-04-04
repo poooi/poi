@@ -2,7 +2,7 @@ import { Grid, Col, FormControl, Checkbox } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { debounce } from 'lodash'
+import { debounce, get } from 'lodash'
 import { Trans } from 'react-i18next'
 
 const { config } = window
@@ -41,12 +41,13 @@ export class ResolutionConfig extends Component {
   handleSetFixedResolution = (e) => {
     config.set('poi.webview.useFixedResolution', !this.props.webview.useFixedResolution)
   }
-  componentWillReceiveProps = (nextProps) => {
-    if (this.state.width !== nextProps.webview.width) {
-      this.setState({
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (prevState.width !== get(nextProps, 'webview.width')) {
+      return {
         width: nextProps.webview.width,
-      })
+      }
     }
+    return null
   }
   render() {
     return (
