@@ -79,8 +79,13 @@ window.dispatch = store.dispatch
 
 //### Listeners and exports ###
 
+let getStoreCache
 window.getStore = (path) => {
-  return path ? get(store.getState(), path) : store.getState()
+  const storeContent = window.isReducerRunning ? getStoreCache : store.getState()
+  if (!window.isReducerRunning) {
+    getStoreCache = storeContent
+  }
+  return path ? get(storeContent, path) : storeContent
 }
 
 // Listen to config.set event

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from './combine-reducers'
 import { mapValues, isEqual } from 'lodash'
 
 import { reducer as constReducer } from './const'
