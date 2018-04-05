@@ -51,7 +51,7 @@ function getShip(shipId, state) {
   if (ship) {
     ship.poi_slot = []
     for (const id of ship.api_slot) {
-      ship.poi_slot.push(getItem(id), state)
+      ship.poi_slot.push(getItem(id, state))
     }
     ship.poi_slot_ex = getItem(ship.api_slot_ex, state)
     // Clean up
@@ -69,7 +69,7 @@ function getFleet(deckId, state) {
   if (ships) {
     const fleet = []
     for (const id of ships) {
-      fleet.push(getShip(id), state)
+      fleet.push(getShip(id, state))
     }
     return fleet
   } else {
