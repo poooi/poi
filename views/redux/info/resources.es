@@ -1,4 +1,4 @@
-import { map } from 'lodash'
+import { map, get } from 'lodash'
 
 import { compareUpdate } from 'views/utils/tools'
 
@@ -20,8 +20,7 @@ function addArrayResources(state, arr) {
   return state
 }
 
-export function reducer(state=[], {type, body, postBody}) {
-  const {getStore} = window
+export function reducer(state=[], {type, body, postBody}, store) {
   switch (type) {
   case '@@Response/kcsapi/api_port/port':
     return compareUpdate(state, map(body.api_material, 'api_value'))
@@ -37,7 +36,7 @@ export function reducer(state=[], {type, body, postBody}) {
     return compareUpdate(state, body.api_after_material)
   case '@@Response/kcsapi/api_req_kousyou/createship_speedchange': {
     // There's no large ship construction flag in kdock, judge by resources
-    const item1 = getStore(`info.constructions.${postBody.api_kdock_id-1}.api_item1`)
+    const item1 = get(store, `info.constructions.${postBody.api_kdock_id-1}.api_item1`)
     const lsc = item1 > 1000
     const newState = state.slice()
     newState[4] -= (lsc ? 10 : 1)
@@ -46,7 +45,7 @@ export function reducer(state=[], {type, body, postBody}) {
   case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
     return addArrayResources(state, body.api_get_material)
   case '@@Response/kcsapi/api_req_nyukyo/start': {
-    const [fuel, steel] = getStore(`info.ships.${postBody.api_ship_id}.api_ndock_item`)
+    const [fuel, steel] = get(store, `info.ships.${postBody.api_ship_id}.api_ndock_item`)
     state = state.slice()
     state[0] -= fuel
     state[2] -= steel

@@ -1,6 +1,6 @@
 import CSON from 'cson'
 import { join } from 'path-extra'
-import { map, sortBy, mapValues, forEach, values, fromPairs, countBy } from 'lodash'
+import { map, sortBy, mapValues, forEach, values, fromPairs, countBy, get } from 'lodash'
 
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -273,9 +273,8 @@ function updateRecordProgress(record, bodyQuest) {
   return record
 }
 
-function questTrackingReducer(state, {type, postBody, body, result}) {
+function questTrackingReducer(state, {type, postBody, body, result}, store) {
   const {activeQuests, questGoals} = state
-  const {getStore} = window
   const records = {...state.records}
   const updateQuestRecord = updateQuestRecordFactory(records, activeQuests, questGoals)
   switch (type) {
@@ -342,8 +341,8 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     const ids = slotitems.split(',')
     // now it only supports gun quest, slotitemType2 = $item.api_type[2]
     const typeCounts = countBy(ids, id => {
-      const equipId = getStore(`info.equips.${id}.api_slotitem_id`)
-      return getStore(`const.$equips.${equipId}.api_type.2`)
+      const equipId = get(store, `info.equips.${id}.api_slotitem_id`)
+      return get(store, `const.$equips.${equipId}.api_type.2`)
     })
 
     let flag = false
@@ -389,7 +388,7 @@ function questTrackingReducer(state, {type, postBody, body, result}) {
     enemyShipId.forEach((shipId, idx) => {
       if (shipId == -1 || enemyHp[idx] > 0)
         return
-      const shipType = getStore(`const.$ships.${shipId}.api_stype`)
+      const shipType = get(store, `const.$ships.${shipId}.api_stype`)
       if ([7, 11, 13, 15].includes(shipType))
         flag = updateQuestRecord('sinking', {shipType: shipType}, 1) || flag
     })

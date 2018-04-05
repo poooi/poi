@@ -1,4 +1,4 @@
-import {values} from 'lodash'
+import { values, get } from 'lodash'
 
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
 
@@ -55,8 +55,7 @@ function completeRepair(ship) {
   })
 }
 
-export function reducer(state={}, {type, body, postBody}) {
-  const {getStore} = window
+export function reducer(state={}, {type, body, postBody}, store) {
   switch (type) {
   case '@@Response/kcsapi/api_port/port': {
     const bodyShips = indexify(body.api_ship)
@@ -148,7 +147,7 @@ export function reducer(state={}, {type, body, postBody}) {
     return newState
   }
   case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
-    const api_ship_id = getStore(`info.repair.${postBody.api_ndock_id}.api_ship_id`)
+    const api_ship_id = get(store, `info.repair.${postBody.api_ndock_id}.api_ship_id`)
     if (api_ship_id) {
       return {
         ...state,

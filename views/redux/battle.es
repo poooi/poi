@@ -1,6 +1,7 @@
 
 import { Models, Simulator } from 'poi-lib-battle'
 const {Battle, Fleet} = Models
+import { get } from 'lodash'
 
 function simulate(battle) {
   const simulator = Simulator.auto(battle)
@@ -28,10 +29,10 @@ function simulate(battle) {
   }
 }
 
-function getItem(itemId) {
-  const _item = window.getStore(`info.equips.${itemId}`)
+function getItem(itemId, state) {
+  const _item = get(state, `info.equips.${itemId}`)
   const item = _item ? {
-    ...window.getStore(`const.$equips.${_item.api_slotitem_id}`),
+    ...get(state, `const.$equips.${_item.api_slotitem_id}`),
     ..._item,
   } : null
   if (item) {
@@ -41,18 +42,18 @@ function getItem(itemId) {
   return item
 }
 
-function getShip(shipId) {
-  const _ship = window.getStore(`info.ships.${shipId}`)
+function getShip(shipId, state) {
+  const _ship = get(state, `info.ships.${shipId}`)
   const ship = _ship ? {
-    ...window.getStore(`const.$ships.${_ship.api_ship_id}`),
+    ...get(state, `const.$ships.${_ship.api_ship_id}`),
     ..._ship,
   } : null
   if (ship) {
     ship.poi_slot = []
     for (const id of ship.api_slot) {
-      ship.poi_slot.push(getItem(id))
+      ship.poi_slot.push(getItem(id), state)
     }
-    ship.poi_slot_ex = getItem(ship.api_slot_ex)
+    ship.poi_slot_ex = getItem(ship.api_slot_ex, state)
     // Clean up
     delete ship.api_getmes
     delete ship.api_slot
@@ -62,13 +63,13 @@ function getShip(shipId) {
   return ship
 }
 
-function getFleet(deckId) {
-  const deck = window.getStore(`info.fleets.${deckId - 1}`) || {}
+function getFleet(deckId, state) {
+  const deck = get(state, `info.fleets.${deckId - 1}`) || {}
   const ships = deck.api_ship
   if (ships) {
     const fleet = []
     for (const id of ships) {
-      fleet.push(getShip(id))
+      fleet.push(getShip(id), state)
     }
     return fleet
   } else {
@@ -76,10 +77,10 @@ function getFleet(deckId) {
   }
 }
 
-function getSortieType() {
-  const combinedFlag = window.getStore('sortie.combinedFlag')
+function getSortieType(state) {
+  const combinedFlag = get(state, 'sortie.combinedFlag')
   const sortieFleet = []
-  for (const [i, status] of (window.getStore('sortie.sortieStatus') || []).entries()) {
+  for (const [i, status] of (get(state, 'sortie.sortieStatus') || []).entries()) {
     if (status) sortieFleet.push(i)
   }
   return sortieFleet.length === 2 ? combinedFlag : 0
@@ -109,7 +110,7 @@ const initState = {
   result: resultInitState,
 }
 
-export function reducer(state=initState, {type, path, body, postBody, time}) {
+export function reducer(state=initState, {type, path, body, postBody, time}, store) {
   const {_status} = state
   switch (type) {
   case '@@Response/kcsapi/api_port/port':
@@ -158,15 +159,15 @@ export function reducer(state=initState, {type, path, body, postBody, time}) {
   case '@@Response/kcsapi/api_req_combined_battle/sp_midnight':
   case '@@Response/kcsapi/api_req_combined_battle/ec_midnight_battle':
   case '@@Response/kcsapi/api_req_combined_battle/ec_night_to_day': {
-    const sortieTypeFlag = getSortieType()
+    const sortieTypeFlag = getSortieType(store)
     const enemyFormation = (body.api_formation || [])[1] || _status.enemyFormation
     const fleetId = [body.api_deck_id, body.api_dock_id].find((x) => x != null)
     const escortId = (sortieTypeFlag > 0) ? 2 : -1
     const battle = _status.battle ? _status.battle : new Battle({
       fleet:  new Fleet({
         type:    sortieTypeFlag,
-        main:    getFleet(fleetId),
-        escort:  getFleet(escortId),
+        main:    getFleet(fleetId, store),
+        escort:  getFleet(escortId, store),
       }),
       packet: [],
     })
