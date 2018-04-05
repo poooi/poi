@@ -84,7 +84,12 @@ export function combineReducers(reducers, store) {
   }
 
   return function combination(state = {}, action) {
+    // Polyfill for redux@4
     window.isReducerRunning = true
+    if (window.getStore) {
+      window.getStore.cache = state
+    }
+
     if (shapeAssertionError) {
       throw shapeAssertionError
     }
@@ -103,7 +108,10 @@ export function combineReducers(reducers, store) {
       nextState[key] = nextStateForKey
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey
     }
+
+    // Polyfill for redux@4
     delete window.isReducerRunning
+
     return hasChanged ? nextState : state
   }
 }

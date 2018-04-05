@@ -79,16 +79,16 @@ window.dispatch = store.dispatch
 
 //### Listeners and exports ###
 
-let getStoreCache
 window.getStore = (path) => {
-  const storeContent = window.isReducerRunning ? getStoreCache : store.getState()
-  if (!window.isReducerRunning) {
-    getStoreCache = storeContent
-  } else {
+  const storeContent = window.isReducerRunning ? window.getStore.cache : store.getState()
+  if (window.getStore.cache !== storeContent) {
+    window.getStore.cache = storeContent
+  } else if (window.dbg.isEnabled && window.dbg.isExtraEnabled('deprecateWarning')) {
     console.warn(new Error('You should not call getStore() in reducer.'))
   }
   return path ? get(storeContent, path) : storeContent
 }
+window.getStore.cache = store.getState()
 
 // Listen to config.set event
 const solveConfSet = (path, value) => {
