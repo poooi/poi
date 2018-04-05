@@ -84,6 +84,8 @@ window.getStore = (path) => {
   const storeContent = window.isReducerRunning ? getStoreCache : store.getState()
   if (!window.isReducerRunning) {
     getStoreCache = storeContent
+  } else {
+    console.warn(new Error('You should not call getStore() in reducer.'))
   }
   return path ? get(storeContent, path) : storeContent
 }
