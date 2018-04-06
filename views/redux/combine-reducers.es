@@ -83,7 +83,7 @@ export function combineReducers(reducers, store) {
     shapeAssertionError = e
   }
 
-  return function combination(state = {}, action) {
+  return function combination(state = {}, action, upperState) {
     // Polyfill for redux@4
     if (window.getStore) {
       window.getStore.lock = true
@@ -100,7 +100,7 @@ export function combineReducers(reducers, store) {
       const key = finalReducerKeys[i]
       const reducer = finalReducers[key]
       const previousStateForKey = state[key]
-      const nextStateForKey = reducer(previousStateForKey, action, state)
+      const nextStateForKey = reducer(previousStateForKey, action, upperState || state)
       if (typeof nextStateForKey === 'undefined') {
         const errorMessage = getUndefinedStateErrorMessage(key, action)
         throw new Error(errorMessage)
