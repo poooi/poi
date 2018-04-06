@@ -120,8 +120,11 @@ i18next.emitResourceAddedDebounce = debounce(() => {
   i18next.store.emit('added', 'zh-CN', 'others', {})
 }, 500)
 
-i18next.addResourcePack = (pack) => {
-  i18next.store.data = merge(i18next.store.data, pack)
+i18next.addResourceBundleDebounce = (...props) => {
+  i18next.addResourceBundle(
+    ...props,
+    { silent: true },
+  )
   i18next.emitResourceAddedDebounce()
 }
 
