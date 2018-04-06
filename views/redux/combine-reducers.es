@@ -85,8 +85,8 @@ export function combineReducers(reducers, store) {
 
   return function combination(state = {}, action) {
     // Polyfill for redux@4
-    window.isReducerRunning = true
     if (window.getStore) {
+      window.getStore.lock = true
       window.getStore.cache = state
     }
 
@@ -110,7 +110,9 @@ export function combineReducers(reducers, store) {
     }
 
     // Polyfill for redux@4
-    delete window.isReducerRunning
+    if (window.getStore) {
+      delete window.getStore.lock
+    }
 
     return hasChanged ? nextState : state
   }

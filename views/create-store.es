@@ -80,7 +80,7 @@ window.dispatch = store.dispatch
 //### Listeners and exports ###
 
 window.getStore = (path) => {
-  const storeContent = window.isReducerRunning ? window.getStore.cache : store.getState()
+  const storeContent = window.getStore.lock ? window.getStore.cache : store.getState()
   if (window.getStore.cache !== storeContent) {
     window.getStore.cache = storeContent
   } else if (window.dbg.isEnabled() && window.dbg.isExtraEnabled('deprecateWarning')) {
