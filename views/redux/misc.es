@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from './combine-reducers'
 
 function canNotify(state=false, {type}) {
   if (type === '@@Response/kcsapi/api_port/port')

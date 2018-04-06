@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from '../combine-reducers'
 
 import cond from './cond'
 
