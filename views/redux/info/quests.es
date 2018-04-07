@@ -211,7 +211,7 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
         if (!satisfyGoal('maparea', subgoal, options)) return
         if (!satisfyGoal('slotitemType2', subgoal, options)) return
         if (!satisfyGoal('times', subgoal, options)) return
-        const subrecord = Object.assign({}, record[_event])
+        const subrecord = { ...record[_event] }
         subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
         records[api_no] = {
           ...record,
@@ -409,7 +409,7 @@ const initState = {
   activeNum: 0,
 }
 
-export function reducer(state=initState, action) {
+export function reducer(state=initState, action, store) {
   const {type, postBody, body} = action
   switch (type) {
   //== Initialization. This takes place once every flash loading ==
@@ -513,7 +513,7 @@ export function reducer(state=initState, action) {
     let {activeQuests, records, activeNum} = state
     activeNum--
     if (api_quest_id in records) {
-      records = Object.assign({}, records)
+      records = { ...records }
       delete records[api_quest_id]
     }
     // activeQuests
@@ -550,7 +550,7 @@ export function reducer(state=initState, action) {
   // }
   }
   // Update quest count
-  return questTrackingReducer(state, action)
+  return questTrackingReducer(state, action, store)
 }
 
 // Action
