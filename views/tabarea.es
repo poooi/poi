@@ -280,7 +280,7 @@ export class ControlledTabArea extends PureComponent {
   )
   isWindowMode = plugin => this.props.windowmode[plugin.id] != null ? this.props.windowmode[plugin.id] : plugin.windowMode
   windowModePlugins = () => this.props.plugins.filter(plugin =>
-    this.isWindowMode(plugin) && this.state.openedWindow[plugin.id]
+    plugin.enabled && this.isWindowMode(plugin) && this.state.openedWindow[plugin.id]
   )
   openWindow = plugin => {
     if (!this.state.openedWindow[plugin.id]) {
