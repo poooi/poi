@@ -2,10 +2,38 @@ import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
+import { screen } from 'electron'
 import { normalizeURL } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
+
+const { workArea } = screen.getPrimaryDisplay()
+const { config } = window
+const getPluginWindowRect = plugin => {
+  const defaultRect = plugin.windowMode ? { width: 800, height: 700 } : { width: 600, height: 500 }
+  let { x, y, width, height } = config.get(`plugin.${plugin.id}.bounds`, defaultRect)
+  if (x == null || y == null) {
+    return defaultRect
+  }
+  const validate = (n, min, range) => (n != null && n >= min && n < min + range)
+  const withinDisplay = (d) => {
+    const wa = d.workArea
+    return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
+  }
+  if (!screen.getAllDisplays().some(withinDisplay)) {
+    x = workArea.x
+    y = workArea.y
+  }
+  if (width == null) {
+    width = defaultRect.width
+  }
+  if (height == null) {
+    height = defaultRect.height
+  }
+  return { x, y, width, height }
+}
+
 
 export class PluginWindowWrap extends PureComponent {
   constructor(props) {
@@ -42,7 +70,7 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   initWindow = () => {
-    const windowOptions = this.props.plugin.windowOptions || { width: 600, height: 500 }
+    const windowOptions = getPluginWindowRect(this.props.plugin)
     const windowFeatures = Object.keys(windowOptions).map(key => {
       switch (key) {
       case 'x': return `left=${windowOptions.x}`
@@ -88,6 +116,7 @@ export class PluginWindowWrap extends PureComponent {
       }
       this.externalWindow.require(require.resolve('./env-parts/theme'))
       this.externalWindow.addEventListener('beforeunload', () => {
+        config.set(`plugin.${this.props.plugin.id}.bounds`, this.externalWindow.remote.getCurrentWindow().getBounds())
         try {
           this.props.closeWindowPortal()
         } catch(e) {
