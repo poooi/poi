@@ -26,9 +26,9 @@ function secureExtensionConfig(extensionConfig) {
     if (func) {
       // Use combineReducers to check sanity of `func`
       const wrappedReducer = combineReducers({_: func})
-      return (state={}, action) => {
+      return (state={}, action, store) => {
         try {
-          return wrappedReducer(state, action)
+          return wrappedReducer(state, action, store)
         } catch(e) {
           console.error(`Error in extension ${key}`, e.stack)
           return state
