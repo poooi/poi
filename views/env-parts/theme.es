@@ -5,8 +5,8 @@ import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path-extra'
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
-
-const { $, EXROOT, config } = window
+const { $, config } = window
+const EXROOT = remote.getGlobal('EXROOT')
 
 require.extensions['.css'] = (m, name) => {
   accessSync(name)
