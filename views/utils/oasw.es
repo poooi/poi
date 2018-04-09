@@ -25,12 +25,13 @@ const isZuihoKaiNiB = ship => ship.api_ship_id === 560
 const map = f => xs => xs.map(x => f(x))
 const sumAbove = value => xs => xs.reduce((s, x) => s + x, 0) >= value
 const equipTais = equip => equip.api_tais || 0
+const equipTaisAbove = value => equip => equipTais(equip) >= value
 
 export const isOASW = (ship, equips) => false
   || isIsuzuK2(ship) || isJervisKai(ship) || isTatsutaKai(ship)
   || (isPF(ship) && taisenAbove(60)(ship) && hasSome(isSonar)(equips))
   || (isPF(ship) && taisenAbove(75)(ship) && sumAbove(4)(map(equipTais)(equips)))
   || (isTaiyou(ship) && taisenAbove(65)(ship) && hasSome(is931)(equips))
-  || ((isTaiyouKai(ship) || isGambierBayKai(ship) || isZuihoKaiNiB(ship)) && taisenAbove(65)(ship) && hasSome(validAll(equipTais, isAircraft))(equips))
-  || (isGambierBay(ship) && hasSome(isTypeZeroSonar)(equips))
+  || ((isTaiyouKai(ship) || isGambierBayKai(ship) || isZuihoKaiNiB(ship)) && taisenAbove(65)(ship) && hasSome(validAll(equipTaisAbove(7), isAircraft))(equips))
+  || ((isGambierBay(ship) || isZuihoKaiNiB(ship)) && hasSome(isTypeZeroSonar)(equips) && taisenAbove(50))
   || (taisenAbove(100)(ship) && hasSome(isSonar)(equips) && !(isTaiyou(ship) || isTaiyouKai(ship)))
