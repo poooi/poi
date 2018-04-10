@@ -168,6 +168,15 @@ export class CountdownNotifierLabel extends Component {
       this.setState({ style })
     }
   }
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (nextProps.completeTime !== prevState.lastCompleteTime) {
+      return {
+        style: nextProps.getLabelStyle(nextProps, CountdownTimer.getTimeRemaining(nextProps.completeTime)),
+        lastCompleteTime: nextProps.completeTime,
+      }
+    }
+    return null
+  }
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.completeTime !== this.props.completeTime || nextState.style !== this.state.style
   }
