@@ -5,18 +5,22 @@ const shipIdIs = n => ship => ship.api_ship_id === n
 const hasSome = pred => xs => xs.some(pred)
 
 const isSonar = iconIs(18)
-const isIsuzuK2 = shipIdIs(141)
-const isJervisKai = shipIdIs(394)
-const isTatsutaKai = shipIdIs(478)
+
 const isDiveBomber = equip => equip.api_type[2] === 7
 const isTorpedoBomber = equip => equip.api_type[2] === 8
 const isTypeZeroSonar = equip => equip.api_slotitem_id === 132
 const taisenAbove = value => ship => ship.api_taisen[0] >= value
 
 const isDE = ship => ship.api_stype === 1
-const isTaiyou = ship => ship.api_ship_id === 526
+
+const isIsuzuK2 = shipIdIs(141)
+const isJervisKai = shipIdIs(394)
+const isTatsutaKai = shipIdIs(478)
+
+const isTaiyou = shipIdIs(526)
 const isTaiyouKai = shipIdIs(380)
 const isTaiyouKaiNi = shipIdIs(529)
+
 const isGambierBay = shipIdIs(544)
 const isGambierBayKai = shipIdIs(396)
 const isZuihoKaiNiB = shipIdIs(560)
@@ -27,15 +31,12 @@ const isASWAircraft = equip =>
   // オートジャイロ (e.g. カ号観測機)
   equip.api_type[3] === 69
 
-const map = f => xs => xs.map(x => f(x))
-const sumAbove = value => xs => xs.reduce((s, x) => s + x, 0) >= value
 const equipTais = equip => equip.api_tais || 0
 const equipTaisAbove = value => equip => equipTais(equip) >= value
 
 // focus on the 2nd argument of isOASW for func
 const overEquips = func => (_ship, equips) => func(equips)
 
-// isOASW(ship: Ship, equips: Array<Equip>): bool
 /*
    - reference as of Apr 10, 2018:
 
@@ -52,6 +53,7 @@ const overEquips = func => (_ship, equips) => func(equips)
          overEquips(<equips predicate>)
 
  */
+// isOASW(ship: Ship, equips: Array<Equip>): bool
 export const isOASW = _.overSome(
   // 無条件に発動
   isIsuzuK2, isJervisKai, isTatsutaKai,
@@ -67,7 +69,7 @@ export const isOASW = _.overSome(
       // 必要対潜値75 + 装備のみの対潜値が合計4以上
       _.overEvery(
         taisenAbove(75),
-        overEquips(equips => sumAbove(4)(map(equipTais)(equips)))
+        overEquips(equips => _.sum(equips.map(equipTais)) >= 4)
       )
     )
   ),
@@ -93,7 +95,7 @@ export const isOASW = _.overSome(
       )
     )
   ),
-  // 護衛空母
+  // 護衛空母 (excluding 大鷹改 大鷹改二)
   _.overEvery(
     _.overSome(isTaiyou, isGambierBay, isGambierBayKai, isZuihoKaiNiB),
     _.overSome(
