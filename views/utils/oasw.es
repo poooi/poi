@@ -17,13 +17,8 @@ const isIsuzuK2 = shipIdIs(141)
 const isJervisKai = shipIdIs(394)
 const isTatsutaKai = shipIdIs(478)
 
-const isTaiyou = shipIdIs(526)
 const isTaiyouKai = shipIdIs(380)
 const isTaiyouKaiNi = shipIdIs(529)
-
-const isGambierBay = shipIdIs(544)
-const isGambierBayKai = shipIdIs(396)
-const isZuihoKaiNiB = shipIdIs(560)
 
 const isASWAircraft = equip =>
   // 対潜哨戒機 (e.g. 三式指揮連絡機(対潜))
