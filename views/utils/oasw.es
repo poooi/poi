@@ -53,8 +53,8 @@ const overEquips = func => (_ship, equips) => func(equips)
          overEquips(<equips predicate>)
 
  */
-// isOASW(ship: Ship, equips: Array<Equip>): bool
-export const isOASW = _.overSome(
+// isOASWWith(allCVEIds: Array<ShipMstId>)(ship: Ship, equips: Array<Equip>): bool
+export const isOASWWith = allCVEIds => _.overSome(
   // 無条件に発動
   isIsuzuK2, isJervisKai, isTatsutaKai,
   // 海防艦
@@ -97,7 +97,7 @@ export const isOASW = _.overSome(
   ),
   // 護衛空母 (excluding 大鷹改 大鷹改二)
   _.overEvery(
-    _.overSome(isTaiyou, isGambierBay, isGambierBayKai, isZuihoKaiNiB),
+    s => !isTaiyouKai(s) && !isTaiyouKaiNi(s) && allCVEIds.includes(s.api_ship_id),
     _.overSome(
       _.overEvery(
         taisenAbove(65),
