@@ -1,5 +1,5 @@
 import memoize from 'fast-memoize'
-import { get, map, zip, flatMap } from 'lodash'
+import { get, map, zip, flatMap, values } from 'lodash'
 import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
 //### Helpers ###
@@ -429,4 +429,18 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId) =>
         shipEquipDataSelectorFactory(shipId)(state)
       )
   ))
+)
+
+export const allCVEIdsSelector = createSelector(
+  constSelector,
+  c => values(get(c, '$ships')).filter(x =>
+    // our ships
+    x.api_id <= 1500 &&
+    // must be CVL
+    x.api_stype === 7 &&
+    // have ASW stat
+    Array.isArray(x.api_tais) &&
+    // in case Tanaka happens
+    x.api_tais[0] > 0
+  ).map(x => x.api_id)
 )

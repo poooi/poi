@@ -4,15 +4,24 @@ import { createSelector } from 'reselect'
 import { memoize } from 'lodash'
 import { Label } from 'react-bootstrap'
 
-import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
-import { isOASW } from 'views/utils/oasw'
+import {
+  shipDataSelectorFactory, shipEquipDataSelectorFactory,
+  allCVEIdsSelector,
+} from 'views/utils/selectors'
+import { isOASWWith } from 'views/utils/oasw'
 import { translate } from 'react-i18next'
+
+const isOASWFuncSelector = createSelector(
+  allCVEIdsSelector,
+  allCVEIds => isOASWWith(allCVEIds)
+)
 
 const OASWSelectorFactory = memoize(shipId =>
   createSelector([
+    isOASWFuncSelector,
     shipDataSelectorFactory(shipId),
     shipEquipDataSelectorFactory(shipId),
-  ], ([_ship = {}, $ship = {}] = [], _equips = []) => {
+  ], (isOASW, [_ship = {}, $ship = {}] = [], _equips = []) => {
     const ship = { ...$ship, ..._ship }
     const equips = _equips.filter(([_equip, $equip, onslot] = []) => !!_equip && !!$equip)
       .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
@@ -20,7 +29,6 @@ const OASWSelectorFactory = memoize(shipId =>
     return isOASW(ship, equips)
   })
 )
-
 
 export const OASWIndicator = translate(['main'])(connect(
   (state, { shipId }) => ({
