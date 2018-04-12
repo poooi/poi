@@ -111,6 +111,7 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
       this.externalWindow.remote = this.externalWindow.require('electron').remote
+      this.externalWindow.remote.require('./lib/utils').stopFileNavigate(this.externalWindow.remote.getCurrentWebContents().id)
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
