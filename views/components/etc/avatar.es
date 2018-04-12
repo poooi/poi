@@ -9,6 +9,8 @@ import { readJsonSync, accessSync } from 'fs-extra'
 
 import './assets/avatar.css'
 
+avatarWorker.initialize()
+
 const { APPDATA_PATH, getStore, ROOT } = window
 
 const avatarCachePath = join(APPDATA_PATH, 'avatar','cache')
