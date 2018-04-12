@@ -87,18 +87,12 @@ export class CountdownTimer extends Component {
     }
     return null
   }
-  getSnapshotBeforeUpdate = (prevProps, prevState) => {
-    if (prevProps.countdownId !== this.props.countdownId) {
-      this.stopTick()
-    }
+  shouldComponentUpdate = (nextProps, nextState) =>
+    nextProps.countdownId !== this.props.countdownId || nextState.completeTime !== this.state.completeTime
+  componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.completeTime !== this.state.completeTime) {
       this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
     }
-    return null
-  }
-  shouldComponentUpdate = (nextProps, nextState) =>
-    nextProps.countdownId !== this.props.countdownId || nextState.completeTime !== this.state.completeTime
-  componentDidUpdate = () => {
     this.startTick() // Doesn't matter if it didn't stop
   }
   componentWillUnmount = () => {
