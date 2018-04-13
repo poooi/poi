@@ -24,7 +24,7 @@ customCSS.setAttribute('id', 'custom-css')
 customCSS.setAttribute('href', customCSSPath)
 document.head.appendChild(customCSS)
 
-const FACSSPath = require.resolve('@fortawesome/fontawesome/styles.css')
+const FACSSPath = require.resolve('@fortawesome/fontawesome-svg-core/styles.css')
 const FACSS = document.createElement('link')
 FACSS.setAttribute('rel', 'stylesheet')
 FACSS.setAttribute('id', 'fontawesome')
