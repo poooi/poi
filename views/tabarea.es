@@ -8,6 +8,7 @@ import { isEqual, omit, get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { translate } from 'react-i18next'
+import { remote } from 'electron'
 
 import * as settings from './components/settings'
 import * as mainview from './components/main'
@@ -16,7 +17,7 @@ import { PluginWrap } from './plugin-wrapper'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { isInGame } from 'views/utils/game-utils'
 
-const { config, dispatch } = window
+const { config, dispatch, ipc } = window
 
 const emptyObj = {}
 
@@ -258,10 +259,14 @@ export class ControlledTabArea extends PureComponent {
     window.addEventListener('game.start', this.handleKeyDown)
     window.addEventListener('game.response', this.handleResponse)
     window.openSettings = this.handleCmdCommaKeyDown
+    ipc.register("MainWindow", {
+      ipcFocusPlugin: this.ipcFocusPlugin,
+    })
   }
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('game.response', this.handleResponse)
+    ipc.unregisterAll("MainWindow")
   }
   // All displaying plugins
   listedPlugins = () => {
@@ -303,6 +308,18 @@ export class ControlledTabArea extends PureComponent {
         [plugin.id]: false,
       },
     })
+  }
+  ipcFocusPlugin = id => {
+    const tgt = this.props.plugins.find(p => p.id === id)
+    if (!tgt || !tgt.enabled) {
+      return
+    }
+    if (!this.isWindowMode(tgt)) {
+      remote.getCurrentWindow().focus()
+      this.handleSelectTab(id)
+    } else {
+      this.openWindow(tgt)
+    }
   }
   render() {
     const { t } = this.props
