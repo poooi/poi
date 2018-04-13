@@ -9,7 +9,7 @@ thanksTo: [
   ,
     name: 'Kancolle English Wikia'
     link: 'http://kancolle.wikia.com/wiki/Kancolle_Wiki'
-    avatar: 'http://vignette4.wikia.nocookie.net/kancolle/images/8/89/Wiki-wordmark.png/revision/latest?cb=20141226051229'
+    avatar: 'https://vignette4.wikia.nocookie.net/kancolle/images/8/89/Wiki-wordmark.png/revision/latest?cb=20141226051229'
     description: 'For providing English translation.'
     extraCSS:
       WebkitClipPath: "inset(0px 74% 0px 0px)"
@@ -33,7 +33,7 @@ thanksTo: [
   ,
     name: 'Kensuke Tanaka'
     link: 'https://www.facebook.com/kensuke.tanaka.790'
-    avatar: 'http://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
+    avatar: 'https://www.famitsu.com/images/000/039/658/l_522b1c633860a.jpg'
     description: 'For providing development difficulties (which we enjoyed a lot, sincerely).'
     extraCSS:
       maxHeight: "200%"
