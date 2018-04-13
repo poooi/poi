@@ -1,9 +1,9 @@
-import { omit, get, set, each } from 'lodash'
+import { omit, get, set, each, isArray } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
 import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, remove, lstatSync } from 'fs-extra'
 import React from 'react'
-import FontAwesome from 'react-fontawesome'
+import FontAwesome from '@skagami/react-fontawesome'
 import semver from 'semver'
 import module from 'module'
 import { promisify } from 'bluebird'
@@ -215,12 +215,17 @@ export async function readPlugin(pluginPath) {
   }
   plugin.isOutdated = plugin.needRollback
   plugin = updateI18n(plugin)
-  const icon = plugin.icon.split('/')[1] || plugin.icon || 'th-large'
+  const icon = isArray(plugin.icon)
+    ? plugin.icon
+    : plugin.icon.split('/')[1] || plugin.icon|| 'th-large'
   plugin.displayName = (
-    <span>
-      <FontAwesome key={0} name={icon} />
-      {' ' + plugin.name}
-    </span>
+    <>
+      {
+        isArray(icon)
+          ? <FontAwesome icon={icon} />
+          : <FontAwesome name={icon} />
+      } {plugin.name}
+    </>
   )
   plugin.timestamp = Date.now()
   return plugin
