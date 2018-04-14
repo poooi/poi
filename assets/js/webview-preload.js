@@ -146,6 +146,16 @@ const handleDOMContentLoaded = () => {
 
 document.addEventListener("DOMContentLoaded", handleDOMContentLoaded)
 
+const _documentWrite = document.write
+
+document.write = function() {
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    console.warn(`Block document.write since document is at state "${document.readyState}". Blocked call:`, arguments)
+  } else {
+    _documentWrite.apply(this, arguments)
+  }
+}
+
 // A workaround for drop-and-drag navigation
 remote.require('./lib/utils').stopFileNavigate(remote.getCurrentWebContents().id)
 
