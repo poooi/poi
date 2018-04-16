@@ -55,3 +55,4 @@ dist/
 
 # pre-compiled theme-env
 views/env-parts/theme.js
+views/utils/tools.js
