@@ -52,3 +52,6 @@ dist/
 
 # F**k you macOS
 .DS_store
+
+# pre-compiled theme-env
+views/env-parts/theme.js
