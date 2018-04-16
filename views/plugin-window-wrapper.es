@@ -48,9 +48,12 @@ export class PluginWindowWrap extends PureComponent {
 
   state = {}
 
+  pluginContainer = React.createRef()
+
   componentDidMount() {
     try {
       this.initWindow()
+      config.addListener('config.set', this.handleZoom)
     } catch(e) {
       console.error(e)
       this.props.closeWindowPortal()
@@ -58,6 +61,7 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   componentWillUnmount() {
+    config.removeListener('config.set', this.handleZoom)
     this.externalWindow.close()
   }
 
@@ -124,8 +128,19 @@ export class PluginWindowWrap extends PureComponent {
           console.error(e)
         }
       })
-      this.setState({ loaded: true })
+      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.zoomLevel', 1)))
     })
+  }
+
+
+  onZoomChange = (value) => {
+    this.pluginContainer.current.style.zoom = value
+  }
+
+  handleZoom = (path, value) => {
+    if (path === 'poi.zoomLevel') {
+      this.onZoomChange(value)
+    }
   }
 
   focusWindow = () => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
@@ -142,7 +157,7 @@ export class PluginWindowWrap extends PureComponent {
           window: this.externalWindow,
           mountPoint: this.containerEl,
         }}>
-          <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }}>
+          <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.pluginContainer}>
             <this.props.plugin.reactClass />
           </div>
         </WindowEnv.Provider>
