@@ -4,7 +4,7 @@ module.exports = {
       require.resolve('@babel/preset-env'),
       {
         targets: {
-          electron: '1.8',
+          electron: '2.0',
         },
         loose: true,
       },
