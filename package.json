@@ -75,6 +75,7 @@
     "mousetrap": "^1.6.1",
     "node-fetch": "^2.0.0",
     "npm": "=5.7.1",
+    "npm-package-arg": "^6.1.0",
     "pac-proxy-agent": "^2.0.0",
     "pangu": "^3.3.0",
     "path-extra": "^4.2.1",
@@ -106,7 +107,6 @@
     "socks5-client": "^1.2.5",
     "socks5-http-client": "^1.0.2",
     "swf-extract": "^1.1.0",
-    "validate-npm-package-name": "^3.0.0",
     "wanakana": "^3.1.0",
     "yargs": "^11.0.0"
   },
