@@ -97,7 +97,7 @@
     "react-toastr": "^3.0.0",
     "react-ultimate-pagination": "^1.0.3",
     "react-virtualized": "^9.18.5",
-    "reduce-reducers": "^0.1.2",
+    "reduce-reducers": "^0.2.0",
     "redux": "^4.0.0-beta.2",
     "redux-observers": "^2.0.2",
     "redux-thunk": "^2.2.0",
