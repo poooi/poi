@@ -57,6 +57,7 @@ export function stopNavigateAndHandleNewWindow(id) {
       shell.openExternal(url)
     } else if (frameName.startsWith('plugin')) {
       Object.assign(options, {
+        resizable: true,
         minWidth: 200,
         minHeight: 200,
         backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
