@@ -22,14 +22,12 @@ const customCSS = document.createElement('link')
 customCSS.setAttribute('rel', 'stylesheet')
 customCSS.setAttribute('id', 'custom-css')
 customCSS.setAttribute('href', customCSSPath)
-document.head.appendChild(customCSS)
 
 const FACSSPath = require.resolve('@fortawesome/fontawesome-svg-core/styles.css')
 const FACSS = document.createElement('link')
 FACSS.setAttribute('rel', 'stylesheet')
 FACSS.setAttribute('id', 'fontawesome')
 FACSS.setAttribute('href', FACSSPath)
-document.head.appendChild(FACSS)
 
 window.reloadCustomCss = () => {
   if (!$('#custom-css')) {
@@ -181,6 +179,8 @@ const toggleBackground = value => {
 }
 
 remote.getCurrentWebContents().on('dom-ready', () => {
+  document.body.appendChild(customCSS)
+  document.head.appendChild(FACSS)
   document.body.appendChild(div)
   document.body.appendChild(glass)
   setBackground(config.get('poi.background'))
