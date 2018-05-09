@@ -23,9 +23,9 @@
     (() => {
       'use strict';
       let ElectronCookies = require('@exponent/electron-cookies');
-      ElectronCookies.enable({ origin: 'https://app.poi.io/' });
-      ga('create', 'UA-99082354-1', 'auto');
-      ga('set', 'location', `https://app.poi.io/${window.POI_VERSION}/`);
+      ElectronCookies.enable({ origin: 'https://analytics.poooi.app/' });
+      ga('create', 'UA-99082354-2', 'auto');
+      ga('set', 'location', `https://analytics.poooi.app/${window.POI_VERSION}/`);
       ga('set', 'checkProtocolTask', null);
     })();
     require('./views/app');
