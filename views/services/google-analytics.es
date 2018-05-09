@@ -1,16 +1,17 @@
+/* global ga */
+
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 
 let heartbeat = null
 
 const handleMemberIdChange = (dispatch, current, previous) => {
-  const { ga } = window
   ga('set', 'userId', current)
   ga('send', 'pageview')
   if (!heartbeat) {
     heartbeat = setInterval(() => {
       ga('send', 'event', 'heartbeat')
-    }, 300000)
+    }, 240000)
   }
 }
 
