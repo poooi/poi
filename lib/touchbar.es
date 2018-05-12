@@ -144,9 +144,11 @@ export const touchBarReInit = (e) => {
 //Tab switching initialization
 export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, pluginDefault) => {
   //Get tab display name
+  //lock plugin when no plugins enabled
   if (pluginTitle != segments[2].label){
     segments.map( x => {
       x.label = [mainTitle, fleetTitle, pluginTitle][segments.indexOf(x)]
+      x.enabled = x.label != pluginDefault? true : false
     })
     touchBarReset()
   }
@@ -159,6 +161,9 @@ export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, p
   case 'shipView':
     tabIndex = 1
     break
+  case 'settings':
+    tabIndex = -1
+    break
   default:
     tabIndex = 2
     break
@@ -166,10 +171,6 @@ export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, p
   if (tabs.selectedIndex != tabIndex) {
     tabs.selectedIndex = tabIndex
     touchBarReset()
-  }
-  //Unlock tab switching when plugin is loaded
-  if (pluginTitle != pluginDefault) {
-    segments.map( x => x.enabled = true)
   }
 }
 //Touchbar reset
