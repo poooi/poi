@@ -150,7 +150,7 @@ export class PoiControl extends Component {
   }
   handleTouchbar = (props) => {
     //load Touchbar-related functions only when touchbar is triggered
-    const {refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
+    const {refreshconfirm, touchBarReset, touchBarReInit} = remote.require('./lib/touchbar')
     //workaround for the input event not defined
     switch (props) {
     case 'refresh':
@@ -201,6 +201,9 @@ export class PoiControl extends Component {
       break
     case 'gameRefreshPage':
       gameRefreshPage()
+      break
+    case 'edit':
+      this.handleSetEditable()
       break
     default:
     }

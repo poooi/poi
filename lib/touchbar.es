@@ -46,6 +46,10 @@ const refresh = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'refresh.png'),
   click: () => {mainWindow.webContents.send('touchbar','refresh')},
 })
+const edit = new TouchBarButton ({
+  icon: config.get('poi.layouteditable') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png'),
+  click: () => {mainWindow.webContents.send('touchbar','edit')},
+})
 // poi esc
 const poibutton = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'icons', 'poi_36x36.png'),
@@ -64,6 +68,7 @@ const popover = new TouchBarPopover({
     cachedir,
     screenshotdir,
     adjust,
+    edit,
     refresh,
   ],
   icon: path.join(ROOT,'assets', 'img', 'touchbar', 'angle-right.png'),
@@ -126,10 +131,16 @@ export const touchBar = new TouchBar({
   ],
   escapeItem: poibutton,
 })
-//Change Volume btn
-export const touchBarReInit = () => {
-  volume.icon = config.get('poi.content.muted') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
+//Change Volume or Edit btn
+export const touchBarReInit = (e) => {
+  edit.icon = config.get('poi.layouteditable') ?
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') :
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png')
+  volume.icon = config.get('poi.content.muted') ?
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png') :
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
 }
+
 //Tab switching initialization
 export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, pluginDefault) => {
   //Get tab display name
