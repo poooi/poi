@@ -202,6 +202,9 @@ export class PoiControl extends Component {
     case 'gameRefreshPage':
       gameRefreshPage()
       break
+    case 'edit':
+      this.handleSetEditable()
+      break
     default:
     }
   }

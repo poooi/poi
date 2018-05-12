@@ -2,7 +2,7 @@ import { TouchBar } from 'electron'
 import config from './config'
 import path from 'path-extra'
 
-const { TouchBarButton, TouchBarSpacer } = TouchBar
+const { TouchBarButton, TouchBarSpacer, TouchBarPopover, TouchBarSegmentedControl } = TouchBar
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
@@ -19,7 +19,7 @@ export const touchbaresc = () => {
 }
 // buttons
 const devtools = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'gears.png'),
+  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'terminal.png'),
   click: () => {mainWindow.openDevTools({mode: 'detach'})},
 })
 const screenshot = new TouchBarButton({
@@ -46,10 +46,49 @@ const refresh = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'refresh.png'),
   click: () => {mainWindow.webContents.send('touchbar','refresh')},
 })
+const edit = new TouchBarButton ({
+  icon: config.get('poi.layouteditable') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png'),
+  click: () => {mainWindow.webContents.send('touchbar','edit')},
+})
 // poi esc
 const poibutton = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'icons', 'poi_36x36.png'),
   backgroundColor: '#000000',
+})
+//spacer
+const spacer = new TouchBarSpacer({
+  size: 'flexible',
+})
+//popover
+const popover = new TouchBarPopover({
+  items: [
+    devtools,
+    screenshot,
+    volume,
+    cachedir,
+    screenshotdir,
+    adjust,
+    edit,
+    refresh,
+  ],
+  icon: path.join(ROOT,'assets', 'img', 'touchbar', 'angle-right.png'),
+})
+//tab-switching
+const segments = [{
+  label: '     ',
+  enabled: false,
+}, {
+  label: '     ',
+  enabled: false,
+}, {
+  label: '     ',
+  enabled: false,
+}]
+const tabs = new TouchBarSegmentedControl({
+  segmentStyle: 'automatic',
+  segments: segments,
+  selectedIndex: 0,
+  change: (selectedIndex) => {mainWindow.webContents.send('touchbartab', selectedIndex)},
 })
 //confirmation modal
 export const refreshconfirm = (btn1,btn2) => {
@@ -84,16 +123,54 @@ export const touchBar = new TouchBar({
     devtools,
     screenshot,
     volume,
-    cachedir,
-    screenshotdir,
-    adjust,
+    popover,
+    spacer,
+    tabs,
+    spacer,
     refresh,
   ],
   escapeItem: poibutton,
 })
-//Change Volume btn
-export const touchBarReInit = () => {
-  volume.icon = config.get('poi.content.muted') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
+//Change Volume or Edit btn
+export const touchBarReInit = (e) => {
+  edit.icon = config.get('poi.layouteditable') ?
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') :
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png')
+  volume.icon = config.get('poi.content.muted') ?
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png') :
+    path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
+}
+
+//Tab switching initialization
+export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, pluginDefault) => {
+  //Get tab display name
+  if (pluginTitle != segments[2].label){
+    segments.map( x => {
+      x.label = [mainTitle, fleetTitle, pluginTitle][segments.indexOf(x)]
+    })
+    touchBarReset()
+  }
+  //Update active tab if necessary
+  let tabIndex
+  switch (activeTab){
+  case 'mainView':
+    tabIndex = 0
+    break
+  case 'shipView':
+    tabIndex = 1
+    break
+  default:
+    tabIndex = 2
+    break
+  }
+  if (tabs.selectedIndex != tabIndex) {
+    tabs.selectedIndex = tabIndex
+    touchBarReset()
+  }
+  //Unlock tab switching when plugin is loaded
+  if (pluginTitle != pluginDefault) {
+    segments.map( x => x.enabled = true)
+  }
 }
 //Touchbar reset
 export const touchBarReset = () => {mainWindow.setTouchBar(touchBar)}
