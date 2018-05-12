@@ -243,6 +243,21 @@ export class ControlledTabArea extends PureComponent {
       this.selectTab(toSwitch, true)
     }
   }
+  handleTouchbar = (props) => {
+    let key
+    switch (props) {
+    case 0:
+      key = 'mainView'
+      break
+    case 1:
+      key = 'shipView'
+      break
+    case 2:
+      key = this.props.activePluginName || (this.props.plugins[0] || {}).packageName
+      break
+    }
+    this.selectTab(key)
+  }
   static getDerivedStateFromProps = (nextProps, prevState) => {
     if (nextProps.doubleTabbed !== (prevState || {}).prevDoubleTabbed) {
       dispatchTabChangeEvent({
@@ -262,6 +277,11 @@ export class ControlledTabArea extends PureComponent {
     ipc.register("MainWindow", {
       ipcFocusPlugin: this.ipcFocusPlugin,
     })
+    if (process.platform === 'darwin') {
+      require('electron').ipcRenderer.on('touchbartab', (event, message) => {
+        this.handleTouchbar(message)
+      })
+    }
   }
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
@@ -441,7 +461,10 @@ export class ControlledTabArea extends PureComponent {
         </div>
       </TabContentsUnion>
     )
-
+    if (process.platform === 'darwin') {
+      const { touchBarTabinit } = remote.require('./lib/touchbar')
+      touchBarTabinit(t('main:Overview'), t('main:Fleet'), activePlugin.name || t('others:Plugins'), this.props.activeMainTab, t('others:Plugins'))
+    }
     return (
       <div className={classNames('poi-tabs-container', {
         'poi-tabs-container-doubletabbed': this.props.doubleTabbed,
