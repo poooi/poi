@@ -1,4 +1,5 @@
 // Process Command Line Arguments
+import chalk from 'chalk'
 import Debug from './debug'
 import { app } from 'electron'
 import { warn } from './utils'
@@ -12,7 +13,7 @@ const rawArgv = process.defaultApp ? process.argv.slice(2) : process.argv.slice(
 const argv = yargs
   .help('h')
   .alias('h', 'help')
-  .alias('v', 'version')
+  // .alias('v', 'version')
   .describe('v', 'Print version')
   .boolean('d')
   .alias('d', 'dev')
@@ -27,13 +28,13 @@ const argv = yargs
 
 // Print Version Info to Console and Exit
 const printVersionAndExit = () => {
-  console.warn(`${app.getName()} ${app.getVersion()}`.bold.blue)
-  console.warn([
+  console.warn(chalk.blue.bold(`${app.getName()} ${app.getVersion()}`))
+  console.warn(chalk.cyan([
     `(electron@${process.versions.electron}`,
     `node@${process.versions.node}`,
     `chrome@${process.versions.chrome}`,
     `react@${require('react').version})`,
-  ].join(' ').cyan)
+  ].join(' ')))
   app.exit(0)
 }
 
