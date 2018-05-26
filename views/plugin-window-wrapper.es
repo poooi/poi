@@ -5,6 +5,7 @@ import { TitleBar } from 'electron-react-titlebar'
 import { screen } from 'electron'
 import { normalizeURL } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
+import { PluginWrap } from './plugin-wrapper'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 
@@ -158,7 +159,10 @@ export class PluginWindowWrap extends PureComponent {
           mountPoint: this.containerEl,
         }}>
           <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.pluginContainer}>
-            <this.props.plugin.reactClass />
+            <PluginWrap
+              key={this.props.plugin.id}
+              plugin={this.props.plugin}
+            />
           </div>
         </WindowEnv.Provider>
       </>,

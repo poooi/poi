@@ -11,6 +11,10 @@ export class PluginWrap extends Component {
     info: null,
   }
 
+  static defaultProps = {
+    withContainer: true,
+  }
+
   shouldComponentUpdate = (nextProps, nextState) => {
     return this.props.plugin.timestamp !== nextProps.plugin.timestamp ||
       nextState.hasError === true
@@ -33,11 +37,11 @@ export class PluginWrap extends Component {
 
   render() {
     const { hasError, error, info } = this.state
-    const { plugin, t } = this.props
+    const { plugin, t, withContainer } = this.props
     if (hasError) {
       const code = [error.stack, info.componentStack].join('\n')
-      return (
-        <div id={plugin.id} className="poi-app-tabpane poi-plugin" style={{padding : '1em'}}>
+      const innerContent = (
+        <>
           <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
           <p>{t('PluginErrorMsg')}</p>
           <FormControl
@@ -47,13 +51,19 @@ export class PluginWrap extends Component {
             style={{ height: '10em' }}
           />
           <Button bsStyle="primary" onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
-        </div>
+        </>
       )
+      return withContainer ? (
+        <div id={plugin.id} className="poi-app-tabpane poi-plugin" style={{padding : '1em'}}>
+          {innerContent}
+        </div>
+      ) : innerContent
     }
-    return (
+    const innerContent = <plugin.reactClass />
+    return withContainer ? (
       <div id={plugin.id} className="poi-app-tabpane poi-plugin">
-        <plugin.reactClass />
+        {innerContent}
       </div>
-    )
+    ) : innerContent
   }
 }
