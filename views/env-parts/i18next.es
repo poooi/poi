@@ -2,7 +2,7 @@ import path from 'path-extra'
 import glob from 'glob'
 import { isString, toString, each, debounce } from 'lodash'
 import I18next from 'i18next'
-import { reactI18nextModule } from 'react-i18next'
+import { reactI18nextModule, translate } from 'react-i18next'
 import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
 import formatJson from 'json-format'
@@ -142,5 +142,10 @@ if (!isMain && config.get('plugin.poi-plugin-translator.enable', false)) {
     console.warn('poi-plugin-translator', e)
   }
 }
+
+// set react-i18next translate HOC namespace mode
+translate.setDefaults({
+  nsMode: 'fallback',
+})
 
 export default i18next
