@@ -104,7 +104,13 @@ const getNextQuest = () => {
   return now.startOf('hour')
 }
 
-const getNextSenka = () => moment.tz('Asia/Tokyo').endOf('month').subtract(2, 'hour')
+const getNextSenka = () => {
+  const m = moment.tz('Asia/Tokyo').endOf('month').subtract(2, 'hour')
+  if (+m <= Date.now()) {
+    return m.add(1, 'months')
+  }
+  return m
+}
 
 const getNextEO = () => moment.tz('Asia/Tokyo').endOf('month')
 
