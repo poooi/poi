@@ -144,7 +144,7 @@ export class MiniShipRow extends Component {
     const remodelLevel = $ship.api_afterlv
     const exp = (ship.api_exp || [])[0]
     const nextExp = (ship.api_exp || [])[1]
-    const remodelString = level < remodelLevel ? `Remodel: Lv. ${remodelLevel}` : remodelLevel ? `Remodel: ready` : null
+    const remodelString = level < remodelLevel ? t('main:RemodelLv', { remodelLevel }) : remodelLevel ? t('main:RemodelReady') : null
     const shipInfoClass = classNames("ship-info", {
       "ship-avatar-padding": enableAvatar,
       "ship-info-hidden": hideShipName,
@@ -165,7 +165,7 @@ export class MiniShipRow extends Component {
           <div className="ship-item">
             { enableAvatar && (
               <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33}>
-                {compact ? <div className='ship-lv-avatar'>Lv. {level || '??'}</div> : null}
+                {compact && <div className='ship-lv-avatar'>{level && t('main:Lv', { level })}</div>}
               </Avatar>
             ) }
             <OverlayTrigger placement='top' overlay={
@@ -173,15 +173,20 @@ export class MiniShipRow extends Component {
                 {
                   hideShipName ? (
                     <div className="ship-tooltip-info">
-                      <div>{$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}</div>
-                      {exp > 0 ? <div>Total: {exp}</div> : null}
-                      {nextExp > 0 ? <div>Next: {nextExp}</div> : null}
-                      {remodelString ? <div>{remodelString}</div> : null}
+                      <div>
+                        {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
+                      </div>
+                      <div>
+                        {level && t('main:Lv', { level })}
+                      </div>
+                      {exp > 0 && <div>{t('main:TotalExp', { exp })}</div>}
+                      {nextExp > 0 && <div>{t('main:NextExp', { nextExp })}</div>}
+                      {remodelString && <div>{remodelString}</div>}
                     </div>
                   ) : <div>
-                    {exp > 0 ? <div>Total: {exp}</div> : null}
-                    {nextExp > 0 ? <div>Next: {nextExp}</div> : null}
-                    {remodelString ? <div>{remodelString}</div> : null}
+                    {exp > 0 && <div>{t('main:TotalExp', { exp })}</div>}
+                    {nextExp > 0 && <div>{t('main:NextExp', { nextExp })}</div>}
+                    {remodelString && <div>{remodelString}</div>}
                   </div>
                 }
               </Tooltip>
@@ -194,7 +199,7 @@ export class MiniShipRow extends Component {
                         {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
                       </span>
                       <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                        Lv. {level || '??'}
+                        {level && t('main:Lv', { level })}
                       </span>
                     </>
                   )
