@@ -87,5 +87,9 @@
   "Max shot down not reached": "最上位の組合せを満たしていない",
   "OASW": "先制対潜",
   "At least one ship in your fleet has not been locked": "少なくとも1つの艦娘は出撃札がついていない",
-  "Event ship locking warning": "誤出撃警告"
+  "Event ship locking warning": "誤出撃警告",
+  "RemodelLv": "次の改造：Lv. {{remodelLevel}}",
+  "RemodelReady": "改造ができる",
+  "TotalExp": "総経験値：{{exp}}",
+  "NextExp": "次のレベルまで：{{nextExp}}"
 }

@@ -87,5 +87,9 @@
   "Max shot down not reached": "未達到最大擊墜數",
   "OASW": "先制對潛",
   "At least one ship in your fleet has not been locked": "至少有一位艦娘沒有貼條",
-  "Event ship locking warning": "活動鎖船警告"
+  "Event ship locking warning": "活動鎖船警告",
+  "RemodelLv": "改造等級：Lv. {{remodelLevel}}",
+  "RemodelReady": "可以進行改造",
+  "TotalExp": "總經驗值：{{exp}}",
+  "NextExp": "距下一級：{{nextExp}}"
 }

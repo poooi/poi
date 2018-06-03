@@ -87,5 +87,9 @@
   "Max shot down not reached": "未达到最大击坠数",
   "OASW": "先制对潜",
   "At least one ship in your fleet has not been locked": "至少有一位舰娘没有贴条",
-  "Event ship locking warning": "活动锁船警告"
+  "Event ship locking warning": "活动锁船警告",
+  "RemodelLv": "改造等级：Lv. {{remodelLevel}}",
+  "RemodelReady": "可以进行改造",
+  "TotalExp": "总经验值：{{exp}}",
+  "NextExp": "距下一级：{{nextExp}}"
 }
