@@ -37,7 +37,7 @@
     "@babel/core": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
-    "@babel/preset-stage-0": "^7.0.0-beta.40",
+    "@babel/preset-stage-0": "7.0.0-beta.40",
     "@babel/register": "^7.0.0-beta.40",
     "@exponent/electron-cookies": "^2.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.0-11",
