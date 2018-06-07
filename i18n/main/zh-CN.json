@@ -88,6 +88,7 @@
   "OASW": "先制对潜",
   "At least one ship in your fleet has not been locked": "至少有一位舰娘没有贴条",
   "Event ship locking warning": "活动锁船警告",
+  "Lv": "Lv. {{level}}",
   "RemodelLv": "改造等级：Lv. {{remodelLevel}}",
   "RemodelReady": "可以进行改造",
   "TotalExp": "总经验值：{{exp}}",

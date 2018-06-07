@@ -49,5 +49,6 @@
   "Retreated": "대피",
   "Repairing": "입거중",
   "Resupply Needed": "보급 필요",
-  "Ship tag": "출격 가능 해역"
+  "Ship tag": "출격 가능 해역",
+  "Lv": "Lv. {{level}}"
 }

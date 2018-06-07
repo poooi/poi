@@ -88,6 +88,7 @@
   "OASW": "先制対潜",
   "At least one ship in your fleet has not been locked": "少なくとも1つの艦娘は出撃札がついていない",
   "Event ship locking warning": "誤出撃警告",
+  "Lv": "Lv. {{level}}",
   "RemodelLv": "次の改造：Lv. {{remodelLevel}}",
   "RemodelReady": "改造ができる",
   "TotalExp": "総経験値：{{exp}}",
