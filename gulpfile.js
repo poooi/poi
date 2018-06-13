@@ -24,42 +24,32 @@ const packageMeta = require('./package.json')
 
 let poiVersion = null
 
-gulp.task('getVersion', () => {
+gulp.task('getVersion', (done) => {
   const package_version = packageMeta.version
   poiVersion = package_version
   log(`*** Start building poi ${poiVersion} ***`)
+  done()
 })
 
-gulp.task('deploy', ['getVersion', 'get_flash'], () => {})
+gulp.task('get_flash', gulp.series('getVersion', () => getFlash(poiVersion)))
 
-gulp.task('build', ['getVersion', 'get_flash_all'], async() => {
-  await build(poiVersion)
-})
+gulp.task('get_flash_all', gulp.series('getVersion', () => getFlashAll(poiVersion)))
 
-gulp.task('get_flash', ['getVersion'], async() => {
-  await getFlash(poiVersion)
-})
+gulp.task('deploy', gulp.series('getVersion', 'get_flash'))
 
-gulp.task('get_flash_all', ['getVersion'], async() => {
-  await getFlashAll(poiVersion)
-})
+gulp.task('build', gulp.series('getVersion', 'get_flash_all', () => build(poiVersion)))
 
-gulp.task('build_plugins', ['getVersion'], async() => {
-  await installPlugins(poiVersion)
-})
+gulp.task('build_plugins', gulp.series('getVersion', () => installPlugins(poiVersion)))
 
-gulp.task('pack_win_release', ['getVersion'], async() => {
-  await packWinRelease(poiVersion)
-})
+gulp.task('pack_win_release', gulp.series('getVersion', () => packWinRelease(poiVersion)))
 
-gulp.task('clean', async () => {
-  await cleanFiles()
-})
+gulp.task('clean', () => cleanFiles())
 
-gulp.task('default', () => {
+gulp.task('default', (done) => {
   const _gulp = 'gulp'
   log("Usage:")
   log(`  ${_gulp} deploy          - Make this repo ready to use`)
   log(`  ${_gulp} build           - Build release complete packages under ./dist/`)
   log(`  ${_gulp} build_plugins   - Pack up latest plugin tarballs under ./dist/`)
+  done()
 })
