@@ -58,7 +58,7 @@
     "cson": "^5.1.0",
     "electron-log": "^2.2.14",
     "electron-react-titlebar": "^0.8.1",
-    "electron-updater": "^2.21.4",
+    "electron-updater": "^2.21.10",
     "fast-memoize": "^2.2.8",
     "font-awesome": "^4.7.0",
     "fs-extra": "^5.0.0",
