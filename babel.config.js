@@ -9,7 +9,12 @@ module.exports = {
         loose: true,
       },
     ],
-    require.resolve('@babel/preset-stage-0'),
+    [
+      require.resolve('@babel/preset-stage-0'),
+      {
+        decoratorsLegacy: true,
+      },
+    ],
     require.resolve('@babel/preset-react'),
   ],
   plugins: [
