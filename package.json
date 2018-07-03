@@ -105,7 +105,6 @@
     "reselect": "^3.0.1",
     "semver": "^5.5.0",
     "socks5-client": "^1.2.6",
-    "socks5-http-client": "git+https://github.com/mattcg/socks5-http-client.git",
     "swf-extract": "^1.1.0",
     "wanakana": "^4.0.1",
     "yargs": "^11.0.0"
