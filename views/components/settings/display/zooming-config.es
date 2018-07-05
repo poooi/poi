@@ -9,24 +9,17 @@ const { config } = window
 
 @connect((state, props) => ({
   zoomLevel: get(state.config, 'poi.zoomLevel', 1),
+  key: get(state.config, 'poi.zoomLevel', 1),
 }))
 export class ZoomingConfig extends Component {
   static propTypes = {
     zoomLevel: PropTypes.number,
   }
   state = {
-    zoomLevel: config.get('poi.zoomLevel', 1),
+    zoomLevel: this.props.zoomLevel,
   }
   handleChangeZoomLevel = (e) => {
     config.set('poi.zoomLevel', this.state.zoomLevel)
-  }
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (prevState.zoomLevel !== nextProps.zoomLevel) {
-      return {
-        zoomLevel: nextProps.zoomLevel,
-      }
-    }
-    return null
   }
   render() {
     return (
@@ -35,7 +28,7 @@ export class ZoomingConfig extends Component {
           <OverlayTrigger placement='top' overlay={
             <Tooltip id='displayconfig-zoom'><Trans>setting:Zoom level</Trans> <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
           }>
-            <FormControl type="range" onInput={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
+            <FormControl type="range" onChange={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
               min={0.5} max={4.0} step={0.05} defaultValue={this.state.zoomLevel}
               onMouseUp={this.handleChangeZoomLevel}
               onTouchEnd={this.handleChangeZoomLevel} />

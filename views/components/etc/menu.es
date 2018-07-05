@@ -17,6 +17,14 @@ const exeCodeOnWindowHasReloadArea = (win, f) => {
   }
 }
 
+const resetViews = () => {
+  const { availWidth, availHeight, availTop, availLeft } = window.screen
+  remote.getCurrentWindow().setPosition(availLeft, availTop)
+  config.set('poi.webview', {})
+  config.set('poi.zoomLevel', 1)
+  remote.getCurrentWindow().setSize(availWidth, availHeight)
+}
+
 let template = []
 
 if (process.platform !== 'darwin') {
@@ -44,6 +52,11 @@ if (process.platform !== 'darwin') {
           },
         },
         { type: 'separator' },
+        {
+          label: i18next.t('menu:Reset Views'),
+          type: 'normal',
+          click: resetViews,
+        },
         {
           label: i18next.t('menu:Resizable'),
           type: 'checkbox',
@@ -203,6 +216,11 @@ if (process.platform !== 'darwin') {
           role: 'unhide',
         },
         { type: 'separator' },
+        {
+          label: i18next.t('menu:Reset Views'),
+          type: 'normal',
+          click: resetViews,
+        },
         {
           label: i18next.t('menu:Resizable'),
           type: 'checkbox',
