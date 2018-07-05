@@ -22,10 +22,7 @@ const resetViews = () => {
   remote.getCurrentWindow().setPosition(availLeft, availTop)
   config.set('poi.webview', {})
   config.set('poi.zoomLevel', 1)
-  remote.getCurrentWindow().setSize({
-    height: availHeight,
-    width: availWidth,
-  })
+  remote.getCurrentWindow().setSize(availWidth, availHeight)
 }
 
 let template = []
