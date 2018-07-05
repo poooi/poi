@@ -29,6 +29,7 @@ const checkExistence = (mstId) => getFilePath(mstId).map(path => {
 
 @connect((state, props) => ({
   marginMagic: props.marginMagic || get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`),
+  key: props.mstId,
 }))
 export class Avatar extends PureComponent {
   static propTypes = {
@@ -80,18 +81,6 @@ export class Avatar extends PureComponent {
 
   componentWillUnmount = () => {
     avatarWorker.port.removeEventListener('message', this.onMessage)
-  }
-
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (prevState.prevMstId !== nextProps.mstId) {
-      const available = checkExistence(nextProps.mstId)
-      return {
-        available,
-        failed: false,
-        prevMstId: nextProps.mstId,
-      }
-    }
-    return null
   }
 
   componentDidUpdate = () => {
