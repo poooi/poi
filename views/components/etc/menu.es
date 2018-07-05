@@ -22,7 +22,7 @@ const resetViews = () => {
   remote.getCurrentWindow().setPosition(availLeft, availTop)
   config.set('poi.webview', {})
   config.set('poi.zoomLevel', 1)
-  config.set('poi.window', {
+  remote.getCurrentWindow().setSize({
     height: availHeight,
     width: availWidth,
   })
@@ -454,22 +454,6 @@ config.on('config.set', (path, value) => {
   }
   if (path === 'poi.vibrant') {
     window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
-  }
-  const { availWidth, availHeight } = window.screen
-  if (path === "poi.window") {
-    // ignore when setting other props in poi.window
-    if (!value || (!value.height && !value.width)) {
-      return
-    }
-    const width = value.width || availWidth
-    const height = value.height || availHeight
-    remote.getCurrentWindow().setSize(width, height)
-  }
-  if (path === 'poi.window.width') {
-    remote.getCurrentWindow().setSize(value, config.get('poi.window.height', window.screen.availHeight))
-  }
-  if (path === 'poi.window.height') {
-    remote.getCurrentWindow().setSize(config.get('poi.window.width', window.screen.availWidth), value)
   }
 })
 
