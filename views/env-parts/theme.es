@@ -188,6 +188,6 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 })
 
 // Workaround for window transparency on 2.0.0
-remote.getCurrentWebContents().once('devtools-opened', () => {
+remote.getCurrentWebContents().once('devtools-closed', () => {
   remote.getCurrentWindow().setBackgroundColor('#00000000')
 })
