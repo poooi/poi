@@ -13,6 +13,7 @@ module.exports = {
       require.resolve('@babel/preset-stage-0'),
       {
         decoratorsLegacy: true,
+        pipelineProposal: 'minimal',
       },
     ],
     require.resolve('@babel/preset-react'),
