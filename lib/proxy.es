@@ -9,9 +9,10 @@ import caseNormalizer from 'header-case-normalizer'
 import request from 'request'
 import mime from 'mime'
 import socks from 'socks5-client'
-import SocksHttpAgent from 'socks5-http-client/lib/Agent'
 import PacProxyAgent from 'pac-proxy-agent'
 import { app } from 'electron'
+
+import SocksHttpAgent from './socks-http-agent'
 import config from './config'
 import { log, error } from './utils'
 

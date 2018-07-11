@@ -45,7 +45,7 @@ class Ticker {
 window.ticker = new Ticker()
 
 
-export class CountdownTimer extends Component {
+class CountdownTimerInner extends Component {
   constructor(props) {
     super(props)
     this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
@@ -76,16 +76,6 @@ export class CountdownTimer extends Component {
   }
   componentDidMount = () => {
     this.startTick()
-    window.addEventListener('countdown.start', this.startTick)
-    window.addEventListener('countdown.stop', this.stopTick)
-  }
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (nextProps.completeTime !== prevState.completeTime) {
-      return {
-        completeTime: nextProps.completeTime,
-      }
-    }
-    return null
   }
   shouldComponentUpdate = (nextProps, nextState) =>
     nextProps.countdownId !== this.props.countdownId || nextState.completeTime !== this.state.completeTime
@@ -97,8 +87,6 @@ export class CountdownTimer extends Component {
   }
   componentWillUnmount = () => {
     this.stopTick()
-    window.removeEventListener('countdown.start', this.startTick)
-    window.removeEventListener('countdown.stop', this.stopTick)
   }
   startTick = () => {
     window.ticker.reg(this.props.countdownId, this.tick)
@@ -136,7 +124,11 @@ export class CountdownTimer extends Component {
   }
 }
 
-export class CountdownNotifierLabel extends Component {
+export function CountdownTimer(props) {
+  return <CountdownTimerInner {...props} key={props.completeTime} />
+}
+
+class CountdownNotifierLabelInner extends Component {
   static propTypes = {
     timerKey: PropTypes.string.isRequired,  // A globally unique string for the timer
     completeTime: PropTypes.number.isRequired,
@@ -162,20 +154,11 @@ export class CountdownNotifierLabel extends Component {
       this.setState({ style })
     }
   }
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (nextProps.completeTime !== prevState.lastCompleteTime) {
-      return {
-        style: nextProps.getLabelStyle(nextProps, CountdownTimer.getTimeRemaining(nextProps.completeTime)),
-        lastCompleteTime: nextProps.completeTime,
-      }
-    }
-    return null
-  }
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.completeTime !== this.props.completeTime || nextState.style !== this.state.style
   }
   getLabelStyle = (props) => {
-    return props.getLabelStyle(props, CountdownTimer.getTimeRemaining(props.completeTime))
+    return props.getLabelStyle(props, CountdownTimerInner.getTimeRemaining(props.completeTime))
   }
   tick = (timeRemaining) => {
     const notifyOptions = this.props.getNotifyOptions(this.props)
@@ -190,7 +173,7 @@ export class CountdownNotifierLabel extends Component {
       <Label className="countdown-timer-label" bsStyle={this.state.style}>
         {
           this.props.completeTime >= 0 &&
-          <CountdownTimer countdownId={this.props.timerKey}
+          <CountdownTimerInner countdownId={this.props.timerKey}
             completeTime={this.props.completeTime}
             tickCallback={this.tick}
             resolveTime={this.props.resolveTime} />
@@ -198,4 +181,8 @@ export class CountdownNotifierLabel extends Component {
       </Label>
     )
   }
+}
+
+export function CountdownNotifierLabel(props) {
+  return <CountdownNotifierLabelInner {...props} key={props.completeTime} />
 }

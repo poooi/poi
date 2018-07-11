@@ -9,6 +9,7 @@ const { config } = window
 
 @connect((state, props) => ({
   webview: state.layout.webview,
+  key: get(state.layout.webview, 'width'),
 }))
 export class ResolutionConfig extends Component {
   static propTypes = {
@@ -40,14 +41,6 @@ export class ResolutionConfig extends Component {
   }
   handleSetFixedResolution = (e) => {
     config.set('poi.webview.useFixedResolution', !this.props.webview.useFixedResolution)
-  }
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (prevState.width !== get(nextProps, 'webview.width')) {
-      return {
-        width: nextProps.webview.width,
-      }
-    }
-    return null
   }
   render() {
     return (
