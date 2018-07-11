@@ -188,7 +188,7 @@ if (process.platform !== 'darwin') {
         },
         { type: 'separator' },
         {
-          label: i18next.t('menu:Preferences...'),
+          label: i18next.t('menu:Preferences'),
           accelerator: 'CmdOrCtrl+,',
           click: (item, focusedWindow) => {
             window.openSettings()
