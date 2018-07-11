@@ -117,7 +117,9 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
       this.externalWindow.remote = this.externalWindow.require('electron').remote
       this.externalWindow.remote.require('./lib/utils').stopFileNavigate(this.externalWindow.remote.getCurrentWebContents().id)
-      this.externalWindow.remote.getCurrentWindow().setBackgroundColor(process.platform === 'darwin' ? '#00000000' : '#E62A2A2A')
+      this.externalWindow.remote.getCurrentWindow().once('blur', () => {
+        this.externalWindow.remote.getCurrentWindow().setBackgroundColor(process.platform === 'darwin' ? '#00000000' : '#E62A2A2A')
+      })
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
