@@ -5,7 +5,7 @@ if (config.get('poi.content.muted', false)) {
   remote.getCurrentWebContents().setAudioMuted(true)
 }
 
-remote.getCurrentWebContents().addListener('dom-ready', (e) => {
+document.addEventListener('DOMContentLoaded', (e) => {
   if (config.get('poi.enableDMMcookie', false)) {
     document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/"
     document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/"
