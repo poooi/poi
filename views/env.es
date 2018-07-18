@@ -50,6 +50,11 @@ if (window.isMain) {
 // Add ROOT to `require` search path
 require('module').globalPaths.unshift(window.ROOT)
 
+// Disable eval
+window.eval = global.eval = function () {
+  throw new Error(`Sorry, this app does not support window.eval().`)
+}
+
 // Shortcuts and Components
 window._ = lodash           // TODO: Backward compatibility
 window.$ = (param) => document.querySelector(param)
