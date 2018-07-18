@@ -7,7 +7,6 @@ let forceClose = false
 let pluginUnload = false
 const state = []  // Window state before hide
 let hidden = false
-const ROOT = global.ROOT
 
 const inRange = (n, min, range) => (n != null && n >= min && n < min + range)
 
@@ -35,7 +34,7 @@ export default {
   createWindow: (options) => {
     options = Object.assign({
       show: false,
-      icon: path.join(ROOT, 'assets', 'icons', 'poi.ico'),
+      icon: path.join(global.ROOT, 'assets', 'icons', 'poi.ico'),
     }, normalizePosition(options))
     const current = new BrowserWindow(options)
     if (options.indexName) {

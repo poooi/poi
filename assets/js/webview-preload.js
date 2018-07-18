@@ -1,6 +1,5 @@
 const { remote, webFrame } = require('electron')
 const config = remote.require('./lib/config')
-const WindowManager = remote.require('./lib/window')
 
 if (config.get('poi.content.muted', false)) {
   remote.getCurrentWebContents().setAudioMuted(true)
@@ -25,17 +24,6 @@ remote.getCurrentWebContents().addListener('dom-ready', (e) => {
     // eslint-disable-next-line no-undef
     DMM.netgame.reloadDialog=function(){}
   }
-})
-window.WindowManager = WindowManager
-remote.getCurrentWebContents().addListener('new-window', (e, url) => {
-  const exWindow = WindowManager.createWindow({
-    realClose: true,
-    navigatable: true,
-    nodeIntegration: false,
-  })
-  exWindow.loadURL(url)
-  exWindow.show()
-  e.preventDefault()
 })
 
 // webview focus area fix
@@ -159,6 +147,6 @@ if (window.location.toString().includes("http://www.dmm.com/netgame/social/-/gad
 }
 
 // A workaround for drop-and-drag navigation
-remote.require('./lib/utils').stopFileNavigate(remote.getCurrentWebContents().id)
+remote.require('./lib/utils').stopFileNavigateAndHandleNewWindowInApp(remote.getCurrentWebContents().id)
 
 remote.getCurrentWindow().webContents.executeJavaScript('window.dispatchEvent(new Event(\'webview-loaded\'))')
