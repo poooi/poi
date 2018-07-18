@@ -26,15 +26,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
   }
 })
 
-// webview focus area fix
-// This is a workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=600395
-window.onclick = (e) => {
-  remote.getCurrentWindow().webContents.executeJavaScript(`
-    $('webview').blur()
-    $('webview').focus()
-  `)
-}
-
 // Faster align setting
 const alertCSS =
 `#alert {
