@@ -83,7 +83,7 @@ export class AppMetrics extends PureComponent {
             <div className="metric-row metric-haeder">
               <span>PID</span>
               {
-                ['type', 'working/MB', 'peak/MB', 'private/MB', 'shared/MB', 'CPU/%', 'wakeup'].map(str =>
+                ['type', 'working/MB', 'peak/MB', 'CPU/%', 'wakeup'].map(str =>
                   <span key={str} title={str}>{str}</span>
                 )
               }
@@ -96,7 +96,7 @@ export class AppMetrics extends PureComponent {
                     {pidmap[metric.pid] || metric.type}
                   </span>
                   {
-                    ['workingSetSize', 'peakWorkingSetSize', 'privateBytes', 'sharedBytes'].map(prop =>
+                    ['workingSetSize', 'peakWorkingSetSize'].map(prop =>
                       <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
                     )
                   }
@@ -119,8 +119,6 @@ export class AppMetrics extends PureComponent {
               <span>
                 {total.peakWorkingSetSize}
               </span>
-              <span />
-              <span />
               <span>
                 {total.percentCPUUsage}
               </span>
