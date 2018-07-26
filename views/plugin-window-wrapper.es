@@ -88,6 +88,7 @@ export class PluginWindowWrap extends PureComponent {
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 <link rel="stylesheet" type="text/css" id="bootstrap-css">
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
