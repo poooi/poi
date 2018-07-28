@@ -224,14 +224,14 @@ const shipBaseDataSelectorFactory = memoize((shipId) =>
 // Attention: shipId here only accepts Number type,
 //   otherwise will always return undefined
 export const shipDataSelectorFactory = memoize((shipId) =>
-  createSelector([
+  arrayResultWrapper(createSelector([
     shipBaseDataSelectorFactory(shipId),
     constSelector,
   ], (ship, {$ships}) =>
     $ships && typeof ship === 'object' && ship
       ? [ship, $ships[ship.api_ship_id]]
       : undefined
-  )
+  ))
 )
 
 
@@ -260,7 +260,10 @@ const shipEquipsIdSelectorFactory = memoize((shipId) =>
   ))
 )
 const landbaseEquipsIdSelectorFactory = memoize(landbaseId =>
-  createSelector(landbaseSelectorFactory(landbaseId), landbase => landbase ? landbase.api_plane_info.map(l => l.api_slotid) : []))
+  arrayResultWrapper(
+    createSelector(
+      landbaseSelectorFactory(landbaseId),
+      landbase => landbase ? landbase.api_plane_info.map(l => l.api_slotid) : [])))
 
 // There's a Number type check
 const equipBaseDataSelectorFactory = memoize((equipId) =>
@@ -278,7 +281,7 @@ const equipBaseDataSelectorFactory = memoize((equipId) =>
 // Attention: equipId here only accepts Number type,
 //   otherwise will always return undefined
 export const equipDataSelectorFactory = memoize((equipId) =>
-  createSelector([
+  arrayResultWrapper(createSelector([
     equipBaseDataSelectorFactory(equipId),
     constSelector,
   ], (equip, {$equips}) => {
@@ -286,10 +289,11 @@ export const equipDataSelectorFactory = memoize((equipId) =>
       return
     return [equip, $equips[equip.api_slotitem_id]]
   })
+  )
 )
 
 const modifiedEquipDataSelectorFactory = memoize((equipId) =>
-  createSelector([
+  arrayResultWrapper(createSelector([
     (state) => equipBaseDataSelectorFactory(equipId)(state.state),
     (state) => constSelector(state.state),
     (state) => state.onslot,
@@ -298,6 +302,7 @@ const modifiedEquipDataSelectorFactory = memoize((equipId) =>
       return
     return [equip, $equips[equip.api_slotitem_id], onslot]
   })
+  )
 )
 
 function effectiveEquips(equipArray, slotnum) {
