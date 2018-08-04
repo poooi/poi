@@ -478,7 +478,7 @@ export class TitleBarWrapper extends PureComponent {
   }
   render () {
     return (
-      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} />
+      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={remote.getCurrentWindow()} />
     )
   }
 }
