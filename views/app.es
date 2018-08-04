@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, unstable_AsyncMode as Async } from 'react'
 import ReactDOM from 'react-dom'
 import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
@@ -80,15 +80,17 @@ class Poi extends Component {
 }
 
 ReactDOM.render(
-  <I18nextProvider i18n={i18next} >
-    <Provider store={store} >
-      <WindowEnv.Provider value={{
-        window,
-        mountPoint: document.body,
-      }}>
-        <Poi />
-      </WindowEnv.Provider>
-    </Provider>
-  </I18nextProvider>,
+  <Async>
+    <I18nextProvider i18n={i18next} >
+      <Provider store={store} >
+        <WindowEnv.Provider value={{
+          window,
+          mountPoint: document.body,
+        }}>
+          <Poi />
+        </WindowEnv.Provider>
+      </Provider>
+    </I18nextProvider>
+  </Async>,
   $('#poi')
 )
