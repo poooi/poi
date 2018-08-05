@@ -53,7 +53,7 @@ poi-info .alert {
 .overflow-anim {
   animation-delay: 2s;
   animation-duration: 18s;
-  animation-iteration-count: infinite;
+  animation-iteration-count: 2;
   animation-name: overflowscroll;
   animation-timing-function: linear;
   display: block;
