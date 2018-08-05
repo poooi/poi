@@ -89,19 +89,23 @@ const setProperWindowSize = () => {
 }
 
 const adjustSize = () => {
-  const layout = config.get('poi.layout', 'horizontal')
-  const zoomLevel = config.get('poi.zoomLevel', 1)
-  const reversed = config.get('poi.reverseLayout', false)
-  // Apply calcualted data
-  setCSSDebounced({
-    layout,
-    zoomLevel,
-    reversed,
-  })
-  window.dispatch({
-    type: '@@LayoutUpdate/webview/useFixedResolution',
-    value: window.getStore('config.poi.webview.useFixedResolution', true),
-  })
+  try {
+    const layout = config.get('poi.layout', 'horizontal')
+    const zoomLevel = config.get('poi.zoomLevel', 1)
+    const reversed = config.get('poi.reverseLayout', false)
+    // Apply calcualted data
+    setCSSDebounced({
+      layout,
+      zoomLevel,
+      reversed,
+    })
+    window.dispatch({
+      type: '@@LayoutUpdate/webview/useFixedResolution',
+      value: window.getStore('config.poi.webview.useFixedResolution', true),
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 adjustSize()
