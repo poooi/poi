@@ -20,6 +20,7 @@ const TARGET_LIST = [
   // Files
   'app.js',
   'index.html',
+  'index-plugin.html',
   'index.js',
   'LICENSE',
   'package.json',
