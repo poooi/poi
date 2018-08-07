@@ -63,7 +63,11 @@ export class PluginWindowWrap extends PureComponent {
 
   componentWillUnmount() {
     config.removeListener('config.set', this.handleZoom)
-    this.externalWindow.close()
+    try {
+      this.externalWindow.close()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   componentDidCatch = (error, info) => {
@@ -71,7 +75,11 @@ export class PluginWindowWrap extends PureComponent {
     this.setState({
       hasError: true,
     })
-    this.externalWindow.close()
+    try {
+      this.externalWindow.close()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   initWindow = () => {
@@ -118,9 +126,6 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
       this.externalWindow.remote = this.externalWindow.require('electron').remote
       this.externalWindow.remote.require('./lib/utils').stopFileNavigate(this.externalWindow.remote.getCurrentWebContents().id)
-      this.externalWindow.remote.getCurrentWindow().once('blur', () => {
-        this.externalWindow.remote.getCurrentWindow().setBackgroundColor(process.platform === 'darwin' ? '#00000000' : '#E62A2A2A')
-      })
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
