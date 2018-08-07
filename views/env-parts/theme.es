@@ -188,6 +188,21 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 })
 
 // Workaround for window transparency on 2.0.0
-remote.getCurrentWebContents().once('devtools-closed', () => {
-  remote.getCurrentWindow().setBackgroundColor('#00000000')
-})
+if (process.platform === 'win32') {
+  remote.getCurrentWindow().on('blur', () => {
+    if (config.get('poi.vibrant', 0) === 1) {
+      remote.getCurrentWindow().setBackgroundColor(window.isMain || window.blurpolyfill ? '#E62A2A2A' : '#FF2A2A2A')
+    }
+  })
+
+  remote.getCurrentWindow().on('focus', () => {
+    if (config.get('poi.vibrant', 0) === 1) {
+      remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
+      if (!window.isMain && !window.blurpolyfill) {
+        window.blurpolyfill = true
+        remote.getCurrentWindow().blur()
+        remote.getCurrentWindow().focus()
+      }
+    }
+  })
+}
