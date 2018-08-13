@@ -12,8 +12,8 @@ import { translate, Trans } from 'react-i18next'
 
 import './assets/control.css'
 
-const {$, config, toggleModal} = window
-const {openExternal} = shell
+const { config, toggleModal, getStore } = window
+const { openExternal } = shell
 
 const openItemAsync = (dir, source=null) => {
   openExternal(`file://${dir}`, {}, err => {
@@ -49,7 +49,7 @@ export class PoiControl extends Component {
     }
     const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
-    $('kan-game webview').getWebContents().capturePage(rect, image => {
+    getStore('layout.webview.ref').getWebContents().capturePage(rect, image => {
       image = image.resize({ width: Math.floor(width), height: Math.floor(height) })
       const buf = usePNG ? image.toPNG() : image.toJPEG(80)
       const now = new Date()
@@ -109,14 +109,14 @@ export class PoiControl extends Component {
     openFocusedWindowDevTools()
   }
   handleOpenWebviewDevTools = () => {
-    $('kan-game webview').openDevTools({mode: 'detach'})
+    getStore('layout.webview.ref').openDevTools({mode: 'detach'})
   }
   handleJustifyLayout = (e) => {
-    window.dispatchEvent(new Event('resize'))
+    getStore('layout.webview.ref').executeJavaScript('window.align()')
     e.preventDefault()
   }
   handleUnlockWebview = () => {
-    $('kan-game webview').executeJavaScript('window.unalign()')
+    getStore('layout.webview.ref').executeJavaScript('window.unalign()')
   }
   handleRefreshGameDialog = (e) => {
     if (e.shiftKey) {

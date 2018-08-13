@@ -39,7 +39,7 @@ const alignCSS = document.createElement('style')
 const alignInnerCSS = document.createElement('style')
 
 window.align = async function () {
-  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("$('webview').getBoundingClientRect().width") / 800
+  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("document.querySelector('webview').getBoundingClientRect().width") / 800
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
   webFrame.setLayoutZoomLevelLimits(-999999, 999999)

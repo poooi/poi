@@ -9,6 +9,7 @@ const initState = {
     width: config.get('poi.webview.width', 800),
     height: config.get('poi.webview.width', 800) * 0.6,
     useFixedResolution: true,
+    ref: null,
   },
   minishippane: {
     width: 250,
@@ -41,6 +42,14 @@ export function reducer(state=initState, {type, value}) {
       webview: {
         ...state.webview,
         useFixedResolution: value,
+      },
+    }
+  case '@@LayoutUpdate/webview/UpdateWebviewRef':
+    return {
+      ...state,
+      webview: {
+        ...state.webview,
+        ref: value,
       },
     }
   case '@@LayoutUpdate/webview/size':

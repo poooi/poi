@@ -18,7 +18,7 @@ remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
 const setCSS = ({ layout, zoomLevel, reversed }) => {
   const tabSize = ($('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')).getBoundingClientRect()
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', 800) !== 0 ?
+  const { right, bottom } =  config.get('poi.webview.width', 800) !== 0 && !config.get('poi.isolateGameWindow', false) ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
@@ -57,6 +57,9 @@ ${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
 const setCSSDebounced = debounce(setCSS, 200)
 
 const setMinSize = () => {
+  if (config.get('poi.isolateGameWindow', false)) {
+    return
+  }
   const { width, height } = window.getStore('layout.webview')
   const zoomLevel = config.get('poi.zoomLevel', 1)
   remote.getCurrentWindow().setMinimumSize(width, Math.floor(height + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))

@@ -94,6 +94,9 @@ const exitPoi = () => {
   remote.require('./lib/window').rememberMain()
   remote.require('./lib/window').closeWindows()
   window.onbeforeunload = null
+  if (window.externalWindow) {
+    window.externalWindow.remote.getCurrentWindow().setClosable(true)
+  }
   window.close()
 }
 window.onbeforeunload = (e) => {
@@ -169,7 +172,9 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 
 // Workaround for flash freeze
 const resetFreeze = debounce(() => {
-  document.querySelector('kan-game webview').executeJavaScript('document.body.style.display="flex";setTimeout(()=>document.body.style.display=null, 10)')
+  if (document.querySelector('kan-game webview')) {
+    document.querySelector('kan-game webview').executeJavaScript('document.body.style.display="flex";setTimeout(()=>document.body.style.display=null, 10)')
+  }
 }, 200)
 remote.getCurrentWindow().on('show', resetFreeze)
 remote.getCurrentWindow().on('restore', resetFreeze)
