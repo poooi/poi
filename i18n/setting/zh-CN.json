@@ -165,5 +165,7 @@
   "Who Calls The Fleet Database": "「是谁呼叫舰队」数据库",
   "Show shipgirl avatar": "显示舰娘头像",
   "Delete avatar cache": "删除头像缓存",
-  "Open plugin in new window": "在新窗口中打开插件"
+  "Open plugin in new window": "在新窗口中打开插件",
+  "Apply changes": "是否应用更改?",
+  "Game page will be refreshed": "游戏页面将被刷新。"
 }
