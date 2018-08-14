@@ -67,6 +67,7 @@ export class KanGameWindowWrapper extends PureComponent {
     try {
       this.externalWindow.remote.getCurrentWindow().setClosable(true)
       this.externalWindow.close()
+      delete window.externalWindow
     } catch (e) {
       console.error(e)
     }

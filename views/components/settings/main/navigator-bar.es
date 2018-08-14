@@ -5,7 +5,7 @@ import { translate } from 'react-i18next'
 
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 
-const { config, $, getStore } = window
+const { config, getStore } = window
 const wvStatus = {
   Loading: 0,
   Loaded: 1,
@@ -27,22 +27,27 @@ export class NavigatorBar extends React.Component {
   componentDidMount() {
     const load = () => {
       const webview = getStore('layout.webview.ref')
-      if (webview) {
-        webview.addEventListener('did-start-loading', this.onStartLoading)
-        webview.addEventListener('did-stop-loading', this.onStopLoading)
-        webview.addEventListener('did-fail-load', this.onFailLoad)
-        webview.addEventListener('will-navigate', this.onWillNavigate)
-      } else {
+      try {
+        webview.getWebContents().addListener('did-start-loading', this.onStartLoading)
+        webview.getWebContents().addListener('did-stop-loading', this.onStopLoading)
+        webview.getWebContents().addListener('did-fail-load', this.onFailLoad)
+        webview.getWebContents().addListener('will-navigate', this.onWillNavigate)
+      } catch (e) {
         setTimeout(load, 1000)
       }
     }
+    load()
   }
   componentWillUnmount() {
-    const webview = getStore('layout.webview.ref')
-    webview.removeEventListener('did-start-loading', this.onStartLoading)
-    webview.removeEventListener('did-stop-loading', this.onStopLoading)
-    webview.removeEventListener('did-fail-load', this.onFailLoad)
-    webview.removeEventListener('will-navigate', this.onWillNavigate)
+    try {
+      const webview = getStore('layout.webview.ref')
+      webview.getWebContents().removeListener('did-start-loading', this.onStartLoading)
+      webview.getWebContents().removeListener('did-stop-loading', this.onStopLoading)
+      webview.getWebContents().removeListener('did-fail-load', this.onFailLoad)
+      webview.getWebContents().removeListener('will-navigate', this.onWillNavigate)
+    } catch (e) {
+      return
+    }
   }
   // Webview Event
   onStartLoading = (e) => {

@@ -48,7 +48,10 @@ export class KanGameWrapper extends Component {
     this.alignWebviewDebounced = debounce(this.alignWebview, 200)
     this.props.dispatch({
       type: '@@LayoutUpdate/webview/UpdateWebviewRef',
-      value: this.webview.current,
+      value: {
+        ref: this.webview.current,
+        ts: Date.now(),
+      },
     })
     if (!this.props.windowMode) {
       window.addEventListener('resize', this.alignWebviewDebounced)
@@ -57,6 +60,13 @@ export class KanGameWrapper extends Component {
   }
 
   componentWillUnmount = () => {
+    this.props.dispatch({
+      type: '@@LayoutUpdate/webview/UpdateWebviewRef',
+      value: {
+        ref: false,
+        ts: Date.now(),
+      },
+    })
     if (!this.props.windowMode) {
       window.removeEventListener('resize', this.alignWebviewDebounced)
       layoutResizeObserver.unobserve(document.querySelector('kan-game webview'))
