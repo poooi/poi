@@ -4,7 +4,6 @@ import { Divider } from '../components/divider'
 import { LayoutConfig } from './layout-config'
 import { ThemeConfig } from './theme-config'
 import { ZoomingConfig } from './zooming-config'
-import { FlashQualityConfig } from './flash-quality-config'
 import { ResolutionConfig } from './resolution-config'
 import { Trans } from 'react-i18next'
 
@@ -57,10 +56,6 @@ export const DisplayConfig = () => (
     <div className="form-group">
       <Divider text={<Trans>setting:Zoom</Trans>} />
       <ZoomingConfig />
-    </div>
-    <div className="form-group">
-      <Divider text={<Trans>setting:Flash Quality & Window Mode</Trans>} />
-      <FlashQualityConfig />
     </div>
     <div className="form-group">
       <Divider text={<Trans>setting:Game resolution</Trans>} />

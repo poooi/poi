@@ -135,7 +135,6 @@
   "Create shortcut on startup (Notification may not be working without shortcut)": "起動時にショートカットを作成する (無効にする場合通知は正しく動作しない可能性があります)",
   "Show network status in notification bar": "通知領域にネットワーク状態を表示する",
   "Volume": "音量",
-  "Flash Quality & Window Mode": "Flash 画質とウインドウモード",
   "Data version": "データバージョン",
   "Update data": "データを更新する",
   "Display Final Stage Notification": "最終戦ヒントを表示する",

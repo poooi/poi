@@ -132,9 +132,6 @@
   "build": {
     "appId": "org.poooi.poi",
     "asar": true,
-    "extraResources": [
-      "PepperFlash/${os}-${arch}"
-    ],
     "npmRebuild": true,
     "mac": {
       "publish": [
