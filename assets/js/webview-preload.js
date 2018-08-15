@@ -96,23 +96,12 @@ const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
   webContent.insertCSS(alertCSS)
-  const flashQuality = config.get('poi.flashQuality', 'high')
-  const flashWindowMode = config.get('poi.flashWindowMode', 'window')
   let count = -1
   const t = setInterval(() => {
     try {
       count++
       if (count > 1245) clearInterval(t)
       const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
-      const flashNode =  iframeDoc.querySelector('#externalswf') ? iframeDoc.querySelector('#externalswf') : iframeDoc.querySelector('embed')
-      const flashParentNode = flashNode.parentNode
-      if (flashQuality !== 'high' || flashWindowMode !== 'window') {
-        const flash = flashNode.cloneNode(true)
-        flash.setAttribute('quality', flashQuality)
-        flash.setAttribute('wmode', flashWindowMode)
-        flashNode.remove()
-        flashParentNode.appendChild(flash)
-      }
       iframeDoc.querySelector('body').appendChild(alignInnerCSS)
       clearInterval(t)
       console.warn('Successed.', new Date(), `retry count: ${count}`)
