@@ -9,14 +9,15 @@ const { config } = window
 
 @connect((state, props) => ({
   webview: state.layout.webview,
-  key: get(state.layout.webview, 'width'),
+  isolateGameWindow: get(state.config, 'poi.isolateGameWindow', false),
+  key: get(state.config, 'poi.isolateGameWindow', false) ? 'i' + get(state.layout.webview, 'windowWidth') : 'n' + get(state.layout.webview, 'width'),
 }))
 export class ResolutionConfig extends Component {
   static propTypes = {
     webview: PropTypes.object,
   }
   state = {
-    width: this.props.webview.width,
+    width: parseInt(this.props.isolateGameWindow ? this.props.webview.windowWidth : this.props.webview.width),
   }
   handleSetWebviewWidthWithDebounce = (value, isDebounced) => {
     this.setState({
@@ -32,22 +33,34 @@ export class ResolutionConfig extends Component {
     }
   }
   handleSetWebviewWidth = (value) => {
-    const useFixedResolution = this.props.webview.useFixedResolution
+    const useFixedResolution = this.props.isolateGameWindow ? this.props.webview.windowUseFixedResolution : this.props.webview.useFixedResolution
     const width = parseInt(value)
     if (isNaN(width) || width < 0 || !useFixedResolution) {
       return
     }
-    config.set('poi.webview.width', width)
+    if (this.props.isolateGameWindow) {
+      config.set('poi.webview.windowWidth', width)
+    } else {
+      config.set('poi.webview.width', width)
+    }
   }
   handleSetFixedResolution = (e) => {
-    config.set('poi.webview.useFixedResolution', !this.props.webview.useFixedResolution)
+    if (this.props.isolateGameWindow) {
+      config.set('poi.webview.windowUseFixedResolution', !this.props.webview.windowUseFixedResolution)
+    } else {
+      config.set('poi.webview.useFixedResolution', !this.props.webview.useFixedResolution)
+    }
   }
   render() {
+    const { isolateGameWindow, webview } = this.props
+    const height = isolateGameWindow ? webview.windowHeight : webview.height
+    const useFixedResolution = isolateGameWindow ? webview.windowUseFixedResolution : webview.useFixedResolution
+    const labelText = `${Math.round(this.state.width / 800 * 100)}%`
     return (
       <Grid>
         <Col xs={8}>
           <Checkbox
-            checked={this.props.webview.useFixedResolution}
+            checked={useFixedResolution}
             onChange={this.handleSetFixedResolution}>
             <Trans>setting:Use certain resolution for game area</Trans>
           </Checkbox>
@@ -56,9 +69,9 @@ export class ResolutionConfig extends Component {
           <FormControl componentClass="select"
             value={this.state.width}
             onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
-            disabled={!this.props.webview.useFixedResolution} >
+            disabled={!useFixedResolution} >
             <option key={-1} value={this.state.width} hidden>
-              {Math.round(this.props.webview.width / 800 * 100)}%
+              {labelText}
             </option>
             {
               [0, 1, 2, 3].map((i) => {
@@ -76,13 +89,13 @@ export class ResolutionConfig extends Component {
             <FormControl type="number"
               value={this.state.width}
               onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, true)}
-              readOnly={!this.props.webview.useFixedResolution} />
+              readOnly={!useFixedResolution} />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             x
           </div>
           <div style={{flex: 1}}>
-            <FormControl type="number" value={Math.round(this.props.webview.height)} readOnly />
+            <FormControl type="number" value={Math.round(height)} readOnly />
           </div>
           <div style={{flex: 'none', width: 15, paddingLeft: 5}}>
             px

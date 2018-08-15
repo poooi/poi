@@ -55,7 +55,7 @@ export class KanGameWindowWrapper extends PureComponent {
   componentDidMount() {
     try {
       this.initWindow()
-      // config.addListener('config.set', this.handleZoom)
+      config.addListener('config.set', this.handleConfigChange)
     } catch(e) {
       console.error(e)
       this.props.closeWindowPortal()
@@ -63,9 +63,9 @@ export class KanGameWindowWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
-    // config.removeListener('config.set', this.handleZoom)
+    config.removeListener('config.set', this.handleConfigChange)
     try {
-      this.externalWindow.remote.getCurrentWindow().setClosable(true)
+      this.externalWindow.onbeforeunload = null
       this.externalWindow.close()
       delete window.externalWindow
     } catch (e) {
@@ -79,15 +79,46 @@ export class KanGameWindowWrapper extends PureComponent {
       hasError: true,
     })
     try {
-      this.externalWindow.remote.getCurrentWindow().setClosable(true)
+      this.externalWindow.onbeforeunload = null
       this.externalWindow.close()
     } catch (e) {
       console.error(e)
     }
   }
 
+  handleConfigChange = (path, value) => {
+    if (!this.externalWindow) return
+    switch (path) {
+    case 'poi.webview.windowUseFixedResolution': {
+      this.externalWindow.remote.getCurrentWindow().setResizable(!value)
+      if (value) {
+        const width = config.get('poi.webview.windowWidth', 800)
+        this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 800 * 480 + this.getYOffset()))
+      }
+      window.dispatch({
+        type: '@@LayoutUpdate/webview/windowUseFixedResolution',
+        value,
+      })
+      break
+    }
+    case 'poi.webview.windowWidth': {
+      this.externalWindow.remote.getCurrentWindow().setContentSize(value, Math.round(value / 800 * 480 + this.getYOffset()))
+      break
+    }
+    }
+  }
+
+  useCustomTitlebar = () => window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')
+
+  getYOffset = () => this.useCustomTitlebar() ? 60 : 30
+
   initWindow = () => {
     const windowOptions = getPluginWindowRect()
+    const windowUseFixedResolution = config.get('poi.webview.windowUseFixedResolution', true)
+    if (windowUseFixedResolution) {
+      windowOptions.width = config.get('poi.webview.windowWidth', 800)
+      windowOptions.height = Math.round(windowOptions.width / 800 * 480 + this.getYOffset())
+    }
     const windowFeatures = Object.keys(windowOptions).map(key => {
       switch (key) {
       case 'x': return `left=${windowOptions.x}`
@@ -98,6 +129,28 @@ export class KanGameWindowWrapper extends PureComponent {
     }).join(',')
     this.externalWindow = window.open(`file:///${__dirname}/../index-plugin.html?kangame`, 'plugin[kangame]', windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
+      this.externalWindow.remote = this.externalWindow.require('electron').remote
+      this.externalWindow.remote.getCurrentWindow().setResizable(!windowUseFixedResolution)
+      this.externalWindow.remote.getCurrentWebContents().executeJavaScript('window.onbeforeunload = e => e.returnValue = false')
+      this.externalWindow.remote.getCurrentWindow().setAspectRatio(800 / 480, { width: 0, height: this.getYOffset() })
+      this.externalWindow.addEventListener('resize', debounce(() => {
+        if (process.platform !== 'darwin') {
+          this.externalWindow.remote.getCurrentWindow().setSize(this.externalWindow.innerWidth, Math.round(this.externalWindow.innerWidth / 800 * 480 + this.getYOffset()))
+        }
+        if (window.getStore('layout.webview.ref')) {
+          window.getStore('layout.webview.ref').executeJavaScript('window.align()')
+        }
+        if (this.externalWindow.document.querySelector('webview')) {
+          const { width: windowWidth, height: windowHeight } = this.externalWindow.document.querySelector('webview').getBoundingClientRect()
+          window.dispatch({
+            type: '@@LayoutUpdate/webview/size',
+            value: {
+              windowWidth,
+              windowHeight,
+            },
+          })
+        }
+      }, 200))
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
@@ -127,30 +180,23 @@ export class KanGameWindowWrapper extends PureComponent {
       }
       this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
-      this.externalWindow.remote = this.externalWindow.require('electron').remote
-      this.externalWindow.remote.getCurrentWindow().setAspectRatio(800 / 480, { width: 0, height: 32 })
-      this.externalWindow.addEventListener('resize', debounce(() => {
-        if (process.platform !== 'darwin') {
-          this.externalWindow.remote.getCurrentWindow().setSize(this.externalWindow.innerWidth, Math.round(this.externalWindow.innerWidth / 800 * 480 + 62))
-        }
-        if (window.getStore('layout.webview.ref')) {
-          window.getStore('layout.webview.ref').executeJavaScript('window.align()')
-        }
-      }, 200))
       this.externalWindow.remote.require('./lib/utils').stopFileNavigate(this.externalWindow.remote.getCurrentWebContents().id)
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
       this.externalWindow.require(require.resolve('./env-parts/theme'))
-      window.externalWindow = this.externalWindow
-      this.externalWindow.remote.getCurrentWindow().setClosable(false)
-      this.externalWindow.onbeforeunload = (e) => {
+      this.externalWindow.addEventListener('beforeunload', e => {
         config.set(`poi.kangameWindow.bounds`, this.externalWindow.remote.getCurrentWindow().getBounds())
+      })
+      if (windowUseFixedResolution) {
+        const width = config.get('poi.webview.windowWidth', 800)
+        this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 800 * 480 + this.getYOffset()))
       }
+      this.externalWindow.remote.getCurrentWindow().blur()
+      this.externalWindow.remote.getCurrentWindow().focus()
       this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.zoomLevel', 1)))
     })
   }
-
 
   onZoomChange = (value) => {
     this.kangameContainer.current.style.zoom = value
@@ -169,7 +215,7 @@ export class KanGameWindowWrapper extends PureComponent {
     return ReactDOM.createPortal(
       <>
         {
-          window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
+          this.useCustomTitlebar() &&
           <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
         <WindowEnv.Provider value={{

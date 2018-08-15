@@ -8,7 +8,10 @@ const initState = {
   webview: {
     width: config.get('poi.webview.width', 800),
     height: config.get('poi.webview.width', 800) * 0.6,
-    useFixedResolution: true,
+    windowWidth: config.get('poi.webview.windowWidth', 800),
+    windowHeight: config.get('poi.webview.windowWidth', 800) * 0.6,
+    useFixedResolution: config.get('poi.webview.useFixedResolution', true),
+    windowUseFixedResolution: config.get('poi.webview.windowUseFixedResolution', true),
     ref: null,
     refts: 0,
   },
@@ -47,6 +50,14 @@ export function reducer(state=initState, {type, value}) {
       webview: {
         ...state.webview,
         useFixedResolution: value,
+      },
+    }
+  case '@@LayoutUpdate/webview/windowUseFixedResolution':
+    return {
+      ...state,
+      webview: {
+        ...state.webview,
+        windowUseFixedResolution: value,
       },
     }
   case '@@LayoutUpdate/webview/UpdateWebviewRef':
