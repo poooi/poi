@@ -39,7 +39,7 @@ const alignCSS = document.createElement('style')
 const alignInnerCSS = document.createElement('style')
 
 window.align = async function () {
-  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("document.querySelector('webview').getBoundingClientRect().width") / 800
+  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("document.querySelector('webview').getBoundingClientRect().width") / 1200
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
   webFrame.setLayoutZoomLevelLimits(-999999, 999999)
@@ -63,7 +63,7 @@ window.align = async function () {
   margin-top: 0 !important;
 }
 #game_frame {
-  width: 800px !important;
+  width: 1200px !important;
   position: absolute;
   top: 0px;
   left: 0;

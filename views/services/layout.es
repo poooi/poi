@@ -4,8 +4,8 @@ import { remote } from 'electron'
 const {config, $} = window
 
 // polyfill
-if (config.get('poi.webview.width', 800) < 0) {
-  config.set('poi.webview.width', 800)
+if (config.get('poi.webview.width', 1200) < 0) {
+  config.set('poi.webview.width', 1200)
 }
 
 const additionalStyle = document.createElement('style')
@@ -18,7 +18,7 @@ remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
 const setCSS = ({ layout, zoomLevel, reversed }) => {
   const tabSize = ($('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')).getBoundingClientRect()
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', 800) !== 0 && !config.get('poi.isolateGameWindow', false) ?
+  const { right, bottom } =  config.get('poi.webview.width', 1200) !== 0 && !config.get('poi.isolateGameWindow', false) ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
@@ -121,11 +121,11 @@ const changeBounds = () => {
   let newWidth = window.innerWidth
   if (config.get('poi.layout', 'horizontal') === 'horizontal') {
     // Previous vertical
-    newHeight = window.innerWidth / 800 * 480 + 30
+    newHeight = window.innerWidth / 1200 * 720 + 30
     newWidth = window.innerWidth / 5 * 7
   } else {
     // Previous horizontal
-    newHeight = window.innerWidth / 7 * 5 / 800 * 480 + 420
+    newHeight = window.innerWidth / 7 * 5 / 1200 * 720 + 420
     newWidth = window.innerWidth / 7 * 5
   }
   remote.getCurrentWindow().setBounds({

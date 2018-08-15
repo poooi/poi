@@ -15,7 +15,7 @@ const config = remote.require('./lib/config')
 const poiControlHeight = 30
 
 @connect(state => ({
-  configWebviewWidth: get(state, 'config.poi.webview.width', 800),
+  configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
   zoomLevel: get(state, 'config.poi.zoomLevel', 1),
   isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
   muted: get(state, 'config.poi.content.muted', false),
@@ -148,7 +148,7 @@ export class KanGameWrapper extends Component {
       }
 
       const defaultWidth = useFixedResolution ? {
-        px: 800,
+        px: 1200,
         percent: 0,
       } : isHorizontal ? {
         px: 0,
@@ -158,7 +158,7 @@ export class KanGameWrapper extends Component {
         percent: 0,
       }
       const defaultHeight = useFixedResolution ? {
-        px: 480 + zoomedPoiControlHeight,
+        px: 720 + zoomedPoiControlHeight,
         percent: 0,
       } : isHorizontal ? {
         px: windowHeight,

@@ -13,7 +13,7 @@ const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n',
 const { workArea } = screen.getPrimaryDisplay()
 const { config } = window
 const getPluginWindowRect = () => {
-  const defaultRect = { width: 800, height: 542 }
+  const defaultRect = { width: 1200, height: 780 }
   let { x, y, width, height } = config.get('poi.kangameWindow.bounds', defaultRect)
   if (x == null || y == null) {
     return defaultRect
@@ -92,8 +92,8 @@ export class KanGameWindowWrapper extends PureComponent {
     case 'poi.webview.windowUseFixedResolution': {
       this.externalWindow.remote.getCurrentWindow().setResizable(!value)
       if (value) {
-        const width = config.get('poi.webview.windowWidth', 800)
-        this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 800 * 480 + this.getYOffset()))
+        const width = config.get('poi.webview.windowWidth', 1200)
+        this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 1200 * 720 + this.getYOffset()))
       }
       window.dispatch({
         type: '@@LayoutUpdate/webview/windowUseFixedResolution',
@@ -102,7 +102,7 @@ export class KanGameWindowWrapper extends PureComponent {
       break
     }
     case 'poi.webview.windowWidth': {
-      this.externalWindow.remote.getCurrentWindow().setContentSize(value, Math.round(value / 800 * 480 + this.getYOffset()))
+      this.externalWindow.remote.getCurrentWindow().setContentSize(value, Math.round(value / 1200 * 720 + this.getYOffset()))
       break
     }
     }
@@ -116,8 +116,8 @@ export class KanGameWindowWrapper extends PureComponent {
     const windowOptions = getPluginWindowRect()
     const windowUseFixedResolution = config.get('poi.webview.windowUseFixedResolution', true)
     if (windowUseFixedResolution) {
-      windowOptions.width = config.get('poi.webview.windowWidth', 800)
-      windowOptions.height = Math.round(windowOptions.width / 800 * 480 + this.getYOffset())
+      windowOptions.width = config.get('poi.webview.windowWidth', 1200)
+      windowOptions.height = Math.round(windowOptions.width / 1200 * 720 + this.getYOffset())
     }
     const windowFeatures = Object.keys(windowOptions).map(key => {
       switch (key) {
@@ -132,10 +132,10 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.remote = this.externalWindow.require('electron').remote
       this.externalWindow.remote.getCurrentWindow().setResizable(!windowUseFixedResolution)
       this.externalWindow.remote.getCurrentWebContents().executeJavaScript('window.onbeforeunload = e => e.returnValue = false')
-      this.externalWindow.remote.getCurrentWindow().setAspectRatio(800 / 480, { width: 0, height: this.getYOffset() })
+      this.externalWindow.remote.getCurrentWindow().setAspectRatio(1200 / 720, { width: 0, height: this.getYOffset() })
       this.externalWindow.addEventListener('resize', debounce(() => {
         if (process.platform !== 'darwin') {
-          this.externalWindow.remote.getCurrentWindow().setSize(this.externalWindow.innerWidth, Math.round(this.externalWindow.innerWidth / 800 * 480 + this.getYOffset()))
+          this.externalWindow.remote.getCurrentWindow().setSize(this.externalWindow.innerWidth, Math.round(this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()))
         }
         if (window.getStore('layout.webview.ref')) {
           window.getStore('layout.webview.ref').executeJavaScript('window.align()')
@@ -189,8 +189,8 @@ export class KanGameWindowWrapper extends PureComponent {
         config.set(`poi.kangameWindow.bounds`, this.externalWindow.remote.getCurrentWindow().getBounds())
       })
       if (windowUseFixedResolution) {
-        const width = config.get('poi.webview.windowWidth', 800)
-        this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 800 * 480 + this.getYOffset()))
+        const width = config.get('poi.webview.windowWidth', 1200)
+        this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 1200 * 720 + this.getYOffset()))
       }
       this.externalWindow.remote.getCurrentWindow().blur()
       this.externalWindow.remote.getCurrentWindow().focus()

@@ -32,7 +32,7 @@ Object.defineProperty(window, 'doubleTabbed', {get: () => {
   return config.get('poi.tabarea.double', false)
 }})
 Object.defineProperty(window, 'webviewWidth', {get: () => {
-  return config.get('poi.webview.width', 800)
+  return config.get('poi.webview.width', 1200)
 }})
 Object.defineProperty(window, 'zoomLevel', {get: () => {
   return config.get('poi.zoomLevel', 1)

@@ -55,7 +55,7 @@ export class ResolutionConfig extends Component {
     const { isolateGameWindow, webview } = this.props
     const height = isolateGameWindow ? webview.windowHeight : webview.height
     const useFixedResolution = isolateGameWindow ? webview.windowUseFixedResolution : webview.useFixedResolution
-    const labelText = `${Math.round(this.state.width / 800 * 100)}%`
+    const labelText = `${Math.round(this.state.width / 1200 * 100)}%`
     return (
       <Grid>
         <Col xs={8}>
