@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import i18next from 'views/env-parts/i18next'
+import { WindowEnv } from 'views/components/etc/window-env'
 
 import './assets/alert.css'
 
-const {$, config} = window
+const { config } = window
 
 const initState = {
   overflow: false,
@@ -33,7 +34,7 @@ const pushToHistory = (history, toPush) => {
   return history
 }
 
-export const PoiAlert = class poiAlert extends Component {
+class PoiAlertInner extends Component {
   static propTypes = {
   }
   constructor(props) {
@@ -59,9 +60,9 @@ export const PoiAlert = class poiAlert extends Component {
   handleStyleChange = () => {
     setTimeout(() => {
       try {
-        const alertHeight =  $('poi-control').offsetHeight
+        const alertHeight =  this.props.$('poi-control').offsetHeight
         const historyHeight = this.alertHistory.offsetHeight
-        const bgColor = window.getComputedStyle($('body')).backgroundColor
+        const bgColor = window.getComputedStyle(this.props.$('body')).backgroundColor
         if (historyHeight === this.historyHeight && alertHeight === this.alertHeight && bgColor === this.bgColor) {
           return
         }
@@ -73,7 +74,7 @@ export const PoiAlert = class poiAlert extends Component {
         this.historyHeight = 152
       }
       this.alertHistory.style.backgroundColor = this.bgColor
-      $('poi-alert').style.height = `${this.alertHeight}px`
+      this.props.$('poi-alert').style.height = `${this.alertHeight}px`
     }, 100)
   }
   handleAddAlert = (e) => {
@@ -178,4 +179,14 @@ export const PoiAlert = class poiAlert extends Component {
       </div>
     )
   }
+}
+
+export function PoiAlert(...props) {
+  return (
+    <WindowEnv.Consumer>
+      {({ window }) => (
+        <PoiAlertInner {...props} $={(...arg) => window.document.querySelector(...arg)} />
+      )}
+    </WindowEnv.Consumer>
+  )
 }

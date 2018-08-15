@@ -165,5 +165,7 @@
   "Who Calls The Fleet Database": "「Who Calls The Fleet」データベース",
   "Show shipgirl avatar": "艦娘アバターを表示する",
   "Delete avatar cache": "艦娘アバターのキャッシュを削除する",
-  "Open plugin in new window": "新しいウィンドウで開く"
+  "Open plugin in new window": "新しいウィンドウで開く",
+  "Apply changes": "変更を適用しますか?",
+  "Game page will be refreshed": "ゲームページが更新されます。"
 }

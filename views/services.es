@@ -169,7 +169,9 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 
 // Workaround for flash freeze
 const resetFreeze = debounce(() => {
-  document.querySelector('kan-game webview').executeJavaScript('document.body.style.display="flex";setTimeout(()=>document.body.style.display=null, 10)')
+  if (document.querySelector('kan-game webview')) {
+    document.querySelector('kan-game webview').executeJavaScript('document.body.style.display="flex";setTimeout(()=>document.body.style.display=null, 10)')
+  }
 }, 200)
 remote.getCurrentWindow().on('show', resetFreeze)
 remote.getCurrentWindow().on('restore', resetFreeze)

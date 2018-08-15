@@ -87,14 +87,18 @@ export function stopNavigateAndHandleNewWindow(id) {
     if (url.startsWith('http')) {
       shell.openExternal(url)
     } else if (frameName.startsWith('plugin')) {
-      Object.assign(options, {
-        resizable: true,
+      options.resizable = true
+      if (frameName.startsWith('plugin[kangame]')) {
+        options.useContentSize = true
+      }
+      options = {
+        ...options,
         minWidth: 200,
         minHeight: 200,
         backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
         titleBarStyle: 'hidden',
         autoHideMenuBar: true,
-      })
+      }
       e.newGuest = new BrowserWindow(options)
     }
   })

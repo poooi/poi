@@ -142,5 +142,7 @@
   "PluginUpdateMsg": "have newer version. Please update your plugins.",
   "Plugin update": "Plugin update",
   "Updating": "Updating",
-  "Open plugin in new window": "Open plugin in new window"
+  "Open plugin in new window": "Open plugin in new window",
+  "Apply changes": "Apply changes?",
+  "Game page will be refreshed": "Game page will be refreshed."
 }

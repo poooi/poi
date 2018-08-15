@@ -15,6 +15,7 @@ import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
 import { KanGameWrapper } from './kan-game-wrapper'
+import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { PoiApp } from './poi-app'
 import { layoutResizeObserver } from 'views/services/layout'
 import i18next from './env-parts/i18next'
@@ -42,6 +43,7 @@ require('./services/alert')
 @connect(state => ({
   isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.reverseLayout', false),
+  isolateGameWindow: get(state, 'config.poi.isolateGameWindow', false),
 }))
 class Poi extends Component {
   componentWillUnmount() {
@@ -68,7 +70,11 @@ class Poi extends Component {
             ...!isHorizontal && { overflow: 'hidden' },
           }}
         >
-          <KanGameWrapper />
+          {
+            this.props.isolateGameWindow ?
+              <KanGameWindowWrapper /> :
+              <KanGameWrapper />
+          }
           <PoiApp />
         </poi-main>
         <ModalTrigger />
