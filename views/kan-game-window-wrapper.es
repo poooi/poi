@@ -128,7 +128,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
       this.externalWindow.remote = this.externalWindow.require('electron').remote
-      this.externalWindow.remote.getCurrentWindow().setAspectRatio(800 / 480, { width: 0, height: 62 })
+      this.externalWindow.remote.getCurrentWindow().setAspectRatio(800 / 480, { width: 0, height: 32 })
       this.externalWindow.addEventListener('resize', debounce(() => {
         if (process.platform !== 'darwin') {
           this.externalWindow.remote.getCurrentWindow().setSize(this.externalWindow.innerWidth, Math.round(this.externalWindow.innerWidth / 800 * 480 + 62))
