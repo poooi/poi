@@ -122,6 +122,5 @@
   "Display \"Tips\"": "「TIP」표시",
   "Stop Loading When Game Loaded": "게임 로딩이 완료되면 페이지 로딩을 중지",
   "Create shortcut on startup (Notification may not be working without shortcut)": "시작시 바로 가기 생성 (비활성화하면 알림이 작동하지 않을 수도 있습니다.)",
-  "Show network status in notification bar": "알림 표시 줄에 네트워크 상태를 표시",
-  "Flash Quality": "Flash 품질"
+  "Show network status in notification bar": "알림 표시 줄에 네트워크 상태를 표시"
 }

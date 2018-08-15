@@ -135,7 +135,6 @@
   "Create shortcut on startup (Notification may not be working without shortcut)": "啟動時建立捷徑 (禁用後通知可能不會正常工作)",
   "Show network status in notification bar": "在通知欄顯示網路狀態",
   "Volume": "聲音",
-  "Flash Quality & Window Mode": "Flash 畫質與視窗模式",
   "Data version": "資料版本",
   "Update data": "更新資料",
   "Display Final Stage Notification": "顯示最終戰提示",
