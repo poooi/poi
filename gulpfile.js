@@ -14,8 +14,6 @@ const { log } = require('./lib/utils')
 const {
   build,
   installPlugins,
-  getFlash,
-  getFlashAll,
   cleanFiles,
   packWinRelease,
 } = require('./build')
@@ -31,13 +29,9 @@ gulp.task('getVersion', (done) => {
   done()
 })
 
-gulp.task('get_flash', gulp.series('getVersion', () => getFlash(poiVersion)))
+gulp.task('deploy', gulp.series('getVersion'))
 
-gulp.task('get_flash_all', gulp.series('getVersion', () => getFlashAll(poiVersion)))
-
-gulp.task('deploy', gulp.series('getVersion', 'get_flash'))
-
-gulp.task('build', gulp.series('getVersion', 'get_flash_all', () => build(poiVersion)))
+gulp.task('build', gulp.series('getVersion', () => build(poiVersion)))
 
 gulp.task('build_plugins', gulp.series('getVersion', () => installPlugins(poiVersion)))
 

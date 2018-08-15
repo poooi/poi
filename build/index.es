@@ -10,8 +10,6 @@ import { runScript, npmInstall, NPM_EXEC_PATH } from './utils'
 
 const { ROOT } = global
 
-export getFlash from './get-flash'
-export getFlashAll from './get-flash-all'
 export cleanFiles from './clean-files'
 export packWinRelease from './pack-win-release'
 export installPlugins from './install-plugins'
