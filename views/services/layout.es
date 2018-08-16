@@ -66,6 +66,40 @@ const setMinSize = isolateWindow => {
   }
 }
 
+const setIsolatedMainWindowSize = isolateWindow => {
+  remote.getCurrentWindow().setMinimumSize(1, 1)
+  const layout = config.get('poi.layout', 'horizontal')
+  const reversed = config.get('poi.reverseLayout', false)
+  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
+  const bounds = remote.getCurrentWindow().getBounds()
+  if (isolateWindow) {
+    if (layout === 'horizontal') {
+      bounds.width -= webviewWidth
+      if (!reversed) {
+        bounds.x += webviewWidth
+      }
+    } else {
+      bounds.height -= webviewHeight + 30
+      if (!reversed) {
+        bounds.y += webviewHeight + 30
+      }
+    }
+  } else {
+    if (layout === 'horizontal') {
+      bounds.width += webviewWidth
+      if (!reversed) {
+        bounds.x -= webviewWidth
+      }
+    } else {
+      bounds.height += webviewHeight + 30
+      if (!reversed) {
+        bounds.y -= webviewHeight + 30
+      }
+    }
+  }
+  remote.getCurrentWindow().setBounds(bounds)
+}
+
 const setProperWindowSize = () => {
   const current = remote.getCurrentWindow()
   // Dont set size on maximized
@@ -173,6 +207,7 @@ config.on('config.set', (path, value) => {
     break
   }
   case 'poi.isolateGameWindow': {
+    setIsolatedMainWindowSize(value)
     setMinSize(value)
     break
   }
