@@ -56,13 +56,14 @@ ${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
 
 const setCSSDebounced = debounce(setCSS, 200)
 
-const setMinSize = () => {
-  if (config.get('poi.isolateGameWindow', false)) {
-    return
+const setMinSize = isolateWindow => {
+  if (isolateWindow) {
+    remote.getCurrentWindow().setMinimumSize(1, 1)
+  } else {
+    const { width, height } = window.getStore('layout.webview')
+    const zoomLevel = config.get('poi.zoomLevel', 1)
+    remote.getCurrentWindow().setMinimumSize(width, Math.floor(height + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
   }
-  const { width, height } = window.getStore('layout.webview')
-  const zoomLevel = config.get('poi.zoomLevel', 1)
-  remote.getCurrentWindow().setMinimumSize(width, Math.floor(height + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
 }
 
 const setProperWindowSize = () => {
@@ -169,6 +170,10 @@ config.on('config.set', (path, value) => {
     current.setFullScreenable(fullscreenable)
 
     adjustSize()
+    break
+  }
+  case 'poi.isolateGameWindow': {
+    setMinSize(value)
     break
   }
   default:
