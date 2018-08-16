@@ -10,4 +10,8 @@ module.exports = {
       ],
     }]
   },
+  'ignoreFiles': [
+    "**/*.es",
+    "**/*.js"
+  ]
 }
