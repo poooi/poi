@@ -25,7 +25,7 @@ const openItemAsync = (dir, source=null) => {
 }
 
 // Controller icon bar
-const {openFocusedWindowDevTools} = remote.require('./lib/window')
+// const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
 @translate()
 @connect((state, props) => ({
@@ -106,7 +106,8 @@ export class PoiControl extends Component {
     config.set('poi.layouteditable', !this.props.editable)
   }
   handleOpenDevTools = () => {
-    openFocusedWindowDevTools()
+    // openFocusedWindowDevTools()
+    remote.getCurrentWindow().openDevTools()
   }
   handleOpenWebviewDevTools = () => {
     getStore('layout.webview.ref').openDevTools({mode: 'detach'})
