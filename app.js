@@ -88,6 +88,13 @@ if (process.platform === 'win32') {
 // Test: enable JavaScript experimental features
 app.commandLine.appendSwitch('js-flags', "--harmony --harmony-do-expressions")
 
+// Fix GPU acceleration
+app.commandLine.appendSwitch('enable-accelerated-2d-canvas', 'true')
+app.commandLine.appendSwitch('enable-gpu-rasterization', 'true')
+app.commandLine.appendSwitch('enable-native-gpu-memory-buffers', 'true')
+app.commandLine.appendSwitch('enable-surface-synchronization', 'true')
+app.commandLine.appendSwitch('enable-checker-imaging', 'true')
+
 // Cache size
 const cacheSize = parseInt(config.get('poi.cacheSize'))
 if (Number.isInteger(cacheSize)) {
