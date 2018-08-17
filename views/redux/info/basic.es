@@ -2,9 +2,6 @@ import { compareUpdate } from 'views/utils/tools'
 
 export function reducer(state={}, {type, body}) {
   switch (type) {
-  // Does this api still exist?
-  case '@@Response/kcsapi/api_get_member/basic':
-    return compareUpdate(state, body)
   case '@@Response/kcsapi/api_port/port':
   case '@@Response/kcsapi/api_get_member/require_info':
     return compareUpdate(state, body.api_basic)

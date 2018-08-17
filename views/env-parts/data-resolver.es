@@ -42,7 +42,7 @@ let locked = false
 const parseResponses = () => {
   const {dispatch} = window
   let [method, [domain, path, url], body, postBody, time] = responses.shift()
-  if (['/kcs2/js/main.js', '/kcsapi/api_start2/getData', '/kcsapi/api_get_member/basic'].includes(path)) {
+  if (['/kcs2/js/main.js', '/kcsapi/api_start2/getData'].includes(path)) {
     handleProxyGameStart()
   }
   if (!isGameApi(path)) {
