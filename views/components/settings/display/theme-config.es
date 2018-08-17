@@ -8,10 +8,9 @@ import PropTypes from 'prop-types'
 import { get } from 'lodash'
 import { FolderPickerConfig } from '../components/folder-picker'
 import { fileUrl } from 'views/utils/tools'
-import { avatarWorker } from 'views/services/worker'
 import { translate } from 'react-i18next'
 
-const { config, toggleModal, EXROOT, APPDATA_PATH } = window
+const { config, toggleModal, EXROOT } = window
 const { openItem } = shell
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
@@ -54,15 +53,6 @@ export class ThemeConfig extends Component {
       return openItem(d)
     } catch (e) {
       return toggleModalWithDelay(this.props.t('setting:Edit custom CSS'), this.props.t('NoPermission'))
-    }
-  }
-  handleDeleteAvatarCache = async e => {
-    try {
-      const d = path.join(APPDATA_PATH, 'avatar')
-      await fs.remove(d)
-      avatarWorker.port.postMessage([ 'Initialize', true, window.APPDATA_PATH ])
-    } catch (e) {
-      return toggleModalWithDelay(this.props.t('setting:Delete avatar cache'), this.props.t('NoPermission'))
     }
   }
   handleSetSVGIcon = () => {
@@ -157,13 +147,10 @@ export class ThemeConfig extends Component {
             {t('setting:Use Gridded Plugin Menu')}
           </Checkbox>
         </Col>
-        <Col xs={6}>
+        <Col xs={12}>
           <Checkbox checked={this.props.enableAvatar} onChange={this.handleSetAvatar}>
             {t('setting:Show shipgirl avatar')}
           </Checkbox>
-        </Col>
-        <Col xs={6}>
-          <Button bsStyle='primary' onClick={this.handleDeleteAvatarCache} block>{t('setting:Delete avatar cache')}</Button>
         </Col>
       </Grid>
     )

@@ -74,15 +74,15 @@ export function reducer(state=[], {type, postBody, body}) {
     const fleet = fleets[fleetId] || {api_ship: []}
     const pos = parseInt(postBody.api_ship_idx)
     const shipId = fleet.api_ship[pos] || -1
-    // Remove all
-    if (pos == -1) {
+    const tgtShipId = parseInt(postBody.api_ship_id)
+    // Remove all but flagship
+    if (tgtShipId === -2) {
       fleets[fleetId] = {
         ...fleet,
         api_ship: [fleet.api_ship[0], -1, -1, -1, -1, -1],
       }
       return fleets
     }
-    const tgtShipId = parseInt(postBody.api_ship_id)
     const [tgtFleetId, tgtPos] = (tgtShipId == -1) ? [-1, -1] : findShip(fleets, tgtShipId)
     // Be cautious to the order of double "setShip"s
     // which takes place when tgtShipId != -1 && tgtFleetId != -1.
