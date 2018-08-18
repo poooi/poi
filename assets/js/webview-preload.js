@@ -95,14 +95,14 @@ const webContent = remote.getCurrentWebContents()
 const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
+  document.querySelector('body').appendChild(alignInnerCSS)
   webContent.insertCSS(alertCSS)
   let count = -1
   const t = setInterval(() => {
     try {
       count++
-      if (count > 1245) clearInterval(t)
-      const iframeDoc = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentWindow.document : document
-      iframeDoc.querySelector('body').appendChild(alignInnerCSS)
+      if (count > 100) clearInterval(t)
+      document.querySelector('#game_frame').contentWindow.document.querySelector('body').appendChild(alignInnerCSS)
       clearInterval(t)
       console.warn('Successed.', new Date(), `retry count: ${count}`)
     } catch (e) {
