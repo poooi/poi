@@ -19,10 +19,17 @@ const exeCodeOnWindowHasReloadArea = (win, f) => {
 
 const resetViews = () => {
   const { availWidth, availHeight, availTop, availLeft } = window.screen
-  remote.getCurrentWindow().setPosition(availLeft, availTop)
-  config.set('poi.webview', {})
+  const webViewConfig = {}
+  if (availHeight < 900) { // setting bar will hide below 900 px
+    webViewConfig.width = 800
+  }
+  config.set('poi.layout', 'horizontal')
+  config.set('poi.webview', webViewConfig)
   config.set('poi.zoomLevel', 1)
-  remote.getCurrentWindow().setSize(availWidth, availHeight)
+  window.setImmediate(() => {
+    remote.getCurrentWindow().setPosition(availLeft, availTop)
+    remote.getCurrentWindow().setSize(availWidth, availHeight)
+  })
 }
 
 let template = []
