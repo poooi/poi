@@ -4,8 +4,16 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { debounce, get } from 'lodash'
 import { Trans } from 'react-i18next'
+import { screen } from 'electron'
 
 const { config } = window
+
+function getMinArea (displays) {
+  return {
+    screenWidth: Math.max(...displays.map(d => d.bounds.width)),
+    screenHeight: Math.max(...displays.map(d => d.bounds.height)),
+  }
+}
 
 @connect((state, props) => ({
   webview: state.layout.webview,
@@ -18,6 +26,7 @@ export class ResolutionConfig extends Component {
   }
   state = {
     width: parseInt(this.props.isolateGameWindow ? this.props.webview.windowWidth : this.props.webview.width),
+    ...getMinArea(screen.getAllDisplays()),
   }
   handleSetWebviewWidthWithDebounce = (value, isDebounced) => {
     this.setState({
@@ -38,6 +47,12 @@ export class ResolutionConfig extends Component {
     if (isNaN(width) || width < 0 || !useFixedResolution) {
       return
     }
+    if (width > this.state.screenWidth || width * 0.6 > this.state.screenHeight) {
+      this.setState({
+        width: config.get(this.props.isolateGameWindow ? 'poi.webview.windowWidth' : 'poi.webview.width', this.defauleWidth),
+      })
+      return
+    }
     if (this.props.isolateGameWindow) {
       config.set('poi.webview.windowWidth', width)
     } else {
@@ -50,6 +65,26 @@ export class ResolutionConfig extends Component {
     } else {
       config.set('poi.webview.useFixedResolution', !this.props.webview.useFixedResolution)
     }
+  }
+  handleScreenStatusChange = () => {
+    this.setState(getMinArea(screen.getAllDisplays()))
+  }
+  componentDidMount = () => {
+    screen.addListener('display-added', this.handleScreenStatusChange)
+    screen.addListener('display-removed', this.handleScreenStatusChange)
+    screen.addListener('display-metrics-changed', this.handleScreenStatusChange)
+    if (this.state.screenHeight < 900 || this.state.screenWidth < 1500) {
+      config.setDefault('poi.webview.width', 800)
+      this.defauleWidth = 800
+    } else {
+      config.setDefault('poi.webview.width', 1200)
+      this.defauleWidth = 1200
+    }
+  }
+  componentWillUnmount = () => {
+    screen.removeListener('display-added', this.handleScreenStatusChange)
+    screen.removeListener('display-removed', this.handleScreenStatusChange)
+    screen.removeListener('display-metrics-changed', this.handleScreenStatusChange)
   }
   render() {
     const { isolateGameWindow, webview } = this.props
