@@ -41,7 +41,7 @@ const resolveBody = async (encoding, body) => {
   return decoded
 }
 const isStaticResource = (pathname, hostname) => {
-  if (pathname.startsWith('/kcs/') && pathname.indexOf('Core.swf') === -1) {
+  if (pathname.startsWith('/kcs2/')) {
     return true
   }
   if (pathname.startsWith('/gadget/')) {
