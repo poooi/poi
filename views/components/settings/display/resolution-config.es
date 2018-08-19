@@ -49,7 +49,7 @@ export class ResolutionConfig extends Component {
     }
     if (width > this.state.screenWidth || width * 0.6 > this.state.screenHeight) {
       this.setState({
-        width: config.get(this.props.isolateGameWindow ? 'poi.webview.windowWidth' : 'poi.webview.width', this.defauleWidth),
+        width: config.get(this.props.isolateGameWindow ? 'poi.webview.windowWidth' : 'poi.webview.width', this.defaultWidth),
       })
       return
     }
@@ -75,10 +75,10 @@ export class ResolutionConfig extends Component {
     screen.addListener('display-metrics-changed', this.handleScreenStatusChange)
     if (this.state.screenHeight < 900 || this.state.screenWidth < 1500) {
       config.setDefault('poi.webview.width', 800)
-      this.defauleWidth = 800
+      this.defaultWidth = 800
     } else {
       config.setDefault('poi.webview.width', 1200)
-      this.defauleWidth = 1200
+      this.defaultWidth = 1200
     }
   }
   componentWillUnmount = () => {
