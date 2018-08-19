@@ -40,7 +40,7 @@ export const damagedCheck = ({$ships, $equips}, {sortieStatus, escapedPos}, {fle
 }
 
 export const gameRefreshPage = () => {
-  window.getStore('layout.webview.ref').reload()
+  window.getStore('layout.webview.ref').getWebContents().reload()
 }
 
 export const gameRefreshPageIgnoringCache = () => {
