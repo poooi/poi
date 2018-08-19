@@ -112,7 +112,7 @@ export class ResolutionConfig extends Component {
               [0, 1, 2, 3].map((i) => {
                 return (
                   <option key={i} value={(i * 400 + 400)}>
-                    {i * 50 + 50}%
+                    {Math.round((i * 400 + 400) / 1200 * 100)}%
                   </option>
                 )
               })
