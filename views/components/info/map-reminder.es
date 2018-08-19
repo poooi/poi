@@ -37,29 +37,30 @@ const MapRoutes = connect(
   const bossSpotLoc = mapspots[get(maproutes, `${bossSpot}.1`)] || [-100, -100]
   const locHistory = spotHistory.map(i => mapspots[get(maproutes, `${i}.1`)] || [-1, -1])
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
+  const SCALE = 1 / 6
   return (
     <div>
-      <svg width="225" height="120" viewBox="0 0 225 120" className="maproutes">
+      <svg width="190" height="110" viewBox="0 0 190 110" className="maproutes">
         {// Draw all lines
           map(maproutes, ([beg, end], i) => {
             if (!(mapspots[beg] && mapspots[end])) return null
             const [begX, begY] = mapspots[beg]
             const [endX, endY] = mapspots[end]
-            return <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} />
+            return <line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} />
           })}
         {// Draw passed lines
           lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-            begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX / 200 * 3)} y1={parseInt(begY / 200 * 3)} x2={parseInt(endX / 200 * 3)} y2={parseInt(endY / 200 * 3)} className="passed" /> : <span />
+            begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} className="passed" /> : <span />
           )}
-        <rect x={parseInt(bossSpotLoc[0] / 200 * 3) - 4.5} y={parseInt(bossSpotLoc[1] / 200 * 3) - 4.5} width={9} height={9}
+        <rect x={parseInt(bossSpotLoc[0] * SCALE) - 4.5} y={parseInt(bossSpotLoc[1] * SCALE) - 4.5} width={9} height={9}
           className='boss' />
         {// Draw all points
           map(mapspots, ([x, y], id) =>
-            <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6} />
+            <rect key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6} />
           )}
         {// Draw passed points again, highlighting the active one
           map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-            x > 0 ? <rect key={id} x={parseInt(x / 200 * 3) - 3} y={parseInt(y / 200 * 3) - 3} width={6} height={6}
+            x > 0 ? <rect key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6}
               className={id == activeSpot ? 'active' : 'passed'} /> : <span />
           )}
       </svg>
