@@ -36,7 +36,27 @@ const alertCSS =
 `
 
 const alignCSS = document.createElement('style')
-const alignInnerCSS = document.createElement('style')
+
+function handleSpacingTop(show) {
+  const status = show ? 'block' : 'none'
+  if (document.querySelector('#spacing_top')) {
+    document.querySelector('#spacing_top').style.display = status
+  }
+  if (!document.querySelector('#game_frame')) {
+    return
+  }
+  function t(count) {
+    try {
+      if (count > 20) {
+        return
+      }
+      document.querySelector('#game_frame').contentWindow.document.querySelector('#spacing_top').style.display = status
+    } catch (e) {
+      setTimeout(() => t(count + 1), 1000)
+    }
+  }
+  t(0)
+}
 
 window.align = async function () {
   const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("document.querySelector('webview').getBoundingClientRect().width") / 1200
@@ -75,16 +95,15 @@ window.align = async function () {
   display: none !important;
 }
 `
-  alignInnerCSS.innerHTML = `
-#spacing_top {
-  display: none;
-}
-`
+  handleSpacingTop(false)
 }
 
 window.unalign = () => {
   alignCSS.innerHTML = ""
-  alignInnerCSS.innerHTML = ""
+  if (document.querySelector('#spacing_top')) {
+    document.querySelector('#spacing_top').style.display = 'block'
+  }
+  handleSpacingTop(true)
 }
 
 window.align()
@@ -95,20 +114,7 @@ const webContent = remote.getCurrentWebContents()
 const handleDOMContentLoaded = () => {
   window.align()
   document.querySelector('body').appendChild(alignCSS)
-  document.querySelector('body').appendChild(alignInnerCSS)
   webContent.insertCSS(alertCSS)
-  let count = -1
-  const t = setInterval(() => {
-    try {
-      count++
-      if (count > 100) clearInterval(t)
-      document.querySelector('#game_frame').contentWindow.document.querySelector('body').appendChild(alignInnerCSS)
-      clearInterval(t)
-      console.warn('Successed.', new Date(), `retry count: ${count}`)
-    } catch (e) {
-      console.warn('Failed. Will retry in 1000ms.')
-    }
-  }, 1000)
   document.removeEventListener("DOMContentLoaded", handleDOMContentLoaded)
 }
 
