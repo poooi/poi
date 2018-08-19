@@ -17,7 +17,7 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
   const uri = getShipImgPath(props.mstId, 'banner', props.isDamaged)
   const ip = get(state, 'info.server.ip', '203.104.209.71')
   const version = get(get(state, 'const.$shipgraph', []).find(a => a.api_id === props.mstId), 'api_version.0')
-  let url = `http://${ip}/${uri}`
+  let url = `http://${ip}${uri}`
   if (version) {
     url = `${url}?version=${version}`
   }
