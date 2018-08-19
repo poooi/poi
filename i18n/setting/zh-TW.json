@@ -165,5 +165,8 @@
     "Show shipgirl avatar": "顯示艦娘頭像",
     "Open plugin in new window": "在新視窗中開啟擴展程式",
     "Apply changes": "是否應用更改?",
-    "Game page will be refreshed": "遊戲頁面將被重新整理。"
+    "Game page will be refreshed": "遊戲頁面將被重新整理。",
+    "GPU Status": "GPU 信息",
+    "Feature": "特性",
+    "Status": "狀態"
 }

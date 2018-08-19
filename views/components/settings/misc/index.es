@@ -15,6 +15,7 @@ import { AppMetrics } from './app-metrics'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
 import { OpenCollective } from './open-collective'
+import { GPUStatus } from './gpu-status'
 
 import '../assets/misc.css'
 
@@ -105,6 +106,10 @@ export class Misc extends Component {
             <WctfDB />
           </Col>
         </Grid>
+        <Divider text={t('setting:GPU')} />
+        <Col xs={12}>
+          <GPUStatus />
+        </Col>
         <Divider text={t('setting:Performance Monitor')} />
         <Col xs={12}>
           <AppMetrics />

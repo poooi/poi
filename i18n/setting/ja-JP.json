@@ -165,5 +165,8 @@
     "Show shipgirl avatar": "艦娘アバターを表示する",
     "Open plugin in new window": "新しいウィンドウで開く",
     "Apply changes": "変更を適用しますか?",
-    "Game page will be refreshed": "ゲームページが更新されます。"
+    "Game page will be refreshed": "ゲームページが更新されます。",
+    "GPU Status": "GPU 状態",
+    "Feature": "特徴",
+    "Status": "状態"
 }

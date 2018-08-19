@@ -165,5 +165,8 @@
     "Show shipgirl avatar": "显示舰娘头像",
     "Open plugin in new window": "在新窗口中打开插件",
     "Apply changes": "是否应用更改?",
-    "Game page will be refreshed": "游戏页面将被刷新。"
+    "Game page will be refreshed": "游戏页面将被刷新。",
+    "GPU Status": "GPU 信息",
+    "Feature": "特性",
+    "Status": "状态"
 }
