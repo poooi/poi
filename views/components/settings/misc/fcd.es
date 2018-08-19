@@ -13,7 +13,6 @@ const { ROOT } = window
 const serverList = [
   "https://poi.io/fcd/",
   "https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/",
-  "http://7xj6zx.com1.z0.glb.clouddn.com/",
 ]
 
 const fetchHeader = new Headers()
