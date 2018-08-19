@@ -26,6 +26,10 @@ div[role='tooltip'], .poi-app-container, poi-info {
   ${zoomLevel !== 1 ? `zoom: ${zoomLevel};` : ''}
 }
 
+.main-panel-content {
+  ${zoomLevel !== 1 ? `width: ${Math.round(zoomLevel * 100)}%;` : ''}
+}
+
 .dropdown-menu[aria-labelledby=plugin-dropdown] {
   max-height: ${tabSize.height}px;
 }
