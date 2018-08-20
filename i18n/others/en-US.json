@@ -55,11 +55,11 @@
   "Refresh game": "Refresh game",
   "Arrange panel": "Arrange panel",
   "poi will never modify your game data package, but please use trusted executables and plugins!": "poi will never modify your game data package, but please use trusted executables and plugins!",
-  "poi does not use proxy by default, which you may change in settings panel.": "poi does not use proxy by default, which you may change in settings panel.",
-  "For cookie method, check Editing DMM Cookie Region Flag setting.": "For cookie method, check Editing DMM Cookie Region Flag setting.",
-  "For Shadowsocks and other Socks5 proxies, use Socks5.": "For Shadowsocks and other Socks5 proxies, use Socks5.",
+  "poi does not use proxy by default, which you may change in settings panel": "poi does not use proxy by default, which you may change in settings panel.",
+  "For cookie method, check Editing DMM Cookie Region Flag setting": "For cookie method, check Editing DMM Cookie Region Flag setting.",
+  "For Shadowsocks and other Socks5 proxies, use Socks5": "For Shadowsocks and other Socks5 proxies, use Socks5.",
   "For VPN, simply leave it unset.": "For VPN, simply leave it unset.",
-  "If you see error on displaying, manually set content size and it will auto-adjust.": "If you see error on displaying, manually set content size and it will auto-adjust.",
-  "If poi is under performance, you may disable some plugins and do a restart.": "If poi is under performance, you may disable some plugins and do a restart.",
+  "If you see error on displaying, manually set content size and it will auto-adjust": "If you see error on displaying, manually set content size and it will auto-adjust.",
+  "If poi is under performance, you may disable some plugins and do a restart": "If poi is under performance, you may disable some plugins and do a restart.",
   "Draft an issue, contribute your code, or plugins for poi": "Draft an issue, contribute your code, or plugins for poi"
 }

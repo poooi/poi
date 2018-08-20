@@ -41,20 +41,20 @@ if (config.get('poi.first', '0.0.0') != POI_VERSION) {
       <p style={{color: '#FFCCFF', fontWeight: 'bold', fontSize: 'large'}}>
         {i18next.t('poi will never modify your game data package, but please use trusted executables and plugins!')}
       </p>
-      <p>{i18next.t('poi does not use proxy by default, which you may change in settings panel.')}</p>
+      <p>{i18next.t('poi does not use proxy by default, which you may change in settings panel')}</p>
       <div>
         <ul>
           {
             isCN
-              ? <li>{i18next.t('For Shimakaze Go, use HTTP proxy with address 127.0.0.1 and port 8099 (default case).')}</li>
-              : <li>{i18next.t('For cookie method, check Editing DMM Cookie Region Flag setting.')}</li>
+              ? <li>{i18next.t('For Shimakaze Go, use HTTP proxy with address 127_0_0_1 and port 8099 (default case)')}</li>
+              : <li>{i18next.t('For cookie method, check Editing DMM Cookie Region Flag setting')}</li>
           }
-          <li>{i18next.t('For Shadowsocks and other Socks5 proxies, use Socks5.')}</li>
-          <li>{i18next.t('For VPN, simply leave it unset.')}</li>
+          <li>{i18next.t('For Shadowsocks and other Socks5 proxies, use Socks5')}</li>
+          <li>{i18next.t('For VPN, simply leave it unset')}</li>
         </ul>
       </div>
-      <p>{i18next.t('If you see error on displaying, manually set content size and it will auto-adjust.')}</p>
-      <p>{i18next.t('If poi is under performance, you may disable some plugins and do a restart.')}</p>
+      <p>{i18next.t('If you see error on displaying, manually set content size and it will auto-adjust')}</p>
+      <p>{i18next.t('If poi is under performance, you may disable some plugins and do a restart')}</p>
       {isEn && <p>If you prefer Kata to Kanji, you may try translator plugin.</p>}
       {isHan && <p>{i18next.t('更多帮助参考')} poi wiki - https://github.com/poooi/poi/wiki。</p>}
       {isHan && <p>{i18next.t('poi 交流群：')}378320628。</p>}
