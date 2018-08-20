@@ -56,6 +56,8 @@ Tips:
 
 - If you have installed packages with npm < 5.0, it is highly recommended to completely remove current `node_modules` folder and re-run `npm install`.
 
+- If you use windows subsystem for linux(WSL), use `export npm_config_platform=win32 && npm install` instead of `npm install` for correct electron installation. 
+
 - If you have trouble downloading electron executables from github/amazonaws, [you may set ELECTRON_MIRROR environment variable](https://github.com/electron-userland/electron-download).
 
 ## Available Plugins
