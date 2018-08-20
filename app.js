@@ -93,7 +93,7 @@ app.commandLine.appendSwitch('js-flags', "--harmony --harmony-do-expressions")
 app.commandLine.appendSwitch('enable-gpu-rasterization', 'true')
 app.commandLine.appendSwitch('enable-native-gpu-memory-buffers', 'true')
 // app.commandLine.appendSwitch('enable-surface-synchronization', 'true')
-app.commandLine.appendSwitch('enable-checker-imaging', 'true')
+// app.commandLine.appendSwitch('enable-checker-imaging', 'true')
 
 // Cache size
 const cacheSize = parseInt(config.get('poi.cacheSize'))
