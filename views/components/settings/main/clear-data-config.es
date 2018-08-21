@@ -14,10 +14,12 @@ import {
   Alert,
 } from 'react-bootstrap'
 import { translate } from 'react-i18next'
+import { remove } from 'fs-extra'
+import { join } from 'path'
 
 const { session } = remote.require('electron')
 
-const { config, toggleModal } = window
+const { config, toggleModal, APPDATA_PATH } = window
 
 @translate(['setting'])
 @connect(state => ({
@@ -31,6 +33,8 @@ export class ClearDataConfig extends Component {
     cacheSize: 0,
   }
   handleClearCookie = (e) => {
+    remove(join(APPDATA_PATH, 'Cookies')).catch(e => null)
+    remove(join(APPDATA_PATH, 'Cookies-journal')).catch(e => null)
     remote.getCurrentWebContents().session.clearStorageData({storages: ['cookies']}, () => {
       toggleModal(this.props.t('setting:Delete cookies'), this.props.t('setting:Success!'))
     })
