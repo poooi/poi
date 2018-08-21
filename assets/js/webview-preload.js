@@ -1,6 +1,8 @@
 const { remote, webFrame } = require('electron')
 const config = remote.require('./lib/config')
 
+window.ipc = remote.require('./lib/ipc')
+
 if (config.get('poi.content.muted', false)) {
   remote.getCurrentWebContents().setAudioMuted(true)
 }
