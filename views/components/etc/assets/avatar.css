@@ -10,8 +10,9 @@
 .ship-avatar-bg-container {
   position: absolute;
   width: 100%;
-  height: 93%;
+  height: 98%;
   overflow: hidden;
+  max-height: calc(100% - 2px);
 }
 
 .ship-avatar-bg {
