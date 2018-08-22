@@ -6,6 +6,7 @@ export const shipImgType = [
   'remodel',
   'character_up',
   'character_full',
+  'full',
   'supply_character',
   'album_status',
 ]
