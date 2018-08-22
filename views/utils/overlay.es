@@ -244,7 +244,7 @@ class OverlayTriggerInner extends React.Component {
 
 export const OverlayTrigger = ({ children, ...props }) => (
   <WindowEnv.Consumer>
-    {({ mountPoint }) => (
+    {({ mountPoint = document.body }) => (
       <OverlayTriggerInner container={mountPoint} {...props}>
         { children }
       </OverlayTriggerInner>
@@ -254,7 +254,7 @@ export const OverlayTrigger = ({ children, ...props }) => (
 
 export const Modal = ({ children, ...props }) => (
   <WindowEnv.Consumer>
-    {({ mountPoint }) => (
+    {({ mountPoint = document.body }) => (
       <OriginModal container={mountPoint} {...props}>
         { children }
       </OriginModal>
