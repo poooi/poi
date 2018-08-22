@@ -13,12 +13,13 @@
   height: 98%;
   overflow: hidden;
   max-height: calc(100% - 2px);
+  display: flex;
+  align-items: center;
 }
 
 .ship-avatar-bg {
   position: absolute;
-  width: 200%;
+  width: 600%;
   z-index: -1;
-  left: -100%;
-  top: -100%;
+  left: -250%;
 }
