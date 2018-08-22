@@ -70,5 +70,5 @@ export function getShipImgPath(id, type, damaged, ip, version) {
 }
 
 export function getShipBackgroundPath(r, ip) {
-  return join(ip, `/kcs2/img/common/ship_bg/screen/${rank[r]}.png`)
+  return join(ip, `/kcs2/img/common/ship_bg/card/${rank[r]}.png`)
 }

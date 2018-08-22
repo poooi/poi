@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { remove } from 'fs-extra'
 import { getShipImgPath, getShipBackgroundPath } from 'views/utils/ship-img'
+import classnames from 'classnames'
 
 import './assets/avatar.css'
 
@@ -25,12 +26,14 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
     url,
     bgurl,
     marginMagic,
+    rank,
   }
 })
 export class Avatar extends PureComponent {
   static propTypes = {
     mstId: PropTypes.number.isRequired,
     height: PropTypes.number,
+    rank: PropTypes.number,
     url: PropTypes.string.isRequired,
     bgurl: PropTypes.string.isRequired,
     isDamaged: PropTypes.bool,
@@ -58,7 +61,10 @@ export class Avatar extends PureComponent {
           !this.props.isEnemy && (
             <div className="ship-avatar-bg-container">
               <img
-                className="ship-avatar-bg"
+                className={classnames("ship-avatar-bg", {
+                  "ship-avatar-bg-nr": this.props.rank < 6,
+                  "ship-avatar-bg-sr": this.props.rank >= 6,
+                })}
                 src={this.props.bgurl} />
             </div>
           )

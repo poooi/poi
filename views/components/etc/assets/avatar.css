@@ -19,7 +19,16 @@
 
 .ship-avatar-bg {
   position: absolute;
-  width: 600%;
+  width: 200%;
   z-index: -1;
-  left: -310%;
+}
+
+.ship-avatar-bg-sr {
+  height: 180%;
+  left: -60%;
+}
+
+.ship-avatar-bg-nr {
+  left: -30%;
+  top: -28%;
 }
