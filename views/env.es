@@ -91,8 +91,11 @@ window.ReactBootstrap.Input = class InputWorkAround extends React.Component {
     }
   }
 }
-window.ReactBootstrap.OverlayTrigger = OverlayTrigger
-window.ReactBootstrap.Modal = Modal
+
+if (window.isMain) {
+  window.ReactBootstrap.OverlayTrigger = OverlayTrigger
+  window.ReactBootstrap.Modal = Modal
+}
 
 // Polyfills
 Object.clone = (obj) =>
