@@ -108,7 +108,7 @@ if ('win32' === process.platform) {
 window.allThemes = normalThemes
 window.normalThemes = normalThemes
 window.vibrantThemes = vibrantThemes
-config.setDefault('poi.theme', 'paperdark')
+config.setDefault('poi.theme', 'darklykai')
 window.setVibrancy(config.get('poi.vibrant', null))
 
 const themeChangeHandler = (path, value) => {
