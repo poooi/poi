@@ -8,6 +8,7 @@
   "Resources": "资源变化",
   "failed to save the screenshot": "截图保存失败",
   "screenshot saved to": "截图保存在",
+  "screenshot saved to clipboard": "截图已保存到剪贴板",
   "Open cache dir": "打开缓存目录",
   "Open screenshot dir": "打开截图目录",
   "NoPermission": "打开失败，可能没有创建文件夹的权限",
