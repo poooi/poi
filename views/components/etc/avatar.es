@@ -15,7 +15,7 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
 
 @connect((state, props) => {
   const isEnemy = props.mstId >= 1500
-  const marginMagic = props.marginMagic || isEnemy ? 1.5 : get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`)
+  const marginMagic = props.marginMagic || (isEnemy ? 1.5 : get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`))
   const ip = get(state, 'info.server.ip', '203.104.209.71')
   const version = get(get(state, 'const.$shipgraph', []).find(a => a.api_id === props.mstId), 'api_version.0')
   const rank = get(state, `const.$ships.${props.mstId}.api_backs`, 7)
@@ -52,7 +52,7 @@ export class Avatar extends PureComponent {
       }}>
         <img
           className="ship-avatar"
-          style={{ height: this.props.height, marginLeft: -Math.round((this.props.marginMagic) * this.props.height) }}
+          style={{ height: this.props.height, marginLeft: -Math.round(this.props.marginMagic * this.props.height) }}
           src={this.props.url} />
         {
           !this.props.isEnemy && (
