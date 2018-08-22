@@ -84,7 +84,7 @@ export class PoiControl extends Component {
   }
   handleOpenMakaiFolder = () => {
     let dir = config.get('poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH'))
-    dir = path.join(dir, 'KanColle', 'kcs', 'resources', 'swf', 'ships')
+    dir = path.join(dir, 'KanColle', 'kcs2', 'resources', 'ship')
     try {
       fs.ensureDirSync(dir)
       openItemAsync(dir, 'handleOpenMakaiFolder')

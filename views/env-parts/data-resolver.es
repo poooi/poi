@@ -148,7 +148,7 @@ const handleProxyNetworkErrorRetry = ([domain, path, url], counter) =>{
 }
 
 const handleProxyNetworkError = ([domain, path, url]) => {
-  if (url.startsWith('http://www.dmm.com/netgame/') || url.includes('/kcs/') || url.includes('/kcsapi/')) {
+  if (url.startsWith('http://www.dmm.com/netgame/') || url.includes('/kcs2/') || url.includes('/kcsapi/')) {
     window.dispatchEvent(new Event('network.error'))
   }
 }
