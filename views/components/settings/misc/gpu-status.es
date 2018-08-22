@@ -12,8 +12,6 @@ export class GPUStatus extends PureComponent {
     const { t } = this.props
     const status = this.getGPUFeatureStatus()
 
-    console.log(status, entries(status))
-
     const content = <Table striped bordered hover>
       <thead>
         <tr>
