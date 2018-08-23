@@ -97,7 +97,7 @@ class OverlayTriggerInner extends React.Component {
     }, delay)
   }
 
-  handleDelayedShow(e, isMouseEvent) {
+  handleDelayedShow(target, isMouseEvent) {
     if (this._hoverHideDelay != null) {
       clearTimeout(this._hoverHideDelay)
       this._hoverHideDelay = null
@@ -112,13 +112,13 @@ class OverlayTriggerInner extends React.Component {
       this.props.delayShow != null ? this.props.delayShow : this.props.delay
 
     if (!delay) {
-      this.show(isMouseEvent ? e.target : null)
+      this.show(isMouseEvent ? target : null)
       return
     }
 
     this._hoverShowDelay = setTimeout(() => {
       this._hoverShowDelay = null
-      this.show(isMouseEvent ? e.target : null)
+      this.show(isMouseEvent ? target : null)
     }, delay)
   }
 
@@ -135,7 +135,7 @@ class OverlayTriggerInner extends React.Component {
     const related = e.relatedTarget || e.nativeEvent[relatedNative]
 
     if ((!related || related !== target) && !contains(target, related)) {
-      handler(e, true)
+      handler(target, true)
     }
   }
 
@@ -173,7 +173,7 @@ class OverlayTriggerInner extends React.Component {
     this.setState({ show: true })
     if (target && !this.t) {
       this.t = setInterval(() => {
-        if (!includes(document.querySelectorAll(':hover'), target)) {
+        if (!includes(this.props.container.querySelectorAll(':hover'), target)) {
           clearInterval(this.t)
           delete this.t
           this.handleDelayedHide()
