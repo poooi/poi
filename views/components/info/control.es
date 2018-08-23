@@ -9,7 +9,6 @@ import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
-const ipc = remote.require('./lib/ipc')
 
 import './assets/control.css'
 
@@ -41,30 +40,22 @@ export class PoiControl extends Component {
     extend: false,
   }
   handleCapturePage = toClipboard => {
-    if (!ipc.access('screenshot')) {
-      ipc.register('screenshot', {
-        url: '',
-      })
+    const { width, height, windowWidth, windowHeight } = window.getStore('layout.webview')
+    const isolate = config.get('poi.isolateGameWindow', false)
+    const scWidth = isolate ? windowWidth : width
+    const scHeight = isolate ? windowHeight : height
+    const rect = {
+      x: 0,
+      y: 0,
+      width: Math.floor(scWidth * devicePixelRatio),
+      height: Math.floor(scHeight * devicePixelRatio),
     }
     const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
-    getStore('layout.webview.ref').executeJavaScript(`(function() {
-      const canvas = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentDocument.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
-        : document.querySelector('#htmlWrap') ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
-        : document.querySelector('canvas') ? document.querySelector('canvas') : null
-      if (!canvas) return false
-      ipc.register('screenshot', {
-        url: canvas.toDataURL(),
-      })
-      return true
-    })()`, suc => {
-      if (!suc) {
-        window.error(this.props.t('Failed to save the screenshot'))
-      }
-      const dataURL = ipc.access('screenshot').url
-      const image = nativeImage.createFromDataURL(dataURL)
+    getStore('layout.webview.ref').getWebContents().capturePage(rect, image => {
+      image = image.resize({ width: Math.floor(scWidth), height: Math.floor(scHeight) })
       if (toClipboard) {
-        clipboard.writeImage(image)
+        clipboard.writeImage(nativeImage.createFromDataURL(image.toDataURL()))
         window.success(this.props.t('screenshot saved to clipboard'))
       } else {
         const buf = usePNG ? image.toPNG() : image.toJPEG(80)
