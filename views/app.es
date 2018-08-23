@@ -86,17 +86,17 @@ class Poi extends Component {
 }
 
 ReactDOM.render(
-  <Async>
-    <I18nextProvider i18n={i18next} >
-      <Provider store={store} >
-        <WindowEnv.Provider value={{
-          window,
-          mountPoint: document.body,
-        }}>
+  <I18nextProvider i18n={i18next} >
+    <Provider store={store} >
+      <WindowEnv.Provider value={{
+        window,
+        mountPoint: document.body,
+      }}>
+        <Async>
           <Poi />
-        </WindowEnv.Provider>
-      </Provider>
-    </I18nextProvider>
-  </Async>,
+        </Async>
+      </WindowEnv.Provider>
+    </Provider>
+  </I18nextProvider>,
   $('#poi')
 )
