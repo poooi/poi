@@ -2,6 +2,7 @@ import React, { cloneElement } from 'react'
 import ReactDOM from 'react-dom'
 import contains from 'dom-helpers/query/contains'
 import { WindowEnv } from '../components/etc/window-env'
+import { includes } from 'lodash'
 
 import * as ReactBootstrap from 'react-bootstrap'
 
@@ -96,7 +97,7 @@ class OverlayTriggerInner extends React.Component {
     }, delay)
   }
 
-  handleDelayedShow() {
+  handleDelayedShow(e, isMouseEvent) {
     if (this._hoverHideDelay != null) {
       clearTimeout(this._hoverHideDelay)
       this._hoverHideDelay = null
@@ -111,13 +112,13 @@ class OverlayTriggerInner extends React.Component {
       this.props.delayShow != null ? this.props.delayShow : this.props.delay
 
     if (!delay) {
-      this.show()
+      this.show(isMouseEvent ? e.target : null)
       return
     }
 
     this._hoverShowDelay = setTimeout(() => {
       this._hoverShowDelay = null
-      this.show()
+      this.show(isMouseEvent ? e.target : null)
     }, delay)
   }
 
@@ -134,7 +135,7 @@ class OverlayTriggerInner extends React.Component {
     const related = e.relatedTarget || e.nativeEvent[relatedNative]
 
     if ((!related || related !== target) && !contains(target, related)) {
-      handler(e)
+      handler(e, true)
     }
   }
 
@@ -148,6 +149,10 @@ class OverlayTriggerInner extends React.Component {
 
   hide() {
     this.setState({ show: false })
+    if (this.t) {
+      clearInterval(this.t)
+      delete this.t
+    }
   }
 
   makeOverlay(overlay, props) {
@@ -164,8 +169,17 @@ class OverlayTriggerInner extends React.Component {
     )
   }
 
-  show() {
+  show(target) {
     this.setState({ show: true })
+    if (target && !this.t) {
+      this.t = setInterval(() => {
+        if (!includes(document.querySelectorAll(':hover'), target)) {
+          clearInterval(this.t)
+          delete this.t
+          this.handleDelayedHide()
+        }
+      }, 1000)
+    }
   }
 
   render() {
