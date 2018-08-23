@@ -8,6 +8,7 @@
   "Resources": "資源變化",
   "failed to save the screenshot": "截圖儲存失敗",
   "screenshot saved to": "截圖儲存於",
+  "screenshot saved to clipboard": "截圖已儲存到剪貼簿",
   "Open cache dir": "開啟快取目錄",
   "Open screenshot dir": "開啟截圖目錄",
   "NoPermission": "開啟失敗，可能沒有建立資料夾的權限",

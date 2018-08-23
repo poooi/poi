@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { shell, remote } from 'electron'
+import { shell, remote, clipboard, nativeImage } from 'electron'
 import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
@@ -39,7 +39,7 @@ export class PoiControl extends Component {
   state = {
     extend: false,
   }
-  handleCapturePage = () => {
+  handleCapturePage = toClipboard => {
     const { width, height, windowWidth, windowHeight } = window.getStore('layout.webview')
     const isolate = config.get('poi.isolateGameWindow', false)
     const scWidth = isolate ? windowWidth : width
@@ -54,16 +54,21 @@ export class PoiControl extends Component {
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
     getStore('layout.webview.ref').getWebContents().capturePage(rect, image => {
       image = image.resize({ width: Math.floor(scWidth), height: Math.floor(scHeight) })
-      const buf = usePNG ? image.toPNG() : image.toJPEG(80)
-      const now = new Date()
-      const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
-      fs.ensureDirSync(screenshotPath)
-      const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
-      fs.writeFile(filename, buf).then(() => {
-        window.success(`${this.props.t('screenshot saved to')} ${filename}`)
-      }).catch(err => {
-        window.error(this.props.t('Failed to save the screenshot'))
-      })
+      if (toClipboard) {
+        clipboard.writeImage(nativeImage.createFromDataURL(image.toDataURL()))
+        window.success(this.props.t('screenshot saved to clipboard'))
+      } else {
+        const buf = usePNG ? image.toPNG() : image.toJPEG(80)
+        const now = new Date()
+        const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+        fs.ensureDirSync(screenshotPath)
+        const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
+        fs.writeFile(filename, buf).then(() => {
+          window.success(`${this.props.t('screenshot saved to')} ${filename}`)
+        }).catch(err => {
+          window.error(this.props.t('Failed to save the screenshot'))
+        })
+      }
     })
   }
   handleOpenCacheFolder = () => {
@@ -231,7 +236,7 @@ export class PoiControl extends Component {
           <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='terminal' /></Button>
         </OverlayTrigger>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'>{this.props.t('Take a screenshot')}</Tooltip>}>
-          <Button onClick={this.handleCapturePage} bsSize='small'><FontAwesome name='camera-retro' /></Button>
+          <Button onClick={() => this.handleCapturePage(false)} onContextMenu={() => this.handleCapturePage(true)} bsSize='small'><FontAwesome name='camera-retro' /></Button>
         </OverlayTrigger>
         <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off')}</Tooltip>}>
           <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>

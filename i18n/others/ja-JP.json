@@ -8,6 +8,7 @@
   "Resources": "資材変更",
   "failed to save the screenshot": "スクリーンショットの保存は失敗しました",
   "screenshot saved to": "スクリーンショットの保存先",
+  "screenshot saved to clipboard": "スクリーンショットをクリップボードに保存しました",
   "Open cache dir": "キャッシュの保存先",
   "Open screenshot dir": "スクリーンショットの保存先フォルダを開く",
   "NoPermission": "失敗しました。権限の有無を確認して下さい",

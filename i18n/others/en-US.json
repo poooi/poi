@@ -9,6 +9,7 @@
   "Resources": "Resources",
   "failed to save the screenshot": "failed to save the screenshot",
   "screenshot saved to": "Screenshot saved to",
+  "screenshot saved to clipboard": "screenshot saved to clipboard",
   "Open cache dir": "Open cache dir",
   "Open screenshot dir": "Open screenshot dir",
   "NoPermission": "Failed. Perhaps you don't have permission to it.",
