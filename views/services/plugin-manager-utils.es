@@ -408,7 +408,8 @@ export function notifyFailed(state, npmConfig) {
   for (let i = 0; i < plugins.length; i++) {
     const plugin = plugins[i]
     unreadList.push(plugin.name)
-    reinstallList.push(plugin.packageName)
+    if (!plugin.linkedPlugin)
+      reinstallList.push(plugin.packageName)
   }
   if (unreadList.length > 0) {
     const content = `${unreadList.join(' / ')} ${i18next.t('setting:PluginLoadFailed')}`
