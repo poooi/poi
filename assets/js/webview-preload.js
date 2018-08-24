@@ -22,9 +22,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const ua = remote.getCurrentWebContents().session.getUserAgent()
     remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
   }
-  if (config.get('poi.disableNetworkAlert', false)) {
-    // eslint-disable-next-line no-undef
-    DMM.netgame.reloadDialog=function(){}
+  if (config.get('poi.disableNetworkAlert', false) && window.DMM) {
+    window.DMM.netgame.reloadDialog=function(){}
   }
 })
 
