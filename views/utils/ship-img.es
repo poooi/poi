@@ -80,7 +80,7 @@ export function getSlotItemImgPath(id, type, ip, version) {
   }
   const seed = "slot_" + type
   const cipherNum = create(id, seed)
-  const padId = padStart(id, 3)
+  const padId = padStart(id, 3, '0')
   const ret = `/kcs2/resources/slot/${type}/${padId}_${cipherNum}.png`
   slotmap.set(mapkey, ret)
   return join(ip, ret, version)
