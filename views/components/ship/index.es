@@ -102,7 +102,7 @@ const FleetShipView = connect(
 const LBView = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
-}))(({areaIds, mapareas, t}) => (
+}))(({areaIds, mapareas, t, enableAvatar, width }) => (
   <ScrollShadow className="ship-details" observerPath={[ 'layout.shippane', 'info.airbase' ]}>
     {
       areaIds.map((id, i) => (
@@ -111,16 +111,20 @@ const LBView = translate(['resources'])(connect(state => ({
             <SquardRow
               key={i}
               squardId={i}
+              enableAvatar={enableAvatar}
+              compact={width < 480}
             /> :
-            <div key={i}>
+            <React.Fragment key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
                 [{id}] {mapareas[id] ? t(`resources:${ mapareas[id].api_name }`) : ''}
               </Alert>
               <SquardRow
                 key={i}
                 squardId={i}
+                enableAvatar={enableAvatar}
+                compact={width < 480}
               />
-            </div>
+            </React.Fragment>
         )
       ))
     }
@@ -225,7 +229,10 @@ export class reactClass extends Component {
                 )
               }
               <div className="ship-deck ship-lbac" key={4}>
-                <LBView />
+                <LBView
+                  enableAvatar={this.props.enableAvatar}
+                  width={this.props.width / this.props.zoomLevel}
+                />
               </div>
             </div>
           </div>

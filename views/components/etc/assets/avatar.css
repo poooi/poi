@@ -1,13 +1,12 @@
 .ship-avatar-container {
   align-items: center;
   position: relative;
-  overflow: hidden;
   display: flex;
   -webkit-mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
   mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
 }
 
-.ship-avatar-bg-container {
+.ship-avatar-inner-container {
   position: absolute;
   width: 100%;
   height: 98%;
@@ -17,9 +16,21 @@
   align-items: center;
 }
 
+.equip-avatar {
+  width: 90%;
+  position: absolute;
+}
+
 .ship-avatar-bg {
   position: absolute;
   width: 200%;
+  z-index: -1;
+}
+
+.equip-avatar-bg {
+  position: absolute;
+  left: -160%;
+  width: 400%;
   z-index: -1;
 }
 

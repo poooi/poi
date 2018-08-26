@@ -46,7 +46,10 @@ export const PaneBodyMini = connect(() => {
 export const LBViewMini = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
-}))(({ areaIds, mapareas, t }) => (
+  enableAvatar: get(state, 'config.poi.enableAvatar', true),
+  width: miniShipRowWidthSelector(state),
+  zoomLevel: get(state, 'config.poi.zoomLevel', 1),
+}))(({ areaIds, mapareas, t, enableAvatar, zoomLevel, width }) => (
   <ScrollShadow className="ship-details-mini" observerPath={[ 'layout.minishippane', 'info.airbase' ]}>
     {
       areaIds.map((id, i) => (
@@ -55,6 +58,8 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
             <MiniSquardRow
               key={i}
               squardId={i}
+              enableAvatar={enableAvatar}
+              compact={width / zoomLevel < 240}
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
@@ -63,6 +68,8 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
               <MiniSquardRow
                 key={i}
                 squardId={i}
+                enableAvatar={enableAvatar}
+                compact={width / zoomLevel < 240}
               />
             </div>
         )
