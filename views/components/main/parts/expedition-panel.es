@@ -100,10 +100,10 @@ export class ExpeditionPanel extends Component {
             range(1, 4).map((i) => {
               const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
               const fleetName = get(fleetNames, i, '???')
-              const expedition = get($expeditions, expeditionId, {})
+              const {api_disp_no, api_name} = get($expeditions, expeditionId, {})
               const expeditionName = status == -1
                 ? this.props.t('main:Locked')
-                : `${expedition.api_disp_no || '???'} ${expedition.api_name || '???'}`
+                : `${api_disp_no || '???'} - ${api_name ? this.props.t(`resources:${api_name}`) : '???'}`
               const completeTime = status > 0 ? rawCompleteTime : -1
 
               return (
