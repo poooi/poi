@@ -107,7 +107,8 @@
 
 .miniship .ship-avatar-container {
   position: absolute;
-  z-index: -1;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .miniship .ship-lv-avatar {
