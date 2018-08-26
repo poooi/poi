@@ -11,6 +11,20 @@ export const shipImgType = [
   'album_status',
 ]
 
+export const slotItemImgType = [
+  'airunit_banner',
+  'airunit_fairy',
+  'airunit_name',
+  'btxt_flat',
+  'cart_t',
+  'card',
+  'item_character',
+  'item_on',
+  'item_up',
+  'remodel',
+  'statustop_item',
+]
+
 const map = new Map()
 const slotmap = new Map()
 
@@ -77,6 +91,9 @@ export function getSlotItemImgPath(id, type, ip, version) {
   const mapkey = [id, type].toString()
   if (slotmap.has(mapkey)) {
     return join(ip, slotmap.get(mapkey))
+  }
+  if (!slotItemImgType.includes(type)) {
+    throw new Error('Wrong type!')
   }
   const seed = "slot_" + type
   const cipherNum = create(id, seed)
