@@ -185,9 +185,10 @@ const TaskRow = translate(['resources'])(connect(
     record: get(state, ['info', 'quests', 'records', quest.api_no]),
     translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
     wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
+    title: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'title']),
   })
-)(function ({idx, quest, record, translation, wikiId, colwidth, t}) {
-  const questName = quest && quest.api_title ? t(`resources:${ escapeI18nKey(quest.api_title) }`) : '???'
+)(function ({idx, quest, record, translation, wikiId, title, colwidth, t}) {
+  const questName = title ? title : quest && quest.api_title ? t(`resources:${ escapeI18nKey(quest.api_title) }`) : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
