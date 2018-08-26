@@ -238,7 +238,8 @@ export const MiniSquardRow = translate(['main'])(connect((state, { squardId }) =
     equipsData,
     squardId,
   }))
-)(({landbase, equipsData, squardId, t}) => {
+)(({landbase, equipsData, squardId, enableAvatar, compact, t}) => {
+  const hideShipName = enableAvatar && compact
   const { api_action_kind, api_name } = landbase
   const tyku = getTyku([equipsData], api_action_kind)
   const statuslabel = (() => {
@@ -256,19 +257,42 @@ export const MiniSquardRow = translate(['main'])(connect((state, { squardId }) =
       return <Label bsStyle='success'>{t('main:Rest')}</Label>
     }
   })()
+  const shipInfoClass = classNames("ship-info", {
+    "ship-avatar-padding": enableAvatar,
+    "ship-info-hidden": hideShipName,
+    "ship-info-show": !hideShipName,
+  })
   return (
     <div className="ship-tile">
       <div className="ship-item">
-        <div className="ship-info ship-info-show">
-          <span className="ship-name">
-            {api_name}
-          </span>
-          <span className="ship-lv-text top-space">
-            <div className="ship-fp">
-              {t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
-            </div>
-            {statuslabel}
-          </span>
+        { enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
+          <Avatar type='equip' mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
+            {compact && (
+              <div className='ship-lv-avatar'>
+                {statuslabel}
+                <div className="ship-fp">
+                  {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
+                </div>
+              </div>
+            )}
+          </Avatar>
+        ) }
+        <div className={shipInfoClass}>
+          {
+            !hideShipName && (
+              <>
+                <span className="ship-name">
+                  {api_name}
+                </span>
+                <span className="ship-lv-text top-space">
+                  <div className="ship-fp">
+                    {t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}
+                  </div>
+                  {statuslabel}
+                </span>
+              </>
+            )
+          }
         </div>
         <div className="ship-stat landbase-stat">
           <div className="div-row">
