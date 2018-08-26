@@ -257,7 +257,7 @@ export const AdmiralPanel = translate(['main'])(connect(
               ? <span>
                 {`Lv. ${level}　`}
                 <span className="nickname">{nickname}</span>
-                <span id="user-rank">{`　[${rankName[rank]}]　`}</span>
+                <span id="user-rank">{`　[${t(`resources:${rankName[rank]}`)}]　`}</span>
               </span>
               : <span>{t('Admiral [Not logged in]')}</span>
           }
