@@ -29,7 +29,7 @@ let updateTime = 0
 const pushToHistory = (history, toPush) => {
   history.push(<div key={Date.now()} className={`alert alert-${toPush.type} alert-history-contents`}>{toPush.content}</div>)
   if (history.length > 5) {
-    history.shift()
+    return history.slice(history.length - 5)
   }
   return history
 }
