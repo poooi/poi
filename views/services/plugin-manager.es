@@ -471,6 +471,7 @@ window.reloadPlugin = async (pkgName, verbose=false) => {
   if (verbose)
     // eslint-disable-next-line no-console
     console.log(`plugin "${plugin.id}" disabled, re-enabling...`)
+  plugin.isBroken = false
   await pluginManager.enablePlugin(plugin)
   if (verbose)
     // eslint-disable-next-line no-console
