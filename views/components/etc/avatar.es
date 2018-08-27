@@ -30,7 +30,7 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
     const isEnemy = props.mstId >= 1500
     const marginMagic = props.marginMagic || (isEnemy ? 1.5 : get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`))
     const version = get(get(state, 'const.$shipgraph', []).find(a => a.api_id === props.mstId), 'api_version.0')
-    const rank = get(state, `const.$ships.${props.mstId}.api_backs`, 7)
+    const rank = props.mstId === 194 ? 6 : get(state, `const.$ships.${props.mstId}.api_backs`, 7)
     const url = getShipImgPath(props.mstId, isEnemy ? 'banner' : 'remodel' , props.isDamaged, ip, version)
     const bgurl = !isEnemy ? getShipBackgroundPath(rank, ip) : ''
     return {
