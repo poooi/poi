@@ -232,6 +232,7 @@ export class KanGameWrapper extends Component {
                   position: 'relative',
                   display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
                 }}
+                useragent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.42 Safari/537.36"
                 muted={muted}
               />
             </div>
