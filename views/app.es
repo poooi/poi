@@ -92,9 +92,13 @@ ReactDOM.render(
         window,
         mountPoint: document.body,
       }}>
-        <Async>
-          <Poi />
-        </Async>
+        {
+          config.get('poi.asyncMode', true) ? (
+            <Async>
+              <Poi />
+            </Async>
+          ) : <Poi />
+        }
       </WindowEnv.Provider>
     </Provider>
   </I18nextProvider>,
