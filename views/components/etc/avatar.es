@@ -19,7 +19,7 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
   const ip = get(state, 'info.server.ip', '203.104.209.71')
   if (props.type === 'equip') {
     const version = get(state, `const.$equips.${props.mstId}.api_version`, 1)
-    const rank = get(state, `const.$equips.${props.mstId}.api_rare`, 5)
+    const rank = props.rank || get(state, `const.$equips.${props.mstId}.api_rare`, 5)
     const url = getSlotItemImgPath(props.mstId, 'item_up', ip, version)
     const bgurl = getSlotItemBackgroundPath(rank, ip)
     return {
@@ -30,7 +30,7 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
     const isEnemy = props.mstId >= 1500
     const marginMagic = props.marginMagic || (isEnemy ? 1.5 : get(state, `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`))
     const version = get(get(state, 'const.$shipgraph', []).find(a => a.api_id === props.mstId), 'api_version.0')
-    const rank = props.mstId === 194 ? 6 : get(state, `const.$ships.${props.mstId}.api_backs`, 7)
+    const rank = props.rank || props.mstId === 194 ? 6 : get(state, `const.$ships.${props.mstId}.api_backs`, 7)
     const url = getShipImgPath(props.mstId, isEnemy ? 'banner' : 'remodel' , props.isDamaged, ip, version)
     const bgurl = !isEnemy ? getShipBackgroundPath(rank, ip) : ''
     return {
