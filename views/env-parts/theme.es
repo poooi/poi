@@ -195,11 +195,16 @@ if (process.platform === 'win32') {
     }
   })
 
-  remote.getCurrentWindow().on('focus', () => {
+  remote.getCurrentWindow().once('focus', () => {
     if (config.get('poi.vibrant', 0) === 1) {
       remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-      if (!window.isMain && !window.blurpolyfill) {
-        window.blurpolyfill = true
+      window.blurpolyfill = true
+      remote.getCurrentWindow().on('focus', () => {
+        if (config.get('poi.vibrant', 0) === 1) {
+          remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
+        }
+      })
+      if (!window.isMain) {
         remote.getCurrentWindow().blur()
         remote.getCurrentWindow().focus()
       }
