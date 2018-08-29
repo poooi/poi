@@ -79,6 +79,10 @@ poi-app poi-nav-tabs {
   width: 100%;
 }
 
+poi-app poi-nav-tabs .poi-tabs-container-doubletabbed-vertical {
+  flex-direction: column;
+}
+
 poi-app poi-nav-tabs .poi-tabs-container-doubletabbed .nav,
 poi-app poi-nav-tabs .poi-tab-contents .nav {
   display: flex;

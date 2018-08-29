@@ -100,10 +100,12 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
 @connect((state) => ({
   plugins: state.plugins,
   doubleTabbed: get(state.config, 'poi.tabarea.double', false),
+  verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
   activeMainTab: get(state.ui, 'activeMainTab', 'mainView'),
   activePluginName: get(state.ui, 'activePluginName', ''),
   mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+  mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
   editable: get(state.config, 'poi.layouteditable', false),
   windowmode: get(state.config, 'poi.windowmode', emptyObj),
 }))
@@ -111,10 +113,15 @@ export class ControlledTabArea extends PureComponent {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
     doubleTabbed: PropTypes.bool.isRequired,
+    verticalDoubleTabbed: PropTypes.bool.isRequired,
     useGridMenu: PropTypes.bool.isRequired,
     activeMainTab: PropTypes.string.isRequired,
     activePluginName: PropTypes.string.isRequired,
     mainPanelWidth: PropTypes.shape({
+      px: PropTypes.number,
+      percent: PropTypes.number,
+    }),
+    mainPanelHeight: PropTypes.shape({
       px: PropTypes.number,
       percent: PropTypes.number,
     }),
@@ -282,11 +289,13 @@ export class ControlledTabArea extends PureComponent {
         this.handleTouchbar(message)
       })
     }
+    config.addListener('config.set', this.handleConfig)
   }
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('game.response', this.handleResponse)
     ipc.unregisterAll("MainWindow")
+    config.removeListener('config.set', this.handleConfig)
   }
   // All displaying plugins
   listedPlugins = () => {
@@ -339,6 +348,15 @@ export class ControlledTabArea extends PureComponent {
       this.handleSelectTab(id)
     } else {
       this.openWindow(tgt)
+    }
+  }
+  handleConfig = (path, value) => {
+    if (path === 'poi.tabarea.vertical') {
+      if (value) {
+        this.resizableArea.setSize({ width: { px: 0, percent: 100 }, height: this.props.mainPanelHeight })
+      } else {
+        this.resizableArea.setSize({ width: this.props.mainPanelWidth, height: { px: 0, percent: 100 } })
+      }
     }
   }
   render() {
@@ -465,23 +483,81 @@ export class ControlledTabArea extends PureComponent {
       const { touchBarTabinit } = remote.require('./lib/touchbar')
       touchBarTabinit(t('main:Overview'), t('main:Fleet'), activePlugin.name || t('others:Plugins'), this.props.activeMainTab, t('others:Plugins'))
     }
+    const resizableAreaProps = !this.props.doubleTabbed ? ({
+      minimumWidth: {
+        px: 0,
+        percent: 100,
+      },
+      defaultWidth: {
+        px: 0,
+        percent: 50,
+      },
+      initWidth: this.props.mainPanelWidth,
+      minimumHeight: {
+        px: 0,
+        percent: 100,
+      },
+      initHeight:{
+        px: 0,
+        percent: 100,
+      },
+      disable: true,
+      onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
+    }) : this.props.verticalDoubleTabbed ? ({
+      className: classNames({ 'height-resize': this.props.editable }),
+      minimumWidth: {
+        px: 0,
+        percent: 100,
+      },
+      defaultHeight: {
+        px: 0,
+        percent: 50,
+      },
+      initHeight: this.props.mainPanelHeight,
+      minimumHeight: {
+        px: 0,
+        percent: 10,
+      },
+      initWidth:{
+        px: 0,
+        percent: 100,
+      },
+      disable: !this.props.editable,
+      onResized: ({ height }) => config.set('poi.tabarea.mainpanelheight', height),
+    }) : ({
+      className: classNames({ 'width-resize': this.props.editable }),
+      minimumWidth: {
+        px: 0,
+        percent: 10,
+      },
+      defaultWidth: {
+        px: 0,
+        percent: 50,
+      },
+      initWidth: this.props.mainPanelWidth,
+      minimumHeight: {
+        px: 0,
+        percent: 100,
+      },
+      initHeight:{
+        px: 0,
+        percent: 100,
+      },
+      disable: !this.props.editable,
+      onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
+    })
+
     return (
       <div className={classNames('poi-tabs-container', {
         'poi-tabs-container-doubletabbed': this.props.doubleTabbed,
         'poi-tabs-container-singletabbed': !this.props.doubleTabbed,
+        'poi-tabs-container-doubletabbed-vertical': this.props.doubleTabbed && this.props.verticalDoubleTabbed,
       })} ref={this.resizeContainer}>
         <ResizableArea
-          className={classNames({ 'width-resize': this.props.doubleTabbed && this.props.editable })}
-          minimumWidth={{ px: 0, percent: this.props.doubleTabbed ? 10 : 100 }}
-          defaultWidth={{ px: 0, percent: 50 }}
-          initWidth={this.props.mainPanelWidth}
-          minimumHeight={{ px: 0, percent: 100 }}
-          initHeight={{ px: 0, percent: 100 }}
+          ref={ref => this.resizableArea = ref}
+          className={classNames({ 'width-resize': this.props.doubleTabbed && this.props.editable && !this.props.verticalDoubleTabbed })}
           parentContainer={this.resizeContainer.current}
-          disable={{ width: !this.props.doubleTabbed || !this.props.editable, height: true }}
-          onResized={({ width }) => {
-            config.set('poi.tabarea.mainpanelwidth', width)
-          }}
+          {...resizableAreaProps}
         >
           <div className="poi-tab-container no-scroll">
             { firstPanelNav }
