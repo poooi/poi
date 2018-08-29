@@ -27,21 +27,25 @@ export function triggleToast(msg, options={}) {
     return
   }
   const type = options.type || 'info'
-  const title = options.title || 'poi'
+  // const title = options.title || 'poi'
   options.showAnimation = options.showAnimation || "animated fadeInLeft"
   options.hideAnimation = options.hideAnimation || "animated fadeOutDown"
   switch (type) {
   case 'success':
-    toastTrigger.success(msg, title, options)
+    // toastTrigger.success(msg, title, options)
+    window.success(msg)
     break
   case 'warning':
-    toastTrigger.warning(msg, title, options)
+    // toastTrigger.warning(msg, title, options)
+    window.warn(msg)
     break
   case 'error':
-    toastTrigger.error(msg, title, options)
+    // toastTrigger.error(msg, title, options)
+    window.error(msg)
     break
   default:
-    toastTrigger.info(msg, title, options)
+    // toastTrigger.info(msg, title, options)
+    window.log(msg)
     break
   }
 }
