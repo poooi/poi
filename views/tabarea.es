@@ -289,11 +289,13 @@ export class ControlledTabArea extends PureComponent {
         this.handleTouchbar(message)
       })
     }
+    config.addListener('config.set', this.handleConfig)
   }
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('game.response', this.handleResponse)
     ipc.unregisterAll("MainWindow")
+    config.removeListener('config.set', this.handleConfig)
   }
   // All displaying plugins
   listedPlugins = () => {
@@ -346,6 +348,15 @@ export class ControlledTabArea extends PureComponent {
       this.handleSelectTab(id)
     } else {
       this.openWindow(tgt)
+    }
+  }
+  handleConfig = (path, value) => {
+    if (path === 'poi.tabarea.vertical') {
+      if (value) {
+        this.resizableArea.setSize({ width: { px: 0, percent: 100 }, height: this.props.mainPanelHeight })
+      } else {
+        this.resizableArea.setSize({ width: this.props.mainPanelWidth, height: { px: 0, percent: 100 } })
+      }
     }
   }
   render() {
@@ -543,7 +554,7 @@ export class ControlledTabArea extends PureComponent {
         'poi-tabs-container-doubletabbed-vertical': this.props.doubleTabbed && this.props.verticalDoubleTabbed,
       })} ref={this.resizeContainer}>
         <ResizableArea
-          key={[this.props.doubleTabbed, this.props.verticalDoubleTabbed].toString()}
+          ref={ref => this.resizableArea = ref}
           className={classNames({ 'width-resize': this.props.doubleTabbed && this.props.editable && !this.props.verticalDoubleTabbed })}
           parentContainer={this.resizeContainer.current}
           {...resizableAreaProps}
