@@ -543,6 +543,7 @@ export class ControlledTabArea extends PureComponent {
         'poi-tabs-container-doubletabbed-vertical': this.props.doubleTabbed && this.props.verticalDoubleTabbed,
       })} ref={this.resizeContainer}>
         <ResizableArea
+          key={[this.props.doubleTabbed, this.props.verticalDoubleTabbed].toString()}
           className={classNames({ 'width-resize': this.props.doubleTabbed && this.props.editable && !this.props.verticalDoubleTabbed })}
           parentContainer={this.resizeContainer.current}
           {...resizableAreaProps}
