@@ -9,7 +9,7 @@ const isAARadar = equip => [12, 13].includes(equip.api_type[2]) && equip.api_tyk
 const isTubeRocketLauncherKai2 = equip => equip.api_slotitem_id === 274
 
 // 6=航空巡洋艦 7=軽空母 10=航空戦艦 11=正規空母 16=水上機母艦 18=装甲空母
-const canAARB = ship => [6, 7, 10, 11, 16, 18].includes(ship.api_stype)
+const canAAPB = ship => [6, 7, 10, 11, 16, 18].includes(ship.api_stype)
 
 // 2=伊勢型
 const isIseClass = ship => ship.api_ctype === 2
@@ -26,8 +26,8 @@ const getEquipWeightedAA = equip => {
 // 艦の素対空値
 const getShipAA = (ship, equips) => ship.api_taiku[0] - equips.reduce((total, equip) => total + equip.api_tyku, 0)
 
-export const getShipAARB = (ship, equips) => {
-  if (!canAARB(ship)) return 0
+export const getShipAAPB = (ship, equips) => {
+  if (!canAAPB(ship)) return 0
   if (!equips.find(e => isTubeRocketLauncherKai2(e))) return 0
 
   const rocketCount = countBy(equips, isTubeRocketLauncherKai2).true

@@ -6,9 +6,9 @@ import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { translate } from 'react-i18next'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
-import { getShipAARB } from 'views/utils/aarb'
+import { getShipAAPB } from 'views/utils/aapb'
 
-const AARBSelectorFactory = memoize(shipId =>
+const AAPBSelectorFactory = memoize(shipId =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipEquipDataSelectorFactory(shipId),
@@ -16,22 +16,22 @@ const AARBSelectorFactory = memoize(shipId =>
     const ship = { ...$ship, ..._ship }
     const equips = _equips.filter(([_equip, $equip, onslot] = []) => !!_equip && !!$equip)
       .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
-    return getShipAARB(ship, equips)
+    return getShipAAPB(ship, equips)
   })
 )
 
-export const AARBIndicator = translate(['main'])(connect(
+export const AAPBIndicator = translate(['main'])(connect(
   (state, { shipId }) => ({
-    AARB: AARBSelectorFactory(shipId)(state) || 0,
+    AAPB: AAPBSelectorFactory(shipId)(state) || 0,
   })
-)(({ AARB, shipId, t }) => {
-  const tooltip = AARB > 0 && <span>{`${AARB}%`}</span>
+)(({ AAPB, shipId, t }) => {
+  const tooltip = AAPB > 0 && <span>{`${AAPB}%`}</span>
 
   return(
-    AARB > 0 ?
-      <span className="ship-aarb">
-        <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aarb-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle='warning'>{t('main:AARB')}</Label>
+    AAPB > 0 ?
+      <span className="ship-aapb">
+        <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aapb-info-${shipId}`}>{tooltip}</Tooltip>}>
+          <Label bsStyle='warning'>{t('main:AAPB')}</Label>
         </OverlayTrigger>
       </span>
       : <span />
