@@ -13,6 +13,7 @@ import { Slotitems } from './slotitems'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { Avatar } from 'views/components/etc/avatar'
 import { AACIIndicator } from './aaci-indicator'
+import { AARBIndicator } from './aarb-indicator'
 import { OASWIndicator } from './oasw-indicator'
 import { getCondStyle, getHpStyle, getStatusStyle, getShipLabelStatus, getSpeedLabel } from 'views/utils/game-utils'
 import { resolveTime } from 'views/utils/tools'
@@ -127,6 +128,7 @@ export class ShipRow extends Component {
                 {t(`main:${getSpeedLabel(ship.api_soku)}`)}
               </span>
               <AACIIndicator shipId={ship.api_id} />
+              <AARBIndicator shipId={ship.api_id} />
               <OASWIndicator shipId={ship.api_id} />
             </div>
             {

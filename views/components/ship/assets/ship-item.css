@@ -73,6 +73,7 @@
 .ShipView .ship-type,
 .ShipView .ship-speed,
 .ShipView .ship-aaci,
+.ShipView .ship-aarb,
 .ShipView .ship-oasw {
   margin-left: 5px;
   margin-right: 5px;
@@ -185,12 +186,14 @@
 }
 
 .ShipView .ship-aaci,
+.ShipView .ship-aarb,
 .ShipView .ship-oasw {
   position: relative;
   top: -1px;
 }
 
 .ShipView .ship-aaci .label,
+.ShipView .ship-aarb .label,
 .ShipView .ship-oasw .label {
   font-size: 80%;
   padding: 0.125em 0.6em;
