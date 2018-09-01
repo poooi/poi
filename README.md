@@ -56,7 +56,7 @@ Tips:
 
 - If you have installed packages with npm < 5.0, it is highly recommended to completely remove current `node_modules` folder and re-run `npm install`.
 
-- If you use windows subsystem for linux(WSL), use `export npm_config_platform=win32 && npm install` instead of `npm install` for correct electron installation. 
+- If you use windows subsystem for linux(WSL), use `export npm_config_platform=win32 && npm install` instead of `npm install` for correct electron installation.
 
 - If you have trouble downloading electron executables from github/amazonaws, [you may set ELECTRON_MIRROR environment variable](https://github.com/electron-userland/electron-download).
 
@@ -67,7 +67,7 @@ Many functionalities are provided as plugins, you may choose only what you want!
 
 Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
 
-On plugin development, the [docs](https://github.com/poooi/poi/tree/master/docs) are available in Chinese and English.
+On plugin development, the [docs](https://dev.poooi.app) are available in English.
 
 Please feel free to contact us via:
 - github issues
