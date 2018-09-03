@@ -236,11 +236,9 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
   z-index: 10;
 }
 
-#poi-app-overlay {
+.poi-app-overlay {
   position: fixed;
   right: 0;
-  background-color: inherit;
-  top: 0;
   transition: transform 0.2s ease-in;
   will-change: transform;
 }
