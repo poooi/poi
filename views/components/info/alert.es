@@ -62,18 +62,15 @@ class PoiAlertInner extends Component {
       try {
         const alertHeight =  this.props.$('poi-control').offsetHeight
         const historyHeight = this.alertHistory.offsetHeight
-        const bgColor = window.getComputedStyle(this.props.$('body')).backgroundColor
-        if (historyHeight === this.historyHeight && alertHeight === this.alertHeight && bgColor === this.bgColor) {
+        if (historyHeight === this.historyHeight && alertHeight === this.alertHeight) {
           return
         }
         this.alertHeight = alertHeight
         this.historyHeight = historyHeight
-        this.bgColor = bgColor
       } catch (error) {
         this.alertHeight = 30
         this.historyHeight = 152
       }
-      this.alertHistory.style.backgroundColor = this.bgColor
       this.props.$('poi-alert').style.height = `${this.alertHeight}px`
     }, 100)
   }
@@ -171,7 +168,7 @@ class PoiAlertInner extends Component {
         </div>
         <div id='alert-history'
           ref={ref => { this.alertHistory = ref }}
-          className='alert-history panel'
+          className='alert-history overlay-background'
           style={this.state.alertHistoryStyle}
           onClick={this.toggleHistory}>
           {this.state.history}

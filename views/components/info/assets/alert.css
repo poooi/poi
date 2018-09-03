@@ -30,12 +30,7 @@ poi-info .alert {
 }
 
 .alert-history {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  margin-bottom: 0;
   overflow: hidden;
-  padding-bottom: 0;
-  position: relative;
   transition: 0.3s;
   z-index: 1;
 }
