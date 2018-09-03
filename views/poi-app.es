@@ -18,7 +18,7 @@ export class PoiApp extends Component {
     const { layout, overlay } = this.props
     const { overlayVisible } = this.state
     const isHorizontal = layout === 'horizontal'
-    const overlayState = overlay ? 'poi-app-overlay' : null
+    const classname = overlay ? 'overlay-background' : null
     const showTrigger = overlay ? null : {display: 'none'}
     return (
       <poi-app style={{
@@ -28,7 +28,7 @@ export class PoiApp extends Component {
         [isHorizontal  || overlay ?  'width' : 'height']: [overlay ? '500px' : 0],
         WebkitTransform: [overlayVisible || !overlay ? 'none': 'translateX(100%)'],
       }}
-      id={overlayState}>
+      className={classname}>
         <a className="overlayPanelTrigger" style={showTrigger} onClick={() => this.setState({overlayVisible: ! this.state.overlayVisible})}><FontAwesome name={!overlayVisible ? 'angle-left' : 'angle-right'} /></a>
         <div id='poi-app-container' className='poi-app-container'>
           <poi-nav>
