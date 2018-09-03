@@ -104,6 +104,44 @@ const setIsolatedMainWindowSize = isolateWindow => {
   remote.getCurrentWindow().setBounds(bounds)
 }
 
+const setOverlayPanelWindowSize = overlayPanel => {
+  remote.getCurrentWindow().setMinimumSize(1, 1)
+  const layout = config.get('poi.layout', 'horizontal')
+  const reversed = config.get('poi.reverseLayout', false)
+  const isolateWindow = config.get('poi.isolateGameWindow', false)
+  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
+  const bounds = remote.getCurrentWindow().getBounds()
+  if (overlayPanel && !isolateWindow) {
+    if (layout === 'horizontal') {
+      config.set('poi.panel.width', bounds.width - webviewWidth)
+      bounds.width -= (bounds.width - webviewWidth)
+      if (!reversed) {
+        bounds.x += (bounds.width - webviewWidth)
+      }
+    } else {
+      config.set('poi.panel.height', bounds.height - webviewHeight - 30)
+      bounds.height -= (bounds.height - webviewHeight - 30)
+      if (!reversed) {
+        bounds.y += (bounds.height - webviewHeight - 30 )
+      }
+    }
+  } else if (!isolateWindow) {
+    if (layout === 'horizontal') {
+      bounds.width += config.get('poi.panel.width', 500)
+      if (!reversed) {
+        bounds.x -= config.get('poi.panel.width', 500)
+      }
+    } else {
+      bounds.height += config.get('poi.panel.height', 800)
+      if (!reversed) {
+        bounds.y -= config.get('poi.panel.height', 800)
+      }
+    }
+  }
+  remote.getCurrentWindow().setBounds(bounds)
+}
+
+
 const setProperWindowSize = () => {
   const current = remote.getCurrentWindow()
   // Dont set size on maximized
@@ -213,6 +251,10 @@ config.on('config.set', (path, value) => {
   case 'poi.isolateGameWindow': {
     setIsolatedMainWindowSize(value)
     setMinSize(value)
+    break
+  }
+  case 'poi.overlayPanel': {
+    setOverlayPanelWindowSize(value)
     break
   }
   default:

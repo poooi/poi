@@ -5,6 +5,10 @@
   width: 100vw;
 }
 
+div#poi {
+  background-color: inherit;
+}
+
 .poi-app-container {
   overflow: hidden;
 }
@@ -17,6 +21,7 @@ poi-main {
   align-items: center;
   display: flex;
   flex: 1 0 0;
+  background-color: inherit;
 }
 
 .webview-resizable-area {
@@ -229,4 +234,25 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
 .resizable-component.height-resize > .resize-handle-bottom {
   background: linear-gradient(0deg, transparent 40%, #666 60%, transparent 51%);
   z-index: 10;
+}
+
+#poi-app-overlay {
+  position: fixed;
+  right: 0;
+  background-color: inherit;
+  top: 0;
+  transition: transform 0.2s ease-in;
+  will-change: transform;
+}
+
+a.overlayPanelTrigger {
+  -webkit-transform: translateX(-100%);
+  position: fixed;
+  background: rgba(75, 75, 75, 0.8);
+  height: 30px;
+  text-align: center;
+  padding: 5px 10px 5px 10px;
+  font-size: 15px;
+  bottom: 0;
+  border-top-left-radius: 5px;
 }

@@ -13,6 +13,7 @@ const { config, toggleModal } = window
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
   reversed: get(state.config, 'poi.reverseLayout', false),
   isolateGameWindow: get(state.config, 'poi.isolateGameWindow', false),
+  overlayPanel: get(state.config, 'poi.overlayPanel', false),
 }))
 export class LayoutConfig extends Component {
   static propTypes = {
@@ -48,16 +49,36 @@ export class LayoutConfig extends Component {
     if (this.props.isolateGameWindow) {
       this.setIsolateGameWindow(false)
     }
+    if (this.props.overlayPanel) {
+      this.setOverlayPanel(false)
+    }
     config.set('poi.layout', layout)
     config.set('poi.reverseLayout', rev)
   }
   handleSetIsolateGameWindow = () => {
     if (!this.props.isolateGameWindow) {
+      if (this.props.overlayPanel) {
+        this.setLayout('horizontal', false)
+      }
       this.createConfirmModal(e => this.setIsolateGameWindow(true))
     }
   }
+  handleSetOverlayPanel = () => {
+    if (this.props.isolateGameWindow) {
+      this.createConfirmModal(() => {
+        this.setLayout('horizontal', false)
+        this.setOverlayPanel(true)
+      })
+      return
+    }
+    this.setOverlayPanel(!this.props.overlayPanel)
+  }
+
   setIsolateGameWindow = flag => {
     config.set('poi.isolateGameWindow', flag)
+  }
+  setOverlayPanel = flag => {
+    config.set('poi.overlayPanel', flag)
   }
   handleSetDoubleTabbed = (doubleTabbed, vertical) => {
     config.set('poi.tabarea.double', doubleTabbed)
@@ -66,11 +87,11 @@ export class LayoutConfig extends Component {
     }
   }
   render() {
-    const { layout, reversed, isolateGameWindow, enableDoubleTabbed, verticalDoubleTabbed } = this.props
+    const { layout, reversed, isolateGameWindow, enableDoubleTabbed, verticalDoubleTabbed, overlayPanel } = this.props
     const leftActive = !isolateGameWindow && layout === 'horizontal' && reversed
     const downActive = !isolateGameWindow && layout !== 'horizontal' && !reversed
     const upActive = !isolateGameWindow && layout !== 'horizontal' && reversed
-    const rightActive = !isolateGameWindow && layout === 'horizontal' && !reversed
+    const rightActive = !isolateGameWindow && layout === 'horizontal' && !reversed && ! overlayPanel
     return (
       <Grid>
         <Col xs={12}>
@@ -91,6 +112,11 @@ export class LayoutConfig extends Component {
               onClick={e => this.handleSetLayout('horizontal', true)}>
               <a className="layout-button layout-side" style={{ transform: 'scaleX(-1)' }} />
             </Button>
+            <Button bsStyle={overlayPanel && !isolateGameWindow ? 'success' : 'danger'}
+              onClick={e => this.handleSetOverlayPanel()}>
+              <a className="layout-button overlay-panel" />
+            </Button>
+
           </ButtonGroup>
           <ButtonGroup style={{ marginLeft: 25 }}>
             <Button bsStyle={isolateGameWindow ? 'success' : 'danger'}
