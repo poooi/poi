@@ -4,7 +4,9 @@
   height: 100vh;
   width: 100vw;
 }
-
+div#poi {
+  background-color: inherit;
+}
 .poi-app-container {
   overflow: hidden;
 }
@@ -17,6 +19,7 @@ poi-main {
   align-items: center;
   display: flex;
   flex: 1 0 0;
+  background-color: inherit;
 }
 
 .webview-resizable-area {
@@ -242,7 +245,7 @@ element.style {
 #poi-app-overlay {
   position: fixed;
   right: 0px;
-  background: rgba(75,75,75,0.9);
+  background-color: inherit;
   right: 0px;
   top: 0px;
   transition: transform 0.2s ease-in;
