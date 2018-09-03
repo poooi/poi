@@ -112,16 +112,16 @@ export class LayoutConfig extends Component {
               onClick={e => this.handleSetLayout('horizontal', true)}>
               <a className="layout-button layout-side" style={{ transform: 'scaleX(-1)' }} />
             </Button>
-            <Button bsStyle={overlayPanel && !isolateGameWindow ? 'success' : 'danger'}
-              onClick={e => this.handleSetOverlayPanel()}>
-              <a className="layout-button overlay-panel" />
-            </Button>
 
           </ButtonGroup>
           <ButtonGroup style={{ marginLeft: 25 }}>
             <Button bsStyle={isolateGameWindow ? 'success' : 'danger'}
               onClick={this.handleSetIsolateGameWindow}>
               <a className="layout-button layout-separate" />
+            </Button>
+            <Button bsStyle={overlayPanel && !isolateGameWindow ? 'success' : 'danger'}
+              onClick={e => this.handleSetOverlayPanel()}>
+              <a className="layout-button overlay-panel" />
             </Button>
           </ButtonGroup>
         </Col>
