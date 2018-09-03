@@ -351,8 +351,8 @@ export class ControlledTabArea extends PureComponent {
     }
   }
   handleConfig = (path, value) => {
-    if (path === 'poi.tabarea.vertical') {
-      if (value) {
+    if (path.startsWith('poi.tabarea')) {
+      if (config.get('poi.tabarea.vertical', false)) {
         this.resizableArea.setSize({ width: { px: 0, percent: 100 }, height: this.props.mainPanelHeight })
       } else {
         this.resizableArea.setSize({ width: this.props.mainPanelWidth, height: { px: 0, percent: 100 } })
