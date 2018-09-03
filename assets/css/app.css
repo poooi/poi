@@ -247,10 +247,18 @@ a.overlayPanelTrigger {
   -webkit-transform: translateX(-100%);
   position: fixed;
   background: rgba(75, 75, 75, 0.8);
-  height: 30px;
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  width: 40px;
+  min-height: 30px;
   text-align: center;
   padding: 5px 10px 5px 10px;
   font-size: 15px;
   bottom: 0;
   border-top-left-radius: 5px;
+}
+
+a.overlayPanelTrigger > svg {
+  margin: auto;
 }
