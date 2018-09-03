@@ -233,6 +233,9 @@ if (process.platform !== 'darwin') {
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
+            if (config.get('poi.webview.useFixedResolution', true) && config.get('poi.overlayPanel', false)) {
+              return
+            }
             const mainWindow = remote.getGlobal('mainWindow')
             mainWindow.setResizable(item.checked)
             mainWindow.setMaximizable(item.checked)
