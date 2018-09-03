@@ -66,7 +66,6 @@ export class ThemeConfig extends Component {
   }
   handleSetVibrancy = e => {
     config.set('poi.vibrant', parseInt(e.target.value))
-    console.log(e)
   }
   handleSetAvatar = e => {
     config.set('poi.enableAvatar', !this.props.enableAvatar)

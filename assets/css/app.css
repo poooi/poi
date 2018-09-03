@@ -4,9 +4,11 @@
   height: 100vh;
   width: 100vw;
 }
+
 div#poi {
   background-color: inherit;
 }
+
 .poi-app-container {
   overflow: hidden;
 }
@@ -234,20 +236,11 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
   z-index: 10;
 }
 
-
-element.style {
-    flex-basis: 0px;
-    flex-grow: 1;
-    height: calc(100% - 30px);
-    width: 500px;
-}
-
 #poi-app-overlay {
   position: fixed;
-  right: 0px;
+  right: 0;
   background-color: inherit;
-  right: 0px;
-  top: 0px;
+  top: 0;
   transition: transform 0.2s ease-in;
   will-change: transform;
 }
@@ -255,11 +248,11 @@ element.style {
 a.overlayPanelTrigger {
   -webkit-transform: translateX(-100%);
   position: fixed;
-  background: rgba(75,75,75,0.8);
+  background: rgba(75, 75, 75, 0.8);
   height: 30px;
   text-align: center;
   padding: 5px 10px 5px 10px;
   font-size: 15px;
-  bottom: 0px;
+  bottom: 0;
   border-top-left-radius: 5px;
 }
