@@ -24,7 +24,7 @@ export class PoiApp extends Component {
       flexGrow: 1,
       [isHorizontal || overlay ? 'height' : 'width']: overlay ? 'inherit' : '100%',
       [isHorizontal  || overlay ?  'width' : 'height']: overlay ? '700px' : 0,
-      maxWidth: 'calc(100vw - 50px)',
+      maxWidth: overlay ? 'calc(100vw - 50px)' : '100vw',
       WebkitTransform: overlayVisible || !overlay ? 'none': 'translateX(100%)',
       top: overlay ? $('title-bar') ? $('title-bar').clientHeight : 0 : 'inherit',
       bottom: overlay ? $('poi-info') ? $('poi-info').clientHeight : 30 : 'inherit',
