@@ -13,6 +13,7 @@ import { layoutResizeObserver } from 'views/services/layout'
 
 const config = remote.require('./lib/config')
 const poiControlHeight = 30
+const ua = remote.getCurrentWebContents().getUserAgent().replace(/Electron[^ ]* /, '').replace(/poi[^ ]* /, '')
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
@@ -246,7 +247,7 @@ export class KanGameWrapper extends Component {
                   position: 'relative',
                   display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
                 }}
-                useragent={remote.getCurrentWebContents().getUserAgent().replace(/Electron[^\ ]*\ /, '').replace(/poi[^\ ]*\ /, '')}
+                useragent={ua}
                 muted={muted}
               />
             </div>
