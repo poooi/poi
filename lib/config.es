@@ -98,9 +98,9 @@ if (!config.get('poi.plugin')) {
     windowmode,
     background,
   })
-  config.delete('poi.windowmode')
-  config.delete('poi.appearance.backgroundProcess')
 }
+config.delete('poi.windowmode')
+config.delete('poi.appearance.backgroundProcess')
 
 const pair = {
   'poi.enableAvatar': 'poi.appearance.avatar',
