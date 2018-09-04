@@ -1,14 +1,7 @@
 require('@babel/register')(require('./babel.config'))
 const gulp = require('gulp')
-const path = require('path')
 
 global.ROOT = __dirname
-const SYS_APPDATA_PATH = process.env.APPDATA || (
-  process.platform == 'darwin'
-    ? path.join(process.env.HOME, 'Library/Application Support')
-    : '/var/local')
-global.APPDATA_PATH = path.join(SYS_APPDATA_PATH, 'poi')
-global.EXROOT = global.APPDATA_PATH
 
 const { log } = require('./lib/utils')
 const {
@@ -40,10 +33,13 @@ gulp.task('pack_win_release', gulp.series('getVersion', () => packWinRelease(poi
 gulp.task('clean', () => cleanFiles())
 
 gulp.task('default', (done) => {
-  const _gulp = 'gulp'
-  log("Usage:")
-  log(`  ${_gulp} deploy          - Make this repo ready to use`)
-  log(`  ${_gulp} build           - Build release complete packages under ./dist/`)
-  log(`  ${_gulp} build_plugins   - Pack up latest plugin tarballs under ./dist/`)
+  log`
+  Usage:
+  gulp deploy          - Make this repo ready to use
+  gulp build           - Build release complete packages under ./dist/
+  gulp build_plugins   - Pack up latest plugin tarballs under ./dist/
+
+  extra arguments will be passed to npm if it is used
+  `
   done()
 })
