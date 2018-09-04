@@ -147,7 +147,7 @@ export class PluginWindowWrap extends PureComponent {
 
 
   onZoomChange = (value) => {
-    this.pluginContainer.current.style.zoom = value
+    this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
   }
 
   handleZoom = (path, value) => {

@@ -60,7 +60,9 @@ function handleSpacingTop(show) {
 }
 
 window.align = async function () {
-  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript("document.querySelector('webview').getBoundingClientRect().width") / 1200
+  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript(
+    "document.querySelector('webview').getBoundingClientRect().width * (window.isMain ? 1 : config.get('poi.appearance.zoom', 1))"
+  ) / 1200
   // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
   webFrame.setLayoutZoomLevelLimits(-999999, 999999)

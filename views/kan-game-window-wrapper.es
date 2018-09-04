@@ -105,6 +105,10 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.remote.getCurrentWindow().setContentSize(value, Math.round(value / 1200 * 720 + this.getYOffset()))
       break
     }
+    case 'poi.appearance.zoom': {
+      this.onZoomChange(value)
+      break
+    }
     }
   }
 
@@ -135,7 +139,10 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.remote.getCurrentWindow().setAspectRatio(1200 / 720, { width: 0, height: this.getYOffset() })
       this.externalWindow.addEventListener('resize', debounce(() => {
         if (process.platform !== 'darwin') {
-          this.externalWindow.remote.getCurrentWindow().setSize(this.externalWindow.innerWidth, Math.round(this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()))
+          this.externalWindow.remote.getCurrentWindow().setSize(
+            Math.round(this.externalWindow.innerWidth * config.get('poi.appearance.zoom', 1)),
+            Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * config.get('poi.appearance.zoom', 1)),
+          )
         }
         if (window.getStore('layout.webview.ref')) {
           window.getStore('layout.webview.ref').executeJavaScript('window.align()')
@@ -199,7 +206,7 @@ export class KanGameWindowWrapper extends PureComponent {
   }
 
   onZoomChange = (value) => {
-    this.kangameContainer.current.style.zoom = value
+    this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
   }
 
   handleZoom = (path, value) => {
@@ -211,7 +218,7 @@ export class KanGameWindowWrapper extends PureComponent {
   focusWindow = () => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
 
   render() {
-    if (this.state.hasError || !this.state.loaded) return null
+    if (this.state.hasError || !this.state.loaded || !this.externalWindow) return null
     return ReactDOM.createPortal(
       <>
         {
