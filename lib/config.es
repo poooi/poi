@@ -93,7 +93,7 @@ if (typeof config.get('poi.layout') === 'string') {
 }
 if (!config.get('poi.plugin')) {
   const windowmode = config.get('poi.windowmode', {})
-  const background = config.get('poi.appearance.backgroundProcess', {})
+  const background = config.get('poi.backgroundProcess', {})
   config.set('poi.plugin', {
     windowmode,
     background,
