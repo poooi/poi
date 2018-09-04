@@ -131,6 +131,9 @@ export class PluginWindowWrap extends PureComponent {
       }
       this.externalWindow.require(require.resolve('./env-parts/theme'))
       this.externalWindow.addEventListener('beforeunload', () => {
+        this.setState({
+          loaded: false,
+        })
         config.set(`plugin.${this.props.plugin.id}.bounds`, this.externalWindow.remote.getCurrentWindow().getBounds())
         try {
           this.props.closeWindowPortal()
@@ -156,7 +159,7 @@ export class PluginWindowWrap extends PureComponent {
   focusWindow = () => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
 
   render() {
-    if (this.state.hasError || !this.state.loaded) return null
+    if (this.state.hasError || !this.state.loaded || !this.externalWindow) return null
     return ReactDOM.createPortal(
       <>
         {
