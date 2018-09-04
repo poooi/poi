@@ -1,0 +1,10 @@
+{
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "*.es": "javascriptreact",
+  },
+  "files.trimTrailingWhitespace": true,
+  "javascript.validate.enable": false,
+  "eslint.autoFixOnSave": true,
+}
