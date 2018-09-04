@@ -20,7 +20,7 @@ const memberIdObserver = observer(
   handleMemberIdChange,
 )
 
-if (window.config.get('poi.sendAnalytics', true)) {
+if (window.config.get('poi.misc.analytics', true)) {
   if (window.getStore('info.basic.api_member_id')) {
     handleMemberIdChange(null, window.getStore('info.basic.api_member_id'))
   }

@@ -23,7 +23,7 @@ const {ROOT, POI_VERSION, CONST, config} = window
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 config.on('config.set', (path, value) => {
-  if (path === 'poi.betaChannel' && process.platform !== 'linux') {
+  if (path === 'poi.update.beta' && process.platform !== 'linux') {
     changeChannel(value ? "beta" : "latest")
   }
 })
@@ -34,7 +34,7 @@ const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
 
 @translate(['setting'])
 @connect(state => ({
-  layout: get(state, 'config.poi.layout', 'horizontal'),
+  layout: get(state, 'config.poi.layout.mode', 'horizontal'),
 }))
 export class Misc extends Component {
   render() {
@@ -63,7 +63,7 @@ export class Misc extends Component {
           <Col xs={6}>
             <CheckboxLabelConfig
               label={t('setting:Check update of beta version')}
-              configName="poi.betaChannel"
+              configName="poi.update.beta"
               defaultVal={false} />
           </Col>
           <Col xs={12}>

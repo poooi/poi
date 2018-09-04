@@ -17,15 +17,15 @@ const ua = remote.getCurrentWebContents().getUserAgent().replace(/Electron[^ ]* 
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
-  zoomLevel: get(state, 'config.poi.zoomLevel', 1),
-  isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
+  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
+  isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   muted: get(state, 'config.poi.content.muted', false),
   useFixedResolution: get(state, 'config.poi.webview.useFixedResolution', true),
   horizontalRatio: get(state, 'config.poi.webview.ratio.horizontal', 60),
   verticalRatio: get(state, 'config.poi.webview.ratio.vertical', 50),
-  editable: get(state, 'config.poi.layouteditable', false),
+  editable: get(state, 'config.poi.layout.editable', false),
   windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
-  overlayPanel: get(state, 'config.poi.overlayPanel', false),
+  overlayPanel: get(state, 'config.poi.layout.overlay', false),
 }))
 export class KanGameWrapper extends Component {
   webview = React.createRef()
@@ -114,7 +114,7 @@ export class KanGameWrapper extends Component {
             className="webview-wrapper"
             ref={e => this.webviewWrapper = e}>
             <WebView
-              src={config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
+              src={config.get('poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
               ref={this.webview}
               plugins
               disablewebsecurity
@@ -235,7 +235,7 @@ export class KanGameWrapper extends Component {
                 width: overlayPanel ? '100%' : webviewWidth,
               }}>
               <WebView
-                src={config.get('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
+                src={config.get('poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
                 ref={this.webview}
                 plugins
                 disablewebsecurity

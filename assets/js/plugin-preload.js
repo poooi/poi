@@ -17,7 +17,7 @@ const onZoomChange = (value) => {
 }
 
 const handleZoom = (path, value) => {
-  if (path === 'poi.zoomLevel') {
+  if (path === 'poi.appearance.zoom') {
     onZoomChange(value)
   }
 }
@@ -28,9 +28,9 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', handleZoom)
 })
 
-document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.zoomLevel', 1)))
+document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.appearance.zoom', 1)))
 // document.addEventListener('DOMContentLoaded', () => {
-//   if (config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')) {
+//   if (config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')) {
 //     const titlebar = document.createElement('div')
 //     titlebar.id = "electron-titlebar"
 //     titlebar.style.position = 'sticky'

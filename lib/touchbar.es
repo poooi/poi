@@ -47,7 +47,7 @@ const refresh = new TouchBarButton({
   click: () => {mainWindow.webContents.send('touchbar','refresh')},
 })
 const edit = new TouchBarButton ({
-  icon: config.get('poi.layouteditable') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png'),
+  icon: config.get('poi.layout.editable') ? path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') : path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png'),
   click: () => {mainWindow.webContents.send('touchbar','edit')},
 })
 // poi esc
@@ -133,7 +133,7 @@ export const touchBar = new TouchBar({
 })
 //Change Volume or Edit btn
 export const touchBarReInit = (e) => {
-  edit.icon = config.get('poi.layouteditable') ?
+  edit.icon = config.get('poi.layout.editable') ?
     path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png') :
     path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png')
   volume.icon = config.get('poi.content.muted') ?

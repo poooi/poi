@@ -14,7 +14,7 @@ const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1
 config.on('config.set', (path, value) => {
   let event
   switch (path) {
-  case 'poi.layout':
+  case 'poi.layout.mode':
     event = new CustomEvent('layout.change', {
       bubbles: true,
       cancelable: true,

@@ -30,7 +30,7 @@ if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
 }
 
 @connect((state, props) => ({
-  value: get(state.config, 'poi.language', language),
+  value: get(state.config, 'poi.misc.language', language),
 }))
 export class LanguageConfig extends Component {
   static propTypes = {
@@ -38,7 +38,7 @@ export class LanguageConfig extends Component {
   }
   handleSetLanguage = (e) => {
     const language = e.target.value
-    config.set('poi.language', language)
+    config.set('poi.misc.language', language)
     i18next.changeLanguage(language)
     setWindowI18nLng(language)
   }

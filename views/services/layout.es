@@ -19,7 +19,7 @@ const setCSS = ({ layout, zoomLevel, reversed }) => {
   const tab = $('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')
   const tabSize = tab ? tab.getBoundingClientRect() : { height: 0, width: 0 }
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', 1200) !== 0 && !config.get('poi.isolateGameWindow', false) && $('kan-game webview') ?
+  const { right, bottom } =  config.get('poi.webview.width', 1200) !== 0 && !config.get('poi.layout.isolate', false) && $('kan-game webview') ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
@@ -62,19 +62,19 @@ ${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
 const setCSSDebounced = debounce(setCSS, 200)
 
 const setMinSize = () => {
-  if (config.get('poi.isolateGameWindow', false) || !$('poi-info') || config.get('poi.overlayPanel', false)) {
+  if (config.get('poi.layout.isolate', false) || !$('poi-info') || config.get('poi.layout.overlay', false)) {
     remote.getCurrentWindow().setMinimumSize(1, 1)
   } else {
     const { width, height } = window.getStore('layout.webview')
-    const zoomLevel = config.get('poi.zoomLevel', 1)
+    const zoomLevel = config.get('poi.appearance.zoom', 1)
     remote.getCurrentWindow().setMinimumSize(width, Math.floor(height + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
   }
 }
 
 const setIsolatedMainWindowSize = isolateWindow => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
-  const layout = config.get('poi.layout', 'horizontal')
-  const reversed = config.get('poi.reverseLayout', false)
+  const layout = config.get('poi.layout.mode', 'horizontal')
+  const reversed = config.get('poi.layout.reverse', false)
   const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   if (isolateWindow) {
@@ -106,13 +106,13 @@ const setIsolatedMainWindowSize = isolateWindow => {
 }
 
 const setOverlayPanelWindowSize = overlayPanel => {
-  const layout = config.get('poi.layout', 'horizontal')
-  const reversed = config.get('poi.reverseLayout', false)
-  const isolateWindow = config.get('poi.isolateGameWindow', false)
+  const layout = config.get('poi.layout.mode', 'horizontal')
+  const reversed = config.get('poi.layout.reverse', false)
+  const isolateWindow = config.get('poi.layout.isolate', false)
   const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   const useFixedResolution = config.get('poi.webview.useFixedResolution', true)
-  const zoomLevel = config.get('poi.zoomLevel', 1)
+  const zoomLevel = config.get('poi.appearance.zoom', 1)
   const poiInfoHeight = Math.floor((($('poi-info') || {}).clientHeight || 0) * zoomLevel)
   const titlebarHeight = Math.floor(($('title-bar') || {}).clientHeight || 0)
   if (overlayPanel && !isolateWindow) {
@@ -120,14 +120,14 @@ const setOverlayPanelWindowSize = overlayPanel => {
       remote.getCurrentWindow().setResizable(false)
     }
     if (layout === 'horizontal') {
-      config.set('poi.panel.width', bounds.width - webviewWidth)
+      config.set('poi.layout.overlaypanel.width', bounds.width - webviewWidth)
       if (reversed) {
         bounds.x += (bounds.width - webviewWidth)
       }
       bounds.width = webviewWidth
       bounds.height = webviewHeight + poiInfoHeight + titlebarHeight
     } else {
-      config.set('poi.panel.height', bounds.height - webviewHeight - poiInfoHeight)
+      config.set('poi.layout.overlaypanel.width', bounds.height - webviewHeight - poiInfoHeight)
       if (reversed) {
         bounds.y += bounds.height - webviewHeight - poiInfoHeight
       }
@@ -138,14 +138,14 @@ const setOverlayPanelWindowSize = overlayPanel => {
   } else if (!isolateWindow) {
     remote.getCurrentWindow().setResizable(config.get('poi.content.resizable', true))
     if (layout === 'horizontal') {
-      bounds.width += config.get('poi.panel.width', 500)
+      bounds.width += config.get('poi.layout.overlaypanel.width', 500)
       if (reversed) {
-        bounds.x -= config.get('poi.panel.width', 500)
+        bounds.x -= config.get('poi.layout.overlaypanel.width', 500)
       }
     } else {
-      bounds.height += config.get('poi.panel.height', 500)
+      bounds.height += config.get('poi.layout.overlaypanel.width', 500)
       if (reversed) {
-        bounds.y -= config.get('poi.panel.height', 500)
+        bounds.y -= config.get('poi.layout.overlaypanel.width', 500)
       }
     }
     remote.getCurrentWindow().setAspectRatio(0)
@@ -155,9 +155,9 @@ const setOverlayPanelWindowSize = overlayPanel => {
 }
 
 const handleOverlayPanelReszie = () => {
-  if (config.get('poi.overlayPanel', false)) {
+  if (config.get('poi.layout.overlay', false)) {
     const width = config.get('poi.webview.useFixedResolution', true) ? config.get('poi.webview.width', 1200) : remote.getCurrentWindow().getContentSize()[0]
-    const zoomLevel = config.get('poi.zoomLevel', 1)
+    const zoomLevel = config.get('poi.appearance.zoom', 1)
     const poiInfoHeight = Math.floor((($('poi-info') || {}).clientHeight || 0) * zoomLevel)
     const titlebarHeight = Math.floor(($('title-bar') || {}).clientHeight || 0)
     remote.getCurrentWindow().setContentSize(width, Math.floor(width / 1200 * 720) + poiInfoHeight + titlebarHeight)
@@ -179,8 +179,8 @@ const setProperWindowSize = () => {
   }
   // Resize when window size smaller than webview size
   const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
-  const zoomLevel = config.get('poi.zoomLevel', 1)
-  const layout = config.get('poi.layout', 'horizontal')
+  const zoomLevel = config.get('poi.appearance.zoom', 1)
+  const layout = config.get('poi.layout.mode', 'horizontal')
   const realWidth = webviewWidth
   const realHeight = Math.floor(webviewHeight + $('poi-info').clientHeight * zoomLevel)
   if (layout === 'vertical' && realWidth > window.innerWidth) {
@@ -199,9 +199,9 @@ const setProperWindowSize = () => {
 
 const adjustSize = () => {
   try {
-    const layout = config.get('poi.layout', 'horizontal')
-    const zoomLevel = config.get('poi.zoomLevel', 1)
-    const reversed = config.get('poi.reverseLayout', false)
+    const layout = config.get('poi.layout.mode', 'horizontal')
+    const zoomLevel = config.get('poi.appearance.zoom', 1)
+    const reversed = config.get('poi.layout.reverse', false)
     // Apply calcualted data
     setCSSDebounced({
       layout,
@@ -227,7 +227,7 @@ const changeBounds = () => {
   const borderY = height - window.innerHeight
   let newHeight = window.innerHeight
   let newWidth = window.innerWidth
-  if (config.get('poi.layout', 'horizontal') === 'horizontal') {
+  if (config.get('poi.layout.mode', 'horizontal') === 'horizontal') {
     // Previous vertical
     newHeight = window.innerWidth / 1200 * 720 + 30
     newWidth = window.innerWidth / 5 * 7
@@ -249,18 +249,17 @@ window.addEventListener('resize', adjustSize)
 
 config.on('config.set', (path, value) => {
   switch (path) {
-  case 'poi.zoomLevel':
-  case 'poi.panelMinSize':
+  case 'poi.appearance.zoom':
   case 'poi.tabarea.double':
   case 'poi.webview.width':
   case 'poi.webview.useFixedResolution':
   case 'poi.webview.ratio.vertical':
   case 'poi.webview.ratio.horizontal':
-  case 'poi.reverseLayout': {
+  case 'poi.layout.reverse': {
     adjustSize()
     break
   }
-  case 'poi.layout': {
+  case 'poi.layout.mode': {
     const current = remote.getCurrentWindow()
     const resizable = current.isResizable()
     const maximizable = current.isMaximizable()
@@ -279,12 +278,12 @@ config.on('config.set', (path, value) => {
     adjustSize()
     break
   }
-  case 'poi.isolateGameWindow': {
+  case 'poi.layout.isolate': {
     setIsolatedMainWindowSize(value)
     setMinSize()
     break
   }
-  case 'poi.overlayPanel': {
+  case 'poi.layout.overlay': {
     setOverlayPanelWindowSize(value)
     break
   }

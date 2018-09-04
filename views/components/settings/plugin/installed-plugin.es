@@ -168,7 +168,7 @@ export class InstalledPlugin extends PureComponent {
                             <div>
                               <CheckboxLabelConfig
                                 label={<Trans>setting:Open plugin in new window</Trans>}
-                                configName={`poi.windowmode.${plugin.id}`}
+                                configName={`poi.plugin.windowmode.${plugin.id}`}
                                 defaultVal={!!plugin.windowMode} />
                             </div>
                           }
@@ -186,7 +186,7 @@ export class InstalledPlugin extends PureComponent {
                             <div>
                               <CheckboxLabelConfig
                                 label={<Trans>setting:Keep plugin process running in background (re-enable to apply changes)</Trans>}
-                                configName={`poi.backgroundProcess.${plugin.id}`}
+                                configName={`poi.plugin.background.${plugin.id}`}
                                 defaultVal={!plugin.realClose} />
                             </div>
                           }

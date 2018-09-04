@@ -16,9 +16,9 @@ const miniShipRowWidthSelector = state => get(state, 'layout.minishippane.width'
 export const PaneBodyMini = connect(() => {
   return (state, {fleetId}) => ({
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
-    enableAvatar: get(state, 'config.poi.enableAvatar', true),
+    enableAvatar: get(state, 'config.poi.appearance.avatar', true),
     width: miniShipRowWidthSelector(state),
-    zoomLevel: get(state, 'config.poi.zoomLevel', 1),
+    zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
   })
 })(({ fleetId, shipsId, enableAvatar, width, zoomLevel }) =>
   <>
@@ -46,9 +46,9 @@ export const PaneBodyMini = connect(() => {
 export const LBViewMini = translate(['resources'])(connect(state => ({
   areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
   mapareas: get(state, 'const.$mapareas', {}),
-  enableAvatar: get(state, 'config.poi.enableAvatar', true),
+  enableAvatar: get(state, 'config.poi.appearance.avatar', true),
   width: miniShipRowWidthSelector(state),
-  zoomLevel: get(state, 'config.poi.zoomLevel', 1),
+  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
 }))(({ areaIds, mapareas, t, enableAvatar, zoomLevel, width }) => (
   <ScrollShadow className="ship-details-mini" observerPath={[ 'layout.minishippane', 'info.airbase' ]}>
     {

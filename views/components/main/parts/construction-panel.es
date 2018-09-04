@@ -20,7 +20,7 @@ const EmptyDock = ({ state }) => (
 )
 
 const getPanelDimension = width => {
-  width = width / window.getStore('config.poi.zoomLevel', 1)
+  width = width / window.getStore('config.poi.appearance.zoom', 1)
   if (width > 700) {
     return 4
   }
@@ -35,7 +35,7 @@ const getPanelDimension = width => {
   constructions: state.info.constructions,
   $ships: state.const.$ships,
   canNotify: state.misc.canNotify,
-  enableAvatar: get(state, 'config.poi.enableAvatar', true),
+  enableAvatar: get(state, 'config.poi.appearance.avatar', true),
   dimension: getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
 }))
 export class ConstructionPanel extends Component {

@@ -9,10 +9,10 @@ const lookupItemName = slotitemId =>
   i18next.t(`resources:${getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')}`, { keySeparator: '%%%%' })
 
 const devResultDelay =
-  window.config.get('poi.delayItemDevResult', false) ? 6200 : 500
+  window.config.get('poi.notify.delay.dev', false) ? 6200 : 500
 
 const improveResultDelay =
-  window.config.get('poi.delayItemImproveResult', false) ? 5500 : 500
+  window.config.get('poi.notify.delay.improve', false) ? 5500 : 500
 
 const sendAfterDelay = sender => (msgStr, delay) =>
   setTimeout(

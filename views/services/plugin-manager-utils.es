@@ -262,7 +262,7 @@ export async function enablePlugin(plugin, reread=true) {
     ...pluginMain,
   }
   if (plugin.windowURL) {
-    plugin.realClose = !config.get(`poi.backgroundProcess.${plugin.id}`, !plugin.realClose)
+    plugin.realClose = !config.get(`poi.plugin.background.${plugin.id}`, !plugin.realClose)
   }
   plugin = postEnableProcess(plugin)
   return plugin
@@ -314,9 +314,9 @@ const postEnableProcess = (plugin) => {
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
       backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
-      // frame: !config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
+      // frame: !config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux'),
     })
-    if (['darwin'].includes(process.platform) && config.get('poi.vibrant', 0) === 1) {
+    if (['darwin'].includes(process.platform) && config.get('poi.appearance.vibrant', 0) === 1) {
       Object.assign(windowOptions, {
         vibrancy: 'ultra-dark',
       })

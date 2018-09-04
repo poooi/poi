@@ -58,7 +58,7 @@ if (process.platform === 'win32') {
 }
 
 export const checkUpdate = async () => {
-  const betaChannel = config.get('poi.betaChannel', false)
+  const betaChannel = config.get('poi.update.beta', false)
   const versionInfo = await fetch(`https://${global.SERVER_HOSTNAME}/update/latest.json`, defaultFetchOption)
     .then(res => res.json())
     .catch(e => {

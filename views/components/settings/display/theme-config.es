@@ -18,13 +18,13 @@ const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1
 @translate(['setting'])
 @connect((state, props) => ({
   themes: get(state, 'ui.themes'),
-  theme: get(state.config, 'poi.theme', 'paperdark'),
-  enableSVGIcon: get(state.config, 'poi.useSVGIcon', false),
+  theme: get(state.config, 'poi.appearance.theme', 'paperdark'),
+  enableSVGIcon: get(state.config, 'poi.appearance.svgicon', false),
   enableTransition: get(state.config, 'poi.transition.enable', true),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
-  vibrant: get(state.config, 'poi.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
-  background: get(state.config, 'poi.background'),
-  enableAvatar: get(state.config, 'poi.enableAvatar', true),
+  vibrant: get(state.config, 'poi.appearance.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
+  background: get(state.config, 'poi.appearance.background'),
+  enableAvatar: get(state.config, 'poi.appearance.avatar', true),
 }))
 export class ThemeConfig extends Component {
   static propTypes = {
@@ -56,7 +56,7 @@ export class ThemeConfig extends Component {
     }
   }
   handleSetSVGIcon = () => {
-    config.set('poi.useSVGIcon', !this.props.enableSVGIcon)
+    config.set('poi.appearance.svgicon', !this.props.enableSVGIcon)
   }
   handleSetTransition = () => {
     config.set('poi.transition.enable', !this.props.enableTransition)
@@ -65,10 +65,10 @@ export class ThemeConfig extends Component {
     config.set('poi.tabarea.grid', !this.props.useGridMenu)
   }
   handleSetVibrancy = e => {
-    config.set('poi.vibrant', parseInt(e.target.value))
+    config.set('poi.appearance.vibrant', parseInt(e.target.value))
   }
   handleSetAvatar = e => {
-    config.set('poi.enableAvatar', !this.props.enableAvatar)
+    config.set('poi.appearance.avatar', !this.props.enableAvatar)
   }
   handleMouseEnter = () => {
     this.setState({
@@ -124,7 +124,7 @@ export class ThemeConfig extends Component {
               this.props.vibrant === 2 &&
               <FolderPickerConfig
                 label={t('setting:Custom background')}
-                configName="poi.background"
+                configName="poi.appearance.background"
                 defaultVal={''}
                 isFolder={false}
                 placeholder={t('setting:No background image selected')}

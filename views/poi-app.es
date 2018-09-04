@@ -8,8 +8,8 @@ import { ControlledTabArea } from './tabarea'
 
 
 @connect((state, props) => ({
-  layout: get(state, 'config.poi.layout', 'horizontal'),
-  overlay: get(state, 'config.poi.overlayPanel', false),
+  layout: get(state, 'config.poi.layout.mode', 'horizontal'),
+  overlay: get(state, 'config.poi.layout.overlay', false),
 }))
 export class PoiApp extends Component {
   state = {

@@ -68,7 +68,7 @@ const isStaticResource = (pathname, hostname) => {
   return false
 }
 const getCachePath = (pathname) => {
-  const dir = config.get('poi.cachePath', global.DEFAULT_CACHE_PATH)
+  const dir = config.get('poi.misc.cache.path', global.DEFAULT_CACHE_PATH)
   return path.join(dir, pathname)
 }
 const findHack = (pathname) => {

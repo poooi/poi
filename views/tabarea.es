@@ -106,8 +106,8 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
   activePluginName: get(state.ui, 'activePluginName', ''),
   mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
   mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
-  editable: get(state.config, 'poi.layouteditable', false),
-  windowmode: get(state.config, 'poi.windowmode', emptyObj),
+  editable: get(state.config, 'poi.layout.editable', false),
+  windowmode: get(state.config, 'poi.plugin.windowmode', emptyObj),
 }))
 export class ControlledTabArea extends PureComponent {
   static propTypes = {

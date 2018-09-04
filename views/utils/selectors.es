@@ -103,13 +103,13 @@ export const extensionSelectorFactory = key =>
   state => get(state.ext, [key, '_']) || {}
 
 export const configLayoutSelector = createSelector(configSelector,
-  config => get(config, 'poi.layout', 'horizontal'))
+  config => get(config, 'poi.layout.mode', 'horizontal'))
 export const configDoubleTabbedSelector = createSelector(configSelector,
   config => get(config, 'poi.tabarea.double', false))
 export const configZoomLevelSelector = createSelector(configSelector,
-  config => get(config, 'poi.zoomLevel', 1))
+  config => get(config, 'poi.appearance.zoom', 1))
 export const configReverseLayoutSelector = createSelector(configSelector,
-  config => get(config, 'poi.reverseLayout', false))
+  config => get(config, 'poi.layout.reverse', false))
 
 
 export const condTickSelector = (state) => state.timers.cond.tick

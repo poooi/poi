@@ -26,9 +26,9 @@ const { config } = window
 @translate(['main'])
 @connect((state, props) => ({
   layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
-  editable: get(state, 'config.poi.layouteditable', false),
+  editable: get(state, 'config.poi.layout.editable', false),
   mainpanewidth: get(state, 'layout.mainpane.width', 450),
-  zoomLevel: get(state, 'config.poi.zoomLevel', 1),
+  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
 }))
 export class reactClass extends Component {
   static propTypes = {

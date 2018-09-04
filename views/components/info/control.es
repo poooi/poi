@@ -30,7 +30,7 @@ const openItemAsync = (dir, source=null) => {
 @translate()
 @connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
-  editable: get(state, 'config.poi.layouteditable', false),
+  editable: get(state, 'config.poi.layout.editable', false),
 }))
 export class PoiControl extends Component {
   static propTypes = {
@@ -41,7 +41,7 @@ export class PoiControl extends Component {
   }
   handleCapturePage = toClipboard => {
     const { width, height, windowWidth, windowHeight } = window.getStore('layout.webview')
-    const isolate = config.get('poi.isolateGameWindow', false)
+    const isolate = config.get('poi.layout.isolate', false)
     const scWidth = isolate ? windowWidth : width
     const scHeight = isolate ? windowHeight : height
     const rect = {
@@ -50,8 +50,8 @@ export class PoiControl extends Component {
       width: Math.floor(scWidth * devicePixelRatio),
       height: Math.floor(scHeight * devicePixelRatio),
     }
-    const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
-    const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
+    const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
+    const usePNG = config.get('poi.misc.screenshot.format', 'png') === 'png'
     getStore('layout.webview.ref').getWebContents().capturePage(rect, image => {
       image = image.resize({ width: Math.floor(scWidth), height: Math.floor(scHeight) })
       if (toClipboard) {
@@ -73,7 +73,7 @@ export class PoiControl extends Component {
   }
   handleOpenCacheFolder = () => {
     try {
-      const dir = config.get('poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH'))
+      const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
       fs.ensureDirSync(dir)
       fs.ensureDirSync(path.join(dir, 'KanColle'))
       fs.ensureDirSync(path.join(dir, 'ShiroPro'))
@@ -88,7 +88,7 @@ export class PoiControl extends Component {
     }
   }
   handleOpenMakaiFolder = () => {
-    let dir = config.get('poi.cachePath', remote.getGlobal('DEFAULT_CACHE_PATH'))
+    let dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
     dir = path.join(dir, 'KanColle', 'kcs2', 'resources', 'ship')
     try {
       fs.ensureDirSync(dir)
@@ -99,7 +99,7 @@ export class PoiControl extends Component {
   }
   handleOpenScreenshotFolder = () => {
     try {
-      const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
+      const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
       fs.ensureDirSync(screenshotPath)
       openItemAsync(screenshotPath,'handleOpenScreenshotFolder')
     }
@@ -111,7 +111,7 @@ export class PoiControl extends Component {
     config.set('poi.content.muted', !this.props.muted)
   }
   handleSetEditable = () => {
-    config.set('poi.layouteditable', !this.props.editable)
+    config.set('poi.layout.editable', !this.props.editable)
   }
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()

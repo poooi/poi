@@ -138,7 +138,7 @@ export class PluginWindowWrap extends PureComponent {
           console.error(e)
         }
       })
-      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.zoomLevel', 1)))
+      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
     })
   }
 
@@ -148,7 +148,7 @@ export class PluginWindowWrap extends PureComponent {
   }
 
   handleZoom = (path, value) => {
-    if (path === 'poi.zoomLevel') {
+    if (path === 'poi.appearance.zoom') {
       this.onZoomChange(value)
     }
   }
@@ -160,7 +160,7 @@ export class PluginWindowWrap extends PureComponent {
     return ReactDOM.createPortal(
       <>
         {
-          window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
+          window.config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
           <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
         <WindowEnv.Provider value={{
