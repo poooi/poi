@@ -94,10 +94,12 @@ if (typeof config.get('poi.layout') === 'string') {
 if (!config.get('poi.plugin')) {
   const windowmode = config.get('poi.windowmode', {})
   const background = config.get('poi.backgroundProcess', {})
-  config.set('poi.plugin', {
-    windowmode,
-    background,
-  })
+  if (Object.keys(windowmode).length || Object.keys(background).length) {
+    config.set('poi.plugin', {
+      windowmode,
+      background,
+    })
+  }
 }
 config.delete('poi.windowmode')
 config.delete('poi.backgroundProcess')
