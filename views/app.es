@@ -41,9 +41,9 @@ require('./services/alert')
 
 
 @connect(state => ({
-  isHorizontal: get(state, 'config.poi.layout', 'horizontal') === 'horizontal',
-  reversed: get(state, 'config.poi.reverseLayout', false),
-  isolateGameWindow: get(state, 'config.poi.isolateGameWindow', false),
+  isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
+  reversed: get(state, 'config.poi.layout.reverse', false),
+  isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
 }))
 class Poi extends Component {
   componentWillUnmount() {
@@ -58,7 +58,7 @@ class Poi extends Component {
     return (
       <>
         {
-          config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux') &&
+          config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
           <title-bar>
             <TitleBarWrapper />
           </title-bar>
@@ -93,7 +93,7 @@ ReactDOM.render(
         mountPoint: document.body,
       }}>
         {
-          config.get('poi.asyncMode', true) ? (
+          config.get('poi.misc.async', true) ? (
             <Async>
               <Poi />
             </Async>

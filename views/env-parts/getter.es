@@ -23,10 +23,10 @@ function object2ArraySelectorFactory(path) {
 const language = Object.clone(window.language)
 delete window.language
 Object.defineProperty(window, 'language', {get: () => {
-  return config.get('poi.language', language)
+  return config.get('poi.misc.language', language)
 }})
 Object.defineProperty(window, 'layout', {get: () => {
-  return config.get('poi.layout', 'horizontal')
+  return config.get('poi.layout.mode', 'horizontal')
 }})
 Object.defineProperty(window, 'doubleTabbed', {get: () => {
   return config.get('poi.tabarea.double', false)
@@ -35,13 +35,13 @@ Object.defineProperty(window, 'webviewWidth', {get: () => {
   return config.get('poi.webview.width', 1200)
 }})
 Object.defineProperty(window, 'zoomLevel', {get: () => {
-  return config.get('poi.zoomLevel', 1)
+  return config.get('poi.appearance.zoom', 1)
 }})
 Object.defineProperty(window, 'useSVGIcon', {get: () => {
-  return config.get('poi.useSVGIcon', false)
+  return config.get('poi.appearance.svgicon', false)
 }})
 Object.defineProperty(window, 'screenshotPath', {get: () => {
-  return config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
+  return config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
 }})
 window.notify = window.notify || {}
 Object.defineProperty(window.notify, 'morale', {get: () => {

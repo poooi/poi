@@ -18,7 +18,7 @@ const config = (() => {
 const NPM_SERVER = (() => {
   const mirrors = fs.readJsonSync(MIRROR_JSON_PATH)
   // Don't want to mess with detecting system language here without window.navigator
-  const language = config.get('poi.language', 'zh-CN')
+  const language = config.get('poi.misc.language', 'zh-CN')
   const primaryServer = language === 'zh-CN' ? 'taobao' : 'npm'
   let server = config.get("packageManager.mirrorName", primaryServer)
   if (process.env.TRAVIS || process.env.APPVEYOR) {

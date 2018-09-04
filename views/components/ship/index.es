@@ -137,9 +137,9 @@ const LBView = translate(['resources'])(connect(state => ({
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
   airBaseCnt: get(state, 'info.airbase.length', 0),
-  enableAvatar: get(state, 'config.poi.enableAvatar', true),
+  enableAvatar: get(state, 'config.poi.appearance.avatar', true),
   width: shipRowWidthSelector(state),
-  zoomLevel: get(state, 'config.poi.zoomLevel', 1),
+  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
 }))
 export class reactClass extends Component {
   static propTypes = {

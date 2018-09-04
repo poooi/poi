@@ -8,8 +8,8 @@ import { Trans } from 'react-i18next'
 const { config } = window
 
 @connect((state, props) => ({
-  zoomLevel: get(state.config, 'poi.zoomLevel', 1),
-  key: get(state.config, 'poi.zoomLevel', 1),
+  zoomLevel: get(state.config, 'poi.appearance.zoom', 1),
+  key: get(state.config, 'poi.appearance.zoom', 1),
 }))
 export class ZoomingConfig extends Component {
   static propTypes = {
@@ -19,7 +19,7 @@ export class ZoomingConfig extends Component {
     zoomLevel: this.props.zoomLevel,
   }
   handleChangeZoomLevel = (e) => {
-    config.set('poi.zoomLevel', this.state.zoomLevel)
+    config.set('poi.appearance.zoom', this.state.zoomLevel)
   }
   render() {
     return (

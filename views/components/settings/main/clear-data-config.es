@@ -23,7 +23,7 @@ const { config, toggleModal, APPDATA_PATH } = window
 
 @translate(['setting'])
 @connect(state => ({
-  cacheSize: get(state.config, 'poi.cacheSize', 320),
+  cacheSize: get(state.config, 'poi.misc.cache.size', 320),
 }))
 export class ClearDataConfig extends Component {
   static propTypes = {
@@ -45,7 +45,7 @@ export class ClearDataConfig extends Component {
     })
   }
   handleValueChange = e => {
-    config.set('poi.cacheSize', parseInt(e.target.value))
+    config.set('poi.misc.cache.size', parseInt(e.target.value))
   }
   handleUpdateCacheSize = () => {
     session.defaultSession.getCacheSize(cacheSize => this.setState({ cacheSize }))

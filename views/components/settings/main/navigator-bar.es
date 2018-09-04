@@ -18,10 +18,10 @@ import '../assets/navigator-bar.css'
 export class NavigatorBar extends React.Component {
   constructor() {
     super()
-    config.setDefault('poi.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')
+    config.setDefault('poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')
     this.state = {
       status: 1,
-      url: config.get('poi.homepage'),
+      url: config.get('poi.misc.homepage'),
     }
   }
   componentDidMount() {
@@ -101,10 +101,10 @@ export class NavigatorBar extends React.Component {
     webview.stop()
   }
   onClickHomepage = (e) => {
-    config.set('poi.homepage', this.state.url)
+    config.set('poi.misc.homepage', this.state.url)
   }
   onRightClickHomepage = (e) => {
-    this.navigate(config.get('poi.homepage'))
+    this.navigate(config.get('poi.misc.homepage'))
   }
 
   render() {

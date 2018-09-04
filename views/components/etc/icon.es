@@ -34,7 +34,7 @@ class iconConf {
 const iconConfSetter = new iconConf()
 
 const setIcon = (path, val) => {
-  if (path === 'poi.useSVGIcon') {
+  if (path === 'poi.appearance.svgicon') {
     iconConfSetter.setConf(val)
   }
 }
@@ -76,7 +76,7 @@ export class SlotitemIcon extends PureComponent {
   }
 
   state = {
-    useSVGIcon: config.get('poi.useSVGIcon', false),
+    useSVGIcon: config.get('poi.appearance.svgicon', false),
   }
 
   name = 'SlotitemIcon'
@@ -120,7 +120,7 @@ export class MaterialIcon extends PureComponent {
   }
 
   state = {
-    useSVGIcon: config.get('poi.useSVGIcon', false),
+    useSVGIcon: config.get('poi.appearance.svgicon', false),
   }
 
   name = 'MaterialIcon'

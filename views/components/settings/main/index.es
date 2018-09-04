@@ -51,7 +51,7 @@ export const PoiConfig = connect(state => ({
       <Divider text={t('setting:Screenshot Format')} />
       <RadioConfig
         label={t('setting:Screenshot Format')}
-        configName="poi.screenshotFormat"
+        configName="poi.misc.screenshot.format"
         defaultVal='png'
         availableVal={[{name: 'PNG', value: 'png'}, {name: 'JPEG', value: 'jpg'}]} />
     </div>
@@ -59,7 +59,7 @@ export const PoiConfig = connect(state => ({
       <Divider text={t('setting:Screenshot Folder')} />
       <FolderPickerConfig
         label={t('setting:Screenshot Folder')}
-        configName="poi.screenshotPath"
+        configName="poi.misc.screenshot.path"
         defaultVal={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
         exclude={screenshotPathExclude}
       />
@@ -68,7 +68,7 @@ export const PoiConfig = connect(state => ({
       <Divider text={t('setting:Cache Folder')} />
       <FolderPickerConfig
         label={t('setting:Cache Folder')}
-        configName="poi.cachePath"
+        configName="poi.misc.cache.path"
         defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
     </div>
     <div className="form-group">
@@ -122,25 +122,25 @@ export const PoiConfig = connect(state => ({
         <Col xs={12}>
           <CheckboxLabelConfig
             label={t('setting:Disable Hardware Acceleration')}
-            configName="poi.disableHA"
+            configName="poi.misc.disablehwaccel"
             defaultVal={false} />
           <CheckboxLabelConfig
             label={t('setting:Editing DMM Cookie Region Flag')}
-            configName="poi.enableDMMcookie"
+            configName="poi.misc.dmmcookie"
             defaultVal={false} />
           <CheckboxLabelConfig
             label={t('setting:Prevent DMM Network Change Popup')}
-            configName="poi.disableNetworkAlert"
+            configName="poi.misc.disablenetworkalert"
             defaultVal={false} />
           <CheckboxLabelConfig
             label={t('setting:Show network status in notification bar')}
-            configName="poi.showNetworkLog"
+            configName="poi.misc.networklog"
             defaultVal={true} />
           {
             (process.platform === 'win32') ?
               <CheckboxLabelConfig
                 label={t('setting:Create shortcut on startup (Notification may not be working without shortcut)')}
-                configName="poi.createShortcut"
+                configName="poi.misc.shortcut"
                 defaultVal={true} />
               :
               null
@@ -156,11 +156,11 @@ export const PoiConfig = connect(state => ({
           }
           <CheckboxLabelConfig
             label={t('setting:Enter safe mode on next startup')}
-            configName="poi.enterSafeMode"
+            configName="poi.misc.safemode"
             defaultVal={false} />
           <CheckboxLabelConfig
             label={t('setting:Send data to Google Analytics')}
-            configName="poi.sendAnalytics"
+            configName="poi.misc.analytics"
             defaultVal={true} />
         </Col>
       </Grid>

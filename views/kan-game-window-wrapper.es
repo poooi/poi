@@ -108,7 +108,7 @@ export class KanGameWindowWrapper extends PureComponent {
     }
   }
 
-  useCustomTitlebar = () => window.config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux')
+  useCustomTitlebar = () => window.config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')
 
   getYOffset = () => this.useCustomTitlebar() ? 60 : 30
 
@@ -194,7 +194,7 @@ export class KanGameWindowWrapper extends PureComponent {
       }
       this.externalWindow.remote.getCurrentWindow().blur()
       this.externalWindow.remote.getCurrentWindow().focus()
-      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.zoomLevel', 1)))
+      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
     })
   }
 
@@ -203,7 +203,7 @@ export class KanGameWindowWrapper extends PureComponent {
   }
 
   handleZoom = (path, value) => {
-    if (path === 'poi.zoomLevel') {
+    if (path === 'poi.appearance.zoom') {
       this.onZoomChange(value)
     }
   }

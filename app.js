@@ -30,20 +30,20 @@ require('./lib/updater')
 proxy.setMaxListeners(30)
 
 // Disable HA
-if (config.get('poi.disableHA', false)) {
+if (config.get('poi.misc.disablehwaccel', false)) {
   app.disableHardwareAcceleration()
 }
 
 // check safe mode config
-if (config.get('poi.enterSafeMode', false)) {
+if (config.get('poi.misc.safemode', false)) {
   warn('Entering SAFE MODE according to config.')
   global.isSafeMode = true
-  config.set('poi.enterSafeMode')
+  config.set('poi.misc.safemode')
 }
 
 // Add shortcut to start menu when os is windows
 app.setAppUserModelId('org.poooi.poi')
-if (process.platform === 'win32' && config.get('poi.createShortcut', true)) {
+if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
   const shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
@@ -100,7 +100,7 @@ app.commandLine.appendSwitch('js-flags', "--harmony --harmony-do-expressions")
 // app.commandLine.appendSwitch('enable-checker-imaging', 'true')
 
 // Cache size
-const cacheSize = parseInt(config.get('poi.cacheSize'))
+const cacheSize = parseInt(config.get('poi.misc.cache.size'))
 if (Number.isInteger(cacheSize)) {
   app.commandLine.appendSwitch('disk-cache-size', `${1048576 * cacheSize}`)
 }
@@ -142,7 +142,7 @@ app.on('ready', () => {
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
     titleBarStyle: isModernMacOS ? 'hidden' : null,
     transparent: isModernMacOS,
-    frame: !config.get('poi.useCustomTitleBar', process.platform === 'win32' || process.platform === 'linux'),
+    frame: !config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux'),
     enableLargerThanScreen: true,
     maximizable: config.get('poi.content.resizable', true),
     fullscreenable: config.get('poi.content.resizable', true),

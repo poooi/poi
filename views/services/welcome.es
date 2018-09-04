@@ -6,14 +6,14 @@ const { config, POI_VERSION } = window
 
 // Readme contents
 const dontShowAgain = () =>
-  config.set('poi.first', POI_VERSION)
+  config.set('poi.update.lastversion', POI_VERSION)
 
 class GoogleAnalyticsOption extends Component {
   state = {
-    checked: config.get('poi.sendAnalytics', true),
+    checked: config.get('poi.misc.analytics', true),
   }
   handleChange = e => {
-    config.set('poi.sendAnalytics', !this.state.checked)
+    config.set('poi.misc.analytics', !this.state.checked)
     this.setState({ checked: !this.state.checked })
   }
   render() {
@@ -27,7 +27,7 @@ class GoogleAnalyticsOption extends Component {
   }
 }
 
-if (config.get('poi.first', '0.0.0') != POI_VERSION) {
+if (config.get('poi.update.lastversion', '0.0.0') != POI_VERSION) {
   const isHan = ['zh-CN', 'zh-TW'].includes(window.language)
   const isEn = window.language === 'en-US'
   const isCN = window.language === 'zh-CN'

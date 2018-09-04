@@ -14,7 +14,7 @@ const animTimeStamp = [0, 0, 0, 0, 0, 0, 0, 0]
 let t
 
 const getPanelDimension = width => {
-  width = width / window.getStore('config.poi.zoomLevel', 1)
+  width = width / window.getStore('config.poi.appearance.zoom', 1)
   if (width < 150) {
     return 1
   }

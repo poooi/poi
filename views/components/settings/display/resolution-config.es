@@ -17,8 +17,8 @@ function getMinArea (displays) {
 
 @connect((state, props) => ({
   webview: state.layout.webview,
-  isolateGameWindow: get(state.config, 'poi.isolateGameWindow', false),
-  key: get(state.config, 'poi.isolateGameWindow', false) ? 'i' + get(state.layout.webview, 'windowWidth') : 'n' + get(state.layout.webview, 'width'),
+  isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
+  key: get(state.config, 'poi.layout.isolate', false) ? 'i' + get(state.layout.webview, 'windowWidth') : 'n' + get(state.layout.webview, 'width'),
 }))
 export class ResolutionConfig extends Component {
   static propTypes = {

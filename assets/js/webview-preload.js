@@ -8,7 +8,7 @@ if (config.get('poi.content.muted', false)) {
 }
 
 document.addEventListener('DOMContentLoaded', (e) => {
-  if (config.get('poi.enableDMMcookie', false)) {
+  if (config.get('poi.misc.dmmcookie', false)) {
     document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/"
     document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/"
     document.cookie = "cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/"
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const ua = remote.getCurrentWebContents().session.getUserAgent()
     remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
   }
-  if (config.get('poi.disableNetworkAlert', false) && window.DMM) {
+  if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
     window.DMM.netgame.reloadDialog=function(){}
   }
 })
@@ -65,7 +65,7 @@ window.align = async function () {
   // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
   webFrame.setLayoutZoomLevelLimits(-999999, 999999)
   webFrame.setZoomFactor(zoom)
-  const zl = webFrame.getZoomLevel()
+  const zl = webFrame.getZoomLevel ()
   webFrame.setLayoutZoomLevelLimits(zl, zl)
   window.scrollTo(0, 0)
   if (!window.location.toString().includes("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/")) {

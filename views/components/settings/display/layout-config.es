@@ -8,12 +8,12 @@ import i18next from 'views/env-parts/i18next'
 const { config, toggleModal } = window
 
 @connect((state, props) => ({
-  layout: get(state.config, 'poi.layout', 'horizontal'),
+  layout: get(state.config, 'poi.layout.mode', 'horizontal'),
   enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
-  reversed: get(state.config, 'poi.reverseLayout', false),
-  isolateGameWindow: get(state.config, 'poi.isolateGameWindow', false),
-  overlayPanel: get(state.config, 'poi.overlayPanel', false),
+  reversed: get(state.config, 'poi.layout.reverse', false),
+  isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
+  overlayPanel: get(state.config, 'poi.layout.overlay', false),
 }))
 export class LayoutConfig extends Component {
   static propTypes = {
@@ -52,8 +52,8 @@ export class LayoutConfig extends Component {
     if (this.props.overlayPanel) {
       this.setOverlayPanel(false)
     }
-    config.set('poi.layout', layout)
-    config.set('poi.reverseLayout', rev)
+    config.set('poi.layout.mode', layout)
+    config.set('poi.layout.reverse', rev)
   }
   handleSetIsolateGameWindow = () => {
     if (!this.props.isolateGameWindow) {
@@ -75,10 +75,10 @@ export class LayoutConfig extends Component {
   }
 
   setIsolateGameWindow = flag => {
-    config.set('poi.isolateGameWindow', flag)
+    config.set('poi.layout.isolate', flag)
   }
   setOverlayPanel = flag => {
-    config.set('poi.overlayPanel', flag)
+    config.set('poi.layout.overlay', flag)
   }
   handleSetDoubleTabbed = (doubleTabbed, vertical) => {
     config.set('poi.tabarea.double', doubleTabbed)

@@ -8,7 +8,7 @@ if (process.platform === 'win32') {
   autoUpdater.setFeedURL({
     provider: "generic",
     url: "https://poi.io/dist",
-    channel: config.get('poi.betaChannel', false) ? "beta" : "latest",
+    channel: config.get('poi.update.beta', false) ? "beta" : "latest",
   })
   autoUpdater.autoDownload = false
 }

@@ -36,7 +36,7 @@ const EmptyDock = ({ state }) => (
 )
 
 const getPanelDimension = width => {
-  width = width / window.getStore('config.poi.zoomLevel', 1)
+  width = width / window.getStore('config.poi.appearance.zoom', 1)
   if (width > 700) {
     return 4
   }
@@ -53,7 +53,7 @@ const getPanelDimension = width => {
     constSelector,
     inRepairShipsDataSelector,
     miscSelector,
-    state => get(state, 'config.poi.enableAvatar', true),
+    state => get(state, 'config.poi.appearance.avatar', true),
     state => getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
   ], (repairs, {$ships}, inRepairShips, {canNotify}, enableAvatar, dimension) => ({
     repairs,

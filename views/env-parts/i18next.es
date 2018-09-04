@@ -13,7 +13,7 @@ import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 const LOCALES = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
 const { ROOT, isMain, config, dbg } = window
 
-const textSpacingCJK = config.get('poi.textSpacingCJK', true)
+const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
 const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
 
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
@@ -30,7 +30,7 @@ each(LOCALES, locale => {
 })
 
 window.LOCALES = LOCALES
-window.language = window.config.get('poi.language', navigator.language)
+window.language = window.config.get('poi.misc.language', navigator.language)
 if (!LOCALES.includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
   case 'zh':

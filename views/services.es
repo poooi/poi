@@ -3,7 +3,6 @@ import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
-import { debounce } from 'lodash'
 
 const proxy = remote.require('./lib/proxy')
 const { config, toggleModal, log, error, dbg } = window
@@ -133,7 +132,7 @@ window.addEventListener('game.response', (e) => {
   if (dbg.extra('gameResponse').isEnabled()) {
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody, time))
   }
-  if (config.get('poi.showNetworkLog', true)) {
+  if (config.get('poi.misc.networklog', true)) {
     log(`${i18next.t('Hit')}: ${method} ${resPath}`, {dontReserve: true})
   }
 })

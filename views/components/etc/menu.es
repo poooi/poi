@@ -23,9 +23,9 @@ const resetViews = () => {
   if (availHeight < 900) { // setting bar will hide below 900 px
     webViewConfig.width = 800
   }
-  config.set('poi.layout', 'horizontal')
+  config.set('poi.layout.mode', 'horizontal')
   config.set('poi.webview', webViewConfig)
-  config.set('poi.zoomLevel', 1)
+  config.set('poi.appearance.zoom', 1)
   window.setImmediate(() => {
     remote.getCurrentWindow().setPosition(availLeft, availTop)
     remote.getCurrentWindow().setSize(availWidth, availHeight)
@@ -233,7 +233,7 @@ if (process.platform !== 'darwin') {
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
-            if (config.get('poi.webview.useFixedResolution', true) && config.get('poi.overlayPanel', false)) {
+            if (config.get('poi.webview.useFixedResolution', true) && config.get('poi.layout.overlay', false)) {
               return
             }
             const mainWindow = remote.getGlobal('mainWindow')
@@ -454,12 +454,12 @@ if (process.platform === 'darwin') {
 
 const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
-  if (path === 'poi.theme' && value != null) {
+  if (path === 'poi.appearance.theme' && value != null) {
     if (themeMenuList[window.normalThemes.indexOf(value)]){
       themeMenuList[window.normalThemes.indexOf(value)].checked = true
     }
   }
-  if (path === 'poi.vibrant') {
+  if (path === 'poi.appearance.vibrant') {
     window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
   }
 })
@@ -471,7 +471,7 @@ export class TitleBarWrapper extends PureComponent {
     menu: template,
   }
   handleThemeChange = (path, value) => {
-    if (path === 'poi.theme') {
+    if (path === 'poi.appearance.theme') {
       let newTemplate = [...this.state.menu]
       for (let i = 0; i < newTemplate[themepos].submenu.length; i++) {
         if (get(newTemplate, `${themepos}.submenu.${i}.type`) === 'radio')

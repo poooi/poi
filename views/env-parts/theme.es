@@ -46,7 +46,7 @@ window.loadTheme = (theme = 'paperdark') => {
   window.reloadCustomCss()
 }
 
-window.applyTheme = theme => config.set('poi.theme', theme)
+window.applyTheme = theme => config.set('poi.appearance.theme', theme)
 
 const windowsSetVibrancy = value => {
   try {
@@ -84,22 +84,22 @@ window.setVibrancy = value => {
     }
   }
   window.isVibrant = Boolean(value)
-  const theme = config.get('poi.theme', 'paperdark')
+  const theme = config.get('poi.appearance.theme', 'paperdark')
   if (themes.includes(theme)) {
     window.loadTheme(theme)
   } else {
-    config.set('poi.theme', 'paperdark')
+    config.set('poi.appearance.theme', 'paperdark')
   }
 }
 
 if ('win32' === process.platform) {
   remote.getCurrentWindow().on('hide', () => {
-    if (config.get('poi.vibrant', 0) === 1) {
+    if (config.get('poi.appearance.vibrant', 0) === 1) {
       windowsSetVibrancy(0)
     }
   })
   remote.getCurrentWindow().on('show', () => {
-    if (config.get('poi.vibrant', 0) === 1) {
+    if (config.get('poi.appearance.vibrant', 0) === 1) {
       windowsSetVibrancy(1)
     }
   })
@@ -108,18 +108,18 @@ if ('win32' === process.platform) {
 window.allThemes = normalThemes
 window.normalThemes = normalThemes
 window.vibrantThemes = vibrantThemes
-config.setDefault('poi.theme', 'darklykai')
-window.setVibrancy(config.get('poi.vibrant', null))
+config.setDefault('poi.appearance.theme', 'darklykai')
+window.setVibrancy(config.get('poi.appearance.vibrant', null))
 
 const themeChangeHandler = (path, value) => {
-  if (path === 'poi.theme') {
+  if (path === 'poi.appearance.theme') {
     window.loadTheme(value)
   }
-  if (path === 'poi.vibrant') {
+  if (path === 'poi.appearance.vibrant') {
     window.setVibrancy(value)
     toggleBackground(value)
   }
-  if (path === 'poi.background') {
+  if (path === 'poi.appearance.background') {
     setBackground(value)
   }
 }
@@ -183,24 +183,24 @@ remote.getCurrentWebContents().on('dom-ready', () => {
   document.head.appendChild(FACSS)
   document.body.appendChild(div)
   document.body.appendChild(glass)
-  setBackground(config.get('poi.background'))
-  toggleBackground(config.get('poi.vibrant'))
+  setBackground(config.get('poi.appearance.background'))
+  toggleBackground(config.get('poi.appearance.vibrant'))
 })
 
 // Workaround for window transparency on 2.0.0
 if (process.platform === 'win32') {
   remote.getCurrentWindow().on('blur', () => {
-    if (config.get('poi.vibrant', 0) === 1) {
+    if (config.get('poi.appearance.vibrant', 0) === 1) {
       remote.getCurrentWindow().setBackgroundColor(window.isMain || window.blurpolyfill ? '#E62A2A2A' : '#FF2A2A2A')
     }
   })
 
   remote.getCurrentWindow().once('focus', () => {
-    if (config.get('poi.vibrant', 0) === 1) {
+    if (config.get('poi.appearance.vibrant', 0) === 1) {
       remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
       window.blurpolyfill = true
       remote.getCurrentWindow().on('focus', () => {
-        if (config.get('poi.vibrant', 0) === 1) {
+        if (config.get('poi.appearance.vibrant', 0) === 1) {
           remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
         }
       })
