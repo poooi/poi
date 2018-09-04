@@ -96,7 +96,7 @@ export function stopNavigateAndHandleNewWindow(id) {
         minWidth: 200,
         minHeight: 200,
         backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
-        titleBarStyle: 'hidden',
+        titleBarStyle: process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17 ? 'hidden' : null,
         autoHideMenuBar: true,
       }
       e.newGuest = new BrowserWindow(options)
