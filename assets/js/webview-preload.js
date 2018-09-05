@@ -86,6 +86,7 @@ function handleSpacingTop(show) {
 
 window.align = async function () {
   document.body.appendChild(alignCSS)
+  handleSpacingTop(false)
   const zoom = await remote.getCurrentWindow().webContents.executeJavaScript(
     "document.querySelector('webview').getBoundingClientRect().width * config.get('poi.appearance.zoom', 1)"
   ) / 1200
@@ -96,10 +97,6 @@ window.align = async function () {
   const zl = webFrame.getZoomLevel ()
   webFrame.setLayoutZoomLevelLimits(zl, zl)
   window.scrollTo(0, 0)
-  if (!window.location.toString().includes("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/")) {
-    return
-  }
-  handleSpacingTop(false)
 }
 
 window.unalign = () => {
