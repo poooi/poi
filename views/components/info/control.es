@@ -115,7 +115,7 @@ export class PoiControl extends Component {
   }
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()
-    remote.getCurrentWindow().openDevTools()
+    remote.getCurrentWindow().openDevTools({mode: 'detach'})
   }
   handleOpenWebviewDevTools = () => {
     getStore('layout.webview.ref').openDevTools({mode: 'detach'})
