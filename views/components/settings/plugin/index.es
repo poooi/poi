@@ -159,7 +159,8 @@ export class PluginConfig extends Component {
       npmWorking: true,
     })
     const plugins = PluginManager.getInstalledPlugins()
-    for (const index in plugins) {
+
+    await Promise.each(Object.keys(plugins), async (index) => {
       if (plugins[index].isOutdated) {
         try {
           await this.handleUpdate(index)
@@ -167,7 +168,7 @@ export class PluginConfig extends Component {
           throw error
         }
       }
-    }
+    })
     this.setState({
       updatingAll: false,
       npmWorking: false,
@@ -296,7 +297,7 @@ export class PluginConfig extends Component {
       await PluginManager.getOutdatedPlugins(isNotif)
       if (this.props.autoUpdate) {
         const plugins = PluginManager.getInstalledPlugins()
-        for (const index in plugins) {
+        await Promise.each(Object.keys(plugins), async (index) => {
           if (plugins[index].isOutdated) {
             try {
               await this.handleUpdate(index)
@@ -304,7 +305,7 @@ export class PluginConfig extends Component {
               throw error
             }
           }
-        }
+        })
       }
     }
     PluginManager.on('initialized', handleAutoUpdate)
