@@ -10,10 +10,12 @@ import { PoiAlert } from './components/info/alert'
 import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { layoutResizeObserver } from 'views/services/layout'
+import { fileUrl } from 'views/utils/tools'
 
 const config = remote.require('./lib/config')
 const poiControlHeight = 30
 const ua = remote.getCurrentWebContents().getUserAgent().replace(/Electron[^ ]* /, '').replace(/poi[^ ]* /, '')
+const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
@@ -151,7 +153,7 @@ export class KanGameWrapper extends Component {
               plugins
               disablewebsecurity
               webpreferences="allowRunningInsecureContent=no"
-              preload={require.resolve('assets/js/webview-preload')}
+              preload={preloadUrl}
               style={{
                 width: '100%',
                 paddingTop: '60%',
@@ -274,7 +276,7 @@ export class KanGameWrapper extends Component {
                 plugins
                 disablewebsecurity
                 webpreferences="allowRunningInsecureContent=no"
-                preload={require.resolve('assets/js/webview-preload')}
+                preload={preloadUrl}
                 style={{
                   width: '100%',
                   paddingTop: '60%',
