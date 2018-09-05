@@ -57,10 +57,12 @@ export class LayoutConfig extends Component {
   }
   handleSetIsolateGameWindow = () => {
     if (!this.props.isolateGameWindow) {
-      if (this.props.overlayPanel) {
-        this.setLayout('horizontal', false)
-      }
-      this.createConfirmModal(e => this.setIsolateGameWindow(true))
+      this.createConfirmModal(e => {
+        if (this.props.overlayPanel) {
+          this.setLayout('horizontal', false)
+        }
+        this.setIsolateGameWindow(true)
+      })
     }
   }
   handleSetOverlayPanel = () => {
