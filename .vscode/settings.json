@@ -7,4 +7,5 @@
   "files.trimTrailingWhitespace": true,
   "javascript.validate.enable": false,
   "eslint.autoFixOnSave": true,
+  "editor.detectIndentation": false,
 }

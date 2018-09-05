@@ -8,7 +8,6 @@ import { get, partial } from 'lodash'
 import { connect } from 'react-redux'
 import FileDrop from 'react-file-dropzone'
 import { translate } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
 import Promise from 'bluebird'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
@@ -142,10 +141,11 @@ export class PluginConfig extends Component {
     })
   }
   handleInstallAll = () => {
-    window.toggleModal(i18next.t('Install all'),
-      i18next.t('install-all-confirmation'),
+    const { t } = this.props
+    window.toggleModal(t('Install all'),
+      t('install-all-confirmation'),
       [{
-        name: i18next.t('Confirm'),
+        name: t('others:Confirm'),
         func: this.doInstallAll,
         style: 'warning',
       }])
@@ -208,9 +208,10 @@ export class PluginConfig extends Component {
     e.preventDefault()
   }
   onSelectInstallFromFile = () => {
+    const { t } = this.props
     this.synchronize(async () => {
       const filenames = dialog.showOpenDialog({
-        title: i18next.t('setting:Select files'),
+        title: t('Select files'),
         defaultPath: remote.require('electron').app.getPath('downloads'),
         properties: ['openFile', 'multiSelections'],
       })
