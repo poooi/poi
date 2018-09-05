@@ -28,7 +28,6 @@ const { config } = window
   layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
   editable: get(state, 'config.poi.layout.editable', false),
   mainpanewidth: get(state, 'layout.mainpane.width', 450),
-  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
 }))
 export class reactClass extends Component {
   static propTypes = {
@@ -61,7 +60,7 @@ export class reactClass extends Component {
           margin={[3, 3]}
           cols={{ lg: 20, sm: 10 }}
           breakpoints={{ lg: 750, sm: 0 }}
-          width={this.props.mainpanewidth / this.props.zoomLevel}
+          width={this.props.mainpanewidth}
           isResizable={this.props.editable}
           isDraggable={this.props.editable}
           compactType="vertical"

@@ -1,3 +1,4 @@
+/* global $, config*/
 import { flatMap, map, get } from 'lodash'
 
 export const damagedCheck = ({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}) => {
@@ -63,3 +64,13 @@ export const gameReloadFlash = () => {
   }
   `)
 }
+
+export const getPoiInfoHeight = () => get($('poi-info'), 'clientHeight', 0)
+
+export const getTitleBarHeight = () => get($('title-bar'), 'clientHeight', 0)
+
+export const getYOffset = () => getPoiInfoHeight() + getTitleBarHeight()
+
+export const getRealSize = value => Math.floor(value * config.get('poi.appearance.zoom', 1))
+
+export const getZoomedSize = value => Math.floor(value / config.get('poi.appearance.zoom', 1))

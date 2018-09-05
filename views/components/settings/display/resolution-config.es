@@ -18,6 +18,7 @@ function getMinArea (displays) {
 @connect((state, props) => ({
   webview: state.layout.webview,
   isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
+  zoomLevel: get(state.config, 'poi.appearance.zoom', 1),
   key: get(state.config, 'poi.layout.isolate', false) ? 'i' + get(state.layout.webview, 'windowWidth') : 'n' + get(state.layout.webview, 'width'),
 }))
 export class ResolutionConfig extends Component {
@@ -25,7 +26,7 @@ export class ResolutionConfig extends Component {
     webview: PropTypes.object,
   }
   state = {
-    width: parseInt(this.props.isolateGameWindow ? this.props.webview.windowWidth : this.props.webview.width),
+    width: Math.round((this.props.isolateGameWindow ? this.props.webview.windowWidth : this.props.webview.width) * this.props.zoomLevel),
     ...getMinArea(screen.getAllDisplays()),
   }
   handleSetWebviewWidthWithDebounce = (value, isDebounced) => {
@@ -88,7 +89,7 @@ export class ResolutionConfig extends Component {
   }
   render() {
     const { isolateGameWindow, webview } = this.props
-    const height = isolateGameWindow ? webview.windowHeight : webview.height
+    const height = Math.round((isolateGameWindow ? webview.windowHeight : webview.height) * this.props.zoomLevel)
     const useFixedResolution = isolateGameWindow ? webview.windowUseFixedResolution : webview.useFixedResolution
     const labelText = `${Math.round(this.state.width / 1200 * 100)}%`
     return (

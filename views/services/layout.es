@@ -1,7 +1,8 @@
+/* global $, config*/
 import { debounce } from 'lodash'
 import { remote } from 'electron'
 
-const {config, $} = window
+import { getPoiInfoHeight, getYOffset, getRealSize, getZoomedSize } from './utils'
 
 // polyfill
 if (config.get('poi.webview.width', 1200) < 0) {
@@ -15,22 +16,14 @@ remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
   setMinSize()
 })
 
-const setCSS = ({ layout, zoomLevel, reversed }) => {
+const setCSS = () => {
   const tab = $('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')
   const tabSize = tab ? tab.getBoundingClientRect() : { height: 0, width: 0 }
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', 1200) !== 0 && !config.get('poi.layout.isolate', false) && $('kan-game webview') ?
+  const { right, bottom } =  config.get('poi.webview.width', getZoomedSize(1200)) !== 0 && !config.get('poi.layout.isolate', false) && $('kan-game webview') ?
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
-div[role='tooltip'], .poi-app-container, poi-info {
-  ${zoomLevel !== 1 ? `zoom: ${zoomLevel};` : ''}
-}
-
-.main-panel-content {
-  ${zoomLevel !== 1 ? `width: ${Math.round(zoomLevel * 100)}%;` : ''}
-}
-
 .dropdown-menu[aria-labelledby=plugin-dropdown] {
   max-height: ${tabSize.height}px;
 }
@@ -44,18 +37,6 @@ div[role='tooltip'], .poi-app-container, poi-info {
   bottom: ${window.innerHeight - bottom + 12}px;
   right: ${window.innerWidth - right + 12}px;
 }
-${(zoomLevel !== 1 && (layout === 'vertical' || reversed)) ? `
-#detail-map-info {
-  left: initial !important;
-  right: 0 !important;
-}
-
-#detail-map-info .tooltip-arrow {
-  left: initial !important;
-  right: 60px;
-}
-` : ''
-}
 `
 }
 
@@ -66,8 +47,10 @@ const setMinSize = () => {
     remote.getCurrentWindow().setMinimumSize(1, 1)
   } else {
     const { width, height } = window.getStore('layout.webview')
-    const zoomLevel = config.get('poi.appearance.zoom', 1)
-    remote.getCurrentWindow().setMinimumSize(width, Math.floor(height + $('poi-info').clientHeight * zoomLevel + (($('title-bar') || {}).clientHeight || 0)))
+    remote.getCurrentWindow().setMinimumSize(
+      getRealSize(width),
+      getRealSize(height + getYOffset()),
+    )
   }
 }
 
@@ -79,26 +62,30 @@ const setIsolatedMainWindowSize = isolateWindow => {
   const bounds = remote.getCurrentWindow().getContentBounds()
   if (isolateWindow) {
     if (layout === 'horizontal') {
-      bounds.width -= webviewWidth
+      const xdelta = getRealSize(webviewWidth)
+      bounds.width -= xdelta
       if (!reversed) {
-        bounds.x += webviewWidth
+        bounds.x += xdelta
       }
     } else {
-      bounds.height -= webviewHeight + 30
+      const ydelta = getRealSize(webviewHeight + getPoiInfoHeight())
+      bounds.height -= ydelta
       if (!reversed) {
-        bounds.y += webviewHeight + 30
+        bounds.y += ydelta
       }
     }
   } else {
     if (layout === 'horizontal') {
-      bounds.width += webviewWidth
+      const xdelta = getRealSize(webviewWidth)
+      bounds.width += xdelta
       if (!reversed) {
-        bounds.x -= webviewWidth
+        bounds.x -= xdelta
       }
     } else {
-      bounds.height += webviewHeight + 30
+      const ydelta = getRealSize(webviewHeight + getPoiInfoHeight())
+      bounds.height += ydelta
       if (!reversed) {
-        bounds.y -= webviewHeight + 30
+        bounds.y -= ydelta
       }
     }
   }
@@ -112,29 +99,29 @@ const setOverlayPanelWindowSize = overlayPanel => {
   const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   const useFixedResolution = config.get('poi.webview.useFixedResolution', true)
-  const zoomLevel = config.get('poi.appearance.zoom', 1)
-  const poiInfoHeight = Math.floor((($('poi-info') || {}).clientHeight || 0) * zoomLevel)
-  const titlebarHeight = Math.floor(($('title-bar') || {}).clientHeight || 0)
   if (overlayPanel && !isolateWindow) {
     if (useFixedResolution) {
       remote.getCurrentWindow().setResizable(false)
     }
     if (layout === 'horizontal') {
-      config.set('poi.layout.overlaypanel.width', bounds.width - webviewWidth)
+      const xdelta = bounds.width - getRealSize(webviewWidth)
+      config.set('poi.layout.overlaypanel.width', xdelta)
       if (reversed) {
-        bounds.x += (bounds.width - webviewWidth)
+        bounds.x += xdelta
       }
-      bounds.width = webviewWidth
-      bounds.height = webviewHeight + poiInfoHeight + titlebarHeight
     } else {
-      config.set('poi.layout.overlaypanel.width', bounds.height - webviewHeight - poiInfoHeight)
+      const ydelta = bounds.height - getRealSize(webviewHeight + getYOffset())
+      config.set('poi.layout.overlaypanel.width', ydelta)
       if (reversed) {
-        bounds.y += bounds.height - webviewHeight - poiInfoHeight
+        bounds.y += ydelta
       }
-      bounds.width = webviewWidth
-      bounds.height = webviewHeight + poiInfoHeight + titlebarHeight
     }
-    remote.getCurrentWindow().setAspectRatio(1200 / 720, { width: 0, height: poiInfoHeight + titlebarHeight })
+    bounds.width = getRealSize(webviewWidth)
+    bounds.height = getRealSize(webviewHeight + getYOffset())
+    remote.getCurrentWindow().setAspectRatio(1200 / 720, {
+      width: 0,
+      height: getRealSize(getYOffset()),
+    })
   } else if (!isolateWindow) {
     remote.getCurrentWindow().setResizable(config.get('poi.content.resizable', true))
     if (layout === 'horizontal') {
@@ -157,10 +144,10 @@ const setOverlayPanelWindowSize = overlayPanel => {
 const handleOverlayPanelReszie = () => {
   if (config.get('poi.layout.overlay', false)) {
     const width = config.get('poi.webview.useFixedResolution', true) ? config.get('poi.webview.width', 1200) : remote.getCurrentWindow().getContentSize()[0]
-    const zoomLevel = config.get('poi.appearance.zoom', 1)
-    const poiInfoHeight = Math.floor((($('poi-info') || {}).clientHeight || 0) * zoomLevel)
-    const titlebarHeight = Math.floor(($('title-bar') || {}).clientHeight || 0)
-    remote.getCurrentWindow().setContentSize(width, Math.floor(width / 1200 * 720) + poiInfoHeight + titlebarHeight)
+    remote.getCurrentWindow().setContentSize(
+      width,
+      Math.floor(width / 1200 * 720 + getRealSize(getYOffset())),
+    )
     if (config.get('poi.webview.useFixedResolution', true)) {
       remote.getCurrentWindow().setResizable(false)
     } else {
@@ -172,6 +159,9 @@ const handleOverlayPanelReszie = () => {
 const handleOverlayPanelReszieDebounced = debounce(handleOverlayPanelReszie, 200)
 
 const setProperWindowSize = () => {
+  if (config.get('poi.layout.overlay', false) || config.get('poi.layout.isolate', false)) {
+    return
+  }
   const current = remote.getCurrentWindow()
   // Dont set size on maximized
   if (current.isMaximized() || current.isFullScreen()) {
@@ -179,35 +169,26 @@ const setProperWindowSize = () => {
   }
   // Resize when window size smaller than webview size
   const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
-  const zoomLevel = config.get('poi.appearance.zoom', 1)
   const layout = config.get('poi.layout.mode', 'horizontal')
-  const realWidth = webviewWidth
-  const realHeight = Math.floor(webviewHeight + $('poi-info').clientHeight * zoomLevel)
-  if (layout === 'vertical' && realWidth > window.innerWidth) {
-    let { width, height, x, y } = current.getBounds()
-    const borderX = width - window.innerWidth
-    width = realWidth + borderX
-    current.setBounds({ width, height, x, y })
+  const realWidth = getRealSize(webviewWidth)
+  const realHeight = getRealSize(webviewHeight + getYOffset())
+  if (layout === 'vertical' && realWidth > getRealSize(window.innerWidth)) {
+    let [width, height] = current.getContentSize()
+    width = realWidth
+    current.setContentSize(width, height)
   }
 
-  if (layout !== 'vertical' && realHeight > window.getStore('layout.window.height')) {
-    let { width, height, x, y } = current.getBounds()
-    height += realHeight - window.getStore('layout.window.height')
-    current.setBounds({ width, height, x, y })
+  if (layout !== 'vertical' && realHeight > getRealSize(window.getStore('layout.window.height'))) {
+    let [width, height] = current.getContentSize()
+    height = realHeight
+    current.setContentSize(width, height)
   }
 }
 
 const adjustSize = () => {
   try {
-    const layout = config.get('poi.layout.mode', 'horizontal')
-    const zoomLevel = config.get('poi.appearance.zoom', 1)
-    const reversed = config.get('poi.layout.reverse', false)
     // Apply calcualted data
-    setCSSDebounced({
-      layout,
-      zoomLevel,
-      reversed,
-    })
+    setCSSDebounced()
     window.dispatch({
       type: '@@LayoutUpdate/webview/useFixedResolution',
       value: window.getStore('config.poi.webview.useFixedResolution', true),
@@ -222,26 +203,19 @@ const adjustSize = () => {
 adjustSize()
 
 const changeBounds = () => {
-  const {width, height, x, y} = remote.getCurrentWindow().getBounds()
-  const borderX = width - window.innerWidth
-  const borderY = height - window.innerHeight
-  let newHeight = window.innerHeight
-  let newWidth = window.innerWidth
+  let { width: newWidth, height: newHeight } = window.getStore('layout.webview')
+  newHeight += getYOffset()
   if (config.get('poi.layout.mode', 'horizontal') === 'horizontal') {
     // Previous vertical
-    newHeight = window.innerWidth / 1200 * 720 + 30
-    newWidth = window.innerWidth / 5 * 7
+    newWidth += 400
   } else {
     // Previous horizontal
-    newHeight = window.innerWidth / 7 * 5 / 1200 * 720 + 420
-    newWidth = window.innerWidth / 7 * 5
+    newHeight += 400
   }
-  remote.getCurrentWindow().setBounds({
-    x,
-    y,
-    width: parseInt(newWidth + borderX),
-    height: parseInt(newHeight + borderY),
-  })
+  remote.getCurrentWindow().setContentSize(
+    getRealSize(newWidth),
+    getRealSize(newHeight),
+  )
 }
 
 window.addEventListener('game.start', adjustSize)
@@ -249,7 +223,13 @@ window.addEventListener('resize', adjustSize)
 
 config.on('config.set', (path, value) => {
   switch (path) {
-  case 'poi.appearance.zoom':
+  case 'poi.appearance.zoom': {
+    const [ width, height ] = remote.getCurrentWindow().getContentSize()
+    remote.getCurrentWebContents().setZoomFactor(value)
+    adjustSize()
+    setTimeout(() => remote.getCurrentWindow().setContentSize(width, height), 1000)
+    break
+  }
   case 'poi.tabarea.double':
   case 'poi.webview.width':
   case 'poi.webview.useFixedResolution':
