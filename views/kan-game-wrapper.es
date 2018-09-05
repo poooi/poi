@@ -56,7 +56,6 @@ export class KanGameWrapper extends Component {
     console.warn('Webview crashed. reloading')
     const url = this.webview.current.view.src
     const key = this.state.key + 1
-    this.webview.current.view.removeEventListener('destroyed', this.handleWebviewDestroyed)
     this.handleWebviewUnmount()
     this.setState({
       url,
@@ -76,7 +75,6 @@ export class KanGameWrapper extends Component {
       window.addEventListener('resize', this.alignWebviewDebounced)
       layoutResizeObserver.observe(document.querySelector('kan-game webview'))
     }
-    this.webview.current.view.addEventListener('destroyed', this.handleWebviewDestroyed)
   }
 
   handleWebviewUnmount = () => {
@@ -160,6 +158,8 @@ export class KanGameWrapper extends Component {
                 position: 'relative',
               }}
               muted={muted}
+              useragent={ua}
+              onDestroyed={this.handleWebviewDestroyed}
             />
           </div>
           <poi-info style={{ flexBasis: poiControlHeight }}>
@@ -283,6 +283,7 @@ export class KanGameWrapper extends Component {
                 }}
                 useragent={ua}
                 muted={muted}
+                onDestroyed={this.handleWebviewDestroyed}
               />
             </div>
             <poi-info style={{ flexBasis: poiControlHeight }}>
