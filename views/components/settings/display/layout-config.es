@@ -88,10 +88,10 @@ export class LayoutConfig extends Component {
   }
   render() {
     const { layout, reversed, isolateGameWindow, enableDoubleTabbed, verticalDoubleTabbed, overlayPanel } = this.props
-    const leftActive = !isolateGameWindow && layout === 'horizontal' && reversed
-    const downActive = !isolateGameWindow && layout !== 'horizontal' && !reversed
-    const upActive = !isolateGameWindow && layout !== 'horizontal' && reversed
-    const rightActive = !isolateGameWindow && layout === 'horizontal' && !reversed && ! overlayPanel
+    const leftActive = !overlayPanel && !isolateGameWindow && layout === 'horizontal' && reversed
+    const downActive = !overlayPanel && !isolateGameWindow && layout !== 'horizontal' && !reversed
+    const upActive = !overlayPanel && !isolateGameWindow && layout !== 'horizontal' && reversed
+    const rightActive = !overlayPanel && !isolateGameWindow && layout === 'horizontal' && !reversed && ! overlayPanel
     return (
       <Grid>
         <Col xs={12}>

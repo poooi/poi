@@ -6,7 +6,6 @@ import { range } from 'lodash'
 import {
   layoutSelector,
   configLayoutSelector,
-  configZoomLevelSelector,
   configDoubleTabbedSelector,
 } from 'views/utils/selectors'
 
@@ -17,18 +16,17 @@ const openCollectiveWidthWidthSelector = createSelector(
     layoutSelector,
     configLayoutSelector,
     configDoubleTabbedSelector,
-    configZoomLevelSelector,
-  ], ({ webview, window }, layout, doubleTabbed, zoomLevel) => {
+  ], ({ webview, window }, layout, doubleTabbed) => {
     if (layout === 'horizontal') {
       if (doubleTabbed) {
-        return ceil(((window.width - webview.width) / zoomLevel) - 40)
+        return window.width - webview.width - 40
       }
-      return ceil(((window.width - webview.width) / zoomLevel) - 40)
+      return window.width - webview.width - 40
     }
     if (doubleTabbed) {
-      return ceil(((window.width / 2) / zoomLevel) - 40)
+      return ceil(window.width / 2 - 40)
     }
-    return ceil((window.width / zoomLevel) -40)
+    return window.width - 40
   }
 )
 

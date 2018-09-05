@@ -105,6 +105,7 @@ export class KanGameWrapper extends Component {
       windowSize,
       overlayPanel,
     } = this.props
+    const getZoomedSize = value => Math.floor(value / zoomLevel)
     if (this.props.windowMode) {
       return (
         <kan-game style={{
@@ -137,9 +138,8 @@ export class KanGameWrapper extends Component {
       )
     } else {
       const { width: windowWidth, height: windowHeight } = windowSize
-      const zoomedPoiControlHeight = Math.floor(poiControlHeight * zoomLevel)
-      let webviewWidth = configWebviewWidth
-      let webviewHeight = Math.floor(configWebviewWidth * 0.6)
+      let webviewWidth = getZoomedSize(configWebviewWidth)
+      let webviewHeight = getZoomedSize(configWebviewWidth * 0.6)
       if (!useFixedResolution && !overlayPanel) {
         if (isHorizontal) {
           webviewWidth = Math.floor(windowWidth * horizontalRatio / 100)
@@ -151,20 +151,20 @@ export class KanGameWrapper extends Component {
       }
 
       const defaultWidth = useFixedResolution ? {
-        px: 1200,
+        px: getZoomedSize(1200),
         percent: 0,
       } : overlayPanel ? {
         px: 0,
         percent: 100,
       } : isHorizontal ? {
         px: 0,
-        percent: (windowHeight - zoomedPoiControlHeight) * 500 / (windowWidth * 3),
+        percent: (windowHeight - poiControlHeight) * 500 / (windowWidth * 3),
       } : {
         px: windowWidth,
         percent: 0,
       }
       const defaultHeight = useFixedResolution ? {
-        px: 720 + zoomedPoiControlHeight,
+        px: getZoomedSize(720) + poiControlHeight,
         percent: 0,
       } : overlayPanel ? {
         px: 0,
@@ -173,7 +173,7 @@ export class KanGameWrapper extends Component {
         px: windowHeight,
         percent: 0,
       } : {
-        px: zoomedPoiControlHeight,
+        px: poiControlHeight,
         percent: windowWidth * 60 / windowHeight,
       }
       this.resizableAreaWidth =  useFixedResolution ? {
@@ -190,7 +190,7 @@ export class KanGameWrapper extends Component {
         percent: 100,
       }
       this.resizableAreaHeight = useFixedResolution ? {
-        px: webviewHeight + zoomedPoiControlHeight,
+        px: webviewHeight + poiControlHeight,
         percent: 0,
       } : overlayPanel ? {
         px: 0,
@@ -199,7 +199,7 @@ export class KanGameWrapper extends Component {
         px: 0,
         percent: 100,
       } : {
-        px: zoomedPoiControlHeight,
+        px: poiControlHeight,
         percent: verticalRatio,
       }
       const disableWidth = !editable || useFixedResolution || overlayPanel || !isHorizontal
@@ -214,7 +214,7 @@ export class KanGameWrapper extends Component {
           minimumWidth={!isHorizontal ? { px: 0, percent: 100 } : { px: 0, percent: 0 }}
           defaultWidth={defaultWidth}
           initWidth={this.resizableAreaWidth}
-          minimumHeight={isHorizontal ? { px: 0, percent: 100 } : { px: zoomedPoiControlHeight, percent: 0 }}
+          minimumHeight={isHorizontal ? { px: 0, percent: 100 } : { px: poiControlHeight, percent: 0 }}
           defaultHeight={defaultHeight}
           initHeight={this.resizableAreaHeight}
           parentContainer={document.querySelector('poi-main')}

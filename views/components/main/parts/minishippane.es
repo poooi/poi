@@ -18,9 +18,8 @@ export const PaneBodyMini = connect(() => {
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
     enableAvatar: get(state, 'config.poi.appearance.avatar', true),
     width: miniShipRowWidthSelector(state),
-    zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
   })
-})(({ fleetId, shipsId, enableAvatar, width, zoomLevel }) =>
+})(({ fleetId, shipsId, enableAvatar, width }) =>
   <>
     <div className='fleet-name'>
       <TopAlert
@@ -35,7 +34,7 @@ export const PaneBodyMini = connect(() => {
             key={shipId}
             shipId={shipId}
             enableAvatar={enableAvatar}
-            compact={width / zoomLevel < 240}
+            compact={width < 240}
           />
         )
       }
@@ -48,8 +47,7 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
   mapareas: get(state, 'const.$mapareas', {}),
   enableAvatar: get(state, 'config.poi.appearance.avatar', true),
   width: miniShipRowWidthSelector(state),
-  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
-}))(({ areaIds, mapareas, t, enableAvatar, zoomLevel, width }) => (
+}))(({ areaIds, mapareas, t, enableAvatar, width }) => (
   <ScrollShadow className="ship-details-mini" observerPath={[ 'layout.minishippane', 'info.airbase' ]}>
     {
       areaIds.map((id, i) => (
@@ -59,7 +57,7 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
               key={i}
               squardId={i}
               enableAvatar={enableAvatar}
-              compact={width / zoomLevel < 240}
+              compact={width < 240}
             /> :
             <div key={i}>
               <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
@@ -69,7 +67,7 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
                 key={i}
                 squardId={i}
                 enableAvatar={enableAvatar}
-                compact={width / zoomLevel < 240}
+                compact={width < 240}
               />
             </div>
         )
