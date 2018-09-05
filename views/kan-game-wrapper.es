@@ -26,9 +26,15 @@ const ua = remote.getCurrentWebContents().getUserAgent().replace(/Electron[^ ]* 
   editable: get(state, 'config.poi.layout.editable', false),
   windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
   overlayPanel: get(state, 'config.poi.layout.overlay', false),
+  homepage: get(state, 'config.poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'),
 }))
 export class KanGameWrapper extends Component {
   webview = React.createRef()
+
+  state = {
+    url: this.props.homepage,
+    key: 0,
+  }
 
   alignWebview = () => {
     try {
@@ -46,8 +52,18 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  componentDidMount = () => {
-    this.alignWebviewDebounced = debounce(this.alignWebview, 200)
+  handleWebviewDestroyed = () => {
+    console.warn('Webview crashed. reloading')
+    const url = this.webview.current.view.src
+    const key = this.state.key + 1
+    this.handleWebviewUnmount()
+    this.setState({
+      url,
+      key,
+    })
+  }
+
+  handleWebviewMount = () => {
     this.props.dispatch({
       type: '@@LayoutUpdate/webview/UpdateWebviewRef',
       value: {
@@ -61,7 +77,7 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  componentWillUnmount = () => {
+  handleWebviewUnmount = () => {
     this.props.dispatch({
       type: '@@LayoutUpdate/webview/UpdateWebviewRef',
       value: {
@@ -75,20 +91,34 @@ export class KanGameWrapper extends Component {
     }
   }
 
+  componentDidMount = () => {
+    this.alignWebviewDebounced = debounce(this.alignWebview, 200)
+    this.handleWebviewMount()
+  }
+
+
+  componentWillUnmount = () => {
+    this.handleWebviewUnmount()
+  }
+
   componentDidUpdate = (prevProps, prevState) => {
-    const { width, height } = this.webviewWrapper.getBoundingClientRect()
-    if (!this.props.windowMode) {
-      this.props.dispatch({
-        type: '@@LayoutUpdate/webview/size',
-        value: {
-          width,
-          height,
-        },
-      })
-      this.resizableArea.setSize({
-        width: this.resizableAreaWidth,
-        height: this.resizableAreaHeight,
-      })
+    if (prevState.key === this.state.key) {
+      const { width, height } = this.webviewWrapper.getBoundingClientRect()
+      if (!this.props.windowMode) {
+        this.props.dispatch({
+          type: '@@LayoutUpdate/webview/size',
+          value: {
+            width,
+            height,
+          },
+        })
+        this.resizableArea.setSize({
+          width: this.resizableAreaWidth,
+          height: this.resizableAreaHeight,
+        })
+      }
+    } else {
+      this.handleWebviewMount()
     }
   }
 
@@ -115,7 +145,8 @@ export class KanGameWrapper extends Component {
             className="webview-wrapper"
             ref={e => this.webviewWrapper = e}>
             <WebView
-              src={config.get('poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
+              src={this.state.url}
+              key={this.state.key}
               ref={this.webview}
               plugins
               disablewebsecurity
@@ -127,6 +158,8 @@ export class KanGameWrapper extends Component {
                 position: 'relative',
               }}
               muted={muted}
+              useragent={ua}
+              onDestroyed={this.handleWebviewDestroyed}
             />
           </div>
           <poi-info style={{ flexBasis: poiControlHeight }}>
@@ -235,7 +268,8 @@ export class KanGameWrapper extends Component {
                 width: overlayPanel ? '100%' : webviewWidth,
               }}>
               <WebView
-                src={config.get('poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')}
+                src={this.state.url}
+                key={this.state.key}
                 ref={this.webview}
                 plugins
                 disablewebsecurity
@@ -249,6 +283,7 @@ export class KanGameWrapper extends Component {
                 }}
                 useragent={ua}
                 muted={muted}
+                onDestroyed={this.handleWebviewDestroyed}
               />
             </div>
             <poi-info style={{ flexBasis: poiControlHeight }}>
