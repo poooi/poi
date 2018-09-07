@@ -88,13 +88,10 @@ window.align = async function () {
   document.body.appendChild(alignCSS)
   handleSpacingTop(false)
   const zoom = await remote.getCurrentWindow().webContents.executeJavaScript(
-    "document.querySelector('webview').getBoundingClientRect().width * config.get('poi.appearance.zoom', 1)"
-  ) / 1200
-  // use trick from https://github.com/electron/electron/issues/6958#issuecomment-271179700
-  // TODO: check if can be removed after https://github.com/electron/electron/pull/8537 is merged
-  webFrame.setLayoutZoomLevelLimits(-999999, 999999)
+    "Math.round(document.querySelector('webview').getBoundingClientRect().width * config.get('poi.appearance.zoom', 1)) / 1200"
+  )
   webFrame.setZoomFactor(zoom)
-  const zl = webFrame.getZoomLevel ()
+  const zl = webFrame.getZoomLevel()
   webFrame.setLayoutZoomLevelLimits(zl, zl)
   window.scrollTo(0, 0)
 }
