@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { webContents, shell, BrowserWindow } from 'electron'
 import WindowManager from './window'
+import { map } from 'lodash'
 
 const stringify = (str) => {
   if (typeof str === 'string') {
@@ -17,20 +18,17 @@ const stringify = (str) => {
 
 export const remoteStringify = JSON.stringify
 
-export function log(str) {
-  str = stringify(str)
+export function log(...str) {
   // eslint-disable-next-line no-console
-  return console.log("[INFO] " + str)
+  console.log("[INFO] ", ...map(str, stringify))
 }
 
-export function  warn(str) {
-  str = stringify(str)
-  return console.warn(chalk.yellow("[WARN] " + str))
+export function warn(str) {
+  console.warn(chalk.yellow("[WARN] ", ...map(str, stringify)))
 }
 
 export function error(str) {
-  str = stringify(str)
-  return console.error(chalk.red.bold("[ERROR] " + str))
+  console.error(chalk.red.bold("[ERROR] ", ...map(str, stringify)))
 }
 
 export function setBounds(options) {
