@@ -39,27 +39,27 @@ const alertCSS =
 const alignCSS = document.createElement('style')
 alignCSS.innerHTML =
 `html {
-overflow: hidden;
+  overflow: hidden;
 }
 #w, #main-ntg {
-position: absolute !important;
-top: 0;
-left: 0;
-z-index: 100;
-margin-left: 0 !important;
-margin-top: 0 !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  margin-left: 0 !important;
+  margin-top: 0 !important;
 }
 #game_frame {
-width: 1200px !important;
-position: absolute;
-top: 0px;
-left: 0;
+  width: 1200px !important;
+  position: absolute;
+  top: 0px;
+  left: 0;
 }
 .naviapp {
-z-index: -1;
+  z-index: -1;
 }
 #ntg-recommend {
-display: none !important;
+  display: none !important;
 }
 `
 
@@ -85,9 +85,6 @@ function handleSpacingTop(show) {
 }
 
 window.align = function () {
-  if (!window.alignCSS) {
-
-  }
   document.body.appendChild(alignCSS)
   handleSpacingTop(false)
   window.scrollTo(0, 0)
@@ -134,5 +131,3 @@ if (window.location.toString().includes("http://www.dmm.com/netgame/social/-/gad
 
 // A workaround for drop-and-drag navigation
 remote.require('./lib/utils').stopFileNavigateAndHandleNewWindowInApp(remote.getCurrentWebContents().id)
-
-remote.getCurrentWindow().webContents.executeJavaScript('window.dispatchEvent(new Event(\'webview-loaded\'))')
