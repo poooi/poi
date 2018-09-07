@@ -1,3 +1,4 @@
+/* global config, getStore */
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { map, get, mapValues } from 'lodash'
@@ -6,7 +7,7 @@ import { remote } from 'electron'
 import { store } from 'views/create-store'
 import { buildArray } from 'views/utils/tools'
 
-const { config } = window
+const ipc = remote.require('./lib/ipc')
 
 function object2Array(obj) {
   return buildArray(map(obj, (v, k) => [k, v]))
@@ -163,3 +164,7 @@ const slotitemsObserver = observer(
 )
 
 observe(store, [shipsObserver, slotitemsObserver])
+
+ipc.register("WebView", {
+  getWebviewWidth: cb => cb(getStore('layout.webview.ref.view.clientWidth', 1200)),
+})

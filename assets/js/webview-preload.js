@@ -30,36 +30,36 @@ document.addEventListener('DOMContentLoaded', (e) => {
 // Faster align setting
 const alertCSS =
 `#alert {
-  transform: scale(0.8);
-  left: 80px !important;
-  top: -80px !important;
+  left: 270px !important;
+  top: 83px !important;
+  border: 0;
 }
 `
 
 const alignCSS = document.createElement('style')
 alignCSS.innerHTML =
 `html {
-  overflow: hidden;
+overflow: hidden;
 }
 #w, #main-ntg {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  margin-left: 0 !important;
-  margin-top: 0 !important;
+position: absolute !important;
+top: 0;
+left: 0;
+z-index: 100;
+margin-left: 0 !important;
+margin-top: 0 !important;
 }
 #game_frame {
-  width: 1200px !important;
-  position: absolute;
-  top: 0px;
-  left: 0;
+width: 1200px !important;
+position: absolute;
+top: 0px;
+left: 0;
 }
 .naviapp {
-  z-index: -1;
+z-index: -1;
 }
 #ntg-recommend {
-  display: none !important;
+display: none !important;
 }
 `
 
@@ -84,16 +84,19 @@ function handleSpacingTop(show) {
   t(0)
 }
 
-window.align = async function () {
+window.align = function () {
+  if (!window.alignCSS) {
+
+  }
   document.body.appendChild(alignCSS)
   handleSpacingTop(false)
-  const zoom = await remote.getCurrentWindow().webContents.executeJavaScript(
-    "Math.round(document.querySelector('webview').getBoundingClientRect().width * config.get('poi.appearance.zoom', 1)) / 1200"
-  )
-  webFrame.setZoomFactor(zoom)
-  const zl = webFrame.getZoomLevel()
-  webFrame.setLayoutZoomLevelLimits(zl, zl)
   window.scrollTo(0, 0)
+  window.ipc.access('WebView').getWebviewWidth(width => {
+    const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+    webFrame.setZoomFactor(zoom)
+    const zl = webFrame.getZoomLevel()
+    webFrame.setLayoutZoomLevelLimits(zl, zl)
+  })
 }
 
 window.unalign = () => {
@@ -104,19 +107,19 @@ window.unalign = () => {
   handleSpacingTop(true)
 }
 
-window.align()
-
 // ref for item purchase css insertion
 const webContent = remote.getCurrentWebContents()
 
-const handleDOMContentLoaded = () => {
+const handleDocumentReady = () => {
+  if (!document.body) {
+    setTimeout(handleDocumentReady, 1000)
+    return
+  }
   window.align()
   webContent.insertCSS(alertCSS)
-  document.removeEventListener("DOMContentLoaded", handleDOMContentLoaded)
 }
 
-document.addEventListener("DOMContentLoaded", handleDOMContentLoaded)
-
+handleDocumentReady()
 
 if (window.location.toString().includes("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/")) {
   const _documentWrite = document.write
