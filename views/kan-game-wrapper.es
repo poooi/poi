@@ -137,7 +137,7 @@ export class KanGameWrapper extends Component {
       windowSize,
       overlayPanel,
     } = this.props
-    const getZoomedSize = value => Math.floor(value / zoomLevel)
+    const getZoomedSize = value => Math.round(value / zoomLevel)
     if (this.props.windowMode) {
       return (
         <kan-game style={{
