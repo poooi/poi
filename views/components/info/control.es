@@ -53,7 +53,6 @@ export class PoiControl extends Component {
     const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
     const usePNG = config.get('poi.misc.screenshot.format', 'png') === 'png'
     getStore('layout.webview.ref').getWebContents().capturePage(rect, image => {
-      image = image.resize({ width: Math.floor(scWidth), height: Math.floor(scHeight) })
       if (toClipboard) {
         clipboard.writeImage(nativeImage.createFromDataURL(image.toDataURL()))
         window.success(this.props.t('screenshot saved to clipboard'))
