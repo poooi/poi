@@ -23,8 +23,6 @@ gulp.task('getVersion', (done) => {
   done()
 })
 
-gulp.task('deploy', gulp.series('getVersion'))
-
 gulp.task('build', gulp.series('getVersion', () => build(poiVersion)))
 
 gulp.task('build_plugins', gulp.series('getVersion', () => installPlugins(poiVersion)))

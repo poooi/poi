@@ -47,7 +47,6 @@ First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://no
 ``` shell
 git clone https://github.com/poooi/poi && cd poi
 npm install
-npm run deploy
 npm start
 ```
 
