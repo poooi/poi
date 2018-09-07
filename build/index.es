@@ -13,6 +13,7 @@ const { ROOT } = global
 export cleanFiles from './clean-files'
 export packWinRelease from './pack-win-release'
 export installPlugins from './install-plugins'
+export deployNightlies from './deploy-nightlies'
 
 const TARGET_LIST = [
   // Files

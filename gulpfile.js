@@ -9,6 +9,7 @@ const {
   installPlugins,
   cleanFiles,
   packWinRelease,
+  deployNightlies,
 } = require('./build')
 
 const packageMeta = require('./package.json')
@@ -29,6 +30,8 @@ gulp.task('build', gulp.series('getVersion', () => build(poiVersion)))
 gulp.task('build_plugins', gulp.series('getVersion', () => installPlugins(poiVersion)))
 
 gulp.task('pack_win_release', gulp.series('getVersion', () => packWinRelease(poiVersion)))
+
+gulp.task('deploy_nightlies', () => deployNightlies())
 
 gulp.task('clean', () => cleanFiles())
 

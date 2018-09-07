@@ -51,7 +51,7 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r -q ./dist/*.{zip,7z,yml} poi@citrus.dazzyd.org:/data/nightly/$TRAVIS_BUILD_NUMBER/
+  script: npm run deploy:nightlies
   on:
     repo: poooi/poi
     all_branches: true
