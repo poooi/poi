@@ -243,7 +243,20 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
   will-change: transform;
 }
 
-a.overlayPanelTrigger {
+.overlay-panel-resizer {
+  position: fixed !important;
+  left: 0;
+  bottom: 30px;
+  pointer-events: none;
+}
+
+.overlay-panel-resizer div {
+  pointer-events: all;
+  opacity: 0;
+}
+
+a.overlay-panel-trigger {
+  transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
   position: fixed;
   background: rgba(75, 75, 75, 0.8);
@@ -259,6 +272,7 @@ a.overlayPanelTrigger {
   border-top-left-radius: 5px;
 }
 
-a.overlayPanelTrigger > svg {
+a.overlay-panel-trigger > svg {
   margin: auto;
 }
+
