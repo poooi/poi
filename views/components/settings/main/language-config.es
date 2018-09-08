@@ -12,25 +12,8 @@ const setWindowI18nLng = language => {
   })
 }
 
-let language = window.language
-if (!(['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR'].includes(language))) {
-  switch (language.substr(0, 1).toLowerCase()) {
-  case 'zh':
-    language = 'zh-TW'
-    break
-  case 'ja':
-    language = 'ja-JP'
-    break
-  case 'ko':
-    language = 'ko-KR'
-    break
-  default:
-    language = 'en-US'
-  }
-}
-
 @connect((state, props) => ({
-  value: get(state.config, 'poi.misc.language', language),
+  value: get(state.config, 'poi.misc.language', window.language),
 }))
 export class LanguageConfig extends Component {
   static propTypes = {
