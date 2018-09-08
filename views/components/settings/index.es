@@ -2,6 +2,7 @@ import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { Trans, translate } from 'react-i18next'
+import { isEqual } from 'lodash'
 
 import { PoiConfig } from './main'
 import { DisplayConfig } from './display'
@@ -13,7 +14,7 @@ import './assets/settings.css'
 
 @translate(['setting'])
 export class reactClass extends React.Component {
-  shouldComponentUpdate = (nextProps, nextState) => (false)
+  shouldComponentUpdate = (nextProps, nextState) => !isEqual(nextProps, this.props)
   render() {
     const { t } = this.props
     return (
