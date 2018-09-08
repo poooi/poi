@@ -501,7 +501,10 @@ export class ControlledTabArea extends PureComponent {
         px: 0,
         percent: 100,
       },
-      disable: true,
+      disable: {
+        width: true,
+        height: true,
+      },
       onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
     }) : this.props.verticalDoubleTabbed ? ({
       className: classNames({ 'height-resize': this.props.editable }),
@@ -522,7 +525,10 @@ export class ControlledTabArea extends PureComponent {
         px: 0,
         percent: 100,
       },
-      disable: !this.props.editable,
+      disable: {
+        width: true,
+        height: !this.props.editable,
+      },
       onResized: ({ height }) => config.set('poi.tabarea.mainpanelheight', height),
     }) : ({
       className: classNames({ 'width-resize': this.props.editable }),
@@ -543,7 +549,10 @@ export class ControlledTabArea extends PureComponent {
         px: 0,
         percent: 100,
       },
-      disable: !this.props.editable,
+      disable: {
+        width: !this.props.editable,
+        height: true,
+      },
       onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
     })
 
