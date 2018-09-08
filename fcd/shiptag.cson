@@ -1,48 +1,54 @@
 meta:
   name: "shiptag"
-  version: "2018/02/25/01"
+  version: "2018/09/09/01"
 
 data:
   mapname: [
     "E1"
-    "E2, E4, E6, E7"
-    "E2, E4, E7"
-    "E3, E7"
-    "E5, E6, E7"
+    "E2"
+    "E3"
+    "TBD"
+    "TBD"
+    "TBD"
   ]
   color: [
     "#9E9E9E"
-    "#4CAF50"
-    "#FFEB3B"
+    "#8BC34A"
+    "#1B5E20"
+    "#FF9800"
     "#03A9F4"
     "#673AB7"
   ]
   fleetname:
     "zh-CN": [
       "警戒部队"
-      "栗田舰队"
-      "西村舰队"
-      "小泽舰队"
-      "志摩舰队"
+      "海峡派遣舰队"
+      "西方作战部队"
+      "欧洲特务舰队"
+      "Force H"
+      "莱茵演习部队"
     ]
     "zh-TW": [
       "警戒部隊"
-      "栗田艦隊"
-      "西村艦隊"
-      "小澤艦隊"
-      "志摩艦隊"
+      "海峽派遣艦隊"
+      "西方作戰部隊"
+      "歐洲特務艦隊"
+      "Force H"
+      "萊茵演習部隊"
     ]
     "ja-JP": [
       "警戒部隊"
-      "栗田艦隊"
-      "西村艦隊"
-      "小沢艦隊"
-      "志摩艦隊"
+      "海峡派遣部隊"
+      "西方作戦部隊"
+      "欧州特務艦隊"
+      "Force H"
+      "ライン演習部隊"
     ]
     "en-US": [
       "Patrol Force"
-      "Kurita Fleet"
-      "Nishimura Fleet"
-      "Kozawa Fleet"
-      "Shima Fleet"
+      "Strait Dispatch Fleet"
+      "Western Operation Force"
+      "European Special Fleet"
+      "Force H"
+      "Rhine Exercise Force"
     ]
