@@ -16,6 +16,7 @@ const isDE = ship => ship.api_stype === 1
 const isIsuzuK2 = shipIdIs(141)
 const isJervisKai = shipIdIs(394)
 const isTatsutaKai = shipIdIs(478)
+const isSamuelKai = shipIdIs(681)
 
 const isTaiyouKai = shipIdIs(380)
 const isTaiyouKaiNi = shipIdIs(529)
@@ -51,7 +52,7 @@ const overEquips = func => (_ship, equips) => func(equips)
 // isOASWWith(allCVEIds: Array<ShipMstId>)(ship: Ship, equips: Array<Equip>): bool
 export const isOASWWith = allCVEIds => _.overSome(
   // 無条件に発動
-  isIsuzuK2, isJervisKai, isTatsutaKai,
+  isIsuzuK2, isJervisKai, isTatsutaKai, isSamuelKai,
   // 海防艦
   _.overEvery(
     isDE,
