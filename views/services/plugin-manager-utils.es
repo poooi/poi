@@ -128,7 +128,7 @@ export function updateI18n(plugin) {
   }
   if (i18nFile != null) {
     const namespace = plugin.id
-    each(window.LOCALES, (language) => {
+    each(window.LOCALES.map(lng => lng.locale), (language) => {
       i18next.addGlobalI18n(namespace)
       i18next.addResourceBundleDebounce(
         language,

@@ -10,7 +10,28 @@ import { readJSONSync, writeFileSync } from 'fs-extra'
 
 import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 
-const LOCALES = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US', 'ko-KR']
+const LOCALES = [
+  {
+    locale: 'zh-CN',
+    lng: '简体中文',
+  },
+  {
+    locale: 'zh-TW',
+    lng: '正體中文',
+  },
+  {
+    locale: 'ja-JP',
+    lng: '日本語',
+  },
+  {
+    locale: 'en-US',
+    lng: 'English',
+  },
+  {
+    locale: 'ko-KR',
+    lng: '한국어',
+  },
+]
 const { ROOT, isMain, config, dbg } = window
 
 const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
@@ -20,8 +41,7 @@ const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
 const mainPoiNs = i18nFiles.map(i => path.basename(i))
 const mainPoiRes = {}
-
-each(LOCALES, locale => {
+each(LOCALES.map(lng => lng.locale), locale => {
   mainPoiRes[locale] = {}
   each(i18nFiles, i18nFile => {
     const namespace = path.basename(i18nFile)
@@ -31,7 +51,7 @@ each(LOCALES, locale => {
 
 window.LOCALES = LOCALES
 window.language = window.config.get('poi.misc.language', navigator.language)
-if (!LOCALES.includes(window.language)) {
+if (!LOCALES.map(lng => lng.locale).includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
   case 'zh':
     window.language = 'zh-TW'
