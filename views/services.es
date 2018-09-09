@@ -1,3 +1,4 @@
+/* global getStore, config, toggleModal, log, error, dbg */
 import { remote } from 'electron'
 import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
@@ -5,7 +6,6 @@ import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 
 const proxy = remote.require('./lib/proxy')
-const { config, toggleModal, log, error, dbg } = window
 
 const { stopNavigateAndHandleNewWindow } = remote.require('./lib/utils')
 
@@ -163,6 +163,12 @@ remote.getCurrentWebContents().on('dom-ready', () => {
       div.style["pointer-events"] = "none";
       document.body.appendChild(div);
     `)
+  }
+})
+
+remote.getCurrentWindow().on('show', () => {
+  if (getStore('layout.webview.ref')) {
+    getStore('layout.webview.ref').executeJavaScript('align()')
   }
 })
 
