@@ -85,6 +85,9 @@ function handleSpacingTop(show) {
 }
 
 window.align = function () {
+  if (!location.pathname.includes('854854')) {
+    return
+  }
   document.body.appendChild(alignCSS)
   handleSpacingTop(false)
   window.scrollTo(0, 0)
@@ -104,6 +107,9 @@ window.align = function () {
 }
 
 window.unalign = () => {
+  if (!location.pathname.includes('854854')) {
+    return
+  }
   document.body.removeChild(alignCSS)
   if (document.querySelector('#spacing_top')) {
     document.querySelector('#spacing_top').style.display = 'block'
