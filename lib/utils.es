@@ -23,11 +23,11 @@ export function log(...str) {
   console.log("[INFO] ", ...map(str, stringify))
 }
 
-export function warn(str) {
+export function warn(...str) {
   console.warn(chalk.yellow("[WARN] ", ...map(str, stringify)))
 }
 
-export function error(str) {
+export function error(...str) {
   console.error(chalk.red.bold("[ERROR] ", ...map(str, stringify)))
 }
 
