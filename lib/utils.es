@@ -89,6 +89,9 @@ export function stopNavigateAndHandleNewWindow(id) {
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
       }
+      if (url.startsWith('chrome')) {
+        options.frame = true
+      }
       options = {
         ...options,
         minWidth: 200,
