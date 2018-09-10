@@ -88,16 +88,19 @@ window.align = function () {
   document.body.appendChild(alignCSS)
   handleSpacingTop(false)
   window.scrollTo(0, 0)
-  window.ipc.access('WebView').getWebviewWidth(width => {
-    const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
-    if (Number.isNaN(zoom)) {
-      setTimeout(window.align, 1000)
-      return
+  remote.getCurrentWindow().webContents.executeJavaScript(
+    "document.querySelector('webview').getBoundingClientRect().width",
+    width => {
+      const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+      if (Number.isNaN(zoom)) {
+        setTimeout(window.align, 1000)
+        return
+      }
+      webFrame.setZoomFactor(zoom)
+      const zl = webFrame.getZoomLevel()
+      webFrame.setLayoutZoomLevelLimits(zl, zl)
     }
-    webFrame.setZoomFactor(zoom)
-    const zl = webFrame.getZoomLevel()
-    webFrame.setLayoutZoomLevelLimits(zl, zl)
-  })
+  )
 }
 
 window.unalign = () => {
