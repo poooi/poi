@@ -139,3 +139,9 @@
 .SettingsView .plugin-setting-wrapper {
   margin-bottom: 30px;
 }
+
+.gpu-stat-view {
+  width: 100%;
+  height: 60vh;
+  background-color: #fff;
+}

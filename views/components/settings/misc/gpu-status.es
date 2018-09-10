@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import { remote } from 'electron'
-import { Button, Table } from 'react-bootstrap'
-import { entries, map } from 'lodash'
+import { Button } from 'react-bootstrap'
 import { translate } from 'react-i18next'
+import Webview from 'react-electron-web-view'
 
 @translate(['setting'])
 export class GPUStatus extends PureComponent {
@@ -10,26 +10,9 @@ export class GPUStatus extends PureComponent {
 
   handleClick = () => {
     const { t } = this.props
-    const status = this.getGPUFeatureStatus()
-
-    const content = <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>{t('setting:Feature')}</th>
-          <th><th>{t('setting:Status')}</th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          map(entries(status), ([key, value]) =>
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{value}</td>
-            </tr>
-          )
-        }
-      </tbody>
-    </Table>
+    const content = <div>
+      <Webview src="chrome://gpu" className="gpu-stat-view" />
+    </div>
 
     window.toggleModal(t('setting:GPU Status'), content)
   }
