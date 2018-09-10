@@ -1,6 +1,6 @@
 meta:
   name: "shiptag"
-  version: "2018/09/10/01"
+  version: "2018/09/10/02"
 
 data:
   mapname: [
@@ -45,10 +45,10 @@ data:
       "ライン演習部隊"
     ]
     "en-US": [
-      "Patrol Force"
-      "Strait Dispatch Fleet"
-      "Western Operation Force"
+      "Vanguard Force"
+      "Straits Deployment Fleet"
+      "Western Operations Unit"
       "European Special Fleet"
       "Force H"
-      "Rhine Exercise Force"
+      "Rhine Manoeuvres Unit"
     ]
