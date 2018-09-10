@@ -90,6 +90,10 @@ window.align = function () {
   window.scrollTo(0, 0)
   window.ipc.access('WebView').getWebviewWidth(width => {
     const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+    if (Number.isNaN(zoom)) {
+      setTimeout(window.align, 1000)
+      return
+    }
     webFrame.setZoomFactor(zoom)
     const zl = webFrame.getZoomLevel()
     webFrame.setLayoutZoomLevelLimits(zl, zl)
