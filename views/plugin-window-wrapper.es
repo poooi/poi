@@ -151,11 +151,13 @@ export class PluginWindowWrap extends PureComponent {
 
   checkBrowserWindowExistence = () => {
     if (!this.state.id || !BrowserWindow.fromId(this.state.id)) {
-      console.warn('Plugin window not exists. Removing window...')
-      try {
-        this.props.closeWindowPortal()
-      } catch(e) {
-        console.error(e)
+      if (!this.state.loaded) {
+        console.warn('Plugin window not exists. Removing window...')
+        try {
+          this.props.closeWindowPortal()
+        } catch(e) {
+          console.error(e)
+        }
       }
       return false
     }
