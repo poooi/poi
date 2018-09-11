@@ -95,12 +95,11 @@ window.align = function () {
     remote.getCurrentWindow().webContents.executeJavaScript(
       "document.querySelector('webview').getBoundingClientRect().width",
       width => {
-        clearInterval(t)
         const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
         if (Number.isNaN(zoom)) {
-          setTimeout(window.align, 1000)
           return
         }
+        clearInterval(t)
         webFrame.setZoomFactor(zoom)
         const zl = webFrame.getZoomLevel()
         webFrame.setLayoutZoomLevelLimits(zl, zl)
