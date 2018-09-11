@@ -150,8 +150,15 @@ const initEquips = (dispatch, current, previous) => {
   })
 }
 
+const initWebviewWidth = () => {
+  ipc.register("WebView", {
+    width: Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
+  })
+}
+
 initShips()
 initEquips()
+initWebviewWidth()
 
 const shipsObserver = observer(
   (state) => state.info.ships,
@@ -163,8 +170,9 @@ const slotitemsObserver = observer(
   initEquips
 )
 
-observe(store, [shipsObserver, slotitemsObserver])
+const webviewSizeObserver = observer(
+  (state) => state.layout.webview.width,
+  initWebviewWidth
+)
 
-ipc.register("WebView", {
-  getWebviewWidth: cb => cb(getStore('layout.webview.ref.view.clientWidth', 1200)),
-})
+observe(store, [shipsObserver, slotitemsObserver, webviewSizeObserver])

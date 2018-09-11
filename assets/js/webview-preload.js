@@ -92,19 +92,15 @@ window.align = function () {
   handleSpacingTop(false)
   window.scrollTo(0, 0)
   const t = setInterval(() => {
-    remote.getCurrentWindow().webContents.executeJavaScript(
-      "document.querySelector('webview').getBoundingClientRect().width",
-      width => {
-        const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
-        if (Number.isNaN(zoom)) {
-          return
-        }
-        clearInterval(t)
-        webFrame.setZoomFactor(zoom)
-        const zl = webFrame.getZoomLevel()
-        webFrame.setLayoutZoomLevelLimits(zl, zl)
-      }
-    )
+    const width = window.ipc.access('WebView').width
+    const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+    if (Number.isNaN(zoom)) {
+      return
+    }
+    clearInterval(t)
+    webFrame.setZoomFactor(zoom)
+    const zl = webFrame.getZoomLevel()
+    webFrame.setLayoutZoomLevelLimits(zl, zl)
   }, 1000)
 }
 

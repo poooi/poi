@@ -73,10 +73,8 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-    if (!this.props.windowMode) {
-      window.addEventListener('resize', this.alignWebviewDebounced)
-      layoutResizeObserver.observe(document.querySelector('kan-game webview'))
-    }
+    window.addEventListener('resize', this.alignWebviewDebounced)
+    layoutResizeObserver.observe(this.webview.current.view)
   }
 
   handleWebviewUnmount = () => {
@@ -87,10 +85,8 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-    if (!this.props.windowMode) {
-      window.removeEventListener('resize', this.alignWebviewDebounced)
-      layoutResizeObserver.unobserve(document.querySelector('kan-game webview'))
-    }
+    window.removeEventListener('resize', this.alignWebviewDebounced)
+    layoutResizeObserver.unobserve(this.webview.current.view)
   }
 
   componentDidMount = () => {
