@@ -297,6 +297,12 @@ export class ControlledTabArea extends PureComponent {
     ipc.unregisterAll("MainWindow")
     config.removeListener('config.set', this.handleConfig)
   }
+  componentDidCatch(error, info) {
+    console.error(error, info)
+    this.setState({
+      error: true,
+    })
+  }
   // All displaying plugins
   listedPlugins = () => {
     return this.props.plugins.filter((plugin) =>
@@ -360,6 +366,9 @@ export class ControlledTabArea extends PureComponent {
     }
   }
   render() {
+    if (this.state.error) {
+      return <div />
+    }
     const { t } = this.props
     const navClass = classNames('top-nav', {
       'grid-menu': this.props.useGridMenu,
