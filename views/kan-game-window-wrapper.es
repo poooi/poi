@@ -1,8 +1,9 @@
+/* global config, ROOT, getStore, dispatch */
 import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
-import { screen } from 'electron'
+import { screen, remote } from 'electron'
 import { normalizeURL } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { KanGameWrapper } from './kan-game-wrapper'
@@ -11,7 +12,7 @@ import { debounce } from 'lodash'
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 
 const { workArea } = screen.getPrimaryDisplay()
-const { config } = window
+const { BrowserWindow } = remote
 const getPluginWindowRect = () => {
   const defaultRect = { width: 1200, height: 780 }
   let { x, y, width, height } = config.get('poi.kangameWindow.bounds', defaultRect)
@@ -95,7 +96,7 @@ export class KanGameWindowWrapper extends PureComponent {
         const width = config.get('poi.webview.windowWidth', 1200)
         this.externalWindow.remote.getCurrentWindow().setContentSize(width, Math.round(width / 1200 * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1)))
       }
-      window.dispatch({
+      dispatch({
         type: '@@LayoutUpdate/webview/windowUseFixedResolution',
         value,
       })
@@ -112,7 +113,7 @@ export class KanGameWindowWrapper extends PureComponent {
     }
   }
 
-  useCustomTitlebar = () => window.config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')
+  useCustomTitlebar = () => config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')
 
   getYOffset = () => this.useCustomTitlebar() ? 60 : 30
 
@@ -131,7 +132,7 @@ export class KanGameWindowWrapper extends PureComponent {
       case 'height': return `height=${windowOptions.height}`
       }
     }).join(',')
-    this.externalWindow = window.open(`file:///${__dirname}/../index-plugin.html?kangame`, 'plugin[kangame]', windowFeatures)
+    this.externalWindow = open(`file:///${__dirname}/../index-plugin.html?kangame`, 'plugin[kangame]', windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.remote = this.externalWindow.require('electron').remote
       this.externalWindow.remote.getCurrentWindow().setResizable(!windowUseFixedResolution)
@@ -144,12 +145,12 @@ export class KanGameWindowWrapper extends PureComponent {
             Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * config.get('poi.appearance.zoom', 1)),
           )
         }
-        if (window.getStore('layout.webview.ref')) {
-          window.getStore('layout.webview.ref').executeJavaScript('window.align()')
+        if (getStore('layout.webview.ref')) {
+          getStore('layout.webview.ref').executeJavaScript('window.align()')
         }
         if (this.externalWindow.document.querySelector('webview')) {
           const { width: windowWidth, height: windowHeight } = this.externalWindow.document.querySelector('webview').getBoundingClientRect()
-          window.dispatch({
+          dispatch({
             type: '@@LayoutUpdate/webview/size',
             value: {
               windowWidth,
@@ -183,7 +184,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.document.title = 'poi'
       this.externalWindow.isWindowMode = true
       if (require.resolve(path.join(__dirname, 'env-parts', 'theme')).endsWith('.es')) {
-        this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(window.ROOT, 'babel.config')))
+        this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(ROOT, 'babel.config')))
       }
       this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
@@ -201,12 +202,28 @@ export class KanGameWindowWrapper extends PureComponent {
       }
       this.externalWindow.remote.getCurrentWindow().blur()
       this.externalWindow.remote.getCurrentWindow().focus()
-      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
+      this.setState({
+        loaded: true,
+        id: this.externalWindow.remote.getCurrentWindow().id,
+      }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
     })
   }
 
+  checkBrowserWindowExistence = () => {
+    if (!this.state.id || !BrowserWindow.fromId(this.state.id)) {
+      if (this.state.loaded) {
+        console.warn('Webview window not exists. Removing window...')
+        config.set('poi.layout.isolate', false)
+      }
+      return false
+    }
+    return true
+  }
+
   onZoomChange = (value) => {
-    this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
+    if (this.checkBrowserWindowExistence()) {
+      this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
+    }
   }
 
   handleZoom = (path, value) => {
@@ -219,15 +236,19 @@ export class KanGameWindowWrapper extends PureComponent {
     }
   }
 
-  focusWindow = () => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
+  focusWindow = () => {
+    if (this.checkBrowserWindowExistence()) {
+      this.externalWindow.require('electron').remote.getCurrentWindow().focus()
+    }
+  }
 
   render() {
-    if (this.state.hasError || !this.state.loaded || !this.externalWindow) return null
+    if (this.state.hasError || !this.state.loaded || !this.externalWindow || !this.checkBrowserWindowExistence()) return null
     return ReactDOM.createPortal(
       <>
         {
           this.useCustomTitlebar() &&
-          <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
+          <TitleBar icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
         <WindowEnv.Provider value={{
           window: this.externalWindow,
