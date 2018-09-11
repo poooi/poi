@@ -1,4 +1,3 @@
-/* global getStore, dispatch */
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
