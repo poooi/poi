@@ -33,9 +33,9 @@ const setCSS = () => {
   width: ${panelRect.width * 0.875}px;
 }
 
-.toast-poi {
-  bottom: ${window.innerHeight - bottom + 12}px;
-  right: ${window.innerWidth - right + 12}px;
+.redux-toastr .bottom-right {
+  bottom: ${window.innerHeight - bottom + 12}px !important;
+  right: ${window.innerWidth - right + 12}px !important;
 }
 `
 }

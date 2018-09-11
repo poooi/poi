@@ -1,21 +1,17 @@
-import { ToastContainer, ToastMessageAnimated  } from 'react-toastr'
-import React, { PureComponent } from 'react'
-import { toastInitializer } from 'views/env-parts/toast'
+import React from 'react'
+import ReduxToastr from 'react-redux-toastr'
 
-import './assets/toast-animate.css'
-import './assets/toast.css'
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 
-const ToastMessageFactory = React.createFactory(ToastMessageAnimated)
-
-export class Toastr extends PureComponent {
-  componentDidMount = () => {
-    toastInitializer(this.container)
-  }
-  render () {
-    return (
-      <ToastContainer ref={ref => { this.container = ref }}
-        toastMessageFactory={ToastMessageFactory}
-        className="toast-poi" />
-    )
-  }
+export function Toastr() {
+  return (
+    <ReduxToastr
+      timeOut={5000}
+      newestOnTop={true}
+      position="bottom-right"
+      transitionIn="fadeIn"
+      transitionOut="fadeOut"
+      progressBar
+      closeOnToastrClick />
+  )
 }
