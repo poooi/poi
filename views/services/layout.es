@@ -1,4 +1,4 @@
-/* global $, config*/
+/* global $, config, getStore, dispatch */
 import { debounce } from 'lodash'
 import { remote } from 'electron'
 
@@ -46,7 +46,7 @@ const setMinSize = () => {
   if (config.get('poi.layout.isolate', false) || !$('poi-info') || config.get('poi.layout.overlay', false)) {
     remote.getCurrentWindow().setMinimumSize(1, 1)
   } else {
-    const { width, height } = window.getStore('layout.webview')
+    const { width, height } = getStore('layout.webview')
     remote.getCurrentWindow().setMinimumSize(
       getRealSize(width),
       getRealSize(height + getYOffset()),
@@ -58,7 +58,7 @@ const setIsolatedMainWindowSize = isolateWindow => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
-  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   if (isolateWindow) {
     if (layout === 'horizontal') {
@@ -96,7 +96,7 @@ const setOverlayPanelWindowSize = overlayPanel => {
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
   const isolateWindow = config.get('poi.layout.isolate', false)
-  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   const useFixedResolution = config.get('poi.webview.useFixedResolution', true)
   if (overlayPanel && !isolateWindow) {
@@ -168,7 +168,7 @@ const setProperWindowSize = () => {
     return
   }
   // Resize when window size smaller than webview size
-  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview')
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
   const layout = config.get('poi.layout.mode', 'horizontal')
   const realWidth = getRealSize(webviewWidth)
   const realHeight = getRealSize(webviewHeight + getYOffset())
@@ -178,7 +178,7 @@ const setProperWindowSize = () => {
     current.setContentSize(width, height)
   }
 
-  if (layout !== 'vertical' && realHeight > getRealSize(window.getStore('layout.window.height'))) {
+  if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
     let [width, height] = current.getContentSize()
     height = realHeight
     current.setContentSize(width, height)
@@ -189,9 +189,9 @@ const adjustSize = () => {
   try {
     // Apply calcualted data
     setCSSDebounced()
-    window.dispatch({
+    dispatch({
       type: '@@LayoutUpdate/webview/useFixedResolution',
-      value: window.getStore('config.poi.webview.useFixedResolution', true),
+      value: getStore('config.poi.webview.useFixedResolution', true),
     })
     setMinSize()
     handleOverlayPanelReszieDebounced()
@@ -203,7 +203,7 @@ const adjustSize = () => {
 adjustSize()
 
 const changeBounds = () => {
-  let { width: newWidth, height: newHeight } = window.getStore('layout.webview')
+  let { width: newWidth, height: newHeight } = getStore('layout.webview')
   newHeight += getYOffset()
   if (config.get('poi.layout.mode', 'horizontal') === 'horizontal') {
     // Previous vertical
@@ -249,7 +249,7 @@ config.on('config.set', (path, value) => {
     current.setFullScreenable(true)
 
     changeBounds()
-    // window.dispatchEvent(new Event('resize'))
+    // dispatchEvent(new Event('resize'))
 
     current.setResizable(resizable)
     current.setMaximizable(maximizable)
@@ -288,7 +288,7 @@ export const layoutResizeObserver = new ResizeObserver(entries => {
         width: entry.contentRect.width,
         height: entry.contentRect.height,
         ...key === 'webview' ? {
-          useFixedResolution: window.getStore('config.poi.webview.useFixedResolution', true),
+          useFixedResolution: getStore('config.poi.webview.useFixedResolution', true),
         } : {},
       },
     }
@@ -297,7 +297,7 @@ export const layoutResizeObserver = new ResizeObserver(entries => {
       setProperWindowSize()
     }
   })
-  window.dispatch({
+  dispatch({
     type: '@@LayoutUpdate',
     value,
   })

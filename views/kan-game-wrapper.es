@@ -1,3 +1,4 @@
+/* global getStore, dispatch */
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
@@ -102,14 +103,14 @@ export class KanGameWrapper extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     if (prevState.key === this.state.key) {
       const { width, height } = this.webviewWrapper.getBoundingClientRect()
+      this.props.dispatch({
+        type: '@@LayoutUpdate/webview/size',
+        value: {
+          width,
+          height,
+        },
+      })
       if (!this.props.windowMode) {
-        this.props.dispatch({
-          type: '@@LayoutUpdate/webview/size',
-          value: {
-            width,
-            height,
-          },
-        })
         this.resizableArea.setSize({
           width: this.resizableAreaWidth,
           height: this.resizableAreaHeight,
