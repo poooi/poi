@@ -1,16 +1,17 @@
+/* global config, ROOT */
 import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
-import { screen } from 'electron'
+import { screen, remote } from 'electron'
 import { normalizeURL } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { PluginWrap } from './plugin-wrapper'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
-
+const { BrowserWindow } = remote
+const ipc = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
-const { config } = window
 const getPluginWindowRect = plugin => {
   const defaultRect = plugin.windowMode ? { width: 800, height: 700 } : { width: 600, height: 500 }
   let { x, y, width, height } = config.get(`plugin.${plugin.id}.bounds`, defaultRect)
@@ -92,7 +93,7 @@ export class PluginWindowWrap extends PureComponent {
       case 'height': return `height=${windowOptions.height}`
       }
     }).join(',')
-    this.externalWindow = window.open(`file:///${__dirname}/../index-plugin.html?${this.props.plugin.id}`, `plugin[${this.props.plugin.id}]`, windowFeatures)
+    this.externalWindow = open(`file:///${__dirname}/../index-plugin.html?${this.props.plugin.id}`, `plugin[${this.props.plugin.id}]`, windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
@@ -120,7 +121,7 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.document.title = this.props.plugin.name
       this.externalWindow.isWindowMode = true
       if (require.resolve(path.join(__dirname, 'env-parts', 'theme')).endsWith('.es')) {
-        this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(window.ROOT, 'babel.config')))
+        this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(ROOT, 'babel.config')))
       }
       this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
       this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
@@ -141,13 +142,30 @@ export class PluginWindowWrap extends PureComponent {
           console.error(e)
         }
       })
-      this.setState({ loaded: true }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
+      this.setState({
+        loaded: true,
+        id: this.externalWindow.remote.getCurrentWindow().id,
+      }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
     })
   }
 
+  checkBrowserWindowExistence = () => {
+    if (!this.state.id || !BrowserWindow.fromId(this.state.id)) {
+      console.warn('Plugin window not exists. Removing window...')
+      try {
+        this.props.closeWindowPortal()
+      } catch(e) {
+        console.error(e)
+      }
+      return false
+    }
+    return true
+  }
 
   onZoomChange = (value) => {
-    this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
+    if (this.checkBrowserWindowExistence()) {
+      this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
+    }
   }
 
   handleZoom = (path, value) => {
@@ -156,15 +174,23 @@ export class PluginWindowWrap extends PureComponent {
     }
   }
 
-  focusWindow = () => this.externalWindow.require('electron').remote.getCurrentWindow().focus()
+  focusWindow = () => {
+    if (this.checkBrowserWindowExistence()) {
+      this.externalWindow.require('electron').remote.getCurrentWindow().focus()
+    } else {
+      setImmediate(() => {
+        ipc.access("MainWindow").ipcFocusPlugin(this.props.plugin.id)
+      })
+    }
+  }
 
   render() {
-    if (this.state.hasError || !this.state.loaded || !this.externalWindow) return null
+    if (this.state.hasError || !this.state.loaded || !this.externalWindow || !this.checkBrowserWindowExistence()) return null
     return ReactDOM.createPortal(
       <>
         {
-          window.config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
-          <TitleBar icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
+          config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
+          <TitleBar icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
         }
         <WindowEnv.Provider value={{
           window: this.externalWindow,
