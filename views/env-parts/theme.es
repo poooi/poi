@@ -1,3 +1,4 @@
+/* global $, config */
 import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
 import { fileUrl } from '../utils/tools'
@@ -5,14 +6,13 @@ import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path-extra'
 
 const { normal: normalThemes, vibrant: vibrantThemes } = themes
-const { $, config } = window
 const EXROOT = remote.getGlobal('EXROOT')
 
 require.extensions['.css'] = (m, name) => {
   accessSync(name)
   const link = document.createElement('link')
   link.setAttribute('rel', 'stylesheet')
-  link.setAttribute('href', name)
+  link.setAttribute('href', fileUrl(name))
   document.head.appendChild(link)
 }
 
@@ -21,13 +21,13 @@ ensureFileSync(customCSSPath)
 const customCSS = document.createElement('link')
 customCSS.setAttribute('rel', 'stylesheet')
 customCSS.setAttribute('id', 'custom-css')
-customCSS.setAttribute('href', customCSSPath)
+customCSS.setAttribute('href', fileUrl(customCSSPath))
 
 const FACSSPath = require.resolve('@fortawesome/fontawesome-svg-core/styles.css')
 const FACSS = document.createElement('link')
 FACSS.setAttribute('rel', 'stylesheet')
 FACSS.setAttribute('id', 'fontawesome')
-FACSS.setAttribute('href', FACSSPath)
+FACSS.setAttribute('href', fileUrl(FACSSPath))
 
 window.reloadCustomCss = () => {
   if (!$('#custom-css')) {
@@ -41,7 +41,7 @@ window.loadTheme = (theme = 'paperdark') => {
   window.theme = theme
   window.isDarkTheme = /(dark|black|slate|superhero|papercyan)/i.test(theme)
   if ($('#bootstrap-css')) {
-    $('#bootstrap-css').setAttribute('href', require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`))
+    $('#bootstrap-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`)))
   }
   window.reloadCustomCss()
 }

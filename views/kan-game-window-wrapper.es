@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
 import { screen, remote } from 'electron'
-import { normalizeURL } from 'views/utils/tools'
+import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { debounce } from 'lodash'
@@ -164,12 +164,12 @@ export class KanGameWindowWrapper extends PureComponent {
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 <link rel="stylesheet" type="text/css" id="bootstrap-css">
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/app.css'))}">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('electron-react-titlebar/assets/style.css'))}">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/info/assets/alert.css'))}">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/info/assets/control.css'))}">
-<link rel="stylesheet" type="text/css" href="${normalizeURL(require.resolve('views/components/info/assets/map-reminder.css'))}">`
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/alert.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/control.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/map-reminder.css'))}">`
       if (process.platform === 'darwin') {
         const div = document.createElement("div")
         div.style.position = "absolute"
