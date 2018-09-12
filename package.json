@@ -112,7 +112,7 @@
   "devDependencies": {
     "asar": "^0.14.3",
     "babel-eslint": "^8.2.1",
-    "electron": "^3.0.0-beta.10",
+    "electron": "^3.0.0-beta.11",
     "electron-builder": "^20.16.4",
     "eslint": "^4.19.1",
     "eslint-plugin-import": "^2.12.0",
