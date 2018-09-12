@@ -63,6 +63,12 @@ alignCSS.innerHTML =
 }
 `
 
+const disableTab = e => {
+  if (e.key === 'Tab') {
+    e.preventDefault()
+  }
+}
+
 function handleSpacingTop(show) {
   const status = show ? 'block' : 'none'
   if (document.querySelector('#spacing_top')) {
@@ -76,7 +82,9 @@ function handleSpacingTop(show) {
       if (count > 20) {
         return
       }
-      document.querySelector('#game_frame').contentWindow.document.querySelector('#spacing_top').style.display = status
+      const frameDocument = document.querySelector('#game_frame').contentDocument
+      frameDocument.querySelector('#spacing_top').style.display = status
+      frameDocument.querySelector('#htmlWrap').contentDocument.addEventListener('keydown', disableTab)
     } catch (e) {
       setTimeout(() => t(count + 1), 1000)
     }
