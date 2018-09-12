@@ -1,15 +1,15 @@
 meta:
   name: "shiptag"
-  version: "2018/09/10/02"
+  version: "2018/09/12/01"
 
 data:
   mapname: [
     "E1"
     "E2"
     "E3"
-    "TBD"
-    "TBD"
-    "TBD"
+    "E4"
+    "E5"
+    "E5"
   ]
   color: [
     "#9E9E9E"
