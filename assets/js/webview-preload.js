@@ -102,7 +102,7 @@ function handleZoom(count=0) {
 }
 
 window.align = function () {
-  if (location.pathname.includes('854854')) {
+  if (location.pathname.includes('854854') || location.hostname === 'osapi.dmm.com') {
     document.body.appendChild(alignCSS)
     handleSpacingTop(false)
     window.scrollTo(0, 0)
