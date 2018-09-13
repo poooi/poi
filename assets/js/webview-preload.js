@@ -106,11 +106,10 @@ window.align = function () {
     document.body.appendChild(alignCSS)
     handleSpacingTop(false)
     window.scrollTo(0, 0)
-    handleZoom()
   } else if (location.pathname.includes('kcs')) {
     document.body.appendChild(alignCSS)
-    handleZoom()
   }
+  handleZoom()
 }
 
 window.unalign = () => {
