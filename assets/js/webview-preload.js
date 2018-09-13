@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
   }
   if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
-    window.DMM.netgame.reloadDialog=function(){}
+    window.DMM.netgame.reloadDialog = function(){}
   }
 })
 
@@ -69,27 +69,36 @@ const disableTab = e => {
   }
 }
 
-function handleSpacingTop(show) {
+function handleSpacingTop(show, count=0) {
   const status = show ? 'block' : 'none'
   if (document.querySelector('#spacing_top')) {
     document.querySelector('#spacing_top').style.display = status
   }
-  if (!document.querySelector('#game_frame')) {
+  if (count > 20 || !document.querySelector('#game_frame')) {
     return
   }
-  function t(count) {
-    try {
-      if (count > 20) {
-        return
-      }
-      const frameDocument = document.querySelector('#game_frame').contentDocument
-      frameDocument.querySelector('#spacing_top').style.display = status
-      frameDocument.querySelector('#htmlWrap').contentDocument.addEventListener('keydown', disableTab)
-    } catch (e) {
-      setTimeout(() => t(count + 1), 1000)
-    }
+  try {
+    const frameDocument = document.querySelector('#game_frame').contentDocument
+    frameDocument.querySelector('#spacing_top').style.display = status
+    frameDocument.querySelector('#htmlWrap').contentDocument.addEventListener('keydown', disableTab)
+  } catch (e) {
+    setTimeout(() => handleSpacingTop(show, count + 1), 1000)
   }
-  t(0)
+}
+
+function handleZoom(count=0) {
+  if (count > 20) {
+    return
+  }
+  const width = window.ipc.access('WebView').width
+  const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+  if (Number.isNaN(zoom)) {
+    setTimeout(() => handleZoom(count + 1), 1000)
+    return
+  }
+  webFrame.setZoomFactor(zoom)
+  const zl = webFrame.getZoomLevel()
+  webFrame.setLayoutZoomLevelLimits(zl, zl)
 }
 
 window.align = function () {
@@ -97,19 +106,10 @@ window.align = function () {
     document.body.appendChild(alignCSS)
     handleSpacingTop(false)
     window.scrollTo(0, 0)
-    const t = setInterval(() => {
-      const width = window.ipc.access('WebView').width
-      const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
-      if (Number.isNaN(zoom)) {
-        return
-      }
-      clearInterval(t)
-      webFrame.setZoomFactor(zoom)
-      const zl = webFrame.getZoomLevel()
-      webFrame.setLayoutZoomLevelLimits(zl, zl)
-    }, 1000)
+    handleZoom()
   } else if (location.pathname.includes('kcs')) {
     document.body.appendChild(alignCSS)
+    handleZoom()
   }
 }
 
