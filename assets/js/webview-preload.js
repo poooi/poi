@@ -114,16 +114,15 @@ window.align = function () {
 }
 
 window.unalign = () => {
-  if (!location.pathname.includes('854854')) {
-    return
+  if (location.pathname.includes('854854') || location.pathname.includes('kcs')) {
+    if (document.body.contains(alignCSS)) {
+      document.body.removeChild(alignCSS)
+    }
+    if (document.querySelector('#spacing_top')) {
+      document.querySelector('#spacing_top').style.display = 'block'
+    }
+    handleSpacingTop(true)
   }
-  if (document.body.contains(alignCSS)) {
-    document.body.removeChild(alignCSS)
-  }
-  if (document.querySelector('#spacing_top')) {
-    document.querySelector('#spacing_top').style.display = 'block'
-  }
-  handleSpacingTop(true)
 }
 
 // ref for item purchase css insertion
