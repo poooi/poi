@@ -93,30 +93,33 @@ function handleSpacingTop(show) {
 }
 
 window.align = function () {
-  if (!location.pathname.includes('854854')) {
-    return
+  if (location.pathname.includes('854854')) {
+    document.body.appendChild(alignCSS)
+    handleSpacingTop(false)
+    window.scrollTo(0, 0)
+    const t = setInterval(() => {
+      const width = window.ipc.access('WebView').width
+      const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+      if (Number.isNaN(zoom)) {
+        return
+      }
+      clearInterval(t)
+      webFrame.setZoomFactor(zoom)
+      const zl = webFrame.getZoomLevel()
+      webFrame.setLayoutZoomLevelLimits(zl, zl)
+    }, 1000)
+  } else if (location.pathname.includes('kcs')) {
+    document.body.appendChild(alignCSS)
   }
-  document.body.appendChild(alignCSS)
-  handleSpacingTop(false)
-  window.scrollTo(0, 0)
-  const t = setInterval(() => {
-    const width = window.ipc.access('WebView').width
-    const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
-    if (Number.isNaN(zoom)) {
-      return
-    }
-    clearInterval(t)
-    webFrame.setZoomFactor(zoom)
-    const zl = webFrame.getZoomLevel()
-    webFrame.setLayoutZoomLevelLimits(zl, zl)
-  }, 1000)
 }
 
 window.unalign = () => {
   if (!location.pathname.includes('854854')) {
     return
   }
-  document.body.removeChild(alignCSS)
+  if (document.body.contains(alignCSS)) {
+    document.body.removeChild(alignCSS)
+  }
   if (document.querySelector('#spacing_top')) {
     document.querySelector('#spacing_top').style.display = 'block'
   }
