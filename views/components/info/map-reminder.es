@@ -109,7 +109,6 @@ const ItemStat = translate()(connect(
   currentNode,
   mapData,
   mapHp,
-  finalHps: fcd.maphp || emptyObj,
   maps: fcd.map || emptyObj,
 })))
 export class PoiMapReminder extends Component {
@@ -122,35 +121,6 @@ export class PoiMapReminder extends Component {
     const mapName = `${api_maparea_id}-${api_no}` +
       (rank == null ? '' : mapRanks[rank])
     return <>{this.props.t('Sortie area')}: {mapName}</>
-  }
-
-  isFinalAttack = () => {
-    const {mapHp, rank, mapId} = this.props
-    if (!mapHp || mapHp[0] == 0)
-      return false
-    const finalHpPostfix = ['', '丁', '丙', '乙', '甲'][rank] || ''
-    const finalHp = this.props.finalHps[`${mapId}${finalHpPostfix}`] || 0
-    return finalHp >= mapHp[0]
-  }
-
-  notifyFinalAttack = (e) => {
-    if (e.detail.path === '/kcsapi/api_req_map/start') {
-      const isFinalAttack = this.isFinalAttack()
-      if (isFinalAttack && config.get("poi.lastbattle.enabled", true)) {
-        toast(this.props.t('Possible final stage'), {
-          type: 'warning',
-          title: this.props.t('Sortie'),
-        })
-      }
-    }
-  }
-
-  componentDidMount() {
-    window.addEventListener('game.response', this.notifyFinalAttack)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('game.response', this.notifyFinalAttack)
   }
 
   render() {

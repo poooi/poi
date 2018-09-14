@@ -106,10 +106,6 @@ export const PoiConfig = connect(state => ({
               </OverlayTrigger>
           }
           <CheckboxLabelConfig
-            label={t('setting:Display Final Stage Notification')}
-            configName="poi.lastbattle.enabled"
-            defaultVal={true} />
-          <CheckboxLabelConfig
             label={t('setting:Display Event Ship Locking Notification')}
             configName="poi.eventSortieCheck.enable"
             defaultVal={true} />
