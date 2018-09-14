@@ -71,16 +71,19 @@ const disableTab = e => {
 
 function handleSpacingTop(show, count=0) {
   const status = show ? 'block' : 'none'
+  const action = show ? 'removeEventListener' : 'addEventListener'
   if (document.querySelector('#spacing_top')) {
     document.querySelector('#spacing_top').style.display = status
   }
+  document[action]('keydown', disableTab)
   if (count > 20 || !document.querySelector('#game_frame')) {
     return
   }
   try {
     const frameDocument = document.querySelector('#game_frame').contentDocument
+    frameDocument[action]('keydown', disableTab)
     frameDocument.querySelector('#spacing_top').style.display = status
-    frameDocument.querySelector('#htmlWrap').contentDocument.addEventListener('keydown', disableTab)
+    frameDocument.querySelector('#htmlWrap').contentDocument[action]('keydown', disableTab)
   } catch (e) {
     setTimeout(() => handleSpacingTop(show, count + 1), 1000)
   }
