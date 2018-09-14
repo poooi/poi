@@ -2,17 +2,49 @@
 # Build a general Node.js application with npm.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/javascript
-
-pool:
-  vmImage: 'Ubuntu 16.04'
-
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm ci
-    npm run build
-  displayName: 'npm install and build'
+jobs:
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'npm install and build'
+  - script: |
+      npm test
+    displayName: 'npm test'
+- job: macOS
+  pool:
+    vmImage: 'xcode9-macos10.13'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'npm install and build'
+  - script: |
+      npm test
+    displayName: 'npm test'
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'npm install and build'
+  - script: |
+      npm test
+    displayName: 'npm test'
