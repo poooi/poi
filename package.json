@@ -149,9 +149,6 @@
     "asar": true,
     "npmRebuild": true,
     "mac": {
-      "publish": [
-        "github"
-      ],
       "icon": "assets/icons/poi.icns",
       "category": "public.app-category.games"
     },
@@ -171,9 +168,6 @@
       ]
     },
     "win": {
-      "publish": [
-        "github"
-      ],
       "icon": "assets/icons/poi.ico",
       "target": [
         {
@@ -199,9 +193,6 @@
       "multiLanguageInstaller": true
     },
     "linux": {
-      "publish": [
-        "github"
-      ],
       "target": [
         "7z",
         "deb",
