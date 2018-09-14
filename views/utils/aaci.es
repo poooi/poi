@@ -60,6 +60,17 @@ const isRocketK2 = equip => equip.api_slotitem_id === 274
 // 275: 10cm連装高角砲改+増設機銃
 const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
 
+// 191: QF 2ポンド8連装ポンポン砲
+const isQF2Pounder = equip => equip.api_slotitem_id === 191
+
+// 300: 16inch Mk.I三連装砲改+FCR type284
+const is16InchMkITriplePlusFCR = equip => equip.api_slotitem_id === 300
+
+// 301: 20連装7inch UP Rocket Launchers
+const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
+
+
+
 // avoid modifying this structure directly, use "declareAACI" instead.
 export const AACITable = {}
 
@@ -83,8 +94,15 @@ const isNotSubmarine = ship => ![13, 14].includes(ship.api_stype)
 
 const isBattleship = ship => [8, 9, 10].includes(ship.api_stype)
 
-// 54=秋月型
+// 54 = 秋月型
 const isAkizukiClass = ship => ship.api_ctype === 54
+// 67 = Queen Elizabeth class
+// 78 = Ark Royal class
+// 82 = J class
+const isHMSRoyalNavyShips = ship => [67, 78, 82].includes(ship.api_ctype)
+
+// 6 = 金剛型
+const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.aftership_id === '0'
 
 const shipIdIs = n => ship => ship.api_ship_id === n
 
@@ -102,6 +120,9 @@ const isIseK = shipIdIs(82)
 const isHyuuGaK = shipIdIs(88)
 const isMusashiK = shipIdIs(148)
 const isMusashiK2 = shipIdIs(546)
+const isHamakazeBK = shipIdIs(558)
+const isIsokazeBK = shipIdIs(557)
+const isTenryuuK2 = shipIdIs(477)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -443,6 +464,56 @@ declareAACI({
   equipsValid: validAll(
     hasSome(isRocketK2),
     hasSome(isAARadar),
+  ),
+})
+
+declareAACI({
+  name: ['浜風乙改', '磯風乙改'],
+  id: 29,
+  fixed: 6,
+  modifier: 1.55,
+  shipValid: validAny(
+    isHamakazeBK,
+    isIsokazeBK,
+  ),
+  equipsValid: validAll(
+    hasSome(isHighAngleMount),
+    hasSome(isRadar),
+  ),
+})
+
+declareAACI({
+  name: ['天龍改二'],
+  id: 30,
+  fixed: 4,
+  modifier: 1.3,
+  shipValid: isTenryuuK2,
+  equipsValid: hasAtLeast(isHighAngleMount, 3),
+})
+
+declareAACI({
+  name: ['天龍改二'],
+  id: 31,
+  fixed: 3,
+  modifier: 1.2,
+  shipValid: isTenryuuK2,
+  equipsValid: hasAtLeast(isHighAngleMount, 2),
+})
+
+declareAACI({
+  name: ['HMS Royal Navy', 'Kongou Class Kai 2'],
+  fixed: 4,
+  modifier: 1.2,
+  shipValid: validAny(
+    isHMSRoyalNavyShips,
+    isKongouClassK2,
+  ),
+  equipsValid: validAll(
+    hasSome(isQF2Pounder),
+    validAny(
+      hasSome(is20Tube7InchUpRocketLaunchers),
+      hasSome(is16InchMkITriplePlusFCR),
+    ),
   ),
 })
 
