@@ -502,6 +502,7 @@ declareAACI({
 
 declareAACI({
   name: ['HMS Royal Navy', 'Kongou Class Kai 2'],
+  id: 32,
   fixed: 4,
   modifier: 1.2,
   shipValid: validAny(
