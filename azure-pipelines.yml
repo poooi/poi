@@ -21,6 +21,13 @@ jobs:
   - script: |
       npm test
     displayName: 'npm test'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: |
+        dist\*
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
 - job: macOS
   pool:
     vmImage: 'xcode9-macos10.13'
@@ -36,6 +43,13 @@ jobs:
   - script: |
       npm test
     displayName: 'npm test'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: |
+        dist\*
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
 - job: Windows
   pool:
     vmImage: 'vs2017-win2016'
@@ -51,3 +65,10 @@ jobs:
   - script: |
       npm test
     displayName: 'npm test'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: |
+        dist\*
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
