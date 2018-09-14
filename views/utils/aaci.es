@@ -4,7 +4,7 @@
 // in thankful acknowledgment of their hard work
 // some variable and function naming are modified
 
-import { maxBy, some } from 'lodash'
+import { maxBy } from 'lodash'
 
 // check for $slotitemtypes
 const itemTypeIs = n => equip => equip.api_type[2] === n
@@ -80,10 +80,6 @@ export const AACITable = {}
 // returns a boolean to indicate whether the ship in question (with equipments)
 // is capable of performing such type of AACI
 const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid }) => {
-  if (some([id, fixed, modifier, shipValid, equipsValid], value => typeof value === 'undefined')) {
-    console.warn('an aaci declaration is invalid, please check', name, id, fixed, modifier, shipValid, equipsValid)
-    return
-  }
   AACITable[id] = {
     name,
     id,
