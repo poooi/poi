@@ -86,13 +86,13 @@ export class ShipRow extends Component {
     const fuelTip = (
       <span>
         {ship.api_fuel} / {$ship.api_fuel_max}
-        {fuelPercentage < 100 && ` (-${Math.floor(($ship.api_fuel_max - ship.api_fuel) * (ship.api_lv > 99 ? 0.85 : 1))})`}
+        {fuelPercentage < 100 && ` (-${Math.max(1, Math.floor(($ship.api_fuel_max - ship.api_fuel) * (ship.api_lv > 99 ? 0.85 : 1)))})`}
       </span>
     )
     const ammoTip = (
       <span>
         {ship.api_bull} / {$ship.api_bull_max}
-        {ammoPercentage < 100 && ` (-${Math.floor(($ship.api_bull_max - ship.api_bull) * (ship.api_lv > 99 ? 0.85 : 1))})`}
+        {ammoPercentage < 100 && ` (-${Math.max(1, Math.floor(($ship.api_bull_max - ship.api_bull) * (ship.api_lv > 99 ? 0.85 : 1)))})`}
       </span>
     )
     return (
