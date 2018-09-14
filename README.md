@@ -13,7 +13,7 @@ Scalable KanColle browser and tool.
 
 [GitHub release](https://github.com/poooi/poi/releases).
 
-[cnpm (CN Mainland)](https://npm.taobao.org/mirrors/poi).
+[TAONPM (CN Mainland)](https://npm.taobao.org/mirrors/poi).
 
 ### UNOFFICIAL releases maintained by the community
 
@@ -40,9 +40,10 @@ brew update && brew cask install poi
 
 [More screenshots are available here](https://github.com/poooi/poi/wiki/Screenshots)
 
-## Run from dev version
+## Getting dev versions
 
-First, get the __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) and [npm](https://npmjs.org) >= __5.0.x__.
+### Running from github repo
+First, install __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) and [npm](https://npmjs.org) >= __5.0.x__.
 
 ``` shell
 git clone https://github.com/poooi/poi && cd poi
@@ -51,13 +52,21 @@ npm start
 ```
 
 Tips:
-- You do not have to run `npm install` and `npm run deploy` with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
+- do not use yarn or npm < 5 because the lock file is npm 5+ specific
 
-- If you have installed packages with npm < 5.0, it is highly recommended to completely remove current `node_modules` folder and re-run `npm install`.
+- running `npm install` is not necessary with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
 
-- If you use windows subsystem for linux(WSL), use `export npm_config_platform=win32 && npm install` instead of `npm install` for correct electron installation.
+- If you use windows subsystem for linux (WSL), use `export npm_config_platform=win32 && npm install` instead of `npm install` for correct electron installation.
 
 - If you have trouble downloading electron executables from github/amazonaws, [you may set ELECTRON_MIRROR environment variable](https://github.com/electron-userland/electron-download).
+
+### Nightlies
+We provide recently built nightlies in form of Continious Integration build artifacts.
+
++ Windows nightlies are hosted on [Appveyor](https://ci.appveyor.com/project/KochiyaOcean/poi),
++ Linux and macOS nightlies are [available here](https://poidb.0u0.moe/nightly/).
+
+Please note that artifacts could be periodically emptied.
 
 ## Available Plugins
 Many functionalities are provided as plugins, you may choose only what you want! [Here's a list of available plugins](https://github.com/poooi/poi/wiki/List-of-available-plugins).
