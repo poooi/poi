@@ -62,14 +62,12 @@ async function build_meta(flist) {
   await Promise.all([
     buildData('map.json'),
     buildData('shipavatar.json'),
-    CSON2JSON('maphp'),
     CSON2JSON('shiptag'),
   ])
 
   await build_meta([
     'map.json',
     'shipavatar.json',
-    'maphp.json',
     'shiptag.json',
   ].sort())
 })()
