@@ -1,3 +1,4 @@
+/* global config, toggleModal, getStore, toast */
 import fs from 'fs-extra'
 import path from 'path-extra'
 import React, { Component } from 'react'
@@ -12,7 +13,6 @@ import { translate, Trans } from 'react-i18next'
 
 import './assets/control.css'
 
-const { config, toggleModal, getStore } = window
 const { openExternal } = shell
 
 const openItemAsync = (dir, source=null) => {
@@ -109,7 +109,41 @@ export class PoiControl extends Component {
   handleSetMuted = () => {
     config.set('poi.content.muted', !this.props.muted)
   }
+  editableTimeout = 0
+  editableConfigList = [
+    'poi.mainpanel.layout',
+    'poi.webview.ratio.horizontal',
+    'poi.webview.ratio.vertical',
+    'poi.tabarea.overlaypanelwidth',
+    'poi.tabarea.mainpanelwidth',
+    'poi.tabarea.mainpanelheight',
+  ]
+  enableEditableMsg() {
+    toast(this.props.t('If no changes, panel will be locked automatically in 1 minute'), {
+      title: this.props.t('Panel unlocked'),
+    })
+    this.disableEditableMsg()
+  }
+  disableEditableMsg() {
+    clearTimeout(this.editableTimeout)
+    this.editableTimeout = setTimeout(() => {
+      config.set('poi.layout.editable', false)
+      toast(this.props.t('You can unlock it manually'), {
+        title: this.props.t('Panel locked'),
+      })
+    }, 60000)
+  }
+  handleConfigChange = (path, value) => {
+    if (this.editableConfigList.includes(path)) {
+      this.disableEditableMsg()
+    }
+  }
   handleSetEditable = () => {
+    if (!this.props.editable) {
+      this.enableEditableMsg()
+    } else {
+      clearTimeout(this.editableTimeout)
+    }
     config.set('poi.layout.editable', !this.props.editable)
   }
   handleOpenDevTools = () => {
@@ -216,12 +250,23 @@ export class PoiControl extends Component {
     default:
     }
   }
+  touchbarListener = (event, message) => {
+    this.handleTouchbar(message)
+  }
   componentDidMount = () => {
+    if (this.props.editable) {
+      this.disableEditableMsg()
+    }
+    config.addListener('config.set', this.handleConfigChange)
     //Stateless touchbar input receiver
     if (process.platform === 'darwin') {
-      require('electron').ipcRenderer.on('touchbar', (event, message) => {
-        this.handleTouchbar(message)
-      })
+      require('electron').ipcRenderer.addListener('touchbar', this.touchbarListener)
+    }
+  }
+  componentWillUnmount = () => {
+    config.removeListener('config.set', this.handleConfigChange)
+    if (process.platform === 'darwin') {
+      require('electron').ipcRenderer.removeListener('touchbar', this.touchbarListener)
     }
   }
   render() {
@@ -251,7 +296,7 @@ export class PoiControl extends Component {
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{this.props.t('Auto adjust')}</Tooltip>}>
               <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.t('Arrange panel')}</Tooltip>}>
+            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel')}</Tooltip>}>
               <Button onClick={this.handleSetEditable} bsSize='small'><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
             </OverlayTrigger>
             <OverlayTrigger placement='right' overlay={<Tooltip id='poi-refresh-button' className='poi-control-tooltip'>{this.props.t('Refresh game')}</Tooltip>}>
