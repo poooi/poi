@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React, { Component, Children, PureComponent } from 'react'
+import React, { Component, Children, PureComponent, unstable_AsyncMode as Async } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
@@ -108,6 +108,7 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
   mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
   editable: get(state.config, 'poi.layout.editable', false),
   windowmode: get(state.config, 'poi.plugin.windowmode', emptyObj),
+  async: get(state.config, 'poi.misc.async', true),
 }))
 export class ControlledTabArea extends PureComponent {
   static propTypes = {
@@ -565,6 +566,21 @@ export class ControlledTabArea extends PureComponent {
       onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
     })
 
+    const inner = (
+      <div className="poi-tab-container no-scroll">
+        <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
+          <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
+            title={(activePlugin || {}).displayName || defaultPluginTitle}>
+            {pluginDropdownContents}
+          </NavDropdown>
+        </Nav>
+        <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }}
+          activeTab={this.props.activePluginName}>
+          {pluginContents}
+        </TabContentsUnion>
+      </div>
+    )
+
     return (
       <div className={classNames('poi-tabs-container', {
         'poi-tabs-container-doubletabbed': this.props.doubleTabbed,
@@ -585,18 +601,9 @@ export class ControlledTabArea extends PureComponent {
         </ResizableArea>
         {
           this.props.doubleTabbed && (
-            <div className="poi-tab-container no-scroll">
-              <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
-                <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
-                  title={(activePlugin || {}).displayName || defaultPluginTitle}>
-                  {pluginDropdownContents}
-                </NavDropdown>
-              </Nav>
-              <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }}
-                activeTab={this.props.activePluginName}>
-                {pluginContents}
-              </TabContentsUnion>
-            </div>
+            this.props.editable || !this.state.async ? inner : <Async>
+              {inner}
+            </Async>
           )
         }
       </div>

@@ -64,7 +64,6 @@ export class reactClass extends Component {
           isResizable={this.props.editable}
           isDraggable={this.props.editable}
           compactType="vertical"
-          preventCollision={true}
         >
           <div className="teitoku-panel" key="teitoku-panel">
             <AdmiralPanel />

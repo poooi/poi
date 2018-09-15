@@ -1,4 +1,4 @@
-import React, { Component, unstable_AsyncMode as Async } from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
@@ -92,13 +92,7 @@ ReactDOM.render(
         window,
         mountPoint: document.body,
       }}>
-        {
-          config.get('poi.misc.async', true) ? (
-            <Async>
-              <Poi />
-            </Async>
-          ) : <Poi />
-        }
+        <Poi />
       </WindowEnv.Provider>
     </Provider>
   </I18nextProvider>,
