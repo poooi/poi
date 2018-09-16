@@ -25,6 +25,7 @@ const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1
   vibrant: get(state.config, 'poi.appearance.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
   background: get(state.config, 'poi.appearance.background'),
   enableAvatar: get(state.config, 'poi.appearance.avatar', true),
+  questContents: get(state.config, 'poi.appearance.questcontents', false),
 }))
 export class ThemeConfig extends Component {
   static propTypes = {
@@ -36,6 +37,7 @@ export class ThemeConfig extends Component {
     vibrant: PropTypes.number,
     background: PropTypes.string,
     enableAvatar: PropTypes.bool,
+    questContents: PropTypes.bool,
   }
   state = {
     show: false,
@@ -69,6 +71,9 @@ export class ThemeConfig extends Component {
   }
   handleSetAvatar = e => {
     config.set('poi.appearance.avatar', !this.props.enableAvatar)
+  }
+  handleSetQuestContents = e => {
+    config.set('poi.appearance.questcontents', !this.props.questContents)
   }
   handleMouseEnter = () => {
     this.setState({
@@ -150,6 +155,11 @@ export class ThemeConfig extends Component {
         <Col xs={12}>
           <Checkbox checked={this.props.enableAvatar} onChange={this.handleSetAvatar}>
             {t('setting:Show shipgirl avatar')}
+          </Checkbox>
+        </Col>
+        <Col xs={12}>
+          <Checkbox checked={this.props.questContents} onChange={this.handleSetQuestContents}>
+            {t('setting:Use quest contents instead of name')}
           </Checkbox>
         </Col>
       </Grid>
