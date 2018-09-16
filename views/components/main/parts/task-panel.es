@@ -16,7 +16,6 @@ import defaultLayout from '../default-layout'
 import '../assets/task-panel.css'
 
 const getPanelDimension = width => {
-  width = width / window.getStore('config.poi.appearance.zoom', 1)
   if (width > 700) {
     return 4
   }

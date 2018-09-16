@@ -52,7 +52,7 @@ class PoiAlertInner extends Component {
     this.showHistory = !this.showHistory
     this.setState({
       alertHistoryStyle: {
-        transform: `translate3d(0, ${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1 * Math.ceil(config.get('poi.appearance.zoom', 1))}px, 0)`,
+        transform: `translate3d(0, ${this.showHistory ? - this.alertHeight - this.historyHeight + 1 : 1}px, 0)`,
         pointerEvents: this.showHistory ? 'auto' : 'none',
       },
     })
