@@ -74,6 +74,7 @@
   "Prevent DMM Network Change Popup": "DMM 네트워크 변경 알림을 막기",
   "Use SVG Icon": "SVG 아이콘 사용",
   "Enable Smooth Transition": "탭을 전환할 때 컨텐츠를 부드럽게 표시합니다",
+  "Use quest contents instead of name": "이름 대신 퀘스트의 내용을 사용하는",
   "Plugin update": "플러그인 업데이트",
   "PluginUpdateMsg": "의 새로운 버전이 있습니다. 업데이트 해주세요.",
   "Check Update": "업데이트 체크",
