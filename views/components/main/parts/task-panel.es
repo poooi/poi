@@ -184,11 +184,13 @@ const TaskRow = translate(['resources'])(connect(
     record: get(state, ['info', 'quests', 'records', quest.api_no]),
     translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
     wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
+    useContents: get(state, ['config', 'poi', 'appearance', 'questcontents'], false),
   })
-)(function ({idx, quest, record, translation, wikiId, colwidth, t}) {
+)(function ({idx, quest, record, translation, wikiId, useContents, colwidth, t}) {
   const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
   const questName = quest && quest.api_title ? t(`resources:${quest.api_title}`, { context: quest.api_no && quest.api_no.toString() }) : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
+  const questLabel = useContents ? questContent : questName
   const [count, required] = sumSubgoals(record)
   const progressBsStyle = record ?
     getStyleByPercent(count / required) :
@@ -203,7 +205,7 @@ const TaskRow = translate(['resources'])(connect(
     <TaskRowBase
       idx={idx}
       bulletColor={quest ? getCategory(quest.api_category) : '#fff'}
-      leftLabel={`${wikiIdPrefix}${questName}`}
+      leftLabel={`${wikiIdPrefix}${questLabel}`}
       leftOverlay={<div><strong>{wikiIdPrefix}{questName}</strong><br />{questContent}</div>}
       rightLabel={progressLabel}
       rightBsStyle={progressBsStyle}
