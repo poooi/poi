@@ -109,6 +109,7 @@ const pair = {
   'poi.background': 'poi.appearance.background',
   'poi.useCustomTitleBar': 'poi.appearance.customtitlebar',
   'poi.useSVGIcon': 'poi.appearance.svgicon',
+  'poi.useQuestContents': 'poi.appearance.questcontents',
   'poi.textSpacingCJK': 'poi.appearance.textspacingcjk',
   'poi.layouteditable': 'poi.layout.editable',
   'poi.vibrant': 'poi.appearance.vibrant',
