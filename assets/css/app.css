@@ -250,7 +250,7 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
   pointer-events: none;
 }
 
-.overlay-panel-resizer div {
+.overlay-panel-resizer.width-resize div {
   pointer-events: all;
   opacity: 0;
 }
