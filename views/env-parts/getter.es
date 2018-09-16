@@ -41,6 +41,9 @@ Object.defineProperty(window, 'zoomLevel', {get: () => {
 Object.defineProperty(window, 'useSVGIcon', {get: () => {
   return config.get('poi.appearance.svgicon', false)
 }})
+Object.defineProperty(window, 'useQuestContents', {get: () => {
+  return config.get('poi.appearance.questcontents', false)
+}})
 Object.defineProperty(window, 'screenshotPath', {get: () => {
   return config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
 }})
