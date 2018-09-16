@@ -81,6 +81,7 @@
   "Prevent DMM Network Change Popup": "屏蔽 DMM 网络变更警告",
   "Use SVG Icon": "使用高清图标",
   "Enable Smooth Transition": "启用平滑切换动画",
+  "Use quest contents instead of name": "使用任务的内容而不是名称",
   "Use Gridded Plugin Menu": "使用网格式插件菜单",
   "Plugin update": "插件更新",
   "PluginUpdateMsg": "有新版本。请更新插件。",
