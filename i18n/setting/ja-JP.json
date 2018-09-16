@@ -81,6 +81,7 @@
   "Prevent DMM Network Change Popup": "DMMネットワーク変更アラートを阻止する",
   "Use SVG Icon": "SVGアイコンを使用する",
   "Enable Smooth Transition": "タブの切り替えをスムースに表示する",
+  "Use quest contents instead of name": "名前の代わりにクエストの内容を使うする",
   "Use Gridded Plugin Menu": "プラグインメニューをグリッド仕様に設定する",
   "Plugin update": "プラグイン更新",
   "PluginUpdateMsg": "は新しいバージョンがあります。アップデートを行って下さい。",
