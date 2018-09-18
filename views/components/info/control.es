@@ -135,7 +135,9 @@ export class PoiControl extends Component {
   }
   handleConfigChange = (path, value) => {
     if (this.editableConfigList.includes(path)) {
-      this.disableEditableMsg()
+      if (config.get('poi.layout.editable', false)) {
+        this.disableEditableMsg()
+      }
     }
   }
   handleSetEditable = () => {
