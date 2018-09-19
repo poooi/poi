@@ -28,7 +28,7 @@ const resetViews = () => {
   config.set('poi.appearance.zoom', 1)
   window.setImmediate(() => {
     remote.getCurrentWindow().setPosition(availLeft, availTop)
-    remote.getCurrentWindow().setSize(availWidth, availHeight)
+    remote.getCurrentWindow().setContentSize(availWidth, availHeight)
   })
 }
 

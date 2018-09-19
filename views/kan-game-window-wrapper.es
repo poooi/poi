@@ -140,7 +140,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.remote.getCurrentWindow().setAspectRatio(1200 / 720, { width: 0, height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)) })
       this.externalWindow.addEventListener('resize', debounce(() => {
         if (process.platform !== 'darwin') {
-          this.externalWindow.remote.getCurrentWindow().setSize(
+          this.externalWindow.remote.getCurrentWindow().setContentSize(
             Math.round(this.externalWindow.innerWidth * config.get('poi.appearance.zoom', 1)),
             Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * config.get('poi.appearance.zoom', 1)),
           )
@@ -229,7 +229,7 @@ export class KanGameWindowWrapper extends PureComponent {
   handleZoom = (path, value) => {
     if (path === 'poi.appearance.zoom') {
       this.onZoomChange(value)
-      this.externalWindow.remote.getCurrentWindow().setSize(
+      this.externalWindow.remote.getCurrentWindow().setContentSize(
         Math.round(this.externalWindow.innerWidth * value),
         Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * value),
       )

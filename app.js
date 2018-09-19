@@ -154,6 +154,7 @@ app.on('ready', () => {
       plugins: true,
       nodeIntegrationInWorker: true,
       nativeWindowOpen: true,
+      zoomFactor: config.get('poi.appearance.zoom', 1),
     },
     backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
   })
