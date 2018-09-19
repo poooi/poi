@@ -62,7 +62,7 @@ export class Avatar extends PureComponent {
   render() {
     if (!this.props.mstId) return <div />
     return (
-      <div className="ship-avatar-container" data-mstid={this.props.mstId} data-damaged={this.props.isDamaged} style={{
+      <div className={classnames(this.props.className, 'ship-avatar-container')} data-mstid={this.props.mstId} data-damaged={this.props.isDamaged} style={{
         width: Math.round(1.85 * this.props.height),
         height: this.props.height,
       }}>
