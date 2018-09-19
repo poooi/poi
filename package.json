@@ -96,7 +96,7 @@
     "path-extra": "^4.2.1",
     "poi-asset-contributor-data": "^1.1.0",
     "poi-asset-themes": "^3.3.2",
-    "poi-lib-battle": "^2.5.0",
+    "poi-lib-battle": "^2.6.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
@@ -127,7 +127,7 @@
   "devDependencies": {
     "asar": "^0.14.3",
     "babel-eslint": "^8.2.1",
-    "electron": "^3.0.0-beta.12",
+    "electron": "^3.0.0",
     "electron-builder": "^20.16.4",
     "eslint": "^4.19.1",
     "eslint-plugin-import": "^2.12.0",
