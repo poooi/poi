@@ -82,7 +82,10 @@ require('./lib/flash')
 let mainWindow, appIcon
 global.mainWindow = mainWindow = null
 
-app.commandLine.appendSwitch('in-process-gpu', "true")
+// Fix GPU process
+if (process.platform === 'win32') {
+  app.commandLine.appendSwitch('in-process-gpu', "true")
+}
 
 // Fix confused cursor in HiDPI
 // https://github.com/electron/electron/issues/7655#issuecomment-259688853
