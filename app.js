@@ -1,6 +1,11 @@
 const {app, BrowserWindow, ipcMain, Tray, nativeImage, shell} = require('electron')
 const path = require('path-extra')
 
+// Fix GPU process
+if (process.platform === 'win32') {
+  app.commandLine.appendSwitch('in-process-gpu', "true")
+}
+
 // Environment
 global.POI_VERSION = app.getVersion()
 global.ROOT = __dirname
@@ -81,11 +86,6 @@ require('./lib/flash')
 
 let mainWindow, appIcon
 global.mainWindow = mainWindow = null
-
-// Fix GPU process
-if (process.platform === 'win32') {
-  app.commandLine.appendSwitch('in-process-gpu', "true")
-}
 
 // Fix confused cursor in HiDPI
 // https://github.com/electron/electron/issues/7655#issuecomment-259688853
