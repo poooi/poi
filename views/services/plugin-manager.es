@@ -347,7 +347,7 @@ class PluginManager extends EventEmitter {
     const packageName = installingByPluginName ? packageSource :
       await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
 
-      // 4) Unload plugin if it's running
+    // 4) Unload plugin if it's running
     const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
     if (nowPlugin) {
       try {

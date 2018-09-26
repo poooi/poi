@@ -14,7 +14,7 @@ module.exports = {
   'parserOptions': {
     'ecmaVersion': 7,
     'ecmaFeatures': {
-      'experimentalObjectRestSpread': true,
+      'legacyDecorators': true,
       'jsx': true,
     },
     'sourceType': 'module',

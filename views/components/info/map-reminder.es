@@ -15,7 +15,6 @@ import {
 
 import './assets/map-reminder.css'
 
-const { toast, config } = window
 const emptyObj = {}
 
 const MapRoutes = connect(
