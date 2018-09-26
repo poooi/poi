@@ -135,8 +135,8 @@ export class KanGameWindowWrapper extends PureComponent {
     this.externalWindow = open(`file:///${__dirname}/../index-plugin.html?kangame`, 'plugin[kangame]', windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.remote = this.externalWindow.require('electron').remote
+      this.externalWindow.require(require.resolve('assets/js/webview-window-preload.js'))
       this.externalWindow.remote.getCurrentWindow().setResizable(!windowUseFixedResolution)
-      this.externalWindow.remote.getCurrentWebContents().executeJavaScript('window.onbeforeunload = e => e.returnValue = false')
       this.externalWindow.remote.getCurrentWindow().setAspectRatio(1200 / 720, { width: 0, height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)) })
       this.externalWindow.addEventListener('resize', debounce(() => {
         if (process.platform !== 'darwin') {
