@@ -22,7 +22,7 @@ class Debug {
 
 // Globals
 // eslint-disable-next-line no-console
-console.assert(process, "process doesn't exist")
+console.assert(process, 'process doesn\'t exist')
 
 // The debug instance depends on Electron process type
 const isRenderer = (process || {}).type === 'renderer'
@@ -91,7 +91,7 @@ class DebuggerBase extends IDebugger {
   }
 
   init() {
-    this.log("Debug Mode")
+    this.log('Debug Mode')
     if (extraOpts.size === 1) {
       this._log(`Extra Option: ${process.env.DEBUG_EXTRA}`)
     } else if (extraOpts.size > 1) {

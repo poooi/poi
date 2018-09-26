@@ -78,7 +78,7 @@ const FleetShipView = connect(
     fleetShipViewDataSelectorFactory(fleetId)(state)
 )(({ fleetId, shipsId, enableAvatar, width }) =>
   <>
-    <div className='fleet-name'>
+    <div className="fleet-name">
       <TopAlert
         fleetId={fleetId}
         isMini={false}
@@ -115,7 +115,7 @@ const LBView = translate(['resources'])(connect(state => ({
               compact={width < 480}
             /> :
             <React.Fragment key={i}>
-              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
+              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className="airbase-area">
                 [{id}] {mapareas[id] ? t(`resources:${ mapareas[id].api_name }`) : ''}
               </Alert>
               <SquardRow
@@ -201,7 +201,7 @@ export class reactClass extends Component {
                 )
               }
             </ButtonGroup>
-            <ButtonGroup className='plane-button'>
+            <ButtonGroup className="plane-button">
               <LandbaseButton key={4}
                 fleetId={4}
                 disabled={this.props.airBaseCnt === 0}
@@ -213,7 +213,7 @@ export class reactClass extends Component {
           </div>
           <div className="no-scroll ship-tab-container" ref={ref => { this.shiptabpane = ref }}>
             <div
-              className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
+              className={classNames('ship-tab-content', {'ship-tab-content-transition': this.props.enableTransition})}
               style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
               {
                 times(4).map(i =>
@@ -240,4 +240,4 @@ export class reactClass extends Component {
   }
 }
 
-export const displayName = <span><FontAwesome key={0} name='bars' /> <Trans>main:Fleet</Trans></span>
+export const displayName = <span><FontAwesome key={0} name="bars" /> <Trans>main:Fleet</Trans></span>

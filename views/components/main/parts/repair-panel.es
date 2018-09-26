@@ -128,7 +128,7 @@ export class RepairPanel extends Component {
                 }
                 <span className="ndock-name">{dockName}</span>
 
-                <OverlayTrigger placement='left' overlay={
+                <OverlayTrigger placement="left" overlay={
                   <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
                     <strong>{this.props.t('main:Finish By')}: </strong>{timeToString(completeTime)}
                   </Tooltip>

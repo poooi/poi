@@ -11,15 +11,15 @@ import '../assets/misc.css'
 const { ROOT } = window
 
 const serverList = [
-  "https://poi.io/fcd/",
-  "https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/",
+  'https://poi.io/fcd/',
+  'https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/',
 ]
 
 const fetchHeader = new Headers()
-fetchHeader.set("Cache-Control", "max-age=0")
+fetchHeader.set('Cache-Control', 'max-age=0')
 const defaultFetchOption = {
-  method: "GET",
-  cache: "default",
+  method: 'GET',
+  cache: 'default',
   headers: fetchHeader,
 }
 

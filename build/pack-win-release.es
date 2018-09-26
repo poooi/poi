@@ -13,7 +13,7 @@ const packWinRelease = async (poiVersion) => {
   target = path.join(ROOT, 'dist', 'win-ia32-unpacked')
   dest = path.join(ROOT, 'dist', 'win-ia32', `poi-${poiVersion}-win-ia32.7z`)
   await compress7z(target, dest)
-  log("Release packed up")
+  log('Release packed up')
 }
 
 export default packWinRelease

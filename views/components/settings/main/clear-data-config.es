@@ -73,7 +73,7 @@ export class ClearDataConfig extends Component {
               <FormControl type="number"
                 disabled
                 value={Math.round(this.state.cacheSize / 1048576)}
-                className='' />
+                className="" />
               <InputGroup.Addon>MB</InputGroup.Addon>
             </InputGroup>
           </FormGroup>
@@ -85,7 +85,7 @@ export class ClearDataConfig extends Component {
               <FormControl type="number"
                 onChange={this.handleValueChange}
                 value={this.props.cacheSize}
-                className='' />
+                className="" />
               <InputGroup.Addon>MB</InputGroup.Addon>
             </InputGroup>
           </FormGroup>
@@ -101,7 +101,7 @@ export class ClearDataConfig extends Component {
           </Button>
         </Col>
         <Col xs={12}>
-          <Alert bsStyle='warning' style={{marginTop: '10px'}}>
+          <Alert bsStyle="warning" style={{marginTop: '10px'}}>
             {t('setting:If connection error occurs frequently, delete both of them')}
           </Alert>
         </Col>

@@ -52,7 +52,7 @@ export class reactClass extends Component {
   render() {
     const { t } = this.props
     return (
-      <div className='main-panel-content' ref={ref => { this.mainpane = ref }}>
+      <div className="main-panel-content" ref={ref => { this.mainpane = ref }}>
         <ResponsiveReactGridLayout
           onLayoutChange={this.onLayoutChange}
           layouts={this.props.layouts}
@@ -71,7 +71,7 @@ export class reactClass extends Component {
           <div className="resource-panel" key="resource-panel">
             <ResourcePanel />
           </div>
-          <div className="miniship" key="miniship" id='MiniShip' ref={ref => { this.miniship = ref }}>
+          <div className="miniship" key="miniship" id="MiniShip" ref={ref => { this.miniship = ref }}>
             <MiniShip />
           </div>
           <Panel className="combined-panels panel-col" key="combined-panels">
@@ -102,4 +102,4 @@ export class reactClass extends Component {
   }
 }
 
-export const displayName = <span><FontAwesome name='home' /> <Trans>main:Overview</Trans></span>
+export const displayName = <span><FontAwesome name="home" /> <Trans>main:Overview</Trans></span>

@@ -129,7 +129,7 @@ window.addEventListener('unload', (e) => {
   config.removeListener('config.set', themeChangeHandler)
 })
 
-const glass = document.createElement("div")
+const glass = document.createElement('div')
 glass.id = 'bg-overlay'
 glass.style.position = 'fixed'
 glass.style.top = '-15px'
@@ -144,7 +144,7 @@ glass.style.backgroundColor = 'rgba(42,42,42,0.9)'
 glass.style.color = '#000'
 glass.style.display = 'none'
 
-const div = document.createElement("div")
+const div = document.createElement('div')
 div.id = 'custom-bg'
 div.style.position = 'fixed',
 div.style.top = '-15px'

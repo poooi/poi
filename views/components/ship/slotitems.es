@@ -62,10 +62,10 @@ export const Slotitems = translate(['resources'])(connect(
               <div>
                 {$equip.api_name ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
-                  <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
+                  <strong style={{color: '#45A9A5'}}> <FontAwesome name="star" />{equip.api_level}</strong>
                 }
                 {(equip.api_alv && equip.api_alv >= 1 && equip.api_alv <= 7) &&
-                  <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)} />
+                  <img className="alv-img" src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)} />
                 }
               </div>
               {$equip &&
@@ -79,9 +79,9 @@ export const Slotitems = translate(['resources'])(connect(
         const equipIconId = equipData ? $equip.api_type[3] : 0
         const showOnslot = !equipData || isExslot || equipIsAircraft($equip)
         const maxOnslot = isExslot ? 0 : api_maxeq[equipIdx]
-        const onslotText = isExslot ? "+" : equipData ? `${onslot}` : `${maxOnslot}`
+        const onslotText = isExslot ? '+' : equipData ? `${onslot}` : `${maxOnslot}`
         const onslotWarning = equipData && onslot < maxOnslot
-        const slotitemClassName = classNames("slotitem-container", {
+        const slotitemClassName = classNames('slotitem-container', {
           'slotitem-onslot-show': showOnslot,
           'slotitem-onslot-hide': !showOnslot,
           'text-warning': onslotWarning,
@@ -91,7 +91,7 @@ export const Slotitems = translate(['resources'])(connect(
 
         return (
           itemOverlay ?
-            <OverlayTrigger placement='left' overlay={itemOverlay} key={equipIdx}>
+            <OverlayTrigger placement="left" overlay={itemOverlay} key={equipIdx}>
               {item}
             </OverlayTrigger>
             :
@@ -117,12 +117,12 @@ export const LandbaseSlotitems = translate(['resources'])(connect(
         const maxOnslot = api_maxeq[equipIdx]
         const onslotWarning = equipData && onslot < maxOnslot
         const onslotText = equipData ? onslot : maxOnslot
-        const onslotClassName = classNames("slotitem-onslot-mini", {
+        const onslotClassName = classNames('slotitem-onslot-mini', {
           'show': showOnslot && api_state[equipIdx] === 1,
           'hide': !showOnslot || api_state[equipIdx] !== 1,
           'text-warning': onslotWarning,
         })
-        const slotitemClassName = classNames("slotitem-container", {
+        const slotitemClassName = classNames('slotitem-container', {
           'slotitem-onslot-show': showOnslot,
           'slotitem-onslot-hide': !showOnslot,
           'text-warning': onslotWarning,
@@ -137,10 +137,10 @@ export const LandbaseSlotitems = translate(['resources'])(connect(
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {$equip.api_name ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '??'}
                 {(equip.api_level == null || equip.api_level == 0) ? undefined :
-                  <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{equip.api_level}</strong>
+                  <strong style={{color: '#45A9A5'}}> <FontAwesome name="star" />{equip.api_level}</strong>
                 }
                 {(equip.api_alv && equip.api_alv >= 1 && equip.api_alv <= 7) &&
-                  <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)} />
+                  <img className="alv-img" src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)} />
                 }
                 {isMini && <Label className={onslotClassName} bsStyle={`${onslotWarning ? 'warning' : 'default'}`}>
                   {onslotText}
@@ -158,7 +158,7 @@ export const LandbaseSlotitems = translate(['resources'])(connect(
 
         return (
           itemOverlay
-            ? <OverlayTrigger placement='left' overlay={itemOverlay} key={equipIdx}>
+            ? <OverlayTrigger placement="left" overlay={itemOverlay} key={equipIdx}>
               {itemSpan}
             </OverlayTrigger>
             : <Fragment key={equipIdx}>{itemSpan}</Fragment>

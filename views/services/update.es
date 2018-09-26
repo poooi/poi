@@ -8,11 +8,11 @@ import i18next from 'views/env-parts/i18next'
 const {POI_VERSION, toggleModal, config, language} = window
 
 const fetchHeader = new Headers()
-fetchHeader.set("Cache-Control", "max-age=0")
+fetchHeader.set('Cache-Control', 'max-age=0')
 fetchHeader.set('User-Agent', `poi v${POI_VERSION}`)
 const defaultFetchOption = {
-  method: "GET",
-  cache: "default",
+  method: 'GET',
+  cache: 'default',
   headers: fetchHeader,
 }
 
@@ -78,7 +78,7 @@ export const checkUpdate = async () => {
         .then(res => res.text())
         .catch(res => {
           console.warn('fetch update log error')
-          return ""
+          return ''
         })
       toggleUpdate(version, log)
     }

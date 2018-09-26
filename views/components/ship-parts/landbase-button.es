@@ -7,12 +7,12 @@ import { translate, Trans } from 'react-i18next'
 
 import './assets/landbase-button.css'
 
-const fatiguedLabel = <Label bsStyle='danger' className='airbase-state-label'><Trans>main:Fatigued</Trans></Label>
-const emptyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Empty Slot</Trans></Label>
-const relocateLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Relocating</Trans></Label>
-const resupplyLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:Resupply Needed</Trans></Label>
-const noActionLabel = <Label bsStyle='warning' className='airbase-state-label'><Trans>main:No Action</Trans></Label>
-const readyLabel = <Label bsStyle='success' className='airbase-state-label'><Trans>main:Ready</Trans></Label>
+const fatiguedLabel = <Label bsStyle="danger" className="airbase-state-label"><Trans>main:Fatigued</Trans></Label>
+const emptyLabel = <Label bsStyle="warning" className="airbase-state-label"><Trans>main:Empty Slot</Trans></Label>
+const relocateLabel = <Label bsStyle="warning" className="airbase-state-label"><Trans>main:Relocating</Trans></Label>
+const resupplyLabel = <Label bsStyle="warning" className="airbase-state-label"><Trans>main:Resupply Needed</Trans></Label>
+const noActionLabel = <Label bsStyle="warning" className="airbase-state-label"><Trans>main:No Action</Trans></Label>
+const readyLabel = <Label bsStyle="success" className="airbase-state-label"><Trans>main:Ready</Trans></Label>
 
 export const LandbaseButton = translate(['resources'])(connect(state => ({
   sortieStatus: get(state, 'sortie.sortieStatus', []),
@@ -81,7 +81,7 @@ export const LandbaseButton = translate(['resources'])(connect(state => ({
     }
   </Tooltip>
   return (
-    <OverlayTrigger placement='bottom' overlay={propTooltip}>
+    <OverlayTrigger placement="bottom" overlay={propTooltip}>
       <Button
         bsSize={isMini ? 'xsmall' : 'small'}
         bsStyle={bsStyle}
@@ -89,7 +89,7 @@ export const LandbaseButton = translate(['resources'])(connect(state => ({
         disabled={disabled}
         className={fleetId == activeFleetId ? 'active' : ''}
       >
-        <FontAwesome name='plane' />
+        <FontAwesome name="plane" />
       </Button>
     </OverlayTrigger>
   )

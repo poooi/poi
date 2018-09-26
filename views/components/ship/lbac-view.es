@@ -29,27 +29,27 @@ export const SquardRow = translate(['main'])(connect((state, { squardId }) =>
     switch (api_action_kind) {
     // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
     case 0:
-      return <Label bsStyle='default'>{t('main:Standby')}</Label>
+      return <Label bsStyle="default">{t('main:Standby')}</Label>
     case 1:
-      return <Label bsStyle='danger'>{t('main:Sortie')}</Label>
+      return <Label bsStyle="danger">{t('main:Sortie')}</Label>
     case 2:
-      return <Label bsStyle='warning'>{t('main:Defense')}</Label>
+      return <Label bsStyle="warning">{t('main:Defense')}</Label>
     case 3:
-      return <Label bsStyle='primary'>{t('main:Retreat')}</Label>
+      return <Label bsStyle="primary">{t('main:Retreat')}</Label>
     case 4:
-      return <Label bsStyle='success'>{t('main:Rest')}</Label>
+      return <Label bsStyle="success">{t('main:Rest')}</Label>
     }
   })()
   const hideShipName = enableAvatar && compact
-  const lbacInfoClass = classNames("ship-info", {
-    "ship-avatar-padding": enableAvatar,
-    "ship-info-show": !hideShipName,
-    "ship-info-hidden": hideShipName,
+  const lbacInfoClass = classNames('ship-info', {
+    'ship-avatar-padding': enableAvatar,
+    'ship-info-show': !hideShipName,
+    'ship-info-hidden': hideShipName,
   })
   return (
     <div className="ship-item">
-      { enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && <Avatar type='equip' mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} /> }
-      <OverlayTrigger placement='top' overlay={
+      { enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && <Avatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} /> }
+      <OverlayTrigger placement="top" overlay={
         hideShipName ? (
           <Tooltip id={`lbac-info-${squardId}`}>
             <div className="ship-tooltip-info">
@@ -74,7 +74,7 @@ export const SquardRow = translate(['main'])(connect((state, { squardId }) =>
                   {api_name}
                 </span>
                 <div className="ship-exp">
-                  <span className='ship-lv'>
+                  <span className="ship-lv">
                     {t('main:Range')}: {api_distance}
                   </span>
                   <br />

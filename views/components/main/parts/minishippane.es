@@ -21,7 +21,7 @@ export const PaneBodyMini = connect(() => {
   })
 })(({ fleetId, shipsId, enableAvatar, width }) =>
   <>
-    <div className='fleet-name'>
+    <div className="fleet-name">
       <TopAlert
         fleetId={fleetId}
         isMini={true}
@@ -60,7 +60,7 @@ export const LBViewMini = translate(['resources'])(connect(state => ({
               compact={width < 240}
             /> :
             <div key={i}>
-              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className='airbase-area'>
+              <Alert style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className="airbase-area">
                 [{id}] {mapareas[id] ? t(`resources:${ mapareas[id].api_name }`) : ''}
               </Alert>
               <MiniSquardRow

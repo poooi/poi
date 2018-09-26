@@ -151,7 +151,7 @@ const initEquips = (dispatch, current, previous) => {
 }
 
 const initWebviewWidth = () => {
-  ipc.register("WebView", {
+  ipc.register('WebView', {
     width: Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
   })
 }

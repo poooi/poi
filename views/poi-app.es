@@ -103,12 +103,12 @@ export class PoiApp extends Component {
           class={classname}>
           {
             overlay && (
-              <a className='overlay-panel-trigger' onClick={() => this.setState({overlayVisible: ! this.state.overlayVisible})}>
+              <a className="overlay-panel-trigger" onClick={() => this.setState({overlayVisible: ! this.state.overlayVisible})}>
                 <FontAwesome name={!overlayVisible ? 'angle-left' : 'angle-right'} />
               </a>
             )
           }
-          <div id='poi-app-container' className='poi-app-container'>
+          <div id="poi-app-container" className="poi-app-container">
             <poi-nav>
               <poi-nav-tabs>
                 <ControlledTabArea />

@@ -24,7 +24,7 @@ const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/u
 
 config.on('config.set', (path, value) => {
   if (path === 'poi.update.beta' && process.platform !== 'linux') {
-    changeChannel(value ? "beta" : "latest")
+    changeChannel(value ? 'beta' : 'latest')
   }
 })
 
@@ -40,7 +40,7 @@ export class Misc extends Component {
   render() {
     const { t } = this.props
     return (
-      <div id='poi-others' className='poi-others'>
+      <div id="poi-others" className="poi-others">
         <Grid>
           <Col xs={12}>
             <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />
@@ -138,9 +138,9 @@ export class Misc extends Component {
           </Col>
         </Grid>
         <Divider text="Special Thanks To" />
-        <Grid className='thanks-to sp-thanks-to'>
+        <Grid className="thanks-to sp-thanks-to">
           <div className="div-row thanks-to-item">
-            <div className='thanks-to-img-container'>
+            <div className="thanks-to-img-container">
               <img className="thanks-to-img"
                 src="https://upload.kcwiki.org/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png"
                 style={{
@@ -152,21 +152,21 @@ export class Misc extends Component {
                 title="KCWiki"
               />
             </div>
-            <div className='thanks-to-container'>
+            <div className="thanks-to-container">
               <b>KCWiki</b>
               <p>For sponsing poi data server, providing data of item imporvment, task info, shipgirl qoutes, etc.</p>
             </div>
           </div>
         </Grid>
         <Divider text="Thanks To" />
-        <Grid className='thanks-to'>
+        <Grid className="thanks-to">
           {
             CONST.thanksTo.map((e, i) => (
               <div className="div-row thanks-to-item" key={i}>
-                <div className='thanks-to-img-container'>
+                <div className="thanks-to-img-container">
                   <img className="thanks-to-img" src={e.avatar} style={e.extraCSS} onClick={shell.openExternal.bind(this, e.link)} title={e.name} />
                 </div>
-                <div className='thanks-to-container'>
+                <div className="thanks-to-container">
                   <b>{e.name}</b>
                   <p>{e.description}</p>
                 </div>

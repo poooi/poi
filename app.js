@@ -11,7 +11,7 @@ global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.DEFAULT_SCREENSHOT_PATH = process.platform === 'darwin'
   ? path.join(app.getPath('home'), 'Pictures', 'Poi')
   : path.join(global.APPDATA_PATH, 'screenshots')
-global.MODULE_PATH = path.join(global.ROOT, "node_modules")
+global.MODULE_PATH = path.join(global.ROOT, 'node_modules')
 
 const {ROOT} = global
 const poiIconPath = path.join(ROOT, 'assets', 'icons',
@@ -44,7 +44,7 @@ if (config.get('poi.misc.safemode', false)) {
 // Add shortcut to start menu when os is windows
 app.setAppUserModelId('org.poooi.poi')
 if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
-  const shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
+  const shortcutPath = app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk'
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
   const option = {
@@ -60,7 +60,7 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
     })
   }
   shell.writeShortcutLink(shortcutPath, option)
-  const safeModeShortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk"
+  const safeModeShortcutPath = app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk'
   const safeModeOption = Object.assign({}, option)
   Object.assign(safeModeOption, {
     description: 'poi the KanColle Browser Tool (safe mode)',
@@ -89,7 +89,7 @@ if (process.platform === 'win32') {
 }
 
 // Test: enable JavaScript experimental features
-app.commandLine.appendSwitch('js-flags', "--harmony --harmony-do-expressions")
+app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
 
 // enable audio autoplay
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391

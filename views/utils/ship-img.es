@@ -36,7 +36,7 @@ const itemrank = ['item_c1', 'item_r1', 'sr1', 'sr1', 'sr1', 'sr2']
 
 function createKey(t) {
   let e = 0
-  if (null != t && "" != t) {
+  if (null != t && '' != t) {
     for (let i = 0; i < t.length; i++) {
       e += t.charCodeAt(i)
     }
@@ -46,7 +46,7 @@ function createKey(t) {
 
 function create(id, seed) {
   const o = id.toString().match(/\d+/)
-  if (null == o || 0 == o.length) return ""
+  if (null == o || 0 == o.length) return ''
   const r = parseInt(o[0])
   const s = createKey(seed)
   const a = null == seed || 0 == seed.length ? 1 : seed.length
@@ -100,7 +100,7 @@ export function getSlotItemImgPath(id, type, ip, version) {
   if (!slotItemImgType.includes(type)) {
     throw new Error('Wrong type!')
   }
-  const seed = "slot_" + type
+  const seed = 'slot_' + type
   const cipherNum = create(id, seed)
   const padId = padStart(id, 3, '0')
   const ret = `/kcs2/resources/slot/${type}/${padId}_${cipherNum}.png`

@@ -26,7 +26,7 @@ export const PoiConfig = connect(state => ({
   refts: get(state, 'layout.webview.refts', 0),
 }))(translate(['setting'])(({ refts, t }) => (
   <div>
-    <div className="form-group navigator-bar" id='navigator-bar'>
+    <div className="form-group navigator-bar" id="navigator-bar">
       <Divider text={t('setting:Browser')} />
       <NavigatorBar key={`isolate-game-window: ${refts}`} />
     </div>
@@ -52,7 +52,7 @@ export const PoiConfig = connect(state => ({
       <RadioConfig
         label={t('setting:Screenshot Format')}
         configName="poi.misc.screenshot.format"
-        defaultVal='png'
+        defaultVal="png"
         availableVal={[{name: 'PNG', value: 'png'}, {name: 'JPEG', value: 'jpg'}]} />
     </div>
     <div className="form-group">

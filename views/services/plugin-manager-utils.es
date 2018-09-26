@@ -172,9 +172,9 @@ export async function readPlugin(pluginPath) {
   if (typeof get(plugin, 'packageData.author') === 'string') {
     plugin.author = plugin.packageData.author
   }
-  plugin.link = get(plugin, 'packageData.author.links') || get(plugin, 'packageData.author.url') || (pluginData[plugin.packageName] || {}).link || "https://github.com/poooi"
+  plugin.link = get(plugin, 'packageData.author.links') || get(plugin, 'packageData.author.url') || (pluginData[plugin.packageName] || {}).link || 'https://github.com/poooi'
   if (plugin.description == null) {
-    plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || "unknown"
+    plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || 'unknown'
   }
   // Resolve symlink.
   plugin.pluginPath = realpathSync(pluginPath)

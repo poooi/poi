@@ -136,7 +136,7 @@ export class KanGameWrapper extends Component {
     if (this.props.windowMode) {
       return (
         <kan-game style={{
-          width: "100%",
+          width: '100%',
         }}>
           <div id="webview-wrapper"
             className="webview-wrapper"
@@ -162,8 +162,8 @@ export class KanGameWrapper extends Component {
           </div>
           <poi-info style={{ flexBasis: poiControlHeight }}>
             <poi-control><PoiControl weview={this.webview} /></poi-control>
-            <poi-alert><PoiAlert id='poi-alert' /></poi-alert>
-            <poi-map-reminder><PoiMapReminder id='poi-map-reminder'/></poi-map-reminder>
+            <poi-alert><PoiAlert id="poi-alert" /></poi-alert>
+            <poi-map-reminder><PoiMapReminder id="poi-map-reminder"/></poi-map-reminder>
           </poi-info>
         </kan-game>
       )
@@ -238,7 +238,7 @@ export class KanGameWrapper extends Component {
 
       return (
         <ResizableArea
-          className={classnames("webview-resizable-area", {
+          className={classnames('webview-resizable-area', {
             'width-resize': !disableWidth,
             'height-resize': !disableHeight,
           })}
@@ -257,7 +257,7 @@ export class KanGameWrapper extends Component {
           ref={r => this.resizableArea = r}
         >
           <kan-game style={{
-            width: "100%",
+            width: '100%',
           }}>
             <div id="webview-wrapper"
               className="webview-wrapper"
@@ -287,8 +287,8 @@ export class KanGameWrapper extends Component {
             </div>
             <poi-info style={{ flexBasis: poiControlHeight }}>
               <poi-control><PoiControl weview={this.webview} /></poi-control>
-              <poi-alert><PoiAlert id='poi-alert' /></poi-alert>
-              <poi-map-reminder><PoiMapReminder id='poi-map-reminder'/></poi-map-reminder>
+              <poi-alert><PoiAlert id="poi-alert" /></poi-alert>
+              <poi-map-reminder><PoiMapReminder id="poi-map-reminder"/></poi-map-reminder>
             </poi-info>
           </kan-game>
         </ResizableArea>

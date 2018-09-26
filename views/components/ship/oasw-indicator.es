@@ -37,7 +37,7 @@ export const OASWIndicator = translate(['main'])(connect(
 )(({ isOASW, shipId, t }) => (
   isOASW ?
     <span className="ship-oasw">
-      <Label bsStyle='primary'>{t('main:OASW')}</Label>
+      <Label bsStyle="primary">{t('main:OASW')}</Label>
     </span>
     : <span />
 )))

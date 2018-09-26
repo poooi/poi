@@ -34,7 +34,7 @@ export class ModalTrigger extends PureComponent {
     window.removeEventListener('poi.modal', this.handleModal)
   }
   renderFooter = (footer) =>{
-    if (!((typeof footer !== "undefined" && footer !== null) && (footer.length != null) && footer.length > 0)) {
+    if (!((typeof footer !== 'undefined' && footer !== null) && (footer.length != null) && footer.length > 0)) {
       return
     }
     return footer.map((button, index) => {

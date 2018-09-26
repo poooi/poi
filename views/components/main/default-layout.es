@@ -11,7 +11,7 @@ const defaultLayout = {
       minH: 2,
       maxW: 10,
       maxH: 50,
-      i: "teitoku-panel",
+      i: 'teitoku-panel',
     },
     {
       w: 5,
@@ -22,7 +22,7 @@ const defaultLayout = {
       minH: 3,
       maxW: 10,
       maxH: 50,
-      i: "resource-panel",
+      i: 'resource-panel',
     },
     {
       w: 5,
@@ -33,7 +33,7 @@ const defaultLayout = {
       minH: 9,
       maxW: 10,
       maxH: 50,
-      i: "miniship",
+      i: 'miniship',
     },
     {
       w: 5,
@@ -44,7 +44,7 @@ const defaultLayout = {
       minH: 6,
       maxW: 10,
       maxH: 50,
-      i: "combined-panels",
+      i: 'combined-panels',
     },
     {
       w: 5,
@@ -55,7 +55,7 @@ const defaultLayout = {
       minH: 5,
       maxW: 10,
       maxH: 50,
-      i: "expedition-panel",
+      i: 'expedition-panel',
     },
     {
       w: 5,
@@ -66,7 +66,7 @@ const defaultLayout = {
       minH: 5,
       maxW: 10,
       maxH: 50,
-      i: "task-panel",
+      i: 'task-panel',
     },
   ],
   lg: [
@@ -79,7 +79,7 @@ const defaultLayout = {
       minH: 2,
       maxW: 20,
       maxH: 50,
-      i: "teitoku-panel",
+      i: 'teitoku-panel',
     },
     {
       w: 6,
@@ -90,7 +90,7 @@ const defaultLayout = {
       minH: 3,
       maxW: 20,
       maxH: 50,
-      i: "resource-panel",
+      i: 'resource-panel',
     },
     {
       w: 8,
@@ -101,7 +101,7 @@ const defaultLayout = {
       minH: 9,
       maxW: 20,
       maxH: 50,
-      i: "miniship",
+      i: 'miniship',
     },
     {
       w: 6,
@@ -112,7 +112,7 @@ const defaultLayout = {
       minH: 6,
       maxW: 20,
       maxH: 50,
-      i: "combined-panels",
+      i: 'combined-panels',
     },
     {
       w: 6,
@@ -123,7 +123,7 @@ const defaultLayout = {
       minH: 5,
       maxW: 20,
       maxH: 50,
-      i: "expedition-panel",
+      i: 'expedition-panel',
     },
     {
       w: 6,
@@ -134,7 +134,7 @@ const defaultLayout = {
       minH: 5,
       maxW: 20,
       maxH: 50,
-      i: "task-panel",
+      i: 'task-panel',
     },
   ],
 }

@@ -19,19 +19,19 @@ export class reactClass extends React.Component {
     const { t } = this.props
     return (
       <Tabs bsStyle="pills" defaultActiveKey={0} animation={false} justified id="settings-view-tabs">
-        <Tab eventKey={0} title={t('setting:Common')} className='poi-settings-Tab'>
+        <Tab eventKey={0} title={t('setting:Common')} className="poi-settings-Tab">
           <PoiConfig />
         </Tab>
-        <Tab eventKey={1} title={t('setting:Display')} className='poi-settings-Tab'>
+        <Tab eventKey={1} title={t('setting:Display')} className="poi-settings-Tab">
           <DisplayConfig />
         </Tab>
-        <Tab eventKey={2} title={t('setting:Proxy')} className='poi-settings-Tab'>
+        <Tab eventKey={2} title={t('setting:Proxy')} className="poi-settings-Tab">
           <NetworkConfig />
         </Tab>
-        <Tab eventKey={3} title={t('setting:Plugins')} className='poi-settings-Tab'>
+        <Tab eventKey={3} title={t('setting:Plugins')} className="poi-settings-Tab">
           <PluginConfig />
         </Tab>
-        <Tab eventKey={-1} title={t('setting:About')} className='poi-settings-Tab'>
+        <Tab eventKey={-1} title={t('setting:About')} className="poi-settings-Tab">
           <Misc />
         </Tab>
       </Tabs>
@@ -39,4 +39,4 @@ export class reactClass extends React.Component {
   }
 }
 
-export const displayName = <span><FontAwesome name='cog' /> <Trans>setting:Settings</Trans></span>
+export const displayName = <span><FontAwesome name="cog" /> <Trans>setting:Settings</Trans></span>

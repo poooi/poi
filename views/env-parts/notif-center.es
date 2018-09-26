@@ -93,7 +93,7 @@ class NotificationCenter {
   }
 
   _doNotify = (o) => {
-    const globalConfig = config.get(`poi.notify`, {})
+    const globalConfig = config.get('poi.notify', {})
     if (!get(globalConfig, 'enabled', true))
       return
     const type = o.type || 'others'
@@ -140,7 +140,7 @@ window.notify = (msg, options) => {
     ...options,
     message: msg,
     volume: config.get('poi.notify.volume', 0.8),
-    type: options ? (options.type || "others") : undefined,
+    type: options ? (options.type || 'others') : undefined,
   }
   notifCenter.notify(options)
 }
