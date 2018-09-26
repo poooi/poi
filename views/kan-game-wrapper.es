@@ -91,7 +91,6 @@ export class KanGameWrapper extends Component {
 
   componentDidMount = () => {
     this.alignWebviewDebounced = debounce(this.alignWebview, 200)
-    this.handleWebviewMount()
   }
 
 
@@ -115,8 +114,6 @@ export class KanGameWrapper extends Component {
           height: this.resizableAreaHeight,
         })
       }
-    } else {
-      this.handleWebviewMount()
     }
   }
 
@@ -157,6 +154,7 @@ export class KanGameWrapper extends Component {
               }}
               muted={muted}
               useragent={ua}
+              onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
             />
           </div>
@@ -281,6 +279,7 @@ export class KanGameWrapper extends Component {
                 }}
                 useragent={ua}
                 muted={muted}
+                onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
               />
             </div>
