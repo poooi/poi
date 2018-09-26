@@ -41,12 +41,12 @@ const Slotitems = translate(['resources'])(connect(
   (state, {shipId}) =>
     slotitemsDataSelectorFactory(shipId)(state),
 )(function ({api_maxeq, equipsData, t}) {
-  const tooltipClassName = classNames("item-name", {
-    "hidden": !equipsData,
+  const tooltipClassName = classNames('item-name', {
+    'hidden': !equipsData,
   })
   return (
     <div className={tooltipClassName}>
-      <div className="slotitems-mini" style={{display: "flex", flexFlow: "column"}}>
+      <div className="slotitems-mini" style={{display: 'flex', flexFlow: 'column'}}>
         {
           equipsData.filter(Boolean).map((equipData, equipIdx) => {
             const [equip, $equip, onslot] = equipData
@@ -57,22 +57,22 @@ const Slotitems = translate(['resources'])(connect(
             const maxOnslot = (api_maxeq || [])[equipIdx]
             const onslotText = onslot
             const onslotWarning = maxOnslot && onslot < maxOnslot
-            const onslotClassName = classNames("slotitem-onslot", {
+            const onslotClassName = classNames('slotitem-onslot', {
               'show': isAircraft,
               'hide': !isAircraft,
             })
             return (
               <div key={equipIdx} className="slotitem-container-mini">
-                <SlotitemIcon key={equip.api_id} className='slotitem-img' slotitemId={equipIconId} />
+                <SlotitemIcon key={equip.api_id} className="slotitem-img" slotitemId={equipIconId} />
                 <span style={{ flex: 1, textAlign: 'left' }}>{$equip ? t(`resources:${$equip.api_name}`, {keySeparator: '%%%%'}) : '???'}</span>
                 {
                   Boolean(level) &&
-                  <strong style={{color: '#45A9A5'}}> <FontAwesome name='star' />{level}</strong>
+                  <strong style={{color: '#45A9A5'}}> <FontAwesome name="star" />{level}</strong>
                 }
                 <span style={{ width: '1ex', display: 'inline-block' }} />
                 {
                   proficiency &&
-                  <img className='alv-img' src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
+                  <img className="alv-img" src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)} />
                 }
                 <Label
                   className={onslotClassName}
@@ -145,10 +145,10 @@ export class MiniShipRow extends Component {
     const exp = (ship.api_exp || [])[0]
     const nextExp = (ship.api_exp || [])[1]
     const remodelString = level < remodelLevel ? t('main:RemodelLv', { remodelLevel }) : remodelLevel ? t('main:RemodelReady') : null
-    const shipInfoClass = classNames("ship-info", {
-      "ship-avatar-padding": enableAvatar,
-      "ship-info-hidden": hideShipName,
-      "ship-info-show": !hideShipName,
+    const shipInfoClass = classNames('ship-info', {
+      'ship-avatar-padding': enableAvatar,
+      'ship-info-hidden': hideShipName,
+      'ship-info-show': !hideShipName,
     })
     return (
       <div className="ship-tile">
@@ -156,7 +156,7 @@ export class MiniShipRow extends Component {
           placement={tooltipPos}
           overlay={
             (( ship.api_slot && ship.api_slot[0] !== -1) || ship.api_slot_ex > 0) ?
-              <Tooltip id={`ship-pop-${ship.api_id}`} className='ship-pop'>
+              <Tooltip id={`ship-pop-${ship.api_id}`} className="ship-pop">
                 <Slotitems shipId={ship.api_id} />
               </Tooltip>
               : <Tooltip id={`ship-pop-${ship.api_id}`} style={{display: 'none'}}></Tooltip>
@@ -165,10 +165,10 @@ export class MiniShipRow extends Component {
           <div className="ship-item">
             { enableAvatar && (
               <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33}>
-                {compact && <div className='ship-lv-avatar'>{level && t('main:Lv', { level })}</div>}
+                {compact && <div className="ship-lv-avatar">{level && t('main:Lv', { level })}</div>}
               </Avatar>
             ) }
-            <OverlayTrigger placement='top' overlay={
+            <OverlayTrigger placement="top" overlay={
               <Tooltip id={`miniship-exp-${ship.api_id}`}>
                 {
                   hideShipName ? (
@@ -214,8 +214,8 @@ export class MiniShipRow extends Component {
                 <div className="status-label">
                   <StatusLabel label={labelStatus} />
                 </div>
-                <div className={"ship-cond " + getCondStyle(ship.api_cond)}>
-                  <FontAwesome name='star' />{ship.api_cond}
+                <div className={'ship-cond ' + getCondStyle(ship.api_cond)}>
+                  <FontAwesome name="star" />{ship.api_cond}
                 </div>
               </div>
               <span className="hp-progress top-space" style={labelStatusStyle}>
@@ -246,29 +246,29 @@ export const MiniSquardRow = translate(['main'])(connect((state, { squardId }) =
     switch (api_action_kind) {
     // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
     case 0:
-      return <Label bsStyle='default'>{t('main:Standby')}</Label>
+      return <Label bsStyle="default">{t('main:Standby')}</Label>
     case 1:
-      return <Label bsStyle='danger'>{t('main:Sortie')}</Label>
+      return <Label bsStyle="danger">{t('main:Sortie')}</Label>
     case 2:
-      return <Label bsStyle='warning'>{t('main:Defense')}</Label>
+      return <Label bsStyle="warning">{t('main:Defense')}</Label>
     case 3:
-      return <Label bsStyle='primary'>{t('main:Retreat')}</Label>
+      return <Label bsStyle="primary">{t('main:Retreat')}</Label>
     case 4:
-      return <Label bsStyle='success'>{t('main:Rest')}</Label>
+      return <Label bsStyle="success">{t('main:Rest')}</Label>
     }
   })()
-  const shipInfoClass = classNames("ship-info", {
-    "ship-avatar-padding": enableAvatar,
-    "ship-info-hidden": hideShipName,
-    "ship-info-show": !hideShipName,
+  const shipInfoClass = classNames('ship-info', {
+    'ship-avatar-padding': enableAvatar,
+    'ship-info-hidden': hideShipName,
+    'ship-info-show': !hideShipName,
   })
   return (
     <div className="ship-tile">
       <div className="ship-item">
         { enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-          <Avatar type='equip' mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
+          <Avatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
             {compact && (
-              <div className='ship-lv-avatar'>
+              <div className="ship-lv-avatar">
                 {statuslabel}
                 <div className="ship-fp">
                   {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}

@@ -53,7 +53,7 @@ class BasicAuth extends PureComponent {
                 {t('Username')}
               </Col>
               <Col sm={10}>
-                <FormControl value={this.state.user} type="username" placeholder={t("Username")} onChange={this.handleUser} />
+                <FormControl value={this.state.user} type="username" placeholder={t('Username')} onChange={this.handleUser} />
               </Col>
             </FormGroup>
 
@@ -62,7 +62,7 @@ class BasicAuth extends PureComponent {
                 {t('Password')}
               </Col>
               <Col sm={10}>
-                <FormControl value={this.state.password} type="password" placeholder={t("Password")} onChange={this.handlePassword}/>
+                <FormControl value={this.state.password} type="password" placeholder={t('Password')} onChange={this.handlePassword}/>
               </Col>
             </FormGroup>
           </Form>

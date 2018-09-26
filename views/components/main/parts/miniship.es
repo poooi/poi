@@ -120,7 +120,7 @@ export class MiniShip extends Component {
                   )
                 }
               </ButtonGroup>
-              <ButtonGroup bsSize="xsmall" className='plane-button-mini'>
+              <ButtonGroup bsSize="xsmall" className="plane-button-mini">
                 <LandbaseButton key={4}
                   fleetId={4}
                   disabled={this.props.airBaseCnt === 0}
@@ -131,7 +131,7 @@ export class MiniShip extends Component {
               </ButtonGroup>
             </div>
             <div className="no-scroll miniship-fleet-content" ref={ref => { this.minishippane = ref }}>
-              <div className={classNames("ship-tab-content", {'ship-tab-content-transition': this.props.enableTransition})}
+              <div className={classNames('ship-tab-content', {'ship-tab-content-transition': this.props.enableTransition})}
                 style={{transform: `translateX(-${this.props.activeFleetId}00%)`}}>
                 {
                   [0, 1, 2, 3].map((i) => (

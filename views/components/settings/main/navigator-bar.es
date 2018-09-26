@@ -113,27 +113,27 @@ export class NavigatorBar extends React.Component {
 
     let statusIcon
     if (status === wvStatus.Loading) {
-      statusIcon = <div><FontAwesome name='spinner' pulse /></div>
+      statusIcon = <div><FontAwesome name="spinner" pulse /></div>
     }
     if (status === wvStatus.Failed) {
-      statusIcon = <div><FontAwesome name='times' /></div>
+      statusIcon = <div><FontAwesome name="times" /></div>
     }
 
     let navigateAction, navigateIcon
     if (status === wvStatus.Loading) {
       navigateAction = this.onClickStop
-      navigateIcon   = <FontAwesome name='times' />
+      navigateIcon   = <FontAwesome name="times" />
     } else {
       navigateAction = this.onClickNavigate
-      navigateIcon   = <FontAwesome name='arrow-right' />
+      navigateIcon   = <FontAwesome name="arrow-right" />
     }
 
     return (
-      <div className='navigator'>
-        <div className='navigator-url'>
+      <div className="navigator">
+        <div className="navigator-url">
           <FormGroup>
-            <InputGroup bsSize='small' style={{width: '100%'}}>
-              <FormControl type='text'
+            <InputGroup bsSize="small" style={{width: '100%'}}>
+              <FormControl type="text"
                 placeholder={t('setting:Input address')}
                 className={statusIcon? 'navigator-status' : 'navigator-no-status'}
                 value={this.state.url}
@@ -145,14 +145,14 @@ export class NavigatorBar extends React.Component {
             </InputGroup>
           </FormGroup>
         </div>
-        <div className='navigator-btn'>
+        <div className="navigator-btn">
           <ButtonGroup>
-            <Button bsSize='small' bsStyle='primary' onClick={navigateAction}>{navigateIcon}</Button>
-            <Button bsSize='small' bsStyle='warning' onClick={gameRefreshPage} onContextMenu={gameReloadFlash}><FontAwesome name='refresh' /></Button>
+            <Button bsSize="small" bsStyle="primary" onClick={navigateAction}>{navigateIcon}</Button>
+            <Button bsSize="small" bsStyle="warning" onClick={gameRefreshPage} onContextMenu={gameReloadFlash}><FontAwesome name="refresh" /></Button>
           </ButtonGroup>
           <ButtonGroup style={{marginLeft: 5}}>
-            <OverlayTrigger placement='top' overlay={<Tooltip id='nav-homepage'>{t('setting:Set as homepage')}</Tooltip>}>
-              <Button bsSize='small' onClick={this.onClickHomepage} onContextMenu={this.onRightClickHomepage}><FontAwesome name='bookmark' /></Button>
+            <OverlayTrigger placement="top" overlay={<Tooltip id="nav-homepage">{t('setting:Set as homepage')}</Tooltip>}>
+              <Button bsSize="small" onClick={this.onClickHomepage} onContextMenu={this.onRightClickHomepage}><FontAwesome name="bookmark" /></Button>
             </OverlayTrigger>
           </ButtonGroup>
         </div>

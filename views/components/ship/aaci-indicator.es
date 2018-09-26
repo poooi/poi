@@ -13,7 +13,7 @@ const getAvailableTranslation = memoize(str => i18next.translator.exists(`main:$
   : i18next.translator.exists(`resources:${str}`) ? <Trans>resources:{str}</Trans>
     : str)
 
-const __t = name => name.map((n, i) => <span className='aaci-type-name' key={i}>{ getAvailableTranslation(n) }</span>)
+const __t = name => name.map((n, i) => <span className="aaci-type-name" key={i}>{ getAvailableTranslation(n) }</span>)
 
 const AACISelectorFactory = memoize(shipId =>
   createSelector([
@@ -74,7 +74,7 @@ export const AACIIndicator = translate(['main'])(connect(
     AACIs.length ?
       <span className="ship-aaci">
         <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aaci-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle='warning'>{t('main:AACI')}</Label>
+          <Label bsStyle="warning">{t('main:AACI')}</Label>
         </OverlayTrigger>
       </span>
       : <span />

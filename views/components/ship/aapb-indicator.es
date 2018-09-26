@@ -31,7 +31,7 @@ export const AAPBIndicator = translate(['main'])(connect(
     AAPB > 0 ?
       <span className="ship-aapb">
         <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aapb-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle='warning'>{t('main:AAPB')}</Label>
+          <Label bsStyle="warning">{t('main:AAPB')}</Label>
         </OverlayTrigger>
       </span>
       : <span />

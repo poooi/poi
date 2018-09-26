@@ -118,7 +118,7 @@ describe('Validate sortie dangerous check', () => {
     })
   })
 
-  it(`heavy damage for sortie fleet is dangerous (many ships version)`, () => {
+  it('heavy damage for sortie fleet is dangerous (many ships version)', () => {
     times(LOOP_TIMES, () => {
       reset()
       const { api_ship } = fleets[0]
@@ -129,7 +129,7 @@ describe('Validate sortie dangerous check', () => {
   })
 
 
-  it(`heavy damage for ships with personel or goddess is safe`, () => {
+  it('heavy damage for ships with personel or goddess is safe', () => {
     times(LOOP_TIMES, () => {
       reset()
       const { api_ship } = fleets[0]
@@ -142,7 +142,7 @@ describe('Validate sortie dangerous check', () => {
     })
   })
 
-  it(`heavy damage for ships in combined fleets`, () => {
+  it('heavy damage for ships in combined fleets', () => {
     times(LOOP_TIMES, () => {
       reset()
       sortieStatus = [true, true, false, false]

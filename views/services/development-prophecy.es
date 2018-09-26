@@ -28,10 +28,10 @@ window.addEventListener('game.response',
     if (path === '/kcsapi/api_req_kousyou/createitem') {
       if (body.api_create_flag === 0) {
         const name = lookupItemName(body.api_fdata.split(',')[1])
-        warnAfterDelay(i18next.t("main:DevelopFailed", {name}), devResultDelay)
+        warnAfterDelay(i18next.t('main:DevelopFailed', {name}), devResultDelay)
       } else if (body.api_create_flag === 1) {
         const name = lookupItemName(body.api_slot_item.api_slotitem_id)
-        successAfterDelay(i18next.t("main:DevelopSuccess", {name}), devResultDelay)
+        successAfterDelay(i18next.t('main:DevelopSuccess', {name}), devResultDelay)
       }
     }
 
@@ -40,9 +40,9 @@ window.addEventListener('game.response',
       const [eqpIdBefore] = body.api_remodel_id
       const name = lookupItemName(eqpIdBefore)
       if (body.api_remodel_flag === 0) {
-        warnAfterDelay(i18next.t("main:ImproveFailed", {name}), improveResultDelay)
+        warnAfterDelay(i18next.t('main:ImproveFailed', {name}), improveResultDelay)
       } else if (body.api_remodel_flag === 1) {
-        successAfterDelay(i18next.t("main:ImproveSuccess", {name}), improveResultDelay)
+        successAfterDelay(i18next.t('main:ImproveSuccess', {name}), improveResultDelay)
       }
     }
   }

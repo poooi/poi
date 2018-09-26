@@ -166,7 +166,7 @@ const TaskRowBase = connect(
       </OverlayTrigger>
       <div>
         <OverlayTrigger
-          placement='left'
+          placement="left"
           overlay={
             <Tooltip id={`task-progress-${idx}`} style={rightOverlay ? null : {display: 'none'}}>{rightOverlay}</Tooltip>
           }

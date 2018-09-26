@@ -22,8 +22,8 @@ function getUndefinedStateErrorMessage(key, action) {
 
   return (
     `Given ${actionDescription}, reducer "${key}" returned undefined. ` +
-    `To ignore an action, you must explicitly return the previous state. ` +
-    `If you want this reducer to hold no value, you can return null instead of undefined.`
+    'To ignore an action, you must explicitly return the previous state. ' +
+    'If you want this reducer to hold no value, you can return null instead of undefined.'
   )
 }
 
@@ -35,10 +35,10 @@ function assertReducerShape(reducers) {
     if (typeof initialState === 'undefined') {
       throw new Error(
         `Reducer "${key}" returned undefined during initialization. ` +
-          `If the state passed to the reducer is undefined, you must ` +
-          `explicitly return the initial state. The initial state may ` +
-          `not be undefined. If you don't want to set a value for this reducer, ` +
-          `you can use null instead of undefined.`
+          'If the state passed to the reducer is undefined, you must ' +
+          'explicitly return the initial state. The initial state may ' +
+          'not be undefined. If you don\'t want to set a value for this reducer, ' +
+          'you can use null instead of undefined.'
       )
     }
 
@@ -55,10 +55,10 @@ function assertReducerShape(reducers) {
           `Don't try to handle ${
             ActionTypes.INIT
           } or other actions in "redux/*" ` +
-          `namespace. They are considered private. Instead, you must return the ` +
-          `current state for any unknown actions, unless it is undefined, ` +
-          `in which case you must return the initial state, regardless of the ` +
-          `action type. The initial state may not be undefined, but can be null.`
+          'namespace. They are considered private. Instead, you must return the ' +
+          'current state for any unknown actions, unless it is undefined, ' +
+          'in which case you must return the initial state, regardless of the ' +
+          'action type. The initial state may not be undefined, but can be null.'
       )
     }
   })

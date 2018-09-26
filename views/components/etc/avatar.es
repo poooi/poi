@@ -86,9 +86,9 @@ export class Avatar extends PureComponent {
                 {
                   !this.props.isEnemy && (
                     <img
-                      className={classnames("ship-avatar-bg", {
-                        "ship-avatar-bg-nr": this.props.rank < 6,
-                        "ship-avatar-bg-sr": this.props.rank >= 6,
+                      className={classnames('ship-avatar-bg', {
+                        'ship-avatar-bg-nr': this.props.rank < 6,
+                        'ship-avatar-bg-sr': this.props.rank >= 6,
                       })}
                       src={this.props.bgurl} />
                   )

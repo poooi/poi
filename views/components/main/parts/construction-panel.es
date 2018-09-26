@@ -75,7 +75,7 @@ export class ConstructionPanel extends Component {
             const completeTime = isInUse ? dock.api_complete_time : -1
             const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null
             return (
-              <OverlayTrigger key={i} placement='top' overlay={
+              <OverlayTrigger key={i} placement="top" overlay={
                 <Tooltip id={`kdock-material-${i}`} style={!isInUse && {display: 'none'}}>
                   {
                     <span style={tooltipTitleClassname}>{dockName}<br /></span>

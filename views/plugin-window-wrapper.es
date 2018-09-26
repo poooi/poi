@@ -41,10 +41,10 @@ export class PluginWindowWrap extends PureComponent {
   constructor(props) {
     super(props)
     this.containerEl = document.createElement('div')
-    this.containerEl.id = "plugin-mountpoint"
+    this.containerEl.id = 'plugin-mountpoint'
     this.containerEl.style['display'] = 'flex'
-    this.containerEl.style['flex-direction'] = "column"
-    this.containerEl.style['height'] = "100vh"
+    this.containerEl.style['flex-direction'] = 'column'
+    this.containerEl.style['height'] = '100vh'
     this.externalWindow = null
   }
 
@@ -108,13 +108,13 @@ export class PluginWindowWrap extends PureComponent {
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/avatar.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/scroll-shadow.css'))}">`
       if (process.platform === 'darwin') {
-        const div = document.createElement("div")
-        div.style.position = "absolute"
+        const div = document.createElement('div')
+        div.style.position = 'absolute'
         div.style.top = 0
-        div.style.height = "23px"
-        div.style.width = "100%"
-        div.style["-webkit-app-region"] = "drag"
-        div.style["pointer-events"] = "none"
+        div.style.height = '23px'
+        div.style.width = '100%'
+        div.style['-webkit-app-region'] = 'drag'
+        div.style['pointer-events'] = 'none'
         this.externalWindow.document.body.appendChild(div)
       }
       this.externalWindow.document.body.appendChild(this.containerEl)
@@ -179,7 +179,7 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.require('electron').remote.getCurrentWindow().focus()
     } else {
       setImmediate(() => {
-        ipc.access("MainWindow").ipcFocusPlugin(this.props.plugin.id)
+        ipc.access('MainWindow').ipcFocusPlugin(this.props.plugin.id)
       })
     }
   }

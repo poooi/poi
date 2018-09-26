@@ -19,7 +19,7 @@ const basic = {
     password: '',
   },
   socks5: {
-    host: "127.0.0.1",
+    host: '127.0.0.1',
     port: 1080,
   },
   retries: 0,
@@ -150,7 +150,7 @@ export class NetworkConfig extends Component {
         <Divider text={t('setting:Proxy server information')} />
         <Grid>
           <Col xs={12}>
-            <FormControl componentClass="select" value={this.state.use || "none"} onChange={this.handleChangeUse}>
+            <FormControl componentClass="select" value={this.state.use || 'none'} onChange={this.handleChangeUse}>
               <option key={0} value="http">HTTP {t('setting:proxy')}</option>
               <option key={1} value="socks5">Socks5 {t('setting:proxy')}</option>
               <option key={2} value="pac">PAC {t('setting:file')} ({t('setting:Experimental')})</option>
@@ -231,7 +231,7 @@ export class NetworkConfig extends Component {
             <FormControl type="number" value={this.state.retries} onChange={this.handleSetRetries} />
           </Col>
           <Col xs={12}>
-            <Alert bsStyle='danger'>
+            <Alert bsStyle="danger">
               {t('setting:It may be unsafe!')}
             </Alert>
           </Col>

@@ -86,7 +86,7 @@ export function onGameRequest({method, path, body, time}) {
 
 export function onConfigChange({path, value}) {
   return {
-    type: `@@Config`,
+    type: '@@Config',
     path,
     value,
   }
@@ -102,7 +102,7 @@ if (!window.isMain) {
           // eslint-disable-next-line no-console
           console.log(`Update ${key} from localStorage`)
           window.dispatch({
-            type: "@@replaceFCD",
+            type: '@@replaceFCD',
             value: {
               path: key,
               data: fcd[key],

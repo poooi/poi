@@ -44,7 +44,7 @@ require('module').globalPaths.unshift(window.ROOT)
 
 // Disable eval
 window.eval = global.eval = function () {
-  throw new Error(`Sorry, this app does not support window.eval().`)
+  throw new Error('Sorry, this app does not support window.eval().')
 }
 
 // Shortcuts and Components

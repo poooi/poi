@@ -9,11 +9,11 @@ const ROOT = global.ROOT
 // simulate Escape key
 export const touchbaresc = () => {
   mainWindow.webContents.sendInputEvent({
-    type: "keyDown",
+    type: 'keyDown',
     keyCode: 'Escape',
   }),
   mainWindow.webContents.sendInputEvent({
-    type: "keyUp",
+    type: 'keyUp',
     keyCode: 'Escape',
   })
 }

@@ -103,7 +103,7 @@ export class ThemeConfig extends Component {
           </FormControl>
         </Col>
         <Col xs={6} style={{ marginTop: '1ex' }}>
-          <Button bsStyle='primary' onClick={this.handleOpenCustomCss} block>{t('setting:Edit custom CSS')}</Button>
+          <Button bsStyle="primary" onClick={this.handleOpenCustomCss} block>{t('setting:Edit custom CSS')}</Button>
         </Col>
         <Col xs={6} style={{ marginTop: '1ex' }}>
           <Overlay
@@ -111,7 +111,7 @@ export class ThemeConfig extends Component {
             placement="bottom"
             target={this.fileSelect}
           >
-            <Tooltip id='background-preview'>
+            <Tooltip id="background-preview">
               <img src={encodeURI(fileUrl(this.props.background))} alt="" style={{ maxHeight: '100%', maxWidth: '100%'}}/>
             </Tooltip>
           </Overlay>

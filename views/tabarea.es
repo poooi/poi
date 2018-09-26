@@ -61,19 +61,19 @@ class TabContentsUnion extends Component {
     const activeKey = this.activeKey()
     const prevKey = this.prevKey()
     return (
-      <div className='poi-tab-contents'>
+      <div className="poi-tab-contents">
         {
           Children.map(this.props.children, (child, index) => {
             if (child.key === activeKey)
               onTheLeft = false
             const positionLeft = child.key === activeKey ?  '0%'
               : onTheLeft ? '-100%' : '100%'
-            const tabClassName = classNames("poi-tab-child-positioner", {
+            const tabClassName = classNames('poi-tab-child-positioner', {
               'poi-tab-child-positioner-transition': (child.key === activeKey || child.key === prevKey) && this.props.enableTransition,
               'transparent': child.key !== activeKey,
             })
             return (
-              <div className='poi-tab-child-sizer'>
+              <div className="poi-tab-child-sizer">
                 <div className={tabClassName}
                   style={{transform: `translateX(${positionLeft})`}}>
                   {child}
@@ -282,7 +282,7 @@ export class ControlledTabArea extends PureComponent {
     window.addEventListener('game.start', this.handleKeyDown)
     window.addEventListener('game.response', this.handleResponse)
     window.openSettings = this.handleCmdCommaKeyDown
-    ipc.register("MainWindow", {
+    ipc.register('MainWindow', {
       ipcFocusPlugin: this.ipcFocusPlugin,
     })
     if (process.platform === 'darwin') {
@@ -295,7 +295,7 @@ export class ControlledTabArea extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('game.response', this.handleResponse)
-    ipc.unregisterAll("MainWindow")
+    ipc.unregisterAll('MainWindow')
     config.removeListener('config.set', this.handleConfig)
   }
   componentDidCatch(error, info) {
@@ -379,7 +379,7 @@ export class ControlledTabArea extends PureComponent {
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const activePluginName = activePlugin.packageName
-    const defaultPluginTitle = <span><FontAwesome name='sitemap' /> {t('others:Plugins')}</span>
+    const defaultPluginTitle = <span><FontAwesome name="sitemap" /> {t('others:Plugins')}</span>
     const pluginDropdownContents = this.props.plugins.length == 0 ? (
       <MenuItem key={1002} disabled>
         {t('setting:Install plugins in settings')}
@@ -416,32 +416,32 @@ export class ControlledTabArea extends PureComponent {
     const firstPanelNav = !this.props.doubleTabbed ? (
       <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} id="top-nav" className={navClass}
         onSelect={this.handleSelectTab}>
-        <NavItem key='mainView' eventKey='mainView'>
+        <NavItem key="mainView" eventKey="mainView">
           {mainview.displayName}
         </NavItem>
-        <NavItem key='shipView' eventKey='shipView'>
+        <NavItem key="shipView" eventKey="shipView">
           {shipview.displayName}
         </NavItem>
-        <NavItem key='plugin' eventKey={activePluginName} onSelect={this.handleSelect}>
+        <NavItem key="plugin" eventKey={activePluginName} onSelect={this.handleSelect}>
           {(activePlugin || {}).displayName || defaultPluginTitle}
         </NavItem>
-        <NavDropdown id='plugin-dropdown' pullRight title=' '
+        <NavDropdown id="plugin-dropdown" pullRight title=" "
           onSelect={this.handleSelectDropdown}>
           {pluginDropdownContents}
         </NavDropdown>
-        <NavItem key='settings' eventKey='settings' className="tab-narrow">
-          <FontAwesome key={0} name='cog' />
+        <NavItem key="settings" eventKey="settings" className="tab-narrow">
+          <FontAwesome key={0} name="cog" />
         </NavItem>
       </Nav>
     ) : (
-      <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id='split-main-nav'>
-        <NavItem key='mainView' eventKey='mainView'>
+      <Nav bsStyle="tabs" activeKey={this.props.activeMainTab} onSelect={this.handleSelectTab} id="split-main-nav">
+        <NavItem key="mainView" eventKey="mainView">
           {mainview.displayName}
         </NavItem>
-        <NavItem key='shipView' eventKey='shipView'>
+        <NavItem key="shipView" eventKey="shipView">
           {shipview.displayName}
         </NavItem>
-        <NavItem key='settings' eventKey='settings'>
+        <NavItem key="settings" eventKey="settings">
           {settings.displayName}
         </NavItem>
       </Nav>
@@ -457,14 +457,14 @@ export class ControlledTabArea extends PureComponent {
           }
         }}
         activeTab={this.props.activeMainTab}>
-        <div id={mainview.name} className="MainView poi-app-tabpane" key='mainView'>
+        <div id={mainview.name} className="MainView poi-app-tabpane" key="mainView">
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={shipview.name} className="ShipView poi-app-tabpane" key='shipView'>
+        <div id={shipview.name} className="ShipView poi-app-tabpane" key="shipView">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
         { pluginContents }
-        <div id={settings.name} className="SettingsView poi-app-tabpane" key='settings'>
+        <div id={settings.name} className="SettingsView poi-app-tabpane" key="settings">
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </div>
       </TabContentsUnion>
@@ -478,13 +478,13 @@ export class ControlledTabArea extends PureComponent {
           }
         }}
         activeTab={this.props.activeMainTab}>
-        <div id={mainview.name} className="MainView poi-app-tabpane" key='mainView'>
+        <div id={mainview.name} className="MainView poi-app-tabpane" key="mainView">
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={shipview.name} className="ShipView poi-app-tabpane" key='shipView'>
+        <div id={shipview.name} className="ShipView poi-app-tabpane" key="shipView">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={settings.name} className="SettingsView poi-app-tabpane" key='settings'>
+        <div id={settings.name} className="SettingsView poi-app-tabpane" key="settings">
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </div>
       </TabContentsUnion>
@@ -568,8 +568,8 @@ export class ControlledTabArea extends PureComponent {
 
     const inner = (
       <div className="poi-tab-container no-scroll">
-        <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id='split-plugin-nav' className={navClass}>
-          <NavDropdown id='plugin-dropdown' pullRight onSelect={this.handleSelectDropdown}
+        <Nav bsStyle="tabs" onSelect={this.handleSelectTab} id="split-plugin-nav" className={navClass}>
+          <NavDropdown id="plugin-dropdown" pullRight onSelect={this.handleSelectDropdown}
             title={(activePlugin || {}).displayName || defaultPluginTitle}>
             {pluginDropdownContents}
           </NavDropdown>

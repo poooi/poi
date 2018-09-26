@@ -61,13 +61,13 @@ const ExpContent = translate(['main'])(connect(
 )(({ level, exp, t }) => level >= 0
   ? <>
   { level < 120 &&
-    <div className='info-tooltip-entry'>
-      <span className='info-tooltip-item'>{t('main:Next')}</span>
+    <div className="info-tooltip-entry">
+      <span className="info-tooltip-item">{t('main:Next')}</span>
       <span>{totalExp[level] - exp}</span>
     </div>
   }
-  <div className='info-tooltip-entry'>
-    <span className='info-tooltip-item'>{t('main:Total Exp')}</span>
+  <div className="info-tooltip-entry">
+    <span className="info-tooltip-item">{t('main:Total Exp')}</span>
     <span>{exp}</span>
   </div>
   </>
@@ -197,8 +197,8 @@ const CountdownContent = ({moments}) => (
   <div>
     {
       ['Practice', 'Quest', 'Senka', 'EO'].map(name => (
-        <div className='info-tooltip-entry' key={name}>
-          <span className='info-tooltip-item'><Trans>main:Next {name}</Trans></span>
+        <div className="info-tooltip-entry" key={name}>
+          <span className="info-tooltip-item"><Trans>main:Next {name}</Trans></span>
           <span>
             <CountdownNotifierLabel
               timerKey={`next-${name}`}
@@ -251,7 +251,7 @@ export const AdmiralPanel = translate(['main'])(connect(
   return (
     <Panel bsStyle="default">
       <Panel.Body>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className='info-tooltip'><ExpContent/></Tooltip>}>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="teitoku-exp" className="info-tooltip"><ExpContent/></Tooltip>}>
           {
             level >= 0
               ? <span>

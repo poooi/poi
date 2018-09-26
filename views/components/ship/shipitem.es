@@ -74,10 +74,10 @@ export class ShipRow extends Component {
   render() {
     const { ship, $ship, $shipTypes, labelStatus, enableAvatar, compact, t } = this.props
     const hideShipName = enableAvatar && compact
-    const shipInfoClass = classNames("ship-info", {
-      "ship-avatar-padding": enableAvatar,
-      "ship-info-show": !hideShipName,
-      "ship-info-hidden": hideShipName,
+    const shipInfoClass = classNames('ship-info', {
+      'ship-avatar-padding': enableAvatar,
+      'ship-info-show': !hideShipName,
+      'ship-info-hidden': hideShipName,
     })
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
@@ -98,7 +98,7 @@ export class ShipRow extends Component {
     return (
       <div className="ship-item">
         { enableAvatar && <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} /> }
-        <OverlayTrigger placement='top' overlay={
+        <OverlayTrigger placement="top" overlay={
           hideShipName ? (
             <Tooltip id={`miniship-exp-${ship.api_id}`}>
               <div className="ship-tooltip-info">
@@ -117,7 +117,7 @@ export class ShipRow extends Component {
               <span className="ship-lv">
                 Lv. {ship.api_lv || '??'}
               </span>
-              <span className='ship-type'>
+              <span className="ship-type">
                 {
                   $shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name ?
                     t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
@@ -146,7 +146,7 @@ export class ShipRow extends Component {
           </div>
         </OverlayTrigger>
         <OverlayTrigger
-          placement='right'
+          placement="right"
           overlay={
             ship.api_ndock_time > 0 ?
               <Tooltip id={`panebody-repair-time-${ship.api_id}`}>
@@ -164,8 +164,8 @@ export class ShipRow extends Component {
                 <StatusLabel label={labelStatus}/>
               </div>
               <div className="status-cond" style={labelStatusStyle}>
-                <span className={"ship-cond " + getCondStyle(ship.api_cond)}>
-                  <FontAwesome name='star' />{ship.api_cond}
+                <span className={'ship-cond ' + getCondStyle(ship.api_cond)}>
+                  <FontAwesome name="star" />{ship.api_cond}
                 </span>
               </div>
             </div>
@@ -177,7 +177,7 @@ export class ShipRow extends Component {
         </OverlayTrigger>
         <span className="ship-fb" style={labelStatusStyle}>
           <span style={{flex: 1}}>
-            <OverlayTrigger placement='right' overlay={
+            <OverlayTrigger placement="right" overlay={
               <Tooltip id={`panebody-fuel-${ship.api_id}`}>
                 {fuelTip}
               </Tooltip>
@@ -187,7 +187,7 @@ export class ShipRow extends Component {
             </OverlayTrigger>
           </span>
           <span style={{flex: 1}}>
-            <OverlayTrigger placement='right' overlay={
+            <OverlayTrigger placement="right" overlay={
               <Tooltip id={`panebody-bull-${ship.api_id}`}>
                 {ammoTip}
               </Tooltip>

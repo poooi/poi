@@ -90,7 +90,7 @@ export class AppMetrics extends PureComponent {
             </div>
             {
               metrics.map(metric => (
-                <div className='metric-row' key={metric.pid}>
+                <div className="metric-row" key={metric.pid}>
                   <span>{metric.pid}</span>
                   <span title={pidmap[metric.pid] || metric.type}>
                     {pidmap[metric.pid] || metric.type}
@@ -108,7 +108,7 @@ export class AppMetrics extends PureComponent {
                 </div>
               ))
             }
-            <div className='metric-row metric-total'>
+            <div className="metric-row metric-total">
               <span>
                 {t('setting:TOTAL')}
               </span>

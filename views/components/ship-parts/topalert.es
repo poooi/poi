@@ -168,18 +168,18 @@ export const TopAlert = translate(['main'])(connect(
     <div style={{width: '100%'}}>
       {
         isMini ?
-          <div style={{display: "flex", justifyContent: "space-around", width: '100%'}}>
-            <span style={{flex: "none"}}>{t(`main:${getSpeedLabel(speed)}`)} </span>
-            <span style={{flex: "none", marginLeft: 5}}>{t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
-            <span style={{flex: "none", marginLeft: 5}}>{t('main:LOS')}: {saku33.total.toFixed(2)}</span>
+          <div style={{display: 'flex', justifyContent: 'space-around', width: '100%'}}>
+            <span style={{flex: 'none'}}>{t(`main:${getSpeedLabel(speed)}`)} </span>
+            <span style={{flex: 'none', marginLeft: 5}}>{t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + '+'}</span>
+            <span style={{flex: 'none', marginLeft: 5}}>{t('main:LOS')}: {saku33.total.toFixed(2)}</span>
           </div>
           :
           <Alert style={getFontStyle()}>
-            <div style={{display: "flex"}}>
-              <span style={{flex: "1"}}>{t(`main:${getSpeedLabel(speed)}`)} </span>
+            <div style={{display: 'flex'}}>
+              <span style={{flex: '1'}}>{t(`main:${getSpeedLabel(speed)}`)} </span>
               <span style={{flex: 1}}>{t('main:Total Lv')}. {totalLv}</span>
               <span style={{flex: 1}}>
-                <OverlayTrigger placement='bottom' overlay={
+                <OverlayTrigger placement="bottom" overlay={
                   <Tooltip id={`topalert-FP-fleet-${fleetId}`}>
                     <div>{t('main:Minimum FP')}: {tyku.min}</div>
                     <div>{t('main:Maximum FP')}: {tyku.max}</div>
@@ -190,31 +190,31 @@ export const TopAlert = translate(['main'])(connect(
                 </OverlayTrigger>
               </span>
               <span style={{flex: 1}}>
-                <OverlayTrigger placement='bottom' overlay={
-                  <Tooltip id={`topalert-recon-fleet-${fleetId}`} className='info-tooltip'>
-                    <div className='recon-title'>
+                <OverlayTrigger placement="bottom" overlay={
+                  <Tooltip id={`topalert-recon-fleet-${fleetId}`} className="info-tooltip">
+                    <div className="recon-title">
                       <span>{t('main:Formula 33')}</span>
                     </div>
-                    <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>× 1</span>
+                    <div className="info-tooltip-entry">
+                      <span className="info-tooltip-item">× 1</span>
                       <span>{saku33.total}</span>
                     </div>
-                    <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>{`× 3 (6-2 & 6-3)`}</span>
+                    <div className="info-tooltip-entry">
+                      <span className="info-tooltip-item">{'× 3 (6-2 & 6-3)'}</span>
                       <span>{saku33x3.total}</span></div>
-                    <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>{`× 4 (3-5 & 6-1)`}</span>
+                    <div className="info-tooltip-entry">
+                      <span className="info-tooltip-item">{'× 4 (3-5 & 6-1)'}</span>
                       <span>{saku33x4.total}</span>
                     </div>
-                    <div className='recon-title'>
+                    <div className="recon-title">
                       <span>{t('main:Formula 2-5')}</span>
                     </div>
-                    <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>{t('main:Fall')}</span>
+                    <div className="info-tooltip-entry">
+                      <span className="info-tooltip-item">{t('main:Fall')}</span>
                       <span>{saku25a.total}</span>
                     </div>
-                    <div className='info-tooltip-entry'>
-                      <span className='info-tooltip-item'>{t('main:Legacy')}</span>
+                    <div className="info-tooltip-entry">
+                      <span className="info-tooltip-item">{t('main:Legacy')}</span>
                       <span>{saku25.total}</span>
                     </div>
                   </Tooltip>

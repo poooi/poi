@@ -25,8 +25,8 @@ export class ZoomingConfig extends Component {
     return (
       <Grid>
         <Col xs={6}>
-          <OverlayTrigger placement='top' overlay={
-            <Tooltip id='displayconfig-zoom'><Trans>setting:Zoom level</Trans> <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
+          <OverlayTrigger placement="top" overlay={
+            <Tooltip id="displayconfig-zoom"><Trans>setting:Zoom level</Trans> <strong>{parseInt(this.state.zoomLevel * 100)}%</strong></Tooltip>
           }>
             <FormControl type="range" onChange={(e) => this.setState({ zoomLevel: parseFloat(e.target.value) })}
               min={0.5} max={4.0} step={0.05} defaultValue={this.state.zoomLevel}
