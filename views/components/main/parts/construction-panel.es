@@ -87,7 +87,7 @@ export class ConstructionPanel extends Component {
                   {this.getMaterialImage(7)} {dock.api_item5}
                 </Tooltip>
               }>
-                <div className="panel-item kdock-item" style={{ flexBasis: `${100 / dimension}%` }}>
+                <div className="panel-item kdock-item" style={{ flexBasis: `calc(${100 / dimension}% - 8px)` }}>
                   {
                     enableAvatar &&
                     <>
