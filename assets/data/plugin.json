@@ -89,11 +89,11 @@
     "icon": "wrench",
     "author": "Dazzy Ding",
     "link": "https://github.com/yukixz",
-    "deszh-CN": "查看装备改修信息，感谢 [舰娘百科](https://zh.kcwiki.org) 提供数据",
-    "deszh-TW": "檢視裝備修改訊息，感謝 [艦娘百科](https://zh.kcwiki.org) 提供數據",
-    "desja-JP": "簡易装備改修表、データは [kcwiki](https://zh.kcwiki.org) によって提供されている",
-    "desen-US": "Show possible improvements of the day based on data from [Kcwiki](https://zh.kcwiki.org)",
-    "desko-KR": "간이 장비 개수표, 데이터 제공되어 [kcwiki](https://zh.kcwiki.org)"
+    "deszh-CN": "查看装备改修信息，基于[是谁呼叫舰队](https://fleet.moe)数据",
+    "deszh-TW": "檢視裝備修改訊息，基於[是谁呼叫舰队](https://fleet.moe)數據",
+    "desja-JP": "簡易装備改修表、データは [WhoCallsTheFleet](https://fleet.moe) によって提供されています。",
+    "desen-US": "Show possible improvements of the day based on data from [WhoCallsTheFleet](https://fleet.moe)",
+    "desko-KR": "간이 장비 개수표"
   },
   "poi-plugin-item-info": {
     "zh-CN": "装备信息",
