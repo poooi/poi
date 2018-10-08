@@ -101,6 +101,8 @@ export function stopFileNavigateAndHandleNewWindowInApp(id) {
   })
 }
 
+const isModernDarwin = process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17
+
 export function stopNavigateAndHandleNewWindow(id) {
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
     e.preventDefault()
@@ -117,15 +119,18 @@ export function stopNavigateAndHandleNewWindow(id) {
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
       }
+      if (frameName.startsWith('plugin[gpuinfo]')) {
+        options.backgroundColor = '#FFFFFFFF'
+      }
       if (url.startsWith('chrome')) {
         options.frame = true
       }
+
       options = {
         ...options,
         minWidth: 200,
         minHeight: 200,
-        backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
-        titleBarStyle: process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17 ? 'hidden' : null,
+        titleBarStyle: isModernDarwin ? 'hidden' : null,
         autoHideMenuBar: true,
       }
       e.newGuest = new BrowserWindow(options)

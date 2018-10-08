@@ -313,7 +313,7 @@ const postEnableProcess = (plugin) => {
     }
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
-      backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
+      backgroundColor: '#E62A2A2A',
       // frame: !config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux'),
     })
     if (['darwin'].includes(process.platform) && config.get('poi.appearance.vibrant', 0) === 1) {
