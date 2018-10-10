@@ -99,6 +99,9 @@ export class PluginWindowWrap extends PureComponent {
 `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 <link rel="stylesheet" type="text/css" id="bootstrap-css">
+<link rel="stylesheet" type="text/css" id="normalize-css">
+<link rel="stylesheet" type="text/css" id="blueprint-css">
+<link rel="stylesheet" type="text/css" id="blueprint-icon-css">
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">

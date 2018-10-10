@@ -84,6 +84,26 @@ poi-app poi-nav-tabs {
   width: 100%;
 }
 
+poi-app poi-nav-tabs .top-nav {
+  width: calc(100% + 20px);
+}
+
+poi-app poi-nav-tabs .nav-tab {
+  text-align: center;
+}
+
+poi-app poi-nav-tabs .nav-tab-3 {
+  width: calc(33% - 20px);
+}
+
+poi-app poi-nav-tabs .nav-tab-4 {
+  width: calc(25% - 20px);
+}
+
+poi-app poi-nav-tabs .nav-tab-8 {
+  width: calc(12.5% - 20px);
+}
+
 poi-app poi-nav-tabs .poi-tabs-container-doubletabbed-vertical {
   flex-direction: column;
 }
