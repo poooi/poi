@@ -302,7 +302,7 @@ class CountDownControl extends Component {
     return (
       <span className="teitoku-timer">
         <Tooltip content={<CountdownContent moments={this.moments} />}>
-          <Tag intent={style}>
+          <Tag intent={style} minimal>
             <FontAwesome name="calendar" />
           </Tag>
         </Tooltip>
@@ -368,8 +368,8 @@ export const AdmiralPanel = translate(['main'])(
     slotNumCheck,
     minSlotNum,
   }) {
-    const shipCountIntent = shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : 'normal'
-    const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : 'normal'
+    const shipCountIntent = shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : null
+    const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : null
 
     return (
       <Card>
@@ -379,7 +379,7 @@ export const AdmiralPanel = translate(['main'])(
               <span>
                 {`Lv. ${level}　`}
                 <span className="nickname">{nickname}</span>
-                <Tag>{t(`resources:${rankName[rank]}`)}</Tag>
+                <Tag minimal>{t(`resources:${rankName[rank]}`)}</Tag>
               </span>
             ) : (
               <span>{t('Admiral [Not logged in]')}</span>
@@ -389,13 +389,13 @@ export const AdmiralPanel = translate(['main'])(
         <CountDownControl />
         <span style={{ marginRight: '1em' }}>
           <span>{t('main:Ships')}: </span>
-          <Tag intent={shipCountIntent}>
+          <Tag intent={shipCountIntent} minimal>
             {(shipNum || 0) + (dropCount || 0) || '?'} / {maxShip || '?'}
           </Tag>
         </span>
         <span>
           <span>{t('main:Equip')}: </span>
-          <Tag intent={slotCountIntent}>
+          <Tag intent={slotCountIntent} minimal>
             {equipNum || '?'} / {maxSlotitem || '?'}
           </Tag>
         </span>
