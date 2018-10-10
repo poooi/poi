@@ -62,14 +62,10 @@ const windowsSetVibrancy = value => {
     const electronVibrancy = remote.require(join(window.ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
     if (value === 1) {
       electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
-      if (window.isWindowMode) {
-        remote.getCurrentWindow().setBackgroundColor('#002A2A2A')
-      }
+      document.body.style.backgroundColor = '#313943E6'
     } else {
       electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
-      if (window.isWindowMode) {
-        remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-      }
+      document.body.style.backgroundColor = '#313943'
     }
   } catch (e) {
     console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
@@ -200,23 +196,13 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 if (process.platform === 'win32') {
   remote.getCurrentWindow().on('blur', () => {
     if (config.get('poi.appearance.vibrant', 0) === 1) {
-      remote.getCurrentWindow().setBackgroundColor(window.isMain || window.blurpolyfill ? '#E62A2A2A' : '#FF2A2A2A')
+      remote.getCurrentWindow().setBackgroundColor('#00000000')
     }
   })
 
   remote.getCurrentWindow().once('focus', () => {
     if (config.get('poi.appearance.vibrant', 0) === 1) {
-      remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-      window.blurpolyfill = true
-      remote.getCurrentWindow().on('focus', () => {
-        if (config.get('poi.appearance.vibrant', 0) === 1) {
-          remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-        }
-      })
-      if (!window.isMain) {
-        remote.getCurrentWindow().blur()
-        remote.getCurrentWindow().focus()
-      }
+      remote.getCurrentWindow().setBackgroundColor('#00000000')
     }
   })
 }
