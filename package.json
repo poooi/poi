@@ -54,6 +54,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@blueprintjs/core": "^3.7.0",
     "@exponent/electron-cookies": "^2.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-brands-svg-icons": "^5.3.1",
