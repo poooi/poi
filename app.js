@@ -156,7 +156,7 @@ app.on('ready', () => {
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
     },
-    backgroundColor: '#E62A2A2A',
+    backgroundColor: '#00000000',
   })
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
