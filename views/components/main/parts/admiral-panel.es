@@ -6,7 +6,7 @@ import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
 import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Popover, Tag, Card, PopoverInteractionKind } from '@blueprintjs/core'
+import { Tooltip, Tag, Card } from '@blueprintjs/core'
 import { compose } from 'redux'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
@@ -301,12 +301,11 @@ class CountDownControl extends Component {
     const { style } = this.state
     return (
       <span className="teitoku-timer">
-        <Popover interactionKind={PopoverInteractionKind.HOVER}>
+        <Tooltip content={<CountdownContent moments={this.moments} />}>
           <Tag intent={style}>
             <FontAwesome name="calendar" />
           </Tag>
-          <CountdownContent moments={this.moments} />
-        </Popover>
+        </Tooltip>
       </span>
     )
   }
@@ -374,18 +373,19 @@ export const AdmiralPanel = translate(['main'])(
 
     return (
       <Card>
-        <Popover interactionKind={PopoverInteractionKind.HOVER}>
-          {level >= 0 ? (
-            <span>
-              {`Lv. ${level}　`}
-              <span className="nickname">{nickname}</span>
-              <Tag>{t(`resources:${rankName[rank]}`)}</Tag>
-            </span>
-          ) : (
-            <span>{t('Admiral [Not logged in]')}</span>
-          )}
-          <ExpContent />
-        </Popover>
+        <Tooltip content={<ExpContent />}>
+          {
+            level >= 0 ? (
+              <span>
+                {`Lv. ${level}　`}
+                <span className="nickname">{nickname}</span>
+                <Tag>{t(`resources:${rankName[rank]}`)}</Tag>
+              </span>
+            ) : (
+              <span>{t('Admiral [Not logged in]')}</span>
+            )
+          }
+        </Tooltip>
         <CountDownControl />
         <span style={{ marginRight: '1em' }}>
           <span>{t('main:Ships')}: </span>
