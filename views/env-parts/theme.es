@@ -43,6 +43,15 @@ window.loadTheme = (theme = 'paperdark') => {
   if ($('#bootstrap-css')) {
     $('#bootstrap-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`)))
   }
+  if ($('#blueprint-css')) {
+    $('#blueprint-css').setAttribute('href', fileUrl(require.resolve('node_modules/@blueprintjs/core/lib/css/blueprint.css')))
+  }
+  if ($('#blueprint-icon-css')) {
+    $('#blueprint-icon-css').setAttribute('href', fileUrl(require.resolve('node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css')))
+  }
+  if ($('#normalize-css')) {
+    $('#normalize-css').setAttribute('href', fileUrl(require.resolve('node_modules/normalize.css/normalize.css')))
+  }
   window.reloadCustomCss()
 }
 
