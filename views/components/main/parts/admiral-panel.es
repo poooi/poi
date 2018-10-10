@@ -7,6 +7,7 @@ import FontAwesome from 'react-fontawesome'
 import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Popover, Tag, Card, PopoverInteractionKind } from '@blueprintjs/core'
+import { compose } from 'redux'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
@@ -167,29 +168,30 @@ const getLabelStyle = (_, timeRemaining) => {
   }
 }
 
-const ExpContent = translate(['main'])(
+const ExpContent = compose(
+  translate(['main']),
   connect(state => ({
     level: get(state, 'info.basic.api_level', 0),
     exp: get(state, 'info.basic.api_experience', 0),
-  }))(
-    ({ level, exp, t }) =>
-      level >= 0 ? (
-        <>
-          {level < 120 && (
-            <div className="info-tooltip-entry">
-              <span className="info-tooltip-item">{t('main:Next')}</span>
-              <span>{totalExp[level] - exp}</span>
-            </div>
-          )}
+  })),
+)(
+  ({ level, exp, t }) =>
+    level >= 0 ? (
+      <>
+        {level < 120 && (
           <div className="info-tooltip-entry">
-            <span className="info-tooltip-item">{t('main:Total Exp')}</span>
-            <span>{exp}</span>
+            <span className="info-tooltip-item">{t('main:Next')}</span>
+            <span>{totalExp[level] - exp}</span>
           </div>
-        </>
-      ) : (
-        <span />
-      )
-  )
+        )}
+        <div className="info-tooltip-entry">
+          <span className="info-tooltip-item">{t('main:Total Exp')}</span>
+          <span>{exp}</span>
+        </div>
+      </>
+    ) : (
+      <span />
+    ),
 )
 
 // Refresh time:
@@ -399,5 +401,5 @@ export const AdmiralPanel = translate(['main'])(
         </span>
       </Card>
     )
-  })
+  }),
 )
