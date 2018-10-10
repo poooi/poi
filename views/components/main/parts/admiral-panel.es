@@ -6,7 +6,7 @@ import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
 import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Tooltip, Tag, Card } from '@blueprintjs/core'
+import { Tooltip, Tag, Card, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
 
 import { CountdownNotifierLabel } from 'views/components/main/parts/countdown-timer'
@@ -373,7 +373,7 @@ export const AdmiralPanel = translate(['main'])(
 
     return (
       <Card>
-        <Tooltip content={<ExpContent />}>
+        <Tooltip content={<ExpContent />} position={Position.RIGHT}>
           {
             level >= 0 ? (
               <span>
@@ -387,7 +387,7 @@ export const AdmiralPanel = translate(['main'])(
           }
         </Tooltip>
         <CountDownControl />
-        <span style={{ marginRight: '1em' }}>
+        <span style={{ marginRight: '1em', marginLeft: '1em' }}>
           <span>{t('main:Ships')}: </span>
           <Tag intent={shipCountIntent} minimal>
             {(shipNum || 0) + (dropCount || 0) || '?'} / {maxShip || '?'}
