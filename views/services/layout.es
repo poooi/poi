@@ -24,11 +24,8 @@ const setCSS = () => {
     $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
-.dropdown-menu[aria-labelledby=plugin-dropdown] {
+.plugin-dropdown {
   max-height: ${tabSize.height}px;
-}
-
-.grid-menu ul[aria-labelledby=plugin-dropdown] {
   max-width: ${tabSize.width}px;
   width: ${panelRect.width * 0.875}px;
 }

@@ -113,34 +113,17 @@ poi-app poi-nav-tabs .poi-tab-contents .nav {
   display: flex;
 }
 
-poi-app poi-nav-tabs .nav li {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-poi-app poi-nav-tabs .nav li a {
-  margin: 0;
-  text-align: center;
-}
-
-poi-app poi-nav-tabs .nav .dropdown-menu {
-  min-width: 100%;
+.plugin-dropdown {
   overflow: auto;
 }
 
-poi-app poi-nav-tabs .nav .dropdown {
-  overflow: inherit;
-}
-
-poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li {
+.plugin-dropdown div {
   display: block;
   float: left;
   width: calc(100% / 3);
 }
 
-poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li a {
+.plugin-dropdown div a {
   display: flex;
   min-height: 5em;
   overflow: hidden;
@@ -150,9 +133,20 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li a {
   width: 100%;
   flex-direction: column;
   align-items: center;
+  color: white;
 }
 
-poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-inline--fa {
+.plugin-pulldown-trigger {
+  width: 100%;
+}
+
+.plugin-dropdown div a:hover {
+  background-color: #46a2dd !important;
+  text-decoration: none;
+  color: white;
+}
+
+.plugin-dropdown div [class*="fa-"].svg-inline--fa {
   display: block;
   font-size: 175%;
 }
@@ -214,19 +208,6 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
 
 .poi-plugin {
   left: 100%;
-}
-
-#top-nav {
-  display: flex;
-}
-
-#top-nav > li {
-  flex-basis: 26%;
-}
-
-#top-nav > li.dropdown,
-#top-nav > li.tab-narrow {
-  flex-basis: 11%;
 }
 
 #electron-app-title-bar {

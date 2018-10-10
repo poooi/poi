@@ -194,12 +194,8 @@ div[role="tooltip"],
 }
 
 a:focus,
-.btn:focus,
-.btn:active:focus,
-.btn.active:focus,
-.btn.focus,
-.btn:active.focus,
-.btn.active.focus {
+[role='tab']:focus,
+button:focus {
   outline: none !important;
 }
 
