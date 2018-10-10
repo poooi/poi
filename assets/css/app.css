@@ -238,6 +238,10 @@ poi-nav .grid-menu ul[aria-labelledby="plugin-dropdown"] li [class*="fa-"].svg-i
   font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft Yahei UI Light", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
 }
 
+#electron-app-title-bar .button-component {
+  box-sizing: border-box;
+}
+
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
   opacity: 0.9 !important;
 }
