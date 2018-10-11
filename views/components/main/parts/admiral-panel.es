@@ -301,7 +301,7 @@ class CountDownControl extends Component {
     const { style } = this.state
     return (
       <span className="teitoku-timer">
-        <Tooltip content={<CountdownContent moments={this.moments} />}>
+        <Tooltip position={Position.LEFT_BOTTOM} content={<CountdownContent moments={this.moments} />}>
           <Tag intent={style} minimal>
             <FontAwesome name="calendar" />
           </Tag>
@@ -314,7 +314,7 @@ class CountDownControl extends Component {
 const CountdownContent = ({ moments }) => (
   <div>
     {['Practice', 'Quest', 'Senka', 'EO'].map(name => (
-      <div className="info-tooltip-entry" key={name}>
+      <div className="info-tooltip-entry countdown-item" key={name}>
         <span className="info-tooltip-item">
           <Trans>main:Next {name}</Trans>
         </span>

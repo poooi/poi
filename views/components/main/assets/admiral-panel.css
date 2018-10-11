@@ -6,3 +6,11 @@
 .next-time-tooltip {
   white-space: nowrap;
 }
+
+.countdown-item:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+
+.countdown-item .info-tooltip-item {
+  margin-right: 5px;
+}
