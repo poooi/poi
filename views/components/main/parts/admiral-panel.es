@@ -160,7 +160,7 @@ const resolveDayTime = time => {
 const getLabelStyle = (_, timeRemaining) => {
   switch (true) {
   case timeRemaining > 1800:
-    return 'primary'
+    return null
   case timeRemaining > 900:
     return 'warning'
   default:
