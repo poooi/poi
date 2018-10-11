@@ -44,7 +44,7 @@ window.loadTheme = (theme = 'paperdark') => {
     $('#bootstrap-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`)))
   }
   if ($('#blueprint-css')) {
-    $('#blueprint-css').setAttribute('href', fileUrl(require.resolve('@blueprintjs/core/lib/css/blueprint.css')))
+    $('#blueprint-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/blueprint/blueprint-${window.isVibrant ? 'vibrant' : 'normal'}.css`)))
   }
   if ($('#blueprint-icon-css')) {
     $('#blueprint-icon-css').setAttribute('href', fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')))
