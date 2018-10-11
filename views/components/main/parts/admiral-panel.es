@@ -160,7 +160,7 @@ const resolveDayTime = time => {
 const getLabelStyle = (_, timeRemaining) => {
   switch (true) {
   case timeRemaining > 1800:
-    return 'none'
+    return 'primary'
   case timeRemaining > 900:
     return 'warning'
   default:
@@ -324,6 +324,7 @@ const CountdownContent = ({ moments }) => (
             completeTime={+moments[name]}
             resolveTime={resolveDayTime}
             getLabelStyle={getLabelStyle}
+            minimal={false}
           />
         </span>
       </div>

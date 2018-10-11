@@ -82,7 +82,7 @@ export class ExpeditionPanel extends Component {
       timeRemaining > 600 ? 'primary' :
         timeRemaining > 60 ? 'warning' :
           timeRemaining >= 0 ? 'success' :
-            'default'
+            null
     )
   }
   static basicNotifyConfig = {
