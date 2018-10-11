@@ -605,7 +605,7 @@ export class ControlledTabArea extends PureComponent {
           }}
           position={Position.BOTTOM_RIGHT}
           content={pluginDropdownContents}
-          className="nav-tab nav-tab-8"
+          className="nav-tab"
           wrapperTagName="div"
           targetTagName="div">
           <Button
