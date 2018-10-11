@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-// import { Label } from 'react-bootstrap'
 import { Tag } from '@blueprintjs/core'
 
 import { resolveTime } from 'views/utils/tools'

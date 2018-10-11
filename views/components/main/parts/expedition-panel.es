@@ -5,7 +5,8 @@ import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Card, Tooltip, Position, Intent } from '@blueprintjs/core'
+import { Card, Position, Intent } from '@blueprintjs/core'
+
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
@@ -15,6 +16,7 @@ import {
   fleetInBattleSelectorFactory,
 } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
+import { Tooltip } from './panel-tooltip'
 
 import '../assets/expedition-panel.css'
 
