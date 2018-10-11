@@ -1,5 +1,6 @@
 import React from 'react'
-import { Tabs, Tab } from 'react-bootstrap'
+// import { Tabs, Tab } from 'react-bootstrap'
+import { Tabs, Tab } from '@blueprintjs/core'
 import FontAwesome from 'react-fontawesome'
 import { Trans, translate } from 'react-i18next'
 import { isEqual } from 'lodash'
@@ -18,22 +19,12 @@ export class reactClass extends React.Component {
   render() {
     const { t } = this.props
     return (
-      <Tabs bsStyle="pills" defaultActiveKey={0} animation={false} justified id="settings-view-tabs">
-        <Tab eventKey={0} title={t('setting:Common')} className="poi-settings-Tab">
-          <PoiConfig />
-        </Tab>
-        <Tab eventKey={1} title={t('setting:Display')} className="poi-settings-Tab">
-          <DisplayConfig />
-        </Tab>
-        <Tab eventKey={2} title={t('setting:Proxy')} className="poi-settings-Tab">
-          <NetworkConfig />
-        </Tab>
-        <Tab eventKey={3} title={t('setting:Plugins')} className="poi-settings-Tab">
-          <PluginConfig />
-        </Tab>
-        <Tab eventKey={-1} title={t('setting:About')} className="poi-settings-Tab">
-          <Misc />
-        </Tab>
+      <Tabs defaultSelectedTabId={0} animate={false} id="settings-view-tabs" className="settings-view-tabs">
+        <Tab id={0} key={0} title={t('setting:Common')} className="poi-settings-Tab" panel={<PoiConfig />}/>
+        <Tab id={1} key={1} title={t('setting:Display')} className="poi-settings-Tab" panel={<DisplayConfig />}/>
+        <Tab id={2} key={2} title={t('setting:Proxy')} className="poi-settings-Tab" panel={<NetworkConfig />}/>
+        <Tab id={3} key={3} title={t('setting:Plugins')} className="poi-settings-Tab" panel={<PluginConfig />}/>
+        <Tab id={-1} key={-1} title={t('setting:About')} className="poi-settings-Tab" panel={<Misc />}/>
       </Tabs>
     )
   }

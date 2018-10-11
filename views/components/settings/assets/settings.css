@@ -7,20 +7,25 @@
   margin-bottom: 15.5px;
 }
 
-.SettingsView #settings-view-tabs {
-  display: flex;
-  flex-direction: column;
+.SettingsView .settings-view-tabs .bp3-tab-list {
+  justify-content: space-between;
   height: 100%;
 }
 
-.SettingsView #settings-view-tabs > .nav {
-  flex: 0 0 38px;
+.SettingsView .settings-view-tabs .bp3-tab.poi-settings-Tab {
+  margin-right: 0;
+  flex-basis: 75px;
+  text-align: center;
 }
 
-.SettingsView #settings-view-tabs > .tab-content {
+/* .SettingsView #settings-view-tabs > .nav {
+  flex: 0 0 38px;
+} */
+
+/* .SettingsView #settings-view-tabs > .tab-content {
   flex: 1 0 0;
   overflow: scroll;
-}
+} */
 
 .SettingsView input[type="range"],
 .SettingsView input[type="range"]:focus,
