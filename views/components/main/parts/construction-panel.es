@@ -109,7 +109,7 @@ export class ConstructionPanel extends Component {
                   </>
                 }
               >
-                <div className="panel-ietm kdock-item">
+                <div className="panel-item kdock-item">
                   {enableAvatar && (
                     <>
                       {dock.api_state > 0 ? (
