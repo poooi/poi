@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Label } from 'react-bootstrap'
+// import { Label } from 'react-bootstrap'
+import { Tag } from '@blueprintjs/core'
 
 import { resolveTime } from 'views/utils/tools'
 import { CountdownNotifier } from 'views/utils/notifiers'
@@ -54,7 +55,7 @@ class CountdownTimerInner extends Component {
   static getTimeRemaining = (completeTime, currentTime=Date.now()) => {
     if (completeTime < 0) {
       return -1
-    } else if ( completeTime <= currentTime) {
+    } else if (completeTime <= currentTime) {
       return 0
     } else {
       return Math.round((completeTime - currentTime) / 1000)
@@ -170,7 +171,7 @@ class CountdownNotifierLabelInner extends Component {
   }
   render() {
     return (
-      <Label className="countdown-timer-label" bsStyle={this.state.style}>
+      <Tag className="countdown-timer-label" intent={this.state.style}>
         {
           this.props.completeTime >= 0 &&
           <CountdownTimerInner countdownId={this.props.timerKey}
@@ -178,7 +179,7 @@ class CountdownNotifierLabelInner extends Component {
             tickCallback={this.tick}
             resolveTime={this.props.resolveTime} />
         }
-      </Label>
+      </Tag>
     )
   }
 }
