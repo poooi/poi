@@ -57,15 +57,27 @@ window.loadTheme = (theme = 'paperdark') => {
 
 window.applyTheme = theme => config.set('poi.appearance.theme', theme)
 
+const setBackgroundColor = value => {
+  if (document.body) {
+    document.body.style.backgroundColor = value
+  } else {
+    setTimeout(() => setBackgroundColor(value), 100)
+  }
+}
+
 const windowsSetVibrancy = value => {
   try {
     const electronVibrancy = remote.require(join(window.ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
     if (value === 1) {
       electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
-      document.body.style.backgroundColor = '#30404de6'
+      if (process.platform !== 'darwin') {
+        setBackgroundColor('#202b33e6')
+      } else {
+        setBackgroundColor('transparent')
+      }
     } else {
       electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
-      document.body.style.backgroundColor = '#30404d'
+      setBackgroundColor('#202b33')
     }
   } catch (e) {
     console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
