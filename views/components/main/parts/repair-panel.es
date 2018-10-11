@@ -7,7 +7,7 @@ import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
-import { Tooltip, Position, Intent } from '@blueprintjs/core'
+import { Position, Intent } from '@blueprintjs/core'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -20,6 +20,7 @@ import {
   createDeepCompareArraySelector,
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
+import { Tooltip } from './panel-tooltip'
 
 import '../assets/repair-panel.css'
 

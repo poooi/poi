@@ -6,10 +6,11 @@ import { join as joinString, range, get, map } from 'lodash'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Tooltip, Intent, Position } from '@blueprintjs/core'
+import { Intent, Position } from '@blueprintjs/core'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
+import { Tooltip } from './panel-tooltip'
 
 import '../assets/construction-panel.css'
 
