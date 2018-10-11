@@ -4,10 +4,9 @@ import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { shell, remote, clipboard, nativeImage } from 'electron'
-import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
+import { Button, Tooltip, OverflowList, Position, Classes, Boundary } from '@blueprintjs/core'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
 
@@ -255,6 +254,18 @@ export class PoiControl extends Component {
   touchbarListener = (event, message) => {
     this.handleTouchbar(message)
   }
+  renderButton = ({ label, space, ...props }) => (
+    space ? (
+      <div style={{ width: 100 }} />
+    ) : (
+      <Tooltip position={Position.RIGHT_TOP} content={label}>
+        <Button {...props} minimal />
+      </Tooltip>
+    )
+  )
+  renderOverflow = () => (
+    <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
+  )
   componentDidMount = () => {
     if (this.props.editable) {
       this.disableEditableMsg()
@@ -276,41 +287,68 @@ export class PoiControl extends Component {
       const { touchBarReInit } = remote.require('./lib/touchbar')
       touchBarReInit()
     }
+    const list = [
+      {
+        onClick: this.handleOpenDevTools,
+        onContextMenu: this.handleOpenWebviewDevTools,
+        label: this.props.t('Developer Tools'),
+        icon: 'console',
+      },
+      {
+        onClick:() => this.handleCapturePage(false),
+        onContextMenu:() => this.handleCapturePage(true),
+        label: this.props.t('Take a screenshot'),
+        icon: 'camera',
+      },
+      {
+        onClick: this.handleSetMuted,
+        onContextMenu: null,
+        label: this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off'),
+        icon: this.props.muted ? 'volume-off' : 'volume-up',
+      },
+      {
+        onClick: this.handleOpenCacheFolder,
+        onContextMenu: null,
+        label: this.props.t('Open cache dir'),
+        icon: 'social-media',
+      },
+      {
+        onClick: this.handleOpenScreenshotFolder,
+        onContextMenu: null,
+        label: this.props.t('Open screenshot dir'),
+        icon: 'media',
+      },
+      {
+        onClick: this.handleJustifyLayout,
+        onContextMenu: this.handleUnlockWebview,
+        label: this.props.t('Auto adjust'),
+        icon: 'fullscreen',
+      },
+      {
+        onClick: this.handleSetEditable,
+        onContextMenu: null,
+        label: this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel'),
+        icon: this.props.editable ? 'unlock' : 'lock',
+      },
+      {
+        onClick: this.handleRefreshGameDialog,
+        onContextMenu: gameReloadFlash,
+        label: this.props.t('Refresh game'),
+        icon: 'refresh',
+      },
+      {
+        space: true,
+      },
+    ]
     return (
-      <div className="poi-control-container">
-        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-developers-tools-button" className="poi-control-tooltip">{this.props.t('Developer Tools')}</Tooltip>}>
-          <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize="small"><FontAwesome name="terminal" /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-screenshot-button" className="poi-control-tooltip">{this.props.t('Take a screenshot')}</Tooltip>}>
-          <Button onClick={() => this.handleCapturePage(false)} onContextMenu={() => this.handleCapturePage(true)} bsSize="small"><FontAwesome name="camera-retro" /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-volume-button" className="poi-control-tooltip">{this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off')}</Tooltip>}>
-          <Button onClick={this.handleSetMuted} bsSize="small" className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
-        </OverlayTrigger>
-        <Collapse in={this.state.extend} dimension="width" className="poi-control-extender">
-          <div>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-cache-button" className="poi-control-tooltip">{this.props.t('Open cache dir')}</Tooltip>}>
-              <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize="small"><FontAwesome name="bolt" /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-screenshot-dir-button" className="poi-control-tooltip">{this.props.t('Open screenshot dir')}</Tooltip>}>
-              <Button onClick={this.handleOpenScreenshotFolder} bsSize="small"><FontAwesome name="photo" /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-adjust-button" className="poi-control-tooltip">{this.props.t('Auto adjust')}</Tooltip>}>
-              <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize="small"><FontAwesome name="arrows-alt" /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-volume-button" className="poi-control-tooltip">{this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel')}</Tooltip>}>
-              <Button onClick={this.handleSetEditable} bsSize="small"><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-refresh-button" className="poi-control-tooltip">{this.props.t('Refresh game')}</Tooltip>}>
-              <Button
-                onClick={this.handleRefreshGameDialog}
-                onContextMenu={gameReloadFlash}
-                bsSize="small"><FontAwesome name="refresh" />
-              </Button>
-            </OverlayTrigger>
-          </div>
-        </Collapse>
-        <Button onClick={this.handleSetExtend} bsSize="small" className={this.state.extend ? 'active' : ''}><FontAwesome name={this.state.extend ? 'angle-left' : 'angle-right'} /></Button>
+      <div className="poi-control-container" style={{ width: this.state.extend ? 272 : 122 }}>
+        <OverflowList
+          className={Classes.BREADCRUMBS}
+          collapseFrom={Boundary.END}
+          items={list}
+          overflowRenderer={this.renderOverflow}
+          visibleItemRenderer={this.renderButton}
+        />
       </div>
     )
   }
