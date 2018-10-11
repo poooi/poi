@@ -13,8 +13,7 @@
 }
 
 .SettingsView .settings-view-tabs .bp3-tab.poi-settings-Tab {
-  margin-right: 0;
-  flex-basis: 75px;
+  flex: 1 0 75px;
   text-align: center;
 }
 
