@@ -19,7 +19,7 @@ export class reactClass extends React.Component {
   render() {
     const { t } = this.props
     return (
-      <Tabs defaultSelectedTabId={0} animate={false} id="settings-view-tabs" className="settings-view-tabs">
+      <Tabs defaultSelectedTabId={0} id="settings-view-tabs" className="settings-view-tabs">
         <Tab id={0} key={0} title={t('setting:Common')} className="poi-settings-Tab" panel={<PoiConfig />}/>
         <Tab id={1} key={1} title={t('setting:Display')} className="poi-settings-Tab" panel={<DisplayConfig />}/>
         <Tab id={2} key={2} title={t('setting:Proxy')} className="poi-settings-Tab" panel={<NetworkConfig />}/>
