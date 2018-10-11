@@ -205,6 +205,11 @@ app.on('ready', () => {
       }
     })
   }
+
+  // devtool
+  if (dbg.isEnabled() && config.get('poi.devtool.enable', true)) {
+    require('./lib/devtool')
+  }
 })
 // http basic auth
 app.on('login', (event, webContents, request, authInfo, callback) => {

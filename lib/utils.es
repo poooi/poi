@@ -23,6 +23,8 @@ export function log(...str) {
   console.log('[INFO] ', ...map(str, stringify))
 }
 
+export const info = log
+
 export function warn(...str) {
   console.warn(chalk.yellow('[WARN] ', ...map(str, stringify)))
 }
