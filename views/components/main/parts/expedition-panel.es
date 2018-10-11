@@ -1,4 +1,3 @@
-import { Panel, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import React, { Component } from 'react'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
@@ -6,6 +5,7 @@ import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
+import { Card, Tooltip, Position, Intent } from '@blueprintjs/core'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
@@ -76,58 +76,61 @@ export class ExpeditionPanel extends Component {
   }
 
   getLabelStyle = (props, timeRemaining) => {
-    return timeRemaining > 600 ? 'primary' : timeRemaining > 60 ? 'warning' : timeRemaining >= 0 ? 'success' : null
+    return timeRemaining > 600
+      ? Intent.PRIMARY
+      : timeRemaining > 60
+        ? Intent.WARNING
+        : timeRemaining >= 0
+          ? Intent.SUCCESS
+          : null
   }
 
   render() {
     const { fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore } = this.props
     return (
-      <Panel bsStyle="default">
-        <Panel.Body>
-          {range(1, 4).map(i => {
-            const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
-            const fleetName = get(fleetNames, i, '???')
-            const { api_disp_no, api_name } = get($expeditions, expeditionId, {})
-            const expeditionName =
-              status == -1
-                ? this.props.t('main:Locked')
-                : `${api_disp_no || '???'} - ${api_name ? this.props.t(`resources:${api_name}`) : '???'}`
-            const completeTime = status > 0 ? rawCompleteTime : -1
+      <Card>
+        {range(1, 4).map(i => {
+          const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
+          const fleetName = get(fleetNames, i, '???')
+          const { api_disp_no, api_name } = get($expeditions, expeditionId, {})
+          const expeditionName =
+            status == -1
+              ? this.props.t('main:Locked')
+              : `${api_disp_no || '???'} - ${api_name ? this.props.t(`resources:${api_name}`) : '???'}`
+          const completeTime = status > 0 ? rawCompleteTime : -1
 
-            return (
-              <div className="panel-item expedition-item" key={i}>
-                {status === 0 ? <FleetStatus fleetId={i} /> : <span className="expedition-name">{expeditionName}</span>}
-                <OverlayTrigger
-                  placement="left"
-                  overlay={
-                    <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && { display: 'none' }}>
-                      <strong>{this.props.t('main:Return By')}: </strong>
-                      {timeToString(completeTime)}
-                    </Tooltip>
+          return (
+            <div className="panel-item expedition-item" key={i}>
+              {status === 0 ? <FleetStatus fleetId={i} /> : <span className="expedition-name">{expeditionName}</span>}
+              <Tooltip
+                position={Position.LEFT}
+                disabled={completeTime < 0}
+                content={
+                  <>
+                    <strong>{this.props.t('main:Return By')}: </strong>
+                    {timeToString(completeTime)}
+                  </>
+                }
+              >
+                <CountdownNotifierLabel
+                  timerKey={`expedition-${i + 1}`}
+                  completeTime={completeTime}
+                  getLabelStyle={this.getLabelStyle}
+                  getNotifyOptions={() =>
+                    canNotify &&
+                    completeTime >= 0 && {
+                      ...this.constructor.basicNotifyConfig,
+                      args: fleetName,
+                      completeTime: completeTime,
+                      preemptTime: notifyBefore,
+                    }
                   }
-                >
-                  <div>
-                    <CountdownNotifierLabel
-                      timerKey={`expedition-${i + 1}`}
-                      completeTime={completeTime}
-                      getLabelStyle={this.getLabelStyle}
-                      getNotifyOptions={() =>
-                        canNotify &&
-                        completeTime >= 0 && {
-                          ...this.constructor.basicNotifyConfig,
-                          args: fleetName,
-                          completeTime: completeTime,
-                          preemptTime: notifyBefore,
-                        }
-                      }
-                    />
-                  </div>
-                </OverlayTrigger>
-              </div>
-            )
-          })}
-        </Panel.Body>
-      </Panel>
+                />
+              </Tooltip>
+            </div>
+          )
+        })}
+      </Card>
     )
   }
 }

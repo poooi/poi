@@ -54,13 +54,13 @@ export class ConstructionPanel extends Component {
 
   getLabelStyle = ({ isLSC }, timeRemaining) => {
     return timeRemaining > 600 && isLSC
-      ? Intent.INTENT_DANGER
+      ? Intent.DANGER
       : timeRemaining > 600
-        ? Intent.INTENT_PRIMARY
+        ? Intent.PRIMARY
         : timeRemaining > 0
-          ? Intent.INTENT_WARNING
+          ? Intent.WARNING
           : timeRemaining == 0
-            ? Intent.INTENT_SUCCESS
+            ? Intent.SUCCESS
             : null
   }
 

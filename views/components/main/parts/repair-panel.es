@@ -75,11 +75,11 @@ export class RepairPanel extends Component {
 
   getLabelStyle = (props, timeRemaining) => {
     return timeRemaining > 600
-      ? Intent.INTENT_PRIMARY
+      ? Intent.PRIMARY
       : timeRemaining > 60
-        ? Intent.INTENT_WARNING
+        ? Intent.WARNING
         : timeRemaining >= 0
-          ? Intent.INTENT_SUCCESS
+          ? Intent.SUCCESS
           : null
   }
 
