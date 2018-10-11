@@ -136,11 +136,13 @@ class CountdownNotifierLabelInner extends Component {
     getNotifyOptions: PropTypes.func,   // (props, timeRemaining) => options | undefined
     getLabelStyle: PropTypes.func,      // (props, timeRemaining) => bsStyle
     resolveTime: PropTypes.func,        // (timeRemaining) => interpreted time string
+    minimal: PropTypes.bool,            // Use minimal style
   }
   static defaultProps = {
     getNotifyOptions: () => undefined,
-    getLabelStyle: () => 'default',
+    getLabelStyle: () => null,
     resolveTime: resolveTime,
+    minimal: true,
   }
   constructor(props) {
     super(props)
@@ -171,15 +173,14 @@ class CountdownNotifierLabelInner extends Component {
   }
   render() {
     return (
-      <Tag className="countdown-timer-label" intent={this.state.style}>
-        {
-          this.props.completeTime >= 0 &&
+      this.props.completeTime >= 0 && (
+        <Tag className="countdown-timer-label" intent={this.state.style} minimal={this.props.minimal}>
           <CountdownTimerInner countdownId={this.props.timerKey}
             completeTime={this.props.completeTime}
             tickCallback={this.tick}
             resolveTime={this.props.resolveTime} />
-        }
-      </Tag>
+        </Tag>
+      )
     )
   }
 }
