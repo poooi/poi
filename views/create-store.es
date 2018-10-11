@@ -52,29 +52,19 @@ remote.getCurrentWindow().on('close', (e) => {
 })
 
 //### Executing code ###
+const composeEnhancers =
+  (window.dbg && window.dbg.isEnabled() && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
-export const store = (window.dbg && window.dbg.isEnabled()) ?
-  createStore(
-    reducerFactory(),
-    storeCache,
-    compose(
-      applyMiddleware(
-        promiseActionMiddleware,
-        thunk,
-      ),
-      window.devToolsExtension ? window.devToolsExtension() : f => f,
-    )
-  )
-  :createStore(
-    reducerFactory(),
-    storeCache,
-    compose(
-      applyMiddleware(
-        promiseActionMiddleware,
-        thunk,
-      ),
-    )
-  )
+export const store = createStore(
+  reducerFactory(),
+  storeCache,
+  composeEnhancers(
+    applyMiddleware(
+      promiseActionMiddleware,
+      thunk,
+    ),
+  ),
+)
 window.dispatch = store.dispatch
 
 //### Listeners and exports ###
