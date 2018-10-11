@@ -6,6 +6,20 @@
   justify-content: space-between;
 }
 
+.MainView .kdock-item-wrapper {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.MainView .kdock-item-tooltip {
+  flex: 1;
+}
+
+.MainView .kdock-item-content {
+  width: 100%
+}
+
 .MainView .kdock-item {
   align-items: center;
   display: flex;
