@@ -7,12 +7,17 @@ import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Intent, Position } from '@blueprintjs/core'
+import styled from 'styled-components'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from '../countdown-timer'
 import { Tooltip } from '../panel-tooltip'
 
 import '../../assets/construction-panel.css'
+
+const PanelItem = styled(Tooltip)`
+  flex-basis: ${props => `${100 / props.dimension}%`};
+`
 
 const EmptyDock = ({ state }) => (
   <div className="empty-dock">
@@ -82,17 +87,15 @@ export class ConstructionPanel extends Component {
           const tooltipTitleClassname = isLSC ? { color: '#D9534F', fontWeight: 'bold' } : undefined
 
           return (
-            <div
+            <PanelItem
               key={i}
+              dimension={dimension}
+              disabled={!isInUse}
+              position={Position.TOP}
+              wrapperTagName="div"
               className="panel-item-wrapper kdock-item-wrapper"
-              style={{ flexBasis: `calc(${100 / dimension}% - 8px)` }}
-            >
-              <Tooltip
-                disabled={!isInUse}
-                position={Position.TOP}
-                className="panel-item-tooltip kdock-item-tooltip"
-                targetClassName="panel-item-content kdock-item-content"
-                content={
+              targetClassName="panel-item-content kdock-item-content"
+              content={
                   <>
                     {
                       <span style={tooltipTitleClassname}>
@@ -107,10 +110,10 @@ export class ConstructionPanel extends Component {
                       </span>
                     ))}
                   </>
-                }
-              >
-                <div className="panel-item kdock-item">
-                  {enableAvatar && (
+              }
+            >
+              <div className="panel-item kdock-item">
+                {enableAvatar && (
                     <>
                       {dock.api_state > 0 ? (
                         <Avatar
@@ -121,25 +124,24 @@ export class ConstructionPanel extends Component {
                         <EmptyDock state={dock.api_state} />
                       )}
                     </>
-                  )}
-                  <span className="kdock-name">{dockName}</span>
-                  <CountdownNotifierLabel
-                    timerKey={`kdock-${i + 1}`}
-                    completeTime={completeTime}
-                    isLSC={isLSC}
-                    getLabelStyle={getTagIntent}
-                    getNotifyOptions={() =>
-                      canNotify &&
+                )}
+                <span className="kdock-name">{dockName}</span>
+                <CountdownNotifierLabel
+                  timerKey={`kdock-${i + 1}`}
+                  completeTime={completeTime}
+                  isLSC={isLSC}
+                  getLabelStyle={getTagIntent}
+                  getNotifyOptions={() =>
+                    canNotify &&
                       completeTime >= 0 && {
-                        ...this.constructor.basicNotifyConfig,
-                        args: dockName,
-                        completeTime: completeTime,
-                      }
+                      ...this.constructor.basicNotifyConfig,
+                      args: dockName,
+                      completeTime: completeTime,
                     }
-                  />
-                </div>
-              </Tooltip>
-            </div>
+                  }
+                />
+              </div>
+            </PanelItem>
           )
         })}
       </>
