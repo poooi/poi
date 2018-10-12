@@ -202,6 +202,7 @@ export class MiniShipRow extends Component {
             position={Position.TOP_LEFT}
             wrapperTagName="div"
             className={shipInfoClass}
+
             content={
               hideShipName ? (
                 <div className="ship-tooltip-info">
@@ -220,7 +221,7 @@ export class MiniShipRow extends Component {
               )
             }
           >
-            <div>
+            <div className="ship-name-container">
               {!hideShipName && (
                   <>
                     <span className="ship-name" style={labelStatusStyle}>

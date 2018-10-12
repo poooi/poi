@@ -171,6 +171,11 @@
   flex-grow: 1;
 }
 
+.miniship .ship-details-mini .ship-item .ship-info .ship-name-container {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .miniship .ship-details-mini .ship-item .ship-info .ship-name {
   height: 20px;
   margin-right: 5px;
