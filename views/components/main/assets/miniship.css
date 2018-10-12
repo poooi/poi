@@ -311,11 +311,12 @@
   padding: 3px 6px 3px 5px;
 }
 
-.ship-pop .slotitem-container-mini span.show {
-  height: 16px;
-  line-height: 10px;
-  margin-left: 5px;
-  padding: 3px 6px 3px;
+.slotitems-onslot {
+  width: 3em;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-left: 1ex;
 }
 
 .ship-pop .slotitem-container-mini .png {

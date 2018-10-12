@@ -64,7 +64,7 @@ const Slotitems = translate(['resources'])(
             const maxOnslot = (api_maxeq || [])[equipIdx]
             const onslotText = onslot
             const onslotWarning = maxOnslot && onslot < maxOnslot
-            const onslotClassName = classNames('slotitem-onslot', {
+            const onslotClassName = classNames('slotitems-onslot', {
               show: isAircraft,
               hide: !isAircraft,
             })
@@ -94,9 +94,7 @@ const Slotitems = translate(['resources'])(
                 )}
                 <Tag
                   className={onslotClassName}
-                  intent={`${onslotWarning ? Intent.WARNING : Intent.NONE}`}
-                  style={{ width: '3em' }}
-                  minimal
+                  intent={onslotWarning ? Intent.WARNING : Intent.SUCCESS}
                 >
                   {onslotText}
                 </Tag>
