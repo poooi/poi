@@ -3,18 +3,16 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import { Tab, Tabs, Panel } from 'react-bootstrap'
-import { translate, Trans } from 'react-i18next'
+import { Trans } from 'react-i18next'
 
 import defaultLayout from './default-layout'
 import { layoutResizeObserver } from 'views/services/layout'
 import { ExpeditionPanel } from './parts/expedition-panel'
-import { RepairPanel } from './parts/repair-panel'
-import { ConstructionPanel } from './parts/construction-panel'
 import { TaskPanel } from './parts/task-panel'
 import { MiniShip } from './parts/miniship'
 import { ResourcePanel } from './parts/resource-panel'
 import { AdmiralPanel } from './parts/admiral-panel'
+import { DockPanel } from './parts/dock-panel'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -23,7 +21,6 @@ import './assets/main.css'
 
 const { config } = window
 
-@translate(['main'])
 @connect((state, props) => ({
   layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
   editable: get(state, 'config.poi.layout.editable', false),
@@ -50,9 +47,13 @@ export class reactClass extends Component {
   }
 
   render() {
-    const { t } = this.props
     return (
-      <div className="main-panel-content" ref={ref => { this.mainpane = ref }}>
+      <div
+        className="main-panel-content"
+        ref={ref => {
+          this.mainpane = ref
+        }}
+      >
         <ResponsiveReactGridLayout
           onLayoutChange={this.onLayoutChange}
           layouts={this.props.layouts}
@@ -71,29 +72,29 @@ export class reactClass extends Component {
           <div className="resource-panel" key="resource-panel">
             <ResourcePanel />
           </div>
-          <div className="miniship" key="miniship" id="MiniShip" ref={ref => { this.miniship = ref }}>
+          <div
+            className="miniship"
+            key="miniship"
+            id="MiniShip"
+            ref={ref => {
+              this.miniship = ref
+            }}
+          >
             <MiniShip />
           </div>
-          <Panel className="combined-panels panel-col" key="combined-panels">
-            <Panel.Body>
-              <Tabs defaultActiveKey={1} animation={false} id="dock-panel-tabs" className="dock-panel-tabs">
-                <Tab eventKey={1} title={t('main:Docking')}>
-                  <div className="ndock-panel flex">
-                    <RepairPanel />
-                  </div>
-                </Tab>
-                <Tab eventKey={2} title={t('main:Construction')}>
-                  <div className="kdock-panel flex">
-                    <ConstructionPanel />
-                  </div>
-                </Tab>
-              </Tabs>
-            </Panel.Body>
-          </Panel>
+          <div className="combined-panels panel-col" key="combined-panels">
+            <DockPanel />
+          </div>
           <div className="expedition-panel" key="expedition-panel">
             <ExpeditionPanel />
           </div>
-          <div className="task-panel" key="task-panel" ref={(ref) => { this.taskPanel = ref }}>
+          <div
+            className="task-panel"
+            key="task-panel"
+            ref={ref => {
+              this.taskPanel = ref
+            }}
+          >
             <TaskPanel />
           </div>
         </ResponsiveReactGridLayout>
@@ -102,4 +103,8 @@ export class reactClass extends Component {
   }
 }
 
-export const displayName = <span><FontAwesome name="home" /> <Trans>main:Overview</Trans></span>
+export const displayName = (
+  <span>
+    <FontAwesome name="home" /> <Trans>main:Overview</Trans>
+  </span>
+)
