@@ -1,4 +1,4 @@
-.MainView .kdock-panel {
+.main-view .kdock-panel {
   display: flex;
   flex-wrap: wrap;
   flex-grow: 1;
@@ -6,21 +6,21 @@
   justify-content: space-between;
 }
 
-.MainView .kdock-item-wrapper {
+.main-view .kdock-item-wrapper {
   max-width: 100%;
   display: flex;
   align-items: center;
 }
 
-.MainView .kdock-item-tooltip {
+.main-view .kdock-item-tooltip {
   flex: 1;
 }
 
-.MainView .kdock-item-content {
+.main-view .kdock-item-content {
   width: 100%;
 }
 
-.MainView .kdock-item {
+.main-view .kdock-item {
   align-items: center;
   display: flex;
   flex: 1;
@@ -28,7 +28,7 @@
   padding-top: 0;
 }
 
-.MainView .kdock-item .kdock-name {
+.main-view .kdock-item .kdock-name {
   flex: 1;
   margin-right: auto;
   overflow: hidden;
@@ -37,7 +37,7 @@
   white-space: nowrap;
 }
 
-.MainView .kdock-item .empty-dock {
+.main-view .kdock-item .empty-dock {
   color: #777;
   font-size: 16px;
   height: 20px;

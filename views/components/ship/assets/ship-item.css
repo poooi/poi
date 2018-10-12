@@ -1,4 +1,4 @@
-.ShipView .ship-item {
+.ship-view .ship-item {
   align-items: flex-end;
   display: flex;
   flex: 1;
@@ -10,19 +10,19 @@
   white-space: nowrap;
 }
 
-.ShipView .ship-avatar-container {
+.ship-view .ship-avatar-container {
   position: absolute;
   top: 9px;
   z-index: 10;
   pointer-events: none;
 }
 
-.ShipView .ship-item .progress {
+.ship-view .ship-item .progress {
   height: 7px;
   margin-bottom: 5px;
 }
 
-.ShipView .ship-info {
+.ship-view .ship-info {
   display: flex;
   flex-basis: 0;
   flex-flow: column nowrap;
@@ -32,23 +32,23 @@
   padding: 0 4px;
 }
 
-.ShipView .ship-info-show {
+.ship-view .ship-info-show {
   flex-grow: 1.2;
   flex-shrink: 0;
 }
 
-.ShipView .ship-info-hidden {
+.ship-view .ship-info-hidden {
   flex-grow: 0;
   flex-shrink: 0;
   height: 58px;
 }
 
-.ShipView .ship-avatar-padding {
+.ship-view .ship-avatar-padding {
   flex-basis: 100px;
   padding-left: 95px;
 }
 
-.ShipView .ship-basic {
+.ship-view .ship-basic {
   flex: 1;
   font-size: 80%;
   opacity: 0.8;
@@ -56,11 +56,11 @@
   vertical-align: bottom;
 }
 
-.ShipView .ship-info-hidden .ship-basic {
+.ship-view .ship-info-hidden .ship-basic {
   padding-left: 5px;
 }
 
-.ShipView .ship-exp {
+.ship-view .ship-exp {
   flex: 1;
   font-size: 75%;
   opacity: 0.8;
@@ -70,23 +70,23 @@
   vertical-align: bottom;
 }
 
-.ShipView .ship-type,
-.ShipView .ship-speed,
-.ShipView .ship-aaci,
-.ShipView .ship-aapb,
-.ShipView .ship-oasw {
+.ship-view .ship-type,
+.ship-view .ship-speed,
+.ship-view .ship-aaci,
+.ship-view .ship-aapb,
+.ship-view .ship-oasw {
   margin-left: 5px;
   margin-right: 5px;
 }
 
-.ShipView .ship-name {
+.ship-view .ship-name {
   flex: 1;
   font-size: 120%;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.ShipView .ship-stat {
+.ship-view .ship-stat {
   display: flex;
   flex-basis: 0;
   flex-flow: column nowrap;
@@ -97,19 +97,19 @@
   min-width: 120px;
 }
 
-.ShipView .landbase-stat {
+.ship-view .landbase-stat {
   flex-basis: 90px;
   flex-grow: 0.8;
   min-width: 90px;
   padding-right: 5px;
 }
 
-.ShipView .ship-hp {
+.ship-view .ship-hp {
   align-self: flex-start;
   flex: 1;
 }
 
-.ShipView .status-label {
+.ship-view .status-label {
   display: inline-block;
   margin-left: 5px;
   margin-top: -1px;
@@ -120,13 +120,13 @@
   z-index: 100;
 }
 
-.ShipView .status-label .label {
+.ship-view .status-label .label {
   display: inline-block;
   padding: 3px 3px;
   width: 18px;
 }
 
-.ShipView .ship-cond {
+.ship-view .ship-cond {
   align-self: flex-end;
   display: table;
   margin-left: auto;
@@ -134,7 +134,7 @@
   width: 40px;
 }
 
-.ShipView .cond-indicator {
+.ship-view .cond-indicator {
   display: inline-block;
   height: 30px;
   margin-left: 4px;
@@ -142,42 +142,42 @@
   width: 4px;
 }
 
-.ShipView .ship-fb {
+.ship-view .ship-fb {
   display: flex;
   flex: 0.75;
   flex-direction: column;
   margin: 5px 2px 0 5px;
 }
 
-.ShipView .hp-progress {
+.ship-view .hp-progress {
   background-color: inherit;
   vertical-align: bottom;
 }
 
-.ShipView .hp-progress .progress .progress-bar {
+.ship-view .hp-progress .progress .progress-bar {
   font-size: 11px;
   line-height: 0.9;
 
   /* color: #666; */
 }
 
-.ShipView .hp-progress .progress {
+.ship-view .hp-progress .progress {
   height: 7px;
   position: relative;
 }
 
-.ShipView .hp-progress .progress-bar span span {
+.ship-view .hp-progress .progress-bar span span {
   display: block;
   position: absolute;
   width: 100%;
 }
 
-.ShipView .material-progress .col-xs-6 {
+.ship-view .material-progress .col-xs-6 {
   padding-left: 0;
   padding-right: 0;
 }
 
-.ShipView .ship-slot {
+.ship-view .ship-slot {
   flex-basis: 172px;
   flex-grow: 0;
   flex-shrink: 0;
@@ -185,16 +185,16 @@
   padding: 5px 5px 5px 5px;
 }
 
-.ShipView .ship-aaci,
-.ShipView .ship-aapb,
-.ShipView .ship-oasw {
+.ship-view .ship-aaci,
+.ship-view .ship-aapb,
+.ship-view .ship-oasw {
   position: relative;
   top: -1px;
 }
 
-.ShipView .ship-aaci .label,
-.ShipView .ship-aapb .label,
-.ShipView .ship-oasw .label {
+.ship-view .ship-aaci .label,
+.ship-view .ship-aapb .label,
+.ship-view .ship-oasw .label {
   font-size: 80%;
   padding: 0.125em 0.6em;
 }

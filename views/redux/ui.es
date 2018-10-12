@@ -1,5 +1,5 @@
 const initState = {
-  activeMainTab: 'mainView',
+  activeMainTab: 'main-view',
   activePluginName: '',
   activeFleetId: 0,
   themes: window.allThemes.slice(),

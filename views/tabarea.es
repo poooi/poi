@@ -486,10 +486,10 @@ export class ControlledTabArea extends PureComponent {
           }
         }}
         activeTab={this.props.activeMainTab}>
-        <div id={mainview.name} className="MainView poi-app-tabpane" key="main-view">
+        <div id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={shipview.name} className="ShipView poi-app-tabpane" key="ship-view">
+        <div id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
         { pluginContents }
@@ -507,10 +507,10 @@ export class ControlledTabArea extends PureComponent {
           }
         }}
         activeTab={this.props.activeMainTab}>
-        <div id={mainview.name} className="MainView poi-app-tabpane" key="main-view">
+        <div id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={shipview.name} className="ShipView poi-app-tabpane" key="ship-view">
+        <div id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
         <div id={settings.name} className="SettingsView poi-app-tabpane" key="settings">

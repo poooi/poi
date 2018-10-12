@@ -155,10 +155,10 @@ export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, p
   //Update active tab if necessary
   let tabIndex
   switch (activeTab){
-  case 'mainView':
+  case 'main-view':
     tabIndex = 0
     break
-  case 'shipView':
+  case 'ship-view':
     tabIndex = 1
     break
   case 'settings':

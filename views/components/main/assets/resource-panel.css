@@ -1,4 +1,4 @@
-.MainView .resource-panel .panel-body {
+.main-view .resource-panel .panel-body {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
@@ -7,7 +7,7 @@
   padding-top: 1px;
 }
 
-.MainView .resource-panel .material-container {
+.main-view .resource-panel .material-container {
   display: flex;
   margin-bottom: 2px;
   margin-top: 1px;
@@ -15,12 +15,12 @@
   padding-right: 0;
 }
 
-.MainView .resource-panel .material-value {
+.main-view .resource-panel .material-value {
   position: relative;
   width: calc(100% - 23px);
 }
 
-.MainView .resource-panel .additional-value {
+.main-view .resource-panel .additional-value {
   color: white;
   opacity: 0;
   text-align: right;
@@ -28,8 +28,8 @@
   z-index: 1;
 }
 
-.MainView .resource-panel .material-value .material-amount,
-.MainView .resource-panel .material-value .additional-value {
+.main-view .resource-panel .material-value .material-amount,
+.main-view .resource-panel .material-value .additional-value {
   height: 100%;
   left: 5px;
   min-width: 4em;
@@ -39,17 +39,17 @@
   width: 100%;
 }
 
-.MainView .resource-panel .inc {
+.main-view .resource-panel .inc {
   background-color: #217dbb;
   opacity: 1;
 }
 
-.MainView .resource-panel .dec {
+.main-view .resource-panel .dec {
   background-color: #d62c1a;
   opacity: 1;
 }
 
-.MainView .resource-panel img {
+.main-view .resource-panel img {
   height: 18px;
   width: 18px;
 }

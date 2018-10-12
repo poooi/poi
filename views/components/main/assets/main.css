@@ -1,100 +1,100 @@
-.MainView {
+.main-view {
   font-size: 12px;
   min-width: 250px;
 }
 
-.MainView .main-panel-content {
+.main-view .main-panel-content {
   position: relative;
   transition: all 0.3s ease-in-out;
 }
 
-.MainView .panel {
+.main-view .panel {
   margin: 0;
 }
 
-.MainView .panel-container,
-.MainView .panel-col {
+.main-view .panel-container,
+.main-view .panel-col {
   display: flex;
   flex-flow: column;
 }
 
-.MainView .panel-row {
+.main-view .panel-row {
   display: flex;
   flex-flow: row;
 }
 
-.MainView .half {
+.main-view .half {
   width: 50%;
 }
 
-.MainView .flex {
+.main-view .flex {
   flex: 1;
 }
 
-.MainView .panel-body {
+.main-view .panel-body {
   height: 100%;
   width: 100%;
   padding: 8px;
 }
 
 /* universal */
-.MainView .teitoku-panel,
-.MainView .resource-panel,
-.MainView .miniship,
-.MainView .combined-panels,
-.MainView .expedition-panel,
-.MainView .task-panel {
+.main-view .teitoku-panel,
+.main-view .resource-panel,
+.main-view .miniship,
+.main-view .combined-panels,
+.main-view .expedition-panel,
+.main-view .task-panel {
   position: absolute;
 }
 
 /* panels */
-.MainView .ndock-panel,
-.MainView .kdock-panel,
-.MainView .expedition-panel,
-.MainView .task-panel,
-.MainView .teitoku-panel,
-.MainView .resource-panel {
+.main-view .ndock-panel,
+.main-view .kdock-panel,
+.main-view .expedition-panel,
+.main-view .task-panel,
+.main-view .teitoku-panel,
+.main-view .resource-panel {
   overflow: scroll;
   white-space: nowrap;
 }
 
-.MainView .react-grid-item > div {
+.main-view .react-grid-item > div {
   height: 100%;
   overflow: scroll;
   width: 100%;
   padding: 7px;
 }
 
-.MainView .panel-item {
+.main-view .panel-item {
   padding: 4px;
 }
 
-.MainView .ndock-panel .panel-item,
-.MainView .kdock-panel .panel-item {
+.main-view .ndock-panel .panel-item,
+.main-view .kdock-panel .panel-item {
   padding: 2px 4px;
   max-width: 100%;
 }
 
-.MainView .label {
+.main-view .label {
   font-size: 90%;
   font-weight: normal;
   padding-bottom: 0.2em;
   padding-top: 0.2em;
 }
 
-.MainView .bp3-tag {
+.main-view .bp3-tag {
   min-height: initial;
   font-size: 90%;
   line-height: 1.2;
 }
 
-.MainView table tr td {
+.main-view table tr td {
   font-size: 12px;
   padding-bottom: 5px;
   padding-top: 4px;
 }
 
-.MainView .panel-body table td {
+.main-view .panel-body table td {
   border: none;
   line-height: 1.42857143;
   overflow: hidden;
@@ -102,15 +102,15 @@
   white-space: nowrap;
 }
 
-.MainView .panel-heading {
+.main-view .panel-heading {
   padding: 8px;
 }
 
-.MainView .glow {
+.main-view .glow {
   filter: drop-shadow(0 0 4px #2196f3);
 }
 
-.MainView .countdown-timer-label {
+.main-view .countdown-timer-label {
   flex: none;
 }
 
@@ -133,11 +133,11 @@
   flex-grow: 1;
 }
 
-.MainView .react-grid-item {
+.main-view .react-grid-item {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.MainView .teitoku-panel .panel-body {
+.main-view .teitoku-panel .panel-body {
   align-content: flex-end;
   display: flex;
   flex-wrap: wrap;

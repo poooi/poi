@@ -44,7 +44,7 @@ export class reactClass extends Component {
   }
 
   componentDidMount() {
-    this.combinedpane = document.querySelector('.MainView .combined-panels')
+    this.combinedpane = document.querySelector('.main-view .combined-panels')
     layoutResizeObserver.observe(this.mainpane)
     layoutResizeObserver.observe(this.combinedpane)
   }
