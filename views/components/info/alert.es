@@ -146,7 +146,7 @@ class PoiAlertInner extends Component {
       <div id="alert-main" className="alert-main" ref={ref => { this.alertMain = ref }}>
         <div
           id="alert-container"
-          className={`alert alert-${this.state.current.type} alert-container`}
+          className={`alert bp3-callout bp3-intent-${this.state.current.type} alert-container`}
           onClick={this.toggleHistory}
         >
           <div className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
