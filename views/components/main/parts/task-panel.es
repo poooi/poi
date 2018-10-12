@@ -115,7 +115,7 @@ function getToolTip(record) {
     <>
       {values(record).map(
         (subgoal, idx) =>
-          subgoal &&
+          Boolean(subgoal) &&
           typeof subgoal === 'object' && (
             <div key={idx}>
               <Trans i18nKey={`data:${escapeI18nKey(subgoal.description)}`}>
@@ -178,7 +178,7 @@ const TaskRowBase = connect(
         </>
       </Tooltip>
       {rightLabel && (
-        <Tooltip id={`task-progress-${idx}`} content={rightOverlay}>
+        <Tooltip disabled={!rightOverlay} content={rightOverlay}>
           <Tag className="quest-progress" intent={rightIntent} minimal>
             {rightLabel}
           </Tag>
@@ -218,7 +218,7 @@ const TaskRow = translate(['resources'])(
       ? getIntentByPercent(count / required)
       : getIntentByProgress(quest)
     const progressLabel = record ? `${count} / ${required}` : progressLabelText(quest)
-    const progressOverlay = record ? <div>{getToolTip(record || {})}</div> : undefined
+    const progressOverlay = record && <div>{getToolTip(record || {})}</div>
     return (
       <TaskRowBase
         idx={idx}
