@@ -225,7 +225,7 @@ export class TaskPanel extends React.Component {
   }
 
   componentDidMount() {
-    this.panelArea = document.querySelector('.MainView .task-panel .panel-body')
+    this.panelArea = document.querySelector('.main-view .task-panel .panel-body')
     if (this.panelArea) {
       this.observer = new ResizeObserver(this.handleResize)
       this.observer.observe(this.panelArea)

@@ -1,40 +1,40 @@
-.ShipView {
+.ship-view {
   font-size: 15px;
 }
 
-.ShipView .ship-tab-container {
+.ship-view .ship-tab-container {
   height: calc(100% - 32px);
 }
 
-.ShipView .ship-tab-content {
+.ship-view .ship-tab-content {
   display: -webkit-box;
   flex-flow: row;
   height: 100%;
   position: relative;
 }
 
-.ShipView .ship-tab-content-transition {
+.ship-view .ship-tab-content-transition {
   transition: all 0.3s cubic-bezier(1, 0, 0, 1);
 }
 
-.ShipView .ship-tabpane,
-.ShipView .ship-deck {
+.ship-view .ship-tabpane,
+.ship-view .ship-deck {
   height: 100%;
   width: 100%;
 }
 
-.ShipView > .panel {
+.ship-view > .panel {
   height: calc(100% - 10px);
   margin: 2px;
   overflow: auto;
 }
 
-.ShipView .panel-body {
+.ship-view .panel-body {
   height: 100%;
   padding: 2px;
 }
 
-.ShipView .btn-group {
+.ship-view .btn-group {
   display: flex;
   padding-left: 5px;
   padding-right: 5px;
@@ -42,16 +42,16 @@
   width: 100%;
 }
 
-.ShipView .plane-button {
+.ship-view .plane-button {
   width: 40px;
 }
 
-.ShipView .airbase-area {
+.ship-view .airbase-area {
   padding-left: 8px;
   text-align: left !important;
 }
 
-.ShipView .btn-group .btn {
+.ship-view .btn-group .btn {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
@@ -61,48 +61,48 @@
   overflow: hidden;
 }
 
-.ShipView .hidden {
+.ship-view .hidden {
   display: none;
 }
 
-.ShipView .show {
+.ship-view .show {
   display: block;
 }
 
-.ShipView .top-space {
+.ship-view .top-space {
   margin-top: 5px;
 }
 
-.ShipView .div-col {
+.ship-view .div-col {
   display: flex;
   flex-flow: column;
 }
 
-.ShipView .div-row {
+.ship-view .div-row {
   display: flex;
   flex-flow: row;
 }
 
-.ShipView .fleet-name-button-container {
+.ship-view .fleet-name-button-container {
   overflow: scroll;
 }
 
-.ShipView .deck-status {
+.ship-view .deck-status {
   padding-left: 0;
   padding-right: 0;
   text-align: center;
 }
 
-.ShipView .ship-details {
+.ship-view .ship-details {
   height: calc(100% - 31px);
   overflow: scroll;
 }
 
-.ShipView .ship-lbac .ship-details {
+.ship-view .ship-lbac .ship-details {
   height: 100%;
 }
 
-.ShipView .alert {
+.ship-view .alert {
   background-color: transparent;
   border-color: transparent;
   margin-top: 5px;

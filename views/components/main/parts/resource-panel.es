@@ -74,7 +74,7 @@ export class ResourcePanel extends React.Component {
 
   componentDidMount() {
     t = setInterval(this.checkAnimTime, 1000)
-    this.panelArea = document.querySelector('.MainView .resource-panel .panel-body')
+    this.panelArea = document.querySelector('.main-view .resource-panel .panel-body')
     if (this.panelArea) {
       this.observer = new ResizeObserver(this.handleResize)
       this.observer.observe(this.panelArea)

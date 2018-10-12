@@ -1,15 +1,15 @@
-.ShipView .slotitems {
+.ship-view .slotitems {
   display: flex;
 }
 
-.ShipView .slotitem-container {
+.ship-view .slotitem-container {
   display: inline;
   margin-right: 2px;
   position: relative;
   vertical-align: bottom;
 }
 
-.ShipView .slotitem-container::after {
+.ship-view .slotitem-container::after {
   background-color: rgba(33, 33, 33, 0.7);
   border-radius: 9px;
   bottom: -3px;
@@ -25,15 +25,15 @@
   width: 18px;
 }
 
-.ShipView .slotitem-onslot-show::after {
+.ship-view .slotitem-onslot-show::after {
   display: inline;
 }
 
-.ShipView .slotitem-onslot-hide::after {
+.ship-view .slotitem-onslot-hide::after {
   display: none;
 }
 
-.ShipView .slotitem-container .png {
+.ship-view .slotitem-container .png {
   height: 32px;
   margin-bottom: -3px;
   margin-left: -5px;
@@ -41,7 +41,7 @@
   width: 32px;
 }
 
-.ShipView .slotitem-container .svg {
+.ship-view .slotitem-container .svg {
   height: 23px;
   width: 26px;
 }

@@ -88,7 +88,7 @@ export class MiniShip extends Component {
     dispatch({
       type: '@@TabSwitch',
       tabInfo: {
-        activeMainTab: 'shipView',
+        activeMainTab: 'ship-view',
       },
     })
   }
@@ -104,7 +104,7 @@ export class MiniShip extends Component {
   render() {
     return (
       <div style={{height: '100%'}} onDoubleClick={this.changeShipView}>
-        <Panel id="ShipViewMini" className="ship-view-mini" bsStyle="default">
+        <Panel id="ship-viewMini" className="ship-view-mini" bsStyle="default">
           <Panel.Body>
             <div className="panel-row miniship-fleet-btn">
               <ButtonGroup bsSize="xsmall">

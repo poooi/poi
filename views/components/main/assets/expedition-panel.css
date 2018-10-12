@@ -1,16 +1,16 @@
-.MainView .expedition-panel .panel-body {
+.main-view .expedition-panel .panel-body {
   /* border: 1px solid orange; */
   display: flex;
   flex-flow: column nowrap;
 }
 
-.MainView .expedition-item {
+.main-view .expedition-item {
   align-items: center;
   display: flex;
   flex: 1;
 }
 
-.MainView .expedition-item .expedition-name {
+.main-view .expedition-item .expedition-name {
   flex: 1;
   margin-right: auto;
   overflow: hidden;

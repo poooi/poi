@@ -170,7 +170,7 @@ export class reactClass extends Component {
     dispatch({
       type: '@@TabSwitch',
       tabInfo: {
-        activeMainTab: 'mainView',
+        activeMainTab: 'main-view',
       },
     })
   }

@@ -1,4 +1,4 @@
-.MainView .ndock-panel {
+.main-view .ndock-panel {
   display: flex;
   flex-wrap: wrap;
   flex-grow: 1;
@@ -6,7 +6,7 @@
   justify-content: space-between;
 }
 
-.MainView .ndock-item {
+.main-view .ndock-item {
   align-items: center;
   display: flex;
   flex: 1;
@@ -14,7 +14,7 @@
   padding-top: 0;
 }
 
-.MainView .ndock-item .ndock-name {
+.main-view .ndock-item .ndock-name {
   flex: 1;
   margin-right: auto;
   overflow: hidden;
@@ -23,7 +23,7 @@
   white-space: nowrap;
 }
 
-.MainView .ndock-item .empty-dock {
+.main-view .ndock-item .empty-dock {
   color: #777;
   font-size: 16px;
   height: 20px;
