@@ -4,12 +4,12 @@
   flex-flow: column nowrap;
 }
 
-.MainView .task-panel .task-card {
+.main-view .task-panel .task-card {
   display: flex;
   flex-flow: row wrap;
 }
 
-.MainView .task-panel table tr td {
+.main-view .task-panel table tr td {
   align-items: center;
   display: flex;
   text-align: left;
@@ -27,23 +27,23 @@
   justify-content: space-between;
 }
 
-.MainView .task-item-12 {
+.main-view .task-item-12 {
   width: 100%;
 }
 
-.MainView .task-item-6 {
+.main-view .task-item-6 {
   width: 50%;
 }
 
-.MainView .task-item-4 {
+.main-view .task-item-4 {
   width: 33.33%;
 }
 
-.MainView .task-item-3 {
+.main-view .task-item-3 {
   width: 25%;
 }
 
-.MainView .task-item .quest-name {
+.main-view .task-item .quest-name {
   flex: 1;
   margin-right: auto;
   overflow: hidden;
