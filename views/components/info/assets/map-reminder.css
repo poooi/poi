@@ -3,7 +3,7 @@ kan-game poi-map-reminder {
   width: 135px;
 }
 
-kan-game poi-map-reminder .progress {
+kan-game poi-map-reminder .map-hp-progress {
   background-color: transparent;
   border-radius: 0;
   height: 3px;
@@ -11,8 +11,19 @@ kan-game poi-map-reminder .progress {
   width: 100%;
 }
 
+.map-route-container {
+  padding: 4px 6px 0 6px;
+}
+
+.map-info-msg {
+  font-size: 12px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .maproutes {
-  background-color: #161616;
+  background-color: #161616aa;
 }
 
 .maproutes rect {

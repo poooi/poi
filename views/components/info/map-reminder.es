@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Popover, ProgressBar, Position, PopoverInteractionKind, Intent } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
@@ -38,7 +38,7 @@ const MapRoutes = connect(
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   const SCALE = 1 / 6
   return (
-    <div>
+    <div className="map-route-container">
       <svg width="190" height="110" viewBox="0 0 190 110" className="maproutes">
         {// Draw all lines
           map(maproutes, ([beg, end], i) => {
@@ -79,7 +79,7 @@ const ItemStat = translate()(connect(
     )
   })
   return (
-    <div>
+    <div className="map-info-msg">
       {Object.keys(stat).length > 0 && `${t('Resources')}: `}
       {
         map(Object.keys(stat), itemKey => (
@@ -133,27 +133,33 @@ export class PoiMapReminder extends Component {
       tooltipMsg.push(<span className="map-tooltip-msg" key="hp">HP: {mapHp[0]} / {mapHp[1]}</span>)
     }
     return (
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip id="detail-map-info" className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
-            <MapRoutes />
-            <div>{ tooltipMsg }</div>
-            <ItemStat />
-          </Tooltip>
-        }>
+      <Popover
+        position={Position.TOP_RIGHT}
+        interactionKind={PopoverInteractionKind.HOVER}
+        wrapperTagName="div"
+        targetTagName="div">
         <div>
           {
             !mapHp ? undefined :
-              <ProgressBar bsStyle="info" now={mapHp[0]} max={mapHp[1]} />
+              <ProgressBar
+                className="map-hp-progress"
+                animate={false}
+                stripes={false}
+                intent={Intent.PRIMARY}
+                value={mapHp[0] / mapHp[1]} />
           }
-          <div className="alert alert-default">
+          <div className="alert">
             <span id="map-reminder-area">
               {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
             </span>
           </div>
         </div>
-      </OverlayTrigger>
+        <>
+          <MapRoutes />
+          <div className="map-info-msg">{ tooltipMsg }</div>
+          <ItemStat />
+        </>
+      </Popover>
     )
   }
 }
