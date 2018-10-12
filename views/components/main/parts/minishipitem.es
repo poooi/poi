@@ -169,7 +169,7 @@ export class MiniShipRow extends Component {
         ? t('main:RemodelLv', { remodelLevel })
         : remodelLevel
           ? t('main:RemodelReady')
-          : null
+          : ''
     const shipInfoClass = classNames('ship-info', {
       'ship-avatar-padding': enableAvatar,
       'ship-info-hidden': hideShipName,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Tag } from '@blueprintjs/core'
+import { Tag, Intent } from '@blueprintjs/core'
 
 import { resolveTime } from 'views/utils/tools'
 import { CountdownNotifier } from 'views/utils/notifiers'
@@ -139,7 +139,7 @@ class CountdownNotifierLabelInner extends Component {
   }
   static defaultProps = {
     getNotifyOptions: () => undefined,
-    getLabelStyle: () => null,
+    getLabelStyle: () => Intent.NONE,
     resolveTime: resolveTime,
     minimal: true,
   }

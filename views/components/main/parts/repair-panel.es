@@ -44,6 +44,16 @@ const getPanelDimension = width => {
   return 1
 }
 
+const getTagIntent = (props, timeRemaining) =>
+  timeRemaining > 600
+    ? Intent.PRIMARY
+    : timeRemaining > 60
+      ? Intent.WARNING
+      : timeRemaining >= 0
+        ? Intent.SUCCESS
+        : Intent.NONE
+
+
 @translate(['main'])
 @connect(
   createDeepCompareArraySelector(
@@ -74,15 +84,6 @@ export class RepairPanel extends Component {
     preemptTime: 60,
   }
 
-  getLabelStyle = (props, timeRemaining) => {
-    return timeRemaining > 600
-      ? Intent.PRIMARY
-      : timeRemaining > 60
-        ? Intent.WARNING
-        : timeRemaining >= 0
-          ? Intent.SUCCESS
-          : null
-  }
 
   render() {
     const { canNotify, repairs, $ships, inRepairShips, enableAvatar, dimension } = this.props
@@ -151,7 +152,7 @@ export class RepairPanel extends Component {
                 <CountdownNotifierLabel
                   timerKey={`ndock-${i + 1}`}
                   completeTime={completeTime}
-                  getLabelStyle={this.getLabelStyle}
+                  getLabelStyle={getTagIntent}
                   getNotifyOptions={() =>
                     canNotify &&
                     completeTime >= 0 && {

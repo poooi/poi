@@ -53,7 +53,7 @@ export const LBViewMini = compose(
   >
     {areaIds.map(
       (id, i) =>
-        mapareas[id] != null &&
+        mapareas[id] &&
         (id === areaIds[i - 1] ? (
           <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
         ) : (
