@@ -8,6 +8,7 @@ import cls from 'classnames'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 import { Position, Intent } from '@blueprintjs/core'
+import styled from 'styled-components'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from '../countdown-timer'
@@ -24,6 +25,13 @@ import { Tooltip } from '../panel-tooltip'
 
 import '../../assets/repair-panel.css'
 
+const PanelItem = styled.div`
+  flex: 1;
+  flex-basis: ${props => `${100 / props.dimension}%`};
+  padding: 2px 4px;
+  max-width: ${props => `${100 / props.dimension}%`};
+`
+
 const inRepairShipsDataSelector = createSelector([inRepairShipsIdSelector, shipsSelector], (inRepairShipsId, ships) =>
   inRepairShipsId.map(shipId => ships[shipId]),
 )
@@ -34,15 +42,7 @@ const EmptyDock = ({ state }) => (
   </div>
 )
 
-const getPanelDimension = width => {
-  if (width > 700) {
-    return 4
-  }
-  if (width > 350) {
-    return 2
-  }
-  return 1
-}
+
 
 const getTagIntent = (props, timeRemaining) =>
   timeRemaining > 600
@@ -63,15 +63,13 @@ const getTagIntent = (props, timeRemaining) =>
       inRepairShipsDataSelector,
       miscSelector,
       state => get(state, 'config.poi.appearance.avatar', true),
-      state => getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
     ],
-    (repairs, { $ships }, inRepairShips, { canNotify }, enableAvatar, dimension) => ({
+    (repairs, { $ships }, inRepairShips, { canNotify }, enableAvatar) => ({
       repairs,
       $ships,
       inRepairShips,
       canNotify,
       enableAvatar,
-      dimension,
     }),
   ),
 )
@@ -119,10 +117,10 @@ export class RepairPanel extends Component {
               100 * get(ships, [dock.api_ship_id, 'api_nowhp']) / get(ships, [dock.api_ship_id, 'api_maxhp'])
           }
           return (
-            <div
+            <PanelItem
               key={i}
               className={cls('panel-item', 'ndock-item', { avatar: enableAvatar })}
-              style={{ flexBasis: `calc(${100 / dimension}%)` }}
+              dimension={dimension}
             >
               {enableAvatar && (
                 <>
@@ -163,7 +161,7 @@ export class RepairPanel extends Component {
                   }
                 />
               </Tooltip>
-            </div>
+            </PanelItem>
           )
         })}
       </>

@@ -69,12 +69,6 @@
   padding: 4px;
 }
 
-.main-view .ndock-panel .panel-item,
-.main-view .kdock-panel .panel-item {
-  padding: 2px 4px;
-  max-width: 100%;
-}
-
 .main-view .label {
   font-size: 90%;
   font-weight: normal;

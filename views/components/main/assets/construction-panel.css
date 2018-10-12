@@ -15,7 +15,6 @@
 .main-view .kdock-item {
   align-items: center;
   display: flex;
-  flex: 1;
   padding-bottom: 0;
   padding-top: 0;
 }

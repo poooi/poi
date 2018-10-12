@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Tabs, Tab, Card } from '@blueprintjs/core'
+import { Tabs, Tab, Card, ResizeSensor } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -32,6 +32,16 @@ const Panel = styled.div`
   flex-wrap: wrap;
 `
 
+const getPanelDimension = width => {
+  if (width > 700) {
+    return 4
+  }
+  if (width > 350) {
+    return 2
+  }
+  return 1
+}
+
 @translate(['main'])
 export class DockPanel extends Component {
   static propTypes = {
@@ -40,6 +50,7 @@ export class DockPanel extends Component {
 
   state = {
     activeTab: 1,
+    dimension: 1,
   }
 
   handleTabChange = (id) => {
@@ -48,38 +59,50 @@ export class DockPanel extends Component {
     })
   }
 
+  handleResize= ([entry]) => {
+    const dimension = getPanelDimension(entry.contentRect.width)
+
+    if (dimension !== this.state.dimension) {
+      this.setState({
+        dimension,
+      })
+    }
+  }
+
   render() {
     const {t} = this.props
-    const { activeTab } = this.state
+    const { activeTab, dimension } = this.state
     return(
-      <Wrapper>
-        <Tabs
-          defaultSelectedTabId={1}
-          animation={false}
-          id="dock-panel-tabs"
-          className="dock-panel-tabs"
-          onChange={this.handleTabChange}
-        >
-          <Tab
-            id={1}
-            title={t('main:Docking')}
-          />
-          <Tab
-            id={2}
-            title={t('main:Construction')}
-          />
-        </Tabs>
-        <ContentWrapper>
-          <Content activeTab={activeTab}>
-            <Panel className="ndock-panel" active={activeTab === 1}>
-              <RepairPanel />
-            </Panel>
-            <Panel className="kdock-panel" active={activeTab === 2}>
-              <ConstructionPanel />
-            </Panel>
-          </Content>
-        </ContentWrapper>
-      </Wrapper>
+      <ResizeSensor onResize={this.handleResize}>
+        <Wrapper>
+          <Tabs
+            defaultSelectedTabId={1}
+            animation={false}
+            id="dock-panel-tabs"
+            className="dock-panel-tabs"
+            onChange={this.handleTabChange}
+          >
+            <Tab
+              id={1}
+              title={t('main:Docking')}
+            />
+            <Tab
+              id={2}
+              title={t('main:Construction')}
+            />
+          </Tabs>
+          <ContentWrapper>
+            <Content activeTab={activeTab}>
+              <Panel className="ndock-panel" active={activeTab === 1}>
+                <RepairPanel dimension={dimension} />
+              </Panel>
+              <Panel className="kdock-panel" active={activeTab === 2}>
+                <ConstructionPanel dimension={dimension} />
+              </Panel>
+            </Content>
+          </ContentWrapper>
+        </Wrapper>
+      </ResizeSensor>
     )
   }
 }
