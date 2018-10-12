@@ -164,7 +164,7 @@
 }
 
 .miniship .ship-details-mini .ship-item .ship-info .ship-fp {
-  width: 60px;
+  flex-grow: 1;
 }
 
 .miniship .ship-details-mini .ship-item .ship-info .ship-name {
@@ -183,6 +183,7 @@
   margin-right: 4px;
   margin-top: 2px;
   overflow: hidden;
+  align-items: center;
 }
 
 .miniship .ship-details-mini .ship-item .ship-stat {
@@ -420,4 +421,9 @@
 .miniship .airbase-area {
   margin-top: 0;
   text-align: left !important;
+}
+
+.miniship .landbase-status {
+  padding-top: 0;
+  padding-bottom: 0;
 }

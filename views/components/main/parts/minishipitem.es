@@ -96,6 +96,7 @@ const Slotitems = translate(['resources'])(
                   className={onslotClassName}
                   intent={`${onslotWarning ? Intent.WARNING : Intent.NONE}`}
                   style={{ width: '3em' }}
+                  minimal
                 >
                   {onslotText}
                 </Tag>
@@ -279,15 +280,15 @@ export const MiniSquardRow = translate(['main'])(
       switch (api_action_kind) {
       // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
       case 0:
-        return <Tag intent="default">{t('main:Standby')}</Tag>
+        return <Tag className="landbase-status" minimal intent={Intent.NONE}>{t('main:Standby')}</Tag>
       case 1:
-        return <Tag intent="danger">{t('main:Sortie')}</Tag>
+        return <Tag className="landbase-status" minimal intent={Intent.DANGER}>{t('main:Sortie')}</Tag>
       case 2:
-        return <Tag intent="warning">{t('main:Defense')}</Tag>
+        return <Tag className="landbase-status" minimal intent={Intent.WARNING}>{t('main:Defense')}</Tag>
       case 3:
-        return <Tag intent="primary">{t('main:Retreat')}</Tag>
+        return <Tag className="landbase-status" minimal intent={Intent.PRIMARY}>{t('main:Retreat')}</Tag>
       case 4:
-        return <Tag intent="success">{t('main:Rest')}</Tag>
+        return <Tag className="landbase-status" minimal intent={Intent.SUCCESS}>{t('main:Rest')}</Tag>
       }
     })()
     const shipInfoClass = classNames('ship-info', {
