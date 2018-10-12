@@ -137,10 +137,12 @@ export class PoiMapReminder extends Component {
         position={Position.TOP_RIGHT}
         interactionKind={PopoverInteractionKind.HOVER}
         wrapperTagName="div"
-        targetTagName="div">
+        targetTagName="div"
+        disabled={!mapData}
+      >
         <div>
           {
-            !mapHp ? undefined :
+            mapHp &&
               <ProgressBar
                 className="map-hp-progress"
                 animate={false}
