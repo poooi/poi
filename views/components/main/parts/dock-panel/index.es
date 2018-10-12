@@ -43,7 +43,6 @@ export class DockPanel extends Component {
   }
 
   handleTabChange = (id) => {
-    console.log(id, typeof id)
     this.setState({
       activeTab: id,
     })
