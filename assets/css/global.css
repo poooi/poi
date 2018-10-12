@@ -190,6 +190,23 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: var(--poi-green);
 }
 
+/* FIXME: remove after droping rb */
+.progress-bar-red {
+  background-color: var(--poi-red);
+}
+
+.progress-bar-orange {
+  background-color: var(--poi-orange);
+}
+
+.progress-bar-yellow {
+  background-color: var(--poi-yellow);
+}
+
+.progress-bar-green {
+  background-color: var(--poi-green);
+}
+
 div[role="tooltip"],
 .poi-app-container {
   transform-origin: 0 0;
