@@ -58,11 +58,11 @@
   white-space: nowrap;
 }
 
-.main-view .react-grid-item > div {
+.main-view .react-grid-item > .bp3-card {
   height: 100%;
   overflow: scroll;
   width: 100%;
-  padding: 7px;
+  padding: 6px 8px;
 }
 
 .main-view .panel-item {

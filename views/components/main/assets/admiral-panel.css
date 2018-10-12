@@ -1,16 +1,21 @@
-.teitoku-timer {
+.teitoku-panel .teitoku-timer {
   position: absolute;
   right: 0.5em;
 }
 
-.next-time-tooltip {
+.teitoku-panel .next-time-tooltip {
   white-space: nowrap;
 }
 
-.countdown-item:not(:last-child) {
+.teitoku-panel .countdown-item:not(:last-child) {
   margin-bottom: 0.5em;
 }
 
-.countdown-item .info-tooltip-item {
+.teitoku-panel .countdown-item .info-tooltip-item {
   margin-right: 5px;
+}
+
+.teitoku-panel .bp3-card {
+  display: flex;
+  align-items: center;
 }
