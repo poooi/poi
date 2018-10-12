@@ -16,7 +16,10 @@ import { Tooltip } from '../panel-tooltip'
 import '../../assets/construction-panel.css'
 
 const PanelItem = styled(Tooltip)`
+  flex: 1;
   flex-basis: ${props => `${100 / props.dimension}%`};
+  padding: 2px 4px;
+  max-width: ${props => `${100 / props.dimension}%`};
 `
 
 const EmptyDock = ({ state }) => (
@@ -54,7 +57,6 @@ const getTagIntent = ({ isLSC }, timeRemaining) =>
   $ships: state.const.$ships,
   canNotify: state.misc.canNotify,
   enableAvatar: get(state, 'config.poi.appearance.avatar', true),
-  dimension: getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
 }))
 export class ConstructionPanel extends Component {
   static basicNotifyConfig = {
