@@ -42,7 +42,7 @@ window.warn = (msg, options) => {
 window.error = (msg, options) => {
   const value = {
     content: msg,
-    type: 'warning',
+    type: 'danger',
     priority: 4,
     stickyFor: DEFAULT_STICKYFOR,
     ...options,
