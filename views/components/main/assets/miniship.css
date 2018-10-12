@@ -2,6 +2,10 @@
   font-size: 14px;
 }
 
+.miniship .bp3-card {
+  height: 100%;
+}
+
 .miniship .ship-view-mini {
   height: 100%;
 }
