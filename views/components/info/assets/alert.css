@@ -29,13 +29,13 @@ poi-info .alert {
   z-index: 2;
 }
 
-.alert-history {
+.alert-log {
   overflow: hidden;
   transition: 0.3s;
   z-index: 1;
 }
 
-.alert-history-contents {
+.alert-log-contents {
   overflow: scroll;
   text-overflow: initial;
 }

@@ -8,7 +8,7 @@ const { config } = window
 
 const initState = {
   overflow: false,
-  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className="alert alert-default alert-history-contents">　</div>)),
+  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className="alert alert-default alert-log-contents">　</div>)),
   current: {
     type: 'default',
     content: i18next.t('Waiting for response'),
@@ -27,7 +27,7 @@ let stickyEnd = Date.now()
 let updateTime = 0
 
 const pushToHistory = (history, toPush) => {
-  history.push(<div key={Date.now()} className={`alert alert-${toPush.type} alert-history-contents`}>{toPush.content}</div>)
+  history.push(<div key={Date.now()} className={`alert alert-${toPush.type} alert-log-contents`}>{toPush.content}</div>)
   if (history.length > 5) {
     return history.slice(history.length - 5)
   }
@@ -143,7 +143,7 @@ class PoiAlertInner extends Component {
   }
   render() {
     return (
-      <div id="alert-main" className="alert-main" ref={ref => { this.alertMain = ref }}>
+      <div id="alert-main" className="alert-main bp3-popover" ref={ref => { this.alertMain = ref }}>
         <div
           id="alert-container"
           className={`alert bp3-callout bp3-intent-${this.state.current.type} alert-container`}
@@ -166,9 +166,9 @@ class PoiAlertInner extends Component {
             </span>
           </div>
         </div>
-        <div id="alert-history"
+        <div id="alert-log"
           ref={ref => { this.alertHistory = ref }}
-          className="alert-history overlay-background"
+          className="alert-log bp3-popover-content"
           style={this.state.alertHistoryStyle}
           onClick={this.toggleHistory}>
           {this.state.history}
