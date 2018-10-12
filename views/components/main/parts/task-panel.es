@@ -1,10 +1,11 @@
 import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
-import { Panel, Label, OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
+import { Card, Tag, Intent, ResizeSensor } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
 import React from 'react'
 import { translate, Trans } from 'react-i18next'
 import { escapeI18nKey } from 'views/utils/tools'
+import { Tooltip } from './panel-tooltip'
 
 import {
   configLayoutSelector,
@@ -147,34 +148,32 @@ const TaskRowBase = connect(
   leftOverlay,
   rightLabel='',
   rightOverlay,
-  rightBsStyle='success',
-  leftOverlayPlacement,
+  rightIntent=Intent.SUCCESS,
+  leftOverlayPlacement='auto',
   colwidth,
 }) {
   return (
-    <Col className="panel-item task-item" xs={colwidth}>
-      <OverlayTrigger
-        placement={leftOverlayPlacement}
-        overlay={
-          <Tooltip id={`task-quest-name-${idx}`} style={leftOverlay ? null : {display: 'none'}}>{leftOverlay}</Tooltip>
-        }
+    <div className={`panel-item task-item task-item-${colwidth}`}>
+      <Tooltip
+        id={`task-quest-name-${idx}`}
+        className="quest-name"
+        disabled={!leftOverlay}
+        postion={leftOverlayPlacement}
+        content={leftOverlay}
       >
-        <div className="quest-name">
+        <>
           <span className="cat-indicator" style={{backgroundColor: bulletColor}}></span>
-          {leftLabel}
-        </div>
-      </OverlayTrigger>
-      <div>
-        <OverlayTrigger
-          placement="left"
-          overlay={
-            <Tooltip id={`task-progress-${idx}`} style={rightOverlay ? null : {display: 'none'}}>{rightOverlay}</Tooltip>
-          }
+          <span>{leftLabel}</span>
+        </>
+      </Tooltip>
+      {rightLabel ?
+        <Tooltip
+          id={`task-progress-${idx}`}
+          content={rightOverlay}
         >
-          <Label className="quest-progress" bsStyle={rightBsStyle}>{rightLabel}</Label>
-        </OverlayTrigger>
-      </div>
-    </Col>
+          <Tag className="quest-progress" intent={rightIntent}>{rightLabel}</Tag>
+        </Tooltip> : ''}
+    </div>
   )
 })
 
@@ -190,7 +189,7 @@ const TaskRow = translate(['resources'])(connect(
   const questName = quest && quest.api_title ? t(`resources:${quest.api_title}`, { context: quest.api_no && quest.api_no.toString() }) : '???'
   const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
   const [count, required] = sumSubgoals(record)
-  const progressBsStyle = record ?
+  const progressIntent = record ?
     getStyleByPercent(count / required) :
     getStyleByProgress(quest)
   const progressLabel = record ?
@@ -206,7 +205,7 @@ const TaskRow = translate(['resources'])(connect(
       leftLabel={`${wikiIdPrefix}${questName}`}
       leftOverlay={<div><strong>{wikiIdPrefix}{questName}</strong><br />{questContent}</div>}
       rightLabel={progressLabel}
-      rightBsStyle={progressBsStyle}
+      rightIntent={progressIntent}
       rightOverlay={progressOverlay}
       colwidth={colwidth}
     />
@@ -224,20 +223,6 @@ export class TaskPanel extends React.Component {
     dimension: 1,
   }
 
-  componentDidMount() {
-    this.panelArea = document.querySelector('.main-view .task-panel .panel-body')
-    if (this.panelArea) {
-      this.observer = new ResizeObserver(this.handleResize)
-      this.observer.observe(this.panelArea)
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.observer) {
-      this.observer.unobserve(this.panelArea)
-    }
-  }
-
   handleResize = entries => {
     const dimension = getPanelDimension(entries[0].contentRect.width)
     if (dimension !== this.state.dimension) {
@@ -249,8 +234,8 @@ export class TaskPanel extends React.Component {
     const { activeQuests, activeCapacity, activeNum, t} = this.props
     const colwidth = Math.floor(12 / this.state.dimension)
     return (
-      <Panel bsStyle="default">
-        <Panel.Body>
+      <ResizeSensor onResize={this.handleResize}>
+        <Card className="task-card">
           {[
             sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) =>
               <TaskRow
@@ -288,8 +273,8 @@ export class TaskPanel extends React.Component {
                 /> )
             ),
           ]}
-        </Panel.Body>
-      </Panel>
+        </Card>
+      </ResizeSensor>
     )
   }
 }

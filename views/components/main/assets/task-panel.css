@@ -4,7 +4,12 @@
   flex-flow: column nowrap;
 }
 
-.main-view .task-panel table tr td {
+.MainView .task-panel .task-card {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.MainView .task-panel table tr td {
   align-items: center;
   display: flex;
   text-align: left;
@@ -22,7 +27,23 @@
   justify-content: space-between;
 }
 
-.main-view .task-item .quest-name {
+.MainView .task-item-12 {
+  width: 100%;
+}
+
+.MainView .task-item-6 {
+  width: 50%;
+}
+
+.MainView .task-item-4 {
+  width: 33.33%;
+}
+
+.MainView .task-item-3 {
+  width: 25%;
+}
+
+.MainView .task-item .quest-name {
   flex: 1;
   margin-right: auto;
   overflow: hidden;
@@ -33,6 +54,7 @@
 
 .main-view .task-item .quest-progress {
   flex: none;
+  text-align: center;
   min-width: 50px;
 }
 
