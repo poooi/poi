@@ -8,7 +8,7 @@ const { config } = window
 
 const initState = {
   overflow: false,
-  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className="alert alert-default alert-log-contents">　</div>)),
+  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className="alert bp3-callout bp3-intent-default alert-log-contents">　</div>)),
   current: {
     type: 'default',
     content: i18next.t('Waiting for response'),
@@ -27,7 +27,7 @@ let stickyEnd = Date.now()
 let updateTime = 0
 
 const pushToHistory = (history, toPush) => {
-  history.push(<div key={Date.now()} className={`alert alert-${toPush.type} alert-log-contents`}>{toPush.content}</div>)
+  history.push(<div key={Date.now()} className={`alert bp3-callout bp3-intent-${toPush.type} alert-log-contents`}>{toPush.content}</div>)
   if (history.length > 5) {
     return history.slice(history.length - 5)
   }
