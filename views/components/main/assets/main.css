@@ -8,16 +8,6 @@
   transition: all 0.3s ease-in-out;
 }
 
-.MainView .nav {
-  margin-bottom: 5px;
-  margin-top: -6px;
-  min-height: 40px;
-}
-
-.MainView .nav > li {
-  overflow: inherit;
-}
-
 .MainView .panel {
   margin: 0;
 }
@@ -90,6 +80,12 @@
   font-weight: normal;
   padding-bottom: 0.2em;
   padding-top: 0.2em;
+}
+
+.MainView .bp3-tag {
+  min-height: initial;
+  font-size: 90%;
+  line-height: 1.2;
 }
 
 .MainView table tr td {
