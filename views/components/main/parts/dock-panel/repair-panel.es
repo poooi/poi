@@ -122,7 +122,7 @@ export class RepairPanel extends Component {
             <div
               key={i}
               className={cls('panel-item', 'ndock-item', { avatar: enableAvatar })}
-              style={{ flexBasis: `calc(${100 / dimension}% - 8px)` }}
+              style={{ flexBasis: `calc(${100 / dimension}%)` }}
             >
               {enableAvatar && (
                 <>
