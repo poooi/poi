@@ -101,6 +101,10 @@
   margin-bottom: 0;
 }
 
+.miniship .ship-details-mini .ship-item-wrapper {
+  width: 100%;
+}
+
 .miniship .ship-details-mini .ship-item {
   align-items: center;
   display: flex;
@@ -255,7 +259,7 @@
   flex: 1;
 }
 
-.miniship .ship-details-mini .ship-item .ship-stat .hp-progress .progress {
+.miniship .ship-details-mini .ship-item .ship-stat .hp-progress .bp3-progress-bar {
   flex: auto;
   height: 7px;
 }
