@@ -28,7 +28,6 @@ import '../../assets/repair-panel.css'
 const PanelItem = styled.div`
   flex: 1;
   flex-basis: ${props => `${100 / props.dimension}%`};
-  padding: 2px 4px;
   max-width: ${props => `${100 / props.dimension}%`};
 `
 
