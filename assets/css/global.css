@@ -1,3 +1,10 @@
+:root {
+  --poi-red: #d50000;
+  --poi-orange: #f57c00;
+  --poi-yellow: #fbc02d;
+  --poi-green: #4caf50;
+}
+
 *,
 body,
 h1,
@@ -167,20 +174,20 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* progress bar */
-.progress-bar-red {
-  background-color: #d50000;
+.bp3-intent-red.bp3-intent-red.bp3-intent-red .bp3-progress-meter {
+  background-color: var(--poi-red);
 }
 
-.progress-bar-orange {
-  background-color: #f57c00;
+.bp3-intent-orange.bp3-intent-orange.bp3-intent-orange .bp3-progress-meter {
+  background-color: var(--poi-orange);
 }
 
-.progress-bar-yellow {
-  background-color: #fbc02d;
+.bp3-intent-yellow.bp3-intent-yellow.bp3-intent-yellow .bp3-progress-meter {
+  background-color: var(--poi-yellow);
 }
 
-.progress-bar-green {
-  background-color: #4caf50;
+.bp3-intent-green.bp3-intent-green.bp3-intent-green .bp3-progress-meter {
+  background-color: var(--poi-green);
 }
 
 div[role="tooltip"],
