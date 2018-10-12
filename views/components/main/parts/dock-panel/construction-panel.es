@@ -9,10 +9,10 @@ import i18next from 'views/env-parts/i18next'
 import { Intent, Position } from '@blueprintjs/core'
 
 import { Avatar } from 'views/components/etc/avatar'
-import { CountdownNotifierLabel } from './countdown-timer'
-import { Tooltip } from './panel-tooltip'
+import { CountdownNotifierLabel } from '../countdown-timer'
+import { Tooltip } from '../panel-tooltip'
 
-import '../assets/construction-panel.css'
+import '../../assets/construction-panel.css'
 
 const EmptyDock = ({ state }) => (
   <div className="empty-dock">

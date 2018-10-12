@@ -1,11 +1,3 @@
-.main-view .ndock-panel {
-  display: flex;
-  flex-wrap: wrap;
-  flex-grow: 1;
-  height: 80px;
-  justify-content: space-between;
-}
-
 .main-view .ndock-item {
   align-items: center;
   display: flex;

@@ -1,11 +1,3 @@
-.main-view .kdock-panel {
-  display: flex;
-  flex-wrap: wrap;
-  flex-grow: 1;
-  height: 80px;
-  justify-content: space-between;
-}
-
 .main-view .kdock-item-wrapper {
   max-width: 100%;
   display: flex;

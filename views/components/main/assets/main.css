@@ -114,25 +114,6 @@
   flex: none;
 }
 
-.dock-panel-tabs {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: center;
-}
-
-.dock-panel-tabs .tab-content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.dock-panel-tabs .tab-content .active {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
 .main-view .react-grid-item {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
