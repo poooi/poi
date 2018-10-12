@@ -69,19 +69,19 @@ function getCategory(api_category) {
 
 function getStyleByProgress(quest) {
   if (!quest)
-    return 'default'
+    return null
   const {api_progress_flag, api_state} = quest
   if (api_state == 3)
     return 'success'
   switch (api_progress_flag) {
   case 0:         // Empty
-    return 'warning'
+    return null
   case 1:         // 50%
-    return 'primary'
+    return 'warning'
   case 2:         // 80%
-    return 'info'
+    return 'primary'
   default:
-    return 'default'
+    return null
   }
 }
 
@@ -103,11 +103,11 @@ function progressLabelText(quest) {
 
 function getStyleByPercent(percent) {
   if (percent < 0.5)
-    return 'warning'
+    return null
   if (percent < 0.8)
-    return 'primary'
+    return 'warning'
   if (percent < 1)
-    return 'info'
+    return 'primary'
   return 'success'
 }
 
@@ -171,7 +171,7 @@ const TaskRowBase = connect(
           id={`task-progress-${idx}`}
           content={rightOverlay}
         >
-          <Tag className="quest-progress" intent={rightIntent}>{rightLabel}</Tag>
+          <Tag className="quest-progress" intent={rightIntent} minimal>{rightLabel}</Tag>
         </Tooltip> : ''}
     </div>
   )
