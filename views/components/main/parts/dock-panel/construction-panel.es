@@ -18,8 +18,13 @@ import '../../assets/construction-panel.css'
 const PanelItem = styled(Tooltip)`
   flex: 1;
   flex-basis: ${props => `${100 / props.dimension}%`};
-  padding: 2px 4px;
   max-width: ${props => `${100 / props.dimension}%`};
+`
+
+const InnerWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
 `
 
 const EmptyDock = ({ state }) => (
@@ -96,7 +101,8 @@ export class ConstructionPanel extends Component {
               position={Position.TOP}
               wrapperTagName="div"
               className="panel-item-wrapper kdock-item-wrapper"
-              targetClassName="panel-item-content kdock-item-content"
+              targetTagName="div"
+              targetClassName="panel-item kdock-item"
               content={
                   <>
                     {
@@ -114,7 +120,7 @@ export class ConstructionPanel extends Component {
                   </>
               }
             >
-              <div className="panel-item kdock-item">
+              <InnerWrapper>
                 {enableAvatar && (
                     <>
                       {dock.api_state > 0 ? (
@@ -142,7 +148,7 @@ export class ConstructionPanel extends Component {
                     }
                   }
                 />
-              </div>
+              </InnerWrapper>
             </PanelItem>
           )
         })}
