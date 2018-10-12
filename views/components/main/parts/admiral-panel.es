@@ -6,7 +6,7 @@ import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
 import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Tag, Card, Position } from '@blueprintjs/core'
+import { Tag, Card, Position, Intent } from '@blueprintjs/core'
 import { compose } from 'redux'
 import { Tooltip } from './panel-tooltip'
 
@@ -158,14 +158,14 @@ const resolveDayTime = time => {
   }
 }
 
-const getLabelStyle = (_, timeRemaining) => {
+const getTagIntent = (_, timeRemaining) => {
   switch (true) {
   case timeRemaining > 1800:
-    return null
+    return Intent.NONE
   case timeRemaining > 900:
-    return 'warning'
+    return Intent.WARNING
   default:
-    return 'danger'
+    return Intent.DANGER
   }
 }
 
@@ -255,7 +255,7 @@ class CountDownControl extends Component {
       EO: getNextEO(),
     }
     this.state = {
-      style: 'default',
+      intent: Intent.NONE,
     }
   }
 
@@ -289,21 +289,21 @@ class CountDownControl extends Component {
 
     // check styles
     const minRemaining = Math.min(...map(this.moments, moment => moment - currentTime))
-    const style = getLabelStyle(null, minRemaining / 1000)
+    const intent = getTagIntent(null, minRemaining / 1000)
 
-    if (style !== this.state.style) {
+    if (intent !== this.state.intent) {
       this.setState({
-        style,
+        intent,
       })
     }
   }
 
   render() {
-    const { style } = this.state
+    const { intent } = this.state
     return (
       <span className="teitoku-timer">
         <Tooltip position={Position.LEFT_BOTTOM} content={<CountdownContent moments={this.moments} />}>
-          <Tag intent={style} minimal>
+          <Tag intent={intent} minimal>
             <FontAwesome name="calendar" />
           </Tag>
         </Tooltip>
@@ -324,7 +324,7 @@ const CountdownContent = ({ moments }) => (
             timerKey={`next-${name}`}
             completeTime={+moments[name]}
             resolveTime={resolveDayTime}
-            getLabelStyle={getLabelStyle}
+            getLabelStyle={getTagIntent}
             minimal={false}
           />
         </span>
@@ -370,8 +370,8 @@ export const AdmiralPanel = translate(['main'])(
     slotNumCheck,
     minSlotNum,
   }) {
-    const shipCountIntent = shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : null
-    const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : null
+    const shipCountIntent = shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : Intent.NONE
+    const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : Intent.NONE
 
     return (
       <Card>

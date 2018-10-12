@@ -32,6 +32,17 @@ const getPanelDimension = width => {
 
 const materials = [1, 2, 3, 4, 7]
 
+const getTagIntent = ({ isLSC }, timeRemaining) =>
+  timeRemaining > 600 && isLSC
+    ? Intent.DANGER
+    : timeRemaining > 600
+      ? Intent.PRIMARY
+      : timeRemaining > 0
+        ? Intent.WARNING
+        : timeRemaining == 0
+          ? Intent.SUCCESS
+          : Intent.NONE
+
 @translate(['main'])
 @connect(state => ({
   constructions: state.info.constructions,
@@ -53,18 +64,6 @@ export class ConstructionPanel extends Component {
     return id ? this.props.t(`resources:${this.props.$ships[id].api_name}`) : defaultVal
   }
 
-  getLabelStyle = ({ isLSC }, timeRemaining) => {
-    return timeRemaining > 600 && isLSC
-      ? Intent.DANGER
-      : timeRemaining > 600
-        ? Intent.PRIMARY
-        : timeRemaining > 0
-          ? Intent.WARNING
-          : timeRemaining == 0
-            ? Intent.SUCCESS
-            : null
-  }
-
   render() {
     const { constructions, canNotify, enableAvatar, dimension } = this.props
     return (
@@ -80,7 +79,7 @@ export class ConstructionPanel extends Component {
                 ? this.props.t('main:Empty')
                 : this.getDockShipName(i, '???')
           const completeTime = isInUse ? dock.api_complete_time : -1
-          const tooltipTitleClassname = isLSC ? { color: '#D9534F', fontWeight: 'bold' } : null
+          const tooltipTitleClassname = isLSC ? { color: '#D9534F', fontWeight: 'bold' } : undefined
 
           return (
             <div
@@ -114,7 +113,10 @@ export class ConstructionPanel extends Component {
                   {enableAvatar && (
                     <>
                       {dock.api_state > 0 ? (
-                        <Avatar height={20} mstId={get(constructions, [i, 'api_created_ship_id'])} />
+                        <Avatar
+                          height={20}
+                          mstId={get(constructions, [i, 'api_created_ship_id'])}
+                        />
                       ) : (
                         <EmptyDock state={dock.api_state} />
                       )}
@@ -125,7 +127,7 @@ export class ConstructionPanel extends Component {
                     timerKey={`kdock-${i + 1}`}
                     completeTime={completeTime}
                     isLSC={isLSC}
-                    getLabelStyle={this.getLabelStyle}
+                    getLabelStyle={getTagIntent}
                     getNotifyOptions={() =>
                       canNotify &&
                       completeTime >= 0 && {

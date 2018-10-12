@@ -51,6 +51,16 @@ const FleetStatus = translate(['main'])(
   }),
 )
 
+const getTagIntent = (props, timeRemaining) =>
+  timeRemaining > 600
+    ? Intent.PRIMARY
+    : timeRemaining > 60
+      ? Intent.WARNING
+      : timeRemaining >= 0
+        ? Intent.SUCCESS
+        : Intent.NONE
+
+
 @translate(['main'])
 @connect(state => {
   const fleetsExpedition = fleetsExpeditionSelector(state)
@@ -75,16 +85,6 @@ export class ExpeditionPanel extends Component {
 
   shouldComponentUpdate = (nextProps, nextState) => {
     return !isEqual(nextProps, this.props)
-  }
-
-  getLabelStyle = (props, timeRemaining) => {
-    return timeRemaining > 600
-      ? Intent.PRIMARY
-      : timeRemaining > 60
-        ? Intent.WARNING
-        : timeRemaining >= 0
-          ? Intent.SUCCESS
-          : null
   }
 
   render() {
@@ -117,7 +117,7 @@ export class ExpeditionPanel extends Component {
                 <CountdownNotifierLabel
                   timerKey={`expedition-${i + 1}`}
                   completeTime={completeTime}
-                  getLabelStyle={this.getLabelStyle}
+                  getLabelStyle={getTagIntent}
                   getNotifyOptions={() =>
                     canNotify &&
                     completeTime >= 0 && {
