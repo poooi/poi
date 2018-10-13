@@ -23,6 +23,10 @@ const Wrapper = styled.div`
     flex: 1;
   }
 
+  .bp3-numeric-input {
+    display: inline-flex;
+  }
+
   .bp3-input-group {
     width: 5em;
   }
@@ -142,6 +146,7 @@ export class NotificationConfig extends Component {
                 onValueChange={this.handleSetExpedition}
                 disabled={!this.props.enabled || !this.props.expedition}
               />
+              {' '}{t('main:s')}
             </FormGroup>
           </Wrapper>
 
