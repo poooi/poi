@@ -48,7 +48,7 @@ export const gameRefreshPageIgnoringCache = () => {
   window.getStore('layout.webview.ref').reloadIgnoringCache()
 }
 
-export const gameReloadFlash = () => {
+export const gameReload = () => {
   window.getStore('layout.webview.ref').executeJavaScript(`
   var doc;
   if (document.getElementById('game_frame')) {
@@ -64,6 +64,12 @@ export const gameReloadFlash = () => {
   }
   `)
 }
+
+/*
+   old name of `GameReload`.
+   TODO: remove this after few future releases
+ */
+export const gameReloadFlash = gameReload
 
 export const getPoiInfoHeight = () => get($('poi-info'), 'clientHeight', 0)
 

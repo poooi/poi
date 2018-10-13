@@ -108,7 +108,7 @@ export const refreshconfirm = (btn1,btn2) => {
           label: btn2,
           backgroundColor: '#E43725',
           click: () => {
-            mainWindow.webContents.send('touchbar','gameReloadFlash')
+            mainWindow.webContents.send('touchbar','gameReload')
             touchbaresc()
           },
         }),

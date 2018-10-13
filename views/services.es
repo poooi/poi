@@ -21,7 +21,7 @@ import './services/google-analytics'
 import {
   gameRefreshPage,
   gameRefreshPageIgnoringCache,
-  gameReloadFlash,
+  gameReload,
 } from './services/utils'
 
 // Update server info
@@ -60,7 +60,7 @@ window.addEventListener('keydown', async (e) => {
   }
   if (process.platform == 'darwin') {
     if (e.keyCode === 91 || e.keyCode === 93) {
-      // When the game (flash) is on focus, it catches all keypress events
+      // When the game frame is on focus, it catches all keypress events
       // Blur the webview when any Cmd key is pressed,
       // so the OS shortcuts will always work
       remote.getCurrentWindow().blurWebView()
@@ -68,7 +68,7 @@ window.addEventListener('keydown', async (e) => {
       if (e.shiftKey) { // cmd + shift + r
         gameRefreshPageIgnoringCache()
       } else if (e.altKey) { // cmd + alt + r
-        gameReloadFlash()
+        gameReload()
       } else { // cmd + r
         // Catched by menu
         // $('kan-game webview').reload()
@@ -79,7 +79,7 @@ window.addEventListener('keydown', async (e) => {
     if (e.ctrlKey) { // ctrl + f5
       gameRefreshPageIgnoringCache()
     } else if (e.altKey){ // alt + f5
-      gameReloadFlash()
+      gameReload()
     } else if (!e.metaKey){ // f5
       gameRefreshPage()
     }
