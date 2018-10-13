@@ -41,15 +41,10 @@ const speedStyles = {
 }
 
 export function getMaterialStyle(percent) {
-  if (percent <= 50) {
-    return 'danger'
-  } else if (percent <= 75){
-    return 'warning'
-  } else if (percent < 100) {
-    return 'info'
-  } else {
-    return 'success'
-  }
+  if (percent <= 50) return 'red'
+  else if (percent <= 75) return 'orange'
+  else if (percent < 100) return 'yellow'
+  else return 'green'
 }
 
 export function getCondStyle(cond) {

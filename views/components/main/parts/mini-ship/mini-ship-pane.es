@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { MiniShipRow, MiniSquardRow } from './minishipitem'
+import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
 import React from 'react'
 import { get } from 'lodash'
 import { translate } from 'react-i18next'

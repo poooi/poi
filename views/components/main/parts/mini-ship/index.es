@@ -6,13 +6,13 @@ import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 import { Card, ButtonGroup, Button } from '@blueprintjs/core'
 
-import { PaneBodyMini, LBViewMini } from './minishippane'
+import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 import { LandbaseButton } from '../../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 
-import '../../assets/miniship.css'
+import '../../assets/mini-ship.css'
 
 const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
   createSelector([fleetStateSelectorFactory(fleetId)], fleetState => ({
