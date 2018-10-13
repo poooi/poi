@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from '../countdown-timer'
-import { Tooltip } from '../panel-tooltip'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import '../../assets/construction-panel.css'
 
@@ -32,16 +32,6 @@ const EmptyDock = ({ state }) => (
     <FA name={state === 0 ? 'inbox' : 'lock'} />
   </div>
 )
-
-const getPanelDimension = width => {
-  if (width > 700) {
-    return 4
-  }
-  if (width > 350) {
-    return 2
-  }
-  return 1
-}
 
 const materials = [1, 2, 3, 4, 7]
 

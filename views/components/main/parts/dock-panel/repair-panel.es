@@ -21,7 +21,7 @@ import {
   createDeepCompareArraySelector,
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
-import { Tooltip } from '../panel-tooltip'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import '../../assets/repair-panel.css'
 
@@ -41,8 +41,6 @@ const EmptyDock = ({ state }) => (
   </div>
 )
 
-
-
 const getTagIntent = (props, timeRemaining) =>
   timeRemaining > 600
     ? Intent.PRIMARY
@@ -51,7 +49,6 @@ const getTagIntent = (props, timeRemaining) =>
       : timeRemaining >= 0
         ? Intent.SUCCESS
         : Intent.NONE
-
 
 @translate(['main'])
 @connect(
