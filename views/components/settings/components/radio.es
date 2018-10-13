@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Col, Grid, Radio } from 'react-bootstrap'
-import { get } from 'lodash'
+import { get, map } from 'lodash'
+import { Radio, RadioGroup } from '@blueprintjs/core'
 
 const { config } = window
 
@@ -19,25 +19,20 @@ export class RadioConfig extends Component {
     value: PropTypes.string,
     availableVal: PropTypes.array,
   }
-  onSelect = (value) => {
-    config.set(this.props.configName, value)
+
+  handleChange = e => {
+    config.set(this.props.configName, e.currentTarget.value)
   }
+
   render() {
     return (
-      <Grid>
-        {
-          this.props.availableVal.map((item, index) => {
-            return (
-              <Col key={index} xs={3}>
-                <Radio checked={this.props.value === item.value}
-                  onChange={this.onSelect.bind(this, item.value)} >
-                  {item.name}
-                </Radio>
-              </Col>
-            )
-          })
-        }
-      </Grid>
+      <RadioGroup inline selectedValue={this.props.value} onChange={this.handleChange}>
+        {map(this.props.availableVal, item => (
+          <Radio key={item.value} value={item.value}>
+            {item.name}
+          </Radio>
+        ))}
+      </RadioGroup>
     )
   }
 }
