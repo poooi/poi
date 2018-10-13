@@ -77,6 +77,7 @@
   "Construction": "Construction",
   "Expedition": "Expedition",
   "Docking": "Docking",
+  "Repair": "Docking",
   "Morale": "Morale",
   "Others": "Others",
   "Notify when expedition returns in": "Notify when expedition returns in",
@@ -145,5 +146,6 @@
   "install-all-confirmation": "Install all plugins may take a long time and you may not need all plugins installed, continue?",
   "Right click": "Right click",
   "Left click": "Left click",
-  "Load homepage": "Load homepage"
+  "Load homepage": "Load homepage",
+  "Heavily damaged notification is managed by Prophet plugin": "Heavily damaged notification is managed by Prophet plugin"
 }

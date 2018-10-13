@@ -53,6 +53,7 @@
   "Expedition": "遠征",
   "Morale": "疲勞回復",
   "Docking": "入渠",
+  "Repair": "入渠",
   "Others": "其它",
   "Slot Check": "出擊檢查",
   "ship slots": "船位檢查",
@@ -168,5 +169,6 @@
   "install-all-confirmation": "安裝全部擴展程式將要花費一些時間，並且你不一定需要安裝所有擴展程式，繼續嗎？",
   "Right click": "左鍵",
   "Left click": "右鍵",
-  "Load homepage": "載入主頁"
+  "Load homepage": "載入主頁",
+  "Heavily damaged notification is managed by Prophet plugin": "大破通知由「未卜先知」擴展提供"
 }

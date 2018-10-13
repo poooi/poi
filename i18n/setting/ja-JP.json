@@ -53,6 +53,7 @@
   "Expedition": "遠征",
   "Morale": "疲労回復",
   "Docking": "入渠",
+  "Repair": "入渠",
   "Others": "その他",
   "Slot Check": "出撃チェック",
   "ship slots": "艦娘の空き枠をチェック",
@@ -168,5 +169,6 @@
   "install-all-confirmation": "すべてのプラグインをインストールするには時間がかかる、続行しますか？",
   "Right click": "左クリック",
   "Left click": "右クリック",
-  "Load homepage": "ホームページを読み込む"
+  "Load homepage": "ホームページを読み込む",
+  "Heavily damaged notification is managed by Prophet plugin": "大破通知は「予知能力」プラグインに管理されます"
 }
