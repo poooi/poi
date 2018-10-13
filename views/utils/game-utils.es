@@ -5,6 +5,7 @@
 import { ProgressBar } from 'react-bootstrap'
 import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
 import _, { get } from 'lodash'
+import { Intent } from '@blueprintjs/core'
 
 addStyle(ProgressBar, 'green')
 addStyle(ProgressBar, 'yellow')
@@ -446,3 +447,26 @@ export async function isInGame () {
     return false
   }
 }
+
+export const FLEET_INTENTS = [
+  Intent.SUCCESS,
+  Intent.WARNING,
+  Intent.DANGER,
+  Intent.NONE,
+  Intent.PRIMARY,
+  Intent.NONE,
+]
+
+/**
+ *
+ * 0: Cond >= 40, Supplied, Repaired, In port
+ * 1: 20 <= Cond < 40, or not supplied, or medium damage
+ * 2: Cond < 20, or heavy damage
+ * 3: Repairing
+ * 4: In mission
+ * 5: In map
+ */
+export const getFleetIntent = (state, disabled) =>
+  state >= 0 && state <= 5 && !disabled ? FLEET_INTENTS[state] : Intent.NONE
+
+export const DEFAULT_FLEET_NAMES = ['I', 'II', 'III', 'IV']
