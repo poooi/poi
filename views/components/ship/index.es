@@ -15,7 +15,7 @@ import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { ShipRow } from './ship-item'
 import { SquardRow } from './lbac-view'
 import { LandbaseButton } from '../ship-parts/landbase-button'
-import { TopAlert } from 'views/components/ship-parts/topalert'
+import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
@@ -62,7 +62,7 @@ const FleetShipView = connect((state, { fleetId }) =>
 )(({ fleetId, shipsId, enableAvatar, width }) => (
   <>
     <div className="fleet-name">
-      <TopAlert fleetId={fleetId} isMini={false} />
+      <FleetStat fleetId={fleetId} isMini={false} />
     </div>
     <ScrollShadow
       className="ship-details"

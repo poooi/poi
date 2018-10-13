@@ -5,7 +5,7 @@ import { get } from 'lodash'
 import { translate } from 'react-i18next'
 import { compose } from 'redux'
 
-import { TopAlert } from 'views/components/ship-parts/topalert'
+import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 
@@ -20,7 +20,7 @@ export const PaneBodyMini = connect(() => {
 })(({ fleetId, shipsId, enableAvatar, width }) => (
   <>
     <div className="fleet-name">
-      <TopAlert fleetId={fleetId} isMini={true} />
+      <FleetStat fleetId={fleetId} isMini={true} />
     </div>
     <ScrollShadow
       className="ship-details-mini"

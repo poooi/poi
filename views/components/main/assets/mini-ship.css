@@ -282,17 +282,12 @@
   width: 105px;
 }
 
-.miniship .alert {
+.miniship .fleet-stat,
+.miniship .airbase-area {
   background-color: transparent;
   border-color: transparent;
-  margin-top: 9px;
   text-align: center;
-}
-
-.miniship .fleet-name {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
+  width: 100%;
 }
 
 .miniship .flex {
