@@ -10,6 +10,10 @@
 .settings-view .settings-view-tabs .bp3-tab-list {
   justify-content: space-between;
   height: 100%;
+  position: sticky;
+  background: rgba(48, 64, 77, 0.8);
+  top: 0;
+  z-index: 10;
 }
 
 .settings-view .settings-view-tabs .bp3-tab.poi-settings-tab {
