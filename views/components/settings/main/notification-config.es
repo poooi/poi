@@ -4,41 +4,10 @@ import { connect } from 'react-redux'
 import { get, map, capitalize } from 'lodash'
 import { translate } from 'react-i18next'
 import { Switch, Slider, FormGroup, NumericInput, Callout } from '@blueprintjs/core'
-import styled from 'styled-components'
 
-import { Section } from '../components/section'
+import { Section, Wrapper, HalfWrapper } from '../components/section'
 
 const { config } = window
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-
-  .bp3-switch {
-    margin-right: 2em;
-  }
-
-  .bp3-form-content {
-    flex: 1;
-  }
-
-  .bp3-numeric-input {
-    display: inline-flex;
-  }
-
-  .bp3-input-group {
-    width: 5em;
-  }
-
-  .bp3-callout {
-    font-size: 12px;
-  }
-`
-
-const HalfWrapper = styled(Wrapper)`
-  width: 50%;
-`
 
 @translate(['setting'])
 @connect((state, props) => ({
