@@ -113,38 +113,8 @@ poi-app poi-nav-tabs .poi-tab-contents .nav {
   overflow: auto;
 }
 
-.plugin-dropdown div {
-  display: block;
-  float: left;
-  width: calc(100% / 3);
-}
-
-.plugin-dropdown div a {
-  display: flex;
-  min-height: 5em;
-  overflow: hidden;
-  padding-top: 1em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-}
-
 .plugin-pulldown-trigger {
   width: 100%;
-}
-
-.plugin-dropdown div a:hover {
-  background-color: #46a2dd !important;
-  text-decoration: none;
-  color: white;
-}
-
-.plugin-dropdown div [class*="fa-"].svg-inline--fa {
-  display: block;
-  font-size: 175%;
 }
 
 .poi-tabs-container {
