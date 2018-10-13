@@ -143,7 +143,7 @@ export const LandbaseButton = translate(['resources'])(
               intent={intent}
               onClick={onClick}
               disabled={disabled}
-              className={fleetId == activeFleetId ? 'active' : ''}
+              active={fleetId == activeFleetId}
               icon={<FontAwesome name="plane" />}
             />
           </ButtonGroup>

@@ -45,7 +45,7 @@ const ShipViewSwitchButton = connect((state, { fleetId }) =>
     intent={getFleetIntent(fleetState, disabled)}
     onClick={onClick}
     disabled={disabled}
-    className={fleetId == activeFleetId ? 'active' : ''}
+    active={fleetId == activeFleetId}
   >
     {fleetName || DEFAULT_FLEET_NAMES[fleetId]}
   </Button>
