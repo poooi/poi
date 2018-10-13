@@ -529,7 +529,7 @@ export class ControlledTabArea extends PureComponent {
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
         { pluginContents }
-        <div id={settings.name} className="SettingsView poi-app-tabpane" key="settings">
+        <div id={settings.name} className="settings-view poi-app-tabpane" key="settings">
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </div>
       </TabContentsUnion>
@@ -549,7 +549,7 @@ export class ControlledTabArea extends PureComponent {
         <div id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
         </div>
-        <div id={settings.name} className="SettingsView poi-app-tabpane" key="settings">
+        <div id={settings.name} className="settings-view poi-app-tabpane" key="settings">
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </div>
       </TabContentsUnion>

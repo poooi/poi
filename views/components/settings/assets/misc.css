@@ -1,75 +1,75 @@
-.SettingsView .poi-others .desc-buttons {
+.settings-view .poi-others .desc-buttons {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.SettingsView .poi-others .desc-buttons > button {
+.settings-view .poi-others .desc-buttons > button {
   margin-bottom: 0.25ex;
   margin-right: 1em;
   margin-top: 0.25ex;
 }
 
-.SettingsView .poi-others .contributors {
+.settings-view .poi-others .contributors {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.SettingsView .poi-others .contributor-item {
+.settings-view .poi-others .contributor-item {
   margin: 5px;
 }
 
-.SettingsView .poi-others .avatar-img {
+.settings-view .poi-others .avatar-img {
   border-radius: 20px;
   cursor: pointer;
   height: 40px;
   width: 40px;
 }
 
-.SettingsView .poi-others .opencollective img {
+.settings-view .poi-others .opencollective img {
   cursor: pointer;
 }
 
-.SettingsView .poi-others .thanks-to {
+.settings-view .poi-others .thanks-to {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.SettingsView .poi-others .thanks-to-item {
+.settings-view .poi-others .thanks-to-item {
   padding-left: 15px;
   padding-right: 15px;
   width: 50%;
 }
 
-.SettingsView .poi-others .sp-thanks-to .thanks-to-item {
+.settings-view .poi-others .sp-thanks-to .thanks-to-item {
   width: initial;
 }
 
-.SettingsView .poi-others .thanks-to-img-container {
+.settings-view .poi-others .thanks-to-img-container {
   border-radius: 4px;
   height: 75px;
   overflow: hidden;
   width: 75px;
 }
 
-.SettingsView .poi-others .thanks-to-img {
+.settings-view .poi-others .thanks-to-img {
   cursor: pointer;
 }
 
-.SettingsView .poi-others .thanks-to-container {
+.settings-view .poi-others .thanks-to-container {
   flex: 1;
   padding-left: 5px;
 }
 
-.SettingsView .poi-others .avatar-img:hover {
+.settings-view .poi-others .avatar-img:hover {
   transform: rotate(360deg);
   transition-duration: 3s;
 }
 
-.SettingsView .poi-others .metric-table {
+.settings-view .poi-others .metric-table {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -78,25 +78,25 @@
   margin-top: 1em;
 }
 
-.SettingsView .poi-others .metric-row {
+.settings-view .poi-others .metric-row {
   display: flex;
   flex-grow: 1;
 }
 
-.SettingsView .poi-others .metric-haeder {
+.settings-view .poi-others .metric-haeder {
   border-bottom: 1px solid #777;
   font-weight: 600;
   margin-bottom: 1ex;
 }
 
-.SettingsView .poi-others .metric-row > span {
+.settings-view .poi-others .metric-row > span {
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: calc(100% / 8);
 }
 
-.SettingsView .poi-others .metric-total {
+.settings-view .poi-others .metric-total {
   border-top: 1px solid #777;
   margin-top: 1ex;
 }

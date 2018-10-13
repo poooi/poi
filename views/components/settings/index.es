@@ -20,11 +20,11 @@ export class reactClass extends React.Component {
     const { t } = this.props
     return (
       <Tabs defaultSelectedTabId={0} id="settings-view-tabs" className="settings-view-tabs">
-        <Tab id={0} key={0} title={t('setting:Common')} className="poi-settings-Tab" panel={<PoiConfig />}/>
-        <Tab id={1} key={1} title={t('setting:Display')} className="poi-settings-Tab" panel={<DisplayConfig />}/>
-        <Tab id={2} key={2} title={t('setting:Proxy')} className="poi-settings-Tab" panel={<NetworkConfig />}/>
-        <Tab id={3} key={3} title={t('setting:Plugins')} className="poi-settings-Tab" panel={<PluginConfig />}/>
-        <Tab id={-1} key={-1} title={t('setting:About')} className="poi-settings-Tab" panel={<Misc />}/>
+        <Tab id={0} key={0} title={t('setting:Common')} className="poi-settings-tab" panel={<PoiConfig />}/>
+        <Tab id={1} key={1} title={t('setting:Display')} className="poi-settings-tab" panel={<DisplayConfig />}/>
+        <Tab id={2} key={2} title={t('setting:Proxy')} className="poi-settings-tab" panel={<NetworkConfig />}/>
+        <Tab id={3} key={3} title={t('setting:Plugins')} className="poi-settings-tab" panel={<PluginConfig />}/>
+        <Tab id={-1} key={-1} title={t('setting:About')} className="poi-settings-tab" panel={<Misc />}/>
       </Tabs>
     )
   }
