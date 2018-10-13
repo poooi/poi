@@ -5,7 +5,7 @@ import { get } from 'lodash'
 import { translate, Trans } from 'react-i18next'
 import { Button, ButtonGroup, Tag, Intent, Position } from '@blueprintjs/core'
 
-import { Tooltip } from '../main/parts/panel-tooltip'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import './assets/landbase-button.css'
 

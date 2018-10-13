@@ -5,7 +5,7 @@ import { createSelector } from 'reselect'
 import React from 'react'
 import { translate, Trans } from 'react-i18next'
 import { escapeI18nKey } from 'views/utils/tools'
-import { Tooltip } from './panel-tooltip'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import {
   configLayoutSelector,

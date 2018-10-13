@@ -16,7 +16,7 @@ import {
   fleetInBattleSelectorFactory,
 } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
-import { Tooltip } from './panel-tooltip'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import '../assets/expedition-panel.css'
 

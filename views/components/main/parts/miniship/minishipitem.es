@@ -31,7 +31,7 @@ import {
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
 
-import { Tooltip } from './panel-tooltip'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 const slotitemsDataSelectorFactory = memoize(shipId =>
   createSelector(

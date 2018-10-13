@@ -7,11 +7,11 @@ import { createSelector } from 'reselect'
 import { Intent, Card, ButtonGroup, Button } from '@blueprintjs/core'
 
 import { PaneBodyMini, LBViewMini } from './minishippane'
-import { LandbaseButton } from '../../ship-parts/landbase-button'
+import { LandbaseButton } from '../../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 
-import '../assets/miniship.css'
+import '../../assets/miniship.css'
 
 const INTENTS = [
   Intent.SUCCESS,
