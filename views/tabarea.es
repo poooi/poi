@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 import React, { Component, Children, PureComponent, unstable_AsyncMode as Async } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
-import { Tab, Tabs, Popover, Button, Position } from '@blueprintjs/core'
+import { Tab, Tabs, Popover, Button, Position, NonIdealState } from '@blueprintjs/core'
 import { isEqual, omit, get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { translate } from 'react-i18next'
 import { remote } from 'electron'
+import styled from 'styled-components'
 
 import * as settings from './components/settings'
 import * as mainview from './components/main'
@@ -20,6 +21,41 @@ import { isInGame } from 'views/utils/game-utils'
 const { config, dispatch, ipc } = window
 
 const emptyObj = {}
+
+const PluginDropdownMenuItem = styled.div`
+  display: block;
+  float: left;
+  width: calc(100% / 3);
+
+  a {
+    display: flex;
+    min-height: 5em;
+    overflow: hidden;
+    padding-top: 1em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+  }
+
+  a:hover {
+    background-color: #46a2dd !important;
+    text-decoration: none;
+    color: white;
+  }
+
+  [class*="fa-"].svg-inline--fa {
+    display: block;
+    font-size: 175%;
+  }
+`
+
+const PluginNonIdealState = styled(NonIdealState)`
+  height: 400px;
+  max-height: 100%;
+`
 
 @connect(
   (state) => ({
@@ -382,11 +418,11 @@ export class ControlledTabArea extends PureComponent {
       <div className="plugin-dropdown">
         {
           this.props.plugins.length == 0 ? (
-            <div key={1002}>
-              <a href="#">
-                {t('setting:Install plugins in settings')}
-              </a>
-            </div>
+            <PluginNonIdealState
+              icon="cloud-download"
+              title={t('setting:No plugin found')}
+              description={t('setting:Install plugins in settings')}
+            />
           ) : (
             this.listedPlugins().map((plugin, index) => {
               const handleClick = plugin.handleClick ?
@@ -398,11 +434,11 @@ export class ControlledTabArea extends PureComponent {
                     this.handleSelectTab(plugin.id)
                   }
               return (
-                <div key={plugin.id}>
+                <PluginDropdownMenuItem key={plugin.id}>
                   <a id={this.props.activeMainTab === plugin.id ? '' : plugin.id} onClick={handleClick} href="#">
                     {plugin.displayName}
                   </a>
-                </div>
+                </PluginDropdownMenuItem>
               )
             })
           )
