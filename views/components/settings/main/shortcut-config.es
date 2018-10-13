@@ -46,7 +46,7 @@ export class ShortcutConfig extends Component {
       return <Trans>setting:Disabled</Trans>
     }
   }
-  active = () => ((typeof this.props.active === "undefined") ? true : this.props.active)
+  active = () => ((typeof this.props.active === 'undefined') ? true : this.props.active)
   showDisableButton = () => (this.active() && this.enabled() && !this.recording())
   recording = () => (this.state.recording)
   enabled = () => (!!this.props.value)
@@ -132,7 +132,7 @@ export class ShortcutConfig extends Component {
           <Button
             active={this.active()}
             disabled={!this.active() || this.recording()}
-            bsStyle={!this.active() ? 'default' : (this.enabled() ? "success" : "danger")}
+            bsStyle={!this.active() ? 'default' : (this.enabled() ? 'success' : 'danger')}
             onClick={this.recording() || (!this.active() ? null : this.handleClickRecord)}
             style={{width: '60%'}} >
             {this.displayText()}

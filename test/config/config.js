@@ -20,11 +20,11 @@ describe('config', function() {
     })
     it('should be set and get a object correctly', function() {
       config.set('another', {
-        a: "b",
+        a: 'b',
         c: 0xbb,
       })
       assert.deepEqual(config.get('another', null), {
-        a: "b",
+        a: 'b',
         c: 0xbb,
       })
     })

@@ -75,7 +75,7 @@ export class ConstructionPanel extends Component {
             const completeTime = isInUse ? dock.api_complete_time : -1
             const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null
             return (
-              <OverlayTrigger key={i} placement='top' overlay={
+              <OverlayTrigger key={i} placement="top" overlay={
                 <Tooltip id={`kdock-material-${i}`} style={!isInUse && {display: 'none'}}>
                   {
                     <span style={tooltipTitleClassname}>{dockName}<br /></span>
@@ -87,7 +87,7 @@ export class ConstructionPanel extends Component {
                   {this.getMaterialImage(7)} {dock.api_item5}
                 </Tooltip>
               }>
-                <div className="panel-item kdock-item" style={{ flexBasis: `${100 / dimension}%` }}>
+                <div className="panel-item kdock-item" style={{ flexBasis: `calc(${100 / dimension}% - 8px)` }}>
                   {
                     enableAvatar &&
                     <>

@@ -25,7 +25,7 @@ const {PLUGIN_PATH} = window
 @translate(['setting'])
 @connect((state, props) => ({
   plugins: state.plugins,
-  mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  "taobao" : "npm"),
+  mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  'taobao' : 'npm'),
   proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
   autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
@@ -205,7 +205,7 @@ export class PluginConfig extends Component {
     shell.openItem(path.join(PLUGIN_PATH, 'node_modules'))
   }
   onSelectOpenSite = (e) => {
-    shell.openExternal("https://www.npmjs.com/search?q=poi-plugin")
+    shell.openExternal('https://www.npmjs.com/search?q=poi-plugin')
     e.preventDefault()
   }
   onSelectInstallFromFile = () => {
@@ -340,7 +340,7 @@ export class PluginConfig extends Component {
     }
     const advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
     return (
-      <form className='contents-wrapper' style={{marginTop: '10px'}}>
+      <form className="contents-wrapper" style={{marginTop: '10px'}}>
         <FileDrop
           className="plugin-dropfile panel"
           onDrop={this.onDropInstallFromFile}
@@ -348,22 +348,22 @@ export class PluginConfig extends Component {
         >
           {t('setting:Drop plugin tarballs here to install')}
         </FileDrop>
-        <Grid className='correct-container'>
-          <Row className='plugin-rowspace'>
+        <Grid className="correct-container">
+          <Row className="plugin-rowspace">
             <Col xs={12}>
               {
                 window.isSafeMode &&
-                <Panel header={t('setting:Safe Mode')} bsStyle='warning'>
+                <Panel header={t('setting:Safe Mode')} bsStyle="warning">
                   <Panel.Body>{t('setting:Poi is running in safe mode, plugins are not enabled automatically')}</Panel.Body>
                 </Panel>
               }
-              <ButtonGroup bsSize='small' className='plugin-buttongroup'>
+              <ButtonGroup bsSize="small" className="plugin-buttongroup">
                 <Button
                   onClick={this.checkUpdate}
                   disabled={this.state.checkingUpdate}
-                  className='control-button col-xs-3'
+                  className="control-button col-xs-3"
                 >
-                  <FontAwesome name='refresh' spin={this.state.checkingUpdate} />
+                  <FontAwesome name="refresh" spin={this.state.checkingUpdate} />
                   <span> {t('setting:Check Update')}</span>
                 </Button>
                 <Button
@@ -372,7 +372,7 @@ export class PluginConfig extends Component {
                           this.state.checkingUpdate ||
                           !PluginManager.getUpdateStatus()
                   }
-                  className='control-button col-xs-3'
+                  className="control-button col-xs-3"
                 >
                   <FontAwesome
                     name={updateStatusFAname}
@@ -385,7 +385,7 @@ export class PluginConfig extends Component {
                   disabled={this.state.npmWorking ||
                           Object.keys(uninstalledPluginSettings).length === 0
                   }
-                  className='control-button col-xs-3'
+                  className="control-button col-xs-3"
                 >
                   <FontAwesome
                     name={installStatusFAname}
@@ -395,7 +395,7 @@ export class PluginConfig extends Component {
                 </Button>
                 <Button
                   onClick={this.handleAdvancedShow}
-                  className='control-button col-xs-3'
+                  className="control-button col-xs-3"
                 >
                   <FontAwesome name="gear" />
                   <span> {t('setting:Advanced')}</span>
@@ -427,7 +427,7 @@ export class PluginConfig extends Component {
                       <Col xs={12}>
                         <Row>
                           <Col xs={12}>
-                            <label className='control-label'>
+                            <label className="control-label">
                               {t('setting:Select npm server')}
                             </label>
                           </Col>
@@ -437,7 +437,7 @@ export class PluginConfig extends Component {
                             Object.keys(mirrors).map((server, index) => {
                               return (
                                 <OverlayTrigger
-                                  placement='top'
+                                  placement="top"
                                   key={index}
                                   overlay={
                                     <Tooltip id={`npm-server-${index}`}>
@@ -445,7 +445,7 @@ export class PluginConfig extends Component {
                                     </Tooltip>
                                   }
                                 >
-                                  <Col key={index} xs={6} className='select-npm-server'>
+                                  <Col key={index} xs={6} className="select-npm-server">
                                     <Radio
                                       checked={this.props.mirrorName == server}
                                       onChange={this.onSelectServer.bind(this, server)}
@@ -462,7 +462,7 @@ export class PluginConfig extends Component {
                       <Col xs={12}>
                         <Row>
                           <Col xs={12}>
-                            <label className='control-label'>
+                            <label className="control-label">
                               {t('setting:Others')}
                             </label>
                           </Col>
@@ -492,14 +492,14 @@ export class PluginConfig extends Component {
                           </Checkbox>
                         </div>
                         <Row>
-                          <ButtonGroup className='plugin-buttongroup'>
-                            <Button className='col-xs-4' onClick={this.onSelectOpenFolder}>
+                          <ButtonGroup className="plugin-buttongroup">
+                            <Button className="col-xs-4" onClick={this.onSelectOpenFolder}>
                               {t('setting:Open plugin folder')}
                             </Button>
-                            <Button className='col-xs-4' onClick={this.onSelectOpenSite}>
+                            <Button className="col-xs-4" onClick={this.onSelectOpenSite}>
                               {t('setting:Search for plugins')}
                             </Button>
-                            <Button className='col-xs-4' onClick={this.handleGracefulRepair}>
+                            <Button className="col-xs-4" onClick={this.handleGracefulRepair}>
                               {t('setting:Repair plugins')}
                             </Button>
                           </ButtonGroup>
@@ -511,7 +511,7 @@ export class PluginConfig extends Component {
               </Collapse>
             </Col>
           </Row>
-          <Row className='plugin-rowspace'>
+          <Row className="plugin-rowspace">
             <Collapse in={this.state.manuallyInstallStatus > 0}>
               <Col xs={12}>
                 <Alert bsStyle={installStatusbsStyle}>
@@ -520,7 +520,7 @@ export class PluginConfig extends Component {
               </Col>
             </Collapse>
           </Row>
-          <Row className='plugin-rowspace'>
+          <Row className="plugin-rowspace">
             <Col xs={12}>
               <NameInput
                 handleManuallyInstall={this.handleManuallyInstall}

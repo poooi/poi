@@ -111,7 +111,7 @@ export class RepairPanel extends Component {
               hpPercentage = (100 * get(ships, [dock.api_ship_id, 'api_nowhp'])) / get(ships, [dock.api_ship_id, 'api_maxhp'])
             }
             return (
-              <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} style={{ flexBasis: `${100 / dimension}%` }}>
+              <div key={i} className={cls('panel-item', 'ndock-item', {avatar : enableAvatar})} style={{ flexBasis: `calc(${100 / dimension}% - 8px)` }}>
                 {
                   enableAvatar &&
                   <>
@@ -128,7 +128,7 @@ export class RepairPanel extends Component {
                 }
                 <span className="ndock-name">{dockName}</span>
 
-                <OverlayTrigger placement='left' overlay={
+                <OverlayTrigger placement="left" overlay={
                   <Tooltip id={`ndock-finish-by-${i}`} style={dock.api_state < 0 && {display: 'none'}}>
                     <strong>{this.props.t('main:Finish By')}: </strong>{timeToString(completeTime)}
                   </Tooltip>

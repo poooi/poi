@@ -11,7 +11,7 @@ global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
 global.DEFAULT_SCREENSHOT_PATH = process.platform === 'darwin'
   ? path.join(app.getPath('home'), 'Pictures', 'Poi')
   : path.join(global.APPDATA_PATH, 'screenshots')
-global.MODULE_PATH = path.join(global.ROOT, "node_modules")
+global.MODULE_PATH = path.join(global.ROOT, 'node_modules')
 
 const {ROOT} = global
 const poiIconPath = path.join(ROOT, 'assets', 'icons',
@@ -24,7 +24,7 @@ require('./lib/module-path').setAllowedPath([ global.ROOT, global.APPDATA_PATH ]
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
-const {warn, error} = require('./lib/utils')
+const { warn, error, darwinDevToolPolyfill } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
@@ -44,7 +44,7 @@ if (config.get('poi.misc.safemode', false)) {
 // Add shortcut to start menu when os is windows
 app.setAppUserModelId('org.poooi.poi')
 if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
-  const shortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk"
+  const shortcutPath = app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk'
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
   const option = {
@@ -60,7 +60,7 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
     })
   }
   shell.writeShortcutLink(shortcutPath, option)
-  const safeModeShortcutPath = app.getPath('appData') + "\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk"
+  const safeModeShortcutPath = app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk'
   const safeModeOption = Object.assign({}, option)
   Object.assign(safeModeOption, {
     description: 'poi the KanColle Browser Tool (safe mode)',
@@ -89,7 +89,7 @@ if (process.platform === 'win32') {
 }
 
 // Test: enable JavaScript experimental features
-app.commandLine.appendSwitch('js-flags', "--harmony --harmony-do-expressions")
+app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
 
 // enable audio autoplay
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391
@@ -154,8 +154,9 @@ app.on('ready', () => {
       plugins: true,
       nodeIntegrationInWorker: true,
       nativeWindowOpen: true,
+      zoomFactor: config.get('poi.appearance.zoom', 1),
     },
-    backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
+    backgroundColor: '#E62A2A2A',
   })
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
@@ -190,6 +191,8 @@ app.on('ready', () => {
     require('./lib/window').closeWindows()
     mainWindow = null
   })
+  // Workaround for cut/copy/paste/close keybindings not working in devtools window on OSX
+  darwinDevToolPolyfill(mainWindow.webContents)
 
   // Tray icon
   if (process.platform === 'win32' || process.platform === 'linux') {

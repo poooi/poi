@@ -38,7 +38,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
     return dirs
   })()
 
-  log("Now packing plugins into tarballs.")
+  log('Now packing plugins into tarballs.')
   await runScript(NPM_EXEC_PATH, ['pack'].concat(pluginDirs), {
     cwd: tarRoot,
   })
@@ -46,7 +46,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
 
 const installPlugins = async (poiVersion) => {
   const BUILD_ROOT = path.join(ROOT, 'dist')
-  const BUILDING_ROOT = path.join(BUILD_ROOT, "plugins")
+  const BUILDING_ROOT = path.join(BUILD_ROOT, 'plugins')
   const RELEASE_DIR = BUILD_ROOT
 
   const packages = await fs.readJson(PLUGIN_JSON_PATH)

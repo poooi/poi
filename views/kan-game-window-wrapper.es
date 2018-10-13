@@ -42,10 +42,10 @@ export class KanGameWindowWrapper extends PureComponent {
   constructor(props) {
     super(props)
     this.containerEl = document.createElement('div')
-    this.containerEl.id = "plugin-mountpoint"
+    this.containerEl.id = 'plugin-mountpoint'
     this.containerEl.style['display'] = 'flex'
-    this.containerEl.style['flex-direction'] = "column"
-    this.containerEl.style['height'] = "100vh"
+    this.containerEl.style['flex-direction'] = 'column'
+    this.containerEl.style['height'] = '100vh'
     this.externalWindow = null
   }
 
@@ -135,12 +135,12 @@ export class KanGameWindowWrapper extends PureComponent {
     this.externalWindow = open(`file:///${__dirname}/../index-plugin.html?kangame`, 'plugin[kangame]', windowFeatures)
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.externalWindow.remote = this.externalWindow.require('electron').remote
+      this.externalWindow.require(require.resolve('assets/js/webview-window-preload.js'))
       this.externalWindow.remote.getCurrentWindow().setResizable(!windowUseFixedResolution)
-      this.externalWindow.remote.getCurrentWebContents().executeJavaScript('window.onbeforeunload = e => e.returnValue = false')
       this.externalWindow.remote.getCurrentWindow().setAspectRatio(1200 / 720, { width: 0, height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)) })
       this.externalWindow.addEventListener('resize', debounce(() => {
         if (process.platform !== 'darwin') {
-          this.externalWindow.remote.getCurrentWindow().setSize(
+          this.externalWindow.remote.getCurrentWindow().setContentSize(
             Math.round(this.externalWindow.innerWidth * config.get('poi.appearance.zoom', 1)),
             Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * config.get('poi.appearance.zoom', 1)),
           )
@@ -171,13 +171,13 @@ export class KanGameWindowWrapper extends PureComponent {
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/control.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/map-reminder.css'))}">`
       if (process.platform === 'darwin') {
-        const div = document.createElement("div")
-        div.style.position = "absolute"
+        const div = document.createElement('div')
+        div.style.position = 'absolute'
         div.style.top = 0
-        div.style.height = "23px"
-        div.style.width = "100%"
-        div.style["-webkit-app-region"] = "drag"
-        div.style["pointer-events"] = "none"
+        div.style.height = '23px'
+        div.style.width = '100%'
+        div.style['-webkit-app-region'] = 'drag'
+        div.style['pointer-events'] = 'none'
         this.externalWindow.document.body.appendChild(div)
       }
       this.externalWindow.document.body.appendChild(this.containerEl)
@@ -194,7 +194,7 @@ export class KanGameWindowWrapper extends PureComponent {
       }
       this.externalWindow.require(require.resolve('./env-parts/theme'))
       this.externalWindow.addEventListener('beforeunload', e => {
-        config.set(`poi.kangameWindow.bounds`, this.externalWindow.remote.getCurrentWindow().getBounds())
+        config.set('poi.kangameWindow.bounds', this.externalWindow.remote.getCurrentWindow().getBounds())
       })
       if (windowUseFixedResolution) {
         const width = config.get('poi.webview.windowWidth', 1200)
@@ -229,7 +229,7 @@ export class KanGameWindowWrapper extends PureComponent {
   handleZoom = (path, value) => {
     if (path === 'poi.appearance.zoom') {
       this.onZoomChange(value)
-      this.externalWindow.remote.getCurrentWindow().setSize(
+      this.externalWindow.remote.getCurrentWindow().setContentSize(
         Math.round(this.externalWindow.innerWidth * value),
         Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * value),
       )

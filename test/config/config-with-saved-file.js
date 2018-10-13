@@ -13,7 +13,7 @@ describe('config with saved file', function() {
       path: {
         to: {
           initial: {
-            value: "Hello World",
+            value: 'Hello World',
           },
         },
       },
@@ -42,11 +42,11 @@ describe('config with saved file', function() {
     })
     it('should be set and get a object correctly', function() {
       config.set('another', {
-        a: "b",
+        a: 'b',
         c: 0xbb,
       })
       assert.deepEqual(config.get('another'), {
-        a: "b",
+        a: 'b',
         c: 0xbb,
       })
     })

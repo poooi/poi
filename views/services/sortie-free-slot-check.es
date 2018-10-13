@@ -13,9 +13,9 @@ window.addEventListener('game.response',
         const shipSlots = basic.api_max_chara - Object.keys(getStore('info.ships')).length
         if (shipSlots < minShipSlots) {
           if (shipSlots > 0){
-            errMsg.push(i18next.t("main:ShipSlotWarning", { count: shipSlots }))
+            errMsg.push(i18next.t('main:ShipSlotWarning', { count: shipSlots }))
           } else {
-            errMsg.push(i18next.t("main:ShipSlotFull"))
+            errMsg.push(i18next.t('main:ShipSlotFull'))
           }
         }
       }
@@ -24,9 +24,9 @@ window.addEventListener('game.response',
         const equipSlots = basic.api_max_slotitem - Object.keys(getStore('info.equips')).length
         if (equipSlots < minEquipSlots) {
           if (equipSlots > 0){
-            errMsg.push(i18next.t("main:EquipSlotWarning", { count: equipSlots }))
+            errMsg.push(i18next.t('main:EquipSlotWarning', { count: equipSlots }))
           } else {
-            errMsg.push(i18next.t("main:EquipSlotFull"))
+            errMsg.push(i18next.t('main:EquipSlotFull'))
           }
         }
       }

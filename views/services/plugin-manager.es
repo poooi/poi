@@ -11,10 +11,10 @@ import i18next from 'views/env-parts/i18next'
 const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 
 const fetchHeader = new Headers()
-fetchHeader.set("Cache-Control", "max-age=0")
+fetchHeader.set('Cache-Control', 'max-age=0')
 const defaultFetchOption = {
-  method: "GET",
-  cache: "default",
+  method: 'GET',
+  cache: 'default',
   headers: fetchHeader,
 }
 
@@ -53,7 +53,7 @@ class PluginManager extends EventEmitter {
     }
     this.npmConfig = {
       prefix: this.pluginRoot,
-      registry: "https://registry.npmjs.org",
+      registry: 'https://registry.npmjs.org',
       progress: false,
     }
     this.VALID = 0
@@ -101,9 +101,9 @@ class PluginManager extends EventEmitter {
   loadConfig() {
     const mirrorConf = config.get('packageManager.mirrorName')
     const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ?
-      mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
-    const proxyConf = config.get("packageManager.proxy", false)
-    const betaCheck = config.get("packageManager.enableBetaPluginCheck", false)
+      mirrorConf : ((navigator.language === 'zh-CN') ?  'taobao' : 'npm')
+    const proxyConf = config.get('packageManager.proxy', false)
+    const betaCheck = config.get('packageManager.enableBetaPluginCheck', false)
     this.selectConfig(mirrorName, proxyConf, betaCheck, false)
 
     return this.mirrors
@@ -111,15 +111,15 @@ class PluginManager extends EventEmitter {
   selectConfig(name, enable, check) {
     if (name) {
       this.config.mirror = this.mirrors[name]
-      config.set("packageManager.mirrorName", name)
+      config.set('packageManager.mirrorName', name)
     }
     if (enable != null) {
       this.config.proxy = enable
-      config.set("packageManager.proxy", enable)
+      config.set('packageManager.proxy', enable)
     }
     if (check != null) {
       this.config.betaCheck = check
-      config.set("packageManager.enableBetaPluginCheck", check)
+      config.set('packageManager.enableBetaPluginCheck', check)
     }
     this.npmConfig.registry = this.config.mirror.server
     if (this.config.proxy) {
@@ -347,7 +347,7 @@ class PluginManager extends EventEmitter {
     const packageName = installingByPluginName ? packageSource :
       await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
 
-      // 4) Unload plugin if it's running
+    // 4) Unload plugin if it's running
     const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
     if (nowPlugin) {
       try {

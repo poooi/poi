@@ -1,50 +1,52 @@
 module.exports = {
-  'env': {
-    'browser': true,
-    'es6': true,
-    'node': true,
-    'mocha': true,
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+    mocha: true,
   },
-  'extends': [
+  extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
   ],
-  'parserOptions': {
-    'ecmaVersion': 7,
-    'ecmaFeatures': {
-      'experimentalObjectRestSpread': true,
-      'jsx': true,
+  parserOptions: {
+    ecmaFeatures: {
+      legacyDecorators: true,
     },
-    'sourceType': 'module',
   },
-  'plugins': [
-    'import',
-    'react',
-  ],
-  'parser': 'babel-eslint',
-  'rules': {
+  plugins: ['import', 'react'],
+  parser: 'babel-eslint',
+  rules: {
     'comma-dangle': ['error', 'always-multiline'],
-    'indent': ['warn', 2],
+    indent: ['warn', 2],
     'linebreak-style': ['error', 'unix'],
-    'no-console': ['warn', {'allow': ['warn', 'error']}],
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     'no-var': 'error',
-    'no-unused-vars': ['warn', {'args': 'none'}],
-    'semi': ['error', 'never'],
+    'no-unused-vars': ['warn', { args: 'none' }],
+    semi: ['error', 'never'],
     'unicode-bom': 'error',
-    'prefer-const': ['error', {'destructuring': 'all'}],
+    'prefer-const': ['error', { destructuring: 'all' }],
     'react/prop-types': [0],
-    'no-irregular-whitespace': ['error', {'skipStrings': true, 'skipTemplates': true}],
+    'no-irregular-whitespace': [
+      'error',
+      { skipStrings: true, skipTemplates: true },
+    ],
     'import/no-named-as-default-member': [0],
+    quotes: ['error', 'single'],
+    'jsx-quotes': ['error', 'prefer-double'],
   },
-  'settings': {
+  settings: {
     'import/resolver': {
-      'node': {
-        'extensions': ['', '.js', '.jsx', '.es', '.coffee', '.cjsx'],
-        'paths': [__dirname]
+      node: {
+        extensions: ['', '.js', '.jsx', '.es', '.coffee', '.cjsx'],
+        paths: [__dirname],
       },
     },
     'import/core-modules': ['electron', 'redux-observers'],
+    react: {
+      version: require('react').version,
+    },
   },
 }

@@ -15,7 +15,6 @@ import {
 
 import './assets/map-reminder.css'
 
-const { toast, config } = window
 const emptyObj = {}
 
 const MapRoutes = connect(
@@ -53,7 +52,7 @@ const MapRoutes = connect(
             begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} className="passed" /> : <span />
           )}
         <rect x={parseInt(bossSpotLoc[0] * SCALE) - 4.5} y={parseInt(bossSpotLoc[1] * SCALE) - 4.5} width={9} height={9}
-          className='boss' />
+          className="boss" />
         {// Draw all points
           map(mapspots, ([x, y], id) =>
             <rect key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6} />
@@ -128,16 +127,16 @@ export class PoiMapReminder extends Component {
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(<span className='map-tooltip-msg' key='node'>{t('Node')}: {alphaNode} ({currentNode})</span>)
+      tooltipMsg.push(<span className="map-tooltip-msg" key="node">{t('Node')}: {alphaNode} ({currentNode})</span>)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
-      tooltipMsg.push(<span className='map-tooltip-msg' key='hp'>HP: {mapHp[0]} / {mapHp[1]}</span>)
+      tooltipMsg.push(<span className="map-tooltip-msg" key="hp">HP: {mapHp[0]} / {mapHp[1]}</span>)
     }
     return (
       <OverlayTrigger
-        placement='top'
+        placement="top"
         overlay={
-          <Tooltip id='detail-map-info' className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
+          <Tooltip id="detail-map-info" className="reminder-pop" style={tooltipMsg.length === 0 ? {display: 'none'}: {}}>
             <MapRoutes />
             <div>{ tooltipMsg }</div>
             <ItemStat />
@@ -148,8 +147,8 @@ export class PoiMapReminder extends Component {
             !mapHp ? undefined :
               <ProgressBar bsStyle="info" now={mapHp[0]} max={mapHp[1]} />
           }
-          <div className='alert alert-default'>
-            <span id='map-reminder-area'>
+          <div className="alert alert-default">
+            <span id="map-reminder-area">
               {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
             </span>
           </div>

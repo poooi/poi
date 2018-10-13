@@ -172,9 +172,9 @@ export async function readPlugin(pluginPath) {
   if (typeof get(plugin, 'packageData.author') === 'string') {
     plugin.author = plugin.packageData.author
   }
-  plugin.link = get(plugin, 'packageData.author.links') || get(plugin, 'packageData.author.url') || (pluginData[plugin.packageName] || {}).link || "https://github.com/poooi"
+  plugin.link = get(plugin, 'packageData.author.links') || get(plugin, 'packageData.author.url') || (pluginData[plugin.packageName] || {}).link || 'https://github.com/poooi'
   if (plugin.description == null) {
-    plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || "unknown"
+    plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || 'unknown'
   }
   // Resolve symlink.
   plugin.pluginPath = realpathSync(pluginPath)
@@ -313,7 +313,7 @@ const postEnableProcess = (plugin) => {
     }
     Object.assign(windowOptions, {
       realClose: plugin.realClose,
-      backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
+      backgroundColor: '#E62A2A2A',
       // frame: !config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux'),
     })
     if (['darwin'].includes(process.platform) && config.get('poi.appearance.vibrant', 0) === 1) {

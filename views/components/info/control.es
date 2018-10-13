@@ -10,6 +10,7 @@ import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
+const ipc = remote.require('./lib/ipc')
 
 import './assets/control.css'
 
@@ -40,35 +41,44 @@ export class PoiControl extends Component {
     extend: false,
   }
   handleCapturePage = toClipboard => {
-    const { width, height, windowWidth, windowHeight } = window.getStore('layout.webview')
-    const isolate = config.get('poi.layout.isolate', false)
-    const scWidth = isolate ? windowWidth : width
-    const scHeight = isolate ? windowHeight : height
-    const rect = {
-      x: 0,
-      y: 0,
-      width: Math.floor(scWidth * devicePixelRatio),
-      height: Math.floor(scHeight * devicePixelRatio),
+    getStore('layout.webview.ref').executeJavaScript(`(function() {
+      const canvas = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentDocument.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
+        : document.querySelector('#htmlWrap') ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
+          : document.querySelector('canvas') ? document.querySelector('canvas') : null
+      if (!canvas || !ImageCapture) return false
+      new ImageCapture(canvas.captureStream(0).getVideoTracks()[0]).grabFrame().then((imageBitmap) => {
+        const tempCanvas = document.createElement('canvas')
+        tempCanvas.width = imageBitmap.width
+        tempCanvas.height = imageBitmap.height
+        tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
+        return tempCanvas.toDataURL()
+      }).then(dataURL => {
+        const ss = ipc.access('screenshot');
+        if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({dataURL, toClipboard: ${!!toClipboard}})
+        return true
+      }).catch(() => false)
+    })()`)
+  }
+  handleScreenshotCaptured = ({dataURL, toClipboard}) => {
+    const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
+    const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
+
+    const image = nativeImage.createFromDataURL(dataURL)
+    if (toClipboard) {
+      clipboard.writeImage(image)
+      window.success(this.props.t('screenshot saved to clipboard'))
+    } else {
+      const buf = usePNG ? image.toPNG() : image.toJPEG(80)
+      const now = new Date()
+      const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+      fs.ensureDirSync(screenshotPath)
+      const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
+      fs.writeFile(filename, buf).then(() => {
+        window.success(`${this.props.t('screenshot saved to')} ${filename}`)
+      }).catch(err => {
+        window.error(this.props.t('Failed to save the screenshot'))
+      })
     }
-    const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
-    const usePNG = config.get('poi.misc.screenshot.format', 'png') === 'png'
-    getStore('layout.webview.ref').getWebContents().capturePage(rect, image => {
-      if (toClipboard) {
-        clipboard.writeImage(nativeImage.createFromDataURL(image.toDataURL()))
-        window.success(this.props.t('screenshot saved to clipboard'))
-      } else {
-        const buf = usePNG ? image.toPNG() : image.toJPEG(80)
-        const now = new Date()
-        const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
-        fs.ensureDirSync(screenshotPath)
-        const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
-        fs.writeFile(filename, buf).then(() => {
-          window.success(`${this.props.t('screenshot saved to')} ${filename}`)
-        }).catch(err => {
-          window.error(this.props.t('Failed to save the screenshot'))
-        })
-      }
-    })
   }
   handleOpenCacheFolder = () => {
     try {
@@ -135,7 +145,9 @@ export class PoiControl extends Component {
   }
   handleConfigChange = (path, value) => {
     if (this.editableConfigList.includes(path)) {
-      this.disableEditableMsg()
+      if (this.props.editable) {
+        this.disableEditableMsg()
+      }
     }
   }
   handleSetEditable = () => {
@@ -181,10 +193,10 @@ export class PoiControl extends Component {
       [
         { name: this.props.t('Refresh page'),
           func: gameRefreshPage,
-          style: "warning" },
+          style: 'warning' },
         { name: this.props.t('Reload Flash'),
           func: gameReloadFlash,
-          style: "danger" },
+          style: 'danger' },
       ])
   }
   handleSetExtend = () => {
@@ -211,10 +223,10 @@ export class PoiControl extends Component {
         [
           { name: this.props.t('Refresh page'),
             func: gameRefreshPage,
-            style: "warning" },
+            style: 'warning' },
           { name: this.props.t('Reload Flash'),
             func: gameReloadFlash,
-            style: "danger" },
+            style: 'danger' },
         ],
         () => {touchBarReset()}
       )
@@ -262,6 +274,12 @@ export class PoiControl extends Component {
     if (process.platform === 'darwin') {
       require('electron').ipcRenderer.addListener('touchbar', this.touchbarListener)
     }
+    // Add Screenshot handler
+    if (!ipc.access('screenshot')) {
+      ipc.register('screenshot', {
+        onScreenshotCaptured: this.handleScreenshotCaptured,
+      })
+    }
   }
   componentWillUnmount = () => {
     config.removeListener('config.set', this.handleConfigChange)
@@ -275,40 +293,40 @@ export class PoiControl extends Component {
       touchBarReInit()
     }
     return (
-      <div className='poi-control-container'>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-developers-tools-button' className='poi-control-tooltip'>{this.props.t('Developer Tools')}</Tooltip>}>
-          <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize='small'><FontAwesome name='terminal' /></Button>
+      <div className="poi-control-container">
+        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-developers-tools-button" className="poi-control-tooltip">{this.props.t('Developer Tools')}</Tooltip>}>
+          <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize="small"><FontAwesome name="terminal" /></Button>
         </OverlayTrigger>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-button' className='poi-control-tooltip'>{this.props.t('Take a screenshot')}</Tooltip>}>
-          <Button onClick={() => this.handleCapturePage(false)} onContextMenu={() => this.handleCapturePage(true)} bsSize='small'><FontAwesome name='camera-retro' /></Button>
+        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-screenshot-button" className="poi-control-tooltip">{this.props.t('Take a screenshot')}</Tooltip>}>
+          <Button onClick={() => this.handleCapturePage(false)} onContextMenu={() => this.handleCapturePage(true)} bsSize="small"><FontAwesome name="camera-retro" /></Button>
         </OverlayTrigger>
-        <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off')}</Tooltip>}>
-          <Button onClick={this.handleSetMuted} bsSize='small' className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
+        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-volume-button" className="poi-control-tooltip">{this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off')}</Tooltip>}>
+          <Button onClick={this.handleSetMuted} bsSize="small" className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
         </OverlayTrigger>
-        <Collapse in={this.state.extend} dimension='width' className="poi-control-extender">
+        <Collapse in={this.state.extend} dimension="width" className="poi-control-extender">
           <div>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-cache-button' className='poi-control-tooltip'>{this.props.t('Open cache dir')}</Tooltip>}>
-              <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize='small'><FontAwesome name='bolt' /></Button>
+            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-cache-button" className="poi-control-tooltip">{this.props.t('Open cache dir')}</Tooltip>}>
+              <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize="small"><FontAwesome name="bolt" /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-screenshot-dir-button' className='poi-control-tooltip'>{this.props.t('Open screenshot dir')}</Tooltip>}>
-              <Button onClick={this.handleOpenScreenshotFolder} bsSize='small'><FontAwesome name='photo' /></Button>
+            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-screenshot-dir-button" className="poi-control-tooltip">{this.props.t('Open screenshot dir')}</Tooltip>}>
+              <Button onClick={this.handleOpenScreenshotFolder} bsSize="small"><FontAwesome name="photo" /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-adjust-button' className='poi-control-tooltip'>{this.props.t('Auto adjust')}</Tooltip>}>
-              <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize='small'><FontAwesome name='arrows-alt' /></Button>
+            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-adjust-button" className="poi-control-tooltip">{this.props.t('Auto adjust')}</Tooltip>}>
+              <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize="small"><FontAwesome name="arrows-alt" /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-volume-button' className='poi-control-tooltip'>{this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel')}</Tooltip>}>
-              <Button onClick={this.handleSetEditable} bsSize='small'><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
+            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-volume-button" className="poi-control-tooltip">{this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel')}</Tooltip>}>
+              <Button onClick={this.handleSetEditable} bsSize="small"><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
             </OverlayTrigger>
-            <OverlayTrigger placement='right' overlay={<Tooltip id='poi-refresh-button' className='poi-control-tooltip'>{this.props.t('Refresh game')}</Tooltip>}>
+            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-refresh-button" className="poi-control-tooltip">{this.props.t('Refresh game')}</Tooltip>}>
               <Button
                 onClick={this.handleRefreshGameDialog}
                 onContextMenu={gameReloadFlash}
-                bsSize='small'><FontAwesome name='refresh' />
+                bsSize="small"><FontAwesome name="refresh" />
               </Button>
             </OverlayTrigger>
           </div>
         </Collapse>
-        <Button onClick={this.handleSetExtend} bsSize='small' className={this.state.extend ? 'active' : ''}><FontAwesome name={this.state.extend ? 'angle-left' : 'angle-right'} /></Button>
+        <Button onClick={this.handleSetExtend} bsSize="small" className={this.state.extend ? 'active' : ''}><FontAwesome name={this.state.extend ? 'angle-left' : 'angle-right'} /></Button>
       </div>
     )
   }

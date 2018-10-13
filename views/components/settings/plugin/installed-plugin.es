@@ -74,22 +74,22 @@ export class InstalledPlugin extends PureComponent {
       'btn-xs-6': !settingAvailable,
     })
     return (
-      <Row className='plugin-wrapper'>
+      <Row className="plugin-wrapper">
         <Col xs={12}>
           <Panel className={panelClass}>
             <Panel.Body>
               <Row>
-                <Col xs={12} className='div-row'>
-                  <span className='plugin-name'>
+                <Col xs={12} className="div-row">
+                  <span className="plugin-name">
                     {plugin.displayName}
                   </span>
-                  <div className='author-wrapper'>{'@'}
-                    <a className='author-link'
+                  <div className="author-wrapper">{'@'}
+                    <a className="author-link"
                       href={plugin.link}>
                       {plugin.author}
                     </a>
                   </div>
-                  <div className='update-wrapper'>
+                  <div className="update-wrapper">
                     <div>
                       <Label bsStyle={outdatedLabelbsStyle}
                         className={outdatedLabelClass}
@@ -101,7 +101,7 @@ export class InstalledPlugin extends PureComponent {
                     </div>
                     <div>
                       <span>
-                        {plugin.linkedPlugin && <FontAwesome name='link' />}
+                        {plugin.linkedPlugin && <FontAwesome name="link" />}
                       </span>
                       {`Ver. ${plugin.version || '1.0.0'}`}
                     </div>
@@ -109,45 +109,45 @@ export class InstalledPlugin extends PureComponent {
                 </Col>
               </Row>
               <Row>
-                <Col className='plugin-description' xs={7}>
+                <Col className="plugin-description" xs={7}>
                   <ReactMarkdown source={plugin.description} />
                 </Col>
-                <Col className='plugin-option' xs={5}>
-                  <ButtonGroup bsSize='small' className={btnGroupClass}>
+                <Col className="plugin-option" xs={5}>
+                  <ButtonGroup bsSize="small" className={btnGroupClass}>
                     {
                       settingAvailable?
-                        <OverlayTrigger placement='top' overlay={
+                        <OverlayTrigger placement="top" overlay={
                           <Tooltip id={`${plugin.id}-set-btn`}>
                             <Trans>setting:Settings</Trans>
                           </Tooltip>
                         }>
                           <Button
-                            bsStyle='primary' bsSize='xs'
+                            bsStyle="primary" bsSize="xs"
                             onClick={this.toggleSettingPop}
-                            className='plugin-control-button btn-xs-4'>
-                            <FontAwesome name='gear' />
+                            className="plugin-control-button btn-xs-4">
+                            <FontAwesome name="gear" />
                           </Button>
                         </OverlayTrigger>
                         : null
                     }
-                    <OverlayTrigger placement='top' overlay={
+                    <OverlayTrigger placement="top" overlay={
                       <Tooltip id={`${plugin.id}-enb-btn`}>
                         {enableBtnText}
                       </Tooltip>
                     }>
-                      <Button bsStyle='info'
+                      <Button bsStyle="info"
                         disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                         onClick={this.props.handleEnable}
                         className={btnClass}>
                         <FontAwesome name={enableBtnFAname}/>
                       </Button>
                     </OverlayTrigger>
-                    <OverlayTrigger placement='top' overlay={
+                    <OverlayTrigger placement="top" overlay={
                       <Tooltip id={`${plugin.id}-rm-btn`}>
                         {removeBtnText}
                       </Tooltip>
                     }>
-                      <Button bsStyle='danger'
+                      <Button bsStyle="danger"
                         onClick={this.props.handleRemove}
                         disabled={!plugin.isInstalled}
                         className={btnClass}>
@@ -160,7 +160,7 @@ export class InstalledPlugin extends PureComponent {
               <Row>
                 {
                   settingAvailable &&
-                    <Collapse in={this.state.settingOpen} className='plugin-setting-wrapper'>
+                    <Collapse in={this.state.settingOpen} className="plugin-setting-wrapper">
                       <Col xs={12}>
                         <Well>
                           {

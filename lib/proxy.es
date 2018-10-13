@@ -44,6 +44,9 @@ const isStaticResource = (pathname, hostname) => {
   if (pathname.startsWith('/kcs2/')) {
     return true
   }
+  if (pathname.startsWith('/kcs/')) {
+    return true
+  }
   if (pathname.startsWith('/gadget/')) {
     return true
   }
@@ -312,7 +315,7 @@ class Proxy extends EventEmitter {
           port: remoteUrl.port,
         })
         remote.on ('connect', () => {
-          client.write("HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n")
+          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
           remote.write(head)
         })
         client.on('data', (data) => {
@@ -332,7 +335,7 @@ class Proxy extends EventEmitter {
         for (const k in req.headers) {
           msg += `${caseNormalizer(k)}: ${req.headers[k]}\r\n`
         }
-        msg += "\r\n"
+        msg += '\r\n'
         remote = net.connect(port, host, () => {
           remote.write(msg)
           remote.write(head)
@@ -344,7 +347,7 @@ class Proxy extends EventEmitter {
       default: {
         // Connect to remote directly
         remote = net.connect(remoteUrl.port, remoteUrl.hostname, () => {
-          client.write("HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n")
+          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
           remote.write(head)
           client.pipe(remote)
           remote.pipe(client)
@@ -383,7 +386,7 @@ class Proxy extends EventEmitter {
       app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
       app.commandLine.appendSwitch('proxy-bypass-list', '<local>;*.google-analytics.com;*.doubleclick.net')
       app.commandLine.appendSwitch('ignore-certificate-errors')
-      app.commandLine.appendSwitch('ssl-version-fallback-min', "tls1")
+      app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1')
       log(`Proxy listening on ${this.port}`)
     })
   }

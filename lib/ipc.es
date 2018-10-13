@@ -14,7 +14,7 @@ class IPC extends EventEmitter {
   // opts:   key-func Object
   register = (scope, opts) => {
     if (!(scope && opts)) {
-      console.error("Invalid scope or opts:", scope, opts)
+      console.error('Invalid scope or opts:', scope, opts)
       return
     }
     if (!this.data[scope]) {
@@ -32,13 +32,13 @@ class IPC extends EventEmitter {
   // keys:   string / Array of string / key-func Object
   unregister = (scope, keys) => {
     if (!(scope && keys)) {
-      console.error("Invalid scope or keys:", scope, keys)
+      console.error('Invalid scope or keys:', scope, keys)
       return
     }
     if (!this.data[scope]) {
       return
     }
-    if (typeof keys === "string") {
+    if (typeof keys === 'string') {
       keys = new Array(keys)
     }
     if (keys instanceof Object && !(keys instanceof Array)) {

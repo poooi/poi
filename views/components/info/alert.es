@@ -8,7 +8,7 @@ const { config } = window
 
 const initState = {
   overflow: false,
-  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className='alert alert-default alert-history-contents'>　</div>)),
+  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className="alert alert-default alert-history-contents">　</div>)),
   current: {
     type: 'default',
     content: i18next.t('Waiting for response'),
@@ -143,14 +143,14 @@ class PoiAlertInner extends Component {
   }
   render() {
     return (
-      <div id='alert-main' className='alert-main' ref={ref => { this.alertMain = ref }}>
+      <div id="alert-main" className="alert-main" ref={ref => { this.alertMain = ref }}>
         <div
-          id='alert-container'
+          id="alert-container"
           className={`alert alert-${this.state.current.type} alert-container`}
           onClick={this.toggleHistory}
         >
-          <div className='alert-position' ref={(ref) => { this.alertPosition = ref }}>
-            <span id='alert-area' ref={ref => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
+          <div className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
+            <span id="alert-area" ref={ref => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
               {
                 this.state.overflow ?
                   <>
@@ -166,9 +166,9 @@ class PoiAlertInner extends Component {
             </span>
           </div>
         </div>
-        <div id='alert-history'
+        <div id="alert-history"
           ref={ref => { this.alertHistory = ref }}
-          className='alert-history overlay-background'
+          className="alert-history overlay-background"
           style={this.state.alertHistoryStyle}
           onClick={this.toggleHistory}>
           {this.state.history}

@@ -33,7 +33,7 @@ export class DownloadProgress extends Component {
     const { t } = this.props
     return this.state.percent > 0 && (
       <h5 className="update-progress">
-        <ProgressBar bsStyle='success'
+        <ProgressBar bsStyle="success"
           now={this.state.percent} />
         {
           this.state.downloaded

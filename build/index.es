@@ -48,7 +48,7 @@ const gitArchiveAndClone = async (tarPath, tgtDir) => {
     })
   } catch (e) {
     log(e)
-    log("Error on git archive! Probably you haven't installed git or it does not exist in your PATH.")
+    log('Error on git archive! Probably you haven\'t installed git or it does not exist in your PATH.')
     process.exit(1)
   }
   log('Archive complete! Extracting...')
@@ -79,7 +79,7 @@ export const build = async (poiVersion, dontRemove) => {
   // const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const BUILDING_ROOT = path.join(ROOT, 'app_compiled')
   const stage1App = path.join(BUILDING_ROOT, 'stage1')
-  const tarPath = path.join(stage1App, "app_stage1.tar")
+  const tarPath = path.join(stage1App, 'app_stage1.tar')
   const stage2App = BUILDING_ROOT
 
   // Clean files
@@ -126,7 +126,7 @@ export const build = async (poiVersion, dontRemove) => {
   delete packageData.devDependencies
   await fs.remove(packagePath)
   await fs.outputJson(packagePath, packageData)
-  log ("Done.")
+  log ('Done.')
 }
 
 export const compile = async () =>

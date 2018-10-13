@@ -46,7 +46,7 @@ export class NameInput extends PureComponent {
     return (
       <FormGroup>
         <ControlLabel>{t('setting:Install directly from npm')}</ControlLabel>
-        <InputGroup bsSize='small'>
+        <InputGroup bsSize="small">
           <FormControl type="text"
             value={packageName}
             onChange={this.changeInstalledPackage}
@@ -55,7 +55,7 @@ export class NameInput extends PureComponent {
             placeholder={t('setting:Input plugin package name') + '...'}>
           </FormControl>
           <InputGroup.Button>
-            <Button bsStyle='primary'
+            <Button bsStyle="primary"
               disabled={this.props.manuallyInstallStatus === 1 ||
                       this.props.npmWorking ||
                       !validPackageName}

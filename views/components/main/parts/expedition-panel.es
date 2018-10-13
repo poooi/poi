@@ -113,7 +113,7 @@ export class ExpeditionPanel extends Component {
                   ) : (
                     <span className="expedition-name">{expeditionName}</span>
                   )}
-                  <OverlayTrigger placement='left' overlay={
+                  <OverlayTrigger placement="left" overlay={
                     <Tooltip id={`expedition-return-by-${i}`} style={completeTime < 0 && {display: 'none'}}>
                       <strong>{this.props.t('main:Return By')}: </strong>{timeToString(completeTime)}
                     </Tooltip>

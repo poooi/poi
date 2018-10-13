@@ -36,10 +36,10 @@ const DB_KEY = {
 }
 
 const fetchHeader = new Headers()
-fetchHeader.set("Cache-Control", "max-age=0")
+fetchHeader.set('Cache-Control', 'max-age=0')
 const defaultFetchOption = {
-  method: "GET",
-  cache: "default",
+  method: 'GET',
+  cache: 'default',
   headers: fetchHeader,
 }
 
@@ -78,9 +78,9 @@ export class WctfDB extends Component {
 
   getNpmConfig = () => {
     const mirrorConf = config.get('packageManager.mirrorName')
-    const useProxy = config.get("packageManager.proxy", false)
+    const useProxy = config.get('packageManager.proxy', false)
     const mirrorName = Object.keys(MIRRORS).includes(mirrorConf) ?
-      mirrorConf : ((navigator.language === 'zh-CN') ?  "taobao" : "npm")
+      mirrorConf : ((navigator.language === 'zh-CN') ?  'taobao' : 'npm')
     const registry = MIRRORS[mirrorName].server
     const npmConfig = {
       registry,
@@ -128,7 +128,7 @@ export class WctfDB extends Component {
       .then(res => res.ok ? res.json() : undefined)
       .catch(e => undefined)
     if (!data || !data.version) {
-      console.warn(`Can't find update info for wctf-db`)
+      console.warn('Can\'t find update info for wctf-db')
     }
 
     updateFlag = updateFlag || get(data, 'version', this.props.version) !== this.props.version

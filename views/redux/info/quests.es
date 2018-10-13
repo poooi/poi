@@ -564,11 +564,11 @@ function dailyRefresh(now) {
 export function schedualDailyRefresh(dispatch) {
   const now = Date.now()
   // eslint-disable-next-line no-console
-  console.log("Scheduling daily refresh at %d (now %d)", QUEST_REFRESH_ZERO, Date.now())
+  console.log('Scheduling daily refresh at %d (now %d)', QUEST_REFRESH_ZERO, Date.now())
   Scheduler.schedule((time) => {
     // TODO: Debug
     // eslint-disable-next-line no-console
-    console.log("Daily refresh at %d scheduled at %d (now %d)", time, now, Date.now())
+    console.log('Daily refresh at %d scheduled at %d (now %d)', time, now, Date.now())
     dispatch(dailyRefresh(time))
   }, {
     time: QUEST_REFRESH_ZERO,

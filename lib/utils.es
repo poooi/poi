@@ -20,15 +20,15 @@ export const remoteStringify = JSON.stringify
 
 export function log(...str) {
   // eslint-disable-next-line no-console
-  console.log("[INFO] ", ...map(str, stringify))
+  console.log('[INFO] ', ...map(str, stringify))
 }
 
 export function warn(...str) {
-  console.warn(chalk.yellow("[WARN] ", ...map(str, stringify)))
+  console.warn(chalk.yellow('[WARN] ', ...map(str, stringify)))
 }
 
 export function error(...str) {
-  console.error(chalk.red.bold("[ERROR] ", ...map(str, stringify)))
+  console.error(chalk.red.bold('[ERROR] ', ...map(str, stringify)))
 }
 
 export function setBounds(options) {
@@ -45,6 +45,33 @@ export function stopFileNavigate(id) {
       e.preventDefault()
     }
   })
+}
+
+/**
+ * Workaround for cut/copy/paste/close keybindings not working in devtools window on OSX
+ * FIXME: https://github.com/electron/electron/issues/11998
+ * credits goes to https://github.com/onivim/oni/pull/2390
+ * @param current {webContents} webContents to polyfill
+ */
+export const darwinDevToolPolyfill = webContents => {
+  if (process.platform === 'darwin') {
+    webContents.on('devtools-opened', () => {
+      webContents.devToolsWebContents.executeJavaScript(`
+          window.addEventListener('keydown', function (e) {
+              if (e.keyCode === 65 && e.metaKey) {
+                  document.execCommand('Select All');
+              } else if (e.keyCode === 67 && e.metaKey) {
+                  document.execCommand('copy');
+              } else if (e.keyCode === 86 && e.metaKey) {
+                  document.execCommand('paste');
+              } else if (e.keyCode === 87 && e.metaKey) {
+                  window.close();
+              } else if (e.keyCode === 88 && e.metaKey) {
+                  document.execCommand('cut');
+              }
+          });`)
+    })
+  }
 }
 
 const set = new Set()
@@ -64,6 +91,7 @@ export function stopFileNavigateAndHandleNewWindowInApp(id) {
       })
       win.loadURL(url)
       win.show()
+      darwinDevToolPolyfill(win.webContents)
       set.add(url)
       setTimeout(() => {
         set.delete(url)
@@ -72,6 +100,8 @@ export function stopFileNavigateAndHandleNewWindowInApp(id) {
     e.preventDefault()
   })
 }
+
+const isModernDarwin = process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17
 
 export function stopNavigateAndHandleNewWindow(id) {
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
@@ -89,18 +119,22 @@ export function stopNavigateAndHandleNewWindow(id) {
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
       }
+      if (frameName.startsWith('plugin[gpuinfo]')) {
+        options.backgroundColor = '#FFFFFFFF'
+      }
       if (url.startsWith('chrome')) {
         options.frame = true
       }
+
       options = {
         ...options,
         minWidth: 200,
         minHeight: 200,
-        backgroundColor: process.platform === 'darwin' ? '#00000000' : '#E62A2A2A',
-        titleBarStyle: process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17 ? 'hidden' : null,
+        titleBarStyle: isModernDarwin ? 'hidden' : null,
         autoHideMenuBar: true,
       }
       e.newGuest = new BrowserWindow(options)
+      darwinDevToolPolyfill(e.newGuest.webContents)
     }
   })
 }

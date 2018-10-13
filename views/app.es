@@ -26,12 +26,6 @@ const config = remote.require('./lib/config')
 // Disable OSX zoom
 webFrame.setVisualZoomLevelLimits(1, 1)
 
-// Workaround for false BrowserWindow size
-if (!config.get('poi.window.isMaximized', false) && !config.get('poi.window.isFullScreen', false) &&
-  config.get('poi.window.width') && config.get('poi.window.height')) {
-  remote.getCurrentWindow().setSize(config.get('poi.window.width'), config.get('poi.window.height'))
-}
-
 // Hackable panels
 window.hack = {}
 
