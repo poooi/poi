@@ -185,16 +185,12 @@
   padding: 5px 5px 5px 5px;
 }
 
-.ship-view .ship-aaci,
-.ship-view .ship-aapb,
-.ship-view .ship-oasw {
+.ship-view .ship-skill-indicator {
   position: relative;
   top: -1px;
 }
 
-.ship-view .ship-aaci .label,
-.ship-view .ship-aapb .label,
-.ship-view .ship-oasw .label {
+.ship-view .ship-skill-indicator .bp3-tag {
   font-size: 80%;
   padding: 0.125em 0.6em;
 }
