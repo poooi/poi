@@ -165,5 +165,8 @@
   "Apply changes": "変更を適用しますか?",
   "Game page will be refreshed": "ゲームページが更新されます。",
   "GPU Status": "GPU 状態",
-  "install-all-confirmation": "すべてのプラグインをインストールするには時間がかかる、続行しますか？"
+  "install-all-confirmation": "すべてのプラグインをインストールするには時間がかかる、続行しますか？",
+  "Right click": "左クリック",
+  "Left click": "右クリック",
+  "Load homepage": "ホームページを読み込む"
 }

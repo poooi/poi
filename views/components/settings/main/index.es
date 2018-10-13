@@ -4,8 +4,10 @@ import { remote } from 'electron'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
+import { compose } from 'redux'
 
 import { Divider } from '../components/divider'
+import { Section } from '../components/section'
 
 import { NotificationConfig } from './notification-config'
 import { NavigatorBar } from './navigator-bar'
@@ -26,10 +28,7 @@ export const PoiConfig = connect(state => ({
   refts: get(state, 'layout.webview.refts', 0),
 }))(translate(['setting'])(({ refts, t }) => (
   <div>
-    <div className="form-group navigator-bar" id="navigator-bar">
-      <Divider text={t('setting:Browser')} />
-      <NavigatorBar key={`isolate-game-window: ${refts}`} />
-    </div>
+    <NavigatorBar key={`isolate-game-window: ${refts}`} />
     <div className="form-group">
       <Divider text={t('setting:Notification')} />
       <NotificationConfig />
