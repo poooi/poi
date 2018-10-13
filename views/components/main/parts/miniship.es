@@ -105,53 +105,51 @@ export class MiniShip extends Component {
 
   render() {
     return (
-      <div style={{ height: '100%' }} onDoubleClick={this.handleChangeShipView}>
-        <Card>
-          <div className="panel-row miniship-switch">
-            <ButtonGroup className="miniship-fleet-switch">
-              {[0, 1, 2, 3].map(i => (
-                <ShipViewSwitchButton
-                  key={i}
-                  fleetId={i}
-                  disabled={i + 1 > this.props.fleetCount}
-                  onClick={this.handleClick.bind(this, i)}
-                  activeFleetId={this.props.activeFleetId}
-                />
-              ))}
-            </ButtonGroup>
-            <LandbaseButton
-              key={4}
-              fleetId={4}
-              disabled={this.props.airBaseCnt === 0}
-              onClick={e => this.handleClick(4)}
-              activeFleetId={this.props.activeFleetId}
-              isMini={true}
-            />
-          </div>
+      <Card onDoubleClick={this.handleChangeShipView}>
+        <div className="panel-row miniship-switch">
+          <ButtonGroup className="miniship-fleet-switch">
+            {[0, 1, 2, 3].map(i => (
+              <ShipViewSwitchButton
+                key={i}
+                fleetId={i}
+                disabled={i + 1 > this.props.fleetCount}
+                onClick={this.handleClick.bind(this, i)}
+                activeFleetId={this.props.activeFleetId}
+              />
+            ))}
+          </ButtonGroup>
+          <LandbaseButton
+            key={4}
+            fleetId={4}
+            disabled={this.props.airBaseCnt === 0}
+            onClick={e => this.handleClick(4)}
+            activeFleetId={this.props.activeFleetId}
+            isMini={true}
+          />
+        </div>
+        <div
+          className="no-scroll miniship-fleet-content"
+          ref={ref => {
+            this.minishippane = ref
+          }}
+        >
           <div
-            className="no-scroll miniship-fleet-content"
-            ref={ref => {
-              this.minishippane = ref
-            }}
+            className={classNames('ship-tab-content', {
+              'ship-tab-content-transition': this.props.enableTransition,
+            })}
+            style={{ transform: `translateX(-${this.props.activeFleetId}00%)` }}
           >
-            <div
-              className={classNames('ship-tab-content', {
-                'ship-tab-content-transition': this.props.enableTransition,
-              })}
-              style={{ transform: `translateX(-${this.props.activeFleetId}00%)` }}
-            >
-              {[0, 1, 2, 3].map(i => (
-                <div className="ship-deck ship-tabpane" key={i}>
-                  <PaneBodyMini key={i} fleetId={i} />
-                </div>
-              ))}
-              <div className="ship-deck ship-tabpane ship-lbac" key={4}>
-                <LBViewMini />
+            {[0, 1, 2, 3].map(i => (
+              <div className="ship-deck ship-tabpane" key={i}>
+                <PaneBodyMini key={i} fleetId={i} />
               </div>
+            ))}
+            <div className="ship-deck ship-tabpane ship-lbac" key={4}>
+              <LBViewMini />
             </div>
           </div>
-        </Card>
-      </div>
+        </div>
+      </Card>
     )
   }
 }
