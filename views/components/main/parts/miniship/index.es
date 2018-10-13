@@ -4,37 +4,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { Intent, Card, ButtonGroup, Button } from '@blueprintjs/core'
+import { Card, ButtonGroup, Button } from '@blueprintjs/core'
 
 import { PaneBodyMini, LBViewMini } from './minishippane'
 import { LandbaseButton } from '../../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
+import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 
 import '../../assets/miniship.css'
-
-const INTENTS = [
-  Intent.SUCCESS,
-  Intent.WARNING,
-  Intent.DANGER,
-  Intent.NONE,
-  Intent.PRIMARY,
-  Intent.NONE,
-]
-
-/**
- *
- * 0: Cond >= 40, Supplied, Repaired, In port
- * 1: 20 <= Cond < 40, or not supplied, or medium damage
- * 2: Cond < 20, or heavy damage
- * 3: Repairing
- * 4: In mission
- * 5: In map
- */
-const getIntent = (state, disabled) =>
-  state >= 0 && state <= 5 && !disabled ? INTENTS[state] : Intent.NONE
-
-const fleetNames = ['I', 'II', 'III', 'IV']
 
 const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
   createSelector([fleetStateSelectorFactory(fleetId)], fleetState => ({
@@ -46,12 +24,12 @@ const ShipViewSwitchButton = connect((state, { fleetId }) =>
   shipViewSwitchButtonDataSelectorFactory(fleetId)(state),
 )(({ fleetId, activeFleetId, fleetState, onClick, disabled }) => (
   <Button
-    intent={getIntent(fleetState, disabled)}
+    intent={getFleetIntent(fleetState, disabled)}
     onClick={onClick}
     disabled={disabled}
     className={fleetId == activeFleetId ? 'active' : ''}
   >
-    {fleetNames[fleetId]}
+    {DEFAULT_FLEET_NAMES[fleetId]}
   </Button>
 ))
 

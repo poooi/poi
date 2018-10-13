@@ -23,18 +23,18 @@
   width: 100%;
 }
 
-.ship-view > .panel {
+.ship-view > .ship-wrapper {
   height: calc(100% - 10px);
   margin: 2px;
   overflow: auto;
 }
 
-.ship-view .panel-body {
+.ship-view .ship-card {
   height: 100%;
   padding: 2px;
 }
 
-.ship-view .btn-group {
+.ship-view .bp3-button-group {
   display: flex;
   padding-left: 5px;
   padding-right: 5px;
@@ -51,7 +51,7 @@
   text-align: left !important;
 }
 
-.ship-view .btn-group .btn {
+.ship-view .bp3-button-group button {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
