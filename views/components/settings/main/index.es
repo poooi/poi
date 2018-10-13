@@ -29,10 +29,7 @@ export const PoiConfig = connect(state => ({
 }))(translate(['setting'])(({ refts, t }) => (
   <div>
     <NavigatorBar key={`isolate-game-window: ${refts}`} />
-    <div className="form-group">
-      <Divider text={t('setting:Notification')} />
-      <NotificationConfig />
-    </div>
+    <NotificationConfig />
     <div className="form-group" >
       <Divider text={t('setting:Slot Check')} />
       <SlotCheckConfig type="ship" />
