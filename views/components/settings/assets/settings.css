@@ -13,8 +13,12 @@
 }
 
 .settings-view .settings-view-tabs .bp3-tab.poi-settings-tab {
-  flex: 1 0 75px;
+  flex: 1 0 30px;
   text-align: center;
+}
+
+.settings-view .settings-view-tabs .bp3-tab.poi-settings-tab[aria-selected="true"] {
+  flex: 4 0 120px;
 }
 
 /* .settings-view #settings-view-tabs > .nav {
