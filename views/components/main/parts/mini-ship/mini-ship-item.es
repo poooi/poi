@@ -14,6 +14,7 @@ import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
+
 import {
   getCondStyle,
   equipIsAircraft,
@@ -21,6 +22,8 @@ import {
   getHpStyle,
   getStatusStyle,
   getTyku,
+  LBAC_INTENTS,
+  LBAC_STATUS_NAMES,
 } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
@@ -275,21 +278,6 @@ export const MiniSquardRow = translate(['main'])(
     const hideShipName = enableAvatar && compact
     const { api_action_kind, api_name } = landbase
     const tyku = getTyku([equipsData], api_action_kind)
-    const statuslabel = (() => {
-      switch (api_action_kind) {
-      // 0=待機, 1=出撃, 2=防空, 3=退避, 4=休息
-      case 0:
-        return <Tag className="landbase-status" minimal intent={Intent.NONE}>{t('main:Standby')}</Tag>
-      case 1:
-        return <Tag className="landbase-status" minimal intent={Intent.DANGER}>{t('main:Sortie')}</Tag>
-      case 2:
-        return <Tag className="landbase-status" minimal intent={Intent.WARNING}>{t('main:Defense')}</Tag>
-      case 3:
-        return <Tag className="landbase-status" minimal intent={Intent.PRIMARY}>{t('main:Retreat')}</Tag>
-      case 4:
-        return <Tag className="landbase-status" minimal intent={Intent.SUCCESS}>{t('main:Rest')}</Tag>
-      }
-    })()
     const shipInfoClass = classNames('ship-info', {
       'ship-avatar-padding': enableAvatar,
       'ship-info-hidden': hideShipName,
@@ -303,7 +291,7 @@ export const MiniSquardRow = translate(['main'])(
             <Avatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
               {compact && (
                 <div className="ship-lv-avatar">
-                  {statuslabel}
+                  <Tag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>{t(LBAC_STATUS_NAMES[api_action_kind])}</Tag>
                   <div className="ship-fp">
                     {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
                   </div>
@@ -319,7 +307,7 @@ export const MiniSquardRow = translate(['main'])(
                   <div className="ship-fp">
                     {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
                   </div>
-                  {statuslabel}
+                  <Tag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>{t(LBAC_STATUS_NAMES[api_action_kind])}</Tag>
                 </span>
               </>
             )}

@@ -465,3 +465,7 @@ export const getFleetIntent = (state, disabled) =>
   state >= 0 && state <= 5 && !disabled ? FLEET_INTENTS[state] : Intent.NONE
 
 export const DEFAULT_FLEET_NAMES = ['I', 'II', 'III', 'IV']
+
+export const LBAC_INTENTS = [Intent.NONE, Intent.DANGER, Intent.WARNING, Intent.PRIMARY, Intent.SUCCESS]
+
+export const LBAC_STATUS_NAMES = ['Standby', 'Sortie', 'Defense', 'Retreat', 'Rest']
