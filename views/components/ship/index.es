@@ -12,7 +12,7 @@ import { compose } from 'redux'
 const { dispatch } = window
 
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
-import { ShipRow } from './shipitem'
+import { ShipRow } from './ship-item'
 import { SquardRow } from './lbac-view'
 import { LandbaseButton } from '../ship-parts/landbase-button'
 import { TopAlert } from 'views/components/ship-parts/topalert'
