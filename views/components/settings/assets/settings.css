@@ -1,61 +1,61 @@
-.SettingsView .divider {
+.settings-view .divider {
   padding-left: 15px;
   padding-right: 15px;
 }
 
-.SettingsView .divider hr {
+.settings-view .divider hr {
   margin-bottom: 15.5px;
 }
 
-.SettingsView .settings-view-tabs .bp3-tab-list {
+.settings-view .settings-view-tabs .bp3-tab-list {
   justify-content: space-between;
   height: 100%;
 }
 
-.SettingsView .settings-view-tabs .bp3-tab.poi-settings-Tab {
+.settings-view .settings-view-tabs .bp3-tab.poi-settings-tab {
   flex: 1 0 75px;
   text-align: center;
 }
 
-/* .SettingsView #settings-view-tabs > .nav {
+/* .settings-view #settings-view-tabs > .nav {
   flex: 0 0 38px;
 } */
 
-/* .SettingsView #settings-view-tabs > .tab-content {
+/* .settings-view #settings-view-tabs > .tab-content {
   flex: 1 0 0;
   overflow: scroll;
 } */
 
-.SettingsView input[type="range"],
-.SettingsView input[type="range"]:focus,
-.SettingsView input[type="range"]:active,
-.SettingsView input[type="range"]:hover {
+.settings-view input[type="range"],
+.settings-view input[type="range"]:focus,
+.settings-view input[type="range"]:active,
+.settings-view input[type="range"]:hover {
   border: none;
   box-shadow: none;
   padding: 0;
 }
 
-.SettingsView .nav-pills > li > a {
+.settings-view .nav-pills > li > a {
   padding-left: 0;
   padding-right: 0;
 }
 
-.SettingsView .notif-button {
+.settings-view .notif-button {
   flex: 1;
   overflow: hidden;
 }
 
-.SettingsView .notif-container {
+.settings-view .notif-container {
   display: flex;
   flex-direction: row;
   padding-bottom: 6px;
 }
 
-.SettingsView .notif-input-desc {
+.settings-view .notif-input-desc {
   padding: 6px 0;
 }
 
-.SettingsView .folder-picker {
+.settings-view .folder-picker {
   border-color: #666;
   border-radius: 0;
   border-style: dashed;
@@ -71,76 +71,76 @@
   width: 100%;
 }
 
-.SettingsView .div-col {
+.settings-view .div-col {
   display: flex;
   flex-flow: column;
 }
 
-.SettingsView .div-row {
+.settings-view .div-row {
   display: flex;
   flex-flow: row;
 }
 
-.SettingsView .well {
+.settings-view .well {
   margin: 0;
   padding: 14px;
 }
 
-.SettingsView .update-progress {
+.settings-view .update-progress {
   padding-right: 20px;
 }
 
-.SettingsView .update-progress .progress {
+.settings-view .update-progress .progress {
   height: 10px;
   margin-bottom: 4px;
 }
 
-.SettingsView .data-version {
+.settings-view .data-version {
   display: inline-block;
   margin-right: 1em;
   white-space: nowrap;
 }
 
-.SettingsView .poi-others {
+.settings-view .poi-others {
   padding-bottom: 20px;
 }
 
-.SettingsView .layout-button {
+.settings-view .layout-button {
   display: block;
   height: 16px;
   line-height: 16px;
   min-width: 16px;
 }
 
-.SettingsView .layout-side {
+.settings-view .layout-side {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E.icon-canvas-transparent,.icon-vs-out{fill:%232d2d30}.icon-canvas-transparent{opacity:0}.icon-vs-fg{fill:%232b282e}.icon-vs-bg{fill:%23c5c5c5}%3C/style%3E%3C/defs%3E%3Ctitle%3EDockRight_16x%3C/title%3E%3Cpath class='icon-canvas-transparent' d='M16 0v16H0V0z'/%3E%3Cpath class='icon-vs-bg' d='M1 2v12h14V2zm9 11H2V3h8z'/%3E%3C/svg%3E") 100% no-repeat;
 }
 
-.SettingsView .layout-land {
+.settings-view .layout-land {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E.icon-canvas-transparent,.icon-vs-out{fill:%232d2d30}.icon-canvas-transparent{opacity:0}.icon-vs-fg{fill:%232b282e}.icon-vs-bg{fill:%23c5c5c5}%3C/style%3E%3C/defs%3E%3Ctitle%3EDockBottom_16x%3C/title%3E%3Cpath class='icon-canvas-transparent' d='M16 0v16H0V0z'/%3E%3Cpath class='icon-vs-bg' d='M1 2v12h14V2zm13 7H2V3h12z'/%3E%3C/svg%3E") 100% no-repeat;
 }
 
-.SettingsView .layout-separate {
+.settings-view .layout-separate {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E.icon-canvas-transparent,.icon-vs-out{fill:%232d2d30}.icon-canvas-transparent{opacity:0}.icon-vs-fg{fill:%232b282e}.icon-vs-bg{fill:%23c5c5c5}%3C/style%3E%3C/defs%3E%3Ctitle%3EDockBottom_16x%3C/title%3E%3Cg%3E%3Cpath class='icon-canvas-transparent' d='M16 0v16H0V0z'/%3E%3Cpath class='icon-vs-bg' d='M3,2v10h12V2H3z M14,11H4V5h10V10z'/%3E%3Cpolygon class='icon-vs-bg' points='2,13 2,9 2,5 1,5 1,14 14,14 14,13 11,13 '/%3E%3C/g%3E%3C/svg%3E") 100% no-repeat;
 }
 
-.SettingsView .doubletabbed-disable {
+.settings-view .doubletabbed-disable {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 -1 16 16'%3E%3Cpath fill='%23C5C5C5' d='M1 1v12h14V1H1zm1 3h12v8H2V4zm12'/%3E%3C/svg%3E") 100% no-repeat;
 }
 
-.SettingsView .doubletabbed-horizontal {
+.settings-view .doubletabbed-horizontal {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 -1 16 16'%3E%3Cpath fill='%23C5C5C5' d='M1 1v12h14V1H1zm1 3h4.999v8H2V4zm12 8H8.999V4H14v8z'/%3E%3C/svg%3E") 100% no-repeat;
 }
 
-.SettingsView .doubletabbed-vertical {
+.settings-view .doubletabbed-vertical {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cstyle%3E.icon-canvas-transparent{opacity:0;fill:%232d2d30}.icon-vs-out{fill:%232d2d30}.icon-vs-bg{fill:%23c5c5c5}.icon-vs-fg{fill:%232b282e}%3C/style%3E%3Cpath class='icon-canvas-transparent' d='M16 16H0V0h16v16z' id='canvas'/%3E%3Cpath class='icon-vs-bg' d='M1 2v12h14V2H1zm13 11H2v-3h12v3zm0-5H2V5h12v3z' id='iconBg'/%3E%3C/svg%3E") 100% no-repeat;
 }
 
-.SettingsView .overlay-panel {
+.settings-view .overlay-panel {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' id='root' version='1.1' viewBox='0 0 16 16'%3E%3Crect fill='none' stroke='%23c5c5c5' x='0.5' y='1.5' width='15' height='13'/%3E%3Cpath fill='none' stroke='%23c5c5c5' d='M 9.5 2 L 9.5 14 L 9.5 2 Z'/%3E%3C/svg%3E");
 }
 
-.SettingsView .plugin-setting-wrapper {
+.settings-view .plugin-setting-wrapper {
   margin-bottom: 30px;
 }
 

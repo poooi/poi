@@ -1,86 +1,86 @@
-.SettingsView .control-button {
+.settings-view .control-button {
   height: 30px;
   margin: 0;
 }
 
-.SettingsView .control-button > button,
-.SettingsView .plugin-control-button {
+.settings-view .control-button > button,
+.settings-view .plugin-control-button {
   padding: 5px 7px;
 }
 
-.SettingsView button [class*="fa-"].svg-inline--fa {
+.settings-view button [class*="fa-"].svg-inline--fa {
   margin-right: 2px;
 }
 
-.SettingsView .author-link,
-.SettingsView .update-label,
-.SettingsView .update-label span {
+.settings-view .author-link,
+.settings-view .update-label,
+.settings-view .update-label span {
   cursor: pointer;
 }
 
-.SettingsView .update-wrapper {
+.settings-view .update-wrapper {
   display: flex;
   margin-left: auto;
   padding-top: 2px;
 }
 
-.SettingsView .author-link:hover {
+.settings-view .author-link:hover {
   filter: drop-shadow(0 0 4px #2196f3);
 }
 
-.SettingsView .author-wrapper {
+.settings-view .author-wrapper {
   padding-left: 2px;
   padding-top: 2px;
 }
 
-.SettingsView .correct-container {
+.settings-view .correct-container {
   padding-left: 15px !important;
   padding-right: 15px !important;
 }
 
-.SettingsView .plugin-content {
+.settings-view .plugin-content {
   margin-bottom: 0;
   margin-top: 8px;
 }
 
-.SettingsView .plugin-name {
+.settings-view .plugin-name {
   font-size: 150%;
 }
 
-.SettingsView .plugin-description {
+.settings-view .plugin-description {
   min-height: 30px;
   padding-top: 5px;
 }
 
-.SettingsView .plugin-content-disabled .plugin-name,
-.SettingsView .plugin-content-disabled .author-wrapper,
-.SettingsView .plugin-content-disabled .plugin-description {
+.settings-view .plugin-content-disabled .plugin-name,
+.settings-view .plugin-content-disabled .author-wrapper,
+.settings-view .plugin-content-disabled .plugin-description {
   opacity: 0.5;
 }
 
-.SettingsView .plugin-content > .panel-body {
+.settings-view .plugin-content > .panel-body {
   padding: 10px;
 }
 
-.SettingsView .plugin-description a:not([data-pid=""]) {
+.settings-view .plugin-description a:not([data-pid=""]) {
   color: #cbcbff;
 }
 
-.SettingsView .plugin-option {
+.settings-view .plugin-option {
   bottom: 10px;
   position: absolute;
   right: 10px;
   z-index: 1;
 }
 
-.SettingsView .plugin-option-install {
+.settings-view .plugin-option-install {
   bottom: 10px;
   position: absolute;
   right: 11px;
   z-index: 1;
 }
 
-.SettingsView .plugin-buttongroup {
+.settings-view .plugin-buttongroup {
   display: block;
   margin-left: auto;
 }
@@ -89,27 +89,27 @@
   width: auto;
 }
 
-.SettingsView .plugin-rowspace {
+.settings-view .plugin-rowspace {
   margin-bottom: 5px;
 }
 
-.SettingsView .btn-xs-4 {
+.settings-view .btn-xs-4 {
   width: 33.33333333%;
 }
 
-.SettingsView .btn-xs-6 {
+.settings-view .btn-xs-6 {
   width: 50%;
 }
 
-.SettingsView .btn-xs-8 {
+.settings-view .btn-xs-8 {
   width: 66.66666666%;
 }
 
-.SettingsView .btn-xs-12 {
+.settings-view .btn-xs-12 {
   width: 100%;
 }
 
-.SettingsView .plugin-dropfile-static {
+.settings-view .plugin-dropfile-static {
   border-color: #666;
   border-radius: 0;
   border-style: dashed;
@@ -121,7 +121,7 @@
   width: 100%;
 }
 
-.SettingsView .plugin-dropfile {
+.settings-view .plugin-dropfile {
   border: 0;
   left: 30px;
   margin: 0;
@@ -131,7 +131,7 @@
   z-index: 10;
 }
 
-.SettingsView .plugin-dropfile .file-drop-target {
+.settings-view .plugin-dropfile .file-drop-target {
   background-color: inherit;
   border: 3px solid black;
   font-size: 20px;
@@ -144,16 +144,16 @@
   width: 100%;
 }
 
-.SettingsView .file-drop-dragging-over-target-accept {
+.settings-view .file-drop-dragging-over-target-accept {
   border: 3px solid #42a5f5;
   box-shadow: 0 0 10px #1976d2;
 }
 
-.SettingsView .file-drop-dragging-over-target-reject {
+.settings-view .file-drop-dragging-over-target-reject {
   border: 3px solid #ef5350;
   box-shadow: 0 0 10px #d32f2f;
 }
 
-.SettingsView .file-drop-dragging-over-target {
+.settings-view .file-drop-dragging-over-target {
   box-shadow: 0 0 13px 3px #45b743;
 }
