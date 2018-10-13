@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, map, capitalize } from 'lodash'
 import { translate } from 'react-i18next'
-import { Switch, Slider, FormGroup, NumericInput } from '@blueprintjs/core'
+import { Switch, Slider, FormGroup, NumericInput, Callout } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { Section } from '../components/section'
@@ -25,6 +25,10 @@ const Wrapper = styled.div`
 
   .bp3-input-group {
     width: 5em;
+  }
+
+  .bp3-callout {
+    font-size: 12px;
   }
 `
 
@@ -123,10 +127,12 @@ export class NotificationConfig extends Component {
                 </Switch>
               ))}
             </Wrapper>
+            {this.props.enabled && (
+              <Callout>{t('Heavily damaged notification is managed by Prophet plugin')}</Callout>
+            )}
           </FormGroup>
 
           <Wrapper>
-
             <FormGroup inline label={t('setting:Notify when expedition returns in')}>
               <NumericInput
                 clampValueOnBlur

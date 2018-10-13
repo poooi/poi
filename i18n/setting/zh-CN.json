@@ -53,6 +53,7 @@
   "Expedition": "远征",
   "Morale": "疲劳回复",
   "Docking": "入渠",
+  "Repair": "入渠",
   "Others": "其它",
   "Slot Check": "出击检查",
   "ship slots": "船位检查",
@@ -168,5 +169,6 @@
   "install-all-confirmation": "安装全部插件将要花费一些时间，并且你不一定需要安装所有插件，继续吗？",
   "Right click": "左键",
   "Left click": "右键",
-  "Load homepage": "载入主页"
+  "Load homepage": "载入主页",
+  "Heavily damaged notification is managed by Prophet plugin": "大破通知由「未卜先知」插件提供"
 }
