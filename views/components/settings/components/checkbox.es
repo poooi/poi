@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import {  Checkbox } from 'react-bootstrap'
 import { get } from 'lodash'
+import { Checkbox } from '@blueprintjs/core'
 
 const { config } = window
 
@@ -19,16 +19,19 @@ export class CheckboxLabelConfig extends Component {
     value: PropTypes.bool,
     undecided: PropTypes.bool,
   }
+
   handleChange = () => {
     config.set(this.props.configName, !this.props.value)
   }
-  render () {
+
+  render() {
     return (
-      <div className={this.props.undecided ? 'undecided-checkbox-inside' : ''} >
+      <div className={this.props.undecided ? 'undecided-checkbox-inside' : ''}>
         <Checkbox
           disabled={this.props.undecided}
           checked={this.props.undecided ? false : this.props.value}
-          onChange={this.props.undecided ? null : this.handleChange}>
+          onChange={this.props.undecided ? undefined : this.handleChange}
+        >
           {this.props.label}
         </Checkbox>
       </div>
