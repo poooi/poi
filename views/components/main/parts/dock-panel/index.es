@@ -12,6 +12,22 @@ const Wrapper = styled(Card)`
   flex-direction: column;
 `
 
+const TabsWrapper = styled.div`
+  height: 30px;
+
+  .bp3-tabs,
+  .bp3-tab-list {
+    height: 30px;
+  }
+
+  .bp3-tab {
+    width: 50%;
+    margin: 0;
+    text-align: center;
+    height: 30px;
+  }
+`
+
 const ContentWrapper = styled.div`
   flex: 1;
   overflow: hidden;
@@ -75,22 +91,26 @@ export class DockPanel extends Component {
     return(
       <ResizeSensor onResize={this.handleResize}>
         <Wrapper>
-          <Tabs
-            defaultSelectedTabId={1}
-            animation={false}
-            id="dock-panel-tabs"
-            className="dock-panel-tabs"
-            onChange={this.handleTabChange}
-          >
-            <Tab
-              id={1}
-              title={t('main:Docking')}
-            />
-            <Tab
-              id={2}
-              title={t('main:Construction')}
-            />
-          </Tabs>
+          <TabsWrapper>
+            <Tabs
+              animate={false}
+              selectedTabId={activeTab}
+              ref={this.tabs}
+              animation={false}
+              id="dock-panel-tabs"
+              className="dock-panel-tabs"
+              onChange={this.handleTabChange}
+            >
+              <Tab
+                id={1}
+                title={t('main:Docking')}
+              />
+              <Tab
+                id={2}
+                title={t('main:Construction')}
+              />
+            </Tabs>
+          </TabsWrapper>
           <ContentWrapper>
             <Content activeTab={activeTab}>
               <Panel className="ndock-panel" active={activeTab === 1}>
