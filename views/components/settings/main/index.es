@@ -13,7 +13,7 @@ import { NotificationConfig } from './notification-config'
 import { NavigatorBar } from './navigator-bar'
 import { ClearDataConfig } from './clear-data-config'
 import { LanguageConfig } from './language-config'
-import { SlotCheckConfig } from './slot-check-config'
+import { PreSortieConfig } from './pre-sortie-config'
 import { ShortcutConfig } from './shortcut-config'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
@@ -30,11 +30,7 @@ export const PoiConfig = connect(state => ({
   <div>
     <NavigatorBar key={`isolate-game-window: ${refts}`} />
     <NotificationConfig />
-    <div className="form-group" >
-      <Divider text={t('setting:Slot Check')} />
-      <SlotCheckConfig type="ship" />
-      <SlotCheckConfig type="item" />
-    </div>
+    <PreSortieConfig />
     <div className="form-group">
       <Divider text={t('setting:Cache and cookies')} />
       <ClearDataConfig />
@@ -101,10 +97,6 @@ export const PoiConfig = connect(state => ({
                 </div>
               </OverlayTrigger>
           }
-          <CheckboxLabelConfig
-            label={t('setting:Display Event Ship Locking Notification')}
-            configName="poi.eventSortieCheck.enable"
-            defaultVal={true} />
         </Col>
       </Grid>
     </div>

@@ -170,5 +170,7 @@
   "Right click": "右鍵",
   "Left click": "左鍵",
   "Load homepage": "載入主頁",
-  "Heavily damaged notification is managed by Prophet plugin": "大破通知由「未卜先知」擴展提供"
+  "Heavily damaged notification is managed by Prophet plugin": "大破通知由「未卜先知」擴展提供",
+  "Threshold": "閾值",
+  "Pre-Sortie Check": "出擊前檢查"
 }
