@@ -6,8 +6,52 @@ import { join } from 'path-extra'
 import { remove } from 'fs-extra'
 import { getShipImgPath, getShipBackgroundPath, getSlotItemImgPath, getSlotItemBackgroundPath } from 'views/utils/ship-img'
 import classnames from 'classnames'
+import styled, { css } from 'styled-components'
 
-import './assets/avatar.css'
+const ShipAvatarContainer = styled.div`
+  align-items: center;
+  position: relative;
+  display: flex;
+  -webkit-mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
+  mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
+`
+
+const ShipAvatarInnerContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 98%;
+  overflow: hidden;
+  max-height: calc(100% - 2px);
+  display: flex;
+  align-items: center;
+`
+
+const ShipAvatar = styled.img``
+
+const EquipAvatar = styled.img`
+  width: 90%;
+  position: absolute;
+`
+
+const ShipAvatarBG = styled.img`
+  position: absolute;
+  width: 200%;
+  z-index: -1;
+  ${({ rank }) => rank >= 6 ? css`
+    height: 220%;
+    left: -60%;
+  ` : css`
+    left: -30%;
+    top: -28%;
+  `}
+`
+
+const EquipAvatarBG = styled.img`
+  position: absolute;
+  left: -160%;
+  width: 400%;
+  z-index: -1;
+`
 
 const { APPDATA_PATH } = window
 
@@ -62,30 +106,31 @@ export class Avatar extends PureComponent {
   render() {
     if (!this.props.mstId) return <div />
     return (
-      <div className={classnames(this.props.className, 'ship-avatar-container')} data-mstid={this.props.mstId} data-damaged={this.props.isDamaged} style={{
+      <ShipAvatarContainer className={classnames(this.props.className, 'ship-avatar-container')} data-mstid={this.props.mstId} data-damaged={this.props.isDamaged} style={{
         width: Math.round(1.85 * this.props.height),
         height: this.props.height,
       }}>
-        <div className="ship-avatar-inner-container">
+        <ShipAvatarInnerContainer className="ship-avatar-inner-container">
           {
             this.props.type === 'equip' ? (
               <>
-                <img
+                <EquipAvatar
                   className="equip-avatar"
                   src={this.props.url} />
-                <img
+                <EquipAvatarBG
                   className="equip-avatar-bg"
                   src={this.props.bgurl} />
               </>
             ) : (
               <>
-                <img
+                <ShipAvatar
                   className="ship-avatar"
                   style={{ height: this.props.height, marginLeft: -Math.round(this.props.marginMagic * this.props.height) }}
                   src={this.props.url} />
                 {
                   !this.props.isEnemy && (
-                    <img
+                    <ShipAvatarBG
+                      rank={this.props.rank}
                       className={classnames('ship-avatar-bg', {
                         'ship-avatar-bg-nr': this.props.rank < 6,
                         'ship-avatar-bg-sr': this.props.rank >= 6,
@@ -96,9 +141,9 @@ export class Avatar extends PureComponent {
               </>
             )
           }
-        </div>
+        </ShipAvatarInnerContainer>
         { this.props.children }
-      </div>
+      </ShipAvatarContainer>
     )
   }
 }
