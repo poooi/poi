@@ -8,7 +8,7 @@ import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
-import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
+import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
 const ipc = remote.require('./lib/ipc')
 
@@ -185,17 +185,17 @@ export class PoiControl extends Component {
           Are you sure to refresh the game?
           <ul>
             <li>Refresh page is the same as pressing F5.</li>
-            <li>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</li>
+            <li>Reload game reloads only the game frame, this is usually faster but could result in catbomb.</li>
           </ul>
-          Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
+          Tip: Right clicking on this button reloads the game and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
         </Trans>
       </div>,
       [
         { name: this.props.t('Refresh page'),
           func: gameRefreshPage,
           style: 'warning' },
-        { name: this.props.t('Reload Flash'),
-          func: gameReloadFlash,
+        { name: this.props.t('Reload game'),
+          func: gameReload,
           style: 'danger' },
       ])
   }
@@ -215,22 +215,22 @@ export class PoiControl extends Component {
             Are you sure to refresh the game?
             <ul>
               <li>Refresh page is the same as pressing F5.</li>
-              <li>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</li>
+              <li>Reload game reloads only the game frame, this is usually faster but could result in catbomb.</li>
             </ul>
-            Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
+            Tip: Right clicking on this button reloads the game and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
           </Trans>
         </div>,
         [
           { name: this.props.t('Refresh page'),
             func: gameRefreshPage,
             style: 'warning' },
-          { name: this.props.t('Reload Flash'),
-            func: gameReloadFlash,
+          { name: this.props.t('Reload game'),
+            func: gameReload,
             style: 'danger' },
         ],
         () => {touchBarReset()}
       )
-      refreshconfirm(this.props.t('Refresh page'), this.props.t('Reload Flash'))
+      refreshconfirm(this.props.t('Refresh page'), this.props.t('Reload game'))
       break
     case 'adjust':
       window.dispatchEvent(new Event('resize'))
@@ -250,8 +250,8 @@ export class PoiControl extends Component {
     case 'screenshot':
       this.handleCapturePage()
       break
-    case 'gameReloadFlash':
-      gameReloadFlash()
+    case 'gameReload':
+      gameReload()
       break
     case 'gameRefreshPage':
       gameRefreshPage()
@@ -320,7 +320,7 @@ export class PoiControl extends Component {
             <OverlayTrigger placement="right" overlay={<Tooltip id="poi-refresh-button" className="poi-control-tooltip">{this.props.t('Refresh game')}</Tooltip>}>
               <Button
                 onClick={this.handleRefreshGameDialog}
-                onContextMenu={gameReloadFlash}
+                onContextMenu={gameReload}
                 bsSize="small"><FontAwesome name="refresh" />
               </Button>
             </OverlayTrigger>
