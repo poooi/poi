@@ -172,5 +172,6 @@
   "Load homepage": "ホームページを読み込む",
   "Heavily damaged notification is managed by Prophet plugin": "大破通知は「予知能力」プラグインに管理されます",
   "Threshold": "閾値",
-  "Pre-Sortie Check": "出撃前確認"
+  "Pre-Sortie Check": "出撃前確認",
+  "Type": "種類"
 }
