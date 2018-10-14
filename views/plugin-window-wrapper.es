@@ -108,7 +108,6 @@ export class PluginWindowWrap extends PureComponent {
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('react-resizable/css/styles.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('react-grid-layout/css/styles.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/avatar.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/scroll-shadow.css'))}">`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
