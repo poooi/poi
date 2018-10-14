@@ -4,14 +4,12 @@ import { remote } from 'electron'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import { compose } from 'redux'
 
 import { Divider } from '../components/divider'
-import { Section } from '../components/section'
 
 import { NotificationConfig } from './notification-config'
 import { NavigatorBar } from './navigator-bar'
-import { ClearDataConfig } from './clear-data-config'
+import { StorageConfig } from './storage-config'
 import { LanguageConfig } from './language-config'
 import { PreSortieConfig } from './pre-sortie-config'
 import { ShortcutConfig } from './shortcut-config'
@@ -31,10 +29,7 @@ export const PoiConfig = connect(state => ({
     <NavigatorBar key={`isolate-game-window: ${refts}`} />
     <NotificationConfig />
     <PreSortieConfig />
-    <div className="form-group">
-      <Divider text={t('setting:Cache and cookies')} />
-      <ClearDataConfig />
-    </div>
+    <StorageConfig />
     <div className="form-group">
       <Divider text={t('setting:Language')} />
       <LanguageConfig />
