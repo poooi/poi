@@ -44,6 +44,12 @@ export const Wrapper = styled.div`
   }
 `
 
+export const FillAvailable = styled(Wrapper)`
+  > .bp3-form-group {
+    width: 100%;
+  }
+`
+
 export const HalfWrapper = styled(Wrapper)`
   width: 50%;
 `
