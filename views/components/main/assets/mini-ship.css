@@ -163,6 +163,11 @@
   padding-left: 58px;
 }
 
+.miniship .ship-details-mini .ship-item .landbase-avatar-padding {
+  flex-basis: 61px;
+  padding-left: 58px;
+}
+
 .miniship .ship-details-mini .ship-item .ship-info-show {
   flex-grow: 1;
   flex-shrink: 0;

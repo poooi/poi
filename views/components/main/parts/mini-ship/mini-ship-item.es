@@ -277,7 +277,7 @@ export const MiniSquardRow = translate(['main'])(
     const { api_action_kind, api_name } = landbase
     const tyku = getTyku([equipsData], api_action_kind)
     const shipInfoClass = classNames('ship-info', {
-      'ship-avatar-padding': enableAvatar,
+      'landbase-avatar-padding': enableAvatar,
       'ship-info-hidden': hideShipName,
       'ship-info-show': !hideShipName,
     })
