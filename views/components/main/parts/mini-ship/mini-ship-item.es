@@ -246,7 +246,6 @@ export class MiniShipRow extends Component {
                 <StatusLabel label={labelStatus} />
               </div>
               <div className={'ship-cond ' + getCondStyle(ship.api_cond)}>
-                <FontAwesome name="star" />
                 {ship.api_cond}
               </div>
             </div>

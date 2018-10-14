@@ -69,10 +69,6 @@
   display: block;
 }
 
-.ship-view .top-space {
-  margin-top: 5px;
-}
-
 .ship-view .div-col {
   display: flex;
   flex-flow: column;

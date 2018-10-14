@@ -5,12 +5,22 @@ import { getHpStyle, getTyku, LBAC_INTENTS, LBAC_STATUS_NAMES } from 'views/util
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
 import { translate } from 'react-i18next'
-import { Avatar } from 'views/components/etc/avatar'
 import classNames from 'classnames'
 import { get } from 'lodash'
 import { Tag, ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
 import memoize from 'fast-memoize'
+import {
+  ShipItem,
+  ShipAvatar,
+  ShipInfo,
+  ShipHPTextRow,
+  ShipSubText,
+  ShipName,
+  LandBaseStat,
+  ShipHP,
+  SlotItemContainer,
+} from './styled-components'
 
 const SquadSelectorFactory = memoize(squardId =>
   createSelector(
@@ -55,17 +65,16 @@ export const SquardRow = compose(
         </div>
       }
     >
-      <div className="ship-item">
+      <ShipItem className="ship-item">
         {enableAvatar &&
           !!get(equipsData, '0.0.api_slotitem_id') && (
-          <Avatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} />
+          <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} />
         )}
-
-        <div className={lbacInfoClass}>
+        <ShipInfo className={lbacInfoClass} avatar={enableAvatar} show={!hideShipName}>
           {!hideShipName && (
             <>
-              <span className="ship-name">{api_name}</span>
-              <div className="ship-exp">
+              <ShipName className="ship-name">{api_name}</ShipName>
+              <ShipSubText className="ship-exp">
                 <span className="ship-lv">
                   {t('main:Range')}: {api_distance}
                 </span>
@@ -74,22 +83,22 @@ export const SquardRow = compose(
                   {t('main:Fighter Power')}:{' '}
                   {tyku.max === tyku.min ? tyku.min : tyku.min + ' ~ ' + tyku.max}
                 </span>
-              </div>
+              </ShipSubText>
             </>
           )}
-        </div>
+        </ShipInfo>
 
-        <div className="ship-stat landbase-stat">
-          <div className="div-row">
-            <span className="ship-hp">
+        <LandBaseStat className="ship-stat landbase-stat">
+          <ShipHPTextRow>
+            <ShipHP className="ship-hp">
               {api_nowhp} / {api_maxhp}
-            </span>
+            </ShipHP>
             <div className="lbac-status-label">
               <Tag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>
                 {t(LBAC_STATUS_NAMES[api_action_kind])}
               </Tag>
             </div>
-          </div>
+          </ShipHPTextRow>
           <span className="hp-progress top-space">
             <ProgressBar
               stripes={false}
@@ -97,11 +106,11 @@ export const SquardRow = compose(
               value={hpPercentage / 100}
             />
           </span>
-        </div>
-        <div className="ship-slot">
+        </LandBaseStat>
+        <SlotItemContainer className="ship-slot">
           <LandbaseSlotitems landbaseId={squardId} isMini={false} />
-        </div>
-      </div>
+        </SlotItemContainer>
+      </ShipItem>
     </Tooltip>
   )
 })

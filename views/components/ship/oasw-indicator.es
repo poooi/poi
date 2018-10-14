@@ -10,6 +10,7 @@ import {
 } from 'views/utils/selectors'
 import { isOASWWith } from 'views/utils/oasw'
 import { translate } from 'react-i18next'
+import { ShipLabel } from './styled-components'
 
 const isOASWFuncSelector = createSelector(
   allCVEIdsSelector,
@@ -36,7 +37,7 @@ export const OASWIndicator = translate(['main'])(connect(
   })
 )(({ isOASW, shipId, t }) => (
   isOASW &&
-    <span className="ship-skill-indicator ship-oasw">
+    <ShipLabel className="ship-skill-indicator ship-oasw" isTag>
       <Tag minimal intent={Intent.PRIMARY}>{t('main:OASW')}</Tag>
-    </span>
+    </ShipLabel>
 )))

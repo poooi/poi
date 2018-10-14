@@ -8,6 +8,7 @@ import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
+import { ShipLabel, AACITypeName } from './styled-components'
 
 const getAvailableTranslation = memoize(
   str =>
@@ -22,9 +23,9 @@ const getAvailableTranslation = memoize(
 
 const __t = name =>
   name.map((n, i) => (
-    <span className="aaci-type-name" key={i}>
+    <AACITypeName className="aaci-type-name" key={i}>
       {getAvailableTranslation(n)}
-    </span>
+    </AACITypeName>
   ))
 
 const AACISelectorFactory = memoize(shipId =>
@@ -76,12 +77,12 @@ export const AACIIndicator = translate(['main'])(
     )
 
     return (
-      AACIs.length && (
-        <span className="ship-skill-indicator ship-aaci">
+      !!AACIs.length && (
+        <ShipLabel className="ship-skill-indicator ship-aaci" isTag>
           <Tooltip position={Position.TOP} content={tooltip}>
             <Tag minimal intent={Intent.WARNING}>{t('main:AACI')}</Tag>
           </Tooltip>
-        </span>
+        </ShipLabel>
       )
     )
   }),
