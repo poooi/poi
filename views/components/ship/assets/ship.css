@@ -21,6 +21,8 @@
 .ship-view .ship-deck {
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .ship-view > .ship-wrapper {
@@ -83,6 +85,10 @@
   overflow: scroll;
 }
 
+.ship-view .fleet-name-button {
+  white-space: nowrap;
+}
+
 .ship-view .deck-status {
   padding-left: 0;
   padding-right: 0;
@@ -100,6 +106,7 @@
 
 .ship-view .fleet-stat,
 .ship-view .airbase-area {
+  white-space: nowrap;
   background-color: transparent;
   border-color: transparent;
   margin-top: 5px;

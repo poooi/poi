@@ -4,6 +4,8 @@
 
 .miniship .bp3-card {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .miniship .ship-view-mini {
@@ -37,6 +39,8 @@
 .miniship .ship-tabpane {
   padding: 2px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .miniship .miniship-fleet-switch {
@@ -81,7 +85,7 @@
 }
 
 .miniship .ship-details-mini {
-  height: calc(100% - 32px);
+  flex: 1;
   overflow: scroll;
 }
 
@@ -280,6 +284,7 @@
   border-color: transparent;
   text-align: center;
   width: 100%;
+  white-space: nowrap;
 }
 
 .miniship .flex {
