@@ -161,20 +161,18 @@ export class FolderPickerConfig extends Component {
         onDragLeave={this.handleOnDrag}
       >
         {this.props.value ? (
-          <>
-            <OverflowList
-              className={Classes.BREADCRUMBS}
-              items={this.parseBreadcrumb(this.props.value)}
-              overflowRenderer={this.renderOverflow}
-              visibleItemRenderer={this.renderBreadcrumb}
-            />
-            <Button onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
-              {t('Change')}
-            </Button>
-          </>
+          <OverflowList
+            className={Classes.BREADCRUMBS}
+            items={this.parseBreadcrumb(this.props.value)}
+            overflowRenderer={this.renderOverflow}
+            visibleItemRenderer={this.renderBreadcrumb}
+          />
         ) : (
           this.props.placeholder
         )}
+        <Button onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
+          {t(this.props.value ? 'Change' : 'Select')}
+        </Button>
       </PickerBox>
     )
   }
