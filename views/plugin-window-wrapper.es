@@ -36,6 +36,23 @@ const getPluginWindowRect = plugin => {
   return { x, y, width, height }
 }
 
+const stylesheetTagsWithID = [
+  'bootstrap',
+  'normalize',
+  'blueprint',
+  'blueprint-icon',
+  'fontawesome',
+].map(id => `<link rel="stylesheet" type="text/css" id="${id}-css">`).join('')
+
+const stylesheetTagsWithHref = [
+  'assets/css/app.css',
+  'assets/css/global.css',
+  'electron-react-titlebar/assets/style.css',
+  'react-resizable/css/styles.css',
+  'react-grid-layout/css/styles.css',
+  'views/components/etc/assets/scroll-shadow.css',
+].map(href => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`).join('')
+
 
 export class PluginWindowWrap extends PureComponent {
   constructor(props) {
@@ -98,17 +115,7 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
-<link rel="stylesheet" type="text/css" id="bootstrap-css">
-<link rel="stylesheet" type="text/css" id="normalize-css">
-<link rel="stylesheet" type="text/css" id="blueprint-css">
-<link rel="stylesheet" type="text/css" id="blueprint-icon-css">
-<link rel="stylesheet" type="text/css" id="fontawesome-css">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('react-resizable/css/styles.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('react-grid-layout/css/styles.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/scroll-shadow.css'))}">`
+${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
         div.style.position = 'absolute'
