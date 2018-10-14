@@ -25,6 +25,7 @@ const { config } = window
 
 const PickerBox = styled.div`
   display: flex;
+  width: 100%;
 
   .bp3-overflow-list {
     flex: 1;

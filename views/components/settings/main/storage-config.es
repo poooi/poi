@@ -19,7 +19,7 @@ import { join } from 'path'
 import { Button, NumericInput, FormGroup, Intent, Callout } from '@blueprintjs/core'
 import styled from 'styled-components'
 
-import { Section, Wrapper } from '../components/section'
+import { Section, Wrapper, FillAvailable } from '../components/section'
 import { FolderPickerConfig } from '../components/folder-picker'
 
 const { session } = remote.require('electron')
@@ -105,29 +105,31 @@ export class StorageConfig extends Component {
             </FormGroup>
           </Wrapper>
 
-          <FormGroup inline label={t('Clear')}>
-            <ButtonArea>
-              <Button intent={Intent.WARNING} onClick={this.handleClearCookie}>
-                {t('setting:Delete cookies')}
-              </Button>
-              <Button intent={Intent.WARNING} onClick={this.handleClearCache}>
-                {t('setting:Delete cache')}
-              </Button>
-              <Callout>
-                {t('setting:If connection error occurs frequently, delete both of them')}
-              </Callout>
-            </ButtonArea>
-          </FormGroup>
+          <FillAvailable>
+            <FormGroup inline label={t('Clear')}>
+              <ButtonArea>
+                <Button intent={Intent.WARNING} onClick={this.handleClearCookie}>
+                  {t('setting:Delete cookies')}
+                </Button>
+                <Button intent={Intent.WARNING} onClick={this.handleClearCache}>
+                  {t('setting:Delete cache')}
+                </Button>
+                <Callout>
+                  {t('setting:If connection error occurs frequently, delete both of them')}
+                </Callout>
+              </ButtonArea>
+            </FormGroup>
+          </FillAvailable>
 
-          <FormGroup inline label={t('setting:Cache location')}>
-            <Wrapper>
+          <FillAvailable>
+            <FormGroup inline label={t('setting:Cache location')}>
               <FolderPickerConfig
                 label={t('setting:Cache location')}
                 configName="poi.misc.cache.path"
                 defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')}
               />
-            </Wrapper>
-          </FormGroup>
+            </FormGroup>
+          </FillAvailable>
         </Wrapper>
       </Section>
     )
