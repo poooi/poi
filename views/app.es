@@ -4,6 +4,7 @@ import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
 import { get } from 'lodash'
 import { I18nextProvider } from 'react-i18next'
+import { ThemeProvider } from 'styled-components'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
@@ -19,6 +20,7 @@ import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { PoiApp } from './poi-app'
 import { layoutResizeObserver } from 'views/services/layout'
 import i18next from './env-parts/i18next'
+import { darkTheme } from './theme'
 
 const {$} = window
 const config = remote.require('./lib/config')
@@ -82,12 +84,14 @@ class Poi extends Component {
 ReactDOM.render(
   <I18nextProvider i18n={i18next} >
     <Provider store={store} >
-      <WindowEnv.Provider value={{
-        window,
-        mountPoint: document.body,
-      }}>
-        <Poi />
-      </WindowEnv.Provider>
+      <ThemeProvider theme={darkTheme}>
+        <WindowEnv.Provider value={{
+          window,
+          mountPoint: document.body,
+        }}>
+          <Poi />
+        </WindowEnv.Provider>
+      </ThemeProvider>
     </Provider>
   </I18nextProvider>,
   $('#poi')
