@@ -37,7 +37,7 @@ const PickerBox = styled.div`
 
 const EllipsisIcon = styled.span`
   color: white;
-  background: #182026;
+  background: ${props => props.theme.DARK_GRAY1};
   border-radius: 3px;
   padding: 0 4px;
 `
