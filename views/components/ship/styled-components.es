@@ -72,6 +72,7 @@ export const ShipSubText = styled.div`
   padding-top: 0;
   text-overflow: ellipsis;
   vertical-align: bottom;
+  margin-bottom: -1px;
 `
 
 export const ShipLabel = styled.span`
@@ -124,7 +125,7 @@ export const LandBaseStat = styled.div`
 `
 
 export const ShipHPRow = styled.div`
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 `
 
 export const ShipHPTextRow = styled.span`
@@ -166,7 +167,7 @@ export const ShipFB = styled.span`
   flex-direction: column;
   margin: 0 4px;
   height: 22px;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   > div {
     margin-top: 4px;
   }
