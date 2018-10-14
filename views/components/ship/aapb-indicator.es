@@ -7,6 +7,7 @@ import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAAPB } from 'views/utils/aapb'
+import { ShipLabel } from './styled-components'
 
 const AAPBSelectorFactory = memoize(shipId =>
   createSelector(
@@ -29,11 +30,11 @@ export const AAPBIndicator = translate(['main'])(
 
     return (
       AAPB > 0 && (
-        <span className="ship-skill-indicator ship-aapb">
+        <ShipLabel className="ship-skill-indicator ship-aapb" isTag>
           <Tooltip position={Position.TOP} content={tooltip}>
             <Tag minimal intent={Intent.WARNING}>{t('main:AAPB')}</Tag>
           </Tooltip>
-        </span>
+        </ShipLabel>
       )
     )
   }),

@@ -5,14 +5,12 @@ import shallowEqual from 'fbjs/lib/shallowEqual'
 import classNames from 'classnames'
 import { createSelector } from 'reselect'
 import { isEqual, pick, omit, memoize } from 'lodash'
-import FontAwesome from 'react-fontawesome'
 import { translate } from 'react-i18next'
 import { ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import { MaterialIcon } from 'views/components/etc/icon'
 
 import { Slotitems } from './slotitems'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
-import { Avatar } from 'views/components/etc/avatar'
 import { AACIIndicator } from './aaci-indicator'
 import { AAPBIndicator } from './aapb-indicator'
 import { OASWIndicator } from './oasw-indicator'
@@ -32,7 +30,23 @@ import {
   escapeStatusSelectorFactory,
 } from 'views/utils/selectors'
 
-import './assets/ship-item.css'
+import {
+  ShipItem,
+  ShipAvatar,
+  ShipInfo,
+  ShipHPTextRow,
+  ShipBasic,
+  ShipSubText,
+  ShipLabel,
+  ShipName,
+  ShipStatWToolTip,
+  ShipHP,
+  StatusLabelContainer,
+  ShipCond,
+  ShipFB,
+  SlotItemContainer,
+  ShipHPRow,
+} from './styled-components'
 
 const shipRowDataSelectorFactory = memoize(shipId =>
   createSelector(
@@ -131,61 +145,55 @@ export class ShipRow extends Component {
           </div>
         }
       >
-        <div className="ship-item">
+        <ShipItem className="ship-item">
           {enableAvatar && (
-            <Avatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} />
+            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} />
           )}
-
-          <div className={shipInfoClass} style={labelStatusStyle}>
-            <div className="ship-basic">
+          <ShipInfo className={shipInfoClass} style={labelStatusStyle} avatar={enableAvatar} show={!hideShipName}>
+            <ShipBasic className="ship-basic" show={!hideShipName}>
               <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
-              <span className="ship-type">
+              <ShipLabel className="ship-type">
                 {$shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name
                   ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
                   : '??'}
-              </span>
-              <span className="ship-speed">{t(`main:${getSpeedLabel(ship.api_soku)}`)}</span>
+              </ShipLabel>
+              <ShipLabel className="ship-speed">{t(`main:${getSpeedLabel(ship.api_soku)}`)}</ShipLabel>
               <AACIIndicator shipId={ship.api_id} />
               <AAPBIndicator shipId={ship.api_id} />
               <OASWIndicator shipId={ship.api_id} />
-            </div>
+            </ShipBasic>
             {!hideShipName && (
               <>
-                <span className="ship-name">
+                <ShipName className="ship-name">
                   {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
-                </span>
-                <span className="ship-exp">Next. {(ship.api_exp || [])[1]}</span>
+                </ShipName>
+                <ShipSubText className="ship-exp">Next. {(ship.api_exp || [])[1]}</ShipSubText>
               </>
             )}
-          </div>
+          </ShipInfo>
 
-          <Tooltip
+          <ShipStatWToolTip
             position={Position.RIGHT}
             disabled={ship.api_ndock_time === 0}
             className="ship-stat"
             wrapperTagName="div"
             targetTagName="div"
-            content={
-              <>
-                {t('main:Repair Time')}: {resolveTime(ship.api_ndock_time / 1000)}
-              </>
-            }
+            content={`${t('main:Repair Time')}: ${resolveTime(ship.api_ndock_time / 1000)}`}
           >
-            <div>
-              <div className="div-row">
-                <span className="ship-hp" style={labelStatusStyle}>
+            <ShipHPRow>
+              <ShipHPTextRow>
+                <ShipHP className="ship-hp" style={labelStatusStyle}>
                   {ship.api_nowhp} / {ship.api_maxhp}
-                </span>
-                <div className="status-label">
+                </ShipHP>
+                <StatusLabelContainer className="status-label">
                   <StatusLabel label={labelStatus} />
-                </div>
+                </StatusLabelContainer>
                 <div className="status-cond" style={labelStatusStyle}>
-                  <span className={'ship-cond ' + getCondStyle(ship.api_cond)}>
-                    <FontAwesome name="star" />
+                  <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
                     {ship.api_cond}
-                  </span>
+                  </ShipCond>
                 </div>
-              </div>
+              </ShipHPTextRow>
               <span className="hp-progress top-space" style={labelStatusStyle}>
                 <ProgressBar
                   stripes={false}
@@ -193,10 +201,10 @@ export class ShipRow extends Component {
                   value={hpPercentage / 100}
                 />
               </span>
-            </div>
-          </Tooltip>
+            </ShipHPRow>
+          </ShipStatWToolTip>
 
-          <span className="ship-fb" style={labelStatusStyle}>
+          <ShipFB className="ship-fb" style={labelStatusStyle}>
             <Tooltip
               className="ship-fb-item"
               position={Position.RIGHT}
@@ -223,12 +231,12 @@ export class ShipRow extends Component {
                 value={ammoPercentage / 100}
               />
             </Tooltip>
-          </span>
+          </ShipFB>
 
-          <div className="ship-slot" style={labelStatusStyle}>
+          <SlotItemContainer className="ship-slot" style={labelStatusStyle}>
             <Slotitems shipId={ship.api_id} />
-          </div>
-        </div>
+          </SlotItemContainer>
+        </ShipItem>
       </Tooltip>
     )
   }
