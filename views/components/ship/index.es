@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
 import { translate, Trans } from 'react-i18next'
-import { Card, Button, ButtonGroup } from '@blueprintjs/core'
+import { Button, ButtonGroup } from '@blueprintjs/core'
 import { compose } from 'redux'
 
 const { dispatch } = window
@@ -23,6 +23,7 @@ import {
 } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
+import { ShipCard } from './styled-components'
 
 import './assets/ship.css'
 
@@ -154,7 +155,7 @@ export class reactClass extends Component {
   render() {
     return (
       <div className="ship-wrapper">
-        <Card onDoubleClick={this.changeMainView} className="ship-card">
+        <ShipCard onDoubleClick={this.changeMainView} className="ship-card">
           <div className="div-row fleet-name-button-container">
             <ButtonGroup className="fleet-name-button">
               {times(4).map(i => (
@@ -202,7 +203,7 @@ export class reactClass extends Component {
               </div>
             </div>
           </div>
-        </Card>
+        </ShipCard>
       </div>
     )
   }

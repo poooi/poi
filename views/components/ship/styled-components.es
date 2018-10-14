@@ -1,7 +1,12 @@
 
 import { Avatar } from 'views/components/etc/avatar'
 import styled, { css } from 'styled-components'
-import { Tooltip } from '@blueprintjs/core'
+import { Tooltip, Card } from '@blueprintjs/core'
+
+export const ShipCard = styled(Card)`
+  display: flex;
+  flex-direction: column;
+`
 
 export const ShipItem = styled.div`
   align-items: flex-end;
@@ -72,18 +77,16 @@ export const ShipSubText = styled.div`
 export const ShipLabel = styled.span`
   margin-left: 5px;
   margin-right: 5px;
-  ${({ isTag }) => {
-    isTag && css`
-      position: relative;
-      top: -1px;
-      .bp3-tag {
-        overflow: visible;
-        max-width: initial;
-        font-size: 80%;
-        padding: 0.125em 0.6em;
-      }
-    `
-  }}
+  ${({ isTag }) => isTag && css`
+    position: relative;
+    top: -1px;
+    .bp3-tag {
+      overflow: visible;
+      max-width: initial;
+      font-size: 80%;
+      padding: 0.125em 0.6em;
+    )
+  `}
 `
 
 export const ShipName = styled.span`
