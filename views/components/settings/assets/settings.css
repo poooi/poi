@@ -63,22 +63,6 @@
   padding: 6px 0;
 }
 
-.settings-view .folder-picker {
-  border-color: #666;
-  border-radius: 0;
-  border-style: dashed;
-  border-width: 2px;
-  cursor: pointer;
-  direction: rtl;
-  height: 100%;
-  overflow: hidden;
-  padding: 5px;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-}
-
 .settings-view .div-col {
   display: flex;
   flex-flow: column;
