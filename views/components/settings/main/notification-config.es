@@ -87,7 +87,7 @@ export class NotificationConfig extends Component {
             </FormGroup>
           </HalfWrapper>
 
-          <FormGroup>
+          <FormGroup inline label={t('Type')}>
             <Wrapper>
               {map(['construction', 'expedition', 'repair', 'morale', 'others'], type => (
                 <Switch
