@@ -152,6 +152,14 @@
 
 .miniship .ship-details-mini .ship-item .ship-avatar-padding {
   flex-basis: 61px;
+}
+
+.miniship .ship-details-mini .ship-item .ship-avatar-padding > .bp3-popover-target {
+  height: 100%;
+}
+
+.miniship .ship-details-mini .ship-item .ship-avatar-padding .ship-name-container {
+  height: 100%;
   padding-left: 58px;
 }
 
