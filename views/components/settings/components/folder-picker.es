@@ -6,15 +6,10 @@ import { get, split, map } from 'lodash'
 import { remote } from 'electron'
 import i18next from 'views/env-parts/i18next'
 import path from 'path'
-import {
-  Position,
-  Button,
-  Intent,
-  Classes,
-  OverflowList,
-} from '@blueprintjs/core'
+import { Position, Button, Intent, Classes, OverflowList } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
 import styled from 'styled-components'
+import FA from 'react-fontawesome'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
@@ -38,6 +33,13 @@ const PickerBox = styled.div`
   .bp3-breadcrumb {
     font-size: 12px;
   }
+`
+
+const EllipsisIcon = styled.span`
+  color: white;
+  background: #182026;
+  border-radius: 3px;
+  padding: 0 4px;
 `
 
 @translate(['setting'])
@@ -145,7 +147,9 @@ export class FolderPickerConfig extends Component {
     return (
       <li>
         <Tooltip position={Position.BOTTOM_LEFT} content={map(items, 'text').join(path.sep)}>
-          <span className={Classes.BREADCRUMBS_COLLAPSED} />
+          <EllipsisIcon>
+            <FA name="ellipsis-h" />
+          </EllipsisIcon>
         </Tooltip>
       </li>
     )
