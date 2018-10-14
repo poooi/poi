@@ -7,6 +7,7 @@ import { screen, remote } from 'electron'
 import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { PluginWrap } from './plugin-wrapper'
+import { StyleSheetManager } from 'styled-components'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 const { BrowserWindow } = remote
@@ -205,12 +206,14 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           window: this.externalWindow,
           mountPoint: this.containerEl,
         }}>
-          <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.pluginContainer}>
-            <PluginWrap
-              key={this.props.plugin.id}
-              plugin={this.props.plugin}
-            />
-          </div>
+          <StyleSheetManager target={this.externalWindow.document.head}>
+            <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.pluginContainer}>
+              <PluginWrap
+                key={this.props.plugin.id}
+                plugin={this.props.plugin}
+              />
+            </div>
+          </StyleSheetManager>
         </WindowEnv.Provider>
       </>,
       this.externalWindow.document.querySelector('#plugin-mountpoint'))
