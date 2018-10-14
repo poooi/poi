@@ -202,10 +202,9 @@ export class MiniShipRow extends Component {
             </Avatar>
           )}
           <Tooltip
+            className={shipInfoClass}
             position={Position.TOP_LEFT}
             wrapperTagName="div"
-            className={shipInfoClass}
-
             content={
               hideShipName ? (
                 <div className="ship-tooltip-info">
@@ -226,14 +225,14 @@ export class MiniShipRow extends Component {
           >
             <div className="ship-name-container">
               {!hideShipName && (
-                  <>
-                    <span className="ship-name" style={labelStatusStyle}>
-                      {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
-                    </span>
-                    <span className="ship-lv-text top-space" style={labelStatusStyle}>
-                      {level && t('main:Lv', { level })}
-                    </span>
-                  </>
+                <>
+                  <span className="ship-name" style={labelStatusStyle}>
+                    {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
+                  </span>
+                  <span className="ship-lv-text top-space" style={labelStatusStyle}>
+                    {level && t('main:Lv', { level })}
+                  </span>
+                </>
               )}
             </div>
           </Tooltip>
