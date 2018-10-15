@@ -30,10 +30,7 @@ export const PoiConfig = connect(state => ({
     <NotificationConfig />
     <PreSortieConfig />
     <StorageConfig />
-    <div className="form-group">
-      <Divider text={t('setting:Language')} />
-      <LanguageConfig />
-    </div>
+    <LanguageConfig />
     <div className="form-group">
       <Divider text={t('setting:Screenshot Format')} />
       <RadioConfig
