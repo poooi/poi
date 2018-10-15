@@ -3,16 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { remote } from 'electron'
-// import {
-//   Grid,
-//   Col,
-//   Button,
-//   FormControl,
-//   FormGroup,
-//   InputGroup,
-//   ControlLabel,
-//   Alert,
-// } from 'react-bootstrap'
 import { translate } from 'react-i18next'
 import { remove } from 'fs-extra'
 import { join } from 'path'

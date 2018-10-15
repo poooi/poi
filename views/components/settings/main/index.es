@@ -1,6 +1,5 @@
 import React from 'react'
 import { Grid, Col, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { remote } from 'electron'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
@@ -13,14 +12,9 @@ import { StorageConfig } from './storage-config'
 import { LanguageConfig } from './language-config'
 import { PreSortieConfig } from './pre-sortie-config'
 import { ShortcutConfig } from './shortcut-config'
+import { ScreenshotConfig } from './screenshot-config'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
-import { RadioConfig } from '../components/radio'
-import { FolderPickerConfig } from '../components/folder-picker'
-
-const screenshotPathExclude = [
-  window.ROOT,
-]
 
 export const PoiConfig = connect(state => ({
   refts: get(state, 'layout.webview.refts', 0),
@@ -31,30 +25,7 @@ export const PoiConfig = connect(state => ({
     <PreSortieConfig />
     <StorageConfig />
     <LanguageConfig />
-    <div className="form-group">
-      <Divider text={t('setting:Screenshot Format')} />
-      <RadioConfig
-        label={t('setting:Screenshot Format')}
-        configName="poi.misc.screenshot.format"
-        defaultVal="png"
-        availableVal={[{name: 'PNG', value: 'png'}, {name: 'JPEG', value: 'jpg'}]} />
-    </div>
-    <div className="form-group">
-      <Divider text={t('setting:Screenshot Folder')} />
-      <FolderPickerConfig
-        label={t('setting:Screenshot Folder')}
-        configName="poi.misc.screenshot.path"
-        defaultVal={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
-        exclude={screenshotPathExclude}
-      />
-    </div>
-    <div className="form-group">
-      <Divider text={t('setting:Cache Folder')} />
-      <FolderPickerConfig
-        label={t('setting:Cache Folder')}
-        configName="poi.misc.cache.path"
-        defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')} />
-    </div>
+    <ScreenshotConfig />
     <div className="form-group">
       <Divider text={t('setting:Other settings')} />
       <Grid>

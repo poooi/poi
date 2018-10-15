@@ -35,10 +35,7 @@ export class LanguageConfig extends Component {
     const { t } = this.props
     return (
       <Section title={t('setting:Language')}>
-        <HTMLSelect
-          value={this.props.value}
-          onChange={this.handleSetLanguage}
-        >
+        <HTMLSelect value={this.props.value} onChange={this.handleSetLanguage}>
           {map(window.LOCALES, lng => (
             <option value={lng.locale} key={lng.locale}>
               {lng.lng}
