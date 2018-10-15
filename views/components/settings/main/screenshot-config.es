@@ -24,7 +24,7 @@ export const ScreenshotConfig = translate(['setting'])(({ t }) => (
       </Wrapper>
 
       <FillAvailable>
-        <FormGroup inline label={t('setting:Location')}>
+        <FormGroup inline label={t('setting:Save to')}>
           <FolderPickerConfig
             label={t('setting:Screenshot Folder')}
             configName="poi.misc.screenshot.path"

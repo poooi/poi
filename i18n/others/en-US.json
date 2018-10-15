@@ -67,5 +67,7 @@
   "For VPN, simply leave it unset.": "For VPN, simply leave it unset.",
   "If you see error on displaying, manually set content size and it will auto-adjust": "If you see error on displaying, manually set content size and it will auto-adjust.",
   "If poi is under performance, you may disable some plugins and do a restart": "If poi is under performance, you may disable some plugins and do a restart.",
-  "Draft an issue, contribute your code, or plugins for poi": "Draft an issue, contribute your code, or plugins for poi"
+  "Draft an issue, contribute your code, or plugins for poi": "Draft an issue, contribute your code, or plugins for poi",
+  "Refresh page": "Refresh page",
+  "Reload Flash": "Reload Flash"
 }

@@ -150,5 +150,14 @@
   "Heavily damaged notification is managed by Prophet plugin": "Heavily damaged notification is managed by Prophet plugin",
   "Threshold": "Threshold",
   "Pre-Sortie Check": "Pre-Sortie Check",
-  "Type": "Type"
+  "Type": "Type",
+  "Storage": "Storage",
+  "Clear": "Clear",
+  "3rd party cache": "3rd party cache",
+  "Select": "Select",
+  "Change": "Change",
+  "Screenshot": "Screenshot",
+  "Format": "Format",
+  "Save to": "Save to",
+  "GPU": "GPU"
 }

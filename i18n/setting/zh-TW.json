@@ -72,9 +72,7 @@
   "Zoom": "縮放",
   "Zoom level": "縮放比率",
   "Panel area": "面板區域",
-  "Screenshot Format": "截圖格式",
-  "Screenshot Folder": "截圖目錄",
-  "Cache Folder": "快取目錄",
+
   "Advanced": "高階設定",
   "Advanced functionalities": "高階功能",
   "Disable Hardware Acceleration": "禁用硬體加速",
@@ -173,5 +171,14 @@
   "Heavily damaged notification is managed by Prophet plugin": "大破通知由「未卜先知」擴展提供",
   "Threshold": "閾值",
   "Pre-Sortie Check": "出擊前檢查",
-  "Type": "類型"
+  "Type": "類型",
+  "Storage": "存儲",
+  "Clear": "清理",
+  "3rd party cache": "第三方快取",
+  "Select": "選擇",
+  "Change": "變更",
+  "Screenshot": "截圖",
+  "Format": "格式",
+  "Save to": "保存到",
+  "GPU": "GPU"
 }

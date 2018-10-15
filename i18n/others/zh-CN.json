@@ -61,8 +61,8 @@
   "Refresh page": "刷新游戏页面",
   "Reload game": "重新载入游戏",
   "Website requires login": "网站需要登陆",
-  "Username":"用户名",
-  "Password":"密码",
+  "Username": "用户名",
+  "Password": "密码",
   "PluginErrTitle": "插件「{{name}}」变成了🐢",
   "PluginErrorMsg": "插件当中发生了某些异常，你可以将它汇报给插件作者，或者 poi 开发团队，并附上如下代码。",
   "Copy to clipboard": "复制到剪贴板",
@@ -75,5 +75,9 @@
   "For VPN, simply leave it unset": "使用 VPN 的选择不使用代理就好了。",
   "If you see error on displaying, manually set content size and it will auto-adjust": "poi 如果有显示错误，可以手动调整一下内容大小，布局会自动适配。",
   "If poi is under performance, you may disable some plugins and do a restart": "如果 poi 的运行不流畅，可以在设置中关闭一部分插件，对插件的操作重启后生效。",
-  "Draft an issue, contribute your code, or plugins for poi": "为 poi 提交建议，贡献代码和编写插件"
+  "Draft an issue, contribute your code, or plugins for poi": "为 poi 提交建议，贡献代码和编写插件",
+  "丁": "丁",
+  "丙": "丙",
+  "乙": "乙",
+  "甲": "甲"
 }

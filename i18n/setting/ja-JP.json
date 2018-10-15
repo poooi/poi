@@ -72,9 +72,7 @@
   "Zoom": "ズーム",
   "Zoom level": "ズーム倍率",
   "Panel area": "パネル",
-  "Screenshot Format": "スクリーンショットの画像ファイルフォーマット",
-  "Screenshot Folder": "スクリーンショットの保存先",
-  "Cache Folder": "キャッシュの保存先",
+
   "Advanced": "詳細設定",
   "Advanced functionalities": "特殊機能",
   "Disable Hardware Acceleration": "ハードウェアアクセラレーションを無効化する",
@@ -173,5 +171,14 @@
   "Heavily damaged notification is managed by Prophet plugin": "大破通知は「予知能力」プラグインに管理されます",
   "Threshold": "閾値",
   "Pre-Sortie Check": "出撃前確認",
-  "Type": "種類"
+  "Type": "種類",
+  "Storage": "ストレージ",
+  "Clear": "整理",
+  "3rd party cache": "第三者のキャッシュ",
+  "Select": "選択",
+  "Change": "変更",
+  "Screenshot": "スクリーンショット",
+  "Format": "画像ファイルフォーマット",
+  "Save to": "保存先",
+  "GPU": "GPU"
 }
