@@ -112,9 +112,9 @@ export class StorageConfig extends Component {
           </FillAvailable>
 
           <FillAvailable>
-            <FormGroup inline label={t('setting:Cache location')}>
+            <FormGroup inline label={t('setting:3rd party cache')}>
               <FolderPickerConfig
-                label={t('setting:Cache location')}
+                label={t('setting:3rd party cache')}
                 configName="poi.misc.cache.path"
                 defaultVal={remote.getGlobal('DEFAULT_CACHE_PATH')}
               />
