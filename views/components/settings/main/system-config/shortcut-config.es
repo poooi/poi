@@ -27,7 +27,7 @@ config.on('config.set', (path, value) => {
 
 @translate(['setting'])
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultVal),
+  value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,
 }))
 export class ShortcutConfig extends Component {
