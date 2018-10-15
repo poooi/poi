@@ -255,7 +255,7 @@ export class PoiControl extends Component {
     this.handleTouchbar(message)
   }
   renderButton = ({ label, ...props }) => (
-    <Tooltip position={Position.RIGHT_TOP} content={label}>
+    <Tooltip position={Position.TOP_LEFT} content={label}>
       <Button {...props} minimal />
     </Tooltip>
   )
