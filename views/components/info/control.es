@@ -254,17 +254,10 @@ export class PoiControl extends Component {
   touchbarListener = (event, message) => {
     this.handleTouchbar(message)
   }
-  renderButton = ({ label, space, ...props }) => (
-    space ? (
-      <div style={{ width: 100 }} />
-    ) : (
-      <Tooltip position={Position.RIGHT_TOP} content={label}>
-        <Button {...props} minimal />
-      </Tooltip>
-    )
-  )
-  renderOverflow = () => (
-    <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
+  renderButton = ({ label, ...props }) => (
+    <Tooltip position={Position.RIGHT_TOP} content={label}>
+      <Button {...props} minimal />
+    </Tooltip>
   )
   componentDidMount = () => {
     if (this.props.editable) {
@@ -341,14 +334,13 @@ export class PoiControl extends Component {
       },
     ]
     return (
-      <div className="poi-control-container" style={{ width: this.state.extend ? 272 : 122 }}>
-        <OverflowList
-          className={Classes.BREADCRUMBS}
-          collapseFrom={Boundary.END}
-          items={list}
-          overflowRenderer={this.renderOverflow}
-          visibleItemRenderer={this.renderButton}
-        />
+      <div className="poi-control-container">
+        <div className="poi-control-inner" style={{ width: this.state.extend ? 240 : 90 }}>
+          {list.map(this.renderButton)}
+        </div>
+        <div>
+          <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
+        </div>
       </div>
     )
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { WindowEnv } from 'views/components/etc/window-env'
+import { debounce } from 'lodash'
 
 import './assets/alert.css'
 
@@ -106,18 +107,20 @@ class PoiAlertInner extends Component {
     }
   }
   handleOverflow = () => {
-    const containerWidth = this.alertMain.offsetWidth
-    if (!this.state.overflow) {
-      this.msgWidth = this.alertArea.offsetWidth
-      this.alertPosition.style.width = `${this.msgWidth}px`
-    }
-    if ((this.msgWidth > containerWidth) && !this.state.overflow) {
-      this.alertPosition.style.width = `${this.msgWidth + 50}px`
-      this.setState({overflow: true})
-    } else if ((this.msgWidth < containerWidth) && this.state.overflow) {
-      this.alertPosition.style.width = `${this.msgWidth}px`
-      this.setState({overflow: false})
-    }
+    requestAnimationFrame(() => {
+      const containerWidth = this.alertMain.offsetWidth
+      if (!this.state.overflow) {
+        this.msgWidth = this.alertArea.offsetWidth
+        this.alertPosition.style.width = `${this.msgWidth}px`
+      }
+      if ((this.msgWidth > containerWidth) && !this.state.overflow) {
+        this.alertPosition.style.width = `${this.msgWidth + 50}px`
+        this.setState({overflow: true})
+      } else if ((this.msgWidth < containerWidth) && this.state.overflow) {
+        this.alertPosition.style.width = `${this.msgWidth}px`
+        this.setState({overflow: false})
+      }
+    })
   }
   componentDidUpdate = (prevProps, prevState) => {
     stickyEnd = Date.now() + updateTime
@@ -126,12 +129,13 @@ class PoiAlertInner extends Component {
     this.handleOverflow()
   }
   componentDidMount = () => {
+    this.handleOverflowDebounced = debounce(this.handleOverflow, 1000)
     config.addListener('config.set', (path, value) => {
       if (path === 'poi.appearance.theme') {
         this.handleStyleChange()
       }
     })
-    this.observer = new ResizeObserver(this.handleOverflow)
+    this.observer = new ResizeObserver(this.handleOverflowDebounced)
     this.observer.observe(this.alertMain)
     window.addEventListener('alert.new', this.handleAddAlert)
     this.handleStyleChange()
