@@ -11,8 +11,8 @@ import { NavigatorBar } from './navigator-bar'
 import { StorageConfig } from './storage-config'
 import { LanguageConfig } from './language-config'
 import { PreSortieConfig } from './pre-sortie-config'
-import { ShortcutConfig } from './shortcut-config'
 import { ScreenshotConfig } from './screenshot-config'
+import { SystemConfig } from './system-config'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
 
@@ -26,43 +26,7 @@ export const PoiConfig = connect(state => ({
     <StorageConfig />
     <LanguageConfig />
     <ScreenshotConfig />
-    <div className="form-group">
-      <Divider text={t('setting:Other settings')} />
-      <Grid>
-        <Col xs={12}>
-          {
-            (process.platform !== 'darwin') ?
-              <ShortcutConfig
-                label={t('setting:Boss key')}
-                configName="poi.shortcut.bosskey" />
-              :
-              <ShortcutConfig
-                label={t('setting:Boss key')}
-                defaultVal="Cmd+H"
-                active={false} />
-          }
-          {
-            (process.platform !== 'darwin') ?
-              <CheckboxLabelConfig
-                label={t('setting:Confirm before exit')}
-                configName="poi.confirm.quit"
-                defaultVal={false} />
-              :
-              <OverlayTrigger placement="top"
-                overlay={
-                  <Tooltip id="tooltip-confirm-before-exit">
-                    {t('setting:Set this in the OS X App Menu')}
-                  </Tooltip>} >
-                <div>
-                  <CheckboxLabelConfig
-                    label={t('setting:Confirm before exit')}
-                    undecided={true} />
-                </div>
-              </OverlayTrigger>
-          }
-        </Col>
-      </Grid>
-    </div>
+    <SystemConfig />
     <div className="form-group">
       <Divider text={t('setting:Advanced functionalities')} />
       <Grid>
