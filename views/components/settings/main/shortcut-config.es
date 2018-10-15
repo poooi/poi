@@ -64,7 +64,6 @@ export class ShortcutConfig extends Component {
         this.setKey(character, modifiers)
       }
     }
-    document.addEventListener('mousedown', this.handleClickAnywhere)
     this.setState({ recording: true })
   }
 
