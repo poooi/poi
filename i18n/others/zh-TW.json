@@ -61,8 +61,8 @@
   "Refresh page": "重新整理遊戲頁面",
   "Reload Flash": "重新載入 Flash",
   "Website requires login": "網站需要登錄",
-  "Username":"帳號",
-  "Password":"密碼",
+  "Username": "帳號",
+  "Password": "密碼",
   "PluginErrTitle": "擴展程式「{{name}}」變成了🐢",
   "PluginErrorMsg": "擴展程式當中發生了某些異常，你可以將它彙報給擴展程式作者，或者 poi 開發團隊，並附上如下代碼。",
   "Copy to clipboard": "複製到剪貼板",
@@ -78,5 +78,9 @@
   "Draft an issue, contribute your code, or plugins for poi": "爲 poi 提交建議，貢獻代碼和編寫插件",
   "For cookie method, check Editing DMM Cookie Region Flag setting": "烤餅乾的用戶請打開設定 DMM 地區 Cookie。",
   "更多帮助参考": "更多幫助參考",
-  "poi 交流群：": "poi 交流 QQ 羣："
+  "poi 交流群：": "poi 交流 QQ 羣：",
+  "丁": "丁",
+  "丙": "丙",
+  "乙": "乙",
+  "甲": "甲"
 }

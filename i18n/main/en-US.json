@@ -82,5 +82,8 @@
   "RemodelLv": "Remodel: Lv. {{remodelLevel}}",
   "RemodelReady": "Remodel: Ready",
   "TotalExp": "Total: {{exp}}",
-  "NextExp": "Next: {{nextExp}}"
+  "NextExp": "Next: {{nextExp}}",
+  "To be refreshed": "To be refreshed",
+  "Browse your quest list to let poi know your active quests": "Browse your quest list to let poi know your active quests",
+  "Max shot down not reached": "Max shot down not reached"
 }
