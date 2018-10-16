@@ -4,6 +4,7 @@ import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
 import { translate } from 'react-i18next'
+import styled, { css, keyframes } from 'styled-components'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 import {
@@ -13,7 +14,89 @@ import {
   currentNodeSelector,
 } from 'views/utils/selectors'
 
-import './assets/map-reminder.css'
+const MapReminder = styled.div`
+  position: relative;
+  width: 135px;
+`
+
+const MapHPProgress = styled(ProgressBar)`
+  background-color: transparent;
+  border-radius: 0;
+  height: 3px;
+  position: absolute;
+  width: 100%;
+`
+
+const MapRouteContainer = styled.div`
+  padding: 4px 6px 0 6px;
+`
+
+const MapInfoMsg = styled.div`
+  font-size: 12px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const MapRoutesSVG = styled.svg`
+  background-color: #161616aa;
+`
+
+const MaproutesBlink = keyframes`
+  from {
+    fill: #d50000;
+  }
+
+  50% {
+    fill: #ff9800;
+  }
+
+  to {
+    fill: #d50000;
+  }
+`
+const Point = styled.rect`
+  fill: white;
+  ${({active}) => active && css`
+    animation: ${MaproutesBlink} 1s linear infinite;
+  `}
+  ${({passed}) => passed && css`
+    fill: #039be5;
+  `}
+  ${({boss}) => boss && css`
+    fill: #c62828;
+  `}
+`
+
+const Line = styled.line`
+  stroke: #373737;
+  stroke-width: 1.5;
+  ${({passed}) => passed && css`
+    stroke: #f5f5f5;
+    stroke-width: 2;
+  `}
+`
+
+const ReminderIcon = styled(MaterialIcon)`
+  height: 15px;
+  margin-right: 0.5ex;
+  width: 15px;
+`
+
+const ItemStatSpan = styled.span`
+  &:not(:last-child) {
+    margin-right: 1ex;
+  }
+`
+
+const MapTooltipMsg = styled.span`
+  &::after {
+    content: "  |  ";
+  }
+  &:last-child::after {
+    content: "";
+  }
+`
 
 const emptyObj = {}
 
@@ -38,32 +121,32 @@ const MapRoutes = connect(
   const lineHistory = histLen ? zip(locHistory.slice(0, histLen-1), locHistory.slice(1)) : [[-1, -1], [-1, -1]]
   const SCALE = 1 / 6
   return (
-    <div className="map-route-container">
-      <svg width="190" height="110" viewBox="0 0 190 110" className="maproutes">
+    <MapRouteContainer className="map-route-container">
+      <MapRoutesSVG width="190" height="110" viewBox="0 0 190 110" className="maproutes">
         {// Draw all lines
           map(maproutes, ([beg, end], i) => {
             if (!(mapspots[beg] && mapspots[end])) return null
             const [begX, begY] = mapspots[beg]
             const [endX, endY] = mapspots[end]
-            return <line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} />
+            return <Line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} />
           })}
         {// Draw passed lines
           lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-            begX > 0 && endX > 0 ? <line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} className="passed" /> : <span />
+            begX > 0 && endX > 0 ? <Line key={i} x1={parseInt(begX * SCALE)} y1={parseInt(begY * SCALE)} x2={parseInt(endX * SCALE)} y2={parseInt(endY * SCALE)} passed /> : <span />
           )}
-        <rect x={parseInt(bossSpotLoc[0] * SCALE) - 4.5} y={parseInt(bossSpotLoc[1] * SCALE) - 4.5} width={9} height={9}
-          className="boss" />
+        <Point x={parseInt(bossSpotLoc[0] * SCALE) - 4.5} y={parseInt(bossSpotLoc[1] * SCALE) - 4.5} width={9} height={9}
+          boss />
         {// Draw all points
           map(mapspots, ([x, y], id) =>
-            <rect key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6} />
+            <Point key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6} />
           )}
         {// Draw passed points again, highlighting the active one
           map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-            x > 0 ? <rect key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6}
-              className={id == activeSpot ? 'active' : 'passed'} /> : <span />
+            x > 0 ? <Point key={id} x={parseInt(x * SCALE) - 3} y={parseInt(y * SCALE) - 3} width={6} height={6}
+              active={id == activeSpot} passed={id != activeSpot} /> : <span />
           )}
-      </svg>
-    </div>
+      </MapRoutesSVG>
+    </MapRouteContainer>
   )
 })
 
@@ -79,19 +162,19 @@ const ItemStat = translate()(connect(
     )
   })
   return (
-    <div className="map-info-msg">
+    <MapInfoMsg className="map-info-msg">
       {Object.keys(stat).length > 0 && `${t('Resources')}: `}
       {
         map(Object.keys(stat), itemKey => (
           itemKey &&
-          <span key={itemKey} className="item-stat">
-            <MaterialIcon materialId={parseInt(itemKey)} className="material-icon reminder"/>
+          <ItemStatSpan key={itemKey} className="item-stat">
+            <ReminderIcon materialId={parseInt(itemKey)} className="material-icon reminder"/>
             {stat[itemKey] > 0 ? `+${stat[itemKey]}` : String(stat[itemKey])}
-          </span>
+          </ItemStatSpan>
         )
         )
       }
-    </div>
+    </MapInfoMsg>
   )
 }))
 
@@ -127,10 +210,10 @@ export class PoiMapReminder extends Component {
     const tooltipMsg = []
     const alphaNode = get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     if (currentNode) {
-      tooltipMsg.push(<span className="map-tooltip-msg" key="node">{t('Node')}: {alphaNode} ({currentNode})</span>)
+      tooltipMsg.push(<MapTooltipMsg className="map-tooltip-msg" key="node">{t('Node')}: {alphaNode} ({currentNode})</MapTooltipMsg>)
     }
     if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
-      tooltipMsg.push(<span className="map-tooltip-msg" key="hp">HP: {mapHp[0]} / {mapHp[1]}</span>)
+      tooltipMsg.push(<MapTooltipMsg className="map-tooltip-msg" key="hp">HP: {mapHp[0]} / {mapHp[1]}</MapTooltipMsg>)
     }
     return (
       <Popover
@@ -140,10 +223,10 @@ export class PoiMapReminder extends Component {
         targetTagName="div"
         disabled={!mapData}
       >
-        <div>
+        <MapReminder>
           {
             mapHp &&
-              <ProgressBar
+              <MapHPProgress
                 className="map-hp-progress"
                 animate={false}
                 stripes={false}
@@ -155,10 +238,10 @@ export class PoiMapReminder extends Component {
               {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
             </span>
           </div>
-        </div>
+        </MapReminder>
         <>
           <MapRoutes />
-          <div className="map-info-msg">{ tooltipMsg }</div>
+          <MapInfoMsg className="map-info-msg">{ tooltipMsg }</MapInfoMsg>
           <ItemStat />
         </>
       </Popover>
