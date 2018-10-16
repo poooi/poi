@@ -45,10 +45,7 @@ config.on('config.set', (path, value) => {
 
 export const DisplayConfig = () => (
   <form>
-    <div className="form-group">
-      <Divider text={<Trans>setting:Layout</Trans>} />
-      <LayoutConfig />
-    </div>
+    <LayoutConfig />
     <div className="form-group">
       <Divider text={<Trans>setting:Themes</Trans>} />
       <ThemeConfig />
