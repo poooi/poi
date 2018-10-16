@@ -21,7 +21,7 @@ export class CheckboxLabelConfig extends Component {
   }
 
   componentDidMount = () => {
-    if (typeof this.props.defaultVal === 'undefined') {
+    if (typeof this.props.defaultVal !== 'undefined') {
       console.error('prop `defaultVal` is deprecated, use `defaultValue` instaed')
     }
   }
