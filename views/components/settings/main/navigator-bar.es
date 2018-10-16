@@ -117,7 +117,7 @@ export class NavigatorBar extends React.Component {
   // UI Interaction
   navigate = url => {
     const webview = getStore('layout.webview.ref')
-    if (!(url.startsWith('http://') || url.startsWith('https://'))) {
+    if (!url || !(url.startsWith('http://') || url.startsWith('https://'))) {
       url = `http://${this.state.url}`
     }
     webview.loadURL(url)
