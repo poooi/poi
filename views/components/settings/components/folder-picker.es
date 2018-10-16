@@ -70,7 +70,7 @@ export class FolderPickerConfig extends Component {
       this.emitErrorMessage()
       config.set(configName, defaultValue)
     }
-    if (typeof this.props.defaultVal === 'undefined') {
+    if (typeof this.props.defaultVal !== 'undefined') {
       console.error('prop `defaultVal` is deprecated, use `defaultValue` instaed')
     }
   }
