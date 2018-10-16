@@ -125,7 +125,7 @@ export class ThemeConfig extends Component {
               <FolderPickerConfig
                 label={t('setting:Custom background')}
                 configName="poi.appearance.background"
-                defaultVal={''}
+                defaultValue={''}
                 isFolder={false}
                 placeholder={t('setting:No background image selected')}
               />

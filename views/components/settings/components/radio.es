@@ -7,7 +7,7 @@ import { Radio, RadioGroup } from '@blueprintjs/core'
 const { config } = window
 
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultVal),
+  value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,
   label: props.label,
   availableVal: props.availableVal,
@@ -18,6 +18,12 @@ export class RadioConfig extends Component {
     configName: PropTypes.string,
     value: PropTypes.string,
     availableVal: PropTypes.array,
+  }
+
+  componentDidMount = () => {
+    if (typeof this.props.defaultVal === 'undefined') {
+      console.error('prop `defaultVal` is deprecated, use `defaultValue` instaed')
+    }
   }
 
   handleChange = e => {

@@ -169,7 +169,7 @@ export class InstalledPlugin extends PureComponent {
                               <CheckboxLabelConfig
                                 label={<Trans>setting:Open plugin in new window</Trans>}
                                 configName={`poi.plugin.windowmode.${plugin.id}`}
-                                defaultVal={!!plugin.windowMode} />
+                                defaultValue={!!plugin.windowMode} />
                             </div>
                           }
                           {
@@ -178,7 +178,7 @@ export class InstalledPlugin extends PureComponent {
                               <CheckboxLabelConfig
                                 label={<Trans>setting:Enable auto switch</Trans>}
                                 configName={`poi.autoswitch.${plugin.id}`}
-                                defaultVal={true} />
+                                defaultValue={true} />
                             </div>
                           }
                           {
@@ -187,7 +187,7 @@ export class InstalledPlugin extends PureComponent {
                               <CheckboxLabelConfig
                                 label={<Trans>setting:Keep plugin process running in background (re-enable to apply changes)</Trans>}
                                 configName={`poi.plugin.background.${plugin.id}`}
-                                defaultVal={!plugin.realClose} />
+                                defaultValue={!plugin.realClose} />
                             </div>
                           }
                           {

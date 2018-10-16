@@ -61,9 +61,9 @@ export class ConstructionPanel extends Component {
     message: names => `${joinString(names, ', ')} ${i18next.t('main:built')}`,
   }
 
-  getDockShipName = (dockId, defaultVal) => {
+  getDockShipName = (dockId, defaultValue) => {
     const id = get(this.props.constructions, [dockId, 'api_created_ship_id'])
-    return id ? this.props.t(`resources:${this.props.$ships[id].api_name}`) : defaultVal
+    return id ? this.props.t(`resources:${this.props.$ships[id].api_name}`) : defaultValue
   }
 
   render() {

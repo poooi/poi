@@ -7,7 +7,7 @@ import { Checkbox } from '@blueprintjs/core'
 const { config } = window
 
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultVal),
+  value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,
   undecided: props.undecided,
   label: props.label,
@@ -18,6 +18,12 @@ export class CheckboxLabelConfig extends Component {
     configName: PropTypes.string,
     value: PropTypes.bool,
     undecided: PropTypes.bool,
+  }
+
+  componentDidMount = () => {
+    if (typeof this.props.defaultVal === 'undefined') {
+      console.error('prop `defaultVal` is deprecated, use `defaultValue` instaed')
+    }
   }
 
   handleChange = () => {

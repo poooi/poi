@@ -64,7 +64,7 @@ export class Misc extends Component {
             <CheckboxLabelConfig
               label={t('setting:Check update of beta version')}
               configName="poi.update.beta"
-              defaultVal={false} />
+              defaultValue={false} />
           </Col>
           <Col xs={12}>
             <p>{t('setting:poi description', {version: process.versions.electron})}</p>

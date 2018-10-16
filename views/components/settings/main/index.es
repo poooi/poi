@@ -34,25 +34,25 @@ export const PoiConfig = connect(state => ({
           <CheckboxLabelConfig
             label={t('setting:Disable Hardware Acceleration')}
             configName="poi.misc.disablehwaccel"
-            defaultVal={false} />
+            defaultValue={false} />
           <CheckboxLabelConfig
             label={t('setting:Editing DMM Cookie Region Flag')}
             configName="poi.misc.dmmcookie"
-            defaultVal={false} />
+            defaultValue={false} />
           <CheckboxLabelConfig
             label={t('setting:Prevent DMM Network Change Popup')}
             configName="poi.misc.disablenetworkalert"
-            defaultVal={false} />
+            defaultValue={false} />
           <CheckboxLabelConfig
             label={t('setting:Show network status in notification bar')}
             configName="poi.misc.networklog"
-            defaultVal={true} />
+            defaultValue={true} />
           {
             (process.platform === 'win32') ?
               <CheckboxLabelConfig
                 label={t('setting:Create shortcut on startup (Notification may not be working without shortcut)')}
                 configName="poi.misc.shortcut"
-                defaultVal={true} />
+                defaultValue={true} />
               :
               null
           }
@@ -61,18 +61,18 @@ export const PoiConfig = connect(state => ({
               <CheckboxLabelConfig
                 label={t('setting:Display tray icon')}
                 configName="poi.linuxTrayIcon"
-                defaultVal={true} />
+                defaultValue={true} />
               :
               null
           }
           <CheckboxLabelConfig
             label={t('setting:Enter safe mode on next startup')}
             configName="poi.misc.safemode"
-            defaultVal={false} />
+            defaultValue={false} />
           <CheckboxLabelConfig
             label={t('setting:Send data to Google Analytics')}
             configName="poi.misc.analytics"
-            defaultVal={true} />
+            defaultValue={true} />
         </Col>
       </Grid>
     </div>

@@ -17,7 +17,7 @@ export const ScreenshotConfig = translate(['setting'])(({ t }) => (
           <RadioConfig
             label={t('setting:Screenshot Format')}
             configName="poi.misc.screenshot.format"
-            defaultVal="png"
+            defaultValue="png"
             availableVal={[{ name: 'PNG', value: 'png' }, { name: 'JPEG', value: 'jpg' }]}
           />
         </FormGroup>
@@ -28,7 +28,7 @@ export const ScreenshotConfig = translate(['setting'])(({ t }) => (
           <FolderPickerConfig
             label={t('setting:Screenshot Folder')}
             configName="poi.misc.screenshot.path"
-            defaultVal={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
+            defaultValue={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
             exclude={screenshotPathExclude}
           />
         </FormGroup>
