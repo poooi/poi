@@ -124,7 +124,7 @@
     "reselect": "^3.0.1",
     "semver": "^5.5.0",
     "socks5-client": "^1.2.6",
-    "styled-components": "^4.0.0-beta.11.3",
+    "styled-components": "^4.0.0",
     "swf-extract": "^1.1.0",
     "wanakana": "^4.0.1",
     "yargs": "^12.0.2"
