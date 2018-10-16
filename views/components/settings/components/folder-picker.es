@@ -44,7 +44,7 @@ const EllipsisIcon = styled.span`
 
 @translate(['setting'])
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultVal),
+  value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,
   label: props.label,
 }))
@@ -56,7 +56,7 @@ export class FolderPickerConfig extends Component {
     isFolder: PropTypes.bool,
     placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     exclude: PropTypes.arrayOf(PropTypes.string),
-    defaultVal: PropTypes.string,
+    defaultValue: PropTypes.string,
   }
 
   static defaultProps = {
@@ -65,10 +65,13 @@ export class FolderPickerConfig extends Component {
   }
 
   componentDidMount = () => {
-    const { exclude, value, defaultVal, configName } = this.props
+    const { exclude, value, defaultValue, configName } = this.props
     if (exclude.length && exclude.some(parent => isSubdirectory(parent, value))) {
       this.emitErrorMessage()
-      config.set(configName, defaultVal)
+      config.set(configName, defaultValue)
+    }
+    if (typeof this.props.defaultVal === 'undefined') {
+      console.error('prop `defaultVal` is deprecated, use `defaultValue` instaed')
     }
   }
 

@@ -414,12 +414,12 @@ export class PluginConfig extends Component {
                         <CheckboxLabelConfig
                           label={t('setting:Switch to Plugin Automatically')}
                           configName="poi.autoswitch.enabled"
-                          defaultVal={true}
+                          defaultValue={true}
                         />
                         <CheckboxLabelConfig
                           label={t('setting:Enable autoswitch for main panel')}
                           configName="poi.autoswitch.main"
-                          defaultVal={true}
+                          defaultValue={true}
                         />
                       </Col>
                     </Row>

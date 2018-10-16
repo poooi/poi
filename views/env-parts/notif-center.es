@@ -11,12 +11,12 @@ function maybeFunctionString(func, args) {
   return func
 }
 
-function defaultAs(val, defaultVal, typeofReq) {
-  if (val == null)
-    return defaultVal
-  if (typeofReq && typeof val !== typeofReq)
-    return defaultVal
-  return val
+function defaultAs(value, defaultValue, typeofReq) {
+  if (value == null)
+    return defaultValue
+  if (typeofReq && typeof value !== typeofReq)
+    return defaultValue
+  return value
 }
 
 function nonNull(a) {
