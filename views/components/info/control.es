@@ -4,13 +4,12 @@ import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { shell, remote, clipboard, nativeImage } from 'electron'
-import { Button, Tooltip, OverflowList, Position, Classes, Boundary } from '@blueprintjs/core'
+import { Button, Tooltip, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
-
-import './assets/control.css'
+import styled from 'styled-components'
 
 const { openExternal } = shell
 
@@ -22,6 +21,17 @@ const openItemAsync = (dir, source=null) => {
     }
   })
 }
+
+const PoiControlContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const PoiControlInner = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  transition: 0.3s;
+`
 
 // Controller icon bar
 // const {openFocusedWindowDevTools} = remote.require('./lib/window')
@@ -334,14 +344,14 @@ export class PoiControl extends Component {
       },
     ]
     return (
-      <div className="poi-control-container">
-        <div className="poi-control-inner" style={{ width: this.state.extend ? 240 : 90 }}>
+      <PoiControlContainer>
+        <PoiControlInner style={{ width: this.state.extend ? 240 : 90 }}>
           {list.map(this.renderButton)}
-        </div>
+        </PoiControlInner>
         <div>
           <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
         </div>
-      </div>
+      </PoiControlContainer>
     )
   }
 }
