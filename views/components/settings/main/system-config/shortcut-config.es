@@ -19,9 +19,9 @@ let keyListener
 
 config.on('config.set', (path, value) => {
   switch (path) {
-  case 'poi.shortcut.bosskey':
-    ipcRenderer.send('refresh-shortcut')
-    break
+    case 'poi.shortcut.bosskey':
+      ipcRenderer.send('refresh-shortcut')
+      break
   }
 })
 
@@ -33,7 +33,7 @@ config.on('config.set', (path, value) => {
 export class ShortcutConfig extends Component {
   static propTypes = {
     value: PropTypes.string,
-    active: PropTypes.bool,
+    disabled: PropTypes.bool,
     configName: PropTypes.string,
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   }
@@ -108,7 +108,18 @@ export class ShortcutConfig extends Component {
   }
 
   render() {
-    const { disabled, value, className, t, ...props } = this.props
+    const {
+      disabled,
+      value,
+      className,
+      configName,
+      defaultValue,
+      t,
+      tReady,
+      i18n,
+      dispatch,
+      ...props
+    } = this.props
     const { recording } = this.state
 
     return (
@@ -137,10 +148,10 @@ export class ShortcutConfig extends Component {
         {!disabled &&
           value &&
           !recording && (
-          <Button minimal intent={Intent.WARNING} onClick={this.handleDisable}>
-            {t('Remove')}
-          </Button>
-        )}
+            <Button minimal intent={Intent.WARNING} onClick={this.handleDisable}>
+              {t('Remove')}
+            </Button>
+          )}
       </div>
     )
   }
