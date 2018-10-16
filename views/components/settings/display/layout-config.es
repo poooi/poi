@@ -34,7 +34,7 @@ const SVG = {
   ),
   singleTab: (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-      <path fill="currentColor" d="M1 1v12h14V1H1zm1 3h12v8H2V4zm12z" />
+      <path fill="currentColor" d="M1 1v12h14V1H1zm1 3h12v8H2V4z" />
     </svg>
   ),
   doubleTabHorizontal: (
