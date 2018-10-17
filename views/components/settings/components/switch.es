@@ -17,6 +17,7 @@ export class SwitchConfig extends Component {
     configName: PropTypes.string.isRequired,
     value: PropTypes.bool.isRequired,
     disabled: PropTypes.bool,
+    defaultValue: PropTypes.bool,
   }
 
   handleChange = () => {

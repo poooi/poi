@@ -18,6 +18,7 @@ export class CheckboxLabelConfig extends Component {
     configName: PropTypes.string,
     value: PropTypes.bool,
     undecided: PropTypes.bool,
+    defaultValue: PropTypes.bool,
   }
 
   componentDidMount = () => {

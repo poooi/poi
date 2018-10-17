@@ -16,6 +16,7 @@ export class TextConfig extends PureComponent {
     configName: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
+    defaultValue: PropTypes.string,
   }
 
   handleChange = debounce(e => {
