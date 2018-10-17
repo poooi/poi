@@ -1,10 +1,16 @@
-import { FormControl, FormGroup, ControlLabel, Checkbox, Grid, Col, Button, Alert, Collapse } from 'react-bootstrap'
+import { FormControl, ControlLabel, Checkbox, Grid, Col, Button, Alert, Collapse } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Divider } from './components/divider'
-import { get, pick } from 'lodash'
+import { get, pick, cloneDeep, isEqual } from 'lodash'
 import { translate } from 'react-i18next'
+import { HTMLSelect, FormGroup, Callout, Intent } from '@blueprintjs/core'
+
+import { Divider } from 'views/components/settings/components/divider'
+import { Section, Wrapper } from 'views/components/settings/components/section'
+import { TextConfig } from 'views/components/settings/components/text.es'
+
+import { ProxyConfig} from './proxy-config'
 
 const { config, toggleModal } = window
 
@@ -27,6 +33,73 @@ const basic = {
   allowLAN: false,
   showAdvanced: false,
 }
+
+
+@translate(['setting'])
+@connect(
+  (state) => ({
+    use: get(state, 'config.proxy.use', 'none'),
+    proxy: get(state, 'config.proxy'),
+  }))
+class ProxysConfig extends Component {
+  state = {
+    proxy: cloneDeep(this.props.proxy),
+  }
+
+  handleChangeUse = (e) => {
+    config.set('proxy.use', e.currentTarget.value)
+  }
+
+  render() {
+    const { use, proxy, t} = this.props
+
+    return (
+      <Section title={t('setting:Proxy')}>
+        <Wrapper>
+          <Wrapper>
+            <FormGroup inline label={t('Type')}>
+              <HTMLSelect value={use} onChange={this.handleChangeUse}>
+                <option key={0} value="http">HTTP {t('setting:proxy')}</option>
+                <option key={1} value="socks5">Socks5 {t('setting:proxy')}</option>
+                <option key={2} value="pac">PAC {t('setting:file')} ({t('setting:Experimental')})</option>
+                <option key={3} value="none">{t('setting:No proxy')}</option>
+              </HTMLSelect>
+            </FormGroup>
+          </Wrapper>
+
+          {
+            use === 'http' &&
+            <ProxyConfig
+              type="http"
+              enablePassword
+            />
+          }
+          {
+            use === 'socks5' &&
+            <ProxyConfig type="socks5" />
+          }
+          {
+            use === 'pac' &&
+            <FormGroup inline label={t('setting:PAC address')}>
+              <TextConfig configName="proxy.pacAddr" defaultValue={''} />
+            </FormGroup>
+          }
+          {
+            use === 'none' &&
+            <Callout>{t('Will connect to server directly')}</Callout>
+          }
+          {
+            !isEqual(this.state.proxy, proxy) &&
+            <Callout intent={Intent.SUCCESS}>{t('Changes will be effective after restarting Poi')}</Callout>
+          }
+        </Wrapper>
+      </Section>
+    )
+  }
+}
+
+
+
 
 @translate(['setting'])
 @connect((state, props) => {
@@ -147,7 +220,7 @@ export class NetworkConfig extends Component {
     const { t } = this.props
     return (
       <form>
-        <Divider text={t('setting:Proxy server information')} />
+        <ProxysConfig />
         <Grid>
           <Col xs={12}>
             <FormControl componentClass="select" value={this.state.use || 'none'} onChange={this.handleChangeUse}>
@@ -225,7 +298,7 @@ export class NetworkConfig extends Component {
                   </Col>
                 </Grid>
         }
-        <Divider text={t('setting:Times of reconnect')} />
+        <Section title={t('setting:Times of reconnect')} />
         <Grid>
           <Col xs={12}>
             <FormControl type="number" value={this.state.retries} onChange={this.handleSetRetries} />
@@ -255,7 +328,7 @@ export class NetworkConfig extends Component {
             </div>
           </Collapse>
         </Grid>
-        <Divider text={t('setting:Save settings')} />
+        <Section title={t('setting:Save settings')} />
         <Grid>
           <Col xs={12}>
             <Button bsStyle="success" onClick={this.handleSaveConfig} style={{width: '100%'}}>{t('setting:Save')}</Button>
