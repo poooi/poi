@@ -1,9 +1,12 @@
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { get, cloneDeep, isEqual } from 'lodash'
 import { translate } from 'react-i18next'
 import { HTMLSelect, FormGroup, Callout, Intent } from '@blueprintjs/core'
 import { compose } from 'redux'
+import styled from 'styled-components'
+import { rgba } from 'polished'
 
 import { Section, Wrapper } from 'views/components/settings/components/section'
 import { TextConfig } from 'views/components/settings/components/text'
@@ -14,14 +17,20 @@ import { ProxyConfig } from './proxy-config'
 
 const { config } = window
 
+const StickyCallout = styled(Callout)`
+  position: sticky;
+  z-index: 5;
+  top: 30px;
+  background-color: ${props => rgba(props.theme.GREEN1, 0.8)} !important;
+`
+
 @translate(['setting'])
 @connect(state => ({
   use: get(state, 'config.proxy.use', 'none'),
-  proxy: get(state, 'config.proxy'),
 }))
-class ProxysConfig extends Component {
-  state = {
-    proxy: cloneDeep(this.props.proxy),
+class ProxiesConfig extends Component {
+  static propTypes = {
+    use: PropTypes.string.isRequired,
   }
 
   handleChangeUse = e => {
@@ -29,7 +38,7 @@ class ProxysConfig extends Component {
   }
 
   render() {
-    const { use, proxy, t } = this.props
+    const { use, t } = this.props
 
     return (
       <Section title={t('setting:Proxy')}>
@@ -61,11 +70,6 @@ class ProxysConfig extends Component {
             </FormGroup>
           )}
           {use === 'none' && <Callout>{t('Will connect to server directly')}</Callout>}
-          {!isEqual(this.state.proxy, proxy) && (
-            <Callout intent={Intent.SUCCESS}>
-              {t('Changes will be effective after restarting Poi')}
-            </Callout>
-          )}
         </Wrapper>
       </Section>
     )
@@ -142,11 +146,29 @@ const RelayMode = compose(
   </Section>
 ))
 
-export const NetworkConfig = () =>  (
-  <div>
-    <ProxysConfig />
-    <ConnectionRetries />
-    <RelayMode />
-  </div>
-)
+@translate(['setting'])
+@connect((state) => ({
+  proxy: get(state, 'config.proxy'),
+}))
+export class NetworkConfig extends Component {
+  state = {
+    proxy: cloneDeep(this.props.proxy),
+  }
+
+  render() {
+    const { proxy, t} = this.props
+    return (
+      <div>
+        {!isEqual(this.state.proxy, proxy) && (
+          <StickyCallout intent={Intent.SUCCESS}>
+            {t('Network setting changes will be effective after restarting Poi')}
+          </StickyCallout>
+        )}
+        <ProxiesConfig />
+        <ConnectionRetries />
+        <RelayMode />
+      </div>
+    )
+  }
+}
 
