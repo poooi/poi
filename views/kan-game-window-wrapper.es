@@ -169,10 +169,7 @@ export class KanGameWindowWrapper extends PureComponent {
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/alert.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/control.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/map-reminder.css'))}">`
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
         div.style.position = 'absolute'
