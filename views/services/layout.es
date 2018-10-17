@@ -20,19 +20,12 @@ const setCSS = () => {
   const tab = $('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')
   const tabSize = tab ? tab.getBoundingClientRect() : { height: 0, width: 0 }
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', getZoomedSize(1200)) !== 0 && !config.get('poi.layout.isolate', false) && $('kan-game webview') ?
-    $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
 .plugin-dropdown {
   max-height: ${tabSize.height}px;
   max-width: ${tabSize.width}px;
   width: ${panelRect.width * 0.875}px;
-}
-
-.redux-toastr .bottom-right {
-  bottom: ${window.innerHeight - bottom + 12}px !important;
-  right: ${window.innerWidth - right + 12}px !important;
 }
 `
 }
