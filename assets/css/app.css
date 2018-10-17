@@ -59,6 +59,12 @@ poi-info {
   display: flex;
 }
 
+poi-alert {
+  flex: 1;
+  height: 30px;
+  width: 0;
+}
+
 poi-app {
   flex-shrink: 0;
   position: relative;

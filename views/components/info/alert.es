@@ -1,15 +1,82 @@
+/* global config */
+
 import React, { Component } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { debounce } from 'lodash'
+import styled, { keyframes, css } from 'styled-components'
 
-import './assets/alert.css'
+const Alert = styled.div`
+  margin-bottom: 0;
+  min-height: 100%;
+  opacity: 0.7;
+  padding: 6px 3px 5px 3px;
+  border-radius: 0;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+`
 
-const { config } = window
+const AlertLogContent = styled(Alert)`
+  overflow: scroll;
+  text-overflow: initial;
+`
+
+const AlertMain = styled.div`
+  height: 29px;
+  pointer-events: none;
+  position: relative;
+  transition: 0.3s;
+  width: 100%;
+`
+
+const AlertContainer = styled(Alert)`
+  cursor: pointer;
+  height: 30px;
+  overflow: hidden;
+  pointer-events: auto;
+  position: relative;
+  transition: 0.3s;
+  z-index: 2;
+`
+
+const AlertLog = styled.div`
+  overflow: hidden;
+  transition: 0.3s;
+  z-index: 1;
+`
+
+const AlertPosition = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+`
+
+const OverflowScroll = keyframes`
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+`
+
+const AlertArea = styled.span`
+  cursor: pointer;
+  ${({overflow}) => overflow && css`
+    animation-delay: 2s;
+    animation-duration: 18s;
+    animation-iteration-count: 2;
+    animation-name: ${OverflowScroll};
+    animation-timing-function: linear;
+    display: block;
+    margin-left: 0;
+  `}
+`
 
 const initState = {
   overflow: false,
-  history: [0, 1, 2, 3, 4].map((index) => (<div key={index++} className="alert bp3-callout bp3-intent-default alert-log-contents">　</div>)),
+  history: [0, 1, 2, 3, 4].map((index) => (<AlertLogContent key={index++} className="bp3-callout bp3-intent-default">　</AlertLogContent>)),
   current: {
     type: 'default',
     content: i18next.t('Waiting for response'),
@@ -28,7 +95,7 @@ let stickyEnd = Date.now()
 let updateTime = 0
 
 const pushToHistory = (history, toPush) => {
-  history.push(<div key={Date.now()} className={`alert bp3-callout bp3-intent-${toPush.type} alert-log-contents`}>{toPush.content}</div>)
+  history.push(<AlertLogContent key={Date.now()} className={`bp3-callout bp3-intent-${toPush.type}`}>{toPush.content}</AlertLogContent>)
   if (history.length > 5) {
     return history.slice(history.length - 5)
   }
@@ -147,14 +214,14 @@ class PoiAlertInner extends Component {
   }
   render() {
     return (
-      <div id="alert-main" className="alert-main bp3-popover" ref={ref => { this.alertMain = ref }}>
-        <div
+      <AlertMain id="alert-main" className="alert-main bp3-popover" ref={ref => { this.alertMain = ref }}>
+        <AlertContainer
           id="alert-container"
-          className={`alert bp3-callout bp3-intent-${this.state.current.type} alert-container`}
+          className={`bp3-callout bp3-intent-${this.state.current.type} alert-container`}
           onClick={this.toggleHistory}
         >
-          <div className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
-            <span id="alert-area" ref={ref => { this.alertArea = ref }} className={this.state.overflow ? 'overflow-anim' : ''}>
+          <AlertPosition className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
+            <AlertArea id="alert-area" ref={ref => { this.alertArea = ref }} overflow={this.state.overflow}>
               {
                 this.state.overflow ?
                   <>
@@ -167,17 +234,17 @@ class PoiAlertInner extends Component {
                   </>
                   : this.state.current.content
               }
-            </span>
-          </div>
-        </div>
-        <div id="alert-log"
+            </AlertArea>
+          </AlertPosition>
+        </AlertContainer>
+        <AlertLog id="alert-log"
           ref={ref => { this.alertHistory = ref }}
           className="alert-log bp3-popover-content"
           style={this.state.alertHistoryStyle}
           onClick={this.toggleHistory}>
           {this.state.history}
-        </div>
-      </div>
+        </AlertLog>
+      </AlertMain>
     )
   }
 }
