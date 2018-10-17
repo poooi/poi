@@ -18,6 +18,7 @@ export class RadioConfig extends Component {
     configName: PropTypes.string,
     value: PropTypes.string,
     availableVal: PropTypes.array,
+    defaultValue: PropTypes.string,
   }
 
   componentDidMount = () => {
