@@ -233,6 +233,7 @@ export class PoiMapReminder extends Component {
         wrapperTagName="div"
         targetTagName="div"
         disabled={!mapData}
+        usePortal={false}
       >
         <MapReminder>
           {
