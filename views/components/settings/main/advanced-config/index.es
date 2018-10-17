@@ -62,7 +62,7 @@ export const AdvancedConfig = translate(['setting'])(({ t }) => (
       <Wrapper>
         <FormGroup inline label={t('setting:Boss key')}>
           {isMacOS ? (
-            <ShortcutConfig defaultValue="Cmd+H" disabled />
+            <ShortcutConfig configName="poi.shortcut.bosskey.macos" defaultValue="Cmd+H" disabled />
           ) : (
             <ShortcutConfig configName="poi.shortcut.bosskey" />
           )}
