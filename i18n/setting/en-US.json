@@ -133,6 +133,7 @@
   "Disable": "Disable",
   "Enable": "Enable",
   "Remove": "Remove",
+  "Reload": "Reload",
   "Installing": "Installing",
   "PluginUpdateMsg": "have newer version. Please update your plugins.",
   "Plugin update": "Plugin update",
