@@ -47,28 +47,17 @@ const SWITCHES = [
 @connect((state, props) => ({
   themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.appearance.theme', 'paperdark'),
-  enableSVGIcon: get(state.config, 'poi.appearance.svgicon', false),
-  enableTransition: get(state.config, 'poi.transition.enable', true),
-  useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
   vibrant: get(state.config, 'poi.appearance.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
   background: get(state.config, 'poi.appearance.background'),
-  enableAvatar: get(state.config, 'poi.appearance.avatar', true),
 }))
 export class ThemeConfig extends Component {
   static propTypes = {
     themes: PropTypes.arrayOf(PropTypes.string),
     theme: PropTypes.string,
-    enableSVGIcon: PropTypes.bool,
-    enableTransition: PropTypes.bool,
-    useGridMenu: PropTypes.bool,
     vibrant: PropTypes.number,
     background: PropTypes.string,
-    enableAvatar: PropTypes.bool,
   }
 
-  state = {
-    show: false,
-  }
 
   handleSetTheme = e => {
     const theme = e.target.value
@@ -90,36 +79,8 @@ export class ThemeConfig extends Component {
     }
   }
 
-  handleSetSVGIcon = () => {
-    config.set('poi.appearance.svgicon', !this.props.enableSVGIcon)
-  }
-
-  handleSetTransition = () => {
-    config.set('poi.transition.enable', !this.props.enableTransition)
-  }
-
-  handleSetGridMenu = () => {
-    config.set('poi.tabarea.grid', !this.props.useGridMenu)
-  }
-
   handleSetVibrancy = e => {
     config.set('poi.appearance.vibrant', parseInt(e.target.value))
-  }
-
-  handleSetAvatar = e => {
-    config.set('poi.appearance.avatar', !this.props.enableAvatar)
-  }
-
-  handleMouseEnter = () => {
-    this.setState({
-      show: true,
-    })
-  }
-
-  handleMouseLeave = () => {
-    this.setState({
-      show: false,
-    })
   }
 
   render() {
