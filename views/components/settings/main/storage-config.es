@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get } from 'lodash'
 import { remote } from 'electron'
 import { translate } from 'react-i18next'
 import { remove } from 'fs-extra'
 import { join } from 'path'
-import { Button, NumericInput, FormGroup, Intent, Callout } from '@blueprintjs/core'
+import { Button, FormGroup, Intent, Callout } from '@blueprintjs/core'
 import styled from 'styled-components'
 
-import { Section, Wrapper, FillAvailable } from '../components/section'
-import { FolderPickerConfig } from '../components/folder-picker'
+import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
+import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
+import { IntegerConfig } from 'views/components/settings/components/integer'
 
 const { session } = remote.require('electron')
 
-const { config, toggleModal, APPDATA_PATH } = window
+const { toggleModal, APPDATA_PATH } = window
 
 const ButtonArea = styled(Wrapper)`
   button + button {
@@ -27,9 +26,6 @@ const ButtonArea = styled(Wrapper)`
 `
 
 @translate(['setting'])
-@connect(state => ({
-  cacheSize: get(state.config, 'poi.misc.cache.size', 320),
-}))
 export class StorageConfig extends Component {
   static propTypes = {
     cacheSize: PropTypes.number,
@@ -51,10 +47,6 @@ export class StorageConfig extends Component {
     remote.getCurrentWebContents().session.clearCache(() => {
       toggleModal(this.props.t('setting:Delete cache'), this.props.t('setting:Success!'))
     })
-  }
-
-  handleValueChange = value => {
-    config.set('poi.misc.cache.size', parseInt(value, 10))
   }
 
   handleUpdateCacheSize = () => {
@@ -88,12 +80,12 @@ export class StorageConfig extends Component {
 
           <Wrapper>
             <FormGroup inline label={t('setting:Maximum cache size')}>
-              <NumericInput
+              <IntegerConfig
                 clampValueOnBlur
                 min={0}
                 max={20480}
-                value={this.props.cacheSize}
-                onValueChange={this.handleValueChange}
+                configName="poi.misc.cache.size"
+                defaultValue={320}
               />
               {' MB'}
             </FormGroup>

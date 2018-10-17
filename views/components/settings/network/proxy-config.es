@@ -2,14 +2,13 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, mapValues } from 'lodash'
-import { FormGroup, Switch, NumericInput } from '@blueprintjs/core'
+import { FormGroup } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
 
 import { Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { TextConfig } from 'views/components/settings/components/text'
 import { SwitchConfig } from 'views/components/settings/components/switch'
-
-const { config } = window
+import { IntegerConfig } from 'views/components/settings/components/integer'
 
 const DEFAULT = {
   http: {
@@ -40,12 +39,8 @@ export class ProxyConfig extends PureComponent {
     password: PropTypes.password,
   }
 
-  handlePortChange = value => {
-    config.set(['proxy', this.props.type, 'port'].join('.'), Math.round(value))
-  }
-
   render() {
-    const { port, requirePassword, enablePassword, type, t } = this.props
+    const { requirePassword, enablePassword, type, t } = this.props
 
     return (
       <>
@@ -60,12 +55,12 @@ export class ProxyConfig extends PureComponent {
 
         <HalfWrapper>
           <FormGroup inline label={t('setting:Proxy server port')}>
-            <NumericInput
+            <IntegerConfig
               clampValueOnBlur
               min={0}
               max={65535}
-              value={port}
-              onValueChange={this.handlePortChange}
+              configName={['proxy', type, 'port'].join('.')}
+              defaultValue={get(DEFAULT, [type, 'port'])}
             />
           </FormGroup>
         </HalfWrapper>
