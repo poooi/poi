@@ -17,6 +17,7 @@ export class InstalledPlugin extends PureComponent {
     handleUpdate: PropTypes.func,
     handleEnable: PropTypes.func,
     handleRemove: PropTypes.func,
+    handleReload: PropTypes.func,
   }
   state = {
     settingOpen: false,
@@ -49,8 +50,8 @@ export class InstalledPlugin extends PureComponent {
       enableBtnFAname = 'ban'
       break
     case PluginManager.BROKEN:
-      enableBtnText = <Trans>setting:Error</Trans>
-      enableBtnFAname = 'close'
+      enableBtnText = <Trans>setting:Reload</Trans>
+      enableBtnFAname = 'refresh'
       break
     default:
       enableBtnText = ''
@@ -137,7 +138,8 @@ export class InstalledPlugin extends PureComponent {
                     }>
                       <Button bsStyle="info"
                         disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                        onClick={this.props.handleEnable}
+                        onClick={PluginManager.getStatusOfPlugin(plugin) != PluginManager.BROKEN ?
+                          this.props.handleEnable : this.props.handleReload}
                         className={btnClass}>
                         <FontAwesome name={enableBtnFAname}/>
                       </Button>
