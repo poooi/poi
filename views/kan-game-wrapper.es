@@ -7,6 +7,7 @@ import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
 
 import { PoiAlert } from './components/info/alert'
+import { PoiToast } from './components/info/toast'
 import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { layoutResizeObserver } from 'views/services/layout'
@@ -159,6 +160,7 @@ export class KanGameWrapper extends Component {
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
             />
+            <PoiToast />
           </div>
           <poi-info style={{ flexBasis: poiControlHeight }}>
             <poi-control><PoiControl weview={this.webview} /></poi-control>
@@ -284,6 +286,7 @@ export class KanGameWrapper extends Component {
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
               />
+              <PoiToast />
             </div>
             <poi-info style={{ flexBasis: poiControlHeight }}>
               <poi-control><PoiControl weview={this.webview} /></poi-control>

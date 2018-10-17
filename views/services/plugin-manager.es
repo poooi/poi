@@ -1,3 +1,4 @@
+/* global config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore */
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
@@ -7,8 +8,6 @@ import { map } from 'lodash'
 import { remote } from 'electron'
 import fetch from 'node-fetch'
 import i18next from 'views/env-parts/i18next'
-
-const {config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore} = window
 
 const fetchHeader = new Headers()
 fetchHeader.set('Cache-Control', 'max-age=0')

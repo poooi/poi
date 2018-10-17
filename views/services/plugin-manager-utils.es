@@ -1,3 +1,4 @@
+/* global ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH */
 import { omit, get, set, each, isArray } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
@@ -16,7 +17,6 @@ import i18next from 'views/env-parts/i18next'
 import { readI18nResources, normalizeURL } from 'views/utils/tools'
 
 import { extendReducer } from 'views/create-store'
-const { ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH } = window
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 

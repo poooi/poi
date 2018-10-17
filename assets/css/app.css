@@ -49,6 +49,7 @@ kan-game {
   margin-right: auto;
   max-height: max-content;
   width: 100%;
+  position: relative;
 }
 
 poi-info {
@@ -252,4 +253,3 @@ a.overlay-panel-trigger {
 a.overlay-panel-trigger > svg {
   margin: auto;
 }
-
