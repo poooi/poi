@@ -451,6 +451,16 @@ class PluginManager extends EventEmitter {
     })
   }
 }
+  async reloadPlugin(plugin) {
+    try {
+      await this.disablePlugin(plugin)
+      plugin.isBroken = false
+      await this.enablePlugin(plugin)
+    } catch (error) {
+      console.error(error.stack)
+    }
+  }
+}
 
 const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'plugin.json'),
@@ -467,15 +477,7 @@ window.reloadPlugin = async (pkgName, verbose=false) => {
     console.error(`plugin "${pkgName}" not found`)
     return
   }
-  await pluginManager.disablePlugin(plugin)
-  if (verbose)
-    // eslint-disable-next-line no-console
-    console.log(`plugin "${plugin.id}" disabled, re-enabling...`)
-  plugin.isBroken = false
-  await pluginManager.enablePlugin(plugin)
-  if (verbose)
-    // eslint-disable-next-line no-console
-    console.log(`plugin "${plugin.id}" enabled.`)
+  await pluginManager.reloadPlugin(plugin)
 }
 
 window.gracefulResetPlugin = () => pluginManager.gracefulRepair(false)
