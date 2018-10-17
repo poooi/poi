@@ -44,5 +44,5 @@
   "Website requires login": "Website requires login",
   "Username":"Username",
   "Password":"Password",
-  "RefreshGameDialogTip": "Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</1></1>Tip  Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk. Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload Flash reloads only the Flash part, this is usually faster but could result in catbomb.</1></1>Tip: Right clicking on this button reloads Flash and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk."
+  "RefreshGameDialogTip":"Are you sure to refresh the game?<1><0>Refresh page is the same as pressing F5.</0><1>Reload game reloads only the game frame, this is usually faster but could result in catbomb.</1></1>Tip  Right clicking on this button reloads the game and Left clicking with Shift key pressed refreshes the page, both are <3>without confirmation</3>, use at your own risk."
 }
