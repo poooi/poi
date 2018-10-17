@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome'
 import { Button, ButtonGroup, FormControl, InputGroup, FormGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { translate } from 'react-i18next'
 
-import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
+import { gameRefreshPage, gameReload } from 'views/services/utils'
 
 const { config, getStore } = window
 const wvStatus = {
@@ -148,7 +148,7 @@ export class NavigatorBar extends React.Component {
         <div className="navigator-btn">
           <ButtonGroup>
             <Button bsSize="small" bsStyle="primary" onClick={navigateAction}>{navigateIcon}</Button>
-            <Button bsSize="small" bsStyle="warning" onClick={gameRefreshPage} onContextMenu={gameReloadFlash}><FontAwesome name="refresh" /></Button>
+            <Button bsSize="small" bsStyle="warning" onClick={gameRefreshPage} onContextMenu={gameReload}><FontAwesome name="refresh" /></Button>
           </ButtonGroup>
           <ButtonGroup style={{marginLeft: 5}}>
             <OverlayTrigger placement="top" overlay={<Tooltip id="nav-homepage">{t('setting:Set as homepage')}</Tooltip>}>
