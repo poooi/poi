@@ -36,7 +36,7 @@ export const Wrapper = styled.div`
     display: inline-flex;
   }
 
-  .bp3-input-group {
+  .bp3-numeric-input .bp3-input-group {
     width: 5em;
   }
 
