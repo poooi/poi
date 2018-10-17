@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, map, capitalize } from 'lodash'
 import { translate } from 'react-i18next'
-import { Switch, Slider, FormGroup, NumericInput, Callout } from '@blueprintjs/core'
+import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
 
-import { Section, Wrapper, HalfWrapper } from '../components/section'
+import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
+import { IntegerConfig } from 'views/components/settings/components/integer'
 
 const { config } = window
 
@@ -13,11 +14,9 @@ const { config } = window
 @connect((state, props) => ({
   enabled: get(state.config, 'poi.notify.enabled', true),
   expedition: get(state.config, 'poi.notify.expedition.enabled', true),
-  expeditionValue: get(state.config, 'poi.notify.expedition.value', 60),
   construction: get(state.config, 'poi.notify.construction.enabled', true),
   repair: get(state.config, 'poi.notify.repair.enabled', true),
   morale: get(state.config, 'poi.notify.morale.enabled', true),
-  moraleValue: get(state.config, 'poi.notify.morale.value', 49),
   others: get(state.config, 'poi.notify.others.enabled', true),
   volume: get(state.config, 'poi.notify.volume', 0.8),
 }))
@@ -51,13 +50,6 @@ export class NotificationConfig extends Component {
     document.getElementById(id).select()
   }
 
-  handleSetExpedition = value => {
-    config.set('poi.notify.expedition.value', parseInt(value, 10))
-  }
-
-  handleSetMorale = value => {
-    config.set('poi.notify.morale.value', parseInt(value, 10))
-  }
 
   render() {
     const { t } = this.props
@@ -107,12 +99,12 @@ export class NotificationConfig extends Component {
 
           <Wrapper>
             <FormGroup inline label={t('setting:Notify when expedition returns in')}>
-              <NumericInput
+              <IntegerConfig
                 clampValueOnBlur
                 min={0}
                 max={7200}
-                value={this.props.expeditionValue}
-                onValueChange={this.handleSetExpedition}
+                configName="poi.notify.expedition.value"
+                defaultValue={60}
                 disabled={!this.props.enabled || !this.props.expedition}
               />
               {' '}{t('main:s')}
@@ -121,12 +113,12 @@ export class NotificationConfig extends Component {
 
           <Wrapper>
             <FormGroup inline label={t('setting:Notify when morale is greater than')}>
-              <NumericInput
+              <IntegerConfig
                 clampValueOnBlur
                 min={0}
                 max={49}
-                value={this.props.moraleValue}
-                onValueChange={this.handleSetMorale}
+                configName="poi.notify.morale.value"
+                defaultValue={49}
                 disabled={!this.props.enabled || !this.props.morale}
               />
             </FormGroup>

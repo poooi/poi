@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { translate } from 'react-i18next'
-import { FormGroup, NumericInput, Switch } from '@blueprintjs/core'
+import { FormGroup, Switch } from '@blueprintjs/core'
 
 import { Wrapper } from 'views/components/settings/components/section'
+import { IntegerConfig } from 'views/components/settings/components/integer'
 
 const { config } = window
 
@@ -22,16 +23,12 @@ export class SlotCheckConfig extends Component {
     enable: PropTypes.bool,
   }
 
-  handleSetThreshold = value => {
-    config.set(`poi.mapStartCheck.${this.props.type}.minFreeSlots`, value)
-  }
-
   handleChange = () => {
     config.set(`poi.mapStartCheck.${this.props.type}.enable`, !this.props.enable)
   }
 
   render() {
-    const { t, enable, minFreeSlots } = this.props
+    const { t, enable, type } = this.props
     return (
       <Wrapper>
         <FormGroup inline>
@@ -40,12 +37,12 @@ export class SlotCheckConfig extends Component {
           </Switch>
         </FormGroup>
         <FormGroup inline label={t('Threshold')}>
-          <NumericInput
+          <IntegerConfig
             clampValueOnBlur
             min={0}
             max={1000}
-            value={minFreeSlots}
-            onValueChange={this.handleSetThreshold}
+            configName={`poi.mapStartCheck.${type}.minFreeSlots`}
+            defaultValue={0}
             disabled={!enable}
           />
         </FormGroup>
