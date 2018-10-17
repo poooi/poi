@@ -275,7 +275,7 @@ export class PoiControl extends Component {
     this.handleTouchbar(message)
   }
   renderButton = ({ label, ...props }) => (
-    <Tooltip position={Position.TOP_LEFT} content={label}>
+    <Tooltip position={Position.TOP_LEFT} content={label} usePortal={false}>
       <Button {...props} minimal />
     </Tooltip>
   )
@@ -354,9 +354,6 @@ export class PoiControl extends Component {
         onContextMenu: gameReload,
         label: this.props.t('Refresh game'),
         icon: 'refresh',
-      },
-      {
-        space: true,
       },
     ]
     return (
