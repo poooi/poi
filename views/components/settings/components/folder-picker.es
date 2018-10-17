@@ -57,6 +57,7 @@ export class FolderPickerConfig extends Component {
     placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     exclude: PropTypes.arrayOf(PropTypes.string),
     defaultValue: PropTypes.string,
+    extraControl: PropTypes.node,
   }
 
   static defaultProps = {
@@ -159,7 +160,7 @@ export class FolderPickerConfig extends Component {
   }
 
   render() {
-    const { t } = this.props
+    const { t, extraControl } = this.props
     return (
       <PickerBox
         className="folder-picker"
@@ -181,6 +182,7 @@ export class FolderPickerConfig extends Component {
         <Button onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
           {t(this.props.value ? 'Change' : 'Select')}
         </Button>
+        {extraControl}
       </PickerBox>
     )
   }

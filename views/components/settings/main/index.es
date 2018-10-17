@@ -1,5 +1,4 @@
 import React from 'react'
-import { Grid, Col, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
