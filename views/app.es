@@ -10,7 +10,6 @@ import '../assets/css/app.css'
 import '../assets/css/global.css'
 
 import { store } from './create-store'
-import { Toastr } from './components/info/toastr'
 import { WindowEnv } from './components/etc/window-env'
 import { ModalTrigger } from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
@@ -74,7 +73,6 @@ class Poi extends Component {
           <PoiApp />
         </poi-main>
         <ModalTrigger />
-        <Toastr />
         <BasicAuth />
       </>
     )
