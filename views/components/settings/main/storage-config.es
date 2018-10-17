@@ -20,6 +20,10 @@ const ButtonArea = styled(Wrapper)`
   button + button {
     margin-left: 10px;
   }
+
+  .bp3-callout {
+    margin-top: 0.5em;
+  }
 `
 
 @translate(['setting'])
@@ -87,7 +91,7 @@ export class StorageConfig extends Component {
               <NumericInput
                 clampValueOnBlur
                 min={0}
-                max={20000}
+                max={20480}
                 value={this.props.cacheSize}
                 onValueChange={this.handleValueChange}
               />
@@ -98,10 +102,10 @@ export class StorageConfig extends Component {
           <FillAvailable>
             <FormGroup inline label={t('Clear')}>
               <ButtonArea>
-                <Button intent={Intent.WARNING} onClick={this.handleClearCookie}>
+                <Button minimal intent={Intent.WARNING} onClick={this.handleClearCookie}>
                   {t('setting:Delete cookies')}
                 </Button>
-                <Button intent={Intent.WARNING} onClick={this.handleClearCache}>
+                <Button minimal intent={Intent.WARNING} onClick={this.handleClearCache}>
                   {t('setting:Delete cache')}
                 </Button>
                 <Callout>
