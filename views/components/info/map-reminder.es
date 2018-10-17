@@ -19,6 +19,17 @@ const MapReminder = styled.div`
   width: 135px;
 `
 
+const Alert = styled.div`
+  margin-bottom: 0;
+  min-height: 100%;
+  opacity: 0.7;
+  padding: 6px 3px 5px 3px;
+  border-radius: 0;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+`
+
 const MapHPProgress = styled(ProgressBar)`
   background-color: transparent;
   border-radius: 0;
@@ -233,11 +244,11 @@ export class PoiMapReminder extends Component {
                 intent={Intent.PRIMARY}
                 value={mapHp[0] / mapHp[1]} />
           }
-          <div className="alert">
+          <Alert>
             <span id="map-reminder-area">
               {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
             </span>
-          </div>
+          </Alert>
         </MapReminder>
         <>
           <MapRoutes />
