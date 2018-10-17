@@ -46,10 +46,7 @@ config.on('config.set', (path, value) => {
 export const DisplayConfig = () => (
   <form>
     <LayoutConfig />
-    <div className="form-group">
-      <Divider text={<Trans>setting:Themes</Trans>} />
-      <ThemeConfig />
-    </div>
+    <ThemeConfig />
     <div className="form-group">
       <Divider text={<Trans>setting:Zoom</Trans>} />
       <ZoomingConfig />
