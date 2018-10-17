@@ -60,7 +60,7 @@
   "If connection error occurs frequently, delete both of them": "통신 오류가 빈번할 경우 쿠키와 캐시를 삭제해주세요.",
   "Themes": "테마",
   "Game resolution": "해상도",
-  "Use certain resolution for game area": "특정 해상도 사용",
+  "Use fixed resolution for game area": "특정 해상도 사용",
   "Input address": "주소 입력",
   "Set as homepage": "홈페이지로 설정",
   "Zoom": "줌",

@@ -44,13 +44,10 @@ config.on('config.set', (path, value) => {
 })
 
 export const DisplayConfig = () => (
-  <form>
+  <div>
     <LayoutConfig />
     <ThemeConfig />
     <ZoomingConfig />
-    <div className="form-group">
-      <Divider text={<Trans>setting:Game resolution</Trans>} />
-      <ResolutionConfig />
-    </div>
-  </form>
+    <ResolutionConfig />
+  </div>
 )
