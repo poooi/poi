@@ -76,6 +76,9 @@ export class PluginConfig extends Component {
       break
     }
   }
+  handleReload = async (index) => {
+    await PluginManager.reloadPlugin(this.props.plugins[index])
+  }
   handleInstall = async (name, e) => {
     if (get(e, 'target.disabled')) {
       return
@@ -543,6 +546,7 @@ export class PluginConfig extends Component {
                   handleUpdate={partial(this.handleUpdate, index)}
                   handleEnable={partial(this.handleEnable, index)}
                   handleRemove={partial(this.handleRemove, index)}
+                  handleReload={partial(this.handleReload, index)}
                 />
               )
             }, this)
