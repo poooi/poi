@@ -47,10 +47,7 @@ export const DisplayConfig = () => (
   <form>
     <LayoutConfig />
     <ThemeConfig />
-    <div className="form-group">
-      <Divider text={<Trans>setting:Zoom</Trans>} />
-      <ZoomingConfig />
-    </div>
+    <ZoomingConfig />
     <div className="form-group">
       <Divider text={<Trans>setting:Game resolution</Trans>} />
       <ResolutionConfig />
