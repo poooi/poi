@@ -22,6 +22,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  align-items: center;
 
   .bp3-switch {
     margin-right: 2em;
