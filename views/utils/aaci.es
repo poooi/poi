@@ -124,6 +124,7 @@ const isMusashiK2 = shipIdIs(546)
 const isHamakazeBK = shipIdIs(558)
 const isIsokazeBK = shipIdIs(557)
 const isTenryuuK2 = shipIdIs(477)
+const isGotlandKai = shipIdIs(579)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -516,6 +517,18 @@ declareAACI({
       hasSome(is20Tube7InchUpRocketLaunchers),
       hasSome(is16InchMkITriplePlusFCR),
     ),
+  ),
+})
+
+declareAACI({
+  name: ['Gotland Kai'],
+  id: 33,
+  fixed: 4,
+  modifier: 1.35,
+  shipValid: isGotlandKai,
+  equipsValid: validAll(
+    hasSome(isHighAngleMount),
+    hasSome(isAAGun),
   ),
 })
 
