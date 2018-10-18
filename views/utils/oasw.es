@@ -34,9 +34,11 @@ const equipTaisAbove = value => equip => equipTais(equip) >= value
 const overEquips = func => (_ship, equips) => func(equips)
 
 /*
-   - reference as of Apr 10, 2018:
+   - reference as of Oct 18, 2018:
 
        http://wikiwiki.jp/kancolle/?%C2%D0%C0%F8%C0%E8%C0%A9%C7%FA%CD%EB%B9%B6%B7%E2
+
+   - Shinyou-related OASW is kinda too messy at this point to be put here.
 
    - regarding _.overSome, _overEvery:
 
@@ -70,8 +72,18 @@ export const isOASWWith = allCVEIds => _.overSome(
     )
   ),
   _.overEvery(
-    // 駆逐 軽巡 雷巡 練巡
-    ship => [2, 3, 4, 21].includes(ship.api_stype),
+    ship => [
+      // 駆逐
+      2,
+      // 軽巡
+      3,
+      // 雷巡
+      4,
+      // 練巡
+      21,
+      // 補給
+      22,
+    ].includes(ship.api_stype),
     taisenAbove(100),
     overEquips(hasSome(isSonar)),
   ),
