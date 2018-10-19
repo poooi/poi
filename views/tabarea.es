@@ -164,27 +164,34 @@ class TabContentsUnion extends Component {
     children: PropTypes.node.isRequired,
     activeTab: PropTypes.string.isRequired,
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     return !shallowEqual(omit(this.props, ['children']), omit(nextProps, ['children']))
       || !shallowEqual(this.state, nextState)
       || !isEqual(this.childrenKey(this.props.children), this.childrenKey(nextProps.children))
   }
+
   componentDidUpdate() {
     this.prevTab = this.props.activeTab
   }
+
   childrenKey = (children) => {
     return Children.map(children, (child) => child.key).filter(Boolean)
   }
+
   findChildByKey = (children, key) => {
     return Children.map(children,
       (child) => child.key === key ? child : null).filter(Boolean)[0]
   }
+
   activeKey = () => {
     return this.props.activeTab || (this.props.children[0] || {}).key
   }
+
   prevKey = () => {
     return this.prevTab || (this.props.children[0] || {}).key
   }
+
   render() {
     let onTheLeft = true
     const activeKey = this.activeKey()
@@ -231,7 +238,7 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch=false) =>
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
   useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
   activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
-  activePluginName: get(state.ui, 'activePluginName', ''),
+  activePluginName: get(state.ui, 'activePluginName', get(state.plugins, '0.id', '')),
   mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
   mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
   editable: get(state.config, 'poi.layout.editable', false),
@@ -257,12 +264,17 @@ export class ControlledTabArea extends PureComponent {
     editable: PropTypes.bool.isRequired,
     windowmode: PropTypes.object.isRequired,
   }
+
   state = {
     openedWindow: {},
   }
+
   windowRefs = {}
+
   trigger = React.createRef()
+
   resizeContainer = React.createRef()
+
   selectTab = (key, autoSwitch=false) => {
     if (key == null)
       return
@@ -276,7 +288,7 @@ export class ControlledTabArea extends PureComponent {
       }
     }
     const tabKeyUnionInstance = this.tabKeyUnion.getWrappedInstance()
-    if ((!['main-view', 'ship-view', 'settings'].includes(key)) &&
+    if (this.isPluginTab(key) &&
       tabKeyUnionInstance.findChildByKey(tabKeyUnionInstance.props.children, key)) {
       tabInfo = {
         ...tabInfo,
@@ -285,18 +297,19 @@ export class ControlledTabArea extends PureComponent {
     }
     dispatchTabChangeEvent(tabInfo, autoSwitch)
   }
+
   handleSelectTab = (key) => {
-    this.selectTab(key)
+    this.selectTab(key === 'plugin' ? this.props.activePluginName : key)
   }
-  handleSelectDropdown = (e, key) => {
-    this.selectTab(key)
-  }
+
   handleCtrlOrCmdTabKeyDown = () => {
     this.selectTab('main-view')
   }
+
   handleCmdCommaKeyDown = () => {
     this.selectTab('settings')
   }
+
   handleCtrlOrCmdNumberKeyDown = (num) => {
     let key
     switch (num) {
@@ -312,18 +325,22 @@ export class ControlledTabArea extends PureComponent {
     }
     this.selectTab(key)
   }
+
   handleShiftTabKeyDown = () => {
     this.handleSetTabOffset(-1)
   }
+
   handleTabKeyDown = () => {
     this.handleSetTabOffset(1)
   }
+
   handleSetTabOffset = (offset) => {
     const tabKeyUnionInstance = this.tabKeyUnion.getWrappedInstance()
     const childrenKey = tabKeyUnionInstance.childrenKey(tabKeyUnionInstance.props.children)
     const nowIndex = childrenKey.indexOf(this.props.doubleTabbed ? this.props.activePluginName : this.props.activeMainTab)
     this.selectTab(childrenKey[(nowIndex + childrenKey.length + offset) % childrenKey.length])
   }
+
   handleKeyDown = () => {
     if (this.listener != null)
       return
@@ -355,6 +372,7 @@ export class ControlledTabArea extends PureComponent {
       }
     })
   }
+
   handleResponse = (e) => {
     if (config.get('poi.autoswitch.enabled', true)) {
       let toSwitch
@@ -380,6 +398,7 @@ export class ControlledTabArea extends PureComponent {
       this.selectTab(toSwitch, true)
     }
   }
+
   handleTouchbar = (props) => {
     let key
     switch (props) {
@@ -395,6 +414,7 @@ export class ControlledTabArea extends PureComponent {
     }
     this.selectTab(key)
   }
+
   static getDerivedStateFromProps = (nextProps, prevState) => {
     if (nextProps.doubleTabbed !== (prevState || {}).prevDoubleTabbed) {
       dispatchTabChangeEvent({
@@ -406,6 +426,7 @@ export class ControlledTabArea extends PureComponent {
     }
     return null
   }
+
   componentDidMount() {
     this.handleKeyDown()
     window.addEventListener('game.start', this.handleKeyDown)
@@ -421,18 +442,21 @@ export class ControlledTabArea extends PureComponent {
     }
     config.addListener('config.set', this.handleConfig)
   }
+
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('game.response', this.handleResponse)
     ipc.unregisterAll('MainWindow')
     config.removeListener('config.set', this.handleConfig)
   }
+
   componentDidCatch(error, info) {
     console.error(error, info)
     this.setState({
       error: true,
     })
   }
+
   // All displaying plugins
   listedPlugins = () => {
     return this.props.plugins.filter((plugin) =>
@@ -440,6 +464,7 @@ export class ControlledTabArea extends PureComponent {
       (plugin.handleClick || plugin.windowURL || plugin.reactClass)
     )
   }
+
   // All non-new-window displaying plugins
   tabbedPlugins = () => this.props.plugins.filter((plugin) =>
     plugin.enabled &&
@@ -448,10 +473,15 @@ export class ControlledTabArea extends PureComponent {
     !this.isWindowMode(plugin) &&
     plugin.reactClass
   )
+
+  isPluginTab = key => !['main-view', 'ship-view', 'settings'].includes(key)
+
   isWindowMode = plugin => this.props.windowmode[plugin.id] != null ? this.props.windowmode[plugin.id] : plugin.windowMode
+
   windowModePlugins = () => this.props.plugins.filter(plugin =>
     plugin.enabled && this.isWindowMode(plugin) && this.state.openedWindow[plugin.id]
   )
+
   openWindow = plugin => {
     if (!this.state.openedWindow[plugin.id]) {
       this.setState({
@@ -466,6 +496,7 @@ export class ControlledTabArea extends PureComponent {
       }
     }
   }
+
   closeWindow = plugin => {
     this.setState({
       openedWindow: {
@@ -474,6 +505,7 @@ export class ControlledTabArea extends PureComponent {
       },
     })
   }
+
   ipcFocusPlugin = id => {
     const tgt = this.props.plugins.find(p => p.id === id)
     if (!tgt || !tgt.enabled) {
@@ -486,6 +518,7 @@ export class ControlledTabArea extends PureComponent {
       this.openWindow(tgt)
     }
   }
+
   handleConfig = (path, value) => {
     if (path.startsWith('poi.tabarea')) {
       if (config.get('poi.tabarea.vertical', false)) {
@@ -495,6 +528,7 @@ export class ControlledTabArea extends PureComponent {
       }
     }
   }
+
   render() {
     if (this.state.error) {
       return <div />
@@ -504,7 +538,6 @@ export class ControlledTabArea extends PureComponent {
     const windowModePlugins = this.windowModePlugins()
     const activePlugin = tabbedPlugins.length == 0 ? {} :
       tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
-    const activePluginName = activePlugin.packageName
     const defaultPluginTitle = <span><FontAwesome name="sitemap" /> {t('others:Plugins')}</span>
     const pluginDropdownContents = (
       <PluginDropdown className="plugin-dropdown">
@@ -555,7 +588,7 @@ export class ControlledTabArea extends PureComponent {
 
     const firstPanelNav = !this.props.doubleTabbed ? (
       <NavTabs large
-        selectedTabId={this.props.activeMainTab}
+        selectedTabId={this.isPluginTab(this.props.activeMainTab) ? 'plugin' : this.props.activeMainTab}
         className="top-nav"
         onChange={this.handleSelectTab}>
         <Tab key="main-view" id="main-view" className="nav-tab-4">
@@ -564,7 +597,7 @@ export class ControlledTabArea extends PureComponent {
         <Tab key="ship-view" id="ship-view" className="nav-tab-4">
           {shipview.displayName}
         </Tab>
-        <Tab key="plugin" id={activePluginName} onSelect={this.handleSelect} className="nav-tab-4">
+        <Tab key="plugin" id="plugin" className="nav-tab-4">
           {(activePlugin || {}).displayName || defaultPluginTitle}
         </Tab>
         <Popover
