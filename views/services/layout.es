@@ -2,7 +2,7 @@
 import { debounce } from 'lodash'
 import { remote } from 'electron'
 
-import { getPoiInfoHeight, getYOffset, getRealSize, getZoomedSize } from './utils'
+import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
 
 // polyfill
 if (config.get('poi.webview.width', 1200) < 0) {
