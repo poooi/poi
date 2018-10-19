@@ -86,11 +86,11 @@ export class DockPanel extends Component {
   }
 
   render() {
-    const {t} = this.props
+    const { t, editable } = this.props
     const { activeTab, dimension } = this.state
     return(
       <ResizeSensor onResize={this.handleResize}>
-        <Wrapper>
+        <Wrapper elevation={editable ? 2 : 0} interactive={editable}>
           <TabsWrapper>
             <Tabs
               animate={false}

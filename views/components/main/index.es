@@ -67,10 +67,10 @@ export class reactClass extends Component {
           compactType="vertical"
         >
           <div className="teitoku-panel" key="teitoku-panel">
-            <AdmiralPanel />
+            <AdmiralPanel editable={this.props.editable} />
           </div>
           <div className="resource-panel" key="resource-panel">
-            <ResourcePanel />
+            <ResourcePanel editable={this.props.editable} />
           </div>
           <div
             className="miniship"
@@ -80,13 +80,13 @@ export class reactClass extends Component {
               this.miniship = ref
             }}
           >
-            <MiniShip />
+            <MiniShip editable={this.props.editable} />
           </div>
           <div className="combined-panels panel-col" key="combined-panels">
-            <DockPanel />
+            <DockPanel editable={this.props.editable} />
           </div>
           <div className="expedition-panel" key="expedition-panel">
-            <ExpeditionPanel />
+            <ExpeditionPanel editable={this.props.editable} />
           </div>
           <div
             className="task-panel"
@@ -95,7 +95,7 @@ export class reactClass extends Component {
               this.taskPanel = ref
             }}
           >
-            <TaskPanel />
+            <TaskPanel editable={this.props.editable} />
           </div>
         </ResponsiveReactGridLayout>
       </div>

@@ -87,13 +87,13 @@ export class ResourcePanel extends React.Component {
   }
 
   render() {
-    const { admiralLv, resources } = this.props
+    const { admiralLv, resources, editable } = this.props
     const { dimension, resourceIncrement } = this.state
     const valid = !!admiralLv
     const limit = 750 + admiralLv * 250
     return (
       <ResizeSensor onResize={this.handleResize}>
-        <Card>
+        <Card elevation={editable ? 2 : 0} interactive={editable}>
           {(dimension === 2 ? order : range(8)).map(i => {
             const iconClassName = classNames('material-icon', {
               glow: valid && i < 4 && resources[i] < limit,
