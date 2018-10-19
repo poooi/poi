@@ -216,7 +216,6 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           <StyleSheetManager target={this.externalWindow.document.head}>
             <PoiAppTabpane className="poi-app-tabpane" ref={this.pluginContainer}>
               <PluginWrap
-                withContainer={false}
                 key={this.props.plugin.id}
                 plugin={this.props.plugin}
               />
