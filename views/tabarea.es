@@ -205,7 +205,7 @@ class TabContentsUnion extends Component {
             const positionLeft = child.key === activeKey ?  '0%'
               : onTheLeft ? '-100%' : '100%'
             return (
-              <PoiTabChildSizer className="poi-tab-child-sizer">
+              <PoiTabChildSizer className="poi-tab-child-sizer" key={child.key}>
                 <PoiTabChildPositioner
                   className="poi-tab-child-positioner"
                   transition={(child.key === activeKey || child.key === prevKey) && this.props.enableTransition}

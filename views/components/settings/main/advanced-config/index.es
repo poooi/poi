@@ -90,7 +90,7 @@ export const AdvancedConfig = translate(['setting'])(({ t }) => (
         SWITCHES,
         ({ label, configName, defaultValue, platform }) =>
           (!size(platform) || includes(platform, process.platform)) && (
-            <FillAvailable>
+            <FillAvailable key={configName}>
               <FormGroup inline>
                 <SwitchConfig
                   label={t(label)}

@@ -144,7 +144,7 @@ export class ThemeConfig extends Component {
           )}
 
           {map(SWITCHES, ({ label, configName, defaultValue, platform }) => (
-            <FillAvailable>
+            <FillAvailable key={configName}>
               <FormGroup inline>
                 <SwitchConfig
                   label={t(label)}

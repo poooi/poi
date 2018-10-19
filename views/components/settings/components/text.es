@@ -24,7 +24,7 @@ export class TextConfig extends PureComponent {
   }, 200)
 
   render() {
-    const { value, configName, defaultValue, ...rest } = this.props
+    const { value, configName, defaultValue, dispatch, ...rest } = this.props
     return <InputGroup {...rest} value={value} onChange={this.handleChange} />
   }
 }
