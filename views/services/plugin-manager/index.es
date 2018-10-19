@@ -20,6 +20,7 @@ import {
   notifyFailed,
   safePhysicallyRemove,
   findInstalledTarball,
+  getNpmConfig,
 } from './utils'
 
 const { PLUGIN_PATH, dispatch, config, proxy, getStore, toast, ROOT } = window
@@ -37,40 +38,32 @@ function defaultPluginPath(packageName) {
 }
 
 class PluginManager extends EventEmitter {
-  constructor(packagePath, pluginRoot, mirrorPath) {
-    super(packagePath, pluginRoot, mirrorPath)
+  constructor(packagePath, pluginRoot) {
+    super(packagePath, pluginRoot)
     this.packagePath = packagePath
     this.pluginRoot = pluginRoot
-    this.mirrorPath = mirrorPath
     this.requirements = null
-    this.mirrors = null
     this.config = {
       production: true,
       mirror: null,
       proxy: null,
       betaCheck: null,
     }
-    this.npmConfig = {
-      prefix: this.pluginRoot,
-      registry: 'https://registry.npmjs.org',
-      progress: false,
-    }
     this.VALID = 0
     this.DISABLED = 1
     this.NEEDUPDATE = 2
     this.BROKEN = 3
-
-    this.getMirrors()
-    this.loadConfig()
   }
+
   getPluginPath(packageName) {
     return join(this.pluginRoot, 'node_modules', packageName)
   }
+
   async initialize() {
-    this.getConf()
     await this.getPlugins()
     this.emit('initialized')
   }
+
   async readPlugins() {
     const pluginPaths = await new Promise(res =>
       glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)),
@@ -86,59 +79,19 @@ class PluginManager extends EventEmitter {
         }),
       ),
     )
-    notifyFailed(plugins, this.npmConfig)
+    const npmConfig = getNpmConfig(this.pluginRoot)
+    notifyFailed(plugins, npmConfig)
     dispatch({
       type: '@@Plugin/initialize',
       value: plugins,
     })
   }
+
   getRequirements() {
     if (!this.requirements) this.requirements = readJsonSync(this.packagePath)
     return this.requirements
   }
-  getMirrors() {
-    if (!this.mirrors) {
-      this.mirrors = readJsonSync(this.mirrorPath)
-    }
-    return this.mirrors
-  }
-  loadConfig() {
-    const mirrorConf = config.get('packageManager.mirrorName')
-    const mirrorName = Object.keys(this.mirrors).includes(mirrorConf)
-      ? mirrorConf
-      : navigator.language === 'zh-CN'
-        ? 'taobao'
-        : 'npm'
-    const proxyConf = config.get('packageManager.proxy', false)
-    const betaCheck = config.get('packageManager.enableBetaPluginCheck', false)
-    this.selectConfig(mirrorName, proxyConf, betaCheck, false)
 
-    return this.mirrors
-  }
-  selectConfig(name, enable, check) {
-    if (name) {
-      this.config.mirror = this.mirrors[name]
-      config.set('packageManager.mirrorName', name)
-    }
-    if (enable != null) {
-      this.config.proxy = enable
-      config.set('packageManager.proxy', enable)
-    }
-    if (check != null) {
-      this.config.betaCheck = check
-      config.set('packageManager.enableBetaPluginCheck', check)
-    }
-    this.npmConfig.registry = this.config.mirror.server
-    if (this.config.proxy) {
-      const { port } = proxy
-      this.npmConfig.http_proxy = `http://127.0.0.1:${port}`
-    } else {
-      if (this.npmConfig.http_proxy) {
-        delete this.npmConfig.http_proxy
-      }
-    }
-    return this.config
-  }
   isMetRequirement(plugin) {
     let lowest
     if (!plugin.isRead) {
@@ -151,12 +104,14 @@ class PluginManager extends EventEmitter {
     }
     return semver.gte(plugin.packageData.version, lowest)
   }
+
   isEnabled(plugin) {
     if (!plugin.isRead) {
       return false
     }
     return plugin.enabled
   }
+
   isValid(plugin) {
     if (!plugin.isRead) {
       return false
@@ -169,6 +124,7 @@ class PluginManager extends EventEmitter {
     }
     return this.isMetRequirement(plugin)
   }
+
   getStatusOfPlugin(plugin) {
     if (plugin.isBroken || plugin.needRollback) {
       return this.BROKEN
@@ -184,6 +140,7 @@ class PluginManager extends EventEmitter {
     }
     return this.VALID
   }
+
   async getPlugins() {
     if (getStore('plugins').length > 0) {
       return getStore('plugins')
@@ -191,12 +148,12 @@ class PluginManager extends EventEmitter {
       return await this.readPlugins()
     }
   }
-  getConf() {
-    return this.config
-  }
+
+
   getInstalledPlugins() {
     return this.getFilteredPlugins(plugin => plugin.isInstalled)
   }
+
   getUninstalledPluginSettings() {
     this.getRequirements()
     const installedPlugins = this.getInstalledPlugins()
@@ -210,24 +167,31 @@ class PluginManager extends EventEmitter {
     }
     return uninstalled
   }
+
   getReadPlugins() {
     return this.getFilteredPlugins(plugin => plugin.isRead)
   }
+
   getUnreadPlugins() {
     return this.getFilteredPlugins(plugin => !plugin.isRead)
   }
+
   getBrokenPlugins() {
     return this.getFilteredPlugins(plugin => plugin.isBroken)
   }
+
   getValidPlugins() {
     return this.getFilteredPlugins(this.isValid.bind(this))
   }
+
   getMetRequirementPlugins() {
     return this.getFilteredPlugins(this.isMetRequirement.bind(this))
   }
+
   getFilteredPlugins(filter) {
     return getStore('plugins').filter(filter)
   }
+
   getUpdateStatus() {
     for (const i in getStore('plugins')) {
       if (getStore('plugins')[i].isOutdated) {
@@ -245,8 +209,9 @@ class PluginManager extends EventEmitter {
     if (plugin.needRollback) {
       return
     }
+    const npmConfig = getNpmConfig(this.pluginRoot)
     const data = await await fetch(
-      `${this.config.mirror.server}${plugin.packageName}/latest`,
+      `${npmConfig.registry}${plugin.packageName}/latest`,
       defaultFetchOption,
     )
       .then(res => (res.ok ? res.json() : undefined))
@@ -260,8 +225,9 @@ class PluginManager extends EventEmitter {
       latest: data.version,
     }
     if (this.config.betaCheck) {
+      const npmConfig = getNpmConfig(this.pluginRoot)
       const betaData = await fetch(
-        `${this.config.mirror.server}${plugin.packageName}/beta`,
+        `${npmConfig.registry}${plugin.packageName}/beta`,
         defaultFetchOption,
       )
         .then(res => (res.ok ? res.json() : undefined))
@@ -352,7 +318,8 @@ class PluginManager extends EventEmitter {
 
     // 2) Install plugin
     try {
-      await installPackage(packageSource, version, this.npmConfig)
+      const npmConfig = getNpmConfig(this.pluginRoot)
+      await installPackage(packageSource, version, npmConfig)
     } catch (e) {
       console.error(e.stack)
       throw e
@@ -411,7 +378,8 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      await removePackage(plugin.packageName, this.npmConfig)
+      const npmConfig = getNpmConfig(this.pluginRoot)
+      await removePackage(plugin.packageName, npmConfig)
       // Make sure the plugin no longer exists in PLUGIN_PATH
       // (unless it's a git repo)
       await safePhysicallyRemove(defaultPluginPath(plugin.packageName))
@@ -481,7 +449,6 @@ class PluginManager extends EventEmitter {
 const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'plugin.json'),
   PLUGIN_PATH,
-  join(ROOT, 'assets', 'data', 'mirror.json'),
 )
 
 window.reloadPlugin = async (pkgName, verbose = false) => {
