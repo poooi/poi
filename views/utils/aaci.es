@@ -103,7 +103,7 @@ const isAkizukiClass = ship => ship.api_ctype === 54
 const isRoyalNavyShips = ship => [67, 78, 82, 88].includes(ship.api_ctype)
 
 // 6 = 金剛型
-const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.aftership_id === '0'
+const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_aftershipid === '0'
 
 const shipIdIs = n => ship => ship.api_ship_id === n
 
