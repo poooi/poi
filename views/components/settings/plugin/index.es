@@ -320,7 +320,6 @@ export class PluginConfig extends Component {
   render() {
     const { t } = this.props
     const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
-    const mirrors = PluginManager.getMirrors()
     const updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
     const installStatusFAname = this.state.installingAll ? 'spinner' : 'download'
     let installStatusbsStyle, installStatusText

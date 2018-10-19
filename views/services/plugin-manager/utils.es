@@ -24,6 +24,9 @@ const allowedPath = [ ROOT, APPDATA_PATH ]
 const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
+const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
+const MIRRORS = require(MIRROR_JSON_PATH)
+
 require('module').globalPaths.push(MODULE_PATH)
 
 // This reducer clears the substore no matter what is given.
@@ -462,4 +465,27 @@ export const safePhysicallyRemove = async (packagePath) => {
   } catch (e) {
     return await remove(packagePath)
   }
+}
+
+/**
+ * reads npm config for other methods to consume
+ * @param {String} prefix path to install the npm package
+ * @return NpmConfig { registry, prefix, http_proxy? }
+ */
+export const getNpmConfig = (prefix) => {
+  const mirrorConf = config.get('packageManager.mirrorName')
+  const useProxy = config.get('packageManager.proxy', false)
+  const mirrorName = Object.keys(MIRRORS).includes(mirrorConf) ?
+    mirrorConf : ((navigator.language === 'zh-CN') ?  'taobao' : 'npm')
+  const registry = MIRRORS[mirrorName].server
+  const npmConfig = {
+    registry,
+    prefix,
+  }
+  if (useProxy) {
+    const { port } =  window.proxy
+    npmConfig.http_proxy = `http://127.0.0.1:${port}`
+  }
+
+  return npmConfig
 }

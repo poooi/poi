@@ -10,12 +10,9 @@ import { Button, Label } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
 
 import { wctfSelector } from 'views/utils/selectors'
-import { installPackage } from 'views/services/plugin-manager/utils'
+import { installPackage, getNpmConfig } from 'views/services/plugin-manager/utils'
 
-const { APPDATA_PATH, config, proxy } = window
-
-const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
-const MIRRORS = require(MIRROR_JSON_PATH)
+const { APPDATA_PATH } = window
 
 const PACKAGE_NAME = 'whocallsthefleet-database'
 const DB_ROOT = path.join(APPDATA_PATH, 'wctf-db')
@@ -76,24 +73,6 @@ export class WctfDB extends Component {
     }
   }
 
-  getNpmConfig = () => {
-    const mirrorConf = config.get('packageManager.mirrorName')
-    const useProxy = config.get('packageManager.proxy', false)
-    const mirrorName = Object.keys(MIRRORS).includes(mirrorConf) ?
-      mirrorConf : ((navigator.language === 'zh-CN') ?  'taobao' : 'npm')
-    const registry = MIRRORS[mirrorName].server
-    const npmConfig = {
-      registry,
-      prefix: DB_ROOT,
-    }
-    if (useProxy) {
-      const { port } =  proxy
-      npmConfig.http_proxy = `http://127.0.0.1:${port}`
-    }
-
-    return npmConfig
-  }
-
   // updateDB is similar to update a plugin
   // Steps:
   // - locally check if wctf-db should be updated or reinstalled
@@ -123,7 +102,7 @@ export class WctfDB extends Component {
       updateFlag = true
     }
 
-    const npmConfig = this.getNpmConfig()
+    const npmConfig = getNpmConfig(DB_ROOT)
     const data = await await fetch(`${npmConfig.registry}${PACKAGE_NAME}/latest`, defaultFetchOption)
       .then(res => res.ok ? res.json() : undefined)
       .catch(e => undefined)
