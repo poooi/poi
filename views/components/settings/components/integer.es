@@ -24,7 +24,7 @@ export class IntegerConfig extends PureComponent {
   }, 200)
 
   render() {
-    const { value, configName, defaultValue, ...rest } = this.props
+    const { value, configName, defaultValue, dispatch, ...rest } = this.props
     return <NumericInput {...rest} value={value} onValueChange={this.handleChange} />
   }
 }

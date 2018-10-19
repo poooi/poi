@@ -45,9 +45,11 @@ export class PoiControl extends Component {
   static propTypes = {
     muted: PropTypes.bool,
   }
+
   state = {
     extend: false,
   }
+
   handleCapturePage = toClipboard => {
     const { width, height, windowWidth, windowHeight } = window.getStore('layout.webview')
     const isolate = config.get('poi.layout.isolate', false)
@@ -79,6 +81,7 @@ export class PoiControl extends Component {
       }
     })
   }
+
   handleOpenCacheFolder = () => {
     try {
       const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
@@ -95,6 +98,7 @@ export class PoiControl extends Component {
       window.toggleModal(this.props.t('Open cache dir'), this.props.t('NoPermission'))
     }
   }
+
   handleOpenMakaiFolder = () => {
     let dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
     dir = path.join(dir, 'KanColle', 'kcs2', 'resources', 'ship')
@@ -105,6 +109,7 @@ export class PoiControl extends Component {
       window.toggleModal(this.props.t('Open makai dir'), this.props.t('NoPermission'))
     }
   }
+
   handleOpenScreenshotFolder = () => {
     try {
       const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
@@ -115,10 +120,13 @@ export class PoiControl extends Component {
       window.toggleModal(this.props.t('Open screenshot dir'), this.props.t('NoPermission'))
     }
   }
+
   handleSetMuted = () => {
     config.set('poi.content.muted', !this.props.muted)
   }
+
   editableTimeout = 0
+
   editableConfigList = [
     'poi.mainpanel.layout',
     'poi.webview.ratio.horizontal',
@@ -127,12 +135,14 @@ export class PoiControl extends Component {
     'poi.tabarea.mainpanelwidth',
     'poi.tabarea.mainpanelheight',
   ]
+
   enableEditableMsg() {
     toast(this.props.t('If no changes, panel will be locked automatically in 1 minute'), {
       title: this.props.t('Panel unlocked'),
     })
     this.disableEditableMsg()
   }
+
   disableEditableMsg() {
     clearTimeout(this.editableTimeout)
     this.editableTimeout = setTimeout(() => {
@@ -142,6 +152,7 @@ export class PoiControl extends Component {
       })
     }, 60000)
   }
+
   handleConfigChange = (path, value) => {
     if (this.editableConfigList.includes(path)) {
       if (this.props.editable) {
@@ -149,6 +160,7 @@ export class PoiControl extends Component {
       }
     }
   }
+
   handleSetEditable = () => {
     if (!this.props.editable) {
       this.enableEditableMsg()
@@ -157,20 +169,25 @@ export class PoiControl extends Component {
     }
     config.set('poi.layout.editable', !this.props.editable)
   }
+
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()
     remote.getCurrentWindow().openDevTools({mode: 'detach'})
   }
+
   handleOpenWebviewDevTools = () => {
     getStore('layout.webview.ref').openDevTools({mode: 'detach'})
   }
+
   handleJustifyLayout = (e) => {
     getStore('layout.webview.ref').executeJavaScript('window.align()')
     e.preventDefault()
   }
+
   handleUnlockWebview = () => {
     getStore('layout.webview.ref').executeJavaScript('window.unalign()')
   }
+
   handleRefreshGameDialog = (e) => {
     if (e.shiftKey) {
       gameRefreshPage()
@@ -198,9 +215,11 @@ export class PoiControl extends Component {
           style: 'danger' },
       ])
   }
+
   handleSetExtend = () => {
     this.setState({extend: !this.state.extend})
   }
+
   handleTouchbar = (props) => {
     //load Touchbar-related functions only when touchbar is triggered
     const {refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
@@ -261,14 +280,17 @@ export class PoiControl extends Component {
     default:
     }
   }
+
   touchbarListener = (event, message) => {
     this.handleTouchbar(message)
   }
+
   renderButton = ({ label, ...props }) => (
-    <Tooltip position={Position.TOP_LEFT} content={label} usePortal={false}>
+    <Tooltip key={label} position={Position.TOP_LEFT} content={label} usePortal={false}>
       <Button {...props} minimal />
     </Tooltip>
   )
+
   componentDidMount = () => {
     if (this.props.editable) {
       this.disableEditableMsg()
@@ -279,12 +301,14 @@ export class PoiControl extends Component {
       require('electron').ipcRenderer.addListener('touchbar', this.touchbarListener)
     }
   }
+
   componentWillUnmount = () => {
     config.removeListener('config.set', this.handleConfigChange)
     if (process.platform === 'darwin') {
       require('electron').ipcRenderer.removeListener('touchbar', this.touchbarListener)
     }
   }
+
   render() {
     if (process.platform === 'darwin') {
       const { touchBarReInit } = remote.require('./lib/touchbar')

@@ -221,7 +221,7 @@ class PoiAlertInner extends Component {
           onClick={this.toggleHistory}
         >
           <AlertPosition className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
-            <AlertArea id="alert-area" ref={ref => { this.alertArea = ref }} overflow={this.state.overflow}>
+            <AlertArea id="alert-area" ref={ref => { this.alertArea = ref }} overflow={this.state.overflow ? 1 : 0}>
               {
                 this.state.overflow ?
                   <>

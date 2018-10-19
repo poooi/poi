@@ -69,6 +69,7 @@ export class NavigatorBar extends React.Component {
         webview.getWebContents().addListener('did-stop-loading', this.onStopLoading)
         webview.getWebContents().addListener('did-fail-load', this.onFailLoad)
         webview.getWebContents().addListener('will-navigate', this.onWillNavigate)
+        this.webview = webview
       } catch (e) {
         setTimeout(load, 1000)
       }
@@ -78,7 +79,7 @@ export class NavigatorBar extends React.Component {
 
   componentWillUnmount() {
     try {
-      const webview = getStore('layout.webview.ref')
+      const { webview } = this
       webview.getWebContents().removeListener('did-start-loading', this.onStartLoading)
       webview.getWebContents().removeListener('did-stop-loading', this.onStopLoading)
       webview.getWebContents().removeListener('did-fail-load', this.onFailLoad)
@@ -98,7 +99,7 @@ export class NavigatorBar extends React.Component {
     const webview = getStore('layout.webview.ref')
     this.setState({
       status: wvStatus.Loaded,
-      url: webview.getURL(),
+      url: webview.getURL() || this.state.url,
     })
   }
 
@@ -110,25 +111,28 @@ export class NavigatorBar extends React.Component {
 
   onWillNavigate = e => {
     this.setState({
-      url: e.url,
+      url: e.url || this.state.url,
     })
   }
 
   // UI Interaction
   navigate = url => {
+    if (!url) {
+      return
+    }
     const webview = getStore('layout.webview.ref')
-    if (!url || !(url.startsWith('http://') || url.startsWith('https://'))) {
+    if (!(url.startsWith('http://') || url.startsWith('https://'))) {
       url = `http://${this.state.url}`
     }
     webview.loadURL(url)
     this.setState({
-      url: url,
+      url: url || this.state.url,
     })
   }
 
   onChangeUrl = e => {
     this.setState({
-      url: e.target.value,
+      url: e.target.value || this.state.url,
     })
   }
 

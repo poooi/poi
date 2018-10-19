@@ -25,7 +25,7 @@ export class SwitchConfig extends Component {
   }
 
   render() {
-    const { value, configName, label, defaultValue, ...rest } = this.props
+    const { value, configName, label, defaultValue, dispatch, ...rest } = this.props
     return (
       <Switch
         {...rest}
