@@ -2,6 +2,14 @@ import React, { Component } from 'react'
 import { FormControl, Button } from 'react-bootstrap'
 import { clipboard } from 'electron'
 import { translate } from 'react-i18next'
+import styled from 'styled-components'
+
+const PoiAppTabpane = styled.div`
+  flex: 1;
+  height: 100%;
+  overflow-y: scroll;
+  width: 100%;
+`
 
 @translate()
 export class PluginWrap extends Component {
@@ -54,16 +62,16 @@ export class PluginWrap extends Component {
         </>
       )
       return withContainer ? (
-        <div id={plugin.id} className="poi-app-tabpane poi-plugin" style={{padding : '1em'}}>
+        <PoiAppTabpane id={plugin.id} className="poi-app-tabpane">
           {innerContent}
-        </div>
+        </PoiAppTabpane>
       ) : innerContent
     }
     const innerContent = <plugin.reactClass />
     return withContainer ? (
-      <div id={plugin.id} className="poi-app-tabpane poi-plugin">
+      <PoiAppTabpane id={plugin.id} className="poi-app-tabpane">
         {innerContent}
-      </div>
+      </PoiAppTabpane>
     ) : innerContent
   }
 }

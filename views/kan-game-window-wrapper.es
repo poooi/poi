@@ -8,7 +8,7 @@ import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { debounce } from 'lodash'
-import { StyleSheetManager } from 'styled-components'
+import styled, { StyleSheetManager } from 'styled-components'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 
@@ -38,6 +38,12 @@ const getPluginWindowRect = () => {
   return { x, y, width, height }
 }
 
+const PoiAppTabpane = styled.div`
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+`
 
 export class KanGameWindowWrapper extends PureComponent {
   constructor(props) {
@@ -256,9 +262,9 @@ export class KanGameWindowWrapper extends PureComponent {
           mountPoint: this.containerEl,
         }}>
           <StyleSheetManager target={this.externalWindow.document.head}>
-            <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.kangameContainer}>
+            <PoiAppTabpane className="poi-app-tabpane" ref={this.kangameContainer}>
               <KanGameWrapper windowMode />
-            </div>
+            </PoiAppTabpane>
           </StyleSheetManager>
         </WindowEnv.Provider>
       </>,
