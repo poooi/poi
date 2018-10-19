@@ -10,7 +10,7 @@ import { Button, Label } from 'react-bootstrap'
 import { Trans } from 'react-i18next'
 
 import { wctfSelector } from 'views/utils/selectors'
-import { installPackage } from 'views/services/plugin-manager-utils'
+import { installPackage } from 'views/services/plugin-manager/utils'
 
 const { APPDATA_PATH, config, proxy } = window
 
