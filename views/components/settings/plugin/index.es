@@ -413,101 +413,17 @@ export class PluginConfig extends Component {
                 <Well>
                   <div>
                     <Row>
-                      <Col xs={12}>
-                        <CheckboxLabelConfig
-                          label={t('setting:Switch to Plugin Automatically')}
-                          configName="poi.autoswitch.enabled"
-                          defaultValue={true}
-                        />
-                        <CheckboxLabelConfig
-                          label={t('setting:Enable autoswitch for main panel')}
-                          configName="poi.autoswitch.main"
-                          defaultValue={true}
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={12}>
-                        <Row>
-                          <Col xs={12}>
-                            <label className="control-label">
-                              {t('setting:Select npm server')}
-                            </label>
-                          </Col>
-                        </Row>
-                        <Row>
-                          {
-                            Object.keys(mirrors).map((server, index) => {
-                              return (
-                                <OverlayTrigger
-                                  placement="top"
-                                  key={index}
-                                  overlay={
-                                    <Tooltip id={`npm-server-${index}`}>
-                                      {mirrors[server].menuname}
-                                    </Tooltip>
-                                  }
-                                >
-                                  <Col key={index} xs={6} className="select-npm-server">
-                                    <Radio
-                                      checked={this.props.mirrorName == server}
-                                      onChange={this.onSelectServer.bind(this, server)}
-                                    >
-                                      {mirrors[server].name}
-                                    </Radio>
-                                  </Col>
-                                </OverlayTrigger>
-                              )
-                            }, this)
-                          }
-                        </Row>
-                      </Col>
-                      <Col xs={12}>
-                        <Row>
-                          <Col xs={12}>
-                            <label className="control-label">
-                              {t('setting:Others')}
-                            </label>
-                          </Col>
-                        </Row>
-                        <div>
-                          <Checkbox
-                            checked={this.props.proxy || false}
-                            onChange={this.handleEnableProxy}
-                          >
-                            {t('setting:Connect to npm server through proxy')}
-                          </Checkbox>
-                        </div>
-                        <div>
-                          <Checkbox
-                            checked={this.props.autoUpdate || false}
-                            onChange={this.handleEnableAutoUpdate}
-                          >
-                            {t('setting:Automatically update plugins')}
-                          </Checkbox>
-                        </div>
-                        <div>
-                          <Checkbox
-                            checked={this.props.betaCheck || false}
-                            onChange={this.handleEnableBetaPluginCheck}
-                          >
-                            {t('setting:Developer option check update of beta version')}
-                          </Checkbox>
-                        </div>
-                        <Row>
-                          <ButtonGroup className="plugin-buttongroup">
-                            <Button className="col-xs-4" onClick={this.onSelectOpenFolder}>
-                              {t('setting:Open plugin folder')}
-                            </Button>
-                            <Button className="col-xs-4" onClick={this.onSelectOpenSite}>
-                              {t('setting:Search for plugins')}
-                            </Button>
-                            <Button className="col-xs-4" onClick={this.handleGracefulRepair}>
-                              {t('setting:Repair plugins')}
-                            </Button>
-                          </ButtonGroup>
-                        </Row>
-                      </Col>
+                      <ButtonGroup className="plugin-buttongroup">
+                        <Button className="col-xs-4" onClick={this.onSelectOpenFolder}>
+                          {t('setting:Open plugin folder')}
+                        </Button>
+                        <Button className="col-xs-4" onClick={this.onSelectOpenSite}>
+                          {t('setting:Search for plugins')}
+                        </Button>
+                        <Button className="col-xs-4" onClick={this.handleGracefulRepair}>
+                          {t('setting:Repair plugins')}
+                        </Button>
+                      </ButtonGroup>
                     </Row>
                   </div>
                 </Well>
