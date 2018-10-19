@@ -49,7 +49,6 @@ const PoiTabChildPositioner = styled.div`
   opacity: 1;
   position: relative;
   width: 100%;
-  padding: 0 6px;
   ${({transition}) => transition && css`
     transition: 0.35s ease-in-out;
   `}
@@ -64,6 +63,7 @@ const PoiAppTabpane = styled.div`
   height: 100%;
   overflow-y: scroll;
   width: 100%;
+  padding: 1px 6px;
 `
 
 const PluginAppTabpane = styled(PoiAppTabpane)`

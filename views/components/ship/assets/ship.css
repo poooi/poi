@@ -27,7 +27,7 @@
 
 .ship-view > .ship-wrapper {
   height: calc(100% - 10px);
-  margin: 2px;
+  padding: 2px;
   overflow: auto;
 }
 
