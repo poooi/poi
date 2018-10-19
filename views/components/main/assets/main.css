@@ -62,7 +62,7 @@
   height: 100%;
   overflow: scroll;
   width: 100%;
-  padding: 6px 8px;
+  padding: 4px 8px;
 }
 
 .main-view .panel-item {
@@ -109,7 +109,7 @@
 }
 
 .main-view .react-grid-item {
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  padding: 1px;
 }
 
 .main-view .teitoku-panel .panel-body {

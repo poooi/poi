@@ -7,13 +7,19 @@
   margin-bottom: 15.5px;
 }
 
+.settings-view .settings-view-tabs {
+  height: 100%;
+}
+
 .settings-view .settings-view-tabs .bp3-tab-list {
   justify-content: space-between;
-  height: 100%;
-  position: sticky;
-  background: rgba(48, 64, 77, 0.8);
-  top: 0;
-  z-index: 10;
+}
+
+.settings-view .settings-view-tabs .bp3-tab-panel {
+  margin: 0;
+  height: calc(100% - 30px);
+  overflow-y: scroll;
+  padding: 1px 2px;
 }
 
 .settings-view .settings-view-tabs .bp3-tab.poi-settings-tab {
