@@ -9,6 +9,7 @@ import { StorageConfig } from './storage-config'
 import { LanguageConfig } from './language-config'
 import { PreSortieConfig } from './pre-sortie-config'
 import { ScreenshotConfig } from './screenshot-config'
+import { PluginConfig } from './plugin-config'
 import { AdvancedConfig } from './advanced-config'
 
 export const PoiConfig = connect(state => ({
@@ -21,6 +22,7 @@ export const PoiConfig = connect(state => ({
     <StorageConfig />
     <LanguageConfig />
     <ScreenshotConfig />
+    <PluginConfig />
     <AdvancedConfig />
   </div>
 )))

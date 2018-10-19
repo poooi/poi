@@ -1,4 +1,3 @@
-/* global config, toast, proxy, ROOT, PLUGIN_PATH, dispatch, getStore */
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
@@ -7,15 +6,9 @@ import glob from 'glob'
 import { map } from 'lodash'
 import { remote } from 'electron'
 import fetch from 'node-fetch'
-import i18next from 'views/env-parts/i18next'
 
-const fetchHeader = new Headers()
-fetchHeader.set('Cache-Control', 'max-age=0')
-const defaultFetchOption = {
-  method: 'GET',
-  cache: 'default',
-  headers: fetchHeader,
-}
+import i18next from 'views/env-parts/i18next'
+import { sortPlugins } from 'views/redux/plugins'
 
 import {
   installPackage,
@@ -28,9 +21,16 @@ import {
   safePhysicallyRemove,
   findInstalledTarball,
 } from './utils'
-import {
-  sortPlugins,
-} from 'views/redux/plugins'
+
+const { PLUGIN_PATH, dispatch, config, proxy, getStore, toast, ROOT } = window
+
+const fetchHeader = new Headers()
+fetchHeader.set('Cache-Control', 'max-age=0')
+const defaultFetchOption = {
+  method: 'GET',
+  cache: 'default',
+  headers: fetchHeader,
+}
 
 function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
@@ -72,14 +72,20 @@ class PluginManager extends EventEmitter {
     this.emit('initialized')
   }
   async readPlugins() {
-    const pluginPaths = await new Promise(res => glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)))
-    const plugins = sortPlugins(await Promise.all(pluginPaths.map(async(pluginPath) => {
-      let plugin = await readPlugin(pluginPath)
-      if (plugin.enabled && !window.isSafeMode) {
-        plugin = await enablePlugin(plugin)
-      }
-      return plugin
-    })))
+    const pluginPaths = await new Promise(res =>
+      glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)),
+    )
+    const plugins = sortPlugins(
+      await Promise.all(
+        pluginPaths.map(async pluginPath => {
+          let plugin = await readPlugin(pluginPath)
+          if (plugin.enabled && !window.isSafeMode) {
+            plugin = await enablePlugin(plugin)
+          }
+          return plugin
+        }),
+      ),
+    )
     notifyFailed(plugins, this.npmConfig)
     dispatch({
       type: '@@Plugin/initialize',
@@ -87,8 +93,7 @@ class PluginManager extends EventEmitter {
     })
   }
   getRequirements() {
-    if (!this.requirements)
-      this.requirements = readJsonSync(this.packagePath)
+    if (!this.requirements) this.requirements = readJsonSync(this.packagePath)
     return this.requirements
   }
   getMirrors() {
@@ -99,8 +104,11 @@ class PluginManager extends EventEmitter {
   }
   loadConfig() {
     const mirrorConf = config.get('packageManager.mirrorName')
-    const mirrorName = Object.keys(this.mirrors).includes(mirrorConf) ?
-      mirrorConf : ((navigator.language === 'zh-CN') ?  'taobao' : 'npm')
+    const mirrorName = Object.keys(this.mirrors).includes(mirrorConf)
+      ? mirrorConf
+      : navigator.language === 'zh-CN'
+        ? 'taobao'
+        : 'npm'
     const proxyConf = config.get('packageManager.proxy', false)
     const betaCheck = config.get('packageManager.enableBetaPluginCheck', false)
     this.selectConfig(mirrorName, proxyConf, betaCheck, false)
@@ -122,7 +130,7 @@ class PluginManager extends EventEmitter {
     }
     this.npmConfig.registry = this.config.mirror.server
     if (this.config.proxy) {
-      const {port} = proxy
+      const { port } = proxy
       this.npmConfig.http_proxy = `http://127.0.0.1:${port}`
     } else {
       if (this.npmConfig.http_proxy) {
@@ -179,8 +187,7 @@ class PluginManager extends EventEmitter {
   async getPlugins() {
     if (getStore('plugins').length > 0) {
       return getStore('plugins')
-    }
-    else {
+    } else {
       return await this.readPlugins()
     }
   }
@@ -188,12 +195,12 @@ class PluginManager extends EventEmitter {
     return this.config
   }
   getInstalledPlugins() {
-    return this.getFilteredPlugins((plugin) => (plugin.isInstalled))
+    return this.getFilteredPlugins(plugin => plugin.isInstalled)
   }
   getUninstalledPluginSettings() {
     this.getRequirements()
     const installedPlugins = this.getInstalledPlugins()
-    const installedPluginNames = installedPlugins.map((plugin) => (plugin.packageName))
+    const installedPluginNames = installedPlugins.map(plugin => plugin.packageName)
     const uninstalled = {}
     for (const name in this.requirements) {
       const value = this.requirements[name]
@@ -204,13 +211,13 @@ class PluginManager extends EventEmitter {
     return uninstalled
   }
   getReadPlugins() {
-    return this.getFilteredPlugins((plugin) => (plugin.isRead))
+    return this.getFilteredPlugins(plugin => plugin.isRead)
   }
   getUnreadPlugins() {
-    return this.getFilteredPlugins((plugin) => (!plugin.isRead))
+    return this.getFilteredPlugins(plugin => !plugin.isRead)
   }
   getBrokenPlugins() {
-    return this.getFilteredPlugins((plugin) => (plugin.isBroken))
+    return this.getFilteredPlugins(plugin => plugin.isBroken)
   }
   getValidPlugins() {
     return this.getFilteredPlugins(this.isValid.bind(this))
@@ -221,7 +228,7 @@ class PluginManager extends EventEmitter {
   getFilteredPlugins(filter) {
     return getStore('plugins').filter(filter)
   }
-  getUpdateStatus () {
+  getUpdateStatus() {
     for (const i in getStore('plugins')) {
       if (getStore('plugins')[i].isOutdated) {
         return true
@@ -232,14 +239,17 @@ class PluginManager extends EventEmitter {
 
   // Resolves the latest plugin if need update
   // Resolves undefined if not
-  getPluginOutdateInfo = async (plugin) => {
+  getPluginOutdateInfo = async plugin => {
     // If needRollback, then we don't need the latest version; we instead
     // display the version it should be rolled back to
     if (plugin.needRollback) {
       return
     }
-    const data = await await fetch(`${this.config.mirror.server}${plugin.packageName}/latest`, defaultFetchOption)
-      .then(res => res.ok ? res.json() : undefined)
+    const data = await await fetch(
+      `${this.config.mirror.server}${plugin.packageName}/latest`,
+      defaultFetchOption,
+    )
+      .then(res => (res.ok ? res.json() : undefined))
       .catch(e => undefined)
     if (!data || !data.version) {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`)
@@ -250,8 +260,11 @@ class PluginManager extends EventEmitter {
       latest: data.version,
     }
     if (this.config.betaCheck) {
-      const betaData = await fetch(`${this.config.mirror.server}${plugin.packageName}/beta`, defaultFetchOption)
-        .then(res => res.ok ? res.json() : undefined)
+      const betaData = await fetch(
+        `${this.config.mirror.server}${plugin.packageName}/beta`,
+        defaultFetchOption,
+      )
+        .then(res => (res.ok ? res.json() : undefined))
         .catch(e => undefined)
       if (betaData && betaData.version) {
         Object.assign(distTag, {
@@ -261,7 +274,7 @@ class PluginManager extends EventEmitter {
     }
     let latest = `${plugin.version}`
     let notCompatible = false
-    const apiVer = ((data.poiPlugin || {}).apiVer || plugin.apiVer) || {}
+    const apiVer = (data.poiPlugin || {}).apiVer || plugin.apiVer || {}
     let nearestCompVer = 'v214.748.3647'
     for (const mainVersion of Object.keys(apiVer)) {
       if (!apiVer[mainVersion]) {
@@ -302,11 +315,15 @@ class PluginManager extends EventEmitter {
 
   async getOutdatedPlugins(isNotif) {
     const plugins = this.getInstalledPlugins()
-    const outdatedList = (await Promise.all(plugins.map((plugin) =>
-      this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack))
-    ))).filter(Boolean)
+    const outdatedList = (await Promise.all(
+      plugins.map(plugin =>
+        this.getPluginOutdateInfo(plugin).catch(err => console.error(err.stack)),
+      ),
+    )).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
-      const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t('setting:PluginUpdateMsg')}`
+      const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t(
+        'setting:PluginUpdateMsg',
+      )}`
       toast(content, {
         type: 'info',
         title: i18next.t('setting:Plugin update'),
@@ -315,11 +332,10 @@ class PluginManager extends EventEmitter {
   }
 
   async installPlugin(packageSource, version) {
-    if (packageSource.includes('@'))
-      [packageSource, version] = packageSource.split('@')
+    if (packageSource.includes('@')) [packageSource, version] = packageSource.split('@')
 
     // 1) See if it is installed by plugin name
-    const installingByPluginName = (function () {
+    const installingByPluginName = (function() {
       try {
         accessSync(packageSource)
         return false
@@ -330,8 +346,8 @@ class PluginManager extends EventEmitter {
     if (installingByPluginName)
       dispatch({
         type: '@@Plugin/changeStatus',
-        value: {packageName: packageSource},
-        option: [{path: 'isUpdating', status: true}],
+        value: { packageName: packageSource },
+        option: [{ path: 'isUpdating', status: true }],
       })
 
     // 2) Install plugin
@@ -343,11 +359,12 @@ class PluginManager extends EventEmitter {
     }
 
     // 3) Get plugin name
-    const packageName = installingByPluginName ? packageSource :
-      await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
+    const packageName = installingByPluginName
+      ? packageSource
+      : await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
 
     // 4) Unload plugin if it's running
-    const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
+    const nowPlugin = getStore('plugins').find(plugin => plugin.packageName === packageName)
     if (nowPlugin) {
       try {
         unloadPlugin(nowPlugin)
@@ -370,7 +387,7 @@ class PluginManager extends EventEmitter {
         dispatch({
           type: '@@Plugin/changeStatus',
           value: nowPlugin,
-          option: [{path: 'isUpdating', status: false}],
+          option: [{ path: 'isUpdating', status: false }],
         })
       console.error(error.stack)
       throw error
@@ -449,7 +466,7 @@ class PluginManager extends EventEmitter {
       value: plugin,
     })
   }
-  
+
   async reloadPlugin(plugin) {
     try {
       await this.disablePlugin(plugin)
@@ -464,14 +481,12 @@ class PluginManager extends EventEmitter {
 const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'plugin.json'),
   PLUGIN_PATH,
-  join(ROOT, 'assets', 'data', 'mirror.json')
+  join(ROOT, 'assets', 'data', 'mirror.json'),
 )
 
-window.reloadPlugin = async (pkgName, verbose=false) => {
+window.reloadPlugin = async (pkgName, verbose = false) => {
   const { plugins } = getStore()
-  const plugin = plugins.find(
-    pkg => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName)
-  )
+  const plugin = plugins.find(pkg => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName))
   if (!plugin) {
     console.error(`plugin "${pkgName}" not found`)
     return
