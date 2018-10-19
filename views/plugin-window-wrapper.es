@@ -58,7 +58,6 @@ const stylesheetTagsWithHref = [
   'electron-react-titlebar/assets/style.css',
   'react-resizable/css/styles.css',
   'react-grid-layout/css/styles.css',
-  'views/components/etc/assets/scroll-shadow.css',
 ].map(href => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`).join('')
 
 
