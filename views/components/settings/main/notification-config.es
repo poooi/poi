@@ -46,11 +46,6 @@ export class NotificationConfig extends Component {
     this.setState({ timeSettingShow })
   }
 
-  selectInput = id => {
-    document.getElementById(id).select()
-  }
-
-
   render() {
     const { t } = this.props
     return (
