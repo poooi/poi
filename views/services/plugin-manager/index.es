@@ -27,10 +27,10 @@ import {
   notifyFailed,
   safePhysicallyRemove,
   findInstalledTarball,
-} from './plugin-manager-utils'
+} from './utils'
 import {
   sortPlugins,
-} from '../redux/plugins'
+} from 'views/redux/plugins'
 
 function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
