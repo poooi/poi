@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { memoize } from 'lodash'
+import { memoize, compact, isFinite } from 'lodash'
 import { OverlayTrigger, Tooltip, Label } from 'react-bootstrap'
 import { translate } from 'react-i18next'
 
@@ -12,29 +12,39 @@ const AAPBSelectorFactory = memoize(shipId =>
   createSelector([
     shipDataSelectorFactory(shipId),
     shipEquipDataSelectorFactory(shipId),
-  ], ([_ship = {}, $ship = {}] = [], _equips = []) => {
-    const ship = { ...$ship, ..._ship }
-    const equips = _equips.filter(([_equip, $equip, onslot] = []) => !!_equip && !!$equip)
-      .map(([_equip, $equip, onslot]) => ({ ...$equip, ..._equip }))
-    return getShipAAPB(ship, equips)
+  ], (shipInfo, equipsInfo) => {
+    if (!shipInfo || !equipsInfo)
+      return 0
+    /*
+       equipment position is irrelevant with regard to AAPB trigger rate,
+       so we might as well remove all `undefined` for getShipAAPB to
+       have a uniform structure to work with.
+     */
+    return getShipAAPB(shipInfo, compact(equipsInfo))
   })
 )
 
 export const AAPBIndicator = translate(['main'])(connect(
   (state, { shipId }) => ({
-    AAPB: AAPBSelectorFactory(shipId)(state) || 0,
+    AAPB: AAPBSelectorFactory(shipId)(state),
   })
-)(({ AAPB, shipId, t }) => {
-  const tooltip = AAPB > 0 && <span>{`${AAPB}%`}</span>
-
-  return(
-    AAPB > 0 ?
-      <span className="ship-aapb">
-        <OverlayTrigger placement="top" overlay={<Tooltip className="info-tooltip" id={`aapb-info-${shipId}`}>{tooltip}</Tooltip>}>
-          <Label bsStyle="warning">{t('main:AAPB')}</Label>
-        </OverlayTrigger>
-      </span>
-      : <span />
-  )
-}))
-
+)(({ AAPB, shipId, t }) =>
+  (isFinite(AAPB) && AAPB > 0) ? (
+    <span className="ship-aapb">
+      <OverlayTrigger
+        placement="top"
+        overlay={
+          (
+            <Tooltip
+              className="info-tooltip"
+              id={`aapb-info-${shipId}`}
+            >
+              <span>{`${AAPB.toFixed(2)}%`}</span>
+            </Tooltip>
+          )
+        }>
+        <Label bsStyle="warning">{t('main:AAPB')}</Label>
+      </OverlayTrigger>
+    </span>
+  ) : (<span />)
+))
