@@ -110,6 +110,7 @@
 
 .main-view .react-grid-item {
   padding: 1px;
+  overflow: visible;
 }
 
 .main-view .teitoku-panel .panel-body {

@@ -262,11 +262,11 @@ export class TaskPanel extends React.Component {
   }
 
   render() {
-    const { activeQuests, activeCapacity, activeNum, t } = this.props
+    const { activeQuests, activeCapacity, activeNum, editable, t } = this.props
     const colwidth = Math.floor(12 / this.state.dimension)
     return (
       <ResizeSensor onResize={this.handleResize}>
-        <Card className="task-card">
+        <Card className="task-card" elevation={editable ? 2 : 0} interactive={editable}>
           {[
             sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) => (
               <TaskRow

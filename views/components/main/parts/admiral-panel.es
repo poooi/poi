@@ -369,12 +369,13 @@ export const AdmiralPanel = translate(['main'])(
     minShipNum,
     slotNumCheck,
     minSlotNum,
+    editable,
   }) {
     const shipCountIntent = shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : Intent.NONE
     const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : Intent.NONE
 
     return (
-      <Card>
+      <Card elevation={editable ? 2 : 0} interactive={editable}>
         <Tooltip content={<ExpContent />} position={Position.RIGHT}>
           {
             level >= 0 ? (

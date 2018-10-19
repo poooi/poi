@@ -83,7 +83,7 @@ export class MiniShip extends Component {
 
   render() {
     return (
-      <Card onDoubleClick={this.handleChangeShipView}>
+      <Card onDoubleClick={this.handleChangeShipView} elevation={this.props.editable ? 2 : 0} interactive={this.props.editable}>
         <div className="panel-row miniship-switch">
           <ButtonGroup className="miniship-fleet-switch">
             {[0, 1, 2, 3].map(i => (

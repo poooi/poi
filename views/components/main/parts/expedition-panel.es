@@ -88,9 +88,9 @@ export class ExpeditionPanel extends Component {
   }
 
   render() {
-    const { fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore } = this.props
+    const { fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore, editable } = this.props
     return (
-      <Card>
+      <Card elevation={editable ? 2 : 0} interactive={editable}>
         {range(1, 4).map(i => {
           const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
           const fleetName = get(fleetNames, i, '???')
