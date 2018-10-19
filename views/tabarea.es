@@ -66,6 +66,15 @@ const PoiAppTabpane = styled.div`
   width: 100%;
 `
 
+const PluginAppTabpane = styled(PoiAppTabpane)`
+  height: 100%;
+  padding-bottom: 8px;
+  & > .bp3-card {
+    padding: 4px;
+    height: 100%;
+  }
+`
+
 const PoiTabsContainer = styled.div`
   display: flex;
   height: 100%;
@@ -532,6 +541,7 @@ export class ControlledTabArea extends PureComponent {
       <PluginWrap
         key={plugin.id}
         plugin={plugin}
+        container={PluginAppTabpane}
       />
     )
     const windowModePluginContents = windowModePlugins.map(plugin =>

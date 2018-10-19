@@ -2,14 +2,7 @@ import React, { Component } from 'react'
 import { FormControl, Button } from 'react-bootstrap'
 import { clipboard } from 'electron'
 import { translate } from 'react-i18next'
-import styled from 'styled-components'
-
-const PoiAppTabpane = styled.div`
-  flex: 1;
-  height: 100%;
-  overflow-y: scroll;
-  width: 100%;
-`
+import { Card } from '@blueprintjs/core'
 
 @translate()
 export class PluginWrap extends Component {
@@ -45,7 +38,7 @@ export class PluginWrap extends Component {
 
   render() {
     const { hasError, error, info } = this.state
-    const { plugin, t, withContainer } = this.props
+    const { plugin, t, container: Container } = this.props
     if (hasError) {
       const code = [error.stack, info.componentStack].join('\n')
       const innerContent = (
@@ -61,17 +54,21 @@ export class PluginWrap extends Component {
           <Button bsStyle="primary" onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
         </>
       )
-      return withContainer ? (
-        <PoiAppTabpane id={plugin.id} className="poi-app-tabpane">
-          {innerContent}
-        </PoiAppTabpane>
+      return Container ? (
+        <Container id={plugin.id} className="poi-app-tabpane">
+          <Card>
+            {innerContent}
+          </Card>
+        </Container>
       ) : innerContent
     }
     const innerContent = <plugin.reactClass />
-    return withContainer ? (
-      <PoiAppTabpane id={plugin.id} className="poi-app-tabpane">
-        {innerContent}
-      </PoiAppTabpane>
+    return Container ? (
+      <Container id={plugin.id} className="poi-app-tabpane">
+        <Card>
+          {innerContent}
+        </Card>
+      </Container>
     ) : innerContent
   }
 }
