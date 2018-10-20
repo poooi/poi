@@ -30,7 +30,7 @@ const PoiControlContainer = styled.div`
 const PoiControlInner = styled.div`
   white-space: nowrap;
   overflow: hidden;
-  transition: 0.3s;
+  transition: 0.3s 0.2s;
 `
 
 // Controller icon bar

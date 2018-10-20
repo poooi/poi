@@ -14,7 +14,7 @@
 }
 
 .ship-view .ship-tab-content-transition {
-  transition: all 0.3s cubic-bezier(1, 0, 0, 1);
+  transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
 }
 
 .ship-view .ship-tabpane,

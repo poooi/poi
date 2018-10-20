@@ -29,7 +29,7 @@ const PoiAppE = styled.div`
   ${({overlay, top, bottom, overlayVisible, overlayWidth}) => overlay && css`
     position: fixed;
     right: 0;
-    transition: transform 0.2s ease-in;
+    transition: transform 0.3s 0.2s ease-in;
     will-change: transform;
     max-width: calc(100vw - 50px);
     transform: translate3d(${overlayVisible ? 0 : 100}%, 0, 0);
