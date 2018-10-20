@@ -44,6 +44,7 @@ const PoiAppContainer = styled.div`
   overflow: hidden;
   height: 100%;
   ${({overlay}) => overlay && css`
+    backdrop-filter: blur(5px);
     background: #202b33e6;
   `}
 `

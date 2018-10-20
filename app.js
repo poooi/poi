@@ -155,6 +155,7 @@ app.on('ready', () => {
       nodeIntegrationInWorker: true,
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
+      experimentalFeatures: true,
     },
     backgroundColor: '#00000000',
   })
