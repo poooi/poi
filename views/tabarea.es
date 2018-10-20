@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import React, { Component, Children, PureComponent, unstable_AsyncMode as Async } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
-import { Tab, Tabs, Popover, Button, Position, NonIdealState } from '@blueprintjs/core'
+import { Tab, Tabs, Popover, Button, Position, NonIdealState, Card } from '@blueprintjs/core'
 import { isEqual, omit, get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
@@ -92,6 +92,7 @@ const PoiTabContainer = styled.div`
 `
 
 const PluginDropdown = styled.div`
+  backdrop-filter: blur(5px);
   overflow: auto;
 `
 
@@ -542,7 +543,7 @@ export class ControlledTabArea extends PureComponent {
     const pluginDropdownContents = (
       <PluginDropdown className="plugin-dropdown">
         {
-          this.props.plugins.length == 0 ? (
+          this.listedPlugins().length == 0 ? (
             <PluginNonIdealState
               icon="cloud-download"
               title={t('setting:No plugin found')}
@@ -753,8 +754,8 @@ export class ControlledTabArea extends PureComponent {
       onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
     })
 
-    const inner = (
-      <PoiTabContainer className="poi-tab-container no-scroll">
+    const inner = this.props.doubleTabbed && (
+      <PoiTabContainer className="poi-tab-container">
         <Popover
           minimal
           hasBackdrop
@@ -774,8 +775,18 @@ export class ControlledTabArea extends PureComponent {
             text={(activePlugin || {}).displayName || defaultPluginTitle} />
         </Popover>
         <TabContentsUnion ref={(ref) => { this.tabKeyUnion = ref }}
-          activeTab={this.props.activePluginName}>
-          {pluginContents}
+          activeTab={pluginContents.length ? this.props.activePluginName : 'no-plugin'}>
+          {pluginContents.length ? pluginContents : (
+            <PluginAppTabpane key="no-plugin" id="no-plugin">
+              <Card>
+                <PluginNonIdealState
+                  icon="cloud-download"
+                  title={t('setting:No plugin found')}
+                  description={t('setting:Install plugins in settings')}
+                />
+              </Card>
+            </PluginAppTabpane>
+          )}
         </TabContentsUnion>
       </PoiTabContainer>
     )
@@ -792,7 +803,7 @@ export class ControlledTabArea extends PureComponent {
           parentContainer={this.resizeContainer.current}
           {...resizableAreaProps}
         >
-          <PoiTabContainer className="poi-tab-container no-scroll">
+          <PoiTabContainer className="poi-tab-container">
             { firstPanelNav }
             { firstPanelCnt }
             { windowModePluginContents }
