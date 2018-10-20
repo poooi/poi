@@ -9,7 +9,7 @@ import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { translate } from 'react-i18next'
 import { remote } from 'electron'
-import styled, { css } from 'styled-components'
+import styled, { css, createGlobalStyle } from 'styled-components'
 
 import * as settings from './components/settings'
 import * as mainview from './components/main'
@@ -22,6 +22,11 @@ const { config, dispatch, ipc } = window
 
 const emptyObj = {}
 
+const GlobalStyle = createGlobalStyle`
+  .plugin-dropdown-container > .bp3-popover-content {
+    backdrop-filter: blur(5px);
+  }
+`
 
 const PoiTabContents = styled.div`
   display: -webkit-box;
@@ -50,7 +55,7 @@ const PoiTabChildPositioner = styled.div`
   position: relative;
   width: 100%;
   ${({transition}) => transition && css`
-    transition: 0.35s ease-in-out;
+    transition: 0.3s 0.2s ease-in-out;
   `}
   ${({transparent}) => transparent && css`
     opacity: 0;
@@ -92,7 +97,6 @@ const PoiTabContainer = styled.div`
 `
 
 const PluginDropdown = styled.div`
-  backdrop-filter: blur(5px);
   overflow: auto;
 `
 
@@ -608,7 +612,8 @@ export class ControlledTabArea extends PureComponent {
           content={pluginDropdownContents}
           className="nav-tab-8"
           wrapperTagName="div"
-          targetTagName="div">
+          targetTagName="div"
+          popoverClassName="plugin-dropdown-container">
           <PluginDropdownButton
             icon="chevron-down"
             minimal
@@ -617,6 +622,7 @@ export class ControlledTabArea extends PureComponent {
         <Tab key="settings" id="settings" className="nav-tab-8" width={12.5}>
           <FontAwesome key={0} name="cog" />
         </Tab>
+        <GlobalStyle />
       </NavTabs>
     ) : (
       <NavTabs large
@@ -632,6 +638,7 @@ export class ControlledTabArea extends PureComponent {
         <Tab key="settings" id="settings" className="nav-tab-3">
           {settings.displayName}
         </Tab>
+        <GlobalStyle />
       </NavTabs>
     )
 
@@ -759,9 +766,7 @@ export class ControlledTabArea extends PureComponent {
         <Popover
           minimal
           hasBackdrop
-          backdropProps={{
-            className: 'plugin-dropdown-backdrop',
-          }}
+          popoverClassName="plugin-dropdown-container"
           position={Position.BOTTOM_RIGHT}
           content={pluginDropdownContents}
           className="nav-tab"

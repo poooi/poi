@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components'
 import { ResizeSensor } from '@blueprintjs/core'
 
 const Container = styled.div`
-  transition: 0.35s;
+  transition: 0.3s 0.1s;
   ${({ top, bottom }) => (top && bottom) ? css`
     box-shadow:
       inset 0 18px 15px -20px #217dbb,

@@ -33,7 +33,7 @@
 }
 
 .miniship .ship-tab-content-transition {
-  transition: all 0.3s cubic-bezier(1, 0, 0, 1);
+  transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
 }
 
 .miniship .ship-tabpane {
@@ -387,26 +387,6 @@
 .miniship .ship-panel-half .panel-body {
   height: 100%;
   padding: 1px;
-}
-
-.toleft {
-  left: 0;
-  transition: 0.2s;
-}
-
-.toright {
-  right: 0;
-  transition: 0.2s;
-}
-
-.top-vertical {
-  height: calc(100% - 42px);
-  transition: 0.2s;
-}
-
-.top-horizontal {
-  height: calc(100% - 180px);
-  transition: 0.2s;
 }
 
 .miniship .ship-deck {
