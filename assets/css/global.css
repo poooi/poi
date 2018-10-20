@@ -207,11 +207,6 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: var(--poi-green);
 }
 
-div[role="tooltip"],
-.poi-app-container {
-  transform-origin: 0 0;
-}
-
 .material-icon {
   height: 18px;
   width: 18px;
