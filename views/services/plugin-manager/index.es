@@ -39,22 +39,21 @@ function defaultPluginPath(packageName) {
 
 const getPluginPath = packageName => join(PLUGIN_PATH, 'node_modules', packageName)
 
+const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
+
+const BUNDLED_PLUGINS = readJsonSync(PLUGIN_DATA_PATH)
+
 class PluginManager extends EventEmitter {
-  constructor(packagePath) {
-    super(packagePath)
-    this.packagePath = packagePath
-    this.requirements = null
-    this.config = {
-      production: true,
-      mirror: null,
-      proxy: null,
-      betaCheck: null,
-    }
-    this.VALID = 0
-    this.DISABLED = 1
-    this.NEEDUPDATE = 2
-    this.BROKEN = 3
+  config = {
+    production: true,
+    mirror: null,
+    proxy: null,
+    betaCheck: null,
   }
+  VALID = 0
+  DISABLED = 1
+  NEEDUPDATE = 2
+  BROKEN = 3
 
   async initialize() {
     await this.getPlugins()
@@ -84,18 +83,13 @@ class PluginManager extends EventEmitter {
     })
   }
 
-  getRequirements() {
-    if (!this.requirements) this.requirements = readJsonSync(this.packagePath)
-    return this.requirements
-  }
-
   isMetRequirement(plugin) {
     let lowest
     if (!plugin.isRead) {
       return false
     }
-    if ((this.requirements[plugin.packageName] || {}).version) {
-      lowest = this.requirements[plugin.packageName].version
+    if ((BUNDLED_PLUGINS[plugin.packageName] || {}).version) {
+      lowest = BUNDLED_PLUGINS[plugin.packageName].version
     } else {
       lowest = 'v0.0.0'
     }
@@ -152,12 +146,11 @@ class PluginManager extends EventEmitter {
   }
 
   getUninstalledPluginSettings() {
-    this.getRequirements()
     const installedPlugins = this.getInstalledPlugins()
     const installedPluginNames = installedPlugins.map(plugin => plugin.packageName)
     const uninstalled = {}
-    for (const name in this.requirements) {
-      const value = this.requirements[name]
+    for (const name in BUNDLED_PLUGINS) {
+      const value = BUNDLED_PLUGINS[name]
       if (!installedPluginNames.includes(name)) {
         uninstalled[name] = value
       }
@@ -443,9 +436,7 @@ class PluginManager extends EventEmitter {
   }
 }
 
-const pluginManager = new PluginManager(
-  join(ROOT, 'assets', 'data', 'plugin.json'),
-)
+const pluginManager = new PluginManager()
 
 window.reloadPlugin = async (pkgName, verbose = false) => {
   const { plugins } = getStore()
