@@ -37,11 +37,12 @@ function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
 }
 
+const getPluginPath = packageName => join(PLUGIN_PATH, 'node_modules', packageName)
+
 class PluginManager extends EventEmitter {
-  constructor(packagePath, pluginRoot) {
-    super(packagePath, pluginRoot)
+  constructor(packagePath) {
+    super(packagePath)
     this.packagePath = packagePath
-    this.pluginRoot = pluginRoot
     this.requirements = null
     this.config = {
       production: true,
@@ -55,10 +56,6 @@ class PluginManager extends EventEmitter {
     this.BROKEN = 3
   }
 
-  getPluginPath(packageName) {
-    return join(this.pluginRoot, 'node_modules', packageName)
-  }
-
   async initialize() {
     await this.getPlugins()
     this.emit('initialized')
@@ -66,7 +63,7 @@ class PluginManager extends EventEmitter {
 
   async readPlugins() {
     const pluginPaths = await new Promise(res =>
-      glob(this.getPluginPath('poi-plugin-*'), (err, files) => res(files)),
+      glob(getPluginPath('poi-plugin-*'), (err, files) => res(files)),
     )
     const plugins = sortPlugins(
       await Promise.all(
@@ -79,7 +76,7 @@ class PluginManager extends EventEmitter {
         }),
       ),
     )
-    const npmConfig = getNpmConfig(this.pluginRoot)
+    const npmConfig = getNpmConfig(PLUGIN_PATH)
     notifyFailed(plugins, npmConfig)
     dispatch({
       type: '@@Plugin/initialize',
@@ -209,7 +206,7 @@ class PluginManager extends EventEmitter {
     if (plugin.needRollback) {
       return
     }
-    const npmConfig = getNpmConfig(this.pluginRoot)
+    const npmConfig = getNpmConfig(PLUGIN_PATH)
     const data = await await fetch(
       `${npmConfig.registry}${plugin.packageName}/latest`,
       defaultFetchOption,
@@ -225,7 +222,7 @@ class PluginManager extends EventEmitter {
       latest: data.version,
     }
     if (this.config.betaCheck) {
-      const npmConfig = getNpmConfig(this.pluginRoot)
+      const npmConfig = getNpmConfig(PLUGIN_PATH)
       const betaData = await fetch(
         `${npmConfig.registry}${plugin.packageName}/beta`,
         defaultFetchOption,
@@ -318,7 +315,7 @@ class PluginManager extends EventEmitter {
 
     // 2) Install plugin
     try {
-      const npmConfig = getNpmConfig(this.pluginRoot)
+      const npmConfig = getNpmConfig(PLUGIN_PATH)
       await installPackage(packageSource, version, npmConfig)
     } catch (e) {
       console.error(e.stack)
@@ -328,7 +325,7 @@ class PluginManager extends EventEmitter {
     // 3) Get plugin name
     const packageName = installingByPluginName
       ? packageSource
-      : await findInstalledTarball(join(this.pluginRoot, 'node_modules'), packageSource)
+      : await findInstalledTarball(join(PLUGIN_PATH, 'node_modules'), packageSource)
 
     // 4) Unload plugin if it's running
     const nowPlugin = getStore('plugins').find(plugin => plugin.packageName === packageName)
@@ -341,7 +338,7 @@ class PluginManager extends EventEmitter {
     }
     // 5) Read plugin and load it
     try {
-      let plugin = await readPlugin(this.getPluginPath(packageName))
+      let plugin = await readPlugin(getPluginPath(packageName))
       if (plugin.enabled) {
         plugin = await enablePlugin(plugin, false)
       }
@@ -378,7 +375,7 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      const npmConfig = getNpmConfig(this.pluginRoot)
+      const npmConfig = getNpmConfig(PLUGIN_PATH)
       await removePackage(plugin.packageName, npmConfig)
       // Make sure the plugin no longer exists in PLUGIN_PATH
       // (unless it's a git repo)
@@ -448,7 +445,6 @@ class PluginManager extends EventEmitter {
 
 const pluginManager = new PluginManager(
   join(ROOT, 'assets', 'data', 'plugin.json'),
-  PLUGIN_PATH,
 )
 
 window.reloadPlugin = async (pkgName, verbose = false) => {
