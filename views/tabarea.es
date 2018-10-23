@@ -77,6 +77,8 @@ const PluginAppTabpane = styled(PoiAppTabpane)`
   & > .bp3-card {
     padding: 4px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 `
 
