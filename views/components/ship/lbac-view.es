@@ -19,7 +19,7 @@ import {
   ShipName,
   LandBaseStat,
   ShipHP,
-  SlotItemContainer,
+  ShipSlot,
 } from './styled-components'
 
 const SquadSelectorFactory = memoize(squardId =>
@@ -107,9 +107,9 @@ export const SquardRow = compose(
             />
           </span>
         </LandBaseStat>
-        <SlotItemContainer className="ship-slot">
+        <ShipSlot className="ship-slot">
           <LandbaseSlotitems landbaseId={squardId} isMini={false} />
-        </SlotItemContainer>
+        </ShipSlot>
       </ShipItem>
     </Tooltip>
   )

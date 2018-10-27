@@ -1,5 +1,6 @@
+/* global ROOT */
 import { connect } from 'react-redux'
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { get, join as joinString, memoize } from 'lodash'
@@ -8,6 +9,7 @@ import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
+import styled from 'styled-components'
 
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
@@ -34,17 +36,44 @@ import {
   miscSelector,
   fleetSlotCountSelectorFactory,
 } from 'views/utils/selectors'
+import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 
-const { ROOT } = window
-const { Component } = React
+const FleetStats = styled.div`
+  white-space: nowrap;
+  margin-top: 5px;
+  text-align: center;
+  width: 100%;
+`
 
-const getFontStyle = () => {
-  if (window.isDarkTheme) {
-    return { color: '#FFF' }
-  } else {
-    return { color: '#000' }
+const Container = styled.div`
+  display: flex;
+`
+
+const MiniContainer = styled(Container)`
+  width: 100%;
+  justify-content: space-around;
+`
+
+const Item = styled.span`
+  flex: 1;
+`
+
+const MiniItem = styled.span`
+  flex: 0;
+  margin-left: 5px;
+  &:first-child {
+    margin-left: 0;
   }
-}
+`
+
+const ReconTile = styled.span`
+  font-size: 110%;
+  font-weight: bold;
+  text-align: left;
+  &:not(:first-child) {
+    margin-top: 0.5em;
+  }
+`
 
 class CountdownLabel extends Component {
   constructor(props) {
@@ -204,99 +233,101 @@ export const FleetStat = compose(
       )
     }
     return (
-      <div className="fleet-stat">
+      <FleetStats className="fleet-stat">
         {isMini ? (
-          <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-            <span style={{ flex: 'none' }}>{t(`main:${getSpeedLabel(speed)}`)} </span>
-            <span style={{ flex: 'none', marginLeft: 5 }}>
+          <MiniContainer>
+            <MiniItem>
+              {t(`main:${getSpeedLabel(speed)}`)}
+            </MiniItem>
+            <MiniItem>
               {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-            </span>
-            <span style={{ flex: 'none', marginLeft: 5 }}>
+            </MiniItem>
+            <MiniItem>
               {t('main:LOS')}: {saku33.total.toFixed(2)}
-            </span>
-          </div>
+            </MiniItem>
+          </MiniContainer>
         ) : (
-          <div style={getFontStyle()}>
-            <div style={{ display: 'flex' }}>
-              <span style={{ flex: '1' }}>{t(`main:${getSpeedLabel(speed)}`)} </span>
-              <span style={{ flex: 1 }}>
-                {t('main:Total Lv')}. {totalLv}
-              </span>
-              <span style={{ flex: 1 }}>
-                <Tooltip
-                  position={Position.BOTTOM}
-                  content={
+          <Container>
+            <Item>
+              {t(`main:${getSpeedLabel(speed)}`)}
+            </Item>
+            <Item>
+              {t('main:Total Lv')}. {totalLv}
+            </Item>
+            <Item>
+              <Tooltip
+                position={Position.BOTTOM}
+                content={
+                  <div>
                     <div>
-                      <div>
-                        {t('main:Minimum FP')}: {tyku.min}
-                      </div>
-                      <div>
-                        {t('main:Maximum FP')}: {tyku.max}
-                      </div>
-                      <div>
-                        {t('main:Basic FP')}: {tyku.basic}
-                      </div>
+                      {t('main:Minimum FP')}: {tyku.min}
                     </div>
-                  }
-                >
-                  <span>
-                    {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-                  </span>
-                </Tooltip>
-              </span>
-              <span style={{ flex: 1 }}>
-                <Tooltip
-                  position={Position.BOTTOM}
-                  content={
-                    <div className="info-tooltip">
-                      <div className="recon-title">
-                        <span>{t('main:Formula 33')}</span>
-                      </div>
-                      <div className="info-tooltip-entry">
-                        <span className="info-tooltip-item">× 1</span>
-                        <span>{saku33.total}</span>
-                      </div>
-                      <div className="info-tooltip-entry">
-                        <span className="info-tooltip-item">{'× 3 (6-2 & 6-3)'}</span>
-                        <span>{saku33x3.total}</span>
-                      </div>
-                      <div className="info-tooltip-entry">
-                        <span className="info-tooltip-item">{'× 4 (3-5 & 6-1)'}</span>
-                        <span>{saku33x4.total}</span>
-                      </div>
-                      <div className="recon-title">
-                        <span>{t('main:Formula 2-5')}</span>
-                      </div>
-                      <div className="info-tooltip-entry">
-                        <span className="info-tooltip-item">{t('main:Fall')}</span>
-                        <span>{saku25a.total}</span>
-                      </div>
-                      <div className="info-tooltip-entry">
-                        <span className="info-tooltip-item">{t('main:Legacy')}</span>
-                        <span>{saku25.total}</span>
-                      </div>
+                    <div>
+                      {t('main:Maximum FP')}: {tyku.max}
                     </div>
-                  }
-                >
-                  <span>
-                    {t('main:LOS')}: {saku33.total.toFixed(2)}
-                  </span>
-                </Tooltip>
-              </span>
-              <span style={{ flex: 1 }}>
-                {inExpedition ? t('main:Expedition') : t('main:Resting')}
-                <span> </span>
-                <CountdownLabel
-                  fleetId={fleetId}
-                  fleetName={fleetName}
-                  completeTime={completeTime}
-                  shouldNotify={!inExpedition && !inBattle && canNotify}
-                />
-              </span>
-            </div>
-          </div>
+                    <div>
+                      {t('main:Basic FP')}: {tyku.basic}
+                    </div>
+                  </div>
+                }
+              >
+                <span>
+                  {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+                </span>
+              </Tooltip>
+            </Item>
+            <Item>
+              <Tooltip
+                position={Position.BOTTOM}
+                content={
+                  <InfoTooltip className="info-tooltip">
+                    <ReconTile className="recon-title">
+                      <span>{t('main:Formula 33')}</span>
+                    </ReconTile>
+                    <InfoTooltipEntry className="info-tooltip-entry">
+                      <InfoTooltipItem className="info-tooltip-item">× 1</InfoTooltipItem>
+                      <span>{saku33.total}</span>
+                    </InfoTooltipEntry>
+                    <InfoTooltipEntry className="info-tooltip-entry">
+                      <InfoTooltipItem className="info-tooltip-item">{'× 3 (6-2 & 6-3)'}</InfoTooltipItem>
+                      <span>{saku33x3.total}</span>
+                    </InfoTooltipEntry>
+                    <InfoTooltipEntry className="info-tooltip-entry">
+                      <InfoTooltipItem className="info-tooltip-item">{'× 4 (3-5 & 6-1)'}</InfoTooltipItem>
+                      <span>{saku33x4.total}</span>
+                    </InfoTooltipEntry>
+                    <ReconTile className="recon-title">
+                      <span>{t('main:Formula 2-5')}</span>
+                    </ReconTile>
+                    <InfoTooltipEntry className="info-tooltip-entry">
+                      <InfoTooltipItem className="info-tooltip-item">{t('main:Fall')}</InfoTooltipItem>
+                      <span>{saku25a.total}</span>
+                    </InfoTooltipEntry>
+                    <InfoTooltipEntry className="info-tooltip-entry">
+                      <InfoTooltipItem className="info-tooltip-item">{t('main:Legacy')}</InfoTooltipItem>
+                      <span>{saku25.total}</span>
+                    </InfoTooltipEntry>
+                  </InfoTooltip>
+                }
+              >
+                <span>
+                  {t('main:LOS')}: {saku33.total.toFixed(2)}
+                </span>
+              </Tooltip>
+            </Item>
+            <Item>
+              {inExpedition ? t('main:Expedition') : t('main:Resting')}
+              <span> </span>
+              <CountdownLabel
+                fleetId={fleetId}
+                fleetName={fleetName}
+                completeTime={completeTime}
+                shouldNotify={!inExpedition && !inBattle && canNotify}
+              />
+            </Item>
+          </Container>
         )}
-      </div>
+      </FleetStats>
     )
   },
 )

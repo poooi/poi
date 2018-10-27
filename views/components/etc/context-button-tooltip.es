@@ -3,16 +3,17 @@
  */
 import React from 'react'
 import { translate } from 'react-i18next'
+import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 
 export const ContextButtonTooltip = translate(['setting'])(({ left, right, t, ...props}) => (
-  <div className="info-tooltip">
-    <div className="info-tooltip-entry">
-      <span className="info-tooltip-item">{t('Left click')}</span>
+  <InfoTooltip className="info-tooltip">
+    <InfoTooltipEntry className="info-tooltip-entry">
+      <InfoTooltipItem className="info-tooltip-item">{t('Left click')}</InfoTooltipItem>
       <span>{left}</span>
-    </div>
-    <div className="info-tooltip-entry">
-      <span className="info-tooltip-item">{t('Right click')}</span>
+    </InfoTooltipEntry>
+    <InfoTooltipEntry className="info-tooltip-entry">
+      <InfoTooltipItem className="info-tooltip-item">{t('Right click')}</InfoTooltipItem>
       <span>{right}</span>
-    </div>
-  </div>
+    </InfoTooltipEntry>
+  </InfoTooltip>
 ))

@@ -147,32 +147,6 @@ input[type="number"]::-webkit-outer-spin-button {
   pointer-events: none;
 }
 
-.info-tooltip .tooltip-inner .recon-title {
-  font-size: 110%;
-  font-weight: bold;
-  text-align: left;
-}
-
-.info-tooltip .recon-title:not(:first-child) {
-  margin-top: 0.5em;
-}
-
-.info-tooltip .info-tooltip-entry {
-  display: flex;
-  min-width: 100px;
-  text-align: left;
-}
-
-.info-tooltip .info-tooltip-item {
-  flex-grow: 1;
-  margin-right: 2em;
-}
-
-.info-tooltip {
-  max-width: initial;
-  width: fit-content;
-}
-
 /* progress bar */
 .bp3-intent-red.bp3-intent-red.bp3-intent-red .bp3-progress-meter {
   background-color: var(--poi-red);

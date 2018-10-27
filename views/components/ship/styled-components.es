@@ -1,11 +1,76 @@
 
 import { Avatar } from 'views/components/etc/avatar'
 import styled, { css } from 'styled-components'
-import { Tooltip, Card } from '@blueprintjs/core'
+import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
+import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 
 export const ShipCard = styled(Card)`
   display: flex;
   flex-direction: column;
+  height: 100%;
+  padding: 2px;
+`
+
+export const ShipWrapper = styled.div`
+  padding: 2px;
+  overflow: auto;
+`
+
+export const ShipTabContainer = styled.div`
+  flex: 1;
+  overflow: hidden;
+`
+
+export const ShipTabContent = styled.div`
+  display: -webkit-box;
+  flex-flow: row;
+  height: 100%;
+  position: relative;
+  ${({transition}) => transition && css`
+    transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
+  `}
+  ${({position}) => css`
+    transform: translateX(-${position}00%);
+  `}
+`
+
+export const ShipDeck = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+export const ShipDetails = styled(ScrollShadow)`
+  overflow: scroll;
+  flex: 1;
+`
+
+export const FleetNameButtonContainer = styled.div`
+  overflow: scroll;
+  display: flex;
+  flex-flow: row;
+`
+
+export const FleetNameButton = styled(ButtonGroup)`
+  white-space: nowrap;
+  display: flex;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  width: 100%;
+  .bp3-button {
+    flex: 1;
+    overflow: hidden;
+  }
+`
+
+export const AirbaseArea = styled.div`
+  padding-left: 8px;
+  text-align: left;
+  white-space: nowrap;
+  margin-top: 5px;
+  width: 100%;
 `
 
 export const ShipItem = styled.div`
@@ -86,7 +151,7 @@ export const ShipLabel = styled.span`
       max-width: initial;
       font-size: 80%;
       padding: 0.125em 0.6em;
-    )
+    }
   `}
 `
 
@@ -173,12 +238,70 @@ export const ShipFB = styled.span`
   }
 `
 
-export const SlotItemContainer = styled.div`
+export const ShipSlot = styled.div`
   flex-basis: 172px;
   flex-grow: 0;
   flex-shrink: 0;
   overflow: hidden;
   padding: 5px 5px 5px 5px;
+`
+
+export const SlotItems = styled.div`
+  display: flex;
+`
+
+export const SlotItemContainer = styled.div`
+  display: inline;
+  margin-right: 2px;
+  position: relative;
+  vertical-align: bottom;
+  &::after {
+    background-color: rgba(33, 33, 33, 0.7);
+    border-radius: 9px;
+    bottom: -3px;
+    content: attr(data-onslot);
+    font-size: 12px;
+    height: 18px;
+    left: -3px;
+    line-height: 18px;
+    padding-left: 2px;
+    padding-right: 2px;
+    position: absolute;
+    text-align: center;
+    width: 18px;
+  }
+  ${({onslot}) => onslot ? css`
+    &::after {
+      display: inline;
+    }
+  ` : css`
+    &::after {
+      display: none;
+    }
+  `}
+  ${({warining}) => warining && css`
+    color: #F39C12;
+  `}
+  .png {
+    height: 32px;
+    margin-bottom: -3px;
+    margin-left: -5px;
+    margin-top: -5px;
+    width: 32px;
+  }
+  .svg {
+    height: 23px;
+    width: 26px;
+  }
+`
+
+export const OnSlotMini = styled(Tag)`
+  font-size: 90%;
+  margin-left: 2px;
+  padding: 3px 6px 3px 5px;
+  ${({hide}) => hide && css`
+    display: none;
+  `}
 `
 
 export const AACITypeName = styled.div`
@@ -193,5 +316,4 @@ export const AACITypeName = styled.div`
   &:last-child::after {
     content: '';
   }
-
 `

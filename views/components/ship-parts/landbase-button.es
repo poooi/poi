@@ -4,12 +4,30 @@ import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
 import { translate, Trans } from 'react-i18next'
 import { Button, ButtonGroup, Tag, Intent, Position } from '@blueprintjs/core'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 const AirbaseLabel = styled(Tag)`
   margin: 2px;
+`
+
+const LandbaseButtonContainer = styled(ButtonGroup)`
+  display: flex;
+  ${({mini}) => mini ? css`
+    width: 30px;
+    height: 18px;
+    line-height: 18px;
+  ` : css`
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    width: 100%;
+    button {
+      flex: 1;
+      overflow: hidden;
+    }
+  `}
 `
 
 const fatiguedLabel = (
@@ -141,7 +159,7 @@ export const LandbaseButton = translate(['resources'])(
       )
       return (
         <Tooltip content={tooltipContent} position={Position.BOTTOM} targetTagName="div">
-          <ButtonGroup className="plane-button-mini">
+          <LandbaseButtonContainer mini={isMini}>
             <Button
               intent={intent}
               onClick={onClick}
@@ -149,7 +167,7 @@ export const LandbaseButton = translate(['resources'])(
               active={fleetId == activeFleetId}
               icon={<FontAwesome name="plane" />}
             />
-          </ButtonGroup>
+          </LandbaseButtonContainer>
         </Tooltip>
       )
     },
