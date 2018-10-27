@@ -9,6 +9,7 @@ import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 import { ShipLabel, AACITypeName } from './styled-components'
+import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 
 const getAvailableTranslation = memoize(
   str =>
@@ -57,23 +58,23 @@ export const AACIIndicator = translate(['main'])(
     const currentMax = Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
 
     const tooltip = AACIs.length && (
-      <div className="info-tooltip">
+      <InfoTooltip className="info-tooltip">
         {AACIs.map(id => (
-          <div className="info-tooltip-entry" key={id}>
-            <span className="info-tooltip-item">
+          <InfoTooltipEntry className="info-tooltip-entry" key={id}>
+            <InfoTooltipItem className="info-tooltip-item">
               {t('main:AACIType', { count: id })}
               <span>
                 {get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : ''}
               </span>
-            </span>
+            </InfoTooltipItem>
             <span>{t('main:Shot down', { count: AACITable[id].fixed })}</span>
             <span style={{ marginLeft: '2ex' }}>
               {t('main:Modifier', { count: AACITable[id].modifier })}
             </span>
-          </div>
+          </InfoTooltipEntry>
         ))}
         {currentMax < maxShotdown && <span>{t('main:Max shot down not reached')}</span>}
-      </div>
+      </InfoTooltip>
     )
 
     return (

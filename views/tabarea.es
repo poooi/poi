@@ -71,6 +71,10 @@ const PoiAppTabpane = styled.div`
   padding: 1px 6px;
 `
 
+const ShipViewTabpanel = styled(PoiAppTabpane)`
+  font-size: 15px;
+`
+
 const PluginAppTabpane = styled(PoiAppTabpane)`
   height: 100%;
   padding-bottom: 8px;
@@ -657,9 +661,9 @@ export class ControlledTabArea extends PureComponent {
         <PoiAppTabpane id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </PoiAppTabpane>
-        <PoiAppTabpane id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
+        <ShipViewTabpanel id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
-        </PoiAppTabpane>
+        </ShipViewTabpanel>
         { pluginContents }
         <PoiAppTabpane id={settings.name} className="settings-view poi-app-tabpane" key="settings">
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
@@ -678,9 +682,9 @@ export class ControlledTabArea extends PureComponent {
         <PoiAppTabpane id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
           <mainview.reactClass activeMainTab={this.props.activeMainTab} />
         </PoiAppTabpane>
-        <PoiAppTabpane id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
+        <ShipViewTabpanel id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
           <shipview.reactClass activeMainTab={this.props.activeMainTab} />
-        </PoiAppTabpane>
+        </ShipViewTabpanel>
         <PoiAppTabpane id={settings.name} className="settings-view poi-app-tabpane" key="settings">
           <settings.reactClass activeMainTab={this.props.activeMainTab}/>
         </PoiAppTabpane>

@@ -12,6 +12,7 @@ import { compose } from 'redux'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { CountdownNotifierLabel } from './countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
+import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 
 import '../assets/admiral-panel.css'
 
@@ -180,15 +181,15 @@ const ExpContent = compose(
     level >= 0 ? (
       <>
         {level < 120 && (
-          <div className="info-tooltip-entry">
-            <span className="info-tooltip-item">{t('main:Next')}</span>
+          <InfoTooltipEntry className="info-tooltip-entry">
+            <InfoTooltipItem className="info-tooltip-item">{t('main:Next')}</InfoTooltipItem>
             <span>{totalExp[level] - exp}</span>
-          </div>
+          </InfoTooltipEntry>
         )}
-        <div className="info-tooltip-entry">
-          <span className="info-tooltip-item">{t('main:Total Exp')}</span>
+        <InfoTooltipEntry className="info-tooltip-entry">
+          <InfoTooltipItem className="info-tooltip-item">{t('main:Total Exp')}</InfoTooltipItem>
           <span>{exp}</span>
-        </div>
+        </InfoTooltipEntry>
       </>
     ) : (
       <span />
@@ -315,10 +316,10 @@ class CountDownControl extends Component {
 const CountdownContent = ({ moments }) => (
   <div>
     {['Practice', 'Quest', 'Senka', 'EO'].map(name => (
-      <div className="info-tooltip-entry countdown-item" key={name}>
-        <span className="info-tooltip-item">
+      <InfoTooltipEntry className="info-tooltip-entry countdown-item" key={name}>
+        <InfoTooltipItem className="info-tooltip-item">
           <Trans>main:Next {name}</Trans>
-        </span>
+        </InfoTooltipItem>
         <span>
           <CountdownNotifierLabel
             timerKey={`next-${name}`}
@@ -328,7 +329,7 @@ const CountdownContent = ({ moments }) => (
             minimal={false}
           />
         </span>
-      </div>
+      </InfoTooltipEntry>
     ))}
   </div>
 )

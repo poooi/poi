@@ -44,7 +44,7 @@ import {
   StatusLabelContainer,
   ShipCond,
   ShipFB,
-  SlotItemContainer,
+  ShipSlot,
   ShipHPRow,
 } from './styled-components'
 
@@ -233,9 +233,9 @@ export class ShipRow extends Component {
             </Tooltip>
           </ShipFB>
 
-          <SlotItemContainer className="ship-slot" style={labelStatusStyle}>
+          <ShipSlot className="ship-slot" style={labelStatusStyle}>
             <Slotitems shipId={ship.api_id} />
-          </SlotItemContainer>
+          </ShipSlot>
         </ShipItem>
       </Tooltip>
     )

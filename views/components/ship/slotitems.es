@@ -18,8 +18,7 @@ import {
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
-
-import './assets/slotitems.css'
+import { SlotItems, SlotItemContainer, OnSlotMini } from './styled-components'
 
 const slotitemsDataSelectorFactory = memoize(shipId =>
   createSelector(
@@ -48,7 +47,7 @@ export const Slotitems = compose(
   translate(['resources']),
   connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state)),
 )(({ api_maxeq, equipsData, exslotUnlocked, t }) => (
-  <div className="slotitems">
+  <SlotItems className="slotitems">
     {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const isExslot = equipIdx === equipsData.length - 1
@@ -91,11 +90,6 @@ export const Slotitems = compose(
         const maxOnslot = isExslot ? 0 : api_maxeq[equipIdx]
         const onslotText = isExslot ? '+' : equipData ? `${onslot}` : `${maxOnslot}`
         const onslotWarning = equipData && onslot < maxOnslot
-        const slotitemClassName = classNames('slotitem-container', {
-          'slotitem-onslot-show': showOnslot,
-          'slotitem-onslot-hide': !showOnslot,
-          'text-warning': onslotWarning,
-        })
 
         return (
           <Tooltip
@@ -104,20 +98,20 @@ export const Slotitems = compose(
             content={itemOverlay}
             key={equipIdx}
           >
-            <div className={slotitemClassName} data-onslot={onslotText}>
+            <SlotItemContainer className="slotitem-container" data-onslot={onslotText} onslot={showOnslot} warning={onslotWarning}>
               <SlotitemIcon className="slotitem-img" slotitemId={equipIconId} />
-            </div>
+            </SlotItemContainer>
           </Tooltip>
         )
       })}
-  </div>
+  </SlotItems>
 ))
 
 export const LandbaseSlotitems = compose(
   translate(['resources']),
   connect((state, { landbaseId }) => landbaseSlotitemsDataSelectorFactory(landbaseId)(state)),
 )(({ api_maxeq, api_cond, api_state, equipsData, isMini, t }) => (
-  <div className="slotitems">
+  <SlotItems className="slotitems">
     {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const [equip, $equip, onslot] = equipData || []
@@ -126,16 +120,6 @@ export const LandbaseSlotitems = compose(
         const maxOnslot = api_maxeq[equipIdx]
         const onslotWarning = equipData && onslot < maxOnslot
         const onslotText = equipData ? onslot : maxOnslot
-        const onslotClassName = classNames('slotitem-onslot-mini', {
-          show: showOnslot && api_state[equipIdx] === 1,
-          hide: !showOnslot || api_state[equipIdx] !== 1,
-          'text-warning': onslotWarning,
-        })
-        const slotitemClassName = classNames('slotitem-container', {
-          'slotitem-onslot-show': showOnslot,
-          'slotitem-onslot-hide': !showOnslot,
-          'text-warning': onslotWarning,
-        })
         const iconStyle = {
           opacity: api_state[equipIdx] === 2 ? 0.5 : null,
           filter:
@@ -166,13 +150,14 @@ export const LandbaseSlotitems = compose(
                   />
                 )}
                 {isMini && (
-                  <Tag
-                    className={onslotClassName}
+                  <OnSlotMini
+                    className="slotitem-onslot-mini"
                     intent={onslotWarning ? Intent.WARNING : Intent.None}
                     minimal
+                    hide={!showOnslot || api_state[equipIdx] !== 1}
                   >
                     {onslotText}
-                  </Tag>
+                  </OnSlotMini>
                 )}
                 <FontAwesome name="dot-circle-o" /> {$equip.api_distance}
               </div>
@@ -188,11 +173,11 @@ export const LandbaseSlotitems = compose(
             content={itemOverlay}
             key={equipIdx}
           >
-            <div className={slotitemClassName} data-onslot={onslotText} style={iconStyle}>
+            <SlotItemContainer className="slotitem-container" data-onslot={onslotText} style={iconStyle} onslot={showOnslot} warning={onslotWarning}>
               <SlotitemIcon className="slotitem-img" slotitemId={equipIconId} />
-            </div>
+            </SlotItemContainer>
           </Tooltip>
         )
       })}
-  </div>
+  </SlotItems>
 ))

@@ -1,17 +1,15 @@
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
 import { translate, Trans } from 'react-i18next'
-import { Button, ButtonGroup } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 import { compose } from 'redux'
 
 const { dispatch } = window
 
-import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { ShipRow } from './ship-item'
 import { SquardRow } from './lbac-view'
 import { LandbaseButton } from '../ship-parts/landbase-button'
@@ -23,9 +21,7 @@ import {
 } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
-import { ShipCard } from './styled-components'
-
-import './assets/ship.css'
+import { ShipCard, ShipWrapper, ShipTabContainer, ShipTabContent, ShipDeck, ShipDetails, AirbaseArea, FleetNameButtonContainer, FleetNameButton } from './styled-components'
 
 const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 
@@ -65,14 +61,14 @@ const FleetShipView = connect((state, { fleetId }) =>
     <div className="fleet-name">
       <FleetStat fleetId={fleetId} isMini={false} />
     </div>
-    <ScrollShadow
+    <ShipDetails
       className="ship-details"
       observerPath={['layout.shippane', `info.fleets.${fleetId}.api_ship`]}
     >
       {(shipsId || []).map((shipId, i) => (
         <ShipRow key={shipId} shipId={shipId} enableAvatar={enableAvatar} compact={width < 480} />
       ))}
-    </ScrollShadow>
+    </ShipDetails>
   </>
 ))
 
@@ -83,7 +79,7 @@ const LBView = compose(
     mapareas: get(state, 'const.$mapareas', {}),
   })),
 )(({ areaIds, mapareas, t, enableAvatar, width }) => (
-  <ScrollShadow className="ship-details" observerPath={['layout.shippane', 'info.airbase']}>
+  <ShipDetails className="ship-details" observerPath={['layout.shippane', 'info.airbase']}>
     {areaIds.map(
       (id, i) =>
         mapareas[id] != null &&
@@ -91,14 +87,14 @@ const LBView = compose(
           <SquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 480} />
         ) : (
           <React.Fragment key={i}>
-            <div style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className="airbase-area">
+            <AirbaseArea className="airbase-area">
               [{id}] {mapareas[id] ? t(`resources:${mapareas[id].api_name}`) : ''}
-            </div>
+            </AirbaseArea>
             <SquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 480} />
           </React.Fragment>
         )),
     )}
-  </ScrollShadow>
+  </ShipDetails>
 ))
 
 @connect((state, props) => ({
@@ -154,10 +150,10 @@ export class reactClass extends Component {
 
   render() {
     return (
-      <div className="ship-wrapper">
+      <ShipWrapper className="ship-wrapper">
         <ShipCard onDoubleClick={this.changeMainView} className="ship-card">
-          <div className="div-row fleet-name-button-container">
-            <ButtonGroup className="fleet-name-button">
+          <FleetNameButtonContainer className="div-row fleet-name-button-container">
+            <FleetNameButton className="fleet-name-button">
               {times(4).map(i => (
                 <ShipViewSwitchButton
                   key={i}
@@ -167,7 +163,7 @@ export class reactClass extends Component {
                   activeFleetId={this.props.activeFleetId}
                 />
               ))}
-            </ButtonGroup>
+            </FleetNameButton>
             <LandbaseButton
               key={4}
               fleetId={4}
@@ -176,35 +172,34 @@ export class reactClass extends Component {
               activeFleetId={this.props.activeFleetId}
               isMini={false}
             />
-          </div>
-          <div
-            className="no-scroll ship-tab-container"
+          </FleetNameButtonContainer>
+          <ShipTabContainer
+            className="ship-tab-container"
             ref={ref => {
               this.shiptabpane = ref
             }}
           >
-            <div
-              className={classNames('ship-tab-content', {
-                'ship-tab-content-transition': this.props.enableTransition,
-              })}
-              style={{ transform: `translateX(-${this.props.activeFleetId}00%)` }}
+            <ShipTabContent
+              className="ship-tab-content"
+              transition={this.props.enableTransition}
+              position={this.props.activeFleetId}
             >
               {times(4).map(i => (
-                <div className="ship-deck" key={i}>
+                <ShipDeck className="ship-deck" key={i}>
                   <FleetShipView
                     fleetId={i}
                     enableAvatar={this.props.enableAvatar}
                     width={this.props.width}
                   />
-                </div>
+                </ShipDeck>
               ))}
-              <div className="ship-deck ship-lbac" key={4}>
+              <ShipDeck className="ship-deck ship-lbac" key={4}>
                 <LBView enableAvatar={this.props.enableAvatar} width={this.props.width} />
-              </div>
-            </div>
-          </div>
+              </ShipDeck>
+            </ShipTabContent>
+          </ShipTabContainer>
         </ShipCard>
-      </div>
+      </ShipWrapper>
     )
   }
 }

@@ -60,12 +60,6 @@
   padding-bottom: 0;
 }
 
-.miniship .plane-button-mini {
-  width: 30px;
-  height: 18px;
-  line-height: 18px;
-}
-
 .miniship .hidden {
   display: none;
 }
@@ -317,12 +311,6 @@
 
 .ship-pop .slotitem-name-mini {
   white-space: nowrap;
-}
-
-.slotitem-onslot-mini {
-  font-size: 90%;
-  margin-left: 2px;
-  padding: 3px 6px 3px 5px;
 }
 
 .slotitems-onslot {
