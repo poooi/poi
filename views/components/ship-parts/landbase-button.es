@@ -4,40 +4,43 @@ import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
 import { translate, Trans } from 'react-i18next'
 import { Button, ButtonGroup, Tag, Intent, Position } from '@blueprintjs/core'
+import styled from 'styled-components'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
-import './assets/landbase-button.css'
+const AirbaseLabel = styled(Tag)`
+  margin: 2px;
+`
 
 const fatiguedLabel = (
-  <Tag intent={Intent.DANGER} className="airbase-state-label">
+  <AirbaseLabel intent={Intent.DANGER} className="airbase-state-label">
     <Trans>main:Fatigued</Trans>
-  </Tag>
+  </AirbaseLabel>
 )
 const emptyLabel = (
-  <Tag intent={Intent.WARNING} className="airbase-state-label">
+  <AirbaseLabel intent={Intent.WARNING} className="airbase-state-label">
     <Trans>main:Empty Slot</Trans>
-  </Tag>
+  </AirbaseLabel>
 )
 const relocateLabel = (
-  <Tag intent={Intent.WARNING} className="airbase-state-label">
+  <AirbaseLabel intent={Intent.WARNING} className="airbase-state-label">
     <Trans>main:Relocating</Trans>
-  </Tag>
+  </AirbaseLabel>
 )
 const resupplyLabel = (
-  <Tag intent={Intent.WARNING} className="airbase-state-label">
+  <AirbaseLabel intent={Intent.WARNING} className="airbase-state-label">
     <Trans>main:Resupply Needed</Trans>
-  </Tag>
+  </AirbaseLabel>
 )
 const noActionLabel = (
-  <Tag intent={Intent.WARNING} className="airbase-state-label">
+  <AirbaseLabel intent={Intent.WARNING} className="airbase-state-label">
     <Trans>main:No Action</Trans>
-  </Tag>
+  </AirbaseLabel>
 )
 const readyLabel = (
-  <Tag intent={Intent.SUCCESS} className="airbase-state-label">
+  <AirbaseLabel intent={Intent.SUCCESS} className="airbase-state-label">
     <Trans>main:Ready</Trans>
-  </Tag>
+  </AirbaseLabel>
 )
 
 export const LandbaseButton = translate(['resources'])(
