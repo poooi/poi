@@ -27,19 +27,23 @@ export const ShipTabContent = styled.div`
   flex-flow: row;
   height: 100%;
   position: relative;
-  ${({transition}) => transition && css`
-    transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
-  `}
-  ${({position}) => css`
-    transform: translateX(-${position}00%);
-  `}
 `
 
 export const ShipDeck = styled.div`
   height: 100%;
   width: 100%;
+  position: absolute;
   display: flex;
   flex-direction: column;
+  transform: translateX(0);
+  ${({transition}) => transition && css`
+    transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
+  `}
+  ${({left, right}) => left ? css`
+    transform: translateX(-100%);
+  ` : right &&  css`
+    transform: translateX(100%);
+  `}
 `
 
 export const ShipDetails = styled(ScrollShadow)`
