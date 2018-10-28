@@ -1,5 +1,4 @@
 import React from 'react'
-import { Divider } from '../components/divider'
 
 import { LayoutConfig } from './layout-config'
 import { ThemeConfig } from './theme-config'
