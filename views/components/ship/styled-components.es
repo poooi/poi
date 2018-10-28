@@ -12,7 +12,8 @@ export const ShipCard = styled(Card)`
 `
 
 export const ShipWrapper = styled.div`
-  padding: 2px;
+  height: 100%;
+  padding: 2px 2px 7px 2px;
   overflow: auto;
 `
 
