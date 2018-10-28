@@ -6,7 +6,7 @@ import { createSelector } from 'reselect'
 import { memoize } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { translate } from 'react-i18next'
-import { Tooltip, Tag, Intent, Position } from '@blueprintjs/core'
+import { Tooltip, Intent, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
 
 import { SlotitemIcon } from 'views/components/etc/icon'
@@ -18,7 +18,7 @@ import {
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
-import { SlotItems, SlotItemContainer, OnSlotMini } from './styled-components'
+import { SlotItems, SlotItemContainer, OnSlotMini } from 'views/components/ship-parts/styled-components'
 
 const slotitemsDataSelectorFactory = memoize(shipId =>
   createSelector(
@@ -110,8 +110,8 @@ export const Slotitems = compose(
 export const LandbaseSlotitems = compose(
   translate(['resources']),
   connect((state, { landbaseId }) => landbaseSlotitemsDataSelectorFactory(landbaseId)(state)),
-)(({ api_maxeq, api_cond, api_state, equipsData, isMini, t }) => (
-  <SlotItems className="slotitems">
+)(({ api_maxeq, api_cond, api_state, equipsData, isMini, t, className }) => (
+  <SlotItems className={classNames('slotitems', className)}>
     {equipsData &&
       equipsData.map((equipData, equipIdx) => {
         const [equip, $equip, onslot] = equipData || []

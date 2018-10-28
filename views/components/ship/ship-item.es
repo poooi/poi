@@ -46,7 +46,7 @@ import {
   ShipFB,
   ShipSlot,
   ShipHPRow,
-} from './styled-components'
+} from 'views/components/ship-parts/styled-components'
 
 const shipRowDataSelectorFactory = memoize(shipId =>
   createSelector(
@@ -194,7 +194,7 @@ export class ShipRow extends Component {
                   </ShipCond>
                 </div>
               </ShipHPTextRow>
-              <span className="hp-progress top-space" style={labelStatusStyle}>
+              <span className="hp-progress" style={labelStatusStyle}>
                 <ProgressBar
                   stripes={false}
                   intent={getHpStyle(hpPercentage)}

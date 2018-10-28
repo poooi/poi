@@ -8,7 +8,7 @@ import { compose } from 'redux'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAAPB } from 'views/utils/aapb'
-import { ShipLabel } from './styled-components'
+import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
 const AAPBSelectorFactory = memoize(shipId =>
   createSelector(

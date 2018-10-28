@@ -15,15 +15,24 @@ const AirbaseLabel = styled(Tag)`
 const LandbaseButtonContainer = styled(ButtonGroup)`
   display: flex;
   ${({mini}) => mini ? css`
-    width: 30px;
-    height: 18px;
-    line-height: 18px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    .bp3-button {
+      flex: 1;
+      border-width: 0 0 1px;
+      height: 18px;
+      min-height: 18px;
+      margin-top: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
   ` : css`
     padding-left: 5px;
     padding-right: 5px;
     padding-top: 5px;
     width: 100%;
-    button {
+    .bp3-button {
       flex: 1;
       overflow: hidden;
     }

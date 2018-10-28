@@ -1,18 +1,33 @@
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { Card, ButtonGroup, Button } from '@blueprintjs/core'
+import { Card, Button } from '@blueprintjs/core'
+import styled from 'styled-components'
 
 import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 import { LandbaseButton } from '../../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
+import {
+  FleetNameButtonContainer,
+  FleetNameButton as FleetNameButtonLarge,
+  ShipDeck,
+  ShipTabContent,
+} from 'views/components/ship-parts/styled-components'
 
-import '../../assets/mini-ship.css'
+const FleetNameButton = styled(FleetNameButtonLarge)`
+  .bp3-button {
+    border-width: 0 0 1px;
+    height: 18px;
+    min-height: 18px;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+`
 
 const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
   createSelector([fleetStateSelectorFactory(fleetId)], fleetState => ({
@@ -73,6 +88,10 @@ export class MiniShip extends Component {
     })
   }
 
+  componentDidUpdate() {
+    this.prevFleetId = this.props.activeFleetId
+  }
+
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.minishippane)
   }
@@ -84,8 +103,8 @@ export class MiniShip extends Component {
   render() {
     return (
       <Card onDoubleClick={this.handleChangeShipView} elevation={this.props.editable ? 2 : 0} interactive={this.props.editable}>
-        <div className="panel-row miniship-switch">
-          <ButtonGroup className="miniship-fleet-switch">
+        <FleetNameButtonContainer className="miniship-switch">
+          <FleetNameButton className="miniship-fleet-switch">
             {[0, 1, 2, 3].map(i => (
               <ShipViewSwitchButton
                 key={i}
@@ -95,7 +114,7 @@ export class MiniShip extends Component {
                 activeFleetId={this.props.activeFleetId}
               />
             ))}
-          </ButtonGroup>
+          </FleetNameButton>
           <LandbaseButton
             key={4}
             fleetId={4}
@@ -104,29 +123,32 @@ export class MiniShip extends Component {
             activeFleetId={this.props.activeFleetId}
             isMini={true}
           />
-        </div>
-        <div
-          className="no-scroll miniship-fleet-content"
+        </FleetNameButtonContainer>
+        <ShipTabContent
+          className="miniship-fleet-content"
           ref={ref => {
             this.minishippane = ref
           }}
         >
-          <div
-            className={classNames('ship-tab-content', {
-              'ship-tab-content-transition': this.props.enableTransition,
-            })}
-            style={{ transform: `translateX(-${this.props.activeFleetId}00%)` }}
-          >
-            {[0, 1, 2, 3].map(i => (
-              <div className="ship-deck ship-tabpane" key={i}>
-                <PaneBodyMini key={i} fleetId={i} />
-              </div>
-            ))}
-            <div className="ship-deck ship-tabpane ship-lbac" key={4}>
-              <LBViewMini />
-            </div>
-          </div>
-        </div>
+          {[0, 1, 2, 3].map(i => (
+            <ShipDeck
+              className="ship-deck"
+              key={i}
+              transition={this.props.enableTransition && (this.props.activeFleetId === i || this.prevFleetId === i)}
+              left={this.props.activeFleetId > i}
+              right={this.props.activeFleetId < i}>
+              <PaneBodyMini key={i} fleetId={i} />
+            </ShipDeck>
+          ))}
+          <ShipDeck
+            className="ship-deck"
+            key={4}
+            transition={this.props.enableTransition && (this.props.activeFleetId === 4 || this.prevFleetId === 4)}
+            left={this.props.activeFleetId > 4}
+            right={this.props.activeFleetId < 4}>
+            <LBViewMini />
+          </ShipDeck>
+        </ShipTabContent>
       </Card>
     )
   }

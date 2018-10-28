@@ -1,9 +1,11 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Trans } from 'react-i18next'
+import styled from 'styled-components'
 
 import defaultLayout from './default-layout'
 import { layoutResizeObserver } from 'views/services/layout'
@@ -19,7 +21,14 @@ import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import './assets/main.css'
 
-const { config } = window
+const MiniShipContainer = styled.div`
+  font-size: 14px;
+  .bp3-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+`
 
 @connect((state, props) => ({
   layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
@@ -72,7 +81,7 @@ export class reactClass extends Component {
           <div className="resource-panel" key="resource-panel">
             <ResourcePanel editable={this.props.editable} />
           </div>
-          <div
+          <MiniShipContainer
             className="miniship"
             key="miniship"
             id="MiniShip"
@@ -81,7 +90,7 @@ export class reactClass extends Component {
             }}
           >
             <MiniShip editable={this.props.editable} />
-          </div>
+          </MiniShipContainer>
           <div className="combined-panels panel-col" key="combined-panels">
             <DockPanel editable={this.props.editable} />
           </div>
