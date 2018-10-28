@@ -18,8 +18,10 @@ class Ticker {
     if (!this.counting) {
       return
     }
-    this.tick()
-    setTimeout(this.count, 1000)
+    requestIdleCallback(() => {
+      this.tick()
+      setTimeout(this.count, 1000)
+    })
   }
   start = () => {
     this.counting = true
