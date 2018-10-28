@@ -41,14 +41,18 @@ const PoiTabChildPositioner = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  opacity: 1;
   position: absolute;
   width: 100%;
   height: 100%;
+  transform: translate3d(0, 0, 0);
   ${({transition}) => transition && css`
-    transition: 0.4s 0.2s ease-in-out;
+    transition: transform 0.4s 0.2s ease-in-out;
   `}
-  ${({disabled}) => disabled && css`
+  ${({left, right}) => left ? css`
+    transform: translate3d(-100%, 0, 0);
+    pointer-events: none;
+  ` : right && css`
+    transform: translate3d(100%, 0, 0);
     pointer-events: none;
   `}
 `
@@ -200,26 +204,23 @@ class TabContentsUnion extends Component {
     const prevKey = this.prevKey()
     const content = []
     Children.forEach(this.props.children, (child, index) => {
-      if (child.key === activeKey)
+      if (child.key === activeKey) {
         onTheLeft = false
-      const positionLeft = child.key === activeKey ?  '0%'
-        : onTheLeft ? '-100%' : '100%'
+      }
       content.push(
         <PoiTabChildPositioner
           key={child.key}
           className="poi-tab-child-positioner"
           transition={(child.key === activeKey || child.key === prevKey) && this.props.enableTransition}
-          disabled={child.key !== activeKey}
-          style={{transform: `translate3d(${positionLeft}, 0, 0)`}}>
+          left={child.key !== activeKey && onTheLeft}
+          right={child.key !== activeKey && !onTheLeft}>
           {child}
         </PoiTabChildPositioner>
       )
     })
     return (
       <PoiTabContents className="poi-tab-contents">
-        {
-          content
-        }
+        {content}
       </PoiTabContents>
     )
   }
