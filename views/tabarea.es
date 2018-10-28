@@ -73,6 +73,7 @@ const PoiAppTabpane = styled.div`
 
 const ShipViewTabpanel = styled(PoiAppTabpane)`
   font-size: 15px;
+  margin-top: -2px;
 `
 
 const PluginAppTabpane = styled(PoiAppTabpane)`

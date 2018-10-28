@@ -6,6 +6,7 @@
 .main-view .main-panel-content {
   position: relative;
   transition: all 0.3s ease-in-out;
+  margin-top: -4px;
 }
 
 .main-view .panel {
