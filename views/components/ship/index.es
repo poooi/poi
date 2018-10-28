@@ -140,6 +140,10 @@ export class reactClass extends Component {
     })
   }
 
+  componentDidUpdate() {
+    this.prevFleetId = this.props.activeFleetId
+  }
+
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.shiptabpane)
   }
@@ -181,11 +185,14 @@ export class reactClass extends Component {
           >
             <ShipTabContent
               className="ship-tab-content"
-              transition={this.props.enableTransition}
-              position={this.props.activeFleetId}
             >
               {times(4).map(i => (
-                <ShipDeck className="ship-deck" key={i}>
+                <ShipDeck
+                  className="ship-deck"
+                  key={i}
+                  transition={this.props.enableTransition && (this.props.activeFleetId === i || this.prevFleetId === i)}
+                  left={this.props.activeFleetId > i}
+                  right={this.props.activeFleetId < i}>
                   <FleetShipView
                     fleetId={i}
                     enableAvatar={this.props.enableAvatar}
@@ -193,7 +200,12 @@ export class reactClass extends Component {
                   />
                 </ShipDeck>
               ))}
-              <ShipDeck className="ship-deck ship-lbac" key={4}>
+              <ShipDeck
+                className="ship-deck ship-lbac"
+                key={4}
+                transition={this.props.enableTransition && (this.props.activeFleetId === 4 || this.prevFleetId === 4)}
+                left={this.props.activeFleetId > 4}
+                right={this.props.activeFleetId < 4}>
                 <LBView enableAvatar={this.props.enableAvatar} width={this.props.width} />
               </ShipDeck>
             </ShipTabContent>
