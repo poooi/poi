@@ -29,22 +29,12 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const PoiTabContents = styled.div`
-  display: -webkit-box;
   flex: 1 0 0;
-  overflow: scroll;
-  position: relative;
-`
-
-const PoiTabChildSizer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  left: 0;
-  margin-right: -100%;
   overflow: hidden;
-  padding: 0;
-  top: 0;
-  width: 100%;
+  position: relative;
+  display: flex;
+  height: 100;
+  width: 100;
 `
 
 const PoiTabChildPositioner = styled.div`
@@ -52,13 +42,13 @@ const PoiTabChildPositioner = styled.div`
   flex: 1;
   flex-direction: column;
   opacity: 1;
-  position: relative;
+  position: absolute;
   width: 100%;
+  height: 100%;
   ${({transition}) => transition && css`
-    transition: 0.3s 0.2s ease-in-out;
+    transition: 0.4s 0.2s ease-in-out;
   `}
-  ${({transparent}) => transparent && css`
-    opacity: 0;
+  ${({disabled}) => disabled && css`
     pointer-events: none;
   `}
 `
@@ -68,7 +58,7 @@ const PoiAppTabpane = styled.div`
   height: 100%;
   overflow-y: scroll;
   width: 100%;
-  padding: 1px 6px;
+  padding: 1px 7px;
 `
 
 const ShipViewTabpanel = styled(PoiAppTabpane)`
@@ -208,26 +198,27 @@ class TabContentsUnion extends Component {
     let onTheLeft = true
     const activeKey = this.activeKey()
     const prevKey = this.prevKey()
+    const content = []
+    Children.forEach(this.props.children, (child, index) => {
+      if (child.key === activeKey)
+        onTheLeft = false
+      const positionLeft = child.key === activeKey ?  '0%'
+        : onTheLeft ? '-100%' : '100%'
+      content.push(
+        <PoiTabChildPositioner
+          key={child.key}
+          className="poi-tab-child-positioner"
+          transition={(child.key === activeKey || child.key === prevKey) && this.props.enableTransition}
+          disabled={child.key !== activeKey}
+          style={{transform: `translate3d(${positionLeft}, 0, 0)`}}>
+          {child}
+        </PoiTabChildPositioner>
+      )
+    })
     return (
       <PoiTabContents className="poi-tab-contents">
         {
-          Children.map(this.props.children, (child, index) => {
-            if (child.key === activeKey)
-              onTheLeft = false
-            const positionLeft = child.key === activeKey ?  '0%'
-              : onTheLeft ? '-100%' : '100%'
-            return (
-              <PoiTabChildSizer className="poi-tab-child-sizer" key={child.key}>
-                <PoiTabChildPositioner
-                  className="poi-tab-child-positioner"
-                  transition={(child.key === activeKey || child.key === prevKey) && this.props.enableTransition}
-                  transparent={child.key !== activeKey}
-                  style={{transform: `translate3d(${positionLeft}, 0, 0)`}}>
-                  {child}
-                </PoiTabChildPositioner>
-              </PoiTabChildSizer>
-            )
-          })
+          content
         }
       </PoiTabContents>
     )
