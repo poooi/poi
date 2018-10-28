@@ -21,7 +21,7 @@ import {
 } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
-import { ShipCard, ShipWrapper, ShipTabContainer, ShipTabContent, ShipDeck, ShipDetails, AirbaseArea, FleetNameButtonContainer, FleetNameButton } from './styled-components'
+import { ShipCard, ShipWrapper, ShipTabContainer, ShipTabContent, ShipDeck, ShipDetails, AirbaseArea, FleetNameButtonContainer, FleetNameButton } from 'views/components/ship-parts/styled-components'
 
 const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 

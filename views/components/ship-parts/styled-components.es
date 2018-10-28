@@ -23,9 +23,10 @@ export const ShipTabContainer = styled.div`
 `
 
 export const ShipTabContent = styled.div`
-  display: -webkit-box;
+  display: flex;
   flex-flow: row;
   height: 100%;
+  flex: 1;
   position: relative;
 `
 
@@ -40,9 +41,9 @@ export const ShipDeck = styled.div`
     transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
   `}
   ${({left, right}) => left ? css`
-    transform: translateX(-100%);
+    transform: translateX(calc(-100% - 10px));
   ` : right &&  css`
-    transform: translateX(100%);
+    transform: translateX(calc(100% + 10px));
   `}
 `
 

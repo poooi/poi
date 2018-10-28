@@ -10,7 +10,7 @@ import {
 } from 'views/utils/selectors'
 import { isOASWWith } from 'views/utils/oasw'
 import { translate } from 'react-i18next'
-import { ShipLabel } from './styled-components'
+import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
 const isOASWFuncSelector = createSelector(
   allCVEIdsSelector,

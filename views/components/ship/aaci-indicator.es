@@ -8,7 +8,7 @@ import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
-import { ShipLabel, AACITypeName } from './styled-components'
+import { ShipLabel, AACITypeName } from 'views/components/ship-parts/styled-components'
 import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 
 const getAvailableTranslation = memoize(

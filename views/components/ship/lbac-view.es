@@ -5,7 +5,6 @@ import { getHpStyle, getTyku, LBAC_INTENTS, LBAC_STATUS_NAMES } from 'views/util
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
 import { translate } from 'react-i18next'
-import classNames from 'classnames'
 import { get } from 'lodash'
 import { Tag, ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
@@ -20,7 +19,7 @@ import {
   LandBaseStat,
   ShipHP,
   ShipSlot,
-} from './styled-components'
+} from 'views/components/ship-parts/styled-components'
 
 const SquadSelectorFactory = memoize(squardId =>
   createSelector(
@@ -41,11 +40,6 @@ export const SquardRow = compose(
   const tyku = getTyku([equipsData], api_action_kind)
   const hpPercentage = api_nowhp / api_maxhp * 100
   const hideShipName = enableAvatar && compact
-  const lbacInfoClass = classNames('ship-info', 'lbac-info', {
-    'ship-avatar-padding': enableAvatar,
-    'ship-info-show': !hideShipName,
-    'ship-info-hidden': hideShipName,
-  })
   return (
     <Tooltip
       position={Position.TOP}
@@ -70,7 +64,7 @@ export const SquardRow = compose(
           !!get(equipsData, '0.0.api_slotitem_id') && (
           <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} />
         )}
-        <ShipInfo className={lbacInfoClass} avatar={enableAvatar} show={!hideShipName}>
+        <ShipInfo className="ship-info lbac-info" avatar={enableAvatar} show={!hideShipName}>
           {!hideShipName && (
             <>
               <ShipName className="ship-name">{api_name}</ShipName>
@@ -99,7 +93,7 @@ export const SquardRow = compose(
               </Tag>
             </div>
           </ShipHPTextRow>
-          <span className="hp-progress top-space">
+          <span className="hp-progress">
             <ProgressBar
               stripes={false}
               intent={getHpStyle(hpPercentage)}

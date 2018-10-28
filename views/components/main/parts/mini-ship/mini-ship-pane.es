@@ -1,15 +1,21 @@
 import { connect } from 'react-redux'
 import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
-import React from 'react'
+import React, { Fragment } from 'react'
 import { get } from 'lodash'
 import { translate } from 'react-i18next'
 import { compose } from 'redux'
+import styled from 'styled-components'
 
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 
 const miniShipRowWidthSelector = state => get(state, 'layout.minishippane.width', 250)
+
+const ShipDetailsMini = styled(ScrollShadow)`
+  flex: 1;
+  overflow: scroll;
+`
 
 export const PaneBodyMini = connect(() => {
   return (state, { fleetId }) => ({
@@ -19,10 +25,8 @@ export const PaneBodyMini = connect(() => {
   })
 })(({ fleetId, shipsId, enableAvatar, width }) => (
   <>
-    <div className="fleet-name">
-      <FleetStat fleetId={fleetId} isMini={true} />
-    </div>
-    <ScrollShadow
+    <FleetStat fleetId={fleetId} isMini={true} />
+    <ShipDetailsMini
       className="ship-details-mini"
       observerPath={['layout.minishippane', `info.fleets.${fleetId}.api_ship`]}
     >
@@ -34,9 +38,16 @@ export const PaneBodyMini = connect(() => {
           compact={width < 240}
         />
       ))}
-    </ScrollShadow>
+    </ShipDetailsMini>
   </>
 ))
+
+const AirbaseArea = styled.div`
+  width: 100%;
+  white-space: nowrap;
+  margin-top: 0;
+  text-align: left;
+`
 
 export const LBViewMini = compose(
   translate(['resources']),
@@ -47,7 +58,7 @@ export const LBViewMini = compose(
     width: miniShipRowWidthSelector(state),
   })),
 )(({ areaIds, mapareas, t, enableAvatar, width }) => (
-  <ScrollShadow
+  <ShipDetailsMini
     className="ship-details-mini"
     observerPath={['layout.minishippane', 'info.airbase']}
   >
@@ -57,13 +68,13 @@ export const LBViewMini = compose(
         (id === areaIds[i - 1] ? (
           <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
         ) : (
-          <div key={i}>
-            <div style={{ color: window.isDarkTheme ? '#FFF' : '#000' }} className="airbase-area">
+          <Fragment key={i}>
+            <AirbaseArea className="airbase-area">
               [{id}] {mapareas[id] ? t(`resources:${mapareas[id].api_name}`) : ''}
-            </div>
+            </AirbaseArea>
             <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
-          </div>
+          </Fragment>
         )),
     )}
-  </ScrollShadow>
+  </ShipDetailsMini>
 ))
