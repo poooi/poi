@@ -46,7 +46,7 @@ const PoiTabChildPositioner = styled.div`
   height: 100%;
   transform: translate3d(0, 0, 0);
   ${({transition}) => transition && css`
-    transition: transform 0.4s 0.2s ease-in-out;
+    transition: transform 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
   `}
   ${({left, right}) => left ? css`
     transform: translate3d(-100%, 0, 0);
