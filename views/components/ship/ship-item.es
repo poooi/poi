@@ -194,13 +194,13 @@ export class ShipRow extends Component {
                   </ShipCond>
                 </div>
               </ShipHPTextRow>
-              <span className="hp-progress" style={labelStatusStyle}>
+              <div className="hp-progress" style={labelStatusStyle}>
                 <ProgressBar
                   stripes={false}
                   intent={getHpStyle(hpPercentage)}
                   value={hpPercentage / 100}
                 />
-              </span>
+              </div>
             </ShipHPRow>
           </ShipStatWToolTip>
 
