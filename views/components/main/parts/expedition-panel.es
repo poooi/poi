@@ -1,3 +1,4 @@
+/* global ROOT, getStore */
 import React, { Component } from 'react'
 import { join } from 'path-extra'
 import { createSelector } from 'reselect'
@@ -19,8 +20,6 @@ import { timeToString } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import '../assets/expedition-panel.css'
-
-const { ROOT } = window
 
 const fleetsExpeditionSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_mission'))
 const fleetsNamesSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_name'))
@@ -60,6 +59,7 @@ const getTagIntent = (props, timeRemaining) =>
         ? Intent.SUCCESS
         : Intent.NONE
 
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 @translate(['main'])
 @connect(state => {
@@ -127,6 +127,7 @@ export class ExpeditionPanel extends Component {
                       preemptTime: notifyBefore,
                     }
                   }
+                  isActive={isActive}
                 />
               </Tooltip>
             </div>
