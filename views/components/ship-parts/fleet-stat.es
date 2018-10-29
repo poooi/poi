@@ -1,4 +1,4 @@
-/* global ROOT */
+/* global ROOT, getStore */
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -37,6 +37,8 @@ import {
   fleetSlotCountSelectorFactory,
 } from 'views/utils/selectors'
 import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+
+const isActive = () => getStore('ui.activeMainTab') === 'ship-view'
 
 const FleetStats = styled.div`
   white-space: nowrap;
@@ -109,6 +111,7 @@ class CountdownLabel extends Component {
     return (
       <span className="expedition-timer">
         <CountdownTimer
+          isActive={isActive}
           countdownId={`resting-fleet-${this.props.fleetId}`}
           completeTime={this.props.completeTime}
           tickCallback={this.tick}

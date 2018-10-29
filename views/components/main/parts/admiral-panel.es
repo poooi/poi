@@ -1,3 +1,4 @@
+/* global getStore */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
@@ -313,6 +314,8 @@ class CountDownControl extends Component {
   }
 }
 
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
+
 const CountdownContent = ({ moments }) => (
   <div>
     {['Practice', 'Quest', 'Senka', 'EO'].map(name => (
@@ -326,6 +329,7 @@ const CountdownContent = ({ moments }) => (
             completeTime={+moments[name]}
             resolveTime={resolveDayTime}
             getLabelStyle={getTagIntent}
+            isActive={isActive}
             minimal={false}
           />
         </span>

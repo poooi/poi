@@ -652,14 +652,14 @@ export class ControlledTabArea extends PureComponent {
         }}
         activeTab={this.props.activeMainTab}>
         <PoiAppTabpane id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
-          <mainview.reactClass activeMainTab={this.props.activeMainTab} />
+          <mainview.reactClass />
         </PoiAppTabpane>
         <ShipViewTabpanel id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
-          <shipview.reactClass activeMainTab={this.props.activeMainTab} />
+          <shipview.reactClass />
         </ShipViewTabpanel>
         { pluginContents }
         <PoiAppTabpane id={settings.name} className="settings-view poi-app-tabpane" key="settings">
-          <settings.reactClass activeMainTab={this.props.activeMainTab}/>
+          <settings.reactClass />
         </PoiAppTabpane>
       </TabContentsUnion>
     ) : (
@@ -673,13 +673,13 @@ export class ControlledTabArea extends PureComponent {
         }}
         activeTab={this.props.activeMainTab}>
         <PoiAppTabpane id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
-          <mainview.reactClass activeMainTab={this.props.activeMainTab} />
+          <mainview.reactClass />
         </PoiAppTabpane>
         <ShipViewTabpanel id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
-          <shipview.reactClass activeMainTab={this.props.activeMainTab} />
+          <shipview.reactClass />
         </ShipViewTabpanel>
         <PoiAppTabpane id={settings.name} className="settings-view poi-app-tabpane" key="settings">
-          <settings.reactClass activeMainTab={this.props.activeMainTab}/>
+          <settings.reactClass />
         </PoiAppTabpane>
       </TabContentsUnion>
     )

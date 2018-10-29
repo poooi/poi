@@ -1,3 +1,4 @@
+/* global getStore */
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
@@ -45,6 +46,8 @@ const getTagIntent = ({ isLSC }, timeRemaining) =>
         : timeRemaining == 0
           ? Intent.SUCCESS
           : Intent.NONE
+
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 @translate(['main'])
 @connect(state => ({
@@ -137,6 +140,7 @@ export class ConstructionPanel extends Component {
                       completeTime: completeTime,
                     }
                   }
+                  isActive={isActive}
                 />
               </InnerWrapper>
             </PanelItem>

@@ -80,7 +80,9 @@ class CountdownTimerInner extends Component {
     this.startTick()
   }
   shouldComponentUpdate = (nextProps, nextState) =>
-    nextProps.countdownId !== this.props.countdownId || nextProps.completeTime !== this.props.completeTime || nextState.timeRemaining !== this.state.timeRemaining
+    nextProps.countdownId !== this.props.countdownId ||
+    nextProps.completeTime !== this.props.completeTime ||
+    nextState.timeRemaining !== this.state.timeRemaining
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.countdownId !== this.props.countdownId || prevProps.completeTime !== this.props.completeTime) {
       this.startTick() // Doesn't matter if it didn't stop
@@ -96,6 +98,9 @@ class CountdownTimerInner extends Component {
     ticker.unreg(this.props.countdownId)
   }
   tick = (currentTime) => {
+    if (typeof this.props.isActive === 'function' && !this.props.isActive()) {
+      return
+    }
     const timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime, currentTime)
     if (timeRemaining < 1) {
       this.stopTick()
@@ -171,6 +176,7 @@ class CountdownNotifierLabelInner extends Component {
         <Tag className="countdown-timer-label" intent={this.state.style} minimal={this.props.minimal}>
           <CountdownTimerInner countdownId={this.props.timerKey}
             completeTime={this.props.completeTime}
+            isActive={this.props.isActive}
             tickCallback={this.tick}
             resolveTime={this.props.resolveTime} />
         </Tag>

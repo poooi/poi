@@ -1,4 +1,4 @@
-const { ROOT } = window
+/* global ROOT, getStore */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { join as joinString, range, get } from 'lodash'
@@ -49,6 +49,9 @@ const getTagIntent = (props, timeRemaining) =>
       : timeRemaining >= 0
         ? Intent.SUCCESS
         : Intent.NONE
+
+
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 @translate(['main'])
 @connect(
@@ -155,6 +158,7 @@ export class RepairPanel extends Component {
                       completeTime: completeTime,
                     }
                   }
+                  isActive={isActive}
                 />
               </Tooltip>
             </PanelItem>
