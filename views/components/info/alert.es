@@ -5,6 +5,13 @@ import i18next from 'views/env-parts/i18next'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { debounce } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
+import { CustomTag } from 'views/components/etc/custom-tag'
+
+const PoiAlertTag = styled(CustomTag)`
+  width: 0;
+  flex: 1;
+  height: 30px;
+`
 
 const Alert = styled.div`
   margin-bottom: 0;
@@ -139,7 +146,6 @@ class PoiAlertInner extends Component {
         this.alertHeight = 30
         this.historyHeight = 152
       }
-      this.props.$('poi-alert').style.height = `${this.alertHeight}px`
     }), 100)
   }
   handleAddAlert = (e) => {
@@ -214,37 +220,39 @@ class PoiAlertInner extends Component {
   }
   render() {
     return (
-      <AlertMain id="alert-main" className="alert-main bp3-popover" ref={ref => { this.alertMain = ref }}>
-        <AlertContainer
-          id="alert-container"
-          className={`bp3-callout bp3-intent-${this.state.current.type} alert-container`}
-          onClick={this.toggleHistory}
-        >
-          <AlertPosition className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
-            <AlertArea id="alert-area" ref={ref => { this.alertArea = ref }} overflow={this.state.overflow ? 1 : 0}>
-              {
-                this.state.overflow ?
-                  <>
-                  <span style={{marginRight: 50}}>
-                    {this.state.current.content}
-                  </span>
-                  <span style={{marginRight: 50}}>
-                    {this.state.current.content}
-                  </span>
-                  </>
-                  : this.state.current.content
-              }
-            </AlertArea>
-          </AlertPosition>
-        </AlertContainer>
-        <AlertLog id="alert-log"
-          ref={ref => { this.alertHistory = ref }}
-          className="alert-log bp3-popover-content"
-          style={this.state.alertHistoryStyle}
-          onClick={this.toggleHistory}>
-          {this.state.history}
-        </AlertLog>
-      </AlertMain>
+      <PoiAlertTag tag="poi-alert">
+        <AlertMain id="alert-main" className="alert-main bp3-popover" ref={ref => { this.alertMain = ref }}>
+          <AlertContainer
+            id="alert-container"
+            className={`bp3-callout bp3-intent-${this.state.current.type} alert-container`}
+            onClick={this.toggleHistory}
+          >
+            <AlertPosition className="alert-position" ref={(ref) => { this.alertPosition = ref }}>
+              <AlertArea id="alert-area" ref={ref => { this.alertArea = ref }} overflow={this.state.overflow ? 1 : 0}>
+                {
+                  this.state.overflow ?
+                    <>
+                    <span style={{marginRight: 50}}>
+                      {this.state.current.content}
+                    </span>
+                    <span style={{marginRight: 50}}>
+                      {this.state.current.content}
+                    </span>
+                    </>
+                    : this.state.current.content
+                }
+              </AlertArea>
+            </AlertPosition>
+          </AlertContainer>
+          <AlertLog id="alert-log"
+            ref={ref => { this.alertHistory = ref }}
+            className="alert-log bp3-popover-content"
+            style={this.state.alertHistoryStyle}
+            onClick={this.toggleHistory}>
+            {this.state.history}
+          </AlertLog>
+        </AlertMain>
+      </PoiAlertTag>
     )
   }
 }
