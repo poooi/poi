@@ -126,7 +126,7 @@ class PoiAlertInner extends Component {
     })
   }
   handleStyleChange = () => {
-    setTimeout(() => {
+    setTimeout(() => requestIdleCallback(() => {
       try {
         const alertHeight =  this.props.$('poi-control').offsetHeight
         const historyHeight = this.alertHistory.offsetHeight
@@ -140,7 +140,7 @@ class PoiAlertInner extends Component {
         this.historyHeight = 152
       }
       this.props.$('poi-alert').style.height = `${this.alertHeight}px`
-    }, 100)
+    }), 100)
   }
   handleAddAlert = (e) => {
     const value = Object.assign({
@@ -174,7 +174,7 @@ class PoiAlertInner extends Component {
     }
   }
   handleOverflow = () => {
-    requestAnimationFrame(() => {
+    requestIdleCallback(() => {
       const containerWidth = this.alertMain.offsetWidth
       if (!this.state.overflow) {
         this.msgWidth = this.alertArea.offsetWidth

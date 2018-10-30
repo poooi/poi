@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
@@ -32,6 +32,11 @@ const PoiControlInner = styled.div`
   white-space: nowrap;
   overflow: hidden;
   transition: 0.3s 0.2s;
+  ${({extend}) => extend ? css`
+    width: 240px;
+  ` : css`
+    width: 90px;
+  `}
 `
 
 // Controller icon bar
@@ -227,7 +232,14 @@ export class PoiControl extends Component {
   }
 
   handleSetExtend = () => {
-    this.setState({extend: !this.state.extend})
+    this.setState({
+      extend: !this.state.extend,
+      transition: true,
+    })
+  }
+
+  handleTransitionEnd = () => {
+    this.setState({ transition: false })
   }
 
   handleTouchbar = (props) => {
@@ -296,7 +308,7 @@ export class PoiControl extends Component {
   }
 
   renderButton = ({ label, ...props }) => (
-    <Tooltip key={label} position={Position.TOP_LEFT} content={label} usePortal={false}>
+    <Tooltip key={label} position={Position.TOP_LEFT} content={label} usePortal={false} disabled={this.state.transition}>
       <Button {...props} minimal />
     </Tooltip>
   )
@@ -382,7 +394,7 @@ export class PoiControl extends Component {
     ]
     return (
       <PoiControlContainer>
-        <PoiControlInner style={{ width: this.state.extend ? 240 : 90 }}>
+        <PoiControlInner extend={this.state.extend} onTransitionEnd={this.handleTransitionEnd}>
           {list.map(this.renderButton)}
         </PoiControlInner>
         <div>
