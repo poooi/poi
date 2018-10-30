@@ -98,15 +98,14 @@ class CountdownTimerInner extends Component {
     ticker.unreg(this.props.countdownId)
   }
   tick = (currentTime) => {
-    if (typeof this.props.isActive === 'function' && !this.props.isActive()) {
-      return
-    }
     const timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime, currentTime)
     if (timeRemaining < 1) {
       this.stopTick()
     }
     if (this.props.completeTime >= 0) {
-      this.setState({ timeRemaining })
+      if (typeof this.props.isActive !== 'function' || this.props.isActive()) {
+        this.setState({ timeRemaining })
+      }
       try {
         if (this.props.tickCallback) {
           this.props.tickCallback(timeRemaining)
