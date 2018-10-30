@@ -157,6 +157,7 @@ export const ShipLabel = styled.span`
       max-width: initial;
       font-size: 80%;
       padding: 0.125em 0.6em;
+      min-height: 10px;
     }
   `}
 `
