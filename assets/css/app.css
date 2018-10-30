@@ -21,22 +21,6 @@ poi-main {
   align-items: center;
 }
 
-kan-game webview {
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-kan-game {
-  display: flex;
-  flex-direction: column;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-}
-
 .webview-wrapper {
   flex-basis: 0;
   flex-grow: 1;
@@ -46,20 +30,6 @@ kan-game {
   max-height: max-content;
   width: 100%;
   position: relative;
-}
-
-poi-info {
-  flex-grow: 0;
-  flex-shrink: 0;
-  transform-origin: 0 0;
-  align-items: stretch;
-  display: flex;
-}
-
-poi-alert {
-  flex: 1;
-  height: 30px;
-  width: 0;
 }
 
 #electron-app-title-bar {

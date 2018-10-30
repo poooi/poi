@@ -13,6 +13,12 @@ import {
   fcdSelector,
   currentNodeSelector,
 } from 'views/utils/selectors'
+import { CustomTag } from 'views/components/etc/custom-tag'
+
+const PoiMapReminderTag = styled(CustomTag)`
+  width: 0;
+  flex: 0 0 135px;
+`
 
 const MapReminder = styled.div`
   position: relative;
@@ -227,36 +233,38 @@ export class PoiMapReminder extends Component {
       tooltipMsg.push(<MapTooltipMsg className="map-tooltip-msg" key="hp">HP: {mapHp[0]} / {mapHp[1]}</MapTooltipMsg>)
     }
     return (
-      <Popover
-        position={Position.TOP_RIGHT}
-        interactionKind={PopoverInteractionKind.HOVER}
-        wrapperTagName="div"
-        targetTagName="div"
-        disabled={!mapData}
-        usePortal={false}
-      >
-        <MapReminder>
-          {
-            mapHp &&
-              <MapHPProgress
-                className="map-hp-progress"
-                animate={false}
-                stripes={false}
-                intent={Intent.PRIMARY}
-                value={mapHp[0] / mapHp[1]} />
-          }
-          <Alert>
-            <span id="map-reminder-area">
-              {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
-            </span>
-          </Alert>
-        </MapReminder>
-        <>
-          <MapRoutes />
-          <MapInfoMsg className="map-info-msg">{ tooltipMsg }</MapInfoMsg>
-          <ItemStat />
-        </>
-      </Popover>
+      <PoiMapReminderTag tag="poi-map-reminder">
+        <Popover
+          position={Position.TOP_RIGHT}
+          interactionKind={PopoverInteractionKind.HOVER}
+          wrapperTagName="div"
+          targetTagName="div"
+          disabled={!mapData}
+          usePortal={false}
+        >
+          <MapReminder>
+            {
+              mapHp &&
+                <MapHPProgress
+                  className="map-hp-progress"
+                  animate={false}
+                  stripes={false}
+                  intent={Intent.PRIMARY}
+                  value={mapHp[0] / mapHp[1]} />
+            }
+            <Alert>
+              <span id="map-reminder-area">
+                {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
+              </span>
+            </Alert>
+          </MapReminder>
+          <>
+            <MapRoutes />
+            <MapInfoMsg className="map-info-msg">{ tooltipMsg }</MapInfoMsg>
+            <ItemStat />
+          </>
+        </Popover>
+      </PoiMapReminderTag>
     )
   }
 }

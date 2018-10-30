@@ -10,6 +10,7 @@ import { get } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
+import { CustomTag } from 'views/components/etc/custom-tag'
 
 const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
@@ -23,20 +24,22 @@ const openItemAsync = (dir, source=null) => {
   })
 }
 
-const PoiControlContainer = styled.div`
+const PoiControlTag = styled(CustomTag)`
+  width: 0;
+  transition: 0.3s 0.2s;
   display: flex;
   flex-direction: row;
+  ${({extend}) => extend ? css`
+    flex: 0 0 270px;
+  ` : css`
+    flex: 0 0 120px;
+  `}
 `
 
 const PoiControlInner = styled.div`
   white-space: nowrap;
   overflow: hidden;
-  transition: 0.3s 0.2s;
-  ${({extend}) => extend ? css`
-    width: 240px;
-  ` : css`
-    width: 90px;
-  `}
+  flex: 1;
 `
 
 // Controller icon bar
@@ -393,14 +396,14 @@ export class PoiControl extends Component {
       },
     ]
     return (
-      <PoiControlContainer>
-        <PoiControlInner extend={this.state.extend} onTransitionEnd={this.handleTransitionEnd}>
+      <PoiControlTag tag="poi-control" extend={this.state.extend} onTransitionEnd={this.handleTransitionEnd}>
+        <PoiControlInner>
           {list.map(this.renderButton)}
         </PoiControlInner>
         <div>
           <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
         </div>
-      </PoiControlContainer>
+      </PoiControlTag>
     )
   }
 }
