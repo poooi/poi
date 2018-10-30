@@ -9,13 +9,12 @@ import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tag, Card, Position, Intent } from '@blueprintjs/core'
 import { compose } from 'redux'
+import styled from 'styled-components'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { CountdownNotifierLabel } from './countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
 import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
-
-import '../assets/admiral-panel.css'
 
 const rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
 
@@ -183,12 +182,12 @@ const ExpContent = compose(
       <>
         {level < 120 && (
           <InfoTooltipEntry className="info-tooltip-entry">
-            <InfoTooltipItem className="info-tooltip-item">{t('main:Next')}</InfoTooltipItem>
+            <CountdownRow className="info-tooltip-item">{t('main:Next')}</CountdownRow>
             <span>{totalExp[level] - exp}</span>
           </InfoTooltipEntry>
         )}
         <InfoTooltipEntry className="info-tooltip-entry">
-          <InfoTooltipItem className="info-tooltip-item">{t('main:Total Exp')}</InfoTooltipItem>
+          <CountdownRow className="info-tooltip-item">{t('main:Total Exp')}</CountdownRow>
           <span>{exp}</span>
         </InfoTooltipEntry>
       </>
@@ -247,6 +246,27 @@ const getNewMomentMap = {
   EO: getNextEO,
 }
 
+const TeitokuTimer = styled.span`
+  position: absolute;
+  right: 0.5em;
+`
+
+const CountdownItem = styled(InfoTooltipEntry)`
+  &:not(:last-child) {
+    margin-bottom: 0.5em;
+  }
+`
+
+const CountdownRow = styled(InfoTooltipItem)`
+  margin-right: 6px;
+`
+
+const TeitokuCard = styled(Card)`
+  display: flex;
+  align-items: center;
+`
+
+
 class CountDownControl extends Component {
   constructor(props) {
     super(props)
@@ -303,13 +323,13 @@ class CountDownControl extends Component {
   render() {
     const { intent } = this.state
     return (
-      <span className="teitoku-timer">
+      <TeitokuTimer className="teitoku-timer">
         <Tooltip position={Position.LEFT_BOTTOM} content={<CountdownContent moments={this.moments} />}>
           <Tag intent={intent} minimal>
             <FontAwesome name="calendar" />
           </Tag>
         </Tooltip>
-      </span>
+      </TeitokuTimer>
     )
   }
 }
@@ -319,10 +339,10 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 const CountdownContent = ({ moments }) => (
   <div>
     {['Practice', 'Quest', 'Senka', 'EO'].map(name => (
-      <InfoTooltipEntry className="info-tooltip-entry countdown-item" key={name}>
-        <InfoTooltipItem className="info-tooltip-item">
+      <CountdownItem className="info-tooltip-entry countdown-item" key={name}>
+        <CountdownRow className="info-tooltip-item">
           <Trans>main:Next {name}</Trans>
-        </InfoTooltipItem>
+        </CountdownRow>
         <span>
           <CountdownNotifierLabel
             timerKey={`next-${name}`}
@@ -333,7 +353,7 @@ const CountdownContent = ({ moments }) => (
             minimal={false}
           />
         </span>
-      </InfoTooltipEntry>
+      </CountdownItem>
     ))}
   </div>
 )
@@ -380,7 +400,7 @@ export const AdmiralPanel = translate(['main'])(
     const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : Intent.NONE
 
     return (
-      <Card elevation={editable ? 2 : 0} interactive={editable}>
+      <TeitokuCard elevation={editable ? 2 : 0} interactive={editable}>
         <Tooltip content={<ExpContent />} position={Position.RIGHT}>
           {
             level >= 0 ? (
@@ -407,7 +427,7 @@ export const AdmiralPanel = translate(['main'])(
             {equipNum || '?'} / {maxSlotitem || '?'}
           </Tag>
         </span>
-      </Card>
+      </TeitokuCard>
     )
   }),
 )
