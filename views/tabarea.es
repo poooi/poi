@@ -55,6 +55,11 @@ const PoiTabChildPositioner = styled.div`
     transform: translate3d(100%, 0, 0);
     pointer-events: none;
   `}
+  ${({active}) => !active && css`
+    & > * {
+      display: none;
+    }
+  `}
 `
 
 const PoiAppTabpane = styled.div`
@@ -171,14 +176,25 @@ class TabContentsUnion extends Component {
     activeTab: PropTypes.string.isRequired,
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.activeTab !== state.activeTab) {
+      return {
+        ...state,
+        prevTab: state.activeTab,
+        activeTab: props.activeTab,
+      }
+    }
+  }
+
+  state = {
+    activeTab: this.props.activeTab,
+    prevTab: null,
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return !shallowEqual(omit(this.props, ['children']), omit(nextProps, ['children']))
       || !shallowEqual(this.state, nextState)
       || !isEqual(this.childrenKey(this.props.children), this.childrenKey(nextProps.children))
-  }
-
-  componentDidUpdate() {
-    this.prevTab = this.props.activeTab
   }
 
   childrenKey = (children) => {
@@ -190,12 +206,16 @@ class TabContentsUnion extends Component {
       (child) => child.key === key ? child : null).filter(Boolean)[0]
   }
 
+  handleTransitionEnd = () => {
+    this.setState({ prevTab: null })
+  }
+
   activeKey = () => {
-    return this.props.activeTab || (this.props.children[0] || {}).key
+    return this.state.activeTab || (this.props.children[0] || {}).key
   }
 
   prevKey = () => {
-    return this.prevTab || (this.props.children[0] || {}).key
+    return this.state.prevTab
   }
 
   render() {
@@ -212,7 +232,9 @@ class TabContentsUnion extends Component {
           key={child.key}
           className="poi-tab-child-positioner"
           transition={(child.key === activeKey || child.key === prevKey) && this.props.enableTransition}
+          active={child.key === activeKey || child.key === prevKey}
           left={child.key !== activeKey && onTheLeft}
+          onTransitionEnd={this.handleTransitionEnd}
           right={child.key !== activeKey && !onTheLeft}>
           {child}
         </PoiTabChildPositioner>
