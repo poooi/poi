@@ -206,8 +206,10 @@ class TabContentsUnion extends Component {
       (child) => child.key === key ? child : null).filter(Boolean)[0]
   }
 
-  handleTransitionEnd = () => {
-    this.setState({ prevTab: null })
+  handleTransitionEnd = (key) => {
+    if (this.state.prevTab === key) {
+      this.setState({ prevTab: null })
+    }
   }
 
   activeKey = () => {
@@ -234,7 +236,7 @@ class TabContentsUnion extends Component {
           transition={(child.key === activeKey || child.key === prevKey) && this.props.enableTransition}
           active={child.key === activeKey || child.key === prevKey}
           left={child.key !== activeKey && onTheLeft}
-          onTransitionEnd={this.handleTransitionEnd}
+          onTransitionEnd={() => this.handleTransitionEnd(child.key)}
           right={child.key !== activeKey && !onTheLeft}>
           {child}
         </PoiTabChildPositioner>
