@@ -135,8 +135,10 @@ export class reactClass extends Component {
     prevFleetId: null,
   }
 
-  handleTransitionEnd = () => {
-    this.setState({ prevFleetId: null })
+  handleTransitionEnd = (i) => {
+    if (i === this.state.prevFleetId) {
+      this.setState({ prevFleetId: null })
+    }
   }
 
   handleClick = idx => {
@@ -205,7 +207,7 @@ export class reactClass extends Component {
               {times(4).map(i => (
                 <ShipDeck
                   className="ship-deck"
-                  onTransitionEnd={this.handleTransitionEnd}
+                  onTransitionEnd={() => this.handleTransitionEnd(i)}
                   key={i}
                   transition={this.props.enableTransition && (activeFleetId === i || prevFleetId === i)}
                   active={activeFleetId === i || prevFleetId === i}
@@ -220,7 +222,7 @@ export class reactClass extends Component {
               ))}
               <ShipDeck
                 className="ship-deck ship-lbac"
-                onTransitionEnd={this.handleTransitionEnd}
+                onTransitionEnd={() => this.handleTransitionEnd(4)}
                 key={4}
                 transition={this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
                 active={activeFleetId === 4 || prevFleetId === 4}
