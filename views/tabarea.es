@@ -179,11 +179,11 @@ class TabContentsUnion extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.activeTab !== state.activeTab) {
       return {
-        ...state,
         prevTab: state.activeTab,
         activeTab: props.activeTab,
       }
     }
+    return null
   }
 
   state = {
