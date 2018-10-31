@@ -66,11 +66,11 @@ export class MiniShip extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.activeFleetId !== state.activeFleetId) {
       return {
-        ...state,
         prevFleetId: state.activeFleetId,
         activeFleetId: props.activeFleetId,
       }
     }
+    return null
   }
 
   constructor(props) {
