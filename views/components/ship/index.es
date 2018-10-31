@@ -115,13 +115,32 @@ export class reactClass extends Component {
     width: PropTypes.number,
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.activeFleetId !== state.activeFleetId) {
+      return {
+        ...state,
+        prevFleetId: state.activeFleetId,
+        activeFleetId: props.activeFleetId,
+      }
+    }
+  }
+
   constructor(props) {
     super(props)
     this.nowTime = 0
   }
 
+  state = {
+    activeFleetId: this.props.activeFleetId,
+    prevFleetId: null,
+  }
+
+  handleTransitionEnd = () => {
+    this.setState({ prevFleetId: null })
+  }
+
   handleClick = idx => {
-    if (idx != this.props.activeFleetId) {
+    if (idx != this.state.activeFleetId) {
       dispatch({
         type: '@@TabSwitch',
         tabInfo: {
@@ -140,10 +159,6 @@ export class reactClass extends Component {
     })
   }
 
-  componentDidUpdate() {
-    this.prevFleetId = this.props.activeFleetId
-  }
-
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.shiptabpane)
   }
@@ -153,6 +168,7 @@ export class reactClass extends Component {
   }
 
   render() {
+    const { activeFleetId, prevFleetId } = this.state
     return (
       <ShipWrapper className="ship-wrapper">
         <ShipCard onDoubleClick={this.changeMainView} className="ship-card">
@@ -164,7 +180,7 @@ export class reactClass extends Component {
                   fleetId={i}
                   disabled={i + 1 > this.props.fleetCount}
                   onClick={e => this.handleClick(i)}
-                  activeFleetId={this.props.activeFleetId}
+                  activeFleetId={activeFleetId}
                 />
               ))}
             </FleetNameButton>
@@ -173,7 +189,7 @@ export class reactClass extends Component {
               fleetId={4}
               disabled={this.props.airBaseCnt === 0}
               onClick={e => this.handleClick(4)}
-              activeFleetId={this.props.activeFleetId}
+              activeFleetId={activeFleetId}
               isMini={false}
             />
           </FleetNameButtonContainer>
@@ -189,10 +205,12 @@ export class reactClass extends Component {
               {times(4).map(i => (
                 <ShipDeck
                   className="ship-deck"
+                  onTransitionEnd={this.handleTransitionEnd}
                   key={i}
-                  transition={this.props.enableTransition && (this.props.activeFleetId === i || this.prevFleetId === i)}
-                  left={this.props.activeFleetId > i}
-                  right={this.props.activeFleetId < i}>
+                  transition={this.props.enableTransition && (activeFleetId === i || prevFleetId === i)}
+                  active={activeFleetId === i || prevFleetId === i}
+                  left={activeFleetId > i}
+                  right={activeFleetId < i}>
                   <FleetShipView
                     fleetId={i}
                     enableAvatar={this.props.enableAvatar}
@@ -202,10 +220,12 @@ export class reactClass extends Component {
               ))}
               <ShipDeck
                 className="ship-deck ship-lbac"
+                onTransitionEnd={this.handleTransitionEnd}
                 key={4}
-                transition={this.props.enableTransition && (this.props.activeFleetId === 4 || this.prevFleetId === 4)}
-                left={this.props.activeFleetId > 4}
-                right={this.props.activeFleetId < 4}>
+                transition={this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
+                active={activeFleetId === 4 || prevFleetId === 4}
+                left={activeFleetId > 4}
+                right={activeFleetId < 4}>
                 <LBView enableAvatar={this.props.enableAvatar} width={this.props.width} />
               </ShipDeck>
             </ShipTabContent>

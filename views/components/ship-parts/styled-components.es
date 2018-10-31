@@ -46,6 +46,11 @@ export const ShipDeck = styled.div`
   ` : right &&  css`
     transform: translateX(calc(100% + 10px));
   `}
+  ${({active}) => !active && css`
+    & > * {
+      display: none;
+    }
+  `}
 `
 
 export const ShipDetails = styled(ScrollShadow)`
