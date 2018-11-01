@@ -104,7 +104,7 @@ class CountdownTimerInner extends Component {
       this.stopTick()
     }
     if (this.props.completeTime >= 0) {
-      if (typeof this.props.isActive !== 'function' || this.props.isActive()) {
+      if (typeof this.props.isActive !== 'function' || this.props.isActive() || timeRemaining < 1) {
         this.setState({ timeRemaining })
       }
       try {
