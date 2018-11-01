@@ -18,10 +18,15 @@ class Ticker {
     if (!this.counting) {
       return
     }
-    requestIdleCallback(() => {
-      this.tick()
-      setTimeout(this.count, 1000)
-    })
+    if (document.hidden) {
+      this.tickAndSchedule()
+    } else {
+      requestIdleCallback(this.tickAndSchedule)
+    }
+  }
+  tickAndSchedule = () => {
+    this.tick()
+    setTimeout(this.count, 1000)
   }
   start = () => {
     this.counting = true
@@ -43,10 +48,6 @@ class Ticker {
     }
   }
 }
-
-export const ticker = new Ticker()
-window.ticker = ticker
-
 
 class CountdownTimerInner extends Component {
   constructor(props) {
@@ -187,3 +188,7 @@ class CountdownNotifierLabelInner extends Component {
 export function CountdownNotifierLabel(props) {
   return <CountdownNotifierLabelInner {...props} key={props.completeTime} />
 }
+
+export const ticker = new Ticker()
+
+window.ticker = ticker
