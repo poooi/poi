@@ -21,7 +21,7 @@ class Ticker {
     if (document.hidden) {
       this.tickAndSchedule()
     } else {
-      requestIdleCallback(this.tickAndSchedule)
+      requestAnimationFrame(this.tickAndSchedule)
     }
   }
   tickAndSchedule = () => {
