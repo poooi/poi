@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Popover, ProgressBar, Position, PopoverInteractionKind, Intent } from '@blueprintjs/core'
+import { ProgressBar, Position, PopoverInteractionKind, Intent } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
@@ -14,7 +14,7 @@ import {
   currentNodeSelector,
 } from 'views/utils/selectors'
 import { CustomTag } from 'views/components/etc/custom-tag'
-import { WindowEnv } from 'views/components/etc/window-env'
+import { Popover } from 'views/components/etc/overlay'
 
 const PoiMapReminderTag = styled(CustomTag)`
   width: 0;
@@ -235,40 +235,35 @@ export class PoiMapReminder extends Component {
     }
     return (
       <PoiMapReminderTag tag="poi-map-reminder">
-        <WindowEnv.Consumer>
-          {({ mountPoint }) => (
-            <Popover
-              position={Position.TOP_RIGHT}
-              interactionKind={PopoverInteractionKind.HOVER}
-              wrapperTagName="div"
-              targetTagName="div"
-              disabled={!mapData}
-              portalContainer={mountPoint}
-            >
-              <MapReminder>
-                {
-                  mapHp &&
+        <Popover
+          position={Position.TOP_RIGHT}
+          interactionKind={PopoverInteractionKind.HOVER}
+          wrapperTagName="div"
+          targetTagName="div"
+          disabled={!mapData}
+        >
+          <MapReminder>
+            {
+              mapHp &&
                     <MapHPProgress
                       className="map-hp-progress"
                       animate={false}
                       stripes={false}
                       intent={Intent.PRIMARY}
                       value={mapHp[0] / mapHp[1]} />
-                }
-                <Alert>
-                  <span id="map-reminder-area">
-                    {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
-                  </span>
-                </Alert>
-              </MapReminder>
+            }
+            <Alert>
+              <span id="map-reminder-area">
+                {this.getMapText(mapData, ['', this.props.t('丁'), this.props.t('丙'), this.props.t('乙'), this.props.t('甲')])}
+              </span>
+            </Alert>
+          </MapReminder>
               <>
                 <MapRoutes />
                 <MapInfoMsg className="map-info-msg">{ tooltipMsg }</MapInfoMsg>
                 <ItemStat />
               </>
-            </Popover>
-          )}
-        </WindowEnv.Consumer>
+        </Popover>
       </PoiMapReminderTag>
     )
   }
