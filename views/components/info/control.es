@@ -11,6 +11,7 @@ import { gameRefreshPage, gameReloadFlash } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
+import { WindowEnv } from 'views/components/etc/window-env'
 
 const { openExternal } = shell
 
@@ -301,9 +302,13 @@ export class PoiControl extends Component {
   }
 
   renderButton = ({ label, ...props }) => (
-    <Tooltip key={label} position={Position.TOP_LEFT} content={label} usePortal={false} disabled={this.state.transition}>
-      <Button {...props} minimal />
-    </Tooltip>
+    <WindowEnv.Consumer key={label}>
+      {({ mountPoint }) => (
+        <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={this.state.transition} portalContainer={mountPoint}>
+          <Button {...props} minimal />
+        </Tooltip>
+      )}
+    </WindowEnv.Consumer>
   )
 
   componentDidMount = () => {
