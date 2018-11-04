@@ -4,14 +4,14 @@ import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { shell, remote, clipboard, nativeImage } from 'electron'
-import { Button, Tooltip, Position } from '@blueprintjs/core'
+import { Button, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
-import { WindowEnv } from 'views/components/etc/window-env'
+import { Tooltip } from 'views/components/etc/overlay'
 
 const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
@@ -312,13 +312,9 @@ export class PoiControl extends Component {
   }
 
   renderButton = ({ label, ...props }) => (
-    <WindowEnv.Consumer key={label}>
-      {({ mountPoint }) => (
-        <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={this.state.transition} portalContainer={mountPoint}>
-          <Button {...props} minimal />
-        </Tooltip>
-      )}
-    </WindowEnv.Consumer>
+    <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={this.state.transition}>
+      <Button {...props} minimal />
+    </Tooltip>
   )
 
   componentDidMount = () => {
