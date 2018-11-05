@@ -25,7 +25,18 @@ export class PluginSettingWrapper extends Component {
 
   shouldComponentUpdate = (nextProps, nextState) =>
     this.props.plugin.timestamp !== nextProps.plugin.timestamp ||
-    nextState.hasError === true
+    nextState.hasError === true ||
+    nextState.hasError !== this.state.hasError
+  
+  componentDidUpdate = (prevProps) => {
+    if (this.state.hasError && this.props.plugin.timestamp !== prevProps.plugin.timestamp) {
+      this.setState({
+        hasError: false,
+        error: null,
+        info: null,
+      })
+    }
+  }
 
   render() {
     const { hasError, error, info } = this.state
