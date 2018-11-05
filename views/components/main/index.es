@@ -14,7 +14,8 @@ import { TaskPanel } from './parts/task-panel'
 import { MiniShip } from './parts/mini-ship'
 import { ResourcePanel } from './parts/resource-panel'
 import { AdmiralPanel } from './parts/admiral-panel'
-import { DockPanel } from './parts/dock-panel'
+import { RepairPanel } from './parts/repair-panel'
+import { ConstructionPanel } from './parts/construction-panel'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -46,13 +47,14 @@ export class reactClass extends Component {
 
   componentWillUnmount() {
     layoutResizeObserver.unobserve(this.mainpane)
-    layoutResizeObserver.unobserve(this.combinedpane)
   }
 
   componentDidMount() {
-    this.combinedpane = document.querySelector('.main-view .combined-panels')
+    // polyfill for old layouts
+    if (!this.props.layouts.sm.find(a => a.i === 'repair-panel') || !this.props.layouts.lg.find(a => a.i === 'repair-panel')) {
+      config.set('poi.mainpanel.layout', defaultLayout)
+    }
     layoutResizeObserver.observe(this.mainpane)
-    layoutResizeObserver.observe(this.combinedpane)
   }
 
   render() {
@@ -91,8 +93,11 @@ export class reactClass extends Component {
           >
             <MiniShip editable={this.props.editable} />
           </MiniShipContainer>
-          <div className="combined-panels panel-col" key="combined-panels">
-            <DockPanel editable={this.props.editable} />
+          <div className="repair-panel panel-col" key="repair-panel">
+            <RepairPanel editable={this.props.editable} />
+          </div>
+          <div className="construction-panel panel-col" key="construction-panel">
+            <ConstructionPanel editable={this.props.editable} />
           </div>
           <div className="expedition-panel" key="expedition-panel">
             <ExpeditionPanel editable={this.props.editable} />
