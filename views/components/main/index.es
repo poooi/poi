@@ -31,8 +31,15 @@ const MiniShipContainer = styled.div`
   }
 `
 
+// polyfill for old layouts
+let layoutConfig = config.get('poi.mainpanel.layout', defaultLayout)
+if (!layoutConfig.sm.find(a => a.i === 'repair-panel') || !layoutConfig.lg.find(a => a.i === 'repair-panel')) {
+  config.set('poi.mainpanel.layout', defaultLayout)
+  layoutConfig = defaultLayout
+}
+
 @connect((state, props) => ({
-  layouts: get(state, 'config.poi.mainpanel.layout', defaultLayout),
+  layouts: layoutConfig,
   editable: get(state, 'config.poi.layout.editable', false),
   mainpanewidth: get(state, 'layout.mainpane.width', 450),
 }))
@@ -50,10 +57,6 @@ export class reactClass extends Component {
   }
 
   componentDidMount() {
-    // polyfill for old layouts
-    if (!this.props.layouts.sm.find(a => a.i === 'repair-panel') || !this.props.layouts.lg.find(a => a.i === 'repair-panel')) {
-      config.set('poi.mainpanel.layout', defaultLayout)
-    }
     layoutResizeObserver.observe(this.mainpane)
   }
 
