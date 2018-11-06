@@ -30,6 +30,20 @@ const InnerWrapper = styled.div`
 const Wrapper = styled(Card)`
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+`
+
+const FAWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  font-size: 50px;
+  opacity: 0.15;
+  z-index: -1;
+  text-align: right;
 `
 
 const Panel = styled.div`
@@ -37,6 +51,7 @@ const Panel = styled.div`
   height: 100%;
   display: flex;
   flex-wrap: wrap;
+  overflow: scroll;
   justify-content: center;
 `
 
@@ -186,6 +201,9 @@ export class ConstructionPanel extends Component {
               )
             })}
           </Panel>
+          <FAWrapper>
+            <FA name="industry" />
+          </FAWrapper>
         </Wrapper>
       </ResizeSensor>
     )

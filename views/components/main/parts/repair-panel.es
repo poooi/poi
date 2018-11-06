@@ -33,6 +33,8 @@ const PanelItem = styled.div`
 const Wrapper = styled(Card)`
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 `
 
 const Panel = styled.div`
@@ -40,7 +42,20 @@ const Panel = styled.div`
   height: 100%;
   display: flex;
   flex-wrap: wrap;
+  overflow: scroll;
   justify-content: center;
+`
+
+const FAWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 52px;
+  height: 52px;
+  font-size: 52px;
+  opacity: 0.15;
+  z-index: -1;
+  text-align: right;
 `
 
 const inRepairShipsDataSelector = createSelector([inRepairShipsIdSelector, shipsSelector], (inRepairShipsId, ships) =>
@@ -203,6 +218,9 @@ export class RepairPanel extends Component {
               )
             })}
           </Panel>
+          <FAWrapper>
+            <FA name="fill" />
+          </FAWrapper>
         </Wrapper>
       </ResizeSensor>
     )
