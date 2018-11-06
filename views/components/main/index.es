@@ -32,14 +32,23 @@ const MiniShipContainer = styled.div`
 `
 
 // polyfill for old layouts
-let layoutConfig = config.get('poi.mainpanel.layout', defaultLayout)
-if (!layoutConfig.sm.find(a => a.i === 'repair-panel') || !layoutConfig.lg.find(a => a.i === 'repair-panel')) {
+function layoutConfigOutdated(layoutConfig) {
+  return !layoutConfig.sm.find(a => a.i === 'repair-panel') || !layoutConfig.lg.find(a => a.i === 'repair-panel')
+}
+
+function layoutConfigFix(layoutConfig) {
+  if (layoutConfigOutdated(layoutConfig)) {
+    return defaultLayout
+  }
+  return layoutConfig
+}
+
+if (layoutConfigOutdated(config.get('poi.mainpanel.layout', defaultLayout))) {
   config.set('poi.mainpanel.layout', defaultLayout)
-  layoutConfig = defaultLayout
 }
 
 @connect((state, props) => ({
-  layouts: layoutConfig,
+  layouts: layoutConfigFix(get(state, 'config.poi.mainpanel.layout', defaultLayout)),
   editable: get(state, 'config.poi.layout.editable', false),
   mainpanewidth: get(state, 'layout.mainpane.width', 450),
 }))
