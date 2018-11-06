@@ -24,6 +24,11 @@ Homebrew Cask (macOS, maintained by @darg20127).
 brew update && brew cask install poi
 ```
 
+[Chocolatey](https://chocolatey.org/packages/poi) (Windows, maintained by @chocolatey and @drel).
+```shell
+choco install poi
+```
+
 ## Features
 
 + Proxy
