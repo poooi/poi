@@ -270,8 +270,7 @@ export const layoutResizeObserver = new ResizeObserver(entries => {
         ? 'webview' : entry.target.className.includes('miniship-fleet-content')
           ? 'minishippane' : entry.target.className.includes('ship-tab-container')
             ? 'shippane' : entry.target.className.includes('main-panel-content')
-              ? 'mainpane': entry.target.className.includes('combined-panels')
-                ? 'combinedpane' : null
+              ? 'mainpane' : null
     value = {
       ...value,
       [key]: {
