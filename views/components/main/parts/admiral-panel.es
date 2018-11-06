@@ -7,7 +7,7 @@ import moment from 'moment-timezone'
 import FontAwesome from 'react-fontawesome'
 import { translate, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Tag, Card, Position, Intent } from '@blueprintjs/core'
+import { Tag, Position, Intent } from '@blueprintjs/core'
 import { compose } from 'redux'
 import styled from 'styled-components'
 
@@ -15,6 +15,7 @@ import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { CountdownNotifierLabel } from './countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
 import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+import { CardWrapper as CardWrapperL } from './styled-components'
 
 const rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
 
@@ -261,7 +262,7 @@ const CountdownRow = styled(InfoTooltipItem)`
   margin-right: 6px;
 `
 
-const TeitokuCard = styled(Card)`
+const CardWrapper = styled(CardWrapperL)`
   display: flex;
   align-items: center;
 `
@@ -400,7 +401,7 @@ export const AdmiralPanel = translate(['main'])(
     const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : Intent.NONE
 
     return (
-      <TeitokuCard elevation={editable ? 2 : 0} interactive={editable}>
+      <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
         <Tooltip content={<ExpContent />} position={Position.RIGHT}>
           {
             level >= 0 ? (
@@ -427,7 +428,7 @@ export const AdmiralPanel = translate(['main'])(
             {equipNum || '?'} / {maxSlotitem || '?'}
           </Tag>
         </span>
-      </TeitokuCard>
+      </CardWrapper>
     )
   }),
 )

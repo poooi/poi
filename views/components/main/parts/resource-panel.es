@@ -1,13 +1,73 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { get, isEqual, range } from 'lodash'
-import { Card, ResizeSensor } from '@blueprintjs/core'
+import { ResizeSensor } from '@blueprintjs/core'
+import styled, { css } from 'styled-components'
 
 import { MaterialIcon } from 'views/components/etc/icon'
+import { CardWrapper as CardWrapperL } from './styled-components'
 
-import '../assets/resource-panel.css'
+const CardWrapper = styled(CardWrapperL)`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 1px;
+  padding-top: 1px;
+`
+
+const MaterialContainer = styled.div`
+  display: flex;
+  margin-bottom: 2px;
+  margin-top: 1px;
+  padding-left: 15px;
+  padding-right: 0;
+  ${({dimension}) => dimension === 1 ? css `
+    flex-basis: 75px;
+  ` : css`
+    flex-basis: ${100 / dimension}%;
+  `}
+`
+
+const MaterialIconGlow = styled(MaterialIcon)`
+  height: 18px;
+  width: 18px;
+  ${({glow}) => glow && css`
+    filter: drop-shadow(0 0 4px #2196f3);
+  `}
+`
+
+const MaterialValue = styled.div`
+  position: relative;
+  width: calc(100% - 23px);
+`
+
+const MaterialAmount = styled.div`
+  height: 100%;
+  left: 5px;
+  min-width: 4em;
+  padding-left: 5px;
+  padding-right: 10px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+`
+
+const AdditionalValue = styled(MaterialAmount)`
+  color: white;
+  opacity: 0;
+  text-align: right;
+  transition: all 0.3s;
+  z-index: 1;
+  ${({inc, dec}) => inc ? css`
+    background-color: #217dbb;
+    opacity: 1;
+  ` : dec && css`
+    background-color: #d62c1a;
+    opacity: 1;
+  `}
+`
 
 const order = [0, 2, 1, 3, 4, 6, 5, 7]
 
@@ -93,34 +153,24 @@ export class ResourcePanel extends React.Component {
     const limit = 750 + admiralLv * 250
     return (
       <ResizeSensor onResize={this.handleResize}>
-        <Card elevation={editable ? 2 : 0} interactive={editable}>
-          {(dimension === 2 ? order : range(8)).map(i => {
-            const iconClassName = classNames('material-icon', {
-              glow: valid && i < 4 && resources[i] < limit,
-            })
-            const valClassName = classNames('additional-value', {
-              inc: resourceIncrement[i] > 0,
-              dec: resourceIncrement[i] < 0,
-            })
-            const amount = valid ? resources[i] : '??'
-            return (
-              <div
-                key={i}
-                className="material-container"
-                style={{ flexBasis: dimension === 1 ? '75px' : `${100 / dimension}%` }}
-              >
-                <MaterialIcon materialId={i + 1} className={iconClassName} />
-                <div className="material-value">
-                  <div className="material-amount">{amount}</div>
-                  <div className={valClassName}>
-                    {resourceIncrement[i] > 0 && '+'}
-                    {resourceIncrement[i] !== 0 && resourceIncrement[i]}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </Card>
+        <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
+          {(dimension === 2 ? order : range(8)).map(i =>  (
+            <MaterialContainer
+              key={i}
+              className="material-container"
+              dimension={dimension}
+            >
+              <MaterialIconGlow materialId={i + 1} className="material-icon" glow={valid && i < 4 && resources[i] < limit} />
+              <MaterialValue className="material-value">
+                <MaterialAmount className="material-amount">{valid ? resources[i] : '??'}</MaterialAmount>
+                <AdditionalValue className="additional-value" inc={resourceIncrement[i] > 0} dec={resourceIncrement[i] < 0}>
+                  {resourceIncrement[i] > 0 && '+'}
+                  {resourceIncrement[i] !== 0 && resourceIncrement[i]}
+                </AdditionalValue>
+              </MaterialValue>
+            </MaterialContainer>
+          ))}
+        </CardWrapper>
       </ResizeSensor>
     )
   }

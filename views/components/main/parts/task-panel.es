@@ -1,11 +1,14 @@
 import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
-import { Card, Tag, Intent, ResizeSensor } from '@blueprintjs/core'
+import { Tag, Intent, ResizeSensor } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
 import React from 'react'
 import { translate, Trans } from 'react-i18next'
+import styled, { css } from 'styled-components'
+
 import { escapeI18nKey } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
+import { CardWrapper as CardWrapperL } from './styled-components'
 
 import {
   configLayoutSelector,
@@ -13,8 +16,6 @@ import {
   extensionSelectorFactory,
 } from 'views/utils/selectors'
 import defaultLayout from '../default-layout'
-
-import '../assets/task-panel.css'
 
 const getPanelDimension = width => {
   if (width > 700) {
@@ -129,6 +130,47 @@ function getToolTip(record) {
   )
 }
 
+const CardWrapper = styled(CardWrapperL)`
+  display: flex;
+  flex-flow: row wrap;
+`
+
+const TaskItem = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding: 4px;
+  ${({colwidth}) => css`
+    width: ${100 * colwidth / 12}%;
+  `}
+`
+
+const QuestNameTooltip = styled(Tooltip)`
+  flex: 1;
+  margin-right: auto;
+  overflow: hidden;
+  padding-right: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const QuestProgress = styled(Tag)`
+  flex: none;
+  text-align: center;
+  min-width: 50px;
+`
+
+const CatIndicator = styled.span`
+  display: inline-block;
+  flex: none;
+  height: 1em;
+  vertical-align: middle;
+  width: 4px;
+  margin-right: 4px;
+  margin-top: -1px;
+`
+
 const TaskRowBase = connect(
   createSelector(
     [
@@ -164,8 +206,8 @@ const TaskRowBase = connect(
   colwidth,
 }) {
   return (
-    <div className={`panel-item task-item task-item-${colwidth}`}>
-      <Tooltip
+    <TaskItem className={'panel-item task-item'} colwidth={colwidth}>
+      <QuestNameTooltip
         id={`task-quest-name-${idx}`}
         className="quest-name"
         disabled={!leftOverlay}
@@ -173,18 +215,18 @@ const TaskRowBase = connect(
         content={leftOverlay}
       >
         <>
-          <span className="cat-indicator" style={{ backgroundColor: bulletColor }} />
+          <CatIndicator className="cat-indicator" style={{ backgroundColor: bulletColor }} />
           <span>{leftLabel}</span>
         </>
-      </Tooltip>
+      </QuestNameTooltip>
       {rightLabel && (
         <Tooltip disabled={!rightOverlay} content={rightOverlay}>
-          <Tag className="quest-progress" intent={rightIntent} minimal>
+          <QuestProgress className="quest-progress" intent={rightIntent} minimal>
             {rightLabel}
-          </Tag>
+          </QuestProgress>
         </Tooltip>
       )}
-    </div>
+    </TaskItem>
   )
 })
 
@@ -266,7 +308,7 @@ export class TaskPanel extends React.Component {
     const colwidth = Math.floor(12 / this.state.dimension)
     return (
       <ResizeSensor onResize={this.handleResize}>
-        <Card className="task-card" elevation={editable ? 2 : 0} interactive={editable}>
+        <CardWrapper className="task-card" elevation={editable ? 2 : 0} interactive={editable}>
           {[
             sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) => (
               <TaskRow
@@ -309,7 +351,7 @@ export class TaskPanel extends React.Component {
                 ),
             ),
           ]}
-        </Card>
+        </CardWrapper>
       </ResizeSensor>
     )
   }

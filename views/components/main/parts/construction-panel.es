@@ -7,58 +7,16 @@ import { join as joinString, range, get, map } from 'lodash'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Intent, Position, Card, ResizeSensor } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { Intent, Position, ResizeSensor } from '@blueprintjs/core'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
-import { Tooltip } from 'views/components/etc/panel-tooltip'
-
-import '../assets/construction-panel.css'
-
-const PanelItem = styled(Tooltip)`
-  flex: 0 0 ${props => `${100 / props.dimension}%`};
-  max-width: ${props => `${100 / props.dimension}%`};
-`
-
-const InnerWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  align-items: center;
-`
-
-const Wrapper = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-`
-
-const FAWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 50px;
-  height: 50px;
-  font-size: 50px;
-  opacity: 0.15;
-  z-index: -1;
-  text-align: right;
-`
-
-const Panel = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  overflow: scroll;
-  justify-content: center;
-`
+import { DockPanelCardWrapper, PanelItemTooltip, DockInnerWrapper, Panel, Watermark, DockName, EmptyDockWrapper } from './styled-components'
 
 const EmptyDock = ({ state }) => (
-  <div className="empty-dock">
+  <EmptyDockWrapper className="empty-dock">
     <FA name={state === 0 ? 'inbox' : 'lock'} />
-  </div>
+  </EmptyDockWrapper>
 )
 
 const getPanelDimension = width => {
@@ -125,7 +83,7 @@ export class ConstructionPanel extends Component {
     const  { dimension } = this.state
     return (
       <ResizeSensor onResize={this.handleResize}>
-        <Wrapper elevation={editable ? 2 : 0} interactive={editable}>
+        <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
           <Panel>
             {range(4).map(i => {
               const dock = get(constructions, i, { api_state: -1, api_complete_time: 0 })
@@ -141,7 +99,7 @@ export class ConstructionPanel extends Component {
               const tooltipTitleClassname = isLSC ? { color: '#D9534F', fontWeight: 'bold' } : undefined
 
               return (
-                <PanelItem
+                <PanelItemTooltip
                   key={i}
                   dimension={dimension}
                   disabled={!isInUse}
@@ -167,7 +125,7 @@ export class ConstructionPanel extends Component {
                   </>
                   }
                 >
-                  <InnerWrapper>
+                  <DockInnerWrapper>
                     {enableAvatar && (
                     <>
                       {dock.api_state > 0 ? (
@@ -180,7 +138,7 @@ export class ConstructionPanel extends Component {
                       )}
                     </>
                     )}
-                    <span className="kdock-name">{dockName}</span>
+                    <DockName className="kdock-name">{dockName}</DockName>
                     <CountdownNotifierLabel
                       timerKey={`kdock-${i + 1}`}
                       completeTime={completeTime}
@@ -196,15 +154,15 @@ export class ConstructionPanel extends Component {
                       }
                       isActive={isActive}
                     />
-                  </InnerWrapper>
-                </PanelItem>
+                  </DockInnerWrapper>
+                </PanelItemTooltip>
               )
             })}
           </Panel>
-          <FAWrapper>
+          <Watermark>
             <FA name="industry" />
-          </FAWrapper>
-        </Wrapper>
+          </Watermark>
+        </DockPanelCardWrapper>
       </ResizeSensor>
     )
   }

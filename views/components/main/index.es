@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Trans } from 'react-i18next'
 import styled from 'styled-components'
+import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 
 import defaultLayout from './default-layout'
 import { layoutResizeObserver } from 'views/services/layout'
@@ -16,20 +17,26 @@ import { ResourcePanel } from './parts/resource-panel'
 import { AdmiralPanel } from './parts/admiral-panel'
 import { RepairPanel } from './parts/repair-panel'
 import { ConstructionPanel } from './parts/construction-panel'
-import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
-import './assets/main.css'
 
-const MiniShipContainer = styled.div`
-  font-size: 14px;
-  .bp3-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+const MainPanelContent = styled.div`
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  margin-top: -4px;
+  font-size: 12px;
+
+  .react-grid-item {
+    padding: 1px;
+    overflow: visible;
+  }
+
+  .countdown-timer-label {
+    flex: none
   }
 `
+
 
 // polyfill for old layouts
 function layoutConfigOutdated(layoutConfig) {
@@ -71,7 +78,7 @@ export class reactClass extends Component {
 
   render() {
     return (
-      <div
+      <MainPanelContent
         className="main-panel-content"
         ref={ref => {
           this.mainpane = ref
@@ -95,16 +102,9 @@ export class reactClass extends Component {
           <div className="resource-panel" key="resource-panel">
             <ResourcePanel editable={this.props.editable} />
           </div>
-          <MiniShipContainer
-            className="miniship"
-            key="miniship"
-            id="MiniShip"
-            ref={ref => {
-              this.miniship = ref
-            }}
-          >
+          <div className="miniship" key="miniship">
             <MiniShip editable={this.props.editable} />
-          </MiniShipContainer>
+          </div>
           <div className="repair-panel panel-col" key="repair-panel">
             <RepairPanel editable={this.props.editable} />
           </div>
@@ -114,23 +114,13 @@ export class reactClass extends Component {
           <div className="expedition-panel" key="expedition-panel">
             <ExpeditionPanel editable={this.props.editable} />
           </div>
-          <div
-            className="task-panel"
-            key="task-panel"
-            ref={ref => {
-              this.taskPanel = ref
-            }}
-          >
+          <div className="task-panel" key="task-panel">
             <TaskPanel editable={this.props.editable} />
           </div>
         </ResponsiveReactGridLayout>
-      </div>
+      </MainPanelContent>
     )
   }
 }
 
-export const displayName = (
-  <span>
-    <FontAwesome name="home" /> <Trans>main:Overview</Trans>
-  </span>
-)
+export const displayName = <><FontAwesome name="home" /> <Trans>main:Overview</Trans></>

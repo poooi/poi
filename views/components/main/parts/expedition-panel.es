@@ -6,8 +6,8 @@ import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Card, Position, Intent } from '@blueprintjs/core'
-
+import { Position, Intent } from '@blueprintjs/core'
+import styled, { css } from 'styled-components'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
@@ -18,8 +18,30 @@ import {
 } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
+import { CardWrapper } from './styled-components'
 
-import '../assets/expedition-panel.css'
+
+export const ExpeditionItem = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1;
+  padding: 4px;
+`
+
+export const ExpeditionName = styled.span`
+  flex: 1;
+  margin-right: auto;
+  overflow: hidden;
+  padding-right: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  ${({warning, success}) => warning ? css`
+    color: #F39C12;
+  ` : success && css`
+    color: #00bc8c;
+  `}
+`
 
 const fleetsExpeditionSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_mission'))
 const fleetsNamesSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_name'))
@@ -36,17 +58,17 @@ const FleetStatus = translate(['main'])(
     }
   })(({ fleetInBattle, fleetShipsData, t }) => {
     if (fleetInBattle) {
-      return <span className="expedition-name text-success">{t('main:In Sortie')}</span>
+      return <ExpeditionName className="expedition-name" success>{t('main:In Sortie')}</ExpeditionName>
     }
 
     const notSuppliedShips = fleetShipsData.filter(
       ([ship, $ship] = []) => Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1,
     )
     if (notSuppliedShips.length) {
-      return <span className="expedition-name text-warning">{t('main:Resupply Needed')}</span>
+      return <ExpeditionName className="expedition-name" warning>{t('main:Resupply Needed')}</ExpeditionName>
     }
 
-    return <span className="expedition-name">{t('main:Ready')}</span>
+    return <ExpeditionName className="expedition-name">{t('main:Ready')}</ExpeditionName>
   }),
 )
 
@@ -90,7 +112,7 @@ export class ExpeditionPanel extends Component {
   render() {
     const { fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore, editable } = this.props
     return (
-      <Card elevation={editable ? 2 : 0} interactive={editable}>
+      <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
         {range(1, 4).map(i => {
           const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
           const fleetName = get(fleetNames, i, '???')
@@ -102,8 +124,8 @@ export class ExpeditionPanel extends Component {
           const completeTime = status > 0 ? rawCompleteTime : -1
 
           return (
-            <div className="panel-item expedition-item" key={i}>
-              {status === 0 ? <FleetStatus fleetId={i} /> : <span className="expedition-name">{expeditionName}</span>}
+            <ExpeditionItem className="panel-item expedition-item" key={i}>
+              {status === 0 ? <FleetStatus fleetId={i} /> : <ExpeditionName className="expedition-name">{expeditionName}</ExpeditionName>}
               <Tooltip
                 position={Position.LEFT}
                 disabled={completeTime < 0}
@@ -130,10 +152,10 @@ export class ExpeditionPanel extends Component {
                   isActive={isActive}
                 />
               </Tooltip>
-            </div>
+            </ExpeditionItem>
           )
         })}
-      </Card>
+      </CardWrapper>
     )
   }
 }

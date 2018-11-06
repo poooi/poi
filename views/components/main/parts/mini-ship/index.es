@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { Card, Button } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
@@ -17,6 +17,7 @@ import {
   ShipDeck,
   ShipTabContent,
 } from 'views/components/ship-parts/styled-components'
+import { CardWrapper as CardWrapperL } from '../styled-components'
 
 const FleetNameButton = styled(FleetNameButtonLarge)`
   .bp3-button {
@@ -27,6 +28,13 @@ const FleetNameButton = styled(FleetNameButtonLarge)`
     padding-top: 0;
     padding-bottom: 0;
   }
+`
+
+const CardWrapper = styled(CardWrapperL)`
+  font-size: 14px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
@@ -121,7 +129,7 @@ export class MiniShip extends Component {
   render() {
     const { activeFleetId, prevFleetId } = this.state
     return (
-      <Card onDoubleClick={this.handleChangeShipView} elevation={this.props.editable ? 2 : 0} interactive={this.props.editable}>
+      <CardWrapper onDoubleClick={this.handleChangeShipView} elevation={this.props.editable ? 2 : 0} interactive={this.props.editable}>
         <FleetNameButtonContainer className="miniship-switch">
           <FleetNameButton className="miniship-fleet-switch">
             {[0, 1, 2, 3].map(i => (
@@ -172,7 +180,7 @@ export class MiniShip extends Component {
             <LBViewMini />
           </ShipDeck>
         </ShipTabContent>
-      </Card>
+      </CardWrapper>
     )
   }
 }

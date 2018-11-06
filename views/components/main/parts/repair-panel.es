@@ -7,7 +7,7 @@ import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
-import { Position, Intent, Card, ResizeSensor } from '@blueprintjs/core'
+import { Position, Intent, ResizeSensor } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { Avatar } from 'views/components/etc/avatar'
@@ -22,31 +22,9 @@ import {
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
+import { DockPanelCardWrapper, PanelItemTooltip, DockInnerWrapper, Panel, Watermark as WatermarkL, DockName, EmptyDockWrapper } from './styled-components'
 
-import '../assets/repair-panel.css'
-
-const PanelItem = styled.div`
-  flex: 0 0 ${props => `${100 / props.dimension}%`};
-  max-width: ${props => `${100 / props.dimension}%`};
-`
-
-const Wrapper = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-`
-
-const Panel = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  overflow: scroll;
-  justify-content: center;
-`
-
-const FAWrapper = styled.div`
+const Watermark = styled(WatermarkL)`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -63,9 +41,9 @@ const inRepairShipsDataSelector = createSelector([inRepairShipsIdSelector, ships
 )
 
 const EmptyDock = ({ state }) => (
-  <div className="empty-dock">
+  <EmptyDockWrapper className="empty-dock">
     <FA name={state === 0 ? 'bath' : 'lock'} />
-  </div>
+  </EmptyDockWrapper>
 )
 
 const getPanelDimension = width => {
@@ -142,7 +120,7 @@ export class RepairPanel extends Component {
     const ships = indexify(inRepairShips)
     return (
       <ResizeSensor onResize={this.handleResize}>
-        <Wrapper elevation={editable ? 2 : 0} interactive={editable}>
+        <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
           <Panel>
             {range(0, 4).map(i => {
               const emptyRepair = {
@@ -169,59 +147,61 @@ export class RepairPanel extends Component {
               100 * get(ships, [dock.api_ship_id, 'api_nowhp']) / get(ships, [dock.api_ship_id, 'api_maxhp'])
               }
               return (
-                <PanelItem
+                <PanelItemTooltip
                   key={i}
                   className={cls('panel-item', 'ndock-item', { avatar: enableAvatar })}
                   dimension={dimension}
                 >
-                  {enableAvatar && (
-                <>
-                  {dock.api_state > 0 ? (
-                    <Avatar
-                      height={20}
-                      mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])}
-                      isDamaged={hpPercentage <= 50}
-                    />
-                  ) : (
-                    <EmptyDock state={dock.api_state} />
-                  )}
-                </>
-                  )}
-                  <span className="ndock-name">{dockName}</span>
+                  <DockInnerWrapper>
+                    {enableAvatar && (
+                    <>
+                      {dock.api_state > 0 ? (
+                        <Avatar
+                          height={20}
+                          mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])}
+                          isDamaged={hpPercentage <= 50}
+                        />
+                      ) : (
+                        <EmptyDock state={dock.api_state} />
+                      )}
+                    </>
+                    )}
+                    <DockName className="ndock-name">{dockName}</DockName>
 
-                  <Tooltip
-                    position={Position.LEFT}
-                    disabled={dock.api_state < 0}
-                    content={
-                      <div>
-                        <strong>{this.props.t('main:Finish By')}: </strong>
-                        {timeToString(completeTime)}
-                      </div>
-                    }
-                  >
-                    <CountdownNotifierLabel
-                      timerKey={`ndock-${i + 1}`}
-                      completeTime={completeTime}
-                      getLabelStyle={getTagIntent}
-                      getNotifyOptions={() =>
-                        canNotify &&
-                    completeTime >= 0 && {
-                          ...this.basicNotifyConfig,
-                          args: dockName,
-                          completeTime: completeTime,
-                        }
+                    <Tooltip
+                      position={Position.LEFT}
+                      disabled={dock.api_state < 0}
+                      content={
+                        <div>
+                          <strong>{this.props.t('main:Finish By')}: </strong>
+                          {timeToString(completeTime)}
+                        </div>
                       }
-                      isActive={isActive}
-                    />
-                  </Tooltip>
-                </PanelItem>
+                    >
+                      <CountdownNotifierLabel
+                        timerKey={`ndock-${i + 1}`}
+                        completeTime={completeTime}
+                        getLabelStyle={getTagIntent}
+                        getNotifyOptions={() =>
+                          canNotify &&
+                          completeTime >= 0 && {
+                            ...this.basicNotifyConfig,
+                            args: dockName,
+                            completeTime: completeTime,
+                          }
+                        }
+                        isActive={isActive}
+                      />
+                    </Tooltip>
+                  </DockInnerWrapper>
+                </PanelItemTooltip>
               )
             })}
           </Panel>
-          <FAWrapper>
+          <Watermark>
             <FA name="fill" />
-          </FAWrapper>
-        </Wrapper>
+          </Watermark>
+        </DockPanelCardWrapper>
       </ResizeSensor>
     )
   }
