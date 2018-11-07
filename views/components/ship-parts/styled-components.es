@@ -67,9 +67,7 @@ export const FleetNameButtonContainer = styled.div`
 export const FleetNameButton = styled(ButtonGroup)`
   white-space: nowrap;
   display: flex;
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-top: 5px;
+  padding: 5px 5px 1px 5px;
   width: 100%;
   .bp3-button {
     flex: 1;

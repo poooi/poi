@@ -49,6 +49,7 @@ const MaterialAmount = styled.div`
   min-width: 4em;
   padding-left: 5px;
   padding-right: 10px;
+  padding-top: 1px;
   position: absolute;
   top: 0;
   width: 100%;

@@ -15,9 +15,7 @@ const AirbaseLabel = styled(Tag)`
 const LandbaseButtonContainer = styled(ButtonGroup)`
   display: flex;
   ${({mini}) => mini ? css`
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 5px;
+    padding: 5px 5px 1px 5px;
     .bp3-button {
       flex: 1;
       border-width: 0 0 1px;
