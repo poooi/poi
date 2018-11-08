@@ -636,7 +636,19 @@ export class ControlledTabArea extends PureComponent {
           className="nav-tab-8"
           wrapperTagName="div"
           targetTagName="div"
-          popoverClassName="plugin-dropdown-container">
+          popoverClassName="plugin-dropdown-container"
+          modifiers={{
+            flip: {
+              enabled: false,
+            },
+            preventOverflow: {
+              boundariesElement: 'window',
+              enabled: false,
+            },
+            hide: {
+              enabled: false,
+            }
+          }}>
           <PluginDropdownButton
             icon="chevron-down"
             minimal
