@@ -23,10 +23,12 @@ export function reducer (state=[], {type, value, option}) {
   }
   case '@@Plugin/changeStatus': {
     const i = findPluginIndexByPackageName(value.packageName)
+    let pluginToUpdate = { ...state[i] }
     for (const opt of option) {
       const {path, status} = opt
-      state = reduxSet(state, [i].concat(path.split('.')), status)
+      pluginToUpdate = reduxSet(pluginToUpdate, path.split('.'), status)
     }
+    state = [ ...state.slice(0, i), pluginToUpdate, ...state.slice(i + 1) ]
     return sortPlugins(state)
   }
   case '@@Plugin/remove': {

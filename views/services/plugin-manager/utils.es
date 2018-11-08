@@ -141,8 +141,11 @@ export function updateI18n(plugin) {
         true,
       )
     })
-    plugin.name = i18next.t(`${namespace}:${plugin.name}`)
-    plugin.description = i18next.t(`${namespace}:${plugin.description}`)
+    plugin = {
+      ...plugin,
+      name: i18next.t(`${namespace}:${plugin.name}`),
+      description: i18next.t(`${namespace}:${plugin.description}`),
+    }
   }
   return plugin
 }
@@ -272,7 +275,10 @@ export async function enablePlugin(plugin, reread=true) {
 }
 
 export async function disablePlugin(plugin) {
-  plugin.enabled = false
+  plugin = {
+    ...plugin,
+    enabled: false,
+  }
   try {
     plugin = unloadPlugin(plugin)
   } catch (error) {
