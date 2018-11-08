@@ -172,7 +172,7 @@ export const LandbaseButton = translate(['resources'])(
               onClick={onClick}
               disabled={disabled}
               active={fleetId == activeFleetId}
-              icon={<FontAwesome name="plane" />}
+              icon={<FontAwesome name="plane-departure" />}
             />
           </LandbaseButtonContainer>
         </Tooltip>
