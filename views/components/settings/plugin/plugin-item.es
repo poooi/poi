@@ -12,7 +12,8 @@ import {
   Intent,
   AnchorButton,
 } from '@blueprintjs/core'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import Transition from 'react-transition-group/Transition'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
 import PluginManager from 'views/services/plugin-manager'
@@ -40,6 +41,32 @@ const PluginMeta = styled.div`
   a {
     font-size: 1em;
   }
+`
+
+const PluginDetail = styled.div`
+  position: relative;
+`
+
+const Fade1 = styled.div`
+  transition: 0.3s ease-in-out;
+  opacity: 0;
+  ${({state}) => {
+    switch (state) {
+    case 'entering': return css`opacity: 0;`
+    case 'entered': return css`opacity: 1;`
+    case 'exiting': return css`opacity: 0;`
+    case 'exited': return css`display: none;`
+    }
+  }}
+`
+
+const Fade2 = styled(Fade1)`
+  ${({state}) => {
+    switch (state) {
+    case 'entering': return css`position: absolute;top:0;`
+    case 'exiting': return css`position: absolute;top:0;`
+    }
+  }}
 `
 
 @translate(['setting'])
@@ -198,55 +225,60 @@ export class PluginItem extends PureComponent {
               </AnchorButton>
             )}
           </PluginMeta>
-          <div className="plugin-detail">
-            {settingOpen ? (
-              <div className="plugin-setting">
-                {!!plugin.reactClass && (
-                  <div>
-                    <CheckboxLabelConfig
-                      label={<Trans>setting:Open plugin in new window</Trans>}
-                      configName={`poi.plugin.windowmode.${plugin.id}`}
-                      defaultValue={!!plugin.windowMode}
-                    />
-                  </div>
-                )}
-                {!!plugin.switchPluginPath && (
-                  <div>
-                    <CheckboxLabelConfig
-                      label={<Trans>setting:Enable auto switch</Trans>}
-                      configName={`poi.autoswitch.${plugin.id}`}
-                      defaultValue={true}
-                    />
-                  </div>
-                )}
-                {!plugin.multiWindow && plugin.windowURL && (
-                  <div>
-                    <CheckboxLabelConfig
-                      label={
-                        <Trans>
+          <PluginDetail className="plugin-detail">
+            <Transition in={settingOpen} timeout={300}>
+              {state => (
+                <Fade1 className="plugin-setting" state={state}>
+                  {!!plugin.reactClass && (
+                    <div>
+                      <CheckboxLabelConfig
+                        label={<Trans>setting:Open plugin in new window</Trans>}
+                        configName={`poi.plugin.windowmode.${plugin.id}`}
+                        defaultValue={!!plugin.windowMode}
+                      />
+                    </div>
+                  )}
+                  {!!plugin.switchPluginPath && (
+                    <div>
+                      <CheckboxLabelConfig
+                        label={<Trans>setting:Enable auto switch</Trans>}
+                        configName={`poi.autoswitch.${plugin.id}`}
+                        defaultValue={true}
+                      />
+                    </div>
+                  )}
+                  {!plugin.multiWindow && plugin.windowURL && (
+                    <div>
+                      <CheckboxLabelConfig
+                        label={
+                          <Trans>
                           setting:Keep plugin process running in background (re-enable to apply
                           changes)
-                        </Trans>
-                      }
-                      configName={`poi.plugin.background.${plugin.id}`}
-                      defaultValue={!plugin.realClose}
-                    />
-                  </div>
-                )}
-                {!!plugin.settingsClass && (
-                  <div>
-                    <PluginSettingWrapper plugin={plugin} key={plugin.timestamp || 0} />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="plugin-description">
-                <ReactMarkdown
-                  source={installable ? plugin[`des${window.language}`] : plugin.description}
-                />
-              </div>
-            )}
-          </div>
+                          </Trans>
+                        }
+                        configName={`poi.plugin.background.${plugin.id}`}
+                        defaultValue={!plugin.realClose}
+                      />
+                    </div>
+                  )}
+                  {!!plugin.settingsClass && (
+                    <div>
+                      <PluginSettingWrapper plugin={plugin} key={plugin.timestamp || 0} />
+                    </div>
+                  )}
+                </Fade1>
+              )}
+            </Transition>
+            <Transition in={!settingOpen} timeout={300}>
+              {state => (
+                <Fade2 className="plugin-description" state={state}>
+                  <ReactMarkdown
+                    source={installable ? plugin[`des${window.language}`] : plugin.description}
+                  />
+                </Fade2>
+              )}
+            </Transition>
+          </PluginDetail>
         </PluginInfo>
       </Card>
     )
