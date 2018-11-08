@@ -16,7 +16,6 @@ import {
   Menu,
   Position,
   MenuItem,
-  Card,
 } from '@blueprintjs/core'
 import styled from 'styled-components'
 
@@ -67,29 +66,45 @@ export class PluginConfig extends Component {
     installingPluginNames: [],
     updatingAll: false,
     reloading: false,
-    advanced: false,
     manuallyInstallStatus: 0,
   }
 
-  handleEnableBetaPluginCheck = () => {
-    PluginManager.selectConfig(null, null, !this.props.betaCheck)
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      prevState.manuallyInstallStatus > 1 &&
+      prevState.manuallyInstallStatus === this.state.manuallyInstallStatus
+    ) {
+      this.setState({ manuallyInstallStatus: 0 })
+    }
   }
 
-  handleEnableProxy = () => {
-    PluginManager.selectConfig(null, !this.props.proxy, null)
-  }
-
-  handleEnableAutoUpdate = () => {
-    // unlike other options, autoUpdate will not write to npm conf
-    window.config.set('packageManager.enableAutoUpdate', !this.props.autoUpdate)
-  }
-
-  onSelectServer = state => {
-    PluginManager.selectConfig(state, null, null)
-  }
-
-  handleAdvancedShow = () => {
-    this.setState({ advanced: !this.state.advanced })
+  componentDidMount = async () => {
+    this.setState({
+      checkingUpdate: true,
+      npmWorking: true,
+    })
+    const isNotif =
+      window.config.get('config.packageManager.enablePluginCheck', true) && !this.props.autoUpdate // if we auto update plugins, don't toast notify
+    const handleAutoUpdate = async () => {
+      await PluginManager.getOutdatedPlugins(isNotif)
+      if (this.props.autoUpdate) {
+        const plugins = PluginManager.getInstalledPlugins()
+        await Promise.each(Object.keys(plugins), async index => {
+          if (plugins[index].isOutdated) {
+            try {
+              await this.handleUpdate(index)()
+            } catch (error) {
+              throw error
+            }
+          }
+        })
+      }
+    }
+    PluginManager.on('initialized', handleAutoUpdate)
+    this.setState({
+      checkingUpdate: false,
+      npmWorking: false,
+    })
   }
 
   handleEnable = memoize(index => async () => {
@@ -227,11 +242,11 @@ export class PluginConfig extends Component {
     })
   }
 
-  onSelectOpenFolder = () => {
+  handleOpenPluginFolder = () => {
     shell.openItem(path.join(PLUGIN_PATH, 'node_modules'))
   }
 
-  onSelectOpenSite = e => {
+  handleOpenSite = e => {
     shell.openExternal('https://www.npmjs.com/search?q=poi-plugin')
     e.preventDefault()
   }
@@ -246,7 +261,18 @@ export class PluginConfig extends Component {
     }
   }
 
-  handleGracefulRepair = async () => {
+  handleGracefulRepair = () => {
+    const { t } = this.props
+    window.toggleModal(t('Repair plugins'), t('repair-plugins-confirmation'), [
+      {
+        name: t('others:Confirm'),
+        func: this.gracefulRepair,
+        style: 'warning',
+      },
+    ])
+  }
+
+  gracefulRepair = async () => {
     this.setState({
       npmWorking: true,
     })
@@ -259,53 +285,6 @@ export class PluginConfig extends Component {
         npmWorking: false,
       })
     }
-  }
-
-  synchronize = callback => {
-    if (this.lock) {
-      return
-    }
-    this.lock = true
-    callback()
-    this.lock = false
-  }
-
-  componentDidUpdate = (prevProps, prevState) => {
-    if (
-      prevState.manuallyInstallStatus > 1 &&
-      prevState.manuallyInstallStatus === this.state.manuallyInstallStatus
-    ) {
-      this.setState({ manuallyInstallStatus: 0 })
-    }
-  }
-
-  componentDidMount = async () => {
-    this.setState({
-      checkingUpdate: true,
-      npmWorking: true,
-    })
-    const isNotif =
-      window.config.get('config.packageManager.enablePluginCheck', true) && !this.props.autoUpdate // if we auto update plugins, don't toast notify
-    const handleAutoUpdate = async () => {
-      await PluginManager.getOutdatedPlugins(isNotif)
-      if (this.props.autoUpdate) {
-        const plugins = PluginManager.getInstalledPlugins()
-        await Promise.each(Object.keys(plugins), async index => {
-          if (plugins[index].isOutdated) {
-            try {
-              await this.handleUpdate(index)()
-            } catch (error) {
-              throw error
-            }
-          }
-        })
-      }
-    }
-    PluginManager.on('initialized', handleAutoUpdate)
-    this.setState({
-      checkingUpdate: false,
-      npmWorking: false,
-    })
   }
 
   render() {
@@ -377,12 +356,9 @@ export class PluginConfig extends Component {
                 <Menu>
                   <MenuItem
                     text={t('setting:Open plugin folder')}
-                    onClick={this.onSelectOpenFolder}
+                    onClick={this.handleOpenPluginFolder}
                   />
-                  <MenuItem
-                    text={t('setting:Search for plugins')}
-                    onClick={this.onSelectOpenSite}
-                  />
+                  <MenuItem text={t('setting:Search for plugins')} onClick={this.handleOpenSite} />
                   <MenuItem
                     text={t('setting:Repair plugins')}
                     onClick={this.handleGracefulRepair}
@@ -390,7 +366,7 @@ export class PluginConfig extends Component {
                 </Menu>
               }
             >
-              <AdvanceButton onClick={this.handleAdvancedShow}>
+              <AdvanceButton>
                 <FontAwesome name="gear" />
                 <span> {t('setting:Advanced')}</span>
               </AdvanceButton>
