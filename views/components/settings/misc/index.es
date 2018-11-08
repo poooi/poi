@@ -10,6 +10,7 @@ import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 
+import { VersionInfo } from './version-info'
 import { DownloadProgress } from './download-progress'
 import { AppMetrics } from './app-metrics'
 import { FCD } from './fcd'
@@ -40,22 +41,17 @@ export class Misc extends Component {
   render() {
     const { t } = this.props
     return (
+      <>
+      <VersionInfo />
       <div id="poi-others" className="poi-others">
-        <Grid>
-          <Col xs={12}>
-            <img src={`file://${ROOT}/assets/img/logo.png`} style={{width: '100%'}} />
+        <Row>
+          <Col xs={6}>
+            <Divider text={`${t('setting:Current version')}: v${POI_VERSION}`} />
           </Col>
-        </Grid>
-        <Grid>
-          <Row>
-            <Col xs={6}>
-              <Divider text={`${t('setting:Current version')}: v${POI_VERSION}`} />
-            </Col>
-            <Col xs={6}>
-              <DownloadProgress />
-            </Col>
-          </Row>
-        </Grid>
+          <Col xs={6}>
+            <DownloadProgress />
+          </Col>
+        </Row>
         <Grid>
           <Col xs={6}>
             <Button onClick={checkUpdate}>{t('setting:Check Update')}</Button>
@@ -175,6 +171,7 @@ export class Misc extends Component {
           }
         </Grid>
       </div>
+    </>
     )
   }
 }
