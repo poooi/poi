@@ -195,7 +195,7 @@ export class InstalledPlugin extends PureComponent {
                           {
                             !!plugin.settingsClass &&
                             <div>
-                              <PluginSettingWrapper plugin={plugin} />
+                              <PluginSettingWrapper plugin={plugin} key={plugin.timestamp || 0} />
                             </div>
                           }
                         </Well>
