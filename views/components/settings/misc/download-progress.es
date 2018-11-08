@@ -1,10 +1,21 @@
 import React, { Component } from 'react'
 import { remote } from 'electron'
-import { ProgressBar } from 'react-bootstrap'
+import { ProgressBar, Intent } from '@blueprintjs/core'
 import { throttle } from 'lodash'
 import { translate } from 'react-i18next'
+import styled from 'styled-components'
 
 const { updater } = remote.require('./lib/updater')
+
+const Wrapper = styled.div`
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+`
+
+const Indicator = styled.div`
+  margin-left: 1em;
+`
 
 @translate(['setting'])
 export class DownloadProgress extends Component {
@@ -15,37 +26,39 @@ export class DownloadProgress extends Component {
     transferred: 0,
     downloaded: false,
   }
-  updateProgress = progress => {
+
+  updateProgress = throttle(progress => {
     remote.getCurrentWindow().setProgressBar(progress.percent / 100)
     this.setState(progress)
-  }
+  }, 1500)
+
   componentDidMount() {
-    if (!this.updateProgressDebounced) {
-      this.updateProgressDebounced = throttle(this.updateProgress, 1500)
-    }
-    updater.on('download-progress', progress => this.updateProgressDebounced(progress))
+    updater.on('download-progress', progress => this.updateProgress(progress))
     updater.on('update-downloaded', () => {
       remote.getCurrentWindow().setProgressBar(-1)
-      this.setState({downloaded: true})
+      this.setState({ downloaded: true })
     })
   }
-  render () {
+
+  render() {
     const { t } = this.props
-    return this.state.percent > 0 && (
-      <h5 className="update-progress">
-        <ProgressBar bsStyle="success"
-          now={this.state.percent} />
-        {
-          this.state.downloaded
-            ? <span>{t('setting:Quit app and install updates')}</span>
-            : (this.state.percent >= 100
-              ? <span>{t('setting:Deploying, please wait')}</span>
-              : <span>
-                {`${Math.round(this.state.bytesPerSecond / 1024)} KB/s, ${Math.round(this.state.transferred / 1048576)} / ${Math.round(this.state.total / 1048576)} MB`}
-              </span>
-            )
-        }
-      </h5>
+
+    const { percent, downloaded, bytesPerSecond, transferred, total } = this.state
+    return (
+      this.state.percent > 0 && (
+        <Wrapper className="update-progress">
+          <ProgressBar stripes={false} intent={Intent.SUCCESS} value={percent} />
+          <Indicator>
+            {downloaded
+              ? t('setting:Quit app and install updates')
+              : percent >= 100
+                ? t('setting:Deploying, please wait')
+                : `${Math.round(bytesPerSecond / 1024)} KB/s, ${Math.round(
+                  transferred / 1048576,
+                )} / ${Math.round(total / 1048576)} MB`}
+          </Indicator>
+        </Wrapper>
+      )
     )
   }
 }
