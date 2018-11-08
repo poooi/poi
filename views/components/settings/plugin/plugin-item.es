@@ -1,8 +1,6 @@
-import classnames from 'classnames'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
-import { Col, Row, Label, Collapse, Well, Panel } from 'react-bootstrap'
 import ReactMarkdown from 'react-remarkable'
 import { Trans, translate } from 'react-i18next'
 import {
@@ -34,8 +32,7 @@ const PluginName = styled.div`
   font-size: 1.5em;
 `
 
-const PluginInfo = styled.div`
-`
+const PluginInfo = styled.div``
 
 const PluginMeta = styled.div`
   margin-left: -0.5em;
@@ -46,7 +43,7 @@ const PluginMeta = styled.div`
 `
 
 @translate(['setting'])
-export class InstalledPlugin extends PureComponent {
+export class PluginItem extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,
     handleUpdate: PropTypes.func,
@@ -54,6 +51,9 @@ export class InstalledPlugin extends PureComponent {
     handleRemove: PropTypes.func,
     handleReload: PropTypes.func,
     t: PropTypes.func.isRequired,
+    installable: PropTypes.bool,
+    installing: PropTypes.bool,
+    npmWorking: PropTypes.bool,
   }
 
   state = {
@@ -65,24 +65,8 @@ export class InstalledPlugin extends PureComponent {
   }
 
   render() {
-    const { plugin, t } = this.props
+    const { plugin, installable, installing, npmWorking, t } = this.props
     const { settingOpen } = this.state
-
-    const outdatedLabelbsStyle = !plugin.latestVersion.includes('beta') ? 'primary' : 'warning'
-
-    const outdatedLabelFAname = classnames({
-      spinner: plugin.isUpdating,
-      'cloud-download': !plugin.isUpdating && plugin.isOutdated,
-      check: !plugin.isUpdating && !plugin.isOutdated,
-    })
-
-    const outdatedLabelText = plugin.isUpdating ? (
-      <Trans>setting:Updating</Trans>
-    ) : plugin.isOutdated ? (
-      `Version ${plugin.latestVersion}`
-    ) : (
-      <Trans>setting:Latest</Trans>
-    )
 
     let enableBtnText, enableBtnFAname
 
@@ -116,34 +100,25 @@ export class InstalledPlugin extends PureComponent {
 
     const removeBtnFAname = plugin.isInstalled ? 'trash' : 'trash-o'
 
-    const panelClass = classnames('plugin-content', {
-      'plugin-content-disabled': PluginManager.getStatusOfPlugin(plugin) !== PluginManager.VALID,
-    })
-
-    const outdatedLabelClass = classnames('update-label', {
-      hidden: !plugin.isOutdated,
-    })
-
     const settingAvailable =
       plugin.reactClass ||
       plugin.settingsClass ||
       plugin.switchPluginPath ||
       (!plugin.multiWindow && plugin.windowURL)
 
-    const btnGroupClass = classnames('plugin-buttongroup', {
-      'btn-xs-12': settingAvailable,
-      'btn-xs-8': !settingAvailable,
-    })
-
-    const btnClass = classnames('plugin-control-button', {
-      'btn-xs-4': settingAvailable,
-      'btn-xs-6': !settingAvailable,
-    })
-
     return (
       <Card className="plugin-item">
         <Header className="plugin-header">
-          <PluginName className="plugin-name">{plugin.displayName}</PluginName>
+          <PluginName className="plugin-name">
+            {installable ? (
+              <>
+                <FontAwesome name={plugin.icon} />
+                {` ${plugin[window.language]}`}
+              </>
+            ) : (
+              plugin.displayName
+            )}
+          </PluginName>
           <ButtonGroup className="plugin-control">
             {settingAvailable && (
               <Tooltip
@@ -155,30 +130,45 @@ export class InstalledPlugin extends PureComponent {
                 </Button>
               </Tooltip>
             )}
-            <Tooltip position={Position.TOP} content={enableBtnText}>
-              <Button
-                minimal
-                intent={Intent.PRIMARY}
-                disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
-                onClick={
-                  PluginManager.getStatusOfPlugin(plugin) != PluginManager.BROKEN
-                    ? this.props.handleEnable
-                    : this.props.handleReload
-                }
-              >
-                <FontAwesome name={enableBtnFAname} />
-              </Button>
-            </Tooltip>
-            <Tooltip position={Position.TOP} content={removeBtnText}>
-              <Button
-                minimal
-                intent={Intent.DANGER}
-                onClick={this.props.handleRemove}
-                disabled={!plugin.isInstalled}
-              >
-                <FontAwesome name={removeBtnFAname} />
-              </Button>
-            </Tooltip>
+            {installable ? (
+              <Tooltip position={Position.TOP} content={t(installing ? 'Installing' : 'Install')}>
+                <Button
+                  minimal
+                  intent={Intent.PRIMARY}
+                  disabled={npmWorking}
+                  onClick={this.props.handleInstall}
+                >
+                  <FontAwesome name="download" />
+                </Button>
+              </Tooltip>
+            ) : (
+              <>
+                <Tooltip position={Position.TOP} content={enableBtnText}>
+                  <Button
+                    minimal
+                    intent={Intent.PRIMARY}
+                    disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
+                    onClick={
+                      PluginManager.getStatusOfPlugin(plugin) != PluginManager.BROKEN
+                        ? this.props.handleEnable
+                        : this.props.handleReload
+                    }
+                  >
+                    <FontAwesome name={enableBtnFAname} />
+                  </Button>
+                </Tooltip>
+                <Tooltip position={Position.TOP} content={removeBtnText}>
+                  <Button
+                    minimal
+                    intent={Intent.DANGER}
+                    onClick={this.props.handleRemove}
+                    disabled={!plugin.isInstalled}
+                  >
+                    <FontAwesome name={removeBtnFAname} />
+                  </Button>
+                </Tooltip>
+              </>
+            )}
           </ButtonGroup>
         </Header>
         <PluginInfo className="plugin-info">
@@ -191,21 +181,21 @@ export class InstalledPlugin extends PureComponent {
                 <FontAwesome name="link" /> {t('Linked')}
               </AnchorButton>
             )}
-            <AnchorButton minimal intent={Intent.PRIMARY}>
-              <FontAwesome name="tag" /> {plugin.version || '1.0.0'}
-            </AnchorButton>
-            {
-              plugin.isOutdated &&
+            {!installable && (
+              <AnchorButton minimal intent={Intent.PRIMARY}>
+                <FontAwesome name="tag" /> {plugin.version || '1.0.0'}
+              </AnchorButton>
+            )}
+            {plugin.isOutdated && (
               <AnchorButton minimal intent={Intent.SUCCESS} onClick={this.props.handleUpdate}>
                 <FontAwesome name="cloud-download" /> {t('Available')} {plugin.latestVersion}
               </AnchorButton>
-            }
-            {
-              plugin.isUpdating &&
+            )}
+            {plugin.isUpdating && (
               <AnchorButton minimal intent={Intent.PRIMARY}>
                 <FontAwesome name="spinner" pulse /> {t('Updating')}
               </AnchorButton>
-            }
+            )}
           </PluginMeta>
           <div className="plugin-detail">
             {settingOpen ? (
@@ -250,7 +240,9 @@ export class InstalledPlugin extends PureComponent {
               </div>
             ) : (
               <div className="plugin-description">
-                <ReactMarkdown source={plugin.description} />
+                <ReactMarkdown
+                  source={installable ? plugin[`des${window.language}`] : plugin.description}
+                />
               </div>
             )}
           </div>

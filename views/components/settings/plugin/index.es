@@ -13,7 +13,7 @@ import Promise from 'bluebird'
 import PluginManager from 'views/services/plugin-manager'
 
 import { NameInput } from './name-input'
-import { InstalledPlugin } from './installed-plugin'
+import { PluginItem } from './plugin-item'
 import { UninstalledPlugin } from './uninstalled-plugin'
 
 import '../assets/plugins.css'
@@ -454,7 +454,7 @@ export class PluginConfig extends Component {
           {
             this.props.plugins.map((plugin, index) => {
               return (
-                <InstalledPlugin
+                <PluginItem
                   key={plugin.id}
                   plugin={plugin}
                   handleUpdate={partial(this.handleUpdate, index)}
@@ -469,7 +469,8 @@ export class PluginConfig extends Component {
             Object.keys(uninstalledPluginSettings).map((name, index) => {
               const value = uninstalledPluginSettings[name]
               return (
-                <UninstalledPlugin
+                <PluginItem
+                  installable
                   key={name}
                   plugin={value}
                   npmWorking={this.state.npmWorking}
