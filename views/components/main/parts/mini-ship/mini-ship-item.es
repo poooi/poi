@@ -35,7 +35,7 @@ import {
 } from 'views/utils/selectors'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
-import { SlotItemContainer } from 'views/components/ship-parts/styled-components'
+import { SlotItemContainer, ALevel } from 'views/components/ship-parts/styled-components'
 
 const SlotItemContainerMini = styled.div`
   align-items: center;
@@ -72,11 +72,6 @@ const Level = styled.strong`
   color: '#45A9A5';
   margin-left: 1em;
   margin-right: 1em;
-`
-
-const ALevel = styled.img`
-  height: 14px;
-  margin-bottom: 2px;
 `
 
 const OnSlot = styled(Tag)`

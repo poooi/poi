@@ -328,3 +328,8 @@ export const AACITypeName = styled.div`
     content: '';
   }
 `
+
+export const ALevel = styled.img`
+  height: 14px;
+  margin-bottom: 2px;
+`

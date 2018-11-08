@@ -18,7 +18,7 @@ import {
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
-import { SlotItems, SlotItemContainer, OnSlotMini } from 'views/components/ship-parts/styled-components'
+import { SlotItems, SlotItemContainer, OnSlotMini, ALevel } from 'views/components/ship-parts/styled-components'
 
 const slotitemsDataSelectorFactory = memoize(shipId =>
   createSelector(
@@ -74,7 +74,7 @@ export const Slotitems = compose(
                 {equip.api_alv &&
                   equip.api_alv >= 1 &&
                   equip.api_alv <= 7 && (
-                  <img
+                  <ALevel
                     className="alv-img"
                     src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
                   />
@@ -144,7 +144,7 @@ export const LandbaseSlotitems = compose(
                 {equip.api_alv &&
                   equip.api_alv >= 1 &&
                   equip.api_alv <= 7 && (
-                  <img
+                  <ALevel
                     className="alv-img"
                     src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
                   />
