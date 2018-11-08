@@ -70,14 +70,8 @@ const windowsSetVibrancy = value => {
     const electronVibrancy = remote.require(join(window.ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
     if (value === 1) {
       electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
-      if (process.platform !== 'darwin') {
-        setBackgroundColor('#202b33e6')
-      } else {
-        setBackgroundColor('transparent')
-      }
     } else {
       electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
-      setBackgroundColor('#202b33')
     }
   } catch (e) {
     console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
@@ -93,8 +87,17 @@ window.setVibrancy = value => {
     })
   }
   window.allThemes = themes
+  if (value) {
+    if ('darwin' === process.platform) {
+      setBackgroundColor('#202b3396')
+    } else {
+      setBackgroundColor('#202b33e6')
+    }
+  } else {
+    setBackgroundColor('#202b33')
+  }
   if ('darwin' === process.platform) {
-    remote.getCurrentWindow().setVibrancy((value === 1) ? 'ultra-dark' : null)
+    remote.getCurrentWindow().setVibrancy((value === 1) ? 'dark' : null)
   } else if('win32' === process.platform) {
     if (remote.getCurrentWindow().isVisible()) {
       windowsSetVibrancy(value)
