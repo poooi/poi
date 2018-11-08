@@ -28,12 +28,10 @@ class GoogleAnalyticsOption extends Component {
   }
 }
 
-console.log(i18next.t('others:welcome_markdown'))
-
 const title = 'README'
 const content =
     <div>
-      <ReactMarkdown source={i18next.t('others:welcome_markdown')} />
+      <ReactMarkdown source={i18next.t('others:welcome_markdown', { version: POI_VERSION })} />
       <div>
         <GoogleAnalyticsOption />
       </div>
