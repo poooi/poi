@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import Promise from 'bluebird'
 import {
+  Card,
   Callout,
   Intent,
   Button,
@@ -322,67 +323,69 @@ export class PluginConfig extends Component {
             {t('setting:Poi is running in safe mode, plugins are not enabled automatically')}
           </Callout>
         )}
-        <Control className="plugin-manage-control">
-          <ButtonGroup fill>
-            <Button onClick={this.checkUpdate} disabled={this.state.checkingUpdate}>
-              <FontAwesome name="refresh" spin={this.state.checkingUpdate} />
-              <span> {t('setting:Check Update')}</span>
-            </Button>
-            <Button
-              onClick={this.handleUpdateAll}
-              disabled={
-                this.state.npmWorking ||
+        <Card>
+          <Control className="plugin-manage-control">
+            <ButtonGroup fill>
+              <Button onClick={this.checkUpdate} disabled={this.state.checkingUpdate}>
+                <FontAwesome name="refresh" spin={this.state.checkingUpdate} />
+                <span> {t('setting:Check Update')}</span>
+              </Button>
+              <Button
+                onClick={this.handleUpdateAll}
+                disabled={
+                  this.state.npmWorking ||
                 this.state.checkingUpdate ||
                 !PluginManager.getUpdateStatus()
-              }
-            >
-              <FontAwesome name={updateStatusFAname} pulse={this.state.updatingAll} />
-              <span> {t('setting:Update all')}</span>
-            </Button>
-            <Button
-              onClick={this.handleInstallAll}
-              disabled={
-                this.state.npmWorking || Object.keys(uninstalledPluginSettings).length === 0
-              }
-            >
-              <FontAwesome name={installStatusFAname} pulse={this.state.installingAll} />
-              <span> {t('setting:Install all')}</span>
-            </Button>
-            <AdvancePopover
-              position={Position.BOTTOM}
-              targetTagName="div"
-              content={
-                <Menu>
-                  <MenuItem
-                    text={t('setting:Open plugin folder')}
-                    onClick={this.handleOpenPluginFolder}
-                  />
-                  <MenuItem text={t('setting:Search for plugins')} onClick={this.handleOpenSite} />
-                  <MenuItem
-                    text={t('setting:Repair plugins')}
-                    onClick={this.handleGracefulRepair}
-                  />
-                </Menu>
-              }
-            >
-              <AdvanceButton>
-                <FontAwesome name="gear" />
-                <span> {t('setting:Advanced')}</span>
-              </AdvanceButton>
-            </AdvancePopover>
-          </ButtonGroup>
-        </Control>
+                }
+              >
+                <FontAwesome name={updateStatusFAname} pulse={this.state.updatingAll} />
+                <span> {t('setting:Update all')}</span>
+              </Button>
+              <Button
+                onClick={this.handleInstallAll}
+                disabled={
+                  this.state.npmWorking || Object.keys(uninstalledPluginSettings).length === 0
+                }
+              >
+                <FontAwesome name={installStatusFAname} pulse={this.state.installingAll} />
+                <span> {t('setting:Install all')}</span>
+              </Button>
+              <AdvancePopover
+                position={Position.BOTTOM}
+                targetTagName="div"
+                content={
+                  <Menu>
+                    <MenuItem
+                      text={t('setting:Open plugin folder')}
+                      onClick={this.handleOpenPluginFolder}
+                    />
+                    <MenuItem text={t('setting:Search for plugins')} onClick={this.handleOpenSite} />
+                    <MenuItem
+                      text={t('setting:Repair plugins')}
+                      onClick={this.handleGracefulRepair}
+                    />
+                  </Menu>
+                }
+              >
+                <AdvanceButton>
+                  <FontAwesome name="gear" />
+                  <span> {t('setting:Advanced')}</span>
+                </AdvanceButton>
+              </AdvancePopover>
+            </ButtonGroup>
+          </Control>
 
-        <Control className="install-plugin-by-name">
-          {manuallyInstallStatus > 0 && (
-            <Callout intent={installStatusIntent}>{installStatusText}</Callout>
-          )}
-          <NameInput
-            onInstall={this.handleInstallByName}
-            status={manuallyInstallStatus}
-            npmWorking={this.state.npmWorking}
-          />
-        </Control>
+          <Control className="install-plugin-by-name">
+            {manuallyInstallStatus > 0 && (
+              <Callout intent={installStatusIntent}>{installStatusText}</Callout>
+            )}
+            <NameInput
+              onInstall={this.handleInstallByName}
+              status={manuallyInstallStatus}
+              npmWorking={this.state.npmWorking}
+            />
+          </Control>
+        </Card>
 
         <div className="plugin-list">
           {this.props.plugins.map((plugin, index) => (
