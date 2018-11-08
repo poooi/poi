@@ -29,8 +29,8 @@ const validate = packageName => {
 @translate(['setting'])
 export class NameInput extends PureComponent {
   static propTypes = {
-    handleManuallyInstall: PropTypes.func,
-    manuallyInstallStatus: PropTypes.number,
+    onInstall: PropTypes.func,
+    status: PropTypes.number,
     npmWorking: PropTypes.bool,
   }
 
@@ -43,7 +43,7 @@ export class NameInput extends PureComponent {
   }
 
   handleClick = () => {
-    this.props.handleManuallyInstall(this.state.packageName)
+    this.props.onInstall(this.state.packageName)
   }
 
   render() {
@@ -57,13 +57,13 @@ export class NameInput extends PureComponent {
             type="text"
             value={packageName}
             onChange={this.changeInstalledPackage}
-            disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
+            disabled={this.props.status === 1 || this.props.npmWorking}
             placeholder={t('setting:Input plugin package name') + '...'}
           />
           <Button
             intent={Intent.PRIMARY}
             disabled={
-              this.props.manuallyInstallStatus === 1 || this.props.npmWorking || !validPackageName
+              this.props.status === 1 || this.props.npmWorking || !validPackageName
             }
             onClick={this.handleClick}
           >

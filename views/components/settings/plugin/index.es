@@ -215,7 +215,7 @@ export class PluginConfig extends Component {
     e.preventDefault()
   }
 
-  handleManuallyInstall = async name => {
+  handleInstallByName = async name => {
     this.setState({ manuallyInstallStatus: 1 })
     try {
       await this.handleInstall(name)()
@@ -397,8 +397,8 @@ export class PluginConfig extends Component {
           <Row className="plugin-rowspace">
             <Col xs={12}>
               <NameInput
-                handleManuallyInstall={this.handleManuallyInstall}
-                manuallyInstallStatus={this.state.manuallyInstallStatus}
+                onInstall={this.handleInstallByName}
+                status={this.state.manuallyInstallStatus}
                 npmWorking={this.state.npmWorking}
               />
             </Col>
@@ -408,10 +408,10 @@ export class PluginConfig extends Component {
               <PluginItem
                 key={plugin.id}
                 plugin={plugin}
-                handleUpdate={this.handleUpdate(index)}
-                handleEnable={this.handleEnable(index)}
-                handleRemove={this.handleRemove(index)}
-                handleReload={this.handleReload(index)}
+                onUpdate={this.handleUpdate(index)}
+                onEnable={this.handleEnable(index)}
+                onRemove={this.handleRemove(index)}
+                onReload={this.handleReload(index)}
               />
             )
           }, this)}
@@ -424,7 +424,7 @@ export class PluginConfig extends Component {
                 plugin={value}
                 npmWorking={this.state.npmWorking}
                 installing={this.state.installingPluginNames.includes(name)}
-                handleInstall={this.handleInstall(name)}
+                onInstall={this.handleInstall(name)}
               />
             )
           }, this)}

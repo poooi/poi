@@ -46,14 +46,15 @@ const PluginMeta = styled.div`
 export class PluginItem extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,
-    handleUpdate: PropTypes.func,
-    handleEnable: PropTypes.func,
-    handleRemove: PropTypes.func,
-    handleReload: PropTypes.func,
+    onUpdate: PropTypes.func,
+    onEnable: PropTypes.func,
+    onRemove: PropTypes.func,
+    onReload: PropTypes.func,
     t: PropTypes.func.isRequired,
     installable: PropTypes.bool,
     installing: PropTypes.bool,
     npmWorking: PropTypes.bool,
+    onInstall: PropTypes.func,
   }
 
   state = {
@@ -150,8 +151,8 @@ export class PluginItem extends PureComponent {
                     disabled={PluginManager.getStatusOfPlugin(plugin) == PluginManager.NEEDUPDATE}
                     onClick={
                       PluginManager.getStatusOfPlugin(plugin) != PluginManager.BROKEN
-                        ? this.props.handleEnable
-                        : this.props.handleReload
+                        ? this.props.onEnable
+                        : this.props.onReload
                     }
                   >
                     <FontAwesome name={enableBtnFAname} />
@@ -161,7 +162,7 @@ export class PluginItem extends PureComponent {
                   <Button
                     minimal
                     intent={Intent.DANGER}
-                    onClick={this.props.handleRemove}
+                    onClick={this.props.onRemove}
                     disabled={!plugin.isInstalled}
                   >
                     <FontAwesome name={removeBtnFAname} />
@@ -187,7 +188,7 @@ export class PluginItem extends PureComponent {
               </AnchorButton>
             )}
             {plugin.isOutdated && (
-              <AnchorButton minimal intent={Intent.SUCCESS} onClick={this.props.handleUpdate}>
+              <AnchorButton minimal intent={Intent.SUCCESS} onClick={this.props.onUpdate}>
                 <FontAwesome name="cloud-download" /> {t('Available')} {plugin.latestVersion}
               </AnchorButton>
             )}
