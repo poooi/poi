@@ -3,20 +3,41 @@ import { shell } from 'electron'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
-import { Grid, Col, Row, Alert, Button, ButtonGroup, Collapse, Well, Panel } from 'react-bootstrap'
 import { get, memoize } from 'lodash'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import Promise from 'bluebird'
+import {
+  Callout,
+  Intent,
+  Button,
+  ButtonGroup,
+  Popover,
+  Menu,
+  Position,
+  MenuItem,
+  Card,
+} from '@blueprintjs/core'
+import styled from 'styled-components'
 
 import PluginManager from 'views/services/plugin-manager'
 
 import { NameInput } from './name-input'
 import { PluginItem } from './plugin-item'
 
-import '../assets/plugins.css'
-
 const { PLUGIN_PATH } = window
+
+const Control = styled.div`
+  margin: 1em 0;
+`
+
+const AdvancePopover = styled(Popover)`
+  flex: 1 1 auto;
+`
+
+const AdvanceButton = styled(Button)`
+  width: 100%;
+`
 
 @translate(['setting'])
 @connect((state, props) => ({
@@ -71,7 +92,7 @@ export class PluginConfig extends Component {
     this.setState({ advanced: !this.state.advanced })
   }
 
-  handleEnable = memoize(index => async  () => {
+  handleEnable = memoize(index => async () => {
     const plugin = this.props.plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)) {
     case PluginManager.DISABLED:
@@ -289,149 +310,133 @@ export class PluginConfig extends Component {
 
   render() {
     const { t } = this.props
+    const { manuallyInstallStatus } = this.state
+
     const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
+
     const updateStatusFAname = this.state.updatingAll ? 'spinner' : 'cloud-download'
+
     const installStatusFAname = this.state.installingAll ? 'spinner' : 'download'
-    let installStatusbsStyle, installStatusText
-    switch (this.state.manuallyInstallStatus) {
+
+    let installStatusIntent, installStatusText
+    switch (manuallyInstallStatus) {
     case 1:
-      installStatusbsStyle = 'info'
+      installStatusIntent = Intent.NONE
       installStatusText = <>{t('setting:Installing')}...</>
       break
     case 2:
-      installStatusbsStyle = 'success'
+      installStatusIntent = Intent.SUCCESS
       installStatusText = t('setting:Plugins are installed successfully')
       break
     case 3:
-      installStatusbsStyle = 'danger'
+      installStatusIntent = Intent.DANGER
       installStatusText = t('setting:InstallFailedMsg')
       break
     default:
-      installStatusbsStyle = 'warning'
+      installStatusIntent = Intent.WARNING
       installStatusText = ''
     }
-    const advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
+
     return (
-      <form className="contents-wrapper" style={{ marginTop: '10px' }}>
-        <Grid className="correct-container">
-          <Row className="plugin-rowspace">
-            <Col xs={12}>
-              {window.isSafeMode && (
-                <Panel header={t('setting:Safe Mode')} bsStyle="warning">
-                  <Panel.Body>
-                    {t(
-                      'setting:Poi is running in safe mode, plugins are not enabled automatically',
-                    )}
-                  </Panel.Body>
-                </Panel>
-              )}
-              <ButtonGroup bsSize="small" className="plugin-buttongroup">
-                <Button
-                  onClick={this.checkUpdate}
-                  disabled={this.state.checkingUpdate}
-                  className="control-button col-xs-3"
-                >
-                  <FontAwesome name="refresh" spin={this.state.checkingUpdate} />
-                  <span> {t('setting:Check Update')}</span>
-                </Button>
-                <Button
-                  onClick={this.handleUpdateAll}
-                  disabled={
-                    this.state.npmWorking ||
-                    this.state.checkingUpdate ||
-                    !PluginManager.getUpdateStatus()
-                  }
-                  className="control-button col-xs-3"
-                >
-                  <FontAwesome name={updateStatusFAname} pulse={this.state.updatingAll} />
-                  <span> {t('setting:Update all')}</span>
-                </Button>
-                <Button
-                  onClick={this.handleInstallAll}
-                  disabled={
-                    this.state.npmWorking || Object.keys(uninstalledPluginSettings).length === 0
-                  }
-                  className="control-button col-xs-3"
-                >
-                  <FontAwesome name={installStatusFAname} pulse={this.state.installingAll} />
-                  <span> {t('setting:Install all')}</span>
-                </Button>
-                <Button onClick={this.handleAdvancedShow} className="control-button col-xs-3">
-                  <FontAwesome name="gear" />
-                  <span> {t('setting:Advanced')}</span>
-                  <FontAwesome name={advanceFAname} />
-                </Button>
-              </ButtonGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12}>
-              <Collapse in={this.state.advanced}>
-                <Well>
-                  <div>
-                    <Row>
-                      <ButtonGroup className="plugin-buttongroup">
-                        <Button className="col-xs-4" onClick={this.onSelectOpenFolder}>
-                          {t('setting:Open plugin folder')}
-                        </Button>
-                        <Button className="col-xs-4" onClick={this.onSelectOpenSite}>
-                          {t('setting:Search for plugins')}
-                        </Button>
-                        <Button className="col-xs-4" onClick={this.handleGracefulRepair}>
-                          {t('setting:Repair plugins')}
-                        </Button>
-                      </ButtonGroup>
-                    </Row>
-                  </div>
-                </Well>
-              </Collapse>
-            </Col>
-          </Row>
-          <Row className="plugin-rowspace">
-            <Collapse in={this.state.manuallyInstallStatus > 0}>
-              <Col xs={12}>
-                <Alert bsStyle={installStatusbsStyle}>{installStatusText}</Alert>
-              </Col>
-            </Collapse>
-          </Row>
-          <Row className="plugin-rowspace">
-            <Col xs={12}>
-              <NameInput
-                onInstall={this.handleInstallByName}
-                status={this.state.manuallyInstallStatus}
-                npmWorking={this.state.npmWorking}
-              />
-            </Col>
-          </Row>
-          {this.props.plugins.map((plugin, index) => {
-            return (
-              <PluginItem
-                key={plugin.id}
-                plugin={plugin}
-                onUpdate={this.handleUpdate(index)}
-                onEnable={this.handleEnable(index)}
-                onRemove={this.handleRemove(index)}
-                onReload={this.handleReload(index)}
-                // FIXME: below is use to ensure component gets update
-                status={PluginManager.getStatusOfPlugin(plugin)}
-              />
-            )
-          }, this)}
+      <>
+        {window.isSafeMode && (
+          <Callout intent={Intent.WARNING}>
+            {t('setting:Poi is running in safe mode, plugins are not enabled automatically')}
+          </Callout>
+        )}
+        <Control className="plugin-manage-control">
+          <ButtonGroup fill>
+            <Button onClick={this.checkUpdate} disabled={this.state.checkingUpdate}>
+              <FontAwesome name="refresh" spin={this.state.checkingUpdate} />
+              <span> {t('setting:Check Update')}</span>
+            </Button>
+            <Button
+              onClick={this.handleUpdateAll}
+              disabled={
+                this.state.npmWorking ||
+                this.state.checkingUpdate ||
+                !PluginManager.getUpdateStatus()
+              }
+            >
+              <FontAwesome name={updateStatusFAname} pulse={this.state.updatingAll} />
+              <span> {t('setting:Update all')}</span>
+            </Button>
+            <Button
+              onClick={this.handleInstallAll}
+              disabled={
+                this.state.npmWorking || Object.keys(uninstalledPluginSettings).length === 0
+              }
+            >
+              <FontAwesome name={installStatusFAname} pulse={this.state.installingAll} />
+              <span> {t('setting:Install all')}</span>
+            </Button>
+            <AdvancePopover
+              position={Position.BOTTOM}
+              targetTagName="div"
+              content={
+                <Menu>
+                  <MenuItem
+                    text={t('setting:Open plugin folder')}
+                    onClick={this.onSelectOpenFolder}
+                  />
+                  <MenuItem
+                    text={t('setting:Search for plugins')}
+                    onClick={this.onSelectOpenSite}
+                  />
+                  <MenuItem
+                    text={t('setting:Repair plugins')}
+                    onClick={this.handleGracefulRepair}
+                  />
+                </Menu>
+              }
+            >
+              <AdvanceButton onClick={this.handleAdvancedShow}>
+                <FontAwesome name="gear" />
+                <span> {t('setting:Advanced')}</span>
+              </AdvanceButton>
+            </AdvancePopover>
+          </ButtonGroup>
+        </Control>
+
+        <Control className="install-plugin-by-name">
+          {manuallyInstallStatus > 0 && (
+            <Callout intent={installStatusIntent}>{installStatusText}</Callout>
+          )}
+          <NameInput
+            onInstall={this.handleInstallByName}
+            status={manuallyInstallStatus}
+            npmWorking={this.state.npmWorking}
+          />
+        </Control>
+
+        <div className="plugin-list">
+          {this.props.plugins.map((plugin, index) => (
+            <PluginItem
+              key={plugin.id}
+              plugin={plugin}
+              onUpdate={this.handleUpdate(index)}
+              onEnable={this.handleEnable(index)}
+              onRemove={this.handleRemove(index)}
+              onReload={this.handleReload(index)}
+              // FIXME: below is use to ensure component gets update
+              status={PluginManager.getStatusOfPlugin(plugin)}
+            />
+          ))}
           {Object.keys(uninstalledPluginSettings).map((name, index) => {
-            const value = uninstalledPluginSettings[name]
+            const plugin = uninstalledPluginSettings[name]
             return (
               <PluginItem
                 installable
                 key={name}
-                plugin={value}
+                plugin={plugin}
                 npmWorking={this.state.npmWorking}
                 installing={this.state.installingPluginNames.includes(name)}
                 onInstall={this.handleInstall(name)}
               />
             )
-          }, this)}
-        </Grid>
-      </form>
+          })}
+        </div>
+      </>
     )
   }
 }
