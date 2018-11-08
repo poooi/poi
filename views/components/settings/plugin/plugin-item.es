@@ -137,7 +137,7 @@ export class PluginItem extends PureComponent {
                   minimal
                   intent={Intent.PRIMARY}
                   disabled={npmWorking}
-                  onClick={this.props.handleInstall}
+                  onClick={this.props.onInstall}
                 >
                   <FontAwesome name="download" />
                 </Button>

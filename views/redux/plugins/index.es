@@ -23,6 +23,9 @@ export function reducer (state=[], {type, value, option}) {
   }
   case '@@Plugin/changeStatus': {
     const i = findPluginIndexByPackageName(value.packageName)
+    if (!state[i]) {
+      return state
+    }
     let pluginToUpdate = { ...state[i] }
     for (const opt of option) {
       const {path, status} = opt
