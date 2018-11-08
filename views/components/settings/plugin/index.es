@@ -412,6 +412,8 @@ export class PluginConfig extends Component {
                 onEnable={this.handleEnable(index)}
                 onRemove={this.handleRemove(index)}
                 onReload={this.handleReload(index)}
+                // FIXME: below is use to ensure component gets update
+                status={PluginManager.getStatusOfPlugin(plugin)}
               />
             )
           }, this)}
