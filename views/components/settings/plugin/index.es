@@ -1,12 +1,11 @@
 import path from 'path-extra'
-import { shell, remote } from 'electron'
+import { shell } from 'electron'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { Grid, Col, Row, Alert, Button, ButtonGroup, Collapse, Well, Panel } from 'react-bootstrap'
-import { get, partial } from 'lodash'
+import { get, memoize } from 'lodash'
 import { connect } from 'react-redux'
-import FileDrop from 'react-file-dropzone'
 import { translate } from 'react-i18next'
 import Promise from 'bluebird'
 
@@ -14,17 +13,19 @@ import PluginManager from 'views/services/plugin-manager'
 
 import { NameInput } from './name-input'
 import { PluginItem } from './plugin-item'
-import { UninstalledPlugin } from './uninstalled-plugin'
 
 import '../assets/plugins.css'
 
-const {dialog} = remote.require('electron')
-const {PLUGIN_PATH} = window
+const { PLUGIN_PATH } = window
 
 @translate(['setting'])
 @connect((state, props) => ({
   plugins: state.plugins,
-  mirrorName: get(state, 'config.packageManager.mirrorName', navigator.language === 'zh-CN' ?  'taobao' : 'npm'),
+  mirrorName: get(
+    state,
+    'config.packageManager.mirrorName',
+    navigator.language === 'zh-CN' ? 'taobao' : 'npm',
+  ),
   proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
   autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
@@ -37,6 +38,7 @@ export class PluginConfig extends Component {
     betaCheck: PropTypes.bool,
     autoUpdate: PropTypes.bool,
   }
+
   state = {
     checkingUpdate: false,
     npmWorking: false,
@@ -51,22 +53,27 @@ export class PluginConfig extends Component {
   handleEnableBetaPluginCheck = () => {
     PluginManager.selectConfig(null, null, !this.props.betaCheck)
   }
+
   handleEnableProxy = () => {
     PluginManager.selectConfig(null, !this.props.proxy, null)
   }
+
   handleEnableAutoUpdate = () => {
     // unlike other options, autoUpdate will not write to npm conf
     window.config.set('packageManager.enableAutoUpdate', !this.props.autoUpdate)
   }
-  onSelectServer = (state) => {
-    PluginManager.selectConfig(state ,null, null)
+
+  onSelectServer = state => {
+    PluginManager.selectConfig(state, null, null)
   }
+
   handleAdvancedShow = () => {
-    this.setState({advanced: !this.state.advanced})
+    this.setState({ advanced: !this.state.advanced })
   }
-  handleEnable = async (index) => {
+
+  handleEnable = memoize(index => async  () => {
     const plugin = this.props.plugins[index]
-    switch (PluginManager.getStatusOfPlugin(plugin)){
+    switch (PluginManager.getStatusOfPlugin(plugin)) {
     case PluginManager.DISABLED:
       await PluginManager.enablePlugin(plugin)
       break
@@ -74,14 +81,13 @@ export class PluginConfig extends Component {
       await PluginManager.disablePlugin(plugin)
       break
     }
-  }
-  handleReload = async (index) => {
-    await PluginManager.reloadPlugin(this.props.plugins[index])
-  }
-  handleInstall = async (name, e) => {
-    if (get(e, 'target.disabled')) {
-      return
-    }
+  })
+
+  handleReload = memoize(index => () => {
+    PluginManager.reloadPlugin(this.props.plugins[index])
+  })
+
+  handleInstall = memoize(name => async () => {
     let installingPluginNames = this.state.installingPluginNames.slice()
     installingPluginNames.push(name)
     this.setState({
@@ -100,19 +106,17 @@ export class PluginConfig extends Component {
         })
       }
     } catch (error) {
-      this.setState({npmWorking: false})
+      this.setState({ npmWorking: false })
       throw error
     }
-  }
-  handleUpdate = async (index, e) => {
-    if (get(e, 'target.disabled')) {
-      return
-    }
-    this.setState({npmWorking: true})
+  })
+
+  handleUpdate = memoize(index => async () => {
+    this.setState({ npmWorking: true })
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
     if (plugin.linkedPlugin) {
-      this.setState({npmWorking: false})
+      this.setState({ npmWorking: false })
       return
     }
     try {
@@ -120,9 +124,10 @@ export class PluginConfig extends Component {
     } catch (error) {
       throw error
     } finally {
-      this.setState({npmWorking: false})
+      this.setState({ npmWorking: false })
     }
-  }
+  })
+
   doInstallAll = async () => {
     this.setState({
       installingAll: true,
@@ -130,9 +135,9 @@ export class PluginConfig extends Component {
     })
     const settings = PluginManager.getUninstalledPluginSettings()
 
-    await Promise.each(Object.keys(settings), async (name) => {
+    await Promise.each(Object.keys(settings), async name => {
       try {
-        await this.handleInstall(name)
+        await this.handleInstall(name)()
       } catch (e) {
         console.error(e)
       }
@@ -142,30 +147,29 @@ export class PluginConfig extends Component {
       npmWorking: false,
     })
   }
+
   handleInstallAll = () => {
     const { t } = this.props
-    window.toggleModal(t('Install all'),
-      t('install-all-confirmation'),
-      [{
+    window.toggleModal(t('Install all'), t('install-all-confirmation'), [
+      {
         name: t('others:Confirm'),
         func: this.doInstallAll,
         style: 'warning',
-      }])
+      },
+    ])
   }
-  handleUpdateAll = async (e) => {
-    if (get(e, 'target.disabled')) {
-      return
-    }
+
+  handleUpdateAll = async () => {
     this.setState({
       updatingAll: true,
       npmWorking: true,
     })
     const plugins = PluginManager.getInstalledPlugins()
 
-    await Promise.each(Object.keys(plugins), async (index) => {
+    await Promise.each(Object.keys(plugins), async index => {
       if (plugins[index].isOutdated) {
         try {
-          await this.handleUpdate(index)
+          await this.handleUpdate(index)()
         } catch (error) {
           throw error
         }
@@ -176,23 +180,21 @@ export class PluginConfig extends Component {
       npmWorking: false,
     })
   }
-  handleRemove = async (index, e) => {
-    if (get(e, 'target.disabled')) {
-      return
-    }
-    this.setState({npmWorking: true})
+
+  handleRemove = memoize(index => async () => {
+    this.setState({ npmWorking: true })
     try {
       const plugins = PluginManager.getInstalledPlugins()
       const plugin = plugins[index]
       await PluginManager.uninstallPlugin(plugin)
-    }
-    catch (error) {
+    } catch (error) {
       throw error
     } finally {
-      this.setState({npmWorking: false})
+      this.setState({ npmWorking: false })
     }
-  }
-  checkUpdate = async () =>{
+  })
+
+  checkUpdate = async () => {
     this.setState({
       checkingUpdate: true,
       npmWorking: true,
@@ -203,63 +205,26 @@ export class PluginConfig extends Component {
       npmWorking: false,
     })
   }
+
   onSelectOpenFolder = () => {
     shell.openItem(path.join(PLUGIN_PATH, 'node_modules'))
   }
-  onSelectOpenSite = (e) => {
+
+  onSelectOpenSite = e => {
     shell.openExternal('https://www.npmjs.com/search?q=poi-plugin')
     e.preventDefault()
   }
-  onSelectInstallFromFile = () => {
-    const { t } = this.props
-    this.synchronize(async () => {
-      const filenames = dialog.showOpenDialog({
-        title: t('Select files'),
-        defaultPath: remote.require('electron').app.getPath('downloads'),
-        properties: ['openFile', 'multiSelections'],
-      })
-      if (filenames) {
-        for (const index in filenames) {
-          const filename = filenames[index]
-          this.setState({manuallyInstallStatus: 1})
-          try {
-            await this.handleInstall(filename)
-            this.setState({manuallyInstallStatus: 2})
-          } catch (error) {
-            this.setState({manuallyInstallStatus: 3})
-          }
-        }
-      }
-    })
-  }
-  onDropInstallFromFile = async (droppedFiles) => {
-    const filenames = []
-    // droppedFiles is not an Array, but a FileList
-    for (let i = 0; i < droppedFiles.length; i++) {
-      filenames.push(droppedFiles[i].path)
-    }
-    if (filenames.length > 0) {
-      for (const index in filenames) {
-        const filename = filenames[index]
-        this.setState({manuallyInstallStatus: 1})
-        try {
-          await this.handleInstall(filename)
-          this.setState({manuallyInstallStatus: 2})
-        } catch (error) {
-          this.setState({manuallyInstallStatus: 3})
-        }
-      }
-    }
-  }
-  handleManuallyInstall = async (name) => {
-    this.setState({manuallyInstallStatus: 1})
+
+  handleManuallyInstall = async name => {
+    this.setState({ manuallyInstallStatus: 1 })
     try {
-      await this.handleInstall(name)
-      this.setState({manuallyInstallStatus: 2})
+      await this.handleInstall(name)()
+      this.setState({ manuallyInstallStatus: 2 })
     } catch (error) {
-      this.setState({manuallyInstallStatus: 3})
+      this.setState({ manuallyInstallStatus: 3 })
     }
   }
+
   handleGracefulRepair = async () => {
     this.setState({
       npmWorking: true,
@@ -274,7 +239,8 @@ export class PluginConfig extends Component {
       })
     }
   }
-  synchronize = (callback) => {
+
+  synchronize = callback => {
     if (this.lock) {
       return
     }
@@ -282,27 +248,31 @@ export class PluginConfig extends Component {
     callback()
     this.lock = false
   }
+
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevState.manuallyInstallStatus > 1 &&
-        prevState.manuallyInstallStatus === this.state.manuallyInstallStatus) {
-      this.setState({manuallyInstallStatus: 0})
+    if (
+      prevState.manuallyInstallStatus > 1 &&
+      prevState.manuallyInstallStatus === this.state.manuallyInstallStatus
+    ) {
+      this.setState({ manuallyInstallStatus: 0 })
     }
   }
+
   componentDidMount = async () => {
     this.setState({
       checkingUpdate: true,
       npmWorking: true,
     })
-    const isNotif = window.config.get('config.packageManager.enablePluginCheck', true)
-      && !this.props.autoUpdate // if we auto update plugins, don't toast notify
+    const isNotif =
+      window.config.get('config.packageManager.enablePluginCheck', true) && !this.props.autoUpdate // if we auto update plugins, don't toast notify
     const handleAutoUpdate = async () => {
       await PluginManager.getOutdatedPlugins(isNotif)
       if (this.props.autoUpdate) {
         const plugins = PluginManager.getInstalledPlugins()
-        await Promise.each(Object.keys(plugins), async (index) => {
+        await Promise.each(Object.keys(plugins), async index => {
           if (plugins[index].isOutdated) {
             try {
-              await this.handleUpdate(index)
+              await this.handleUpdate(index)()
             } catch (error) {
               throw error
             }
@@ -316,6 +286,7 @@ export class PluginConfig extends Component {
       npmWorking: false,
     })
   }
+
   render() {
     const { t } = this.props
     const uninstalledPluginSettings = PluginManager.getUninstalledPluginSettings()
@@ -341,23 +312,19 @@ export class PluginConfig extends Component {
     }
     const advanceFAname = this.state.advanced ? 'angle-up' : 'angle-down'
     return (
-      <form className="contents-wrapper" style={{marginTop: '10px'}}>
-        <FileDrop
-          className="plugin-dropfile panel"
-          onDrop={this.onDropInstallFromFile}
-          acceptType="application/gzip, application/x-gzip"
-        >
-          {t('setting:Drop plugin tarballs here to install')}
-        </FileDrop>
+      <form className="contents-wrapper" style={{ marginTop: '10px' }}>
         <Grid className="correct-container">
           <Row className="plugin-rowspace">
             <Col xs={12}>
-              {
-                window.isSafeMode &&
+              {window.isSafeMode && (
                 <Panel header={t('setting:Safe Mode')} bsStyle="warning">
-                  <Panel.Body>{t('setting:Poi is running in safe mode, plugins are not enabled automatically')}</Panel.Body>
+                  <Panel.Body>
+                    {t(
+                      'setting:Poi is running in safe mode, plugins are not enabled automatically',
+                    )}
+                  </Panel.Body>
                 </Panel>
-              }
+              )}
               <ButtonGroup bsSize="small" className="plugin-buttongroup">
                 <Button
                   onClick={this.checkUpdate}
@@ -369,35 +336,27 @@ export class PluginConfig extends Component {
                 </Button>
                 <Button
                   onClick={this.handleUpdateAll}
-                  disabled={this.state.npmWorking ||
-                          this.state.checkingUpdate ||
-                          !PluginManager.getUpdateStatus()
+                  disabled={
+                    this.state.npmWorking ||
+                    this.state.checkingUpdate ||
+                    !PluginManager.getUpdateStatus()
                   }
                   className="control-button col-xs-3"
                 >
-                  <FontAwesome
-                    name={updateStatusFAname}
-                    pulse={this.state.updatingAll}
-                  />
+                  <FontAwesome name={updateStatusFAname} pulse={this.state.updatingAll} />
                   <span> {t('setting:Update all')}</span>
                 </Button>
                 <Button
                   onClick={this.handleInstallAll}
-                  disabled={this.state.npmWorking ||
-                          Object.keys(uninstalledPluginSettings).length === 0
+                  disabled={
+                    this.state.npmWorking || Object.keys(uninstalledPluginSettings).length === 0
                   }
                   className="control-button col-xs-3"
                 >
-                  <FontAwesome
-                    name={installStatusFAname}
-                    pulse={this.state.installingAll}
-                  />
+                  <FontAwesome name={installStatusFAname} pulse={this.state.installingAll} />
                   <span> {t('setting:Install all')}</span>
                 </Button>
-                <Button
-                  onClick={this.handleAdvancedShow}
-                  className="control-button col-xs-3"
-                >
+                <Button onClick={this.handleAdvancedShow} className="control-button col-xs-3">
                   <FontAwesome name="gear" />
                   <span> {t('setting:Advanced')}</span>
                   <FontAwesome name={advanceFAname} />
@@ -431,9 +390,7 @@ export class PluginConfig extends Component {
           <Row className="plugin-rowspace">
             <Collapse in={this.state.manuallyInstallStatus > 0}>
               <Col xs={12}>
-                <Alert bsStyle={installStatusbsStyle}>
-                  {installStatusText}
-                </Alert>
+                <Alert bsStyle={installStatusbsStyle}>{installStatusText}</Alert>
               </Col>
             </Collapse>
           </Row>
@@ -445,41 +402,32 @@ export class PluginConfig extends Component {
                 npmWorking={this.state.npmWorking}
               />
             </Col>
-            <Col xs={12}>
-              <div className="plugin-dropfile-static" onClick={this.onSelectInstallFromFile}>
-                {t('setting:Drop plugin packages here to install it, or click here to select them')}
-              </div>
-            </Col>
           </Row>
-          {
-            this.props.plugins.map((plugin, index) => {
-              return (
-                <PluginItem
-                  key={plugin.id}
-                  plugin={plugin}
-                  handleUpdate={partial(this.handleUpdate, index)}
-                  handleEnable={partial(this.handleEnable, index)}
-                  handleRemove={partial(this.handleRemove, index)}
-                  handleReload={partial(this.handleReload, index)}
-                />
-              )
-            }, this)
-          }
-          {
-            Object.keys(uninstalledPluginSettings).map((name, index) => {
-              const value = uninstalledPluginSettings[name]
-              return (
-                <PluginItem
-                  installable
-                  key={name}
-                  plugin={value}
-                  npmWorking={this.state.npmWorking}
-                  installing={this.state.installingPluginNames.includes(name)}
-                  handleInstall={partial(this.handleInstall, name)}
-                />
-              )
-            }, this)
-          }
+          {this.props.plugins.map((plugin, index) => {
+            return (
+              <PluginItem
+                key={plugin.id}
+                plugin={plugin}
+                handleUpdate={this.handleUpdate(index)}
+                handleEnable={this.handleEnable(index)}
+                handleRemove={this.handleRemove(index)}
+                handleReload={this.handleReload(index)}
+              />
+            )
+          }, this)}
+          {Object.keys(uninstalledPluginSettings).map((name, index) => {
+            const value = uninstalledPluginSettings[name]
+            return (
+              <PluginItem
+                installable
+                key={name}
+                plugin={value}
+                npmWorking={this.state.npmWorking}
+                installing={this.state.installingPluginNames.includes(name)}
+                handleInstall={this.handleInstall(name)}
+              />
+            )
+          }, this)}
         </Grid>
       </form>
     )
