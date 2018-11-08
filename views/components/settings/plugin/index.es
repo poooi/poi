@@ -124,8 +124,7 @@ export class PluginConfig extends Component {
   })
 
   handleInstall = memoize(name => async () => {
-    let installingPluginNames = this.state.installingPluginNames.slice()
-    installingPluginNames.push(name)
+    let installingPluginNames = [ ...this.state.installingPluginNames, name ]
     this.setState({
       installingPluginNames,
       npmWorking: true,

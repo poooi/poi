@@ -291,14 +291,14 @@ class PluginManager extends EventEmitter {
     if (packageSource.includes('@')) [packageSource, version] = packageSource.split('@')
 
     // 1) See if it is installed by plugin name
-    const installingByPluginName = (function() {
+    const installingByPluginName = do {
       try {
         accessSync(packageSource)
-        return false
+        false
       } catch (e) {
-        return true
+        true
       }
-    })()
+    }
     if (installingByPluginName)
       dispatch({
         type: '@@Plugin/changeStatus',
