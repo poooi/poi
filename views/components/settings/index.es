@@ -3,14 +3,13 @@ import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
 import FontAwesome from 'react-fontawesome'
 import { Trans, translate } from 'react-i18next'
 import { isEqual, map } from 'lodash'
+import styled from 'styled-components'
 
 import { PoiConfig } from './main'
 import { DisplayConfig } from './display'
 import { NetworkConfig } from './network'
 import { PluginConfig } from './plugin'
 import { About } from './about'
-
-import './assets/settings.css'
 
 const TABS = [
   {
@@ -45,6 +44,30 @@ const TABS = [
   },
 ]
 
+const SettingsTabs = styled(Tabs)`
+  height: 100%;
+
+  .bp3-tab-list {
+    justify-content: space-between;
+  }
+
+  .bp3-tab {
+    flex: 1 0 30px;
+    text-align: center;
+
+    &[aria-selected="true"] {
+      flex: 4 0 120px;
+    }
+  }
+
+  .bp3-tab-panel {
+    margin: 0;
+    height: calc(100% - 30px);
+    overflow-y: scroll;
+    padding: 1px 2px;
+  }
+`
+
 @translate(['setting'])
 export class reactClass extends React.Component {
   state = {
@@ -62,7 +85,7 @@ export class reactClass extends React.Component {
     const { t } = this.props
     const { activeTab } = this.state
     return (
-      <Tabs
+      <SettingsTabs
         selectedTabId={activeTab}
         id="settings-view-tabs"
         className="settings-view-tabs"
@@ -91,7 +114,7 @@ export class reactClass extends React.Component {
             panel={<tab.component />}
           />
         ))}
-      </Tabs>
+      </SettingsTabs>
     )
   }
 }
