@@ -118,7 +118,7 @@ export const VersionInfo = translate(['setting'])(({ t }) => (
       </Versions>
     </Wrapper>
     <div>
-      <div>{t('description_markdown', { version: process.versions.electron })}</div>
+      <div>{t('description_markdown')}</div>
       <LinksArea>
         {map(
           LINKS,
