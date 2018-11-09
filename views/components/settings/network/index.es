@@ -20,7 +20,7 @@ const { config } = window
 const StickyCallout = styled(Callout)`
   position: sticky;
   z-index: 5;
-  top: 30px;
+  top: 0;
   background-color: ${props => rgba(props.theme.GREEN1, 0.8)} !important;
 `
 
