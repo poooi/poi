@@ -33,7 +33,7 @@ const TABS = [
   },
   {
     id: 2,
-    title: 'Proxy',
+    title: 'Network',
     component: NetworkConfig,
     icon: 'link',
   },

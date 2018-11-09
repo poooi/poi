@@ -4,6 +4,7 @@
   "Gaming": "遊戲設置",
   "Display": "顯示設定",
   "Proxy": "網路代理",
+  "Network": "網路設置",
   "Plugins": "擴展程式",
   "About": "關於 poi",
   "Database": "掉落資料統計",
@@ -203,5 +204,5 @@
   "Linked": "鏈接插件",
   "Available": "可用更新",
   "repair-plugins-confirmation": "Poi 將刪除當前插件目錄並重新安裝插件，這個操作不會影響插件數據，但需要一定的時間，繼續嗎？",
-  "Network setting changes will be effective after restarting Poi": "网络设置的变更将在重新启动 Poi 后生效"
+  "Network setting changes will be effective after restarting Poi": "網路設置的變更將在重新啓動 Poi 後生效"
 }
