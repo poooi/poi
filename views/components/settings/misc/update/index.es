@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormGroup, Button, Intent } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
+import { remote } from 'electron'
 
 import { checkUpdate } from 'views/services/update'
 import { Section, Wrapper } from 'views/components/settings/components/section'
@@ -9,6 +10,15 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 import { DownloadProgress } from './download-progress'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
+
+const { config } = window
+const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
+
+config.on('config.set', (path, value) => {
+  if (path === 'poi.update.beta' && process.platform !== 'linux') {
+    changeChannel(value ? 'beta' : 'latest')
+  }
+})
 
 export const Update = translate(['setting'])(({ t }) => (
   <Section title={t('Update')}>
