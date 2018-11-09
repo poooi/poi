@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { Button, Label } from 'react-bootstrap'
+import { Button, Tag, Intent, Tooltip } from '@blueprintjs/core'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, entries, map, max, values } from 'lodash'
 import { sync as globSync } from 'glob'
 import fetch from 'node-fetch'
-import FA from 'react-fontawesome'
+import { translate } from 'react-i18next'
 
-import '../assets/misc.css'
+import {
+  InfoTooltip,
+  InfoTooltipEntry,
+  InfoTooltipItem,
+} from 'views/components/etc/styled-components'
 
 const { ROOT } = window
 
@@ -25,6 +29,7 @@ const defaultFetchOption = {
 
 const initState = {}
 
+@translate(['setting'])
 @connect(state => ({
   version: state.fcd.version || initState,
 }))
@@ -61,17 +66,21 @@ export class FCD extends Component {
       flag = true
 
       const fileList = await await fetch(`${server}meta.json`, defaultFetchOption)
-        .then(res => res.ok ? res.json() : undefined)
+        .then(res => (res.ok ? res.json() : undefined))
         .catch(e => undefined)
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
             // eslint-disable-next-line no-console
-            console.log(`Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
+            console.log(
+              `Updating ${file.name}: current ${localVersion}, remote ${
+                file.version
+              }, mode ${cacheMode}`,
+            )
 
             const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
-              .then(res => res.ok ? res.json() : undefined)
+              .then(res => (res.ok ? res.json() : undefined))
               .catch(e => undefined)
             if (data) {
               this.props.dispatch({
@@ -83,7 +92,11 @@ export class FCD extends Component {
             }
           } else {
             // eslint-disable-next-line no-console
-            console.log(`No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`)
+            console.log(
+              `No newer version of ${file.name}: current ${localVersion}, remote ${
+                file.version
+              }, mode ${cacheMode}`,
+            )
           }
         }
       } else {
@@ -101,31 +114,38 @@ export class FCD extends Component {
       updating: false,
     })
   }
+
   componentDidMount() {
     this.updateData()()
   }
+
   render() {
+    const { version, t } = this.props
     const { updating } = this.state
-    const fcds = Object.keys(this.props.version || {}).map(key => [key, this.props.version[key]])
     return (
       <>
+        <Tooltip
+          content={
+            <InfoTooltip className="info-tooltip">
+              {map(entries(version), ([name, version]) => (
+                <InfoTooltipEntry key={name} className="info-tooltip-entry">
+                  <InfoTooltipItem className="info-tooltip-item">{name}</InfoTooltipItem>
+                  <span>{version}</span>
+                </InfoTooltipEntry>
+              ))}
+            </InfoTooltip>
+          }
+        >
+          {max(values(version)) || t('Unknown')}
+        </Tooltip>{' '}
         <Button
+          minimal
           onClick={this.updateData('reload')}
           disabled={updating}
-          bsSize="small"
-          style={{ marginRight: '1em' }}
+          intent={Intent.PRIMARY}
         >
-          <FA name="refresh" spin={updating} ></FA>
+          {t('Update')}
         </Button>
-        {
-          fcds.map(fcd => (
-            fcd
-              ? <span key={fcd[0]} className="data-version">
-                {fcd[0]}: <Label bsStyle="primary">{fcd[1]}</Label>
-              </span>
-              : null
-          ))
-        }
       </>
     )
   }

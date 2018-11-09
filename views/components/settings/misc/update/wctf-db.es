@@ -5,8 +5,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import glob from 'glob'
 import Promise from 'bluebird'
-import FA from 'react-fontawesome'
-import { Button, Label } from 'react-bootstrap'
+import { Button, Intent } from '@blueprintjs/core'
 import { Trans } from 'react-i18next'
 
 import { wctfSelector } from 'views/utils/selectors'
@@ -164,15 +163,16 @@ export class WctfDB extends Component {
     const { updating } = this.state
     return (
       <>
+        {this.props.version}
+        {' '}
         <Button
-          bsSize="small"
+          minimal
           onClick={this.handleRefesh}
           disabled={updating}
-          style={{ marginRight: '1em' }}
+          intent={Intent.PRIMARY}
         >
-          <FA name="refresh" spin={updating} />
+          <Trans>setting:Update</Trans>
         </Button>
-        <Trans>setting:Who Calls The Fleet Database</Trans>: <Label bsStyle="primary">{this.props.version}</Label>
       </>
     )
   }

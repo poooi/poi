@@ -1,26 +1,21 @@
 import React, { Component } from 'react'
 import { shell, remote } from 'electron'
 import { Divider } from '../components/divider'
-import { Grid, Col, Row, Button } from 'react-bootstrap'
+import { Grid, Col } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import { CheckboxLabelConfig } from '../components/checkbox'
-import { checkUpdate } from 'views/services/update'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
-import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 
 import { VersionInfo } from './version-info'
-import { DownloadProgress } from './download-progress'
 import { AppMetrics } from './app-metrics'
-import { FCD } from './fcd'
-import { WctfDB } from './wctf-db'
 import { OpenCollective } from './open-collective'
 import { GPUStatus } from './gpu-status'
+import { Update } from './update'
 
 import '../assets/misc.css'
 
-const {ROOT, POI_VERSION, CONST, config} = window
+const { CONST, config} = window
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 config.on('config.set', (path, value) => {
@@ -43,39 +38,9 @@ export class Misc extends Component {
     return (
       <>
       <VersionInfo />
+      <Update />
       <div id="poi-others" className="poi-others">
-        <Row>
-          <Col xs={6}>
-            <Divider text={`${t('setting:Current version')}: v${POI_VERSION}`} />
-          </Col>
-          <Col xs={6}>
-            <DownloadProgress />
-          </Col>
-        </Row>
-        <Grid>
-          <Col xs={6}>
-            <Button onClick={checkUpdate}>{t('setting:Check Update')}</Button>
-          </Col>
-          <Col xs={6}>
-            <CheckboxLabelConfig
-              label={t('setting:Check update of beta version')}
-              configName="poi.update.beta"
-              defaultValue={false} />
-          </Col>
-        </Grid>
-        <Divider text={t('setting:Data version')} />
-        <Grid>
-          <Col xs={12}>
-            <FCD />
-          </Col>
-          <Col xs={12}>
-            <WctfDB />
-          </Col>
-        </Grid>
-        <Divider text={t('setting:GPU')} />
-        <Col xs={12}>
-          <GPUStatus />
-        </Col>
+        <GPUStatus />
         <Divider text={t('setting:Performance Monitor')} />
         <Col xs={12}>
           <AppMetrics />
