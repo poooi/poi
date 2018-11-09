@@ -9,7 +9,7 @@ import { Update } from './update'
 import { Contributors } from './contributors'
 import { ThanksTo } from './thanks-to'
 
-export const Misc = () => (
+export const About = () => (
   <div>
     <VersionInfo />
     <Update />

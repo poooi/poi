@@ -8,7 +8,7 @@ import { PoiConfig } from './main'
 import { DisplayConfig } from './display'
 import { NetworkConfig } from './network'
 import { PluginConfig } from './plugin'
-import { Misc } from './misc'
+import { About } from './about'
 
 import './assets/settings.css'
 
@@ -40,7 +40,7 @@ const TABS = [
   {
     id: -1,
     title: 'About',
-    component: Misc,
+    component: About,
     icon: 'question-circle',
   },
 ]
