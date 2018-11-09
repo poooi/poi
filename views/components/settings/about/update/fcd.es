@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Tag, Intent, Tooltip } from '@blueprintjs/core'
+import { Button, Intent, Tooltip } from '@blueprintjs/core'
 import { connect } from 'react-redux'
 import { get, entries, map, max, values } from 'lodash'
 import { sync as globSync } from 'glob'

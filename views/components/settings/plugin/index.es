@@ -117,12 +117,12 @@ export class PluginConfig extends Component {
   handleEnable = memoize(index => async () => {
     const plugin = this.props.plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)) {
-      case PluginManager.DISABLED:
-        await PluginManager.enablePlugin(plugin)
-        break
-      case PluginManager.VALID:
-        await PluginManager.disablePlugin(plugin)
-        break
+    case PluginManager.DISABLED:
+      await PluginManager.enablePlugin(plugin)
+      break
+    case PluginManager.VALID:
+      await PluginManager.disablePlugin(plugin)
+      break
     }
   })
 
@@ -305,21 +305,21 @@ export class PluginConfig extends Component {
 
     let installStatusIntent, installStatusText
     switch (manuallyInstallStatus) {
-      case 1:
-        installStatusIntent = Intent.NONE
-        installStatusText = <>{t('setting:Installing')}...</>
-        break
-      case 2:
-        installStatusIntent = Intent.SUCCESS
-        installStatusText = t('setting:Plugins are installed successfully')
-        break
-      case 3:
-        installStatusIntent = Intent.DANGER
-        installStatusText = t('setting:InstallFailedMsg')
-        break
-      default:
-        installStatusIntent = Intent.WARNING
-        installStatusText = ''
+    case 1:
+      installStatusIntent = Intent.NONE
+      installStatusText = <>{t('setting:Installing')}...</>
+      break
+    case 2:
+      installStatusIntent = Intent.SUCCESS
+      installStatusText = t('setting:Plugins are installed successfully')
+      break
+    case 3:
+      installStatusIntent = Intent.DANGER
+      installStatusText = t('setting:InstallFailedMsg')
+      break
+    default:
+      installStatusIntent = Intent.WARNING
+      installStatusText = ''
     }
 
     return (
