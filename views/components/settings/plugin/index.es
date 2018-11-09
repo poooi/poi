@@ -35,7 +35,13 @@ const AdvancePopover = styled(Popover)`
   flex: 1 1 auto;
 `
 
-const AdvanceButton = styled(Button)`
+const SettingButton = styled(Button)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+const AdvanceButton = styled(SettingButton)`
   width: 100%;
 `
 
@@ -111,12 +117,12 @@ export class PluginConfig extends Component {
   handleEnable = memoize(index => async () => {
     const plugin = this.props.plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)) {
-    case PluginManager.DISABLED:
-      await PluginManager.enablePlugin(plugin)
-      break
-    case PluginManager.VALID:
-      await PluginManager.disablePlugin(plugin)
-      break
+      case PluginManager.DISABLED:
+        await PluginManager.enablePlugin(plugin)
+        break
+      case PluginManager.VALID:
+        await PluginManager.disablePlugin(plugin)
+        break
     }
   })
 
@@ -125,7 +131,7 @@ export class PluginConfig extends Component {
   })
 
   handleInstall = memoize(name => async () => {
-    let installingPluginNames = [ ...this.state.installingPluginNames, name ]
+    let installingPluginNames = [...this.state.installingPluginNames, name]
     this.setState({
       installingPluginNames,
       npmWorking: true,
@@ -299,21 +305,21 @@ export class PluginConfig extends Component {
 
     let installStatusIntent, installStatusText
     switch (manuallyInstallStatus) {
-    case 1:
-      installStatusIntent = Intent.NONE
-      installStatusText = <>{t('setting:Installing')}...</>
-      break
-    case 2:
-      installStatusIntent = Intent.SUCCESS
-      installStatusText = t('setting:Plugins are installed successfully')
-      break
-    case 3:
-      installStatusIntent = Intent.DANGER
-      installStatusText = t('setting:InstallFailedMsg')
-      break
-    default:
-      installStatusIntent = Intent.WARNING
-      installStatusText = ''
+      case 1:
+        installStatusIntent = Intent.NONE
+        installStatusText = <>{t('setting:Installing')}...</>
+        break
+      case 2:
+        installStatusIntent = Intent.SUCCESS
+        installStatusText = t('setting:Plugins are installed successfully')
+        break
+      case 3:
+        installStatusIntent = Intent.DANGER
+        installStatusText = t('setting:InstallFailedMsg')
+        break
+      default:
+        installStatusIntent = Intent.WARNING
+        installStatusText = ''
     }
 
     return (
@@ -326,22 +332,22 @@ export class PluginConfig extends Component {
         <Card>
           <Control className="plugin-manage-control">
             <ButtonGroup fill>
-              <Button onClick={this.checkUpdate} disabled={this.state.checkingUpdate}>
+              <SettingButton onClick={this.checkUpdate} disabled={this.state.checkingUpdate}>
                 <FontAwesome name="refresh" spin={this.state.checkingUpdate} />
                 <span> {t('setting:Check Update')}</span>
-              </Button>
-              <Button
+              </SettingButton>
+              <SettingButton
                 onClick={this.handleUpdateAll}
                 disabled={
                   this.state.npmWorking ||
-                this.state.checkingUpdate ||
-                !PluginManager.getUpdateStatus()
+                  this.state.checkingUpdate ||
+                  !PluginManager.getUpdateStatus()
                 }
               >
                 <FontAwesome name={updateStatusFAname} pulse={this.state.updatingAll} />
                 <span> {t('setting:Update all')}</span>
-              </Button>
-              <Button
+              </SettingButton>
+              <SettingButton
                 onClick={this.handleInstallAll}
                 disabled={
                   this.state.npmWorking || Object.keys(uninstalledPluginSettings).length === 0
@@ -349,7 +355,7 @@ export class PluginConfig extends Component {
               >
                 <FontAwesome name={installStatusFAname} pulse={this.state.installingAll} />
                 <span> {t('setting:Install all')}</span>
-              </Button>
+              </SettingButton>
               <AdvancePopover
                 position={Position.BOTTOM}
                 targetTagName="div"
