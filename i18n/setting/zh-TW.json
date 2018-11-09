@@ -202,5 +202,6 @@
   "Poi internal data": "Poi 內部數據",
   "Linked": "鏈接插件",
   "Available": "可用更新",
-  "repair-plugins-confirmation": "Poi 將刪除當前插件目錄並重新安裝插件，這個操作不會影響插件數據，但需要一定的時間，繼續嗎？"
+  "repair-plugins-confirmation": "Poi 將刪除當前插件目錄並重新安裝插件，這個操作不會影響插件數據，但需要一定的時間，繼續嗎？",
+  "Network setting changes will be effective after restarting Poi": "网络设置的变更将在重新启动 Poi 后生效"
 }
