@@ -155,8 +155,9 @@ app.on('ready', () => {
       nodeIntegrationInWorker: true,
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
+      experimentalFeatures: true,
     },
-    backgroundColor: '#E62A2A2A',
+    backgroundColor: '#00000000',
   })
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
@@ -204,6 +205,11 @@ app.on('ready', () => {
         mainWindow.show()
       }
     })
+  }
+
+  // devtool
+  if (dbg.isEnabled() && config.get('poi.devtool.enable', true)) {
+    require('./lib/devtool')
   }
 })
 // http basic auth

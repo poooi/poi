@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { FormControl, Button } from 'react-bootstrap'
 import { translate } from 'react-i18next'
+import { TextArea, Button, Intent } from '@blueprintjs/core'
 
 @translate(['setting'])
 export class PluginSettingWrapper extends Component {
@@ -36,13 +36,13 @@ export class PluginSettingWrapper extends Component {
         <div>
           <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
           <p>{t('PluginErrorMsg')}</p>
-          <FormControl
-            componentClass="textarea"
+          <TextArea
+            fill
             readOnly
             value={code}
             style={{ height: '10em' }}
           />
-          <Button bsStyle="primary" onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
+          <Button intent={Intent.PRIMARY} onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
         </div>
       )
     }

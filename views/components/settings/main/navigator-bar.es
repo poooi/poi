@@ -1,9 +1,21 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Button, ButtonGroup, FormControl, InputGroup, FormGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { translate } from 'react-i18next'
+import styled from 'styled-components'
+import {
+  Button,
+  ButtonGroup,
+  InputGroup,
+  Tooltip,
+  Intent,
+  Position,
+  FormGroup,
+} from '@blueprintjs/core'
 
 import { gameRefreshPage, gameReload } from 'views/services/utils'
+import { ContextButtonTooltip } from 'views/components/etc/context-button-tooltip'
+
+import { Section } from '../components/section'
 
 const { config, getStore } = window
 const wvStatus = {
@@ -12,18 +24,43 @@ const wvStatus = {
   Failed: 2,
 }
 
-import '../assets/navigator-bar.css'
+const Wrapper = styled.div`
+  display: flex;
+`
+
+const URL = styled.div`
+  flex: 1;
+
+  svg {
+    z-index: 16;
+    top: 30%;
+    left: 10px;
+    position: absolute;
+  }
+
+  input {
+    font-size: 12px;
+  }
+`
+
+const Control = styled.div`
+  margin-left: 1em;
+`
 
 @translate(['setting'])
 export class NavigatorBar extends React.Component {
   constructor() {
     super()
-    config.setDefault('poi.misc.homepage', 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/')
+    config.setDefault(
+      'poi.misc.homepage',
+      'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
+    )
     this.state = {
       status: 1,
       url: config.get('poi.misc.homepage'),
     }
   }
+
   componentDidMount() {
     const load = () => {
       const webview = getStore('layout.webview.ref')
@@ -32,15 +69,17 @@ export class NavigatorBar extends React.Component {
         webview.getWebContents().addListener('did-stop-loading', this.onStopLoading)
         webview.getWebContents().addListener('did-fail-load', this.onFailLoad)
         webview.getWebContents().addListener('will-navigate', this.onWillNavigate)
+        this.webview = webview
       } catch (e) {
         setTimeout(load, 1000)
       }
     }
     load()
   }
+
   componentWillUnmount() {
     try {
-      const webview = getStore('layout.webview.ref')
+      const { webview } = this
       webview.getWebContents().removeListener('did-start-loading', this.onStartLoading)
       webview.getWebContents().removeListener('did-stop-loading', this.onStopLoading)
       webview.getWebContents().removeListener('did-fail-load', this.onFailLoad)
@@ -50,60 +89,73 @@ export class NavigatorBar extends React.Component {
     }
   }
   // Webview Event
-  onStartLoading = (e) => {
+  onStartLoading = e => {
     this.setState({
       status: wvStatus.Loading,
     })
   }
-  onStopLoading = (e) => {
+
+  onStopLoading = e => {
     const webview = getStore('layout.webview.ref')
     this.setState({
       status: wvStatus.Loaded,
-      url: webview.getURL(),
+      url: webview.getURL() || this.state.url,
     })
   }
-  onFailLoad = (e) => {
+
+  onFailLoad = e => {
     this.setState({
       status: wvStatus.Failed,
     })
   }
-  onWillNavigate = (e) => {
+
+  onWillNavigate = e => {
     this.setState({
-      url: e.url,
+      url: e.url || this.state.url,
     })
   }
+
   // UI Interaction
-  navigate(url) {
+  navigate = url => {
+    if (!url) {
+      return
+    }
     const webview = getStore('layout.webview.ref')
     if (!(url.startsWith('http://') || url.startsWith('https://'))) {
       url = `http://${this.state.url}`
     }
     webview.loadURL(url)
     this.setState({
-      url: url,
+      url: url || this.state.url,
     })
   }
-  onChangeUrl = (e) => {
+
+  onChangeUrl = e => {
     this.setState({
-      url: e.target.value,
+      url: e.target.value || this.state.url,
     })
   }
-  onKeydown = (e) => {
+
+  onKeydown = e => {
     if (e.keyCode === 13) {
       this.navigate(this.state.url)
     }
   }
-  onClickNavigate = (e) => {
+
+  onClickNavigate = e => {
     this.navigate(this.state.url)
   }
-  onClickStop = (e) => {
+
+  onClickStop = e => {
     const webview = getStore('layout.webview.ref')
     webview.stop()
   }
-  onClickHomepage = (e) => {
+
+  onClickHomepage = e => {
     config.set('poi.misc.homepage', this.state.url)
   }
-  onRightClickHomepage = (e) => {
+
+  onRightClickHomepage = e => {
     this.navigate(config.get('poi.misc.homepage'))
   }
 
@@ -113,50 +165,75 @@ export class NavigatorBar extends React.Component {
 
     let statusIcon
     if (status === wvStatus.Loading) {
-      statusIcon = <div><FontAwesome name="spinner" pulse /></div>
+      statusIcon = <FontAwesome name="spinner" pulse />
     }
     if (status === wvStatus.Failed) {
-      statusIcon = <div><FontAwesome name="times" /></div>
+      statusIcon = <FontAwesome name="times" />
     }
 
     let navigateAction, navigateIcon
     if (status === wvStatus.Loading) {
       navigateAction = this.onClickStop
-      navigateIcon   = <FontAwesome name="times" />
+      navigateIcon = <FontAwesome name="times" />
     } else {
       navigateAction = this.onClickNavigate
-      navigateIcon   = <FontAwesome name="arrow-right" />
+      navigateIcon = <FontAwesome name="arrow-right" />
     }
 
     return (
-      <div className="navigator">
-        <div className="navigator-url">
-          <FormGroup>
-            <InputGroup bsSize="small" style={{width: '100%'}}>
-              <FormControl type="text"
+      <Section className="navigator" title={t('setting:Browser')}>
+        <Wrapper>
+          <URL className="navigator-url">
+            <FormGroup>
+              <InputGroup
+                type="text"
                 placeholder={t('setting:Input address')}
-                className={statusIcon? 'navigator-status' : 'navigator-no-status'}
+                className={statusIcon ? 'navigator-with-status' : 'navigator-without-status'}
                 value={this.state.url}
                 onChange={this.onChangeUrl}
-                onKeyDown={this.onKeydown} />
-              {statusIcon ? <FormControl.Feedback>
-                {statusIcon}
-              </FormControl.Feedback> : null}
-            </InputGroup>
-          </FormGroup>
-        </div>
-        <div className="navigator-btn">
-          <ButtonGroup>
-            <Button bsSize="small" bsStyle="primary" onClick={navigateAction}>{navigateIcon}</Button>
-            <Button bsSize="small" bsStyle="warning" onClick={gameRefreshPage} onContextMenu={gameReload}><FontAwesome name="refresh" /></Button>
-          </ButtonGroup>
-          <ButtonGroup style={{marginLeft: 5}}>
-            <OverlayTrigger placement="top" overlay={<Tooltip id="nav-homepage">{t('setting:Set as homepage')}</Tooltip>}>
-              <Button bsSize="small" onClick={this.onClickHomepage} onContextMenu={this.onRightClickHomepage}><FontAwesome name="bookmark" /></Button>
-            </OverlayTrigger>
-          </ButtonGroup>
-        </div>
-      </div>
+                onKeyDown={this.onKeydown}
+                leftIcon={statusIcon}
+              />
+            </FormGroup>
+          </URL>
+          <Control className="navigator-control">
+            <ButtonGroup>
+              <Button intent={Intent.PRIMARY} onClick={navigateAction}>
+                {navigateIcon}
+              </Button>
+              <Tooltip
+                position={Position.TOP}
+                content={
+                  <ContextButtonTooltip
+                    left={t('others:Refresh page')}
+                    right={t('others:Reload Flash')}
+                  />
+                }
+              >
+                <Button
+                  intent={Intent.WARNING}
+                  onClick={gameRefreshPage}
+                  onContextMenu={gameReload}
+                >
+                  <FontAwesome name="refresh" />
+                </Button>
+              </Tooltip>
+            </ButtonGroup>
+            <Tooltip
+              position={Position.TOP}
+              content={
+                <ContextButtonTooltip left={t('Set as homepage')} right={t('Load homepage')} />
+              }
+            >
+              <ButtonGroup style={{ marginLeft: 5 }}>
+                <Button onClick={this.onClickHomepage} onContextMenu={this.onRightClickHomepage}>
+                  <FontAwesome name="bookmark" />
+                </Button>
+              </ButtonGroup>
+            </Tooltip>
+          </Control>
+        </Wrapper>
+      </Section>
     )
   }
 }

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { FormControl, ControlLabel, InputGroup, FormGroup, Button } from 'react-bootstrap'
+import { FormGroup, ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core'
 import { trim, last } from 'lodash'
 import npa from 'npm-package-arg'
 import { translate } from 'react-i18next'
@@ -11,7 +11,7 @@ import { translate } from 'react-i18next'
  * @returns {boolean}
  */
 const validate = packageName => {
-  if(!packageName) {
+  if (!packageName) {
     return false
   }
   let resolved
@@ -29,41 +29,47 @@ const validate = packageName => {
 @translate(['setting'])
 export class NameInput extends PureComponent {
   static propTypes = {
-    handleManuallyInstall: PropTypes.func,
-    manuallyInstallStatus: PropTypes.number,
+    onInstall: PropTypes.func,
+    status: PropTypes.number,
     npmWorking: PropTypes.bool,
   }
+
   state = {
     packageName: '',
   }
-  changeInstalledPackage = (e) => {
-    this.setState({packageName: trim(e.target.value)})
+
+  changeInstalledPackage = e => {
+    this.setState({ packageName: trim(e.target.value) })
   }
+
+  handleClick = () => {
+    this.props.onInstall(this.state.packageName)
+  }
+
   render() {
     const { packageName } = this.state
     const { t } = this.props
     const validPackageName = validate(packageName)
     return (
-      <FormGroup>
-        <ControlLabel>{t('setting:Install directly from npm')}</ControlLabel>
-        <InputGroup bsSize="small">
-          <FormControl type="text"
+      <FormGroup label={t('setting:Install directly from npm')}>
+        <ControlGroup fill>
+          <InputGroup
+            type="text"
             value={packageName}
             onChange={this.changeInstalledPackage}
-            label={t('setting:Install directly from npm')}
-            disabled={this.props.manuallyInstallStatus === 1 || this.props.npmWorking}
-            placeholder={t('setting:Input plugin package name') + '...'}>
-          </FormControl>
-          <InputGroup.Button>
-            <Button bsStyle="primary"
-              disabled={this.props.manuallyInstallStatus === 1 ||
-                      this.props.npmWorking ||
-                      !validPackageName}
-              onClick={this.props.handleManuallyInstall.bind(null, this.state.packageName)}>
-              {t('setting:Install')}
-            </Button>
-          </InputGroup.Button>
-        </InputGroup>
+            disabled={this.props.status === 1 || this.props.npmWorking}
+            placeholder={t('setting:Input plugin package name') + '...'}
+          />
+          <Button
+            intent={Intent.PRIMARY}
+            disabled={
+              this.props.status === 1 || this.props.npmWorking || !validPackageName
+            }
+            onClick={this.handleClick}
+          >
+            {t('setting:Install')}
+          </Button>
+        </ControlGroup>
       </FormGroup>
     )
   }

@@ -7,6 +7,7 @@ import { screen, remote } from 'electron'
 import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { PluginWrap } from './plugin-wrapper'
+import styled, { StyleSheetManager } from 'styled-components'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 const { BrowserWindow } = remote
@@ -35,6 +36,29 @@ const getPluginWindowRect = plugin => {
   }
   return { x, y, width, height }
 }
+
+const PoiAppTabpane = styled.div`
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+`
+
+const stylesheetTagsWithID = [
+  'bootstrap',
+  'normalize',
+  'blueprint',
+  'blueprint-icon',
+  'fontawesome',
+].map(id => `<link rel="stylesheet" type="text/css" id="${id}-css">`).join('')
+
+const stylesheetTagsWithHref = [
+  'assets/css/app.css',
+  'assets/css/global.css',
+  'electron-react-titlebar/assets/style.css',
+  'react-resizable/css/styles.css',
+  'react-grid-layout/css/styles.css',
+].map(href => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`).join('')
 
 
 export class PluginWindowWrap extends PureComponent {
@@ -98,15 +122,7 @@ export class PluginWindowWrap extends PureComponent {
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
-<link rel="stylesheet" type="text/css" id="bootstrap-css">
-<link rel="stylesheet" type="text/css" id="fontawesome-css">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('react-resizable/css/styles.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('react-grid-layout/css/styles.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/avatar.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/etc/assets/scroll-shadow.css'))}">`
+${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
         div.style.position = 'absolute'
@@ -196,12 +212,14 @@ export class PluginWindowWrap extends PureComponent {
           window: this.externalWindow,
           mountPoint: this.containerEl,
         }}>
-          <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.pluginContainer}>
-            <PluginWrap
-              key={this.props.plugin.id}
-              plugin={this.props.plugin}
-            />
-          </div>
+          <StyleSheetManager target={this.externalWindow.document.head}>
+            <PoiAppTabpane className="poi-app-tabpane" ref={this.pluginContainer}>
+              <PluginWrap
+                key={this.props.plugin.id}
+                plugin={this.props.plugin}
+              />
+            </PoiAppTabpane>
+          </StyleSheetManager>
         </WindowEnv.Provider>
       </>,
       this.externalWindow.document.querySelector('#plugin-mountpoint'))

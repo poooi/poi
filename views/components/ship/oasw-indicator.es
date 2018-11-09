@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize } from 'lodash'
-import { Label } from 'react-bootstrap'
+import { Tag, Intent } from '@blueprintjs/core'
 
 import {
   shipDataSelectorFactory, shipEquipDataSelectorFactory,
@@ -10,6 +10,7 @@ import {
 } from 'views/utils/selectors'
 import { isOASWWith } from 'views/utils/oasw'
 import { translate } from 'react-i18next'
+import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
 const isOASWFuncSelector = createSelector(
   allCVEIdsSelector,
@@ -35,9 +36,8 @@ export const OASWIndicator = translate(['main'])(connect(
     isOASW: OASWSelectorFactory(shipId)(state),
   })
 )(({ isOASW, shipId, t }) => (
-  isOASW ?
-    <span className="ship-oasw">
-      <Label bsStyle="primary">{t('main:OASW')}</Label>
-    </span>
-    : <span />
+  isOASW &&
+    <ShipLabel className="ship-skill-indicator ship-oasw" isTag>
+      <Tag minimal intent={Intent.PRIMARY}>{t('main:OASW')}</Tag>
+    </ShipLabel>
 )))

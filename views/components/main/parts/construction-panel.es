@@ -1,121 +1,169 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+/* global getStore */
 import { join } from 'path-extra'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { MaterialIcon } from 'views/components/etc/icon'
-import { join as joinString, range, get } from 'lodash'
+import { join as joinString, range, get, map } from 'lodash'
 import FA from 'react-fontawesome'
 import { translate } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
+import { Intent, Position, ResizeSensor } from '@blueprintjs/core'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
-
-import '../assets/construction-panel.css'
+import { DockPanelCardWrapper, PanelItemTooltip, DockInnerWrapper, Panel, Watermark, DockName, EmptyDockWrapper } from './styled-components'
 
 const EmptyDock = ({ state }) => (
-  <div className="empty-dock">
+  <EmptyDockWrapper className="empty-dock">
     <FA name={state === 0 ? 'inbox' : 'lock'} />
-  </div>
+  </EmptyDockWrapper>
 )
 
 const getPanelDimension = width => {
-  if (width > 700) {
+  if (width > 500) {
     return 4
   }
-  if (width > 350) {
+  if (width > 210) {
     return 2
   }
   return 1
 }
 
+const materials = [1, 2, 3, 4, 7]
+
+const getTagIntent = ({ isLSC }, timeRemaining) =>
+  timeRemaining > 600 && isLSC
+    ? Intent.DANGER
+    : timeRemaining > 600
+      ? Intent.PRIMARY
+      : timeRemaining > 0
+        ? Intent.WARNING
+        : timeRemaining == 0
+          ? Intent.SUCCESS
+          : Intent.NONE
+
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
+
 @translate(['main'])
-@connect((state) => ({
+@connect(state => ({
   constructions: state.info.constructions,
   $ships: state.const.$ships,
   canNotify: state.misc.canNotify,
   enableAvatar: get(state, 'config.poi.appearance.avatar', true),
-  dimension: getPanelDimension(get(state, 'layout.combinedpane.width', 250)),
 }))
 export class ConstructionPanel extends Component {
-  getMaterialImage = (idx) => {
-    return <MaterialIcon materialId={idx} className="material-icon" />
-  }
-  getDockShipName = (dockId, defaultVal) => {
-    const id = get(this.props.constructions, [dockId, 'api_created_ship_id'])
-    return id ? this.props.t(`resources:${ this.props.$ships[id].api_name }`) : defaultVal
-  }
-  getLabelStyle = ({isLSC}, timeRemaining) => {
-    return (
-      (timeRemaining > 600 && isLSC) ? 'danger' :
-        (timeRemaining > 600) ? 'primary' :
-          (timeRemaining > 0) ? 'warning' :
-            (timeRemaining == 0) ? 'success' :
-              'default'
-    )
-  }
   static basicNotifyConfig = {
     icon: join(window.ROOT, 'assets', 'img', 'operation', 'build.png'),
     type: 'construction',
     title: i18next.t('main:Construction'),
-    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:built')}`,
+    message: names => `${joinString(names, ', ')} ${i18next.t('main:built')}`,
   }
+
+  state = {
+    dimension: 2,
+  }
+
+  getDockShipName = (dockId, defaultValue) => {
+    const id = get(this.props.constructions, [dockId, 'api_created_ship_id'])
+    return id ? this.props.t(`resources:${this.props.$ships[id].api_name}`) : defaultValue
+  }
+
+  handleResize= ([entry]) => {
+    const dimension = getPanelDimension(entry.contentRect.width)
+
+    if (dimension !== this.state.dimension) {
+      this.setState({
+        dimension,
+      })
+    }
+  }
+
   render() {
-    const {constructions, canNotify, enableAvatar, dimension} = this.props
+    const { constructions, canNotify, enableAvatar, editable } = this.props
+    const  { dimension } = this.state
     return (
-      <>
-        {
-          range(4).map((i) => {
-            const dock = get(constructions, i, {api_state: -1, api_complete_time: 0})
-            const isInUse = dock.api_state > 0
-            const isLSC = isInUse && dock.api_item1 >= 1000
-            const dockName = dock.api_state == -1 ? this.props.t('main:Locked') :
-              dock.api_state == 0 ? this.props.t('main:Empty')
+      <ResizeSensor onResize={this.handleResize}>
+        <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
+          <Panel>
+            {range(4).map(i => {
+              const dock = get(constructions, i, { api_state: -1, api_complete_time: 0 })
+              const isInUse = dock.api_state > 0
+              const isLSC = isInUse && dock.api_item1 >= 1000
+              const dockName =
+            dock.api_state == -1
+              ? this.props.t('main:Locked')
+              : dock.api_state == 0
+                ? this.props.t('main:Empty')
                 : this.getDockShipName(i, '???')
-            const completeTime = isInUse ? dock.api_complete_time : -1
-            const tooltipTitleClassname = isLSC ? {color: '#D9534F', fontWeight: 'bold'} : null
-            return (
-              <OverlayTrigger key={i} placement="top" overlay={
-                <Tooltip id={`kdock-material-${i}`} style={!isInUse && {display: 'none'}}>
-                  {
-                    <span style={tooltipTitleClassname}>{dockName}<br /></span>
+              const completeTime = isInUse ? dock.api_complete_time : -1
+              const tooltipTitleClassname = isLSC ? { color: '#D9534F', fontWeight: 'bold' } : undefined
+
+              return (
+                <PanelItemTooltip
+                  key={i}
+                  dimension={dimension}
+                  disabled={!isInUse}
+                  position={Position.TOP}
+                  wrapperTagName="div"
+                  className="panel-item-wrapper kdock-item-wrapper"
+                  targetTagName="div"
+                  targetClassName="panel-item kdock-item"
+                  content={
+                  <>
+                    {
+                      <span style={tooltipTitleClassname}>
+                        {dockName}
+                        <br />
+                      </span>
+                    }
+                    {map(materials, (id, index) => (
+                      <span key={id}>
+                        <MaterialIcon materialId={id} className="material-icon" />
+                        {dock[`api_item${index + 1}`]}
+                      </span>
+                    ))}
+                  </>
                   }
-                  {this.getMaterialImage(1)} {dock.api_item1}
-                  {this.getMaterialImage(2)} {dock.api_item2}
-                  {this.getMaterialImage(3)} {dock.api_item3}
-                  {this.getMaterialImage(4)} {dock.api_item4}
-                  {this.getMaterialImage(7)} {dock.api_item5}
-                </Tooltip>
-              }>
-                <div className="panel-item kdock-item" style={{ flexBasis: `calc(${100 / dimension}% - 8px)` }}>
-                  {
-                    enableAvatar &&
+                >
+                  <DockInnerWrapper>
+                    {enableAvatar && (
                     <>
-                      {
-                        dock.api_state > 0
-                          ? <Avatar height={20} mstId={get(constructions, [i, 'api_created_ship_id'])} />
-                          : <EmptyDock state={dock.api_state} />
-                      }
+                      {dock.api_state > 0 ? (
+                        <Avatar
+                          height={20}
+                          mstId={get(constructions, [i, 'api_created_ship_id'])}
+                        />
+                      ) : (
+                        <EmptyDock state={dock.api_state} />
+                      )}
                     </>
-                  }
-                  <span className="kdock-name">{dockName}</span>
-                  <CountdownNotifierLabel
-                    timerKey={`kdock-${i+1}`}
-                    completeTime={completeTime}
-                    isLSC={isLSC}
-                    getLabelStyle={this.getLabelStyle}
-                    getNotifyOptions={() => canNotify && (completeTime >= 0) && {
-                      ...this.constructor.basicNotifyConfig,
-                      args: dockName,
-                      completeTime: completeTime,
-                    }}
-                  />
-                </div>
-              </OverlayTrigger>
-            )
-          })
-        }
-      </>
+                    )}
+                    <DockName className="kdock-name">{dockName}</DockName>
+                    <CountdownNotifierLabel
+                      timerKey={`kdock-${i + 1}`}
+                      completeTime={completeTime}
+                      isLSC={isLSC}
+                      getLabelStyle={getTagIntent}
+                      getNotifyOptions={() =>
+                        canNotify &&
+                      completeTime >= 0 && {
+                          ...this.constructor.basicNotifyConfig,
+                          args: dockName,
+                          completeTime: completeTime,
+                        }
+                      }
+                      isActive={isActive}
+                    />
+                  </DockInnerWrapper>
+                </PanelItemTooltip>
+              )
+            })}
+          </Panel>
+          <Watermark>
+            <FA name="industry" />
+          </Watermark>
+        </DockPanelCardWrapper>
+      </ResizeSensor>
     )
   }
 }

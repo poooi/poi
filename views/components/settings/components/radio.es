@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Col, Grid, Radio } from 'react-bootstrap'
-import { get } from 'lodash'
+import { get, map } from 'lodash'
+import { Radio, RadioGroup } from '@blueprintjs/core'
 
 const { config } = window
 
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultVal),
+  value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,
   label: props.label,
   availableVal: props.availableVal,
@@ -18,26 +18,28 @@ export class RadioConfig extends Component {
     configName: PropTypes.string,
     value: PropTypes.string,
     availableVal: PropTypes.array,
+    defaultValue: PropTypes.string,
   }
-  onSelect = (value) => {
-    config.set(this.props.configName, value)
+
+  componentDidMount = () => {
+    if (typeof this.props.defaultVal !== 'undefined') {
+      console.error('prop `defaultVal` is deprecated, use `defaultValue` instaed')
+    }
   }
+
+  handleChange = e => {
+    config.set(this.props.configName, e.currentTarget.value)
+  }
+
   render() {
     return (
-      <Grid>
-        {
-          this.props.availableVal.map((item, index) => {
-            return (
-              <Col key={index} xs={3}>
-                <Radio checked={this.props.value === item.value}
-                  onChange={this.onSelect.bind(this, item.value)} >
-                  {item.name}
-                </Radio>
-              </Col>
-            )
-          })
-        }
-      </Grid>
+      <RadioGroup inline selectedValue={this.props.value} onChange={this.handleChange}>
+        {map(this.props.availableVal, item => (
+          <Radio key={item.value} value={item.value}>
+            {item.name}
+          </Radio>
+        ))}
+      </RadioGroup>
     )
   }
 }

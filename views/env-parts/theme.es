@@ -43,24 +43,35 @@ window.loadTheme = (theme = 'paperdark') => {
   if ($('#bootstrap-css')) {
     $('#bootstrap-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/${window.isVibrant ? 'vibrant' : 'normal'}/${theme}.css`)))
   }
+  if ($('#blueprint-css')) {
+    $('#blueprint-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/blueprint/blueprint-${window.isVibrant ? 'vibrant' : 'normal'}.css`)))
+  }
+  if ($('#blueprint-icon-css')) {
+    $('#blueprint-icon-css').setAttribute('href', fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')))
+  }
+  if ($('#normalize-css')) {
+    $('#normalize-css').setAttribute('href', fileUrl(require.resolve('normalize.css/normalize.css')))
+  }
   window.reloadCustomCss()
 }
 
 window.applyTheme = theme => config.set('poi.appearance.theme', theme)
+
+const setBackgroundColor = value => {
+  if (document.body) {
+    document.body.style.backgroundColor = value
+  } else {
+    setTimeout(() => setBackgroundColor(value), 100)
+  }
+}
 
 const windowsSetVibrancy = value => {
   try {
     const electronVibrancy = remote.require(join(window.ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
     if (value === 1) {
       electronVibrancy.SetVibrancy(remote.getCurrentWindow(), 0)
-      if (window.isWindowMode) {
-        remote.getCurrentWindow().setBackgroundColor('#002A2A2A')
-      }
     } else {
       electronVibrancy.DisableVibrancy(remote.getCurrentWindow())
-      if (window.isWindowMode) {
-        remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-      }
     }
   } catch (e) {
     console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
@@ -76,8 +87,17 @@ window.setVibrancy = value => {
     })
   }
   window.allThemes = themes
+  if (value) {
+    if ('darwin' === process.platform) {
+      setBackgroundColor('#202b3396')
+    } else {
+      setBackgroundColor('#202b33e6')
+    }
+  } else {
+    setBackgroundColor('#202b33')
+  }
   if ('darwin' === process.platform) {
-    remote.getCurrentWindow().setVibrancy((value === 1) ? 'ultra-dark' : null)
+    remote.getCurrentWindow().setVibrancy((value === 1) ? 'dark' : null)
   } else if('win32' === process.platform) {
     if (remote.getCurrentWindow().isVisible()) {
       windowsSetVibrancy(value)
@@ -191,23 +211,13 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 if (process.platform === 'win32') {
   remote.getCurrentWindow().on('blur', () => {
     if (config.get('poi.appearance.vibrant', 0) === 1) {
-      remote.getCurrentWindow().setBackgroundColor(window.isMain || window.blurpolyfill ? '#E62A2A2A' : '#FF2A2A2A')
+      remote.getCurrentWindow().setBackgroundColor('#00000000')
     }
   })
 
   remote.getCurrentWindow().once('focus', () => {
     if (config.get('poi.appearance.vibrant', 0) === 1) {
-      remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-      window.blurpolyfill = true
-      remote.getCurrentWindow().on('focus', () => {
-        if (config.get('poi.appearance.vibrant', 0) === 1) {
-          remote.getCurrentWindow().setBackgroundColor('#E62A2A2A')
-        }
-      })
-      if (!window.isMain) {
-        remote.getCurrentWindow().blur()
-        remote.getCurrentWindow().focus()
-      }
+      remote.getCurrentWindow().setBackgroundColor('#00000000')
     }
   })
 }

@@ -4,16 +4,16 @@ import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { shell, remote, clipboard, nativeImage } from 'electron'
-import { Button, OverlayTrigger, Tooltip, Collapse } from 'react-bootstrap'
+import { Button, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import FontAwesome from 'react-fontawesome'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { translate, Trans } from 'react-i18next'
+import styled, { css } from 'styled-components'
+import { CustomTag } from 'views/components/etc/custom-tag'
+import { Tooltip } from 'views/components/etc/overlay'
+
 const ipc = remote.require('./lib/ipc')
-
-import './assets/control.css'
-
 const { openExternal } = shell
 
 const openItemAsync = (dir, source=null) => {
@@ -24,6 +24,24 @@ const openItemAsync = (dir, source=null) => {
     }
   })
 }
+
+const PoiControlTag = styled(CustomTag)`
+  width: 0;
+  transition: 0.3s 0.2s;
+  display: flex;
+  flex-direction: row;
+  ${({extend}) => extend ? css`
+    flex: 0 0 270px;
+  ` : css`
+    flex: 0 0 120px;
+  `}
+`
+
+const PoiControlInner = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1;
+`
 
 // Controller icon bar
 // const {openFocusedWindowDevTools} = remote.require('./lib/window')
@@ -37,9 +55,11 @@ export class PoiControl extends Component {
   static propTypes = {
     muted: PropTypes.bool,
   }
+
   state = {
     extend: false,
   }
+
   handleCapturePage = toClipboard => {
     getStore('layout.webview.ref').executeJavaScript(`(function() {
       const canvas = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentDocument.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
@@ -80,6 +100,7 @@ export class PoiControl extends Component {
       })
     }
   }
+
   handleOpenCacheFolder = () => {
     try {
       const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
@@ -96,6 +117,7 @@ export class PoiControl extends Component {
       window.toggleModal(this.props.t('Open cache dir'), this.props.t('NoPermission'))
     }
   }
+
   handleOpenMakaiFolder = () => {
     let dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
     dir = path.join(dir, 'KanColle', 'kcs2', 'resources', 'ship')
@@ -106,6 +128,7 @@ export class PoiControl extends Component {
       window.toggleModal(this.props.t('Open makai dir'), this.props.t('NoPermission'))
     }
   }
+
   handleOpenScreenshotFolder = () => {
     try {
       const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
@@ -116,10 +139,13 @@ export class PoiControl extends Component {
       window.toggleModal(this.props.t('Open screenshot dir'), this.props.t('NoPermission'))
     }
   }
+
   handleSetMuted = () => {
     config.set('poi.content.muted', !this.props.muted)
   }
+
   editableTimeout = 0
+
   editableConfigList = [
     'poi.mainpanel.layout',
     'poi.webview.ratio.horizontal',
@@ -128,12 +154,14 @@ export class PoiControl extends Component {
     'poi.tabarea.mainpanelwidth',
     'poi.tabarea.mainpanelheight',
   ]
+
   enableEditableMsg() {
     toast(this.props.t('If no changes, panel will be locked automatically in 1 minute'), {
       title: this.props.t('Panel unlocked'),
     })
     this.disableEditableMsg()
   }
+
   disableEditableMsg() {
     clearTimeout(this.editableTimeout)
     this.editableTimeout = setTimeout(() => {
@@ -143,6 +171,7 @@ export class PoiControl extends Component {
       })
     }, 60000)
   }
+
   handleConfigChange = (path, value) => {
     if (this.editableConfigList.includes(path)) {
       if (this.props.editable) {
@@ -150,6 +179,7 @@ export class PoiControl extends Component {
       }
     }
   }
+
   handleSetEditable = () => {
     if (!this.props.editable) {
       this.enableEditableMsg()
@@ -158,20 +188,25 @@ export class PoiControl extends Component {
     }
     config.set('poi.layout.editable', !this.props.editable)
   }
+
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()
     remote.getCurrentWindow().openDevTools({mode: 'detach'})
   }
+
   handleOpenWebviewDevTools = () => {
     getStore('layout.webview.ref').openDevTools({mode: 'detach'})
   }
+
   handleJustifyLayout = (e) => {
     getStore('layout.webview.ref').executeJavaScript('window.align()')
     e.preventDefault()
   }
+
   handleUnlockWebview = () => {
     getStore('layout.webview.ref').executeJavaScript('window.unalign()')
   }
+
   handleRefreshGameDialog = (e) => {
     if (e.shiftKey) {
       gameRefreshPage()
@@ -199,9 +234,18 @@ export class PoiControl extends Component {
           style: 'danger' },
       ])
   }
+
   handleSetExtend = () => {
-    this.setState({extend: !this.state.extend})
+    this.setState({
+      extend: !this.state.extend,
+      transition: true,
+    })
   }
+
+  handleTransitionEnd = () => {
+    this.setState({ transition: false })
+  }
+
   handleTouchbar = (props) => {
     //load Touchbar-related functions only when touchbar is triggered
     const {refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
@@ -262,9 +306,17 @@ export class PoiControl extends Component {
     default:
     }
   }
+
   touchbarListener = (event, message) => {
     this.handleTouchbar(message)
   }
+
+  renderButton = ({ label, ...props }) => (
+    <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={this.state.transition}>
+      <Button {...props} minimal />
+    </Tooltip>
+  )
+
   componentDidMount = () => {
     if (this.props.editable) {
       this.disableEditableMsg()
@@ -281,53 +333,78 @@ export class PoiControl extends Component {
       })
     }
   }
+
   componentWillUnmount = () => {
     config.removeListener('config.set', this.handleConfigChange)
     if (process.platform === 'darwin') {
       require('electron').ipcRenderer.removeListener('touchbar', this.touchbarListener)
     }
   }
+
   render() {
     if (process.platform === 'darwin') {
       const { touchBarReInit } = remote.require('./lib/touchbar')
       touchBarReInit()
     }
+    const list = [
+      {
+        onClick: this.handleOpenDevTools,
+        onContextMenu: this.handleOpenWebviewDevTools,
+        label: this.props.t('Developer Tools'),
+        icon: 'console',
+      },
+      {
+        onClick:() => this.handleCapturePage(false),
+        onContextMenu:() => this.handleCapturePage(true),
+        label: this.props.t('Take a screenshot'),
+        icon: 'camera',
+      },
+      {
+        onClick: this.handleSetMuted,
+        onContextMenu: null,
+        label: this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off'),
+        icon: this.props.muted ? 'volume-off' : 'volume-up',
+      },
+      {
+        onClick: this.handleOpenCacheFolder,
+        onContextMenu: null,
+        label: this.props.t('Open cache dir'),
+        icon: 'social-media',
+      },
+      {
+        onClick: this.handleOpenScreenshotFolder,
+        onContextMenu: null,
+        label: this.props.t('Open screenshot dir'),
+        icon: 'media',
+      },
+      {
+        onClick: this.handleJustifyLayout,
+        onContextMenu: this.handleUnlockWebview,
+        label: this.props.t('Auto adjust'),
+        icon: 'fullscreen',
+      },
+      {
+        onClick: this.handleSetEditable,
+        onContextMenu: null,
+        label: this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel'),
+        icon: this.props.editable ? 'unlock' : 'lock',
+      },
+      {
+        onClick: this.handleRefreshGameDialog,
+        onContextMenu: gameReload,
+        label: this.props.t('Refresh game'),
+        icon: 'refresh',
+      },
+    ]
     return (
-      <div className="poi-control-container">
-        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-developers-tools-button" className="poi-control-tooltip">{this.props.t('Developer Tools')}</Tooltip>}>
-          <Button onClick={this.handleOpenDevTools} onContextMenu={this.handleOpenWebviewDevTools} bsSize="small"><FontAwesome name="terminal" /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-screenshot-button" className="poi-control-tooltip">{this.props.t('Take a screenshot')}</Tooltip>}>
-          <Button onClick={() => this.handleCapturePage(false)} onContextMenu={() => this.handleCapturePage(true)} bsSize="small"><FontAwesome name="camera-retro" /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="right" overlay={<Tooltip id="poi-volume-button" className="poi-control-tooltip">{this.props.muted ? this.props.t('Volume on') : this.props.t('Volume off')}</Tooltip>}>
-          <Button onClick={this.handleSetMuted} bsSize="small" className={this.props.muted ? 'active' : ''}><FontAwesome name={this.props.muted ? 'volume-off' : 'volume-up'} /></Button>
-        </OverlayTrigger>
-        <Collapse in={this.state.extend} dimension="width" className="poi-control-extender">
-          <div>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-cache-button" className="poi-control-tooltip">{this.props.t('Open cache dir')}</Tooltip>}>
-              <Button onClick={this.handleOpenCacheFolder}  onContextMenu={this.handleOpenMakaiFolder} bsSize="small"><FontAwesome name="bolt" /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-screenshot-dir-button" className="poi-control-tooltip">{this.props.t('Open screenshot dir')}</Tooltip>}>
-              <Button onClick={this.handleOpenScreenshotFolder} bsSize="small"><FontAwesome name="photo" /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-adjust-button" className="poi-control-tooltip">{this.props.t('Auto adjust')}</Tooltip>}>
-              <Button onClick={this.handleJustifyLayout} onContextMenu={this.handleUnlockWebview} bsSize="small"><FontAwesome name="arrows-alt" /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-volume-button" className="poi-control-tooltip">{this.props.editable ? this.props.t('Lock panel') : this.props.t('Unlock panel')}</Tooltip>}>
-              <Button onClick={this.handleSetEditable} bsSize="small"><FontAwesome name={this.props.editable ? 'pencil-square' : 'pencil-square-o'} /></Button>
-            </OverlayTrigger>
-            <OverlayTrigger placement="right" overlay={<Tooltip id="poi-refresh-button" className="poi-control-tooltip">{this.props.t('Refresh game')}</Tooltip>}>
-              <Button
-                onClick={this.handleRefreshGameDialog}
-                onContextMenu={gameReload}
-                bsSize="small"><FontAwesome name="refresh" />
-              </Button>
-            </OverlayTrigger>
-          </div>
-        </Collapse>
-        <Button onClick={this.handleSetExtend} bsSize="small" className={this.state.extend ? 'active' : ''}><FontAwesome name={this.state.extend ? 'angle-left' : 'angle-right'} /></Button>
-      </div>
+      <PoiControlTag tag="poi-control" extend={this.state.extend} onTransitionEnd={this.handleTransitionEnd}>
+        <PoiControlInner>
+          {list.map(this.renderButton)}
+        </PoiControlInner>
+        <div>
+          <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
+        </div>
+      </PoiControlTag>
     )
   }
 }

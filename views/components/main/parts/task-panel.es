@@ -1,10 +1,14 @@
 import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
-import { Panel, Label, OverlayTrigger, Tooltip, Col } from 'react-bootstrap'
+import { Tag, Intent, ResizeSensor } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
 import React from 'react'
 import { translate, Trans } from 'react-i18next'
+import styled, { css } from 'styled-components'
+
 import { escapeI18nKey } from 'views/utils/tools'
+import { Tooltip } from 'views/components/etc/panel-tooltip'
+import { CardWrapper as CardWrapperL } from './styled-components'
 
 import {
   configLayoutSelector,
@@ -12,8 +16,6 @@ import {
   extensionSelectorFactory,
 } from 'views/utils/selectors'
 import defaultLayout from '../default-layout'
-
-import '../assets/task-panel.css'
 
 const getPanelDimension = width => {
   if (width > 700) {
@@ -30,8 +32,7 @@ const getPanelDimension = width => {
 
 // Return [count, required]
 function sumSubgoals(record) {
-  if (!record)
-    return [0, 0]
+  if (!record) return [0, 0]
   let [count, required] = [0, 0]
   forEach(record, (subgoal, key) => {
     if (subgoal && typeof subgoal === 'object') {
@@ -66,155 +67,226 @@ function getCategory(api_category) {
   }
 }
 
-function getStyleByProgress(quest) {
-  if (!quest)
-    return 'default'
-  const {api_progress_flag, api_state} = quest
-  if (api_state == 3)
+function getIntentByProgress(quest) {
+  if (!quest) {
+    return Intent.NONE
+  }
+  const { api_progress_flag, api_state } = quest
+  if (api_state == 3) {
     return 'success'
+  }
   switch (api_progress_flag) {
-  case 0:         // Empty
-    return 'warning'
-  case 1:         // 50%
-    return 'primary'
-  case 2:         // 80%
-    return 'info'
+  case 0: // Empty
+    return Intent.NONE
+  case 1: // 50%
+    return Intent.WARNING
+  case 2: // 80%
+    return Intent.PRIMARY
   default:
-    return 'default'
+    return Intent.NONE
   }
 }
 
 function progressLabelText(quest) {
-  if (!quest)
-    return ''
-  const {api_progress_flag, api_state} = quest
-  if (api_state == 3)
+  if (!quest) return ''
+  const { api_progress_flag, api_state } = quest
+  if (api_state == 3) {
     return <Trans>main:Completed</Trans>
+  }
   switch (api_progress_flag) {
-  case 1:         // 50%
+  case 1: // 50%
     return '50%'
-  case 2:         // 80%
+  case 2: // 80%
     return '80%'
-  default:        // api_progress_flag == 0, which means empty progress
+  default:
+    // api_progress_flag == 0, which means empty progress
     return <Trans>main:In progress</Trans>
   }
 }
 
-function getStyleByPercent(percent) {
-  if (percent < 0.5)
-    return 'warning'
-  if (percent < 0.8)
-    return 'primary'
-  if (percent < 1)
-    return 'info'
-  return 'success'
+function getIntentByPercent(percent) {
+  if (percent < 0.5) return Intent.NONE
+  if (percent < 0.8) return Intent.WARNING
+  if (percent < 1) return Intent.PRIMARY
+  return Intent.SUCCESS
 }
 
 function getToolTip(record) {
   return (
     <>
-      {
-        values(record).map((subgoal, idx) =>
-          (subgoal && typeof subgoal === 'object')
-            ? <div key={idx}><Trans i18nKey={`data:${ escapeI18nKey(subgoal.description) }`}>{ subgoal.description }</Trans> - {subgoal.count} / {subgoal.required}</div>
-            : undefined
-        )
-      }
+      {values(record).map(
+        (subgoal, idx) =>
+          Boolean(subgoal) &&
+          typeof subgoal === 'object' && (
+            <div key={idx}>
+              <Trans i18nKey={`data:${escapeI18nKey(subgoal.description)}`}>
+                {subgoal.description}
+              </Trans>{' '}
+              - {subgoal.count} / {subgoal.required}
+            </div>
+          ),
+      )}
     </>
   )
 }
 
+const CardWrapper = styled(CardWrapperL)`
+  display: flex;
+  flex-flow: row wrap;
+`
+
+const TaskItem = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding: 4px;
+  ${({colwidth}) => css`
+    width: ${100 * colwidth / 12}%;
+  `}
+`
+
+const QuestNameTooltip = styled(Tooltip)`
+  flex: 1;
+  margin-right: auto;
+  overflow: hidden;
+  padding-right: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const QuestProgress = styled(Tag)`
+  flex: none;
+  text-align: center;
+  min-width: 50px;
+`
+
+const CatIndicator = styled.span`
+  display: inline-block;
+  flex: none;
+  height: 1em;
+  vertical-align: middle;
+  width: 4px;
+  margin-right: 4px;
+  margin-top: -1px;
+`
+
 const TaskRowBase = connect(
-  createSelector([
-    configLayoutSelector,
-    configReverseLayoutSelector,
-    state => get(state, 'layout.mainpane.width', 450),
-    state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
-  ], (layout, reversed, mainPanelWidth, mainPanelLayout) => {
-    const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm']
-      .find(panel => panel.i === 'task-panel')
-    const colCnt = mainPanelWidth > 750 ? 20 : 10
-    const colWidth = mainPanelWidth / colCnt
-    const leftDist = taskPanelLayout.x * colWidth
-    return {
-      leftOverlayPlacement: (layout !== 'horizontal' || (layout === 'horizontal' && reversed)) && (leftDist < 180) ? 'top' : 'left',
-    }
-  })
+  createSelector(
+    [
+      configLayoutSelector,
+      configReverseLayoutSelector,
+      state => get(state, 'layout.mainpane.width', 450),
+      state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
+    ],
+    (layout, reversed, mainPanelWidth, mainPanelLayout) => {
+      const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm'].find(
+        panel => panel.i === 'task-panel',
+      )
+      const colCnt = mainPanelWidth > 750 ? 20 : 10
+      const colWidth = mainPanelWidth / colCnt
+      const leftDist = taskPanelLayout.x * colWidth
+      return {
+        leftOverlayPlacement:
+          (layout !== 'horizontal' || (layout === 'horizontal' && reversed)) && leftDist < 180
+            ? 'top'
+            : 'left',
+      }
+    },
+  ),
 )(function({
-  idx,                  // Mandatory: 0..5
-  bulletColor='#fff',
-  leftLabel='',
+  idx, // Mandatory: 0..5
+  bulletColor = '#fff',
+  leftLabel = '',
   leftOverlay,
-  rightLabel='',
+  rightLabel = '',
   rightOverlay,
-  rightBsStyle='success',
-  leftOverlayPlacement,
+  rightIntent = Intent.SUCCESS,
+  leftOverlayPlacement = 'auto',
   colwidth,
 }) {
   return (
-    <Col className="panel-item task-item" xs={colwidth}>
-      <OverlayTrigger
-        placement={leftOverlayPlacement}
-        overlay={
-          <Tooltip id={`task-quest-name-${idx}`} style={leftOverlay ? null : {display: 'none'}}>{leftOverlay}</Tooltip>
-        }
+    <TaskItem className={'panel-item task-item'} colwidth={colwidth}>
+      <QuestNameTooltip
+        id={`task-quest-name-${idx}`}
+        className="quest-name"
+        disabled={!leftOverlay}
+        postion={leftOverlayPlacement}
+        content={leftOverlay}
       >
-        <div className="quest-name">
-          <span className="cat-indicator" style={{backgroundColor: bulletColor}}></span>
-          {leftLabel}
-        </div>
-      </OverlayTrigger>
-      <div>
-        <OverlayTrigger
-          placement="left"
-          overlay={
-            <Tooltip id={`task-progress-${idx}`} style={rightOverlay ? null : {display: 'none'}}>{rightOverlay}</Tooltip>
-          }
-        >
-          <Label className="quest-progress" bsStyle={rightBsStyle}>{rightLabel}</Label>
-        </OverlayTrigger>
-      </div>
-    </Col>
+        <>
+          <CatIndicator className="cat-indicator" style={{ backgroundColor: bulletColor }} />
+          <span>{leftLabel}</span>
+        </>
+      </QuestNameTooltip>
+      {rightLabel && (
+        <Tooltip disabled={!rightOverlay} content={rightOverlay}>
+          <QuestProgress className="quest-progress" intent={rightIntent} minimal>
+            {rightLabel}
+          </QuestProgress>
+        </Tooltip>
+      )}
+    </TaskItem>
   )
 })
 
-const TaskRow = translate(['resources'])(connect(
-  (state, {quest}) => ({
+const TaskRow = translate(['resources'])(
+  connect((state, { quest }) => ({
     quest,
     record: get(state, ['info', 'quests', 'records', quest.api_no]),
-    translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'condition']),
-    wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), ['quests', quest.api_no, 'wiki_id']),
-  })
-)(function ({idx, quest, record, translation, wikiId, colwidth, t}) {
-  const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
-  const questName = quest && quest.api_title ? t(`resources:${quest.api_title}`, { context: quest.api_no && quest.api_no.toString() }) : '???'
-  const questContent = translation ? translation : quest ? quest.api_detail.replace(/<br\s*\/?>/gi, '') : '...'
-  const [count, required] = sumSubgoals(record)
-  const progressBsStyle = record ?
-    getStyleByPercent(count / required) :
-    getStyleByProgress(quest)
-  const progressLabel = record ?
-    `${count} / ${required}` :
-    progressLabelText(quest)
-  const progressOverlay = record ?
-    <div>{getToolTip(record || {})}</div> :
-    undefined
-  return (
-    <TaskRowBase
-      idx={idx}
-      bulletColor={quest ? getCategory(quest.api_category) : '#fff'}
-      leftLabel={`${wikiIdPrefix}${questName}`}
-      leftOverlay={<div><strong>{wikiIdPrefix}{questName}</strong><br />{questContent}</div>}
-      rightLabel={progressLabel}
-      rightBsStyle={progressBsStyle}
-      rightOverlay={progressOverlay}
-      colwidth={colwidth}
-    />
-  )
-}))
+    translation: get(extensionSelectorFactory('poi-plugin-quest-info')(state), [
+      'quests',
+      quest.api_no,
+      'condition',
+    ]),
+    wikiId: get(extensionSelectorFactory('poi-plugin-quest-info')(state), [
+      'quests',
+      quest.api_no,
+      'wiki_id',
+    ]),
+  }))(function({ idx, quest, record, translation, wikiId, colwidth, t }) {
+    const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
+    const questName =
+      quest && quest.api_title
+        ? t(`resources:${quest.api_title}`, { context: quest.api_no && quest.api_no.toString() })
+        : '???'
+    const questContent = translation
+      ? translation
+      : quest
+        ? quest.api_detail.replace(/<br\s*\/?>/gi, '')
+        : '...'
+    const [count, required] = sumSubgoals(record)
+    const progressIntent = record
+      ? getIntentByPercent(count / required)
+      : getIntentByProgress(quest)
+    const progressLabel = record ? `${count} / ${required}` : progressLabelText(quest)
+    const progressOverlay = record && <div>{getToolTip(record || {})}</div>
+    return (
+      <TaskRowBase
+        idx={idx}
+        bulletColor={quest ? getCategory(quest.api_category) : '#fff'}
+        leftLabel={`${wikiIdPrefix}${questName}`}
+        leftOverlay={
+          <div>
+            <strong>
+              {wikiIdPrefix}
+              {questName}
+            </strong>
+            <br />
+            {questContent}
+          </div>
+        }
+        rightLabel={progressLabel}
+        rightIntent={progressIntent}
+        rightOverlay={progressOverlay}
+        colwidth={colwidth}
+      />
+    )
+  }),
+)
 
 @translate(['main'])
-@connect(({info: {quests: {activeQuests, activeCapacity, activeNum}}}) => ({
+@connect(({ info: { quests: { activeQuests, activeCapacity, activeNum } } }) => ({
   activeQuests,
   activeCapacity,
   activeNum,
@@ -224,20 +296,6 @@ export class TaskPanel extends React.Component {
     dimension: 1,
   }
 
-  componentDidMount() {
-    this.panelArea = document.querySelector('.MainView .task-panel .panel-body')
-    if (this.panelArea) {
-      this.observer = new ResizeObserver(this.handleResize)
-      this.observer.observe(this.panelArea)
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.observer) {
-      this.observer.unobserve(this.panelArea)
-    }
-  }
-
   handleResize = entries => {
     const dimension = getPanelDimension(entries[0].contentRect.width)
     if (dimension !== this.state.dimension) {
@@ -245,51 +303,56 @@ export class TaskPanel extends React.Component {
     }
   }
 
-  render () {
-    const { activeQuests, activeCapacity, activeNum, t} = this.props
+  render() {
+    const { activeQuests, activeCapacity, activeNum, editable, t } = this.props
     const colwidth = Math.floor(12 / this.state.dimension)
     return (
-      <Panel bsStyle="default">
-        <Panel.Body>
+      <ResizeSensor onResize={this.handleResize}>
+        <CardWrapper className="task-card" elevation={editable ? 2 : 0} interactive={editable}>
           {[
-            sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) =>
+            sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) => (
               <TaskRow
                 key={(quest || {}).api_no || idx}
                 idx={idx}
                 quest={quest}
                 colwidth={colwidth}
               />
-            ),
-            range(Object.keys(activeQuests).length, 6).map((idx) =>
-              (idx < activeNum) ?  (
-                // Need refreshing
-                <TaskRowBase
-                  key={idx}
-                  idx={idx}
-                  leftLabel={t('main:To be refreshed')}
-                  leftOverlay={t('main:Browse your quest list to let poi know your active quests')}
-                  colwidth={colwidth}
-                />
-              ) : (idx < activeCapacity) ? (
-                // Empty
-                <TaskRowBase
-                  key={idx}
-                  idx={idx}
-                  leftLabel={t('main:Empty quest')}
-                  colwidth={colwidth}
-                /> ) : (
-                // Can expand
-                <TaskRowBase
-                  key={idx}
-                  idx={idx}
-                  leftLabel={t('main:Locked')}
-                  leftOverlay={t('main:QuestLimitMsg')}
-                  colwidth={colwidth}
-                /> )
+            )),
+            range(Object.keys(activeQuests).length, 6).map(
+              idx =>
+                idx < activeNum ? (
+                  // Need refreshing
+                  <TaskRowBase
+                    key={idx}
+                    idx={idx}
+                    leftLabel={t('main:To be refreshed')}
+                    leftOverlay={t(
+                      'main:Browse your quest list to let poi know your active quests',
+                    )}
+                    colwidth={colwidth}
+                  />
+                ) : idx < activeCapacity ? (
+                  // Empty
+                  <TaskRowBase
+                    key={idx}
+                    idx={idx}
+                    leftLabel={t('main:Empty quest')}
+                    colwidth={colwidth}
+                  />
+                ) : (
+                  // Can expand
+                  <TaskRowBase
+                    key={idx}
+                    idx={idx}
+                    leftLabel={t('main:Locked')}
+                    leftOverlay={t('main:QuestLimitMsg')}
+                    colwidth={colwidth}
+                  />
+                ),
             ),
           ]}
-        </Panel.Body>
-      </Panel>
+        </CardWrapper>
+      </ResizeSensor>
     )
   }
 }

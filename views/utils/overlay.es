@@ -1,4 +1,4 @@
-import React, { cloneElement } from 'react'
+import React, { cloneElement, useContext } from 'react'
 import ReactDOM from 'react-dom'
 import contains from 'dom-helpers/query/contains'
 import { WindowEnv } from '../components/etc/window-env'
@@ -257,23 +257,15 @@ class OverlayTriggerInner extends React.Component {
 }
 
 export const OverlayTrigger = ({ children, ...props }) => (
-  <WindowEnv.Consumer>
-    {({ mountPoint = document.body }) => (
-      <OverlayTriggerInner container={mountPoint} {...props}>
-        { children }
-      </OverlayTriggerInner>
-    )}
-  </WindowEnv.Consumer>
+  <OverlayTriggerInner container={useContext(WindowEnv).mountPoint} {...props}>
+    { children }
+  </OverlayTriggerInner>
 )
 
 export const Modal = ({ children, ...props }) => (
-  <WindowEnv.Consumer>
-    {({ mountPoint = document.body }) => (
-      <OriginModal container={mountPoint} {...props}>
-        { children }
-      </OriginModal>
-    )}
-  </WindowEnv.Consumer>
+  <OriginModal container={useContext(WindowEnv).mountPoint} {...props}>
+    { children }
+  </OriginModal>
 )
 
 Modal.Body = OriginModal.Body

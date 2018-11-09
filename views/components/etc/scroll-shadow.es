@@ -1,10 +1,22 @@
 import React, { PureComponent } from 'react'
-import classnames from 'classnames'
 import { observer, observe } from 'redux-observers'
 import { get } from 'lodash'
 import { store } from 'views/create-store'
+import styled, { css } from 'styled-components'
+import { ResizeSensor } from '@blueprintjs/core'
 
-import './assets/scroll-shadow.css'
+const Container = styled.div`
+  transition: 0.3s 0.1s;
+  ${({ top, bottom }) => (top && bottom) ? css`
+    box-shadow:
+      inset 0 18px 15px -20px #217dbb,
+      inset 0 -18px 15px -20px #217dbb;
+  ` : top ? css `
+    box-shadow: inset 0 18px 15px -20px #217dbb;
+  ` : bottom ? css `
+    box-shadow: inset 0 -18px 15px -20px #217dbb;
+  ` : css``}
+`
 
 export class ScrollShadow extends PureComponent {
   state = {
@@ -48,14 +60,12 @@ export class ScrollShadow extends PureComponent {
 
   render () {
     const { children, className } = this.props
-    const scrollClassName = classnames(className, 'scroll-shadow', {
-      'scroll-shadow-top': !this.state.top,
-      'scroll-shadow-bottom': !this.state.bottom,
-    })
     return (
-      <div ref={r => this.r = r} className={scrollClassName} onScroll={this.onScroll}>
-        { children }
-      </div>
+      <ResizeSensor onResize={this.onScroll}>
+        <Container ref={r => this.r = r} className={className} top={!this.state.top} bottom={!this.state.bottom} onScroll={this.onScroll}>
+          { children }
+        </Container>
+      </ResizeSensor>
     )
   }
 }

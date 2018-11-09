@@ -99,10 +99,11 @@ const isAkizukiClass = ship => ship.api_ctype === 54
 // 67 = Queen Elizabeth class
 // 78 = Ark Royal class
 // 82 = J class
-const isHMSRoyalNavyShips = ship => [67, 78, 82].includes(ship.api_ctype)
+// 88 = Nelson class
+const isRoyalNavyShips = ship => [67, 78, 82, 88].includes(ship.api_ctype)
 
 // 6 = 金剛型
-const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.aftership_id === '0'
+const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_aftershipid === '0'
 
 const shipIdIs = n => ship => ship.api_ship_id === n
 
@@ -123,6 +124,7 @@ const isMusashiK2 = shipIdIs(546)
 const isHamakazeBK = shipIdIs(558)
 const isIsokazeBK = shipIdIs(557)
 const isTenryuuK2 = shipIdIs(477)
+const isGotlandKai = shipIdIs(579)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -506,7 +508,7 @@ declareAACI({
   fixed: 4,
   modifier: 1.2,
   shipValid: validAny(
-    isHMSRoyalNavyShips,
+    isRoyalNavyShips,
     isKongouClassK2,
   ),
   equipsValid: validAll(
@@ -515,6 +517,18 @@ declareAACI({
       hasSome(is20Tube7InchUpRocketLaunchers),
       hasSome(is16InchMkITriplePlusFCR),
     ),
+  ),
+})
+
+declareAACI({
+  name: ['Gotland Kai'],
+  id: 33,
+  fixed: 4,
+  modifier: 1.35,
+  shipValid: isGotlandKai,
+  equipsValid: validAll(
+    hasSome(isHighAngleMount),
+    hasSome(isAAGun),
   ),
 })
 

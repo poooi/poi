@@ -8,6 +8,7 @@ import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { debounce } from 'lodash'
+import styled, { StyleSheetManager } from 'styled-components'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 
@@ -37,6 +38,12 @@ const getPluginWindowRect = () => {
   return { x, y, width, height }
 }
 
+const PoiAppTabpane = styled.div`
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+`
 
 export class KanGameWindowWrapper extends PureComponent {
   constructor(props) {
@@ -163,13 +170,13 @@ export class KanGameWindowWrapper extends PureComponent {
 `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 <link rel="stylesheet" type="text/css" id="bootstrap-css">
+<link rel="stylesheet" type="text/css" id="normalize-css">
+<link rel="stylesheet" type="text/css" id="blueprint-css">
+<link rel="stylesheet" type="text/css" id="blueprint-icon-css">
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/alert.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/control.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('views/components/info/assets/map-reminder.css'))}">`
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
         div.style.position = 'absolute'
@@ -254,9 +261,11 @@ export class KanGameWindowWrapper extends PureComponent {
           window: this.externalWindow,
           mountPoint: this.containerEl,
         }}>
-          <div className="poi-app-tabpane poi-plugin" style={{ flex: 1, overflow: 'auto' }} ref={this.kangameContainer}>
-            <KanGameWrapper windowMode />
-          </div>
+          <StyleSheetManager target={this.externalWindow.document.head}>
+            <PoiAppTabpane className="poi-app-tabpane" ref={this.kangameContainer}>
+              <KanGameWrapper windowMode />
+            </PoiAppTabpane>
+          </StyleSheetManager>
         </WindowEnv.Provider>
       </>,
       this.externalWindow.document.querySelector('#plugin-mountpoint'))

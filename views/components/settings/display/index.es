@@ -1,5 +1,4 @@
 import React from 'react'
-import { Divider } from '../components/divider'
 
 import { LayoutConfig } from './layout-config'
 import { ThemeConfig } from './theme-config'
@@ -44,22 +43,10 @@ config.on('config.set', (path, value) => {
 })
 
 export const DisplayConfig = () => (
-  <form>
-    <div className="form-group">
-      <Divider text={<Trans>setting:Layout</Trans>} />
-      <LayoutConfig />
-    </div>
-    <div className="form-group">
-      <Divider text={<Trans>setting:Themes</Trans>} />
-      <ThemeConfig />
-    </div>
-    <div className="form-group">
-      <Divider text={<Trans>setting:Zoom</Trans>} />
-      <ZoomingConfig />
-    </div>
-    <div className="form-group">
-      <Divider text={<Trans>setting:Game resolution</Trans>} />
-      <ResolutionConfig />
-    </div>
-  </form>
+  <div>
+    <LayoutConfig />
+    <ThemeConfig />
+    <ZoomingConfig />
+    <ResolutionConfig />
+  </div>
 )

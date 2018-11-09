@@ -13,7 +13,6 @@ import { reducer as fcd } from './fcd'
 import { reducer as ui } from './ui'
 import { reducer as ipc } from './ipc'
 import { reducer as wctf } from './wctf'
-import { reducer as toastrReducer } from 'react-redux-toastr'
 import misc from './misc'
 
 const emptyObject = {}
@@ -57,7 +56,6 @@ export function reducerFactory(extensionConfig) {
     ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
     ipc,
     wctf,
-    toastr: toastrReducer,
   })
 }
 

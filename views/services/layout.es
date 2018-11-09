@@ -2,7 +2,7 @@
 import { debounce } from 'lodash'
 import { remote } from 'electron'
 
-import { getPoiInfoHeight, getYOffset, getRealSize, getZoomedSize } from './utils'
+import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
 
 // polyfill
 if (config.get('poi.webview.width', 1200) < 0) {
@@ -20,22 +20,12 @@ const setCSS = () => {
   const tab = $('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')
   const tabSize = tab ? tab.getBoundingClientRect() : { height: 0, width: 0 }
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
-  const { right, bottom } =  config.get('poi.webview.width', getZoomedSize(1200)) !== 0 && !config.get('poi.layout.isolate', false) && $('kan-game webview') ?
-    $('kan-game webview').getBoundingClientRect() : { right: window.innerWidth, bottom: window.innerHeight, width: 0 }
   // Apply css
   additionalStyle.innerHTML = `
-.dropdown-menu[aria-labelledby=plugin-dropdown] {
+.plugin-dropdown {
   max-height: ${tabSize.height}px;
-}
-
-.grid-menu ul[aria-labelledby=plugin-dropdown] {
   max-width: ${tabSize.width}px;
   width: ${panelRect.width * 0.875}px;
-}
-
-.redux-toastr .bottom-right {
-  bottom: ${window.innerHeight - bottom + 12}px !important;
-  right: ${window.innerWidth - right + 12}px !important;
 }
 `
 }
@@ -280,8 +270,7 @@ export const layoutResizeObserver = new ResizeObserver(entries => {
         ? 'webview' : entry.target.className.includes('miniship-fleet-content')
           ? 'minishippane' : entry.target.className.includes('ship-tab-container')
             ? 'shippane' : entry.target.className.includes('main-panel-content')
-              ? 'mainpane': entry.target.className.includes('combined-panels')
-                ? 'combinedpane' : null
+              ? 'mainpane' : null
     value = {
       ...value,
       [key]: {

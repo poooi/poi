@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Label } from 'react-bootstrap'
+import { Tag, Intent } from '@blueprintjs/core'
 
 import { resolveTime } from 'views/utils/tools'
 import { CountdownNotifier } from 'views/utils/notifiers'
@@ -18,6 +18,13 @@ class Ticker {
     if (!this.counting) {
       return
     }
+    if (document.hidden) {
+      this.tickAndSchedule()
+    } else {
+      requestAnimationFrame(this.tickAndSchedule)
+    }
+  }
+  tickAndSchedule = () => {
     this.tick()
     setTimeout(this.count, 1000)
   }
@@ -42,19 +49,15 @@ class Ticker {
   }
 }
 
-window.ticker = new Ticker()
-
-
 class CountdownTimerInner extends Component {
   constructor(props) {
     super(props)
-    this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
     this.resolveTime = props.resolveTime || resolveTime
   }
   static getTimeRemaining = (completeTime, currentTime=Date.now()) => {
     if (completeTime < 0) {
       return -1
-    } else if ( completeTime <= currentTime) {
+    } else if (completeTime <= currentTime) {
       return 0
     } else {
       return Math.round((completeTime - currentTime) / 1000)
@@ -72,55 +75,52 @@ class CountdownTimerInner extends Component {
     completeCallback: null,
   }
   state = {
-    completeTime: this.props.completeTime,
+    timeRemaining: this.constructor.getTimeRemaining(this.props.completeTime),
   }
   componentDidMount = () => {
     this.startTick()
   }
   shouldComponentUpdate = (nextProps, nextState) =>
-    nextProps.countdownId !== this.props.countdownId || nextState.completeTime !== this.state.completeTime
+    nextProps.countdownId !== this.props.countdownId ||
+    nextProps.completeTime !== this.props.completeTime ||
+    nextState.timeRemaining !== this.state.timeRemaining
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps.completeTime !== this.state.completeTime) {
-      this.timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime)
+    if (prevProps.countdownId !== this.props.countdownId || prevProps.completeTime !== this.props.completeTime) {
+      this.startTick() // Doesn't matter if it didn't stop
     }
-    this.startTick() // Doesn't matter if it didn't stop
   }
   componentWillUnmount = () => {
     this.stopTick()
   }
   startTick = () => {
-    window.ticker.reg(this.props.countdownId, this.tick)
+    ticker.reg(this.props.countdownId, this.tick)
   }
   stopTick = () => {
-    window.ticker.unreg(this.props.countdownId)
+    ticker.unreg(this.props.countdownId)
   }
   tick = (currentTime) => {
-    const actualRemaining = this.constructor.getTimeRemaining(this.state.completeTime, currentTime)
-    if (Math.abs(this.timeRemaining - actualRemaining) > 2) {
-      this.timeRemaining = actualRemaining
-    }
-    this.timeRemaining = this.constructor.getTimeRemaining(this.state.completeTime, currentTime)
-    if (this.timeRemaining < 1) {
+    const timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime, currentTime)
+    if (timeRemaining < 1) {
       this.stopTick()
     }
-    if (this.state.completeTime >= 0)
+    if (this.props.completeTime >= 0) {
+      if (typeof this.props.isActive !== 'function' || this.props.isActive() || timeRemaining < 1) {
+        this.setState({ timeRemaining })
+      }
       try {
-        if (this.textLabel) {
-          this.textLabel.textContent = this.resolveTime(this.timeRemaining)
-        }
         if (this.props.tickCallback) {
-          this.props.tickCallback(this.timeRemaining)
+          this.props.tickCallback(timeRemaining)
         }
-        if (this.timeRemaining < 1 && this.props.completeCallback) {
+        if (timeRemaining < 1 && this.props.completeCallback) {
           this.props.completeCallback()
         }
       } catch (error) {
         console.error(error.stack)
       }
-    this.timeRemaining--
+    }
   }
   render() {
-    return <span ref={(ref) => {this.textLabel = ref}}>{this.resolveTime(this.timeRemaining)}</span>
+    return this.resolveTime(this.state.timeRemaining)
   }
 }
 
@@ -135,11 +135,13 @@ class CountdownNotifierLabelInner extends Component {
     getNotifyOptions: PropTypes.func,   // (props, timeRemaining) => options | undefined
     getLabelStyle: PropTypes.func,      // (props, timeRemaining) => bsStyle
     resolveTime: PropTypes.func,        // (timeRemaining) => interpreted time string
+    minimal: PropTypes.bool,            // Use minimal style
   }
   static defaultProps = {
     getNotifyOptions: () => undefined,
-    getLabelStyle: () => 'default',
+    getLabelStyle: () => Intent.NONE,
     resolveTime: resolveTime,
+    minimal: true,
   }
   constructor(props) {
     super(props)
@@ -170,15 +172,15 @@ class CountdownNotifierLabelInner extends Component {
   }
   render() {
     return (
-      <Label className="countdown-timer-label" bsStyle={this.state.style}>
-        {
-          this.props.completeTime >= 0 &&
+      this.props.completeTime >= 0 && (
+        <Tag className="countdown-timer-label" intent={this.state.style} minimal={this.props.minimal}>
           <CountdownTimerInner countdownId={this.props.timerKey}
             completeTime={this.props.completeTime}
+            isActive={this.props.isActive}
             tickCallback={this.tick}
             resolveTime={this.props.resolveTime} />
-        }
-      </Label>
+        </Tag>
+      )
     )
   }
 }
@@ -186,3 +188,7 @@ class CountdownNotifierLabelInner extends Component {
 export function CountdownNotifierLabel(props) {
   return <CountdownNotifierLabelInner {...props} key={props.completeTime} />
 }
+
+export const ticker = new Ticker()
+
+window.ticker = ticker

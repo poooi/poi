@@ -5,18 +5,46 @@ import WebView from 'react-electron-web-view'
 import { get, debounce } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
+import styled from 'styled-components'
 
 import { PoiAlert } from './components/info/alert'
+import { PoiToast } from './components/info/toast'
 import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { layoutResizeObserver } from 'views/services/layout'
 import { fileUrl } from 'views/utils/tools'
 import { darwinDevToolPolyfill } from '../lib/utils.es'
+import { CustomTag } from 'views/components/etc/custom-tag'
 
 const config = remote.require('./lib/config')
 const poiControlHeight = 30
 const ua = remote.getCurrentWebContents().getUserAgent().replace(/Electron[^ ]* /, '').replace(/poi[^ ]* /, '')
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
+
+const PoiInfo = styled(CustomTag)`
+  flex-basis: 0 0 ${poiControlHeight}px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  transform-origin: 0 0;
+  align-items: stretch;
+  display: flex;
+`
+
+const KanGame = styled(CustomTag)`
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  width: 100%;
+  .kancolle-webview {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+`
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
@@ -135,13 +163,12 @@ export class KanGameWrapper extends Component {
     const getZoomedSize = value => Math.round(value / zoomLevel)
     if (this.props.windowMode) {
       return (
-        <kan-game style={{
-          width: '100%',
-        }}>
+        <KanGame tag="kan-game">
           <div id="webview-wrapper"
             className="webview-wrapper"
             ref={e => this.webviewWrapper = e}>
             <WebView
+              className="kancolle-webview"
               src={this.state.url}
               key={this.state.key}
               ref={this.webview}
@@ -159,13 +186,14 @@ export class KanGameWrapper extends Component {
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
             />
+            <PoiToast />
           </div>
-          <poi-info style={{ flexBasis: poiControlHeight }}>
-            <poi-control><PoiControl weview={this.webview} /></poi-control>
-            <poi-alert><PoiAlert id="poi-alert" /></poi-alert>
-            <poi-map-reminder><PoiMapReminder id="poi-map-reminder"/></poi-map-reminder>
-          </poi-info>
-        </kan-game>
+          <PoiInfo tag="poi-info">
+            <PoiControl weview={this.webview} />
+            <PoiAlert />
+            <PoiMapReminder />
+          </PoiInfo>
+        </KanGame>
       )
     } else {
       const { width: windowWidth, height: windowHeight } = windowSize
@@ -256,9 +284,7 @@ export class KanGameWrapper extends Component {
           onResized={this.setRatio}
           ref={r => this.resizableArea = r}
         >
-          <kan-game style={{
-            width: '100%',
-          }}>
+          <KanGame tag="kan-game">
             <div id="webview-wrapper"
               className="webview-wrapper"
               ref={e => this.webviewWrapper = e}
@@ -266,6 +292,7 @@ export class KanGameWrapper extends Component {
                 width: overlayPanel ? '100%' : webviewWidth,
               }}>
               <WebView
+                className="kancolle-webview"
                 src={this.state.url}
                 key={this.state.key}
                 ref={this.webview}
@@ -284,13 +311,14 @@ export class KanGameWrapper extends Component {
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
               />
+              <PoiToast />
             </div>
-            <poi-info style={{ flexBasis: poiControlHeight }}>
-              <poi-control><PoiControl weview={this.webview} /></poi-control>
-              <poi-alert><PoiAlert id="poi-alert" /></poi-alert>
-              <poi-map-reminder><PoiMapReminder id="poi-map-reminder"/></poi-map-reminder>
-            </poi-info>
-          </kan-game>
+            <PoiInfo tag="poi-info">
+              <PoiControl weview={this.webview} />
+              <PoiAlert />
+              <PoiMapReminder />
+            </PoiInfo>
+          </KanGame>
         </ResizableArea>
       )
     }

@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react'
-import { Modal, Button } from 'react-bootstrap'
 import { translate } from 'react-i18next'
+import { Dialog, Button, Classes } from '@blueprintjs/core'
+import { size } from 'lodash'
+import cls from 'classnames'
 
 // Notification modal
 @translate()
@@ -10,6 +12,7 @@ export class ModalTrigger extends PureComponent {
     title: null,
     content: null,
   }
+
   handleToggle = () => {
     window.modalLocked = false
     this.setState({
@@ -17,60 +20,69 @@ export class ModalTrigger extends PureComponent {
     })
     window.showModal()
   }
-  handleModal = (e) => {
+
+  handleModal = e => {
     window.modalLocked = true
     this.setState({
       isModalOpen: true,
       title: e.detail.title,
       content: e.detail.content,
       footer: e.detail.footer,
-      onExiting: e.detail.onExiting,
+      onClosing: e.detail.onClosing || e.detail.onExiting, // FIXME: button.style for rb backward compat
     })
   }
+
   componentDidMount = () => {
     window.addEventListener('poi.modal', this.handleModal)
   }
+
   componentWillUnmount = () => {
     window.removeEventListener('poi.modal', this.handleModal)
   }
-  renderFooter = (footer) =>{
-    if (!((typeof footer !== 'undefined' && footer !== null) && (footer.length != null) && footer.length > 0)) {
+
+  renderFooter = footer => {
+    if (size(footer) === 0) {
       return
     }
     return footer.map((button, index) => {
       return (
-        <Button key={index} onClick={
-          (e) => {
+        <Button
+          key={index}
+          onClick={e => {
             this.handleToggle()
-            button.func()
-          }
-        } bsStyle={button.style}>{button.name}</Button>
+            button.func(e)
+          }}
+          intent={button.intent || button.style} // FIXME: button.style for rb backward compat
+        >
+          {button.name}
+        </Button>
       )
     })
   }
+
   render() {
     const { t } = this.props
+    const { isModalOpen, onClosing, title, content, footer } = this.state
     return (
-      <Modal autoFocus={true}
+      <Dialog
+        isCloseButtonShown
+        autoFocus={true}
         animation={true}
-        show={this.state.isModalOpen}
-        onHide={this.handleToggle}
-        onExiting={this.state.onExiting}>
-        <Modal.Header closeButton>
-          <Modal.Title>{this.state.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {this.state.content}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.handleToggle}>
-            {
-              (this.state.footer || []).length === 0 ? t('Close') : t('Cancel')
-            }
-          </Button>
-          {this.renderFooter(this.state.footer)}
-        </Modal.Footer>
-      </Modal>
+        isOpen={isModalOpen}
+        onClose={this.handleToggle}
+        onClosing={onClosing}
+        title={title}
+      >
+        <div className={Classes.DIALOG_BODY}>{content}</div>
+        <div className={cls(Classes.DIALOG_FOOTER, 'dialog-footer')}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button onClick={this.handleToggle}>
+              {size(footer) === 0 ? t('Close') : t('Cancel')}
+            </Button>
+            {this.renderFooter(footer)}
+          </div>
+        </div>
+      </Dialog>
     )
   }
 }
