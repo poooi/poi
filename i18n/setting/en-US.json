@@ -4,7 +4,6 @@
   "Proxy": "Proxy",
   "Plugins": "Plugins",
   "About": "About",
-  "poi description": "poi is an open source Kancolle browser based on Electron {{version}}. poi behaves the same as Chrome and does not modify game data, packets or implement bots/macros. The main poi provides basic functionalities and is complemented by a variety of plugins.",
   "Proxy setting": "Proxy setting",
   "Proxy protocol": "Proxy protocol",
   "proxy": "proxy",
@@ -160,5 +159,6 @@
   "Screenshot": "Screenshot",
   "Format": "Format",
   "Save to": "Save to",
-  "GPU": "GPU"
+  "GPU": "GPU",
+  "description_markdown": "Poi is an open source Kancolle browser based on Electron {{version}} and React.js. Poi behaves the same as Chrome and won't modify game data, packets or implement bots/macros. The main Poi provides basic functionalities and is complemented by a variety of plugins.\n"
 }

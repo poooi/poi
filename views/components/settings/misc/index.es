@@ -62,36 +62,6 @@ export class Misc extends Component {
               configName="poi.update.beta"
               defaultValue={false} />
           </Col>
-          <Col xs={12}>
-            <p>{t('setting:poi description', {version: process.versions.electron})}</p>
-            <div className="desc-buttons">
-              {
-                ['zh-CN', 'zh-TW'].includes(window.language) &&
-                    <Button onClick={shell.openExternal.bind(this, 'http://weibo.com/letspoi')}>
-                      <FA name="weibo" /> @今天poi出新版本了吗
-                    </Button>
-              }
-              {
-                ['zh-CN', 'zh-TW'].includes(window.language)
-                  ? <Button><FA name="qq" /> 用户交流群： 378320628 </Button>
-                  : <Button onClick={shell.openExternal.bind(this, 'https://discordapp.com/channels/118339803660943369/367575898313981952')}>
-                    Discord channel
-                  </Button>
-              }
-              <Button onClick={shell.openExternal.bind(this, 'http://db.kcwiki.org')}>
-                <FA name="database" /> {t('setting:Database')}
-              </Button>
-              <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi/wiki')}>
-                <FA name="question" /> {t('setting:Wiki')}
-              </Button>
-              <Button onClick={shell.openExternal.bind(this, 'https://github.com/poooi/poi')}>
-                <FA name="github" /> GitHub
-              </Button>
-              <Button onClick={shell.openExternal.bind(this, 'https://opencollective.com/poi')}>
-                OpenCollective
-              </Button>
-            </div>
-          </Col>
         </Grid>
         <Divider text={t('setting:Data version')} />
         <Grid>

@@ -5,7 +5,6 @@
   "Proxy": "プロキシ",
   "Plugins": "プラグイン(拡張機能)",
   "About": "poiについて",
-  "poi description": "poi は Electron {{version}} と React.js で開発された、マルチプラットフォーム対応のオープンソース艦これ専用ブラウザです。ゲームにおける受送信仕様について、poiはChromeと異なりがなく、原則的にはパケット通信に影響を与える機能は一切提供しません。poi本体は基本的なブラウジング機能を提供し、拡張機能はプラグインで実現する仕様となります。",
   "Database": "統計データベース",
   "Wiki": "ウィキ",
   "Proxy setting": "プロキシ設定",
@@ -72,7 +71,6 @@
   "Zoom": "ズーム",
   "Zoom level": "ズーム倍率",
   "Panel area": "パネル",
-
   "Advanced": "詳細設定",
   "Advanced functionalities": "特殊機能",
   "Disable Hardware Acceleration": "ハードウェアアクセラレーションを無効化する",
@@ -181,5 +179,6 @@
   "Screenshot": "スクリーンショット",
   "Format": "画像ファイルフォーマット",
   "Save to": "保存先",
-  "GPU": "GPU"
+  "GPU": "GPU",
+  "description_markdown": "Poi は Electron {{version}} と React.js で開発された、マルチプラットフォーム対応のオープンソース「艦隊これくしょん」専用ブラウザです。ゲームにおける受送信仕様について、poi は Chrome と異なりがなく、原則的にはパケット通信に影響を与える機能は一切提供しません。Poi 本体は基本的なブラウジング機能を提供し、拡張機能はプラグインで実現する仕様となります。\n"
 }

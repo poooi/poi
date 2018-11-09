@@ -5,7 +5,6 @@
   "Proxy": "网络代理",
   "Plugins": "扩展程序",
   "About": "关于 poi",
-  "poi description": "poi 基于 Electron {{version}} 和 React.js 开发，是一个开源的跨平台舰队 Collection 浏览器。poi 的游戏行为与 Chrome 一致，原则上不提供任何影响收发包的功能。poi 仅提供基本浏览器功能，扩展功能请等待插件开发。",
   "Database": "掉落数据统计",
   "Wiki": "帮助与指南",
   "Proxy setting": "代理设置",
@@ -180,5 +179,6 @@
   "Screenshot": "截图",
   "Format": "格式",
   "Save to": "保存到",
-  "GPU": "GPU"
+  "GPU": "GPU",
+  "description_markdown": "Poi 基于 Electron {{version}} 与 React.js 开发，是一个开源的跨平台的「艦隊これくしょん」浏览器。Poi 的行为与 Chrome 一致，原则上不提供任何影响收发包的功能。在基本功能之外，Poi 还支持安装各类插件来提供扩展功能。\n"
 }
