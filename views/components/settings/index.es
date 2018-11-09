@@ -6,6 +6,7 @@ import { isEqual, map } from 'lodash'
 import styled from 'styled-components'
 
 import { PoiConfig } from './main'
+import { GamingConfig } from './gaming'
 import { DisplayConfig } from './display'
 import { NetworkConfig } from './network'
 import { PluginConfig } from './plugin'
@@ -17,6 +18,12 @@ const TABS = [
     title: 'Common',
     component: PoiConfig,
     icon: 'wrench',
+  },
+  {
+    id: 4,
+    title: 'Gaming',
+    component: GamingConfig,
+    icon: 'gamepad',
   },
   {
     id: 1,
