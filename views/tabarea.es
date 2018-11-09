@@ -647,7 +647,7 @@ export class ControlledTabArea extends PureComponent {
             },
             hide: {
               enabled: false,
-            }
+            },
           }}>
           <PluginDropdownButton
             icon="chevron-down"
