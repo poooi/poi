@@ -1,7 +1,5 @@
+/* global error, config, getStore */
 import i18next from 'views/env-parts/i18next'
-
-const { error, config, getStore } = window
-
 
 window.addEventListener('game.response',
   ({detail: {path, body}}) => {

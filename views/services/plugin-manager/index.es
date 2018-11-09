@@ -1,3 +1,4 @@
+/* global PLUGIN_PATH, dispatch, config, getStore, toast, ROOT */
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
@@ -22,8 +23,6 @@ import {
   findInstalledTarball,
   getNpmConfig,
 } from './utils'
-
-const { PLUGIN_PATH, dispatch, config, getStore, toast, ROOT } = window
 
 const fetchHeader = new Headers()
 fetchHeader.set('Cache-Control', 'max-age=0')

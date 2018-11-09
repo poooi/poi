@@ -1,9 +1,8 @@
+/* global config, POI_VERSION */
 import React, { Component } from 'react'
 import { Switch } from '@blueprintjs/core'
 import i18next from 'views/env-parts/i18next'
 import ReactMarkdown from 'react-remarkable'
-
-const { config, POI_VERSION } = window
 
 // Readme contents
 const dontShowAgain = () =>

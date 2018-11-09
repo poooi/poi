@@ -1,3 +1,4 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -9,8 +10,6 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
-
-const { config } = window
 
 const Icon = styled.div`
   margin: 0 1em;

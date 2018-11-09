@@ -1,3 +1,4 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -8,7 +9,6 @@ import { translate } from 'react-i18next'
 
 import { Section } from '../components/section'
 
-const { config } = window
 const setWindowI18nLng = language => {
   each(i18next.options.ns, ns => {
     window.i18n[ns].fixedT = i18next.getFixedT(language, ns)

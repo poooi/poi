@@ -1,3 +1,4 @@
+/* global PLUGIN_PATH */
 import path from 'path-extra'
 import { shell } from 'electron'
 import React, { Component } from 'react'
@@ -24,8 +25,6 @@ import PluginManager from 'views/services/plugin-manager'
 
 import { NameInput } from './name-input'
 import { PluginItem } from './plugin-item'
-
-const { PLUGIN_PATH } = window
 
 const Control = styled.div`
   margin: 1em 0;

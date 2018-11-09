@@ -1,3 +1,4 @@
+/* global language */
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
@@ -24,7 +25,6 @@ export class StatusLabel extends React.Component {
   render() {
     const { label: i, t } = this.props
     const { color, mapname, fleetname } = this.props.shipTag
-    const { language } = window
     if (i != null && 0 <= i) {
       return (
         <Tooltip

@@ -1,3 +1,4 @@
+/* global dispatch */
 import { onGameRequest, onGameResponse } from 'views/redux'
 import { remote } from 'electron'
 
@@ -7,7 +8,6 @@ const isGameApi = (pathname) =>
   (pathname.startsWith('/kcsapi'))
 
 const handleProxyGameOnRequest = (method, [domain, path], body, time) => {
-  const {dispatch} = window
   if (!isGameApi(path)) {
     return
   }
@@ -40,7 +40,6 @@ const responses = []
 let locked = false
 
 const parseResponses = () => {
-  const {dispatch} = window
   let [method, [domain, path, url], body, postBody, time] = responses.shift()
   if (['/kcs2/js/main.js', '/kcsapi/api_start2/getData'].includes(path)) {
     handleProxyGameStart()

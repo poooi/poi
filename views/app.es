@@ -1,3 +1,5 @@
+/* global $ */
+
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect, Provider } from 'react-redux'
@@ -21,7 +23,6 @@ import { layoutResizeObserver } from 'views/services/layout'
 import i18next from './env-parts/i18next'
 import { darkTheme } from './theme'
 
-const {$} = window
 const config = remote.require('./lib/config')
 
 // Disable OSX zoom

@@ -1,3 +1,4 @@
+/* global ROOT, APPDATA_PATH */
 import CSON from 'cson'
 import { join } from 'path-extra'
 import { map, sortBy, mapValues, forEach, values, fromPairs, countBy, get } from 'lodash'
@@ -5,7 +6,6 @@ import { map, sortBy, mapValues, forEach, values, fromPairs, countBy, get } from
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
 import Scheduler from 'views/services/scheduler'
-const {ROOT, APPDATA_PATH} = window
 
 const QUESTS_REFRESH_DAY = '@@QUESTS_REFRESH_DAY'
 

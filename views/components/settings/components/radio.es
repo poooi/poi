@@ -1,10 +1,9 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, map } from 'lodash'
 import { Radio, RadioGroup } from '@blueprintjs/core'
-
-const { config } = window
 
 @connect((state, props) => ({
   value: get(state.config, props.configName, props.defaultValue),

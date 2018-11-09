@@ -1,10 +1,9 @@
+/* global config */
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, debounce } from 'lodash'
 import { InputGroup } from '@blueprintjs/core'
-
-const { config } = window
 
 @connect((state, props) => ({
   value: get(state.config, props.configName, props.defaultValue || ''),

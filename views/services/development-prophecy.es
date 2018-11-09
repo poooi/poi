@@ -1,9 +1,8 @@
+/* global success, warn, getStore */
 /*
    Item development & improvement prophecy
  */
 import i18next from 'views/env-parts/i18next'
-
-const {success, warn, getStore} = window
 
 const lookupItemName = slotitemId =>
   i18next.t(`resources:${getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')}`, { keySeparator: '%%%%' })

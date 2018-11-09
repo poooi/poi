@@ -1,6 +1,5 @@
+/* global POI_VERSION, getStore, isMain */
 import { remote } from 'electron'
-
-const { POI_VERSION, getStore, isMain } = window
 
 if(isMain) {
   remote.getCurrentWebContents().addListener('devtools-opened',

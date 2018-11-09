@@ -1,3 +1,4 @@
+/* global dispatch */
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -7,8 +8,6 @@ import { createSelector } from 'reselect'
 import { translate, Trans } from 'react-i18next'
 import { Button } from '@blueprintjs/core'
 import { compose } from 'redux'
-
-const { dispatch } = window
 
 import { ShipRow } from './ship-item'
 import { SquardRow } from './lbac-view'

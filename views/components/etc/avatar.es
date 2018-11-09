@@ -1,3 +1,4 @@
+/* global APPDATA_PATH */
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
@@ -52,8 +53,6 @@ const EquipAvatarBG = styled.img`
   width: 400%;
   z-index: -1;
 `
-
-const { APPDATA_PATH } = window
 
 // Remove old folder
 remove(join(APPDATA_PATH, 'avatar')).catch(e => null)

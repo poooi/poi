@@ -1,3 +1,4 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -8,8 +9,6 @@ import { Tag, Button, Intent, Dialog, Callout } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
 import cls from 'classnames'
 import styled from 'styled-components'
-
-const { config } = window
 
 const BorderlessDialog = styled(Dialog)`
   padding: 0;

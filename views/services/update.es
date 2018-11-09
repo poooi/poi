@@ -1,11 +1,10 @@
+/* global POI_VERSION, toggleModal, config, language */
 import React from 'react'
 import { shell, remote } from 'electron'
 import semver from 'semver'
 import Markdown from 'react-remarkable'
 import fetch from 'node-fetch'
 import i18next from 'views/env-parts/i18next'
-
-const {POI_VERSION, toggleModal, config, language} = window
 
 const fetchHeader = new Headers()
 fetchHeader.set('Cache-Control', 'max-age=0')

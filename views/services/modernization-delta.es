@@ -1,11 +1,10 @@
+/* global config */
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import i18next from 'views/env-parts/i18next'
 import { Trans } from 'react-i18next'
 
 const { unzip, sum } = require('lodash')
-const { config } = window
-
 
 const nameStatuses = [
   i18next.t('Firepower'),

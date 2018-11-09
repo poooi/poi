@@ -1,3 +1,4 @@
+/* global ROOT, config */
 import fs from 'fs-extra'
 import classnames from 'classnames'
 import React, { PureComponent } from 'react'
@@ -8,8 +9,6 @@ const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
   return classnames(type, props)
 }
-
-const {ROOT, config} = window
 
 class iconConf {
   constructor() {

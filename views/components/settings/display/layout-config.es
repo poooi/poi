@@ -1,3 +1,4 @@
+/* global config, toggleModal */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -7,8 +8,6 @@ import { translate } from 'react-i18next'
 import styled from 'styled-components'
 
 import { Section, Wrapper } from 'views/components/settings/components/section'
-
-const { config, toggleModal } = window
 
 const SVG = {
   horizontal: (

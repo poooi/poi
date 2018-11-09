@@ -1,3 +1,4 @@
+/* global config, toggleModal, EXROOT */
 import path from 'path-extra'
 import fs from 'fs-extra'
 import { shell } from 'electron'
@@ -15,7 +16,6 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
-const { config, toggleModal, EXROOT } = window
 const { openItem } = shell
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)

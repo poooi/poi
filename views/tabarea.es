@@ -1,3 +1,4 @@
+/* global config, dispatch, ipc */
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import React, { Component, Children, PureComponent, unstable_AsyncMode as Async } from 'react'
@@ -17,8 +18,6 @@ import * as shipview from './components/ship'
 import { PluginWrap } from './plugin-wrapper'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { isInGame } from 'views/utils/game-utils'
-
-const { config, dispatch, ipc } = window
 
 const emptyObj = {}
 

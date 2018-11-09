@@ -1,3 +1,4 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -16,7 +17,6 @@ import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { isSubdirectory } from 'views/utils/tools'
 
 const { dialog } = remote.require('electron')
-const { config } = window
 
 const PickerBox = styled.div`
   display: flex;

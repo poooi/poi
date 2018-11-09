@@ -1,3 +1,4 @@
+/* global config, ROOT, isMain, dbg */
 import path from 'path-extra'
 import glob from 'glob'
 import { isString, toString, each, debounce } from 'lodash'
@@ -32,7 +33,6 @@ const LOCALES = [
     lng: '한국어',
   },
 ]
-const { ROOT, isMain, config, dbg } = window
 
 const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
 const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString

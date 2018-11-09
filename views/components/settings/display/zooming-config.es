@@ -1,3 +1,4 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -6,8 +7,6 @@ import { Slider } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
 
 import { Section } from 'views/components/settings/components/section'
-
-const { config } = window
 
 @translate(['setting'])
 @connect((state, props) => ({

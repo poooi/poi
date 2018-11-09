@@ -1,3 +1,4 @@
+/* global config, getStore */
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { translate } from 'react-i18next'
@@ -17,7 +18,6 @@ import { ContextButtonTooltip } from 'views/components/etc/context-button-toolti
 
 import { Section } from '../components/section'
 
-const { config, getStore } = window
 const wvStatus = {
   Loading: 0,
   Loaded: 1,

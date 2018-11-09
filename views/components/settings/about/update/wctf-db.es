@@ -1,3 +1,4 @@
+/* global APPDATA_PATH */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _, { get } from 'lodash'
@@ -10,8 +11,6 @@ import { Trans } from 'react-i18next'
 
 import { wctfSelector } from 'views/utils/selectors'
 import { installPackage, getNpmConfig } from 'views/services/plugin-manager/utils'
-
-const { APPDATA_PATH } = window
 
 const PACKAGE_NAME = 'whocallsthefleet-database'
 const DB_ROOT = path.join(APPDATA_PATH, 'wctf-db')

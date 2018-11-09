@@ -1,3 +1,4 @@
+/* global config */
 import React from 'react'
 import { FormGroup, Button, Intent } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
@@ -11,7 +12,6 @@ import { DownloadProgress } from './download-progress'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
 
-const { config } = window
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
 config.on('config.set', (path, value) => {

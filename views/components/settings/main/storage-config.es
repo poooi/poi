@@ -1,3 +1,4 @@
+/* global toggleModal, APPDATA_PATH */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { remote } from 'electron'
@@ -12,8 +13,6 @@ import { FolderPickerConfig } from 'views/components/settings/components/folder-
 import { IntegerConfig } from 'views/components/settings/components/integer'
 
 const { session } = remote.require('electron')
-
-const { toggleModal, APPDATA_PATH } = window
 
 const ButtonArea = styled(Wrapper)`
   button + button {

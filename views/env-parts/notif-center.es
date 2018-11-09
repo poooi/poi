@@ -1,8 +1,8 @@
+/* global config, ROOT */
 import path from 'path-extra'
 import { remote } from 'electron'
 import { get, memoize, throttle, debounce, pickBy } from 'lodash'
 
-const {config, ROOT} = window
 const NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 
 function maybeFunctionString(func, args) {

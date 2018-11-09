@@ -1,3 +1,4 @@
+/* global config */
 import React, { PureComponent } from 'react'
 import { remote, shell } from 'electron'
 import { TitleBar } from 'electron-react-titlebar'
@@ -8,7 +9,6 @@ import i18next from 'views/env-parts/i18next'
 
 const { Menu } = remote.require('electron')
 const { openExternal } = shell
-const { config } = window
 
 const exeCodeOnWindowHasReloadArea = (win, f) => {
   if ((win || {}).reloadArea) {

@@ -1,3 +1,4 @@
+/* global ROOT */
 import React, { Component } from 'react'
 import { Button, Intent, Tooltip } from '@blueprintjs/core'
 import { connect } from 'react-redux'
@@ -11,8 +12,6 @@ import {
   InfoTooltipEntry,
   InfoTooltipItem,
 } from 'views/components/etc/styled-components'
-
-const { ROOT } = window
 
 const serverList = [
   'https://poi.io/fcd/',

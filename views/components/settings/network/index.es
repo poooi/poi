@@ -1,3 +1,4 @@
+/* global config */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -14,8 +15,6 @@ import { IntegerConfig } from 'views/components/settings/components/integer'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 
 import { ProxyConfig } from './proxy-config'
-
-const { config } = window
 
 const StickyCallout = styled(Callout)`
   position: sticky;

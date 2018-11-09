@@ -1,3 +1,4 @@
+/* global ROOT, POI_VERSION */
 import React from 'react'
 import styled from 'styled-components'
 import { map, capitalize, memoize, size } from 'lodash'
@@ -5,8 +6,6 @@ import { translate } from 'react-i18next'
 import { Card, Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
 import { shell } from 'electron'
 import FA from 'react-fontawesome'
-
-const { ROOT, POI_VERSION } = window
 
 const Wrapper = styled.div`
   margin-bottom: 1em;
