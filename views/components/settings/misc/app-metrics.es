@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react'
 import { remote } from 'electron'
-import { Button } from 'react-bootstrap'
-import { sortBy, round, sumBy } from 'lodash'
+import { Button, Intent, HTMLTable } from '@blueprintjs/core'
+import { sortBy, round, sumBy, map } from 'lodash'
 import { translate } from 'react-i18next'
+
+import { Section } from 'views/components/settings/components/section'
 
 @translate(['setting'])
 export class AppMetrics extends PureComponent {
@@ -27,8 +29,8 @@ export class AppMetrics extends PureComponent {
     const total = {}
 
     const pidmap = {}
-    ;['workingSetSize', 'peakWorkingSetSize'].map(prop =>
-      total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)
+    ;['workingSetSize', 'peakWorkingSetSize'].map(
+      prop => (total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)),
     )
 
     total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
@@ -69,64 +71,52 @@ export class AppMetrics extends PureComponent {
     const { t } = this.props
     const { metrics, active, total, pidmap } = this.state
     return (
-      <>
-        <Button onClick={this.handleClick} bsStyle={active ? 'success' : 'default'}>
-          {
-            active
-              ? <span>{t('setting:Monitor on')}</span>
-              : <span>{t('setting:Monitor off')}</span>
-          }
+      <Section title={t('setting:Performance Monitor')}>
+        <Button
+          minimal
+          onClick={this.handleClick}
+          intent={active ? Intent.SUCCESS : Intent.PRIMARY}
+        >
+          {t(active ? 'Monitor on' : 'Monitor off')}
         </Button>
-        {
-          active &&
-          <div className="metric-table">
-            <div className="metric-row metric-haeder">
-              <span>PID</span>
-              {
-                ['type', 'working/MB', 'peak/MB', 'CPU/%', 'wakeup'].map(str =>
-                  <span key={str} title={str}>{str}</span>
-                )
-              }
-            </div>
-            {
-              metrics.map(metric => (
-                <div className="metric-row" key={metric.pid}>
-                  <span>{metric.pid}</span>
-                  <span title={pidmap[metric.pid] || metric.type}>
+        {active && (
+          <HTMLTable condensed interactive className="metric-table">
+            <thead>
+              {map(['PID', 'type', 'working/MB', 'peak/MB', 'CPU/%', 'wakeup'], str => (
+                <th key={str} title={str}>
+                  {str}
+                </th>
+              ))}
+            </thead>
+            <tbody>
+              {map(metrics, metric => (
+                <tr className="metric-row" key={metric.pid}>
+                  <th>{metric.pid}</th>
+                  <td title={pidmap[metric.pid] || metric.type}>
                     {pidmap[metric.pid] || metric.type}
-                  </span>
-                  {
-                    ['workingSetSize', 'peakWorkingSetSize'].map(prop =>
-                      <span key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</span>
-                    )
-                  }
-                  {
-                    ['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop =>
-                      <span key={prop}>{round((metric.cpu || [])[prop], 1)}</span>
-                    )
-                  }
-                </div>
-              ))
-            }
-            <div className="metric-row metric-total">
-              <span>
-                {t('setting:TOTAL')}
-              </span>
-              <span />
-              <span>
-                {total.workingSetSize}
-              </span>
-              <span>
-                {total.peakWorkingSetSize}
-              </span>
-              <span>
-                {total.percentCPUUsage}
-              </span>
-              <span />
-            </div>
-          </div>
-        }
-      </>
+                  </td>
+                  {['workingSetSize', 'peakWorkingSetSize'].map(prop => (
+                    <td key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</td>
+                  ))}
+                  {['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop => (
+                    <td key={prop}>{round((metric.cpu || [])[prop], 1)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>{t('setting:TOTAL')}</th>
+                <td />
+                <td>{total.workingSetSize}</td>
+                <td>{total.peakWorkingSetSize}</td>
+                <td>{total.percentCPUUsage}</td>
+                <td />
+              </tr>
+            </tfoot>
+          </HTMLTable>
+        )}
+      </Section>
     )
   }
 }

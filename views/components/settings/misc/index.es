@@ -39,12 +39,11 @@ export class Misc extends Component {
       <>
       <VersionInfo />
       <Update />
+      <GPUStatus />
+      <AppMetrics />
       <div id="poi-others" className="poi-others">
-        <GPUStatus />
-        <Divider text={t('setting:Performance Monitor')} />
-        <Col xs={12}>
-          <AppMetrics />
-        </Col>
+
+
         <Divider text="Contributors" />
         <Grid>
           <Col xs={12} className="contributors">

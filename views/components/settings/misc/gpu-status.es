@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react'
 import { remote } from 'electron'
-import { Button } from 'react-bootstrap'
+import { Button, Intent } from '@blueprintjs/core'
 import { translate } from 'react-i18next'
+
+import { Section } from 'views/components/settings/components/section'
 
 @translate(['setting'])
 export class GPUStatus extends PureComponent {
@@ -14,9 +16,11 @@ export class GPUStatus extends PureComponent {
   render() {
     const { t } = this.props
     return (
-      <Button onClick={this.handleClick}>
-        {t('setting:GPU Status')}
-      </Button>
+      <Section title={t('setting:GPU')}>
+        <Button minimal intent={Intent.PRIMARY} onClick={this.handleClick}>
+          {t('setting:GPU Status')}
+        </Button>
+      </Section>
     )
   }
 }
