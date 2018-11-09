@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { FormControl, Button } from 'react-bootstrap'
 import { clipboard } from 'electron'
 import { translate } from 'react-i18next'
-import { Card } from '@blueprintjs/core'
+import { Card, TextArea, Button, Intent } from '@blueprintjs/core'
 
 @translate()
 export class PluginWrap extends Component {
@@ -45,13 +44,12 @@ export class PluginWrap extends Component {
         <>
           <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
           <p>{t('PluginErrorMsg')}</p>
-          <FormControl
-            componentClass="textarea"
+          <TextArea
             readOnly
             value={code}
             style={{ height: '10em' }}
           />
-          <Button bsStyle="primary" onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
+          <Button intent={Intent.PRIMARY} onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
         </>
       )
       return Container ? (
