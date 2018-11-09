@@ -204,5 +204,5 @@
   "Linked": "リンクされた",
   "Available": "利用可能",
   "repair-plugins-confirmation": "Poi は現在のプラグインディレクトリを削除してプラグインを再インストールしますが、この操作はプラグインデータには影響しませんが、時間がかかります。続行しますか？",
-  "Network setting changes will be effective after restarting Poi": "ネットワーク設定の変更は、Poiを再起動した後に有効になります"
+  "Network setting changes will be effective after restarting Poi": "ネットワーク設定の変更は、Poi を再起動した後に有効になります"
 }
