@@ -71,5 +71,5 @@
   "丙": "丙",
   "乙": "乙",
   "甲": "甲",
-  "welcome_markdown": "Good day and welcome to poi {{version}}! Before your use, here is some information for you!\n\n__Poi will never modify your game data, but please use trusted releases and plugins!__\n\nPoi does not use proxy by default, and you could change in settings panel:\n- If you're using HTTP or Socks5 proxies, make sure it complies to your proxy information;\n- If you're using VPN, simply leave it unset;\n- You may also consider enable Editing DMM Cookie Region Flag setting.\n\nIf you're seeing poi under performance, you may disable some plugins.\n\nIf you prefer alphabetic names to Japanese ones, you may try `Translator` plugin.\n\n-----\n\nLike Poi? Have suggestions? Interested in contributing? [Please see here](https://github.com/poooi/poi)\n"
+  "welcome_markdown": "poi {{version}} へようこそっぽい！使用の前に、あなたのためのいくつかのヒントがあります\n\n__poi はあなたのゲームデータを決して変更しませんが、信頼できるリリースとプラグインを使用してください__\n\nパフォーマンスが低下している場合は、一部のプラグインを無効にすることが効きます\n\n-----\n\n提案がありますか？ 開発に参加したいですか? [こちらに注目してください](https://github.com/poooi/poi)\n"
 }
