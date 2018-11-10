@@ -1,7 +1,7 @@
 /* global ROOT, POI_VERSION */
 import React from 'react'
 import styled from 'styled-components'
-import { map, capitalize, memoize, size } from 'lodash'
+import { map, capitalize, memoize, size, throttle } from 'lodash'
 import { translate } from 'react-i18next'
 import { Card, Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
 import { shell } from 'electron'
@@ -20,6 +20,10 @@ const PoiLogo = styled.img`
 
   :hover {
     filter: drop-shadow(0 0 1em rgba(255, 255, 255, 0.25));
+  }
+
+  :active {
+    filter: drop-shadow(0 0 1em rgba(255, 255, 255, 0.75));
   }
 `
 
@@ -92,6 +96,9 @@ const LINKS = [
 
 const openLink = memoize(link => () => shell.openExternal(link))
 
+const audio = new Audio(`file://${ROOT}/assets/audio/about.mp3`)
+const playPoiAudio = throttle(() => audio.play(), 3000, { trailing: false })
+
 // FIXME: Eggs for April 1st, to remove in next version
 const today = new Date()
 const aprilFirst = today.getDate() === 1 && today.getMonth() === 3
@@ -99,7 +106,7 @@ const aprilFirst = today.getDate() === 1 && today.getMonth() === 3
 export const VersionInfo = translate(['setting'])(({ t }) => (
   <Card>
     <Wrapper>
-      <PoiLogo src={`file://${ROOT}/assets/icons/poi.png`} />
+      <PoiLogo src={`file://${ROOT}/assets/icons/poi.png`} onClick={playPoiAudio} />
       <Versions>
         <Title>
           <PoiName>{aprilFirst ? 'chiba' : 'poi'}</PoiName> {POI_VERSION}
