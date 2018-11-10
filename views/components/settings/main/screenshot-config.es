@@ -1,6 +1,6 @@
 import React from 'react'
 import { remote } from 'electron'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { FormGroup } from '@blueprintjs/core'
 
 import { Section, Wrapper, FillAvailable } from '../components/section'
@@ -9,7 +9,7 @@ import { RadioConfig } from '../components/radio'
 
 const screenshotPathExclude = [window.ROOT]
 
-export const ScreenshotConfig = translate(['setting'])(({ t }) => (
+export const ScreenshotConfig = withNamespaces(['setting'])(({ t }) => (
   <Section title={t('Screenshot')}>
     <Wrapper>
       <Wrapper>

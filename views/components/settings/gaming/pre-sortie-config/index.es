@@ -1,12 +1,12 @@
 import React from 'react'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { FormGroup } from '@blueprintjs/core'
 
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { Section } from 'views/components/settings/components/section'
 import { SlotCheckConfig } from './slot-check-config'
 
-export const PreSortieConfig = translate(['setting'])(({ t }) => (
+export const PreSortieConfig = withNamespaces(['setting'])(({ t }) => (
   <Section title={t('setting:Pre-Sortie Check')}>
     <SlotCheckConfig type="ship" />
     <SlotCheckConfig type="item" />

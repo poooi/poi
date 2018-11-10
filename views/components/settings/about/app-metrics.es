@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react'
 import { remote } from 'electron'
 import { Button, Intent, HTMLTable } from '@blueprintjs/core'
 import { sortBy, round, sumBy, map } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 
 import { Section } from 'views/components/settings/components/section'
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 export class AppMetrics extends PureComponent {
   constructor(props) {
     super(props)

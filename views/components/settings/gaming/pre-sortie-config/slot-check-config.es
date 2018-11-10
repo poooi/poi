@@ -3,13 +3,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { FormGroup, Switch } from '@blueprintjs/core'
 
 import { Wrapper } from 'views/components/settings/components/section'
 import { IntegerConfig } from 'views/components/settings/components/integer'
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   type: props.type,
   enable: get(state.config, `poi.mapStartCheck.${props.type}.enable`, false),

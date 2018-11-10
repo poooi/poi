@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { remote } from 'electron'
 import { ProgressBar, Intent } from '@blueprintjs/core'
 import { throttle } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import styled from 'styled-components'
 
 const { updater } = remote.require('./lib/updater')
@@ -17,7 +17,7 @@ const Indicator = styled.div`
   margin-left: 1em;
 `
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 export class DownloadProgress extends Component {
   state = {
     bytesPerSecond: 0,

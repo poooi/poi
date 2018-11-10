@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { get, join as joinString, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
@@ -200,7 +200,7 @@ const fleetStatSelectorFactory = memoize(fleetId =>
   ),
 )
 export const FleetStat = compose(
-  translate(['main']),
+  withNamespaces(['main']),
   connect((state, { fleetId }) => fleetStatSelectorFactory(fleetId)(state)),
 )(
   ({

@@ -2,7 +2,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { map, capitalize, memoize, size, throttle } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Card, Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
 import { shell } from 'electron'
 import FA from 'react-fontawesome'
@@ -103,7 +103,7 @@ const playPoiAudio = throttle(() => audio.play(), 3000, { trailing: false })
 const today = new Date()
 const aprilFirst = today.getDate() === 1 && today.getMonth() === 3
 
-export const VersionInfo = translate(['setting'])(({ t }) => (
+export const VersionInfo = withNamespaces(['setting'])(({ t }) => (
   <Card>
     <Wrapper>
       <PoiLogo src={`file://${ROOT}/assets/icons/poi.png`} onClick={playPoiAudio} />

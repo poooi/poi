@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Dialog, Button, Classes } from '@blueprintjs/core'
 import { size } from 'lodash'
 import cls from 'classnames'
 
 // Notification modal
-@translate()
+@withNamespaces()
 export class ModalTrigger extends PureComponent {
   state = {
     isModalOpen: false,

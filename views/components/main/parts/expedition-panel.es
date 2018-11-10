@@ -4,7 +4,7 @@ import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Position, Intent } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
@@ -52,7 +52,7 @@ const fleetsExpeditionSelector = createSelector(fleetsSelector, fleets =>
 const fleetsNamesSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_name'))
 const fleetInBattleSelector = createSelector(fleetInBattleSelectorFactory, inBattle => inBattle)
 
-const FleetStatus = translate(['main'])(
+const FleetStatus = withNamespaces(['main'])(
   connect((state, { fleetId }) => {
     const fleetShipsData = fleetShipsDataSelectorFactory(fleetId)(state)
     const fleetInBattle = fleetInBattleSelector(fleetId)(state)
@@ -97,7 +97,7 @@ const getTagIntent = (props, timeRemaining) =>
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
-@translate(['main'])
+@withNamespaces(['main'])
 @connect(state => {
   const fleetsExpedition = fleetsExpeditionSelector(state)
   const fleetNames = fleetsNamesSelector(state)

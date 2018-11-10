@@ -8,7 +8,7 @@ import { Tab, Tabs, Popover, Button, Position, NonIdealState, Card } from '@blue
 import { isEqual, omit, get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { remote } from 'electron'
 import styled, { css, createGlobalStyle } from 'styled-components'
 
@@ -274,7 +274,7 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
     autoSwitch,
   })
 
-@translate(['setting', 'others'])
+@withNamespaces(['setting', 'others'])
 @connect(state => ({
   plugins: state.plugins,
   doubleTabbed: get(state.config, 'poi.tabarea.double', false),

@@ -3,7 +3,7 @@ import { ProgressBar, Position, PopoverInteractionKind, Intent } from '@blueprin
 import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 
 import { MaterialIcon } from 'views/components/etc/icon'
@@ -216,7 +216,7 @@ const MapRoutes = connect(state => ({
   )
 })
 
-const ItemStat = translate()(
+const ItemStat = withNamespaces(['others'])(
   connect(state => ({
     itemHistoty: get(state, 'sortie.itemHistory'),
   }))(({ itemHistoty, t }) => {
@@ -243,7 +243,7 @@ const ItemStat = translate()(
 )
 
 // Map Reminder
-@translate()
+@withNamespaces()
 @connect(
   createSelector(
     [sortieMapDataSelector, sortieMapHpSelector, currentNodeSelector, fcdSelector],

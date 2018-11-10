@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
 import React, { Fragment } from 'react'
 import { get } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { compose } from 'redux'
 import styled from 'styled-components'
 
@@ -50,7 +50,7 @@ const AirbaseArea = styled.div`
 `
 
 export const LBViewMini = compose(
-  translate(['resources']),
+  withNamespaces(['resources']),
   connect(state => ({
     areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
     mapareas: get(state, 'const.$mapareas', {}),

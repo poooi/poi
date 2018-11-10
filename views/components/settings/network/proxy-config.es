@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, mapValues } from 'lodash'
 import { FormGroup } from '@blueprintjs/core'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 
 import { Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { TextConfig } from 'views/components/settings/components/text'
@@ -24,7 +24,7 @@ const DEFAULT = {
   },
 }
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, { type }) =>
   mapValues(DEFAULT[type], (value, key) => get(state, ['config', 'proxy', type, key], value)),
 )

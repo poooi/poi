@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { FormGroup, ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core'
 import { trim, last } from 'lodash'
 import npa from 'npm-package-arg'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 
 /**
  * function to check if it is valid poi plugin package
@@ -26,7 +26,7 @@ const validate = packageName => {
   return true
 }
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 export class NameInput extends PureComponent {
   static propTypes = {
     onInstall: PropTypes.func,

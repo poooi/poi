@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { get, compact } from 'lodash'
 import { Button, ButtonGroup, Intent, FormGroup } from '@blueprintjs/core'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import styled from 'styled-components'
 
 import { Section, Wrapper } from 'views/components/settings/components/section'
@@ -57,7 +57,7 @@ const Icon = styled.span`
     compact([props.invertX && 'scaleX(-1)', props.invertY && 'scaleY(-1)']).join(' ')};
 `
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   layout: get(state.config, 'poi.layout.mode', 'horizontal'),
   enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),

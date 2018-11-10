@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
-import { translate, Trans } from 'react-i18next'
+import { withNamespaces, Trans } from 'react-i18next'
 import { Button } from '@blueprintjs/core'
 import { compose } from 'redux'
 
@@ -82,7 +82,7 @@ const FleetShipView = connect((state, { fleetId }) =>
 ))
 
 const LBView = compose(
-  translate(['resources']),
+  withNamespaces(['resources']),
   connect(state => ({
     areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
     mapareas: get(state, 'const.$mapareas', {}),

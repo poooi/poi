@@ -10,7 +10,7 @@ import {
   allCVEIdsSelector,
 } from 'views/utils/selectors'
 import { isOASWWith } from 'views/utils/oasw'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
 const isOASWFuncSelector = createSelector(allCVEIdsSelector, allCVEIds => isOASWWith(allCVEIds))
@@ -29,7 +29,7 @@ const OASWSelectorFactory = memoize(shipId =>
   ),
 )
 
-export const OASWIndicator = translate(['main'])(
+export const OASWIndicator = withNamespaces(['main'])(
   connect((state, { shipId }) => ({
     isOASW: OASWSelectorFactory(shipId)(state),
   }))(

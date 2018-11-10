@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { get } from 'lodash'
-import { translate, Trans } from 'react-i18next'
+import { withNamespaces, Trans } from 'react-i18next'
 import { Button, ButtonGroup, Tag, Intent, Position } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 
@@ -71,7 +71,7 @@ const readyLabel = (
   </AirbaseLabel>
 )
 
-export const LandbaseButton = translate(['resources'])(
+export const LandbaseButton = withNamespaces(['resources'])(
   connect(state => ({
     sortieStatus: get(state, 'sortie.sortieStatus', []),
     airbase: get(state, 'info.airbase', []),

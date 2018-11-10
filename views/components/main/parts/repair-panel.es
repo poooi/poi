@@ -6,7 +6,7 @@ import { join } from 'path-extra'
 import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Position, Intent, ResizeSensor } from '@blueprintjs/core'
 import styled from 'styled-components'
 
@@ -76,7 +76,7 @@ const getTagIntent = (props, timeRemaining) =>
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
-@translate(['main'])
+@withNamespaces(['main'])
 @connect(
   createDeepCompareArraySelector(
     [

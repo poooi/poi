@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { get, memoize } from 'lodash'
 import { connect } from 'react-redux'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import Promise from 'bluebird'
 import {
   Card,
@@ -44,7 +44,7 @@ const AdvanceButton = styled(SettingButton)`
   width: 100%;
 `
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   plugins: state.plugins,
   mirrorName: get(

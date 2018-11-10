@@ -8,7 +8,7 @@ import { Button, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
-import { translate, Trans } from 'react-i18next'
+import { withNamespaces, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
@@ -49,7 +49,7 @@ const PoiControlInner = styled.div`
 // Controller icon bar
 // const {openFocusedWindowDevTools} = remote.require('./lib/window')
 
-@translate()
+@withNamespaces()
 @connect((state, props) => ({
   muted: get(state, 'config.poi.content.muted', false),
   editable: get(state, 'config.poi.layout.editable', false),

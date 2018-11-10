@@ -82,7 +82,7 @@ i18next.use(reactI18nextModule).init({
   debug: dbg && dbg.extra('i18next').isEnabled(),
   react: {
     wait: false,
-    nsMode: true,
+    nsMode: 'fallback',
   },
   saveMissing: dbg && dbg.extra('i18next-save-missing').isEnabled(),
   missingKeyHandler: function(lng, ns, key, fallbackValue) {
@@ -163,10 +163,5 @@ if (!isMain && config.get('plugin.poi-plugin-translator.enable', false)) {
     console.warn('poi-plugin-translator', e)
   }
 }
-
-// set react-i18next translate HOC namespace mode
-translate.setDefaults({
-  nsMode: 'fallback',
-})
 
 export default i18next

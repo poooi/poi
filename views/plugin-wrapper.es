@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { clipboard } from 'electron'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Card, TextArea, Button, Intent } from '@blueprintjs/core'
 
-@translate()
+@withNamespaces()
 export class PluginWrap extends Component {
   state = {
     hasError: false,

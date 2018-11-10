@@ -3,7 +3,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { isEqual, get } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Tooltip, Tag, Intent, Position } from '@blueprintjs/core'
 
 const TEXTS = [['Retreated'], ['Repairing'], ['Resupply Needed']]
@@ -15,7 +15,7 @@ const initState = {
   mapname: [],
 }
 
-@translate(['main'])
+@withNamespaces(['main'])
 @connect(state => ({
   shipTag: state.fcd.shiptag || initState,
 }))

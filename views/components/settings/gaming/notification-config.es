@@ -3,13 +3,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, map, capitalize } from 'lodash'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
 
 import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { IntegerConfig } from 'views/components/settings/components/integer'
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   enabled: get(state.config, 'poi.notify.enabled', true),
   expedition: get(state.config, 'poi.notify.expedition.enabled', true),

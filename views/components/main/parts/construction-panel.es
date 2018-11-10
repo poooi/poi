@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { join as joinString, range, get, map } from 'lodash'
 import FA from 'react-fontawesome'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Intent, Position, ResizeSensor } from '@blueprintjs/core'
 
@@ -52,7 +52,7 @@ const getTagIntent = ({ isLSC }, timeRemaining) =>
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
-@translate(['main'])
+@withNamespaces(['main'])
 @connect(state => ({
   constructions: state.info.constructions,
   $ships: state.const.$ships,

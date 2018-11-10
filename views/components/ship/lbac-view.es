@@ -4,7 +4,7 @@ import { createSelector } from 'reselect'
 import { getHpStyle, getTyku, LBAC_INTENTS, LBAC_STATUS_NAMES } from 'views/utils/game-utils'
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { get } from 'lodash'
 import { Tag, ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
@@ -33,7 +33,7 @@ const SquadSelectorFactory = memoize(squardId =>
 )
 
 export const SquardRow = compose(
-  translate(['main']),
+  withNamespaces(['main']),
   connect((state, { squardId }) => SquadSelectorFactory(squardId)),
 )(({ landbase, equipsData, squardId, t, enableAvatar, compact }) => {
   const { api_action_kind, api_distance, api_name, api_nowhp = 200, api_maxhp = 200 } = landbase

@@ -8,7 +8,7 @@ import { remote } from 'electron'
 import i18next from 'views/env-parts/i18next'
 import path from 'path'
 import { Position, Button, Intent, Classes, OverflowList } from '@blueprintjs/core'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import styled from 'styled-components'
 import FA from 'react-fontawesome'
 
@@ -42,7 +42,7 @@ const EllipsisIcon = styled.span`
   padding: 0 4px;
 `
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,

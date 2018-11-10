@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { createSelector } from 'reselect'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { Tag, ProgressBar, Intent, Position } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 
@@ -99,7 +99,7 @@ const slotitemsDataSelectorFactory = memoize(shipId =>
   ),
 )
 
-const Slotitems = translate(['resources'])(
+const Slotitems = withNamespaces(['resources'])(
   connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state))(function({
     api_maxeq,
     equipsData,
@@ -331,7 +331,7 @@ export const ShipAvatar = styled(Avatar)`
   pointer-events: none;
 `
 
-@translate(['resources', 'main'])
+@withNamespaces(['resources', 'main'])
 @connect((state, { shipId }) => miniShipRowDataSelectorFactory(shipId))
 export class MiniShipRow extends Component {
   static propTypes = {
@@ -508,7 +508,7 @@ const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
   }
 `
 
-export const MiniSquardRow = translate(['main'])(
+export const MiniSquardRow = withNamespaces(['main'])(
   connect((state, { squardId }) =>
     createSelector(
       [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],

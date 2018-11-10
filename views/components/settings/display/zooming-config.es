@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Slider } from '@blueprintjs/core'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 
 import { Section } from 'views/components/settings/components/section'
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   zoomLevel: get(state.config, 'poi.appearance.zoom', 1),
   key: get(state.config, 'poi.appearance.zoom', 1),

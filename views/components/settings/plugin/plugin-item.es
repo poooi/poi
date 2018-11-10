@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import ReactMarkdown from 'react-remarkable'
-import { Trans, translate } from 'react-i18next'
+import { Trans, withNamespaces } from 'react-i18next'
 import {
   Card,
   ButtonGroup,
@@ -89,7 +89,7 @@ const Fade2 = styled(Fade1)`
   }}
 `
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 export class PluginItem extends PureComponent {
   static propTypes = {
     plugin: PropTypes.object,

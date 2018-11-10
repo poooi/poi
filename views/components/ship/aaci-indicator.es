@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { memoize, get } from 'lodash'
-import { translate, Trans } from 'react-i18next'
+import { withNamespaces, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 
@@ -53,7 +53,7 @@ const maxAACIShotdownSelectorFactory = memoize(shipId =>
   }),
 )
 
-export const AACIIndicator = translate(['main'])(
+export const AACIIndicator = withNamespaces(['main'])(
   connect((state, { shipId }) => ({
     AACIs: AACISelectorFactory(shipId)(state) || [],
     maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),

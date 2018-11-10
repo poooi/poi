@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get, map } from 'lodash'
 import { fileUrl } from 'views/utils/tools'
-import { translate } from 'react-i18next'
+import { withNamespaces } from 'react-i18next'
 import { HTMLSelect, Button, ControlGroup, FormGroup, Intent, Position } from '@blueprintjs/core'
 import styled from 'styled-components'
 
@@ -43,7 +43,7 @@ const SWITCHES = [
   },
 ]
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 @connect((state, props) => ({
   themes: get(state, 'ui.themes'),
   theme: get(state.config, 'poi.appearance.theme', 'paperdark'),

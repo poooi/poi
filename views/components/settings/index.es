@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
 import FontAwesome from 'react-fontawesome'
-import { Trans, translate } from 'react-i18next'
+import { Trans, withNamespaces } from 'react-i18next'
 import { isEqual, map } from 'lodash'
 import styled from 'styled-components'
 
@@ -75,7 +75,7 @@ const SettingsTabs = styled(Tabs)`
   }
 `
 
-@translate(['setting'])
+@withNamespaces(['setting'])
 export class reactClass extends React.Component {
   state = {
     activeTab: 0,
