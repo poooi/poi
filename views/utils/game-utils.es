@@ -16,16 +16,16 @@ import { between } from './tools'
 
 const aircraftExpTable = [0, 10, 25, 40, 55, 70, 85, 100, 121]
 const aircraftLevelBonus = {
-  '6': [0, 0, 2, 5, 9, 14, 14, 22, 22],   // 艦上戦闘機
-  '7': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 艦上爆撃機
-  '8': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 艦上攻撃機
-  '11': [0, 1, 1, 1, 1, 3, 3, 6, 6],      // 水上爆撃機
-  '45': [0, 0, 2, 5, 9, 14, 14, 22, 22],  // 水上戦闘機
-  '47': [0, 0, 0, 0, 0, 0, 0, 0, 0],       // 陸上攻撃機
-  '48': [0, 0, 2, 5, 9, 14, 14, 22, 22],   // 局地戦闘機 陸軍戦闘機
-  '56': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式戦闘機
-  '57': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式戦闘爆撃機
-  '58': [0, 0, 0, 0, 0, 0, 0, 0, 0],      // 噴式攻撃機
+  '6': [0, 0, 2, 5, 9, 14, 14, 22, 22], // 艦上戦闘機
+  '7': [0, 0, 0, 0, 0, 0, 0, 0, 0], // 艦上爆撃機
+  '8': [0, 0, 0, 0, 0, 0, 0, 0, 0], // 艦上攻撃機
+  '11': [0, 1, 1, 1, 1, 3, 3, 6, 6], // 水上爆撃機
+  '45': [0, 0, 2, 5, 9, 14, 14, 22, 22], // 水上戦闘機
+  '47': [0, 0, 0, 0, 0, 0, 0, 0, 0], // 陸上攻撃機
+  '48': [0, 0, 2, 5, 9, 14, 14, 22, 22], // 局地戦闘機 陸軍戦闘機
+  '56': [0, 0, 0, 0, 0, 0, 0, 0, 0], // 噴式戦闘機
+  '57': [0, 0, 0, 0, 0, 0, 0, 0, 0], // 噴式戦闘爆撃機
+  '58': [0, 0, 0, 0, 0, 0, 0, 0, 0], // 噴式攻撃機
 }
 
 const speedInterpretation = {
@@ -36,8 +36,8 @@ const speedInterpretation = {
 }
 
 const speedStyles = {
-  [15]: {color: '#1E88E5'},
-  [20]: {color: '#64B5F6'},
+  [15]: { color: '#1E88E5' },
+  [20]: { color: '#64B5F6' },
 }
 
 export function getMaterialStyle(percent) {
@@ -49,33 +49,26 @@ export function getMaterialStyle(percent) {
 
 export function getCondStyle(cond) {
   let s = 'poi-ship-cond-'
-  if (cond > 52)
-    s += '53'
-  else if (cond > 49)
-    s += '50'
-  else if (cond == 49)
-    s += '49'
-  else if (cond > 39)
-    s += '40'
-  else if (cond > 29)
-    s += '30'
-  else if (cond > 19)
-    s += '20'
-  else
-    s += '0'
+  if (cond > 52) s += '53'
+  else if (cond > 49) s += '50'
+  else if (cond == 49) s += '49'
+  else if (cond > 39) s += '40'
+  else if (cond > 29) s += '30'
+  else if (cond > 19) s += '20'
+  else s += '0'
   s += window.isDarkTheme ? ' dark' : ' light'
   return s
 }
 
-export const getSpeedLabel = (speed) => speedInterpretation[speed] || 'Unknown'
+export const getSpeedLabel = speed => speedInterpretation[speed] || 'Unknown'
 
-export const getSpeedStyle = (speed) => speedStyles[speed] || {}
+export const getSpeedStyle = speed => speedStyles[speed] || {}
 
 export function getStatusStyle(status) {
   if (status != null) {
     const flag = status == 0 || status == 1 // retreat or repairing
     if (flag != null && flag) {
-      return {opacity: 0.4}
+      return { opacity: 0.4 }
     }
   } else {
     return {}
@@ -106,9 +99,9 @@ export function getShipLabelStatus(ship, $ship, inRepair, escaped) {
 export function getHpStyle(percent) {
   if (percent <= 25) {
     return 'red'
-  } else if (percent <= 50){
+  } else if (percent <= 50) {
     return 'orange'
-  } else if (percent <= 75){
+  } else if (percent <= 75) {
     return 'yellow'
   } else {
     return 'green'
@@ -118,24 +111,27 @@ export function getHpStyle(percent) {
 // equip: $equip or $equip.api_type[3]
 export function equipIsAircraft(equip) {
   if (Number.isInteger(equip)) {
-    return equip != null && (
-      between(equip, 6, 10) ||
-      between(equip, 21, 22) ||
-      between(equip, 37, 40) ||
-      between(equip, 43, 46) ||
-      [33].includes(equip)
+    return (
+      equip != null &&
+      (between(equip, 6, 10) ||
+        between(equip, 21, 22) ||
+        between(equip, 37, 40) ||
+        between(equip, 43, 46) ||
+        [33].includes(equip))
     )
   } else {
     const id = get(equip, 'api_type.2', 0)
-    return between(id, 6, 11) ||
-    between(id, 25, 26) ||
-    between(id, 47, 48) ||
-    between(id, 56, 59) ||
-    [41, 45, 94].includes(id)
+    return (
+      between(id, 6, 11) ||
+      between(id, 25, 26) ||
+      between(id, 47, 48) ||
+      between(id, 56, 59) ||
+      [41, 45, 94].includes(id)
+    )
   }
 }
 
-export function getTyku(equipsData, landbaseStatus=0) {
+export function getTyku(equipsData, landbaseStatus = 0) {
   let minTyku = 0
   let maxTyku = 0
   let basicTyku = 0
@@ -181,7 +177,9 @@ export function getTyku(equipsData, landbaseStatus=0) {
         let landbaseBonus = 0
         if (landbaseStatus === 1) landbaseBonus = 1.5 * $equip.api_houk // (対空 ＋ 迎撃 × 1.5)
         if (landbaseStatus === 2) landbaseBonus = $equip.api_houk + 2 * $equip.api_houm // (対空 ＋ 迎撃 ＋ 対爆 × 2)
-        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + landbaseBonus + (_equip.api_level || 0) * levelFactor)
+        tempTyku +=
+          Math.sqrt(onslot) *
+          ($equip.api_tyku + landbaseBonus + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
@@ -232,8 +230,7 @@ export function getSaku25(shipsData, equipsData) {
   let radarSaku = 0
   let totalSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
-    if (!shipsData[i] || !equipsData[i])
-      continue
+    if (!shipsData[i] || !equipsData[i]) continue
     const [_ship] = shipsData[i]
     shipSaku += _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
@@ -242,26 +239,26 @@ export function getSaku25(shipsData, equipsData) {
       }
       const $equip = equipsData[i][j][1]
       switch ($equip.api_type[3]) {
-      case 9:
-        reconSaku += $equip.api_saku
-        shipSaku -= $equip.api_saku
-        break
-      case 10:
-        if ($equip.api_type[2] == 10) {
+        case 9:
           reconSaku += $equip.api_saku
           shipSaku -= $equip.api_saku
-        }
-        break
-      case 11:
-        radarSaku += $equip.api_saku
-        shipSaku -= $equip.api_saku
-        break
-      default:
-        break
+          break
+        case 10:
+          if ($equip.api_type[2] == 10) {
+            reconSaku += $equip.api_saku
+            shipSaku -= $equip.api_saku
+          }
+          break
+        case 11:
+          radarSaku += $equip.api_saku
+          shipSaku -= $equip.api_saku
+          break
+        default:
+          break
       }
     }
   }
-  reconSaku = reconSaku * 2.00
+  reconSaku = reconSaku * 2.0
   shipSaku = Math.sqrt(shipSaku)
   totalSaku = reconSaku + radarSaku + shipSaku
 
@@ -273,7 +270,6 @@ export function getSaku25(shipsData, equipsData) {
   }
 }
 
-
 // Saku (2-5 秋式)
 // 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
 //            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
@@ -284,8 +280,7 @@ export function getSaku25a(shipsData, equipsData, teitokuLv) {
   let equipSaku = 0
   let teitokuSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
-    if (!shipsData[i] || !equipsData[i])
-      continue
+    if (!shipsData[i] || !equipsData[i]) continue
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
@@ -295,35 +290,34 @@ export function getSaku25a(shipsData, equipsData, teitokuLv) {
       const $equip = equipsData[i][j][1]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[3]) {
-      case 7:
-        equipSaku += $equip.api_saku * 1.04
-        break
-      case 8:
-        equipSaku += $equip.api_saku * 1.37
-        break
-      case 9:
-        equipSaku += $equip.api_saku * 1.66
-        break
-      case 10:
-        if ($equip.api_type[2] == 10) {
-          equipSaku += $equip.api_saku * 2.00
-        } else if ($equip.api_type[2] == 11) {
-          equipSaku += $equip.api_saku * 1.78
-        }
-        break
-      case 11:
-        if ($equip.api_type[2] == 12) {
-          equipSaku += $equip.api_saku * 1.00
-        }
-        else if ($equip.api_type[2] == 13) {
-          equipSaku += $equip.api_saku * 0.99
-        }
-        break
-      case 24:
-        equipSaku += $equip.api_saku * 0.91
-        break
-      default:
-        break
+        case 7:
+          equipSaku += $equip.api_saku * 1.04
+          break
+        case 8:
+          equipSaku += $equip.api_saku * 1.37
+          break
+        case 9:
+          equipSaku += $equip.api_saku * 1.66
+          break
+        case 10:
+          if ($equip.api_type[2] == 10) {
+            equipSaku += $equip.api_saku * 2.0
+          } else if ($equip.api_type[2] == 11) {
+            equipSaku += $equip.api_saku * 1.78
+          }
+          break
+        case 11:
+          if ($equip.api_type[2] == 12) {
+            equipSaku += $equip.api_saku * 1.0
+          } else if ($equip.api_type[2] == 13) {
+            equipSaku += $equip.api_saku * 0.99
+          }
+          break
+        case 24:
+          equipSaku += $equip.api_saku * 0.91
+          break
+        default:
+          break
       }
     }
     shipSaku += Math.sqrt(shipPureSaku) * 1.69
@@ -366,15 +360,14 @@ export function getSaku25a(shipsData, equipsData, teitokuLv) {
 //     H(レベル)
 //     M(空き数)
 
-export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0, slotCount = 6) {
+export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier = 1.0, slotCount = 6) {
   let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
   let teitokuSaku = 0
   let emptySlot = slotCount
   for (let i = 0; i < equipsData.length; i++) {
-    if (!shipsData[i] || !equipsData[i])
-      continue
+    if (!shipsData[i] || !equipsData[i]) continue
     emptySlot -= 1
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
@@ -385,27 +378,27 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0, slo
       const [_equip, $equip] = equipsData[i][j]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[2]) {
-      case 8:
-        equipSaku += $equip.api_saku * 0.8
-        break
-      case 9:
-        equipSaku += $equip.api_saku * 1.0
-        break
-      case 10:
-        equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 1.2
-        break
-      case 11:
-        equipSaku += $equip.api_saku * 1.1
-        break
-      case 12:
-        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
-        break
-      case 13:
-        equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
-        break
-      default:
-        equipSaku += $equip.api_saku * 0.6
-        break
+        case 8:
+          equipSaku += $equip.api_saku * 0.8
+          break
+        case 9:
+          equipSaku += $equip.api_saku * 1.0
+          break
+        case 10:
+          equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 1.2
+          break
+        case 11:
+          equipSaku += $equip.api_saku * 1.1
+          break
+        case 12:
+          equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
+          break
+        case 13:
+          equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
+          break
+        default:
+          equipSaku += $equip.api_saku * 0.6
+          break
       }
     }
     shipSaku += Math.sqrt(shipPureSaku)
@@ -423,20 +416,23 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier=1.0, slo
 }
 
 // returns fleet's minimal api_soku value, returns 0 when all elements undefined
-export const getFleetSpeed = (shipsData) => ({
-  speed: _(shipsData).map(([ship = {}] = []) => ship.api_soku || Infinity).min() || 0,
+export const getFleetSpeed = shipsData => ({
+  speed:
+    _(shipsData)
+      .map(([ship = {}] = []) => ship.api_soku || Infinity)
+      .min() || 0,
 })
 
-export async function isInGame () {
+export async function isInGame() {
   try {
     return (
-      document.querySelector('webview').getURL() === 'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' ||
-      await new Promise((resolve, reject) => {
-        document.querySelector('webview').executeJavaScript(
-          'document.querySelector(\'embed\') !== null',
-          (e) => resolve(e)
-        )
-      })
+      document.querySelector('webview').getURL() ===
+        'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' ||
+      (await new Promise((resolve, reject) => {
+        document
+          .querySelector('webview')
+          .executeJavaScript("document.querySelector('embed') !== null", e => resolve(e))
+      }))
     )
   } catch (e) {
     return false
@@ -466,6 +462,12 @@ export const getFleetIntent = (state, disabled) =>
 
 export const DEFAULT_FLEET_NAMES = ['I', 'II', 'III', 'IV']
 
-export const LBAC_INTENTS = [Intent.NONE, Intent.DANGER, Intent.WARNING, Intent.PRIMARY, Intent.SUCCESS]
+export const LBAC_INTENTS = [
+  Intent.NONE,
+  Intent.DANGER,
+  Intent.WARNING,
+  Intent.PRIMARY,
+  Intent.SUCCESS,
+]
 
 export const LBAC_STATUS_NAMES = ['Standby', 'Sortie', 'Defense', 'Retreat', 'Rest']

@@ -41,19 +41,17 @@ const Detail = styled.div`
 export const ThanksTo = () => (
   <Section title="Thanks to">
     <Wrapper className="thanks-to">
-      {
-        map(CONST.thanksTo, e => (
-          <Item key={e.name} className="thanks-to-item">
-            <Icon className="thanks-to-img-container">
-              <img src={e.avatar} style={e.extraCSS} onClick={openLink(e.link)} title={e.name} />
-            </Icon>
-            <Detail className="thanks-to-container">
-              <b>{e.name}</b>
-              <p>{e.description}</p>
-            </Detail>
-          </Item>
-        ))
-      }
+      {map(CONST.thanksTo, e => (
+        <Item key={e.name} className="thanks-to-item">
+          <Icon className="thanks-to-img-container">
+            <img src={e.avatar} style={e.extraCSS} onClick={openLink(e.link)} title={e.name} />
+          </Icon>
+          <Detail className="thanks-to-container">
+            <b>{e.name}</b>
+            <p>{e.description}</p>
+          </Detail>
+        </Item>
+      ))}
     </Wrapper>
   </Section>
 )

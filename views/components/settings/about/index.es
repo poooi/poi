@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 import { VersionInfo } from './version-info'
 import { AppMetrics } from './app-metrics'
 import { OpenCollective } from './open-collective'

@@ -7,29 +7,33 @@ if (config.get('poi.content.muted', false)) {
   remote.getCurrentWebContents().setAudioMuted(true)
 }
 
-document.addEventListener('DOMContentLoaded', (e) => {
+document.addEventListener('DOMContentLoaded', e => {
   if (config.get('poi.misc.dmmcookie', false)) {
     document.cookie = 'cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/'
-    document.cookie = 'cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/'
-    document.cookie = 'cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/'
+    document.cookie =
+      'cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/'
+    document.cookie =
+      'cklg=welcome;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/'
     document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=osapi.dmm.com;path=/'
     document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=203.104.209.7;path=/'
-    document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=www.dmm.com;path=/netgame/'
-    document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=log-netgame.dmm.com;path=/'
+    document.cookie =
+      'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=www.dmm.com;path=/netgame/'
+    document.cookie =
+      'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=log-netgame.dmm.com;path=/'
     document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/'
     document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame/'
-    document.cookie = 'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/'
+    document.cookie =
+      'ckcy=1;expires=Sun, 09 Feb 2019 09:00:09 GMT;domain=.dmm.com;path=/netgame_s/'
     const ua = remote.getCurrentWebContents().session.getUserAgent()
     remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
   }
   if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
-    window.DMM.netgame.reloadDialog = function(){}
+    window.DMM.netgame.reloadDialog = function() {}
   }
 })
 
 // Faster align setting
-const alertCSS =
-`#alert {
+const alertCSS = `#alert {
   left: 270px !important;
   top: 83px !important;
   border: 0;
@@ -37,8 +41,7 @@ const alertCSS =
 `
 
 const alignCSS = document.createElement('style')
-alignCSS.innerHTML =
-`html {
+alignCSS.innerHTML = `html {
   overflow: hidden;
 }
 #w, #main-ntg {
@@ -69,7 +72,7 @@ const disableTab = e => {
   }
 }
 
-function handleSpacingTop(show, count=0) {
+function handleSpacingTop(show, count = 0) {
   const status = show ? 'block' : 'none'
   const action = show ? 'removeEventListener' : 'addEventListener'
   if (document.querySelector('#spacing_top')) {
@@ -89,7 +92,7 @@ function handleSpacingTop(show, count=0) {
   }
 }
 
-function handleZoom(count=0) {
+function handleZoom(count = 0) {
   if (count > 20) {
     return
   }
@@ -104,7 +107,7 @@ function handleZoom(count=0) {
   webFrame.setLayoutZoomLevelLimits(zl, zl)
 }
 
-window.align = function () {
+window.align = function() {
   if (location.pathname.includes('854854') || location.hostname === 'osapi.dmm.com') {
     document.body.appendChild(alignCSS)
     handleSpacingTop(false)
@@ -141,11 +144,18 @@ const handleDocumentReady = () => {
 
 handleDocumentReady()
 
-if (window.location.toString().includes('http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/')) {
+if (
+  window.location
+    .toString()
+    .includes('http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/')
+) {
   const _documentWrite = document.write
   document.write = function() {
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
-      console.warn(`Block document.write since document is at state "${document.readyState}". Blocked call:`, arguments)
+      console.warn(
+        `Block document.write since document is at state "${document.readyState}". Blocked call:`,
+        arguments,
+      )
     } else {
       _documentWrite.apply(this, arguments)
     }
@@ -153,4 +163,6 @@ if (window.location.toString().includes('http://www.dmm.com/netgame/social/-/gad
 }
 
 // A workaround for drop-and-drag navigation
-remote.require('./lib/utils').stopFileNavigateAndHandleNewWindowInApp(remote.getCurrentWebContents().id)
+remote
+  .require('./lib/utils')
+  .stopFileNavigateAndHandleNewWindowInApp(remote.getCurrentWebContents().id)

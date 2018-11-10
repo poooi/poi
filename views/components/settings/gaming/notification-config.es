@@ -100,8 +100,8 @@ export class NotificationConfig extends Component {
                 configName="poi.notify.expedition.value"
                 defaultValue={60}
                 disabled={!this.props.enabled || !this.props.expedition}
-              />
-              {' '}{t('main:s')}
+              />{' '}
+              {t('main:s')}
             </FormGroup>
           </Wrapper>
 

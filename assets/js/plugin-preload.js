@@ -8,11 +8,15 @@ require('module').globalPaths.push(MODULE_PATH)
 require('@babel/register')(require(`${ROOT}/babel.config`))
 require('coffee-react/register')
 async function setPath() {
-  require(`${ROOT}/lib/module-path`).setAllowedPath([ ROOT, APPDATA_PATH, await remote.getCurrentWebContents().executeJavaScript('__dirname') ])
+  require(`${ROOT}/lib/module-path`).setAllowedPath([
+    ROOT,
+    APPDATA_PATH,
+    await remote.getCurrentWebContents().executeJavaScript('__dirname'),
+  ])
 }
 setPath()
 
-const onZoomChange = (value) => {
+const onZoomChange = value => {
   remote.getCurrentWebContents().setZoomFactor(value)
 }
 
@@ -24,11 +28,13 @@ const handleZoom = (path, value) => {
 
 config.addListener('config.set', handleZoom)
 
-window.addEventListener('unload', (e) => {
+window.addEventListener('unload', e => {
   config.removeListener('config.set', handleZoom)
 })
 
-document.addEventListener('DOMContentLoaded', () => onZoomChange(config.get('poi.appearance.zoom', 1)))
+document.addEventListener('DOMContentLoaded', () =>
+  onZoomChange(config.get('poi.appearance.zoom', 1)),
+)
 // document.addEventListener('DOMContentLoaded', () => {
 //   if (config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')) {
 //     const titlebar = document.createElement('div')

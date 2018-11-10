@@ -1,4 +1,3 @@
-
 import fs from 'fs-extra'
 import path from 'path-extra'
 
@@ -8,7 +7,7 @@ import { log } from '../lib/utils'
 const { ROOT } = global
 
 const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
-  try{
+  try {
     await fs.remove(installRoot)
     await fs.remove(tarRoot)
   } catch (e) {
@@ -18,9 +17,13 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   await fs.ensureDir(tarRoot)
 
   // Install plugins
-  await npmInstall(installRoot, ['--global-style', '--only=production', '--prefix', '.'].concat(pluginNames), false)
+  await npmInstall(
+    installRoot,
+    ['--global-style', '--only=production', '--prefix', '.'].concat(pluginNames),
+    false,
+  )
 
-  const pluginDirs = (() =>{
+  const pluginDirs = (() => {
     const dirs = []
     for (const name of pluginNames) {
       const dir = path.join(installRoot, 'node_modules', name)
@@ -44,7 +47,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   })
 }
 
-const installPlugins = async (poiVersion) => {
+const installPlugins = async poiVersion => {
   const BUILD_ROOT = path.join(ROOT, 'dist')
   const BUILDING_ROOT = path.join(BUILD_ROOT, 'plugins')
   const RELEASE_DIR = BUILD_ROOT
@@ -58,9 +61,9 @@ const installPlugins = async (poiVersion) => {
   await installPluginsTo(pluginNames, installRoot, gzip_root)
 
   const d = new Date()
-  const str_date = `${d.getUTCFullYear()}-${d.getUTCMonth()+1}-${d.getUTCDate()}`
+  const str_date = `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`
   const archive_path = path.join(RELEASE_DIR, `poi-plugins_${str_date}.7z`)
-  await compress7z (gzip_root, archive_path)
+  await compress7z(gzip_root, archive_path)
 
   log(`Successfully built tarballs at ${archive_path}`)
 }

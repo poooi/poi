@@ -58,14 +58,20 @@ if (process.platform === 'win32') {
 
 export const checkUpdate = async () => {
   const betaChannel = config.get('poi.update.beta', false)
-  const versionInfo = await fetch(`https://${global.SERVER_HOSTNAME}/update/latest.json`, defaultFetchOption)
+  const versionInfo = await fetch(
+    `https://${global.SERVER_HOSTNAME}/update/latest.json`,
+    defaultFetchOption,
+  )
     .then(res => res.json())
     .catch(e => {
       console.warn('Check update error.', e.stack)
       return {}
     })
   if (versionInfo.version) {
-    const version = betaChannel && semver.gt(versionInfo.betaVersion, versionInfo.version) ? versionInfo.betaVersion || 'v0.0.0' : versionInfo.version
+    const version =
+      betaChannel && semver.gt(versionInfo.betaVersion, versionInfo.version)
+        ? versionInfo.betaVersion || 'v0.0.0'
+        : versionInfo.version
     const channel = version.includes('beta') ? '-beta' : ''
     // eslint-disable-next-line no-console
     console.log(`Remote version: ${version}. Current version: ${POI_VERSION}`)
@@ -73,7 +79,10 @@ export const checkUpdate = async () => {
 
     if (semver.lt(POI_VERSION, version) && semver.lt(knownVersion, version)) {
       const currentLang = LANG.includes(language) ? language : 'en-US'
-      const log = await fetch(`https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`, defaultFetchOption)
+      const log = await fetch(
+        `https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`,
+        defaultFetchOption,
+      )
         .then(res => res.text())
         .catch(res => {
           console.warn('fetch update log error')
@@ -85,14 +94,16 @@ export const checkUpdate = async () => {
 }
 
 const toggleUpdate = (version, log) => {
-  const title = <span>{i18next.t('Update')} poi-{version}</span>
+  const title = (
+    <span>
+      {i18next.t('Update')} poi-{version}
+    </span>
+  )
   // react-remarkable uses remarkable as parser，
   // remarkable disables HTML by default，
   // react-remarkable's default option dose not enable HTML，
   // it could be considered safe
-  const content = (
-    <Markdown source={log} />
-  )
+  const content = <Markdown source={log} />
   const footer = [
     {
       name: i18next.t('I know'),
@@ -115,7 +126,6 @@ const toggleUpdate = (version, log) => {
   toggleModal(title, content, footer)
 }
 
-
 if (config.get('poi.update.enable', true)) {
-  setTimeout(checkUpdate, 5000 )
+  setTimeout(checkUpdate, 5000)
 }

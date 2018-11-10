@@ -35,7 +35,7 @@ const LOCALES = [
 ]
 
 const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
-const spacing = textSpacingCJK ? (str => isString(str) ? _spacing(str) : toString(str)) : toString
+const spacing = textSpacingCJK ? str => (isString(str) ? _spacing(str) : toString(str)) : toString
 
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
@@ -53,62 +53,64 @@ window.LOCALES = LOCALES
 window.language = window.config.get('poi.misc.language', navigator.language)
 if (!LOCALES.map(lng => lng.locale).includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
-  case 'zh':
-    window.language = 'zh-TW'
-    break
-  case 'ja':
-    window.language = 'ja-JP'
-    break
-  case 'ko':
-    window.language = 'ko-KR'
-    break
-  default:
-    window.language = 'en-US'
+    case 'zh':
+      window.language = 'zh-TW'
+      break
+    case 'ja':
+      window.language = 'ja-JP'
+      break
+    case 'ko':
+      window.language = 'ko-KR'
+      break
+    default:
+      window.language = 'en-US'
   }
 }
 
 const i18next = I18next.createInstance()
 
-i18next.use(reactI18nextModule)
-  .init({
-    lng: window.language,
-    fallbackLng: false,
-    resources: mainPoiRes,
-    ns: mainPoiNs,
-    defaultNS: 'others',
-    interpolation: {
-      escapeValue: false,
-    },
-    returnObjects: true, // allow returning objects
-    debug: dbg && dbg.extra('i18next').isEnabled(),
-    react: {
-      wait: false,
-      nsMode: true,
-    },
-    saveMissing: dbg && dbg.extra('i18next-save-missing').isEnabled(),
-    missingKeyHandler: function (lng, ns, key, fallbackValue) {
-      if (!ns || ns == '') {
-        ns = 'others'
-      }
-      if (ns !== 'data' && i18nFiles.map(i => path.basename(i)).includes(ns)) {
-        try {
-          const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
-          const cnt = readJSONSync(p)
-          let val = fallbackValue
-          if (val.startsWith(ns)) {
-            val = val.split(/:(.+)/)[1]
-          }
-          cnt[key] = val
-          writeFileSync(p, formatJson(cnt, {
+i18next.use(reactI18nextModule).init({
+  lng: window.language,
+  fallbackLng: false,
+  resources: mainPoiRes,
+  ns: mainPoiNs,
+  defaultNS: 'others',
+  interpolation: {
+    escapeValue: false,
+  },
+  returnObjects: true, // allow returning objects
+  debug: dbg && dbg.extra('i18next').isEnabled(),
+  react: {
+    wait: false,
+    nsMode: true,
+  },
+  saveMissing: dbg && dbg.extra('i18next-save-missing').isEnabled(),
+  missingKeyHandler: function(lng, ns, key, fallbackValue) {
+    if (!ns || ns == '') {
+      ns = 'others'
+    }
+    if (ns !== 'data' && i18nFiles.map(i => path.basename(i)).includes(ns)) {
+      try {
+        const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
+        const cnt = readJSONSync(p)
+        let val = fallbackValue
+        if (val.startsWith(ns)) {
+          val = val.split(/:(.+)/)[1]
+        }
+        cnt[key] = val
+        writeFileSync(
+          p,
+          formatJson(cnt, {
             type: 'space',
             size: 2,
-          }) + '\n')
-        } catch(e) {
-          return
-        }
+          }) + '\n',
+        )
+      } catch (e) {
+        return
       }
-    },
-  })
+    }
+  },
+})
 
 // for test
 if (window.dbg && window.dbg.isEnabled()) {
@@ -118,13 +120,15 @@ if (window.dbg && window.dbg.isEnabled()) {
 // FIXME: simulating window.i18n with i18next
 // to be removed in next major release
 window.i18n = {}
-const addGlobalI18n = (namespace) => {
+const addGlobalI18n = namespace => {
   window.i18n[namespace] = {
     fixedT: i18next.getFixedT(window.language, namespace),
   }
 
-  window.i18n[namespace].__ = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
-  window.i18n[namespace].__n = (str, ...args) => format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
+  window.i18n[namespace].__ = (str, ...args) =>
+    format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
+  window.i18n[namespace].__n = (str, ...args) =>
+    format(window.i18n[namespace].fixedT(escapeI18nKey(str)), ...args)
   window.i18n[namespace].setLocale = () => {}
 }
 
@@ -141,17 +145,14 @@ i18next.emitResourceAddedDebounce = debounce(() => {
 }, 500)
 
 i18next.addResourceBundleDebounce = (...props) => {
-  i18next.addResourceBundle(
-    ...props,
-    { silent: true },
-  )
+  i18next.addResourceBundle(...props, { silent: true })
   i18next.emitResourceAddedDebounce()
 }
 
 window.i18n.resources = {
-  __: (str) => spacing(str),
+  __: str => spacing(str),
   translate: (locale, str) => spacing(str),
-  setLocale: (str) => (str),
+  setLocale: str => str,
 }
 
 // inject translator for English names

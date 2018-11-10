@@ -16,6 +16,7 @@ module.exports = {
           'optionalCatchBinding',
           'optionalChaining',
           'doExpressions',
+          'exportDefaultFrom',
         ],
       },
     ],

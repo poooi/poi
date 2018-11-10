@@ -14,14 +14,11 @@ const memoizeMerge = memoize((...args) => merge(...args))
 export const Tooltip = ({ modifiers, ...props }) => (
   <BPTooltip
     {...props}
-    modifiers={memoizeMerge(
-      modifiers,
-      {
-        preventOverflow: {
-          boundariesElement: 'window',
-        },
-      }
-    )}
+    modifiers={memoizeMerge(modifiers, {
+      preventOverflow: {
+        boundariesElement: 'window',
+      },
+    })}
   />
 )
 

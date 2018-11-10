@@ -36,7 +36,11 @@ import {
   miscSelector,
   fleetSlotCountSelectorFactory,
 } from 'views/utils/selectors'
-import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+import {
+  InfoTooltip,
+  InfoTooltipEntry,
+  InfoTooltipItem,
+} from 'views/components/etc/styled-components'
 
 const isActive = () => getStore('ui.activeMainTab') === 'ship-view'
 
@@ -239,9 +243,7 @@ export const FleetStat = compose(
       <FleetStats className="fleet-stat">
         {isMini ? (
           <MiniContainer>
-            <MiniItem>
-              {t(`main:${getSpeedLabel(speed)}`)}
-            </MiniItem>
+            <MiniItem>{t(`main:${getSpeedLabel(speed)}`)}</MiniItem>
             <MiniItem>
               {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
             </MiniItem>
@@ -251,9 +253,7 @@ export const FleetStat = compose(
           </MiniContainer>
         ) : (
           <Container>
-            <Item>
-              {t(`main:${getSpeedLabel(speed)}`)}
-            </Item>
+            <Item>{t(`main:${getSpeedLabel(speed)}`)}</Item>
             <Item>
               {t('main:Total Lv')}. {totalLv}
             </Item>
@@ -292,22 +292,30 @@ export const FleetStat = compose(
                       <span>{saku33.total}</span>
                     </InfoTooltipEntry>
                     <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{'× 3 (6-2 & 6-3)'}</InfoTooltipItem>
+                      <InfoTooltipItem className="info-tooltip-item">
+                        {'× 3 (6-2 & 6-3)'}
+                      </InfoTooltipItem>
                       <span>{saku33x3.total}</span>
                     </InfoTooltipEntry>
                     <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{'× 4 (3-5 & 6-1)'}</InfoTooltipItem>
+                      <InfoTooltipItem className="info-tooltip-item">
+                        {'× 4 (3-5 & 6-1)'}
+                      </InfoTooltipItem>
                       <span>{saku33x4.total}</span>
                     </InfoTooltipEntry>
                     <ReconTile className="recon-title">
                       <span>{t('main:Formula 2-5')}</span>
                     </ReconTile>
                     <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{t('main:Fall')}</InfoTooltipItem>
+                      <InfoTooltipItem className="info-tooltip-item">
+                        {t('main:Fall')}
+                      </InfoTooltipItem>
                       <span>{saku25a.total}</span>
                     </InfoTooltipEntry>
                     <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{t('main:Legacy')}</InfoTooltipItem>
+                      <InfoTooltipItem className="info-tooltip-item">
+                        {t('main:Legacy')}
+                      </InfoTooltipItem>
                       <span>{saku25.total}</span>
                     </InfoTooltipEntry>
                   </InfoTooltip>

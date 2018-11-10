@@ -10,7 +10,16 @@ import { PluginWrap } from './plugin-wrapper'
 import styled, { StyleSheetManager } from 'styled-components'
 import { loadStyle } from './env-parts/theme'
 
-const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
+const pickOptions = [
+  'ROOT',
+  'EXROOT',
+  'toast',
+  'notify',
+  'toggleModal',
+  'i18n',
+  'config',
+  'getStore',
+]
 const { BrowserWindow } = remote
 const ipc = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
@@ -20,8 +29,8 @@ const getPluginWindowRect = plugin => {
   if (x == null || y == null) {
     return defaultRect
   }
-  const validate = (n, min, range) => (n != null && n >= min && n < min + range)
-  const withinDisplay = (d) => {
+  const validate = (n, min, range) => n != null && n >= min && n < min + range
+  const withinDisplay = d => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -51,7 +60,9 @@ const stylesheetTagsWithID = [
   'blueprint',
   'blueprint-icon',
   'fontawesome',
-].map(id => `<link rel="stylesheet" type="text/css" id="${id}-css">`).join('')
+]
+  .map(id => `<link rel="stylesheet" type="text/css" id="${id}-css">`)
+  .join('')
 
 const stylesheetTagsWithHref = [
   'assets/css/app.css',
@@ -59,8 +70,9 @@ const stylesheetTagsWithHref = [
   'electron-react-titlebar/assets/style.css',
   'react-resizable/css/styles.css',
   'react-grid-layout/css/styles.css',
-].map(href => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`).join('')
-
+]
+  .map(href => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`)
+  .join('')
 
 export class PluginWindowWrap extends PureComponent {
   constructor(props) {
@@ -81,7 +93,7 @@ export class PluginWindowWrap extends PureComponent {
     try {
       this.initWindow()
       config.addListener('config.set', this.handleZoom)
-    } catch(e) {
+    } catch (e) {
       console.error(e)
       this.props.closeWindowPortal()
     }
@@ -110,20 +122,31 @@ export class PluginWindowWrap extends PureComponent {
 
   initWindow = () => {
     const windowOptions = getPluginWindowRect(this.props.plugin)
-    const windowFeatures = Object.keys(windowOptions).map(key => {
-      switch (key) {
-      case 'x': return `left=${windowOptions.x}`
-      case 'y': return `top=${windowOptions.y}`
-      case 'width': return `width=${windowOptions.width}`
-      case 'height': return `height=${windowOptions.height}`
-      }
-    }).join(',')
+    const windowFeatures = Object.keys(windowOptions)
+      .map(key => {
+        switch (key) {
+          case 'x':
+            return `left=${windowOptions.x}`
+          case 'y':
+            return `top=${windowOptions.y}`
+          case 'width':
+            return `width=${windowOptions.width}`
+          case 'height':
+            return `height=${windowOptions.height}`
+        }
+      })
+      .join(',')
     const URL = `file:///${__dirname}/../index-plugin.html?${this.props.plugin.id}`
-    this.externalWindow = open(URL, `plugin[${this.props.plugin.id}]`, windowFeatures + ',nodeIntegration=no')
+    this.externalWindow = open(
+      URL,
+      `plugin[${this.props.plugin.id}]`,
+      windowFeatures + ',nodeIntegration=no',
+    )
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
-      this.currentWindow = BrowserWindow.getAllWindows().find(a => a.getURL().endsWith(this.props.plugin.id))
-      this.externalWindow.document.head.innerHTML =
-`<meta charset="utf-8">
+      this.currentWindow = BrowserWindow.getAllWindows().find(a =>
+        a.getURL().endsWith(this.props.plugin.id),
+      )
+      this.externalWindow.document.head.innerHTML = `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       if (process.platform === 'darwin') {
@@ -151,14 +174,17 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
         config.set(`plugin.${this.props.plugin.id}.bounds`, this.currentWindow.getBounds())
         try {
           this.props.closeWindowPortal()
-        } catch(e) {
+        } catch (e) {
           console.error(e)
         }
       })
-      this.setState({
-        loaded: true,
-        id: this.currentWindow.id,
-      }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
+      this.setState(
+        {
+          loaded: true,
+          id: this.currentWindow.id,
+        },
+        () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
+      )
     })
   }
 
@@ -167,7 +193,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       console.warn('Plugin window not exists. Removing window...')
       try {
         this.props.closeWindowPortal()
-      } catch(e) {
+      } catch (e) {
         console.error(e)
       }
       return false
@@ -175,7 +201,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
     return true
   }
 
-  onZoomChange = (value) => {
+  onZoomChange = value => {
     if (this.checkBrowserWindowExistence()) {
       this.currentWindow.webContents.setZoomFactor(value)
     }
@@ -198,27 +224,38 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
   }
 
   render() {
-    if (this.state.hasError || !this.state.loaded || !this.externalWindow || !this.checkBrowserWindowExistence()) return null
+    if (
+      this.state.hasError ||
+      !this.state.loaded ||
+      !this.externalWindow ||
+      !this.checkBrowserWindowExistence()
+    )
+      return null
     return ReactDOM.createPortal(
       <>
-        {
-          config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
-          <TitleBar icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.currentWindow} />
-        }
-        <WindowEnv.Provider value={{
-          window: this.externalWindow,
-          mountPoint: this.containerEl,
-        }}>
+        {config.get(
+          'poi.appearance.customtitlebar',
+          process.platform === 'win32' || process.platform === 'linux',
+        ) && (
+          <TitleBar
+            icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+            currentWindow={this.currentWindow}
+          />
+        )}
+        <WindowEnv.Provider
+          value={{
+            window: this.externalWindow,
+            mountPoint: this.containerEl,
+          }}
+        >
           <StyleSheetManager target={this.externalWindow.document.head}>
             <PoiAppTabpane className="poi-app-tabpane" ref={this.pluginContainer}>
-              <PluginWrap
-                key={this.props.plugin.id}
-                plugin={this.props.plugin}
-              />
+              <PluginWrap key={this.props.plugin.id} plugin={this.props.plugin} />
             </PoiAppTabpane>
           </StyleSheetManager>
         </WindowEnv.Provider>
       </>,
-      this.externalWindow.document.querySelector('#plugin-mountpoint'))
+      this.externalWindow.document.querySelector('#plugin-mountpoint'),
+    )
   }
 }

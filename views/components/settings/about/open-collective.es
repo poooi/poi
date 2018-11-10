@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { range, debounce } from 'lodash'
-import {ResizeSensor} from '@blueprintjs/core'
+import { ResizeSensor } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { Section } from 'views/components/settings/components/section'
@@ -31,25 +31,19 @@ export class OpenCollective extends Component {
         <Section title="OpenCollective">
           <Wrapper>
             <div className="opencollective">
-              {
-                range(10).map(i => (
-                  <a
-                    href={`https://opencollective.com/poi/sponsor/${i}/website`}
-                    key={i}
-                  >
-                    <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
-                  </a>
-                ))
-              }
+              {range(10).map(i => (
+                <a href={`https://opencollective.com/poi/sponsor/${i}/website`} key={i}>
+                  <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
+                </a>
+              ))}
             </div>
-            {
-              width > 0 &&
-            <div>
-              <a href="https://opencollective.com/poi#backers">
-                <img src={`https://opencollective.com/poi/backers.svg?width=${width}`} />
-              </a>
-            </div>
-            }
+            {width > 0 && (
+              <div>
+                <a href="https://opencollective.com/poi#backers">
+                  <img src={`https://opencollective.com/poi/backers.svg?width=${width}`} />
+                </a>
+              </div>
+            )}
           </Wrapper>
         </Section>
       </ResizeSensor>

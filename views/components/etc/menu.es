@@ -20,7 +20,8 @@ const exeCodeOnWindowHasReloadArea = (win, f) => {
 const resetViews = () => {
   const { availWidth, availHeight, availTop, availLeft } = window.screen
   const webViewConfig = {}
-  if (availHeight < 900) { // setting bar will hide below 900 px
+  if (availHeight < 900) {
+    // setting bar will hide below 900 px
     webViewConfig.width = 800
   }
   config.set('poi.layout.mode', 'horizontal')
@@ -119,13 +120,16 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Ctrl+Shift+I',
           click: (item, focusedWindow) => {
-            focusedWindow.openDevTools({mode: 'detach'})
+            focusedWindow.openDevTools({ mode: 'detach' })
           },
         },
         {
           label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(remote.getGlobal('mainWindow'), 'openDevTools({mode: "detach"})')
+            exeCodeOnWindowHasReloadArea(
+              remote.getGlobal('mainWindow'),
+              'openDevTools({mode: "detach"})',
+            )
           },
         },
       ],
@@ -233,7 +237,10 @@ if (process.platform !== 'darwin') {
           type: 'checkbox',
           checked: config.get('poi.content.resizable', true),
           click: (item, focusedWindow) => {
-            if (config.get('poi.webview.useFixedResolution', true) && config.get('poi.layout.overlay', false)) {
+            if (
+              config.get('poi.webview.useFixedResolution', true) &&
+              config.get('poi.layout.overlay', false)
+            ) {
               return
             }
             const mainWindow = remote.getGlobal('mainWindow')
@@ -333,7 +340,7 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Alt+CmdOrCtrl+I',
           click: (item, focusedWindow) => {
-            focusedWindow.openDevTools({mode: 'detach'})
+            focusedWindow.openDevTools({ mode: 'detach' })
           },
         },
         {
@@ -424,7 +431,7 @@ if (process.platform !== 'darwin') {
 }
 
 const themepos = process.platform === 'darwin' ? 3 : 2
-for (let i = window.normalThemes.length - 1; i >=0; i--) {
+for (let i = window.normalThemes.length - 1; i >= 0; i--) {
   const th = window.normalThemes[i]
   template[themepos].submenu.unshift({
     label: th === '__default__' ? 'Default' : capitalize(th),
@@ -455,12 +462,14 @@ if (process.platform === 'darwin') {
 const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
   if (path === 'poi.appearance.theme' && value != null) {
-    if (themeMenuList[window.normalThemes.indexOf(value)]){
+    if (themeMenuList[window.normalThemes.indexOf(value)]) {
       themeMenuList[window.normalThemes.indexOf(value)].checked = true
     }
   }
   if (path === 'poi.appearance.vibrant') {
-    window.normalThemes.forEach((theme, i) => themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme))
+    window.normalThemes.forEach(
+      (theme, i) => (themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme)),
+    )
   }
 })
 
@@ -475,7 +484,11 @@ export class TitleBarWrapper extends PureComponent {
       let newTemplate = [...this.state.menu]
       for (let i = 0; i < newTemplate[themepos].submenu.length; i++) {
         if (get(newTemplate, `${themepos}.submenu.${i}.type`) === 'radio')
-          newTemplate = reduxSet(newTemplate, [themepos, 'submenu', i, 'checked'], get(newTemplate, `${themepos}.submenu.${i}.label`).toLowerCase() === value)
+          newTemplate = reduxSet(
+            newTemplate,
+            [themepos, 'submenu', i, 'checked'],
+            get(newTemplate, `${themepos}.submenu.${i}.label`).toLowerCase() === value,
+          )
       }
       this.setState({ menu: newTemplate })
     }
@@ -486,9 +499,13 @@ export class TitleBarWrapper extends PureComponent {
   componentWillUnmount = () => {
     config.removeListener('config.set', this.handleThemeChange)
   }
-  render () {
+  render() {
     return (
-      <TitleBar menu={this.state.menu} icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={remote.getCurrentWindow()} />
+      <TitleBar
+        menu={this.state.menu}
+        icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')}
+        currentWindow={remote.getCurrentWindow()}
+      />
     )
   }
 }

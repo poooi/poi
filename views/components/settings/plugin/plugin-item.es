@@ -50,21 +50,41 @@ const PluginDetail = styled.div`
 const Fade1 = styled.div`
   transition: 0.3s ease-in-out;
   opacity: 0;
-  ${({state}) => {
+  ${({ state }) => {
     switch (state) {
-    case 'entering': return css`opacity: 0;`
-    case 'entered': return css`opacity: 1;`
-    case 'exiting': return css`opacity: 0;`
-    case 'exited': return css`display: none;`
+      case 'entering':
+        return css`
+          opacity: 0;
+        `
+      case 'entered':
+        return css`
+          opacity: 1;
+        `
+      case 'exiting':
+        return css`
+          opacity: 0;
+        `
+      case 'exited':
+        return css`
+          display: none;
+        `
     }
   }}
 `
 
 const Fade2 = styled(Fade1)`
-  ${({state}) => {
+  ${({ state }) => {
     switch (state) {
-    case 'entering': return css`position: absolute;top:0;`
-    case 'exiting': return css`position: absolute;top:0;`
+      case 'entering':
+        return css`
+          position: absolute;
+          top: 0;
+        `
+      case 'exiting':
+        return css`
+          position: absolute;
+          top: 0;
+        `
     }
   }}
 `
@@ -99,25 +119,25 @@ export class PluginItem extends PureComponent {
     let enableBtnText, enableBtnFAname
 
     switch (PluginManager.getStatusOfPlugin(plugin)) {
-    case PluginManager.VALID:
-      enableBtnText = <Trans>setting:Disable</Trans>
-      enableBtnFAname = 'pause'
-      break
-    case PluginManager.DISABLED:
-      enableBtnText = <Trans>setting:Enable</Trans>
-      enableBtnFAname = 'play'
-      break
-    case PluginManager.NEEDUPDATE:
-      enableBtnText = <Trans>setting:Outdated</Trans>
-      enableBtnFAname = 'ban'
-      break
-    case PluginManager.BROKEN:
-      enableBtnText = <Trans>setting:Reload</Trans>
-      enableBtnFAname = 'refresh'
-      break
-    default:
-      enableBtnText = ''
-      enableBtnFAname = ''
+      case PluginManager.VALID:
+        enableBtnText = <Trans>setting:Disable</Trans>
+        enableBtnFAname = 'pause'
+        break
+      case PluginManager.DISABLED:
+        enableBtnText = <Trans>setting:Enable</Trans>
+        enableBtnFAname = 'play'
+        break
+      case PluginManager.NEEDUPDATE:
+        enableBtnText = <Trans>setting:Outdated</Trans>
+        enableBtnFAname = 'ban'
+        break
+      case PluginManager.BROKEN:
+        enableBtnText = <Trans>setting:Reload</Trans>
+        enableBtnFAname = 'refresh'
+        break
+      default:
+        enableBtnText = ''
+        enableBtnFAname = ''
     }
 
     const removeBtnText = plugin.isUninstalling ? (
@@ -252,8 +272,8 @@ export class PluginItem extends PureComponent {
                       <CheckboxLabelConfig
                         label={
                           <Trans>
-                          setting:Keep plugin process running in background (re-enable to apply
-                          changes)
+                            setting:Keep plugin process running in background (re-enable to apply
+                            changes)
                           </Trans>
                         }
                         configName={`poi.plugin.background.${plugin.id}`}

@@ -45,25 +45,25 @@ function sumSubgoals(record) {
 
 function getCategory(api_category) {
   switch (api_category) {
-  case 0:
-    return '#ffffff'
-  case 1:
-    return '#19BB2E'
-  case 2:
-  case 8:
-    return '#e73939'
-  case 3:
-    return '#87da61'
-  case 4:
-    return '#16C2A3'
-  case 5:
-    return '#E2C609'
-  case 6:
-    return '#805444'
-  case 7:
-    return '#c792e8'
-  default:
-    return '#fff'
+    case 0:
+      return '#ffffff'
+    case 1:
+      return '#19BB2E'
+    case 2:
+    case 8:
+      return '#e73939'
+    case 3:
+      return '#87da61'
+    case 4:
+      return '#16C2A3'
+    case 5:
+      return '#E2C609'
+    case 6:
+      return '#805444'
+    case 7:
+      return '#c792e8'
+    default:
+      return '#fff'
   }
 }
 
@@ -76,14 +76,14 @@ function getIntentByProgress(quest) {
     return 'success'
   }
   switch (api_progress_flag) {
-  case 0: // Empty
-    return Intent.NONE
-  case 1: // 50%
-    return Intent.WARNING
-  case 2: // 80%
-    return Intent.PRIMARY
-  default:
-    return Intent.NONE
+    case 0: // Empty
+      return Intent.NONE
+    case 1: // 50%
+      return Intent.WARNING
+    case 2: // 80%
+      return Intent.PRIMARY
+    default:
+      return Intent.NONE
   }
 }
 
@@ -94,13 +94,13 @@ function progressLabelText(quest) {
     return <Trans>main:Completed</Trans>
   }
   switch (api_progress_flag) {
-  case 1: // 50%
-    return '50%'
-  case 2: // 80%
-    return '80%'
-  default:
-    // api_progress_flag == 0, which means empty progress
-    return <Trans>main:In progress</Trans>
+    case 1: // 50%
+      return '50%'
+    case 2: // 80%
+      return '80%'
+    default:
+      // api_progress_flag == 0, which means empty progress
+      return <Trans>main:In progress</Trans>
   }
 }
 
@@ -141,8 +141,8 @@ const TaskItem = styled.div`
   flex-flow: row nowrap;
   justify-content: space-between;
   padding: 4px;
-  ${({colwidth}) => css`
-    width: ${100 * colwidth / 12}%;
+  ${({ colwidth }) => css`
+    width: ${(100 * colwidth) / 12}%;
   `}
 `
 
@@ -253,8 +253,8 @@ const TaskRow = translate(['resources'])(
     const questContent = translation
       ? translation
       : quest
-        ? quest.api_detail.replace(/<br\s*\/?>/gi, '')
-        : '...'
+      ? quest.api_detail.replace(/<br\s*\/?>/gi, '')
+      : '...'
     const [count, required] = sumSubgoals(record)
     const progressIntent = record
       ? getIntentByPercent(count / required)
@@ -318,37 +318,34 @@ export class TaskPanel extends React.Component {
                 colwidth={colwidth}
               />
             )),
-            range(Object.keys(activeQuests).length, 6).map(
-              idx =>
-                idx < activeNum ? (
-                  // Need refreshing
-                  <TaskRowBase
-                    key={idx}
-                    idx={idx}
-                    leftLabel={t('main:To be refreshed')}
-                    leftOverlay={t(
-                      'main:Browse your quest list to let poi know your active quests',
-                    )}
-                    colwidth={colwidth}
-                  />
-                ) : idx < activeCapacity ? (
-                  // Empty
-                  <TaskRowBase
-                    key={idx}
-                    idx={idx}
-                    leftLabel={t('main:Empty quest')}
-                    colwidth={colwidth}
-                  />
-                ) : (
-                  // Can expand
-                  <TaskRowBase
-                    key={idx}
-                    idx={idx}
-                    leftLabel={t('main:Locked')}
-                    leftOverlay={t('main:QuestLimitMsg')}
-                    colwidth={colwidth}
-                  />
-                ),
+            range(Object.keys(activeQuests).length, 6).map(idx =>
+              idx < activeNum ? (
+                // Need refreshing
+                <TaskRowBase
+                  key={idx}
+                  idx={idx}
+                  leftLabel={t('main:To be refreshed')}
+                  leftOverlay={t('main:Browse your quest list to let poi know your active quests')}
+                  colwidth={colwidth}
+                />
+              ) : idx < activeCapacity ? (
+                // Empty
+                <TaskRowBase
+                  key={idx}
+                  idx={idx}
+                  leftLabel={t('main:Empty quest')}
+                  colwidth={colwidth}
+                />
+              ) : (
+                // Can expand
+                <TaskRowBase
+                  key={idx}
+                  idx={idx}
+                  leftLabel={t('main:Locked')}
+                  leftOverlay={t('main:QuestLimitMsg')}
+                  colwidth={colwidth}
+                />
+              ),
             ),
           ]}
         </CardWrapper>

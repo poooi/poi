@@ -58,7 +58,6 @@ export class ThemeConfig extends Component {
     background: PropTypes.string,
   }
 
-
   handleSetTheme = e => {
     const theme = e.target.value
     if (this.props.theme !== theme) {
@@ -135,7 +134,9 @@ export class ThemeConfig extends Component {
                         <PreviewImage src={encodeURI(fileUrl(this.props.background))} alt="" />
                       }
                     >
-                      <Button intent={Intent.PRIMARY} minimal>{t('Preview')}</Button>
+                      <Button intent={Intent.PRIMARY} minimal>
+                        {t('Preview')}
+                      </Button>
                     </Tooltip>
                   }
                 />

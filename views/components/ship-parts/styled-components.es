@@ -1,4 +1,3 @@
-
 import { Avatar } from 'views/components/etc/avatar'
 import styled, { css } from 'styled-components'
 import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
@@ -38,19 +37,27 @@ export const ShipDeck = styled.div`
   display: flex;
   flex-direction: column;
   transform: translateX(0);
-  ${({transition}) => transition && css`
-    transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
-  `}
-  ${({left, right}) => left ? css`
-    transform: translateX(calc(-100% - 10px));
-  ` : right &&  css`
-    transform: translateX(calc(100% + 10px));
-  `}
-  ${({active}) => !active && css`
-    & > * {
-      display: none;
-    }
-  `}
+  ${({ transition }) =>
+    transition &&
+    css`
+      transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
+    `}
+  ${({ left, right }) =>
+    left
+      ? css`
+          transform: translateX(calc(-100% - 10px));
+        `
+      : right &&
+        css`
+          transform: translateX(calc(100% + 10px));
+        `}
+  ${({ active }) =>
+    !active &&
+    css`
+      & > * {
+        display: none;
+      }
+    `}
 `
 
 export const ShipDetails = styled(ScrollShadow)`
@@ -115,18 +122,23 @@ export const ShipInfo = styled.div`
   margin-right: auto;
   min-width: 0;
   padding: 0 4px;
-  ${({ show }) => show ? css`
-    flex-grow: 1.2;
-    flex-shrink: 0;
-  ` : css`
-    flex-grow: 0;
-    flex-shrink: 0;
-    height: 58px;
-  `}
-  ${({avatar}) => avatar && css`
-    flex-basis: 100px;
-    padding-left: 95px;
-  `}
+  ${({ show }) =>
+    show
+      ? css`
+          flex-grow: 1.2;
+          flex-shrink: 0;
+        `
+      : css`
+          flex-grow: 0;
+          flex-shrink: 0;
+          height: 58px;
+        `}
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      flex-basis: 100px;
+      padding-left: 95px;
+    `}
 `
 
 export const ShipBasic = styled.div`
@@ -135,9 +147,11 @@ export const ShipBasic = styled.div`
   opacity: 0.8;
   padding-top: 0;
   vertical-align: bottom;
-  ${({ show }) => !show && css`
-    padding-left: 5px;
-  `}
+  ${({ show }) =>
+    !show &&
+    css`
+      padding-left: 5px;
+    `}
 `
 
 export const ShipSubText = styled.div`
@@ -154,17 +168,19 @@ export const ShipSubText = styled.div`
 export const ShipLabel = styled.span`
   margin-left: 5px;
   margin-right: 5px;
-  ${({ isTag }) => isTag && css`
-    position: relative;
-    top: -1px;
-    .bp3-tag {
-      overflow: visible;
-      max-width: initial;
-      font-size: 80%;
-      padding: 0.125em 0.6em;
-      min-height: 10px;
-    }
-  `}
+  ${({ isTag }) =>
+    isTag &&
+    css`
+      position: relative;
+      top: -1px;
+      .bp3-tag {
+        overflow: visible;
+        max-width: initial;
+        font-size: 80%;
+        padding: 0.125em 0.6em;
+        min-height: 10px;
+      }
+    `}
 `
 
 export const ShipName = styled.span`
@@ -213,7 +229,6 @@ export const ShipHPTextRow = styled.span`
     align-self: flex-end;
   }
 `
-
 
 export const ShipHP = styled.span`
   flex: 1;
@@ -282,12 +297,14 @@ export const SlotItemContainer = styled.div`
     position: absolute;
     text-align: center;
     width: 18px;
-    display: ${props => props.onslot ? 'inline' : 'none' };
+    display: ${props => (props.onslot ? 'inline' : 'none')};
   }
 
-  ${({warining}) => warining && css`
-    color: #F39C12;
-  `}
+  ${({ warining }) =>
+    warining &&
+    css`
+      color: #f39c12;
+    `}
 
   .png {
     height: 32px;
@@ -307,9 +324,11 @@ export const OnSlotMini = styled(Tag)`
   font-size: 90%;
   margin-left: 2px;
   padding: 3px 6px 3px 5px;
-  ${({hide}) => hide && css`
-    display: none;
-  `}
+  ${({ hide }) =>
+    hide &&
+    css`
+      display: none;
+    `}
 `
 
 export const AACITypeName = styled.div`

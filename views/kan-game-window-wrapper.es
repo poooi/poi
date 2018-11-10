@@ -11,7 +11,16 @@ import { debounce } from 'lodash'
 import styled, { StyleSheetManager } from 'styled-components'
 import { loadStyle } from './env-parts/theme'
 
-const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
+const pickOptions = [
+  'ROOT',
+  'EXROOT',
+  'toast',
+  'notify',
+  'toggleModal',
+  'i18n',
+  'config',
+  'getStore',
+]
 
 const { workArea } = screen.getPrimaryDisplay()
 const { BrowserWindow } = remote
@@ -21,8 +30,8 @@ const getPluginWindowRect = () => {
   if (x == null || y == null) {
     return defaultRect
   }
-  const validate = (n, min, range) => (n != null && n >= min && n < min + range)
-  const withinDisplay = (d) => {
+  const validate = (n, min, range) => n != null && n >= min && n < min + range
+  const withinDisplay = d => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -65,7 +74,7 @@ export class KanGameWindowWrapper extends PureComponent {
     try {
       this.initWindow()
       config.addListener('config.set', this.handleConfigChange)
-    } catch(e) {
+    } catch (e) {
       console.error(e)
       this.props.closeWindowPortal()
     }
@@ -98,77 +107,120 @@ export class KanGameWindowWrapper extends PureComponent {
   handleConfigChange = (path, value) => {
     if (!this.externalWindow && !this.currentWindow) return
     switch (path) {
-    case 'poi.webview.windowUseFixedResolution': {
-      this.currentWindow.setResizable(!value)
-      if (value) {
-        const width = config.get('poi.webview.windowWidth', 1200)
-        this.currentWindow.setContentSize(width, Math.round(width / 1200 * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1)))
+      case 'poi.webview.windowUseFixedResolution': {
+        this.currentWindow.setResizable(!value)
+        if (value) {
+          const width = config.get('poi.webview.windowWidth', 1200)
+          this.currentWindow.setContentSize(
+            width,
+            Math.round(
+              (width / 1200) * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1),
+            ),
+          )
+        }
+        dispatch({
+          type: '@@LayoutUpdate/webview/windowUseFixedResolution',
+          value,
+        })
+        break
       }
-      dispatch({
-        type: '@@LayoutUpdate/webview/windowUseFixedResolution',
-        value,
-      })
-      break
-    }
-    case 'poi.webview.windowWidth': {
-      this.currentWindow.setContentSize(value, Math.round(value / 1200 * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1)))
-      break
-    }
-    case 'poi.appearance.zoom': {
-      this.onZoomChange(value)
-      break
-    }
+      case 'poi.webview.windowWidth': {
+        this.currentWindow.setContentSize(
+          value,
+          Math.round(
+            (value / 1200) * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1),
+          ),
+        )
+        break
+      }
+      case 'poi.appearance.zoom': {
+        this.onZoomChange(value)
+        break
+      }
     }
   }
 
-  useCustomTitlebar = () => config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')
+  useCustomTitlebar = () =>
+    config.get(
+      'poi.appearance.customtitlebar',
+      process.platform === 'win32' || process.platform === 'linux',
+    )
 
-  getYOffset = () => this.useCustomTitlebar() ? 60 : 30
+  getYOffset = () => (this.useCustomTitlebar() ? 60 : 30)
 
   initWindow = () => {
     const windowOptions = getPluginWindowRect()
     const windowUseFixedResolution = config.get('poi.webview.windowUseFixedResolution', true)
     if (windowUseFixedResolution) {
       windowOptions.width = config.get('poi.webview.windowWidth', 1200)
-      windowOptions.height = Math.round(windowOptions.width / 1200 * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1))
+      windowOptions.height = Math.round(
+        (windowOptions.width / 1200) * 720 +
+          this.getYOffset() * config.get('poi.appearance.zoom', 1),
+      )
     }
-    const windowFeatures = Object.keys(windowOptions).map(key => {
-      switch (key) {
-      case 'x': return `left=${windowOptions.x}`
-      case 'y': return `top=${windowOptions.y}`
-      case 'width': return `width=${windowOptions.width}`
-      case 'height': return `height=${windowOptions.height}`
-      }
-    }).join(',')
-    this.externalWindow = open(`file:///${__dirname}/../index-plugin.html?kangame`, 'plugin[kangame]', windowFeatures + ',nodeIntegration=no')
+    const windowFeatures = Object.keys(windowOptions)
+      .map(key => {
+        switch (key) {
+          case 'x':
+            return `left=${windowOptions.x}`
+          case 'y':
+            return `top=${windowOptions.y}`
+          case 'width':
+            return `width=${windowOptions.width}`
+          case 'height':
+            return `height=${windowOptions.height}`
+        }
+      })
+      .join(',')
+    this.externalWindow = open(
+      `file:///${__dirname}/../index-plugin.html?kangame`,
+      'plugin[kangame]',
+      windowFeatures + ',nodeIntegration=no',
+    )
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
-      this.currentWindow = BrowserWindow.getAllWindows().find(a => a.getURL().endsWith('index-plugin.html?kangame'))
-      loadScript(fileUrl(require.resolve('assets/js/webview-window-preload.js')), this.externalWindow.document)
+      this.currentWindow = BrowserWindow.getAllWindows().find(a =>
+        a.getURL().endsWith('index-plugin.html?kangame'),
+      )
+      loadScript(
+        fileUrl(require.resolve('assets/js/webview-window-preload.js')),
+        this.externalWindow.document,
+      )
       this.currentWindow.setResizable(!windowUseFixedResolution)
-      this.currentWindow.setAspectRatio(1200 / 720, { width: 0, height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)) })
-      this.externalWindow.addEventListener('resize', debounce(() => {
-        if (process.platform !== 'darwin') {
-          this.currentWindow.setContentSize(
-            Math.round(this.externalWindow.innerWidth * config.get('poi.appearance.zoom', 1)),
-            Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * config.get('poi.appearance.zoom', 1)),
-          )
-        }
-        if (getStore('layout.webview.ref')) {
-          getStore('layout.webview.ref').executeJavaScript('window.align()')
-        }
-        if (this.externalWindow.document.querySelector('webview')) {
-          const { width: windowWidth, height: windowHeight } = this.externalWindow.document.querySelector('webview').getBoundingClientRect()
-          dispatch({
-            type: '@@LayoutUpdate/webview/size',
-            value: {
-              windowWidth,
-              windowHeight,
-            },
-          })
-        }
-      }, 200))
-      this.externalWindow.document.head.innerHTML =
-`<meta charset="utf-8">
+      this.currentWindow.setAspectRatio(1200 / 720, {
+        width: 0,
+        height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)),
+      })
+      this.externalWindow.addEventListener(
+        'resize',
+        debounce(() => {
+          if (process.platform !== 'darwin') {
+            this.currentWindow.setContentSize(
+              Math.round(this.externalWindow.innerWidth * config.get('poi.appearance.zoom', 1)),
+              Math.round(
+                ((this.externalWindow.innerWidth / 1200) * 720 + this.getYOffset()) *
+                  config.get('poi.appearance.zoom', 1),
+              ),
+            )
+          }
+          if (getStore('layout.webview.ref')) {
+            getStore('layout.webview.ref').executeJavaScript('window.align()')
+          }
+          if (this.externalWindow.document.querySelector('webview')) {
+            const {
+              width: windowWidth,
+              height: windowHeight,
+            } = this.externalWindow.document.querySelector('webview').getBoundingClientRect()
+            dispatch({
+              type: '@@LayoutUpdate/webview/size',
+              value: {
+                windowWidth,
+                windowHeight,
+              },
+            })
+          }
+        }, 200),
+      )
+      this.externalWindow.document.head.innerHTML = `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 <link rel="stylesheet" type="text/css" id="bootstrap-css">
 <link rel="stylesheet" type="text/css" id="normalize-css">
@@ -177,7 +229,9 @@ export class KanGameWindowWrapper extends PureComponent {
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/assets/style.css'))}">`
+<link rel="stylesheet" type="text/css" href="${fileUrl(
+        require.resolve('electron-react-titlebar/assets/style.css'),
+      )}">`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
         div.style.position = 'absolute'
@@ -201,14 +255,22 @@ export class KanGameWindowWrapper extends PureComponent {
       })
       if (windowUseFixedResolution) {
         const width = config.get('poi.webview.windowWidth', 1200)
-        this.currentWindow.setContentSize(width, Math.round(width / 1200 * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1)))
+        this.currentWindow.setContentSize(
+          width,
+          Math.round(
+            (width / 1200) * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1),
+          ),
+        )
       }
       this.currentWindow.blur()
       this.currentWindow.focus()
-      this.setState({
-        loaded: true,
-        id: this.currentWindow.id,
-      }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
+      this.setState(
+        {
+          loaded: true,
+          id: this.currentWindow.id,
+        },
+        () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
+      )
     })
   }
 
@@ -223,7 +285,7 @@ export class KanGameWindowWrapper extends PureComponent {
     return true
   }
 
-  onZoomChange = (value) => {
+  onZoomChange = value => {
     if (this.checkBrowserWindowExistence()) {
       this.currentWindow.webContents.setZoomFactor(value)
     }
@@ -234,7 +296,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.onZoomChange(value)
       this.currentWindow.setContentSize(
         Math.round(this.externalWindow.innerWidth * value),
-        Math.round((this.externalWindow.innerWidth / 1200 * 720 + this.getYOffset()) * value),
+        Math.round(((this.externalWindow.innerWidth / 1200) * 720 + this.getYOffset()) * value),
       )
     }
   }
@@ -246,17 +308,27 @@ export class KanGameWindowWrapper extends PureComponent {
   }
 
   render() {
-    if (this.state.hasError || !this.state.loaded || !this.externalWindow || !this.checkBrowserWindowExistence()) return null
+    if (
+      this.state.hasError ||
+      !this.state.loaded ||
+      !this.externalWindow ||
+      !this.checkBrowserWindowExistence()
+    )
+      return null
     return ReactDOM.createPortal(
       <>
-        {
-          this.useCustomTitlebar() &&
-          <TitleBar icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.currentWindow} />
-        }
-        <WindowEnv.Provider value={{
-          window: this.externalWindow,
-          mountPoint: this.containerEl,
-        }}>
+        {this.useCustomTitlebar() && (
+          <TitleBar
+            icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+            currentWindow={this.currentWindow}
+          />
+        )}
+        <WindowEnv.Provider
+          value={{
+            window: this.externalWindow,
+            mountPoint: this.containerEl,
+          }}
+        >
           <StyleSheetManager target={this.externalWindow.document.head}>
             <PoiAppTabpane className="poi-app-tabpane" ref={this.kangameContainer}>
               <KanGameWrapper windowMode />
@@ -264,6 +336,7 @@ export class KanGameWindowWrapper extends PureComponent {
           </StyleSheetManager>
         </WindowEnv.Provider>
       </>,
-      this.externalWindow.document.querySelector('#plugin-mountpoint'))
+      this.externalWindow.document.querySelector('#plugin-mountpoint'),
+    )
   }
 }

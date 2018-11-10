@@ -13,7 +13,7 @@ if (process.platform === 'win32') {
   autoUpdater.autoDownload = false
 }
 
-export function changeChannel (channel) {
+export function changeChannel(channel) {
   if (process.platform !== 'darwin') {
     autoUpdater.setFeedURL({
       provider: 'generic',

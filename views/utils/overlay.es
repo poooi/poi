@@ -13,7 +13,6 @@ ReactBootstrap.OriginModal = ReactBootstrap.Modal
 // eslint-disable-next-line import/namespace
 const { OriginModal, Overlay } = ReactBootstrap
 
-
 function isOneOf(one, of) {
   if (Array.isArray(of)) {
     return of.indexOf(one) >= 0
@@ -22,22 +21,22 @@ function isOneOf(one, of) {
 }
 
 function createChainedFunction(...funcs) {
-  return funcs.filter(f => f != null).reduce((acc, f) => {
-    if (typeof f !== 'function') {
-      throw new Error(
-        'Invalid Argument Type, must only provide functions, undefined, or null.'
-      )
-    }
+  return funcs
+    .filter(f => f != null)
+    .reduce((acc, f) => {
+      if (typeof f !== 'function') {
+        throw new Error('Invalid Argument Type, must only provide functions, undefined, or null.')
+      }
 
-    if (acc === null) {
-      return f
-    }
+      if (acc === null) {
+        return f
+      }
 
-    return function chainedFunction(...args) {
-      acc.apply(this, args)
-      f.apply(this, args)
-    }
-  }, null)
+      return function chainedFunction(...args) {
+        acc.apply(this, args)
+        f.apply(this, args)
+      }
+    }, null)
 }
 
 class OverlayTriggerInner extends React.Component {
@@ -49,10 +48,8 @@ class OverlayTriggerInner extends React.Component {
     this.handleDelayedHide = this.handleDelayedHide.bind(this)
     this.handleHide = this.handleHide.bind(this)
 
-    this.handleMouseOver = e =>
-      this.handleMouseOverOut(this.handleDelayedShow, e, 'fromElement')
-    this.handleMouseOut = e =>
-      this.handleMouseOverOut(this.handleDelayedHide, e, 'toElement')
+    this.handleMouseOver = e => this.handleMouseOverOut(this.handleDelayedShow, e, 'fromElement')
+    this.handleMouseOut = e => this.handleMouseOverOut(this.handleDelayedHide, e, 'toElement')
 
     this._mountNode = null
 
@@ -67,7 +64,6 @@ class OverlayTriggerInner extends React.Component {
   }
 
   componentWillUnmount() {
-
     clearTimeout(this._hoverShowDelay)
     clearTimeout(this._hoverHideDelay)
   }
@@ -83,8 +79,7 @@ class OverlayTriggerInner extends React.Component {
       return
     }
 
-    const delay =
-      this.props.delayHide != null ? this.props.delayHide : this.props.delay
+    const delay = this.props.delayHide != null ? this.props.delayHide : this.props.delay
 
     if (!delay) {
       this.hide()
@@ -108,8 +103,7 @@ class OverlayTriggerInner extends React.Component {
       return
     }
 
-    const delay =
-      this.props.delayShow != null ? this.props.delayShow : this.props.delay
+    const delay = this.props.delayShow != null ? this.props.delayShow : this.props.delay
 
     if (!delay) {
       this.show(isMouseEvent ? target : null)
@@ -214,23 +208,19 @@ class OverlayTriggerInner extends React.Component {
     triggerProps.onClick = createChainedFunction(childProps.onClick, onClick)
 
     if (isOneOf('click', trigger)) {
-      triggerProps.onClick = createChainedFunction(
-        triggerProps.onClick,
-        this.handleToggle
-      )
+      triggerProps.onClick = createChainedFunction(triggerProps.onClick, this.handleToggle)
     }
 
     if (isOneOf('hover', trigger)) {
-
       triggerProps.onMouseOver = createChainedFunction(
         childProps.onMouseOver,
         onMouseOver,
-        this.handleMouseOver
+        this.handleMouseOver,
       )
       triggerProps.onMouseOut = createChainedFunction(
         childProps.onMouseOut,
         onMouseOut,
-        this.handleMouseOut
+        this.handleMouseOut,
       )
     }
 
@@ -238,33 +228,31 @@ class OverlayTriggerInner extends React.Component {
       triggerProps.onFocus = createChainedFunction(
         childProps.onFocus,
         onFocus,
-        this.handleDelayedShow
+        this.handleDelayedShow,
       )
-      triggerProps.onBlur = createChainedFunction(
-        childProps.onBlur,
-        onBlur,
-        this.handleDelayedHide
-      )
+      triggerProps.onBlur = createChainedFunction(childProps.onBlur, onBlur, this.handleDelayedHide)
     }
 
     this._overlay = this.makeOverlay(overlay, props)
 
-    return <>
-      { cloneElement(child, triggerProps) }
-      { this.state.show && ReactDOM.createPortal(this._overlay, this.props.container) }
-    </>
+    return (
+      <>
+        {cloneElement(child, triggerProps)}
+        {this.state.show && ReactDOM.createPortal(this._overlay, this.props.container)}
+      </>
+    )
   }
 }
 
 export const OverlayTrigger = ({ children, ...props }) => (
   <OverlayTriggerInner container={useContext(WindowEnv).mountPoint} {...props}>
-    { children }
+    {children}
   </OverlayTriggerInner>
 )
 
 export const Modal = ({ children, ...props }) => (
   <OriginModal container={useContext(WindowEnv).mountPoint} {...props}>
-    { children }
+    {children}
   </OriginModal>
 )
 

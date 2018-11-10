@@ -18,13 +18,13 @@ class IPC extends EventEmitter {
       return
     }
     if (!this.data[scope]) {
-      this.data[scope]= new Object()
+      this.data[scope] = new Object()
     }
     this.unregister(scope, Object.keys(opts))
     for (const key in opts) {
       this.data[scope][key] = opts[key]
     }
-    this.emit('update', {type: '@@registerIPC', value: { scope, opts }})
+    this.emit('update', { type: '@@registerIPC', value: { scope, opts } })
     return
   }
 
@@ -47,16 +47,16 @@ class IPC extends EventEmitter {
     for (const key of keys) {
       delete this.data[scope][key]
     }
-    this.emit('update', {type: '@@unregisterIPC', value: { scope, keys }})
+    this.emit('update', { type: '@@unregisterIPC', value: { scope, keys } })
     return
   }
 
-  unregisterAll = (scope) => {
+  unregisterAll = scope => {
     delete this.data[scope]
-    this.emit('update', {type: '@@unregisterAllIPC', value: { scope }})
+    this.emit('update', { type: '@@unregisterAllIPC', value: { scope } })
   }
 
-  access = (scope) => {
+  access = scope => {
     return this.data[scope]
   }
 
@@ -66,7 +66,7 @@ class IPC extends EventEmitter {
   // args:   arguments passing to api
   foreachCall = (key, ...args) => {
     for (const scope in this.data) {
-      if (this.data[scope].hasOwnProperty(key)){
+      if (this.data[scope].hasOwnProperty(key)) {
         this.data[key].apply(null, args)
       }
     }

@@ -2,7 +2,16 @@
 import { omit, get, set, each, isArray } from 'lodash'
 import { remote } from 'electron'
 import { join, basename } from 'path-extra'
-import { createReadStream, readJson, accessSync, realpathSync, lstat, unlink, remove, lstatSync } from 'fs-extra'
+import {
+  createReadStream,
+  readJson,
+  accessSync,
+  realpathSync,
+  lstat,
+  unlink,
+  remove,
+  lstatSync,
+} from 'fs-extra'
 import React from 'react'
 import FontAwesome from '@skagami/react-fontawesome'
 import semver from 'semver'
@@ -20,7 +29,7 @@ import { extendReducer } from 'views/create-store'
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 
-const allowedPath = [ ROOT, APPDATA_PATH ]
+const allowedPath = [ROOT, APPDATA_PATH]
 const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
@@ -38,15 +47,15 @@ function calculateShasum(path) {
       const hash = crypto.createHash('sha1')
       const stream = createReadStream(path)
 
-      stream.on('data', (data) => {
+      stream.on('data', data => {
         hash.update(data, 'utf8')
       })
 
-      stream.on('end', function () {
+      stream.on('end', function() {
         resolve(hash.digest('hex'))
       })
 
-      stream.on('error', function (e) {
+      stream.on('error', function(e) {
         reject(e)
       })
     } catch (e) {
@@ -58,11 +67,13 @@ function calculateShasum(path) {
 export const findInstalledTarball = async (pluginRoot, tarballPath) => {
   const filename = basename(tarballPath)
   const pluginPaths = await promisify(glob)(join(pluginRoot, 'poi-plugin-*'))
-  const packageDatas = await Promise.all(pluginPaths.map((pluginPath) =>
-    promisify(readJson)(join(pluginPath, 'package.json'))))
+  const packageDatas = await Promise.all(
+    pluginPaths.map(pluginPath => promisify(readJson)(join(pluginPath, 'package.json'))),
+  )
   // packageJson._required.raw should contain full path upon installation
-  const nameMatchDatas = packageDatas.filter((packageData) =>
-    get(packageData, '_requested.raw', '').endsWith(filename))
+  const nameMatchDatas = packageDatas.filter(packageData =>
+    get(packageData, '_requested.raw', '').endsWith(filename),
+  )
   if (nameMatchDatas.length === 1) {
     return nameMatchDatas[0].name
   }
@@ -73,20 +84,22 @@ export const findInstalledTarball = async (pluginRoot, tarballPath) => {
   // installed from the same path. Unbelievable huh? We can still match checksum.
   // packageJson._shasum should contain shasum.
   const shasum = await calculateShasum(tarballPath)
-  const shasumMatchDatas = nameMatchDatas.filter((data) => data._shasum === shasum)
+  const shasumMatchDatas = nameMatchDatas.filter(data => data._shasum === shasum)
   if (!shasumMatchDatas[0])
-    throw new Error(`Error: Can' find a package installed from ${tarballPath} matching shasum ${shasum}.`)
+    throw new Error(
+      `Error: Can' find a package installed from ${tarballPath} matching shasum ${shasum}.`,
+    )
   // I believe it won't collide.
   return shasumMatchDatas[0].name
 }
 
 const runScriptAsync = (scriptPath, args, options) =>
-  new Promise ((resolve) => {
+  new Promise(resolve => {
     const proc = child_process.fork(scriptPath, args, options)
     proc.on('exit', () => resolve())
   })
 
-export async function installPackage (packageName, version, npmConfig) {
+export async function installPackage(packageName, version, npmConfig) {
   if (!packageName) {
     return
   }
@@ -103,14 +116,13 @@ export async function installPackage (packageName, version, npmConfig) {
   })
 }
 
-export async function removePackage (target, npmConfig) {
+export async function removePackage(target, npmConfig) {
   const args = ['uninstall', '--no-progress', '--no-save', target]
   await runScriptAsync(NPM_EXEC_PATH, args, {
     cwd: npmConfig.prefix,
   })
   await repairDep([], npmConfig)
 }
-
 
 export function updateI18n(plugin) {
   let i18nFile = null
@@ -131,12 +143,12 @@ export function updateI18n(plugin) {
   }
   if (i18nFile != null) {
     const namespace = plugin.id
-    each(window.LOCALES.map(lng => lng.locale), (language) => {
+    each(window.LOCALES.map(lng => lng.locale), language => {
       i18next.addGlobalI18n(namespace)
       i18next.addResourceBundleDebounce(
         language,
         namespace,
-        readI18nResources(join(i18nFile, `${language}.json`,)),
+        readI18nResources(join(i18nFile, `${language}.json`)),
         true,
         true,
       )
@@ -178,9 +190,16 @@ export async function readPlugin(pluginPath) {
   if (typeof get(plugin, 'packageData.author') === 'string') {
     plugin.author = plugin.packageData.author
   }
-  plugin.link = get(plugin, 'packageData.author.links') || get(plugin, 'packageData.author.url') || (pluginData[plugin.packageName] || {}).link || 'https://github.com/poooi'
+  plugin.link =
+    get(plugin, 'packageData.author.links') ||
+    get(plugin, 'packageData.author.url') ||
+    (pluginData[plugin.packageName] || {}).link ||
+    'https://github.com/poooi'
   if (plugin.description == null) {
-    plugin.description = (plugin.packageData || {}).description || (pluginData[plugin.packageName] || {})[`des${language}`] || 'unknown'
+    plugin.description =
+      (plugin.packageData || {}).description ||
+      (pluginData[plugin.packageName] || {})[`des${language}`] ||
+      'unknown'
   }
   // Resolve symlink.
   plugin.pluginPath = realpathSync(pluginPath)
@@ -212,7 +231,11 @@ export async function readPlugin(pluginPath) {
   if (plugin.apiVer) {
     let nearestCompVer = 'v214.748.3647'
     for (const mainVersion in plugin.apiVer) {
-      if (semver.lte(window.POI_VERSION, mainVersion) && semver.lt(mainVersion, nearestCompVer) && semver.gt(plugin.version, plugin.apiVer[mainVersion])) {
+      if (
+        semver.lte(window.POI_VERSION, mainVersion) &&
+        semver.lt(mainVersion, nearestCompVer) &&
+        semver.gt(plugin.version, plugin.apiVer[mainVersion])
+      ) {
         plugin.needRollback = true
         nearestCompVer = mainVersion
         plugin.latestVersion = plugin.apiVer[mainVersion]
@@ -223,33 +246,28 @@ export async function readPlugin(pluginPath) {
   plugin = updateI18n(plugin)
   const icon = isArray(plugin.icon)
     ? plugin.icon
-    : plugin.icon.split('/')[1] || plugin.icon|| 'th-large'
+    : plugin.icon.split('/')[1] || plugin.icon || 'th-large'
   plugin.displayName = (
     <>
-      {
-        isArray(icon)
-          ? <FontAwesome icon={icon} />
-          : <FontAwesome name={icon} />
-      } {plugin.name}
+      {isArray(icon) ? <FontAwesome icon={icon} /> : <FontAwesome name={icon} />} {plugin.name}
     </>
   )
   plugin.timestamp = Date.now()
   return plugin
 }
 
-export async function enablePlugin(plugin, reread=true) {
+export async function enablePlugin(plugin, reread = true) {
   if (!pathAdded.get(plugin.packageName) && !plugin.windowURL) {
     allowedPath.push(plugin.pluginPath)
     setAllowedPath(allowedPath)
     pathAdded.set(plugin.packageName, true)
   }
-  if (plugin.needRollback)
-    return plugin
+  if (plugin.needRollback) return plugin
   let pluginMain
   try {
     pluginMain = {
-      ...await import(plugin.pluginPath),
-      ...reread ? await readPlugin(plugin.pluginPath) : {},
+      ...(await import(plugin.pluginPath)),
+      ...(reread ? await readPlugin(plugin.pluginPath) : {}),
     }
     pluginMain.enabled = true
     pluginMain.isRead = true
@@ -287,7 +305,7 @@ export async function disablePlugin(plugin) {
   return plugin
 }
 
-const postEnableProcess = (plugin) => {
+const postEnableProcess = plugin => {
   if (plugin.reducer) {
     try {
       extendReducer(plugin.packageName, plugin.reducer)
@@ -301,7 +319,11 @@ const postEnableProcess = (plugin) => {
       windowOptions = plugin.windowOptions
       if (!get(windowOptions, 'webPreferences.preload')) {
         set(windowOptions, 'webPreferences.affinity', 'poi-plugin')
-        set(windowOptions, 'webPreferences.preload', join(ROOT, 'assets', 'js', 'plugin-preload.js'))
+        set(
+          windowOptions,
+          'webPreferences.preload',
+          join(ROOT, 'assets', 'js', 'plugin-preload.js'),
+        )
       }
       if (!get(windowOptions, 'webPreferences.nodeIntegrationInWorker')) {
         set(windowOptions, 'webPreferences.nodeIntegrationInWorker', true)
@@ -411,14 +433,13 @@ export function unloadPlugin(plugin) {
 }
 
 export function notifyFailed(state, npmConfig) {
-  const plugins = state.filter((plugin) => (plugin.isBroken))
+  const plugins = state.filter(plugin => plugin.isBroken)
   const unreadList = []
   const reinstallList = []
   for (let i = 0; i < plugins.length; i++) {
     const plugin = plugins[i]
     unreadList.push(plugin.name)
-    if (!plugin.linkedPlugin)
-      reinstallList.push(plugin.packageName)
+    if (!plugin.linkedPlugin) reinstallList.push(plugin.packageName)
   }
   if (unreadList.length > 0) {
     const content = `${unreadList.join(' / ')} ${i18next.t('setting:PluginLoadFailed')}`
@@ -449,7 +470,7 @@ export async function repairDep(brokenList, npmConfig) {
 // Unlink a path if it's a symlink.
 // Do nothing (but logging error) if it's a git repo.
 // Remove the directory otherwise.
-export const safePhysicallyRemove = async (packagePath) => {
+export const safePhysicallyRemove = async packagePath => {
   let packageStat
   try {
     packageStat = await promisify(lstat)(packagePath)
@@ -465,7 +486,9 @@ export const safePhysicallyRemove = async (packagePath) => {
   try {
     const gitStat = await promisify(lstat)(join(packagePath, '.git'))
     if (gitStat.isDirectory()) {
-      console.error(`${packagePath} appears to be a git repository. For the safety of your files in development, please use 'npm link' to install plugins from github.`)
+      console.error(
+        `${packagePath} appears to be a git repository. For the safety of your files in development, please use 'npm link' to install plugins from github.`,
+      )
       return
     }
   } catch (e) {
@@ -478,18 +501,21 @@ export const safePhysicallyRemove = async (packagePath) => {
  * @param {String} prefix path to install the npm package
  * @return NpmConfig { registry, prefix, http_proxy? }
  */
-export const getNpmConfig = (prefix) => {
+export const getNpmConfig = prefix => {
   const mirrorConf = config.get('packageManager.mirrorName')
   const useProxy = config.get('packageManager.proxy', false)
-  const mirrorName = Object.keys(MIRRORS).includes(mirrorConf) ?
-    mirrorConf : ((navigator.language === 'zh-CN') ?  'taobao' : 'npm')
+  const mirrorName = Object.keys(MIRRORS).includes(mirrorConf)
+    ? mirrorConf
+    : navigator.language === 'zh-CN'
+    ? 'taobao'
+    : 'npm'
   const registry = MIRRORS[mirrorName].server
   const npmConfig = {
     registry,
     prefix,
   }
   if (useProxy) {
-    const { port } =  window.proxy
+    const { port } = window.proxy
     npmConfig.http_proxy = `http://127.0.0.1:${port}`
   }
 

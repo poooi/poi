@@ -12,13 +12,15 @@ import { AdvancedConfig } from './advanced-config'
 
 export const PoiConfig = connect(state => ({
   refts: get(state, 'layout.webview.refts', 0),
-}))(translate(['setting'])(({ refts, t }) => (
-  <div>
-    <NavigatorBar key={`isolate-game-window: ${refts}`} />
-    <LanguageConfig />
-    <StorageConfig />
-    <ScreenshotConfig />
-    <PluginConfig />
-    <AdvancedConfig />
-  </div>
-)))
+}))(
+  translate(['setting'])(({ refts, t }) => (
+    <div>
+      <NavigatorBar key={`isolate-game-window: ${refts}`} />
+      <LanguageConfig />
+      <StorageConfig />
+      <ScreenshotConfig />
+      <PluginConfig />
+      <AdvancedConfig />
+    </div>
+  )),
+)

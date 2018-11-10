@@ -25,11 +25,11 @@ function secureExtensionConfig(extensionConfig) {
   return mapValues(extensionConfig, (func, key) => {
     if (func) {
       // Use combineReducers to check sanity of `func`
-      const wrappedReducer = combineReducers({_: func})
-      return (state={}, action, store) => {
+      const wrappedReducer = combineReducers({ _: func })
+      return (state = {}, action, store) => {
         try {
           return wrappedReducer(state, action, store)
-        } catch(e) {
+        } catch (e) {
           console.error(`Error in extension ${key}`, e.stack)
           return state
         }
@@ -50,10 +50,12 @@ export function reducerFactory(extensionConfig) {
     battle,
     misc,
     fcd,
-    plugins: window.isMain ? plugins: (() => emptyObject),
-    layout: window.isMain ? layout: (() => emptyObject),
-    ui: window.isMain ? ui: (() => emptyObject),
-    ext: extensionConfig ? combineReducers(secureExtensionConfig(extensionConfig)) : (() => emptyObject),
+    plugins: window.isMain ? plugins : () => emptyObject,
+    layout: window.isMain ? layout : () => emptyObject,
+    ui: window.isMain ? ui : () => emptyObject,
+    ext: extensionConfig
+      ? combineReducers(secureExtensionConfig(extensionConfig))
+      : () => emptyObject,
     ipc,
     wctf,
   })
@@ -61,7 +63,7 @@ export function reducerFactory(extensionConfig) {
 
 // === Actions ===
 
-export function onGameResponse({method, path, body, postBody, time}) {
+export function onGameResponse({ method, path, body, postBody, time }) {
   return {
     type: `@@Response${path}`,
     method,
@@ -72,7 +74,7 @@ export function onGameResponse({method, path, body, postBody, time}) {
   }
 }
 
-export function onGameRequest({method, path, body, time}) {
+export function onGameRequest({ method, path, body, time }) {
   return {
     type: `@@Request${path}`,
     method,
@@ -82,7 +84,7 @@ export function onGameRequest({method, path, body, time}) {
   }
 }
 
-export function onConfigChange({path, value}) {
+export function onConfigChange({ path, value }) {
   return {
     type: '@@Config',
     path,

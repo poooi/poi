@@ -3,7 +3,7 @@ import { webContents, shell, BrowserWindow } from 'electron'
 import WindowManager from './window'
 import { map } from 'lodash'
 
-const stringify = (str) => {
+const stringify = str => {
   if (typeof str === 'string') {
     return str
   }
@@ -14,7 +14,6 @@ const stringify = (str) => {
   }
   return str
 }
-
 
 export const remoteStringify = JSON.stringify
 
@@ -84,26 +83,34 @@ export function stopFileNavigateAndHandleNewWindowInApp(id) {
       e.preventDefault()
     }
   })
-  webContents.fromId(id).addListener('new-window',(e, url, frameName, disposition, options, additionalFeatures) => {
-    if (!set.has(url)) {
-      const win = WindowManager.createWindow({
-        realClose: true,
-        navigatable: true,
-        nodeIntegration: false,
-      })
-      win.loadURL(url)
-      win.show()
-      darwinDevToolPolyfill(win.webContents)
-      set.add(url)
-      setTimeout(() => {
-        set.delete(url)
-      }, 1000)
-    }
-    e.preventDefault()
-  })
+  webContents
+    .fromId(id)
+    .addListener('new-window', (e, url, frameName, disposition, options, additionalFeatures) => {
+      if (!set.has(url)) {
+        const win = WindowManager.createWindow({
+          realClose: true,
+          navigatable: true,
+          nodeIntegration: false,
+        })
+        win.loadURL(url)
+        win.show()
+        darwinDevToolPolyfill(win.webContents)
+        set.add(url)
+        setTimeout(() => {
+          set.delete(url)
+        }, 1000)
+      }
+      e.preventDefault()
+    })
 }
 
-const isModernDarwin = process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17
+const isModernDarwin =
+  process.platform === 'darwin' &&
+  Number(
+    require('os')
+      .release()
+      .split('.')[0],
+  ) >= 17
 
 export function stopNavigateAndHandleNewWindow(id) {
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
@@ -112,38 +119,40 @@ export function stopNavigateAndHandleNewWindow(id) {
       shell.openExternal(url)
     }
   })
-  webContents.fromId(id).addListener('new-window', (e, url, frameName, disposition, options, additionalFeatures) => {
-    e.preventDefault()
-    if (url.startsWith('http')) {
-      shell.openExternal(url)
-    } else if (frameName.startsWith('plugin')) {
-      options.resizable = true
-      if (frameName.startsWith('plugin[kangame]')) {
-        options.useContentSize = true
-      }
-      if (frameName.startsWith('plugin[gpuinfo]')) {
-        options.backgroundColor = '#FFFFFFFF'
-      }
-      if (url.startsWith('chrome')) {
-        options.frame = true
-      }
+  webContents
+    .fromId(id)
+    .addListener('new-window', (e, url, frameName, disposition, options, additionalFeatures) => {
+      e.preventDefault()
+      if (url.startsWith('http')) {
+        shell.openExternal(url)
+      } else if (frameName.startsWith('plugin')) {
+        options.resizable = true
+        if (frameName.startsWith('plugin[kangame]')) {
+          options.useContentSize = true
+        }
+        if (frameName.startsWith('plugin[gpuinfo]')) {
+          options.backgroundColor = '#FFFFFFFF'
+        }
+        if (url.startsWith('chrome')) {
+          options.frame = true
+        }
 
-      options = {
-        ...options,
-        minWidth: 200,
-        minHeight: 200,
-        titleBarStyle: isModernDarwin ? 'hidden' : null,
-        autoHideMenuBar: true,
-        webPreferences: {
-          ...options.webPreferences,
-          nodeIntegration: false,
-          nodeIntegrationInWorker: false,
-          plugins: false,
-          sandbox: true,
-        },
+        options = {
+          ...options,
+          minWidth: 200,
+          minHeight: 200,
+          titleBarStyle: isModernDarwin ? 'hidden' : null,
+          autoHideMenuBar: true,
+          webPreferences: {
+            ...options.webPreferences,
+            nodeIntegration: false,
+            nodeIntegrationInWorker: false,
+            plugins: false,
+            sandbox: true,
+          },
+        }
+        e.newGuest = new BrowserWindow(options)
+        darwinDevToolPolyfill(e.newGuest.webContents)
       }
-      e.newGuest = new BrowserWindow(options)
-      darwinDevToolPolyfill(e.newGuest.webContents)
-    }
-  })
+    })
 }

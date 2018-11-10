@@ -37,10 +37,12 @@ const MainPanelContent = styled.div`
   }
 `
 
-
 // polyfill for old layouts
 function layoutConfigOutdated(layoutConfig) {
-  return !layoutConfig.sm.find(a => a.i === 'repair-panel') || !layoutConfig.lg.find(a => a.i === 'repair-panel')
+  return (
+    !layoutConfig.sm.find(a => a.i === 'repair-panel') ||
+    !layoutConfig.lg.find(a => a.i === 'repair-panel')
+  )
 }
 
 function layoutConfigFix(layoutConfig) {
@@ -123,4 +125,8 @@ export class reactClass extends Component {
   }
 }
 
-export const displayName = <><FontAwesome name="home" /> <Trans>main:Overview</Trans></>
+export const displayName = (
+  <>
+    <FontAwesome name="home" /> <Trans>main:Overview</Trans>
+  </>
+)

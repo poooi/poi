@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, Tray, nativeImage, shell} = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell } = require('electron')
 const path = require('path-extra')
 
 // Environment
@@ -8,19 +8,30 @@ global.EXECROOT = path.join(process.execPath, '..')
 global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
 global.EXROOT = global.APPDATA_PATH
 global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
-global.DEFAULT_SCREENSHOT_PATH = process.platform === 'darwin'
-  ? path.join(app.getPath('home'), 'Pictures', 'Poi')
-  : path.join(global.APPDATA_PATH, 'screenshots')
+global.DEFAULT_SCREENSHOT_PATH =
+  process.platform === 'darwin'
+    ? path.join(app.getPath('home'), 'Pictures', 'Poi')
+    : path.join(global.APPDATA_PATH, 'screenshots')
 global.MODULE_PATH = path.join(global.ROOT, 'node_modules')
 
-const {ROOT} = global
-const poiIconPath = path.join(ROOT, 'assets', 'icons',
-  process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico')
+const { ROOT } = global
+const poiIconPath = path.join(
+  ROOT,
+  'assets',
+  'icons',
+  process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico',
+)
 
 // high sierra and above
-const isModernMacOS = process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17
+const isModernMacOS =
+  process.platform === 'darwin' &&
+  Number(
+    require('os')
+      .release()
+      .split('.')[0],
+  ) >= 17
 
-require('./lib/module-path').setAllowedPath([ global.ROOT, global.APPDATA_PATH ])
+require('./lib/module-path').setAllowedPath([global.ROOT, global.APPDATA_PATH])
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
@@ -44,7 +55,8 @@ if (config.get('poi.misc.safemode', false)) {
 // Add shortcut to start menu when os is windows
 app.setAppUserModelId('org.poooi.poi')
 if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
-  const shortcutPath = app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk'
+  const shortcutPath =
+    app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk'
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
   const option = {
@@ -60,7 +72,8 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
     })
   }
   shell.writeShortcutLink(shortcutPath, option)
-  const safeModeShortcutPath = app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk'
+  const safeModeShortcutPath =
+    app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk'
   const safeModeOption = Object.assign({}, option)
   Object.assign(safeModeOption, {
     description: 'poi the KanColle Browser Tool (safe mode)',
@@ -109,18 +122,18 @@ if (Number.isInteger(cacheSize)) {
   app.commandLine.appendSwitch('disk-cache-size', `${1048576 * cacheSize}`)
 }
 
-app.on ('window-all-closed', () => {
+app.on('window-all-closed', () => {
   shortcut.unregister()
   app.quit()
 })
 
 app.on('ready', () => {
-  const {screen} = require('electron')
+  const { screen } = require('electron')
   shortcut.register()
-  const {workArea} = screen.getPrimaryDisplay()
-  let {x, y, width, height} = config.get('poi.window', workArea)
-  const validate = (n, min, range) => (n != null && n >= min && n < min + range)
-  const withinDisplay = (d) => {
+  const { workArea } = screen.getPrimaryDisplay()
+  let { x, y, width, height } = config.get('poi.window', workArea)
+  const validate = (n, min, range) => n != null && n >= min && n < min + range
+  const withinDisplay = d => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -146,7 +159,10 @@ app.on('ready', () => {
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
     titleBarStyle: isModernMacOS ? 'hidden' : null,
     transparent: isModernMacOS,
-    frame: !config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux'),
+    frame: !config.get(
+      'poi.appearance.customtitlebar',
+      process.platform === 'win32' || process.platform === 'linux',
+    ),
     enableLargerThanScreen: true,
     maximizable: config.get('poi.content.resizable', true),
     fullscreenable: config.get('poi.content.resizable', true),
@@ -162,7 +178,7 @@ app.on('ready', () => {
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
   if (process.platform === 'darwin') {
-    const {touchBar} = require('./lib/touchbar')
+    const { touchBar } = require('./lib/touchbar')
     mainWindow.setTouchBar(touchBar)
     if (/electron$/i.test(process.argv[0])) {
       const icon = nativeImage.createFromPath(`${ROOT}/assets/icons/poi.png`)
@@ -184,7 +200,7 @@ app.on('ready', () => {
     })
   }
   // Never wants navigate
-  mainWindow.webContents.on('will-navigate', (e) => {
+  mainWindow.webContents.on('will-navigate', e => {
     e.preventDefault()
   })
   mainWindow.on('closed', () => {
@@ -216,18 +232,17 @@ app.on('ready', () => {
 app.on('login', (event, webContents, request, authInfo, callback) => {
   event.preventDefault()
   mainWindow.webContents.send('http-basic-auth', 'login')
-  ipcMain.once ('basic-auth-info', (event, usr, pwd) => {
+  ipcMain.once('basic-auth-info', (event, usr, pwd) => {
     callback(usr, pwd)
   })
 })
 
-
-ipcMain.on ('refresh-shortcut', () => {
+ipcMain.on('refresh-shortcut', () => {
   shortcut.unregister()
   shortcut.register()
 })
 
 // Uncaught error
-process.on ('uncaughtException', (e) => {
+process.on('uncaughtException', e => {
   error(e.stack)
 })

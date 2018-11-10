@@ -55,114 +55,114 @@ function completeRepair(ship) {
   })
 }
 
-export function reducer(state={}, {type, body, postBody}, store) {
+export function reducer(state = {}, { type, body, postBody }, store) {
   switch (type) {
-  case '@@Response/kcsapi/api_port/port': {
-    const bodyShips = indexify(body.api_ship)
-    return pickExisting(compareUpdate(state, bodyShips), bodyShips)
-  }
-  case '@@Response/kcsapi/api_get_member/ship_deck':
-  case '@@Response/kcsapi/api_get_member/ship3':
-    return compareUpdate(state, indexify(body.api_ship_data))
-  case '@@Response/kcsapi/api_get_member/ship2':
-    return compareUpdate(state, indexify(body))
-  case '@@Response/kcsapi/api_req_hokyu/charge':
-    // Only partial info is given for each ship here
-    return compareUpdate(state, indexify(body.api_ship), 2)
-  case '@@Response/kcsapi/api_req_hensei/lock': {
-    const {api_ship_id} = postBody
-    return {
-      ...state,
-      [api_ship_id]: {
-        ...state[api_ship_id],
-        api_locked: body.api_locked,
-      },
+    case '@@Response/kcsapi/api_port/port': {
+      const bodyShips = indexify(body.api_ship)
+      return pickExisting(compareUpdate(state, bodyShips), bodyShips)
     }
-  }
-  case '@@Response/kcsapi/api_req_kaisou/powerup':
-    state = {
-      ...state,
-      [body.api_ship.api_id]: body.api_ship,
-    }
-    postBody.api_id_items.split(',').forEach((shipId) => {
-      delete state[parseInt(shipId)]
-    })
-    return state
-  case '@@Response/kcsapi/api_req_kaisou/slot_exchange_index': {
-    const {api_id} = postBody
-    return {
-      ...state,
-      [api_id]: {
-        ...state[api_id],
-        api_slot: body.api_slot,
-      },
-    }
-  }
-  case '@@Response/kcsapi/api_req_kaisou/slot_deprive':
-    return {
-      ...state,
-      ...indexify(values(body.api_ship_data)),
-    }
-  case '@@Response/kcsapi/api_req_kousyou/destroyship':
-    state = {...state}
-    postBody.api_ship_id.split(',').forEach((shipId) => {
-      delete state[parseInt(shipId)]
-    })
-    return state
-  case '@@Response/kcsapi/api_req_kousyou/getship':
-    return {
-      ...state,
-      [body.api_ship.api_id]: body.api_ship,
-    }
-  case '@@Response/kcsapi/api_req_nyukyo/start': {
-    const {api_ship_id, api_highspeed, api_ndock_id} = postBody
-
-    if (api_highspeed == '1') {
+    case '@@Response/kcsapi/api_get_member/ship_deck':
+    case '@@Response/kcsapi/api_get_member/ship3':
+      return compareUpdate(state, indexify(body.api_ship_data))
+    case '@@Response/kcsapi/api_get_member/ship2':
+      return compareUpdate(state, indexify(body))
+    case '@@Response/kcsapi/api_req_hokyu/charge':
+      // Only partial info is given for each ship here
+      return compareUpdate(state, indexify(body.api_ship), 2)
+    case '@@Response/kcsapi/api_req_hensei/lock': {
+      const { api_ship_id } = postBody
       return {
         ...state,
-        [api_ship_id]: completeRepair(state[api_ship_id]),
-      }
-    } else {
-      instantDockingCompletionState = {
-        rstId: api_ship_id,
-        dockId: Number(api_ndock_id),
+        [api_ship_id]: {
+          ...state[api_ship_id],
+          api_locked: body.api_locked,
+        },
       }
     }
-    break
-  }
-  case '@@Response/kcsapi/api_get_member/ndock': {
-    let newState = state
-    if (instantDockingCompletionState) {
-      const {rstId, dockId} = instantDockingCompletionState
-      const dockInfo = body.find(x => x.api_id === dockId)
-      if (dockInfo.api_ship_id === 0) {
-        newState = {
+    case '@@Response/kcsapi/api_req_kaisou/powerup':
+      state = {
+        ...state,
+        [body.api_ship.api_id]: body.api_ship,
+      }
+      postBody.api_id_items.split(',').forEach(shipId => {
+        delete state[parseInt(shipId)]
+      })
+      return state
+    case '@@Response/kcsapi/api_req_kaisou/slot_exchange_index': {
+      const { api_id } = postBody
+      return {
+        ...state,
+        [api_id]: {
+          ...state[api_id],
+          api_slot: body.api_slot,
+        },
+      }
+    }
+    case '@@Response/kcsapi/api_req_kaisou/slot_deprive':
+      return {
+        ...state,
+        ...indexify(values(body.api_ship_data)),
+      }
+    case '@@Response/kcsapi/api_req_kousyou/destroyship':
+      state = { ...state }
+      postBody.api_ship_id.split(',').forEach(shipId => {
+        delete state[parseInt(shipId)]
+      })
+      return state
+    case '@@Response/kcsapi/api_req_kousyou/getship':
+      return {
+        ...state,
+        [body.api_ship.api_id]: body.api_ship,
+      }
+    case '@@Response/kcsapi/api_req_nyukyo/start': {
+      const { api_ship_id, api_highspeed, api_ndock_id } = postBody
+
+      if (api_highspeed == '1') {
+        return {
           ...state,
-          [rstId]: completeRepair(state[rstId]),
+          [api_ship_id]: completeRepair(state[api_ship_id]),
+        }
+      } else {
+        instantDockingCompletionState = {
+          rstId: api_ship_id,
+          dockId: Number(api_ndock_id),
         }
       }
+      break
     }
+    case '@@Response/kcsapi/api_get_member/ndock': {
+      let newState = state
+      if (instantDockingCompletionState) {
+        const { rstId, dockId } = instantDockingCompletionState
+        const dockInfo = body.find(x => x.api_id === dockId)
+        if (dockInfo.api_ship_id === 0) {
+          newState = {
+            ...state,
+            [rstId]: completeRepair(state[rstId]),
+          }
+        }
+      }
 
-    instantDockingCompletionState = null
-    return newState
-  }
-  case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
-    const api_ship_id = get(store, `info.repair.${postBody.api_ndock_id}.api_ship_id`)
-    if (api_ship_id) {
+      instantDockingCompletionState = null
+      return newState
+    }
+    case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
+      const api_ship_id = get(store, `info.repair.${postBody.api_ndock_id}.api_ship_id`)
+      if (api_ship_id) {
+        return {
+          ...state,
+          [api_ship_id]: completeRepair(state[api_ship_id]),
+        }
+      }
+      break
+    }
+    case '@@info.ships@RepairCompleted': {
+      const { api_ship_id } = body
       return {
         ...state,
         [api_ship_id]: completeRepair(state[api_ship_id]),
       }
     }
-    break
-  }
-  case '@@info.ships@RepairCompleted': {
-    const {api_ship_id} = body
-    return {
-      ...state,
-      [api_ship_id]: completeRepair(state[api_ship_id]),
-    }
-  }
   }
   return state
 }

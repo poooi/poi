@@ -9,17 +9,20 @@ import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 import { ShipLabel, AACITypeName } from 'views/components/ship-parts/styled-components'
-import { InfoTooltip, InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+import {
+  InfoTooltip,
+  InfoTooltipEntry,
+  InfoTooltipItem,
+} from 'views/components/etc/styled-components'
 
-const getAvailableTranslation = memoize(
-  str =>
-    i18next.translator.exists(`main:${str}`) ? (
-      <Trans>main:{str}</Trans>
-    ) : i18next.translator.exists(`resources:${str}`) ? (
-      <Trans>resources:{str}</Trans>
-    ) : (
-      str
-    ),
+const getAvailableTranslation = memoize(str =>
+  i18next.translator.exists(`main:${str}`) ? (
+    <Trans>main:{str}</Trans>
+  ) : i18next.translator.exists(`resources:${str}`) ? (
+    <Trans>resources:{str}</Trans>
+  ) : (
+    str
+  ),
 )
 
 const __t = name =>
@@ -81,7 +84,9 @@ export const AACIIndicator = translate(['main'])(
       !!AACIs.length && (
         <ShipLabel className="ship-skill-indicator ship-aaci" isTag>
           <Tooltip position={Position.TOP} content={tooltip}>
-            <Tag minimal intent={Intent.WARNING}>{t('main:AACI')}</Tag>
+            <Tag minimal intent={Intent.WARNING}>
+              {t('main:AACI')}
+            </Tag>
           </Tooltip>
         </ShipLabel>
       )

@@ -4,7 +4,7 @@ const INTERVAL = 1000
 
 // Scheduler: Schedule one-time or interval tasks, without worrying the problem
 //   that setTimeout pauses when the computer falls aleep.
-// 
+//
 // Scheduler.prototype.schedule(func, time)
 //   Schedule an one-time task.
 //     func: (scheduledTime) => {}
@@ -12,7 +12,7 @@ const INTERVAL = 1000
 // Scheduler.prototype.schedule(func, options)
 //   Schedule a complicated task.
 //     func: (scheduledTime) => {}
-//     options: 
+//     options:
 //       time: unix milliseconds. The first start time, default Date.now()
 //       interval: milliseconds. Interval time, default being non-inverval
 //       allowImmediate: Boolean. If true, func will be executed immediately
@@ -33,7 +33,7 @@ class Scheduler {
     const nextNow = now + INTERVAL
     while (this._tasks.length && nextNow >= this._tasks[0].next) {
       const task = this._tasks.shift()
-      const {func, next: time, opts} = task
+      const { func, next: time, opts } = task
       setTimeout(partial(func, time), Math.max(time - now, 0))
       const next = this._nextTaskTime(opts, time, false)
       if (next)
@@ -51,14 +51,10 @@ class Scheduler {
 
   _parseOptions(rawOpts) {
     const opts = cloneDeep(rawOpts)
-    if (typeof opts === 'number')
-      return {time: opts}
-    if (typeof opts !== 'object' || !opts)
-      throw new Error('Invalid scheduler time option')
-    if (!('time' in opts))
-      opts.time = Date.now()
-    if (!('allowImmediate' in opts))
-      opts.allowImmediate = true
+    if (typeof opts === 'number') return { time: opts }
+    if (typeof opts !== 'object' || !opts) throw new Error('Invalid scheduler time option')
+    if (!('time' in opts)) opts.time = Date.now()
+    if (!('allowImmediate' in opts)) opts.allowImmediate = true
     return opts
   }
 
@@ -67,16 +63,13 @@ class Scheduler {
       return opts.time
     }
     if (!opts.interval) {
-      if (!allowImmediate)
-        return
+      if (!allowImmediate) return
       return opts.time
     }
-    const {time, interval} = opts
-    const nextBeforeNow = Math.floor((now-time)/interval) * interval + time
-    if (allowImmediate)
-      return nextBeforeNow
-    else
-      return nextBeforeNow + interval
+    const { time, interval } = opts
+    const nextBeforeNow = Math.floor((now - time) / interval) * interval + time
+    if (allowImmediate) return nextBeforeNow
+    else return nextBeforeNow + interval
   }
 
   _pushTask(task) {
@@ -86,8 +79,7 @@ class Scheduler {
   schedule(func, rawOpts) {
     const opts = this._parseOptions(rawOpts)
     const next = this._nextTaskTime(opts, Date.now(), opts.allowImmediate)
-    if (!next)
-      return
+    if (!next) return
     const task = {
       opts,
       next,

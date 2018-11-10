@@ -18,9 +18,9 @@ let keyListener
 
 config.on('config.set', (path, value) => {
   switch (path) {
-  case 'poi.shortcut.bosskey':
-    ipcRenderer.send('refresh-shortcut')
-    break
+    case 'poi.shortcut.bosskey':
+      ipcRenderer.send('refresh-shortcut')
+      break
   }
 })
 
@@ -144,9 +144,7 @@ export class ShortcutConfig extends Component {
           {value ? t('Change') : t('Set')}
         </Button>
 
-        {!disabled &&
-          value &&
-          !recording && (
+        {!disabled && value && !recording && (
           <Button minimal intent={Intent.WARNING} onClick={this.handleDisable}>
             {t('Remove')}
           </Button>

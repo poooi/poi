@@ -14,15 +14,15 @@ export const compress7z = async (files, archive, options) => {
   } catch (e) {
     console.error(e.stack)
   }
-  await (new n7z()).add(archive, files, options)
+  await new n7z().add(archive, files, options)
 }
 
 // Run js script
-export const runScript = (scriptPath, args, options) => new Promise ((resolve) => {
-  const proc = child_process.fork(scriptPath, args, options)
-  proc.on('exit', () => resolve())
-})
-
+export const runScript = (scriptPath, args, options) =>
+  new Promise(resolve => {
+    const proc = child_process.fork(scriptPath, args, options)
+    proc.on('exit', () => resolve())
+  })
 
 export const npmInstall = async (tgtDir, args = [], ci = true) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins

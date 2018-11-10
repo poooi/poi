@@ -35,7 +35,7 @@ const TARGET_LIST = [
 
 const gitArchiveAndClone = async (tarPath, tgtDir) => {
   log('Archive file from git..')
-  try{
+  try {
     await fs.remove(tarPath)
   } catch (e) {
     console.error(e.stack)
@@ -48,30 +48,33 @@ const gitArchiveAndClone = async (tarPath, tgtDir) => {
     })
   } catch (e) {
     log(e)
-    log('Error on git archive! Probably you haven\'t installed git or it does not exist in your PATH.')
+    log(
+      "Error on git archive! Probably you haven't installed git or it does not exist in your PATH.",
+    )
     process.exit(1)
   }
   log('Archive complete! Extracting...')
-  await new Promise((resolve) => {
+  await new Promise(resolve => {
     fs.createReadStream(tarPath)
       .pipe(tar.extract(tgtDir))
-      .on('finish', (e) => {
-        log ('Extract complete!')
+      .on('finish', e => {
+        log('Extract complete!')
         resolve(e)
       })
-      .on('error', (err) => {
+      .on('error', err => {
         log(err)
         resolve()
-      }
-      )})
+      })
+  })
 }
 
 // *** METHODS ***
-const filterCopyApp = async (stage1App, stage2App) => Promise.map(TARGET_LIST, target =>
-  fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
-    overwrite: true,
-  })
-)
+const filterCopyApp = async (stage1App, stage2App) =>
+  Promise.map(TARGET_LIST, target =>
+    fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
+      overwrite: true,
+    }),
+  )
 
 // Build poi for use
 export const build = async (poiVersion, dontRemove) => {
@@ -106,7 +109,7 @@ export const build = async (poiVersion, dontRemove) => {
 
   // Stage2: Filtered copy
   await filterCopyApp(stage1App, stage2App)
-  if (!dontRemove){
+  if (!dontRemove) {
     await npmInstall(stage2App, ['--only=production'])
     await runScript(NPM_EXEC_PATH, ['dedupe', '--no-package-lock'], {
       cwd: path.join(stage2App, 'node_modules', 'npm'),
@@ -126,8 +129,7 @@ export const build = async (poiVersion, dontRemove) => {
   delete packageData.devDependencies
   await fs.remove(packagePath)
   await fs.outputJson(packagePath, packageData)
-  log ('Done.')
+  log('Done.')
 }
 
-export const compile = async () =>
-  await compileToJs(ROOT, true)
+export const compile = async () => await compileToJs(ROOT, true)

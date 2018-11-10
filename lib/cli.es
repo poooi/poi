@@ -29,12 +29,16 @@ const argv = yargs
 // Print Version Info to Console and Exit
 const printVersionAndExit = () => {
   console.warn(chalk.blue.bold(`${app.getName()} ${app.getVersion()}`))
-  console.warn(chalk.cyan([
-    `(electron@${process.versions.electron}`,
-    `node@${process.versions.node}`,
-    `chrome@${process.versions.chrome}`,
-    `react@${require('react').version})`,
-  ].join(' ')))
+  console.warn(
+    chalk.cyan(
+      [
+        `(electron@${process.versions.electron}`,
+        `node@${process.versions.node}`,
+        `chrome@${process.versions.chrome}`,
+        `react@${require('react').version})`,
+      ].join(' '),
+    ),
+  )
   app.exit(0)
 }
 

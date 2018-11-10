@@ -62,9 +62,7 @@ export class NameInput extends PureComponent {
           />
           <Button
             intent={Intent.PRIMARY}
-            disabled={
-              this.props.status === 1 || this.props.npmWorking || !validPackageName
-            }
+            disabled={this.props.status === 1 || this.props.npmWorking || !validPackageName}
             onClick={this.handleClick}
           >
             {t('setting:Install')}

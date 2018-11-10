@@ -18,21 +18,17 @@ import './services/sortie-dangerous-check'
 import './services/sortie-free-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
-import {
-  gameRefreshPage,
-  gameRefreshPageIgnoringCache,
-  gameReload,
-} from './services/utils'
+import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
 // Update server info
-const setUpdateServer = (dispatch) => {
+const setUpdateServer = dispatch => {
   const t = setInterval(() => {
-    const {ip, num: id, name} = proxy.getServerInfo()
+    const { ip, num: id, name } = proxy.getServerInfo()
     if (window.getStore('info.server.ip') !== ip) {
       if (ip) {
         dispatch({
           type: '@@ServerReady',
-          serverInfo: {ip, id, name},
+          serverInfo: { ip, id, name },
         })
       }
     } else {
@@ -41,21 +37,24 @@ const setUpdateServer = (dispatch) => {
   }, 1000)
 }
 const serverObserver = observer(
-  (state) => state.info.server.ip,
+  state => state.info.server.ip,
   (dispatch, current, previous) => {
     if (!current) {
       setUpdateServer(dispatch)
     }
-  }
+  },
 )
 setUpdateServer(window.dispatch)
 
 observe(store, [serverObserver])
 
 // F5 & Ctrl+F5 & Alt+F5
-window.addEventListener('keydown', async (e) => {
+window.addEventListener('keydown', async e => {
   const isingame = await isInGame()
-  if ((document.activeElement.tagName === 'WEBVIEW' && !isingame) || document.activeElement.tagName === 'INPUT') {
+  if (
+    (document.activeElement.tagName === 'WEBVIEW' && !isingame) ||
+    document.activeElement.tagName === 'INPUT'
+  ) {
     return
   }
   if (process.platform == 'darwin') {
@@ -65,22 +64,28 @@ window.addEventListener('keydown', async (e) => {
       // so the OS shortcuts will always work
       remote.getCurrentWindow().blurWebView()
     } else if (e.keyCode === 82 && e.metaKey) {
-      if (e.shiftKey) { // cmd + shift + r
+      if (e.shiftKey) {
+        // cmd + shift + r
         gameRefreshPageIgnoringCache()
-      } else if (e.altKey) { // cmd + alt + r
+      } else if (e.altKey) {
+        // cmd + alt + r
         gameReload()
-      } else { // cmd + r
+      } else {
+        // cmd + r
         // Catched by menu
         // $('kan-game webview').reload()
         return false
       }
     }
-  } else if (e.keyCode === 116){
-    if (e.ctrlKey) { // ctrl + f5
+  } else if (e.keyCode === 116) {
+    if (e.ctrlKey) {
+      // ctrl + f5
       gameRefreshPageIgnoringCache()
-    } else if (e.altKey){ // alt + f5
+    } else if (e.altKey) {
+      // alt + f5
       gameReload()
-    } else if (!e.metaKey){ // f5
+    } else if (!e.metaKey) {
+      // f5
       gameRefreshPage()
     }
   }
@@ -95,15 +100,17 @@ const exitPoi = () => {
   window.onbeforeunload = null
   window.close()
 }
-window.onbeforeunload = (e) => {
+window.onbeforeunload = e => {
   if (confirmExit || !config.get('poi.confirm.quit', false)) {
     exitPoi()
   } else {
-    toggleModal(i18next.t('Exit'), i18next.t('Confirm?'), [{
-      name: i18next.t('Confirm'),
-      func: exitPoi,
-      style: 'warning',
-    }])
+    toggleModal(i18next.t('Exit'), i18next.t('Confirm?'), [
+      {
+        name: i18next.t('Confirm'),
+        func: exitPoi,
+        style: 'warning',
+      },
+    ])
     e.returnValue = false
   }
 }
@@ -115,37 +122,39 @@ class GameResponse {
     Object.defineProperty(this, 'time', {
       get: () => String(new Date(time)),
     })
-    Object.defineProperty(this, 'ClickToCopy -->', {get: () => {
-      require('electron').clipboard.writeText(JSON.stringify({path, body, postBody}))
-      return `Copied: ${this.path}`
-    }})
+    Object.defineProperty(this, 'ClickToCopy -->', {
+      get: () => {
+        require('electron').clipboard.writeText(JSON.stringify({ path, body, postBody }))
+        return `Copied: ${this.path}`
+      },
+    })
   }
 }
 
-window.addEventListener('game.request', (e) => {
+window.addEventListener('game.request', e => {
   //const {method} = e.detail
   //const resPath = e.detail.path
 })
-window.addEventListener('game.response', (e) => {
-  const {method, body, postBody, time} = e.detail
+window.addEventListener('game.response', e => {
+  const { method, body, postBody, time } = e.detail
   const resPath = e.detail.path
   if (dbg.extra('gameResponse').isEnabled()) {
     dbg._getLogFunc()(new GameResponse(resPath, body, postBody, time))
   }
   if (config.get('poi.misc.networklog', true)) {
-    log(`${i18next.t('Hit')}: ${method} ${resPath}`, {dontReserve: true})
+    log(`${i18next.t('Hit')}: ${method} ${resPath}`, { dontReserve: true })
   }
 })
-window.addEventListener ('network.error', () => {
-  error(i18next.t('Connection failed.'), {dontReserve: true})
+window.addEventListener('network.error', () => {
+  error(i18next.t('Connection failed.'), { dontReserve: true })
 })
-window.addEventListener('network.error.retry', (e) => {
-  const {counter} = e.detail
-  error(i18next.t('ConnectionFailedMsg', { count: counter }), {dontReserve: true})
+window.addEventListener('network.error.retry', e => {
+  const { counter } = e.detail
+  error(i18next.t('ConnectionFailedMsg', { count: counter }), { dontReserve: true })
 })
-window.addEventListener('network.invalid.result', (e) => {
-  const {code} = e.detail
-  error(i18next.t('CatError', { code }), {dontReserve: true})
+window.addEventListener('network.invalid.result', e => {
+  const { code } = e.detail
+  error(i18next.t('CatError', { code }), { dontReserve: true })
 })
 
 remote.getCurrentWebContents().on('devtools-opened', e => window.dispatchEvent(new Event('resize')))

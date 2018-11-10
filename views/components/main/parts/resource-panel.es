@@ -23,19 +23,24 @@ const MaterialContainer = styled.div`
   margin-top: 1px;
   padding-left: 15px;
   padding-right: 0;
-  ${({dimension}) => dimension === 1 ? css `
-    flex-basis: 75px;
-  ` : css`
-    flex-basis: ${100 / dimension}%;
-  `}
+  ${({ dimension }) =>
+    dimension === 1
+      ? css`
+          flex-basis: 75px;
+        `
+      : css`
+          flex-basis: ${100 / dimension}%;
+        `}
 `
 
 const MaterialIconGlow = styled(MaterialIcon)`
   height: 18px;
   width: 18px;
-  ${({glow}) => glow && css`
-    filter: drop-shadow(0 0 4px #2196f3);
-  `}
+  ${({ glow }) =>
+    glow &&
+    css`
+      filter: drop-shadow(0 0 4px #2196f3);
+    `}
 `
 
 const MaterialValue = styled.div`
@@ -61,13 +66,17 @@ const AdditionalValue = styled(MaterialAmount)`
   text-align: right;
   transition: all 0.3s;
   z-index: 1;
-  ${({inc, dec}) => inc ? css`
-    background-color: #217dbb;
-    opacity: 1;
-  ` : dec && css`
-    background-color: #d62c1a;
-    opacity: 1;
-  `}
+  ${({ inc, dec }) =>
+    inc
+      ? css`
+          background-color: #217dbb;
+          opacity: 1;
+        `
+      : dec &&
+        css`
+          background-color: #d62c1a;
+          opacity: 1;
+        `}
 `
 
 const order = [0, 2, 1, 3, 4, 6, 5, 7]
@@ -155,16 +164,22 @@ export class ResourcePanel extends React.Component {
     return (
       <ResizeSensor onResize={this.handleResize}>
         <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
-          {(dimension === 2 ? order : range(8)).map(i =>  (
-            <MaterialContainer
-              key={i}
-              className="material-container"
-              dimension={dimension}
-            >
-              <MaterialIconGlow materialId={i + 1} className="material-icon" glow={valid && i < 4 && resources[i] < limit} />
+          {(dimension === 2 ? order : range(8)).map(i => (
+            <MaterialContainer key={i} className="material-container" dimension={dimension}>
+              <MaterialIconGlow
+                materialId={i + 1}
+                className="material-icon"
+                glow={valid && i < 4 && resources[i] < limit}
+              />
               <MaterialValue className="material-value">
-                <MaterialAmount className="material-amount">{valid ? resources[i] : '??'}</MaterialAmount>
-                <AdditionalValue className="additional-value" inc={resourceIncrement[i] > 0} dec={resourceIncrement[i] < 0}>
+                <MaterialAmount className="material-amount">
+                  {valid ? resources[i] : '??'}
+                </MaterialAmount>
+                <AdditionalValue
+                  className="additional-value"
+                  inc={resourceIncrement[i] > 0}
+                  dec={resourceIncrement[i] < 0}
+                >
                   {resourceIncrement[i] > 0 && '+'}
                   {resourceIncrement[i] !== 0 && resourceIncrement[i]}
                 </AdditionalValue>

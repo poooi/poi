@@ -52,88 +52,87 @@ const overEquips = func => (_ship, equips) => func(equips)
 
  */
 // isOASWWith(allCVEIds: Array<ShipMstId>)(ship: Ship, equips: Array<Equip>): bool
-export const isOASWWith = allCVEIds => _.overSome(
-  // 無条件に発動
-  isIsuzuK2, isJervisKai, isTatsutaKai, isSamuelKai,
-  // 海防艦
-  _.overEvery(
-    isDE,
-    _.overSome(
-      // 必要対潜60 + ソナー
-      _.overEvery(
-        taisenAbove(60),
-        overEquips(hasSome(isSonar))
+export const isOASWWith = allCVEIds =>
+  _.overSome(
+    // 無条件に発動
+    isIsuzuK2,
+    isJervisKai,
+    isTatsutaKai,
+    isSamuelKai,
+    // 海防艦
+    _.overEvery(
+      isDE,
+      _.overSome(
+        // 必要対潜60 + ソナー
+        _.overEvery(taisenAbove(60), overEquips(hasSome(isSonar))),
+        // 必要対潜値75 + 装備のみの対潜値が合計4以上
+        _.overEvery(taisenAbove(75), overEquips(equips => _.sum(equips.map(equipTais)) >= 4)),
       ),
-      // 必要対潜値75 + 装備のみの対潜値が合計4以上
-      _.overEvery(
-        taisenAbove(75),
-        overEquips(equips => _.sum(equips.map(equipTais)) >= 4)
-      )
-    )
-  ),
-  _.overEvery(
-    ship => [
-      // 駆逐
-      2,
-      // 軽巡
-      3,
-      // 雷巡
-      4,
-      // 練巡
-      21,
-      // 補給
-      22,
-    ].includes(ship.api_stype),
-    taisenAbove(100),
-    overEquips(hasSome(isSonar)),
-  ),
-  // 大鷹改 大鷹改二
-  _.overEvery(
-    _.overSome(isTaiyouKai, isTaiyouKaiNi),
-    overEquips(
-      hasSome(
-        _.overSome(
-          // 対潜値1以上の艦攻
-          _.overEvery(isTorpedoBomber, equipTaisAbove(1)),
-          // 艦爆
-          isDiveBomber,
-          // 三式指揮連絡機(対潜) / カ号観測機
-          isASWAircraft
-        )
-      )
-    )
-  ),
-  // 護衛空母 (excluding 大鷹改 大鷹改二)
-  _.overEvery(
-    s => !isTaiyouKai(s) && !isTaiyouKaiNi(s) && allCVEIds.includes(s.api_ship_id),
-    _.overSome(
-      _.overEvery(
-        taisenAbove(65),
-        overEquips(
-          hasSome(
-            _.overSome(
-              // 対潜値7以上の艦攻
-              _.overEvery(isTorpedoBomber, equipTaisAbove(7)),
-              // 三式指揮連絡機(対潜) / カ号観測機
-              isASWAircraft
-            )
-          )
-        )
+    ),
+    _.overEvery(
+      ship =>
+        [
+          // 駆逐
+          2,
+          // 軽巡
+          3,
+          // 雷巡
+          4,
+          // 練巡
+          21,
+          // 補給
+          22,
+        ].includes(ship.api_stype),
+      taisenAbove(100),
+      overEquips(hasSome(isSonar)),
+    ),
+    // 大鷹改 大鷹改二
+    _.overEvery(
+      _.overSome(isTaiyouKai, isTaiyouKaiNi),
+      overEquips(
+        hasSome(
+          _.overSome(
+            // 対潜値1以上の艦攻
+            _.overEvery(isTorpedoBomber, equipTaisAbove(1)),
+            // 艦爆
+            isDiveBomber,
+            // 三式指揮連絡機(対潜) / カ号観測機
+            isASWAircraft,
+          ),
+        ),
       ),
-      _.overEvery(
-        taisenAbove(50),
-        overEquips(isTypeZeroSonar),
-        overEquips(
-          hasSome(
-            _.overSome(
-              // 対潜値7以上の艦攻
-              _.overEvery(isTorpedoBomber, equipTaisAbove(7)),
-              // 三式指揮連絡機(対潜) / カ号観測機
-              isASWAircraft,
-            )
-          )
-        )
-      )
-    )
-  ),
-)
+    ),
+    // 護衛空母 (excluding 大鷹改 大鷹改二)
+    _.overEvery(
+      s => !isTaiyouKai(s) && !isTaiyouKaiNi(s) && allCVEIds.includes(s.api_ship_id),
+      _.overSome(
+        _.overEvery(
+          taisenAbove(65),
+          overEquips(
+            hasSome(
+              _.overSome(
+                // 対潜値7以上の艦攻
+                _.overEvery(isTorpedoBomber, equipTaisAbove(7)),
+                // 三式指揮連絡機(対潜) / カ号観測機
+                isASWAircraft,
+              ),
+            ),
+          ),
+        ),
+        _.overEvery(
+          taisenAbove(50),
+          overEquips(isTypeZeroSonar),
+          overEquips(
+            hasSome(
+              _.overSome(
+                // 対潜値7以上の艦攻
+                _.overEvery(isTorpedoBomber, equipTaisAbove(7)),
+                // 三式指揮連絡機(対潜) / カ号観測機
+                isASWAircraft,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  )

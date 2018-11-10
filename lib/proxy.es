@@ -16,7 +16,7 @@ import SocksHttpAgent from './socks-http-agent'
 import config from './config'
 import { log, error } from './utils'
 
-const {ROOT} = global
+const { ROOT } = global
 
 const fs = require('fs-extra')
 const zlib = bluebird.promisifyAll(require('zlib'))
@@ -24,14 +24,14 @@ const zlib = bluebird.promisifyAll(require('zlib'))
 const resolveBody = async (encoding, body) => {
   let decoded = null
   switch (encoding) {
-  case 'gzip':
-    decoded = await zlib.gunzipAsync(body)
-    break
-  case 'deflate':
-    decoded = await zlib.inflateAsync(body)
-    break
-  default:
-    decoded = body
+    case 'gzip':
+      decoded = await zlib.gunzipAsync(body)
+      break
+    case 'deflate':
+      decoded = await zlib.inflateAsync(body)
+      break
+    default:
+      decoded = body
   }
   decoded = decoded.toString()
   if (decoded.indexOf('svdata=') === 0) {
@@ -70,11 +70,11 @@ const isStaticResource = (pathname, hostname) => {
   }
   return false
 }
-const getCachePath = (pathname) => {
+const getCachePath = pathname => {
   const dir = config.get('poi.misc.cache.path', global.DEFAULT_CACHE_PATH)
   return path.join(dir, pathname)
 }
-const findHack = (pathname) => {
+const findHack = pathname => {
   let loc = getCachePath(path.join('KanColle', pathname))
   const sp = loc.split('.')
   const ext = sp.pop()
@@ -85,8 +85,7 @@ const findHack = (pathname) => {
     fs.accessSync(loc, fs.R_OK)
     return loc
   } catch (e) {
-    if (e.code !== 'ENOENT')
-      console.error(`error while loading hack file ${loc}`,e)
+    if (e.code !== 'ENOENT') console.error(`error while loading hack file ${loc}`, e)
     return null
   }
 }
@@ -114,47 +113,47 @@ const findCache = (pathname, hostname) => {
 }
 
 const PacAgents = {}
-const resolve = (req) => {
+const resolve = req => {
   switch (config.get('proxy.use')) {
-  // HTTP Request via SOCKS5 proxy
-  case 'socks5':
-    return Object.assign(req, {
-      agentClass: SocksHttpAgent,
-      agentOptions: {
-        socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
-        socksPort: config.get('proxy.socks5.port', 1080),
-      },
-    })
-  // HTTP Request via HTTP proxy
-  case 'http': {
-    const host = config.get('proxy.http.host', '127.0.0.1')
-    const port = config.get('proxy.http.port', 8118)
-    const requirePassword = config.get('proxy.http.requirePassword', false)
-    const username = config.get('proxy.http.username', '')
-    const password = config.get('proxy.http.password', '')
-    const useAuth = (requirePassword && username !== '' && password !== '')
-    const strAuth = `${username}:${password}@`
-    return Object.assign(req, {
-      proxy: `http://${useAuth ? strAuth : ''}${host}:${port}`,
-    })
-  }
-  // PAC
-  case 'pac': {
-    const uri = config.get('proxy.pacAddr')
-    if (!PacAgents[uri]) {
-      PacAgents[uri] = new PacProxyAgent(uri)
+    // HTTP Request via SOCKS5 proxy
+    case 'socks5':
+      return Object.assign(req, {
+        agentClass: SocksHttpAgent,
+        agentOptions: {
+          socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
+          socksPort: config.get('proxy.socks5.port', 1080),
+        },
+      })
+    // HTTP Request via HTTP proxy
+    case 'http': {
+      const host = config.get('proxy.http.host', '127.0.0.1')
+      const port = config.get('proxy.http.port', 8118)
+      const requirePassword = config.get('proxy.http.requirePassword', false)
+      const username = config.get('proxy.http.username', '')
+      const password = config.get('proxy.http.password', '')
+      const useAuth = requirePassword && username !== '' && password !== ''
+      const strAuth = `${username}:${password}@`
+      return Object.assign(req, {
+        proxy: `http://${useAuth ? strAuth : ''}${host}:${port}`,
+      })
     }
-    return Object.assign(req, {
-      agent: PacAgents[uri],
-    })
-  }
-  // Directly
-  default:
-    return req
+    // PAC
+    case 'pac': {
+      const uri = config.get('proxy.pacAddr')
+      if (!PacAgents[uri]) {
+        PacAgents[uri] = new PacProxyAgent(uri)
+      }
+      return Object.assign(req, {
+        agent: PacAgents[uri],
+      })
+    }
+    // Directly
+    default:
+      return req
   }
 }
 
-const isKancolleGameApi = (pathname) => (pathname.startsWith('/kcsapi'))
+const isKancolleGameApi = pathname => pathname.startsWith('/kcsapi')
 
 class Proxy extends EventEmitter {
   constructor() {
@@ -192,7 +191,7 @@ class Proxy extends EventEmitter {
       }
       let reqBody = Buffer.alloc(0)
       // Get all request body
-      req.on ('data', (data) => {
+      req.on('data', data => {
         reqBody = Buffer.concat([reqBody, data])
       })
       req.on('end', async () => {
@@ -212,12 +211,15 @@ class Proxy extends EventEmitter {
             })
           }
           // Use cache file
-          if (cacheFile){
+          if (cacheFile) {
             const stats = await fs.stat(cacheFile)
             // Cache is new
-            if (req.headers['if-modified-since'] && (new Date(req.headers['if-modified-since']) >= stats.mtime)) {
+            if (
+              req.headers['if-modified-since'] &&
+              new Date(req.headers['if-modified-since']) >= stats.mtime
+            ) {
               res.writeHead(304, {
-                'Server': 'nginx',
+                Server: 'nginx',
                 'Last-Modified': stats.mtime.toGMTString(),
               })
               res.end()
@@ -225,7 +227,7 @@ class Proxy extends EventEmitter {
               // Cache is old
               const data = await fs.readFile(cacheFile)
               res.writeHead(200, {
-                'Server': 'nginx',
+                Server: 'nginx',
                 'Content-Length': data.length,
                 'Content-Type': mime.getType(cacheFile),
                 'Last-Modified': stats.mtime.toGMTString(),
@@ -251,7 +253,13 @@ class Proxy extends EventEmitter {
               try {
                 // Emit request event to plugins
                 reqBody = JSON.stringify(querystring.parse(reqBody.toString()))
-                this.emit('network.on.request', req.method, [domain, pathname, requrl], reqBody, Date.now())
+                this.emit(
+                  'network.on.request',
+                  req.method,
+                  [domain, pathname, requrl],
+                  reqBody,
+                  Date.now(),
+                )
                 // Create remote request
                 const [response, body] = await new Promise((promise_resolve, promise_reject) => {
                   request(resolve(options), (err, res_response, res_body) => {
@@ -275,7 +283,14 @@ class Proxy extends EventEmitter {
                   throw new Error('Empty Body')
                 }
                 if (response.statusCode == 200) {
-                  this.emit('network.on.response', req.method, [domain, pathname, requrl], JSON.stringify(resolvedBody), reqBody, Date.now())
+                  this.emit(
+                    'network.on.response',
+                    req.method,
+                    [domain, pathname, requrl],
+                    JSON.stringify(resolvedBody),
+                    reqBody,
+                    Date.now(),
+                  )
                 } else {
                   this.emit('network.error', [domain, pathname, requrl], response.statusCode)
                 }
@@ -306,53 +321,61 @@ class Proxy extends EventEmitter {
       const remoteUrl = url.parse(`https://${req.url}`)
       let remote = null
       switch (config.get('proxy.use')) {
-      case 'socks5': {
-        // Write data directly to SOCKS5 proxy
-        remote = socks.createConnection({
-          socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
-          socksPort: config.get('proxy.socks5.port', 1080),
-          host: remoteUrl.hostname,
-          port: remoteUrl.port,
-        })
-        remote.on ('connect', () => {
-          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
-          remote.write(head)
-        })
-        client.on('data', (data) => {
-          remote.write(data)
-        })
-        remote.on('data', (data) => {
-          client.write(data)
-        })
-        break
-      }
-      case 'http': {
-        // Write data directly to HTTP proxy
-        const host = config.get('proxy.http.host', '127.0.0.1')
-        const port = config.get('proxy.http.port', 8118)
-        // Write header to http proxy
-        let msg = `CONNECT ${remoteUrl.hostname}:${remoteUrl.port} HTTP/${req.httpVersion}\r\n`
-        for (const k in req.headers) {
-          msg += `${caseNormalizer(k)}: ${req.headers[k]}\r\n`
+        case 'socks5': {
+          // Write data directly to SOCKS5 proxy
+          remote = socks.createConnection({
+            socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
+            socksPort: config.get('proxy.socks5.port', 1080),
+            host: remoteUrl.hostname,
+            port: remoteUrl.port,
+          })
+          remote.on('connect', () => {
+            client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
+            remote.write(head)
+          })
+          client.on('data', data => {
+            remote.write(data)
+          })
+          remote.on('data', data => {
+            client.write(data)
+          })
+          break
         }
-        msg += '\r\n'
-        remote = net.connect(port, host, () => {
-          remote.write(msg)
-          remote.write(head)
-          client.pipe(remote)
-          remote.pipe(client)
-        })
-        break
-      }
-      default: {
-        // Connect to remote directly
-        remote = net.connect(remoteUrl.port, remoteUrl.hostname, () => {
-          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
-          remote.write(head)
-          client.pipe(remote)
-          remote.pipe(client)
-        })
-      }
+        case 'http': {
+          // Write data directly to HTTP proxy
+          const host = config.get('proxy.http.host', '127.0.0.1')
+          const port = config.get('proxy.http.port', 8118)
+          // Write header to http proxy
+          let msg = `CONNECT ${remoteUrl.hostname}:${remoteUrl.port} HTTP/${req.httpVersion}\r\n`
+          for (const k in req.headers) {
+            msg += `${caseNormalizer(k)}: ${req.headers[k]}\r\n`
+          }
+          msg += '\r\n'
+          remote = net.connect(
+            port,
+            host,
+            () => {
+              remote.write(msg)
+              remote.write(head)
+              client.pipe(remote)
+              remote.pipe(client)
+            },
+          )
+          break
+        }
+        default: {
+          // Connect to remote directly
+          remote = net.connect(
+            remoteUrl.port,
+            remoteUrl.hostname,
+            () => {
+              client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
+              remote.write(head)
+              client.pipe(remote)
+              remote.pipe(client)
+            },
+          )
+        }
       }
       client.on('end', () => {
         remote.end()
@@ -360,11 +383,11 @@ class Proxy extends EventEmitter {
       remote.on('end', () => {
         client.end()
       })
-      client.on('error', (e) => {
+      client.on('error', e => {
         error(e)
         remote.destroy()
       })
-      remote.on('error', (e) => {
+      remote.on('error', e => {
         error(e)
         client.destroy()
       })
@@ -377,18 +400,25 @@ class Proxy extends EventEmitter {
         remote.destroy()
       })
     })
-    this.server.on('error', (err) => {
+    this.server.on('error', err => {
       error(err)
     })
     const listenPort = config.get('proxy.port', 0)
-    this.server.listen(listenPort, config.get('proxy.allowLAN', false) ? '0.0.0.0' : '127.0.0.1', () => {
-      this.port = this.server.address().port
-      app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
-      app.commandLine.appendSwitch('proxy-bypass-list', '<local>;*.google-analytics.com;*.doubleclick.net')
-      app.commandLine.appendSwitch('ignore-certificate-errors')
-      app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1')
-      log(`Proxy listening on ${this.port}`)
-    })
+    this.server.listen(
+      listenPort,
+      config.get('proxy.allowLAN', false) ? '0.0.0.0' : '127.0.0.1',
+      () => {
+        this.port = this.server.address().port
+        app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
+        app.commandLine.appendSwitch(
+          'proxy-bypass-list',
+          '<local>;*.google-analytics.com;*.doubleclick.net',
+        )
+        app.commandLine.appendSwitch('ignore-certificate-errors')
+        app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1')
+        log(`Proxy listening on ${this.port}`)
+      },
+    )
   }
 }
 

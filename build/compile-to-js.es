@@ -25,9 +25,10 @@ const compileToJs = (appDir, dontRemove) => {
 
   const { presets, plugins } = BabelConfig
 
-  return new Promise ((resolve) => {
+  return new Promise(resolve => {
     const tasks = []
-    walk.walk(appDir, options)
+    walk
+      .walk(appDir, options)
       .on('file', (root, fileStats, next) => {
         const extname = path.extname(fileStats.name).toLowerCase()
         if (targetExts.includes(extname)) {

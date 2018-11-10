@@ -22,7 +22,15 @@ import {
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
-import { DockPanelCardWrapper, PanelItemTooltip, DockInnerWrapper, Panel, Watermark as WatermarkL, DockName, EmptyDockWrapper } from './styled-components'
+import {
+  DockPanelCardWrapper,
+  PanelItemTooltip,
+  DockInnerWrapper,
+  Panel,
+  Watermark as WatermarkL,
+  DockName,
+  EmptyDockWrapper,
+} from './styled-components'
 
 const Watermark = styled(WatermarkL)`
   position: absolute;
@@ -36,8 +44,9 @@ const Watermark = styled(WatermarkL)`
   text-align: right;
 `
 
-const inRepairShipsDataSelector = createSelector([inRepairShipsIdSelector, shipsSelector], (inRepairShipsId, ships) =>
-  inRepairShipsId.map(shipId => ships[shipId]),
+const inRepairShipsDataSelector = createSelector(
+  [inRepairShipsIdSelector, shipsSelector],
+  (inRepairShipsId, ships) => inRepairShipsId.map(shipId => ships[shipId]),
 )
 
 const EmptyDock = ({ state }) => (
@@ -60,11 +69,10 @@ const getTagIntent = (props, timeRemaining) =>
   timeRemaining > 600
     ? Intent.PRIMARY
     : timeRemaining > 60
-      ? Intent.WARNING
-      : timeRemaining >= 0
-        ? Intent.SUCCESS
-        : Intent.NONE
-
+    ? Intent.WARNING
+    : timeRemaining >= 0
+    ? Intent.SUCCESS
+    : Intent.NONE
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
@@ -100,7 +108,7 @@ export class RepairPanel extends Component {
     dimension: 2,
   }
 
-  handleResize= ([entry]) => {
+  handleResize = ([entry]) => {
     const dimension = getPanelDimension(entry.contentRect.width)
 
     if (dimension !== this.state.dimension) {
@@ -135,16 +143,19 @@ export class RepairPanel extends Component {
               }
               const dock = repairs[i] || emptyRepair
               const dockName =
-            dock.api_state == -1
-              ? this.props.t('main:Locked')
-              : dock.api_state == 0
-                ? this.props.t('main:Empty')
-                : this.props.t(`resources:${$ships[ships[dock.api_ship_id].api_ship_id].api_name}`)
+                dock.api_state == -1
+                  ? this.props.t('main:Locked')
+                  : dock.api_state == 0
+                  ? this.props.t('main:Empty')
+                  : this.props.t(
+                      `resources:${$ships[ships[dock.api_ship_id].api_ship_id].api_name}`,
+                    )
               const completeTime = dock.api_complete_time || -1
               let hpPercentage
               if (dock.api_state > 0) {
                 hpPercentage =
-              100 * get(ships, [dock.api_ship_id, 'api_nowhp']) / get(ships, [dock.api_ship_id, 'api_maxhp'])
+                  (100 * get(ships, [dock.api_ship_id, 'api_nowhp'])) /
+                  get(ships, [dock.api_ship_id, 'api_maxhp'])
               }
               return (
                 <PanelItemTooltip
@@ -154,17 +165,17 @@ export class RepairPanel extends Component {
                 >
                   <DockInnerWrapper>
                     {enableAvatar && (
-                    <>
-                      {dock.api_state > 0 ? (
-                        <Avatar
-                          height={20}
-                          mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])}
-                          isDamaged={hpPercentage <= 50}
-                        />
-                      ) : (
-                        <EmptyDock state={dock.api_state} />
-                      )}
-                    </>
+                      <>
+                        {dock.api_state > 0 ? (
+                          <Avatar
+                            height={20}
+                            mstId={get(ships, [dock.api_ship_id, 'api_ship_id'])}
+                            isDamaged={hpPercentage <= 50}
+                          />
+                        ) : (
+                          <EmptyDock state={dock.api_state} />
+                        )}
+                      </>
                     )}
                     <DockName className="ndock-name">{dockName}</DockName>
 

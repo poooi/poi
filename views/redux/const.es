@@ -24,10 +24,10 @@ function dataFromBody(body) {
   }
 }
 
-export function reducer(state={}, {type, body}) {
+export function reducer(state = {}, { type, body }) {
   switch (type) {
-  case '@@Response/kcsapi/api_start2/getData':
-    return dataFromBody(body)
+    case '@@Response/kcsapi/api_start2/getData':
+      return dataFromBody(body)
   }
   return state
 }

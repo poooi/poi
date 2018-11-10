@@ -10,18 +10,18 @@ onconnect = function(e) {
     const data = [...e.data]
     const type = data.shift()
     switch (type) {
-    case 'WriteFile': {
-      let [path, content] = data
-      if (typeof content !== 'string') {
-        content = JSON.stringify(content)
+      case 'WriteFile': {
+        let [path, content] = data
+        if (typeof content !== 'string') {
+          content = JSON.stringify(content)
+        }
+        writeFile(path, content)
+        break
       }
-      writeFile(path, content)
-      break
-    }
-    case 'Disconnect': {
-      portList.splice(portList.indexOf(currentPort), 1)
-      break
-    }
+      case 'Disconnect': {
+        portList.splice(portList.indexOf(currentPort), 1)
+        break
+      }
     }
   })
   currentPort.start()

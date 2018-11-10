@@ -10,17 +10,18 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
+    'prettier',
+    'prettier/react',
   ],
   parserOptions: {
     ecmaFeatures: {
       legacyDecorators: true,
     },
   },
-  plugins: ['import', 'react'],
+  plugins: ['import', 'react', 'prettier'],
   parser: 'babel-eslint',
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
-    indent: ['warn', 2],
     'linebreak-style': ['error', 'unix'],
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     'no-var': 'error',
@@ -34,8 +35,8 @@ module.exports = {
       { skipStrings: true, skipTemplates: true },
     ],
     'import/no-named-as-default-member': [0],
-    quotes: ['error', 'single'],
     'jsx-quotes': ['error', 'prefer-double'],
+    'prettier/prettier': 'error',
   },
   settings: {
     'import/resolver': {

@@ -20,7 +20,6 @@ import { timeToString } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { CardWrapper } from './styled-components'
 
-
 export const ExpeditionItem = styled.div`
   align-items: center;
   display: flex;
@@ -36,14 +35,20 @@ export const ExpeditionName = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  ${({warning, success}) => warning ? css`
-    color: #F39C12;
-  ` : success && css`
-    color: #00bc8c;
-  `}
+  ${({ warning, success }) =>
+    warning
+      ? css`
+          color: #f39c12;
+        `
+      : success &&
+        css`
+          color: #00bc8c;
+        `}
 `
 
-const fleetsExpeditionSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_mission'))
+const fleetsExpeditionSelector = createSelector(fleetsSelector, fleets =>
+  map(fleets, 'api_mission'),
+)
 const fleetsNamesSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_name'))
 const fleetInBattleSelector = createSelector(fleetInBattleSelectorFactory, inBattle => inBattle)
 
@@ -58,14 +63,23 @@ const FleetStatus = translate(['main'])(
     }
   })(({ fleetInBattle, fleetShipsData, t }) => {
     if (fleetInBattle) {
-      return <ExpeditionName className="expedition-name" success>{t('main:In Sortie')}</ExpeditionName>
+      return (
+        <ExpeditionName className="expedition-name" success>
+          {t('main:In Sortie')}
+        </ExpeditionName>
+      )
     }
 
     const notSuppliedShips = fleetShipsData.filter(
-      ([ship, $ship] = []) => Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1,
+      ([ship, $ship] = []) =>
+        Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1,
     )
     if (notSuppliedShips.length) {
-      return <ExpeditionName className="expedition-name" warning>{t('main:Resupply Needed')}</ExpeditionName>
+      return (
+        <ExpeditionName className="expedition-name" warning>
+          {t('main:Resupply Needed')}
+        </ExpeditionName>
+      )
     }
 
     return <ExpeditionName className="expedition-name">{t('main:Ready')}</ExpeditionName>
@@ -76,10 +90,10 @@ const getTagIntent = (props, timeRemaining) =>
   timeRemaining > 600
     ? Intent.PRIMARY
     : timeRemaining > 60
-      ? Intent.WARNING
-      : timeRemaining >= 0
-        ? Intent.SUCCESS
-        : Intent.NONE
+    ? Intent.WARNING
+    : timeRemaining >= 0
+    ? Intent.SUCCESS
+    : Intent.NONE
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
@@ -110,7 +124,14 @@ export class ExpeditionPanel extends Component {
   }
 
   render() {
-    const { fleetsExpedition, fleetNames, $expeditions, canNotify, notifyBefore, editable } = this.props
+    const {
+      fleetsExpedition,
+      fleetNames,
+      $expeditions,
+      canNotify,
+      notifyBefore,
+      editable,
+    } = this.props
     return (
       <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
         {range(1, 4).map(i => {
@@ -120,12 +141,18 @@ export class ExpeditionPanel extends Component {
           const expeditionName =
             status == -1
               ? this.props.t('main:Locked')
-              : `${api_disp_no || '???'} - ${api_name ? this.props.t(`resources:${api_name}`) : '???'}`
+              : `${api_disp_no || '???'} - ${
+                  api_name ? this.props.t(`resources:${api_name}`) : '???'
+                }`
           const completeTime = status > 0 ? rawCompleteTime : -1
 
           return (
             <ExpeditionItem className="panel-item expedition-item" key={i}>
-              {status === 0 ? <FleetStatus fleetId={i} /> : <ExpeditionName className="expedition-name">{expeditionName}</ExpeditionName>}
+              {status === 0 ? (
+                <FleetStatus fleetId={i} />
+              ) : (
+                <ExpeditionName className="expedition-name">{expeditionName}</ExpeditionName>
+              )}
               <Tooltip
                 position={Position.LEFT}
                 disabled={completeTime < 0}
