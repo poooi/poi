@@ -46,7 +46,7 @@ export const Update = translate(['setting'])(({ t }) => (
       </Wrapper>
 
       <Wrapper>
-        <FormGroup inline label={t('Poi internal data')}>
+        <FormGroup inline label={t('poi internal data')}>
           <FCD />
         </FormGroup>
       </Wrapper>

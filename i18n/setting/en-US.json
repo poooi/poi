@@ -161,6 +161,6 @@
   "Format": "Format",
   "Save to": "Save to",
   "GPU": "GPU",
-  "description_markdown": "Poi is an open source Kancolle browser. Poi behaves the same as Chrome and won't modify game data, packets or implement bots/macros. The main Poi provides basic functionalities and is complemented by a variety of plugins.\n",
-  "repair-plugins-confirmation": "Poi will empty plugin folder and re-install current plugins, which won't touch plugin data but will take some time. Continue?"
+  "description_markdown": "poi is an open source Kancolle browser. poi behaves the same as Chrome and won't modify game data, packets or implement bots/macros. The main poi provides basic functionalities and is complemented by a variety of plugins.\n",
+  "repair-plugins-confirmation": "poi will empty plugin folder and re-install current plugins, which won't touch plugin data but will take some time. Continue?"
 }

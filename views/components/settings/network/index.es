@@ -116,7 +116,7 @@ const RelayMode = compose(
         {t('If you do not know what is this section for, leave it unconfigured')}
       </Callout>
       <Wrapper>
-        <FormGroup inline label={t('Poi port')}>
+        <FormGroup inline label={t('poi port')}>
           <IntegerConfig
             clampValueOnBlur
             max={65535}
@@ -159,7 +159,7 @@ export class NetworkConfig extends Component {
       <div>
         {!isEqual(this.state.proxy, proxy) && (
           <StickyCallout intent={Intent.SUCCESS}>
-            {t('Network setting changes will be effective after restarting Poi')}
+            {t('Network setting changes will be effective after restarting poi')}
           </StickyCallout>
         )}
         <ProxiesConfig />

@@ -1,15 +1,15 @@
 {
   "Preferences": "환경설정...",
   "Services": "서비스",
-  "About poi": "Poi?",
-  "Hide poi": "Poi 숨기기",
-  "Show poi": "Poi 표시",
+  "About poi": "poi?",
+  "Hide poi": "poi 숨기기",
+  "Show poi": "poi 표시",
   "Hide others": "기타 숨기기",
   "Show All": "모두 표시",
   "Always on top": "창을 항상 맨 위에 표시",
   "Resizable": "창 크기 변경 허용",
   "Confirm before exit": "종료하기 전에 경고 메시지 표시",
-  "Quit poi": "Poi 종료",
+  "Quit poi": "poi 종료",
   "Edit": "편집",
   "Undo": "취소",
   "Redo": "되돌리기",
@@ -32,7 +32,7 @@
   "Bring All to Front": "모두 앞으로 이동",
   "Help": "도움말",
   "Wiki": "위키" ,
-  "Poi Statistics": "Poi 통계 DB도구",
+  "poi Statistics": "poi 통계 DB도구",
   "Report Issue": "Issue 보고",
   "Search Issues": "Issue 검색"
 }

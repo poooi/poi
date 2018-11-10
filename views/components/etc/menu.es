@@ -38,7 +38,7 @@ let template = []
 if (process.platform !== 'darwin') {
   template = [
     {
-      label: 'Poi',
+      label: 'poi',
       submenu: [
         {
           label: i18next.t('menu:Preferences'),
@@ -167,7 +167,7 @@ if (process.platform !== 'darwin') {
           },
         },
         {
-          label: i18next.t('menu:Poi Statistics'),
+          label: i18next.t('menu:poi Statistics'),
           click: () => {
             openExternal('http://db.kcwiki.org/')
           },
@@ -191,7 +191,7 @@ if (process.platform !== 'darwin') {
 } else {
   template = [
     {
-      label: 'Poi',
+      label: 'poi',
       submenu: [
         {
           label: i18next.t('menu:About poi'),
@@ -407,7 +407,7 @@ if (process.platform !== 'darwin') {
           },
         },
         {
-          label: i18next.t('menu:Poi Statistics'),
+          label: i18next.t('menu:poi Statistics'),
           click: () => {
             openExternal('http://db.kcwiki.org/')
           },

@@ -325,7 +325,7 @@ export class PluginConfig extends Component {
       <>
         {window.isSafeMode && (
           <Callout intent={Intent.WARNING}>
-            {t('setting:Poi is running in safe mode, plugins are not enabled automatically')}
+            {t('setting:poi is running in safe mode, plugins are not enabled automatically')}
           </Callout>
         )}
         <Card>

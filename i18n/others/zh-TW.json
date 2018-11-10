@@ -71,5 +71,5 @@
   "丙": "丙",
   "乙": "乙",
   "甲": "甲",
-  "welcome_markdown": "誒嘿！歡迎使用 Poi {{version}}！使用之前看看下面！\n\n__Poi 不會修改任何遊戲內的發包與收包，但是請使用可信的 poi 版本和可信的擴展程式！__\n\nPoi 默認不使用代理。更改代理的設置在設置面板中可以找到。\n- 烤餅乾的用戶請打開設定 DMM 地區 Cookie；\n- 使用自己本地的 Shadowsocks 或者 Socks5 代理的選擇 Socks5 代理；\n- 使用 VPN 的選擇不使用代理就好了。\n\n如果 Poi 的運行不流暢，可以在設置中關閉或卸載一部分擴展程式。\n\n更多幫助與說明請[移步 Wiki](https://github.com/poooi/poi/wiki)。\n\n-----\n\n喜歡 Poi？對 Poi 有建議？想要貢獻代碼或者插件？[請點擊這裏](https://github.com/poooi/poi)\n"
+  "welcome_markdown": "誒嘿！歡迎使用 poi {{version}}！使用之前看看下面！\n\n__poi 不會修改任何遊戲內的發包與收包，但是請使用可信的 poi 版本和可信的擴展程式！__\n\npoi 默認不使用代理。更改代理的設置在設置面板中可以找到。\n- 烤餅乾的用戶請打開設定 DMM 地區 Cookie；\n- 使用自己本地的 Shadowsocks 或者 Socks5 代理的選擇 Socks5 代理；\n- 使用 VPN 的選擇不使用代理就好了。\n\n如果 poi 的運行不流暢，可以在設置中關閉或卸載一部分擴展程式。\n\n更多幫助與說明請[移步 Wiki](https://github.com/poooi/poi/wiki)。\n\n-----\n\n喜歡 poi？對 poi 有建議？想要貢獻代碼或者插件？[請點擊這裏](https://github.com/poooi/poi)\n"
 }
