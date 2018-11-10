@@ -134,6 +134,13 @@ export function stopNavigateAndHandleNewWindow(id) {
         minHeight: 200,
         titleBarStyle: isModernDarwin ? 'hidden' : null,
         autoHideMenuBar: true,
+        webPreferences: {
+          ...options.webPreferences,
+          nodeIntegration: false,
+          nodeIntegrationInWorker: false,
+          plugins: false,
+          sandbox: true,
+        },
       }
       e.newGuest = new BrowserWindow(options)
       darwinDevToolPolyfill(e.newGuest.webContents)
