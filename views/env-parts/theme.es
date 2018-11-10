@@ -1,4 +1,4 @@
-/* global config, ROOT, isMain, dispatch */
+/* global config, ROOT, dispatch */
 import themes from 'poi-asset-themes/index.json'
 import { remote } from 'electron'
 import { fileUrl } from '../utils/tools'
@@ -22,7 +22,7 @@ window.normalThemes = normalThemes
 window.vibrantThemes = vibrantThemes
 config.setDefault('poi.appearance.theme', 'darklykai')
 
-export function loadStyle(document=window.document, currentWindow=remote.getCurrentWindow(), isMainWindow=isMain) {
+export function loadStyle(document=window.document, currentWindow=remote.getCurrentWindow(), isMainWindow=true) {
   const $ = (...s) => document.querySelector(...s)
   const customCSSPath = join(EXROOT, 'hack', 'custom.css')
   ensureFileSync(customCSSPath)
@@ -224,3 +224,5 @@ export function loadStyle(document=window.document, currentWindow=remote.getCurr
     })
   }
 }
+
+loadStyle()
