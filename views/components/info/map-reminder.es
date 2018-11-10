@@ -111,6 +111,7 @@ const MapTooltipMsg = styled.span`
   &::after {
     content: "  |  ";
   }
+
   &:last-child::after {
     content: "";
   }

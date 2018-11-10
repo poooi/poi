@@ -13,7 +13,6 @@ const ShipAvatarContainer = styled.div`
   align-items: center;
   position: relative;
   display: flex;
-  -webkit-mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
   mask-image: -webkit-gradient(linear, 65% 100%, 100% 100%, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
 `
 

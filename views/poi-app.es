@@ -16,16 +16,19 @@ const PoiAppE = styled.div`
   max-width: 100vw;
   width: 100%;
   height: 0;
+
   .container {
     overflow-x: hidden;
     padding-left: 0;
     padding-right: 0;
     width: auto;
   }
+
   ${({isHorizontal}) => isHorizontal && css`
     height: 100%;
     width: 0;
   `}
+
   ${({overlay, top, bottom, overlayVisible, overlayWidth}) => overlay && css`
     position: fixed;
     right: 0;
@@ -51,7 +54,6 @@ const PoiAppContainer = styled.div`
 
 const OverlayPanelTrigger = styled.a`
   transform: translateX(-100%);
-  -webkit-transform: translateX(-100%);
   position: fixed;
   background: rgba(75, 75, 75, 0.8);
   height: 5vh;
@@ -64,6 +66,7 @@ const OverlayPanelTrigger = styled.a`
   font-size: 15px;
   bottom: 0;
   border-top-left-radius: 5px;
+
   & > svg {
     margin: auto;
   }

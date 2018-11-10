@@ -77,6 +77,7 @@ const ShipViewTabpanel = styled(PoiAppTabpane)`
 const PluginAppTabpane = styled(PoiAppTabpane)`
   height: 100%;
   padding-bottom: 8px;
+
   & > .bp3-card {
     padding: 4px;
     height: 100%;
@@ -141,15 +142,19 @@ const PluginDropdownMenuItem = styled.div`
 
 const NavTabs = styled(Tabs)`
   width: calc(100% + 20px);
+
   .bp3-tab {
     text-align: center;
   }
+
   .nav-tab-3 {
     width: calc(33% - 20px);
   }
+
   .nav-tab-4 {
     width: calc(25% - 20px);
   }
+
   .nav-tab-8 {
     width: calc(12.5% - 20px);
   }

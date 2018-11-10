@@ -33,7 +33,7 @@ const MainPanelContent = styled.div`
   }
 
   .countdown-timer-label {
-    flex: none
+    flex: none;
   }
 `
 

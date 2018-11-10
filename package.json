@@ -12,8 +12,9 @@
     "dev": "electron . --dev --inspect",
     "clean": "gulp clean",
     "lint:js": "eslint . --ext .es --ext .js --ignore-path .gitignore",
-    "lint:css": "stylelint views/**/*.css assets/**/*.css",
-    "lint": "npm run lint:js && npm run lint:css"
+    "lint:css": "stylelint views/**/*.css assets/**/*.css --config .stylelintrc.css.js",
+    "lint:styled": "stylelint 'views/**/*.es' --config .stylelintrc.styled.js",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:styled"
   },
   "repository": {
     "type": "git",
@@ -144,8 +145,10 @@
     "node-7z": "^0.4.0",
     "node-unzip-2": "^0.2.7",
     "rimraf": "^2.6.2",
-    "stylelint": "^9.2.1",
-    "stylelint-config-standard": "^18.1.0",
+    "stylelint": "^9.8.0",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-processor-styled-components": "^1.5.0",
     "tar-fs": "^1.16.3",
     "walk": "^2.3.13"
   },

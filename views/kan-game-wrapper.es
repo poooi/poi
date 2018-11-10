@@ -37,6 +37,7 @@ const KanGame = styled(CustomTag)`
   margin-right: auto;
   overflow: hidden;
   width: 100%;
+
   .kancolle-webview {
     height: 100%;
     left: 0;

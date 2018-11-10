@@ -69,6 +69,7 @@ export const FleetNameButton = styled(ButtonGroup)`
   display: flex;
   padding: 5px 5px 1px 5px;
   width: 100%;
+
   .bp3-button {
     flex: 1;
     overflow: hidden;
@@ -93,6 +94,7 @@ export const ShipItem = styled.div`
   padding-top: 7px;
   position: relative;
   white-space: nowrap;
+
   .bp3-progress-bar {
     height: 7px;
   }
@@ -133,7 +135,6 @@ export const ShipBasic = styled.div`
   opacity: 0.8;
   padding-top: 0;
   vertical-align: bottom;
-
   ${({ show }) => !show && css`
     padding-left: 5px;
   `}
@@ -186,13 +187,10 @@ export const ShipStatWToolTip = styled(Tooltip)`
 
 export const LandBaseStat = styled.div`
   display: flex;
-  flex-basis: 0;
   flex-flow: column nowrap;
-  flex-grow: 2;
   font-size: 90%;
   justify-content: space-between;
   margin-left: auto;
-  min-width: 120px;
   flex-basis: 90px;
   flex-grow: 0.8;
   min-width: 90px;
@@ -209,7 +207,9 @@ export const ShipHPTextRow = styled.span`
   flex-direction: row;
   padding-bottom: 5px;
   align-items: end;
-  span, div {
+
+  span,
+  div {
     align-self: flex-end;
   }
 `
@@ -244,6 +244,7 @@ export const ShipFB = styled.span`
   margin: 0 4px;
   height: 22px;
   margin-bottom: 3px;
+
   > div {
     margin-top: 4px;
   }
@@ -266,6 +267,7 @@ export const SlotItemContainer = styled.div`
   margin-right: 2px;
   position: relative;
   vertical-align: bottom;
+
   &::after {
     background-color: rgba(33, 33, 33, 0.7);
     border-radius: 9px;
@@ -280,19 +282,13 @@ export const SlotItemContainer = styled.div`
     position: absolute;
     text-align: center;
     width: 18px;
+    display: ${props => props.onslot ? 'inline' : 'none' };
   }
-  ${({onslot}) => onslot ? css`
-    &::after {
-      display: inline;
-    }
-  ` : css`
-    &::after {
-      display: none;
-    }
-  `}
+
   ${({warining}) => warining && css`
     color: #F39C12;
   `}
+
   .png {
     height: 32px;
     margin-bottom: -3px;
@@ -300,6 +296,7 @@ export const SlotItemContainer = styled.div`
     margin-top: -5px;
     width: 32px;
   }
+
   .svg {
     height: 23px;
     width: 26px;
