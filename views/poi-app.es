@@ -24,32 +24,38 @@ const PoiAppE = styled.div`
     width: auto;
   }
 
-  ${({isHorizontal}) => isHorizontal && css`
-    height: 100%;
-    width: 0;
-  `}
+  ${({ isHorizontal }) =>
+    isHorizontal &&
+    css`
+      height: 100%;
+      width: 0;
+    `}
 
-  ${({overlay, top, bottom, overlayVisible, overlayWidth}) => overlay && css`
-    position: fixed;
-    right: 0;
-    transition: transform 0.3s 0.2s ease-in;
-    will-change: transform;
-    max-width: calc(100vw - 50px);
-    transform: translate3d(${overlayVisible ? 0 : 100}%, 0, 0);
-    top: ${top}px;
-    bottom: ${bottom}px;
-    height: inherit;
-    width: ${overlayWidth}px;
-  `}
+  ${({ overlay, top, bottom, overlayVisible, overlayWidth }) =>
+    overlay &&
+    css`
+      position: fixed;
+      right: 0;
+      transition: transform 0.3s 0.2s ease-in;
+      will-change: transform;
+      max-width: calc(100vw - 50px);
+      transform: translate3d(${overlayVisible ? 0 : 100}%, 0, 0);
+      top: ${top}px;
+      bottom: ${bottom}px;
+      height: inherit;
+      width: ${overlayWidth}px;
+    `}
 `
 
 const PoiAppContainer = styled.div`
   overflow: hidden;
   height: 100%;
-  ${({overlay}) => overlay && css`
-    backdrop-filter: blur(5px);
-    background: #202b33e6;
-  `}
+  ${({ overlay }) =>
+    overlay &&
+    css`
+      backdrop-filter: blur(5px);
+      background: #202b33e6;
+    `}
 `
 
 const OverlayPanelTrigger = styled.a`
@@ -77,12 +83,14 @@ const OverlayPanelResizer = styled(ResizableArea)`
   left: 0;
   bottom: 30px;
   pointer-events: none;
-  ${({ widthResize }) => widthResize && css`
-    & > div {
-      pointer-events: all;
-      opacity: 0;
-    }
-  `}
+  ${({ widthResize }) =>
+    widthResize &&
+    css`
+      & > div {
+        pointer-events: all;
+        opacity: 0;
+      }
+    `}
 `
 
 const overlayPanelDefaultWidth = {
@@ -130,56 +138,56 @@ export class PoiApp extends Component {
     const bottom = $('poi-info') ? $('poi-info').clientHeight : 30
     return (
       <>
-        {
-          overlay && (
-            <OverlayPanelResizer
-              ref={ref => this.resizableArea = ref}
-              className="overlay-panel-resizer"
-              widthResize={this.props.editable && this.state.overlayVisible ? 1 : 0}
-              minimumWidth={{
-                px: 50,
-                percent: 0,
-              }}
-              maximumWidth={transformToAreaSize(overlayPanelMinimumWidth)}
-              defaultWidth={transformToAreaSize(overlayPanelDefaultWidth)}
-              initWidth={transformToAreaSize(this.props.overlayPanelWidth)}
-              minimumHeight={{
-                px: -(bottom + top),
-                percent: 100,
-              }}
-              maximumHeight={{
-                px: -(bottom + top),
-                percent: 100,
-              }}
-              initHeight={{
-                px: -(bottom + top),
-                percent: 100,
-              }}
-              usePercentageResize={{ width: false, height: false }}
-              disable={{
-                width: !this.props.editable || !this.state.overlayVisible,
-                height: !this.props.editable || !this.state.overlayVisible,
-              }}
-              onResizing={this.handleOverlayPanelResize}
-              onResized={this.handleOverlayPanelResize}
-              parentContainer={$('poi-main')}
-            />
-          )
-        }
+        {overlay && (
+          <OverlayPanelResizer
+            ref={ref => (this.resizableArea = ref)}
+            className="overlay-panel-resizer"
+            widthResize={this.props.editable && this.state.overlayVisible ? 1 : 0}
+            minimumWidth={{
+              px: 50,
+              percent: 0,
+            }}
+            maximumWidth={transformToAreaSize(overlayPanelMinimumWidth)}
+            defaultWidth={transformToAreaSize(overlayPanelDefaultWidth)}
+            initWidth={transformToAreaSize(this.props.overlayPanelWidth)}
+            minimumHeight={{
+              px: -(bottom + top),
+              percent: 100,
+            }}
+            maximumHeight={{
+              px: -(bottom + top),
+              percent: 100,
+            }}
+            initHeight={{
+              px: -(bottom + top),
+              percent: 100,
+            }}
+            usePercentageResize={{ width: false, height: false }}
+            disable={{
+              width: !this.props.editable || !this.state.overlayVisible,
+              height: !this.props.editable || !this.state.overlayVisible,
+            }}
+            onResizing={this.handleOverlayPanelResize}
+            onResized={this.handleOverlayPanelResize}
+            parentContainer={$('poi-main')}
+          />
+        )}
         <PoiAppE
           overlay={overlay}
           overlayVisible={overlayVisible}
           isHorizontal={isHorizontal}
           overlayWidth={this.props.overlayPanelWidth.px}
           top={top}
-          bottom={bottom}>
-          {
-            overlay && (
-              <OverlayPanelTrigger className="overlay-panel-trigger" onClick={() => this.setState({overlayVisible: ! this.state.overlayVisible})}>
-                <FontAwesome name={!overlayVisible ? 'angle-left' : 'angle-right'} />
-              </OverlayPanelTrigger>
-            )
-          }
+          bottom={bottom}
+        >
+          {overlay && (
+            <OverlayPanelTrigger
+              className="overlay-panel-trigger"
+              onClick={() => this.setState({ overlayVisible: !this.state.overlayVisible })}
+            >
+              <FontAwesome name={!overlayVisible ? 'angle-left' : 'angle-right'} />
+            </OverlayPanelTrigger>
+          )}
           <PoiAppContainer id="poi-app-container" className="poi-app-container" overlay={overlay}>
             <poi-nav>
               <poi-nav-tabs>

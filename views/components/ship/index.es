@@ -20,7 +20,17 @@ import {
 } from 'views/utils/selectors'
 import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
-import { ShipCard, ShipWrapper, ShipTabContainer, ShipTabContent, ShipDeck, ShipDetails, AirbaseArea, FleetNameButtonContainer, FleetNameButton } from 'views/components/ship-parts/styled-components'
+import {
+  ShipCard,
+  ShipWrapper,
+  ShipTabContainer,
+  ShipTabContent,
+  ShipDeck,
+  ShipDetails,
+  AirbaseArea,
+  FleetNameButtonContainer,
+  FleetNameButton,
+} from 'views/components/ship-parts/styled-components'
 
 const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 
@@ -134,7 +144,7 @@ export class reactClass extends Component {
     prevFleetId: null,
   }
 
-  handleTransitionEnd = (i) => {
+  handleTransitionEnd = i => {
     if (i === this.state.prevFleetId) {
       this.setState({ prevFleetId: null })
     }
@@ -200,18 +210,19 @@ export class reactClass extends Component {
               this.shiptabpane = ref
             }}
           >
-            <ShipTabContent
-              className="ship-tab-content"
-            >
+            <ShipTabContent className="ship-tab-content">
               {times(4).map(i => (
                 <ShipDeck
                   className="ship-deck"
                   onTransitionEnd={() => this.handleTransitionEnd(i)}
                   key={i}
-                  transition={this.props.enableTransition && (activeFleetId === i || prevFleetId === i)}
+                  transition={
+                    this.props.enableTransition && (activeFleetId === i || prevFleetId === i)
+                  }
                   active={activeFleetId === i || prevFleetId === i}
                   left={activeFleetId > i}
-                  right={activeFleetId < i}>
+                  right={activeFleetId < i}
+                >
                   <FleetShipView
                     fleetId={i}
                     enableAvatar={this.props.enableAvatar}
@@ -223,10 +234,13 @@ export class reactClass extends Component {
                 className="ship-deck ship-lbac"
                 onTransitionEnd={() => this.handleTransitionEnd(4)}
                 key={4}
-                transition={this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
+                transition={
+                  this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)
+                }
                 active={activeFleetId === 4 || prevFleetId === 4}
                 left={activeFleetId > 4}
-                right={activeFleetId < 4}>
+                right={activeFleetId < 4}
+              >
                 <LBView enableAvatar={this.props.enableAvatar} width={this.props.width} />
               </ShipDeck>
             </ShipTabContent>

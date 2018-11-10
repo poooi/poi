@@ -7,10 +7,14 @@ export class CountdownNotifier {
   constructor() {
     this._lastCompleteTime = null
     // Two notif must be separated by at least one non-notif call to tryNotify
-    this._justNotified = false  
+    this._justNotified = false
   }
-  tryNotify = (o) => {
-    if (o.completeTime != null && this._lastCompleteTime != null && o.completeTime === this._lastCompleteTime) {
+  tryNotify = o => {
+    if (
+      o.completeTime != null &&
+      this._lastCompleteTime != null &&
+      o.completeTime === this._lastCompleteTime
+    ) {
       return
     }
     // 1 second more to preemptTime bc notifications are throttled by 1 sec

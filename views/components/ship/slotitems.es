@@ -18,7 +18,12 @@ import {
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
-import { SlotItems, SlotItemContainer, OnSlotMini, ALevel } from 'views/components/ship-parts/styled-components'
+import {
+  SlotItems,
+  SlotItemContainer,
+  OnSlotMini,
+  ALevel,
+} from 'views/components/ship-parts/styled-components'
 
 const slotitemsDataSelectorFactory = memoize(shipId =>
   createSelector(
@@ -71,9 +76,7 @@ export const Slotitems = compose(
                     {equip.api_level}
                   </strong>
                 )}
-                {equip.api_alv &&
-                  equip.api_alv >= 1 &&
-                  equip.api_alv <= 7 && (
+                {equip.api_alv && equip.api_alv >= 1 && equip.api_alv <= 7 && (
                   <ALevel
                     className="alv-img"
                     src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
@@ -98,7 +101,12 @@ export const Slotitems = compose(
             content={itemOverlay}
             key={equipIdx}
           >
-            <SlotItemContainer className="slotitem-container" data-onslot={onslotText} onslot={showOnslot} warning={onslotWarning}>
+            <SlotItemContainer
+              className="slotitem-container"
+              data-onslot={onslotText}
+              onslot={showOnslot}
+              warning={onslotWarning}
+            >
               <SlotitemIcon className="slotitem-img" slotitemId={equipIconId} />
             </SlotItemContainer>
           </Tooltip>
@@ -141,9 +149,7 @@ export const LandbaseSlotitems = compose(
                     {equip.api_level}
                   </strong>
                 )}
-                {equip.api_alv &&
-                  equip.api_alv >= 1 &&
-                  equip.api_alv <= 7 && (
+                {equip.api_alv && equip.api_alv >= 1 && equip.api_alv <= 7 && (
                   <ALevel
                     className="alv-img"
                     src={join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
@@ -173,7 +179,13 @@ export const LandbaseSlotitems = compose(
             content={itemOverlay}
             key={equipIdx}
           >
-            <SlotItemContainer className="slotitem-container" data-onslot={onslotText} style={iconStyle} onslot={showOnslot} warning={onslotWarning}>
+            <SlotItemContainer
+              className="slotitem-container"
+              data-onslot={onslotText}
+              style={iconStyle}
+              onslot={showOnslot}
+              warning={onslotWarning}
+            >
               <SlotitemIcon className="slotitem-img" slotitemId={equipIconId} />
             </SlotItemContainer>
           </Tooltip>

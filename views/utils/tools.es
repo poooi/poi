@@ -17,7 +17,7 @@ export function arraySum(arr) {
 }
 
 export function arrayMultiply(arr, n) {
-  return arr.map((i) => i * n)
+  return arr.map(i => i * n)
 }
 
 // Args:
@@ -25,9 +25,9 @@ export function arrayMultiply(arr, n) {
 //   n   - number or Array
 export function arrayAdd(arr, n) {
   if (Array.isArray(n)) {
-    return zip(arr, n).map(([a, b]) => a+b)
+    return zip(arr, n).map(([a, b]) => a + b)
   } else {
-    return arr.map((i) => i + n)
+    return arr.map(i => i + n)
   }
 }
 
@@ -36,9 +36,9 @@ export function arrayAdd(arr, n) {
 //   n   - number or Array
 export function arraySubstract(arr, n) {
   if (Array.isArray(n)) {
-    return zip(arr, n).map(([a, b]) => a-b)
+    return zip(arr, n).map(([a, b]) => a - b)
   } else {
-    return arr.map((i) => i - n)
+    return arr.map(i => i - n)
   }
 }
 
@@ -59,28 +59,24 @@ export function between(n, min, max) {
 //   0 in a     // false
 export function buildArray(pairsOrIdx, _value) {
   let pairs
-  if (Array.isArray(pairsOrIdx))
-    pairs = pairsOrIdx
-  else
-    pairs = [[pairsOrIdx, _value]]
+  if (Array.isArray(pairsOrIdx)) pairs = pairsOrIdx
+  else pairs = [[pairsOrIdx, _value]]
   const ret = []
-  pairs.forEach(([index, value]=[]) => {
+  pairs.forEach(([index, value] = []) => {
     index = parseInt(index)
-    if (isNaN(index) || index < 0)
-      return
+    if (isNaN(index) || index < 0) return
     ret[index] = value
   })
   return ret
 }
 
-export function indexify(array, key='api_id') {
+export function indexify(array, key = 'api_id') {
   return keyBy(array, key)
 }
 
 export function copyIfSame(obj, to) {
   // assert(typeof obj === 'object')
-  if (obj === to)
-    return Array.isArray(obj) ? obj.slice() : {...obj}
+  if (obj === to) return Array.isArray(obj) ? obj.slice() : { ...obj }
   return obj
 }
 
@@ -103,10 +99,8 @@ export function pickExisting(state, body) {
 export function reduxSet(obj, path, val) {
   const [prop, ...restPath] = path
   if (typeof prop === 'undefined') {
-    if (!isEqual(obj, val))
-      return val
-    else
-      return obj
+    if (!isEqual(obj, val)) return val
+    else return obj
   }
   let before
   if (prop in obj) {
@@ -141,11 +135,9 @@ export function reduxSet(obj, path, val) {
 //   grand-properties will be deleted.
 // - If a property is updated, all its grand-properties will be new ones,
 //   even if the grand-property itself isEqual.
-export function compareUpdate(prevState, newState, depth=1) {
-  if (typeof prevState !== typeof newState)
-    return newState
-  if (prevState === newState)
-    return prevState
+export function compareUpdate(prevState, newState, depth = 1) {
+  if (typeof prevState !== typeof newState) return newState
+  if (prevState === newState) return prevState
   if (depth == 0 || typeof depth !== 'number' || typeof prevState !== 'object') {
     return isEqual(prevState, newState) ? prevState : newState
   }
@@ -157,8 +149,7 @@ export function compareUpdate(prevState, newState, depth=1) {
     // ATTENTION: Any null properties are ignored
     if (newV != null && prevState[k] !== newV) {
       prevState = copyIfSame(prevState, prevStateBackup)
-      if (newV != null)
-        prevState[k] = newV
+      if (newV != null) prevState[k] = newV
     }
   })
   return prevState
@@ -182,9 +173,8 @@ export function resolveTime(seconds) {
 
 export function timeToString(milliseconds) {
   const date = new Date(milliseconds)
-  return date.toTimeString().slice(0, 8)  // HH:mm:ss
+  return date.toTimeString().slice(0, 8) // HH:mm:ss
 }
-
 
 export function trimArray(state, comparator) {
   if (Array.isArray(state) && Array.isArray(comparator) && comparator.length < state.length)
@@ -214,8 +204,7 @@ export const normalizeURL = (str = '') => {
 // if parent and dir are the same, also returns true
 export const isSubdirectory = (parent, dir) => {
   const relative = path.relative(parent, dir)
-  return !relative ||
-    (!relative.startsWith('..') && !path.isAbsolute(relative))
+  return !relative || (!relative.startsWith('..') && !path.isAbsolute(relative))
 }
 
 // Execute function until dom ready
@@ -227,14 +216,15 @@ export const executeUntilReady = func => {
   }
 }
 
-const ensureString = str => isString(str) ? str : toString(str)
-export const escapeI18nKey = str => ensureString(str)
-  .replace(/\.\W/g, '')
-  .replace(/\.$/, '')
-  .replace(/:\s/g, '')
-  .replace(/:$/g, '')
+const ensureString = str => (isString(str) ? str : toString(str))
+export const escapeI18nKey = str =>
+  ensureString(str)
+    .replace(/\.\W/g, '')
+    .replace(/\.$/, '')
+    .replace(/:\s/g, '')
+    .replace(/:$/g, '')
 
-export const readI18nResources = (filePath) => {
+export const readI18nResources = filePath => {
   try {
     let data = readJsonSync(filePath)
     data = _(data)
@@ -248,7 +238,7 @@ export const readI18nResources = (filePath) => {
   }
 }
 
-export const loadScript = (path, document=window.document) => {
+export const loadScript = (path, document = window.document) => {
   const script = document.createElement('script')
   script.setAttribute('src', path)
   document.head.appendChild(script)

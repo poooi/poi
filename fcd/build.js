@@ -46,11 +46,11 @@ async function buildData(name) {
   const current = await fs.readJSON(path.join(DEST, name))
   const data = await fs.readJSON(name)
   const meta = getMeta(current, data)
-  await writeJSON(name, {meta, data})
+  await writeJSON(name, { meta, data })
 }
 
 async function build_meta(flist) {
-  const meta = await Promise.map(flist, async (fname) => {
+  const meta = await Promise.map(flist, async fname => {
     const fpath = path.join(DEST, fname)
     const data = JSON.parse(await fs.readFile(fpath))
     return data.meta
@@ -58,16 +58,8 @@ async function build_meta(flist) {
   await writeJSON('meta.json', meta)
 }
 
-(async () => {
-  await Promise.all([
-    buildData('map.json'),
-    buildData('shipavatar.json'),
-    CSON2JSON('shiptag'),
-  ])
+;(async () => {
+  await Promise.all([buildData('map.json'), buildData('shipavatar.json'), CSON2JSON('shiptag')])
 
-  await build_meta([
-    'map.json',
-    'shipavatar.json',
-    'shiptag.json',
-  ].sort())
+  await build_meta(['map.json', 'shipavatar.json', 'shiptag.json'].sort())
 })()

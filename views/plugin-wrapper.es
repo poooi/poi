@@ -16,8 +16,7 @@ export class PluginWrap extends Component {
   }
 
   shouldComponentUpdate = (nextProps, nextState) => {
-    return this.props.plugin.timestamp !== nextProps.plugin.timestamp ||
-      nextState.hasError === true
+    return this.props.plugin.timestamp !== nextProps.plugin.timestamp || nextState.hasError === true
   }
 
   componentDidCatch = (error, info) => {
@@ -44,29 +43,27 @@ export class PluginWrap extends Component {
         <>
           <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
           <p>{t('PluginErrorMsg')}</p>
-          <TextArea
-            readOnly
-            value={code}
-            style={{ height: '10em' }}
-          />
-          <Button intent={Intent.PRIMARY} onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
+          <TextArea readOnly value={code} style={{ height: '10em' }} />
+          <Button intent={Intent.PRIMARY} onClick={this.handleCopy}>
+            {t('Copy to clipboard')}
+          </Button>
         </>
       )
       return Container ? (
         <Container id={plugin.id} className="poi-app-tabpane">
-          <Card>
-            {innerContent}
-          </Card>
+          <Card>{innerContent}</Card>
         </Container>
-      ) : innerContent
+      ) : (
+        innerContent
+      )
     }
     const innerContent = <plugin.reactClass />
     return Container ? (
       <Container id={plugin.id} className="poi-app-tabpane">
-        <Card>
-          {innerContent}
-        </Card>
+        <Card>{innerContent}</Card>
       </Container>
-    ) : innerContent
+    ) : (
+      innerContent
+    )
   }
 }

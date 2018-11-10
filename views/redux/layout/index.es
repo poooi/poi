@@ -34,51 +34,51 @@ const initState = {
   },
 }
 
-export function reducer(state=initState, {type, value}) {
+export function reducer(state = initState, { type, value }) {
   switch (type) {
-  case '@@LayoutUpdate':
-    return {
-      ...state,
-      ...value,
-      webview: {
-        ...state.webview,
-        ...value.webview,
-      },
-    }
-  case '@@LayoutUpdate/webview/useFixedResolution':
-    return {
-      ...state,
-      webview: {
-        ...state.webview,
-        useFixedResolution: value,
-      },
-    }
-  case '@@LayoutUpdate/webview/windowUseFixedResolution':
-    return {
-      ...state,
-      webview: {
-        ...state.webview,
-        windowUseFixedResolution: value,
-      },
-    }
-  case '@@LayoutUpdate/webview/UpdateWebviewRef':
-    return {
-      ...state,
-      webview: {
-        ...state.webview,
-        ref: value.ref,
-        refts: value.ts,
-      },
-    }
-  case '@@LayoutUpdate/webview/size':
-    return {
-      ...state,
-      webview: {
-        ...state.webview,
+    case '@@LayoutUpdate':
+      return {
+        ...state,
         ...value,
-      },
-    }
-  default:
-    return state
+        webview: {
+          ...state.webview,
+          ...value.webview,
+        },
+      }
+    case '@@LayoutUpdate/webview/useFixedResolution':
+      return {
+        ...state,
+        webview: {
+          ...state.webview,
+          useFixedResolution: value,
+        },
+      }
+    case '@@LayoutUpdate/webview/windowUseFixedResolution':
+      return {
+        ...state,
+        webview: {
+          ...state.webview,
+          windowUseFixedResolution: value,
+        },
+      }
+    case '@@LayoutUpdate/webview/UpdateWebviewRef':
+      return {
+        ...state,
+        webview: {
+          ...state.webview,
+          ref: value.ref,
+          refts: value.ts,
+        },
+      }
+    case '@@LayoutUpdate/webview/size':
+      return {
+        ...state,
+        webview: {
+          ...state.webview,
+          ...value,
+        },
+      }
+    default:
+      return state
   }
 }

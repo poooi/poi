@@ -34,8 +34,6 @@ window.hack = {}
 // Alert functions
 require('./services/alert')
 
-
-
 @connect(state => ({
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.layout.reverse', false),
@@ -53,24 +51,24 @@ class Poi extends Component {
     const { isHorizontal, reversed } = this.props
     return (
       <>
-        {
-          config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
+        {config.get(
+          'poi.appearance.customtitlebar',
+          process.platform === 'win32' || process.platform === 'linux',
+        ) && (
           <title-bar>
             <TitleBarWrapper />
           </title-bar>
-        }
+        )}
         <poi-main
-          ref={ref => { this.poimain = ref }}
+          ref={ref => {
+            this.poimain = ref
+          }}
           style={{
             flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
-            ...!isHorizontal && { overflow: 'hidden' },
+            ...(!isHorizontal && { overflow: 'hidden' }),
           }}
         >
-          {
-            this.props.isolateGameWindow ?
-              <KanGameWindowWrapper /> :
-              <KanGameWrapper />
-          }
+          {this.props.isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper />}
           <PoiApp />
         </poi-main>
         <ModalTrigger />
@@ -81,17 +79,19 @@ class Poi extends Component {
 }
 
 ReactDOM.render(
-  <I18nextProvider i18n={i18next} >
-    <Provider store={store} >
+  <I18nextProvider i18n={i18next}>
+    <Provider store={store}>
       <ThemeProvider theme={darkTheme}>
-        <WindowEnv.Provider value={{
-          window,
-          mountPoint: document.body,
-        }}>
+        <WindowEnv.Provider
+          value={{
+            window,
+            mountPoint: document.body,
+          }}
+        >
           <Poi />
         </WindowEnv.Provider>
       </ThemeProvider>
     </Provider>
   </I18nextProvider>,
-  $('#poi')
+  $('#poi'),
 )

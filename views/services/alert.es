@@ -1,4 +1,4 @@
-const DEFAULT_STICKYFOR = 3*1000  // Milliseconds
+const DEFAULT_STICKYFOR = 3 * 1000 // Milliseconds
 
 function dispatchAlertEvent(value) {
   const event = new CustomEvent('alert.new', {

@@ -11,9 +11,9 @@ const chalk = require('chalk')
 class Debug {
   static wrap(o) {
     if (typeof o === 'string') {
-      return Object.assign(new Debug, {msg: o})
+      return Object.assign(new Debug(), { msg: o })
     } else if (typeof o === 'object') {
-      return Object.assign(new Debug, o)
+      return Object.assign(new Debug(), o)
     } else {
       return o
     }
@@ -22,7 +22,7 @@ class Debug {
 
 // Globals
 // eslint-disable-next-line no-console
-console.assert(process, 'process doesn\'t exist')
+console.assert(process, "process doesn't exist")
 
 // The debug instance depends on Electron process type
 const isRenderer = (process || {}).type === 'renderer'
@@ -41,8 +41,7 @@ const definePureVirtual = (obj, name, defaultReturn = false) =>
       return defaultReturn
     },
     writable: true,
-  }
-  )
+  })
 
 // the very base class
 class IDebugger {
@@ -76,7 +75,7 @@ class ExtraDebugOptions {}
 
 // Base Implementation
 class DebuggerBase extends IDebugger {
-  constructor () {
+  constructor() {
     super()
     this.main()
   }
@@ -84,7 +83,7 @@ class DebuggerBase extends IDebugger {
   initialised = false
   _log = this._getLogFunc('[DEBUG]')
 
-  isInitialised()  {
+  isInitialised() {
     const r = this.initialised
     this.initialised = true
     return r
@@ -99,10 +98,9 @@ class DebuggerBase extends IDebugger {
     }
   }
 
-
   setEnabled(b = true) {
     enabled = b
-    return Debug.wrap({enabled: b})
+    return Debug.wrap({ enabled: b })
   }
 
   enable() {
@@ -127,7 +125,7 @@ class DebuggerBase extends IDebugger {
       return Debug.wrap('Invalid extra option name')
     }
     extraOpts.add(tag.toString())
-    return Debug.wrap({enabledExtra: tag})
+    return Debug.wrap({ enabledExtra: tag })
   }
 
   disableExtra(tag) {
@@ -135,7 +133,7 @@ class DebuggerBase extends IDebugger {
       return Debug.wrap('Invalid extra option name')
     }
     extraOpts.delete(tag.toString())
-    return Debug.wrap({disabledExtra: tag})
+    return Debug.wrap({ disabledExtra: tag })
   }
 
   isExtraEnabled(tag) {
@@ -151,11 +149,11 @@ class DebuggerBase extends IDebugger {
 
   extra(tag) {
     if (this.validateTagName(tag) && this.h[tag] == null) {
-      Object.defineProperty(this.h, tag,{
-        value: new ExOptHandler,
+      Object.defineProperty(this.h, tag, {
+        value: new ExOptHandler(),
         enumerable: true,
       })
-      Object.defineProperties(this.h[tag],{
+      Object.defineProperties(this.h[tag], {
         enable: {
           value: this.enableExtra.bind(this, tag),
         },
@@ -179,11 +177,11 @@ class DebuggerBase extends IDebugger {
 
   main() {
     if (this.h.main == null) {
-      Object.defineProperty(this.h, 'main',{
-        value: new ExOptHandler,
+      Object.defineProperty(this.h, 'main', {
+        value: new ExOptHandler(),
         enumerable: true,
       })
-      Object.defineProperties (this.h.main,{
+      Object.defineProperties(this.h.main, {
         enable: {
           value: this.enable.bind(this),
         },
@@ -210,7 +208,7 @@ definePureVirtual(DebuggerBase.prototype, '_getLogFunc', doNothing)
 
 // manually set h to be enumerable
 Object.defineProperty(DebuggerBase.prototype, 'h', {
-  value: new ExtraDebugOptions,
+  value: new ExtraDebugOptions(),
   enumerable: true,
 })
 
@@ -246,7 +244,7 @@ class Booster {
     const enable = dbgr.enable.bind(dbgr)
     const disable = dbgr.disable.bind(dbgr)
     if (this.Enabled) {
-      Object.defineProperty (this, 'ClickToDisable -->',{
+      Object.defineProperty(this, 'ClickToDisable -->', {
         get: () => {
           disable()
           relistFunc()
@@ -254,7 +252,7 @@ class Booster {
         },
       })
     } else {
-      Object.defineProperty(this, 'ClickToEnable -->',{
+      Object.defineProperty(this, 'ClickToEnable -->', {
         get: () => {
           enable()
           relistFunc()
@@ -270,7 +268,11 @@ class DebuggerRenderer extends DebuggerBase {
   _getLogFunc(prefix) {
     if (prefix != null) {
       // eslint-disable-next-line no-console
-      return console.log.bind(console, `%c${prefix}`, 'background: linear-gradient(30deg, cyan, white 3ex)')
+      return console.log.bind(
+        console,
+        `%c${prefix}`,
+        'background: linear-gradient(30deg, cyan, white 3ex)',
+      )
     } else {
       // eslint-disable-next-line no-console
       return console.log.bind(console)
@@ -288,7 +290,7 @@ class DebuggerRenderer extends DebuggerBase {
   }
   list() {
     const relist = this.list.bind(this)
-    const output = new DevToolsBooster
+    const output = new DevToolsBooster()
     output['DEBUG'] = new Booster(this, 'main', relist)
     for (const opt of Object.keys(this.h)) {
       if (opt === 'main') {
@@ -301,6 +303,6 @@ class DebuggerRenderer extends DebuggerBase {
   }
 }
 
-const dbg = isRenderer ? new DebuggerRenderer : new DebuggerMain
+const dbg = isRenderer ? new DebuggerRenderer() : new DebuggerMain()
 
 export default dbg

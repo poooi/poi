@@ -22,13 +22,13 @@ export class ZoomingConfig extends Component {
     zoomLevel: this.props.zoomLevel,
   }
 
-  handleChangeZoomLevel = (value) => {
+  handleChangeZoomLevel = value => {
     this.setState({
       zoomLevel: value,
     })
   }
 
-  handleSaveZoomLevel = (value) => {
+  handleSaveZoomLevel = value => {
     config.set('poi.appearance.zoom', this.state.zoomLevel)
   }
 

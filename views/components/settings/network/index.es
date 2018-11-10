@@ -92,10 +92,9 @@ const ConnectionRetries = compose(
           defaultValue={0}
         />
       </FormGroup>
-      {
-        retries > 0 &&
+      {retries > 0 && (
         <Callout intent={Intent.WARNING}>{t('The result is not guaranteed, beware')}</Callout>
-      }
+      )}
     </Wrapper>
   </Section>
 ))
@@ -146,7 +145,7 @@ const RelayMode = compose(
 ))
 
 @translate(['setting'])
-@connect((state) => ({
+@connect(state => ({
   proxy: get(state, 'config.proxy'),
 }))
 export class NetworkConfig extends Component {
@@ -155,7 +154,7 @@ export class NetworkConfig extends Component {
   }
 
   render() {
-    const { proxy, t} = this.props
+    const { proxy, t } = this.props
     return (
       <div>
         {!isEqual(this.state.proxy, proxy) && (
@@ -170,4 +169,3 @@ export class NetworkConfig extends Component {
     )
   }
 }
-

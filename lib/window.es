@@ -1,21 +1,21 @@
 import { BrowserWindow, screen } from 'electron'
 import path from 'path-extra'
-const windows = global.windows = []
-const windowsIndex = global.windowsIndex = {}
+const windows = (global.windows = [])
+const windowsIndex = (global.windowsIndex = {})
 
 let forceClose = false
 let pluginUnload = false
-const state = []  // Window state before hide
+const state = [] // Window state before hide
 let hidden = false
 
-const inRange = (n, min, range) => (n != null && n >= min && n < min + range)
+const inRange = (n, min, range) => n != null && n >= min && n < min + range
 
 const withinDisplay = (display, x, y) => {
   const wa = display.workArea
   return inRange(x, wa.x, wa.width) && inRange(y, wa.y, wa.height)
 }
 
-const normalizePosition = (options) => {
+const normalizePosition = options => {
   // user's workArea may change during game
   const { workArea } = screen.getPrimaryDisplay()
   let { x, y } = options
@@ -31,11 +31,14 @@ const normalizePosition = (options) => {
 }
 
 export default {
-  createWindow: (options) => {
-    options = Object.assign({
-      show: false,
-      icon: path.join(global.ROOT, 'assets', 'icons', 'poi.ico'),
-    }, normalizePosition(options))
+  createWindow: options => {
+    options = Object.assign(
+      {
+        show: false,
+        icon: path.join(global.ROOT, 'assets', 'icons', 'poi.ico'),
+      },
+      normalizePosition(options),
+    )
     const current = new BrowserWindow(options)
     if (options.indexName) {
       windowsIndex[options.indexName] = current
@@ -52,11 +55,13 @@ export default {
     }
     // Disable OSX zoom
     current.webContents.on('dom-ready', () => {
-      current.webContents.executeJavaScript('require(\'electron\').webFrame.setVisualZoomLevelLimits(1, 1)')
+      current.webContents.executeJavaScript(
+        "require('electron').webFrame.setVisualZoomLevelLimits(1, 1)",
+      )
     })
     // Close window really
     if (options.realClose) {
-      current.on('closed', (e) => {
+      current.on('closed', e => {
         if (options.indexName) {
           delete windowsIndex[options.indexName]
         }
@@ -64,13 +69,13 @@ export default {
         windows.splice(idx, 1)
       })
     } else if (options.forceMinimize) {
-      current.on('close', (e) => {
+      current.on('close', e => {
         current.minimize()
         if (!forceClose && !pluginUnload) {
           e.preventDefault()
         }
       })
-      current.on ('closed', (e) => {
+      current.on('closed', e => {
         pluginUnload = false
         if (options.indexName) {
           delete windowsIndex[options.indexName]
@@ -79,7 +84,7 @@ export default {
         windows.splice(idx, 1)
       })
     } else {
-      current.on('close', (e) => {
+      current.on('close', e => {
         if (current.isFullScreen()) {
           current.once('leave-full-screen', current.hide)
           current.setFullScreen(false)
@@ -90,7 +95,7 @@ export default {
           e.preventDefault()
         }
       })
-      current.on( 'closed', (e) => {
+      current.on('closed', e => {
         pluginUnload = false
         if (options.indexName) {
           delete windowsIndex[options.indexName]
@@ -101,7 +106,7 @@ export default {
     }
     // Draggable
     if (!options.navigatable) {
-      current.webContents.on('will-navigate', (e) => {
+      current.webContents.on('will-navigate', e => {
         e.preventDefault()
       })
     }
@@ -120,7 +125,7 @@ export default {
       windows[i] = null
     }
   },
-  closeWindow: (win) => {
+  closeWindow: win => {
     pluginUnload = true
     win.close()
   },
@@ -131,7 +136,7 @@ export default {
       win.setFullScreen(false)
     }
     const isMaximized = win.isMaximized()
-    if (win.isMaximized()){
+    if (win.isMaximized()) {
       win.unmaximize()
     }
     const b = win.getBounds()
@@ -139,9 +144,9 @@ export default {
     b.isMaximized = isMaximized
     require('./config').set('poi.window', b)
   },
-  toggleAllWindowsVisibility: () =>{
+  toggleAllWindowsVisibility: () => {
     for (const w of BrowserWindow.getAllWindows())
-      if (!hidden){
+      if (!hidden) {
         state[w.id] = w.isVisible()
         w.hide()
       } else {
@@ -151,7 +156,7 @@ export default {
       }
     hidden = !hidden
   },
-  openFocusedWindowDevTools: () =>{
+  openFocusedWindowDevTools: () => {
     BrowserWindow.getFocusedWindow().openDevTools({
       mode: 'detach',
     })
@@ -159,7 +164,7 @@ export default {
   getWindowsIndex: () => {
     return global.windowsIndex
   },
-  getWindow: (name) => {
+  getWindow: name => {
     return global.windowsIndex[name]
   },
   getMainWindow: () => {

@@ -26,11 +26,7 @@ export class SwitchConfig extends Component {
   render() {
     const { value, configName, label, defaultValue, dispatch, ...rest } = this.props
     return (
-      <Switch
-        {...rest}
-        checked={value}
-        onChange={this.handleChange}
-      >
+      <Switch {...rest} checked={value} onChange={this.handleChange}>
         {label}
       </Switch>
     )

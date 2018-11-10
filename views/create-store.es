@@ -37,15 +37,15 @@ const setLocalStorageDebounced = debounce(setLocalStorage, 5000)
 
 function autoCacheObserver(store, path) {
   return observer(
-    (state) => get(state, path),
+    state => get(state, path),
     (dispatch, current, previous) => {
       set(storeCache, path, current)
       setLocalStorageDebounced()
-    }
+    },
   )
 }
 
-remote.getCurrentWindow().on('close', (e) => {
+remote.getCurrentWindow().on('close', e => {
   if (window.isMain) {
     localStorage.setItem(cachePosition, JSON.stringify(storeCache))
   }
@@ -58,22 +58,21 @@ const composeEnhancers =
 export const store = createStore(
   reducerFactory(),
   storeCache,
-  composeEnhancers(
-    applyMiddleware(
-      promiseActionMiddleware,
-      thunk,
-    ),
-  ),
+  composeEnhancers(applyMiddleware(promiseActionMiddleware, thunk)),
 )
 window.dispatch = store.dispatch
 
 //### Listeners and exports ###
 
-window.getStore = (path) => {
+window.getStore = path => {
   const storeContent = window.getStore.lock ? window.getStore.cache : store.getState()
   if (window.getStore.cache !== storeContent) {
     window.getStore.cache = storeContent
-  } else if (window.dbg && window.dbg.isEnabled() && window.dbg.isExtraEnabled('deprecateWarning')) {
+  } else if (
+    window.dbg &&
+    window.dbg.isEnabled() &&
+    window.dbg.isExtraEnabled('deprecateWarning')
+  ) {
     console.warn(new Error('You should not call getStore() in reducer.'))
   }
   return path ? get(storeContent, path) : storeContent
@@ -90,7 +89,7 @@ const solveConfSet = (path, value) => {
 }
 const config = remote.require('./lib/config')
 config.addListener('config.set', solveConfSet)
-window.addEventListener('unload', (e) => {
+window.addEventListener('unload', e => {
   config.removeListener('config.set', solveConfSet)
 })
 
@@ -101,36 +100,37 @@ if (!window.isMain) {
 }
 ipc.on('update', action => store.dispatch(action))
 
-observe(store, compact([
-  // When any targetPath is modified, store it into localStorage
-  ...(window.isMain ? targetPaths.map((path) => autoCacheObserver(store, path)) : []),
+observe(
+  store,
+  compact([
+    // When any targetPath is modified, store it into localStorage
+    ...(window.isMain ? targetPaths.map(path => autoCacheObserver(store, path)) : []),
 
-  // Save quest tracking to the file when it changes
-  window.isMain && observer(
-    (state) => state.info.quests.records,
-    (dispatch, current, previous) => saveQuestTracking(current)
-  ),
+    // Save quest tracking to the file when it changes
+    window.isMain &&
+      observer(
+        state => state.info.quests.records,
+        (dispatch, current, previous) => saveQuestTracking(current),
+      ),
 
-  // Dispatch an action '@@BattleResult' when a battle is completed
-  observer(
-    (state) => state.battle.result,
-    dispatchBattleResult,
-  ),
+    // Dispatch an action '@@BattleResult' when a battle is completed
+    observer(state => state.battle.result, dispatchBattleResult),
 
-  // observe on docking status and send an action to update info.ships
-  // when docking is done.
-  dockingCompleteObserver,
-]))
+    // observe on docking status and send an action to update info.ships
+    // when docking is done.
+    dockingCompleteObserver,
+  ]),
+)
 
 schedualDailyRefresh(store.dispatch)
 
 // Use this function to extend extra reducers to the store, such as plugin
 // specific data maintainance.
 // Use extensionSelectorFactory(key) inside utils/selectors to access it.
-export const extendReducer = (function () {
+export const extendReducer = (function() {
   let _reducerExtensions = {}
 
-  return function (key, reducer) {
+  return function(key, reducer) {
     const _reducerExtensionsNew = {
       ..._reducerExtensions,
       [key]: reducer,

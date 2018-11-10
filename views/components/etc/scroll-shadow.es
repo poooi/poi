@@ -7,15 +7,20 @@ import { ResizeSensor } from '@blueprintjs/core'
 
 const Container = styled.div`
   transition: 0.3s 0.1s;
-  ${({ top, bottom }) => (top && bottom) ? css`
-    box-shadow:
-      inset 0 18px 15px -20px #217dbb,
-      inset 0 -18px 15px -20px #217dbb;
-  ` : top ? css `
-    box-shadow: inset 0 18px 15px -20px #217dbb;
-  ` : bottom ? css `
-    box-shadow: inset 0 -18px 15px -20px #217dbb;
-  ` : css``}
+  ${({ top, bottom }) =>
+    top && bottom
+      ? css`
+          box-shadow: inset 0 18px 15px -20px #217dbb, inset 0 -18px 15px -20px #217dbb;
+        `
+      : top
+      ? css`
+          box-shadow: inset 0 18px 15px -20px #217dbb;
+        `
+      : bottom
+      ? css`
+          box-shadow: inset 0 -18px 15px -20px #217dbb;
+        `
+      : css``}
 `
 
 export class ScrollShadow extends PureComponent {
@@ -25,7 +30,7 @@ export class ScrollShadow extends PureComponent {
   }
 
   onScroll = e => {
-    const { scrollTop, clientHeight, scrollHeight  } = this.r
+    const { scrollTop, clientHeight, scrollHeight } = this.r
     const scrollBottom = scrollHeight - clientHeight - scrollTop
     let { state } = this
     const top = scrollTop < 5
@@ -47,10 +52,9 @@ export class ScrollShadow extends PureComponent {
 
   componentDidMount = e => {
     this.onScroll()
-    const sizeObservers = this.props.observerPath.map(p => new observer(
-      state => get(state, p),
-      this.onScroll,
-    ))
+    const sizeObservers = this.props.observerPath.map(
+      p => new observer(state => get(state, p), this.onScroll),
+    )
     this.unobserve = observe(store, sizeObservers)
   }
 
@@ -58,12 +62,18 @@ export class ScrollShadow extends PureComponent {
     this.unobserve()
   }
 
-  render () {
+  render() {
     const { children, className } = this.props
     return (
       <ResizeSensor onResize={this.onScroll}>
-        <Container ref={r => this.r = r} className={className} top={!this.state.top} bottom={!this.state.bottom} onScroll={this.onScroll}>
-          { children }
+        <Container
+          ref={r => (this.r = r)}
+          className={className}
+          top={!this.state.top}
+          bottom={!this.state.bottom}
+          onScroll={this.onScroll}
+        >
+          {children}
         </Container>
       </ResizeSensor>
     )

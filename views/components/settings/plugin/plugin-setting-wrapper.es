@@ -24,8 +24,7 @@ export class PluginSettingWrapper extends Component {
   }
 
   shouldComponentUpdate = (nextProps, nextState) =>
-    this.props.plugin.timestamp !== nextProps.plugin.timestamp ||
-    nextState.hasError === true
+    this.props.plugin.timestamp !== nextProps.plugin.timestamp || nextState.hasError === true
 
   render() {
     const { hasError, error, info } = this.state
@@ -36,13 +35,10 @@ export class PluginSettingWrapper extends Component {
         <div>
           <h1>{t('PluginErrTitle', { name: plugin.name })}</h1>
           <p>{t('PluginErrorMsg')}</p>
-          <TextArea
-            fill
-            readOnly
-            value={code}
-            style={{ height: '10em' }}
-          />
-          <Button intent={Intent.PRIMARY} onClick={this.handleCopy}>{t('Copy to clipboard')}</Button>
+          <TextArea fill readOnly value={code} style={{ height: '10em' }} />
+          <Button intent={Intent.PRIMARY} onClick={this.handleCopy}>
+            {t('Copy to clipboard')}
+          </Button>
         </div>
       )
     }

@@ -69,8 +69,6 @@ const is16InchMkITriplePlusFCR = equip => equip.api_slotitem_id === 300
 // 301: 20連装7inch UP Rocket Launchers
 const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
 
-
-
 // avoid modifying this structure directly, use "declareAACI" instead.
 export const AACITable = {}
 
@@ -137,17 +135,13 @@ const hasSome = pred => xs => xs.some(pred)
 // check if slot num of ship (excluding ex slot) equals or greater
 const slotNumAtLeast = n => ship => ship.api_slot_num >= n
 
-
 // *** all non-submarine ships
 declareAACI({
   id: 5,
   fixed: 4,
   modifier: 1.5,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(
-    hasAtLeast(isBuiltinHighAngleMount, 2),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -155,11 +149,7 @@ declareAACI({
   fixed: 3,
   modifier: 1.35,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAFD),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -167,10 +157,7 @@ declareAACI({
   fixed: 4,
   modifier: 1.4,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
-  equipsValid: validAll(
-    hasSome(isBuiltinHighAngleMount),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isBuiltinHighAngleMount), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -178,10 +165,7 @@ declareAACI({
   fixed: 2,
   modifier: 1.3,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAFD),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD)),
 })
 
 // CDMG is considered AAGun
@@ -190,11 +174,7 @@ declareAACI({
   fixed: 3,
   modifier: 1.25,
   shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(
-    hasSome(isCDMG),
-    hasAtLeast(isAAGun, 2),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isCDMG), hasAtLeast(isAAGun, 2), hasSome(isAARadar)),
 })
 
 // *** BattleShip
@@ -218,13 +198,8 @@ declareAACI({
   fixed: 4,
   modifier: 1.45,
   shipValid: validAll(isBattleship, slotNumAtLeast(3)),
-  equipsValid: validAll(
-    hasSome(isLargeCaliberMainGun),
-    hasSome(isType3Shell),
-    hasSome(isAAFD),
-  ),
+  equipsValid: validAll(hasSome(isLargeCaliberMainGun), hasSome(isType3Shell), hasSome(isAAFD)),
 })
-
 
 // *** Akizuki-class AACIs
 declareAACI({
@@ -233,10 +208,7 @@ declareAACI({
   fixed: 7,
   modifier: 1.7,
   shipValid: isAkizukiClass,
-  equipsValid: validAll(
-    hasAtLeast(isHighAngleMount, 2),
-    hasSome(isRadar),
-  ),
+  equipsValid: validAll(hasAtLeast(isHighAngleMount, 2), hasSome(isRadar)),
 })
 
 declareAACI({
@@ -245,10 +217,7 @@ declareAACI({
   fixed: 6,
   modifier: 1.7,
   shipValid: isAkizukiClass,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isRadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
 })
 
 declareAACI({
@@ -257,9 +226,7 @@ declareAACI({
   fixed: 4,
   modifier: 1.6,
   shipValid: isAkizukiClass,
-  equipsValid: validAll(
-    hasAtLeast(isHighAngleMount, 2),
-  ),
+  equipsValid: validAll(hasAtLeast(isHighAngleMount, 2)),
 })
 
 // *** Maya K2
@@ -269,11 +236,7 @@ declareAACI({
   fixed: 8,
   modifier: 1.65,
   shipValid: isMayaK2,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isCDMG),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isCDMG), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -282,10 +245,7 @@ declareAACI({
   fixed: 6,
   modifier: 1.5,
   shipValid: isMayaK2,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isCDMG),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isCDMG)),
 })
 
 // *** Isuzu K2
@@ -295,11 +255,7 @@ declareAACI({
   fixed: 4,
   modifier: 1.45,
   shipValid: isIsuzuK2,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAGun),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -308,10 +264,7 @@ declareAACI({
   fixed: 3,
   modifier: 1.3,
   shipValid: isIsuzuK2,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAGun),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
 // *** Kasumi K2B
@@ -321,11 +274,7 @@ declareAACI({
   fixed: 4,
   modifier: 1.4,
   shipValid: isKasumiK2B,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAGun),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -334,10 +283,7 @@ declareAACI({
   fixed: 2,
   modifier: 1.25,
   shipValid: isKasumiK2B,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAGun),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
 // *** Satsuki K2
@@ -347,9 +293,7 @@ declareAACI({
   fixed: 2,
   modifier: 1.2,
   shipValid: isSatsukiK2,
-  equipsValid: validAll(
-    hasSome(isCDMG),
-  ),
+  equipsValid: validAll(hasSome(isCDMG)),
 })
 
 // *** Kinu K2
@@ -373,9 +317,7 @@ declareAACI({
   fixed: 3,
   modifier: 1.25,
   shipValid: isKinuK2,
-  equipsValid: validAll(
-    hasSome(isCDMG),
-  ),
+  equipsValid: validAll(hasSome(isCDMG)),
 })
 
 declareAACI({
@@ -384,10 +326,7 @@ declareAACI({
   fixed: 5,
   modifier: 1.45,
   shipValid: isYuraK2,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -396,9 +335,7 @@ declareAACI({
   fixed: 2,
   modifier: 1.25,
   shipValid: isFumitsukiK2,
-  equipsValid: validAll(
-    hasSome(isCDMG),
-  ),
+  equipsValid: validAll(hasSome(isCDMG)),
 })
 
 declareAACI({
@@ -407,9 +344,7 @@ declareAACI({
   fixed: 1,
   modifier: 1.05,
   shipValid: validAny(isUIT25, isI504),
-  equipsValid: validAll(
-    hasSome(validAll(isAAGun, validNot(isCDMG))),
-  ),
+  equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG)))),
 })
 
 declareAACI({
@@ -418,10 +353,7 @@ declareAACI({
   fixed: 3,
   modifier: 1.25,
   shipValid: isTastutaK2,
-  equipsValid: validAll(
-    hasSome(validAll(isAAGun, validNot(isCDMG))),
-    hasSome(isHighAngleMount),
-  ),
+  equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG))), hasSome(isHighAngleMount)),
 })
 
 declareAACI({
@@ -429,15 +361,8 @@ declareAACI({
   id: 25,
   fixed: 7,
   modifier: 1.55,
-  shipValid: validAny(
-    isIseK,
-    isHyuuGaK,
-  ),
-  equipsValid: validAll(
-    hasSome(isRocketK2),
-    hasSome(isAARadar),
-    hasSome(isType3Shell),
-  ),
+  shipValid: validAny(isIseK, isHyuuGaK),
+  equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar), hasSome(isType3Shell)),
 })
 
 declareAACI({
@@ -446,10 +371,7 @@ declareAACI({
   fixed: 6,
   modifier: 1.4,
   shipValid: isMusashiK2,
-  equipsValid: validAll(
-    hasSome(isHighAngleMountGun),
-    hasSome(isAARadar),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -457,16 +379,8 @@ declareAACI({
   id: 28,
   fixed: 4,
   modifier: 1.4,
-  shipValid: validAny(
-    isIseK,
-    isHyuuGaK,
-    isMusashiK,
-    isMusashiK2,
-  ),
-  equipsValid: validAll(
-    hasSome(isRocketK2),
-    hasSome(isAARadar),
-  ),
+  shipValid: validAny(isIseK, isHyuuGaK, isMusashiK, isMusashiK2),
+  equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar)),
 })
 
 declareAACI({
@@ -474,14 +388,8 @@ declareAACI({
   id: 29,
   fixed: 6,
   modifier: 1.55,
-  shipValid: validAny(
-    isHamakazeBK,
-    isIsokazeBK,
-  ),
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isRadar),
-  ),
+  shipValid: validAny(isHamakazeBK, isIsokazeBK),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
 })
 
 declareAACI({
@@ -507,16 +415,10 @@ declareAACI({
   id: 32,
   fixed: 4,
   modifier: 1.2,
-  shipValid: validAny(
-    isRoyalNavyShips,
-    isKongouClassK2,
-  ),
+  shipValid: validAny(isRoyalNavyShips, isKongouClassK2),
   equipsValid: validAll(
     hasSome(isQF2Pounder),
-    validAny(
-      hasSome(is20Tube7InchUpRocketLaunchers),
-      hasSome(is16InchMkITriplePlusFCR),
-    ),
+    validAny(hasSome(is20Tube7InchUpRocketLaunchers), hasSome(is16InchMkITriplePlusFCR)),
   ),
 })
 
@@ -526,21 +428,20 @@ declareAACI({
   fixed: 4,
   modifier: 1.35,
   shipValid: isGotlandKai,
-  equipsValid: validAll(
-    hasSome(isHighAngleMount),
-    hasSome(isAAGun),
-  ),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
 // return: a list of sorted AACI objects order by effect desc,
 //   as most effective AACI gets priority to be triggered.
 // param: AACI IDs from possibleAACIs functions
 // param: a optional sorting callback to customize ordering
-const sortAaciIds = (aaciIds,
-  sortCallback = (a, b) => b.fixed - a.fixed || b.modifier - a.modifier) => {
+const sortAaciIds = (
+  aaciIds,
+  sortCallback = (a, b) => b.fixed - a.fixed || b.modifier - a.modifier,
+) => {
   let aaciList = []
   if (!!aaciIds && Array.isArray(aaciIds)) {
-    aaciIds.forEach((id) => {
+    aaciIds.forEach(id => {
       if (AACITable[id]) {
         aaciList.push(AACITable[id])
       }
@@ -559,7 +460,7 @@ export const sortFleetPossibleAaciList = triggeredShipAaciIds =>
 // equips: [[equip, onslot] for equip on ship]
 export const getShipAvailableAACIs = (ship, equips) =>
   Object.keys(AACITable)
-    .filter((key) => {
+    .filter(key => {
       const type = AACITable[key]
       return type.shipValid(ship) && type.equipsValid(equips)
     })
@@ -568,7 +469,7 @@ export const getShipAvailableAACIs = (ship, equips) =>
 // return a list of all possible AACIs for the ship herself
 export const getShipAllAACIs = ship =>
   Object.keys(AACITable)
-    .filter((key) => {
+    .filter(key => {
       const type = AACITable[key]
       return type.shipValid(ship)
     })
@@ -612,7 +513,7 @@ export const getShipAACIs = (ship, equips) => {
 export const getFleetAvailableAACIs = (ships, equips) => {
   const aaciSet = {}
   ships.forEach((ship, index) => {
-    getShipAACIs(ship, equips[index].map(([equip, onslot]) => equip)).forEach((id) => {
+    getShipAACIs(ship, equips[index].map(([equip, onslot]) => equip)).forEach(id => {
       aaciSet[id] = true
     })
   })

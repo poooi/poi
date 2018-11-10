@@ -6,7 +6,7 @@ const initState = {
 
 export const reducer = (state = initState, action) => {
   if (action.type === '@@ServerReady') {
-    const {serverInfo} = action
+    const { serverInfo } = action
     return serverInfo
   }
 

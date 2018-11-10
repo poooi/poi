@@ -5,8 +5,7 @@ import i18next from 'views/env-parts/i18next'
 import ReactMarkdown from 'react-remarkable'
 
 // Readme contents
-const dontShowAgain = () =>
-  config.set('poi.update.lastversion', POI_VERSION)
+const dontShowAgain = () => config.set('poi.update.lastversion', POI_VERSION)
 
 class GoogleAnalyticsOption extends Component {
   state = {
@@ -18,9 +17,7 @@ class GoogleAnalyticsOption extends Component {
   }
   render() {
     return (
-      <Switch
-        checked={this.state.checked}
-        onChange={this.handleChange}>
+      <Switch checked={this.state.checked} onChange={this.handleChange}>
         {i18next.t('setting:Send data to Google Analytics')}
       </Switch>
     )
@@ -28,13 +25,14 @@ class GoogleAnalyticsOption extends Component {
 }
 
 const title = 'README'
-const content =
+const content = (
+  <div>
+    <ReactMarkdown source={i18next.t('others:welcome_markdown', { version: POI_VERSION })} />
     <div>
-      <ReactMarkdown source={i18next.t('others:welcome_markdown', { version: POI_VERSION })} />
-      <div>
-        <GoogleAnalyticsOption />
-      </div>
+      <GoogleAnalyticsOption />
     </div>
+  </div>
+)
 const footer = [
   {
     name: i18next.t('I know'),

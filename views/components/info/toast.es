@@ -18,11 +18,12 @@ const toastPreload = (...props) => {
 window.toast = toastPreload
 
 const ToasterPositioned = styled(Toaster)`
-  ${({inbound}) => inbound && css`
-    position: absolute !important;
-  `}
+  ${({ inbound }) =>
+    inbound &&
+    css`
+      position: absolute !important;
+    `}
 `
-
 
 @connect(state => ({
   webviewWidth: get(state, 'layout.webview.width'),
@@ -31,11 +32,13 @@ const ToasterPositioned = styled(Toaster)`
 export class PoiToast extends React.PureComponent {
   toaster = Toaster
 
-  triggleToast = (message, options={}) => {
+  triggleToast = (message, options = {}) => {
     if (!message) {
       return
     }
-    const intent = intentTypes.has(options.type) ? options.type : map[options.type] || Intent.PRIMARY
+    const intent = intentTypes.has(options.type)
+      ? options.type
+      : map[options.type] || Intent.PRIMARY
     const props = {
       message,
       intent,
@@ -59,9 +62,10 @@ export class PoiToast extends React.PureComponent {
     return (
       <ToasterPositioned
         position={Position.BOTTOM_RIGHT}
-        ref={ref => this.toaster = ref}
+        ref={ref => (this.toaster = ref)}
         inbound={this.props.isolateGameWindow || this.props.webviewWidth >= 400}
-        usePortal={false} />
+        usePortal={false}
+      />
     )
   }
 }

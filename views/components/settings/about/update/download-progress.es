@@ -52,8 +52,8 @@ export class DownloadProgress extends Component {
             {downloaded
               ? t('setting:Quit app and install updates')
               : percent >= 100
-                ? t('setting:Deploying, please wait')
-                : `${Math.round(bytesPerSecond / 1024)} KB/s, ${Math.round(
+              ? t('setting:Deploying, please wait')
+              : `${Math.round(bytesPerSecond / 1024)} KB/s, ${Math.round(
                   transferred / 1048576,
                 )} / ${Math.round(total / 1048576)} MB`}
           </Indicator>

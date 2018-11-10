@@ -12,32 +12,38 @@ const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1
 config.on('config.set', (path, value) => {
   let event
   switch (path) {
-  case 'poi.layout.mode':
-    event = new CustomEvent('layout.change', {
-      bubbles: true,
-      cancelable: true,
-      detail: {
-        layout: value,
-      },
-    })
-    window.dispatchEvent(event)
-    toggleModalWithDelay(<Trans>setting:Layout settings</Trans>, <Trans>setting:Some plugins may not work before you refresh the page</Trans>)
-    break
-  case 'poi.tabarea.double':
-    event = new CustomEvent('doubleTabbed.change', {
-      bubbles: true,
-      cancelable: true,
-      detail: {
-        doubleTabbed: value,
-      },
-    })
-    window.dispatchEvent(event)
-    toggleModalWithDelay(<Trans>setting:Layout settings</Trans>, <Trans>setting:Some plugins may not work before you refresh the page</Trans>)
-    break
-  case 'poi.transition.enable':
-    window.dispatchEvent(new Event('display.transition.change'))
-    break
-  default:
+    case 'poi.layout.mode':
+      event = new CustomEvent('layout.change', {
+        bubbles: true,
+        cancelable: true,
+        detail: {
+          layout: value,
+        },
+      })
+      window.dispatchEvent(event)
+      toggleModalWithDelay(
+        <Trans>setting:Layout settings</Trans>,
+        <Trans>setting:Some plugins may not work before you refresh the page</Trans>,
+      )
+      break
+    case 'poi.tabarea.double':
+      event = new CustomEvent('doubleTabbed.change', {
+        bubbles: true,
+        cancelable: true,
+        detail: {
+          doubleTabbed: value,
+        },
+      })
+      window.dispatchEvent(event)
+      toggleModalWithDelay(
+        <Trans>setting:Layout settings</Trans>,
+        <Trans>setting:Some plugins may not work before you refresh the page</Trans>,
+      )
+      break
+    case 'poi.transition.enable':
+      window.dispatchEvent(new Event('display.transition.change'))
+      break
+    default:
   }
 })
 

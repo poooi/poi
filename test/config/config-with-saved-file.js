@@ -9,15 +9,18 @@ let config = null
 
 describe('config with saved file', function() {
   beforeEach(function() {
-    fs.writeFileSync(path.resolve(__dirname, './config.cson'), CSON.stringify({
-      path: {
-        to: {
-          initial: {
-            value: 'Hello World',
+    fs.writeFileSync(
+      path.resolve(__dirname, './config.cson'),
+      CSON.stringify({
+        path: {
+          to: {
+            initial: {
+              value: 'Hello World',
+            },
           },
         },
-      },
-    }))
+      }),
+    )
     delete require.cache[require.resolve('../../lib/config')]
     config = require('../../lib/config')
   })

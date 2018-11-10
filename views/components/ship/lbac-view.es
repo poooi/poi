@@ -38,7 +38,7 @@ export const SquardRow = compose(
 )(({ landbase, equipsData, squardId, t, enableAvatar, compact }) => {
   const { api_action_kind, api_distance, api_name, api_nowhp = 200, api_maxhp = 200 } = landbase
   const tyku = getTyku([equipsData], api_action_kind)
-  const hpPercentage = api_nowhp / api_maxhp * 100
+  const hpPercentage = (api_nowhp / api_maxhp) * 100
   const hideShipName = enableAvatar && compact
   return (
     <Tooltip
@@ -60,8 +60,7 @@ export const SquardRow = compose(
       }
     >
       <ShipItem className="ship-item">
-        {enableAvatar &&
-          !!get(equipsData, '0.0.api_slotitem_id') && (
+        {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
           <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} />
         )}
         <ShipInfo className="ship-info lbac-info" avatar={enableAvatar} show={!hideShipName}>

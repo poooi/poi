@@ -2,7 +2,7 @@ const { keyBy, range, random, sampleSize, times, shuffle } = require('lodash')
 const start2 = require('./fixtures/start2.json')
 const assert = require('assert')
 
-const {damagedCheck} = require('../views/services/utils')
+const { damagedCheck } = require('../views/services/utils')
 
 const $ships = keyBy(start2.api_mst_ship, 'api_id')
 const $equips = keyBy(start2.api_mst_slotitem, 'api_id')
@@ -11,7 +11,7 @@ let sortieStatus, escapedPos, fleets, ships, equips
 const LOOP_TIMES = 100
 const MAX_ID = 500
 
-const randomSetSlot = (ship) => {
+const randomSetSlot = ship => {
   const index = random(0, 4)
   if (index == 4) {
     ship.api_slot_ex = random(2, 3)
@@ -57,30 +57,49 @@ describe('Validate sortie dangerous check', () => {
   beforeEach(reset)
 
   it('normal condition without warning', () => {
-    assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
+    assert.equal(
+      0,
+      damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+        .length,
+    )
   })
 
   it('heavy damage for non sortie fleet is safe', () => {
     const { api_ship } = fleets[1]
     ships[api_ship[3]].api_nowhp = 8
-    assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
+    assert.equal(
+      0,
+      damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+        .length,
+    )
   })
 
   it('heavy damage for sortie fleet is dangerous', () => {
     const { api_ship } = fleets[0]
     ships[api_ship[2]].api_nowhp = 8
-    assert.equal(1, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
-    assert.equal(`Lv. ${api_ship[2]} - 睦月`, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips})[0])
+    assert.equal(
+      1,
+      damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+        .length,
+    )
+    assert.equal(
+      `Lv. ${api_ship[2]} - 睦月`,
+      damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })[0],
+    )
   })
 
   it('heavy damage for sortie fleet flag ship is safe', () => {
     const { api_ship } = fleets[0]
     ships[api_ship[0]].api_nowhp = 8
-    assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
+    assert.equal(
+      0,
+      damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+        .length,
+    )
   })
 
   it('heavy damage for sortie fleet is dangerous (all possible slots)', () => {
-    range(0, 4).forEach((fleetId) => {
+    range(0, 4).forEach(fleetId => {
       range(7).forEach(index => {
         const { api_ship } = fleets[fleetId]
         if (index >= api_ship.length) {
@@ -92,15 +111,26 @@ describe('Validate sortie dangerous check', () => {
         const count = index === 0 ? 0 : 1
         const result = index === 0 ? [] : [`Lv. ${id} - 睦月`]
         ships[id].api_nowhp = 8
-        assert.equal(count, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
-        assert.deepEqual(result, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}))
+        assert.equal(
+          count,
+          damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+            .length,
+        )
+        assert.deepEqual(
+          result,
+          damagedCheck(
+            { $ships, $equips },
+            { sortieStatus, escapedPos },
+            { fleets, ships, equips },
+          ),
+        )
         ships[id].api_nowhp = ships[id].api_maxhp
       })
     })
   })
 
   it('heavy damage for sortie fleet for ship escaped is safe (all possible slots)', () => {
-    range(0, 4).forEach((fleetId) => {
+    range(0, 4).forEach(fleetId => {
       range(7).forEach(index => {
         reset()
         const { api_ship } = fleets[fleetId]
@@ -112,8 +142,19 @@ describe('Validate sortie dangerous check', () => {
         sortieStatus[fleetId] = true
         escapedPos = [index]
         ships[id].api_nowhp = 8
-        assert.equal(0, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
-        assert.deepEqual([], damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}))
+        assert.equal(
+          0,
+          damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+            .length,
+        )
+        assert.deepEqual(
+          [],
+          damagedCheck(
+            { $ships, $equips },
+            { sortieStatus, escapedPos },
+            { fleets, ships, equips },
+          ),
+        )
       })
     })
   })
@@ -123,11 +164,14 @@ describe('Validate sortie dangerous check', () => {
       reset()
       const { api_ship } = fleets[0]
       const sampleCount = random(1, api_ship.length - 1)
-      sampleSize(api_ship.slice(1), sampleCount).forEach(id => ships[id].api_nowhp = 8)
-      assert.equal(sampleCount, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
+      sampleSize(api_ship.slice(1), sampleCount).forEach(id => (ships[id].api_nowhp = 8))
+      assert.equal(
+        sampleCount,
+        damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+          .length,
+      )
     })
   })
-
 
   it('heavy damage for ships with personel or goddess is safe', () => {
     times(LOOP_TIMES, () => {
@@ -136,9 +180,13 @@ describe('Validate sortie dangerous check', () => {
       const damageCount = random(1, api_ship.length - 1)
       const repairCount = random(1, damageCount)
       const damages = sampleSize(api_ship.slice(1), damageCount)
-      damages.forEach(id => ships[id].api_nowhp = 8)
+      damages.forEach(id => (ships[id].api_nowhp = 8))
       sampleSize(damages, repairCount).forEach(id => randomSetSlot(ships[id]))
-      assert.equal((damageCount - repairCount), damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
+      assert.equal(
+        damageCount - repairCount,
+        damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+          .length,
+      )
     })
   })
 
@@ -155,13 +203,13 @@ describe('Validate sortie dangerous check', () => {
         let count = damageCount - repairCount
 
         const damages = sampleSize(fleet, damageCount)
-        damages.forEach(id => ships[id].api_nowhp = 8)
+        damages.forEach(id => (ships[id].api_nowhp = 8))
 
         const repairs = sampleSize(damages, repairCount)
         repairs.forEach(id => randomSetSlot(ships[id]))
 
         // both flagships are always safe
-        if (damages.includes(fleet[0]) && !repairs.includes(fleet[0]) ) {
+        if (damages.includes(fleet[0]) && !repairs.includes(fleet[0])) {
           count -= 1
         }
         return count
@@ -169,7 +217,11 @@ describe('Validate sortie dangerous check', () => {
 
       const count = setFleet(mainFleet) + setFleet(escortFleet)
 
-      assert.equal(count, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
+      assert.equal(
+        count,
+        damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
+          .length,
+      )
     })
   })
 
@@ -196,10 +248,7 @@ describe('Validate sortie dangerous check', () => {
   //     // fix for sortieStatus
   //     damages.forEach(id => sortieStatus[parseInt(id / 6)] = true)
 
-
   //     assert.equal(count, damagedCheck({$ships, $equips}, {sortieStatus, escapedPos}, {fleets, ships, equips}).length)
   //   })
   // })
-
-
 })

@@ -11,7 +11,7 @@ import { RadioConfig } from 'views/components/settings/components/radio'
 const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS = require(MIRROR_JSON_PATH)
 
-const MIRROR_OPTIONS = map(entries(MIRRORS), ([server, { name }] )=> ({
+const MIRROR_OPTIONS = map(entries(MIRRORS), ([server, { name }]) => ({
   name,
   value: server,
 }))
@@ -43,7 +43,7 @@ export const PluginConfig = translate(['setting'])(({ t }) => (
         <FormGroup inline label={t('NPM server')}>
           <RadioConfig
             configName="packageManager.mirrorName"
-            defaultValue={navigator.language === 'zh-CN' ?  'taobao' : 'npm'}
+            defaultValue={navigator.language === 'zh-CN' ? 'taobao' : 'npm'}
             availableVal={MIRROR_OPTIONS}
           />
         </FormGroup>

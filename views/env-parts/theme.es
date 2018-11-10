@@ -22,7 +22,11 @@ window.normalThemes = normalThemes
 window.vibrantThemes = vibrantThemes
 config.setDefault('poi.appearance.theme', 'darklykai')
 
-export function loadStyle(document=window.document, currentWindow=remote.getCurrentWindow(), isMainWindow=true) {
+export function loadStyle(
+  document = window.document,
+  currentWindow = remote.getCurrentWindow(),
+  isMainWindow = true,
+) {
   const $ = (...s) => document.querySelector(...s)
   const customCSSPath = join(EXROOT, 'hack', 'custom.css')
   ensureFileSync(customCSSPath)
@@ -50,16 +54,34 @@ export function loadStyle(document=window.document, currentWindow=remote.getCurr
     // FIXME: wait for light theme
     window.isDarkTheme = true
     if ($('#bootstrap-css')) {
-      $('#bootstrap-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/${isVibrant ? 'vibrant' : 'normal'}/${theme}.css`)))
+      $('#bootstrap-css').setAttribute(
+        'href',
+        fileUrl(
+          require.resolve(`poi-asset-themes/dist/${isVibrant ? 'vibrant' : 'normal'}/${theme}.css`),
+        ),
+      )
     }
     if ($('#blueprint-css')) {
-      $('#blueprint-css').setAttribute('href', fileUrl(require.resolve(`poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`)))
+      $('#blueprint-css').setAttribute(
+        'href',
+        fileUrl(
+          require.resolve(
+            `poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`,
+          ),
+        ),
+      )
     }
     if ($('#blueprint-icon-css')) {
-      $('#blueprint-icon-css').setAttribute('href', fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')))
+      $('#blueprint-icon-css').setAttribute(
+        'href',
+        fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')),
+      )
     }
     if ($('#normalize-css')) {
-      $('#normalize-css').setAttribute('href', fileUrl(require.resolve('normalize.css/normalize.css')))
+      $('#normalize-css').setAttribute(
+        'href',
+        fileUrl(require.resolve('normalize.css/normalize.css')),
+      )
     }
     reloadCustomCss()
   }
@@ -74,14 +96,19 @@ export function loadStyle(document=window.document, currentWindow=remote.getCurr
 
   const windowsSetVibrancy = value => {
     try {
-      const electronVibrancy = remote.require(join(ROOT, 'assets', 'binary', 'electron-vibrancy-x64'))
+      const electronVibrancy = remote.require(
+        join(ROOT, 'assets', 'binary', 'electron-vibrancy-x64'),
+      )
       if (value === 1) {
         electronVibrancy.SetVibrancy(currentWindow, 0)
       } else {
         electronVibrancy.DisableVibrancy(currentWindow)
       }
     } catch (e) {
-      console.warn('Set vibrancy style failed. Check if electron-vibrancy is correctly complied.', e)
+      console.warn(
+        'Set vibrancy style failed. Check if electron-vibrancy is correctly complied.',
+        e,
+      )
     }
   }
 
@@ -104,8 +131,8 @@ export function loadStyle(document=window.document, currentWindow=remote.getCurr
       setBackgroundColor('#202b33')
     }
     if ('darwin' === process.platform) {
-      currentWindow.setVibrancy((value === 1) ? 'dark' : null)
-    } else if('win32' === process.platform) {
+      currentWindow.setVibrancy(value === 1 ? 'dark' : null)
+    } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
         windowsSetVibrancy(value)
       }
@@ -147,7 +174,7 @@ export function loadStyle(document=window.document, currentWindow=remote.getCurr
   }
 
   config.addListener('config.set', themeChangeHandler)
-  currentWindow.on('closed', (e) => {
+  currentWindow.on('closed', e => {
     config.removeListener('config.set', themeChangeHandler)
   })
 
@@ -168,8 +195,7 @@ export function loadStyle(document=window.document, currentWindow=remote.getCurr
 
   const div = document.createElement('div')
   div.id = 'custom-bg'
-  div.style.position = 'fixed',
-  div.style.top = '-15px'
+  ;(div.style.position = 'fixed'), (div.style.top = '-15px')
   div.style.left = '-15px'
   div.style.height = 'calc(100vh + 30px)'
   div.style.width = 'calc(100vw + 30px)'

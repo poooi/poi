@@ -134,7 +134,7 @@ export class ResolutionConfig extends Component {
     const useFixedResolution = isolateGameWindow
       ? webview.windowUseFixedResolution
       : webview.useFixedResolution
-    const labelText = `${Math.round(this.state.width / 1200 * 100)}%`
+    const labelText = `${Math.round((this.state.width / 1200) * 100)}%`
     return (
       <Section title={<Trans>setting:Game resolution</Trans>}>
         <Wrapper>
@@ -147,7 +147,6 @@ export class ResolutionConfig extends Component {
           <FillAvailable>
             <FormGroup inline>
               <Wrapper>
-
                 <HTMLSelect
                   value={this.state.width}
                   onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
@@ -159,7 +158,7 @@ export class ResolutionConfig extends Component {
                   {[0, 1, 2, 3].map(i => {
                     return (
                       <option key={i} value={i * 400 + 400}>
-                        {Math.round((i * 400 + 400) / 1200 * 100)}%
+                        {Math.round(((i * 400 + 400) / 1200) * 100)}%
                       </option>
                     )
                   })}

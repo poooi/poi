@@ -2,7 +2,7 @@ import { fleetShipsDataSelectorFactory, fleetStateSelectorFactory } from '../uti
 import _ from 'lodash'
 import i18next from 'views/env-parts/i18next'
 
-const { config } =  window
+const { config } = window
 
 // event sortie check notify for fleets that
 // - is not in mission
@@ -16,17 +16,13 @@ const getFleetFlag = fleetData => {
     .map(([ship, _] = []) => ship)
     .filter(Boolean)
 
-  const freeShipCount = data
-    .filter(ship => ship.api_sally_area === 0)
-    .value()
-    .length
+  const freeShipCount = data.filter(ship => ship.api_sally_area === 0).value().length
 
   const taggedCount = data
     .filter(ship => ship.api_sally_area > 0)
     .map(ship => ship.api_sally_area)
     .uniq()
-    .value()
-    .length
+    .value().length
 
   return freeShipCount > 0 && taggedCount <= 1
 }
@@ -41,7 +37,12 @@ window.addEventListener('game.request', ({ detail: { path } }) => {
     let flag = false
     let fleets = [0, 1, 2, 3]
     if (state.sortie.combinedFlag > 0) {
-      flag = flag || getFleetFlag([...fleetShipsDataSelectorFactory(0)(state), ...fleetShipsDataSelectorFactory(1)(state)])
+      flag =
+        flag ||
+        getFleetFlag([
+          ...fleetShipsDataSelectorFactory(0)(state),
+          ...fleetShipsDataSelectorFactory(1)(state),
+        ])
       fleets = [2, 3]
     }
 
@@ -52,10 +53,10 @@ window.addEventListener('game.request', ({ detail: { path } }) => {
       })
 
     if (flag) {
-      window.toast(
-        i18next.t('main:At least one ship in your fleet has not been locked'),
-        { type: 'warning', title: i18next.t('main:Event ship locking warning') }
-      )
+      window.toast(i18next.t('main:At least one ship in your fleet has not been locked'), {
+        type: 'warning',
+        title: i18next.t('main:Event ship locking warning'),
+      })
     }
   }
 })

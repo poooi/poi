@@ -11,13 +11,15 @@ if (config.get('poi.webview.width', 1200) < 0) {
 
 const additionalStyle = document.createElement('style')
 
-remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
+remote.getCurrentWindow().webContents.on('dom-ready', e => {
   document.head.appendChild(additionalStyle)
   setMinSize()
 })
 
 const setCSS = () => {
-  const tab = $('.poi-tab-container:last-child .poi-tab-contents') || $('.poi-tab-container .poi-tab-contents')
+  const tab =
+    $('.poi-tab-container:last-child .poi-tab-contents') ||
+    $('.poi-tab-container .poi-tab-contents')
   const tabSize = tab ? tab.getBoundingClientRect() : { height: 0, width: 0 }
   const panelRect = $('poi-nav-tabs').getBoundingClientRect()
   // Apply css
@@ -33,14 +35,15 @@ const setCSS = () => {
 const setCSSDebounced = debounce(setCSS, 200)
 
 const setMinSize = () => {
-  if (config.get('poi.layout.isolate', false) || !$('poi-info') || config.get('poi.layout.overlay', false)) {
+  if (
+    config.get('poi.layout.isolate', false) ||
+    !$('poi-info') ||
+    config.get('poi.layout.overlay', false)
+  ) {
     remote.getCurrentWindow().setMinimumSize(1, 1)
   } else {
     const { width, height } = getStore('layout.webview')
-    remote.getCurrentWindow().setMinimumSize(
-      getRealSize(width),
-      getRealSize(height + getYOffset()),
-    )
+    remote.getCurrentWindow().setMinimumSize(getRealSize(width), getRealSize(height + getYOffset()))
   }
 }
 
@@ -133,11 +136,12 @@ const setOverlayPanelWindowSize = overlayPanel => {
 
 const handleOverlayPanelReszie = () => {
   if (config.get('poi.layout.overlay', false)) {
-    const width = config.get('poi.webview.useFixedResolution', true) ? config.get('poi.webview.width', 1200) : remote.getCurrentWindow().getContentSize()[0]
-    remote.getCurrentWindow().setContentSize(
-      width,
-      Math.floor(width / 1200 * 720 + getRealSize(getYOffset())),
-    )
+    const width = config.get('poi.webview.useFixedResolution', true)
+      ? config.get('poi.webview.width', 1200)
+      : remote.getCurrentWindow().getContentSize()[0]
+    remote
+      .getCurrentWindow()
+      .setContentSize(width, Math.floor((width / 1200) * 720 + getRealSize(getYOffset())))
     if (config.get('poi.webview.useFixedResolution', true)) {
       remote.getCurrentWindow().setResizable(false)
     } else {
@@ -202,10 +206,7 @@ const changeBounds = () => {
     // Previous horizontal
     newHeight += 400
   }
-  remote.getCurrentWindow().setContentSize(
-    getRealSize(newWidth),
-    getRealSize(newHeight),
-  )
+  remote.getCurrentWindow().setContentSize(getRealSize(newWidth), getRealSize(newHeight))
 }
 
 window.addEventListener('game.start', adjustSize)
@@ -213,72 +214,80 @@ window.addEventListener('resize', adjustSize)
 
 config.on('config.set', (path, value) => {
   switch (path) {
-  case 'poi.appearance.zoom': {
-    const [ width, height ] = remote.getCurrentWindow().getContentSize()
-    remote.getCurrentWebContents().setZoomFactor(value)
-    adjustSize()
-    setTimeout(() => remote.getCurrentWindow().setContentSize(width, height), 1000)
-    break
-  }
-  case 'poi.tabarea.double':
-  case 'poi.webview.width':
-  case 'poi.webview.useFixedResolution':
-  case 'poi.webview.ratio.vertical':
-  case 'poi.webview.ratio.horizontal':
-  case 'poi.layout.reverse': {
-    adjustSize()
-    break
-  }
-  case 'poi.layout.mode': {
-    const current = remote.getCurrentWindow()
-    const resizable = current.isResizable()
-    const maximizable = current.isMaximizable()
-    const fullscreenable = current.isFullScreenable()
-    current.setResizable(true)
-    current.setMaximizable(true)
-    current.setFullScreenable(true)
+    case 'poi.appearance.zoom': {
+      const [width, height] = remote.getCurrentWindow().getContentSize()
+      remote.getCurrentWebContents().setZoomFactor(value)
+      adjustSize()
+      setTimeout(() => remote.getCurrentWindow().setContentSize(width, height), 1000)
+      break
+    }
+    case 'poi.tabarea.double':
+    case 'poi.webview.width':
+    case 'poi.webview.useFixedResolution':
+    case 'poi.webview.ratio.vertical':
+    case 'poi.webview.ratio.horizontal':
+    case 'poi.layout.reverse': {
+      adjustSize()
+      break
+    }
+    case 'poi.layout.mode': {
+      const current = remote.getCurrentWindow()
+      const resizable = current.isResizable()
+      const maximizable = current.isMaximizable()
+      const fullscreenable = current.isFullScreenable()
+      current.setResizable(true)
+      current.setMaximizable(true)
+      current.setFullScreenable(true)
 
-    changeBounds()
-    // dispatchEvent(new Event('resize'))
+      changeBounds()
+      // dispatchEvent(new Event('resize'))
 
-    current.setResizable(resizable)
-    current.setMaximizable(maximizable)
-    current.setFullScreenable(fullscreenable)
+      current.setResizable(resizable)
+      current.setMaximizable(maximizable)
+      current.setFullScreenable(fullscreenable)
 
-    adjustSize()
-    break
-  }
-  case 'poi.layout.isolate': {
-    setIsolatedMainWindowSize(value)
-    setMinSize()
-    break
-  }
-  case 'poi.layout.overlay': {
-    setOverlayPanelWindowSize(value)
-    break
-  }
-  default:
-    break
+      adjustSize()
+      break
+    }
+    case 'poi.layout.isolate': {
+      setIsolatedMainWindowSize(value)
+      setMinSize()
+      break
+    }
+    case 'poi.layout.overlay': {
+      setOverlayPanelWindowSize(value)
+      break
+    }
+    default:
+      break
   }
 })
 
 export const layoutResizeObserver = new ResizeObserver(entries => {
   let value = {}
   entries.forEach(entry => {
-    const key = entry.target.tagName === 'POI-MAIN'
-      ? 'window' : entry.target.tagName === 'WEBVIEW'
-        ? 'webview' : entry.target.className.includes('miniship-fleet-content')
-          ? 'minishippane' : entry.target.className.includes('ship-tab-container')
-            ? 'shippane' : entry.target.className.includes('main-panel-content')
-              ? 'mainpane' : null
+    const key =
+      entry.target.tagName === 'POI-MAIN'
+        ? 'window'
+        : entry.target.tagName === 'WEBVIEW'
+        ? 'webview'
+        : entry.target.className.includes('miniship-fleet-content')
+        ? 'minishippane'
+        : entry.target.className.includes('ship-tab-container')
+        ? 'shippane'
+        : entry.target.className.includes('main-panel-content')
+        ? 'mainpane'
+        : null
     value = {
       ...value,
       [key]: {
         width: entry.contentRect.width,
         height: entry.contentRect.height,
-        ...key === 'webview' ? {
-          useFixedResolution: getStore('config.poi.webview.useFixedResolution', true),
-        } : {},
+        ...(key === 'webview'
+          ? {
+              useFixedResolution: getStore('config.poi.webview.useFixedResolution', true),
+            }
+          : {}),
       },
     }
     if (entry.target.tagName === 'WEBVIEW') {

@@ -62,7 +62,7 @@ const SettingsTabs = styled(Tabs)`
     flex: 1 0 30px;
     text-align: center;
 
-    &[aria-selected="true"] {
+    &[aria-selected='true'] {
       flex: 4 0 120px;
     }
   }
@@ -108,11 +108,7 @@ export class reactClass extends React.Component {
                   <FontAwesome name={tab.icon} /> {t(tab.title)}
                 </>
               ) : (
-                <Tooltip
-                  position={Position.BOTTOM}
-                  content={t(tab.title)}
-                  hoverOpenDelay={500}
-                >
+                <Tooltip position={Position.BOTTOM} content={t(tab.title)} hoverOpenDelay={500}>
                   <FontAwesome name={tab.icon} />
                 </Tooltip>
               )

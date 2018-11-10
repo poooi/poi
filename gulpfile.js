@@ -4,19 +4,13 @@ const gulp = require('gulp')
 global.ROOT = __dirname
 
 const { log } = require('./lib/utils')
-const {
-  build,
-  installPlugins,
-  cleanFiles,
-  packWinRelease,
-  deployNightlies,
-} = require('./build')
+const { build, installPlugins, cleanFiles, packWinRelease, deployNightlies } = require('./build')
 
 const packageMeta = require('./package.json')
 
 let poiVersion = null
 
-gulp.task('getVersion', (done) => {
+gulp.task('getVersion', done => {
   const package_version = packageMeta.version
   poiVersion = package_version
   log(`*** Start building poi ${poiVersion} ***`)
@@ -33,7 +27,7 @@ gulp.task('deploy_nightlies', () => deployNightlies())
 
 gulp.task('clean', () => cleanFiles())
 
-gulp.task('default', (done) => {
+gulp.task('default', done => {
   log`
   Usage:
   gulp deploy          - Make this repo ready to use

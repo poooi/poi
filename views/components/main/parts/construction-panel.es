@@ -11,7 +11,15 @@ import { Intent, Position, ResizeSensor } from '@blueprintjs/core'
 
 import { Avatar } from 'views/components/etc/avatar'
 import { CountdownNotifierLabel } from './countdown-timer'
-import { DockPanelCardWrapper, PanelItemTooltip, DockInnerWrapper, Panel, Watermark, DockName, EmptyDockWrapper } from './styled-components'
+import {
+  DockPanelCardWrapper,
+  PanelItemTooltip,
+  DockInnerWrapper,
+  Panel,
+  Watermark,
+  DockName,
+  EmptyDockWrapper,
+} from './styled-components'
 
 const EmptyDock = ({ state }) => (
   <EmptyDockWrapper className="empty-dock">
@@ -35,12 +43,12 @@ const getTagIntent = ({ isLSC }, timeRemaining) =>
   timeRemaining > 600 && isLSC
     ? Intent.DANGER
     : timeRemaining > 600
-      ? Intent.PRIMARY
-      : timeRemaining > 0
-        ? Intent.WARNING
-        : timeRemaining == 0
-          ? Intent.SUCCESS
-          : Intent.NONE
+    ? Intent.PRIMARY
+    : timeRemaining > 0
+    ? Intent.WARNING
+    : timeRemaining == 0
+    ? Intent.SUCCESS
+    : Intent.NONE
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
@@ -68,7 +76,7 @@ export class ConstructionPanel extends Component {
     return id ? this.props.t(`resources:${this.props.$ships[id].api_name}`) : defaultValue
   }
 
-  handleResize= ([entry]) => {
+  handleResize = ([entry]) => {
     const dimension = getPanelDimension(entry.contentRect.width)
 
     if (dimension !== this.state.dimension) {
@@ -80,7 +88,7 @@ export class ConstructionPanel extends Component {
 
   render() {
     const { constructions, canNotify, enableAvatar, editable } = this.props
-    const  { dimension } = this.state
+    const { dimension } = this.state
     return (
       <ResizeSensor onResize={this.handleResize}>
         <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
@@ -90,13 +98,15 @@ export class ConstructionPanel extends Component {
               const isInUse = dock.api_state > 0
               const isLSC = isInUse && dock.api_item1 >= 1000
               const dockName =
-            dock.api_state == -1
-              ? this.props.t('main:Locked')
-              : dock.api_state == 0
-                ? this.props.t('main:Empty')
-                : this.getDockShipName(i, '???')
+                dock.api_state == -1
+                  ? this.props.t('main:Locked')
+                  : dock.api_state == 0
+                  ? this.props.t('main:Empty')
+                  : this.getDockShipName(i, '???')
               const completeTime = isInUse ? dock.api_complete_time : -1
-              const tooltipTitleClassname = isLSC ? { color: '#D9534F', fontWeight: 'bold' } : undefined
+              const tooltipTitleClassname = isLSC
+                ? { color: '#D9534F', fontWeight: 'bold' }
+                : undefined
 
               return (
                 <PanelItemTooltip
@@ -109,34 +119,34 @@ export class ConstructionPanel extends Component {
                   targetTagName="div"
                   targetClassName="panel-item kdock-item"
                   content={
-                  <>
-                    {
-                      <span style={tooltipTitleClassname}>
-                        {dockName}
-                        <br />
-                      </span>
-                    }
-                    {map(materials, (id, index) => (
-                      <span key={id}>
-                        <MaterialIcon materialId={id} className="material-icon" />
-                        {dock[`api_item${index + 1}`]}
-                      </span>
-                    ))}
-                  </>
+                    <>
+                      {
+                        <span style={tooltipTitleClassname}>
+                          {dockName}
+                          <br />
+                        </span>
+                      }
+                      {map(materials, (id, index) => (
+                        <span key={id}>
+                          <MaterialIcon materialId={id} className="material-icon" />
+                          {dock[`api_item${index + 1}`]}
+                        </span>
+                      ))}
+                    </>
                   }
                 >
                   <DockInnerWrapper>
                     {enableAvatar && (
-                    <>
-                      {dock.api_state > 0 ? (
-                        <Avatar
-                          height={20}
-                          mstId={get(constructions, [i, 'api_created_ship_id'])}
-                        />
-                      ) : (
-                        <EmptyDock state={dock.api_state} />
-                      )}
-                    </>
+                      <>
+                        {dock.api_state > 0 ? (
+                          <Avatar
+                            height={20}
+                            mstId={get(constructions, [i, 'api_created_ship_id'])}
+                          />
+                        ) : (
+                          <EmptyDock state={dock.api_state} />
+                        )}
+                      </>
                     )}
                     <DockName className="kdock-name">{dockName}</DockName>
                     <CountdownNotifierLabel
@@ -146,7 +156,7 @@ export class ConstructionPanel extends Component {
                       getLabelStyle={getTagIntent}
                       getNotifyOptions={() =>
                         canNotify &&
-                      completeTime >= 0 && {
+                        completeTime >= 0 && {
                           ...this.constructor.basicNotifyConfig,
                           args: dockName,
                           completeTime: completeTime,

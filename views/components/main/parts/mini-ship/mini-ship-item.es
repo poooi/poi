@@ -58,9 +58,11 @@ const SlotItemContainerMini = styled.div`
 
 const ItemName = styled.div`
   margin-bottom: 5px;
-  ${({hide}) => hide && css`
-    display: none;
-  `}
+  ${({ hide }) =>
+    hide &&
+    css`
+      display: none;
+    `}
 `
 
 const SlotItemName = styled.span`
@@ -80,9 +82,11 @@ const OnSlot = styled(Tag)`
   display: flex;
   align-items: center;
   margin-left: 1ex;
-  ${({hide}) => hide && css`
-    display: none;
-  `}
+  ${({ hide }) =>
+    hide &&
+    css`
+      display: none;
+    `}
 `
 
 const slotitemsDataSelectorFactory = memoize(shipId =>
@@ -224,23 +228,27 @@ const ShipInfo = styled.div`
   z-index: 1;
   flex-grow: 1;
   flex-shrink: 0;
-  ${({avatar}) => avatar && css`
-    flex-basis: 61px;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      flex-basis: 61px;
 
-    & > .bp3-popover-target {
-      height: 100%;
-    }
+      & > .bp3-popover-target {
+        height: 100%;
+      }
 
-    ${ShipNameContainer} {
-      height: 100%;
-      padding-left: 58px;
-    }
-  `}
-  ${({hideInfo}) => hideInfo && css`
-    flex-grow: 0;
-    flex-shrink: 0;
-    height: 37px;
-  `}
+      ${ShipNameContainer} {
+        height: 100%;
+        padding-left: 58px;
+      }
+    `}
+  ${({ hideInfo }) =>
+    hideInfo &&
+    css`
+      flex-grow: 0;
+      flex-shrink: 0;
+      height: 37px;
+    `}
 `
 
 const ShipName = styled.div`
@@ -346,7 +354,7 @@ export class MiniShipRow extends Component {
     const hideShipName = enableAvatar && compact
     if (!ship) return <div />
     const labelStatusStyle = getStatusStyle(labelStatus)
-    const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
+    const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
     const level = ship.api_lv
     const remodelLevel = $ship.api_afterlv
     const exp = (ship.api_exp || [])[0]
@@ -355,10 +363,9 @@ export class MiniShipRow extends Component {
       level < remodelLevel
         ? t('main:RemodelLv', { remodelLevel })
         : remodelLevel
-          ? t('main:RemodelReady')
-          : ''
+        ? t('main:RemodelReady')
+        : ''
     return (
-
       <ShipTile
         as={Tooltip}
         position={Position.RIGHT_TOP}
@@ -377,7 +384,9 @@ export class MiniShipRow extends Component {
           {enableAvatar && (
             <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33}>
               {compact && (
-                <ShipLvAvatar className="ship-lv-avatar">{level && t('main:Lv', { level })}</ShipLvAvatar>
+                <ShipLvAvatar className="ship-lv-avatar">
+                  {level && t('main:Lv', { level })}
+                </ShipLvAvatar>
               )}
             </ShipAvatar>
           )}
@@ -516,12 +525,17 @@ export const MiniSquardRow = translate(['main'])(
     return (
       <ShipTile className="ship-tile">
         <ShipItem className="ship-item">
-          {enableAvatar &&
-            !!get(equipsData, '0.0.api_slotitem_id') && (
+          {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
             <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
               {compact && (
                 <ShipLvAvatar className="ship-lv-avatar">
-                  <LandBaseStatTag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>{t(LBAC_STATUS_NAMES[api_action_kind])}</LandBaseStatTag>
+                  <LandBaseStatTag
+                    className="landbase-status"
+                    minimal
+                    intent={LBAC_INTENTS[api_action_kind]}
+                  >
+                    {t(LBAC_STATUS_NAMES[api_action_kind])}
+                  </LandBaseStatTag>
                   <ShipFP className="ship-fp">
                     {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
                   </ShipFP>
@@ -529,10 +543,7 @@ export const MiniSquardRow = translate(['main'])(
               )}
             </ShipAvatar>
           )}
-          <ShipInfo
-            className="ship-info"
-            avatar={enableAvatar}
-            hideInfo={hideShipName}>
+          <ShipInfo className="ship-info" avatar={enableAvatar} hideInfo={hideShipName}>
             {!hideShipName && (
               <ShipNameContainer>
                 <ShipName className="ship-name">{api_name}</ShipName>
@@ -540,7 +551,13 @@ export const MiniSquardRow = translate(['main'])(
                   <ShipFP className="ship-fp">
                     {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
                   </ShipFP>
-                  <LandBaseStatTag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>{t(LBAC_STATUS_NAMES[api_action_kind])}</LandBaseStatTag>
+                  <LandBaseStatTag
+                    className="landbase-status"
+                    minimal
+                    intent={LBAC_INTENTS[api_action_kind]}
+                  >
+                    {t(LBAC_STATUS_NAMES[api_action_kind])}
+                  </LandBaseStatTag>
                 </ShipLvText>
               </ShipNameContainer>
             )}

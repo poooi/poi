@@ -4,8 +4,7 @@ import { remote } from 'electron'
 
 const proxy = remote.require('./lib/proxy')
 
-const isGameApi = (pathname) =>
-  (pathname.startsWith('/kcsapi'))
+const isGameApi = pathname => pathname.startsWith('/kcsapi')
 
 const handleProxyGameOnRequest = (method, [domain, path], body, time) => {
   if (!isGameApi(path)) {
@@ -20,7 +19,7 @@ const handleProxyGameOnRequest = (method, [domain, path], body, time) => {
       body: body,
       time: time,
     }
-    try{
+    try {
       dispatch(onGameRequest(details))
     } catch (e) {
       console.error(details, e.stack)
@@ -132,7 +131,7 @@ const handleProxyGameStart = () => {
   window.dispatchEvent(new Event('game.start'))
 }
 
-const handleProxyNetworkErrorRetry = ([domain, path, url], counter) =>{
+const handleProxyNetworkErrorRetry = ([domain, path, url], counter) => {
   if (!isGameApi(path)) {
     return
   }
@@ -147,11 +146,14 @@ const handleProxyNetworkErrorRetry = ([domain, path, url], counter) =>{
 }
 
 const handleProxyNetworkError = ([domain, path, url]) => {
-  if (url.startsWith('http://www.dmm.com/netgame/') || url.includes('/kcs2/') || url.includes('/kcsapi/')) {
+  if (
+    url.startsWith('http://www.dmm.com/netgame/') ||
+    url.includes('/kcs2/') ||
+    url.includes('/kcsapi/')
+  ) {
     window.dispatchEvent(new Event('network.error'))
   }
 }
-
 
 const proxyListener = {
   'network.on.request': handleProxyGameOnRequest,
@@ -173,12 +175,12 @@ const addProxyListener = () => {
 
 addProxyListener()
 
-window.addEventListener ('load', () => {
+window.addEventListener('load', () => {
   addProxyListener()
 })
 
-window.addEventListener ('unload', () => {
-  if (window.listenerStatusFlag){
+window.addEventListener('unload', () => {
+  if (window.listenerStatusFlag) {
     window.listenerStatusFlag = false
     for (const eventName in proxyListener) {
       proxy.removeListener(eventName, proxyListener[eventName])

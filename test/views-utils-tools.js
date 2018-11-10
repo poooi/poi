@@ -55,16 +55,18 @@ describe('views/utils/tools', () => {
     it('should work with cases below', () => {
       assert.deepEqual([false, 2], test(2, 2))
       assert.deepEqual([true, { 1: 'a', 2: 'b' }], test({ 1: 'a' }, { 2: 'b' }))
-      assert.deepEqual([true, { 1: 'b' }], test({ 1: 'a'}, { 1: 'b' }))
-      assert.deepEqual([false, { 1: 'a' }], test({ 1 : 'a'}, { 1 : 'a' }))
-      assert.deepEqual([false, { 1: { 1 :2 } }], test({ 1: {1 : 2 } }, { 1 : { 1 : 2 } }))
-      assert.deepEqual([true, { 1 : { 1 : [] } }], test({ 1 : { 1 : [], 2 : ['g'] } }, { 1 : { 1 : [] } }))
-      assert.deepEqual([false, { 1 : { 1 : [], 2 : [ 'g' ] } }], test({ 1 : { 1 : [], 2 : ['g'] } }, { 1 : { 1 : [] } }, 2))
+      assert.deepEqual([true, { 1: 'b' }], test({ 1: 'a' }, { 1: 'b' }))
+      assert.deepEqual([false, { 1: 'a' }], test({ 1: 'a' }, { 1: 'a' }))
+      assert.deepEqual([false, { 1: { 1: 2 } }], test({ 1: { 1: 2 } }, { 1: { 1: 2 } }))
+      assert.deepEqual([true, { 1: { 1: [] } }], test({ 1: { 1: [], 2: ['g'] } }, { 1: { 1: [] } }))
+      assert.deepEqual(
+        [false, { 1: { 1: [], 2: ['g'] } }],
+        test({ 1: { 1: [], 2: ['g'] } }, { 1: { 1: [] } }, 2),
+      )
 
       const a = []
-      a[1] = {1: 2}
-      assert.deepEqual([true, [{ 1 : 1 }, { 1 : 2 }]], test([{ 1 : 1 }], a))
+      a[1] = { 1: 2 }
+      assert.deepEqual([true, [{ 1: 1 }, { 1: 2 }]], test([{ 1: 1 }], a))
     })
   })
 })
-

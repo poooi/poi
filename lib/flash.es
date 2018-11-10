@@ -7,4 +7,3 @@ try {
 } catch (e) {
   warn('Cannot get system flash plugin path')
 }
-

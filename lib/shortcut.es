@@ -8,7 +8,7 @@ const registerShortcut = (acc, desc, func) => {
   try {
     globalShortcut.register(acc, func)
     return true
-  } catch (err){
+  } catch (err) {
     console.error(`Failed to register shortcut[${acc}]: ${err}`)
     return false
   }

@@ -17,7 +17,19 @@ import { configSelector, basicSelector } from 'views/utils/selectors'
 import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 import { CardWrapper as CardWrapperL } from './styled-components'
 
-const rankName = ['', '元帥', '大将', '中将', '少将', '大佐', '中佐', '新米中佐', '少佐', '中堅少佐', '新米少佐']
+const rankName = [
+  '',
+  '元帥',
+  '大将',
+  '中将',
+  '少将',
+  '大佐',
+  '中佐',
+  '新米中佐',
+  '少佐',
+  '中堅少佐',
+  '新米少佐',
+]
 
 const totalExp = [
   0,
@@ -162,12 +174,12 @@ const resolveDayTime = time => {
 
 const getTagIntent = (_, timeRemaining) => {
   switch (true) {
-  case timeRemaining > 1800:
-    return Intent.NONE
-  case timeRemaining > 900:
-    return Intent.WARNING
-  default:
-    return Intent.DANGER
+    case timeRemaining > 1800:
+      return Intent.NONE
+    case timeRemaining > 900:
+      return Intent.WARNING
+    default:
+      return Intent.DANGER
   }
 }
 
@@ -177,24 +189,23 @@ const ExpContent = compose(
     level: get(state, 'info.basic.api_level', 0),
     exp: get(state, 'info.basic.api_experience', 0),
   })),
-)(
-  ({ level, exp, t }) =>
-    level >= 0 ? (
-      <>
-        {level < 120 && (
-          <InfoTooltipEntry className="info-tooltip-entry">
-            <CountdownRow className="info-tooltip-item">{t('main:Next')}</CountdownRow>
-            <span>{totalExp[level] - exp}</span>
-          </InfoTooltipEntry>
-        )}
+)(({ level, exp, t }) =>
+  level >= 0 ? (
+    <>
+      {level < 120 && (
         <InfoTooltipEntry className="info-tooltip-entry">
-          <CountdownRow className="info-tooltip-item">{t('main:Total Exp')}</CountdownRow>
-          <span>{exp}</span>
+          <CountdownRow className="info-tooltip-item">{t('main:Next')}</CountdownRow>
+          <span>{totalExp[level] - exp}</span>
         </InfoTooltipEntry>
-      </>
-    ) : (
-      <span />
-    ),
+      )}
+      <InfoTooltipEntry className="info-tooltip-entry">
+        <CountdownRow className="info-tooltip-item">{t('main:Total Exp')}</CountdownRow>
+        <span>{exp}</span>
+      </InfoTooltipEntry>
+    </>
+  ) : (
+    <span />
+  ),
 )
 
 // Refresh time:
@@ -267,7 +278,6 @@ const CardWrapper = styled(CardWrapperL)`
   align-items: center;
 `
 
-
 class CountDownControl extends Component {
   constructor(props) {
     super(props)
@@ -325,7 +335,10 @@ class CountDownControl extends Component {
     const { intent } = this.state
     return (
       <TeitokuTimer className="teitoku-timer">
-        <Tooltip position={Position.LEFT_BOTTOM} content={<CountdownContent moments={this.moments} />}>
+        <Tooltip
+          position={Position.LEFT_BOTTOM}
+          content={<CountdownContent moments={this.moments} />}
+        >
           <Tag intent={intent} minimal>
             <FontAwesome name="calendar" />
           </Tag>
@@ -397,23 +410,23 @@ export const AdmiralPanel = translate(['main'])(
     minSlotNum,
     editable,
   }) {
-    const shipCountIntent = shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : Intent.NONE
-    const slotCountIntent = slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : Intent.NONE
+    const shipCountIntent =
+      shipNumCheck && maxShip - (shipNum + dropCount) < minShipNum ? 'warning' : Intent.NONE
+    const slotCountIntent =
+      slotNumCheck && maxSlotitem - equipNum < minSlotNum ? 'warning' : Intent.NONE
 
     return (
       <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
         <Tooltip content={<ExpContent />} position={Position.RIGHT}>
-          {
-            level >= 0 ? (
-              <span>
-                {`Lv. ${level}　`}
-                <span className="nickname">{nickname}</span>
-                <Tag minimal>{t(`resources:${rankName[rank]}`)}</Tag>
-              </span>
-            ) : (
-              <span>{t('Admiral [Not logged in]')}</span>
-            )
-          }
+          {level >= 0 ? (
+            <span>
+              {`Lv. ${level}　`}
+              <span className="nickname">{nickname}</span>
+              <Tag minimal>{t(`resources:${rankName[rank]}`)}</Tag>
+            </span>
+          ) : (
+            <span>{t('Admiral [Not logged in]')}</span>
+          )}
         </Tooltip>
         <CountDownControl />
         <span style={{ marginRight: '1em', marginLeft: '1em' }}>

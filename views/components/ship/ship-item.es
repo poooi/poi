@@ -105,9 +105,9 @@ export class ShipRow extends Component {
       'ship-info-hidden': hideShipName,
     })
     const labelStatusStyle = getStatusStyle(labelStatus)
-    const hpPercentage = ship.api_nowhp / ship.api_maxhp * 100
-    const fuelPercentage = ship.api_fuel / $ship.api_fuel_max * 100
-    const ammoPercentage = ship.api_bull / $ship.api_bull_max * 100
+    const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
+    const fuelPercentage = (ship.api_fuel / $ship.api_fuel_max) * 100
+    const ammoPercentage = (ship.api_bull / $ship.api_bull_max) * 100
     const fuelTip = (
       <span>
         <MaterialIcon materialId={1} className="material-icon" />
@@ -149,7 +149,12 @@ export class ShipRow extends Component {
           {enableAvatar && (
             <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} />
           )}
-          <ShipInfo className={shipInfoClass} style={labelStatusStyle} avatar={enableAvatar} show={!hideShipName}>
+          <ShipInfo
+            className={shipInfoClass}
+            style={labelStatusStyle}
+            avatar={enableAvatar}
+            show={!hideShipName}
+          >
             <ShipBasic className="ship-basic" show={!hideShipName}>
               <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
               <ShipLabel className="ship-type">
@@ -157,7 +162,9 @@ export class ShipRow extends Component {
                   ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
                   : '??'}
               </ShipLabel>
-              <ShipLabel className="ship-speed">{t(`main:${getSpeedLabel(ship.api_soku)}`)}</ShipLabel>
+              <ShipLabel className="ship-speed">
+                {t(`main:${getSpeedLabel(ship.api_soku)}`)}
+              </ShipLabel>
               <AACIIndicator shipId={ship.api_id} />
               <AAPBIndicator shipId={ship.api_id} />
               <OASWIndicator shipId={ship.api_id} />

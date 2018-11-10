@@ -5,20 +5,19 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import dbg from './debug'
 
-const {ROOT, EXROOT} = global
+const { ROOT, EXROOT } = global
 const defaultConfigPath = path.join(ROOT, 'config.cson')
 const configPath = path.join(EXROOT, 'config.cson')
 
 class configClass extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     this.configData = null
     try {
       fs.accessSync(configPath, fs.R_OK | fs.W_OK)
       this.configData = CSON.parseCSONFile(configPath)
       dbg.log(`Config loaded from: ${configPath}`)
-    }
-    catch (e) {
+    } catch (e) {
       dbg.log(e)
     }
     if (!this.configData) {
@@ -26,8 +25,7 @@ class configClass extends EventEmitter {
         fs.accessSync(defaultConfigPath, fs.R_OK)
         this.configData = CSON.parseCSONFile(defaultConfigPath) || {}
         dbg.log(`Config loaded from: ${defaultConfigPath}`)
-      }
-      catch (e) {
+      } catch (e) {
         this.configData = {}
         dbg.log(e)
       }
@@ -60,12 +58,11 @@ class configClass extends EventEmitter {
   save = () => {
     try {
       fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
-    }
-    catch (e) {
+    } catch (e) {
       console.warn(e)
     }
   }
-  delete = (path) => {
+  delete = path => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData
       const subpath = path.split('.')
@@ -81,8 +78,6 @@ const config = new configClass()
 config.setMaxListeners(100)
 
 export default config
-
-
 
 // polyfill for old configs
 if (typeof config.get('poi.layout') === 'string') {

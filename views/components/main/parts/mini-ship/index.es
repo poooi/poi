@@ -91,12 +91,11 @@ export class MiniShip extends Component {
     prevFleetId: null,
   }
 
-  handleTransitionEnd = (i) => {
+  handleTransitionEnd = i => {
     if (i === this.state.prevFleetId) {
       this.setState({ prevFleetId: null })
     }
   }
-
 
   handleClick = idx => {
     if (idx != this.state.activeFleetId) {
@@ -129,7 +128,11 @@ export class MiniShip extends Component {
   render() {
     const { activeFleetId, prevFleetId } = this.state
     return (
-      <CardWrapper onDoubleClick={this.handleChangeShipView} elevation={this.props.editable ? 2 : 0} interactive={this.props.editable}>
+      <CardWrapper
+        onDoubleClick={this.handleChangeShipView}
+        elevation={this.props.editable ? 2 : 0}
+        interactive={this.props.editable}
+      >
         <FleetNameButtonContainer className="miniship-switch">
           <FleetNameButton className="miniship-fleet-switch">
             {[0, 1, 2, 3].map(i => (
@@ -165,7 +168,8 @@ export class MiniShip extends Component {
               transition={this.props.enableTransition && (activeFleetId === i || prevFleetId === i)}
               active={activeFleetId === i || prevFleetId === i}
               left={activeFleetId > i}
-              right={activeFleetId < i}>
+              right={activeFleetId < i}
+            >
               <PaneBodyMini key={i} fleetId={i} />
             </ShipDeck>
           ))}
@@ -176,7 +180,8 @@ export class MiniShip extends Component {
             transition={this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
             active={activeFleetId === 4 || prevFleetId === 4}
             left={activeFleetId > 4}
-            right={activeFleetId < 4}>
+            right={activeFleetId < 4}
+          >
             <LBViewMini />
           </ShipDeck>
         </ShipTabContent>

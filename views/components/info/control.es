@@ -16,7 +16,7 @@ import { Tooltip } from 'views/components/etc/overlay'
 const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
 
-const openItemAsync = (dir, source=null) => {
+const openItemAsync = (dir, source = null) => {
   openExternal(`file://${dir}`, {}, err => {
     if (err) {
       const prefix = (source && `${source}: `) || ''
@@ -30,11 +30,14 @@ const PoiControlTag = styled(CustomTag)`
   transition: 0.3s 0.2s;
   display: flex;
   flex-direction: row;
-  ${({extend}) => extend ? css`
-    flex: 0 0 270px;
-  ` : css`
-    flex: 0 0 120px;
-  `}
+  ${({ extend }) =>
+    extend
+      ? css`
+          flex: 0 0 270px;
+        `
+      : css`
+          flex: 0 0 120px;
+        `}
 `
 
 const PoiControlInner = styled.div`
@@ -79,8 +82,11 @@ export class PoiControl extends Component {
       }).catch(() => false)
     })()`)
   }
-  handleScreenshotCaptured = ({dataURL, toClipboard}) => {
-    const screenshotPath = config.get('poi.screenshotPath', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
+  handleScreenshotCaptured = ({ dataURL, toClipboard }) => {
+    const screenshotPath = config.get(
+      'poi.screenshotPath',
+      remote.getGlobal('DEFAULT_SCREENSHOT_PATH'),
+    )
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
 
     const image = nativeImage.createFromDataURL(dataURL)
@@ -90,14 +96,17 @@ export class PoiControl extends Component {
     } else {
       const buf = usePNG ? image.toPNG() : image.toJPEG(80)
       const now = new Date()
-      const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+      const date = `${now.getFullYear()}-${now.getMonth() +
+        1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
       fs.ensureDirSync(screenshotPath)
       const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
-      fs.writeFile(filename, buf).then(() => {
-        window.success(`${this.props.t('screenshot saved to')} ${filename}`)
-      }).catch(err => {
-        window.error(this.props.t('Failed to save the screenshot'))
-      })
+      fs.writeFile(filename, buf)
+        .then(() => {
+          window.success(`${this.props.t('screenshot saved to')} ${filename}`)
+        })
+        .catch(err => {
+          window.error(this.props.t('Failed to save the screenshot'))
+        })
     }
   }
 
@@ -112,8 +121,7 @@ export class PoiControl extends Component {
       fs.ensureDirSync(path.join(dir, 'FlowerKnightGirls'))
       fs.ensureDirSync(path.join(dir, 'ToukenRanbu'))
       openItemAsync(dir, 'handleOpenCacheFolder')
-    }
-    catch (e) {
+    } catch (e) {
       window.toggleModal(this.props.t('Open cache dir'), this.props.t('NoPermission'))
     }
   }
@@ -131,11 +139,13 @@ export class PoiControl extends Component {
 
   handleOpenScreenshotFolder = () => {
     try {
-      const screenshotPath = config.get('poi.misc.screenshot.path', remote.getGlobal('DEFAULT_SCREENSHOT_PATH'))
+      const screenshotPath = config.get(
+        'poi.misc.screenshot.path',
+        remote.getGlobal('DEFAULT_SCREENSHOT_PATH'),
+      )
       fs.ensureDirSync(screenshotPath)
-      openItemAsync(screenshotPath,'handleOpenScreenshotFolder')
-    }
-    catch (e) {
+      openItemAsync(screenshotPath, 'handleOpenScreenshotFolder')
+    } catch (e) {
       window.toggleModal(this.props.t('Open screenshot dir'), this.props.t('NoPermission'))
     }
   }
@@ -191,14 +201,14 @@ export class PoiControl extends Component {
 
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()
-    remote.getCurrentWindow().openDevTools({mode: 'detach'})
+    remote.getCurrentWindow().openDevTools({ mode: 'detach' })
   }
 
   handleOpenWebviewDevTools = () => {
-    getStore('layout.webview.ref').openDevTools({mode: 'detach'})
+    getStore('layout.webview.ref').openDevTools({ mode: 'detach' })
   }
 
-  handleJustifyLayout = (e) => {
+  handleJustifyLayout = e => {
     getStore('layout.webview.ref').executeJavaScript('window.align()')
     e.preventDefault()
   }
@@ -207,7 +217,7 @@ export class PoiControl extends Component {
     getStore('layout.webview.ref').executeJavaScript('window.unalign()')
   }
 
-  handleRefreshGameDialog = (e) => {
+  handleRefreshGameDialog = e => {
     if (e.shiftKey) {
       gameRefreshPage()
       return
@@ -220,19 +230,20 @@ export class PoiControl extends Component {
           Are you sure to refresh the game?
           <ul>
             <li>Refresh page is the same as pressing F5.</li>
-            <li>Reload game reloads only the game frame, this is usually faster but could result in catbomb.</li>
+            <li>
+              Reload game reloads only the game frame, this is usually faster but could result in
+              catbomb.
+            </li>
           </ul>
-          Tip: Right clicking on this button reloads the game and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
+          Tip: Right clicking on this button reloads the game and Left clicking with Shift key
+          pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
         </Trans>
       </div>,
       [
-        { name: this.props.t('Refresh page'),
-          func: gameRefreshPage,
-          style: 'warning' },
-        { name: this.props.t('Reload game'),
-          func: gameReload,
-          style: 'danger' },
-      ])
+        { name: this.props.t('Refresh page'), func: gameRefreshPage, style: 'warning' },
+        { name: this.props.t('Reload game'), func: gameReload, style: 'danger' },
+      ],
+    )
   }
 
   handleSetExtend = () => {
@@ -246,64 +257,67 @@ export class PoiControl extends Component {
     this.setState({ transition: false })
   }
 
-  handleTouchbar = (props) => {
+  handleTouchbar = props => {
     //load Touchbar-related functions only when touchbar is triggered
-    const {refreshconfirm, touchBarReset} = remote.require('./lib/touchbar')
+    const { refreshconfirm, touchBarReset } = remote.require('./lib/touchbar')
     //workaround for the input event not defined
     switch (props) {
-    case 'refresh':
-      toggleModal(
-        this.props.t('Confirm Refreshing'),
-        <div>
-          <Trans i18nKey="RefreshGameDialogTip">
-            Are you sure to refresh the game?
-            <ul>
-              <li>Refresh page is the same as pressing F5.</li>
-              <li>Reload game reloads only the game frame, this is usually faster but could result in catbomb.</li>
-            </ul>
-            Tip: Right clicking on this button reloads the game and Left clicking with Shift key pressed refreshes the page, both are <b>without confirmation</b>, use at your own risk.
-          </Trans>
-        </div>,
-        [
-          { name: this.props.t('Refresh page'),
-            func: gameRefreshPage,
-            style: 'warning' },
-          { name: this.props.t('Reload game'),
-            func: gameReload,
-            style: 'danger' },
-        ],
-        () => {touchBarReset()}
-      )
-      refreshconfirm(this.props.t('Refresh page'), this.props.t('Reload game'))
-      break
-    case 'adjust':
-      window.dispatchEvent(new Event('resize'))
-      break
-    case 'unlock':
-      this.handleUnlockWebview()
-      break
-    case 'screenshotdir':
-      this.handleOpenScreenshotFolder()
-      break
-    case 'cachedir':
-      this.handleOpenCacheFolder()
-      break
-    case 'volume':
-      this.handleSetMuted()
-      break
-    case 'screenshot':
-      this.handleCapturePage()
-      break
-    case 'gameReload':
-      gameReload()
-      break
-    case 'gameRefreshPage':
-      gameRefreshPage()
-      break
-    case 'edit':
-      this.handleSetEditable()
-      break
-    default:
+      case 'refresh':
+        toggleModal(
+          this.props.t('Confirm Refreshing'),
+          <div>
+            <Trans i18nKey="RefreshGameDialogTip">
+              Are you sure to refresh the game?
+              <ul>
+                <li>Refresh page is the same as pressing F5.</li>
+                <li>
+                  Reload game reloads only the game frame, this is usually faster but could result
+                  in catbomb.
+                </li>
+              </ul>
+              Tip: Right clicking on this button reloads the game and Left clicking with Shift key
+              pressed refreshes the page, both are <b>without confirmation</b>, use at your own
+              risk.
+            </Trans>
+          </div>,
+          [
+            { name: this.props.t('Refresh page'), func: gameRefreshPage, style: 'warning' },
+            { name: this.props.t('Reload game'), func: gameReload, style: 'danger' },
+          ],
+          () => {
+            touchBarReset()
+          },
+        )
+        refreshconfirm(this.props.t('Refresh page'), this.props.t('Reload game'))
+        break
+      case 'adjust':
+        window.dispatchEvent(new Event('resize'))
+        break
+      case 'unlock':
+        this.handleUnlockWebview()
+        break
+      case 'screenshotdir':
+        this.handleOpenScreenshotFolder()
+        break
+      case 'cachedir':
+        this.handleOpenCacheFolder()
+        break
+      case 'volume':
+        this.handleSetMuted()
+        break
+      case 'screenshot':
+        this.handleCapturePage()
+        break
+      case 'gameReload':
+        gameReload()
+        break
+      case 'gameRefreshPage':
+        gameRefreshPage()
+        break
+      case 'edit':
+        this.handleSetEditable()
+        break
+      default:
     }
   }
 
@@ -312,7 +326,12 @@ export class PoiControl extends Component {
   }
 
   renderButton = ({ label, ...props }) => (
-    <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={this.state.transition}>
+    <Tooltip
+      key={label}
+      position={Position.TOP_LEFT}
+      content={label}
+      disabled={this.state.transition}
+    >
       <Button {...props} minimal />
     </Tooltip>
   )
@@ -354,8 +373,8 @@ export class PoiControl extends Component {
         icon: 'console',
       },
       {
-        onClick:() => this.handleCapturePage(false),
-        onContextMenu:() => this.handleCapturePage(true),
+        onClick: () => this.handleCapturePage(false),
+        onContextMenu: () => this.handleCapturePage(true),
         label: this.props.t('Take a screenshot'),
         icon: 'camera',
       },
@@ -397,12 +416,18 @@ export class PoiControl extends Component {
       },
     ]
     return (
-      <PoiControlTag tag="poi-control" extend={this.state.extend} onTransitionEnd={this.handleTransitionEnd}>
-        <PoiControlInner>
-          {list.map(this.renderButton)}
-        </PoiControlInner>
+      <PoiControlTag
+        tag="poi-control"
+        extend={this.state.extend}
+        onTransitionEnd={this.handleTransitionEnd}
+      >
+        <PoiControlInner>{list.map(this.renderButton)}</PoiControlInner>
         <div>
-          <Button icon={this.state.extend ? 'chevron-left' : 'chevron-right'} onClick={this.handleSetExtend} minimal />
+          <Button
+            icon={this.state.extend ? 'chevron-left' : 'chevron-right'}
+            onClick={this.handleSetExtend}
+            minimal
+          />
         </div>
       </PoiControlTag>
     )

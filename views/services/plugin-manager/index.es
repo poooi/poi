@@ -139,7 +139,6 @@ class PluginManager extends EventEmitter {
     }
   }
 
-
   getInstalledPlugins() {
     return this.getFilteredPlugins(plugin => plugin.isInstalled)
   }

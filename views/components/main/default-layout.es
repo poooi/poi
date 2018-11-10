@@ -164,13 +164,15 @@ const defaultLayout = {
 // Override maxsize
 const configLayout = window.config.get('poi.mainpanel.layout')
 const keys = ['minW', 'maxW', 'minH', 'maxH']
-const newLayout = fromPairs(map(entries(defaultLayout), ([bp, conf]) => ([
-  bp,
-  map(conf, (panelConf, i) => ({
-    ...get(configLayout, [bp, i], panelConf),
-    ...pick(panelConf, keys),
-  })),
-])))
+const newLayout = fromPairs(
+  map(entries(defaultLayout), ([bp, conf]) => [
+    bp,
+    map(conf, (panelConf, i) => ({
+      ...get(configLayout, [bp, i], panelConf),
+      ...pick(panelConf, keys),
+    })),
+  ]),
+)
 
 if (!isEqual(newLayout, configLayout)) {
   window.config.set('poi.mainpanel.layout', newLayout)

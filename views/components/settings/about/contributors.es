@@ -6,9 +6,7 @@ import styled from 'styled-components'
 
 import { Section } from 'views/components/settings/components/section'
 
-const getAvatarUrl = url => /.*githubusercontent.com\/u\/.*/.test(url)
-  ? `${url}&s=160`
-  : url
+const getAvatarUrl = url => (/.*githubusercontent.com\/u\/.*/.test(url) ? `${url}&s=160` : url)
 
 const openLink = memoize(link => () => shell.openExternal(link))
 
@@ -38,17 +36,15 @@ const Avatar = styled.div`
 export const Contributors = () => (
   <Section title="Contributors">
     <Wrapper className="contributors">
-      {
-        map(CONTRIBUTORS, (e, i) => (
-          <Avatar key={e.name || e.login} className="contributor-item">
-            <img
-              src={getAvatarUrl(e.avatar_url)}
-              onClick={openLink(e.html_url)}
-              title={e.name || e.login}
-            />
-          </Avatar>
-        ))
-      }
+      {map(CONTRIBUTORS, (e, i) => (
+        <Avatar key={e.name || e.login} className="contributor-item">
+          <img
+            src={getAvatarUrl(e.avatar_url)}
+            onClick={openLink(e.html_url)}
+            title={e.name || e.login}
+          />
+        </Avatar>
+      ))}
     </Wrapper>
   </Section>
 )

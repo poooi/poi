@@ -23,17 +23,14 @@ export default class FileWriter {
   }
 
   async _continueWriting() {
-    if (this.writing)
-      return
+    if (this.writing) return
     this.writing = true
     while (this._queue.length) {
       const [path, data, options, callback] = this._queue.shift()
       await promisify(ensureDir)(dirname(path))
       const err = await promisify(writeFile)(path, data, options)
-      if (callback)
-        callback(err)
+      if (callback) callback(err)
     }
     this.writing = false
   }
-
 }

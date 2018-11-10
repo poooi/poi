@@ -80,8 +80,7 @@ const capableShipTypes = [
  */
 export const getShipAAPB = (...args) => {
   const [[ship, $ship], equipsInfo] = args
-  if (!capableShipTypes.includes($ship.api_stype))
-    return 0
+  if (!capableShipTypes.includes($ship.api_stype)) return 0
 
   let rlk2Count = 0
   equipsInfo.forEach(([_ignored, $equip]) => {
@@ -91,8 +90,7 @@ export const getShipAAPB = (...args) => {
     }
   })
 
-  if (rlk2Count === 0)
-    return 0
+  if (rlk2Count === 0) return 0
 
   const iseClassBonus = $ship.api_ctype === 2 ? 70 : 0
 
@@ -120,5 +118,5 @@ export const getShipAAPB = (...args) => {
    */
   adjustedAA = 2 * Math.floor(adjustedAA / 2)
   // as we want to show the precentage, let *100 here to obtain a better precision.
-  return (adjustedAA + ship.api_lucky[0])*100 /(322 - 40*rlk2Count - iseClassBonus)
+  return ((adjustedAA + ship.api_lucky[0]) * 100) / (322 - 40 * rlk2Count - iseClassBonus)
 }
