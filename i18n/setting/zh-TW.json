@@ -188,7 +188,7 @@
   "Plugin": "擴展",
   "NPM server": "NPM 服務器",
   "Update plugins at startup": "啓動時自動更新擴展",
-  "Try plugin beta version": "嘗試 btea 版本擴展",
+  "Try plugin beta version": "嘗試 beta 版本擴展",
   "Background": "背景",
   "Preview": "預覽",
   "Connection retries": "連接重試次數",

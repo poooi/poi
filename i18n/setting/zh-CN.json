@@ -188,7 +188,7 @@
   "Plugin": "插件",
   "NPM server": "NPM 服务器",
   "Update plugins at startup": "启动时自动更新插件",
-  "Try plugin beta version": "尝试 btea 版本插件",
+  "Try plugin beta version": "尝试 beta 版本插件",
   "Background": "背景",
   "Preview": "预览",
   "Connection retries": "连接重试次数",
