@@ -35,7 +35,7 @@ require('./lib/module-path').setAllowedPath([global.ROOT, global.APPDATA_PATH])
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
-const { warn, error, darwinDevToolPolyfill } = require('./lib/utils')
+const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
@@ -208,8 +208,6 @@ app.on('ready', () => {
     require('./lib/window').closeWindows()
     mainWindow = null
   })
-  // Workaround for cut/copy/paste/close keybindings not working in devtools window on OSX
-  darwinDevToolPolyfill(mainWindow.webContents)
 
   // Tray icon
   if (process.platform === 'win32' || process.platform === 'linux') {

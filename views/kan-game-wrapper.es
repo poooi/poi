@@ -13,7 +13,6 @@ import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { layoutResizeObserver } from 'views/services/layout'
 import { fileUrl } from 'views/utils/tools'
-import { darwinDevToolPolyfill } from '../lib/utils.es'
 import { CustomTag } from 'views/components/etc/custom-tag'
 
 const config = remote.require('./lib/config')
@@ -113,7 +112,6 @@ export class KanGameWrapper extends Component {
     })
     window.addEventListener('resize', this.alignWebviewDebounced)
     layoutResizeObserver.observe(this.webview.current.view)
-    darwinDevToolPolyfill(this.webview.current.getWebContents())
   }
 
   handleWebviewUnmount = () => {

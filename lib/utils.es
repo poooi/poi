@@ -48,33 +48,6 @@ export function stopFileNavigate(id) {
   })
 }
 
-/**
- * Workaround for cut/copy/paste/close keybindings not working in devtools window on OSX
- * FIXME: https://github.com/electron/electron/issues/11998
- * credits goes to https://github.com/onivim/oni/pull/2390
- * @param current {webContents} webContents to polyfill
- */
-export const darwinDevToolPolyfill = webContents => {
-  if (process.platform === 'darwin') {
-    webContents.on('devtools-opened', () => {
-      webContents.devToolsWebContents.executeJavaScript(`
-          window.addEventListener('keydown', function (e) {
-              if (e.keyCode === 65 && e.metaKey) {
-                  document.execCommand('Select All');
-              } else if (e.keyCode === 67 && e.metaKey) {
-                  document.execCommand('copy');
-              } else if (e.keyCode === 86 && e.metaKey) {
-                  document.execCommand('paste');
-              } else if (e.keyCode === 87 && e.metaKey) {
-                  window.close();
-              } else if (e.keyCode === 88 && e.metaKey) {
-                  document.execCommand('cut');
-              }
-          });`)
-    })
-  }
-}
-
 const set = new Set()
 
 export function stopFileNavigateAndHandleNewWindowInApp(id) {
@@ -94,7 +67,6 @@ export function stopFileNavigateAndHandleNewWindowInApp(id) {
         })
         win.loadURL(url)
         win.show()
-        darwinDevToolPolyfill(win.webContents)
         set.add(url)
         setTimeout(() => {
           set.delete(url)
@@ -152,7 +124,6 @@ export function stopNavigateAndHandleNewWindow(id) {
           },
         }
         e.newGuest = new BrowserWindow(options)
-        darwinDevToolPolyfill(e.newGuest.webContents)
       }
     })
 }
