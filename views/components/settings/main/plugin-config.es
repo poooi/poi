@@ -40,7 +40,7 @@ export const PluginConfig = translate(['setting'])(({ t }) => (
       </Wrapper>
 
       <Wrapper>
-        <FormGroup inline label={t('NPM server')}>
+        <FormGroup inline label={t('npm server')}>
           <RadioConfig
             configName="packageManager.mirrorName"
             defaultValue={navigator.language === 'zh-CN' ? 'taobao' : 'npm'}

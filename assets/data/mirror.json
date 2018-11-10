@@ -5,12 +5,12 @@
     "server": "http://registry.npm.taobao.org/"
   },
   "cnpm": {
-    "name": "CNPM (CN)",
+    "name": "cnpm (CN)",
     "menuname": "r.cnpmjs.org",
     "server": "http://r.cnpmjs.org/"
   },
   "npm": {
-    "name": "NPMJS (US)",
+    "name": "npmjs (US)",
     "menuname": "registry.npmjs.org",
     "server": "https://registry.npmjs.org/"
   }
