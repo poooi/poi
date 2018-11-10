@@ -102,7 +102,7 @@ export const VersionInfo = translate(['setting'])(({ t }) => (
       <PoiLogo src={`file://${ROOT}/assets/icons/poi.png`} />
       <Versions>
         <Title>
-          <PoiName>{aprilFirst ? 'Chiba' : 'poi'}</PoiName> {POI_VERSION}
+          <PoiName>{aprilFirst ? 'chiba' : 'poi'}</PoiName> {POI_VERSION}
         </Title>
         <VersionDetail>
           {map(['electron', 'chrome', 'node'], name => (
