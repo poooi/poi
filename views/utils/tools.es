@@ -247,3 +247,9 @@ export const readI18nResources = (filePath) => {
     return {}
   }
 }
+
+export const loadScript = (path, document=window.document) => {
+  const script = document.createElement('script')
+  script.setAttribute('src', path)
+  document.head.appendChild(script)
+}

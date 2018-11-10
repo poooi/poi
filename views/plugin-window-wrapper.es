@@ -8,6 +8,7 @@ import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { PluginWrap } from './plugin-wrapper'
 import styled, { StyleSheetManager } from 'styled-components'
+import { loadStyle } from './env-parts/theme'
 
 const pickOptions = ['ROOT', 'EXROOT', 'toast', 'notify', 'toggleModal', 'i18n', 'config', 'getStore']
 const { BrowserWindow } = remote
@@ -117,8 +118,10 @@ export class PluginWindowWrap extends PureComponent {
       case 'height': return `height=${windowOptions.height}`
       }
     }).join(',')
-    this.externalWindow = open(`file:///${__dirname}/../index-plugin.html?${this.props.plugin.id}`, `plugin[${this.props.plugin.id}]`, windowFeatures)
+    const URL = `file:///${__dirname}/../index-plugin.html?${this.props.plugin.id}`
+    this.externalWindow = open(URL, `plugin[${this.props.plugin.id}]`, windowFeatures + ',nodeIntegration=no')
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
+      this.currentWindow = BrowserWindow.getAllWindows().find(a => a.getURL().endsWith(this.props.plugin.id))
       this.externalWindow.document.head.innerHTML =
 `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
@@ -136,22 +139,16 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       this.externalWindow.document.body.appendChild(this.containerEl)
       this.externalWindow.document.title = this.props.plugin.name
       this.externalWindow.isWindowMode = true
-      if (require.resolve(path.join(__dirname, 'env-parts', 'theme')).endsWith('.es')) {
-        this.externalWindow.require('@babel/register')(this.externalWindow.require(path.join(ROOT, 'babel.config')))
-      }
-      this.externalWindow.$ = param => this.externalWindow.document.querySelector(param)
-      this.externalWindow.$$ = param => this.externalWindow.document.querySelectorAll(param)
-      this.externalWindow.remote = this.externalWindow.require('electron').remote
-      this.externalWindow.remote.require('./lib/utils').stopFileNavigate(this.externalWindow.remote.getCurrentWebContents().id)
+      loadStyle(this.externalWindow.document, this.currentWindow, false)
+      remote.require('./lib/utils').stopFileNavigate(this.currentWindow.webContents.id)
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
-      this.externalWindow.require(require.resolve('./env-parts/theme'))
       this.externalWindow.addEventListener('beforeunload', () => {
         this.setState({
           loaded: false,
         })
-        config.set(`plugin.${this.props.plugin.id}.bounds`, this.externalWindow.remote.getCurrentWindow().getBounds())
+        config.set(`plugin.${this.props.plugin.id}.bounds`, this.currentWindow.getBounds())
         try {
           this.props.closeWindowPortal()
         } catch(e) {
@@ -160,13 +157,13 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       })
       this.setState({
         loaded: true,
-        id: this.externalWindow.remote.getCurrentWindow().id,
+        id: this.currentWindow.id,
       }, () => this.onZoomChange(config.get('poi.appearance.zoom', 1)))
     })
   }
 
   checkBrowserWindowExistence = () => {
-    if (!this.state.id || !BrowserWindow.fromId(this.state.id)) {
+    if (!this.state.id || !BrowserWindow.fromId(this.state.id) || !this.currentWindow) {
       console.warn('Plugin window not exists. Removing window...')
       try {
         this.props.closeWindowPortal()
@@ -180,7 +177,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
 
   onZoomChange = (value) => {
     if (this.checkBrowserWindowExistence()) {
-      this.externalWindow.remote.getCurrentWebContents().setZoomFactor(value)
+      this.currentWindow.webContents.setZoomFactor(value)
     }
   }
 
@@ -192,7 +189,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
 
   focusWindow = () => {
     if (this.checkBrowserWindowExistence()) {
-      this.externalWindow.require('electron').remote.getCurrentWindow().focus()
+      this.currentWindow.focus()
     } else {
       setImmediate(() => {
         ipc.access('MainWindow').ipcFocusPlugin(this.props.plugin.id)
@@ -206,7 +203,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       <>
         {
           config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux') &&
-          <TitleBar icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.externalWindow.require('electron').remote.getCurrentWindow()} />
+          <TitleBar icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')} currentWindow={this.currentWindow} />
         }
         <WindowEnv.Provider value={{
           window: this.externalWindow,

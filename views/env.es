@@ -79,7 +79,7 @@ require('./env-parts/modal')
 
 // Custom theme
 // You should call window.applyTheme() to apply a theme properly.
-require('./env-parts/theme')
+require('./env-parts/theme').loadStyle()
 
 // Global data resolver
 require('./env-parts/data-resolver')
