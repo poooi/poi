@@ -772,8 +772,8 @@ export class ControlledTabArea extends PureComponent {
       </TabContentsUnion>
     )
     if (process.platform === 'darwin') {
-      const { touchBarTabinit } = remote.require('./lib/touchbar')
-      touchBarTabinit(
+      const { updateMainTouchbar } = remote.require('./lib/touchbar')
+      updateMainTouchbar(
         t('main:Overview'),
         t('main:Fleet'),
         activePlugin.name || t('others:Plugins'),

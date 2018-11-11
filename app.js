@@ -178,8 +178,8 @@ app.on('ready', () => {
   // Default menu
   mainWindow.reloadArea = 'kan-game webview'
   if (process.platform === 'darwin') {
-    const { touchBar } = require('./lib/touchbar')
-    mainWindow.setTouchBar(touchBar)
+    const { renderMainTouchbar } = require('./lib/touchbar')
+    renderMainTouchbar()
     if (/electron$/i.test(process.argv[0])) {
       const icon = nativeImage.createFromPath(`${ROOT}/assets/icons/poi.png`)
       app.dock.setIcon(icon)

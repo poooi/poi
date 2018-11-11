@@ -6,84 +6,94 @@ const { TouchBarButton, TouchBarSpacer, TouchBarPopover, TouchBarSegmentedContro
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
+const getIcon = name => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
+
 // simulate Escape key
-export const touchbaresc = () => {
+export const sendEscKey = () => {
   mainWindow.webContents.sendInputEvent({
     type: 'keyDown',
     keyCode: 'Escape',
-  }),
-    mainWindow.webContents.sendInputEvent({
-      type: 'keyUp',
-      keyCode: 'Escape',
-    })
+  })
+  mainWindow.webContents.sendInputEvent({
+    type: 'keyUp',
+    keyCode: 'Escape',
+  })
 }
+
 // buttons
 const devtools = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'terminal.png'),
+  icon: getIcon('terminal'),
   click: () => {
     mainWindow.openDevTools({ mode: 'detach' })
   },
 })
+
 const screenshot = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'camera-retro.png'),
+  icon: getIcon('camera-retro'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'screenshot')
   },
 })
+
 const volume = new TouchBarButton({
-  icon: config.get('poi.content.muted')
-    ? path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png')
-    : path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png'),
+  icon: config.get('poi.content.muted') ? getIcon('volume-off') : getIcon('volume-up'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'volume')
   },
 })
+
 const cachedir = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'bolt.png'),
+  icon: getIcon('bolt'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'cachedir')
   },
 })
+
 const screenshotdir = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'photo.png'),
+  icon: getIcon('photo'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'screenshotdir')
   },
 })
+
 const adjust = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'arrows-alt.png'),
+  icon: getIcon('arrows-alt'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'adjust')
   },
 })
+
 const refresh = new TouchBarButton({
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'refresh.png'),
+  icon: getIcon('refresh'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'refresh')
   },
 })
+
 const edit = new TouchBarButton({
-  icon: config.get('poi.layout.editable')
-    ? path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png')
-    : path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png'),
+  icon: config.get('poi.layout.editable') ? getIcon('pen-square') : getIcon('edit'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'edit')
   },
 })
+
 // poi esc
 const poibutton = new TouchBarButton({
   icon: path.join(ROOT, 'assets', 'icons', 'poi_36x36.png'),
   backgroundColor: '#000000',
 })
+
 //spacer
 const spacer = new TouchBarSpacer({
   size: 'flexible',
 })
+
 //popover
 const popover = new TouchBarPopover({
   items: [devtools, screenshot, volume, cachedir, screenshotdir, adjust, edit, refresh],
-  icon: path.join(ROOT, 'assets', 'img', 'touchbar', 'angle-right.png'),
+  icon: getIcon('angle-right'),
 })
+
 //tab-switching
 const segments = [
   {
@@ -99,6 +109,7 @@ const segments = [
     enabled: false,
   },
 ]
+
 const tabs = new TouchBarSegmentedControl({
   segmentStyle: 'automatic',
   segments: segments,
@@ -107,8 +118,9 @@ const tabs = new TouchBarSegmentedControl({
     mainWindow.webContents.send('touchbartab', selectedIndex)
   },
 })
+
 //confirmation modal
-export const refreshconfirm = (btn1, btn2) => {
+export const toggleRefreshConfirm = (btn1, btn2) => {
   mainWindow.setTouchBar(
     new TouchBar({
       items: [
@@ -118,7 +130,7 @@ export const refreshconfirm = (btn1, btn2) => {
           backgroundColor: '#E08E0B',
           click: () => {
             mainWindow.webContents.send('touchbar', 'gameRefreshPage')
-            touchbaresc()
+            sendEscKey()
           },
         }),
         new TouchBarButton({
@@ -126,7 +138,7 @@ export const refreshconfirm = (btn1, btn2) => {
           backgroundColor: '#E43725',
           click: () => {
             mainWindow.webContents.send('touchbar', 'gameReload')
-            touchbaresc()
+            sendEscKey()
           },
         }),
         new TouchBarSpacer({ size: 'flexible' }),
@@ -134,31 +146,35 @@ export const refreshconfirm = (btn1, btn2) => {
     }),
   )
 }
+
 //main-touchbar
-export const touchBar = new TouchBar({
+const mainTouchbar = new TouchBar({
   items: [devtools, screenshot, volume, popover, spacer, tabs, spacer, refresh],
   escapeItem: poibutton,
 })
+
 //Change Volume or Edit btn
-export const touchBarReInit = e => {
-  edit.icon = config.get('poi.layout.editable')
-    ? path.join(ROOT, 'assets', 'img', 'touchbar', 'pen-square.png')
-    : path.join(ROOT, 'assets', 'img', 'touchbar', 'edit.png')
-  volume.icon = config.get('poi.content.muted')
-    ? path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-off.png')
-    : path.join(ROOT, 'assets', 'img', 'touchbar', 'volume-up.png')
+export const updateTouchbarInfoIcons = () => {
+  edit.icon = config.get('poi.layout.editable') ? getIcon('pen-square') : getIcon('edit')
+  volume.icon = config.get('poi.content.muted') ? getIcon('volume-off') : getIcon('volume-up')
 }
 
 //Tab switching initialization
-export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, pluginDefault) => {
+export const updateMainTouchbar = (
+  mainTitle,
+  fleetTitle,
+  pluginTitle,
+  activeTab,
+  pluginDefault,
+) => {
   //Get tab display name
   //lock plugin when no plugins enabled
   if (pluginTitle != segments[2].label) {
-    segments.map(x => {
+    segments.forEach(x => {
       x.label = [mainTitle, fleetTitle, pluginTitle][segments.indexOf(x)]
       x.enabled = x.label != pluginDefault ? true : false
     })
-    touchBarReset()
+    renderMainTouchbar()
   }
   //Update active tab if necessary
   let tabIndex
@@ -178,10 +194,10 @@ export const touchBarTabinit = (mainTitle, fleetTitle, pluginTitle, activeTab, p
   }
   if (tabs.selectedIndex != tabIndex) {
     tabs.selectedIndex = tabIndex
-    touchBarReset()
+    renderMainTouchbar()
   }
 }
 //Touchbar reset
-export const touchBarReset = () => {
-  mainWindow.setTouchBar(touchBar)
+export const renderMainTouchbar = () => {
+  mainWindow.setTouchBar(mainTouchbar)
 }

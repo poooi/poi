@@ -259,7 +259,7 @@ export class PoiControl extends Component {
 
   handleTouchbar = props => {
     //load Touchbar-related functions only when touchbar is triggered
-    const { refreshconfirm, touchBarReset } = remote.require('./lib/touchbar')
+    const { toggleRefreshConfirm, renderMainTouchbar } = remote.require('./lib/touchbar')
     //workaround for the input event not defined
     switch (props) {
       case 'refresh':
@@ -285,10 +285,10 @@ export class PoiControl extends Component {
             { name: this.props.t('Reload game'), func: gameReload, style: 'danger' },
           ],
           () => {
-            touchBarReset()
+            renderMainTouchbar()
           },
         )
-        refreshconfirm(this.props.t('Refresh page'), this.props.t('Reload game'))
+        toggleRefreshConfirm(this.props.t('Refresh page'), this.props.t('Reload game'))
         break
       case 'adjust':
         window.dispatchEvent(new Event('resize'))
@@ -362,8 +362,8 @@ export class PoiControl extends Component {
 
   render() {
     if (process.platform === 'darwin') {
-      const { touchBarReInit } = remote.require('./lib/touchbar')
-      touchBarReInit()
+      const { updateTouchbarInfoIcons } = remote.require('./lib/touchbar')
+      updateTouchbarInfoIcons()
     }
     const list = [
       {
