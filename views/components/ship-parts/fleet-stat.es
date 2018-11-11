@@ -14,14 +14,7 @@ import styled from 'styled-components'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
 import { recoveryEndTime } from 'views/redux/timers/cond'
-import {
-  getTyku,
-  getSaku25,
-  getSaku25a,
-  getSaku33,
-  getFleetSpeed,
-  getSpeedLabel,
-} from 'views/utils/game-utils'
+import { getTyku, getSaku33, getFleetSpeed, getSpeedLabel } from 'views/utils/game-utils'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
@@ -142,9 +135,8 @@ const sakuSelectorFactory = memoize(fleetId =>
       fleetSlotCountSelectorFactory(fleetId),
     ],
     (shipsData = [], equipsData = [], admiralLevel, slotCount) => ({
-      saku25: getSaku25(shipsData, equipsData),
-      saku25a: getSaku25a(shipsData, equipsData, admiralLevel),
       saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0, slotCount),
+      saku33x2: getSaku33(shipsData, equipsData, admiralLevel, 2.0, slotCount),
       saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0, slotCount),
       saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0, slotCount),
     }),
@@ -219,7 +211,7 @@ export const FleetStat = compose(
     canNotify,
     t,
   }) => {
-    const { saku25, saku25a, saku33, saku33x3, saku33x4 } = saku
+    const { saku33, saku33x2, saku33x3, saku33x4 } = saku
     const { speed } = fleetSpeed
     let totalLv = 0
     let minCond = 100
@@ -292,31 +284,16 @@ export const FleetStat = compose(
                       <span>{saku33.total}</span>
                     </InfoTooltipEntry>
                     <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">
-                        {'× 3 (6-2 & 6-3)'}
-                      </InfoTooltipItem>
+                      <InfoTooltipItem className="info-tooltip-item">{'× 2'}</InfoTooltipItem>
+                      <span>{saku33x2.total}</span>
+                    </InfoTooltipEntry>
+                    <InfoTooltipEntry className="info-tooltip-entry">
+                      <InfoTooltipItem className="info-tooltip-item">{'× 3'}</InfoTooltipItem>
                       <span>{saku33x3.total}</span>
                     </InfoTooltipEntry>
                     <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">
-                        {'× 4 (3-5 & 6-1)'}
-                      </InfoTooltipItem>
+                      <InfoTooltipItem className="info-tooltip-item">{'× 4'}</InfoTooltipItem>
                       <span>{saku33x4.total}</span>
-                    </InfoTooltipEntry>
-                    <ReconTile className="recon-title">
-                      <span>{t('main:Formula 2-5')}</span>
-                    </ReconTile>
-                    <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">
-                        {t('main:Fall')}
-                      </InfoTooltipItem>
-                      <span>{saku25a.total}</span>
-                    </InfoTooltipEntry>
-                    <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">
-                        {t('main:Legacy')}
-                      </InfoTooltipItem>
-                      <span>{saku25.total}</span>
                     </InfoTooltipEntry>
                   </InfoTooltip>
                 }
