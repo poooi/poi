@@ -309,6 +309,29 @@ export class ControlledTabArea extends PureComponent {
     config.addListener('config.set', this.handleConfig)
   }
 
+  componentDidUpdate(prevProps) {
+    if (process.platform === 'darwin') {
+      const { t } = this.props
+
+      const tabbedPlugins = this.tabbedPlugins()
+
+      const activePlugin =
+        tabbedPlugins.length == 0
+          ? {}
+          : tabbedPlugins.find(p => p.packageName === this.props.activePluginName) ||
+            tabbedPlugins[0]
+
+      const { updateMainTouchbar } = remote.require('./lib/touchbar')
+      updateMainTouchbar(
+        t('main:Overview'),
+        t('main:Fleet'),
+        activePlugin.name || t('others:Plugins'),
+        this.props.activeMainTab,
+        t('others:Plugins'),
+      )
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener('game.start', this.handleKeyDown)
     window.removeEventListener('game.response', this.handleResponse)
@@ -719,17 +742,6 @@ export class ControlledTabArea extends PureComponent {
         </PoiAppTabpane>
       </TabContentsUnion>
     )
-
-    if (process.platform === 'darwin') {
-      const { updateMainTouchbar } = remote.require('./lib/touchbar')
-      updateMainTouchbar(
-        t('main:Overview'),
-        t('main:Fleet'),
-        activePlugin.name || t('others:Plugins'),
-        this.props.activeMainTab,
-        t('others:Plugins'),
-      )
-    }
 
     const resizableAreaProps = getResizableAreaProps(this.props)
 
