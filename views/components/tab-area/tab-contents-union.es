@@ -86,11 +86,11 @@ export class TabContentsUnion extends Component {
   }
 
   childrenKey = children => {
-    return Children.map(children, child => child.key).filter(Boolean)
+    return Children.map(children, child => child?.key).filter(Boolean)
   }
 
   findChildByKey = (children, key) => {
-    return Children.map(children, child => (child.key === key ? child : null)).filter(Boolean)[0]
+    return Children.map(children, child => (child?.key === key ? child : null)).filter(Boolean)[0]
   }
 
   handleTransitionEnd = key => {
@@ -113,6 +113,9 @@ export class TabContentsUnion extends Component {
     const prevKey = this.prevKey()
     const content = []
     Children.forEach(this.props.children, (child, index) => {
+      if (!child) {
+        return
+      }
       if (child.key === activeKey) {
         onTheLeft = false
       }

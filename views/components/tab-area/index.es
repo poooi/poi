@@ -13,9 +13,9 @@ import styled, { css, createGlobalStyle } from 'styled-components'
 
 import { isInGame } from 'views/utils/game-utils'
 
-import * as settings from '../settings'
-import * as mainview from '../main'
-import * as shipview from '../ship'
+import * as SETTINGS_VIEW from '../settings'
+import * as MAIN_VIEW from '../main'
+import * as SHIP_VIEW from '../ship'
 import { PluginWrap } from './plugin-wrapper'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { TabContentsUnion } from './tab-contents-union'
@@ -135,6 +135,95 @@ const PluginNonIdealState = styled(NonIdealState)`
   max-height: 100%;
 `
 
+const getResizableAreaProps = ({
+  editable,
+  doubleTabbed,
+  mainPanelWidth,
+  verticalDoubleTabbed,
+  mainPanelHeight,
+}) => {
+  if (!doubleTabbed) {
+    return {
+      minimumWidth: {
+        px: 0,
+        percent: 100,
+      },
+      defaultWidth: {
+        px: 0,
+        percent: 50,
+      },
+      initWidth: mainPanelWidth,
+      minimumHeight: {
+        px: 0,
+        percent: 100,
+      },
+      initHeight: {
+        px: 0,
+        percent: 100,
+      },
+      disable: {
+        width: true,
+        height: true,
+      },
+      onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
+    }
+  }
+
+  if (verticalDoubleTabbed) {
+    return {
+      className: classNames({ 'height-resize': editable }),
+      minimumWidth: {
+        px: 0,
+        percent: 100,
+      },
+      defaultHeight: {
+        px: 0,
+        percent: 50,
+      },
+      initHeight: mainPanelHeight,
+      minimumHeight: {
+        px: 0,
+        percent: 10,
+      },
+      initWidth: {
+        px: 0,
+        percent: 100,
+      },
+      disable: {
+        width: true,
+        height: !editable,
+      },
+      onResized: ({ height }) => config.set('poi.tabarea.mainpanelheight', height),
+    }
+  }
+
+  return {
+    className: classNames({ 'width-resize': editable }),
+    minimumWidth: {
+      px: 0,
+      percent: 10,
+    },
+    defaultWidth: {
+      px: 0,
+      percent: 50,
+    },
+    initWidth: mainPanelWidth,
+    minimumHeight: {
+      px: 0,
+      percent: 100,
+    },
+    initHeight: {
+      px: 0,
+      percent: 100,
+    },
+    disable: {
+      width: !editable,
+      height: true,
+    },
+    onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
+  }
+}
+
 let lockedTab = false
 
 const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
@@ -188,18 +277,64 @@ export class ControlledTabArea extends PureComponent {
 
   resizeContainer = React.createRef()
 
+  mainTabKeyUnion = React.createRef()
+
+  tabKeyUnion = React.createRef()
+
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (nextProps.doubleTabbed !== (prevState || {}).prevDoubleTabbed) {
+      dispatchTabChangeEvent({
+        activeMainTab: 'main-view',
+      })
+      return {
+        prevDoubleTabbed: nextProps.doubleTabbed,
+      }
+    }
+    return null
+  }
+
+  componentDidMount() {
+    this.handleKeyDown()
+    window.addEventListener('game.start', this.handleKeyDown)
+    window.addEventListener('game.response', this.handleResponse)
+    window.openSettings = this.handleCmdCommaKeyDown
+    ipc.register('MainWindow', {
+      ipcFocusPlugin: this.ipcFocusPlugin,
+    })
+    if (process.platform === 'darwin') {
+      require('electron').ipcRenderer.on('touchbartab', (event, message) => {
+        this.handleTouchbar(message)
+      })
+    }
+    config.addListener('config.set', this.handleConfig)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('game.start', this.handleKeyDown)
+    window.removeEventListener('game.response', this.handleResponse)
+    ipc.unregisterAll('MainWindow')
+    config.removeListener('config.set', this.handleConfig)
+  }
+
+  componentDidCatch(error, info) {
+    console.error(error, info)
+    this.setState({
+      error: true,
+    })
+  }
+
   selectTab = (key, autoSwitch = false) => {
     if (key == null) return
     let tabInfo = {}
     const mainTabKeyUnion = this.props.doubleTabbed ? this.mainTabKeyUnion : this.tabKeyUnion
-    const mainTabInstance = mainTabKeyUnion.getWrappedInstance()
+    const mainTabInstance = mainTabKeyUnion.current.getWrappedInstance()
     if (mainTabInstance.findChildByKey(mainTabInstance.props.children, key)) {
       tabInfo = {
         ...tabInfo,
         activeMainTab: key,
       }
     }
-    const tabKeyUnionInstance = this.tabKeyUnion.getWrappedInstance()
+    const tabKeyUnionInstance = this.tabKeyUnion.current.getWrappedInstance()
     if (
       this.isPluginTab(key) &&
       tabKeyUnionInstance.findChildByKey(tabKeyUnionInstance.props.children, key)
@@ -249,7 +384,7 @@ export class ControlledTabArea extends PureComponent {
   }
 
   handleSetTabOffset = offset => {
-    const tabKeyUnionInstance = this.tabKeyUnion.getWrappedInstance()
+    const tabKeyUnionInstance = this.tabKeyUnion.current.getWrappedInstance()
     const childrenKey = tabKeyUnionInstance.childrenKey(tabKeyUnionInstance.props.children)
     const nowIndex = childrenKey.indexOf(
       this.props.doubleTabbed ? this.props.activePluginName : this.props.activeMainTab,
@@ -346,48 +481,6 @@ export class ControlledTabArea extends PureComponent {
     this.selectTab(key)
   }
 
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (nextProps.doubleTabbed !== (prevState || {}).prevDoubleTabbed) {
-      dispatchTabChangeEvent({
-        activeMainTab: 'main-view',
-      })
-      return {
-        prevDoubleTabbed: nextProps.doubleTabbed,
-      }
-    }
-    return null
-  }
-
-  componentDidMount() {
-    this.handleKeyDown()
-    window.addEventListener('game.start', this.handleKeyDown)
-    window.addEventListener('game.response', this.handleResponse)
-    window.openSettings = this.handleCmdCommaKeyDown
-    ipc.register('MainWindow', {
-      ipcFocusPlugin: this.ipcFocusPlugin,
-    })
-    if (process.platform === 'darwin') {
-      require('electron').ipcRenderer.on('touchbartab', (event, message) => {
-        this.handleTouchbar(message)
-      })
-    }
-    config.addListener('config.set', this.handleConfig)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('game.start', this.handleKeyDown)
-    window.removeEventListener('game.response', this.handleResponse)
-    ipc.unregisterAll('MainWindow')
-    config.removeListener('config.set', this.handleConfig)
-  }
-
-  componentDidCatch(error, info) {
-    console.error(error, info)
-    this.setState({
-      error: true,
-    })
-  }
-
   // All displaying plugins
   listedPlugins = () => {
     return this.props.plugins.filter(
@@ -476,6 +569,7 @@ export class ControlledTabArea extends PureComponent {
     const { t } = this.props
     const tabbedPlugins = this.tabbedPlugins()
     const windowModePlugins = this.windowModePlugins()
+    const pluginsToList = this.listedPlugins()
     const activePlugin =
       tabbedPlugins.length == 0
         ? {}
@@ -485,16 +579,17 @@ export class ControlledTabArea extends PureComponent {
         <FontAwesome name="sitemap" /> {t('others:Plugins')}
       </span>
     )
+
     const pluginDropdownContents = (
       <PluginDropdown className="plugin-dropdown">
-        {this.listedPlugins().length == 0 ? (
+        {pluginsToList.length == 0 ? (
           <PluginNonIdealState
             icon="cloud-download"
             title={t('setting:No plugin found')}
             description={t('setting:Install plugins in settings')}
           />
         ) : (
-          this.listedPlugins().map((plugin, index) => {
+          pluginsToList.map((plugin, index) => {
             const handleClick = plugin.handleClick
               ? plugin.handleClick
               : this.isWindowMode(plugin)
@@ -518,9 +613,11 @@ export class ControlledTabArea extends PureComponent {
         )}
       </PluginDropdown>
     )
+
     const pluginContents = tabbedPlugins.map(plugin => (
       <PluginWrap key={plugin.id} plugin={plugin} container={PluginAppTabpane} />
     ))
+
     const windowModePluginContents = windowModePlugins.map(plugin => (
       <PluginWindowWrap
         key={plugin.id}
@@ -530,7 +627,7 @@ export class ControlledTabArea extends PureComponent {
       />
     ))
 
-    const firstPanelNav = !this.props.doubleTabbed ? (
+    const leftPanelNav = (
       <NavTabs
         large
         selectedTabId={
@@ -539,108 +636,90 @@ export class ControlledTabArea extends PureComponent {
         className="top-nav"
         onChange={this.handleSelectTab}
       >
-        <Tab key="main-view" id="main-view" className="nav-tab-4">
-          {mainview.displayName}
-        </Tab>
-        <Tab key="ship-view" id="ship-view" className="nav-tab-4">
-          {shipview.displayName}
-        </Tab>
-        <Tab key="plugin" id="plugin" className="nav-tab-4">
-          {(activePlugin || {}).displayName || defaultPluginTitle}
-        </Tab>
-        <Popover
-          minimal
-          hasBackdrop
-          position={Position.BOTTOM_RIGHT}
-          content={pluginDropdownContents}
-          className="nav-tab-8"
-          wrapperTagName="div"
-          targetTagName="div"
-          popoverClassName="plugin-dropdown-container"
-          modifiers={{
-            flip: {
-              enabled: false,
-            },
-            preventOverflow: {
-              boundariesElement: 'window',
-              enabled: false,
-            },
-            hide: {
-              enabled: false,
-            },
-          }}
+        <Tab
+          key="main-view"
+          id="main-view"
+          className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
         >
-          <PluginDropdownButton icon="chevron-down" minimal ref={this.trigger} />
-        </Popover>
-        <Tab key="settings" id="settings" className="nav-tab-8" width={12.5}>
-          <FontAwesome key={0} name="cog" />
+          {MAIN_VIEW.displayName}
         </Tab>
-        <GlobalStyle />
-      </NavTabs>
-    ) : (
-      <NavTabs
-        large
-        selectedTabId={this.props.activeMainTab}
-        onChange={this.handleSelectTab}
-        className="top-nav"
-      >
-        <Tab key="main-view" id="main-view" className="nav-tab-3">
-          {mainview.displayName}
+        <Tab
+          key="ship-view"
+          id="ship-view"
+          className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
+        >
+          {SHIP_VIEW.displayName}
         </Tab>
-        <Tab key="ship-view" id="ship-view" className="nav-tab-3">
-          {shipview.displayName}
-        </Tab>
-        <Tab key="settings" id="settings" className="nav-tab-3">
-          {settings.displayName}
-        </Tab>
+        {this.props.doubleTabbed && (
+          <Tab key="settings" id="settings" className="nav-tab-3">
+            {SETTINGS_VIEW.displayName}
+          </Tab>
+        )}
+
+        {/* we're not using fragment because blueprint tabs only reads direct children */}
+        {!this.props.doubleTabbed && (
+          <Tab key="plugin" id="plugin" className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}>
+            {(activePlugin || {}).displayName || defaultPluginTitle}
+          </Tab>
+        )}
+        {!this.props.doubleTabbed && (
+          <Popover
+            minimal
+            hasBackdrop
+            position={Position.BOTTOM_RIGHT}
+            content={pluginDropdownContents}
+            className="nav-tab-8"
+            wrapperTagName="div"
+            targetTagName="div"
+            popoverClassName="plugin-dropdown-container"
+            modifiers={{
+              flip: {
+                enabled: false,
+              },
+              preventOverflow: {
+                boundariesElement: 'window',
+                enabled: false,
+              },
+              hide: {
+                enabled: false,
+              },
+            }}
+          >
+            <PluginDropdownButton icon="chevron-down" minimal ref={this.trigger} />
+          </Popover>
+        )}
+        {!this.props.doubleTabbed && (
+          <Tab key="settings" id="settings" className="nav-tab-8" width={12.5}>
+            <FontAwesome key={0} name="cog" />
+          </Tab>
+        )}
+
         <GlobalStyle />
       </NavTabs>
     )
 
-    const firstPanelCnt = !this.props.doubleTabbed ? (
+    const leftPanelContent = (
       <TabContentsUnion
-        ref={ref => {
-          if (this.props.doubleTabbed) {
-            this.mainTabKeyUnion = ref
-          } else {
-            this.tabKeyUnion = ref
-          }
-        }}
+        ref={this.props.doubleTabbed ? this.mainTabKeyUnion : this.tabKeyUnion}
         activeTab={this.props.activeMainTab}
       >
-        <PoiAppTabpane id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
-          <mainview.reactClass />
+        <PoiAppTabpane id={MAIN_VIEW.name} className="main-view poi-app-tabpane" key="main-view">
+          <MAIN_VIEW.reactClass />
         </PoiAppTabpane>
-        <ShipViewTabpanel id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
-          <shipview.reactClass />
+        {!this.props.doubleTabbed && pluginContents}
+        <ShipViewTabpanel id={SHIP_VIEW.name} className="ship-view poi-app-tabpane" key="ship-view">
+          <SHIP_VIEW.reactClass />
         </ShipViewTabpanel>
-        {pluginContents}
-        <PoiAppTabpane id={settings.name} className="settings-view poi-app-tabpane" key="settings">
-          <settings.reactClass />
-        </PoiAppTabpane>
-      </TabContentsUnion>
-    ) : (
-      <TabContentsUnion
-        ref={ref => {
-          if (this.props.doubleTabbed) {
-            this.mainTabKeyUnion = ref
-          } else {
-            this.tabKeyUnion = ref
-          }
-        }}
-        activeTab={this.props.activeMainTab}
-      >
-        <PoiAppTabpane id={mainview.name} className="main-view poi-app-tabpane" key="main-view">
-          <mainview.reactClass />
-        </PoiAppTabpane>
-        <ShipViewTabpanel id={shipview.name} className="ship-view poi-app-tabpane" key="ship-view">
-          <shipview.reactClass />
-        </ShipViewTabpanel>
-        <PoiAppTabpane id={settings.name} className="settings-view poi-app-tabpane" key="settings">
-          <settings.reactClass />
+        <PoiAppTabpane
+          id={SETTINGS_VIEW.name}
+          className="settings-view poi-app-tabpane"
+          key="settings"
+        >
+          <SETTINGS_VIEW.reactClass />
         </PoiAppTabpane>
       </TabContentsUnion>
     )
+
     if (process.platform === 'darwin') {
       const { updateMainTouchbar } = remote.require('./lib/touchbar')
       updateMainTouchbar(
@@ -651,84 +730,10 @@ export class ControlledTabArea extends PureComponent {
         t('others:Plugins'),
       )
     }
-    const resizableAreaProps = !this.props.doubleTabbed
-      ? {
-          minimumWidth: {
-            px: 0,
-            percent: 100,
-          },
-          defaultWidth: {
-            px: 0,
-            percent: 50,
-          },
-          initWidth: this.props.mainPanelWidth,
-          minimumHeight: {
-            px: 0,
-            percent: 100,
-          },
-          initHeight: {
-            px: 0,
-            percent: 100,
-          },
-          disable: {
-            width: true,
-            height: true,
-          },
-          onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
-        }
-      : this.props.verticalDoubleTabbed
-      ? {
-          className: classNames({ 'height-resize': this.props.editable }),
-          minimumWidth: {
-            px: 0,
-            percent: 100,
-          },
-          defaultHeight: {
-            px: 0,
-            percent: 50,
-          },
-          initHeight: this.props.mainPanelHeight,
-          minimumHeight: {
-            px: 0,
-            percent: 10,
-          },
-          initWidth: {
-            px: 0,
-            percent: 100,
-          },
-          disable: {
-            width: true,
-            height: !this.props.editable,
-          },
-          onResized: ({ height }) => config.set('poi.tabarea.mainpanelheight', height),
-        }
-      : {
-          className: classNames({ 'width-resize': this.props.editable }),
-          minimumWidth: {
-            px: 0,
-            percent: 10,
-          },
-          defaultWidth: {
-            px: 0,
-            percent: 50,
-          },
-          initWidth: this.props.mainPanelWidth,
-          minimumHeight: {
-            px: 0,
-            percent: 100,
-          },
-          initHeight: {
-            px: 0,
-            percent: 100,
-          },
-          disable: {
-            width: !this.props.editable,
-            height: true,
-          },
-          onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width),
-        }
 
-    const inner = this.props.doubleTabbed && (
+    const resizableAreaProps = getResizableAreaProps(this.props)
+
+    const rightPanel = this.props.doubleTabbed && (
       <PoiTabContainer className="poi-tab-container">
         <Popover
           minimal
@@ -749,9 +754,7 @@ export class ControlledTabArea extends PureComponent {
           />
         </Popover>
         <TabContentsUnion
-          ref={ref => {
-            this.tabKeyUnion = ref
-          }}
+          ref={this.tabKeyUnion}
           activeTab={pluginContents.length ? this.props.activePluginName : 'no-plugin'}
         >
           {pluginContents.length ? (
@@ -788,13 +791,13 @@ export class ControlledTabArea extends PureComponent {
           {...resizableAreaProps}
         >
           <PoiTabContainer className="poi-tab-container">
-            {firstPanelNav}
-            {firstPanelCnt}
+            {leftPanelNav}
+            {leftPanelContent}
             {windowModePluginContents}
           </PoiTabContainer>
         </ResizableArea>
         {this.props.doubleTabbed &&
-          (this.props.editable || !this.state.async ? inner : <Async>{inner}</Async>)}
+          (this.props.editable || !this.state.async ? rightPanel : <Async>{rightPanel}</Async>)}
       </PoiTabsContainer>
     )
   }
