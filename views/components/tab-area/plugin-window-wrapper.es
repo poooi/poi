@@ -6,9 +6,10 @@ import { TitleBar } from 'electron-react-titlebar'
 import { screen, remote } from 'electron'
 import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
-import { PluginWrap } from './plugin-wrapper'
 import styled, { StyleSheetManager } from 'styled-components'
-import { loadStyle } from './env-parts/theme'
+import { loadStyle } from 'views/env-parts/theme'
+
+import { PluginWrap } from './plugin-wrapper'
 
 const pickOptions = [
   'ROOT',

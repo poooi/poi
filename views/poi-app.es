@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import { ResizableArea } from 'react-resizable-area'
 import styled, { css } from 'styled-components'
 
-import { ControlledTabArea } from './tabarea'
+import { ControlledTabArea } from './components/tab-area'
 
 const PoiAppE = styled.div`
   position: relative;
