@@ -157,7 +157,7 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
-    titleBarStyle: isModernMacOS ? 'hidden' : null,
+    titleBarStyle: isModernMacOS ? 'hiddenInset' : null,
     transparent: isModernMacOS,
     frame: !config.get(
       'poi.appearance.customtitlebar',
