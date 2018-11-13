@@ -350,14 +350,14 @@ export class ControlledTabArea extends PureComponent {
     if (key == null) return
     let tabInfo = {}
     const mainTabKeyUnion = this.props.doubleTabbed ? this.mainTabKeyUnion : this.tabKeyUnion
-    const mainTabInstance = mainTabKeyUnion.current.getWrappedInstance()
+    const mainTabInstance = mainTabKeyUnion.current
     if (mainTabInstance.findChildByKey(mainTabInstance.props.children, key)) {
       tabInfo = {
         ...tabInfo,
         activeMainTab: key,
       }
     }
-    const tabKeyUnionInstance = this.tabKeyUnion.current.getWrappedInstance()
+    const tabKeyUnionInstance = this.tabKeyUnion.current
     if (
       this.isPluginTab(key) &&
       tabKeyUnionInstance.findChildByKey(tabKeyUnionInstance.props.children, key)
@@ -407,7 +407,7 @@ export class ControlledTabArea extends PureComponent {
   }
 
   handleSetTabOffset = offset => {
-    const tabKeyUnionInstance = this.tabKeyUnion.current.getWrappedInstance()
+    const tabKeyUnionInstance = this.tabKeyUnion.current
     const childrenKey = tabKeyUnionInstance.childrenKey(tabKeyUnionInstance.props.children)
     const nowIndex = childrenKey.indexOf(
       this.props.doubleTabbed ? this.props.activePluginName : this.props.activeMainTab,

@@ -53,7 +53,7 @@ const PoiTabChildPositioner = styled.div`
   }),
   undefined,
   undefined,
-  { pure: true, withRef: true },
+  { pure: true, forwardRef: true },
 )
 export class TabContentsUnion extends Component {
   static propTypes = {

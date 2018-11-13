@@ -14,10 +14,10 @@ module.exports = {
   plugins: [
     require.resolve('babel-plugin-styled-components'),
     [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
     [require.resolve('@babel/plugin-proposal-pipeline-operator'), { proposal: 'minimal' }],
   ].concat(
     [
-      '@babel/plugin-proposal-class-properties',
       '@babel/plugin-proposal-do-expressions',
       '@babel/plugin-proposal-export-default-from',
       '@babel/plugin-proposal-export-namespace-from',
