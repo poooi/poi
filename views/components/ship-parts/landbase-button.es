@@ -1,10 +1,11 @@
 import { connect } from 'react-redux'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { get } from 'lodash'
+import _, { get, map } from 'lodash'
 import { withNamespaces, Trans } from 'react-i18next'
 import { Button, ButtonGroup, Tag, Intent, Position } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
+import memoizeOne from 'memoize-one'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
@@ -71,6 +72,56 @@ const readyLabel = (
   </AirbaseLabel>
 )
 
+const getAirbaseData = memoizeOne((airbase, mapareas, sortieStatus) => {
+  const baseInfo = _(airbase)
+    .filter(a => mapareas[a.api_area_id])
+    .groupBy('api_area_id')
+    .mapValues((bases, areaId) => {
+      const planes = _(bases).flatMap('api_plane_info')
+      return {
+        areaId,
+        needSupply: planes.some(plane => plane.api_count !== plane.api_max_count),
+        squardState: planes.map('api_state').max(), // 0: 未配属あり, 1: 配属済み, >1: 配置転換中あり
+        squardCond: planes.map(plane => plane.api_cond || 1).max(), // 1: 通常, >1: 黄疲労・赤疲労あり
+        noAction: bases.some(base => ![1, 2].includes(base.api_action_kind)),
+        allEmpty: planes.every(plane => plane.api_state === 0),
+      }
+    })
+
+  const needSupply = baseInfo.some(base => !base.allEmpty && base.needSupply)
+  const squardState =
+    baseInfo
+      .filter(base => !base.allEmpty)
+      .map('squardState')
+      .max() || 1
+  const squardCond =
+    baseInfo
+      .filter(base => !base.allEmpty)
+      .map('squardCond')
+      .max() || 1
+  const noAction = baseInfo.some(base => !base.allEmpty && base.noAction)
+
+  const airbaseProps = baseInfo.value()
+
+  const sortie = sortieStatus.filter(a => !a.allEmpty).reduce((a, b) => a || b, false)
+  const intent = do {
+    if (sortie || noAction) {
+      Intent.NONE
+    } else if (squardCond > 1) {
+      Intent.DANGER
+    } else if (squardState !== 1 || needSupply) {
+      Intent.WARNING
+    } else {
+      Intent.SUCCESS
+    }
+  }
+
+  return {
+    airbaseProps,
+    intent,
+  }
+})
+
 export const LandbaseButton = withNamespaces(['resources'])(
   connect(state => ({
     sortieStatus: get(state, 'sortie.sortieStatus', []),
@@ -78,83 +129,16 @@ export const LandbaseButton = withNamespaces(['resources'])(
     mapareas: get(state, 'const.$mapareas', {}),
   }))(
     ({ fleetId, activeFleetId, onClick, disabled, airbase, sortieStatus, mapareas, isMini, t }) => {
-      const airbaseProps = airbase
-        .map(a => a.api_area_id)
-        .filter(a => mapareas[a])
-        .sort((a, b) => a - b)
-        .filter((a, i, arr) => a != arr[i - 1])
-        .map(i => ({
-          mapId: i,
-          needSupply: airbase
-            .filter(a => mapareas[a.api_area_id])
-            .filter(a => a.api_area_id === i)
-            .map(a =>
-              a.api_plane_info
-                .map(s => s.api_count !== s.api_max_count)
-                .reduce((a, b) => a || b, false),
-            )
-            .reduce((a, b) => a || b, false),
-          // 0: 未配属あり, 1: 配属済み, >1: 配置転換中あり
-          squardState: airbase
-            .filter(a => mapareas[a.api_area_id])
-            .filter(a => a.api_area_id === i)
-            .map(a => a.api_plane_info.map(s => s.api_state).reduce((a, b) => a * b, 1))
-            .reduce((a, b) => a * b, 1),
-          // 1: 通常, >1: 黄疲労・赤疲労あり
-          squardCond: airbase
-            .filter(a => mapareas[a.api_area_id])
-            .filter(a => a.api_area_id === i)
-            .map(a => a.api_plane_info.map(s => s.api_cond || 1).reduce((a, b) => a * b, 1))
-            .reduce((a, b) => a * b, 1),
-          noAction: airbase
-            .filter(a => mapareas[a.api_area_id])
-            .filter(a => a.api_area_id === i)
-            .map(a => a.api_action_kind !== 1 && a.api_action_kind !== 2)
-            .reduce((a, b) => a || b, false),
-          allEmpty: airbase
-            .filter(a => mapareas[a.api_area_id])
-            .filter(a => a.api_area_id === i)
-            .map(a => a.api_plane_info.map(s => s.api_state === 0).reduce((a, b) => a && b, true))
-            .reduce((a, b) => a && b, true),
-        }))
-      const needSupply = airbaseProps
-        .filter(a => !a.allEmpty)
-        .map(a => a.needSupply)
-        .reduce((a, b) => a || b, false)
-      const squardState = airbaseProps
-        .filter(a => !a.allEmpty)
-        .map(a => a.squardState)
-        .reduce((a, b) => a * b, 1)
-      const squardCond = airbaseProps
-        .filter(a => !a.allEmpty)
-        .map(a => a.squardCond)
-        .reduce((a, b) => a * b, 1)
-      const noAction = airbaseProps
-        .filter(a => !a.allEmpty)
-        .map(a => a.noAction)
-        .reduce((a, b) => a || b, false)
-      const sortie = sortieStatus.filter(a => !a.allEmpty).reduce((a, b) => a || b, false)
-      const intent = (() => {
-        if (sortie) {
-          return null
-        } else if (squardCond > 1) {
-          return Intent.DANGER
-        } else if (squardState !== 1 || needSupply) {
-          return Intent.WARNING
-        } else if (noAction) {
-          return Intent.NONE
-        } else {
-          return Intent.SUCCESS
-        }
-      })()
+      const { airbaseProps, intent } = getAirbaseData(airbase, mapareas, sortieStatus)
+
       const tooltipContent = (
         <div>
-          {airbaseProps.map((airbase, i) => {
-            const { mapId, needSupply, squardState, squardCond, noAction } = airbase
+          {map(airbaseProps, airbase => {
+            const { areaId, needSupply, squardState, squardCond, noAction } = airbase
             return (
-              <div key={i}>
+              <div key={areaId}>
                 <div>
-                  [{mapId}] {mapareas[mapId] ? t(`resources:${mapareas[mapId].api_name}`) : ''}
+                  [{areaId}] {mapareas[areaId] && t(`resources:${mapareas[areaId].api_name}`)}
                 </div>
                 {squardCond > 1 && fatiguedLabel}
                 {squardState < 1 && emptyLabel}
