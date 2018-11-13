@@ -14,7 +14,10 @@ function object2Array(obj) {
 }
 function object2ArraySelectorFactory(path) {
   const pathSelector = state => get(state, path)
-  return createSelector(pathSelector, obj => object2Array(obj))
+  return createSelector(
+    pathSelector,
+    obj => object2Array(obj),
+  )
 }
 
 // User config

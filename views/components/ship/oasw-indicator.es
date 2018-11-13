@@ -13,7 +13,10 @@ import { isOASWWith } from 'views/utils/oasw'
 import { withNamespaces } from 'react-i18next'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
-const isOASWFuncSelector = createSelector(allCVEIdsSelector, allCVEIds => isOASWWith(allCVEIds))
+const isOASWFuncSelector = createSelector(
+  allCVEIdsSelector,
+  allCVEIds => isOASWWith(allCVEIds),
+)
 
 const OASWSelectorFactory = memoize(shipId =>
   createSelector(

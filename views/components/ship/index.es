@@ -58,9 +58,12 @@ const ShipViewSwitchButton = connect((state, { fleetId }) =>
 ))
 
 const fleetShipViewDataSelectorFactory = memoize(fleetId =>
-  createSelector([fleetShipsIdSelectorFactory(fleetId)], shipsId => ({
-    shipsId,
-  })),
+  createSelector(
+    [fleetShipsIdSelectorFactory(fleetId)],
+    shipsId => ({
+      shipsId,
+    }),
+  ),
 )
 
 const FleetShipView = connect((state, { fleetId }) =>
