@@ -36,7 +36,7 @@ export class ProxyConfig extends PureComponent {
     enablePassword: PropTypes.bool,
     requirePassword: PropTypes.bool,
     username: PropTypes.string,
-    password: PropTypes.password,
+    password: PropTypes.string,
   }
 
   render() {

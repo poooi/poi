@@ -297,7 +297,7 @@ export const SlotItemContainer = styled.div`
     position: absolute;
     text-align: center;
     width: 18px;
-    display: ${props => (props.onslot ? 'inline' : 'none')};
+    display: ${props => (props.showOnslot ? 'inline' : 'none')};
   }
 
   ${({ warining }) =>

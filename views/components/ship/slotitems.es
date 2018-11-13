@@ -104,7 +104,7 @@ export const Slotitems = compose(
             <SlotItemContainer
               className="slotitem-container"
               data-onslot={onslotText}
-              onslot={showOnslot}
+              showOnslot={showOnslot}
               warning={onslotWarning}
             >
               <SlotitemIcon className="slotitem-img" slotitemId={equipIconId} />
@@ -183,7 +183,7 @@ export const LandbaseSlotitems = compose(
               className="slotitem-container"
               data-onslot={onslotText}
               style={iconStyle}
-              onslot={showOnslot}
+              showOnslot={showOnslot}
               warning={onslotWarning}
             >
               <SlotitemIcon className="slotitem-img" slotitemId={equipIconId} />

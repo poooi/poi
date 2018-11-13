@@ -14,8 +14,8 @@ const AirbaseLabel = styled(Tag)`
 
 const LandbaseButtonContainer = styled(ButtonGroup)`
   display: flex;
-  ${({ mini }) =>
-    mini
+  ${({ isMini }) =>
+    isMini
       ? css`
           padding: 5px 5px 1px 5px;
           .bp3-button {
@@ -169,7 +169,7 @@ export const LandbaseButton = withNamespaces(['resources'])(
       )
       return (
         <Tooltip content={tooltipContent} position={Position.BOTTOM} targetTagName="div">
-          <LandbaseButtonContainer mini={isMini}>
+          <LandbaseButtonContainer isMini={isMini}>
             <Button
               intent={intent}
               onClick={onClick}

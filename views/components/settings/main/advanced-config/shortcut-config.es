@@ -116,6 +116,9 @@ export class ShortcutConfig extends Component {
       t,
       tReady,
       i18n,
+      i18nOptions,
+      defaultNS,
+      reportNS,
       dispatch,
       ...props
     } = this.props
