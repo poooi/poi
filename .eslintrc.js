@@ -18,7 +18,7 @@ module.exports = {
       legacyDecorators: true,
     },
   },
-  plugins: ['import', 'react', 'prettier'],
+  plugins: ['import', 'react', 'prettier', 'react-hooks'],
   parser: 'babel-eslint',
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
@@ -36,6 +36,7 @@ module.exports = {
     ],
     'import/no-named-as-default-member': [0],
     'jsx-quotes': ['error', 'prefer-double'],
+    'react-hooks/rules-of-hooks': 'error',
     'prettier/prettier': 'error',
   },
   settings: {
