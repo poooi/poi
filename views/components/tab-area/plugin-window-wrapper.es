@@ -137,7 +137,7 @@ export class PluginWindowWrap extends PureComponent {
         }
       })
       .join(',')
-    const URL = `file:///${__dirname}/../index-plugin.html?${this.props.plugin.id}`
+    const URL = `${fileUrl(path.join(ROOT, 'index-plugin.html'))}?${this.props.plugin.id}`
     this.externalWindow = open(
       URL,
       `plugin[${this.props.plugin.id}]`,

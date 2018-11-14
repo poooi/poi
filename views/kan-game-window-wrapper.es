@@ -173,7 +173,7 @@ export class KanGameWindowWrapper extends PureComponent {
       })
       .join(',')
     this.externalWindow = open(
-      `file:///${__dirname}/../index-plugin.html?kangame`,
+      `${fileUrl(path.join(ROOT, 'index-plugin.html'))}?kangame`,
       'plugin[kangame]',
       windowFeatures + ',nodeIntegration=no',
     )
