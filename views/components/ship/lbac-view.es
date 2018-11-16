@@ -37,6 +37,7 @@ export const SquardRow = compose(
   connect((state, { squardId }) => SquadSelectorFactory(squardId)),
 )(({ landbase, equipsData, squardId, t, enableAvatar, compact }) => {
   const { api_action_kind, api_distance, api_name, api_nowhp = 200, api_maxhp = 200 } = landbase
+  const { api_base, api_bonus } = api_distance
   const tyku = getTyku([equipsData], api_action_kind)
   const hpPercentage = (api_nowhp / api_maxhp) * 100
   const hideShipName = enableAvatar && compact
@@ -50,7 +51,8 @@ export const SquardRow = compose(
         <div className="ship-tooltip-info">
           <div>{api_name}</div>
           <div>
-            {t('main:Range')}: {api_distance}
+            {t('main:Range')}: {api_base + api_bonus}
+            {!!api_bonus && ` (${api_base} + ${api_bonus})`}
           </div>
           <div>
             {t('main:Fighter Power')}:{' '}
@@ -69,7 +71,8 @@ export const SquardRow = compose(
               <ShipName className="ship-name">{api_name}</ShipName>
               <ShipSubText className="ship-exp">
                 <span className="ship-lv">
-                  {t('main:Range')}: {api_distance}
+                  {t('main:Range')}: {api_base + api_bonus}
+                  {!!api_bonus && ` (${api_base} + ${api_bonus})`}
                 </span>
                 <br />
                 <span className="ship-lv">
