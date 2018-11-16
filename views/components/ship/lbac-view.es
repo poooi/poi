@@ -21,6 +21,7 @@ export const SquardRow = translate(['main'])(connect((state, { squardId }) =>
   }))
 )(({landbase, equipsData, squardId, t, enableAvatar, compact}) => {
   let { api_action_kind, api_distance, api_name, api_nowhp, api_maxhp } = landbase
+  const { api_base, api_bonus } = api_distance
   api_nowhp = api_nowhp || 200
   api_maxhp = api_maxhp || 200
   const tyku = getTyku([equipsData], api_action_kind)
@@ -57,7 +58,8 @@ export const SquardRow = translate(['main'])(connect((state, { squardId }) =>
                 {api_name}
               </div>
               <div>
-                {t('main:Range')}: {api_distance}
+                {t('main:Range')}: {api_base + api_bonus}
+                {!!api_bonus && ` (${api_base} + ${api_bonus})`}
               </div>
               <div>
                 {t('main:Fighter Power')}: {(tyku.max === tyku.min) ? tyku.min : tyku.min + ' ~ ' + tyku.max}
@@ -75,7 +77,8 @@ export const SquardRow = translate(['main'])(connect((state, { squardId }) =>
                 </span>
                 <div className="ship-exp">
                   <span className='ship-lv'>
-                    {t('main:Range')}: {api_distance}
+                    {t('main:Range')}: {api_base + api_bonus}
+                    {!!api_bonus && ` (${api_base} + ${api_bonus})`}
                   </span>
                   <br />
                   <span className="ship-lv">
