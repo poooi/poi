@@ -203,10 +203,9 @@ class Proxy extends EventEmitter {
     req.headers['connection'] = 'close'
 
     const parsed = url.parse(req.url)
-    const isGameApi = parsed.pathname.startsWith('/kcsapi')
 
     // Update server status
-    if (isGameApi && this.serverInfo.ip !== parsed.hostname) {
+    if (isKancolleGameApi(parsed.pathname) && this.serverInfo.ip !== parsed.hostname) {
       if (this.serverList[parsed.hostname]) {
         this.serverInfo = {
           ...this.serverList[parsed.hostname],
