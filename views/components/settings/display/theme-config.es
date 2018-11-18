@@ -41,6 +41,11 @@ const SWITCHES = [
     configName: 'poi.appearance.avatar',
     defaultValue: false,
   },
+  {
+    label: 'Use Gridded Plugin Menu',
+    configName: 'poi.tabarea.grid',
+    defaultValue: true,
+  },
 ]
 
 @withNamespaces(['setting'])
