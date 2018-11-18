@@ -4,7 +4,17 @@ import { connect } from 'react-redux'
 import React, { PureComponent, unstable_AsyncMode as Async } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
-import { Tab, Tabs, Popover, Button, Position, NonIdealState, Card } from '@blueprintjs/core'
+import {
+  Tab,
+  Tabs,
+  Popover,
+  Button,
+  Position,
+  NonIdealState,
+  Card,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
@@ -22,9 +32,26 @@ import { TabContentsUnion } from './tab-contents-union'
 
 const emptyObj = {}
 
+const pluginDropDownModifier = {
+  flip: {
+    enabled: false,
+  },
+  preventOverflow: {
+    boundariesElement: 'window',
+    enabled: false,
+  },
+  hide: {
+    enabled: false,
+  },
+}
+
 const GlobalStyle = createGlobalStyle`
   .plugin-dropdown-container > .bp3-popover-content {
     backdrop-filter: blur(5px);
+
+    .bp3-menu {
+      background: transparent;
+    }
   }
 `
 
@@ -72,42 +99,40 @@ const PoiTabContainer = styled.div`
   overflow: hidden;
 `
 
-const PluginDropdown = styled.div`
-  overflow: auto;
-`
-
 const PluginDropdownButton = styled(Button)`
   width: 100%;
 `
 
-const PluginDropdownMenuItem = styled.div`
-  display: block;
-  float: left;
-  width: calc(100% / 3);
+const PluginDropdownMenuItem = styled(MenuItem)`
+  align-items: center;
+`
 
-  a {
-    display: flex;
-    min-height: 5em;
-    overflow: hidden;
-    padding-top: 1em;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-  }
+const PluginDropdown = styled(Menu)`
+  overflow: auto;
+  ${({ grid }) =>
+    grid
+      ? css`
+          li {
+            display: block;
+            float: left;
+            width: calc(100% / 3);
 
-  a:hover {
-    background-color: #46a2dd !important;
-    text-decoration: none;
-    color: white;
-  }
+            a {
+              padding: 10px;
+              flex-direction: column;
 
-  [class*='fa-'].svg-inline--fa {
-    display: block;
-    font-size: 175%;
-  }
+              [class*='fa-'].svg-inline--fa {
+                font-size: 175%;
+                margin: 0;
+              }
+            }
+          }
+        `
+      : css`
+          [class*='fa-'].svg-inline--fa {
+            width: 1em;
+          }
+        `}
 `
 
 const NavTabs = styled(Tabs)`
@@ -133,6 +158,7 @@ const NavTabs = styled(Tabs)`
 const PluginNonIdealState = styled(NonIdealState)`
   height: 400px;
   max-height: 100%;
+  padding: 50px;
 `
 
 const getResizableAreaProps = ({
@@ -238,7 +264,7 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
   plugins: state.plugins,
   doubleTabbed: get(state.config, 'poi.tabarea.double', false),
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
-  useGridMenu: get(state.config, 'poi.tabarea.grid', navigator.maxTouchPoints !== 0),
+  useGridMenu: get(state.config, 'poi.tabarea.grid', true),
   activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
   activePluginName: get(state.ui, 'activePluginName', get(state.plugins, '0.id', '')),
   mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
@@ -598,13 +624,17 @@ export class ControlledTabArea extends PureComponent {
         ? {}
         : tabbedPlugins.find(p => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
     const defaultPluginTitle = (
-      <span>
+      <>
         <FontAwesome name="sitemap" /> {t('others:Plugins')}
-      </span>
+      </>
     )
 
     const pluginDropdownContents = (
-      <PluginDropdown className="plugin-dropdown">
+      <PluginDropdown
+        className="plugin-dropdown"
+        large={!this.props.useGridMenu}
+        grid={this.props.useGridMenu}
+      >
         {pluginsToList.length == 0 ? (
           <PluginNonIdealState
             icon="cloud-download"
@@ -617,20 +647,15 @@ export class ControlledTabArea extends PureComponent {
               ? plugin.handleClick
               : this.isWindowMode(plugin)
               ? e => this.openWindow(plugin)
-              : e => {
-                  this.trigger.current.buttonRef.click()
-                  this.handleSelectTab(plugin.id)
-                }
+              : e => this.handleSelectTab(plugin.id)
             return (
-              <PluginDropdownMenuItem key={plugin.id}>
-                <a
-                  id={this.props.activeMainTab === plugin.id ? '' : plugin.id}
-                  onClick={handleClick}
-                  href="#"
-                >
-                  {plugin.displayName}
-                </a>
-              </PluginDropdownMenuItem>
+              <PluginDropdownMenuItem
+                onClick={handleClick}
+                id={this.props.activeMainTab === plugin.id ? '' : plugin.id}
+                icon={plugin.displayIcon}
+                text={plugin.name}
+                key={plugin.id}
+              />
             )
           })
         )}
@@ -695,18 +720,7 @@ export class ControlledTabArea extends PureComponent {
             wrapperTagName="div"
             targetTagName="div"
             popoverClassName="plugin-dropdown-container"
-            modifiers={{
-              flip: {
-                enabled: false,
-              },
-              preventOverflow: {
-                boundariesElement: 'window',
-                enabled: false,
-              },
-              hide: {
-                enabled: false,
-              },
-            }}
+            modifiers={pluginDropDownModifier}
           >
             <PluginDropdownButton icon="chevron-down" minimal ref={this.trigger} />
           </Popover>
@@ -756,6 +770,7 @@ export class ControlledTabArea extends PureComponent {
           className="nav-tab"
           wrapperTagName="div"
           targetTagName="div"
+          modifiers={pluginDropDownModifier}
         >
           <PluginDropdownButton
             ref={this.trigger}

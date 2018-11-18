@@ -247,9 +247,10 @@ export async function readPlugin(pluginPath) {
   const icon = isArray(plugin.icon)
     ? plugin.icon
     : plugin.icon.split('/')[1] || plugin.icon || 'th-large'
+  plugin.displayIcon = isArray(icon) ? <FontAwesome icon={icon} /> : <FontAwesome name={icon} />
   plugin.displayName = (
     <>
-      {isArray(icon) ? <FontAwesome icon={icon} /> : <FontAwesome name={icon} />} {plugin.name}
+      {plugin.displayIcon} {plugin.name}
     </>
   )
   plugin.timestamp = Date.now()

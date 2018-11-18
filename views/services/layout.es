@@ -26,8 +26,7 @@ const setCSS = () => {
   additionalStyle.innerHTML = `
 .plugin-dropdown {
   max-height: ${tabSize.height}px;
-  max-width: ${tabSize.width}px;
-  width: ${panelRect.width * 0.875}px;
+  max-width: ${Math.min(panelRect.width * 0.875, tabSize.width)}px;
 }
 `
 }
