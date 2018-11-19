@@ -73,10 +73,7 @@ const FleetShipView = connect((state, { fleetId }) =>
     <div className="fleet-name">
       <FleetStat fleetId={fleetId} isMini={false} />
     </div>
-    <ShipDetails
-      className="ship-details"
-      observerPath={['layout.shippane', `info.fleets.${fleetId}.api_ship`]}
-    >
+    <ShipDetails className="ship-details">
       {(shipsId || []).map((shipId, i) => (
         <ShipRow key={shipId} shipId={shipId} enableAvatar={enableAvatar} compact={width < 480} />
       ))}
@@ -91,7 +88,7 @@ const LBView = compose(
     mapareas: get(state, 'const.$mapareas', {}),
   })),
 )(({ areaIds, mapareas, t, enableAvatar, width }) => (
-  <ShipDetails className="ship-details" observerPath={['layout.shippane', 'info.airbase']}>
+  <ShipDetails className="ship-details">
     {areaIds.map(
       (id, i) =>
         mapareas[id] != null &&

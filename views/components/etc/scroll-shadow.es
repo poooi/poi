@@ -1,26 +1,25 @@
 import React, { PureComponent } from 'react'
-import { observer, observe } from 'redux-observers'
-import { get } from 'lodash'
-import { store } from 'views/create-store'
-import styled, { css } from 'styled-components'
-import { ResizeSensor } from '@blueprintjs/core'
+import { compact } from 'lodash'
+import styled from 'styled-components'
 
 const Container = styled.div`
   transition: 0.3s 0.1s;
-  ${({ top, bottom }) =>
-    top && bottom
-      ? css`
-          box-shadow: inset 0 18px 15px -20px #217dbb, inset 0 -18px 15px -20px #217dbb;
-        `
-      : top
-      ? css`
-          box-shadow: inset 0 18px 15px -20px #217dbb;
-        `
-      : bottom
-      ? css`
-          box-shadow: inset 0 -18px 15px -20px #217dbb;
-        `
-      : css``}
+  position: relative;
+  box-shadow: ${({ top, bottom }) =>
+    compact([
+      top && 'inset 0 18px 15px -20px #217dbb',
+      bottom && 'inset 0 -18px 15px -20px #217dbb;',
+    ]).join(',')};
+`
+
+const TopSentinel = styled.div`
+  position: relative;
+  top: 0;
+`
+
+const BottomSentinel = styled.div`
+  position: relative;
+  bottom: 0;
 `
 
 export class ScrollShadow extends PureComponent {
@@ -29,56 +28,43 @@ export class ScrollShadow extends PureComponent {
     bottom: true,
   }
 
-  onScroll = e => {
-    if (!this.r) {
-      return
+  topSentinel = React.createRef()
+  bottomSentinel = React.createRef()
+
+  handleIntersect = type => ([entry]) => {
+    if (this.state[type] !== entry.isIntersecting) {
+      this.setState({
+        [type]: entry.isIntersecting,
+      })
     }
-    const { scrollTop, clientHeight, scrollHeight } = this.r
-    const scrollBottom = scrollHeight - clientHeight - scrollTop
-    let { state } = this
-    const top = scrollTop < 5
-    const bottom = scrollBottom < 5
-    if (top !== state.top) {
-      state = {
-        ...state,
-        top,
-      }
-    }
-    if (bottom !== state.bottom) {
-      state = {
-        ...state,
-        bottom,
-      }
-    }
-    this.setState(state)
   }
 
   componentDidMount = e => {
-    this.onScroll()
-    const sizeObservers = this.props.observerPath.map(
-      p => new observer(state => get(state, p), this.onScroll),
-    )
-    this.unobserve = observe(store, sizeObservers)
+    this.topObserver = new IntersectionObserver(this.handleIntersect('top'))
+    this.bottomObserver = new IntersectionObserver(this.handleIntersect('bottom'))
+
+    this.topObserver.observe(this.topSentinel.current)
+    this.bottomObserver.observe(this.bottomSentinel.current)
   }
 
   componentWillUnmount = e => {
-    this.unobserve()
+    this.topObserver.disconnect()
+    this.bottomObserver.disconnect()
   }
 
   render() {
     const { children, className } = this.props
     return (
-      <ResizeSensor onResize={this.onScroll}>
-        <Container
-          ref={r => (this.r = r)}
-          className={className}
-          top={!this.state.top}
-          bottom={!this.state.bottom}
-          onScroll={this.onScroll}
-        >
-          {children}
-        </Container>
-      </ResizeSensor>
+      <Container
+        className={className}
+        top={!this.state.top}
+        bottom={!this.state.bottom}
+        onScroll={this.onScroll}
+      >
+        <TopSentinel ref={this.topSentinel} />
+        {children}
+        <BottomSentinel ref={this.bottomSentinel} />
+      </Container>
     )
   }
 }

@@ -58,10 +58,7 @@ export const LBViewMini = compose(
     width: miniShipRowWidthSelector(state),
   })),
 )(({ areaIds, mapareas, t, enableAvatar, width }) => (
-  <ShipDetailsMini
-    className="ship-details-mini"
-    observerPath={['layout.minishippane', 'info.airbase']}
-  >
+  <ShipDetailsMini className="ship-details-mini">
     {areaIds.map(
       (id, i) =>
         mapareas[id] &&
