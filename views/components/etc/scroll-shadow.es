@@ -14,12 +14,12 @@ const Container = styled.div`
 
 const TopSentinel = styled.div`
   position: relative;
-  top: 0;
+  top: 4px;
 `
 
 const BottomSentinel = styled.div`
   position: relative;
-  bottom: 0;
+  bottom: 4px;
 `
 
 export class ScrollShadow extends PureComponent {
