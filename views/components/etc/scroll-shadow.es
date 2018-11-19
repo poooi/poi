@@ -30,6 +30,9 @@ export class ScrollShadow extends PureComponent {
   }
 
   onScroll = e => {
+    if (!this.r) {
+      return
+    }
     const { scrollTop, clientHeight, scrollHeight } = this.r
     const scrollBottom = scrollHeight - clientHeight - scrollTop
     let { state } = this
