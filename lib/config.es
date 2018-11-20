@@ -96,6 +96,9 @@ if (!config.get('poi.plugin')) {
     })
   }
 }
+if (!['light', 'dark'].includes(config.get('poi.appearance.theme', 'dark'))) {
+  config.set('poi.appearance.theme', 'dark')
+}
 config.delete('poi.windowmode')
 config.delete('poi.backgroundProcess')
 

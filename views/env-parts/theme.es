@@ -1,11 +1,12 @@
-/* global config, ROOT, dispatch */
-import themes from 'poi-asset-themes/index.json'
+/* global config, ROOT */
 import { remote } from 'electron'
 import { fileUrl } from '../utils/tools'
 import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path-extra'
+import themes from 'assets/data/theme.json'
+import classNames from 'classnames'
+import { isBoolean } from 'util'
 
-const { normal: normalThemes, vibrant: vibrantThemes } = themes
 const EXROOT = remote.getGlobal('EXROOT')
 
 require.extensions['.css'] = (m, name) => {
@@ -17,9 +18,6 @@ require.extensions['.css'] = (m, name) => {
 }
 
 window.applyTheme = theme => config.set('poi.appearance.theme', theme)
-window.allThemes = normalThemes
-window.normalThemes = normalThemes
-window.vibrantThemes = vibrantThemes
 config.setDefault('poi.appearance.theme', 'darklykai')
 
 export function loadStyle(
@@ -48,16 +46,52 @@ export function loadStyle(
     $('#custom-css').setAttribute('href', `file://${EXROOT}/hack/custom.css`)
   }
 
-  const loadTheme = (theme = 'paperdark') => {
-    theme = themes.normal.includes(theme) ? theme : 'paperdark'
-    const isVibrant = config.get('poi.appearance.vibrant', false)
-    // FIXME: wait for light theme
-    window.isDarkTheme = true
+  const delaySetClassName = className => {
+    if (document.body) {
+      document.body.className = className
+    } else {
+      setTimeout(() => delaySetClassName(className), 100)
+    }
+  }
+
+  const delaySetBackgroundColor = value => {
+    if (document.body) {
+      document.body.style.backgroundColor = value
+    } else {
+      setTimeout(() => delaySetBackgroundColor(value), 100)
+    }
+  }
+
+  const setBackgroundColor = (isDark, isVibrant) => {
+    if (isVibrant) {
+      if ('darwin' === process.platform) {
+        delaySetBackgroundColor(isDark ? '#202b3396' : '#f5f8fa96')
+      } else {
+        delaySetBackgroundColor(isDark ? '#202b33e6' : '#f5f8fae6')
+      }
+    } else {
+      delaySetBackgroundColor(isDark ? '#202b33' : '#f5f8fa')
+    }
+  }
+
+  const loadTheme = (theme = 'dark', isVibrant) => {
+    theme = themes.includes(theme) ? theme : 'dark'
+    isVibrant = isBoolean(isVibrant) ? isVibrant : config.get('poi.appearance.vibrant', false)
+    const isDark = theme === 'dark'
+    window.isDarkTheme = isDark
+    setBackgroundColor(isDark, isVibrant)
+    delaySetClassName(
+      classNames('bp3-focus-disabled', {
+        'bp3-dark': isDark,
+      }),
+    )
     if ($('#bootstrap-css')) {
       $('#bootstrap-css').setAttribute(
         'href',
         fileUrl(
-          require.resolve(`poi-asset-themes/dist/${isVibrant ? 'vibrant' : 'normal'}/${theme}.css`),
+          require.resolve(
+            `poi-asset-themes/dist/${isVibrant ? 'vibrant' : 'normal'}/paperdark.css`,
+          ),
         ),
       )
     }
@@ -86,14 +120,6 @@ export function loadStyle(
     reloadCustomCss()
   }
 
-  const setBackgroundColor = value => {
-    if (document.body) {
-      document.body.style.backgroundColor = value
-    } else {
-      setTimeout(() => setBackgroundColor(value), 100)
-    }
-  }
-
   const windowsSetVibrancy = value => {
     try {
       const electronVibrancy = remote.require(
@@ -113,49 +139,20 @@ export function loadStyle(
   }
 
   const setVibrancy = value => {
-    const themes = value ? vibrantThemes : normalThemes
-    if (isMainWindow && window.dispatch) {
-      dispatch({
-        type: '@@UpdateThemes',
-        themes,
-      })
-      window.allThemes = themes
-    }
-    if (value) {
-      if ('darwin' === process.platform) {
-        setBackgroundColor('#202b3396')
-      } else {
-        setBackgroundColor('#202b33e6')
-      }
-    } else {
-      setBackgroundColor('#202b33')
-    }
+    const theme = config.get('poi.appearance.theme', 'dark')
+    const isDark = theme === 'dark'
     if ('darwin' === process.platform) {
-      currentWindow.setVibrancy(value === 1 ? 'dark' : null)
+      currentWindow.setVibrancy(value === 1 ? (isDark ? 'dark' : 'light') : null)
     } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
         windowsSetVibrancy(value)
       }
     }
-    const theme = config.get('poi.appearance.theme', 'paperdark')
     if (themes.includes(theme)) {
-      loadTheme(theme)
+      loadTheme(theme, !!value)
     } else {
-      config.set('poi.appearance.theme', 'paperdark')
+      config.set('poi.appearance.theme', 'dark')
     }
-  }
-
-  if ('win32' === process.platform) {
-    currentWindow.on('hide', () => {
-      if (config.get('poi.appearance.vibrant', 0) === 1) {
-        windowsSetVibrancy(0)
-      }
-    })
-    currentWindow.on('show', () => {
-      if (config.get('poi.appearance.vibrant', 0) === 1) {
-        windowsSetVibrancy(1)
-      }
-    })
   }
 
   setVibrancy(config.get('poi.appearance.vibrant', null))

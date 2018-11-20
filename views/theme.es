@@ -5,3 +5,9 @@ export const darkTheme = {
   name: 'bp3-dark',
   variant: 'dark',
 }
+
+export const lightTheme = {
+  ...Colors,
+  name: 'bp3-light',
+  variant: 'light',
+}
