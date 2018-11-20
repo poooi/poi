@@ -36,6 +36,15 @@ export class PoiToast extends React.PureComponent {
     if (!message) {
       return
     }
+    message = options.title ? (
+      <>
+        <strong>{options.title}</strong>
+        <br />
+        {message}
+      </>
+    ) : (
+      message
+    )
     const intent = intentTypes.has(options.type)
       ? options.type
       : map[options.type] || Intent.PRIMARY
