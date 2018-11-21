@@ -6,6 +6,7 @@ import { withNamespaces } from 'react-i18next'
 import { Card, Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
 import { shell } from 'electron'
 import FA from 'react-fontawesome'
+import osName from 'os-name'
 
 const Wrapper = styled.div`
   margin-bottom: 1em;
@@ -112,6 +113,9 @@ export const VersionInfo = withNamespaces(['setting'])(({ t }) => (
           <PoiName>{aprilFirst ? 'chiba' : 'poi'}</PoiName> {POI_VERSION}
         </Title>
         <VersionDetail>
+          <div>
+            <Entry>OS</Entry> {osName()}
+          </div>
           {map(['electron', 'chrome', 'node'], name => (
             <div key={name}>
               <Entry>{capitalize(name)}</Entry> {process.versions[name]}
