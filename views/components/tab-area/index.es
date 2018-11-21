@@ -744,10 +744,10 @@ export class ControlledTabArea extends PureComponent {
         <PoiAppTabpane id={MAIN_VIEW.name} className="main-view poi-app-tabpane" key="main-view">
           <MAIN_VIEW.reactClass />
         </PoiAppTabpane>
-        {!this.props.doubleTabbed && pluginContents}
         <ShipViewTabpanel id={SHIP_VIEW.name} className="ship-view poi-app-tabpane" key="ship-view">
           <SHIP_VIEW.reactClass />
         </ShipViewTabpanel>
+        {!this.props.doubleTabbed && pluginContents}
         <PoiAppTabpane
           id={SETTINGS_VIEW.name}
           className="settings-view poi-app-tabpane"
