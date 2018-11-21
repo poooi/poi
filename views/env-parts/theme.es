@@ -74,6 +74,12 @@ export function loadStyle(
     }
   }
 
+  const setRef = (el, url) => {
+    if (el.href !== url) {
+      el.setAttribute('href', url)
+    }
+  }
+
   const loadTheme = (theme = 'dark', isVibrant) => {
     theme = themes.includes(theme) ? theme : 'dark'
     isVibrant = isBoolean(isVibrant) ? isVibrant : config.get('poi.appearance.vibrant', false)
@@ -86,18 +92,20 @@ export function loadStyle(
       }),
     )
     if ($('#bootstrap-css')) {
-      $('#bootstrap-css').setAttribute(
-        'href',
+      setRef(
+        $('#bootstrap-css'),
         fileUrl(
           require.resolve(
-            `poi-asset-themes/dist/${isVibrant ? 'vibrant' : 'normal'}/paperdark.css`,
+            `poi-asset-themes/dist/bootstrap/${isDark ? 'darklykai' : 'cosmo'}-${
+              isVibrant ? 'vibrant' : 'normal'
+            }.css`,
           ),
         ),
       )
     }
     if ($('#blueprint-css')) {
-      $('#blueprint-css').setAttribute(
-        'href',
+      setRef(
+        $('#blueprint-css'),
         fileUrl(
           require.resolve(
             `poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`,
@@ -106,16 +114,13 @@ export function loadStyle(
       )
     }
     if ($('#blueprint-icon-css')) {
-      $('#blueprint-icon-css').setAttribute(
-        'href',
+      setRef(
+        $('#blueprint-icon-css'),
         fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')),
       )
     }
     if ($('#normalize-css')) {
-      $('#normalize-css').setAttribute(
-        'href',
-        fileUrl(require.resolve('normalize.css/normalize.css')),
-      )
+      setRef($('#normalize-css'), fileUrl(require.resolve('normalize.css/normalize.css')))
     }
     reloadCustomCss()
   }
