@@ -48,7 +48,7 @@ export function getMaterialStyle(percent) {
 }
 
 export function getCondStyle(cond) {
-  let s = 'poi-ship-cond-'
+  let s = 'poi-ship-cond poi-ship-cond-'
   if (cond > 52) s += '53'
   else if (cond > 49) s += '50'
   else if (cond == 49) s += '49'

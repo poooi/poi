@@ -6,6 +6,7 @@ import { reduxSet } from 'views/utils/tools'
 import { get, capitalize } from 'lodash'
 import path from 'path'
 import i18next from 'views/env-parts/i18next'
+import themes from 'assets/data/theme.json'
 
 const { Menu } = remote.require('electron')
 const { openExternal } = shell
@@ -136,25 +137,7 @@ if (process.platform !== 'darwin') {
     },
     {
       label: i18next.t('menu:Themes'),
-      submenu: [
-        { type: 'separator' },
-        {
-          label: i18next.t('menu:Next Theme'),
-          click: (item, focusedWindow) => {
-            const all = window.allThemes
-            const nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
-            window.applyTheme(nextTheme)
-          },
-        },
-        {
-          label: i18next.t('menu:Previous Theme'),
-          click: (item, focusedWindow) => {
-            const all = window.allThemes
-            const prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
-            window.applyTheme(prevTheme)
-          },
-        },
-      ],
+      submenu: [],
     },
     {
       label: i18next.t('menu:Help'),
@@ -353,27 +336,7 @@ if (process.platform !== 'darwin') {
     },
     {
       label: i18next.t('menu:Themes'),
-      submenu: [
-        { type: 'separator' },
-        {
-          label: i18next.t('menu:Next Theme'),
-          accelerator: 'CmdOrCtrl+T',
-          click: (item, focusedWindow) => {
-            const all = window.allThemes
-            const nextTheme = all[(all.indexOf(window.theme) + 1) % all.length]
-            window.applyTheme(nextTheme)
-          },
-        },
-        {
-          label: i18next.t('menu:Previous Theme'),
-          accelerator: 'CmdOrCtrl+Shift+T',
-          click: (item, focusedWindow) => {
-            const all = window.allThemes
-            const prevTheme = all[(all.indexOf(window.theme) + all.length - 1) % all.length]
-            window.applyTheme(prevTheme)
-          },
-        },
-      ],
+      submenu: [],
     },
     {
       label: i18next.t('menu:Window'),
@@ -431,15 +394,14 @@ if (process.platform !== 'darwin') {
 }
 
 const themepos = process.platform === 'darwin' ? 3 : 2
-for (let i = window.normalThemes.length - 1; i >= 0; i--) {
-  const th = window.normalThemes[i]
+for (let i = themes.length - 1; i >= 0; i--) {
+  const th = themes[i]
   template[themepos].submenu.unshift({
     label: th === '__default__' ? 'Default' : capitalize(th),
     type: 'radio',
-    checked: window.theme === th,
-    enabled: !window.isVibrant || window.vibrantThemes.includes(th),
+    checked: config.get('poi.appearance.theme', 'dark') === th,
     click: (item, focusedWindow) => {
-      if (th !== window.theme) {
+      if (th !== config.get('poi.appearance.theme', 'dark')) {
         window.applyTheme(th)
       }
     },
@@ -462,14 +424,9 @@ if (process.platform === 'darwin') {
 const themeMenuList = appMenu.items[themepos].submenu.items
 config.on('config.set', (path, value) => {
   if (path === 'poi.appearance.theme' && value != null) {
-    if (themeMenuList[window.normalThemes.indexOf(value)]) {
-      themeMenuList[window.normalThemes.indexOf(value)].checked = true
+    if (themeMenuList[themes.indexOf(value)]) {
+      themeMenuList[themes.indexOf(value)].checked = true
     }
-  }
-  if (path === 'poi.appearance.vibrant') {
-    window.normalThemes.forEach(
-      (theme, i) => (themeMenuList[i].enabled = !value || window.vibrantThemes.includes(theme)),
-    )
   }
 })
 

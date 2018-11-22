@@ -1,7 +1,6 @@
 const initState = {
   activeMainTab: 'main-view',
   activeFleetId: 0,
-  themes: window.allThemes.slice(),
 }
 
 export function reducer(state = initState, { type, tabInfo, themes }) {
@@ -10,12 +9,6 @@ export function reducer(state = initState, { type, tabInfo, themes }) {
       return {
         ...state,
         ...tabInfo,
-      }
-    }
-    case '@@UpdateThemes': {
-      return {
-        ...state,
-        themes,
       }
     }
     default:

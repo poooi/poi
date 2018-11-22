@@ -21,7 +21,7 @@ import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { PoiApp } from './poi-app'
 import { layoutResizeObserver } from 'views/services/layout'
 import i18next from './env-parts/i18next'
-import { darkTheme } from './theme'
+import { darkTheme, lightTheme } from './theme'
 
 const config = remote.require('./lib/config')
 
@@ -38,6 +38,7 @@ require('./services/alert')
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.layout.reverse', false),
   isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
+  theme: get(state, 'config.poi.appearance.theme', 'dark'),
 }))
 class Poi extends Component {
   componentWillUnmount() {
@@ -48,32 +49,34 @@ class Poi extends Component {
     layoutResizeObserver.observe(this.poimain)
   }
   render() {
-    const { isHorizontal, reversed } = this.props
+    const { isHorizontal, reversed, theme } = this.props
     return (
-      <>
-        {config.get(
-          'poi.appearance.customtitlebar',
-          process.platform === 'win32' || process.platform === 'linux',
-        ) && (
-          <title-bar>
-            <TitleBarWrapper />
-          </title-bar>
-        )}
-        <poi-main
-          ref={ref => {
-            this.poimain = ref
-          }}
-          style={{
-            flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
-            ...(!isHorizontal && { overflow: 'hidden' }),
-          }}
-        >
-          {this.props.isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper />}
-          <PoiApp />
-        </poi-main>
-        <ModalTrigger />
-        <BasicAuth />
-      </>
+      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
+        <>
+          {config.get(
+            'poi.appearance.customtitlebar',
+            process.platform === 'win32' || process.platform === 'linux',
+          ) && (
+            <title-bar>
+              <TitleBarWrapper />
+            </title-bar>
+          )}
+          <poi-main
+            ref={ref => {
+              this.poimain = ref
+            }}
+            style={{
+              flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
+              ...(!isHorizontal && { overflow: 'hidden' }),
+            }}
+          >
+            {this.props.isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper />}
+            <PoiApp />
+          </poi-main>
+          <ModalTrigger />
+          <BasicAuth />
+        </>
+      </ThemeProvider>
     )
   }
 }
@@ -81,16 +84,14 @@ class Poi extends Component {
 ReactDOM.render(
   <I18nextProvider i18n={i18next}>
     <Provider store={store}>
-      <ThemeProvider theme={darkTheme}>
-        <WindowEnv.Provider
-          value={{
-            window,
-            mountPoint: document.body,
-          }}
-        >
-          <Poi />
-        </WindowEnv.Provider>
-      </ThemeProvider>
+      <WindowEnv.Provider
+        value={{
+          window,
+          mountPoint: document.body,
+        }}
+      >
+        <Poi />
+      </WindowEnv.Provider>
     </Provider>
   </I18nextProvider>,
   $('#poi'),
