@@ -78,41 +78,63 @@ button {
   flex-flow: column;
 }
 
+.poi-ship-cond {
+  margin-right: 0.5em;
+  position: relative;
+}
+
+.poi-ship-cond::after {
+  height: 0.8em;
+  width: 0.4em;
+  position: absolute;
+  right: -0.5em;
+  top: calc(50% - 0.4em);
+  border: 1px #00000080 solid;
+  border-radius: 1px;
+  content: ' ';
+}
+
+/* cond 0~19  */
 .poi-ship-cond-0 {
-  /* cond 0~19  */
-  color: #dd514c;
   font-weight: bold;
 }
 
-.poi-ship-cond-20 {
-  /* cond 20~29 */
-  color: #f37b1d;
+.poi-ship-cond-0::after {
+  background-color: #dd514c;
 }
 
-.poi-ship-cond-30 {
-  /* cond 30~39 */
-  color: #ffc880;
+/* cond 20~29 */
+.poi-ship-cond-20::after {
+  background-color: #f37b1d;
 }
 
-.poi-ship-cond-40 {
-  /* cond 40~48 */
-  color: inherit;
+/* cond 30~39 */
+.poi-ship-cond-30::after {
+  background-color: #ffc880;
 }
 
-.poi-ship-cond-49 {
-  /* cond 49 */
-  color: inherit;
+/* cond 40~48 */
+.poi-ship-cond-40::after {
+  background-color: #fff;
 }
 
-.poi-ship-cond-50 {
-  /* cond 50~52 */
-  color: #fe0;
+/* cond 49 */
+.poi-ship-cond-49::after {
+  background-color: #fff;
 }
 
+/* cond 50~52 */
+.poi-ship-cond-50::after {
+  background-color: #fe0;
+}
+
+/* cond 53~100 */
 .poi-ship-cond-53 {
-  /* cond 53~100 */
-  color: #ffff40;
   font-weight: bold;
+}
+
+.poi-ship-cond-53::after {
+  background-color: #ffff40;
 }
 
 .undecided-checkbox-inside label {
