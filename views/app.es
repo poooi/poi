@@ -38,7 +38,7 @@ require('./services/alert')
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.layout.reverse', false),
   isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
-  theme: get(state, 'poi.appearance.theme', 'dark'),
+  theme: get(state, 'config.poi.appearance.theme', 'dark'),
 }))
 class Poi extends Component {
   componentWillUnmount() {
