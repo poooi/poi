@@ -284,10 +284,7 @@ export const SlotItemContainer = styled.div`
   vertical-align: bottom;
 
   &::after {
-    background-color: ${props => {
-      console.log(props.theme)
-      return props.theme.slotBg
-    }};
+    background-color: ${props => props.theme.slotBg};
     border-radius: 9px;
     bottom: -3px;
     content: attr(data-onslot);
