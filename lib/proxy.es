@@ -198,11 +198,14 @@ class Proxy extends EventEmitter {
   }
 
   createServer = (req, res) => {
-    // Disable HTTP Keep-Alive
-    delete req.headers['proxy-connection']
-    req.headers['connection'] = 'close'
-
     const parsed = url.parse(req.url)
+    if (req.headers['proxy-connection'] && !req.headers['connection']) {
+      req.headers['connection'] = req.headers['proxy-connection']
+      delete req.headers['proxy-connection']
+    } else if (!req.headers['connection']) {
+      req.headers['connection'] = 'close'
+    }
+    const keepAlive = req.headers['connection'] === 'keep-alive'
 
     // Update server status
     if (isKancolleGameApi(parsed.pathname) && this.serverInfo.ip !== parsed.hostname) {
@@ -247,6 +250,7 @@ class Proxy extends EventEmitter {
           headers: req.headers,
           encoding: null,
           followRedirect: false,
+          forever: keepAlive,
         }
 
         // Add body to request
@@ -370,9 +374,12 @@ class Proxy extends EventEmitter {
   }
 
   onConnect = (req, client, head) => {
-    delete req.headers['proxy-connection']
-    // Disable HTTP Keep-Alive
-    req.headers['connection'] = 'close'
+    if (req.headers['proxy-connection'] && !req.headers['connection']) {
+      req.headers['connection'] = req.headers['proxy-connection']
+      delete req.headers['proxy-connection']
+    } else if (!req.headers['connection']) {
+      req.headers['connection'] = 'close'
+    }
     const remoteUrl = url.parse(`https://${req.url}`)
     let remote = null
     switch (config.get('proxy.use')) {
