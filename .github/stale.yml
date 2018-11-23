@@ -27,7 +27,7 @@ staleLabel: stale
 markComment: |
   This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.
 
-  由于该 issue 近期内没有相关跟进，已经被自动标记为过期。如果没有新的追加信息，它将在近期被关闭。
+  由于该 issue 已经有一段时间没有相关跟进，已经被自动标记为过期。如果没有新的追加信息，它将在近期被关闭。
 
 # Comment to post when removing the stale label.
 # unmarkComment: >
