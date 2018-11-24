@@ -206,7 +206,7 @@ export class NavigatorBar extends React.Component {
                 content={
                   <ContextButtonTooltip
                     left={t('others:Refresh page')}
-                    right={t('others:Reload Flash')}
+                    right={t('others:Reload game')}
                   />
                 }
               >
