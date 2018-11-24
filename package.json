@@ -126,6 +126,7 @@
     "request": "^2.88.0",
     "reselect": "^4.0.0",
     "semver": "^5.6.0",
+    "socks5-client": "^1.2.6",
     "styled-components": "^4.1.1",
     "swf-extract": "^1.1.0",
     "wanakana": "^4.0.2",

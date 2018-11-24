@@ -221,7 +221,7 @@ class Proxy extends EventEmitter {
 
   setProxy = () => {
     const httpsProxy = resolveProxyUrl()
-    const httpProxy = `http://127.0.0..1:${this.port}`
+    const httpProxy = `http://127.0.0.1:${this.port}`
     session.defaultSession.setProxy(
       {
         proxyRules: `http=${httpProxy},direct://;https=${httpsProxy},direct://`,
