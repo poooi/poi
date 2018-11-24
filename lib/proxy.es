@@ -1,15 +1,12 @@
 import EventEmitter from 'events'
 import url from 'url'
-import net from 'net'
 import http from 'http'
 import path from 'path'
 import querystring from 'querystring'
-import caseNormalizer from 'header-case-normalizer'
 import request from 'request'
 import mime from 'mime'
-import socks from 'socks5-client'
 import PacProxyAgent from 'pac-proxy-agent'
-import { app } from 'electron'
+import { app, session } from 'electron'
 import util from 'util'
 import { gunzip, inflate } from 'zlib'
 import fs from 'fs-extra'
@@ -166,6 +163,28 @@ const resolveProxy = req => {
 
 const isKancolleGameApi = pathname => pathname.startsWith('/kcsapi')
 
+const resolveProxyUrl = () => {
+  switch (config.get('proxy.use')) {
+    case 'socks5': {
+      const host = config.get('proxy.socks5.host', '127.0.0.1')
+      const port = config.get('proxy.socks5.port', 1080)
+      return `socks5://${host}:${port}`
+    }
+    case 'http': {
+      const host = config.get('proxy.http.host', '127.0.0.1')
+      const port = config.get('proxy.http.port', 8118)
+      const requirePassword = config.get('proxy.http.requirePassword', false)
+      const username = config.get('proxy.http.username', '')
+      const password = config.get('proxy.http.password', '')
+      const useAuth = requirePassword && username !== '' && password !== ''
+      const strAuth = `${username}:${password}@`
+      return `http://${useAuth ? strAuth : ''}${host}:${port}`
+    }
+    default:
+      return 'direct://'
+  }
+}
+
 class Proxy extends EventEmitter {
   serverInfo = {}
 
@@ -176,8 +195,6 @@ class Proxy extends EventEmitter {
   load = () => {
     // HTTP Requests
     this.server = http.createServer(this.createServer)
-    // HTTPS Requests
-    this.server.on('connect', this.onConnect)
     this.server.on('error', error)
     const listenPort = config.get('proxy.port', 0)
     this.server.listen(
@@ -185,15 +202,32 @@ class Proxy extends EventEmitter {
       config.get('proxy.allowLAN', false) ? '0.0.0.0' : '127.0.0.1',
       () => {
         this.port = this.server.address().port
-        app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
-        app.commandLine.appendSwitch(
-          'proxy-bypass-list',
-          '<local>;*.google-analytics.com;*.doubleclick.net',
-        )
+        this.setProxy()
+        config.on('config.set', path => {
+          if (path.startsWith('proxy')) {
+            this.setProxy()
+          }
+        })
+        // app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${this.port}`)
+        // app.commandLine.appendSwitch(
+        //   'proxy-bypass-list',
+        //   '<local>;*.google-analytics.com;*.doubleclick.net',
+        // )
         app.commandLine.appendSwitch('ignore-certificate-errors')
         app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1')
-        log(`Proxy listening on ${this.port}`)
       },
+    )
+  }
+
+  setProxy = () => {
+    const httpsProxy = resolveProxyUrl()
+    const httpProxy = `http://127.0.0..1:${this.port}`
+    session.defaultSession.setProxy(
+      {
+        proxyRules: `http=${httpProxy},direct://;https=${httpsProxy},direct://`,
+        proxyBypassRules: '<local>;*.google-analytics.com;*.doubleclick.net',
+      },
+      () => log(`Proxy listening on ${this.port}`),
     )
   }
 
@@ -372,99 +406,11 @@ class Proxy extends EventEmitter {
       }
     }
   }
-
-  onConnect = (req, client, head) => {
-    if (req.headers['proxy-connection'] && !req.headers['connection']) {
-      req.headers['connection'] = req.headers['proxy-connection']
-      delete req.headers['proxy-connection']
-    } else if (!req.headers['connection']) {
-      req.headers['connection'] = 'close'
-    }
-    const remoteUrl = url.parse(`https://${req.url}`)
-    let remote = null
-    switch (config.get('proxy.use')) {
-      case 'socks5': {
-        // Write data directly to SOCKS5 proxy
-        remote = socks.createConnection({
-          socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
-          socksPort: config.get('proxy.socks5.port', 1080),
-          host: remoteUrl.hostname,
-          port: remoteUrl.port,
-        })
-        remote.on('connect', () => {
-          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
-          remote.write(head)
-        })
-        client.on('data', data => {
-          remote.write(data)
-        })
-        remote.on('data', data => {
-          client.write(data)
-        })
-        break
-      }
-      case 'http': {
-        // Write data directly to HTTP proxy
-        const host = config.get('proxy.http.host', '127.0.0.1')
-        const port = config.get('proxy.http.port', 8118)
-        // Write header to http proxy
-        let msg = `CONNECT ${remoteUrl.hostname}:${remoteUrl.port} HTTP/${req.httpVersion}\r\n`
-        for (const k in req.headers) {
-          msg += `${caseNormalizer(k)}: ${req.headers[k]}\r\n`
-        }
-        msg += '\r\n'
-        remote = net.connect(
-          port,
-          host,
-          () => {
-            remote.write(msg)
-            remote.write(head)
-            client.pipe(remote)
-            remote.pipe(client)
-          },
-        )
-        break
-      }
-      default: {
-        // Connect to remote directly
-        remote = net.connect(
-          remoteUrl.port,
-          remoteUrl.hostname,
-          () => {
-            client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
-            remote.write(head)
-            client.pipe(remote)
-            remote.pipe(client)
-          },
-        )
-      }
-    }
-    client.on('end', () => {
-      remote.end()
-    })
-    remote.on('end', () => {
-      client.end()
-    })
-    client.on('error', e => {
-      error(e)
-      remote.destroy()
-    })
-    remote.on('error', e => {
-      error(e)
-      client.destroy()
-    })
-    client.on('timeout', () => {
-      client.destroy()
-      remote.destroy()
-    })
-    remote.on('timeout', () => {
-      client.destroy()
-      remote.destroy()
-    })
-  }
 }
 
 const poiProxy = new Proxy()
-poiProxy.load()
+app.on('ready', () => {
+  poiProxy.load()
+})
 
 export default poiProxy
