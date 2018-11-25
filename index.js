@@ -1,5 +1,8 @@
-if (require.resolve('./lib/cli').endsWith('es')) {
+try {
+  require('./lib/cli')
+} catch (e) {
   require('@babel/register')(require('./babel.config'))
+  require('./lib/cli')
+} finally {
+  require('./app')
 }
-require('./lib/cli')
-require('./app')
