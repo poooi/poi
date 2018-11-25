@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell, session } = require('electron')
 const path = require('path-extra')
+const fs = require('fs-extra')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -35,7 +36,7 @@ require('./lib/module-path').setAllowedPath([global.ROOT, global.APPDATA_PATH])
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
-const { warn, error } = require('./lib/utils')
+const { warn, error, log } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
@@ -94,6 +95,75 @@ require('./lib/flash')
 
 let mainWindow, appIcon
 global.mainWindow = mainWindow = null
+
+// Workaround https://github.com/electron/electron/issues/15365
+app.on('window-all-closed', () => {
+  session.defaultSession.cookies.get({}, (e, cookies) => {
+    const set = new Set()
+    const map = new Map()
+    const newCookies = cookies.filter(a => a.domain.includes('dmm'))
+    newCookies
+      .filter(a => a.domain.includes('dmm'))
+      .filter(a => a.name.includes('se') || a.name.includes('id') || a.name.startsWith('_'))
+      .forEach(cookie => {
+        set.add(`${cookie.name};${cookie.domain};${cookie.path}`)
+        map.set(cookie.name, cookie)
+      })
+    let storageCookies
+    try {
+      storageCookies = fs.readJSONSync(path.join(global.APPDATA_PATH, 'cookie-backup.json'))
+    } catch (e) {
+      storageCookies = []
+    }
+    storageCookies = storageCookies.filter(
+      cookie => !set.has(`${cookie.name};${cookie.domain};${cookie.path}`),
+    )
+    storageCookies.map(cookie => {
+      if (map.has(cookie.name)) {
+        return {
+          ...cookie,
+          expirationDate: map.get(cookie.name).expirationDate,
+          value: map.get(cookie.name).value,
+        }
+      } else {
+        return cookie
+      }
+    })
+    fs.writeJSONSync(path.join(global.APPDATA_PATH, 'cookie-backup.json'), [
+      ...newCookies,
+      ...storageCookies,
+    ])
+  })
+})
+
+app.on('ready', () => {
+  try {
+    const url = 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/'
+    const homepage = config.get('poi.misc.homepage')
+    const cookies = fs.readJSONSync(path.join(global.APPDATA_PATH, 'cookie-backup.json'))
+    cookies.forEach(cookie => {
+      session.defaultSession.cookies.set(
+        {
+          ...cookie,
+          url,
+        },
+        e => null,
+      )
+      if (homepage && homepage !== url) {
+        session.defaultSession.cookies.set(
+          {
+            ...cookie,
+            url: homepage,
+          },
+          e => null,
+        )
+      }
+    })
+    log('Cookie backup loaded.')
+  } catch (e) {
+    warn('No cookie backup found.')
+  }
+})
 
 // Fix confused cursor in HiDPI
 // https://github.com/electron/electron/issues/7655#issuecomment-259688853

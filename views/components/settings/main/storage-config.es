@@ -35,6 +35,7 @@ export class StorageConfig extends Component {
   }
 
   handleClearCookie = e => {
+    remove(join(APPDATA_PATH, 'cookie-backup.json')).catch(e => null)
     remove(join(APPDATA_PATH, 'Cookies')).catch(e => null)
     remove(join(APPDATA_PATH, 'Cookies-journal')).catch(e => null)
     remote.getCurrentWebContents().session.clearStorageData({ storages: ['cookies'] }, () => {
