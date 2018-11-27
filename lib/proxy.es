@@ -3,15 +3,14 @@ import url from 'url'
 import http from 'http'
 import path from 'path'
 import querystring from 'querystring'
-import request from 'request'
 import mime from 'mime'
-import PacProxyAgent from 'pac-proxy-agent'
+// import PacProxyAgent from 'pac-proxy-agent'
 import { app, session } from 'electron'
 import util from 'util'
 import { gunzip, inflate } from 'zlib'
 import fs from 'fs-extra'
 
-import SocksHttpAgent from './socks-http-agent'
+// import SocksHttpAgent from './socks-http-agent'
 import config from './config'
 import { log, error } from './utils'
 
@@ -20,25 +19,25 @@ const { ROOT } = global
 const gunzipAsync = util.promisify(gunzip)
 const inflateAsync = util.promisify(inflate)
 
-const resolveBody = async (encoding, body) => {
-  let decoded = null
-  switch (encoding) {
-    case 'gzip':
-      decoded = await gunzipAsync(body)
-      break
-    case 'deflate':
-      decoded = await inflateAsync(body)
-      break
-    default:
-      decoded = body
-  }
-  decoded = decoded.toString()
-  if (decoded.indexOf('svdata=') === 0) {
-    decoded = decoded.substring(7)
-  }
-  decoded = JSON.parse(decoded)
-  return decoded
-}
+// const resolveBody = async (encoding, body) => {
+//   let decoded = null
+//   switch (encoding) {
+//     case 'gzip':
+//       decoded = await gunzipAsync(body)
+//       break
+//     case 'deflate':
+//       decoded = await inflateAsync(body)
+//       break
+//     default:
+//       decoded = body
+//   }
+//   decoded = decoded.toString()
+//   if (decoded.indexOf('svdata=') === 0) {
+//     decoded = decoded.substring(7)
+//   }
+//   decoded = JSON.parse(decoded)
+//   return decoded
+// }
 
 const delay = time => new Promise(res => setTimeout(res, time))
 
@@ -117,49 +116,49 @@ const findCache = (pathname, hostname) => {
   }
 }
 
-const PacAgents = {}
-const resolveProxy = req => {
-  switch (config.get('proxy.use')) {
-    // HTTP Request via SOCKS5 proxy
-    case 'socks5':
-      return {
-        ...req,
-        agentClass: SocksHttpAgent,
-        agentOptions: {
-          socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
-          socksPort: config.get('proxy.socks5.port', 1080),
-        },
-      }
-    // HTTP Request via HTTP proxy
-    case 'http': {
-      const host = config.get('proxy.http.host', '127.0.0.1')
-      const port = config.get('proxy.http.port', 8118)
-      const requirePassword = config.get('proxy.http.requirePassword', false)
-      const username = config.get('proxy.http.username', '')
-      const password = config.get('proxy.http.password', '')
-      const useAuth = requirePassword && username !== '' && password !== ''
-      const strAuth = `${username}:${password}@`
-      return {
-        ...req,
-        proxy: `http://${useAuth ? strAuth : ''}${host}:${port}`,
-      }
-    }
-    // PAC
-    case 'pac': {
-      const uri = config.get('proxy.pacAddr')
-      if (!PacAgents[uri]) {
-        PacAgents[uri] = new PacProxyAgent(uri)
-      }
-      return {
-        ...req,
-        agent: PacAgents[uri],
-      }
-    }
-    // Directly
-    default:
-      return req
-  }
-}
+// const PacAgents = {}
+// const resolveProxy = req => {
+//   switch (config.get('proxy.use')) {
+//     // HTTP Request via SOCKS5 proxy
+//     case 'socks5':
+//       return {
+//         ...req,
+//         agentClass: SocksHttpAgent,
+//         agentOptions: {
+//           socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
+//           socksPort: config.get('proxy.socks5.port', 1080),
+//         },
+//       }
+//     // HTTP Request via HTTP proxy
+//     case 'http': {
+//       const host = config.get('proxy.http.host', '127.0.0.1')
+//       const port = config.get('proxy.http.port', 8118)
+//       const requirePassword = config.get('proxy.http.requirePassword', false)
+//       const username = config.get('proxy.http.username', '')
+//       const password = config.get('proxy.http.password', '')
+//       const useAuth = requirePassword && username !== '' && password !== ''
+//       const strAuth = `${username}:${password}@`
+//       return {
+//         ...req,
+//         proxy: `http://${useAuth ? strAuth : ''}${host}:${port}`,
+//       }
+//     }
+//     // PAC
+//     case 'pac': {
+//       const uri = config.get('proxy.pacAddr')
+//       if (!PacAgents[uri]) {
+//         PacAgents[uri] = new PacProxyAgent(uri)
+//       }
+//       return {
+//         ...req,
+//         agent: PacAgents[uri],
+//       }
+//     }
+//     // Directly
+//     default:
+//       return req
+//   }
+// }
 
 const isKancolleGameApi = pathname => pathname.startsWith('/kcsapi')
 
@@ -231,103 +230,166 @@ class Proxy extends EventEmitter {
     )
   }
 
-  createServer = (req, res) => {
-    const parsed = url.parse(req.url)
+  updateServerInfo = urlPattern => {
+    if (isKancolleGameApi(urlPattern.pathname) && this.serverInfo.ip !== urlPattern.hostname) {
+      if (this.serverList[urlPattern.hostname]) {
+        this.serverInfo = {
+          ...this.serverList[urlPattern.hostname],
+          ip: urlPattern.hostname,
+        }
+      } else {
+        this.serverInfo = {
+          num: -1,
+          name: '__UNKNOWN',
+          ip: urlPattern.hostname,
+        }
+      }
+    }
+  }
+
+  createServer = async (req, res) => {
+    const urlPattern = url.parse(req.url)
+
     if (req.headers['proxy-connection'] && !req.headers['connection']) {
       req.headers['connection'] = req.headers['proxy-connection']
       delete req.headers['proxy-connection']
     } else if (!req.headers['connection']) {
       req.headers['connection'] = 'close'
     }
-    const keepAlive = req.headers['connection'] === 'keep-alive'
+    // const keepAlive = req.headers['connection'] === 'keep-alive'
 
-    // Update server status
-    if (isKancolleGameApi(parsed.pathname) && this.serverInfo.ip !== parsed.hostname) {
-      if (this.serverList[parsed.hostname]) {
-        this.serverInfo = {
-          ...this.serverList[parsed.hostname],
-          ip: parsed.hostname,
-        }
-      } else {
-        this.serverInfo = {
-          num: -1,
-          name: '__UNKNOWN',
-          ip: parsed.hostname,
-        }
-      }
-    }
+    this.updateServerInfo(urlPattern)
 
     // Find cachefile for static resource
-    const cacheFile = isStaticResource(parsed.pathname, parsed.hostname)
-      ? findHack(parsed.pathname) || findCache(parsed.pathname, parsed.hostname)
+    const cacheFile = isStaticResource(urlPattern.pathname, urlPattern.hostname)
+      ? findHack(urlPattern.pathname) || findCache(urlPattern.pathname, urlPattern.hostname)
       : false
 
-    // Get all request body
-    let reqBody = Buffer.alloc(0)
-    req.on('data', data => {
-      reqBody = Buffer.concat([reqBody, data])
-    })
+    // Prepare request
+    const rawReqBody = await this.fetchRequest(req)
+    const reqBody = JSON.stringify(querystring.parse(rawReqBody.toString()))
+    const reqOption = this.getRequestOption(urlPattern, req)
+    const requestInfo = [req.headers.origin, urlPattern.pathname, req.url]
 
-    // Make request
-    req.on('end', async () => {
-      const domain = req.headers.origin
-      const pathname = parsed.pathname
-      const requrl = req.url
+    this.emit('network.on.request', req.method, requestInfo, reqBody, Date.now())
 
-      const retryConfig = config.get('proxy.retries', 0)
-      const retries = retryConfig < 0 ? 0 : retryConfig
-
-      try {
-        let options = {
-          method: req.method,
-          url: req.url,
-          headers: req.headers,
-          encoding: null,
-          followRedirect: false,
-          forever: keepAlive,
-        }
-
-        // Add body to request
-        if (reqBody.length > 0) {
-          options = {
-            ...options,
-            body: reqBody,
-          }
-        }
-
-        // Use cache file
-        if (cacheFile) {
-          this.useCache(req, res, cacheFile)
-        } else {
-          let count = 0
-          while (count <= retries) {
-            const { success, retry, error } = await this.sendRequest({
-              req,
-              res,
-              reqBody,
-              domain,
-              pathname,
-              requrl,
-              options,
-            })
-            if (success) {
-              res.end()
-              break
-            } else if (retry && count < retries) {
-              count++
-              await delay(3000)
-            } else {
+    try {
+      // Use cache file
+      if (cacheFile) {
+        this.useCache(req, res, cacheFile)
+      } else {
+        const count = 0
+        const retryConfig = config.get('proxy.retries', 0)
+        const retries = retryConfig < 0 ? 0 : retryConfig
+        while (count <= retries) {
+          const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
+          if (error) {
+            if (count === retries) {
               res.end()
               throw error
             }
+            await delay(5000)
+          } else {
+            res.end()
+            if (statusCode == 200 && data !== null) {
+              this.emit('network.on.response', req.method, requestInfo, data, reqBody, Date.now())
+            } else if (statusCode != 200) {
+              this.emit('network.error', requestInfo, statusCode)
+            }
+            break
           }
         }
-      } catch (e) {
-        error(`${req.method} ${req.url} ${e.toString()}`)
-        this.emit('network.error', [domain, pathname, requrl])
       }
-    })
+    } catch (e) {
+      error(`${req.method} ${req.url} ${e.toString()}`)
+      this.emit('network.error', requestInfo)
+    }
   }
+
+  fetchRequest = req =>
+    new Promise(resolve => {
+      const reqBody = []
+      req.on('data', chunk => {
+        reqBody.push(chunk)
+      })
+      req.on('end', () => {
+        resolve(Buffer.concat(reqBody))
+      })
+    })
+
+  getRequestOption = (urlPattern, req) => {
+    const options = {
+      hostname: urlPattern.hostname || req.headers.host,
+      port: urlPattern.port || req.port || 80,
+      path: urlPattern.path,
+      method: req.method,
+      headers: req.headers,
+    }
+
+    return options
+  }
+
+  parseResponse = async (resDataChunks, resHeader) => {
+    const serverResData = Buffer.concat(resDataChunks)
+    const contentEncoding = resHeader['content-encoding'] || resHeader['Content-Encoding']
+    const ifServerGzipped = /gzip/i.test(contentEncoding)
+    const isServerDeflated = /deflate/i.test(contentEncoding)
+
+    // only do unzip when there is res data
+    const data = (ifServerGzipped
+      ? await gunzipAsync(serverResData).catch(e => 'null')
+      : isServerDeflated
+      ? await inflateAsync(serverResData).catch(e => 'null')
+      : serverResData
+    ).toString()
+    try {
+      return data.startsWith('svdata=') ? JSON.parse(data.substring(7)) : JSON.parse(data)
+    } catch (e) {
+      return null
+    }
+  }
+
+  fetchResponse = (options, rawReqBody, cRes) =>
+    new Promise((resolve, reject) => {
+      //send request
+      const proxyRequest = http.request(options, res => {
+        //deal response header
+        const { statusCode, headers } = res
+        const resDataChunks = []
+        const rawResChunks = []
+
+        cRes.writeHead(statusCode, headers)
+        res.pipe(cRes)
+
+        //deal response data
+        cRes.on('data', chunk => {
+          rawResChunks.push(chunk)
+        })
+
+        res.on('end', () => {
+          if (isKancolleGameApi(options.path)) {
+            this.parseResponse(resDataChunks, headers).then(r =>
+              resolve({
+                data: r,
+                statusCode,
+              }),
+            )
+          } else {
+            resolve({ statusCode })
+          }
+        })
+        res.on('error', error => {
+          reject({ error })
+        })
+      })
+
+      proxyRequest.on('error', error => {
+        reject({ error })
+      })
+
+      proxyRequest.write(rawReqBody)
+      proxyRequest.end()
+    })
 
   useCache = async (req, res, cacheFile) => {
     const stats = await fs.stat(cacheFile)
@@ -354,58 +416,58 @@ class Proxy extends EventEmitter {
     }
   }
 
-  sendRequest = async ({ req, res, reqBody, domain, pathname, requrl, options }) => {
-    try {
-      // Emit request event to plugins
-      reqBody = JSON.stringify(querystring.parse(reqBody.toString()))
-      this.emit('network.on.request', req.method, [domain, pathname, requrl], reqBody, Date.now())
+  // sendRequest = async ({ req, res, reqBody, domain, pathname, requrl, options }) => {
+  //   try {
+  //     // Emit request event to plugins
+  //     reqBody = JSON.stringify(querystring.parse(reqBody.toString()))
+  //     this.emit('network.on.request', req.method, [domain, pathname, requrl], reqBody, Date.now())
 
-      // Create remote request
-      const [response, body] = await new Promise((pResolve, pReject) => {
-        request(resolveProxy(options), (err, rRes, rBody) => {
-          if (!err) {
-            pResolve([rRes, rBody])
-          } else {
-            pReject(err)
-          }
-        }).pipe(res)
-      })
+  //     // Create remote request
+  //     const [response, body] = await new Promise((pResolve, pReject) => {
+  //       request(resolveProxy(options), (err, rRes, rBody) => {
+  //         if (!err) {
+  //           pResolve([rRes, rBody])
+  //         } else {
+  //           pReject(err)
+  //         }
+  //       }).pipe(res)
+  //     })
 
-      // Parse response
-      const resolvedBody = await resolveBody(response.headers['content-encoding'], body).catch(
-        e => null,
-      )
+  //     // Parse response
+  //     const resolvedBody = await resolveBody(response.headers['content-encoding'], body).catch(
+  //       e => null,
+  //     )
 
-      if (response.statusCode == 200 && resolvedBody !== null) {
-        this.emit(
-          'network.on.response',
-          req.method,
-          [domain, pathname, requrl],
-          JSON.stringify(resolvedBody),
-          reqBody,
-          Date.now(),
-        )
-      } else if (response.statusCode != 200) {
-        this.emit('network.error', [domain, pathname, requrl], response.statusCode)
-      }
-      return {
-        success: true,
-      }
-    } catch (e) {
-      if (!isKancolleGameApi(pathname)) {
-        return {
-          success: false,
-          retry: false,
-          error: e,
-        }
-      }
-      return {
-        success: false,
-        retry: true,
-        error: e,
-      }
-    }
-  }
+  //     if (response.statusCode == 200 && resolvedBody !== null) {
+  //       this.emit(
+  //         'network.on.response',
+  //         req.method,
+  //         [domain, pathname, requrl],
+  //         JSON.stringify(resolvedBody),
+  //         reqBody,
+  //         Date.now(),
+  //       )
+  //     } else if (response.statusCode != 200) {
+  //       this.emit('network.error', [domain, pathname, requrl], response.statusCode)
+  //     }
+  //     return {
+  //       success: true,
+  //     }
+  //   } catch (e) {
+  //     if (!isKancolleGameApi(pathname)) {
+  //       return {
+  //         success: false,
+  //         retry: false,
+  //         error: e,
+  //       }
+  //     }
+  //     return {
+  //       success: false,
+  //       retry: true,
+  //       error: e,
+  //     }
+  //   }
+  // }
 }
 
 const poiProxy = new Proxy()
