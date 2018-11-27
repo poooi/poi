@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
 import { withNamespaces } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
+import { rgba } from 'polished'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 import {
@@ -57,7 +58,8 @@ const MapInfoMsg = styled.div`
 `
 
 const MapRoutesSVG = styled.svg`
-  background-color: #161616aa;
+  background-color: ${props =>
+    rgba(props.theme.BLUE5, props.theme.vibrant === 'dark' ? 0.75 : 0.25)};
 `
 
 const MaproutesBlink = keyframes`
@@ -273,28 +275,13 @@ export class PoiMapReminder extends Component {
 
   render() {
     const { mapHp, mapData, currentNode, mapId, maps, t } = this.props
-    const tooltipMsg = []
     const alphaNode =
       get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
-    if (currentNode) {
-      tooltipMsg.push(
-        <MapTooltipMsg className="map-tooltip-msg" key="node">
-          {t('Node')}: {alphaNode} ({currentNode})
-        </MapTooltipMsg>,
-      )
-    }
-    if (mapHp && mapHp[1] > 0 && mapHp[0] !== 0) {
-      tooltipMsg.push(
-        <MapTooltipMsg className="map-tooltip-msg" key="hp">
-          HP: {mapHp[0]} / {mapHp[1]}
-        </MapTooltipMsg>,
-      )
-    }
     return (
       <PoiMapReminderTag tag="poi-map-reminder">
         <Popover
           position={Position.TOP_RIGHT}
-          interactionKind={PopoverInteractionKind.HOVER}
+          interactionKind={PopoverInteractionKind.CLICK}
           wrapperTagName="div"
           targetTagName="div"
           disabled={!mapData}
@@ -323,7 +310,18 @@ export class PoiMapReminder extends Component {
           </MapReminder>
           <>
             <MapRoutes />
-            <MapInfoMsg className="map-info-msg">{tooltipMsg}</MapInfoMsg>
+            <MapInfoMsg className="map-info-msg">
+              {!!currentNode && (
+                <MapTooltipMsg className="map-tooltip-msg">
+                  {t('Node')}: {alphaNode} ({currentNode})
+                </MapTooltipMsg>
+              )}
+              {!!mapHp && mapHp[1] > 0 && mapHp[0] !== 0 && (
+                <MapTooltipMsg className="map-tooltip-msg">
+                  HP: {mapHp[0]} / {mapHp[1]}
+                </MapTooltipMsg>
+              )}
+            </MapInfoMsg>
             <ItemStat />
           </>
         </Popover>
