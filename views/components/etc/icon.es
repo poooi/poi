@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import classnames from 'classnames'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { memoize } from 'lodash'
+import { memoize, range, map } from 'lodash'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'
@@ -10,6 +10,9 @@ const getClassName = (props, isSVG) => {
 }
 
 const {ROOT, config} = window
+
+const MATERIAL_ICON_SVG = map(range(1, 9).concat([10, 11, 12]), id => require(`${ROOT}/assets/svgr/material/${id}`))
+const SLOTITEM_ICON_SVG = map(range(-1, 48), id => require(`${ROOT}/assets/svgr/slotitem/${id}`))
 
 class iconConf {
   constructor() {
@@ -102,6 +105,11 @@ export class SlotitemIcon extends PureComponent {
         `${ROOT}/assets/img/slotitem/-1.png`
     )
 
+    if (useSVGIcon) {
+      const Komponent = SLOTITEM_ICON_SVG[slotitemId] || SLOTITEM_ICON_SVG[-1]
+      return <Komponent className={getClassName(className, useSVGIcon)} />
+    }
+
     return (
       <img
         alt={alt}
@@ -138,6 +146,10 @@ export class MaterialIcon extends PureComponent {
   render() {
     const { className, alt } = this.props
     const { useSVGIcon } = this.state
+    if (useSVGIcon) {
+      const Komponent = MATERIAL_ICON_SVG[this.props.materialId]
+      return <Komponent className={getClassName(className, useSVGIcon)} />
+    }
     return (
       <img
         alt={alt}
