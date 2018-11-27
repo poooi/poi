@@ -281,7 +281,7 @@ export class PoiMapReminder extends Component {
       <PoiMapReminderTag tag="poi-map-reminder">
         <Popover
           position={Position.TOP_RIGHT}
-          interactionKind={PopoverInteractionKind.CLICK}
+          interactionKind={PopoverInteractionKind.HOVER}
           wrapperTagName="div"
           targetTagName="div"
           disabled={!mapData}
