@@ -332,7 +332,7 @@ class Proxy extends EventEmitter {
   }
 
   parseResponse = async (resDataChunks, header) => {
-    const contentType = header['content-type'] || header['Content-Type']
+    const contentType = header['content-type'] || header['Content-Type'] || ''
     if (!contentType.startsWith('text') && !contentType.startsWith('application')) {
       return null
     }
@@ -374,12 +374,14 @@ class Proxy extends EventEmitter {
         })
 
         res.on('end', () => {
-          this.parseResponse(resDataChunks, headers).then(data =>
-            resolve({
-              data,
-              statusCode,
-            }),
-          )
+          this.parseResponse(resDataChunks, headers)
+            .then(data =>
+              resolve({
+                data,
+                statusCode,
+              }),
+            )
+            .catch(e => resolve({ statusCode }))
         })
         res.on('error', error => {
           reject({ error })
