@@ -35,6 +35,7 @@ const AlertMain = styled.div`
   position: relative;
   transition: 0.3s;
   width: 100%;
+  border-radius: 0;
 `
 
 const AlertContainer = styled(Alert)`
