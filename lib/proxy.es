@@ -216,7 +216,7 @@ class Proxy extends EventEmitter {
         this.useCache(req, res, cacheFile)
       } else {
         // Retry for kancolle api
-        const count = 0
+        let count = 0
         const retryConfig = config.get('proxy.retries', 0)
         const retries = retryConfig < 0 ? 0 : retryConfig
         while (count <= retries) {
@@ -227,6 +227,8 @@ class Proxy extends EventEmitter {
               throw error
             }
             await delay(5000)
+            count++
+            this.emit('network.error.retry', requestInfo, count)
           } else {
             res.end()
             if (statusCode == 200 && data != null) {
