@@ -146,7 +146,7 @@ const RelayMode = compose(
 
 @withNamespaces(['setting'])
 @connect(state => ({
-  proxy: get(state, 'config.proxy'),
+  proxy: get(state, 'config.proxy', {}),
 }))
 export class NetworkConfig extends Component {
   state = {
@@ -157,7 +157,8 @@ export class NetworkConfig extends Component {
     const { proxy, t } = this.props
     return (
       <div>
-        {!isEqual(this.state.proxy, proxy) && (
+        {(!isEqual(this.state.proxy.port, proxy.port) ||
+          !isEqual(this.state.proxy.allowLAN, proxy.allowLAN)) && (
           <StickyCallout intent={Intent.SUCCESS}>
             {t('Network setting changes will be effective after restarting poi')}
           </StickyCallout>
