@@ -222,7 +222,7 @@ class Proxy extends EventEmitter {
           const reqOption = this.getRequestOption(urlPattern, req, keepAlive)
           const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
           if (error) {
-            if (count === retries || !isKancolleGameApi(urlPattern.pathname)) {
+            if (count >= retries || !isKancolleGameApi(urlPattern.pathname)) {
               res.end()
               throw error
             }
