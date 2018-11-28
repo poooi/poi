@@ -271,27 +271,29 @@ class Proxy extends EventEmitter {
     const reqOption = this.getRequestOption(urlPattern, req)
     const requestInfo = [req.headers.origin, urlPattern.pathname, req.url]
 
+    // Emit request event
     this.emit('network.on.request', req.method, requestInfo, reqBody, Date.now())
 
     try {
-      // Use cache file
       if (cacheFile) {
+        // Use cache file
         this.useCache(req, res, cacheFile)
       } else {
+        // Retry for kancolle api
         const count = 0
         const retryConfig = config.get('proxy.retries', 0)
         const retries = retryConfig < 0 ? 0 : retryConfig
         while (count <= retries) {
           const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
           if (error) {
-            if (count === retries) {
+            if (count === retries || !isKancolleGameApi(urlPattern.pathname)) {
               res.end()
               throw error
             }
             await delay(5000)
           } else {
             res.end()
-            if (statusCode == 200 && data !== null) {
+            if (statusCode == 200 && data != null) {
               this.emit('network.on.response', req.method, requestInfo, data, reqBody, Date.now())
             } else if (statusCode != 200) {
               this.emit('network.error', requestInfo, statusCode)
@@ -329,25 +331,30 @@ class Proxy extends EventEmitter {
     return options
   }
 
-  parseResponse = async (resDataChunks, resHeader) => {
-    const serverResData = Buffer.concat(resDataChunks)
-    const contentEncoding = resHeader['content-encoding'] || resHeader['Content-Encoding']
-    const ifServerGzipped = /gzip/i.test(contentEncoding)
-    const isServerDeflated = /deflate/i.test(contentEncoding)
+  parseResponse = async (resDataChunks, header) => {
+    const contentType = header['content-type'] || header['Content-Type']
+    if (!contentType.startsWith('text') && !contentType.startsWith('application')) {
+      return null
+    }
 
-    // only do unzip when there is res data
-    const data = ifServerGzipped
-      ? await gunzipAsync(serverResData).catch(e => {
+    const resData = Buffer.concat(resDataChunks)
+    const contentEncoding = header['content-encoding'] || header['Content-Encoding']
+    const isGzip = /gzip/i.test(contentEncoding)
+    const isDeflat = /deflate/i.test(contentEncoding)
+    const unzipped = isGzip
+      ? await gunzipAsync(resData).catch(e => {
           return null
         })
-      : isServerDeflated
-      ? await inflateAsync(serverResData).catch(e => {
+      : isDeflat
+      ? await inflateAsync(resData).catch(e => {
           return null
         })
-      : serverResData
+      : resData
     try {
-      const parsed = data.toString()
-      return parsed.startsWith('svdata=') ? parsed.substring(7) : parsed
+      const str = unzipped.toString()
+      const parsed = str.startsWith('svdata=') ? str.substring(7) : str
+      JSON.parse(parsed)
+      return parsed
     } catch (e) {
       return null
     }
@@ -355,32 +362,24 @@ class Proxy extends EventEmitter {
 
   fetchResponse = (options, rawReqBody, cRes) =>
     new Promise((resolve, reject) => {
-      //send request
       const proxyRequest = http.request(options, res => {
-        //deal response header
         const { statusCode, headers } = res
-        const rawResChunks = []
+        const resDataChunks = []
 
         cRes.writeHead(statusCode, headers)
         res.pipe(cRes)
 
-        //deal response data
         res.on('data', chunk => {
-          // cRes.write(chunk)
-          rawResChunks.push(chunk)
+          resDataChunks.push(chunk)
         })
 
         res.on('end', () => {
-          if (isKancolleGameApi(options.path)) {
-            this.parseResponse(rawResChunks, headers).then(r =>
-              resolve({
-                data: r,
-                statusCode,
-              }),
-            )
-          } else {
-            resolve({ statusCode })
-          }
+          this.parseResponse(resDataChunks, headers).then(data =>
+            resolve({
+              data,
+              statusCode,
+            }),
+          )
         })
         res.on('error', error => {
           reject({ error })
