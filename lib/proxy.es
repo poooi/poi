@@ -336,14 +336,18 @@ class Proxy extends EventEmitter {
     const isServerDeflated = /deflate/i.test(contentEncoding)
 
     // only do unzip when there is res data
-    const data = (ifServerGzipped
-      ? await gunzipAsync(serverResData).catch(e => 'null')
+    const data = ifServerGzipped
+      ? await gunzipAsync(serverResData).catch(e => {
+          return null
+        })
       : isServerDeflated
-      ? await inflateAsync(serverResData).catch(e => 'null')
+      ? await inflateAsync(serverResData).catch(e => {
+          return null
+        })
       : serverResData
-    ).toString()
     try {
-      return data.startsWith('svdata=') ? JSON.parse(data.substring(7)) : JSON.parse(data)
+      const parsed = data.toString()
+      return parsed.startsWith('svdata=') ? parsed.substring(7) : parsed
     } catch (e) {
       return null
     }
@@ -355,20 +359,20 @@ class Proxy extends EventEmitter {
       const proxyRequest = http.request(options, res => {
         //deal response header
         const { statusCode, headers } = res
-        const resDataChunks = []
         const rawResChunks = []
 
         cRes.writeHead(statusCode, headers)
         res.pipe(cRes)
 
         //deal response data
-        cRes.on('data', chunk => {
+        res.on('data', chunk => {
+          // cRes.write(chunk)
           rawResChunks.push(chunk)
         })
 
         res.on('end', () => {
           if (isKancolleGameApi(options.path)) {
-            this.parseResponse(resDataChunks, headers).then(r =>
+            this.parseResponse(rawResChunks, headers).then(r =>
               resolve({
                 data: r,
                 statusCode,
