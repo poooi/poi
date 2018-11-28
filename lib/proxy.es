@@ -204,7 +204,6 @@ class Proxy extends EventEmitter {
     // Prepare request options
     const rawReqBody = await this.fetchRequest(req)
     const reqBody = JSON.stringify(querystring.parse(rawReqBody.toString()))
-    const reqOption = this.getRequestOption(urlPattern, req, keepAlive)
     const requestInfo = [req.headers.origin, urlPattern.pathname, req.url]
 
     // Emit request event
@@ -220,6 +219,7 @@ class Proxy extends EventEmitter {
         const retryConfig = config.get('proxy.retries', 0)
         const retries = retryConfig < 0 ? 0 : retryConfig
         while (count <= retries) {
+          const reqOption = this.getRequestOption(urlPattern, req, keepAlive)
           const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
           if (error) {
             if (count === retries || !isKancolleGameApi(urlPattern.pathname)) {
@@ -370,12 +370,12 @@ class Proxy extends EventEmitter {
         })
 
         res.on('error', error => {
-          reject({ error })
+          resolve({ error })
         })
       })
 
       proxyRequest.on('error', error => {
-        reject({ error })
+        resolve({ error })
       })
 
       proxyRequest.write(rawReqBody)
