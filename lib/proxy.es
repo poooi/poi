@@ -226,9 +226,9 @@ class Proxy extends EventEmitter {
               res.end()
               throw error
             }
-            await delay(5000)
             count++
             this.emit('network.error.retry', requestInfo, count)
+            await delay(3000)
           } else {
             res.end()
             if (statusCode == 200 && data != null) {
