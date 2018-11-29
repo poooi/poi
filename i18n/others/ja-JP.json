@@ -47,7 +47,7 @@
   "Update failed": "更新失敗",
   "Please try again or download manually": "再試行または手動でダウンロードする",
   "ConnectionFailedMsg": "ネットワークエラーが発生しました。{{count}} 回目の再試行を開始します",
-  "Connection failed.": "接続できません。ネットワークとプロキシ設定を確認して下さい",
+  "Connection failed": "接続できません。ネットワークとプロキシ設定を確認して下さい",
   "CatError": "猫を検出しました。(エラーコード: {{code}})",
   "Modernization succeeded": "近代化改修に成功しました！",
   "Modernization failed": "近代化改修に失敗しました…",

@@ -146,7 +146,7 @@ window.addEventListener('game.response', e => {
   }
 })
 window.addEventListener('network.error', () => {
-  error(i18next.t('Connection failed.'), { dontReserve: true })
+  error(i18next.t('Connection failed'), { dontReserve: true })
 })
 window.addEventListener('network.error.retry', e => {
   const { counter } = e.detail

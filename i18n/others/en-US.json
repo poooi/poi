@@ -41,7 +41,7 @@
   "Download latest version": "Download latest version",
   "Aliyun": "Aliyun",
   "ConnectionFailedMsg": "Connection failed, now reconnecting, retry count: {{count}}",
-  "Connection failed.": "Connection failed.",
+  "Connection failed": "Connection failed.",
   "CatError": "The server presented you a cat. (Error code: {{code}})",
   "Modernization succeeded": "Modernization succeeded! ",
   "Modernization failed": "Modernization failed.",

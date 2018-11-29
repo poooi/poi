@@ -31,7 +31,7 @@
   "Download latest version": "최신 버전 다운로드",
   "Aliyun": "Aliyun",
   "ConnectionFailedMsg": "네트워크 에러가 발생했습니다. {{count}}번째 재시도중...",
-  "Connection failed.": "연결할 수 없습니다.",
+  "Connection failed": "연결할 수 없습니다.",
   "CatError": "에러코 발견! (에러 코드: {{code}})",
 
   "Modernization succeeded": "근대화 개수 성공!",

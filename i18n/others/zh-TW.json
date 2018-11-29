@@ -47,7 +47,7 @@
   "Update failed": "更新失敗",
   "Please try again or download manually": "重新更新或者手動下載更新",
   "ConnectionFailedMsg": "網路連線錯誤，正在進行第 {{count}} 次重試",
-  "Connection failed.": "網路連線失敗，請檢查網路與代理設定",
+  "Connection failed": "網路連線失敗，請檢查網路與代理設定",
   "CatError": "伺服器向你扔了一隻貓娘（錯誤代碼：{{code}}）",
   "Modernization succeeded": "近代化改修成功！",
   "Modernization failed": "近代化改修失敗…",
