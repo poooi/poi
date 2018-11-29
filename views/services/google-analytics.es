@@ -1,4 +1,4 @@
-/* global ga */
+/* global ga, config, getStore */
 
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
@@ -17,8 +17,8 @@ const handleMemberIdChange = (dispatch, current, previous) => {
 
 const memberIdObserver = observer(state => state.info.basic.api_member_id, handleMemberIdChange)
 
-if (window.config.get('poi.misc.analytics', true)) {
-  if (window.getStore('info.basic.api_member_id')) {
+if (config.get('poi.misc.analytics', true)) {
+  if (getStore('info.basic.api_member_id')) {
     handleMemberIdChange(null, window.getStore('info.basic.api_member_id'))
   }
   observe(store, [memberIdObserver])

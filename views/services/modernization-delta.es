@@ -126,7 +126,7 @@ const onResponse = e => {
   }
 }
 
-if (config.get('feature.modernization-delta.enable', true)) {
+if (config.get('feature.modernizationDelta.enable', true)) {
   window.addEventListener('game.request', onRequest)
   window.addEventListener('game.response', onResponse)
 }

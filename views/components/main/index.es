@@ -3,12 +3,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
 import { Trans } from 'react-i18next'
 import styled from 'styled-components'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 
-import defaultLayout from './default-layout'
 import { layoutResizeObserver } from 'views/services/layout'
 import { ExpeditionPanel } from './parts/expedition-panel'
 import { TaskPanel } from './parts/task-panel'
@@ -36,6 +35,24 @@ const MainPanelContent = styled.div`
     flex: none;
   }
 `
+
+// Override maxsize
+const defaultLayout = config.getDefault('poi.mainpanel.layout')
+const configLayout = config.get('poi.mainpanel.layout')
+const keys = ['minW', 'maxW', 'minH', 'maxH']
+const newLayout = fromPairs(
+  map(entries(defaultLayout), ([bp, conf]) => [
+    bp,
+    map(conf, (panelConf, i) => ({
+      ...get(configLayout, [bp, i], panelConf),
+      ...pick(panelConf, keys),
+    })),
+  ]),
+)
+
+if (!isEqual(newLayout, configLayout)) {
+  config.set('poi.mainpanel.layout', newLayout)
+}
 
 // polyfill for old layouts
 function layoutConfigOutdated(layoutConfig) {

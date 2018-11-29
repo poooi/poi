@@ -1,3 +1,4 @@
+/* global config */
 import { connect } from 'react-redux'
 import { get, map, range, forEach, values, sortBy } from 'lodash'
 import { Tag, Intent, ResizeSensor } from '@blueprintjs/core'
@@ -15,7 +16,8 @@ import {
   configReverseLayoutSelector,
   extensionSelectorFactory,
 } from 'views/utils/selectors'
-import defaultLayout from '../default-layout'
+
+const defaultLayout = config.getDefault('poi.mainpanel.layout')
 
 const getPanelDimension = width => {
   if (width > 700) {

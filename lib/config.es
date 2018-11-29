@@ -4,9 +4,9 @@ import CSON from 'cson'
 import fs from 'fs-extra'
 import path from 'path-extra'
 import dbg from './debug'
+import defaultConfig from './default-config'
 
-const { ROOT, EXROOT } = global
-const defaultConfigPath = path.join(ROOT, 'config.cson')
+const { EXROOT } = global
 const configPath = path.join(EXROOT, 'config.cson')
 
 class configClass extends EventEmitter {
@@ -18,30 +18,26 @@ class configClass extends EventEmitter {
       this.configData = CSON.parseCSONFile(configPath)
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
+      this.configData = {}
       dbg.log(e)
     }
-    if (!this.configData) {
-      try {
-        fs.accessSync(defaultConfigPath, fs.R_OK)
-        this.configData = CSON.parseCSONFile(defaultConfigPath) || {}
-        dbg.log(`Config loaded from: ${defaultConfigPath}`)
-      } catch (e) {
-        this.configData = {}
-        dbg.log(e)
-      }
-    }
+    this.defaultConfigData = defaultConfig
   }
+
   get = (path, value) => {
     if (path === '') {
       return this.configData
     }
-    const ret = get(this.configData, path)
-    if (ret !== undefined) {
-      return ret
-    } else {
-      return value
-    }
+    return get(this.configData, path, this.getDefault(path, value))
   }
+
+  getDefault = (path, value) => {
+    if (path === '') {
+      return this.defaultConfigData
+    }
+    return get(this.defaultConfigData, path, value)
+  }
+
   set = (path, value) => {
     if (get(this.configData, path) === value) {
       return
@@ -50,11 +46,13 @@ class configClass extends EventEmitter {
     this.emit('config.set', path, value)
     this.save()
   }
+
   setDefault = (path, value) => {
     if (this.get(path) === undefined) {
       this.set(path, value)
     }
   }
+
   save = () => {
     try {
       fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
@@ -62,6 +60,7 @@ class configClass extends EventEmitter {
       console.warn(e)
     }
   }
+
   delete = path => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData

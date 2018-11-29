@@ -1,4 +1,4 @@
-/* global success, warn, getStore */
+/* global success, warn, getStore, config */
 /*
    Item development & improvement prophecy
  */
@@ -9,9 +9,9 @@ const lookupItemName = slotitemId =>
     keySeparator: '%%%%',
   })
 
-const devResultDelay = window.config.get('poi.notify.delay.dev', false) ? 6200 : 500
+const devResultDelay = config.get('poi.notify.delay.dev', false) ? 6200 : 500
 
-const improveResultDelay = window.config.get('poi.notify.delay.improve', false) ? 5500 : 500
+const improveResultDelay = config.get('poi.notify.delay.improve', false) ? 5500 : 500
 
 const sendAfterDelay = sender => (msgStr, delay) => setTimeout(sender.bind([], msgStr), delay)
 

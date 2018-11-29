@@ -1,4 +1,4 @@
-/* global PLUGIN_PATH */
+/* global PLUGIN_PATH, config */
 import path from 'path-extra'
 import { shell } from 'electron'
 import React, { Component } from 'react'
@@ -89,8 +89,7 @@ export class PluginConfig extends Component {
       checkingUpdate: true,
       npmWorking: true,
     })
-    const isNotif =
-      window.config.get('config.packageManager.enablePluginCheck', true) && !this.props.autoUpdate // if we auto update plugins, don't toast notify
+    const isNotif = config.get('packageManager.enablePluginCheck', true) && !this.props.autoUpdate // if we auto update plugins, don't toast notify
     const handleAutoUpdate = async () => {
       await PluginManager.getOutdatedPlugins(isNotif)
       if (this.props.autoUpdate) {

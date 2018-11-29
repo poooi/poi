@@ -82,7 +82,7 @@ export function loadStyle(
 
   const loadTheme = (theme = 'dark', isVibrant) => {
     theme = themes.includes(theme) ? theme : 'dark'
-    isVibrant = isBoolean(isVibrant) ? isVibrant : config.get('poi.appearance.vibrant', false)
+    isVibrant = isBoolean(isVibrant) ? isVibrant : config.get('poi.appearance.vibrant', 0)
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
@@ -160,7 +160,7 @@ export function loadStyle(
     }
   }
 
-  setVibrancy(config.get('poi.appearance.vibrant', null))
+  setVibrancy(config.get('poi.appearance.vibrant', 0))
 
   const themeChangeHandler = (path, value) => {
     if (path === 'poi.appearance.theme') {
