@@ -70,6 +70,7 @@ export class PoiToast extends React.PureComponent {
   render() {
     return (
       <ToasterPositioned
+        autoFocus={true}
         position={Position.BOTTOM_RIGHT}
         ref={ref => (this.toaster = ref)}
         inbound={this.props.isolateGameWindow || this.props.webviewWidth >= 400}
