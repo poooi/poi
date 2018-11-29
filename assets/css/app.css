@@ -35,6 +35,7 @@ poi-main {
 #electron-app-title-bar {
   background-color: transparent !important;
   box-sizing: content-box !important;
+  border-bottom: 1px solid #00000050 !important;
 }
 
 #electron-app-title-bar * {
