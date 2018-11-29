@@ -10,6 +10,9 @@ const defaultConfig = {
       networklog: true,
       analytics: true,
       async: true,
+      screenshot: {
+        format: 'png',
+      },
     },
     content: {
       resizable: true,
@@ -53,7 +56,6 @@ const defaultConfig = {
     confirm: {
       quit: false,
     },
-    screenshotFormat: 'png',
     autoswitch: {
       enabled: true,
       main: true,
