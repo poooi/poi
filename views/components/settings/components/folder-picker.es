@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import fs from 'fs-extra'
-import { get, split, map } from 'lodash'
+import { split, map } from 'lodash'
 import { remote } from 'electron'
 import i18next from 'views/env-parts/i18next'
 import path from 'path'
@@ -14,7 +14,7 @@ import FA from 'react-fontawesome'
 
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 
-import { isSubdirectory } from 'views/utils/tools'
+import { isSubdirectory, getStoreConfig } from 'views/utils/tools'
 
 const { dialog } = remote.require('electron')
 
@@ -44,7 +44,7 @@ const EllipsisIcon = styled.span`
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultValue),
+  value: getStoreConfig(state, props.configName, props.defaultValue),
   configName: props.configName,
   label: props.label,
 }))

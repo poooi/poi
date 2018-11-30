@@ -7,7 +7,7 @@ import React from 'react'
 import { withNamespaces, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { escapeI18nKey } from 'views/utils/tools'
+import { escapeI18nKey, getStoreConfig } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { CardWrapper as CardWrapperL } from './styled-components'
 
@@ -179,7 +179,7 @@ const TaskRowBase = connect(
       configLayoutSelector,
       configReverseLayoutSelector,
       state => get(state, 'layout.mainpane.width', 450),
-      state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
+      state => getStoreConfig(state, 'poi.mainpanel.layout', defaultLayout),
     ],
     (layout, reversed, mainPanelWidth, mainPanelLayout) => {
       const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm'].find(

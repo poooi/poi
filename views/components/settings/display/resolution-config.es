@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
+import { getStoreConfig } from 'views/utils/tools'
 
 const Icon = styled.div`
   margin: 0 1em;
@@ -30,9 +31,9 @@ function getMinArea(displays) {
 
 @connect((state, props) => ({
   webview: state.layout.webview,
-  isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
-  zoomLevel: get(state.config, 'poi.appearance.zoom', 1),
-  key: get(state.config, 'poi.layout.isolate', false)
+  isolateGameWindow: getStoreConfig(state, 'poi.layout.isolate', false),
+  zoomLevel: getStoreConfig(state, 'poi.appearance.zoom', 1),
+  key: getStoreConfig(state, 'poi.layout.isolate', false)
     ? 'i' + get(state.layout.webview, 'windowWidth')
     : 'n' + get(state.layout.webview, 'width'),
 }))

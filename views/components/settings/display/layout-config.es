@@ -2,10 +2,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { get, compact } from 'lodash'
+import { compact } from 'lodash'
 import { Button, ButtonGroup, Intent, FormGroup } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
 import styled from 'styled-components'
+import { getStoreConfig } from 'views/utils/tools'
 
 import { Section, Wrapper } from 'views/components/settings/components/section'
 
@@ -59,12 +60,12 @@ const Icon = styled.span`
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  layout: get(state.config, 'poi.layout.mode', 'horizontal'),
-  enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
-  verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
-  reversed: get(state.config, 'poi.layout.reverse', false),
-  isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
-  overlayPanel: get(state.config, 'poi.layout.overlay', false),
+  layout: getStoreConfig(state, 'poi.layout.mode', 'horizontal'),
+  enableDoubleTabbed: getStoreConfig(state, 'poi.tabarea.double', false),
+  verticalDoubleTabbed: getStoreConfig(state, 'poi.tabarea.vertical', false),
+  reversed: getStoreConfig(state, 'poi.layout.reverse', false),
+  isolateGameWindow: getStoreConfig(state, 'poi.layout.isolate', false),
+  overlayPanel: getStoreConfig(state, 'poi.layout.overlay', false),
 }))
 export class LayoutConfig extends Component {
   static propTypes = {

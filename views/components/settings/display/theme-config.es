@@ -5,8 +5,8 @@ import { shell } from 'electron'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { get, map } from 'lodash'
-import { fileUrl } from 'views/utils/tools'
+import { map } from 'lodash'
+import { fileUrl, getStoreConfig } from 'views/utils/tools'
 import { withNamespaces } from 'react-i18next'
 import { HTMLSelect, Button, ControlGroup, FormGroup, Intent, Position } from '@blueprintjs/core'
 import styled from 'styled-components'
@@ -51,9 +51,9 @@ const SWITCHES = [
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  theme: get(state.config, 'poi.appearance.theme', 'dark'),
-  vibrant: get(state.config, 'poi.appearance.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
-  background: get(state.config, 'poi.appearance.background'),
+  theme: getStoreConfig(state, 'poi.appearance.theme', 'dark'),
+  vibrant: getStoreConfig(state, 'poi.appearance.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
+  background: getStoreConfig(state, 'poi.appearance.background'),
 }))
 export class ThemeConfig extends Component {
   static propTypes = {

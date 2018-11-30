@@ -20,6 +20,7 @@ import {
   DockName,
   EmptyDockWrapper,
 } from './styled-components'
+import { getStoreConfig } from 'views/utils/tools'
 
 const EmptyDock = ({ state }) => (
   <EmptyDockWrapper className="empty-dock">
@@ -57,7 +58,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
   constructions: state.info.constructions,
   $ships: state.const.$ships,
   canNotify: state.misc.canNotify,
-  enableAvatar: get(state, 'config.poi.appearance.avatar', true),
+  enableAvatar: getStoreConfig(state, 'poi.appearance.avatar', true),
 }))
 export class ConstructionPanel extends Component {
   static basicNotifyConfig = {

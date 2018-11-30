@@ -29,6 +29,7 @@ import * as SHIP_VIEW from '../ship'
 import { PluginWrap } from './plugin-wrapper'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { TabContentsUnion } from './tab-contents-union'
+import { getStoreConfig } from 'views/utils/tools'
 
 const emptyObj = {}
 
@@ -263,16 +264,16 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
 @withNamespaces(['setting', 'others'])
 @connect(state => ({
   plugins: state.plugins,
-  doubleTabbed: get(state.config, 'poi.tabarea.double', false),
-  verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
-  useGridMenu: get(state.config, 'poi.tabarea.grid', true),
+  doubleTabbed: getStoreConfig(state, 'poi.tabarea.double', false),
+  verticalDoubleTabbed: getStoreConfig(state, 'poi.tabarea.vertical', false),
+  useGridMenu: getStoreConfig(state, 'poi.tabarea.grid', true),
   activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
   activePluginName: get(state.ui, 'activePluginName', get(state.plugins, '0.id', '')),
-  mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
-  mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
-  editable: get(state.config, 'poi.layout.editable', false),
-  windowmode: get(state.config, 'poi.plugin.windowmode', emptyObj),
-  async: get(state.config, 'poi.misc.async', true),
+  mainPanelWidth: getStoreConfig(state, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+  mainPanelHeight: getStoreConfig(state, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
+  editable: getStoreConfig(state, 'poi.layout.editable', false),
+  windowmode: getStoreConfig(state, 'poi.plugin.windowmode', emptyObj),
+  async: getStoreConfig(state, 'poi.misc.async', true),
 }))
 export class ControlledTabArea extends PureComponent {
   static propTypes = {

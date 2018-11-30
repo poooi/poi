@@ -8,16 +8,17 @@ import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
 
 import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { IntegerConfig } from 'views/components/settings/components/integer'
+import { getStoreConfig } from 'views/utils/tools'
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  enabled: get(state.config, 'poi.notify.enabled', true),
-  expedition: get(state.config, 'poi.notify.expedition.enabled', true),
-  construction: get(state.config, 'poi.notify.construction.enabled', true),
-  repair: get(state.config, 'poi.notify.repair.enabled', true),
-  morale: get(state.config, 'poi.notify.morale.enabled', true),
-  others: get(state.config, 'poi.notify.others.enabled', true),
-  volume: get(state.config, 'poi.notify.volume', 0.8),
+  enabled: getStoreConfig(state, 'poi.notify.enabled', true),
+  expedition: getStoreConfig(state, 'poi.notify.expedition.enabled', true),
+  construction: getStoreConfig(state, 'poi.notify.construction.enabled', true),
+  repair: getStoreConfig(state, 'poi.notify.repair.enabled', true),
+  morale: getStoreConfig(state, 'poi.notify.morale.enabled', true),
+  others: getStoreConfig(state, 'poi.notify.others.enabled', true),
+  volume: getStoreConfig(state, 'poi.notify.volume', 0.8),
 }))
 export class NotificationConfig extends Component {
   static propTypes = {

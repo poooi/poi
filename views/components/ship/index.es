@@ -31,6 +31,7 @@ import {
   FleetNameButtonContainer,
   FleetNameButton,
 } from 'views/components/ship-parts/styled-components'
+import { getStoreConfig } from 'views/utils/tools'
 
 const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 
@@ -107,11 +108,11 @@ const LBView = compose(
 ))
 
 @connect((state, props) => ({
-  enableTransition: get(state, 'config.poi.transition.enable', true),
+  enableTransition: getStoreConfig(state, 'poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
   airBaseCnt: get(state, 'info.airbase.length', 0),
-  enableAvatar: get(state, 'config.poi.appearance.avatar', true),
+  enableAvatar: getStoreConfig(state, 'poi.appearance.avatar', true),
   width: shipRowWidthSelector(state),
 }))
 export class reactClass extends Component {

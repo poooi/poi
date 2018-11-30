@@ -22,6 +22,7 @@ import {
 import styled from 'styled-components'
 
 import PluginManager from 'views/services/plugin-manager'
+import { getStoreConfig } from 'views/utils/tools'
 
 import { NameInput } from './name-input'
 import { PluginItem } from './plugin-item'
@@ -52,9 +53,9 @@ const AdvanceButton = styled(SettingButton)`
     'config.packageManager.mirrorName',
     navigator.language === 'zh-CN' ? 'taobao' : 'npm',
   ),
-  proxy: get(state, 'config.packageManager.proxy', false),
-  betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
-  autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
+  proxy: getStoreConfig(state, 'packageManager.proxy', false),
+  betaCheck: getStoreConfig(state, 'packageManager.enableBetaPluginCheck', false),
+  autoUpdate: getStoreConfig(state, 'packageManager.enableAutoUpdate', true),
 }))
 export class PluginConfig extends Component {
   static propTypes = {

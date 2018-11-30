@@ -13,6 +13,7 @@ import { Section, Wrapper } from 'views/components/settings/components/section'
 import { TextConfig } from 'views/components/settings/components/text'
 import { IntegerConfig } from 'views/components/settings/components/integer'
 import { SwitchConfig } from 'views/components/settings/components/switch'
+import { getStoreConfig } from 'views/utils/tools'
 
 import { ProxyConfig } from './proxy-config'
 
@@ -25,7 +26,7 @@ const StickyCallout = styled(Callout)`
 
 @withNamespaces(['setting'])
 @connect(state => ({
-  use: get(state, 'config.proxy.use', 'none'),
+  use: getStoreConfig(state, 'proxy.use', 'none'),
 }))
 class ProxiesConfig extends Component {
   static propTypes = {
@@ -78,7 +79,7 @@ class ProxiesConfig extends Component {
 const ConnectionRetries = compose(
   withNamespaces(['setting']),
   connect(state => ({
-    retries: get(state, 'config.proxy.retries', 0),
+    retries: getStoreConfig(state, 'proxy.retries', 0),
   })),
 )(({ retries, t }) => (
   <Section title={t('setting:Connection retries')}>
@@ -102,11 +103,11 @@ const ConnectionRetries = compose(
 const RelayMode = compose(
   withNamespaces(['setting']),
   connect(state => {
-    const use = get(state, 'config.proxy.use', 'none')
+    const use = getStoreConfig(state, 'proxy.use', 'none')
     return {
       proxyPort: get(state, ['config', 'proxy', use, 'port'], -1),
       port: get(state, ['config', 'proxy', 'port']),
-      allowLAN: get(state, 'config.proxy.allowLAN'),
+      allowLAN: getStoreConfig(state, 'proxy.allowLAN'),
     }
   }),
 )(({ proxyPort, port, allowLAN, t }) => (
@@ -146,7 +147,7 @@ const RelayMode = compose(
 
 @withNamespaces(['setting'])
 @connect(state => ({
-  proxy: get(state, 'config.proxy', {}),
+  proxy: getStoreConfig(state, 'proxy', {}),
 }))
 export class NetworkConfig extends Component {
   state = {

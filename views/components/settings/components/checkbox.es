@@ -2,11 +2,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
 import { Checkbox } from '@blueprintjs/core'
+import { getStoreConfig } from 'views/utils/tools'
 
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultValue),
+  value: getStoreConfig(state, props.configName, props.defaultValue),
   configName: props.configName,
   undecided: props.undecided,
   label: props.label,

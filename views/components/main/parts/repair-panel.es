@@ -20,7 +20,7 @@ import {
   inRepairShipsIdSelector,
   createDeepCompareArraySelector,
 } from 'views/utils/selectors'
-import { indexify, timeToString } from 'views/utils/tools'
+import { indexify, timeToString, getStoreConfig } from 'views/utils/tools'
 import { Tooltip } from 'views/components/etc/panel-tooltip'
 import {
   DockPanelCardWrapper,
@@ -84,7 +84,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
       constSelector,
       inRepairShipsDataSelector,
       miscSelector,
-      state => get(state, 'config.poi.appearance.avatar', true),
+      state => getStoreConfig(state, 'poi.appearance.avatar', true),
     ],
     (repairs, { $ships }, inRepairShips, { canNotify }, enableAvatar) => ({
       repairs,

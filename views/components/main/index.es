@@ -16,6 +16,7 @@ import { ResourcePanel } from './parts/resource-panel'
 import { AdmiralPanel } from './parts/admiral-panel'
 import { RepairPanel } from './parts/repair-panel'
 import { ConstructionPanel } from './parts/construction-panel'
+import { getStoreConfig } from 'views/utils/tools'
 
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
@@ -74,8 +75,8 @@ if (layoutConfigOutdated(config.get('poi.mainpanel.layout', defaultLayout))) {
 }
 
 @connect((state, props) => ({
-  layouts: layoutConfigFix(get(state, 'config.poi.mainpanel.layout', defaultLayout)),
-  editable: get(state, 'config.poi.layout.editable', false),
+  layouts: layoutConfigFix(getStoreConfig(state, 'poi.mainpanel.layout', defaultLayout)),
+  editable: getStoreConfig(state, 'poi.layout.editable', false),
   mainpanewidth: get(state, 'layout.mainpane.width', 450),
 }))
 export class reactClass extends Component {

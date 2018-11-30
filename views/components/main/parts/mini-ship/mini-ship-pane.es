@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
+import { getStoreConfig } from 'views/utils/tools'
 
 const miniShipRowWidthSelector = state => get(state, 'layout.minishippane.width', 250)
 
@@ -20,7 +21,7 @@ const ShipDetailsMini = styled(ScrollShadow)`
 export const PaneBodyMini = connect(() => {
   return (state, { fleetId }) => ({
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
-    enableAvatar: get(state, 'config.poi.appearance.avatar', true),
+    enableAvatar: getStoreConfig(state, 'poi.appearance.avatar', true),
     width: miniShipRowWidthSelector(state),
   })
 })(({ fleetId, shipsId, enableAvatar, width }) => (
@@ -54,7 +55,7 @@ export const LBViewMini = compose(
   connect(state => ({
     areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
     mapareas: get(state, 'const.$mapareas', {}),
-    enableAvatar: get(state, 'config.poi.appearance.avatar', true),
+    enableAvatar: getStoreConfig(state, 'poi.appearance.avatar', true),
     width: miniShipRowWidthSelector(state),
   })),
 )(({ areaIds, mapareas, t, enableAvatar, width }) => (

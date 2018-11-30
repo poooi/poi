@@ -2,11 +2,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get, map } from 'lodash'
+import { map } from 'lodash'
 import { Radio, RadioGroup } from '@blueprintjs/core'
+import { getStoreConfig } from 'views/utils/tools'
 
 @connect((state, props) => ({
-  value: get(state.config, props.configName, props.defaultValue),
+  value: getStoreConfig(state, props.configName, props.defaultValue),
   configName: props.configName,
   label: props.label,
   availableVal: props.availableVal,

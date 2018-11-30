@@ -3,6 +3,7 @@ import { Position, Toaster, Intent } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
+import { getStoreConfig } from 'views/utils/tools'
 
 const intentTypes = new Set(Object.values(Intent))
 const map = {
@@ -27,7 +28,7 @@ const ToasterPositioned = styled(Toaster)`
 
 @connect(state => ({
   webviewWidth: get(state, 'layout.webview.width'),
-  isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
+  isolateGameWindow: getStoreConfig(state, 'poi.layout.isolate', false),
 }))
 export class PoiToast extends React.PureComponent {
   toaster = Toaster

@@ -2,12 +2,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get, each, map } from 'lodash'
+import { each, map } from 'lodash'
 import i18next from 'views/env-parts/i18next'
 import { HTMLSelect } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
 
 import { Section } from '../components/section'
+import { getStoreConfig } from 'views/utils/tools'
 
 const setWindowI18nLng = language => {
   each(i18next.options.ns, ns => {
@@ -17,7 +18,7 @@ const setWindowI18nLng = language => {
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  value: get(state.config, 'poi.misc.language', window.language),
+  value: getStoreConfig(state, 'poi.misc.language', window.language),
 }))
 export class LanguageConfig extends Component {
   static propTypes = {

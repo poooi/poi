@@ -4,9 +4,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect, Provider } from 'react-redux'
 import { remote, webFrame } from 'electron'
-import { get } from 'lodash'
 import { I18nextProvider } from 'react-i18next'
 import { ThemeProvider } from 'styled-components'
+import { getStoreConfig } from 'views/utils/tools'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
@@ -35,10 +35,10 @@ window.hack = {}
 require('./services/alert')
 
 @connect(state => ({
-  isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
-  reversed: get(state, 'config.poi.layout.reverse', false),
-  isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
-  theme: get(state, 'config.poi.appearance.theme', 'dark'),
+  isHorizontal: getStoreConfig(state, 'poi.layout.mode', 'horizontal') === 'horizontal',
+  reversed: getStoreConfig(state, 'poi.layout.reverse', false),
+  isolateGameWindow: getStoreConfig(state, 'poi.layout.isolate', false),
+  theme: getStoreConfig(state, 'poi.appearance.theme', 'dark'),
 }))
 class Poi extends Component {
   componentWillUnmount() {
