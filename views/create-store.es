@@ -1,3 +1,4 @@
+/* global config */
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
@@ -144,9 +145,7 @@ export const extendReducer = (function() {
   }
 })()
 
-window.config.get = (path, value) => {
-  return get(window.getStore('config'), path, value)
-}
+config.get = (path, value) => get(window.getStore('config'), path, config.getDefault(path, value))
 
-const getDefaultOrigin = window.config.getDefault
-window.config.getDefault = (...arg) => cloneDeep(getDefaultOrigin(...arg))
+const getDefaultOrigin = config.getDefault
+config.getDefault = (...arg) => cloneDeep(getDefaultOrigin(...arg))
