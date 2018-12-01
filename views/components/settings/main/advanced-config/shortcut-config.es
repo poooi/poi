@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import mousetrap from 'mousetrap'
+import { get } from 'lodash'
 import { Tag, Button, Intent, Dialog, Callout } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
 import cls from 'classnames'
 import styled from 'styled-components'
-import { getStoreConfig } from 'views/utils/tools'
 
 const BorderlessDialog = styled(Dialog)`
   padding: 0;
@@ -26,7 +26,7 @@ config.on('config.set', (path, value) => {
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  value: getStoreConfig(state, props.configName, props.defaultValue),
+  value: get(state.config, props.configName, props.defaultValue),
   configName: props.configName,
 }))
 export class ShortcutConfig extends Component {

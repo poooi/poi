@@ -1,10 +1,9 @@
 import { connect } from 'react-redux'
 import React, { Component, Children } from 'react'
 import PropTypes from 'prop-types'
-import { isEqual, omit } from 'lodash'
+import { isEqual, omit, get } from 'lodash'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import styled, { css } from 'styled-components'
-import { getStoreConfig } from 'views/utils/tools'
 
 const PoiTabContents = styled.div`
   flex: 1 0 0;
@@ -50,7 +49,7 @@ const PoiTabChildPositioner = styled.div`
 
 @connect(
   state => ({
-    enableTransition: getStoreConfig(state, 'poi.transition.enable', true),
+    enableTransition: get(state.config, 'poi.transition.enable', true),
   }),
   undefined,
   undefined,

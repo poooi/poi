@@ -18,7 +18,6 @@ import {
   ShipTabContent,
 } from 'views/components/ship-parts/styled-components'
 import { CardWrapper as CardWrapperL } from '../styled-components'
-import { getStoreConfig } from 'views/utils/tools'
 
 const FleetNameButton = styled(FleetNameButtonLarge)`
   .bp3-button {
@@ -62,7 +61,7 @@ const ShipViewSwitchButton = connect((state, { fleetId }) =>
 
 @connect((state, props) => ({
   airBaseCnt: get(state, 'info.airbase.length', 0),
-  enableTransition: getStoreConfig(state, 'poi.transition.enable', true),
+  enableTransition: get(state, 'config.poi.transition.enable', true),
   fleetCount: get(state, 'info.fleets.length', 4),
   activeFleetId: get(state, 'ui.activeFleetId', 0),
 }))

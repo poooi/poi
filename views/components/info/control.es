@@ -6,12 +6,12 @@ import PropTypes from 'prop-types'
 import { shell, remote, clipboard, nativeImage } from 'electron'
 import { Button, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { withNamespaces, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
-import { getStoreConfig } from 'views/utils/tools'
 
 const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
@@ -51,8 +51,8 @@ const PoiControlInner = styled.div`
 
 @withNamespaces()
 @connect((state, props) => ({
-  muted: getStoreConfig(state, 'poi.content.muted', false),
-  editable: getStoreConfig(state, 'poi.layout.editable', false),
+  muted: get(state, 'config.poi.content.muted', false),
+  editable: get(state, 'config.poi.layout.editable', false),
 }))
 export class PoiControl extends Component {
   static propTypes = {

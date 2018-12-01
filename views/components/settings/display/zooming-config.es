@@ -2,16 +2,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 import { Slider } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import { getStoreConfig } from 'views/utils/tools'
 
 import { Section } from 'views/components/settings/components/section'
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
-  zoomLevel: getStoreConfig(state, 'poi.appearance.zoom', 1),
-  key: getStoreConfig(state, 'poi.appearance.zoom', 1),
+  zoomLevel: get(state.config, 'poi.appearance.zoom', 1),
+  key: get(state.config, 'poi.appearance.zoom', 1),
 }))
 export class ZoomingConfig extends Component {
   static propTypes = {

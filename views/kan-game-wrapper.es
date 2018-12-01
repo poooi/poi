@@ -12,7 +12,7 @@ import { PoiToast } from './components/info/toast'
 import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { layoutResizeObserver } from 'views/services/layout'
-import { fileUrl, getStoreConfig } from 'views/utils/tools'
+import { fileUrl } from 'views/utils/tools'
 import { CustomTag } from 'views/components/etc/custom-tag'
 
 const config = remote.require('./lib/config')
@@ -51,16 +51,16 @@ const KanGame = styled(CustomTag)`
 `
 
 @connect(state => ({
-  configWebviewWidth: getStoreConfig(state, 'poi.webview.width', 1200),
-  zoomLevel: getStoreConfig(state, 'poi.appearance.zoom', 1),
-  isHorizontal: getStoreConfig(state, 'poi.layout.mode', 'horizontal') === 'horizontal',
-  muted: getStoreConfig(state, 'poi.content.muted', false),
-  useFixedResolution: getStoreConfig(state, 'poi.webview.useFixedResolution', true),
-  horizontalRatio: getStoreConfig(state, 'poi.webview.ratio.horizontal', 60),
-  verticalRatio: getStoreConfig(state, 'poi.webview.ratio.vertical', 50),
-  editable: getStoreConfig(state, 'poi.layout.editable', false),
+  configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
+  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
+  isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
+  muted: get(state, 'config.poi.content.muted', false),
+  useFixedResolution: get(state, 'config.poi.webview.useFixedResolution', true),
+  horizontalRatio: get(state, 'config.poi.webview.ratio.horizontal', 60),
+  verticalRatio: get(state, 'config.poi.webview.ratio.vertical', 50),
+  editable: get(state, 'config.poi.layout.editable', false),
   windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
-  overlayPanel: getStoreConfig(state, 'poi.layout.overlay', false),
+  overlayPanel: get(state, 'config.poi.layout.overlay', false),
   homepage: get(
     state,
     'config.poi.misc.homepage',

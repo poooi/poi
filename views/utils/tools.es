@@ -1,9 +1,8 @@
-/* global config */
 /*
  * This file contains utility functions that is unrelated to the game mechanism.
  */
 
-import _, { isEqual, forEach, keyBy, zip, unzip, sum, isString, toString, get } from 'lodash'
+import _, { isEqual, forEach, keyBy, zip, unzip, sum, isString, toString } from 'lodash'
 import path from 'path'
 import { readJsonSync } from 'fs-extra'
 import url from 'url'
@@ -244,6 +243,3 @@ export const loadScript = (path, document = window.document) => {
   script.setAttribute('src', path)
   document.head.appendChild(script)
 }
-
-export const getStoreConfig = (state, path, value) =>
-  get(state.config, path, config.getDefault(path, value))

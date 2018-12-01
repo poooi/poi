@@ -1,12 +1,12 @@
 /* global $, config */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { ResizableArea } from 'react-resizable-area'
 import styled, { css } from 'styled-components'
 
 import { ControlledTabArea } from './components/tab-area'
-import { getStoreConfig } from 'views/utils/tools'
 
 const PoiAppE = styled.div`
   position: relative;
@@ -114,14 +114,10 @@ const transformToPanelSize = size => ({
 })
 
 @connect((state, props) => ({
-  layout: getStoreConfig(state, 'poi.layout.mode', 'horizontal'),
-  overlay: getStoreConfig(state, 'poi.layout.overlay', false),
-  editable: getStoreConfig(state, 'poi.layout.editable', false),
-  overlayPanelWidth: getStoreConfig(
-    state,
-    'poi.tabarea.overlaypanelwidth',
-    overlayPanelDefaultWidth,
-  ),
+  layout: get(state, 'config.poi.layout.mode', 'horizontal'),
+  overlay: get(state, 'config.poi.layout.overlay', false),
+  editable: get(state.config, 'poi.layout.editable', false),
+  overlayPanelWidth: get(state.config, 'poi.tabarea.overlaypanelwidth', overlayPanelDefaultWidth),
 }))
 export class PoiApp extends Component {
   state = {

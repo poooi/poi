@@ -2,12 +2,11 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { debounce } from 'lodash'
+import { get, debounce } from 'lodash'
 import { InputGroup } from '@blueprintjs/core'
-import { getStoreConfig } from 'views/utils/tools'
 
 @connect((state, props) => ({
-  value: getStoreConfig(state, props.configName, props.defaultValue || ''),
+  value: get(state.config, props.configName, props.defaultValue || ''),
   configName: props.configName,
   label: props.label,
 }))
