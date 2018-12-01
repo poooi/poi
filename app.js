@@ -292,7 +292,7 @@ app.on('ready', () => {
   }
 
   // devtool
-  if (dbg.isEnabled() && config.get('poi.devtool.enable', true)) {
+  if (dbg.isEnabled() && config.get('poi.devtool.enable', false)) {
     require('./lib/devtool')
   }
 })
