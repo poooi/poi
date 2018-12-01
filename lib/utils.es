@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { webContents, shell, BrowserWindow } from 'electron'
 import WindowManager from './window'
-import { map, get, mapValues, isPlainObject, isNumber, isArray, isString } from 'lodash'
+import { map, get, mapValues, isPlainObject, isNumber, isArray, isString, isBoolean } from 'lodash'
 
 const stringify = str => {
   if (typeof str === 'string') {
@@ -146,7 +146,9 @@ export const mergeConfig = (defaults, incoming) => {
 
     const incomingValue = get(incoming, key)
 
-    return [isNumber, isArray, isString].some(test => test(value) !== test(incomingValue))
+    return [isNumber, isArray, isString, isBoolean].some(
+      test => test(value) !== test(incomingValue),
+    )
       ? value
       : incomingValue
   })

@@ -1,4 +1,4 @@
-import { set, get, isEqual } from 'lodash'
+import { set, get, isEqual, keys } from 'lodash'
 import EventEmitter from 'events'
 import CSON from 'cson'
 import fs from 'fs-extra'
@@ -10,7 +10,7 @@ import { mergeConfig, warn } from './utils'
 const { EXROOT } = global
 const configPath = path.join(EXROOT, 'config.cson')
 
-const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${Object.keys(defaultConfig).join('|')}]`)
+const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
 class PoiConfig extends EventEmitter {
   constructor() {
@@ -130,7 +130,7 @@ if (typeof config.get('poi.layout') === 'string') {
 if (!config.get('poi.plugin')) {
   const windowmode = config.get('poi.windowmode', {})
   const background = config.get('poi.backgroundProcess', {})
-  if (Object.keys(windowmode).length || Object.keys(background).length) {
+  if (keys(windowmode).length || keys(background).length) {
     config.set('poi.plugin', {
       windowmode,
       background,
