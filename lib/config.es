@@ -26,6 +26,11 @@ class PoiConfig extends EventEmitter {
     this.defaultConfigData = defaultConfig
   }
 
+  /**
+   * get a config value at give path
+   * @param {String | String[]} path the given config location
+   * @param value value to fallback if queried config is undefined
+   */
   get = (path = '', value) => {
     if (path === '') {
       return this.configData
@@ -43,6 +48,10 @@ class PoiConfig extends EventEmitter {
     return get(this.configData, path, value)
   }
 
+  /**
+   * get default config value at give path
+   * @param {String | String[]} path the given config location
+   */
   getDefault = (path = '') => {
     if (path === '') {
       return this.defaultConfigData
@@ -50,21 +59,35 @@ class PoiConfig extends EventEmitter {
     return get(this.defaultConfigData, path)
   }
 
+  /**
+   * set a config value at give path
+   * @param {String | String[]} path the given config location
+   * @param value value to overwrite, if the path belongs to poi's default config, will reset to default value
+   */
   set = (path, value) => {
     if (get(this.configData, path) === value) {
       return
     }
     set(this.configData, path, value)
+    path = Array.isArray(path) ? path.join('.') : path
     this.emit('config.set', path, value)
     this.save()
   }
 
+  /**
+   * set a config value only when it is not set (addition only)
+   * @param {String | String[]} path the given config location
+   * @param value value to overwrite, leaving undefined will remove the config
+   */
   setDefault = (path, value) => {
     if (this.get(path) === undefined) {
       this.set(path, value)
     }
   }
 
+  /**
+   * save current config to file
+   */
   save = () => {
     try {
       fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
@@ -73,10 +96,14 @@ class PoiConfig extends EventEmitter {
     }
   }
 
+  /**
+   * remove a config at given path
+   * @param {String | String[]} path path to remove
+   */
   delete = path => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData
-      const subpath = path.split('.')
+      const subpath = Array.isArray(path) ? path : path.split('.')
       for (const sub of subpath.slice(0, subpath.length - 1)) {
         p = p[sub]
       }
