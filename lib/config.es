@@ -1,41 +1,53 @@
-import { set, get } from 'lodash'
+import { set, get, isEqual } from 'lodash'
 import EventEmitter from 'events'
 import CSON from 'cson'
 import fs from 'fs-extra'
 import path from 'path-extra'
 import dbg from './debug'
 import defaultConfig from './default-config'
+import { mergeConfig, warn } from './utils'
 
 const { EXROOT } = global
 const configPath = path.join(EXROOT, 'config.cson')
 
-class configClass extends EventEmitter {
+const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${Object.keys(defaultConfig).join('|')}]`)
+
+class PoiConfig extends EventEmitter {
   constructor() {
     super()
-    this.configData = null
+    this.configData = {}
     try {
       fs.accessSync(configPath, fs.R_OK | fs.W_OK)
-      this.configData = CSON.parseCSONFile(configPath)
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath))
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
-      this.configData = {}
       dbg.log(e)
     }
     this.defaultConfigData = defaultConfig
   }
 
-  get = (path, value) => {
+  get = (path = '', value) => {
     if (path === '') {
       return this.configData
     }
-    return get(this.configData, path, this.getDefault(path, value))
+    if (dbg.isEnabled()) {
+      const stringPath = Array.isArray(path) ? path.join('.') : path
+      if (
+        DEFAULT_CONFIG_PATH_REGEXP.test(stringPath) &&
+        value !== undefined &&
+        !isEqual(get(this.defaultConfigData, path), value)
+      ) {
+        warn('There might be a mssing config default, check', stringPath, value)
+      }
+    }
+    return get(this.configData, path, value)
   }
 
-  getDefault = (path, value) => {
+  getDefault = (path = '') => {
     if (path === '') {
       return this.defaultConfigData
     }
-    return get(this.defaultConfigData, path, value)
+    return get(this.defaultConfigData, path)
   }
 
   set = (path, value) => {
@@ -73,7 +85,7 @@ class configClass extends EventEmitter {
   }
 }
 
-const config = new configClass()
+const config = new PoiConfig()
 config.setMaxListeners(100)
 
 export default config

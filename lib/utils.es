@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { webContents, shell, BrowserWindow } from 'electron'
 import WindowManager from './window'
-import { map } from 'lodash'
+import { map, get, mapValues, isPlainObject, isNumber, isArray, isString } from 'lodash'
 
 const stringify = str => {
   if (typeof str === 'string') {
@@ -126,4 +126,30 @@ export function stopNavigateAndHandleNewWindow(id) {
         e.newGuest = new BrowserWindow(options)
       }
     })
+}
+
+/**
+ * Merges default values into user poi config
+ * to ensure all default values exists if not set by user
+ * rules:
+ * let A and B respectively values in default and user config
+ * - if A is not undefined, and A, B is different in data type, honor A
+ * - other cases, honor B
+ * @param defaults default config
+ * @param incoming loaded config
+ */
+export const mergeConfig = (defaults, incoming) => {
+  const overwrite = mapValues(defaults, (value, key) => {
+    if (isPlainObject(value)) {
+      return mergeConfig(value, get(incoming, key))
+    }
+
+    const incomingValue = get(incoming, key)
+
+    return [isNumber, isArray, isString].some(test => test(value) !== test(incomingValue))
+      ? value
+      : incomingValue
+  })
+
+  return isPlainObject(incoming) ? { ...incoming, ...overwrite } : overwrite
 }
