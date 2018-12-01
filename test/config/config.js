@@ -7,6 +7,7 @@ describe('config merging', () => {
   const { mergeConfig } = require('../../lib/utils')
 
   const defaultConfig = {
+    single: true,
     foo: 'bar',
     year: 2018,
     bits: [0, 1],
@@ -26,6 +27,27 @@ describe('config merging', () => {
     assert.deepEqual(mergeConfig(defaultConfig, { bits: '0' }), defaultConfig)
     assert.deepEqual(mergeConfig(defaultConfig, { year: '0' }), defaultConfig)
     assert.deepEqual(mergeConfig(defaultConfig, { foo: 42 }), defaultConfig)
+    assert.deepEqual(mergeConfig(defaultConfig, { single: 10 }), defaultConfig)
+  })
+
+  it('value of correct type in user config is honored', () => {
+    assert.deepEqual(mergeConfig(defaultConfig, { galaxy: { answer: -1 } }), {
+      ...defaultConfig,
+      galaxy: { answer: -1 },
+    })
+    assert.deepEqual(mergeConfig(defaultConfig, { bits: ['lll'] }), {
+      ...defaultConfig,
+      bits: ['lll'],
+    })
+    assert.deepEqual(mergeConfig(defaultConfig, { year: 999 }), { ...defaultConfig, year: 999 })
+    assert.deepEqual(mergeConfig(defaultConfig, { foo: 'tanaka' }), {
+      ...defaultConfig,
+      foo: 'tanaka',
+    })
+    assert.deepEqual(mergeConfig(defaultConfig, { single: false }), {
+      ...defaultConfig,
+      single: false,
+    })
   })
 
   it('other user config values exist in result', () => {
