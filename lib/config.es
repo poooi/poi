@@ -45,7 +45,7 @@ class PoiConfig extends EventEmitter {
         warn('There might be a mssing config default, check', stringPath, value)
       }
     }
-    return get(this.configData, path, value)
+    return get(this.configData, path, this.getDefault(path, value))
   }
 
   /**
@@ -67,6 +67,9 @@ class PoiConfig extends EventEmitter {
   set = (path, value) => {
     if (get(this.configData, path) === value) {
       return
+    }
+    if (value === undefined && this.getDefault(path) !== undefined) {
+      value = this.getDefault(path)
     }
     set(this.configData, path, value)
     path = Array.isArray(path) ? path.join('.') : path
