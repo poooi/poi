@@ -13,6 +13,9 @@ const defaultConfig = {
       screenshot: {
         format: 'png',
       },
+      cache: {
+        path: global.DEFAULT_CACHE_PATH,
+      },
     },
     content: {
       resizable: true,
@@ -25,6 +28,7 @@ const defaultConfig = {
       svgicon: false,
       textspacingcjk: true,
       vibrant: 0,
+      customtitlebar: process.platform === 'win32' || process.platform === 'linux',
     },
     window: {
       isMaximized: false,
@@ -39,6 +43,7 @@ const defaultConfig = {
     },
     webview: {
       useFixedResolution: true,
+      windowUseFixedResolution: true,
       windowWidth: 1200,
       width: 1200,
       ratio: {
