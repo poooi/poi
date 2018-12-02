@@ -165,6 +165,11 @@ app.on('ready', () => {
   }
 })
 
+// Set FPS limit
+if (config.get('poi.misc.limitfps')) {
+  app.commandLine.appendSwitch('limit-fps', '30')
+}
+
 // Fix confused cursor in HiDPI
 // https://github.com/electron/electron/issues/7655#issuecomment-259688853
 if (process.platform === 'win32') {

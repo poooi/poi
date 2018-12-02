@@ -75,6 +75,7 @@
   "Advanced": "高级设置",
   "Advanced functionalities": "高级功能",
   "Disable Hardware Acceleration": "禁用硬件加速",
+  "Set FPS limit to 30": "设置上限为 30fps",
   "Editing DMM Cookie Region Flag": "设置 DMM 地区 Cookie",
   "Prevent DMM Network Change Popup": "屏蔽 DMM 网络变更警告",
   "Use SVG Icon": "使用高清图标",

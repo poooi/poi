@@ -18,6 +18,11 @@ const SWITCHES = [
     defaultValue: false,
   },
   {
+    label: 'Set FPS limit to 30',
+    configName: 'poi.misc.limitfps',
+    defaultValue: false,
+  },
+  {
     label: 'Editing DMM Cookie Region Flag',
     configName: 'poi.misc.dmmcookie',
     defaultValue: false,
