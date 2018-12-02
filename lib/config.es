@@ -52,11 +52,11 @@ class PoiConfig extends EventEmitter {
    * get default config value at give path
    * @param {String | String[]} path the given config location
    */
-  getDefault = (path = '') => {
+  getDefault = (path = '', value) => {
     if (path === '') {
       return this.defaultConfigData
     }
-    return get(this.defaultConfigData, path)
+    return get(this.defaultConfigData, path, value)
   }
 
   /**
