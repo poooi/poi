@@ -10,6 +10,7 @@ module.exports = {
       },
     ],
     require.resolve('@babel/preset-react'),
+    require.resolve('@babel/preset-typescript'),
   ],
   plugins: [
     require.resolve('babel-plugin-styled-components'),
@@ -36,7 +37,8 @@ module.exports = {
     ].map(plugin => require.resolve(plugin)),
   ),
   ignore: [],
-  only: [/.es$/],
+  only: [/\.(es|ts|tsx)$/],
+  extensions: ['.es', '.ts', '.tsx'],
   babelrc: false,
   cache: false,
 }
