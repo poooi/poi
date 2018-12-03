@@ -142,7 +142,7 @@ export class Avatar extends PureComponent {
     return (
       <ShipAvatarContainer
         className={classnames(this.props.className, 'ship-avatar-container')}
-        data-mstid={this.props.mstId}
+        data-master-id={this.props.mstId}
         data-damaged={this.props.isDamaged}
         style={{
           width: Math.round(1.85 * this.props.height),

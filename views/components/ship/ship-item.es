@@ -145,7 +145,11 @@ export class ShipRow extends Component {
           </div>
         }
       >
-        <ShipItem className="ship-item">
+        <ShipItem
+          className="ship-item"
+          data-master-id={ship.api_ship_id}
+          data-ship-id={ship.api_id}
+        >
           {enableAvatar && (
             <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} />
           )}
