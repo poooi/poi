@@ -231,7 +231,7 @@ class Proxy extends EventEmitter {
             await delay(3000)
           } else {
             res.end()
-            if (statusCode >= 200 && statusCode <= 299 && data != null) {
+            if (statusCode === 200 && data != null) {
               this.emit('network.on.response', req.method, requestInfo, data, reqBody, Date.now())
             } else if (statusCode >= 400) {
               this.emit('network.error', requestInfo, statusCode)
