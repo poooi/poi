@@ -173,6 +173,10 @@ const CatIndicator = styled.span`
   margin-top: -1px;
 `
 
+const QuestDescription = styled.div`
+  max-width: 25em;
+`
+
 const TaskRowBase = connect(
   createSelector(
     [
@@ -269,14 +273,14 @@ const TaskRow = withNamespaces(['resources'])(
         bulletColor={quest ? getCategory(quest.api_category) : '#fff'}
         leftLabel={`${wikiIdPrefix}${questName}`}
         leftOverlay={
-          <div>
+          <QuestDescription>
             <strong>
               {wikiIdPrefix}
               {questName}
             </strong>
             <br />
             {questContent}
-          </div>
+          </QuestDescription>
         }
         rightLabel={progressLabel}
         rightIntent={progressIntent}
