@@ -300,11 +300,7 @@ export const SlotItemContainer = styled.div`
     display: ${props => (props.showOnslot ? 'inline' : 'none')};
   }
 
-  ${({ warining }) =>
-    warining &&
-    css`
-      color: #f39c12;
-    `}
+  color: ${props => props.warning && props.theme.ORANGE1};
 
   .png {
     height: 32px;
