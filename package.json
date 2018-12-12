@@ -1,6 +1,6 @@
 {
   "name": "poi",
-  "version": "9.0.3",
+  "version": "10.0.0-beta.0",
   "description": "poi the KanColle Browser Tool",
   "main": "index.js",
   "scripts": {
@@ -170,8 +170,7 @@
     "asar": true,
     "npmRebuild": true,
     "mac": {
-      "publish": [
-      ],
+      "publish": [],
       "icon": "assets/icons/poi.icns",
       "category": "public.app-category.games"
     },
@@ -191,8 +190,7 @@
       ]
     },
     "win": {
-      "publish": [
-      ],
+      "publish": [],
       "icon": "assets/icons/poi.ico",
       "target": [
         {
@@ -218,8 +216,7 @@
       "multiLanguageInstaller": true
     },
     "linux": {
-      "publish": [
-      ],
+      "publish": [],
       "target": [
         "7z",
         "deb",
