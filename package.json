@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --recursive --harmony --require ./test/babelhook",
     "deploy:nightlies": "gulp deploy_nightlies",
-    "build": "gulp build && electron-builder",
+    "build": "gulp build && electron-builder -p never",
     "start": "electron .",
     "start_debug": "electron . --dev --inspect",
     "dev": "electron . --dev --inspect",
