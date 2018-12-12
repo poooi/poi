@@ -48,7 +48,7 @@ Key features include:
 
 Please note that artifacts could be periodically emptied.
 
-### Staring from this repository
+### Starting from this repository
 
 [See here](https://github.com/poooi/poi/wiki/StartingRunFromThisRepo)
 
