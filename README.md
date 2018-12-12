@@ -1,41 +1,23 @@
 ![Header](https://raw.githubusercontent.com/poooi/poi/master/assets/img/header.png)
 
+# poi
+
+poi is a scalable browser and tool set for _Kantai Collection_(KanColle).
+
+Key features include:
+
+- Proxy, HTTP, Socks5 and PAC (Experimental)
+- Cache, including custom cache
+- Data synthesis and analysis
+- Notification
+- Plugin support for extensive functionalities, [see plugin List](https://github.com/poooi/poi/wiki/List-of-available-plugins)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b239a37253a3486c946b047acae5f1ac)](https://www.codacy.com/app/KochiyaOcean/poi?utm_source=github.com&utm_medium=referral&utm_content=poooi/poi&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/poooi/poi.svg?branch=master)](https://travis-ci.org/poooi/poi)
 [![Backers on Open Collective](https://opencollective.com/poi/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/poi/sponsors/badge.svg)](#sponsors) [![Build status](https://ci.appveyor.com/api/projects/status/apv2xngtej1m17he?svg=true)](https://ci.appveyor.com/project/KochiyaOcean/poi)
 [![Dependencies](https://david-dm.org/poooi/poi.svg)](https://david-dm.org/poooi/poi)
 [![DevDependencies](https://david-dm.org/poooi/poi/dev-status.svg)](https://david-dm.org/poooi/poi?type=dev)
 [![license:mit](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
-
-Scalable KanColle browser and tool.
-
-## Prebuilt Release Downloads
-
-[GitHub release](https://github.com/poooi/poi/releases).
-
-[TAONPM (CN Mainland)](https://npm.taobao.org/mirrors/poi).
-
-### UNOFFICIAL releases maintained by the community
-
-[AUR (Arch Linux, maintained by @swordfeng)](https://aur.archlinux.org/packages/poi/).
-
-Homebrew Cask (macOS, maintained by @darg20127).
-```shell
-brew update && brew cask install poi
-```
-
-[Chocolatey](https://chocolatey.org/packages/poi) (Windows, maintained by @chocolatey and @drel).
-```shell
-choco install poi
-```
-
-## Features
-
-+ Proxy
-+ Cache
-+ Analysis
-+ Notification
-+ Plugin Support
 
 ## Screenshots
 
@@ -45,71 +27,67 @@ choco install poi
 
 [More screenshots are available here](https://github.com/poooi/poi/wiki/Screenshots)
 
-## Getting dev versions
+## Installation
 
-### Running from github repo
-First, install __latest__ __x64__ version (__>= 7.6.x__) of [Node.js](https://nodejs.org) and [npm](https://npmjs.org) >= __5.0.x__.
+[GitHub release](https://github.com/poooi/poi/releases)
 
-``` shell
-git clone https://github.com/poooi/poi && cd poi
-npm install
-npm start
-```
+[TAONPM (CN Mainland)](https://npm.taobao.org/mirrors/poi).
 
-Tips:
-- do not use yarn or npm < 5 because the lock file is npm 5+ specific
+### Community maintained releases (unofficial)
 
-- running `npm install` is not necessary with every `git pull`, however they're recommended after a major version bump. In case of any dependency or `require` error, try re-running them.
-
-- If you use windows subsystem for linux (WSL), use `export npm_config_platform=win32 && npm install` instead of `npm install` for correct electron installation.
-
-- If you have trouble downloading electron executables from github/amazonaws, [you may set ELECTRON_MIRROR environment variable](https://github.com/electron-userland/electron-download).
+| Platform                                                    | Maintainer            | Instruction                                             |
+| ----------------------------------------------------------- | --------------------- | ------------------------------------------------------- |
+| AUR / Arch Linux                                            | @swordfeng            | see [AUR page](https://aur.archlinux.org/packages/poi/) |
+| Homebrew Cask / macOS                                       | @darg20127            | `brew update && brew cask install poi`                  |
+| [Chocolatey / Windows](https://chocolatey.org/packages/poi) | @chocolatey and @drel | `choco install poi`                                     |
 
 ### Nightlies
-We provide recently built nightlies in form of Continious Integration build artifacts.
 
-+ Windows nightlies are hosted on [Appveyor](https://ci.appveyor.com/project/KochiyaOcean/poi),
-+ Linux and macOS nightlies are [available here](https://poidb.0u0.moe/nightly/).
+- Windows nightlies are hosted on [Appveyor](https://ci.appveyor.com/project/KochiyaOcean/poi),
+- Linux and macOS nightlies are [available here](https://poidb.0u0.moe/nightly/).
 
 Please note that artifacts could be periodically emptied.
 
-## Available Plugins
-Many functionalities are provided as plugins, you may choose only what you want! [Here's a list of available plugins](https://github.com/poooi/poi/wiki/List-of-available-plugins).
+### Staring from this repository
 
-## Contributing
+[See here](https://github.com/poooi/poi/wiki/StartingRunFromThisRepo)
 
-Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
+## Development
+
+### Libraries backing poi
+
+- [Electron](https://github.com/atom/electron)
+- [React](https://github.com/facebook/react)
+- [Blueprint](https://blueprintjs.com/)
+- [Redux](https://github.com/reactjs/redux)
+
+### Documentation
 
 On plugin development, the [docs](https://dev.poooi.app) are available in English.
 
+## Contact us
+
+Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
+
 Please feel free to contact us via:
-- github issues
+
+- [github issues](https://github.com/poooi/poi/issues)
 - [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ) for Chinese speaking user
 - [#poi-viewer channel](https://discordapp.com/channels/118339803660943369/367575898313981952) under `/r/kancolle` discord for world wide user, [How to join](https://github.com/poooi/poi/issues/1596)
-- QQ group
-- weibo
+- [QQ group](https://jq.qq.com/?_wv=1027&k=5MRX31j)
+- [Sina Weibo](http://weibo.com/letspoi)
 - or anything else.
-
-
-## Based on
-
-+ [Electron](https://github.com/atom/electron)
-+ [React](https://github.com/facebook/react)
-+ [ReactBootstrap](https://github.com/react-bootstrap/react-bootstrap/)
-+ [Redux](https://github.com/reactjs/redux)
 
 ## Contributors
 
 This project exists thanks to all the people who contribute.
 <a href="//github.com/poooi/poi/graphs/contributors"><img src="https://poooi.github.io/contributors/graph.svg" /></a>
 
-
 ## Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/poi#backer)]
 
 <a href="https://opencollective.com/poi#backers" target="_blank"><img src="https://opencollective.com/poi/backers.svg?width=890"></a>
-
 
 ## Sponsors
 
@@ -126,9 +104,8 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/poi/sponsor/8/website" target="_blank"><img src="https://opencollective.com/poi/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/poi/sponsor/9/website" target="_blank"><img src="https://opencollective.com/poi/sponsor/9/avatar.svg"></a>
 
-
-
 ## License
+
 [The MIT License](https://github.com/poooi/poi/blob/master/LICENSE)
 
 NOTE: THE SOFTWARE ICON AND SVG ICONS IS NOT LICENSED BY MIT AND COULD NOT BE USED
