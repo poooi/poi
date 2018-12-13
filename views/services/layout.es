@@ -151,33 +151,6 @@ const handleOverlayPanelReszie = () => {
 
 const handleOverlayPanelReszieDebounced = debounce(handleOverlayPanelReszie, 200)
 
-const setProperWindowSize = () => {
-  if (config.get('poi.layout.overlay', false) || config.get('poi.layout.isolate', false)) {
-    return
-  }
-  const current = remote.getCurrentWindow()
-  // Dont set size on maximized
-  if (current.isMaximized() || current.isFullScreen()) {
-    return
-  }
-  // Resize when window size smaller than webview size
-  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
-  const layout = config.get('poi.layout.mode', 'horizontal')
-  const realWidth = getRealSize(webviewWidth)
-  const realHeight = getRealSize(webviewHeight + getYOffset())
-  if (layout === 'vertical' && realWidth > getRealSize(window.innerWidth)) {
-    let [width, height] = current.getContentSize()
-    width = realWidth
-    current.setContentSize(width, height)
-  }
-
-  if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
-    let [width, height] = current.getContentSize()
-    height = realHeight
-    current.setContentSize(width, height)
-  }
-}
-
 const adjustSize = () => {
   try {
     // Apply calcualted data
@@ -260,42 +233,4 @@ config.on('config.set', (path, value) => {
     default:
       break
   }
-})
-
-export const layoutResizeObserver = new ResizeObserver(entries => {
-  let value = {}
-  entries.forEach(entry => {
-    const key =
-      entry.target.tagName === 'POI-MAIN'
-        ? 'window'
-        : entry.target.tagName === 'WEBVIEW'
-        ? 'webview'
-        : entry.target.className.includes('miniship-fleet-content')
-        ? 'minishippane'
-        : entry.target.className.includes('ship-tab-container')
-        ? 'shippane'
-        : entry.target.className.includes('main-panel-content')
-        ? 'mainpane'
-        : null
-    value = {
-      ...value,
-      [key]: {
-        width: entry.contentRect.width,
-        height: entry.contentRect.height,
-        ...(key === 'webview'
-          ? {
-              useFixedResolution: getStore('config.poi.webview.useFixedResolution', true),
-            }
-          : {}),
-      },
-    }
-    if (entry.target.tagName === 'WEBVIEW') {
-      setMinSize()
-      setProperWindowSize()
-    }
-  })
-  dispatch({
-    type: '@@LayoutUpdate',
-    value,
-  })
 })

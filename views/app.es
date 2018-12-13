@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, getStore */
 
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
@@ -7,6 +7,7 @@ import { remote, webFrame } from 'electron'
 import { get } from 'lodash'
 import { I18nextProvider } from 'react-i18next'
 import { ThemeProvider } from 'styled-components'
+import { ResizeSensor } from '@blueprintjs/core'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
@@ -19,7 +20,6 @@ import { TitleBarWrapper } from './components/etc/menu'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { PoiApp } from './poi-app'
-import { layoutResizeObserver } from 'views/services/layout'
 import i18next from './env-parts/i18next'
 import { darkTheme, lightTheme } from './theme'
 
@@ -41,13 +41,27 @@ require('./services/alert')
   theme: get(state, 'config.poi.appearance.theme', 'dark'),
 }))
 class Poi extends Component {
-  componentWillUnmount() {
-    layoutResizeObserver.unobserve(this.poimain)
+  handleResize = entries => {
+    entries.forEach(entry => {
+      const { width, height } = entry.contentRect
+      if (
+        width !== 0 &&
+        height !== 0 &&
+        (width !== getStore('layout.window.width') || height !== getStore('layout.window.height'))
+      ) {
+        this.props.dispatch({
+          type: '@@LayoutUpdate',
+          value: {
+            window: {
+              width,
+              height,
+            },
+          },
+        })
+      }
+    })
   }
 
-  componentDidMount() {
-    layoutResizeObserver.observe(this.poimain)
-  }
   render() {
     const { isHorizontal, reversed, theme } = this.props
     return (
@@ -61,18 +75,17 @@ class Poi extends Component {
               <TitleBarWrapper />
             </title-bar>
           )}
-          <poi-main
-            ref={ref => {
-              this.poimain = ref
-            }}
-            style={{
-              flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
-              ...(!isHorizontal && { overflow: 'hidden' }),
-            }}
-          >
-            {this.props.isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper />}
-            <PoiApp />
-          </poi-main>
+          <ResizeSensor onResize={this.handleResize}>
+            <poi-main
+              style={{
+                flexFlow: `${isHorizontal ? 'row' : 'column'}${reversed ? '-reverse' : ''} nowrap`,
+                ...(!isHorizontal && { overflow: 'hidden' }),
+              }}
+            >
+              {this.props.isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper />}
+              <PoiApp />
+            </poi-main>
+          </ResizeSensor>
           <ModalTrigger />
           <BasicAuth />
         </>

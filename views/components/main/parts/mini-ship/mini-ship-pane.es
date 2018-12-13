@@ -26,10 +26,7 @@ export const PaneBodyMini = connect(() => {
 })(({ fleetId, shipsId, enableAvatar, width }) => (
   <>
     <FleetStat fleetId={fleetId} isMini={true} />
-    <ShipDetailsMini
-      className="ship-details-mini"
-      observerPath={['layout.minishippane', `info.fleets.${fleetId}.api_ship`]}
-    >
+    <ShipDetailsMini className="ship-details-mini">
       {(shipsId || []).map((shipId, i) => (
         <MiniShipRow
           key={shipId}

@@ -1,4 +1,4 @@
-/* global config */
+/* global config, getStore */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
@@ -7,8 +7,8 @@ import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
 import { Trans } from 'react-i18next'
 import styled from 'styled-components'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
+import { ResizeSensor } from '@blueprintjs/core'
 
-import { layoutResizeObserver } from 'views/services/layout'
 import { ExpeditionPanel } from './parts/expedition-panel'
 import { TaskPanel } from './parts/task-panel'
 import { MiniShip } from './parts/mini-ship'
@@ -87,57 +87,68 @@ export class reactClass extends Component {
     config.set('poi.mainpanel.layout', layouts)
   }
 
-  componentWillUnmount() {
-    layoutResizeObserver.unobserve(this.mainpane)
-  }
-
-  componentDidMount() {
-    layoutResizeObserver.observe(this.mainpane)
+  handleResize = entries => {
+    entries.forEach(entry => {
+      const { width, height } = entry.contentRect
+      if (
+        width !== 0 &&
+        height !== 0 &&
+        (width !== getStore('layout.mainpane.width') ||
+          height !== getStore('layout.mainpane.height'))
+      ) {
+        this.props.dispatch({
+          type: '@@LayoutUpdate',
+          value: {
+            mainpane: {
+              width,
+              height,
+            },
+          },
+        })
+      }
+    })
   }
 
   render() {
     return (
-      <MainPanelContent
-        className="main-panel-content"
-        ref={ref => {
-          this.mainpane = ref
-        }}
-      >
-        <ResponsiveReactGridLayout
-          onLayoutChange={this.onLayoutChange}
-          layouts={this.props.layouts}
-          rowHeight={10}
-          margin={[3, 3]}
-          cols={{ lg: 20, sm: 10 }}
-          breakpoints={{ lg: 750, sm: 0 }}
-          width={this.props.mainpanewidth}
-          isResizable={this.props.editable}
-          isDraggable={this.props.editable}
-          compactType="vertical"
-        >
-          <div className="teitoku-panel" key="teitoku-panel">
-            <AdmiralPanel editable={this.props.editable} />
-          </div>
-          <div className="resource-panel" key="resource-panel">
-            <ResourcePanel editable={this.props.editable} />
-          </div>
-          <div className="miniship" key="miniship">
-            <MiniShip editable={this.props.editable} />
-          </div>
-          <div className="repair-panel panel-col" key="repair-panel">
-            <RepairPanel editable={this.props.editable} />
-          </div>
-          <div className="construction-panel panel-col" key="construction-panel">
-            <ConstructionPanel editable={this.props.editable} />
-          </div>
-          <div className="expedition-panel" key="expedition-panel">
-            <ExpeditionPanel editable={this.props.editable} />
-          </div>
-          <div className="task-panel" key="task-panel">
-            <TaskPanel editable={this.props.editable} />
-          </div>
-        </ResponsiveReactGridLayout>
-      </MainPanelContent>
+      <ResizeSensor onResize={this.handleResize}>
+        <MainPanelContent className="main-panel-content">
+          <ResponsiveReactGridLayout
+            onLayoutChange={this.onLayoutChange}
+            layouts={this.props.layouts}
+            rowHeight={10}
+            margin={[3, 3]}
+            cols={{ lg: 20, sm: 10 }}
+            breakpoints={{ lg: 750, sm: 0 }}
+            width={this.props.mainpanewidth}
+            isResizable={this.props.editable}
+            isDraggable={this.props.editable}
+            compactType="vertical"
+          >
+            <div className="teitoku-panel" key="teitoku-panel">
+              <AdmiralPanel editable={this.props.editable} />
+            </div>
+            <div className="resource-panel" key="resource-panel">
+              <ResourcePanel editable={this.props.editable} />
+            </div>
+            <div className="miniship" key="miniship">
+              <MiniShip editable={this.props.editable} />
+            </div>
+            <div className="repair-panel panel-col" key="repair-panel">
+              <RepairPanel editable={this.props.editable} />
+            </div>
+            <div className="construction-panel panel-col" key="construction-panel">
+              <ConstructionPanel editable={this.props.editable} />
+            </div>
+            <div className="expedition-panel" key="expedition-panel">
+              <ExpeditionPanel editable={this.props.editable} />
+            </div>
+            <div className="task-panel" key="task-panel">
+              <TaskPanel editable={this.props.editable} />
+            </div>
+          </ResponsiveReactGridLayout>
+        </MainPanelContent>
+      </ResizeSensor>
     )
   }
 }

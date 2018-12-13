@@ -1,15 +1,15 @@
+/* global getStore */
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { Button } from '@blueprintjs/core'
+import { Button, ResizeSensor } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 import { LandbaseButton } from '../../../ship-parts/landbase-button'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
-import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import {
   FleetNameButtonContainer,
@@ -120,12 +120,26 @@ export class MiniShip extends Component {
     })
   }
 
-  componentWillUnmount() {
-    layoutResizeObserver.unobserve(this.minishippane)
-  }
-
-  componentDidMount() {
-    layoutResizeObserver.observe(this.minishippane)
+  handleResize = entries => {
+    entries.forEach(entry => {
+      const { width, height } = entry.contentRect
+      if (
+        width !== 0 &&
+        height !== 0 &&
+        (width !== getStore('layout.minishippane.width') ||
+          height !== getStore('layout.minishippane.height'))
+      ) {
+        this.props.dispatch({
+          type: '@@LayoutUpdate',
+          value: {
+            minishippane: {
+              width,
+              height,
+            },
+          },
+        })
+      }
+    })
   }
 
   render() {
@@ -157,37 +171,36 @@ export class MiniShip extends Component {
             isMini={true}
           />
         </FleetNameButtonContainer>
-        <ShipTabContent
-          className="miniship-fleet-content"
-          ref={ref => {
-            this.minishippane = ref
-          }}
-        >
-          {[0, 1, 2, 3].map(i => (
+        <ResizeSensor onResize={this.handleResize}>
+          <ShipTabContent className="miniship-fleet-content">
+            {[0, 1, 2, 3].map(i => (
+              <ShipDeck
+                className="ship-deck"
+                onTransitionEnd={() => this.handleTransitionEnd(i)}
+                key={i}
+                transition={
+                  this.props.enableTransition && (activeFleetId === i || prevFleetId === i)
+                }
+                active={activeFleetId === i || prevFleetId === i}
+                left={activeFleetId > i}
+                right={activeFleetId < i}
+              >
+                <PaneBodyMini key={i} fleetId={i} />
+              </ShipDeck>
+            ))}
             <ShipDeck
               className="ship-deck"
-              onTransitionEnd={() => this.handleTransitionEnd(i)}
-              key={i}
-              transition={this.props.enableTransition && (activeFleetId === i || prevFleetId === i)}
-              active={activeFleetId === i || prevFleetId === i}
-              left={activeFleetId > i}
-              right={activeFleetId < i}
+              onTransitionEnd={() => this.handleTransitionEnd(4)}
+              key={4}
+              transition={this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
+              active={activeFleetId === 4 || prevFleetId === 4}
+              left={activeFleetId > 4}
+              right={activeFleetId < 4}
             >
-              <PaneBodyMini key={i} fleetId={i} />
+              <LBViewMini />
             </ShipDeck>
-          ))}
-          <ShipDeck
-            className="ship-deck"
-            onTransitionEnd={() => this.handleTransitionEnd(4)}
-            key={4}
-            transition={this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
-            active={activeFleetId === 4 || prevFleetId === 4}
-            left={activeFleetId > 4}
-            right={activeFleetId < 4}
-          >
-            <LBViewMini />
-          </ShipDeck>
-        </ShipTabContent>
+          </ShipTabContent>
+        </ResizeSensor>
       </CardWrapper>
     )
   }

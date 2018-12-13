@@ -1,4 +1,4 @@
-/* global dispatch */
+/* global getStore */
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import { get, memoize, times } from 'lodash'
 import { createSelector } from 'reselect'
 import { withNamespaces, Trans } from 'react-i18next'
-import { Button } from '@blueprintjs/core'
+import { Button, ResizeSensor } from '@blueprintjs/core'
 import { compose } from 'redux'
 
 import { ShipRow } from './ship-item'
@@ -18,7 +18,6 @@ import {
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
 } from 'views/utils/selectors'
-import { layoutResizeObserver } from 'views/services/layout'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import {
   ShipCard,
@@ -152,7 +151,7 @@ export class reactClass extends Component {
 
   handleClick = idx => {
     if (idx != this.state.activeFleetId) {
-      dispatch({
+      this.props.dispatch({
         type: '@@TabSwitch',
         tabInfo: {
           activeFleetId: idx,
@@ -162,7 +161,7 @@ export class reactClass extends Component {
   }
 
   changeMainView = () => {
-    dispatch({
+    this.props.dispatch({
       type: '@@TabSwitch',
       tabInfo: {
         activeMainTab: 'main-view',
@@ -170,12 +169,26 @@ export class reactClass extends Component {
     })
   }
 
-  componentWillUnmount() {
-    layoutResizeObserver.unobserve(this.shiptabpane)
-  }
-
-  componentDidMount() {
-    layoutResizeObserver.observe(this.shiptabpane)
+  handleResize = entries => {
+    entries.forEach(entry => {
+      const { width, height } = entry.contentRect
+      if (
+        width !== 0 &&
+        height !== 0 &&
+        (width !== getStore('layout.shippane.width') ||
+          height !== getStore('layout.shippane.height'))
+      ) {
+        this.props.dispatch({
+          type: '@@LayoutUpdate',
+          value: {
+            shippane: {
+              width,
+              height,
+            },
+          },
+        })
+      }
+    })
   }
 
   render() {
@@ -204,47 +217,44 @@ export class reactClass extends Component {
               isMini={false}
             />
           </FleetNameButtonContainer>
-          <ShipTabContainer
-            className="ship-tab-container"
-            ref={ref => {
-              this.shiptabpane = ref
-            }}
-          >
-            <ShipTabContent className="ship-tab-content">
-              {times(4).map(i => (
+          <ResizeSensor onResize={this.handleResize}>
+            <ShipTabContainer className="ship-tab-container">
+              <ShipTabContent className="ship-tab-content">
+                {times(4).map(i => (
+                  <ShipDeck
+                    className="ship-deck"
+                    onTransitionEnd={() => this.handleTransitionEnd(i)}
+                    key={i}
+                    transition={
+                      this.props.enableTransition && (activeFleetId === i || prevFleetId === i)
+                    }
+                    active={activeFleetId === i || prevFleetId === i}
+                    left={activeFleetId > i}
+                    right={activeFleetId < i}
+                  >
+                    <FleetShipView
+                      fleetId={i}
+                      enableAvatar={this.props.enableAvatar}
+                      width={this.props.width}
+                    />
+                  </ShipDeck>
+                ))}
                 <ShipDeck
-                  className="ship-deck"
-                  onTransitionEnd={() => this.handleTransitionEnd(i)}
-                  key={i}
+                  className="ship-deck ship-lbac"
+                  onTransitionEnd={() => this.handleTransitionEnd(4)}
+                  key={4}
                   transition={
-                    this.props.enableTransition && (activeFleetId === i || prevFleetId === i)
+                    this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)
                   }
-                  active={activeFleetId === i || prevFleetId === i}
-                  left={activeFleetId > i}
-                  right={activeFleetId < i}
+                  active={activeFleetId === 4 || prevFleetId === 4}
+                  left={activeFleetId > 4}
+                  right={activeFleetId < 4}
                 >
-                  <FleetShipView
-                    fleetId={i}
-                    enableAvatar={this.props.enableAvatar}
-                    width={this.props.width}
-                  />
+                  <LBView enableAvatar={this.props.enableAvatar} width={this.props.width} />
                 </ShipDeck>
-              ))}
-              <ShipDeck
-                className="ship-deck ship-lbac"
-                onTransitionEnd={() => this.handleTransitionEnd(4)}
-                key={4}
-                transition={
-                  this.props.enableTransition && (activeFleetId === 4 || prevFleetId === 4)
-                }
-                active={activeFleetId === 4 || prevFleetId === 4}
-                left={activeFleetId > 4}
-                right={activeFleetId < 4}
-              >
-                <LBView enableAvatar={this.props.enableAvatar} width={this.props.width} />
-              </ShipDeck>
-            </ShipTabContent>
-          </ShipTabContainer>
+              </ShipTabContent>
+            </ShipTabContainer>
+          </ResizeSensor>
         </ShipCard>
       </ShipWrapper>
     )
