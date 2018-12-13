@@ -103,12 +103,6 @@ if (config.get('poi.misc.limitFps.enabled')) {
   }
 }
 
-// Fix confused cursor in HiDPI
-// https://github.com/electron/electron/issues/7655#issuecomment-259688853
-if (process.platform === 'win32') {
-  app.commandLine.appendSwitch('enable-use-zoom-for-dsf', 'false')
-}
-
 // Test: enable JavaScript experimental features
 app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
 
