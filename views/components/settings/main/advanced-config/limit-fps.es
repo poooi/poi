@@ -1,5 +1,5 @@
 /* global config */
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { withNamespaces } from 'react-i18next'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
