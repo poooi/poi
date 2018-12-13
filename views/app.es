@@ -7,7 +7,7 @@ import { remote, webFrame } from 'electron'
 import { get } from 'lodash'
 import { I18nextProvider } from 'react-i18next'
 import { ThemeProvider } from 'styled-components'
-import { ResizeSensor } from '@blueprintjs/core'
+import { ResizeSensor, Popover } from '@blueprintjs/core'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
@@ -33,6 +33,15 @@ window.hack = {}
 
 // Alert functions
 require('./services/alert')
+
+// configure Popover (including Tooltip)
+// ATTENTION default props will be overriden by providing props
+Popover.defaultProps.modifiers = {
+  computeStyle: { gpuAcceleration: false }, // prevent using translat3d since it could make text blurry with zooming
+  preventOverflow: {
+    boundariesElement: 'window', // enable display tooltip within small containers
+  },
+}
 
 @connect(state => ({
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',

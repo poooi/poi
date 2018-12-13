@@ -1,11 +1,10 @@
 import React from 'react'
 import { withNamespaces } from 'react-i18next'
-import { FormGroup, Position } from '@blueprintjs/core'
+import { FormGroup, Position, Tooltip } from '@blueprintjs/core'
 import { map, size, includes } from 'lodash'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
-import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import { ShortcutConfig } from './shortcut-config'
 

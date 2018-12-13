@@ -6,7 +6,7 @@ import { join as joinString, map, get, range, isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
-import { Position, Intent } from '@blueprintjs/core'
+import { Position, Intent, Tooltip } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -17,7 +17,6 @@ import {
   fleetInBattleSelectorFactory,
 } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
-import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { CardWrapper } from './styled-components'
 
 export const ExpeditionItem = styled.div`

@@ -8,13 +8,20 @@ import PropTypes from 'prop-types'
 import { get, map } from 'lodash'
 import { fileUrl } from 'views/utils/tools'
 import { withNamespaces } from 'react-i18next'
-import { HTMLSelect, Button, ControlGroup, FormGroup, Intent, Position } from '@blueprintjs/core'
+import {
+  HTMLSelect,
+  Button,
+  ControlGroup,
+  FormGroup,
+  Intent,
+  Position,
+  Tooltip,
+} from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
-import { Tooltip } from 'views/components/etc/panel-tooltip'
 import themes from 'assets/data/theme.json'
 
 const { openItem } = shell

@@ -7,7 +7,7 @@ import { createSelector } from 'reselect'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import { Tag, ProgressBar, Intent, Position } from '@blueprintjs/core'
+import { Tag, ProgressBar, Intent, Position, Tooltip } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
@@ -34,7 +34,6 @@ import {
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
 
-import { Tooltip } from 'views/components/etc/panel-tooltip'
 import { SlotItemContainer, ALevel } from 'views/components/ship-parts/styled-components'
 
 const SlotItemContainerMini = styled.div`

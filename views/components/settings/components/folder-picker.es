@@ -7,12 +7,10 @@ import { get, split, map } from 'lodash'
 import { remote } from 'electron'
 import i18next from 'views/env-parts/i18next'
 import path from 'path'
-import { Position, Button, Intent, Classes, OverflowList } from '@blueprintjs/core'
+import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
 import styled from 'styled-components'
 import FA from 'react-fontawesome'
-
-import { Tooltip } from 'views/components/etc/panel-tooltip'
 
 import { isSubdirectory } from 'views/utils/tools'
 

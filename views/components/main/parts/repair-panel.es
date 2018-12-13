@@ -7,7 +7,7 @@ import { createSelector } from 'reselect'
 import cls from 'classnames'
 import FA from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import { Position, Intent, ResizeSensor } from '@blueprintjs/core'
+import { Position, Intent, ResizeSensor, Tooltip } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 import { Avatar } from 'views/components/etc/avatar'
@@ -21,7 +21,6 @@ import {
   createDeepCompareArraySelector,
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
-import { Tooltip } from 'views/components/etc/panel-tooltip'
 import {
   DockPanelCardWrapper,
   PanelItemTooltip,
