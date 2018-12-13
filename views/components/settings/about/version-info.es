@@ -100,6 +100,26 @@ const openLink = memoize(link => () => shell.openExternal(link))
 const audio = new Audio(`file://${ROOT}/assets/audio/about.mp3`)
 const playPoiAudio = throttle(() => audio.play(), 3000, { trailing: false })
 
+const os = do {
+  try {
+    osName()
+  } catch (e) {
+    switch (process.platform) {
+      case 'win32': {
+        ;('Windows')
+        break
+      }
+      case 'darwin': {
+        ;('macOS')
+        break
+      }
+      default: {
+        ;('Linux')
+      }
+    }
+  }
+}
+
 // FIXME: Eggs for April 1st, to remove in next version
 const today = new Date()
 const aprilFirst = today.getDate() === 1 && today.getMonth() === 3
@@ -114,7 +134,7 @@ export const VersionInfo = withNamespaces(['setting'])(({ t }) => (
         </Title>
         <VersionDetail>
           <div>
-            <Entry>OS</Entry> {osName()}
+            <Entry>OS</Entry> {os}
           </div>
           {map(['electron', 'chrome', 'node'], name => (
             <div key={name}>
