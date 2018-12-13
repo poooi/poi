@@ -96,8 +96,11 @@ let mainWindow, appIcon
 global.mainWindow = mainWindow = null
 
 // Set FPS limit
-if (config.get('poi.misc.limitfps')) {
-  app.commandLine.appendSwitch('limit-fps', '30')
+if (config.get('poi.misc.limitFps.enabled')) {
+  const value = parseInt(config.get('poi.misc.limitFps.value'))
+  if (Number.isFinite(value)) {
+    app.commandLine.appendSwitch('limit-fps', String(value))
+  }
 }
 
 // Fix confused cursor in HiDPI

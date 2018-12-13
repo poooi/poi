@@ -7,6 +7,7 @@ import { Section, Wrapper, FillAvailable } from 'views/components/settings/compo
 import { SwitchConfig } from 'views/components/settings/components/switch'
 
 import { ShortcutConfig } from './shortcut-config'
+import { LimitFps } from './limit-fps'
 
 const isMacOS = process.platform === 'darwin'
 
@@ -14,11 +15,6 @@ const SWITCHES = [
   {
     label: 'Disable Hardware Acceleration',
     configName: 'poi.misc.disablehwaccel',
-    defaultValue: false,
-  },
-  {
-    label: 'Set FPS limit to 30',
-    configName: 'poi.misc.limitfps',
     defaultValue: false,
   },
   {
@@ -89,6 +85,8 @@ export const AdvancedConfig = withNamespaces(['setting'])(({ t }) => (
           </Tooltip>
         </FormGroup>
       </FillAvailable>
+
+      <LimitFps />
 
       {map(
         SWITCHES,

@@ -2,7 +2,10 @@ const defaultConfig = {
   poi: {
     misc: {
       disablehwaccel: false,
-      limitfps: false,
+      limitFps: {
+        enabled: false,
+        value: 60,
+      },
       safemode: false,
       shortcut: true,
       disablenetworkalert: false,
