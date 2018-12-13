@@ -43,6 +43,7 @@ const pluginDropDownModifier = {
   hide: {
     enabled: false,
   },
+  computeStyle: { gpuAcceleration: false },
 }
 
 const GlobalStyle = createGlobalStyle`
