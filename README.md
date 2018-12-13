@@ -6,7 +6,7 @@ poi is a scalable browser and tool set for _Kantai Collection_(KanColle).
 
 Key features include:
 
-- Proxy, HTTP, Socks5 and PAC (Experimental)
+- Proxy: HTTP, Socks5 and PAC (Experimental)
 - Cache, including custom cache
 - Data synthesis and analysis
 - Notification
@@ -15,9 +15,11 @@ Key features include:
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b239a37253a3486c946b047acae5f1ac)](https://www.codacy.com/app/KochiyaOcean/poi?utm_source=github.com&utm_medium=referral&utm_content=poooi/poi&utm_campaign=badger)
 [![Dependencies](https://david-dm.org/poooi/poi.svg)](https://david-dm.org/poooi/poi)
 [![DevDependencies](https://david-dm.org/poooi/poi/dev-status.svg)](https://david-dm.org/poooi/poi?type=dev)
+
 [![Build Status](https://travis-ci.org/poooi/poi.svg?branch=master)](https://travis-ci.org/poooi/poi)
 [![Build status](https://ci.appveyor.com/api/projects/status/apv2xngtej1m17he?svg=true)](https://ci.appveyor.com/project/KochiyaOcean/poi)
 [![Azure Pipelines](https://vsrm.dev.azure.com/poooi/_apis/public/Release/badge/5b8293df-7d09-4edf-9f44-ce14e18b1701/1/1)](https://dev.azure.com/poooi/poi/_build)
+
 [![Backers on Open Collective](https://opencollective.com/poi/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/poi/sponsors/badge.svg)](#sponsors)
 [![license:mit](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
@@ -53,20 +55,26 @@ Please note that artifacts could be periodically emptied.
 
 ### Starting from this repository
 
-[See here](https://github.com/poooi/poi/wiki/StartingRunFromThisRepo)
+```shell
+git clone https://github.com/poooi/poi && cd poi
+npm install
+npm start
+```
+
+[For more details see here](https://github.com/poooi/poi/wiki/StartingRunFromThisRepo)
 
 ## Development
 
 ### Libraries backing poi
 
-- [Electron](https://github.com/atom/electron)
-- [React](https://github.com/facebook/react)
+- [Electron](https://electronjs.org/)
+- [React](https://reactjs.org/)
 - [Blueprint](https://blueprintjs.com/)
-- [Redux](https://github.com/reactjs/redux)
+- [Redux](https://redux.js.org/)
 
 ### Documentation
 
-On plugin development, the [docs](https://dev.poooi.app) are available in English.
+On plugin development, the [docs are available in English](<(https://dev.poooi.app)>).
 
 ## Contact us
 
