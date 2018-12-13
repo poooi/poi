@@ -243,3 +243,16 @@ export const loadScript = (path, document = window.document) => {
   script.setAttribute('src', path)
   document.head.appendChild(script)
 }
+
+/**
+ * default modiers used in poi
+ */
+export const POPOVER_MODIFIERS = {
+  computeStyle: { gpuAcceleration: false }, // prevent using translat3d since it could make text blurry with zooming
+  preventOverflow: {
+    boundariesElement: 'window', // enable display tooltip within small containers
+  },
+  flip: {
+    behavior: ['clockwise', 'counterclockwise', 'flip'],
+  },
+}

@@ -22,6 +22,7 @@ import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { PoiApp } from './poi-app'
 import i18next from './env-parts/i18next'
 import { darkTheme, lightTheme } from './theme'
+import { POPOVER_MODIFIERS } from './utils/tools'
 
 const config = remote.require('./lib/config')
 
@@ -36,12 +37,7 @@ require('./services/alert')
 
 // configure Popover (including Tooltip)
 // ATTENTION default props will be overriden by providing props
-Popover.defaultProps.modifiers = {
-  computeStyle: { gpuAcceleration: false }, // prevent using translat3d since it could make text blurry with zooming
-  preventOverflow: {
-    boundariesElement: 'window', // enable display tooltip within small containers
-  },
-}
+Popover.defaultProps.modifiers = POPOVER_MODIFIERS
 
 @connect(state => ({
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
