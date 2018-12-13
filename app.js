@@ -1,6 +1,5 @@
-const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell, session } = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell } = require('electron')
 const path = require('path-extra')
-const fs = require('fs-extra')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -36,7 +35,7 @@ require('./lib/module-path').setAllowedPath([global.ROOT, global.APPDATA_PATH])
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
-const { warn, error, log } = require('./lib/utils')
+const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
