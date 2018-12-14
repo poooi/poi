@@ -209,12 +209,12 @@
   "Accessibility": "無障礙",
   "Color blind mode": "色盲模式",
   "none": "無",
-  "protanopia": "Protanopia",
-  "protanomaly": "Protanomaly",
-  "deuteranopia": "Deuteranopia",
-  "deuteranomaly": "Deuteranomaly",
-  "tritanopia": "Tritanopia",
-  "tritanomaly": "Tritanomaly",
-  "achromatopsia": "Achromatopsia",
-  "achromatomaly": "Achromatomaly"
+  "protanopia": "紅色盲",
+  "protanomaly": "紅色弱",
+  "deuteranopia": "綠色盲",
+  "deuteranomaly": "綠色弱",
+  "tritanopia": "藍色盲",
+  "tritanomaly": "藍色弱",
+  "achromatopsia": "全色盲",
+  "achromatomaly": "色弱"
 }

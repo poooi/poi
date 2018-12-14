@@ -209,12 +209,12 @@
   "Accessibility": "アクセシビリティ",
   "Color blind mode": "カラーブラインドモード",
   "none": "無し",
-  "protanopia": "Protanopia",
-  "protanomaly": "Protanomaly",
-  "deuteranopia": "Deuteranopia",
-  "deuteranomaly": "Deuteranomaly",
-  "tritanopia": "Tritanopia",
-  "tritanomaly": "Tritanomaly",
-  "achromatopsia": "Achromatopsia",
-  "achromatomaly": "Achromatomaly"
+  "protanopia": "1型2色覚/赤色盲",
+  "protanomaly": "1型3色覚/赤色弱",
+  "deuteranopia": "2型2色覚/緑色盲",
+  "deuteranomaly": "2型3色覚/緑色弱",
+  "tritanopia": "3型2色覚/青色盲",
+  "tritanomaly": "3型3色覚/青色弱",
+  "achromatopsia": "1色覚/全色盲",
+  "achromatomaly": "異常3色覚/色弱"
 }
