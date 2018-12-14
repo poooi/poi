@@ -29,6 +29,7 @@ const defaultConfig = {
     appearance: {
       zoom: 1,
       theme: 'dark',
+      colorblindFilter: 'null',
       svgicon: false,
       textspacingcjk: true,
       vibrant: 0,

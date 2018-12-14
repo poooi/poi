@@ -9,6 +9,7 @@ import { LanguageConfig } from './language-config'
 import { ScreenshotConfig } from './screenshot-config'
 import { PluginConfig } from './plugin-config'
 import { AdvancedConfig } from './advanced-config'
+import { AccessibilityConfig } from './accessibility-config'
 
 export const PoiConfig = connect(state => ({
   refts: get(state, 'layout.webview.refts', 0),
@@ -20,6 +21,7 @@ export const PoiConfig = connect(state => ({
       <StorageConfig />
       <ScreenshotConfig />
       <PluginConfig />
+      <AccessibilityConfig />
       <AdvancedConfig />
     </div>
   )),

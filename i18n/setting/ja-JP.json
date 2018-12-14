@@ -205,5 +205,16 @@
   "Linked": "リンクされた",
   "Available": "利用可能",
   "repair-plugins-confirmation": "poi は現在のプラグインディレクトリを削除してプラグインを再インストールしますが、この操作はプラグインデータには影響しませんが、時間がかかります。続行しますか？",
-  "Network setting changes will be effective after restarting poi": "ネットワーク設定の変更は、poi を再起動した後に有効になります"
+  "Network setting changes will be effective after restarting poi": "ネットワーク設定の変更は、poi を再起動した後に有効になります",
+  "Accessibility": "アクセシビリティ",
+  "Color blind mode": "カラーブラインドモード",
+  "none": "無し",
+  "protanopia": "Protanopia",
+  "protanomaly": "Protanomaly",
+  "deuteranopia": "Deuteranopia",
+  "deuteranomaly": "Deuteranomaly",
+  "tritanopia": "Tritanopia",
+  "tritanomaly": "Tritanomaly",
+  "achromatopsia": "Achromatopsia",
+  "achromatomaly": "Achromatomaly"
 }

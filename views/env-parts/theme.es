@@ -62,6 +62,22 @@ export function loadStyle(
     }
   }
 
+  const delaySetFilter = value => {
+    if (document.body) {
+      document.body.style.filter = value
+    } else {
+      setTimeout(() => delaySetFilter(value), 100)
+    }
+  }
+
+  const setFilter = type => {
+    if (type === 'null') {
+      delaySetFilter(null)
+    } else {
+      delaySetFilter(`url(${fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#${type})`)
+    }
+  }
+
   const setBackgroundColor = (isDark, isVibrant) => {
     if (isVibrant) {
       if ('darwin' === process.platform) {
@@ -86,6 +102,7 @@ export function loadStyle(
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
+    setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
       classNames('bp3-focus-disabled', {
         'bp3-dark': isDark,
@@ -172,6 +189,9 @@ export function loadStyle(
     }
     if (path === 'poi.appearance.background') {
       setBackground(value)
+    }
+    if (path === 'poi.appearance.colorblindFilter') {
+      setFilter(value)
     }
   }
 

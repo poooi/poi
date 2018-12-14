@@ -205,5 +205,16 @@
   "Linked": "鏈接插件",
   "Available": "可用更新",
   "repair-plugins-confirmation": "poi 將刪除當前插件目錄並重新安裝插件，這個操作不會影響插件數據，但需要一定的時間，繼續嗎？",
-  "Network setting changes will be effective after restarting poi": "網路設置的變更將在重新啓動 poi 後生效"
+  "Network setting changes will be effective after restarting poi": "網路設置的變更將在重新啓動 poi 後生效",
+  "Accessibility": "無障礙",
+  "Color blind mode": "色盲模式",
+  "none": "無",
+  "protanopia": "Protanopia",
+  "protanomaly": "Protanomaly",
+  "deuteranopia": "Deuteranopia",
+  "deuteranomaly": "Deuteranomaly",
+  "tritanopia": "Tritanopia",
+  "tritanomaly": "Tritanomaly",
+  "achromatopsia": "Achromatopsia",
+  "achromatomaly": "Achromatomaly"
 }
