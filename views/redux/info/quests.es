@@ -170,7 +170,7 @@ function filterActiveQuestFactory(now) {
 
 function outdateActiveQuests(activeQuests, now) {
   const activeQuestList = values(activeQuests).filter(filterActiveQuestFactory(now))
-  if (activeQuestList.length === Object.keys(activeQuests).lenfth) return activeQuests
+  if (activeQuestList.length === Object.keys(activeQuests).length) return activeQuests
   return formActiveQuests(activeQuestList)
 }
 
