@@ -679,6 +679,7 @@ export class ControlledTabArea extends PureComponent {
 
     const leftPanelNav = (
       <NavTabs
+        id="top-nav"
         large
         selectedTabId={
           this.isPluginTab(this.props.activeMainTab) ? 'plugin' : this.props.activeMainTab
