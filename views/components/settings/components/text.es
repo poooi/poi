@@ -18,12 +18,35 @@ export class TextConfig extends PureComponent {
     defaultValue: PropTypes.string,
   }
 
-  handleChange = debounce(e => {
-    config.set(this.props.configName, e.currentTarget.value)
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (nextProps.value !== prevState.propValue) {
+      return {
+        value: nextProps.value,
+        propValue: nextProps.value,
+      }
+    } else {
+      return null
+    }
+  }
+
+  state = {
+    value: this.props.value,
+    propValue: this.props.value,
+  }
+
+  handleChange = e => {
+    this.setState({
+      value: e.currentTarget.value,
+    })
+    this.applyConfig(e.currentTarget.value)
+  }
+
+  applyConfig = debounce(value => {
+    config.set(this.props.configName, value)
   }, 200)
 
   render() {
-    const { value, configName, defaultValue, dispatch, ...rest } = this.props
-    return <InputGroup {...rest} value={value} onChange={this.handleChange} />
+    const { configName, defaultValue, dispatch, ...rest } = this.props
+    return <InputGroup {...rest} value={this.state.value} onChange={this.handleChange} />
   }
 }
