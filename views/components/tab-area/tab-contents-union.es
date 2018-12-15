@@ -42,7 +42,7 @@ const PoiTabChildPositioner = styled.div`
     !active &&
     css`
       & > * {
-        display: none;
+        display: none !important;
       }
     `}
 `
