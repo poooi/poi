@@ -108,7 +108,10 @@ export function getHpStyle(percent) {
   }
 }
 
-// equip: $equip or $equip.api_type[3]
+/**
+ * test if an equipment is aircraft using api_type[2]
+ * @param {Equip | number} equip equip (master) data or api_type[2]
+ */
 export function equipIsAircraft(equip) {
   if (Number.isInteger(equip)) {
     return (
