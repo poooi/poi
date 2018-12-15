@@ -109,11 +109,12 @@ export function getHpStyle(percent) {
 }
 
 /**
- * test if an equipment is aircraft using api_type[2]
- * @param {Equip | number} equip equip (master) data or api_type[2]
+ * test if an equipment is aircraft using api_type[2] or api_type[3]
+ * @param {Equip | number} equip equip (master) data or api_type[3]
  */
 export function equipIsAircraft(equip) {
   if (Number.isInteger(equip)) {
+    // compat: the function used to accept api_type[3]
     return (
       equip != null &&
       (between(equip, 6, 10) ||
