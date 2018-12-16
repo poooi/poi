@@ -10,6 +10,9 @@ import { app, session } from 'electron'
 import util from 'util'
 import { gunzip, inflate } from 'zlib'
 import fs from 'fs-extra'
+import caseNormalizer from 'header-case-normalizer'
+import socks from 'socks5-client'
+import net from 'net'
 
 import SocksHttpAgent from './socks-http-agent'
 import config from './config'
@@ -134,6 +137,7 @@ class Proxy extends EventEmitter {
     // Handles http request only, https request will be passed to upstream proxy directly.
     this.server = http.createServer(this.createServer)
     this.server.on('error', error)
+    this.server.on('connect', this.onConnect)
     const listenPort = config.get('proxy.port', 0)
     this.server.listen(
       listenPort,
@@ -405,6 +409,96 @@ class Proxy extends EventEmitter {
       })
       res.end(data)
     }
+  }
+
+  onConnect = (req, client, head) => {
+    if (req.headers['proxy-connection'] && !req.headers['connection']) {
+      req.headers['connection'] = req.headers['proxy-connection']
+      delete req.headers['proxy-connection']
+    } else if (!req.headers['connection']) {
+      req.headers['connection'] = 'close'
+    }
+    const remoteUrl = url.parse(`https://${req.url}`)
+    let remote = null
+    switch (config.get('proxy.use')) {
+      case 'socks5': {
+        // Write data directly to SOCKS5 proxy
+        remote = socks.createConnection({
+          socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
+          socksPort: config.get('proxy.socks5.port', 1080),
+          host: remoteUrl.hostname,
+          port: remoteUrl.port,
+        })
+        remote.on('connect', () => {
+          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
+          remote.write(head)
+        })
+        client.on('data', data => {
+          remote.write(data)
+        })
+        remote.on('data', data => {
+          client.write(data)
+        })
+        break
+      }
+      case 'http': {
+        // Write data directly to HTTP proxy
+        const host = config.get('proxy.http.host', '127.0.0.1')
+        const port = config.get('proxy.http.port', 8118)
+        // Write header to http proxy
+        let msg = `CONNECT ${remoteUrl.hostname}:${remoteUrl.port} HTTP/${req.httpVersion}\r\n`
+        for (const k in req.headers) {
+          msg += `${caseNormalizer(k)}: ${req.headers[k]}\r\n`
+        }
+        msg += '\r\n'
+        remote = net.connect(
+          port,
+          host,
+          () => {
+            remote.write(msg)
+            remote.write(head)
+            client.pipe(remote)
+            remote.pipe(client)
+          },
+        )
+        break
+      }
+      default: {
+        // Connect to remote directly
+        remote = net.connect(
+          remoteUrl.port,
+          remoteUrl.hostname,
+          () => {
+            client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
+            remote.write(head)
+            client.pipe(remote)
+            remote.pipe(client)
+          },
+        )
+      }
+    }
+    client.on('end', () => {
+      remote.end()
+    })
+    remote.on('end', () => {
+      client.end()
+    })
+    client.on('error', e => {
+      error(e)
+      remote.destroy()
+    })
+    remote.on('error', e => {
+      error(e)
+      client.destroy()
+    })
+    client.on('timeout', () => {
+      client.destroy()
+      remote.destroy()
+    })
+    remote.on('timeout', () => {
+      client.destroy()
+      remote.destroy()
+    })
   }
 }
 
