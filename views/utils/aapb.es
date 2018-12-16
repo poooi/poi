@@ -1,9 +1,10 @@
 /*
    reference:
 
-   - http://kancolle.wikia.com/wiki/12cm_30-tube_Rocket_Launcher_Kai_Ni (as of Oct 18, 2018)
+   - http://kancolle.wikia.com/wiki/12cm_30-tube_Rocket_Launcher_Kai_Ni (as of Dec 15, 2018)
    - http://kancolle.wikia.com/wiki/Combat#/Aerial (as of Oct 18, 2018)
    - https://wikiwiki.jp/kancolle/航空戦#h2_content_1_6 (as of Oct 18, 2018)
+   - https://twitter.com/noratako5/status/1062027534026428416
    - https://twitter.com/kankenRJ/status/979524073934893056
    - https://twitter.com/noratako5/status/976988915734228992
 
@@ -118,5 +119,5 @@ export const getShipAAPB = (...args) => {
    */
   adjustedAA = 2 * Math.floor(adjustedAA / 2)
   // as we want to show the precentage, let *100 here to obtain a better precision.
-  return ((adjustedAA + ship.api_lucky[0]) * 100) / (322 - 40 * rlk2Count - iseClassBonus)
+  return ((adjustedAA + 0.9 * ship.api_lucky[0]) * 100) / (322 - 40 * rlk2Count - iseClassBonus)
 }
