@@ -83,6 +83,7 @@ i18next.use(reactI18nextModule).init({
   react: {
     wait: false,
     nsMode: 'fallback',
+    usePureComponent: true,
   },
   saveMissing: dbg && dbg.extra('i18next-save-missing').isEnabled(),
   missingKeyHandler: function(lng, ns, key, fallbackValue) {
