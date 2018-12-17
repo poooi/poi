@@ -24,6 +24,8 @@ const ButtonArea = styled(Wrapper)`
   }
 `
 
+const defaultCachePath = remote.getGlobal('DEFAULT_CACHE_PATH')
+
 @withNamespaces(['setting'])
 export class StorageConfig extends Component {
   static propTypes = {
@@ -111,7 +113,7 @@ export class StorageConfig extends Component {
               <FolderPickerConfig
                 label={t('setting:3rd party cache')}
                 configName="poi.misc.cache.path"
-                defaultValue={remote.getGlobal('DEFAULT_CACHE_PATH')}
+                defaultValue={defaultCachePath}
               />
             </FormGroup>
           </FillAvailable>

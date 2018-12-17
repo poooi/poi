@@ -8,6 +8,7 @@ import { FolderPickerConfig } from '../components/folder-picker'
 import { RadioConfig } from '../components/radio'
 
 const screenshotPathExclude = [window.ROOT]
+const defaultScreenshotPath = remote.getGlobal('DEFAULT_SCREENSHOT_PATH')
 
 export const ScreenshotConfig = withNamespaces(['setting'])(({ t }) => (
   <Section title={t('Screenshot')}>
@@ -28,7 +29,7 @@ export const ScreenshotConfig = withNamespaces(['setting'])(({ t }) => (
           <FolderPickerConfig
             label={t('setting:Screenshot Folder')}
             configName="poi.misc.screenshot.path"
-            defaultValue={remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}
+            defaultValue={defaultScreenshotPath}
             exclude={screenshotPathExclude}
           />
         </FormGroup>
