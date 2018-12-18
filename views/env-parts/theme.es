@@ -164,6 +164,7 @@ export function loadStyle(
     const theme = config.get('poi.appearance.theme', 'dark')
     const isDark = theme === 'dark'
     if ('darwin' === process.platform) {
+      currentWindow.setBackgroundColor('#00000000')
       currentWindow.setVibrancy(value === 1 ? (isDark ? 'dark' : 'light') : null)
     } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
