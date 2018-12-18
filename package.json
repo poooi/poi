@@ -141,7 +141,7 @@
     "@commitlint/config-conventional": "^7.1.2",
     "asar": "^0.14.6",
     "babel-eslint": "^10.0.1",
-    "electron": "^4.0.0-beta.10",
+    "electron": "^4.0.0-beta.9",
     "electron-builder": "^20.38.3",
     "eslint": "^5.10.0",
     "eslint-config-prettier": "^3.3.0",
