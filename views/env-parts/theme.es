@@ -113,9 +113,7 @@ export function loadStyle(
         $('#bootstrap-css'),
         fileUrl(
           require.resolve(
-            `poi-asset-themes/dist/bootstrap/${isDark ? 'darklykai' : 'cosmo'}-${
-              isVibrant ? 'vibrant' : 'normal'
-            }.css`,
+            `poi-asset-themes/dist/bootstrap/${isDark ? 'darklykai' : 'cosmo'}-vibrant.css`,
           ),
         ),
       )
