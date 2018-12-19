@@ -39,6 +39,33 @@ export function loadStyle(
   FACSS.setAttribute('id', 'fontawesome')
   FACSS.setAttribute('href', fileUrl(FACSSPath))
 
+  const glass = document.createElement('div')
+  glass.id = 'bg-overlay'
+  glass.style.position = 'fixed'
+  glass.style.top = '-15px'
+  glass.style.left = '-15px'
+  glass.style.height = 'calc(100vh + 30px)'
+  glass.style.width = 'calc(100vw + 30px)'
+  glass.style.zIndex = -1
+  glass.style.backgroundRepeat = 'no-repeat'
+  glass.style.backgroundPosition = 'center center'
+  glass.style.backgroundSize = 'cover'
+  glass.style.color = '#000'
+  glass.style.display = 'none'
+
+  const div = document.createElement('div')
+  div.id = 'custom-bg'
+  ;(div.style.position = 'fixed'), (div.style.top = '-15px')
+  div.style.left = '-15px'
+  div.style.height = 'calc(100vh + 30px)'
+  div.style.width = 'calc(100vw + 30px)'
+  div.style.zIndex = -2
+  div.style.backgroundRepeat = 'no-repeat'
+  div.style.backgroundPosition = 'center center'
+  div.style.backgroundSize = 'cover'
+  div.style.backgroundColor = '#000'
+  div.style.display = 'none'
+
   const reloadCustomCss = () => {
     if (!$('#custom-css')) {
       return
@@ -102,6 +129,7 @@ export function loadStyle(
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
+    glass.style.backgroundColor = isDark ? 'rgba(32, 43, 51, 0.8)' : 'rgba(245, 248, 250, 0.8)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
       classNames('bp3-focus-disabled', {
@@ -198,34 +226,6 @@ export function loadStyle(
   currentWindow.on('closed', e => {
     config.removeListener('config.set', themeChangeHandler)
   })
-
-  const glass = document.createElement('div')
-  glass.id = 'bg-overlay'
-  glass.style.position = 'fixed'
-  glass.style.top = '-15px'
-  glass.style.left = '-15px'
-  glass.style.height = 'calc(100vh + 30px)'
-  glass.style.width = 'calc(100vw + 30px)'
-  glass.style.zIndex = -1
-  glass.style.backgroundRepeat = 'no-repeat'
-  glass.style.backgroundPosition = 'center center'
-  glass.style.backgroundSize = 'cover'
-  glass.style.backgroundColor = 'rgba(42,42,42,0.9)'
-  glass.style.color = '#000'
-  glass.style.display = 'none'
-
-  const div = document.createElement('div')
-  div.id = 'custom-bg'
-  ;(div.style.position = 'fixed'), (div.style.top = '-15px')
-  div.style.left = '-15px'
-  div.style.height = 'calc(100vh + 30px)'
-  div.style.width = 'calc(100vw + 30px)'
-  div.style.zIndex = -2
-  div.style.backgroundRepeat = 'no-repeat'
-  div.style.backgroundPosition = 'center center'
-  div.style.backgroundSize = 'cover'
-  div.style.backgroundColor = '#000'
-  div.style.display = 'none'
 
   const setBackground = p => {
     if (p) {
