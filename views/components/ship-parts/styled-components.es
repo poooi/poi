@@ -147,6 +147,7 @@ export const ShipBasic = styled.div`
   opacity: 0.8;
   padding-top: 0;
   vertical-align: bottom;
+  display: flex;
   ${({ show }) =>
     !show &&
     css`
@@ -168,6 +169,7 @@ export const ShipSubText = styled.div`
 export const ShipLabel = styled.span`
   margin-left: 5px;
   margin-right: 5px;
+  height: 1em;
   ${({ isTag }) =>
     isTag &&
     css`
