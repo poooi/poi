@@ -18,8 +18,8 @@ const isJervisKai = shipIdIs(394)
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 
-const isTaiyouKai = shipIdIs(380)
-const isTaiyouKaiNi = shipIdIs(529)
+const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])
+const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
 
 const isASWAircraft = equip =>
   // 対潜哨戒機 (e.g. 三式指揮連絡機(対潜))
@@ -88,7 +88,7 @@ export const isOASWWith = allCVEIds =>
     ),
     // 大鷹改 大鷹改二
     _.overEvery(
-      _.overSome(isTaiyouKai, isTaiyouKaiNi),
+      _.overSome(isTaiyouClassKai, isTaiyouClassKaiNi),
       overEquips(
         hasSome(
           _.overSome(
@@ -104,7 +104,7 @@ export const isOASWWith = allCVEIds =>
     ),
     // 護衛空母 (excluding 大鷹改 大鷹改二)
     _.overEvery(
-      s => !isTaiyouKai(s) && !isTaiyouKaiNi(s) && allCVEIds.includes(s.api_ship_id),
+      s => !isTaiyouClassKai(s) && !isTaiyouClassKaiNi(s) && allCVEIds.includes(s.api_ship_id),
       _.overSome(
         _.overEvery(
           taisenAbove(65),
