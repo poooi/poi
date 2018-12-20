@@ -392,7 +392,7 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier = 1.0, s
           equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 1.2
           break
         case 11:
-          equipSaku += $equip.api_saku * 1.1
+          equipSaku += ($equip.api_saku + 1.15 * Math.sqrt(_equip.api_level || 0)) * 1.1
           break
         case 12:
           equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
