@@ -134,7 +134,7 @@ const RelayMode = compose(
       <Wrapper>
         <FormGroup inline>
           <SwitchConfig
-            configName="config.proxy.allowLAN"
+            configName="proxy.allowLAN"
             defaultValue={false}
             label={t('Allow access from other machines on LAN or WAN')}
           />
