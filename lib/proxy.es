@@ -189,13 +189,8 @@ class Proxy extends EventEmitter {
     const urlPattern = url.parse(req.url)
 
     // Prepare request headers
-    if (req.headers['proxy-connection'] && !req.headers['connection']) {
-      req.headers['connection'] = req.headers['proxy-connection']
-      delete req.headers['proxy-connection']
-    } else if (!req.headers['connection']) {
-      req.headers['connection'] = 'close'
-    }
-    const keepAlive = req.headers['connection'] === 'keep-alive'
+    delete req.headers['proxy-connection']
+    req.headers['connection'] = 'close'
 
     // Update kancolle server info
     this.updateServerInfo(urlPattern)
@@ -223,7 +218,7 @@ class Proxy extends EventEmitter {
         const retryConfig = config.get('proxy.retries', 0)
         const retries = retryConfig < 0 ? 0 : retryConfig
         while (count <= retries) {
-          const reqOption = this.getRequestOption(urlPattern, req, keepAlive)
+          const reqOption = this.getRequestOption(urlPattern, req)
           const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
           if (error) {
             if (count >= retries || !isKancolleGameApi(urlPattern.pathname)) {
@@ -261,7 +256,7 @@ class Proxy extends EventEmitter {
       })
     })
 
-  getRequestOption = (urlPattern, req, keepAlive = false) => {
+  getRequestOption = (urlPattern, req) => {
     const options = {
       hostname: urlPattern.hostname || req.headers.host,
       port: urlPattern.port || req.port || 80,
@@ -280,7 +275,6 @@ class Proxy extends EventEmitter {
           this.socksAgents[uri] = new SocksHttpAgent({
             socksHost,
             socksPort,
-            keepAlive,
           })
         }
         options.agent = this.socksAgents[uri]
@@ -310,11 +304,6 @@ class Proxy extends EventEmitter {
         }
         options.agent = this.pacAgents[uri]
         break
-      }
-      default: {
-        options.agent = new Agent({
-          keepAlive,
-        })
       }
     }
     return options
@@ -412,12 +401,8 @@ class Proxy extends EventEmitter {
   }
 
   onConnect = (req, client, head) => {
-    if (req.headers['proxy-connection'] && !req.headers['connection']) {
-      req.headers['connection'] = req.headers['proxy-connection']
-      delete req.headers['proxy-connection']
-    } else if (!req.headers['connection']) {
-      req.headers['connection'] = 'close'
-    }
+    delete req.headers['proxy-connection']
+    req.headers['connection'] = 'close'
     const remoteUrl = url.parse(`https://${req.url}`)
     let remote = null
     switch (config.get('proxy.use')) {
