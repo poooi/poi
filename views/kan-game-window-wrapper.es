@@ -10,6 +10,7 @@ import { KanGameWrapper } from './kan-game-wrapper'
 import { debounce } from 'lodash'
 import styled, { StyleSheetManager } from 'styled-components'
 import { loadStyle } from './env-parts/theme'
+import { appMenu } from 'views/components/etc/menu'
 
 const pickOptions = [
   'ROOT',
@@ -241,6 +242,10 @@ export class KanGameWindowWrapper extends PureComponent {
         div.style['-webkit-app-region'] = 'drag'
         div.style['pointer-events'] = 'none'
         this.externalWindow.document.body.appendChild(div)
+      } else {
+        this.currentWindow.setMenu(appMenu)
+        this.currentWindow.setAutoHideMenuBar(true)
+        this.currentWindow.setMenuBarVisibility(false)
       }
       this.externalWindow.document.body.appendChild(this.containerEl)
       this.externalWindow.document.title = 'poi'
