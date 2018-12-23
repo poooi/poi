@@ -104,7 +104,7 @@ export const Slotitems = compose(
             <SlotItemContainer
               className={classNames('slotitem-container', {
                 'with-onslot': showOnslot,
-                'without-onsolot': !showOnslot,
+                'without-onslot': !showOnslot,
               })}
               data-onslot={onslotText}
               showOnslot={showOnslot}
