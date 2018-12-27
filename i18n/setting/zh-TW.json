@@ -145,7 +145,6 @@
   "Safe Mode": "安全模式",
   "poi is running in safe mode, plugins are not enabled automatically": "poi 運行在安全模式下，擴展程式沒有自動啓用。",
   "Enter safe mode on next startup": "下次啓動進入安全模式",
-  "Display tray icon": "顯示托盤圖標",
   "Send data to Google Analytics": "向 Google Analytics 傳送統計資料",
   "Current version": "現在版本",
   "Check update of beta version": "檢查測試版更新",
