@@ -185,6 +185,7 @@ const SHIP_PROPS_TO_PICK = [
 
 const ShipTooltip = styled.div`
   font-size: 13px;
+  white-space: nowrap;
 
   .material-icon {
     margin-right: auto;

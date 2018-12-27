@@ -178,7 +178,7 @@ export const LandbaseSlotitems = compose(
         return (
           <Tooltip
             disabled={!itemOverlay || !equipData}
-            position={Position.LEFT}
+            position={Position.BOTTOM}
             content={itemOverlay}
             key={equipIdx}
           >

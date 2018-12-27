@@ -252,7 +252,4 @@ export const POPOVER_MODIFIERS = {
   preventOverflow: {
     boundariesElement: 'window', // enable display tooltip within small containers
   },
-  flip: {
-    behavior: ['clockwise', 'counterclockwise', 'flip'],
-  },
 }
