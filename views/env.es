@@ -23,7 +23,7 @@ window.PLUGIN_PATH = path.join(window.APPDATA_PATH, 'plugins')
 window.POI_VERSION = remote.getGlobal('POI_VERSION')
 window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME')
 window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
-window.appIcon = remote.getGlobal('appIcon')
+window.appTray = remote.getGlobal('appTray')
 window.isSafeMode = remote.getGlobal('isSafeMode')
 window.isDevVersion = remote.getGlobal('isDevVersion')
 

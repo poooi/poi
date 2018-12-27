@@ -39,6 +39,7 @@ const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
+require('./lib/tray')
 
 // Disable HA
 if (config.get('poi.misc.disablehwaccel', false)) {
@@ -210,18 +211,6 @@ app.on('ready', () => {
     require('./lib/window').closeWindows()
     mainWindow = null
   })
-
-  // Tray icon
-  if (process.platform === 'win32' || process.platform === 'linux') {
-    global.appIcon = appIcon = new Tray(poiIconPath)
-    appIcon.on('click', () => {
-      if (mainWindow.isMinimized()) {
-        mainWindow.restore()
-      } else {
-        mainWindow.show()
-      }
-    })
-  }
 
   // devtool
   if (dbg.isEnabled() && config.get('poi.devtool.enable', false)) {
