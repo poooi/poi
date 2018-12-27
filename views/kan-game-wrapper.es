@@ -50,6 +50,10 @@ const KanGame = styled(CustomTag)`
     top: 0;
     width: 100%;
   }
+
+  .bp3-toast-container {
+    overflow: hidden !important;
+  }
 `
 
 @connect(state => ({
