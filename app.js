@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const path = require('path-extra')
 
 // Environment
@@ -39,6 +39,7 @@ const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
+require('./lib/tray')
 
 // Disable HA
 if (config.get('poi.misc.disablehwaccel', false)) {
@@ -92,7 +93,7 @@ if (dbg.isEnabled()) {
 
 require('./lib/flash')
 
-let mainWindow, appIcon
+let mainWindow
 global.mainWindow = mainWindow = null
 
 // Set FPS limit
@@ -210,18 +211,6 @@ app.on('ready', () => {
     require('./lib/window').closeWindows()
     mainWindow = null
   })
-
-  // Tray icon
-  if (process.platform === 'win32' || process.platform === 'linux') {
-    global.appIcon = appIcon = new Tray(poiIconPath)
-    appIcon.on('click', () => {
-      if (mainWindow.isMinimized()) {
-        mainWindow.restore()
-      } else {
-        mainWindow.show()
-      }
-    })
-  }
 
   // devtool
   if (dbg.isEnabled() && config.get('poi.devtool.enable', false)) {

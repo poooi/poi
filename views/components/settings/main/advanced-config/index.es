@@ -39,12 +39,6 @@ const SWITCHES = [
     platform: ['win32'],
   },
   {
-    label: 'Display tray icon',
-    configName: 'poi.linuxTrayIcon',
-    defaultValue: true,
-    platform: ['linux'],
-  },
-  {
     label: 'Enter safe mode on next startup',
     configName: 'poi.misc.safemode',
     defaultValue: false,
