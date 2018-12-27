@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, nativeImage, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const path = require('path-extra')
 
 // Environment
@@ -93,7 +93,7 @@ if (dbg.isEnabled()) {
 
 require('./lib/flash')
 
-let mainWindow, appIcon
+let mainWindow
 global.mainWindow = mainWindow = null
 
 // Set FPS limit
