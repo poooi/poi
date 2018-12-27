@@ -54,11 +54,11 @@ const EmptyDock = ({ state }) => (
   </EmptyDockWrapper>
 )
 
-const getPanelDimension = width => {
-  if (width > 500) {
+const getPanelDimension = (width, enableAvatar) => {
+  if (width > (enableAvatar ? 640 : 480)) {
     return 4
   }
-  if (width > 210) {
+  if (width > (enableAvatar ? 320 : 240)) {
     return 2
   }
   return 1
@@ -103,17 +103,30 @@ export class RepairPanel extends Component {
     preemptTime: 60,
   }
 
+  width = 250
+
   state = {
     dimension: 2,
   }
 
-  handleResize = ([entry]) => {
-    const dimension = getPanelDimension(entry.contentRect.width)
+  updateDimension = () => {
+    const dimension = getPanelDimension(this.width, this.props.enableAvatar)
 
     if (dimension !== this.state.dimension) {
       this.setState({
         dimension,
       })
+    }
+  }
+
+  handleResize = ([entry]) => {
+    this.width = entry.contentRect.width
+    this.updateDimension()
+  }
+
+  componentDidUpdate = prevProps => {
+    if (prevProps.enableAvatar !== this.props.enableAvatar) {
+      this.updateDimension()
     }
   }
 
