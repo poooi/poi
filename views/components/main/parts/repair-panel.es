@@ -54,11 +54,11 @@ const EmptyDock = ({ state }) => (
   </EmptyDockWrapper>
 )
 
-const getPanelDimension = (width, enableAvatar) => {
-  if (width > (enableAvatar ? 640 : 480)) {
+const getPanelDimension = width => {
+  if (width > 480) {
     return 4
   }
-  if (width > (enableAvatar ? 320 : 240)) {
+  if (width > 240) {
     return 2
   }
   return 1
@@ -107,14 +107,17 @@ export class RepairPanel extends Component {
 
   state = {
     dimension: 2,
+    displayShipName: true,
   }
 
   updateDimension = () => {
-    const dimension = getPanelDimension(this.width, this.props.enableAvatar)
+    const dimension = getPanelDimension(this.width)
+    const displayShipName = !this.props.enableAvatar || this.width / dimension >= 130
 
     if (dimension !== this.state.dimension) {
       this.setState({
         dimension,
+        displayShipName,
       })
     }
   }
@@ -132,7 +135,7 @@ export class RepairPanel extends Component {
 
   render() {
     const { canNotify, repairs, $ships, inRepairShips, enableAvatar, editable } = this.props
-    const { dimension } = this.state
+    const { dimension, displayShipName } = this.state
     // The reason why we use an array to pass in inRepairShips and indexify it
     // into ships, is because by passing an array we can make use of
     // createDeepCompareArraySelector which only deep compares arrays, and
@@ -159,9 +162,11 @@ export class RepairPanel extends Component {
                   ? this.props.t('main:Locked')
                   : dock.api_state == 0
                   ? this.props.t('main:Empty')
-                  : this.props.t(
+                  : displayShipName
+                  ? this.props.t(
                       `resources:${$ships[ships[dock.api_ship_id].api_ship_id].api_name}`,
                     )
+                  : ''
               const completeTime = dock.api_complete_time || -1
               let hpPercentage
               if (dock.api_state > 0) {
@@ -190,7 +195,6 @@ export class RepairPanel extends Component {
                       </>
                     )}
                     <DockName className="ndock-name">{dockName}</DockName>
-
                     <Tooltip
                       position={Position.LEFT}
                       disabled={dock.api_state < 0}

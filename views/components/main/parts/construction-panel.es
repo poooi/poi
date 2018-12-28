@@ -27,11 +27,11 @@ const EmptyDock = ({ state }) => (
   </EmptyDockWrapper>
 )
 
-const getPanelDimension = (width, enableAvatar) => {
-  if (width > (enableAvatar ? 640 : 480)) {
+const getPanelDimension = width => {
+  if (width > 480) {
     return 4
   }
-  if (width > (enableAvatar ? 320 : 240)) {
+  if (width > 240) {
     return 2
   }
   return 1
@@ -71,21 +71,24 @@ export class ConstructionPanel extends Component {
 
   state = {
     dimension: 2,
+    displayShipName: true,
+  }
+
+  updateDimension = () => {
+    const dimension = getPanelDimension(this.width)
+    const displayShipName = !this.props.enableAvatar || this.width / dimension >= 130
+
+    if (dimension !== this.state.dimension) {
+      this.setState({
+        dimension,
+        displayShipName,
+      })
+    }
   }
 
   getDockShipName = (dockId, defaultValue) => {
     const id = get(this.props.constructions, [dockId, 'api_created_ship_id'])
     return id ? this.props.t(`resources:${this.props.$ships[id].api_name}`) : defaultValue
-  }
-
-  updateDimension = () => {
-    const dimension = getPanelDimension(this.width, this.props.enableAvatar)
-
-    if (dimension !== this.state.dimension) {
-      this.setState({
-        dimension,
-      })
-    }
   }
 
   handleResize = ([entry]) => {
@@ -101,7 +104,7 @@ export class ConstructionPanel extends Component {
 
   render() {
     const { constructions, canNotify, enableAvatar, editable } = this.props
-    const { dimension } = this.state
+    const { dimension, displayShipName } = this.state
     return (
       <ResizeSensor onResize={this.handleResize}>
         <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
@@ -115,7 +118,9 @@ export class ConstructionPanel extends Component {
                   ? this.props.t('main:Locked')
                   : dock.api_state == 0
                   ? this.props.t('main:Empty')
-                  : this.getDockShipName(i, '???')
+                  : displayShipName
+                  ? this.getDockShipName(i, '???')
+                  : ''
               const completeTime = isInUse ? dock.api_complete_time : -1
               const tooltipTitleClassname = isLSC
                 ? { color: '#D9534F', fontWeight: 'bold' }
