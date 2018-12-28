@@ -38,7 +38,7 @@ export const DockName = styled.span`
   margin-right: auto;
   overflow: hidden;
   padding-right: 10px;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 `
 

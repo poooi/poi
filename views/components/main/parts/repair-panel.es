@@ -112,7 +112,7 @@ export class RepairPanel extends Component {
 
   updateDimension = () => {
     const dimension = getPanelDimension(this.width)
-    const displayShipName = !this.props.enableAvatar || this.width / dimension >= 130
+    const displayShipName = !this.props.enableAvatar || this.width / dimension >= 145
 
     if (dimension !== this.state.dimension || displayShipName !== this.state.displayShipName) {
       this.setState({
