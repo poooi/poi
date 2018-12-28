@@ -78,7 +78,7 @@ export class ConstructionPanel extends Component {
     const dimension = getPanelDimension(this.width)
     const displayShipName = !this.props.enableAvatar || this.width / dimension >= 130
 
-    if (dimension !== this.state.dimension) {
+    if (dimension !== this.state.dimension || displayShipName !== this.state.displayShipName) {
       this.setState({
         dimension,
         displayShipName,
