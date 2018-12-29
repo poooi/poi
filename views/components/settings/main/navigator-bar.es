@@ -131,9 +131,11 @@ export class NavigatorBar extends React.Component {
   }
 
   onChangeUrl = e => {
-    this.setState({
-      url: e.target.value || this.state.url,
-    })
+    if (typeof e.currentTarget.value === 'string') {
+      this.setState({
+        url: e.currentTarget.value,
+      })
+    }
   }
 
   onKeydown = e => {
