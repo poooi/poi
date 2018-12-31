@@ -44,7 +44,6 @@ export default {
       windowsIndex[options.indexName] = current
     }
     current.setMenu(options.menu || null)
-    current.reloadArea = null
     const show = current.show
     current.show = () => {
       if (current.isMinimized()) {

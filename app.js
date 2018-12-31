@@ -179,7 +179,6 @@ app.on('ready', () => {
     backgroundColor: '#00000000',
   })
   // Default menu
-  mainWindow.reloadArea = 'kan-game webview'
   if (process.platform === 'darwin') {
     const { renderMainTouchbar } = require('./lib/touchbar')
     renderMainTouchbar()

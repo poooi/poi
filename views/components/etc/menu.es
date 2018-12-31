@@ -1,4 +1,4 @@
-/* global config */
+/* global config, getStore */
 import React, { PureComponent } from 'react'
 import { remote, shell } from 'electron'
 import { TitleBar } from 'electron-react-titlebar'
@@ -10,13 +10,6 @@ import themes from 'assets/data/theme.json'
 
 const { Menu } = remote.require('electron')
 const { openExternal } = shell
-
-const exeCodeOnWindowHasReloadArea = (win, f) => {
-  if ((win || {}).reloadArea) {
-    const code = `$('${win.reloadArea}').${f}`
-    win.webContents.executeJavaScript(code)
-  }
-}
 
 const resetViews = () => {
   const { availWidth, availHeight, availTop, availLeft } = window.screen
@@ -107,14 +100,14 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Reload'),
           accelerator: 'Ctrl+R',
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
+            getStore('layout.webview.ref').reload()
           },
         },
         {
           label: i18next.t('menu:Stop'),
           accelerator: 'Ctrl+.',
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
+            getStore('layout.webview.ref').stop()
           },
         },
         {
@@ -127,10 +120,7 @@ if (process.platform !== 'darwin') {
         {
           label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(
-              remote.getGlobal('mainWindow'),
-              'openDevTools({mode: "detach"})',
-            )
+            getStore('layout.webview.ref').openDevTools({ mode: 'detach' })
           },
         },
       ],
@@ -308,14 +298,14 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Reload'),
           accelerator: 'CmdOrCtrl+R',
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(focusedWindow, 'reload()')
+            getStore('layout.webview.ref').reload()
           },
         },
         {
           label: i18next.t('menu:Stop'),
           accelerator: 'CmdOrCtrl+.',
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(focusedWindow, 'stop()')
+            getStore('layout.webview.ref').stop()
           },
         },
         { type: 'separator' },
@@ -329,7 +319,7 @@ if (process.platform !== 'darwin') {
         {
           label: i18next.t('menu:Developer Tools of WebView'),
           click: (item, focusedWindow) => {
-            exeCodeOnWindowHasReloadArea(focusedWindow, 'openDevTools({mode: "detach"})')
+            getStore('layout.webview.ref').openDevTools({ mode: 'detach' })
           },
         },
       ],
