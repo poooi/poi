@@ -22,15 +22,6 @@ const poiIconPath = path.join(
   process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico',
 )
 
-// high sierra and above
-const isModernMacOS =
-  process.platform === 'darwin' &&
-  Number(
-    require('os')
-      .release()
-      .split('.')[0],
-  ) >= 17
-
 require('./lib/module-path').setAllowedPath([global.ROOT, global.APPDATA_PATH])
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
@@ -160,8 +151,8 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
-    titleBarStyle: isModernMacOS ? 'hiddenInset' : null,
-    transparent: isModernMacOS,
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : null,
+    transparent: process.platform === 'darwin',
     frame: !config.get(
       'poi.appearance.customtitlebar',
       process.platform === 'win32' || process.platform === 'linux',
