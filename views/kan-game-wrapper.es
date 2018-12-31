@@ -7,7 +7,6 @@ import { get, debounce } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
 import styled from 'styled-components'
-import { ResizeSensor } from '@blueprintjs/core'
 
 import { PoiAlert } from './components/info/alert'
 import { PoiToast } from './components/info/toast'
@@ -18,6 +17,7 @@ import { CustomTag } from 'views/components/etc/custom-tag'
 import { getRealSize, getYOffset } from 'views/services/utils'
 
 const config = remote.require('./lib/config')
+const ipc = remote.require('./lib/ipc')
 const poiControlHeight = 30
 const ua = remote
   .getCurrentWebContents()
@@ -113,35 +113,41 @@ export class KanGameWrapper extends Component {
             },
           },
         })
-        this.setProperWindowSize()
+        this.setProperWindowSize(width, height)
+        ipc.register('WebView', {
+          width,
+        })
+        this.alignWebview()
       }
     })
   }
 
-  setProperWindowSize = () => {
-    if (config.get('poi.layout.overlay', false) || config.get('poi.layout.isolate', false)) {
-      return
-    }
-    const current = remote.getCurrentWindow()
-    // Dont set size on maximized
-    if (current.isMaximized() || current.isFullScreen()) {
-      return
-    }
-    // Resize when window size smaller than webview size
-    const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
-    const layout = config.get('poi.layout.mode', 'horizontal')
-    const realWidth = getRealSize(webviewWidth)
-    const realHeight = getRealSize(webviewHeight + getYOffset())
-    if (layout === 'vertical' && realWidth > getRealSize(window.innerWidth)) {
-      let [width, height] = current.getContentSize()
-      width = realWidth
-      current.setContentSize(width, height)
-    }
+  resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
 
-    if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
-      let [width, height] = current.getContentSize()
-      height = realHeight
-      current.setContentSize(width, height)
+  setProperWindowSize = (webviewWidth, webviewHeight) => {
+    const current = remote.getCurrentWindow()
+    if (!config.get('poi.layout.overlay', false) && !config.get('poi.layout.isolate', false)) {
+      current.setMinimumSize(getRealSize(webviewWidth), getRealSize(webviewHeight + getYOffset()))
+      // Dont set size on maximized
+      if (current.isMaximized() || current.isFullScreen()) {
+        return
+      }
+      const layout = config.get('poi.layout.mode', 'horizontal')
+      const realWidth = getRealSize(webviewWidth)
+      const realHeight = getRealSize(webviewHeight + getYOffset())
+      if (layout === 'vertical' && realWidth > getRealSize(window.innerWidth)) {
+        let [width, height] = current.getContentSize()
+        width = realWidth
+        current.setContentSize(width, height)
+      }
+
+      if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
+        let [width, height] = current.getContentSize()
+        height = realHeight
+        current.setContentSize(width, height)
+      }
+    } else {
+      current.setMinimumSize(1, 1)
     }
   }
 
@@ -164,7 +170,11 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-    window.addEventListener('resize', this.alignWebviewDebounced)
+    this.resizeObserver.observe(this.webview.current.view)
+    this.setProperWindowSize(
+      Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
+      Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
+    )
   }
 
   handleWebviewUnmount = () => {
@@ -175,11 +185,7 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-    window.removeEventListener('resize', this.alignWebviewDebounced)
-  }
-
-  componentDidMount = () => {
-    this.alignWebviewDebounced = debounce(this.alignWebview, 200)
+    this.resizeObserver.unobserve(this.webview.current.view)
   }
 
   componentWillUnmount = () => {
@@ -214,30 +220,28 @@ export class KanGameWrapper extends Component {
     if (this.props.windowMode) {
       return (
         <KanGame tag="kan-game">
-          <ResizeSensor onResize={this.handleResize}>
-            <div id="webview-wrapper" className="webview-wrapper">
-              <WebView
-                className="kancolle-webview"
-                src={this.state.url}
-                key={this.state.key}
-                ref={this.webview}
-                plugins
-                disablewebsecurity
-                webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
-                preload={preloadUrl}
-                style={{
-                  width: '100%',
-                  paddingTop: '60%',
-                  position: 'relative',
-                }}
-                muted={muted}
-                useragent={ua}
-                onDidAttach={this.handleWebviewMount}
-                onDestroyed={this.handleWebviewDestroyed}
-              />
-              <PoiToast />
-            </div>
-          </ResizeSensor>
+          <div id="webview-wrapper" className="webview-wrapper">
+            <WebView
+              className="kancolle-webview"
+              src={this.state.url}
+              key={this.state.key}
+              ref={this.webview}
+              plugins
+              disablewebsecurity
+              webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+              preload={preloadUrl}
+              style={{
+                width: '100%',
+                paddingTop: '60%',
+                position: 'relative',
+              }}
+              muted={muted}
+              useragent={ua}
+              onDidAttach={this.handleWebviewMount}
+              onDestroyed={this.handleWebviewDestroyed}
+            />
+            <PoiToast />
+          </div>
           <PoiInfo tag="poi-info">
             <PoiControl weview={this.webview} />
             <PoiAlert />
@@ -361,37 +365,35 @@ export class KanGameWrapper extends Component {
           ref={r => (this.resizableArea = r)}
         >
           <KanGame tag="kan-game">
-            <ResizeSensor onResize={this.handleResize}>
-              <div
-                id="webview-wrapper"
-                className="webview-wrapper"
+            <div
+              id="webview-wrapper"
+              className="webview-wrapper"
+              style={{
+                width: overlayPanel ? '100%' : webviewWidth,
+              }}
+            >
+              <WebView
+                className="kancolle-webview"
+                src={this.state.url}
+                key={this.state.key}
+                ref={this.webview}
+                plugins
+                disablewebsecurity
+                webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+                preload={preloadUrl}
                 style={{
-                  width: overlayPanel ? '100%' : webviewWidth,
+                  width: '100%',
+                  paddingTop: '60%',
+                  position: 'relative',
+                  display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
                 }}
-              >
-                <WebView
-                  className="kancolle-webview"
-                  src={this.state.url}
-                  key={this.state.key}
-                  ref={this.webview}
-                  plugins
-                  disablewebsecurity
-                  webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
-                  preload={preloadUrl}
-                  style={{
-                    width: '100%',
-                    paddingTop: '60%',
-                    position: 'relative',
-                    display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
-                  }}
-                  useragent={ua}
-                  muted={muted}
-                  onDidAttach={this.handleWebviewMount}
-                  onDestroyed={this.handleWebviewDestroyed}
-                />
-                <PoiToast />
-              </div>
-            </ResizeSensor>
+                useragent={ua}
+                muted={muted}
+                onDidAttach={this.handleWebviewMount}
+                onDestroyed={this.handleWebviewDestroyed}
+              />
+              <PoiToast />
+            </div>
             <PoiInfo tag="poi-info">
               <PoiControl weview={this.webview} />
               <PoiAlert />

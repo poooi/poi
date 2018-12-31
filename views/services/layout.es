@@ -13,7 +13,6 @@ const additionalStyle = document.createElement('style')
 
 remote.getCurrentWindow().webContents.on('dom-ready', e => {
   document.head.appendChild(additionalStyle)
-  setMinSize()
 })
 
 const setCSS = () => {
@@ -32,19 +31,6 @@ const setCSS = () => {
 }
 
 const setCSSDebounced = debounce(setCSS, 200)
-
-const setMinSize = () => {
-  if (
-    config.get('poi.layout.isolate', false) ||
-    !$('poi-info') ||
-    config.get('poi.layout.overlay', false)
-  ) {
-    remote.getCurrentWindow().setMinimumSize(1, 1)
-  } else {
-    const { width, height } = getStore('layout.webview')
-    remote.getCurrentWindow().setMinimumSize(getRealSize(width), getRealSize(height + getYOffset()))
-  }
-}
 
 const setIsolatedMainWindowSize = isolateWindow => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
@@ -129,7 +115,6 @@ const setOverlayPanelWindowSize = overlayPanel => {
     }
     remote.getCurrentWindow().setAspectRatio(0)
   }
-  setMinSize()
   remote.getCurrentWindow().setContentBounds(bounds)
 }
 
@@ -159,7 +144,6 @@ const adjustSize = () => {
       type: '@@LayoutUpdate/webview/useFixedResolution',
       value: getStore('config.poi.webview.useFixedResolution', true),
     })
-    setMinSize()
     handleOverlayPanelReszieDebounced()
   } catch (error) {
     console.error(error)
@@ -223,7 +207,6 @@ config.on('config.set', (path, value) => {
     }
     case 'poi.layout.isolate': {
       setIsolatedMainWindowSize(value)
-      setMinSize()
       break
     }
     case 'poi.layout.overlay': {
