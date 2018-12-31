@@ -64,23 +64,30 @@ export class PoiControl extends Component {
   }
 
   handleCapturePage = toClipboard => {
-    getStore('layout.webview.ref').executeJavaScript(`(function() {
-      const canvas = document.querySelector('#game_frame') ? document.querySelector('#game_frame').contentDocument.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
-        : document.querySelector('#htmlWrap') ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
-          : document.querySelector('canvas') ? document.querySelector('canvas') : null
-      if (!canvas || !ImageCapture) return false
-      new ImageCapture(canvas.captureStream(0).getVideoTracks()[0]).grabFrame().then((imageBitmap) => {
-        const tempCanvas = document.createElement('canvas')
-        tempCanvas.width = imageBitmap.width
-        tempCanvas.height = imageBitmap.height
-        tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
-        return tempCanvas.toDataURL()
-      }).then(dataURL => {
-        const ss = ipc.access('screenshot');
-        if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({dataURL, toClipboard: ${!!toClipboard}})
-        return true
-      }).catch(() => false)
-    })()`)
+    getStore('layout.webview.ref')
+      .getWebContents()
+      .executeJavaScript(`capture(${!!toClipboard})`)
+      .then(success => {
+        if (!success) {
+          const { width, height } = getStore('layout.webview')
+          const rect = {
+            x: 0,
+            y: 0,
+            width: Math.floor(width * devicePixelRatio),
+            height: Math.floor(height * devicePixelRatio),
+          }
+          getStore('layout.webview.ref')
+            .getWebContents()
+            .capturePage(rect, image => {
+              this.handleScreenshotCaptured({
+                dataURL: image
+                  .resize({ width: Math.floor(width), height: Math.floor(height) })
+                  .toDataURL(),
+                toClipboard,
+              })
+            })
+        }
+      })
   }
   handleScreenshotCaptured = ({ dataURL, toClipboard }) => {
     const screenshotPath = config.get(

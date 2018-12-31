@@ -130,6 +130,35 @@ window.unalign = () => {
   }
 }
 
+window.capture = async function(toClipboard) {
+  const canvas = document.querySelector('#game_frame')
+    ? document
+        .querySelector('#game_frame')
+        .contentDocument.querySelector('#htmlWrap')
+        .contentDocument.querySelector('canvas')
+    : document.querySelector('#htmlWrap')
+    ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
+    : document.querySelector('canvas')
+    ? document.querySelector('canvas')
+    : null
+  if (!canvas || !ImageCapture) return false
+  return await new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
+    .grabFrame()
+    .then(imageBitmap => {
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = imageBitmap.width
+      tempCanvas.height = imageBitmap.height
+      tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
+      return tempCanvas.toDataURL()
+    })
+    .then(dataURL => {
+      const ss = window.ipc.access('screenshot')
+      if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({ dataURL, toClipboard })
+      return true
+    })
+    .catch(() => false)
+}
+
 // ref for item purchase css insertion
 const webContent = remote.getCurrentWebContents()
 
