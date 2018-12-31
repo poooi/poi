@@ -38,6 +38,7 @@ require('./services/alert')
 // configure Popover (including Tooltip)
 // ATTENTION default props will be overriden by providing props
 Popover.defaultProps.modifiers = POPOVER_MODIFIERS
+Popover.defaultProps.boundary = 'viewport'
 
 @connect(state => ({
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
