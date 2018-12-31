@@ -107,7 +107,7 @@ const resolveProxyUrl = () => {
     case 'socks5': {
       const host = config.get('proxy.socks5.host', '127.0.0.1')
       const port = config.get('proxy.socks5.port', 1080)
-      return `socks5://${host}:${port}`
+      return `socks5://${host}:${port},direct://`
     }
     case 'http': {
       const host = config.get('proxy.http.host', '127.0.0.1')
@@ -117,7 +117,7 @@ const resolveProxyUrl = () => {
       const password = config.get('proxy.http.password', '')
       const useAuth = requirePassword && username !== '' && password !== ''
       const strAuth = `${username}:${password}@`
-      return `http://${useAuth ? strAuth : ''}${host}:${port}`
+      return `http://${useAuth ? strAuth : ''}${host}:${port},direct://`
     }
     default:
       return 'direct://'
@@ -158,10 +158,10 @@ class Proxy extends EventEmitter {
 
   setProxy = () => {
     const httpsProxy = resolveProxyUrl()
-    const httpProxy = `http://127.0.0.1:${this.port}`
+    const httpProxy = `http://127.0.0.1:${this.port},direct://`
     session.defaultSession.setProxy(
       {
-        proxyRules: `http=${httpProxy},direct://;https=${httpsProxy},direct://`,
+        proxyRules: `http=${httpProxy};https=${httpsProxy}`,
         proxyBypassRules: '<local>;*.google-analytics.com;*.doubleclick.net',
       },
       () => log(`Proxy listening on ${this.port}, upstream proxy ${httpsProxy}`),
