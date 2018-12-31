@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 import url from 'url'
-import http, { Agent } from 'http'
+import http from 'http'
 import path from 'path'
 import querystring from 'querystring'
 import mime from 'mime'
