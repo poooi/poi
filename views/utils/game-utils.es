@@ -47,7 +47,7 @@ export function getMaterialStyle(percent) {
   else return 'green'
 }
 
-export function getCondStyle(cond) {
+export function getCondStyle(cond, withoutPseudo = false) {
   let s = 'poi-ship-cond poi-ship-cond-'
   if (cond > 52) s += '53'
   else if (cond > 49) s += '50'
@@ -57,6 +57,7 @@ export function getCondStyle(cond) {
   else if (cond > 19) s += '20'
   else s += '0'
   s += window.isDarkTheme ? ' dark' : ' light'
+  s += withoutPseudo ? ' no-pseudo' : ''
   return s
 }
 

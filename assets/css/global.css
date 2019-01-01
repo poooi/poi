@@ -83,6 +83,14 @@ button {
   position: relative;
 }
 
+.poi-ship-cond.no-pseudo {
+  margin-right: 0;
+}
+
+.poi-ship-cond.no-pseudo::after {
+  display: none;
+}
+
 .poi-ship-cond::after {
   height: 1em;
   width: 0.7em;
