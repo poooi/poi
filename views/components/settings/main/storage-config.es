@@ -1,4 +1,4 @@
-/* global toggleModal, APPDATA_PATH */
+/* global toggleModal, config, APPDATA_PATH */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { remote } from 'electron'
@@ -48,6 +48,10 @@ export class StorageConfig extends Component {
     remote.getCurrentWebContents().session.clearCache(() => {
       toggleModal(this.props.t('setting:Delete cache'), this.props.t('setting:Success!'))
     })
+  }
+
+  handleRevokeCert = e => {
+    config.set('poi.misc.trustedCert', [])
   }
 
   handleUpdateCacheSize = () => {
@@ -100,6 +104,9 @@ export class StorageConfig extends Component {
                 </Button>
                 <Button minimal intent={Intent.WARNING} onClick={this.handleClearCache}>
                   {t('setting:Delete cache')}
+                </Button>
+                <Button minimal intent={Intent.WARNING} onClick={this.handleRevokeCert}>
+                  {t('setting:Revoke trusted certificate')}
                 </Button>
                 <Callout>
                   {t('setting:If connection error occurs frequently, delete both of them')}

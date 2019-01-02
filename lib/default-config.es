@@ -20,6 +20,7 @@ const defaultConfig = {
       cache: {
         path: global.DEFAULT_CACHE_PATH,
       },
+      trustedCert: [],
     },
     content: {
       resizable: true,
