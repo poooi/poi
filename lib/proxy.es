@@ -150,8 +150,6 @@ class Proxy extends EventEmitter {
             this.setProxy()
           }
         })
-        app.commandLine.appendSwitch('ignore-certificate-errors')
-        app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1')
       },
     )
   }
