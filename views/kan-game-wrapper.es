@@ -128,7 +128,7 @@ export class KanGameWrapper extends Component {
   resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
 
   handleCertError = (event, url, error, certificate, callback) => {
-    const trusted = config.get('poi.misc.trustedCert', [])
+    const trusted = config.get('poi.misc.trustedCerts', [])
     const hash = createHash('sha256')
       .update(certificate.data)
       .digest('base64')
@@ -145,7 +145,7 @@ export class KanGameWrapper extends Component {
       const footer = [
         {
           name: i18next.t('others:Trust'),
-          func: () => this.setTrustedCert(hash),
+          func: () => this.settrustedCerts(hash),
           style: 'warning',
         },
       ]
@@ -153,10 +153,10 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  setTrustedCert = hash => {
-    const trusted = config.get('poi.misc.trustedCert', [])
+  settrustedCerts = hash => {
+    const trusted = config.get('poi.misc.trustedCerts', [])
     trusted.push(hash)
-    config.set('poi.misc.trustedCert', trusted)
+    config.set('poi.misc.trustedCerts', trusted)
     this.webview.current.view.reload()
   }
 

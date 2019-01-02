@@ -223,7 +223,7 @@ ipcMain.on('refresh-shortcut', () => {
 
 const { createHash } = require('crypto')
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  const trusted = config.get('poi.misc.trustedCert', [])
+  const trusted = config.get('poi.misc.trustedCerts', [])
   const hash = createHash('sha256')
     .update(certificate.data)
     .digest('base64')

@@ -51,7 +51,7 @@ export class StorageConfig extends Component {
   }
 
   handleRevokeCert = e => {
-    config.set('poi.misc.trustedCert', [])
+    config.set('poi.misc.trustedCerts', [])
   }
 
   handleUpdateCacheSize = () => {
