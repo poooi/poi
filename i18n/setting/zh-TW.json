@@ -40,7 +40,7 @@
   "Maximum cache size": "最大快取大小",
   "Delete cookies": "刪除 Cookies",
   "Delete cache": "刪除快取",
-  "Revoke trusted certificate": "移除信任證書",
+  "Revoke trusted certificates": "移除信任證書",
   "Success!": "刪除成功。",
   "Edit custom CSS": "編輯自訂 CSS",
   "NoPermission": "開啟失敗，可能沒有建立檔案的權限",

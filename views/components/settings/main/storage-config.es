@@ -106,7 +106,7 @@ export class StorageConfig extends Component {
                   {t('setting:Delete cache')}
                 </Button>
                 <Button minimal intent={Intent.WARNING} onClick={this.handleRevokeCert}>
-                  {t('setting:Revoke trusted certificate')}
+                  {t('setting:Revoke trusted certificates')}
                 </Button>
                 <Callout>
                   {t('setting:If connection error occurs frequently, delete both of them')}
