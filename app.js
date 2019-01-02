@@ -221,6 +221,18 @@ ipcMain.on('refresh-shortcut', () => {
   shortcut.register()
 })
 
+const { createHash } = require('crypto')
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+  const trusted = config.get('poi.misc.trustedCert', [])
+  const hash = createHash('sha256')
+    .update(certificate.data)
+    .digest('base64')
+  if (trusted.includes(hash)) {
+    event.preventDefault()
+    callback(true)
+  }
+})
+
 // Uncaught error
 process.on('uncaughtException', e => {
   error(e.stack)

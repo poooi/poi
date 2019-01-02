@@ -1,4 +1,4 @@
-/* global getStore */
+/* global getStore, toggleModal */
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
@@ -7,6 +7,8 @@ import { get, debounce } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
 import styled from 'styled-components'
+import { createHash } from 'crypto'
+import ReactMarkdown from 'react-remarkable'
 
 import { PoiAlert } from './components/info/alert'
 import { PoiToast } from './components/info/toast'
@@ -15,6 +17,7 @@ import { PoiControl } from './components/info/control'
 import { fileUrl } from 'views/utils/tools'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { getRealSize, getYOffset } from 'views/services/utils'
+import i18next from 'views/env-parts/i18next'
 
 const config = remote.require('./lib/config')
 const ipc = remote.require('./lib/ipc')
@@ -124,6 +127,39 @@ export class KanGameWrapper extends Component {
 
   resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
 
+  handleCertError = (event, url, error, certificate, callback) => {
+    const trusted = config.get('poi.misc.trustedCert', [])
+    const hash = createHash('sha256')
+      .update(certificate.data)
+      .digest('base64')
+    if (!trusted.includes(hash)) {
+      const title = i18next.t('others:Certificate error')
+      const content = (
+        <ReactMarkdown
+          source={i18next.t('others:cert_error_markdown', {
+            name: certificate.issuerName,
+            value: hash,
+          })}
+        />
+      )
+      const footer = [
+        {
+          name: i18next.t('others:Trust'),
+          func: () => this.setTrustedCert(hash),
+          style: 'warning',
+        },
+      ]
+      toggleModal(title, content, footer)
+    }
+  }
+
+  setTrustedCert = hash => {
+    const trusted = config.get('poi.misc.trustedCert', [])
+    trusted.push(hash)
+    config.set('poi.misc.trustedCert', trusted)
+    this.webview.current.view.reload()
+  }
+
   setProperWindowSize = (webviewWidth, webviewHeight) => {
     const current = remote.getCurrentWindow()
     if (!config.get('poi.layout.overlay', false) && !config.get('poi.layout.isolate', false)) {
@@ -175,6 +211,9 @@ export class KanGameWrapper extends Component {
       Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
       Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
     )
+    this.webview.current.view
+      .getWebContents()
+      .addListener('certificate-error', this.handleCertError)
   }
 
   handleWebviewUnmount = () => {
