@@ -185,12 +185,12 @@ const TaskRowBase = connect(
       state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
     ],
     (layout, reversed, mainPanelWidth, mainPanelLayout) => {
-      const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm'].find(
+      const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm']?.find(
         panel => panel.i === 'task-panel',
       )
       const colCnt = mainPanelWidth > 750 ? 20 : 10
       const colWidth = mainPanelWidth / colCnt
-      const leftDist = taskPanelLayout.x * colWidth
+      const leftDist = (taskPanelLayout?.x || 0) * colWidth
       return {
         leftOverlayPlacement:
           (layout !== 'horizontal' || (layout === 'horizontal' && reversed)) && leftDist < 180
