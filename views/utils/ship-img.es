@@ -166,6 +166,18 @@ function join(ip, base, version) {
 }
 
 export function getShipImgPath(id, type, damaged, ip, version) {
+  // reset damaged status according to main.js
+  if (type === 'album_status') {
+    damaged = false
+  }
+  if (['banner_g', 'banner2_g', 'banner3_g'].includes(type)) {
+    damaged = true
+  }
+  // for enemy ships, damagaed images are the same, we could reset the damaged status
+  // exceptions are 北方栖姫
+  if (id > 1500 && ![1587, 1588, 1589, 1590].includes(id)) {
+    damaged = false
+  }
   const mapkey = [id, type, damaged].toString()
   if (map.has(mapkey)) {
     return join(ip, map.get(mapkey), version)
