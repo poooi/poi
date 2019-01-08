@@ -128,6 +128,7 @@ export class KanGameWrapper extends Component {
   resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
 
   handleCertError = (event, url, error, certificate, callback) => {
+    console.warn(event, url, error, certificate)
     const trusted = config.get('poi.misc.trustedCerts', [])
     const hash = createHash('sha256')
       .update(certificate.data)
