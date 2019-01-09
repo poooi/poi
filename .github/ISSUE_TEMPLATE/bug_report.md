@@ -1,15 +1,17 @@
+---
+name: Bug report 代码缺陷汇报
+about: Create a report to help us improve 汇报程序代码错误
+---
+
 <!--
-感谢你向 poi 提交 issue，请尽量填写以下内容以方便沟通，
-你也许能在 https://github.com/poooi/poi/wiki 找到一些答案。
-如果你使用网络加速服务来连接游戏，并且无法载入游戏，请先与网络加速服务客服联系。
-Thanks for opening an issue, please fill the following template,
-If you need general information, see https://github.com/poooi/poi/wiki.
+🚨 如果你使用网络加速服务来连接游戏，并且无法载入游戏，请先与网络加速服务客服联系。
+请尽量附上完整信息，以方便问题得到更快的解决。
 -->
 
 **poi 版本 / poi version:**
 
-
 **操作系统 / OS:**
+
 <!--
 Windows 10 用户请说明具体的发行版本号（可以通过 `winver` 命令来获得）
 For Windows 10 users, please specify your build version (can be obtained through `winver` command)
@@ -22,10 +24,7 @@ For Windows 10 users, please specify your build version (can be obtained through
 If this is an issue about plugin.
 -->
 
-
 **你遇到了什么样的问题 / The problem you've met:**
-
-
 
 **有没有重现的方法，或者与问题相关的任何信息 / How to reproduce, or any information that might be related:**
 
@@ -35,8 +34,6 @@ If this is an issue about plugin.
 Please provide a screenshot of developer tool's console tab, if possible.
 To open the dev tool, press ctrl + shift + i (⌥ + ⌘ + i for macOS), or the leftmost gear button on the info bar below the game area.
 -->
-
-
 
 <!-- Love poi? Please consider supporting our collective:
 👉  https://opencollective.com/poi/donate -->
