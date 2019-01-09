@@ -43,12 +43,6 @@ const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
 const BUNDLED_PLUGINS = readJsonSync(PLUGIN_DATA_PATH)
 
 class PluginManager extends EventEmitter {
-  config = {
-    production: true,
-    mirror: null,
-    proxy: null,
-    betaCheck: null,
-  }
   VALID = 0
   DISABLED = 1
   NEEDUPDATE = 2
@@ -212,7 +206,7 @@ class PluginManager extends EventEmitter {
     const distTag = {
       latest: data.version,
     }
-    if (this.config.betaCheck) {
+    if (npmConfig.enableBetaPluginCheck) {
       const npmConfig = getNpmConfig(PLUGIN_PATH)
       const betaData = await fetch(
         `${npmConfig.registry}${plugin.packageName}/beta`,
@@ -240,7 +234,7 @@ class PluginManager extends EventEmitter {
         latest = apiVer[mainVersion]
       }
     }
-    if (!notCompatible && this.config.betaCheck && distTag.beta) {
+    if (!notCompatible && npmConfig.enableBetaPluginCheck && distTag.beta) {
       if (semver.gt(distTag.beta, latest)) {
         latest = distTag.beta
       }

@@ -500,11 +500,12 @@ export const safePhysicallyRemove = async packagePath => {
 /**
  * reads npm config for other methods to consume
  * @param {String} prefix path to install the npm package
- * @return NpmConfig { registry, prefix, http_proxy? }
+ * @return NpmConfig { registry, prefix, enableBetaPluginCheck, http_proxy? }
  */
 export const getNpmConfig = prefix => {
   const mirrorConf = config.get('packageManager.mirrorName')
   const useProxy = config.get('packageManager.proxy', false)
+  const enableBetaPluginCheck = config.get('packageManager.enableBetaPluginCheck')
   const mirrorName = Object.keys(MIRRORS).includes(mirrorConf)
     ? mirrorConf
     : navigator.language === 'zh-CN'
@@ -514,6 +515,7 @@ export const getNpmConfig = prefix => {
   const npmConfig = {
     registry,
     prefix,
+    enableBetaPluginCheck,
   }
   if (useProxy) {
     const { port } = window.proxy
