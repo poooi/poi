@@ -216,5 +216,6 @@
   "tritanopia": "蓝色盲",
   "tritanomaly": "蓝色弱",
   "achromatopsia": "全色盲",
-  "achromatomaly": "色弱"
+  "achromatomaly": "色弱",
+  "Description": "简介"
 }

@@ -216,5 +216,6 @@
   "tritanopia": "3型2色覚/青色盲",
   "tritanomaly": "3型3色覚/青色弱",
   "achromatopsia": "1色覚/全色盲",
-  "achromatomaly": "異常3色覚/色弱"
+  "achromatomaly": "異常3色覚/色弱",
+  "Description": "説明"
 }
