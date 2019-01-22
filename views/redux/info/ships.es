@@ -89,13 +89,10 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       })
       return state
     case '@@Response/kcsapi/api_req_kaisou/slot_exchange_index': {
-      const { api_id } = postBody
+      const { api_ship_data } = body
       return {
         ...state,
-        [api_id]: {
-          ...state[api_id],
-          api_slot: body.api_slot,
-        },
+        [api_ship_data.api_id]: api_ship_data,
       }
     }
     case '@@Response/kcsapi/api_req_kaisou/slot_deprive':
