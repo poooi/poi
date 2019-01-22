@@ -105,6 +105,11 @@ const defaultConfig = {
       repair: {
         enabled: true,
       },
+      battleEnd: {
+        enabled: true,
+        onlyBackground: true,
+        onlyMuted: true,
+      },
       others: {
         enabled: true,
       },
