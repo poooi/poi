@@ -70,11 +70,9 @@ ResourceNotifier.addListener('request', detail => {
     }
     case '/kcs2/resources/se/217.mp3': {
       if (needNotification(inBattle)) {
-        notify(
-          i18next.t('other:Battle is over', {
-            icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
-          }),
-        )
+        notify(i18next.t('others:Battle is over'), {
+          icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
+        })
       }
     }
   }
