@@ -18,6 +18,7 @@ import './services/sortie-dangerous-check'
 import './services/sortie-free-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
+import './services/battle-notify'
 import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
 // Update server info

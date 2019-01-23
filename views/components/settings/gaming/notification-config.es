@@ -8,12 +8,14 @@ import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
 
 import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { IntegerConfig } from 'views/components/settings/components/integer'
+import { SwitchConfig } from 'views/components/settings/components/switch'
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
   enabled: get(state.config, 'poi.notify.enabled', true),
   expedition: get(state.config, 'poi.notify.expedition.enabled', true),
   construction: get(state.config, 'poi.notify.construction.enabled', true),
+  battleEnd: get(state.config, 'poi.notify.battleEnd.enabled', true),
   repair: get(state.config, 'poi.notify.repair.enabled', true),
   morale: get(state.config, 'poi.notify.morale.enabled', true),
   others: get(state.config, 'poi.notify.others.enabled', true),
@@ -75,16 +77,19 @@ export class NotificationConfig extends Component {
 
           <FormGroup inline label={t('Type')}>
             <Wrapper>
-              {map(['construction', 'expedition', 'repair', 'morale', 'others'], type => (
-                <Switch
-                  key={type}
-                  disabled={!this.props.enabled}
-                  checked={this.props[type]}
-                  onChange={this.handleSetNotify(type)}
-                >
-                  {t(capitalize(type))}
-                </Switch>
-              ))}
+              {map(
+                ['construction', 'expedition', 'repair', 'morale', 'battleEnd', 'others'],
+                type => (
+                  <Switch
+                    key={type}
+                    disabled={!this.props.enabled}
+                    checked={this.props[type]}
+                    onChange={this.handleSetNotify(type)}
+                  >
+                    {t(capitalize(type))}
+                  </Switch>
+                ),
+              )}
             </Wrapper>
             {this.props.enabled && (
               <Callout>{t('Heavily damaged notification is managed by Prophet plugin')}</Callout>
@@ -118,6 +123,25 @@ export class NotificationConfig extends Component {
             </FormGroup>
           </Wrapper>
         </Wrapper>
+        <FormGroup inline label={t('Battleend')}>
+          <Wrapper>
+            <SwitchConfig
+              label={t('Notify only when not focused')}
+              configName="poi.notify.battleEnd.onlyBackground"
+              defaultValue={true}
+              disabled={!this.props.battleEnd}
+            />
+            <SwitchConfig
+              label={t('Notify only when muted')}
+              configName="poi.notify.battleEnd.onlyMuted"
+              defaultValue={true}
+              disabled={!this.props.battleEnd}
+            />
+          </Wrapper>
+          {this.props.enabled && (
+            <Callout>{t('Heavily damaged notification is managed by Prophet plugin')}</Callout>
+          )}
+        </FormGroup>
       </Section>
     )
   }
