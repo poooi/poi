@@ -12,7 +12,11 @@ const needNotification = inBattle => {
   const noticeOnlyBackground = config.get('poi.notify.battleEnd.onlyBackground')
   const noticeOnlyMuted = config.get('poi.notify.battleEnd.onlyMuted')
   const poiMuted = config.get('poi.content.muted')
-  const poiFocused = remote.getCurrentWindow().isFocused()
+  const poiFocused =
+    remote.getCurrentWindow().isFocused() ||
+    remote.BrowserWindow.getAllWindows().some(
+      win => win.getURL().endsWith('?kangame') && win.isFocused(),
+    )
   if (!inBattle) {
     // no need notice because not battling
     return false
