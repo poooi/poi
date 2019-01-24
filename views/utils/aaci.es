@@ -43,11 +43,17 @@ const isAAGun = itemTypeIs(21)
 // 3: 大口径主砲
 const isLargeCaliberMainGun = itemTypeIs(3)
 
+// full list from wikiwiki (as of Jan 24, 2019)
 // 122: 10cm連装高角砲+高射装置
 // 130: 12.7cm高角砲+高射装置
 // 135: 90mm単装高角砲
 // 172: 5inch連装砲 Mk.28 mod.2
-const isBuiltinHighAngleMount = equip => [122, 130, 135, 172].includes(equip.api_slotitem_id)
+// 275: 10cm連装高角砲改+増設機銃
+// 295: 12.7cm連装砲A型改三(戦時改修)＋高射装置
+// 296: 12.7cm連装砲B型改四(戦時改修)＋高射装置
+// 308: 5inch単装砲 Mk.30改＋GFCS Mk.37
+const isBuiltinHighAngleMount = equip =>
+  [122, 130, 135, 172, 275, 295, 296, 308].includes(equip.api_slotitem_id)
 
 // 131: 25mm三連装機銃 集中配備
 // 173: Bofors 40mm四連装機関砲
