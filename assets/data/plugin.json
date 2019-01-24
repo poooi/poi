@@ -427,7 +427,7 @@
     "link": "https://github.com/SoraYama",
     "deszh-CN": "新舰上锁提醒",
     "deszh-TW": "新艦上鎖提醒",
-    "desja-JP": "新艦娘ロックのお知らせ",
+    "desja-JP": "新艦娘がロックされない場合に通知する",
     "desen-US": "Reminder for locking new ship",
     "desko-KR": "Reminder for locking new ship"
   }
