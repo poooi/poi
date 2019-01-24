@@ -17,6 +17,7 @@ const isIsuzuK2 = shipIdIs(141)
 const isJervisKai = shipIdIs(394)
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
+const isJohnstonOrKai = _.overSome([shipIdIs(562), shipIdIs(689)])
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])
 const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
@@ -34,7 +35,7 @@ const equipTaisAbove = value => equip => equipTais(equip) >= value
 const overEquips = func => (_ship, equips) => func(equips)
 
 /*
-   - reference as of Oct 18, 2018:
+   - reference as of Jan 23, 2019: (TODO: not all implemented yet since Oct 18, 2018)
 
        http://wikiwiki.jp/kancolle/?%C2%D0%C0%F8%C0%E8%C0%A9%C7%FA%CD%EB%B9%B6%B7%E2
 
@@ -59,6 +60,7 @@ export const isOASWWith = allCVEIds =>
     isJervisKai,
     isTatsutaKai,
     isSamuelKai,
+    isJohnstonOrKai,
     // 海防艦
     _.overEvery(
       isDE,
