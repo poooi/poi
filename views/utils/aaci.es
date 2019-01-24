@@ -118,7 +118,7 @@ const isYuraK2 = shipIdIs(488)
 const isFumitsukiK2 = shipIdIs(548)
 const isUIT25 = shipIdIs(539)
 const isI504 = shipIdIs(530)
-const isTatsuTaK2 = shipIdIs(478)
+const isTatsutaK2 = shipIdIs(478)
 const isIseK = shipIdIs(82)
 const isHyuuGaK = shipIdIs(88)
 const isMusashiK = shipIdIs(148)
@@ -371,7 +371,7 @@ declareAACI({
   id: 24,
   fixed: 3,
   modifier: 1.25,
-  shipValid: validAny(isTenryuuK2, isTatsuTaK2),
+  shipValid: validAny(isTenryuuK2, isTatsutaK2),
   equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG))), hasSome(isHighAngleMount)),
 })
 
