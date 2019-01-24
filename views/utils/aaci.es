@@ -69,6 +69,10 @@ const is16InchMkITriplePlusFCR = equip => equip.api_slotitem_id === 300
 // 301: 20連装7inch UP Rocket Launchers
 const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
 
+const is5InchSingleGunMountMk30 = equip => equip.api_slotitem_id === 313
+const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
+const isGFCSMk37 = equip => equip.api_slotitem_id === 307
+
 // avoid modifying this structure directly, use "declareAACI" instead.
 export const AACITable = {}
 
@@ -114,7 +118,7 @@ const isYuraK2 = shipIdIs(488)
 const isFumitsukiK2 = shipIdIs(548)
 const isUIT25 = shipIdIs(539)
 const isI504 = shipIdIs(530)
-const isTastutaK2 = shipIdIs(478)
+const isTatsuTaK2 = shipIdIs(478)
 const isIseK = shipIdIs(82)
 const isHyuuGaK = shipIdIs(88)
 const isMusashiK = shipIdIs(148)
@@ -135,73 +139,15 @@ const hasSome = pred => xs => xs.some(pred)
 // check if slot num of ship (excluding ex slot) equals or greater
 const slotNumAtLeast = n => ship => ship.api_slot_num >= n
 
-// *** all non-submarine ships
-declareAACI({
-  id: 5,
-  fixed: 4,
-  modifier: 1.5,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAARadar)),
-})
+/*
 
-declareAACI({
-  id: 7,
-  fixed: 3,
-  modifier: 1.35,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD), hasSome(isAARadar)),
-})
+   reference:
 
-declareAACI({
-  id: 8,
-  fixed: 4,
-  modifier: 1.4,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
-  equipsValid: validAll(hasSome(isBuiltinHighAngleMount), hasSome(isAARadar)),
-})
+   - https://wikiwiki.jp/kancolle/航空戦#antiairfire (as of Jan 23, 2019)
 
-declareAACI({
-  id: 9,
-  fixed: 2,
-  modifier: 1.3,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
-  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD)),
-})
+ */
 
-// CDMG is considered AAGun
-declareAACI({
-  id: 12,
-  fixed: 3,
-  modifier: 1.25,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(hasSome(isCDMG), hasAtLeast(isAAGun, 2), hasSome(isAARadar)),
-})
-
-// *** BattleShip
-declareAACI({
-  name: ['Battle Ship'],
-  id: 4,
-  fixed: 6,
-  modifier: 1.4,
-  shipValid: validAll(isBattleship, slotNumAtLeast(4)),
-  equipsValid: validAll(
-    hasSome(isLargeCaliberMainGun),
-    hasSome(isType3Shell),
-    hasSome(isAAFD),
-    hasSome(isAARadar),
-  ),
-})
-
-declareAACI({
-  name: ['Battle Ship'],
-  id: 6,
-  fixed: 4,
-  modifier: 1.45,
-  shipValid: validAll(isBattleship, slotNumAtLeast(3)),
-  equipsValid: validAll(hasSome(isLargeCaliberMainGun), hasSome(isType3Shell), hasSome(isAAFD)),
-})
-
-// *** Akizuki-class AACIs
+// id 1~3: Akizuki-class
 declareAACI({
   name: ['Akizuki Class'],
   id: 1,
@@ -229,7 +175,66 @@ declareAACI({
   equipsValid: validAll(hasAtLeast(isHighAngleMount, 2)),
 })
 
-// *** Maya K2
+// id 4: battleships
+declareAACI({
+  name: ['Battle Ship'],
+  id: 4,
+  fixed: 6,
+  modifier: 1.4,
+  shipValid: validAll(isBattleship, slotNumAtLeast(4)),
+  equipsValid: validAll(
+    hasSome(isLargeCaliberMainGun),
+    hasSome(isType3Shell),
+    hasSome(isAAFD),
+    hasSome(isAARadar),
+  ),
+})
+
+// id 5: all surface ships
+declareAACI({
+  id: 5,
+  fixed: 4,
+  modifier: 1.5,
+  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  equipsValid: validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAARadar)),
+})
+
+// id 6: battleships
+declareAACI({
+  name: ['Battle Ship'],
+  id: 6,
+  fixed: 4,
+  modifier: 1.45,
+  shipValid: validAll(isBattleship, slotNumAtLeast(3)),
+  equipsValid: validAll(hasSome(isLargeCaliberMainGun), hasSome(isType3Shell), hasSome(isAAFD)),
+})
+
+// id 7~9: all surface ships
+declareAACI({
+  id: 7,
+  fixed: 3,
+  modifier: 1.35,
+  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD), hasSome(isAARadar)),
+})
+
+declareAACI({
+  id: 8,
+  fixed: 4,
+  modifier: 1.4,
+  shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
+  equipsValid: validAll(hasSome(isBuiltinHighAngleMount), hasSome(isAARadar)),
+})
+
+declareAACI({
+  id: 9,
+  fixed: 2,
+  modifier: 1.3,
+  shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD)),
+})
+
+// id: 10~11 Maya K2
 declareAACI({
   name: ['摩耶改二'],
   id: 10,
@@ -248,7 +253,17 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isCDMG)),
 })
 
-// *** Isuzu K2
+declareAACI({
+  id: 12,
+  fixed: 3,
+  modifier: 1.25,
+  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  equipsValid: validAll(hasSome(isCDMG), hasAtLeast(isAAGun, 2), hasSome(isAARadar)),
+})
+
+// id 13: <unknown>
+
+// id 14~15: Isuzu K2
 declareAACI({
   name: ['五十鈴改二'],
   id: 14,
@@ -267,7 +282,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
-// *** Kasumi K2B
+// id 16~17 Kasumi K2B
 declareAACI({
   name: ['霞改二乙'],
   id: 16,
@@ -286,7 +301,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
-// *** Satsuki K2
+// id 18: Satsuki K2
 declareAACI({
   name: ['皐月改二'],
   id: 18,
@@ -296,7 +311,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isCDMG)),
 })
 
-// *** Kinu K2
+// id 19~20: Kinu K2
 // any HA with builtin AAFD will not work
 declareAACI({
   name: ['鬼怒改二'],
@@ -320,6 +335,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isCDMG)),
 })
 
+// id 21: Yura K2
 declareAACI({
   name: ['由良改二'],
   id: 21,
@@ -329,15 +345,17 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
 
+// id 22: Fumitsuki K2
 declareAACI({
   name: ['文月改二'],
   id: 22,
   fixed: 2,
-  modifier: 1.25,
+  modifier: 1.2,
   shipValid: isFumitsukiK2,
   equipsValid: validAll(hasSome(isCDMG)),
 })
 
+// id 23: UIT-25 & I-504
 declareAACI({
   name: ['UIT-25', '伊504'],
   id: 23,
@@ -347,15 +365,17 @@ declareAACI({
   equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG)))),
 })
 
+// id 24: Tenryuu K2 & Tatsuta K2
 declareAACI({
-  name: ['龍田改二'],
+  name: ['天龍改二', '龍田改二'],
   id: 24,
   fixed: 3,
   modifier: 1.25,
-  shipValid: isTastutaK2,
+  shipValid: validAny(isTenryuuK2, isTatsuTaK2),
   equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG))), hasSome(isHighAngleMount)),
 })
 
+// id 25: Ise-class Kai
 declareAACI({
   name: ['伊勢改', '日向改'],
   id: 25,
@@ -365,6 +385,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar), hasSome(isType3Shell)),
 })
 
+// id 26: Musashi K2
 declareAACI({
   name: ['武蔵改二'],
   id: 26,
@@ -374,6 +395,9 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isAARadar)),
 })
 
+// id 27: <unknown>
+
+// id 28: Ise-class Kai & Musashi Kai/K2
 declareAACI({
   name: ['伊勢改', '日向改', '武蔵改', '武蔵改二'],
   id: 28,
@@ -383,37 +407,41 @@ declareAACI({
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar)),
 })
 
+// id 29: Hamakaze B Kai & Isokaze B Kai
 declareAACI({
   name: ['浜風乙改', '磯風乙改'],
   id: 29,
-  fixed: 6,
+  fixed: 5,
   modifier: 1.55,
   shipValid: validAny(isHamakazeBK, isIsokazeBK),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
 })
 
+// id 30: Tenryuu K2 & Gotland Kai
 declareAACI({
-  name: ['天龍改二'],
+  name: ['天龍改二', 'Gotland Kai'],
   id: 30,
-  fixed: 4,
+  fixed: 3,
   modifier: 1.3,
-  shipValid: isTenryuuK2,
+  shipValid: validAny(isTenryuuK2, isGotlandKai),
   equipsValid: hasAtLeast(isHighAngleMount, 3),
 })
 
+// id 31: Tenryuu K2
 declareAACI({
   name: ['天龍改二'],
   id: 31,
-  fixed: 3,
-  modifier: 1.2,
+  fixed: 2,
+  modifier: 1.25,
   shipValid: isTenryuuK2,
   equipsValid: hasAtLeast(isHighAngleMount, 2),
 })
 
+// id 32: HMS & Kongou-class K2
 declareAACI({
   name: ['HMS Royal Navy', 'Kongou Class Kai 2'],
   id: 32,
-  fixed: 4,
+  fixed: 3,
   modifier: 1.2,
   shipValid: validAny(isRoyalNavyShips, isKongouClassK2),
   equipsValid: validAll(
@@ -422,13 +450,56 @@ declareAACI({
   ),
 })
 
+// id 33: Gotland Kai
 declareAACI({
   name: ['Gotland Kai'],
   id: 33,
-  fixed: 4,
-  modifier: 1.35,
+  fixed: 3,
+  modifier: 1.25,
   shipValid: isGotlandKai,
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
+})
+
+const isJohnstonOrKai = validAny(shipIdIs(562), shipIdIs(689))
+
+// id 34~37: Johnston
+declareAACI({
+  name: ['Johnston'],
+  id: 34,
+  fixed: 7,
+  modifier: 1.6,
+  shipValid: isJohnstonOrKai,
+  equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
+})
+
+declareAACI({
+  name: ['Johnston'],
+  id: 35,
+  fixed: 6,
+  modifier: 1.55,
+  shipValid: isJohnstonOrKai,
+  equipsValid: validAll(
+    hasSome(is5InchSingleGunMountMk30PlusGFCS),
+    hasSome(is5InchSingleGunMountMk30),
+  ),
+})
+
+declareAACI({
+  name: ['Johnston'],
+  id: 36,
+  fixed: 6,
+  modifier: 1.55,
+  shipValid: isJohnstonOrKai,
+  equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30, 2), hasSome(isGFCSMk37)),
+})
+
+declareAACI({
+  name: ['Johnston'],
+  id: 37,
+  fixed: 4,
+  modifier: 1.55,
+  shipValid: isJohnstonOrKai,
+  equipsValid: hasAtLeast(is5InchSingleGunMountMk30, 2),
 })
 
 // return: a list of sorted AACI objects order by effect desc,
