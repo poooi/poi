@@ -414,5 +414,21 @@
     "desja-JP": "艦隊と艦娘のコンディション値早見",
     "desen-US": "Monitoring morale for your fleets and ships",
     "desko-KR": "Monitoring morale for your fleets and ships"
+  },
+  "poi-plugin-lock-reminder": {
+    "zh-CN": "新舰力保",
+    "zh-TW": "新艦提醒",
+    "ja-JP": "New Ship Reminder",
+    "en-US": "New Ship Reminder",
+    "ko-KR": "New Ship Reminder",
+    "version": "v0.0.0",
+    "icon": "lock",
+    "author": "SoraYama",
+    "link": "https://github.com/SoraYama",
+    "deszh-CN": "新舰上锁提醒",
+    "deszh-TW": "新艦上鎖提醒",
+    "desja-JP": "新艦娘がロックされない場合に通知する",
+    "desen-US": "Reminder for locking new ship",
+    "desko-KR": "Reminder for locking new ship"
   }
 }
