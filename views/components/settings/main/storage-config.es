@@ -90,7 +90,7 @@ export class StorageConfig extends Component {
                 min={0}
                 max={20480}
                 configName="poi.misc.cache.size"
-                defaultValue={320}
+                defaultValue={640}
               />
               {' MB'}
             </FormGroup>

@@ -19,6 +19,7 @@ const defaultConfig = {
       },
       cache: {
         path: global.DEFAULT_CACHE_PATH,
+        size: 640,
       },
       trustedCerts: [],
     },
