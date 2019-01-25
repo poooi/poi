@@ -138,9 +138,6 @@ export class NotificationConfig extends Component {
               disabled={!this.props.battleEnd}
             />
           </Wrapper>
-          {this.props.enabled && (
-            <Callout>{t('Heavily damaged notification is managed by Prophet plugin')}</Callout>
-          )}
         </FormGroup>
       </Section>
     )
