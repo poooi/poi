@@ -24,7 +24,7 @@ export const Update = withNamespaces(['setting'])(({ t }) => (
   <Section title={t('Update')}>
     <Wrapper>
       <Wrapper>
-        <FormGroup inline>
+        <FormGroup inline style={{ width: '100%' }}>
           <DownloadProgress />
         </FormGroup>
       </Wrapper>
