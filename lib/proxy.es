@@ -434,30 +434,22 @@ class Proxy extends EventEmitter {
           msg += `${caseNormalizer(k)}: ${req.headers[k]}\r\n`
         }
         msg += '\r\n'
-        remote = net.connect(
-          port,
-          host,
-          () => {
-            remote.write(msg)
-            remote.write(head)
-            client.pipe(remote)
-            remote.pipe(client)
-          },
-        )
+        remote = net.connect(port, host, () => {
+          remote.write(msg)
+          remote.write(head)
+          client.pipe(remote)
+          remote.pipe(client)
+        })
         break
       }
       default: {
         // Connect to remote directly
-        remote = net.connect(
-          remoteUrl.port,
-          remoteUrl.hostname,
-          () => {
-            client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
-            remote.write(head)
-            client.pipe(remote)
-            remote.pipe(client)
-          },
-        )
+        remote = net.connect(remoteUrl.port, remoteUrl.hostname, () => {
+          client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
+          remote.write(head)
+          client.pipe(remote)
+          remote.pipe(client)
+        })
       }
     }
     client.on('end', () => {
