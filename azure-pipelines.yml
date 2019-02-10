@@ -8,6 +8,7 @@ jobs:
       versionSpec: '10.x'
     displayName: 'Install Node.js'
   - script: |
+      sudo apt-get update
       sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm bsdtar snapcraft
     displayName: 'Linux system dependencies'
   - script: |
