@@ -418,7 +418,7 @@
   "poi-plugin-lock-reminder": {
     "zh-CN": "新舰力保",
     "zh-TW": "新艦提醒",
-    "ja-JP": "New Ship Reminder",
+    "ja-JP": "新艦入手通知",
     "en-US": "New Ship Reminder",
     "ko-KR": "New Ship Reminder",
     "version": "v0.0.0",
