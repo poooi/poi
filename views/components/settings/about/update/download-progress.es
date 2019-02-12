@@ -44,14 +44,19 @@ export class DownloadProgress extends Component {
     const { t } = this.props
 
     const { percent, downloaded, bytesPerSecond, transferred, total } = this.state
+    const isFinished = percent >= 100
     return (
       this.state.percent > 0 && (
         <Wrapper className="update-progress">
-          <ProgressBar stripes={false} intent={Intent.SUCCESS} value={percent} />
+          <ProgressBar
+            stripes={false}
+            intent={isFinished ? Intent.SUCCESS : Intent.PRIMARY}
+            value={percent / 100}
+          />
           <Indicator>
             {downloaded
               ? t('setting:Quit app and install updates')
-              : percent >= 100
+              : isFinished
               ? t('setting:Deploying, please wait')
               : `${Math.round(bytesPerSecond / 1024)} KB/s, ${Math.round(
                   transferred / 1048576,
