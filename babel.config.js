@@ -38,7 +38,5 @@ module.exports = {
   ),
   ignore: [],
   only: [/\.(es|ts|tsx)$/],
-  extensions: ['.es', '.ts', '.tsx'],
   babelrc: false,
-  cache: false,
 }
