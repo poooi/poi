@@ -32,7 +32,7 @@ Array [
 exports[`config should be set and get a object correctly 2`] = `
 Array [
   Array [
-    "/Users/kagami/dev/poi/config.cson",
+    "/exroot/config.cson",
     "CSON Stringified",
   ],
 ]
@@ -58,7 +58,7 @@ Array [
 exports[`config should be set and get a string correctly 2`] = `
 Array [
   Array [
-    "/Users/kagami/dev/poi/config.cson",
+    "/exroot/config.cson",
     "CSON Stringified",
   ],
 ]
