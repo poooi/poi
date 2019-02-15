@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`config initially, should be filled with default value 1`] = `Array []`;
+
+exports[`config initially, should be filled with default value 2`] = `
+Object {
+  "foo": "bar",
+}
+`;
+
+exports[`config should be set and get a object correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "another": Object {
+        "a": "b",
+        "c": 187,
+      },
+      "foo": "bar",
+      "path": Object {
+        "to": Object {
+          "value": "Dead Beef",
+        },
+      },
+    },
+    null,
+    2,
+  ],
+]
+`;
+
+exports[`config should be set and get a object correctly 2`] = `
+Array [
+  Array [
+    "/Users/kagami/dev/poi/config.cson",
+    "CSON Stringified",
+  ],
+]
+`;
+
+exports[`config should be set and get a string correctly 1`] = `
+Array [
+  Array [
+    Object {
+      "foo": "bar",
+      "path": Object {
+        "to": Object {
+          "value": "Dead Beef",
+        },
+      },
+    },
+    null,
+    2,
+  ],
+]
+`;
+
+exports[`config should be set and get a string correctly 2`] = `
+Array [
+  Array [
+    "/Users/kagami/dev/poi/config.cson",
+    "CSON Stringified",
+  ],
+]
+`;

@@ -6,4 +6,5 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'es', 'json', 'jsx', 'ts', 'tsx', 'node'],
   testMatch: ['**/__tests__/**/*.[ejt]s?(x)', '**/?(*.)+(spec|test).[ejt]s?(x)'],
+  setupFilesAfterEnv: ['./setupTests.es'],
 }
