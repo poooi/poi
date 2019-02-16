@@ -29,14 +29,7 @@ Array [
 ]
 `;
 
-exports[`config should be set and get a object correctly 2`] = `
-Array [
-  Array [
-    "/exroot/config.cson",
-    "CSON Stringified",
-  ],
-]
-`;
+exports[`config should be set and get a object correctly 2`] = `"CSON Stringified"`;
 
 exports[`config should be set and get a string correctly 1`] = `
 Array [
@@ -55,11 +48,4 @@ Array [
 ]
 `;
 
-exports[`config should be set and get a string correctly 2`] = `
-Array [
-  Array [
-    "/exroot/config.cson",
-    "CSON Stringified",
-  ],
-]
-`;
+exports[`config should be set and get a string correctly 2`] = `"CSON Stringified"`;
