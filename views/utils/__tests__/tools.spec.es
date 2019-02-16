@@ -1,7 +1,6 @@
-const _ = require('lodash')
-const assert = require('assert')
-const path = require('path')
-const { isSubdirectory, compareUpdate } = require('../views/utils/tools')
+import _ from 'lodash'
+import path from 'path'
+import { isSubdirectory, compareUpdate } from '../tools'
 
 const pathPatterns = [
   ['/foo', '/foo', true],
@@ -26,21 +25,22 @@ describe('views/utils/tools', () => {
   describe('isSubdirectory', () => {
     it('should work under current os', () => {
       const subdir = path.resolve(__dirname, './ddddd')
-      assert.equal(true, isSubdirectory(__dirname, subdir))
+      expect(isSubdirectory(__dirname, subdir)).toBe(true)
+
       const otherDir = path.resolve(__dirname, '../other')
-      assert.equal(false, isSubdirectory(__dirname, otherDir))
+      expect(isSubdirectory(__dirname, otherDir)).toBe(false)
     })
 
     it('should work with given paths', () => {
       _.each(pathPatterns, ([parent, dir, result]) => {
-        assert.equal(result, isSubdirectory(parent, dir))
+        expect(isSubdirectory(parent, dir)).toBe(result)
       })
     })
 
     if (process.platform === 'win32') {
       it('should work for windows', () => {
         _.each(win32PathPatterns, ([parent, dir, result]) => {
-          assert.equal(result, isSubdirectory(parent, dir))
+          expect(isSubdirectory(parent, dir)).toBe(result)
         })
       })
     }
@@ -53,20 +53,20 @@ describe('views/utils/tools', () => {
     }
 
     it('should work with cases below', () => {
-      assert.deepEqual([false, 2], test(2, 2))
-      assert.deepEqual([true, { 1: 'a', 2: 'b' }], test({ 1: 'a' }, { 2: 'b' }))
-      assert.deepEqual([true, { 1: 'b' }], test({ 1: 'a' }, { 1: 'b' }))
-      assert.deepEqual([false, { 1: 'a' }], test({ 1: 'a' }, { 1: 'a' }))
-      assert.deepEqual([false, { 1: { 1: 2 } }], test({ 1: { 1: 2 } }, { 1: { 1: 2 } }))
-      assert.deepEqual([true, { 1: { 1: [] } }], test({ 1: { 1: [], 2: ['g'] } }, { 1: { 1: [] } }))
-      assert.deepEqual(
-        [false, { 1: { 1: [], 2: ['g'] } }],
-        test({ 1: { 1: [], 2: ['g'] } }, { 1: { 1: [] } }, 2),
-      )
+      expect(test(2, 2)).toEqual([false, 2])
+      expect(test({ 1: 'a' }, { 2: 'b' })).toEqual([true, { 1: 'a', 2: 'b' }])
+      expect(test({ 1: 'a' }, { 1: 'b' })).toEqual([true, { 1: 'b' }])
+      expect(test({ 1: 'a' }, { 1: 'a' })).toEqual([false, { 1: 'a' }])
+      expect(test({ 1: { 1: 2 } }, { 1: { 1: 2 } })).toEqual([false, { 1: { 1: 2 } }])
+      expect(test({ 1: { 1: [], 2: ['g'] } }, { 1: { 1: [] } })).toEqual([true, { 1: { 1: [] } }])
+      expect(test({ 1: { 1: [], 2: ['g'] } }, { 1: { 1: [] } }, 2)).toEqual([
+        false,
+        { 1: { 1: [], 2: ['g'] } },
+      ])
 
       const a = []
       a[1] = { 1: 2 }
-      assert.deepEqual([true, [{ 1: 1 }, { 1: 2 }]], test([{ 1: 1 }], a))
+      expect(test([{ 1: 1 }], a)).toEqual([true, [{ 1: 1 }, { 1: 2 }]])
     })
   })
 })

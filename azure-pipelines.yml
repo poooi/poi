@@ -15,11 +15,11 @@ jobs:
       npm ci
     displayName: 'npm install'
   - script: |
-      npm run build
-    displayName: 'npm build'
-  - script: |
       npm test
     displayName: 'npm test'
+  - script: |
+      npm run build
+    displayName: 'npm build'
   - task: CopyFiles@2
     inputs:
       contents: dist/*

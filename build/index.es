@@ -73,6 +73,7 @@ const filterCopyApp = async (stage1App, stage2App) =>
   Promise.map(TARGET_LIST, target =>
     fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
       overwrite: true,
+      filter: src => ['__tests__', '__mocks__'].every(p => !src.includes(p)),
     }),
   )
 

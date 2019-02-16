@@ -6,8 +6,6 @@ import { transformFile } from '@babel/core'
 import BabelConfig from '../babel.config'
 import walk from 'walk'
 
-const { ROOT } = global
-
 const changeExt = (srcPath, ext) => {
   const srcDir = path.dirname(srcPath)
   const srcBasename = path.basename(srcPath, path.extname(srcPath))
@@ -16,11 +14,11 @@ const changeExt = (srcPath, ext) => {
 
 const compileToJs = (appDir, dontRemove) => {
   log(`Compiling ${appDir}`)
-  const targetExts = ['.es']
+  const targetExts = ['.es', '.ts', '.tsx']
 
   const options = {
     followLinks: false,
-    filters: ['node_modules', 'assets', path.join(ROOT, 'components')],
+    filters: ['node_modules', 'assets', '__tests__', '__mocks__'],
   }
 
   const { presets, plugins } = BabelConfig

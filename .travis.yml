@@ -32,10 +32,10 @@ before_script:
 - export TRAVIS=1
 - npm ci
 - npm run lint
+- npm test
 
 script:
 - npm run build
-- npm test
 
 branches:
   except:
