@@ -35,8 +35,8 @@
   },
   "homepage": "https://github.com/poooi/poi",
   "dependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-class-properties": "^7.3.3",
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "@babel/plugin-proposal-do-expressions": "^7.2.0",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
@@ -54,7 +54,7 @@
     "@babel/plugin-syntax-import-meta": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.1.0",
+    "@babel/preset-typescript": "^7.3.3",
     "@babel/register": "^7.0.0",
     "@blueprintjs/core": "^3.13.0",
     "@blueprintjs/datetime": "^3.7.1",
@@ -107,7 +107,7 @@
     "poi-asset-contributor-data": "^1.1.1",
     "poi-asset-themes": "^4.0.0-beta.4",
     "poi-lib-battle": "^2.9.0",
-    "polished": "^2.3.3",
+    "polished": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-bootstrap": "^0.32.4",
@@ -133,7 +133,7 @@
     "styled-components": "^4.1.3",
     "swf-extract": "^1.1.0",
     "wanakana": "^4.0.2",
-    "yargs": "^13.2.0"
+    "yargs": "^13.2.1"
   },
   "devDependencies": {
     "7zip-bin": "^4.1.0",
@@ -144,7 +144,7 @@
     "babel-jest": "^24.1.0",
     "electron": "^4.0.5",
     "electron-builder": "^20.38.5",
-    "eslint": "^5.13.0",
+    "eslint": "^5.14.1",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-prettier": "^3.0.1",
