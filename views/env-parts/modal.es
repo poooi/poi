@@ -1,11 +1,11 @@
 const modals = []
 window.modalLocked = false
-window.toggleModal = (title, content, footer, onExiting) => {
+window.toggleModal = (title, content, footer, onClosing) => {
   modals.push({
     title: title,
     content: content,
     footer: footer,
-    onExiting: onExiting,
+    onClosing,
   })
   if (!window.modalLocked) {
     window.showModal()
@@ -15,7 +15,7 @@ window.showModal = () => {
   if (modals.length === 0) {
     return
   }
-  const { title, content, footer, onExiting } = modals.shift()
+  const { title, content, footer, onClosing } = modals.shift()
   const e = new CustomEvent('poi.modal', {
     bubbles: true,
     cancelable: true,
@@ -23,7 +23,7 @@ window.showModal = () => {
       title: title,
       content: content,
       footer: footer,
-      onExiting: onExiting,
+      onClosing,
     },
   })
   window.dispatchEvent(e)
