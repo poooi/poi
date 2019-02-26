@@ -24,7 +24,6 @@ class GoogleAnalyticsOption extends Component {
   }
 }
 
-const title = 'README'
 const content = (
   <div>
     <ReactMarkdown source={i18next.t('others:welcome_markdown', { version: POI_VERSION })} />
@@ -41,7 +40,7 @@ const footer = [
   },
 ]
 
-const toggle = () => window.toggleModal(title, content, footer)
+const toggle = () => window.toggleModal(i18next.t('others:Welcome'), content, footer)
 
 // using setTimeout to avoid disturbing the magic being cast in layout.es
 if (config.get('poi.update.lastversion', '0.0.0') != POI_VERSION) {
