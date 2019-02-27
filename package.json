@@ -106,7 +106,7 @@
     "path-extra": "^4.2.1",
     "poi-asset-contributor-data": "^1.1.1",
     "poi-asset-themes": "^4.0.0-beta.4",
-    "poi-lib-battle": "^2.9.0",
+    "poi-lib-battle": "^2.10.1",
     "polished": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.3",
