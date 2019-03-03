@@ -95,6 +95,12 @@ export function reducer(state = {}, { type, body, postBody }, store) {
         [api_ship_data.api_id]: api_ship_data,
       }
     }
+    case '@@Response/kcsapi/api_req_kaisou/marriage': {
+      return {
+        ...state,
+        [body.api_id]: body,
+      }
+    }
     case '@@Response/kcsapi/api_req_kaisou/slot_deprive':
       return {
         ...state,
