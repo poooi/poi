@@ -14,7 +14,7 @@ const onRequest = e => {
     const { api_id } = e.detail.body
     const kyouka = getStore(`info.ships.${api_id}.api_kyouka`)
     if (Array.isArray(kyouka)) {
-      kyoukaState = {id: Number(api_id), kyouka}
+      kyoukaState = { id: Number(api_id), kyouka }
     }
   }
 }
@@ -26,10 +26,7 @@ const onResponse = e => {
       api_lucky: [curLuck, maxLuck],
       api_id,
     } = e.detail.body
-    if (
-      kyoukaState !== null &&
-      kyoukaState.id === api_id
-    ) {
+    if (kyoukaState !== null && kyoukaState.id === api_id) {
       const luckDiff = newKyouka[4] - kyoukaState.kyouka[4]
       const remaining = maxLuck - curLuck
       if (luckDiff > 0) {
@@ -49,11 +46,7 @@ const onResponse = e => {
             </span>
           </span>
         )
-        setTimeout(
-          window.success,
-          100,
-          msg
-        )
+        setTimeout(window.success, 100, msg)
       }
     }
     kyoukaState = null
