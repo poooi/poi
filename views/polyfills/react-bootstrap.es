@@ -1,16 +1,18 @@
+/**
+ * FIXME: remove this polyfill when react-bootstrap is no longer used
+ */
+/* eslint-disable import/namespace */
+
 import React, { cloneElement, useContext } from 'react'
 import ReactDOM from 'react-dom'
+import * as ReactBootstrap from 'react-bootstrap'
 import contains from 'dom-helpers/query/contains'
 import { WindowEnv } from '../components/etc/window-env'
 import { includes } from 'lodash'
 
-import * as ReactBootstrap from 'react-bootstrap'
-
-// eslint-disable-next-line import/namespace
 ReactBootstrap.OrigOverlayTrigger = ReactBootstrap.OverlayTrigger
-// eslint-disable-next-line import/namespace
 ReactBootstrap.OriginModal = ReactBootstrap.Modal
-// eslint-disable-next-line import/namespace
+
 const { OriginModal, Overlay } = ReactBootstrap
 
 function isOneOf(one, of) {
@@ -261,3 +263,8 @@ Modal.Header = OriginModal.Header
 Modal.Title = OriginModal.Title
 Modal.Footer = OriginModal.Footer
 Modal.Dialog = OriginModal.Dialog
+
+if (window.isMain) {
+  ReactBootstrap.OverlayTrigger = OverlayTrigger
+  ReactBootstrap.Modal = Modal
+}
