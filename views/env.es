@@ -14,6 +14,8 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 import '@skagami/react-fontawesome/inject'
 library.add(fas, far, fab)
 
+import './polyfills/react-i18next'
+
 // Environments
 window.remote = remote
 window.ROOT = path.join(__dirname, '..')

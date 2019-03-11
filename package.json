@@ -116,7 +116,7 @@
     "react-file-dropzone": "^0.4.1",
     "react-fontawesome": "^1.6.1",
     "react-grid-layout": "^0.16.6",
-    "react-i18next": "^9.0.10",
+    "react-i18next": "^10.4.1",
     "react-redux": "^6.0.1",
     "react-remarkable": "^1.1.3",
     "react-resizable-area": "^0.4.2",
