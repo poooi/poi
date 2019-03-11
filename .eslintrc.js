@@ -34,7 +34,7 @@ module.exports = {
     ],
     'import/no-named-as-default-member': [0],
     'react-hooks/rules-of-hooks': 'error',
-    'prettier/prettier': 'error',
+    'prettier/prettier': 'warn',
   },
   settings: {
     'import/resolver': {
