@@ -44,6 +44,7 @@ module.exports = {
       },
     },
     'import/core-modules': ['electron', 'redux-observers'],
+    'import/ignore': ['react-i18next'],
     react: {
       version: require('react').version,
     },
