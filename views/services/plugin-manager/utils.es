@@ -326,6 +326,12 @@ const postEnableProcess = plugin => {
           join(ROOT, 'assets', 'js', 'plugin-preload.js'),
         )
       }
+      if (!get(windowOptions, 'webPreferences.webviewTag')) {
+        set(windowOptions, 'webPreferences.webviewTag', true)
+      }
+      if (!get(windowOptions, 'webPreferences.nodeIntegration')) {
+        set(windowOptions, 'webPreferences.nodeIntegration', true)
+      }
       if (!get(windowOptions, 'webPreferences.nodeIntegrationInWorker')) {
         set(windowOptions, 'webPreferences.nodeIntegrationInWorker', true)
       }
@@ -338,6 +344,8 @@ const postEnableProcess = plugin => {
         webPreferences: {
           preload: join(ROOT, 'assets', 'js', 'plugin-preload.js'),
           plugins: true,
+          webviewTag: true,
+          nodeIntegration: true,
           nodeIntegrationInWorker: true,
           affinity: 'poi-plugin',
         },

@@ -269,6 +269,7 @@ export class KanGameWrapper extends Component {
               plugins
               disablewebsecurity
               webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+              nodeIntegration
               preload={preloadUrl}
               style={{
                 width: '100%',
@@ -420,6 +421,7 @@ export class KanGameWrapper extends Component {
                 plugins
                 disablewebsecurity
                 webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+                nodeIntegration
                 preload={preloadUrl}
                 style={{
                   width: '100%',
