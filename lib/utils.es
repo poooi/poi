@@ -19,17 +19,17 @@ export const remoteStringify = JSON.stringify
 
 export function log(...str) {
   // eslint-disable-next-line no-console
-  console.log('[INFO] ', ...map(str, stringify))
+  console.log('[INFO]', ...map(str, stringify))
 }
 
 export const info = log
 
 export function warn(...str) {
-  console.warn(chalk.yellow('[WARN] ', ...map(str, stringify)))
+  console.warn(chalk.yellow('[WARN]', ...map(str, stringify)))
 }
 
 export function error(...str) {
-  console.error(chalk.red.bold('[ERROR] ', ...map(str, stringify)))
+  console.error(chalk.red.bold('[ERROR]', ...map(str, stringify)))
 }
 
 export function setBounds(options) {
