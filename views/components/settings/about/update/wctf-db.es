@@ -101,10 +101,7 @@ export class WctfDB extends Component {
     }
 
     const npmConfig = getNpmConfig(DB_ROOT)
-    const data = await await fetch(
-      `${npmConfig.registry}${PACKAGE_NAME}/latest`,
-      defaultFetchOption,
-    )
+    const data = await fetch(`${npmConfig.registry}${PACKAGE_NAME}/latest`, defaultFetchOption)
       .then(res => (res.ok ? res.json() : undefined))
       .catch(e => undefined)
     if (!data || !data.version) {

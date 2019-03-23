@@ -64,7 +64,7 @@ export class FCD extends Component {
     for (const server of serverList) {
       flag = true
 
-      const fileList = await await fetch(`${server}meta.json`, defaultFetchOption)
+      const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
         .then(res => (res.ok ? res.json() : undefined))
         .catch(e => undefined)
       if (fileList) {
