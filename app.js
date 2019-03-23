@@ -122,7 +122,6 @@ app.on('window-all-closed', () => {
 })
 
 // Single instance
-
 const getLock = app.requestSingleInstanceLock()
 
 if (!getLock) {
@@ -131,7 +130,7 @@ if (!getLock) {
 } else {
   app.on('second-instance', () => {
     if (mainWindow) {
-      if (mainWindow.insMinimized()) {
+      if (mainWindow.isMinimized()) {
         mainWindow.restore()
       }
       mainWindow.focus()
