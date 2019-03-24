@@ -121,6 +121,23 @@ app.on('window-all-closed', () => {
   app.quit()
 })
 
+// Single instance
+const getLock = app.requestSingleInstanceLock()
+
+if (!getLock) {
+  error('Another instance is running, exiting')
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      mainWindow.focus()
+    }
+  })
+}
+
 app.on('ready', () => {
   const { screen } = require('electron')
   shortcut.register()

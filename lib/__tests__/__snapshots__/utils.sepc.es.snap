@@ -3,7 +3,7 @@
 exports[`error() should print a bold red object as error 1`] = `
 Array [
   Array [
-    "[31m[1m[ERROR]  {\\"message\\":\\"I am bold red error.\\"}[22m[39m",
+    "[31m[1m[ERROR] {\\"message\\":\\"I am bold red error.\\"}[22m[39m",
   ],
 ]
 `;
@@ -11,7 +11,7 @@ Array [
 exports[`error() should print a bold red string as error 1`] = `
 Array [
   Array [
-    "[31m[1m[ERROR]  I am bold red error..[22m[39m",
+    "[31m[1m[ERROR] I am bold red error..[22m[39m",
   ],
 ]
 `;
@@ -19,7 +19,7 @@ Array [
 exports[`log() should print a white object string as log 1`] = `
 Array [
   Array [
-    "[INFO] ",
+    "[INFO]",
     "{\\"message\\":\\"I am white log\\"}",
   ],
 ]
@@ -28,7 +28,7 @@ Array [
 exports[`log() should print a white string as log 1`] = `
 Array [
   Array [
-    "[INFO] ",
+    "[INFO]",
     "I am white log.",
   ],
 ]
@@ -37,7 +37,7 @@ Array [
 exports[`warn() should print a yellow object as warning 1`] = `
 Array [
   Array [
-    "[33m[WARN]  {\\"message\\":\\"I am yellow warning.\\"}[39m",
+    "[33m[WARN] {\\"message\\":\\"I am yellow warning.\\"}[39m",
   ],
 ]
 `;
@@ -45,7 +45,7 @@ Array [
 exports[`warn() should print a yellow string as warning 1`] = `
 Array [
   Array [
-    "[33m[WARN]  I am yellow warning.[39m",
+    "[33m[WARN] I am yellow warning.[39m",
   ],
 ]
 `;
