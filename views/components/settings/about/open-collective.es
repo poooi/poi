@@ -26,18 +26,21 @@ export class OpenCollective extends Component {
 
   render() {
     const { width } = this.state
+    const { ready } = this.props
     return (
       <ResizeSensor onResize={this.handleResize}>
         <Section title="OpenCollective">
           <Wrapper>
-            <div className="opencollective">
-              {range(10).map(i => (
-                <a href={`https://opencollective.com/poi/sponsor/${i}/website`} key={i}>
-                  <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
-                </a>
-              ))}
-            </div>
-            {width > 0 && (
+            {ready && (
+              <div className="opencollective">
+                {range(10).map(i => (
+                  <a href={`https://opencollective.com/poi/sponsor/${i}/website`} key={i}>
+                    <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
+                  </a>
+                ))}
+              </div>
+            )}
+            {ready && width > 0 && (
               <div>
                 <a href="https://opencollective.com/poi#backers">
                   <img src={`https://opencollective.com/poi/backers.svg?width=${width}`} />

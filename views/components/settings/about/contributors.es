@@ -33,18 +33,19 @@ const Avatar = styled.div`
   }
 `
 
-export const Contributors = () => (
+export const Contributors = ({ ready }) => (
   <Section title="Contributors">
     <Wrapper className="contributors">
-      {map(CONTRIBUTORS, (e, i) => (
-        <Avatar key={e.name || e.login} className="contributor-item">
-          <img
-            src={getAvatarUrl(e.avatar_url)}
-            onClick={openLink(e.html_url)}
-            title={e.name || e.login}
-          />
-        </Avatar>
-      ))}
+      {ready &&
+        map(CONTRIBUTORS, (e, i) => (
+          <Avatar key={e.name || e.login} className="contributor-item">
+            <img
+              src={getAvatarUrl(e.avatar_url)}
+              onClick={openLink(e.html_url)}
+              title={e.name || e.login}
+            />
+          </Avatar>
+        ))}
     </Wrapper>
   </Section>
 )

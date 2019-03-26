@@ -38,13 +38,15 @@ const Detail = styled.div`
   padding-left: 5px;
 `
 
-export const ThanksTo = () => (
+export const ThanksTo = ({ ready }) => (
   <Section title="Thanks to">
     <Wrapper className="thanks-to">
       {map(CONST.thanksTo, e => (
         <Item key={e.name} className="thanks-to-item">
           <Icon className="thanks-to-img-container">
-            <img src={e.avatar} style={e.extraCSS} onClick={openLink(e.link)} title={e.name} />
+            {ready && (
+              <img src={e.avatar} style={e.extraCSS} onClick={openLink(e.link)} title={e.name} />
+            )}
           </Icon>
           <Detail className="thanks-to-container">
             <b>{e.name}</b>
