@@ -6,7 +6,7 @@ const config = {
       require.resolve('@babel/preset-env'),
       {
         targets: {
-          electron: '3.0',
+          electron: '4.0',
         },
         loose: true,
       },
