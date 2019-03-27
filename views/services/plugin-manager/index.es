@@ -74,6 +74,7 @@ class PluginManager extends EventEmitter {
       type: '@@Plugin/initialize',
       value: plugins,
     })
+    return plugins
   }
 
   isMetRequirement(plugin) {

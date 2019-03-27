@@ -179,6 +179,8 @@ app.on('ready', () => {
     fullscreenable: config.get('poi.content.resizable', true),
     webPreferences: {
       plugins: true,
+      webviewTag: true,
+      nodeIntegration: true,
       nodeIntegrationInWorker: true,
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
