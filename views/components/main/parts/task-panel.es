@@ -323,7 +323,7 @@ export class TaskPanel extends React.Component {
                 colwidth={colwidth}
               />
             )),
-            range(Object.keys(activeQuests).length, 6).map(idx =>
+            range(Object.keys(activeQuests).length, 7).map(idx =>
               idx < activeNum ? (
                 // Need refreshing
                 <TaskRowBase
