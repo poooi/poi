@@ -170,7 +170,7 @@
   "build": {
     "appId": "org.poooi.poi",
     "asar": true,
-    "npmRebuild": true,
+    "npmRebuild": false,
     "mac": {
       "publish": [],
       "icon": "assets/icons/poi.icns",
