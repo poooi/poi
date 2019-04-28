@@ -222,7 +222,8 @@
     "mac": {
       "publish": [],
       "icon": "assets/icons/poi.icns",
-      "category": "public.app-category.games"
+      "category": "public.app-category.games",
+      "provisioningProfile": "poi.provisionprofile"
     },
     "dmg": {
       "contents": [
