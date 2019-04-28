@@ -7,6 +7,7 @@
     "test": "jest",
     "deploy:nightlies": "gulp deploy_nightlies",
     "build": "gulp build && electron-builder -p never",
+    "build:mas": "gulp build && electron-builder --config build-mas.yml",
     "start": "electron .",
     "start_debug": "electron . --dev --inspect",
     "dev": "electron . --dev --inspect",
