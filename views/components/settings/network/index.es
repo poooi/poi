@@ -27,7 +27,7 @@ const StickyCallout = styled(Callout)`
 @connect(state => ({
   use: get(state, 'config.proxy.use', 'none'),
 }))
-class ProxiesConfig extends Component {
+export class ProxiesConfig extends Component {
   static propTypes = {
     use: PropTypes.string.isRequired,
   }
