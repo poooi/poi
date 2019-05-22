@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
-import { screen, remote } from 'electron'
+import { remote } from 'electron'
 import { fileUrl, loadScript } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { KanGameWrapper } from './kan-game-wrapper'
@@ -23,8 +23,8 @@ const pickOptions = [
   'getStore',
 ]
 
+const { BrowserWindow, screen } = remote
 const { workArea } = screen.getPrimaryDisplay()
-const { BrowserWindow } = remote
 const getPluginWindowRect = () => {
   const defaultRect = { width: 1200, height: 780 }
   let { x, y, width, height } = config.get('poi.kangameWindow.bounds', defaultRect)

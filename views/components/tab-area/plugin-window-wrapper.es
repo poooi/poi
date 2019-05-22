@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
 import { TitleBar } from 'electron-react-titlebar'
-import { screen, remote } from 'electron'
+import { remote } from 'electron'
 import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import styled, { StyleSheetManager } from 'styled-components'
@@ -22,7 +22,7 @@ const pickOptions = [
   'config',
   'getStore',
 ]
-const { BrowserWindow } = remote
+const { BrowserWindow, screen } = remote
 const ipc = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
 const getPluginWindowRect = plugin => {

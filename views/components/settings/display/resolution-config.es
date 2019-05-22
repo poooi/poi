@@ -4,12 +4,14 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { debounce, get } from 'lodash'
 import { Trans } from 'react-i18next'
-import { screen } from 'electron'
+import { remote } from 'electron'
 import { Switch, HTMLSelect, NumericInput, FormGroup } from '@blueprintjs/core'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
+
+const { screen } = remote
 
 const Icon = styled.div`
   margin: 0 1em;
