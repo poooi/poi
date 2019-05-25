@@ -1,6 +1,6 @@
 meta:
   name: "shiptag"
-  version: "2019/05/25/01"
+  version: "2019/05/25/02"
 
 data:
   mapname: [
@@ -13,8 +13,11 @@ data:
   ]
   color: [
     "#9E9E9E"
-    "#FFC107"
+    "#FF9800"
     "#03A9F4"
+    "#8BC34A"
+    "#FFEB3B"
+    "#009688"
   ]
   fleetname:
     "zh-CN": [
