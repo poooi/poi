@@ -3,7 +3,8 @@ const fs = require('fs-extra')
 const path = require('path')
 const moment = require('moment')
 const CSON = require('cson')
-const { isEqual, last, padStart } = require('lodash')
+const { isEqual, last, padStart, size } = require('lodash')
+const assert = require('assert')
 
 const DEST = path.resolve(__dirname, '../assets/data/fcd')
 
@@ -58,7 +59,23 @@ async function build_meta(flist) {
   await writeJSON('meta.json', meta)
 }
 
+const validateShipTag = async () => {
+  const file = await fs.readFile('shiptag.cson')
+  const { data } = CSON.parse(file)
+
+  const count = size(data.mapname)
+
+  assert(count > 0)
+  assert(size(data.color) === count)
+  assert(size(data.fleetname['zh-CN']) === count)
+  assert(size(data.fleetname['zh-TW']) === count)
+  assert(size(data.fleetname['ja-JP']) === count)
+  assert(size(data.fleetname['en-US']) === count)
+}
+
 ;(async () => {
+  await validateShipTag()
+
   await Promise.all([buildData('map.json'), buildData('shipavatar.json'), CSON2JSON('shiptag')])
 
   await build_meta(['map.json', 'shipavatar.json', 'shiptag.json'].sort())
