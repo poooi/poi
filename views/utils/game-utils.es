@@ -216,6 +216,13 @@ export function getTyku(equipsData, landbaseStatus = 0) {
           minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
           maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
         }
+      } else if ([49].includes($equip.api_type[2])) {
+        // 陸上偵察機
+        if (landbaseStatus == 1) {
+          reconBonus = Math.max(reconBonus, 1.15)
+        } else if (landbaseStatus == 2) {
+          reconBonus = Math.max(reconBonus, 1.18)
+        }
       }
     }
   }
