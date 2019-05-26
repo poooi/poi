@@ -205,16 +205,10 @@ export function getTyku(equipsData, landbaseStatus = 0) {
         }
       } else if ([9].includes($equip.api_type[2]) && landbaseStatus == 2) {
         // 艦偵
-        if (landbaseStatus == 2) {
-          if ($equip.api_saku >= 9) {
-            reconBonus = Math.max(reconBonus, 1.3)
-          } else {
-            reconBonus = Math.max(reconBonus, 1.2)
-          }
-        } else if (landbaseStatus == 1) {
-          tempTyku += Math.sqrt(onslot) * $equip.api_tyku
-          minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-          maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
+        if ($equip.api_saku >= 9) {
+          reconBonus = Math.max(reconBonus, 1.3)
+        } else {
+          reconBonus = Math.max(reconBonus, 1.2)
         }
       } else if ([49].includes($equip.api_type[2])) {
         // 陸上偵察機
