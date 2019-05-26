@@ -307,6 +307,9 @@ export async function disablePlugin(plugin) {
 }
 
 const postEnableProcess = plugin => {
+  if (plugin.isBroken) {
+    return plugin
+  }
   if (plugin.reducer) {
     try {
       extendReducer(plugin.packageName, plugin.reducer)
