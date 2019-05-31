@@ -26,9 +26,7 @@ Key features include:
 
 ## Screenshots
 
-![Preview 1](https://gist.githubusercontent.com/KochiyaOcean/79d405dfa1c15fbad60c9ae92b981c8f/raw/4a9879a22ebc5675d37b84b72347d66bb885985c/L.png)
-
-![Preview 2](https://gist.githubusercontent.com/KochiyaOcean/79d405dfa1c15fbad60c9ae92b981c8f/raw/4a9879a22ebc5675d37b84b72347d66bb885985c/V.png)
+![Preview 1](https://user-images.githubusercontent.com/3816900/58731579-ae9fb480-8421-11e9-8a28-f7002f84c0ae.png)
 
 [More screenshots are available here](https://github.com/poooi/poi/wiki/Screenshots)
 
