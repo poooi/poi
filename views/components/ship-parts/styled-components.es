@@ -197,7 +197,7 @@ export const ShipHP = styled.span`
 export const StatusLabelContainer = styled.div`
   grid-column: 4 / 5;
   grid-row: 2 / 4;
-  z-index: 100;
+  z-index: 101;
   align-self: flex-end;
 `
 
