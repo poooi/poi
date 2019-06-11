@@ -128,6 +128,7 @@ const isTatsutaK2 = shipIdIs(478)
 const isIseK = shipIdIs(82)
 const isIseK2 = shipIdIs(553)
 const isHyuuGaK = shipIdIs(88)
+const isHyuuGaK2 = shipIdIs(554)
 const isMusashiK = shipIdIs(148)
 const isMusashiK2 = shipIdIs(546)
 const isHamakazeBK = shipIdIs(558)
@@ -406,11 +407,11 @@ declareAACI({
 
 // id 28: Ise-class Kai & Musashi Kai/K2
 declareAACI({
-  name: ['伊勢改', '伊勢改二', '日向改', '武蔵改', '武蔵改二'],
+  name: ['伊勢改', '伊勢改二', '日向改', '日向改二', '武蔵改', '武蔵改二'],
   id: 28,
   fixed: 4,
   modifier: 1.4,
-  shipValid: validAny(isIseK, isIseK2, isHyuuGaK, isMusashiK, isMusashiK2),
+  shipValid: validAny(isIseK, isIseK2, isHyuuGaK, isHyuuGaK2, isMusashiK, isMusashiK2),
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar)),
 })
 
