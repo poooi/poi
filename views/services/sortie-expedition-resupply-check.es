@@ -1,4 +1,4 @@
-/* global config, getStore, $ships */
+/* global config, getStore */
 import i18next from 'views/env-parts/i18next'
 
 window.addEventListener('game.response', ({ detail: { path } }) => {
@@ -7,13 +7,10 @@ window.addEventListener('game.response', ({ detail: { path } }) => {
 
   const fleets = getStore('info.fleets')
   const ships = getStore('info.ships')
+  const $ships = getStore('const.$ships')
   const needResupply = fleets
     .filter((_, index) => index !== 0)
-    .map(fleet => fleet.api_ship)
-    .reduce((p, c) => {
-      p.push(...c)
-      return p
-    }, [])
+    .flatMap(fleet => fleet.api_ship)
     .some(shipId => {
       const ship = ships[shipId]
       const $ship = $ships[ship.api_ship_id]
