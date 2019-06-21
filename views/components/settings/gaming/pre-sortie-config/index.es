@@ -17,5 +17,12 @@ export const PreSortieConfig = withNamespaces(['setting'])(({ t }) => (
         defaultValue={true}
       />
     </FormGroup>
+    <FormGroup>
+      <SwitchConfig
+        label={t('setting:Display Expedition Resupply Notification')}
+        configName="poi.expeditionResupplyCheck.enable"
+        defaultValue={false}
+      />
+    </FormGroup>
   </Section>
 ))

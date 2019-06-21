@@ -89,6 +89,8 @@
   "OASW": "先制对潜",
   "At least one ship in your fleet has not been locked": "至少有一位舰娘没有贴条",
   "Event ship locking warning": "活动锁船警告",
+  "At least one fleet has not been fully resupplied": "至少有一个舰队未补给",
+  "Expedition resupply warning": "远征补给警告",
   "Lv": "Lv. {{level}}",
   "RemodelLv": "改造等级：Lv. {{remodelLevel}}",
   "RemodelReady": "可以进行改造",
