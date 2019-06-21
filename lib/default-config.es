@@ -118,6 +118,9 @@ const defaultConfig = {
     eventSortieCheck: {
       enable: true,
     },
+    expeditionResupplyCheck: {
+      enable: false,
+    },
     mapStartCheck: {
       ship: {
         enable: false,
