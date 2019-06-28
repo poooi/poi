@@ -24,5 +24,12 @@ export const PreSortieConfig = withNamespaces(['setting'])(({ t }) => (
         defaultValue={false}
       />
     </FormGroup>
+    <FormGroup>
+      <SwitchConfig
+        label={t('setting:Display Unused Equipment Slot Notification')}
+        configName="poi.unusedEquipmentSlotCheck.enable"
+        defaultValue={false}
+      />
+    </FormGroup>
   </Section>
 ))

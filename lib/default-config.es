@@ -121,6 +121,9 @@ const defaultConfig = {
     expeditionResupplyCheck: {
       enable: false,
     },
+    unusedEquipmentSlotCheck: {
+      enable: false,
+    },
     mapStartCheck: {
       ship: {
         enable: false,
