@@ -123,6 +123,7 @@ const defaultConfig = {
     },
     unusedEquipmentSlotCheck: {
       enable: false,
+      ignoreUnlocked: false,
     },
     mapStartCheck: {
       ship: {
