@@ -193,92 +193,64 @@ const ShipTooltip = styled.div`
 `
 
 const ShipItem = styled.div`
-  align-items: center;
-  display: flex;
+  align-items: start;
+  display: grid;
   flex: 1;
   flex-flow: row nowrap;
   overflow: hidden;
   position: relative;
+  white-space: nowrap;
+  ${({ avatar = true, shipName = true, isLBAC = false }) => {
+    const avatarWidth = avatar ? '58px' : 0
+    const nameWidth = shipName ? '4fr' : 0
+    const dataWidth = isLBAC ? 'minmax(32px, 1fr) 120px' : '5fr 18px 42px'
+    return css`
+      grid-template-columns: ${avatarWidth} ${nameWidth} ${dataWidth};
+      grid-template-rows: 20px 13px;
+      grid-column-gap: 3px;
+      grid-row-gap: 5px;
+    `
+  }}
 `
 
 const ShipLvAvatar = styled.div`
-  bottom: 0;
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  z-index: 99;
   display: flex;
   filter: drop-shadow(0 0 2px black);
   font-size: 70%;
-  left: 0;
   line-height: 1;
-  position: absolute;
   text-shadow: 0 0 2px rgba(0, 0, 0, 1);
   white-space: nowrap;
 `
 
-const ShipNameContainer = styled.div`
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
-
 const ShipInfo = styled.div`
-  display: flex;
-  flex-basis: 0;
-  flex-flow: column nowrap;
-  font-size: 14px;
-  justify-content: space-between;
-  min-width: 0;
-  z-index: 1;
-  flex-grow: 1;
-  flex-shrink: 0;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      flex-basis: 61px;
-
-      & > .bp3-popover-target {
-        height: 100%;
-      }
-
-      ${ShipNameContainer} {
-        height: 100%;
-        padding-left: 58px;
-      }
-    `}
-  ${({ hideInfo }) =>
-    hideInfo &&
-    css`
-      flex-grow: 0;
-      flex-shrink: 0;
-      height: 37px;
-    `}
+  grid-row: 1 / 3;
+  grid-column: 1 / 3;
+  z-index: 100;
+  height: 100%;
+  & > div {
+    height: 100%;
+    width: 100%;
+  }
 `
 
 const ShipName = styled.div`
-  height: 20px;
-  margin-right: 5px;
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `
 
 const ShipLvText = styled.div`
-  display: flex;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
   font-size: 70%;
-  height: 13px;
   line-height: 1;
-  margin-right: 4px;
-  margin-top: 2px;
   overflow: hidden;
   align-items: center;
-  margin-top: 5px;
-`
-
-const ShipState = styled.div`
-  display: flex;
-  flex-basis: 0;
-  flex-flow: column nowrap;
-  flex-grow: 2;
-  flex-shrink: 1;
-  font-size: 14px;
-  justify-content: space-between;
 `
 
 const ShipStateText = styled.div`
@@ -286,39 +258,30 @@ const ShipStateText = styled.div`
 `
 
 const ShipHP = styled.span`
-  align-self: flex-start;
-  flex-basis: 60px;
-  flex-grow: 1;
-  flex-shrink: 0;
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
 `
 
 const StatusLabelContainer = styled.div`
-  display: inline-block;
-  flex-basis: 20px;
-  flex-grow: 0;
-  flex-shrink: 1;
-  margin-left: 5px;
-  margin-top: -1px;
+  grid-row: 1 / 2;
+  grid-column: 4 / 5;
   position: relative;
   text-align: center;
   vertical-align: middle;
-  z-index: 100;
+  z-index: 101;
 `
 
 const ShipCond = styled.div`
   align-self: flex-end;
-  flex-basis: inherit;
-  flex-flow: nowrap;
-  flex-grow: 0;
-  flex-shrink: 1;
-  width: 30px;
+  grid-row: 1 / 2;
+  grid-column: 5 / 6;
   text-align: right;
   white-space: nowrap;
 `
 
 const HPProgress = styled.div`
-  flex: 1;
-  margin-top: 5px;
+  grid-row: 2 / 3;
+  grid-column: 3 / 6;
   .bp3-progress-bar {
     flex: auto;
     height: 7px;
@@ -329,6 +292,8 @@ export const ShipAvatar = styled(Avatar)`
   position: absolute;
   z-index: 10;
   pointer-events: none;
+  align-items: end;
+  align-self: center;
 `
 
 @withNamespaces(['resources', 'main'])
@@ -382,25 +347,51 @@ export class MiniShipRow extends Component {
       >
         <ShipItem
           className="ship-item"
+          avatar={enableAvatar}
+          shipName={!hideShipName}
           data-master-id={ship.api_ship_id}
           data-ship-id={ship.api_id}
         >
           {enableAvatar && (
-            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33}>
-              {compact && (
-                <ShipLvAvatar className="ship-lv-avatar">
-                  {level && t('main:Lv', { level })}
-                </ShipLvAvatar>
-              )}
-            </ShipAvatar>
+            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33} />
           )}
+          {hideShipName && (
+            <ShipLvAvatar className="ship-lv-avatar">
+              {level && t('main:Lv', { level })}
+            </ShipLvAvatar>
+          )}
+          {!hideShipName && (
+            <>
+              <ShipName className="ship-name" style={labelStatusStyle}>
+                {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
+              </ShipName>
+              <ShipLvText className="ship-lv-text" style={labelStatusStyle}>
+                {level && t('main:Lv', { level })}
+              </ShipLvText>
+            </>
+          )}
+          <ShipHP className="ship-hp" style={labelStatusStyle}>
+            {ship.api_nowhp} / {ship.api_maxhp}
+          </ShipHP>
+          <StatusLabelContainer className="status-label">
+            <StatusLabel label={labelStatus} />
+          </StatusLabelContainer>
+          <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
+            {ship.api_cond}
+          </ShipCond>
+          <HPProgress className="hp-progress" style={labelStatusStyle}>
+            <ProgressBar
+              stripes={false}
+              intent={getHpStyle(hpPercentage)}
+              value={hpPercentage / 100}
+            />
+          </HPProgress>
           <ShipInfo
             as={Tooltip}
             className="ship-info"
-            avatar={enableAvatar}
-            hideInfo={hideShipName}
             position={Position.TOP_LEFT}
             wrapperTagName="div"
+            targetTagName="div"
             content={
               hideShipName ? (
                 <div className="ship-tooltip-info">
@@ -419,39 +410,8 @@ export class MiniShipRow extends Component {
               )
             }
           >
-            <ShipNameContainer className="ship-name-container">
-              {!hideShipName && (
-                <>
-                  <ShipName className="ship-name" style={labelStatusStyle}>
-                    {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
-                  </ShipName>
-                  <ShipLvText className="ship-lv-text" style={labelStatusStyle}>
-                    {level && t('main:Lv', { level })}
-                  </ShipLvText>
-                </>
-              )}
-            </ShipNameContainer>
+            <div />
           </ShipInfo>
-          <ShipState className="ship-stat">
-            <ShipStateText className="div-row">
-              <ShipHP className="ship-hp" style={labelStatusStyle}>
-                {ship.api_nowhp} / {ship.api_maxhp}
-              </ShipHP>
-              <StatusLabelContainer className="status-label">
-                <StatusLabel label={labelStatus} />
-              </StatusLabelContainer>
-              <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
-                {ship.api_cond}
-              </ShipCond>
-            </ShipStateText>
-            <HPProgress className="hp-progress" style={labelStatusStyle}>
-              <ProgressBar
-                stripes={false}
-                intent={getHpStyle(hpPercentage)}
-                value={hpPercentage / 100}
-              />
-            </HPProgress>
-          </ShipState>
         </ShipItem>
       </ShipTile>
     )
@@ -479,24 +439,29 @@ const ShipTile = styled.div`
 `
 
 const LandBaseStatTag = styled(Tag)`
-  padding-top: 0;
-  padding-bottom: 0;
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
+  font-size: 63% !important;
+  text-align: center;
 `
 
-const LandBaseState = styled(ShipState)`
-  flex-basis: 110px;
-  flex-grow: 0;
-  min-width: 110px;
-  width: 110px;
+const LandBaseState = styled.div`
+  grid-column: 4 / 5;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 14px;
+  justify-content: space-between;
+  align-self: end;
 `
 
 const ShipFP = styled.div`
-  flex-grow: 1;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  font-size: 70%;
 `
 
 const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
-  padding-top: 6px;
-
   ${SlotItemContainer} .png {
     height: 32px;
     margin-bottom: -3px;
@@ -528,44 +493,30 @@ export const MiniSquardRow = withNamespaces(['main'])(
     const tyku = getTyku([equipsData], api_action_kind)
     return (
       <ShipTile className="ship-tile">
-        <ShipItem className="ship-item">
+        <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
           {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-            <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
-              {compact && (
-                <ShipLvAvatar className="ship-lv-avatar">
-                  <LandBaseStatTag
-                    className="landbase-status"
-                    minimal
-                    intent={LBAC_INTENTS[api_action_kind]}
-                  >
-                    {t(LBAC_STATUS_NAMES[api_action_kind])}
-                  </LandBaseStatTag>
-                  <ShipFP className="ship-fp">
-                    {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-                  </ShipFP>
-                </ShipLvAvatar>
-              )}
-            </ShipAvatar>
+            <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33} />
           )}
-          <ShipInfo className="ship-info" avatar={enableAvatar} hideInfo={hideShipName}>
-            {!hideShipName && (
-              <ShipNameContainer>
-                <ShipName className="ship-name">{api_name}</ShipName>
-                <ShipLvText className="ship-lv-text">
-                  <ShipFP className="ship-fp">
-                    {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-                  </ShipFP>
-                  <LandBaseStatTag
-                    className="landbase-status"
-                    minimal
-                    intent={LBAC_INTENTS[api_action_kind]}
-                  >
-                    {t(LBAC_STATUS_NAMES[api_action_kind])}
-                  </LandBaseStatTag>
-                </ShipLvText>
-              </ShipNameContainer>
-            )}
-          </ShipInfo>
+          {hideShipName && (
+            <ShipLvAvatar className="ship-lv-avatar">
+              {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+            </ShipLvAvatar>
+          )}
+          {!hideShipName && (
+            <>
+              <ShipName className="ship-name">{api_name}</ShipName>
+              <ShipFP className="ship-fp">
+                {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+              </ShipFP>
+            </>
+          )}
+          <LandBaseStatTag
+            className="landbase-status"
+            minimal
+            intent={LBAC_INTENTS[api_action_kind]}
+          >
+            {t(LBAC_STATUS_NAMES[api_action_kind])}
+          </LandBaseStatTag>
           <LandBaseState className="ship-stat landbase-stat">
             <ShipStateText>
               <MiniLandbaseSlotitems landbaseId={squardId} isMini={true} />
