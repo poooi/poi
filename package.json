@@ -92,7 +92,7 @@
     "i18next": "^15.1.1",
     "immutable": "^3.8.2",
     "json-format": "^1.0.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "memoize-one": "^5.0.4",
     "mime": "^2.4.4",
     "moment-timezone": "^0.5.25",
