@@ -107,7 +107,7 @@
     "poi-asset-contributor-data": "^1.1.1",
     "poi-asset-themes": "^4.0.0-beta.4",
     "poi-lib-battle": "^2.10.1",
-    "polished": "^3.4.0",
+    "polished": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-bootstrap": "^0.32.4",
