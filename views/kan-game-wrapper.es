@@ -271,6 +271,7 @@ export class KanGameWrapper extends Component {
               webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
               nodeIntegration
               preload={preloadUrl}
+              allowpopups
               style={{
                 width: '100%',
                 paddingTop: '60%',
@@ -423,6 +424,7 @@ export class KanGameWrapper extends Component {
                 webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
                 nodeIntegration
                 preload={preloadUrl}
+                allowpopups
                 style={{
                   width: '100%',
                   paddingTop: '60%',
