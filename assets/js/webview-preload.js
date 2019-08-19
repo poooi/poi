@@ -192,8 +192,3 @@ if (
     }
   }
 }
-
-// A workaround for drop-and-drag navigation
-remote
-  .require('./lib/utils')
-  .stopFileNavigateAndHandleNewWindowInApp(remote.getCurrentWebContents().id)
