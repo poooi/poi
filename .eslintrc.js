@@ -22,7 +22,7 @@ module.exports = {
   parser: 'babel-eslint',
   rules: {
     'linebreak-style': ['error', 'unix'],
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
     'no-var': 'error',
     'no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
     'unicode-bom': 'error',
