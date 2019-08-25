@@ -128,6 +128,7 @@ export const build = async (poiVersion, dontRemove) => {
   const packageData = await fs.readJson(packagePath)
   delete packageData.build
   delete packageData.devDependencies
+  packageData.latestCommit = global.latestCommit
   await fs.remove(packagePath)
   await fs.outputJson(packagePath, packageData)
   log('Done.')

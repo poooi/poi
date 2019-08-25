@@ -1,5 +1,7 @@
 require('@babel/register')(require('./babel.config'))
 const gulp = require('gulp')
+const childProcess = require('child_process')
+const { trim } = require('lodash')
 
 global.ROOT = __dirname
 
@@ -13,8 +15,14 @@ let poiVersion = null
 gulp.task('getVersion', done => {
   const package_version = packageMeta.version
   poiVersion = package_version
-  log(`*** Start building poi ${poiVersion} ***`)
-  done()
+  childProcess.exec('git rev-parse HEAD', (err, stdout) => {
+    if (!err) {
+      console.error(err)
+      global.latestCommit = trim(stdout)
+    }
+    log(`*** Start building poi ${poiVersion} at ${global.latestCommit} ***`)
+    done()
+  })
 })
 
 gulp.task('build', gulp.series('getVersion', () => build(poiVersion)))
