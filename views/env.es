@@ -39,6 +39,12 @@ if (window.isMain) {
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://bc58c4a7f37a43e8aa89ba9097536c84@sentry.io/1250935',
+    beforeSend(event) {
+      if (event.message.includes('React is running in production mode')) {
+        return null
+      }
+      return event
+    },
   })
 
   Sentry.configureScope(scope => {
