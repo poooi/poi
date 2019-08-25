@@ -17,8 +17,9 @@ gulp.task('getVersion', done => {
   poiVersion = package_version
   childProcess.exec('git rev-parse HEAD', (err, stdout) => {
     if (!err) {
-      console.error(err)
       global.latestCommit = trim(stdout)
+    } else {
+      console.error(err)
     }
     log(`*** Start building poi ${poiVersion} at ${global.latestCommit} ***`)
     done()

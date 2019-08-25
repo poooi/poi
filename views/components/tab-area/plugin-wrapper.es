@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { clipboard } from 'electron'
 import { withNamespaces } from 'react-i18next'
 import { Card, TextArea, Button, Intent } from '@blueprintjs/core'
+import * as Sentry from '@sentry/electron'
 
 @withNamespaces()
 export class PluginWrap extends Component {
@@ -9,6 +10,7 @@ export class PluginWrap extends Component {
     hasError: false,
     error: null,
     info: null,
+    eventId: '',
   }
 
   static defaultProps = {
@@ -20,10 +22,16 @@ export class PluginWrap extends Component {
   }
 
   componentDidCatch = (error, info) => {
-    this.setState({
-      hasError: true,
-      error,
-      info,
+    Sentry.withScope(scope => {
+      scope.setExtra('componentStack', info.componentStack)
+      scope.setTag('area', this.props.plugin.name)
+      const eventId = Sentry.captureException(error)
+      this.setState({
+        hasError: true,
+        error,
+        info,
+        eventId,
+      })
     })
   }
 
