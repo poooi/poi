@@ -102,6 +102,9 @@ app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
+// Polyfill for webview iframe isolation
+app.commandLine.appendSwitch('disable-site-isolation-trials', true)
+
 // Fix GPU acceleration
 // app.commandLine.appendSwitch('enable-accelerated-2d-canvas', 'true')
 // app.commandLine.appendSwitch('ignore-gpu-blacklist', 'true')
