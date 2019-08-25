@@ -287,6 +287,7 @@ export async function enablePlugin(plugin, reread = true) {
     ...pluginMain,
   }
   if (plugin.windowURL) {
+    // eslint-disable-next-line require-atomic-updates
     plugin.realClose = !config.get(`poi.plugin.background.${plugin.id}`, !plugin.realClose)
   }
   plugin = postEnableProcess(plugin)

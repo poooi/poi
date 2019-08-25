@@ -99,7 +99,7 @@ export class PluginConfig extends Component {
             try {
               await this.handleUpdate(index)()
             } catch (error) {
-              throw error
+              console.error(error)
             }
           }
         })
@@ -162,7 +162,7 @@ export class PluginConfig extends Component {
     try {
       await PluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
     } catch (error) {
-      throw error
+      console.error(error)
     } finally {
       this.setState({ npmWorking: false })
     }
@@ -211,7 +211,7 @@ export class PluginConfig extends Component {
         try {
           await this.handleUpdate(index)()
         } catch (error) {
-          throw error
+          console.error(error)
         }
       }
     })
@@ -228,7 +228,7 @@ export class PluginConfig extends Component {
       const plugin = plugins[index]
       await PluginManager.uninstallPlugin(plugin)
     } catch (error) {
-      throw error
+      console.error(error)
     } finally {
       this.setState({ npmWorking: false })
     }

@@ -421,6 +421,7 @@ class PluginManager extends EventEmitter {
   async reloadPlugin(plugin) {
     try {
       await this.disablePlugin(plugin)
+      // eslint-disable-next-line require-atomic-updates
       plugin.isBroken = false
       await this.enablePlugin(plugin)
     } catch (error) {

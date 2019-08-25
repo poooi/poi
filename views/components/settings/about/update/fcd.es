@@ -73,9 +73,7 @@ export class FCD extends Component {
           if (file.version > localVersion) {
             // eslint-disable-next-line no-console
             console.log(
-              `Updating ${file.name}: current ${localVersion}, remote ${
-                file.version
-              }, mode ${cacheMode}`,
+              `Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`,
             )
 
             const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
@@ -92,9 +90,7 @@ export class FCD extends Component {
           } else {
             // eslint-disable-next-line no-console
             console.log(
-              `No newer version of ${file.name}: current ${localVersion}, remote ${
-                file.version
-              }, mode ${cacheMode}`,
+              `No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`,
             )
           }
         }

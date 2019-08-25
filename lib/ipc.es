@@ -66,7 +66,7 @@ class IPC extends EventEmitter {
   // args:   arguments passing to api
   foreachCall = (key, ...args) => {
     for (const scope in this.data) {
-      if (this.data[scope].hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this.data[scope], key)) {
         this.data[key].apply(null, args)
       }
     }
