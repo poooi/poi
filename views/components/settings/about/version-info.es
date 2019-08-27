@@ -1,7 +1,7 @@
-/* global ROOT, POI_VERSION */
+/* global ROOT, POI_VERSION, LATEST_COMMIT */
 import React from 'react'
 import styled from 'styled-components'
-import { map, capitalize, memoize, size, throttle } from 'lodash'
+import { map, capitalize, memoize, size, throttle, isString, toUpper } from 'lodash'
 import { withNamespaces } from 'react-i18next'
 import { Card, Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
 import { shell } from 'electron'
@@ -133,6 +133,15 @@ export const VersionInfo = withNamespaces(['setting'])(({ t }) => (
           <PoiName>{aprilFirst ? 'chiba' : 'poi'}</PoiName> {POI_VERSION}
         </Title>
         <VersionDetail>
+          <div>
+            {isString(LATEST_COMMIT) ? (
+              <>
+                <Entry>Build</Entry> {toUpper(LATEST_COMMIT.substring(0, 8))}
+              </>
+            ) : (
+              <Entry>DEV</Entry>
+            )}
+          </div>
           <div>
             <Entry>OS</Entry> {os}
           </div>

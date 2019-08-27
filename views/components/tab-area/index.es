@@ -20,6 +20,7 @@ import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
 import { remote } from 'electron'
 import styled, { css, createGlobalStyle } from 'styled-components'
+import * as Sentry from '@sentry/electron'
 
 import { isInGame } from 'views/utils/game-utils'
 
@@ -297,6 +298,7 @@ export class ControlledTabArea extends PureComponent {
 
   state = {
     openedWindow: {},
+    hasError: false,
   }
 
   windowRefs = {}
@@ -369,8 +371,16 @@ export class ControlledTabArea extends PureComponent {
 
   componentDidCatch(error, info) {
     console.error(error, info)
-    this.setState({
-      error: true,
+    Sentry.withScope(scope => {
+      scope.setExtra('componentStack', info.componentStack)
+      scope.setTag('area', 'poi')
+      const eventId = Sentry.captureException(error)
+      this.setState({
+        hasError: true,
+        error,
+        info,
+        eventId,
+      })
     })
   }
 
@@ -614,7 +624,7 @@ export class ControlledTabArea extends PureComponent {
   }
 
   render() {
-    if (this.state.error) {
+    if (this.state.hasError) {
       return <div />
     }
     const { t } = this.props

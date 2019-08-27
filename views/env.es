@@ -4,6 +4,7 @@ import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
 import lodash from 'lodash'
+import * as Sentry from '@sentry/electron'
 
 import './polyfills/react-i18next'
 import './polyfills/react-fontawesome'
@@ -16,6 +17,7 @@ window.EXROOT = remote.getGlobal('EXROOT')
 window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 window.PLUGIN_PATH = path.join(window.APPDATA_PATH, 'plugins')
 window.POI_VERSION = remote.getGlobal('POI_VERSION')
+window.LATEST_COMMIT = remote.getGlobal('LATEST_COMMIT')
 window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME')
 window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appTray = remote.getGlobal('appTray')
@@ -32,6 +34,22 @@ if (window.isMain) {
   // Debug
   window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
   window.dbg.init()
+}
+
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://bc58c4a7f37a43e8aa89ba9097536c84@sentry.io/1250935',
+    beforeSend(event) {
+      if (lodash.includes(event.message, 'React is running in production mode')) {
+        return null
+      }
+      return event
+    },
+  })
+
+  Sentry.configureScope(scope => {
+    scope.setTag('build', window.LATEST_COMMIT || 'DEV')
+  })
 }
 
 // Add ROOT to `require` search path
