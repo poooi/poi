@@ -167,7 +167,9 @@ export class ShipRow extends Component {
           {!hideShipName && (
             <>
               <ShipName className="ship-name">
-                {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
+                {$ship.api_name
+                  ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
+                  : '??'}
               </ShipName>
               <ShipSubText className="ship-exp">Next. {(ship.api_exp || [])[1]}</ShipSubText>
             </>

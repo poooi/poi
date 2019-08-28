@@ -363,7 +363,9 @@ export class MiniShipRow extends Component {
           {!hideShipName && (
             <>
               <ShipName className="ship-name" style={labelStatusStyle}>
-                {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
+                {$ship.api_name
+                  ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
+                  : '??'}
               </ShipName>
               <ShipLvText className="ship-lv-text" style={labelStatusStyle}>
                 {level && t('main:Lv', { level })}
