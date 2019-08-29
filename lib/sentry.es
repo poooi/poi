@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/electron'
-import { isString, includes, get, each } from 'lodash'
+import { isString, includes, get, each, takeRight, split } from 'lodash'
 import path from 'path'
 
 export const init = ({ build, paths }) => {
@@ -19,7 +19,7 @@ export const init = ({ build, paths }) => {
       }
     })
     if (path.isAbsolute(result)) {
-      return path.basename(result)
+      return takeRight(split(result, path.sep), 3).join(path.sep)
     }
     return result
   }
