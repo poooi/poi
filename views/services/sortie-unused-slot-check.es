@@ -1,6 +1,7 @@
 /* global getStore, config */
 import { fleetStateSelectorFactory } from '../utils/selectors'
 import i18next from 'views/env-parts/i18next'
+import { get } from 'lodash'
 
 window.addEventListener('game.response', ({ detail: { path, body } }) => {
   if (path !== '/kcsapi/api_get_member/mapinfo') return
@@ -8,12 +9,17 @@ window.addEventListener('game.response', ({ detail: { path, body } }) => {
 
   const ignoreUnlocked = config.get('poi.unusedEquipmentSlotCheck.ignoreUnlocked', false)
 
-  const fleets = getStore('info.fleets')
-  const ships = getStore('info.ships')
   const state = getStore()
+  const fleets = get(state, 'info.fleets')
+  const ships = get(state, 'info.ships')
 
   const checkSlot = ship => {
-    if (ignoreUnlocked && !ship.api_locked) return false
+    if (!ship) {
+      return false
+    }
+    if (ignoreUnlocked && !ship.api_locked) {
+      return false
+    }
     return (
       ship.api_slot.some((equip, index) => index < ship.api_slotnum && equip === -1) ||
       ship.api_slot_ex === -1
