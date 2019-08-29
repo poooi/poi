@@ -24,7 +24,7 @@ export class PluginWrap extends Component {
   componentDidCatch = (error, info) => {
     Sentry.withScope(scope => {
       scope.setExtra('componentStack', info.componentStack)
-      scope.setTag('area', this.props.plugin.name)
+      scope.setTag('area', this.props.plugin.id)
       const eventId = Sentry.captureException(error)
       this.setState({
         hasError: true,

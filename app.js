@@ -1,6 +1,5 @@
 const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const path = require('path-extra')
-const Sentry = require('@sentry/electron')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -81,12 +80,10 @@ if (dbg.isEnabled()) {
 } else {
   global.SERVER_HOSTNAME = 'poi.0u0.moe'
   process.env.NODE_ENV = 'production'
-  Sentry.init({
-    dsn: 'https://bc58c4a7f37a43e8aa89ba9097536c84@sentry.io/1250935',
-  })
-
-  Sentry.configureScope(scope => {
-    scope.setTag('build', global.LATEST_COMMIT || 'DEV')
+  const { init } = require('./lib/sentry')
+  init({
+    build: global.LATEST_COMMIT,
+    paths: [global.ROOT, global.APPDATA_PATH],
   })
 }
 

@@ -4,7 +4,7 @@ import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
 import lodash from 'lodash'
-import * as Sentry from '@sentry/electron'
+import { init } from '../lib/sentry'
 
 import './polyfills/react-i18next'
 import './polyfills/react-fontawesome'
@@ -37,18 +37,9 @@ if (window.isMain) {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn: 'https://bc58c4a7f37a43e8aa89ba9097536c84@sentry.io/1250935',
-    beforeSend(event) {
-      if (lodash.includes(event.message, 'React is running in production mode')) {
-        return null
-      }
-      return event
-    },
-  })
-
-  Sentry.configureScope(scope => {
-    scope.setTag('build', window.LATEST_COMMIT || 'DEV')
+  init({
+    build: window.LATEST_COMMIT,
+    paths: [window.ROOT, window.APPDATA_PATH],
   })
 }
 
