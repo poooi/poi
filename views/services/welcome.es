@@ -1,6 +1,6 @@
 /* global config, POI_VERSION */
 import React from 'react'
-import { FormGroup, Tabs, Tab } from '@blueprintjs/core'
+import { Tabs, Tab } from '@blueprintjs/core'
 import ReactMarkdown from 'react-remarkable'
 import { map } from 'lodash'
 import { useTranslation, Trans } from 'react-i18next'
@@ -26,7 +26,7 @@ const SWITCHES = [
 ]
 
 const WelcomeMessage = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation('setting')
   return (
     <div>
       <ReactMarkdown source={t('others:welcome_markdown', { version: POI_VERSION })} />
