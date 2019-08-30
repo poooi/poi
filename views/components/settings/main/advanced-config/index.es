@@ -48,6 +48,11 @@ const SWITCHES = [
     configName: 'poi.misc.analytics',
     defaultValue: true,
   },
+  {
+    label: 'Send program exceptions to poi team',
+    configName: 'poi.misc.exceptionReporting',
+    defaultValue: true,
+  },
 ]
 
 export const AdvancedConfig = withNamespaces(['setting'])(({ t }) => (

@@ -13,6 +13,7 @@ const defaultConfig = {
       homepage: 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
       networklog: true,
       analytics: true,
+      exceptionReporting: true,
       async: true,
       screenshot: {
         format: 'png',

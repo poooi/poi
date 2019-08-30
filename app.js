@@ -80,11 +80,13 @@ if (dbg.isEnabled()) {
 } else {
   global.SERVER_HOSTNAME = 'poi.0u0.moe'
   process.env.NODE_ENV = 'production'
-  const { init } = require('./lib/sentry')
-  init({
-    build: global.LATEST_COMMIT,
-    paths: [global.ROOT, global.APPDATA_PATH],
-  })
+  if (config.get('poi.misc.exceptionReporting')) {
+    const { init } = require('./lib/sentry')
+    init({
+      build: global.LATEST_COMMIT,
+      paths: [global.ROOT, global.APPDATA_PATH],
+    })
+  }
 }
 
 require('./lib/flash')
