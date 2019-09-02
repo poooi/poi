@@ -1,6 +1,4 @@
-/* global config */
-
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { debounce } from 'lodash'
@@ -52,6 +50,16 @@ const AlertLog = styled.div`
   overflow: hidden;
   transition: 0.3s;
   z-index: 1;
+  ${({ toggle, height, containerHeight }) =>
+    toggle
+      ? css`
+          transform: translate3d(0, ${1 - containerHeight - height}px, 0);
+          pointer-events: auto;
+        `
+      : css`
+          transform: translate3d(0, 1px, 0);
+          pointer-events: none;
+        `}
 `
 
 const AlertPosition = styled.div`
@@ -69,8 +77,9 @@ const OverflowScroll = keyframes`
   }
 `
 
-const AlertArea = styled.span`
+const AlertArea = styled.div`
   cursor: pointer;
+  display: flex;
   ${({ overflow }) =>
     overflow &&
     css`
@@ -79,18 +88,17 @@ const AlertArea = styled.span`
       animation-iteration-count: 2;
       animation-name: ${OverflowScroll};
       animation-timing-function: linear;
-      display: block;
       margin-left: 0;
     `}
 `
 
+const MsgMainCnt = styled.div`
+  width: fit-content;
+`
+
 const initState = {
   overflow: false,
-  history: [0, 1, 2, 3, 4].map(index => (
-    <AlertLogContent key={index++} className="bp3-callout bp3-intent-default">
-      {' '}
-    </AlertLogContent>
-  )),
+  history: [],
   current: {
     type: 'default',
     content: i18next.t('Waiting for response'),
@@ -99,153 +107,99 @@ const initState = {
       dontReserve: true,
     },
   },
-  alertHistoryStyle: {
-    transform: 'translate3d(0, 1px, 0)',
-    pointerEvents: 'none',
-  },
+  showHistory: false,
+  containerWidth: 1,
+  containerHeight: 0,
+  historyHeight: 0,
+  msgWidth: 0,
 }
 
-let stickyEnd = Date.now()
-let updateTime = 0
-
-const pushToHistory = (history, toPush) => {
-  history.push(
+class PoiAlertInner extends PureComponent {
+  static propTypes = {}
+  state = initState
+  stickyEnd = Date.now()
+  updateTime = 0
+  toggleHistory = () => {
+    this.setState({ showHistory: !this.state.showHistory })
+  }
+  pushToHistory = (history, toPush) => [
+    ...(history.length > 5 ? history.slice(1) : history),
     <AlertLogContent key={Date.now()} className={`bp3-callout bp3-intent-${toPush.type}`}>
       {toPush.content}
     </AlertLogContent>,
-  )
-  if (history.length > 5) {
-    return history.slice(history.length - 5)
-  }
-  return history
-}
-
-class PoiAlertInner extends Component {
-  static propTypes = {}
-  constructor(props) {
-    super(props)
-    this.showHistory = false
-    this.msgWidth = 0
-    this.alertHeight = 30
-    this.historyHeight = 152
-    this.state = initState
-  }
-  shouldComponentUpdate = (nextProps, nextState) => {
-    return nextState !== this.state
-  }
-  toggleHistory = () => {
-    this.showHistory = !this.showHistory
-    this.setState({
-      alertHistoryStyle: {
-        transform: `translate3d(0, ${
-          this.showHistory ? -this.alertHeight - this.historyHeight + 1 : 1
-        }px, 0)`,
-        pointerEvents: this.showHistory ? 'auto' : 'none',
-      },
-    })
-  }
-  handleStyleChange = () => {
-    setTimeout(
-      () =>
-        requestIdleCallback(() => {
-          try {
-            const alertHeight = this.props.$('poi-control').offsetHeight
-            const historyHeight = this.alertHistory.offsetHeight
-            if (historyHeight === this.historyHeight && alertHeight === this.alertHeight) {
-              return
-            }
-            this.alertHeight = alertHeight
-            this.historyHeight = historyHeight
-          } catch (error) {
-            this.alertHeight = 30
-            this.historyHeight = 152
-          }
-        }),
-      100,
-    )
-  }
+  ]
   handleAddAlert = e => {
-    const value = Object.assign(
-      {
+    const value = {
+      ...{
         type: 'default',
         content: '',
         priority: 0,
       },
-      e.detail,
-    )
+      ...e.detail,
+    }
     let { history, current } = this.state
     const nowTS = Date.now()
-    if (value.priority < current.priority && nowTS < stickyEnd) {
+    if (value.priority < current.priority && nowTS < this.stickyEnd) {
       if (!value.dontReserve) {
         // Old message has higher priority, push new message to history
-        history = pushToHistory(history, value)
+        history = this.pushToHistory(history, value)
         this.setState({ history })
       }
     } else if (!current.dontReserve) {
       // push old message to history
-      updateTime = value.stickyFor || 3000
-      history = pushToHistory(history, current)
+      this.updateTime = value.stickyFor || 3000
+      history = this.pushToHistory(history, current)
       this.setState({
         history: history,
         current: value,
-        overflow: false,
       })
     } else {
-      updateTime = value.stickyFor || 3000
+      this.updateTime = value.stickyFor || 3000
       this.setState({
         current: value,
-        overflow: false,
       })
     }
   }
-  handleOverflow = () => {
-    requestIdleCallback(() => {
-      const containerWidth = this.alertMain.offsetWidth
-      if (!this.state.overflow) {
-        this.msgWidth = this.alertArea.offsetWidth
-        this.alertPosition.style.width = `${this.msgWidth}px`
-      }
-      if (this.msgWidth > containerWidth && !this.state.overflow) {
-        this.alertPosition.style.width = `${this.msgWidth + 50}px`
-        this.setState({ overflow: true })
-      } else if (this.msgWidth < containerWidth && this.state.overflow) {
-        this.alertPosition.style.width = `${this.msgWidth}px`
-        this.setState({ overflow: false })
+  handleRefResize = entries => {
+    let { containerWidth, containerHeight, historyHeight, msgWidth } = this.state
+    entries.forEach(entry => {
+      if (entry.target === this.alertMain) {
+        ;({ width: containerWidth, height: containerHeight } = entry.contentRect)
+      } else if (entry.target === this.msgCnt) {
+        msgWidth = entry.contentRect.width
+      } else {
+        ;({ height: historyHeight } = entry.contentRect)
       }
     })
+    this.setState({ containerWidth, containerHeight, historyHeight, msgWidth })
   }
   componentDidUpdate = (prevProps, prevState) => {
-    stickyEnd = Date.now() + updateTime
-    updateTime = 0
-    this.handleStyleChange()
-    this.handleOverflow()
+    this.stickyEnd = Date.now() + this.updateTime
+    this.updateTime = 0
   }
   componentDidMount = () => {
-    this.handleOverflowDebounced = debounce(this.handleOverflow, 1000)
-    config.addListener('config.set', (path, value) => {
-      if (path === 'poi.appearance.theme') {
-        this.handleStyleChange()
-      }
-    })
-    this.observer = new ResizeObserver(this.handleOverflowDebounced)
+    this.handleRefResizeDebounced = debounce(this.handleRefResize, 100, { trailing: false })
+    this.observer = new ResizeObserver(this.handleRefResize)
     this.observer.observe(this.alertMain)
+    this.observer.observe(this.alertHistory)
+    this.observer.observe(this.msgCnt)
+    this.oldMsgCnt = this.msgCnt
     window.addEventListener('alert.new', this.handleAddAlert)
-    this.handleStyleChange()
   }
   componentWillUnmount = () => {
     this.observer.unobserve(this.alertMain)
-    config.removeListener('config.set', this.handleStyleChange)
+    this.observer.unobserve(this.alertHistory)
+    this.observer.unobserve(this.msgCnt)
     window.removeEventListener('alert.new', this.handleAddAlert)
   }
   render() {
+    const overflow = this.state.msgWidth > this.state.containerWidth
     return (
       <PoiAlertTag tag="poi-alert">
         <AlertMain
           id="alert-main"
           className="alert-main bp3-popover"
-          ref={ref => {
-            this.alertMain = ref
-          }}
+          ref={ref => (this.alertMain = ref)}
         >
           <AlertContainer
             id="alert-container"
@@ -254,35 +208,28 @@ class PoiAlertInner extends Component {
           >
             <AlertPosition
               className="alert-position"
-              ref={ref => {
-                this.alertPosition = ref
-              }}
+              ref={ref => (this.alertPosition = ref)}
+              style={{ width: this.state.msgWidth + (overflow ? 50 : 0) }}
             >
-              <AlertArea
-                id="alert-area"
-                ref={ref => {
-                  this.alertArea = ref
-                }}
-                overflow={this.state.overflow ? 1 : 0}
-              >
-                {this.state.overflow ? (
-                  <>
-                    <span style={{ marginRight: 50 }}>{this.state.current.content}</span>
-                    <span style={{ marginRight: 50 }}>{this.state.current.content}</span>
-                  </>
-                ) : (
-                  this.state.current.content
+              <AlertArea id="alert-area" ref={ref => (this.alertArea = ref)} overflow={overflow}>
+                <MsgMainCnt ref={ref => (this.msgCnt = ref)}>
+                  <span>{this.state.current.content}</span>
+                </MsgMainCnt>
+                {overflow && (
+                  <span style={{ marginRight: 50, marginLeft: 50 }}>
+                    {this.state.current.content}
+                  </span>
                 )}
               </AlertArea>
             </AlertPosition>
           </AlertContainer>
           <AlertLog
             id="alert-log"
-            ref={ref => {
-              this.alertHistory = ref
-            }}
+            ref={ref => (this.alertHistory = ref)}
             className="alert-log bp3-popover-content"
-            style={this.state.alertHistoryStyle}
+            toggle={this.state.showHistory}
+            height={this.state.historyHeight}
+            containerHeight={this.state.containerHeight}
             onClick={this.toggleHistory}
           >
             {this.state.history}
