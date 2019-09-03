@@ -161,17 +161,45 @@ class PoiAlertInner extends PureComponent {
     }
   }
   handleRefResize = entries => {
-    let { containerWidth, containerHeight, historyHeight, msgWidth } = this.state
+    const newState = {}
     entries.forEach(entry => {
-      if (entry.target === this.alertMain) {
-        ;({ width: containerWidth, height: containerHeight } = entry.contentRect)
-      } else if (entry.target === this.msgCnt) {
-        msgWidth = entry.contentRect.width
-      } else {
-        ;({ height: historyHeight } = entry.contentRect)
+      if (entry.contentRect) {
+        if (entry.target === this.alertMain) {
+          const { width: containerWidth, height: containerHeight } = entry.contentRect
+          newState.containerWidth = containerWidth
+          newState.containerHeight = containerHeight
+        } else if (entry.target === this.msgCnt) {
+          newState.msgWidth = entry.contentRect.width
+        } else {
+          newState.historyHeight = entry.contentRect.height
+        }
       }
     })
-    this.setState({ containerWidth, containerHeight, historyHeight, msgWidth })
+    this.setStateDefer(newState, newState.msgWidth ? 0 : 50)
+  }
+  setStateDefer = (newState, defer) => {
+    if (!this.deferredState) {
+      this.deferredState = newState
+    } else {
+      clearTimeout(this.timeoutId)
+      this.deferredState = {
+        ...this.deferredState,
+        ...newState,
+      }
+    }
+    if (defer) {
+      this.timeoutId = setTimeout(() => {
+        const { deferredState } = this
+        delete this.deferredState
+        delete this.timeoutId
+        this.setState(deferredState)
+      }, defer)
+    } else {
+      const { deferredState } = this
+      delete this.deferredState
+      delete this.timeoutId
+      this.setState(deferredState)
+    }
   }
   componentDidUpdate = (prevProps, prevState) => {
     this.stickyEnd = Date.now() + this.updateTime
