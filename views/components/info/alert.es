@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { WindowEnv } from 'views/components/etc/window-env'
-import { debounce } from 'lodash'
+import { takeRight } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 
@@ -117,17 +117,25 @@ const initState = {
 class PoiAlertInner extends PureComponent {
   static propTypes = {}
   state = initState
+
   stickyEnd = Date.now()
   updateTime = 0
+
+  alertMain = React.createRef()
+  alertHistory = React.createRef()
+  msgCnt = React.createRef()
+
   toggleHistory = () => {
     this.setState({ showHistory: !this.state.showHistory })
   }
+
   pushToHistory = (history, toPush) => [
-    ...(history.length > 5 ? history.slice(1) : history),
+    ...takeRight(history, 5),
     <AlertLogContent key={Date.now()} className={`bp3-callout bp3-intent-${toPush.type}`}>
       {toPush.content}
     </AlertLogContent>,
   ]
+
   handleAddAlert = e => {
     const value = {
       ...{
@@ -160,15 +168,16 @@ class PoiAlertInner extends PureComponent {
       })
     }
   }
+
   handleRefResize = entries => {
     const newState = {}
     entries.forEach(entry => {
       if (entry.contentRect) {
-        if (entry.target === this.alertMain) {
+        if (entry.target === this.alertMain.current) {
           const { width: containerWidth, height: containerHeight } = entry.contentRect
           newState.containerWidth = containerWidth
           newState.containerHeight = containerHeight
-        } else if (entry.target === this.msgCnt) {
+        } else if (entry.target === this.msgCnt.current) {
           newState.msgWidth = entry.contentRect.width
         } else {
           newState.historyHeight = entry.contentRect.height
@@ -177,6 +186,7 @@ class PoiAlertInner extends PureComponent {
     })
     this.setStateDefer(newState, newState.msgWidth ? 0 : 50)
   }
+
   setStateDefer = (newState, defer) => {
     if (!this.deferredState) {
       this.deferredState = newState
@@ -201,34 +211,32 @@ class PoiAlertInner extends PureComponent {
       this.setState(deferredState)
     }
   }
+
   componentDidUpdate = (prevProps, prevState) => {
     this.stickyEnd = Date.now() + this.updateTime
     this.updateTime = 0
   }
+
   componentDidMount = () => {
-    this.handleRefResizeDebounced = debounce(this.handleRefResize, 100, { trailing: false })
     this.observer = new ResizeObserver(this.handleRefResize)
-    this.observer.observe(this.alertMain)
-    this.observer.observe(this.alertHistory)
-    this.observer.observe(this.msgCnt)
-    this.oldMsgCnt = this.msgCnt
+    this.observer.observe(this.alertMain.current)
+    this.observer.observe(this.alertHistory.current)
+    this.observer.observe(this.msgCnt.current)
     window.addEventListener('alert.new', this.handleAddAlert)
   }
+
   componentWillUnmount = () => {
-    this.observer.unobserve(this.alertMain)
-    this.observer.unobserve(this.alertHistory)
-    this.observer.unobserve(this.msgCnt)
+    this.observer.unobserve(this.alertMain.current)
+    this.observer.unobserve(this.alertHistory.current)
+    this.observer.unobserve(this.msgCnt.current)
     window.removeEventListener('alert.new', this.handleAddAlert)
   }
+
   render() {
     const overflow = this.state.msgWidth > this.state.containerWidth
     return (
       <PoiAlertTag tag="poi-alert">
-        <AlertMain
-          id="alert-main"
-          className="alert-main bp3-popover"
-          ref={ref => (this.alertMain = ref)}
-        >
+        <AlertMain id="alert-main" className="alert-main bp3-popover" ref={this.alertMain}>
           <AlertContainer
             id="alert-container"
             className={`bp3-callout bp3-intent-${this.state.current.type} alert-container`}
@@ -236,11 +244,10 @@ class PoiAlertInner extends PureComponent {
           >
             <AlertPosition
               className="alert-position"
-              ref={ref => (this.alertPosition = ref)}
               style={{ width: this.state.msgWidth + (overflow ? 50 : 0) }}
             >
-              <AlertArea id="alert-area" ref={ref => (this.alertArea = ref)} overflow={overflow}>
-                <MsgMainCnt ref={ref => (this.msgCnt = ref)}>
+              <AlertArea id="alert-area" overflow={overflow}>
+                <MsgMainCnt ref={this.msgCnt}>
                   <span>{this.state.current.content}</span>
                 </MsgMainCnt>
                 {overflow && (
@@ -253,7 +260,7 @@ class PoiAlertInner extends PureComponent {
           </AlertContainer>
           <AlertLog
             id="alert-log"
-            ref={ref => (this.alertHistory = ref)}
+            ref={this.alertHistory}
             className="alert-log bp3-popover-content"
             toggle={this.state.showHistory}
             height={this.state.historyHeight}
