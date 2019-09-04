@@ -124,7 +124,9 @@ export class WctfDB extends Component {
         this.loadDB()
       }
       // eslint-disable-next-line no-console
-      console.log(`No update for wctf-db, current: ${this.props.version}, remote: ${data.version}`)
+      console.log(
+        `No update for wctf-db, current: ${this.props.version}, remote: ${get(data, 'version')}`,
+      )
     }
 
     this.setState({
