@@ -17,6 +17,8 @@ export class PluginWrap extends Component {
     withContainer: true,
   }
 
+  root = React.createRef()
+
   shouldComponentUpdate = (nextProps, nextState) => {
     return this.props.plugin.timestamp !== nextProps.plugin.timestamp || nextState.hasError === true
   }
@@ -40,6 +42,19 @@ export class PluginWrap extends Component {
     const code = [error.stack, info.componentStack].join('\n')
 
     clipboard.writeText(code)
+  }
+
+  componentDidMount = () => {
+    if (this.root.current) {
+      this.root.current.querySelectorAll('link').forEach(link => {
+        if (link.href.includes('#') || link.href.includes('$')) {
+          link.href = link.href
+            .replace(/#/g, '%23')
+            .replace(/\$/g, '%24')
+            .replace(/&/g, '%26')
+        }
+      })
+    }
   }
 
   render() {
@@ -67,7 +82,7 @@ export class PluginWrap extends Component {
     }
     const innerContent = <plugin.reactClass />
     return Container ? (
-      <Container id={plugin.id} className="poi-app-tabpane">
+      <Container id={plugin.id} className="poi-app-tabpane" ref={this.root}>
         <Card>{innerContent}</Card>
       </Container>
     ) : (
