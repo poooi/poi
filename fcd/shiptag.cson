@@ -1,54 +1,36 @@
 meta:
   name: "shiptag"
-  version: "2019/05/25/02"
+  version: "2019/09/04/01"
 
 data:
   mapname: [
     "E1"
     "E2"
     "E3"
-    "E4"
-    "E4"
-    "E5"
   ]
   color: [
-    "#9E9E9E"
-    "#FF9800"
     "#03A9F4"
     "#8BC34A"
-    "#FFEB3B"
-    "#009688"
+    "#FF9800"
   ]
   fleetname:
     "zh-CN": [
-      "第百四战队"
-      "第二舰队"
-      "北方部队"
-      "机动部队"
-      "攻略部队"
-      "夏威夷派遣部队"
+      "欧洲防卫舰队"
+      "联合舰队"
+      "地中海舰队"
     ]
     "zh-TW": [
-      "第百四戰隊"
-      "第二艦隊"
-      "北方部隊"
-      "機動部隊"
-      "攻略部隊"
-      "夏威夷派遣部隊"
+      "歐洲防衛艦隊"
+      "聯合艦隊"
+      "地中海艦隊"
     ]
     "ja-JP": [
-      "第百四戦隊"
-      "第二艦隊"
-      "北方部隊"
-      "機動部隊"
-      "攻略部隊"
-      "ハワイ派遣艦隊"
+      "欧州防衛艦隊"
+      "連合艦隊"
+      "地中海艦隊"
     ]
     "en-US": [
-      "Squad 104"
-      "2nd Fleet"
-      "North Force"
-      "Task Force"
-      "Capture Force"
-      "Hawaii Dispatch Fleet"
+      "EU Defense Fleet"
+      "Combined Fleet"
+      "Mediterranean Sea Fleet"
     ]
