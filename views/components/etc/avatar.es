@@ -30,11 +30,18 @@ const ShipAvatarContainer = styled.div`
 const ShipAvatarInnerContainer = styled.div`
   position: absolute;
   width: 100%;
-  height: 98%;
   overflow: hidden;
-  max-height: calc(100% - 2px);
   display: flex;
   align-items: center;
+  ${({ useDefaultBG }) =>
+    useDefaultBG
+      ? css`
+          height: 98%;
+          max-height: calc(100% - 2px);
+        `
+      : css`
+          height: 100%;
+        `}
 `
 
 const ShipAvatar = styled.img``
@@ -128,6 +135,8 @@ export class Avatar extends PureComponent {
     bgurl: PropTypes.string.isRequired,
     isDamaged: PropTypes.bool,
     children: PropTypes.node,
+    useFixedWidth: PropTypes.bool,
+    useDefaultBG: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -135,21 +144,29 @@ export class Avatar extends PureComponent {
     marginMagic: 0.555,
     isDamaged: false,
     children: null,
+    useFixedWidth: true,
+    useDefaultBG: true,
   }
 
   render() {
     if (!this.props.mstId) return <div />
+    const shipAvatarContainerStyle = {
+      height: this.props.height,
+    }
+    if (this.props.useFixedWidth) {
+      shipAvatarContainerStyle.width = Math.round(1.85 * this.props.height)
+    }
     return (
       <ShipAvatarContainer
         className={classnames(this.props.className, 'ship-avatar-container')}
         data-master-id={this.props.mstId}
         data-damaged={this.props.isDamaged}
-        style={{
-          width: Math.round(1.85 * this.props.height),
-          height: this.props.height,
-        }}
+        style={shipAvatarContainerStyle}
       >
-        <ShipAvatarInnerContainer className="ship-avatar-inner-container">
+        <ShipAvatarInnerContainer
+          className="ship-avatar-inner-container"
+          useDefaultBG={this.props.useDefaultBG}
+        >
           {this.props.type === 'equip' ? (
             <>
               <EquipAvatar className="equip-avatar" src={this.props.url} />
@@ -165,7 +182,7 @@ export class Avatar extends PureComponent {
                 }}
                 src={this.props.url}
               />
-              {!this.props.isEnemy && (
+              {!this.props.isEnemy && this.props.useDefaultBG && (
                 <ShipAvatarBG
                   rank={this.props.rank}
                   className={classnames('ship-avatar-bg', {

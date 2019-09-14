@@ -16,6 +16,7 @@ import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
 
 import {
+  getShipTypeColor,
   getCondStyle,
   equipIsAircraft,
   getShipLabelStatus,
@@ -201,13 +202,13 @@ const ShipItem = styled.div`
   position: relative;
   white-space: nowrap;
   ${({ avatar = true, shipName = true, isLBAC = false }) => {
-    const avatarWidth = avatar ? '58px' : 0
-    const nameWidth = shipName ? '4fr' : 0
-    const dataWidth = isLBAC ? 'minmax(32px, 1fr) 120px' : '5fr 18px 42px'
+    const avatarWidth = avatar ? '50px' : 0
+    const nameWidth = shipName ? '6fr' : '15px'
+    const dataWidth = isLBAC ? 'minmax(32px, 1fr) 120px' : 'minmax(70px, 5fr) 18px 42px'
     return css`
       grid-template-columns: ${avatarWidth} ${nameWidth} ${dataWidth};
       grid-template-rows: 20px 13px;
-      grid-column-gap: 3px;
+      grid-column-gap: 6px;
       grid-row-gap: 5px;
     `
   }}
@@ -230,6 +231,7 @@ const ShipInfo = styled.div`
   grid-column: 1 / 3;
   z-index: 100;
   height: 100%;
+
   & > div {
     height: 100%;
     width: 100%;
@@ -237,20 +239,39 @@ const ShipInfo = styled.div`
 `
 
 const ShipName = styled.div`
+  z-index: 2;
   grid-row: 1 / 2;
   grid-column: 2 / 3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      font-weight: 600;
+      color: white;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 const ShipLvText = styled.div`
+  z-index: 2;
   grid-row: 2 / 3;
   grid-column: 2 / 3;
   font-size: 70%;
   line-height: 1;
   overflow: hidden;
   align-items: center;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      color: white;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 const ShipStateText = styled.div`
@@ -258,6 +279,7 @@ const ShipStateText = styled.div`
 `
 
 const ShipHP = styled.span`
+  font-size: 110%;
   grid-row: 1 / 2;
   grid-column: 3 / 4;
 `
@@ -285,15 +307,27 @@ const HPProgress = styled.div`
   .bp3-progress-bar {
     flex: auto;
     height: 7px;
+    margin-top: 3px;
   }
 `
 
 export const ShipAvatar = styled(Avatar)`
-  position: absolute;
-  z-index: 10;
   pointer-events: none;
   align-items: end;
   align-self: center;
+  grid-row: 1 / 3;
+  grid-column: 1 / 3;
+`
+
+const Gradient = styled.div`
+  z-index: 1;
+  grid-row: 1 / 3;
+  grid-column: 2 / 3;
+  height: 100%;
+
+  ${({ shipType }) => css`
+    background: linear-gradient(to right, transparent, ${getShipTypeColor(shipType)});
+  `}
 `
 
 @withNamespaces(['resources', 'main'])
@@ -353,7 +387,16 @@ export class MiniShipRow extends Component {
           data-ship-id={ship.api_id}
         >
           {enableAvatar && (
-            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33} />
+            <>
+              <ShipAvatar
+                mstId={$ship.api_id}
+                isDamaged={hpPercentage <= 50}
+                useDefaultBG={false}
+                useFixedWidth={false}
+                height={38}
+              />
+              <Gradient shipType={$ship.api_stype} />
+            </>
           )}
           {hideShipName && (
             <ShipLvAvatar className="ship-lv-avatar">
@@ -362,12 +405,20 @@ export class MiniShipRow extends Component {
           )}
           {!hideShipName && (
             <>
-              <ShipName className="ship-name" style={labelStatusStyle}>
+              <ShipName
+                className="ship-name"
+                style={enableAvatar ? null : labelStatusStyle}
+                avatar={enableAvatar}
+              >
                 {$ship.api_name
                   ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
                   : '??'}
               </ShipName>
-              <ShipLvText className="ship-lv-text" style={labelStatusStyle}>
+              <ShipLvText
+                className="ship-lv-text"
+                style={enableAvatar ? null : labelStatusStyle}
+                avatar={enableAvatar}
+              >
                 {level && t('main:Lv', { level })}
               </ShipLvText>
             </>
@@ -424,7 +475,7 @@ const ShipTile = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin: 2px 0;
+  margin: 4px 0;
   position: relative;
 
   .ship-item-wrapper {
@@ -497,7 +548,7 @@ export const MiniSquardRow = withNamespaces(['main'])(
       <ShipTile className="ship-tile">
         <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
           {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-            <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33} />
+            <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={40} />
           )}
           {hideShipName && (
             <ShipLvAvatar className="ship-lv-avatar">

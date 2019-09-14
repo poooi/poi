@@ -60,6 +60,37 @@ export function getCondStyle(cond) {
   return s
 }
 
+export function getShipTypeColor(shipType) {
+  switch (shipType) {
+    case 1: // 海防艦
+      return '#90caf960'
+    case 2: // 駆逐艦
+      return '#8bc34a60'
+    case 3: // 軽巡洋艦
+    case 4: // 重雷装巡洋艦
+    case 21: // 練習巡洋艦
+      return '#fdd83560'
+    case 5: // 重巡洋艦
+    case 6: // 航空巡洋艦
+      return '#fb8c0060'
+    case 8: // 戦艦
+    case 9: // 戦艦
+    case 10: // 航空戦艦
+    case 12: // 超弩級戦艦
+      return '#ef535060'
+    case 7: // 軽空母
+    case 11: // 航空母艦
+    case 18: // 装甲空母
+      return '#1e88e560'
+    case 13: // 潜水艦
+    case 14: // 潜水空母
+      return '#8e24aa80'
+    default:
+      // 他
+      return '#e0e0e060'
+  }
+}
+
 export const getSpeedLabel = speed => speedInterpretation[speed] || 'Unknown'
 
 export const getSpeedStyle = speed => speedStyles[speed] || {}
