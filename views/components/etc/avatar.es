@@ -170,7 +170,9 @@ export class Avatar extends PureComponent {
           {this.props.type === 'equip' ? (
             <>
               <EquipAvatar className="equip-avatar" src={this.props.url} />
-              <EquipAvatarBG className="equip-avatar-bg" src={this.props.bgurl} />
+              {this.props.useDefaultBG && (
+                <EquipAvatarBG className="equip-avatar-bg" src={this.props.bgurl} />
+              )}
             </>
           ) : (
             <>

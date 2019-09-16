@@ -512,6 +512,15 @@ const ShipFP = styled.div`
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   font-size: 70%;
+  z-index: 2;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      color: white;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
@@ -548,7 +557,16 @@ export const MiniSquardRow = withNamespaces(['main'])(
       <ShipTile className="ship-tile">
         <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
           {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-            <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={40} />
+            <>
+              <ShipAvatar
+                type="equip"
+                mstId={get(equipsData, '0.0.api_slotitem_id')}
+                height={38}
+                useDefaultBG={false}
+                useFixedWidth={false}
+              />
+              <Gradient />
+            </>
           )}
           {hideShipName && (
             <ShipLvAvatar className="ship-lv-avatar">
@@ -557,8 +575,10 @@ export const MiniSquardRow = withNamespaces(['main'])(
           )}
           {!hideShipName && (
             <>
-              <ShipName className="ship-name">{api_name}</ShipName>
-              <ShipFP className="ship-fp">
+              <ShipName className="ship-name" avatar={enableAvatar}>
+                {api_name}
+              </ShipName>
+              <ShipFP className="ship-fp" avatar={enableAvatar}>
                 {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
               </ShipFP>
             </>
