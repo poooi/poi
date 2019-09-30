@@ -23,10 +23,11 @@ export function reducer(state = {}, { type, postBody, body }, store) {
     }
     case '@@Response/kcsapi/api_req_kousyou/createitem':
       if (body.api_create_flag == 1) {
-        const { api_slot_item } = body
+        const items = {}
+        body.api_get_items.filter(e => e.api_id !== -1).forEach(e => (items[e.api_id] = e))
         return {
           ...state,
-          [api_slot_item.api_id]: api_slot_item,
+          ...items,
         }
       }
       break

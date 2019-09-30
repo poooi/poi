@@ -5,7 +5,7 @@
   "built": "建造完成",
   "Construction": "建造",
   "DevelopSuccess": "{{name}} 开发成功",
-  "DevelopFailed": "{{name}} 开发失败",
+  "DevelopFailed": "开发失败",
   "ImproveSuccess": "{{name}} 改修成功",
   "ImproveFailed": "{{name}} 改修失败",
   "mission complete": "远征完成",

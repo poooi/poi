@@ -5,7 +5,7 @@
   "built": "built",
   "Construction": "Construction",
   "DevelopSuccess": "Develop {{name}} successfully.",
-  "DevelopFailed": "Develop {{name}} failed.",
+  "DevelopFailed": "Develop failed.",
   "ImproveSuccess": "Improve {{name}} successfully.",
   "ImproveFailed": "Improve {{name}} failed.",
   "mission complete": "mission complete",

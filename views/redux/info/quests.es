@@ -302,7 +302,8 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
       break
     // type: create_item
     case '@@Response/kcsapi/api_req_kousyou/createitem':
-      if (updateQuestRecord('create_item', null, 1)) return { ...state, records }
+      if (updateQuestRecord('create_item', null, body.api_get_items.length))
+        return { ...state, records }
       break
     // type: create_ship
     case '@@Response/kcsapi/api_req_kousyou/createship':
