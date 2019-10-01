@@ -21,10 +21,12 @@ const warnAfterDelay = sendAfterDelay(warn)
 window.addEventListener('game.response', ({ detail: { path, body } }) => {
   if (path === '/kcsapi/api_req_kousyou/createitem') {
     if (body.api_create_flag === 0) {
-      const name = lookupItemName(body.api_fdata.split(',')[1])
-      warnAfterDelay(i18next.t('main:DevelopFailed', { name }), devResultDelay)
+      warnAfterDelay(i18next.t('main:DevelopFailed'), devResultDelay)
     } else if (body.api_create_flag === 1) {
-      const name = lookupItemName(body.api_slot_item.api_slotitem_id)
+      const name = body.api_get_items
+        .filter(e => e.api_slotitem_id !== -1)
+        .map(e => lookupItemName(e.api_slotitem_id))
+        .join(', ')
       successAfterDelay(i18next.t('main:DevelopSuccess', { name }), devResultDelay)
     }
   }
