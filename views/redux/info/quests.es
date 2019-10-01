@@ -1,7 +1,7 @@
 /* global ROOT, APPDATA_PATH */
 import CSON from 'cson'
 import { join } from 'path-extra'
-import { map, sortBy, mapValues, forEach, values, fromPairs, countBy, get } from 'lodash'
+import { map, sortBy, mapValues, forEach, values, fromPairs, countBy, get, size } from 'lodash'
 
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -302,7 +302,7 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
       break
     // type: create_item
     case '@@Response/kcsapi/api_req_kousyou/createitem':
-      if (updateQuestRecord('create_item', null, body.api_get_items.length))
+      if (updateQuestRecord('create_item', null, size(body.api_get_items)))
         return { ...state, records }
       break
     // type: create_ship

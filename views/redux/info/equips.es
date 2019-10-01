@@ -1,5 +1,5 @@
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { flatMap, isArray, get } from 'lodash'
+import { flatMap, isArray, get, keyBy, filter } from 'lodash'
 
 // Returns a clone
 // Don't worry about -1 because it won't cause error
@@ -23,8 +23,7 @@ export function reducer(state = {}, { type, postBody, body }, store) {
     }
     case '@@Response/kcsapi/api_req_kousyou/createitem':
       if (body.api_create_flag == 1) {
-        const items = {}
-        body.api_get_items.filter(e => e.api_id !== -1).forEach(e => (items[e.api_id] = e))
+        const items = keyBy(filter(body.api_get_items, item => item?.api_id > 0), 'api_id')
         return {
           ...state,
           ...items,

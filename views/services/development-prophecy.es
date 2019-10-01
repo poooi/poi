@@ -3,6 +3,7 @@
    Item development & improvement prophecy
  */
 import i18next from 'views/env-parts/i18next'
+import _ from 'lodash'
 
 const lookupItemName = slotitemId =>
   i18next.t(`resources:${getStore(['const', '$equips', slotitemId, 'api_name'], 'unknown')}`, {
@@ -23,10 +24,10 @@ window.addEventListener('game.response', ({ detail: { path, body } }) => {
     if (body.api_create_flag === 0) {
       warnAfterDelay(i18next.t('main:DevelopFailed'), devResultDelay)
     } else if (body.api_create_flag === 1) {
-      const name = body.api_get_items
-        .filter(e => e.api_slotitem_id !== -1)
-        .map(e => lookupItemName(e.api_slotitem_id))
-        .join(', ')
+      const name = _(body.api_get_items)
+        .filter(item => item?.api_slotitem_id > 0)
+        .map(item => lookupItemName(item.api_slotitem_id))
+        .join(' | ')
       successAfterDelay(i18next.t('main:DevelopSuccess', { name }), devResultDelay)
     }
   }
