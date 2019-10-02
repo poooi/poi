@@ -33,15 +33,7 @@ const ShipAvatarInnerContainer = styled.div`
   overflow: hidden;
   display: flex;
   align-items: center;
-  ${({ useDefaultBG }) =>
-    useDefaultBG
-      ? css`
-          height: 98%;
-          max-height: calc(100% - 2px);
-        `
-      : css`
-          height: 100%;
-        `}
+  height: 100%;
 `
 
 const ShipAvatar = styled.img``
@@ -163,10 +155,7 @@ export class Avatar extends PureComponent {
         data-damaged={this.props.isDamaged}
         style={shipAvatarContainerStyle}
       >
-        <ShipAvatarInnerContainer
-          className="ship-avatar-inner-container"
-          useDefaultBG={this.props.useDefaultBG}
-        >
+        <ShipAvatarInnerContainer className="ship-avatar-inner-container">
           {this.props.type === 'equip' ? (
             <>
               <EquipAvatar className="equip-avatar" src={this.props.url} />
@@ -179,8 +168,10 @@ export class Avatar extends PureComponent {
               <ShipAvatar
                 className="ship-avatar"
                 style={{
-                  height: this.props.height,
+                  // The origin img has 182px height, includes 3px top & bottom padding
+                  height: Math.round((this.props.height / 176) * 182),
                   marginLeft: -Math.round(this.props.marginMagic * this.props.height),
+                  marginTop: -Math.round((this.props.height / 176) * 3),
                 }}
                 src={this.props.url}
               />

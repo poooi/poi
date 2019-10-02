@@ -33,6 +33,7 @@ import {
   ShipItem,
   ShipAvatar,
   ShipBasic,
+  ShipIndicators,
   ShipSubText,
   ShipLabel,
   ShipName,
@@ -44,6 +45,7 @@ import {
   ShipFB,
   ShipSlot,
   ShipHPProgress,
+  Gradient,
 } from 'views/components/ship-parts/styled-components'
 
 const shipRowDataSelectorFactory = memoize(shipId =>
@@ -123,6 +125,24 @@ export class ShipRow extends Component {
           )})`}
       </span>
     )
+    const shipBasicContent = (
+      <>
+        <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
+        <ShipLabel className="ship-type">
+          {$shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name
+            ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
+            : '??'}
+        </ShipLabel>
+      </>
+    )
+    const shipIndicatorsContent = (
+      <>
+        <ShipLabel className="ship-speed">{t(`main:${getSpeedLabel(ship.api_soku)}`)}</ShipLabel>
+        <AACIIndicator shipId={ship.api_id} />
+        <AAPBIndicator shipId={ship.api_id} />
+        <OASWIndicator shipId={ship.api_id} />
+      </>
+    )
     return (
       <Tooltip
         position={Position.TOP}
@@ -146,36 +166,46 @@ export class ShipRow extends Component {
           shipName={!hideShipName}
         >
           {enableAvatar && (
-            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} />
+            <>
+              <ShipAvatar
+                mstId={$ship.api_id}
+                isDamaged={hpPercentage <= 50}
+                height={58}
+                useDefaultBG={false}
+                useFixedWidth={false}
+              />
+              <Gradient shipType={$ship.api_stype} />
+            </>
           )}
 
-          <ShipBasic className="ship-basic" show={!hideShipName}>
-            <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
-            <ShipLabel className="ship-type">
-              {$shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name
-                ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
-                : '??'}
-            </ShipLabel>
-            <ShipLabel className="ship-speed">
-              {t(`main:${getSpeedLabel(ship.api_soku)}`)}
-            </ShipLabel>
-            <AACIIndicator shipId={ship.api_id} />
-            <AAPBIndicator shipId={ship.api_id} />
-            <OASWIndicator shipId={ship.api_id} />
-          </ShipBasic>
+          {hideShipName || (
+            <ShipBasic className="ship-basic" avatar={enableAvatar}>
+              {shipBasicContent}
+              {!enableAvatar && shipIndicatorsContent}
+            </ShipBasic>
+          )}
+
+          {enableAvatar && (
+            <ShipIndicators className="ship-basic">
+              {hideShipName && shipBasicContent}
+              {shipIndicatorsContent}
+            </ShipIndicators>
+          )}
 
           {!hideShipName && (
             <>
-              <ShipName className="ship-name">
+              <ShipName className="ship-name" avatar={enableAvatar}>
                 {$ship.api_name
                   ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
                   : '??'}
               </ShipName>
-              <ShipSubText className="ship-exp">Next. {(ship.api_exp || [])[1]}</ShipSubText>
+              <ShipSubText className="ship-exp" avatar={enableAvatar}>
+                Next. {(ship.api_exp || [])[1]}
+              </ShipSubText>
             </>
           )}
 
-          <ShipHP className="ship-hp" style={labelStatusStyle} shipName={!hideShipName}>
+          <ShipHP className="ship-hp" style={labelStatusStyle}>
             {ship.api_nowhp} / {ship.api_maxhp}
           </ShipHP>
 
@@ -189,7 +219,7 @@ export class ShipRow extends Component {
             </ShipCond>
           </ShipStatusContainer>
 
-          <ShipHPProgress className="hp-progress" style={labelStatusStyle} shipName={!hideShipName}>
+          <ShipHPProgress className="hp-progress" style={labelStatusStyle}>
             <ProgressBar
               stripes={false}
               intent={getHpStyle(hpPercentage)}

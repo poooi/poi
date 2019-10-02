@@ -19,6 +19,7 @@ import {
   ShipStatusContainer,
   ShipHPProgress,
   ShipSlot,
+  Gradient,
 } from 'views/components/ship-parts/styled-components'
 
 const SquadSelectorFactory = memoize(squardId =>
@@ -63,17 +64,28 @@ export const SquardRow = compose(
     >
       <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideLBACName} isLBAC>
         {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-          <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} />
+          <>
+            <ShipAvatar
+              type="equip"
+              mstId={get(equipsData, '0.0.api_slotitem_id')}
+              height={58}
+              useDefaultBG={false}
+              useFixedWidth={false}
+            />
+            <Gradient />
+          </>
         )}
         {!hideLBACName && (
           <>
-            <LBACName className="ship-name">{api_name}</LBACName>
+            <LBACName className="ship-name" avatar={enableAvatar}>
+              {api_name}
+            </LBACName>
 
-            <LBACRange className="ship-lv">
+            <LBACRange className="ship-lv" avatar={enableAvatar}>
               {t('main:Range')}: {api_base + api_bonus}
               {!!api_bonus && ` (${api_base} + ${api_bonus})`}
             </LBACRange>
-            <LBACFP className="ship-lv">
+            <LBACFP className="ship-lv" avatar={enableAvatar}>
               {t('main:Fighter Power')}:{' '}
               {tyku.max === tyku.min ? tyku.min : tyku.min + ' ~ ' + tyku.max}
             </LBACFP>

@@ -2,6 +2,7 @@ import { Avatar } from 'views/components/etc/avatar'
 import styled, { css } from 'styled-components'
 import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
+import { getShipTypeColor } from 'views/utils/game-utils'
 
 export const ShipCard = styled(Card)`
   display: flex;
@@ -102,13 +103,13 @@ export const ShipItem = styled.div`
   position: relative;
   white-space: nowrap;
   ${({ avatar = true, shipName = true, isLBAC = false }) => {
-    const avatarWidth = avatar ? '95px' : 0
-    const nameWidth = shipName ? '5fr' : 0
+    const avatarWidth = avatar ? '70px' : 0
+    const nameWidth = shipName ? '6fr' : '32px'
     const fbWidth = isLBAC ? 0 : '3fr'
     return css`
-      grid-template-columns: ${avatarWidth} ${nameWidth} minmax(60px, 5fr) 18px 42px ${fbWidth} 172px;
+      grid-template-columns: ${avatarWidth} ${nameWidth} minmax(60px, 4fr) 18px 42px ${fbWidth} 172px;
       grid-template-rows: 16px 10px 16px 16px;
-      grid-column-gap: 5px;
+      grid-column-gap: 6px;
     `
   }}
 
@@ -118,20 +119,52 @@ export const ShipItem = styled.div`
 `
 
 export const ShipAvatar = styled(Avatar)`
-  grid-column: 1 / 2;
+  grid-column: 1 / 3;
   grid-row: 1 / 5;
   pointer-events: none;
 `
 
+export const Gradient = styled.div`
+  z-index: 1;
+  grid-row: 1 / 5;
+  grid-column: 2 / 3;
+  height: 100%;
+  ${({ shipType }) => css`
+    background: linear-gradient(to right, transparent, ${getShipTypeColor(shipType)});
+  `}
+`
+
 export const ShipBasic = styled.div`
+  z-index: 2;
+  font-size: 80%;
+  width: 0;
+  opacity: 0.8;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  vertical-align: bottom;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      width: auto;
+      text-align: end;
+      padding-right: 6px;
+      font-weight: 500;
+      color: white;
+      opacity: 1;
+      text-shadow: #000000 0px 0px 10px;
+    `}
+`
+
+export const ShipIndicators = styled.div`
   font-size: 80%;
   opacity: 0.8;
-  grid-column: 2 / 6;
+  grid-column: 3 / 6;
   grid-row: 1 / 2;
   vertical-align: bottom;
 `
 
 export const ShipSubText = styled.div`
+  z-index: 2;
   grid-column: 2 / 3;
   grid-row: 4 / 5;
   font-size: 75%;
@@ -139,25 +172,56 @@ export const ShipSubText = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: bottom;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      font-weight: 500;
+      color: white;
+      opacity: 1;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 export const ShipName = styled.span`
+  z-index: 2;
   grid-column: 2 / 3;
   grid-row: 2 / 4;
   font-size: 120%;
   overflow: hidden;
   text-overflow: ellipsis;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      font-weight: 600;
+      color: white;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 export const LBACName = styled.span`
+  z-index: 2;
   grid-column: 2 / 3;
   grid-row: 1 / 3;
   font-size: 120%;
   overflow: hidden;
   text-overflow: ellipsis;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      font-weight: 600;
+      color: white;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 export const LBACRange = styled.div`
+  z-index: 2;
   grid-column: 2 / 3;
   grid-row: 3 / 4;
   font-size: 75%;
@@ -165,6 +229,16 @@ export const LBACRange = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: bottom;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      text-align: end;
+      padding-right: 6px;
+      font-weight: 500;
+      color: white;
+      opacity: 1;
+      text-shadow: #000000 0px 0px 10px;
+    `}
 `
 
 export const LBACFP = ShipSubText
@@ -182,14 +256,7 @@ export const ShipStatWToolTip = styled(Tooltip)`
 `
 
 export const ShipHP = styled.span`
-  ${({ shipName }) =>
-    shipName
-      ? css`
-          grid-column: 3 / 4;
-        `
-      : css`
-          grid-column: 2 / 4;
-        `}
+  grid-column: 3 / 4;
   grid-row: 2 / 4;
   align-self: flex-end;
 `
@@ -209,14 +276,7 @@ export const ShipStatusContainer = styled.div`
 `
 
 export const ShipHPProgress = styled.div`
-  ${({ shipName }) =>
-    shipName
-      ? css`
-          grid-column: 3 / 6;
-        `
-      : css`
-          grid-column: 2 / 6;
-        `}
+  grid-column: 3 / 6;
   grid-row: 4 / 5;
 `
 
@@ -238,9 +298,16 @@ export const ShipSlot = styled.div`
 `
 
 export const ShipLabel = styled.span`
-  margin-left: 5px;
-  margin-right: 5px;
   height: 1em;
+
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+
   ${({ isTag }) =>
     isTag &&
     css`

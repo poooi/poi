@@ -60,13 +60,13 @@ export const LBViewMini = compose(
       (id, i) =>
         mapareas[id] &&
         (id === areaIds[i - 1] ? (
-          <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
+          <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 280} />
         ) : (
           <Fragment key={i}>
             <AirbaseArea className="airbase-area">
               [{id}] {mapareas[id] ? t(`resources:${mapareas[id].api_name}`) : ''}
             </AirbaseArea>
-            <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
+            <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 280} />
           </Fragment>
         )),
     )}
