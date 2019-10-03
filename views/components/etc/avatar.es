@@ -30,11 +30,10 @@ const ShipAvatarContainer = styled.div`
 const ShipAvatarInnerContainer = styled.div`
   position: absolute;
   width: 100%;
-  height: 98%;
   overflow: hidden;
-  max-height: calc(100% - 2px);
   display: flex;
   align-items: center;
+  height: 100%;
 `
 
 const ShipAvatar = styled.img``
@@ -128,6 +127,8 @@ export class Avatar extends PureComponent {
     bgurl: PropTypes.string.isRequired,
     isDamaged: PropTypes.bool,
     children: PropTypes.node,
+    useFixedWidth: PropTypes.bool,
+    useDefaultBG: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -135,37 +136,46 @@ export class Avatar extends PureComponent {
     marginMagic: 0.555,
     isDamaged: false,
     children: null,
+    useFixedWidth: true,
+    useDefaultBG: true,
   }
 
   render() {
     if (!this.props.mstId) return <div />
+    const shipAvatarContainerStyle = {
+      height: this.props.height,
+    }
+    if (this.props.useFixedWidth) {
+      shipAvatarContainerStyle.width = Math.round(1.85 * this.props.height)
+    }
     return (
       <ShipAvatarContainer
         className={classnames(this.props.className, 'ship-avatar-container')}
         data-master-id={this.props.mstId}
         data-damaged={this.props.isDamaged}
-        style={{
-          width: Math.round(1.85 * this.props.height),
-          height: this.props.height,
-        }}
+        style={shipAvatarContainerStyle}
       >
         <ShipAvatarInnerContainer className="ship-avatar-inner-container">
           {this.props.type === 'equip' ? (
             <>
               <EquipAvatar className="equip-avatar" src={this.props.url} />
-              <EquipAvatarBG className="equip-avatar-bg" src={this.props.bgurl} />
+              {this.props.useDefaultBG && (
+                <EquipAvatarBG className="equip-avatar-bg" src={this.props.bgurl} />
+              )}
             </>
           ) : (
             <>
               <ShipAvatar
                 className="ship-avatar"
                 style={{
-                  height: this.props.height,
+                  // The origin img has 182px height, includes 3px top & bottom padding
+                  height: Math.round((this.props.height / 176) * 182),
                   marginLeft: -Math.round(this.props.marginMagic * this.props.height),
+                  marginTop: -Math.round((this.props.height / 176) * 3),
                 }}
                 src={this.props.url}
               />
-              {!this.props.isEnemy && (
+              {!this.props.isEnemy && this.props.useDefaultBG && (
                 <ShipAvatarBG
                   rank={this.props.rank}
                   className={classnames('ship-avatar-bg', {

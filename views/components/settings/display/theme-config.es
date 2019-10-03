@@ -45,15 +45,23 @@ const SWITCHES = [
     defaultValue: true,
   },
   {
-    label: 'Show shipgirl avatar',
-    configName: 'poi.appearance.avatar',
-    defaultValue: false,
-  },
-  {
     label: 'Use Gridded Plugin Menu',
     configName: 'poi.tabarea.grid',
     defaultValue: true,
   },
+  {
+    label: 'Show shipgirl avatar',
+    configName: 'poi.appearance.avatar',
+    defaultValue: false,
+  },
+]
+
+const avatarType = [
+  { name: 'setting:none', value: 'none' },
+  { name: 'setting:Type', value: 'shiptype' },
+  { name: 'data:Range', value: 'range' },
+  { name: 'main:Ship tag', value: 'tag' },
+  { name: 'data:Speed', value: 'speed' },
 ]
 
 @withNamespaces(['setting'])
@@ -61,12 +69,16 @@ const SWITCHES = [
   theme: get(state.config, 'poi.appearance.theme', 'dark'),
   vibrant: get(state.config, 'poi.appearance.vibrant', 0), // 0: disable, 1: macOS vibrant, 2: custom background
   background: get(state.config, 'poi.appearance.background'),
+  enableAvatar: get(state.config, 'poi.appearance.avatar'),
+  avatarType: get(state.config, 'poi.appearance.avatarType'),
 }))
 export class ThemeConfig extends Component {
   static propTypes = {
     theme: PropTypes.string,
     vibrant: PropTypes.number,
     background: PropTypes.string,
+    enableAvatar: PropTypes.bool,
+    avatarType: PropTypes.string,
   }
 
   handleSetTheme = e => {
@@ -91,6 +103,10 @@ export class ThemeConfig extends Component {
 
   handleSetVibrancy = e => {
     config.set('poi.appearance.vibrant', parseInt(e.target.value))
+  }
+
+  handleSetAvatarType = e => {
+    config.set('poi.appearance.avatarType', e.target.value)
   }
 
   render() {
@@ -166,6 +182,15 @@ export class ThemeConfig extends Component {
               </FormGroup>
             </FillAvailable>
           ))}
+          {this.props.enableAvatar && (
+            <HTMLSelect value={this.props.avatarType} onChange={this.handleSetAvatarType}>
+              {avatarType.map(({ name, value }, index) => (
+                <option key={index} value={value}>
+                  {t(name)}
+                </option>
+              ))}
+            </HTMLSelect>
+          )}
         </Wrapper>
       </Section>
     )

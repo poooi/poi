@@ -30,6 +30,8 @@ const defaultConfig = {
       muted: false,
     },
     appearance: {
+      avatar: true,
+      avatarType: 'none',
       zoom: 1,
       theme: 'dark',
       colorblindFilter: 'null',

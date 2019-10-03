@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
-import { isEqual, pick, omit, memoize } from 'lodash'
+import { isEqual, pick, omit, memoize, get } from 'lodash'
 import { withNamespaces } from 'react-i18next'
 import { ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import { MaterialIcon } from 'views/components/etc/icon'
@@ -20,6 +20,7 @@ import {
   getShipLabelStatus,
   getSpeedLabel,
   getMaterialStyle,
+  selectShipAvatarColor,
 } from 'views/utils/game-utils'
 import { resolveTime } from 'views/utils/tools'
 import {
@@ -27,12 +28,14 @@ import {
   shipRepairDockSelectorFactory,
   constSelector,
   escapeStatusSelectorFactory,
+  fcdShipTagColorSelector,
 } from 'views/utils/selectors'
 
 import {
   ShipItem,
   ShipAvatar,
   ShipBasic,
+  ShipIndicators,
   ShipSubText,
   ShipLabel,
   ShipName,
@@ -44,6 +47,7 @@ import {
   ShipFB,
   ShipSlot,
   ShipHPProgress,
+  Gradient,
 } from 'views/components/ship-parts/styled-components'
 
 const shipRowDataSelectorFactory = memoize(shipId =>
@@ -53,12 +57,15 @@ const shipRowDataSelectorFactory = memoize(shipId =>
       shipRepairDockSelectorFactory(shipId),
       constSelector,
       escapeStatusSelectorFactory(shipId),
+      fcdShipTagColorSelector,
+      state => get(state, 'config.poi.appearance.avatarType'),
     ],
-    ([ship, $ship] = [], repairDock, { $shipTypes }, escaped) => ({
+    ([ship, $ship] = [], repairDock, { $shipTypes }, escaped, shipTagColor, avatarType) => ({
       ship: ship || {},
       $ship: $ship || {},
       $shipTypes,
       labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
+      shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
     }),
   ),
 )
@@ -73,6 +80,7 @@ export class ShipRow extends Component {
     labelStatus: PropTypes.number,
     enableAvatar: PropTypes.bool,
     compact: PropTypes.bool,
+    shipAvatarColor: PropTypes.string,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -95,7 +103,16 @@ export class ShipRow extends Component {
   }
 
   render() {
-    const { ship, $ship, $shipTypes, labelStatus, enableAvatar, compact, t } = this.props
+    const {
+      ship,
+      $ship,
+      $shipTypes,
+      labelStatus,
+      enableAvatar,
+      shipAvatarColor,
+      compact,
+      t,
+    } = this.props
     const hideShipName = enableAvatar && compact
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
@@ -123,6 +140,24 @@ export class ShipRow extends Component {
           )})`}
       </span>
     )
+    const shipBasicContent = (
+      <>
+        <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
+        <ShipLabel className="ship-type">
+          {$shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name
+            ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
+            : '??'}
+        </ShipLabel>
+      </>
+    )
+    const shipIndicatorsContent = (
+      <>
+        <ShipLabel className="ship-speed">{t(`main:${getSpeedLabel(ship.api_soku)}`)}</ShipLabel>
+        <AACIIndicator shipId={ship.api_id} />
+        <AAPBIndicator shipId={ship.api_id} />
+        <OASWIndicator shipId={ship.api_id} />
+      </>
+    )
     return (
       <Tooltip
         position={Position.TOP}
@@ -146,36 +181,46 @@ export class ShipRow extends Component {
           shipName={!hideShipName}
         >
           {enableAvatar && (
-            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={54} />
+            <>
+              <ShipAvatar
+                mstId={$ship.api_id}
+                isDamaged={hpPercentage <= 50}
+                height={58}
+                useDefaultBG={false}
+                useFixedWidth={false}
+              />
+              <Gradient color={shipAvatarColor} />
+            </>
           )}
 
-          <ShipBasic className="ship-basic" show={!hideShipName}>
-            <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
-            <ShipLabel className="ship-type">
-              {$shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name
-                ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
-                : '??'}
-            </ShipLabel>
-            <ShipLabel className="ship-speed">
-              {t(`main:${getSpeedLabel(ship.api_soku)}`)}
-            </ShipLabel>
-            <AACIIndicator shipId={ship.api_id} />
-            <AAPBIndicator shipId={ship.api_id} />
-            <OASWIndicator shipId={ship.api_id} />
-          </ShipBasic>
+          {hideShipName || (
+            <ShipBasic className="ship-basic" avatar={enableAvatar}>
+              {shipBasicContent}
+              {!enableAvatar && shipIndicatorsContent}
+            </ShipBasic>
+          )}
+
+          {enableAvatar && (
+            <ShipIndicators className="ship-basic">
+              {hideShipName && shipBasicContent}
+              {shipIndicatorsContent}
+            </ShipIndicators>
+          )}
 
           {!hideShipName && (
             <>
-              <ShipName className="ship-name">
+              <ShipName className="ship-name" avatar={enableAvatar}>
                 {$ship.api_name
                   ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
                   : '??'}
               </ShipName>
-              <ShipSubText className="ship-exp">Next. {(ship.api_exp || [])[1]}</ShipSubText>
+              <ShipSubText className="ship-exp" avatar={enableAvatar}>
+                Next. {(ship.api_exp || [])[1]}
+              </ShipSubText>
             </>
           )}
 
-          <ShipHP className="ship-hp" style={labelStatusStyle} shipName={!hideShipName}>
+          <ShipHP className="ship-hp" style={labelStatusStyle}>
             {ship.api_nowhp} / {ship.api_maxhp}
           </ShipHP>
 
@@ -189,7 +234,7 @@ export class ShipRow extends Component {
             </ShipCond>
           </ShipStatusContainer>
 
-          <ShipHPProgress className="hp-progress" style={labelStatusStyle} shipName={!hideShipName}>
+          <ShipHPProgress className="hp-progress" style={labelStatusStyle}>
             <ProgressBar
               stripes={false}
               intent={getHpStyle(hpPercentage)}

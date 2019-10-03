@@ -90,6 +90,7 @@ export const fcdSelector = state => state.fcd
 export const ipcSelector = state => state.ipc
 export const wctfSelector = state => state.wctf
 export const layoutSelector = state => state.layout
+export const fcdShipTagColorSelector = state => get(state.fcd, 'shipTag.color', [])
 
 export const extensionSelectorFactory = key => state => get(state.ext, [key, '_']) || {}
 

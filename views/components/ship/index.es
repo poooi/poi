@@ -74,7 +74,7 @@ const FleetShipView = connect((state, { fleetId }) =>
     </div>
     <ShipDetails className="ship-details">
       {(shipsId || []).map((shipId, i) => (
-        <ShipRow key={shipId} shipId={shipId} enableAvatar={enableAvatar} compact={width < 480} />
+        <ShipRow key={shipId} shipId={shipId} enableAvatar={enableAvatar} compact={width < 540} />
       ))}
     </ShipDetails>
   </>
