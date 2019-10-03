@@ -1,7 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { getHpStyle, getTyku, LBAC_INTENTS, LBAC_STATUS_NAMES } from 'views/utils/game-utils'
+import {
+  getHpStyle,
+  getTyku,
+  LBAC_INTENTS,
+  LBAC_STATUS_NAMES,
+  LBAC_STATUS_AVATAR_COLOR,
+} from 'views/utils/game-utils'
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
 import { withNamespaces } from 'react-i18next'
@@ -72,7 +78,7 @@ export const SquardRow = compose(
               useDefaultBG={false}
               useFixedWidth={false}
             />
-            <Gradient />
+            <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
           </>
         )}
         {!hideLBACName && (

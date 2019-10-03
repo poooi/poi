@@ -2,7 +2,6 @@ import { Avatar } from 'views/components/etc/avatar'
 import styled, { css } from 'styled-components'
 import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
-import { getShipTypeColor } from 'views/utils/game-utils'
 
 export const ShipCard = styled(Card)`
   display: flex;
@@ -129,8 +128,8 @@ export const Gradient = styled.div`
   grid-row: 1 / 5;
   grid-column: 2 / 3;
   height: 100%;
-  ${({ shipType }) => css`
-    background: linear-gradient(to right, transparent, ${getShipTypeColor(shipType)});
+  ${({ color }) => css`
+    background: linear-gradient(to right, transparent, ${color});
   `}
 `
 

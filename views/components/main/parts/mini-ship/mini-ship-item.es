@@ -16,7 +16,7 @@ import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
 
 import {
-  getShipTypeColor,
+  selectShipAvatarColor,
   getCondStyle,
   equipIsAircraft,
   getShipLabelStatus,
@@ -25,6 +25,7 @@ import {
   getTyku,
   LBAC_INTENTS,
   LBAC_STATUS_NAMES,
+  LBAC_STATUS_AVATAR_COLOR,
 } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
@@ -33,6 +34,7 @@ import {
   escapeStatusSelectorFactory,
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
+  fcdShipTagColorSelector,
 } from 'views/utils/selectors'
 
 import { SlotItemContainer, ALevel } from 'views/components/ship-parts/styled-components'
@@ -161,12 +163,15 @@ const miniShipRowDataSelectorFactory = memoize(shipId =>
       shipDataSelectorFactory(shipId),
       shipRepairDockSelectorFactory(shipId),
       escapeStatusSelectorFactory(shipId),
+      fcdShipTagColorSelector,
+      state => get(state, 'config.poi.appearance.avatarType'),
     ],
-    ([ship, $ship] = [], repairDock, escaped) => {
+    ([ship, $ship] = [], repairDock, escaped, shipTagColor, avatarType) => {
       return {
         ship: ship || {},
         $ship: $ship || {},
         labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
+        shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
       }
     },
   ),
@@ -325,8 +330,8 @@ const Gradient = styled.div`
   grid-column: 2 / 3;
   height: 100%;
 
-  ${({ shipType }) => css`
-    background: linear-gradient(to right, transparent, ${getShipTypeColor(shipType)});
+  ${({ color }) => css`
+    background: linear-gradient(to right, transparent, ${color});
   `}
 `
 
@@ -339,6 +344,7 @@ export class MiniShipRow extends Component {
     labelStatus: PropTypes.number,
     enableAvatar: PropTypes.bool,
     compact: PropTypes.bool,
+    shipAvatarColor: PropTypes.string,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -349,7 +355,7 @@ export class MiniShipRow extends Component {
   }
 
   render() {
-    const { ship, $ship, labelStatus, enableAvatar, compact, t } = this.props
+    const { ship, $ship, labelStatus, enableAvatar, shipAvatarColor, compact, t } = this.props
     const hideShipName = enableAvatar && compact
     if (!ship) return <div />
     const labelStatusStyle = getStatusStyle(labelStatus)
@@ -395,7 +401,7 @@ export class MiniShipRow extends Component {
                 useFixedWidth={false}
                 height={38}
               />
-              <Gradient shipType={$ship.api_stype} />
+              <Gradient color={shipAvatarColor} />
             </>
           )}
           {hideShipName && (
@@ -565,7 +571,7 @@ export const MiniSquardRow = withNamespaces(['main'])(
                 useDefaultBG={false}
                 useFixedWidth={false}
               />
-              <Gradient />
+              <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
             </>
           )}
           {hideShipName && (

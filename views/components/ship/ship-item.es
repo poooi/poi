@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
-import { isEqual, pick, omit, memoize } from 'lodash'
+import { isEqual, pick, omit, memoize, get } from 'lodash'
 import { withNamespaces } from 'react-i18next'
 import { ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import { MaterialIcon } from 'views/components/etc/icon'
@@ -20,6 +20,7 @@ import {
   getShipLabelStatus,
   getSpeedLabel,
   getMaterialStyle,
+  selectShipAvatarColor,
 } from 'views/utils/game-utils'
 import { resolveTime } from 'views/utils/tools'
 import {
@@ -27,6 +28,7 @@ import {
   shipRepairDockSelectorFactory,
   constSelector,
   escapeStatusSelectorFactory,
+  fcdShipTagColorSelector,
 } from 'views/utils/selectors'
 
 import {
@@ -55,12 +57,15 @@ const shipRowDataSelectorFactory = memoize(shipId =>
       shipRepairDockSelectorFactory(shipId),
       constSelector,
       escapeStatusSelectorFactory(shipId),
+      fcdShipTagColorSelector,
+      state => get(state, 'config.poi.appearance.avatarType'),
     ],
-    ([ship, $ship] = [], repairDock, { $shipTypes }, escaped) => ({
+    ([ship, $ship] = [], repairDock, { $shipTypes }, escaped, shipTagColor, avatarType) => ({
       ship: ship || {},
       $ship: $ship || {},
       $shipTypes,
       labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
+      shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
     }),
   ),
 )
@@ -75,6 +80,7 @@ export class ShipRow extends Component {
     labelStatus: PropTypes.number,
     enableAvatar: PropTypes.bool,
     compact: PropTypes.bool,
+    shipAvatarColor: PropTypes.string,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -97,7 +103,16 @@ export class ShipRow extends Component {
   }
 
   render() {
-    const { ship, $ship, $shipTypes, labelStatus, enableAvatar, compact, t } = this.props
+    const {
+      ship,
+      $ship,
+      $shipTypes,
+      labelStatus,
+      enableAvatar,
+      shipAvatarColor,
+      compact,
+      t,
+    } = this.props
     const hideShipName = enableAvatar && compact
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
@@ -174,7 +189,7 @@ export class ShipRow extends Component {
                 useDefaultBG={false}
                 useFixedWidth={false}
               />
-              <Gradient shipType={$ship.api_stype} />
+              <Gradient color={shipAvatarColor} />
             </>
           )}
 
