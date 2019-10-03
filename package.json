@@ -13,7 +13,7 @@
     "clean": "gulp clean",
     "lint:js": "eslint . --ext .es --ext .js --ignore-path .gitignore",
     "lint:css": "stylelint views/**/*.css assets/**/*.css --config .stylelintrc.css.js",
-    "lint:styled": "stylelint views/**/*.es --config .stylelintrc.styled.js",
+    "lint:styled": "stylelint views/**/*.es --config .stylelintrc.js",
     "lint": "npm run lint:js && npm run lint:css && npm run lint:styled"
   },
   "repository": {
