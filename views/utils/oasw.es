@@ -3,12 +3,13 @@ import _ from 'lodash'
 const iconIs = n => equip => equip.api_type[3] === n
 const shipIdIs = n => ship => ship.api_ship_id === n
 const hasSome = pred => xs => xs.some(pred)
+const hasMoreThan = num => pred => xs => xs.filter(pred).length >= num
 
 const isSonar = iconIs(18)
 
 const isDiveBomber = equip => equip.api_type[2] === 7
 const isTorpedoBomber = equip => equip.api_type[2] === 8
-const isTypeZeroSonar = equip => equip.api_slotitem_id === 132
+const isLargeSonar = equip => equip.api_type[2] === 40
 const taisenAbove = value => ship => ship.api_taisen[0] >= value
 
 const isDE = ship => ship.api_stype === 1
@@ -22,11 +23,17 @@ const isJohnstonOrKai = _.overSome([shipIdIs(562), shipIdIs(689)])
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])
 const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
 
-const isASWAircraft = equip =>
+const isHyugaKaiNi = shipIdIs(554)
+
+const isFixedWingASWAircraft = equip =>
   // 対潜哨戒機 (e.g. 三式指揮連絡機(対潜))
-  equip.api_type[3] === 26 ||
+  equip.api_type[2] === 26
+
+const isAutogyro = equip =>
   // オートジャイロ (e.g. カ号観測機)
-  equip.api_type[3] === 69
+  equip.api_type[2] === 25
+
+const isASWAircraft = equip => isFixedWingASWAircraft(equip) || isAutogyro(equip)
 
 const equipTais = equip => equip.api_tais || 0
 const equipTaisAbove = value => equip => equipTais(equip) >= value
@@ -123,7 +130,7 @@ export const isOASWWith = allCVEIds =>
         ),
         _.overEvery(
           taisenAbove(50),
-          overEquips(isTypeZeroSonar),
+          overEquips(isLargeSonar),
           overEquips(
             hasSome(
               _.overSome(
@@ -135,6 +142,16 @@ export const isOASWWith = allCVEIds =>
             ),
           ),
         ),
+      ),
+    ),
+    // 日向改二
+    _.overEvery(
+      isHyugaKaiNi,
+      _.overSome(
+        // 対潜値12以上のオートジャイロ
+        overEquips(hasSome(_.overEvery(isAutogyro, equipTaisAbove(12)))),
+        // オートジャイロ二機
+        overEquips(hasMoreThan(2)(isAutogyro)),
       ),
     ),
   )
