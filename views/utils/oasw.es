@@ -130,7 +130,7 @@ export const isOASWWith = allCVEIds =>
         ),
         _.overEvery(
           taisenAbove(50),
-          overEquips(isLargeSonar),
+          overEquips(hasSome(isLargeSonar)),
           overEquips(
             hasSome(
               _.overSome(
