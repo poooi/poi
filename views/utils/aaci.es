@@ -385,11 +385,11 @@ declareAACI({
 
 // id 25: Ise-class Kai
 declareAACI({
-  name: ['伊勢改', '日向改'],
+  name: ['伊勢改', '伊勢改二', '日向改', '日向改二'],
   id: 25,
   fixed: 7,
   modifier: 1.55,
-  shipValid: validAny(isIseK, isHyuuGaK),
+  shipValid: validAny(isIseK, isHyuuGaK, isIseK2, isHyuuGaK2),
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar), hasSome(isType3Shell)),
 })
 
