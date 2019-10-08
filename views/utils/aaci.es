@@ -468,24 +468,24 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
-const isJohnstonOrKai = validAny(shipIdIs(562), shipIdIs(689))
+const isFletcherClassOrKai = validAny(shipIdIs(562), shipIdIs(689), shipIdIs(596), shipIdIs(692))
 
 // id 34~37: Johnston
 declareAACI({
-  name: ['Johnston'],
+  name: ['Johnston', 'Fletcher'],
   id: 34,
   fixed: 7,
   modifier: 1.6,
-  shipValid: isJohnstonOrKai,
+  shipValid: isFletcherClassOrKai,
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
 })
 
 declareAACI({
-  name: ['Johnston'],
+  name: ['Johnston', 'Fletcher'],
   id: 35,
   fixed: 6,
   modifier: 1.55,
-  shipValid: isJohnstonOrKai,
+  shipValid: isFletcherClassOrKai,
   equipsValid: validAll(
     hasSome(is5InchSingleGunMountMk30PlusGFCS),
     hasSome(is5InchSingleGunMountMk30),
@@ -493,20 +493,20 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['Johnston'],
+  name: ['Johnston', 'Fletcher'],
   id: 36,
   fixed: 6,
   modifier: 1.55,
-  shipValid: isJohnstonOrKai,
+  shipValid: isFletcherClassOrKai,
   equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30, 2), hasSome(isGFCSMk37)),
 })
 
 declareAACI({
-  name: ['Johnston'],
+  name: ['Johnston', 'Fletcher'],
   id: 37,
   fixed: 4,
   modifier: 1.55,
-  shipValid: isJohnstonOrKai,
+  shipValid: isFletcherClassOrKai,
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30, 2),
 })
 
