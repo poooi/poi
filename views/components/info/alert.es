@@ -129,34 +129,28 @@ class PoiAlertInner extends PureComponent {
     this.setState({ showHistory: !this.state.showHistory })
   }
 
-  pushToHistory = (history, toPush) => [
-    ...takeRight(history, 5),
-    <AlertLogContent key={Date.now()} className={`bp3-callout bp3-intent-${toPush.type}`}>
-      {toPush.content}
-    </AlertLogContent>,
-  ]
-
   handleAddAlert = e => {
+    const nowTS = Date.now()
     const value = {
       ...{
         type: 'default',
         content: '',
         priority: 0,
+        ts: nowTS,
       },
       ...e.detail,
     }
     let { history, current } = this.state
-    const nowTS = Date.now()
     if (value.priority < current.priority && nowTS < this.stickyEnd) {
       if (!value.dontReserve) {
         // Old message has higher priority, push new message to history
-        history = this.pushToHistory(history, value)
+        history = [...takeRight(history, 5), value]
         this.setState({ history })
       }
     } else if (!current.dontReserve) {
       // push old message to history
       this.updateTime = value.stickyFor || 3000
-      history = this.pushToHistory(history, current)
+      history = [...takeRight(history, 5), current]
       this.setState({
         history: history,
         current: value,
@@ -267,7 +261,11 @@ class PoiAlertInner extends PureComponent {
             containerHeight={this.state.containerHeight}
             onClick={this.toggleHistory}
           >
-            {this.state.history}
+            {this.state.history.map(h => (
+              <AlertLogContent key={h.ts} className={`bp3-callout bp3-intent-${h.type}`}>
+                {h.content}
+              </AlertLogContent>
+            ))}
           </AlertLog>
         </AlertMain>
       </PoiAlertTag>
