@@ -15,10 +15,15 @@ const taisenAbove = value => ship => ship.api_taisen[0] >= value
 const isDE = ship => ship.api_stype === 1
 
 const isIsuzuK2 = shipIdIs(141)
-const isJervisKai = shipIdIs(394)
+const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893)])
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
-const isJohnstonOrKai = _.overSome([shipIdIs(562), shipIdIs(689)])
+const isFletcherClassOrKai = _.overSome([
+  shipIdIs(562),
+  shipIdIs(689),
+  shipIdIs(596),
+  shipIdIs(692),
+])
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])
 const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
@@ -64,10 +69,10 @@ export const isOASWWith = allCVEIds =>
   _.overSome(
     // 無条件に発動
     isIsuzuK2,
-    isJervisKai,
+    isJClassKai,
     isTatsutaKai,
     isSamuelKai,
-    isJohnstonOrKai,
+    isFletcherClassOrKai,
     // 海防艦
     _.overEvery(
       isDE,
