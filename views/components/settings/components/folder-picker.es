@@ -121,7 +121,7 @@ export class FolderPickerConfig extends Component {
       } catch (e) {
         defaultPath = remote.app.getPath('desktop')
       }
-      const filenames = dialog.showOpenDialog({
+      const filenames = dialog.showOpenDialogSync({
         title: this.props.label,
         defaultPath,
         properties: this.props.isFolder ? ['openDirectory', 'createDirectory'] : ['openFile'],
