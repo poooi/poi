@@ -40,7 +40,7 @@
   "Maximum cache size": "キャッシュの最大サイズ",
   "Delete cookies": "クッキーを削除する",
   "Delete cache": "キャッシュを削除する",
-  "Revoke trusted certificates": "信頼した証明書を削除する",
+  "Revoke trusted / ignored certificates": "信頼 / 無視した証明書を削除する",
   "Success!": "削除完了。",
   "Edit custom CSS": "カスタマイズ CSS を編集する",
   "NoPermission": "失敗しました。権限の有無を確認して下さい",

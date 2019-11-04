@@ -28,7 +28,7 @@
   "Layout settings": "Layout settings",
   "Delete cookies": "Delete cookies",
   "Delete cache": "Delete cache",
-  "Revoke trusted certificates": "Revoke trusted certificates",
+  "Revoke trusted / ignored certificates": "Revoke trusted / ignored certificates",
   "Success!": "Success!",
   "Edit custom CSS": "Edit custom CSS",
   "NoPermission": "Failed. Perhaps you don't have permission to it.",

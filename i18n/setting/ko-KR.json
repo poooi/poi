@@ -40,7 +40,7 @@
   "Maximum cache size": "최대 캐시 크기",
   "Delete cookies": "쿠키 삭제",
   "Delete cache": "캐시 삭제",
-  "Revoke trusted certificates": "신뢰한 인증서 삭제",
+  "Revoke trusted / ignored certificates": "신뢰한 인증서 삭제",
   "Success!": "삭제 완료",
   "Edit custom CSS": "사용자 정의 CSS",
   "NoPermission": "실패했습니다. 권한이 있는지 확인해주세요.",

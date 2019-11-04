@@ -40,7 +40,7 @@
   "Maximum cache size": "最大缓存大小",
   "Delete cookies": "删除 Cookies",
   "Delete cache": "删除缓存",
-  "Revoke trusted certificates": "移除信任证书",
+  "Revoke trusted / ignored certificates": "移除信任 / 无视证书",
   "Success!": "删除成功。",
   "Edit custom CSS": "编辑自定义 CSS",
   "NoPermission": "打开失败，可能没有创建文件的权限",

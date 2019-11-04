@@ -52,6 +52,7 @@ export class StorageConfig extends Component {
 
   handleRevokeCert = e => {
     config.set('poi.misc.trustedCerts', [])
+    config.set('poi.misc.untrustedCerts', [])
   }
 
   handleUpdateCacheSize = () => {
@@ -106,7 +107,7 @@ export class StorageConfig extends Component {
                   {t('setting:Delete cache')}
                 </Button>
                 <Button minimal intent={Intent.WARNING} onClick={this.handleRevokeCert}>
-                  {t('setting:Revoke trusted certificates')}
+                  {t('setting:Revoke trusted / ignored certificates')}
                 </Button>
                 <Callout>
                   {t('setting:If connection error occurs frequently, delete both of them')}

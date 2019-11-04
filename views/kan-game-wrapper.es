@@ -130,20 +130,27 @@ export class KanGameWrapper extends Component {
   handleCertError = (event, url, error, certificate, callback) => {
     console.warn(event, url, error, certificate)
     const trusted = config.get('poi.misc.trustedCerts', [])
+    const untrusted = config.get('poi.misc.untrustedCerts', [])
     const hash = createHash('sha256')
       .update(certificate.data)
       .digest('base64')
-    if (!trusted.includes(hash)) {
+    if (!trusted.includes(hash) && !untrusted.includes(hash)) {
       const title = i18next.t('others:Certificate error')
       const content = (
         <ReactMarkdown
           source={i18next.t('others:cert_error_markdown', {
             name: certificate.issuerName,
+            url: url,
             value: hash,
           })}
         />
       )
       const footer = [
+        {
+          name: i18next.t('others:Ignore'),
+          func: () => this.setuntrustedCerts(hash),
+          style: 'warning',
+        },
         {
           name: i18next.t('others:Trust'),
           func: () => this.settrustedCerts(hash),
@@ -159,6 +166,12 @@ export class KanGameWrapper extends Component {
     trusted.push(hash)
     config.set('poi.misc.trustedCerts', trusted)
     this.webview.current.view.reload()
+  }
+
+  setuntrustedCerts = hash => {
+    const untrusted = config.get('poi.misc.untrustedCerts', [])
+    untrusted.push(hash)
+    config.set('poi.misc.untrustedCerts', untrusted)
   }
 
   setProperWindowSize = (webviewWidth, webviewHeight) => {
