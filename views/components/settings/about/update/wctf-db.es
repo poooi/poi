@@ -8,6 +8,7 @@ import glob from 'glob'
 import Promise from 'bluebird'
 import { Button, Intent } from '@blueprintjs/core'
 import { Trans } from 'react-i18next'
+import { register, parseRaw } from 'kckit'
 
 import { wctfSelector } from 'views/utils/selectors'
 import { installPackage, getNpmConfig } from 'views/services/plugin-manager/utils'
@@ -55,16 +56,18 @@ export class WctfDB extends Component {
   loadDB = async () => {
     try {
       const meta = await fs.readJSON(DB_META_PATH)
-      const data = await this.parseData()
+      const data = await this.loadRawData()
       if (data) {
         this.props.dispatch({
           type: '@@wctf-db-update',
           payload: {
             version: meta.version,
             lastModified: +new Date(), // reloading database should effective for plugin windows
-            ...data,
+            ...this.parseData(data),
           },
         })
+
+        this.initializeKckit(data)
       }
     } catch (e) {
       console.error(e.stack)
@@ -81,8 +84,7 @@ export class WctfDB extends Component {
   //  + fetch latest release info json
   // - if should update, install the npm package
   // - load the new db if updated or forced to load
-  // @params force: Boolean, reloads DB if no update available
-  updateDB = async (force = false) => {
+  updateDB = async () => {
     this.setState({
       updating: true,
     })
@@ -113,20 +115,17 @@ export class WctfDB extends Component {
     if (updateFlag) {
       try {
         await installPackage(PACKAGE_NAME, data.version, npmConfig)
-        this.loadDB()
         // eslint-disable-next-line no-console
         console.log(`wctf-db updated to ${data.version}`)
       } catch (e) {
         console.error(e)
       }
     } else {
-      if (force) {
-        this.loadDB()
-      }
       // eslint-disable-next-line no-console
       console.log(
         `No update for wctf-db, current: ${this.props.version}, remote: ${get(data, 'version')}`,
       )
+      await this.loadDB()
     }
 
     this.setState({
@@ -134,24 +133,18 @@ export class WctfDB extends Component {
     })
   }
 
-  parseData = async () => {
+  loadRawData = async () => {
     const data = {}
     try {
-      await Promise.map(glob.sync(`${DB_FILE_PATH}/*.nedb`), async dbPath => {
-        const dbName = path.basename(dbPath, '.nedb')
-        if (!(dbName in DB_KEY)) {
-          return
-        }
-        const buf = await fs.readFile(dbPath)
-        const entries = buf
-          .toString()
-          .split('\n')
-          .filter(Boolean)
-        data[dbName] = _(entries)
-          .map(content => JSON.parse(content))
-          .keyBy(DB_KEY[dbName])
-          .value()
-      })
+      await Promise.map(
+        glob.sync(`${DB_FILE_PATH}/*.nedb`),
+        async dbPath => {
+          const dbName = path.basename(dbPath, '.nedb')
+          const buf = await fs.readFile(dbPath)
+          data[dbName] = buf.toString()
+        },
+        { concurrency: 2 },
+      )
     } catch (e) {
       console.error(e.stack)
       return
@@ -160,7 +153,22 @@ export class WctfDB extends Component {
     return data
   }
 
-  handleRefesh = () => this.updateDB(true)
+  initializeKckit = async data => {
+    register({ db: parseRaw(data) })
+    this.props.dispatch({ type: '@@misc-kckit-bump' })
+  }
+
+  parseData = data =>
+    _.mapValues(_.pick(data, _.keys(DB_KEY)), (value, dbName) =>
+      _(value)
+        .split('\n')
+        .compact()
+        .map(content => JSON.parse(content))
+        .keyBy(DB_KEY[dbName])
+        .value(),
+    )
+
+  handleRefesh = () => this.updateDB()
 
   render() {
     const { updating } = this.state

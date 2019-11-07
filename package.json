@@ -93,6 +93,7 @@
     "i18next": "^17.0.12",
     "immutable": "^3.8.2",
     "json-format": "^1.0.1",
+    "kckit": "^1.25.0",
     "lodash": "^4.17.15",
     "memoize-one": "^5.1.1",
     "mime": "^2.4.4",
