@@ -1,3 +1,15 @@
+//@ts-check
+
+const configExtends = [
+  'eslint:recommended',
+  'plugin:react/recommended',
+  'plugin:import/errors',
+  'plugin:import/warnings',
+]
+
+const configExtendsPrettier = ['prettier', 'prettier/react']
+
+/** @type { import("@types/eslint").Linter.Config } */
 module.exports = {
   env: {
     browser: true,
@@ -5,14 +17,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'prettier',
-    'prettier/react',
-  ],
+  extends: [...configExtends, ...configExtendsPrettier],
   parserOptions: {
     ecmaFeatures: {
       legacyDecorators: true,
@@ -27,19 +32,16 @@ module.exports = {
     'no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
     'unicode-bom': 'error',
     'prefer-const': ['error', { destructuring: 'all' }],
-    'react/prop-types': [0],
-    'no-irregular-whitespace': [
-      'error',
-      { skipStrings: true, skipTemplates: true },
-    ],
-    'import/no-named-as-default-member': [0],
+    'react/prop-types': 'off',
+    'no-irregular-whitespace': ['error', { skipStrings: true, skipTemplates: true }],
+    'import/no-named-as-default-member': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'prettier/prettier': 'warn',
   },
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['', '.js', '.jsx', '.es', '.coffee', '.cjsx'],
+        extensions: ['', '.js', '.jsx', '.es', '.ts', '.tsx'],
         paths: [__dirname],
       },
     },
@@ -49,4 +51,18 @@ module.exports = {
       version: require('react').version,
     },
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: [
+        ...configExtends,
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
+        ...configExtendsPrettier,
+        'prettier/@typescript-eslint',
+      ],
+    },
+  ],
 }
