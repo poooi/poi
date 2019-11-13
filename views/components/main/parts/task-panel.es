@@ -9,6 +9,7 @@ import styled, { css } from 'styled-components'
 
 import { escapeI18nKey } from 'views/utils/tools'
 import { CardWrapper as CardWrapperL } from './styled-components'
+import i18next from 'views/env-parts/i18next'
 
 import {
   configLayoutSelector,
@@ -113,22 +114,14 @@ function getIntentByPercent(percent) {
 }
 
 function getToolTip(record) {
-  return (
-    <>
-      {values(record).map(
-        (subgoal, idx) =>
-          Boolean(subgoal) &&
-          typeof subgoal === 'object' && (
-            <div key={idx}>
-              <Trans i18nKey={`data:${escapeI18nKey(subgoal.description)}`}>
-                {subgoal.description}
-              </Trans>{' '}
-              - {subgoal.count} / {subgoal.required}
-            </div>
-          ),
-      )}
-    </>
-  )
+  return values(record)
+    .map(
+      (g, idx) =>
+        Boolean(g) &&
+        typeof g === 'object' &&
+        `${i18next.t(`data:${escapeI18nKey(g.description)}`)} - ${g.count} / ${g.required}`,
+    )
+    .filter(a => a)
 }
 
 const CardWrapper = styled(CardWrapperL)`
@@ -205,18 +198,25 @@ const TaskRowBase = connect(
   leftLabel = '',
   leftOverlay,
   rightLabel = '',
-  rightOverlay,
+  rightOverlay = [],
   rightIntent = Intent.SUCCESS,
   leftOverlayPlacement = 'auto',
   colwidth,
 }) {
+  const rightOverlayCnt = (
+    <div>
+      {rightOverlay.map(msg => (
+        <div key={msg}>{msg}</div>
+      ))}
+    </div>
+  )
   return (
     <TaskItem className={'panel-item task-item'} colwidth={colwidth}>
       <QuestNameTooltip
         id={`task-quest-name-${idx}`}
         className="quest-name"
         disabled={!leftOverlay}
-        postion={leftOverlayPlacement}
+        position={leftOverlayPlacement}
         content={leftOverlay}
       >
         <>
@@ -225,7 +225,7 @@ const TaskRowBase = connect(
         </>
       </QuestNameTooltip>
       {rightLabel && (
-        <Tooltip disabled={!rightOverlay} content={rightOverlay}>
+        <Tooltip disabled={!rightOverlay.length} content={rightOverlayCnt} position="left">
           <QuestProgress className="quest-progress" intent={rightIntent} minimal>
             {rightLabel}
           </QuestProgress>
@@ -265,7 +265,7 @@ const TaskRow = withNamespaces(['resources'])(
       ? getIntentByPercent(count / required)
       : getIntentByProgress(quest)
     const progressLabel = record ? `${count} / ${required}` : progressLabelText(quest)
-    const progressOverlay = record && <div>{getToolTip(record || {})}</div>
+    const progressOverlay = record && getToolTip(record || {})
     return (
       <TaskRowBase
         idx={idx}
