@@ -3,14 +3,14 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
-    name: Build on node ${{ matrix.node_version }} and ${{ matrix.os }}
+  build_macOS:
+    name: build_macOS
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         node-version: [12.x]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [macOS-latest]
 
     steps:
     - uses: actions/checkout@v1
@@ -19,6 +19,61 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install, build, and test
+      run: |
+        npm ci
+        npm run build --if-present
+        npm test
+      env:
+        CI: true
+
+  build_linux:
+    name: build_linux
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 1080
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install build dependency
+      timeout-minutes: 1080
+      run: |
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm bsdtar snapcraft
+    - name: npm install, build, and test
+      timeout-minutes: 1080
+      run: |
+        npm ci
+        npm run build --if-present
+        npm test
+      env:
+        CI: true
+
+  build_windows:
+    name: build_windows
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 1080
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      timeout-minutes: 1080
       run: |
         npm ci
         npm run build --if-present
