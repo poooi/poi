@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
 import i18next from 'views/env-parts/i18next'
-import { WindowEnv } from 'views/components/etc/window-env'
 import { takeRight } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
@@ -114,7 +113,7 @@ const initState = {
   msgWidth: 0,
 }
 
-class PoiAlertInner extends PureComponent {
+export class PoiAlert extends PureComponent {
   static propTypes = {}
   state = initState
 
@@ -262,7 +261,11 @@ class PoiAlertInner extends PureComponent {
             onClick={this.toggleHistory}
           >
             {this.state.history.map(h => (
-              <AlertLogContent key={h.ts} className={`bp3-callout bp3-intent-${h.type}`}>
+              <AlertLogContent
+                key={h.ts}
+                className={`bp3-callout bp3-intent-${h.type}`}
+                data-ts={h.ts}
+              >
                 {h.content}
               </AlertLogContent>
             ))}
@@ -271,14 +274,4 @@ class PoiAlertInner extends PureComponent {
       </PoiAlertTag>
     )
   }
-}
-
-export function PoiAlert(...props) {
-  return (
-    <WindowEnv.Consumer>
-      {({ window }) => (
-        <PoiAlertInner {...props} $={(...arg) => window.document.querySelector(...arg)} />
-      )}
-    </WindowEnv.Consumer>
-  )
 }
