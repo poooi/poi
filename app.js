@@ -192,9 +192,10 @@ app.on('ready', () => {
       webviewTag: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
+      nodeIntegrationInSubFrames: true,
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
-      experimentalFeatures: true,
+      // experimentalFeatures: true,
     },
     backgroundColor: '#00000000',
   })
