@@ -592,7 +592,10 @@ export const getShipAACIs = (ship, equips) => {
 export const getFleetAvailableAACIs = (ships, equips) => {
   const aaciSet = {}
   ships.forEach((ship, index) => {
-    getShipAACIs(ship, equips[index].map(([equip, onslot]) => equip)).forEach(id => {
+    getShipAACIs(
+      ship,
+      equips[index].map(([equip, onslot]) => equip),
+    ).forEach(id => {
       aaciSet[id] = true
     })
   })

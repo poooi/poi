@@ -264,11 +264,13 @@ class PluginManager extends EventEmitter {
 
   async getOutdatedPlugins(isNotif) {
     const plugins = this.getInstalledPlugins()
-    const outdatedList = (await Promise.all(
-      plugins.map(plugin =>
-        this.getPluginOutdateInfo(plugin).catch(err => console.error(err.stack)),
-      ),
-    )).filter(Boolean)
+    const outdatedList = (
+      await Promise.all(
+        plugins.map(plugin =>
+          this.getPluginOutdateInfo(plugin).catch(err => console.error(err.stack)),
+        ),
+      )
+    ).filter(Boolean)
     if (isNotif && outdatedList.length > 0) {
       const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t(
         'setting:PluginUpdateMsg',

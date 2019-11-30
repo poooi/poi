@@ -23,7 +23,10 @@ export function reducer(state = {}, { type, postBody, body }, store) {
     }
     case '@@Response/kcsapi/api_req_kousyou/createitem':
       if (body.api_create_flag == 1) {
-        const items = keyBy(filter(body.api_get_items, item => item?.api_id > 0), 'api_id')
+        const items = keyBy(
+          filter(body.api_get_items, item => item?.api_id > 0),
+          'api_id',
+        )
         return {
           ...state,
           ...items,

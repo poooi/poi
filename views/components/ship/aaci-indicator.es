@@ -47,13 +47,10 @@ const AACISelectorFactory = memoize(shipId =>
 )
 
 const maxAACIShotdownSelectorFactory = memoize(shipId =>
-  createSelector(
-    [shipDataSelectorFactory(shipId)],
-    ([_ship = {}, $ship = {}] = []) => {
-      const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
-      return Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
-    },
-  ),
+  createSelector([shipDataSelectorFactory(shipId)], ([_ship = {}, $ship = {}] = []) => {
+    const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
+    return Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
+  }),
 )
 
 export const AACIIndicator = withNamespaces(['main'])(

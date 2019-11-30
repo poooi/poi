@@ -132,16 +132,12 @@ class CountdownLabel extends Component {
 }
 
 const tykuSelectorFactory = memoize(fleetId =>
-  createSelector(
-    fleetShipsEquipDataWithEscapeSelectorFactory(fleetId),
-    (equipsData = []) => getTyku(equipsData),
+  createSelector(fleetShipsEquipDataWithEscapeSelectorFactory(fleetId), (equipsData = []) =>
+    getTyku(equipsData),
   ),
 )
 
-const admiralLevelSelector = createSelector(
-  basicSelector,
-  basic => basic.api_level,
-)
+const admiralLevelSelector = createSelector(basicSelector, basic => basic.api_level)
 
 const sakuSelectorFactory = memoize(fleetId =>
   createSelector(
@@ -161,9 +157,8 @@ const sakuSelectorFactory = memoize(fleetId =>
 )
 
 const speedSelectorFactory = memoize(fleetId =>
-  createSelector(
-    [fleetShipsDataWithEscapeSelectorFactory(fleetId)],
-    (shipsData = []) => getFleetSpeed(shipsData),
+  createSelector([fleetShipsDataWithEscapeSelectorFactory(fleetId)], (shipsData = []) =>
+    getFleetSpeed(shipsData),
   ),
 )
 

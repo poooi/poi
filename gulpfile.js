@@ -26,11 +26,20 @@ gulp.task('getVersion', done => {
   })
 })
 
-gulp.task('build', gulp.series('getVersion', () => build(poiVersion)))
+gulp.task(
+  'build',
+  gulp.series('getVersion', () => build(poiVersion)),
+)
 
-gulp.task('build_plugins', gulp.series('getVersion', () => installPlugins(poiVersion)))
+gulp.task(
+  'build_plugins',
+  gulp.series('getVersion', () => installPlugins(poiVersion)),
+)
 
-gulp.task('pack_win_release', gulp.series('getVersion', () => packWinRelease(poiVersion)))
+gulp.task(
+  'pack_win_release',
+  gulp.series('getVersion', () => packWinRelease(poiVersion)),
+)
 
 gulp.task('deploy_nightlies', () => deployNightlies())
 

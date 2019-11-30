@@ -371,26 +371,20 @@ const CountdownContent = ({ moments }) => (
   </div>
 )
 
-const admiralInfoSelector = createSelector(
-  [basicSelector],
-  basic => ({
-    level: get(basic, 'api_level', -1),
-    nickname: get(basic, 'api_nickname', ''),
-    rank: get(basic, 'api_rank', 0),
-    maxShip: get(basic, 'api_max_chara', 0),
-    maxSlotitem: get(basic, 'api_max_slotitem', 0),
-  }),
-)
+const admiralInfoSelector = createSelector([basicSelector], basic => ({
+  level: get(basic, 'api_level', -1),
+  nickname: get(basic, 'api_nickname', ''),
+  rank: get(basic, 'api_rank', 0),
+  maxShip: get(basic, 'api_max_chara', 0),
+  maxSlotitem: get(basic, 'api_max_slotitem', 0),
+}))
 
-const numCheckSelector = createSelector(
-  [configSelector],
-  config => ({
-    shipNumCheck: get(config, 'poi.mapStartCheck.ship.enable', false),
-    minShipNum: get(config, 'poi.mapStartCheck.ship.minFreeSlots', 4),
-    slotNumCheck: get(config, 'poi.mapStartCheck.item.enable', false),
-    minSlotNum: get(config, 'poi.mapStartCheck.item.minFreeSlots', 10),
-  }),
-)
+const numCheckSelector = createSelector([configSelector], config => ({
+  shipNumCheck: get(config, 'poi.mapStartCheck.ship.enable', false),
+  minShipNum: get(config, 'poi.mapStartCheck.ship.minFreeSlots', 4),
+  slotNumCheck: get(config, 'poi.mapStartCheck.item.enable', false),
+  minSlotNum: get(config, 'poi.mapStartCheck.item.minFreeSlots', 10),
+}))
 
 export const AdmiralPanel = withNamespaces(['main'])(
   connect(state => ({

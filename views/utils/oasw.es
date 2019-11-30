@@ -80,7 +80,10 @@ export const isOASWWith = allCVEIds =>
         // 必要対潜60 + ソナー
         _.overEvery(taisenAbove(60), overEquips(hasSome(isSonar))),
         // 必要対潜値75 + 装備のみの対潜値が合計4以上
-        _.overEvery(taisenAbove(75), overEquips(equips => _.sum(equips.map(equipTais)) >= 4)),
+        _.overEvery(
+          taisenAbove(75),
+          overEquips(equips => _.sum(equips.map(equipTais)) >= 4),
+        ),
       ),
     ),
     _.overEvery(

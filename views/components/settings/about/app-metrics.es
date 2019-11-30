@@ -33,7 +33,10 @@ export class AppMetrics extends PureComponent {
     //   prop => (total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)),
     // )
 
-    total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
+    total.percentCPUUsage = round(
+      sumBy(metrics, metric => metric.cpu.percentCPUUsage),
+      2,
+    )
 
     this.getAllWindows().map(win => {
       const pid = win.webContents.getOSProcessId()

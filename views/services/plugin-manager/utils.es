@@ -143,16 +143,19 @@ export function updateI18n(plugin) {
   }
   if (i18nFile != null) {
     const namespace = plugin.id
-    each(window.LOCALES.map(lng => lng.locale), language => {
-      i18next.addGlobalI18n(namespace)
-      i18next.addResourceBundleDebounce(
-        language,
-        namespace,
-        readI18nResources(join(i18nFile, `${language}.json`)),
-        true,
-        true,
-      )
-    })
+    each(
+      window.LOCALES.map(lng => lng.locale),
+      language => {
+        i18next.addGlobalI18n(namespace)
+        i18next.addResourceBundleDebounce(
+          language,
+          namespace,
+          readI18nResources(join(i18nFile, `${language}.json`)),
+          true,
+          true,
+        )
+      },
+    )
     plugin = {
       ...plugin,
       name: i18next.t(`${namespace}:${plugin.name}`),
@@ -465,9 +468,11 @@ export function notifyFailed(state, npmConfig) {
 }
 
 export async function repairDep(brokenList, npmConfig) {
-  const depList = (await new Promise(res => {
-    glob(path.join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches))
-  })).filter(p => !p.includes('poi-plugin'))
+  const depList = (
+    await new Promise(res => {
+      glob(path.join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches))
+    })
+  ).filter(p => !p.includes('poi-plugin'))
   depList.forEach(p => {
     try {
       require(p)

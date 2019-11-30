@@ -19,7 +19,10 @@ export const ScreenshotConfig = withNamespaces(['setting'])(({ t }) => (
             label={t('setting:Screenshot Format')}
             configName="poi.misc.screenshot.format"
             defaultValue="png"
-            availableVal={[{ name: 'PNG', value: 'png' }, { name: 'JPEG', value: 'jpg' }]}
+            availableVal={[
+              { name: 'PNG', value: 'png' },
+              { name: 'JPEG', value: 'jpg' },
+            ]}
           />
         </FormGroup>
       </Wrapper>

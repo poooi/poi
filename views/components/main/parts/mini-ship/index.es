@@ -38,12 +38,9 @@ const CardWrapper = styled(CardWrapperL)`
 `
 
 const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
-  createSelector(
-    [fleetStateSelectorFactory(fleetId)],
-    fleetState => ({
-      fleetState,
-    }),
-  ),
+  createSelector([fleetStateSelectorFactory(fleetId)], fleetState => ({
+    fleetState,
+  })),
 )
 
 const ShipViewSwitchButton = connect((state, { fleetId }) =>

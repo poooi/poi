@@ -45,18 +45,11 @@ export const ExpeditionName = styled.span`
         `}
 `
 
-const fleetsExpeditionSelector = createSelector(
-  fleetsSelector,
-  fleets => map(fleets, 'api_mission'),
+const fleetsExpeditionSelector = createSelector(fleetsSelector, fleets =>
+  map(fleets, 'api_mission'),
 )
-const fleetsNamesSelector = createSelector(
-  fleetsSelector,
-  fleets => map(fleets, 'api_name'),
-)
-const fleetInBattleSelector = createSelector(
-  fleetInBattleSelectorFactory,
-  inBattle => inBattle,
-)
+const fleetsNamesSelector = createSelector(fleetsSelector, fleets => map(fleets, 'api_name'))
+const fleetInBattleSelector = createSelector(fleetInBattleSelectorFactory, inBattle => inBattle)
 
 const FleetStatus = withNamespaces(['main'])(
   connect((state, { fleetId }) => {

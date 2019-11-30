@@ -41,13 +41,16 @@ const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
 const mainPoiNs = i18nFiles.map(i => path.basename(i))
 const mainPoiRes = {}
-each(LOCALES.map(lng => lng.locale), locale => {
-  mainPoiRes[locale] = {}
-  each(i18nFiles, i18nFile => {
-    const namespace = path.basename(i18nFile)
-    mainPoiRes[locale][namespace] = readI18nResources(path.join(i18nFile, `${locale}.json`))
-  })
-})
+each(
+  LOCALES.map(lng => lng.locale),
+  locale => {
+    mainPoiRes[locale] = {}
+    each(i18nFiles, i18nFile => {
+      const namespace = path.basename(i18nFile)
+      mainPoiRes[locale][namespace] = readI18nResources(path.join(i18nFile, `${locale}.json`))
+    })
+  },
+)
 
 window.LOCALES = LOCALES
 window.language = window.config.get('poi.misc.language', navigator.language)

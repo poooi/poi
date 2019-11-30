@@ -145,7 +145,10 @@ const MapRoutes = connect(state => ({
   const locHistory = spotHistory.map(i => mapspots[get(maproutes, `${i}.1`)] || [-1, -1])
   const lineHistory = histLen
     ? zip(locHistory.slice(0, histLen - 1), locHistory.slice(1))
-    : [[-1, -1], [-1, -1]]
+    : [
+        [-1, -1],
+        [-1, -1],
+      ]
   const SCALE = 1 / 6
   return (
     <MapRouteContainer className="map-route-container">
