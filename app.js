@@ -78,7 +78,7 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
 if (dbg.isEnabled()) {
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 } else {
-  global.SERVER_HOSTNAME = 'poi.0u0.moe'
+  global.SERVER_HOSTNAME = 'api.poi.moe'
   process.env.NODE_ENV = 'production'
   if (config.get('poi.misc.exceptionReporting')) {
     const { init } = require('./lib/sentry')
