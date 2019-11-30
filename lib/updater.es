@@ -7,7 +7,7 @@ if (process.platform === 'win32') {
 
   autoUpdater.setFeedURL({
     provider: 'generic',
-    url: 'https://poi.io/dist',
+    url: 'https://poi.moe/dist',
     channel: config.get('poi.update.beta', false) ? 'beta' : 'latest',
   })
   autoUpdater.autoDownload = false
@@ -17,7 +17,7 @@ export function changeChannel(channel) {
   if (process.platform !== 'darwin') {
     autoUpdater.setFeedURL({
       provider: 'generic',
-      url: 'https://poi.io/dist',
+      url: 'https://poi.moe/dist',
       channel,
     })
   }

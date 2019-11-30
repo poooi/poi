@@ -34,7 +34,7 @@ const doUpdate = async () => {
 if (process.platform === 'win32') {
   updater.on('update-available', () => {
     // eslint-disable-next-line no-console
-    console.log('Update from poi.io available')
+    console.log('Update from poi.moe available')
   })
 
   updater.on('update-downloaded', () => {
@@ -45,7 +45,7 @@ if (process.platform === 'win32') {
   })
 
   updater.on('update-not-available', () => {
-    console.warn('Update from poi.io not available')
+    console.warn('Update from poi.moe not available')
   })
 
   updater.on('error', (event, error) => {
@@ -112,7 +112,7 @@ const toggleUpdate = (version, log) => {
     },
     {
       name: `${i18next.t('Manually download')}`,
-      func: () => shell.openExternal('https://poi.io'),
+      func: () => shell.openExternal('https://poi.moe'),
       style: 'primary',
     },
   ]

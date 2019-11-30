@@ -14,7 +14,7 @@ import {
 } from 'views/components/etc/styled-components'
 
 const serverList = [
-  'https://poi.io/fcd/',
+  'https://poi.moe/fcd/',
   'https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/',
 ]
 
