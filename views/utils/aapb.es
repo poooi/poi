@@ -78,6 +78,11 @@ const capableShipTypes = [
    - ShipInfo: Array of shape [ship, $ship]
    - EquipsInfo: Array of `EquipInfo`,
        where EquipInfo at least has shape: [equip, $equip, onslot]
+
+  Last update Dec 3, 2019. Ref:
+  - https://kancolle.fandom.com/wiki/Combat/Aerial_Combat
+  - https://wikiwiki.jp/kancolle/12cm30連装噴進砲改二
+
  */
 export const getShipAAPB = (...args) => {
   const [[ship, $ship], equipsInfo] = args
@@ -93,7 +98,7 @@ export const getShipAAPB = (...args) => {
 
   if (rlk2Count === 0) return 0
 
-  const iseClassBonus = $ship.api_ctype === 2 ? 70 : 0
+  const iseClassBonus = $ship.api_ctype === 2 ? 25 : 0
 
   // 艦の素対空値
   /*
@@ -119,5 +124,5 @@ export const getShipAAPB = (...args) => {
    */
   adjustedAA = 2 * Math.floor(adjustedAA / 2)
   // as we want to show the precentage, let *100 here to obtain a better precision.
-  return ((adjustedAA + 0.9 * ship.api_lucky[0]) * 100) / (322 - 40 * rlk2Count - iseClassBonus)
+  return ((adjustedAA + 0.9 * ship.api_lucky[0]) * 100) / 281 + 15 * (rlk2Count - 1) + iseClassBonus
 }
