@@ -61,6 +61,9 @@ export class FolderPickerConfig extends Component {
   static defaultProps = {
     isFolder: true,
     exclude: [],
+  }
+
+  state = {
     locked: false,
   }
 
