@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import fs from 'fs-extra'
-import { get, split, map } from 'lodash'
+import { get, split, map, size } from 'lodash'
 import { remote } from 'electron'
 import i18next from 'views/env-parts/i18next'
 import path from 'path'
@@ -61,6 +61,7 @@ export class FolderPickerConfig extends Component {
   static defaultProps = {
     isFolder: true,
     exclude: [],
+    locked: false,
   }
 
   componentDidMount = () => {
@@ -76,15 +77,6 @@ export class FolderPickerConfig extends Component {
 
   handleOnDrag = e => {
     e.preventDefault()
-  }
-
-  synchronize = callback => {
-    if (this.lock) {
-      return
-    }
-    this.lock = true
-    callback()
-    this.lock = false
   }
 
   emitErrorMessage = () =>
@@ -110,25 +102,35 @@ export class FolderPickerConfig extends Component {
     }
   }
 
-  handleOnClick = () => {
-    this.synchronize(() => {
-      let defaultPath
-      try {
-        if (this.props.isFolder) {
-          fs.ensureDirSync(this.props.value)
-          defaultPath = this.props.value
-        }
-      } catch (e) {
-        defaultPath = remote.app.getPath('desktop')
+  handleOnClick = async () => {
+    if (this.state.locked) {
+      return
+    }
+    this.setState({
+      locked: true,
+    })
+
+    let defaultPath
+    try {
+      if (this.props.isFolder) {
+        fs.ensureDirSync(this.props.value)
+        defaultPath = this.props.value
       }
-      const filenames = dialog.showOpenDialogSync({
-        title: this.props.label,
-        defaultPath,
-        properties: this.props.isFolder ? ['openDirectory', 'createDirectory'] : ['openFile'],
-      })
-      if (filenames !== undefined) {
-        this.setPath(filenames[0])
-      }
+    } catch (e) {
+      defaultPath = remote.app.getPath('desktop')
+    }
+
+    const selection = await dialog.showOpenDialog({
+      title: this.props.label,
+      defaultPath,
+      properties: this.props.isFolder ? ['openDirectory', 'createDirectory'] : ['openFile'],
+    })
+    if (!selection.canceled && size(selection.filePaths)) {
+      this.setPath(selection.filePaths[0])
+    }
+
+    this.setState({
+      locked: false,
     })
   }
 
@@ -159,6 +161,7 @@ export class FolderPickerConfig extends Component {
 
   render() {
     const { t, extraControl } = this.props
+    const { locked } = this.state
     return (
       <PickerBox
         className="folder-picker"
@@ -177,7 +180,7 @@ export class FolderPickerConfig extends Component {
         ) : (
           this.props.placeholder
         )}
-        <Button onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
+        <Button disabled={locked} onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
           {t(this.props.value ? 'Change' : 'Select')}
         </Button>
         {extraControl}
