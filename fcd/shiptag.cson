@@ -1,6 +1,6 @@
 meta:
   name: "shiptag"
-  version: "2019/11/30/01"
+  version: "2019/12/08/01"
 
 data:
   mapname: [
@@ -8,12 +8,16 @@ data:
     "E2"
     "E3"
     "E4"
+    "E5"
+    "E6"
   ]
   color: [
     "#E91E63"
     "#03A9F4"
     "#3F51B5"
     "#8BC34A"
+    "#BDBDBD"
+    "#FFCA28"
   ]
   fleetname:
     "zh-CN": [
@@ -21,22 +25,30 @@ data:
       "空袭部队"
       "兰印部队"
       "马来部队"
+      "哨戒部队"
+      "决战部队"
     ]
     "zh-TW": [
       "攻略護衛隊"
       "空襲部隊"
       "蘭印部隊"
       "馬來部隊"
+      "哨戒部隊"
+      "決戰部隊"
     ]
     "ja-JP": [
       "攻略護衛隊"
       "空襲部隊"
       "蘭印部隊"
       "馬来部隊"
+      "哨戒部隊"
+      "決戦部隊"
     ]
     "en-US": [
       "Raiders Guard"
       "Air Strike Force"
       "Dutch Indies Force"
       "Malay Force"
+      "Patrol Force"
+      "Decisive Battle Force"
     ]
