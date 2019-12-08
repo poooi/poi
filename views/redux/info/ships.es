@@ -166,6 +166,10 @@ export function reducer(state = {}, { type, body, postBody }, store) {
         [api_ship_id]: completeRepair(state[api_ship_id]),
       }
     }
+    case '@@Response/kcsapi/api_req_map/anchorage_repair': {
+      const { api_ship_data } = body
+      return compareUpdate(state, indexify(api_ship_data))
+    }
   }
   return state
 }
