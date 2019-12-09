@@ -91,7 +91,7 @@
   "Event ship locking warning": "活動鎖船警告",
   "At least one fleet has not been fully resupplied": "至少有一個艦隊未補給",
   "Expedition resupply warning": "遠征補給警告",
-  "Unused equipment slot warning": "遠征補給警告",
+  "Unused equipment slot warning": "未使用裝備欄警告",
   "Unused equipment slot appears in your fleet": "艦隊中有未使用的裝備欄",
   "Lv": "Lv. {{level}}",
   "RemodelLv": "改造等級：Lv. {{remodelLevel}}",
