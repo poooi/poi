@@ -17,6 +17,7 @@ const defaultConfig = {
       async: true,
       screenshot: {
         format: 'png',
+        usecanvas: false,
       },
       cache: {
         path: global.DEFAULT_CACHE_PATH,

@@ -64,31 +64,41 @@ export class PoiControl extends Component {
   }
 
   handleCapturePage = toClipboard => {
+    if (config.get('poi.misc.screenshot.usecanvas')) {
+      getStore('layout.webview.ref')
+        .getWebContents()
+        .executeJavaScript(`capture(${!!toClipboard})`)
+        .then(success => {
+          if (!success) {
+            this.handleCapturePageOverWebContent(toClipboard)
+          }
+        })
+    } else {
+      this.handleCapturePageOverWebContent(toClipboard)
+    }
+  }
+
+  handleCapturePageOverWebContent = toClipboard => {
+    const { width, height } = getStore('layout.webview')
+    const rect = {
+      x: 0,
+      y: 0,
+      width: Math.floor(width * devicePixelRatio),
+      height: Math.floor(height * devicePixelRatio),
+    }
     getStore('layout.webview.ref')
       .getWebContents()
-      .executeJavaScript(`capture(${!!toClipboard})`)
-      .then(success => {
-        if (!success) {
-          const { width, height } = getStore('layout.webview')
-          const rect = {
-            x: 0,
-            y: 0,
-            width: Math.floor(width * devicePixelRatio),
-            height: Math.floor(height * devicePixelRatio),
-          }
-          getStore('layout.webview.ref')
-            .getWebContents()
-            .capturePage(rect, image => {
-              this.handleScreenshotCaptured({
-                dataURL: image
-                  .resize({ width: Math.floor(width), height: Math.floor(height) })
-                  .toDataURL(),
-                toClipboard,
-              })
-            })
-        }
+      .capturePage(rect)
+      .then(image => {
+        this.handleScreenshotCaptured({
+          dataURL: image
+            .resize({ width: Math.floor(width), height: Math.floor(height) })
+            .toDataURL(),
+          toClipboard,
+        })
       })
   }
+
   handleScreenshotCaptured = ({ dataURL, toClipboard }) => {
     const screenshotPath = config.get(
       'poi.misc.screenshot.path',

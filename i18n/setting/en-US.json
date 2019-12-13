@@ -90,6 +90,7 @@
   "Update": "Update",
   "Maximum cache size": "Maximum cache size",
   "Screenshot Format": "Screenshot Format",
+  "Capture screenshot using canvas directly": "Capture screenshot using canvas directly",
   "Display Final Stage Notification": "Display Final Stage Notification",
   "Display Event Ship Locking Notification": "Display Event Ship Locking Notification",
   "Disable Hardware Acceleration": "Disable Hardware Acceleration",
