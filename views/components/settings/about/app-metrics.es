@@ -29,9 +29,9 @@ export class AppMetrics extends PureComponent {
     const total = {}
 
     const pidmap = {}
-    // ;['workingSetSize', 'peakWorkingSetSize'].map(
-    //   prop => (total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)),
-    // )
+    ;['workingSetSize', 'peakWorkingSetSize'].map(
+      prop => (total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)),
+    )
 
     total.percentCPUUsage = round(
       sumBy(metrics, metric => metric.cpu.percentCPUUsage),
@@ -85,7 +85,7 @@ export class AppMetrics extends PureComponent {
         {active && (
           <HTMLTable condensed interactive className="metric-table">
             <thead>
-              {map(['PID', 'type', /* 'working/MB', 'peak/MB',*/ 'CPU/%', 'wakeup'], str => (
+              {map(['PID', 'type', 'working/MB', 'peak/MB', 'CPU/%', 'wakeup'], str => (
                 <th key={str} title={str}>
                   {str}
                 </th>
@@ -98,9 +98,9 @@ export class AppMetrics extends PureComponent {
                   <td title={pidmap[metric.pid] || metric.type}>
                     {pidmap[metric.pid] || metric.type}
                   </td>
-                  {/* {['workingSetSize', 'peakWorkingSetSize'].map(prop => (
+                  {['workingSetSize', 'peakWorkingSetSize'].map(prop => (
                     <td key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</td>
-                  ))} */}
+                  ))}
                   {['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop => (
                     <td key={prop}>{round((metric.cpu || [])[prop], 1)}</td>
                   ))}
@@ -111,8 +111,8 @@ export class AppMetrics extends PureComponent {
               <tr>
                 <th>{t('setting:TOTAL')}</th>
                 <td />
-                {/* <td>{total.workingSetSize}</td>
-                <td>{total.peakWorkingSetSize}</td> */}
+                <td>{total.workingSetSize}</td>
+                <td>{total.peakWorkingSetSize}</td>
                 <td>{total.percentCPUUsage}</td>
                 <td />
               </tr>
