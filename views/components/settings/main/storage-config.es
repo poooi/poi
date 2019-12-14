@@ -56,7 +56,7 @@ export class StorageConfig extends Component {
   }
 
   handleUpdateCacheSize = () => {
-    session.defaultSession.getCacheSize(cacheSize => this.setState({ cacheSize }))
+    session.defaultSession.getCacheSize().then(cacheSize => this.setState({ cacheSize }))
   }
 
   componentDidMount = () => {
