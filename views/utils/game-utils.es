@@ -108,7 +108,7 @@ export function getShipAvatarColorByRange(rng) {
 }
 
 export function getShipAvatarColorByTag(tag, color) {
-  return Number.isInteger(tag) && tag > 0 ? `${color}60` : shipAvatarColor.BLACK
+  return Number.isInteger(tag) && tag > 0 ? `${color[tag - 1]}60` : shipAvatarColor.BLACK
 }
 
 export function getShipAvatarColorBySpeed(speed) {
