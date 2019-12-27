@@ -3,10 +3,6 @@ const config = remote.require('./lib/config')
 
 window.ipc = remote.require('./lib/ipc')
 
-if (config.get('poi.content.muted', false)) {
-  remote.getCurrentWebContents().setAudioMuted(true)
-}
-
 document.addEventListener('DOMContentLoaded', e => {
   if (config.get('poi.misc.dmmcookie', false)) {
     const now = new Date()

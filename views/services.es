@@ -184,3 +184,8 @@ remote.getCurrentWindow().on('show', () => {
     getStore('layout.webview.ref').executeJavaScript('align()')
   }
 })
+
+// Initialize webview audio mute
+remote.getCurrentWebContents().on('did-attach-webview', (e, webContents) => {
+  webContents.audioMuted = config.get('poi.content.muted', false)
+})
