@@ -208,7 +208,7 @@ const ShipItem = styled.div`
   white-space: nowrap;
   ${({ avatar = true, shipName = true, isLBAC = false }) => {
     const avatarWidth = avatar ? '50px' : 0
-    const nameWidth = shipName ? '6fr' : '15px'
+    const nameWidth = shipName ? 'minmax(35px, 95px)' : '15px'
     const dataWidth = isLBAC ? 'minmax(32px, 1fr) 120px' : 'minmax(70px, 5fr) 18px 42px'
     return css`
       grid-template-columns: ${avatarWidth} ${nameWidth} ${dataWidth};

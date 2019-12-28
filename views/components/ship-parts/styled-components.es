@@ -103,8 +103,8 @@ export const ShipItem = styled.div`
   white-space: nowrap;
   ${({ avatar = true, shipName = true, isLBAC = false }) => {
     const avatarWidth = avatar ? '70px' : 0
-    const nameWidth = shipName ? '6fr' : '32px'
-    const fbWidth = isLBAC ? 0 : '3fr'
+    const nameWidth = shipName ? 'minmax(95px, 150px)' : '32px'
+    const fbWidth = isLBAC ? 0 : 'minmax(30px, 3fr)'
     return css`
       grid-template-columns: ${avatarWidth} ${nameWidth} minmax(60px, 4fr) 18px 42px ${fbWidth} 172px;
       grid-template-rows: 16px 10px 16px 16px;
