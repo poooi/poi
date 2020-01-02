@@ -12,72 +12,10 @@ const itemTypeIs = n => equip => equip.api_type[2] === n
 // type for slot item
 const iconIs = n => equip => equip.api_type[3] === n
 
-// 12: 小型電探
-// 13: 大型電探
-const isRadar = equip => itemTypeIs(12)(equip) || itemTypeIs(13)(equip)
-
 // validAll(f,g...)(x) = f(x) && g(x) && ...
 const validAll = (...func) => x => func.every(f => f(x))
-
 const validNot = f => x => !f(x)
-
 const validAny = (...func) => x => func.some(f => f(x))
-
-// AA Radar
-// Surface Radar are excluded by checking whether
-// the equipment gives AA stat (api_tyku)
-const isAARadar = equip => isRadar(equip) && equip.api_tyku > 0
-
-// 36: 高射装置 Anti-aircraft Fire Director
-const isAAFD = itemTypeIs(36)
-
-// icon=16: 高角砲
-const isHighAngleMount = iconIs(16)
-
-// 18: 対空強化弾
-const isType3Shell = itemTypeIs(18)
-
-// 21: 対空機銃
-const isAAGun = itemTypeIs(21)
-
-// 3: 大口径主砲
-const isLargeCaliberMainGun = itemTypeIs(3)
-
-// full list from wikiwiki (as of Jan 24, 2019)
-// 122: 10cm連装高角砲+高射装置
-// 130: 12.7cm高角砲+高射装置
-// 135: 90mm単装高角砲
-// 172: 5inch連装砲 Mk.28 mod.2
-// 275: 10cm連装高角砲改+増設機銃
-// 295: 12.7cm連装砲A型改三(戦時改修)＋高射装置
-// 296: 12.7cm連装砲B型改四(戦時改修)＋高射装置
-// 308: 5inch単装砲 Mk.30改＋GFCS Mk.37
-const isBuiltinHighAngleMount = equip =>
-  [122, 130, 135, 172, 275, 295, 296, 308].includes(equip.api_slotitem_id)
-
-// 131: 25mm三連装機銃 集中配備
-// 173: Bofors 40mm四連装機関砲
-// 191: QF 2ポンド8連装ポンポン砲
-const isCDMG = equip => [131, 173, 191].includes(equip.api_slotitem_id)
-
-// 274: 12cm30連装噴進砲改二
-const isRocketK2 = equip => equip.api_slotitem_id === 274
-
-// 275: 10cm連装高角砲改+増設機銃
-const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
-
-// 191: QF 2ポンド8連装ポンポン砲
-const isQF2Pounder = equip => equip.api_slotitem_id === 191
-
-// 300: 16inch Mk.I三連装砲改+FCR type284
-const is16InchMkITriplePlusFCR = equip => equip.api_slotitem_id === 300
-
-// 301: 20連装7inch UP Rocket Launchers
-const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
-
-const is5InchSingleGunMountMk30 = equip => equip.api_slotitem_id === 313
-const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
-const isGFCSMk37 = equip => equip.api_slotitem_id === 307
 
 // avoid modifying this structure directly, use "declareAACI" instead.
 export const AACITable = {}
@@ -98,43 +36,7 @@ const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid })
   }
 }
 
-const isNotSubmarine = ship => ![13, 14].includes(ship.api_stype)
-
-const isBattleship = ship => [8, 9, 10].includes(ship.api_stype)
-
-// 54 = 秋月型
-const isAkizukiClass = ship => ship.api_ctype === 54
-// 67 = Queen Elizabeth class
-// 78 = Ark Royal class
-// 82 = J class
-// 88 = Nelson class
-const isRoyalNavyShips = ship => [67, 78, 82, 88].includes(ship.api_ctype)
-
-// 6 = 金剛型
-const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_aftershipid === '0'
-
 const shipIdIs = n => ship => ship.api_ship_id === n
-
-const isMayaK2 = shipIdIs(428)
-const isIsuzuK2 = shipIdIs(141)
-const isKasumiK2B = shipIdIs(470)
-const isSatsukiK2 = shipIdIs(418)
-const isKinuK2 = shipIdIs(487)
-const isYuraK2 = shipIdIs(488)
-const isFumitsukiK2 = shipIdIs(548)
-const isUIT25 = shipIdIs(539)
-const isI504 = shipIdIs(530)
-const isTatsutaK2 = shipIdIs(478)
-const isIseK = shipIdIs(82)
-const isIseK2 = shipIdIs(553)
-const isHyuuGaK = shipIdIs(88)
-const isHyuuGaK2 = shipIdIs(554)
-const isMusashiK = shipIdIs(148)
-const isMusashiK2 = shipIdIs(546)
-const isHamakazeBK = shipIdIs(558)
-const isIsokazeBK = shipIdIs(557)
-const isTenryuuK2 = shipIdIs(477)
-const isGotlandKai = shipIdIs(579)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -152,8 +54,18 @@ const slotNumAtLeast = n => ship => ship.api_slot_num >= n
    reference:
 
    - https://wikiwiki.jp/kancolle/航空戦#antiairfire (as of Jan 23, 2019)
+   - https://kancolle.fandom.com/wiki/Combat/Aerial_Combat (as of Jan 1, 2020)
+   - https://github.com/andanteyk/ElectronicObserver/blob/master/ElectronicObserver/Other/Information/apilist.txt (as of Jan 1, 2019)
 
  */
+
+// 54 = 秋月型
+const isAkizukiClass = ship => ship.api_ctype === 54
+// icon=16: 高角砲
+const isHighAngleMount = iconIs(16)
+// 12: 小型電探
+// 13: 大型電探
+const isRadar = equip => itemTypeIs(12)(equip) || itemTypeIs(13)(equip)
 
 // id 1~3: Akizuki-class
 declareAACI({
@@ -183,6 +95,18 @@ declareAACI({
   equipsValid: validAll(hasAtLeast(isHighAngleMount, 2)),
 })
 
+const isBattleship = ship => [8, 9, 10].includes(ship.api_stype)
+// 3: 大口径主砲
+const isLargeCaliberMainGun = itemTypeIs(3)
+// 18: 対空強化弾
+const isType3Shell = itemTypeIs(18)
+// 36: 高射装置 Anti-aircraft Fire Director
+const isAAFD = itemTypeIs(36)
+// AA Radar
+// Surface Radar are excluded by checking whether
+// the equipment gives AA stat (api_tyku)
+const isAARadar = equip => isRadar(equip) && equip.api_tyku > 0
+
 // id 4: battleships
 declareAACI({
   name: ['Battle Ship'],
@@ -197,6 +121,19 @@ declareAACI({
     hasSome(isAARadar),
   ),
 })
+
+const isNotSubmarine = ship => ![13, 14].includes(ship.api_stype)
+// full list from wikiwiki (as of Jan 24, 2019)
+// 122: 10cm連装高角砲+高射装置
+// 130: 12.7cm高角砲+高射装置
+// 135: 90mm単装高角砲
+// 172: 5inch連装砲 Mk.28 mod.2
+// 275: 10cm連装高角砲改+増設機銃
+// 295: 12.7cm連装砲A型改三(戦時改修)＋高射装置
+// 296: 12.7cm連装砲B型改四(戦時改修)＋高射装置
+// 308: 5inch単装砲 Mk.30改＋GFCS Mk.37
+const isBuiltinHighAngleMount = equip =>
+  [122, 130, 135, 172, 275, 295, 296, 308].includes(equip.api_slotitem_id)
 
 // id 5: all surface ships
 declareAACI({
@@ -242,6 +179,12 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD)),
 })
 
+const isMayaK2 = shipIdIs(428)
+// 131: 25mm三連装機銃 集中配備
+// 173: Bofors 40mm四連装機関砲
+// 191: QF 2ポンド8連装ポンポン砲
+const isCDMG = equip => [131, 173, 191].includes(equip.api_slotitem_id)
+
 // id: 10~11 Maya K2
 declareAACI({
   name: ['摩耶改二'],
@@ -261,6 +204,9 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isCDMG)),
 })
 
+// 21: 対空機銃
+const isAAGun = itemTypeIs(21)
+
 declareAACI({
   id: 12,
   fixed: 3,
@@ -271,6 +217,7 @@ declareAACI({
 
 // id 13: <unknown>
 
+const isIsuzuK2 = shipIdIs(141)
 // id 14~15: Isuzu K2
 declareAACI({
   name: ['五十鈴改二'],
@@ -289,6 +236,8 @@ declareAACI({
   shipValid: isIsuzuK2,
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
+
+const isKasumiK2B = shipIdIs(470)
 
 // id 16~17 Kasumi K2B
 declareAACI({
@@ -309,6 +258,8 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
+const isSatsukiK2 = shipIdIs(418)
+
 // id 18: Satsuki K2
 declareAACI({
   name: ['皐月改二'],
@@ -319,6 +270,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isCDMG)),
 })
 
+const isKinuK2 = shipIdIs(487)
 // id 19~20: Kinu K2
 // any HA with builtin AAFD will not work
 declareAACI({
@@ -343,6 +295,8 @@ declareAACI({
   equipsValid: validAll(hasSome(isCDMG)),
 })
 
+const isYuraK2 = shipIdIs(488)
+
 // id 21: Yura K2
 declareAACI({
   name: ['由良改二'],
@@ -352,6 +306,8 @@ declareAACI({
   shipValid: isYuraK2,
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
+
+const isFumitsukiK2 = shipIdIs(548)
 
 // id 22: Fumitsuki K2
 declareAACI({
@@ -363,6 +319,9 @@ declareAACI({
   equipsValid: validAll(hasSome(isCDMG)),
 })
 
+const isUIT25 = shipIdIs(539)
+const isI504 = shipIdIs(530)
+
 // id 23: UIT-25 & I-504
 declareAACI({
   name: ['UIT-25', '伊504'],
@@ -372,6 +331,8 @@ declareAACI({
   shipValid: validAny(isUIT25, isI504),
   equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG)))),
 })
+
+const isTatsutaK2 = shipIdIs(478)
 
 // id 24: Tenryuu K2 & Tatsuta K2
 declareAACI({
@@ -383,6 +344,13 @@ declareAACI({
   equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG))), hasSome(isHighAngleMount)),
 })
 
+const isIseK = shipIdIs(82)
+const isIseK2 = shipIdIs(553)
+const isHyuuGaK = shipIdIs(88)
+const isHyuuGaK2 = shipIdIs(554)
+// 274: 12cm30連装噴進砲改二
+const isRocketK2 = equip => equip.api_slotitem_id === 274
+
 // id 25: Ise-class Kai
 declareAACI({
   name: ['伊勢改', '伊勢改二', '日向改', '日向改二'],
@@ -392,6 +360,10 @@ declareAACI({
   shipValid: validAny(isIseK, isHyuuGaK, isIseK2, isHyuuGaK2),
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar), hasSome(isType3Shell)),
 })
+
+const isMusashiK2 = shipIdIs(546)
+// 275: 10cm連装高角砲改+増設機銃
+const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
 
 // id 26: Musashi K2
 declareAACI({
@@ -404,6 +376,7 @@ declareAACI({
 })
 
 // id 27: <unknown>
+const isMusashiK = shipIdIs(148)
 
 // id 28: Ise-class Kai & Musashi Kai/K2
 declareAACI({
@@ -415,6 +388,9 @@ declareAACI({
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar)),
 })
 
+const isHamakazeBK = shipIdIs(558)
+const isIsokazeBK = shipIdIs(557)
+
 // id 29: Hamakaze B Kai & Isokaze B Kai
 declareAACI({
   name: ['浜風乙改', '磯風乙改'],
@@ -424,6 +400,9 @@ declareAACI({
   shipValid: validAny(isHamakazeBK, isIsokazeBK),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
 })
+
+const isTenryuuK2 = shipIdIs(477)
+const isGotlandKai = shipIdIs(579)
 
 // id 30: Tenryuu K2 & Gotland Kai
 declareAACI({
@@ -444,6 +423,20 @@ declareAACI({
   shipValid: isTenryuuK2,
   equipsValid: hasAtLeast(isHighAngleMount, 2),
 })
+
+// 67 = Queen Elizabeth class
+// 78 = Ark Royal class
+// 82 = J class
+// 88 = Nelson class
+const isRoyalNavyShips = ship => [67, 78, 82, 88].includes(ship.api_ctype)
+// 6 = 金剛型
+const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_aftershipid === '0'
+// 191: QF 2ポンド8連装ポンポン砲
+const isQF2Pounder = equip => equip.api_slotitem_id === 191
+// 300: 16inch Mk.I三連装砲改+FCR type284
+const is16InchMkITriplePlusFCR = equip => equip.api_slotitem_id === 300
+// 301: 20連装7inch UP Rocket Launchers
+const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
 
 // id 32: HMS & Kongou-class K2
 declareAACI({
@@ -469,6 +462,7 @@ declareAACI({
 })
 
 const isFletcherClassOrKai = validAny(shipIdIs(562), shipIdIs(689), shipIdIs(596), shipIdIs(692))
+const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
 
 // id 34~37: Johnston
 declareAACI({
@@ -479,6 +473,8 @@ declareAACI({
   shipValid: isFletcherClassOrKai,
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
 })
+
+const is5InchSingleGunMountMk30 = equip => equip.api_slotitem_id === 313
 
 declareAACI({
   name: ['Johnston', 'Fletcher'],
@@ -491,6 +487,8 @@ declareAACI({
     hasSome(is5InchSingleGunMountMk30),
   ),
 })
+
+const isGFCSMk37 = equip => equip.api_slotitem_id === 307
 
 declareAACI({
   name: ['Johnston', 'Fletcher'],
