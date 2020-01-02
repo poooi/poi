@@ -500,6 +500,57 @@ declareAACI({
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30, 2),
 })
 
+// id 38: unknown
+
+// id 39~41: Atlanta
+
+// 597: Atlanta
+// 696: Atlanta Kai
+const isAtlantaOrKai = ship => [597, 696].includes(ship.api_ship_id)
+// 362: 5inch連装両用砲(集中配備)
+// 363: GFCS Mk.37+5inch連装両用砲(集中配備)
+const isGFCSMk37And5InchTwinDualPurposeGunMount = equip => equip.api_slotitem_id === 363
+const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.api_slotitem_id)
+
+// (as of Jan 1, 2020) Wikia listed this as Atlanta Kai's AACI and wikiwiki listed this as Atlanta's
+// Applying to both Atlanta and Atlanta Kai since I'm seeing Atlanta trigering type 39.
+declareAACI({
+  name: ['Atlanta', 'Atlanta Kai'],
+  id: 39,
+  fixed: 11,
+  modifier: 1.7,
+  shipValid: isAtlantaOrKai,
+  equipsValid:
+    validAll(
+      // GFCS Mk.37＋5inch連装両用砲(集中配備) must be equipped for this one
+      hasSome(isGFCSMk37And5InchTwinDualPurposeGunMount),
+      // And should have at least 2 in total, regardless of presence of GFCS radar.
+      hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
+    ),
+})
+
+declareAACI({
+  name: ['Atlanta', 'Atlanta Kai'],
+  id: 40,
+  fixed: 11,
+  modifier: 1.7,
+  shipValid: isAtlantaOrKai,
+  equipsValid:
+    validAll(
+      hasSome(isGFCSMk37),
+      hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
+    ),
+})
+
+declareAACI({
+  name: ['Atlanta', 'Atlanta Kai'],
+  id: 41,
+  fixed: 10,
+  modifier: 1.65,
+  shipValid: isAtlantaOrKai,
+  equipsValid: hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
+})
+
 // return: a list of sorted AACI objects order by effect desc,
 //   as most effective AACI gets priority to be triggered.
 // param: AACI IDs from possibleAACIs functions
