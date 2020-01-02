@@ -78,7 +78,11 @@ export default function reducer(state = [], { type, body, postBody }) {
       const { api_destruction_battle, api_maparea_id } = body
       if (api_destruction_battle) {
         const { api_f_maxhps, api_f_nowhps, api_air_base_attack } = api_destruction_battle
-        const api_fdam = get(api_air_base_attack, 'api_stage3.api_fdam', [])
+        const parsed_api_air_base_attack =
+          typeof api_air_base_attack === 'string'
+            ? JSON.parse(api_air_base_attack)
+            : api_air_base_attack
+        const api_fdam = get(parsed_api_air_base_attack, 'api_stage3.api_fdam', [])
         return map(state, airbase => {
           const { api_area_id, api_rid } = airbase
           if (api_maparea_id !== api_area_id) {
