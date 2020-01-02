@@ -225,5 +225,10 @@
   "tritanomaly": "3型3色覚/青色弱",
   "achromatopsia": "1色覚/全色盲",
   "achromatomaly": "異常3色覚/色弱",
-  "Description": "説明"
+  "Description": "説明",
+  "Connection test": "接続テスト",
+  "connection-test-failure-message": "接続に問題があるようです。設定を確認してください。",
+  "Your connection looks good": "接続が良好に見えます",
+  "Start testing": "テスト開始",
+  "connection-test-description": "テストは、Google.com をプロキシ設定に接続しようとします。その結果は参照専用です。"
 }

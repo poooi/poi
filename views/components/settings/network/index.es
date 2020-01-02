@@ -15,6 +15,7 @@ import { IntegerConfig } from 'views/components/settings/components/integer'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 
 import { ProxyConfig } from './proxy-config'
+import { ConnectionTest } from './connection-test'
 
 const StickyCallout = styled(Callout)`
   position: sticky;
@@ -164,6 +165,9 @@ export class NetworkConfig extends Component {
           </StickyCallout>
         )}
         <ProxiesConfig />
+        <Section title={t('setting:Connection test')}>
+          <ConnectionTest />
+        </Section>
         <ConnectionRetries />
         <RelayMode />
       </div>

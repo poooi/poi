@@ -220,5 +220,10 @@
   "tritanomaly": "3형3색각/청색약",
   "achromatopsia": "1색각/색맹",
   "achromatomaly": "이상3색각/색약",
-  "Description": "설명"
+  "Description": "설명",
+  "Connection test": "Connection test",
+  "Your connection looks good": "Your connection looks good",
+  "Start testing": "Start testing",
+  "connection-test-failure-message": "Your connection seems having issue. Please verify you configuration.",
+  "connection-test-description": "The test will try to connect Google.com with your proxy configuration. Its result is for reference only."
 }

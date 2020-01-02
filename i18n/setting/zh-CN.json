@@ -225,5 +225,10 @@
   "tritanomaly": "蓝色弱",
   "achromatopsia": "全色盲",
   "achromatomaly": "色弱",
-  "Description": "简介"
+  "Description": "简介",
+  "Connection test": "网络连接测试",
+  "connection-test-failure-message": "网络连接好像有问题，请检查你的设置。",
+  "Your connection looks good": "网络连接看起来没问题",
+  "Start testing": "开始测试",
+  "connection-test-description": "测试会尝试使用代理设置来连接 Google.com，结果仅供参考。"
 }
