@@ -123,17 +123,9 @@ declareAACI({
 })
 
 const isNotSubmarine = ship => ![13, 14].includes(ship.api_stype)
-// full list from wikiwiki (as of Jan 24, 2019)
-// 122: 10cm連装高角砲+高射装置
-// 130: 12.7cm高角砲+高射装置
-// 135: 90mm単装高角砲
-// 172: 5inch連装砲 Mk.28 mod.2
-// 275: 10cm連装高角砲改+増設機銃
-// 295: 12.7cm連装砲A型改三(戦時改修)＋高射装置
-// 296: 12.7cm連装砲B型改四(戦時改修)＋高射装置
-// 308: 5inch単装砲 Mk.30改＋GFCS Mk.37
-const isBuiltinHighAngleMount = equip =>
-  [122, 130, 135, 172, 275, 295, 296, 308].includes(equip.api_slotitem_id)
+// ref wikia: "Built-in HA mount is defined as a single High-Angle gun that has 8￼AA stat or higher."
+// (as of Jan 1, 2020)
+const isBuiltinHighAngleMount = equip => isHighAngleMount(equip) && equip.api_tyku >= 8
 
 // id 5: all surface ships
 declareAACI({
@@ -179,11 +171,11 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD)),
 })
 
+// 21=対空機銃
+const isMachineGun = itemTypeIs(21)
 const isMayaK2 = shipIdIs(428)
-// 131: 25mm三連装機銃 集中配備
-// 173: Bofors 40mm四連装機関砲
-// 191: QF 2ポンド8連装ポンポン砲
-const isCDMG = equip => [131, 173, 191].includes(equip.api_slotitem_id)
+// ref wikia: "CDMG is defined as any Anti-Air gun that has 9￼AA stat or higher."
+const isCDMG = equip => equip => isMachineGun(equip) && equip.api_tyku >= 9
 
 // id: 10~11 Maya K2
 declareAACI({
