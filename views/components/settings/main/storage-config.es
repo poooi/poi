@@ -55,12 +55,12 @@ export class StorageConfig extends Component {
     config.set('poi.misc.untrustedCerts', [])
   }
 
-  handleUpdateCacheSize = () => {
-    session.defaultSession.getCacheSize().then(cacheSize => this.setState({ cacheSize }))
+  handleUpdateCacheSize = async () => {
+    this.setState({ cacheSize: await session.defaultSession.getCacheSize() })
   }
 
   componentDidMount = () => {
-    this.handleUpdateCacheSize()
+    this.handleUpdateCacheSize().catch(e => null)
     this.cycle = setInterval(this.handleUpdateCacheSize, 6000000)
   }
 
