@@ -103,7 +103,7 @@ if (config.get('poi.misc.limitFps.enabled')) {
 }
 
 // Test: enable JavaScript experimental features
-app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
+// app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
 
 // enable audio autoplay
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391
