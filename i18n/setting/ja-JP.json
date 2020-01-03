@@ -126,7 +126,7 @@
   "Open plugin folder": "プラグインのフォルダを開く",
   "Search for plugins": "プラグインを検索する",
   "Repair plugins": "自動修復",
-  "Connect to npm server through proxy": "プロキシサーバ経由て npm サーバーに接続する",
+  "Connect to npm server through proxy": "プロキシサーバ経由で npm サーバーに接続する",
   "Developer option check update of beta version": "開発者向けオプション: プラグインのベータ版をチェックする",
   "Automatically update plugins": "自動アップデート",
   "Other settings": "他の機能",
@@ -177,7 +177,7 @@
   "Right click": "右クリック",
   "Left click": "左クリック",
   "Load homepage": "ホームページを読み込む",
-  "Heavily damaged notification is managed by Prophet plugin": "大破通知は「予知能力」プラグインに管理されます",
+  "Heavily damaged notification is managed by Prophet plugin": "大破通知は「予知能力」プラグインに管理されています",
   "Threshold": "閾値",
   "Pre-Sortie Check": "出撃前確認",
   "Type": "種類",
@@ -230,5 +230,5 @@
   "connection-test-failure-message": "接続に問題があるようです。設定を確認してください。",
   "Your connection looks good": "接続が良好に見えます",
   "Start testing": "テスト開始",
-  "connection-test-description": "テストは、Google.com をプロキシ設定に接続しようとします。その結果は参照専用です。"
+  "connection-test-description": "Google.com をプロキシサーバ経由で接続するテストです。実際の接続状況と異なる場合があります。"
 }
