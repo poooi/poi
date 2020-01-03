@@ -1,5 +1,8 @@
+// @ts-check
+
 const _ = require('lodash')
 
+/** @type { jest.ProjectConfig } */
 module.exports = {
   clearMocks: true,
   coverageDirectory: 'coverage',
@@ -7,6 +10,9 @@ module.exports = {
     '^.+\\.(es|ts|tsx)$': 'babel-jest',
   },
   moduleFileExtensions: ['js', 'es', 'json', 'jsx', 'ts', 'tsx', 'node'],
+  moduleNameMapper: {
+    '^views/(.*)': '<rootDir>/views/$1',
+  },
   testMatch: ['**/__tests__/**/*.[ejt]s?(x)', '**/?(*.)+(spec|test).[ejt]s?(x)'],
   setupFilesAfterEnv: ['./setupTests.es'],
   collectCoverageFrom: ['lib', 'views', 'build'].map(dir => `./${dir}/**/*.[ejt]s?(x)`),

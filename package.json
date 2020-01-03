@@ -154,6 +154,7 @@
     "@types/glob": "^7.1.1",
     "@types/gulp": "^4.0.6",
     "@types/http-proxy-agent": "^2.0.2",
+    "@types/jest": "^24.0.25",
     "@types/lodash": "^4.14.149",
     "@types/mime": "^2.0.1",
     "@types/moment-timezone": "^0.5.12",
