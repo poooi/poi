@@ -1,7 +1,18 @@
 /* global ROOT, APPDATA_PATH */
 import CSON from 'cson'
 import { join } from 'path-extra'
-import { map, sortBy, mapValues, forEach, values, fromPairs, countBy, get, size } from 'lodash'
+import {
+  map,
+  sortBy,
+  mapValues,
+  forEach,
+  values,
+  fromPairs,
+  countBy,
+  get,
+  size,
+  isEqual,
+} from 'lodash'
 
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -78,15 +89,20 @@ function isDifferentMonth(time1, time2) {
   )
 }
 
-const getQuarter = time => {
-  const month = time.getUTCMonth()
-  return month - (month % 3)
+// returns [q,m], where q uniquely identifies a Tanaka quarter,
+// and m <- [0,1,2] describes the relative month within that quarter.
+export const getTanakalendarQuarterMonth = time => {
+  const y = time.getUTCFullYear()
+  // yup, month apparently starts at 0
+  const m = time.getUTCMonth() + 1
+  const v = y * 12 + m
+  return [Math.floor(v / 3), v % 3]
 }
 
 const isDifferentQuarter = (time1, time2) => {
   const date1 = new Date(time1 + 14400000)
   const date2 = new Date(time2 + 14400000)
-  return getQuarter(date1) !== getQuarter(date2) || date1.getUTCFullYear() != date2.getUTCFullYear()
+  return !isEqual(getTanakalendarQuarterMonth(date1), getTanakalendarQuarterMonth(date2))
 }
 
 function newQuestRecord(id, questGoals) {
