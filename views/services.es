@@ -4,6 +4,7 @@ import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
+import { ResourceNotifier } from './services/resource-notifier'
 
 const proxy = remote.require('./lib/proxy')
 
@@ -191,11 +192,13 @@ remote.getCurrentWebContents().on('did-attach-webview', (e, webContents) => {
 })
 
 // workaround for audioMuted not working on game iframe navgated
-document.querySelector('webview').addEventListener('load-commit', () => {
-  setWebviewAudioMuted(
-    document.querySelector('webview').getWebContents(),
-    config.get('poi.content.muted', false),
-  )
+ResourceNotifier.addListener('request', detail => {
+  if (detail.url.includes('version.json')) {
+    setWebviewAudioMuted(
+      document.querySelector('webview').getWebContents(),
+      config.get('poi.content.muted', false),
+    )
+  }
 })
 
 function setWebviewAudioMuted(webContents, muted) {
