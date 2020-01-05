@@ -206,5 +206,7 @@ function setWebviewAudioMuted(webContents, muted) {
   if (muted) {
     webContents.audioMuted = !muted
   }
-  webContents.audioMuted = muted
+  setTimeout(() => {
+    webContents.audioMuted = muted
+  }, 50)
 }
