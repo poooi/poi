@@ -175,7 +175,7 @@ declareAACI({
 const isMachineGun = itemTypeIs(21)
 const isMayaK2 = shipIdIs(428)
 // ref wikia: "CDMG is defined as any Anti-Air gun that has 9￼AA stat or higher."
-const isCDMG = equip => equip => isMachineGun(equip) && equip.api_tyku >= 9
+const isCDMG = equip => isMachineGun(equip) && equip.api_tyku >= 9
 
 // id: 10~11 Maya K2
 declareAACI({
