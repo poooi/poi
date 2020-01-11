@@ -24,6 +24,7 @@ const defaultConfig = {
         size: 640,
       },
       trustedCerts: [],
+      pinminimap: false,
     },
     content: {
       resizable: true,

@@ -1,3 +1,5 @@
+/* global config */
+
 import React, { Component } from 'react'
 import { ProgressBar, Position, PopoverInteractionKind, Intent, Button } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
@@ -274,14 +276,21 @@ const ItemStat = withNamespaces(['others'])(
 @withNamespaces()
 @connect(
   createSelector(
-    [sortieMapDataSelector, sortieMapHpSelector, currentNodeSelector, fcdSelector],
-    (mapData, mapHp, currentNode, fcd = {}) => ({
+    [
+      sortieMapDataSelector,
+      sortieMapHpSelector,
+      currentNodeSelector,
+      fcdSelector,
+      state => get(state.config, 'poi.misc.pinminimap'),
+    ],
+    (mapData, mapHp, currentNode, fcd = {}, pinminimap) => ({
       mapId: get(mapData, '0.api_id'),
       rank: get(mapData, '0.api_eventmap.api_selected_rank'),
       currentNode,
       mapData,
       mapHp,
       maps: fcd.map || emptyObj,
+      pinminimap,
     }),
   ),
 )
@@ -304,7 +313,7 @@ export class PoiMapReminder extends Component {
   }
 
   render() {
-    const { mapHp, mapData, currentNode, mapId, maps, t } = this.props
+    const { mapHp, mapData, currentNode, mapId, maps, pinminimap, t } = this.props
     const alphaNode =
       get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     return (
@@ -315,7 +324,7 @@ export class PoiMapReminder extends Component {
           wrapperTagName="div"
           targetTagName="div"
           disabled={!mapData}
-          {...(this.state.pin
+          {...(pinminimap
             ? { isOpen: !!mapData }
             : { interactionKind: PopoverInteractionKind.HOVER })}
         >
@@ -360,12 +369,12 @@ export class PoiMapReminder extends Component {
               icon="pin"
               minimal
               small
-              active={this.state.pin}
-              onClick={() => this.setState({ pin: !!mapData && !this.state.pin })}
+              active={pinminimap}
+              onClick={() => config.set('poi.misc.pinminimap', !!mapData && !pinminimap)}
             />
           </>
         </Popover>
-        <GlobalStyle pin={!!mapData && this.state.pin} />
+        <GlobalStyle pin={!!mapData && pinminimap} />
       </PoiMapReminderTag>
     )
   }
