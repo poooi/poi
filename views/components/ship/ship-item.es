@@ -5,7 +5,7 @@ import shallowEqual from 'fbjs/lib/shallowEqual'
 import { createSelector } from 'reselect'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import { ProgressBar, Tooltip, Position } from '@blueprintjs/core'
+import { ProgressBar, Tooltip, Position, Tag, Intent } from '@blueprintjs/core'
 import { MaterialIcon } from 'views/components/etc/icon'
 
 import { Slotitems } from './slotitems'
@@ -110,6 +110,7 @@ export class ShipRow extends Component {
       labelStatus,
       enableAvatar,
       shipAvatarColor,
+      showSpAttackLabel,
       compact,
       t,
     } = this.props
@@ -156,6 +157,13 @@ export class ShipRow extends Component {
         <AACIIndicator shipId={ship.api_id} />
         <AAPBIndicator shipId={ship.api_id} />
         <OASWIndicator shipId={ship.api_id} />
+        {showSpAttackLabel && (
+          <ShipLabel className="ship-skill-indicator ship-sp-attack" isTag>
+            <Tag minimal intent={Intent.DANGER}>
+              {t('main:Special Attack')}
+            </Tag>
+          </ShipLabel>
+        )}
       </>
     )
     return (
