@@ -17,6 +17,7 @@ import {
   fleetNameSelectorFactory,
   fleetStateSelectorFactory,
   fleetShipsIdSelectorFactory,
+  fleetShipsDataWithEscapeSelectorFactory,
 } from 'views/utils/selectors'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import {
@@ -30,6 +31,7 @@ import {
   FleetNameButtonContainer,
   FleetNameButton,
 } from 'views/components/ship-parts/styled-components'
+import { isSpAttack } from 'views/utils/sp_attack'
 
 const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
 
@@ -57,21 +59,35 @@ const ShipViewSwitchButton = connect((state, { fleetId }) =>
 ))
 
 const fleetShipViewDataSelectorFactory = memoize(fleetId =>
-  createSelector([fleetShipsIdSelectorFactory(fleetId)], shipsId => ({
-    shipsId,
-  })),
+  createSelector(
+    [
+      fleetShipsIdSelectorFactory(fleetId),
+      fleetShipsDataWithEscapeSelectorFactory(fleetId),
+      state => state.sortie.spAttackUsed,
+    ],
+    (shipsId, shipsData, spAttackUsed) => ({
+      shipsId,
+      isSpAttack: !spAttackUsed && isSpAttack(shipsData),
+    }),
+  ),
 )
 
 const FleetShipView = connect((state, { fleetId }) =>
   fleetShipViewDataSelectorFactory(fleetId)(state),
-)(({ fleetId, shipsId, enableAvatar, width }) => (
+)(({ fleetId, shipsId, enableAvatar, width, isSpAttack }) => (
   <>
     <div className="fleet-name">
       <FleetStat fleetId={fleetId} isMini={false} />
     </div>
     <ShipDetails className="ship-details">
       {(shipsId || []).map((shipId, i) => (
-        <ShipRow key={shipId} shipId={shipId} enableAvatar={enableAvatar} compact={width < 540} />
+        <ShipRow
+          key={shipId}
+          shipId={shipId}
+          enableAvatar={enableAvatar}
+          compact={width < 540}
+          showSpAttackLabel={i === 0 && isSpAttack}
+        />
       ))}
     </ShipDetails>
   </>
