@@ -32,6 +32,11 @@ poi-main {
   position: relative;
 }
 
+.bp3-popover-content {
+  max-width: calc(50vw - 20px);
+  overflow: hidden;
+}
+
 #electron-app-title-bar {
   background-color: transparent !important;
   box-sizing: content-box !important;
