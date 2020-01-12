@@ -213,6 +213,7 @@
   "Linked": "链接插件",
   "Available": "可用更新",
   "repair-plugins-confirmation": "poi 将删除当前插件目录并重新安装插件，这个操作不会影响插件数据，但需要一定的时间，继续吗？",
+  "plugin-install-failed-message": "插件安装失败。如果不是网络错误，可以通过点击[自动修复]按钮进行修复。",
   "Network setting changes will be effective after restarting poi": "网络设置的变更将在重新启动 poi 后生效",
   "Accessibility": "辅助功能",
   "Color blind mode": "色盲模式",

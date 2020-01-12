@@ -105,7 +105,8 @@ export class PluginConfig extends Component {
         })
       }
     }
-    PluginManager.on('initialized', handleAutoUpdate)
+    PluginManager.once('installfailed', this.showGracefulRepairToast)
+    PluginManager.once('initialized', handleAutoUpdate)
     this.setState({
       checkingUpdate: false,
       npmWorking: false,
@@ -289,6 +290,14 @@ export class PluginConfig extends Component {
         npmWorking: false,
       })
     }
+  }
+
+  showGracefulRepairToast = () => {
+    const { t } = this.props
+    window.toast(t('plugin-install-failed-message'), {
+      action: { onClick: this.handleGracefulRepair, text: t('Repair plugins') },
+      intent: 'danger',
+    })
   }
 
   render() {

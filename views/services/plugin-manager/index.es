@@ -306,6 +306,7 @@ class PluginManager extends EventEmitter {
       const npmConfig = getNpmConfig(PLUGIN_PATH)
       await installPackage(packageSource, version, npmConfig)
     } catch (e) {
+      this.emit('installfailed', packageSource)
       console.error(e.stack)
       throw e
     }

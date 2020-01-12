@@ -213,6 +213,7 @@
   "Linked": "リンクされた",
   "Available": "利用可能",
   "repair-plugins-confirmation": "poi は現在のプラグインディレクトリを削除してプラグインを再インストールしますが、この操作はプラグインデータには影響しませんが、時間がかかります。続行しますか？",
+  "plugin-install-failed-message": "プラグインのインストールに失敗しました。 ネットワークに問題がない場合は、[自動修復]ボタンをクリックして修正することができます。",
   "Network setting changes will be effective after restarting poi": "ネットワーク設定の変更は、poi を再起動した後に有効になります",
   "Accessibility": "アクセシビリティ",
   "Color blind mode": "カラーブラインドモード",
