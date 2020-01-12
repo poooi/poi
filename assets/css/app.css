@@ -32,7 +32,7 @@ poi-main {
   position: relative;
 }
 
-.bp3-popover-content {
+.bp3-tooltip .bp3-popover-content {
   max-width: calc(50vw - 20px);
   overflow: hidden;
 }
