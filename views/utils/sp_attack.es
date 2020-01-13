@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-const isFullFleet = shipsData => shipsData.length >= 6
+const isFullFleet = shipsData => shipsData && shipsData.length >= 6
 
 const overShip = n => func => shipsData => func(shipsData[n])
 
