@@ -16,6 +16,7 @@ import {
   Intent,
   Position,
   Tooltip,
+  Label,
 } from '@blueprintjs/core'
 import styled from 'styled-components'
 
@@ -31,6 +32,11 @@ const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1
 const PreviewImage = styled.img`
   max-width: 30em;
   max-height: 15em;
+`
+
+const WrappedLabel = styled(Label)`
+  margin-bottom: 0;
+  margin-right: 10px;
 `
 
 const SWITCHES = [
@@ -183,13 +189,16 @@ export class ThemeConfig extends Component {
             </FillAvailable>
           ))}
           {this.props.enableAvatar && (
-            <HTMLSelect value={this.props.avatarType} onChange={this.handleSetAvatarType}>
-              {avatarType.map(({ name, value }, index) => (
-                <option key={index} value={value}>
-                  {t(name)}
-                </option>
-              ))}
-            </HTMLSelect>
+            <>
+              <WrappedLabel>{t('AvatarBackground')}</WrappedLabel>
+              <HTMLSelect value={this.props.avatarType} onChange={this.handleSetAvatarType}>
+                {avatarType.map(({ name, value }, index) => (
+                  <option key={index} value={value}>
+                    {t(name)}
+                  </option>
+                ))}
+              </HTMLSelect>
+            </>
           )}
         </Wrapper>
       </Section>

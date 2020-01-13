@@ -188,5 +188,6 @@
   "Your connection looks good": "Your connection looks good",
   "Start testing": "Start testing",
   "connection-test-failure-message": "Your connection seems having issue. Please verify you configuration.",
-  "connection-test-description": "The test will try to connect Google.com with your proxy configuration. Its result is for reference only."
+  "connection-test-description": "The test will try to connect Google.com with your proxy configuration. Its result is for reference only.",
+  "AvatarBackground": "Avatar Background Color"
 }

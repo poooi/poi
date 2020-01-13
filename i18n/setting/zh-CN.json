@@ -231,5 +231,6 @@
   "connection-test-failure-message": "网络连接好像有问题，请检查你的设置。",
   "Your connection looks good": "网络连接看起来没问题",
   "Start testing": "开始测试",
-  "connection-test-description": "测试会尝试使用代理设置来连接 Google.com，结果仅供参考。"
+  "connection-test-description": "测试会尝试使用代理设置来连接 Google.com，结果仅供参考。",
+  "AvatarBackground": "头像背景色"
 }

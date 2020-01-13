@@ -231,5 +231,6 @@
   "connection-test-failure-message": "接続に問題があるようです。設定を確認してください。",
   "Your connection looks good": "接続が良好に見えます",
   "Start testing": "テスト開始",
-  "connection-test-description": "Google.com をプロキシサーバ経由で接続するテストです。実際の接続状況と異なる場合があります。"
+  "connection-test-description": "Google.com をプロキシサーバ経由で接続するテストです。実際の接続状況と異なる場合があります。",
+  "AvatarBackground": "背景色"
 }
