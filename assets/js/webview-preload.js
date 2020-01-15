@@ -4,7 +4,7 @@ const config = remote.require('./lib/config')
 window.ipc = remote.require('./lib/ipc')
 
 document.addEventListener('DOMContentLoaded', e => {
-  if (config.get('poi.misc.dmmcookie', false)) {
+  if (config.get('poi.misc.dmmcookie', false) && location.hostname.includes('dmm')) {
     const now = new Date()
     now.setFullYear(now.getFullYear() + 1)
     const expires = now.toUTCString()
@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', e => {
     document.cookie = `ckcy=1;expires=${expires};domain=.dmm.com;path=/netgame_s/`
     const ua = remote.getCurrentWebContents().session.getUserAgent()
     remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
+
+    // Workaround for re-navigate from foreign page on first visit
+    if (location.href.includes('/foreign/')) {
+      location.href = config.getDefault('poi.misc.homepage')
+    }
   }
   if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
     window.DMM.netgame.reloadDialog = function() {}
