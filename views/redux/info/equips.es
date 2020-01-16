@@ -55,15 +55,17 @@ export function reducer(state = {}, { type, postBody, body }, store) {
       }
     }
     case '@@Response/kcsapi/api_req_kaisou/powerup':
-      return removeEquips(
-        state,
-        [].concat.apply(
-          [],
-          postBody.api_id_items
-            .split(',')
-            .map(shipId => get(store, `info.ships.${shipId}.api_slot`) || []),
-        ),
-      )
+      return parseInt(postBody.api_slot_dest_flag) === 0
+        ? state
+        : removeEquips(
+            state,
+            [].concat.apply(
+              [],
+              postBody.api_id_items
+                .split(',')
+                .map(shipId => get(store, `info.ships.${shipId}.api_slot`) || []),
+            ),
+          )
     case '@@Response/kcsapi/api_req_kousyou/destroyship':
       return parseInt(postBody.api_slot_dest_flag) === 0
         ? state
