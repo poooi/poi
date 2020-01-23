@@ -148,11 +148,6 @@ export default {
       if (!hidden) {
         state[w.id] = w.isVisible()
 
-        // Workaround for crash on electron@7
-        if (w.isMinimized()) {
-          w.restore()
-        }
-
         w.hide()
       } else {
         if (state[w.id]) {
