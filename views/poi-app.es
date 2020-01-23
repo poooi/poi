@@ -44,6 +44,7 @@ const PoiAppE = styled.div`
       bottom: ${bottom}px;
       height: inherit;
       width: ${overlayWidth}px;
+      z-index: 19;
     `}
 `
 
@@ -135,7 +136,12 @@ export class PoiApp extends Component {
     const { overlayVisible } = this.state
     const isHorizontal = layout === 'horizontal'
     const top = $('title-bar') ? $('title-bar').clientHeight : 0
-    const bottom = $('poi-info') ? $('poi-info').clientHeight : 30
+    const bottom = $('poi-info')
+      ? do {
+          const rect = $('poi-info').getBoundingClientRect()
+          rect.height - rect.bottom + innerHeight
+        }
+      : 29
     return (
       <>
         {overlay && (

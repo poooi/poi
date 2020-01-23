@@ -25,6 +25,7 @@ const GlobalStyle = createGlobalStyle`
     css`
       .map-reminder-popover > .bp3-transition-container {
         pointer-events: none;
+        z-index: 18;
       }
     `}
 `
