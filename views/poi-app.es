@@ -51,18 +51,17 @@ const PoiAppE = styled.div`
 const PoiAppContainer = styled.div`
   overflow: hidden;
   height: 100%;
-  ${({ overlay }) =>
+  ${({ overlay, isDarkTheme }) =>
     overlay &&
     css`
       backdrop-filter: blur(5px);
-      background: #202b33e6;
+      background: ${isDarkTheme ? 'rgba(32, 43, 51, 0.9)' : 'rgba(245, 248, 250, 0.9)'};
     `}
 `
 
 const OverlayPanelTrigger = styled.a`
   transform: translateX(-100%);
   position: fixed;
-  background: rgba(75, 75, 75, 0.8);
   height: 5vh;
   display: flex;
   align-items: center;
@@ -73,6 +72,10 @@ const OverlayPanelTrigger = styled.a`
   font-size: 15px;
   bottom: 0;
   border-top-left-radius: 5px;
+  ${({ isDarkTheme }) =>
+    css`
+      background: ${isDarkTheme ? 'rgba(32, 43, 51, 0.9)' : 'rgba(245, 248, 250, 0.9)'};
+    `}
 
   & > svg {
     margin: auto;
@@ -118,6 +121,7 @@ const transformToPanelSize = size => ({
   layout: get(state, 'config.poi.layout.mode', 'horizontal'),
   overlay: get(state, 'config.poi.layout.overlay', false),
   editable: get(state.config, 'poi.layout.editable', false),
+  isDarkTheme: get(state.config, 'poi.appearance.theme', 'dark') === 'dark',
   overlayPanelWidth: get(state.config, 'poi.tabarea.overlaypanelwidth', overlayPanelDefaultWidth),
 }))
 export class PoiApp extends Component {
@@ -132,7 +136,7 @@ export class PoiApp extends Component {
     config.set('poi.tabarea.overlaypanelwidth', val)
   }
   render() {
-    const { layout, overlay } = this.props
+    const { layout, overlay, isDarkTheme } = this.props
     const { overlayVisible } = this.state
     const isHorizontal = layout === 'horizontal'
     const top = $('title-bar') ? $('title-bar').clientHeight : 0
@@ -189,12 +193,18 @@ export class PoiApp extends Component {
           {overlay && (
             <OverlayPanelTrigger
               className="overlay-panel-trigger"
+              isDarkTheme={isDarkTheme}
               onClick={() => this.setState({ overlayVisible: !this.state.overlayVisible })}
             >
               <FontAwesome name={!overlayVisible ? 'angle-left' : 'angle-right'} />
             </OverlayPanelTrigger>
           )}
-          <PoiAppContainer id="poi-app-container" className="poi-app-container" overlay={overlay}>
+          <PoiAppContainer
+            id="poi-app-container"
+            className="poi-app-container"
+            overlay={overlay}
+            isDarkTheme={isDarkTheme}
+          >
             <poi-nav>
               <poi-nav-tabs>
                 <ControlledTabArea />
