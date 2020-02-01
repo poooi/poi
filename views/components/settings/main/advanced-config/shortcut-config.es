@@ -131,7 +131,7 @@ export class ShortcutConfig extends Component {
           disabled={disabled || recording}
           intent={disabled || !value ? Intent.NONE : Intent.SUCCESS}
         >
-          {value || t('key not set')}
+          {value || t('Key not set')}
         </Tag>
 
         <BorderlessDialog autoFocus isOpen={recording} onClose={this.abortRecording}>

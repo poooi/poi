@@ -232,5 +232,7 @@
   "Your connection looks good": "接続が良好に見えます",
   "Start testing": "テスト開始",
   "connection-test-description": "Google.com をプロキシサーバ経由で接続するテストです。実際の接続状況と異なる場合があります。",
-  "AvatarBackground": "背景色"
+  "AvatarBackground": "背景色",
+  "Key not set": "設定されていません",
+  "Set": "設定"
 }

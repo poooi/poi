@@ -131,7 +131,7 @@
   "Automatically update plugins": "自动更新插件",
   "Other settings": "其它功能",
   "Boss key": "老板键",
-  "Press the key, or Esc to cancel": "等待按下快捷键中，或按Esc取消",
+  "Press the key, or Esc to cancel": "请按下快捷键，或按 Esc 取消",
   "Disabled": "快捷键未设置，点此处设置",
   "Display \"Tips\"": "显示“小提示”",
   "Stop Loading When Game Loaded": "游戏载入完成后停止载入页面（适用于直连与不怎么务正业的代理的用户）",
@@ -232,5 +232,7 @@
   "Your connection looks good": "网络连接看起来没问题",
   "Start testing": "开始测试",
   "connection-test-description": "测试会尝试使用代理设置来连接 Google.com，结果仅供参考。",
-  "AvatarBackground": "头像背景色"
+  "AvatarBackground": "头像背景色",
+  "Key not set": "未设置",
+  "Set": "设置"
 }

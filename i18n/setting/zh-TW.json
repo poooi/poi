@@ -131,7 +131,7 @@
   "Automatically update plugins": "自動更新擴展程式",
   "Other settings": "其它功能",
   "Boss key": "老闆鍵",
-  "Press the key, or Esc to cancel": "等待按下快速鍵中，或按Esc取消",
+  "Press the key, or Esc to cancel": "請按下快捷鍵，或按 Esc 取消",
   "Disabled": "快速鍵未設定，點此處設定",
   "Display \"Tips\"": "顯示「小提示」",
   "Stop Loading When Game Loaded": "遊戲載入完成後停止載入頁面",
@@ -232,5 +232,7 @@
   "Your connection looks good": "網路連接看起來沒問題",
   "Start testing": "開始測試",
   "connection-test-description": "測試會嘗試使用代理設置來連接 Google.com，結果僅供參考。",
-  "AvatarBackground": "頭像背景顏色"
+  "AvatarBackground": "頭像背景顏色",
+  "Key not set": "未設置",
+  "Set": "設置"
 }
