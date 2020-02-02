@@ -194,8 +194,13 @@ remote.getCurrentWebContents().on('did-attach-webview', (e, webContents) => {
 })
 
 // workaround for audioMuted not working on game iframe navgated
+let flag = false
 ResourceNotifier.addListener('request', detail => {
   if (detail.url.includes('version.json')) {
+    flag = true
+  }
+  if (detail.url.includes('mp3') && flag) {
+    flag = false
     setWebviewAudioMuted(document.querySelector('webview'), config.get('poi.content.muted', false))
   }
 })
