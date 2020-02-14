@@ -98,5 +98,6 @@
   "RemodelLv": "改造等级：Lv. {{remodelLevel}}",
   "RemodelReady": "可以进行改造",
   "TotalExp": "总经验值：{{exp}}",
-  "NextExp": "距下一级：{{nextExp}}"
+  "NextExp": "距下一级：{{nextExp}}",
+  "Total": "合计"
 }

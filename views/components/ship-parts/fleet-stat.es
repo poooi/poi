@@ -230,12 +230,16 @@ export const FleetStat = compose(
     let minCond = 100
     let totalFP = 0
     let totalASW = 0
+    let totalLoS = 0
+    let totalAA = 0
     shipsData.forEach(([_ship] = []) => {
       if (_ship) {
         totalLv += _ship.api_lv
         minCond = Math.min(minCond, _ship.api_cond)
         totalFP += _ship.api_karyoku?.[0] || 0
         totalASW += _ship.api_taisen?.[0] || 0
+        totalLoS += _ship?.api_sakuteki?.[0] || 0
+        totalAA += _ship?.api_taiku?.[0] || 0
       }
     })
     let completeTime
@@ -267,6 +271,7 @@ export const FleetStat = compose(
               <Item label={t('data:Lv')}>{totalLv}</Item>
               <Item label={t('data:FP')}>{totalFP}</Item>
               <Item label={t('data:ASW')}>{totalASW}</Item>
+              <Item label={t('data:AA')}>{totalAA}</Item>
               <Item label={t('main:Fighter Power')}>
                 <Tooltip
                   position={Position.BOTTOM}
@@ -292,6 +297,13 @@ export const FleetStat = compose(
                   position={Position.BOTTOM}
                   content={
                     <InfoTooltip className="info-tooltip">
+                      <ReconTile className="recon-title">
+                        <span>{t('main:Total')}</span>
+                      </ReconTile>
+                      <InfoTooltipEntry className="info-tooltip-entry">
+                        <InfoTooltipItem className="info-tooltip-item" />
+                        <span>{totalLoS}</span>
+                      </InfoTooltipEntry>
                       <ReconTile className="recon-title">
                         <span>{t('main:Formula 33')}</span>
                       </ReconTile>

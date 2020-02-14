@@ -98,5 +98,6 @@
   "RemodelLv": "次の改造：Lv. {{remodelLevel}}",
   "RemodelReady": "改造ができる",
   "TotalExp": "総経験値：{{exp}}",
-  "NextExp": "次のレベルまで：{{nextExp}}"
+  "NextExp": "次のレベルまで：{{nextExp}}",
+  "Total": "合計"
 }
