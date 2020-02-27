@@ -35,6 +35,9 @@ const isStaticResource = (pathname, hostname) => {
   if (pathname.startsWith('/gadget/')) {
     return true
   }
+  if (pathname.startsWith('/gadget_html5/')) {
+    return true
+  }
   if (pathname.startsWith('/kcscontents/')) {
     return true
   }
