@@ -17,7 +17,7 @@ async function setPath() {
 setPath()
 
 const onZoomChange = value => {
-  remote.getCurrentWebContents().setZoomFactor(value)
+  remote.getCurrentWebContents().zoomFactor = value
 }
 
 const handleZoom = (path, value) => {

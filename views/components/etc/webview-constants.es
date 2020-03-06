@@ -89,6 +89,8 @@ export const methods = [
   'showDefinitionForSelection',
   'getWebContents',
   'focus',
+  'addEventListener',
+  'removeEventListener',
 ]
 
 export const props = {

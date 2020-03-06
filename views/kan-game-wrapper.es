@@ -60,6 +60,7 @@ const KanGame = styled(CustomTag)`
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
+  configWindowWebviewWidth: get(state, 'config.poi.webview.windowWidth', 1200),
   zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   muted: get(state, 'config.poi.content.muted', false),
@@ -258,6 +259,7 @@ export class KanGameWrapper extends Component {
   render() {
     const {
       configWebviewWidth,
+      configWindowWebviewWidth,
       zoomLevel,
       isHorizontal,
       muted,
@@ -267,10 +269,12 @@ export class KanGameWrapper extends Component {
       editable,
       windowSize,
       overlayPanel,
+      windowMode,
     } = this.props
     const getZoomedSize = value => Math.round(value / zoomLevel)
-    const webviewZoomFactor = Math.round(configWebviewWidth / 1200)
-    if (this.props.windowMode) {
+    const webviewZoomFactor =
+      Math.round((windowMode ? configWindowWebviewWidth : configWebviewWidth) / 0.012) / 100000
+    if (windowMode) {
       return (
         <KanGame tag="kan-game">
           <div id="webview-wrapper" className="webview-wrapper">

@@ -29,6 +29,9 @@ export default class ElectronWebView extends Component {
           this.view[propName] = this.props[propName]
         }
       })
+
+      this.view.addEventListener('dom-ready', this.forceSyncZoom)
+
       if (this.props.onDidAttach) this.props.onDidAttach(...attachArgs)
     })
 
@@ -52,6 +55,14 @@ export default class ElectronWebView extends Component {
 
   isReady() {
     return this.ready
+  }
+
+  forceSyncZoom = () => {
+    if (this.props.zoomFactor && this.props.zoomFactor !== this.view.zoomFactor) {
+      this.view.zoomFactor = this.props.zoomFactor
+    } else if (this.props.zoomLevel && this.props.zoomLevel !== this.view.zoomLevel) {
+      this.view.zoomLevel = this.props.zoomLevel
+    }
   }
 
   render() {

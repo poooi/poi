@@ -172,7 +172,11 @@ config.on('config.set', (path, value) => {
   switch (path) {
     case 'poi.appearance.zoom': {
       const [width, height] = remote.getCurrentWindow().getContentSize()
-      remote.getCurrentWebContents().setZoomFactor(value)
+      remote.getCurrentWebContents().zoomFactor = value
+      const webview = getStore('layout.webview.ref')
+      if (webview) {
+        webview.forceSyncZoom()
+      }
       adjustSize()
       setTimeout(() => remote.getCurrentWindow().setContentSize(width, height), 1000)
       break

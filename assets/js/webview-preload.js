@@ -83,9 +83,9 @@ function handleSpacingTop(show, count = 0) {
   }
   try {
     const frameDocument = document.querySelector('#game_frame').contentDocument
-    frameDocument[action]('keydown', disableTab)
     frameDocument.querySelector('#spacing_top').style.display = status
     frameDocument.querySelector('#htmlWrap').contentDocument[action]('keydown', disableTab)
+    frameDocument[action]('keydown', disableTab)
   } catch (e) {
     setTimeout(() => handleSpacingTop(show, count + 1), 1000)
   }

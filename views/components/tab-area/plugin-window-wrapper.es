@@ -208,7 +208,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
 
   onZoomChange = value => {
     if (this.checkBrowserWindowExistence()) {
-      this.currentWindow.webContents.setZoomFactor(value)
+      this.currentWindow.webContents.zoomFactor = value
     }
   }
 

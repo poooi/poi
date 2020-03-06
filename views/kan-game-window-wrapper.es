@@ -292,7 +292,13 @@ export class KanGameWindowWrapper extends PureComponent {
 
   onZoomChange = value => {
     if (this.checkBrowserWindowExistence()) {
-      this.currentWindow.webContents.setZoomFactor(value)
+      this.currentWindow.webContents.zoomFactor = value
+      const webview = getStore('layout.webview.ref')
+      if (webview) {
+        webview.forceSyncZoom()
+      } else {
+        setTimeout(() => this.onZoomChange(value), 100)
+      }
     }
   }
 
