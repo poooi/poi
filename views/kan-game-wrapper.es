@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
-import WebView from 'react-electron-web-view'
 import { get, debounce } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
@@ -16,6 +15,7 @@ import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { fileUrl } from 'views/utils/tools'
 import { CustomTag } from 'views/components/etc/custom-tag'
+import WebView from 'views/components/etc/webview'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import i18next from 'views/env-parts/i18next'
 
@@ -290,7 +290,7 @@ export class KanGameWrapper extends Component {
                 paddingTop: '60%',
                 position: 'relative',
               }}
-              muted={muted}
+              audioMuted={muted}
               useragent={ua}
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
@@ -445,7 +445,7 @@ export class KanGameWrapper extends Component {
                   display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
                 }}
                 useragent={ua}
-                muted={muted}
+                audioMuted={muted}
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
               />
