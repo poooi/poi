@@ -93,19 +93,18 @@ export const methods = [
 
 export const props = {
   src: PropTypes.string,
-  autosize: PropTypes.bool,
-  nodeintegration: PropTypes.bool,
+  autosize: PropTypes.string,
+  nodeintegration: PropTypes.string,
   plugins: PropTypes.bool,
   preload: PropTypes.string,
   httpreferrer: PropTypes.string,
-  disablewebsecurity: PropTypes.bool,
+  disablewebsecurity: PropTypes.string,
   partition: PropTypes.string,
-  allowpopups: PropTypes.bool,
+  allowpopups: PropTypes.string,
   webpreferences: PropTypes.string,
   blinkfeatures: PropTypes.string,
   disableblinkfeatures: PropTypes.string,
   guestinstance: PropTypes.number,
-  disableguestresize: PropTypes.bool,
 }
 
 export const staticProps = {

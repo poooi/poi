@@ -279,12 +279,10 @@ export class KanGameWrapper extends Component {
               src={this.state.url}
               key={this.state.key}
               ref={this.webview}
-              plugins
-              disablewebsecurity
+              disablewebsecurity="on"
+              allowpopups="on"
               webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
-              nodeIntegration
               preload={preloadUrl}
-              allowpopups
               style={{
                 width: '100%',
                 paddingTop: '60%',
@@ -433,12 +431,10 @@ export class KanGameWrapper extends Component {
                 src={this.state.url}
                 key={this.state.key}
                 ref={this.webview}
-                plugins
-                disablewebsecurity
+                disablewebsecurity="on"
+                allowpopups="on"
                 webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
-                nodeIntegration
                 preload={preloadUrl}
-                allowpopups
                 style={{
                   width: '100%',
                   paddingTop: '60%',
