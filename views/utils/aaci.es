@@ -432,7 +432,7 @@ const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
 
 // id 32: HMS & Kongou-class K2
 declareAACI({
-  name: ['HMS Royal Navy', 'Kongou Class Kai 2'],
+  name: ['HMS Royal Navy', '金剛改二', '比叡改二', '榛名改二', '霧島改二'],
   id: 32,
   fixed: 3,
   modifier: 1.2,
