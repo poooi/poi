@@ -398,7 +398,7 @@ const isGotlandKai = shipIdIs(579)
 
 // id 30: Tenryuu K2 & Gotland Kai
 declareAACI({
-  name: ['天龍改二', 'Gotland Kai'],
+  name: ['天龍改二', 'Gotland改'],
   id: 30,
   fixed: 3,
   modifier: 1.3,
@@ -445,7 +445,7 @@ declareAACI({
 
 // id 33: Gotland Kai
 declareAACI({
-  name: ['Gotland Kai'],
+  name: ['Gotland改'],
   id: 33,
   fixed: 3,
   modifier: 1.25,
@@ -515,7 +515,7 @@ const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.ap
 // (as of Jan 1, 2020) Wikia listed this as Atlanta Kai's AACI and wikiwiki listed this as Atlanta's
 // Applying to both Atlanta and Atlanta Kai since I'm seeing Atlanta trigering type 39.
 declareAACI({
-  name: ['Atlanta', 'Atlanta Kai'],
+  name: ['Atlanta', 'Atlanta改'],
   id: 39,
   fixed: 11,
   modifier: 1.7,
@@ -530,7 +530,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['Atlanta', 'Atlanta Kai'],
+  name: ['Atlanta', 'Atlanta改'],
   id: 40,
   fixed: 11,
   modifier: 1.7,
@@ -543,7 +543,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['Atlanta', 'Atlanta Kai'],
+  name: ['Atlanta', 'Atlanta改'],
   id: 41,
   fixed: 10,
   modifier: 1.65,
