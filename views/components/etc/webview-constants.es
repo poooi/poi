@@ -98,7 +98,6 @@ export const props = {
   plugins: PropTypes.bool,
   preload: PropTypes.string,
   httpreferrer: PropTypes.string,
-  useragent: PropTypes.string,
   disablewebsecurity: PropTypes.bool,
   partition: PropTypes.string,
   allowpopups: PropTypes.bool,
@@ -107,14 +106,12 @@ export const props = {
   disableblinkfeatures: PropTypes.string,
   guestinstance: PropTypes.number,
   disableguestresize: PropTypes.bool,
-  devtools: PropTypes.bool,
 }
 
-export const changableProps = {
-  src: '__USE_ATTR__',
-  useragent: 'setUserAgent',
-  guestinstance: '__USE_ATTR__',
-  devtools: 'setDevTools',
+export const staticProps = {
+  audioMuted: PropTypes.bool,
+  userAgent: PropTypes.string,
+  zoomLevel: PropTypes.number,
+  zoomFactor: PropTypes.number,
+  frameRate: PropTypes.number,
 }
-
-export const staticProps = ['audioMuted']

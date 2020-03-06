@@ -24,8 +24,7 @@ const ipc = remote.require('./lib/ipc')
 const poiControlHeight = 30
 const ua = remote
   .getCurrentWebContents()
-  .getUserAgent()
-  .replace(/Electron[^ ]* /, '')
+  .userAgent.replace(/Electron[^ ]* /, '')
   .replace(/poi[^ ]* /, '')
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
 
@@ -270,6 +269,7 @@ export class KanGameWrapper extends Component {
       overlayPanel,
     } = this.props
     const getZoomedSize = value => Math.round(value / zoomLevel)
+    const webviewZoomFactor = Math.round(configWebviewWidth / 1200)
     if (this.props.windowMode) {
       return (
         <KanGame tag="kan-game">
@@ -291,7 +291,8 @@ export class KanGameWrapper extends Component {
                 position: 'relative',
               }}
               audioMuted={muted}
-              useragent={ua}
+              userAgent={ua}
+              zoomFactor={webviewZoomFactor}
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
             />
@@ -444,8 +445,9 @@ export class KanGameWrapper extends Component {
                   position: 'relative',
                   display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
                 }}
-                useragent={ua}
                 audioMuted={muted}
+                userAgent={ua}
+                zoomFactor={webviewZoomFactor}
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
               />

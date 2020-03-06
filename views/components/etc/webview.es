@@ -9,38 +9,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { camelCase } from 'lodash'
-import { changableProps, events, methods, props, staticProps } from './webview-constants'
+import { events, methods, props, staticProps } from './webview-constants'
 
 export default class ElectronWebView extends Component {
   componentDidMount() {
-    const container = this.c
-    let propString = ''
-    Object.keys(props).forEach(propName => {
-      if (typeof this.props[propName] !== 'undefined') {
-        if (typeof this.props[propName] === 'boolean') {
-          propString += `${propName}="${this.props[propName] ? 'on' : 'off'}" `
-        } else {
-          propString += `${propName}=${JSON.stringify(this.props[propName].toString())} `
-        }
-      }
-    })
-    if (this.props.className) {
-      propString += `class="${this.props.className}" `
-    }
-    container.innerHTML = `<webview ${propString}/>`
-    this.view = container.querySelector('webview')
-
     this.ready = false
     this.view.addEventListener('did-attach', (...attachArgs) => {
       this.ready = true
-      events.forEach(event => {
-        this.view.addEventListener(event, (...eventArgs) => {
-          const propName = camelCase(`on-${event}`)
-          if (this.props[propName]) this.props[propName](...eventArgs)
-        })
-      })
-      staticProps.forEach(propName => {
-        this.view[propName] = this.props[propName]
+      Object.keys(staticProps).forEach(propName => {
+        if (this.props[propName] != null) {
+          this.view[propName] = this.props[propName]
+        }
       })
       if (this.props.onDidAttach) this.props.onDidAttach(...attachArgs)
     })
@@ -53,26 +32,10 @@ export default class ElectronWebView extends Component {
         return this.view[method](...args)
       }
     })
-    this.setDevTools = open => {
-      if (open && !this.isDevToolsOpened()) {
-        this.openDevTools()
-      } else if (!open && this.isDevToolsOpened()) {
-        this.closeDevTools()
-      }
-    }
   }
 
   componentDidUpdate(prevProps) {
-    Object.keys(changableProps).forEach(propName => {
-      if (this.props[propName] !== prevProps[propName]) {
-        if (changableProps[propName] === '__USE_ATTR__') {
-          this.view.setAttribute(propName, this.props[propName])
-        } else {
-          this[changableProps[propName]](this.props[propName])
-        }
-      }
-    })
-    staticProps.forEach(propName => {
+    Object.keys(staticProps).forEach(propName => {
       if (this.props[propName] !== prevProps[propName]) {
         this.view[propName] = this.props[propName]
       }
@@ -84,13 +47,11 @@ export default class ElectronWebView extends Component {
   }
 
   render() {
+    const { style, ...props } = this.props
     return (
-      <div
-        ref={c => {
-          this.c = c
-        }}
-        style={this.props.style || {}}
-      />
+      <div style={style || {}}>
+        <webview {...props} ref={view => (this.view = view)} />
+      </div>
     )
   }
 }
@@ -101,6 +62,7 @@ ElectronWebView.propTypes = Object.assign(
     style: PropTypes.object,
   },
   props,
+  staticProps,
 )
 
 events.forEach(event => {
