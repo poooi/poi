@@ -208,6 +208,9 @@ export class PoiAlert extends PureComponent {
   componentDidUpdate = (prevProps, prevState) => {
     this.stickyEnd = Date.now() + this.updateTime
     this.updateTime = 0
+    while (this.alertHistory.current.childNodes.length > 6) {
+      this.alertHistory.current.childNode[0].remove()
+    }
   }
 
   componentDidMount = () => {
