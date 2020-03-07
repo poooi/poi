@@ -36,8 +36,8 @@ const ONE_DAY = 1000 * 60 * 60 * 24
 
 const ONE_WEEK = ONE_DAY * 7
 
-// A UTC+4 timezone without daylight
-export const ARMENIA_TIMEZONE = 'Asia/Tbilisi'
+// A UTC+4 timezone without daylight saving
+export const ARMENIA_TIMEZONE = 'Asia/Yerevan'
 
 // Remove items from an object where its value doesn't satisfy `pred`.
 // The argument `obj` IS MODIFIED.
