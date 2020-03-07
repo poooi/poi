@@ -1,14 +1,23 @@
 import { getTanakalendarQuarterMonth } from '../quests'
+import moment from 'moment-timezone'
+import { padStart } from 'lodash'
 
 const spec = it
 
+/**
+ * creates a date for first quest refresh of given year and month
+ * @param {number} year
+ * @param {number} month
+ */
+const createDate = (year, month) =>
+  new Date(+moment.tz(`${year}-${padStart(String(month), 2, '0')}-01 05:00`, 'Asia/Tokyo'))
+
+const testCase = (year, month, expected) =>
+  expect(getTanakalendarQuarterMonth(createDate(year, month))).toStrictEqual(expected)
+
 describe('getTanakalendarQuarterMonth', () => {
   spec('sample of a full year', () => {
-    const mkDate = (year, month) => new Date(`${year}-${month}`)
-    const testCase = (year, month, expected) =>
-      expect(getTanakalendarQuarterMonth(mkDate(year, month))).toStrictEqual(expected)
-
-    const qmBase = getTanakalendarQuarterMonth(mkDate(2019, 1))
+    const qmBase = getTanakalendarQuarterMonth(createDate(2019, 1))
     // this "quarter" is relative, we don't care about its actual value
     // but will expect the following months to be consistent.
     const q0 = qmBase[0]

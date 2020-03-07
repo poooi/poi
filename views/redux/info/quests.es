@@ -13,6 +13,7 @@ import {
   size,
   isEqual,
 } from 'lodash'
+import moment from 'moment-timezone'
 
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -24,6 +25,19 @@ function questTrackingPath(admiralId) {
   return join(APPDATA_PATH, `quest_tracking_${admiralId}.cson`)
 }
 const questGoalsPath = join(ROOT, 'assets', 'data', 'quest_goal.cson')
+
+// as quests refresh at 5:00 Japan Time (UTC+9), equivalent to 0:00 UTC+4
+// for calculation convenience we shift Date object with a 4-hour offset
+const FOUR_HOUR_OFFSET = 1000 * 60 * 60 * 4
+
+const QUEST_REFRESH_ZERO = 331200000
+
+const ONE_DAY = 1000 * 60 * 60 * 24
+
+const ONE_WEEK = ONE_DAY * 7
+
+// A UTC+4 timezone without daylight
+export const ARMENIA_TIMEZONE = 'Asia/Tbilisi'
 
 // Remove items from an object where its value doesn't satisfy `pred`.
 // The argument `obj` IS MODIFIED.
@@ -68,22 +82,20 @@ function updateObject(obj, items) {
   return obj
 }
 
-const QUEST_REFRESH_ZERO = 331200000
-const ONE_DAY = 86400000
 function isDifferentDay(time1, time2) {
-  const day1 = Math.floor((time1 - QUEST_REFRESH_ZERO) / ONE_DAY)
-  const day2 = Math.floor((time2 - QUEST_REFRESH_ZERO) / ONE_DAY)
+  const day1 = Math.floor((time1 + FOUR_HOUR_OFFSET) / ONE_DAY)
+  const day2 = Math.floor((time2 + FOUR_HOUR_OFFSET) / ONE_DAY)
   return day1 != day2
 }
 function isDifferentWeek(time1, time2) {
-  const week1 = Math.floor((time1 - QUEST_REFRESH_ZERO) / 604800000)
-  const week2 = Math.floor((time2 - QUEST_REFRESH_ZERO) / 604800000)
+  const week1 = Math.floor((time1 + FOUR_HOUR_OFFSET) / ONE_WEEK)
+  const week2 = Math.floor((time2 + FOUR_HOUR_OFFSET) / ONE_WEEK)
   return week1 != week2
 }
 function isDifferentMonth(time1, time2) {
   // UTC time to UTC+4
-  const date1 = new Date(time1 + 14400000)
-  const date2 = new Date(time2 + 14400000)
+  const date1 = new Date(time1 + FOUR_HOUR_OFFSET)
+  const date2 = new Date(time2 + FOUR_HOUR_OFFSET)
   return (
     date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
   )
@@ -91,19 +103,23 @@ function isDifferentMonth(time1, time2) {
 
 // returns [q,m], where q uniquely identifies a Tanaka quarter,
 // and m <- [0,1,2] describes the relative month within that quarter.
+// Tanaka quater starts from Feb
 export const getTanakalendarQuarterMonth = time => {
-  const y = time.getUTCFullYear()
+  const y = moment(time)
+    .tz(ARMENIA_TIMEZONE)
+    .year()
   // yup, month apparently starts at 0
-  const m = time.getUTCMonth() + 1
+  const m =
+    moment(time)
+      .tz(ARMENIA_TIMEZONE)
+      .month() + 1
+
   const v = y * 12 + m
   return [Math.floor(v / 3), v % 3]
 }
 
-const isDifferentQuarter = (time1, time2) => {
-  const date1 = new Date(time1 + 14400000)
-  const date2 = new Date(time2 + 14400000)
-  return !isEqual(getTanakalendarQuarterMonth(date1), getTanakalendarQuarterMonth(date2))
-}
+const isDifferentQuarter = (time1, time2) =>
+  !isEqual(getTanakalendarQuarterMonth(time1), getTanakalendarQuarterMonth(time2))
 
 function newQuestRecord(id, questGoals) {
   const questGoal = questGoals[id]
@@ -579,7 +595,7 @@ export function schedualDailyRefresh(dispatch) {
       dispatch(dailyRefresh(time))
     },
     {
-      time: QUEST_REFRESH_ZERO,
+      time: QUEST_REFRESH_ZERO, // TODO: this value has no effect here
       interval: ONE_DAY,
       allowImmediate: false,
     },
