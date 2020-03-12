@@ -6,7 +6,7 @@ const { _nodeModulePaths } = Module
 /**
  * this is the same function from views/utils, we cannot share because we want to also use it in main
  */
-export const isSubdirectory = (parent, dir) => {
+function isSubdirectory(parent, dir) {
   const relative = path.relative(parent, dir)
   return !relative || (!relative.startsWith('..') && !path.isAbsolute(relative))
 }
@@ -19,8 +19,11 @@ export const isSubdirectory = (parent, dir) => {
  */
 export const setAllowedPath = function(allowedPath) {
   Module._nodeModulePaths = function(from) {
-    return _nodeModulePaths
-      .call(this, from)
-      .filter(dir => allowedPath.some(parent => isSubdirectory(parent, dir)))
+    // use function style instead of arrows, expecting some possible perf gain
+    return _nodeModulePaths.call(this, from).filter(function(dir) {
+      return allowedPath.some(function(parent) {
+        return isSubdirectory(parent, dir)
+      })
+    })
   }
 }
