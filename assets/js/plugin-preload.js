@@ -4,7 +4,7 @@ const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 const config = remote.require('./lib/config')
 
-require('module').globalPaths.push(MODULE_PATH)
+require('module').globalPaths.unshift(MODULE_PATH)
 require('@babel/register')(require(`${ROOT}/babel.config`))
 require('coffee-react/register')
 async function setPath() {
