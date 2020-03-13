@@ -208,8 +208,25 @@ export class PoiAlert extends PureComponent {
   componentDidUpdate = (prevProps, prevState) => {
     this.stickyEnd = Date.now() + this.updateTime
     this.updateTime = 0
-    while (this.alertHistory.current.childNodes.length > 6) {
-      this.alertHistory.current.childNodes[0].remove()
+    if (this.state.disableHistory) {
+      setTimeout(
+        () =>
+          this.setState({
+            disableHistory: false,
+          }),
+        1000,
+      )
+    } else if (
+      this.alertHistory &&
+      this.alertHistory.current &&
+      this.alertHistory.current.childNodes.length > 6
+    ) {
+      this.observer.unobserve(this.alertHistory.current)
+      this.setState({
+        disableHistory: true,
+      })
+    } else if (prevState.disableHistory && !this.state.disableHistory) {
+      this.observer.observe(this.alertHistory.current)
     }
   }
 
@@ -254,25 +271,27 @@ export class PoiAlert extends PureComponent {
               </AlertArea>
             </AlertPosition>
           </AlertContainer>
-          <AlertLog
-            id="alert-log"
-            ref={this.alertHistory}
-            className="alert-log bp3-popover-content"
-            toggle={this.state.showHistory}
-            height={this.state.historyHeight}
-            containerHeight={this.state.containerHeight}
-            onClick={this.toggleHistory}
-          >
-            {this.state.history.map(h => (
-              <AlertLogContent
-                key={h.ts}
-                className={`bp3-callout bp3-intent-${h.type}`}
-                data-ts={h.ts}
-              >
-                {h.content}
-              </AlertLogContent>
-            ))}
-          </AlertLog>
+          {!this.state.disableHistory && (
+            <AlertLog
+              id="alert-log"
+              ref={this.alertHistory}
+              className="alert-log bp3-popover-content"
+              toggle={this.state.showHistory}
+              height={this.state.historyHeight}
+              containerHeight={this.state.containerHeight}
+              onClick={this.toggleHistory}
+            >
+              {this.state.history.map(h => (
+                <AlertLogContent
+                  key={h.ts}
+                  className={`bp3-callout bp3-intent-${h.type}`}
+                  data-ts={h.ts}
+                >
+                  {h.content}
+                </AlertLogContent>
+              ))}
+            </AlertLog>
+          )}
         </AlertMain>
       </PoiAlertTag>
     )
