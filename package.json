@@ -103,7 +103,7 @@
     "npm": "^6.13.4",
     "npm-package-arg": "^7.0.0",
     "os-name": "^3.1.0",
-    "pac-proxy-agent": "^3.0.1",
+    "pac-proxy-agent": "^4.1.0",
     "pangu": "^4.0.7",
     "path-extra": "^4.3.0",
     "poi-asset-contributor-data": "^1.1.2",
