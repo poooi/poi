@@ -4,6 +4,8 @@ import { takeRight } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 
+const HISTORY_SIZE = 6
+
 const PoiAlertTag = styled(CustomTag)`
   width: 0;
   flex: 1;
@@ -143,13 +145,13 @@ export class PoiAlert extends PureComponent {
     if (value.priority < current.priority && nowTS < this.stickyEnd) {
       if (!value.dontReserve) {
         // Old message has higher priority, push new message to history
-        history = [...takeRight(history, 5), value]
+        history = [...takeRight(history, HISTORY_SIZE), value]
         this.setState({ history })
       }
     } else if (!current.dontReserve) {
       // push old message to history
       this.updateTime = value.stickyFor || 3000
-      history = [...takeRight(history, 5), current]
+      history = [...takeRight(history, HISTORY_SIZE - 1), current]
       this.setState({
         history: history,
         current: value,
@@ -219,7 +221,7 @@ export class PoiAlert extends PureComponent {
     } else if (
       this.alertHistory &&
       this.alertHistory.current &&
-      this.alertHistory.current.childNodes.length > 6
+      this.alertHistory.current.childNodes.length > HISTORY_SIZE
     ) {
       this.observer.unobserve(this.alertHistory.current)
       this.setState({
