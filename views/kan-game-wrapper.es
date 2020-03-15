@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
-import { get, debounce } from 'lodash'
+import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
 import styled from 'styled-components'
@@ -60,7 +60,7 @@ const KanGame = styled(CustomTag)`
 
 @connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
-  configWindowWebviewWidth: get(state, 'config.poi.webview.windowWidth', 1200),
+  actualWindowWidth: get(state, 'layout.webview.width', 1200),
   zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   muted: get(state, 'config.poi.content.muted', false),
@@ -124,8 +124,6 @@ export class KanGameWrapper extends Component {
       }
     })
   }
-
-  resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
 
   handleCertError = (event, url, error, certificate, callback) => {
     console.warn(event, url, error, certificate)
@@ -220,7 +218,6 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-    this.resizeObserver.observe(this.webview.current.view)
     this.setProperWindowSize(
       Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
       Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
@@ -238,7 +235,6 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-    this.resizeObserver.unobserve(this.webview.current.view)
   }
 
   componentWillUnmount = () => {
@@ -259,7 +255,7 @@ export class KanGameWrapper extends Component {
   render() {
     const {
       configWebviewWidth,
-      configWindowWebviewWidth,
+      actualWindowWidth,
       zoomLevel,
       isHorizontal,
       muted,
@@ -272,8 +268,7 @@ export class KanGameWrapper extends Component {
       windowMode,
     } = this.props
     const getZoomedSize = value => Math.round(value / zoomLevel)
-    const webviewZoomFactor =
-      Math.round((windowMode ? configWindowWebviewWidth : configWebviewWidth) / 0.012) / 100000
+    const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
     if (windowMode) {
       return (
         <KanGame tag="kan-game">
@@ -297,6 +292,7 @@ export class KanGameWrapper extends Component {
               zoomFactor={webviewZoomFactor}
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
+              onResize={this.handleResize}
             />
             <PoiToast />
           </div>
@@ -450,6 +446,7 @@ export class KanGameWrapper extends Component {
                 zoomFactor={webviewZoomFactor}
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
+                onResize={this.handleResize}
               />
               <PoiToast />
             </div>

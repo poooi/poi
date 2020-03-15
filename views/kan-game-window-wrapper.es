@@ -176,7 +176,7 @@ export class KanGameWindowWrapper extends PureComponent {
     this.externalWindow = open(
       `${fileUrl(path.join(ROOT, 'index-plugin.html'))}?kangame`,
       'plugin[kangame]',
-      windowFeatures + ',nodeIntegration=no',
+      windowFeatures + ',nodeIntegration=no,webSecurity=no',
     )
     this.externalWindow.addEventListener('DOMContentLoaded', e => {
       this.currentWindow = BrowserWindow.getAllWindows().find(a =>
@@ -292,6 +292,11 @@ export class KanGameWindowWrapper extends PureComponent {
 
   onZoomChange = value => {
     if (this.checkBrowserWindowExistence()) {
+      // Workaround for ResizeObserver not fired on zoomFactor change
+      const [width, height] = this.currentWindow.getContentSize()
+      this.currentWindow.setContentSize(width - 10, height - 10)
+      this.currentWindow.setContentSize(width, height)
+
       this.currentWindow.webContents.zoomFactor = value
       const webview = getStore('layout.webview.ref')
       if (webview) {
@@ -299,16 +304,6 @@ export class KanGameWindowWrapper extends PureComponent {
       } else {
         setTimeout(() => this.onZoomChange(value), 100)
       }
-    }
-  }
-
-  handleZoom = (path, value) => {
-    if (path === 'poi.appearance.zoom') {
-      this.onZoomChange(value)
-      this.currentWindow.setContentSize(
-        Math.round(this.externalWindow.innerWidth * value),
-        Math.round(((this.externalWindow.innerWidth / 1200) * 720 + this.getYOffset()) * value),
-      )
     }
   }
 

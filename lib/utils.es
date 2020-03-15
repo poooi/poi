@@ -101,6 +101,7 @@ export function stopNavigateAndHandleNewWindow(id) {
         options.resizable = true
         if (frameName.startsWith('plugin[kangame]')) {
           options.useContentSize = true
+          options.webPreferences.webSecurity = false
         }
         if (frameName.startsWith('plugin[gpuinfo]')) {
           options.backgroundColor = '#FFFFFFFF'

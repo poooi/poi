@@ -8,12 +8,13 @@
 
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { camelCase } from 'lodash'
+import { camelCase, debounce } from 'lodash'
 import { events, methods, props, staticProps } from './webview-constants'
 
 export default class ElectronWebView extends Component {
   componentDidMount() {
     this.ready = false
+    this.resizeObserver.observe(this.view)
     this.view.addEventListener('did-attach', (...attachArgs) => {
       this.ready = true
 
@@ -32,6 +33,15 @@ export default class ElectronWebView extends Component {
 
       this.view.addEventListener('dom-ready', this.forceSyncZoom)
 
+      this.handleResize([
+        {
+          contentRect: {
+            width: this.view.clientWidth,
+            height: this.view.clientHeight,
+          },
+        },
+      ])
+
       if (this.props.onDidAttach) this.props.onDidAttach(...attachArgs)
     })
 
@@ -43,6 +53,10 @@ export default class ElectronWebView extends Component {
         return this.view[method](...args)
       }
     })
+  }
+
+  componentWillUnmount() {
+    this.resizeObserver.unobserve(this.view)
   }
 
   componentDidUpdate(prevProps) {
@@ -65,6 +79,15 @@ export default class ElectronWebView extends Component {
     }
   }
 
+  handleResize = entries => {
+    if (this.props.onResize) {
+      this.props.onResize(entries)
+    }
+    this.forceSyncZoom()
+  }
+
+  resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
+
   render() {
     const { style, ...props } = this.props
     return (
@@ -79,6 +102,7 @@ ElectronWebView.propTypes = Object.assign(
   {
     className: PropTypes.string,
     style: PropTypes.object,
+    onResize: PropTypes.func,
   },
   props,
   staticProps,

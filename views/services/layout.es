@@ -173,12 +173,16 @@ config.on('config.set', (path, value) => {
     case 'poi.appearance.zoom': {
       const [width, height] = remote.getCurrentWindow().getContentSize()
       remote.getCurrentWebContents().zoomFactor = value
-      const webview = getStore('layout.webview.ref')
-      if (webview) {
-        webview.forceSyncZoom()
-      }
+      // Workaround for ResizeObserver not fired on zoomFactor change
+      remote.getCurrentWindow().setContentSize(width - 10, height - 10)
       adjustSize()
-      setTimeout(() => remote.getCurrentWindow().setContentSize(width, height), 1000)
+      setTimeout(() => {
+        remote.getCurrentWindow().setContentSize(width, height)
+        const webview = getStore('layout.webview.ref')
+        if (webview) {
+          webview.forceSyncZoom()
+        }
+      }, 1000)
       break
     }
     case 'poi.tabarea.double':
