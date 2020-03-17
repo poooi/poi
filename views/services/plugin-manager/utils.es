@@ -29,7 +29,7 @@ import { extendReducer } from 'views/create-store'
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 
-const allowedPath = [ROOT, APPDATA_PATH]
+const allowedPath = [MODULE_PATH, ROOT, APPDATA_PATH]
 const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 

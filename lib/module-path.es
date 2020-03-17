@@ -20,10 +20,14 @@ function isSubdirectory(parent, dir) {
 export const setAllowedPath = function(allowedPath) {
   Module._nodeModulePaths = function(from) {
     // use function style instead of arrows, expecting some possible perf gain
-    return _nodeModulePaths.call(this, from).filter(function(dir) {
-      return allowedPath.some(function(parent) {
-        return isSubdirectory(parent, dir)
-      })
-    })
+
+    // putting allowed path in front so that main program's module path has higher priority
+    return allowedPath.concat(
+      _nodeModulePaths.call(this, from).filter(function(dir) {
+        return allowedPath.some(function(parent) {
+          return isSubdirectory(parent, dir)
+        })
+      }),
+    )
   }
 }
