@@ -219,6 +219,9 @@ export class PoiControl extends Component {
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()
     remote.getCurrentWindow().openDevTools({ mode: 'detach' })
+    setTimeout(() => {
+      getStore('layout.webview.ref').executeJavaScript('window.align()')
+    }, 100)
   }
 
   handleOpenWebviewDevTools = () => {
