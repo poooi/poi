@@ -88,8 +88,9 @@ function isDifferentDay(time1, time2) {
   return day1 != day2
 }
 function isDifferentWeek(time1, time2) {
-  const week1 = Math.floor((time1 + FOUR_HOUR_OFFSET) / ONE_WEEK)
-  const week2 = Math.floor((time2 + FOUR_HOUR_OFFSET) / ONE_WEEK)
+  // UTC time to UTC+4, Jan 1st 1970 is Thursday so make a 4-days padding to ensure the breakpoint of a week is Monday 05:00:00
+  const week1 = Math.floor((time1 + FOUR_HOUR_OFFSET - ONE_DAY * 4) / ONE_WEEK)
+  const week2 = Math.floor((time2 + FOUR_HOUR_OFFSET - ONE_DAY * 4) / ONE_WEEK)
   return week1 != week2
 }
 function isDifferentMonth(time1, time2) {
