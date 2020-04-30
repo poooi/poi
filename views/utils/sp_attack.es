@@ -2,6 +2,8 @@ import _ from 'lodash'
 
 const isFullFleet = shipsData => shipsData && shipsData.length >= 6
 
+const isFleetWith5NonSubs = shipsData => shipsData && shipsData.filter(isNotSub).length >= 5
+
 const overShip = n => func => shipsData => func(shipsData[n])
 
 const overShipState = func => ship => func(ship[0])
@@ -35,6 +37,16 @@ const isMutsuKaiNi = shipIdIs(573)
 const isNelson = _.overSome([shipIdIs(571), shipIdIs(576)])
 
 const isColorado = _.overSome([shipIdIs(601), shipIdIs(1496)])
+
+const isKongoKaiNiC = shipIdIs(591)
+
+const isHieiKaiNiC = shipIdIs(592)
+
+const isHarunaKaiNi = shipIdIs(151)
+
+const isKirishimaKaiNi = shipIdIs(152)
+
+const isWarspite = _.overSome([shipIdIs(364), shipIdIs(439)])
 
 const isNelsonSpAttack = _.overEvery([
   isFullFleet,
@@ -76,9 +88,26 @@ const isColoradoSpAttack = _.overEvery([
   overShip(5)(isNotSub),
 ])
 
+const isKongoClassKaiNiCSpAttack = _.overEvery([
+  isFleetWith5NonSubs,
+  _.overSome([
+    _.overEvery([
+      overShip(0)(_.overEvery([isKongoKaiNiC, isNotMidDmg])),
+      overShip(1)(
+        _.overEvery([_.overSome([isHieiKaiNiC, isHarunaKaiNi, isWarspite]), isNotMidDmg]),
+      ),
+    ]),
+    _.overEvery([
+      overShip(0)(_.overEvery([isHieiKaiNiC, isNotMidDmg])),
+      overShip(1)(_.overEvery([_.overSome([isKongoKaiNiC, isKirishimaKaiNi]), isNotMidDmg])),
+    ]),
+  ]),
+])
+
 export const isSpAttack = _.overSome([
   isNelsonSpAttack,
   isNagatoSpAttack,
   isMutsuSpAttack,
   isColoradoSpAttack,
+  isKongoClassKaiNiCSpAttack,
 ])
