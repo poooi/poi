@@ -156,6 +156,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
       ...get(body, 'api_hougeki1.api_at_type', []),
       ...get(body, 'api_hougeki2.api_at_type', []),
       ...get(body, 'api_hougeki3.api_at_type', []),
+      ...get(body, 'api_hougeki.api_sp_list', []),
     ].filter(a => a >= 100).length > 0
   ) {
     return {
