@@ -237,6 +237,13 @@ export class KanGameWrapper extends Component {
     })
   }
 
+  handleWebviewMediaStartedPlaying = () => {
+    if (this.props.muted) {
+      this.webview.current.view.audioMuted = false
+      this.webview.current.view.audioMuted = true
+    }
+  }
+
   componentWillUnmount = () => {
     this.handleWebviewUnmount()
   }
@@ -292,6 +299,7 @@ export class KanGameWrapper extends Component {
               zoomFactor={webviewZoomFactor}
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
+              onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
               onResize={this.handleResize}
             />
             <PoiToast />
@@ -446,6 +454,7 @@ export class KanGameWrapper extends Component {
                 zoomFactor={webviewZoomFactor}
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
+                onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
                 onResize={this.handleResize}
               />
               <PoiToast />
