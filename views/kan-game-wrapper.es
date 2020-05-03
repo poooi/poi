@@ -237,8 +237,13 @@ export class KanGameWrapper extends Component {
     })
   }
 
+  handleDidFrameFinishLoad = () => {
+    this.enableAudioMutePolyfill = true
+  }
+
   handleWebviewMediaStartedPlaying = () => {
-    if (this.props.muted) {
+    if (this.props.muted && this.enableAudioMutePolyfill) {
+      this.enableAudioMutePolyfill = false
       this.webview.current.view.audioMuted = false
       this.webview.current.view.audioMuted = true
     }
@@ -299,6 +304,7 @@ export class KanGameWrapper extends Component {
               zoomFactor={webviewZoomFactor}
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
+              onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
               onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
               onResize={this.handleResize}
             />
@@ -454,6 +460,7 @@ export class KanGameWrapper extends Component {
                 zoomFactor={webviewZoomFactor}
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
+                onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
                 onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
                 onResize={this.handleResize}
               />
