@@ -340,7 +340,7 @@ export const SlotItemContainer = styled.div`
   vertical-align: bottom;
 
   &::after {
-    background-color: ${props => props.theme.slotBg};
+    background-color: ${(props) => props.theme.slotBg};
     border-radius: 9px;
     bottom: -3px;
     content: attr(data-onslot);
@@ -353,10 +353,10 @@ export const SlotItemContainer = styled.div`
     position: absolute;
     text-align: center;
     width: 18px;
-    display: ${props => (props.showOnslot ? 'inline' : 'none')};
+    display: ${(props) => (props.showOnslot ? 'inline' : 'none')};
   }
 
-  color: ${props => props.warning && props.theme.ORANGE1};
+  color: ${(props) => props.warning && props.theme.ORANGE1};
 
   .png {
     height: 32px;

@@ -48,7 +48,7 @@ const PoiTabChildPositioner = styled.div`
 `
 
 @connect(
-  state => ({
+  (state) => ({
     enableTransition: get(state.config, 'poi.transition.enable', true),
   }),
   undefined,
@@ -85,15 +85,15 @@ export class TabContentsUnion extends Component {
     )
   }
 
-  childrenKey = children => {
-    return Children.map(children, child => child?.key).filter(Boolean)
+  childrenKey = (children) => {
+    return Children.map(children, (child) => child?.key).filter(Boolean)
   }
 
   findChildByKey = (children, key) => {
-    return Children.map(children, child => (child?.key === key ? child : null)).filter(Boolean)[0]
+    return Children.map(children, (child) => (child?.key === key ? child : null)).filter(Boolean)[0]
   }
 
-  handleTransitionEnd = key => {
+  handleTransitionEnd = (key) => {
     if (this.state.prevTab === key) {
       this.setState({ prevTab: null })
     }

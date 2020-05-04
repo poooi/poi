@@ -57,8 +57,8 @@ if (!isEqual(newLayout, configLayout)) {
 // polyfill for old layouts
 function layoutConfigOutdated(layoutConfig) {
   return (
-    !layoutConfig.sm.find(a => a.i === 'repair-panel') ||
-    !layoutConfig.lg.find(a => a.i === 'repair-panel')
+    !layoutConfig.sm.find((a) => a.i === 'repair-panel') ||
+    !layoutConfig.lg.find((a) => a.i === 'repair-panel')
   )
 }
 
@@ -87,8 +87,8 @@ export class reactClass extends Component {
     config.set('poi.mainpanel.layout', layouts)
   }
 
-  handleResize = entries => {
-    entries.forEach(entry => {
+  handleResize = (entries) => {
+    entries.forEach((entry) => {
       const { width, height } = entry.contentRect
       if (
         width !== 0 &&

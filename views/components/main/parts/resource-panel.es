@@ -81,7 +81,7 @@ const AdditionalValue = styled(MaterialAmount)`
 
 const order = [0, 2, 1, 3, 4, 6, 5, 7]
 
-const getPanelDimension = width => {
+const getPanelDimension = (width) => {
   if (width < 150) {
     return 1
   }
@@ -94,7 +94,7 @@ const getPanelDimension = width => {
   return 2
 }
 
-@connect(state => ({
+@connect((state) => ({
   resources: get(state, 'info.resources', []),
   admiralLv: get(state, 'info.basic.api_level', 0),
 }))
@@ -149,7 +149,7 @@ export class ResourcePanel extends React.Component {
     clearInterval(this.timer)
   }
 
-  handleResize = entries => {
+  handleResize = (entries) => {
     const dimension = getPanelDimension(entries[0].contentRect.width)
     if (dimension !== this.state.dimension) {
       this.setState({ dimension })
@@ -164,7 +164,7 @@ export class ResourcePanel extends React.Component {
     return (
       <ResizeSensor onResize={this.handleResize}>
         <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
-          {(dimension === 2 ? order : range(8)).map(i => (
+          {(dimension === 2 ? order : range(8)).map((i) => (
             <MaterialContainer key={i} className="material-container" dimension={dimension}>
               <MaterialIconGlow
                 materialId={i + 1}

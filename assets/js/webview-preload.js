@@ -3,7 +3,7 @@ const config = remote.require('./lib/config')
 
 window.ipc = remote.require('./lib/ipc')
 
-document.addEventListener('DOMContentLoaded', e => {
+document.addEventListener('DOMContentLoaded', (e) => {
   if (config.get('poi.misc.dmmcookie', false) && location.hostname.includes('dmm')) {
     const now = new Date()
     now.setFullYear(now.getFullYear() + 1)
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', e => {
     }
   }
   if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
-    window.DMM.netgame.reloadDialog = function() {}
+    window.DMM.netgame.reloadDialog = function () {}
   }
 })
 
@@ -65,7 +65,7 @@ alignCSS.innerHTML = `html {
 }
 `
 
-const disableTab = e => {
+const disableTab = (e) => {
   if (e.key === 'Tab') {
     e.preventDefault()
   }
@@ -91,7 +91,7 @@ function handleSpacingTop(show, count = 0) {
   }
 }
 
-window.align = function() {
+window.align = function () {
   if (location.pathname.includes('854854') || location.hostname === 'osapi.dmm.com') {
     document.body.appendChild(alignCSS)
     handleSpacingTop(false)
@@ -113,7 +113,7 @@ window.unalign = () => {
   }
 }
 
-window.capture = async function(toClipboard) {
+window.capture = async function (toClipboard) {
   try {
     const canvas = document.querySelector('#game_frame')
       ? document
@@ -128,14 +128,14 @@ window.capture = async function(toClipboard) {
     if (!canvas || !ImageCapture) return false
     return await new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
       .grabFrame()
-      .then(imageBitmap => {
+      .then((imageBitmap) => {
         const tempCanvas = document.createElement('canvas')
         tempCanvas.width = imageBitmap.width
         tempCanvas.height = imageBitmap.height
         tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
         return tempCanvas.toDataURL()
       })
-      .then(dataURL => {
+      .then((dataURL) => {
         const ss = window.ipc.access('screenshot')
         if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({ dataURL, toClipboard })
         return true
@@ -166,7 +166,7 @@ if (
     .includes('http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/')
 ) {
   const _documentWrite = document.write
-  document.write = function() {
+  document.write = function () {
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
       console.warn(
         `Block document.write since document is at state "${document.readyState}". Blocked call:`,

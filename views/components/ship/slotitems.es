@@ -25,7 +25,7 @@ import {
   ALevel,
 } from 'views/components/ship-parts/styled-components'
 
-const slotitemsDataSelectorFactory = memoize(shipId =>
+const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     ([ship, $ship] = [{}, {}], equipsData) => ({
@@ -36,13 +36,13 @@ const slotitemsDataSelectorFactory = memoize(shipId =>
   ),
 )
 
-const landbaseSlotitemsDataSelectorFactory = memoize(landbaseId =>
+const landbaseSlotitemsDataSelectorFactory = memoize((landbaseId) =>
   createSelector(
     [landbaseSelectorFactory(landbaseId), landbaseEquipDataSelectorFactory(landbaseId)],
     (landbase = {}, equipsData) => ({
-      api_maxeq: (landbase.api_plane_info || []).map(l => l.api_max_count),
-      api_cond: (landbase.api_plane_info || []).map(l => l.api_cond),
-      api_state: (landbase.api_plane_info || []).map(l => l.api_state),
+      api_maxeq: (landbase.api_plane_info || []).map((l) => l.api_max_count),
+      api_cond: (landbase.api_plane_info || []).map((l) => l.api_cond),
+      api_state: (landbase.api_plane_info || []).map((l) => l.api_state),
       equipsData,
     }),
   ),
@@ -67,9 +67,7 @@ export const Slotitems = compose(
                 {$equip.api_name
                   ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' })
                   : '??'}
-                {equip.api_level == null || equip.api_level == 0 ? (
-                  undefined
-                ) : (
+                {equip.api_level == null || equip.api_level == 0 ? undefined : (
                   <strong style={{ color: '#45A9A5' }}>
                     {' '}
                     <FontAwesome name="star" />

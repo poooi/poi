@@ -24,7 +24,7 @@ function isOneOf(one, of) {
 
 function createChainedFunction(...funcs) {
   return funcs
-    .filter(f => f != null)
+    .filter((f) => f != null)
     .reduce((acc, f) => {
       if (typeof f !== 'function') {
         throw new Error('Invalid Argument Type, must only provide functions, undefined, or null.')
@@ -50,8 +50,8 @@ class OverlayTriggerInner extends React.Component {
     this.handleDelayedHide = this.handleDelayedHide.bind(this)
     this.handleHide = this.handleHide.bind(this)
 
-    this.handleMouseOver = e => this.handleMouseOverOut(this.handleDelayedShow, e, 'fromElement')
-    this.handleMouseOut = e => this.handleMouseOverOut(this.handleDelayedHide, e, 'toElement')
+    this.handleMouseOver = (e) => this.handleMouseOverOut(this.handleDelayedShow, e, 'fromElement')
+    this.handleMouseOut = (e) => this.handleMouseOverOut(this.handleDelayedHide, e, 'toElement')
 
     this._mountNode = null
 

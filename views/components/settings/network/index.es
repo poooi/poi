@@ -21,11 +21,11 @@ const StickyCallout = styled(Callout)`
   position: sticky;
   z-index: 5;
   top: 0;
-  background-color: ${props => rgba(props.theme.GREEN1, 0.8)} !important;
+  background-color: ${(props) => rgba(props.theme.GREEN1, 0.8)} !important;
 `
 
 @withNamespaces(['setting'])
-@connect(state => ({
+@connect((state) => ({
   use: get(state, 'config.proxy.use', 'none'),
 }))
 export class ProxiesConfig extends Component {
@@ -33,7 +33,7 @@ export class ProxiesConfig extends Component {
     use: PropTypes.string.isRequired,
   }
 
-  handleChangeUse = e => {
+  handleChangeUse = (e) => {
     config.set('proxy.use', e.currentTarget.value)
   }
 
@@ -78,7 +78,7 @@ export class ProxiesConfig extends Component {
 
 const ConnectionRetries = compose(
   withNamespaces(['setting']),
-  connect(state => ({
+  connect((state) => ({
     retries: get(state, 'config.proxy.retries', 0),
   })),
 )(({ retries, t }) => (
@@ -102,7 +102,7 @@ const ConnectionRetries = compose(
 
 const RelayMode = compose(
   withNamespaces(['setting']),
-  connect(state => {
+  connect((state) => {
     const use = get(state, 'config.proxy.use', 'none')
     return {
       proxyPort: get(state, ['config', 'proxy', use, 'port'], -1),
@@ -146,7 +146,7 @@ const RelayMode = compose(
 ))
 
 @withNamespaces(['setting'])
-@connect(state => ({
+@connect((state) => ({
   proxy: get(state, 'config.proxy', {}),
 }))
 export class NetworkConfig extends Component {

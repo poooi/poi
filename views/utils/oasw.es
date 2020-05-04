@@ -1,18 +1,18 @@
 import _ from 'lodash'
 
-const iconIs = n => equip => equip.api_type[3] === n
-const shipIdIs = n => ship => ship.api_ship_id === n
-const hasSome = pred => xs => xs.some(pred)
-const hasMoreThan = num => pred => xs => xs.filter(pred).length >= num
+const iconIs = (n) => (equip) => equip.api_type[3] === n
+const shipIdIs = (n) => (ship) => ship.api_ship_id === n
+const hasSome = (pred) => (xs) => xs.some(pred)
+const hasMoreThan = (num) => (pred) => (xs) => xs.filter(pred).length >= num
 
 const isSonar = iconIs(18)
 
-const isDiveBomber = equip => equip.api_type[2] === 7
-const isTorpedoBomber = equip => equip.api_type[2] === 8
-const isLargeSonar = equip => equip.api_type[2] === 40
-const taisenAbove = value => ship => ship.api_taisen[0] >= value
+const isDiveBomber = (equip) => equip.api_type[2] === 7
+const isTorpedoBomber = (equip) => equip.api_type[2] === 8
+const isLargeSonar = (equip) => equip.api_type[2] === 40
+const taisenAbove = (value) => (ship) => ship.api_taisen[0] >= value
 
-const isDE = ship => ship.api_stype === 1
+const isDE = (ship) => ship.api_stype === 1
 
 const isIsuzuK2 = shipIdIs(141)
 const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893)])
@@ -30,21 +30,21 @@ const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
 
 const isHyugaKaiNi = shipIdIs(554)
 
-const isFixedWingASWAircraft = equip =>
+const isFixedWingASWAircraft = (equip) =>
   // 対潜哨戒機 (e.g. 三式指揮連絡機(対潜))
   equip.api_type[2] === 26
 
-const isAutogyro = equip =>
+const isAutogyro = (equip) =>
   // オートジャイロ (e.g. カ号観測機)
   equip.api_type[2] === 25
 
-const isASWAircraft = equip => isFixedWingASWAircraft(equip) || isAutogyro(equip)
+const isASWAircraft = (equip) => isFixedWingASWAircraft(equip) || isAutogyro(equip)
 
-const equipTais = equip => equip.api_tais || 0
-const equipTaisAbove = value => equip => equipTais(equip) >= value
+const equipTais = (equip) => equip.api_tais || 0
+const equipTaisAbove = (value) => (equip) => equipTais(equip) >= value
 
 // focus on the 2nd argument of isOASW for func
-const overEquips = func => (_ship, equips) => func(equips)
+const overEquips = (func) => (_ship, equips) => func(equips)
 
 /*
    - reference as of Jan 23, 2019: (TODO: not all implemented yet since Oct 18, 2018)
@@ -65,7 +65,7 @@ const overEquips = func => (_ship, equips) => func(equips)
 
  */
 // isOASWWith(allCVEIds: Array<ShipMstId>)(ship: Ship, equips: Array<Equip>): bool
-export const isOASWWith = allCVEIds =>
+export const isOASWWith = (allCVEIds) =>
   _.overSome(
     // 無条件に発動
     isIsuzuK2,
@@ -82,12 +82,12 @@ export const isOASWWith = allCVEIds =>
         // 必要対潜値75 + 装備のみの対潜値が合計4以上
         _.overEvery(
           taisenAbove(75),
-          overEquips(equips => _.sum(equips.map(equipTais)) >= 4),
+          overEquips((equips) => _.sum(equips.map(equipTais)) >= 4),
         ),
       ),
     ),
     _.overEvery(
-      ship =>
+      (ship) =>
         [
           // 駆逐
           2,
@@ -121,7 +121,7 @@ export const isOASWWith = allCVEIds =>
     ),
     // 護衛空母 (excluding 大鷹改 大鷹改二)
     _.overEvery(
-      s => !isTaiyouClassKai(s) && !isTaiyouClassKaiNi(s) && allCVEIds.includes(s.api_ship_id),
+      (s) => !isTaiyouClassKai(s) && !isTaiyouClassKaiNi(s) && allCVEIds.includes(s.api_ship_id),
       _.overSome(
         _.overEvery(
           taisenAbove(65),

@@ -54,14 +54,14 @@ const gitArchiveAndClone = async (tarPath, tgtDir) => {
     process.exit(1)
   }
   log('Archive complete! Extracting...')
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     fs.createReadStream(tarPath)
       .pipe(tar.extract(tgtDir))
-      .on('finish', e => {
+      .on('finish', (e) => {
         log('Extract complete!')
         resolve(e)
       })
-      .on('error', err => {
+      .on('error', (err) => {
         log(err)
         resolve()
       })
@@ -70,10 +70,10 @@ const gitArchiveAndClone = async (tarPath, tgtDir) => {
 
 // *** METHODS ***
 const filterCopyApp = async (stage1App, stage2App) =>
-  Promise.map(TARGET_LIST, target =>
+  Promise.map(TARGET_LIST, (target) =>
     fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
       overwrite: true,
-      filter: src => ['__tests__', '__mocks__'].every(p => !src.includes(p)),
+      filter: (src) => ['__tests__', '__mocks__'].every((p) => !src.includes(p)),
     }),
   )
 

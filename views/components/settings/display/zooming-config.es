@@ -22,13 +22,13 @@ export class ZoomingConfig extends Component {
     zoomLevel: this.props.zoomLevel,
   }
 
-  handleChangeZoomLevel = value => {
+  handleChangeZoomLevel = (value) => {
     this.setState({
       zoomLevel: value,
     })
   }
 
-  handleSaveZoomLevel = value => {
+  handleSaveZoomLevel = (value) => {
     config.set('poi.appearance.zoom', this.state.zoomLevel)
   }
 
@@ -42,7 +42,7 @@ export class ZoomingConfig extends Component {
           min={0.5}
           max={4.0}
           stepSize={0.05}
-          labelRenderer={value => `${Math.round(value * 100)}%`}
+          labelRenderer={(value) => `${Math.round(value * 100)}%`}
           value={this.state.zoomLevel}
         />
       </Section>

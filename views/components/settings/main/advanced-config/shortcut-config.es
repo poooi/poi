@@ -51,7 +51,7 @@ export class ShortcutConfig extends Component {
     return false
   }
 
-  handleClickRecord = e => {
+  handleClickRecord = (e) => {
     keyListener = (character, modifiers, e) => {
       if (this.keyShouldIgnore(character, modifiers)) {
         return

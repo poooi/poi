@@ -24,7 +24,7 @@ const initState = {
   spAttackUsed: false,
 }
 
-const ensureArray = x => (isArray(x) ? x : [x])
+const ensureArray = (x) => (isArray(x) ? x : [x])
 
 const getItem = ({ api_itemget = [], api_happening = {}, api_itemget_eo_comment = {} }) => {
   const item = {}
@@ -157,7 +157,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
       ...get(body, 'api_hougeki2.api_at_type', []),
       ...get(body, 'api_hougeki3.api_at_type', []),
       ...get(body, 'api_hougeki.api_sp_list', []),
-    ].filter(a => a >= 100).length > 0
+    ].filter((a) => a >= 100).length > 0
   ) {
     return {
       ...state,

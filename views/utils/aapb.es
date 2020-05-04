@@ -10,10 +10,10 @@
 
  */
 
-const isAAGun = $equip => $equip.api_type[2] === 21
-const isHighAngleMount = $equip => $equip.api_type[3] === 16
-const isAAFireDirector = $equip => $equip.api_type[2] === 36
-const isAARadar = $equip => [12, 13].includes($equip.api_type[2]) && $equip.api_tyku > 0
+const isAAGun = ($equip) => $equip.api_type[2] === 21
+const isHighAngleMount = ($equip) => $equip.api_type[3] === 16
+const isAAFireDirector = ($equip) => $equip.api_type[2] === 36
+const isAARadar = ($equip) => [12, 13].includes($equip.api_type[2]) && $equip.api_tyku > 0
 
 // 加重対空値
 /*
@@ -110,7 +110,7 @@ export const getShipAAPB = (...args) => {
    */
   const basicAA = $ship.api_tyku[0] + ship.api_kyouka[2]
   let adjustedAA = basicAA
-  equipsInfo.forEach(e => {
+  equipsInfo.forEach((e) => {
     adjustedAA += getEquipWeightedAA(e)
   })
 

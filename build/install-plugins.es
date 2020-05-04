@@ -47,7 +47,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   })
 }
 
-const installPlugins = async poiVersion => {
+const installPlugins = async (poiVersion) => {
   const BUILD_ROOT = path.join(ROOT, 'dist')
   const BUILDING_ROOT = path.join(BUILD_ROOT, 'plugins')
   const RELEASE_DIR = BUILD_ROOT

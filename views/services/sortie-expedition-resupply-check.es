@@ -10,8 +10,8 @@ window.addEventListener('game.response', ({ detail: { path } }) => {
   const $ships = getStore('const.$ships')
   const needResupply = fleets
     .filter((_, index) => index !== 0)
-    .flatMap(fleet => fleet.api_ship)
-    .some(shipId => {
+    .flatMap((fleet) => fleet.api_ship)
+    .some((shipId) => {
       const ship = ships[shipId]
       const $ship = $ships[ship.api_ship_id]
       return ship.api_bull < $ship.api_bull_max || ship.api_fuel < $ship.api_fuel_max

@@ -6,7 +6,7 @@ const { TouchBarButton, TouchBarSpacer, TouchBarPopover, TouchBarSegmentedContro
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
-const getIcon = name => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
+const getIcon = (name) => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
 
 // simulate Escape key
 export const sendEscKey = () => {
@@ -114,7 +114,7 @@ const tabs = new TouchBarSegmentedControl({
   segmentStyle: 'automatic',
   segments: segments,
   selectedIndex: 0,
-  change: selectedIndex => {
+  change: (selectedIndex) => {
     mainWindow.webContents.send('touchbartab', selectedIndex)
   },
 })
@@ -170,7 +170,7 @@ export const updateMainTouchbar = (
   //Get tab display name
   //lock plugin when no plugins enabled
   if (pluginTitle != segments[2].label) {
-    segments.forEach(x => {
+    segments.forEach((x) => {
       x.label = [mainTitle, fleetTitle, pluginTitle][segments.indexOf(x)]
       x.enabled = x.label != pluginDefault ? true : false
     })

@@ -38,7 +38,7 @@ const defaultFetchOption = {
   headers: fetchHeader,
 }
 
-@connect(state => ({
+@connect((state) => ({
   version: get(wctfSelector(state), 'version', '0.0.0'),
 }))
 export class WctfDB extends Component {
@@ -102,8 +102,8 @@ export class WctfDB extends Component {
 
     const npmConfig = getNpmConfig(DB_ROOT)
     const data = await fetch(`${npmConfig.registry}${PACKAGE_NAME}/latest`, defaultFetchOption)
-      .then(res => (res.ok ? res.json() : undefined))
-      .catch(e => undefined)
+      .then((res) => (res.ok ? res.json() : undefined))
+      .catch((e) => undefined)
     if (!data || !data.version) {
       console.warn("Can't find update info for wctf-db")
     }
@@ -137,18 +137,15 @@ export class WctfDB extends Component {
   parseData = async () => {
     const data = {}
     try {
-      await Promise.map(glob.sync(`${DB_FILE_PATH}/*.nedb`), async dbPath => {
+      await Promise.map(glob.sync(`${DB_FILE_PATH}/*.nedb`), async (dbPath) => {
         const dbName = path.basename(dbPath, '.nedb')
         if (!(dbName in DB_KEY)) {
           return
         }
         const buf = await fs.readFile(dbPath)
-        const entries = buf
-          .toString()
-          .split('\n')
-          .filter(Boolean)
+        const entries = buf.toString().split('\n').filter(Boolean)
         data[dbName] = _(entries)
-          .map(content => JSON.parse(content))
+          .map((content) => JSON.parse(content))
           .keyBy(DB_KEY[dbName])
           .value()
       })

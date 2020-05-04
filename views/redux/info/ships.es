@@ -84,7 +84,7 @@ export function reducer(state = {}, { type, body, postBody }, store) {
         ...state,
         [body.api_ship.api_id]: body.api_ship,
       }
-      postBody.api_id_items.split(',').forEach(shipId => {
+      postBody.api_id_items.split(',').forEach((shipId) => {
         delete state[parseInt(shipId)]
       })
       return state
@@ -108,7 +108,7 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       }
     case '@@Response/kcsapi/api_req_kousyou/destroyship':
       state = { ...state }
-      postBody.api_ship_id.split(',').forEach(shipId => {
+      postBody.api_ship_id.split(',').forEach((shipId) => {
         delete state[parseInt(shipId)]
       })
       return state
@@ -137,7 +137,7 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       let newState = state
       if (instantDockingCompletionState) {
         const { rstId, dockId } = instantDockingCompletionState
-        const dockInfo = body.find(x => x.api_id === dockId)
+        const dockInfo = body.find((x) => x.api_id === dockId)
         if (dockInfo.api_ship_id === 0) {
           newState = {
             ...state,

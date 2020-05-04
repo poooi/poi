@@ -18,14 +18,14 @@ export default class ElectronWebView extends Component {
     this.view.addEventListener('did-attach', (...attachArgs) => {
       this.ready = true
 
-      events.forEach(event => {
+      events.forEach((event) => {
         this.view.addEventListener(event, (...eventArgs) => {
           const propName = camelCase(`on-${event}`)
           if (this.props[propName]) this.props[propName](...eventArgs)
         })
       })
 
-      Object.keys(staticProps).forEach(propName => {
+      Object.keys(staticProps).forEach((propName) => {
         if (this.props[propName] != null) {
           this.view[propName] = this.props[propName]
         }
@@ -45,7 +45,7 @@ export default class ElectronWebView extends Component {
       if (this.props.onDidAttach) this.props.onDidAttach(...attachArgs)
     })
 
-    methods.forEach(method => {
+    methods.forEach((method) => {
       this[method] = (...args) => {
         if (!this.ready) {
           throw new Error("WebView is not ready yet, you can't call this method")
@@ -60,7 +60,7 @@ export default class ElectronWebView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    Object.keys(staticProps).forEach(propName => {
+    Object.keys(staticProps).forEach((propName) => {
       if (this.props[propName] !== prevProps[propName]) {
         this.view[propName] = this.props[propName]
       }
@@ -79,7 +79,7 @@ export default class ElectronWebView extends Component {
     }
   }
 
-  handleResize = entries => {
+  handleResize = (entries) => {
     if (this.props.onResize) {
       this.props.onResize(entries)
     }
@@ -92,7 +92,7 @@ export default class ElectronWebView extends Component {
     const { style, ...props } = this.props
     return (
       <div style={style || {}}>
-        <webview {...props} ref={view => (this.view = view)} />
+        <webview {...props} ref={(view) => (this.view = view)} />
       </div>
     )
   }
@@ -108,6 +108,6 @@ ElectronWebView.propTypes = Object.assign(
   staticProps,
 )
 
-events.forEach(event => {
+events.forEach((event) => {
   ElectronWebView.propTypes[camelCase(`on-${event}`)] = PropTypes.func
 })

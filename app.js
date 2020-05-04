@@ -154,7 +154,7 @@ app.on('ready', () => {
   const { workArea } = screen.getPrimaryDisplay()
   let { x, y, width, height } = config.get('poi.window', workArea)
   const validate = (n, min, range) => n != null && n >= min && n < min + range
-  const withinDisplay = d => {
+  const withinDisplay = (d) => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -223,7 +223,7 @@ app.on('ready', () => {
     })
   }
   // Never wants navigate
-  mainWindow.webContents.on('will-navigate', e => {
+  mainWindow.webContents.on('will-navigate', (e) => {
     e.preventDefault()
   })
   mainWindow.on('closed', () => {
@@ -254,9 +254,7 @@ ipcMain.on('refresh-shortcut', () => {
 const { createHash } = require('crypto')
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   const trusted = config.get('poi.misc.trustedCerts', [])
-  const hash = createHash('sha256')
-    .update(certificate.data)
-    .digest('base64')
+  const hash = createHash('sha256').update(certificate.data).digest('base64')
   if (trusted.includes(hash)) {
     event.preventDefault()
     callback(true)
@@ -264,6 +262,6 @@ app.on('certificate-error', (event, webContents, url, error, certificate, callba
 })
 
 // Uncaught error
-process.on('uncaughtException', e => {
+process.on('uncaughtException', (e) => {
   error(e.stack)
 })

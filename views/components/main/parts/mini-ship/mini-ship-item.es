@@ -91,7 +91,7 @@ const OnSlot = styled(Tag)`
     `}
 `
 
-const slotitemsDataSelectorFactory = memoize(shipId =>
+const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     ([ship, $ship] = [], equipsData) => ({
@@ -102,7 +102,7 @@ const slotitemsDataSelectorFactory = memoize(shipId =>
 )
 
 const Slotitems = withNamespaces(['resources'])(
-  connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state))(function({
+  connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state))(function ({
     api_maxeq,
     equipsData,
     t,
@@ -157,14 +157,14 @@ const Slotitems = withNamespaces(['resources'])(
   }),
 )
 
-const miniShipRowDataSelectorFactory = memoize(shipId =>
+const miniShipRowDataSelectorFactory = memoize((shipId) =>
   createSelector(
     [
       shipDataSelectorFactory(shipId),
       shipRepairDockSelectorFactory(shipId),
       escapeStatusSelectorFactory(shipId),
       fcdShipTagColorSelector,
-      state => get(state, 'config.poi.appearance.avatarType'),
+      (state) => get(state, 'config.poi.appearance.avatarType'),
     ],
     ([ship, $ship] = [], repairDock, escaped, shipTagColor, avatarType) => {
       return {

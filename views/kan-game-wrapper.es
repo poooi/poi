@@ -58,7 +58,7 @@ const KanGame = styled(CustomTag)`
   }
 `
 
-@connect(state => ({
+@connect((state) => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
   actualWindowWidth: get(state, 'layout.webview.width', 1200),
   zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
@@ -100,8 +100,8 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  handleResize = entries => {
-    entries.forEach(entry => {
+  handleResize = (entries) => {
+    entries.forEach((entry) => {
       const { width, height } = entry.contentRect
       if (
         width !== getStore('layout.webview.width') ||
@@ -129,9 +129,7 @@ export class KanGameWrapper extends Component {
     console.warn(event, url, error, certificate)
     const trusted = config.get('poi.misc.trustedCerts', [])
     const untrusted = config.get('poi.misc.untrustedCerts', [])
-    const hash = createHash('sha256')
-      .update(certificate.data)
-      .digest('base64')
+    const hash = createHash('sha256').update(certificate.data).digest('base64')
     if (!trusted.includes(hash) && !untrusted.includes(hash)) {
       const title = i18next.t('others:Certificate error')
       const content = (
@@ -159,14 +157,14 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  settrustedCerts = hash => {
+  settrustedCerts = (hash) => {
     const trusted = config.get('poi.misc.trustedCerts', [])
     trusted.push(hash)
     config.set('poi.misc.trustedCerts', trusted)
     this.webview.current.view.reload()
   }
 
-  setuntrustedCerts = hash => {
+  setuntrustedCerts = (hash) => {
     const untrusted = config.get('poi.misc.untrustedCerts', [])
     untrusted.push(hash)
     config.set('poi.misc.untrustedCerts', untrusted)
@@ -279,7 +277,7 @@ export class KanGameWrapper extends Component {
       overlayPanel,
       windowMode,
     } = this.props
-    const getZoomedSize = value => Math.round(value / zoomLevel)
+    const getZoomedSize = (value) => Math.round(value / zoomLevel)
     const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
     if (windowMode) {
       return (
@@ -430,7 +428,7 @@ export class KanGameWrapper extends Component {
             height: disableHeight,
           }}
           onResized={this.setRatio}
-          ref={r => (this.resizableArea = r)}
+          ref={(r) => (this.resizableArea = r)}
         >
           <KanGame tag="kan-game">
             <div

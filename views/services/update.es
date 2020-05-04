@@ -62,8 +62,8 @@ export const checkUpdate = async () => {
     `https://${global.SERVER_HOSTNAME}/update/latest.json`,
     defaultFetchOption,
   )
-    .then(res => res.json())
-    .catch(e => {
+    .then((res) => res.json())
+    .catch((e) => {
       console.warn('Check update error.', e.stack)
       return {}
     })
@@ -83,8 +83,8 @@ export const checkUpdate = async () => {
         `https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`,
         defaultFetchOption,
       )
-        .then(res => res.text())
-        .catch(res => {
+        .then((res) => res.text())
+        .catch((res) => {
           console.warn('fetch update log error')
           return ''
         })

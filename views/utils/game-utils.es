@@ -142,9 +142,9 @@ export function selectShipAvatarColor(ship, $ship, color, opt) {
   }
 }
 
-export const getSpeedLabel = speed => speedInterpretation[speed] || 'Unknown'
+export const getSpeedLabel = (speed) => speedInterpretation[speed] || 'Unknown'
 
-export const getSpeedStyle = speed => speedStyles[speed] || {}
+export const getSpeedStyle = (speed) => speedStyles[speed] || {}
 
 export function getStatusStyle(status) {
   if (status != null) {
@@ -503,7 +503,7 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier = 1.0, s
 }
 
 // returns fleet's minimal api_soku value, returns 0 when all elements undefined
-export const getFleetSpeed = shipsData => ({
+export const getFleetSpeed = (shipsData) => ({
   speed:
     _(shipsData)
       .map(([ship = {}] = []) => ship.api_soku || Infinity)
@@ -518,7 +518,7 @@ export async function isInGame() {
       (await new Promise((resolve, reject) => {
         document
           .querySelector('webview')
-          .executeJavaScript("document.querySelector('embed') !== null", e => resolve(e))
+          .executeJavaScript("document.querySelector('embed') !== null", (e) => resolve(e))
       }))
     )
   } catch (e) {

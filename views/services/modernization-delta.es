@@ -18,7 +18,7 @@ const nameStatuses = [
 let requestRecord = null
 
 // Multiplied by a factor of 5 to do operations in integers
-const luckProviders = id => {
+const luckProviders = (id) => {
   switch (id) {
     case 163:
       return 6 // Maruyu
@@ -28,41 +28,41 @@ const luckProviders = id => {
   return 0
 }
 
-const calcMaxDelta = lst => {
+const calcMaxDelta = (lst) => {
   const baseSum = sum(lst)
   // According to the formula provided by wiki
   return baseSum + Math.floor((baseSum + 1) / 5)
 }
 
 // Given sourceShips, the maximum statuses addable regardless of status cap
-const calcMaxDeltas = sourceShips => {
+const calcMaxDeltas = (sourceShips) => {
   const maxFourDeltas = unzip(
-    sourceShips.map(id => (window.$ships[id] || {}).api_powup || [0, 0, 0, 0]),
-  ).map(delta => calcMaxDelta(delta))
-  const maxLuck = Math.ceil(sum(sourceShips.map(id => luckProviders(id))) / 5 - 0.0001)
+    sourceShips.map((id) => (window.$ships[id] || {}).api_powup || [0, 0, 0, 0]),
+  ).map((delta) => calcMaxDelta(delta))
+  const maxLuck = Math.ceil(sum(sourceShips.map((id) => luckProviders(id))) / 5 - 0.0001)
   return maxFourDeltas.concat([maxLuck])
 }
 
 const apiStatuses = ['api_houg', 'api_raig', 'api_tyku', 'api_souk', 'api_luck']
 
-const calcRemainingStatuses = ship =>
+const calcRemainingStatuses = (ship) =>
   [...Array(5).keys()].map(
-    i => ship[apiStatuses[i]][1] - (ship[apiStatuses[i]][0] + ship.api_kyouka[i]),
+    (i) => ship[apiStatuses[i]][1] - (ship[apiStatuses[i]][0] + ship.api_kyouka[i]),
   )
 
 const calcDisplayText = (targetShipBefore, sourceShips) => {
   // Clone it because it may have been modified on response
   const kyoukaBefore = targetShipBefore.api_kyouka.slice()
   // Run unnecessary calculation in a promise to minimize the blocking of request
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const maxDeltas = calcMaxDeltas(sourceShips)
-    return resolve(targetShipAfter => {
+    return resolve((targetShipAfter) => {
       const kyoukaAfter = targetShipAfter.api_kyouka
       const remainingAfter = calcRemainingStatuses(targetShipAfter)
       return (
         <span>
           <Trans>Modernization succeeded</Trans>
-          {[...Array(5).keys()].map(i => {
+          {[...Array(5).keys()].map((i) => {
             const delta = kyoukaAfter[i] - kyoukaBefore[i]
             const maxDelta = maxDeltas[i]
             const remaining = remainingAfter[i]
@@ -91,25 +91,25 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
   })
 }
 
-const onRequest = e => {
+const onRequest = (e) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/powerup') {
     const { api_id, api_id_items } = e.detail.body
     // Read the status before modernization, use a copy because map's callback
     // may be delayed to when ship is deleted from _ships
-    const sourceShips = api_id_items.split(',').map(id_item => {
+    const sourceShips = api_id_items.split(',').map((id_item) => {
       return (window._ships[id_item] || {}).api_ship_id
     })
     requestRecord = calcDisplayText(window._ships[api_id], sourceShips)
   }
 }
 
-const onResponse = e => {
+const onResponse = (e) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/powerup') {
     // Read the status after modernization
     if (e.detail.body.api_powerup_flag) {
       const target = e.detail.body.api_ship
       if (requestRecord != null) {
-        requestRecord.then(calcText =>
+        requestRecord.then((calcText) =>
           setTimeout(
             window.success,
             100,

@@ -71,7 +71,7 @@ const MapInfoMsg = styled.div`
 `
 
 const MapRoutesSVG = styled.svg`
-  background-color: ${props =>
+  background-color: ${(props) =>
     rgba(props.theme.BLUE5, props.theme.vibrant === 'dark' ? 0.75 : 0.25)};
 `
 
@@ -155,7 +155,7 @@ const emptyMap = (
   </MapRouteContainer>
 )
 
-const MapRoutes = connect(state => ({
+const MapRoutes = connect((state) => ({
   sortieMapId: get(state, 'sortie.sortieMapId'),
   spotHistory: get(state, 'sortie.spotHistory'),
   bossSpot: get(state, 'sortie.bossSpot'),
@@ -168,7 +168,7 @@ const MapRoutes = connect(state => ({
   const histLen = spotHistory.length
   const activeSpot = spotHistory[histLen - 1]
   const bossSpotLoc = mapspots[get(maproutes, `${bossSpot}.1`)] || [-100, -100]
-  const locHistory = spotHistory.map(i => mapspots[get(maproutes, `${i}.1`)] || [-1, -1])
+  const locHistory = spotHistory.map((i) => mapspots[get(maproutes, `${i}.1`)] || [-1, -1])
   const lineHistory = histLen
     ? zip(locHistory.slice(0, histLen - 1), locHistory.slice(1))
     : [
@@ -179,36 +179,40 @@ const MapRoutes = connect(state => ({
   return (
     <MapRouteContainer className="map-route-container">
       <MapRoutesSVG width="190" height="110" viewBox="0 0 190 110" className="maproutes">
-        {// Draw all lines
-        map(maproutes, ([beg, end], i) => {
-          if (!(mapspots[beg] && mapspots[end])) return null
-          const [begX, begY] = mapspots[beg]
-          const [endX, endY] = mapspots[end]
-          return (
-            <Line
-              key={i}
-              x1={parseInt(begX * SCALE)}
-              y1={parseInt(begY * SCALE)}
-              x2={parseInt(endX * SCALE)}
-              y2={parseInt(endY * SCALE)}
-            />
+        {
+          // Draw all lines
+          map(maproutes, ([beg, end], i) => {
+            if (!(mapspots[beg] && mapspots[end])) return null
+            const [begX, begY] = mapspots[beg]
+            const [endX, endY] = mapspots[end]
+            return (
+              <Line
+                key={i}
+                x1={parseInt(begX * SCALE)}
+                y1={parseInt(begY * SCALE)}
+                x2={parseInt(endX * SCALE)}
+                y2={parseInt(endY * SCALE)}
+              />
+            )
+          })
+        }
+        {
+          // Draw passed lines
+          lineHistory.map(([[begX, begY], [endX, endY]], i) =>
+            begX > 0 && endX > 0 ? (
+              <Line
+                key={i}
+                x1={parseInt(begX * SCALE)}
+                y1={parseInt(begY * SCALE)}
+                x2={parseInt(endX * SCALE)}
+                y2={parseInt(endY * SCALE)}
+                passed
+              />
+            ) : (
+              <span />
+            ),
           )
-        })}
-        {// Draw passed lines
-        lineHistory.map(([[begX, begY], [endX, endY]], i) =>
-          begX > 0 && endX > 0 ? (
-            <Line
-              key={i}
-              x1={parseInt(begX * SCALE)}
-              y1={parseInt(begY * SCALE)}
-              x2={parseInt(endX * SCALE)}
-              y2={parseInt(endY * SCALE)}
-              passed
-            />
-          ) : (
-            <span />
-          ),
-        )}
+        }
         <Point
           x={parseInt(bossSpotLoc[0] * SCALE) - 4.5}
           y={parseInt(bossSpotLoc[1] * SCALE) - 4.5}
@@ -216,51 +220,55 @@ const MapRoutes = connect(state => ({
           height={9}
           boss
         />
-        {// Draw all points
-        map(mapspots, ([x, y], id) => (
-          <Point
-            key={id}
-            x={parseInt(x * SCALE) - 3}
-            y={parseInt(y * SCALE) - 3}
-            width={6}
-            height={6}
-          />
-        ))}
-        {// Draw passed points again, highlighting the active one
-        map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
-          x > 0 ? (
+        {
+          // Draw all points
+          map(mapspots, ([x, y], id) => (
             <Point
               key={id}
               x={parseInt(x * SCALE) - 3}
               y={parseInt(y * SCALE) - 3}
               width={6}
               height={6}
-              active={id == activeSpot}
-              passed={id != activeSpot}
             />
-          ) : (
-            <span />
-          ),
-        )}
+          ))
+        }
+        {
+          // Draw passed points again, highlighting the active one
+          map(zip(spotHistory, locHistory), ([id, [x, y]]) =>
+            x > 0 ? (
+              <Point
+                key={id}
+                x={parseInt(x * SCALE) - 3}
+                y={parseInt(y * SCALE) - 3}
+                width={6}
+                height={6}
+                active={id == activeSpot}
+                passed={id != activeSpot}
+              />
+            ) : (
+              <span />
+            ),
+          )
+        }
       </MapRoutesSVG>
     </MapRouteContainer>
   )
 })
 
 const ItemStat = withNamespaces(['others'])(
-  connect(state => ({
+  connect((state) => ({
     itemHistoty: get(state, 'sortie.itemHistory'),
   }))(({ itemHistoty, t }) => {
     const stat = {}
     each(itemHistoty, (item = {}) => {
-      each(Object.keys(item), itemKey => (stat[itemKey] = item[itemKey] + (stat[itemKey] || 0)))
+      each(Object.keys(item), (itemKey) => (stat[itemKey] = item[itemKey] + (stat[itemKey] || 0)))
     })
     return (
       <MapInfoMsg className="map-info-msg">
         {Object.keys(stat).length > 0 && `${t('Resources')}: `}
         {map(
           Object.keys(stat),
-          itemKey =>
+          (itemKey) =>
             itemKey && (
               <ItemStatSpan key={itemKey} className="item-stat">
                 <ReminderIcon materialId={parseInt(itemKey)} className="material-icon reminder" />
@@ -282,7 +290,7 @@ const ItemStat = withNamespaces(['others'])(
       sortieMapHpSelector,
       currentNodeSelector,
       fcdSelector,
-      state => get(state.config, 'poi.misc.pinminimap'),
+      (state) => get(state.config, 'poi.misc.pinminimap'),
     ],
     (mapData, mapHp, currentNode, fcd = {}, pinminimap) => ({
       mapId: get(mapData, '0.api_id'),

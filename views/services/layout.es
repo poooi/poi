@@ -11,7 +11,7 @@ if (config.get('poi.webview.width', 1200) < 0) {
 
 const additionalStyle = document.createElement('style')
 
-remote.getCurrentWindow().webContents.on('dom-ready', e => {
+remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
   document.head.appendChild(additionalStyle)
 })
 
@@ -32,7 +32,7 @@ const setCSS = () => {
 
 const setCSSDebounced = debounce(setCSS, 200)
 
-const setIsolatedMainWindowSize = isolateWindow => {
+const setIsolatedMainWindowSize = (isolateWindow) => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
@@ -70,7 +70,7 @@ const setIsolatedMainWindowSize = isolateWindow => {
   remote.getCurrentWindow().setContentBounds(bounds)
 }
 
-const setOverlayPanelWindowSize = overlayPanel => {
+const setOverlayPanelWindowSize = (overlayPanel) => {
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
   const isolateWindow = config.get('poi.layout.isolate', false)

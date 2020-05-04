@@ -107,12 +107,12 @@ const overlayPanelMinimumWidth = {
   percent: 0,
 }
 
-const transformToAreaSize = size => ({
+const transformToAreaSize = (size) => ({
   percent: 100,
   px: -size.px,
 })
 
-const transformToPanelSize = size => ({
+const transformToPanelSize = (size) => ({
   percent: 0,
   px: -size.px,
 })
@@ -150,7 +150,7 @@ export class PoiApp extends Component {
       <>
         {overlay && (
           <OverlayPanelResizer
-            ref={ref => (this.resizableArea = ref)}
+            ref={(ref) => (this.resizableArea = ref)}
             className="overlay-panel-resizer"
             widthResize={this.props.editable && this.state.overlayVisible ? 1 : 0}
             minimumWidth={{

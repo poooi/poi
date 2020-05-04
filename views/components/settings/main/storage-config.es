@@ -36,21 +36,21 @@ export class StorageConfig extends Component {
     cacheSize: 0,
   }
 
-  handleClearCookie = e => {
-    remove(join(APPDATA_PATH, 'Cookies')).catch(e => null)
-    remove(join(APPDATA_PATH, 'Cookies-journal')).catch(e => null)
+  handleClearCookie = (e) => {
+    remove(join(APPDATA_PATH, 'Cookies')).catch((e) => null)
+    remove(join(APPDATA_PATH, 'Cookies-journal')).catch((e) => null)
     remote.getCurrentWebContents().session.clearStorageData({ storages: ['cookies'] }, () => {
       toggleModal(this.props.t('setting:Delete cookies'), this.props.t('setting:Success!'))
     })
   }
 
-  handleClearCache = e => {
+  handleClearCache = (e) => {
     remote.getCurrentWebContents().session.clearCache(() => {
       toggleModal(this.props.t('setting:Delete cache'), this.props.t('setting:Success!'))
     })
   }
 
-  handleRevokeCert = e => {
+  handleRevokeCert = (e) => {
     config.set('poi.misc.trustedCerts', [])
     config.set('poi.misc.untrustedCerts', [])
   }
@@ -60,7 +60,7 @@ export class StorageConfig extends Component {
   }
 
   componentDidMount = () => {
-    this.handleUpdateCacheSize().catch(e => null)
+    this.handleUpdateCacheSize().catch((e) => null)
     this.cycle = setInterval(this.handleUpdateCacheSize, 6000000)
   }
 

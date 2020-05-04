@@ -24,7 +24,7 @@ export class PluginWrap extends Component {
   }
 
   componentDidCatch = (error, info) => {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtra('componentStack', info.componentStack)
       scope.setTag('area', this.props.plugin.id)
       const eventId = Sentry.captureException(error)
@@ -46,12 +46,9 @@ export class PluginWrap extends Component {
 
   componentDidMount = () => {
     if (this.root.current) {
-      this.root.current.querySelectorAll('link').forEach(link => {
+      this.root.current.querySelectorAll('link').forEach((link) => {
         if (link.href.includes('#') || link.href.includes('$')) {
-          link.href = link.href
-            .replace(/#/g, '%23')
-            .replace(/\$/g, '%24')
-            .replace(/&/g, '%26')
+          link.href = link.href.replace(/#/g, '%23').replace(/\$/g, '%24').replace(/&/g, '%26')
         }
       })
     }

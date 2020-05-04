@@ -40,18 +40,18 @@ if (window.isMain) {
 require('module').globalPaths.unshift(window.ROOT)
 
 // Disable eval
-window.eval = global.eval = function() {
+window.eval = global.eval = function () {
   throw new Error('Sorry, this app does not support window.eval().')
 }
 
 // Shortcuts and Components
 window._ = lodash // TODO: Backward compatibility
-window.$ = param => document.querySelector(param)
-window.$$ = param => document.querySelectorAll(param)
+window.$ = (param) => document.querySelector(param)
+window.$$ = (param) => document.querySelectorAll(param)
 
 // Polyfills
-Object.clone = obj => JSON.parse(JSON.stringify(obj))
-Object.remoteClone = obj => JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
+Object.clone = (obj) => JSON.parse(JSON.stringify(obj))
+Object.remoteClone = (obj) => JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
 
 // Node modules
 const originConfig = remote.require('./lib/config')

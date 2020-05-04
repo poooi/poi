@@ -35,7 +35,7 @@ const PickerBox = styled.div`
 
 const EllipsisIcon = styled.span`
   color: white;
-  background: ${props => props.theme.DARK_GRAY1};
+  background: ${(props) => props.theme.DARK_GRAY1};
   border-radius: 3px;
   padding: 0 4px;
 `
@@ -69,7 +69,7 @@ export class FolderPickerConfig extends Component {
 
   componentDidMount = () => {
     const { exclude, value, defaultValue, configName } = this.props
-    if (exclude.length && exclude.some(parent => isSubdirectory(parent, value))) {
+    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, value))) {
       this.emitErrorMessage()
       config.set(configName, defaultValue)
     }
@@ -78,7 +78,7 @@ export class FolderPickerConfig extends Component {
     }
   }
 
-  handleOnDrag = e => {
+  handleOnDrag = (e) => {
     e.preventDefault()
   }
 
@@ -88,16 +88,16 @@ export class FolderPickerConfig extends Component {
       title: i18next.t('setting:Error'),
     })
 
-  setPath = val => {
+  setPath = (val) => {
     const { exclude } = this.props
-    if (exclude.length && exclude.some(parent => isSubdirectory(parent, val))) {
+    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, val))) {
       this.emitErrorMessage()
       return
     }
     config.set(this.props.configName, val)
   }
 
-  handleOnDrop = e => {
+  handleOnDrop = (e) => {
     e.preventDefault()
     const droppedFiles = e.dataTransfer.files
     if (fs.statSync(droppedFiles[0].path).isDirectory() || !this.props.isFolder) {
@@ -137,8 +137,8 @@ export class FolderPickerConfig extends Component {
     })
   }
 
-  parseBreadcrumb = value =>
-    map(split(this.props.value, path.sep), p => ({
+  parseBreadcrumb = (value) =>
+    map(split(this.props.value, path.sep), (p) => ({
       text: p,
     }))
 
@@ -150,7 +150,7 @@ export class FolderPickerConfig extends Component {
     )
   }
 
-  renderOverflow = items => {
+  renderOverflow = (items) => {
     return (
       <li>
         <Tooltip position={Position.BOTTOM_LEFT} content={map(items, 'text').join(path.sep)}>

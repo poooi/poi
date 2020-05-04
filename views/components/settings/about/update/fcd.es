@@ -29,7 +29,7 @@ const defaultFetchOption = {
 const initState = {}
 
 @withNamespaces(['setting'])
-@connect(state => ({
+@connect((state) => ({
   version: state.fcd.version || initState,
 }))
 export class FCD extends Component {
@@ -65,8 +65,8 @@ export class FCD extends Component {
       flag = true
 
       const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
-        .then(res => (res.ok ? res.json() : undefined))
-        .catch(e => undefined)
+        .then((res) => (res.ok ? res.json() : undefined))
+        .catch((e) => undefined)
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
@@ -77,8 +77,8 @@ export class FCD extends Component {
             )
 
             const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
-              .then(res => (res.ok ? res.json() : undefined))
-              .catch(e => undefined)
+              .then((res) => (res.ok ? res.json() : undefined))
+              .catch((e) => undefined)
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',

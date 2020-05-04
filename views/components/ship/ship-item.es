@@ -50,7 +50,7 @@ import {
   Gradient,
 } from 'views/components/ship-parts/styled-components'
 
-const shipRowDataSelectorFactory = memoize(shipId =>
+const shipRowDataSelectorFactory = memoize((shipId) =>
   createSelector(
     [
       shipDataSelectorFactory(shipId),
@@ -58,7 +58,7 @@ const shipRowDataSelectorFactory = memoize(shipId =>
       constSelector,
       escapeStatusSelectorFactory(shipId),
       fcdShipTagColorSelector,
-      state => get(state, 'config.poi.appearance.avatarType'),
+      (state) => get(state, 'config.poi.appearance.avatarType'),
     ],
     ([ship, $ship] = [], repairDock, { $shipTypes }, escaped, shipTagColor, avatarType) => ({
       ship: ship || {},

@@ -35,7 +35,7 @@ export default function reducer(state = initState, { type, postBody, body }) {
       let condNeedsUpdate = false
       let misprediction = false
       // Use lodash.forEach because it supports breaking by returning false
-      forEach(body.api_ship, ship => {
+      forEach(body.api_ship, (ship) => {
         const { api_cond: cond, api_id } = ship
         conds[api_id] = cond
         if (cond !== oldConds[api_id]) {

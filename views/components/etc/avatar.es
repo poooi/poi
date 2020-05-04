@@ -67,7 +67,7 @@ const EquipAvatarBG = styled.img`
 `
 
 // Remove old folder
-remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
+remove(join(APPDATA_PATH, 'avatar')).catch((e) => null)
 
 @connect((state, props) => {
   if (!props.mstId) return {}
@@ -92,7 +92,7 @@ remove(join(APPDATA_PATH, 'avatar')).catch(e => null)
             `fcd.shipavatar.marginMagics.${props.mstId}.${props.isDamaged ? 'damaged' : 'normal'}`,
           ))
     const version = get(
-      get(state, 'const.$shipgraph', []).find(a => a.api_id === props.mstId),
+      get(state, 'const.$shipgraph', []).find((a) => a.api_id === props.mstId),
       'api_version.0',
     )
     const rank =

@@ -36,7 +36,7 @@ function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
 }
 
-const getPluginPath = packageName => join(PLUGIN_PATH, 'node_modules', packageName)
+const getPluginPath = (packageName) => join(PLUGIN_PATH, 'node_modules', packageName)
 
 const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
 
@@ -54,12 +54,12 @@ class PluginManager extends EventEmitter {
   }
 
   async readPlugins() {
-    const pluginPaths = await new Promise(res =>
+    const pluginPaths = await new Promise((res) =>
       glob(getPluginPath('poi-plugin-*'), (err, files) => res(files)),
     )
     const plugins = sortPlugins(
       await Promise.all(
-        pluginPaths.map(async pluginPath => {
+        pluginPaths.map(async (pluginPath) => {
           let plugin = await readPlugin(pluginPath)
           if (plugin.enabled && !window.isSafeMode) {
             plugin = await enablePlugin(plugin)
@@ -135,12 +135,12 @@ class PluginManager extends EventEmitter {
   }
 
   getInstalledPlugins() {
-    return this.getFilteredPlugins(plugin => plugin.isInstalled)
+    return this.getFilteredPlugins((plugin) => plugin.isInstalled)
   }
 
   getUninstalledPluginSettings() {
     const installedPlugins = this.getInstalledPlugins()
-    const installedPluginNames = installedPlugins.map(plugin => plugin.packageName)
+    const installedPluginNames = installedPlugins.map((plugin) => plugin.packageName)
     const uninstalled = {}
     for (const name in BUNDLED_PLUGINS) {
       const value = BUNDLED_PLUGINS[name]
@@ -152,15 +152,15 @@ class PluginManager extends EventEmitter {
   }
 
   getReadPlugins() {
-    return this.getFilteredPlugins(plugin => plugin.isRead)
+    return this.getFilteredPlugins((plugin) => plugin.isRead)
   }
 
   getUnreadPlugins() {
-    return this.getFilteredPlugins(plugin => !plugin.isRead)
+    return this.getFilteredPlugins((plugin) => !plugin.isRead)
   }
 
   getBrokenPlugins() {
-    return this.getFilteredPlugins(plugin => plugin.isBroken)
+    return this.getFilteredPlugins((plugin) => plugin.isBroken)
   }
 
   getValidPlugins() {
@@ -186,7 +186,7 @@ class PluginManager extends EventEmitter {
 
   // Resolves the latest plugin if need update
   // Resolves undefined if not
-  getPluginOutdateInfo = async plugin => {
+  getPluginOutdateInfo = async (plugin) => {
     // If needRollback, then we don't need the latest version; we instead
     // display the version it should be rolled back to
     if (plugin.needRollback) {
@@ -197,8 +197,8 @@ class PluginManager extends EventEmitter {
       `${npmConfig.registry}${plugin.packageName}/latest`,
       defaultFetchOption,
     )
-      .then(res => (res.ok ? res.json() : undefined))
-      .catch(e => undefined)
+      .then((res) => (res.ok ? res.json() : undefined))
+      .catch((e) => undefined)
     if (!data || !data.version) {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`)
       return
@@ -213,8 +213,8 @@ class PluginManager extends EventEmitter {
         `${npmConfig.registry}${plugin.packageName}/beta`,
         defaultFetchOption,
       )
-        .then(res => (res.ok ? res.json() : undefined))
-        .catch(e => undefined)
+        .then((res) => (res.ok ? res.json() : undefined))
+        .catch((e) => undefined)
       if (betaData && betaData.version) {
         Object.assign(distTag, {
           beta: betaData.version,
@@ -266,8 +266,8 @@ class PluginManager extends EventEmitter {
     const plugins = this.getInstalledPlugins()
     const outdatedList = (
       await Promise.all(
-        plugins.map(plugin =>
-          this.getPluginOutdateInfo(plugin).catch(err => console.error(err.stack)),
+        plugins.map((plugin) =>
+          this.getPluginOutdateInfo(plugin).catch((err) => console.error(err.stack)),
         ),
       )
     ).filter(Boolean)
@@ -317,7 +317,7 @@ class PluginManager extends EventEmitter {
       : await findInstalledTarball(join(PLUGIN_PATH, 'node_modules'), packageSource)
 
     // 4) Unload plugin if it's running
-    const nowPlugin = getStore('plugins').find(plugin => plugin.packageName === packageName)
+    const nowPlugin = getStore('plugins').find((plugin) => plugin.packageName === packageName)
     if (nowPlugin) {
       try {
         unloadPlugin(nowPlugin)
@@ -379,13 +379,13 @@ class PluginManager extends EventEmitter {
     const modulePath = join(PLUGIN_PATH, 'node_modules')
     await safePhysicallyRemove(modulePath)
     await ensureDir(modulePath)
-    await Promise.all(plugins.map(plugin => this.uninstallPlugin(plugin)))
+    await Promise.all(plugins.map((plugin) => this.uninstallPlugin(plugin)))
 
     if (!repair) {
       return
     }
 
-    await Promise.all(plugins.map(plugin => this.installPlugin(plugin.packageName)))
+    await Promise.all(plugins.map((plugin) => this.installPlugin(plugin.packageName)))
   }
 
   async enablePlugin(plugin) {
@@ -437,7 +437,7 @@ const pluginManager = new PluginManager()
 
 window.reloadPlugin = async (pkgName, verbose = false) => {
   const { plugins } = getStore()
-  const plugin = plugins.find(pkg => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName))
+  const plugin = plugins.find((pkg) => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName))
   if (!plugin) {
     console.error(`plugin "${pkgName}" not found`)
     return

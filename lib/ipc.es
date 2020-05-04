@@ -51,16 +51,16 @@ class IPC extends EventEmitter {
     return
   }
 
-  unregisterAll = scope => {
+  unregisterAll = (scope) => {
     delete this.data[scope]
     this.emit('update', { type: '@@unregisterAllIPC', value: { scope } })
   }
 
-  access = scope => {
+  access = (scope) => {
     return this.data[scope]
   }
 
-  list = () => mapValues(this.data, scope => mapValues(scope, () => true))
+  list = () => mapValues(this.data, (scope) => mapValues(scope, () => true))
 
   // key:    string
   // args:   arguments passing to api

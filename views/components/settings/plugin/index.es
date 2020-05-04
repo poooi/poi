@@ -94,7 +94,7 @@ export class PluginConfig extends Component {
       await PluginManager.getOutdatedPlugins(isNotif)
       if (this.props.autoUpdate) {
         const plugins = PluginManager.getInstalledPlugins()
-        await Promise.each(Object.keys(plugins), async index => {
+        await Promise.each(Object.keys(plugins), async (index) => {
           if (plugins[index].isOutdated) {
             try {
               await this.handleUpdate(index)()
@@ -113,7 +113,7 @@ export class PluginConfig extends Component {
     })
   }
 
-  handleEnable = memoize(index => async () => {
+  handleEnable = memoize((index) => async () => {
     const plugin = this.props.plugins[index]
     switch (PluginManager.getStatusOfPlugin(plugin)) {
       case PluginManager.DISABLED:
@@ -125,11 +125,11 @@ export class PluginConfig extends Component {
     }
   })
 
-  handleReload = memoize(index => () => {
+  handleReload = memoize((index) => () => {
     PluginManager.reloadPlugin(this.props.plugins[index])
   })
 
-  handleInstall = memoize(name => async () => {
+  handleInstall = memoize((name) => async () => {
     let installingPluginNames = [...this.state.installingPluginNames, name]
     this.setState({
       installingPluginNames,
@@ -152,7 +152,7 @@ export class PluginConfig extends Component {
     }
   })
 
-  handleUpdate = memoize(index => async () => {
+  handleUpdate = memoize((index) => async () => {
     this.setState({ npmWorking: true })
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
@@ -176,7 +176,7 @@ export class PluginConfig extends Component {
     })
     const settings = PluginManager.getUninstalledPluginSettings()
 
-    await Promise.each(Object.keys(settings), async name => {
+    await Promise.each(Object.keys(settings), async (name) => {
       try {
         await this.handleInstall(name)()
       } catch (e) {
@@ -207,7 +207,7 @@ export class PluginConfig extends Component {
     })
     const plugins = PluginManager.getInstalledPlugins()
 
-    await Promise.each(Object.keys(plugins), async index => {
+    await Promise.each(Object.keys(plugins), async (index) => {
       if (plugins[index].isOutdated) {
         try {
           await this.handleUpdate(index)()
@@ -222,7 +222,7 @@ export class PluginConfig extends Component {
     })
   }
 
-  handleRemove = memoize(index => async () => {
+  handleRemove = memoize((index) => async () => {
     this.setState({ npmWorking: true })
     try {
       const plugins = PluginManager.getInstalledPlugins()
@@ -251,12 +251,12 @@ export class PluginConfig extends Component {
     shell.openItem(path.join(PLUGIN_PATH, 'node_modules'))
   }
 
-  handleOpenSite = e => {
+  handleOpenSite = (e) => {
     shell.openExternal('https://www.npmjs.com/search?q=poi-plugin')
     e.preventDefault()
   }
 
-  handleInstallByName = async name => {
+  handleInstallByName = async (name) => {
     this.setState({ manuallyInstallStatus: 1 })
     try {
       await this.handleInstall(name)()

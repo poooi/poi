@@ -13,7 +13,7 @@ window.addEventListener('game.response', ({ detail: { path, body } }) => {
   const fleets = get(state, 'info.fleets')
   const ships = get(state, 'info.ships')
 
-  const checkSlot = ship => {
+  const checkSlot = (ship) => {
     if (!ship) {
       return false
     }
@@ -28,8 +28,8 @@ window.addEventListener('game.response', ({ detail: { path, body } }) => {
 
   const flag = fleets
     .filter((_, fleetId) => ![3, 4, 5].includes(fleetStateSelectorFactory(fleetId)(state)))
-    .flatMap(fleet => fleet.api_ship)
-    .some(shipId => checkSlot(ships[shipId]))
+    .flatMap((fleet) => fleet.api_ship)
+    .some((shipId) => checkSlot(ships[shipId]))
 
   if (flag) {
     window.toast(i18next.t('main:Unused equipment slot appears in your fleet'), {

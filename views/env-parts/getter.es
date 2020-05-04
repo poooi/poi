@@ -13,8 +13,8 @@ function object2Array(obj) {
   return buildArray(map(obj, (v, k) => [k, v]))
 }
 function object2ArraySelectorFactory(path) {
-  const pathSelector = state => get(state, path)
-  return createSelector(pathSelector, obj => object2Array(obj))
+  const pathSelector = (state) => get(state, path)
+  return createSelector(pathSelector, (obj) => object2Array(obj))
 }
 
 // User config
@@ -151,7 +151,7 @@ Object.defineProperty(window, '_ndocks', {
 })
 Object.defineProperty(window, '_eventMapRanks', {
   get: () => {
-    return mapValues(window.getStore('info.maps'), m => get(m, 'api_eventmap.api_selected_rank'))
+    return mapValues(window.getStore('info.maps'), (m) => get(m, 'api_eventmap.api_selected_rank'))
   },
 })
 Object.defineProperty(window, '_serverIp', {
@@ -213,10 +213,10 @@ initShips()
 initEquips()
 initWebviewWidth()
 
-const shipsObserver = observer(state => state.info.ships, initShips)
+const shipsObserver = observer((state) => state.info.ships, initShips)
 
-const slotitemsObserver = observer(state => state.info.equips, initEquips)
+const slotitemsObserver = observer((state) => state.info.equips, initEquips)
 
-const webviewSizeObserver = observer(state => state.layout.webview.width, initWebviewWidth)
+const webviewSizeObserver = observer((state) => state.layout.webview.width, initWebviewWidth)
 
 observe(store, [shipsObserver, slotitemsObserver, webviewSizeObserver])

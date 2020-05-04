@@ -100,4 +100,4 @@ async function downloadSymbols(options) {
   })
 }
 
-main().catch(e => console.error(e))
+main().catch((e) => console.error(e))

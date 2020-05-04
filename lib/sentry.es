@@ -3,13 +3,13 @@ import { isString, includes, get, each, takeRight, split } from 'lodash'
 import path from 'path'
 
 export const init = ({ build, paths }) => {
-  const fromatRelative = url => {
+  const fromatRelative = (url) => {
     if (url.startsWith('app://')) {
       return url
     }
 
     let result = url
-    each(paths, parent => {
+    each(paths, (parent) => {
       if (url.startsWith(parent)) {
         const relative = path.relative(parent, url)
         if (!relative.startsWith('..')) {
@@ -36,8 +36,8 @@ export const init = ({ build, paths }) => {
         return null
       }
 
-      each(get(event, 'exception.values'), value => {
-        each(get(value, 'stacktrace.frames'), frame => {
+      each(get(event, 'exception.values'), (value) => {
+        each(get(value, 'stacktrace.frames'), (frame) => {
           if (frame.filename) {
             frame.filename = fromatRelative(frame.filename)
           }
@@ -56,7 +56,7 @@ export const init = ({ build, paths }) => {
     },
   })
 
-  Sentry.configureScope(scope => {
+  Sentry.configureScope((scope) => {
     scope.setTag('build', isString(build) ? build.substring(0, 8) : 'DEV')
   })
 }

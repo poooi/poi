@@ -28,7 +28,7 @@ import {
   Gradient,
 } from 'views/components/ship-parts/styled-components'
 
-const SquadSelectorFactory = memoize(squardId =>
+const SquadSelectorFactory = memoize((squardId) =>
   createSelector(
     [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
     (landbase, equipsData) => ({

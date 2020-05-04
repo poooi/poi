@@ -31,5 +31,6 @@ module.exports = {
     ],
     'block-no-empty': null,
     'declaration-colon-newline-after': null,
+    'value-keyword-case': ['lower', { ignoreKeywords: [/dummyValue/] }]
   },
 }

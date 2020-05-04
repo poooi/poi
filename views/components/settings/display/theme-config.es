@@ -87,14 +87,14 @@ export class ThemeConfig extends Component {
     avatarType: PropTypes.string,
   }
 
-  handleSetTheme = e => {
+  handleSetTheme = (e) => {
     const theme = e.target.value
     if (this.props.theme !== theme) {
       return window.applyTheme(theme)
     }
   }
 
-  handleOpenCustomCss = e => {
+  handleOpenCustomCss = (e) => {
     try {
       const d = path.join(EXROOT, 'hack', 'custom.css')
       fs.ensureFileSync(d)
@@ -107,11 +107,11 @@ export class ThemeConfig extends Component {
     }
   }
 
-  handleSetVibrancy = e => {
+  handleSetVibrancy = (e) => {
     config.set('poi.appearance.vibrant', parseInt(e.target.value))
   }
 
-  handleSetAvatarType = e => {
+  handleSetAvatarType = (e) => {
     config.set('poi.appearance.avatarType', e.target.value)
   }
 

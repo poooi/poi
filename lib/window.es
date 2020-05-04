@@ -15,11 +15,11 @@ const withinDisplay = (display, x, y) => {
   return inRange(x, wa.x, wa.width) && inRange(y, wa.y, wa.height)
 }
 
-const normalizePosition = options => {
+const normalizePosition = (options) => {
   // user's workArea may change during game
   const { workArea } = screen.getPrimaryDisplay()
   let { x, y } = options
-  if (!screen.getAllDisplays().some(display => withinDisplay(display, x, y))) {
+  if (!screen.getAllDisplays().some((display) => withinDisplay(display, x, y))) {
     x = workArea.x
     y = workArea.y
   }
@@ -31,7 +31,7 @@ const normalizePosition = options => {
 }
 
 export default {
-  createWindow: options => {
+  createWindow: (options) => {
     options = Object.assign(
       {
         show: false,
@@ -60,7 +60,7 @@ export default {
     })
     // Close window really
     if (options.realClose) {
-      current.on('closed', e => {
+      current.on('closed', (e) => {
         if (options.indexName) {
           delete windowsIndex[options.indexName]
         }
@@ -68,13 +68,13 @@ export default {
         windows.splice(idx, 1)
       })
     } else if (options.forceMinimize) {
-      current.on('close', e => {
+      current.on('close', (e) => {
         current.minimize()
         if (!forceClose && !pluginUnload) {
           e.preventDefault()
         }
       })
-      current.on('closed', e => {
+      current.on('closed', (e) => {
         pluginUnload = false
         if (options.indexName) {
           delete windowsIndex[options.indexName]
@@ -83,7 +83,7 @@ export default {
         windows.splice(idx, 1)
       })
     } else {
-      current.on('close', e => {
+      current.on('close', (e) => {
         if (current.isFullScreen()) {
           current.once('leave-full-screen', current.hide)
           current.setFullScreen(false)
@@ -94,7 +94,7 @@ export default {
           e.preventDefault()
         }
       })
-      current.on('closed', e => {
+      current.on('closed', (e) => {
         pluginUnload = false
         if (options.indexName) {
           delete windowsIndex[options.indexName]
@@ -105,7 +105,7 @@ export default {
     }
     // Draggable
     if (!options.navigatable) {
-      current.webContents.on('will-navigate', e => {
+      current.webContents.on('will-navigate', (e) => {
         e.preventDefault()
       })
     }
@@ -124,7 +124,7 @@ export default {
       windows[i] = null
     }
   },
-  closeWindow: win => {
+  closeWindow: (win) => {
     pluginUnload = true
     win.close()
   },
@@ -164,7 +164,7 @@ export default {
   getWindowsIndex: () => {
     return global.windowsIndex
   },
-  getWindow: name => {
+  getWindow: (name) => {
     return global.windowsIndex[name]
   },
   getMainWindow: () => {

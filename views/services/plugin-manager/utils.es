@@ -47,15 +47,15 @@ function calculateShasum(path) {
       const hash = crypto.createHash('sha1')
       const stream = createReadStream(path)
 
-      stream.on('data', data => {
+      stream.on('data', (data) => {
         hash.update(data, 'utf8')
       })
 
-      stream.on('end', function() {
+      stream.on('end', function () {
         resolve(hash.digest('hex'))
       })
 
-      stream.on('error', function(e) {
+      stream.on('error', function (e) {
         reject(e)
       })
     } catch (e) {
@@ -68,10 +68,10 @@ export const findInstalledTarball = async (pluginRoot, tarballPath) => {
   const filename = basename(tarballPath)
   const pluginPaths = await promisify(glob)(join(pluginRoot, 'poi-plugin-*'))
   const packageDatas = await Promise.all(
-    pluginPaths.map(pluginPath => promisify(readJson)(join(pluginPath, 'package.json'))),
+    pluginPaths.map((pluginPath) => promisify(readJson)(join(pluginPath, 'package.json'))),
   )
   // packageJson._required.raw should contain full path upon installation
-  const nameMatchDatas = packageDatas.filter(packageData =>
+  const nameMatchDatas = packageDatas.filter((packageData) =>
     get(packageData, '_requested.raw', '').endsWith(filename),
   )
   if (nameMatchDatas.length === 1) {
@@ -84,7 +84,7 @@ export const findInstalledTarball = async (pluginRoot, tarballPath) => {
   // installed from the same path. Unbelievable huh? We can still match checksum.
   // packageJson._shasum should contain shasum.
   const shasum = await calculateShasum(tarballPath)
-  const shasumMatchDatas = nameMatchDatas.filter(data => data._shasum === shasum)
+  const shasumMatchDatas = nameMatchDatas.filter((data) => data._shasum === shasum)
   if (!shasumMatchDatas[0])
     throw new Error(
       `Error: Can' find a package installed from ${tarballPath} matching shasum ${shasum}.`,
@@ -94,7 +94,7 @@ export const findInstalledTarball = async (pluginRoot, tarballPath) => {
 }
 
 const runScriptAsync = (scriptPath, args, options) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const proc = child_process.fork(scriptPath, args, options)
     proc.on('exit', () => resolve())
   })
@@ -144,8 +144,8 @@ export function updateI18n(plugin) {
   if (i18nFile != null) {
     const namespace = plugin.id
     each(
-      window.LOCALES.map(lng => lng.locale),
-      language => {
+      window.LOCALES.map((lng) => lng.locale),
+      (language) => {
         i18next.addGlobalI18n(namespace)
         i18next.addResourceBundleDebounce(
           language,
@@ -310,7 +310,7 @@ export async function disablePlugin(plugin) {
   return plugin
 }
 
-const postEnableProcess = plugin => {
+const postEnableProcess = (plugin) => {
   if (plugin.isBroken) {
     return plugin
   }
@@ -370,7 +370,7 @@ const postEnableProcess = plugin => {
     }
     const windowURL = normalizeURL(plugin.windowURL)
     if (plugin.multiWindow) {
-      plugin.handleClick = function() {
+      plugin.handleClick = function () {
         const pluginWindow = windowManager.createWindow(windowOptions)
         pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
         pluginWindow.setAutoHideMenuBar(true)
@@ -380,13 +380,13 @@ const postEnableProcess = plugin => {
       }
     } else if (plugin.realClose) {
       plugin.pluginWindow = null
-      plugin.handleClick = function() {
+      plugin.handleClick = function () {
         if (plugin.pluginWindow == null) {
           plugin.pluginWindow = windowManager.createWindow(windowOptions)
           plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
           plugin.pluginWindow.setAutoHideMenuBar(true)
           plugin.pluginWindow.setMenuBarVisibility(false)
-          plugin.pluginWindow.on('close', function() {
+          plugin.pluginWindow.on('close', function () {
             plugin.pluginWindow = null
           })
           plugin.pluginWindow.loadURL(windowURL)
@@ -401,7 +401,7 @@ const postEnableProcess = plugin => {
       plugin.pluginWindow.setAutoHideMenuBar(true)
       plugin.pluginWindow.setMenuBarVisibility(false)
       plugin.pluginWindow.loadURL(windowURL)
-      plugin.handleClick = function() {
+      plugin.handleClick = function () {
         return plugin.pluginWindow.show()
       }
     }
@@ -449,7 +449,7 @@ export function unloadPlugin(plugin) {
 }
 
 export function notifyFailed(state, npmConfig) {
-  const plugins = state.filter(plugin => plugin.isBroken)
+  const plugins = state.filter((plugin) => plugin.isBroken)
   const unreadList = []
   const reinstallList = []
   for (let i = 0; i < plugins.length; i++) {
@@ -469,18 +469,18 @@ export function notifyFailed(state, npmConfig) {
 
 export async function repairDep(brokenList, npmConfig) {
   const depList = (
-    await new Promise(res => {
+    await new Promise((res) => {
       glob(path.join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches))
     })
-  ).filter(p => !p.includes('poi-plugin'))
-  depList.forEach(p => {
+  ).filter((p) => !p.includes('poi-plugin'))
+  depList.forEach((p) => {
     try {
       require(p)
     } catch (e) {
       safePhysicallyRemove(p, npmConfig)
     }
   })
-  brokenList.forEach(pluginName => {
+  brokenList.forEach((pluginName) => {
     installPackage(pluginName, null, npmConfig)
   })
 }
@@ -488,7 +488,7 @@ export async function repairDep(brokenList, npmConfig) {
 // Unlink a path if it's a symlink.
 // Do nothing (but logging error) if it's a git repo.
 // Remove the directory otherwise.
-export const safePhysicallyRemove = async packagePath => {
+export const safePhysicallyRemove = async (packagePath) => {
   let packageStat
   try {
     packageStat = await promisify(lstat)(packagePath)
@@ -519,7 +519,7 @@ export const safePhysicallyRemove = async packagePath => {
  * @param {String} prefix path to install the npm package
  * @return NpmConfig { registry, prefix, enableBetaPluginCheck, http_proxy? }
  */
-export const getNpmConfig = prefix => {
+export const getNpmConfig = (prefix) => {
   const mirrorConf = config.get('packageManager.mirrorName')
   const useProxy = config.get('packageManager.proxy', false)
   const enableBetaPluginCheck = config.get('packageManager.enableBetaPluginCheck')

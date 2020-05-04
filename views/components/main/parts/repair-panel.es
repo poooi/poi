@@ -45,7 +45,7 @@ const Watermark = styled(WatermarkL)`
 
 const inRepairShipsDataSelector = createSelector(
   [inRepairShipsIdSelector, shipsSelector],
-  (inRepairShipsId, ships) => inRepairShipsId.map(shipId => ships[shipId]),
+  (inRepairShipsId, ships) => inRepairShipsId.map((shipId) => ships[shipId]),
 )
 
 const EmptyDock = ({ state }) => (
@@ -54,7 +54,7 @@ const EmptyDock = ({ state }) => (
   </EmptyDockWrapper>
 )
 
-const getPanelDimension = width => {
+const getPanelDimension = (width) => {
   if (width > 480) {
     return 4
   }
@@ -83,7 +83,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
       constSelector,
       inRepairShipsDataSelector,
       miscSelector,
-      state => get(state, 'config.poi.appearance.avatar', true),
+      (state) => get(state, 'config.poi.appearance.avatar', true),
     ],
     (repairs, { $ships }, inRepairShips, { canNotify }, enableAvatar) => ({
       repairs,
@@ -98,7 +98,7 @@ export class RepairPanel extends Component {
   basicNotifyConfig = {
     type: 'repair',
     title: this.props.t('main:Docking'),
-    message: names => `${joinString(names, ', ')} ${this.props.t('main:repair completed')}`,
+    message: (names) => `${joinString(names, ', ')} ${this.props.t('main:repair completed')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png'),
     preemptTime: 60,
   }
@@ -127,7 +127,7 @@ export class RepairPanel extends Component {
     this.updateDimension()
   }
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.enableAvatar !== this.props.enableAvatar) {
       this.updateDimension()
     }
@@ -145,7 +145,7 @@ export class RepairPanel extends Component {
       <ResizeSensor onResize={this.handleResize}>
         <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
           <Panel>
-            {range(0, 4).map(i => {
+            {range(0, 4).map((i) => {
               const emptyRepair = {
                 api_complete_time: 0,
                 api_complete_time_str: '0',

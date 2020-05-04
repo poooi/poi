@@ -17,7 +17,7 @@ export class PluginSettingWrapper extends Component {
   }
 
   componentDidCatch = (error, info) => {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtra('componentStack', info.componentStack)
       scope.setTag('area', this.props.plugin.id)
       const eventId = Sentry.captureException(error)

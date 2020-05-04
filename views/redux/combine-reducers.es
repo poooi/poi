@@ -1,18 +1,6 @@
 const ActionTypes = {
-  INIT:
-    '@@redux/INIT' +
-    Math.random()
-      .toString(36)
-      .substring(7)
-      .split('')
-      .join('.'),
-  REPLACE:
-    '@@redux/REPLACE' +
-    Math.random()
-      .toString(36)
-      .substring(7)
-      .split('')
-      .join('.'),
+  INIT: '@@redux/INIT' + Math.random().toString(36).substring(7).split('').join('.'),
+  REPLACE: '@@redux/REPLACE' + Math.random().toString(36).substring(7).split('').join('.'),
 }
 
 function getUndefinedStateErrorMessage(key, action) {
@@ -27,7 +15,7 @@ function getUndefinedStateErrorMessage(key, action) {
 }
 
 function assertReducerShape(reducers) {
-  Object.keys(reducers).forEach(key => {
+  Object.keys(reducers).forEach((key) => {
     const reducer = reducers[key]
     const initialState = reducer(undefined, { type: ActionTypes.INIT })
 
@@ -42,12 +30,7 @@ function assertReducerShape(reducers) {
     }
 
     const type =
-      '@@redux/PROBE_UNKNOWN_ACTION_' +
-      Math.random()
-        .toString(36)
-        .substring(7)
-        .split('')
-        .join('.')
+      '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.')
     if (typeof reducer(undefined, { type }) === 'undefined') {
       throw new Error(
         `Reducer "${key}" returned undefined when probed with a random type. ` +

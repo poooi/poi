@@ -23,7 +23,7 @@ const { ROOT } = global
 const gunzipAsync = util.promisify(gunzip)
 const inflateAsync = util.promisify(inflate)
 
-const delay = time => new Promise(res => setTimeout(res, time))
+const delay = (time) => new Promise((res) => setTimeout(res, time))
 
 const isStaticResource = (pathname, hostname) => {
   if (pathname.startsWith('/kcs2/')) {
@@ -59,12 +59,12 @@ const isStaticResource = (pathname, hostname) => {
   return false
 }
 
-const getCachePath = pathname => {
+const getCachePath = (pathname) => {
   const dir = config.get('poi.misc.cache.path', global.DEFAULT_CACHE_PATH)
   return path.join(dir, pathname)
 }
 
-const findHack = pathname => {
+const findHack = (pathname) => {
   let loc = getCachePath(path.join('KanColle', pathname))
   const sp = loc.split('.')
   const ext = sp.pop()
@@ -103,7 +103,7 @@ const findCache = (pathname, hostname) => {
   }
 }
 
-const isKancolleGameApi = pathname => pathname.startsWith('/kcsapi')
+const isKancolleGameApi = (pathname) => pathname.startsWith('/kcsapi')
 
 const resolveProxyUrl = () => {
   switch (config.get('proxy.use')) {
@@ -148,7 +148,7 @@ class Proxy extends EventEmitter {
       () => {
         this.port = this.server.address().port
         this.setProxy()
-        config.on('config.set', path => {
+        config.on('config.set', (path) => {
           if (path.startsWith('proxy')) {
             this.setProxy()
           }
@@ -169,7 +169,7 @@ class Proxy extends EventEmitter {
     )
   }
 
-  updateServerInfo = urlPattern => {
+  updateServerInfo = (urlPattern) => {
     if (isKancolleGameApi(urlPattern.pathname) && this.serverInfo.ip !== urlPattern.hostname) {
       if (this.serverList[urlPattern.hostname]) {
         this.serverInfo = {
@@ -246,10 +246,10 @@ class Proxy extends EventEmitter {
     }
   }
 
-  fetchRequest = req =>
-    new Promise(resolve => {
+  fetchRequest = (req) =>
+    new Promise((resolve) => {
       const reqBody = []
-      req.on('data', chunk => {
+      req.on('data', (chunk) => {
         reqBody.push(chunk)
       })
       req.on('end', () => {
@@ -321,11 +321,11 @@ class Proxy extends EventEmitter {
     const isGzip = /gzip/i.test(contentEncoding)
     const isDeflat = /deflate/i.test(contentEncoding)
     const unzipped = isGzip
-      ? await gunzipAsync(resData).catch(e => {
+      ? await gunzipAsync(resData).catch((e) => {
           return null
         })
       : isDeflat
-      ? await inflateAsync(resData).catch(e => {
+      ? await inflateAsync(resData).catch((e) => {
           return null
         })
       : resData
@@ -341,34 +341,34 @@ class Proxy extends EventEmitter {
 
   fetchResponse = (options, rawReqBody, cRes) =>
     new Promise((resolve, reject) => {
-      const proxyRequest = http.request(options, res => {
+      const proxyRequest = http.request(options, (res) => {
         const { statusCode, headers } = res
         const resDataChunks = []
 
         cRes.writeHead(statusCode, headers)
         res.pipe(cRes)
 
-        res.on('data', chunk => {
+        res.on('data', (chunk) => {
           resDataChunks.push(chunk)
         })
 
         res.on('end', () => {
           this.parseResponse(resDataChunks, headers)
-            .then(data =>
+            .then((data) =>
               resolve({
                 data,
                 statusCode,
               }),
             )
-            .catch(e => resolve({ statusCode }))
+            .catch((e) => resolve({ statusCode }))
         })
 
-        res.on('error', error => {
+        res.on('error', (error) => {
           resolve({ error })
         })
       })
 
-      proxyRequest.on('error', error => {
+      proxyRequest.on('error', (error) => {
         resolve({ error })
       })
 
@@ -419,10 +419,10 @@ class Proxy extends EventEmitter {
           client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
           remote.write(head)
         })
-        client.on('data', data => {
+        client.on('data', (data) => {
           remote.write(data)
         })
-        remote.on('data', data => {
+        remote.on('data', (data) => {
           client.write(data)
         })
         break
@@ -461,11 +461,11 @@ class Proxy extends EventEmitter {
     remote.on('end', () => {
       client.end()
     })
-    client.on('error', e => {
+    client.on('error', (e) => {
       error(e)
       remote.destroy()
     })
-    remote.on('error', e => {
+    remote.on('error', (e) => {
       error(e)
       client.destroy()
     })

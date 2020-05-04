@@ -17,14 +17,14 @@ function isSubdirectory(parent, dir) {
  * we use this to filter out upper folders
  * @param allowedPath {string[]} the limit we want
  */
-export const setAllowedPath = function(allowedPath) {
-  Module._nodeModulePaths = function(from) {
+export const setAllowedPath = function (allowedPath) {
+  Module._nodeModulePaths = function (from) {
     // use function style instead of arrows, expecting some possible perf gain
 
     // putting allowed path in front so that main program's module path has higher priority
     return allowedPath.concat(
-      _nodeModulePaths.call(this, from).filter(function(dir) {
-        return allowedPath.some(function(parent) {
+      _nodeModulePaths.call(this, from).filter(function (dir) {
+        return allowedPath.some(function (parent) {
           return isSubdirectory(parent, dir)
         })
       }),

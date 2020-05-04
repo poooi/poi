@@ -33,9 +33,9 @@ import {
 } from 'views/components/ship-parts/styled-components'
 import { isSpAttack } from 'views/utils/sp_attack'
 
-const shipRowWidthSelector = state => get(state, 'layout.shippane.width', 450)
+const shipRowWidthSelector = (state) => get(state, 'layout.shippane.width', 450)
 
-const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
+const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
   createSelector(
     [fleetNameSelectorFactory(fleetId), fleetStateSelectorFactory(fleetId)],
     (fleetName, fleetState) => ({
@@ -58,12 +58,12 @@ const ShipViewSwitchButton = connect((state, { fleetId }) =>
   </Button>
 ))
 
-const fleetShipViewDataSelectorFactory = memoize(fleetId =>
+const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
   createSelector(
     [
       fleetShipsIdSelectorFactory(fleetId),
       fleetShipsDataWithEscapeSelectorFactory(fleetId),
-      state => state.sortie.spAttackUsed,
+      (state) => state.sortie.spAttackUsed,
     ],
     (shipsId, shipsData, spAttackUsed) => ({
       shipsId,
@@ -95,8 +95,8 @@ const FleetShipView = connect((state, { fleetId }) =>
 
 const LBView = compose(
   withNamespaces(['resources']),
-  connect(state => ({
-    areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
+  connect((state) => ({
+    areaIds: get(state, 'info.airbase', []).map((a) => a.api_area_id),
     mapareas: get(state, 'const.$mapareas', {}),
   })),
 )(({ areaIds, mapareas, t, enableAvatar, width }) => (
@@ -156,13 +156,13 @@ export class reactClass extends Component {
     prevFleetId: null,
   }
 
-  handleTransitionEnd = i => {
+  handleTransitionEnd = (i) => {
     if (i === this.state.prevFleetId) {
       this.setState({ prevFleetId: null })
     }
   }
 
-  handleClick = idx => {
+  handleClick = (idx) => {
     if (idx != this.state.activeFleetId) {
       this.props.dispatch({
         type: '@@TabSwitch',
@@ -182,8 +182,8 @@ export class reactClass extends Component {
     })
   }
 
-  handleResize = entries => {
-    entries.forEach(entry => {
+  handleResize = (entries) => {
+    entries.forEach((entry) => {
       const { width, height } = entry.contentRect
       if (
         width !== 0 &&
@@ -211,12 +211,12 @@ export class reactClass extends Component {
         <ShipCard onDoubleClick={this.changeMainView} className="ship-card">
           <FleetNameButtonContainer className="div-row fleet-name-button-container">
             <FleetNameButton className="fleet-name-button">
-              {times(4).map(i => (
+              {times(4).map((i) => (
                 <ShipViewSwitchButton
                   key={i}
                   fleetId={i}
                   disabled={i + 1 > this.props.fleetCount}
-                  onClick={e => this.handleClick(i)}
+                  onClick={(e) => this.handleClick(i)}
                   activeFleetId={activeFleetId}
                 />
               ))}
@@ -225,7 +225,7 @@ export class reactClass extends Component {
               key={4}
               fleetId={4}
               disabled={this.props.airBaseCnt === 0}
-              onClick={e => this.handleClick(4)}
+              onClick={(e) => this.handleClick(4)}
               activeFleetId={activeFleetId}
               isMini={false}
             />
@@ -233,7 +233,7 @@ export class reactClass extends Component {
           <ResizeSensor onResize={this.handleResize}>
             <ShipTabContainer className="ship-tab-container">
               <ShipTabContent className="ship-tab-content">
-                {times(4).map(i => (
+                {times(4).map((i) => (
                   <ShipDeck
                     className="ship-deck"
                     onTransitionEnd={() => this.handleTransitionEnd(i)}

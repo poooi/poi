@@ -10,7 +10,7 @@ let sortieStatus, escapedPos, fleets, ships, equips
 const LOOP_TIMES = 100
 const MAX_ID = 500
 
-const randomSetSlot = ship => {
+const randomSetSlot = (ship) => {
   const index = random(0, 4)
   if (index == 4) {
     ship.api_slot_ex = random(2, 3)
@@ -28,10 +28,10 @@ describe('Validate sortie dangerous check', () => {
       shipIds.slice(12, 18),
       shipIds.slice(18),
     ])
-    fleets = range(4).map(id => ({ api_ship: chunks[id] }))
+    fleets = range(4).map((id) => ({ api_ship: chunks[id] }))
     sortieStatus = [true, false, false, false]
     escapedPos = []
-    const _ships = range(1, MAX_ID).map(id => ({
+    const _ships = range(1, MAX_ID).map((id) => ({
       api_id: id,
       api_maxhp: 32,
       api_nowhp: 16,
@@ -93,8 +93,8 @@ describe('Validate sortie dangerous check', () => {
   })
 
   it('heavy damage for sortie fleet is dangerous (all possible slots)', () => {
-    range(0, 4).forEach(fleetId => {
-      range(7).forEach(index => {
+    range(0, 4).forEach((fleetId) => {
+      range(7).forEach((index) => {
         const { api_ship } = fleets[fleetId]
         if (index >= api_ship.length) {
           return
@@ -122,8 +122,8 @@ describe('Validate sortie dangerous check', () => {
   })
 
   it('heavy damage for sortie fleet for ship escaped is safe (all possible slots)', () => {
-    range(0, 4).forEach(fleetId => {
-      range(7).forEach(index => {
+    range(0, 4).forEach((fleetId) => {
+      range(7).forEach((index) => {
         reset()
         const { api_ship } = fleets[fleetId]
         if (index >= api_ship.length) {
@@ -154,7 +154,7 @@ describe('Validate sortie dangerous check', () => {
       reset()
       const { api_ship } = fleets[0]
       const sampleCount = random(1, api_ship.length - 1)
-      sampleSize(api_ship.slice(1), sampleCount).forEach(id => (ships[id].api_nowhp = 8))
+      sampleSize(api_ship.slice(1), sampleCount).forEach((id) => (ships[id].api_nowhp = 8))
       expect(
         damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
           .length,
@@ -169,8 +169,8 @@ describe('Validate sortie dangerous check', () => {
       const damageCount = random(1, api_ship.length - 1)
       const repairCount = random(1, damageCount)
       const damages = sampleSize(api_ship.slice(1), damageCount)
-      damages.forEach(id => (ships[id].api_nowhp = 8))
-      sampleSize(damages, repairCount).forEach(id => randomSetSlot(ships[id]))
+      damages.forEach((id) => (ships[id].api_nowhp = 8))
+      sampleSize(damages, repairCount).forEach((id) => randomSetSlot(ships[id]))
       expect(
         damagedCheck({ $ships, $equips }, { sortieStatus, escapedPos }, { fleets, ships, equips })
           .length,
@@ -185,16 +185,16 @@ describe('Validate sortie dangerous check', () => {
       const { api_ship: mainFleet } = fleets[0]
       const { api_ship: escortFleet } = fleets[1]
 
-      const setFleet = fleet => {
+      const setFleet = (fleet) => {
         const damageCount = random(1, fleet.length)
         const repairCount = random(1, damageCount)
         let count = damageCount - repairCount
 
         const damages = sampleSize(fleet, damageCount)
-        damages.forEach(id => (ships[id].api_nowhp = 8))
+        damages.forEach((id) => (ships[id].api_nowhp = 8))
 
         const repairs = sampleSize(damages, repairCount)
-        repairs.forEach(id => randomSetSlot(ships[id]))
+        repairs.forEach((id) => randomSetSlot(ships[id]))
 
         // both flagships are always safe
         if (damages.includes(fleet[0]) && !repairs.includes(fleet[0])) {

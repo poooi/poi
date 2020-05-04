@@ -26,7 +26,7 @@ const ToasterPositioned = styled(Toaster)`
     `}
 `
 
-@connect(state => ({
+@connect((state) => ({
   webviewWidth: get(state, 'layout.webview.width'),
   isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
 }))

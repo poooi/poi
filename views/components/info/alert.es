@@ -130,7 +130,7 @@ export class PoiAlert extends PureComponent {
     this.setState({ showHistory: !this.state.showHistory })
   }
 
-  handleAddAlert = e => {
+  handleAddAlert = (e) => {
     const nowTS = Date.now()
     const value = {
       ...{
@@ -164,9 +164,9 @@ export class PoiAlert extends PureComponent {
     }
   }
 
-  handleRefResize = entries => {
+  handleRefResize = (entries) => {
     const newState = {}
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.contentRect) {
         if (entry.target === this.alertMain.current) {
           const { width: containerWidth, height: containerHeight } = entry.contentRect
@@ -283,7 +283,7 @@ export class PoiAlert extends PureComponent {
               containerHeight={this.state.containerHeight}
               onClick={this.toggleHistory}
             >
-              {this.state.history.map(h => (
+              {this.state.history.map((h) => (
                 <AlertLogContent
                   key={h.ts}
                   className={`bp3-callout bp3-intent-${h.type}`}

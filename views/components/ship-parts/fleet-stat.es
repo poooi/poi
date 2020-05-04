@@ -101,13 +101,14 @@ class CountdownLabel extends Component {
   shouldComponentUpdate = (nextProps, nextState) => {
     return nextProps.completeTime !== this.props.completeTime
   }
-  tick = timeRemaining => {
+  tick = (timeRemaining) => {
     if (this.props.shouldNotify && this.props.completeTime >= 0) this.tryNotify()
   }
   static basicNotifyConfig = {
     type: 'morale',
     title: i18next.t('main:Morale'),
-    message: names => `${joinString(names, ', ')} ${i18next.t('main:have recovered from fatigue')}`,
+    message: (names) =>
+      `${joinString(names, ', ')} ${i18next.t('main:have recovered from fatigue')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
   }
   tryNotify = () => {
@@ -131,15 +132,15 @@ class CountdownLabel extends Component {
   }
 }
 
-const tykuSelectorFactory = memoize(fleetId =>
+const tykuSelectorFactory = memoize((fleetId) =>
   createSelector(fleetShipsEquipDataWithEscapeSelectorFactory(fleetId), (equipsData = []) =>
     getTyku(equipsData),
   ),
 )
 
-const admiralLevelSelector = createSelector(basicSelector, basic => basic.api_level)
+const admiralLevelSelector = createSelector(basicSelector, (basic) => basic.api_level)
 
-const sakuSelectorFactory = memoize(fleetId =>
+const sakuSelectorFactory = memoize((fleetId) =>
   createSelector(
     [
       fleetShipsDataWithEscapeSelectorFactory(fleetId),
@@ -156,13 +157,13 @@ const sakuSelectorFactory = memoize(fleetId =>
   ),
 )
 
-const speedSelectorFactory = memoize(fleetId =>
+const speedSelectorFactory = memoize((fleetId) =>
   createSelector([fleetShipsDataWithEscapeSelectorFactory(fleetId)], (shipsData = []) =>
     getFleetSpeed(shipsData),
   ),
 )
 
-const fleetStatSelectorFactory = memoize(fleetId =>
+const fleetStatSelectorFactory = memoize((fleetId) =>
   createSelector(
     [
       fleetInBattleSelectorFactory(fleetId),
@@ -249,7 +250,7 @@ export const FleetStat = compose(
       const conds = shipsData.map(([ship = { api_cond: 0 }] = []) => ship.api_cond)
       completeTime = Math.max.apply(
         null,
-        conds.map(cond => recoveryEndTime(condTick, cond, condTarget)),
+        conds.map((cond) => recoveryEndTime(condTick, cond, condTarget)),
       )
     }
     return (

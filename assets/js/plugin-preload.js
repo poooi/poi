@@ -16,7 +16,7 @@ async function setPath() {
 }
 setPath()
 
-const onZoomChange = value => {
+const onZoomChange = (value) => {
   remote.getCurrentWebContents().zoomFactor = value
 }
 
@@ -28,7 +28,7 @@ const handleZoom = (path, value) => {
 
 config.addListener('config.set', handleZoom)
 
-window.addEventListener('unload', e => {
+window.addEventListener('unload', (e) => {
   config.removeListener('config.set', handleZoom)
 })
 

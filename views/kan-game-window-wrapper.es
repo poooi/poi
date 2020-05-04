@@ -32,7 +32,7 @@ const getPluginWindowRect = () => {
     return defaultRect
   }
   const validate = (n, min, range) => n != null && n >= min && n < min + range
-  const withinDisplay = d => {
+  const withinDisplay = (d) => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -160,7 +160,7 @@ export class KanGameWindowWrapper extends PureComponent {
       )
     }
     const windowFeatures = Object.keys(windowOptions)
-      .map(key => {
+      .map((key) => {
         switch (key) {
           case 'x':
             return `left=${windowOptions.x}`
@@ -178,8 +178,8 @@ export class KanGameWindowWrapper extends PureComponent {
       'plugin[kangame]',
       windowFeatures + ',nodeIntegration=no,webSecurity=no',
     )
-    this.externalWindow.addEventListener('DOMContentLoaded', e => {
-      this.currentWindow = BrowserWindow.getAllWindows().find(a =>
+    this.externalWindow.addEventListener('DOMContentLoaded', (e) => {
+      this.currentWindow = BrowserWindow.getAllWindows().find((a) =>
         a.getURL().endsWith('index-plugin.html?kangame'),
       )
       loadScript(
@@ -255,7 +255,7 @@ export class KanGameWindowWrapper extends PureComponent {
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
-      this.externalWindow.addEventListener('beforeunload', e => {
+      this.externalWindow.addEventListener('beforeunload', (e) => {
         config.set('poi.kangameWindow.bounds', this.currentWindow.getBounds())
       })
       if (windowUseFixedResolution) {
@@ -290,7 +290,7 @@ export class KanGameWindowWrapper extends PureComponent {
     return true
   }
 
-  onZoomChange = value => {
+  onZoomChange = (value) => {
     if (this.checkBrowserWindowExistence()) {
       // Workaround for ResizeObserver not fired on zoomFactor change
       const [width, height] = this.currentWindow.getContentSize()

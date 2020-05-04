@@ -25,8 +25,8 @@ const NumericResolution = styled.div`
 
 function getMinArea(displays) {
   return {
-    screenWidth: Math.max(...displays.map(d => d.bounds.width)),
-    screenHeight: Math.max(...displays.map(d => d.bounds.height)),
+    screenWidth: Math.max(...displays.map((d) => d.bounds.width)),
+    screenHeight: Math.max(...displays.map((d) => d.bounds.height)),
   }
 }
 
@@ -87,7 +87,7 @@ export class ResolutionConfig extends Component {
     }
   }
 
-  handleSetWebviewWidth = value => {
+  handleSetWebviewWidth = (value) => {
     const useFixedResolution = this.props.isolateGameWindow
       ? this.props.webview.windowUseFixedResolution
       : this.props.webview.useFixedResolution
@@ -111,7 +111,7 @@ export class ResolutionConfig extends Component {
     }
   }
 
-  handleSetFixedResolution = e => {
+  handleSetFixedResolution = (e) => {
     if (this.props.isolateGameWindow) {
       config.set(
         'poi.webview.windowUseFixedResolution',
@@ -126,7 +126,7 @@ export class ResolutionConfig extends Component {
     this.setState(getMinArea(screen.getAllDisplays()))
   }
 
-  handleResolutionInput = value => this.handleSetWebviewWidthWithDebounce(value, true)
+  handleResolutionInput = (value) => this.handleSetWebviewWidthWithDebounce(value, true)
 
   render() {
     const { isolateGameWindow, webview } = this.props
@@ -151,13 +151,13 @@ export class ResolutionConfig extends Component {
               <Wrapper>
                 <HTMLSelect
                   value={this.state.width}
-                  onChange={e => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
+                  onChange={(e) => this.handleSetWebviewWidthWithDebounce(e.target.value, false)}
                   disabled={!useFixedResolution}
                 >
                   <option key={-1} value={this.state.width} hidden>
                     {labelText}
                   </option>
-                  {[0, 1, 2, 3].map(i => {
+                  {[0, 1, 2, 3].map((i) => {
                     return (
                       <option key={i} value={i * 400 + 400}>
                         {Math.round(((i * 400 + 400) / 1200) * 100)}%

@@ -19,7 +19,7 @@ import {
 
 const defaultLayout = config.getDefault('poi.mainpanel.layout')
 
-const getPanelDimension = width => {
+const getPanelDimension = (width) => {
   if (width > 700) {
     return 4
   }
@@ -122,7 +122,7 @@ function getToolTip(record) {
         typeof g === 'object' &&
         `${i18next.t(`data:${escapeI18nKey(g.description)}`)} - ${g.count} / ${g.required}`,
     )
-    .filter(a => a)
+    .filter((a) => a)
 }
 
 const CardWrapper = styled(CardWrapperL)`
@@ -175,12 +175,12 @@ const TaskRowBase = connect(
     [
       configLayoutSelector,
       configReverseLayoutSelector,
-      state => get(state, 'layout.mainpane.width', 450),
-      state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
+      (state) => get(state, 'layout.mainpane.width', 450),
+      (state) => get(state, 'config.poi.mainpanel.layout', defaultLayout),
     ],
     (layout, reversed, mainPanelWidth, mainPanelLayout) => {
       const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm']?.find(
-        panel => panel.i === 'task-panel',
+        (panel) => panel.i === 'task-panel',
       )
       const colCnt = mainPanelWidth > 750 ? 20 : 10
       const colWidth = mainPanelWidth / colCnt
@@ -193,7 +193,7 @@ const TaskRowBase = connect(
       }
     },
   ),
-)(function({
+)(function ({
   idx, // Mandatory: 0..5
   bulletColor = '#fff',
   leftLabel = '',
@@ -206,7 +206,7 @@ const TaskRowBase = connect(
 }) {
   const rightOverlayCnt = (
     <div>
-      {rightOverlay.map(msg => (
+      {rightOverlay.map((msg) => (
         <div key={msg}>{msg}</div>
       ))}
     </div>
@@ -250,7 +250,7 @@ const TaskRow = withNamespaces(['resources'])(
       quest.api_no,
       'wiki_id',
     ]),
-  }))(function({ idx, quest, record, translation, wikiId, colwidth, t }) {
+  }))(function ({ idx, quest, record, translation, wikiId, colwidth, t }) {
     const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
     const questName =
       quest && quest.api_title
@@ -302,7 +302,7 @@ export class TaskPanel extends React.Component {
     dimension: 1,
   }
 
-  handleResize = entries => {
+  handleResize = (entries) => {
     const dimension = getPanelDimension(entries[0].contentRect.width)
     if (dimension !== this.state.dimension) {
       this.setState({ dimension })
@@ -324,7 +324,7 @@ export class TaskPanel extends React.Component {
                 colwidth={colwidth}
               />
             )),
-            range(Object.keys(activeQuests).length, Math.max(activeCapacity, 7)).map(idx =>
+            range(Object.keys(activeQuests).length, Math.max(activeCapacity, 7)).map((idx) =>
               idx < activeNum ? (
                 // Need refreshing
                 <TaskRowBase

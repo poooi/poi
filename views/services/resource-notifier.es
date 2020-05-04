@@ -6,7 +6,7 @@ const { session } = remote
 export const ResourceNotifier = new (class ResourceNotifier extends EventEmitter {
   constructor() {
     super()
-    session.defaultSession.webRequest.onSendHeaders(detail => {
+    session.defaultSession.webRequest.onSendHeaders((detail) => {
       this.emit('request', detail)
     })
   }

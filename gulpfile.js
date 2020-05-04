@@ -12,7 +12,7 @@ const packageMeta = require('./package.json')
 
 let poiVersion = null
 
-gulp.task('getVersion', done => {
+gulp.task('getVersion', (done) => {
   const package_version = packageMeta.version
   poiVersion = package_version
   childProcess.exec('git rev-parse HEAD', (err, stdout) => {
@@ -45,7 +45,7 @@ gulp.task('deploy_nightlies', () => deployNightlies())
 
 gulp.task('clean', () => cleanFiles())
 
-gulp.task('default', done => {
+gulp.task('default', (done) => {
   log`
   Usage:
   gulp deploy          - Make this repo ready to use
