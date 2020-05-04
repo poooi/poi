@@ -7,7 +7,7 @@ import { Section, Wrapper, FillAvailable } from 'views/components/settings/compo
 import { SwitchConfig } from 'views/components/settings/components/switch'
 
 import { ShortcutConfig } from './shortcut-config'
-import { LimitFps } from './limit-fps'
+// import { LimitFps } from './limit-fps'
 
 const isMacOS = process.platform === 'darwin'
 
@@ -85,7 +85,7 @@ export const AdvancedConfig = withNamespaces(['setting'])(({ t }) => (
         </FormGroup>
       </FillAvailable>
 
-      <LimitFps />
+      {/* <LimitFps /> */}
 
       {map(
         SWITCHES,

@@ -95,12 +95,12 @@ let mainWindow
 global.mainWindow = mainWindow = null
 
 // Set FPS limit
-if (config.get('poi.misc.limitFps.enabled')) {
-  const value = parseInt(config.get('poi.misc.limitFps.value'))
-  if (Number.isFinite(value)) {
-    app.commandLine.appendSwitch('limit-fps', String(value))
-  }
-}
+// if (config.get('poi.misc.limitFps.enabled')) {
+//   const value = parseInt(config.get('poi.misc.limitFps.value'))
+//   if (Number.isFinite(value)) {
+//     app.commandLine.appendSwitch('limit-fps', String(value))
+//   }
+// }
 
 // Test: enable JavaScript experimental features
 // app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
