@@ -15,6 +15,9 @@ jobs:
       npm ci
     displayName: 'npm install'
   - script: |
+      npm run lint
+    displayName: 'npm lint'
+  - script: |
       npm test
     displayName: 'npm test'
   - script: |
@@ -32,11 +35,14 @@ jobs:
   steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '10.x'
+      versionSpec: '12.x'
     displayName: 'Install Node.js'
   - script: |
       npm ci
     displayName: 'npm install'
+  - script: |
+      npm run lint
+    displayName: 'npm lint'
   - script: |
       npm run build
     displayName: 'npm build'
@@ -55,11 +61,14 @@ jobs:
   steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '10.x'
+      versionSpec: '12.x'
     displayName: 'Install Node.js'
   - script: |
       npm ci
     displayName: 'npm install'
+  - script: |
+      npm run lint
+    displayName: 'npm lint'
   - script: |
       npm run build
     displayName: 'npm build'
