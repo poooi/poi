@@ -1,7 +1,7 @@
 jobs:
 - job: Linux
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-latest'
   steps:
   - task: NodeTool@0
     inputs:
@@ -28,7 +28,7 @@ jobs:
   - task: PublishBuildArtifacts@1
 - job: macOS
   pool:
-    vmImage: 'xcode9-macos10.13'
+    vmImage: 'macOS-latest'
   steps:
   - task: NodeTool@0
     inputs:
@@ -51,7 +51,7 @@ jobs:
   - task: PublishBuildArtifacts@1
 - job: Windows
   pool:
-    vmImage: 'vs2017-win2016'
+    vmImage: 'windows-latest'
   steps:
   - task: NodeTool@0
     inputs:
