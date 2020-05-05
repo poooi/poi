@@ -83,8 +83,12 @@ const poibutton = new TouchBarButton({
   backgroundColor: '#000000',
 })
 
-//spacer
-const spacer = new TouchBarSpacer({
+// spacer
+const spacer1 = new TouchBarSpacer({
+  size: 'flexible',
+})
+
+const spacer2 = new TouchBarSpacer({
   size: 'flexible',
 })
 
@@ -149,7 +153,7 @@ export const toggleRefreshConfirm = (btn1, btn2) => {
 
 //main-touchbar
 const mainTouchbar = new TouchBar({
-  items: [devtools, screenshot, volume, popover, spacer, tabs, spacer, refresh],
+  items: [devtools, screenshot, volume, popover, spacer1, tabs, spacer2, refresh],
   escapeItem: poibutton,
 })
 
