@@ -60,11 +60,13 @@ export default class ElectronWebView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    Object.keys(staticProps).forEach((propName) => {
-      if (this.props[propName] !== prevProps[propName]) {
-        this.view[propName] = this.props[propName]
-      }
-    })
+    if (this.ready) {
+      Object.keys(staticProps).forEach((propName) => {
+        if (this.props[propName] !== prevProps[propName]) {
+          this.view[propName] = this.props[propName]
+        }
+      })
+    }
   }
 
   isReady() {
