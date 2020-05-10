@@ -7,6 +7,15 @@ function mergeIndexifiedFleets(state, body) {
   return compareUpdate(state, bodyFleet, 2)
 }
 
+// Ensure all -1 is in the end of array
+function fixPlaceholder(originShips) {
+  const ships = originShips.filter((a) => a > 0)
+  while (ships.length < originShips.length) {
+    ships.push(-1)
+  }
+  return ships
+}
+
 // Return [fleetId, pos] if found
 // [-1, -1] otherwise
 function findShip(fleets, shipId) {
@@ -34,7 +43,7 @@ function setShip(fleet, pos, shipId) {
   if (isEqual(ships, fleet.api_ship)) return fleet
   return {
     ...fleet,
-    api_ship: ships,
+    api_ship: fixPlaceholder(ships),
   }
 }
 
