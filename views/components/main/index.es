@@ -23,7 +23,6 @@ import 'react-resizable/css/styles.css'
 const MainPanelContent = styled.div`
   position: relative;
   transition: all 0.3s ease-in-out;
-  margin-top: -4px;
   font-size: 12px;
 
   .react-grid-item {
