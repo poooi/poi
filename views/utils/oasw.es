@@ -19,10 +19,12 @@ const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893)])
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 const isFletcherClassOrKai = _.overSome([
-  shipIdIs(562),
-  shipIdIs(689),
-  shipIdIs(596),
-  shipIdIs(692),
+  shipIdIs(562), // Johnston
+  shipIdIs(689), // Johnston Kai
+  shipIdIs(596), // Fletcher
+  shipIdIs(692), // Fletcher Kai
+  shipIdIs(628), // Fletcher Kai Mod.2
+  shipIdIs(629), // Fletcher Mk.II
 ])
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])
