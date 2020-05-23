@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
+import { get, pick, isEqual, entries, fromPairs, map, differenceWith } from 'lodash'
 import { Trans } from 'react-i18next'
 import styled from 'styled-components'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
@@ -72,6 +72,24 @@ if (layoutConfigOutdated(config.get('poi.mainpanel.layout', defaultLayout))) {
   config.set('poi.mainpanel.layout', defaultLayout)
 }
 
+const configKey = ['x', 'y', 'h', 'w', 'i', 'minW', 'maxW', 'minH', 'maxH']
+
+function isPositionEqual(pos1, pos2) {
+  return isEqual(pick(pos1, configKey), pick(pos2, configKey))
+}
+
+function isLayoutEqual(layout1, layout2) {
+  return Object.keys(layout1)
+    .map((i) => isPositionEqual(layout1[i], layout2[i]))
+    .reduce((a, b) => a && b)
+}
+
+function isLayoutsEqual(layouts1, layouts2) {
+  return Object.keys(layouts1)
+    .map((layoutName) => isLayoutEqual(layouts1[layoutName], layouts2[layoutName]))
+    .reduce((a, b) => a && b)
+}
+
 @connect((state, props) => ({
   layouts: layoutConfigFix(get(state, 'config.poi.mainpanel.layout', defaultLayout)),
   editable: get(state, 'config.poi.layout.editable', false),
@@ -83,7 +101,9 @@ export class reactClass extends Component {
   }
 
   onLayoutChange = (layout, layouts) => {
-    config.set('poi.mainpanel.layout', layouts)
+    if (!isLayoutsEqual(layouts, config.get('poi.mainpanel.layout'))) {
+      config.set('poi.mainpanel.layout', layouts)
+    }
   }
 
   handleResize = (entries) => {
