@@ -225,3 +225,23 @@ config.on('config.set', (path, value) => {
       break
   }
 })
+
+// workaround for https://github.com/electron/electron/issues/22440
+let minimumSize
+
+const storeMinimumSize = debounce(() => {
+  minimumSize = remote.getCurrentWindow().getMinimumSize()
+  remote.getCurrentWindow().setMinimumSize(1, 1)
+}, 200)
+
+const restoreMinimumSize = () => {
+  if (minimumSize && minimumSize.length === 2) {
+    remote.getCurrentWindow().setMinimumSize(...minimumSize)
+  }
+}
+
+remote.getCurrentWindow().on('minimize', storeMinimumSize)
+remote.getCurrentWindow().on('maximize', storeMinimumSize)
+
+remote.getCurrentWindow().on('restore', restoreMinimumSize)
+remote.getCurrentWindow().on('unmaximize', restoreMinimumSize)
