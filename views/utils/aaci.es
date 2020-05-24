@@ -453,7 +453,7 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
-const isFletcherClassOrKai = validAny(shipIdIs(562), shipIdIs(689), shipIdIs(596), shipIdIs(692))
+const isFletcherClassOrKai = validAny(shipIdIs(562), shipIdIs(689), shipIdIs(596), shipIdIs(692), shipIdIs(628), shipIdIs(629))
 const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
 
 // id 34~37: Johnston
