@@ -87,7 +87,6 @@ export const methods = [
   'setZoomFactor',
   'setZoomLevel',
   'showDefinitionForSelection',
-  'getWebContents',
   'focus',
   'addEventListener',
   'removeEventListener',
