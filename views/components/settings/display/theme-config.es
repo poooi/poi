@@ -25,7 +25,7 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import themes from 'assets/data/theme.json'
 
-const { openItem } = shell
+const { openPath } = shell
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
 
@@ -98,7 +98,7 @@ export class ThemeConfig extends Component {
     try {
       const d = path.join(EXROOT, 'hack', 'custom.css')
       fs.ensureFileSync(d)
-      return openItem(d)
+      return openPath(d)
     } catch (e) {
       return toggleModalWithDelay(
         this.props.t('setting:Edit custom CSS'),
