@@ -10,6 +10,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { camelCase, debounce } from 'lodash'
 import { events, methods, props, staticProps } from './webview-constants'
+import { remote } from 'electron'
+
+const { webContents } = remote
 
 export default class ElectronWebView extends Component {
   componentDidMount() {
@@ -89,6 +92,8 @@ export default class ElectronWebView extends Component {
   }
 
   resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
+
+  getWebContents = () => webContents.fromId(this.view.getWebContentsId())
 
   render() {
     const { style, ...props } = this.props

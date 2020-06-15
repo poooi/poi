@@ -248,7 +248,7 @@ export class PluginConfig extends Component {
   }
 
   handleOpenPluginFolder = () => {
-    shell.openItem(path.join(PLUGIN_PATH, 'node_modules'))
+    shell.openPath(path.join(PLUGIN_PATH, 'node_modules'))
   }
 
   handleOpenSite = (e) => {

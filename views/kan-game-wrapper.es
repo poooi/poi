@@ -220,9 +220,7 @@ export class KanGameWrapper extends Component {
       Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
       Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
     )
-    this.webview.current.view
-      .getWebContents()
-      .addListener('certificate-error', this.handleCertError)
+    this.webview.current.getWebContents().addListener('certificate-error', this.handleCertError)
   }
 
   handleWebviewUnmount = () => {

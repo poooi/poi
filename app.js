@@ -110,7 +110,7 @@ global.mainWindow = mainWindow = null
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
 // Polyfill for webview iframe isolation
-app.commandLine.appendSwitch('disable-site-isolation-trials', true)
+app.commandLine.appendSwitch('site-isolation-trial-opt-out', false)
 
 // Fix GPU acceleration
 // app.commandLine.appendSwitch('enable-accelerated-2d-canvas', 'true')
@@ -195,6 +195,7 @@ app.on('ready', () => {
       nodeIntegrationInSubFrames: true,
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
+      enableRemoteModule: true,
       // experimentalFeatures: true,
     },
     backgroundColor: '#00000000',
