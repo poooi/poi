@@ -110,6 +110,7 @@ export class KanGameWindowWrapper extends PureComponent {
     switch (path) {
       case 'poi.webview.windowUseFixedResolution': {
         this.currentWindow.setResizable(!value)
+        this.resizable = !value
         if (value) {
           const width = config.get('poi.webview.windowWidth', 1200)
           this.currentWindow.setContentSize(
@@ -187,6 +188,7 @@ export class KanGameWindowWrapper extends PureComponent {
         this.externalWindow.document,
       )
       this.currentWindow.setResizable(!windowUseFixedResolution)
+      this.resizable = !windowUseFixedResolution
       this.currentWindow.setAspectRatio(1200 / 720, {
         width: 0,
         height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)),
@@ -276,6 +278,21 @@ export class KanGameWindowWrapper extends PureComponent {
         },
         () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
       )
+
+      // workaround for https://github.com/electron/electron/issues/22440
+      const unsetResizable = debounce(() => {
+        this.currentWindow.setResizable(true)
+      }, 200)
+
+      const setResizable = () => {
+        this.currentWindow.setResizable(this.resizable)
+      }
+
+      this.currentWindow.on('minimize', unsetResizable)
+      this.currentWindow.on('maximize', unsetResizable)
+
+      this.currentWindow.on('restore', setResizable)
+      this.currentWindow.on('unmaximize', setResizable)
     })
   }
 
