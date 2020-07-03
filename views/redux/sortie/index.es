@@ -47,10 +47,18 @@ const getItem = ({ api_itemget = [], api_happening = {}, api_itemget_eo_comment 
 
 export function reducer(state = initState, { type, path, postBody, body }) {
   switch (type) {
+    /*
+       Clear sortie state if we have returned to port (api_port/port)
+       or if we have reloaded in the middle of a sorite, in which case api_req_member/get_incentive
+       is the first API that game calls.
+     */
     case '@@Response/kcsapi/api_port/port':
+    case '@@Request/kcsapi/api_req_member/get_incentive':
       return {
         ...state,
-        combinedFlag: body.api_combined_flag || 0,
+        combinedFlag:
+          // note that get_incentive doesn't have this field.
+          get(body, 'api_combined_flag', 0),
         sortieStatus: initState.sortieStatus,
         escapedPos: [],
         sortieMapId: 0,
