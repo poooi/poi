@@ -3,6 +3,7 @@
  */
 
 import _, { isEqual, forEach, keyBy, zip, unzip, sum, isString, toString } from 'lodash'
+import pangu from 'pangu'
 import path from 'path'
 import { readJsonSync } from 'fs-extra'
 import url from 'url'
@@ -249,3 +250,5 @@ export const POPOVER_MODIFIERS = {
     boundariesElement: 'window', // enable display tooltip within small containers
   },
 }
+
+export const cjkSpacing = (str) => (isString(str) ? pangu.spacing(str) : toString(str))

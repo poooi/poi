@@ -1,15 +1,14 @@
 /* global config, ROOT, isMain, dbg */
 import path from 'path-extra'
 import glob from 'glob'
-import { isString, toString, each, debounce } from 'lodash'
+import { toString, each, debounce } from 'lodash'
 import I18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
-import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
 import formatJson from 'json-format'
 import { readJSONSync, writeFileSync } from 'fs-extra'
 
-import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
+import { readI18nResources, escapeI18nKey, cjkSpacing } from 'views/utils/tools'
 
 const LOCALES = [
   {
@@ -34,8 +33,9 @@ const LOCALES = [
   },
 ]
 
-const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
-const spacing = textSpacingCJK ? (str) => (isString(str) ? _spacing(str) : toString(str)) : toString
+const textSpacingCJK = window.config.get('poi.appearance.textspacingcjk', true)
+
+const spacing = textSpacingCJK ? cjkSpacing : toString
 
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
