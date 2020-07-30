@@ -170,6 +170,18 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       const { api_ship_data } = body
       return compareUpdate(state, indexify(api_ship_data))
     }
+    case '@@Response/kcsapi/api_req_kaisou/open_exslot': {
+      // Reference:
+      // https://github.com/andanteyk/ElectronicObserver/blob/6c2ae187c85be9e1fc8b131f73dd3d16b2b2f85b/ElectronicObserver/Other/Information/apilist.txt#L1431-L1434
+      const { api_id } = postBody
+      return {
+        ...state,
+        [api_id]: {
+          ...state[api_id],
+          api_slot_ex: -1, // 補強スロット 0=未解放, -1=未装備
+        },
+      }
+    }
   }
   return state
 }
