@@ -153,7 +153,7 @@ const totalExp = [
   15000000,
 ]
 
-const resolveDayTime = (time) => {
+const resolveDayTime = time => {
   const seconds = parseInt(time)
   if (seconds >= 0) {
     const s = seconds % 60
@@ -184,7 +184,7 @@ const getTagIntent = (_, timeRemaining) => {
 
 const ExpContent = compose(
   withNamespaces(['main']),
-  connect((state) => ({
+  connect(state => ({
     level: get(state, 'info.basic.api_level', 0),
     exp: get(state, 'info.basic.api_experience', 0),
   })),
@@ -238,7 +238,10 @@ const getNextQuest = () => {
 }
 
 const getNextSenka = () => {
-  const m = moment.tz('Asia/Tokyo').endOf('month').subtract(2, 'hour')
+  const m = moment
+    .tz('Asia/Tokyo')
+    .endOf('month')
+    .subtract(2, 'hour')
   if (+m <= Date.now()) {
     return m.add(1, 'months')
   }
@@ -308,16 +311,16 @@ class CountDownControl extends Component {
     window.ticker.unreg('admiral-panel')
   }
 
-  tick = (currentTime) => {
+  tick = currentTime => {
     // update moments
-    Object.keys(this.moments).forEach((key) => {
+    Object.keys(this.moments).forEach(key => {
       if (this.moments[key] - currentTime < 0) {
         this.moments[key] = getNewMomentMap[key]()
       }
     })
 
     // check styles
-    const minRemaining = Math.min(...map(this.moments, (moment) => moment - currentTime))
+    const minRemaining = Math.min(...map(this.moments, moment => moment - currentTime))
     const intent = getTagIntent(null, minRemaining / 1000)
 
     if (intent !== this.state.intent) {
@@ -348,7 +351,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const CountdownContent = ({ moments }) => (
   <div>
-    {['Practice', 'Quest', 'Senka', 'EO'].map((name) => (
+    {['Practice', 'Quest', 'Senka', 'EO'].map(name => (
       <CountdownItem className="info-tooltip-entry countdown-item" key={name}>
         <CountdownRow className="info-tooltip-item">
           <Trans>main:Next {name}</Trans>
@@ -368,23 +371,29 @@ const CountdownContent = ({ moments }) => (
   </div>
 )
 
-const admiralInfoSelector = createSelector([basicSelector], (basic) => ({
-  level: get(basic, 'api_level', -1),
-  nickname: get(basic, 'api_nickname', ''),
-  rank: get(basic, 'api_rank', 0),
-  maxShip: get(basic, 'api_max_chara', 0),
-  maxSlotitem: get(basic, 'api_max_slotitem', 0),
-}))
+const admiralInfoSelector = createSelector(
+  [basicSelector],
+  basic => ({
+    level: get(basic, 'api_level', -1),
+    nickname: get(basic, 'api_nickname', ''),
+    rank: get(basic, 'api_rank', 0),
+    maxShip: get(basic, 'api_max_chara', 0),
+    maxSlotitem: get(basic, 'api_max_slotitem', 0),
+  }),
+)
 
-const numCheckSelector = createSelector([configSelector], (config) => ({
-  shipNumCheck: get(config, 'poi.mapStartCheck.ship.enable', false),
-  minShipNum: get(config, 'poi.mapStartCheck.ship.minFreeSlots', 4),
-  slotNumCheck: get(config, 'poi.mapStartCheck.item.enable', false),
-  minSlotNum: get(config, 'poi.mapStartCheck.item.minFreeSlots', 10),
-}))
+const numCheckSelector = createSelector(
+  [configSelector],
+  config => ({
+    shipNumCheck: get(config, 'poi.mapStartCheck.ship.enable', false),
+    minShipNum: get(config, 'poi.mapStartCheck.ship.minFreeSlots', 4),
+    slotNumCheck: get(config, 'poi.mapStartCheck.item.enable', false),
+    minSlotNum: get(config, 'poi.mapStartCheck.item.minFreeSlots', 10),
+  }),
+)
 
 export const AdmiralPanel = withNamespaces(['main'])(
-  connect((state) => ({
+  connect(state => ({
     ...admiralInfoSelector(state),
     equipNum: Object.keys(state.info.equips).length,
     shipNum: Object.keys(state.info.ships).length,

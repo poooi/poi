@@ -16,7 +16,7 @@ const initState = {
 }
 
 @withNamespaces(['main'])
-@connect((state) => ({
+@connect(state => ({
   shipTag: state.fcd.shiptag || initState,
 }))
 export class StatusLabel extends React.Component {
@@ -31,9 +31,8 @@ export class StatusLabel extends React.Component {
           position={Position.TOP}
           content={
             i > 2
-              ? `${get(fleetname, [language, i - 3], t('main:Ship tag'))} - ${
-                  mapname[i - 3] || i - 2
-                }`
+              ? `${get(fleetname, [language, i - 3], t('main:Ship tag'))} - ${mapname[i - 3] ||
+                  i - 2}`
               : t(`main:${TEXTS[i]}`)
           }
         >

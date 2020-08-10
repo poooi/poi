@@ -9,7 +9,7 @@ function simulate(battle) {
     deckHp = [],
     deckInitHp = []
   const deck = [].concat(simulator.mainFleet || [], simulator.escortFleet || [])
-  deck.map((ship) => {
+  deck.map(ship => {
     deckShipId.push(ship && ship.raw ? ship.raw.api_id : -1) // use _ships id in deckShipId
     deckHp.push(ship ? ship.nowHP : 0)
     deckInitHp.push(ship ? ship.initHP : 0)
@@ -17,7 +17,7 @@ function simulate(battle) {
   const enemyShipId = [],
     enemyHp = []
   const enemy = [].concat(simulator.enemyFleet || [], simulator.enemyEscort || [])
-  enemy.map((ship) => {
+  enemy.map(ship => {
     enemyShipId.push(ship ? ship.id : -1)
     enemyHp.push(ship ? ship.nowHP : 0)
   })
@@ -167,7 +167,7 @@ export function reducer(state = initState, { type, path, body, postBody, time },
     case '@@Response/kcsapi/api_req_combined_battle/ec_night_to_day': {
       const sortieTypeFlag = getSortieType(store)
       const enemyFormation = (body.api_formation || [])[1] || _status.enemyFormation
-      const fleetId = [body.api_deck_id, body.api_dock_id].find((x) => x != null)
+      const fleetId = [body.api_deck_id, body.api_dock_id].find(x => x != null)
       const escortId = sortieTypeFlag > 0 ? 2 : -1
       const battle = _status.battle
         ? _status.battle
@@ -208,9 +208,9 @@ export function reducer(state = initState, { type, path, body, postBody, time },
           mapCell: _status.currentCell,
           quest: body.api_quest_name,
           enemy: body.api_enemy_info.api_deck_name,
-          combined: getSortieType(store) > 0,
+          combined: getSortieType() > 0,
           mvp:
-            getSortieType(store) > 0
+            getSortieType() > 0
               ? [body.api_mvp - 1, body.api_mvp_combined - 1]
               : [body.api_mvp - 1, body.api_mvp - 1],
           dropItem: body.api_get_useitem,

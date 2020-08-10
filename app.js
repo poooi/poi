@@ -78,15 +78,8 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
 if (dbg.isEnabled()) {
   global.SERVER_HOSTNAME = '127.0.0.1:17027'
 } else {
-  global.SERVER_HOSTNAME = 'api.poi.moe'
+  global.SERVER_HOSTNAME = 'poi.0u0.moe'
   process.env.NODE_ENV = 'production'
-  if (config.get('poi.misc.exceptionReporting')) {
-    const { init } = require('./lib/sentry')
-    init({
-      build: global.LATEST_COMMIT,
-      paths: [global.ROOT, global.APPDATA_PATH],
-    })
-  }
 }
 
 require('./lib/flash')
@@ -95,22 +88,19 @@ let mainWindow
 global.mainWindow = mainWindow = null
 
 // Set FPS limit
-// if (config.get('poi.misc.limitFps.enabled')) {
-//   const value = parseInt(config.get('poi.misc.limitFps.value'))
-//   if (Number.isFinite(value)) {
-//     app.commandLine.appendSwitch('limit-fps', String(value))
-//   }
-// }
+if (config.get('poi.misc.limitFps.enabled')) {
+  const value = parseInt(config.get('poi.misc.limitFps.value'))
+  if (Number.isFinite(value)) {
+    app.commandLine.appendSwitch('limit-fps', String(value))
+  }
+}
 
 // Test: enable JavaScript experimental features
-// app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
+app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
 
 // enable audio autoplay
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
-
-// Polyfill for webview iframe isolation
-app.commandLine.appendSwitch('site-isolation-trial-opt-out', false)
 
 // Fix GPU acceleration
 // app.commandLine.appendSwitch('enable-accelerated-2d-canvas', 'true')
@@ -154,7 +144,7 @@ app.on('ready', () => {
   const { workArea } = screen.getPrimaryDisplay()
   let { x, y, width, height } = config.get('poi.window', workArea)
   const validate = (n, min, range) => n != null && n >= min && n < min + range
-  const withinDisplay = (d) => {
+  const withinDisplay = d => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -192,11 +182,9 @@ app.on('ready', () => {
       webviewTag: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
-      nodeIntegrationInSubFrames: true,
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
-      enableRemoteModule: true,
-      // experimentalFeatures: true,
+      experimentalFeatures: true,
     },
     backgroundColor: '#00000000',
   })
@@ -224,7 +212,7 @@ app.on('ready', () => {
     })
   }
   // Never wants navigate
-  mainWindow.webContents.on('will-navigate', (e) => {
+  mainWindow.webContents.on('will-navigate', e => {
     e.preventDefault()
   })
   mainWindow.on('closed', () => {
@@ -255,7 +243,9 @@ ipcMain.on('refresh-shortcut', () => {
 const { createHash } = require('crypto')
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   const trusted = config.get('poi.misc.trustedCerts', [])
-  const hash = createHash('sha256').update(certificate.data).digest('base64')
+  const hash = createHash('sha256')
+    .update(certificate.data)
+    .digest('base64')
   if (trusted.includes(hash)) {
     event.preventDefault()
     callback(true)
@@ -263,6 +253,6 @@ app.on('certificate-error', (event, webContents, url, error, certificate, callba
 })
 
 // Uncaught error
-process.on('uncaughtException', (e) => {
+process.on('uncaughtException', e => {
   error(e.stack)
 })

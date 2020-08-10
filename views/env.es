@@ -4,7 +4,6 @@ import path from 'path-extra'
 import fs from 'fs-extra'
 import { remote } from 'electron'
 import lodash from 'lodash'
-import { init } from '../lib/sentry'
 
 import './polyfills/react-i18next'
 import './polyfills/react-fontawesome'
@@ -17,7 +16,6 @@ window.EXROOT = remote.getGlobal('EXROOT')
 window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 window.PLUGIN_PATH = path.join(window.APPDATA_PATH, 'plugins')
 window.POI_VERSION = remote.getGlobal('POI_VERSION')
-window.LATEST_COMMIT = remote.getGlobal('LATEST_COMMIT')
 window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME')
 window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appTray = remote.getGlobal('appTray')
@@ -40,18 +38,18 @@ if (window.isMain) {
 require('module').globalPaths.unshift(window.ROOT)
 
 // Disable eval
-window.eval = global.eval = function () {
+window.eval = global.eval = function() {
   throw new Error('Sorry, this app does not support window.eval().')
 }
 
 // Shortcuts and Components
 window._ = lodash // TODO: Backward compatibility
-window.$ = (param) => document.querySelector(param)
-window.$$ = (param) => document.querySelectorAll(param)
+window.$ = param => document.querySelector(param)
+window.$$ = param => document.querySelectorAll(param)
 
 // Polyfills
-Object.clone = (obj) => JSON.parse(JSON.stringify(obj))
-Object.remoteClone = (obj) => JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
+Object.clone = obj => JSON.parse(JSON.stringify(obj))
+Object.remoteClone = obj => JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
 
 // Node modules
 const originConfig = remote.require('./lib/config')
@@ -61,16 +59,6 @@ window.CONST = Object.remoteClone(remote.require('./lib/constant'))
 window.config = {}
 for (const key in originConfig) {
   window.config[key] = originConfig[key]
-}
-
-if (
-  process.env.NODE_ENV === 'production' &&
-  lodash.get(originConfig, 'poi.misc.exceptionReporting')
-) {
-  init({
-    build: window.LATEST_COMMIT,
-    paths: [window.ROOT, window.APPDATA_PATH],
-  })
 }
 
 // i18n config

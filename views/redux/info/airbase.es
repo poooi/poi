@@ -15,10 +15,10 @@ export default function reducer(state = [], { type, body, postBody }) {
       const { api_distance, api_plane_info } = body
       const baseIndex = findIndex(
         state,
-        (squad) => squad.api_rid == api_base_id && squad.api_area_id == api_area_id,
+        squad => squad.api_rid == api_base_id && squad.api_area_id == api_area_id,
       )
       const index = baseIndex === -1 ? api_base_id - 1 : baseIndex
-      const squadrons = buildArray(api_plane_info.map((p) => [p.api_squadron_id - 1, p]))
+      const squadrons = buildArray(api_plane_info.map(p => [p.api_squadron_id - 1, p]))
       return compareUpdate(
         state,
         buildArray(index, {
@@ -32,7 +32,7 @@ export default function reducer(state = [], { type, body, postBody }) {
       const { api_base_id, api_name, api_area_id } = postBody
       const baseIndex = findIndex(
         state,
-        (squad) => squad.api_rid == api_base_id && squad.api_area_id == api_area_id,
+        squad => squad.api_rid == api_base_id && squad.api_area_id == api_area_id,
       )
       const index = baseIndex === -1 ? api_base_id - 1 : baseIndex
       return compareUpdate(
@@ -49,7 +49,7 @@ export default function reducer(state = [], { type, body, postBody }) {
         ([base_id, action_kind]) => {
           const baseIndex = findIndex(
             state,
-            (squad) => squad.api_rid == base_id && squad.api_area_id == api_area_id,
+            squad => squad.api_rid == base_id && squad.api_area_id == api_area_id,
           )
           const index = baseIndex === -1 ? base_id - 1 : baseIndex
           return [index, { api_action_kind: parseInt(action_kind) }]
@@ -62,10 +62,10 @@ export default function reducer(state = [], { type, body, postBody }) {
       const { api_plane_info } = body
       const baseIndex = findIndex(
         state,
-        (squad) => squad.api_rid == api_base_id && squad.api_area_id == api_area_id,
+        squad => squad.api_rid == api_base_id && squad.api_area_id == api_area_id,
       )
       const index = baseIndex === -1 ? api_base_id - 1 : baseIndex
-      const squadrons = buildArray(api_plane_info.map((p) => [p.api_squadron_id - 1, p]))
+      const squadrons = buildArray(api_plane_info.map(p => [p.api_squadron_id - 1, p]))
       return compareUpdate(
         state,
         buildArray(index, {
@@ -78,12 +78,8 @@ export default function reducer(state = [], { type, body, postBody }) {
       const { api_destruction_battle, api_maparea_id } = body
       if (api_destruction_battle) {
         const { api_f_maxhps, api_f_nowhps, api_air_base_attack } = api_destruction_battle
-        const parsed_api_air_base_attack =
-          typeof api_air_base_attack === 'string'
-            ? JSON.parse(api_air_base_attack)
-            : api_air_base_attack
-        const api_fdam = get(parsed_api_air_base_attack, 'api_stage3.api_fdam', [])
-        return map(state, (airbase) => {
+        const api_fdam = get(api_air_base_attack, 'api_stage3.api_fdam', [])
+        return map(state, airbase => {
           const { api_area_id, api_rid } = airbase
           if (api_maparea_id !== api_area_id) {
             return airbase
@@ -106,7 +102,7 @@ export default function reducer(state = [], { type, body, postBody }) {
       break
     }
     case '@@Response/kcsapi/api_port/port': {
-      return map(state, (airbase) =>
+      return map(state, airbase =>
         typeof airbase.api_nowhp !== 'undefined' || typeof airbase.api_maxhp !== 'undefined'
           ? omit(airbase, ['api_nowhp', 'api_maxhp'])
           : airbase,

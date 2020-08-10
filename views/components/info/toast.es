@@ -1,4 +1,4 @@
-import React, { createRef } from 'react'
+import React from 'react'
 import { Position, Toaster, Intent } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
@@ -18,7 +18,6 @@ const toastPreload = (...props) => {
 window.toast = toastPreload
 
 const ToasterPositioned = styled(Toaster)`
-  padding-bottom: 25px;
   ${({ inbound }) =>
     inbound &&
     css`
@@ -26,12 +25,12 @@ const ToasterPositioned = styled(Toaster)`
     `}
 `
 
-@connect((state) => ({
+@connect(state => ({
   webviewWidth: get(state, 'layout.webview.width'),
   isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
 }))
 export class PoiToast extends React.PureComponent {
-  toaster = createRef()
+  toaster = Toaster
 
   triggleToast = (message, options = {}) => {
     if (!message) {
@@ -54,7 +53,7 @@ export class PoiToast extends React.PureComponent {
       intent,
       ...options,
     }
-    this.toaster.current.show(props)
+    this.toaster.show(props)
   }
 
   componentDidMount = () => {
@@ -73,7 +72,7 @@ export class PoiToast extends React.PureComponent {
       <ToasterPositioned
         autoFocus={true}
         position={Position.BOTTOM_RIGHT}
-        ref={this.toaster}
+        ref={ref => (this.toaster = ref)}
         inbound={this.props.isolateGameWindow || this.props.webviewWidth >= 400}
         usePortal={false}
       />

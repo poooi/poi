@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import fs from 'fs-extra'
-import { get, split, map, size } from 'lodash'
+import { get, split, map } from 'lodash'
 import { remote } from 'electron'
 import i18next from 'views/env-parts/i18next'
 import path from 'path'
@@ -35,7 +35,7 @@ const PickerBox = styled.div`
 
 const EllipsisIcon = styled.span`
   color: white;
-  background: ${(props) => props.theme.DARK_GRAY1};
+  background: ${props => props.theme.DARK_GRAY1};
   border-radius: 3px;
   padding: 0 4px;
 `
@@ -63,13 +63,9 @@ export class FolderPickerConfig extends Component {
     exclude: [],
   }
 
-  state = {
-    locked: false,
-  }
-
   componentDidMount = () => {
     const { exclude, value, defaultValue, configName } = this.props
-    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, value))) {
+    if (exclude.length && exclude.some(parent => isSubdirectory(parent, value))) {
       this.emitErrorMessage()
       config.set(configName, defaultValue)
     }
@@ -78,8 +74,17 @@ export class FolderPickerConfig extends Component {
     }
   }
 
-  handleOnDrag = (e) => {
+  handleOnDrag = e => {
     e.preventDefault()
+  }
+
+  synchronize = callback => {
+    if (this.lock) {
+      return
+    }
+    this.lock = true
+    callback()
+    this.lock = false
   }
 
   emitErrorMessage = () =>
@@ -88,16 +93,16 @@ export class FolderPickerConfig extends Component {
       title: i18next.t('setting:Error'),
     })
 
-  setPath = (val) => {
+  setPath = val => {
     const { exclude } = this.props
-    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, val))) {
+    if (exclude.length && exclude.some(parent => isSubdirectory(parent, val))) {
       this.emitErrorMessage()
       return
     }
     config.set(this.props.configName, val)
   }
 
-  handleOnDrop = (e) => {
+  handleOnDrop = e => {
     e.preventDefault()
     const droppedFiles = e.dataTransfer.files
     if (fs.statSync(droppedFiles[0].path).isDirectory() || !this.props.isFolder) {
@@ -105,40 +110,30 @@ export class FolderPickerConfig extends Component {
     }
   }
 
-  handleOnClick = async () => {
-    if (this.state.locked) {
-      return
-    }
-    this.setState({
-      locked: true,
-    })
-
-    let defaultPath
-    try {
-      if (this.props.isFolder) {
-        fs.ensureDirSync(this.props.value)
-        defaultPath = this.props.value
+  handleOnClick = () => {
+    this.synchronize(() => {
+      let defaultPath
+      try {
+        if (this.props.isFolder) {
+          fs.ensureDirSync(this.props.value)
+          defaultPath = this.props.value
+        }
+      } catch (e) {
+        defaultPath = remote.app.getPath('desktop')
       }
-    } catch (e) {
-      defaultPath = remote.app.getPath('desktop')
-    }
-
-    const selection = await dialog.showOpenDialog({
-      title: this.props.label,
-      defaultPath,
-      properties: this.props.isFolder ? ['openDirectory', 'createDirectory'] : ['openFile'],
-    })
-    if (!selection.canceled && size(selection.filePaths)) {
-      this.setPath(selection.filePaths[0])
-    }
-
-    this.setState({
-      locked: false,
+      const filenames = dialog.showOpenDialog({
+        title: this.props.label,
+        defaultPath,
+        properties: this.props.isFolder ? ['openDirectory', 'createDirectory'] : ['openFile'],
+      })
+      if (filenames !== undefined) {
+        this.setPath(filenames[0])
+      }
     })
   }
 
-  parseBreadcrumb = (value) =>
-    map(split(this.props.value, path.sep), (p) => ({
+  parseBreadcrumb = value =>
+    map(split(this.props.value, path.sep), p => ({
       text: p,
     }))
 
@@ -150,7 +145,7 @@ export class FolderPickerConfig extends Component {
     )
   }
 
-  renderOverflow = (items) => {
+  renderOverflow = items => {
     return (
       <li>
         <Tooltip position={Position.BOTTOM_LEFT} content={map(items, 'text').join(path.sep)}>
@@ -164,7 +159,6 @@ export class FolderPickerConfig extends Component {
 
   render() {
     const { t, extraControl } = this.props
-    const { locked } = this.state
     return (
       <PickerBox
         className="folder-picker"
@@ -183,7 +177,7 @@ export class FolderPickerConfig extends Component {
         ) : (
           this.props.placeholder
         )}
-        <Button disabled={locked} onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
+        <Button onClick={this.handleOnClick} minimal intent={Intent.PRIMARY}>
           {t(this.props.value ? 'Change' : 'Select')}
         </Button>
         {extraControl}

@@ -10,7 +10,7 @@ import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/uti
 import { getShipAAPB } from 'views/utils/aapb'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
-const AAPBSelectorFactory = memoize((shipId) =>
+const AAPBSelectorFactory = memoize(shipId =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     (shipInfo, equipsInfo) => {

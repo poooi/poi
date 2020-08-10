@@ -15,7 +15,7 @@ const handleMemberIdChange = (dispatch, current, previous) => {
   }
 }
 
-const memberIdObserver = observer((state) => state.info.basic.api_member_id, handleMemberIdChange)
+const memberIdObserver = observer(state => state.info.basic.api_member_id, handleMemberIdChange)
 
 if (config.get('poi.misc.analytics', true)) {
   if (getStore('info.basic.api_member_id')) {

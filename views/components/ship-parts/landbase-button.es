@@ -72,36 +72,36 @@ const readyLabel = (
 
 const getAirbaseData = memoizeOne((airbase, mapareas, sortieStatus) => {
   const baseInfo = _(airbase)
-    .filter((a) => mapareas[a.api_area_id])
+    .filter(a => mapareas[a.api_area_id])
     .groupBy('api_area_id')
     .mapValues((bases, areaId) => {
       const planes = _(bases).flatMap('api_plane_info')
       return {
         areaId,
-        needSupply: planes.some((plane) => plane.api_count !== plane.api_max_count),
+        needSupply: planes.some(plane => plane.api_count !== plane.api_max_count),
         squardState: planes.map('api_state').max(), // 0: 未配属あり, 1: 配属済み, >1: 配置転換中あり
-        squardCond: planes.map((plane) => plane.api_cond || 1).max(), // 1: 通常, >1: 黄疲労・赤疲労あり
-        noAction: bases.some((base) => ![1, 2].includes(base.api_action_kind)),
-        allEmpty: planes.every((plane) => plane.api_state === 0),
+        squardCond: planes.map(plane => plane.api_cond || 1).max(), // 1: 通常, >1: 黄疲労・赤疲労あり
+        noAction: bases.some(base => ![1, 2].includes(base.api_action_kind)),
+        allEmpty: planes.every(plane => plane.api_state === 0),
       }
     })
 
-  const needSupply = baseInfo.some((base) => !base.allEmpty && base.needSupply)
+  const needSupply = baseInfo.some(base => !base.allEmpty && base.needSupply)
   const squardState =
     baseInfo
-      .filter((base) => !base.allEmpty)
+      .filter(base => !base.allEmpty)
       .map('squardState')
       .max() || 1
   const squardCond =
     baseInfo
-      .filter((base) => !base.allEmpty)
+      .filter(base => !base.allEmpty)
       .map('squardCond')
       .max() || 1
-  const noAction = baseInfo.some((base) => !base.allEmpty && base.noAction)
+  const noAction = baseInfo.some(base => !base.allEmpty && base.noAction)
 
   const airbaseProps = baseInfo.value()
 
-  const sortie = sortieStatus.filter((a) => !a.allEmpty).reduce((a, b) => a || b, false)
+  const sortie = sortieStatus.filter(a => !a.allEmpty).reduce((a, b) => a || b, false)
   const intent = do {
     if (sortie || noAction) {
       Intent.NONE
@@ -121,7 +121,7 @@ const getAirbaseData = memoizeOne((airbase, mapareas, sortieStatus) => {
 })
 
 export const LandbaseButton = withNamespaces(['resources'])(
-  connect((state) => ({
+  connect(state => ({
     sortieStatus: get(state, 'sortie.sortieStatus', []),
     airbase: get(state, 'info.airbase', []),
     mapareas: get(state, 'const.$mapareas', {}),
@@ -131,7 +131,7 @@ export const LandbaseButton = withNamespaces(['resources'])(
 
       const tooltipContent = (
         <div>
-          {map(airbaseProps, (airbase) => {
+          {map(airbaseProps, airbase => {
             const { areaId, needSupply, squardState, squardCond, noAction } = airbase
             return (
               <div key={areaId}>

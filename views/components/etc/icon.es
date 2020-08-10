@@ -16,16 +16,16 @@ class iconConf {
     this.unassignedKey = 1
   }
 
-  setConf = (val) => this.callbacks.forEach((f) => f(val))
+  setConf = val => this.callbacks.forEach(f => f(val))
 
-  reg = (func) => {
+  reg = func => {
     const key = this.unassignedKey
     ++this.unassignedKey
     this.callbacks.set(key, func)
     return key
   }
 
-  unreg = (key) => this.callbacks.delete(key)
+  unreg = key => this.callbacks.delete(key)
 }
 
 const iconConfSetter = new iconConf()
@@ -38,7 +38,7 @@ const setIcon = (path, val) => {
 
 config.addListener('config.set', setIcon)
 
-window.addEventListener('unload', (e) => {
+window.addEventListener('unload', e => {
   config.removeListener('config.set', setIcon)
 })
 
@@ -47,8 +47,8 @@ window.addEventListener('unload', (e) => {
 
    check availability of a slotitem path, return the path if it's available, or null if not.
  */
-const getAvailableSlotitemIconPath = memoize((slotitemId) =>
-  memoize((useSVGIcon) => {
+const getAvailableSlotitemIconPath = memoize(slotitemId =>
+  memoize(useSVGIcon => {
     try {
       const path = useSVGIcon
         ? /* SVG path */
@@ -77,7 +77,7 @@ export class SlotitemIcon extends PureComponent {
 
   name = 'SlotitemIcon'
 
-  setUseSvg = (useSVGIcon) => this.setState({ useSVGIcon })
+  setUseSvg = useSVGIcon => this.setState({ useSVGIcon })
 
   componentDidMount = () => {
     this.key = iconConfSetter.reg(this.setUseSvg)
@@ -111,7 +111,7 @@ export class MaterialIcon extends PureComponent {
 
   name = 'MaterialIcon'
 
-  setUseSvg = (useSVGIcon) => this.setState({ useSVGIcon })
+  setUseSvg = useSVGIcon => this.setState({ useSVGIcon })
 
   componentDidMount = () => {
     this.key = iconConfSetter.reg(this.setUseSvg)

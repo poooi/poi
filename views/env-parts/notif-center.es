@@ -17,7 +17,7 @@ function defaultAs(value, defaultValue, typeofReq) {
 }
 
 function nonNull(a) {
-  return pickBy(a, (v) => v != null)
+  return pickBy(a, v => v != null)
 }
 
 const THROTTLE_TIME = 1000
@@ -48,20 +48,20 @@ const defaultNotifOptions = {
 class NotificationCenter {
   constructor() {}
 
-  notify = (o) => {
+  notify = o => {
     if (!('groupKey' in o) && 'type' in o) o = { ...o, groupKey: o.type }
     const notifyFunc = o.groupKey ? this._buildGroupedNotify(o.groupKey) : this._doNotify
     notifyFunc(o)
   }
 
-  _buildGroupedNotify = memoize((groupKey) => {
+  _buildGroupedNotify = memoize(groupKey => {
     const groupInfo = {}
     groupInfo.notify = debounce(this._groupedNotifyRun(groupInfo), THROTTLE_TIME)
     return this._groupedNotify(groupInfo)
   })
 
   // o: options
-  _groupedNotify = (info) => (o) => {
+  _groupedNotify = info => o => {
     if (!o) return
     info.options = {
       ...info.options,
@@ -71,7 +71,7 @@ class NotificationCenter {
     info.notify()
   }
 
-  _groupedNotifyRun = (info) => () => {
+  _groupedNotifyRun = info => () => {
     const { title: titleFunc, message: messageFunc } = info.options
     const title = maybeFunctionString(titleFunc, info.buffer)
     const message = maybeFunctionString(messageFunc, info.buffer)
@@ -84,7 +84,7 @@ class NotificationCenter {
     info.options = {}
   }
 
-  _doNotify = (o) => {
+  _doNotify = o => {
     const globalConfig = config.get('poi.notify', {})
     if (!get(globalConfig, 'enabled', true)) return
     const type = o.type || 'others'
@@ -117,8 +117,8 @@ class NotificationCenter {
     }
   }
 
-  _throttlePlaySound = memoize((type) =>
-    throttle((sound) => sound.play(), THROTTLE_TIME, { leading: true, trailing: false }),
+  _throttlePlaySound = memoize(type =>
+    throttle(sound => sound.play(), THROTTLE_TIME, { leading: true, trailing: false }),
   )
 }
 

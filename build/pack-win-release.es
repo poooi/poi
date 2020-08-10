@@ -5,7 +5,7 @@ import { log } from '../lib/utils'
 
 const { ROOT } = global
 
-const packWinRelease = async (poiVersion) => {
+const packWinRelease = async poiVersion => {
   let target = path.join(ROOT, 'dist', 'win-unpacked')
   let dest = path.join(ROOT, 'dist', 'win', `poi-${poiVersion}-win-x64.7z`)
   await compress7z(target, dest)

@@ -47,7 +47,7 @@ Key features include:
 ### Nightlies
 
 - Windows nightlies are hosted on [Appveyor](https://ci.appveyor.com/project/KochiyaOcean/poi),
-- Linux and macOS nightlies are [available here](https://nightly.poi.moe/).
+- Linux and macOS nightlies are [available here](https://poidb.0u0.moe/nightly/).
 
 Please note that artifacts could be periodically emptied.
 

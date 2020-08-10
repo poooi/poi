@@ -2,7 +2,8 @@
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import WebView from 'react-electron-web-view'
+import { get, debounce } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
 import styled from 'styled-components'
@@ -15,7 +16,6 @@ import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiControl } from './components/info/control'
 import { fileUrl } from 'views/utils/tools'
 import { CustomTag } from 'views/components/etc/custom-tag'
-import WebView from 'views/components/etc/webview'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import i18next from 'views/env-parts/i18next'
 
@@ -24,7 +24,8 @@ const ipc = remote.require('./lib/ipc')
 const poiControlHeight = 30
 const ua = remote
   .getCurrentWebContents()
-  .userAgent.replace(/Electron[^ ]* /, '')
+  .getUserAgent()
+  .replace(/Electron[^ ]* /, '')
   .replace(/poi[^ ]* /, '')
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
 
@@ -58,9 +59,8 @@ const KanGame = styled(CustomTag)`
   }
 `
 
-@connect((state) => ({
+@connect(state => ({
   configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
-  actualWindowWidth: get(state, 'layout.webview.width', 1200),
   zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   muted: get(state, 'config.poi.content.muted', false),
@@ -100,8 +100,8 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  handleResize = (entries) => {
-    entries.forEach((entry) => {
+  handleResize = entries => {
+    entries.forEach(entry => {
       const { width, height } = entry.contentRect
       if (
         width !== getStore('layout.webview.width') ||
@@ -125,28 +125,25 @@ export class KanGameWrapper extends Component {
     })
   }
 
+  resizeObserver = new ResizeObserver(debounce(this.handleResize, 200))
+
   handleCertError = (event, url, error, certificate, callback) => {
     console.warn(event, url, error, certificate)
     const trusted = config.get('poi.misc.trustedCerts', [])
-    const untrusted = config.get('poi.misc.untrustedCerts', [])
-    const hash = createHash('sha256').update(certificate.data).digest('base64')
-    if (!trusted.includes(hash) && !untrusted.includes(hash)) {
+    const hash = createHash('sha256')
+      .update(certificate.data)
+      .digest('base64')
+    if (!trusted.includes(hash)) {
       const title = i18next.t('others:Certificate error')
       const content = (
         <ReactMarkdown
           source={i18next.t('others:cert_error_markdown', {
             name: certificate.issuerName,
-            url: url,
             value: hash,
           })}
         />
       )
       const footer = [
-        {
-          name: i18next.t('others:Ignore'),
-          func: () => this.setuntrustedCerts(hash),
-          style: 'warning',
-        },
         {
           name: i18next.t('others:Trust'),
           func: () => this.settrustedCerts(hash),
@@ -157,17 +154,11 @@ export class KanGameWrapper extends Component {
     }
   }
 
-  settrustedCerts = (hash) => {
+  settrustedCerts = hash => {
     const trusted = config.get('poi.misc.trustedCerts', [])
     trusted.push(hash)
     config.set('poi.misc.trustedCerts', trusted)
     this.webview.current.view.reload()
-  }
-
-  setuntrustedCerts = (hash) => {
-    const untrusted = config.get('poi.misc.untrustedCerts', [])
-    untrusted.push(hash)
-    config.set('poi.misc.untrustedCerts', untrusted)
   }
 
   setProperWindowSize = (webviewWidth, webviewHeight) => {
@@ -216,11 +207,14 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
+    this.resizeObserver.observe(this.webview.current.view)
     this.setProperWindowSize(
       Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
       Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
     )
-    this.webview.current.getWebContents().addListener('certificate-error', this.handleCertError)
+    this.webview.current.view
+      .getWebContents()
+      .addListener('certificate-error', this.handleCertError)
   }
 
   handleWebviewUnmount = () => {
@@ -231,18 +225,7 @@ export class KanGameWrapper extends Component {
         ts: Date.now(),
       },
     })
-  }
-
-  handleDidFrameFinishLoad = () => {
-    this.enableAudioMutePolyfill = true
-  }
-
-  handleWebviewMediaStartedPlaying = () => {
-    if (this.props.muted && this.enableAudioMutePolyfill) {
-      this.enableAudioMutePolyfill = false
-      this.webview.current.view.audioMuted = false
-      this.webview.current.view.audioMuted = true
-    }
+    this.resizeObserver.unobserve(this.webview.current.view)
   }
 
   componentWillUnmount = () => {
@@ -263,7 +246,6 @@ export class KanGameWrapper extends Component {
   render() {
     const {
       configWebviewWidth,
-      actualWindowWidth,
       zoomLevel,
       isHorizontal,
       muted,
@@ -273,11 +255,9 @@ export class KanGameWrapper extends Component {
       editable,
       windowSize,
       overlayPanel,
-      windowMode,
     } = this.props
-    const getZoomedSize = (value) => Math.round(value / zoomLevel)
-    const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
-    if (windowMode) {
+    const getZoomedSize = value => Math.round(value / zoomLevel)
+    if (this.props.windowMode) {
       return (
         <KanGame tag="kan-game">
           <div id="webview-wrapper" className="webview-wrapper">
@@ -286,23 +266,20 @@ export class KanGameWrapper extends Component {
               src={this.state.url}
               key={this.state.key}
               ref={this.webview}
-              disablewebsecurity="on"
-              allowpopups="on"
+              plugins
+              disablewebsecurity
               webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+              nodeIntegration
               preload={preloadUrl}
               style={{
                 width: '100%',
                 paddingTop: '60%',
                 position: 'relative',
               }}
-              audioMuted={muted}
-              userAgent={ua}
-              zoomFactor={webviewZoomFactor}
+              muted={muted}
+              useragent={ua}
               onDidAttach={this.handleWebviewMount}
               onDestroyed={this.handleWebviewDestroyed}
-              onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
-              onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
-              onResize={this.handleResize}
             />
             <PoiToast />
           </div>
@@ -426,7 +403,7 @@ export class KanGameWrapper extends Component {
             height: disableHeight,
           }}
           onResized={this.setRatio}
-          ref={(r) => (this.resizableArea = r)}
+          ref={r => (this.resizableArea = r)}
         >
           <KanGame tag="kan-game">
             <div
@@ -441,9 +418,10 @@ export class KanGameWrapper extends Component {
                 src={this.state.url}
                 key={this.state.key}
                 ref={this.webview}
-                disablewebsecurity="on"
-                allowpopups="on"
+                plugins
+                disablewebsecurity
                 webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+                nodeIntegration
                 preload={preloadUrl}
                 style={{
                   width: '100%',
@@ -451,14 +429,10 @@ export class KanGameWrapper extends Component {
                   position: 'relative',
                   display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
                 }}
-                audioMuted={muted}
-                userAgent={ua}
-                zoomFactor={webviewZoomFactor}
+                useragent={ua}
+                muted={muted}
                 onDidAttach={this.handleWebviewMount}
                 onDestroyed={this.handleWebviewDestroyed}
-                onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
-                onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
-                onResize={this.handleResize}
               />
               <PoiToast />
             </div>

@@ -84,7 +84,7 @@ export function reducer(state = {}, { type, body, postBody }, store) {
         ...state,
         [body.api_ship.api_id]: body.api_ship,
       }
-      postBody.api_id_items.split(',').forEach((shipId) => {
+      postBody.api_id_items.split(',').forEach(shipId => {
         delete state[parseInt(shipId)]
       })
       return state
@@ -108,7 +108,7 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       }
     case '@@Response/kcsapi/api_req_kousyou/destroyship':
       state = { ...state }
-      postBody.api_ship_id.split(',').forEach((shipId) => {
+      postBody.api_ship_id.split(',').forEach(shipId => {
         delete state[parseInt(shipId)]
       })
       return state
@@ -137,7 +137,7 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       let newState = state
       if (instantDockingCompletionState) {
         const { rstId, dockId } = instantDockingCompletionState
-        const dockInfo = body.find((x) => x.api_id === dockId)
+        const dockInfo = body.find(x => x.api_id === dockId)
         if (dockInfo.api_ship_id === 0) {
           newState = {
             ...state,
@@ -164,22 +164,6 @@ export function reducer(state = {}, { type, body, postBody }, store) {
       return {
         ...state,
         [api_ship_id]: completeRepair(state[api_ship_id]),
-      }
-    }
-    case '@@Response/kcsapi/api_req_map/anchorage_repair': {
-      const { api_ship_data } = body
-      return compareUpdate(state, indexify(api_ship_data))
-    }
-    case '@@Response/kcsapi/api_req_kaisou/open_exslot': {
-      // Reference:
-      // https://github.com/andanteyk/ElectronicObserver/blob/6c2ae187c85be9e1fc8b131f73dd3d16b2b2f85b/ElectronicObserver/Other/Information/apilist.txt#L1431-L1434
-      const { api_id } = postBody
-      return {
-        ...state,
-        [api_id]: {
-          ...state[api_id],
-          api_slot_ex: -1, // 補強スロット 0=未解放, -1=未装備
-        },
       }
     }
   }

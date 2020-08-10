@@ -47,6 +47,22 @@
     "desen-US": "Exp calculator",
     "desko-KR": "경험치 계산기"
   },
+  "poi-plugin-expedition": {
+    "zh-CN": "远征信息",
+    "zh-TW": "遠征信息",
+    "ja-JP": "遠征情報",
+    "en-US": "Expedition",
+    "ko-KR": "원정 정보",
+    "version": "v0.0.0",
+    "icon": "flag",
+    "author": "马里酱",
+    "link": "https://github.com/malichan",
+    "deszh-CN": "远征信息查询 & 成功条件检查",
+    "deszh-TW": "遠征信息查詢 & 成功條件檢查",
+    "desja-JP": "遠征情報 & 成功条件チェック",
+    "desen-US": "Expedition requirements inquiry & validation",
+    "desko-KR": "원정 정보 조회 & 성공 조건 확인"
+  },
   "poi-plugin-hensei-nikki": {
     "zh-CN": "编成日记",
     "zh-TW": "編成日記",

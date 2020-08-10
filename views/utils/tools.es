@@ -3,7 +3,6 @@
  */
 
 import _, { isEqual, forEach, keyBy, zip, unzip, sum, isString, toString } from 'lodash'
-import pangu from 'pangu'
 import path from 'path'
 import { readJsonSync } from 'fs-extra'
 import url from 'url'
@@ -18,7 +17,7 @@ export function arraySum(arr) {
 }
 
 export function arrayMultiply(arr, n) {
-  return arr.map((i) => i * n)
+  return arr.map(i => i * n)
 }
 
 // Args:
@@ -28,7 +27,7 @@ export function arrayAdd(arr, n) {
   if (Array.isArray(n)) {
     return zip(arr, n).map(([a, b]) => a + b)
   } else {
-    return arr.map((i) => i + n)
+    return arr.map(i => i + n)
   }
 }
 
@@ -39,7 +38,7 @@ export function arraySubstract(arr, n) {
   if (Array.isArray(n)) {
     return zip(arr, n).map(([a, b]) => a - b)
   } else {
-    return arr.map((i) => i - n)
+    return arr.map(i => i - n)
   }
 }
 
@@ -209,7 +208,7 @@ export const isSubdirectory = (parent, dir) => {
 }
 
 // Execute function until dom ready
-export const executeUntilReady = (func) => {
+export const executeUntilReady = func => {
   if (document.readyState === 'complete') {
     func()
   } else {
@@ -217,11 +216,15 @@ export const executeUntilReady = (func) => {
   }
 }
 
-const ensureString = (str) => (isString(str) ? str : toString(str))
-export const escapeI18nKey = (str) =>
-  ensureString(str).replace(/\.\W/g, '').replace(/\.$/, '').replace(/:\s/g, '').replace(/:$/g, '')
+const ensureString = str => (isString(str) ? str : toString(str))
+export const escapeI18nKey = str =>
+  ensureString(str)
+    .replace(/\.\W/g, '')
+    .replace(/\.$/, '')
+    .replace(/:\s/g, '')
+    .replace(/:$/g, '')
 
-export const readI18nResources = (filePath) => {
+export const readI18nResources = filePath => {
   try {
     let data = readJsonSync(filePath)
     data = _(data)
@@ -250,5 +253,3 @@ export const POPOVER_MODIFIERS = {
     boundariesElement: 'window', // enable display tooltip within small containers
   },
 }
-
-export const cjkSpacing = (str) => (isString(str) ? pangu.spacing(str) : toString(str))

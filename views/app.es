@@ -40,15 +40,15 @@ require('./services/alert')
 Popover.defaultProps.modifiers = POPOVER_MODIFIERS
 Popover.defaultProps.boundary = 'viewport'
 
-@connect((state) => ({
+@connect(state => ({
   isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
   reversed: get(state, 'config.poi.layout.reverse', false),
   isolateGameWindow: get(state, 'config.poi.layout.isolate', false),
   theme: get(state, 'config.poi.appearance.theme', 'dark'),
 }))
 class Poi extends Component {
-  handleResize = (entries) => {
-    entries.forEach((entry) => {
+  handleResize = entries => {
+    entries.forEach(entry => {
       const { width, height } = entry.contentRect
       if (
         width !== 0 &&

@@ -32,11 +32,11 @@ class BasicAuth extends PureComponent {
     this.setState({ showModal: true })
   }
 
-  handleUser = (e) => {
+  handleUser = e => {
     this.setState({ user: e.target.value })
   }
 
-  handlePassword = (e) => {
+  handlePassword = e => {
     this.setState({ password: e.target.value })
   }
 

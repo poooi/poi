@@ -53,7 +53,7 @@ const Icon = styled.span`
   line-height: 16px;
   min-width: 16px;
   display: flex;
-  transform: ${(props) =>
+  transform: ${props =>
     compact([props.invertX && 'scaleX(-1)', props.invertY && 'scaleY(-1)']).join(' ')};
 `
 
@@ -74,7 +74,7 @@ export class LayoutConfig extends Component {
     isolateGameWindow: PropTypes.bool,
   }
 
-  createConfirmModal = (callback) => {
+  createConfirmModal = callback => {
     const { t } = this.props
     const title = t('setting:Apply changes')
     const content = t('setting:Game page will be refreshed')
@@ -109,7 +109,7 @@ export class LayoutConfig extends Component {
 
   handleSetIsolateGameWindow = () => {
     if (!this.props.isolateGameWindow) {
-      this.createConfirmModal((e) => {
+      this.createConfirmModal(e => {
         if (this.props.overlayPanel) {
           this.setLayout('horizontal', false)
         }
@@ -129,11 +129,11 @@ export class LayoutConfig extends Component {
     this.setOverlayPanel(!this.props.overlayPanel)
   }
 
-  setIsolateGameWindow = (flag) => {
+  setIsolateGameWindow = flag => {
     config.set('poi.layout.isolate', flag)
   }
 
-  setOverlayPanel = (flag) => {
+  setOverlayPanel = flag => {
     config.set('poi.layout.overlay', flag)
   }
 
@@ -169,7 +169,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={rightActive}
-                  onClick={(e) => this.handleSetLayout('horizontal', false)}
+                  onClick={e => this.handleSetLayout('horizontal', false)}
                 >
                   <Icon>{SVG.horizontal}</Icon>
                 </Button>
@@ -177,7 +177,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={downActive}
-                  onClick={(e) => this.handleSetLayout('vertical', false)}
+                  onClick={e => this.handleSetLayout('vertical', false)}
                 >
                   <Icon>{SVG.vertical}</Icon>
                 </Button>
@@ -185,7 +185,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={upActive}
-                  onClick={(e) => this.handleSetLayout('vertical', true)}
+                  onClick={e => this.handleSetLayout('vertical', true)}
                 >
                   <Icon invertY>{SVG.vertical}</Icon>
                 </Button>
@@ -193,7 +193,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={leftActive}
-                  onClick={(e) => this.handleSetLayout('horizontal', true)}
+                  onClick={e => this.handleSetLayout('horizontal', true)}
                 >
                   <Icon invertX>{SVG.horizontal}</Icon>
                 </Button>
@@ -212,7 +212,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={overlayPanel && !isolateGameWindow}
-                  onClick={(e) => this.handleSetOverlayPanel()}
+                  onClick={e => this.handleSetOverlayPanel()}
                 >
                   <Icon>{SVG.panel}</Icon>
                 </Button>
@@ -227,7 +227,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={!enableDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(false)}
+                  onClick={e => this.handleSetDoubleTabbed(false)}
                 >
                   <Icon invertX>{SVG.singleTab}</Icon>
                 </Button>
@@ -235,7 +235,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={enableDoubleTabbed && !verticalDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(true, false)}
+                  onClick={e => this.handleSetDoubleTabbed(true, false)}
                 >
                   <Icon>{SVG.doubleTabHorizontal}</Icon>
                 </Button>
@@ -243,7 +243,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={enableDoubleTabbed && verticalDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(true, true)}
+                  onClick={e => this.handleSetDoubleTabbed(true, true)}
                 >
                   <Icon invertY>{SVG.doubleTabVertical}</Icon>
                 </Button>

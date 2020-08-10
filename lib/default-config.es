@@ -13,18 +13,15 @@ const defaultConfig = {
       homepage: 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
       networklog: true,
       analytics: true,
-      exceptionReporting: true,
       async: true,
       screenshot: {
         format: 'png',
-        usecanvas: false,
       },
       cache: {
         path: global.DEFAULT_CACHE_PATH,
         size: 640,
       },
       trustedCerts: [],
-      pinminimap: false,
     },
     content: {
       resizable: true,
@@ -32,8 +29,6 @@ const defaultConfig = {
       muted: false,
     },
     appearance: {
-      avatar: true,
-      avatarType: 'none',
       zoom: 1,
       theme: 'dark',
       colorblindFilter: 'null',
@@ -122,13 +117,6 @@ const defaultConfig = {
     },
     eventSortieCheck: {
       enable: true,
-    },
-    expeditionResupplyCheck: {
-      enable: false,
-    },
-    unusedEquipmentSlotCheck: {
-      enable: false,
-      ignoreUnlocked: false,
     },
     mapStartCheck: {
       ship: {

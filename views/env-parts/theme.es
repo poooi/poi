@@ -17,7 +17,7 @@ require.extensions['.css'] = (m, name) => {
   document.head.appendChild(link)
 }
 
-window.applyTheme = (theme) => config.set('poi.appearance.theme', theme)
+window.applyTheme = theme => config.set('poi.appearance.theme', theme)
 config.setDefault('poi.appearance.theme', 'darklykai')
 
 export function loadStyle(
@@ -73,7 +73,7 @@ export function loadStyle(
     $('#custom-css').setAttribute('href', `file://${EXROOT}/hack/custom.css`)
   }
 
-  const delaySetClassName = (className) => {
+  const delaySetClassName = className => {
     if (document.body) {
       document.body.className = className
     } else {
@@ -81,7 +81,7 @@ export function loadStyle(
     }
   }
 
-  const delaySetBackgroundColor = (value) => {
+  const delaySetBackgroundColor = value => {
     if (document.body) {
       document.body.style.backgroundColor = value
     } else {
@@ -89,7 +89,7 @@ export function loadStyle(
     }
   }
 
-  const delaySetFilter = (value) => {
+  const delaySetFilter = value => {
     if (document.body) {
       document.body.style.filter = value
     } else {
@@ -97,7 +97,7 @@ export function loadStyle(
     }
   }
 
-  const setFilter = (type) => {
+  const setFilter = type => {
     if (type === 'null') {
       delaySetFilter(null)
     } else {
@@ -168,7 +168,7 @@ export function loadStyle(
     reloadCustomCss()
   }
 
-  const windowsSetVibrancy = (value) => {
+  const windowsSetVibrancy = value => {
     try {
       const electronVibrancy = remote.require(
         join(ROOT, 'assets', 'binary', 'electron-vibrancy-x64'),
@@ -186,7 +186,7 @@ export function loadStyle(
     }
   }
 
-  const setVibrancy = (value) => {
+  const setVibrancy = value => {
     const theme = config.get('poi.appearance.theme', 'dark')
     const isDark = theme === 'dark'
     if ('darwin' === process.platform) {
@@ -223,11 +223,11 @@ export function loadStyle(
   }
 
   config.addListener('config.set', themeChangeHandler)
-  currentWindow.on('closed', (e) => {
+  currentWindow.on('closed', e => {
     config.removeListener('config.set', themeChangeHandler)
   })
 
-  const setBackground = (p) => {
+  const setBackground = p => {
     if (p) {
       div.style.backgroundImage = `url(${CSS.escape(fileUrl(p))})`
     } else {
@@ -235,7 +235,7 @@ export function loadStyle(
     }
   }
 
-  const toggleBackground = (value) => {
+  const toggleBackground = value => {
     if (value === 2) {
       div.style.filter = 'blur(10px) saturate(50%)'
       div.style.display = 'block'

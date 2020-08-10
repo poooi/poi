@@ -89,13 +89,13 @@ export class NavigatorBar extends React.Component {
     }
   }
   // Webview Event
-  onStartLoading = (e) => {
+  onStartLoading = e => {
     this.setState({
       status: wvStatus.Loading,
     })
   }
 
-  onStopLoading = (e) => {
+  onStopLoading = e => {
     const webview = getStore('layout.webview.ref')
     this.setState({
       status: wvStatus.Loaded,
@@ -103,20 +103,20 @@ export class NavigatorBar extends React.Component {
     })
   }
 
-  onFailLoad = (e) => {
+  onFailLoad = e => {
     this.setState({
       status: wvStatus.Failed,
     })
   }
 
-  onWillNavigate = (e) => {
+  onWillNavigate = e => {
     this.setState({
       url: e.url || this.state.url,
     })
   }
 
   // UI Interaction
-  navigate = (url) => {
+  navigate = url => {
     if (!url) {
       return
     }
@@ -130,7 +130,7 @@ export class NavigatorBar extends React.Component {
     })
   }
 
-  onChangeUrl = (e) => {
+  onChangeUrl = e => {
     if (typeof e.currentTarget.value === 'string') {
       this.setState({
         url: e.currentTarget.value,
@@ -138,26 +138,26 @@ export class NavigatorBar extends React.Component {
     }
   }
 
-  onKeydown = (e) => {
+  onKeydown = e => {
     if (e.keyCode === 13) {
       this.navigate(this.state.url)
     }
   }
 
-  onClickNavigate = (e) => {
+  onClickNavigate = e => {
     this.navigate(this.state.url)
   }
 
-  onClickStop = (e) => {
+  onClickStop = e => {
     const webview = getStore('layout.webview.ref')
     webview.stop()
   }
 
-  onClickHomepage = (e) => {
+  onClickHomepage = e => {
     config.set('poi.misc.homepage', this.state.url)
   }
 
-  onRightClickHomepage = (e) => {
+  onRightClickHomepage = e => {
     this.navigate(config.get('poi.misc.homepage'))
   }
 

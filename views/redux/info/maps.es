@@ -3,7 +3,7 @@ import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
 export function reducer(state = {}, { type, body, postBody }) {
   // Compatibility: Old api arranges maps in array
-  if (Array.isArray(state)) state = indexify(state.filter((e) => e && e.api_id))
+  if (Array.isArray(state)) state = indexify(state.filter(e => e && e.api_id))
   switch (type) {
     case '@@Response/kcsapi/api_get_member/mapinfo': {
       const newState = indexify(body.api_map_info)

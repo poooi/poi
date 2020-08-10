@@ -10,7 +10,7 @@ import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import { ScrollShadow } from 'views/components/etc/scroll-shadow'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 
-const miniShipRowWidthSelector = (state) => get(state, 'layout.minishippane.width', 250)
+const miniShipRowWidthSelector = state => get(state, 'layout.minishippane.width', 250)
 
 const ShipDetailsMini = styled(ScrollShadow)`
   flex: 1;
@@ -48,8 +48,8 @@ const AirbaseArea = styled.div`
 
 export const LBViewMini = compose(
   withNamespaces(['resources']),
-  connect((state) => ({
-    areaIds: get(state, 'info.airbase', []).map((a) => a.api_area_id),
+  connect(state => ({
+    areaIds: get(state, 'info.airbase', []).map(a => a.api_area_id),
     mapareas: get(state, 'const.$mapareas', {}),
     enableAvatar: get(state, 'config.poi.appearance.avatar', true),
     width: miniShipRowWidthSelector(state),
@@ -60,13 +60,13 @@ export const LBViewMini = compose(
       (id, i) =>
         mapareas[id] &&
         (id === areaIds[i - 1] ? (
-          <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 280} />
+          <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
         ) : (
           <Fragment key={i}>
             <AirbaseArea className="airbase-area">
               [{id}] {mapareas[id] ? t(`resources:${mapareas[id].api_name}`) : ''}
             </AirbaseArea>
-            <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 280} />
+            <MiniSquardRow key={i} squardId={i} enableAvatar={enableAvatar} compact={width < 240} />
           </Fragment>
         )),
     )}

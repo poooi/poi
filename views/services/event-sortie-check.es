@@ -11,16 +11,16 @@ const { config } = window
 // - ships has less than 2 color tags (multiple-color prevents sortie)
 // It is of course insufficient because the existence of easy level and areas that has no tag requirements
 
-const getFleetFlag = (fleetData) => {
+const getFleetFlag = fleetData => {
   const data = _(fleetData)
     .map(([ship, _] = []) => ship)
     .filter(Boolean)
 
-  const freeShipCount = data.filter((ship) => ship.api_sally_area === 0).value().length
+  const freeShipCount = data.filter(ship => ship.api_sally_area === 0).value().length
 
   const taggedCount = data
-    .filter((ship) => ship.api_sally_area > 0)
-    .map((ship) => ship.api_sally_area)
+    .filter(ship => ship.api_sally_area > 0)
+    .map(ship => ship.api_sally_area)
     .uniq()
     .value().length
 
@@ -47,8 +47,8 @@ window.addEventListener('game.request', ({ detail: { path } }) => {
     }
 
     _(fleets)
-      .filter((fleetId) => ![3, 4, 5].includes(fleetStateSelectorFactory(fleetId)(state))) // 3: Repairing, 4: In mission, 5: In map
-      .each((fleetId) => {
+      .filter(fleetId => ![3, 4, 5].includes(fleetStateSelectorFactory(fleetId)(state))) // 3: Repairing, 4: In mission, 5: In map
+      .each(fleetId => {
         flag = flag || getFleetFlag(fleetShipsDataSelectorFactory(fleetId)(state))
       })
 

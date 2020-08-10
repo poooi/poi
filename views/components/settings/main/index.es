@@ -11,7 +11,7 @@ import { PluginConfig } from './plugin-config'
 import { AdvancedConfig } from './advanced-config'
 import { AccessibilityConfig } from './accessibility-config'
 
-export const PoiConfig = connect((state) => ({
+export const PoiConfig = connect(state => ({
   refts: get(state, 'layout.webview.refts', 0),
 }))(
   withNamespaces(['setting'])(({ refts, t }) => (

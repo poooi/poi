@@ -16,7 +16,6 @@ import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
 
 import {
-  selectShipAvatarColor,
   getCondStyle,
   equipIsAircraft,
   getShipLabelStatus,
@@ -25,7 +24,6 @@ import {
   getTyku,
   LBAC_INTENTS,
   LBAC_STATUS_NAMES,
-  LBAC_STATUS_AVATAR_COLOR,
 } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
@@ -34,7 +32,6 @@ import {
   escapeStatusSelectorFactory,
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
-  fcdShipTagColorSelector,
 } from 'views/utils/selectors'
 
 import { SlotItemContainer, ALevel } from 'views/components/ship-parts/styled-components'
@@ -91,7 +88,7 @@ const OnSlot = styled(Tag)`
     `}
 `
 
-const slotitemsDataSelectorFactory = memoize((shipId) =>
+const slotitemsDataSelectorFactory = memoize(shipId =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     ([ship, $ship] = [], equipsData) => ({
@@ -102,7 +99,7 @@ const slotitemsDataSelectorFactory = memoize((shipId) =>
 )
 
 const Slotitems = withNamespaces(['resources'])(
-  connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state))(function ({
+  connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state))(function({
     api_maxeq,
     equipsData,
     t,
@@ -157,21 +154,18 @@ const Slotitems = withNamespaces(['resources'])(
   }),
 )
 
-const miniShipRowDataSelectorFactory = memoize((shipId) =>
+const miniShipRowDataSelectorFactory = memoize(shipId =>
   createSelector(
     [
       shipDataSelectorFactory(shipId),
       shipRepairDockSelectorFactory(shipId),
       escapeStatusSelectorFactory(shipId),
-      fcdShipTagColorSelector,
-      (state) => get(state, 'config.poi.appearance.avatarType'),
     ],
-    ([ship, $ship] = [], repairDock, escaped, shipTagColor, avatarType) => {
+    ([ship, $ship] = [], repairDock, escaped) => {
       return {
         ship: ship || {},
         $ship: $ship || {},
         labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
-        shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
       }
     },
   ),
@@ -199,84 +193,92 @@ const ShipTooltip = styled.div`
 `
 
 const ShipItem = styled.div`
-  align-items: start;
-  display: grid;
+  align-items: center;
+  display: flex;
   flex: 1;
   flex-flow: row nowrap;
   overflow: hidden;
   position: relative;
-  white-space: nowrap;
-  ${({ avatar = true, shipName = true, isLBAC = false }) => {
-    const avatarWidth = avatar ? '50px' : 0
-    const nameWidth = shipName ? 'minmax(35px, 95px)' : '15px'
-    const dataWidth = isLBAC ? 'minmax(32px, 1fr) 120px' : 'minmax(70px, 5fr) 18px 42px'
-    return css`
-      grid-template-columns: ${avatarWidth} ${nameWidth} ${dataWidth};
-      grid-template-rows: 20px 13px;
-      grid-column-gap: 6px;
-      grid-row-gap: 5px;
-    `
-  }}
 `
 
 const ShipLvAvatar = styled.div`
-  grid-row: 2 / 3;
-  grid-column: 1 / 2;
-  z-index: 99;
+  bottom: 0;
   display: flex;
   filter: drop-shadow(0 0 2px black);
   font-size: 70%;
+  left: 0;
   line-height: 1;
+  position: absolute;
   text-shadow: 0 0 2px rgba(0, 0, 0, 1);
   white-space: nowrap;
 `
 
-const ShipInfo = styled.div`
-  grid-row: 1 / 3;
-  grid-column: 1 / 3;
-  z-index: 100;
-  height: 100%;
+const ShipNameContainer = styled.div`
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
 
-  & > div {
-    height: 100%;
-    width: 100%;
-  }
+const ShipInfo = styled.div`
+  display: flex;
+  flex-basis: 0;
+  flex-flow: column nowrap;
+  font-size: 14px;
+  justify-content: space-between;
+  min-width: 0;
+  z-index: 1;
+  flex-grow: 1;
+  flex-shrink: 0;
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      flex-basis: 61px;
+
+      & > .bp3-popover-target {
+        height: 100%;
+      }
+
+      ${ShipNameContainer} {
+        height: 100%;
+        padding-left: 58px;
+      }
+    `}
+  ${({ hideInfo }) =>
+    hideInfo &&
+    css`
+      flex-grow: 0;
+      flex-shrink: 0;
+      height: 37px;
+    `}
 `
 
 const ShipName = styled.div`
-  z-index: 2;
-  grid-row: 1 / 2;
-  grid-column: 2 / 3;
+  height: 20px;
+  margin-right: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      font-weight: 600;
-      color: white;
-      text-shadow: #000000 0px 0px 10px;
-    `}
 `
 
 const ShipLvText = styled.div`
-  z-index: 2;
-  grid-row: 2 / 3;
-  grid-column: 2 / 3;
+  display: flex;
   font-size: 70%;
+  height: 13px;
   line-height: 1;
+  margin-right: 4px;
+  margin-top: 2px;
   overflow: hidden;
   align-items: center;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      color: white;
-      text-shadow: #000000 0px 0px 10px;
-    `}
+  margin-top: 5px;
+`
+
+const ShipState = styled.div`
+  display: flex;
+  flex-basis: 0;
+  flex-flow: column nowrap;
+  flex-grow: 2;
+  flex-shrink: 1;
+  font-size: 14px;
+  justify-content: space-between;
 `
 
 const ShipStateText = styled.div`
@@ -284,55 +286,49 @@ const ShipStateText = styled.div`
 `
 
 const ShipHP = styled.span`
-  font-size: 110%;
-  grid-row: 1 / 2;
-  grid-column: 3 / 4;
+  align-self: flex-start;
+  flex-basis: 60px;
+  flex-grow: 1;
+  flex-shrink: 0;
 `
 
 const StatusLabelContainer = styled.div`
-  grid-row: 1 / 2;
-  grid-column: 4 / 5;
+  display: inline-block;
+  flex-basis: 20px;
+  flex-grow: 0;
+  flex-shrink: 1;
+  margin-left: 5px;
+  margin-top: -1px;
   position: relative;
   text-align: center;
   vertical-align: middle;
-  z-index: 101;
+  z-index: 100;
 `
 
 const ShipCond = styled.div`
   align-self: flex-end;
-  grid-row: 1 / 2;
-  grid-column: 5 / 6;
+  flex-basis: inherit;
+  flex-flow: nowrap;
+  flex-grow: 0;
+  flex-shrink: 1;
+  width: 30px;
   text-align: right;
   white-space: nowrap;
 `
 
 const HPProgress = styled.div`
-  grid-row: 2 / 3;
-  grid-column: 3 / 6;
+  flex: 1;
+  margin-top: 5px;
   .bp3-progress-bar {
     flex: auto;
     height: 7px;
-    margin-top: 3px;
   }
 `
 
 export const ShipAvatar = styled(Avatar)`
+  position: absolute;
+  z-index: 10;
   pointer-events: none;
-  align-items: end;
-  align-self: center;
-  grid-row: 1 / 3;
-  grid-column: 1 / 3;
-`
-
-const Gradient = styled.div`
-  z-index: 1;
-  grid-row: 1 / 3;
-  grid-column: 2 / 3;
-  height: 100%;
-
-  ${({ color }) => css`
-    background: linear-gradient(to right, transparent, ${color});
-  `}
 `
 
 @withNamespaces(['resources', 'main'])
@@ -344,7 +340,6 @@ export class MiniShipRow extends Component {
     labelStatus: PropTypes.number,
     enableAvatar: PropTypes.bool,
     compact: PropTypes.bool,
-    shipAvatarColor: PropTypes.string,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -355,7 +350,7 @@ export class MiniShipRow extends Component {
   }
 
   render() {
-    const { ship, $ship, labelStatus, enableAvatar, shipAvatarColor, compact, t } = this.props
+    const { ship, $ship, labelStatus, enableAvatar, compact, t } = this.props
     const hideShipName = enableAvatar && compact
     if (!ship) return <div />
     const labelStatusStyle = getStatusStyle(labelStatus)
@@ -387,70 +382,25 @@ export class MiniShipRow extends Component {
       >
         <ShipItem
           className="ship-item"
-          avatar={enableAvatar}
-          shipName={!hideShipName}
           data-master-id={ship.api_ship_id}
           data-ship-id={ship.api_id}
         >
           {enableAvatar && (
-            <>
-              <ShipAvatar
-                mstId={$ship.api_id}
-                isDamaged={hpPercentage <= 50}
-                useDefaultBG={false}
-                useFixedWidth={false}
-                height={38}
-              />
-              <Gradient color={shipAvatarColor} />
-            </>
+            <ShipAvatar mstId={$ship.api_id} isDamaged={hpPercentage <= 50} height={33}>
+              {compact && (
+                <ShipLvAvatar className="ship-lv-avatar">
+                  {level && t('main:Lv', { level })}
+                </ShipLvAvatar>
+              )}
+            </ShipAvatar>
           )}
-          {hideShipName && (
-            <ShipLvAvatar className="ship-lv-avatar">
-              {level && t('main:Lv', { level })}
-            </ShipLvAvatar>
-          )}
-          {!hideShipName && (
-            <>
-              <ShipName
-                className="ship-name"
-                style={enableAvatar ? null : labelStatusStyle}
-                avatar={enableAvatar}
-              >
-                {$ship.api_name
-                  ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
-                  : '??'}
-              </ShipName>
-              <ShipLvText
-                className="ship-lv-text"
-                style={enableAvatar ? null : labelStatusStyle}
-                avatar={enableAvatar}
-              >
-                {level && t('main:Lv', { level })}
-              </ShipLvText>
-            </>
-          )}
-          <ShipHP className="ship-hp" style={labelStatusStyle}>
-            {ship.api_nowhp} / {ship.api_maxhp}
-          </ShipHP>
-          <StatusLabelContainer className="status-label">
-            <StatusLabel label={labelStatus} />
-          </StatusLabelContainer>
-          <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
-            {ship.api_cond}
-          </ShipCond>
-          <HPProgress className="hp-progress" style={labelStatusStyle}>
-            <ProgressBar
-              stripes={false}
-              intent={getHpStyle(hpPercentage)}
-              value={hpPercentage / 100}
-            />
-          </HPProgress>
           <ShipInfo
             as={Tooltip}
             className="ship-info"
+            avatar={enableAvatar}
+            hideInfo={hideShipName}
             position={Position.TOP_LEFT}
             wrapperTagName="div"
-            targetTagName="div"
             content={
               hideShipName ? (
                 <div className="ship-tooltip-info">
@@ -469,8 +419,39 @@ export class MiniShipRow extends Component {
               )
             }
           >
-            <div />
+            <ShipNameContainer className="ship-name-container">
+              {!hideShipName && (
+                <>
+                  <ShipName className="ship-name" style={labelStatusStyle}>
+                    {$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}
+                  </ShipName>
+                  <ShipLvText className="ship-lv-text" style={labelStatusStyle}>
+                    {level && t('main:Lv', { level })}
+                  </ShipLvText>
+                </>
+              )}
+            </ShipNameContainer>
           </ShipInfo>
+          <ShipState className="ship-stat">
+            <ShipStateText className="div-row">
+              <ShipHP className="ship-hp" style={labelStatusStyle}>
+                {ship.api_nowhp} / {ship.api_maxhp}
+              </ShipHP>
+              <StatusLabelContainer className="status-label">
+                <StatusLabel label={labelStatus} />
+              </StatusLabelContainer>
+              <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
+                {ship.api_cond}
+              </ShipCond>
+            </ShipStateText>
+            <HPProgress className="hp-progress" style={labelStatusStyle}>
+              <ProgressBar
+                stripes={false}
+                intent={getHpStyle(hpPercentage)}
+                value={hpPercentage / 100}
+              />
+            </HPProgress>
+          </ShipState>
         </ShipItem>
       </ShipTile>
     )
@@ -481,7 +462,7 @@ const ShipTile = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin: 4px 0;
+  margin: 2px 0;
   position: relative;
 
   .ship-item-wrapper {
@@ -498,38 +479,24 @@ const ShipTile = styled.div`
 `
 
 const LandBaseStatTag = styled(Tag)`
-  grid-column: 3 / 4;
-  grid-row: 2 / 3;
-  font-size: 63% !important;
-  text-align: center;
+  padding-top: 0;
+  padding-bottom: 0;
 `
 
-const LandBaseState = styled.div`
-  grid-column: 4 / 5;
-  grid-row: 1 / 3;
-  display: flex;
-  flex-flow: column nowrap;
-  font-size: 14px;
-  justify-content: space-between;
-  align-self: end;
+const LandBaseState = styled(ShipState)`
+  flex-basis: 110px;
+  flex-grow: 0;
+  min-width: 110px;
+  width: 110px;
 `
 
 const ShipFP = styled.div`
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  font-size: 70%;
-  z-index: 2;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      color: white;
-      text-shadow: #000000 0px 0px 10px;
-    `}
+  flex-grow: 1;
 `
 
 const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
+  padding-top: 6px;
+
   ${SlotItemContainer} .png {
     height: 32px;
     margin-bottom: -3px;
@@ -561,41 +528,44 @@ export const MiniSquardRow = withNamespaces(['main'])(
     const tyku = getTyku([equipsData], api_action_kind)
     return (
       <ShipTile className="ship-tile">
-        <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
+        <ShipItem className="ship-item">
           {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-            <>
-              <ShipAvatar
-                type="equip"
-                mstId={get(equipsData, '0.0.api_slotitem_id')}
-                height={38}
-                useDefaultBG={false}
-                useFixedWidth={false}
-              />
-              <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
-            </>
+            <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={33}>
+              {compact && (
+                <ShipLvAvatar className="ship-lv-avatar">
+                  <LandBaseStatTag
+                    className="landbase-status"
+                    minimal
+                    intent={LBAC_INTENTS[api_action_kind]}
+                  >
+                    {t(LBAC_STATUS_NAMES[api_action_kind])}
+                  </LandBaseStatTag>
+                  <ShipFP className="ship-fp">
+                    {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+                  </ShipFP>
+                </ShipLvAvatar>
+              )}
+            </ShipAvatar>
           )}
-          {hideShipName && (
-            <ShipLvAvatar className="ship-lv-avatar">
-              {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-            </ShipLvAvatar>
-          )}
-          {!hideShipName && (
-            <>
-              <ShipName className="ship-name" avatar={enableAvatar}>
-                {api_name}
-              </ShipName>
-              <ShipFP className="ship-fp" avatar={enableAvatar}>
-                {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-              </ShipFP>
-            </>
-          )}
-          <LandBaseStatTag
-            className="landbase-status"
-            minimal
-            intent={LBAC_INTENTS[api_action_kind]}
-          >
-            {t(LBAC_STATUS_NAMES[api_action_kind])}
-          </LandBaseStatTag>
+          <ShipInfo className="ship-info" avatar={enableAvatar} hideInfo={hideShipName}>
+            {!hideShipName && (
+              <ShipNameContainer>
+                <ShipName className="ship-name">{api_name}</ShipName>
+                <ShipLvText className="ship-lv-text">
+                  <ShipFP className="ship-fp">
+                    {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+                  </ShipFP>
+                  <LandBaseStatTag
+                    className="landbase-status"
+                    minimal
+                    intent={LBAC_INTENTS[api_action_kind]}
+                  >
+                    {t(LBAC_STATUS_NAMES[api_action_kind])}
+                  </LandBaseStatTag>
+                </ShipLvText>
+              </ShipNameContainer>
+            )}
+          </ShipInfo>
           <LandBaseState className="ship-stat landbase-stat">
             <ShipStateText>
               <MiniLandbaseSlotitems landbaseId={squardId} isMini={true} />

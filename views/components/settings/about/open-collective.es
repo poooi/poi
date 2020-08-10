@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { Section } from 'views/components/settings/components/section'
 
-const floor = (x) => Math.floor(x / 10) * 10
+const floor = x => Math.floor(x / 10) * 10
 
 const Wrapper = styled.div`
   img {
@@ -33,7 +33,7 @@ export class OpenCollective extends Component {
           <Wrapper>
             {ready && (
               <div className="opencollective">
-                {range(10).map((i) => (
+                {range(10).map(i => (
                   <a href={`https://opencollective.com/poi/sponsor/${i}/website`} key={i}>
                     <img src={`https://opencollective.com/poi/sponsor/${i}/avatar.svg`} />
                   </a>

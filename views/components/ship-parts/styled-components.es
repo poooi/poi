@@ -92,8 +92,8 @@ export const AirbaseArea = styled.div`
 `
 
 export const ShipItem = styled.div`
-  align-items: center;
-  display: grid;
+  align-items: flex-end;
+  display: flex;
   flex: 1;
   flex-flow: row nowrap;
   overflow: hidden;
@@ -101,16 +101,6 @@ export const ShipItem = styled.div`
   padding-top: 7px;
   position: relative;
   white-space: nowrap;
-  ${({ avatar = true, shipName = true, isLBAC = false }) => {
-    const avatarWidth = avatar ? '70px' : 0
-    const nameWidth = shipName ? 'minmax(95px, 150px)' : '32px'
-    const fbWidth = isLBAC ? 0 : 'minmax(30px, 3fr)'
-    return css`
-      grid-template-columns: ${avatarWidth} ${nameWidth} minmax(60px, 4fr) 18px 42px ${fbWidth} 172px;
-      grid-template-rows: 16px 10px 16px 16px;
-      grid-column-gap: 6px;
-    `
-  }}
 
   .bp3-progress-bar {
     height: 7px;
@@ -118,195 +108,68 @@ export const ShipItem = styled.div`
 `
 
 export const ShipAvatar = styled(Avatar)`
-  grid-column: 1 / 3;
-  grid-row: 1 / 5;
+  position: absolute;
+  top: 9px;
+  z-index: 10;
   pointer-events: none;
 `
 
-export const Gradient = styled.div`
-  z-index: 1;
-  grid-row: 1 / 5;
-  grid-column: 2 / 3;
-  height: 100%;
-  ${({ color }) => css`
-    background: linear-gradient(to right, transparent, ${color});
-  `}
+export const ShipInfo = styled.div`
+  display: flex;
+  flex-basis: 0;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  margin-right: auto;
+  min-width: 0;
+  padding: 0 4px;
+  ${({ show }) =>
+    show
+      ? css`
+          flex-grow: 1.2;
+          flex-shrink: 0;
+        `
+      : css`
+          flex-grow: 0;
+          flex-shrink: 0;
+          height: 58px;
+        `}
+  ${({ avatar }) =>
+    avatar &&
+    css`
+      flex-basis: 100px;
+      padding-left: 95px;
+    `}
 `
 
 export const ShipBasic = styled.div`
-  z-index: 2;
+  flex: 1;
   font-size: 80%;
-  width: 0;
   opacity: 0.8;
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
+  padding-top: 0;
   vertical-align: bottom;
-  ${({ avatar }) =>
-    avatar &&
+  display: flex;
+  ${({ show }) =>
+    !show &&
     css`
-      width: auto;
-      text-align: end;
-      padding-right: 6px;
-      font-weight: 500;
-      color: white;
-      opacity: 1;
-      text-shadow: #000000 0px 0px 10px;
+      padding-left: 5px;
     `}
-`
-
-export const ShipIndicators = styled.div`
-  font-size: 80%;
-  opacity: 0.8;
-  grid-column: 3 / 6;
-  grid-row: 1 / 2;
-  vertical-align: bottom;
 `
 
 export const ShipSubText = styled.div`
-  z-index: 2;
-  grid-column: 2 / 3;
-  grid-row: 4 / 5;
+  flex: 1;
   font-size: 75%;
   opacity: 0.8;
   overflow: hidden;
+  padding-top: 0;
   text-overflow: ellipsis;
   vertical-align: bottom;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      font-weight: 500;
-      color: white;
-      opacity: 1;
-      text-shadow: #000000 0px 0px 10px;
-    `}
-`
-
-export const ShipName = styled.span`
-  z-index: 2;
-  grid-column: 2 / 3;
-  grid-row: 2 / 4;
-  font-size: 120%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      font-weight: 600;
-      color: white;
-      text-shadow: #000000 0px 0px 10px;
-    `}
-`
-
-export const LBACName = styled.span`
-  z-index: 2;
-  grid-column: 2 / 3;
-  grid-row: 1 / 3;
-  font-size: 120%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      font-weight: 600;
-      color: white;
-      text-shadow: #000000 0px 0px 10px;
-    `}
-`
-
-export const LBACRange = styled.div`
-  z-index: 2;
-  grid-column: 2 / 3;
-  grid-row: 3 / 4;
-  font-size: 75%;
-  opacity: 0.8;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: bottom;
-  ${({ avatar }) =>
-    avatar &&
-    css`
-      text-align: end;
-      padding-right: 6px;
-      font-weight: 500;
-      color: white;
-      opacity: 1;
-      text-shadow: #000000 0px 0px 10px;
-    `}
-`
-
-export const LBACFP = ShipSubText
-
-export const ShipStatWToolTip = styled(Tooltip)`
-  grid-column: 3 / 6;
-  grid-row: 2 / 5;
-  z-index: 100;
-  height: 100%;
-
-  & > div {
-    height: 100%;
-    width: 100%;
-  }
-`
-
-export const ShipHP = styled.span`
-  grid-column: 3 / 4;
-  grid-row: 2 / 4;
-  align-self: flex-end;
-`
-
-export const StatusLabelContainer = styled.div`
-  grid-column: 4 / 5;
-  grid-row: 2 / 4;
-  z-index: 101;
-  align-self: flex-end;
-`
-
-export const ShipStatusContainer = styled.div`
-  grid-column: 5 / 6;
-  grid-row: 2 / 4;
-  align-self: flex-end;
-  justify-self: flex-end;
-`
-
-export const ShipHPProgress = styled.div`
-  grid-column: 3 / 6;
-  grid-row: 4 / 5;
-`
-
-export const ShipFB = styled.span`
-  grid-column: 6 / 7;
-  grid-row: 3 / 5;
-  display: flex;
-  flex-direction: column;
-
-  > div {
-    margin-top: 4px;
-  }
-`
-
-export const ShipSlot = styled.div`
-  grid-column: 7 / 8;
-  grid-row: 2 / 5;
-  align-self: flex-end;
+  margin-bottom: -1px;
 `
 
 export const ShipLabel = styled.span`
+  margin-left: 5px;
+  margin-right: 5px;
   height: 1em;
-
-  &:not(:first-child) {
-    margin-left: 5px;
-  }
-
-  &:not(:last-child) {
-    margin-right: 5px;
-  }
-
   ${({ isTag }) =>
     isTag &&
     css`
@@ -322,11 +185,94 @@ export const ShipLabel = styled.span`
     `}
 `
 
+export const ShipName = styled.span`
+  flex: 1;
+  font-size: 120%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+export const ShipStatWToolTip = styled(Tooltip)`
+  display: flex;
+  flex-basis: 0;
+  flex-flow: column nowrap;
+  flex-grow: 2;
+  font-size: 90%;
+  justify-content: space-between;
+  margin-left: auto;
+  min-width: 120px;
+`
+
+export const LandBaseStat = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 90%;
+  justify-content: space-between;
+  margin-left: auto;
+  flex-basis: 90px;
+  flex-grow: 0.8;
+  min-width: 90px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+`
+
+export const ShipHPRow = styled.div`
+  margin-bottom: 3px;
+`
+
+export const ShipHPTextRow = styled.span`
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 5px;
+  align-items: end;
+
+  span,
+  div {
+    align-self: flex-end;
+  }
+`
+
+export const ShipHP = styled.span`
+  flex: 1;
+`
+
+export const StatusLabelContainer = styled.div`
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: -1px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 18px;
+  z-index: 100;
+`
+
 export const ShipCond = styled.span`
   display: table;
   margin-left: auto;
   text-align: right;
   width: 30px;
+`
+
+export const ShipFB = styled.span`
+  display: flex;
+  flex: 0.75;
+  flex-direction: column;
+  margin: 0 4px;
+  height: 22px;
+  margin-bottom: 3px;
+
+  > div {
+    margin-top: 4px;
+  }
+`
+
+export const ShipSlot = styled.div`
+  flex-basis: 172px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 5px 5px 5px 5px;
 `
 
 export const SlotItems = styled.div`
@@ -340,7 +286,7 @@ export const SlotItemContainer = styled.div`
   vertical-align: bottom;
 
   &::after {
-    background-color: ${(props) => props.theme.slotBg};
+    background-color: ${props => props.theme.slotBg};
     border-radius: 9px;
     bottom: -3px;
     content: attr(data-onslot);
@@ -353,10 +299,10 @@ export const SlotItemContainer = styled.div`
     position: absolute;
     text-align: center;
     width: 18px;
-    display: ${(props) => (props.showOnslot ? 'inline' : 'none')};
+    display: ${props => (props.showOnslot ? 'inline' : 'none')};
   }
 
-  color: ${(props) => props.warning && props.theme.ORANGE1};
+  color: ${props => props.warning && props.theme.ORANGE1};
 
   .png {
     height: 32px;
@@ -367,8 +313,6 @@ export const SlotItemContainer = styled.div`
   }
 
   .svg {
-    transform: scale(1.25);
-    transform-origin: bottom left;
     height: 23px;
     width: 26px;
   }

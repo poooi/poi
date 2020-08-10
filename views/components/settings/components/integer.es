@@ -18,7 +18,7 @@ export class IntegerConfig extends PureComponent {
     defaultValue: PropTypes.number,
   }
 
-  handleChange = debounce((value) => {
+  handleChange = debounce(value => {
     config.set(this.props.configName, Math.round(value))
   }, 200)
 

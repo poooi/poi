@@ -45,11 +45,18 @@ export const ExpeditionName = styled.span`
         `}
 `
 
-const fleetsExpeditionSelector = createSelector(fleetsSelector, (fleets) =>
-  map(fleets, 'api_mission'),
+const fleetsExpeditionSelector = createSelector(
+  fleetsSelector,
+  fleets => map(fleets, 'api_mission'),
 )
-const fleetsNamesSelector = createSelector(fleetsSelector, (fleets) => map(fleets, 'api_name'))
-const fleetInBattleSelector = createSelector(fleetInBattleSelectorFactory, (inBattle) => inBattle)
+const fleetsNamesSelector = createSelector(
+  fleetsSelector,
+  fleets => map(fleets, 'api_name'),
+)
+const fleetInBattleSelector = createSelector(
+  fleetInBattleSelectorFactory,
+  inBattle => inBattle,
+)
 
 const FleetStatus = withNamespaces(['main'])(
   connect((state, { fleetId }) => {
@@ -97,7 +104,7 @@ const getTagIntent = (props, timeRemaining) =>
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 @withNamespaces(['main'])
-@connect((state) => {
+@connect(state => {
   const fleetsExpedition = fleetsExpeditionSelector(state)
   const fleetNames = fleetsNamesSelector(state)
   const $expeditions = state.const.$missions
@@ -114,7 +121,7 @@ export class ExpeditionPanel extends Component {
   static basicNotifyConfig = {
     type: 'expedition',
     title: i18next.t('main:Expedition'),
-    message: (names) => `${joinString(names, ', ')} ${i18next.t('main:mission complete')}`,
+    message: names => `${joinString(names, ', ')} ${i18next.t('main:mission complete')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
   }
 
@@ -133,7 +140,7 @@ export class ExpeditionPanel extends Component {
     } = this.props
     return (
       <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
-        {range(1, 4).map((i) => {
+        {range(1, 4).map(i => {
           const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] || [-1, 0, -1]
           const fleetName = get(fleetNames, i, '???')
           const { api_disp_no, api_name } = get($expeditions, expeditionId, {})

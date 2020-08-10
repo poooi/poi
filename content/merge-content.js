@@ -16,18 +16,18 @@ const { compareUpdate } = require('../views/utils/tools')
 const main = async () => {
   const data = {}
 
-  await Promise.map(glob.sync(path.resolve(__dirname, '**/*.md')), async (file) => {
+  await Promise.map(glob.sync(path.resolve(__dirname, '**/*.md')), async file => {
     const text = await fs.readFile(file, 'utf8')
 
     const {
       content,
       data: { namespace, language, key },
     } = matter(text)
-    _.each([content, namespace, language, key], (v) => assert(v))
+    _.each([content, namespace, language, key], v => assert(v))
     _.set(data, [`${namespace}/${language}`, key], content)
   })
 
-  await Promise.each(Object.keys(data), async (nl) => {
+  await Promise.each(Object.keys(data), async nl => {
     const file = path.resolve(__dirname, `../i18n/${nl}.json`)
     const content = await fs.readJSON(file)
     return fs.writeJSON(file, compareUpdate(content, data[nl]), { spaces: 2 })

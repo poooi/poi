@@ -1,15 +1,15 @@
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { flatMap, isArray, get, keyBy, filter } from 'lodash'
+import { flatMap, isArray, get } from 'lodash'
 
 // Returns a clone
 // Don't worry about -1 because it won't cause error
 function removeEquips(equips, idList) {
   equips = Object.assign({}, equips)
-  idList.forEach((itemId) => delete equips[itemId])
+  idList.forEach(itemId => delete equips[itemId])
   return equips
 }
 
-const ensureArray = (x) => (isArray(x) ? x : [x])
+const ensureArray = x => (isArray(x) ? x : [x])
 
 export function reducer(state = {}, { type, postBody, body }, store) {
   switch (type) {
@@ -23,13 +23,10 @@ export function reducer(state = {}, { type, postBody, body }, store) {
     }
     case '@@Response/kcsapi/api_req_kousyou/createitem':
       if (body.api_create_flag == 1) {
-        const items = keyBy(
-          filter(body.api_get_items, (item) => item?.api_id > 0),
-          'api_id',
-        )
+        const { api_slot_item } = body
         return {
           ...state,
-          ...items,
+          [api_slot_item.api_id]: api_slot_item,
         }
       }
       break
@@ -55,17 +52,15 @@ export function reducer(state = {}, { type, postBody, body }, store) {
       }
     }
     case '@@Response/kcsapi/api_req_kaisou/powerup':
-      return parseInt(postBody.api_slot_dest_flag) === 0
-        ? state
-        : removeEquips(
-            state,
-            [].concat.apply(
-              [],
-              postBody.api_id_items
-                .split(',')
-                .map((shipId) => get(store, `info.ships.${shipId}.api_slot`) || []),
-            ),
-          )
+      return removeEquips(
+        state,
+        [].concat.apply(
+          [],
+          postBody.api_id_items
+            .split(',')
+            .map(shipId => get(store, `info.ships.${shipId}.api_slot`) || []),
+        ),
+      )
     case '@@Response/kcsapi/api_req_kousyou/destroyship':
       return parseInt(postBody.api_slot_dest_flag) === 0
         ? state
@@ -73,7 +68,7 @@ export function reducer(state = {}, { type, postBody, body }, store) {
             state,
             flatMap(
               postBody.api_ship_id.split(','),
-              (shipId) => get(store, `info.ships.${shipId}.api_slot`) || [],
+              shipId => get(store, `info.ships.${shipId}.api_slot`) || [],
             ),
           )
     case '@@Response/kcsapi/api_req_kousyou/remodel_slot': {

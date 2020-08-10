@@ -1,14 +1,9 @@
-import { writeFile } from 'fs-extra'
+import { join } from 'path-extra'
 
-/*
- * ioWorker is deprecated. this is a dummy worker for backward compatibility
- */
-
-export const ioWorker = {
-  initialize: () => null,
-  port: {
-    postMessage: ([type, path, data]) => {
-      writeFile(path, JSON.stringify(data))
-    },
-  },
+export const ioWorker = new SharedWorker(join(__dirname, 'workers', 'io-worker.js'))
+ioWorker.initialize = () => {
+  ioWorker.port.start()
+  window.addEventListener('unload', e => {
+    ioWorker.port.postMessage(['Disconnect'])
+  })
 }

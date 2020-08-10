@@ -84,7 +84,7 @@ export class reactClass extends React.Component {
   shouldComponentUpdate = (nextProps, nextState) =>
     !isEqual(nextProps, this.props) || nextState.activeTab !== this.state.activeTab
 
-  handleTabChange = (id) => {
+  handleTabChange = id => {
     this.setState({ activeTab: id })
   }
 
@@ -98,7 +98,7 @@ export class reactClass extends React.Component {
         className="settings-view-tabs"
         onChange={this.handleTabChange}
       >
-        {map(TABS, (tab) => (
+        {map(TABS, tab => (
           <Tab
             key={tab.id}
             id={tab.id}

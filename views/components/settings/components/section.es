@@ -1,17 +1,12 @@
 /**
  * section is a group of settings on certain subject
  */
-import React, { ReactNode, FunctionComponent } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, H5 } from '@blueprintjs/core'
 import styled from 'styled-components'
 
-interface SectionProps {
-  title: ReactNode
-  children: ReactNode
-}
-
-export const Section: FunctionComponent<SectionProps> = ({ title, children, ...props }) => (
+export const Section = ({ title, children, ...props }) => (
   <Card {...props}>
     {title && <H5>{title}</H5>}
     {children}

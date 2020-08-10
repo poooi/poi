@@ -9,8 +9,8 @@ import { withNamespaces } from 'react-i18next'
 
 import { Section } from '../components/section'
 
-const setWindowI18nLng = (language) => {
-  each(i18next.options.ns, (ns) => {
+const setWindowI18nLng = language => {
+  each(i18next.options.ns, ns => {
     window.i18n[ns].fixedT = i18next.getFixedT(language, ns)
   })
 }
@@ -24,7 +24,7 @@ export class LanguageConfig extends Component {
     value: PropTypes.string,
   }
 
-  handleSetLanguage = (e) => {
+  handleSetLanguage = e => {
     const language = e.currentTarget.value
     config.set('poi.misc.language', language)
     i18next.changeLanguage(language)
@@ -36,7 +36,7 @@ export class LanguageConfig extends Component {
     return (
       <Section title={t('setting:Language')}>
         <HTMLSelect value={this.props.value} onChange={this.handleSetLanguage}>
-          {map(window.LOCALES, (lng) => (
+          {map(window.LOCALES, lng => (
             <option value={lng.locale} key={lng.locale}>
               {lng.lng}
             </option>

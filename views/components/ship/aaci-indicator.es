@@ -15,7 +15,7 @@ import {
   InfoTooltipItem,
 } from 'views/components/etc/styled-components'
 
-const getAvailableTranslation = memoize((str) =>
+const getAvailableTranslation = memoize(str =>
   i18next.translator.exists(`main:${str}`) ? (
     <Trans>main:{str}</Trans>
   ) : i18next.translator.exists(`resources:${str}`) ? (
@@ -25,14 +25,14 @@ const getAvailableTranslation = memoize((str) =>
   ),
 )
 
-const __t = (name) =>
+const __t = name =>
   name.map((n, i) => (
     <AACITypeName className="aaci-type-name" key={i}>
       {getAvailableTranslation(n)}
     </AACITypeName>
   ))
 
-const AACISelectorFactory = memoize((shipId) =>
+const AACISelectorFactory = memoize(shipId =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     ([_ship = {}, $ship = {}] = [], _equips = []) => {
@@ -46,11 +46,14 @@ const AACISelectorFactory = memoize((shipId) =>
   ),
 )
 
-const maxAACIShotdownSelectorFactory = memoize((shipId) =>
-  createSelector([shipDataSelectorFactory(shipId)], ([_ship = {}, $ship = {}] = []) => {
-    const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
-    return Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
-  }),
+const maxAACIShotdownSelectorFactory = memoize(shipId =>
+  createSelector(
+    [shipDataSelectorFactory(shipId)],
+    ([_ship = {}, $ship = {}] = []) => {
+      const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
+      return Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
+    },
+  ),
 )
 
 export const AACIIndicator = withNamespaces(['main'])(
@@ -58,11 +61,11 @@ export const AACIIndicator = withNamespaces(['main'])(
     AACIs: AACISelectorFactory(shipId)(state) || [],
     maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),
   }))(({ AACIs, maxShotdown, shipId, t }) => {
-    const currentMax = Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
+    const currentMax = Math.max(...AACIs.map(id => AACITable[id].fixed || 0))
 
     const tooltip = AACIs.length && (
       <InfoTooltip className="info-tooltip">
-        {AACIs.map((id) => (
+        {AACIs.map(id => (
           <InfoTooltipEntry className="info-tooltip-entry" key={id}>
             <InfoTooltipItem className="info-tooltip-item">
               {t('main:AACIType', { count: id })}

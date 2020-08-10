@@ -32,7 +32,7 @@ const getPluginWindowRect = () => {
     return defaultRect
   }
   const validate = (n, min, range) => n != null && n >= min && n < min + range
-  const withinDisplay = (d) => {
+  const withinDisplay = d => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -110,7 +110,6 @@ export class KanGameWindowWrapper extends PureComponent {
     switch (path) {
       case 'poi.webview.windowUseFixedResolution': {
         this.currentWindow.setResizable(!value)
-        this.resizable = !value
         if (value) {
           const width = config.get('poi.webview.windowWidth', 1200)
           this.currentWindow.setContentSize(
@@ -161,7 +160,7 @@ export class KanGameWindowWrapper extends PureComponent {
       )
     }
     const windowFeatures = Object.keys(windowOptions)
-      .map((key) => {
+      .map(key => {
         switch (key) {
           case 'x':
             return `left=${windowOptions.x}`
@@ -177,10 +176,10 @@ export class KanGameWindowWrapper extends PureComponent {
     this.externalWindow = open(
       `${fileUrl(path.join(ROOT, 'index-plugin.html'))}?kangame`,
       'plugin[kangame]',
-      windowFeatures + ',nodeIntegration=no,webSecurity=no',
+      windowFeatures + ',nodeIntegration=no',
     )
-    this.externalWindow.addEventListener('DOMContentLoaded', (e) => {
-      this.currentWindow = BrowserWindow.getAllWindows().find((a) =>
+    this.externalWindow.addEventListener('DOMContentLoaded', e => {
+      this.currentWindow = BrowserWindow.getAllWindows().find(a =>
         a.getURL().endsWith('index-plugin.html?kangame'),
       )
       loadScript(
@@ -188,7 +187,6 @@ export class KanGameWindowWrapper extends PureComponent {
         this.externalWindow.document,
       )
       this.currentWindow.setResizable(!windowUseFixedResolution)
-      this.resizable = !windowUseFixedResolution
       this.currentWindow.setAspectRatio(1200 / 720, {
         width: 0,
         height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)),
@@ -257,7 +255,7 @@ export class KanGameWindowWrapper extends PureComponent {
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }
-      this.externalWindow.addEventListener('beforeunload', (e) => {
+      this.externalWindow.addEventListener('beforeunload', e => {
         config.set('poi.kangameWindow.bounds', this.currentWindow.getBounds())
       })
       if (windowUseFixedResolution) {
@@ -278,21 +276,6 @@ export class KanGameWindowWrapper extends PureComponent {
         },
         () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
       )
-
-      // workaround for https://github.com/electron/electron/issues/22440
-      const unsetResizable = debounce(() => {
-        this.currentWindow.setResizable(true)
-      }, 200)
-
-      const setResizable = () => {
-        this.currentWindow.setResizable(this.resizable)
-      }
-
-      this.currentWindow.on('minimize', unsetResizable)
-      this.currentWindow.on('maximize', unsetResizable)
-
-      this.currentWindow.on('restore', setResizable)
-      this.currentWindow.on('unmaximize', setResizable)
     })
   }
 
@@ -307,20 +290,19 @@ export class KanGameWindowWrapper extends PureComponent {
     return true
   }
 
-  onZoomChange = (value) => {
+  onZoomChange = value => {
     if (this.checkBrowserWindowExistence()) {
-      // Workaround for ResizeObserver not fired on zoomFactor change
-      const [width, height] = this.currentWindow.getContentSize()
-      this.currentWindow.setContentSize(width - 10, height - 10)
-      this.currentWindow.setContentSize(width, height)
+      this.currentWindow.webContents.setZoomFactor(value)
+    }
+  }
 
-      this.currentWindow.webContents.zoomFactor = value
-      const webview = getStore('layout.webview.ref')
-      if (webview) {
-        webview.forceSyncZoom()
-      } else {
-        setTimeout(() => this.onZoomChange(value), 100)
-      }
+  handleZoom = (path, value) => {
+    if (path === 'poi.appearance.zoom') {
+      this.onZoomChange(value)
+      this.currentWindow.setContentSize(
+        Math.round(this.externalWindow.innerWidth * value),
+        Math.round(((this.externalWindow.innerWidth / 1200) * 720 + this.getYOffset()) * value),
+      )
     }
   }
 

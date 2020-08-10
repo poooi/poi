@@ -40,7 +40,7 @@
   "Maximum cache size": "최대 캐시 크기",
   "Delete cookies": "쿠키 삭제",
   "Delete cache": "캐시 삭제",
-  "Revoke trusted / ignored certificates": "신뢰한 인증서 삭제",
+  "Revoke trusted certificates": "신뢰한 인증서 삭제",
   "Success!": "삭제 완료",
   "Edit custom CSS": "사용자 정의 CSS",
   "NoPermission": "실패했습니다. 권한이 있는지 확인해주세요.",
@@ -220,11 +220,5 @@
   "tritanomaly": "3형3색각/청색약",
   "achromatopsia": "1색각/색맹",
   "achromatomaly": "이상3색각/색약",
-  "Description": "설명",
-  "Connection test": "Connection test",
-  "Your connection looks good": "Your connection looks good",
-  "Start testing": "Start testing",
-  "connection-test-failure-message": "Your connection seems having issue. Please verify you configuration.",
-  "connection-test-description": "The test will try to connect Google.com with your proxy configuration. Its result is for reference only.",
-  "AvatarBackground": "배경색"
+  "Description": "설명"
 }

@@ -1,10 +1,14 @@
-const { remote } = require('electron')
+const { remote, webFrame } = require('electron')
 const config = remote.require('./lib/config')
 
 window.ipc = remote.require('./lib/ipc')
 
-document.addEventListener('DOMContentLoaded', (e) => {
-  if (config.get('poi.misc.dmmcookie', false) && location.hostname.includes('dmm')) {
+if (config.get('poi.content.muted', false)) {
+  remote.getCurrentWebContents().setAudioMuted(true)
+}
+
+document.addEventListener('DOMContentLoaded', e => {
+  if (config.get('poi.misc.dmmcookie', false)) {
     const now = new Date()
     now.setFullYear(now.getFullYear() + 1)
     const expires = now.toUTCString()
@@ -20,14 +24,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
     document.cookie = `ckcy=1;expires=${expires};domain=.dmm.com;path=/netgame_s/`
     const ua = remote.getCurrentWebContents().session.getUserAgent()
     remote.getCurrentWebContents().session.setUserAgent(ua, 'ja-JP')
-
-    // Workaround for re-navigate from foreign page on first visit
-    if (location.href.includes('/foreign/')) {
-      location.href = config.getDefault('poi.misc.homepage')
-    }
   }
   if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
-    window.DMM.netgame.reloadDialog = function () {}
+    window.DMM.netgame.reloadDialog = function() {}
   }
 })
 
@@ -65,7 +64,7 @@ alignCSS.innerHTML = `html {
 }
 `
 
-const disableTab = (e) => {
+const disableTab = e => {
   if (e.key === 'Tab') {
     e.preventDefault()
   }
@@ -83,15 +82,30 @@ function handleSpacingTop(show, count = 0) {
   }
   try {
     const frameDocument = document.querySelector('#game_frame').contentDocument
+    frameDocument[action]('keydown', disableTab)
     frameDocument.querySelector('#spacing_top').style.display = status
     frameDocument.querySelector('#htmlWrap').contentDocument[action]('keydown', disableTab)
-    frameDocument[action]('keydown', disableTab)
   } catch (e) {
     setTimeout(() => handleSpacingTop(show, count + 1), 1000)
   }
 }
 
-window.align = function () {
+function handleZoom(count = 0) {
+  if (count > 20) {
+    return
+  }
+  const width = window.ipc.access('WebView').width
+  const zoom = Math.round(width * config.get('poi.appearance.zoom', 1)) / 1200
+  if (Number.isNaN(zoom)) {
+    setTimeout(() => handleZoom(count + 1), 1000)
+    return
+  }
+  webFrame.setZoomFactor(zoom)
+  const zl = webFrame.getZoomLevel()
+  webFrame.setLayoutZoomLevelLimits(zl, zl)
+}
+
+window.align = function() {
   if (location.pathname.includes('854854') || location.hostname === 'osapi.dmm.com') {
     document.body.appendChild(alignCSS)
     handleSpacingTop(false)
@@ -99,6 +113,7 @@ window.align = function () {
   } else if (location.pathname.includes('kcs')) {
     document.body.appendChild(alignCSS)
   }
+  handleZoom()
 }
 
 window.unalign = () => {
@@ -113,37 +128,33 @@ window.unalign = () => {
   }
 }
 
-window.capture = async function (toClipboard) {
-  try {
-    const canvas = document.querySelector('#game_frame')
-      ? document
-          .querySelector('#game_frame')
-          .contentDocument.querySelector('#htmlWrap')
-          .contentDocument.querySelector('canvas')
-      : document.querySelector('#htmlWrap')
-      ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
-      : document.querySelector('canvas')
-      ? document.querySelector('canvas')
-      : null
-    if (!canvas || !ImageCapture) return false
-    return await new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
-      .grabFrame()
-      .then((imageBitmap) => {
-        const tempCanvas = document.createElement('canvas')
-        tempCanvas.width = imageBitmap.width
-        tempCanvas.height = imageBitmap.height
-        tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
-        return tempCanvas.toDataURL()
-      })
-      .then((dataURL) => {
-        const ss = window.ipc.access('screenshot')
-        if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({ dataURL, toClipboard })
-        return true
-      })
-      .catch(() => false)
-  } catch (e) {
-    return false
-  }
+window.capture = async function(toClipboard) {
+  const canvas = document.querySelector('#game_frame')
+    ? document
+        .querySelector('#game_frame')
+        .contentDocument.querySelector('#htmlWrap')
+        .contentDocument.querySelector('canvas')
+    : document.querySelector('#htmlWrap')
+    ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
+    : document.querySelector('canvas')
+    ? document.querySelector('canvas')
+    : null
+  if (!canvas || !ImageCapture) return false
+  return await new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
+    .grabFrame()
+    .then(imageBitmap => {
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = imageBitmap.width
+      tempCanvas.height = imageBitmap.height
+      tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
+      return tempCanvas.toDataURL()
+    })
+    .then(dataURL => {
+      const ss = window.ipc.access('screenshot')
+      if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({ dataURL, toClipboard })
+      return true
+    })
+    .catch(() => false)
 }
 
 // ref for item purchase css insertion
@@ -166,7 +177,7 @@ if (
     .includes('http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/')
 ) {
   const _documentWrite = document.write
-  document.write = function () {
+  document.write = function() {
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
       console.warn(
         `Block document.write since document is at state "${document.readyState}". Blocked call:`,
@@ -177,3 +188,8 @@ if (
     }
   }
 }
+
+// A workaround for drop-and-drag navigation
+remote
+  .require('./lib/utils')
+  .stopFileNavigateAndHandleNewWindowInApp(remote.getCurrentWebContents().id)

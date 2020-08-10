@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import path from 'path'
-import { isSubdirectory, compareUpdate, cjkSpacing } from '../tools'
+import { isSubdirectory, compareUpdate } from '../tools'
 
 const pathPatterns = [
   ['/foo', '/foo', true],
@@ -68,11 +68,5 @@ describe('views/utils/tools', () => {
       a[1] = { 1: 2 }
       expect(test([{ 1: 1 }], a)).toEqual([true, [{ 1: 1 }, { 1: 2 }]])
     })
-  })
-
-  describe('cjkSpacing', () => {
-    expect(cjkSpacing('你好world')).toMatchInlineSnapshot(`"你好 world"`)
-    expect(cjkSpacing('こんいちわworld')).toMatchInlineSnapshot(`"こんいちわ world"`)
-    expect(cjkSpacing('芸術は爆發だ!')).toMatchInlineSnapshot(`"芸術は爆發だ！"`)
   })
 })

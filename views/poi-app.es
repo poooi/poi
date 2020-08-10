@@ -44,24 +44,24 @@ const PoiAppE = styled.div`
       bottom: ${bottom}px;
       height: inherit;
       width: ${overlayWidth}px;
-      z-index: 19;
     `}
 `
 
 const PoiAppContainer = styled.div`
   overflow: hidden;
   height: 100%;
-  ${({ overlay, isDarkTheme }) =>
+  ${({ overlay }) =>
     overlay &&
     css`
       backdrop-filter: blur(5px);
-      background: ${isDarkTheme ? 'rgba(32, 43, 51, 0.9)' : 'rgba(245, 248, 250, 0.9)'};
+      background: #202b33e6;
     `}
 `
 
 const OverlayPanelTrigger = styled.a`
   transform: translateX(-100%);
   position: fixed;
+  background: rgba(75, 75, 75, 0.8);
   height: 5vh;
   display: flex;
   align-items: center;
@@ -72,10 +72,6 @@ const OverlayPanelTrigger = styled.a`
   font-size: 15px;
   bottom: 0;
   border-top-left-radius: 5px;
-  ${({ isDarkTheme }) =>
-    css`
-      background: ${isDarkTheme ? 'rgba(32, 43, 51, 0.9)' : 'rgba(245, 248, 250, 0.9)'};
-    `}
 
   & > svg {
     margin: auto;
@@ -107,12 +103,12 @@ const overlayPanelMinimumWidth = {
   percent: 0,
 }
 
-const transformToAreaSize = (size) => ({
+const transformToAreaSize = size => ({
   percent: 100,
   px: -size.px,
 })
 
-const transformToPanelSize = (size) => ({
+const transformToPanelSize = size => ({
   percent: 0,
   px: -size.px,
 })
@@ -121,7 +117,6 @@ const transformToPanelSize = (size) => ({
   layout: get(state, 'config.poi.layout.mode', 'horizontal'),
   overlay: get(state, 'config.poi.layout.overlay', false),
   editable: get(state.config, 'poi.layout.editable', false),
-  isDarkTheme: get(state.config, 'poi.appearance.theme', 'dark') === 'dark',
   overlayPanelWidth: get(state.config, 'poi.tabarea.overlaypanelwidth', overlayPanelDefaultWidth),
 }))
 export class PoiApp extends Component {
@@ -136,21 +131,16 @@ export class PoiApp extends Component {
     config.set('poi.tabarea.overlaypanelwidth', val)
   }
   render() {
-    const { layout, overlay, isDarkTheme } = this.props
+    const { layout, overlay } = this.props
     const { overlayVisible } = this.state
     const isHorizontal = layout === 'horizontal'
     const top = $('title-bar') ? $('title-bar').clientHeight : 0
-    const bottom = $('poi-info')
-      ? do {
-          const rect = $('poi-info').getBoundingClientRect()
-          rect.height - rect.bottom + innerHeight
-        }
-      : 29
+    const bottom = $('poi-info') ? $('poi-info').clientHeight : 30
     return (
       <>
         {overlay && (
           <OverlayPanelResizer
-            ref={(ref) => (this.resizableArea = ref)}
+            ref={ref => (this.resizableArea = ref)}
             className="overlay-panel-resizer"
             widthResize={this.props.editable && this.state.overlayVisible ? 1 : 0}
             minimumWidth={{
@@ -193,18 +183,12 @@ export class PoiApp extends Component {
           {overlay && (
             <OverlayPanelTrigger
               className="overlay-panel-trigger"
-              isDarkTheme={isDarkTheme}
               onClick={() => this.setState({ overlayVisible: !this.state.overlayVisible })}
             >
               <FontAwesome name={!overlayVisible ? 'angle-left' : 'angle-right'} />
             </OverlayPanelTrigger>
           )}
-          <PoiAppContainer
-            id="poi-app-container"
-            className="poi-app-container"
-            overlay={overlay}
-            isDarkTheme={isDarkTheme}
-          >
+          <PoiAppContainer id="poi-app-container" className="poi-app-container" overlay={overlay}>
             <poi-nav>
               <poi-nav-tabs>
                 <ControlledTabArea />

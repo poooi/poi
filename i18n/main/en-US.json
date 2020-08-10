@@ -5,7 +5,7 @@
   "built": "built",
   "Construction": "Construction",
   "DevelopSuccess": "Develop {{name}} successfully.",
-  "DevelopFailed": "Develop failed.",
+  "DevelopFailed": "Develop {{name}} failed.",
   "ImproveSuccess": "Improve {{name}} successfully.",
   "ImproveFailed": "Improve {{name}} failed.",
   "mission complete": "mission complete",
@@ -77,7 +77,6 @@
   "OASW": "OASW",
   "AACI": "AACI",
   "AAPB": "AAPB",
-  "Special Attack": "Special Attack",
   "Fast+": "Fast+",
   "Lv": "Lv. {{level}}",
   "RemodelLv": "Remodel: Lv. {{remodelLevel}}",
@@ -86,6 +85,5 @@
   "NextExp": "Next: {{nextExp}}",
   "To be refreshed": "To be refreshed",
   "Browse your quest list to let poi know your active quests": "Browse your quest list to let poi know your active quests",
-  "Max shot down not reached": "Max shot down not reached",
-  "Total": "Total"
+  "Max shot down not reached": "Max shot down not reached"
 }

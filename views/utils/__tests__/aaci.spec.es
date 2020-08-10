@@ -3,12 +3,12 @@ import { AACITable, getShipAACIs } from '../aaci'
 
 const { ship, equips } = require('./fixtures/aaci-sample-ship.json')
 
-const isStringArray = (array) => isArray(array) && every(array, (e) => isString(e))
+const isStringArray = array => isArray(array) && every(array, e => isString(e))
 
 describe('AACI entry check', () => {
   it('AACI key is numeric', () => {
     expect(Object.keys(AACITable).length > 0).toBe(true)
-    expect(every(Object.keys(AACITable), (key) => isFinite(+key))).toBe(true)
+    expect(every(Object.keys(AACITable), key => isFinite(+key))).toBe(true)
   })
 
   it('AACI entry should be valid', () => {

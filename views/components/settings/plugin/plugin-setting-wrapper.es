@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { TextArea, Button, Intent } from '@blueprintjs/core'
-import * as Sentry from '@sentry/electron'
 
 @withNamespaces(['setting'])
 export class PluginSettingWrapper extends Component {
@@ -17,16 +16,10 @@ export class PluginSettingWrapper extends Component {
   }
 
   componentDidCatch = (error, info) => {
-    Sentry.withScope((scope) => {
-      scope.setExtra('componentStack', info.componentStack)
-      scope.setTag('area', this.props.plugin.id)
-      const eventId = Sentry.captureException(error)
-      this.setState({
-        hasError: true,
-        error,
-        info,
-        eventId,
-      })
+    this.setState({
+      hasError: true,
+      error,
+      info,
     })
   }
 

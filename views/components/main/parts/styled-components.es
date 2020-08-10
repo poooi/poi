@@ -22,8 +22,8 @@ export const DockPanelCardWrapper = styled(CardWrapper)`
 `
 
 export const PanelItemTooltip = styled(Tooltip)`
-  flex: 0 0 ${(props) => `${100 / props.dimension}%`};
-  max-width: ${(props) => `${100 / props.dimension}%`};
+  flex: 0 0 ${props => `${100 / props.dimension}%`};
+  max-width: ${props => `${100 / props.dimension}%`};
   align-items: center;
   display: flex;
 

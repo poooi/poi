@@ -32,7 +32,7 @@ export class ScrollShadow extends PureComponent {
   topSentinel = React.createRef()
   bottomSentinel = React.createRef()
 
-  handleIntersect = (type) => ([entry]) => {
+  handleIntersect = type => ([entry]) => {
     if (this.state[type] !== entry.isIntersecting) {
       this.setState({
         [type]: entry.isIntersecting,
@@ -40,9 +40,9 @@ export class ScrollShadow extends PureComponent {
     }
   }
 
-  componentDidMount = (e) => {
+  componentDidMount = e => {
     if (
-      [this.root.current, this.topSentinel.current, this.bottomSentinel.current].some((ref) => !ref)
+      [this.root.current, this.topSentinel.current, this.bottomSentinel.current].some(ref => !ref)
     ) {
       return
     }
@@ -57,7 +57,7 @@ export class ScrollShadow extends PureComponent {
     this.bottomObserver.observe(this.bottomSentinel.current)
   }
 
-  componentWillUnmount = (e) => {
+  componentWillUnmount = e => {
     if (this.topObserver) {
       this.topObserver.disconnect()
     }

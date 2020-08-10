@@ -11,7 +11,7 @@ if (config.get('poi.webview.width', 1200) < 0) {
 
 const additionalStyle = document.createElement('style')
 
-remote.getCurrentWindow().webContents.on('dom-ready', (e) => {
+remote.getCurrentWindow().webContents.on('dom-ready', e => {
   document.head.appendChild(additionalStyle)
 })
 
@@ -32,7 +32,7 @@ const setCSS = () => {
 
 const setCSSDebounced = debounce(setCSS, 200)
 
-const setIsolatedMainWindowSize = (isolateWindow) => {
+const setIsolatedMainWindowSize = isolateWindow => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
@@ -70,7 +70,7 @@ const setIsolatedMainWindowSize = (isolateWindow) => {
   remote.getCurrentWindow().setContentBounds(bounds)
 }
 
-const setOverlayPanelWindowSize = (overlayPanel) => {
+const setOverlayPanelWindowSize = overlayPanel => {
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
   const isolateWindow = config.get('poi.layout.isolate', false)
@@ -172,17 +172,9 @@ config.on('config.set', (path, value) => {
   switch (path) {
     case 'poi.appearance.zoom': {
       const [width, height] = remote.getCurrentWindow().getContentSize()
-      remote.getCurrentWebContents().zoomFactor = value
-      // Workaround for ResizeObserver not fired on zoomFactor change
-      remote.getCurrentWindow().setContentSize(width - 10, height - 10)
+      remote.getCurrentWebContents().setZoomFactor(value)
       adjustSize()
-      setTimeout(() => {
-        remote.getCurrentWindow().setContentSize(width, height)
-        const webview = getStore('layout.webview.ref')
-        if (webview) {
-          webview.forceSyncZoom()
-        }
-      }, 1000)
+      setTimeout(() => remote.getCurrentWindow().setContentSize(width, height), 1000)
       break
     }
     case 'poi.tabarea.double':
@@ -225,23 +217,3 @@ config.on('config.set', (path, value) => {
       break
   }
 })
-
-// workaround for https://github.com/electron/electron/issues/22440
-let minimumSize
-
-const storeMinimumSize = debounce(() => {
-  minimumSize = remote.getCurrentWindow().getMinimumSize()
-  remote.getCurrentWindow().setMinimumSize(1, 1)
-}, 200)
-
-const restoreMinimumSize = () => {
-  if (minimumSize && minimumSize.length === 2) {
-    remote.getCurrentWindow().setMinimumSize(...minimumSize)
-  }
-}
-
-remote.getCurrentWindow().on('minimize', storeMinimumSize)
-remote.getCurrentWindow().on('maximize', storeMinimumSize)
-
-remote.getCurrentWindow().on('restore', restoreMinimumSize)
-remote.getCurrentWindow().on('unmaximize', restoreMinimumSize)

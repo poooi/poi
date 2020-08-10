@@ -26,14 +26,14 @@ export class RadioConfig extends Component {
     }
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     config.set(this.props.configName, e.currentTarget.value)
   }
 
   render() {
     return (
       <RadioGroup inline selectedValue={this.props.value} onChange={this.handleChange}>
-        {map(this.props.availableVal, (item) => (
+        {map(this.props.availableVal, item => (
           <Radio key={item.value} value={item.value}>
             {item.name}
           </Radio>

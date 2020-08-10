@@ -37,10 +37,13 @@ const CardWrapper = styled(CardWrapperL)`
   flex-direction: column;
 `
 
-const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId) =>
-  createSelector([fleetStateSelectorFactory(fleetId)], (fleetState) => ({
-    fleetState,
-  })),
+const shipViewSwitchButtonDataSelectorFactory = memoize(fleetId =>
+  createSelector(
+    [fleetStateSelectorFactory(fleetId)],
+    fleetState => ({
+      fleetState,
+    }),
+  ),
 )
 
 const ShipViewSwitchButton = connect((state, { fleetId }) =>
@@ -91,13 +94,13 @@ export class MiniShip extends Component {
     prevFleetId: null,
   }
 
-  handleTransitionEnd = (i) => {
+  handleTransitionEnd = i => {
     if (i === this.state.prevFleetId) {
       this.setState({ prevFleetId: null })
     }
   }
 
-  handleClick = (idx) => {
+  handleClick = idx => {
     if (idx != this.state.activeFleetId) {
       this.props.dispatch({
         type: '@@TabSwitch',
@@ -117,8 +120,8 @@ export class MiniShip extends Component {
     })
   }
 
-  handleResize = (entries) => {
-    entries.forEach((entry) => {
+  handleResize = entries => {
+    entries.forEach(entry => {
       const { width, height } = entry.contentRect
       if (
         width !== 0 &&
@@ -149,7 +152,7 @@ export class MiniShip extends Component {
       >
         <FleetNameButtonContainer className="miniship-switch">
           <FleetNameButton className="miniship-fleet-switch">
-            {[0, 1, 2, 3].map((i) => (
+            {[0, 1, 2, 3].map(i => (
               <ShipViewSwitchButton
                 key={i}
                 fleetId={i}
@@ -163,14 +166,14 @@ export class MiniShip extends Component {
             key={4}
             fleetId={4}
             disabled={this.props.airBaseCnt === 0}
-            onClick={(e) => this.handleClick(4)}
+            onClick={e => this.handleClick(4)}
             activeFleetId={activeFleetId}
             isMini={true}
           />
         </FleetNameButtonContainer>
         <ResizeSensor onResize={this.handleResize}>
           <ShipTabContent className="miniship-fleet-content">
-            {[0, 1, 2, 3].map((i) => (
+            {[0, 1, 2, 3].map(i => (
               <ShipDeck
                 className="ship-deck"
                 onTransitionEnd={() => this.handleTransitionEnd(i)}

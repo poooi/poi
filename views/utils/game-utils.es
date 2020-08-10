@@ -6,7 +6,6 @@ import { ProgressBar } from 'react-bootstrap'
 import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
 import _, { get } from 'lodash'
 import { Intent } from '@blueprintjs/core'
-import { shipAvatarColor } from './color'
 
 addStyle(ProgressBar, 'green')
 addStyle(ProgressBar, 'yellow')
@@ -61,90 +60,9 @@ export function getCondStyle(cond) {
   return s
 }
 
-export function getShipAvatarColorByType(shipType) {
-  switch (shipType) {
-    case 1: // 海防艦
-      return shipAvatarColor.GREY_BLUE
-    case 2: // 駆逐艦
-      return shipAvatarColor.GREEN
-    case 3: // 軽巡洋艦
-    case 4: // 重雷装巡洋艦
-    case 21: // 練習巡洋艦
-      return shipAvatarColor.YELLOW
-    case 5: // 重巡洋艦
-    case 6: // 航空巡洋艦
-      return shipAvatarColor.ORANGE
-    case 8: // 戦艦
-    case 9: // 戦艦
-    case 10: // 航空戦艦
-    case 12: // 超弩級戦艦
-      return shipAvatarColor.RED
-    case 7: // 軽空母
-    case 11: // 航空母艦
-    case 18: // 装甲空母
-      return shipAvatarColor.BLUE
-    case 13: // 潜水艦
-    case 14: // 潜水空母
-      return shipAvatarColor.PURPLE
-    default:
-      // 他
-      return shipAvatarColor.WHITE
-  }
-}
+export const getSpeedLabel = speed => speedInterpretation[speed] || 'Unknown'
 
-export function getShipAvatarColorByRange(rng) {
-  switch (rng) {
-    case 1:
-      return shipAvatarColor.GREEN
-    case 2:
-      return shipAvatarColor.YELLOW
-    case 3:
-      return shipAvatarColor.ORANGE
-    case 4:
-      return shipAvatarColor.RED
-    default:
-      return shipAvatarColor.BLACK
-  }
-}
-
-export function getShipAvatarColorByTag(tag, color) {
-  return Number.isInteger(tag) && tag > 0 ? `${color[tag - 1]}60` : shipAvatarColor.BLACK
-}
-
-export function getShipAvatarColorBySpeed(speed) {
-  switch (speed) {
-    // 0=陸上基地, 5=低速, 10=高速(, 15=高速+, 20=最速)
-    case 5:
-      return shipAvatarColor.BLUE
-    case 10:
-      return shipAvatarColor.GREEN
-    case 15:
-      return shipAvatarColor.YELLOW
-    case 20:
-      return shipAvatarColor.RED
-    default:
-      return shipAvatarColor.BLUE
-  }
-}
-
-export function selectShipAvatarColor(ship, $ship, color, opt) {
-  switch (opt) {
-    case 'shiptype':
-      return getShipAvatarColorByType($ship.api_stype)
-    case 'range':
-      return getShipAvatarColorByRange(ship.api_leng)
-    case 'tag':
-      return getShipAvatarColorByTag(ship.api_sally_area, color)
-    case 'speed':
-      return getShipAvatarColorBySpeed(ship.api_soku)
-    default:
-      return '#00000000'
-  }
-}
-
-export const getSpeedLabel = (speed) => speedInterpretation[speed] || 'Unknown'
-
-export const getSpeedStyle = (speed) => speedStyles[speed] || {}
+export const getSpeedStyle = speed => speedStyles[speed] || {}
 
 export function getStatusStyle(status) {
   if (status != null) {
@@ -244,15 +162,15 @@ export function getTyku(equipsData, landbaseStatus = 0) {
       }
       // 改修：艦戦×0.2、爆戦×0.25
       const levelFactor = $equip.api_baku > 0 ? 0.25 : 0.2
-      if ([6, 7, 45, 47, 57].includes($equip.api_type[2])) {
-        // 艦戦 · 爆戦 · 水上戦闘機 · 陸上攻撃機 · 噴式機
+      if ([6, 7, 8, 45, 47, 56, 57, 58].includes($equip.api_type[2])) {
+        // 艦载機 · 水上戦闘機 · 陸上攻撃機 · 噴式機
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
-      } else if ([8, 11].includes($equip.api_type[2])) {
-        // 艦攻 · 水上爆撃機
+      } else if ([11].includes($equip.api_type[2])) {
+        // 水上爆撃機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
@@ -503,7 +421,7 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier = 1.0, s
 }
 
 // returns fleet's minimal api_soku value, returns 0 when all elements undefined
-export const getFleetSpeed = (shipsData) => ({
+export const getFleetSpeed = shipsData => ({
   speed:
     _(shipsData)
       .map(([ship = {}] = []) => ship.api_soku || Infinity)
@@ -518,7 +436,7 @@ export async function isInGame() {
       (await new Promise((resolve, reject) => {
         document
           .querySelector('webview')
-          .executeJavaScript("document.querySelector('embed') !== null", (e) => resolve(e))
+          .executeJavaScript("document.querySelector('embed') !== null", e => resolve(e))
       }))
     )
   } catch (e) {
@@ -558,11 +476,3 @@ export const LBAC_INTENTS = [
 ]
 
 export const LBAC_STATUS_NAMES = ['Standby', 'Sortie', 'Defense', 'Retreat', 'Rest']
-
-export const LBAC_STATUS_AVATAR_COLOR = [
-  shipAvatarColor.WHITE,
-  shipAvatarColor.RED,
-  shipAvatarColor.ORANGE,
-  shipAvatarColor.BLUE,
-  shipAvatarColor.GREEN,
-]

@@ -9,7 +9,7 @@ export class CountdownNotifier {
     // Two notif must be separated by at least one non-notif call to tryNotify
     this._justNotified = false
   }
-  tryNotify = (o) => {
+  tryNotify = o => {
     if (
       o.completeTime != null &&
       this._lastCompleteTime != null &&

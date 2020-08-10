@@ -1,14 +1,15 @@
 /* global config, ROOT, isMain, dbg */
 import path from 'path-extra'
 import glob from 'glob'
-import { toString, each, debounce } from 'lodash'
+import { isString, toString, each, debounce } from 'lodash'
 import I18next from 'i18next'
 import { reactI18nextModule } from 'react-i18next'
+import { spacing as _spacing } from 'pangu'
 import { format } from 'util'
 import formatJson from 'json-format'
 import { readJSONSync, writeFileSync } from 'fs-extra'
 
-import { readI18nResources, escapeI18nKey, cjkSpacing } from 'views/utils/tools'
+import { readI18nResources, escapeI18nKey } from 'views/utils/tools'
 
 const LOCALES = [
   {
@@ -33,28 +34,24 @@ const LOCALES = [
   },
 ]
 
-const textSpacingCJK = window.config.get('poi.appearance.textspacingcjk', true)
-
-const spacing = textSpacingCJK ? cjkSpacing : toString
+const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
+const spacing = textSpacingCJK ? str => (isString(str) ? _spacing(str) : toString(str)) : toString
 
 const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
 
-const mainPoiNs = i18nFiles.map((i) => path.basename(i))
+const mainPoiNs = i18nFiles.map(i => path.basename(i))
 const mainPoiRes = {}
-each(
-  LOCALES.map((lng) => lng.locale),
-  (locale) => {
-    mainPoiRes[locale] = {}
-    each(i18nFiles, (i18nFile) => {
-      const namespace = path.basename(i18nFile)
-      mainPoiRes[locale][namespace] = readI18nResources(path.join(i18nFile, `${locale}.json`))
-    })
-  },
-)
+each(LOCALES.map(lng => lng.locale), locale => {
+  mainPoiRes[locale] = {}
+  each(i18nFiles, i18nFile => {
+    const namespace = path.basename(i18nFile)
+    mainPoiRes[locale][namespace] = readI18nResources(path.join(i18nFile, `${locale}.json`))
+  })
+})
 
 window.LOCALES = LOCALES
 window.language = window.config.get('poi.misc.language', navigator.language)
-if (!LOCALES.map((lng) => lng.locale).includes(window.language)) {
+if (!LOCALES.map(lng => lng.locale).includes(window.language)) {
   switch (window.language.substr(0, 2).toLowerCase()) {
     case 'zh':
       window.language = 'zh-TW'
@@ -89,11 +86,11 @@ i18next.use(reactI18nextModule).init({
     usePureComponent: true,
   },
   saveMissing: dbg && dbg.extra('i18next-save-missing').isEnabled(),
-  missingKeyHandler: function (lng, ns, key, fallbackValue) {
+  missingKeyHandler: function(lng, ns, key, fallbackValue) {
     if (!ns || ns == '') {
       ns = 'others'
     }
-    if (ns !== 'data' && i18nFiles.map((i) => path.basename(i)).includes(ns)) {
+    if (ns !== 'data' && i18nFiles.map(i => path.basename(i)).includes(ns)) {
       try {
         const p = path.join(ROOT, 'i18n', ns, `${lng}.json`)
         const cnt = readJSONSync(p)
@@ -124,7 +121,7 @@ if (window.dbg && window.dbg.isEnabled()) {
 // FIXME: simulating window.i18n with i18next
 // to be removed in next major release
 window.i18n = {}
-const addGlobalI18n = (namespace) => {
+const addGlobalI18n = namespace => {
   window.i18n[namespace] = {
     fixedT: i18next.getFixedT(window.language, namespace),
   }
@@ -137,7 +134,7 @@ const addGlobalI18n = (namespace) => {
 }
 
 if (window.isMain) {
-  each(mainPoiNs, (ns) => addGlobalI18n(ns))
+  each(mainPoiNs, ns => addGlobalI18n(ns))
 }
 
 // export addGlobalI18n for plugin manager usage
@@ -154,9 +151,9 @@ i18next.addResourceBundleDebounce = (...props) => {
 }
 
 window.i18n.resources = {
-  __: (str) => spacing(str),
+  __: str => spacing(str),
   translate: (locale, str) => spacing(str),
-  setLocale: (str) => str,
+  setLocale: str => str,
 }
 
 // inject translator for English names

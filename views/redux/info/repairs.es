@@ -35,7 +35,7 @@ export function reducer(state = [], { type, body, postBody }) {
 
 // observe docking complete events and modify ship HP accordingly.
 export const dockingCompleteObserver = observer(
-  (state) => state.info.repairs,
+  state => state.info.repairs,
   (dispatch, current, previous) => {
     /*
        only observe valid state changes:

@@ -9,14 +9,14 @@ const runShell = (scriptPath, args, options) =>
   new Promise((resolve, reject) => {
     const proc = child_process.spawn(scriptPath, args, options)
 
-    proc.stdout.on('data', (data) => {
+    proc.stdout.on('data', data => {
       log(`stdout: ${data}`)
     })
 
-    proc.stderr.on('data', (data) => {
+    proc.stderr.on('data', data => {
       log(`stderr: ${data}`)
     })
-    proc.on('exit', (code) => {
+    proc.on('exit', code => {
       if (code > 0) {
         reject(new Error('deploy fails'))
       } else {
@@ -34,7 +34,7 @@ const deployNightlies = async () => {
     return Promise.reject(new Error('nightly deployment only runs on ci mode'))
   }
 
-  await Promise.each(files, async (file) => {
+  await Promise.each(files, async file => {
     await runShell('rsync', [
       '-r',
       '-q',

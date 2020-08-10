@@ -34,14 +34,14 @@ export class TextConfig extends PureComponent {
     propValue: this.props.value,
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       value: e.currentTarget.value,
     })
     this.applyConfig(e.currentTarget.value)
   }
 
-  applyConfig = debounce((value) => {
+  applyConfig = debounce(value => {
     config.set(this.props.configName, value)
   }, 200)
 

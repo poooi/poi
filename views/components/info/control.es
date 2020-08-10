@@ -17,7 +17,7 @@ const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
 
 const openItemAsync = (dir, source = null) => {
-  openExternal(`file://${dir}`, {}, (err) => {
+  openExternal(`file://${dir}`, {}, err => {
     if (err) {
       const prefix = (source && `${source}: `) || ''
       console.error(`${prefix}Failed to open item "${dir}" asynchronously`, err)
@@ -63,42 +63,32 @@ export class PoiControl extends Component {
     extend: false,
   }
 
-  handleCapturePage = (toClipboard) => {
-    if (config.get('poi.misc.screenshot.usecanvas')) {
-      getStore('layout.webview.ref')
-        .getWebContents()
-        .executeJavaScript(`capture(${!!toClipboard})`)
-        .then((success) => {
-          if (!success) {
-            this.handleCapturePageOverWebContent(toClipboard)
-          }
-        })
-    } else {
-      this.handleCapturePageOverWebContent(toClipboard)
-    }
-  }
-
-  handleCapturePageOverWebContent = (toClipboard) => {
-    const { width, height } = getStore('layout.webview')
-    const rect = {
-      x: 0,
-      y: 0,
-      width: Math.floor(width * devicePixelRatio),
-      height: Math.floor(height * devicePixelRatio),
-    }
+  handleCapturePage = toClipboard => {
     getStore('layout.webview.ref')
       .getWebContents()
-      .capturePage(rect)
-      .then((image) => {
-        this.handleScreenshotCaptured({
-          dataURL: image
-            .resize({ width: Math.floor(width), height: Math.floor(height) })
-            .toDataURL(),
-          toClipboard,
-        })
+      .executeJavaScript(`capture(${!!toClipboard})`)
+      .then(success => {
+        if (!success) {
+          const { width, height } = getStore('layout.webview')
+          const rect = {
+            x: 0,
+            y: 0,
+            width: Math.floor(width * devicePixelRatio),
+            height: Math.floor(height * devicePixelRatio),
+          }
+          getStore('layout.webview.ref')
+            .getWebContents()
+            .capturePage(rect, image => {
+              this.handleScreenshotCaptured({
+                dataURL: image
+                  .resize({ width: Math.floor(width), height: Math.floor(height) })
+                  .toDataURL(),
+                toClipboard,
+              })
+            })
+        }
       })
   }
-
   handleScreenshotCaptured = ({ dataURL, toClipboard }) => {
     const screenshotPath = config.get(
       'poi.misc.screenshot.path',
@@ -113,16 +103,15 @@ export class PoiControl extends Component {
     } else {
       const buf = usePNG ? image.toPNG() : image.toJPEG(80)
       const now = new Date()
-      const date = `${now.getFullYear()}-${
-        now.getMonth() + 1
-      }-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+      const date = `${now.getFullYear()}-${now.getMonth() +
+        1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
       fs.ensureDirSync(screenshotPath)
       const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
       fs.writeFile(filename, buf)
         .then(() => {
           window.success(`${this.props.t('screenshot saved to')} ${filename}`)
         })
-        .catch((err) => {
+        .catch(err => {
           window.error(this.props.t('Failed to save the screenshot'))
         })
     }
@@ -220,16 +209,13 @@ export class PoiControl extends Component {
   handleOpenDevTools = () => {
     // openFocusedWindowDevTools()
     remote.getCurrentWindow().openDevTools({ mode: 'detach' })
-    setTimeout(() => {
-      getStore('layout.webview.ref').executeJavaScript('window.align()')
-    }, 100)
   }
 
   handleOpenWebviewDevTools = () => {
     getStore('layout.webview.ref').openDevTools({ mode: 'detach' })
   }
 
-  handleJustifyLayout = (e) => {
+  handleJustifyLayout = e => {
     getStore('layout.webview.ref').executeJavaScript('window.align()')
     e.preventDefault()
   }
@@ -238,7 +224,7 @@ export class PoiControl extends Component {
     getStore('layout.webview.ref').executeJavaScript('window.unalign()')
   }
 
-  handleRefreshGameDialog = (e) => {
+  handleRefreshGameDialog = e => {
     if (e.shiftKey) {
       gameRefreshPage()
       return
@@ -278,7 +264,7 @@ export class PoiControl extends Component {
     this.setState({ transition: false })
   }
 
-  handleTouchbar = (props) => {
+  handleTouchbar = props => {
     //load Touchbar-related functions only when touchbar is triggered
     const { toggleRefreshConfirm, renderMainTouchbar } = remote.require('./lib/touchbar')
     //workaround for the input event not defined

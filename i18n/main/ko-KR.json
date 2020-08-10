@@ -5,7 +5,7 @@
   "built": "건조 완료",
   "Construction": "건조",
   "DevelopSuccess": "{{name}} 개발 성공",
-  "DevelopFailed": "개발 실패",
+  "DevelopFailed": "{{name}} 개발 실패",
   "ImproveSuccess": "{{name}} 개수 성공",
   "ImproveFailed": "{{name}} 개수 실패",
   "mission complete": "원정 성공",
