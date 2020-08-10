@@ -208,9 +208,9 @@ export function reducer(state = initState, { type, path, body, postBody, time },
           mapCell: _status.currentCell,
           quest: body.api_quest_name,
           enemy: body.api_enemy_info.api_deck_name,
-          combined: getSortieType() > 0,
+          combined: getSortieType(store) > 0,
           mvp:
-            getSortieType() > 0
+            getSortieType(store) > 0
               ? [body.api_mvp - 1, body.api_mvp_combined - 1]
               : [body.api_mvp - 1, body.api_mvp - 1],
           dropItem: body.api_get_useitem,
