@@ -8,7 +8,7 @@ const { ROOT } = global
 const rimraf = promisify(_rimraf)
 
 const cleanFiles = () => {
-  glob.sync(path.join(ROOT, 'build', '!(*.es)')).forEach(file => rimraf(file, () => {}))
+  glob.sync(path.join(ROOT, 'build', '!(*.es)')).forEach((file) => rimraf(file, () => {}))
   rimraf(path.join(ROOT, 'app_compiled'), () => {})
   rimraf(path.join(ROOT, 'dist'), () => {})
 }

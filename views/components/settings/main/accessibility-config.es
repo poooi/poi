@@ -29,7 +29,7 @@ export class AccessibilityConfig extends Component {
     value: PropTypes.string,
   }
 
-  handleSetFilter = e => {
+  handleSetFilter = (e) => {
     config.set('poi.appearance.colorblindFilter', e.currentTarget.value)
   }
 
@@ -39,7 +39,7 @@ export class AccessibilityConfig extends Component {
       <Section title={t('setting:Accessibility')}>
         {t('setting:Color blind mode')}
         <HTMLSelect value={this.props.value} onChange={this.handleSetFilter}>
-          {map(list, mode => (
+          {map(list, (mode) => (
             <option value={mode} key={mode}>
               {t(`setting:${mode}`)}
             </option>

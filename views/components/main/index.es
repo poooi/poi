@@ -23,7 +23,6 @@ import 'react-resizable/css/styles.css'
 const MainPanelContent = styled.div`
   position: relative;
   transition: all 0.3s ease-in-out;
-  margin-top: -4px;
   font-size: 12px;
 
   .react-grid-item {
@@ -57,8 +56,8 @@ if (!isEqual(newLayout, configLayout)) {
 // polyfill for old layouts
 function layoutConfigOutdated(layoutConfig) {
   return (
-    !layoutConfig.sm.find(a => a.i === 'repair-panel') ||
-    !layoutConfig.lg.find(a => a.i === 'repair-panel')
+    !layoutConfig.sm.find((a) => a.i === 'repair-panel') ||
+    !layoutConfig.lg.find((a) => a.i === 'repair-panel')
   )
 }
 
@@ -73,6 +72,24 @@ if (layoutConfigOutdated(config.get('poi.mainpanel.layout', defaultLayout))) {
   config.set('poi.mainpanel.layout', defaultLayout)
 }
 
+const configKey = ['x', 'y', 'h', 'w', 'i', 'minW', 'maxW', 'minH', 'maxH']
+
+function isPositionEqual(pos1, pos2) {
+  return isEqual(pick(pos1, configKey), pick(pos2, configKey))
+}
+
+function isLayoutEqual(layout1, layout2) {
+  return Object.keys(layout1)
+    .map((i) => isPositionEqual(layout1[i], layout2[i]))
+    .reduce((a, b) => a && b)
+}
+
+function isLayoutsEqual(layouts1, layouts2) {
+  return Object.keys(layouts1)
+    .map((layoutName) => isLayoutEqual(layouts1[layoutName], layouts2[layoutName]))
+    .reduce((a, b) => a && b)
+}
+
 @connect((state, props) => ({
   layouts: layoutConfigFix(get(state, 'config.poi.mainpanel.layout', defaultLayout)),
   editable: get(state, 'config.poi.layout.editable', false),
@@ -84,11 +101,13 @@ export class reactClass extends Component {
   }
 
   onLayoutChange = (layout, layouts) => {
-    config.set('poi.mainpanel.layout', layouts)
+    if (!isLayoutsEqual(layouts, config.get('poi.mainpanel.layout'))) {
+      config.set('poi.mainpanel.layout', layouts)
+    }
   }
 
-  handleResize = entries => {
-    entries.forEach(entry => {
+  handleResize = (entries) => {
+    entries.forEach((entry) => {
       const { width, height } = entry.contentRect
       if (
         width !== 0 &&

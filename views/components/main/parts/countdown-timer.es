@@ -12,7 +12,7 @@ class Ticker {
   }
   tick = () => {
     const now = Date.now()
-    this.callbacks.forEach(f => f(now))
+    this.callbacks.forEach((f) => f(now))
   }
   count = () => {
     if (!this.counting) {
@@ -41,7 +41,7 @@ class Ticker {
       this.start()
     }
   }
-  unreg = key => {
+  unreg = (key) => {
     this.callbacks.delete(key)
     if (this.callbacks.size === 0) {
       this.stop()
@@ -101,7 +101,7 @@ class CountdownTimerInner extends Component {
   stopTick = () => {
     ticker.unreg(this.props.countdownId)
   }
-  tick = currentTime => {
+  tick = (currentTime) => {
     const timeRemaining = this.constructor.getTimeRemaining(this.props.completeTime, currentTime)
     if (timeRemaining < 1) {
       this.stopTick()
@@ -164,10 +164,10 @@ class CountdownNotifierLabelInner extends Component {
       nextProps.completeTime !== this.props.completeTime || nextState.style !== this.state.style
     )
   }
-  getLabelStyle = props => {
+  getLabelStyle = (props) => {
     return props.getLabelStyle(props, CountdownTimerInner.getTimeRemaining(props.completeTime))
   }
-  tick = timeRemaining => {
+  tick = (timeRemaining) => {
     const notifyOptions = this.props.getNotifyOptions(this.props)
     if (notifyOptions) this.notifier.tryNotify(notifyOptions)
     const style = this.getLabelStyle(this.props)

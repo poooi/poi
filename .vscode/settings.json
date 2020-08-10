@@ -2,10 +2,20 @@
   "editor.tabSize": 2,
   "files.insertFinalNewline": true,
   "files.associations": {
-    "*.es": "javascriptreact",
+    "*.es": "javascriptreact"
   },
   "files.trimTrailingWhitespace": true,
   "javascript.validate.enable": false,
   "eslint.autoFixOnSave": true,
   "editor.detectIndentation": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }

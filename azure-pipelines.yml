@@ -1,11 +1,11 @@
 jobs:
 - job: Linux
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-latest'
   steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '10.x'
+      versionSpec: '12.x'
     displayName: 'Install Node.js'
   - script: |
       sudo apt-get update
@@ -14,6 +14,9 @@ jobs:
   - script: |
       npm ci
     displayName: 'npm install'
+  - script: |
+      npm run lint
+    displayName: 'npm lint'
   - script: |
       npm test
     displayName: 'npm test'
@@ -28,15 +31,18 @@ jobs:
   - task: PublishBuildArtifacts@1
 - job: macOS
   pool:
-    vmImage: 'xcode9-macos10.13'
+    vmImage: 'macOS-latest'
   steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '10.x'
+      versionSpec: '12.x'
     displayName: 'Install Node.js'
   - script: |
       npm ci
     displayName: 'npm install'
+  - script: |
+      npm run lint
+    displayName: 'npm lint'
   - script: |
       npm run build
     displayName: 'npm build'
@@ -51,15 +57,18 @@ jobs:
   - task: PublishBuildArtifacts@1
 - job: Windows
   pool:
-    vmImage: 'vs2017-win2016'
+    vmImage: 'windows-latest'
   steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '10.x'
+      versionSpec: '12.x'
     displayName: 'Install Node.js'
   - script: |
       npm ci
     displayName: 'npm install'
+  - script: |
+      npm run lint
+    displayName: 'npm lint'
   - script: |
       npm run build
     displayName: 'npm build'

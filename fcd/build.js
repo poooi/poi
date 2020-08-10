@@ -51,7 +51,7 @@ async function buildData(name) {
 }
 
 async function build_meta(flist) {
-  const meta = await Promise.map(flist, async fname => {
+  const meta = await Promise.map(flist, async (fname) => {
     const fpath = path.join(DEST, fname)
     const data = JSON.parse(await fs.readFile(fpath))
     return data.meta

@@ -4,12 +4,14 @@ dist: trusty
 language: node_js
 
 node_js:
-- '10'
+- '12'
 
 matrix:
   include:
   - os: osx
   - os: linux
+
+osx_image: xcode11
 
 addons:
   apt:

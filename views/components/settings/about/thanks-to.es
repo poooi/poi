@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { Section } from 'views/components/settings/components/section'
 
-const openLink = memoize(link => () => shell.openExternal(link))
+const openLink = memoize((link) => () => shell.openExternal(link))
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,7 +41,7 @@ const Detail = styled.div`
 export const ThanksTo = ({ ready }) => (
   <Section title="Thanks to">
     <Wrapper className="thanks-to">
-      {map(CONST.thanksTo, e => (
+      {map(CONST.thanksTo, (e) => (
         <Item key={e.name} className="thanks-to-item">
           <Icon className="thanks-to-img-container">
             {ready && (

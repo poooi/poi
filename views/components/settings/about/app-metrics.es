@@ -29,13 +29,16 @@ export class AppMetrics extends PureComponent {
     const total = {}
 
     const pidmap = {}
-    // ;['workingSetSize', 'peakWorkingSetSize'].map(
-    //   prop => (total[prop] = round(sumBy(metrics, metric => metric.memory[prop]) / 1000, 2)),
-    // )
+    ;['workingSetSize', 'peakWorkingSetSize'].map(
+      (prop) => (total[prop] = round(sumBy(metrics, (metric) => metric.memory[prop]) / 1000, 2)),
+    )
 
-    total.percentCPUUsage = round(sumBy(metrics, metric => metric.cpu.percentCPUUsage), 2)
+    total.percentCPUUsage = round(
+      sumBy(metrics, (metric) => metric.cpu.percentCPUUsage),
+      2,
+    )
 
-    this.getAllWindows().map(win => {
+    this.getAllWindows().map((win) => {
       const pid = win.webContents.getOSProcessId()
       const title = win.getTitle()
       pidmap[pid] = title
@@ -82,23 +85,23 @@ export class AppMetrics extends PureComponent {
         {active && (
           <HTMLTable condensed interactive className="metric-table">
             <thead>
-              {map(['PID', 'type', /* 'working/MB', 'peak/MB',*/ 'CPU/%', 'wakeup'], str => (
+              {map(['PID', 'type', 'working/MB', 'peak/MB', 'CPU/%', 'wakeup'], (str) => (
                 <th key={str} title={str}>
                   {str}
                 </th>
               ))}
             </thead>
             <tbody>
-              {map(metrics, metric => (
+              {map(metrics, (metric) => (
                 <tr className="metric-row" key={metric.pid}>
                   <th>{metric.pid}</th>
                   <td title={pidmap[metric.pid] || metric.type}>
                     {pidmap[metric.pid] || metric.type}
                   </td>
-                  {/* {['workingSetSize', 'peakWorkingSetSize'].map(prop => (
+                  {['workingSetSize', 'peakWorkingSetSize'].map((prop) => (
                     <td key={prop}>{round((metric.memory || [])[prop] / 1000, 2)}</td>
-                  ))} */}
-                  {['percentCPUUsage', 'idleWakeupsPerSecond'].map(prop => (
+                  ))}
+                  {['percentCPUUsage', 'idleWakeupsPerSecond'].map((prop) => (
                     <td key={prop}>{round((metric.cpu || [])[prop], 1)}</td>
                   ))}
                 </tr>
@@ -108,8 +111,8 @@ export class AppMetrics extends PureComponent {
               <tr>
                 <th>{t('setting:TOTAL')}</th>
                 <td />
-                {/* <td>{total.workingSetSize}</td>
-                <td>{total.peakWorkingSetSize}</td> */}
+                <td>{total.workingSetSize}</td>
+                <td>{total.peakWorkingSetSize}</td>
                 <td>{total.percentCPUUsage}</td>
                 <td />
               </tr>

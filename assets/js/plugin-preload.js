@@ -4,7 +4,7 @@ const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 const config = remote.require('./lib/config')
 
-require('module').globalPaths.push(MODULE_PATH)
+require('module').globalPaths.unshift(MODULE_PATH)
 require('@babel/register')(require(`${ROOT}/babel.config`))
 require('coffee-react/register')
 async function setPath() {
@@ -16,8 +16,8 @@ async function setPath() {
 }
 setPath()
 
-const onZoomChange = value => {
-  remote.getCurrentWebContents().setZoomFactor(value)
+const onZoomChange = (value) => {
+  remote.getCurrentWebContents().zoomFactor = value
 }
 
 const handleZoom = (path, value) => {
@@ -28,7 +28,7 @@ const handleZoom = (path, value) => {
 
 config.addListener('config.set', handleZoom)
 
-window.addEventListener('unload', e => {
+window.addEventListener('unload', (e) => {
   config.removeListener('config.set', handleZoom)
 })
 

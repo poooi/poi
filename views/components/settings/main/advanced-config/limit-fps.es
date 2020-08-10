@@ -10,13 +10,13 @@ import { Slider, FormGroup } from '@blueprintjs/core'
 import { Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 
-const handleChangeLimit = value => {
+const handleChangeLimit = (value) => {
   config.set('poi.misc.limitFps.value', parseInt(value))
 }
 
 export const LimitFps = compose(
   withNamespaces(['setting']),
-  connect(state => get(state.config, 'poi.misc.limitFps')),
+  connect((state) => get(state.config, 'poi.misc.limitFps')),
 )(({ t, enabled, value }) => {
   const [fps, setFps] = useState(value)
 
@@ -36,7 +36,7 @@ export const LimitFps = compose(
         <FormGroup inline label={t('Limit')}>
           <Slider
             disabled={!enabled}
-            onChange={v => setFps(v)}
+            onChange={(v) => setFps(v)}
             onRelease={handleChangeLimit}
             min={30}
             max={120}

@@ -14,7 +14,7 @@ import {
 } from 'views/components/etc/styled-components'
 
 const serverList = [
-  'https://poi.io/fcd/',
+  'https://poi.moe/fcd/',
   'https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/',
 ]
 
@@ -29,7 +29,7 @@ const defaultFetchOption = {
 const initState = {}
 
 @withNamespaces(['setting'])
-@connect(state => ({
+@connect((state) => ({
   version: state.fcd.version || initState,
 }))
 export class FCD extends Component {
@@ -65,22 +65,20 @@ export class FCD extends Component {
       flag = true
 
       const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
-        .then(res => (res.ok ? res.json() : undefined))
-        .catch(e => undefined)
+        .then((res) => (res.ok ? res.json() : undefined))
+        .catch((e) => undefined)
       if (fileList) {
         for (const file of fileList) {
           const localVersion = get(this.props.version, file.name, '1970/01/01/01')
           if (file.version > localVersion) {
             // eslint-disable-next-line no-console
             console.log(
-              `Updating ${file.name}: current ${localVersion}, remote ${
-                file.version
-              }, mode ${cacheMode}`,
+              `Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`,
             )
 
             const data = await fetch(`${server}${file.name}.json`, defaultFetchOption)
-              .then(res => (res.ok ? res.json() : undefined))
-              .catch(e => undefined)
+              .then((res) => (res.ok ? res.json() : undefined))
+              .catch((e) => undefined)
             if (data) {
               this.props.dispatch({
                 type: '@@updateFCD',
@@ -92,9 +90,7 @@ export class FCD extends Component {
           } else {
             // eslint-disable-next-line no-console
             console.log(
-              `No newer version of ${file.name}: current ${localVersion}, remote ${
-                file.version
-              }, mode ${cacheMode}`,
+              `No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`,
             )
           }
         }

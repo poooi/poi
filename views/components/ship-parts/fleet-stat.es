@@ -53,10 +53,6 @@ const MiniContainer = styled(Container)`
   justify-content: space-around;
 `
 
-const Item = styled.span`
-  flex: 1;
-`
-
 const MiniItem = styled.span`
   flex: 0;
   margin-left: 5px;
@@ -74,6 +70,23 @@ const ReconTile = styled.span`
   }
 `
 
+const ItemContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`
+
+const ItemLabel = styled.div`
+  font-size: 80%;
+`
+
+const Item = ({ label, children }) => (
+  <ItemContainer>
+    <ItemLabel>{label}</ItemLabel>
+    <div>{children}</div>
+  </ItemContainer>
+)
+
 class CountdownLabel extends Component {
   constructor(props) {
     super(props)
@@ -88,13 +101,14 @@ class CountdownLabel extends Component {
   shouldComponentUpdate = (nextProps, nextState) => {
     return nextProps.completeTime !== this.props.completeTime
   }
-  tick = timeRemaining => {
+  tick = (timeRemaining) => {
     if (this.props.shouldNotify && this.props.completeTime >= 0) this.tryNotify()
   }
   static basicNotifyConfig = {
     type: 'morale',
     title: i18next.t('main:Morale'),
-    message: names => `${joinString(names, ', ')} ${i18next.t('main:have recovered from fatigue')}`,
+    message: (names) =>
+      `${joinString(names, ', ')} ${i18next.t('main:have recovered from fatigue')}`,
     icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
   }
   tryNotify = () => {
@@ -118,19 +132,15 @@ class CountdownLabel extends Component {
   }
 }
 
-const tykuSelectorFactory = memoize(fleetId =>
-  createSelector(
-    fleetShipsEquipDataWithEscapeSelectorFactory(fleetId),
-    (equipsData = []) => getTyku(equipsData),
+const tykuSelectorFactory = memoize((fleetId) =>
+  createSelector(fleetShipsEquipDataWithEscapeSelectorFactory(fleetId), (equipsData = []) =>
+    getTyku(equipsData),
   ),
 )
 
-const admiralLevelSelector = createSelector(
-  basicSelector,
-  basic => basic.api_level,
-)
+const admiralLevelSelector = createSelector(basicSelector, (basic) => basic.api_level)
 
-const sakuSelectorFactory = memoize(fleetId =>
+const sakuSelectorFactory = memoize((fleetId) =>
   createSelector(
     [
       fleetShipsDataWithEscapeSelectorFactory(fleetId),
@@ -147,14 +157,13 @@ const sakuSelectorFactory = memoize(fleetId =>
   ),
 )
 
-const speedSelectorFactory = memoize(fleetId =>
-  createSelector(
-    [fleetShipsDataWithEscapeSelectorFactory(fleetId)],
-    (shipsData = []) => getFleetSpeed(shipsData),
+const speedSelectorFactory = memoize((fleetId) =>
+  createSelector([fleetShipsDataWithEscapeSelectorFactory(fleetId)], (shipsData = []) =>
+    getFleetSpeed(shipsData),
   ),
 )
 
-const fleetStatSelectorFactory = memoize(fleetId =>
+const fleetStatSelectorFactory = memoize((fleetId) =>
   createSelector(
     [
       fleetInBattleSelectorFactory(fleetId),
@@ -220,10 +229,18 @@ export const FleetStat = compose(
     const { speed } = fleetSpeed
     let totalLv = 0
     let minCond = 100
+    let totalFP = 0
+    let totalASW = 0
+    let totalLoS = 0
+    let totalAA = 0
     shipsData.forEach(([_ship] = []) => {
       if (_ship) {
         totalLv += _ship.api_lv
         minCond = Math.min(minCond, _ship.api_cond)
+        totalFP += _ship.api_karyoku?.[0] || 0
+        totalASW += _ship.api_taisen?.[0] || 0
+        totalLoS += _ship?.api_sakuteki?.[0] || 0
+        totalAA += _ship?.api_taiku?.[0] || 0
       }
     })
     let completeTime
@@ -233,7 +250,7 @@ export const FleetStat = compose(
       const conds = shipsData.map(([ship = { api_cond: 0 }] = []) => ship.api_cond)
       completeTime = Math.max.apply(
         null,
-        conds.map(cond => recoveryEndTime(condTick, cond, condTarget)),
+        conds.map((cond) => recoveryEndTime(condTick, cond, condTarget)),
       )
     }
     return (
@@ -249,76 +266,80 @@ export const FleetStat = compose(
             </MiniItem>
           </MiniContainer>
         ) : (
-          <Container>
-            <Item>{t(`main:${getSpeedLabel(speed)}`)}</Item>
-            <Item>
-              {t('main:Total Lv')}. {totalLv}
-            </Item>
-            <Item>
-              <Tooltip
-                position={Position.BOTTOM}
-                content={
-                  <div>
+          <>
+            <Container>
+              <Item label={t('data:Speed')}>{t(`main:${getSpeedLabel(speed)}`)}</Item>
+              <Item label={t('data:Lv')}>{totalLv}</Item>
+              <Item label={t('data:FP')}>{totalFP}</Item>
+              <Item label={t('data:ASW')}>{totalASW}</Item>
+              <Item label={t('data:AA')}>{totalAA}</Item>
+              <Item label={t('main:Fighter Power')}>
+                <Tooltip
+                  position={Position.BOTTOM}
+                  content={
                     <div>
-                      {t('main:Minimum FP')}: {tyku.min}
+                      <div>
+                        {t('main:Minimum FP')}: {tyku.min}
+                      </div>
+                      <div>
+                        {t('main:Maximum FP')}: {tyku.max}
+                      </div>
+                      <div>
+                        {t('main:Basic FP')}: {tyku.basic}
+                      </div>
                     </div>
-                    <div>
-                      {t('main:Maximum FP')}: {tyku.max}
-                    </div>
-                    <div>
-                      {t('main:Basic FP')}: {tyku.basic}
-                    </div>
-                  </div>
-                }
-              >
-                <span>
-                  {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-                </span>
-              </Tooltip>
-            </Item>
-            <Item>
-              <Tooltip
-                position={Position.BOTTOM}
-                content={
-                  <InfoTooltip className="info-tooltip">
-                    <ReconTile className="recon-title">
-                      <span>{t('main:Formula 33')}</span>
-                    </ReconTile>
-                    <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">× 1</InfoTooltipItem>
-                      <span>{saku33.total}</span>
-                    </InfoTooltipEntry>
-                    <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{'× 2'}</InfoTooltipItem>
-                      <span>{saku33x2.total}</span>
-                    </InfoTooltipEntry>
-                    <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{'× 3'}</InfoTooltipItem>
-                      <span>{saku33x3.total}</span>
-                    </InfoTooltipEntry>
-                    <InfoTooltipEntry className="info-tooltip-entry">
-                      <InfoTooltipItem className="info-tooltip-item">{'× 4'}</InfoTooltipItem>
-                      <span>{saku33x4.total}</span>
-                    </InfoTooltipEntry>
-                  </InfoTooltip>
-                }
-              >
-                <span>
-                  {t('main:LOS')}: {saku33.total.toFixed(2)}
-                </span>
-              </Tooltip>
-            </Item>
-            <Item>
-              {inExpedition ? t('main:Expedition') : t('main:Resting')}
-              <span> </span>
-              <CountdownLabel
-                fleetId={fleetId}
-                fleetName={fleetName}
-                completeTime={completeTime}
-                shouldNotify={!inExpedition && !inBattle && canNotify}
-              />
-            </Item>
-          </Container>
+                  }
+                >
+                  <span>{tyku.max === tyku.min ? tyku.min : tyku.min + '+'}</span>
+                </Tooltip>
+              </Item>
+              <Item label={t('main:LOS')}>
+                <Tooltip
+                  position={Position.BOTTOM}
+                  content={
+                    <InfoTooltip className="info-tooltip">
+                      <ReconTile className="recon-title">
+                        <span>{t('main:Total')}</span>
+                      </ReconTile>
+                      <InfoTooltipEntry className="info-tooltip-entry">
+                        <InfoTooltipItem className="info-tooltip-item" />
+                        <span>{totalLoS}</span>
+                      </InfoTooltipEntry>
+                      <ReconTile className="recon-title">
+                        <span>{t('main:Formula 33')}</span>
+                      </ReconTile>
+                      <InfoTooltipEntry className="info-tooltip-entry">
+                        <InfoTooltipItem className="info-tooltip-item">× 1</InfoTooltipItem>
+                        <span>{saku33.total}</span>
+                      </InfoTooltipEntry>
+                      <InfoTooltipEntry className="info-tooltip-entry">
+                        <InfoTooltipItem className="info-tooltip-item">{'× 2'}</InfoTooltipItem>
+                        <span>{saku33x2.total}</span>
+                      </InfoTooltipEntry>
+                      <InfoTooltipEntry className="info-tooltip-entry">
+                        <InfoTooltipItem className="info-tooltip-item">{'× 3'}</InfoTooltipItem>
+                        <span>{saku33x3.total}</span>
+                      </InfoTooltipEntry>
+                      <InfoTooltipEntry className="info-tooltip-entry">
+                        <InfoTooltipItem className="info-tooltip-item">{'× 4'}</InfoTooltipItem>
+                        <span>{saku33x4.total}</span>
+                      </InfoTooltipEntry>
+                    </InfoTooltip>
+                  }
+                >
+                  <span>{saku33.total.toFixed(2)}</span>
+                </Tooltip>
+              </Item>
+              <Item label={inExpedition ? t('main:Expedition') : t('main:Resting')}>
+                <CountdownLabel
+                  fleetId={fleetId}
+                  fleetName={fleetName}
+                  completeTime={completeTime}
+                  shouldNotify={!inExpedition && !inBattle && canNotify}
+                />
+              </Item>
+            </Container>
+          </>
         )}
       </FleetStats>
     )

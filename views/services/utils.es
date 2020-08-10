@@ -13,7 +13,7 @@ export const damagedCheck = (
 
   const flagships = map(sortieStatus, (sortie, index) =>
     sortie ? get(fleets, [index, 'api_ship', 0], -1) : -1,
-  ).filter(id => id > -1)
+  ).filter((id) => id > -1)
 
   sortieShips.forEach((shipId, idx) => {
     if (shipId === -1 || flagships.includes(shipId)) {
@@ -30,7 +30,7 @@ export const damagedCheck = (
     }
     // Check Emergency repair personnel / goddess
     let safe = false
-    ship.api_slot.concat(ship.api_slot_ex || -1).forEach(slotId => {
+    ship.api_slot.concat(ship.api_slot_ex || -1).forEach((slotId) => {
       if (slotId === -1) {
         return
       }
@@ -52,10 +52,7 @@ export const damagedCheck = (
 }
 
 export const gameRefreshPage = () => {
-  window
-    .getStore('layout.webview.ref')
-    .getWebContents()
-    .reload()
+  window.getStore('layout.webview.ref').getWebContents().reload()
 }
 
 export const gameRefreshPageIgnoringCache = () => {
@@ -91,6 +88,6 @@ export const getTitleBarHeight = () => get($('title-bar'), 'clientHeight', 0)
 
 export const getYOffset = () => getPoiInfoHeight() + getTitleBarHeight()
 
-export const getRealSize = value => Math.floor(value * config.get('poi.appearance.zoom', 1))
+export const getRealSize = (value) => Math.floor(value * config.get('poi.appearance.zoom', 1))
 
-export const getZoomedSize = value => Math.floor(value / config.get('poi.appearance.zoom', 1))
+export const getZoomedSize = (value) => Math.floor(value / config.get('poi.appearance.zoom', 1))

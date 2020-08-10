@@ -6,6 +6,7 @@ import { FormGroup } from '@blueprintjs/core'
 import { Section, Wrapper, FillAvailable } from '../components/section'
 import { FolderPickerConfig } from '../components/folder-picker'
 import { RadioConfig } from '../components/radio'
+import { SwitchConfig } from '../components/switch'
 
 const screenshotPathExclude = [window.ROOT]
 const defaultScreenshotPath = remote.getGlobal('DEFAULT_SCREENSHOT_PATH')
@@ -19,9 +20,17 @@ export const ScreenshotConfig = withNamespaces(['setting'])(({ t }) => (
             label={t('setting:Screenshot Format')}
             configName="poi.misc.screenshot.format"
             defaultValue="png"
-            availableVal={[{ name: 'PNG', value: 'png' }, { name: 'JPEG', value: 'jpg' }]}
+            availableVal={[
+              { name: 'PNG', value: 'png' },
+              { name: 'JPEG', value: 'jpg' },
+            ]}
           />
         </FormGroup>
+        <SwitchConfig
+          label={t('setting:Capture screenshot using canvas directly')}
+          configName="poi.misc.screenshot.usecanvas"
+          defaultValue={false}
+        />
       </Wrapper>
 
       <FillAvailable>

@@ -6,7 +6,7 @@ const { TouchBarButton, TouchBarSpacer, TouchBarPopover, TouchBarSegmentedContro
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
-const getIcon = name => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
+const getIcon = (name) => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
 
 // simulate Escape key
 export const sendEscKey = () => {
@@ -83,8 +83,12 @@ const poibutton = new TouchBarButton({
   backgroundColor: '#000000',
 })
 
-//spacer
-const spacer = new TouchBarSpacer({
+// spacer
+const spacer1 = new TouchBarSpacer({
+  size: 'flexible',
+})
+
+const spacer2 = new TouchBarSpacer({
   size: 'flexible',
 })
 
@@ -114,7 +118,7 @@ const tabs = new TouchBarSegmentedControl({
   segmentStyle: 'automatic',
   segments: segments,
   selectedIndex: 0,
-  change: selectedIndex => {
+  change: (selectedIndex) => {
     mainWindow.webContents.send('touchbartab', selectedIndex)
   },
 })
@@ -149,7 +153,7 @@ export const toggleRefreshConfirm = (btn1, btn2) => {
 
 //main-touchbar
 const mainTouchbar = new TouchBar({
-  items: [devtools, screenshot, volume, popover, spacer, tabs, spacer, refresh],
+  items: [devtools, screenshot, volume, popover, spacer1, tabs, spacer2, refresh],
   escapeItem: poibutton,
 })
 
@@ -170,7 +174,7 @@ export const updateMainTouchbar = (
   //Get tab display name
   //lock plugin when no plugins enabled
   if (pluginTitle != segments[2].label) {
-    segments.forEach(x => {
+    segments.forEach((x) => {
       x.label = [mainTitle, fleetTitle, pluginTitle][segments.indexOf(x)]
       x.enabled = x.label != pluginDefault ? true : false
     })

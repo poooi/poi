@@ -26,7 +26,7 @@ export const compress7z = async (files, archive, options) => {
 
 // Run js script
 export const runScript = (scriptPath, args, options) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const proc = child_process.fork(scriptPath, args, options)
     proc.on('exit', () => resolve())
   })

@@ -6,7 +6,7 @@ const config = {
       require.resolve('@babel/preset-env'),
       {
         targets: {
-          electron: '4.0',
+          electron: '6.0',
         },
         loose: true,
       },
@@ -36,7 +36,7 @@ const config = {
       '@babel/plugin-syntax-import-meta',
       'babel-plugin-add-module-exports',
       'babel-plugin-dynamic-import-node',
-    ].map(plugin => require.resolve(plugin)),
+    ].map((plugin) => require.resolve(plugin)),
   ),
   ignore: [],
   only: [/\.(es|ts|tsx)$/],

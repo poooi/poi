@@ -10,7 +10,7 @@ import { withNamespaces } from 'react-i18next'
  * @param {string} packageName the package name to validate
  * @returns {boolean}
  */
-const validate = packageName => {
+const validate = (packageName) => {
   if (!packageName) {
     return false
   }
@@ -38,7 +38,7 @@ export class NameInput extends PureComponent {
     packageName: '',
   }
 
-  changeInstalledPackage = e => {
+  changeInstalledPackage = (e) => {
     this.setState({ packageName: trim(e.target.value) })
   }
 

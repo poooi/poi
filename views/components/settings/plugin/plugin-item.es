@@ -247,7 +247,7 @@ export class PluginItem extends PureComponent {
           </PluginMeta>
           <PluginDetail className="plugin-detail">
             <Transition in={settingOpen} timeout={300}>
-              {state => (
+              {(state) => (
                 <Fade1 className="plugin-setting" state={state}>
                   {!!plugin.reactClass && (
                     <div>
@@ -290,7 +290,7 @@ export class PluginItem extends PureComponent {
               )}
             </Transition>
             <Transition in={!settingOpen} timeout={300}>
-              {state => (
+              {(state) => (
                 <Fade2 className="plugin-description" state={state}>
                   <ReactMarkdown
                     source={installable ? plugin[`des${window.language}`] : plugin.description}

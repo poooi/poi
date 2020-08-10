@@ -5,6 +5,9 @@ import { app } from 'electron'
 import { warn } from './utils'
 import yargs from 'yargs'
 
+const packageMeta = require('../package.json')
+global.LATEST_COMMIT = packageMeta.latestCommit
+
 // check if starts with Electron app, e.g. `electron .`
 // with Electron app: process.argv = [path to electron bin, '.', ...args ]
 // without: process.argv = [path to poi bin, ...args]
@@ -29,6 +32,9 @@ const argv = yargs
 // Print Version Info to Console and Exit
 const printVersionAndExit = () => {
   console.warn(chalk.blue.bold(`${app.getName()} ${app.getVersion()}`))
+  if (global.LATEST_COMMIT) {
+    console.warn(chalk.green`${global.LATEST_COMMIT}`)
+  }
   console.warn(
     chalk.cyan(
       [
@@ -52,7 +58,7 @@ if (argv.d) {
 }
 
 if (argv.extra) {
-  argv.extra.forEach(extra => Debug.enableExtra(extra))
+  argv.extra.forEach((extra) => Debug.enableExtra(extra))
 }
 
 // safe mode

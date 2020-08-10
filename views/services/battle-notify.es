@@ -7,7 +7,7 @@ import i18next from 'views/env-parts/i18next'
 
 let inBattle = false
 
-const needNotification = inBattle => {
+const needNotification = (inBattle) => {
   const enabled = config.get('poi.notify.battleEnd.enabled')
   const noticeOnlyBackground = config.get('poi.notify.battleEnd.onlyBackground')
   const noticeOnlyMuted = config.get('poi.notify.battleEnd.onlyMuted')
@@ -15,7 +15,7 @@ const needNotification = inBattle => {
   const poiFocused =
     remote.getCurrentWindow().isFocused() ||
     remote.BrowserWindow.getAllWindows().some(
-      win => win.getURL().endsWith('?kangame') && win.isFocused(),
+      (win) => win.getURL().endsWith('?kangame') && win.isFocused(),
     )
   if (!inBattle) {
     // no need notice because not battling
@@ -36,7 +36,7 @@ const needNotification = inBattle => {
   return true
 }
 
-ResourceNotifier.addListener('request', detail => {
+ResourceNotifier.addListener('request', (detail) => {
   const { pathname } = parse(detail.url)
   switch (pathname) {
     case '/kcsapi/api_req_practice/battle':

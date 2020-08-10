@@ -1,11 +1,11 @@
 import { sortBy } from 'lodash'
 import { reduxSet } from 'views/utils/tools'
 
-export const sortPlugins = ps => sortBy(ps, ['priority', 'packageName'])
+export const sortPlugins = (ps) => sortBy(ps, ['priority', 'packageName'])
 
 export function reducer(state = [], { type, value, option }) {
-  const findPluginIndexByPackageName = packageName =>
-    state.findIndex(p => p.packageName === packageName)
+  const findPluginIndexByPackageName = (packageName) =>
+    state.findIndex((p) => p.packageName === packageName)
 
   switch (type) {
     case '@@Plugin/initialize': {

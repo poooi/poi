@@ -26,7 +26,7 @@ export class NotificationConfig extends Component {
     enabled: PropTypes.bool,
   }
 
-  handleSetNotify = path => () => {
+  handleSetNotify = (path) => () => {
     if (!path) {
       config.set('poi.notify.enabled', !this.props.enabled)
     } else {
@@ -34,7 +34,7 @@ export class NotificationConfig extends Component {
     }
   }
 
-  handleChangeNotifyVolume = volume => {
+  handleChangeNotifyVolume = (volume) => {
     config.set('poi.notify.volume', volume)
   }
 
@@ -69,7 +69,7 @@ export class NotificationConfig extends Component {
                 min={0.0}
                 max={1.0}
                 stepSize={0.05}
-                labelRenderer={value => `${Math.round(value * 100)}%`}
+                labelRenderer={(value) => `${Math.round(value * 100)}%`}
                 value={this.props.volume}
               />
             </FormGroup>
@@ -79,7 +79,7 @@ export class NotificationConfig extends Component {
             <Wrapper>
               {map(
                 ['construction', 'expedition', 'repair', 'morale', 'battleEnd', 'others'],
-                type => (
+                (type) => (
                   <Switch
                     key={type}
                     disabled={!this.props.enabled}

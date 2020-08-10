@@ -20,6 +20,7 @@ import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
 import { remote } from 'electron'
 import styled, { css, createGlobalStyle } from 'styled-components'
+import * as Sentry from '@sentry/electron'
 
 import { isInGame } from 'views/utils/game-utils'
 
@@ -262,7 +263,7 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
   })
 
 @withNamespaces(['setting', 'others'])
-@connect(state => ({
+@connect((state) => ({
   plugins: state.plugins,
   doubleTabbed: get(state.config, 'poi.tabarea.double', false),
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
@@ -297,6 +298,7 @@ export class ControlledTabArea extends PureComponent {
 
   state = {
     openedWindow: {},
+    hasError: false,
   }
 
   windowRefs = {}
@@ -346,7 +348,7 @@ export class ControlledTabArea extends PureComponent {
       const activePlugin =
         tabbedPlugins.length == 0
           ? {}
-          : tabbedPlugins.find(p => p.packageName === this.props.activePluginName) ||
+          : tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) ||
             tabbedPlugins[0]
 
       const { updateMainTouchbar } = remote.require('./lib/touchbar')
@@ -369,8 +371,16 @@ export class ControlledTabArea extends PureComponent {
 
   componentDidCatch(error, info) {
     console.error(error, info)
-    this.setState({
-      error: true,
+    Sentry.withScope((scope) => {
+      scope.setExtra('componentStack', info.componentStack)
+      scope.setTag('area', 'poi')
+      const eventId = Sentry.captureException(error)
+      this.setState({
+        hasError: true,
+        error,
+        info,
+        eventId,
+      })
     })
   }
 
@@ -398,7 +408,7 @@ export class ControlledTabArea extends PureComponent {
     dispatchTabChangeEvent(tabInfo, autoSwitch)
   }
 
-  handleSelectTab = key => {
+  handleSelectTab = (key) => {
     this.selectTab(key === 'plugin' ? this.props.activePluginName : key)
   }
 
@@ -410,7 +420,7 @@ export class ControlledTabArea extends PureComponent {
     this.selectTab('settings')
   }
 
-  handleCtrlOrCmdNumberKeyDown = num => {
+  handleCtrlOrCmdNumberKeyDown = (num) => {
     let key
     switch (num) {
       case 1:
@@ -434,7 +444,7 @@ export class ControlledTabArea extends PureComponent {
     this.handleSetTabOffset(1)
   }
 
-  handleSetTabOffset = offset => {
+  handleSetTabOffset = (offset) => {
     const tabKeyUnionInstance = this.tabKeyUnion.current
     const childrenKey = tabKeyUnionInstance.childrenKey(tabKeyUnionInstance.props.children)
     const nowIndex = childrenKey.indexOf(
@@ -446,7 +456,7 @@ export class ControlledTabArea extends PureComponent {
   handleKeyDown = () => {
     if (this.listener != null) return
     this.listener = true
-    window.addEventListener('keydown', async e => {
+    window.addEventListener('keydown', async (e) => {
       const isingame = await isInGame()
       if (
         (document.activeElement.tagName === 'WEBVIEW' && !isingame) ||
@@ -478,7 +488,7 @@ export class ControlledTabArea extends PureComponent {
     })
   }
 
-  handleResponse = e => {
+  handleResponse = (e) => {
     if (config.get('poi.autoswitch.enabled', true)) {
       let toSwitch
       if (config.get('poi.autoswitch.main', true)) {
@@ -496,7 +506,7 @@ export class ControlledTabArea extends PureComponent {
           toSwitch = 'ship-view'
         }
       }
-      for (const [id, enabled, switchPluginPath] of this.props.plugins.map(plugin => [
+      for (const [id, enabled, switchPluginPath] of this.props.plugins.map((plugin) => [
         plugin.id,
         plugin.enabled,
         plugin.switchPluginPath || [],
@@ -516,7 +526,7 @@ export class ControlledTabArea extends PureComponent {
     }
   }
 
-  handleTouchbar = props => {
+  handleTouchbar = (props) => {
     let key
     switch (props) {
       case 0:
@@ -535,14 +545,14 @@ export class ControlledTabArea extends PureComponent {
   // All displaying plugins
   listedPlugins = () => {
     return this.props.plugins.filter(
-      plugin => plugin.enabled && (plugin.handleClick || plugin.windowURL || plugin.reactClass),
+      (plugin) => plugin.enabled && (plugin.handleClick || plugin.windowURL || plugin.reactClass),
     )
   }
 
   // All non-new-window displaying plugins
   tabbedPlugins = () =>
     this.props.plugins.filter(
-      plugin =>
+      (plugin) =>
         plugin.enabled &&
         !plugin.handleClick &&
         !plugin.windowURL &&
@@ -550,17 +560,17 @@ export class ControlledTabArea extends PureComponent {
         plugin.reactClass,
     )
 
-  isPluginTab = key => !['main-view', 'ship-view', 'settings'].includes(key)
+  isPluginTab = (key) => !['main-view', 'ship-view', 'settings'].includes(key)
 
-  isWindowMode = plugin =>
+  isWindowMode = (plugin) =>
     this.props.windowmode[plugin.id] != null ? this.props.windowmode[plugin.id] : plugin.windowMode
 
   windowModePlugins = () =>
     this.props.plugins.filter(
-      plugin => plugin.enabled && this.isWindowMode(plugin) && this.state.openedWindow[plugin.id],
+      (plugin) => plugin.enabled && this.isWindowMode(plugin) && this.state.openedWindow[plugin.id],
     )
 
-  openWindow = plugin => {
+  openWindow = (plugin) => {
     if (!this.state.openedWindow[plugin.id]) {
       this.setState({
         openedWindow: {
@@ -575,7 +585,7 @@ export class ControlledTabArea extends PureComponent {
     }
   }
 
-  closeWindow = plugin => {
+  closeWindow = (plugin) => {
     this.setState({
       openedWindow: {
         ...this.state.openedWindow,
@@ -584,8 +594,8 @@ export class ControlledTabArea extends PureComponent {
     })
   }
 
-  ipcFocusPlugin = id => {
-    const tgt = this.props.plugins.find(p => p.id === id)
+  ipcFocusPlugin = (id) => {
+    const tgt = this.props.plugins.find((p) => p.id === id)
     if (!tgt || !tgt.enabled) {
       return
     }
@@ -614,7 +624,7 @@ export class ControlledTabArea extends PureComponent {
   }
 
   render() {
-    if (this.state.error) {
+    if (this.state.hasError) {
       return <div />
     }
     const { t } = this.props
@@ -624,7 +634,8 @@ export class ControlledTabArea extends PureComponent {
     const activePlugin =
       tabbedPlugins.length == 0
         ? {}
-        : tabbedPlugins.find(p => p.packageName === this.props.activePluginName) || tabbedPlugins[0]
+        : tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) ||
+          tabbedPlugins[0]
     const defaultPluginTitle = (
       <>
         <FontAwesome name="sitemap" /> {t('others:Plugins')}
@@ -648,8 +659,8 @@ export class ControlledTabArea extends PureComponent {
             const handleClick = plugin.handleClick
               ? plugin.handleClick
               : this.isWindowMode(plugin)
-              ? e => this.openWindow(plugin)
-              : e => this.handleSelectTab(plugin.id)
+              ? (e) => this.openWindow(plugin)
+              : (e) => this.handleSelectTab(plugin.id)
             return (
               <PluginDropdownMenuItem
                 onClick={handleClick}
@@ -664,16 +675,16 @@ export class ControlledTabArea extends PureComponent {
       </PluginDropdown>
     )
 
-    const pluginContents = tabbedPlugins.map(plugin => (
+    const pluginContents = tabbedPlugins.map((plugin) => (
       <PluginWrap key={plugin.id} plugin={plugin} container={PluginAppTabpane} />
     ))
 
-    const windowModePluginContents = windowModePlugins.map(plugin => (
+    const windowModePluginContents = windowModePlugins.map((plugin) => (
       <PluginWindowWrap
         key={plugin.id}
         plugin={plugin}
-        ref={r => (this.windowRefs[plugin.id] = r)}
-        closeWindowPortal={e => this.closeWindow(plugin)}
+        ref={(r) => (this.windowRefs[plugin.id] = r)}
+        closeWindowPortal={(e) => this.closeWindow(plugin)}
       />
     ))
 
@@ -812,7 +823,7 @@ export class ControlledTabArea extends PureComponent {
         ref={this.resizeContainer}
       >
         <ResizableArea
-          ref={ref => (this.resizableArea = ref)}
+          ref={(ref) => (this.resizableArea = ref)}
           className={classNames({
             'width-resize':
               this.props.doubleTabbed && this.props.editable && !this.props.verticalDoubleTabbed,

@@ -25,14 +25,14 @@ const pickOptions = [
 const { BrowserWindow, screen } = remote
 const ipc = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
-const getPluginWindowRect = plugin => {
+const getPluginWindowRect = (plugin) => {
   const defaultRect = plugin.windowMode ? { width: 800, height: 700 } : { width: 600, height: 500 }
   let { x, y, width, height } = config.get(`plugin.${plugin.id}.bounds`, defaultRect)
   if (x == null || y == null) {
     return defaultRect
   }
   const validate = (n, min, range) => n != null && n >= min && n < min + range
-  const withinDisplay = d => {
+  const withinDisplay = (d) => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -62,7 +62,7 @@ const stylesheetTagsWithID = [
   'blueprint-icon',
   'fontawesome',
 ]
-  .map(id => `<link rel="stylesheet" type="text/css" id="${id}-css">`)
+  .map((id) => `<link rel="stylesheet" type="text/css" id="${id}-css">`)
   .join('')
 
 const stylesheetTagsWithHref = [
@@ -72,7 +72,7 @@ const stylesheetTagsWithHref = [
   'react-resizable/css/styles.css',
   'react-grid-layout/css/styles.css',
 ]
-  .map(href => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`)
+  .map((href) => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`)
   .join('')
 
 export class PluginWindowWrap extends PureComponent {
@@ -124,7 +124,7 @@ export class PluginWindowWrap extends PureComponent {
   initWindow = () => {
     const windowOptions = getPluginWindowRect(this.props.plugin)
     const windowFeatures = Object.keys(windowOptions)
-      .map(key => {
+      .map((key) => {
         switch (key) {
           case 'x':
             return `left=${windowOptions.x}`
@@ -143,8 +143,8 @@ export class PluginWindowWrap extends PureComponent {
       `plugin[${this.props.plugin.id}]`,
       windowFeatures + ',nodeIntegration=no',
     )
-    this.externalWindow.addEventListener('DOMContentLoaded', e => {
-      this.currentWindow = BrowserWindow.getAllWindows().find(a =>
+    this.externalWindow.addEventListener('DOMContentLoaded', (e) => {
+      this.currentWindow = BrowserWindow.getAllWindows().find((a) =>
         a.getURL().endsWith(this.props.plugin.id),
       )
       this.externalWindow.document.head.innerHTML = `<meta charset="utf-8">
@@ -206,9 +206,9 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
     return true
   }
 
-  onZoomChange = value => {
+  onZoomChange = (value) => {
     if (this.checkBrowserWindowExistence()) {
-      this.currentWindow.webContents.setZoomFactor(value)
+      this.currentWindow.webContents.zoomFactor = value
     }
   }
 

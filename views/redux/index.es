@@ -94,7 +94,7 @@ export function onConfigChange({ path, value }) {
 
 // publish data changes to plugin windows
 if (!window.isMain) {
-  window.addEventListener('storage', e => {
+  window.addEventListener('storage', (e) => {
     if (e.key === '_storeCache') {
       const { fcd, wctf = {} } = JSON.parse(e.newValue)
       for (const key of Object.keys(fcd)) {

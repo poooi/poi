@@ -1,7 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { getHpStyle, getTyku, LBAC_INTENTS, LBAC_STATUS_NAMES } from 'views/utils/game-utils'
+import {
+  getHpStyle,
+  getTyku,
+  LBAC_INTENTS,
+  LBAC_STATUS_NAMES,
+  LBAC_STATUS_AVATAR_COLOR,
+} from 'views/utils/game-utils'
 import { LandbaseSlotitems } from './slotitems'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
 import { withNamespaces } from 'react-i18next'
@@ -12,16 +18,17 @@ import memoize from 'fast-memoize'
 import {
   ShipItem,
   ShipAvatar,
-  ShipInfo,
-  ShipHPTextRow,
-  ShipSubText,
-  ShipName,
-  LandBaseStat,
+  LBACName,
+  LBACRange,
+  LBACFP,
   ShipHP,
+  ShipStatusContainer,
+  ShipHPProgress,
   ShipSlot,
+  Gradient,
 } from 'views/components/ship-parts/styled-components'
 
-const SquadSelectorFactory = memoize(squardId =>
+const SquadSelectorFactory = memoize((squardId) =>
   createSelector(
     [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
     (landbase, equipsData) => ({
@@ -40,11 +47,11 @@ export const SquardRow = compose(
   const { api_base, api_bonus } = api_distance
   const tyku = getTyku([equipsData], api_action_kind)
   const hpPercentage = (api_nowhp / api_maxhp) * 100
-  const hideShipName = enableAvatar && compact
+  const hideLBACName = enableAvatar && compact
   return (
     <Tooltip
       position={Position.TOP}
-      disabled={!hideShipName}
+      disabled={!hideLBACName}
       wrapperTagName="div"
       targetTagName="div"
       content={
@@ -61,48 +68,50 @@ export const SquardRow = compose(
         </div>
       }
     >
-      <ShipItem className="ship-item">
+      <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideLBACName} isLBAC>
         {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-          <ShipAvatar type="equip" mstId={get(equipsData, '0.0.api_slotitem_id')} height={54} />
-        )}
-        <ShipInfo className="ship-info lbac-info" avatar={enableAvatar} show={!hideShipName}>
-          {!hideShipName && (
-            <>
-              <ShipName className="ship-name">{api_name}</ShipName>
-              <ShipSubText className="ship-exp">
-                <span className="ship-lv">
-                  {t('main:Range')}: {api_base + api_bonus}
-                  {!!api_bonus && ` (${api_base} + ${api_bonus})`}
-                </span>
-                <br />
-                <span className="ship-lv">
-                  {t('main:Fighter Power')}:{' '}
-                  {tyku.max === tyku.min ? tyku.min : tyku.min + ' ~ ' + tyku.max}
-                </span>
-              </ShipSubText>
-            </>
-          )}
-        </ShipInfo>
-
-        <LandBaseStat className="ship-stat landbase-stat">
-          <ShipHPTextRow>
-            <ShipHP className="ship-hp">
-              {api_nowhp} / {api_maxhp}
-            </ShipHP>
-            <div className="lbac-status-label">
-              <Tag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>
-                {t(LBAC_STATUS_NAMES[api_action_kind])}
-              </Tag>
-            </div>
-          </ShipHPTextRow>
-          <span className="hp-progress">
-            <ProgressBar
-              stripes={false}
-              intent={getHpStyle(hpPercentage)}
-              value={hpPercentage / 100}
+          <>
+            <ShipAvatar
+              type="equip"
+              mstId={get(equipsData, '0.0.api_slotitem_id')}
+              height={58}
+              useDefaultBG={false}
+              useFixedWidth={false}
             />
-          </span>
-        </LandBaseStat>
+            <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
+          </>
+        )}
+        {!hideLBACName && (
+          <>
+            <LBACName className="ship-name" avatar={enableAvatar}>
+              {api_name}
+            </LBACName>
+
+            <LBACRange className="ship-lv" avatar={enableAvatar}>
+              {t('main:Range')}: {api_base + api_bonus}
+              {!!api_bonus && ` (${api_base} + ${api_bonus})`}
+            </LBACRange>
+            <LBACFP className="ship-lv" avatar={enableAvatar}>
+              {t('main:Fighter Power')}:{' '}
+              {tyku.max === tyku.min ? tyku.min : tyku.min + ' ~ ' + tyku.max}
+            </LBACFP>
+          </>
+        )}
+        <ShipHP className="ship-hp" shipName={!hideLBACName}>
+          {api_nowhp} / {api_maxhp}
+        </ShipHP>
+        <ShipStatusContainer className="lbac-status-label">
+          <Tag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind]}>
+            {t(LBAC_STATUS_NAMES[api_action_kind])}
+          </Tag>
+        </ShipStatusContainer>
+        <ShipHPProgress className="hp-progress" shipName={!hideLBACName}>
+          <ProgressBar
+            stripes={false}
+            intent={getHpStyle(hpPercentage)}
+            value={hpPercentage / 100}
+          />
+        </ShipHPProgress>
         <ShipSlot className="ship-slot">
           <LandbaseSlotitems landbaseId={squardId} isMini={false} />
         </ShipSlot>

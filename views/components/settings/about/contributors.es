@@ -6,9 +6,9 @@ import styled from 'styled-components'
 
 import { Section } from 'views/components/settings/components/section'
 
-const getAvatarUrl = url => (/.*githubusercontent.com\/u\/.*/.test(url) ? `${url}&s=160` : url)
+const getAvatarUrl = (url) => (/.*githubusercontent.com\/u\/.*/.test(url) ? `${url}&s=160` : url)
 
-const openLink = memoize(link => () => shell.openExternal(link))
+const openLink = memoize((link) => () => shell.openExternal(link))
 
 const Wrapper = styled.div`
   display: flex;

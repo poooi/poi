@@ -3,15 +3,24 @@ import { isEqual } from 'lodash'
 import { buildArray, compareUpdate } from 'views/utils/tools'
 
 function mergeIndexifiedFleets(state, body) {
-  const bodyFleet = buildArray(body.map(fleet => [fleet.api_id - 1, fleet]))
+  const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet]))
   return compareUpdate(state, bodyFleet, 2)
+}
+
+// Ensure all -1 is in the end of array
+function fixPlaceholder(originShips) {
+  const ships = originShips.filter((a) => a > 0)
+  while (ships.length < originShips.length) {
+    ships.push(-1)
+  }
+  return ships
 }
 
 // Return [fleetId, pos] if found
 // [-1, -1] otherwise
 function findShip(fleets, shipId) {
   for (let fleetId = 0; fleetId < fleets.length; fleetId++) {
-    const pos = fleets[fleetId].api_ship.findIndex(_shipId => _shipId == shipId)
+    const pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId == shipId)
     if (pos != -1) {
       return [fleetId, pos]
     }
@@ -34,7 +43,7 @@ function setShip(fleet, pos, shipId) {
   if (isEqual(ships, fleet.api_ship)) return fleet
   return {
     ...fleet,
-    api_ship: ships,
+    api_ship: fixPlaceholder(ships),
   }
 }
 
@@ -56,9 +65,9 @@ export function reducer(state = [], { type, postBody, body }) {
       const fleets = state.slice()
       const shipIds = postBody.api_ship_id
         .split(',')
-        .filter(shipId => findShip(fleets, parseInt(shipId))[0] !== -1)
+        .filter((shipId) => findShip(fleets, parseInt(shipId))[0] !== -1)
       if (shipIds.length > 0) {
-        shipIds.forEach(shipId => {
+        shipIds.forEach((shipId) => {
           const [fleetId, pos] = findShip(fleets, parseInt(shipId))
           fleets[fleetId] = setShip(fleets[fleetId], pos, -1)
         })
@@ -98,7 +107,7 @@ export function reducer(state = [], { type, postBody, body }) {
       const newName = postBody.api_name
       const fleetId = parseInt(postBody.api_deck_id)
       // assertion: fleetIndex !== -1 as this comes from in-game action
-      const fleetIndex = state.findIndex(f => f.api_id === fleetId)
+      const fleetIndex = state.findIndex((f) => f.api_id === fleetId)
       const fleet = state[fleetIndex]
       if (fleet.api_name !== newName) {
         const newState = [...state]

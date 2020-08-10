@@ -9,6 +9,7 @@ import styled, { css } from 'styled-components'
 
 import { escapeI18nKey } from 'views/utils/tools'
 import { CardWrapper as CardWrapperL } from './styled-components'
+import i18next from 'views/env-parts/i18next'
 
 import {
   configLayoutSelector,
@@ -18,7 +19,7 @@ import {
 
 const defaultLayout = config.getDefault('poi.mainpanel.layout')
 
-const getPanelDimension = width => {
+const getPanelDimension = (width) => {
   if (width > 700) {
     return 4
   }
@@ -52,6 +53,7 @@ function getCategory(api_category) {
       return '#19BB2E'
     case 2:
     case 8:
+    case 9:
       return '#e73939'
     case 3:
       return '#87da61'
@@ -113,22 +115,14 @@ function getIntentByPercent(percent) {
 }
 
 function getToolTip(record) {
-  return (
-    <>
-      {values(record).map(
-        (subgoal, idx) =>
-          Boolean(subgoal) &&
-          typeof subgoal === 'object' && (
-            <div key={idx}>
-              <Trans i18nKey={`data:${escapeI18nKey(subgoal.description)}`}>
-                {subgoal.description}
-              </Trans>{' '}
-              - {subgoal.count} / {subgoal.required}
-            </div>
-          ),
-      )}
-    </>
-  )
+  return values(record)
+    .map(
+      (g, idx) =>
+        Boolean(g) &&
+        typeof g === 'object' &&
+        `${i18next.t(`data:${escapeI18nKey(g.description)}`)} - ${g.count} / ${g.required}`,
+    )
+    .filter((a) => a)
 }
 
 const CardWrapper = styled(CardWrapperL)`
@@ -181,12 +175,12 @@ const TaskRowBase = connect(
     [
       configLayoutSelector,
       configReverseLayoutSelector,
-      state => get(state, 'layout.mainpane.width', 450),
-      state => get(state, 'config.poi.mainpanel.layout', defaultLayout),
+      (state) => get(state, 'layout.mainpane.width', 450),
+      (state) => get(state, 'config.poi.mainpanel.layout', defaultLayout),
     ],
     (layout, reversed, mainPanelWidth, mainPanelLayout) => {
       const taskPanelLayout = mainPanelLayout[mainPanelWidth > 750 ? 'lg' : 'sm']?.find(
-        panel => panel.i === 'task-panel',
+        (panel) => panel.i === 'task-panel',
       )
       const colCnt = mainPanelWidth > 750 ? 20 : 10
       const colWidth = mainPanelWidth / colCnt
@@ -199,24 +193,31 @@ const TaskRowBase = connect(
       }
     },
   ),
-)(function({
+)(function ({
   idx, // Mandatory: 0..5
   bulletColor = '#fff',
   leftLabel = '',
   leftOverlay,
   rightLabel = '',
-  rightOverlay,
+  rightOverlay = [],
   rightIntent = Intent.SUCCESS,
   leftOverlayPlacement = 'auto',
   colwidth,
 }) {
+  const rightOverlayCnt = (
+    <div>
+      {rightOverlay.map((msg) => (
+        <div key={msg}>{msg}</div>
+      ))}
+    </div>
+  )
   return (
     <TaskItem className={'panel-item task-item'} colwidth={colwidth}>
       <QuestNameTooltip
         id={`task-quest-name-${idx}`}
         className="quest-name"
         disabled={!leftOverlay}
-        postion={leftOverlayPlacement}
+        position={leftOverlayPlacement}
         content={leftOverlay}
       >
         <>
@@ -225,7 +226,7 @@ const TaskRowBase = connect(
         </>
       </QuestNameTooltip>
       {rightLabel && (
-        <Tooltip disabled={!rightOverlay} content={rightOverlay}>
+        <Tooltip disabled={!rightOverlay.length} content={rightOverlayCnt} position="left">
           <QuestProgress className="quest-progress" intent={rightIntent} minimal>
             {rightLabel}
           </QuestProgress>
@@ -249,7 +250,7 @@ const TaskRow = withNamespaces(['resources'])(
       quest.api_no,
       'wiki_id',
     ]),
-  }))(function({ idx, quest, record, translation, wikiId, colwidth, t }) {
+  }))(function ({ idx, quest, record, translation, wikiId, colwidth, t }) {
     const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
     const questName =
       quest && quest.api_title
@@ -265,7 +266,7 @@ const TaskRow = withNamespaces(['resources'])(
       ? getIntentByPercent(count / required)
       : getIntentByProgress(quest)
     const progressLabel = record ? `${count} / ${required}` : progressLabelText(quest)
-    const progressOverlay = record && <div>{getToolTip(record || {})}</div>
+    const progressOverlay = record && getToolTip(record || {})
     return (
       <TaskRowBase
         idx={idx}
@@ -301,7 +302,7 @@ export class TaskPanel extends React.Component {
     dimension: 1,
   }
 
-  handleResize = entries => {
+  handleResize = (entries) => {
     const dimension = getPanelDimension(entries[0].contentRect.width)
     if (dimension !== this.state.dimension) {
       this.setState({ dimension })
@@ -323,7 +324,7 @@ export class TaskPanel extends React.Component {
                 colwidth={colwidth}
               />
             )),
-            range(Object.keys(activeQuests).length, Math.max(activeCapacity, 7)).map(idx =>
+            range(Object.keys(activeQuests).length, Math.max(activeCapacity, 7)).map((idx) =>
               idx < activeNum ? (
                 // Need refreshing
                 <TaskRowBase

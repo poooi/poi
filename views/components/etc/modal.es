@@ -21,7 +21,7 @@ export class ModalTrigger extends PureComponent {
     window.showModal()
   }
 
-  handleModal = e => {
+  handleModal = (e) => {
     window.modalLocked = true
     this.setState({
       isModalOpen: true,
@@ -40,7 +40,7 @@ export class ModalTrigger extends PureComponent {
     window.removeEventListener('poi.modal', this.handleModal)
   }
 
-  renderFooter = footer => {
+  renderFooter = (footer) => {
     if (size(footer) === 0) {
       return
     }
@@ -48,7 +48,7 @@ export class ModalTrigger extends PureComponent {
       return (
         <Button
           key={index}
-          onClick={e => {
+          onClick={(e) => {
             this.handleToggle()
             button.func(e)
           }}

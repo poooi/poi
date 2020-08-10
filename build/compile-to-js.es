@@ -23,7 +23,7 @@ const compileToJs = (appDir, dontRemove) => {
 
   const { presets, plugins } = BabelConfig
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const tasks = []
     walk
       .walk(appDir, options)
@@ -57,7 +57,7 @@ const compileToJs = (appDir, dontRemove) => {
       })
       .on('end', async () => {
         log(`Files to compile: ${tasks.length} files`)
-        resolve(await Promise.all(tasks.map(f => f())))
+        resolve(await Promise.all(tasks.map((f) => f())))
       })
   })
 }

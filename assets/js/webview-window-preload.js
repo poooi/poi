@@ -1,1 +1,1 @@
-window.onbeforeunload = e => (e.returnValue = false)
+window.onbeforeunload = (e) => (e.returnValue = false)

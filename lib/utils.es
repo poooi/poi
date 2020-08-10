@@ -3,7 +3,7 @@ import { webContents, shell, BrowserWindow } from 'electron'
 import WindowManager from './window'
 import { map, get, mapValues, isPlainObject, isNumber, isArray, isString, isBoolean } from 'lodash'
 
-const stringify = str => {
+const stringify = (str) => {
   if (typeof str === 'string') {
     return str
   }
@@ -77,12 +77,7 @@ export function stopFileNavigateAndHandleNewWindowInApp(id) {
 }
 
 const isModernDarwin =
-  process.platform === 'darwin' &&
-  Number(
-    require('os')
-      .release()
-      .split('.')[0],
-  ) >= 17
+  process.platform === 'darwin' && Number(require('os').release().split('.')[0]) >= 17
 
 export function stopNavigateAndHandleNewWindow(id) {
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
@@ -101,6 +96,7 @@ export function stopNavigateAndHandleNewWindow(id) {
         options.resizable = true
         if (frameName.startsWith('plugin[kangame]')) {
           options.useContentSize = true
+          options.webPreferences.webSecurity = false
         }
         if (frameName.startsWith('plugin[gpuinfo]')) {
           options.backgroundColor = '#FFFFFFFF'
@@ -147,7 +143,7 @@ export const mergeConfig = (defaults, incoming) => {
     const incomingValue = get(incoming, key)
 
     return [isNumber, isArray, isString, isBoolean].some(
-      test => test(value) !== test(incomingValue),
+      (test) => test(value) !== test(incomingValue),
     )
       ? value
       : incomingValue

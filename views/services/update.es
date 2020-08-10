@@ -34,7 +34,7 @@ const doUpdate = async () => {
 if (process.platform === 'win32') {
   updater.on('update-available', () => {
     // eslint-disable-next-line no-console
-    console.log('Update from poi.io available')
+    console.log('Update from poi.moe available')
   })
 
   updater.on('update-downloaded', () => {
@@ -45,7 +45,7 @@ if (process.platform === 'win32') {
   })
 
   updater.on('update-not-available', () => {
-    console.warn('Update from poi.io not available')
+    console.warn('Update from poi.moe not available')
   })
 
   updater.on('error', (event, error) => {
@@ -62,8 +62,8 @@ export const checkUpdate = async () => {
     `https://${global.SERVER_HOSTNAME}/update/latest.json`,
     defaultFetchOption,
   )
-    .then(res => res.json())
-    .catch(e => {
+    .then((res) => res.json())
+    .catch((e) => {
       console.warn('Check update error.', e.stack)
       return {}
     })
@@ -83,8 +83,8 @@ export const checkUpdate = async () => {
         `https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`,
         defaultFetchOption,
       )
-        .then(res => res.text())
-        .catch(res => {
+        .then((res) => res.text())
+        .catch((res) => {
           console.warn('fetch update log error')
           return ''
         })
@@ -112,7 +112,7 @@ const toggleUpdate = (version, log) => {
     },
     {
       name: `${i18next.t('Manually download')}`,
-      func: () => shell.openExternal('https://poi.io'),
+      func: () => shell.openExternal('https://poi.moe'),
       style: 'primary',
     },
   ]

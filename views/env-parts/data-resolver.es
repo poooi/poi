@@ -4,7 +4,7 @@ import { remote } from 'electron'
 
 const proxy = remote.require('./lib/proxy')
 
-const isGameApi = pathname => pathname.startsWith('/kcsapi')
+const isGameApi = (pathname) => pathname.startsWith('/kcsapi')
 
 const handleProxyGameOnRequest = (method, [domain, path], body, time) => {
   if (!isGameApi(path)) {

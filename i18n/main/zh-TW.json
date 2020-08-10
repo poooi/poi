@@ -5,7 +5,7 @@
   "built": "建造完成",
   "Construction": "建造",
   "DevelopSuccess": "{{name}} 開發成功",
-  "DevelopFailed": "{{name}} 開發失敗",
+  "DevelopFailed": "開發失敗",
   "ImproveSuccess": "{{name}} 改修成功",
   "ImproveFailed": "{{name}} 改修失敗",
   "mission complete": "遠征完成",
@@ -87,11 +87,17 @@
   "AACIType": "類型: {{count}}",
   "Max shot down not reached": "未達到最大擊墜數",
   "OASW": "先制對潛",
+  "Special Attack": "特殊攻擊",
   "At least one ship in your fleet has not been locked": "至少有一位艦娘沒有貼條",
   "Event ship locking warning": "活動鎖船警告",
+  "At least one fleet has not been fully resupplied": "至少有一個艦隊未補給",
+  "Expedition resupply warning": "遠征補給警告",
+  "Unused equipment slot warning": "未使用裝備欄警告",
+  "Unused equipment slot appears in your fleet": "艦隊中有未使用的裝備欄",
   "Lv": "Lv. {{level}}",
   "RemodelLv": "改造等級：Lv. {{remodelLevel}}",
   "RemodelReady": "可以進行改造",
   "TotalExp": "總經驗值：{{exp}}",
-  "NextExp": "距下一級：{{nextExp}}"
+  "NextExp": "距下一級：{{nextExp}}",
+  "Total": "合計"
 }

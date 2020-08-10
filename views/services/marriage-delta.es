@@ -9,7 +9,7 @@ const { getStore, config } = window
  */
 let kyoukaState = null
 
-const onRequest = e => {
+const onRequest = (e) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/marriage') {
     const { api_id } = e.detail.body
     const kyouka = getStore(`info.ships.${api_id}.api_kyouka`)
@@ -19,7 +19,7 @@ const onRequest = e => {
   }
 }
 
-const onResponse = e => {
+const onResponse = (e) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/marriage') {
     const {
       api_kyouka: newKyouka,

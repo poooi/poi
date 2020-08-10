@@ -103,7 +103,7 @@ class PoiConfig extends EventEmitter {
    * remove a config at given path
    * @param {String | String[]} path path to remove
    */
-  delete = path => {
+  delete = (path) => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData
       const subpath = Array.isArray(path) ? path : path.split('.')

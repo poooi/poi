@@ -34,7 +34,7 @@ function DisableVibrancy(buffer) {
 }
 
 module.exports = {
-  SetVibrancy: function(window, material) {
+  SetVibrancy: function (window, material) {
     if (window == null) return -1
 
     const width = window.getSize()[0]
@@ -55,16 +55,16 @@ module.exports = {
 
     return AddView(window.getNativeWindowHandle(), viewOptions)
   },
-  AddView: function(window, options) {
+  AddView: function (window, options) {
     return AddView(window.getNativeWindowHandle(), options)
   },
-  UpdateView: function(window, options) {
+  UpdateView: function (window, options) {
     return UpdateView(window.getNativeWindowHandle(), options)
   },
-  RemoveView: function(window, viewId) {
+  RemoveView: function (window, viewId) {
     return RemoveView(window.getNativeWindowHandle(), viewId)
   },
-  DisableVibrancy: function(window) {
+  DisableVibrancy: function (window) {
     return DisableVibrancy(window.getNativeWindowHandle())
   },
 }
