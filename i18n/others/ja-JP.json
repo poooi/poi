@@ -58,6 +58,8 @@
   "AntiAir": "対空",
   "Armor": "装甲",
   "Luck": "運",
+  "HP": "耐久",
+  "ASW": "対潜",
   "Refresh game": "ゲームをリロード",
   "Confirm Refreshing": "リロードの確認",
   "Refresh page": "ページをリロード",

@@ -6,13 +6,19 @@ import { Trans } from 'react-i18next'
 
 const { unzip, sum } = require('lodash')
 
+const REMAINING_UNKNOWN = -10000
+
 const nameStatuses = [
   i18next.t('Firepower'),
   i18next.t('Torpedo'),
   i18next.t('AntiAir'),
   i18next.t('Armor'),
   i18next.t('Luck'),
+  i18next.t('HP'),
+  i18next.t('ASW'),
 ]
+
+const possibleStatusNum = nameStatuses.length
 
 // Stores information in onRequest, used in onResponse
 let requestRecord = null
@@ -40,15 +46,38 @@ const calcMaxDeltas = (sourceShips) => {
     sourceShips.map((id) => (window.$ships[id] || {}).api_powup || [0, 0, 0, 0]),
   ).map((delta) => calcMaxDelta(delta))
   const maxLuck = Math.ceil(sum(sourceShips.map((id) => luckProviders(id))) / 5 - 0.0001)
-  return maxFourDeltas.concat([maxLuck])
+  return maxFourDeltas.concat([maxLuck, 0, 0])
 }
 
-const apiStatuses = ['api_houg', 'api_raig', 'api_tyku', 'api_souk', 'api_luck']
+// ... I have no idea how to get potential max HP and max ASW
+const apiStatuses = [
+  'api_houg',
+  'api_raig',
+  'api_tyku',
+  'api_souk',
+  'api_luck',
+  '_NODATA_',
+  '_NODATA_',
+]
 
 const calcRemainingStatuses = (ship) =>
-  [...Array(5).keys()].map(
-    (i) => ship[apiStatuses[i]][1] - (ship[apiStatuses[i]][0] + ship.api_kyouka[i]),
-  )
+  [...Array(possibleStatusNum).keys()].map((i) => {
+    const statusPair = ship[apiStatuses[i]]
+    if (!statusPair) {
+      return REMAINING_UNKNOWN
+    }
+    return statusPair[1] - (statusPair[0] + ship.api_kyouka[i])
+  })
+
+const formatRemaining = (remaining) => {
+  if (remaining == REMAINING_UNKNOWN) {
+    return '?'
+  } else if (remaining > 0) {
+    return `+${remaining}`
+  } else {
+    return 'MAX'
+  }
+}
 
 const calcDisplayText = (targetShipBefore, sourceShips) => {
   // Clone it because it may have been modified on response
@@ -62,7 +91,7 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
       return (
         <span>
           <Trans>Modernization succeeded</Trans>
-          {[...Array(5).keys()].map((i) => {
+          {[...Array(possibleStatusNum).keys()].map((i) => {
             const delta = kyoukaAfter[i] - kyoukaBefore[i]
             const maxDelta = maxDeltas[i]
             const remaining = remainingAfter[i]
@@ -74,12 +103,12 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
                 <span key={i} style={{ margin: '0 6px' }}>
                   {nameStatuses[i]}
                   <FontAwesome
-                    name={remaining <= 0 || delta == maxDelta ? 'angle-double-up' : 'angle-up'}
+                    name={remaining <= 0 || delta >= maxDelta ? 'angle-double-up' : 'angle-up'}
                     style={{ margin: '0 3px' }}
                   />
                   {delta}/
                   <span style={{ fontSize: '80%', verticalAlign: 'baseline' }}>
-                    {remaining <= 0 ? 'MAX' : `+${remaining}`}
+                    {formatRemaining(remaining)}
                   </span>
                 </span>
               )
