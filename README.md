@@ -81,7 +81,7 @@ Bug reports, suggestions, ideas, pull requests, and devs are always welcome :)
 Please feel free to contact us via:
 
 - [github issues](https://github.com/poooi/poi/issues)
-- [telegram group](https://telegram.me/joinchat/AoMUpkCr6B8uH7EUewq6eQ) for Chinese speaking user
+- [telegram group](https://t.me/joinchat/ENYTx0Cr6B9OxSCRKUzYUw) for Chinese speaking user
 - [#poi-viewer channel](https://discordapp.com/channels/118339803660943369/367575898313981952) under `/r/kancolle` discord for world wide user, [How to join](https://github.com/poooi/poi/issues/1596)
 - [QQ group](https://jq.qq.com/?_wv=1027&k=5MRX31j)
 - [Sina Weibo](http://weibo.com/letspoi)
