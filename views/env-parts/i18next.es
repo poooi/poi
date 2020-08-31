@@ -31,6 +31,10 @@ const LOCALES = [
     locale: 'ko-KR',
     lng: '한국어',
   },
+  {
+    locale: 'es',
+    lng: 'Español',
+  },
 ]
 
 const textSpacingCJK = window.config.get('poi.appearance.textspacingcjk', true)
@@ -64,6 +68,9 @@ if (!LOCALES.map((lng) => lng.locale).includes(window.language)) {
       break
     case 'ko':
       window.language = 'ko-KR'
+      break
+    case 'es':
+      window.language = 'es'
       break
     default:
       window.language = 'en-US'
