@@ -89,8 +89,6 @@ if (dbg.isEnabled()) {
   }
 }
 
-require('./lib/flash')
-
 let mainWindow
 global.mainWindow = mainWindow = null
 

@@ -67,20 +67,15 @@ export const gameReload = () => {
   } else {
     doc = document;
   }
-  var flash = doc.getElementById('flashWrap');
-  if(flash) {
-    var flashInnerHTML = flash.innerHTML;
-    flash.innerHTML = '';
-    flash.innerHTML = flashInnerHTML;
+
+  var game = doc.getElementById('flashWrap');
+  if(game) {
+    var gameInnerHTML = game.innerHTML;
+    game.innerHTML = '';
+    game.innerHTML = gameInnerHTML;
   }
   `)
 }
-
-/*
-   old name of `GameReload`.
-   TODO: remove this after few future releases
- */
-export const gameReloadFlash = gameReload
 
 export const getPoiInfoHeight = () => get($('poi-info'), 'clientHeight', 0)
 
