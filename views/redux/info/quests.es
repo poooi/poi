@@ -432,7 +432,7 @@ const initState = {
 export function reducer(state = initState, action, store) {
   const { type, postBody, body } = action
   switch (type) {
-    //== Initialization. This takes place once every flash loading ==
+    //== Initialization. ==
     case '@@Response/kcsapi/api_get_member/require_info': {
       const admiralId = body.api_basic.api_member_id
       // Load static quest goal data

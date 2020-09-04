@@ -67,12 +67,6 @@ export const gameReload = () => {
   } else {
     doc = document;
   }
-  var flash = doc.getElementById('flashWrap');
-  if(flash) {
-    var flashInnerHTML = flash.innerHTML;
-    flash.innerHTML = '';
-    flash.innerHTML = flashInnerHTML;
-  }
   `)
 }
 
@@ -80,8 +74,6 @@ export const gameReload = () => {
    old name of `GameReload`.
    TODO: remove this after few future releases
  */
-export const gameReloadFlash = gameReload
-
 export const getPoiInfoHeight = () => get($('poi-info'), 'clientHeight', 0)
 
 export const getTitleBarHeight = () => get($('title-bar'), 'clientHeight', 0)
