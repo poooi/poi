@@ -62,9 +62,9 @@ const isNagatoSpAttack = _.overEvery([
   isFullFleet,
   overShip(0)(_.overEvery([isNagatoKaiNi, isNotMidDmg])),
   overShip(1)(isBattleShip),
+  overShip(2)(isNotSub),
   overShip(3)(isNotSub),
-  overShip(3)(isNotSub),
-  overShip(3)(isNotSub),
+  overShip(4)(isNotSub),
   overShip(5)(isNotSub),
 ])
 
@@ -72,9 +72,9 @@ const isMutsuSpAttack = _.overEvery([
   isFullFleet,
   overShip(0)(_.overEvery([isMutsuKaiNi, isNotMidDmg])),
   overShip(1)(isBattleShip),
+  overShip(2)(isNotSub),
   overShip(3)(isNotSub),
-  overShip(3)(isNotSub),
-  overShip(3)(isNotSub),
+  overShip(4)(isNotSub),
   overShip(5)(isNotSub),
 ])
 
