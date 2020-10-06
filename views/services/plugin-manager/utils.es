@@ -342,6 +342,9 @@ const postEnableProcess = (plugin) => {
       if (!get(windowOptions, 'webPreferences.nodeIntegrationInWorker')) {
         set(windowOptions, 'webPreferences.nodeIntegrationInWorker', true)
       }
+      if (!get(windowOptions, 'webPreferences.enableRemoteModule')) {
+        set(windowOptions, 'webPreferences.enableRemoteModule', true)
+      }
     } else {
       windowOptions = {
         x: config.get('poi.window.x', 0),
@@ -353,7 +356,8 @@ const postEnableProcess = (plugin) => {
           plugins: true,
           webviewTag: true,
           nodeIntegration: true,
-          nodeIntegrationInWorker: true,
+          nodeIntegrationInWorker: false,
+          enableRemoteModule: true,
           affinity: 'poi-plugin',
         },
       }

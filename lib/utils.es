@@ -115,6 +115,7 @@ export function stopNavigateAndHandleNewWindow(id) {
             ...options.webPreferences,
             nodeIntegration: false,
             nodeIntegrationInWorker: false,
+            enableRemoteModule: true,
             plugins: false,
             sandbox: true,
           },
