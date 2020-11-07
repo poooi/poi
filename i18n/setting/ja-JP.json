@@ -201,7 +201,7 @@
   "Background": "背景",
   "Preview": "プレビュー",
   "Connection retries": "接続再試行",
-  "The result is not guaranteed, beware": "結果は保証されいません、注意してください。",
+  "The result is not guaranteed, beware": "結果は保証されていません、注意してください。",
   "Relay mode": "リレーモード",
   "If you do not know what is this section for, leave it unconfigured": "このセクションが何であるかわからない場合は、未構成のままにしておいてください",
   "poi port": "poi ポート",
