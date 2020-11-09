@@ -134,7 +134,7 @@ export class RepairPanel extends Component {
   }
 
   render() {
-    const { canNotify, repairs, $ships, inRepairShips, enableAvatar, editable } = this.props
+    const { canNotify, repairs, $ships, inRepairShips, enableAvatar, editable, t } = this.props
     const { dimension, displayShipName } = this.state
     // The reason why we use an array to pass in inRepairShips and indexify it
     // into ships, is because by passing an array we can make use of
@@ -157,16 +157,17 @@ export class RepairPanel extends Component {
                 api_state: 0,
               }
               const dock = repairs[i] || emptyRepair
-              const dockName =
-                dock.api_state == -1
-                  ? this.props.t('main:Locked')
-                  : dock.api_state == 0
-                  ? this.props.t('main:Empty')
-                  : displayShipName
-                  ? this.props.t(
-                      `resources:${$ships[ships[dock.api_ship_id].api_ship_id].api_name}`,
-                    )
-                  : ''
+              const dockName = do {
+                if (dock.api_state === -1) {
+                  t('main:Locked')
+                } else if (dock.api_state == 0) {
+                  t('main:Empty')
+                } else if (displayShipName) {
+                  t(`resources:${$ships[ships[dock.api_ship_id]?.api_ship_id]?.api_name}`)
+                } else {
+                  ;('')
+                }
+              }
               const completeTime = dock.api_complete_time || -1
               let hpPercentage
               if (dock.api_state > 0) {
@@ -200,7 +201,7 @@ export class RepairPanel extends Component {
                       disabled={dock.api_state < 0}
                       content={
                         <div>
-                          <strong>{this.props.t('main:Finish By')}: </strong>
+                          <strong>{t('main:Finish By')}: </strong>
                           {timeToString(completeTime)}
                         </div>
                       }
