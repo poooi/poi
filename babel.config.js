@@ -1,6 +1,4 @@
-const { omit } = require('lodash')
-
-const config = {
+module.exports = {
   presets: [
     [
       require.resolve('@babel/preset-env'),
@@ -41,13 +39,4 @@ const config = {
   ignore: [],
   only: [/\.(es|ts|tsx)$/],
   babelrc: false,
-  extensions: ['.es', '.ts', '.tsx'],
-  cache: false,
-}
-
-module.exports = config
-
-// babel-jest does not support extra config options
-if (process.env.NODE_ENV === 'test') {
-  module.exports = omit(config, ['extensions', 'cache'])
 }
