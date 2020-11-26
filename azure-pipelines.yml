@@ -1,83 +1,26 @@
+variables:
+  npm_config_cache: $(Pipeline.Workspace)/.npm
+  THIS_MONTH: $[format('{0:yyyyMM}', pipeline.startTime)]
+
 jobs:
 - job: Linux
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '12.x'
-    displayName: 'Install Node.js'
   - script: |
       sudo apt-get update
       sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm bsdtar snapcraft
     displayName: 'Linux system dependencies'
-  - script: |
-      npm ci
-    displayName: 'npm install'
-  - script: |
-      npm run lint
-    displayName: 'npm lint'
-  - script: |
-      npm test
-    displayName: 'npm test'
-  - script: |
-      npm run build
-    displayName: 'npm build'
-  - task: CopyFiles@2
-    inputs:
-      contents: dist/*
-      targetFolder: $(Build.ArtifactStagingDirectory)
-      flattenFolders: true
-  - task: PublishBuildArtifacts@1
+  - template: build/azure-pipeline-steps.yml
+
 - job: macOS
   pool:
     vmImage: 'macOS-latest'
   steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '12.x'
-    displayName: 'Install Node.js'
-  - script: |
-      npm ci
-    displayName: 'npm install'
-  - script: |
-      npm run lint
-    displayName: 'npm lint'
-  - script: |
-      npm run build
-    displayName: 'npm build'
-  - script: |
-      npm test
-    displayName: 'npm test'
-  - task: CopyFiles@2
-    inputs:
-      contents: dist/*
-      targetFolder: $(Build.ArtifactStagingDirectory)
-      flattenFolders: true
-  - task: PublishBuildArtifacts@1
+  - template: build/azure-pipeline-steps.yml
+
 - job: Windows
   pool:
     vmImage: 'windows-latest'
   steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '12.x'
-    displayName: 'Install Node.js'
-  - script: |
-      npm ci
-    displayName: 'npm install'
-  - script: |
-      npm run lint
-    displayName: 'npm lint'
-  - script: |
-      npm run build
-    displayName: 'npm build'
-  - script: |
-      npm test
-    displayName: 'npm test'
-  - task: CopyFiles@2
-    inputs:
-      contents: dist\*
-      targetFolder: $(Build.ArtifactStagingDirectory)
-      flattenFolders: true
-  - task: PublishBuildArtifacts@1
+  - template: build/azure-pipeline-steps.yml
