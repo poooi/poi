@@ -1,0 +1,37 @@
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- task: Cache@2
+  inputs:
+    key: $(THIS_MONTH) | npm | $(Agent.OS) | package-lock.json
+    restoreKeys: |
+       $(THIS_MONTH) | npm | $(Agent.OS)
+    path: $(npm_config_cache)
+  displayName: Cache npm
+
+- script: |
+    npm ci
+  displayName: 'npm install'
+
+- script: |
+    npm run lint
+  displayName: 'npm lint'
+
+- script: |
+    npm run build
+  displayName: 'npm build'
+
+- script: |
+    npm test
+  displayName: 'npm test'
+
+- task: CopyFiles@2
+  inputs:
+    contents: dist/*
+    targetFolder: $(Build.ArtifactStagingDirectory)
+    flattenFolders: true
+
+- task: PublishBuildArtifacts@1
