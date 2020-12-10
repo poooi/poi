@@ -4,14 +4,12 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { debounce, get } from 'lodash'
 import { Trans } from 'react-i18next'
-import { remote } from 'electron'
+import { ipcRenderer } from 'electron'
 import { Switch, HTMLSelect, NumericInput, FormGroup } from '@blueprintjs/core'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
-
-const { screen } = remote
 
 const Icon = styled.div`
   margin: 0 1em;
@@ -48,13 +46,16 @@ export class ResolutionConfig extends Component {
       (this.props.isolateGameWindow ? this.props.webview.windowWidth : this.props.webview.width) *
         this.props.zoomLevel,
     ),
-    ...getMinArea(screen.getAllDisplays()),
+    ...getMinArea(ipcRenderer.sendSync('get-all-displays')),
   }
 
   componentDidMount = () => {
-    screen.addListener('display-added', this.handleScreenStatusChange)
-    screen.addListener('display-removed', this.handleScreenStatusChange)
-    screen.addListener('display-metrics-changed', this.handleScreenStatusChange)
+    //screen.addListener('display-added', this.handleScreenStatusChange)
+    //screen.addListener('display-removed', this.handleScreenStatusChange)
+    //screen.addListener('display-metrics-changed', this.handleScreenStatusChange)
+    ipcRenderer.on('screen-status-change', (event, displays) => {
+      this.handleScreenStatusChange(displays)
+    })
     if (this.state.screenHeight < 900 || this.state.screenWidth < 1500) {
       config.setDefault('poi.webview.width', 800)
       this.defaultWidth = 800
@@ -65,9 +66,10 @@ export class ResolutionConfig extends Component {
   }
 
   componentWillUnmount = () => {
-    screen.removeListener('display-added', this.handleScreenStatusChange)
-    screen.removeListener('display-removed', this.handleScreenStatusChange)
-    screen.removeListener('display-metrics-changed', this.handleScreenStatusChange)
+    //screen.removeListener('display-added', this.handleScreenStatusChange)
+    //screen.removeListener('display-removed', this.handleScreenStatusChange)
+    //screen.removeListener('display-metrics-changed', this.handleScreenStatusChange)
+    ipcRenderer.send('remove-display-listener')
   }
 
   handleSetWebviewWidthWithDebounce = (value, isDebounced) => {
@@ -122,8 +124,8 @@ export class ResolutionConfig extends Component {
     }
   }
 
-  handleScreenStatusChange = () => {
-    this.setState(getMinArea(screen.getAllDisplays()))
+  handleScreenStatusChange = (displays) => {
+    this.setState(getMinArea(displays))
   }
 
   handleResolutionInput = (value) => this.handleSetWebviewWidthWithDebounce(value, true)

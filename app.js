@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, nativeImage, screen, shell } = require('electron')
 const path = require('path-extra')
 
 // Environment
@@ -194,6 +194,7 @@ app.on('ready', () => {
       nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
       enableRemoteModule: true,
+      contextIsolation: false,
       // experimentalFeatures: true,
     },
     backgroundColor: '#00000000',
@@ -230,6 +231,22 @@ app.on('ready', () => {
     require('./lib/window').closeWindows()
     mainWindow = null
   })
+
+  //display config
+  const handleScreenStatusChange = () => {
+    mainWindow.webContents.send('screen-status-change', screen.getAllDisplays())
+  }
+  ipcMain.on('get-all-displays', (e) => {
+    e.returnValue = screen.getAllDisplays()
+  })
+  ipcMain.on('remove-display-listener', () => {
+    screen.removeListener('display-added', handleScreenStatusChange)
+    screen.removeListener('display-removed', handleScreenStatusChange)
+    screen.removeListener('display-metrics-changed', handleScreenStatusChange)
+  })
+  screen.addListener('display-added', handleScreenStatusChange)
+  screen.addListener('display-removed', handleScreenStatusChange)
+  screen.addListener('display-metrics-changed', handleScreenStatusChange)
 
   // devtool
   if (dbg.isEnabled() && config.get('poi.devtool.enable', false)) {
