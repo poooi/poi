@@ -1,5 +1,5 @@
 diff --git a/node_modules/electron-builder/out/builder.js b/node_modules/electron-builder/out/builder.js
-index 59383a1..0ab0d54 100644
+index 59383a1..8b9aef7 100644
 --- a/node_modules/electron-builder/out/builder.js
 +++ b/node_modules/electron-builder/out/builder.js
 @@ -69,10 +69,6 @@ function normalizeOptions(args) {
@@ -13,13 +13,12 @@ index 59383a1..0ab0d54 100644
        const result = Array();
  
        if (args.x64) {
-@@ -242,7 +238,8 @@ function createTargets(platforms, type, arch) {
+@@ -242,7 +238,7 @@ function createTargets(platforms, type, arch) {
    const targets = new Map();
  
    for (const platform of platforms) {
 -    const archs = platform === _appBuilderLib().Platform.MAC ? [_builderUtil().Arch.x64] : arch === "all" ? [_builderUtil().Arch.x64, _builderUtil().Arch.ia32] : [(0, _builderUtil().archFromString)(arch == null ? process.arch : arch)];
 +    const archs = arch === "all" && platform !== _appBuilderLib().Platform.MAC ? [_builderUtil().Arch.x64, _builderUtil().Arch.ia32] : [(0, _builderUtil().archFromString)(arch == null ? process.arch : arch)];
-+     const archToType = new Map();
      const archToType = new Map();
      targets.set(platform, archToType);
  

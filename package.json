@@ -15,7 +15,8 @@
     "lint:js": "eslint . --ext .es --ext .js --ext .ts --ext .tsx --ignore-path .gitignore",
     "lint:css": "stylelint views/**/*.css assets/**/*.css --config .stylelintrc.css.js",
     "lint:styled": "stylelint views/**/*.es --config .stylelintrc.js",
-    "lint": "npm run lint:js && npm run lint:css && npm run lint:styled"
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:styled",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
