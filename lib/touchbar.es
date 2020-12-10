@@ -161,6 +161,8 @@ const mainTouchbar = new TouchBar({
 export const updateTouchbarInfoIcons = () => {
   edit.icon = config.get('poi.layout.editable') ? getIcon('pen-square') : getIcon('edit')
   volume.icon = config.get('poi.content.muted') ? getIcon('volume-off') : getIcon('volume-up')
+  //TouchBar icon will not auto update on recent macOS
+  mainWindow.setTouchBar(mainTouchbar)
 }
 
 //Tab switching initialization
