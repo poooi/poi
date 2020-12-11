@@ -24,6 +24,7 @@ const TARGET_LIST = [
   'LICENSE',
   'package.json',
   'babel.config.js',
+  'babel-register.config.js',
   'package-lock.json',
   // Folders
   'assets',
