@@ -1,0 +1,18 @@
+diff --git a/node_modules/dmg-builder/.DS_Store b/node_modules/dmg-builder/.DS_Store
+new file mode 100644
+index 0000000..e7fe979
+Binary files /dev/null and b/node_modules/dmg-builder/.DS_Store differ
+diff --git a/node_modules/dmg-builder/out/dmg.js b/node_modules/dmg-builder/out/dmg.js
+index ad0bb2e..4a64444 100644
+--- a/node_modules/dmg-builder/out/dmg.js
++++ b/node_modules/dmg-builder/out/dmg.js
+@@ -295,7 +295,8 @@ exports.DmgTarget = DmgTarget;
+ async function createStageDmg(tempDmg, appPath, volumeName) {
+   //noinspection SpellCheckingInspection
+   const imageArgs = addLogLevel(["create", "-srcfolder", appPath, "-volname", volumeName, "-anyowners", "-nospotlight", "-format", "UDRW"]);
+-  imageArgs.push("-fs", "HFS+", "-fsargs", "-c c=64,a=16,e=16");
++  //HFS+ is deprecated and broken on Big Sur
++  //imageArgs.push("-fs", "HFS+", "-fsargs", "-c c=64,a=16,e=16");
+   imageArgs.push(tempDmg);
+   await (0, _builderUtil().spawn)("hdiutil", imageArgs);
+   return tempDmg;
