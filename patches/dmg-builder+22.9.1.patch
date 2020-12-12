@@ -1,6 +1,6 @@
 diff --git a/node_modules/dmg-builder/.DS_Store b/node_modules/dmg-builder/.DS_Store
 new file mode 100644
-index 0000000..87bf7ab
+index 0000000..ba74fd3
 Binary files /dev/null and b/node_modules/dmg-builder/.DS_Store differ
 diff --git a/node_modules/dmg-builder/out/dmg.js b/node_modules/dmg-builder/out/dmg.js
 index ad0bb2e..4a64444 100644
@@ -48,20 +48,26 @@ diff --git a/node_modules/dmg-builder/vendor/mac_alias/bookmark.pyc b/node_modul
 index bc51c70..09f0f99 100644
 Binary files a/node_modules/dmg-builder/vendor/mac_alias/bookmark.pyc and b/node_modules/dmg-builder/vendor/mac_alias/bookmark.pyc differ
 diff --git a/node_modules/dmg-builder/vendor/mac_alias/osx.py b/node_modules/dmg-builder/vendor/mac_alias/osx.py
-index d4af65d..08a6925 100644
+index d4af65d..b43fa3a 100644
 --- a/node_modules/dmg-builder/vendor/mac_alias/osx.py
 +++ b/node_modules/dmg-builder/vendor/mac_alias/osx.py
-@@ -421,11 +421,11 @@ _fgetattrlist = libc.fgetattrlist
+@@ -421,11 +421,17 @@ _fgetattrlist = libc.fgetattrlist
  _fgetattrlist.argtypes = [c_int, POINTER(attrlist), c_void_p, c_ulong, c_ulong]
  _fgetattrlist.restype = c_int
  
 -_statfs = libc['statfs$INODE64']
-+_statfs = libc['statfs']
++try:
++     _statfs = libc['statfs$INODE64']
++ except (KeyError, AttributeError):
++     _statfs = libc['statfs']
  _statfs.argtypes = [c_char_p, POINTER(struct_statfs)]
  _statfs.restype = c_int
  
 -_fstatfs = libc['fstatfs$INODE64']
-+_fstatfs = libc['fstatfs']
++try:
++     _fstatfs = libc['fstatfs$INODE64']
++ except (KeyError, AttributeError):
++     _fstatfs = libc['fstatfs']
  _fstatfs.argtypes = [c_int, POINTER(struct_statfs)]
  _fstatfs.restype = c_int
  
