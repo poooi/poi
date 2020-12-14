@@ -46,14 +46,11 @@ export class ResolutionConfig extends Component {
       (this.props.isolateGameWindow ? this.props.webview.windowWidth : this.props.webview.width) *
         this.props.zoomLevel,
     ),
-    ...getMinArea(ipcRenderer.sendSync('get-all-displays')),
+    ...getMinArea(ipcRenderer.sendSync('displays::get-all')),
   }
 
   componentDidMount = () => {
-    //screen.addListener('display-added', this.handleScreenStatusChange)
-    //screen.addListener('display-removed', this.handleScreenStatusChange)
-    //screen.addListener('display-metrics-changed', this.handleScreenStatusChange)
-    ipcRenderer.on('screen-status-change', (event, displays) => {
+    ipcRenderer.on('screen-status-changed', (event, displays) => {
       this.handleScreenStatusChange(displays)
     })
     if (this.state.screenHeight < 900 || this.state.screenWidth < 1500) {
@@ -66,10 +63,7 @@ export class ResolutionConfig extends Component {
   }
 
   componentWillUnmount = () => {
-    //screen.removeListener('display-added', this.handleScreenStatusChange)
-    //screen.removeListener('display-removed', this.handleScreenStatusChange)
-    //screen.removeListener('display-metrics-changed', this.handleScreenStatusChange)
-    ipcRenderer.send('remove-display-listener')
+    ipcRenderer.send('displays::remove-all-listeners')
   }
 
   handleSetWebviewWidthWithDebounce = (value, isDebounced) => {
