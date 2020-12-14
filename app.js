@@ -234,12 +234,12 @@ app.on('ready', () => {
 
   //display config
   const handleScreenStatusChange = () => {
-    mainWindow.webContents.send('screen-status-change', screen.getAllDisplays())
+    mainWindow.webContents.send('screen-status-changed', screen.getAllDisplays())
   }
-  ipcMain.on('get-all-displays', (e) => {
+  ipcMain.on('displays::get-all', (e) => {
     e.returnValue = screen.getAllDisplays()
   })
-  ipcMain.on('remove-display-listener', () => {
+  ipcMain.on('displays::remove-all-listeners', () => {
     screen.removeListener('display-added', handleScreenStatusChange)
     screen.removeListener('display-removed', handleScreenStatusChange)
     screen.removeListener('display-metrics-changed', handleScreenStatusChange)
