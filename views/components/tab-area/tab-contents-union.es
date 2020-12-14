@@ -26,6 +26,7 @@ const PoiTabChildPositioner = styled.div`
     transition &&
     css`
       transition: transform 0.3s 0.1s cubic-bezier(1, 0, 0, 1);
+      will-change: transform;
     `}
   ${({ left, right }) =>
     left
