@@ -192,7 +192,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.0.0",
     "electron": "^11.0.4",
-    "electron-builder": "^22.9.1",
+    "electron-builder": "^22.10.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
