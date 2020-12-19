@@ -3,20 +3,10 @@ new file mode 100644
 index 0000000..f9b3028
 Binary files /dev/null and b/node_modules/app-builder-lib/.DS_Store differ
 diff --git a/node_modules/app-builder-lib/electron-osx-sign/util.js b/node_modules/app-builder-lib/electron-osx-sign/util.js
-index 107d8aa..1ce14c9 100644
+index 107d8aa..4ea91f8 100644
 --- a/node_modules/app-builder-lib/electron-osx-sign/util.js
 +++ b/node_modules/app-builder-lib/electron-osx-sign/util.js
-@@ -143,6 +143,9 @@ const isBinaryFile = require("isbinaryfile").isBinaryFile;
- const getFilePathIfBinaryAsync = module.exports.getFilePathIfBinaryAsync = function (filePath) {
-   return isBinaryFile(filePath)
-     .then(function (isBinary) {
-+      if (isBinary) {
-+        console.log(path.basename(filePath))
-+      }
-       return isBinary ? filePath : undefined
-     })
- }
-@@ -202,12 +205,23 @@ module.exports.walkAsync = async function (dirPath) {
+@@ -202,12 +202,23 @@ module.exports.walkAsync = async function (dirPath) {
        const stat = await fs.lstat(filePath)
        if (stat.isFile()) {
          switch (path.extname(filePath)) {
