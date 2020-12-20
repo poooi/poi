@@ -57,4 +57,3 @@ linux:
       arch:
         - arm64
   icon: assets/icons
-electronVersion: 11.1.0
