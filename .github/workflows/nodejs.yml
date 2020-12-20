@@ -30,7 +30,7 @@ jobs:
   build_linux:
     name: build_linux
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 12
+    timeout-minutes: 30
 
     strategy:
       matrix:
