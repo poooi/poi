@@ -8,7 +8,7 @@
     "deploy:nightlies": "gulp deploy_nightlies",
     "build": "gulp build && electron-builder -p never",
     "build:mas": "gulp build && electron-builder --config build-mas.yml",
-    "build:arm64": "gulp build && electron-builder -p never --arm64",
+    "build:arm64": "gulp build && electron-builder -p never --config build-arm64.yaml",
     "start": "electron .",
     "start_debug": "electron . --dev --inspect",
     "dev": "electron . --dev --inspect",
