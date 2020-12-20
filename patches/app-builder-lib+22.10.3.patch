@@ -1,6 +1,6 @@
 diff --git a/node_modules/app-builder-lib/.DS_Store b/node_modules/app-builder-lib/.DS_Store
 new file mode 100644
-index 0000000..f9b3028
+index 0000000..32261d4
 Binary files /dev/null and b/node_modules/app-builder-lib/.DS_Store differ
 diff --git a/node_modules/app-builder-lib/electron-osx-sign/util.js b/node_modules/app-builder-lib/electron-osx-sign/util.js
 index 107d8aa..4ea91f8 100644
@@ -31,3 +31,23 @@ index 107d8aa..4ea91f8 100644
          }
        } else if (stat.isDirectory() && !stat.isSymbolicLink()) {
          const result = await _walkAsync(filePath)
+diff --git a/node_modules/app-builder-lib/templates/.DS_Store b/node_modules/app-builder-lib/templates/.DS_Store
+new file mode 100644
+index 0000000..a0d7491
+Binary files /dev/null and b/node_modules/app-builder-lib/templates/.DS_Store differ
+diff --git a/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh b/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
+index 886bebc..b35dc40 100644
+--- a/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
++++ b/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
+@@ -13,6 +13,11 @@
+ 	  !endif
+ 
+     !insertmacro compute_files_for_current_arch
++
++  !else ifdef APP_ARM64
++    StrCpy $packageArch "ARM64"
++    !insertmacro arm64_app_files
++
+   !else
+     !insertmacro ia32_app_files
+   !endif
