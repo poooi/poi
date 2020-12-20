@@ -22,7 +22,6 @@ steps:
 
 - script: |
     npm run build
-    npm run build:arm64
   displayName: 'npm build'
 
 - script: |
