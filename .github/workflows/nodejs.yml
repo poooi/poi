@@ -53,6 +53,7 @@ jobs:
       run: |
         npm ci
         npm run build --if-present
+        npm run build:arm64 --if-present
         npm test
       env:
         CI: true
@@ -83,6 +84,7 @@ jobs:
       timeout-minutes: 12
       run: |
         npm run build --if-present
+        npm run build:arm64 --if-present
       env:
         CI: true
     - name: npm test
