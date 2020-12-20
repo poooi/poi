@@ -36,8 +36,11 @@ export default class ElectronWebView extends Component {
 
       this.view.addEventListener('dom-ready', this.forceSyncZoom)
       this.view.addEventListener('did-fail-load', (e) => {
-        const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
-        this.view.executeJavaScript(errorScript)
+        // don't show error if we cancel the navigation
+        if (e.errorCode != -3) {
+          const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
+          this.view.executeJavaScript(errorScript)
+        }
       })
 
       this.handleResize([
