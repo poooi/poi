@@ -31,10 +31,27 @@ index 107d8aa..4ea91f8 100644
          }
        } else if (stat.isDirectory() && !stat.isSymbolicLink()) {
          const result = await _walkAsync(filePath)
+diff --git a/node_modules/app-builder-lib/out/publish/updateInfoBuilder.js b/node_modules/app-builder-lib/out/publish/updateInfoBuilder.js
+index 180d84a..ee1804b 100644
+--- a/node_modules/app-builder-lib/out/publish/updateInfoBuilder.js
++++ b/node_modules/app-builder-lib/out/publish/updateInfoBuilder.js
+@@ -147,7 +147,7 @@ function getUpdateInfoFileName(channel, packager, arch) {
+ }
+ 
+ function getArchPrefixForUpdateFile(arch, packager) {
+-  if (arch == null || arch === _builderUtil().Arch.x64 || packager.platform !== _core().Platform.LINUX) {
++  if (arch == null || arch === _builderUtil().Arch.x64 || packager.platform === _core().Platform.MAC) {
+     return "";
+   }
+ 
 diff --git a/node_modules/app-builder-lib/templates/.DS_Store b/node_modules/app-builder-lib/templates/.DS_Store
 new file mode 100644
 index 0000000..a0d7491
 Binary files /dev/null and b/node_modules/app-builder-lib/templates/.DS_Store differ
+diff --git a/node_modules/app-builder-lib/templates/nsis/.DS_Store b/node_modules/app-builder-lib/templates/nsis/.DS_Store
+new file mode 100644
+index 0000000..5caee1e
+Binary files /dev/null and b/node_modules/app-builder-lib/templates/nsis/.DS_Store differ
 diff --git a/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh b/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
 index 886bebc..b35dc40 100644
 --- a/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh

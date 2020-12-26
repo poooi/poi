@@ -1,0 +1,18 @@
+diff --git a/node_modules/electron-updater/out/providers/Provider.js b/node_modules/electron-updater/out/providers/Provider.js
+index f174c7b..785a0e4 100644
+--- a/node_modules/electron-updater/out/providers/Provider.js
++++ b/node_modules/electron-updater/out/providers/Provider.js
+@@ -55,8 +55,12 @@ class Provider {
+       const arch = process.env.TEST_UPDATER_ARCH || process.arch;
+       const archSuffix = arch === "x64" ? "" : `-${arch}`;
+       return "-linux" + archSuffix;
++    } else if (this.runtimeOptions.platform === "darwin") {
++        return "-mac";
+     } else {
+-      return this.runtimeOptions.platform === "darwin" ? "-mac" : "";
++      // win32
++      const arch = process.env.TEST_UPDATER_ARCH || process.arch;
++      return arch === "x64" ? "" : `-${arch}`;
+     }
+   } // due to historical reasons for windows we use channel name without platform specifier
+ 
