@@ -10,8 +10,10 @@ import contains from 'dom-helpers/query/contains'
 import { WindowEnv } from '../components/etc/window-env'
 import { includes } from 'lodash'
 
+/* eslint-disable no-import-assign */
 ReactBootstrap.OrigOverlayTrigger = ReactBootstrap.OverlayTrigger
 ReactBootstrap.OriginModal = ReactBootstrap.Modal
+/* eslint-enable no-import-assign */
 
 const { OriginModal, Overlay } = ReactBootstrap
 
@@ -265,6 +267,8 @@ Modal.Footer = OriginModal.Footer
 Modal.Dialog = OriginModal.Dialog
 
 if (window.isMain) {
+  /* eslint-disable no-import-assign */
   ReactBootstrap.OverlayTrigger = OverlayTrigger
   ReactBootstrap.Modal = Modal
+  /* eslint-enable no-import-assign */
 }
