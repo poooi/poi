@@ -1,4 +1,3 @@
-require('coffee-react/register')
 require('@babel/register')(require('../babel-register.config'))
 import path from 'path-extra'
 import fs from 'fs-extra'
