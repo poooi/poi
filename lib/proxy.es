@@ -197,9 +197,10 @@ class Proxy extends EventEmitter {
     this.updateServerInfo(urlPattern)
 
     // Find cachefile for static resource
-    const cacheFile = isStaticResource(urlPattern.pathname, urlPattern.hostname)
-      ? findHack(urlPattern.pathname) || findCache(urlPattern.pathname, urlPattern.hostname)
-      : false
+    const cacheFile =
+      urlPattern.hostname && isStaticResource(urlPattern.pathname, urlPattern.hostname)
+        ? findHack(urlPattern.pathname) || findCache(urlPattern.pathname, urlPattern.hostname)
+        : false
 
     // Prepare request options
     const rawReqBody = await this.fetchRequest(req)
