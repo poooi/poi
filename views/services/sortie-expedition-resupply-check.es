@@ -13,7 +13,8 @@ window.addEventListener('game.response', ({ detail: { path } }) => {
     .flatMap((fleet) => fleet.api_ship)
     .some((shipId) => {
       const ship = ships[shipId]
-      const $ship = $ships[ship.api_ship_id]
+      const $ship = $ships[ship?.api_ship_id]
+      if (!ship || !$ship) return false
       return ship.api_bull < $ship.api_bull_max || ship.api_fuel < $ship.api_fuel_max
     })
 
