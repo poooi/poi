@@ -221,7 +221,7 @@ export class PluginItem extends PureComponent {
         </Header>
         <PluginInfo className="plugin-info">
           <PluginMeta className="plugin-meta">
-            <AnchorButton minimal intent={Intent.PRIMARY} href={plugin.link}>
+            <AnchorButton minimal intent={Intent.PRIMARY} href={plugin.link} target="_blank">
               <FontAwesome name="user" /> {plugin.author}
             </AnchorButton>
             {plugin.linkedPlugin && (
