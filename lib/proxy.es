@@ -378,15 +378,15 @@ class Proxy extends EventEmitter {
     })
 
   useCache = async (req, res, cacheFile) => {
-    const stats = await fs.stat(cacheFile)
+    const mtime = (await fs.stat(cacheFile)).mtime.toGMTString()
     if (
       req.headers['if-modified-since'] &&
-      new Date(req.headers['if-modified-since']) >= stats.mtime
+      new Date(req.headers['if-modified-since']) >= new Date(mtime)
     ) {
       // Cache is new
       res.writeHead(304, {
         Server: 'nginx',
-        'Last-Modified': stats.mtime.toGMTString(),
+        'Last-Modified': mtime,
       })
       res.end()
     } else {
@@ -396,7 +396,8 @@ class Proxy extends EventEmitter {
         Server: 'nginx',
         'Content-Length': data.length,
         'Content-Type': mime.getType(cacheFile),
-        'Last-Modified': stats.mtime.toGMTString(),
+        'Last-Modified': mtime,
+        'Cache-Control': 'max-age=0',
       })
       res.end(data)
     }
