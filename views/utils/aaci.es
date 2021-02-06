@@ -420,7 +420,8 @@ declareAACI({
 // 78 = Ark Royal class
 // 82 = J class
 // 88 = Nelson class
-const isRoyalNavyShips = ship => [67, 78, 82, 88].includes(ship.api_ctype)
+// 108 = Town class
+const isRoyalNavyShips = ship => [67, 78, 82, 88, 108].includes(ship.api_ctype)
 // 6 = 金剛型
 const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_aftershipid === '0'
 // 191: QF 2ポンド8連装ポンポン砲
