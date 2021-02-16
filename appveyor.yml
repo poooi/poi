@@ -22,7 +22,6 @@ install:
 
 build_script:
   - npm run build
-  - npm run build:arm64
   - .\node_modules\.bin\gulp build_plugins
 
 artifacts:

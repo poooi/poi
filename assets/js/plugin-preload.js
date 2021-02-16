@@ -6,7 +6,6 @@ const config = remote.require('./lib/config')
 
 require('module').globalPaths.unshift(MODULE_PATH)
 require('@babel/register')(require(`${ROOT}/babel-register.config`))
-require('coffee-react/register')
 async function setPath() {
   require(`${ROOT}/lib/module-path`).setAllowedPath([
     ROOT,
