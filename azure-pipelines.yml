@@ -4,22 +4,38 @@ variables:
 
 jobs:
 - job: Linux
+  strategy:
+    matrix:
+      x64:
+        arch: x64
+      arm64:
+        arch: arm64
   pool:
     vmImage: 'ubuntu-latest'
   steps:
   - script: |
       sudo apt-get update
-      sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm bsdtar snapcraft
+      sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm libarchive-tools snapcraft
     displayName: 'Linux system dependencies'
   - template: build/azure-pipeline-steps.yml
 
 - job: macOS
+  strategy:
+    matrix:
+      x64:
+        arch: x64
+      arm64:
+        arch: arm64
   pool:
     vmImage: 'macOS-latest'
   steps:
   - template: build/azure-pipeline-steps.yml
 
 - job: Windows
+  strategy:
+    matrix:
+      x64:
+        arch: x64
   pool:
     vmImage: 'windows-latest'
   steps:

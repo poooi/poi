@@ -21,13 +21,8 @@ steps:
   displayName: 'npm lint'
 
 - script: |
-    npm run build
+    npm run build:$(arch)
   displayName: 'npm build'
-
-- script: |
-    npm run build:arm64
-  displayName: 'npm build:arm64'
-  condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
 
 - script: |
     npm test
