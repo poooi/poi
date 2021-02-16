@@ -27,7 +27,7 @@ steps:
 - script: |
     npm run build:arm64
   displayName: 'npm build:arm64'
-  condition: not(eq(Agent.OS, 'Windows_NT'))
+  condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
 
 - script: |
     npm test
