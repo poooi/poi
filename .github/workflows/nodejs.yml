@@ -46,3 +46,35 @@ jobs:
           npm run build:${{matrix.arch}}
         env:
           CI: true
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: v1-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            v1-${{ runner.os }}-node-
+      - name: npm install
+        run: |
+          npm ci
+      - name: lint
+        run: |
+          npm run lint
+      - name: test
+        run: |
+          npm test
+        env:
+          CI: true
