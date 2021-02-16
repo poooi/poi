@@ -47,7 +47,7 @@ jobs:
       timeout-minutes: 12
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm bsdtar snapcraft
+        sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm libarchive-tools snapcraft
     - name: npm install, build, and test
       timeout-minutes: 24
       run: |
