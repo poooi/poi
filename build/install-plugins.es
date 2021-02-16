@@ -26,7 +26,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
       '--ignore-scripts',
       '--prefix',
       '.',
-      pluginNames,
+      ...pluginNames,
     ],
     false,
   )
