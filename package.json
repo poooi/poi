@@ -6,10 +6,9 @@
   "scripts": {
     "test": "jest",
     "deploy:nightlies": "gulp deploy_nightlies",
-    "build": "gulp build && electron-builder -p never",
-    "build:x64": "gulp build && electron-builder -p never",
-    "build:mas": "gulp build && electron-builder --config build-mas.yml",
-    "build:arm64": "gulp build && electron-builder -p never --config build-arm64.yaml",
+    "build": "gulp build && electron-builder -p never --config electron-builder.config.js",
+    "build:x64": "gulp build && cross-env ARCH=x64 electron-builder -p never --config electron-builder.config.js",
+    "build:arm64": "gulp build && cross-env ARCH=arm64 electron-builder -p never --config electron-builder.config.js",
     "start": "electron .",
     "start_debug": "electron . --dev --inspect",
     "dev": "electron . --dev --inspect",
@@ -189,6 +188,7 @@
     "asar": "^3.0.3",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
+    "cross-env": "^7.0.3",
     "electron": "^11.2.3",
     "electron-builder": "^22.10.4",
     "eslint": "^7.20.0",
@@ -215,73 +215,6 @@
     "typescript": "^4.1.5",
     "walk": "^2.3.14"
   },
-  "build": {
-    "appId": "org.poooi.poi",
-    "asar": true,
-    "npmRebuild": false,
-    "mac": {
-      "publish": [],
-      "icon": "assets/icons/poi.icns",
-      "category": "public.app-category.games",
-      "provisioningProfile": "poi.provisionprofile"
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 220,
-          "type": "file"
-        }
-      ]
-    },
-    "win": {
-      "publish": [],
-      "icon": "assets/icons/poi.ico",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "7z",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
-    },
-    "nsis": {
-      "artifactName": "poi-setup-${version}.${ext}",
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "multiLanguageInstaller": true
-    },
-    "linux": {
-      "publish": [],
-      "target": [
-        "7z",
-        "deb",
-        "rpm",
-        "pacman",
-        "AppImage"
-      ],
-      "icon": "assets/icons"
-    },
-    "directories": {
-      "app": "app_compiled"
-    }
-  },
-  "false": {},
   "collective": {
     "type": "opencollective",
     "url": "https://opencollective.com/poi",
