@@ -14,7 +14,7 @@ switch (process.env.ARCH) {
     break
 }
 
-console.log('building arch:', arch)
+console.log('Building arch:', arch)
 
 const createTargets = (targets) =>
   targets.map((target) => ({
@@ -26,6 +26,7 @@ module.exports = {
   appId: 'org.poooi.poi',
   asar: true,
   npmRebuild: false,
+  copyright: `Copyright ©${new Date().getFullYear()} poi Contributors`,
   mac: {
     publish: [],
     icon: 'assets/icons/poi.icns',
