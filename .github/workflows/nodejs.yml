@@ -84,7 +84,6 @@ jobs:
       timeout-minutes: 24
       run: |
         npm run build --if-present
-        npm run build:arm64 --if-present
       env:
         CI: true
     - name: npm test
