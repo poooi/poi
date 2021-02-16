@@ -19,7 +19,15 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   // Install plugins
   await npmInstall(
     installRoot,
-    ['--global-style', '--only=production', '--prefix', '.'].concat(pluginNames),
+    [
+      '--global-style',
+      '--only=production',
+      '--no-package-lock',
+      '--ignore-scripts',
+      '--prefix',
+      '.',
+      pluginNames,
+    ],
     false,
   )
 

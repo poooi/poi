@@ -110,7 +110,14 @@ export async function installPackage(packageName, version, npmConfig) {
   if (npmConfig.http_proxy) {
     args = [...args, '--proxy', npmConfig.http_proxy]
   }
-  args = [...args, '--no-progress', '--global-style', '--no-package-lock', packageName]
+  args = [
+    ...args,
+    '--no-progress',
+    '--global-style',
+    '--no-package-lock',
+    '--ignore-scripts',
+    packageName,
+  ]
   await runScriptAsync(NPM_EXEC_PATH, args, {
     cwd: npmConfig.prefix,
   })
