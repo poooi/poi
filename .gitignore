@@ -50,4 +50,7 @@ dist/
 
 # F**k you macOS
 .DS_store
+._*
 
+#Editor config
+.nova

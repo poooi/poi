@@ -25,6 +25,10 @@ steps:
   displayName: 'npm build'
 
 - script: |
+    npm run build:arm64
+  displayName: 'npm build:arm64'
+
+- script: |
     npm test
   displayName: 'npm test'
 

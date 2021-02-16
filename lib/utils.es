@@ -99,6 +99,7 @@ export function stopNavigateAndHandleNewWindow(id) {
           options.webPreferences.webSecurity = false
         }
         if (frameName.startsWith('plugin[gpuinfo]')) {
+          options = {}
           options.backgroundColor = '#FFFFFFFF'
         }
         if (url.startsWith('chrome')) {
@@ -120,7 +121,13 @@ export function stopNavigateAndHandleNewWindow(id) {
             sandbox: true,
           },
         }
-        e.newGuest = new BrowserWindow(options)
+        const win = new BrowserWindow(options)
+        if (frameName.startsWith('plugin[gpuinfo]')) {
+          win.setBounds({ width: 640, height: 480 })
+          win.center()
+          win.loadURL('chrome://gpu')
+        }
+        e.newGuest = win
       }
     })
 }

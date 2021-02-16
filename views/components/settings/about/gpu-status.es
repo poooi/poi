@@ -10,6 +10,7 @@ export class GPUStatus extends PureComponent {
   getGPUFeatureStatus = remote.require('electron').app.getGPUFeatureStatus
 
   handleClick = () => {
+    //As of electron 11, the url 'chrome://gpu' is not working.
     window.open('chrome://gpu', 'plugin[gpuinfo]')
   }
 

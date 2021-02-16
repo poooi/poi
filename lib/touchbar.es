@@ -22,14 +22,14 @@ export const sendEscKey = () => {
 
 // buttons
 const devtools = new TouchBarButton({
-  icon: getIcon('terminal'),
+  icon: getIcon('console'),
   click: () => {
     mainWindow.openDevTools({ mode: 'detach' })
   },
 })
 
 const screenshot = new TouchBarButton({
-  icon: getIcon('camera-retro'),
+  icon: getIcon('camera'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'screenshot')
   },
@@ -43,21 +43,21 @@ const volume = new TouchBarButton({
 })
 
 const cachedir = new TouchBarButton({
-  icon: getIcon('bolt'),
+  icon: getIcon('social-media'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'cachedir')
   },
 })
 
 const screenshotdir = new TouchBarButton({
-  icon: getIcon('photo'),
+  icon: getIcon('media'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'screenshotdir')
   },
 })
 
 const adjust = new TouchBarButton({
-  icon: getIcon('arrows-alt'),
+  icon: getIcon('fullscreen'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'adjust')
   },
@@ -71,7 +71,7 @@ const refresh = new TouchBarButton({
 })
 
 const edit = new TouchBarButton({
-  icon: config.get('poi.layout.editable') ? getIcon('pen-square') : getIcon('edit'),
+  icon: config.get('poi.layout.editable') ? getIcon('unlock') : getIcon('lock'),
   click: () => {
     mainWindow.webContents.send('touchbar', 'edit')
   },
@@ -93,9 +93,24 @@ const spacer2 = new TouchBarSpacer({
 })
 
 //popover
-const popover = new TouchBarPopover({
-  items: [devtools, screenshot, volume, cachedir, screenshotdir, adjust, edit, refresh],
+//touchBar popover is not working for electron 11 at the moment, refer: https://github.com/electron/electron/issues/26615
+//const popover = new TouchBarPopover({
+//  items: [devtools, screenshot, volume, cachedir, screenshotdir, adjust, edit, refresh],
+//  icon: getIcon('angle-right'),
+//})
+
+const openPopover = new TouchBarButton({
   icon: getIcon('angle-right'),
+  click: () => {
+    mainWindow.setTouchBar(popoverTouchbar)
+  },
+})
+
+const closePopover = new TouchBarButton({
+  icon: getIcon('angle-left'),
+  click: () => {
+    renderMainTouchbar()
+  },
 })
 
 //tab-switching
@@ -153,14 +168,21 @@ export const toggleRefreshConfirm = (btn1, btn2) => {
 
 //main-touchbar
 const mainTouchbar = new TouchBar({
-  items: [devtools, screenshot, volume, popover, spacer1, tabs, spacer2, refresh],
+  items: [devtools, screenshot, volume, openPopover, spacer1, tabs, spacer2, refresh],
+  escapeItem: poibutton,
+})
+
+const popoverTouchbar = new TouchBar({
+  items: [devtools, screenshot, volume, cachedir, screenshotdir, adjust, edit, closePopover],
   escapeItem: poibutton,
 })
 
 //Change Volume or Edit btn
 export const updateTouchbarInfoIcons = () => {
-  edit.icon = config.get('poi.layout.editable') ? getIcon('pen-square') : getIcon('edit')
+  edit.icon = config.get('poi.layout.editable') ? getIcon('unlock') : getIcon('lock')
   volume.icon = config.get('poi.content.muted') ? getIcon('volume-off') : getIcon('volume-up')
+  //TouchBar icon will not auto update on recent macOS
+  renderMainTouchbar()
 }
 
 //Tab switching initialization
