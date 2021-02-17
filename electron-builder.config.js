@@ -14,6 +14,8 @@ switch (process.env.ARCH) {
     break
 }
 
+const isFullTarget = process.env.FULL_TARGET === 'true'
+
 console.log('Building arch:', arch)
 
 const createTargets = (targets) =>
@@ -32,16 +34,19 @@ module.exports = {
     icon: 'assets/icons/poi.icns',
     category: 'public.app-category.games',
     provisioningProfile: 'poi.provisionprofile',
-    target: createTargets(['dmg', 'zip']),
+    target: createTargets(isFullTarget ? ['dmg', 'zip'] : ['zip']),
   },
   win: {
     publish: [],
     icon: 'assets/icons/poi.ico',
-    target: createTargets(['nsis', '7z']),
+    target: [
+      ...createTargets(isFullTarget ? ['nsis', '7z'] : ['7z']),
+      { target: '7z', arch: 'ia32' },
+    ],
   },
   linux: {
     publish: [],
-    target: createTargets(['7z', 'deb', 'rpm', 'pacman', 'AppImage']),
+    target: createTargets(isFullTarget ? ['7z', 'deb', 'rpm', 'pacman', 'AppImage'] : ['7z']),
     icon: 'assets/icons',
   },
   dmg: {

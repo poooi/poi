@@ -3,50 +3,6 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
-    name: build / ${{ matrix.os }} / ${{matrix.arch}}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [12.x]
-        os: [macOS-latest, ubuntu-latest]
-        arch: [x64, arm64]
-        include:
-          - node-version: 12.x
-            os: windows-latest
-            arch: x64
-
-    steps:
-      - name: Install build dependency
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm libarchive-tools snapcraft
-      - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: v1-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            v1-${{ runner.os }}-node-
-      - name: npm install
-        run: |
-          npm ci
-      - name: build ${{matrix.arch}}
-        run: |
-          npm run build:${{matrix.arch}}
-        env:
-          CI: true
-
   test:
     name: test
     runs-on: ubuntu-latest

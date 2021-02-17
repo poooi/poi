@@ -7,9 +7,9 @@ jobs:
   strategy:
     matrix:
       x64:
-        arch: x64
+        buildType: x64
       arm64:
-        arch: arm64
+        buildType: arm64
   pool:
     vmImage: 'ubuntu-latest'
   steps:
@@ -23,9 +23,9 @@ jobs:
   strategy:
     matrix:
       x64:
-        arch: x64
+        buildType: x64
       arm64:
-        arch: arm64
+        buildType: arm64
   pool:
     vmImage: 'macOS-latest'
   steps:
@@ -35,7 +35,7 @@ jobs:
   strategy:
     matrix:
       x64:
-        arch: x64
+        buildType: x64
   pool:
     vmImage: 'windows-latest'
   steps:
