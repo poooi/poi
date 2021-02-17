@@ -17,11 +17,9 @@ install:
   - node --version
   - npm --version
   - npm ci --silent
-  - npm run lint
-  - npm test
 
 build_script:
-  - npm run build
+  - npm run build:all
   - .\node_modules\.bin\gulp build_plugins
 
 artifacts:

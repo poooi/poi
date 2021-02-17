@@ -9,6 +9,7 @@
     "build": "gulp build && electron-builder -p never --config electron-builder.config.js",
     "build:x64": "gulp build && cross-env ARCH=x64 electron-builder -p never --config electron-builder.config.js",
     "build:arm64": "gulp build && cross-env ARCH=arm64 electron-builder -p never --config electron-builder.config.js",
+    "build:all": "gulp build && cross-env ARCH=all electron-builder -p never --config electron-builder.config.js",
     "build:full": "gulp build && cross-env FULL_TARGET=true ARCH=all electron-builder -p never --config electron-builder.config.js",
     "start": "electron .",
     "start_debug": "electron . --dev --inspect",
