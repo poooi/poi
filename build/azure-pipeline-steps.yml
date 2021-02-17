@@ -21,7 +21,7 @@ steps:
   displayName: 'npm lint'
 
 - script: |
-    npm run build:$(arch)
+    npm run build:$(buildType)
   displayName: 'npm build'
 
 - script: |
