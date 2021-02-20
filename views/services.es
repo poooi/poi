@@ -22,6 +22,7 @@ import './services/sortie-unused-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
 import './services/battle-notify'
+import './services/game-assets-depository'
 import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
 // Update server info

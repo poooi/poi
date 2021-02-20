@@ -5,4 +5,5 @@ interface ToastConfig {
 
 interface Window {
   toast: (message: string, config: ToastConfig) => void
+  APPDATA_PATH: string
 }
