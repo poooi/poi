@@ -19,7 +19,7 @@ install:
   - npm ci --silent
 
 build_script:
-  - npm run build:all
+  - npm run build:full
   - .\node_modules\.bin\gulp build_plugins
 
 artifacts:
