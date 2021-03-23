@@ -108,7 +108,7 @@ global.mainWindow = mainWindow = null
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
 // Polyfill for webview iframe isolation
-app.commandLine.appendSwitch('site-isolation-trial-opt-out', false)
+// app.commandLine.appendSwitch('site-isolation-trial-opt-out', false)
 
 // Fix GPU acceleration
 // app.commandLine.appendSwitch('enable-accelerated-2d-canvas', 'true')

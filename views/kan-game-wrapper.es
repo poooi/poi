@@ -288,7 +288,7 @@ export class KanGameWrapper extends Component {
               ref={this.webview}
               disablewebsecurity="on"
               allowpopups="on"
-              webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+              webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no"
               preload={preloadUrl}
               style={{
                 width: '100%',
@@ -443,7 +443,7 @@ export class KanGameWrapper extends Component {
                 ref={this.webview}
                 disablewebsecurity="on"
                 allowpopups="on"
-                webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no"
+                webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no"
                 preload={preloadUrl}
                 style={{
                   width: '100%',
