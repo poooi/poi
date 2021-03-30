@@ -41,6 +41,9 @@ const isStaticResource = (pathname, hostname) => {
   if (pathname.startsWith('/kcscontents/')) {
     return true
   }
+  if (pathname.startsWith('/html/')) {
+    return true
+  }
   if (hostname.match('kanpani.jp')) {
     return true
   }
