@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>44</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#C7EFCD" offset="0%"></stop>
+            <stop stop-color="#9BEEBE" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M395.26,297.08 L395.26,311.16 L438.6,311.16 L438.6,334.92 L389.32,334.92 L389.32,349.44 L503.94,349.44 L503.94,334.92 L454,334.92 L454,311.16 L496.9,311.16 L496.9,297.08 L454,297.08 L454,269.58 L438.6,269.58 L438.6,297.08 L395.26,297.08 Z M396.58,406.2 L396.58,420.72 L438.82,420.72 L438.82,450.2 L386.68,450.2 L386.68,464.72 L507.9,464.72 L507.9,450.2 L454.22,450.2 L454.22,420.72 L498.44,420.72 L498.44,406.2 L454.22,406.2 L454.22,374.96 L438.82,374.96 L438.82,406.2 L396.58,406.2 Z M468.08,351.42 L458.62,360.66 C474.9,372.76 487.66,384.2 496.9,394.98 L507.24,384.86 C496.68,373.64 483.48,362.42 468.08,351.42 Z M423.86,351.86 C413.74,364.62 401.2,375.62 386.24,385.3 L394.82,396.3 C410.44,386.18 423.64,374.52 434.2,360.88 L423.86,351.86 Z M318.7,277.94 L318.7,470.66 L334.1,470.66 L334.1,292.9 L368.64,292.9 C362.92,311.38 355.22,332.06 345.1,354.94 C359.84,373.2 367.32,389.7 367.32,404.44 C367.32,409.5 366,413.02 363.58,415.22 C361.16,417.2 356.32,418.52 349.06,418.96 C346.64,418.96 343.78,418.52 340.48,418.08 L345.54,434.14 C360.06,433.92 370.4,431.28 376.12,426 C380.52,421.6 382.72,414.34 382.72,404.44 C381.62,389.04 374.36,371.66 360.72,352.52 C369.74,330.96 377.66,310.28 384.26,290.48 L384.26,277.94 L318.7,277.94 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="44">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#9BEEBE">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>
