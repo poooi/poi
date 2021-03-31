@@ -23,6 +23,11 @@ const SWITCHES = [
     defaultValue: false,
   },
   {
+    label: 'Bypass Google login restriction',
+    configName: 'poi.misc.bypassgooglerestriction',
+    defaultValue: false,
+  },
+  {
     label: 'Prevent DMM Network Change Popup',
     configName: 'poi.misc.disablenetworkalert',
     defaultValue: false,

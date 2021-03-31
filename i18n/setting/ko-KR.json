@@ -82,6 +82,7 @@
   "Limit max FPS": "최대 FPS 제한",
   "Limit": "제한",
   "Editing DMM Cookie Region Flag": "DMM 지역 쿠키 설정",
+  "Bypass Google login restriction": "Bypass Google login restriction (It's not recommended. Use it on your own risk!)",
   "Prevent DMM Network Change Popup": "DMM 네트워크 변경 알림을 막기",
   "Use SVG Icon": "SVG 아이콘 사용",
   "Enable Smooth Transition": "탭을 전환할 때 컨텐츠를 부드럽게 표시",

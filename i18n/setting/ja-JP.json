@@ -82,6 +82,7 @@
   "Limit max FPS": "最大 FPS を制限する",
   "Limit": "制限",
   "Editing DMM Cookie Region Flag": "DMMリージョンクッキーを設定する",
+  "Bypass Google login restriction": "Googleのログイン制限を回避する（推奨しません、自己責任でお願いします）",
   "Prevent DMM Network Change Popup": "DMMネットワーク変更アラートを阻止する",
   "Use SVG Icon": "SVGアイコンを使用する",
   "Enable Smooth Transition": "タブの切り替えをスムースに表示する",

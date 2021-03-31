@@ -82,6 +82,7 @@
   "Limit max FPS": "限制最大 FPS",
   "Limit": "限制",
   "Editing DMM Cookie Region Flag": "設定 DMM 地區 Cookie",
+  "Bypass Google login restriction": "繞過谷歌登入限制（不建議使用，請自擔風險！）",
   "Prevent DMM Network Change Popup": "遮蔽 DMM 網路變更警告",
   "Use SVG Icon": "使用高畫質圖示",
   "Enable Smooth Transition": "啟用平滑切換動畫",

@@ -22,10 +22,6 @@ import i18next from 'views/env-parts/i18next'
 const config = remote.require('./lib/config')
 const ipc = remote.require('./lib/ipc')
 const poiControlHeight = 30
-const ua = remote
-  .getCurrentWebContents()
-  .userAgent.replace(/Electron[^ ]* /, '')
-  .replace(/poi[^ ]* /, '')
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
 
 const PoiInfo = styled(CustomTag)`
@@ -70,6 +66,7 @@ const KanGame = styled(CustomTag)`
   editable: get(state, 'config.poi.layout.editable', false),
   windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
   overlayPanel: get(state, 'config.poi.layout.overlay', false),
+  bypassGoogleRestriction: get(state, 'config.poi.misc.bypassgooglerestriction', false),
   homepage: get(
     state,
     'config.poi.misc.homepage',
@@ -274,9 +271,16 @@ export class KanGameWrapper extends Component {
       windowSize,
       overlayPanel,
       windowMode,
+      bypassGoogleRestriction,
     } = this.props
     const getZoomedSize = (value) => Math.round(value / zoomLevel)
     const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
+    console.log(bypassGoogleRestriction)
+    const ua = remote
+      .getCurrentWebContents()
+      .userAgent.replace(/Electron[^ ]* /, '')
+      .replace(/poi[^ ]* /, '')
+      .replace(bypassGoogleRestriction ? /Chrome[^ ]* / : '', '')
     if (windowMode) {
       return (
         <KanGame tag="kan-game">

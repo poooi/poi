@@ -10,6 +10,7 @@ const defaultConfig = {
       shortcut: true,
       disablenetworkalert: false,
       dmmcookie: false,
+      bypassgooglerestriction: false,
       homepage: 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
       networklog: true,
       analytics: true,
