@@ -69,7 +69,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.2",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
-    "@sentry/electron": "^2.3.0",
+    "@sentry/electron": "^2.4.0",
     "@skagami/react-fontawesome": "^1.0.1",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-dynamic-import-node": "^2.3.3",
