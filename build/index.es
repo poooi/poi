@@ -6,7 +6,7 @@ import gitArchive from 'git-archive'
 import { log } from '../lib/utils'
 
 import compileToJs from './compile-to-js'
-import { runScript, npmInstall, NPM_EXEC_PATH } from './utils'
+import { npmInstall } from './utils'
 
 const { ROOT } = global
 
@@ -113,9 +113,6 @@ export const build = async (poiVersion, dontRemove) => {
   await filterCopyApp(stage1App, stage2App)
   if (!dontRemove) {
     await npmInstall(stage2App, ['--only=production'])
-    await runScript(NPM_EXEC_PATH, ['dedupe', '--no-package-lock'], {
-      cwd: path.join(stage2App, 'node_modules', 'npm'),
-    })
   }
   log('stage 2 finished')
 
