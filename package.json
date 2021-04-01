@@ -127,6 +127,7 @@
     "react-virtualized": "^9.22.3",
     "react-virtualized-auto-sizer": "^1.0.4",
     "react-window": "^1.8.6",
+    "recoil": "^0.2.0",
     "reduce-reducers": "^1.0.4",
     "redux": "^4.0.5",
     "redux-observers": "^2.1.1",
