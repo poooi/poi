@@ -7,7 +7,7 @@ const configExtends = [
   'plugin:import/warnings',
 ]
 
-const configExtendsPrettier = ['prettier', 'prettier/react']
+const configExtendsPrettier = ['prettier']
 
 /** @type { import("@types/eslint").Linter.Config } */
 module.exports = {
@@ -61,7 +61,6 @@ module.exports = {
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
         ...configExtendsPrettier,
-        'prettier/@typescript-eslint',
       ],
     },
   ],
