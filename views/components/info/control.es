@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { shell, remote, clipboard, nativeImage } from 'electron'
 import { Button, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, padStart } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { withNamespaces, Trans } from 'react-i18next'
 import styled, { css } from 'styled-components'
@@ -48,6 +48,23 @@ const PoiControlInner = styled.div`
 
 // Controller icon bar
 // const {openFocusedWindowDevTools} = remote.require('./lib/window')
+
+const formatDate = (date) => do {
+  const pad2 = (x) => padStart(x, 2, '0')
+  const datePart = do {
+    const yyyy = date.getFullYear()
+    const mm = pad2(date.getMonth() + 1)
+    const dd = pad2(date.getDate())
+    ;`${yyyy}-${mm}-${dd}`
+  }
+  const timePart = do {
+    const hh = pad2(date.getHours())
+    const mm = pad2(date.getMinutes())
+    const ss = pad2(date.getSeconds())
+    ;`${hh}.${mm}.${ss}`
+  }
+  ;`${datePart}T${timePart}`
+}
 
 @withNamespaces()
 @connect((state, props) => ({
@@ -112,10 +129,7 @@ export class PoiControl extends Component {
       window.success(this.props.t('screenshot saved to clipboard'))
     } else {
       const buf = usePNG ? image.toPNG() : image.toJPEG(80)
-      const now = new Date()
-      const date = `${now.getFullYear()}-${
-        now.getMonth() + 1
-      }-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
+      const date = formatDate(new Date())
       fs.ensureDirSync(screenshotPath)
       const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
       fs.writeFile(filename, buf)
