@@ -1,42 +1,54 @@
 meta:
   name: "shiptag"
-  version: "2020/12/11/01"
+  version: "2021/05/09/01"
 
 data:
   mapname: [
     "E1"
-    "E2"
-    "E3"
-    "E4"
+    "E2A"
+    "E2B"
+    "E3A"
+    "E3B"
+    "E3C"
   ]
   color: [
+    "#8BC34A"
+    "#9C27B0"
+    "#2196F3"
     "#FF5722"
-    "#03A9F4"
-    "#FFD54F"
-    "#4CAF50"
+    "#9E9E9E"
+    "#FFEB3B"
   ]
   fleetname:
     "zh-CN": [
-      "地中海舰队"
-      "护卫 R 部队"
-      "PQ17 船团"
-      "南西方面舰队"
+      "第三十一战队"
+      "第六舰队"
+      "第三舰队"
+      "二水战"
+      "第八舰队"
+      "联合舰队"
     ]
     "zh-TW": [
-      "地中海艦隊"
-      "護衛 R 部隊"
-      "PQ17 船団"
-      "南西方面艦隊"
+      "第三十一戰隊"
+      "第六艦隊"
+      "第三艦隊"
+      "二水戰"
+      "第八艦隊"
+      "聯合艦隊"
     ]
     "ja-JP": [
-      "地中海艦隊"
-      "護衛 R 部隊"
-      "PQ17 船団"
-      "南西方面艦隊"
+      "第三十一戦隊"
+      "第六艦隊"
+      "第三艦隊"
+      "二水戦"
+      "第八艦隊"
+      "連合艦隊"
     ]
     "en-US": [
-      "Mediterranean Fleet"
-      "Escort R Unit"
-      "PQ17 fleet"
-      "Southwest Fleet"
+      "31st Squadron"
+      "6th Fleet"
+      "3rd Fleet"
+      "2nd Torpedo Squadron"
+      "8th Fleet"
+      "Combined Fleet"
     ]
