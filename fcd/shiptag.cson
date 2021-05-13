@@ -1,6 +1,6 @@
 meta:
   name: "shiptag"
-  version: "2021/05/09/01"
+  version: "2021/05/14/01"
 
 data:
   mapname: [
@@ -16,8 +16,8 @@ data:
     "#9C27B0"
     "#2196F3"
     "#FF5722"
-    "#9E9E9E"
     "#FFEB3B"
+    "#9E9E9E"
   ]
   fleetname:
     "zh-CN": [
@@ -25,30 +25,30 @@ data:
       "第六舰队"
       "第三舰队"
       "二水战"
-      "第八舰队"
       "联合舰队"
+      "第八舰队"
     ]
     "zh-TW": [
       "第三十一戰隊"
       "第六艦隊"
       "第三艦隊"
       "二水戰"
-      "第八艦隊"
       "聯合艦隊"
+      "第八艦隊"
     ]
     "ja-JP": [
       "第三十一戦隊"
       "第六艦隊"
       "第三艦隊"
       "二水戦"
-      "第八艦隊"
       "連合艦隊"
+      "第八艦隊"
     ]
     "en-US": [
       "31st Squadron"
       "6th Fleet"
       "3rd Fleet"
       "2nd Torpedo Squadron"
-      "8th Fleet"
       "Combined Fleet"
+      "8th Fleet"
     ]
