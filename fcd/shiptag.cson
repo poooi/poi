@@ -1,15 +1,18 @@
 meta:
   name: "shiptag"
-  version: "2021/05/14/01"
+  version: "2021/05/22/01"
 
 data:
   mapname: [
-    "E1"
-    "E2A"
-    "E2B"
-    "E3A"
-    "E3B"
-    "E3C"
+    "第三十一戦隊"
+    "第六艦隊"
+    "第三艦隊"
+    "二水戦"
+    "連合艦隊"
+    "第八艦隊"
+    "遊撃部隊"
+    "輸送部隊"
+    "第二艦隊"
   ]
   color: [
     "#8BC34A"
@@ -18,6 +21,9 @@ data:
     "#FF5722"
     "#FFEB3B"
     "#9E9E9E"
+    "#00BCD4"
+    "#E91E63"
+    "#009688"
   ]
   fleetname:
     "zh-CN": [
@@ -27,6 +33,9 @@ data:
       "二水战"
       "联合舰队"
       "第八舰队"
+      "游击部队"
+      "输送部队"
+      "第二舰队"
     ]
     "zh-TW": [
       "第三十一戰隊"
@@ -35,6 +44,9 @@ data:
       "二水戰"
       "聯合艦隊"
       "第八艦隊"
+      "遊擊部隊"
+      "輸送部隊"
+      "第二艦隊"
     ]
     "ja-JP": [
       "第三十一戦隊"
@@ -43,6 +55,9 @@ data:
       "二水戦"
       "連合艦隊"
       "第八艦隊"
+      "遊撃部隊"
+      "輸送部隊"
+      "第二艦隊"
     ]
     "en-US": [
       "31st Squadron"
@@ -51,4 +66,7 @@ data:
       "2nd Torpedo Squadron"
       "Combined Fleet"
       "8th Fleet"
+      "Striking Force"
+      "Transportation Force"
+      "2nd Fleet"
     ]
