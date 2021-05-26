@@ -195,6 +195,7 @@ app.on('ready', () => {
       zoomFactor: config.get('poi.appearance.zoom', 1),
       enableRemoteModule: true,
       contextIsolation: false,
+      spellcheck: false,
       // experimentalFeatures: true,
     },
     backgroundColor: '#00000000',
