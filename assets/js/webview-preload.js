@@ -71,6 +71,8 @@ const disableTab = (e) => {
   }
 }
 
+let tick = 0
+
 function handleSpacingTop(show, count = 0) {
   const status = show ? 'block' : 'none'
   const action = show ? 'removeEventListener' : 'addEventListener'
@@ -87,7 +89,8 @@ function handleSpacingTop(show, count = 0) {
     frameDocument.querySelector('#htmlWrap').contentDocument[action]('keydown', disableTab)
     frameDocument[action]('keydown', disableTab)
   } catch (e) {
-    setTimeout(() => handleSpacingTop(show, count + 1), 1000)
+    clearTimeout(tick)
+    tick = setTimeout(() => handleSpacingTop(show, count + 1), 200)
   }
 }
 
