@@ -486,7 +486,8 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   })
 
   // all those that has nothing pointing to them are originals
-  const originMstIds = mstIds.filter((mstId) => !afterMstIdSet.has(mstId))
+  // except apino 699 Soya, who has a uroboros-esque "circular" remodel chain
+  const originMstIds = mstIds.filter((mstId) => !afterMstIdSet.has(mstId)).concat(699)
 
   /*
        remodelChains[originMstId] = <RemodelChain>
