@@ -1,5 +1,6 @@
 import memoize from 'fast-memoize'
 import { get, map, zip, flatMap, values, fromPairs } from 'lodash'
+import { element } from 'prop-types'
 import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
 //### Helpers ###
@@ -486,8 +487,21 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   })
 
   // all those that has nothing pointing to them are originals
-  // except apino 699 Soya, who has a uroboros-esque "circular" remodel chain
-  const originMstIds = mstIds.filter((mstId) => !afterMstIdSet.has(mstId)).concat(699)
+  const originMstIds = mstIds.filter((mstId) => !afterMstIdSet.has(mstId))
+
+  // chase remodel chain until we either reach an end or hit a loop
+  const searchRemodels = (mstId, results = []) => {
+    if (results.includes(mstId)) return results
+
+    const newResults = [...results, mstId]
+    const $ship = $ships[mstId]
+    const afterMstId = Number(get($ship, 'api_aftershipid', 0))
+    if (afterMstId !== 0) {
+      return searchRemodels(afterMstId, newResults)
+    } else {
+      return newResults
+    }
+  }
 
   /*
        remodelChains[originMstId] = <RemodelChain>
@@ -497,22 +511,28 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
      */
   const remodelChains = fromPairs(
     originMstIds.map((originMstId) => {
-      // chase remodel chain until we either reach an end or hit a loop
-      const searchRemodels = (mstId, results = []) => {
-        if (results.includes(mstId)) return results
-
-        const newResults = [...results, mstId]
-        const $ship = $ships[mstId]
-        const afterMstId = Number(get($ship, 'api_aftershipid', 0))
-        if (afterMstId !== 0) {
-          return searchRemodels(afterMstId, newResults)
-        } else {
-          return newResults
-        }
-      }
       return [originMstId, searchRemodels(originMstId)]
     }),
   )
+
+  const shipsInChain = new Set()
+  for (const [originMstId, chain] of Object.entries(remodelChains)) {
+    chain.forEach((item) => shipsInChain.add(item))
+  }
+  // Master IDs that are not contained in the remodel chain.
+  // This is (for now) because some ships does not have originMstId.
+  // Here, we take the ascending order and assume the ship with least MstID is the original ship.
+  // This might not be the case in the future whenever Tanaka found appropriate.
+  let missingMstId = Array.from(
+    new Set([...mstIds].filter((element) => !shipsInChain.has(element))),
+  ).sort((a, b) => a - b)
+  while (missingMstId.length > 0) {
+    // Choose the one with least Master ID
+    const originMstId = missingMstId[0]
+    remodelChains[originMstId] = searchRemodels(originMstId)
+    // Remove all master IDs along the newly found chain from missingMstId
+    missingMstId = missingMstId.filter((element) => !remodelChains[originMstId].includes(element))
+  }
 
   // originMstIdOf[<master id>] = <original master id>
   const originMstIdOf = {}
