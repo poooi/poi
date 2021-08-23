@@ -275,7 +275,6 @@ export class KanGameWrapper extends Component {
     } = this.props
     const getZoomedSize = (value) => Math.round(value / zoomLevel)
     const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
-    console.log(bypassGoogleRestriction)
     const ua = remote
       .getCurrentWebContents()
       .userAgent.replace(/Electron[^ ]* /, '')

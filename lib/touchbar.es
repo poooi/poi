@@ -2,7 +2,7 @@ import { TouchBar } from 'electron'
 import config from './config'
 import path from 'path-extra'
 
-const { TouchBarButton, TouchBarSpacer, TouchBarPopover, TouchBarSegmentedControl } = TouchBar
+const { TouchBarButton, TouchBarSpacer, TouchBarSegmentedControl } = TouchBar
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 

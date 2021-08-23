@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, nativeImage, screen, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const path = require('path-extra')
 
 // Environment
