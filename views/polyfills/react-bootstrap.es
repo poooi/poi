@@ -3,19 +3,20 @@
  */
 /* eslint-disable import/namespace */
 
-import React, { cloneElement, useContext } from 'react'
+import React, { cloneElement, useContext, useState } from 'react'
 import ReactDOM from 'react-dom'
 import * as ReactBootstrap from 'react-bootstrap'
 import contains from 'dom-helpers/query/contains'
 import { WindowEnv } from '../components/etc/window-env'
-import { includes } from 'lodash'
+import { includes, debounce } from 'lodash'
 
 /* eslint-disable no-import-assign */
 ReactBootstrap.OrigOverlayTrigger = ReactBootstrap.OverlayTrigger
 ReactBootstrap.OriginModal = ReactBootstrap.Modal
+ReactBootstrap.OriginDropdown = ReactBootstrap.Dropdown
 /* eslint-enable no-import-assign */
 
-const { OriginModal, Overlay } = ReactBootstrap
+const { OriginModal, Overlay, OriginDropdown } = ReactBootstrap
 
 function isOneOf(one, of) {
   if (Array.isArray(of)) {
@@ -260,15 +261,33 @@ export const Modal = ({ children, ...props }) => (
   </OriginModal>
 )
 
+export const Dropdown = (props) => {
+  const [open, setOpen] = useState(false)
+  const extraProps =
+    props.onToggle && props.open !== undefined
+      ? {
+          onToggle: debounce(props.onToggle, 100),
+        }
+      : {
+          open,
+          onToggle: debounce(() => setOpen(!open), 100),
+        }
+  return <OriginDropdown {...props} {...extraProps} />
+}
+
 Modal.Body = OriginModal.Body
 Modal.Header = OriginModal.Header
 Modal.Title = OriginModal.Title
 Modal.Footer = OriginModal.Footer
 Modal.Dialog = OriginModal.Dialog
 
+Dropdown.Toggle = OriginDropdown.Toggle
+Dropdown.Menu = OriginDropdown.Menu
+
 if (window.isMain) {
   /* eslint-disable no-import-assign */
   ReactBootstrap.OverlayTrigger = OverlayTrigger
   ReactBootstrap.Modal = Modal
+  ReactBootstrap.Dropdown = Dropdown
   /* eslint-enable no-import-assign */
 }
