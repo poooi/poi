@@ -192,7 +192,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.0.6",
     "cross-env": "^7.0.3",
-    "electron": "^13.2.1",
+    "electron": "^13.2.2",
     "electron-builder": "^22.10.5",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
