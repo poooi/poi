@@ -143,21 +143,21 @@
     "desen-US": "Battle result prediction",
     "desko-KR": "전투 예보"
   },
-  "poi-plugin-quest-info": {
-    "zh-CN": "任务信息",
-    "zh-TW": "任务信息",
-    "ja-JP": "任务信息",
-    "en-US": "Quest Info",
-    "ko-KR": "임무 정보",
+  "poi-plugin-quest-info-2": {
+    "zh-CN": "任务信息 2",
+    "zh-TW": "任務信息 2",
+    "ja-JP": "任务信息 2",
+    "en-US": "Quest Info 2",
+    "ko-KR": "임무 정보 2",
     "version": "v0.0.0",
     "icon": "indent",
-    "author": "马里酱",
-    "link": "https://github.com/malichan",
-    "deszh-CN": "任务信息查询 & 任务面板强化，感谢 [舰娘百科](https://zh.kcwiki.org) 维护数据。",
-    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝 [艦娘百科](https://zh.kcwiki.org) 維護數據。",
-    "desja-JP": "任務攻略データや任務パネルの強化、データは [kcwiki](https://zh.kcwiki.org) によって提供されている。",
-    "desen-US": "Show task infomation & enhance task panel, Data maintained by [kcwiki](https://zh.kcwiki.org).",
-    "desko-KR": "임무 공략 데이터와 임무 패널 강화. 데이터는 [kcwiki](https://zh.kcwiki.org) 에서 제공되고 있습니다."
+    "author": "白水",
+    "link": "https://github.com/lawvs",
+    "deszh-CN": "任务信息查询 & 任务面板强化，感谢 [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3改](https://github.com/KC3Kai/kc3-translations) 维护数据。",
+    "deszh-TW": "任務信息查詢 & 任務面板強化，感謝 [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3改](https://github.com/KC3Kai/kc3-translations) 維護數據。",
+    "desja-JP": "任務攻略データや任務パネルの強化、データは [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations) によって提供されている。",
+    "desen-US": "Show task infomation & enhance task panel, Data maintained by [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations).",
+    "desko-KR": "임무 공략 데이터와 임무 패널 강화. 데이터는 [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations) 에서 제공되고 있습니다."
   },
   "poi-plugin-report": {
     "zh-CN": "数据汇报",
