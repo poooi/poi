@@ -1,6 +1,6 @@
 meta:
   name: "shiptag"
-  version: "2021/09/05/01"
+  version: "2021/09/05/02"
 
 # color: https://material.io/design/color/the-color-system.html#color-usage-and-palettes
 
@@ -19,10 +19,10 @@ data:
   ]
   color: [
     "#EF6C00"
-    "#424242"
+    "#BDBDBD"
     "#03A9F4"
     "#8BC34A"
-    "#F5F5F5"
+    "#B39DDB"
     "#01579B"
     "#FFFF00"
     "#FFFFFF"
