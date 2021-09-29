@@ -84,6 +84,9 @@ export default class ElectronWebView extends Component {
   }
 
   forceSyncZoom = () => {
+    if (!this.isReady()) {
+      setTimeout(this.forceSyncZoom, 1000)
+    }
     if (this.props.zoomFactor && this.props.zoomFactor !== this.view.zoomFactor) {
       this.view.zoomFactor = this.props.zoomFactor
     } else if (this.props.zoomLevel && this.props.zoomLevel !== this.view.zoomLevel) {
