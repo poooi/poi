@@ -70,6 +70,8 @@ const ItemName = styled.div`
 const SlotItemName = styled.span`
   flex: 1;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const Level = styled.strong`
