@@ -32,6 +32,12 @@ const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
 
 const isHyugaKaiNi = shipIdIs(554)
 
+const isYuubariKaiNiTei = shipIdIs(624)
+
+const isKagaKaiNiGo = shipIdIs(646)
+
+const isShinShuMaruKai = shipIdIs(626)
+
 const isFixedWingASWAircraft = (equip) =>
   // 対潜哨戒機 (e.g. 三式指揮連絡機(対潜))
   equip.api_type[2] === 26
@@ -39,6 +45,8 @@ const isFixedWingASWAircraft = (equip) =>
 const isAutogyro = (equip) =>
   // オートジャイロ (e.g. カ号観測機)
   equip.api_type[2] === 25
+
+const isSeaplaneBomber = (equip) => equip.api_type[2] === 11
 
 const isASWAircraft = (equip) => isFixedWingASWAircraft(equip) || isAutogyro(equip)
 
@@ -73,6 +81,7 @@ export const isOASWWith = (allCVEIds) =>
     isIsuzuK2,
     isJClassKai,
     isTatsutaKai,
+    isYuubariKaiNiTei,
     isSamuelKai,
     isFletcherClassOrKai,
     // 海防艦
@@ -105,9 +114,9 @@ export const isOASWWith = (allCVEIds) =>
       taisenAbove(100),
       overEquips(hasSome(isSonar)),
     ),
-    // 大鷹改 大鷹改二
+    // 大鷹型改 大鷹型改二 加賀改二護
     _.overEvery(
-      _.overSome(isTaiyouClassKai, isTaiyouClassKaiNi),
+      _.overSome(isTaiyouClassKai, isTaiyouClassKaiNi, isKagaKaiNiGo),
       overEquips(
         hasSome(
           _.overSome(
@@ -163,5 +172,21 @@ export const isOASWWith = (allCVEIds) =>
         // オートジャイロ二機
         overEquips(hasMoreThan(2)(isAutogyro)),
       ),
+    ),
+    // 神州丸改
+    _.overEvery(
+      isShinShuMaruKai,
+      taisenAbove(100),
+      overEquips(
+        hasSome(
+          _.overSome(
+            // 回転翼機
+            isAutogyro,
+            // 水上爆撃機
+            isSeaplaneBomber,
+          ),
+        ),
+      ),
+      overEquips(hasSome(isSonar)),
     ),
   )
