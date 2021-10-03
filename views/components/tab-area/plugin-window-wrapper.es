@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import path from 'path-extra'
-import { TitleBar } from 'electron-react-titlebar'
+import { TitleBar } from 'electron-react-titlebar/renderer'
 import { remote } from 'electron'
 import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
@@ -244,7 +244,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
         ) && (
           <TitleBar
             icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
-            currentWindow={this.currentWindow}
+            browserWindowId={this.currentWindow.id}
           />
         )}
         <WindowEnv.Provider

@@ -1,7 +1,7 @@
 /* global config, getStore */
 import React, { PureComponent } from 'react'
 import { remote, shell } from 'electron'
-import { TitleBar } from 'electron-react-titlebar'
+import { TitleBar } from 'electron-react-titlebar/renderer'
 import { reduxSet } from 'views/utils/tools'
 import { get, capitalize } from 'lodash'
 import path from 'path'
@@ -451,7 +451,6 @@ export class TitleBarWrapper extends PureComponent {
       <TitleBar
         menu={this.state.menu}
         icon={path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png')}
-        currentWindow={remote.getCurrentWindow()}
       />
     )
   }

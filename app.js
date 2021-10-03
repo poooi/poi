@@ -147,6 +147,7 @@ if (!getLock) {
 }
 
 app.on('ready', () => {
+  require('electron-react-titlebar/main').initialize()
   const { screen } = require('electron')
   shortcut.register()
   const { workArea } = screen.getPrimaryDisplay()
