@@ -83,7 +83,7 @@
     "cson": "^7.20.0",
     "electron-devtools-installer": "^3.1.1",
     "electron-log": "^4.3.2",
-    "electron-react-titlebar": "^1.0.0",
+    "electron-react-titlebar": "^1.1.0",
     "electron-updater": "^4.3.8",
     "fast-memoize": "^2.5.2",
     "fbjs": "^3.0.0",
@@ -142,7 +142,6 @@
     "yargs": "^17.1.1"
   },
   "devDependencies": {
-    "7zip-bin": "^5.1.1",
     "@types/babel__core": "^7.1.14",
     "@types/bindings": "^1.5.0",
     "@types/bluebird": "^3.5.33",
@@ -189,6 +188,7 @@
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
+    "7zip-bin": "^5.1.1",
     "asar": "^3.0.3",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.0.6",

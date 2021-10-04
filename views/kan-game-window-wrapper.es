@@ -233,7 +233,7 @@ export class KanGameWindowWrapper extends PureComponent {
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(
-        require.resolve('electron-react-titlebar/assets/style.css'),
+        require.resolve('electron-react-titlebar/style'),
       )}">`
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
