@@ -501,9 +501,7 @@ declareAACI({
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30, 2),
 })
 
-// id 38: unknown
-
-// id 39~41: Atlanta
+// id 38~41: Atlanta
 
 // 597: Atlanta
 // 696: Atlanta Kai
@@ -512,6 +510,19 @@ const isAtlantaOrKai = ship => [597, 696].includes(ship.api_ship_id)
 // 363: GFCS Mk.37+5inch連装両用砲(集中配備)
 const isGFCSMk37And5InchTwinDualPurposeGunMount = equip => equip.api_slotitem_id === 363
 const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.api_slotitem_id)
+
+declareAACI({
+  name: ['Atlanta', 'Atlanta改'],
+  id: 38,
+  fixed: 11,
+  modifier: 1.85,
+  shipValid: isAtlantaOrKai,
+  equipsValid:
+    validAll(
+      // 2 of GFCS Mk.37＋5inch連装両用砲(集中配備) must be equipped for this one
+      hasAtLeast(isGFCSMk37And5InchTwinDualPurposeGunMount, 2),
+    ),
+})
 
 // (as of Jan 1, 2020) Wikia listed this as Atlanta Kai's AACI and wikiwiki listed this as Atlanta's
 // Applying to both Atlanta and Atlanta Kai since I'm seeing Atlanta trigering type 39.
