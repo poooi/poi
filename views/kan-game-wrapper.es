@@ -1,6 +1,6 @@
 /* global getStore, toggleModal */
 import React, { Component } from 'react'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'

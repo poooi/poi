@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
+const electronRemote = require('@electron/remote/main')
 const path = require('path-extra')
 
 // Environment
@@ -21,6 +22,8 @@ const poiIconPath = path.join(
   'icons',
   process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico',
 )
+
+electronRemote.initialize()
 
 require('./lib/module-path').setAllowedPath([global.ROOT, global.APPDATA_PATH])
 const config = require('./lib/config')
@@ -201,6 +204,12 @@ app.on('ready', () => {
     },
     backgroundColor: '#00000000',
   })
+
+  electronRemote.enable(mainWindow.webContents)
+  mainWindow.webContents.addListener('did-attach-webview', (e, webContent) => {
+    electronRemote.enable(webContent)
+  })
+
   // Default menu
   if (process.platform === 'darwin') {
     const { renderMainTouchbar } = require('./lib/touchbar')
@@ -234,7 +243,7 @@ app.on('ready', () => {
     mainWindow = null
   })
 
-  //display config
+  // display config
   const handleScreenStatusChange = () => {
     mainWindow.webContents.send('screen-status-changed', screen.getAllDisplays())
   }
@@ -270,6 +279,7 @@ ipcMain.on('refresh-shortcut', () => {
 })
 
 const { createHash } = require('crypto')
+const { stopNavigateAndHandleNewWindow } = require('./lib/utils.es')
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   const trusted = config.get('poi.misc.trustedCerts', [])
   const hash = createHash('sha256').update(certificate.data).digest('base64')

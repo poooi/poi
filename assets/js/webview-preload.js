@@ -1,4 +1,4 @@
-const { remote } = require('electron')
+const remote = require('@electron/remote')
 const config = remote.require('./lib/config')
 
 window.ipc = remote.require('./lib/ipc')

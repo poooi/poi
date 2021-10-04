@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { ProgressBar, Intent } from '@blueprintjs/core'
 import { throttle } from 'lodash'
 import { withNamespaces } from 'react-i18next'

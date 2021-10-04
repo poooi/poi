@@ -1,4 +1,4 @@
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 
 import { reduxSet } from 'views/utils/tools'
 const config = remote.require('./lib/config')

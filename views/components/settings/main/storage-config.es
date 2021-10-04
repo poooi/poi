@@ -1,7 +1,7 @@
 /* global toggleModal, config, APPDATA_PATH */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { withNamespaces } from 'react-i18next'
 import { remove } from 'fs-extra'
 import { join } from 'path'

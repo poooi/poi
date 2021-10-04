@@ -1,5 +1,5 @@
 import React from 'react'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { withNamespaces } from 'react-i18next'
 import { FormGroup } from '@blueprintjs/core'
 

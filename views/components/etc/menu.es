@@ -1,6 +1,7 @@
 /* global config, getStore */
 import React, { PureComponent } from 'react'
-import { remote, shell } from 'electron'
+import { shell } from 'electron'
+import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
 import { reduxSet } from 'views/utils/tools'
 import { get, capitalize } from 'lodash'

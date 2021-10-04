@@ -1,5 +1,5 @@
 /* global getStore, config, toggleModal, log, error, dbg */
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'

@@ -1,5 +1,5 @@
 /* global config, ROOT */
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { fileUrl } from '../utils/tools'
 import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path-extra'

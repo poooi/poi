@@ -1,7 +1,7 @@
 require('@babel/register')(require('../babel-register.config'))
 import path from 'path-extra'
 import fs from 'fs-extra'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import lodash from 'lodash'
 import { init } from '../lib/sentry'
 
@@ -22,6 +22,11 @@ window.MODULE_PATH = remote.getGlobal('MODULE_PATH')
 window.appTray = remote.getGlobal('appTray')
 window.isSafeMode = remote.getGlobal('isSafeMode')
 window.isDevVersion = remote.getGlobal('isDevVersion')
+
+// Fallback support of remote module
+if (!require('electron').remote) {
+  require('electron').remote = remote
+}
 
 // Temp: remove package-lock.json of plugin folder
 fs.remove(path.join(window.PLUGIN_PATH, 'package-lock.json'))

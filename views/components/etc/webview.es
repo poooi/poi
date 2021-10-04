@@ -10,7 +10,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { camelCase, debounce } from 'lodash'
 import { events, methods, props, staticProps } from './webview-constants'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 
 const { webContents } = remote
 

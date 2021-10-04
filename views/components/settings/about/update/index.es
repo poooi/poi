@@ -2,7 +2,7 @@
 import React from 'react'
 import { FormGroup, Button, Intent } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 
 import { checkUpdate } from 'views/services/update'
 import { Section, Wrapper } from 'views/components/settings/components/section'

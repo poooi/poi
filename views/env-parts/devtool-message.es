@@ -1,5 +1,5 @@
 /* global POI_VERSION, getStore, isMain */
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 
 if (isMain) {
   remote.getCurrentWebContents().addListener('devtools-opened', () => {

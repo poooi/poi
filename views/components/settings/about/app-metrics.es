@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { Button, Intent, HTMLTable } from '@blueprintjs/core'
 import { sortBy, round, sumBy, map } from 'lodash'
 import { withNamespaces } from 'react-i18next'

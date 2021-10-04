@@ -18,7 +18,7 @@ import {
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import styled, { css, createGlobalStyle } from 'styled-components'
 import * as Sentry from '@sentry/electron'
 

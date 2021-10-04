@@ -1,5 +1,5 @@
 /* global config, notify, ROOT */
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { ResourceNotifier } from './resource-notifier'
 import { parse } from 'url'
 import { join } from 'path-extra'

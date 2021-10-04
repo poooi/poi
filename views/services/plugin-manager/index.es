@@ -5,7 +5,7 @@ import EventEmitter from 'events'
 import { readJsonSync, accessSync, ensureDir } from 'fs-extra'
 import glob from 'glob'
 import { map } from 'lodash'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import fetch from 'node-fetch'
 
 import i18next from 'views/env-parts/i18next'

@@ -1,6 +1,6 @@
 /* global ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH */
 import { omit, get, set, each, isArray } from 'lodash'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 import { join, basename } from 'path-extra'
 import {
   createReadStream,

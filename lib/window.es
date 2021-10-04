@@ -1,4 +1,5 @@
 import { BrowserWindow, screen } from 'electron'
+import * as electronRemote from '@electron/remote/main'
 import path from 'path-extra'
 const windows = (global.windows = [])
 const windowsIndex = (global.windowsIndex = {})
@@ -43,6 +44,7 @@ export default {
     if (options.indexName) {
       windowsIndex[options.indexName] = current
     }
+    electronRemote.enable(current.webContents)
     current.setMenu(options.menu || null)
     const show = current.show
     current.show = () => {

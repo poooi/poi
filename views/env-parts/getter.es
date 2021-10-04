@@ -2,7 +2,7 @@
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { map, get, mapValues } from 'lodash'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 
 import { store } from 'views/create-store'
 import { buildArray } from 'views/utils/tools'

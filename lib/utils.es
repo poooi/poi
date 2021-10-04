@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import { webContents, shell, BrowserWindow } from 'electron'
+import * as electronRemote from '@electron/remote/main'
 import WindowManager from './window'
 import { map, get, mapValues, isPlainObject, isNumber, isArray, isString, isBoolean } from 'lodash'
 
@@ -51,6 +52,7 @@ export function stopFileNavigate(id) {
 const set = new Set()
 
 export function stopFileNavigateAndHandleNewWindowInApp(id) {
+  electronRemote.enable(webContents.fromId(id))
   webContents.fromId(id).addListener('will-navigate', (e, url) => {
     if (url.startsWith('file')) {
       e.preventDefault()
@@ -94,6 +96,7 @@ export function stopNavigateAndHandleNewWindow(id) {
         shell.openExternal(url)
       } else if (frameName.startsWith('plugin')) {
         options.resizable = true
+        options.frame = false
         if (frameName.startsWith('plugin[kangame]')) {
           options.useContentSize = true
           options.webPreferences.webSecurity = false
@@ -127,6 +130,7 @@ export function stopNavigateAndHandleNewWindow(id) {
           win.center()
           win.loadURL('chrome://gpu')
         }
+        electronRemote.enable(win.webContents)
         e.newGuest = win
       }
     })

@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { observer, observe } from 'redux-observers'
 import { get, set, debounce, compact } from 'lodash'
-import { remote } from 'electron'
+import * as remote from '@electron/remote'
 
 import { middleware as promiseActionMiddleware } from './middlewares/promise-action'
 import { reducerFactory, onConfigChange } from './redux'

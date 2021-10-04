@@ -1,6 +1,7 @@
 /* global POI_VERSION, toggleModal, config, language */
 import React from 'react'
-import { shell, remote } from 'electron'
+import { shell } from 'electron'
+import * as remote from '@electron/remote'
 import semver from 'semver'
 import Markdown from 'react-remarkable'
 import fetch from 'node-fetch'

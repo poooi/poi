@@ -1,4 +1,4 @@
-const { remote } = require('electron')
+const remote = require('@electron/remote')
 const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
