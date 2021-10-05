@@ -194,6 +194,7 @@ export function loadStyle(
       currentWindow.setVibrancy(value === 1 ? (isDark ? 'dark' : 'light') : null)
     } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
+        currentWindow.setBackgroundColor('#00000000')
         windowsSetVibrancy(value)
       }
     }
