@@ -1,6 +1,18 @@
 import _ from 'lodash'
 
-const isFullFleet = (shipsData) => shipsData && shipsData.length >= 6
+const overNotLessThan = (n) => ([...funcs]) => (...data) =>
+  funcs.map((func) => func(...data)).filter((result) => result).length >= n
+
+const isSpAttackUsed = (shipsData, extraData) => extraData.spAttackUsed
+
+const hasSubmarineSupply = (shipsData, extraData) => extraData.submarineSupplyCount > 0
+
+const isNotInCombinedFleet = (shipsData, extraData) =>
+  !extraData.combinedFlag || extraData.fleetId > 1
+
+const hasShipMoreThan = (n) => (shipsData) => shipsData && shipsData.length >= n
+
+const isFullFleet = hasShipMoreThan(6)
 
 const isFleetWith5NonSubs = (shipsData) => shipsData && shipsData.filter(isNotSub).length >= 5
 
@@ -16,6 +28,10 @@ const isNotLightDmg = overShipState((ship) => ship.api_nowhp * 4 > ship.api_maxh
 
 const isNotMidDmg = overShipState((ship) => ship.api_nowhp * 2 > ship.api_maxhp)
 
+const isNotHeavyDmg = overShipState((ship) => ship.api_nowhp * 4 > ship.api_maxhp)
+
+const isLevelOver = (level) => overShipState((ship) => ship.api_lv >= level)
+
 // Not sure if nagato / mutsu sp attack requires 2nd ship is not heavy damaged
 // const isNotHeavyDmg = overShipState(ship => ship.api_nowhp * 4 > ship.api_maxhp)
 
@@ -29,6 +45,10 @@ const isBattleShip = overShipProp(
   (ship) =>
     ship.api_stype === 8 || ship.api_stype === 9 || ship.api_stype === 10 || ship.api_stype === 12,
 )
+
+const isSubmarineTender = overShipProp((ship) => ship.api_stype === 20)
+
+const isSubmarine = overShipProp((ship) => ship.api_stype === 13 || ship.api_stype === 14)
 
 const isNagatoKaiNi = shipIdIs(541)
 
@@ -49,6 +69,7 @@ const isKirishimaKaiNi = shipIdIs(152)
 const isWarspite = _.overSome([shipIdIs(364), shipIdIs(439)])
 
 const isNelsonSpAttack = _.overEvery([
+  isSpAttackUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isNelson, isNotMidDmg])),
   overShip(1)(isNotSub),
@@ -59,6 +80,7 @@ const isNelsonSpAttack = _.overEvery([
 ])
 
 const isNagatoSpAttack = _.overEvery([
+  isSpAttackUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isNagatoKaiNi, isNotMidDmg])),
   overShip(1)(isBattleShip),
@@ -69,6 +91,7 @@ const isNagatoSpAttack = _.overEvery([
 ])
 
 const isMutsuSpAttack = _.overEvery([
+  isSpAttackUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isMutsuKaiNi, isNotMidDmg])),
   overShip(1)(isBattleShip),
@@ -79,6 +102,7 @@ const isMutsuSpAttack = _.overEvery([
 ])
 
 const isColoradoSpAttack = _.overEvery([
+  isSpAttackUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isColorado, isNotLightDmg])),
   overShip(1)(_.overEvery([isBattleShip, isNotLightDmg])),
@@ -89,6 +113,7 @@ const isColoradoSpAttack = _.overEvery([
 ])
 
 const isKongoClassKaiNiCSpAttack = _.overEvery([
+  isSpAttackUsed,
   isFleetWith5NonSubs,
   _.overSome([
     _.overEvery([
@@ -104,10 +129,25 @@ const isKongoClassKaiNiCSpAttack = _.overEvery([
   ]),
 ])
 
-export const isSpAttack = _.overSome([
+const isSubmarineSpAttack = _.overEvery([
+  hasShipMoreThan(3),
+  hasSubmarineSupply,
+  isNotInCombinedFleet,
+  overShip(0)(_.overEvery([isSubmarineTender, isLevelOver(30), isNotHeavyDmg])),
+  overShip(1)(isSubmarine),
+  overShip(2)(isSubmarine),
+  overNotLessThan(2)([
+    overShip(1)(isNotMidDmg),
+    overShip(2)(isNotMidDmg),
+    _.overEvery(hasShipMoreThan(4), overShip(3)(_.overEvery(isSubmarine, isNotMidDmg))),
+  ]),
+])
+
+export const isSpAttackAvailable = _.overSome([
   isNelsonSpAttack,
   isNagatoSpAttack,
   isMutsuSpAttack,
   isColoradoSpAttack,
   isKongoClassKaiNiCSpAttack,
+  isSubmarineSpAttack,
 ])

@@ -31,7 +31,7 @@ import {
   FleetNameButtonContainer,
   FleetNameButton,
 } from 'views/components/ship-parts/styled-components'
-import { isSpAttack } from 'views/utils/sp_attack'
+import { isSpAttackAvailable } from 'views/utils/sp_attack'
 
 const shipRowWidthSelector = (state) => get(state, 'layout.shippane.width', 450)
 
@@ -63,11 +63,18 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
     [
       fleetShipsIdSelectorFactory(fleetId),
       fleetShipsDataWithEscapeSelectorFactory(fleetId),
-      (state) => state.sortie.spAttackUsed,
+      (state) => get(state.sortie, 'spAttackUsed'),
+      (state) => get(state.info, 'useitems.95.api_count'),
+      (state) => get(state.sortie, 'combinedFlag'),
     ],
-    (shipsId, shipsData, spAttackUsed) => ({
+    (shipsId, shipsData, spAttackUsed, submarineSupplyCount, combinedFlag) => ({
       shipsId,
-      isSpAttack: !spAttackUsed && isSpAttack(shipsData),
+      isSpAttack: isSpAttackAvailable(shipsData, {
+        spAttackUsed,
+        submarineSupplyCount,
+        combinedFlag,
+        fleetId,
+      }),
     }),
   ),
 )
