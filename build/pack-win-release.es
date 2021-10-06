@@ -1,7 +1,6 @@
 import path from 'path-extra'
 
-import { compress7z } from './utils'
-import { log } from '../lib/utils'
+import { compress7z, log } from './utils'
 
 const { ROOT } = global
 

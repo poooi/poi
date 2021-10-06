@@ -3,7 +3,7 @@ import Promise from 'bluebird'
 import path from 'path'
 import child_process from 'child_process'
 
-import { log } from '../lib/utils'
+import { log } from './utils'
 
 const runShell = (scriptPath, args, options) =>
   new Promise((resolve, reject) => {

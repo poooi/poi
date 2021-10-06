@@ -1,8 +1,7 @@
 import fs from 'fs-extra'
 import path from 'path-extra'
 
-import { compress7z, npmInstall, runScript, PLUGIN_JSON_PATH, NPM_EXEC_PATH } from './utils'
-import { log } from '../lib/utils'
+import { compress7z, npmInstall, runScript, PLUGIN_JSON_PATH, NPM_EXEC_PATH, log } from './utils'
 
 const { ROOT } = global
 

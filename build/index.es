@@ -3,10 +3,9 @@ import Promise, { promisify } from 'bluebird'
 import fs from 'fs-extra'
 import tar from 'tar-fs'
 import gitArchive from 'git-archive'
-import { log } from '../lib/utils'
+import { log, npmInstall } from './utils'
 
 import compileToJs from './compile-to-js'
-import { npmInstall } from './utils'
 
 const { ROOT } = global
 

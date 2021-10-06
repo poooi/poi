@@ -5,7 +5,7 @@ const { trim } = require('lodash')
 
 global.ROOT = __dirname
 
-const { log } = require('./lib/utils')
+const { log } = require('./build/utils')
 const { build, installPlugins, cleanFiles, packWinRelease, deployNightlies } = require('./build')
 
 const packageMeta = require('./package.json')

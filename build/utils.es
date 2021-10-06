@@ -1,9 +1,9 @@
 import fs from 'fs-extra'
 import path from 'path-extra'
-import { log } from '../lib/utils'
 import child_process from 'child_process'
 import Seven from 'node-7z'
 import sevenBin from '7zip-bin'
+import { map } from 'lodash'
 
 const pathTo7zip = sevenBin.path7za
 
@@ -30,6 +30,23 @@ export const runScript = (scriptPath, args, options) =>
     const proc = child_process.fork(scriptPath, args, options)
     proc.on('exit', () => resolve())
   })
+
+const stringify = (str) => {
+  if (typeof str === 'string') {
+    return str
+  }
+  if (str.toString().startsWith('[object ')) {
+    str = JSON.stringify(str)
+  } else {
+    str = str.toString()
+  }
+  return str
+}
+
+export function log(...str) {
+  // eslint-disable-next-line no-console
+  console.log('[INFO]', ...map(str, stringify))
+}
 
 export const npmInstall = async (tgtDir, args = [], ci = true) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
