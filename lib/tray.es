@@ -1,12 +1,12 @@
 import path from 'path'
-import { app, Tray, systemPreferences } from 'electron'
+import { app, Tray, systemPreferences, nativeTheme } from 'electron'
 
 const getIcon = (platform) => {
   if (platform === 'linux') {
     return 'poi_32x32.png'
   }
   if (platform === 'darwin') {
-    if (systemPreferences.isDarkMode()) {
+    if (nativeTheme.shouldUseDarkColors) {
       return 'poi_ribbon_dark.png'
     }
     return 'poi_ribbon_light.png'
