@@ -105,7 +105,6 @@ export class PoiControl extends Component {
       height: Math.floor(height * devicePixelRatio),
     }
     getStore('layout.webview.ref')
-      .getWebContents()
       .capturePage(rect)
       .then((image) => {
         this.handleScreenshotCaptured({
