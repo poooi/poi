@@ -1,10 +1,19 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import i18next from 'views/env-parts/i18next'
-import { takeRight } from 'lodash'
+import { take } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 
-const HISTORY_SIZE = 6
+const HISTORY_SIZE = 7
+
+const initialMessage = {
+  type: 'default',
+  content: i18next.t('Waiting for response'),
+  priority: 0,
+  options: {
+    dontReserve: true,
+  },
+}
 
 const PoiAlertTag = styled(CustomTag)`
   width: 0;
@@ -98,15 +107,7 @@ const MsgMainCnt = styled.div`
 `
 
 export const PoiAlert = () => {
-  const [history, setHistory] = useState([])
-  const [current, setCurrent] = useState({
-    type: 'default',
-    content: i18next.t('Waiting for response'),
-    priority: 0,
-    options: {
-      dontReserve: true,
-    },
-  })
+  const [list, setList] = useState([initialMessage])
   const [showHistory, setShowHistory] = useState(false)
   const [containerWidth, setContainerWidth] = useState(1)
   const [containerHeight, setContainerHeight] = useState(0)
@@ -116,38 +117,38 @@ export const PoiAlert = () => {
   const alertMain = useRef()
   const alertHistory = useRef()
   const msgCnt = useRef()
-  const updateTime = useRef(0)
   const stickyEnd = useRef(Date.now())
 
   const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
 
-  const handleAddAlert = useCallback(
-    (e) => {
-      const nowTS = Date.now()
-      const value = {
-        type: 'default',
-        content: '',
-        priority: 0,
-        ts: nowTS,
-        ...e.detail,
-      }
+  const handleAddAlert = useCallback((e) => {
+    const nowTS = Date.now()
+    const value = {
+      type: 'default',
+      content: '',
+      priority: 0,
+      ts: nowTS,
+      ...e.detail,
+    }
+    setList((prevList) => {
+      const [current, ...history] = prevList
       if (value.priority < current.priority && nowTS < stickyEnd.current) {
         if (!value.dontReserve) {
           // Old message has higher priority, push new message to history
-          setHistory([...takeRight(history, HISTORY_SIZE), value])
+          return [current, value, ...take(history, HISTORY_SIZE - 2)]
         }
       } else if (!current.dontReserve) {
         // push old message to history
-        updateTime.current = value.stickyFor || 3000
-        setHistory([...takeRight(history, HISTORY_SIZE - 1), current])
-        setCurrent(value)
+        stickyEnd.current = nowTS + value.stickyFor || 3000
+        return [value, current, ...take(history, HISTORY_SIZE - 2)]
       } else {
-        updateTime.current = value.stickyFor || 3000
-        setCurrent(value)
+        // Replace old message
+        stickyEnd.current = nowTS + value.stickyFor || 3000
+        return [value, ...take(history, HISTORY_SIZE - 1)]
       }
-    },
-    [current, history],
-  )
+      return prevList
+    })
+  }, [])
 
   const handleRefResize = useCallback((entries) => {
     entries.forEach((entry) => {
@@ -166,11 +167,6 @@ export const PoiAlert = () => {
   }, [])
 
   useEffect(() => {
-    stickyEnd.current = Date.now() + updateTime.current
-    updateTime.current = 0
-  })
-
-  useEffect(() => {
     const observer = new ResizeObserver(handleRefResize)
     observer.observe(alertMain.current)
     observer.observe(alertHistory.current)
@@ -185,6 +181,8 @@ export const PoiAlert = () => {
   }, [handleRefResize, handleAddAlert])
 
   const isOverflow = msgWidth > containerWidth
+  const [current, ...history] = list
+
   return (
     <PoiAlertTag tag="poi-alert">
       <AlertMain id="alert-main" className="alert-main bp3-popover" ref={alertMain}>
@@ -216,7 +214,7 @@ export const PoiAlert = () => {
           containerHeight={containerHeight}
           onClick={toggleHistory}
         >
-          {history.map((h) => (
+          {history.reverse().map((h) => (
             <AlertLogContent
               key={h.ts}
               className={`bp3-callout bp3-intent-${h.type}`}
