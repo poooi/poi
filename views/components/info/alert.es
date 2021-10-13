@@ -128,6 +128,7 @@ export const PoiAlert = () => {
       content: '',
       priority: 0,
       ts: nowTS,
+      stickyFor: 3000,
       ...e.detail,
     }
     setList((prevList) => {
@@ -139,11 +140,11 @@ export const PoiAlert = () => {
         }
       } else if (!current.dontReserve) {
         // push old message to history
-        stickyEnd.current = nowTS + value.stickyFor || 3000
+        stickyEnd.current = nowTS + value.stickyFor
         return [value, current, ...take(history, HISTORY_SIZE - 2)]
       } else {
         // Replace old message
-        stickyEnd.current = nowTS + value.stickyFor || 3000
+        stickyEnd.current = nowTS + value.stickyFor
         return [value, ...take(history, HISTORY_SIZE - 1)]
       }
       return prevList
