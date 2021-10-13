@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { takeRight } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
@@ -97,205 +97,136 @@ const MsgMainCnt = styled.div`
   width: fit-content;
 `
 
-const initState = {
-  overflow: false,
-  history: [],
-  current: {
+export const PoiAlert = () => {
+  const [history, setHistory] = useState([])
+  const [current, setCurrent] = useState({
     type: 'default',
     content: i18next.t('Waiting for response'),
     priority: 0,
     options: {
       dontReserve: true,
     },
-  },
-  showHistory: false,
-  containerWidth: 1,
-  containerHeight: 0,
-  historyHeight: 0,
-  msgWidth: 0,
-}
+  })
+  const [showHistory, setShowHistory] = useState(false)
+  const [containerWidth, setContainerWidth] = useState(1)
+  const [containerHeight, setContainerHeight] = useState(0)
+  const [historyHeight, setHistoryHeight] = useState(0)
+  const [msgWidth, setMsgWidth] = useState(0)
 
-export class PoiAlert extends PureComponent {
-  static propTypes = {}
-  state = initState
+  const alertMain = useRef()
+  const alertHistory = useRef()
+  const msgCnt = useRef()
+  const updateTime = useRef(0)
+  const stickyEnd = useRef(Date.now())
 
-  stickyEnd = Date.now()
-  updateTime = 0
+  const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
 
-  alertMain = React.createRef()
-  alertHistory = React.createRef()
-  msgCnt = React.createRef()
-
-  toggleHistory = () => {
-    this.setState({ showHistory: !this.state.showHistory })
-  }
-
-  handleAddAlert = (e) => {
-    const nowTS = Date.now()
-    const value = {
-      ...{
+  const handleAddAlert = useCallback(
+    (e) => {
+      const nowTS = Date.now()
+      const value = {
         type: 'default',
         content: '',
         priority: 0,
         ts: nowTS,
-      },
-      ...e.detail,
-    }
-    let { history, current } = this.state
-    if (value.priority < current.priority && nowTS < this.stickyEnd) {
-      if (!value.dontReserve) {
-        // Old message has higher priority, push new message to history
-        history = [...takeRight(history, HISTORY_SIZE), value]
-        this.setState({ history })
+        ...e.detail,
       }
-    } else if (!current.dontReserve) {
-      // push old message to history
-      this.updateTime = value.stickyFor || 3000
-      history = [...takeRight(history, HISTORY_SIZE - 1), current]
-      this.setState({
-        history: history,
-        current: value,
-      })
-    } else {
-      this.updateTime = value.stickyFor || 3000
-      this.setState({
-        current: value,
-      })
-    }
-  }
+      if (value.priority < current.priority && nowTS < stickyEnd.current) {
+        if (!value.dontReserve) {
+          // Old message has higher priority, push new message to history
+          setHistory([...takeRight(history, HISTORY_SIZE), value])
+        }
+      } else if (!current.dontReserve) {
+        // push old message to history
+        updateTime.current = value.stickyFor || 3000
+        setHistory([...takeRight(history, HISTORY_SIZE - 1), current])
+        setCurrent(value)
+      } else {
+        updateTime.current = value.stickyFor || 3000
+        setCurrent(value)
+      }
+    },
+    [current, history],
+  )
 
-  handleRefResize = (entries) => {
-    const newState = {}
+  const handleRefResize = useCallback((entries) => {
     entries.forEach((entry) => {
       if (entry.contentRect) {
-        if (entry.target === this.alertMain.current) {
+        if (entry.target === alertMain.current) {
           const { width: containerWidth, height: containerHeight } = entry.contentRect
-          newState.containerWidth = containerWidth
-          newState.containerHeight = containerHeight
-        } else if (entry.target === this.msgCnt.current) {
-          newState.msgWidth = entry.contentRect.width
+          setContainerWidth(containerWidth)
+          setContainerHeight(containerHeight)
+        } else if (entry.target === msgCnt.current) {
+          setMsgWidth(entry.contentRect.width)
         } else {
-          newState.historyHeight = entry.contentRect.height
+          setHistoryHeight(entry.contentRect.height)
         }
       }
     })
-    this.setStateDefer(newState, newState.msgWidth ? 0 : 50)
-  }
+  }, [])
 
-  setStateDefer = (newState, defer) => {
-    if (!this.deferredState) {
-      this.deferredState = newState
-    } else {
-      clearTimeout(this.timeoutId)
-      this.deferredState = {
-        ...this.deferredState,
-        ...newState,
-      }
+  useEffect(() => {
+    stickyEnd.current = Date.now() + updateTime.current
+    updateTime.current = 0
+  })
+
+  useEffect(() => {
+    const observer = new ResizeObserver(handleRefResize)
+    observer.observe(alertMain.current)
+    observer.observe(alertHistory.current)
+    observer.observe(msgCnt.current)
+    window.addEventListener('alert.new', handleAddAlert)
+    return () => {
+      observer.unobserve(alertMain.current)
+      observer.unobserve(alertHistory.current)
+      observer.unobserve(msgCnt.current)
+      window.removeEventListener('alert.new', handleAddAlert)
     }
-    if (defer) {
-      this.timeoutId = setTimeout(() => {
-        const { deferredState } = this
-        delete this.deferredState
-        delete this.timeoutId
-        this.setState(deferredState)
-      }, defer)
-    } else {
-      const { deferredState } = this
-      delete this.deferredState
-      delete this.timeoutId
-      this.setState(deferredState)
-    }
-  }
+  }, [handleRefResize, handleAddAlert])
 
-  componentDidUpdate = (prevProps, prevState) => {
-    this.stickyEnd = Date.now() + this.updateTime
-    this.updateTime = 0
-    if (this.state.disableHistory) {
-      setTimeout(
-        () =>
-          this.setState({
-            disableHistory: false,
-          }),
-        1000,
-      )
-    } else if (
-      this.alertHistory &&
-      this.alertHistory.current &&
-      this.alertHistory.current.childNodes.length > HISTORY_SIZE
-    ) {
-      this.observer.unobserve(this.alertHistory.current)
-      this.setState({
-        disableHistory: true,
-      })
-    } else if (prevState.disableHistory && !this.state.disableHistory) {
-      this.observer.observe(this.alertHistory.current)
-    }
-  }
-
-  componentDidMount = () => {
-    this.observer = new ResizeObserver(this.handleRefResize)
-    this.observer.observe(this.alertMain.current)
-    this.observer.observe(this.alertHistory.current)
-    this.observer.observe(this.msgCnt.current)
-    window.addEventListener('alert.new', this.handleAddAlert)
-  }
-
-  componentWillUnmount = () => {
-    this.observer.unobserve(this.alertMain.current)
-    this.observer.unobserve(this.alertHistory.current)
-    this.observer.unobserve(this.msgCnt.current)
-    window.removeEventListener('alert.new', this.handleAddAlert)
-  }
-
-  render() {
-    const overflow = this.state.msgWidth > this.state.containerWidth
-    return (
-      <PoiAlertTag tag="poi-alert">
-        <AlertMain id="alert-main" className="alert-main bp3-popover" ref={this.alertMain}>
-          <AlertContainer
-            id="alert-container"
-            className={`bp3-callout bp3-intent-${this.state.current.type} alert-container`}
-            onClick={this.toggleHistory}
+  const isOverflow = msgWidth > containerWidth
+  return (
+    <PoiAlertTag tag="poi-alert">
+      <AlertMain id="alert-main" className="alert-main bp3-popover" ref={alertMain}>
+        <AlertContainer
+          id="alert-container"
+          className={`bp3-callout bp3-intent-${current.type} alert-container`}
+          onClick={toggleHistory}
+        >
+          <AlertPosition
+            className="alert-position"
+            style={{ width: msgWidth + (isOverflow ? 50 : 0) }}
           >
-            <AlertPosition
-              className="alert-position"
-              style={{ width: this.state.msgWidth + (overflow ? 50 : 0) }}
+            <AlertArea id="alert-area" overflow={isOverflow}>
+              <MsgMainCnt ref={msgCnt}>
+                <span>{current.content}</span>
+              </MsgMainCnt>
+              {isOverflow && (
+                <span style={{ marginRight: 50, marginLeft: 50 }}>{current.content}</span>
+              )}
+            </AlertArea>
+          </AlertPosition>
+        </AlertContainer>
+        <AlertLog
+          id="alert-log"
+          ref={alertHistory}
+          className="alert-log bp3-popover-content"
+          toggle={showHistory}
+          height={historyHeight}
+          containerHeight={containerHeight}
+          onClick={toggleHistory}
+        >
+          {history.map((h) => (
+            <AlertLogContent
+              key={h.ts}
+              className={`bp3-callout bp3-intent-${h.type}`}
+              data-ts={h.ts}
             >
-              <AlertArea id="alert-area" overflow={overflow}>
-                <MsgMainCnt ref={this.msgCnt}>
-                  <span>{this.state.current.content}</span>
-                </MsgMainCnt>
-                {overflow && (
-                  <span style={{ marginRight: 50, marginLeft: 50 }}>
-                    {this.state.current.content}
-                  </span>
-                )}
-              </AlertArea>
-            </AlertPosition>
-          </AlertContainer>
-          {!this.state.disableHistory && (
-            <AlertLog
-              id="alert-log"
-              ref={this.alertHistory}
-              className="alert-log bp3-popover-content"
-              toggle={this.state.showHistory}
-              height={this.state.historyHeight}
-              containerHeight={this.state.containerHeight}
-              onClick={this.toggleHistory}
-            >
-              {this.state.history.map((h) => (
-                <AlertLogContent
-                  key={h.ts}
-                  className={`bp3-callout bp3-intent-${h.type}`}
-                  data-ts={h.ts}
-                >
-                  {h.content}
-                </AlertLogContent>
-              ))}
-            </AlertLog>
-          )}
-        </AlertMain>
-      </PoiAlertTag>
-    )
-  }
+              {h.content}
+            </AlertLogContent>
+          ))}
+        </AlertLog>
+      </AlertMain>
+    </PoiAlertTag>
+  )
 }
