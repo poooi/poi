@@ -114,6 +114,7 @@ export async function installPackage(packageName, version, npmConfig) {
     ...args,
     '--no-progress',
     '--global-style',
+    '--no-save',
     '--no-package-lock',
     '--ignore-scripts',
     packageName,
