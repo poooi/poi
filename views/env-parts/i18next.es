@@ -81,10 +81,11 @@ i18next.use(reactI18nextModule).init({
   interpolation: {
     escapeValue: false,
   },
+  nsSeparator: ':',
   returnObjects: true, // allow returning objects
   debug: dbg && dbg.extra('i18next').isEnabled(),
   react: {
-    wait: false,
+    useSuspense: true,
     nsMode: 'fallback',
     usePureComponent: true,
   },
