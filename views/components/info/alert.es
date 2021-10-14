@@ -3,6 +3,7 @@ import i18next from 'views/env-parts/i18next'
 import { take } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
+import { ResizeSensor } from '@blueprintjs/core'
 
 const HISTORY_SIZE = 7
 
@@ -113,10 +114,6 @@ export const PoiAlert = () => {
   const [containerHeight, setContainerHeight] = useState(0)
   const [historyHeight, setHistoryHeight] = useState(0)
   const [msgWidth, setMsgWidth] = useState(0)
-
-  const alertMain = useRef()
-  const alertHistory = useRef()
-  const msgCnt = useRef()
   const stickyEnd = useRef(Date.now())
 
   const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
@@ -151,81 +148,89 @@ export const PoiAlert = () => {
     })
   }, [])
 
-  const handleRefResize = useCallback((entries) => {
+  const handleAlertMainResize = useCallback((entries) => {
     entries.forEach((entry) => {
       if (entry.contentRect) {
-        if (entry.target === alertMain.current) {
-          const { width: containerWidth, height: containerHeight } = entry.contentRect
-          setContainerWidth(containerWidth)
-          setContainerHeight(containerHeight)
-        } else if (entry.target === msgCnt.current) {
-          setMsgWidth(entry.contentRect.width)
-        } else {
-          setHistoryHeight(entry.contentRect.height)
-        }
+        const { width: containerWidth, height: containerHeight } = entry.contentRect
+        setContainerWidth(containerWidth)
+        setContainerHeight(containerHeight)
+      }
+    })
+  }, [])
+
+  const handleMsgCntResize = useCallback((entries) => {
+    entries.forEach((entry) => {
+      if (entry.contentRect) {
+        setMsgWidth(entry.contentRect.width)
+      }
+    })
+  }, [])
+
+  const handleAlertLogResize = useCallback((entries) => {
+    entries.forEach((entry) => {
+      if (entry.contentRect) {
+        setHistoryHeight(entry.contentRect.height)
       }
     })
   }, [])
 
   useEffect(() => {
-    const observer = new ResizeObserver(handleRefResize)
-    observer.observe(alertMain.current)
-    observer.observe(alertHistory.current)
-    observer.observe(msgCnt.current)
     window.addEventListener('alert.new', handleAddAlert)
     return () => {
-      observer.unobserve(alertMain.current)
-      observer.unobserve(alertHistory.current)
-      observer.unobserve(msgCnt.current)
       window.removeEventListener('alert.new', handleAddAlert)
     }
-  }, [handleRefResize, handleAddAlert])
+  }, [handleAddAlert])
 
   const isOverflow = msgWidth > containerWidth
   const [current, ...history] = list
 
   return (
     <PoiAlertTag tag="poi-alert">
-      <AlertMain id="alert-main" className="alert-main bp3-popover" ref={alertMain}>
-        <AlertContainer
-          id="alert-container"
-          className={`bp3-callout bp3-intent-${current.type} alert-container`}
-          onClick={toggleHistory}
-        >
-          <AlertPosition
-            className="alert-position"
-            style={{ width: msgWidth + (isOverflow ? 50 : 0) }}
+      <ResizeSensor onResize={handleAlertMainResize}>
+        <AlertMain id="alert-main" className="alert-main bp3-popover">
+          <AlertContainer
+            id="alert-container"
+            className={`bp3-callout bp3-intent-${current.type} alert-container`}
+            onClick={toggleHistory}
           >
-            <AlertArea id="alert-area" overflow={isOverflow}>
-              <MsgMainCnt ref={msgCnt}>
-                <span>{current.content}</span>
-              </MsgMainCnt>
-              {isOverflow && (
-                <span style={{ marginRight: 50, marginLeft: 50 }}>{current.content}</span>
-              )}
-            </AlertArea>
-          </AlertPosition>
-        </AlertContainer>
-        <AlertLog
-          id="alert-log"
-          ref={alertHistory}
-          className="alert-log bp3-popover-content"
-          toggle={showHistory}
-          height={historyHeight}
-          containerHeight={containerHeight}
-          onClick={toggleHistory}
-        >
-          {history.reverse().map((h) => (
-            <AlertLogContent
-              key={h.ts}
-              className={`bp3-callout bp3-intent-${h.type}`}
-              data-ts={h.ts}
+            <AlertPosition
+              className="alert-position"
+              style={{ width: msgWidth + (isOverflow ? 50 : 0) }}
             >
-              {h.content}
-            </AlertLogContent>
-          ))}
-        </AlertLog>
-      </AlertMain>
+              <AlertArea id="alert-area" overflow={isOverflow}>
+                <ResizeSensor onResize={handleMsgCntResize}>
+                  <MsgMainCnt>
+                    <span>{current.content}</span>
+                  </MsgMainCnt>
+                </ResizeSensor>
+                {isOverflow && (
+                  <span style={{ marginRight: 50, marginLeft: 50 }}>{current.content}</span>
+                )}
+              </AlertArea>
+            </AlertPosition>
+          </AlertContainer>
+          <ResizeSensor onResize={handleAlertLogResize}>
+            <AlertLog
+              id="alert-log"
+              className="alert-log bp3-popover-content"
+              toggle={showHistory}
+              height={historyHeight}
+              containerHeight={containerHeight}
+              onClick={toggleHistory}
+            >
+              {history.reverse().map((h) => (
+                <AlertLogContent
+                  key={h.ts}
+                  className={`bp3-callout bp3-intent-${h.type}`}
+                  data-ts={h.ts}
+                >
+                  {h.content}
+                </AlertLogContent>
+              ))}
+            </AlertLog>
+          </ResizeSensor>
+        </AlertMain>
+      </ResizeSensor>
     </PoiAlertTag>
   )
 }
