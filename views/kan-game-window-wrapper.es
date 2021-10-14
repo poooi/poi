@@ -253,7 +253,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.document.title = 'poi'
       this.externalWindow.isWindowMode = true
       loadStyle(this.externalWindow.document, this.currentWindow, false)
-      remote.require('./lib/utils').stopFileNavigate(this.currentWindow.webContents.id)
+      remote.require('./lib/webcontent-utils').stopFileNavigate(this.currentWindow.webContents.id)
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }

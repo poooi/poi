@@ -7,7 +7,7 @@ import i18next from 'views/env-parts/i18next'
 
 const proxy = remote.require('./lib/proxy')
 
-const { stopNavigateAndHandleNewWindow } = remote.require('./lib/utils')
+const { stopNavigateAndHandleNewWindow } = remote.require('./lib/webcontent-utils')
 
 import './services/update'
 import './services/layout'
