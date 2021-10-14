@@ -150,7 +150,12 @@ export const LandbaseButton = withNamespaces(['resources'])(
         </div>
       )
       return (
-        <Tooltip content={tooltipContent} position={Position.BOTTOM} targetTagName="div">
+        <Tooltip
+          content={tooltipContent}
+          disabled={disabled}
+          position={Position.BOTTOM}
+          targetTagName="div"
+        >
           <LandbaseButtonContainer isMini={isMini}>
             <Button
               intent={intent}
