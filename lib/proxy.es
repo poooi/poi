@@ -14,7 +14,7 @@ import caseNormalizer from 'header-case-normalizer'
 import socks from 'socks5-client'
 import net from 'net'
 
-import SocksHttpAgent from './socks-http-agent'
+import SocksProxyAgent from 'socks-proxy-agent'
 import config from './config'
 import { log, error } from './utils'
 
@@ -277,10 +277,7 @@ class Proxy extends EventEmitter {
         const socksPort = config.get('proxy.socks5.port', 1080)
         const uri = `${socksHost}:${socksPort}`
         if (!this.socksAgents[uri]) {
-          this.socksAgents[uri] = new SocksHttpAgent({
-            socksHost,
-            socksPort,
-          })
+          this.socksAgents[uri] = new SocksProxyAgent(`socks://${uri}`)
         }
         options.agent = this.socksAgents[uri]
         break

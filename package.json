@@ -136,6 +136,7 @@
     "request": "^2.88.2",
     "reselect": "^4.0.0",
     "semver": "^7.3.5",
+    "socks-proxy-agent": "^6.1.0",
     "socks5-client": "^1.2.8",
     "styled-components": "^5.3.1",
     "wanakana": "^4.0.2",
