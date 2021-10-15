@@ -1,7 +1,14 @@
-import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+} from 'electron-devtools-installer'
 
 import { log, error } from './utils'
 
-installExtension(REACT_DEVELOPER_TOOLS)
-  .then((name) => log('React Devtool is added'))
+const options = {
+  loadExtensionOptions: { allowFileAccess: true },
+}
+
+installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], options)
+  .then((name) => log(`${name} is added`))
   .catch((err) => error('An error occurred: ', err))

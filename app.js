@@ -260,7 +260,7 @@ app.on('ready', () => {
   screen.addListener('display-metrics-changed', handleScreenStatusChange)
 
   // devtool
-  if (dbg.isEnabled() && config.get('poi.devtool.enable', false)) {
+  if (config.get('poi.devtool.enable', false)) {
     require('./lib/devtool')
   }
 })
