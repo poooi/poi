@@ -24,8 +24,14 @@ class Scheduler {
     this._tasks = []
   }
 
+  _stopTick() {
+    if (this.currentTick) {
+      clearTimeout(this.currentTick)
+    }
+  }
+
   _scheduleNextTick() {
-    setTimeout(this._nextTick.bind(this), INTERVAL)
+    this.currentTick = setTimeout(this._nextTick.bind(this), INTERVAL)
   }
 
   _tryTasks() {

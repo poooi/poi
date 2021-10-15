@@ -1,6 +1,7 @@
 import { getTanakalendarQuarterMonth } from '../quests'
 import moment from 'moment-timezone'
 import { padStart } from 'lodash'
+import Scheduler from 'views/services/scheduler'
 
 const spec = it
 
@@ -40,4 +41,6 @@ describe('getTanakalendarQuarterMonth', () => {
 
     testCase(2019, 12, [q0 + 4, 0])
   })
+
+  Scheduler._stopTick()
 })
