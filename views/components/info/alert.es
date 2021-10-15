@@ -14,6 +14,7 @@ const initialMessage = {
   options: {
     dontReserve: true,
   },
+  ts: 0,
 }
 
 const PoiAlertTag = styled(CustomTag)`
