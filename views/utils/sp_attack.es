@@ -35,9 +35,6 @@ const isNotHeavyDmg = overShipState((ship) => ship.api_nowhp * 4 > ship.api_maxh
 
 const isLevelOver = (level) => overShipState((ship) => ship.api_lv >= level)
 
-// Not sure if nagato / mutsu sp attack requires 2nd ship is not heavy damaged
-// const isNotHeavyDmg = overShipState(ship => ship.api_nowhp * 4 > ship.api_maxhp)
-
 const isNotSub = overShipProp((ship) => ship.api_stype !== 13 && ship.api_stype !== 14)
 
 const isNotCarrier = overShipProp(
@@ -108,8 +105,8 @@ const isColoradoSpAttack = _.overEvery([
   isSpAttackUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isColorado, isNotLightDmg])),
-  overShip(1)(_.overEvery([isBattleShip, isNotLightDmg])),
-  overShip(2)(_.overEvery([isBattleShip, isNotLightDmg])),
+  overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
+  overShip(2)(_.overEvery([isBattleShip, isNotHeavyDmg])),
   overShip(3)(isNotSub),
   overShip(4)(isNotSub),
   overShip(5)(isNotSub),
