@@ -1,6 +1,5 @@
 import memoize from 'fast-memoize'
 import { get, map, zip, flatMap, values, fromPairs } from 'lodash'
-import { element } from 'prop-types'
 import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
 //### Helpers ###
@@ -122,11 +121,11 @@ export const inRepairShipsIdSelector = arrayResultWrapper(
   }),
 )
 
-export const fleetSelectorFactory = memoize((fleetId) => (state) =>
-  (state.info.fleets || [])[fleetId],
+export const fleetSelectorFactory = memoize(
+  (fleetId) => (state) => (state.info.fleets || [])[fleetId],
 )
-export const landbaseSelectorFactory = memoize((landbaseId) => (state) =>
-  (state.info.airbase || [])[landbaseId],
+export const landbaseSelectorFactory = memoize(
+  (landbaseId) => (state) => (state.info.airbase || [])[landbaseId],
 )
 
 // Returns [shipId] of this fleet
@@ -516,7 +515,7 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   )
 
   const shipsInChain = new Set()
-  for (const [originMstId, chain] of Object.entries(remodelChains)) {
+  for (const chain of Object.values(remodelChains)) {
     chain.forEach((item) => shipsInChain.add(item))
   }
   // Master IDs that are not contained in the remodel chain.

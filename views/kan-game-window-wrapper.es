@@ -209,10 +209,9 @@ export class KanGameWindowWrapper extends PureComponent {
             getStore('layout.webview.ref').executeJavaScript('window.align()')
           }
           if (this.externalWindow.document.querySelector('webview')) {
-            const {
-              width: windowWidth,
-              height: windowHeight,
-            } = this.externalWindow.document.querySelector('webview').getBoundingClientRect()
+            const { width: windowWidth, height: windowHeight } = this.externalWindow.document
+              .querySelector('webview')
+              .getBoundingClientRect()
             dispatch({
               type: '@@LayoutUpdate/webview/size',
               value: {

@@ -38,12 +38,8 @@ export const reducer = (state = {}, action) => {
     }
     // item remodel consumption
     case '@@Response/kcsapi/api_req_kousyou/remodel_slotlist_detail': {
-      const {
-        api_req_useitem_id,
-        api_req_useitem_num,
-        api_req_useitem_id2,
-        api_req_useitem_num2,
-      } = body
+      const { api_req_useitem_id, api_req_useitem_num, api_req_useitem_id2, api_req_useitem_num2 } =
+        body
       let nextState = { ...state }
 
       // assume there's enough items

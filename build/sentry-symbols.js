@@ -12,7 +12,8 @@ try {
   process.exit(1)
 }
 
-const VERSION = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/i
+const VERSION =
+  /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/i
 const SYMBOL_CACHE_FOLDER = '.electron-symbols'
 const packageMeta = require('../package.json')
 const sentryCli = new SentryCli('./sentry.properties')

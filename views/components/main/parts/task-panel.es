@@ -292,11 +292,17 @@ const TaskRow = withNamespaces(['resources'])(
 )
 
 @withNamespaces(['main'])
-@connect(({ info: { quests: { activeQuests, activeCapacity, activeNum } } }) => ({
-  activeQuests,
-  activeCapacity,
-  activeNum,
-}))
+@connect(
+  ({
+    info: {
+      quests: { activeQuests, activeCapacity, activeNum },
+    },
+  }) => ({
+    activeQuests,
+    activeCapacity,
+    activeNum,
+  }),
+)
 export class TaskPanel extends React.Component {
   state = {
     dimension: 1,

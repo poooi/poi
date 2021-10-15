@@ -1,7 +1,10 @@
 import _ from 'lodash'
 
-const overNotLessThan = (n) => ([...funcs]) => (...data) =>
-  funcs.map((func) => func(...data)).filter((result) => result).length >= n
+const overNotLessThan =
+  (n) =>
+  ([...funcs]) =>
+  (...data) =>
+    funcs.map((func) => func(...data)).filter((result) => result).length >= n
 
 const isSpAttackUsed = (shipsData, extraData) => extraData.spAttackUsed
 
