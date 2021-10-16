@@ -27,8 +27,6 @@ const overShipProp = (func) => (ship) => func(ship[1])
 
 const shipIdIs = (n) => overShipState((ship) => ship.api_ship_id === n)
 
-const isNotLightDmg = overShipState((ship) => ship.api_nowhp * 4 > ship.api_maxhp * 3)
-
 const isNotMidDmg = overShipState((ship) => ship.api_nowhp * 2 > ship.api_maxhp)
 
 const isNotHeavyDmg = overShipState((ship) => ship.api_nowhp * 4 > ship.api_maxhp)
@@ -83,7 +81,7 @@ const isNagatoSpAttack = _.overEvery([
   isSpAttackNotUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isNagatoKaiNi, isNotMidDmg])),
-  overShip(1)(isBattleShip),
+  overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
   overShip(2)(isNotSub),
   overShip(3)(isNotSub),
   overShip(4)(isNotSub),
@@ -94,7 +92,7 @@ const isMutsuSpAttack = _.overEvery([
   isSpAttackNotUsed,
   isFullFleet,
   overShip(0)(_.overEvery([isMutsuKaiNi, isNotMidDmg])),
-  overShip(1)(isBattleShip),
+  overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
   overShip(2)(isNotSub),
   overShip(3)(isNotSub),
   overShip(4)(isNotSub),
@@ -104,7 +102,7 @@ const isMutsuSpAttack = _.overEvery([
 const isColoradoSpAttack = _.overEvery([
   isSpAttackNotUsed,
   isFullFleet,
-  overShip(0)(_.overEvery([isColorado, isNotLightDmg])),
+  overShip(0)(_.overEvery([isColorado, isNotMidDmg])),
   overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
   overShip(2)(_.overEvery([isBattleShip, isNotHeavyDmg])),
   overShip(3)(isNotSub),
