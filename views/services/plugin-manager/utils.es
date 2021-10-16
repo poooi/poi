@@ -114,9 +114,8 @@ export async function installPackage(packageName, version, npmConfig) {
     ...args,
     '--no-progress',
     '--global-style',
-    '--no-save',
-    '--no-package-lock',
     '--ignore-scripts',
+    '--legacy-peer-deps',
     packageName,
   ]
   await runScriptAsync(NPM_EXEC_PATH, args, {
@@ -125,7 +124,7 @@ export async function installPackage(packageName, version, npmConfig) {
 }
 
 export async function removePackage(target, npmConfig) {
-  const args = ['uninstall', '--no-progress', '--no-save', target]
+  const args = ['uninstall', '--no-progress', target]
   await runScriptAsync(NPM_EXEC_PATH, args, {
     cwd: npmConfig.prefix,
   })

@@ -33,11 +33,6 @@ if (window.isMain) {
   fs.ensureDirSync(window.PLUGIN_PATH)
   fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
 
-  // Temp: remove package-lock.json of plugin folder
-  fs.remove(path.join(window.PLUGIN_PATH, 'package.json'))
-  fs.remove(path.join(window.PLUGIN_PATH, 'package-lock.json'))
-  fs.remove(path.join(window.PLUGIN_PATH, 'node_modules', '.package-lock.json'))
-
   // Debug
   window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
   window.dbg.init()
