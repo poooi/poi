@@ -32,13 +32,13 @@ poi-main {
   position: relative;
 }
 
+.bp3-popover-content {
+  backdrop-filter: blur(5px);
+}
+
 .bp3-tooltip .bp3-popover-content {
   max-width: calc(50vw - 20px);
   overflow: hidden;
-}
-
-.bp3-popover-content {
-  backdrop-filter: blur(5px);
 }
 
 .plugin-dropdown-container > .bp3-popover-content > .bp3-menu {

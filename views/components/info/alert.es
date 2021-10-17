@@ -4,7 +4,6 @@ import { take } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { ResizeSensor } from '@blueprintjs/core'
-import { adjustHue } from 'polished'
 
 const HISTORY_SIZE = 7
 
