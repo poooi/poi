@@ -2,9 +2,9 @@
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
-import { readJsonSync, accessSync, ensureDir } from 'fs-extra'
+import { readJsonSync, accessSync, ensureDir, writeJSON } from 'fs-extra'
 import glob from 'glob'
-import { map } from 'lodash'
+import { fromPairs, map } from 'lodash'
 import * as remote from '@electron/remote'
 import fetch from 'node-fetch'
 
@@ -23,6 +23,7 @@ import {
   findInstalledTarball,
   getNpmConfig,
 } from './utils'
+import { access } from 'fs'
 
 const fetchHeader = new Headers()
 fetchHeader.set('Cache-Control', 'max-age=0')
@@ -35,6 +36,8 @@ const defaultFetchOption = {
 function defaultPluginPath(packageName) {
   return join(PLUGIN_PATH, 'node_modules', packageName)
 }
+
+const PACKAGE_JSON_PATH = join(PLUGIN_PATH, 'package.json')
 
 const getPluginPath = (packageName) => join(PLUGIN_PATH, 'node_modules', packageName)
 
@@ -68,6 +71,19 @@ class PluginManager extends EventEmitter {
         }),
       ),
     )
+    // workaround to generates package.json if not existed
+    try {
+      await access(PACKAGE_JSON_PATH)
+    } catch {
+      const packageJsonContent = {
+        dependencies: fromPairs(
+          plugins
+            .sort((a, b) => (a.packageName < b.packageName ? -1 : 1))
+            .map((plugin) => [plugin.packageName, '^' + plugin.version]),
+        ),
+      }
+      await writeJSON(PACKAGE_JSON_PATH, packageJsonContent, { spaces: 2 })
+    }
     const npmConfig = getNpmConfig(PLUGIN_PATH)
     notifyFailed(plugins, npmConfig)
     dispatch({

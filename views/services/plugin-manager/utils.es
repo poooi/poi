@@ -113,6 +113,7 @@ export async function installPackage(packageName, version, npmConfig) {
   args = [
     ...args,
     '--no-progress',
+    '--no-prune',
     '--global-style',
     '--ignore-scripts',
     '--legacy-peer-deps',
