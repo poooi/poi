@@ -33,10 +33,6 @@ const defaultFetchOption = {
   headers: fetchHeader,
 }
 
-function defaultPluginPath(packageName) {
-  return join(PLUGIN_PATH, 'node_modules', packageName)
-}
-
 const PACKAGE_JSON_PATH = join(PLUGIN_PATH, 'package.json')
 
 const getPluginPath = (packageName) => join(PLUGIN_PATH, 'node_modules', packageName)
@@ -56,11 +52,9 @@ class PluginManager extends EventEmitter {
     this.emit('initialized')
   }
 
-  async readPlugins() {
-    const pluginPaths = await new Promise((res) =>
-      glob(getPluginPath('poi-plugin-*'), (err, files) => res(files)),
-    )
-    const plugins = sortPlugins(
+  async readFromWildcardPath(wildcardPath) {
+    const pluginPaths = await new Promise((res) => glob(wildcardPath, (err, files) => res(files)))
+    return sortPlugins(
       await Promise.all(
         pluginPaths.map(async (pluginPath) => {
           let plugin = await readPlugin(pluginPath)
@@ -71,19 +65,28 @@ class PluginManager extends EventEmitter {
         }),
       ),
     )
-    // workaround to generates package.json if not existed
+  }
+
+  // workaround to generates package.json if not existed
+  async ensurePackageJson(plugins) {
     try {
       await access(PACKAGE_JSON_PATH)
-    } catch {
+    } catch (e) {
       const packageJsonContent = {
         dependencies: fromPairs(
           plugins
+            .slice()
             .sort((a, b) => (a.packageName < b.packageName ? -1 : 1))
             .map((plugin) => [plugin.packageName, '^' + plugin.version]),
         ),
       }
       await writeJSON(PACKAGE_JSON_PATH, packageJsonContent, { spaces: 2 })
     }
+  }
+
+  async readPlugins() {
+    const plugins = await this.readFromWildcardPath(getPluginPath('poi-plugin-*'))
+    await this.ensurePackageJson(plugins)
     const npmConfig = getNpmConfig(PLUGIN_PATH)
     notifyFailed(plugins, npmConfig)
     dispatch({
@@ -209,7 +212,7 @@ class PluginManager extends EventEmitter {
       return
     }
     const npmConfig = getNpmConfig(PLUGIN_PATH)
-    const data = await await fetch(
+    const data = await fetch(
       `${npmConfig.registry}${plugin.packageName}/latest`,
       defaultFetchOption,
     )
@@ -384,7 +387,7 @@ class PluginManager extends EventEmitter {
       await removePackage(plugin.packageName, npmConfig)
       // Make sure the plugin no longer exists in PLUGIN_PATH
       // (unless it's a git repo)
-      await safePhysicallyRemove(defaultPluginPath(plugin.packageName))
+      await safePhysicallyRemove(getPluginPath(plugin.packageName))
     } catch (error) {
       console.error(error.stack)
     }
