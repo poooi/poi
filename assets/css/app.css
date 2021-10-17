@@ -37,7 +37,7 @@ poi-main {
   overflow: hidden;
 }
 
-.plugin-dropdown-container > .bp3-popover-content {
+.bp3-popover-content {
   backdrop-filter: blur(5px);
 }
 
