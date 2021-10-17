@@ -4,6 +4,7 @@ import { take } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { ResizeSensor } from '@blueprintjs/core'
+import { adjustHue } from 'polished'
 
 const HISTORY_SIZE = 7
 
@@ -62,10 +63,13 @@ const AlertLog = styled.div`
   overflow: hidden;
   transition: 0.3s;
   z-index: 1;
+  backdrop-filter: blur(5px);
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
   ${({ toggle, height, containerHeight }) =>
     toggle
       ? css`
-          transform: translate3d(0, ${1 - containerHeight - height}px, 0);
+          transform: translate3d(0, ${-Math.round(containerHeight + height)}px, 0);
           pointer-events: auto;
         `
       : css`
@@ -107,6 +111,8 @@ const AlertArea = styled.div`
 const MsgMainCnt = styled.div`
   width: fit-content;
 `
+
+window.testlist = []
 
 export const PoiAlert = () => {
   const [list, setList] = useState([initialMessage])
@@ -218,6 +224,7 @@ export const PoiAlert = () => {
               height={historyHeight}
               containerHeight={containerHeight}
               onClick={toggleHistory}
+              key={history[0]?.ts || 0}
             >
               {history.reverse().map((h) => (
                 <AlertLogContent

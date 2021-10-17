@@ -1,7 +1,7 @@
 /* global config, dispatch, ipc */
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import React, { PureComponent, unstable_AsyncMode as Async } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import {
@@ -19,7 +19,7 @@ import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
 import * as remote from '@electron/remote'
-import styled, { css, createGlobalStyle } from 'styled-components'
+import styled, { css } from 'styled-components'
 import * as Sentry from '@sentry/electron'
 
 import { isInGame } from 'views/utils/game-utils'
@@ -46,16 +46,6 @@ const pluginDropDownModifier = {
   },
   computeStyle: { gpuAcceleration: false },
 }
-
-const GlobalStyle = createGlobalStyle`
-  .plugin-dropdown-container > .bp3-popover-content {
-    backdrop-filter: blur(5px);
-
-    .bp3-menu {
-      background: transparent;
-    }
-  }
-`
 
 const PoiAppTabpane = styled.div`
   flex: 1;
@@ -744,8 +734,6 @@ export class ControlledTabArea extends PureComponent {
             <FontAwesome key={0} name="cog" />
           </Tab>
         )}
-
-        <GlobalStyle />
       </NavTabs>
     )
 
@@ -837,8 +825,7 @@ export class ControlledTabArea extends PureComponent {
             {windowModePluginContents}
           </PoiTabContainer>
         </ResizableArea>
-        {this.props.doubleTabbed &&
-          (this.props.editable || !this.state.async ? rightPanel : <Async>{rightPanel}</Async>)}
+        {this.props.doubleTabbed && rightPanel}
       </PoiTabsContainer>
     )
   }
