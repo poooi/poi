@@ -280,7 +280,7 @@ export async function enablePlugin(plugin, reread = true) {
   try {
     pluginMain = {
       ...(await import(plugin.pluginPath)),
-      ...(reread ? await readPlugin(plugin.pluginPath) : {}),
+      ...(reread ? await readPlugin(plugin.pluginPath, plugin.isExtra) : {}),
     }
     pluginMain.enabled = true
     pluginMain.isRead = true
