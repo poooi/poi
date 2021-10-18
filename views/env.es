@@ -15,6 +15,7 @@ window.ROOT = path.join(__dirname, '..')
 window.EXROOT = remote.getGlobal('EXROOT')
 window.APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 window.PLUGIN_PATH = path.join(window.APPDATA_PATH, 'plugins')
+window.PLUGIN_EXTRA_PATH = path.join(window.APPDATA_PATH, 'plugins-extra')
 window.POI_VERSION = remote.getGlobal('POI_VERSION')
 window.LATEST_COMMIT = remote.getGlobal('LATEST_COMMIT')
 window.SERVER_HOSTNAME = remote.getGlobal('SERVER_HOSTNAME')
@@ -32,6 +33,8 @@ if (window.isMain) {
   // Plugins
   fs.ensureDirSync(window.PLUGIN_PATH)
   fs.ensureDirSync(path.join(window.PLUGIN_PATH, 'node_modules'))
+  fs.ensureDirSync(window.PLUGIN_EXTRA_PATH)
+  fs.ensureDirSync(path.join(window.PLUGIN_EXTRA_PATH, 'node_modules'))
 
   // Debug
   window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))

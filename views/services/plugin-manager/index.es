@@ -1,4 +1,4 @@
-/* global PLUGIN_PATH, dispatch, config, getStore, toast, ROOT */
+/* global PLUGIN_PATH, PLUGIN_EXTRA_PATH, dispatch, config, getStore, toast, ROOT */
 import { join } from 'path-extra'
 import semver from 'semver'
 import EventEmitter from 'events'
@@ -33,9 +33,13 @@ const defaultFetchOption = {
   headers: fetchHeader,
 }
 
+const PLUGIN_NAME_WILDCARD = 'poi-plugin-*'
+
 const PACKAGE_JSON_PATH = join(PLUGIN_PATH, 'package.json')
 
 const getPluginPath = (packageName) => join(PLUGIN_PATH, 'node_modules', packageName)
+
+const getPluginExtraPath = (packageName) => join(PLUGIN_EXTRA_PATH, 'node_modules', packageName)
 
 const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
 
@@ -52,18 +56,33 @@ class PluginManager extends EventEmitter {
     this.emit('initialized')
   }
 
-  async readFromWildcardPath(wildcardPath) {
+  async readFromWildcardPath(wildcardPath, isExtra = false) {
     const pluginPaths = await new Promise((res) => glob(wildcardPath, (err, files) => res(files)))
     return sortPlugins(
       await Promise.all(
         pluginPaths.map(async (pluginPath) => {
-          let plugin = await readPlugin(pluginPath)
-          if (plugin.enabled && !window.isSafeMode) {
-            plugin = await enablePlugin(plugin)
-          }
-          return plugin
+          return await readPlugin(pluginPath, isExtra)
         }),
       ),
+    )
+  }
+
+  async mergePlugins(plugins, extraPlugins) {
+    const extraPluginIdSet = new Set(extraPlugins.map((plugin) => plugin.id))
+    return sortPlugins([
+      ...plugins.filter((plugin) => !extraPluginIdSet.has(plugin.id)),
+      ...extraPlugins,
+    ])
+  }
+
+  async enablePlugins(plugins) {
+    return Promise.all(
+      plugins.map(async (plugin) => {
+        if (plugin.enabled && !window.isSafeMode) {
+          return await enablePlugin(plugin)
+        }
+        return plugin
+      }),
     )
   }
 
@@ -85,15 +104,20 @@ class PluginManager extends EventEmitter {
   }
 
   async readPlugins() {
-    const plugins = await this.readFromWildcardPath(getPluginPath('poi-plugin-*'))
+    const plugins = await this.readFromWildcardPath(getPluginPath(PLUGIN_NAME_WILDCARD))
     await this.ensurePackageJson(plugins)
+    const extraPlugins = await this.readFromWildcardPath(
+      getPluginExtraPath(PLUGIN_NAME_WILDCARD),
+      true,
+    )
+    const mergedPlugins = await this.enablePlugins(await this.mergePlugins(plugins, extraPlugins))
     const npmConfig = getNpmConfig(PLUGIN_PATH)
     notifyFailed(plugins, npmConfig)
     dispatch({
       type: '@@Plugin/initialize',
-      value: plugins,
+      value: mergedPlugins,
     })
-    return plugins
+    return mergedPlugins
   }
 
   isMetRequirement(plugin) {
@@ -154,7 +178,7 @@ class PluginManager extends EventEmitter {
   }
 
   getInstalledPlugins() {
-    return this.getFilteredPlugins((plugin) => plugin.isInstalled)
+    return this.getFilteredPlugins((plugin) => plugin.isInstalled && !plugin.isExtra)
   }
 
   getUninstalledPluginSettings() {
@@ -383,11 +407,15 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      const npmConfig = getNpmConfig(PLUGIN_PATH)
-      await removePackage(plugin.packageName, npmConfig)
-      // Make sure the plugin no longer exists in PLUGIN_PATH
-      // (unless it's a git repo)
-      await safePhysicallyRemove(getPluginPath(plugin.packageName))
+      if (plugin.isExtra) {
+        const npmConfig = getNpmConfig(PLUGIN_PATH)
+        await removePackage(plugin.packageName, npmConfig)
+        // Make sure the plugin no longer exists in PLUGIN_PATH
+        // (unless it's a git repo)
+        await safePhysicallyRemove(getPluginPath(plugin.packageName))
+      } else {
+        await safePhysicallyRemove(getPluginExtraPath(plugin.packageName))
+      }
     } catch (error) {
       console.error(error.stack)
     }

@@ -173,7 +173,7 @@ export function updateI18n(plugin) {
   return plugin
 }
 
-export async function readPlugin(pluginPath) {
+export async function readPlugin(pluginPath, isExtra = false) {
   let pluginData, packageData, plugin
   try {
     pluginData = await readJson(join(ROOT, 'assets', 'data', 'plugin.json'))
@@ -236,6 +236,7 @@ export async function readPlugin(pluginPath) {
     plugin.priority = 10000
   }
   plugin.enabled = config.get(`plugin.${plugin.id}.enable`, true)
+  plugin.isExtra = isExtra
   plugin.isInstalled = true
   plugin.isUpdating = false
   plugin.needRollback = false
