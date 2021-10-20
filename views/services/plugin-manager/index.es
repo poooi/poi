@@ -178,15 +178,11 @@ class PluginManager extends EventEmitter {
   }
 
   getInstalledPlugins() {
-    return this.getFilteredPlugins((plugin) => plugin.isInstalled && !plugin.isExtra)
-  }
-
-  getInstalledAndExtraPlugins() {
     return this.getFilteredPlugins((plugin) => plugin.isInstalled)
   }
 
   getUninstalledPluginSettings() {
-    const installedPlugins = this.getInstalledAndExtraPlugins()
+    const installedPlugins = this.getInstalledPlugins()
     const installedPluginNames = installedPlugins.map((plugin) => plugin.packageName)
     const uninstalled = {}
     for (const name in BUNDLED_PLUGINS) {
