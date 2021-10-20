@@ -407,7 +407,7 @@ class PluginManager extends EventEmitter {
       console.error(error.stack)
     }
     try {
-      if (plugin.isExtra) {
+      if (!plugin.isExtra) {
         const npmConfig = getNpmConfig(PLUGIN_PATH)
         await removePackage(plugin.packageName, npmConfig)
         // Make sure the plugin no longer exists in PLUGIN_PATH
