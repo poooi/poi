@@ -293,6 +293,8 @@ export class ControlledTabArea extends PureComponent {
 
   windowRefs = {}
 
+  tabs = React.createRef()
+
   trigger = React.createRef()
 
   resizeContainer = React.createRef()
@@ -327,6 +329,11 @@ export class ControlledTabArea extends PureComponent {
       })
     }
     config.addListener('config.set', this.handleConfig)
+    setTimeout(() => {
+      if (this.tabs.current?.moveSelectionIndicator) {
+        this.tabs.current.moveSelectionIndicator(false)
+      }
+    }, 500)
   }
 
   componentDidUpdate(prevProps) {
@@ -687,6 +694,7 @@ export class ControlledTabArea extends PureComponent {
         }
         className="top-nav"
         onChange={this.handleSelectTab}
+        ref={this.tabs}
       >
         <Tab
           key="main-view"
