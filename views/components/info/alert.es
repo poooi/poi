@@ -113,7 +113,7 @@ const MsgMainCnt = styled.div`
 
 window.testlist = []
 
-export const PoiAlert = () => {
+export const PoiAlert = ({ eventName = 'alert.new', onHistoryToggled = undefined }) => {
   const [list, setList] = useState([initialMessage])
   const [showHistory, setShowHistory] = useState(false)
   const [containerWidth, setContainerWidth] = useState(1)
@@ -122,7 +122,10 @@ export const PoiAlert = () => {
   const [msgWidth, setMsgWidth] = useState(0)
   const stickyEnd = useRef(Date.now())
 
-  const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
+  const toggleHistory = useCallback(() => {
+    setShowHistory(!showHistory), [showHistory]
+    if (onHistoryToggled) onHistoryToggled(showHistory)
+  })
 
   const handleAddAlert = useCallback((e) => {
     const nowTS = Date.now()
@@ -181,9 +184,9 @@ export const PoiAlert = () => {
   }, [])
 
   useEffect(() => {
-    window.addEventListener('alert.new', handleAddAlert)
+    window.addEventListener(eventName, handleAddAlert)
     return () => {
-      window.removeEventListener('alert.new', handleAddAlert)
+      window.removeEventListener(eventName, handleAddAlert)
     }
   }, [handleAddAlert])
 
