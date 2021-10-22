@@ -156,7 +156,7 @@ export class PluginConfig extends Component {
     this.setState({ npmWorking: true })
     const plugins = PluginManager.getInstalledPlugins()
     const plugin = plugins[index]
-    if (plugin.linkedPlugin) {
+    if (plugin.linkedPlugin || plugin.isExtra) {
       this.setState({ npmWorking: false })
       return
     }
