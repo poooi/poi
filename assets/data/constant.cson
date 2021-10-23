@@ -2,7 +2,7 @@ thanksTo: [
     name: 'KCwiki'
     link: 'https://zh.kcwiki.moe/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91'
     avatar: 'https://upload.kcwiki.org/commons/thumb/d/d1/Kcwiki-banner.png/600px-Kcwiki-banner.png'
-    description: 'For providing data of item imporvment, task info, shipgirl qoutes, etc.'
+    description: 'For providing data of item improvement, task info, shipgirl qoutes, etc.'
     extraCSS:
       WebkitClipPath: "inset(0px 78% 0px 0px)"
       maxHeight: "100%"
