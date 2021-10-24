@@ -27,7 +27,7 @@ const Alert = styled.div`
   margin-bottom: 0;
   min-height: 100%;
   opacity: 0.7;
-  padding: 6px 3px 5px 3px;
+  padding: 6px 3px 5px;
   border-radius: 0;
   font-size: 12px;
   text-align: center;

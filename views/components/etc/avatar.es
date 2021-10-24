@@ -22,8 +22,8 @@ const ShipAvatarContainer = styled.div`
     linear,
     65% 100%,
     100% 100%,
-    from(rgba(0, 0, 0, 1)),
-    to(rgba(0, 0, 0, 0))
+    from(rgb(0 0 0 / 1)),
+    to(rgb(0 0 0 / 0))
   );
 `
 

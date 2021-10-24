@@ -12,7 +12,7 @@ export const ShipCard = styled(Card)`
 
 export const ShipWrapper = styled.div`
   height: 100%;
-  padding: 2px 2px 7px 2px;
+  padding: 2px 2px 7px;
   overflow: auto;
 `
 
@@ -74,7 +74,7 @@ export const FleetNameButtonContainer = styled.div`
 export const FleetNameButton = styled(ButtonGroup)`
   white-space: nowrap;
   display: flex;
-  padding: 5px 5px 1px 5px;
+  padding: 5px 5px 1px;
   width: 100%;
 
   .bp3-button {

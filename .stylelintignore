@@ -1,0 +1,6 @@
+node_modules
+
+# poi build directory
+build/download
+app_compiled/
+dist/

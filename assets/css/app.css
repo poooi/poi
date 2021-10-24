@@ -22,9 +22,7 @@ poi-main {
 }
 
 .webview-wrapper {
-  flex-basis: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex: 1 1 0;
   margin-left: auto;
   margin-right: auto;
   max-height: max-content;
@@ -56,7 +54,7 @@ poi-main {
 }
 
 #electron-app-title-bar * {
-  font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft Yahei UI Light", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
+  font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft Yahei UI Light", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
 }
 
 #electron-app-title-bar .button-component {

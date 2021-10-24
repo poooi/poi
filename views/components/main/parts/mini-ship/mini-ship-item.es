@@ -229,7 +229,7 @@ const ShipLvAvatar = styled.div`
   filter: drop-shadow(0 0 2px black);
   font-size: 70%;
   line-height: 1;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 1);
+  text-shadow: 0 0 2px rgb(0 0 0 / 1);
   white-space: nowrap;
 `
 

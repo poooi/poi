@@ -20,11 +20,11 @@ const PoiLogo = styled.img`
   transition: 0.3s;
 
   :hover {
-    filter: drop-shadow(0 0 1em rgba(255, 255, 255, 0.25));
+    filter: drop-shadow(0 0 1em rgb(255 255 255 / 0.25));
   }
 
   :active {
-    filter: drop-shadow(0 0 1em rgba(255, 255, 255, 0.75));
+    filter: drop-shadow(0 0 1em rgb(255 255 255 / 0.75));
   }
 `
 

@@ -25,9 +25,7 @@ const poiControlHeight = 30
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
 
 const PoiInfo = styled(CustomTag)`
-  flex-basis: 0 0 ${poiControlHeight}px;
-  flex-grow: 0;
-  flex-shrink: 0;
+  flex: 0 0 ${poiControlHeight}px;
   transform-origin: 0 0;
   align-items: stretch;
   display: flex;

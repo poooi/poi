@@ -24,7 +24,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Arial", "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
+  font-family: Ubuntu, "Helvetica Neue", Helvetica, Arial, "WenQuanYi Micro Hei", "Microsoft YaHei", "Droid Sans Fallback", sans-serif;
 }
 
 hr {
@@ -36,7 +36,7 @@ hr {
 body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
-  line-height: 1.42857143;
+  line-height: 1.4286;
   overflow: hidden;
   -webkit-user-drag: none;
   user-select: none;
@@ -152,8 +152,7 @@ button {
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-  -moz-appearance: none;
-  -webkit-appearance: none;
+  appearance: none;
 }
 
 .no-scroll {

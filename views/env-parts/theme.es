@@ -129,7 +129,7 @@ export function loadStyle(
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
-    glass.style.backgroundColor = isDark ? 'rgba(32, 43, 51, 0.8)' : 'rgba(245, 248, 250, 0.8)'
+    glass.style.backgroundColor = isDark ? 'rgb(32 43 51 / 0.8)' : 'rgb(245 248 250 / 0.8)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
       classNames('bp3-focus-disabled', {

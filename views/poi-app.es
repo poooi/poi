@@ -10,9 +10,7 @@ import { ControlledTabArea } from './components/tab-area'
 
 const PoiAppE = styled.div`
   position: relative;
-  flex-shrink: 0;
-  flex-basis: 0;
-  flex-grow: 1;
+  flex: 1 0 0;
   max-width: 100vw;
   width: 100%;
   height: 0;
@@ -55,7 +53,7 @@ const PoiAppContainer = styled.div`
     overlay &&
     css`
       backdrop-filter: blur(5px);
-      background: ${isDarkTheme ? 'rgba(32, 43, 51, 0.9)' : 'rgba(245, 248, 250, 0.9)'};
+      background: ${isDarkTheme ? 'rgb(32 43 51 / 0.9)' : 'rgb(245 248 250 / 0.9)'};
     `}
 `
 
@@ -68,13 +66,13 @@ const OverlayPanelTrigger = styled.a`
   width: 40px;
   min-height: 30px;
   text-align: center;
-  padding: 5px 10px 5px 10px;
+  padding: 5px 10px;
   font-size: 15px;
   bottom: 0;
   border-top-left-radius: 5px;
   ${({ isDarkTheme }) =>
     css`
-      background: ${isDarkTheme ? 'rgba(32, 43, 51, 0.9)' : 'rgba(245, 248, 250, 0.9)'};
+      background: ${isDarkTheme ? 'rgb(32 43 51 / 0.9)' : 'rgb(245 248 250 / 0.9)'};
     `}
 
   & > svg {

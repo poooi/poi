@@ -29,7 +29,7 @@ const Avatar = styled.div`
   }
 
   :hover {
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.25));
+    filter: drop-shadow(0 0 4px rgb(255 255 255 / 0.25));
   }
 `
 
