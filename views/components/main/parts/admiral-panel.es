@@ -127,6 +127,16 @@ const getNextQuest = () => {
   return now.startOf('hour')
 }
 
+const getNextQuarterlyQuest = () => {
+  const now = Date.now()
+  // 04:59:59 Mar 1st of the year (UTC+0)
+  const m = moment.tz('Asia/Tokyo').month(1).endOf('month').add(5, 'hour')
+  while (+m <= now) {
+    m.add(3, 'months')
+  }
+  return m
+}
+
 const getNextSenka = () => {
   const m = moment.tz('Asia/Tokyo').endOf('month').subtract(2, 'hour')
   if (+m <= Date.now()) {
@@ -170,6 +180,7 @@ class CountDownControl extends Component {
     this.moments = {
       Practice: getNextPractice(),
       Quest: getNextQuest(),
+      QuarterlyQuest: getNextQuarterlyQuest(),
       Senka: getNextSenka(),
       EO: getNextEO(),
     }
@@ -238,7 +249,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const CountdownContent = ({ moments }) => (
   <div>
-    {['Practice', 'Quest', 'Senka', 'EO'].map((name) => (
+    {['Practice', 'Quest', 'QuarterlyQuest', 'Senka', 'EO'].map((name) => (
       <CountdownItem className="info-tooltip-entry countdown-item" key={name}>
         <CountdownRow className="info-tooltip-item">
           <Trans>main:Next {name}</Trans>
