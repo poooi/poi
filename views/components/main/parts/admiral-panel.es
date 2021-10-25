@@ -100,6 +100,7 @@ const ExpContent = compose(
 // Refresh time:
 // - Practice: JST 3h00, 15h00, UTC 18h00, 6h00
 // - Quest: JST 5h00, UTC 20h00
+// - Querterly Quest: JST 5h00 of Mar 1st, Jun 1st, Sept 1st, Dec 1st
 // - Senka: JST 22h00 on last day of every month, UTC 13h00
 // - Extra Operation: JST 0h00 on first day of every month, UTC 15h00 on last day of every month
 
@@ -129,7 +130,6 @@ const getNextQuest = () => {
 
 const getNextQuarterlyQuest = () => {
   const now = Date.now()
-  // 04:59:59 Mar 1st of the year (UTC+0)
   const m = moment.tz('Asia/Tokyo').month(1).endOf('month').add(5, 'hour')
   while (+m <= now) {
     m.add(3, 'months')
