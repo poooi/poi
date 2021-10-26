@@ -24,7 +24,7 @@ module.exports = {
     },
   },
   plugins: ['import', 'react', 'prettier', 'react-hooks'],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   rules: {
     'linebreak-style': ['error', 'unix'],
     'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
