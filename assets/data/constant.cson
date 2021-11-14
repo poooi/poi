@@ -9,7 +9,7 @@ thanksTo: [
       marginLeft: "5%"
   ,
     name: 'TaoNPM'
-    link: 'https://npm.taobao.org/'
+    link: 'https://npmmirror.com/'
     avatar: 'https://zos.alipayobjects.com/rmsportal/UQvFKvLLWPPmxTM.png'
     description: 'For providing China mirror for the project.'
     extraCSS:

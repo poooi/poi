@@ -1,13 +1,13 @@
 {
   "taobao": {
     "name": "Taobao (CN)",
-    "menuname": "registry.npm.taobao.org",
-    "server": "http://registry.npm.taobao.org/"
+    "menuname": "registry.npmmirror.com",
+    "server": "https://registry.npmmirror.com/"
   },
   "cnpm": {
     "name": "cnpm (CN)",
     "menuname": "r.cnpmjs.org",
-    "server": "http://r.cnpmjs.org/"
+    "server": "https://r.cnpmjs.org/"
   },
   "npm": {
     "name": "npmjs (US)",
