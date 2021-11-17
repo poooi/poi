@@ -17,7 +17,8 @@
     "clean": "gulp clean",
     "lint:js": "eslint . --ext .es --ext .js --ext .ts --ext .tsx --ignore-path .gitignore",
     "lint:style": "stylelint '**/*.es' '**/*.css' --config .stylelintrc.js",
-    "lint": "npm run lint:js && npm run lint:style"
+    "lint": "npm run lint:js && npm run lint:style",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -224,10 +225,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/poi",
     "logo": "https://opencollective.com/opencollective/logo.txt"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
