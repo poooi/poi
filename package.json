@@ -17,7 +17,8 @@
     "clean": "gulp clean",
     "lint:js": "eslint . --ext .es --ext .js --ext .ts --ext .tsx --ignore-path .gitignore",
     "lint:style": "stylelint '**/*.es' '**/*.css' --config .stylelintrc.js",
-    "lint": "npm run lint:js && npm run lint:style"
+    "lint": "npm run lint:js && npm run lint:style",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -146,7 +147,6 @@
     "@types/babel__core": "^7.1.16",
     "@types/bindings": "^1.5.1",
     "@types/bluebird": "^3.5.36",
-    "@types/classnames": "^2.3.1",
     "@types/create-react-class": "^15.6.3",
     "@types/cson": "^7.20.0",
     "@types/electron-devtools-installer": "^2.2.0",
@@ -155,14 +155,11 @@
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",
     "@types/gulp": "^4.0.9",
-    "@types/http-proxy-agent": "^4.0.1",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.176",
     "@types/mime": "^2.0.3",
-    "@types/moment-timezone": "^0.5.30",
     "@types/mousetrap": "^1.6.8",
     "@types/node-7z": "^2.1.3",
-    "@types/node-fetch": "^3.0.3",
     "@types/npm": "^7.19.0",
     "@types/npm-package-arg": "^6.1.1",
     "@types/pangu": "^3.3.0",
@@ -224,10 +221,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/poi",
     "logo": "https://opencollective.com/opencollective/logo.txt"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
