@@ -39,6 +39,11 @@ if (window.isMain) {
   // Debug
   window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
   window.dbg.init()
+
+  // Handle New Window
+
+  const { stopNavigateAndHandleNewWindow } = remote.require('./lib/webcontent-utils')
+  stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
 }
 
 // Add ROOT to `require` search path

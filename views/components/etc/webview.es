@@ -18,7 +18,7 @@ export default class ElectronWebView extends Component {
   componentDidMount() {
     this.ready = false
     this.resizeObserver.observe(this.view)
-    this.view.addEventListener('did-attach', (...attachArgs) => {
+    const onDidAttach = (...attachArgs) => {
       this.ready = true
 
       events.forEach((event) => {
@@ -53,6 +53,17 @@ export default class ElectronWebView extends Component {
       ])
 
       if (this.props.onDidAttach) this.props.onDidAttach(...attachArgs)
+    }
+    this.view.addEventListener('did-attach', onDidAttach)
+    window.addEventListener('game.response', (e) => {
+      // TODO: remove after https://github.com/electron/electron/issues/31622 fixed
+      if (this.ready) {
+        return
+      }
+      const { path } = e.detail
+      if (path === '/kcsapi/api_start2/getData') {
+        onDidAttach()
+      }
     })
 
     methods.forEach((method) => {
@@ -83,9 +94,12 @@ export default class ElectronWebView extends Component {
     return this.ready
   }
 
-  forceSyncZoom = () => {
+  forceSyncZoom = (count = 0) => {
     if (!this.isReady()) {
-      setTimeout(this.forceSyncZoom, 1000)
+      if (count < 10) {
+        setTimeout(() => this.forceSyncZoom(count + 1), 1000)
+      }
+      return
     }
     if (this.props.zoomFactor && this.props.zoomFactor !== this.view.zoomFactor) {
       this.view.zoomFactor = this.props.zoomFactor

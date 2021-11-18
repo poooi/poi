@@ -89,7 +89,11 @@ class Poi extends Component {
                 ...(!isHorizontal && { overflow: 'hidden' }),
               }}
             >
-              {this.props.isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper />}
+              {this.props.isolateGameWindow ? (
+                <KanGameWindowWrapper />
+              ) : (
+                <KanGameWrapper key="frame" />
+              )}
               <PoiApp />
             </poi-main>
           </ResizeSensor>

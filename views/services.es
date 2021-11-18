@@ -7,8 +7,6 @@ import i18next from 'views/env-parts/i18next'
 
 const proxy = remote.require('./lib/proxy')
 
-const { stopNavigateAndHandleNewWindow } = remote.require('./lib/webcontent-utils')
-
 import './services/update'
 import './services/layout'
 import './services/welcome'
@@ -164,7 +162,6 @@ window.addEventListener('network.invalid.result', (e) => {
 remote
   .getCurrentWebContents()
   .on('devtools-opened', (e) => window.dispatchEvent(new Event('resize')))
-stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   if (process.platform === 'darwin') {

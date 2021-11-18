@@ -236,7 +236,9 @@ export class KanGameWrapper extends Component {
     if (this.props.muted && this.enableAudioMutePolyfill) {
       this.enableAudioMutePolyfill = false
       this.webview.current.view.audioMuted = false
-      this.webview.current.view.audioMuted = true
+      setImmediate(() => {
+        this.webview.current.view.audioMuted = true
+      })
     }
   }
 
@@ -278,33 +280,37 @@ export class KanGameWrapper extends Component {
       .userAgent.replace(/Electron[^ ]* /, '')
       .replace(/poi[^ ]* /, '')
       .replace(bypassGoogleRestriction ? /Chrome[^ ]* / : '', '')
+    const webview = (
+      <WebView
+        className="kancolle-webview"
+        src={this.state.url}
+        key={this.state.key}
+        ref={this.webview}
+        disablewebsecurity="on"
+        allowpopups="on"
+        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no"
+        preload={preloadUrl}
+        style={{
+          width: '100%',
+          paddingTop: '60%',
+          position: 'relative',
+        }}
+        audioMuted={muted}
+        userAgent={ua}
+        zoomFactor={webviewZoomFactor}
+        onDidAttach={this.handleWebviewMount}
+        onDestroyed={this.handleWebviewDestroyed}
+        onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
+        onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
+        onResize={this.handleResize}
+      />
+    )
+
     if (windowMode) {
       return (
         <KanGame tag="kan-game">
           <div id="webview-wrapper" className="webview-wrapper">
-            <WebView
-              className="kancolle-webview"
-              src={this.state.url}
-              key={this.state.key}
-              ref={this.webview}
-              disablewebsecurity="on"
-              allowpopups="on"
-              webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no"
-              preload={preloadUrl}
-              style={{
-                width: '100%',
-                paddingTop: '60%',
-                position: 'relative',
-              }}
-              audioMuted={muted}
-              userAgent={ua}
-              zoomFactor={webviewZoomFactor}
-              onDidAttach={this.handleWebviewMount}
-              onDestroyed={this.handleWebviewDestroyed}
-              onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
-              onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
-              onResize={this.handleResize}
-            />
+            {webview}
             <PoiToast />
           </div>
           <PoiInfo tag="poi-info">
@@ -437,30 +443,7 @@ export class KanGameWrapper extends Component {
                 width: overlayPanel ? '100%' : webviewWidth,
               }}
             >
-              <WebView
-                className="kancolle-webview"
-                src={this.state.url}
-                key={this.state.key}
-                ref={this.webview}
-                disablewebsecurity="on"
-                allowpopups="on"
-                webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no"
-                preload={preloadUrl}
-                style={{
-                  width: '100%',
-                  paddingTop: '60%',
-                  position: 'relative',
-                  display: webviewWidth > -0.00001 && webviewWidth < 0.00001 ? 'none' : null,
-                }}
-                audioMuted={muted}
-                userAgent={ua}
-                zoomFactor={webviewZoomFactor}
-                onDidAttach={this.handleWebviewMount}
-                onDestroyed={this.handleWebviewDestroyed}
-                onDidFrameFinishLoad={this.handleDidFrameFinishLoad}
-                onMediaStartedPlaying={this.handleWebviewMediaStartedPlaying}
-                onResize={this.handleResize}
-              />
+              {webview}
               <PoiToast />
             </div>
             <PoiInfo tag="poi-info">

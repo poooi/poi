@@ -306,6 +306,15 @@ export class KanGameWindowWrapper extends PureComponent {
     return true
   }
 
+  forceSyncZoom = (count = 0) => {
+    const webview = getStore('layout.webview.ref')
+    if (webview) {
+      webview.forceSyncZoom()
+    } else if (count < 20) {
+      setTimeout(() => this.forceSyncZoom(count + 1), 100)
+    }
+  }
+
   onZoomChange = (value) => {
     if (this.checkBrowserWindowExistence()) {
       // Workaround for ResizeObserver not fired on zoomFactor change
@@ -314,12 +323,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.currentWindow.setContentSize(width, height)
 
       this.currentWindow.webContents.zoomFactor = value
-      const webview = getStore('layout.webview.ref')
-      if (webview) {
-        webview.forceSyncZoom()
-      } else {
-        setTimeout(() => this.onZoomChange(value), 100)
-      }
+      this.forceSyncZoom()
     }
   }
 
@@ -353,7 +357,7 @@ export class KanGameWindowWrapper extends PureComponent {
         >
           <StyleSheetManager target={this.externalWindow.document.head}>
             <PoiAppTabpane className="poi-app-tabpane" ref={this.kangameContainer}>
-              <KanGameWrapper windowMode />
+              <KanGameWrapper windowMode key="window" />
             </PoiAppTabpane>
           </StyleSheetManager>
         </WindowEnv.Provider>

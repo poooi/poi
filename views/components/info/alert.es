@@ -3,7 +3,7 @@ import i18next from 'views/env-parts/i18next'
 import { take } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
-import { ResizeSensor } from '@blueprintjs/core'
+import { ResizeSensor } from 'views/components/etc/resize-sensor'
 
 const HISTORY_SIZE = 7
 

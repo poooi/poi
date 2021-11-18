@@ -51,8 +51,9 @@ export function stopNavigateAndHandleNewWindow(id) {
             nodeIntegration: false,
             nodeIntegrationInWorker: false,
             enableRemoteModule: true,
-            plugins: false,
-            sandbox: true,
+            plugins: true,
+            sandbox: false,
+            webviewTag: true,
           },
         }
         const win = new BrowserWindow(options)
@@ -62,6 +63,9 @@ export function stopNavigateAndHandleNewWindow(id) {
           win.loadURL('chrome://gpu')
         }
         electronRemote.enable(win.webContents)
+        win.webContents.addListener('did-attach-webview', (e, webContent) => {
+          electronRemote.enable(webContent)
+        })
         e.newGuest = win
       }
     })
