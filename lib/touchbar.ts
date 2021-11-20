@@ -6,7 +6,7 @@ const { TouchBarButton, TouchBarSpacer, TouchBarSegmentedControl } = TouchBar
 const mainWindow = global.mainWindow
 const ROOT = global.ROOT
 
-const getIcon = (name) => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
+const getIcon = (name: string) => path.join(ROOT, 'assets', 'img', 'touchbar', `${name}.png`)
 
 // simulate Escape key
 export const sendEscKey = () => {
@@ -24,7 +24,7 @@ export const sendEscKey = () => {
 const devtools = new TouchBarButton({
   icon: getIcon('console'),
   click: () => {
-    mainWindow.openDevTools({ mode: 'detach' })
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
   },
 })
 
@@ -139,13 +139,13 @@ const tabs = new TouchBarSegmentedControl({
 })
 
 //confirmation modal
-export const toggleRefreshConfirm = (btn1, btn2) => {
+export const toggleRefreshConfirm = (refreshLabel: string, reloadLabel: string) => {
   mainWindow.setTouchBar(
     new TouchBar({
       items: [
         new TouchBarSpacer({ size: 'flexible' }),
         new TouchBarButton({
-          label: btn1,
+          label: refreshLabel,
           backgroundColor: '#E08E0B',
           click: () => {
             mainWindow.webContents.send('touchbar', 'gameRefreshPage')
@@ -153,7 +153,7 @@ export const toggleRefreshConfirm = (btn1, btn2) => {
           },
         }),
         new TouchBarButton({
-          label: btn2,
+          label: reloadLabel,
           backgroundColor: '#E43725',
           click: () => {
             mainWindow.webContents.send('touchbar', 'gameReload')
@@ -179,7 +179,11 @@ const popoverTouchbar = new TouchBar({
 
 //Change Volume or Edit btn
 export const updateTouchbarInfoIcons = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: TouchbarIcon accepts string but the typing is not correct
   edit.icon = config.get('poi.layout.editable') ? getIcon('unlock') : getIcon('lock')
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: TouchbarIcon accepts string but the typing is not correct
   volume.icon = config.get('poi.content.muted') ? getIcon('volume-off') : getIcon('volume-up')
   //TouchBar icon will not auto update on recent macOS
   renderMainTouchbar()
@@ -187,11 +191,11 @@ export const updateTouchbarInfoIcons = () => {
 
 //Tab switching initialization
 export const updateMainTouchbar = (
-  mainTitle,
-  fleetTitle,
-  pluginTitle,
-  activeTab,
-  pluginDefault,
+  mainTitle: string,
+  fleetTitle: string,
+  pluginTitle: string,
+  activeTab: string,
+  pluginDefault: string,
 ) => {
   //Get tab display name
   //lock plugin when no plugins enabled
