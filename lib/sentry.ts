@@ -2,8 +2,13 @@ import * as Sentry from '@sentry/electron'
 import { isString, includes, get, each, takeRight, split } from 'lodash'
 import path from 'path'
 
-export const init = ({ build, paths }) => {
-  const fromatRelative = (url) => {
+interface InitOptions {
+  build: string
+  paths: string[]
+}
+
+export const init = ({ build, paths }: InitOptions) => {
+  const fromatRelative = (url: string) => {
     if (url.startsWith('app://')) {
       return url
     }
