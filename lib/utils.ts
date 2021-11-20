@@ -1,36 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import chalk from 'chalk'
+import { Rectangle } from 'electron'
 import { map, get, mapValues, isPlainObject, isNumber, isArray, isString, isBoolean } from 'lodash'
 
-const stringify = (str) => {
-  if (typeof str === 'string') {
-    return str
+const stringify = (payload: any) => {
+  if (typeof payload === 'string') {
+    return payload
   }
-  if (str.toString().startsWith('[object ')) {
-    str = JSON.stringify(str)
+  if (payload.toString().startsWith('[object ')) {
+    payload = JSON.stringify(payload)
   } else {
-    str = str.toString()
+    payload = payload.toString()
   }
-  return str
+  return payload
 }
 
 export const remoteStringify = JSON.stringify
 
-export function log(...str) {
+export function log(...str: any[]) {
   // eslint-disable-next-line no-console
   console.log('[INFO]', ...map(str, stringify))
 }
 
 export const info = log
 
-export function warn(...str) {
+export function warn(...str: any[]) {
   console.warn(chalk.yellow('[WARN]', ...map(str, stringify)))
 }
 
-export function error(...str) {
+export function error(...str: any[]) {
   console.error(chalk.red.bold('[ERROR]', ...map(str, stringify)))
 }
 
-export function setBounds(options) {
+export function setBounds(options: Partial<Rectangle>) {
   return global.mainWindow.setBounds(options)
 }
 
@@ -48,8 +50,8 @@ export function getBounds() {
  * @param defaults default config
  * @param incoming loaded config
  */
-export const mergeConfig = (defaults, incoming) => {
-  const overwrite = mapValues(defaults, (value, key) => {
+export const mergeConfig = (defaults: object, incoming: object) => {
+  const overwrite: object = mapValues(defaults, (value, key) => {
     if (isPlainObject(value)) {
       return mergeConfig(value, get(incoming, key))
     }
