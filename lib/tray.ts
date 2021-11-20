@@ -1,7 +1,16 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import path from 'path'
 import { app, Tray, systemPreferences, nativeTheme } from 'electron'
 
-const getIcon = (platform) => {
+declare global {
+  namespace NodeJS {
+    interface Global {
+      appTray: Tray
+    }
+  }
+}
+
+const getIcon = (platform: NodeJS.Platform) => {
   if (platform === 'linux') {
     return 'poi_32x32.png'
   }
@@ -14,11 +23,13 @@ const getIcon = (platform) => {
   return 'poi.ico'
 }
 
-const getIconPath = (platform) => path.join(global.ROOT, 'assets', 'icons', getIcon(platform))
+const getIconPath = (platform: NodeJS.Platform) =>
+  path.join(global.ROOT, 'assets', 'icons', getIcon(platform))
 
-let tray = null
+let tray: Tray | null = null
 app.on('ready', () => {
-  global.appTray = tray = new Tray(getIconPath(process.platform))
+  tray = new Tray(getIconPath(process.platform))
+  global.appTray = tray
   tray.on('click', () => {
     if (global.mainWindow?.isMinimized()) {
       global.mainWindow.restore()

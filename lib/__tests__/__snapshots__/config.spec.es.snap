@@ -23,7 +23,7 @@ Array [
         },
       },
     },
-    null,
+    undefined,
     2,
   ],
 ]
@@ -42,7 +42,7 @@ Array [
         },
       },
     },
-    null,
+    undefined,
     2,
   ],
 ]

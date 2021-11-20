@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { set, get, isEqual, keys } from 'lodash'
 import EventEmitter from 'events'
 import CSON from 'cson'
@@ -12,13 +13,18 @@ const configPath = path.join(EXROOT, 'config.cson')
 
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
+type Config = { [key: string]: Config }
+
 class PoiConfig extends EventEmitter {
+  configData: Config
+  defaultConfigData: typeof defaultConfig
+
   constructor() {
     super()
     this.configData = {}
     try {
-      fs.accessSync(configPath, fs.R_OK | fs.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath))
+      fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as Config
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)
@@ -31,7 +37,7 @@ class PoiConfig extends EventEmitter {
    * @param {String | String[]} path the given config location
    * @param value value to fallback if queried config is undefined
    */
-  get = (path = '', value) => {
+  get = (path: string | string[] = '', value?: any) => {
     if (path === '') {
       return this.configData
     }
@@ -52,7 +58,7 @@ class PoiConfig extends EventEmitter {
    * get default config value at give path
    * @param {String | String[]} path the given config location
    */
-  getDefault = (path = '', value) => {
+  getDefault = (path: string | string[] = '', value?: any) => {
     if (path === '') {
       return this.defaultConfigData
     }
@@ -64,7 +70,7 @@ class PoiConfig extends EventEmitter {
    * @param {String | String[]} path the given config location
    * @param value value to overwrite, if the path belongs to poi's default config, will reset to default value
    */
-  set = (path, value) => {
+  set = (path: string | string[], value: any) => {
     if (get(this.configData, path) === value) {
       return
     }
@@ -82,7 +88,7 @@ class PoiConfig extends EventEmitter {
    * @param {String | String[]} path the given config location
    * @param value value to overwrite, leaving undefined will remove the config
    */
-  setDefault = (path, value) => {
+  setDefault = (path: string | string[], value: any) => {
     if (this.get(path) === undefined) {
       this.set(path, value)
     }
@@ -93,7 +99,7 @@ class PoiConfig extends EventEmitter {
    */
   save = () => {
     try {
-      fs.writeFileSync(configPath, CSON.stringify(this.configData, null, 2))
+      fs.writeFileSync(configPath, CSON.stringify(this.configData, undefined, 2))
     } catch (e) {
       console.warn(e)
     }
@@ -103,7 +109,7 @@ class PoiConfig extends EventEmitter {
    * remove a config at given path
    * @param {String | String[]} path path to remove
    */
-  delete = (path) => {
+  delete = (path: string | string[]) => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData
       const subpath = Array.isArray(path) ? path : path.split('.')
@@ -119,69 +125,3 @@ const config = new PoiConfig()
 config.setMaxListeners(100)
 
 export default config
-
-// polyfill for old configs
-if (typeof config.get('poi.layout') === 'string') {
-  const mode = config.get('poi.layout')
-  config.set('poi.layout', {
-    mode,
-  })
-}
-if (!config.get('poi.plugin')) {
-  const windowmode = config.get('poi.windowmode', {})
-  const background = config.get('poi.backgroundProcess', {})
-  if (keys(windowmode).length || keys(background).length) {
-    config.set('poi.plugin', {
-      windowmode,
-      background,
-    })
-  }
-}
-if (!['light', 'dark'].includes(config.get('poi.appearance.theme', 'dark'))) {
-  config.set('poi.appearance.theme', 'dark')
-}
-config.delete('poi.windowmode')
-config.delete('poi.backgroundProcess')
-
-const pair = {
-  'poi.enableAvatar': 'poi.appearance.avatar',
-  'poi.background': 'poi.appearance.background',
-  'poi.useCustomTitleBar': 'poi.appearance.customtitlebar',
-  'poi.useSVGIcon': 'poi.appearance.svgicon',
-  'poi.textSpacingCJK': 'poi.appearance.textspacingcjk',
-  'poi.layouteditable': 'poi.layout.editable',
-  'poi.vibrant': 'poi.appearance.vibrant',
-  'poi.isolateGameWindow': 'poi.layout.isolate',
-  'poi.overlayPanel': 'poi.layout.overlay',
-  'poi.panel': 'poi.layout.overlaypanel',
-  'poi.theme': 'poi.appearance.theme',
-  'poi.zoomLevel': 'poi.appearance.zoom',
-  'poi.asyncMode': 'poi.misc.async',
-  'poi.sendAnalytics': 'poi.misc.analytics',
-  'poi.language': 'poi.misc.language',
-  'poi.first': 'poi.update.lastversion',
-  'poi.showNetworkLog': 'poi.misc.networklog',
-  'poi.homepage': 'poi.misc.homepage',
-  'poi.disableHA': 'poi.misc.disablehwaccel',
-  'poi.disableNetworkAlert': 'poi.misc.disablenetworkalert',
-  'poi.enterSafeMode': 'poi.misc.safemode',
-  'poi.screenshotFormat': 'poi.misc.screenshot.format',
-  'poi.screenshotPath': 'poi.misc.screenshot.path',
-  'poi.createShortcut': 'poi.misc.shortcut',
-  'poi.delayItemDevResult': 'poi.notify.delay.dev',
-  'poi.delayItemImproveResult': 'poi.notify.delay.improve',
-  'poi.betaChannel': 'poi.update.beta',
-  'poi.cachePath': 'poi.misc.cache.path',
-  'poi.cacheSize': 'poi.misc.cache.size',
-  'poi.reverseLayout': 'poi.layout.reverse',
-  'poi.enableDMMcookie': 'poi.misc.dmmcookie',
-}
-
-for (const [orig, next] of Object.entries(pair)) {
-  if (typeof config.get(orig) !== 'undefined') {
-    config.set(next, config.get(orig))
-    config.delete(orig)
-  }
-}
-
-config.save()

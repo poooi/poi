@@ -1,8 +1,10 @@
 import { autoUpdater } from 'electron-updater'
 import config from './config'
 
-autoUpdater.logger = require('electron-log')
-autoUpdater.logger.transports.file.level = 'info'
+import Logger from 'electron-log'
+
+autoUpdater.logger = Logger
+;(autoUpdater.logger as typeof Logger).transports.file.level = 'info'
 
 autoUpdater.setFeedURL({
   provider: 'generic',
@@ -11,7 +13,7 @@ autoUpdater.setFeedURL({
 })
 autoUpdater.autoDownload = false
 
-export function changeChannel(channel) {
+export function changeChannel(channel: string) {
   autoUpdater.setFeedURL({
     provider: 'generic',
     url: 'https://poi.moe/dist',
