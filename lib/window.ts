@@ -1,22 +1,51 @@
-import { BrowserWindow, screen } from 'electron'
+/* eslint-disable @typescript-eslint/no-namespace */
+import {
+  BrowserWindow,
+  Display,
+  screen,
+  webContents,
+  BrowserWindowConstructorOptions,
+  Menu,
+} from 'electron'
 import * as electronRemote from '@electron/remote/main'
 import path from 'path-extra'
-const windows = (global.windows = [])
-const windowsIndex = (global.windowsIndex = {})
+const windows: typeof global.windows = (global.windows = [])
+const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
+
+declare global {
+  namespace NodeJS {
+    interface Global {
+      mainWindow: BrowserWindow
+      windows: (BrowserWindow | null)[]
+      windowsIndex: {
+        [key: string]: BrowserWindow | null
+      }
+    }
+  }
+}
 
 let forceClose = false
 let pluginUnload = false
-const state = [] // Window state before hide
+const state: boolean[] = [] // Window state before hide
 let hidden = false
 
-const inRange = (n, min, range) => n != null && n >= min && n < min + range
+export interface PoiWindowOptions extends BrowserWindowConstructorOptions {
+  indexName: string
+  forceMinimize: boolean
+  realClose: boolean
+  navigatable: boolean
+  menu: Menu
+}
 
-const withinDisplay = (display, x, y) => {
+const inRange = (n: number | undefined, min: number, range: number): boolean =>
+  n != null && n >= min && n < min + range
+
+const withinDisplay = (display: Display, x: number | undefined, y: number | undefined) => {
   const wa = display.workArea
   return inRange(x, wa.x, wa.width) && inRange(y, wa.y, wa.height)
 }
 
-const normalizePosition = (options) => {
+const normalizePosition = (options: PoiWindowOptions) => {
   // user's workArea may change during game
   const { workArea } = screen.getPrimaryDisplay()
   let { x, y } = options
@@ -32,7 +61,7 @@ const normalizePosition = (options) => {
 }
 
 export default {
-  createWindow: (options) => {
+  createWindow: (options: PoiWindowOptions) => {
     options = Object.assign(
       {
         show: false,
@@ -62,7 +91,7 @@ export default {
     })
     // Close window really
     if (options.realClose) {
-      current.on('closed', (e) => {
+      current.on('closed', () => {
         if (options.indexName) {
           delete windowsIndex[options.indexName]
         }
@@ -76,7 +105,7 @@ export default {
           e.preventDefault()
         }
       })
-      current.on('closed', (e) => {
+      current.on('closed', () => {
         pluginUnload = false
         if (options.indexName) {
           delete windowsIndex[options.indexName]
@@ -96,7 +125,7 @@ export default {
           e.preventDefault()
         }
       })
-      current.on('closed', (e) => {
+      current.on('closed', () => {
         pluginUnload = false
         if (options.indexName) {
           delete windowsIndex[options.indexName]
@@ -122,11 +151,11 @@ export default {
       if (windows[i] == null) {
         continue
       }
-      windows[i].close()
+      windows[i]?.close?.()
       windows[i] = null
     }
   },
-  closeWindow: (win) => {
+  closeWindow: (win: BrowserWindow) => {
     pluginUnload = true
     win.close()
   },
@@ -141,9 +170,12 @@ export default {
       win.unmaximize()
     }
     const b = win.getBounds()
-    b.isFullScreen = isFullScreen
-    b.isMaximized = isMaximized
-    require('./config').set('poi.window', b)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('./config').set('poi.window', {
+      ...b,
+      isFullScreen,
+      isMaximized,
+    })
   },
   toggleAllWindowsVisibility: () => {
     for (const w of BrowserWindow.getAllWindows())
@@ -159,14 +191,14 @@ export default {
     hidden = !hidden
   },
   openFocusedWindowDevTools: () => {
-    BrowserWindow.getFocusedWindow().openDevTools({
+    webContents.getFocusedWebContents()?.openDevTools?.({
       mode: 'detach',
     })
   },
   getWindowsIndex: () => {
     return global.windowsIndex
   },
-  getWindow: (name) => {
+  getWindow: (name: string) => {
     return global.windowsIndex[name]
   },
   getMainWindow: () => {

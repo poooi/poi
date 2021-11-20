@@ -11,6 +11,7 @@ declare global {
   namespace NodeJS {
     interface Global {
       EXROOT: string
+      ROOT: string
     }
   }
 }
