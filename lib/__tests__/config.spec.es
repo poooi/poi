@@ -1,6 +1,10 @@
-jest.mock('fs-extra')
+jest.mock('fs-extra', () => ({
+  accessSync: jest.fn(),
+  writeFileSync: jest.fn(),
+  constants: {},
+}))
 jest.mock('cson')
-jest.mock('../default-config', () => ({ foo: 'bar' }))
+jest.mock('../default-config.ts', () => ({ foo: 'bar' }))
 import config from '../config'
 import fs from 'fs-extra'
 import CSON from 'cson'
