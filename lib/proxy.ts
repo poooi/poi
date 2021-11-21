@@ -4,8 +4,9 @@ import http from 'http'
 import path from 'path'
 import querystring from 'querystring'
 import mime from 'mime'
-import PacProxyAgent from 'pac-proxy-agent'
-import HttpProxyAgent from 'http-proxy-agent'
+import createPacProxyAgent from 'pac-proxy-agent'
+import createHttpProxyAgent from 'http-proxy-agent'
+import createSocksProxyAgent from 'socks-proxy-agent'
 import { app, session } from 'electron'
 import util from 'util'
 import { gunzip, inflate } from 'zlib'
@@ -13,19 +14,37 @@ import fs from 'fs-extra'
 import caseNormalizer from 'header-case-normalizer'
 import socks from 'socks5-client'
 import net from 'net'
+import stream from 'stream'
 
-import SocksProxyAgent from 'socks-proxy-agent'
 import config from './config'
 import { log, error } from './utils'
 
 const { ROOT } = global
+
+type PoiRequestOptions = http.RequestOptions
+
+interface PoiResponseData {
+  statusCode?: number
+  error?: Error
+  data?: any
+}
+
+interface KancolleServer {
+  num?: number
+  name?: string
+  ip?: string
+}
+
+interface KancolleServerInfo {
+  [ip: string]: KancolleServer
+}
 
 const gunzipAsync = util.promisify(gunzip)
 const inflateAsync = util.promisify(inflate)
 
 const delay = (time) => new Promise((res) => setTimeout(res, time))
 
-const isStaticResource = (pathname, hostname) => {
+const isStaticResource = (pathname: string, hostname: string): boolean => {
   if (pathname.startsWith('/kcs2/')) {
     return true
   }
@@ -62,12 +81,12 @@ const isStaticResource = (pathname, hostname) => {
   return false
 }
 
-const getCachePath = (pathname) => {
+const getCachePath = (pathname: string): string => {
   const dir = config.get('poi.misc.cache.path', global.DEFAULT_CACHE_PATH)
   return path.join(dir, pathname)
 }
 
-const findHack = (pathname) => {
+const findHack = (pathname: string): string | null => {
   let loc = getCachePath(path.join('KanColle', pathname))
   const sp = loc.split('.')
   const ext = sp.pop()
@@ -75,7 +94,7 @@ const findHack = (pathname) => {
   sp.push(ext)
   loc = sp.join('.')
   try {
-    fs.accessSync(loc, fs.R_OK)
+    fs.accessSync(loc, fs.constants.R_OK)
     return loc
   } catch (e) {
     if (e.code !== 'ENOENT') console.error(`error while loading hack file ${loc}`, e)
@@ -83,8 +102,8 @@ const findHack = (pathname) => {
   }
 }
 
-const findCache = (pathname, hostname) => {
-  let loc
+const findCache = (pathname: string, hostname: string): string | null => {
+  let loc: string
   if (hostname.match('kanpani.jp')) {
     loc = getCachePath(path.join('Kanpani', pathname))
   } else if (hostname.match('assets.shiropro-re.net')) {
@@ -99,20 +118,20 @@ const findCache = (pathname, hostname) => {
     loc = getCachePath(path.join('KanColle', pathname))
   }
   try {
-    fs.accessSync(loc, fs.R_OK)
+    fs.accessSync(loc, fs.constants.R_OK)
     return loc
   } catch (error) {
     return null
   }
 }
 
-const isKancolleGameApi = (pathname) => pathname.startsWith('/kcsapi')
+const isKancolleGameApi = (pathname: string): boolean => pathname.startsWith('/kcsapi')
 
-const resolveProxyUrl = () => {
+const resolveProxyUrl = (): string => {
   switch (config.get('proxy.use')) {
     case 'socks5': {
-      const host = config.get('proxy.socks5.host', '127.0.0.1')
-      const port = config.get('proxy.socks5.port', 1080)
+      const host: string = config.get('proxy.socks5.host', '127.0.0.1')
+      const port: string = config.get('proxy.socks5.port', 1080)
       return `socks5://${host}:${port},direct://`
     }
     case 'http': {
@@ -134,10 +153,13 @@ class Proxy extends EventEmitter {
   pacAgents = {}
   socksAgents = {}
   httpAgents = {}
-  serverInfo = {}
-  serverList = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
+  serverInfo: KancolleServer = {}
+  serverList: KancolleServerInfo = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
 
   getServerInfo = () => this.serverInfo
+
+  server: http.Server
+  port: number
 
   load = () => {
     // Handles http request only, https request will be passed to upstream proxy directly.
@@ -149,7 +171,7 @@ class Proxy extends EventEmitter {
       listenPort,
       config.get('proxy.allowLAN', false) ? '0.0.0.0' : '127.0.0.1',
       () => {
-        this.port = this.server.address().port
+        this.port = (this.server.address() as net.AddressInfo).port
         this.setProxy()
         config.on('config.set', (path) => {
           if (path.startsWith('proxy')) {
@@ -160,19 +182,17 @@ class Proxy extends EventEmitter {
     )
   }
 
-  setProxy = () => {
+  setProxy = async () => {
     const httpsProxy = resolveProxyUrl()
     const httpProxy = `http://127.0.0.1:${this.port},direct://`
-    session.defaultSession.setProxy(
-      {
-        proxyRules: `http=${httpProxy};https=${httpsProxy}`,
-        proxyBypassRules: '<local>;*.google-analytics.com;*.doubleclick.net',
-      },
-      () => log(`Proxy listening on ${this.port}, upstream proxy ${httpsProxy}`),
-    )
+    await session.defaultSession.setProxy({
+      proxyRules: `http=${httpProxy};https=${httpsProxy}`,
+      proxyBypassRules: '<local>;*.google-analytics.com;*.doubleclick.net',
+    })
+    log(`Proxy listening on ${this.port}, upstream proxy ${httpsProxy}`)
   }
 
-  updateServerInfo = (urlPattern) => {
+  updateServerInfo = (urlPattern: url.UrlWithStringQuery) => {
     if (isKancolleGameApi(urlPattern.pathname) && this.serverInfo.ip !== urlPattern.hostname) {
       if (this.serverList[urlPattern.hostname]) {
         this.serverInfo = {
@@ -189,7 +209,7 @@ class Proxy extends EventEmitter {
     }
   }
 
-  createServer = async (req, res) => {
+  createServer = async (req: http.IncomingMessage, res: http.ServerResponse) => {
     const urlPattern = url.parse(req.url)
 
     // Prepare request headers
@@ -223,7 +243,7 @@ class Proxy extends EventEmitter {
         const retryConfig = config.get('proxy.retries', 0)
         const retries = retryConfig < 0 ? 0 : retryConfig
         while (count <= retries) {
-          const reqOption = this.getRequestOption(urlPattern, req)
+          const reqOption = this.getRequestOptions(urlPattern, req)
           const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
           if (error) {
             if (count >= retries || !isKancolleGameApi(urlPattern.pathname)) {
@@ -250,7 +270,7 @@ class Proxy extends EventEmitter {
     }
   }
 
-  fetchRequest = (req) =>
+  fetchRequest = (req: http.IncomingMessage): any =>
     new Promise((resolve) => {
       const reqBody = []
       req.on('data', (chunk) => {
@@ -261,10 +281,13 @@ class Proxy extends EventEmitter {
       })
     })
 
-  getRequestOption = (urlPattern, req) => {
-    const options = {
+  getRequestOptions = (
+    urlPattern: url.UrlWithStringQuery,
+    req: http.IncomingMessage,
+  ): PoiRequestOptions => {
+    const options: PoiRequestOptions = {
       hostname: urlPattern.hostname || req.headers.host,
-      port: urlPattern.port || req.port || 80,
+      port: urlPattern.port || 80,
       path: urlPattern.path,
       method: req.method,
       headers: req.headers,
@@ -277,7 +300,7 @@ class Proxy extends EventEmitter {
         const socksPort = config.get('proxy.socks5.port', 1080)
         const uri = `${socksHost}:${socksPort}`
         if (!this.socksAgents[uri]) {
-          this.socksAgents[uri] = new SocksProxyAgent(`socks://${uri}`)
+          this.socksAgents[uri] = createSocksProxyAgent(`socks://${uri}`)
         }
         options.agent = this.socksAgents[uri]
         break
@@ -293,7 +316,7 @@ class Proxy extends EventEmitter {
         const strAuth = `${username}:${password}@`
         const uri = `http://${useAuth ? strAuth : ''}${host}:${port}`
         if (!this.httpAgents[uri]) {
-          this.httpAgents[uri] = new HttpProxyAgent(uri)
+          this.httpAgents[uri] = createHttpProxyAgent(uri)
         }
         options.agent = this.httpAgents[uri]
         break
@@ -302,7 +325,7 @@ class Proxy extends EventEmitter {
       case 'pac': {
         const uri = config.get('proxy.pacAddr')
         if (!this.pacAgents[uri]) {
-          this.pacAgents[uri] = new PacProxyAgent(uri)
+          this.pacAgents[uri] = createPacProxyAgent(uri)
         }
         options.agent = this.pacAgents[uri]
         break
@@ -311,22 +334,25 @@ class Proxy extends EventEmitter {
     return options
   }
 
-  parseResponse = async (resDataChunks, header) => {
-    const contentType = header['content-type'] || header['Content-Type'] || ''
+  parseResponse = async (
+    resDataChunks: any[],
+    header: http.IncomingHttpHeaders,
+  ): Promise<any | null> => {
+    const contentType: string = header['content-type'] || (header['Content-Type'] as string) || ''
     if (!contentType.startsWith('text') && !contentType.startsWith('application')) {
       return null
     }
 
     const resData = Buffer.concat(resDataChunks)
-    const contentEncoding = header['content-encoding'] || header['Content-Encoding']
+    const contentEncoding = header['content-encoding'] || (header['Content-Encoding'] as string)
     const isGzip = /gzip/i.test(contentEncoding)
     const isDeflat = /deflate/i.test(contentEncoding)
     const unzipped = isGzip
-      ? await gunzipAsync(resData).catch((e) => {
+      ? await gunzipAsync(resData).catch(() => {
           return null
         })
       : isDeflat
-      ? await inflateAsync(resData).catch((e) => {
+      ? await inflateAsync(resData).catch(() => {
           return null
         })
       : resData
@@ -340,11 +366,15 @@ class Proxy extends EventEmitter {
     }
   }
 
-  fetchResponse = (options, rawReqBody, cRes) =>
-    new Promise((resolve, reject) => {
+  fetchResponse = (
+    options: PoiRequestOptions,
+    rawReqBody: any,
+    cRes: http.ServerResponse,
+  ): Promise<PoiResponseData> =>
+    new Promise((resolve) => {
       const proxyRequest = http.request(options, (res) => {
         const { statusCode, headers } = res
-        const resDataChunks = []
+        const resDataChunks: any[] = []
 
         cRes.writeHead(statusCode, headers)
         res.pipe(cRes)
@@ -361,7 +391,7 @@ class Proxy extends EventEmitter {
                 statusCode,
               }),
             )
-            .catch((e) => resolve({ statusCode }))
+            .catch(() => resolve({ statusCode }))
         })
 
         res.on('error', (error) => {
@@ -377,8 +407,8 @@ class Proxy extends EventEmitter {
       proxyRequest.end()
     })
 
-  useCache = async (req, res, cacheFile) => {
-    const mtime = (await fs.stat(cacheFile)).mtime.toGMTString()
+  useCache = async (req: http.IncomingMessage, res: http.ServerResponse, cacheFile: string) => {
+    const mtime = (await fs.stat(cacheFile)).mtime.toUTCString()
     if (
       req.headers['if-modified-since'] &&
       new Date(req.headers['if-modified-since']) >= new Date(mtime)
@@ -403,7 +433,7 @@ class Proxy extends EventEmitter {
     }
   }
 
-  onConnect = (req, client, head) => {
+  onConnect = (req: http.IncomingMessage, client: stream.Duplex, head: Buffer) => {
     delete req.headers['proxy-connection']
     req.headers['connection'] = 'close'
     const remoteUrl = url.parse(`https://${req.url}`)
@@ -449,7 +479,7 @@ class Proxy extends EventEmitter {
       }
       default: {
         // Connect to remote directly
-        remote = net.connect(remoteUrl.port, remoteUrl.hostname, () => {
+        remote = net.connect(Number(remoteUrl.port), remoteUrl.hostname, () => {
           client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
           remote.write(head)
           client.pipe(remote)
