@@ -52,6 +52,9 @@ export const npmInstall = async (tgtDir, args = [], ci = true) => {
   // Can't use require('npm') module b/c we kept npm2 in node_modules for plugins
   log(`Installing npm for ${tgtDir}`)
   await fs.ensureDir(tgtDir)
+  await runScript(NPM_EXEC_PATH, ['set-script', 'prepare', ''].concat(process.argv.slice(3)), {
+    cwd: tgtDir,
+  })
   await runScript(NPM_EXEC_PATH, [ci ? 'ci' : 'i'].concat(process.argv.slice(3)).concat(args), {
     cwd: tgtDir,
   })
