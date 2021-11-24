@@ -113,7 +113,7 @@ export class ResourcePanel extends React.Component {
   animTimeStamp = [0, 0, 0, 0, 0, 0, 0, 0]
 
   state = {
-    resourceIncrement: [],
+    resourceIncrement: [0, 0, 0, 0, 0, 0, 0, 0],
     dimension: 2,
   }
 
