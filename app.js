@@ -37,6 +37,7 @@ require('./lib/tray')
 
 // Disable HA
 if (config.get('poi.misc.disablehwaccel', false)) {
+  app.commandLine.appendSwitch('disable-software-rasterizer')
   app.disableHardwareAcceleration()
 }
 
