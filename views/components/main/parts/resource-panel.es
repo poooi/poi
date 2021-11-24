@@ -22,7 +22,7 @@ const MaterialContainer = styled.div`
   margin-bottom: 2px;
   margin-top: 1px;
   padding: 0;
-  justify-content: center;
+  justify-content: flex-end;
   ${({ dimension }) =>
     dimension === 1
       ? css`
@@ -46,31 +46,32 @@ const MaterialIconGlow = styled(MaterialIcon)`
 const MaterialValue = styled.div`
   line-height: 1.5;
   min-width: max-content;
-  width: calc(100% - 64px);
+  width: calc(100% - 42px);
   position: relative;
 `
 
 const MaterialAmount = styled.div`
-  min-width: 4em;
+  min-width: 5em;
   width: 100%;
   height: 100%;
-  padding-left: 5px;
-  padding-right: 10px;
+  padding-left: 4px;
+  padding-right: 12px;
 `
 
 const AdditionalValue = styled.div`
   position: absolute;
   top: 0;
-  left: 5px;
-  width: 100%;
+  left: 4px;
+  right: 12px;
   height: 100%;
-  padding-left: 5px;
-  padding-right: 10px;
+  padding-left: 4px;
+  padding-right: 8px;
   color: white;
   opacity: 0;
   text-align: right;
   transition: all 0.3s;
   z-index: 1;
+  min-width: 4em;
   ${({ inc, dec }) =>
     inc
       ? css`
