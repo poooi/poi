@@ -13,8 +13,7 @@ Key features include:
 - Plugin support for extensive functionalities, [see plugin List](https://github.com/poooi/poi/wiki/List-of-available-plugins)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b239a37253a3486c946b047acae5f1ac)](https://www.codacy.com/app/KochiyaOcean/poi?utm_source=github.com&utm_medium=referral&utm_content=poooi/poi&utm_campaign=badger)
-[![Dependencies](https://david-dm.org/poooi/poi.svg)](https://david-dm.org/poooi/poi)
-[![DevDependencies](https://david-dm.org/poooi/poi/dev-status.svg)](https://david-dm.org/poooi/poi?type=dev)
+[![Dependencies](https://img.shields.io/librariesio/github/poooi/poi)](https://libraries.io/github/poooi/poi)
 
 [![Build Status](https://travis-ci.org/poooi/poi.svg?branch=master)](https://travis-ci.org/poooi/poi)
 [![Build status](https://ci.appveyor.com/api/projects/status/apv2xngtej1m17he?svg=true)](https://ci.appveyor.com/project/KochiyaOcean/poi)
@@ -38,12 +37,12 @@ Key features include:
 
 ### Community maintained releases (unofficial)
 
-| Platform                                                    | Maintainer            | Instruction                                             |
-| ----------------------------------------------------------- | --------------------- | ------------------------------------------------------- |
-| AUR / Arch Linux                                            | @swordfeng            | see [AUR page](https://aur.archlinux.org/packages/poi/) |
-| Homebrew Cask / macOS                                       | @darg20127            | `brew update && brew cask install poi`                  |
-| [Chocolatey / Windows](https://chocolatey.org/packages/poi) | @chocolatey and @drel | `choco install poi`                                     |
-| [Scoop / Windows](https://github.com/Darkatse/Scoop-KanColle)|@Darkatse             | see [bucket repo](https://github.com/Darkatse/Scoop-KanColle)|
+| Platform                                                      | Maintainer            | Instruction                                                   |
+| ------------------------------------------------------------- | --------------------- | ------------------------------------------------------------- |
+| AUR / Arch Linux                                              | @swordfeng            | see [AUR page](https://aur.archlinux.org/packages/poi/)       |
+| Homebrew Cask / macOS                                         | @darg20127            | `brew update && brew cask install poi`                        |
+| [Chocolatey / Windows](https://chocolatey.org/packages/poi)   | @chocolatey and @drel | `choco install poi`                                           |
+| [Scoop / Windows](https://github.com/Darkatse/Scoop-KanColle) | @Darkatse             | see [bucket repo](https://github.com/Darkatse/Scoop-KanColle) |
 
 ### Nightlies
 
