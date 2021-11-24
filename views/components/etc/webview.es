@@ -34,7 +34,7 @@ export default class ElectronWebView extends Component {
         }
       })
 
-      this.view.addEventListener('dom-ready', this.forceSyncZoom)
+      this.view.addEventListener('dom-ready', () => this.forceSyncZoom())
       this.view.addEventListener('did-fail-load', (e) => {
         // don't show error if we cancel the navigation
         if (e.errorCode != -3) {
