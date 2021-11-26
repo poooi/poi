@@ -78,3 +78,8 @@ poi-main {
   background: linear-gradient(0deg, transparent 40%, #666 60%, transparent 51%);
   z-index: 10;
 }
+
+img {
+  /* stylelint-disable-next-line value-no-vendor-prefix */
+  image-rendering: -webkit-optimize-contrast;
+}
