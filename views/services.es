@@ -164,12 +164,6 @@ remote
   .on('devtools-opened', (e) => window.dispatchEvent(new Event('resize')))
 
 remote.getCurrentWebContents().on('dom-ready', () => {
-  // Avoid throttling of test window by playing silence
-  const context = new AudioContext()
-  const source = context.createBufferSource()
-  source.connect(context.destination)
-  source.start(0)
-
   if (process.platform === 'darwin') {
     remote.getCurrentWebContents().executeJavaScript(`
       var div = document.createElement("div");

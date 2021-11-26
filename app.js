@@ -96,31 +96,14 @@ if (dbg.isEnabled()) {
 let mainWindow
 global.mainWindow = mainWindow = null
 
-// Set FPS limit
-// if (config.get('poi.misc.limitFps.enabled')) {
-//   const value = parseInt(config.get('poi.misc.limitFps.value'))
-//   if (Number.isFinite(value)) {
-//     app.commandLine.appendSwitch('limit-fps', String(value))
-//   }
-// }
-
-// Test: enable JavaScript experimental features
-// app.commandLine.appendSwitch('js-flags', '--harmony --harmony-do-expressions')
-
 // enable audio autoplay
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
 // Polyfill for webview iframe isolation
-// app.commandLine.appendSwitch('site-isolation-trial-opt-out', false)
+app.commandLine.appendSwitch('site-isolation-trial-opt-out', false)
 
-// Fix GPU acceleration
-// app.commandLine.appendSwitch('enable-accelerated-2d-canvas', 'true')
-// app.commandLine.appendSwitch('ignore-gpu-blacklist', 'true')
-// app.commandLine.appendSwitch('enable-gpu-rasterization', 'true')
-// app.commandLine.appendSwitch('enable-native-gpu-memory-buffers', 'true')
-// app.commandLine.appendSwitch('enable-surface-synchronization', 'true')
-// app.commandLine.appendSwitch('enable-checker-imaging', 'true')
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
 
 // Cache size
 const cacheSize = parseInt(config.get('poi.misc.cache.size'))
