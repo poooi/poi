@@ -3,10 +3,13 @@
 
    - http://kancolle.wikia.com/wiki/12cm_30-tube_Rocket_Launcher_Kai_Ni (as of Dec 15, 2018)
    - http://kancolle.wikia.com/wiki/Combat#/Aerial (as of Oct 18, 2018)
-   - https://wikiwiki.jp/kancolle/航空戦#h2_content_1_6 (as of Oct 18, 2018)
    - https://twitter.com/noratako5/status/1062027534026428416
    - https://twitter.com/kankenRJ/status/979524073934893056
    - https://twitter.com/noratako5/status/976988915734228992
+   - https://wikiwiki.jp/kancolle/%E5%AF%BE%E7%A9%BA%E7%A0%B2%E7%81%AB#AntiAircraft (as of Nov 27, 2021)
+   - https://wikiwiki.jp/kancolle/12cm30連装噴進砲改二 (as of Nov 27, 2021)
+
+    Last update Nov 27, 2021.
 
  */
 
@@ -25,7 +28,13 @@ const isAARadar = ($equip) => [12, 13].includes($equip.api_type[2]) && $equip.ap
 const getEquipWeightedAA = ([equip, $equip]) => {
   // equip AA = (E_fmod * E_AA) + (E_f* * sqrt(lvl))
   if (isAAGun($equip)) {
-    return 6 * $equip.api_tyku + 4 * Math.sqrt(equip.api_level)
+    if ($equip.api_tyku >= 8) {
+      // 素対空8以上
+      return 6 * $equip.api_tyku + 6 * Math.sqrt(equip.api_level)
+    } else {
+      // 素対空7以下
+      return 6 * $equip.api_tyku + 4 * Math.sqrt(equip.api_level)
+    }
   }
   if (isHighAngleMount($equip)) {
     /*
@@ -78,11 +87,6 @@ const capableShipTypes = [
    - ShipInfo: Array of shape [ship, $ship]
    - EquipsInfo: Array of `EquipInfo`,
        where EquipInfo at least has shape: [equip, $equip, onslot]
-
-  Last update Dec 3, 2019. Ref:
-  - https://kancolle.fandom.com/wiki/Combat/Aerial_Combat
-  - https://wikiwiki.jp/kancolle/12cm30連装噴進砲改二
-
  */
 export const getShipAAPB = (...args) => {
   const [[ship, $ship], equipsInfo] = args
