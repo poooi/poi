@@ -150,6 +150,7 @@ const getNextEO = () => moment.tz('Asia/Tokyo').endOf('month')
 const getNewMomentMap = {
   Practice: getNextPractice,
   Quest: getNextQuest,
+  QuarterlyQuest: getNextQuarterlyQuest,
   Senka: getNextSenka,
   EO: getNextEO,
 }
