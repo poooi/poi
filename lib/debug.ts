@@ -8,6 +8,8 @@ import _ from 'lodash'
 
 type LogType = 'assert' | 'debug' | 'error' | 'info' | 'log' | 'table' | 'trace' | 'warn'
 
+type DefaultLogger = Console['log']
+
 const logLevels = {
   assert: {
     color: '#ed556a',
@@ -35,7 +37,7 @@ const logLevels = {
   },
 }
 
-const getLogformatArgs = (logLevel: LogType, prefix: string) => [
+const getLogformatArgs = (logLevel: LogType = 'log', prefix: string) => [
   `%c${moment().format('YYYY-MM-DD HH:mm:ss')} <${logLevel.toUpperCase()}> ${prefix.toUpperCase()}`,
   `
     background: ${logLevels[logLevel]?.color};
@@ -76,23 +78,22 @@ abstract class BaseDebugger {
 
   public log = this.getLeveledLog('log')
 
-  public info: Console['info'] = this.getLeveledLog('info')
+  public info: Console['info'] = (...args) => this.getLeveledLog('info')(...args)
 
-  public warn: Console['warn'] = this.getLeveledLog('warn')
+  public warn: Console['warn'] = (...args) => this.getLeveledLog('warn')(...args)
 
-  public error: Console['error'] = this.getLeveledLog('error')
+  public error: Console['error'] = (...args) => this.getLeveledLog('error')(...args)
 
-  public trace: Console['trace'] | void = this.getLeveledLog('trace')
+  public trace: Console['trace'] | void = (...args) => this.getLeveledLog('trace')(...args)
 
-  public table: Console['table'] = this.getLeveledLog('table') as Console['table']
+  public table: Console['table'] = (...args) =>
+    (this.getLeveledLog('table') as Console['table'])(...args)
 
-  public assert: Console['assert'] = this.getLeveledLog('assert')
+  public assert: Console['assert'] = (...args) => this.getLeveledLog('assert')(...args)
 
   protected prefix = '[MAIN]'
 
   protected _enabled = false
-
-  protected logLevel: LogType = 'log'
 
   public isEnabled() {
     return this._enabled
@@ -111,18 +112,17 @@ abstract class BaseDebugger {
     this.setEnabled(false)
   }
 
-  protected abstract getLogFunc(): Console[LogType]
+  protected abstract getLogFunc(level: LogType): DefaultLogger
 
   protected getLeveledLog(level: LogType): (...args: any[]) => void {
     if (this.isEnabled()) {
-      this.logLevel = level
       switch (level) {
         case 'assert':
           return console.assert.bind(console)
         case 'table':
           return console.table.bind(console)
         default:
-          return this.getLogFunc()
+          return this.getLogFunc(level)
       }
     } else {
       return _.noop
@@ -137,14 +137,11 @@ class ExtraDebugger extends BaseDebugger {
     this.prefix = tag
   }
 
-  protected getLogFunc() {
+  protected getLogFunc(level: LogType) {
     if (this.prefix != null) {
-      return console[this.logLevel as 'log'].bind(
-        console,
-        ...getLogformatArgs(this.logLevel, this.prefix),
-      )
+      return console[level as 'log'].bind(console, ...getLogformatArgs(level, this.prefix))
     } else {
-      return console[this.logLevel].bind(console)
+      return console[level].bind(console)
     }
   }
 }
@@ -152,7 +149,7 @@ class ExtraDebugger extends BaseDebugger {
 // Base Implementation
 abstract class DebuggerBase extends BaseDebugger {
   public h = new Map<string, ExtraDebugger>()
-  public internalLog = this.getLogFunc()
+  public internalLog = this.getLogFunc('log')
 
   protected initialised = false
 
@@ -226,7 +223,7 @@ abstract class DebuggerBase extends BaseDebugger {
     }
   }
 
-  protected abstract getLogFunc(): (...args: any[]) => void
+  protected abstract getLogFunc(level: LogType): DefaultLogger
 }
 
 // add two clickable method to enable/disable
@@ -313,14 +310,11 @@ class DebuggerRenderer extends DebuggerBase {
     console.table(output)
   }
 
-  protected getLogFunc(): Console[LogType] {
+  protected getLogFunc(level: LogType): Console[LogType] {
     if (this.prefix != null) {
-      return console[this.logLevel as 'log'].bind(
-        console,
-        ...getLogformatArgs(this.logLevel, this.prefix),
-      )
+      return console[level as 'log'].bind(console, ...getLogformatArgs(level, this.prefix))
     } else {
-      return console[this.logLevel].bind(console)
+      return console[level].bind(console)
     }
   }
 }
