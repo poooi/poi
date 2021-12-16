@@ -273,8 +273,8 @@ class DebuggerMain extends DebuggerBase {
     this.info('debugger main created')
   }
 
-  public getLogFunc() {
-    return console[this.logLevel as 'log'].bind(
+  public getLogFunc(level: LogType) {
+    return console[level as 'log'].bind(
       console,
       chalk.cyan(`${this.prefix} %s`),
     ) as Console[LogType]
