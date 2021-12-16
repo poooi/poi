@@ -68,12 +68,10 @@ window.getStore = (path) => {
   const storeContent = window.getStore.lock ? window.getStore.cache : store.getState()
   if (window.getStore.cache !== storeContent) {
     window.getStore.cache = storeContent
-  } else if (
-    window.dbg &&
-    window.dbg.isEnabled() &&
-    window.dbg.isExtraEnabled('deprecateWarning')
-  ) {
-    console.warn(new Error('You should not call getStore() in reducer.'))
+  }
+  if (window.getStore.lock) {
+    window.dbg.warn(new Error('You should not call getStore() in reducer.'))
+    window.dbg.trace()
   }
   return path ? get(storeContent, path) : storeContent
 }
