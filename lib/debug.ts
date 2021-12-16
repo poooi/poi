@@ -137,7 +137,7 @@ class ExtraDebugger extends BaseDebugger {
     this.prefix = tag
   }
 
-  protected getLogFunc(level: LogType) {
+  protected getLogFunc(level: LogType = 'log') {
     if (this.prefix != null) {
       return console[level as 'log'].bind(console, ...getLogformatArgs(level, this.prefix))
     } else {
@@ -273,7 +273,7 @@ class DebuggerMain extends DebuggerBase {
     this.info('debugger main created')
   }
 
-  public getLogFunc(level: LogType) {
+  public getLogFunc(level: LogType = 'log') {
     return console[level as 'log'].bind(
       console,
       chalk.cyan(`${this.prefix} %s`),
@@ -310,7 +310,7 @@ class DebuggerRenderer extends DebuggerBase {
     console.table(output)
   }
 
-  protected getLogFunc(level: LogType): Console[LogType] {
+  protected getLogFunc(level: LogType = 'log'): Console[LogType] {
     if (this.prefix != null) {
       return console[level as 'log'].bind(console, ...getLogformatArgs(level, this.prefix))
     } else {
