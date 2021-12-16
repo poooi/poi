@@ -5,14 +5,11 @@ import { EventEmitter } from 'events'
 import { mapValues } from 'lodash'
 
 class IPC extends EventEmitter {
-  constructor() {
-    super()
-    this.data = new Object()
-  }
+  data: any = new Object()
 
   // scope:  string
   // opts:   key-func Object
-  register = (scope, opts) => {
+  register = (scope: string, opts: object) => {
     if (!(scope && opts)) {
       console.error('Invalid scope or opts:', scope, opts)
       return
@@ -22,7 +19,7 @@ class IPC extends EventEmitter {
     }
     this.unregister(scope, Object.keys(opts))
     for (const key in opts) {
-      this.data[scope][key] = opts[key]
+      this.data[scope][key] = opts[key as keyof typeof opts]
     }
     this.emit('update', { type: '@@registerIPC', value: { scope, opts } })
     return
@@ -30,7 +27,7 @@ class IPC extends EventEmitter {
 
   // scope:  string
   // keys:   string / Array of string / key-func Object
-  unregister = (scope, keys) => {
+  unregister = (scope: string, keys: string | string[] | object) => {
     if (!(scope && keys)) {
       console.error('Invalid scope or keys:', scope, keys)
       return
@@ -44,19 +41,19 @@ class IPC extends EventEmitter {
     if (keys instanceof Object && !(keys instanceof Array)) {
       keys = Object.keys(keys)
     }
-    for (const key of keys) {
+    for (const key of keys as string[]) {
       delete this.data[scope][key]
     }
     this.emit('update', { type: '@@unregisterIPC', value: { scope, keys } })
     return
   }
 
-  unregisterAll = (scope) => {
+  unregisterAll = (scope: string) => {
     delete this.data[scope]
     this.emit('update', { type: '@@unregisterAllIPC', value: { scope } })
   }
 
-  access = (scope) => {
+  access = (scope: string) => {
     return this.data[scope]
   }
 
@@ -64,7 +61,7 @@ class IPC extends EventEmitter {
 
   // key:    string
   // args:   arguments passing to api
-  foreachCall = (key, ...args) => {
+  foreachCall = (key: string, ...args: any[]) => {
     for (const scope in this.data) {
       if (Object.prototype.hasOwnProperty.call(this.data[scope], key)) {
         this.data[key].apply(null, args)
