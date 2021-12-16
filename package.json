@@ -71,6 +71,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
+    "@reduxjs/toolkit": "^1.7.1",
     "@sentry/electron": "^2.5.4",
     "@skagami/react-fontawesome": "^1.0.1",
     "babel-plugin-add-module-exports": "^1.0.4",
