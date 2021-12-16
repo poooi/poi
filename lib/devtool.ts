@@ -5,10 +5,8 @@ import installExtension, {
 
 import { log, error } from './utils'
 
-const options = {
+installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
   loadExtensionOptions: { allowFileAccess: true },
-}
-
-installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], options)
+})
   .then((name) => log(`${name} is added`))
   .catch((err) => error('An error occurred: ', err))

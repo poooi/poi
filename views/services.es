@@ -141,7 +141,7 @@ window.addEventListener('game.response', (e) => {
   const { method, body, postBody, time } = e.detail
   const resPath = e.detail.path
   if (dbg.extra('gameResponse').isEnabled()) {
-    dbg._getLogFunc()(new GameResponse(resPath, body, postBody, time))
+    dbg.getLogFunc()(new GameResponse(resPath, body, postBody, time))
   }
   if (config.get('poi.misc.networklog', true)) {
     log(`${i18next.t('Hit')}: ${method} ${resPath}`, { dontReserve: true })

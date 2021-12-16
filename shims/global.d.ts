@@ -12,6 +12,7 @@ declare global {
     interface Global {
       EXROOT: string
       ROOT: string
+      DEFAULT_CACHE_PATH: string
     }
   }
 }
