@@ -14,7 +14,7 @@ switch (process.env.ARCH) {
     break
 }
 
-const isFullTarget = process.env.FULL_TARGET === 'true'
+const isFullTarget = true
 
 console.log('Building arch:', arch)
 
@@ -66,7 +66,6 @@ module.exports = {
     ],
   },
   nsis: {
-    artifactName: 'poi-setup-${version}.${ext}',
     oneClick: false,
     allowToChangeInstallationDirectory: true,
     multiLanguageInstaller: true,
@@ -76,4 +75,5 @@ module.exports = {
     output: 'dist',
     buildResources: 'build',
   },
+  artifactName: 'poi-${os}-${arch}-${version}.${ext}',
 }
