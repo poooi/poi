@@ -63,6 +63,14 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         ...configExtendsPrettier,
       ],
+      settings: {
+        'import/resolver': {
+          node: {
+            extensions: ['', '.js', '.jsx', '.es', '.ts', '.tsx'],
+            paths: [__dirname],
+          },
+        },
+      },
     },
   ],
 }
