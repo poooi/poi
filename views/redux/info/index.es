@@ -1,5 +1,5 @@
 import { combineReducers } from '../combine-reducers'
-import reduceReducers from '../reduce-reducers'
+import reduceReducers from 'reduce-reducers'
 import { get, pick } from 'lodash'
 
 import { reducer as basic } from './basic'
