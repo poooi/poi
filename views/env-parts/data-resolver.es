@@ -1,5 +1,5 @@
 /* global dispatch */
-import { onGameRequest, onGameResponse } from 'views/redux'
+import { onGameRequest, onGameResponse } from 'views/redux/reducer-factory'
 import * as remote from '@electron/remote'
 
 const proxy = remote.require('./lib/proxy')

@@ -4,10 +4,10 @@ import { observer, observe } from 'redux-observers'
 import { get, set, debounce, compact } from 'lodash'
 import * as remote from '@electron/remote'
 
-import { reducerFactory, onConfigChange } from './redux'
-import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
-import { dockingCompleteObserver } from './redux/info/repairs'
-import { dispatchBattleResult } from './redux/battle'
+import { reducerFactory, onConfigChange } from './reducer-factory'
+import { saveQuestTracking, schedualDailyRefresh } from './info/quests'
+import { dockingCompleteObserver } from './info/repairs'
+import { dispatchBattleResult } from './battle'
 
 const cachePosition = '_storeCache'
 const targetPaths = ['const', 'info', 'fcd', 'wctf']
