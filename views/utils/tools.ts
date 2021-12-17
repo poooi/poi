@@ -80,12 +80,37 @@ export function between(n: number, min: number, max: number): boolean {
   return n >= min && n <= max
 }
 
+/**
+ * a non-ambiguous method to build array, should supersed `buildArray`
+ * @param idx
+ * @param values
+ * @returns
+ */
+export const constructArray = <T = any>(idx: number[], values: T[]) => {
+  const ret: T[] = []
+  idx.forEach((index, i) => {
+    index = Math.floor(index)
+    if (isNaN(index) || index < 0) {
+      return
+    }
+    ret[index] = values[i]
+  })
+  return ret
+}
+
+/**
+ * @deprecated use constructArray instead
+ */
 export function buildArray<T = any>(idx: number, value: T): T[]
 /**
  * Builds an array with the given position and value info
  * @param pairs array of [position, value]
+ * @deprecated use constructArray instead
  */
 export function buildArray<T = any>(pairs: [number, T][]): T[]
+/**
+ * @deprecated use constructArray instead
+ */
 export function buildArray<T = any>(
   pairsOrIdx: number | [number, T][],
   _value?: T,
