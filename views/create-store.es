@@ -4,7 +4,6 @@ import { observer, observe } from 'redux-observers'
 import { get, set, debounce, compact } from 'lodash'
 import * as remote from '@electron/remote'
 
-import { middleware as promiseActionMiddleware } from './middlewares/promise-action'
 import { reducerFactory, onConfigChange } from './redux'
 import { saveQuestTracking, schedualDailyRefresh } from './redux/info/quests'
 import { dockingCompleteObserver } from './redux/info/repairs'
@@ -58,7 +57,7 @@ const composeEnhancers =
 export const store = createStore(
   reducerFactory(),
   storeCache,
-  composeEnhancers(applyMiddleware(promiseActionMiddleware, thunk)),
+  composeEnhancers(applyMiddleware(thunk)),
 )
 window.dispatch = store.dispatch
 
