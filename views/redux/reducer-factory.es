@@ -66,6 +66,13 @@ export function reducerFactory(extensionConfig) {
 export function onGameResponse({ method, path, body, postBody, time }) {
   return {
     type: `@@Response${path}`,
+    payload: {
+      method,
+      path,
+      body,
+      postBody,
+      time,
+    },
     method,
     path,
     body,
@@ -77,6 +84,12 @@ export function onGameResponse({ method, path, body, postBody, time }) {
 export function onGameRequest({ method, path, body, time }) {
   return {
     type: `@@Request${path}`,
+    payload: {
+      method,
+      path,
+      body,
+      time,
+    },
     method,
     path,
     body,
