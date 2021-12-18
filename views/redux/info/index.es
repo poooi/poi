@@ -13,7 +13,7 @@ import { reducer as maps } from './maps'
 import { reducer as quests } from './quests'
 import { reducer as server } from './server'
 import { reducer as useitems } from './useitems'
-import airbase from './airbase'
+import { reducer as airbase } from './airbase'
 import presets from './presets'
 
 export const reducer = reduceReducers(

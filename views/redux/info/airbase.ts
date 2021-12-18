@@ -157,6 +157,4 @@ const airBaseSlice = createSlice({
   },
 })
 
-const reducer = airBaseSlice.reducer
-
-export default reducer
+export const reducer = airBaseSlice.reducer

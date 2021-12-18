@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_air_corps/set_action","body":{"api_result":1,"api_result_msg":"成功"},"postBody":{"api_verno":"1","api_area_id":"6","api_base_id":"1,2,3","api_action_kind":"0,0,0"},"time":1576947577250}

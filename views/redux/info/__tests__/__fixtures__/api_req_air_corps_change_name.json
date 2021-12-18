@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_air_corps/change_name","body":{"api_result":1,"api_result_msg":"成功"},"postBody":{"api_verno":"1","api_area_id":"6","api_base_id":"1","api_name":"第1基地航空隊"},"time":1639774787802}

@@ -14,7 +14,7 @@ module.exports = {
     '^views/(.*)': '<rootDir>/views/$1',
   },
   testMatch: ['**/__tests__/**/*.[ejt]s?(x)', '**/?(*.)+(spec|test).[ejt]s?(x)'],
-  setupFilesAfterEnv: ['./setupTests.es'],
+  setupFilesAfterEnv: ['./setup-tests.ts'],
   collectCoverageFrom: ['lib', 'views', 'build'].map((dir) => `./${dir}/**/*.[ejt]s?(x)`),
   collectCoverage: _.toLower(process.env.CI) === 'true',
 }
