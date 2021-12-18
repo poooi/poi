@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import path from 'path'
-import { isSubdirectory, compareUpdate, cjkSpacing } from '../tools'
+import { isSubdirectory, compareUpdate, cjkSpacing, constructArray } from '../tools'
 
 const pathPatterns = [
   ['/foo', '/foo', true],
@@ -47,7 +47,7 @@ describe('views/utils/tools', () => {
   })
 
   describe('compareUpdate', () => {
-    const test = (a, b, d) => {
+    const test = (a: any, b: any, d?: number) => {
       const c = compareUpdate(a, b, d)
       return [c !== a, c]
     }
@@ -74,5 +74,22 @@ describe('views/utils/tools', () => {
     expect(cjkSpacing('你好world')).toMatchInlineSnapshot(`"你好 world"`)
     expect(cjkSpacing('こんいちわworld')).toMatchInlineSnapshot(`"こんいちわ world"`)
     expect(cjkSpacing('芸術は爆發だ!')).toMatchInlineSnapshot(`"芸術は爆發だ！"`)
+  })
+
+  describe('constructArray', () => {
+    expect(constructArray([1], ['foo'])).toMatchInlineSnapshot(`
+      Array [
+        ,
+        "foo",
+      ]
+    `)
+    expect(constructArray([-1], ['foo'])).toMatchInlineSnapshot(`Array []`)
+    // @ts-expect-error testing passing non number
+    expect(constructArray(['bar'], ['foo'])).toMatchInlineSnapshot(`Array []`)
+    expect(constructArray([0.92], ['foo'])).toMatchInlineSnapshot(`
+      Array [
+        "foo",
+      ]
+    `)
   })
 })
