@@ -1,6 +1,11 @@
+const lintScripts = ['eslint --fix']
+const lintViews = [...lintScripts, 'stylelint --config .stylelintrc.js']
+
 module.exports = {
-  '*.es': ['eslint --fix', 'stylelint --config .stylelintrc.js'],
-  '*.js': ['eslint --fix'],
+  '*.js': lintScripts,
+  '*.ts': lintScripts,
+  '*.es': lintViews,
+  '*.tsx': lintViews,
   '*.css': ['stylelint --config .stylelintrc.js'],
   '*.md': ['prettier --write'],
 }
