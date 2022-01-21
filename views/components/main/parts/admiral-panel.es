@@ -14,6 +14,7 @@ import styled from 'styled-components'
 import { CountdownNotifierLabel } from './countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'
 import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+import { getSlotitemCount } from 'views/utils/game-utils'
 import { CardWrapper as CardWrapperL } from './styled-components'
 
 const rankName = [
@@ -288,7 +289,7 @@ const numCheckSelector = createSelector([configSelector], (config) => ({
 export const AdmiralPanel = withNamespaces(['main'])(
   connect((state) => ({
     ...admiralInfoSelector(state),
-    equipNum: Object.keys(state.info.equips).length,
+    equipNum: getSlotitemCount(state.info.equips),
     shipNum: Object.keys(state.info.ships).length,
     dropCount: state.sortie.dropCount,
     ...numCheckSelector(state),

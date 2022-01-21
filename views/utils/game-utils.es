@@ -41,6 +41,8 @@ const speedStyles = {
   [20]: { color: '#64B5F6' },
 }
 
+const uncountedSlotitemId = [42, 43, 145, 146, 150, 241]
+
 export function getMaterialStyle(percent) {
   if (percent <= 50) return 'red'
   else if (percent <= 75) return 'orange'
@@ -536,6 +538,12 @@ export async function isInGame() {
   } catch (e) {
     return false
   }
+}
+
+export const getSlotitemCount = (slotitems) => {
+  return Object.values(slotitems).filter(
+    ({ api_slotitem_id }) => !uncountedSlotitemId.includes(api_slotitem_id),
+  ).length
 }
 
 export const FLEET_INTENTS = [

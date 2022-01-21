@@ -1,5 +1,6 @@
 /* global error, config, getStore */
 import i18next from 'views/env-parts/i18next'
+import { getSlotitemCount } from 'views/utils/game-utils'
 
 window.addEventListener('game.response', ({ detail: { path, body } }) => {
   if (path === '/kcsapi/api_get_member/mapinfo') {
@@ -18,7 +19,7 @@ window.addEventListener('game.response', ({ detail: { path, body } }) => {
     }
     if (config.get('poi.mapStartCheck.item.enable', false)) {
       const minEquipSlots = config.get('poi.mapStartCheck.item.minFreeSlots', 10)
-      const equipSlots = basic.api_max_slotitem - Object.keys(getStore('info.equips')).length
+      const equipSlots = basic.api_max_slotitem - getSlotitemCount(getStore('info.equips'))
       if (equipSlots < minEquipSlots) {
         if (equipSlots > 0) {
           errMsg.push(i18next.t('main:EquipSlotWarning', { count: equipSlots }))
