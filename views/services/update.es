@@ -57,12 +57,11 @@ if (process.platform === 'win32') {
   })
 }
 
+const UPDATE_SERVER = 'poi.moe'
+
 export const checkUpdate = async () => {
   const betaChannel = config.get('poi.update.beta', false)
-  const versionInfo = await fetch(
-    `https://${global.SERVER_HOSTNAME}/update/latest.json`,
-    defaultFetchOption,
-  )
+  const versionInfo = await fetch(`https://${UPDATE_SERVER}/update/latest.json`, defaultFetchOption)
     .then((res) => res.json())
     .catch((e) => {
       console.warn('Check update error.', e.stack)
@@ -81,7 +80,7 @@ export const checkUpdate = async () => {
     if (semver.lt(POI_VERSION, version) && semver.lt(knownVersion, version)) {
       const currentLang = LANG.includes(language) ? language : 'en-US'
       const log = await fetch(
-        `https://${global.SERVER_HOSTNAME}/update/${currentLang}${channel}.md`,
+        `https://${UPDATE_SERVER}/update/${currentLang}${channel}.md`,
         defaultFetchOption,
       )
         .then((res) => res.text())
