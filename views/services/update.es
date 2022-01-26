@@ -57,7 +57,7 @@ if (process.platform === 'win32') {
   })
 }
 
-const UPDATE_SERVER = 'poi.moe'
+const UPDATE_SERVER = 'update.poi.moe'
 
 export const checkUpdate = async () => {
   const betaChannel = config.get('poi.update.beta', false)

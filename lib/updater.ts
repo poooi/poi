@@ -8,7 +8,7 @@ autoUpdater.logger = Logger
 
 autoUpdater.setFeedURL({
   provider: 'generic',
-  url: 'https://poi.moe/dist',
+  url: 'https://update.poi.moe/dist',
   channel: config.get('poi.update.beta', false) ? 'beta' : 'latest',
 })
 autoUpdater.autoDownload = false
@@ -16,7 +16,7 @@ autoUpdater.autoDownload = false
 export function changeChannel(channel: string) {
   autoUpdater.setFeedURL({
     provider: 'generic',
-    url: 'https://poi.moe/dist',
+    url: 'https://update.poi.moe/dist',
     channel,
   })
   autoUpdater.autoDownload = false
