@@ -192,7 +192,7 @@
     "asar": "^3.1.0",
     "babel-jest": "^27.3.1",
     "cross-env": "^7.0.3",
-    "electron": "^16.0.1",
+    "electron": "^16.0.7",
     "electron-builder": "^22.14.5",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
