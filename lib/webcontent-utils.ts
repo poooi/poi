@@ -69,10 +69,7 @@ export function stopNavigateAndHandleNewWindow(id: number) {
   })
 
   webContent.addListener('did-create-window', (win, { frameName }) => {
-    if (frameName.startsWith('plugin')) {
-      if (frameName.startsWith('plugin[gpuinfo]')) {
-        win.loadURL('chrome://gpu')
-      }
+    if (frameName.startsWith('plugin') && !frameName.startsWith('plugin[gpuinfo]')) {
       electronRemote.enable(win.webContents)
       win.webContents.addListener('did-attach-webview', (e, webContent) => {
         electronRemote.enable(webContent)
