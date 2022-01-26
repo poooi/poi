@@ -1,4 +1,4 @@
-import { webContents, shell, BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
+import { webContents, shell, BrowserWindowConstructorOptions } from 'electron'
 import * as electronRemote from '@electron/remote/main'
 import os from 'os'
 import _ from 'lodash'
@@ -35,6 +35,9 @@ export function stopNavigateAndHandleNewWindow(id: number) {
           height: 480,
           center: true,
           autoHideMenuBar: true,
+          webPreferences: {
+            webviewTag: true,
+          },
         },
       }
     } else if (frameName.startsWith('plugin')) {
