@@ -15,12 +15,14 @@ export function stopFileNavigate(id: number) {
 
 export function stopNavigateAndHandleNewWindow(id: number) {
   const webContent = webContents.fromId(id)
+
   webContent.addListener('will-navigate', (e, url) => {
     e.preventDefault()
     if (url.startsWith('http')) {
       shell.openExternal(url)
     }
   })
+
   webContent.setWindowOpenHandler(({ url, frameName }) => {
     if (url.startsWith('http')) {
       shell.openExternal(url)
@@ -36,26 +38,14 @@ export function stopNavigateAndHandleNewWindow(id: number) {
         },
       }
     } else if (frameName.startsWith('plugin')) {
-      let options: BrowserWindowConstructorOptions = {
+      const options: BrowserWindowConstructorOptions = {
         resizable: true,
         frame: false,
-      }
-      if (frameName.startsWith('plugin[kangame]')) {
-        options.useContentSize = true
-        _.set(options, ['webPreferences', 'webSecurity'], false)
-      }
-      if (url.startsWith('chrome')) {
-        options.frame = true
-      }
-
-      options = {
-        ...options,
         minWidth: 200,
         minHeight: 200,
         titleBarStyle: isModernDarwin ? 'hidden' : undefined,
         autoHideMenuBar: true,
         webPreferences: {
-          ...options.webPreferences,
           nodeIntegration: false,
           nodeIntegrationInWorker: false,
           plugins: true,
@@ -63,15 +53,18 @@ export function stopNavigateAndHandleNewWindow(id: number) {
           webviewTag: true,
         },
       }
-
+      if (frameName.startsWith('plugin[kangame]')) {
+        options.useContentSize = true
+        _.set(options, ['webPreferences', 'webSecurity'], false)
+      }
       return {
         action: 'allow',
         overrideBrowserWindowOptions: options,
       }
     }
-
     return { action: 'deny' }
   })
+
   webContent.addListener('did-create-window', (win, { frameName }) => {
     if (frameName.startsWith('plugin')) {
       if (frameName.startsWith('plugin[gpuinfo]')) {
