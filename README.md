@@ -33,7 +33,7 @@ Key features include:
 
 [GitHub release](https://github.com/poooi/poi/releases)
 
-[TAONPM (CN Mainland)](https://npmmirror.com/mirrors/poi).
+[TAONPM (CN Mainland)](https://registry.npmmirror.com/binary.html?path=poi/).
 
 ### Community maintained releases (unofficial)
 
