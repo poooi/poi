@@ -14,7 +14,15 @@ export class GPUStatus extends PureComponent {
 
   handleClick = () => {
     //As of electron 11, the url 'chrome://gpu' is not working.
-    window.open(fileUrl(path.join(ROOT, 'index-gpu.html')), 'plugin[gpuinfo]')
+    const gpuWindow = open(fileUrl(path.join(ROOT, 'index-plugin.html')), 'plugin[gpuinfo]')
+    gpuWindow.addEventListener('DOMContentLoaded', () => {
+      const div = gpuWindow.document.createElement('div')
+      div.style.height = '100%'
+      div.innerHTML = '<webview src="chrome://gpu" style="width: 100%; height: 100%" />'
+      gpuWindow.document.body.style.height = '100vh'
+      gpuWindow.document.body.style.margin = 0
+      gpuWindow.document.body.appendChild(div)
+    })
   }
 
   render() {
