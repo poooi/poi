@@ -74,9 +74,9 @@ const isRenderer = (process || {}).type === 'renderer'
 
 // the very base class
 abstract class BaseDebugger {
-  public debug = this.getLeveledLog('debug')
+  public debug: Console['debug'] = (...args) => this.getLeveledLog('debug')(...args)
 
-  public log = this.getLeveledLog('log')
+  public log: Console['log'] = (...args) => this.getLeveledLog('log')(...args)
 
   public info: Console['info'] = (...args) => this.getLeveledLog('info')(...args)
 
