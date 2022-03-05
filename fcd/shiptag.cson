@@ -1,14 +1,14 @@
 meta:
   name: "shiptag"
-  version: "2021/11/21/01"
+  version: "2021/03/06/01"
 
 # color: https://material.io/design/color/the-color-system.html#color-usage-and-palettes
 
 data:
   mapname: [
-    "第百四戦隊"
-    "ヒ船団"
-    "横須賀防衛隊"
+    "南西方面艦隊"
+    "第三十一戦隊"
+    "輸送部隊"
     "連合艦隊"
     "？？？（5）"
     "？？？（6）"
@@ -18,10 +18,10 @@ data:
     "？？？（10）"
   ]
   color: [
-    "#4CAF50"
-    "#FFEB3B"
-    "#9E9E9E"
-    "#03A9F4"
+    "#B2FF59"
+    "#FF4081"
+    "#FFEA00"
+    "#2196F3"
     "#FFFFFF"
     "#FFFFFF"
     "#FFFFFF"
@@ -31,9 +31,9 @@ data:
   ]
   fleetname:
     "zh-CN": [
-      "第一〇四战队"
-      "比号船团"
-      "横须贺防卫队"
+      "南西方面舰队"
+      "第三十一战队"
+      "输送部队"
       "联合舰队"
       "？？？（5）"
       "？？？（6）"
@@ -43,9 +43,9 @@ data:
       "？？？（10）"
     ]
     "zh-TW": [
-      "第一〇四戰隊"
-      "比號船團"
-      "橫須賀防衛隊"
+      "南西方面艦隊"
+      "第三十一戰隊"
+      "輸送部隊"
       "聯合艦隊"
       "？？？（5）"
       "？？？（6）"
@@ -55,9 +55,9 @@ data:
       "？？？（10）"
     ]
     "ja-JP": [
-      "第百四戦隊"
-      "ヒ船団"
-      "横須賀防衛隊"
+      "南西方面艦隊"
+      "第三十一戦隊"
+      "輸送部隊"
       "連合艦隊"
       "？？？（5）"
       "？？？（6）"
@@ -67,9 +67,9 @@ data:
       "？？？（10）"
     ]
     "en-US": [
-      "104th Squadron"
-      "Hi Convoy"
-      "Yokosuka Defense Force"
+      "South-Western fleet"
+      "31st Squadron"
+      "Transport Unit"
       "Combined Fleet"
       "???(5)"
       "???(6)"
