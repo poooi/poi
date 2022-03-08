@@ -35,24 +35,25 @@ const getMeta = (current, next) => {
 
 async function writeJSON(fname, data) {
   const JSON_OPTIONS = { spaces: '' }
-  await fs.outputJSON(path.join(DEST, fname), data, JSON_OPTIONS)
+  await fs.outputJSON(path.resolve(DEST, fname), data, JSON_OPTIONS)
 }
 
-async function CSON2JSON(name) {
-  const data = await fs.readFile(`${name}.cson`)
-  await writeJSON(`${name}.json`, CSON.parse(data))
+async function readCSON(name) {
+  const data = await fs.readFile(name)
+  return CSON.parse(data)
 }
 
 async function buildData(name) {
-  const current = await fs.readJSON(path.join(DEST, name))
-  const data = await fs.readJSON(name)
+  const dest = path.resolve(DEST, name.replace('.cson', '.json'))
+  const current = await fs.readJSON(dest)
+  const data = name.endsWith('cson') ? await readCSON(name) : await fs.readJSON(name)
   const meta = getMeta(current, data)
-  await writeJSON(name, { meta, data })
+  await writeJSON(name.replace('.cson', '.json'), { meta, data })
 }
 
-async function build_meta(flist) {
+async function buildMeta(flist) {
   const meta = await Promise.map(flist, async (fname) => {
-    const fpath = path.join(DEST, fname)
+    const fpath = path.resolve(DEST, fname)
     const data = JSON.parse(await fs.readFile(fpath))
     return data.meta
   })
@@ -60,8 +61,8 @@ async function build_meta(flist) {
 }
 
 const validateShipTag = async () => {
-  const file = await fs.readFile('shiptag.cson')
-  const { data } = CSON.parse(file)
+  const file = await fs.readFile('shiptag.cson', 'utf-8')
+  const data = CSON.parse(file)
 
   const count = size(data.mapname)
 
@@ -76,7 +77,11 @@ const validateShipTag = async () => {
 ;(async () => {
   await validateShipTag()
 
-  await Promise.all([buildData('map.json'), buildData('shipavatar.json'), CSON2JSON('shiptag')])
+  await Promise.all([
+    buildData('map.json'),
+    buildData('shipavatar.json'),
+    buildData('shiptag.cson'),
+  ])
 
-  await build_meta(['map.json', 'shipavatar.json', 'shiptag.json'].sort())
+  await buildMeta(['map.json', 'shipavatar.json', 'shiptag.json'].sort())
 })()
