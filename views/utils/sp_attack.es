@@ -6,7 +6,7 @@ const overNotLessThan =
   (...data) =>
     funcs.map((func) => func(...data)).filter((result) => result).length >= n
 
-const isSpAttackNotUsed = (shipsData, extraData) => !extraData.spAttackUsed
+const isSpAttackLessThan = (count) => (shipsData, extraData) => extraData.spAttackCount < count
 
 const hasSubmarineSupply = (shipsData, extraData) => extraData.submarineSupplyCount > 0
 
@@ -67,7 +67,7 @@ const isKirishimaKaiNi = shipIdIs(152)
 const isWarspite = _.overSome([shipIdIs(364), shipIdIs(439)])
 
 const isNelsonSpAttack = _.overEvery([
-  isSpAttackNotUsed,
+  isSpAttackLessThan(1),
   isFullFleet,
   overShip(0)(_.overEvery([isNelson, isNotMidDmg])),
   overShip(1)(isNotSub),
@@ -78,7 +78,7 @@ const isNelsonSpAttack = _.overEvery([
 ])
 
 const isNagatoSpAttack = _.overEvery([
-  isSpAttackNotUsed,
+  isSpAttackLessThan(1),
   isFullFleet,
   overShip(0)(_.overEvery([isNagatoKaiNi, isNotMidDmg])),
   overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
@@ -89,7 +89,7 @@ const isNagatoSpAttack = _.overEvery([
 ])
 
 const isMutsuSpAttack = _.overEvery([
-  isSpAttackNotUsed,
+  isSpAttackLessThan(1),
   isFullFleet,
   overShip(0)(_.overEvery([isMutsuKaiNi, isNotMidDmg])),
   overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
@@ -100,7 +100,7 @@ const isMutsuSpAttack = _.overEvery([
 ])
 
 const isColoradoSpAttack = _.overEvery([
-  isSpAttackNotUsed,
+  isSpAttackLessThan(1),
   isFullFleet,
   overShip(0)(_.overEvery([isColorado, isNotMidDmg])),
   overShip(1)(_.overEvery([isBattleShip, isNotHeavyDmg])),
@@ -111,7 +111,7 @@ const isColoradoSpAttack = _.overEvery([
 ])
 
 const isKongoClassKaiNiCSpAttack = _.overEvery([
-  isSpAttackNotUsed,
+  isSpAttackLessThan(2),
   isFleetWith5NonSubs,
   _.overSome([
     _.overEvery([

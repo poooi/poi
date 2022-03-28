@@ -21,7 +21,7 @@ const initState = {
   spotHistory: [],
   item: null,
   itemHistory: [],
-  spAttackUsed: false,
+  spAttackCount: 0,
 }
 
 const ensureArray = (x) => (isArray(x) ? x : [x])
@@ -67,7 +67,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         spotHistory: [],
         item: null,
         itemHistory: [],
-        spAttackUsed: false,
+        spAttackCount: 0,
       }
 
     case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -169,7 +169,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
   ) {
     return {
       ...state,
-      spAttackUsed: true,
+      spAttackCount: state.spAttackCount + 1,
     }
   }
   return state

@@ -63,14 +63,14 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId) =>
     [
       fleetShipsIdSelectorFactory(fleetId),
       fleetShipsDataWithEscapeSelectorFactory(fleetId),
-      (state) => get(state.sortie, 'spAttackUsed'),
+      (state) => get(state.sortie, 'spAttackCount'),
       (state) => get(state.info, 'useitems.95.api_count'),
       (state) => get(state.sortie, 'combinedFlag'),
     ],
-    (shipsId, shipsData, spAttackUsed, submarineSupplyCount, combinedFlag) => ({
+    (shipsId, shipsData, spAttackCount, submarineSupplyCount, combinedFlag) => ({
       shipsId,
       isSpAttack: isSpAttackAvailable(shipsData, {
-        spAttackUsed,
+        spAttackCount,
         submarineSupplyCount,
         combinedFlag,
         fleetId,
