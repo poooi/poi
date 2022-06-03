@@ -105,7 +105,7 @@
     "moment-timezone": "^0.5.34",
     "mousetrap": "^1.6.5",
     "node-fetch": "^2.6.7",
-    "npm": "^8.4.0",
+    "npm": "^8.11.0",
     "npm-package-arg": "^8.1.5",
     "os-name": "^4.0.1",
     "pac-proxy-agent": "^5.0.0",
