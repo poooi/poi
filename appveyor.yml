@@ -16,7 +16,7 @@ install:
   - npm install npm -g
   - node --version
   - npm --version
-  - npm ci --silent
+  - npm ci
 
 build_script:
   - npm run build:full
