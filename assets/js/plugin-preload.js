@@ -3,8 +3,12 @@ const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 const config = remote.require('./lib/config')
+const Module = require('module')
 
-require('module').globalPaths.unshift(MODULE_PATH)
+const nodeModulePaths = Module._nodeModulePaths
+Module._nodeModulePaths = (from) => {
+  return [MODULE_PATH, ...nodeModulePaths(from)]
+}
 require('@babel/register')(require(`${ROOT}/babel-register.config`))
 async function setPath() {
   require(`${ROOT}/lib/module-path`).setAllowedPath([

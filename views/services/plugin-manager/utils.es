@@ -15,7 +15,7 @@ import {
 import React from 'react'
 import FontAwesome from '@skagami/react-fontawesome'
 import semver from 'semver'
-import module from 'module'
+import Module from 'module'
 import { promisify } from 'bluebird'
 import glob from 'glob'
 import crypto from 'crypto'
@@ -36,7 +36,10 @@ const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js'
 const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS = require(MIRROR_JSON_PATH)
 
-require('module').globalPaths.push(MODULE_PATH)
+const nodeModulePaths = Module._nodeModulePaths
+Module._nodeModulePaths = (from) => {
+  return [MODULE_PATH, ...nodeModulePaths(from)]
+}
 
 // This reducer clears the substore no matter what is given.
 const clearReducer = undefined
@@ -434,14 +437,14 @@ const postEnableProcess = (plugin) => {
 }
 
 function clearPluginCache(packagePath) {
-  for (const path in module._cache) {
+  for (const path in Module._cache) {
     if (path.includes(basename(packagePath))) {
-      delete module._cache[path]
+      delete Module._cache[path]
     }
   }
-  for (const path in module._pathCache) {
+  for (const path in Module._pathCache) {
     if (path.includes(basename(packagePath))) {
-      delete module._pathCache[path]
+      delete Module._pathCache[path]
     }
   }
 }

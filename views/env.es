@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import * as remote from '@electron/remote'
 import lodash from 'lodash'
 import { init } from '../lib/sentry'
+import Module from 'module'
 
 import './polyfills/react-i18next'
 import './polyfills/react-fontawesome'
@@ -47,7 +48,10 @@ if (window.isMain) {
 }
 
 // Add ROOT to `require` search path
-require('module').globalPaths.unshift(window.ROOT)
+const nodeModulePaths = Module._nodeModulePaths
+Module._nodeModulePaths = (from) => {
+  return [window.ROOT, ...nodeModulePaths(from)]
+}
 
 // Disable eval
 window.eval = global.eval = function () {

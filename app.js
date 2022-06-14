@@ -179,7 +179,6 @@ app.on('ready', () => {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       nodeIntegrationInSubFrames: true,
-      nativeWindowOpen: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
       enableRemoteModule: true,
       contextIsolation: false,
