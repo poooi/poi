@@ -146,6 +146,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.2",
+    "@stylelint/postcss-css-in-js": "^0.38.0",
     "@types/babel__core": "^7.1.19",
     "@types/bindings": "^1.5.1",
     "@types/bluebird": "^3.5.36",
@@ -209,6 +210,8 @@
     "lint-staged": "^13.0.1",
     "node-7z": "^3.0.0",
     "node-unzip-2": "^0.2.8",
+    "postcss-jsx": "^0.36.4",
+    "postcss-syntax": "^0.36.2",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "snapshot-diff": "^0.9.0",
@@ -216,7 +219,6 @@
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^26.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "stylelint-processor-styled-components": "^1.10.0",
     "tar-fs": "^2.1.1",
     "typescript": "^4.7.3",
     "walk": "^2.3.15"

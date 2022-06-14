@@ -1,3 +1,5 @@
+const postCssSyntax = require('postcss-syntax')
+
 module.exports = {
   extends: [
     'stylelint-config-standard',
@@ -20,29 +22,10 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/*.es'],
-      processors: [
-        [
-          'stylelint-processor-styled-components',
-          {
-            parserPlugins: [
-              'jsx',
-              'objectRestSpread',
-              ['decorators', { decoratorsBeforeExport: true }],
-              'classProperties',
-              'exportExtensions',
-              'asyncGenerators',
-              'functionBind',
-              'functionSent',
-              'dynamicImport',
-              'optionalCatchBinding',
-              'optionalChaining',
-              'doExpressions',
-              'exportDefaultFrom',
-            ],
-          },
-        ],
-      ],
+      files: ['**/*.es', '**/*.tsx'],
+      customSyntax: postCssSyntax({
+        'styled-components': true,
+      })
     }
   ]
 }
