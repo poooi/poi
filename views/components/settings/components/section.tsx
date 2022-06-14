@@ -3,7 +3,7 @@
  */
 import React, { ReactNode, FunctionComponent } from 'react'
 import PropTypes from 'prop-types'
-import { Card, H5 } from '@blueprintjs/core'
+import { Card, H3 } from '@blueprintjs/core'
 import styled from 'styled-components'
 
 interface SectionProps {
@@ -11,11 +11,17 @@ interface SectionProps {
   children: ReactNode
 }
 
+const SectionCard = styled(Card)`
+  & + & {
+    margin-top: 2em;
+  }
+`
+
 export const Section: FunctionComponent<SectionProps> = ({ title, children, ...props }) => (
-  <Card {...props}>
-    {title && <H5>{title}</H5>}
+  <SectionCard {...props}>
+    {title && <H3>{title}</H3>}
     {children}
-  </Card>
+  </SectionCard>
 )
 
 Section.propTypes = {

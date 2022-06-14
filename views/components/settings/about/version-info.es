@@ -3,10 +3,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { map, capitalize, memoize, size, throttle, isString, toUpper } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import { Card, Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
+import { Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
 import { shell } from 'electron'
 import { FontAwesomeIcon as FA } from '@fortawesome/react-fontawesome'
 import osName from 'os-name'
+
+import { Section } from '../components/section'
 
 const Wrapper = styled.div`
   margin-bottom: 1em;
@@ -125,7 +127,7 @@ const today = new Date()
 const aprilFirst = today.getDate() === 1 && today.getMonth() === 3
 
 export const VersionInfo = withNamespaces(['setting'])(({ t }) => (
-  <Card>
+  <Section>
     <Wrapper>
       <PoiLogo src={`file://${ROOT}/assets/icons/poi.png`} onClick={playPoiAudio} />
       <Versions>
@@ -172,5 +174,5 @@ export const VersionInfo = withNamespaces(['setting'])(({ t }) => (
         )}
       </LinksArea>
     </div>
-  </Card>
+  </Section>
 ))

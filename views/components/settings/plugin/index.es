@@ -23,6 +23,7 @@ import styled from 'styled-components'
 
 import PluginManager from 'views/services/plugin-manager'
 
+import { Section } from '../components/section'
 import { NameInput } from './name-input'
 import { PluginItem } from './plugin-item'
 
@@ -42,6 +43,10 @@ const SettingButton = styled(Button)`
 
 const AdvanceButton = styled(SettingButton)`
   width: 100%;
+`
+
+const PluginList = styled.div`
+  margin-top: 4em;
 `
 
 @withNamespaces(['setting'])
@@ -336,7 +341,7 @@ export class PluginConfig extends Component {
             {t('setting:poi is running in safe mode, plugins are not enabled automatically')}
           </Callout>
         )}
-        <Card>
+        <Section>
           <Control className="plugin-manage-control">
             <ButtonGroup fill>
               <SettingButton onClick={this.checkUpdate} disabled={this.state.checkingUpdate}>
@@ -401,9 +406,9 @@ export class PluginConfig extends Component {
               npmWorking={this.state.npmWorking}
             />
           </Control>
-        </Card>
+        </Section>
 
-        <div className="plugin-list">
+        <PluginList className="plugin-list">
           {this.props.plugins.map((plugin, index) => (
             <PluginItem
               key={plugin.id}
@@ -427,7 +432,7 @@ export class PluginConfig extends Component {
               />
             )
           })}
-        </div>
+        </PluginList>
       </>
     )
   }

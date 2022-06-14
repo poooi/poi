@@ -3,19 +3,12 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import ReactMarkdown from 'react-remarkable'
 import { Trans, withNamespaces } from 'react-i18next'
-import {
-  Card,
-  ButtonGroup,
-  Button,
-  Tooltip,
-  Position,
-  Intent,
-  AnchorButton,
-} from '@blueprintjs/core'
+import { ButtonGroup, Button, Tooltip, Position, Intent, AnchorButton } from '@blueprintjs/core'
 import styled, { css } from 'styled-components'
 import Transition from 'react-transition-group/Transition'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
+import { Section } from '../components/section'
 import PluginManager from 'views/services/plugin-manager'
 
 import { PluginSettingWrapper } from './plugin-setting-wrapper'
@@ -155,7 +148,7 @@ export class PluginItem extends PureComponent {
       (!plugin.multiWindow && plugin.windowURL)
 
     return (
-      <Card className="plugin-item">
+      <Section className="plugin-item">
         <Header className="plugin-header">
           <PluginName className="plugin-name">
             {installable ? (
@@ -300,7 +293,7 @@ export class PluginItem extends PureComponent {
             </Transition>
           </PluginDetail>
         </PluginInfo>
-      </Card>
+      </Section>
     )
   }
 }
