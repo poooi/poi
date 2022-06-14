@@ -47,7 +47,7 @@ const KanGame = styled(CustomTag)`
     width: 100%;
   }
 
-  .bp3-toast-container {
+  .bp4-toast-container {
     overflow: hidden !important;
   }
 `

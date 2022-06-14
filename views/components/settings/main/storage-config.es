@@ -19,9 +19,22 @@ const ButtonArea = styled(Wrapper)`
     margin-left: 10px;
   }
 
-  .bp3-callout {
+  .bp4-callout {
     margin-top: 0.5em;
   }
+`
+const InlineFormGroup = styled(FormGroup)`
+  .bp4-form-content {
+    display: flex;
+    align-items: center;
+  }
+
+  label {
+    flex-shrink: 0;
+  }
+`
+const EndLabel = styled.div`
+  margin-left: 8px;
 `
 
 const defaultCachePath = remote.getGlobal('DEFAULT_CACHE_PATH')
@@ -85,7 +98,7 @@ export class StorageConfig extends Component {
           </Wrapper>
 
           <Wrapper>
-            <FormGroup inline label={t('setting:Maximum cache size')}>
+            <InlineFormGroup inline label={t('setting:Maximum cache size')}>
               <IntegerConfig
                 clampValueOnBlur
                 min={0}
@@ -93,12 +106,12 @@ export class StorageConfig extends Component {
                 configName="poi.misc.cache.size"
                 defaultValue={640}
               />
-              {' MB'}
-            </FormGroup>
+              <EndLabel>MB</EndLabel>
+            </InlineFormGroup>
           </Wrapper>
 
           <FillAvailable>
-            <FormGroup inline label={t('Clear')}>
+            <InlineFormGroup inline label={t('Clear')}>
               <ButtonArea>
                 <Button minimal intent={Intent.WARNING} onClick={this.handleClearCookie}>
                   {t('setting:Delete cookies')}
@@ -113,7 +126,7 @@ export class StorageConfig extends Component {
                   {t('setting:If connection error occurs frequently, delete both of them')}
                 </Callout>
               </ButtonArea>
-            </FormGroup>
+            </InlineFormGroup>
           </FillAvailable>
 
           <FillAvailable>

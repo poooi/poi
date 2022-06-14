@@ -19,6 +19,13 @@ const NumericResolution = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
+
+  .bp4-input-group {
+    flex-shrink: 1;
+  }
+`
+const EndLabel = styled.div`
+  margin-left: 8px;
 `
 
 function getMinArea(displays) {
@@ -178,7 +185,7 @@ export class ResolutionConfig extends Component {
                     <FontAwesomeIcon icon={['fas', 'times']} />
                   </Icon>
                   <NumericInput value={Math.round(height)} disabled />
-                  {' px'}
+                  <EndLabel>px</EndLabel>
                 </NumericResolution>
               </Wrapper>
             </FormGroup>

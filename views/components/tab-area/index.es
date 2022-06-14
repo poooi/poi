@@ -64,7 +64,7 @@ const PluginAppTabpane = styled(PoiAppTabpane)`
   height: 100%;
   padding-bottom: 8px;
 
-  & > .bp3-card {
+  & > .bp4-card {
     padding: 4px;
     height: 100%;
     display: flex;
@@ -131,7 +131,7 @@ const PluginDropdown = styled(Menu)`
 const NavTabs = styled(Tabs)`
   width: calc(100% + 20px);
 
-  .bp3-tab {
+  .bp4-tab {
     text-align: center;
   }
 

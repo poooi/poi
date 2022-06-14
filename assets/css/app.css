@@ -30,17 +30,23 @@ poi-main {
   position: relative;
 }
 
-.bp3-popover-content {
+.bp4-popover-content,
+.bp4-dialog {
   backdrop-filter: blur(5px);
 }
 
-.bp3-tooltip .bp3-popover-content {
+.bp4-tooltip .bp4-popover-content {
   max-width: calc(50vw - 20px);
   overflow: hidden;
 }
 
-.plugin-dropdown-container > .bp3-popover-content > .bp3-menu {
+.plugin-dropdown-container > .bp4-popover-content > .bp4-menu {
   background: transparent;
+}
+
+.bp4-html-select select,
+.bp4-select select {
+  background-image: none;
 }
 
 #electron-app-title-bar {

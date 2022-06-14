@@ -77,7 +77,7 @@ export const FleetNameButton = styled(ButtonGroup)`
   padding: 5px 5px 1px;
   width: 100%;
 
-  .bp3-button {
+  .bp4-button {
     flex: 1;
     overflow: hidden;
   }
@@ -112,7 +112,7 @@ export const ShipItem = styled.div`
     `
   }}
 
-  .bp3-progress-bar {
+  .bp4-progress-bar {
     height: 7px;
   }
 `
@@ -312,7 +312,7 @@ export const ShipLabel = styled.span`
     css`
       position: relative;
       top: -1px;
-      .bp3-tag {
+      .bp4-tag {
         overflow: visible;
         max-width: initial;
         font-size: 80%;

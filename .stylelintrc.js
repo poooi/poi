@@ -16,6 +16,7 @@ module.exports = {
     'declaration-colon-newline-after': null,
     'value-keyword-case': ['lower', { ignoreKeywords: [/dummyValue/] }],
     'keyframes-name-pattern': null,
+    'function-no-unknown': [true, { 'ignoreFunctions': ['-webkit-gradient', 'from', 'to'] }]
   },
   overrides: [
     {

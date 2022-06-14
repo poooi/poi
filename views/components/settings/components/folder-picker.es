@@ -20,7 +20,7 @@ const PickerBox = styled.div`
   display: flex;
   width: 100%;
 
-  .bp3-overflow-list {
+  .bp4-overflow-list {
     flex: 1;
   }
 
@@ -28,7 +28,7 @@ const PickerBox = styled.div`
     margin-left: 1em;
   }
 
-  .bp3-breadcrumb {
+  .bp4-breadcrumb {
     font-size: 12px;
   }
 `

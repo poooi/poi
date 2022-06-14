@@ -108,12 +108,12 @@ export function loadStyle(
   const setBackgroundColor = (isDark, isVibrant) => {
     if (isVibrant) {
       if ('darwin' === process.platform) {
-        delaySetBackgroundColor(isDark ? '#202b3396' : '#f5f8fa96')
+        delaySetBackgroundColor(isDark ? '#2F343C96' : '#F6F7F996')
       } else {
-        delaySetBackgroundColor(isDark ? '#202b33e6' : '#f5f8fae6')
+        delaySetBackgroundColor(isDark ? '#2F343CE6' : '#F6F7F9E6')
       }
     } else {
-      delaySetBackgroundColor(isDark ? '#202b33' : '#f5f8fa')
+      delaySetBackgroundColor(isDark ? '#2F343C' : '#F6F7F9')
     }
   }
 
@@ -129,11 +129,11 @@ export function loadStyle(
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
-    glass.style.backgroundColor = isDark ? 'rgb(32 43 51 / 0.8)' : 'rgb(245 248 250 / 0.8)'
+    glass.style.backgroundColor = isDark ? '#2F343CE6' : '#F6F7F9E6'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
-      classNames('bp3-focus-disabled', {
-        'bp3-dark': isDark,
+      classNames('bp4-focus-disabled', {
+        'bp4-dark': isDark,
       }),
     )
     if ($('#bootstrap-css')) {

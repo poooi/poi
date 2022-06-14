@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { get, map } from 'lodash'
 import { HTMLSelect } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
+import styled from 'styled-components'
 
 import { Section } from '../components/section'
 
@@ -19,6 +20,10 @@ const list = [
   'achromatopsia',
   'achromatomaly',
 ]
+
+const Select = styled(HTMLSelect)`
+  margin-left: 8px;
+`
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({
@@ -38,13 +43,13 @@ export class AccessibilityConfig extends Component {
     return (
       <Section title={t('setting:Accessibility')}>
         {t('setting:Color blind mode')}
-        <HTMLSelect value={this.props.value} onChange={this.handleSetFilter}>
+        <Select value={this.props.value} onChange={this.handleSetFilter}>
           {map(list, (mode) => (
             <option value={mode} key={mode}>
               {t(`setting:${mode}`)}
             </option>
           ))}
-        </HTMLSelect>
+        </Select>
       </Section>
     )
   }
