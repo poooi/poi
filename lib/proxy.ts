@@ -6,7 +6,7 @@ import querystring from 'querystring'
 import mime from 'mime'
 import createPacProxyAgent from 'pac-proxy-agent'
 import createHttpProxyAgent from 'http-proxy-agent'
-import createSocksProxyAgent from 'socks-proxy-agent'
+import { SocksProxyAgent } from 'socks-proxy-agent'
 import { app, session } from 'electron'
 import util from 'util'
 import { gunzip, inflate } from 'zlib'
@@ -300,7 +300,7 @@ class Proxy extends EventEmitter {
         const socksPort = config.get('proxy.socks5.port', 1080)
         const uri = `${socksHost}:${socksPort}`
         if (!this.socksAgents[uri]) {
-          this.socksAgents[uri] = createSocksProxyAgent(`socks://${uri}`)
+          this.socksAgents[uri] = new SocksProxyAgent(`socks://${uri}`)
         }
         options.agent = this.socksAgents[uri]
         break
