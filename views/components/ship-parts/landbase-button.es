@@ -17,7 +17,7 @@ const LandbaseButtonContainer = styled(ButtonGroup)`
     isMini
       ? css`
           padding: 5px 5px 1px 5px;
-          .bp3-button {
+          .bp4-button {
             flex: 1;
             border-width: 0 0 1px;
             height: 18px;
@@ -32,7 +32,7 @@ const LandbaseButtonContainer = styled(ButtonGroup)`
           padding-right: 5px;
           padding-top: 5px;
           width: 100%;
-          .bp3-button {
+          .bp4-button {
             flex: 1;
             overflow: hidden;
           }

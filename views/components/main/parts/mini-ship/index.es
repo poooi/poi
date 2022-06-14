@@ -20,7 +20,7 @@ import {
 import { CardWrapper as CardWrapperL } from '../styled-components'
 
 const FleetNameButton = styled(FleetNameButtonLarge)`
-  .bp3-button {
+  .bp4-button {
     border-width: 0 0 1px;
     height: 18px;
     min-height: 18px;

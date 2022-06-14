@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
   ${({ pin }) =>
     pin &&
     css`
-      .map-reminder-popover > .bp3-transition-container {
+      .map-reminder-popover > .bp4-transition-container {
         pointer-events: none;
         z-index: 18;
       }

@@ -10,6 +10,21 @@ import { Section, Wrapper, HalfWrapper } from 'views/components/settings/compone
 import { IntegerConfig } from 'views/components/settings/components/integer'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 
+import styled from 'styled-components'
+
+const InlineFormGroup = styled(FormGroup)`
+  .bp4-form-content {
+    display: flex;
+    align-items: center;
+  }
+`
+const EndLabel = styled.div`
+  margin-left: 8px;
+`
+const SwitchWithMargin = styled(Switch)`
+  margin-right: 8px;
+`
+
 @withNamespaces(['setting'])
 @connect((state, props) => ({
   enabled: get(state.config, 'poi.notify.enabled', true),
@@ -80,14 +95,14 @@ export class NotificationConfig extends Component {
               {map(
                 ['construction', 'expedition', 'repair', 'morale', 'battleEnd', 'others'],
                 (type) => (
-                  <Switch
+                  <SwitchWithMargin
                     key={type}
                     disabled={!this.props.enabled}
                     checked={this.props[type]}
                     onChange={this.handleSetNotify(type)}
                   >
                     {t(capitalize(type))}
-                  </Switch>
+                  </SwitchWithMargin>
                 ),
               )}
             </Wrapper>
@@ -97,7 +112,7 @@ export class NotificationConfig extends Component {
           </FormGroup>
 
           <Wrapper>
-            <FormGroup inline label={t('setting:Notify when expedition returns in')}>
+            <InlineFormGroup inline label={t('setting:Notify when expedition returns in')}>
               <IntegerConfig
                 clampValueOnBlur
                 min={0}
@@ -105,9 +120,9 @@ export class NotificationConfig extends Component {
                 configName="poi.notify.expedition.value"
                 defaultValue={60}
                 disabled={!this.props.enabled || !this.props.expedition}
-              />{' '}
-              {t('main:s')}
-            </FormGroup>
+              />
+              <EndLabel>{t('main:s')}</EndLabel>
+            </InlineFormGroup>
           </Wrapper>
 
           <Wrapper>

@@ -4,6 +4,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Switch } from '@blueprintjs/core'
+import styled from 'styled-components'
+
+const SwitchWithMargin = styled(Switch)`
+  margin-right: 8px;
+`
 
 @connect((state, props) => ({
   value: get(state.config, props.configName, props.defaultValue),
@@ -26,9 +31,9 @@ export class SwitchConfig extends Component {
   render() {
     const { value, configName, label, defaultValue, dispatch, ...rest } = this.props
     return (
-      <Switch {...rest} checked={value} onChange={this.handleChange}>
+      <SwitchWithMargin {...rest} checked={value} onChange={this.handleChange}>
         {label}
-      </Switch>
+      </SwitchWithMargin>
     )
   }
 }

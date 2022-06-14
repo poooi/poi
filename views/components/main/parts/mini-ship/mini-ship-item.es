@@ -311,7 +311,7 @@ const ShipCond = styled.div`
 const HPProgress = styled.div`
   grid-row: 2 / 3;
   grid-column: 3 / 6;
-  .bp3-progress-bar {
+  .bp4-progress-bar {
     flex: auto;
     height: 7px;
     margin-top: 3px;

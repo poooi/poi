@@ -46,6 +46,7 @@ const AlertMain = styled.div`
   transition: 0.3s;
   width: 100%;
   border-radius: 0;
+  box-shadow: none !important;
 `
 
 const AlertContainer = styled(Alert)`
@@ -193,10 +194,10 @@ export const PoiAlert = () => {
   return (
     <PoiAlertTag tag="poi-alert">
       <ResizeSensor onResize={handleAlertMainResize}>
-        <AlertMain id="alert-main" className="alert-main bp3-popover">
+        <AlertMain id="alert-main" className="alert-main bp4-popover">
           <AlertContainer
             id="alert-container"
-            className={`bp3-callout bp3-intent-${current.type} alert-container`}
+            className={`bp4-callout bp4-intent-${current.type} alert-container`}
             onClick={toggleHistory}
           >
             <AlertPosition
@@ -218,7 +219,7 @@ export const PoiAlert = () => {
           <ResizeSensor onResize={handleAlertLogResize}>
             <AlertLog
               id="alert-log"
-              className="alert-log bp3-popover-content"
+              className="alert-log bp4-popover-content"
               toggle={showHistory}
               height={historyHeight}
               containerHeight={containerHeight}
@@ -228,7 +229,7 @@ export const PoiAlert = () => {
               {history.reverse().map((h) => (
                 <AlertLogContent
                   key={h.ts}
-                  className={`bp3-callout bp3-intent-${h.type}`}
+                  className={`bp4-callout bp4-intent-${h.type}`}
                   data-ts={h.ts}
                 >
                   {h.content}
