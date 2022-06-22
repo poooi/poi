@@ -286,6 +286,7 @@ export class PluginItem extends PureComponent {
               {(state) => (
                 <Fade2 className="plugin-description" state={state}>
                   <ReactMarkdown
+                    options={{ linkTarget: '_blank' }}
                     source={installable ? plugin[`des${window.language}`] : plugin.description}
                   />
                 </Fade2>
