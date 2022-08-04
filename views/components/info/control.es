@@ -82,18 +82,20 @@ export class PoiControl extends Component {
   }
 
   handleCapturePage = (toClipboard) => {
-    if (config.get('poi.misc.screenshot.usecanvas')) {
-      getStore('layout.webview.ref')
-        .getWebContents()
-        .executeJavaScript(`capture(${!!toClipboard})`)
-        .then((success) => {
-          if (!success) {
-            this.handleCapturePageOverWebContent(toClipboard)
-          }
-        })
-    } else {
-      this.handleCapturePageOverWebContent(toClipboard)
-    }
+    // Todo: find a workaround to make canvas capture work again
+    // if (config.get('poi.misc.screenshot.usecanvas')) {
+    //   getStore('layout.webview.ref')
+    //     .getWebContents()
+    //     .executeJavaScript(`capture(${!!toClipboard})`)
+    //     .then((success) => {
+    //       if (!success) {
+    //         this.handleCapturePageOverWebContent(toClipboard)
+    //       }
+    //     })
+    // } else {
+    //   this.handleCapturePageOverWebContent(toClipboard)
+    // }
+    this.handleCapturePageOverWebContent(toClipboard)
   }
 
   handleCapturePageOverWebContent = (toClipboard) => {
@@ -104,7 +106,8 @@ export class PoiControl extends Component {
       width: Math.floor(width * devicePixelRatio),
       height: Math.floor(height * devicePixelRatio),
     }
-    getStore('layout.webview.ref')
+    remote.webContents
+      .fromId(getStore('layout.webview.ref.view').getWebContentsId())
       .capturePage(rect)
       .then((image) => {
         this.handleScreenshotCaptured({
