@@ -288,7 +288,7 @@ export class KanGameWrapper extends Component {
         ref={this.webview}
         disablewebsecurity="on"
         allowpopups="on"
-        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no"
+        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no, sandbox=no"
         preload={preloadUrl}
         style={{
           width: '100%',

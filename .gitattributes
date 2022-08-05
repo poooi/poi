@@ -7,3 +7,4 @@
 *.svg text eol=lf
 *.ts text eol=lf
 *.tsx text eol=lf
+*.node filter=lfs diff=lfs merge=lfs -text
