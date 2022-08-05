@@ -18,6 +18,7 @@ const isIsuzuK2 = shipIdIs(141)
 const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893)])
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
+const isSamuelKaiNi = shipIdIs(920)
 const isFletcherClassOrKai = _.overSome([
   shipIdIs(562), // Johnston
   shipIdIs(689), // Johnston Kai
@@ -84,6 +85,7 @@ export const isOASWWith = (allCVEIds) =>
     isYuubariKaiNiTei,
     isSamuelKai,
     isFletcherClassOrKai,
+    isSamuelKaiNi,
     // 海防艦
     _.overEvery(
       isDE,
