@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>37</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#4EA915" offset="0%"></stop>
+            <stop stop-color="#267009" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M395.7,298.62 L395.7,309.62 L440.58,309.62 L440.58,336.68 L389.98,336.68 L389.98,347.68 L503.28,347.68 L503.28,336.68 L452.02,336.68 L452.02,309.62 L496.46,309.62 L496.46,298.62 L452.02,298.62 L452.02,270.02 L440.58,270.02 L440.58,298.62 L395.7,298.62 Z M397.02,408.18 L397.02,419.18 L440.8,419.18 L440.8,452.4 L387.12,452.4 L387.12,463.62 L507.24,463.62 L507.24,452.4 L452.24,452.4 L452.24,419.18 L498,419.18 L498,408.18 L452.24,408.18 L452.24,374.96 L440.8,374.96 L440.8,408.18 L397.02,408.18 Z M466.54,351.86 L459.06,359.12 C475.78,371.44 488.98,383.32 498.88,394.54 L506.58,386.84 C495.8,375.18 482.38,363.52 466.54,351.86 Z M425.84,352.52 C415.28,365.72 402.3,377.16 386.9,387.28 L393.5,395.86 C409.34,385.3 422.76,373.2 433.76,359.56 L425.84,352.52 Z M320.68,279.92 L320.68,470.22 L332.12,470.22 L332.12,291.36 L371.06,291.36 C365.34,310.28 357.42,331.62 346.86,354.94 C361.82,373.2 369.3,389.7 369.3,404.66 C369.3,410.6 367.76,414.78 364.9,417.42 C361.82,419.84 356.1,421.38 347.52,422.04 C345.76,422.04 343.56,421.82 340.92,421.38 L345.1,433.48 C359.18,433.26 369.08,430.62 374.58,425.34 C378.76,420.94 380.96,414.12 381.18,404.66 C380.08,388.82 372.6,371.66 358.96,353.4 C368.2,331.4 376.34,310.06 382.94,289.6 L382.94,279.92 L320.68,279.92 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="37">
+            <g id="Group" filter="url(#filter-1)" transform="translate(20.000000, 45.000000)" fill="#267009">
+                <polygon id="Path-35" points="40 240 60 200 100 180 120 140 200 120 220 140 400 100 460 20 500 2.84217094e-14 460 120 240 240 60 260 20 260"></polygon>
+                <polygon id="Path-34" points="140 180 0 80 20 60 80 60 180 140"></polygon>
+                <polygon id="Path-37" points="428.712891 134.680664 520 160 540 140 440 116.074219"></polygon>
+                <polygon id="Path-36" points="400 120 340 60 380 60 420 100"></polygon>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>
