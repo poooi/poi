@@ -21,7 +21,7 @@ const initState = {
   spotHistory: [],
   item: null,
   itemHistory: [],
-  spAttackCount: 0,
+  spAttackCount: {},
 }
 
 const ensureArray = (x) => (isArray(x) ? x : [x])
@@ -67,7 +67,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         spotHistory: [],
         item: null,
         itemHistory: [],
-        spAttackCount: 0,
+        spAttackCount: {},
       }
 
     case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -159,17 +159,20 @@ export function reducer(state = initState, { type, path, postBody, body }) {
       }
     }
   }
-  if (
-    [
-      ...get(body, 'api_hougeki1.api_at_type', []),
-      ...get(body, 'api_hougeki2.api_at_type', []),
-      ...get(body, 'api_hougeki3.api_at_type', []),
-      ...get(body, 'api_hougeki.api_sp_list', []),
-    ].filter((a) => a >= 100).length > 0
-  ) {
+  const spAttackIds = [
+    ...get(body, 'api_hougeki1.api_at_type', []),
+    ...get(body, 'api_hougeki2.api_at_type', []),
+    ...get(body, 'api_hougeki3.api_at_type', []),
+    ...get(body, 'api_hougeki.api_sp_list', []),
+  ].filter((a) => a >= 100)
+  if (spAttackIds.length > 0) {
+    const spAttackCount = {
+      ...state.spAttackCount,
+    }
+    spAttackIds.forEach((id) => (spAttackCount[id] = (spAttackCount[id] || 0) + 1))
     return {
       ...state,
-      spAttackCount: state.spAttackCount + 1,
+      spAttackCount,
     }
   }
   return state
