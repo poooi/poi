@@ -119,7 +119,6 @@
     "react": "^18.1.0",
     "react-bootstrap": "^0.33.1",
     "react-dom": "^18.1.0",
-    "react-file-dropzone": "^0.4.1",
     "react-fontawesome": "^1.7.1",
     "react-grid-layout": "^1.3.4",
     "react-i18next": "^11.17.1",
