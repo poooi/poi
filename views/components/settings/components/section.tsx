@@ -13,7 +13,7 @@ interface SectionProps {
 
 const SectionCard = styled(Card)`
   & + & {
-    margin-top: 2em;
+    margin-top: 0.625em;
   }
 `
 
