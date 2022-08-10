@@ -39,6 +39,7 @@ module.exports = {
   win: {
     publish: [],
     icon: 'assets/icons/poi.ico',
+    verifyUpdateCodeSignature: false,
     target: [
       ...createTargets(isFullTarget ? ['nsis', '7z'] : ['7z']),
       { target: '7z', arch: 'ia32' },
