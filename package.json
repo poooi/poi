@@ -140,6 +140,7 @@
     "socks-proxy-agent": "^7.0.0",
     "socks5-client": "^1.2.8",
     "styled-components": "^5.3.5",
+    "tslib": "^2.4.0",
     "wanakana": "^5.0.2",
     "yargs": "^17.5.1"
   },

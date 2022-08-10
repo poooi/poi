@@ -12,5 +12,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
   }
 }

@@ -1,5 +1,5 @@
-/* global ROOT, config, language, toast, MODULE_PATH, APPDATA_PATH */
-import { omit, get, set, each, isArray } from 'lodash'
+/* global ROOT, config, language, toast */
+import { omit, get, each, isArray } from 'lodash'
 import * as remote from '@electron/remote'
 import { join, basename } from 'path-extra'
 import {
@@ -15,7 +15,7 @@ import {
 import React from 'react'
 import FontAwesome from '@skagami/react-fontawesome'
 import semver from 'semver'
-import Module from 'module'
+import { Module } from 'module'
 import { promisify } from 'bluebird'
 import glob from 'glob'
 import crypto from 'crypto'
@@ -29,17 +29,11 @@ import { extendReducer } from 'views/create-store'
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 
-const allowedPath = [MODULE_PATH, ROOT, APPDATA_PATH]
 const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS = require(MIRROR_JSON_PATH)
-
-const nodeModulePaths = Module._nodeModulePaths
-Module._nodeModulePaths = (from) => {
-  return [MODULE_PATH, ...nodeModulePaths(from)]
-}
 
 // This reducer clears the substore no matter what is given.
 const clearReducer = undefined
@@ -274,8 +268,7 @@ export async function readPlugin(pluginPath, isExtra = false) {
 
 export async function enablePlugin(plugin, reread = true) {
   if (!pathAdded.get(plugin.packageName) && !plugin.windowURL) {
-    allowedPath.push(plugin.pluginPath)
-    setAllowedPath(allowedPath)
+    setAllowedPath(plugin.pluginPath)
     pathAdded.set(plugin.packageName, true)
   }
   if (plugin.needRollback) return plugin
@@ -335,58 +328,34 @@ const postEnableProcess = (plugin) => {
   }
   let windowOptions
   if (plugin.windowURL) {
-    if (plugin.windowOptions) {
-      windowOptions = plugin.windowOptions
-      if (!get(windowOptions, 'webPreferences.preload')) {
-        set(windowOptions, 'webPreferences.affinity', 'poi-plugin')
-        set(
-          windowOptions,
-          'webPreferences.preload',
-          join(ROOT, 'assets', 'js', 'plugin-preload.js'),
-        )
-      }
-      if (!get(windowOptions, 'webPreferences.webviewTag')) {
-        set(windowOptions, 'webPreferences.webviewTag', true)
-      }
-      if (!get(windowOptions, 'webPreferences.nodeIntegration')) {
-        set(windowOptions, 'webPreferences.nodeIntegration', true)
-      }
-      if (!get(windowOptions, 'webPreferences.nodeIntegrationInWorker')) {
-        set(windowOptions, 'webPreferences.nodeIntegrationInWorker', true)
-      }
-      if (!get(windowOptions, 'webPreferences.enableRemoteModule')) {
-        set(windowOptions, 'webPreferences.enableRemoteModule', true)
-      }
-      if (!(get(windowOptions, 'webPreferences.contextIsolation') === false)) {
-        set(windowOptions, 'webPreferences.contextIsolation', false)
-      }
-    } else {
-      windowOptions = {
-        x: config.get('poi.window.x', 0),
-        y: config.get('poi.window.y', 0),
-        width: 800,
-        height: 600,
-        webPreferences: {
-          preload: join(ROOT, 'assets', 'js', 'plugin-preload.js'),
-          plugins: true,
-          webviewTag: true,
-          nodeIntegration: true,
-          nodeIntegrationInWorker: false,
-          enableRemoteModule: true,
-          contextIsolation: false,
-          affinity: 'poi-plugin',
-        },
-      }
-    }
-    Object.assign(windowOptions, {
+    const vibrancy =
+      ['darwin'].includes(process.platform) && config.get('poi.appearance.vibrant', 0) === 1
+        ? 'ultra-dark'
+        : undefined
+
+    windowOptions = {
+      x: config.get('poi.window.x', 0),
+      y: config.get('poi.window.y', 0),
+      width: 800,
+      height: 600,
+      webPreferences: {
+        preload: join(ROOT, 'assets', 'js', 'plugin-preload.js'),
+        plugins: true,
+        webviewTag: true,
+        nodeIntegration: true,
+        nodeIntegrationInWorker: true,
+        nodeIntegrationInSubFrames: true,
+        sandbox: false,
+        enableRemoteModule: true,
+        contextIsolation: false,
+        affinity: 'poi-plugin',
+        webSecurity: false,
+        ...plugin.windowOptions?.webPreferences,
+      },
+      ...plugin.windowOptions,
       realClose: plugin.realClose,
       backgroundColor: '#E62A2A2A',
-      // frame: !config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux'),
-    })
-    if (['darwin'].includes(process.platform) && config.get('poi.appearance.vibrant', 0) === 1) {
-      Object.assign(windowOptions, {
-        vibrancy: 'ultra-dark',
-      })
+      vibrancy,
     }
     const windowURL = normalizeURL(plugin.windowURL)
     if (plugin.multiWindow) {

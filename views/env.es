@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import * as remote from '@electron/remote'
 import lodash from 'lodash'
 import { init } from '../lib/sentry'
-import Module from 'module'
+import { setAllowedPath } from '../lib/module-path'
 
 import './polyfills/react-i18next'
 import './polyfills/react-fontawesome'
@@ -30,6 +30,9 @@ if (!require('electron').remote) {
   require('electron').remote = remote
 }
 
+// Add ROOT to `require` search path
+setAllowedPath(window.MODULE_PATH, window.ROOT, window.APPDATA_PATH)
+
 if (window.isMain) {
   // Plugins
   fs.ensureDirSync(window.PLUGIN_PATH)
@@ -45,12 +48,6 @@ if (window.isMain) {
 
   const { stopNavigateAndHandleNewWindow } = remote.require('./lib/webcontent-utils')
   stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
-}
-
-// Add ROOT to `require` search path
-const nodeModulePaths = Module._nodeModulePaths
-Module._nodeModulePaths = (from) => {
-  return [window.ROOT, ...nodeModulePaths(from)]
 }
 
 // Disable eval

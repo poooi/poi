@@ -3,21 +3,10 @@ const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 const config = remote.require('./lib/config')
-const Module = require('module')
-
-const nodeModulePaths = Module._nodeModulePaths
-Module._nodeModulePaths = (from) => {
-  return [MODULE_PATH, ...nodeModulePaths(from)]
-}
 require('@babel/register')(require(`${ROOT}/babel-register.config`))
-async function setPath() {
-  require(`${ROOT}/lib/module-path`).setAllowedPath([
-    ROOT,
-    APPDATA_PATH,
-    await remote.getCurrentWebContents().executeJavaScript('__dirname'),
-  ])
-}
-setPath()
+const { setAllowedPath } = require(`${ROOT}/lib/module-path`)
+
+setAllowedPath(MODULE_PATH, ROOT, APPDATA_PATH)
 
 const onZoomChange = (value) => {
   remote.getCurrentWebContents().zoomFactor = value
@@ -38,38 +27,3 @@ window.addEventListener('unload', (e) => {
 document.addEventListener('DOMContentLoaded', () =>
   onZoomChange(config.get('poi.appearance.zoom', 1)),
 )
-// document.addEventListener('DOMContentLoaded', () => {
-//   if (config.get('poi.appearance.customtitlebar', process.platform === 'win32' || process.platform === 'linux')) {
-//     const titlebar = document.createElement('div')
-//     titlebar.id = "electron-titlebar"
-//     titlebar.style.position = 'sticky'
-//     titlebar.style.left = '0'
-//     titlebar.style.top = '0'
-//     titlebar.style.width = '100vw'
-//     titlebar.style.zIndex = '1000'
-//     document.querySelector('html').insertBefore(titlebar, document.body)
-//     const titlebarStyle = document.createElement('style')
-//     titlebarStyle.innerHTML =
-// `#electron-app-title-bar {
-//   background-color: transparent !important;
-//   box-sizing: content-box !important;
-// }
-// #electron-app-title-bar * {
-//   font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft Yahei UI Light", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
-// }
-// #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
-//   opacity: 0.9 !important;
-// }
-// `
-//     document.querySelector('head').appendChild(titlebarStyle)
-//     const ReactDOM = require('react-dom')
-//     const React = require('react')
-//     const path = require('path')
-//     const { TitleBar } = require('electron-react-titlebar')
-//     ReactDOM.render(React.createElement(
-//       TitleBar,
-//       { icon: path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png'), menu: [] },
-//       React.createElement('link', { rel: 'stylesheet', type: 'text/css', href: require.resolve('electron-react-titlebar/assets/style.css') })
-//     ), document.querySelector('#electron-titlebar'))
-//   }
-// })
