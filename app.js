@@ -34,6 +34,7 @@ const dbg = require('./lib/debug')
 require('./lib/updater')
 proxy.setMaxListeners(30)
 require('./lib/tray')
+require('./lib/screenshot')
 
 // Disable HA
 if (config.get('poi.misc.disablehwaccel', false)) {

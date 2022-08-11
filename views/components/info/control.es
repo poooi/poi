@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import path from 'path-extra'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { shell, clipboard, nativeImage } from 'electron'
+import { shell, clipboard, nativeImage, ipcRenderer } from 'electron'
 import * as remote from '@electron/remote'
 import { Button, Position } from '@blueprintjs/core'
 import { connect } from 'react-redux'
@@ -98,28 +98,30 @@ export class PoiControl extends Component {
     this.handleCapturePageOverWebContent(toClipboard)
   }
 
-  handleCapturePageOverWebContent = (toClipboard) => {
+  handleCapturePageOverWebContent = async (toClipboard) => {
     const { width, height } = getStore('layout.webview')
+    const webContentId = getStore('layout.webview.ref.view').getWebContentsId()
+    const actualSize = { width: Math.round(width), height: Math.round(height) }
     const rect = {
       x: 0,
       y: 0,
       width: Math.floor(width * devicePixelRatio),
       height: Math.floor(height * devicePixelRatio),
     }
-    remote.webContents
-      .fromId(getStore('layout.webview.ref.view').getWebContentsId())
-      .capturePage(rect)
-      .then((image) => {
-        this.handleScreenshotCaptured({
-          dataURL: image
-            .resize({ width: Math.floor(width), height: Math.floor(height) })
-            .toDataURL(),
-          toClipboard,
-        })
-      })
+    try {
+      const dataURL =
+        (await ipcRenderer.invoke('screenshot::get', webContentId, rect, actualSize)) ||
+        (await remote.webContents.fromId(webContentId).capturePage(rect))
+          .resize(actualSize)
+          .toDataURL()
+      this.handleScreenshotCaptured(dataURL, toClipboard)
+    } catch (err) {
+      console.error(err)
+      window.error(this.props.t('Failed to save the screenshot'))
+    }
   }
 
-  handleScreenshotCaptured = ({ dataURL, toClipboard }) => {
+  handleScreenshotCaptured = (dataURL, toClipboard) => {
     const screenshotPath = config.get(
       'poi.misc.screenshot.path',
       remote.getGlobal('DEFAULT_SCREENSHOT_PATH'),

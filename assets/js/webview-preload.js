@@ -140,7 +140,7 @@ window.capture = async function (toClipboard) {
       })
       .then((dataURL) => {
         const ss = window.ipc.access('screenshot')
-        if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured({ dataURL, toClipboard })
+        if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured(dataURL, toClipboard)
         return true
       })
       .catch(() => false)
