@@ -116,7 +116,7 @@ window.unalign = () => {
   }
 }
 
-window.capture = async function (toClipboard) {
+window.capture = async function () {
   try {
     const canvas = document.querySelector('#game_frame')
       ? document
@@ -128,24 +128,17 @@ window.capture = async function (toClipboard) {
       : document.querySelector('canvas')
       ? document.querySelector('canvas')
       : null
-    if (!canvas || !ImageCapture) return false
-    return await new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
-      .grabFrame()
-      .then((imageBitmap) => {
-        const tempCanvas = document.createElement('canvas')
-        tempCanvas.width = imageBitmap.width
-        tempCanvas.height = imageBitmap.height
-        tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
-        return tempCanvas.toDataURL()
-      })
-      .then((dataURL) => {
-        const ss = window.ipc.access('screenshot')
-        if (ss && ss.onScreenshotCaptured) ss.onScreenshotCaptured(dataURL, toClipboard)
-        return true
-      })
-      .catch(() => false)
+    if (!canvas || !ImageCapture) return undefined
+    const imageCapture = new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
+    const imageBitmap = await imageCapture.grabFrame()
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = imageBitmap.width
+    tempCanvas.height = imageBitmap.height
+    tempCanvas.getContext('2d').drawImage(imageBitmap, 0, 0)
+    return tempCanvas.toDataURL()
   } catch (e) {
-    return false
+    console.error(e)
+    return undefined
   }
 }
 

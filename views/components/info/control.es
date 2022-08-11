@@ -14,7 +14,6 @@ import styled, { css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
 
-const ipc = remote.require('./lib/ipc')
 const { openExternal } = shell
 
 const openItemAsync = (dir, source = null) => {
@@ -81,21 +80,23 @@ export class PoiControl extends Component {
     extend: false,
   }
 
-  handleCapturePage = (toClipboard) => {
-    // Todo: find a workaround to make canvas capture work again
-    // if (config.get('poi.misc.screenshot.usecanvas')) {
-    //   getStore('layout.webview.ref')
-    //     .getWebContents()
-    //     .executeJavaScript(`capture(${!!toClipboard})`)
-    //     .then((success) => {
-    //       if (!success) {
-    //         this.handleCapturePageOverWebContent(toClipboard)
-    //       }
-    //     })
-    // } else {
-    //   this.handleCapturePageOverWebContent(toClipboard)
-    // }
-    this.handleCapturePageOverWebContent(toClipboard)
+  handleCapturePage = async (toClipboard) => {
+    if (config.get('poi.misc.screenshot.usecanvas')) {
+      this.handleCapturePageOverCanvas(toClipboard)
+    } else {
+      this.handleCapturePageOverWebContent(toClipboard)
+    }
+  }
+
+  handleCapturePageOverCanvas = async (toClipboard) => {
+    const dataURL = await getStore('layout.webview.ref')
+      .getWebContents()
+      .executeJavaScript(`capture(${!!toClipboard})`)
+    if (!dataURL) {
+      await this.handleCapturePageOverWebContent(toClipboard)
+    } else {
+      await this.handleScreenshotCaptured(dataURL, toClipboard)
+    }
   }
 
   handleCapturePageOverWebContent = async (toClipboard) => {
@@ -115,13 +116,12 @@ export class PoiControl extends Component {
           .resize(actualSize)
           .toDataURL()
       this.handleScreenshotCaptured(dataURL, toClipboard)
-    } catch (err) {
-      console.error(err)
-      window.error(this.props.t('Failed to save the screenshot'))
+    } catch (error) {
+      this.handleScreenshotFailure(error)
     }
   }
 
-  handleScreenshotCaptured = (dataURL, toClipboard) => {
+  handleScreenshotCaptured = async (dataURL, toClipboard) => {
     const screenshotPath = config.get(
       'poi.misc.screenshot.path',
       remote.getGlobal('DEFAULT_SCREENSHOT_PATH'),
@@ -135,16 +135,22 @@ export class PoiControl extends Component {
     } else {
       const buf = usePNG ? image.toPNG() : image.toJPEG(80)
       const date = formatDate(new Date())
-      fs.ensureDirSync(screenshotPath)
       const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
-      fs.writeFile(filename, buf)
-        .then(() => {
-          window.success(`${this.props.t('screenshot saved to')} ${filename}`)
-        })
-        .catch((err) => {
-          window.error(this.props.t('Failed to save the screenshot'))
-        })
+      try {
+        await fs.ensureDir(screenshotPath)
+        await fs.writeFile(filename, buf)
+        window.success(`${this.props.t('screenshot saved to')} ${filename}`)
+      } catch (error) {
+        this.handleScreenshotFailure(error)
+      }
     }
+  }
+
+  handleScreenshotFailure = (error) => {
+    if (error) {
+      console.error(error)
+    }
+    window.error(this.props.t('Failed to save the screenshot'))
   }
 
   handleOpenCacheFolder = () => {
@@ -384,12 +390,6 @@ export class PoiControl extends Component {
     //Stateless touchbar input receiver
     if (process.platform === 'darwin') {
       require('electron').ipcRenderer.addListener('touchbar', this.touchbarListener)
-    }
-    // Add Screenshot handler
-    if (!ipc.access('screenshot')) {
-      ipc.register('screenshot', {
-        onScreenshotCaptured: this.handleScreenshotCaptured,
-      })
     }
   }
 
