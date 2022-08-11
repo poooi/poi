@@ -40,12 +40,10 @@ module.exports = {
     publish: [],
     icon: 'assets/icons/poi.ico',
     verifyUpdateCodeSignature: false,
-    publisherName: 'poi dev team',
     target: [
       ...createTargets(isFullTarget ? ['nsis', '7z'] : ['7z']),
       { target: '7z', arch: 'ia32' },
     ],
-    sign: async () => console.log('Skip signing'),
   },
   linux: {
     publish: [],
