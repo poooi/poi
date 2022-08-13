@@ -11,6 +11,7 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 import { DownloadProgress } from './download-progress'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
+import styled from 'styled-components'
 
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 
@@ -20,13 +21,21 @@ config.on('config.set', (path, value) => {
   }
 })
 
+const FullWidthFormGroup = styled(FormGroup)`
+  width: 100%;
+
+  & > div {
+    width: 100%;
+  }
+`
+
 export const Update = withNamespaces(['setting'])(({ t }) => (
   <Section title={t('Update')}>
     <Wrapper>
       <Wrapper>
-        <FormGroup inline style={{ width: '100%' }}>
+        <FullWidthFormGroup inline>
           <DownloadProgress />
-        </FormGroup>
+        </FullWidthFormGroup>
       </Wrapper>
       <Wrapper>
         <FormGroup inline>
