@@ -56,9 +56,11 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
     app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk'
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
+  const cwdPath = process.cwd()
   const option = {
     target: targetPath,
     args: argPath,
+    cwd: cwdPath,
     appUserModelId: 'org.poooi.poi',
     description: 'poi the KanColle Browser Tool',
   }
@@ -71,12 +73,12 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
   shell.writeShortcutLink(shortcutPath, option)
   const safeModeShortcutPath =
     app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi (safe mode).lnk'
-  const safeModeOption = Object.assign({}, option)
-  Object.assign(safeModeOption, {
+  const safeModeOption = {
+    ...option,
     description: 'poi the KanColle Browser Tool (safe mode)',
     args: `${argPath} --safe`,
     appUserModelId: 'org.poooi.poi.safe',
-  })
+  }
   shell.writeShortcutLink(safeModeShortcutPath, safeModeOption)
 }
 
