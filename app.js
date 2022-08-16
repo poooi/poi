@@ -56,7 +56,11 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
     app.getPath('appData') + '\\Microsoft\\Windows\\Start Menu\\Programs\\poi.lnk'
   const targetPath = app.getPath('exe')
   const argPath = app.getAppPath()
-  const cwdPath = process.cwd()
+  const cwdPath = process.cwd().startsWith(app.getPath('appData'))
+    ? ROOT.endsWith('.asar')
+      ? path.dirname(targetPath)
+      : ROOT
+    : process.cwd()
   const option = {
     target: targetPath,
     args: argPath,
@@ -64,7 +68,7 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
     appUserModelId: 'org.poooi.poi',
     description: 'poi the KanColle Browser Tool',
   }
-  if (!ROOT.includes('.asar')) {
+  if (!ROOT.endsWith('.asar')) {
     Object.assign(option, {
       icon: path.join(ROOT, 'assets', 'icons', 'poi.ico'),
       iconIndex: 0,
