@@ -14,7 +14,7 @@ const MODULE_PATH = path.join(__dirname, '..', 'node_modules')
  * we search for a package in node modules, we will node_modules at every level
  * but some unexpected packages from upper node_modules would break our app
  * we use this to filter out upper folders
- * @param allowedPaths {string[]} the limit we want
+ * @param modulePaths {string[]} the limit we want
  */
 export const setAllowedPath = function (...modulePaths: string[]) {
   modulePaths.forEach(function (modulePath) {
