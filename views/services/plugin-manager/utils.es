@@ -19,7 +19,6 @@ import { Module } from 'module'
 import { promisify } from 'bluebird'
 import glob from 'glob'
 import crypto from 'crypto'
-import { setAllowedPath } from 'lib/module-path'
 import child_process from 'child_process'
 import path from 'path'
 import i18next from 'views/env-parts/i18next'
@@ -29,7 +28,6 @@ import { extendReducer } from 'views/create-store'
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 
-const pathAdded = new Map()
 const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
 const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
@@ -267,10 +265,6 @@ export async function readPlugin(pluginPath, isExtra = false) {
 }
 
 export async function enablePlugin(plugin, reread = true) {
-  if (!pathAdded.get(plugin.packageName) && !plugin.windowURL) {
-    setAllowedPath(plugin.pluginPath)
-    pathAdded.set(plugin.packageName, true)
-  }
   if (plugin.needRollback) return plugin
   let pluginMain
   try {

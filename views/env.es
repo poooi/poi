@@ -31,7 +31,7 @@ if (!require('electron').remote) {
 }
 
 // Add ROOT to `require` search path
-setAllowedPath(window.MODULE_PATH, window.ROOT, window.APPDATA_PATH)
+setAllowedPath(window.MODULE_PATH, window.ROOT)
 
 if (window.isMain) {
   // Plugins

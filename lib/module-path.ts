@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore: module seems to be special
 import { Module } from 'module'
+import path from 'path'
 
 // @ts-ignore: patching internal variables
 const { _nodeModulePaths } = Module
 
 const allowedPaths = new Set<string>()
+
+const MODULE_PATH = path.join(__dirname, '..', 'node_modules')
 
 /**
  * we search for a package in node modules, we will node_modules at every level
@@ -22,7 +25,13 @@ export const setAllowedPath = function (...modulePaths: string[]) {
   Module._nodeModulePaths = function (from: string) {
     // use function style instead of arrows, expecting some possible perf gain
 
-    // putting allowed path in back so that main program's module path has lower priority
-    return _nodeModulePaths.call(this, from).concat(allowedPathsArray)
+    const originResult = _nodeModulePaths.call(this, from)
+
+    // if require path is including module path, do not put allowed path so that
+    // require priority won't be messed up
+    const ignoreAllowedPath = from.startsWith(MODULE_PATH)
+
+    // put allowed path in front so that main program's module path has higher priority
+    return ignoreAllowedPath ? originResult : allowedPathsArray.concat(originResult)
   }
 }

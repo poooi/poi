@@ -25,7 +25,7 @@ const poiIconPath = path.join(
 
 electronRemote.initialize()
 
-require('./lib/module-path').setAllowedPath(global.ROOT, global.APPDATA_PATH)
+require('./lib/module-path').setAllowedPath(global.ROOT)
 const config = require('./lib/config')
 const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')

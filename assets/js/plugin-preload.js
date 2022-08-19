@@ -1,12 +1,11 @@
 const remote = require('@electron/remote')
 const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
-const APPDATA_PATH = remote.getGlobal('APPDATA_PATH')
 const config = remote.require('./lib/config')
 require('@babel/register')(require(`${ROOT}/babel-register.config`))
 const { setAllowedPath } = require(`${ROOT}/lib/module-path`)
 
-setAllowedPath(MODULE_PATH, ROOT, APPDATA_PATH)
+setAllowedPath(MODULE_PATH, ROOT)
 
 const onZoomChange = (value) => {
   remote.getCurrentWebContents().zoomFactor = value
