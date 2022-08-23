@@ -355,20 +355,35 @@ declareAACI({
 })
 
 const isMusashiK2 = shipIdIs(546)
+const isYamatoK2 = validAny(shipIdIs(911), shipIdIs(916))
 // 275: 10cm連装高角砲改+増設機銃
 const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
 
-// id 26: Musashi K2
+// id 26: Yamato K2 / Yamato K2 Heavy / Musashi K2
 declareAACI({
-  name: ['武蔵改二'],
+  name: ['武蔵改二', '大和改二', '大和改二重'],
   id: 26,
   fixed: 6,
   modifier: 1.4,
-  shipValid: isMusashiK2,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
   equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isAARadar)),
 })
 
-// id 27: <unknown>
+// id 27: Ooyodo Kai
+const isOoyodoK = shipIdIs(321)
+declareAACI({
+  name: ['大淀改'],
+  id: 27,
+  fixed: 5,
+  modifier: 1.55,
+  shipValid: validAny(isOoyodoK),
+  equipsValid: validAll(
+    hasSome(isHighAngleMountGun),
+    hasSome(isRocketK2),
+    hasSome(isAARadar)
+  ),
+})
+
 const isMusashiK = shipIdIs(148)
 
 // id 28: Ise-class Kai & Musashi Kai/K2
@@ -561,6 +576,68 @@ declareAACI({
   modifier: 1.65,
   shipValid: isAtlantaOrKai,
   equipsValid: hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
+})
+
+// id 42~45: Yamato K2 / Yamoto K2 Heavy / Musashi K2
+
+// 464: 10cm連装高角砲群 集中配備
+const is10cmTwinHighAngleGunMountConcentratedDeployment = equip => equip.api_slotitem_id === 464
+
+// 142: 15m二重測距儀＋21号電探改二
+// 460: 15m二重測距儀改＋21号電探改二＋熟練射撃指揮所
+const is15mDuplexRangefinderLike = equip => [142, 460].includes(equip.api_slotitem_id)
+
+// Anti-Air gun that has 9￼AA stat or higher.
+const isAAMG = equip => isMachineGun(equip) && equip.api_tyku >= 6
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 42,
+  fixed: 10,
+  modifier: 1.65,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasAtLeast(is10cmTwinHighAngleGunMountConcentratedDeployment, 2),
+    hasSome(is15mDuplexRangefinderLike),
+    hasSome(isAAMG),
+  ),
+})
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 43,
+  fixed: 8,
+  modifier: 1.6,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasAtLeast(is10cmTwinHighAngleGunMountConcentratedDeployment, 2),
+    hasSome(is15mDuplexRangefinderLike),
+  ),
+})
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 44,
+  fixed: 6,
+  modifier: 1.6,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
+    hasSome(is15mDuplexRangefinderLike),
+    hasSome(isAAMG),
+  ),
+})
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 45,
+  fixed: 5,
+  modifier: 1.55,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
+    hasSome(is15mDuplexRangefinderLike),
+  ),
 })
 
 // return: a list of sorted AACI objects order by effect desc,
