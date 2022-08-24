@@ -255,8 +255,9 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
 @withNamespaces(['setting', 'others'])
 @connect((state) => {
   const windowmode = get(state.config, 'poi.plugin.windowmode', emptyObj)
-  const visibleActivePlugins = state.plugins.filter(plugin =>
-    plugin.enabled && !get(windowmode, plugin.id, false))
+  const visibleActivePlugins = state.plugins.filter(
+    (plugin) => plugin.enabled && !get(windowmode, plugin.id, false),
+  )
   const activePluginName = get(state.ui, 'activePluginName', get(visibleActivePlugins, '0.id', ''))
 
   return {
