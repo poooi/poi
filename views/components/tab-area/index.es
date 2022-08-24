@@ -253,19 +253,26 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
   })
 
 @withNamespaces(['setting', 'others'])
-@connect((state) => ({
-  plugins: state.plugins,
-  doubleTabbed: get(state.config, 'poi.tabarea.double', false),
-  verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
-  useGridMenu: get(state.config, 'poi.tabarea.grid', true),
-  activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
-  activePluginName: get(state.ui, 'activePluginName', get(state.plugins, '0.id', '')),
-  mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
-  mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
-  editable: get(state.config, 'poi.layout.editable', false),
-  windowmode: get(state.config, 'poi.plugin.windowmode', emptyObj),
-  async: get(state.config, 'poi.misc.async', true),
-}))
+@connect((state) => {
+  const windowmode = get(state.config, 'poi.plugin.windowmode', emptyObj)
+  const visibleActivePlugins = state.plugins.filter(plugin =>
+    plugin.enabled && !get(windowmode, plugin.id, false))
+  const activePluginName = get(state.ui, 'activePluginName', get(visibleActivePlugins, '0.id', ''))
+
+  return {
+    plugins: state.plugins,
+    doubleTabbed: get(state.config, 'poi.tabarea.double', false),
+    verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
+    useGridMenu: get(state.config, 'poi.tabarea.grid', true),
+    activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
+    activePluginName,
+    mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+    mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
+    editable: get(state.config, 'poi.layout.editable', false),
+    windowmode,
+    async: get(state.config, 'poi.misc.async', true),
+  }
+})
 export class ControlledTabArea extends PureComponent {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
