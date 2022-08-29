@@ -1,11 +1,8 @@
 import React, { useContext } from 'react'
-import {
-  Alert as BAlert,
-  Dialog as BDialog,
-  Tooltip as BTooltip,
-  Popover as BPopover,
-  Overlay as BOverlay,
-} from '@blueprintjs/core'
+import { Alert as BAlert, Dialog as BDialog, Overlay as BOverlay } from '@blueprintjs/core'
+import { Popover2, Tooltip2 } from '@blueprintjs/popover2'
+
+import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
 
 import { WindowEnv } from './window-env'
 
@@ -22,15 +19,15 @@ export const Dialog = ({ children, ...props }) => (
 )
 
 export const Tooltip = ({ children, ...props }) => (
-  <BTooltip portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <Tooltip2 portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BTooltip>
+  </Tooltip2>
 )
 
 export const Popover = ({ children, ...props }) => (
-  <BPopover portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <Popover2 portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BPopover>
+  </Popover2>
 )
 
 export const Overlay = ({ children, ...props }) => (
