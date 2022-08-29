@@ -333,6 +333,31 @@ export class PoiMapReminder extends Component {
           wrapperTagName="div"
           targetTagName="div"
           disabled={!mapData}
+          content={
+            <>
+              <MapRoutes />
+              <MapInfoMsg className="map-info-msg">
+                {!!currentNode && (
+                  <MapTooltipMsg className="map-tooltip-msg">
+                    {t('Node')}: {alphaNode} ({currentNode})
+                  </MapTooltipMsg>
+                )}
+                {!!mapHp && mapHp[1] > 0 && mapHp[0] !== 0 && (
+                  <MapTooltipMsg className="map-tooltip-msg">
+                    HP: {mapHp[0]} / {mapHp[1]}
+                  </MapTooltipMsg>
+                )}
+              </MapInfoMsg>
+              <ItemStat />
+              <PinBtn
+                icon="pin"
+                minimal
+                small
+                active={pinminimap}
+                onClick={() => config.set('poi.misc.pinminimap', !!mapData && !pinminimap)}
+              />
+            </>
+          }
           {...(pinminimap
             ? { isOpen: !!mapData }
             : { interactionKind: PopoverInteractionKind.HOVER })}
@@ -359,29 +384,6 @@ export class PoiMapReminder extends Component {
               </span>
             </Alert>
           </MapReminder>
-          <>
-            <MapRoutes />
-            <MapInfoMsg className="map-info-msg">
-              {!!currentNode && (
-                <MapTooltipMsg className="map-tooltip-msg">
-                  {t('Node')}: {alphaNode} ({currentNode})
-                </MapTooltipMsg>
-              )}
-              {!!mapHp && mapHp[1] > 0 && mapHp[0] !== 0 && (
-                <MapTooltipMsg className="map-tooltip-msg">
-                  HP: {mapHp[0]} / {mapHp[1]}
-                </MapTooltipMsg>
-              )}
-            </MapInfoMsg>
-            <ItemStat />
-            <PinBtn
-              icon="pin"
-              minimal
-              small
-              active={pinminimap}
-              onClick={() => config.set('poi.misc.pinminimap', !!mapData && !pinminimap)}
-            />
-          </>
         </Popover>
         <GlobalStyle pin={!!mapData && pinminimap} />
       </PoiMapReminderTag>
