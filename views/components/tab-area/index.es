@@ -94,6 +94,15 @@ const PoiTabContainer = styled.div`
 
 const PluginDropdownButton = styled(Button)`
   width: 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  ${({ double }) =>
+    double &&
+    css`
+      width: calc(100% - 13.5px);
+      margin-left: 6.5px;
+      margin-right: 7px;
+    `}
 `
 
 const PluginDropdownMenuItem = styled(MenuItem)`
@@ -786,7 +795,7 @@ export class ControlledTabArea extends PureComponent {
           minimal
           hasBackdrop
           popoverClassName="plugin-dropdown-container"
-          position={Position.BOTTOM_RIGHT}
+          position={Position.BOTTOM}
           content={pluginDropdownContents}
           className="nav-tab"
           wrapperTagName="div"
@@ -797,6 +806,7 @@ export class ControlledTabArea extends PureComponent {
             ref={this.trigger}
             minimal
             large
+            double
             icon="chevron-down"
             text={(activePlugin || {}).displayName || defaultPluginTitle}
           />
