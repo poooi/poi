@@ -22,6 +22,7 @@ Key features include:
 [![Backers on Open Collective](https://opencollective.com/poi/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/poi/sponsors/badge.svg)](#sponsors)
 [![license:mit](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
+[![kandi X-Ray](https://kandi.openweaver.com/badges/xray.svg)](https://kandi.openweaver.com/javascript/poooi/poi)
 
 ## Screenshots
 
