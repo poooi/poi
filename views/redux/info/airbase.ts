@@ -11,6 +11,8 @@ import {
   createAPIReqAirCorpsSupplyResponseAction,
   createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
+  createAPIReqAirCorpsChangeDeploymentBaseResponseAction,
+  APIBaseItem,
 } from '../actions'
 
 export interface AirBase extends Partial<APIAirBase> {
@@ -53,6 +55,67 @@ const airBaseSlice = createSlice({
                 api_plane_info: squadrons,
               },
             ],
+          ),
+          3,
+        )
+      })
+      .addCase(createAPIReqAirCorpsChangeDeploymentBaseResponseAction, (state, { payload }) => {
+        const {
+          api_area_id,
+          api_base_id_src,
+          api_base_id,
+          api_item_id,
+        } = payload.postBody
+        const { api_base_items } = payload.body
+        // Err on the side of caution, few preconditions before updating.
+
+        // Only two plane slots are supposed to be swapped.
+        if (api_base_items.length !== 2) {
+          return state
+        }
+
+        const findSquadronIndex = (baseId: number | string) => {
+          const ret = findIndex(
+            state,
+            (squad) => squad.api_rid === +baseId && squad.api_area_id === +api_area_id
+          )
+          return ret === -1 ? +baseId - 1 : ret
+        }
+
+        // Moving a plane equip from src slot to dst slot.
+        const indexSrc = findSquadronIndex(api_base_id_src)
+        const indexDst = findSquadronIndex(api_base_id)
+
+        // The equip in question should exist.
+        if (
+          findIndex(
+            state[indexSrc].api_plane_info,
+            (squad) => squad.api_slotid === +api_item_id) === -1
+        ) {
+          return state
+        }
+
+        const [objSrc, objDst] = (() => {
+          const [item0, item1] = api_base_items
+          return item0.api_rid === +api_base_id_src ? [item0, item1] : [item1, item0]
+        })()
+
+        const convertItem = ({ api_distance, api_plane_info }: APIBaseItem) => {
+          const squadrons = constructArray(
+            api_plane_info.map((p) => p.api_squadron_id - 1),
+            api_plane_info,
+          )
+          return {
+            api_distance,
+            api_plane_info: squadrons,
+          }
+        }
+
+        return compareUpdate(
+          state,
+          constructArray(
+            [indexSrc, indexDst],
+            map([objSrc, objDst], convertItem),
           ),
           3,
         )
