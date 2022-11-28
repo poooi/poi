@@ -482,7 +482,8 @@ declareAACI({
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
 })
 
-const is5InchSingleGunMountMk30 = equip => equip.api_slotitem_id === 313
+const is5InchSingleGunMountMk30OrKai = equip => (equip.api_slotitem_id === 284 || equip.api_slotitem_id === 313)
+const is5InckSingleGunMountMk30Kai = equip => equip.apt_slotitem_id === 313
 
 declareAACI({
   name: ['Johnston', 'Fletcher'],
@@ -492,7 +493,7 @@ declareAACI({
   shipValid: isFletcherClassOrKai,
   equipsValid: validAll(
     hasSome(is5InchSingleGunMountMk30PlusGFCS),
-    hasSome(is5InchSingleGunMountMk30),
+    hasSome(is5InchSingleGunMountMk30OrKai),
   ),
 })
 
@@ -504,7 +505,7 @@ declareAACI({
   fixed: 6,
   modifier: 1.55,
   shipValid: isFletcherClassOrKai,
-  equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30, 2), hasSome(isGFCSMk37)),
+  equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30OrKai, 2), hasSome(isGFCSMk37)),
 })
 
 declareAACI({
@@ -513,7 +514,7 @@ declareAACI({
   fixed: 4,
   modifier: 1.55,
   shipValid: isFletcherClassOrKai,
-  equipsValid: hasAtLeast(is5InchSingleGunMountMk30, 2),
+  equipsValid: hasAtLeast(is5InckSingleGunMountMk30Kai, 2),
 })
 
 // id 38~41: Atlanta
