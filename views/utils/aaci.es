@@ -482,11 +482,10 @@ const isFletcherClassOrKai = shipIdIsOneOf(
 )
 
 const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
-const fletcherClassNames = ['Johnston', 'Fletcher', 'Heywood L.E.']
 
 // id 34~37: Johnston
 declareAACI({
-  name: fletcherClassNames,
+  name: ['Fletcher-class'],
   id: 34,
   fixed: 7,
   modifier: 1.6,
@@ -498,7 +497,7 @@ const is5InchSingleGunMountMk30OrKai = equip => (equip.api_slotitem_id === 284 |
 const is5InckSingleGunMountMk30Kai = equip => equip.apt_slotitem_id === 313
 
 declareAACI({
-  name: fletcherClassNames,
+  name: ['Fletcher-class'],
   id: 35,
   fixed: 6,
   modifier: 1.55,
@@ -512,7 +511,7 @@ declareAACI({
 const isGFCSMk37 = equip => equip.api_slotitem_id === 307
 
 declareAACI({
-  name: fletcherClassNames,
+  name: ['Fletcher-class'],
   id: 36,
   fixed: 6,
   modifier: 1.55,
@@ -521,7 +520,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: fletcherClassNames,
+  name: ['Fletcher-class'],
   id: 37,
   fixed: 4,
   modifier: 1.55,
