@@ -362,7 +362,7 @@ export class PoiMapReminder extends Component {
           }}
           content={
             <PopoverContainer>
-              {nextEnemy.map(({ api_ship_ids }, index) => (
+              {nextEnemy.map(({ api_ship_ids = [] }, index) => (
                 <EnemyContainer key={index}>
                   {api_ship_ids.map((id, index) => (
                     <Avatar

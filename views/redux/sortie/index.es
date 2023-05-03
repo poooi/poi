@@ -127,7 +127,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         bossSpot: body.api_bosscell_no,
         item,
         itemHistory: state.itemHistory.concat(item || []),
-        nextEnemyInfo: body.api_e_deck_info,
+        nextEnemyInfo: body.api_e_deck_info || [],
       }
     }
 
@@ -141,7 +141,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         spotHistory: state.spotHistory.concat(body.api_no || []),
         item,
         itemHistory: state.itemHistory.concat(item || []),
-        nextEnemyInfo: body.api_e_deck_info,
+        nextEnemyInfo: body.api_e_deck_info || [],
       }
     }
 
