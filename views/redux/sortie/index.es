@@ -22,6 +22,7 @@ const initState = {
   item: null,
   itemHistory: [],
   spAttackCount: {},
+  nextEnemyInfo: [],
 }
 
 const ensureArray = (x) => (isArray(x) ? x : [x])
@@ -68,6 +69,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         item: null,
         itemHistory: [],
         spAttackCount: {},
+        nextEnemyInfo: [],
       }
 
     case '@@Response/kcsapi/api_req_sortie/battleresult':
@@ -125,6 +127,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         bossSpot: body.api_bosscell_no,
         item,
         itemHistory: state.itemHistory.concat(item || []),
+        nextEnemyInfo: body.api_e_deck_info,
       }
     }
 
@@ -138,6 +141,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
         spotHistory: state.spotHistory.concat(body.api_no || []),
         item,
         itemHistory: state.itemHistory.concat(item || []),
+        nextEnemyInfo: body.api_e_deck_info,
       }
     }
 
@@ -159,6 +163,7 @@ export function reducer(state = initState, { type, path, postBody, body }) {
       }
     }
   }
+  let newState = state
   const spAttackIds = [
     ...get(body, 'api_hougeki1.api_at_type', []),
     ...get(body, 'api_hougeki2.api_at_type', []),
@@ -170,10 +175,16 @@ export function reducer(state = initState, { type, path, postBody, body }) {
       ...state.spAttackCount,
     }
     spAttackIds.forEach((id) => (spAttackCount[id] = (spAttackCount[id] || 0) + 1))
-    return {
+    newState = {
       ...state,
       spAttackCount,
     }
   }
-  return state
+  if (type.includes('battle') && newState.nextEnemyInfo.length !== 0) {
+    newState = {
+      ...newState,
+      nextEnemyInfo: [],
+    }
+  }
+  return newState
 }

@@ -13,9 +13,11 @@ import { MaterialIcon } from 'views/components/etc/icon'
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
+  sortieMapEnemySelector,
   fcdSelector,
   currentNodeSelector,
 } from 'views/utils/selectors'
+import { Avatar } from 'views/components/etc/avatar'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Popover } from 'views/components/etc/overlay'
 
@@ -33,6 +35,24 @@ const GlobalStyle = createGlobalStyle`
 const PoiMapReminderTag = styled(CustomTag)`
   width: 0;
   flex: 0 0 135px;
+`
+
+const PopoverContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+`
+
+const EnemyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const MapContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
 `
 
 const MapReminder = styled.div`
@@ -59,9 +79,7 @@ const MapHPProgress = styled(ProgressBar)`
   width: 100%;
 `
 
-const MapRouteContainer = styled.div`
-  padding: 4px 6px 0;
-`
+const MapRouteContainer = styled.div``
 
 const MapInfoMsg = styled.div`
   font-size: 12px;
@@ -143,8 +161,8 @@ const MapTooltipMsg = styled.span`
 const PinBtn = styled(Button)`
   pointer-events: all;
   position: absolute;
-  right: 8px;
-  top: 7px;
+  right: 0;
+  top: 0;
 `
 
 const emptyObj = {}
@@ -288,13 +306,15 @@ const ItemStat = withNamespaces(['others'])(
     [
       sortieMapDataSelector,
       sortieMapHpSelector,
+      sortieMapEnemySelector,
       currentNodeSelector,
       fcdSelector,
       (state) => get(state.config, 'poi.misc.pinminimap'),
     ],
-    (mapData, mapHp, currentNode, fcd = {}, pinminimap) => ({
+    (mapData, mapHp, nextEnemy, currentNode, fcd = {}, pinminimap) => ({
       mapId: get(mapData, '0.api_id'),
       rank: get(mapData, '0.api_eventmap.api_selected_rank'),
+      nextEnemy,
       currentNode,
       mapData,
       mapHp,
@@ -322,7 +342,7 @@ export class PoiMapReminder extends Component {
   }
 
   render() {
-    const { mapHp, mapData, currentNode, mapId, maps, pinminimap, t } = this.props
+    const { mapHp, mapData, nextEnemy, currentNode, mapId, maps, pinminimap, t } = this.props
     const alphaNode =
       get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     return (
@@ -333,30 +353,53 @@ export class PoiMapReminder extends Component {
           wrapperTagName="div"
           targetTagName="div"
           disabled={!mapData}
+          modifiers={{
+            offset: {
+              options: {
+                offset: [-5, 15],
+              },
+            },
+          }}
           content={
-            <>
-              <MapRoutes />
-              <MapInfoMsg className="map-info-msg">
-                {!!currentNode && (
-                  <MapTooltipMsg className="map-tooltip-msg">
-                    {t('Node')}: {alphaNode} ({currentNode})
-                  </MapTooltipMsg>
-                )}
-                {!!mapHp && mapHp[1] > 0 && mapHp[0] !== 0 && (
-                  <MapTooltipMsg className="map-tooltip-msg">
-                    HP: {mapHp[0]} / {mapHp[1]}
-                  </MapTooltipMsg>
-                )}
-              </MapInfoMsg>
-              <ItemStat />
-              <PinBtn
-                icon="pin"
-                minimal
-                small
-                active={pinminimap}
-                onClick={() => config.set('poi.misc.pinminimap', !!mapData && !pinminimap)}
-              />
-            </>
+            <PopoverContainer>
+              {nextEnemy.map(({ api_ship_ids }, index) => (
+                <EnemyContainer key={index}>
+                  {api_ship_ids.map((id, index) => (
+                    <Avatar
+                      key={`${id}-${index}`}
+                      height={38}
+                      mstId={id}
+                      useFixedWidth={false}
+                      useDefaultBG={false}
+                      showFullImg
+                    />
+                  ))}
+                </EnemyContainer>
+              ))}
+              <MapContainer>
+                <MapRoutes />
+                <MapInfoMsg className="map-info-msg">
+                  {!!currentNode && (
+                    <MapTooltipMsg className="map-tooltip-msg">
+                      {t('Node')}: {alphaNode} ({currentNode})
+                    </MapTooltipMsg>
+                  )}
+                  {!!mapHp && mapHp[1] > 0 && mapHp[0] !== 0 && (
+                    <MapTooltipMsg className="map-tooltip-msg">
+                      HP: {mapHp[0]} / {mapHp[1]}
+                    </MapTooltipMsg>
+                  )}
+                </MapInfoMsg>
+                <ItemStat />
+                <PinBtn
+                  icon="pin"
+                  minimal
+                  small
+                  active={pinminimap}
+                  onClick={() => config.set('poi.misc.pinminimap', !!mapData && !pinminimap)}
+                />
+              </MapContainer>
+            </PopoverContainer>
           }
           {...(pinminimap
             ? { isOpen: !!mapData }

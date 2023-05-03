@@ -129,6 +129,7 @@ export class Avatar extends PureComponent {
     children: PropTypes.node,
     useFixedWidth: PropTypes.bool,
     useDefaultBG: PropTypes.bool,
+    showFullImg: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -138,6 +139,7 @@ export class Avatar extends PureComponent {
     children: null,
     useFixedWidth: true,
     useDefaultBG: true,
+    showFullImg: false,
   }
 
   render() {
@@ -147,6 +149,8 @@ export class Avatar extends PureComponent {
     }
     if (this.props.useFixedWidth) {
       shipAvatarContainerStyle.width = Math.round(1.85 * this.props.height)
+    } else if (this.props.showFullImg) {
+      shipAvatarContainerStyle.width = 164
     }
     return (
       <ShipAvatarContainer
@@ -170,7 +174,9 @@ export class Avatar extends PureComponent {
                 style={{
                   // The origin img has 182px height, includes 3px top & bottom padding
                   height: Math.round((this.props.height / 176) * 182),
-                  marginLeft: -Math.round(this.props.marginMagic * this.props.height),
+                  marginLeft: this.props.showFullImg
+                    ? 0
+                    : -Math.round(this.props.marginMagic * this.props.height),
                   marginTop: -Math.round((this.props.height / 176) * 3),
                 }}
                 src={this.props.url}
