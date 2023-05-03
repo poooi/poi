@@ -21,6 +21,7 @@ const aircraftLevelBonus = {
   7: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 艦上爆撃機
   8: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 艦上攻撃機
   11: [0, 1, 1, 1, 1, 3, 3, 6, 6], // 水上爆撃機
+  26: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 対潜哨戒機
   45: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 水上戦闘機
   47: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 陸上攻撃機
   48: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 局地戦闘機 陸軍戦闘機
@@ -245,9 +246,13 @@ export function getTyku(equipsData, landbaseStatus = 0) {
         tempAlv = 0
       }
       // 改修：艦戦×0.2、爆戦×0.25
-      const levelFactor = $equip.api_baku > 0 ? 0.25 : 0.2
-      if ([6, 7, 45, 47, 57].includes($equip.api_type[2])) {
+      const levelFactor = $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) : 0
+      if (
+        [6, 7, 45, 47, 57].includes($equip.api_type[2]) ||
+        ([26].includes($equip.api_type[2]) && $equip.api_tyku > 0)
+      ) {
         // 艦戦 · 爆戦 · 水上戦闘機 · 陸上攻撃機 · 噴式機
+        // 対潜哨戒機 (一式戦 隼II型改(20戦隊) · 一式戦 隼III型改(熟練/20戦隊))
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
