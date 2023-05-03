@@ -95,3 +95,8 @@ img {
   /* stylelint-disable-next-line value-no-vendor-prefix */
   image-rendering: -webkit-optimize-contrast;
 }
+
+.map-reminder-popover.pinned [class*='transition-container'] {
+  pointer-events: none;
+  z-index: 18;
+}

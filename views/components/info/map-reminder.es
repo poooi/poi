@@ -6,8 +6,9 @@ import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import styled, { css, keyframes, createGlobalStyle } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { rgba } from 'polished'
+import classNames from 'classnames'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 import {
@@ -20,17 +21,6 @@ import {
 import { Avatar } from 'views/components/etc/avatar'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Popover } from 'views/components/etc/overlay'
-
-const GlobalStyle = createGlobalStyle`
-  ${({ pin }) =>
-    pin &&
-    css`
-      .map-reminder-popover > .bp4-transition-container {
-        pointer-events: none;
-        z-index: 18;
-      }
-    `}
-`
 
 const PoiMapReminderTag = styled(CustomTag)`
   width: 0;
@@ -349,7 +339,9 @@ export class PoiMapReminder extends Component {
       <PoiMapReminderTag tag="poi-map-reminder">
         <Popover
           position={Position.TOP_RIGHT}
-          portalClassName="map-reminder-popover"
+          portalClassName={classNames('map-reminder-popover', {
+            pinned: !!mapData && pinminimap,
+          })}
           wrapperTagName="div"
           targetTagName="div"
           disabled={!mapData}
@@ -428,7 +420,6 @@ export class PoiMapReminder extends Component {
             </Alert>
           </MapReminder>
         </Popover>
-        <GlobalStyle pin={!!mapData && pinminimap} />
       </PoiMapReminderTag>
     )
   }
