@@ -85,6 +85,9 @@ function isLayoutEqual(layout1, layout2) {
 }
 
 function isLayoutsEqual(layouts1, layouts2) {
+  if (layouts1 == undefined || layouts2 == undefined) {
+    return false
+  }
   return Object.keys(layouts1)
     .map((layoutName) => isLayoutEqual(layouts1[layoutName], layouts2[layoutName]))
     .reduce((a, b) => a && b)
