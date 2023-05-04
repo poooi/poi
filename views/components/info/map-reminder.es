@@ -332,7 +332,7 @@ export class PoiMapReminder extends Component {
   }
 
   render() {
-    const { mapHp, mapData, nextEnemy, currentNode, mapId, maps, pinminimap, t } = this.props
+    const { mapHp, mapData, nextEnemy = [], currentNode, mapId, maps, pinminimap, t } = this.props
     const alphaNode =
       get(maps, `${Math.floor(mapId / 10)}-${mapId % 10}.route.${currentNode}.1`) || '?'
     return (
@@ -354,7 +354,7 @@ export class PoiMapReminder extends Component {
           }}
           content={
             <PopoverContainer>
-              {nextEnemy.map(({ api_ship_ids = [] }, index) => (
+              {nextEnemy.reverse().map(({ api_ship_ids = [] }, index) => (
                 <EnemyContainer key={index}>
                   {api_ship_ids.map((id, index) => (
                     <Avatar
