@@ -407,7 +407,7 @@ declareAACI({
   fixed: 5,
   modifier: 1.55,
   shipValid: validAny(isHamakazeBK, isIsokazeBK),
-  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
 
 const isGotlandKai = shipIdIs(579)
