@@ -26,6 +26,7 @@ const isFletcherClassOrKai = _.overSome([
   shipIdIs(692), // Fletcher Kai
   shipIdIs(628), // Fletcher Kai Mod.2
   shipIdIs(629), // Fletcher Mk.II
+  shipIdIs(726), // Heywood L.E. Kai (Note: no OASW without kai)
 ])
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])

@@ -37,6 +37,7 @@ const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid })
 }
 
 const shipIdIs = n => ship => ship.api_ship_id === n
+const shipIdIsOneOf = (...shipIds) => ship => shipIds.includes(ship.api_ship_id)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -469,12 +470,22 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
-const isFletcherClassOrKai = validAny(shipIdIs(562), shipIdIs(689), shipIdIs(596), shipIdIs(692), shipIdIs(628), shipIdIs(629))
+const isFletcherClassOrKai = shipIdIsOneOf(
+  // Johnston & Kai
+  562, 689,
+
+  // Fletcher & Kai & Mod.2 & Mk.II
+  596, 692, 628, 629,
+
+  // Heywood L.E. & Kai
+  941, 726,
+)
+
 const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
 
 // id 34~37: Johnston
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 34,
   fixed: 7,
   modifier: 1.6,
@@ -486,7 +497,7 @@ const is5InchSingleGunMountMk30OrKai = equip => (equip.api_slotitem_id === 284 |
 const is5InckSingleGunMountMk30Kai = equip => equip.apt_slotitem_id === 313
 
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 35,
   fixed: 6,
   modifier: 1.55,
@@ -500,7 +511,7 @@ declareAACI({
 const isGFCSMk37 = equip => equip.api_slotitem_id === 307
 
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 36,
   fixed: 6,
   modifier: 1.55,
@@ -509,7 +520,7 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 37,
   fixed: 4,
   modifier: 1.55,
