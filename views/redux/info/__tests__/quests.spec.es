@@ -2,6 +2,7 @@ import { getTanakalendarQuarterMonth } from '../quests'
 import moment from 'moment-timezone'
 import { padStart } from 'lodash'
 import Scheduler from 'views/services/scheduler'
+jest.mock('@electron/remote', () => ({ require }))
 
 const spec = it
 
