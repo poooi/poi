@@ -142,6 +142,9 @@ const NavTabs = styled(Tabs)`
 
   .bp4-tab {
     text-align: center;
+    justify-content: center;
+    display: flex;
+    gap: 8px;
   }
 
   .nav-tab-3 {
@@ -155,6 +158,13 @@ const NavTabs = styled(Tabs)`
   .nav-tab-8 {
     width: calc(12.5% - 20px);
   }
+`
+
+const PluginNameContainer = styled.div`
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  gap: 8px;
 `
 
 const PluginNonIdealState = styled(NonIdealState)`
@@ -653,11 +663,8 @@ export class ControlledTabArea extends PureComponent {
         ? {}
         : tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) ||
           tabbedPlugins[0]
-    const defaultPluginTitle = (
-      <>
-        <FontAwesome name="sitemap" /> {t('others:Plugins')}
-      </>
-    )
+    const defaultPluginIcon = <FontAwesome name="sitemap" />
+    const defaultPluginTitle = t('others:Plugins')
 
     const pluginDropdownContents = (
       <PluginDropdown
@@ -720,6 +727,7 @@ export class ControlledTabArea extends PureComponent {
           key="main-view"
           id="main-view"
           className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
+          icon={MAIN_VIEW.icon}
         >
           {MAIN_VIEW.displayName}
         </Tab>
@@ -727,19 +735,25 @@ export class ControlledTabArea extends PureComponent {
           key="ship-view"
           id="ship-view"
           className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
+          icon={SHIP_VIEW.icon}
         >
           {SHIP_VIEW.displayName}
         </Tab>
         {this.props.doubleTabbed && (
-          <Tab key="settings" id="settings" className="nav-tab-3">
+          <Tab key="settings" id="settings" className="nav-tab-3" icon={SETTINGS_VIEW.icon}>
             {SETTINGS_VIEW.displayName}
           </Tab>
         )}
 
         {/* we're not using fragment because blueprint tabs only reads direct children */}
         {!this.props.doubleTabbed && (
-          <Tab key="plugin" id="plugin" className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}>
-            {(activePlugin || {}).displayName || defaultPluginTitle}
+          <Tab
+            key="plugin"
+            id="plugin"
+            className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
+            icon={activePlugin.displayIcon}
+          >
+            {(activePlugin || {}).name || defaultPluginTitle}
           </Tab>
         )}
         {!this.props.doubleTabbed && (
@@ -758,9 +772,13 @@ export class ControlledTabArea extends PureComponent {
           </Popover>
         )}
         {!this.props.doubleTabbed && (
-          <Tab key="settings" id="settings" className="nav-tab-8" width={12.5}>
-            <FontAwesome key={0} name="cog" />
-          </Tab>
+          <Tab
+            key="settings"
+            id="settings"
+            className="nav-tab-8"
+            width={12.5}
+            icon={<FontAwesome key={0} name="cog" />}
+          />
         )}
       </NavTabs>
     )
@@ -808,7 +826,12 @@ export class ControlledTabArea extends PureComponent {
             large
             double
             icon="chevron-down"
-            text={(activePlugin || {}).displayName || defaultPluginTitle}
+            text={
+              <PluginNameContainer>
+                {(activePlugin || {}).displayIcon || defaultPluginIcon}
+                {(activePlugin || {}).name || defaultPluginTitle}
+              </PluginNameContainer>
+            }
           />
         </Popover>
         <TabContentsUnion

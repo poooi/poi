@@ -175,8 +175,6 @@ export class reactClass extends Component {
   }
 }
 
-export const displayName = (
-  <>
-    <FontAwesome name="home" /> <Trans>main:Overview</Trans>
-  </>
-)
+export const displayName = <Trans>main:Overview</Trans>
+
+export const icon = <FontAwesome name="home" />
