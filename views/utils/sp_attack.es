@@ -78,6 +78,10 @@ const isHieiKaiNiC = shipIdIs(592)
 
 const isHarunaKaiNi = shipIdIs(151)
 
+const isHarunaKaiNiB = shipIdIs(593)
+
+const isHarunaKaiNiC = shipIdIs(954)
+
 const isKirishimaKaiNi = shipIdIs(152)
 
 const isWarspite = _.overSome([shipIdIs(364), shipIdIs(439)])
@@ -159,12 +163,19 @@ const isKongoClassKaiNiCSpAttack = _.overEvery([
     _.overEvery([
       overShip(0)(_.overEvery([isKongoKaiNiC, isNotMidDmg])),
       overShip(1)(
-        _.overEvery([_.overSome([isHieiKaiNiC, isHarunaKaiNi, isWarspite]), isNotMidDmg]),
+        _.overEvery([
+          _.overSome([isHieiKaiNiC, isHarunaKaiNi, isHarunaKaiNiB, isHarunaKaiNiC, isWarspite]),
+          isNotMidDmg,
+        ]),
       ),
     ]),
     _.overEvery([
       overShip(0)(_.overEvery([isHieiKaiNiC, isNotMidDmg])),
       overShip(1)(_.overEvery([_.overSome([isKongoKaiNiC, isKirishimaKaiNi]), isNotMidDmg])),
+    ]),
+    _.overEvery([
+      overShip(0)(_.overEvery([_.overSome([isHarunaKaiNiB, isHarunaKaiNiC]), isNotMidDmg])),
+      overShip(1)(_.overEvery([_.overSome([isKongoKaiNiC, isHieiKaiNiC]), isNotMidDmg])),
     ]),
   ]),
 ])
