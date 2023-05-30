@@ -113,7 +113,7 @@ declareAACI({
   name: ['Battle Ship'],
   id: 4,
   fixed: 6,
-  modifier: 1.4,
+  modifier: 1.5,
   shipValid: validAll(isBattleship, slotNumAtLeast(4)),
   equipsValid: validAll(
     hasSome(isLargeCaliberMainGun),
@@ -209,6 +209,18 @@ declareAACI({
 })
 
 // id 13: <unknown>
+// declareAACI({
+//   name: [],
+//   id: 13,
+//   fixed: 3,
+//   modifier: 1.35,
+//   equipsValid: validAll(
+//     hasSome(isBuiltinHighAngleMount),
+//     hasSome(isCDMG),
+//     hasSome(isAARadar),
+//   ),
+// })
+
 
 const isIsuzuK2 = shipIdIs(141)
 // id 14~15: Isuzu K2
@@ -465,7 +477,7 @@ declareAACI({
   name: ['Gotland改'],
   id: 33,
   fixed: 3,
-  modifier: 1.25,
+  modifier: 1.35,
   shipValid: isGotlandKai,
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
@@ -523,7 +535,7 @@ declareAACI({
   name: ['Fletcher-class'],
   id: 37,
   fixed: 4,
-  modifier: 1.55,
+  modifier: 1.45,
   shipValid: isFletcherClassOrKai,
   equipsValid: hasAtLeast(is5InckSingleGunMountMk30Kai, 2),
 })
@@ -541,7 +553,7 @@ const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.ap
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 38,
-  fixed: 11,
+  fixed: 10,
   modifier: 1.85,
   shipValid: isAtlantaOrKai,
   equipsValid:
@@ -556,7 +568,7 @@ declareAACI({
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 39,
-  fixed: 11,
+  fixed: 10,
   modifier: 1.7,
   shipValid: isAtlantaOrKai,
   equipsValid:
@@ -571,7 +583,7 @@ declareAACI({
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 40,
-  fixed: 11,
+  fixed: 10,
   modifier: 1.7,
   shipValid: isAtlantaOrKai,
   equipsValid:
@@ -584,7 +596,7 @@ declareAACI({
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 41,
-  fixed: 10,
+  fixed: 9,
   modifier: 1.65,
   shipValid: isAtlantaOrKai,
   equipsValid: hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
@@ -649,6 +661,27 @@ declareAACI({
   equipsValid: validAll(
     hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
     hasSome(is15mDuplexRangefinderLike),
+  ),
+})
+
+// id 46: Haruna Kai Ni B
+
+const isHarunaKaiNiB = shipIdIs(593)
+// 502: 35.6cm連装砲改三(ダズル迷彩仕様)
+const is356mmTwinMountKai3Dazzle = equip => equip.api_slotitem_id === 502
+// 503: 35.6cm連装砲改四
+const is356mmTwinMountKai4 = equip => equip.api_slotitem_id === 503
+
+declareAACI({
+  name: ['榛名改二乙'],
+  id: 46,
+  fixed: 8,
+  modifier: 1.55,
+  shipValid: validAny(isHarunaKaiNiB),
+  equipsValid: validAll(
+    hasSome(isCDMG),
+    hasSome(isAARadar),
+    hasSome(validAny(is356mmTwinMountKai3Dazzle, is356mmTwinMountKai4)),
   ),
 })
 
