@@ -5,6 +5,8 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import {
+  Classes,
+  Colors,
   Tab,
   Tabs,
   Popover,
@@ -15,6 +17,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
@@ -96,6 +99,36 @@ const PluginDropdownButton = styled(Button)`
   width: 100%;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  background: transparent !important;
+
+  svg[data-icon=${IconNames.CHEVRON_DOWN}] {
+    transform: rotate(0);
+    transition: transform 0.3s;
+  }
+
+  &:hover,
+  &.${Classes.ACTIVE} {
+    color: ${Colors.BLUE2} !important;
+
+    svg {
+      color: ${Colors.BLUE2};
+    }
+
+    .${Classes.DARK} & {
+      color: ${Colors.BLUE5} !important;
+
+      svg {
+        color: ${Colors.BLUE5};
+      }
+    }
+  }
+
+  &.${Classes.ACTIVE} {
+    svg[data-icon=${IconNames.CHEVRON_DOWN}] {
+      transform: rotate(180deg);
+    }
+  }
+
   ${({ double }) =>
     double &&
     css`
@@ -138,25 +171,35 @@ const PluginDropdown = styled(Menu)`
 `
 
 const NavTabs = styled(Tabs)`
-  width: calc(100% + 20px);
+  width: 100%;
 
-  .bp4-tab {
-    text-align: center;
-    justify-content: center;
-    display: flex;
-    gap: 8px;
-  }
+  & > .${Classes.TAB_LIST} {
+    gap: 20px;
 
-  .nav-tab-3 {
-    width: calc(33% - 20px);
-  }
+    & > .${Classes.TAB} {
+      flex: 2 0 0;
+      margin-right: 0;
+      text-align: center;
+      justify-content: center;
+      display: flex;
+      gap: 8px;
 
-  .nav-tab-4 {
-    width: calc(25% - 20px);
-  }
+      &.half-width {
+        flex: 1 0 0;
+      }
 
-  .nav-tab-8 {
-    width: calc(12.5% - 20px);
+      svg {
+        transform: rotate(0);
+        transition: 0s;
+      }
+
+      &[aria-selected='true'] {
+        svg {
+          transform: rotate(360deg);
+          transition: 0.75s;
+        }
+      }
+    }
   }
 `
 
@@ -723,36 +766,21 @@ export class ControlledTabArea extends PureComponent {
         onChange={this.handleSelectTab}
         ref={this.tabs}
       >
-        <Tab
-          key="main-view"
-          id="main-view"
-          className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
-          icon={MAIN_VIEW.icon}
-        >
+        <Tab key="main-view" id="main-view" icon={MAIN_VIEW.icon}>
           {MAIN_VIEW.displayName}
         </Tab>
-        <Tab
-          key="ship-view"
-          id="ship-view"
-          className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
-          icon={SHIP_VIEW.icon}
-        >
+        <Tab key="ship-view" id="ship-view" icon={SHIP_VIEW.icon}>
           {SHIP_VIEW.displayName}
         </Tab>
         {this.props.doubleTabbed && (
-          <Tab key="settings" id="settings" className="nav-tab-3" icon={SETTINGS_VIEW.icon}>
+          <Tab key="settings" id="settings" icon={SETTINGS_VIEW.icon}>
             {SETTINGS_VIEW.displayName}
           </Tab>
         )}
 
         {/* we're not using fragment because blueprint tabs only reads direct children */}
         {!this.props.doubleTabbed && (
-          <Tab
-            key="plugin"
-            id="plugin"
-            className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
-            icon={activePlugin.displayIcon}
-          >
+          <Tab key="plugin" id="plugin" icon={activePlugin.displayIcon || defaultPluginIcon}>
             {(activePlugin || {}).name || defaultPluginTitle}
           </Tab>
         )}
@@ -762,7 +790,6 @@ export class ControlledTabArea extends PureComponent {
             hasBackdrop
             position={Position.BOTTOM_RIGHT}
             content={pluginDropdownContents}
-            className="nav-tab-8"
             wrapperTagName="div"
             targetTagName="div"
             popoverClassName="plugin-dropdown-container"
@@ -773,9 +800,9 @@ export class ControlledTabArea extends PureComponent {
         )}
         {!this.props.doubleTabbed && (
           <Tab
+            className="half-width"
             key="settings"
             id="settings"
-            className="nav-tab-8"
             width={12.5}
             icon={<FontAwesome key={0} name="cog" />}
           />
@@ -825,7 +852,7 @@ export class ControlledTabArea extends PureComponent {
             minimal
             large
             double
-            icon="chevron-down"
+            rightIcon="chevron-down"
             text={
               <PluginNameContainer>
                 {(activePlugin || {}).displayIcon || defaultPluginIcon}
