@@ -179,7 +179,7 @@ const NavTabs = styled(Tabs)`
     & > .${Classes.TAB} {
       flex: 2 0 0;
       margin-right: 0;
-      text-align: center;
+      align-items: center;
       justify-content: center;
       display: flex;
       gap: 8px;
@@ -204,7 +204,7 @@ const NavTabs = styled(Tabs)`
 `
 
 const PluginNameContainer = styled.div`
-  text-align: center;
+  align-items: center;
   justify-content: center;
   display: flex;
   gap: 8px;
