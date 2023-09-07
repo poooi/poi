@@ -9,8 +9,11 @@ mapname: [
   "第一水雷戦隊"
   "第五艦隊主力"
   "第一艦隊"
-  "？？？"
-  "？？？？"
+  "欧州遠征先遣隊"
+  "イギリス連絡部隊"
+  "英海軍主力部隊"
+  "英D-Day上陸部隊"
+  "米D-Day上陸部隊"
 ]
 color: [
   "#78716c"
@@ -19,8 +22,11 @@ color: [
   "#71717a"
   "#06b6d4"
   "#6366f1"
-  "#ef4444"
-  "#ec4899"
+  "#99cc00"
+  "#ff9900"
+  "#808000"
+  "#008000"
+  "#ff00ff"
 ]
 fleetname:
   "zh-CN": [
@@ -30,8 +36,11 @@ fleetname:
     "第一水雷战队"
     "第五舰队主力"
     "第一舰队"
-    "？？？"
-    "？？？？"
+    "欧州远征先遣队"
+    "英国联络部队"
+    "英海军主力部隊"
+    "英D-Day上陆部队"
+    "美D-Day上陆部队"
   ]
   "zh-TW": [
     "第二艦隊"
@@ -40,8 +49,11 @@ fleetname:
     "第一水雷戰隊"
     "第五艦隊主力"
     "第一艦隊"
-    "？？？"
-    "？？？？"
+    "欧州遠征先遣隊"
+    "イギリス連絡部隊"
+    "英海軍主力部隊"
+    "英D-Day上陸部隊"
+    "美D-Day上陸部隊"
   ]
   "ja-JP": [
     "第二艦隊"
@@ -50,8 +62,11 @@ fleetname:
     "第一水雷戦隊"
     "第五艦隊主力"
     "第一艦隊"
-    "？？？"
-    "？？？？"
+    "欧州遠征先遣隊"
+    "イギリス連絡部隊"
+    "英海軍主力部隊"
+    "英D-Day上陸部隊"
+    "米D-Day上陸部隊"
   ]
   "en-US": [
     "2nd Fleet"
@@ -60,6 +75,9 @@ fleetname:
     "1st Torpedo Squadron"
     "5th Fleet Main Force"
     "1st Fleet"
-    "？？？"
-    "？？？？"
+    "European Expedition Advance Force"
+    "British Liaison Force"
+    "British Fleet Main Force"
+    "British D-Day Landing Force"
+    "American D-Day Landing Force"
   ]
