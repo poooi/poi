@@ -112,7 +112,6 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 app.commandLine.appendSwitch('disable-site-isolation-trials')
 
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
-
 ;(() => {
   /*
     Configure extra command flags.
@@ -155,13 +154,13 @@ app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
     if (!Array.isArray(cfg.flags)) {
       throw new Error('No flags specified')
     }
-    cfg.flags.forEach(flag => {
+    cfg.flags.forEach((flag) => {
       if (typeof flag === 'string') {
         app.commandLine.appendSwitch(flag)
       } else if (
         Array.isArray(flag) &&
         flag.length === 2 &&
-        flag.every(x => typeof x === 'string')
+        flag.every((x) => typeof x === 'string')
       ) {
         const [k, v] = flag
         app.commandLine.appendSwitch(k, v)
