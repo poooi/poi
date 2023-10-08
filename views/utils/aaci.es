@@ -466,9 +466,10 @@ declareAACI({
   fixed: 3,
   modifier: 1.2,
   shipValid: validAny(isRoyalNavyShips, isKongouClassK2),
-  equipsValid: validAll(
-    hasSome(isQF2Pounder),
-    validAny(hasSome(is20Tube7InchUpRocketLaunchers), hasSome(is16InchMkITriplePlusFCR)),
+  equipsValid: validAny(
+    validAll(hasSome(is16InchMkITriplePlusFCR), hasSome(isQF2Pounder)),
+    validAll(hasSome(is20Tube7InchUpRocketLaunchers), hasSome(isQF2Pounder)),
+    hasAtLeast(is20Tube7InchUpRocketLaunchers, 2)
   ),
 })
 
