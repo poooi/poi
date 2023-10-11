@@ -15,7 +15,7 @@ const taisenAbove = (value) => (ship) => ship.api_taisen[0] >= value
 const isDE = (ship) => ship.api_stype === 1
 
 const isIsuzuK2 = shipIdIs(141)
-const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893)])
+const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893), shipIdIs(906)])
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 const isSamuelKaiNi = shipIdIs(920)
