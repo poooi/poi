@@ -225,6 +225,10 @@ app.on('ready', () => {
   if (height == null) {
     height = workArea.height
   }
+  const hideTitlebar = config.get(
+    'poi.appearance.customtitlebar',
+    process.platform === 'win32' || process.platform === 'linux',
+  )
   global.mainWindow = mainWindow = new BrowserWindow({
     x: x,
     y: y,
@@ -235,12 +239,9 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : null,
-    transparent: process.platform === 'darwin',
-    frame: !config.get(
-      'poi.appearance.customtitlebar',
-      process.platform === 'win32' || process.platform === 'linux',
-    ),
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : hideTitlebar ? 'hidden' : null,
+    transparent: true,
+    frame: !hideTitlebar,
     enableLargerThanScreen: true,
     maximizable: config.get('poi.content.resizable', true),
     fullscreenable: config.get('poi.content.resizable', true),
@@ -256,6 +257,8 @@ app.on('ready', () => {
       spellcheck: false,
     },
     backgroundColor: '#00000000',
+    backgroundMaterial: 'acrylic',
+    roundedCorners: true,
   })
 
   electronRemote.enable(mainWindow.webContents)
@@ -277,6 +280,10 @@ app.on('ready', () => {
   mainWindow.loadURL(`file://${__dirname}/index.html${dbg.isEnabled() ? '?react_perf' : ''}`)
   if (config.get('poi.window.isMaximized', false)) {
     mainWindow.maximize()
+  } else {
+    // Workaround for initial backgroundMaterial config not applied
+    mainWindow.setSize(width + 1, height)
+    mainWindow.setSize(width, height)
   }
   if (config.get('poi.window.isFullScreen', false)) {
     mainWindow.setFullScreen(true)

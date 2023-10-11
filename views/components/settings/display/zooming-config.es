@@ -24,7 +24,7 @@ export class ZoomingConfig extends Component {
 
   handleChangeZoomLevel = (value) => {
     this.setState({
-      zoomLevel: value,
+      zoomLevel: Math.round(value * 100) / 100,
     })
   }
 

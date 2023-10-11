@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "module": "commonjs",
     "lib": ["ESNext", "DOM"],
     "jsx": "react",
@@ -9,6 +9,7 @@
     "paths": {
       "views/*": ["./views/*"]
     },
+    "typeRoots": ["./node_modules/@types", "./shims"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,

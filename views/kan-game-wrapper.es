@@ -156,7 +156,7 @@ export class KanGameWrapper extends Component {
     const trusted = config.get('poi.misc.trustedCerts', [])
     trusted.push(hash)
     config.set('poi.misc.trustedCerts', trusted)
-    this.webview.current.view.reload()
+    this.webview.current.reload()
   }
 
   setuntrustedCerts = (hash) => {
@@ -194,7 +194,7 @@ export class KanGameWrapper extends Component {
 
   handleWebviewDestroyed = () => {
     console.warn('Webview crashed. reloading')
-    const url = this.webview.current.view.src
+    const url = this.webview.current.src
     const key = this.state.key + 1
     this.handleWebviewUnmount()
     this.setState({
@@ -235,9 +235,9 @@ export class KanGameWrapper extends Component {
   handleWebviewMediaStartedPlaying = () => {
     if (this.props.muted && this.enableAudioMutePolyfill) {
       this.enableAudioMutePolyfill = false
-      this.webview.current.view.audioMuted = false
+      this.webview.current.audioMuted = false
       setImmediate(() => {
-        this.webview.current.view.audioMuted = true
+        this.webview.current.audioMuted = true
       })
     }
   }

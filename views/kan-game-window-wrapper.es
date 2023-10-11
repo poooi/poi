@@ -270,13 +270,12 @@ export class KanGameWindowWrapper extends PureComponent {
       }
       this.currentWindow.blur()
       this.currentWindow.focus()
-      this.setState(
-        {
+      this.currentWindow.webContents.once('dom-ready', () => {
+        this.setState({
           loaded: true,
           id: this.currentWindow.id,
-        },
-        () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
-      )
+        })
+      })
 
       // workaround for https://github.com/electron/electron/issues/22440
       const unsetResizable = debounce(() => {
@@ -306,24 +305,20 @@ export class KanGameWindowWrapper extends PureComponent {
     return true
   }
 
-  forceSyncZoom = (count = 0) => {
-    const webview = getStore('layout.webview.ref')
-    if (webview) {
-      webview.forceSyncZoom()
-    } else if (count < 20) {
-      setTimeout(() => this.forceSyncZoom(count + 1), 100)
-    }
-  }
-
   onZoomChange = (value) => {
-    if (this.checkBrowserWindowExistence()) {
+    if (
+      this.state.loaded &&
+      this.checkBrowserWindowExistence() &&
+      this.currentWindow.getContentSize &&
+      this.currentWindow.webContents &&
+      this.currentWindow.webContents.setZoomFactor
+    ) {
       // Workaround for ResizeObserver not fired on zoomFactor change
       const [width, height] = this.currentWindow.getContentSize()
       this.currentWindow.setContentSize(width - 10, height - 10)
       this.currentWindow.setContentSize(width, height)
 
-      this.currentWindow.webContents.zoomFactor = value
-      this.forceSyncZoom()
+      this.currentWindow.webContents.setZoomFactor(value)
     }
   }
 

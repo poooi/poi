@@ -2,6 +2,7 @@ import { webContents, shell, BrowserWindowConstructorOptions } from 'electron'
 import * as electronRemote from '@electron/remote/main'
 import os from 'os'
 import _ from 'lodash'
+import config from './config'
 
 const isModernDarwin = process.platform === 'darwin' && Number(os.release().split('.')[0]) >= 17
 
@@ -55,10 +56,12 @@ export function stopNavigateAndHandleNewWindow(id: number) {
           sandbox: false,
           webviewTag: true,
         },
+        transparent: true,
       }
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
         _.set(options, ['webPreferences', 'webSecurity'], false)
+        _.set(options, ['webPreferences', 'zoomFactor'], config.get('poi.appearance.zoom'))
       }
       return {
         action: 'allow',
