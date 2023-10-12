@@ -13,7 +13,19 @@ import { HandlerFields, useWebviewEventListener } from './webview-util'
 type WebviewTagDOMAttrs = Partial<
   Pick<
     WebviewTag,
-    'src' | 'disablewebsecurity' | 'allowpopups' | 'preload' | 'useragent' | 'webpreferences'
+    | 'src'
+    | 'nodeintegration'
+    | 'nodeintegrationinsubframes'
+    | 'plugins'
+    | 'preload'
+    | 'httpreferrer'
+    | 'useragent'
+    | 'disablewebsecurity'
+    | 'partition'
+    | 'allowpopups'
+    | 'webpreferences'
+    | 'enableblinkfeatures'
+    | 'disableblinkfeatures'
   >
 >
 
@@ -43,11 +55,18 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       className,
       webviewTagClassName,
       src,
-      webpreferences,
-      disablewebsecurity,
-      allowpopups,
+      nodeintegration,
+      nodeintegrationinsubframes,
+      plugins,
       preload,
+      httpreferrer,
       useragent,
+      disablewebsecurity,
+      partition,
+      allowpopups,
+      webpreferences,
+      enableblinkfeatures,
+      disableblinkfeatures,
       ...props
     },
     ref,
@@ -201,13 +220,22 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
         <webview
           className={webviewTagClassName}
           src={src}
-          webpreferences={webpreferences}
+          // @ts-expect-error wrong type definition
+          nodeintegration={nodeintegration ? 'on' : undefined}
+          nodeintegrationinsubframes={nodeintegrationinsubframes ? 'on' : undefined}
+          // @ts-expect-error wrong type definition
+          plugins={plugins ? 'on' : undefined}
+          preload={preload}
+          httpreferrer={httpreferrer}
+          useragent={useragent}
           // @ts-expect-error wrong type definition
           disablewebsecurity={disablewebsecurity ? 'on' : undefined}
+          partition={partition}
           // @ts-expect-error wrong type definition
           allowpopups={allowpopups ? 'on' : undefined}
-          preload={preload}
-          useragent={useragent}
+          webpreferences={webpreferences}
+          enableblinkfeatures={enableblinkfeatures}
+          disableblinkfeatures={disableblinkfeatures}
           ref={(view: WebviewTag) => {
             setView(view)
           }}
