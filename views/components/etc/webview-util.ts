@@ -51,9 +51,10 @@ export const useWebviewEventListener = (
   handlers: HandlerFields,
   view?: WebviewTag,
 ) => {
+  const handlerName = camelCase(`on-${eventName}`) as HandlerName<typeof eventName>
+  const handler = handlers[handlerName]
+
   useEffect(() => {
-    const handlerName = camelCase(`on-${eventName}`) as HandlerName<typeof eventName>
-    const handler = handlers[handlerName]
     if (view && handler) {
       view.addEventListener(eventName, handler)
     }
@@ -63,5 +64,5 @@ export const useWebviewEventListener = (
         view.removeEventListener(eventName, handler)
       }
     }
-  }, [eventName, handlers, view])
+  }, [eventName, handler, view])
 }
