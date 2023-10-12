@@ -1,6 +1,5 @@
 import React, {
   CSSProperties,
-  HTMLProps,
   useEffect,
   useMemo,
   useState,
@@ -9,17 +8,25 @@ import React, {
 } from 'react'
 import { type DidFailLoadEvent, type WebviewTag, type WebContents } from 'electron'
 import { webContents } from '@electron/remote'
+import { HandlerFields, useWebviewEventListener } from './webview-util'
 
-interface Props extends HTMLProps<WebviewTag> {
+type WebviewTagDOMAttrs = Partial<
+  Pick<
+    WebviewTag,
+    'src' | 'disablewebsecurity' | 'allowpopups' | 'preload' | 'useragent' | 'webpreferences'
+  >
+>
+
+interface ExtraFields {
+  className?: string
+  webviewTagClassName?: string
   style?: CSSProperties
   zoomFactor?: number
   audioMuted?: boolean
   onResize?: (entries: ResizeObserverEntry[]) => void
-  onDidAttach?: () => void
-  onDestroyed?: () => void
-  onDidFrameFinishLoad?: () => void
-  onMediaStartedPlaying?: () => void
 }
+
+type Props = WebviewTagDOMAttrs & HandlerFields & ExtraFields
 
 type ExtendedWebviewTag = WebviewTag & {
   getWebContents: () => WebContents
@@ -33,10 +40,14 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       zoomFactor,
       audioMuted,
       onResize,
-      onDidAttach,
-      onDestroyed,
-      onMediaStartedPlaying,
-      onDidFrameFinishLoad,
+      className,
+      webviewTagClassName,
+      src,
+      webpreferences,
+      disablewebsecurity,
+      allowpopups,
+      preload,
+      useragent,
       ...props
     },
     ref,
@@ -45,12 +56,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     const [isReady, setIsReady] = useState(false)
     const [entries, setEntries] = useState<ResizeObserverEntry[]>([])
 
-    useEffect(() => {
-      if (onResize) {
-        onResize(entries)
-      }
-    }, [onResize, entries])
-
+    // Sync zoomFactor state
     useEffect(() => {
       if (
         isReady &&
@@ -62,6 +68,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       }
     }, [isReady, view, view?.getZoomFactor, zoomFactor])
 
+    // Sync audioMuted state
     useEffect(() => {
       if (
         isReady &&
@@ -75,6 +82,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
 
     const observer = useMemo(() => new ResizeObserver(setEntries), [])
 
+    // Enable Observer
     useEffect(() => {
       if (view) {
         observer.observe(view)
@@ -87,11 +95,20 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       }
     }, [view, observer])
 
+    // onResize event handler
+    useEffect(() => {
+      if (onResize) {
+        onResize(entries)
+      }
+    }, [onResize, entries])
+
+    // Error handling
     useEffect(() => {
       const callback = (e: DidFailLoadEvent) => {
         if (e.errorCode !== -3) {
           const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
-          ;(e.target as WebviewTag).executeJavaScript(errorScript)
+          const target = e.target as WebviewTag
+          target.executeJavaScript(errorScript)
         }
       }
       if (view) {
@@ -104,6 +121,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       }
     })
 
+    // Set isReady state
     useEffect(() => {
       const cb = () => {
         setIsReady(true)
@@ -118,54 +136,42 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       }
     }, [view])
 
-    useEffect(() => {
-      if (view && onDidAttach) {
-        view.addEventListener('did-attach', onDidAttach)
-      }
+    // Custom event handlers
+    useWebviewEventListener('load-commit', props, view)
+    useWebviewEventListener('did-attach', props, view)
+    useWebviewEventListener('did-finish-load', props, view)
+    useWebviewEventListener('did-fail-load', props, view)
+    useWebviewEventListener('did-frame-finish-load', props, view)
+    useWebviewEventListener('did-start-loading', props, view)
+    useWebviewEventListener('did-stop-loading', props, view)
+    useWebviewEventListener('dom-ready', props, view)
+    useWebviewEventListener('console-message', props, view)
+    useWebviewEventListener('context-menu', props, view)
+    useWebviewEventListener('devtools-open-url', props, view)
+    useWebviewEventListener('devtools-opened', props, view)
+    useWebviewEventListener('devtools-closed', props, view)
+    useWebviewEventListener('devtools-focused', props, view)
+    useWebviewEventListener('will-navigate', props, view)
+    useWebviewEventListener('did-start-navigation', props, view)
+    useWebviewEventListener('did-redirect-navigation', props, view)
+    useWebviewEventListener('did-navigate', props, view)
+    useWebviewEventListener('did-frame-navigate', props, view)
+    useWebviewEventListener('did-navigate-in-page', props, view)
+    useWebviewEventListener('close', props, view)
+    useWebviewEventListener('render-process-gone', props, view)
+    useWebviewEventListener('plugin-crashed', props, view)
+    useWebviewEventListener('destroyed', props, view)
+    useWebviewEventListener('page-title-updated', props, view)
+    useWebviewEventListener('page-favicon-updated', props, view)
+    useWebviewEventListener('enter-html-full-screen', props, view)
+    useWebviewEventListener('leave-html-full-screen', props, view)
+    useWebviewEventListener('media-started-playing', props, view)
+    useWebviewEventListener('media-paused', props, view)
+    useWebviewEventListener('found-in-page', props, view)
+    useWebviewEventListener('did-change-theme-color', props, view)
+    useWebviewEventListener('update-target-url', props, view)
 
-      return () => {
-        if (view && onDidAttach) {
-          view.removeEventListener('did-attach', onDidAttach)
-        }
-      }
-    }, [onDidAttach, view])
-
-    useEffect(() => {
-      if (view && onDidFrameFinishLoad) {
-        view.addEventListener('did-frame-finish-load', onDidFrameFinishLoad)
-      }
-
-      return () => {
-        if (view && onDidFrameFinishLoad) {
-          view.removeEventListener('did-frame-finish-load', onDidFrameFinishLoad)
-        }
-      }
-    }, [onDidFrameFinishLoad, view])
-
-    useEffect(() => {
-      if (view && onMediaStartedPlaying) {
-        view.addEventListener('media-started-playing', onMediaStartedPlaying)
-      }
-
-      return () => {
-        if (view && onMediaStartedPlaying) {
-          view.removeEventListener('media-started-playing', onMediaStartedPlaying)
-        }
-      }
-    }, [onMediaStartedPlaying, view])
-
-    useEffect(() => {
-      if (view && onDestroyed) {
-        view.addEventListener('destroyed', onDestroyed)
-      }
-
-      return () => {
-        if (view && onDestroyed) {
-          view.removeEventListener('destroyed', onDestroyed)
-        }
-      }
-    }, [onDestroyed, view])
-
+    // Custom ref
     useImperativeHandle(
       ref,
       () => {
@@ -191,9 +197,17 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     )
 
     return (
-      <div style={style}>
+      <div style={style} className={className}>
         <webview
-          {...props}
+          className={webviewTagClassName}
+          src={src}
+          webpreferences={webpreferences}
+          // @ts-expect-error wrong type definition
+          disablewebsecurity={disablewebsecurity ? 'on' : undefined}
+          // @ts-expect-error wrong type definition
+          allowpopups={allowpopups ? 'on' : undefined}
+          preload={preload}
+          useragent={useragent}
           ref={(view: WebviewTag) => {
             setView(view)
           }}

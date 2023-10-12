@@ -242,15 +242,19 @@ export function loadStyle(
 
   // Workaround for window transparency on 27.0.0
   if (process.platform === 'win32') {
-    currentWindow.on('blur', () => {
+    const resetBackgroundColor = () => {
       if (config.get('poi.appearance.vibrant', 0) === 1) {
         currentWindow.setBackgroundColor('#00000000')
       }
-    })
+    }
 
-    currentWindow.on('focus', () => {
+    currentWindow.on('blur', resetBackgroundColor)
+    currentWindow.on('focus', resetBackgroundColor)
+    currentWindow.on('restore', () => {
       if (config.get('poi.appearance.vibrant', 0) === 1) {
-        currentWindow.setBackgroundColor('#00000000')
+        const [width, height] = currentWindow.getSize()
+        currentWindow.setSize(width + 1, height + 1)
+        currentWindow.setSize(width, height)
       }
     })
   }

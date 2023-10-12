@@ -39,16 +39,22 @@ const KanGame = styled(CustomTag)`
   overflow: hidden;
   width: 100%;
 
-  .kancolle-webview {
+  .bp4-toast-container {
+    overflow: hidden !important;
+  }
+`
+
+const KanGameWebview = styled(WebView)`
+  width: 100%;
+  padding-top: 60%;
+  position: relative;
+
+  webview {
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
     width: 100%;
-  }
-
-  .bp4-toast-container {
-    overflow: hidden !important;
   }
 `
 
@@ -281,22 +287,17 @@ export class KanGameWrapper extends Component {
       .replace(/poi[^ ]* /, '')
       .replace(bypassGoogleRestriction ? /Chrome[^ ]* / : '', '')
     const webview = (
-      <WebView
-        className="kancolle-webview"
+      <KanGameWebview
+        webviewTagClassName="kancolle-webview"
         src={this.state.url}
         key={this.state.key}
         ref={this.webview}
-        disablewebsecurity="on"
-        allowpopups="on"
+        disablewebsecurity
+        allowpopups
         webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no, sandbox=no"
         preload={preloadUrl}
-        style={{
-          width: '100%',
-          paddingTop: '60%',
-          position: 'relative',
-        }}
         audioMuted={muted}
-        userAgent={ua}
+        useragent={ua}
         zoomFactor={webviewZoomFactor}
         onDidAttach={this.handleWebviewMount}
         onDestroyed={this.handleWebviewDestroyed}

@@ -4,8 +4,8 @@ import http from 'http'
 import path from 'path'
 import querystring from 'querystring'
 import mime from 'mime'
-import createPacProxyAgent from 'pac-proxy-agent'
-import createHttpProxyAgent from 'http-proxy-agent'
+import createPacProxyAgent, { PacProxyAgent } from 'pac-proxy-agent'
+import createHttpProxyAgent, { HttpProxyAgent } from 'http-proxy-agent'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import { app, session } from 'electron'
 import util from 'util'
@@ -26,7 +26,7 @@ type PoiRequestOptions = http.RequestOptions
 interface PoiResponseData {
   statusCode?: number
   error?: Error
-  data?: any
+  data?: unknown
 }
 
 interface KancolleServer {
@@ -42,7 +42,7 @@ interface KancolleServerInfo {
 const gunzipAsync = util.promisify(gunzip)
 const inflateAsync = util.promisify(inflate)
 
-const delay = (time) => new Promise((res) => setTimeout(res, time))
+const delay = (time: number) => new Promise((res) => setTimeout(res, time))
 
 const isStaticResource = (pathname: string, hostname: string): boolean => {
   if (pathname.startsWith('/kcs2/')) {
@@ -91,13 +91,16 @@ const findHack = (pathname: string): string | null => {
   const sp = loc.split('.')
   const ext = sp.pop()
   sp.push('hack')
-  sp.push(ext)
+  if (ext) {
+    sp.push(ext)
+  }
   loc = sp.join('.')
   try {
     fs.accessSync(loc, fs.constants.R_OK)
     return loc
   } catch (e) {
-    if (e.code !== 'ENOENT') console.error(`error while loading hack file ${loc}`, e)
+    if ((e as { code: string })?.code !== 'ENOENT')
+      console.error(`error while loading hack file ${loc}`, e)
     return null
   }
 }
@@ -150,16 +153,16 @@ const resolveProxyUrl = (): string => {
 }
 
 class Proxy extends EventEmitter {
-  pacAgents = {}
-  socksAgents = {}
-  httpAgents = {}
+  pacAgents: Record<string, PacProxyAgent> = {}
+  socksAgents: Record<string, SocksProxyAgent> = {}
+  httpAgents: Record<string, HttpProxyAgent> = {}
   serverInfo: KancolleServer = {}
   serverList: KancolleServerInfo = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
 
   getServerInfo = () => this.serverInfo
 
-  server: http.Server
-  port: number
+  server!: http.Server
+  port!: number
 
   load = () => {
     // Handles http request only, https request will be passed to upstream proxy directly.
@@ -193,7 +196,12 @@ class Proxy extends EventEmitter {
   }
 
   updateServerInfo = (urlPattern: url.UrlWithStringQuery) => {
-    if (isKancolleGameApi(urlPattern.pathname) && this.serverInfo.ip !== urlPattern.hostname) {
+    if (
+      urlPattern.pathname &&
+      urlPattern.hostname &&
+      isKancolleGameApi(urlPattern.pathname) &&
+      this.serverInfo.ip !== urlPattern.hostname
+    ) {
       if (this.serverList[urlPattern.hostname]) {
         this.serverInfo = {
           ...this.serverList[urlPattern.hostname],
@@ -210,7 +218,7 @@ class Proxy extends EventEmitter {
   }
 
   createServer = async (req: http.IncomingMessage, res: http.ServerResponse) => {
-    const urlPattern = url.parse(req.url)
+    const urlPattern = url.parse(req.url || '')
 
     // Prepare request headers
     delete req.headers['proxy-connection']
@@ -221,7 +229,9 @@ class Proxy extends EventEmitter {
 
     // Find cachefile for static resource
     const cacheFile =
-      urlPattern.hostname && isStaticResource(urlPattern.pathname, urlPattern.hostname)
+      urlPattern.hostname &&
+      urlPattern.pathname &&
+      isStaticResource(urlPattern.pathname, urlPattern.hostname)
         ? findHack(urlPattern.pathname) || findCache(urlPattern.pathname, urlPattern.hostname)
         : false
 
@@ -246,7 +256,7 @@ class Proxy extends EventEmitter {
           const reqOption = this.getRequestOptions(urlPattern, req)
           const { statusCode, data, error } = await this.fetchResponse(reqOption, rawReqBody, res)
           if (error) {
-            if (count >= retries || !isKancolleGameApi(urlPattern.pathname)) {
+            if (count >= retries || !isKancolleGameApi(urlPattern.pathname || '')) {
               res.end()
               throw error
             }
@@ -257,7 +267,7 @@ class Proxy extends EventEmitter {
             res.end()
             if (statusCode === 200 && data != null) {
               this.emit('network.on.response', req.method, requestInfo, data, reqBody, Date.now())
-            } else if (statusCode >= 400) {
+            } else if (statusCode == null || statusCode >= 400) {
               this.emit('network.error', requestInfo, statusCode)
             }
             break
@@ -265,14 +275,14 @@ class Proxy extends EventEmitter {
         }
       }
     } catch (e) {
-      error(`${req.method} ${req.url} ${e.toString()}`)
+      error(`${req.method} ${req.url} ${(e as Error).toString()}`)
       this.emit('network.error', requestInfo)
     }
   }
 
-  fetchRequest = (req: http.IncomingMessage): any =>
+  fetchRequest = (req: http.IncomingMessage): Promise<Buffer> =>
     new Promise((resolve) => {
-      const reqBody = []
+      const reqBody: Uint8Array[] = []
       req.on('data', (chunk) => {
         reqBody.push(chunk)
       })
@@ -296,8 +306,8 @@ class Proxy extends EventEmitter {
     switch (config.get('proxy.use')) {
       // HTTP Request via SOCKS5 proxy
       case 'socks5': {
-        const socksHost = config.get('proxy.socks5.host', '127.0.0.1')
-        const socksPort = config.get('proxy.socks5.port', 1080)
+        const socksHost: string = config.get('proxy.socks5.host', '127.0.0.1')
+        const socksPort: number = config.get('proxy.socks5.port', 1080)
         const uri = `${socksHost}:${socksPort}`
         if (!this.socksAgents[uri]) {
           this.socksAgents[uri] = new SocksProxyAgent(`socks://${uri}`)
@@ -335,48 +345,48 @@ class Proxy extends EventEmitter {
   }
 
   parseResponse = async (
-    resDataChunks: any[],
+    resDataChunks: unknown[],
     header: http.IncomingHttpHeaders,
-  ): Promise<any | null> => {
+  ): Promise<string | undefined> => {
     const contentType: string = header['content-type'] || (header['Content-Type'] as string) || ''
     if (!contentType.startsWith('text') && !contentType.startsWith('application')) {
-      return null
+      return undefined
     }
 
-    const resData = Buffer.concat(resDataChunks)
+    const resData = Buffer.concat(resDataChunks as never[])
     const contentEncoding = header['content-encoding'] || (header['Content-Encoding'] as string)
     const isGzip = /gzip/i.test(contentEncoding)
     const isDeflat = /deflate/i.test(contentEncoding)
     const unzipped = isGzip
       ? await gunzipAsync(resData).catch(() => {
-          return null
+          return undefined
         })
       : isDeflat
       ? await inflateAsync(resData).catch(() => {
-          return null
+          return undefined
         })
       : resData
     try {
-      const str = unzipped.toString()
-      const parsed = str.startsWith('svdata=') ? str.substring(7) : str
-      JSON.parse(parsed)
+      const str = unzipped?.toString()
+      const parsed = str?.startsWith('svdata=') ? str.substring(7) : str
+      JSON.parse(parsed || '')
       return parsed
     } catch (e) {
-      return null
+      return undefined
     }
   }
 
   fetchResponse = (
     options: PoiRequestOptions,
-    rawReqBody: any,
+    rawReqBody: unknown,
     cRes: http.ServerResponse,
   ): Promise<PoiResponseData> =>
     new Promise((resolve) => {
       const proxyRequest = http.request(options, (res) => {
         const { statusCode, headers } = res
-        const resDataChunks: any[] = []
+        const resDataChunks: unknown[] = []
 
-        cRes.writeHead(statusCode, headers)
+        cRes.writeHead(statusCode || 0, headers)
         res.pipe(cRes)
 
         res.on('data', (chunk) => {
@@ -425,7 +435,7 @@ class Proxy extends EventEmitter {
       res.writeHead(200, {
         Server: 'nginx',
         'Content-Length': data.length,
-        'Content-Type': mime.getType(cacheFile),
+        'Content-Type': mime.getType(cacheFile) || '',
         'Last-Modified': mtime,
         'Cache-Control': 'max-age=0',
       })
@@ -437,15 +447,15 @@ class Proxy extends EventEmitter {
     delete req.headers['proxy-connection']
     req.headers['connection'] = 'close'
     const remoteUrl = url.parse(`https://${req.url}`)
-    let remote = null
+    let remote: net.Socket
     switch (config.get('proxy.use')) {
       case 'socks5': {
         // Write data directly to SOCKS5 proxy
         remote = socks.createConnection({
           socksHost: config.get('proxy.socks5.host', '127.0.0.1'),
           socksPort: config.get('proxy.socks5.port', 1080),
-          host: remoteUrl.hostname,
-          port: remoteUrl.port,
+          host: remoteUrl.hostname || '',
+          port: remoteUrl.port || 0,
         })
         remote.on('connect', () => {
           client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
@@ -479,7 +489,7 @@ class Proxy extends EventEmitter {
       }
       default: {
         // Connect to remote directly
-        remote = net.connect(Number(remoteUrl.port), remoteUrl.hostname, () => {
+        remote = net.connect(Number(remoteUrl.port), remoteUrl.hostname || undefined, () => {
           client.write('HTTP/1.1 200 Connection Established\r\nConnection: close\r\n\r\n')
           remote.write(head)
           client.pipe(remote)

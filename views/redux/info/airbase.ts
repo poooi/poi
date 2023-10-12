@@ -60,12 +60,7 @@ const airBaseSlice = createSlice({
         )
       })
       .addCase(createAPIReqAirCorpsChangeDeploymentBaseResponseAction, (state, { payload }) => {
-        const {
-          api_area_id,
-          api_base_id_src,
-          api_base_id,
-          api_item_id,
-        } = payload.postBody
+        const { api_area_id, api_base_id_src, api_base_id, api_item_id } = payload.postBody
         const { api_base_items } = payload.body
         // Err on the side of caution, few preconditions before updating.
 
@@ -77,7 +72,7 @@ const airBaseSlice = createSlice({
         const findSquadronIndex = (baseId: number | string) => {
           const ret = findIndex(
             state,
-            (squad) => squad.api_rid === +baseId && squad.api_area_id === +api_area_id
+            (squad) => squad.api_rid === +baseId && squad.api_area_id === +api_area_id,
           )
           return ret === -1 ? +baseId - 1 : ret
         }
@@ -90,7 +85,8 @@ const airBaseSlice = createSlice({
         if (
           findIndex(
             state[indexSrc].api_plane_info,
-            (squad) => squad.api_slotid === +api_item_id) === -1
+            (squad) => squad.api_slotid === +api_item_id,
+          ) === -1
         ) {
           return state
         }
@@ -113,10 +109,7 @@ const airBaseSlice = createSlice({
 
         return compareUpdate(
           state,
-          constructArray(
-            [indexSrc, indexDst],
-            map([objSrc, objDst], convertItem),
-          ),
+          constructArray([indexSrc, indexDst], map([objSrc, objDst], convertItem)),
           3,
         )
       })
@@ -195,7 +188,7 @@ const airBaseSlice = createSlice({
               return airbase
             }
 
-            const index = api_rid! - 1
+            const index = (api_rid || 0) - 1
             const newBase = { ...airbase }
 
             if (get(api_f_maxhps, index) >= 0) {

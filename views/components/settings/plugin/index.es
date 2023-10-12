@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 import { withNamespaces } from 'react-i18next'
 import Promise from 'bluebird'
 import {
-  Card,
   Callout,
   Intent,
   Button,

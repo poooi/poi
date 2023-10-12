@@ -17,6 +17,8 @@ import _, {
   toString,
   Dictionary,
   padStart,
+  setWith,
+  clone,
 } from 'lodash'
 import pangu from 'pangu'
 import path from 'path'
@@ -115,19 +117,19 @@ export function buildArray<T = any>(
   pairsOrIdx: number | [number, T][],
   _value?: T,
 ): (T | undefined)[] {
-  let pairs: [number, T][]
+  let pairs: [number, T | undefined][]
   if (Array.isArray(pairsOrIdx)) {
     pairs = pairsOrIdx
   } else {
     console.warn(
       'buildArray(idx, value) is pending deprecation, please use buildArray([idx, value]) instead',
     )
-    pairs = [[pairsOrIdx, _value!]]
+    pairs = [[pairsOrIdx, _value]]
   }
   const ret: T[] = []
   pairs.forEach(([index, value]) => {
     index = Math.floor(index)
-    if (isNaN(index) || index < 0) {
+    if (isNaN(index) || index < 0 || value == null) {
       return
     }
     ret[index] = value
@@ -181,36 +183,12 @@ export function pickExisting<T extends object>(state: T, body: object): T {
  * @param path data path
  * @param val the value to update
  */
-export function reduxSet<T = any>(obj: T, path: (string | number)[], val: any): T {
-  const [prop, ...restPath] = path
-  if (typeof prop === 'undefined') {
-    if (!isEqual(obj, val)) {
-      return val
-    } else {
-      return obj
-    }
-  }
-  let before
-  if (prop in obj) {
-    before = obj[prop as keyof T]
-  } else {
-    before = {}
-  }
-  const after = reduxSet(before, restPath, val)
-  if (after !== before) {
-    let result
-    if (Array.isArray(obj)) {
-      result = obj.slice()
-      result[prop as number] = after
-    } else {
-      result = {
-        ...obj,
-        [prop]: after,
-      }
-    }
-    return result as T
-  }
-  return obj
+export function reduxSet<T extends Record<string, unknown>>(
+  obj: T,
+  path: (string | number)[],
+  val: any,
+): T {
+  return setWith(clone(obj), path, val, clone)
 }
 
 /**

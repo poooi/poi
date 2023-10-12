@@ -74,22 +74,22 @@ const isRenderer = (process || {}).type === 'renderer'
 
 // the very base class
 abstract class BaseDebugger {
-  public debug: Console['debug'] = (...args) => this.getLeveledLog('debug')(...args)
+  public debug: Console['debug'] = (...args: never[]) => this.getLeveledLog('debug')(...args)
 
-  public log: Console['log'] = (...args) => this.getLeveledLog('log')(...args)
+  public log: Console['log'] = (...args: never[]) => this.getLeveledLog('log')(...args)
 
-  public info: Console['info'] = (...args) => this.getLeveledLog('info')(...args)
+  public info: Console['info'] = (...args: never[]) => this.getLeveledLog('info')(...args)
 
-  public warn: Console['warn'] = (...args) => this.getLeveledLog('warn')(...args)
+  public warn: Console['warn'] = (...args: never[]) => this.getLeveledLog('warn')(...args)
 
-  public error: Console['error'] = (...args) => this.getLeveledLog('error')(...args)
+  public error: Console['error'] = (...args: never[]) => this.getLeveledLog('error')(...args)
 
-  public trace: Console['trace'] | void = (...args) => this.getLeveledLog('trace')(...args)
+  public trace: Console['trace'] | void = (...args: never[]) => this.getLeveledLog('trace')(...args)
 
-  public table: Console['table'] = (...args) =>
+  public table: Console['table'] = (...args: never[]) =>
     (this.getLeveledLog('table') as Console['table'])(...args)
 
-  public assert: Console['assert'] = (...args) => this.getLeveledLog('assert')(...args)
+  public assert: Console['assert'] = (...args: never[]) => this.getLeveledLog('assert')(...args)
 
   protected prefix = '[MAIN]'
 
@@ -114,7 +114,7 @@ abstract class BaseDebugger {
 
   protected abstract getLogFunc(level: LogType): DefaultLogger
 
-  protected getLeveledLog(level: LogType): (...args: any[]) => void {
+  protected getLeveledLog(level: LogType): (...args: never[]) => void {
     if (this.isEnabled()) {
       switch (level) {
         case 'assert':
@@ -174,7 +174,7 @@ abstract class DebuggerBase extends BaseDebugger {
     if (!this.extra(tag)) {
       return Debug.wrap('Invalid extra option name')
     }
-    this.extra(tag).enable()
+    this.extra(tag)?.enable()
     return Debug.wrap({ enabledExtra: tag })
   }
 
@@ -182,7 +182,7 @@ abstract class DebuggerBase extends BaseDebugger {
     if (!this.validateTagName(tag)) {
       return Debug.wrap('Invalid extra option name')
     }
-    this.extra(tag).disable()
+    this.extra(tag)?.disable()
     return Debug.wrap({ disabledExtra: tag })
   }
 
@@ -206,14 +206,14 @@ abstract class DebuggerBase extends BaseDebugger {
       }
       this.h.set(tag, extraHandler)
     }
-    return this.h.get(tag)!
+    return this.h.get(tag)
   }
 
   public main() {
     if (!this.h || !this.h.get('main')) {
       this.h.set('main', new ExtraDebugger('[MAIN]'))
     }
-    return this.h.get('main')!
+    return this.h.get('main')
   }
 
   public init() {

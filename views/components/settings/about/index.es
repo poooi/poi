@@ -35,7 +35,7 @@ export const About = () => {
     observer.current.observe(sentinel.current)
 
     return () => observer.current.disconnect()
-  }, [])
+  }, [handleIntersection])
 
   return (
     <div>

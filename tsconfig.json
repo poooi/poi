@@ -2,14 +2,22 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "jsx": "react",
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "views/*": ["./views/*"]
+      "views/*": [
+        "./views/*"
+      ]
     },
-    "typeRoots": ["./node_modules/@types", "./shims"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./shims/vendor"
+    ],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
