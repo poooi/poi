@@ -7,7 +7,7 @@ import config from './config'
 const isModernDarwin = process.platform === 'darwin' && Number(os.release().split('.')[0]) >= 17
 
 export function stopFileNavigate(id: number) {
-  webContents.fromId(id).addListener('will-navigate', (e, url) => {
+  webContents.fromId(id)?.addListener('will-navigate', (e, url) => {
     if (url.startsWith('file')) {
       e.preventDefault()
     }
@@ -16,6 +16,10 @@ export function stopFileNavigate(id: number) {
 
 export function stopNavigateAndHandleNewWindow(id: number) {
   const webContent = webContents.fromId(id)
+
+  if (!webContent) {
+    return
+  }
 
   webContent.addListener('will-navigate', (e, url) => {
     e.preventDefault()
@@ -61,6 +65,7 @@ export function stopNavigateAndHandleNewWindow(id: number) {
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
         _.set(options, ['webPreferences', 'webSecurity'], false)
+        _.set(options, ['webPreferences', 'backgroundThrottling '], false)
         _.set(options, ['webPreferences', 'zoomFactor'], config.get('poi.appearance.zoom'))
       }
       return {

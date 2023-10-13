@@ -255,6 +255,7 @@ app.on('ready', () => {
       enableRemoteModule: true,
       contextIsolation: false,
       spellcheck: false,
+      backgroundThrottling: false,
     },
     backgroundColor: '#00000000',
     backgroundMaterial: 'acrylic',
