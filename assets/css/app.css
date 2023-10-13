@@ -81,6 +81,11 @@ poi-main {
   margin: 6px 10px !important;
 }
 
+body:not(.bp4-dark) #electron-app-title-bar .window-controls button:not(:hover),
+body:not(.bp4-dark) #electron-app-title-bar #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button:not(:hover) {
+  color: #24292e;
+}
+
 .resizable-component.width-resize > .resize-handle-right {
   background: linear-gradient(90deg, transparent 40%, #666 60%, transparent 51%);
   z-index: 10;
