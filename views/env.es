@@ -67,7 +67,6 @@ Object.remoteClone = (obj) => JSON.parse(window.remote.require('./lib/utils').re
 // Node modules
 const originConfig = remote.require('./lib/config')
 window.ipc = remote.require('./lib/ipc')
-window.proxy = remote.require('./lib/proxy')
 window.CONST = Object.remoteClone(remote.require('./lib/constant'))
 window.config = {}
 for (const key in originConfig) {
