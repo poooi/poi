@@ -295,7 +295,7 @@ export class KanGameWrapper extends Component {
         disablewebsecurity
         allowpopups
         nodeintegrationinsubframes
-        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no, sandbox=no"
+        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no, sandbox=no, nodeIntegrationInSubFrames=yes"
         preload={preloadUrl}
         audioMuted={muted}
         useragent={ua}
