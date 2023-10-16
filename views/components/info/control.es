@@ -101,7 +101,7 @@ export class PoiControl extends Component {
 
   handleCapturePageOverWebContent = async (toClipboard) => {
     const { width, height } = getStore('layout.webview')
-    const webContentId = getStore('layout.webview.ref.view').getWebContentsId()
+    const webContentId = getStore('layout.webview.ref').getWebContentsId()
     const actualSize = { width: Math.round(width), height: Math.round(height) }
     const rect = {
       x: 0,
