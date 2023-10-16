@@ -68,11 +68,9 @@ export const gameReload = () => {
     doc = document;
   }
 
-  var game = doc.getElementById('flashWrap');
-  if(game) {
-    var gameInnerHTML = game.innerHTML;
-    game.innerHTML = '';
-    game.innerHTML = gameInnerHTML;
+  var game = doc.getElementById('htmlWrap');
+  if (game) {
+    game.contentWindow.location.reload()
   }
   `)
 }

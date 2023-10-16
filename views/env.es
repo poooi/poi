@@ -46,8 +46,10 @@ if (window.isMain) {
 
   // Handle New Window
 
-  const { stopNavigateAndHandleNewWindow } = remote.require('./lib/webcontent-utils')
+  const { stopNavigateAndHandleNewWindow, handleWebviewPreloadHack } =
+    remote.require('./lib/webcontent-utils')
   stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
+  handleWebviewPreloadHack(remote.getCurrentWebContents().id)
 }
 
 // Disable eval

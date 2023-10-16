@@ -177,7 +177,8 @@ export class KanGameWindowWrapper extends PureComponent {
     this.externalWindow = open(
       `${fileUrl(path.join(ROOT, 'index-plugin.html'))}?kangame`,
       'plugin[kangame]',
-      windowFeatures + ',nodeIntegration=no,webSecurity=no',
+      windowFeatures +
+        ',nodeIntegration=no,nodeIntegrationInSubFrames=yes,webSecurity=no,contextIsolation=no',
     )
     this.externalWindow.addEventListener('DOMContentLoaded', (e) => {
       this.currentWindow = BrowserWindow.getAllWindows().find((a) =>
@@ -252,7 +253,10 @@ export class KanGameWindowWrapper extends PureComponent {
       this.externalWindow.document.title = 'poi'
       this.externalWindow.isWindowMode = true
       loadStyle(this.externalWindow.document, this.currentWindow, false)
-      remote.require('./lib/webcontent-utils').stopFileNavigate(this.currentWindow.webContents.id)
+      const { stopFileNavigate, handleWebviewPreloadHack } =
+        remote.require('./lib/webcontent-utils')
+      stopFileNavigate(this.currentWindow.webContents.id)
+      handleWebviewPreloadHack(this.currentWindow.webContents.id)
       for (const pickOption of pickOptions) {
         this.externalWindow[pickOption] = window[pickOption]
       }

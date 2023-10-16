@@ -6,7 +6,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from 'react'
-import { type DidFailLoadEvent, type WebviewTag, type WebContents } from 'electron'
+import type { DidFailLoadEvent, WebviewTag, WebContents } from 'electron'
 import { webContents } from '@electron/remote'
 import { HandlerFields, useWebviewEventListener } from './webview-util'
 
