@@ -7,53 +7,83 @@ window.hackXhr = (win = window) => {
   if (win.xhrHacked) {
     return false
   }
+
   const OriginalXMLHttpRequest = win.XMLHttpRequest
-  win.XMLHttpRequest = function () {
-    let method, reqUrl, reqBody
-    const req = new OriginalXMLHttpRequest()
 
-    // Hack open method
-    req.originalOpen = req.open
-    req.open = (...params) => {
-      method = params[0]
-      reqUrl = params[1]
-      return req.originalOpen(...params)
-    }
+  win.XMLHttpRequest = class XMLHttpRequest extends OriginalXMLHttpRequest {
+    constructor() {
+      super()
 
-    // Hack send method
-    req.originalSend = req.send
-    req.send = (body) => {
-      reqBody = body
-      return req.originalSend(body)
-    }
+      this.method = 'GET'
+      this.requestURL = ''
+      this.request = ''
+      this.responseHack = undefined
+      this.responseTextHack = undefined
+      this.responseXMLHack = undefined
 
-    // Send event
-    req.addEventListener('load', () => {
-      const resUrl = req.responseURL || reqUrl
-      gameAPIBroadcaster.sendRequest(
-        method,
-        [undefined, url.parse(resUrl).pathname, resUrl],
-        reqBody,
-      )
-    })
-    req.addEventListener('loadend', () => {
-      if (!req.responseType || ['json', 'document', 'text'].includes(req.responseType)) {
-        gameAPIBroadcaster.sendResponse(
-          method,
-          [undefined, url.parse(req.responseURL).pathname, req.responseURL],
-          reqBody,
-          req.response,
-          req.responseType,
-          req.status,
+      this.addEventListener('load', () => {
+        const responseURL = this.responseURL || this.requestURL
+        gameAPIBroadcaster.sendRequest(
+          this.method,
+          [undefined, url.parse(responseURL).pathname, responseURL],
+          this.request,
         )
-      }
-    })
-    req.addEventListener('error', () => {
-      const resUrl = req.responseURL || reqUrl
-      gameAPIBroadcaster.sendError([undefined, url.parse(resUrl).pathname, resUrl], req.status)
-    })
+      })
+      this.addEventListener('loadend', () => {
+        if (!this.responseType || ['json', 'document', 'text'].includes(this.responseType)) {
+          gameAPIBroadcaster.sendResponse(
+            this.method,
+            [undefined, url.parse(this.responseURL).pathname, this.responseURL],
+            this.request,
+            this.response,
+            this.responseType,
+            this.status,
+          )
+        }
+      })
+      this.addEventListener('error', () => {
+        const responseURL = this.responseURL || this.requestURL
+        gameAPIBroadcaster.sendError(
+          [undefined, url.parse(responseURL).pathname, responseURL],
+          this.status,
+        )
+      })
+    }
 
-    return req
+    open(method, requestURL, ...props) {
+      this.method = method
+      this.requestURL = requestURL
+      super.open(method, requestURL, ...props)
+    }
+
+    send(body) {
+      this.request = body
+      super.send(body)
+    }
+
+    get response() {
+      return this.responseHack || super.response
+    }
+
+    set response(response) {
+      this.responseHack = response
+    }
+
+    get responseText() {
+      return this.responseTextHack || super.responseText
+    }
+
+    set responseText(responseText) {
+      this.responseTextHack = responseText
+    }
+
+    get responseXML() {
+      return this.responseXMLHack || super.responseXML
+    }
+
+    set responseXML(responseXML) {
+      this.responseXMLHack = responseXML
+    }
   }
 
   win.xhrHacked = true

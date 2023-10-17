@@ -61,6 +61,9 @@ class GameAPIBroadcaster extends EventEmitter {
   }
 
   private parseResponseBody = (rawResBody: unknown, resType: XMLHttpRequestResponseType) => {
+    if (rawResBody == null) {
+      return undefined
+    }
     switch (resType) {
       case 'arraybuffer':
       case 'blob': {
