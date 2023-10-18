@@ -66,20 +66,20 @@ class GameAPIBroadcaster extends EventEmitter {
     }
     switch (resType) {
       case 'arraybuffer':
-      case 'blob': {
+      case 'blob':
+      case 'document': {
         // not parseable
         return undefined
       }
       case 'json': {
         return JSON.stringify(rawResBody)
       }
-      case 'document':
       case 'text':
       default: {
         try {
-          const bodyStr = rawResBody as string
+          const bodyStr = (rawResBody as string) || undefined
           const parsed = bodyStr?.startsWith('svdata=') ? bodyStr.substring(7) : bodyStr
-          JSON.parse(parsed)
+          JSON.parse(parsed || '')
           return parsed
         } catch (e) {
           return undefined

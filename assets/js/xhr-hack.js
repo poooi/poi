@@ -30,7 +30,7 @@ window.hackXhr = (win = window) => {
         )
       })
       this.addEventListener('loadend', () => {
-        if (!this.responseType || ['json', 'document', 'text'].includes(this.responseType)) {
+        if (!this.responseType || ['json', 'text'].includes(this.responseType)) {
           gameAPIBroadcaster.sendResponse(
             this.method,
             [undefined, url.parse(this.responseURL).pathname, this.responseURL],
