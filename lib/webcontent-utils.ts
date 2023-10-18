@@ -36,25 +36,43 @@ export function handleWebviewPreloadHack(id: number) {
         frameRoutingId,
       ) => {
         const frame = webFrameMain.fromId(frameProcessId, frameRoutingId)
-        if (
-          frame &&
-          url !== 'about:blank' &&
-          !(await frame.executeJavaScript('window.xhrHacked || false'))
-        ) {
-          warn('iframe failed to load preload script, loading xhr hack from parent', url)
-          await frame.executeJavaScript(`
-            let cur = window.parent
-            while (true) {
-              if (cur.hackXhr) {
-                cur.hackXhr(window)
-                break
-              } else if (cur.parent !== cur) {
-                cur = cur.parent
-              } else {
-                break
+        if (frame && url !== 'about:blank') {
+          if (!(await frame.executeJavaScript('window.xhrHacked || false'))) {
+            warn('iframe failed to load preload script, loading xhr hack from parent', url)
+            await frame.executeJavaScript(`
+            (() => {
+              let cur = window.parent
+              while (true) {
+                if (cur.hackXhr) {
+                  cur.hackXhr(window)
+                  break
+                } else if (cur.parent !== cur) {
+                  cur = cur.parent
+                } else {
+                  break
+                }
               }
-            }
+            })()
           `)
+          }
+          if (!(await frame.executeJavaScript('window.imageHacked || false'))) {
+            warn('iframe failed to load preload script, loading image hack from parent', url)
+            await frame.executeJavaScript(`
+            (() => {
+              let cur = window.parent
+              while (true) {
+                if (cur.hackImage) {
+                  cur.hackImage(window)
+                  break
+                } else if (cur.parent !== cur) {
+                  cur = cur.parent
+                } else {
+                  break
+                }
+              }
+            })()
+          `)
+          }
         }
       },
     )

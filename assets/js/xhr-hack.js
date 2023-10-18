@@ -10,7 +10,7 @@ window.hackXhr = (win = window) => {
 
   const OriginalXMLHttpRequest = win.XMLHttpRequest
 
-  win.XMLHttpRequest = class XMLHttpRequest extends OriginalXMLHttpRequest {
+  win.XMLHttpRequest = class HackedXMLHttpRequest extends OriginalXMLHttpRequest {
     constructor() {
       super()
 
