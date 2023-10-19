@@ -55,14 +55,14 @@ export function handleWebviewPreloadHack(id: number) {
             })()
           `)
           }
-          if (!(await frame.executeJavaScript('window.imageHacked || false'))) {
+          if (!(await frame.executeJavaScript('window.resourceHacked || false'))) {
             warn('iframe failed to load preload script, loading image hack from parent', url)
             await frame.executeJavaScript(`
             (() => {
               let cur = window.parent
               while (true) {
-                if (cur.hackImage) {
-                  cur.hackImage(window)
+                if (cur.hackResource) {
+                  cur.hackResource(window)
                   break
                 } else if (cur.parent !== cur) {
                   cur = cur.parent

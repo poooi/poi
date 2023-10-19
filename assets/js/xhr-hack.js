@@ -52,7 +52,7 @@ window.hackXhr = (win = window) => {
 
     open(method, requestURL, ...props) {
       this.method = method
-      this.requestURL = requestURL
+      this.requestURL = new URL(requestURL, win.location.href).href
       super.open(method, requestURL, ...props)
     }
 
