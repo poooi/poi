@@ -110,7 +110,7 @@ class GameAPIBroadcaster extends EventEmitter {
     }
   }
 
-  private isKancolleGameApi = (pathname: PathName = ''): boolean => pathname.startsWith('/kcsapi')
+  private isKancolleGameApi = (pathname: PathName = ''): boolean => pathname?.startsWith('/kcsapi')
 }
 
 export default new GameAPIBroadcaster()
