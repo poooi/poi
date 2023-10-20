@@ -2,7 +2,7 @@
 import { onGameRequest, onGameResponse } from 'views/redux/reducer-factory'
 import * as remote from '@electron/remote'
 
-const proxy = remote.require('./lib/proxy')
+const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
 
 const isGameApi = (pathname) => pathname.startsWith('/kcsapi')
 
@@ -168,7 +168,7 @@ const addProxyListener = () => {
   if (!window.listenerStatusFlag) {
     window.listenerStatusFlag = true
     for (const eventName in proxyListener) {
-      proxy.addListener(eventName, proxyListener[eventName])
+      gameAPIBroadcaster.addListener(eventName, proxyListener[eventName])
     }
   }
 }
@@ -183,7 +183,7 @@ window.addEventListener('unload', () => {
   if (window.listenerStatusFlag) {
     window.listenerStatusFlag = false
     for (const eventName in proxyListener) {
-      proxy.removeListener(eventName, proxyListener[eventName])
+      gameAPIBroadcaster.removeListener(eventName, proxyListener[eventName])
     }
   }
 })

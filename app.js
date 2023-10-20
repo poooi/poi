@@ -26,14 +26,13 @@ const poiIconPath = path.join(
 
 electronRemote.initialize()
 
+require('./lib/proxy')
 require('./lib/module-path').setAllowedPath(global.ROOT)
 const config = require('./lib/config')
-const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
 const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
-proxy.setMaxListeners(30)
 require('./lib/tray')
 require('./lib/screenshot')
 
