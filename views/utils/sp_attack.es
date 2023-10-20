@@ -45,6 +45,8 @@ const isNotHeavyDmg = overShipState((ship) => ship.api_nowhp * 4 > ship.api_maxh
 
 const isLevelOver = (level) => overShipState((ship) => ship.api_lv >= level)
 
+const shipClassTypeIs = (n) => overShipProp((ship) => ship.api_ctype === n)
+
 const isNotSub = overShipProp((ship) => ship.api_stype !== 13 && ship.api_stype !== 14)
 
 const isNotCarrier = overShipProp(
@@ -64,13 +66,9 @@ const isNagatoKaiNi = shipIdIs(541)
 
 const isMutsuKaiNi = shipIdIs(573)
 
-const isNelson = _.overSome([shipIdIs(571), shipIdIs(576)])
+const isNelsonClass = shipClassTypeIs(88)
 
-const isColorado = _.overSome([shipIdIs(601), shipIdIs(1496)])
-
-const isMaryland = _.overSome([shipIdIs(913), shipIdIs(918)])
-
-const isColoradoClass = _.overSome([isColorado, isMaryland])
+const isColoradoClass = shipClassTypeIs(93)
 
 const isKongoKaiNiC = shipIdIs(591)
 
@@ -115,7 +113,7 @@ const isWashingtonKai = shipIdIs(659)
 const isNelsonSpAttack = _.overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Nelson_Touch])(1),
   isFullFleet,
-  overShip(0)(_.overEvery([isNelson, isNotMidDmg])),
+  overShip(0)(_.overEvery([isNelsonClass, isNotMidDmg])),
   overShip(1)(isNotSub),
   overShip(2)(_.overEvery([isNotSub, isNotCarrier])),
   overShip(3)(isNotSub),
@@ -222,16 +220,15 @@ const isYamatoTripleAttack = _.overEvery([
     _.overEvery(overShip(1)(isHyugaKaiNi), overShip(2)(isIseKaiNi)),
     _.overEvery(overShip(1)(isFusoKaiNi), overShip(2)(isYamashiroKaiNi)),
     _.overEvery(overShip(1)(isYamashiroKaiNi), overShip(2)(isFusoKaiNi)),
-    _.overEvery(overShip(1)(isNelson), overShip(2)(isWarspite)),
-    _.overEvery(overShip(1)(isWarspite), overShip(2)(isNelson)),
+    _.overEvery(overShip(1)(isNelsonClass), overShip(2)(isWarspite)),
+    _.overEvery(overShip(1)(isWarspite), overShip(2)(isNelsonClass)),
     _.overEvery(overShip(1)(isKongoKaiNiC), overShip(2)(isHieiKaiNiC)),
     _.overEvery(overShip(1)(isHieiKaiNiC), overShip(2)(isKongoKaiNiC)),
     _.overEvery(overShip(1)(isSouthDakotaKai), overShip(2)(isWashingtonKai)),
     _.overEvery(overShip(1)(isWashingtonKai), overShip(2)(isSouthDakotaKai)),
     _.overEvery(overShip(1)(isItalia), overShip(2)(isRomaKai)),
     _.overEvery(overShip(1)(isRomaKai), overShip(2)(isItalia)),
-    _.overEvery(overShip(1)(isColorado), overShip(2)(isMaryland)),
-    _.overEvery(overShip(1)(isMaryland), overShip(2)(isColorado)),
+    _.overEvery(overShip(1)(isColoradoClass), overShip(2)(isColoradoClass)),
   ),
   overShip(0)(_.overEvery(isNotMidDmg, isYamatoKaiNi)),
   overShip(1)(isNotMidDmg),
