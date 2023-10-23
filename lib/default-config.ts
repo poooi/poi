@@ -326,7 +326,6 @@ const defaultConfig = {
   },
   packageManager: {
     enablePluginCheck: true,
-    proxy: false,
     enableBetaPluginCheck: false,
     enableAutoUpdate: true,
   },

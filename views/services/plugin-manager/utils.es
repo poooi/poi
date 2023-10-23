@@ -504,7 +504,6 @@ export const safePhysicallyRemove = async (packagePath) => {
  */
 export const getNpmConfig = (prefix) => {
   const mirrorConf = config.get('packageManager.mirrorName')
-  const useProxy = config.get('packageManager.proxy', false)
   const enableBetaPluginCheck = config.get('packageManager.enableBetaPluginCheck')
   const mirrorName = Object.keys(MIRRORS).includes(mirrorConf)
     ? mirrorConf
@@ -516,10 +515,6 @@ export const getNpmConfig = (prefix) => {
     registry,
     prefix,
     enableBetaPluginCheck,
-  }
-  if (useProxy) {
-    const { port } = window.proxy
-    npmConfig.http_proxy = `http://127.0.0.1:${port}`
   }
 
   return npmConfig
