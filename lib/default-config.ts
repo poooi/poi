@@ -319,9 +319,6 @@ const defaultConfig = {
       username: '',
       password: '',
     },
-    allowLAN: false,
-    port: 0,
-    retries: 0,
     use: 'none',
   },
   packageManager: {

@@ -146,10 +146,6 @@ window.addEventListener('game.response', (e) => {
 window.addEventListener('network.error', () => {
   error(i18next.t('Connection failed'), { dontReserve: true })
 })
-window.addEventListener('network.error.retry', (e) => {
-  const { counter } = e.detail
-  error(i18next.t('ConnectionFailedMsg', { count: counter }), { dontReserve: true })
-})
 window.addEventListener('network.invalid.result', (e) => {
   const { code } = e.detail
   error(i18next.t('CatError', { code }), { dontReserve: true })

@@ -131,20 +131,6 @@ const handleProxyGameStart = () => {
   window.dispatchEvent(new Event('game.start'))
 }
 
-const handleProxyNetworkErrorRetry = ([domain, path, url], counter) => {
-  if (!isGameApi(path)) {
-    return
-  }
-  const event = new CustomEvent('network.error.retry', {
-    bubbles: true,
-    cancelable: true,
-    detail: {
-      counter: counter,
-    },
-  })
-  window.dispatchEvent(event)
-}
-
 const handleProxyNetworkError = ([domain, path, url]) => {
   if (
     url.startsWith('http://www.dmm.com/netgame/') ||
@@ -159,7 +145,6 @@ const proxyListener = {
   'network.on.request': handleProxyGameOnRequest,
   'network.on.response': handleProxyGameOnResponse,
   'network.error': handleProxyNetworkError,
-  'network.error.retry': handleProxyNetworkErrorRetry,
 }
 
 window.listenerStatusFlag = false
