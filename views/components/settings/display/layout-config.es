@@ -20,6 +20,11 @@ const SVG = {
       <path d="M1 2v12h14V2zm13 7H2V3h12z" fill="currentColor" />
     </svg>
   ),
+  surrounding: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+      <path d="M1 2v12h14V2H1M2 10H10V13H2ZM11 3H14V13H11Z" fill="currentColor" />
+    </svg>
+  ),
   separate: (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
       <path fill="currentColor" d="M3 2v10h12V2H3zm11 9H4V5h10v5z" />
@@ -61,6 +66,7 @@ const Icon = styled.span`
 @connect((state, props) => ({
   layout: get(state.config, 'poi.layout.mode', 'horizontal'),
   enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
+  enableIsolatedTabbed: get(state.config, 'poi.tabarea.isolated', false),
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
   reversed: get(state.config, 'poi.layout.reverse', false),
   isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
@@ -69,6 +75,7 @@ const Icon = styled.span`
 export class LayoutConfig extends Component {
   static propTypes = {
     enableDoubleTabbed: PropTypes.bool,
+    enableIsolatedTabbed: PropTypes.bool,
     layout: PropTypes.string,
     reversed: PropTypes.bool,
     isolateGameWindow: PropTypes.bool,
@@ -137,8 +144,10 @@ export class LayoutConfig extends Component {
     config.set('poi.layout.overlay', flag)
   }
 
-  handleSetDoubleTabbed = (doubleTabbed, vertical) => {
+  handleSetDoubleTabbed = (doubleTabbed, isolated, vertical) => {
     config.set('poi.tabarea.double', doubleTabbed)
+    config.set('poi.tabarea.isolated', isolated)
+
     if (doubleTabbed) {
       config.set('poi.tabarea.vertical', vertical)
     }
@@ -150,6 +159,7 @@ export class LayoutConfig extends Component {
       reversed,
       isolateGameWindow,
       enableDoubleTabbed,
+      enableIsolatedTabbed,
       verticalDoubleTabbed,
       overlayPanel,
       t,
@@ -226,8 +236,8 @@ export class LayoutConfig extends Component {
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  active={!enableDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(false)}
+                  active={!enableDoubleTabbed && !enableIsolatedTabbed}
+                  onClick={(e) => this.handleSetDoubleTabbed(false, false)}
                 >
                   <Icon invertX>{SVG.singleTab}</Icon>
                 </Button>
@@ -235,7 +245,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={enableDoubleTabbed && !verticalDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(true, false)}
+                  onClick={(e) => this.handleSetDoubleTabbed(true, false, false)}
                 >
                   <Icon>{SVG.doubleTabHorizontal}</Icon>
                 </Button>
@@ -243,9 +253,17 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={enableDoubleTabbed && verticalDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(true, true)}
+                  onClick={(e) => this.handleSetDoubleTabbed(true, false, true)}
                 >
                   <Icon invertY>{SVG.doubleTabVertical}</Icon>
+                  </Button>
+                  <Button
+                  minimal
+                  intent={Intent.PRIMARY}
+                  active={!enableDoubleTabbed && enableIsolatedTabbed}
+                  onClick={(e) => this.handleSetDoubleTabbed(false, true)}
+                >
+                  <Icon>{SVG.surrounding}</Icon>
                 </Button>
               </ButtonGroup>
             </FormGroup>
