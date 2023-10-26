@@ -14,10 +14,6 @@ const registerShortcut = (acc: Electron.Accelerator, desc: string, func: () => v
   }
 }
 
-const disableTabKey = () => {
-  registerShortcut('Tab', 'Tab Key', () => (console.log("Ignored tab key")))
-}
-
 const registerBossKey = () => {
   const accelerator = config.get('poi.shortcut.bosskey', '')
   if (accelerator)
@@ -27,8 +23,6 @@ const registerBossKey = () => {
 
 export default {
   register: () => {
-    disableTabKey()
-
     if (process.platform !== 'darwin') {
       registerBossKey()
     }
