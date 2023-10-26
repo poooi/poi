@@ -22,14 +22,14 @@ export const PaneBodyMini = connect(() => {
   return (state, { fleetId }) => ({
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
     enableAvatar: get(state, 'config.poi.appearance.avatar', true),
-    summarizeFleetInfo: get(state, 'config.poi.appearance.summarizeFleetInfo', true),
+    enableOverviewFleetDetail: get(state, 'config.poi.appearance.enableOverviewFleetDetail', false),
     width: miniShipRowWidthSelector(state),
   })
-})(({ fleetId, shipsId, enableAvatar, summarizeFleetInfo, width }) => (
+})(({ fleetId, shipsId, enableAvatar, enableOverviewFleetDetail, width }) => (
   <>
-    <FleetStat fleetId={fleetId} isMini={summarizeFleetInfo} />
+    <FleetStat fleetId={fleetId} isMini={!enableOverviewFleetDetail} />
     <ShipDetailsMini className="ship-details-mini">
-      {(summarizeFleetInfo) ? (shipsId || []).map((shipId, i) => (
+      {(!enableOverviewFleetDetail) ? (shipsId || []).map((shipId, i) => (
         <MiniShipRow
           key={shipId}
           shipId={shipId}
