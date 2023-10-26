@@ -344,6 +344,7 @@ const postEnableProcess = (plugin) => {
         contextIsolation: false,
         affinity: 'poi-plugin',
         webSecurity: false,
+        zoomFactor: config.get('poi.appearance.zoom', 1),
         ...plugin.windowOptions?.webPreferences,
       },
       ...plugin.windowOptions,
