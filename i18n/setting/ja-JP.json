@@ -87,6 +87,7 @@
   "Use SVG Icon": "SVGアイコンを使用する",
   "Enable Smooth Transition": "タブの切り替えをスムースに表示する",
   "Use Gridded Plugin Menu": "プラグインメニューをグリッド仕様に設定する",
+  "Summarize fleet info in overview": "一覧の艦隊情報を簡略化する",
   "Plugin update": "プラグイン更新",
   "PluginUpdateMsg": "は新しいバージョンがあります。アップデートを行って下さい。",
   "Check Update": "更新を確認",

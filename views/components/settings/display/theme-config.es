@@ -56,6 +56,11 @@ const SWITCHES = [
     defaultValue: true,
   },
   {
+    label: 'Summarize fleet info in overview',
+    configName: 'poi.appearance.summarizeFleetInfo',
+    defaultValue: true,
+  },
+  {
     label: 'Show shipgirl avatar',
     configName: 'poi.appearance.avatar',
     defaultValue: false,
