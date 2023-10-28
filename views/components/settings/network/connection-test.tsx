@@ -47,7 +47,7 @@ export const ConnectionTest: FunctionComponent<void> = () => {
       controller.current?.abort?.()
       setLoading(false)
     }
-  }, [])
+  }, [connect, t])
 
   return (
     <div>

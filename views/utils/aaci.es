@@ -37,6 +37,7 @@ const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid })
 }
 
 const shipIdIs = n => ship => ship.api_ship_id === n
+const shipIdIsOneOf = (...shipIds) => ship => shipIds.includes(ship.api_ship_id)
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -112,7 +113,7 @@ declareAACI({
   name: ['Battle Ship'],
   id: 4,
   fixed: 6,
-  modifier: 1.4,
+  modifier: 1.5,
   shipValid: validAll(isBattleship, slotNumAtLeast(4)),
   equipsValid: validAll(
     hasSome(isLargeCaliberMainGun),
@@ -208,6 +209,18 @@ declareAACI({
 })
 
 // id 13: <unknown>
+// declareAACI({
+//   name: [],
+//   id: 13,
+//   fixed: 3,
+//   modifier: 1.35,
+//   equipsValid: validAll(
+//     hasSome(isBuiltinHighAngleMount),
+//     hasSome(isCDMG),
+//     hasSome(isAARadar),
+//   ),
+// })
+
 
 const isIsuzuK2 = shipIdIs(141)
 // id 14~15: Isuzu K2
@@ -355,20 +368,35 @@ declareAACI({
 })
 
 const isMusashiK2 = shipIdIs(546)
+const isYamatoK2 = validAny(shipIdIs(911), shipIdIs(916))
 // 275: 10cm連装高角砲改+増設機銃
 const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
 
-// id 26: Musashi K2
+// id 26: Yamato K2 / Yamato K2 Heavy / Musashi K2
 declareAACI({
-  name: ['武蔵改二'],
+  name: ['武蔵改二', '大和改二', '大和改二重'],
   id: 26,
   fixed: 6,
   modifier: 1.4,
-  shipValid: isMusashiK2,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
   equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isAARadar)),
 })
 
-// id 27: <unknown>
+// id 27: Ooyodo Kai
+const isOoyodoK = shipIdIs(321)
+declareAACI({
+  name: ['大淀改'],
+  id: 27,
+  fixed: 5,
+  modifier: 1.55,
+  shipValid: validAny(isOoyodoK),
+  equipsValid: validAll(
+    hasSome(isHighAngleMountGun),
+    hasSome(isRocketK2),
+    hasSome(isAARadar)
+  ),
+})
+
 const isMusashiK = shipIdIs(148)
 
 // id 28: Ise-class Kai & Musashi Kai/K2
@@ -391,7 +419,7 @@ declareAACI({
   fixed: 5,
   modifier: 1.55,
   shipValid: validAny(isHamakazeBK, isIsokazeBK),
-  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
+  equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
 
 const isGotlandKai = shipIdIs(579)
@@ -438,9 +466,10 @@ declareAACI({
   fixed: 3,
   modifier: 1.2,
   shipValid: validAny(isRoyalNavyShips, isKongouClassK2),
-  equipsValid: validAll(
-    hasSome(isQF2Pounder),
-    validAny(hasSome(is20Tube7InchUpRocketLaunchers), hasSome(is16InchMkITriplePlusFCR)),
+  equipsValid: validAny(
+    validAll(hasSome(is16InchMkITriplePlusFCR), hasSome(isQF2Pounder)),
+    validAll(hasSome(is20Tube7InchUpRocketLaunchers), hasSome(isQF2Pounder)),
+    hasAtLeast(is20Tube7InchUpRocketLaunchers, 2)
   ),
 })
 
@@ -449,17 +478,27 @@ declareAACI({
   name: ['Gotland改'],
   id: 33,
   fixed: 3,
-  modifier: 1.25,
+  modifier: 1.35,
   shipValid: isGotlandKai,
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
-const isFletcherClassOrKai = validAny(shipIdIs(562), shipIdIs(689), shipIdIs(596), shipIdIs(692), shipIdIs(628), shipIdIs(629))
+const isFletcherClassOrKai = shipIdIsOneOf(
+  // Johnston & Kai
+  562, 689,
+
+  // Fletcher & Kai & Mod.2 & Mk.II
+  596, 692, 628, 629,
+
+  // Heywood L.E. & Kai
+  941, 726,
+)
+
 const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
 
 // id 34~37: Johnston
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 34,
   fixed: 7,
   modifier: 1.6,
@@ -467,38 +506,39 @@ declareAACI({
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
 })
 
-const is5InchSingleGunMountMk30 = equip => equip.api_slotitem_id === 313
+const is5InchSingleGunMountMk30OrKai = equip => (equip.api_slotitem_id === 284 || equip.api_slotitem_id === 313)
+const is5InckSingleGunMountMk30Kai = equip => equip.apt_slotitem_id === 313
 
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 35,
   fixed: 6,
   modifier: 1.55,
   shipValid: isFletcherClassOrKai,
   equipsValid: validAll(
     hasSome(is5InchSingleGunMountMk30PlusGFCS),
-    hasSome(is5InchSingleGunMountMk30),
+    hasSome(is5InchSingleGunMountMk30OrKai),
   ),
 })
 
 const isGFCSMk37 = equip => equip.api_slotitem_id === 307
 
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 36,
   fixed: 6,
   modifier: 1.55,
   shipValid: isFletcherClassOrKai,
-  equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30, 2), hasSome(isGFCSMk37)),
+  equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30OrKai, 2), hasSome(isGFCSMk37)),
 })
 
 declareAACI({
-  name: ['Johnston', 'Fletcher'],
+  name: ['Fletcher-class'],
   id: 37,
   fixed: 4,
-  modifier: 1.55,
+  modifier: 1.45,
   shipValid: isFletcherClassOrKai,
-  equipsValid: hasAtLeast(is5InchSingleGunMountMk30, 2),
+  equipsValid: hasAtLeast(is5InckSingleGunMountMk30Kai, 2),
 })
 
 // id 38~41: Atlanta
@@ -514,7 +554,7 @@ const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.ap
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 38,
-  fixed: 11,
+  fixed: 10,
   modifier: 1.85,
   shipValid: isAtlantaOrKai,
   equipsValid:
@@ -529,7 +569,7 @@ declareAACI({
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 39,
-  fixed: 11,
+  fixed: 10,
   modifier: 1.7,
   shipValid: isAtlantaOrKai,
   equipsValid:
@@ -544,7 +584,7 @@ declareAACI({
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 40,
-  fixed: 11,
+  fixed: 10,
   modifier: 1.7,
   shipValid: isAtlantaOrKai,
   equipsValid:
@@ -557,10 +597,93 @@ declareAACI({
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
   id: 41,
-  fixed: 10,
+  fixed: 9,
   modifier: 1.65,
   shipValid: isAtlantaOrKai,
   equipsValid: hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
+})
+
+// id 42~45: Yamato K2 / Yamoto K2 Heavy / Musashi K2
+
+// 464: 10cm連装高角砲群 集中配備
+const is10cmTwinHighAngleGunMountConcentratedDeployment = equip => equip.api_slotitem_id === 464
+
+// 142: 15m二重測距儀＋21号電探改二
+// 460: 15m二重測距儀改＋21号電探改二＋熟練射撃指揮所
+const is15mDuplexRangefinderLike = equip => [142, 460].includes(equip.api_slotitem_id)
+
+// Anti-Air gun that has 9￼AA stat or higher.
+const isAAMG = equip => isMachineGun(equip) && equip.api_tyku >= 6
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 42,
+  fixed: 10,
+  modifier: 1.65,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasAtLeast(is10cmTwinHighAngleGunMountConcentratedDeployment, 2),
+    hasSome(is15mDuplexRangefinderLike),
+    hasSome(isAAMG),
+  ),
+})
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 43,
+  fixed: 8,
+  modifier: 1.6,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasAtLeast(is10cmTwinHighAngleGunMountConcentratedDeployment, 2),
+    hasSome(is15mDuplexRangefinderLike),
+  ),
+})
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 44,
+  fixed: 6,
+  modifier: 1.6,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
+    hasSome(is15mDuplexRangefinderLike),
+    hasSome(isAAMG),
+  ),
+})
+
+declareAACI({
+  name: ['武蔵改二', '大和改二', '大和改二重'],
+  id: 45,
+  fixed: 5,
+  modifier: 1.55,
+  shipValid: validAny(isMusashiK2, isYamatoK2),
+  equipsValid: validAll(
+    hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
+    hasSome(is15mDuplexRangefinderLike),
+  ),
+})
+
+// id 46: Haruna Kai Ni B
+
+const isHarunaKaiNiB = shipIdIs(593)
+// 502: 35.6cm連装砲改三(ダズル迷彩仕様)
+const is356mmTwinMountKai3Dazzle = equip => equip.api_slotitem_id === 502
+// 503: 35.6cm連装砲改四
+const is356mmTwinMountKai4 = equip => equip.api_slotitem_id === 503
+
+declareAACI({
+  name: ['榛名改二乙'],
+  id: 46,
+  fixed: 8,
+  modifier: 1.55,
+  shipValid: validAny(isHarunaKaiNiB),
+  equipsValid: validAll(
+    hasSome(isCDMG),
+    hasSome(isAARadar),
+    hasSome(validAny(is356mmTwinMountKai3Dazzle, is356mmTwinMountKai4)),
+  ),
 })
 
 // return: a list of sorted AACI objects order by effect desc,

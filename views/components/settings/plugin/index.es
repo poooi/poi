@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 import { withNamespaces } from 'react-i18next'
 import Promise from 'bluebird'
 import {
-  Card,
   Callout,
   Intent,
   Button,
@@ -57,7 +56,6 @@ const PluginList = styled.div`
     'config.packageManager.mirrorName',
     navigator.language === 'zh-CN' ? 'taobao' : 'npm',
   ),
-  proxy: get(state, 'config.packageManager.proxy', false),
   betaCheck: get(state, 'config.packageManager.enableBetaPluginCheck', false),
   autoUpdate: get(state, 'config.packageManager.enableAutoUpdate', true),
 }))
@@ -65,7 +63,6 @@ export class PluginConfig extends Component {
   static propTypes = {
     plugins: PropTypes.array,
     mirrorName: PropTypes.string,
-    proxy: PropTypes.bool,
     betaCheck: PropTypes.bool,
     autoUpdate: PropTypes.bool,
   }

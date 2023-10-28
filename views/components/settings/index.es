@@ -61,6 +61,9 @@ const SettingsTabs = styled(Tabs)`
   .bp4-tab {
     flex: 1 0 30px;
     text-align: center;
+    justify-content: center;
+    display: flex;
+    gap: 8px;
 
     &[aria-selected='true'] {
       flex: 4 0 120px;
@@ -102,17 +105,17 @@ export class reactClass extends React.Component {
           <Tab
             key={tab.id}
             id={tab.id}
-            title={
-              tab.id === activeTab ? (
-                <>
-                  <FontAwesome name={tab.icon} /> {t(tab.title)}
-                </>
-              ) : (
-                <Tooltip position={Position.BOTTOM} content={t(tab.title)} hoverOpenDelay={500}>
-                  <FontAwesome name={tab.icon} />
-                </Tooltip>
-              )
+            icon={
+              <Tooltip
+                disabled={tab.id === activeTab}
+                position={Position.BOTTOM}
+                content={t(tab.title)}
+                hoverOpenDelay={200}
+              >
+                <FontAwesome name={tab.icon} />
+              </Tooltip>
             }
+            title={tab.id === activeTab ? t(tab.title) : ''}
             className="poi-settings-tab"
             panel={<tab.component />}
           />
@@ -122,8 +125,6 @@ export class reactClass extends React.Component {
   }
 }
 
-export const displayName = (
-  <span>
-    <FontAwesome name="cog" /> <Trans>setting:Settings</Trans>
-  </span>
-)
+export const displayName = <Trans>setting:Settings</Trans>
+
+export const icon = <FontAwesome name="cog" />

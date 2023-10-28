@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>52</title>
+    <defs>
+        <filter x="-2.8%" y="-5.4%" width="111.1%" height="121.4%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="73.9510995%" y1="-43.1315104%" x2="79.5334201%" y2="184.492188%" id="linearGradient-2">
+            <stop stop-color="#9F8A2A" offset="0%"></stop>
+            <stop stop-color="#716119" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="52">
+            <g id="Group" filter="url(#filter-1)">
+                <polygon id="Path-1" fill="#9F8A2A" points="60 280 60 360 110 430 500 430 580 360 580 305 550 280 450 280 450 245 490 245 490 230 580 230 580 215 450 215 450 190 410 190 410 175 335 175 335 190 250 190 250 250 310 260 310 280"></polygon>
+                <polygon id="Path-2" fill="url(#linearGradient-2)" points="60 360 100 416 516 416 580 360"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

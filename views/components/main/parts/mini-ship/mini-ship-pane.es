@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { ShipRow } from '../../../ship/ship-item'
 import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
 import React, { Fragment } from 'react'
 import { get } from 'lodash'
@@ -21,14 +22,22 @@ export const PaneBodyMini = connect(() => {
   return (state, { fleetId }) => ({
     shipsId: fleetShipsIdSelectorFactory(fleetId)(state),
     enableAvatar: get(state, 'config.poi.appearance.avatar', true),
+    enableOverviewFleetDetail: get(state, 'config.poi.appearance.enableOverviewFleetDetail', false),
     width: miniShipRowWidthSelector(state),
   })
-})(({ fleetId, shipsId, enableAvatar, width }) => (
+})(({ fleetId, shipsId, enableAvatar, enableOverviewFleetDetail, width }) => (
   <>
-    <FleetStat fleetId={fleetId} isMini={true} />
+    <FleetStat fleetId={fleetId} isMini={!enableOverviewFleetDetail} />
     <ShipDetailsMini className="ship-details-mini">
-      {(shipsId || []).map((shipId, i) => (
+      {(!enableOverviewFleetDetail) ? (shipsId || []).map((shipId, i) => (
         <MiniShipRow
+          key={shipId}
+          shipId={shipId}
+          enableAvatar={enableAvatar}
+          compact={width < 240}
+        />
+      )) : (shipsId || []).map((shipId, i) => (
+        <ShipRow
           key={shipId}
           shipId={shipId}
           enableAvatar={enableAvatar}

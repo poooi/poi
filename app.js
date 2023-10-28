@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const electronRemote = require('@electron/remote/main')
 const path = require('path-extra')
+const fs = require('fs-extra')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -25,14 +26,13 @@ const poiIconPath = path.join(
 
 electronRemote.initialize()
 
+require('./lib/proxy')
 require('./lib/module-path').setAllowedPath(global.ROOT)
 const config = require('./lib/config')
-const proxy = require('./lib/proxy')
 const shortcut = require('./lib/shortcut')
 const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
 require('./lib/updater')
-proxy.setMaxListeners(30)
 require('./lib/tray')
 require('./lib/screenshot')
 
@@ -111,6 +111,69 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 app.commandLine.appendSwitch('disable-site-isolation-trials')
 
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
+;(() => {
+  /*
+    Configure extra command flags.
+
+    If APPDATA_PATH/hack/argv.json can be loaded successfully,
+    add extra command line flags as specified by it:
+
+    the loaded JSON object consists of two attributes:
+
+    - "mode": only allowed value is "append"
+
+    - "flags": must be an Array. elements are either:
+
+      + plain string, in which case `appendSwitch(_)` is called
+      + an Array consists of two strings, in which case `appendSwitch(_, _)` is called
+
+    this could be useful to fine-tune some GPU settings, example content:
+
+    {
+      "mode": "append",
+      "flags": [
+        "ignore-gpu-blocklist",
+        ["use-gl", "desktop"],
+        ["gpu-testing-vendor-id", "0x1234"],
+        ["gpu-testing-device-id", "0x5678"]
+      ]
+    }
+
+    Note that this is intentionally not part of poi.config,
+    as otherwise main program might not able to recover on its own
+    should any of the command flags misconfigured.
+
+   */
+  const argvPath = path.join(global.APPDATA_PATH, 'hack', 'argv.json')
+  try {
+    const cfg = fs.readJsonSync(argvPath)
+    if (cfg.mode !== 'append') {
+      throw new Error('Only "append" mode is supported')
+    }
+    if (!Array.isArray(cfg.flags)) {
+      throw new Error('No flags specified')
+    }
+    cfg.flags.forEach((flag) => {
+      if (typeof flag === 'string') {
+        app.commandLine.appendSwitch(flag)
+      } else if (
+        Array.isArray(flag) &&
+        flag.length === 2 &&
+        flag.every((x) => typeof x === 'string')
+      ) {
+        const [k, v] = flag
+        app.commandLine.appendSwitch(k, v)
+      } else {
+        warn('Ignoring unrecognized flag: ', flag)
+      }
+    })
+    console.info(`Config ${argvPath} loaded successfully.`)
+  } catch (e) {
+    if (e.code !== 'ENOENT') {
+      error(`Error while attempting to load ${argvPath}`, e)
+    }
+  }
+})()
 
 // Cache size
 const cacheSize = parseInt(config.get('poi.misc.cache.size'))
@@ -161,6 +224,10 @@ app.on('ready', () => {
   if (height == null) {
     height = workArea.height
   }
+  const hideTitlebar = config.get(
+    'poi.appearance.customtitlebar',
+    process.platform === 'win32' || process.platform === 'linux',
+  )
   global.mainWindow = mainWindow = new BrowserWindow({
     x: x,
     y: y,
@@ -171,12 +238,9 @@ app.on('ready', () => {
     resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : null,
-    transparent: process.platform === 'darwin',
-    frame: !config.get(
-      'poi.appearance.customtitlebar',
-      process.platform === 'win32' || process.platform === 'linux',
-    ),
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : hideTitlebar ? 'hidden' : null,
+    transparent: true,
+    frame: !hideTitlebar,
     enableLargerThanScreen: true,
     maximizable: config.get('poi.content.resizable', true),
     fullscreenable: config.get('poi.content.resizable', true),
@@ -190,8 +254,11 @@ app.on('ready', () => {
       enableRemoteModule: true,
       contextIsolation: false,
       spellcheck: false,
+      backgroundThrottling: false,
     },
     backgroundColor: '#00000000',
+    backgroundMaterial: 'acrylic',
+    roundedCorners: true,
   })
 
   electronRemote.enable(mainWindow.webContents)
@@ -213,6 +280,10 @@ app.on('ready', () => {
   mainWindow.loadURL(`file://${__dirname}/index.html${dbg.isEnabled() ? '?react_perf' : ''}`)
   if (config.get('poi.window.isMaximized', false)) {
     mainWindow.maximize()
+  } else {
+    // Workaround for initial backgroundMaterial config not applied
+    mainWindow.setSize(width + 1, height)
+    mainWindow.setSize(width, height)
   }
   if (config.get('poi.window.isFullScreen', false)) {
     mainWindow.setFullScreen(true)

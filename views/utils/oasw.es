@@ -15,7 +15,7 @@ const taisenAbove = (value) => (ship) => ship.api_taisen[0] >= value
 const isDE = (ship) => ship.api_stype === 1
 
 const isIsuzuK2 = shipIdIs(141)
-const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893)])
+const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893), shipIdIs(906)])
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 const isSamuelKaiNi = shipIdIs(920)
@@ -26,6 +26,7 @@ const isFletcherClassOrKai = _.overSome([
   shipIdIs(692), // Fletcher Kai
   shipIdIs(628), // Fletcher Kai Mod.2
   shipIdIs(629), // Fletcher Mk.II
+  shipIdIs(726), // Heywood L.E. Kai (Note: no OASW without kai)
 ])
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])

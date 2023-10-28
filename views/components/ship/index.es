@@ -283,6 +283,8 @@ export class reactClass extends Component {
 
 export const displayName = (
   <span>
-    <FontAwesome key={0} name="bars" /> <Trans>main:Fleet</Trans>
+    <Trans>main:Fleet</Trans>
   </span>
 )
+
+export const icon = <FontAwesome key={0} name="bars" />

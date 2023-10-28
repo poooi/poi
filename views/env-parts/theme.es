@@ -108,12 +108,12 @@ export function loadStyle(
   const setBackgroundColor = (isDark, isVibrant) => {
     if (isVibrant) {
       if ('darwin' === process.platform) {
-        delaySetBackgroundColor(isDark ? '#2F343C96' : '#F6F7F996')
+        delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.59)' : 'rgba(246, 247, 249, 0.59)')
       } else {
-        delaySetBackgroundColor(isDark ? '#2F343CE6' : '#F6F7F9E6')
+        delaySetBackgroundColor(isDark ? 'rgba(36, 41, 46, 0.7)' : 'rgba(246, 247, 249, 0.25)')
       }
     } else {
-      delaySetBackgroundColor(isDark ? '#2F343C' : '#F6F7F9')
+      delaySetBackgroundColor(isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)')
     }
   }
 
@@ -129,7 +129,7 @@ export function loadStyle(
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
-    glass.style.backgroundColor = isDark ? '#2F343CE6' : '#F6F7F9E6'
+    glass.style.backgroundColor = isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
       classNames('bp4-focus-disabled', {
@@ -168,36 +168,19 @@ export function loadStyle(
     reloadCustomCss()
   }
 
-  const windowsSetVibrancy = (value) => {
-    try {
-      const electronVibrancy = remote.require(
-        join(ROOT, 'assets', 'binary', 'electron-vibrancy-x64'),
-      )
-      if (value === 1) {
-        electronVibrancy.SetVibrancy(currentWindow, 0)
-      } else {
-        electronVibrancy.DisableVibrancy(currentWindow)
-      }
-    } catch (e) {
-      console.warn(
-        'Set vibrancy style failed. Check if electron-vibrancy is correctly complied.',
-        e,
-      )
-    }
-  }
-
   const setVibrancy = (value) => {
     const theme = config.get('poi.appearance.theme', 'dark')
     const isDark = theme === 'dark'
     if ('darwin' === process.platform) {
-      currentWindow.setBackgroundColor('#00000000')
+      currentWindow.setBackgroundColor(value === 1 ? '#00000000' : '#000000')
       currentWindow.setVibrancy(value === 1 ? (isDark ? 'dark' : 'light') : null)
     } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
-        currentWindow.setBackgroundColor('#00000000')
-        windowsSetVibrancy(value)
+        currentWindow.setBackgroundColor(value === 1 ? '#00000000' : '#000000')
+        currentWindow.setBackgroundMaterial(value === 1 ? 'acrylic' : 'none')
       }
     }
+    window.dispatchEvent(new Event('resize'))
     if (themes.includes(theme)) {
       loadTheme(theme, !!value)
     } else {
@@ -257,17 +240,21 @@ export function loadStyle(
     toggleBackground(config.get('poi.appearance.vibrant'))
   })
 
-  // Workaround for window transparency on 2.0.0
+  // Workaround for window transparency on 27.0.0
   if (process.platform === 'win32') {
-    currentWindow.on('blur', () => {
+    const resetBackgroundColor = () => {
       if (config.get('poi.appearance.vibrant', 0) === 1) {
         currentWindow.setBackgroundColor('#00000000')
       }
-    })
+    }
 
-    currentWindow.once('focus', () => {
+    currentWindow.on('blur', resetBackgroundColor)
+    currentWindow.on('focus', resetBackgroundColor)
+    currentWindow.on('restore', () => {
       if (config.get('poi.appearance.vibrant', 0) === 1) {
-        currentWindow.setBackgroundColor('#00000000')
+        const [width, height] = currentWindow.getSize()
+        currentWindow.setSize(width + 1, height + 1)
+        currentWindow.setSize(width, height)
       }
     })
   }
